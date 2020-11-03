@@ -1203,6 +1203,22 @@ Route::get('delete/welding/jig_bom/{id}', 'WeldingProcessController@deleteWeldin
 
 Route::get('index/welding/jig_schedule', 'WeldingProcessController@indexWeldingJigSchedule');
 Route::get('fetch/welding/jig_schedule', 'WeldingProcessController@fetchWeldingJigSchedule');
+Route::get('edit/welding/jig_schedule', 'WeldingProcessController@editWeldingJigSchedule');
+Route::post('update/welding/jig_schedule', 'WeldingProcessController@updateWeldingJigSchedule');
+
+Route::get('index/welding/kensa_point', 'WeldingProcessController@indexWeldingKensaPoint');
+Route::get('fetch/welding/kensa_point', 'WeldingProcessController@fetchWeldingKensaPoint');
+Route::post('input/welding/kensa_point', 'WeldingProcessController@inputWeldingKensaPoint');
+Route::get('edit/welding/kensa_point', 'WeldingProcessController@editWeldingKensaPoint');
+Route::post('update/welding/kensa_point', 'WeldingProcessController@updateWeldingKensaPoint');
+Route::get('delete/welding/kensa_point/{id}', 'WeldingProcessController@deleteWeldingKensaPoint');
+
+Route::get('index/welding/jig_part', 'WeldingProcessController@indexWeldingJigPart');
+Route::get('fetch/welding/jig_part', 'WeldingProcessController@fetchWeldingJigPart');
+Route::post('input/welding/jig_part', 'WeldingProcessController@inputWeldingJigPart');
+Route::get('edit/welding/jig_part', 'WeldingProcessController@editWeldingJigPart');
+Route::post('update/welding/jig_part', 'WeldingProcessController@updateWeldingJigPart');
+Route::get('delete/welding/jig_part/{id}', 'WeldingProcessController@deleteWeldingJigPart');
 
 Route::get('index/welding/kensa_jig', 'WeldingProcessController@indexWeldingKensaJig');
 Route::get('scan/welding/jig', 'WeldingProcessController@scanWeldingJig');

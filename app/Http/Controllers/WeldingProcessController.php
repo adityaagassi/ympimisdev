@@ -20,9 +20,24 @@ use App\WeldingInventory;
 use App\MaterialPlantDataList;
 use App\Employee;
 use App\StandardTime;
+use App\Jig;
+use App\JigBom;
+use App\JigSchedule;
+use App\JigKensaCheck;
+use App\JigKensa;
+use App\JigKensaLog;
+use App\JigRepair;
+use App\JigRepairLog;
+use App\JigPartStock;
 use App\SolderingStandardTime;
+use App\WorkshopJobOrderLog;
+use App\WorkshopJobOrder;
 use Carbon\Carbon;
 use DateTime;
+use FTP;
+use File;
+
+use Storage;
 
 
 class WeldingProcessController extends Controller
@@ -160,14 +175,88 @@ class WeldingProcessController extends Controller
 		))->with('page', 'Welding Kensa Jig');
 	}
 
+	public function indexWeldingRepairJig(){
+		$title = 'Welding Repair Jig';
+		$title_jp = '溶接冶具の修正';
+
+		return view('processes.welding.jig.repair', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'Welding Repair Jig');
+	}
+
 	public function indexWeldingJigData(){
-		$title = "Wedling Jig Data";
-		$title_jp = "修理冶具溶接";
+		$title = "Welding Jig Data";
+		$title_jp = "??";
 
 		return view('processes.welding.jig.data', array(
 			'title' => $title,
 			'title_jp' => $title_jp
 		))->with('page', 'Welding Jig Data');
+	}
+
+	public function indexWeldingJigBom(){
+		$title = "Welding Jig BOM";
+		$title_jp = "??";
+
+		return view('processes.welding.jig.bom', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'Welding Jig BOM');
+	}
+
+	public function indexWeldingJigSchedule(){
+		$title = "Welding Jig Schedule";
+		$title_jp = "??";
+
+		return view('processes.welding.jig.schedule', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'Welding Jig Schedule');
+	}
+
+	public function indexWldJigMonitoring()
+	{
+		$title = 'Kensa Welding Jig Monitoring';
+		$title_jp = '溶接冶具の検査の監視';
+
+		return view('processes.welding.jig.monitoring', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'Kensa Welding Jig Monitoring');
+	}
+
+	public function indexWeldingKensaPoint()
+	{
+		$title = 'Point Check Kensa Welding Jig';
+		$title_jp = '??';
+
+		$jig_parent = Jig::where('category','KENSA')->get();
+		$jig_child = Jig::get();
+
+		return view('processes.welding.jig.point', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'jig_parent' => $jig_parent,
+			'jig_child' => $jig_child,
+			'jig_parent2' => $jig_parent,
+			'jig_child2' => $jig_child
+		))->with('page', 'Point Check Kensa Welding Jig');
+	}
+
+	public function indexWeldingJigPart()
+	{
+		$title = 'Kensa Welding Jig Parts';
+		$title_jp = '??';
+
+		$jig_part = Jig::where('category','PART')->get();
+
+		return view('processes.welding.jig.part', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'jig_part' => $jig_part,
+			'jig_part2' => $jig_part,
+		))->with('page', 'Kensa Welding Jig Parts');
 	}
 
 	public function indexEffHandling(){
@@ -428,6 +517,19 @@ class WeldingProcessController extends Controller
 		))->with('page', 'Welding Process');		
 	}
 
+	public function fetchWeldingData(Request $request){
+		$jigs = Jig::orderBy('jig_id', 'asc')->get();
+
+		return DataTables::of($jigs)
+		->addColumn('action', function($jigs){
+			return '
+			<button class="btn btn-xs btn-info" data-toggle="tooltip" title="Details" onclick="modalView('.$materials->id.')">View</button>
+			<button class="btn btn-xs btn-warning" data-toggle="tooltip" title="Edit" onclick="modalEdit('.$materials->id.')">Edit</button>
+			<button class="btn btn-xs btn-danger" data-toggle="tooltip" title="Delete" onclick="modalDelete('.$materials->id.',\''.$materials->material_number.'\')">Delete</button>';
+		})
+		->rawColumns(['action' => 'action'])
+		->make(true);
+	}
 
 	public function fetchMasterOperator(Request $request)
 	{
@@ -973,31 +1075,31 @@ class WeldingProcessController extends Controller
 				a.material_description as gmcdesc, 
 				'0000-00-00 00:00:00' as waktu_akan,
 				'0000-00-00 00:00:00' as waktu_sedang
-			FROM
+				FROM
 				(
 				SELECT
-					DATE( order_store_date ) AS date,
-					order_store_date AS datetime,
-					hsa_name AS material_description,
-					hsa_kito_code AS gmc 
+				DATE( order_store_date ) AS date,
+				order_store_date AS datetime,
+				hsa_name AS material_description,
+				hsa_kito_code AS gmc 
 				FROM
-					`t_before_cuci`
-					LEFT JOIN m_hsa ON m_hsa.hsa_id = t_before_cuci.part_id 
+				`t_before_cuci`
+				LEFT JOIN m_hsa ON m_hsa.hsa_id = t_before_cuci.part_id 
 				WHERE
-					order_status = 0 
-					AND part_type = 2 UNION ALL
+				order_status = 0 
+				AND part_type = 2 UNION ALL
 				SELECT
-					DATE( order_store_date ) AS date,
-					order_store_date AS datetime,
-					phs_name AS material_description,
-					phs_code AS gmc 
+				DATE( order_store_date ) AS date,
+				order_store_date AS datetime,
+				phs_name AS material_description,
+				phs_code AS gmc 
 				FROM
-					`t_before_cuci`
-					LEFT JOIN m_phs ON m_phs.phs_id = t_before_cuci.part_id 
+				`t_before_cuci`
+				LEFT JOIN m_phs ON m_phs.phs_id = t_before_cuci.part_id 
 				WHERE
-					order_status = 0 
+				order_status = 0 
 				AND part_type = 1 
-				) a");
+			) a");
 		}
 
 		$indexCuci1 = 0;
@@ -2902,6 +3004,1525 @@ class WeldingProcessController extends Controller
 		);
 		return Response::json($response);
 	}
+
+	public function scanWeldingJig(Request $request){
+
+		try {
+			if ($request->get('status') == 'Repair') {
+				$jig = Jig::join('jig_kensas','jig_kensas.jig_id','jigs.jig_id')
+				->where('jigs.jig_tag', '=', $request->get('tag'))
+				->where('category',$request->get('category'))
+				->where('status',$request->get('status'))
+				->get();
+
+				if (count($jig) > 0) {
+					foreach ($jig as $key) {
+						$jig_id = $key->jig_id;
+					}
+
+					$part = JigBom::where('jig_boms.jig_parent',$jig_id)->join('jig_part_stocks','jig_boms.jig_child','jig_part_stocks.jig_id')->get();
+				}
+			}else{
+				$jig = Jig::where('jigs.jig_tag', '=', $request->get('tag'))->where('category',$request->get('category'))->first();
+				if (count($jig) > 0) {
+					$part = JigBom::where('jig_boms.jig_parent',$jig->jig_id)->get();
+				}
+			}
+
+			if (count($jig) > 0) {
+				$response = array(
+					'status' => true,
+					'jig' => $jig,
+					'part' => $part,
+					'started_at' => date('Y-m-d H:i:s'),
+				);
+				return Response::json($response);
+			}else{
+				$response = array(
+					'status' => false,
+					'message' => 'Tag Tidak Ditemukan'
+				);
+				return Response::json($response);
+			}
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function fetchWeldingScheduleJig(Request $request){
+		$query = "SELECT
+		jigs.jig_id,
+		jigs.jig_name,
+		jigs.jig_index,
+		jigs.category,
+		jig_schedules.check_period - 5 AS check_period,
+		jig_schedules.last_check,
+		DATEDIFF( now( ), last_check ) AS age 
+		FROM
+		`jig_schedules`
+		LEFT JOIN jigs ON jigs.jig_id = jig_schedules.jig_id 
+		AND jigs.jig_index = jig_schedules.jig_index 
+		HAVING
+		check_period < age";
+
+		$schedules = db::select($query);
+
+		$response = array(
+			'status' => true,
+			'schedules' => $schedules,
+		);
+		return Response::json($response);
+	}
+
+	public function fetchJigCheck(Request $request)
+	{
+		try {
+			$jig_id = $request->get('jig_id');
+
+			$jig_check = JigKensaCheck::where('jig_id',$jig_id)->orderBy('check_index','asc')->get();
+
+			$response = array(
+				'status' => true,
+				'jig_check' => $jig_check,
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function fetchDrawingList(Request $request)
+	{
+		try {
+			$jig_id = $request->get('jig_id');
+
+			$drawing = DB::SELECT("SELECT
+				a.file_name,
+				a.jig_name,
+				a.jig_child,
+				a.jig_parent
+				FROM
+				(
+				SELECT
+				'".$jig_id."' AS jig_parent,
+				'".$jig_id."' AS jig_child,
+				file_name,
+				jig_name 
+				FROM
+				jigs 
+				WHERE
+				jig_id = '".$jig_id."' UNION ALL
+				SELECT
+				jig_parent,
+				jig_child,
+				file_name,
+				jig_name 
+				FROM
+				`jig_boms`
+				JOIN jigs ON jigs.jig_id = jig_child 
+				WHERE
+				jig_parent = '".$jig_id."' 
+			) a");
+
+			$path = '/jig/drawing/';
+			$file_path = asset($path);
+
+			$response = array(
+				'status' => true,
+				'drawing' => $drawing,
+				'file_path' => $file_path
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function inputKensaJig(Request $request)
+	{
+		try {
+			$operator_id = $request->get('operator_id');
+			$jig_id = $request->get('jig_id');
+			$jig_index = $request->get('jig_index');
+			$started_at = $request->get('started_at');
+			$check_indexes = $request->get('check_indexes');
+			$check_index = $request->get('check_index');
+			$check_name = $request->get('check_name');
+			$upper_limit = $request->get('upper_limit');
+			$lower_limit = $request->get('lower_limit');
+			$value = $request->get('value');
+			$result = $request->get('result');
+			$jig_child = $request->get('jig_child');
+			$jig_alias = $request->get('jig_alias');
+			$started_at = $request->get('started_at');
+			$finished_at = date('Y-m-d H:i:s');
+			$now = date('Y-m-d');
+
+			$id_user = Auth::id();
+
+			$count_ng = 0;
+
+			for ($j=0; $j < $check_indexes; $j++) { 
+				if ($result[$j] == 'NG') {
+					$count_ng++;
+				}
+			}
+
+			if ($count_ng > 0) {
+				for ($i=0; $i < $check_indexes; $i++) { 
+					$kensa_jig = new JigKensa([
+						'operator_id' => $operator_id,
+						'jig_id' => $jig_id,
+						'jig_index' => $jig_index,
+						'check_index' => $check_index[$i],
+						'check_name' => $check_name[$i],
+						'upper_limit' => $upper_limit[$i],
+						'lower_limit' => $lower_limit[$i],
+						'value' => $value[$i],
+						'result' => $result[$i],
+						'jig_child' => $jig_child[$i],
+						'jig_alias' => $jig_alias[$i],
+						'status' => 'Repair',
+						'started_at' => $started_at,
+						'finished_at' => $finished_at,
+						'created_by' => $id_user,
+					]);
+					$kensa_jig->save();
+				}
+
+				$status = 'Repair';
+			}else{
+				for ($k=0; $k < $check_indexes; $k++) { 
+					$kensa_jig = new JigKensaLog([
+						'operator_id' => $operator_id,
+						'jig_id' => $jig_id,
+						'jig_index' => $jig_index,
+						'check_index' => $check_index[$k],
+						'check_name' => $check_name[$k],
+						'upper_limit' => $upper_limit[$k],
+						'lower_limit' => $lower_limit[$k],
+						'value' => $value[$k],
+						'result' => $result[$k],
+						'jig_child' => $jig_child[$k],
+						'jig_alias' => $jig_alias[$k],
+						'started_at' => $started_at,
+						'finished_at' => $finished_at,
+						'created_by' => $id_user,
+					]);
+					$kensa_jig->save();
+				}
+
+				$status = 'OK';
+			}
+
+			$jigs = Jig::where('jig_id',$jig_id)->first();
+			$check_period = $jigs->check_period;
+
+			$jig_schedule = JigSchedule::where('jig_id',$jig_id)->where('jig_index',$jig_index)->where('schedule_status','Open')->first();
+			if (count($jig_schedule) > 0) {
+				if ($status == 'OK') {
+					$jig_schedule->schedule_date = date('Y-m-d');
+					$jig_schedule->kensa_time = $finished_at;
+					$jig_schedule->kensa_status = 'Finish Kensa';
+					$jig_schedule->kensa_pic = $operator_id;
+					$jig_schedule->repair_status = 'No Repair';
+					$jig_schedule->schedule_status = 'Close';
+					$jig_schedule->save();
+
+					$schedule = new JigSchedule([
+						'jig_id' => $jig_id,
+						'jig_index' => $jig_index,
+						'schedule_date' => date('Y-m-d', strtotime($now. ' + '.$check_period.' days')),
+						'schedule_status' => 'Open',
+						'created_by' => $id_user,
+					]);
+					$schedule->save();
+				}else{
+					$jig_schedule->schedule_date = date('Y-m-d');
+					$jig_schedule->kensa_time = $finished_at;
+					$jig_schedule->kensa_pic = $operator_id;
+					$jig_schedule->save();
+				}
+			}else{
+				if ($status == 'OK') {
+					$schedule = new JigSchedule([
+						'jig_id' => $jig_id,
+						'jig_index' => $jig_index,
+						'schedule_date' => date('Y-m-d'),
+						'kensa_time' => $finished_at,
+						'kensa_pic' => $operator_id,
+						'kensa_status' => 'Finish Kensa',
+						'repair_status' => 'No Repair',
+						'schedule_status' => 'Close',
+						'created_by' => $id_user,
+					]);
+					$schedule->save();
+
+					$schedule = new JigSchedule([
+						'jig_id' => $jig_id,
+						'jig_index' => $jig_index,
+						'schedule_date' => date('Y-m-d', strtotime($now. ' + '.$check_period.' days')),
+						'schedule_status' => 'Open',
+						'created_by' => $id_user,
+					]);
+					$schedule->save();
+				}else{
+					$schedule = new JigSchedule([
+						'jig_id' => $jig_id,
+						'jig_index' => $jig_index,
+						'schedule_date' => date('Y-m-d'),
+						'kensa_time' => $finished_at,
+						'kensa_pic' => $operator_id,
+						'kensa_status' => 'Finish Kensa',
+						'repair_status' => 'Unrepaired',
+						'schedule_status' => 'Open',
+						'created_by' => $id_user,
+					]);
+					$schedule->save();
+				}
+			}
+
+			$response = array(
+				'status' => true,
+				'message' => 'Save Kensa Success',
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function inputRepairJig(Request $request)
+	{
+		try {
+			$operator_id = $request->get('operator_id');
+			$jig_id = $request->get('jig_id');
+			$jig_index = $request->get('jig_index');
+			$started_at = $request->get('started_at');
+			$check_indexes = $request->get('check_indexes');
+			$check_index = $request->get('check_index');
+			$check_name = $request->get('check_name');
+			$upper_limit = $request->get('upper_limit');
+			$lower_limit = $request->get('lower_limit');
+			$value = $request->get('value');
+			$result = $request->get('result');
+			$jig_child = $request->get('jig_child');
+			$jig_alias = $request->get('jig_alias');
+			$action = $request->get('action');
+			$jig_parent = $request->get('jig_parent');
+			$part = $request->get('part');
+			$count = $request->get('count');
+			$status = $request->get('status');
+			$finished_at = date('Y-m-d H:i:s');
+			$now = date('Y-m-d');
+			$id_user = Auth::id();
+
+			$jig_parents = [];
+			$jig_childs = [];
+			$jig_aliases = [];
+
+			if ($status == 'Repaired') {
+				for ($k=0; $k < $check_indexes; $k++) { 
+					if ($result[$k] == 'NG') {
+						$jig_aliases[] = $jig_alias[$k];
+						$jig_childs[] = $jig_child[$k];
+						$jig_parents[] = $jig_id;
+					}
+				}
+
+				$usageserror = 0;
+
+				for ($i = 0; $i < count($jig_aliases); $i++) {
+					$jigbom = JigBom::where('jig_parent',$jig_parents[$i])->where('jig_child',$jig_childs[$i])->first();
+					$usage = $jigbom->usage;
+
+					$partsstock = JigPartStock::where('jig_id',$jig_aliases[$i])->get();
+
+					foreach ($partsstock as $key) {
+						$id_partstock = $key->id;
+						$stock = $key->quantity;
+						$min_order = $key->min_order;
+						$material_jig = $key->material;
+						$remarkjig = $key->remark;
+					}
+
+					if ($stock < $usage) {
+						$usageserror++;
+					}else{
+						if ($remarkjig == null) {
+							$date = date('Y-m-d');
+							$prefix_now = 'WJO'.date("y").date("m");
+							$code_generator = CodeGenerator::where('note','=','wjo')->first();
+							if ($prefix_now != $code_generator->prefix){
+								$code_generator->prefix = $prefix_now;
+								$code_generator->index = '0';
+								$code_generator->save();
+							}
+
+							$jigs = Jig::where('jig_id',$jig_childs[$i])->get();
+
+							foreach ($jigs as $key) {
+								$item_name = $key->jig_name;
+							}
+
+							$sub_section = 'Welding Process_Koshuha Solder';
+							$item_name = $item_name;
+							$category = 'Jig';
+							$drawing_name = $item_name;
+							$item_number = $jig_childs[$i];
+							$part_number = $jig_aliases[$i];
+							$quantity = $min_order;
+							$priority = 'Normal';
+							$type = 'Pembuatan Baru';
+							$material = $material_jig;
+							$problem_desc = 'Pembuatan Part Kensa Jig Welding';
+
+							$remark;
+							if($priority == 'Normal'){
+								$remark = 1;
+							}else{
+								$remark = 0;
+							}
+
+							$request_date = date('Y-m-d', strtotime($date. ' + 14 days'));
+
+							$number = sprintf("%'.0" . $code_generator->length . "d", $code_generator->index+1);
+							$order_no = $code_generator->prefix . $number;
+							$code_generator->index = $code_generator->index+1;
+							$code_generator->save();
+
+							$file_name = $order_no.'.pdf';
+							$path = public_path(). '/workshop';
+							$file_path = public_path() . "/jig/drawing/" .$jig_parents[$i].'/'.$jig_childs[$i].'.pdf';
+
+							$newplace  = $path.'/'.$order_no.'.pdf';
+						    copy($file_path,$newplace);
+
+							$wjo = new WorkshopJobOrder([
+								'order_no' => $order_no,
+								'sub_section' => $sub_section,
+								'item_name' => $item_name,
+								'category' => $category,
+								'drawing_name' => $drawing_name,
+								'item_number' => $item_number,
+								'part_number' => $part_number,
+								'quantity' => $quantity,
+								'target_date' => $request_date,
+								'priority' => $priority,
+								'type' => $type,
+								'material' => $material,
+								'problem_description' => $problem_desc,
+								'remark' => $remark,
+								'attachment' => $file_name,
+								'created_by' => 'PI9902015',
+							]);
+
+							$wjo_log = new WorkshopJobOrderLog([
+								'order_no' => $order_no,
+								'remark' => $remark,
+								'created_by' => 'PI9902015',
+							]);
+
+							$wjo->save();
+							$wjo_log->save();
+
+							$partsstocks = JigPartStock::find($id_partstock);
+							$qtynew = $stock - $usage;
+							$partsstocks->quantity = $qtynew;
+							$partsstocks->quantity_order = $min_order;
+							$partsstocks->remark = $order_no;
+							$partsstocks->save();
+						}
+					}
+				}
+
+				if ($usageserror > 0) {
+					$status = false;
+					$message = 'Part Tidak Tersedia';
+				}else{
+
+					$partsstocks = JigPartStock::find($id_partstock);
+					$qtynew = $stock - $usage;
+					$partsstocks->quantity = $qtynew;
+					$partsstocks->save();
+
+					for ($j=0; $j < $check_indexes; $j++) {
+
+						$repair = new JigRepairLog([
+							'operator_id' => $operator_id,
+							'jig_id' => $jig_id,
+							'jig_index' => $jig_index,
+							'check_index' => $check_index[$j],
+							'check_name' => $check_name[$j],
+							'upper_limit' => $upper_limit[$j],
+							'lower_limit' => $lower_limit[$j],
+							'value' => $value[$j],
+							'result' => $result[$j],
+							'jig_child' => $jig_child[$j],
+							'jig_alias' => $jig_alias[$j],
+							'status' => 'Repaired',
+							'action' => $action[$j],
+							'started_at' => $started_at,
+							'finished_at' => $finished_at,
+							'created_by' => $id_user,
+						]);
+						$repair->save();
+					}
+
+					$jigKensa = JigKensa::where('jig_kensas.jig_id', '=', $jig_id)
+					->where('status','Repair')
+					->get();
+
+					foreach ($jigKensa as $key) {
+						$kensa_jig = new JigKensaLog([
+							'operator_id' => $key->operator_id,
+							'jig_id' => $key->jig_id,
+							'jig_index' => $key->jig_index,
+							'jig_alias' => $key->jig_alias,
+							'check_index' => $key->check_index,
+							'check_name' => $key->check_name,
+							'upper_limit' => $key->upper_limit,
+							'lower_limit' => $key->lower_limit,
+							'value' => $key->value,
+							'result' => $key->result,
+							'status' => 'Repaired',
+							'jig_child' => $key->jig_child,
+							'started_at' => $key->started_at,
+							'finished_at' => $key->finished_at,
+							'created_by' => $id_user,
+						]);
+						$kensa_jig->save();
+						$kensas = JigKensa::where('id',$key->id)->forceDelete();
+					}
+
+					$jigses = Jig::where('jig_id',$jig_id)->first();
+					$check_period = $jigses->check_period;
+
+					$jig_schedule = JigSchedule::where('jig_id',$jig_id)->where('jig_index',$jig_index)->where('schedule_status','Open')->first();
+					if (count($jig_schedule) > 0) {
+							$jig_schedule->repair_time = $finished_at;
+							$jig_schedule->repair_pic = $operator_id;
+							$jig_schedule->repair_status = 'Finish Repair';
+							$jig_schedule->schedule_status = 'Close';
+							$jig_schedule->save();
+
+							$schedule = new JigSchedule([
+								'jig_id' => $jig_id,
+								'jig_index' => $jig_index,
+								'schedule_date' => date('Y-m-d', strtotime($now. ' + '.$check_period.' days')),
+								'schedule_status' => 'Open',
+								'created_by' => $id_user,
+							]);
+							$schedule->save();
+					}
+
+					$status = true;
+					$message = 'Repair Jig Selesai';
+				}
+			}else{
+				for ($k=0; $k < $check_indexes; $k++) { 
+					// $kensa = new JigKensa([
+					// 	'operator_id' => $operator_id,
+					// 	'jig_id' => $jig_id,
+					// 	'jig_index' => $jig_index,
+					// 	'check_index' => $check_index[$k],
+					// 	'check_name' => $check_name[$k],
+					// 	'upper_limit' => $upper_limit[$k],
+					// 	'lower_limit' => $lower_limit[$k],
+					// 	'value' => $value[$k],
+					// 	'result' => $result[$k],
+					// 	'jig_child' => $jig_child[$k],
+					// 	'status' => 'Open',
+					// 	'action' => $action[$k],
+					// 	'started_at' => $started_at,
+					// 	'finished_at' => $finished_at,
+					// 	'created_by' => $id_user,
+					// ]);
+					$kensa = JigKensa::where('jig_id',$jig_id)->where('jig_index',$jig_index)->where('check_index',$check_index[$k])->first();
+					$kensa->action = $action[$k];
+					$kensa->save();
+				}
+
+				$jigses = Jig::where('jig_id',$jig_id)->first();
+				$check_period = $jigses->check_period;
+
+				$jig_schedule = JigSchedule::where('jig_id',$jig_id)->where('jig_index',$jig_index)->where('schedule_status','Open')->first();
+				if (count($jig_schedule) > 0) {
+					$jig_schedule->repair_time = $finished_at;
+					$jig_schedule->repair_pic = $operator_id;
+					$jig_schedule->repair_status = 'Waiting Part';
+					$jig_schedule->save();
+				}
+
+				$status = true;
+				$message = 'Jig Belum di Repair. Menunggu Part';
+
+				// $jigKensa = JigKensa::where('jig_kensas.jig_id', '=', $jig_id)
+				// 	->where('status','Repair')
+				// 	->get();
+
+				// foreach ($jigKensa as $key) {
+				// 	$kensa_jig = new JigKensaLog([
+				// 		'operator_id' => $key->operator_id,
+				// 		'jig_id' => $key->jig_id,
+				// 		'jig_index' => $key->jig_index,
+				// 		'check_index' => $key->check_index,
+				// 		'check_name' => $key->check_name,
+				// 		'upper_limit' => $key->upper_limit,
+				// 		'lower_limit' => $key->lower_limit,
+				// 		'value' => $key->value,
+				// 		'result' => $key->result,
+				// 		'status' => 'Repaired',
+				// 		'jig_child' => $key->jig_child,
+				// 		'started_at' => $key->started_at,
+				// 		'finished_at' => $key->finished_at,
+				// 		'created_by' => $id_user,
+				// 	]);
+				// 	$kensa_jig->save();
+
+				// 	$kensas = JigKensa::where('id',$key->id)->forceDelete();
+				// }
+			}
+
+			$response = array(
+				'status' => $status,
+				'message' => $message,
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => $status,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function fetchWldJigMonitoring()
+	{
+		try {
+
+			$monitoring = DB::SELECT("SELECT
+				b.bulan,
+				SUM( b.before_kensa ) AS before_kensa,
+				SUM( b.after_kensa ) AS after_kensa,
+				SUM( b.before_repair ) AS before_repair,
+				SUM( b.waiting_part ) AS waiting_part 
+			FROM
+				(
+				SELECT DISTINCT
+					(
+					DATE_FORMAT( week_date, '%Y-%m' )) AS bulan,
+					(
+					SELECT
+						COUNT(
+						DISTINCT ( id )) 
+					FROM
+						jig_schedules 
+					WHERE
+						DATE_FORMAT( jig_schedules.schedule_date, '%Y-%m' ) = bulan 
+						AND schedule_status = 'Open' 
+						AND kensa_time IS NULL 
+						AND repair_time IS NULL 
+					) AS before_kensa,
+					(
+					SELECT
+						COUNT(
+						DISTINCT ( id )) 
+					FROM
+						jig_schedules 
+					WHERE
+						DATE_FORMAT( jig_schedules.schedule_date, '%Y-%m' ) = bulan 
+						AND schedule_status = 'Close' 
+						AND kensa_time IS NOT NULL 
+					) AS after_kensa,
+					(
+					SELECT
+						COUNT(
+						DISTINCT ( id )) 
+					FROM
+						jig_schedules 
+					WHERE
+						DATE_FORMAT( jig_schedules.schedule_date, '%Y-%m' ) = bulan 
+						AND schedule_status = 'Open' 
+						AND kensa_time IS NOT NULL 
+						AND repair_time IS NULL 
+					) AS before_repair,
+					(
+					SELECT
+						COUNT(
+						DISTINCT ( id )) 
+					FROM
+						jig_schedules 
+					WHERE
+						DATE_FORMAT( jig_schedules.schedule_date, '%Y-%m' ) = bulan 
+						AND schedule_status = 'Open' 
+						AND kensa_time IS NOT NULL 
+						AND repair_time IS NOT NULL 
+					) AS waiting_part 
+				FROM
+					weekly_calendars 
+				WHERE
+					week_date BETWEEN DATE(
+					DATE_ADD( NOW(), INTERVAL - 6 MONTH )) 
+					AND DATE(
+					DATE_ADD( NOW(), INTERVAL + 1 MONTH )) UNION ALL
+				SELECT
+					DATE_FORMAT( jig_schedules.schedule_date, '%Y-%m' ) AS bulan,
+					COUNT(
+					DISTINCT ( id )) AS before_kensa,
+					0 AS after_kensa,
+					0 AS before_repair,
+					0 AS waiting_part 
+				FROM
+					jig_schedules 
+				WHERE
+					schedule_date < DATE(
+					DATE_ADD( NOW(), INTERVAL - 6 MONTH )) 
+					AND schedule_status = 'Open' 
+					AND kensa_time IS NULL 
+				GROUP BY
+					DATE_FORMAT( jig_schedules.schedule_date, '%Y-%m' ) 
+				) b 
+			GROUP BY
+				b.bulan 
+			ORDER BY
+				b.bulan ASC");
+
+			$resume = DB::SELECT("SELECT
+				a.week_date,
+				(
+				SELECT
+					COUNT(
+					DISTINCT ( id )) 
+				FROM
+					jig_schedules 
+				WHERE
+					jig_schedules.schedule_date = a.week_date 
+					AND schedule_status = 'Open' 
+					AND kensa_time IS NULL 
+					AND repair_time IS NULL 
+				) AS before_kensa,
+				( SELECT COUNT( DISTINCT ( id )) FROM jig_schedules WHERE jig_schedules.schedule_date = a.week_date AND schedule_status = 'Close' AND kensa_time IS NOT NULL ) AS after_kensa,
+				(
+				SELECT
+					COUNT(
+					DISTINCT ( id )) 
+				FROM
+					jig_schedules 
+				WHERE
+					jig_schedules.schedule_date = a.week_date 
+					AND schedule_status = 'Open' 
+					AND kensa_time IS NOT NULL 
+					AND repair_time IS NULL 
+				) AS before_repair,
+				(
+				SELECT
+					COUNT(
+					DISTINCT ( id )) 
+				FROM
+					jig_schedules 
+				WHERE
+					jig_schedules.schedule_date = a.week_date 
+					AND schedule_status = 'Open' 
+					AND kensa_time IS NOT NULL 
+					AND repair_time IS NOT NULL 
+				) AS waiting_part 
+			FROM
+				weekly_calendars a 
+			WHERE
+				a.week_date = DATE(
+				NOW())");
+
+			$outstanding = DB::SELECT("SELECT b.*
+			FROM
+			(SELECT
+				jig_schedules.jig_id,
+				jigs.jig_name,
+				COALESCE ( kensa_time, '' ) AS kensa_time,
+				COALESCE ( empkensa.name, '' ) AS kensa_pic,
+				COALESCE ( kensa_status, '' ) AS kensa_status,
+				COALESCE ( repair_time, '' ) AS repair_time,
+				COALESCE ( emprepair.name, '' ) AS repair_pic,
+				COALESCE ( repair_status, '' ) AS repair_status,
+				schedule_status,
+				schedule_date 
+			FROM
+				`jig_schedules`
+				LEFT JOIN employee_syncs empkensa ON empkensa.employee_id = jig_schedules.kensa_pic
+				LEFT JOIN employee_syncs emprepair ON emprepair.employee_id = jig_schedules.repair_pic
+				JOIN jigs ON jigs.jig_id = jig_schedules.jig_id 
+			WHERE
+				schedule_status = 'Open' 
+				AND schedule_date BETWEEN DATE(
+				DATE_ADD( NOW(), INTERVAL - 6 MONTH )) 
+				AND DATE(
+				DATE_ADD( NOW(), INTERVAL + 1 MONTH )) UNION
+			SELECT
+				jig_schedules.jig_id,
+				jigs.jig_name,
+				COALESCE ( kensa_time, '' ) AS kensa_time,
+				COALESCE ( empkensa.name, '' ) AS kensa_pic,
+				COALESCE ( kensa_status, '' ) AS kensa_status,
+				COALESCE ( repair_time, '' ) AS repair_time,
+				COALESCE ( emprepair.name, '' ) AS repair_pic,
+				COALESCE ( repair_status, '' ) AS repair_status,
+				schedule_status,
+				schedule_date 
+			FROM
+				`jig_schedules`
+				LEFT JOIN employee_syncs empkensa ON empkensa.employee_id = jig_schedules.kensa_pic
+				LEFT JOIN employee_syncs emprepair ON emprepair.employee_id = jig_schedules.repair_pic
+				JOIN jigs ON jigs.jig_id = jig_schedules.jig_id 
+			WHERE
+				schedule_status = 'Open' 
+				AND schedule_date < DATE(
+				DATE_ADD( NOW(), INTERVAL - 6 MONTH ))) b ORDER BY b.schedule_date");
+
+			$response = array(
+				'status' => true,
+				'monitoring' => $monitoring,
+				'outstanding' => $outstanding,
+				'resume' => $resume,
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function fetchWldDetailJigMonitoring(Request $request)
+	{
+		try {
+			$date = $request->get('date');
+			$status = $request->get('status');
+
+			$detail = [];
+
+			if ($status == 'Belum Kensa') {
+				$schedule = DB::SELECT("select * from jig_schedules join jigs on jigs.jig_id = jig_schedules.jig_id where DATE_FORMAT(schedule_date,'%Y-%m') = '".$date."' and schedule_status = 'Open' and kensa_time is null");
+
+				foreach ($schedule as $key) {
+					$detail[$key->jig_id] = DB::SELECT("select * from jig_schedules join jig_kensa_logs on jig_kensa_logs.jig_id = jig_schedules.jig_id and DATE(finished_at) = schedule_date join jigs on jigs.jig_id = jig_schedules.jig_id where DATE_FORMAT(schedule_date,'%Y-%m') = '".$date."' and schedule_status = 'Open' and jig_schedules.jig_id = '".$key->jig_id."' and jig_schedules.kensa_time is null");
+				}
+
+				$judul = 'DETAIL WELDING KENSA JIG YANG BELUM KENSA';
+			}elseif ($status == 'Sudah Kensa') {
+				$schedule = DB::SELECT("select * from jig_schedules join jigs on jigs.jig_id = jig_schedules.jig_id where DATE_FORMAT(schedule_date,'%Y-%m') = '".$date."' and schedule_status = 'Close'");
+
+				foreach ($schedule as $key) {
+					$detail[$key->jig_id] = DB::SELECT("SELECT
+						*,
+						CONCAT(
+							SPLIT_STRING ( empkensa.NAME, ' ', 1 ),
+							' ',
+						SPLIT_STRING ( empkensa.NAME, ' ', 2 )) AS kensaemp 
+					FROM
+						jig_schedules
+						JOIN jig_kensa_logs ON jig_kensa_logs.jig_id = jig_schedules.jig_id 
+						AND DATE( finished_at ) = schedule_date
+						JOIN jigs ON jigs.jig_id = jig_schedules.jig_id
+						LEFT JOIN employee_syncs empkensa ON empkensa.employee_id = jig_schedules.kensa_pic 
+					WHERE
+						DATE_FORMAT( schedule_date, '%Y-%m' ) = '".$date."' 
+						AND schedule_status = 'Close' 
+						AND jig_schedules.jig_id = '".$key->jig_id."'");
+				}
+
+				$judul = 'DETAIL WELDING KENSA JIG YANG SUDAH KENSA';
+			}elseif ($status == 'Belum Repair') {
+				$schedule = DB::SELECT("select * from jig_schedules join jigs on jigs.jig_id = jig_schedules.jig_id where DATE_FORMAT(schedule_date,'%Y-%m') = '".$date."' and schedule_status = 'Open' and kensa_time is not null and repair_time is null");
+
+				foreach ($schedule as $key) {
+					$detail[$key->jig_id] = DB::SELECT("SELECT
+						*,
+						CONCAT(
+							SPLIT_STRING ( empkensa.NAME, ' ', 1 ),
+							' ',
+						SPLIT_STRING ( empkensa.NAME, ' ', 2 )) AS kensaemp 
+					FROM
+						jig_schedules
+						JOIN jig_kensas ON jig_kensas.jig_id = jig_schedules.jig_id 
+						AND DATE( finished_at ) = schedule_date
+						JOIN jigs ON jigs.jig_id = jig_schedules.jig_id 
+						LEFT JOIN employee_syncs empkensa ON empkensa.employee_id = jig_schedules.kensa_pic 
+					WHERE
+						DATE_FORMAT( schedule_date, '%Y-%m' ) = '".$date."' 
+						AND schedule_status = 'Open' 
+						AND jig_schedules.jig_id = '".$key->jig_id."' 
+						AND kensa_time IS NOT NULL 
+						AND repair_time IS NULL");
+				}
+
+				$judul = 'DETAIL WELDING KENSA JIG YANG BELUM REPAIR';
+			}elseif ($status == 'Menunggu Part') {
+				$schedule = DB::SELECT("select * from jig_schedules join jigs on jigs.jig_id = jig_schedules.jig_id where DATE_FORMAT(schedule_date,'%Y-%m') = '".$date."' and schedule_status = 'Open' and kensa_time is not null and repair_time is not null");
+
+				foreach ($schedule as $key) {
+					$detail[$key->jig_id] = DB::SELECT("SELECT
+						* ,
+						CONCAT(
+							SPLIT_STRING ( empkensa.NAME, ' ', 1 ),
+							' ',
+						SPLIT_STRING ( empkensa.NAME, ' ', 2 )) AS kensaemp 
+					FROM
+						jig_schedules
+						JOIN jig_kensas ON jig_kensas.jig_id = jig_schedules.jig_id 
+						AND DATE( finished_at ) = schedule_date
+						JOIN jigs ON jigs.jig_id = jig_schedules.jig_id 
+						LEFT JOIN employee_syncs empkensa ON empkensa.employee_id = jig_schedules.kensa_pic 
+					WHERE
+						DATE_FORMAT( schedule_date, '%Y-%m' ) = '".$date."' 
+						AND schedule_status = 'Open' 
+						AND jig_schedules.jig_id = '".$key->jig_id."' 
+						AND kensa_time IS NOT NULL 
+						AND repair_time IS NOT NULL");
+				}
+
+				$judul = 'DETAIL WELDING KENSA JIG YANG MENUNGGU PART';
+			}
+
+			$response = array(
+				'status' => true,
+				'message' => 'Success Get Data',
+				'detail' => $detail,
+				'schedule' => $schedule,
+				'judul' => $judul,
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function fetchWeldingJigData(Request $request)
+	{
+		try {
+
+			$jigs = Jig::select('*','jigs.id as id_jig')->join('jig_boms','jig_boms.jig_child','jigs.jig_id')->orderby('jigs.id','asc')->get();
+			$response = array(
+				'status' => true,
+				'message' => 'Success Get Data',
+				'jigs' => $jigs
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function editWeldingJigData(Request $request)
+	{
+		try {
+
+			$jigs = Jig::select('*','jigs.id as id_jig')->join('jig_boms','jig_boms.jig_child','jigs.jig_id')->orderby('jigs.id','asc')->where('jigs.id',$request->get('id'))->get();
+
+			$response = array(
+				'status' => true,
+				'message' => 'Success Get Data',
+				'jigs' => $jigs
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function inputWeldingJigData(Request $request)
+	{
+		try {
+			$fileData = $request->get('fileData');
+			$jig_parent = $request->get('jig_parent');
+			$jig_id = $request->get('jig_id');
+			$jig_index = $request->get('jig_index');
+			$jig_name = $request->get('jig_name');
+			$jig_alias = $request->get('jig_alias');
+			$category = $request->get('category');
+			$jig_tag = $request->get('jig_tag');
+			$check_period = $request->get('check_period');
+			$type = $request->get('type');
+			$usage = $request->get('usage');
+			$file = $request->file('fileData');
+
+			$tujuan_upload = 'jig/drawing/'.$jig_parent;
+
+          	$filename = $jig_id.'.'.$request->input('extension');
+          	$file->move($tujuan_upload,$filename);
+
+          	$jigs = Jig::firstOrNew(['jig_id' => $jig_id, 'jig_index' => $jig_index]);
+            $jigs->jig_id = $jig_id;
+            $jigs->jig_index = $jig_index;
+            $jigs->jig_name = $jig_name;
+            $jigs->jig_alias = $jig_alias;
+            $jigs->category = $category;
+            $jigs->jig_tag = $jig_tag;
+            $jigs->check_period = $check_period;
+            $jigs->type = $type;
+            $jigs->file_name = $filename;
+            $jigs->created_by = Auth::id();
+
+			$jigbom = JigBom::firstOrNew(['jig_parent' => $jig_parent, 'jig_child' => $jig_id]);
+            $jigbom->jig_parent = $jig_parent;
+            $jigbom->jig_child = $jig_id;
+            $jigbom->created_by = Auth::id();
+            $jigbom->usage = $usage;
+
+            $jigbom->save();
+			$jigs->save();
+
+			$response = array(
+				'status' => true,
+				'message' => 'Success Input Data'
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function updateWeldingJigData(Request $request)
+	{
+		try {
+			$fileData = $request->get('fileData');
+			$jig_parent = $request->get('jig_parent');
+			$jig_id = $request->get('jig_id');
+			$id_jig = $request->get('id_jig');
+			$jig_index = $request->get('jig_index');
+			$jig_name = $request->get('jig_name');
+			$jig_alias = $request->get('jig_alias');
+			$category = $request->get('category');
+			$jig_tag = $request->get('jig_tag');
+			$check_period = $request->get('check_period');
+			$type = $request->get('type');
+			$usage = $request->get('usage');
+			$file = $request->file('fileData');
+			$file_name = $request->get('file_name');
+
+			$jigs = Jig::find($id_jig);
+            $jigs->jig_id = $jig_id;
+            $jigs->jig_index = $jig_index;
+            $jigs->jig_name = $jig_name;
+            $jigs->jig_alias = $jig_alias;
+            $jigs->category = $category;
+            $jigs->jig_tag = $jig_tag;
+            $jigs->check_period = $check_period;
+            $jigs->type = $type;
+
+			if ($file_name != null) {
+				$tujuan_upload = 'jig/drawing/'.$jig_parent;
+	          	$filename = $jig_id.'.'.$request->input('extension');
+	          	$file->move($tujuan_upload,$filename);
+
+	          	$jigs->file_name = $filename;
+			}          	
+
+			$jigbom = JigBom::firstOrNew(['jig_parent' => $jig_parent, 'jig_child' => $jig_id]);
+            $jigbom->jig_parent = $jig_parent;
+            $jigbom->jig_child = $jig_id;
+            $jigbom->usage = $usage;
+
+            $jigbom->save();
+			$jigs->save();
+
+			$response = array(
+				'status' => true,
+				'message' => 'Success Update Data'
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function deleteWeldingJigData($id,$jig_id,$jig_parent)
+	{
+		try {
+
+			$jigs = Jig::find($id);
+
+			$jigbom = JigBom::where('jig_boms.jig_child',$jig_id)->forceDelete();
+
+			File::delete('jig/drawing/'.$jig_parent.'/'.$jig_id.'.pdf');
+
+			$jigs->forceDelete();
+
+			return redirect('index/welding/jig_data');
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function fetchWeldingJigBom()
+	{
+		try {
+			$jigbom = JigBom::select('*','jig_boms.id as id_jig_bom')->get();
+
+			$response = array(
+				'status' => true,
+				'message' => 'Success Get Data',
+				'jig_bom' => $jigbom
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function inputWeldingJigBom(Request $request)
+	{
+		try {
+			$jig_parent = $request->get('jig_parent');
+			$jig_child = $request->get('jig_child');
+			$usage = $request->get('usage');
+
+          	$jigs = JigBom::firstOrNew(['jig_parent' => $jig_parent, 'jig_child' => $jig_child]);
+            $jigs->jig_parent = $jig_parent;
+            $jigs->jig_child = $jig_child;
+            $jigs->usage = $usage;
+            $jigs->created_by = Auth::id();
+			$jigs->save();
+
+			$response = array(
+				'status' => true,
+				'message' => 'Success Input Data'
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function editWeldingJigBom(Request $request)
+	{
+		try {
+			$jigbom = JigBom::where('jig_boms.id',$request->get('id'))->get();
+
+			$response = array(
+				'status' => true,
+				'message' => 'Success Get Data',
+				'jig_bom' => $jigbom
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function updateWeldingJigBom(Request $request)
+	{
+		try {
+			$jig_parent = $request->get('jig_parent');
+			$jig_child = $request->get('jig_child');
+			$usage = $request->get('usage');
+			$id_jig_bom = $request->get('id_jig_bom');
+
+          	$jigs = JigBom::find($id_jig_bom);
+            $jigs->jig_parent = $jig_parent;
+            $jigs->jig_child = $jig_child;
+            $jigs->usage = $usage;
+			$jigs->save();
+
+			$response = array(
+				'status' => true,
+				'message' => 'Success Update Data'
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function deleteWeldingJigBom($id)
+	{
+		try {
+			$jigbom = JigBom::find($id);
+
+			$jigbom->forceDelete();
+
+			return redirect('index/welding/jig_bom');
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function fetchWeldingJigSchedule()
+	{
+		try {
+			$jigschedule = JigSchedule::orderBy('schedule_status','desc')->orderBy('schedule_date','asc')->get();
+
+			$response = array(
+				'status' => true,
+				'message' => 'Success Get Data',
+				'jig_schedule' => $jigschedule
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function editWeldingJigSchedule(Request $request)
+	{
+		try {
+			$jigschedule = JigSchedule::where('id',$request->get('id'))->orderBy('schedule_status','desc')->orderBy('schedule_date','asc')->first();
+
+			$response = array(
+				'status' => true,
+				'jig_schedule' => $jigschedule
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function updateWeldingJigSchedule(Request $request)
+	{
+		try {
+			$jigschedule = JigSchedule::where('id',$request->get('id'))->first();
+			$jigschedule->schedule_date = $request->get('schedule_date');
+			$jigschedule->save();
+
+			$response = array(
+				'status' => true,
+				'message' => 'Update Data Success'
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function fetchWeldingKensaPoint()
+	{
+		try {
+
+			$jig_point = JigKensaCheck::orderBy('jig_id','asc')->orderBy('jig_child','asc')->orderBy('check_index','asc')->get();
+
+			$response = array(
+				'status' => true,
+				'jig_point' => $jig_point,
+				'message' => 'Update Data Success'
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function inputWeldingKensaPoint(Request $request)
+	{
+		try {
+			$jig_parent = $request->get('jig_parent');
+			$jig_child = $request->get('jig_child');
+			$check_name = $request->get('check_name');
+			$lower_limit = $request->get('lower_limit');
+			$upper_limit = $request->get('upper_limit');
+
+			$jigalias = Jig::where('jig_id',$jig_child)->first();
+
+			$checkindex = JigKensaCheck::where('jig_id',$jig_parent)->orderBy('check_index','desc')->first();
+
+          	$kensapoint = new JigKensaCheck([
+				'jig_id' => $jig_parent,
+				'jig_child' => $jig_child,
+				'jig_alias' => $jigalias->jig_alias,
+				'check_index' => $checkindex->check_index+1,
+				'check_name' => $check_name,
+				'upper_limit' => $upper_limit,
+				'lower_limit' => $lower_limit,
+				'created_by' => Auth::id(),
+			]);
+			$kensapoint->save();
+
+			$response = array(
+				'status' => true,
+				'message' => 'Success Input Data'
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function editWeldingKensaPoint(Request $request)
+	{
+		try {
+			$jig_point = JigKensaCheck::where('id',$request->get('id'))->first();
+
+			$response = array(
+				'status' => true,
+				'jig_point' => $jig_point
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function updateWeldingKensaPoint(Request $request)
+	{
+		try {
+			$jigpoint = JigKensaCheck::where('id',$request->get('id_jig_point'))->first();
+			$jigpoint->jig_id = $request->get('jig_parent');
+			if ($jigpoint->jig_child != $request->get('jig_child')) {
+				$jigalias = Jig::where('jig_id',$request->get('jig_child'))->first();
+				$jigpoint->jig_alias = $jigalias->jig_alias;
+			}
+			$jigpoint->jig_child = $request->get('jig_child');
+			$jigpoint->check_index = $request->get('check_index');
+			$jigpoint->check_name = $request->get('check_name');
+			$jigpoint->lower_limit = $request->get('lower_limit');
+			$jigpoint->upper_limit = $request->get('upper_limit');
+			$jigpoint->save();
+
+			$response = array(
+				'status' => true,
+				'message' => 'Update Data Success'
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function deleteWeldingKensaPoint($id)
+	{
+		try {
+			$jigpoint = JigKensaCheck::find($id);
+
+			$jigpoint->forceDelete();
+
+			return redirect('index/welding/kensa_point');
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function fetchWeldingJigPart()
+	{
+		try {
+			$jig_part = JigPartStock::get();
+
+			$response = array(
+				'status' => true,
+				'jig_part' => $jig_part,
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function inputWeldingJigPart(Request $request)
+	{
+		try {
+
+			$jig_id = $request->get('jig_id');
+			$quantity = $request->get('quantity');
+			$min_stock = $request->get('min_stock');
+			$min_order = $request->get('min_order');
+			$quantity_order = $request->get('quantity_order');
+			$material = $request->get('material');
+
+			$jigs = JigPartStock::where('jig_id',$jig_id)->first();
+
+			if (count($jigs) > 0) {
+				$jigs->jig_id = $jig_id;
+				$jigs->quantity = $quantity;
+				$jigs->min_stock = $min_stock;
+				$jigs->min_order = $min_order;
+				$jigs->quantity_order = $quantity_order;
+				$jigs->material = $material;
+				$jigs->save();
+			}else{
+				$jigpart = new JigPartStock([
+					'jig_id' => $jig_id,
+					'quantity' => $quantity,
+					'min_stock' => $min_stock,
+					'min_order' => $min_order,
+					'quantity_order' => $quantity_order,
+					'material' => $material,
+					'created_by' => Auth::id(),
+				]);
+				$jigpart->save();
+			}
+
+			$response = array(
+				'status' => true,
+				'message' => 'Input Data Success',
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function editWeldingJigPart(Request $request)
+	{
+		try {
+			$jig_part = JigPartStock::where('id',$request->get('id'))->first();
+			$response = array(
+				'status' => true,
+				'jig_part' => $jig_part
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function updateWeldingJigPart(Request $request)
+	{
+		try {
+			$jigpart = JigPartStock::where('id',$request->get('id_jig_part'))->first();
+			$jigpart->jig_id = $request->get('jig_id');
+			$jigpart->quantity = $request->get('quantity');
+			$jigpart->min_stock = $request->get('min_stock');
+			$jigpart->min_order = $request->get('min_order');
+			$jigpart->material = $request->get('material');
+			$jigpart->save();
+
+			$response = array(
+				'status' => true,
+				'message' => 'Update Data Success'
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function deleteWeldingJigPart($id)
+	{
+		try {
+			$jigpart = JigPartStock::find($id);
+
+			$jigpart->forceDelete();
+
+			return redirect('index/welding/jig_part');
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	//END Kensa Jig
 
 	public function fetchKensaResult(Request $request){
 
