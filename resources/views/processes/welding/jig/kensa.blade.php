@@ -251,7 +251,7 @@
 					checkTable += '<td><center id="jig_alias_'+value.check_index+'">'+value.jig_alias+'</center></td>';
 					checkTable += '<td><center id="lower_'+value.check_index+'">'+value.lower_limit+'</center></td>';
 					checkTable += '<td><center id="upper_'+value.check_index+'">'+value.upper_limit+'</center></td>';
-					checkTable += '<td><input type="number" id="value_'+value.check_index+'" class="numpad" style="width:100%;background-color:rgb(236, 240, 245);text-align: center;" onchange="checkPoint(this.value,\''+value.check_index+'\')" value="'+value.upper_limit+'"></td>';
+					checkTable += '<td><input type="number" id="value_'+value.check_index+'" class="numpad" style="width:100%;background-color:rgb(236, 240, 245);text-align: center;" onchange="checkPoint(this.value,\''+value.check_index+'\')"></td>';
 					checkTable += '<td><center id="result_'+value.check_index+'">OK</center></td>';
 					checkTable += '</tr>';
 					valueCheck.push(value.check_index);
