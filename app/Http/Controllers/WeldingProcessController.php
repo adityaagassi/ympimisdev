@@ -187,7 +187,7 @@ class WeldingProcessController extends Controller
 
 	public function indexWeldingJigData(){
 		$title = "Welding Jig Data";
-		$title_jp = "??";
+		$title_jp = "溶接冶具のデータ";
 
 		return view('processes.welding.jig.data', array(
 			'title' => $title,
@@ -197,7 +197,7 @@ class WeldingProcessController extends Controller
 
 	public function indexWeldingJigBom(){
 		$title = "Welding Jig BOM";
-		$title_jp = "??";
+		$title_jp = "溶接冶具のBOM";
 
 		return view('processes.welding.jig.bom', array(
 			'title' => $title,
@@ -207,7 +207,7 @@ class WeldingProcessController extends Controller
 
 	public function indexWeldingJigSchedule(){
 		$title = "Welding Jig Schedule";
-		$title_jp = "??";
+		$title_jp = "溶接冶具のスケジュール";
 
 		return view('processes.welding.jig.schedule', array(
 			'title' => $title,
@@ -229,7 +229,7 @@ class WeldingProcessController extends Controller
 	public function indexWeldingKensaPoint()
 	{
 		$title = 'Point Check Kensa Welding Jig';
-		$title_jp = '??';
+		$title_jp = '溶接冶具の検査項目';
 
 		$jig_parent = Jig::where('category','KENSA')->get();
 		$jig_child = Jig::get();
@@ -247,7 +247,7 @@ class WeldingProcessController extends Controller
 	public function indexWeldingJigPart()
 	{
 		$title = 'Kensa Welding Jig Parts';
-		$title_jp = '??';
+		$title_jp = '溶接冶具の部品検査';
 
 		$jig_part = Jig::where('category','PART')->get();
 

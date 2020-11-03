@@ -329,7 +329,7 @@ class EmployeeController extends Controller
      public function checklogData()
      {
           $title = 'Checklog Data';
-          $title_jp = '??';
+          $title_jp = 'チェックログのデータ';
 
           $q = "select employee_syncs.employee_id, employee_syncs.name, employee_syncs.department, employee_syncs.`section`, employee_syncs.`group`, employee_syncs.cost_center, cost_centers2.cost_center_name from employee_syncs left join cost_centers2 on cost_centers2.cost_center = employee_syncs.cost_center";
 
