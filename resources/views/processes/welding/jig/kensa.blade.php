@@ -341,15 +341,29 @@
 
 	function fetchDrawing(jig_parent,file_name,file_path) {
 		$('#drawingDetail').empty();
-		// console.log(file_name);
-		if (file_name === "") {
-			$('#drawingDetail').append('Drawing Tidak Tersedia.');
-		}else{
+
+		var result = doesFileExist(file_path +"/"+ jig_parent +"/"+ file_name);
+ 
+		if (result == true) {
 			if(file_name.includes('.pdf')){
 				$('#drawingDetail').append("<embed src='"+ file_path +"/"+ jig_parent +"/"+ file_name +"' type='application/pdf' width='100%' height='600px'>");
 				console.log("<embed src='"+ file_path +"/"+ jig_parent +"/"+ file_name +"' type='application/pdf' width='100%' height='600px'>");
 			}
+		} else {
+		    $('#drawingDetail').append("<center><span style='font-weight:bold;font-size:30px;color:white'>Tidak Ada Drawing</span></center>");
 		}
+	}
+
+	function doesFileExist(urlToFile) {
+	    var xhr = new XMLHttpRequest();
+	    xhr.open('HEAD', urlToFile, false);
+	    xhr.send();
+	     
+	    if (xhr.responseURL.includes('404')) {
+	        return false;
+	    } else {
+	        return true;
+	    }
 	}
 
 	function confirmKensa() {
