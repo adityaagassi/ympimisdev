@@ -81,7 +81,7 @@
 								<div style="background-color: rgba(248,161,63,0.9); font-size: 2vw; font-weight: bold;">Finished Goods</div>
 								<div id="container" style="width:100%; height:450px;"></div>
 								<div style="background-color: rgba(248,161,63,0.9); font-size: 2vw; font-weight: bold;">KD Parts</div>
-								<div id="container2" style="width:100%; height:550px;"></div>
+								<div id="container2" style="width:100%; height:650px;"></div>
 								<span class="text-red">Blank = No Export Plan</span><br>
 								<span class="text-red">ブランク = 輸出計画はありません</span><br>
 							</center>
