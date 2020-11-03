@@ -150,7 +150,7 @@ class ProcessController extends Controller
 		select distinct model, processes.process_code, processes.process_name from materials left join processes on processes.remark = CONCAT('YFL',materials.origin_group_code) where processes.remark = 'YFL041' and processes.process_code <> '5' and materials.category = 'FG') as result1
 		left join
 		(
-		select stamp_inventories.model, stamp_inventories.process_code, sum(stamp_inventories.quantity) as quantity from stamp_inventories where stamp_inventories.status is null group by stamp_inventories.model, stamp_inventories.process_code
+		select stamp_inventories.model, stamp_inventories.process_code, sum(stamp_inventories.quantity) as quantity from stamp_inventories where stamp_inventories.status is null and stamp_inventories.deleted_at is null group by stamp_inventories.model, stamp_inventories.process_code
 		) as result2 
 		on result2.model = result1.model and result2.process_code = result1.process_code order by result1.model asc";
 
