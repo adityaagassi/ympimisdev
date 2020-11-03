@@ -2549,7 +2549,7 @@ class RecorderProcessController extends Controller
 
     public function index_torque_ai($remark){
       $name = Auth::user()->name;
-      $view = 'recorder.process.index_torque_ai'; //existing
+      $view = 'recorder.process.index_torque'; //existing
       // $view = 'recorder.process.index_torque_ai2'; //tag rfid
       return view($view)
       ->with('page', 'Process Assy Recorder')
