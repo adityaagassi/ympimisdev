@@ -23,7 +23,7 @@
 		<p style="font-size: 18px;">Request Purchase Requisition (PR) <br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
 		This is an automatic notification. Please do not reply to this address.
 
-		<h2>Purchase Requisition (PR) {{$no_pr}}</h2>
+		<h2>Purchase Requisition (PR) {{ $data[0]->no_pr }}</h2>
 
 		<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 			<thead style="background-color: rgb(126,86,134);">
@@ -263,7 +263,7 @@
 		<p style="font-size: 18px;">PR Request Not Approved<br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
 		This is an automatic notification. Please do not reply to this address.
 		<br>
-		<h2>Purchase Requisition (PR) {{$no_pr}} Not Approved</h2>
+		<h2>Purchase Requisition (PR) {{ $data[0]->no_pr }} Not Approved</h2>
 		
 		<?php if ($alasan != null) { ?>
 			<h3>Reason :<h3>
