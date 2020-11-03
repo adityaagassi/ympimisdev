@@ -111,7 +111,7 @@
 					<td colspan="1" style="width:3%; background-color: yellow; font-weight: bold; border: 1px solid black;">Unit Price</td>
 					<td colspan="1" style="width:3%; background-color: yellow; font-weight: bold; border: 1px solid black;">Amount</td>
 					<td colspan="1" style="width:2%; background-color: yellow; font-weight: bold; border: 1px solid black;">Stock</td>
-					<td colspan="1" style="width:3%; background-color: yellow; font-weight: bold; border: 1px solid black;">Kebutuhan</td>
+					<td colspan="1" style="width:3%; background-color: yellow; font-weight: bold; border: 1px solid black;">Kebutuhan Per (Waktu)</td>
 					<td colspan="1" style="width:6%; background-color: yellow; font-weight: bold; border: 1px solid black;">Peruntukan</td>
 					<td colspan="1" style="width:4%; background-color: yellow; font-weight: bold; border: 1px solid black;">Last Order</td>
 				
@@ -412,7 +412,7 @@
 								<td colspan="1" style="width:3%; background-color: yellow; font-weight: bold; border: 1px solid black;">Unit Price</td>
 								<td colspan="1" style="width:3%; background-color: yellow; font-weight: bold; border: 1px solid black;">Amount</td>
 								<td colspan="1" style="width:2%; background-color: yellow; font-weight: bold; border: 1px solid black;">Stock</td>
-								<td colspan="1" style="width:3%; background-color: yellow; font-weight: bold; border: 1px solid black;">Kebutuhan</td>
+								<td colspan="1" style="width:3%; background-color: yellow; font-weight: bold; border: 1px solid black;">Kebutuhan Per (Waktu)</td>
 								<td colspan="1" style="width:6%; background-color: yellow; font-weight: bold; border: 1px solid black;">Peruntukan</td>
 								<td colspan="1" style="width:4%; background-color: yellow; font-weight: bold; border: 1px solid black;">Last Order</td>
 							

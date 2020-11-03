@@ -352,7 +352,7 @@
     </a>
     <ul class="treeview-menu">
       @if(isset($page) && $page == "Investment")<li class="active">@else<li>@endif
-        <a href="{{ url("investment") }}"><i class="fa fa-file-pdf-o"></i>Investment</a>
+        <a href="{{ url("investment") }}"><i class="fa fa-file-pdf-o"></i>Request Investment</a>
       </li>
       @if(isset($page) && $page == "Investment Control")<li class="active">@else<li>@endif
         <a href="{{ url("investment/control") }}"><i class="fa fa-tv"></i><span>Investment Monitoring & Control</span></a>

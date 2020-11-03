@@ -1235,7 +1235,7 @@ class AccountingController extends Controller
 
             $pdf = \App::make('dompdf.wrapper');
             $pdf->getDomPDF()->set_option("enable_php", true);
-            $pdf->setPaper('A4', 'potrait');
+            $pdf->setPaper('A4', 'landscape');
 
             $pdf->loadView('accounting_purchasing.report.report_pr', array(
                 'pr' => $detail_pr,
@@ -1413,7 +1413,7 @@ class AccountingController extends Controller
 
             $pdf = \App::make('dompdf.wrapper');
             $pdf->getDomPDF()->set_option("enable_php", true);
-            $pdf->setPaper('A4', 'potrait');
+            $pdf->setPaper('A4', 'landscape');
 
             $pdf->loadView('accounting_purchasing.report.report_pr', array(
                 'pr' => $detail_pr,
@@ -1483,7 +1483,7 @@ class AccountingController extends Controller
 
             $pdf = \App::make('dompdf.wrapper');
             $pdf->getDomPDF()->set_option("enable_php", true);
-            $pdf->setPaper('A4', 'potrait');
+            $pdf->setPaper('A4', 'landscape');
 
             $pdf->loadView('accounting_purchasing.report.report_pr', array(
                 'pr' => $detail_pr,
@@ -1644,7 +1644,7 @@ class AccountingController extends Controller
 
             $pdf = \App::make('dompdf.wrapper');
             $pdf->getDomPDF()->set_option("enable_php", true);
-            $pdf->setPaper('A4', 'potrait');
+            $pdf->setPaper('A4', 'landscape');
 
             $pdf->loadView('accounting_purchasing.report.report_pr', array(
                 'pr' => $detail_pr,
@@ -1707,7 +1707,7 @@ class AccountingController extends Controller
 
                     $pdf = \App::make('dompdf.wrapper');
                     $pdf->getDomPDF()->set_option("enable_php", true);
-                    $pdf->setPaper('A4', 'potrait');
+                    $pdf->setPaper('A4', 'landscape');
 
                     $pdf->loadView('accounting_purchasing.report.report_pr', array(
                         'pr' => $detail_pr,
@@ -1758,7 +1758,7 @@ class AccountingController extends Controller
 
                     $pdf = \App::make('dompdf.wrapper');
                     $pdf->getDomPDF()->set_option("enable_php", true);
-                    $pdf->setPaper('A4', 'potrait');
+                    $pdf->setPaper('A4', 'landscape');
 
                     $pdf->loadView('accounting_purchasing.report.report_pr', array(
                         'pr' => $detail_pr,
@@ -1793,7 +1793,7 @@ class AccountingController extends Controller
 
                     $pdf = \App::make('dompdf.wrapper');
                     $pdf->getDomPDF()->set_option("enable_php", true);
-                    $pdf->setPaper('A4', 'potrait');
+                    $pdf->setPaper('A4', 'landscape');
 
                     $pdf->loadView('accounting_purchasing.report.report_pr', array(
                         'pr' => $detail_pr,
@@ -1862,7 +1862,7 @@ class AccountingController extends Controller
 
                 $pdf = \App::make('dompdf.wrapper');
                 $pdf->getDomPDF()->set_option("enable_php", true);
-                $pdf->setPaper('A4', 'potrait');
+                $pdf->setPaper('A4', 'landscape');
 
                 $pdf->loadView('accounting_purchasing.report.report_pr', array(
                     'pr' => $detail_pr,
@@ -1897,7 +1897,7 @@ class AccountingController extends Controller
 
                 $pdf = \App::make('dompdf.wrapper');
                 $pdf->getDomPDF()->set_option("enable_php", true);
-                $pdf->setPaper('A4', 'potrait');
+                $pdf->setPaper('A4', 'landscape');
 
                 $pdf->loadView('accounting_purchasing.report.report_pr', array(
                     'pr' => $detail_pr,
@@ -1959,7 +1959,7 @@ class AccountingController extends Controller
 
                 $pdf = \App::make('dompdf.wrapper');
                 $pdf->getDomPDF()->set_option("enable_php", true);
-                $pdf->setPaper('A4', 'potrait');
+                $pdf->setPaper('A4', 'landscape');
 
                 $pdf->loadView('accounting_purchasing.report.report_pr', array(
                     'pr' => $detail_pr,
@@ -1995,7 +1995,7 @@ class AccountingController extends Controller
 
                 $pdf = \App::make('dompdf.wrapper');
                 $pdf->getDomPDF()->set_option("enable_php", true);
-                $pdf->setPaper('A4', 'potrait');
+                $pdf->setPaper('A4', 'landscape');
 
                 $pdf->loadView('accounting_purchasing.report.report_pr', array(
                     'pr' => $detail_pr,
@@ -2335,7 +2335,7 @@ class AccountingController extends Controller
 
             $pdf = \App::make('dompdf.wrapper');
             $pdf->getDomPDF()->set_option("enable_php", true);
-            $pdf->setPaper('A4', 'potrait');
+            $pdf->setPaper('A4', 'landscape');
 
             $pdf->loadView('accounting_purchasing.report.report_pr', array(
                 'pr' => $detail_pr,
@@ -4321,7 +4321,7 @@ public function update_purchase_requisition_po(Request $request)
 
             $pdf = \App::make('dompdf.wrapper');
             $pdf->getDomPDF()->set_option("enable_php", true);
-            $pdf->setPaper('A4', 'potrait');
+            $pdf->setPaper('A4', 'landscape');
 
             $pdf->loadView('accounting_purchasing.report.report_pr', array(
                 'pr' => $detail_pr,
