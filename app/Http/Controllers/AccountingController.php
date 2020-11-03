@@ -777,8 +777,8 @@ class AccountingController extends Controller
             $dept = "Procurement";
             $budgets->where('department', '=', $dept);
         }
-        // else if ($request->get('department') == "Management Information System") {
-        // }
+        else if ($request->get('department') == "Management Information System") {
+        }
         else{
             $dept = $request->get('department');
             $budgets->where('department', '=', $dept);
