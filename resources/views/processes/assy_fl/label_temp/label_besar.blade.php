@@ -100,8 +100,6 @@
 		jumlah();
 
 		defineCustomPaperSize();
-		// printWindow(window, 'Label Besar');
-
 		setTimeout(function() {
 			printWindow(window, 'Label Besar');
 		}, 2000)
