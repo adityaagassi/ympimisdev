@@ -120,7 +120,12 @@
 						if (!items[key]) {
 							items[key] = 0;
 						}
-						items[key] += value.quantity;
+						if(value.movement_type == '102' || value.movement_type == '9S2'){
+							items[key] += -(value.quantity);
+						}
+						else{
+							items[key] += value.quantity;
+						}
 					}
 				});
 
