@@ -5195,7 +5195,7 @@ public function update_purchase_requisition_po(Request $request)
             else if($investment_item->currency == "JPY"){
                 $cur = "¥";
             }
-            return $cur." ".number_format($investment_item->price,0,"",".");
+            return $cur." ".$investment_item->price;
         })
         ->editColumn('amount', function ($investment_item)
         {
@@ -5208,7 +5208,7 @@ public function update_purchase_requisition_po(Request $request)
             else if($investment_item->currency == "JPY"){
                 $cur = "¥";
             }
-            return $cur." ".number_format($investment_item->amount,0,"",".");
+            return $cur." ".$investment_item->amount;
         })
         ->addColumn('action', function ($investment_item)
         {

@@ -560,7 +560,8 @@
             <div class="col-sm-8" align="left">
               <div class="input-group">
                 <span class="input-group-addon ket_harga_item"></span>
-                <input type="text" id="price_item" name="price_item" class="form-control currency" placeholder="Harga" data-number-to-fixed="2" data-number-stepfactor="100" onkeyup="getPersen()">
+                <!-- <input type="text" id="price_item" name="price_item" class="form-control currency" placeholder="Harga" data-number-to-fixed="2" data-number-stepfactor="100" onkeyup="getPersen()"> -->
+                <input type="text" id="price_item" name="price_item" class="form-control" placeholder="Harga" onkeyup="getPersen()">
               </div>
             </div>
           </div>
@@ -570,8 +571,9 @@
             <div class="col-sm-8" align="left">
               <div class="input-group">
                 <span class="input-group-addon ket_harga_item"></span>
-                <input type="text" id="amount_item" name="amount_item" class="form-control currency" placeholder="Total" data-number-to-fixed="2" data-number-stepfactor="100"  disabled required>
+                <!-- <input type="text" id="amount_item" name="amount_item" class="form-control currency" placeholder="Total" data-number-to-fixed="2" data-number-stepfactor="100"  disabled required> -->
 
+                <input type="text" id="amount_item" name="amount_item" class="form-control" placeholder="Total" disabled required>
                 <input type="hidden" id="dollar_item" name="dollar_item" class="form-control currency" placeholder="Dollar">
               </div>
             </div>
@@ -896,7 +898,7 @@
       var currency = $('#currency').val();
       var prc = price.replace(/\D/g, "");
 
-      var hasil = parseInt(qty) * parseInt(prc);
+      var hasil = parseInt(qty) * parseFloat(prc);
 
       if (!isNaN(hasil)) {
           $("#amount_item").val(hasil);
@@ -929,7 +931,7 @@
       var qty = $("#jumlah_item_edit").val();
       var price = $("#price_item_edit").val();
 
-      var hasil = parseInt(qty) * parseInt(price);
+      var hasil = parseInt(qty) * parseFloat(price);
 
       if (!isNaN(hasil)) {
          $("#amount_item_edit").val(hasil);
@@ -947,7 +949,8 @@
           url: "{{ route('admin.gettotalamount') }}?reff_number="+ $("#reff_number").val(),
           method: 'GET',
           success: function(data) {
-            $('#total_amount_beli').text(formatRupiah(data,""));
+            // $('#total_amount_beli').text(formatRupiah(data,""));
+            $('#total_amount_beli').text(data,"");
             total_beli += parseInt(data);
 
 
