@@ -287,7 +287,7 @@
       if (jen2 == "Building") {
         jenis = "B";
       }
-      else if(jen2 == "Machine & Equipment"){
+    else if(jen2 == "Machine and Equipment"){
         jenis = "M";
       }
       else if(jen2 == "Vehicle"){
@@ -505,7 +505,7 @@
         list += "<option></option> ";
         if (isi == "Investment") {
           list += "<option value='Building'>Building</option>";
-          list += "<option value='Machine & Equipment'>Machine & Equipment</option>";
+          list += "<option value='Machine and Equipment'>Machine and Equipment</option>";
           list += "<option value='Vehicle'>Vehicle</option>";          
           list += "<option value='Tools, Jigs & Furniture'>Tools, Jigs & Furniture</option>";
           list += "<option value='Moulding'>Moulding</option>";

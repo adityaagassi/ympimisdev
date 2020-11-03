@@ -136,7 +136,7 @@
             <select class="form-control select2" id="type" data-placeholder='Choose Type' style="width: 100%">
               <option value="">&nbsp;</option>
               <option value="Building" <?php if($investment->type == "Building") echo "selected"; ?>>Building</option>
-              <option value="Machine & Equipment" <?php if($investment->type == "Machine & Equipment") echo "selected"; ?>>Machine & Equipment</option>
+              <option value="Machine and Equipment" <?php if($investment->type == "Machine and Equipment") echo "selected"; ?>>Machine and Equipment</option>
               <option value="Vehicle" <?php if($investment->type == "Vehicle") echo "selected"; ?>>Vehicle</option>
               <option value="Tools, Jigs & Furniture" <?php if($investment->type == "Tools, Jigs & Furniture") echo "selected"; ?>>Tools, Jigs & Furniture</option>
               <option value="Moulding" <?php if($investment->type == "Moulding") echo "selected"; ?>>Moulding</option>
@@ -985,7 +985,7 @@
       if (jen2 == "Building") {
         jenis = "B";
       }
-      else if(jen2 == "Machine & Equipment"){
+      else if(jen2 == "Machine and Equipment"){
         jenis = "M";
       }
       else if(jen2 == "Vehicle"){
@@ -1370,7 +1370,7 @@
         list += "<option></option> ";
         if (isi == "Investment") {
           list += "<option value='Building'>Building</option>";
-          list += "<option value='Machine & Equipment'>Machine & Equipment</option>";
+          list += "<option value='Machine and Equipment'>Machine and Equipment</option>";
           list += "<option value='Vehicle'>Vehicle</option>";          
           list += "<option value='Tools, Jigs & Furniture'>Tools, Jigs & Furniture</option>";
           list += "<option value='Moulding'>Moulding</option>";
