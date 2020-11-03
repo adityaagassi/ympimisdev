@@ -41,8 +41,6 @@
 		day();		
     defineCustomPaperSize();
     printWindow(window, 'Label Besar');
-
-
   });
 	function day() {
 		var models = $('#codemodel').val();

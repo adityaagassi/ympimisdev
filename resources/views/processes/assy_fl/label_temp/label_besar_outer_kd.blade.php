@@ -123,7 +123,7 @@
 		defineCustomPaperSize();
 		setTimeout(function() {
 			printWindow(window, 'Label Besar');
-		}, 2000)
+		}, 3000)
 
 		
 	});

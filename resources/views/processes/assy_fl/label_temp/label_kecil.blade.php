@@ -87,12 +87,11 @@
 <script>
 	jQuery(document).ready(function() {		
 		jan();
-		 // window.print();
-
-		 defineCustomPaperSize();
-		 printWindow(window, 'Label Kecil');
-		 // window.close();
-		});
+		defineCustomPaperSize();
+		setTimeout(function() {
+			printWindow(window, 'Label Kecil');
+		}, 2000)
+	});
 
 	function jan() {
 		var jan = $('#codemodel').val();
