@@ -528,7 +528,8 @@ class GeneralController extends Controller{
 
 		DB::beginTransaction();
 		for ($i=0; $i < count($employee); $i++) {
-			$stock = GeneralShoesStock::where('gender',  $employee[$i]['gender'])
+			$stock = GeneralShoesStock::where('merk',  $employee[$i]['merk'])
+			->where('gender',  $employee[$i]['gender'])
 			->where('size',  $employee[$i]['size'])
 			->first();
 
@@ -538,9 +539,15 @@ class GeneralController extends Controller{
 					$stock->save();
 				}else{
 					DB::rollback();
+
+					$stock = GeneralShoesStock::where('merk',  $employee[$i]['merk'])
+					->where('gender',  $employee[$i]['gender'])
+					->where('size',  $employee[$i]['size'])
+					->first();
+
 					$response = array(
 						'status' => false,
-						'message' => 'Ukuran Sepatu '.$employee[$i]['size'].' untuk '.$employee[$i]['gender'].' stock tidak cukup'
+						'message' => 'Sepatu '.$employee[$i]['merk'].' ukuran '.$employee[$i]['size'].' ('.$employee[$i]['gender'].') stock tidak cukup. Stock tersisa '.$stock->temp_stock
 					);
 					return Response::json($response);
 				}
@@ -548,7 +555,7 @@ class GeneralController extends Controller{
 				DB::rollback();
 				$response = array(
 					'status' => false,
-					'message' => 'Ukuran Sepatu '.$employee[$i]['size'].' untuk '.$employee[$i]['gender'].' tidak ada'
+					'message' => 'Tidak ada Sepatu '.$employee[$i]['merk']. ' ukuran '.$employee[$i]['size'].' ('.$employee[$i]['gender'].')'
 				);
 				return Response::json($response);
 			}			
@@ -575,6 +582,7 @@ class GeneralController extends Controller{
 				$request = new GeneralShoesRequest([
 					'request_id' => $request_id,
 					'employee_id' => $employee[$i]['employee_id'],
+					'merk' => $employee[$i]['merk'],
 					'size' => $employee[$i]['size'],
 					'created_by' => Auth::id()
 				]);
@@ -594,12 +602,14 @@ class GeneralController extends Controller{
 		->where('general_shoes_requests.request_id', $request_id)
 		->select(
 			'employee_syncs.gender',
+			'general_shoes_requests.merk',
 			'general_shoes_requests.size',
 			'users.name',
 			db::raw('COUNT(general_shoes_requests.id) AS qty')
 		)
 		->groupBy(
 			'employee_syncs.gender',
+			'general_shoes_requests.merk',
 			'general_shoes_requests.size',
 			'users.name'
 		)
@@ -626,12 +636,14 @@ class GeneralController extends Controller{
 		->where('general_shoes_requests.request_id', $request_id)
 		->select(
 			'employee_syncs.gender',
+			'general_shoes_requests.merk',
 			'general_shoes_requests.size',
 			'users.name',
 			db::raw('COUNT(general_shoes_requests.id) AS qty')
 		)
 		->groupBy(
 			'employee_syncs.gender',
+			'general_shoes_requests.merk',
 			'general_shoes_requests.size',
 			'users.name'
 		)
@@ -676,9 +688,10 @@ class GeneralController extends Controller{
 		for ($i=0; $i < count($data); $i++) {
 			$gender = $this->writeString('('.$data[$i]->gender.')', 2, ' ');
 			$size = $this->writeString($data[$i]->size, 2, ' ');
-			$qty = $this->writeString($data[$i]->qty, 2, ' ');
+			$qty = $this->writeNumber($data[$i]->qty, 2, ' ');
+			$merk = $this->writeString($data[$i]->merk, 8, ' ');
 
-			$printer->text($gender." Size ".$size." -> ".$qty. " Pasang");
+			$printer->text($merk ." ".$gender." Size ".$size." -> ".$qty. " Pasang");
 			$printer->feed(1);
 
 		}
@@ -709,6 +722,22 @@ class GeneralController extends Controller{
 			}
 		}
 		return strtoupper($text);
+	}
+
+	public function writeNumber($text, $maxLength, $char){
+		$return = "";
+
+		if ($maxLength > 0) {
+
+			$textLength = strlen($text);
+			for ($i = 0; $i < ($maxLength - $textLength); $i++) {
+				$return .= $char;
+			}
+
+			$return .= $text;
+
+		}
+		return strtoupper($return);
 	}
 
 	public function inputSuratDokter(Request $request){
@@ -853,7 +882,7 @@ class GeneralController extends Controller{
 			$general_data->destination = $request->input('newDestination');
 			$general_data->highway_amount = $request->input('newHighwayAmount');
 			$general_data->created_by = Auth::id();
-            $general_data->save();
+			$general_data->save();
 
 			$response = array(
 				'status' => true,
@@ -1025,16 +1054,30 @@ class GeneralController extends Controller{
 
 	public function fetchSafetyShoes(){
 		$data = GeneralShoesStock::get();
-		$max = GeneralShoesStock::max('size');
-		$min = GeneralShoesStock::min('size');
+
+		$resume = GeneralShoesStock::select('size', 'gender', db::raw('sum(quantity) AS quantity'))
+		->groupBy('size', 'gender')
+		->get();
 
 		$response = array(
 			'status' => true,
 			'data' => $data,
-			'max' => $max,
-			'min' => $min
+			'resume' => $resume
 		);
 		return Response::json($response);
+	}
+
+	public function fetchSafetyShoesDetail(Request $request){
+		$data = GeneralShoesStock::where('gender', $request->get('gender'))
+		->where('size', $request->get('size'))
+		->get();
+
+		$response = array(
+			'status' => true,
+			'data' => $data
+		);
+		return Response::json($response);
+
 	}
 
 	public function fetchOnlineTransportationResumeReport(Request $request){
@@ -1069,133 +1112,133 @@ class GeneralController extends Controller{
 			A.highway_amount_total,
 			A.distance_total,
 			A.remark 
-		FROM
+			FROM
 			(
 			SELECT
-				attendance.zona,
-				max( attendance.att_in ) AS att_in,
-				max( attendance.att_out ) AS att_out,
-				max( attendance.remark_in ) AS remark_in,
-				max( attendance.remark_out ) AS remark_out,
-				max( attendance.id_in ) AS id_in,
-				max( attendance.id_out ) AS id_out,
-				attendance.employee_id,
-				attendance.grade,
-				attendance.check_date,
-				attendance.attend_code,
-				max( attendance.attend_count ) AS attend_count,
-				max( attendance.vehicle ) AS vehicle,
-				max( attendance.highway_in ) AS highway_amount_in,
-				max( attendance.highway_out ) AS highway_amount_out,
-				max( attendance.distance_in ) AS distance_in,
-				max( attendance.distance_out ) AS distance_out,
-				max( attendance.origin_in ) AS origin_in,
-				max( attendance.origin_out ) AS origin_out,
-				max( attendance.destination_in ) AS destination_in,
-				max( attendance.destination_out) AS destination_out,
-				max( attendance.highway_in ) + max( attendance.highway_out ) AS highway_amount_total,
-				max( attendance.distance_in ) + max( attendance.distance_out ) AS distance_total,
-				min( attendance.remark ) AS remark 
+			attendance.zona,
+			max( attendance.att_in ) AS att_in,
+			max( attendance.att_out ) AS att_out,
+			max( attendance.remark_in ) AS remark_in,
+			max( attendance.remark_out ) AS remark_out,
+			max( attendance.id_in ) AS id_in,
+			max( attendance.id_out ) AS id_out,
+			attendance.employee_id,
+			attendance.grade,
+			attendance.check_date,
+			attendance.attend_code,
+			max( attendance.attend_count ) AS attend_count,
+			max( attendance.vehicle ) AS vehicle,
+			max( attendance.highway_in ) AS highway_amount_in,
+			max( attendance.highway_out ) AS highway_amount_out,
+			max( attendance.distance_in ) AS distance_in,
+			max( attendance.distance_out ) AS distance_out,
+			max( attendance.origin_in ) AS origin_in,
+			max( attendance.origin_out ) AS origin_out,
+			max( attendance.destination_in ) AS destination_in,
+			max( attendance.destination_out) AS destination_out,
+			max( attendance.highway_in ) + max( attendance.highway_out ) AS highway_amount_total,
+			max( attendance.distance_in ) + max( attendance.distance_out ) AS distance_total,
+			min( attendance.remark ) AS remark 
 			FROM
-				(
-				SELECT
-					zona,
-					highway_attachment AS att_in,
-					0 AS att_out,
-					remark AS remark_in,
-					0 AS remark_out,
-					id AS id_in,
-					0 AS id_out,
-					employee_id,
-					grade,
-					check_date,
-					'hadir' AS attend_code,
-					1 AS attend_count,
-					vehicle,
-					highway_amount AS highway_in,
-					0 AS highway_out,
-					distance AS distance_in,
-					0 AS distance_out,
-					origin AS origin_in,
-					0 AS origin_out,
-					destination AS destination_in,
-					0 AS destination_out,
-					remark 
-				FROM
-					`general_transportations` 
-				WHERE
-					DATE_FORMAT( check_date, '%Y-%m' ) = '".$month."' 
-					AND remark = 1 
-					AND attend_code = 'in' UNION ALL
-				SELECT
-					zona,
-					0 AS att_in,
-					highway_attachment AS att_out,
-					0 AS remark_in,
-					remark AS remark_out,
-					0 AS id_in,
-					id AS id_out,
-					employee_id,
-					grade,
-					check_date,
-					'hadir' AS attend_code,
-					1 AS attend_count,
-					vehicle,
-					0 AS highway_in,
-					highway_amount AS highway_out,
-					0 AS distance_in,
-					distance AS distance_out,
-					0 AS origin_in,
-					origin AS origin_out,
-					0 AS destination_in,
-					destination AS destination_out,
-					remark 
-				FROM
-					`general_transportations` 
-				WHERE
-					DATE_FORMAT( check_date, '%Y-%m' ) = '".$month."' 
-					AND remark = 1 
-					AND attend_code = 'out' UNION ALL
-				SELECT
-					zona,
-					0 AS att_in,
-					0 AS att_out,
-					remark AS remark_in,
-					0 AS remark_out,
-					id AS id_in,
-					0 AS id_out,
-					employee_id,
-					grade,
-					check_date,
-					attend_code,
-					0 AS attend_count,
-					0 AS vehicle,
-					0 AS highway_in,
-					0 AS highway_out,
-					0 AS distance_in,
-					0 AS distance_out,
-					0 AS origin_in,
-					0 AS origin_out,
-					0 AS destination_in,
-					0 AS destination_out,
-					remark 
-				FROM
-					`general_transportations` 
-				WHERE
-					DATE_FORMAT( check_date, '%Y-%m' ) = '".$month."' 
-					AND remark = 1 
-					AND attend_code <> 'out' 
-					AND attend_code <> 'in' 
-				) AS attendance 
+			(
+			SELECT
+			zona,
+			highway_attachment AS att_in,
+			0 AS att_out,
+			remark AS remark_in,
+			0 AS remark_out,
+			id AS id_in,
+			0 AS id_out,
+			employee_id,
+			grade,
+			check_date,
+			'hadir' AS attend_code,
+			1 AS attend_count,
+			vehicle,
+			highway_amount AS highway_in,
+			0 AS highway_out,
+			distance AS distance_in,
+			0 AS distance_out,
+			origin AS origin_in,
+			0 AS origin_out,
+			destination AS destination_in,
+			0 AS destination_out,
+			remark 
+			FROM
+			`general_transportations` 
+			WHERE
+			DATE_FORMAT( check_date, '%Y-%m' ) = '".$month."' 
+			AND remark = 1 
+			AND attend_code = 'in' UNION ALL
+			SELECT
+			zona,
+			0 AS att_in,
+			highway_attachment AS att_out,
+			0 AS remark_in,
+			remark AS remark_out,
+			0 AS id_in,
+			id AS id_out,
+			employee_id,
+			grade,
+			check_date,
+			'hadir' AS attend_code,
+			1 AS attend_count,
+			vehicle,
+			0 AS highway_in,
+			highway_amount AS highway_out,
+			0 AS distance_in,
+			distance AS distance_out,
+			0 AS origin_in,
+			origin AS origin_out,
+			0 AS destination_in,
+			destination AS destination_out,
+			remark 
+			FROM
+			`general_transportations` 
+			WHERE
+			DATE_FORMAT( check_date, '%Y-%m' ) = '".$month."' 
+			AND remark = 1 
+			AND attend_code = 'out' UNION ALL
+			SELECT
+			zona,
+			0 AS att_in,
+			0 AS att_out,
+			remark AS remark_in,
+			0 AS remark_out,
+			id AS id_in,
+			0 AS id_out,
+			employee_id,
+			grade,
+			check_date,
+			attend_code,
+			0 AS attend_count,
+			0 AS vehicle,
+			0 AS highway_in,
+			0 AS highway_out,
+			0 AS distance_in,
+			0 AS distance_out,
+			0 AS origin_in,
+			0 AS origin_out,
+			0 AS destination_in,
+			0 AS destination_out,
+			remark 
+			FROM
+			`general_transportations` 
+			WHERE
+			DATE_FORMAT( check_date, '%Y-%m' ) = '".$month."' 
+			AND remark = 1 
+			AND attend_code <> 'out' 
+			AND attend_code <> 'in' 
+			) AS attendance 
 			GROUP BY
-				zona,
-				employee_id,
-				grade,
-				check_date,
-				attend_code 
+			zona,
+			employee_id,
+			grade,
+			check_date,
+			attend_code 
 			) AS A
 			LEFT JOIN employee_syncs ON A.employee_id = employee_syncs.employee_id 
-		ORDER BY
+			ORDER BY
 			A.employee_id ASC,
 			A.check_date ASC");
 
@@ -1346,242 +1389,242 @@ class GeneralController extends Controller{
 
 		$transportations = db::select("
 			SELECT
-				calendar.week_date AS check_date,
-				calendar.remark AS h,
-				COALESCE ( attendance.zona, 0 ) AS zona,
-				COALESCE ( attendance.att_in, 0 ) AS att_in,
-				COALESCE ( attendance.att_out, 0 ) AS att_out,
-				COALESCE ( attendance.remark_in, 0 ) AS remark_in,
-				COALESCE ( attendance.remark_out, 0 ) AS remark_out,
-				COALESCE ( attendance.id_in, 0 ) AS id_in,
-				COALESCE ( attendance.id_out, 0 ) AS id_out,
-				COALESCE ( attendance.employee_id, 0 ) AS employee_id,
-				COALESCE ( attendance.grade, 0 ) AS grade,
-				COALESCE ( attendance.attend_code, 0 ) AS attend_code,
-				COALESCE ( attendance.vehicle, 0 ) AS vehicle,
-				COALESCE ( attendance.origin_in, 0 ) AS origin_in,
-				COALESCE ( attendance.destination_in, 0 ) AS destination_in,
-				COALESCE ( attendance.origin_out, 0 ) AS origin_out,
-				COALESCE ( attendance.destination_out, 0 ) AS destination_out,
-				COALESCE ( attendance.highway_amount_in, 0 ) AS highway_amount_in,
-				COALESCE ( attendance.highway_amount_out, 0 ) AS highway_amount_out,
-				COALESCE ( attendance.distance_in, 0 ) AS distance_in,
-				COALESCE ( attendance.distance_out, 0 ) AS distance_out,
-				COALESCE ( attendance.highway_amount_total, 0 ) AS highway_amount_total,
-				COALESCE ( attendance.distance_total, 0 ) AS distance_total,
-				attendance.remark AS remark 
+			calendar.week_date AS check_date,
+			calendar.remark AS h,
+			COALESCE ( attendance.zona, 0 ) AS zona,
+			COALESCE ( attendance.att_in, 0 ) AS att_in,
+			COALESCE ( attendance.att_out, 0 ) AS att_out,
+			COALESCE ( attendance.remark_in, 0 ) AS remark_in,
+			COALESCE ( attendance.remark_out, 0 ) AS remark_out,
+			COALESCE ( attendance.id_in, 0 ) AS id_in,
+			COALESCE ( attendance.id_out, 0 ) AS id_out,
+			COALESCE ( attendance.employee_id, 0 ) AS employee_id,
+			COALESCE ( attendance.grade, 0 ) AS grade,
+			COALESCE ( attendance.attend_code, 0 ) AS attend_code,
+			COALESCE ( attendance.vehicle, 0 ) AS vehicle,
+			COALESCE ( attendance.origin_in, 0 ) AS origin_in,
+			COALESCE ( attendance.destination_in, 0 ) AS destination_in,
+			COALESCE ( attendance.origin_out, 0 ) AS origin_out,
+			COALESCE ( attendance.destination_out, 0 ) AS destination_out,
+			COALESCE ( attendance.highway_amount_in, 0 ) AS highway_amount_in,
+			COALESCE ( attendance.highway_amount_out, 0 ) AS highway_amount_out,
+			COALESCE ( attendance.distance_in, 0 ) AS distance_in,
+			COALESCE ( attendance.distance_out, 0 ) AS distance_out,
+			COALESCE ( attendance.highway_amount_total, 0 ) AS highway_amount_total,
+			COALESCE ( attendance.distance_total, 0 ) AS distance_total,
+			attendance.remark AS remark 
 			FROM
-				( SELECT * FROM weekly_calendars WHERE week_date >= '".$date_from."' AND week_date <= '".$date_to."' ) AS calendar
-				LEFT JOIN (
-				SELECT
-					zona,
-					max( att_in ) AS att_in,
-					max( att_out ) AS att_out,
-					max( remark_in ) AS remark_in,
-					max( remark_out ) AS remark_out,
-					max( id_in ) AS id_in,
-					max( id_out ) AS id_out,
-					employee_id,
-					grade,
-					check_date,
-					attend_code,
-					max( vehicle ) AS vehicle,
-					max( origin_in ) AS origin_in,
-					max( destination_in ) AS destination_in,
-					max( origin_out ) AS origin_out,
-					max( destination_out ) AS destination_out,
-					max( highway_in ) AS highway_amount_in,
-					max( highway_out ) AS highway_amount_out,
-					max( distance_in ) AS distance_in,
-					max( distance_out ) AS distance_out,
-					max( highway_in ) + max( highway_out ) AS highway_amount_total,
-					max( distance_in ) + max( distance_out ) AS distance_total,
-					min( remark ) AS remark 
-				FROM
-					(
-					SELECT
-						zona,
-						highway_attachment AS att_in,
-						0 AS att_out,
-						remark AS remark_in,
-						0 AS remark_out,
-						id AS id_in,
-						0 AS id_out,
-						employee_id,
-						grade,
-						check_date,
-						'hadir' AS attend_code,
-						vehicle,
-						origin as origin_in,
-						destination as destination_in,
-						0 AS origin_out,
-						0 AS destination_out,
-						highway_amount AS highway_in,
-						0 AS highway_out,
-						distance AS distance_in,
-						0 AS distance_out,
-						remark 
-					FROM
-						`general_transportations` 
-					WHERE
-						employee_id = '".Auth::user()->username."' 
-						AND check_date >= '".$date_from."' 
-						AND check_date <= '".$date_to."' 
-						AND attend_code = 'in' UNION ALL
-					SELECT
-						zona,
-						0 AS att_in,
-						highway_attachment AS att_out,
-						0 AS remark_in,
-						remark AS remark_out,
-						0 AS id_in,
-						id AS id_out,
-						employee_id,
-						grade,
-						check_date,
-						'hadir' AS attend_code,
-						vehicle,
-						0 AS origin_in,
-						0 AS destination_in,
-						origin as origin_out,
-						destination as destination_out,
-						0 AS highway_in,
-						highway_amount AS highway_out,
-						0 AS distance_in,
-						distance AS distance_out,
-						remark 
-					FROM
-						`general_transportations` 
-					WHERE
-						employee_id = '".Auth::user()->username."' 
-						AND check_date >= '".$date_from."' 
-						AND check_date <= '".$date_to."' 
-						AND attend_code = 'out' UNION ALL
-					SELECT
-						zona,
-						0 AS att_in,
-						0 AS att_out,
-						remark AS remark_in,
-						0 AS remark_out,
-						id AS id_in,
-						0 AS id_out,
-						employee_id,
-						grade,
-						check_date,
-						attend_code,
-						0 AS vehicle,
-						0 AS origin_in,
-						0 AS destination_in,
-						0 AS origin_out,
-						0 AS destination_out,
-						0 AS highway_in,
-						0 AS highway_out,
-						0 AS distance_in,
-						0 AS distance_out,
-						remark 
-					FROM
-						`general_transportations` 
-					WHERE
-						employee_id = '".Auth::user()->username."' 
-						AND check_date >= '".$date_from."' 
-						AND check_date <= '".$date_to."' 
-						AND attend_code <> 'out' 
-						AND attend_code <> 'in' 
-					) AS A 
-				GROUP BY
-					zona,
-					employee_id,
-					grade,
-					check_date,
-					attend_code 
-				) AS attendance ON calendar.week_date = attendance.check_date 
+			( SELECT * FROM weekly_calendars WHERE week_date >= '".$date_from."' AND week_date <= '".$date_to."' ) AS calendar
+			LEFT JOIN (
+			SELECT
+			zona,
+			max( att_in ) AS att_in,
+			max( att_out ) AS att_out,
+			max( remark_in ) AS remark_in,
+			max( remark_out ) AS remark_out,
+			max( id_in ) AS id_in,
+			max( id_out ) AS id_out,
+			employee_id,
+			grade,
+			check_date,
+			attend_code,
+			max( vehicle ) AS vehicle,
+			max( origin_in ) AS origin_in,
+			max( destination_in ) AS destination_in,
+			max( origin_out ) AS origin_out,
+			max( destination_out ) AS destination_out,
+			max( highway_in ) AS highway_amount_in,
+			max( highway_out ) AS highway_amount_out,
+			max( distance_in ) AS distance_in,
+			max( distance_out ) AS distance_out,
+			max( highway_in ) + max( highway_out ) AS highway_amount_total,
+			max( distance_in ) + max( distance_out ) AS distance_total,
+			min( remark ) AS remark 
+			FROM
+			(
+			SELECT
+			zona,
+			highway_attachment AS att_in,
+			0 AS att_out,
+			remark AS remark_in,
+			0 AS remark_out,
+			id AS id_in,
+			0 AS id_out,
+			employee_id,
+			grade,
+			check_date,
+			'hadir' AS attend_code,
+			vehicle,
+			origin as origin_in,
+			destination as destination_in,
+			0 AS origin_out,
+			0 AS destination_out,
+			highway_amount AS highway_in,
+			0 AS highway_out,
+			distance AS distance_in,
+			0 AS distance_out,
+			remark 
+			FROM
+			`general_transportations` 
+			WHERE
+			employee_id = '".Auth::user()->username."' 
+			AND check_date >= '".$date_from."' 
+			AND check_date <= '".$date_to."' 
+			AND attend_code = 'in' UNION ALL
+			SELECT
+			zona,
+			0 AS att_in,
+			highway_attachment AS att_out,
+			0 AS remark_in,
+			remark AS remark_out,
+			0 AS id_in,
+			id AS id_out,
+			employee_id,
+			grade,
+			check_date,
+			'hadir' AS attend_code,
+			vehicle,
+			0 AS origin_in,
+			0 AS destination_in,
+			origin as origin_out,
+			destination as destination_out,
+			0 AS highway_in,
+			highway_amount AS highway_out,
+			0 AS distance_in,
+			distance AS distance_out,
+			remark 
+			FROM
+			`general_transportations` 
+			WHERE
+			employee_id = '".Auth::user()->username."' 
+			AND check_date >= '".$date_from."' 
+			AND check_date <= '".$date_to."' 
+			AND attend_code = 'out' UNION ALL
+			SELECT
+			zona,
+			0 AS att_in,
+			0 AS att_out,
+			remark AS remark_in,
+			0 AS remark_out,
+			id AS id_in,
+			0 AS id_out,
+			employee_id,
+			grade,
+			check_date,
+			attend_code,
+			0 AS vehicle,
+			0 AS origin_in,
+			0 AS destination_in,
+			0 AS origin_out,
+			0 AS destination_out,
+			0 AS highway_in,
+			0 AS highway_out,
+			0 AS distance_in,
+			0 AS distance_out,
+			remark 
+			FROM
+			`general_transportations` 
+			WHERE
+			employee_id = '".Auth::user()->username."' 
+			AND check_date >= '".$date_from."' 
+			AND check_date <= '".$date_to."' 
+			AND attend_code <> 'out' 
+			AND attend_code <> 'in' 
+			) AS A 
+			GROUP BY
+			zona,
+			employee_id,
+			grade,
+			check_date,
+			attend_code 
+			) AS attendance ON calendar.week_date = attendance.check_date 
 			ORDER BY
-				calendar.week_date ASC");
+			calendar.week_date ASC");
 
-			$datas = array();
+$datas = array();
 
-			foreach ($transportations as $transportation) {
-				array_push($datas, 
-					[
-						"h" => $transportation->h,
-						"zona" => $transportation->zona,
-						"att_in" => asset('files/general_transportation/'.$transportation->att_in),
-						"att_out" => asset('files/general_transportation/'.$transportation->att_out),
-						"remark_in" => $transportation->remark_in,
-						"remark_out" => $transportation->remark_out,
-						"id_in" => $transportation->id_in,
-						"id_out" => $transportation->id_out,
-						"employee_id" => $transportation->employee_id,
-						"grade" => $transportation->grade,
-						"check_date" => $transportation->check_date,
-						"attend_code" => $transportation->attend_code,
-						"origin_in" => $transportation->origin_in,
-						"destination_in" => $transportation->destination_in,
-						"origin_out" => $transportation->origin_out,
-						"destination_out" => $transportation->destination_out,
-						"vehicle" => $transportation->vehicle,
-						"highway_amount_in" => $transportation->highway_amount_in,
-						"highway_amount_out" => $transportation->highway_amount_out,
-						"distance_in" => $transportation->distance_in,
-						"distance_out" => $transportation->distance_out,
-						"highway_amount_total" => $transportation->highway_amount_total,
-						"distance_total" => $transportation->distance_total,
-						"remark" => $transportation->remark
-					]);
+foreach ($transportations as $transportation) {
+	array_push($datas, 
+		[
+			"h" => $transportation->h,
+			"zona" => $transportation->zona,
+			"att_in" => asset('files/general_transportation/'.$transportation->att_in),
+			"att_out" => asset('files/general_transportation/'.$transportation->att_out),
+			"remark_in" => $transportation->remark_in,
+			"remark_out" => $transportation->remark_out,
+			"id_in" => $transportation->id_in,
+			"id_out" => $transportation->id_out,
+			"employee_id" => $transportation->employee_id,
+			"grade" => $transportation->grade,
+			"check_date" => $transportation->check_date,
+			"attend_code" => $transportation->attend_code,
+			"origin_in" => $transportation->origin_in,
+			"destination_in" => $transportation->destination_in,
+			"origin_out" => $transportation->origin_out,
+			"destination_out" => $transportation->destination_out,
+			"vehicle" => $transportation->vehicle,
+			"highway_amount_in" => $transportation->highway_amount_in,
+			"highway_amount_out" => $transportation->highway_amount_out,
+			"distance_in" => $transportation->distance_in,
+			"distance_out" => $transportation->distance_out,
+			"highway_amount_total" => $transportation->highway_amount_total,
+			"distance_total" => $transportation->distance_total,
+			"remark" => $transportation->remark
+		]);
 
-			}
+}
 
-			$response = array(
-				'status' => true,
-				'transportations' => $datas
-			);
-			return Response::json($response);
-			}
+$response = array(
+	'status' => true,
+	'transportations' => $datas
+);
+return Response::json($response);
+}
 
-	public function editOnlineTransportation(Request $request)
-	{
-		try {
+public function editOnlineTransportation(Request $request)
+{
+	try {
 
-			$datas = GeneralTransportation::where('id',$request->get('id'))->first();
-			$response = array(
-				'status' => true,
-				'datas' => $datas
-			);
-			return Response::json($response);
-		} catch (\Exception $e) {
-			$response = array(
-				'status' => false,
-				'message' => $e->getMessage()
-			);
-			return Response::json($response);
-		}
+		$datas = GeneralTransportation::where('id',$request->get('id'))->first();
+		$response = array(
+			'status' => true,
+			'datas' => $datas
+		);
+		return Response::json($response);
+	} catch (\Exception $e) {
+		$response = array(
+			'status' => false,
+			'message' => $e->getMessage()
+		);
+		return Response::json($response);
 	}
+}
 
-	public function updateOnlineTransportation(Request $request)
-	{
-		try {
+public function updateOnlineTransportation(Request $request)
+{
+	try {
 
-			$datas = GeneralTransportation::where('id',$request->get('id_transport'))->first();
-			$datas->check_date = $request->get('editDate');
-			$datas->distance = $request->get('editDistance');
-			$datas->origin = $request->get('editOrigin');
-			$datas->destination = $request->get('editDestination');
-			$datas->highway_amount = $request->get('editHighwayAmount');
-			$datas->save();
+		$datas = GeneralTransportation::where('id',$request->get('id_transport'))->first();
+		$datas->check_date = $request->get('editDate');
+		$datas->distance = $request->get('editDistance');
+		$datas->origin = $request->get('editOrigin');
+		$datas->destination = $request->get('editDestination');
+		$datas->highway_amount = $request->get('editHighwayAmount');
+		$datas->save();
 
-			$response = array(
-				'status' => true,
-				'datas' => $datas
-			);
-			return Response::json($response);
-		} catch (\Exception $e) {
-			$response = array(
-				'status' => false,
-				'message' => $e->getMessage()
-			);
-			return Response::json($response);
-		}
+		$response = array(
+			'status' => true,
+			'datas' => $datas
+		);
+		return Response::json($response);
+	} catch (\Exception $e) {
+		$response = array(
+			'status' => false,
+			'message' => $e->getMessage()
+		);
+		return Response::json($response);
 	}
+}
 
 public function indexOmiVisitor(){
 	$title = 'Koyami Visitor';

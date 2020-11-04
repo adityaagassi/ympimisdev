@@ -63,15 +63,22 @@
 	</div>
 
 	<div class="row">
+		@if($user)
+		@if($user->department == 'Management Information System' || $user->group == 'Standardization')
 		<div class="col-xs-12 pull-right" style="padding-left: 0;">
 			<button class="btn btn-success pull-right" style="margin-left: 5px; width: 16%;" data-toggle="modal" data-target="#modalCreate"><i class="fa fa-plus"></i>&nbsp;Add Stock</button>
 		</div>
+		@endif
+		@endif
 
-		<div class="col-xs-8" style="margin-top: 1%; margin-bottom: 1%;">
-			<div id="container"></div>
+		<div class="col-xs-6" style="margin-top: 1%; margin-bottom: 1%;">
+			<div id="container1"></div>
 		</div>
-		<div class="col-xs-4" style="margin-top: 1%; margin-bottom: 1%;">
+		<div class="col-xs-3" style="margin-top: 1%; margin-bottom: 1%;">
 			<div id="container2"></div>
+		</div>
+		<div class="col-xs-3" style="margin-top: 1%; margin-bottom: 1%;">
+			<div id="container3"></div>
 		</div>
 
 		<div class="col-xs-10">
@@ -91,15 +98,28 @@
 					</tr>
 				</thead>
 				<tbody id="tableRequestBody">
-
 				</tbody>
 			</table>
 		</div>
 
 		<div class="col-xs-2" style="padding-left: 0;">
+			@if($user)
+			@if(strpos(strtolower($user->position), 'operator') !== false || strpos(strtolower($user->position), 'Sub') !== false) 
+			
+			@else
 			<button data-toggle="modal" class="btn btn-primary" style="width: 100%; margin-bottom: 5px;" ata-toggle="modal" data-target="#modalRequest"><i class="fa fa-file-text-o"></i>&nbsp;&nbsp;&nbsp;Create Request</button>
+			@endif
+
+
+			@if(!strpos(strtolower($user->position), 'operator'))
+			@if($user->department == 'Management Information System' || ($user->section == 'Warehouse' && ($user->assignment == 'FRM' || $user->assignment == 'LDR')))
 			<button data-toggle="modal" data-target="#modalScan" class="btn btn-success" style="width: 100%; margin-bottom: 5px;"><i class="fa fa-camera"></i>&nbsp;&nbsp;&nbsp;Scan Request</button>
-			<a href="{{ url('index/std_control/safety_shoes_log') }}" class="btn btn-info" style="width: 100%; margin-bottom: 5px;"><i class="fa fa-list-ul"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Safety Shoes Log</a>
+			@endif
+			@endif
+
+			@endif
+
+			<a href="{{ url('index/std_control/safety_shoes_log') }}" target="_blank" class="btn btn-info" style="width: 100%; margin-bottom: 5px;"><i class="fa fa-list-ul"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Safety Shoes Log</a>
 
 		</div>
 	</div>
@@ -124,8 +144,8 @@
 										<th style="width: 1%;">NIK</th>
 										<th style="width: 4%;">Nama</th>
 										<th style="width: 1%;">Gender</th>
-										<th style="width: 1%;">Bagian</th>
-										<th style="width: 1%;">Size</th>
+										<th style="width: 4%;">Bagian</th>
+										<th style="width: 4%;">Sepatu</th>
 										<th style="width: 1%;">Qty</th>
 										<th style="width: 1%;">Status</th>
 										<th style="width: 1%;">#</th>
@@ -135,8 +155,8 @@
 								</tbody>
 							</table>
 						</div>
-						<div class="col-xs-12">
-							<div class="col-xs-4" style="padding-left: 0px; padding-right: 0px;">
+						<div class="col-xs-8 col-xs-offset-2">
+							<div class="col-xs-6" style="padding-left: 0px; padding-right: 0px;">
 								<select class="form-control select4" name="addEmp" id="addEmp" data-placeholder="Pilih Karyawan" style="width: 100%;">
 									<option></option>
 									@foreach($employees as $employee)
@@ -145,27 +165,18 @@
 								</select>
 							</div>
 
-							<div class="col-xs-2" style="padding-left: 1%; padding-right: 0px;">
-								<select class="form-control select4" name="addSize" id="addSize" data-placeholder="Pilih Ukuran" style="width: 100%;">
-									<option></option>
-									<option value="35">35</option>
-									<option value="36">36</option>
-									<option value="37">37</option>
-									<option value="38">38</option>
-									<option value="39">39</option>
-									<option value="40">40</option>
-									<option value="41">41</option>
-									<option value="42">42</option>
-									<option value="43">43</option>
-									<option value="44">44</option>
-									<option value="45">45</option>
-									<option value="46">46</option>
-									<option value="47">47</option>
-									<option value="48">48</option>									
+							<div class="col-xs-6" style="padding-left: 1%; padding-right: 0px;">
+								<select class="form-control select4" name="addSizeUk" id="addSizeUk" data-placeholder="Pilih Sepatu" style="width: 100%;">
 								</select>
 							</div>
+						</div>
+						<div class="col-xs-8 col-xs-offset-2" style="margin-top: 1%;">
 
-							<div class="col-xs-2" style="padding-left: 1%; padding-right: 0px;">
+							<div class="col-xs-3" style="padding-left: 0%; padding-right: 0px;">
+								<input style="text-align: center;" class="form-control" type="text" id="addSize" name="addSize" placeholder="Ukuran IND" readonly>
+							</div>
+							
+							<div class="col-xs-3" style="padding-left: 1%; padding-right: 0px;">
 								<select class="form-control select4" name="addStatus" id="addStatus" data-placeholder="Pilih Status" style="width: 100%;">
 									<option></option>
 									<option value="Simpan">Simpan</option>
@@ -173,11 +184,11 @@
 								</select>
 							</div>
 
-							<div class="col-xs-2" style="padding-left: 1%; padding-right: 0px;">
+							<div class="col-xs-3" style="padding-left: 1%; padding-right: 0px;">
 								<input style="text-align: center;" class="form-control" type="number" min="1" value="1" id="addQty" name="addQty" placeholder="input Qty">
 							</div>
 
-							<div class="col-xs-2" style="padding-left: 1%; padding-right: 0px;">
+							<div class="col-xs-3" style="padding-left: 1%; padding-right: 0px;">
 								<a class="btn btn-success" style="width: 100%;" onclick="addStock()">Tambahkan</a>
 							</div>
 						</div>
@@ -228,7 +239,7 @@
 										<th style="width: 4%;">Nama</th>
 										<th style="width: 3%;">Gender</th>
 										<th style="width: 3%;">Bagian</th>
-										<th style="width: 3%;">Size</th>
+										<th style="width: 3%;">Shoes</th>
 										<th style="width: 1%;">#</th>
 									</tr>
 								</thead>
@@ -241,31 +252,19 @@
 								<select class="form-control select3" name="reqEmp" id="reqEmp" data-placeholder="Pilih Karyawan" style="width: 100%;">
 									<option></option>
 									@foreach($employees as $employee)
-									<option value="{{ $employee->employee_id }}_{{ $employee->name }}_{{ $employee->gender }}_{{ $employee->group }}">{{ $employee->employee_id }} - {{ $employee->name }}</option>
+									@if($employee->end_date == null)
+									<option value="{{ $employee->employee_id }}_{{ $employee->name }}_{{ $employee->gender }}_{{ $employee->group }}_{{ $employee->department }}">{{ $employee->employee_id }} - {{ $employee->name }}</option>
+									@endif
 									@endforeach								
 								</select>
 							</div>
 
-							<div class="col-xs-3" style="padding-left: 1%; padding-right: 0px;">
-								<select class="form-control select3" name="reqSize" id="reqSize" data-placeholder="Pilih Ukuran" style="width: 100%;">
-									<option></option>
-									<option value="35">35</option>
-									<option value="36">36</option>
-									<option value="37">37</option>
-									<option value="38">38</option>
-									<option value="39">39</option>
-									<option value="40">40</option>
-									<option value="41">41</option>
-									<option value="42">42</option>
-									<option value="43">43</option>
-									<option value="44">44</option>
-									<option value="45">45</option>
-									<option value="46">46</option>
-									<option value="47">47</option>
-									<option value="48">48</option>									
+							<div class="col-xs-5" style="padding-left: 1%; padding-right: 0px;">
+								<select class="form-control select3" name="reqSizeUk" id="reqSizeUk" data-placeholder="Pilih Sepatu" style="width: 100%;">
 								</select>
 							</div>
-							<div class="col-xs-3" style="padding-left: 1%; padding-right: 0px;">
+
+							<div class="col-xs-2" style="padding-left: 1%; padding-right: 0px;">
 								<a class="btn btn-success" style="width: 100%;" onclick="addReq()">Tambahkan</a>
 							</div>
 						</div>
@@ -336,6 +335,68 @@
 	</div>
 </div>
 
+<div class="modal fade" id="modalDetail">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<center>
+					<span id="detail_request_id" style="font-weight: bold; font-size: 1.5vw;"></span>
+					<br>
+					<span id="detail_requester" style="font-weight: bold; font-size: 1vw;"></span>
+				</center>
+				<hr>
+				<div class="modal-body table-responsive no-padding" style="min-height: 100px; padding-bottom: 5px;">
+					<div class="col-xs-12" style="padding-bottom: 5px;">
+						<table class="table table-hover table-bordered table-striped" id="tableDetailRequest">
+							<thead style="background-color: rgba(126,86,134,.7);">
+								<tr>
+									<th style="width: 1%;">Employee ID</th>
+									<th style="width: 4%;">Name</th>
+									<th style="width: 1%;">Gender</th>
+									<th style="width: 5%;">Department</th>
+									<th style="width: 4%;">Section</th>
+									<th style="width: 4%;">Group</th>
+									<th style="width: 1%;">Size</th>
+								</tr>
+							</thead>
+							<tbody id="tableDetailRequestBody">
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalStock">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<center>
+					<span id="detail_stock" style="font-weight: bold; font-size: 1.5vw;"></span>
+				</center>
+				<hr>
+				<div class="modal-body table-responsive no-padding" style="min-height: 100px; padding-bottom: 5px;">
+					<div class="col-xs-12" style="padding-bottom: 5px;">
+						<table class="table table-hover table-bordered table-striped" id="tableDetailStock">
+							<thead style="background-color: rgba(126,86,134,.7);">
+								<tr>
+									<th style="width: 4%;">Merk</th>
+									<th style="width: 1%;">Gender</th>
+									<th style="width: 2%;">Size</th>
+									<th style="width: 2%;">Size</th>
+								</tr>
+							</thead>
+							<tbody id="tableDetailStockBody">
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
 
 
@@ -368,6 +429,48 @@
 	var stock = [];
 	var employee = [];
 	var vdo;
+	var shoesName = '';
+
+
+	var sizeChart = [
+	{type : 'Cheetah', gender : 'L', uk : '4', ind:'37'},
+	{type : 'Cheetah', gender : 'L', uk : '5', ind:'38'},
+	{type : 'Cheetah', gender : 'L', uk : '6', ind:'39-40'},
+	{type : 'Cheetah', gender : 'L', uk : '7', ind:'41'},
+	{type : 'Cheetah', gender : 'L', uk : '8', ind:'42'},
+	{type : 'Cheetah', gender : 'L', uk : '9', ind:'43'},
+	{type : 'Cheetah', gender : 'L', uk : '10', ind:'44-45'},
+	{type : 'Cheetah', gender : 'L', uk : '11', ind:'46'},
+	{type : 'Cheetah', gender : 'L', uk : '12', ind:'47'},
+	{type : 'Kings', gender : 'L', uk : '3', ind:'36'},
+	{type : 'Kings', gender : 'L', uk : '4', ind:'37'},
+	{type : 'Kings', gender : 'L', uk : '5', ind:'38'},
+	{type : 'Kings', gender : 'L', uk : '6', ind:'39-40'},
+	{type : 'Kings', gender : 'L', uk : '7', ind:'41'},
+	{type : 'Kings', gender : 'L', uk : '8', ind:'42'},
+	{type : 'Kings', gender : 'L', uk : '9', ind:'43'},
+	{type : 'Kings', gender : 'L', uk : '10', ind:'44-45'},
+	{type : 'Kings', gender : 'L', uk : '11', ind:'46'},
+	{type : 'Krisbow', gender : 'L', uk : '5', ind:'38'},
+	{type : 'Krisbow', gender : 'L', uk : '6', ind:'39'},
+	{type : 'Krisbow', gender : 'L', uk : '6.5', ind:'40'},
+	{type : 'Krisbow', gender : 'L', uk : '7', ind:'41'},
+	{type : 'Krisbow', gender : 'L', uk : '8', ind:'42'},
+	{type : 'Krisbow', gender : 'L', uk : '9', ind:'43'},
+	{type : 'Krisbow', gender : 'L', uk : '10', ind:'44'},
+	{type : 'Cheetah', gender : 'P', uk : '2.5', ind:'35'},
+	{type : 'Cheetah', gender : 'P', uk : '3.5', ind:'36'},
+	{type : 'Cheetah', gender : 'P', uk : '4', ind:'37'},
+	{type : 'Cheetah', gender : 'P', uk : '5', ind:'38'},
+	{type : 'Cheetah', gender : 'P', uk : '6', ind:'39'},
+	{type : 'Cheetah', gender : 'P', uk : '6.5', ind:'40'},
+	{type : 'Kings', gender : 'P', uk : '3', ind:'35'},
+	{type : 'Kings', gender : 'P', uk : '4', ind:'36'},
+	{type : 'Kings', gender : 'P', uk : '5', ind:'37'},
+	{type : 'Kings', gender : 'P', uk : '6', ind:'38'},
+	{type : 'Kings', gender : 'P', uk : '7', ind:'39'},
+	{type : 'Kings', gender : 'P', uk : '8', ind:'40'},
+	];
 
 	function stopScan() {
 		$('#modalScan').modal('hide');
@@ -384,7 +487,6 @@
 		vdo.src = "";
 		vdo.srcObject.getTracks()[0].stop();
 	}
-
 
 	$('#modalScan').on('shown.bs.modal', function(){
 		showCheck('123');
@@ -544,14 +646,16 @@
 		employee = [];
 		$('#tableAddStockBody').html('');
 		$("#addEmp").prop('selectedIndex', 0).change();			
-		$("#addSize").prop('selectedIndex', 0).change();			
+		$("#addSize").val('');			
+		$("#addSizeUk").prop('selectedIndex', 0).change();			
 		$("#addStatus").prop('selectedIndex', 0).change();
 		$("#addQty").val(1);
 
 		$('#tableCreateReqBody').html('');
 		$("#reqPrinter").prop('selectedIndex', 0).change();
 		$("#reqEmp").prop('selectedIndex', 0).change();
-		$("#reqSize").prop('selectedIndex', 0).change();
+		$("#reqSizeUk").prop('selectedIndex', 0).change();
+		$("#reqSize").val('');
 
 		$("#repPrinter").prop('selectedIndex', 0).change();
 
@@ -575,6 +679,25 @@
 		});
 	})
 
+	$("#addEmp").change(function(){
+		$("#addSizeUk").html('');
+
+		var message = '<option value=""></option>';
+		for(var i = 0; i < sizeChart.length; i++) {
+			message += '<option value="'+sizeChart[i].ind+'(ime)( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'">( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'</option>';
+		}
+
+		$("#addSizeUk").html(message);
+	});
+
+	$("#addSizeUk").change(function(){
+		var message = $("#addSizeUk").val();
+		var data = message.split('(ime)');
+		$("#addSize").val(data[0]);
+		shoesName = data[1];
+	});
+
+
 	function addStock(){
 		if($('#addEmp').val() != "" && $('#addSize').val() != ""  && $('#addStatus').val() != "" && $('#addQty').val() != ""){
 			
@@ -591,22 +714,28 @@
 			var gender = data[2];
 			var group = data[3];
 
+			var data1 = shoesName.replaceAll("(", "");
+			var data2 = data1.replaceAll(")", "");
+			var data3 = data2.replaceAll(" ", "");
+			var data = data3.split('-');
+
 			tableData = "";
-			tableData += "<tr id='rowStock"+employee_id+size+status+qty+"'>";
+			tableData += "<tr id='rowStock"+employee_id+size+data[0]+qty+status+"'>";
 			tableData += '<td>'+employee_id+'</td>';
 			tableData += '<td>'+name+'</td>';
 			tableData += '<td>'+gender+'</td>';
 			tableData += '<td>'+group+'</td>';
-			tableData += '<td>'+size+'</td>';
+			tableData += '<td>'+shoesName+'</td>';
 			tableData += '<td>'+qty+'</td>';
 			tableData += '<td>'+status+'</td>';
-			tableData += "<td><a href='javascript:void(0)' onclick='remStock(id)' id='"+employee_id+size+status+qty+"' class='btn btn-danger btn-xs' style='margin-right:5px;'><i class='fa fa-trash'></i></a></td>";
+			tableData += "<td><a href='javascript:void(0)' onclick='remStock(id)' id='"+employee_id+size+data[0]+qty+status+"' class='btn btn-danger btn-xs' style='margin-right:5px;'><i class='fa fa-trash'></i></a></td>";
 			tableData += '</tr>';
 
 			stock.push({
 				'employee_id' : employee_id,
+				'merk' : data[1],
+				'gender' : data[0],
 				'size' : size,
-				'gender' : gender,
 				'qty' : qty,
 				'status' : status
 			});
@@ -614,8 +743,9 @@
 			$('#tableAddStockBody').append(tableData);
 
 			$("#addEmp").prop('selectedIndex', 0).change();			
-			$("#addSize").prop('selectedIndex', 0).change();			
+			$("#addSizeUk").prop('selectedIndex', 0).change();			
 			$("#addStatus").prop('selectedIndex', 0).change();
+			$("#addSize").val('');
 			$("#addQty").val(1);
 
 			console.log(stock);
@@ -664,173 +794,51 @@
 		}else{
 			$('#loading').hide();
 			openErrorGritter('Error!', 'Semua point form harus diisi');
-		}			
-		
+		}	
 	}
 
-	function fetchStock(){
-		$.get('{{ url("fetch/std_control/safety_shoes") }}', function(result, status, xhr){
-			if(result.status){
 
-				
+	$("#reqEmp").change(function(){
+		$("#reqSizeUk").html('');
 
-				var series = [];
-				var male = [];
-				var female = [];
+		var message = $("#reqEmp").val();
 
-				for (var h = result.min; h <= result.max; h++) {
-					var maleInserted = false;
-					var femaleInserted = false;
-					series.push('Size '+h);
+		var data = message.split('_');
+		var department = data[4];
 
-					for (var i = 0; i < result.data.length; i++) {
-						if(result.data[i].gender == 'L' && result.data[i].size == h){
-							male.push(result.data[i].quantity);
-							maleInserted = true;
-						}
-					}
+		var shoesMerk = '';
+		if(department != 'Maintenance' && department != 'Production Engineering'){
+			shoesMerk = 'Cheetah';
+		}
 
-					for (var i = 0; i < result.data.length; i++) {
-						if(result.data[i].gender == 'P' && result.data[i].size == h){
-							female.push(result.data[i].quantity);
-							femaleInserted = true;
-						}
-					}
-
-					if(!maleInserted){
-						male.push(0);
-					}
-
-					if(!femaleInserted){
-						female.push(0);
-					}		
+		var message = '<option value=""></option>';
+		for(var i = 0; i < sizeChart.length; i++) {
+			if(shoesMerk == 'Cheetah'){
+				if(sizeChart[i].type == 'Cheetah'){
+					message += '<option value="'+sizeChart[i].ind+'(ime)( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'">( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'</option>';
 				}
-
-
-				var total_male = 0;
-				var total_female = 0;
-
-				for (var i = 0; i < male.length; i++) {
-					total_male += male[i] << 0;
-				}
-
-				for (var i = 0; i < female.length; i++) {
-					total_female += female[i] << 0;
-				}
-
-				Highcharts.chart('container2', {
-					chart: {
-						plotBackgroundColor: null,
-						plotBorderWidth: null,
-						plotShadow: false,
-						type: 'pie',
-						backgroundColor: null
-					},
-					title: {
-						text: null
-					},
-					accessibility: {
-						point: {
-							valueSuffix: '%'
-						}
-					},
-					credits: {
-						enabled: false
-					},
-					plotOptions: {
-						pie: {
-							allowPointSelect: true,
-							cursor: 'pointer',
-							dataLabels: {
-								enabled: true,
-								format: '<b>{point.name}</b><br>{point.y} Pasang',
-								distance: -50,
-								style:{
-									textOutline: false,
-									fontSize: '1.2vw'
-								}
-							},
-							showInLegend: true
-						}
-					},
-					series: [{
-						data: [{
-							name: 'Laki-laki',
-							y: total_male,
-							color: '#aab6fe'
-						}, {
-							name: 'Perempuan',
-							y: total_female,
-							color: '#ff5c8d'
-						}]
-					}]
-				});
-
-
-				Highcharts.chart('container', {
-					chart: {
-						type: 'column',
-						backgroundColor: null
-					},
-					title: {
-						text: 'Safety Shoes Stock'
-					},
-					xAxis: {
-						categories: series,
-						crosshair: true
-					},
-					yAxis: {
-						min: 0,
-						title: {
-							text: 'Pair(s)'
-						}
-					},
-					tooltip: {
-						headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-						pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-						'<td style="padding:0"><b>{point.y}</b></td></tr>',
-						footerFormat: '</table>',
-						shared: true,
-						useHTML: true
-					},
-					credits: {
-						enabled:false
-					},
-					plotOptions: {
-						column: {
-							pointPadding: 0.2,
-							borderWidth: 0
-						},
-						series:{
-							animation: false,
-							borderWidth: 0.93
-						}
-					},
-					series: [{
-						name: 'Laki-Laki',
-						data: male,
-						color: '#aab6fe'
-					}, {
-						name: 'Perempuan',
-						data: female,
-						color: '#ff5c8d'
-					}]
-				});
+			}else{
+				message += '<option value="'+sizeChart[i].ind+'(ime)( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'">( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'</option>';
 			}
-			else{
-				alert('Attempt to retrieve data failed.');
-			}
-		});
-	}
-
+		}
+		$("#reqSizeUk").html(message);
+	});
 
 	function addReq(){
-		if($('#reqEmp').val() != ""  && $('#reqSize').val()){
+		if($('#reqEmp').val() != ""  && $('#reqSizeUk').val()){
 
 			var emp = $('#reqEmp').val();
-			var size = $('#reqSize').val();
+			var shoesName = $('#reqSizeUk').val();
 
-			console.log(emp);
+			var data = shoesName.split('(ime)');
+			var size = data[0];
+			var shoes = data[1];
+
+			var data1 = shoes.replaceAll("(", "");
+			var data2 = data1.replaceAll(")", "");
+			var data3 = data2.replaceAll(" ", "");
+			var data4 = data3.split('-');
+			var merk = data4[1];
 
 			var data = emp.split('_');
 
@@ -845,12 +853,13 @@
 			tableData += '<td>'+name+'</td>';
 			tableData += '<td>'+gender+'</td>';
 			tableData += '<td>'+group+'</td>';
-			tableData += '<td>'+size+'</td>';
+			tableData += '<td>'+shoes+'</td>';
 			tableData += "<td><a href='javascript:void(0)' onclick='remReq(id)' id='"+employee_id+"' class='btn btn-danger btn-xs' style='margin-right:5px;'><i class='fa fa-trash'></i></a></td>";
 			tableData += '</tr>';
 
 			employee.push({
 				'employee_id' : employee_id,
+				'merk' : merk,
 				'size' : size,
 				'gender' : gender
 			});
@@ -858,7 +867,7 @@
 			$('#tableCreateReqBody').append(tableData);
 
 			$("#reqEmp").prop('selectedIndex', 0).change();
-			$("#reqSize").prop('selectedIndex', 0).change();			
+			$("#reqSizeUk").prop('selectedIndex', 0).change();			
 
 
 			console.log(employee);
@@ -912,6 +921,10 @@
 			openErrorGritter('Error!', 'Semua point form harus diisi');
 		}		
 	}
+
+
+
+
 
 	function fetchRequest(){
 		$.get('{{ url("fetch/std_control/request_safety_shoes") }}', function(result, status, xhr){
@@ -973,312 +986,551 @@
 		});
 	}
 
-
 	function fetchDetailRequest(id){
-
 		$('#loading').show();
+
 		var data = {
-			id:id
+			request_id:id
 		}
-		$.get('{{ url("fetch/ga_control/driver_detail") }}', data, function(result, status, xhr){
+
+		$.get('{{ url("fetch/std_control/detail_safety_shoes") }}', data, function(result, status, xhr){
 			if(result.status){
-				var start_time = result.driver.date_from.split(" ");
-				var end_time = result.driver.date_to.split(" ");
-				$('#detailID').val(result.driver.id);
-				$('#detailPurpose').val(result.driver.purpose);
-				$('#detailDestination').val(result.driver.destination_city);
-				$('#detailRequestedBy').val(result.driver.request_id+' - '+result.driver.request_name);
-				if(result.driver.approve_id != null){
-					$('#detailApprovedBy').val(result.driver.approve_id+' - '+result.driver.approve_name);
-				}
-				else{
-					$('#detailApprovedBy').val('(Waiting For Approval)');				
-				}
-				$('#detailStart').val(start_time[0]);
-				$('#detailStartTime').val(start_time[1]);
-				$('#detailEnd').val(end_time[0]);
-				$('#detailEndTime').val(end_time[1]);
+				$('#tableDetailRequestBody').html("");
 
-				var driverData = "";
-				$('#detailDriver').html('');
+				$('#detail_request_id').text(id);
+				$('#detail_requester').text('Requester : '+ result.data[0].requester);
 
-				$.each(result.driver_lists, function(key, value){
-					driverData += '<option></option>';
-					if(value.driver_id == result.driver.driver_id){
-						driverData += '<option value="'+value.driver_id+'" selected>'+value.driver_id+' - '+value.name+'</option>';
-					}
-					else{
-						driverData += '<option value="'+value.driver_id+'">'+value.driver_id+' - '+value.name+'</option>';					
-					}
+				var detail = '';
+				$.each(result.data, function(key, value){
+					detail += '<tr>';
+					detail += '<td>'+value.employee_id+'</td>';
+					detail += '<td>'+value.name+'</td>';
+					detail += '<td>'+value.gender+'</td>';
+					detail += '<td>'+value.department+'</td>';
+					detail += '<td>'+value.section+'</td>';
+					detail += '<td>'+(value.group || '')+'</td>';
+					detail += '<td>'+value.size+'</td>';
+					detail += '</tr>';
 				});
 
-				$('#detailDriver').append(driverData);
+				$('#tableDetailRequestBody').append(detail);
 
 				$('#modalDetail').modal('show');
 				$('#loading').hide();
-
-				var passengerData = "";
-				var destinationData = "";
-
-				$('#tableDetailPassengerBody').html("");
-				$('#tableDetailDestinationBody').html("");
-
-				$.each(result.passenger_detail, function(key, value){
-					passengerData += '<tr>';
-					passengerData += '<td>'+value.employee_id+'</td>';
-					passengerData += '<td>'+value.name+'</td>';
-					passengerData += '</tr>';
-				});
-
-				$.each(result.destination_detail, function(key, value){
-					destinationData += '<tr>';
-					destinationData += '<td>'+value.remark+'</td>';
-					destinationData += '</tr>';
-				});
-
-				$('#tableDetailPassengerBody').append(passengerData);
-				$('#tableDetailDestinationBody').append(destinationData);
 			}
 			else{
 				openErrorGritter('Error!', result.message);
 			}
 		});
-
 	}
 
-	Highcharts.createElement('link', {
-		href: '{{ url("fonts/UnicaOne.css")}}',
-		rel: 'stylesheet',
-		type: 'text/css'
-	}, null, document.getElementsByTagName('head')[0]);
+	function fetchStock(){
+		$.get('{{ url("fetch/std_control/safety_shoes") }}', function(result, status, xhr){
+			if(result.status){
 
-	Highcharts.theme = {
-		colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
-		'#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
-		chart: {
-			backgroundColor: {
-				linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
-				stops: [
-				[0, '#2a2a2b'],
-				[1, '#3e3e40']
-				]
-			},
-			style: {
-				fontFamily: 'sans-serif'
-			},
-			plotBorderColor: '#606063'
-		},
-		title: {
-			style: {
-				color: '#E0E0E3',
-				textTransform: 'uppercase',
-				fontSize: '20px'
-			}
-		},
-		subtitle: {
-			style: {
-				color: '#E0E0E3',
-				textTransform: 'uppercase'
-			}
-		},
-		xAxis: {
-			gridLineColor: '#707073',
-			labels: {
-				style: {
-					color: '#E0E0E3'
-				}
-			},
-			lineColor: '#707073',
-			minorGridLineColor: '#505053',
-			tickColor: '#707073',
-			title: {
-				style: {
-					color: '#A0A0A3'
+				var series = [];
+				var male = [];
+				var female = [];
 
-				}
-			}
-		},
-		yAxis: {
-			gridLineColor: '#707073',
-			labels: {
-				style: {
-					color: '#E0E0E3'
-				}
-			},
-			lineColor: '#707073',
-			minorGridLineColor: '#505053',
-			tickColor: '#707073',
-			tickWidth: 1,
-			title: {
-				style: {
-					color: '#A0A0A3'
-				}
-			}
-		},
-		tooltip: {
-			backgroundColor: 'rgba(0, 0, 0, 0.85)',
-			style: {
-				color: '#F0F0F0'
-			}
-		},
-		plotOptions: {
-			series: {
-				dataLabels: {
-					color: 'white'
-				},
-				marker: {
-					lineColor: '#333'
-				}
-			},
-			boxplot: {
-				fillColor: '#505053'
-			},
-			candlestick: {
-				lineColor: 'white'
-			},
-			errorbar: {
-				color: 'white'
-			}
-		},
-		legend: {
-			itemStyle: {
-				color: '#E0E0E3'
-			},
-			itemHoverStyle: {
-				color: '#FFF'
-			},
-			itemHiddenStyle: {
-				color: '#606063'
-			}
-		},
-		credits: {
-			style: {
-				color: '#666'
-			}
-		},
-		labels: {
-			style: {
-				color: '#707073'
-			}
-		},
-
-		drilldown: {
-			activeAxisLabelStyle: {
-				color: '#F0F0F3'
-			},
-			activeDataLabelStyle: {
-				color: '#F0F0F3'
-			}
-		},
-
-		navigation: {
-			buttonOptions: {
-				symbolStroke: '#DDDDDD',
-				theme: {
-					fill: '#505053'
-				}
-			}
-		},
-
-		rangeSelector: {
-			buttonTheme: {
-				fill: '#505053',
-				stroke: '#000000',
-				style: {
-					color: '#CCC'
-				},
-				states: {
-					hover: {
-						fill: '#707073',
-						stroke: '#000000',
-						style: {
-							color: 'white'
-						}
-					},
-					select: {
-						fill: '#000003',
-						stroke: '#000000',
-						style: {
-							color: 'white'
-						}
+				for (var g = 0; g < result.data.length; g++) {
+					if(!series.includes('Size '+result.data[g].size)){
+						series.push('Size '+result.data[g].size);
 					}
 				}
-			},
-			inputBoxBorderColor: '#505053',
-			inputStyle: {
-				backgroundColor: '#333',
-				color: 'silver'
-			},
-			labelStyle: {
-				color: 'silver'
+
+				series.sort();
+
+				for (var h = 0; h < series.length; h++) {
+					var maleInserted = false;
+					var femaleInserted = false;
+
+					for (var i = 0; i < result.resume.length; i++) {
+						if(result.resume[i].gender == 'L' && 'Size '+result.resume[i].size == series[h]){
+							male.push(parseInt(result.resume[i].quantity));
+							maleInserted = true;
+						}
+					}
+
+					for (var i = 0; i < result.resume.length; i++) {
+						if(result.resume[i].gender == 'P' && 'Size '+result.resume[i].size == series[h]){
+							female.push(parseInt(result.resume[i].quantity));
+							femaleInserted = true;
+						}
+					}
+
+					if(!maleInserted){
+						male.push(0);
+					}
+
+					if(!femaleInserted){
+						female.push(0);
+					}		
+				}
+
+				Highcharts.chart('container1', {
+					chart: {
+						type: 'column',
+						backgroundColor: null
+					},
+					title: {
+						text: 'Safety Shoes Stock'
+					},
+					xAxis: {
+						categories: series,
+						crosshair: true
+					},
+					yAxis: {
+						min: 0,
+						title: {
+							text: 'Pair(s)'
+						}
+					},
+					tooltip: {
+						headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+						pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+						'<td style="padding:0"><b>{point.y}</b></td></tr>',
+						footerFormat: '</table>',
+						shared: true,
+						useHTML: true
+					},
+					credits: {
+						enabled:false
+					},
+					plotOptions: {
+						column: {
+							pointPadding: 0.2,
+							borderWidth: 0,
+							point: {
+								events: {
+									click: function (event) {
+										showStockDetail(event.point.series.name, event.point.category);
+
+									}
+								}
+							},
+						},
+						series:{
+							animation: false,
+							borderWidth: 0.93,
+						},
+					},
+					series: [{
+						name: 'Laki-Laki',
+						data: male,
+						color: '#aab6fe'
+					}, {
+						name: 'Perempuan',
+						data: female,
+						color: '#ff5c8d'
+					}]
+				});
+
+
+
+
+
+				var total_male = 0;
+				var total_female = 0;
+
+				for (var i = 0; i < male.length; i++) {
+					total_male += male[i] << 0;
+				}
+
+				for (var i = 0; i < female.length; i++) {
+					total_female += female[i] << 0;
+				}
+
+				Highcharts.chart('container2', {
+					chart: {
+						plotBackgroundColor: null,
+						plotBorderWidth: null,
+						plotShadow: false,
+						type: 'pie',
+						backgroundColor: null
+					},
+					title: {
+						text: null
+					},
+					accessibility: {
+						point: {
+							valueSuffix: '%'
+						}
+					},
+					credits: {
+						enabled: false
+					},
+					plotOptions: {
+						pie: {
+							size: 230,
+							allowPointSelect: true,
+							cursor: 'pointer',
+							dataLabels: {
+								enabled: true,
+								format: '<b>{point.name}</b><br>{point.y} Pasang',
+								distance: -50,
+								style:{
+									textOutline: false,
+									fontSize: '1vw'
+								}
+							},
+							showInLegend: true
+						}
+					},
+					tooltip: {
+						pointFormat: 'Stok: <b>{point.y} Pasang</b>'
+					},
+					series: [{
+						data: [{
+							name: 'Laki-laki',
+							y: total_male,
+							color: '#aab6fe'
+						}, {
+							name: 'Perempuan',
+							y: total_female,
+							color: '#ff5c8d'
+						}]
+					}]
+				});
+
+
+
+
+
+				var total_cheetah = 0;
+				var total_kings = 0;
+				var total_krisbow = 0;
+
+				for (var i = 0; i < result.data.length; i++) {
+					if(result.data[i].merk == 'Cheetah'){
+						total_cheetah += result.data[i].quantity;
+					}else if(result.data[i].merk == 'Kings'){
+						total_kings += result.data[i].quantity;
+					}else if(result.data[i].merk == 'Krisbow'){
+						total_krisbow += result.data[i].quantity;
+					}
+				}
+
+				Highcharts.chart('container3', {
+					chart: {
+						plotBackgroundColor: null,
+						plotBorderWidth: null,
+						plotShadow: false,
+						type: 'pie',
+						backgroundColor: null
+					},
+					title: {
+						text: null
+					},
+					accessibility: {
+						point: {
+							valueSuffix: '%'
+						}
+					},
+					credits: {
+						enabled: false
+					},
+					plotOptions: {
+						pie: {
+							size: 230,
+							allowPointSelect: true,
+							cursor: 'pointer',
+							showInLegend: true
+						}
+					},
+					tooltip: {
+						pointFormat: 'Stok: <b>{point.y} Pasang</b>'
+					},
+					series: [{
+						data: [{
+							name: 'Cheetah',
+							y: total_cheetah,
+							color: '#2b908f'
+						}, {
+							name: 'Kings',
+							y: total_kings,
+							color: '#90ee7e'
+						}, {
+							name: 'Krisbow',
+							y: total_krisbow,
+							color: '#f45b5b'
+						}]
+					}]
+				});				
+
+			}else{
+				alert('Attempt to retrieve data failed.');
 			}
-		},
+		});
+}
 
-		navigator: {
-			handles: {
-				backgroundColor: '#666',
-				borderColor: '#AAA'
-			},
-			outlineColor: '#CCC',
-			maskFill: 'rgba(255,255,255,0.1)',
-			series: {
-				color: '#7798BF',
-				lineColor: '#A6C7ED'
-			},
-			xAxis: {
-				gridLineColor: '#505053'
-			}
-		},
+function showStockDetail(series, size) {
+	$('#loading').show();
 
-		scrollbar: {
-			barBackgroundColor: '#808083',
-			barBorderColor: '#808083',
-			buttonArrowColor: '#CCC',
-			buttonBackgroundColor: '#606063',
-			buttonBorderColor: '#606063',
-			rifleColor: '#FFF',
-			trackBackgroundColor: '#404043',
-			trackBorderColor: '#404043'
-		},
+	var data = {
+		gender: series[0],
+		size: size.replaceAll('Size ', '')
+	}
 
-		legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
-		background2: '#505053',
-		dataLabelsColor: '#B0B0B3',
-		textColor: '#C0C0C0',
-		contrastTextColor: '#F0F0F3',
-		maskColor: 'rgba(255,255,255,0.3)'
-	};
-	Highcharts.setOptions(Highcharts.theme);
+	$.get('{{ url("fetch/std_control/safety_shoes_detail") }}', data, function(result, status, xhr){
+		if(result.status){
+			$('#tableDetailStockBody').html("");
 
-	Highcharts.setOptions({
-		global: {
-			useUTC: true,
-			timezoneOffset: -420
+			$('#detail_stock').text('Stock Safety Shoes ' + series + ' ' + size);
+
+			var detail = '';
+			$.each(result.data, function(key, value){
+				detail += '<tr>';
+				detail += '<td>'+value.merk+'</td>';
+				detail += '<td>'+value.gender+'</td>';
+				detail += '<td>'+value.size+'</td>';
+				detail += '<td>'+value.quantity+'</td>';
+				detail += '</tr>';
+			});
+
+			$('#tableDetailStockBody').append(detail);
+
+			$('#modalStock').modal('show');
+			$('#loading').hide();
+		}
+		else{
+			openErrorGritter('Error!', result.message);
 		}
 	});
+}
 
-	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+Highcharts.createElement('link', {
+	href: '{{ url("fonts/UnicaOne.css")}}',
+	rel: 'stylesheet',
+	type: 'text/css'
+}, null, document.getElementsByTagName('head')[0]);
 
-	function openSuccessGritter(title, message){
-		jQuery.gritter.add({
-			title: title,
-			text: message,
-			class_name: 'growl-success',
-			image: '{{ url("images/image-screen.png") }}',
-			sticky: false,
-			time: '3000'
-		});
+Highcharts.theme = {
+	colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
+	'#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+	chart: {
+		backgroundColor: {
+			linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
+			stops: [
+			[0, '#2a2a2b'],
+			[1, '#3e3e40']
+			]
+		},
+		style: {
+			fontFamily: 'sans-serif'
+		},
+		plotBorderColor: '#606063'
+	},
+	title: {
+		style: {
+			color: '#E0E0E3',
+			textTransform: 'uppercase',
+			fontSize: '20px'
+		}
+	},
+	subtitle: {
+		style: {
+			color: '#E0E0E3',
+			textTransform: 'uppercase'
+		}
+	},
+	xAxis: {
+		gridLineColor: '#707073',
+		labels: {
+			style: {
+				color: '#E0E0E3'
+			}
+		},
+		lineColor: '#707073',
+		minorGridLineColor: '#505053',
+		tickColor: '#707073',
+		title: {
+			style: {
+				color: '#A0A0A3'
+
+			}
+		}
+	},
+	yAxis: {
+		gridLineColor: '#707073',
+		labels: {
+			style: {
+				color: '#E0E0E3'
+			}
+		},
+		lineColor: '#707073',
+		minorGridLineColor: '#505053',
+		tickColor: '#707073',
+		tickWidth: 1,
+		title: {
+			style: {
+				color: '#A0A0A3'
+			}
+		}
+	},
+	tooltip: {
+		backgroundColor: 'rgba(0, 0, 0, 0.85)',
+		style: {
+			color: '#F0F0F0'
+		}
+	},
+	plotOptions: {
+		series: {
+			dataLabels: {
+				color: 'white'
+			},
+			marker: {
+				lineColor: '#333'
+			}
+		},
+		boxplot: {
+			fillColor: '#505053'
+		},
+		candlestick: {
+			lineColor: 'white'
+		},
+		errorbar: {
+			color: 'white'
+		}
+	},
+	legend: {
+		itemStyle: {
+			color: '#E0E0E3'
+		},
+		itemHoverStyle: {
+			color: '#FFF'
+		},
+		itemHiddenStyle: {
+			color: '#606063'
+		}
+	},
+	credits: {
+		style: {
+			color: '#666'
+		}
+	},
+	labels: {
+		style: {
+			color: '#707073'
+		}
+	},
+
+	drilldown: {
+		activeAxisLabelStyle: {
+			color: '#F0F0F3'
+		},
+		activeDataLabelStyle: {
+			color: '#F0F0F3'
+		}
+	},
+
+	navigation: {
+		buttonOptions: {
+			symbolStroke: '#DDDDDD',
+			theme: {
+				fill: '#505053'
+			}
+		}
+	},
+
+	rangeSelector: {
+		buttonTheme: {
+			fill: '#505053',
+			stroke: '#000000',
+			style: {
+				color: '#CCC'
+			},
+			states: {
+				hover: {
+					fill: '#707073',
+					stroke: '#000000',
+					style: {
+						color: 'white'
+					}
+				},
+				select: {
+					fill: '#000003',
+					stroke: '#000000',
+					style: {
+						color: 'white'
+					}
+				}
+			}
+		},
+		inputBoxBorderColor: '#505053',
+		inputStyle: {
+			backgroundColor: '#333',
+			color: 'silver'
+		},
+		labelStyle: {
+			color: 'silver'
+		}
+	},
+
+	navigator: {
+		handles: {
+			backgroundColor: '#666',
+			borderColor: '#AAA'
+		},
+		outlineColor: '#CCC',
+		maskFill: 'rgba(255,255,255,0.1)',
+		series: {
+			color: '#7798BF',
+			lineColor: '#A6C7ED'
+		},
+		xAxis: {
+			gridLineColor: '#505053'
+		}
+	},
+
+	scrollbar: {
+		barBackgroundColor: '#808083',
+		barBorderColor: '#808083',
+		buttonArrowColor: '#CCC',
+		buttonBackgroundColor: '#606063',
+		buttonBorderColor: '#606063',
+		rifleColor: '#FFF',
+		trackBackgroundColor: '#404043',
+		trackBorderColor: '#404043'
+	},
+
+	legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
+	background2: '#505053',
+	dataLabelsColor: '#B0B0B3',
+	textColor: '#C0C0C0',
+	contrastTextColor: '#F0F0F3',
+	maskColor: 'rgba(255,255,255,0.3)'
+};
+Highcharts.setOptions(Highcharts.theme);
+
+Highcharts.setOptions({
+	global: {
+		useUTC: true,
+		timezoneOffset: -420
 	}
+});
 
-	function openErrorGritter(title, message) {
-		jQuery.gritter.add({
-			title: title,
-			text: message,
-			class_name: 'growl-danger',
-			image: '{{ url("images/image-stop.png") }}',
-			sticky: false,
-			time: '3000'
-		});
-	}
+var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+
+function openSuccessGritter(title, message){
+	jQuery.gritter.add({
+		title: title,
+		text: message,
+		class_name: 'growl-success',
+		image: '{{ url("images/image-screen.png") }}',
+		sticky: false,
+		time: '3000'
+	});
+}
+
+function openErrorGritter(title, message) {
+	jQuery.gritter.add({
+		title: title,
+		text: message,
+		class_name: 'growl-danger',
+		image: '{{ url("images/image-stop.png") }}',
+		sticky: false,
+		time: '3000'
+	});
+}
 </script>
 @endsection

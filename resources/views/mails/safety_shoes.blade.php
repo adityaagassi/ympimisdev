@@ -29,10 +29,11 @@
 						<th style="width: 1%; border:1px solid black;">#</th>
 						<th style="width: 2%; border:1px solid black;">NIK</th>
 						<th style="width: 3%; border:1px solid black;">Nama</th>
-						<th style="width: 1%; border:1px solid black;">L/P</th>
 						<th style="width: 3%; border:1px solid black;">Department</th>
 						<th style="width: 2%; border:1px solid black;">Section</th>
 						<th style="width: 2%; border:1px solid black;">Group</th>
+						<th style="width: 1%; border:1px solid black;">Merk</th>
+						<th style="width: 1%; border:1px solid black;">Gender</th>
 						<th style="width: 1%; border:1px solid black;">Size</th>
 						<th style="width: 1%; border:1px solid black;">Status Sepatu</th>
 						<th style="width: 1%; border:1px solid black;">Qty</th>
@@ -48,10 +49,11 @@
 						<td style="border:1px solid black;">{{ ++$i }}</td>
 						<td style="border:1px solid black;">{{ $dt['employee_id'] }}</td>
 						<td style="border:1px solid black;">{{ $dt['name'] }}</td>
-						<td style="border:1px solid black;">{{ $dt['gender'] }}</td>
 						<td style="border:1px solid black;">{{ $dt['department'] }}</td>
 						<td style="border:1px solid black;">{{ $dt['section'] }}</td>
 						<td style="border:1px solid black;">{{ $dt['group'] }}</td>
+						<td style="border:1px solid black;">{{ $dt['merk'] }}</td>
+						<td style="border:1px solid black;">{{ $dt['gender'] }}</td>
 						<td style="border:1px solid black;">{{ $dt['size'] }}</td>
 						<td style="border:1px solid black;">{{ $dt['status'] }}</td>
 						<td style="border:1px solid black;">{{ $dt['quantity'] }}</td>

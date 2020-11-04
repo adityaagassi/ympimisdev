@@ -996,6 +996,7 @@ Route::get('index/ga_control/bento', 'GeneralAffairController@indexBento');
 //STD CONTROL
 Route::get('index/std_control/safety_shoes', 'GeneralController@indexSafetyShoes');
 Route::get('fetch/std_control/safety_shoes', 'GeneralController@fetchSafetyShoes');
+Route::get('fetch/std_control/safety_shoes_detail', 'GeneralController@fetchSafetyShoesDetail');
 Route::get('fetch/std_control/request_safety_shoes', 'GeneralController@fetchRequestSafetyShoes');
 Route::get('fetch/std_control/detail_safety_shoes', 'GeneralController@fetchDetailSafetyShoes');
 
