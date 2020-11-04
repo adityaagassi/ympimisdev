@@ -577,17 +577,20 @@ class TransactionController extends Controller
 			else if($receive == 'FL91'){
 				$printer_name = 'FLO Printer 101';			
 			}
-			else if($receive == 'SX51' || $receive == 'CL51' || $receive == 'FL51' || $receive == 'VN51' || $receive == 'VN91'){
+			else if($receive == 'SX51' || $receive == 'CL51' || $receive == 'FL51' || $receive == 'VN51'){
 				$printer_name = 'Stockroom-Printer';			
 			}
 			else if($receive == 'SX21' || $receive == 'CL21' || $receive == 'FL21' || $receive == 'VN21'){
 				$printer_name = 'Welding-Printer';			
 			}
+			else if ($receive == 'VN91') {
+				$printer_name = 'FLO Printer VN';
+			}
 			else{
 				$printer_name = 'MIS';
 			}
 		}
-			// dd($printer_name);
+		
 		$connector = new WindowsPrintConnector($printer_name);
 		$printer = new Printer($connector);
 
@@ -643,17 +646,20 @@ class TransactionController extends Controller
 			else if($receive == 'FL91'){
 				$printer_name = 'FLO Printer 101';			
 			}
-			else if($receive == 'SX51' || $receive == 'CL51' || $receive == 'FL51' || $receive == 'VN51' || $receive == 'VN91'){
+			else if($receive == 'SX51' || $receive == 'CL51' || $receive == 'FL51' || $receive == 'VN51'){
 				$printer_name = 'Stockroom-Printer';			
 			}
 			else if($receive == 'SX21' || $receive == 'CL21' || $receive == 'FL21' || $receive == 'VN21'){
 				$printer_name = 'Welding-Printer';			
 			}
+			else if ($receive == 'VN91') {
+				$printer_name = 'FLO Printer VN';
+			}
 			else{
 				$printer_name = 'MIS';
 			}
 		}
-			// dd($printer_name);
+
 		$connector = new WindowsPrintConnector($printer_name);
 		$printer = new Printer($connector);
 
