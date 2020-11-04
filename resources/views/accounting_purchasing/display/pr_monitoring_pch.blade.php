@@ -872,6 +872,7 @@ hr { background-color: red; height: 1px; border: 0; }
             table_belum_po += '<td style="border-left:3px solid #000">'+value.item_code+'</td>';
             table_belum_po += '<td style="border-left:3px solid #000">'+value.item_desc+'</td>';
             table_belum_po += '<td style="border-left:3px solid #000">'+value.item_request_date+'</td>';
+            table_belum_po += '<td style="border-left:3px solid #000">'+value.receive_date+'</td>';
             table_belum_po += '</tr>';
           })
 

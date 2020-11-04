@@ -137,7 +137,7 @@
 					$totalusd += $purchase_r->item_amount;
 				}
 
-				if ($no % 10 == 0) { ?>
+				if ($no % 8 == 0) { ?>
 						<tr>
 							<td colspan="1" style="height: 26px; border: 1px solid black;text-align: center;padding: 0">{{ $no }}</td>
 							<td colspan="1" style="border: 1px solid black;">{{ $purchase_r->item_code }}</td>
