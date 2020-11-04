@@ -179,7 +179,7 @@
 						attendance_data += '<td style="padding: 0; width:30%; font-size:3vw;">'+value.department+'</td>';
 						attendance_data += '</tr>';
 						attendance_data += '<tr>';
-						attendance_data += '<td colspan="2" style="padding: 0; font-size:4vw;"><p>'+name.substring(0,30)+'</p></td>';
+						attendance_data += '<td colspan="2" style="padding: 0; font-size:5vw;">'+name.substring(0,30).toUpperCase()+'</td>';
 						attendance_data += '</tr>';
 						attendance_data += '</tbody>';
 						attendance_data += '</table>';
