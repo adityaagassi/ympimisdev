@@ -1264,7 +1264,7 @@ class AccountingController extends Controller
                 
             // }
 
-            // $isimail = "select acc_purchase_requisitions.*,acc_purchase_requisition_items.item_stock, acc_purchase_requisition_items.item_desc, acc_items.kebutuhan, acc_purchase_requisition_items.peruntukan FROM acc_purchase_requisitions join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr where acc_purchase_requisitions.id= " . $data->id;
+            // $isimail = "select acc_purchase_requisitions.*,acc_purchase_requisition_items.item_stock, acc_purchase_requisition_items.item_desc, acc_purchase_requisition_items.kebutuhan, acc_purchase_requisition_items.peruntukan FROM acc_purchase_requisitions join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr where acc_purchase_requisitions.id= " . $data->id;
             // $purchaserequisition = db::select($isimail);
 
             // Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($purchaserequisition, 'purchase_requisition'));
@@ -2135,7 +2135,7 @@ class AccountingController extends Controller
     public function detail_pr_po(Request $request)
     {
         $purchase_requistion = AccPurchaseRequisition::find($request->get('id'));
-        $purchase_requistion_item = AccPurchaseRequisition::select('acc_purchase_requisition_items.*','acc_budget_histories.budget', 'acc_budget_histories.budget_month', 'acc_budget_histories.budget_date', 'acc_budget_histories.category_number','acc_budget_histories.no_item','acc_budget_histories.amount','acc_budget_histories.beg_bal','acc_purchase_requisition_items.peruntukan','acc_items.kebutuhan')
+        $purchase_requistion_item = AccPurchaseRequisition::select('acc_purchase_requisition_items.*','acc_budget_histories.budget', 'acc_budget_histories.budget_month', 'acc_budget_histories.budget_date', 'acc_budget_histories.category_number','acc_budget_histories.no_item','acc_budget_histories.amount','acc_budget_histories.beg_bal','acc_purchase_requisition_items.peruntukan','acc_purchase_requisition_items.kebutuhan')
         ->join('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
         // ->leftJoin('acc_items', 'acc_purchase_requisition_items.item_code', '=', 'acc_items.kode_item')
         ->join('acc_budget_histories', function($join) {
