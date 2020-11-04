@@ -4913,7 +4913,7 @@ public function update_purchase_requisition_po(Request $request)
             else if($request->get('type') == "Repair and Maintenance"){
                 $type = "Repair Maintenance";
             }
-            else if($request->get('type') == "Tools, Jig, and Furniture"){
+            else if($request->get('type') == "Tools, Jigs, and Furniture"){
                 $type = "Tool, Jig, and Furniture";
             }
             else if($request->get('type') == "Moulding"){
