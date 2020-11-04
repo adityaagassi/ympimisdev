@@ -252,7 +252,7 @@
 					checkTable += '<td><center id="lower_'+value.check_index+'">'+value.lower_limit+'</center></td>';
 					checkTable += '<td><center id="upper_'+value.check_index+'">'+value.upper_limit+'</center></td>';
 					checkTable += '<td><input type="number" id="value_'+value.check_index+'" class="numpad" style="width:100%;background-color:rgb(236, 240, 245);text-align: center;" onchange="checkPoint(this.value,\''+value.check_index+'\')"></td>';
-					checkTable += '<td><center id="result_'+value.check_index+'">OK</center></td>';
+					checkTable += '<td><center id="result_'+value.check_index+'"></center></td>';
 					checkTable += '</tr>';
 					valueCheck.push(value.check_index);
 					check_index = value.check_index;
@@ -285,9 +285,9 @@
 
 		var id = 'check_index_'+index;
 		var id2 = 'value_'+index;
-
+		
 		if (value != "" || parseFloat(value) != 0) {
-			if (parseFloat(value) > parseFloat(upper) || parseFloat(value) <= parseFloat(lower)) {
+			if (parseFloat(value) > parseFloat(upper) || parseFloat(value) < parseFloat(lower)) {
 				document.getElementById(id).style.backgroundColor = "#ff8282";
 				document.getElementById(id2).style.backgroundColor = "#ff8282";
 				$('#result_'+index).html('NG');
