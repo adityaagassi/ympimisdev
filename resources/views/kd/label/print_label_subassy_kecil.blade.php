@@ -143,7 +143,7 @@
 		"marginRight": 0,
 		"marginTop": 0,
 		"marginBottom": 0,
-		"numCopies": 1,
+		"numCopies": 2,
 		"title": "",
 		"docURL": "",
 		"headerStrLeft": "",
