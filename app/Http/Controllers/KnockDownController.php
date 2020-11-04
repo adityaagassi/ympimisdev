@@ -36,9 +36,9 @@ use Response;
 
 class KnockDownController extends Controller{
 
-	// public function __construct(){
-	// 	$this->middleware('auth');
-	// }
+	public function __construct(){
+		$this->middleware('auth');
+	}
 
 	public function indexKD($id){
 		if($id == 'z-pro'){
@@ -1503,7 +1503,7 @@ class KnockDownController extends Controller{
 	}
 
 	public function fetchKDNew($id){
-		$dateto = date('Y-m-d', strtotime('+7 day'));
+		$dateto = date('Y-m-d', strtotime('+14 day'));
 
 		$storage = '';
 		if($id == 'z-pro'){
