@@ -267,18 +267,18 @@
 				<tr>
 					<td colspan="2" style="border: 1px solid black;">Class Of Assets / Kind Of Expense (Account) <span class="droid">資産・経費種類</span></td>
 					<td colspan="4" style="border: 1px solid black;">
-						<rio style="<?php if($inv[0]->type == "Building") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">1. Building <span class="droid">建物</span> </rio><rio style="<?php if($inv[0]->type == "Machine & Equipment") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">2. Machine & Equipment <span class="droid">機械・道具</span></rio>
+						<rio style="<?php if($inv[0]->type == "Building") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">1. Building <span class="droid">建物</span> </rio><rio style="<?php if($inv[0]->type == "Machine and Equipment") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">2. Machine & Equipment <span class="droid">機械・道具</span></rio>
 						<rio style="<?php if($inv[0]->type == "Vehicle") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">3. Vehicle <span class="droid">車両</span> </rio> 
-						<rio style="<?php if($inv[0]->type == "Tools, Jigs & Furniture") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">4. Tools, Jigs & Furniture <span class="droid">工具、治具、家具</span> </rio> 
+						<rio style="<?php if($inv[0]->type == "Tools, Jigs and Furniture") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">4. Tools, Jigs & Furniture <span class="droid">工具、治具、家具</span> </rio> 
 						<rio style="<?php if($inv[0]->type == "Moulding") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">5. Moulding <span class="droid">金型</span> </rio><br>
-						<rio style="<?php if($inv[0]->type == "PC & Printer") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">6. PC & Printer <span class="droid">パソコン・プリント機</span> </rio><br>
+						<rio style="<?php if($inv[0]->type == "PC and Printer") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">6. PC & Printer <span class="droid">パソコン・プリント機</span> </rio><br>
 						<rio style="<?php if($inv[0]->type == "Land Acquisition") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">7. Land Acquisition <span class="droid"> </span> </rio>
 					</td>
 					
 
 					<td colspan="4" style="border: 1px solid black;">
 						<rio style="<?php if($inv[0]->type == "Office Supplies") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">1. Office Supplies <span class="droid">事務用品</span> </rio> 
-						<rio style="<?php if($inv[0]->type == "Repair & Maintenance") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">2. Repair & Maintenance <span class="droid">修理・メンテナンス</span> </rio> 
+						<rio style="<?php if($inv[0]->type == "Repair and Maintenance") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">2. Repair & Maintenance <span class="droid">修理・メンテナンス</span> </rio> 
 						<rio style="<?php if($inv[0]->type == "Constool") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">3. Constool <span class="droid">消耗費</span> </rio>
 						<br>
 						<rio style="<?php if($inv[0]->type == "Professional Fee") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">4. Professional Fee <span class="droid">専門家鑑定料</span> </rio> 
