@@ -169,6 +169,7 @@ hr { background-color: red; height: 1px; border: 0; }
                   <th style="width: 10%; padding: 5;vertical-align: middle;border-left:3px solid #000 !important;font-size: 16px;color: black; background-color: #f57f17">Kode Item</th>
                   <th style="width: 15%; padding: 5;vertical-align: middle;border-left:3px solid #000 !important;font-size: 16px;color: black; background-color: #f57f17">Deskripsi</th>
                   <th style="width: 10%; padding: 5;vertical-align: middle;border-left:3px solid #000 !important;font-size: 16px;color: black; background-color: #f57f17">Request Date</th>
+                  <th style="width: 10%; padding: 5;vertical-align: middle;border-left:3px solid #000 !important;font-size: 16px;color: black; background-color: #f57f17">Received Date</th>
                 </tr>
               </thead>
               <tbody id="tabelisipo_undone">
