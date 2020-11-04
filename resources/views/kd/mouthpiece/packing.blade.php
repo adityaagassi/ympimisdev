@@ -190,6 +190,7 @@
 	}
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+	var audio_ok = new Audio('{{ url("sounds/sukses.mp3") }}');
 
 	$('#barcode_outer').keydown(function(event) {
 		if (event.keyCode == 13 || event.keyCode == 9) {
@@ -243,6 +244,7 @@
 						$('#loading').hide();
 						$('#packingTable').DataTable().ajax.reload();
 						openSuccessGritter('Success', result.message);
+						audio_ok.play();
 						$('#barcode_inner').val('');
 						$('#barcode_outer').prop('disabled', true);
 					}
