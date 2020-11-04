@@ -113,6 +113,7 @@
 										<th style="width: 1%">Jarak</th>
 										<!-- <th style="width: 1%">Lampiran</th> -->
 										<th style="width: 1%">Confirm</th>
+										<th style="width: 1%">Action</th>
 									</tr>
 								</thead>
 								<tbody id="confirmTableBody">
@@ -130,6 +131,7 @@
 										<th></th>
 										<th></th>
 										<!-- <th></th> -->
+										<th></th>
 										<th></th>
 									</tr>
 								</tfoot>
@@ -209,6 +211,88 @@
 		</div>
 	</div>
 </div>
+
+<div class="modal fade" id="edit_modal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header" style="padding-top: 0;">
+				<center><h3 style="background-color: #00a65a; font-weight: bold; padding: 3px;">Edit Transportation Data</h3></center>
+				<div class="row">
+					<div class="col-md-11 col-md-offset-2">
+						<form class="form-horizontal">
+							<input type="hidden" id="newId">
+							<div class="form-group">
+								<input type="hidden" id="id_transport">
+								<label for="newAttend" class="col-sm-2 control-label">Kehadiran<span class="text-red">*</span></label>
+								<div class="col-sm-6">
+									<select class="form-control select2" name="editAttend" id="editAttend" data-placeholder="Pilih Kehadiran" style="width: 100%;" disabled>
+										<option value=""></option>
+										<option value="in">Masuk</option>
+										<option value="out">Pulang</option>
+										<option value="cuti">Cuti</option>
+										<option value="izin">Izin</option>
+										<option value="sakit">Sakit</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="editDate" class="col-sm-2 control-label">Tanggal<span class="text-red">*</span></label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control pull-right" id="editDate" name="editDate" value="{{date('Y-m-d')}}">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="editVehicle" class="col-sm-2 control-label">Kendaraan<span class="text-red">*</span></label>
+								<div class="col-sm-6">
+									<select class="form-control select2" name="editVehicle" id="editVehicle" data-placeholder="Pilih Kendaraan" style="width: 100%;" disabled>
+										<option value=""></option>
+										<option value="car">Mobil</option>
+										<option value="shuttle">Shuttle</option>
+										<option value="lainnya">Lainnya</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="editOrigin" class="col-sm-2 control-label">Asal<span class="text-red">*</span></label>
+								<div class="col-sm-6">
+									<input type="text" style="width: 100%" class="form-control" id="editOrigin" name="editOrigin" placeholder="Asal">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="editDestination" class="col-sm-2 control-label">Tujuan<span class="text-red">*</span></label>
+								<div class="col-sm-6">
+									<input type="text" style="width: 100%" class="form-control" id="editDestination" name="editDestination" placeholder="Tujuan">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="" class="col-sm-2 control-label">Jarak<span class="text-red">*</span></label>
+								<div class="col-sm-6">
+									<div class="input-group">
+										<input type="number" style="width: 100%" class="form-control" id="editDistance" name="editDistance" placeholder="Jarak Tempuh">
+										<div class="input-group-addon">
+											Km
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="editHighwayAmount" class="col-sm-2 control-label">Biaya Tol<span class="text-red">*</span></label>
+								<div class="col-sm-6">
+									<input type="text" style="width: 100%" class="form-control" id="editHighwayAmount" name="editHighwayAmount" placeholder="Biaya Tol">
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<a class="btn btn-success pull-right" onclick="updateData()" id="newButton">Update</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 </section>
 @endsection
 
@@ -241,6 +325,12 @@
 		$('.select2').select2();
 		fetchConfirmTable();
 		fetchResumeTable();
+
+		$('#editDate').datepicker({
+			autoclose: true,
+			format: 'yyyy-mm-dd',
+			todayHighlight: true
+		});
 	});
 
 	function fetchTable(){
@@ -506,10 +596,15 @@ function fetchConfirmTable(){
 				confirmTable += '<td>'+value.vehicle.toUpperCase()+'</td>';
 				confirmTable += '<td>'+value.origin+'</td>';
 				confirmTable += '<td>'+value.destination+'</td>';
-				confirmTable += '<td>'+value.highway_amount+'</td>';
+				if (value.highway_amount == null) {
+					confirmTable += '<td>0</td>';
+				}else{
+					confirmTable += '<td>'+value.highway_amount+'</td>';
+				}
 				confirmTable += '<td>'+value.distance+'</td>';
 				// confirmTable += '<td><a href="javascript:void(0)" id="'+ value.highway_attachment +'" onClick="downloadAtt(id)" class="fa fa-paperclip"> Struk</a></td>';
 				confirmTable += '<td><button class="btn btn-success btn-xs" onclick="confirmRecord(\''+value.id+'\')">Confirm</button></td>';
+				confirmTable += '<td><button class="btn btn-warning btn-xs" onclick="openModalEdit(\''+value.id+'\')">Edit</button></td>';
 				confirmTable += '</tr>';
 			});
 
@@ -588,6 +683,60 @@ function fetchConfirmTable(){
 	});
 
 }
+
+function openModalEdit(id) {
+	var data = {
+		id:id
+	}
+	$.get('{{ url("fetch/general/edit_online_transportation") }}', data,function(result, status, xhr){
+		if(result.status){
+			$('#editAttend').val(result.datas.attend_code).trigger('change');
+			$('#editVehicle').val(result.datas.vehicle).trigger('change');
+			$('#editDate').val(result.datas.check_date);
+			$('#editDistance').val(result.datas.distance);
+			$('#editOrigin').val(result.datas.origin);
+			$('#editDestination').val(result.datas.destination);
+			$('#editHighwayAmount').val(result.datas.highway_amount);
+			$('#id_transport').val(id);
+
+			$('#edit_modal').modal('show');
+		}
+	});
+}
+
+function updateData() {
+	$('#loading').show();
+	var editDate = $('#editDate').val();
+	var editDistance = $('#editDistance').val();
+	var editOrigin = $('#editOrigin').val();
+	var editDestination = $('#editDestination').val();
+	var editHighwayAmount = $('#editHighwayAmount').val();
+	var id_transport = $('#id_transport').val();
+	var data = {
+		editDate:editDate,
+		editDistance:editDistance,
+		editOrigin:editOrigin,
+		editDestination:editDestination,
+		editHighwayAmount:editHighwayAmount,
+		id_transport:id_transport,
+	}
+
+	var url = '{{ url("update/general/online_transportation") }}';
+
+	$.post(url, data,function(result, status, xhr){
+		if(result.status){
+			openSuccessGritter('Success','Update Data Berhasil.');
+			$('#edit_modal').modal('hide');
+			$('#loading').hide();
+			fetchTable();
+		}else{
+			openErrorGritter('Error!','Update Data Gagal.');
+			$('#loading').hide();
+		}
+	});
+}
+
+
 
 function downloadAtt(id){
 	window.open(id, '_blank');

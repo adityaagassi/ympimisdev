@@ -503,6 +503,8 @@ Route::group(['nav' => 'R10', 'middleware' => 'permission'], function(){
 	Route::get('fetch/general/online_transportation_report', 'GeneralController@fetchOnlineTransportationReport');
 	Route::get('fetch/general/online_transportation_resume_report', 'GeneralController@fetchOnlineTransportationResumeReport');
 	Route::post('confirm/general/online_transportation_report', 'GeneralController@confirmOnlineTransportationReport');
+	Route::get('fetch/general/edit_online_transportation', 'GeneralController@editOnlineTransportation');
+	Route::post('update/general/online_transportation', 'GeneralController@updateOnlineTransportation');
 
 	Route::get('index/general/report_surat_dokter', 'GeneralController@indexReportSuratDokter');
 	Route::get('fetch/general/report_surat_dokter', 'GeneralController@fetchReportSuratDokter');

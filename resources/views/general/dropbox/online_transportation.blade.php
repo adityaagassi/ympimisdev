@@ -207,7 +207,7 @@
 							<div class="form-group">
 								<label for="newVehicle" class="col-sm-2 control-label">Kendaraan<span class="text-red">*</span></label>
 								<div class="col-sm-6">
-									<select class="form-control select2" name="newVehicle" id="newVehicle" data-placeholder="Pilih Kehadiran" style="width: 100%;" onchange="selectVehicle(value)">
+									<select class="form-control select2" name="newVehicle" id="newVehicle" data-placeholder="Pilih Kendaraan" style="width: 100%;" onchange="selectVehicle(value)">
 										<option value=""></option>
 										<option value="car">Mobil</option>
 										<option value="shuttle">Shuttle</option>

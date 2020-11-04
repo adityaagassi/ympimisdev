@@ -441,7 +441,8 @@ class GeneralController extends Controller{
 		for ($i=0; $i < count($stock); $i++) {
 			try {
 				if($stock[$i]['status'] == 'Simpan'){
-					$shoes = GeneralShoesStock::where('gender',  $stock[$i]['gender'])
+					$shoes = GeneralShoesStock::where('merk',  $stock[$i]['merk'])
+					->where('gender',  $stock[$i]['gender'])
 					->where('size',  $stock[$i]['size'])
 					->first();
 
@@ -451,6 +452,7 @@ class GeneralController extends Controller{
 						$shoes->save();
 					}else{
 						$shoes = new GeneralShoesStock([
+							'merk' => $stock[$i]['merk'],
 							'gender' => $stock[$i]['gender'],
 							'size' => $stock[$i]['size'],
 							'temp_stock' => $stock[$i]['qty'],
@@ -469,6 +471,7 @@ class GeneralController extends Controller{
 					'department' => $emp->department,
 					'section' => $emp->section,
 					'group' => $emp->group,
+					'merk' => $stock[$i]['merk'],
 					'gender' => $stock[$i]['gender'],
 					'size' => $stock[$i]['size'],
 					'quantity' => $stock[$i]['qty'],
@@ -1495,45 +1498,90 @@ class GeneralController extends Controller{
 			ORDER BY
 				calendar.week_date ASC");
 
-$datas = array();
+			$datas = array();
 
-foreach ($transportations as $transportation) {
-	array_push($datas, 
-		[
-			"h" => $transportation->h,
-			"zona" => $transportation->zona,
-			"att_in" => asset('files/general_transportation/'.$transportation->att_in),
-			"att_out" => asset('files/general_transportation/'.$transportation->att_out),
-			"remark_in" => $transportation->remark_in,
-			"remark_out" => $transportation->remark_out,
-			"id_in" => $transportation->id_in,
-			"id_out" => $transportation->id_out,
-			"employee_id" => $transportation->employee_id,
-			"grade" => $transportation->grade,
-			"check_date" => $transportation->check_date,
-			"attend_code" => $transportation->attend_code,
-			"origin_in" => $transportation->origin_in,
-			"destination_in" => $transportation->destination_in,
-			"origin_out" => $transportation->origin_out,
-			"destination_out" => $transportation->destination_out,
-			"vehicle" => $transportation->vehicle,
-			"highway_amount_in" => $transportation->highway_amount_in,
-			"highway_amount_out" => $transportation->highway_amount_out,
-			"distance_in" => $transportation->distance_in,
-			"distance_out" => $transportation->distance_out,
-			"highway_amount_total" => $transportation->highway_amount_total,
-			"distance_total" => $transportation->distance_total,
-			"remark" => $transportation->remark
-		]);
+			foreach ($transportations as $transportation) {
+				array_push($datas, 
+					[
+						"h" => $transportation->h,
+						"zona" => $transportation->zona,
+						"att_in" => asset('files/general_transportation/'.$transportation->att_in),
+						"att_out" => asset('files/general_transportation/'.$transportation->att_out),
+						"remark_in" => $transportation->remark_in,
+						"remark_out" => $transportation->remark_out,
+						"id_in" => $transportation->id_in,
+						"id_out" => $transportation->id_out,
+						"employee_id" => $transportation->employee_id,
+						"grade" => $transportation->grade,
+						"check_date" => $transportation->check_date,
+						"attend_code" => $transportation->attend_code,
+						"origin_in" => $transportation->origin_in,
+						"destination_in" => $transportation->destination_in,
+						"origin_out" => $transportation->origin_out,
+						"destination_out" => $transportation->destination_out,
+						"vehicle" => $transportation->vehicle,
+						"highway_amount_in" => $transportation->highway_amount_in,
+						"highway_amount_out" => $transportation->highway_amount_out,
+						"distance_in" => $transportation->distance_in,
+						"distance_out" => $transportation->distance_out,
+						"highway_amount_total" => $transportation->highway_amount_total,
+						"distance_total" => $transportation->distance_total,
+						"remark" => $transportation->remark
+					]);
 
-}
+			}
 
-$response = array(
-	'status' => true,
-	'transportations' => $datas
-);
-return Response::json($response);
-}
+			$response = array(
+				'status' => true,
+				'transportations' => $datas
+			);
+			return Response::json($response);
+			}
+
+	public function editOnlineTransportation(Request $request)
+	{
+		try {
+
+			$datas = GeneralTransportation::where('id',$request->get('id'))->first();
+			$response = array(
+				'status' => true,
+				'datas' => $datas
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function updateOnlineTransportation(Request $request)
+	{
+		try {
+
+			$datas = GeneralTransportation::where('id',$request->get('id_transport'))->first();
+			$datas->check_date = $request->get('editDate');
+			$datas->distance = $request->get('editDistance');
+			$datas->origin = $request->get('editOrigin');
+			$datas->destination = $request->get('editDestination');
+			$datas->highway_amount = $request->get('editHighwayAmount');
+			$datas->save();
+
+			$response = array(
+				'status' => true,
+				'datas' => $datas
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+	}
 
 public function indexOmiVisitor(){
 	$title = 'Koyami Visitor';
