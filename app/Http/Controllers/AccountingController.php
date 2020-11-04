@@ -1719,7 +1719,7 @@ class AccountingController extends Controller
                     $isimail = "select acc_purchase_requisitions.*,acc_purchase_requisition_items.item_stock, acc_purchase_requisition_items.item_desc, acc_purchase_requisition_items.kebutuhan, acc_purchase_requisition_items.peruntukan FROM acc_purchase_requisitions join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr where acc_purchase_requisitions.id= " . $pr->id;
                     $pr_isi = db::select($isimail);
 
-                    Mail::to($mailtoo)->send(new SendEmail($pr_isi, 'purchase_requisition'));
+                    Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($pr_isi, 'purchase_requisition'));
 
                     $message = 'PR dengan Nomor '.$pr->no_pr;
                     $message2 ='Berhasil di approve';
@@ -1770,7 +1770,7 @@ class AccountingController extends Controller
                     $isimail = "select acc_purchase_requisitions.*,acc_purchase_requisition_items.item_stock, acc_purchase_requisition_items.item_desc, acc_purchase_requisition_items.kebutuhan, acc_purchase_requisition_items.peruntukan FROM acc_purchase_requisitions join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr where acc_purchase_requisitions.id= " . $pr->id;
                     $pr_isi = db::select($isimail);
 
-                    Mail::to($mailtoo)->send(new SendEmail($pr_isi, 'purchase_requisition'));
+                    Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($pr_isi, 'purchase_requisition'));
 
                     $message = 'PR dengan Nomor '.$pr->no_pr;
                     $message2 ='Berhasil di approve';
@@ -1874,7 +1874,7 @@ class AccountingController extends Controller
                 $isimail = "select acc_purchase_requisitions.*,acc_purchase_requisition_items.item_stock, acc_purchase_requisition_items.item_desc, acc_purchase_requisition_items.kebutuhan, acc_purchase_requisition_items.peruntukan FROM acc_purchase_requisitions join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr where acc_purchase_requisitions.id= " . $pr->id;
                 $pr_isi = db::select($isimail);
 
-                Mail::to($mailtoo)->send(new SendEmail($pr_isi, 'purchase_requisition'));
+                Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($pr_isi, 'purchase_requisition'));
 
                 $message = 'PR dengan Nomor '.$pr->no_pr;
                 $message2 ='Berhasil di approve';
@@ -1971,7 +1971,7 @@ class AccountingController extends Controller
                 $isimail = "select acc_purchase_requisitions.*,acc_purchase_requisition_items.item_stock, acc_purchase_requisition_items.item_desc, acc_purchase_requisition_items.kebutuhan, acc_purchase_requisition_items.peruntukan FROM acc_purchase_requisitions join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr where acc_purchase_requisitions.id= " . $pr->id;
                 $pr_isi = db::select($isimail);
 
-                Mail::to($mailtoo)->send(new SendEmail($pr_isi, 'purchase_requisition'));
+                Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($pr_isi, 'purchase_requisition'));
 
                 $message = 'PR dengan Nomor '.$pr->no_pr;
                 $message2 ='Berhasil di approve';
@@ -3746,7 +3746,7 @@ public function poapprovalmanager($id){
 
             $po_isi = db::select($isimail);
 
-            Mail::to($mailtoo)->send(new SendEmail($po_isi, 'purchase_order'));
+            Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($po_isi, 'purchase_order'));
 
             $message = 'PO dengan Nomor '.$po->no_po;
             $message2 ='Berhasil di approve';
@@ -3831,7 +3831,7 @@ public function poapprovaldgm($id){
 
             $po_isi = db::select($isimail);
 
-            Mail::to($mailtoo)->send(new SendEmail($po_isi, 'purchase_order'));
+            Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($po_isi, 'purchase_order'));
 
             $message = 'PO dengan Nomor '.$po->no_po;
             $message2 ='Berhasil di approve';
