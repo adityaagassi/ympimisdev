@@ -293,13 +293,13 @@
       else if(jen2 == "Vehicle"){
         jenis = "V";
       }
-      else if(jen2 == "Tools, Jigs & Furniture"){
+      else if(jen2 == "Tools, Jigs and Furniture"){
         jenis = "T";
       }
       else if(jen2 == "Moulding"){
         jenis = "MD";
       }
-      else if(jen2 == "PC & Printer"){
+      else if(jen2 == "PC and Printer"){
         jenis = "PC";
       }
       else if(jen2 == "Land Acquisition"){
@@ -309,7 +309,7 @@
       if (jen2 == "Office Supplies") {
         jenis = "O";
       }
-      else if(jen2 == "Repair & Maintenance"){
+      else if(jen2 == "Repair and Maintenance"){
         jenis = "R";
       }
       else if(jen2 == "Constool"){
@@ -507,14 +507,14 @@
           list += "<option value='Building'>Building</option>";
           list += "<option value='Machine and Equipment'>Machine and Equipment</option>";
           list += "<option value='Vehicle'>Vehicle</option>";          
-          list += "<option value='Tools, Jigs & Furniture'>Tools, Jigs & Furniture</option>";
+          list += "<option value='Tools, Jigs and Furniture'>Tools, Jigs and Furniture</option>";
           list += "<option value='Moulding'>Moulding</option>";
-          list += "<option value='PC & Printer'>PC & Printer</option>";
+          list += "<option value='PC and Printer'>PC and Printer</option>";
           list += "<option value='Land Acquisition'>Land Acquisition</option>";
         }
         else if (isi == "Expense"){
           list += "<option value='Office Supplies'>Office Supplies</option>";
-          list += "<option value='Repair & Maintenance'>Repair & Maintenance</option>";
+          list += "<option value='Repair and Maintenance'>Repair and Maintenance</option>";
           list += "<option value='Constool'>Constool</option>";
           list += "<option value='Professional Fee'>Proffesional Fee</option>";
           list += "<option value='Miscellaneous'>Miscellaneous</option>";

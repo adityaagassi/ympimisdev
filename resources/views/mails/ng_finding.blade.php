@@ -26,7 +26,7 @@
 	<div>
 		<center>
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
-			<p style="font-size: 18px;">Temuan NG of {{ $leader }} ({{ $department_name }}) <br>on {{ $monthTitle }} <br> (Last Update: {{ date('d-M-Y H:i:s') }})</p>
+			<p style="font-size: 18px;">Temuan NG<br>{{ $leader }} ({{ strtoupper($department_name) }})</p>
 			This is an automatic notification. Please do not reply to this address.
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">

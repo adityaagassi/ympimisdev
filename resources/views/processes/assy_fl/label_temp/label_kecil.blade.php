@@ -202,9 +202,9 @@ function printWindow(win, what) {
   		console.log("after print: "+what, true);
   		
   		if (rem == "P") {
-  			setTimeout(label_desc,2000); 
+  			setTimeout(label_desc,1000); 
   		}else{
-  			setTimeout(tutup,2000);
+  			setTimeout(tutup,1000);
   		}
   	});
   }

@@ -167,7 +167,7 @@
 
 				console.log(rem);
 
-				setTimeout(tutup,2000);	
+				setTimeout(tutup,1000);	
 				
 
 			});

@@ -89,10 +89,10 @@
 		<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 			<thead style="background-color: rgb(126,86,134);">
 				<tr>
-					<th style="width: 2%; border:1px solid black;">Item Desc</th>
-					<th style="width: 2%; border:1px solid black;">Peruntukan</th>
-					<th style="width: 2%; border:1px solid black;">Stok</th>
-					<th style="width: 2%; border:1px solid black;">Kebutuhan</th>
+					<th style="width: 3%; border:1px solid black;">Item Desc</th>
+					<th style="width: 3%; border:1px solid black;">Peruntukan</th>
+					<th style="width: 1%; border:1px solid black;">Stok</th>
+					<th style="width: 1%; border:1px solid black;">Kebutuhan</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -166,10 +166,10 @@
 		<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 			<thead style="background-color: rgb(126,86,134);">
 				<tr>
-					<th style="width: 2%; border:1px solid black;">Item Desc (品名)</th>
-					<th style="width: 2%; border:1px solid black;">Peruntukan (目的)</th>
-					<th style="width: 2%; border:1px solid black;">Stok (在庫)</th>
-					<th style="width: 2%; border:1px solid black;">Kebutuhan (必要数)</th>
+					<th style="width: 3%; border:1px solid black;">Item Desc (品名)</th>
+					<th style="width: 3%; border:1px solid black;">Peruntukan (目的)</th>
+					<th style="width: 1%; border:1px solid black;">Stok (在庫)</th>
+					<th style="width: 1%; border:1px solid black;">Kebutuhan (必要数)</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -228,10 +228,10 @@
 		<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 			<thead style="background-color: rgb(126,86,134);">
 				<tr>
-					<th style="width: 2%; border:1px solid black;">Item Desc</th>
-					<th style="width: 2%; border:1px solid black;">Peruntukan</th>
-					<th style="width: 2%; border:1px solid black;">Stok</th>
-					<th style="width: 2%; border:1px solid black;">Kebutuhan</th>
+					<th style="width: 3%; border:1px solid black;">Item Desc</th>
+					<th style="width: 3%; border:1px solid black;">Peruntukan</th>
+					<th style="width: 1%; border:1px solid black;">Stok</th>
+					<th style="width: 1%; border:1px solid black;">Kebutuhan</th>
 				</tr>
 			</thead>
 			<tbody>

@@ -195,9 +195,9 @@ function printWindow(win, what) {
       var rem = $('#rem').val(); 
 
       if (rem == "P") {
-        setTimeout(label_kecil2,2000);
+        setTimeout(label_kecil2,1000);
       }else{
-        setTimeout(tutup,2000);
+        setTimeout(tutup,1000);
       }
       // window.close();
     });

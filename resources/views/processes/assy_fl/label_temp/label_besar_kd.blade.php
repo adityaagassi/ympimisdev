@@ -74,6 +74,7 @@
 		"marginRight": 0,
 		"marginTop": -3,
 		"marginBottom": 0,
+		"scaling": 1,
 		"title": "",
 		"docURL": "",
 		"headerStrLeft": "",
@@ -140,7 +141,7 @@
 
 				console.log(rem);
 
-				setTimeout(tutup,2000);	
+				setTimeout(tutup,1000);	
 				
 
 			});

@@ -288,7 +288,7 @@ function printWindow(win, what) {
   	win.addEventListener("afterprint", function(event) {
   		console.log("after print: "+what, true);
 
-  		setTimeout(tutup,3000);
+  		setTimeout(tutup,1000);
 		// window.close();
 	});
   }

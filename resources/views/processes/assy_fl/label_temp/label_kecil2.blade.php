@@ -195,7 +195,7 @@ function printWindow(win, what) {
   		var rem = $('#rem').val();
   		console.log("after print: "+what, true);
 
-  		setTimeout(tutup,2000);
+  		setTimeout(tutup,1000);
   	});
   }
   

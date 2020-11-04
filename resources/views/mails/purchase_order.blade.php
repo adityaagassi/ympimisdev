@@ -46,7 +46,7 @@
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
 						<th style="width: 2%; border:1px solid black;">Point</th>
-						<th style="width: 2%; border:1px solid black;">Content</th>
+						<th style="width: 4%; border:1px solid black;">Content</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -118,7 +118,7 @@
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
 						<th style="width: 2%; border:1px solid black;">Point</th>
-						<th style="width: 2%; border:1px solid black;">Content</th>
+						<th style="width: 4%; border:1px solid black;">Content</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -191,7 +191,7 @@
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
 						<th style="width: 2%; border:1px solid black;">Point</th>
-						<th style="width: 2%; border:1px solid black;">Content</th>
+						<th style="width: 4%; border:1px solid black;">Content</th>
 					</tr>
 				</thead>
 				<tbody>

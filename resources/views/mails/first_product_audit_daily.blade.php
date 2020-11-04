@@ -31,19 +31,19 @@
 	<div>
 		<center>
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
-			<p style="font-size: 18px;">Daily Evidence {{ $activity_name }} of {{ $leader }} ({{ $department_name }}) <br>on {{ $monthitle }}<br><br>Sub Section {{ $subsection }} <br> (Last Update: {{ date('d-M-Y H:i:s') }})</p>
+			<p style="font-size: 18px;">Daily Evidence {{ $activity_name }} <br>{{ $leader }} ({{ strtoupper($department_name) }}) <br>on {{ $monthitle }}</p>
 			This is an automatic notification. Please do not reply to this address.
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
 						<th style="width: 1%; border:1px solid black;">#</th>
-						<th style="width: 2%; border:1px solid black;">Date</th>
-						<th style="width: 2%; border:1px solid black;">Month</th>
+						<th style="width: 2%; border:1px solid black;">Tanggal</th>
+						<th style="width: 2%; border:1px solid black;">Bulan</th>
 						<th style="width: 2%; border:1px solid black;">Proses</th>
 						<th style="width: 2%; border:1px solid black;">Jenis</th>
-						<th style="width: 2%; border:1px solid black;">Judgement</th>
+						<th style="width: 2%; border:1px solid black;">Kondisi</th>
 						<th style="width: 2%; border:1px solid black;">Auditor</th>
-						<th style="width: 2%; border:1px solid black;">Note</th>
+						<th style="width: 2%; border:1px solid black;">Catatan</th>
 					</tr>
 				</thead>
 				<tbody>

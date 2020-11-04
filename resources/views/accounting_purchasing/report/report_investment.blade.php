@@ -477,7 +477,7 @@
 						<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold">{{ $bud->budget_no }} <br> {{ $bud->budget_name }}</td>
 						<td colspan="1" style="border: 1px solid black;"><span style="color: blue;font-weight: bold">$ <?= number_format($bud->sisa,2,",",".");?></span></td>
 						<td colspan="1" style="border: 1px solid black;"><span style="color: blue;font-weight: bold"> $ <?= number_format($bud->total,2,",",".");?></span></td>
-						<td colspan="2" style="border: 1px solid black;"> <span style="color: blue;font-weight: bold">$ <?= $bud->sisa - $bud->total ?></span></td>
+						<td colspan="2" style="border: 1px solid black;"> <span style="color: blue;font-weight: bold">$ <?= number_format($bud->sisa - $bud->total, 2, ',', '.'); ?></span></td>
 					</tr>
 					<tr>
 						<td colspan="2" style="border: 1px solid black;">Shifting Budget No. <span class="droid">予算シフト</span> <br> Budget Name <span class="droid">予算名前</span></td>

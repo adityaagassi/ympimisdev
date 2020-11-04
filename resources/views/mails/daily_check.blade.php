@@ -27,16 +27,16 @@
 	<div>
 		<center>
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
-			<p style="font-size: 18px;">Daily Check FG {{ $product }} of {{ $leader }} ({{ $department_name }}) {{ $activity_name }} <br>on {{ $monthTitle }} <br> (Last Update: {{ date('d-M-Y H:i:s') }})</p>
+			<p style="font-size: 18px;">Daily Check FG/KD {{ $product }}<br>{{ $leader }} ({{ strtoupper($department_name) }})</p>
 			This is an automatic notification. Please do not reply to this address.
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
 						<th style="width: 1%; border:1px solid black;">#</th>
-						<th style="width: 2%; border:1px solid black;">Production Date</th>
-						<th style="width: 2%; border:1px solid black;">Check Date</th>
+						<th style="width: 2%; border:1px solid black;">Tanggal Produksi</th>
+						<th style="width: 2%; border:1px solid black;">Tanggal Cek</th>
 						<th style="width: 2%; border:1px solid black;">Serial Number</th>
-						<th style="width: 2%; border:1px solid black;">Condition</th>
+						<th style="width: 2%; border:1px solid black;">Kondisi</th>
 						<th style="width: 2%; border:1px solid black;">Keterangan</th>
 					</tr>
 				</thead>

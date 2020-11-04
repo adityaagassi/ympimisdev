@@ -27,16 +27,16 @@
 	<div>
 		<center>
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
-			<p style="font-size: 18px;">Production Report of {{ $leader }} ({{ $department_name }}) {{ $activity_name }} <br>on {{ $month }} <br> (Last Update: {{ date('d-M-Y H:i:s') }})</p>
+			<p style="font-size: 18px;">Audit NG Jelas<br>{{ $leader }} ({{ strtoupper($department_name) }})</p>
 			This is an automatic notification. Please do not reply to this address.
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
 						<th style="width: 1%; border:1px solid black;">#</th>
 						<th style="width: 2%; border:1px solid black;">Departments</th>
-						<th style="width: 2%; border:1px solid black;">Product</th>
+						<th style="width: 2%; border:1px solid black;">Produk</th>
 						<th style="width: 2%; border:1px solid black;">Proses</th>
-						<th style="width: 2%; border:1px solid black;">Date</th>
+						<th style="width: 2%; border:1px solid black;">Tanggal</th>
 						<th style="width: 2%; border:1px solid black;">Kondisi</th>
 						<th style="width: 2%; border:1px solid black;">PIC</th>
 						<th style="width: 2%; border:1px solid black;">Auditor</th>

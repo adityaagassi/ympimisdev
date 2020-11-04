@@ -138,12 +138,12 @@
               <option value="Building" <?php if($investment->type == "Building") echo "selected"; ?>>Building</option>
               <option value="Machine and Equipment" <?php if($investment->type == "Machine and Equipment") echo "selected"; ?>>Machine and Equipment</option>
               <option value="Vehicle" <?php if($investment->type == "Vehicle") echo "selected"; ?>>Vehicle</option>
-              <option value="Tools, Jigs & Furniture" <?php if($investment->type == "Tools, Jigs & Furniture") echo "selected"; ?>>Tools, Jigs & Furniture</option>
+              <option value="Tools, Jigs and Furniture" <?php if($investment->type == "Tools, Jigs and Furniture") echo "selected"; ?>>Tools, Jigs and Furniture</option>
               <option value="Moulding" <?php if($investment->type == "Moulding") echo "selected"; ?>>Moulding</option>
-              <option value="Pc & Printer" <?php if($investment->type == "Pc & Printer") echo "selected"; ?>>PC & Printer</option>
+              <option value="PC and Printer" <?php if($investment->type == "PC and Printer") echo "selected"; ?>>PC and Printer</option>
 
               <option value="Office Supplies" <?php if($investment->type == "Office Supplies") echo "selected"; ?>>Office Supplies</option>
-              <option value="Repair & Maintenance" <?php if($investment->type == "Repair & Maintenance") echo "selected"; ?>>Repair & Maintenance</option>
+              <option value="Repair and Maintenance" <?php if($investment->type == "Repair and Maintenance") echo "selected"; ?>>Repair and Maintenance</option>
               <option value="Constool" <?php if($investment->type == "Constool") echo "selected"; ?>>Constool</option>
               <option value="Professional Fee" <?php if($investment->type == "Professional Fee") echo "selected"; ?>>Proffesional Fee</option>
               <option value="Miscellaneous" <?php if($investment->type == "Miscellaneous") echo "selected"; ?>>Miscellaneous</option>
@@ -994,20 +994,20 @@
       else if(jen2 == "Vehicle"){
         jenis = "V";
       }
-      else if(jen2 == "Tools, Jigs & Furniture"){
+      else if(jen2 == "Tools, Jigs and Furniture"){
         jenis = "T";
       }
       else if(jen2 == "Moulding"){
         jenis = "MD";
       }
-      else if(jen2 == "PC & Printer"){
+      else if(jen2 == "PC and Printer"){
         jenis = "PC";
       }
 
       if (jen2 == "Office Supplies") {
         jenis = "O";
       }
-      else if(jen2 == "Repair & Maintenance"){
+      else if(jen2 == "Repair and Maintenance"){
         jenis = "R";
       }
       else if(jen2 == "Constool"){
@@ -1375,14 +1375,14 @@
           list += "<option value='Building'>Building</option>";
           list += "<option value='Machine and Equipment'>Machine and Equipment</option>";
           list += "<option value='Vehicle'>Vehicle</option>";          
-          list += "<option value='Tools, Jigs & Furniture'>Tools, Jigs & Furniture</option>";
+          list += "<option value='Tools, Jigs and Furniture'>Tools, Jigs and Furniture</option>";
           list += "<option value='Moulding'>Moulding</option>";
-          list += "<option value='PC & Printer'>PC & Printer</option>";
+          list += "<option value='PC and Printer'>PC and Printer</option>";
           list += "<option value='Land Acquisition'>Land Acquisition</option>";
         }
         else if (isi == "Expense"){
           list += "<option value='Office Supplies'>Office Supplies</option>";
-          list += "<option value='Repair & Maintenance'>Repair & Maintenance</option>";
+          list += "<option value='Repair and Maintenance'>Repair and Maintenance</option>";
           list += "<option value='Constool'>Constool</option>";
           list += "<option value='Professional Fee'>Proffesional Fee</option>";
           list += "<option value='Miscellaneous'>Miscellaneous</option>";

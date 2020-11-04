@@ -27,15 +27,14 @@
 	<div>
 		<center>
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
-			<p style="font-size: 18px;">{{ $activity_name }} of {{ $leader }} ({{ $department_name }}) <br>on {{ $date_jishu_hozen }} <br> (Last Update: {{ date('d-M-Y H:i:s') }})</p>
+			<p style="font-size: 18px;">Audit Jishu Hozen<br>{{ $leader }} ({{ strtoupper($department_name) }})</p>
 			This is an automatic notification. Please do not reply to this address.
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
 						<th style="width: 1%; border:1px solid black;">#</th>
-						<th style="width: 2%; border:1px solid black;">Sub Section</th>
-						<th style="width: 2%; border:1px solid black;">Date</th>
-						<th style="width: 2%; border:1px solid black;">Month</th>
+						<th style="width: 2%; border:1px solid black;">Tanggal</th>
+						<th style="width: 2%; border:1px solid black;">Bulan</th>
 						<th style="width: 2%; border:1px solid black;">PIC</th>
 						<th style="width: 2%; border:1px solid black;">Leader</th>
 					</tr>
@@ -45,7 +44,6 @@
 					@foreach($data as $col)
 					<tr>
 						<td style="border:1px solid black; text-align: center;">{{$i}}</td>
-						<td style="border:1px solid black; text-align: center;">{{$col->subsection}}</td>
 						<td style="border:1px solid black; text-align: center;">{{$col->date}}</td>
 						<td style="border:1px solid black; text-align: center;">{{$col->month}}</td>
 						<td style="border:1px solid black; text-align: center;">{{$col->pic}}</td>

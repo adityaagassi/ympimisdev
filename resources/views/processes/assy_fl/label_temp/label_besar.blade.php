@@ -9,7 +9,6 @@
 		}
 		.name {
 			font-family: 'arial';
-			/*-moz-transform:scale(1.3,1);*/
 		}
 		.product {
 			font-size: 12pt;
@@ -19,7 +18,6 @@
 		.kiri {
 			font-size: 6pt;
 			font-family: 'arial';
-			/*font-weight: bold;*/
 		}
 		.bawah {
 			font-size: 12pt;
@@ -44,14 +42,8 @@
 		<input type="text" name="codegmc" id="codegmc" value="{{$barcode->finished}}" hidden="">
 		<input type="text" name="codejan" id="codejan" value="{{$barcode->janean}}" hidden="">
 		<input type="text" name="codeupc" id="codeupc" value="{{$barcode->upc}}" hidden="">
-		{{-- <input type="text" name="codeday" id="codeday" value="{{$barcode->date_code}}" hidden=""> a--}}
 		<input type="text" name="codej" id="codej" value="{{$barcode->remark}}" hidden="">
 		@endforeach
-
-		{{-- @foreach($date as $nomor => $date)
-		<input type="text" name="codeday" id="codeday" value="{{$date->date_code}}" hidden="">
-		@endforeach --}}
-
 
 		<tr>
 			<td colspan="3" class="name" align="left" id="model" style="font-size: 14pt;padding-left: 25px; font-weight: bold;"></td>
@@ -90,8 +82,7 @@
 </html>
 <script src="{{ url("bower_components/jquery/dist/jquery.min.js")}}"></script>
 <script>
-	jQuery(document).ready(function() {
-		
+	jQuery(document).ready(function() {	
 		
 		jan();
 		upc();
@@ -107,9 +98,7 @@
 		
 	});
 
-	function asd() {
-		window.open('{{ url("index/label_kecil") }}'+'/21N37897/RP', '_blank')
-	}
+
 	function day() {
 		var days = $('#codeday').val();
 		$('#day').text(days);
@@ -239,140 +228,136 @@
 	}
 
 
-// default print settings
-var printSettings = {
-	"printSilent": true,
-	"shrinkToFit": true,
-	"unwriteableMarginLeft": 0,
-	"unwriteableMarginRight": 0,
-	"unwriteableMarginTop": 0,
-	"unwriteableMarginBottom": 0,
-	"edgeLeft": 0,
-	"edgeRight": 0,
-	"edgeTop": 0,
-	"edgeBottom": 0,
-	"marginLeft": -10,
-	"marginRight": 0,
-	"marginTop": -3,
-	"marginBottom": 0,
-	// "scaling": 1,
-	"title": "",
-	"docURL": "",
-	"headerStrLeft": "",
-	"headerStrCenter": "",
-	"headerStrRight": "",
-	"footerStrLeft": "",
-	"footerStrCenter": "",
-	"footerStrRight": "",
-	"printerName" : "SATO CG408TT" 
-};
+	var printSettings = {
+		"printSilent": true,
+		"shrinkToFit": true,
+		"unwriteableMarginLeft": 0,
+		"unwriteableMarginRight": 0,
+		"unwriteableMarginTop": 0,
+		"unwriteableMarginBottom": 0,
+		"edgeLeft": 0,
+		"edgeRight": 0,
+		"edgeTop": 0,
+		"edgeBottom": 0,
+		"marginLeft": -10,
+		"marginRight": 0,
+		"marginTop": -3,
+		"marginBottom": 0,
+		"scaling": 1,
+		"title": "",
+		"docURL": "",
+		"headerStrLeft": "",
+		"headerStrCenter": "",
+		"headerStrRight": "",
+		"footerStrLeft": "",
+		"footerStrCenter": "",
+		"footerStrRight": "",
+		"printerName" : "SATO CG408TT" 
+	};
 
-function label_kecil() {
-	var sn = $('#codesn').val();
-	window.open('{{ url("index/fl_label_kecil") }}'+'/'+sn+'/P', '_blank');
-	window.close();
-}
+	function label_kecil() {
+		var sn = $('#codesn').val();
+		window.open('{{ url("index/fl_label_kecil") }}'+'/'+sn+'/P', '_blank');
+		window.close();
+	}
 
-function tutup() {
-	window.close();
-}
+	function tutup() {
+		window.close();
+	}
 
-function defineCustomPaperSize() {
-	console.log("Define custom paper size", false);
-	jsPrintSetup.definePaperSize(101, 101, 'Custom Size 1', 'Custom Size 1', 'My Test Custom Size 1', 76.0, 34.5, jsPrintSetup.kPaperSizeInches);
-  // w, h
-  console.log(JSON.stringify(jsPrintSetup.getPaperSizeDataByID(101), null, "\t"), true);
-}
+	function defineCustomPaperSize() {
+		console.log("Define custom paper size", false);
+		jsPrintSetup.definePaperSize(101, 101, 'Custom Size 1', 'Custom Size 1', 'My Test Custom Size 1', 76.0, 34.5, jsPrintSetup.kPaperSizeInches);
+		console.log(JSON.stringify(jsPrintSetup.getPaperSizeDataByID(101), null, "\t"), true);
+	}
 
-function printWindow(win, what) {
-  // jsPrintSetup messages  
-  function jspListener(event) {
-  	console.log('event.data:'+JSON.stringify(event.data));
-  	if (event.source == win 
-  		&& event.data.source && event.data.source == "jsPrintSetup"
-  		) {
-  		if (event.data.message == "job_start") {  
-  			console.log(what+" Job "+event.data.jobId+" started");
-  			console.log(what+" Job "+event.data.jobId+" started", true);
-  		} else if (event.data.message == "job_progress") {
-  			console.log(what+" Job "+event.data.jobId+" progress:"+event.data.progress);
-  			console.log(what+" Job "+event.data.jobId+" progress:"+event.data.progress, true);
-  		} else if (event.data.message == "job_error") {
-  			console.log(what+" Job "+event.data.jobId+" error:"+event.data.statusMessage);
-  			console.log(what+" Job "+event.data.jobId+" error:"+event.data.statusMessage, true);
-  		} else if (event.data.message == "job_rejected") {
-  			console.log(what+" Job "+event.data.jobId+" rejected.");
-  			console.log(what+" Job "+event.data.jobId+" rejected.", true);
-  		} else if (event.data.message == "job_submited") {
-  			console.log(what+" Job "+event.data.jobId+" submited.");
-  			console.log(what+" Job "+event.data.jobId+" submited.", true);
-  		} else if (event.data.message == "job_complete") {
-  			console.log(what+" Job "+event.data.jobId+" completed.");
-  			console.log(what+" Job "+event.data.jobId+" completed.", true);
-  		} else if (event.data.message == "jsp_permission") {
-  			console.log(what+" jsPrintSetup accessEnabled:"+event.data.accessEnabled+" permission:"+event.data.permission);
-  			console.log(what+" jsPrintSetup accessEnabled:"+event.data.accessEnabled+" permission:"+event.data.permission, true);
-  		} else {
-  			console.log(what+" Unknown message:"+event.data.message);
-  			console.log(what+" Unknown message:"+event.data.message, true);
-  		}
-  	}
-  }
-  if (typeof(win.privListenersAdded) === "undefined") {
-  	win.privListenersAdded = true;    
-  	win.addEventListener("message", jspListener);
+	function printWindow(win, what) {
+		function jspListener(event) {
+			console.log('event.data:'+JSON.stringify(event.data));
+			if (event.source == win 
+				&& event.data.source && event.data.source == "jsPrintSetup"
+				) {
+				if (event.data.message == "job_start") {  
+					console.log(what+" Job "+event.data.jobId+" started");
+					console.log(what+" Job "+event.data.jobId+" started", true);
+				} else if (event.data.message == "job_progress") {
+					console.log(what+" Job "+event.data.jobId+" progress:"+event.data.progress);
+					console.log(what+" Job "+event.data.jobId+" progress:"+event.data.progress, true);
+				} else if (event.data.message == "job_error") {
+					console.log(what+" Job "+event.data.jobId+" error:"+event.data.statusMessage);
+					console.log(what+" Job "+event.data.jobId+" error:"+event.data.statusMessage, true);
+				} else if (event.data.message == "job_rejected") {
+					console.log(what+" Job "+event.data.jobId+" rejected.");
+					console.log(what+" Job "+event.data.jobId+" rejected.", true);
+				} else if (event.data.message == "job_submited") {
+					console.log(what+" Job "+event.data.jobId+" submited.");
+					console.log(what+" Job "+event.data.jobId+" submited.", true);
+				} else if (event.data.message == "job_complete") {
+					console.log(what+" Job "+event.data.jobId+" completed.");
+					console.log(what+" Job "+event.data.jobId+" completed.", true);
+				} else if (event.data.message == "jsp_permission") {
+					console.log(what+" jsPrintSetup accessEnabled:"+event.data.accessEnabled+" permission:"+event.data.permission);
+					console.log(what+" jsPrintSetup accessEnabled:"+event.data.accessEnabled+" permission:"+event.data.permission, true);
+				} else {
+					console.log(what+" Unknown message:"+event.data.message);
+					console.log(what+" Unknown message:"+event.data.message, true);
+				}
+			}
+		}
+		if (typeof(win.privListenersAdded) === "undefined") {
+			win.privListenersAdded = true;    
+			win.addEventListener("message", jspListener);
 
-  	win.addEventListener("beforeprint", function(event) {
-  		jan();
-  		upc();
-  		gmc();
-  		day();
-  		jumlah();
-  		console.log("before print: "+what, true);
-  	});
-  	win.addEventListener("afterprint", function(event) {
-  		console.log("after print: "+what, true);
-  		var sn = $('#codesn').val();
-  		var rem = $('#rem').val();
+			win.addEventListener("beforeprint", function(event) {
+				jan();
+				upc();
+				gmc();
+				day();
+				jumlah();
+				console.log("before print: "+what, true);
+			});
+			win.addEventListener("afterprint", function(event) {
+				console.log("after print: "+what, true);
+				var sn = $('#codesn').val();
+				var rem = $('#rem').val();
 
-  		console.log(rem);
+				console.log(rem);
 
-  		if (rem == "P") {
-  			setTimeout(label_kecil,2000);
-  		}else{
-  			setTimeout(tutup,2000);	
-  		}
+				if (rem == "P") {
+					setTimeout(label_kecil,1000);
+				}else{
+					setTimeout(tutup,1000);	
+				}
 
-  	});
-  }
-  
-  win.jsPrintSetup.print(printSettings).then(
-  	(jobId) => {
-  		console.log(what+" Print job for submitted with id:"+jobId);
-  		console.log(what+" Print job for submitted with id:"+jobId, true);
-  		checkJobInfo(what, win,jobId);
+			});
+		}
 
-  		setTimeout(() => {checkJobInfo(what, win, jobId);}, 5000);
-  	}
-  	, (err) => {
-  		console.log(what+" Pint job rejected:"+err);
-  		console.log(what+" Pint job rejected:"+err, true);
-  	}
-  	);
-} 
+		win.jsPrintSetup.print(printSettings).then(
+			(jobId) => {
+				console.log(what+" Print job for submitted with id:"+jobId);
+				console.log(what+" Print job for submitted with id:"+jobId, true);
+				checkJobInfo(what, win,jobId);
 
-function checkJobInfo(what, win, jobId) {
-	var jobInfo = win.jsPrintSetup.getJobInfo(jobId);
-	console.log(what+ " Async Checking Ifo for Job:"+jobId, true);
-	if (jobInfo) {
-  //  jobInfo_1 = JSON.parse(jobInfo);
-  console.log("----- job info:"+JSON.stringify(jobInfo));
-  console.log(JSON.stringify(jobInfo, null, "\t"), true);
-} else {
-	console.log("----- Can't find jobInfo for jobId:"+jobId);
-	console.log("Can't find jobInfo for jobId:"+jobId, true);
-}
-}
+				setTimeout(() => {checkJobInfo(what, win, jobId);}, 5000);
+			}
+			, (err) => {
+				console.log(what+" Pint job rejected:"+err);
+				console.log(what+" Pint job rejected:"+err, true);
+			}
+			);
+	} 
+
+	function checkJobInfo(what, win, jobId) {
+		var jobInfo = win.jsPrintSetup.getJobInfo(jobId);
+		console.log(what+ " Async Checking Ifo for Job:"+jobId, true);
+		if (jobInfo) {
+			console.log("----- job info:"+JSON.stringify(jobInfo));
+			console.log(JSON.stringify(jobInfo, null, "\t"), true);
+		} else {
+			console.log("----- Can't find jobInfo for jobId:"+jobId);
+			console.log("Can't find jobInfo for jobId:"+jobId, true);
+		}
+	}
 
 
 </script>
