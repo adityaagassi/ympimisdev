@@ -44,8 +44,8 @@
   </h1>
   <ol class="breadcrumb">
     <li>
-      <a data-toggle="modal" data-target="#deleteModal" class="btn btn-danger btn-sm" style="color:white">Delete {{ $page }}s</a>
-      &nbsp;
+      {{-- <a data-toggle="modal" data-target="#deleteModal" class="btn btn-danger btn-sm" style="color:white">Delete {{ $page }}s</a>
+      &nbsp; --}}
       <a data-toggle="modal" data-target="#importModal" class="btn btn-success btn-sm" style="color:white">Import {{ $page }}s</a>
       &nbsp;
       <a data-toggle="modal" data-target="#createModal" class="btn btn-primary btn-sm" style="color:white">Create {{ $page }}</a>
@@ -79,12 +79,13 @@
           <table id="example1" class="table table-bordered table-striped table-hover">
             <thead style="background-color: rgba(126,86,134,.7);">
               <tr>
-                <th>Material Number</th>
+                <th>Material</th>
                 <th>Description</th>
-                <th>Origin Group</th>
+                <th>Group</th>
                 <th>HPL</th>
-                <th>Due Date</th>
-                <th>Qty</th>
+                <th>Date</th>
+                <th>Target</th>
+                <th>Produksi</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -92,6 +93,7 @@
             </tbody>
             <tfoot>
               <tr>
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -248,6 +250,15 @@
             <div class="input-group">
               <input min="1" type="number" class="form-control" id="quantity_edit" placeholder="Enter Quantity" required>
               <input type="hidden" id="id_edit">
+              <span class="input-group-addon">pc(s)</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-4">Actual Quantity<span class="text-red">*</span></label>
+          <div class="col-sm-6">
+            <div class="input-group">
+              <input min="1" type="number" class="form-control" id="actual_edit" placeholder="Enter Quantity" required>
               <span class="input-group-addon">pc(s)</span>
             </div>
           </div>
@@ -426,6 +437,7 @@
       { "data": "hpl" },
       { "data": "due_date" },
       { "data": "quantity" },
+      { "data": "actual_quantity" },
       { "data": "action" }
       ],
       'buttons': {
@@ -521,7 +533,7 @@
       return false;
     }
 
-    $.post('{{ url("delete/production_schedule") }}', data, function(result, status, xhr){
+    $.post('{{ url("delete/production_schedule_kd") }}', data, function(result, status, xhr){
       $('#example1').DataTable().ajax.reload(null, false);
       openSuccessGritter("Success","Delete Material Schedule");
     })
@@ -540,6 +552,7 @@
       $('#material_number_edit').val(result.datas.material_number).trigger('change.select2');
       $("#due_date_edit").val(result.datas.due_date);
       $("#quantity_edit").val(result.datas.quantity);
+      $("#actual_edit").val(result.datas.actual_quantity);
     })
   }
 
@@ -549,7 +562,7 @@
     quantity: $("#quantity_edit").val()
   };
 
-  $.post('{{ url("edit/production_schedule") }}', data, function(result, status, xhr){
+  $.post('{{ url("edit/production_schedule_kd") }}', data, function(result, status, xhr){
     if (result.status == true) {
       $('#example1').DataTable().ajax.reload(null, false);
       openSuccessGritter("Success","New Production schedule has been edited.");
