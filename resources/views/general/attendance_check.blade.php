@@ -23,6 +23,21 @@
 		vertical-align: middle;
 	}
 	#loading { display: none; }
+	.blink {
+		animation-duration: 1s;
+		animation-name: blink;
+		animation-iteration-count: infinite;
+		animation-direction: alternate;
+		animation-timing-function: ease-in-out;
+	}
+	@keyframes blink {
+		50% {
+			opacity: 1;
+		}
+		100% {
+			opacity: 0;
+		}
+	}
 </style>
 @stop
 @section('header')
@@ -110,6 +125,7 @@
 			if(result.status){
 				openSuccessGritter('Success', result.message);
 				fetchAttendanceList();
+				audio_ok.play();
 				$('#tag').val('');
 				$('#tag').focus();
 			}
@@ -148,24 +164,47 @@
 				$('#container').html("");
 				$.each(result.attendance_lists, function(key, value){
 					var name = value.NAME;
-					attendance_data += '<div class="col-xs-2" style="padding:2px;padding-top:0px">';
-					if(value.attend_date == null){
-						attendance_data += '<table class="table table-bordered" style="background-color: #ffccff; width: 100%;padding-bottom:0px;margin-bottom:2px;">';
-					}else{
-						count_ok += 1;
-						attendance_data += '<table class="table table-bordered" style="background-color: #ccffff; width: 100%;padding-bottom:0px;margin-bottom:2px;">';
+
+					if(key == 0){
+						attendance_data += '<div class="col-xs-12" style="padding:2px;padding-top:0px">';
+						if(value.attend_date == null){
+							attendance_data += '<table class="table table-bordered" style="background-color: #ffccff; width: 100%;padding-bottom:0px;margin-bottom:2px;">';
+						}else{
+							count_ok += 1;
+							attendance_data += '<table class="table table-bordered blink" style="background-color: #ccff90; width: 100%;padding-bottom:0px;margin-bottom:2px;">';
+						}
+						attendance_data += '<tbody>';
+						attendance_data += '<tr>';
+						attendance_data += '<td style="padding: 0; width:70%; font-size:3vw;">'+value.employee_id+'</td>';
+						attendance_data += '<td style="padding: 0; width:30%; font-size:3vw;">'+value.department+'</td>';
+						attendance_data += '</tr>';
+						attendance_data += '<tr>';
+						attendance_data += '<td colspan="2" style="padding: 0; font-size:4vw;"><p>'+name.substring(0,30)+'</p></td>';
+						attendance_data += '</tr>';
+						attendance_data += '</tbody>';
+						attendance_data += '</table>';
+						attendance_data += '</div>';
 					}
-					attendance_data += '<tbody>';
-					attendance_data += '<tr>';
-					attendance_data += '<td style="padding: 0; width:70%;">'+value.employee_id+'</td>';
-					attendance_data += '<td style="padding: 0; width:30%;">'+value.department+'</td>';
-					attendance_data += '</tr>';
-					attendance_data += '<tr>';
-					attendance_data += '<td colspan="2" style="padding: 0;">'+name.substring(0,30)+'</td>';
-					attendance_data += '</tr>';
-					attendance_data += '</tbody>';
-					attendance_data += '</table>';
-					attendance_data += '</div>';
+					else{						
+						attendance_data += '<div class="col-xs-2" style="padding:2px;padding-top:0px">';
+						if(value.attend_date == null){
+							attendance_data += '<table class="table table-bordered" style="background-color: #ffccff; width: 100%;padding-bottom:0px;margin-bottom:2px;">';
+						}else{
+							count_ok += 1;
+							attendance_data += '<table class="table table-bordered" style="background-color: #ccffff; width: 100%;padding-bottom:0px;margin-bottom:2px;">';
+						}
+						attendance_data += '<tbody>';
+						attendance_data += '<tr>';
+						attendance_data += '<td style="padding: 0; width:70%;">'+value.employee_id+'</td>';
+						attendance_data += '<td style="padding: 0; width:30%;">'+value.department+'</td>';
+						attendance_data += '</tr>';
+						attendance_data += '<tr>';
+						attendance_data += '<td colspan="2" style="padding: 0;">'+name.substring(0,30)+'</td>';
+						attendance_data += '</tr>';
+						attendance_data += '</tbody>';
+						attendance_data += '</table>';
+						attendance_data += '</div>';
+					}
 
 					count_all += 1;
 
@@ -184,6 +223,7 @@
 	}
 	
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+	var audio_ok = new Audio('{{ url("sounds/sukses.mp3") }}');
 
 	function openSuccessGritter(title, message){
 		jQuery.gritter.add({
