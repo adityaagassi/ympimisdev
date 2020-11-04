@@ -62,7 +62,7 @@
 			</table>
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
-			<a href="http://172.17.128.4/mirai/public/index/audit_report_activity/print_audit_report_email/{{ $activity_list_id }}/{{ $subsection }}/{{ substr($date,0,7) }}">See Audit Report Activity Data / Approval Data</a>
+			<a href="http://172.17.128.4/mirai/public/index/audit_report_activity/print_audit_report_email/{{ $activity_list_id }}/{{ substr($date,0,7) }}">See Audit Report Activity Data / Approval Data</a>
 		</center>
 	</div>
 </body>
