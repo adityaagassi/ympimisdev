@@ -839,6 +839,11 @@
 			return false;
 		}
 
+		if ($("#kategori").val().indexOf("Mesin") >= 0 && $("#nama_mesin").val() == "") {
+			openErrorGritter('Gagal', 'Harap Memilih Mesin');
+			return false;
+		}
+
 		$("#create_btn").attr("disabled", true);
 
 		e.preventDefault();
