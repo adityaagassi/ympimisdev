@@ -176,6 +176,8 @@ table > thead > tr > th{
               </select>
           </div>
         </div> -->
+        
+        <input type="hidden" name="status" id="status">
 
         <div class="col-md-2">
           <div class="input-group">
@@ -202,6 +204,7 @@ table > thead > tr > th{
               </select>
           </div>
         </div> -->
+
 
         <div class="col-md-2">
           <div class="input-group">
@@ -569,7 +572,7 @@ table > thead > tr > th{
 
     var kategori = $('#kategori').val();
     var departemen = $('#departemen').val();
-    // var status = $('#status').val();
+    var status = $('#status').val();
     var sumber_komplain = $('#sumber_komplain').val();
     var pic = $('#picprogress').val();
 

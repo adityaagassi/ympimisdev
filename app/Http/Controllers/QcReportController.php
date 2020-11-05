@@ -1646,16 +1646,16 @@ class QcReportController extends Controller
           $dep = '';
       }
 
-      // $status = $request->get('status');
+      $status = $request->get('status');
 
-      // if ($status != null) {
-      //     $statt = json_encode($status);
-      //     $stat = str_replace(array("[","]"),array("(",")"),$statt);
+      if ($status != null) {
+          $statt = json_encode($status);
+          $stat = str_replace(array("[","]"),array("(",")"),$statt);
 
-      //     $sta = 'and qc_cpars.status_code in '.$stat;
-      // } else {
-      //     $sta = 'and qc_cpars.status_code not in (1)';
-      // }
+          $sta = 'and qc_cpars.status_code in '.$stat;
+      } else {
+          $sta = 'and qc_cpars.status_code not in (1)';
+      }
 
       $sumber_komplain = $request->get('sumber_komplain');
 
@@ -1686,7 +1686,7 @@ class QcReportController extends Controller
               WHEN qc_verifikators.verifikatorcoordinator is not null THEN (select name from employees where employee_id = qc_verifikators.verifikatorcoordinator)
               WHEN qc_verifikators.verifikatorforeman is not null THEN (IF(qc_cpars.kategori = 'internal',(select name from employees where employee_id = qc_verifikators.verifikatorforeman),'Tidak Ada'))
               ELSE 'Tidak Ada'
-        END) as namacfcar from qc_cpars join departments on departments.id = qc_cpars.department_id left join qc_cars on qc_cpars.cpar_no = qc_cars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id where qc_cpars.deleted_at is null ".$kate." ".$dep." ".$sk." order by kategori,id,cpar_no asc");
+        END) as namacfcar from qc_cpars join departments on departments.id = qc_cpars.department_id left join qc_cars on qc_cpars.cpar_no = qc_cars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id where qc_cpars.deleted_at is null ".$kate." ".$dep." ".$sk." ".$sta." order by kategori,id,cpar_no asc");
 
       $response = array(
         'status' => true,
