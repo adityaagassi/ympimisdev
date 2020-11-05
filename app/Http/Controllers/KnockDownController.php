@@ -186,7 +186,7 @@ class KnockDownController extends Controller{
 			));
 		}else if($knock_down_detail->label == 'thermal'){
 			$this->printKDOSub($knock_down_detail);
-			return JavaScript("window.close();");			
+			return view('close');			
 		}else{
 			return view('kd.label.print_label_subassy', array(
 				'knock_down_detail' => $knock_down_detail,
@@ -1901,7 +1901,7 @@ class KnockDownController extends Controller{
 		$status = 1;
 		if($location == 'z-pro'){
 			$max_count = 100;
-			$status = 100;
+			$status = 0;
 		}
 
 		$storage_location = Material::where('material_number','=',$material_number)
@@ -2259,7 +2259,7 @@ class KnockDownController extends Controller{
 		}else if (Auth::user()->role_code == 'OP-WH-Exim'){
 			$printer_name = 'FLO Printer LOG';
 		}else{
-			$printer_name = 'MIS2';
+			$printer_name = 'MIS';
 		}
 
 		$connector = new WindowsPrintConnector($printer_name);
@@ -2353,7 +2353,7 @@ class KnockDownController extends Controller{
 		$receive = $knock_down_details->storage_location;
 
 		if(Auth::user()->role_code == 'MIS' || Auth::user()->role_code == 'S'){
-			$printer_name = 'MIS2';
+			$printer_name = 'MIS';
 		}else{
 			if($receive == 'CL91' || $receive == 'CLB9'){
 				$printer_name = 'FLO Printer 102';
@@ -2401,13 +2401,31 @@ class KnockDownController extends Controller{
 		$printer->feed(2);
 		$printer->initialize();
 		$printer->text("GMC     | Description                     | Qty ");
-		$total_qty = 0;
 		$qty = $this->writeString($knock_down_details->quantity, 4, ' ');
 		$material_description = substr($knock_down_details->material_description, 0,31);
 		$material_description = $this->writeString($material_description, 31, ' ');
 		$printer->text($knock_down_details->material_number." | ".$material_description." | ".$qty);
 		
+		$printer->feed(3);
+		$printer->initialize();
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->text("------------------------------------");
+		$printer->feed(1);
+		$printer->text("|Qty:             |Qty:            |");
+		$printer->feed(1);
+		$printer->text("|                 |                |");
+		$printer->feed(1);
+		$printer->text("|                 |                |");
+		$printer->feed(1);
+		$printer->text("|                 |                |");
+		$printer->feed(1);
+		$printer->text("|Production       |Logistic        |");
+		$printer->feed(1);
+		$printer->text("------------------------------------");
 		$printer->feed(2);
+		$printer->initialize();
+		$printer->text("Total Qty: ". $qty ."\n");
+		$printer->feed(3);
 		$printer->cut();
 		$printer->close();
 	}
