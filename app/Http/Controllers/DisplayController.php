@@ -15,6 +15,196 @@ use Illuminate\Support\Facades\Auth;
 
 class DisplayController extends Controller
 {
+	public function indexEfficiencyMonitoring(){
+
+		$title = 'Efficiency Monitoring';
+		$title_jp = '効率の監視';
+
+		return view('displays.efficiency_monitoring', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'Display Efficiency Monitoring')->with('head', 'Display');
+	}
+
+	public function fetchEfficiencyMonitoring(Request $request){
+
+		$employee_histories = db::select("SELECT
+			date_format( date_add( e.period, INTERVAL 5 DAY ), '%Y-%m' ) AS completion_month,
+			e.Emp_no AS employee_id,
+			e.cost_center_code,
+			c.cost_center_eff AS cost_center_name 
+			FROM
+			employee_histories AS e
+			LEFT JOIN cost_centers2 AS c ON c.cost_center = e.cost_center_code 
+			WHERE
+			c.cost_center_eff IS NOT NULL 
+			AND date_format( e.period, '%Y-%m-%d' ) >= '2020-09-01' 
+			AND date_format( e.period, '%Y-%m-%d' ) <= '2020-09-30'");
+
+		$completion_times = db::select("SELECT
+			date_format( c.completion_date, '%Y-%m' ) AS completion_month,
+			DATE_FORMAT( c.completion_date, '%u' ) AS completion_week,
+			c.completion_date,
+			c.work_center_name,
+			sum( c.total_time ) AS total_time 
+			FROM
+			(
+			SELECT
+			date( kh.created_at ) AS completion_date,
+			km.material_number,
+			km.location,
+			kh.lot,
+			km.stdval,
+			kh.lot * km.stdval AS total_time,
+			yw.work_center_name 
+			FROM
+			kitto.histories AS kh
+			LEFT JOIN kitto.materials AS km ON km.id = kh.completion_material_id
+			LEFT JOIN ympimis.work_centers AS yw ON yw.work_center = km.work_center 
+			WHERE
+			date( kh.created_at ) >= '2020-10-01' 
+			AND date( kh.created_at ) <= '2020-10-12' 
+			AND kh.category IN ( 'completion', 'completion_cancel', 'completion_return', 'completion_adjustment' ) UNION ALL
+			SELECT
+			date( l.transaction_date ) AS completion_date,
+			l.material_number,
+			l.issue_storage_location AS location,
+			IF
+			(
+			l.mvt = '101',
+			l.qty,
+			-(
+			l.qty 
+			)) AS lot,
+			s.std_time AS stdval,
+			IF
+			(
+			l.mvt = '101',
+			l.qty,
+			-(
+			l.qty 
+			)) * s.std_time AS total_time,
+			w.work_center_name 
+			FROM
+			log_transactions AS l
+			LEFT JOIN sap_standard_times AS s ON s.material_number = l.material_number
+			LEFT JOIN work_centers AS w ON w.work_center = s.work_center 
+			WHERE
+			date( l.transaction_date ) >= '2020-10-01'
+			AND date( l.transaction_date ) <= '2020-10-12'  
+			AND l.mvt IN ( '101', '102' ) UNION ALL
+			SELECT
+			date( t.created_at ) AS completion_date,
+			t.material_number,
+			t.issue_location AS location,
+			IF
+			(
+			t.movement_type = '101',
+			t.quantity,
+			-(
+			t.quantity 
+			)) AS lot,
+			s.std_time AS stdval,
+			IF
+			(
+			t.movement_type = '101',
+			t.quantity,
+			-(
+			t.quantity 
+			))* s.std_time AS total_time,
+			w.work_center_name 
+			FROM
+			transaction_completions t
+			LEFT JOIN sap_standard_times AS s ON s.material_number = t.material_number
+			LEFT JOIN work_centers AS w ON w.work_center = s.work_center 
+			WHERE
+			date( t.created_at ) >= '2020-10-01' 
+			AND date( t.created_at ) <= '2020-10-12' 
+			) AS c
+			GROUP BY
+			completion_month,
+			completion_week,
+			c.completion_date,
+			c.work_center_name");
+
+		$man_times = db::connection('sunfish')->select("SELECT
+			format ( a.shiftstarttime, 'yyyy-MM' ) AS completion_month,
+			DATEPART( wk, a.shiftstarttime ) AS completion_week,
+			format ( a.shiftstarttime, 'yyyy-MM-dd' ) AS completion_date,
+			a.emp_no AS employee_id,
+			datediff( MINUTE, starttime, endtime ) AS work_time,
+			COALESCE ( b.break_time, 0 ) AS break_time,
+			COALESCE ( a.total_ot, 0 ) AS ot_time,
+			datediff( MINUTE, starttime, endtime ) + COALESCE ( b.break_time, 0 ) + COALESCE ( a.total_ot, 0 ) AS total_time 
+			FROM
+			VIEW_YMPI_Emp_Attendance AS a
+			LEFT JOIN ( SELECT shiftdailycode, SUM ( datediff( MINUTE, breakovt_endtime, breakovt_starttime ) ) AS break_time FROM OVT_BREAK_YMPI GROUP BY shiftdailycode ) AS b ON b.shiftdailycode = a.shiftdaily_code 
+			WHERE
+			format ( a.shiftstarttime, 'yyyy-MM-dd' ) >= '2020-10-01'
+			AND format ( a.shiftstarttime, 'yyyy-MM-dd' ) <= '2020-10-12'");
+
+		$man_times2 = array();
+
+		foreach ($man_times as $man_time) {
+			$cost_center_name = "";
+			foreach ($employee_histories as $employee_history) {
+				if($man_time->completion_month == $employee_history->completion_month && $man_time->employee_id == $employee_history->employee_id){
+					$cost_center_name = $employee_history->cost_center_name;
+				}
+			}
+			if($cost_center_name != ""){
+				array_push($man_times2, 
+					[
+						'completion_month' => $man_time->completion_month,
+						'completion_week' => $man_time->completion_week,
+						'completion_date' => $man_time->completion_date,
+						'cost_center_name' => $cost_center_name,
+						'total_time' => $man_time->total_time
+					]);				
+			}
+		}
+		
+		$groups = array();
+		foreach ($man_times2 as $data) {
+			$key = $data['completion_month'].'_'.$data['completion_week'].'_'.$data['completion_date'].'_'.$data['cost_center_name'] ;
+			if (!array_key_exists($key, $groups)) {
+				$groups[$key] = array(
+					'completion_month' => $data['completion_month'],
+					'completion_week' => $data['completion_week'],
+					'completion_date' => $data['completion_date'],
+					'cost_center_name' => $data['cost_center_name'],
+					'total_time' => (float) $data['total_time']
+				);
+			} else {
+				$groups[$key]['total_time'] = (float) $groups[$key]['total_time'] + (float) $data['total_time'];
+			}
+		}
+
+		$results = array();
+
+		foreach ($completion_times as $output) {
+			foreach ($groups as $input) {
+				if($output->completion_date == $input['completion_date'] && $output->work_center_name == $input['cost_center_name']){
+					array_push($results,
+						[
+							'completion_month' => $output->completion_month,
+							'completion_week' => $output->completion_week,
+							'completion_date' => $output->completion_date,
+							'cost_center_name' => $output->work_center_name,
+							'total_output' => $output->total_time,
+							'total_input' => $input['total_time']
+						]);
+				}
+			}
+		}
+
+		$response = array(
+			'status' => true,
+			'tes' => $results,
+		);
+		return Response::json($response);
+		
+	}
 
 	public function index_dp_production_result(){
 		$activity =  new UserActivityLog([
@@ -40,7 +230,7 @@ class DisplayController extends Controller
 		return view('displays.eff_scrap', array(
 			'title' => $title,
 			'title_jp' => $title_jp
-		))->with('page', 'Display Weekly Shipment')->with('head', 'Display');
+		))->with('page', 'Display Scrap Monitoring')->with('head', 'Display');
 	}
 
 	public function fetchEffScrap(Request $request){

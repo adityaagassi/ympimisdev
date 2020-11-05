@@ -973,6 +973,10 @@
                                             <i class="fa fa-caret-right"></i> Production Summary (生産まとめ)
                                         </a>
                                         <br>
+                                        <a href="{{ url("/index/display/efficiency_monitoring") }}">
+                                            <i class="fa fa-caret-right"></i> Efficiency Monitoring (効率の監視)
+                                        </a>
+                                        <br>
                                         <a href="{{ url("/index/display/eff_scrap") }}">
                                             <i class="fa fa-caret-right"></i> Scrap Monitoring (スクラップの監視)
                                         </a>
