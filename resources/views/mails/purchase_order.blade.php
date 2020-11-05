@@ -42,7 +42,7 @@
 
 			<h2>Purchase Order (PO) {{$no_po}}</h2>
 
-			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
+			<table style="border:1px solid black; border-collapse: collapse;" width="60%">
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
 						<th style="width: 2%; border:1px solid black;">Point</th>
@@ -52,27 +52,27 @@
 				<tbody>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Buyer</td>
-						<td style="border:1px solid black; text-align: center;"><?= $buyer_name ?></td></td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $buyer_name ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">PO Date</td>
-						<td style="border:1px solid black; text-align: center;"><?php echo date('d F Y', strtotime($tgl_po)) ?></td></td>
+						<td style="border:1px solid black; text-align: left !important;"><?php echo date('d F Y', strtotime($tgl_po)) ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Supplier</td>
-						<td style="border:1px solid black; text-align: center;"><?= $supplier_code ?> - <?= $supplier_name ?></td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $supplier_code ?> - <?= $supplier_name ?></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Budget No</td>
-						<td style="border:1px solid black; text-align: center;"><?= $budget ?></td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $budget ?></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Currency</td>
-						<td style="border:1px solid black; text-align: center;"><?= $currency ?></td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $currency ?></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">PO Amount</td>
-						<td style="border:1px solid black; text-align: center;">
+						<td style="border:1px solid black; text-align: left !important;">
 						@if($currency == "USD")
 							$
 						@elseif($currency == "JPY")
@@ -80,7 +80,7 @@
 						@elseif($currency == "IDR")
 							Rp.
 						@endif
-						<?= number_format($amount,0,".","") ?>
+						<?= number_format($amount,2,",",".") ?>
 							
 						</td>
 					</tr>
@@ -114,7 +114,7 @@
 
 			<h2>Purchase Order (PO) {{$no_po}}</h2>
 
-			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
+			<table style="border:1px solid black; border-collapse: collapse;" width="60%">
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
 						<th style="width: 2%; border:1px solid black;">Point</th>
@@ -124,27 +124,27 @@
 				<tbody>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Buyer</td>
-						<td style="border:1px solid black; text-align: center;"><?= $buyer_name ?></td></td>
+						<td style="border:1px solid black; text-align:left !important;"><?= $buyer_name ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">PO Date</td>
-						<td style="border:1px solid black; text-align: center;"><?php echo date('d F Y', strtotime($tgl_po)) ?></td></td>
+						<td style="border:1px solid black; text-align:left !important;"><?php echo date('d F Y', strtotime($tgl_po)) ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Supplier</td>
-						<td style="border:1px solid black; text-align: center;"><?= $supplier_code ?> - <?= $supplier_name ?></td>
+						<td style="border:1px solid black; text-align:left !important;"><?= $supplier_code ?> - <?= $supplier_name ?></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Budget No</td>
-						<td style="border:1px solid black; text-align: center;"><?= $budget ?></td>
+						<td style="border:1px solid black; text-align:left !important;"><?= $budget ?></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Currency</td>
-						<td style="border:1px solid black; text-align: center;"><?= $currency ?></td>
+						<td style="border:1px solid black; text-align:left !important;"><?= $currency ?></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">PO Amount</td>
-						<td style="border:1px solid black; text-align: center;"> 
+						<td style="border:1px solid black; text-align:left !important;"> 
 						@if($currency == "USD")
 							$
 						@elseif($currency == "JPY")
@@ -152,7 +152,7 @@
 						@elseif($currency == "IDR")
 							Rp.
 						@endif
-						<?= number_format($amount,0,".","") ?>
+						<?= number_format($amount,2,",",".") ?>
 							
 						</td>
 					</tr>
@@ -187,7 +187,7 @@
 
 			<h2>Purchase Order (発注依頼) {{$no_po}}</h2>
 
-			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
+			<table style="border:1px solid black; border-collapse: collapse;" width="60%">
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
 						<th style="width: 2%; border:1px solid black;">Point</th>
@@ -197,27 +197,27 @@
 				<tbody>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Buyer (購入担当者)</td>
-						<td style="border:1px solid black; text-align: center;"><?= $buyer_name ?></td></td>
+						<td style="border:1px solid black; text-align:left !important;"><?= $buyer_name ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">PO Date (作成日付)</td>
-						<td style="border:1px solid black; text-align: center;"><?php echo date('d F Y', strtotime($tgl_po)) ?></td></td>
+						<td style="border:1px solid black; text-align:left !important;"><?php echo date('d F Y', strtotime($tgl_po)) ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Supplier (サプライヤー)</td>
-						<td style="border:1px solid black; text-align: center;"><?= $supplier_code ?> - <?= $supplier_name ?></td>
+						<td style="border:1px solid black; text-align:left !important;"><?= $supplier_code ?> - <?= $supplier_name ?></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Budget No (予算番号)</td>
-						<td style="border:1px solid black; text-align: center;"><?= $budget ?></td>
+						<td style="border:1px solid black; text-align:left !important;"><?= $budget ?></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Currency (通貨)</td>
-						<td style="border:1px solid black; text-align: center;"><?= $currency ?></td>
+						<td style="border:1px solid black; text-align:left !important;"><?= $currency ?></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">PO Amount (全額)</td>
-						<td style="border:1px solid black; text-align: center;"> 
+						<td style="border:1px solid black; text-align:left !important;"> 
 						@if($currency == "USD")
 							$
 						@elseif($currency == "JPY")
@@ -225,7 +225,7 @@
 						@elseif($currency == "IDR")
 							Rp.
 						@endif
-						<?= number_format($amount,0,".","") ?>
+						<?= number_format($amount,2,",",".") ?>
 							
 						</td>
 					</tr>

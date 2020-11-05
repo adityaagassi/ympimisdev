@@ -274,7 +274,7 @@
 												<label>File Terlampir (Optional)</label>
 												<input type="file" id="reportAttachment" name="reportAttachment[]" multiple="">
 											</div>
-											@if($employee->position == "Leader")
+											@if($employee->position == "Leader" && $employee->department != "Logistic")
 											<div class="form-group">
 												<label>Staff</label>
 												<select class="form-control select2" data-placeholder="Pilih Staff" name="staff" id="staff" style="width: 100% height: 35px;" required>
@@ -549,7 +549,7 @@
 										</div>
 
 										<div class="col-xs-2" style="padding:5px;">
-											<b>Kebutuhan Per (Waktu)</b>
+											<b>Kebutuhan Per (qty/waktu)</b>
 										</div>
 
 										<div class="col-xs-2" style="padding:5px;">

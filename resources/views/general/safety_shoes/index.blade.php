@@ -231,7 +231,7 @@
 							</div>
 						</div>
 
-						<div class="col-xs-12">
+						<div class="col-xs-12" style="margin-top: 1%;">
 							<div class="col-xs-5" style="padding-left: 0px; padding-right: 0px;">
 								<select class="form-control select3" name="reqEmp" id="reqEmp" data-placeholder="Pilih Karyawan" style="width: 100%;">
 									<option></option>

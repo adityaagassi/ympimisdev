@@ -85,38 +85,38 @@
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
-						<th style="width: 2%; border:1px solid black;">Point</th>
+						<th style="width: 1%; border:1px solid black;">Point</th>
 						<th style="width: 4%; border:1px solid black;">Content</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Applicant</td>
-						<td style="border:1px solid black; text-align: center;"><?= $applicant_name ?></td></td>
+						<td style="width: 1%; border:1px solid black;">Applicant</td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $applicant_name ?></td></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Department</td>
-						<td style="border:1px solid black; text-align: center;"><?= $applicant_department ?></td></td>
+						<td style="width: 1%; border:1px solid black;">Department</td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $applicant_department ?></td></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Submission Date</td>
-						<td style="border:1px solid black; text-align: center;"><?php echo date('d F Y', strtotime($submission_date)) ?></td></td>
+						<td style="width: 1%; border:1px solid black;">Submission Date</td>
+						<td style="border:1px solid black; text-align: left !important;"><?php echo date('d F Y', strtotime($submission_date)) ?></td></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Category</td>
-						<td style="border:1px solid black; text-align: center;"><?= $category ?></td>
+						<td style="width: 1%; border:1px solid black;">Category</td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $category ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Type</td>
-						<td style="border:1px solid black; text-align: center;"><?= $type ?></td>
+						<td style="width: 1%; border:1px solid black;">Type</td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $type ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Objective</td>
-						<td style="border:1px solid black; text-align: center;"><?= $objective ?> - <?= $objective_detail ?></td>
+						<td style="width: 1%; border:1px solid black;">Objective</td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $objective ?> - <?= $objective_detail ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Vendor</td>
-						<td style="border:1px solid black; text-align: center;"><?= $supplier_code ?> - <?= $supplier_name ?></td>
+						<td style="width: 1%; border:1px solid black;">Vendor</td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $supplier_code ?> - <?= $supplier_name ?></td>
 					</tr>
 			
 				</tbody>
@@ -139,38 +139,38 @@
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
-						<th style="width: 2%; border:1px solid black;">Point</th>
+						<th style="width: 1%; border:1px solid black;">Point</th>
 						<th style="width: 4%; border:1px solid black;">Content</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Applicant</td>
-						<td style="border:1px solid black; text-align: center;"><?= $applicant_name ?></td></td>
+						<td style="width: 1%; border:1px solid black;">Applicant</td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $applicant_name ?></td></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Department</td>
-						<td style="border:1px solid black; text-align: center;"><?= $applicant_department ?></td></td>
+						<td style="width: 1%; border:1px solid black;">Department</td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $applicant_department ?></td></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Submission Date</td>
-						<td style="border:1px solid black; text-align: center;"><?php echo date('d F Y', strtotime($submission_date)) ?></td></td>
+						<td style="width: 1%; border:1px solid black;">Submission Date</td>
+						<td style="border:1px solid black; text-align: left !important;"><?php echo date('d F Y', strtotime($submission_date)) ?></td></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Category</td>
-						<td style="border:1px solid black; text-align: center;"><?= $category ?></td>
+						<td style="width: 1%; border:1px solid black;">Category</td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $category ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Type</td>
-						<td style="border:1px solid black; text-align: center;"><?= $type ?></td>
+						<td style="width: 1%; border:1px solid black;">Type</td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $type ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Objective</td>
-						<td style="border:1px solid black; text-align: center;"><?= $objective ?> - <?= $objective_detail ?></td>
+						<td style="width: 1%; border:1px solid black;">Objective</td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $objective ?> - <?= $objective_detail ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Vendor</td>
-						<td style="border:1px solid black; text-align: center;"><?= $supplier_code ?> - <?= $supplier_name ?></td>
+						<td style="width: 1%; border:1px solid black;">Vendor</td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $supplier_code ?> - <?= $supplier_name ?></td>
 					</tr>
 			
 				</tbody>
@@ -192,38 +192,38 @@
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
-						<th style="width: 2%; border:1px solid black;">Point</th>
+						<th style="width: 1%; border:1px solid black;">Point</th>
 						<th style="width: 4%; border:1px solid black;">Content</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Applicant</td>
-						<td style="border:1px solid black; text-align: center;"><?= $applicant_name ?></td></td>
+						<td style="width: 1%; border:1px solid black;">Applicant</td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $applicant_name ?></td></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Department</td>
-						<td style="border:1px solid black; text-align: center;"><?= $applicant_department ?></td></td>
+						<td style="width: 1%; border:1px solid black;">Department</td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $applicant_department ?></td></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Submission Date</td>
-						<td style="border:1px solid black; text-align: center;"><?php echo date('d F Y', strtotime($submission_date)) ?></td></td>
+						<td style="width: 1%; border:1px solid black;">Submission Date</td>
+						<td style="border:1px solid black; text-align: left !important;"><?php echo date('d F Y', strtotime($submission_date)) ?></td></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Category</td>
-						<td style="border:1px solid black; text-align: center;"><?= $category ?></td>
+						<td style="width: 1%; border:1px solid black;">Category</td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $category ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Type</td>
-						<td style="border:1px solid black; text-align: center;"><?= $type ?></td>
+						<td style="width: 1%; border:1px solid black;">Type</td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $type ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Objective</td>
-						<td style="border:1px solid black; text-align: center;"><?= $objective ?> - <?= $objective_detail ?></td>
+						<td style="width: 1%; border:1px solid black;">Objective</td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $objective ?> - <?= $objective_detail ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Vendor</td>
-						<td style="border:1px solid black; text-align: center;"><?= $supplier_code ?> - <?= $supplier_name ?></td>
+						<td style="width: 1%; border:1px solid black;">Vendor</td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $supplier_code ?> - <?= $supplier_name ?></td>
 					</tr>
 			
 				</tbody>
@@ -251,38 +251,38 @@
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
-						<th style="width: 2%; border:1px solid black;">Point</th>
+						<th style="width: 1%; border:1px solid black;">Point</th>
 						<th style="width: 4%; border:1px solid black;">Content</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Applicant</td>
-						<td style="border:1px solid black; text-align: center;"><?= $applicant_name ?></td></td>
+						<td style="width: 1%; border:1px solid black;">Applicant</td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $applicant_name ?></td></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Department</td>
-						<td style="border:1px solid black; text-align: center;"><?= $applicant_department ?></td></td>
+						<td style="width: 1%; border:1px solid black;">Department</td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $applicant_department ?></td></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Submission Date</td>
-						<td style="border:1px solid black; text-align: center;"><?php echo date('d F Y', strtotime($submission_date)) ?></td></td>
+						<td style="width: 1%; border:1px solid black;">Submission Date</td>
+						<td style="border:1px solid black; text-align: left !important;"><?php echo date('d F Y', strtotime($submission_date)) ?></td></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Category</td>
-						<td style="border:1px solid black; text-align: center;"><?= $category ?></td>
+						<td style="width: 1%; border:1px solid black;">Category</td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $category ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Type</td>
-						<td style="border:1px solid black; text-align: center;"><?= $type ?></td>
+						<td style="width: 1%; border:1px solid black;">Type</td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $type ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Objective</td>
-						<td style="border:1px solid black; text-align: center;"><?= $objective ?> - <?= $objective_detail ?></td>
+						<td style="width: 1%; border:1px solid black;">Objective</td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $objective ?> - <?= $objective_detail ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Vendor</td>
-						<td style="border:1px solid black; text-align: center;"><?= $supplier_code ?> - <?= $supplier_name ?></td>
+						<td style="width: 1%; border:1px solid black;">Vendor</td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $supplier_code ?> - <?= $supplier_name ?></td>
 					</tr>
 			
 				</tbody>
@@ -311,38 +311,38 @@
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
-						<th style="width: 2%; border:1px solid black;">Point</th>
+						<th style="width: 1%; border:1px solid black;">Point</th>
 						<th style="width: 4%; border:1px solid black;">Content</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Applicant (申請者) </td>
-						<td style="border:1px solid black; text-align: center;"><?= $applicant_name ?></td></td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $applicant_name ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Department (部門)</td>
-						<td style="border:1px solid black; text-align: center;"><?= $applicant_department ?></td></td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $applicant_department ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Submission Date (提出日)</td>
-						<td style="border:1px solid black; text-align: center;"><?php echo date('d F Y', strtotime($submission_date)) ?></td></td>
+						<td style="border:1px solid black; text-align: left !important;"><?php echo date('d F Y', strtotime($submission_date)) ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Category (部類)</td>
-						<td style="border:1px solid black; text-align: center;"><?= $category ?></td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $category ?></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Type (種目)</td>
-						<td style="border:1px solid black; text-align: center;"><?= $type ?></td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $type ?></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Objective (目的)</td>
-						<td style="border:1px solid black; text-align: center;"><?= $objective ?> - <?= $objective_detail_jpy ?></td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $objective ?> - <?= $objective_detail_jpy ?></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Vendor (サプライヤー)</td>
-						<td style="border:1px solid black; text-align: center;"><?= $supplier_code ?> - <?= $supplier_name ?></td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $supplier_code ?> - <?= $supplier_name ?></td>
 					</tr>
 				</tbody>
 			</table>
@@ -368,38 +368,38 @@
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
-						<th style="width: 2%; border:1px solid black;">Point</th>
+						<th style="width: 1%; border:1px solid black;">Point</th>
 						<th style="width: 4%; border:1px solid black;">Content</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Applicant</td>
-						<td style="border:1px solid black; text-align: center;"><?= $applicant_name ?></td></td>
+						<td style="width: 1%; border:1px solid black;">Applicant</td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $applicant_name ?></td></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Department</td>
-						<td style="border:1px solid black; text-align: center;"><?= $applicant_department ?></td></td>
+						<td style="width: 1%; border:1px solid black;">Department</td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $applicant_department ?></td></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Submission Date</td>
-						<td style="border:1px solid black; text-align: center;"><?php echo date('d F Y', strtotime($submission_date)) ?></td></td>
+						<td style="width: 1%; border:1px solid black;">Submission Date</td>
+						<td style="border:1px solid black; text-align: left !important;"><?php echo date('d F Y', strtotime($submission_date)) ?></td></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Category</td>
-						<td style="border:1px solid black; text-align: center;"><?= $category ?></td>
+						<td style="width: 1%; border:1px solid black;">Category</td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $category ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Type</td>
-						<td style="border:1px solid black; text-align: center;"><?= $type ?></td>
+						<td style="width: 1%; border:1px solid black;">Type</td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $type ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Objective</td>
-						<td style="border:1px solid black; text-align: center;"><?= $objective ?> - <?= $objective_detail ?></td>
+						<td style="width: 1%; border:1px solid black;">Objective</td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $objective ?> - <?= $objective_detail ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Vendor</td>
-						<td style="border:1px solid black; text-align: center;"><?= $supplier_code ?> - <?= $supplier_name ?></td>
+						<td style="width: 1%; border:1px solid black;">Vendor</td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $supplier_code ?> - <?= $supplier_name ?></td>
 					</tr>
 			
 				</tbody>
@@ -429,38 +429,38 @@
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
-						<th style="width: 2%; border:1px solid black;">Point</th>
+						<th style="width: 1%; border:1px solid black;">Point</th>
 						<th style="width: 4%; border:1px solid black;">Content</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Applicant (申請者) </td>
-						<td style="border:1px solid black; text-align: center;"><?= $applicant_name ?></td></td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $applicant_name ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Department (部門)</td>
-						<td style="border:1px solid black; text-align: center;"><?= $applicant_department ?></td></td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $applicant_department ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Submission Date (提出日)</td>
-						<td style="border:1px solid black; text-align: center;"><?php echo date('d F Y', strtotime($submission_date)) ?></td></td>
+						<td style="border:1px solid black; text-align: left !important;"><?php echo date('d F Y', strtotime($submission_date)) ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Category (部類)</td>
-						<td style="border:1px solid black; text-align: center;"><?= $category ?></td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $category ?></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Type (種目)</td>
-						<td style="border:1px solid black; text-align: center;"><?= $type ?></td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $type ?></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Objective (目的)</td>
-						<td style="border:1px solid black; text-align: center;"><?= $objective ?> - <?= $objective_detail_jpy ?></td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $objective ?> - <?= $objective_detail_jpy ?></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Vendor (サプライヤー)</td>
-						<td style="border:1px solid black; text-align: center;"><?= $supplier_code ?> - <?= $supplier_name ?></td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $supplier_code ?> - <?= $supplier_name ?></td>
 					</tr>
 			
 				</tbody>
@@ -489,38 +489,38 @@
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
-						<th style="width: 2%; border:1px solid black;">Point</th>
+						<th style="width: 1%; border:1px solid black;">Point</th>
 						<th style="width: 4%; border:1px solid black;">Content</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Applicant (申請者) </td>
-						<td style="border:1px solid black; text-align: center;"><?= $applicant_name ?></td></td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $applicant_name ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Department (部門)</td>
-						<td style="border:1px solid black; text-align: center;"><?= $applicant_department ?></td></td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $applicant_department ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Submission Date (提出日)</td>
-						<td style="border:1px solid black; text-align: center;"><?php echo date('d F Y', strtotime($submission_date)) ?></td></td>
+						<td style="border:1px solid black; text-align: left !important;"><?php echo date('d F Y', strtotime($submission_date)) ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Category (部類)</td>
-						<td style="border:1px solid black; text-align: center;"><?= $category ?></td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $category ?></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Type (種目)</td>
-						<td style="border:1px solid black; text-align: center;"><?= $type ?></td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $type ?></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Objective (目的)</td>
-						<td style="border:1px solid black; text-align: center;"><?= $objective ?> - <?= $objective_detail_jpy ?></td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $objective ?> - <?= $objective_detail_jpy ?></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Vendor (サプライヤー)</td>
-						<td style="border:1px solid black; text-align: center;"><?= $supplier_code ?> - <?= $supplier_name ?></td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $supplier_code ?> - <?= $supplier_name ?></td>
 					</tr>
 			
 				</tbody>
