@@ -164,7 +164,7 @@ table > thead > tr > th{
             </div>
         </div>
 
-        <div class="col-md-2">
+        <!-- <div class="col-md-2">
           <div class="input-group">
             <div class="input-group-addon bg-blue">
               <i class="fa fa-search"></i>
@@ -172,6 +172,19 @@ table > thead > tr > th{
             <select class="form-control select2" multiple="multiple" onchange="drawChart()" id="status" data-placeholder="Pilih Status" style="width: 100%;border-color: #605ca8" >
                 @foreach($status as $status)
                   <option value="{{ $status->status_code }}">{{ $status->status_name }}</option>
+                @endforeach
+              </select>
+          </div>
+        </div> -->
+
+        <div class="col-md-2">
+          <div class="input-group">
+            <div class="input-group-addon bg-blue">
+              <i class="fa fa-search"></i>
+            </div>
+            <select class="form-control select2" multiple="multiple" onchange="drawChart()" id="sumber_komplain" data-placeholder="Pilih Sumber Komplain" style="width: 100%;border-color: #605ca8" >
+                @foreach($sumber_komplain as $sk)
+                  <option value="{{ $sk->sumber_komplain }}">{{ $sk->sumber_komplain }}</option>
                 @endforeach
               </select>
           </div>
@@ -385,7 +398,8 @@ table > thead > tr > th{
     var tglto = $('#tglto').val();
     var kategori = $('#kategori').val();
     var departemen = $('#departemen').val();
-    var status = $('#status').val();
+    // var status = $('#status').val();
+    var sumber_komplain = $('#sumber_komplain').val();
     var sumber = $('#sumber').val();
 
     var data = {
@@ -393,7 +407,7 @@ table > thead > tr > th{
       tglto: tglto,
       kategori: kategori,
       departemen: departemen,
-      status:status,
+      sumber_komplain:sumber_komplain,
       sumber:sumber
     };
 
@@ -413,16 +427,17 @@ table > thead > tr > th{
             years = "All"
           }
 
-          var month = [], jml = [], statusunverifiedcpar = [], statusunverifiedcar = [], statusverifikasi = [], statusclose = [];
+          var month = [], jml = [], statusunverifiedcpar = [], statusunverifiedcar = [], statusverifikasi = [], statusclose = [], tahun = [];
 
           $.each(result.datas, function(key, value) {
             // departemen.push(value.department_name);
             month.push(value.bulan);
             jml.push(value.jumlah);
-            statusunverifiedcpar.push(parseInt(value.UnverifiedCPAR));
-            statusunverifiedcar.push(parseInt(value.UnverifiedCAR));
-            statusverifikasi.push(parseInt(value.qaverification));
-            statusclose.push(parseInt(value.close));
+            tahun.push(value.tahun);
+            statusunverifiedcpar.push({y: parseInt(value.UnverifiedCPAR),key:value.tahun});
+            statusunverifiedcar.push({y: parseInt(value.UnverifiedCAR),key:value.tahun});
+            statusverifikasi.push({y: parseInt(value.qaverification),key:value.tahun});
+            statusclose.push({y: parseInt(value.close),key:value.tahun});
           })
 
           $('#chart').highcharts({
@@ -448,7 +463,12 @@ table > thead > tr > th{
               categories: month,
               lineWidth:2,
               lineColor:'#9e9e9e',
-              gridLineWidth: 1
+              gridLineWidth: 1,
+              labels: {
+                formatter: function (e) {
+                  return ''+ this.value +' '+tahun[(this.pos)];
+                }
+              }
             },
             yAxis: {
               lineWidth:2,
@@ -487,7 +507,7 @@ table > thead > tr > th{
                 point: {
                   events: {
                     click: function () {
-                      ShowModal(this.category,this.series.name,result.tglfrom,result.tglto,result.kategori,result.departemen,result.sumber);
+                      ShowModal(this.category,this.series.name,result.tglfrom,result.tglto,result.kategori,result.departemen,this.options.key);
                     }
                   }
                 },
@@ -549,13 +569,14 @@ table > thead > tr > th{
 
     var kategori = $('#kategori').val();
     var departemen = $('#departemen').val();
-    var status = $('#status').val();
+    // var status = $('#status').val();
+    var sumber_komplain = $('#sumber_komplain').val();
     var pic = $('#picprogress').val();
 
     var data = {
       kategori: kategori,
       departemen: departemen,
-      status:status,
+      sumber_komplain:sumber_komplain,
       pic:pic
     }
 
@@ -1386,7 +1407,8 @@ table > thead > tr > th{
   //   })
   // }
 
-  function ShowModal(bulan, status, tglfrom, tglto, kategori, departemen, sumber) {
+  function ShowModal(bulan, status, tglfrom, tglto, kategori, departemen, tahun) {
+    // console.log(tahun);
     tabel = $('#example2').DataTable();
     tabel.destroy();
 
@@ -1454,7 +1476,7 @@ table > thead > tr > th{
             departemen : departemen,
             tglfrom : tglfrom,
             tglto : tglto,
-            sumber : sumber
+            tahun : tahun
           }
         },
       "columns": [
