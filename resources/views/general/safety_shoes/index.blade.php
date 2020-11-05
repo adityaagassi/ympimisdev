@@ -136,25 +136,6 @@
 				<div class="modal-body table-responsive no-padding" style="min-height: 100px; padding-bottom: 5px;">
 					<div class="col-xs-12" style="padding-bottom: 5px;">
 
-						<div class="col-xs-12">
-							<span style="font-weight: bold; font-size: 1vw;">Safety Shoes<span class="text-red">*</span></span>
-							<table class="table table-hover table-bordered table-striped" id="tableAddStock">
-								<thead style="background-color: rgba(126,86,134,.7);">
-									<tr>
-										<th style="width: 1%;">NIK</th>
-										<th style="width: 4%;">Nama</th>
-										<th style="width: 1%;">Gender</th>
-										<th style="width: 4%;">Bagian</th>
-										<th style="width: 4%;">Sepatu</th>
-										<th style="width: 1%;">Qty</th>
-										<th style="width: 1%;">Status</th>
-										<th style="width: 1%;">#</th>
-									</tr>
-								</thead>
-								<tbody id="tableAddStockBody">
-								</tbody>
-							</table>
-						</div>
 						<div class="col-xs-8 col-xs-offset-2">
 							<div class="col-xs-6" style="padding-left: 0px; padding-right: 0px;">
 								<select class="form-control select4" name="addEmp" id="addEmp" data-placeholder="Pilih Karyawan" style="width: 100%;">
@@ -191,6 +172,26 @@
 							<div class="col-xs-3" style="padding-left: 1%; padding-right: 0px;">
 								<a class="btn btn-success" style="width: 100%;" onclick="addStock()">Tambahkan</a>
 							</div>
+						</div>
+
+						<div class="col-xs-12">
+							<span style="font-weight: bold; font-size: 1vw;">Safety Shoes<span class="text-red">*</span></span>
+							<table class="table table-hover table-bordered table-striped" id="tableAddStock">
+								<thead style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th style="width: 1%;">NIK</th>
+										<th style="width: 4%;">Nama</th>
+										<th style="width: 1%;">Gender</th>
+										<th style="width: 4%;">Bagian</th>
+										<th style="width: 4%;">Sepatu</th>
+										<th style="width: 1%;">Qty</th>
+										<th style="width: 1%;">Status</th>
+										<th style="width: 1%;">#</th>
+									</tr>
+								</thead>
+								<tbody id="tableAddStockBody">
+								</tbody>
+							</table>
 						</div>
 
 					</div>
@@ -230,23 +231,6 @@
 							</div>
 						</div>
 
-
-						<div class="col-xs-12" style="margin-top: 3%;">
-							<table class="table table-hover table-bordered table-striped" id="tableCreateReq">
-								<thead style="background-color: rgba(126,86,134,.7);">
-									<tr>
-										<th style="width: 3%;">NIK</th>
-										<th style="width: 4%;">Nama</th>
-										<th style="width: 3%;">Gender</th>
-										<th style="width: 3%;">Bagian</th>
-										<th style="width: 3%;">Shoes</th>
-										<th style="width: 1%;">#</th>
-									</tr>
-								</thead>
-								<tbody id="tableCreateReqBody">
-								</tbody>
-							</table>
-						</div>
 						<div class="col-xs-12">
 							<div class="col-xs-5" style="padding-left: 0px; padding-right: 0px;">
 								<select class="form-control select3" name="reqEmp" id="reqEmp" data-placeholder="Pilih Karyawan" style="width: 100%;">
@@ -268,6 +252,25 @@
 								<a class="btn btn-success" style="width: 100%;" onclick="addReq()">Tambahkan</a>
 							</div>
 						</div>
+
+
+						<div class="col-xs-12" style="margin-top: 3%;">
+							<table class="table table-hover table-bordered table-striped" id="tableCreateReq">
+								<thead style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th style="width: 3%;">NIK</th>
+										<th style="width: 4%;">Nama</th>
+										<th style="width: 3%;">Gender</th>
+										<th style="width: 3%;">Bagian</th>
+										<th style="width: 3%;">Shoes</th>
+										<th style="width: 1%;">#</th>
+									</tr>
+								</thead>
+								<tbody id="tableCreateReqBody">
+								</tbody>
+							</table>
+						</div>
+						
 
 					</div>
 				</div>
@@ -663,19 +666,22 @@
 
 	$(function () {
 		$('.select4').select2({
-			dropdownParent: $('#modalCreate')
+			dropdownParent: $('#modalCreate'),
+			allowClear: true,
 		});
 	})
 
 	$(function () {
 		$('.select3').select2({
-			dropdownParent: $('#modalRequest')
+			dropdownParent: $('#modalRequest'),
+			allowClear: true,
 		});
 	})
 
 	$(function () {
 		$('.select1').select2({
-			dropdownParent: $('#modalReprint')
+			dropdownParent: $('#modalReprint'),
+			allowClear: true,
 		});
 	})
 
