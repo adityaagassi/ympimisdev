@@ -441,7 +441,9 @@
         if(result.status == true){    
           $("#loading").hide();
           openSuccessGritter("Success","Berhasil Dibuat");
-          setTimeout(function(){ window.location = "{{ url('index/purchase_item') }}" }, 2000); 
+          // setTimeout(function(){ window.location = "{{ url('index/purchase_item') }}" }, 2000); 
+
+          setTimeout(function(){  window.location = "{{url('index/purchase_item/update')}}/"+result.id; }, 1000); 
         }
         else {
           $("#loading").hide();

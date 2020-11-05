@@ -231,9 +231,9 @@ hr { background-color: red; height: 1px; border: 0; }
                     <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;color: black;background-color: #3f51b5;color: white">Investment No</th>
                     <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;color: black; background-color: #3f51b5;color: white">Department</th>
                     <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;color: black; background-color: #3f51b5;color: white">No PO</th>
-                    <th style="width: 20%; padding: 5;vertical-align: middle;font-size: 16px;color: black; background-color: #3f51b5;color: white">Tanggal PO</th>
+                    <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;color: black; background-color: #3f51b5;color: white">Tanggal PO</th>
                     <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;color: black; background-color: #3f51b5;color: white">Supplier</th>
-                    <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;color: black; background-color: #3f51b5;color: white">Deskripsi Item</th>
+                    <th style="width: 20%; padding: 5;vertical-align: middle;font-size: 16px;color: black; background-color: #3f51b5;color: white">Deskripsi Item</th>
                     <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;color: black; background-color: #3f51b5;color: white">Status PO</th>
                   </tr>
                 </thead>

@@ -320,7 +320,8 @@ class AccountingController extends Controller
 
             $response = array(
                 'status' => true,
-                'datas' => "Berhasil"
+                'datas' => "Berhasil",
+                'id' => $item->id
             );
             return Response::json($response);
 
