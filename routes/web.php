@@ -1245,6 +1245,7 @@ Route::get('fetch/welding/detail_kensa_jig_report', 'WeldingProcessController@fe
 
 Route::get('index/welding/repair_jig_report', 'WeldingProcessController@indexRepairJigReport');
 Route::get('fetch/welding/repair_jig_report', 'WeldingProcessController@fetchRepairJigReport');
+Route::get('fetch/welding/detail_repair_jig_report', 'WeldingProcessController@fetchDetailRepairJigReport');
 
 
 //Sakurentsu

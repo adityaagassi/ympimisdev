@@ -259,6 +259,28 @@ class WeldingProcessController extends Controller
 		))->with('page', 'Kensa Welding Jig Parts');
 	}
 
+	public function indexKensaJigReport()
+	{
+		$title = 'Kensa Welding Jig Report';
+		$title_jp = '??';
+
+		return view('processes.welding.jig.kensa_report', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+		))->with('page', 'Kensa Welding Jig Report');
+	}
+
+	public function indexRepairJigReport()
+	{
+		$title = 'Repair Welding Jig Report';
+		$title_jp = '??';
+
+		return view('processes.welding.jig.repair_report', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+		))->with('page', 'Repair Welding Jig Report');
+	}
+
 	public function indexEffHandling(){
 		$title = 'Average Working Time';
 		$title_jp = '作業時間の平均';
@@ -4513,6 +4535,247 @@ class WeldingProcessController extends Controller
 			$jigpart->forceDelete();
 
 			return redirect('index/welding/jig_part');
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function fetchKensaJigReport(Request $request)
+	{
+		try {
+
+			if ($request->get('month') == "") {
+				$now = 'DATE(
+					DATE_ADD( NOW(), INTERVAL - 6 MONTH ))';
+			}else{
+				$now = $request->get('month').'-01';
+			}
+
+			if ($request->get('month') == "") {
+				$now = 'NOW()';
+			}else{
+				$now = date($request->get('month').'-01');
+			}
+			$jigs = DB::SELECT("SELECT DISTINCT
+				( a.jig_id ) AS jig_id,
+				jigs.jig_name,
+				started_at,
+				finished_at,
+				NAME AS operator,
+			IF
+				((
+					SELECT
+						count(
+						DISTINCT ( result )) 
+					FROM
+						jig_kensa_logs 
+					WHERE
+						jig_kensa_logs.jig_id = a.jig_id 
+						AND jig_kensa_logs.finished_at = a.finished_at 
+						) > 1,
+					'NG',
+					'OK' 
+				) AS result,
+				COALESCE (( SELECT DISTINCT ( STATUS ) FROM jig_kensa_logs WHERE jig_kensa_logs.jig_id = a.jig_id AND jig_kensa_logs.finished_at = a.finished_at ), 'No Repair' ) AS status,
+				'OK Kensa, No Need Action' AS action 
+			FROM
+				`jig_kensa_logs` a
+				JOIN employee_syncs ON operator_id = employee_id
+				JOIN jigs ON jigs.jig_id = a.jig_id
+			WHERE
+				DATE(finished_at) BETWEEN '".$now."'
+				AND DATE(
+				DATE_ADD( NOW(), INTERVAL + 1 MONTH ))");
+
+			$response = array(
+				'status' => true,
+				'jig_report' => $jigs,
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function fetchDetailKensaJigReport(Request $request)
+	{
+		try {
+			$jig_id = $request->get('jig_id');
+			$started_at = $request->get('started_at');
+			$finished_at = $request->get('finished_at');
+
+			$detail = DB::SELECT("SELECT
+				* 
+			FROM
+				jig_kensa_logs a
+				JOIN employee_syncs ON operator_id = employee_id
+				JOIN jigs ON jigs.jig_id = a.jig_id 
+			WHERE
+				a.jig_id = '".$jig_id."' 
+				AND a.started_at = '".$started_at."' 
+				AND a.finished_at = '".$finished_at."'");
+
+			$response = array(
+				'status' => true,
+				'detail' => $detail,
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function fetchRepairJigReport(Request $request)
+	{
+		try {
+			if ($request->get('month') == "") {
+				$now = 'DATE(
+					DATE_ADD( NOW(), INTERVAL - 6 MONTH ))';
+			}else{
+				$now = $request->get('month').'-01';
+			}
+
+			$jig_no_repair = DB::SELECT("	
+				SELECT DISTINCT
+					( a.jig_id ) AS jig_id,
+					jigs.jig_name,
+					started_at,
+					finished_at,
+					NAME AS operator,
+					NOW(),
+				IF
+					((
+						SELECT
+							count(
+							DISTINCT ( result )) 
+						FROM
+							jig_kensas 
+						WHERE
+							jig_kensas.jig_id = a.jig_id 
+							AND jig_kensas.finished_at = a.finished_at 
+							) > 1,
+						'NG',
+						'OK' 
+					) AS result,
+					COALESCE (( SELECT DISTINCT ( STATUS ) FROM jig_kensas WHERE jig_kensas.jig_id = a.jig_id AND jig_kensas.finished_at = a.finished_at ), 'No Repair' ) AS status,
+				IF
+					((
+						SELECT
+							COUNT(
+							DISTINCT ( action )) 
+						FROM
+							jig_kensas 
+						WHERE
+							jig_kensas.jig_id = a.jig_id 
+							AND jig_kensas.finished_at = a.finished_at 
+							) > 1,
+						'Open',
+						'OK Kensa, No Action' 
+					) AS action 
+				FROM
+					`jig_kensas` a
+					JOIN employee_syncs ON operator_id = employee_id
+					JOIN jigs ON jigs.jig_id = a.jig_id
+				WHERE
+					DATE(finished_at) BETWEEN '".$now."'
+					AND DATE(
+					DATE_ADD( NOW(), INTERVAL + 1 MONTH ))");
+
+			$jig_repaired = DB::SELECT("SELECT DISTINCT
+				( a.jig_id ) AS jig_id,
+				jigs.jig_name,
+				started_at,
+				finished_at,
+				NAME AS operator,
+			IF
+				((
+					SELECT
+						count(
+						DISTINCT ( result )) 
+					FROM
+						jig_repair_logs 
+					WHERE
+						jig_repair_logs.jig_id = a.jig_id 
+						AND jig_repair_logs.finished_at = a.finished_at 
+						) > 1,
+					'NG',
+					'OK' 
+				) AS result,
+				COALESCE (( SELECT DISTINCT ( STATUS ) FROM jig_repair_logs WHERE jig_repair_logs.jig_id = a.jig_id AND jig_repair_logs.finished_at = a.finished_at ), 'No Repair' ) AS status,
+				COALESCE (( SELECT DISTINCT ( action) FROM jig_repair_logs WHERE jig_repair_logs.jig_id = a.jig_id AND jig_repair_logs.finished_at = a.finished_at ),'OK') AS action 
+			FROM
+				`jig_repair_logs` a
+				JOIN employee_syncs ON operator_id = employee_id
+				JOIN jigs ON jigs.jig_id = a.jig_id
+			WHERE
+				DATE(finished_at) BETWEEN '".$now."'
+				AND DATE(
+				DATE_ADD( NOW(), INTERVAL + 1 MONTH ))");
+
+			$response = array(
+				'status' => true,
+				'jig_no_repair' => $jig_no_repair,
+				'jig_repaired' => $jig_repaired,
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function fetchDetailRepairJigReport(Request $request)
+	{
+		try {
+			$stts = $request->get('stts');
+			$jig_id = $request->get('jig_id');
+			$started_at = $request->get('started_at');
+			$finished_at = $request->get('finished_at');
+
+			if ($stts == 'Repaired') {
+				$detail = DB::SELECT("SELECT
+					* 
+				FROM
+					jig_repair_logs a
+					JOIN employee_syncs ON operator_id = employee_id
+					JOIN jigs ON jigs.jig_id = a.jig_id 
+				WHERE
+					a.jig_id = '".$jig_id."' 
+					AND a.started_at = '".$started_at."' 
+					AND a.finished_at = '".$finished_at."'");
+			}else{
+				$detail = DB::SELECT("SELECT
+					* 
+				FROM
+					jig_kensas a
+					JOIN employee_syncs ON operator_id = employee_id
+					JOIN jigs ON jigs.jig_id = a.jig_id 
+				WHERE
+					a.jig_id = '".$jig_id."' 
+					AND a.started_at = '".$started_at."' 
+					AND a.finished_at = '".$finished_at."'");
+			}
+
+			$response = array(
+				'status' => true,
+				'detail' => $detail,
+			);
+			return Response::json($response);
 		} catch (\Exception $e) {
 			$response = array(
 				'status' => false,
