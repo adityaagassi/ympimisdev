@@ -335,6 +335,34 @@
 						$jumlah = 13;
 					else if($jumlahitem == 8)
 						$jumlah = 15;
+					else if($jumlahitem == 9)
+						$jumlah = 17;
+					else if($jumlahitem == 10)
+						$jumlah = 19;
+					else if($jumlahitem == 11)
+						$jumlah = 21;
+					else if($jumlahitem == 12)
+						$jumlah = 23;
+					else if($jumlahitem == 13)
+						$jumlah = 25;
+					else if($jumlahitem == 14)
+						$jumlah = 27;
+					else if($jumlahitem == 15)
+						$jumlah = 29;
+					else if($jumlahitem == 16)
+						$jumlah = 31;
+					else if($jumlahitem == 17)
+						$jumlah = 33;
+					else if($jumlahitem == 18)
+						$jumlah = 35;
+					else if($jumlahitem == 19)
+						$jumlah = 37;
+					else if($jumlahitem == 20)
+						$jumlah = 39;
+					else if($jumlahitem == 21)
+						$jumlah = 41;
+					else if($jumlahitem == 22)
+						$jumlah = 43;
 					?>
 
 				?>
@@ -398,8 +426,8 @@
 				<tr>
 					<td colspan="3" rowspan="2" style="border: 1px solid black;color: blue;font-weight: bold;vertical-align: top;">{{$item->detail}}</td>
 					<td colspan="1" rowspan="2" style="border: 1px solid black;color: blue;font-weight: bold;vertical-align: top;">{{$item->qty}} {{$item->uom}}</td>
-					<td colspan="2" rowspan="2" style="border: 1px solid black;color: blue;font-weight: bold;vertical-align: top;"><?= $ket_harga ?> <?= number_format($item->price,2,",",".");?></td>
-					<td colspan="2" rowspan="2" style="border: 1px solid black;color: blue;font-weight: bold;vertical-align: top;"><?= $ket_harga ?> <?= number_format($item->amount,2,",",".");?></td>
+					<td colspan="2" rowspan="2" style="border: 1px solid black;color: blue;font-weight: bold;vertical-align: top;text-align: right;"><?= $ket_harga ?> <?= number_format($item->price,2,",",".");?></td>
+					<td colspan="2" rowspan="2" style="border: 1px solid black;color: blue;font-weight: bold;vertical-align: top;text-align: right;"><?= $ket_harga ?> <?= number_format($item->amount,2,",",".");?></td>
 
 					<?php 
 					if($item->vat_status == "Yes"){
@@ -428,16 +456,16 @@
 					<td colspan="2" rowspan="3" style="border: 1px solid black;">Currency<br><span class="droid">通貨</span></td>
 					<td colspan="2" rowspan="3" style="border: 1px solid black;color: blue;font-weight: bold">{{ $inv[0]->currency }}</td>
 					<td colspan="2" style="border: 1px solid black;">Sub Total <span class="droid">小計</span></td>
-					<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold"><?= $ket_harga ?> <?= number_format($total,2,",",".");?></td>
+					<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold;text-align: right;"><?= $ket_harga ?> <?= number_format($total,2,",",".");?></td>
 				</tr>
 				<tr>
 					<td colspan="2" style="border: 1px solid black;">VAT <span class="droid">付加価値税</span></td>
-					<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold"><?= $ket_harga ?> <?= number_format($vat,2,",",".");?></td>
+					<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold;text-align: right;"><?= $ket_harga ?> <?= number_format($vat,2,",",".");?></td>
 				</tr>
 				<tr>
 					<td colspan="2" style="border: 1px solid black;">Total <span class="droid">合計</span></td>
 					<?php $total_all = $total - $vat; ?>
-					<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold"><?= $ket_harga ?> <?= number_format($total_all,2,",",".");?></td>
+					<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold;text-align: right;"><?= $ket_harga ?> <?= number_format($total_all,2,",",".");?></td>
 				</tr>
 				<tr>
 					<td colspan="2" style="border: 1px solid black;">Delivery <span class="droid">納期</span></td>
