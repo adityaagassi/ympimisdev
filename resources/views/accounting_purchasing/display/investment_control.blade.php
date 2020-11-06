@@ -136,7 +136,7 @@ hr { background-color: red; height: 1px; border: 0; }
             <input type="text" class="form-control datepicker" id="dateto" placeholder="Select Date To">
           </div>
         </div>
-        @if(Auth::user()->role_code == "MIS" || Auth::user()->role_code == "ACC-SPL")
+        @if(Auth::user()->role_code == "MIS" || Auth::user()->role_code == "ACC-SPL" || Auth::user()->role_code == "ACC-SPL" || Auth::user()->role_code == "PCH" || Auth::user()->role_code == "PCH-SPL")
         <div class="col-md-2">
             <div class="input-group">
               <div class="input-group-addon bg-blue">

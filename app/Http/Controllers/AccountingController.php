@@ -3052,8 +3052,6 @@ class AccountingController extends Controller
                 'delivery_term' => $request->get('delivery_term_edit') , 
                 'holding_tax' => $request->get('holding_tax_edit') , 
                 'currency' => $request->get('currency_edit') , 
-                'authorized3' => $request->get('authorized3_edit') , 
-                'authorized3_name' => $request->get('authorized3_name_edit'), 
                 'authorized4' => $request->get('authorized4_edit') , 
                 'authorized4_name' => $request->get('authorized4_name_edit') , 
                 'note' => $request->get('note_edit') 
@@ -8339,7 +8337,7 @@ public function update_purchase_requisition_po(Request $request)
         and date(week_date) <= '".$dateto."') date
         left join
         (select date(tgl_po) as date, count(id) as total from acc_purchase_orders
-        where date(tgl_po) >= '".$datefrom."' and date(tgl_po) <= '".$dateto."' and acc_purchase_orders.deleted_at is null and posisi = 'pch' and `status` = 'sap'
+        where date(tgl_po) >= '".$datefrom."' and date(tgl_po) <= '".$dateto."' and acc_purchase_orders.deleted_at is null and posisi = 'pch' and (`status` = 'sap' or `status` = 'not_sap')
         group by date(tgl_po)) sudah_diterima
         on date.week_date = sudah_diterima.date
         left join

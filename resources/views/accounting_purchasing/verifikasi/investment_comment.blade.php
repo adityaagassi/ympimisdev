@@ -60,20 +60,20 @@
       <section class="content">
         @if($invest->posisi != "user")
         <form role="form" method="post" id="formNote" action="{{url('investment/comment/'.$invest->id)}}">
-          <div class="col-xs-12" style="text-align: center;" id="show">
+          <div class="col-xs-12 " style="text-align: center;" id="show">
             <h1><i class="fa fa-file-text-o"></i> {{ $invest->reff_number }}</h1>
             <p>
               <input type="hidden" value="{{csrf_token()}}" name="_token" />
-              <div class="col-xs-6 col-xs-offset-3">
+              <div class="col-xs-12">
                 <h2>Give Question To Applicant :</h2>
               </div>
 
-              <div class="col-xs-6 col-xs-offset-3">
+              <div class="col-xs-12">
                 <textarea class="form-control" id="question" name="question"></textarea>
                 <input type="hidden" class="form-control" id="posisi" name="posisi" value="{{ $invest->posisi }}" required=""></textarea>
               </div>
 
-              <div class="col-xs-6 col-xs-offset-3">
+              <div class="col-xs-12">
                   <br>
                   <button class="btn btn-success btn-lg" type="Submit">Submit & Send Email</button>
                   <a class="btn btn-danger btn-lg" type="button" onclick="reset();">Reset</a>
@@ -89,21 +89,21 @@
             <p>
               <input type="hidden" value="{{csrf_token()}}" name="_token" />
 
-              <div class="col-xs-6 col-xs-offset-3">
+              <div class="col-xs-12">
                 <h2>Question : <br><br><?= $invest->comment_note ?></h2>
               </div>
 
 
-              <div class="col-xs-6 col-xs-offset-3">
+              <div class="col-xs-12">
                 <h2>Give Response :</h2>
               </div>
 
-              <div class="col-xs-6 col-xs-offset-3">
+              <div class="col-xs-12">
                 <textarea class="form-control" id="answer" name="answer"></textarea>
                 <input type="hidden" class="form-control" id="posisi" name="posisi" value="{{ $invest->posisi }}" required=""></textarea>
               </div>
 
-              <div class="col-xs-6 col-xs-offset-3">
+              <div class="col-xs-12">
                   <br>
                   <button class="btn btn-success btn-lg" type="Submit">Submit & Send Email</button>
                   <a class="btn btn-danger btn-lg" type="button" onclick="resetanswer();">Reset</a>

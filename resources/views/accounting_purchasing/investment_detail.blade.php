@@ -542,11 +542,11 @@
                 <input type="number" class="form-control" id="jumlah_item" placeholder="Jumlah Item" onkeyup="getPersen()" required>
             </div>
           </div>
-          <div class="form-group row" align="left">
+          <div class="form-group row" align="left" id="uom_data">
             <div class="col-sm-1"></div>
             <label class="col-sm-2">UOM</span></label>
             <div class="col-sm-8">
-              <select class="form-control select2" id="uom" name="uom" data-placeholder="UOM" style="width: 100%;">
+              <select class="form-control select5" id="uom" name="uom" data-placeholder="UOM" style="width: 100%;">
                   <option></option>
                   @foreach($uom as $um)
                   <option value="{{ $um }}">{{ $um }}</option>
@@ -722,9 +722,9 @@
 
       var harga = document.getElementById("price_item");
 
-      harga.addEventListener("keyup", function(e) {
-        harga.value = formatRupiah(this.value, "");
-      });
+      // harga.addEventListener("keyup", function(e) {
+      //   harga.value = formatRupiah(this.value, "");
+      // });
 
       getExchangeRate();
 
@@ -736,6 +736,13 @@
             dropdownAutoWidth : true,
             allowClear:true,
           });
+
+        $('.select5').select2({
+          dropdownAutoWidth : true,
+          dropdownParent: $("#uom_data"),
+          allowClear:true,
+        });
+
       });
 
       if ($('#currency').val() == "USD") {
@@ -896,15 +903,15 @@
       var price = $("#price_item").val();
 
       var currency = $('#currency').val();
-      var prc = price.replace(/\D/g, "");
+      // var prc = price.replace(/\D/g, "");
 
-      var hasil = parseInt(qty) * parseFloat(prc);
+      var hasil = parseInt(qty) * parseFloat(price);
 
       if (!isNaN(hasil)) {
           $("#amount_item").val(hasil);
 
           var total = document.getElementById("amount_item");
-          total.value = formatRupiah(total.value, "");
+          // total.value = formatRupiah(total.value, "");
 
           var hasil_konversi = parseFloat(konversi(currency,"USD", hasil));
           $('#dollar_item').val(hasil_konversi);
@@ -1260,10 +1267,10 @@
       }
 
       var price = $("#price_item").val();
-      var price_number = price.replace(/\D/g, "");
+      // var price_number = price.replace(/\D/g, "");
 
       var amount = $("#amount_item").val();
-      var amount_number = amount.replace(/\D/g, "");
+      // var amount_number = amount.replace(/\D/g, "");
 
       var data = {
         reff_number: $("#reff_number").val(),
@@ -1271,8 +1278,8 @@
         detail_item: $("#detail_item").val(),
         jumlah_item : $("#jumlah_item").val(),
         uom : $("#uom").val(),
-        price_item : price_number,
-        amount_item : amount_number,
+        price_item : price,
+        amount_item : amount,
         dollar : $("#dollar_item").val()
       };
 

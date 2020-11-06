@@ -567,10 +567,10 @@ hr { background-color: red; height: 1px; border: 0; }
               }
 
               table += '<tr>';
-              table += '<td>'+value.no_po+'</td>';
-              table += '<td>'+value.po_date+'</td>';
-              table += '<td>'+value.supplier_name+'</td>';
-              table += '<td>'+value.budget_item+'</td>';
+              table += '<td style="text-align:left !important">'+value.no_po+'</td>';
+              table += '<td style="text-align:left !important">'+value.po_date+'</td>';
+              table += '<td style="text-align:left !important">'+value.supplier_name+'</td>';
+              table += '<td style="text-align:left !important">'+value.budget_item+'</td>';
 
               var curr = "";
 
