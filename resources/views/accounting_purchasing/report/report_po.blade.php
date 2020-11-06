@@ -304,6 +304,14 @@
 				<?php $no++; ?>
 				@endforeach
 
+				@if($po[0]->note != null)
+
+				<tr>
+					<td colspan="8"><span style="color: red;font-size: 12px"><?= $po[0]->note ?> </span></td>
+				</tr>
+
+				@endif
+
 
 				<tr>
 					<td colspan="8"><br></td>

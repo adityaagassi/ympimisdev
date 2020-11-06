@@ -179,7 +179,7 @@
           <div class="col-sm-6" align="left">
             <div class="input-group"> 
               <span class="input-group-addon" id="ket_harga">?</span>
-              <input type="text" id="item_price" name="item_price" class="form-control currency" placeholder="Harga" data-number-to-fixed="2" data-number-stepfactor="100">
+              <input type="text" id="item_price" name="item_price" class="form-control" placeholder="Harga" >
           </div>
             
             <!-- <input type="number" id="item_price" name="item_price" class="form-control" min="0.01" max="2500.00" value="25.00" /> -->
@@ -279,27 +279,27 @@
       if (mata_uang == "USD") {
         $('#ket_harga').text("$");
             var harga = document.getElementById("item_price");
-            harga.addEventListener("keyup", function(e) {
-              harga.value = formatRupiah(this.value, "");
-            });
+            // harga.addEventListener("keyup", function(e) {
+            //   harga.value = formatRupiah(this.value, "");
+            // });
       }
 
       else if (mata_uang == "IDR") {
           $('#ket_harga').text("Rp. ");
 
           var harga = document.getElementById("item_price");
-          harga.addEventListener("keyup", function(e) {
-            harga.value = formatRupiah(this.value, "");
-          });
+          // harga.addEventListener("keyup", function(e) {
+          //   harga.value = formatRupiah(this.value, "");
+          // });
       }
 
       else if (mata_uang == "JPY") {
           $('#ket_harga').text("¥");
 
           var harga = document.getElementById("item_price");
-          harga.addEventListener("keyup", function(e) {
-            harga.value = formatRupiah(this.value, "");
-          });
+          // harga.addEventListener("keyup", function(e) {
+          //   harga.value = formatRupiah(this.value, "");
+          // });
       }
     }
 
@@ -422,7 +422,6 @@
       }
 
       var price = $("#item_price").val();
-      var price_number = price.replace(/\D/g, "");
 
       var data = {
         item_code: $("#item_code").val(),
@@ -430,7 +429,7 @@
         item_desc: $("#item_desc").val(),
         item_spec: $("#item_spec").val(),
         item_currency: $("#item_currency").val(),
-        item_price: price_number,
+        item_price: price,
         item_leadtime: $("#item_leadtime").val(),
         item_uom: $("#item_uom").val(),
         item_lot: $("#item_lot").val(),

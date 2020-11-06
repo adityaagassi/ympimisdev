@@ -623,6 +623,7 @@
 												<option value="">&nbsp;</option>
 												<option value="Include VAT">Include VAT</option>
 												<option value="Exclude VAT">Exclude VAT</option>
+												<option value="None">None</option>
 											</select>
 										</div>
 										<div class="form-group">

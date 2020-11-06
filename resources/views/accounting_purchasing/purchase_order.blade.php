@@ -316,6 +316,7 @@
 												<option value="">&nbsp;</option>
 												<option value="Include VAT">Include VAT</option>
 												<option value="Exclude VAT">Exclude VAT</option>
+												<option value="None">None</option>
 											</select>
 										</div>
 										<div class="form-group">
@@ -1722,8 +1723,9 @@
 	        // var no = 1;
 
 		    var ids = [];
+
+
 	        $.each(result.purchase_order_detail, function(key, value) {
-		    	// console.log(result.purchase_order_detail);
 		    	var tambah2 = "tambah2";
 		    	var	lop2 = "lop2";
 
