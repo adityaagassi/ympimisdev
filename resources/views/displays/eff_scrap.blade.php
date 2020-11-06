@@ -53,6 +53,8 @@
 						</thead>
 						<tbody id="tableDetailBody">
 						</tbody>
+						<tfoot id="tableDetailFoot">
+						</tfoot>
 					</table>
 				</div>
 			</div>
@@ -106,9 +108,13 @@
 	function fetchDetail(a,b){
 		// $('#loading').show();
 		var loc = a.split("_");
+		$('#tableDetail').DataTable().clear();
+		$('#tableDetail').DataTable().destroy();
 		$('#tableDetailBody').html("");
+		$('#tableDetailFoot').html("");
 		$('#modalDetailTitle').text(a+' '+b);
 		var detailData = "";
+		var detailDataFoot = "";
 
 		if(loc[0] == 'MSCR'){
 			if(loc[1] == 'ALL'){
@@ -146,15 +152,68 @@
 						total += val*a[2];
 					}
 				});
-				detailData += '<tr>';
-				detailData += '<td></td>';
-				detailData += '<td></td>';
-				detailData += '<td></td>';
-				detailData += '<td><b>'+total.toFixed(4)+'</b></td>';
-				detailData += '</tr>';
+				detailDataFoot += '<tr>';
+				detailDataFoot += '<td></td>';
+				detailDataFoot += '<td></td>';
+				detailDataFoot += '<td></td>';
+				detailDataFoot += '<td><b>'+total.toFixed(4)+'</b></td>';
+				detailDataFoot += '</tr>';
 
 				$('#tableDetailBody').append(detailData);
+				$('#tableDetailFoot').append(detailDataFoot);
 				$('#modalDetail').modal('show');
+
+				$('#tableDetail').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'lengthMenu': [
+					[ 10, 25, 50, -1 ],
+					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
+						{
+							extend: 'pageLength',
+							className: 'btn btn-default',
+						},
+						{
+							extend: 'copy',
+							className: 'btn btn-success',
+							text: '<i class="fa fa-copy"></i> Copy',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'excel',
+							className: 'btn btn-info',
+							text: '<i class="fa fa-file-excel-o"></i> Excel',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'print',
+							className: 'btn btn-warning',
+							text: '<i class="fa fa-print"></i> Print',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						]
+					},
+					'paging': false,
+					'lengthChange': true,
+					'searching': true,
+					'ordering': true,
+					'order': [3],
+					'info': true,
+					'autoWidth': true,
+					"sPaginationType": "full_numbers",
+					"bJQueryUI": true,
+					"bAutoWidth": false,
+					"processing": true
+				});
 			}
 			else{
 
@@ -191,16 +250,68 @@
 						total += val*a[2];
 					}
 				});
-				detailData += '<tr>';
-				detailData += '<td></td>';
-				detailData += '<td></td>';
-				detailData += '<td></td>';
-				detailData += '<td><b>'+total.toFixed(4)+'</b></td>';
-				detailData += '</tr>';
+				detailDataFoot += '<tr>';
+				detailDataFoot += '<td></td>';
+				detailDataFoot += '<td></td>';
+				detailDataFoot += '<td></td>';
+				detailDataFoot += '<td><b>'+total.toFixed(4)+'</b></td>';
+				detailDataFoot += '</tr>';
 
 				$('#tableDetailBody').append(detailData);
+				$('#tableDetailFoot').append(detailDataFoot);
 				$('#modalDetail').modal('show');
 
+				$('#tableDetail').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'lengthMenu': [
+					[ 10, 25, 50, -1 ],
+					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
+						{
+							extend: 'pageLength',
+							className: 'btn btn-default',
+						},
+						{
+							extend: 'copy',
+							className: 'btn btn-success',
+							text: '<i class="fa fa-copy"></i> Copy',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'excel',
+							className: 'btn btn-info',
+							text: '<i class="fa fa-file-excel-o"></i> Excel',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'print',
+							className: 'btn btn-warning',
+							text: '<i class="fa fa-print"></i> Print',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						]
+					},
+					'paging': false,
+					'lengthChange': true,
+					'searching': true,
+					'ordering': true,
+					'order': [3],
+					'info': true,
+					'autoWidth': true,
+					"sPaginationType": "full_numbers",
+					"bJQueryUI": true,
+					"bAutoWidth": false,
+					"processing": true
+				});
 			}
 		}
 
@@ -240,15 +351,68 @@
 						total += val*a[2];
 					}
 				});
-				detailData += '<tr>';
-				detailData += '<td></td>';
-				detailData += '<td></td>';
-				detailData += '<td></td>';
-				detailData += '<td><b>'+total.toFixed(4)+'</b></td>';
-				detailData += '</tr>';
+				detailDataFoot += '<tr>';
+				detailDataFoot += '<td></td>';
+				detailDataFoot += '<td></td>';
+				detailDataFoot += '<td></td>';
+				detailDataFoot += '<td><b>'+total.toFixed(4)+'</b></td>';
+				detailDataFoot += '</tr>';
 
 				$('#tableDetailBody').append(detailData);
+				$('#tableDetailFoot').append(detailDataFoot);
 				$('#modalDetail').modal('show');
+
+				$('#tableDetail').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'lengthMenu': [
+					[ 10, 25, 50, -1 ],
+					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
+						{
+							extend: 'pageLength',
+							className: 'btn btn-default',
+						},
+						{
+							extend: 'copy',
+							className: 'btn btn-success',
+							text: '<i class="fa fa-copy"></i> Copy',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'excel',
+							className: 'btn btn-info',
+							text: '<i class="fa fa-file-excel-o"></i> Excel',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'print',
+							className: 'btn btn-warning',
+							text: '<i class="fa fa-print"></i> Print',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						]
+					},
+					'paging': false,
+					'lengthChange': true,
+					'searching': true,
+					'ordering': true,
+					'order': [3],
+					'info': true,
+					'autoWidth': true,
+					"sPaginationType": "full_numbers",
+					"bJQueryUI": true,
+					"bAutoWidth": false,
+					"processing": true
+				});
 			}
 			else{
 
@@ -285,15 +449,68 @@
 						total += val*a[2];
 					}
 				});
-				detailData += '<tr>';
-				detailData += '<td></td>';
-				detailData += '<td></td>';
-				detailData += '<td></td>';
-				detailData += '<td><b>'+total.toFixed(4)+'</b></td>';
-				detailData += '</tr>';
+				detailDataFoot += '<tr>';
+				detailDataFoot += '<td></td>';
+				detailDataFoot += '<td></td>';
+				detailDataFoot += '<td></td>';
+				detailDataFoot += '<td><b>'+total.toFixed(4)+'</b></td>';
+				detailDataFoot += '</tr>';
 
 				$('#tableDetailBody').append(detailData);
+				$('#tableDetailFoot').append(detailDataFoot);
 				$('#modalDetail').modal('show');
+
+				$('#tableDetail').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'lengthMenu': [
+					[ 10, 25, 50, -1 ],
+					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
+						{
+							extend: 'pageLength',
+							className: 'btn btn-default',
+						},
+						{
+							extend: 'copy',
+							className: 'btn btn-success',
+							text: '<i class="fa fa-copy"></i> Copy',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'excel',
+							className: 'btn btn-info',
+							text: '<i class="fa fa-file-excel-o"></i> Excel',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'print',
+							className: 'btn btn-warning',
+							text: '<i class="fa fa-print"></i> Print',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						]
+					},
+					'paging': false,
+					'lengthChange': true,
+					'searching': true,
+					'ordering': true,
+					'order': [3],
+					'info': true,
+					'autoWidth': true,
+					"sPaginationType": "full_numbers",
+					"bJQueryUI": true,
+					"bAutoWidth": false,
+					"processing": true
+				});
 
 			}
 		}
