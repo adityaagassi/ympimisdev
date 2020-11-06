@@ -471,7 +471,7 @@
 	<footer>
 
 		@if($po[0]->approval_authorized4 == "Approved")
-		<img width="100" src="{{ public_path() . '/files/ttd_pr_po/stempel_ympi.png' }}" alt="" style="padding: 0;position: absolute;top: 850px;left: 600px;z-index: 200">
+		<img width="100" src="{{ public_path() . '/files/ttd_pr_po/stempel_ympi.png' }}" alt="" style="padding: 0;position: absolute;top: 830px;left: 600px;z-index: 200">
 		@endif
 		<div class="footer">
 			<table style="width: 100%; font-family: TimesNewRoman; border-collapse: collapse;">
@@ -499,14 +499,14 @@
 						</td>
 						<td colspan="3" style="width: 30%">
 							@if($po[0]->approval_authorized3 == "Approved")
-								<img width="70" src="{{ public_path() . '/files/ttd_pr_po/ttd_pak_budhi.jpg' }}" alt="" style="padding: 0">
+								<img width="90" src="{{ public_path() . '/files/ttd_pr_po/ttd_pak_budhi.jpg' }}" alt="" style="padding: 0">
 								<span style="position: absolute;left: 380px;width: 75px;font-size: 10px;font-weight: bold;top: 81px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->date_approval_authorized3)) ?></span>
 							@endif
 						</td>
 
 						<td colspan="3" style="width: 30%">
 							@if($po[0]->approval_authorized4 == "Approved")
-								<img width="70" src="{{ public_path() . '/files/ttd_pr_po/ttd_pak_hayakawa.jpg' }}" alt="" style="padding: 0">
+								<img width="90" src="{{ public_path() . '/files/ttd_pr_po/ttd_pak_hayakawa.png' }}" alt="" style="padding: 0">
 								<span style="position: absolute;left: 540px;width: 75px;font-size: 10px;font-weight: bold;top: 81px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->date_approval_authorized4)) ?></span>
 							@endif
 						</td>
