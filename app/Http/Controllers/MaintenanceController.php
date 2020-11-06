@@ -626,27 +626,33 @@ class MaintenanceController extends Controller
 			if($prioritas == 'Urgent'){
 				$remark = 0;
 
-				if (date('W') % 2 == 0) {
-					// $id = 'PI0004007';
-					$id = 'PI1910003';
+				// if (date('W') % 2 == 0) {
+				// 	// $id = 'PI0004007';
+				// 	$id = 'PI1910003';
 
-				} else {
-					// $id = 'PI0805001';
-					$id = 'PI1910003';
+				// } else {
+				// 	// $id = 'PI0805001';
+				// 	$id = 'PI1910003';
 
+				// }
+
+				$ids = ['PI0004007', 'PI0805001'];
+				// $ids = ['PI2002021', 'PI1910003'];
+
+				$phones = EmployeeSync::select('phone')->whereIn('employee_id', $ids)->get();
+				$phone_log = [];
+
+				foreach ($phones as $phone) {
+					$new_phone = substr($phone->phone, 1, 15);
+					$new_phone = '62'.$new_phone;
+
+					// array_push($phone_log, $new_phone);
+					$query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+					$query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($new_phone);
+					$query_string .= "&message=".rawurlencode(stripslashes("Ada SPK Urgent Dari ".$data[0]->name.", Mohon segera cek MIRAI > SPK List. Terimakasih")) . "&languagetype=1";
+					$url = "http://gateway.onewaysms.co.id:10002/".$query_string; 
+					$fd = @implode('', file($url));
 				}
-
-				$phone = EmployeeSync::select('phone')->where('employee_id', '=', $id)->first();
-
-				$new_phone = substr($phone->phone, 1, 15);
-				$new_phone = '62'.$new_phone;
-
-				// ---------- SMS ------------
-				$query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
-				$query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($new_phone);
-				$query_string .= "&message=".rawurlencode(stripslashes("Ada SPK Urgent Dari ".$data[0]->name.", Mohon segera cek MIRAI. Terimakasih")) . "&languagetype=1";
-				$url = "http://gateway.onewaysms.co.id:10002/".$query_string; 
-				$fd = @implode('', file($url));
 				
 				// ----------- EMAIL ----------
 				// Mail::to('susilo.basri@music.yamaha.com')
@@ -849,7 +855,7 @@ class MaintenanceController extends Controller
 				$maintenance_job_orders = $maintenance_job_orders->where('maintenance_job_orders.remark', '=', $request->get('remark'));
 			}
 		}else{
-			$maintenance_job_orders = $maintenance_job_orders->where('maintenance_job_orders.remark', '=', 2);
+			$maintenance_job_orders = $maintenance_job_orders->whereIn('maintenance_job_orders.remark', [0,2]);
 		}
 		if(strlen($request->get('approvedBy')) > 0){
 			$maintenance_job_orders = $maintenance_job_orders->where('maintenance_job_orders.approved_by', '=', $request->get('approvedBy'));
