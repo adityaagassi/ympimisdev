@@ -4607,18 +4607,18 @@ public function update_purchase_requisition_po(Request $request)
             {
                 return '
                 <a href="investment/detail/' . $id . '" class="btn btn-warning btn-xs"><i class="fa fa-edit"></i> Edit</a>
-                <a href="investment/report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report PDF</a>
+                <a href="investment/report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report Investment</a>
                 <a href="javascript:void(0)" class="btn btn-xs btn-danger" onClick="deleteConfirmationInvestment('.$id.')" data-toggle="modal" data-target="#modalDeleteInvestment"  title="Delete Investment"><i class="fa fa-trash"></i> Delete Investment</a>
                 ';
             }
             else if ($invest->posisi == "acc_budget" || $invest->posisi == "acc_pajak")
             {
-                return '<a href="investment/report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report PDF</a>';
+                return '<a href="investment/report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report Investment</a>';
             }
             else if ($invest->posisi == "acc" || $invest->posisi == "manager" || $invest->posisi == "dgm" || $invest->posisi == "gm" || $invest->posisi == "manager_acc" || $invest->posisi == "direktur_acc" || $invest->posisi == "presdir" || $invest->posisi == "finished")
             {
                 return '
-                <a href="investment/report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report PDF</a>
+                <a href="investment/report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report Investment</a>
                 ';
             }
         })
@@ -4908,28 +4908,43 @@ public function update_purchase_requisition_po(Request $request)
 
 
         if($request->get('budget') == "On Budget"){
-            if ($request->get('type') == "Office Supplies") {
-                $type = "Office supplies/facilities";
+
+            if ($request->get('category') == "Investment") {
+                
+                $type = "";
+
+                $budgets = AccBudget::select('acc_budgets.budget_no', 'acc_budgets.description')
+                ->where('department', '=', $dept)
+                ->where('category', '=', $cat)
+                ->distinct()
+                ->get();
+
             }
-            else if($request->get('type') == "Repair and Maintenance"){
-                $type = "Repair Maintenance";
-            }
-            else if($request->get('type') == "Tools, Jigs and Furniture"){
-                $type = "Tool, Jig, and Furniture";
-            }
-            else if($request->get('type') == "Moulding"){
-                $type = "Molding";
-            }
+            //jika expense maka filter berdasarkan type
             else{
-                $type = $request->get('type');
+                if ($request->get('type') == "Office Supplies") {
+                    $type = "Office supplies/facilities";
+                }
+                else if($request->get('type') == "Repair and Maintenance"){
+                    $type = "Repair Maintenance";
+                }
+                else if($request->get('type') == "Tools, Jigs and Furniture"){
+                    $type = "Tool, Jig, and Furniture";
+                }
+                else if($request->get('type') == "Moulding"){
+                    $type = "Molding";
+                }
+                else{
+                    $type = $request->get('type');
+                }
+                
+                $budgets = AccBudget::select('acc_budgets.budget_no', 'acc_budgets.description')
+                ->where('department', '=', $dept)
+                ->where('category', '=', $cat)
+                ->where('account_name', '=', $type)
+                ->distinct()
+                ->get();
             }
-            
-            $budgets = AccBudget::select('acc_budgets.budget_no', 'acc_budgets.description')
-            ->where('department', '=', $dept)
-            ->where('category', '=', $cat)
-            ->where('account_name', '=', $type)
-            ->distinct()
-            ->get();
         }
         else if ($request->get('budget') == "Shifting") {
             $type = "";
@@ -8897,7 +8912,7 @@ public function update_purchase_requisition_po(Request $request)
         else if ($invest->posisi == "acc" || $invest->posisi == "manager" || $invest->posisi == "dgm" || $invest->posisi == "gm" || $invest->posisi == "manager_acc" || $invest->posisi == "direktur_acc" || $invest->posisi == "presdir" || $invest->posisi == "finished")
         {
             return '
-            <a href="report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report PDF</a>
+            <a href="report/' . $id . '" target="_blank" class="btn btn-warning btn-md" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report Investment</a>
             ';
         }
     })
