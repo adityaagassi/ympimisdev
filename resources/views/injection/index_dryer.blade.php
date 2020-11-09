@@ -42,7 +42,7 @@
 	<h1>
 		<?php echo e($title); ?>
 		<small><span class="text-purple"> <?php echo e($title_jp); ?></span></small>
-		<button class="btn btn-primary pull-right" onclick="showModalAdjustment()" style="font-weight: bold;font-size: 20px"><i class="fa fa-exchange"></i> Dryer Adjustment</button>
+		<!-- <button class="btn btn-primary pull-right" onclick="showModalAdjustment()" style="font-weight: bold;font-size: 20px"><i class="fa fa-exchange"></i> Dryer Adjustment</button> -->
 	</h1>
 </section>
 <?php $__env->stopSection(); ?>
@@ -118,11 +118,10 @@
 					<span style="font-weight: bold; font-size: 16px;">Dryer:</span>
 					<select name="dryer" id="dryer" class="form-group" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" data-placeholder="Select Dryer">
 						<option value="1">1</option>
-						<option value="2">2</option>
+						<option value="2 & 6">2 & 6</option>
 						<option value="3">3</option>
 						<option value="4">4</option>
 						<option value="5">5</option>
-						<option value="6">6</option>
 						<option value="7">7</option>
 						<option value="9">9</option>
 					</select>
@@ -141,7 +140,7 @@
 				</div>
 				<div class="col-xs-6" style="padding-top: 10px">
 					<span style="font-weight: bold; font-size: 16px;">Lot Number:</span>
-					<input type="text" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" placeholder="Lot Number" id="lot_number">
+					<input type="text" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" placeholder="Lot Number" id="lot_number" onkeyup="upperLot(this.value)">
 				</div>
 				<div class="col-xs-12" style="padding-top: 10px">
 					<span style="font-weight: bold; font-size: 16px;">Add Count:</span>
@@ -328,6 +327,11 @@
 		$('#dryer').val(null).trigger('change');
 	});
 
+	function upperLot(value) {
+		$('#lot_number').val(value.toUpperCase());
+		$('#lot_number').focus();
+	}
+
 	function showModalAdjustment() {
 		if ($('#op').val() == '') {
 			openErrorGritter('Error!','Scan ID Card First!');
@@ -421,7 +425,7 @@
 						$('#scan_tag').hide();
 						$('#scan_tag_success').show();
 						$('#op').val(result.employee.employee_id);
-						$('#op2').val(result.employee.name);
+						$('#op2').val(result.employee.name.split(' ').slice(0,2).join(' '));
 						$('#lot_number').removeAttr('disabled');
 						$('#dryer').removeAttr('disabled');
 					}
@@ -598,6 +602,7 @@
 					fetchResinList();
 					fetchResumeResin();
 					$('#dryer').val(null).trigger('change');
+					location.reload();
 				}
 				else{
 					audio_error.play();
