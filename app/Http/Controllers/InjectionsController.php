@@ -172,7 +172,9 @@ class InjectionsController extends Controller
     }
 
     public function scanPartMolding(Request $request){
-        $part = InjectionMoldingMaster::where('tag', '=', $request->get('tag'))->where('status_mesin', '=', $request->get('mesin'))->first();
+        $part = InjectionMoldingMaster::
+        // where('tag', '=', $request->get('tag'))->
+        where('status_mesin', '=', $request->get('machine'))->first();
 
         if (count($part) > 0) {
             $response = array(
@@ -1629,9 +1631,9 @@ class InjectionsController extends Controller
             $inventory->save();
 
             //send Inj Inventories
-            $inventory = InjectionInventory::firstOrNew(['material_number' => $request->get('material_number'), 'location' => 'RC11']);
-            $inventory->quantity = ($inventory->quantity+$request->get('shot'));
-            $inventory->save();
+            $injectionInventory = InjectionInventory::firstOrNew(['material_number' => $request->get('material_number'), 'location' => 'RC11']);
+            $injectionInventory->quantity = ($injectionInventory->quantity+$request->get('shot'));
+            $injectionInventory->save();
 
             //Transaction
             InjectionTransaction::create([
@@ -1652,7 +1654,7 @@ class InjectionsController extends Controller
             $completion = db::connection('mysql2')->table('histories')->insert([
                     "category" => "completion",
                     "completion_barcode_number" => "",
-                    "completion_description" => "",
+                    "completion_description" => $material->description,
                     "completion_location" => 'RC11',
                     "completion_issue_plant" => "8190",
                     "completion_material_id" => $material->id,
@@ -4756,15 +4758,8 @@ class InjectionsController extends Controller
                 ]);
             }else{
                 $transaction = InjectionTag::where('tag',$request->get('tag'))->first();
-                $transaction->operator_id = null;
-                $transaction->material_number = null;
-                $transaction->part_name = null;
-                $transaction->part_type = null;
-                $transaction->color = null;
-                $transaction->cavity = null;
-                $transaction->location = null;
-                $transaction->shot = null;
-                $transaction->availability = null;
+                $transaction->operator_id = $request->get('operator_id');
+                $transaction->availability = 2;
                 $transaction->remark = null;
                 $transaction->height_check = null;
                 $transaction->push_pull_check = null;
@@ -5246,7 +5241,7 @@ class InjectionsController extends Controller
         }
     }
 
-    public function indexMachineSchedule()
+    public function indexInjectionSchedule()
     {
         $title = 'Injection Schedule';
         $title_jp = '???';
@@ -5256,23 +5251,28 @@ class InjectionsController extends Controller
         ))->with('page', 'Injection Schedule View')->with('jpn', '???');
     }
 
-    public function fetchSchedule()
+    public function fetchInjectionSchedule()
     {
-        $sch = db::select("SELECT mesin, plan_mesin_injection_tmps.color, plan_mesin_injection_tmps.qty, working_date as due_date, shoot, cycle.cycle, plan_mesin_injection_tmps.part FROM `plan_mesin_injection_tmps` left join cycle_time_mesin_injections as cycle on cycle.part = SPLIT_STRING(plan_mesin_injection_tmps.color,' - ', 1) and cycle.color = SPLIT_STRING(plan_mesin_injection_tmps.color,' - ', 2)
-            order by working_date asc, plan_mesin_injection_tmps.id asc");
+        $last = date('Y-m-t');
+        $first = date('Y-m-01');
 
-        // $sch = db::select("SELECT mesin, plan_mesin_injections.color, plan_mesin_injections.qty, due_date, shoot, cycle.cycle, plan_mesin_injections.part FROM `plan_mesin_injections` left join cycle_time_mesin_injections as cycle on cycle.part = SPLIT_STRING(plan_mesin_injections.color,' - ', 1) and cycle.color = SPLIT_STRING(plan_mesin_injections.color,' - ', 2)
-        //     order by due_date asc, plan_mesin_injections.id asc");
+        // $schedule = [];
 
-        // $sch2 = db::select("SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d')>='2019-12-01' and DATE_FORMAT(week_date,'%Y-%m-%d')<='2019-12-30'");
-        $sch2 = db::select("SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d')>='2019-11-01' and DATE_FORMAT(week_date,'%Y-%m-%d')<='2019-11-31'");
+        // for ($i = 0; $i < count($this->mesin); $i++) {
+            $schedule = db::select("select * from injection_schedule_logs where date(start_time) >= '".$first."' and date(end_time) <= '".$last."'");
+        // }
+
+
+        // $sch2 = db::select("SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d')>='2019-11-01' and DATE_FORMAT(week_date,'%Y-%m-%d')<='2019-11-31'");
 
         
 
         $response = array(
             'status' => true,            
-            'schedule' => $sch,          
-            'tgl' => $sch2
+            'schedule' => $schedule,          
+            'mesin' => $this->mesin, 
+            'first' => $first,
+            'last' => $last
 
         );
         return Response::json($response);

@@ -99,9 +99,7 @@
 					<thead>
 						<tr>
 							<th colspan="3" style="width: 10%; background-color: rgb(220,220,220); padding:0;font-size: 20px;">Maintenance Molding (LEPAS) <span style="color: red" id="counter"></span></th>
-							
 						</tr>
-						
 					</thead>
 					<tbody>
 						<tr>
@@ -907,7 +905,7 @@
 
 		$.post('{{ url("index/injeksi/update_history_temp") }}', data, function(result, status, xhr){
 			if(result.status){
-				openSuccessGritter('Success','History Molding Temp has been updated');
+				// openSuccessGritter('Success','History Molding Temp has been updated');
 				// reset();
 			} else {
 				audio_error.play();
@@ -923,7 +921,7 @@
 
 		$.post('{{ url("index/injeksi/update_history_temp") }}', data2, function(result, status, xhr){
 			if(result.status){
-				openSuccessGritter('Success','History Molding Temp has been updated');
+				// openSuccessGritter('Success','History Molding Temp has been updated');
 				// reset();
 			} else {
 				audio_error.play();

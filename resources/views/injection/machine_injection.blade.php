@@ -125,7 +125,7 @@
 					
 				</tbody>
 			</table>
-			<div class="col-xs-6" style="padding: 0px;margin-bottom: 20px;">
+			<!-- <div class="col-xs-6" style="padding: 0px;margin-bottom: 20px;">
 				<div class="input-group" style="padding-top: 10px;">
 					<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: black;">
 						<i class="glyphicon glyphicon-qrcode"></i>
@@ -135,8 +135,9 @@
 						<i class="glyphicon glyphicon-qrcode"></i>
 					</div>
 				</div>
-			</div>
-			<div class="col-xs-6" style="padding: 0px;padding-bottom: 15.6px">
+			</div> -->
+			<div class="col-xs-12" style="padding: 0px;padding-bottom: 15.6px">
+				<input type="hidden" id="tag_molding" name="tag_molding" placeholder="Scan Tag Molding" >
 				<div class="input-group" style="padding-top: 10px;">
 					<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: black;">
 						<i class="glyphicon glyphicon-qrcode"></i>
@@ -273,15 +274,20 @@
 				</table>
 			</div>
 
-			<div class="col-xs-6" style="padding: 0px;padding-top: 10px;padding-right: 5px">
-				<button class="btn btn-warning" id="btn_ganti" onclick="changeMesin()" style="font-size: 30px;font-weight: bold;width: 100%">
+			<div class="col-xs-4" style="padding: 0px;padding-top: 10px;padding-right: 5px">
+				<button class="btn btn-warning" id="btn_ganti" onclick="changeMesin()" style="font-size: 25px;font-weight: bold;width: 100%">
 					PILIH MESIN
 				</button>
 			</div>
-			<div class="col-xs-6" style="padding: 0px;padding-top: 10px;padding-left: 5px">
-				<button class="btn btn-info" id="btn_ganti_op" onclick="location.reload()" style="font-size: 30px;font-weight: bold;width: 100%">
+			<div class="col-xs-4" style="padding: 0px;padding-top: 10px;padding-left: 5px">
+				<button class="btn btn-info" id="btn_ganti_op" onclick="location.reload()" style="font-size: 25px;font-weight: bold;width: 100%">
 					GANTI OPERATOR
 				</button>
+			</div>
+			<div class="col-xs-4" style="padding: 0px;padding-top: 10px;padding-left: 5px">
+				<a href="{{url('index/injection/molding')}}" target="_blank" class="btn btn-primary" style="font-size: 25px;font-weight: bold;width: 100%">
+					GANTI MOLDING
+				</a>
 			</div>
 		</div>
 	</div>
@@ -296,6 +302,11 @@
 						<label for="exampleInputEmail1">Employee ID</label>
 						<input class="form-control" style="width: 100%; text-align: center;" type="text" id="operator" placeholder="Scan ID Card" required>
 					</div>
+					<div class="col-xs-12">
+						<div class="row">
+							<a href="{{url('index/injection/molding')}}" target="_blank" class="btn btn-primary btn-sm btn-block">Ganti Molding</a>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -307,26 +318,25 @@
 		<div class="modal-content">
 			<div class="modal-header"><center> <b id="statusa" style="font-size: 2vw"></b> </center>
 				<div class="modal-body table-responsive no-padding">
+					<div class="col-xs-12">
+						<div class="row">
+							<a href="{{url('index/injection/molding')}}" target="_blank" class="btn btn-primary btn-sm pull-right">Ganti Molding</a>
+						</div>
+					</div>
 					<div class="col-xs-12" id="mesin_choice" style="padding-top: 20px">
 						<div class="row">
 							<div class="col-xs-12">
-								<div class="row">
-									<div class="col-xs-12">
-										<center><span style="font-weight: bold; font-size: 18px;">Pilih mesin</span></center>
-									</div>
-								</div>
+									<center><span style="font-weight: bold; font-size: 18px;">Pilih Mesin</span></center>
 							</div>
-							<div class="row">
-								<div class="col-xs-12" id="mesin_btn">
-									@foreach($mesin as $mesin)
-									<div class="col-xs-3" style="padding-top: 5px">
-										<center>
-											<button class="btn btn-primary" id="{{$mesin}}" style="width: 200px;font-size: 15px;font-weight: bold;" onclick="getMesin(this.id)">{{$mesin}}</button>
-										</center>
-									</div>
-									@endforeach
+							<div class="col-xs-12" id="mesin_btn">
+								@foreach($mesin as $mesin)
+								<div class="col-xs-3" style="padding-top: 5px">
+									<center>
+										<button class="btn btn-primary" id="{{$mesin}}" style="width: 200px;font-size: 15px;font-weight: bold;" onclick="getMesin(this.id)">{{$mesin}}</button>
+									</center>
 								</div>
-						    </div>
+								@endforeach
+							</div>
 						</div>
 					</div>
 					<div class="col-xs-12" id="mesin_fix" style="padding-top: 20px">
@@ -603,40 +613,40 @@
 		}
 	});
 
-	$('#tag_molding').keyup(function(event) {
-		if (event.keyCode == 13 || event.keyCode == 9) {
-			if($("#tag_molding").val().length >= 7){
-				var data = {
-					tag : $("#tag_molding").val(),
-					mesin : $("#mesin_fix2").text(),
-					// part : $("#part_type").text(),
-				}
+	// $('#tag_molding').keyup(function(event) {
+	// 	if (event.keyCode == 13 || event.keyCode == 9) {
+	// 		if($("#tag_molding").val().length >= 7){
+	// 			var data = {
+	// 				tag : $("#tag_molding").val(),
+	// 				mesin : $("#mesin_fix2").text(),
+	// 				// part : $("#part_type").text(),
+	// 			}
 				
-				$.get('{{ url("scan/part_molding") }}', data, function(result, status, xhr){
-					if(result.status){
-						openSuccessGritter('Success!', result.message);
-						$('#tag_molding').prop('disabled', true);
-						$('#molding').html(result.part.part);
-						$('#molding_part_type').val(result.part.product);
-						$('#tag_product').removeAttr('disabled');
-						$('#tag_product').focus();
-					}
-					else{
-						openErrorGritter('Error!', 'Molding Invalid');
-						audio_error.play();
-						$("#tag_molding").val("");
-						$("#tag_molding").focus();
-					}
-				});
-			}
-			else{
-				openErrorGritter('Error!', 'Tag Invalid');
-				audio_error.play();
-				$("#tag_product").val("");
-				$("#tag_product").focus();
-			}			
-		}
-	});
+	// 			$.get('{{ url("scan/part_molding") }}', data, function(result, status, xhr){
+	// 				if(result.status){
+	// 					openSuccessGritter('Success!', result.message);
+	// 					$('#tag_molding').prop('disabled', true);
+	// 					$('#molding').html(result.part.part);
+	// 					$('#molding_part_type').val(result.part.product);
+	// 					$('#tag_product').removeAttr('disabled');
+	// 					$('#tag_product').focus();
+	// 				}
+	// 				else{
+	// 					openErrorGritter('Error!', 'Molding Invalid');
+	// 					audio_error.play();
+	// 					$("#tag_molding").val("");
+	// 					$("#tag_molding").focus();
+	// 				}
+	// 			});
+	// 		}
+	// 		else{
+	// 			openErrorGritter('Error!', 'Tag Invalid');
+	// 			audio_error.play();
+	// 			$("#tag_product").val("");
+	// 			$("#tag_product").focus();
+	// 		}			
+	// 	}
+	// });
 
 	function getProduct(value) {
 		$('#product_fix').show();
@@ -888,14 +898,13 @@
 				$('#modalMesin').modal('hide');
 			}
 			else{
+				resulttrue = 0;
 				var data2 = {
 					machine:$('#mesin_fix2').text()
 				}
 				$.get('{{ url("index/injection/fetch_dryer") }}', data2, function(result, status, xhr){
 					if(result.status){
-						$('#tag_molding').removeAttr('disabled');
-						$('#tag_molding').focus();
-						$('#modalMesin').modal('hide');
+						resulttrue++;
 						$('#mesin').html($('#mesin_fix2').text());
 						$('#dryer').html(result.dryer.dryer);
 						$('#dryer_lot_number').html(result.dryer.lot_number);
@@ -903,9 +912,27 @@
 					}else{
 						openErrorGritter('Error!','Mesin Belum Terset Dryer. Silahkan hubungi Leader Injeksi sebelum memulai proses');
 					}
-				})
-				// $('#tag_product').removeAttr('disabled');
-				// $('#tag_product').focus();
+				});
+				
+				$.get('{{ url("scan/part_molding") }}', data2, function(result, status, xhr){
+					if(result.status){
+						openSuccessGritter('Success!', result.message);
+						$('#tag_molding').val(result.part.tag);
+						$('#tag_molding').prop('disabled', true);
+						$('#molding').html(result.part.part);
+						$('#molding_part_type').val(result.part.product);
+						$('#tag_product').removeAttr('disabled');
+						$('#tag_product').focus();
+						resulttrue++;
+						if (resulttrue == 2) {
+							$('#modalMesin').modal('hide');
+						}
+					}
+					else{
+						openErrorGritter('Error!','Molding Belum Dipasang');
+						audio_error.play();
+					}
+				});
 			}
 		});
 	}
