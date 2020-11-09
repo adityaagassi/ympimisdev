@@ -220,6 +220,7 @@ class KnockDownController extends Controller{
 			(SELECT ck.marking, ck.gmc AS material_number, ck.ck_qty, COALESCE(st.st_qty,0) AS st_qty FROM
 			(SELECT marking, gmc, SUM(qty_qty) as ck_qty FROM detail_checksheets ck
 			WHERE id_checkSheet = '".$container_id."'
+			and deleted_at is null
 			GROUP BY marking, gmc) AS ck
 			LEFT JOIN
 			(SELECT d.material_number, SUM(d.quantity) as st_qty FROM knock_down_details d
