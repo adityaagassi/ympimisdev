@@ -40,6 +40,10 @@ Route::get('trial_loc2/{lat}/{long}', 'TrialController@getLocation');
 Route::get('index/whatsapp_api', 'ChatBotController@index');
 Route::get('whatsapp_api', 'TrialController@whatsapp_api');
 
+Route::get('index_push_pull_trial', 'TrialController@index_push_pull_trial');
+Route::post('push_pull_trial', 'TrialController@push_pull_trial');
+Route::get('fetch_push_pull_trial', 'TrialController@fetch_push_pull_trial');
+
 
 Route::get('/index/emergency_response', 'TrialController@tes2');
 Route::get('/index/trials', 'TrialController@tes');
@@ -2626,6 +2630,7 @@ Route::get('index/display/stuffing_monitoring', 'DisplayController@indexStuffing
 Route::get('index/display/sub_assy/{id}', 'AssyProcessController@indexDisplayAssy');
 Route::get('fetch/display/sub_assy/{id}', 'AssyProcessController@fetchPicking');
 Route::get('fetch/display/welding/{id}', 'AssyProcessController@fetchPickingWelding');
+Route::get('index/display/body/{id}', 'AssyProcessController@indexDisplayBody');
 
 Route::get('fetch/chart/sub_assy', 'AssyProcessController@chartPicking');
 Route::get('fetch/detail/sub_assy', 'AssyProcessController@fetchPickingDetail');
@@ -3472,6 +3477,9 @@ Route::get('verify/maintenance/spk/danger_note/{order_no}', 'MaintenanceControll
 
 Route::post('verify/maintenance/spk/danger_note', 'MaintenanceController@addDangerNote');
 
+Route::get('index/report/urgent_monitoring', 'MaintenanceController@indexSPKUrgentReport');
+Route::get('fetch/maintenance/spk/monitoring/urgent', 'MaintenanceController@fetchSPKUrgentReport');
+
 Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::get('index/maintenance/spk/operator', 'MaintenanceController@indexOperatorMonitoring');
 
@@ -3600,11 +3608,14 @@ Route::get('fetch/assembly/flute/fillModelResult', 'AssemblyProcessController@fi
 Route::get('fetch/assembly/flute/fillResult', 'AssemblyProcessController@fillResult');
 Route::get('fetch/assembly/flute/fetchCheckTag', 'AssemblyProcessController@fetchCheckTag');
 Route::get('fetch/assembly/flute/fetchCheckReprint', 'AssemblyProcessController@fetchCheckReprint');
+
 Route::get('index/assembly/flute/label_outer/{id}/{gmc}/{remark}', 'AssemblyProcessController@labelBesarOuterFl');
 Route::get('index/assembly/flute/label_besar/{id}/{gmc}/{remark}', 'AssemblyProcessController@labelBesarFl');
 Route::get('index/assembly/flute/label_kecil/{id}/{remark}', 'AssemblyProcessController@labelKecilFl');
 Route::get('index/assembly/flute/label_kecil2/{id}/{remark}', 'AssemblyProcessController@labelKecil2Fl');
 Route::get('index/assembly/flute/label_deskripsi/{id}/{remark}', 'AssemblyProcessController@labelDeskripsi');
+Route::get('fetch/check_carb', 'AssemblyProcessController@fetchCheckCarb');
+
 
 
 Route::get('index/board/{location}', 'AssemblyProcessController@indexAssemblyBoard');

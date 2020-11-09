@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Mike42\Escpos\Printer;
-use Mike42\Escpos\EscposImage;
 use Yajra\DataTables\Exception;
 use Response;
 use Illuminate\Support\Facades\DB;
@@ -36,10 +35,132 @@ use App\KnockDownDetail;
 use App\TransactionTransfer;
 use App\EmployeeSync;
 use App\Libraries\ActMLEasyIf;
+use Excel;
 
 class TrialController extends Controller{
 	var $APIurl = 'https://eu45.chat-api.com/instance150276/';
-    var $token = 'owl5cvgsqlil60xf';
+	var $token = 'owl5cvgsqlil60xf';
+
+	public function printSummary(){
+		$printer_name = 'MIS2';
+		$connector = new WindowsPrintConnector($printer_name);
+		$printer = new Printer($connector);
+
+		$id = 'ST_4';
+		$store = 'BFF3B';
+		$substore = 'GROUP D_1';
+		$category = '(ASSY)';
+		$material_number = 'ZQ88390';
+		$sloc = 'SX51';
+		$description = 'A32 D-4 ASSY TUMBLING & BUFFING(YMPI)';
+		$uom = 'PC';
+
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->setEmphasis(true);
+		$printer->setReverseColors(true);
+		$printer->text("   Monthly Stocktaking October 2020   \n");
+		$printer->setTextSize(2, 2);
+		$printer->text("  Summary of Counting  "."\n");
+		$printer->initialize();
+		$printer->setTextSize(2, 2);
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->text($store."\n");
+		$printer->text($substore."\n");
+
+		$printer->qrCode($id, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
+		$printer->initialize();
+		$printer->setEmphasis(true);
+		$printer->setTextSize(1, 1);
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->text($id."\n");
+
+		$printer->initialize();
+		$printer->setTextSize(3, 2);
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->text($category."\n");
+
+		$printer->initialize();
+		$printer->setEmphasis(true);
+		$printer->setTextSize(3, 2);
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->text($material_number. " (". $sloc. ")\n\n");
+
+		$printer->initialize();
+		$printer->setEmphasis(true);
+		$printer->setTextSize(1, 1);
+		$printer->text($description."\n");
+		$printer->text("Uom: ".$uom."\n");
+
+		$printer->initialize();
+		$printer->setEmphasis(true);
+		$printer->setTextSize(1, 1);
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+
+		$printer->setReverseColors(true);
+		$printer->textRaw("          HITUNG        "."|"."         REVISI        ");
+		$printer->setReverseColors(false);
+		$printer->textRaw(str_repeat(" ", 12)."x".str_repeat(" ", 11)." ".str_repeat(" ", 11)."x".str_repeat(" ", 12));
+		$printer->textRaw("\xc0".str_repeat("\xc4", 21)."\xd9 \xc0".str_repeat("\xc4", 21)."\xd9\n");
+		$printer->textRaw(str_repeat(" ", 12)."x".str_repeat(" ", 11)." ".str_repeat(" ", 11)."x".str_repeat(" ", 12));
+		$printer->textRaw("\xc0".str_repeat("\xc4", 21)."\xd9 \xc0".str_repeat("\xc4", 21)."\xd9\n");
+		$printer->textRaw(str_repeat(" ", 12)."x".str_repeat(" ", 11)." ".str_repeat(" ", 11)."x".str_repeat(" ", 12));
+		$printer->textRaw("\xc0".str_repeat("\xc4", 21)."\xd9 \xc0".str_repeat("\xc4", 21)."\xd9\n");
+		$printer->textRaw(str_repeat(" ", 12)."x".str_repeat(" ", 11)." ".str_repeat(" ", 11)."x".str_repeat(" ", 12));
+		$printer->textRaw("\xc0".str_repeat("\xc4", 21)."\xd9 \xc0".str_repeat("\xc4", 21)."\xd9\n");
+		$printer->textRaw(str_repeat(" ", 12)."x".str_repeat(" ", 11)." ".str_repeat(" ", 11)."x".str_repeat(" ", 12));
+		$printer->textRaw("\xc0".str_repeat("\xc4", 21)."\xd9 \xc0".str_repeat("\xc4", 21)."\xd9\n");
+
+
+		$printer->setTextSize(1, 1);
+		$printer->setJustification(Printer::JUSTIFY_RIGHT);
+		$printer->text("Print at " . Carbon::now());
+		$printer->feed(1);
+		$printer->cut();
+		$printer->close();
+	}
+
+
+	public function test1(){
+		for ($i=0; $i <= 5; $i++) { 
+			echo $i++;
+		}	
+	}
+
+	public function test2(){
+
+		$string = "Hello world. It's a beautiful day.";
+		$newString = explode(" ", $string);
+
+		echo $newString[0].' '.$newString[4];
+		
+	}
+
+	public function test3(){
+		
+		for ($i=0; $i < 10; $i++) { 
+			for ($j=0; $j < 10; $j++) { 
+				if($i <  $j){
+					echo $j;
+				}
+			}
+			echo "<br>";
+		}	
+
+	}
+
+	public function test4(){
+
+		$myArr = ['A','B','C','D','E','F','G','H','I','J'];
+
+		for ($i=0; $i < 10; $i++) { 
+			if(($i % 2) == 0){
+				echo $myArr[$i];
+			}
+		}
+
+
+
+	}
 
 	public function trialLoc(){
 
@@ -509,14 +630,130 @@ class TrialController extends Controller{
 		# code...
 	}
 
+	public function index_push_pull_trial()
+	{
+		return view('trials.push_pull_trial', array(
+          ))->with('page', 'Trial');
+	}
+
+	public function push_pull_trial(Request $request)
+	{
+		try {
+			$id_user = Auth::id();
+
+             $file = $request->file('file');
+             $file_name = 'temp_'. MD5(date("YmdHisa")) .'.'.$file->getClientOriginalExtension();
+             $file->move('data_file/push_pull/trial/', $file_name);
+
+             $excel = 'data_file/push_pull/trial/' . $file_name;
+             $rows = Excel::load($excel, function($reader) {
+                // $reader->noHeading();
+                // $reader->skipRows(1);
+
+                // $reader->each(function($row) {
+                // });
+           })->toObject();
+
+             // $index = 0;
+             // $index2 = 0;
+             // for ($i=0; $i < count($rows); $i++) { 
+             // 	if ($rows[$i][0] != 0) {
+             // 		$rowfix[$i] = $rows[$i][0];
+             // 	}
+             // 	if ($index2 != $rows[$i][0]) {
+             // 		$indexfix[] = $index++;
+             // 	}
+             // }
+
+
+            $arr = [];
+            $temp = [];
+            $insert = true;
+
+            for ($i=0; $i < count($rows); $i++) { 
+
+            	if($rows[$i][0] != 0){
+					array_push($temp, $rows[$i][0]);
+					$insert = true;
+            	}else{
+            		if($insert){
+						$insert = false;
+						array_push($arr, $temp);
+            			$temp = [];
+            		}
+            	}
+
+            }
+
+
+            for ($i=0; $i < count($arr); $i++) { 
+            	for ($j=0; $j < count($arr[$i]); $j++) { 
+            		DB::table('push_pull_trial_temps')->insert([
+			            'check_index' => $i,
+			            'value' => $arr[$i][$j],
+			            'created_by' => $id_user,
+			            'created_at' => date('Y-m-d H:i:s'),
+			            'updated_at' => date('Y-m-d H:i:s'),
+			        ]);
+            	}
+            }
+
+            $fix = DB::SELECT('SELECT DISTINCT ( a.check_index ),( SELECT max( VALUE ) FROM push_pull_trial_temps WHERE check_index = a.check_index ) as value
+				FROM
+					push_pull_trial_temps a');
+            foreach ($fix as $key) {
+            	DB::table('push_pull_trials')->insert([
+		            'check_index' => $key->check_index+1,
+		            'value' => $key->value,
+		            'created_by' => $id_user,
+		            'created_at' => date('Y-m-d H:i:s'),
+		            'updated_at' => date('Y-m-d H:i:s'),
+		        ]);
+            }
+
+            DB::table('push_pull_trial_temps')->truncate();
+
+             $response = array(
+	           'status' => true,
+	           'message' => 'Upload file success',
+		    );
+		    return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+		        'status' => false,
+		        'message' => $e->getMessage(),
+		    );
+		    return Response::json($response);
+		}
+	}
+
+	public function fetch_push_pull_trial()
+	{
+		try {
+			$push_pull = DB::SELECT('select * from push_pull_trials');
+			
+			$response = array(
+		        'status' => true,
+		        'push_pull' => $push_pull,
+		    );
+		    return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+		        'status' => false,
+		        'message' => $e->getMessage(),
+		    );
+		    return Response::json($response);
+		}
+	}
+
 	public function whatsapp_api2(Request $request)
 	{
 		// $time2 = $request->get('time2');
 		// $time = $request->get('time');
 		$json = file_get_contents('https://api.chat-api.com/instance150276/messages?token=owl5cvgsqlil60xf&last=1&limit=3');
-        $decoded = json_decode($json,true);
+		$decoded = json_decode($json,true);
 
-        var_dump($decoded);
+		var_dump($decoded);
 
         //write parsed JSON-body to the file for debugging
         // ob_start();
