@@ -598,8 +598,16 @@ function fetchConfirmTable(){
 				}else{
 					confirmTable += '<td>'+value.vehicle.toUpperCase()+'</td>';
 				}
-				confirmTable += '<td>'+value.origin+'</td>';
-				confirmTable += '<td>'+value.destination+'</td>';
+				if (value.vehicle == null) {
+					confirmTable += '<td></td>';
+				}else{
+					confirmTable += '<td>'+value.origin+'</td>';
+				}
+				if (value.vehicle == null) {
+					confirmTable += '<td></td>';
+				}else{
+					confirmTable += '<td>'+value.destination+'</td>';
+				}
 				if (value.highway_amount == null) {
 					confirmTable += '<td>0</td>';
 				}else{

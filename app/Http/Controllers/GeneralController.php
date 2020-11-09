@@ -1254,11 +1254,11 @@ class GeneralController extends Controller{
 				$grade = $transportation->grade;
 			}
 
-			if(substr($grade, 1, 1) == 'M'){
+			if(substr($grade, 0, 1) == 'M'){
 				$divider = 5;
 				$multiplier = 7650;
 			}
-			else if(substr($grade, 1, 1) == 'L'){
+			else if(substr($grade, 0, 1) == 'L'){
 				$divider = 7;
 				$multiplier = 7650;
 			}
@@ -1321,7 +1321,7 @@ class GeneralController extends Controller{
 					"highway_amount_total" => $transportation->highway_amount_total,
 					"distance_total" => $transportation->distance_total,
 					"remark" => $transportation->remark,
-					"fuel" => $fuel,
+					"fuel" => round($fuel,2),
 					"total_amount" => $total_amount
 				]);
 		}
