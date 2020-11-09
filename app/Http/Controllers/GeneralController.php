@@ -528,9 +528,11 @@ class GeneralController extends Controller{
 
 		DB::beginTransaction();
 		for ($i=0; $i < count($employee); $i++) {
-			$stock = GeneralShoesStock::where('merk',  $employee[$i]['merk'])
-			->where('gender',  $employee[$i]['gender'])
-			->where('size',  $employee[$i]['size'])
+			$stock = GeneralShoesStock::where('merk',  $employee[$i]['merk']);
+			if($employee[$i]['gender'] == 'L'){
+				$stock = $stock->where('gender',  $employee[$i]['gender']);
+			}
+			$stock = $stock->where('size',  $employee[$i]['size'])
 			->first();
 
 			if($stock){
