@@ -464,7 +464,7 @@
 							</tr>
 							<tr>
 								<td colspan="2" style="border: 1px solid black;">Total <span class="droid">合計</span></td>
-								<?php $total_all = $total - $vat; ?>
+								<?php $total_all = $total + $vat; ?>
 								<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold;text-align: right;"><?= $ket_harga ?> <?= number_format($total_all,2,",",".");?></td>
 							</tr>
 							<tr>
