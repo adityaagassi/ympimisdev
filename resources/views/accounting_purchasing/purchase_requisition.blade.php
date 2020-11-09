@@ -1256,13 +1256,17 @@
 			department:"{{ $employee->department }}",
 		}
 		$.get('{{ url("fetch/purchase_requisition/budgetlist") }}', data, function(result, status, xhr) {
-	  		$('#budget_no').html('');
 	  		budget_list = "";
 	  		budget_list = "<option value=''></option>";
 			$.each(result.budget, function(index, value){
 				budget_list += "<option value="+value.budget_no+">"+value.budget_no+" - "+value.description+"</option> ";
 			});
-			$('#budget_no').append(budget_list);
+			// console.log($('#budget_no').val());
+			if ($('#budget_no').val() == "" || $('#budget_no').val() == null) {
+	  			$('#budget_no').html('');
+				$('#budget_no').append(budget_list);				
+			}
+
 		})
 	}
 
