@@ -4707,6 +4707,14 @@ public function update_purchase_requisition_po(Request $request)
                 ->where('position','=','Manager')
                 ->first();
             }
+            else if ($request->get('applicant_department') == "General Affairs")
+            {
+                $getmanager = EmployeeSync::select('employee_id', 'name', 'position', 'section')
+                ->whereNull('end_date')
+                ->where('department','=','Human Resources')
+                ->where('position','=','Manager')
+                ->first();
+            }
             else
             {
                 $getmanager = EmployeeSync::select('employee_id', 'name', 'position', 'section')
