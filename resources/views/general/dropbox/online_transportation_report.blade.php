@@ -593,7 +593,11 @@ function fetchConfirmTable(){
 				confirmTable += '<td>'+value.grade_code+'</td>';
 				confirmTable += '<td>'+value.check_date+'</td>';
 				confirmTable += '<td>'+value.attend_code.toUpperCase()+'</td>';
-				confirmTable += '<td>'+value.vehicle.toUpperCase()+'</td>';
+				if (value.vehicle == null) {
+					confirmTable += '<td></td>';
+				}else{
+					confirmTable += '<td>'+value.vehicle.toUpperCase()+'</td>';
+				}
 				confirmTable += '<td>'+value.origin+'</td>';
 				confirmTable += '<td>'+value.destination+'</td>';
 				if (value.highway_amount == null) {
