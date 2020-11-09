@@ -216,20 +216,46 @@ class KnockDownController extends Controller{
 	public function fetchContainerResume(Request $request){
 		$container_id = $request->get('container_id');
 
-		$resume = db::select("SELECT resume.marking, resume.material_number, materials.material_description, materials.category, resume.ck_qty, resume.st_qty FROM
-			(SELECT ck.marking, ck.gmc AS material_number, ck.ck_qty, COALESCE(st.st_qty,0) AS st_qty FROM
-			(SELECT marking, gmc, SUM(qty_qty) as ck_qty FROM detail_checksheets ck
-			WHERE id_checkSheet = '".$container_id."'
-			and deleted_at is null
-			GROUP BY marking, gmc) AS ck
+		// $resume = db::select("SELECT resume.marking, resume.material_number, materials.material_description, materials.category, resume.ck_qty, resume.st_qty FROM
+		// 	(SELECT ck.marking, ck.gmc AS material_number, ck.ck_qty, COALESCE(st.st_qty,0) AS st_qty FROM
+		// 	(SELECT marking, gmc, SUM(qty_qty) as ck_qty FROM detail_checksheets ck
+		// 	WHERE id_checkSheet = '".$container_id."'
+		// 	and deleted_at is null
+		// 	GROUP BY marking, gmc) AS ck
+		// 	LEFT JOIN
+		// 	(SELECT d.material_number, SUM(d.quantity) as st_qty FROM knock_down_details d
+		// 	LEFT JOIN knock_downs k on k.kd_number = d.kd_number
+		// 	WHERE k.container_id = '".$container_id."'
+		// 	GROUP BY d.material_number) st
+		// 	ON ck.gmc = st.material_number) AS resume
+		// 	LEFT JOIN materials ON resume.material_number = materials.material_number
+		// 	ORDER BY resume.marking, materials.material_description ASC");
+
+		$resume = db::select("SELECT ck.marking, ck.gmc AS material_number, ck.material_description, ck.category, ck.ck_qty, COALESCE(st.st_qty,0) AS st_qty FROM
+			(SELECT ck.marking, ck.gmc, m.material_description, m.category, SUM(ck.qty_qty) as ck_qty FROM detail_checksheets ck
+			LEFT JOIN materials m ON ck.gmc = m.material_number
+			WHERE ck.id_checkSheet = '".$container_id."'
+			AND ck.deleted_at IS NULL
+			AND m.category = 'KD'
+			GROUP BY ck.marking, ck.gmc
+			UNION ALL
+			SELECT GROUP_CONCAT(ck.marking) AS marking, ck.gmc, m.material_description, m.category, SUM(ck.qty_qty) as ck_qty FROM detail_checksheets ck
+			LEFT JOIN materials m ON ck.gmc = m.material_number
+			WHERE ck.id_checkSheet = '".$container_id."'
+			AND ck.deleted_at IS NULL
+			AND m.category <> 'KD'
+			GROUP BY ck.gmc) AS ck
 			LEFT JOIN
 			(SELECT d.material_number, SUM(d.quantity) as st_qty FROM knock_down_details d
 			LEFT JOIN knock_downs k on k.kd_number = d.kd_number
 			WHERE k.container_id = '".$container_id."'
-			GROUP BY d.material_number) st
-			ON ck.gmc = st.material_number) AS resume
-			LEFT JOIN materials ON resume.material_number = materials.material_number
-			ORDER BY resume.marking, materials.material_description ASC");
+			GROUP BY d.material_number
+			UNION ALL
+			SELECT material_number, SUM(actual) as st_qty FROM flos
+			WHERE container_id = '".$container_id."'
+			GROUP BY material_number) st
+			ON ck.gmc = st.material_number
+			ORDER BY ck.marking, ck.material_description ASC");
 
 		$pallet = DetailChecksheet::where('id_checkSheet', $container_id)
 		->select('marking')
