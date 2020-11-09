@@ -46,7 +46,7 @@
 
 		@if($po[0]->revised == "true")
 			<img width="150" src="{{ public_path() . '/files/ttd_pr_po/revised.jpg' }}" alt="" style="padding: 0;position: absolute;top: 150px;left: 250px">
-			<span style="position: absolute;left: 11px;width: 75px;font-size: 12px;font-weight: bold;font-family: arial-narrow;top:194px;left: 294px;color: #e797ab"><?= date('d F Y', strtotime($po[0]->revised_date)) ?></span>
+			<span style="position: absolute;left: 11px;width: 75px;font-size: 12px;font-weight: bold;font-family: arial-narrow;top:194px;left: 294px;color: #e797ab"><?= date('d-M-y', strtotime($po[0]->revised_date)) ?></span>
 		@endif
 		<table style="width: 100%; font-family: TimesNewRoman; border-collapse: collapse; text-align: left;" >
 			<thead>
