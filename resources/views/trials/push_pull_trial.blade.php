@@ -306,7 +306,7 @@
 				if(result.message){
 					$("#loading").hide();
 					$("#file").val('');
-					// fillList();
+					fillList();
 					$('#importExcel').modal('hide');
 					openSuccessGritter('Success', result.message);
 
