@@ -150,19 +150,11 @@
 						<div class="col-md-4">
 							<div class="form-group">
 								<label>Status</label>
-								<select class="form-control select2" multiple="multiple" name="sub_group" id='sub_group' data-placeholder="Select SubGroup" style="width: 100%; height: 100px;">
+								<select class="form-control select2" multiple="multiple" name="status" id='status' data-placeholder="Select Status" style="width: 100%; height: 100px;">
 									<option value=""></option>
-									@php
-									$sub_group = array();
-									@endphp
-									@foreach($employees as $employee)
-									@if(!in_array($employee->sub_group, $sub_group))
-									<option value="{{ $employee->sub_group }}">{{ $employee->sub_group }}</option>
-									@php
-									array_push($sub_group, $employee->sub_group);
-									@endphp
-									@endif
-									@endforeach
+									<option value="Simpan">Simpan</option>
+									<option value="Buang">Buang</option>
+									<option value="Pinjam">Pinjam</option>
 								</select>
 							</div>
 						</div>				
@@ -275,7 +267,7 @@
 		var department = $('#department').val();
 		var section = $('#section').val();
 		var group = $('#group').val();
-		var sub_group = $('#sub_group').val();
+		var status = $('#status').val();
 		var requester = $('#requester').val();
 		var creator = $('#creator').val();
 
@@ -286,12 +278,12 @@
 			department:department,
 			section:section,
 			group:group,
-			sub_group:sub_group,
+			status:status,
 			requested_by:requester,
 			created_by:creator,
 		}
 
-		// $.get('{{ url("fetch/return_logs") }}', data, function(result, status, xhr){
+		// $.get('{{ url("fetch/std_control/safety_shoes_log") }}', data, function(result, status, xhr){
 
 		// });
 		

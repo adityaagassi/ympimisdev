@@ -957,11 +957,11 @@ class GeneralController extends Controller{
 		->leftJoin(db::raw("(SELECT id, concat(SPLIT_STRING(`name`, ' ', 1), ' ', SPLIT_STRING(`name`, ' ', 2)) as `name` FROM users) AS create_user"), 'general_shoes_logs.created_by', '=', 'create_user.id');
 
 		if(strlen($request->get('datefrom')) > 0 ){
-			$data = $data->where('general_shoes_logs.created_at', '>=', $request->get('datefrom'));
+			$data = $data->where(db::raw('date(general_shoes_logs.created_at)'), '>=', $request->get('datefrom'));
 		}
 
 		if(strlen($request->get('dateto')) > 0 ){
-			$data = $data->where('general_shoes_logs.created_at', '<=', $request->get('dateto'));
+			$data = $data->where(db::raw('date(general_shoes_logs.created_at)'), '<=', $request->get('dateto'));
 		}
 		
 		if($request->get('department') != null){
@@ -976,8 +976,8 @@ class GeneralController extends Controller{
 			$data = $data->whereIn('general_shoes_logs.group', $request->get('group'));
 		}
 
-		if($request->get('sub_group') != null){
-			$data = $data->whereIn('general_shoes_logs.sub_group', $request->get('sub_group'));
+		if($request->get('status') != null){
+			$data = $data->whereIn('general_shoes_logs.status', $request->get('status'));
 		}
 
 		if($request->get('requested_by') != null){
