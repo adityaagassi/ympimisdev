@@ -1153,11 +1153,6 @@ class AccountingController extends Controller
                 // $price_real = preg_replace('/[^0-9]/', '', $request->get($item_price));
                 // $amount = preg_replace('/[^0-9]/', '', $request->get($item_amount));
 
-                $updatekebutuhan = AccItem::where('kode_item','=',$request->get($item_code))->update([
-                    'peruntukan' => $request->get($peruntukan),
-                    'kebutuhan' => $request->get($kebutuhan)
-                ]);
-
 
                 $data2 = new AccPurchaseRequisitionItem([
                     'no_pr' => $request->get('no_pr') , 
@@ -1195,6 +1190,13 @@ class AccountingController extends Controller
                 ]);
 
                 $data3->save();
+
+
+                $updatekebutuhan = AccItem::where('kode_item','=',$request->get($item_code))->update([
+                    'peruntukan' => $request->get($peruntukan),
+                    'kebutuhan' => $request->get($kebutuhan)
+                ]);
+
             }
 
             $totalPembelian = $request->get('TotalPembelian');
@@ -9513,6 +9515,13 @@ public function update_purchase_requisition_po(Request $request)
                 'message2' => $e->getMessage(),
             ))->with('page', 'Approval');
         }
+    }
+
+
+    // Terima Barang
+
+    public function wh_receive_equipment(){
+        
     }
 
 }

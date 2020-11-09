@@ -385,7 +385,13 @@
 						
 						elseif($status == "1")
 						{
-							$pajak = ($total*10)/100;
+							if ($po[0]->supplier_status == "PKP") {
+								$pajak = ($total*10)/100;
+							}
+							else if ($po[0]->supplier_status == "Non PKP" || $po[0]->supplier_status == "Import"){
+								$pajak = 0;
+							}
+							// $pajak = ($total*10)/100;
 						}
 
 					?> 
