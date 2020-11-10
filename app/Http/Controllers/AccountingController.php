@@ -9526,10 +9526,186 @@ public function update_purchase_requisition_po(Request $request)
     }
 
 
+    //==================================//
+    //      Verifikasi Investment       //
+    //==================================//
+    public function verifikasi_investment($id)
+    {
+        $inv = AccInvestment::find($id);
+
+        $path = '/investment_list/'.$inv->pdf;
+        $file_path = asset($path);
+
+        return view('accounting_purchasing.verifikasi.investment_verifikasi', array(
+            'investment' => $inv,
+            'file_path' => $file_path,
+        ))->with('page', 'Investment');
+    }
+
+    public function approval_investment(Request $request, $id)
+    {
+        $approve = $request->get('approve');
+
+        if ($approve == "1") {
+
+            $investment = AccInvestment::find($id);
+
+            if ($investment->posisi == "manager")
+            {
+
+                if ($investment->approval_dgm != null) {
+                    $investment->posisi = "dgm";
+                    $investment->approval_manager = $investment->approval_manager."/Approved/".date('Y-m-d H:i:s');
+
+                    $dgm_id = explode("/", $investment->approval_dgm);
+                    $mailto = "select distinct email from users where username = '" .$dgm_id[0]. "'";
+
+                    $mails = DB::select($mailto);
+
+                    foreach ($mails as $mail)
+                    {
+                        $mailtoo = $mail->email;
+                    }
+                }
+                else{
+                    $investment->posisi = "gm";
+                    $investment->approval_manager = $investment->approval_manager."/Approved/".date('Y-m-d H:i:s');
+
+                    $gm_id = explode("/", $investment->approval_gm);
+                    $mailto = "select distinct email from users where username = '" .$gm_id[0]. "'";
+
+                    $mails = DB::select($mailto);
+
+                    foreach ($mails as $mail)
+                    {
+                        $mailtoo = $mail->email;
+                    }
+                }
+            }
+
+            else if ($investment->posisi == "dgm")
+            {
+                $investment->posisi = "gm";
+                $investment->approval_dgm = $investment->approval_dgm."/Approved/".date('Y-m-d H:i:s');
+
+                $gm_id = explode("/", $investment->approval_gm);
+                $mailto = "select distinct email from users where username = '" .$gm_id[0]. "'";
+
+                $mails = DB::select($mailto);
+
+                foreach ($mails as $mail)
+                {
+                    $mailtoo = $mail->email;
+                }
+            }
+
+            else if ($investment->posisi == "gm")
+            {
+
+                $investment->posisi = "manager_acc";
+                $investment->approval_gm = $investment->approval_gm."/Approved/".date('Y-m-d H:i:s');
+
+                $manager_acc_id = explode("/", $investment->approval_manager_acc);
+                $mailto = "select distinct email from users where username = '" .$manager_acc_id[0]. "'";
+
+                $mails = DB::select($mailto);
+
+                foreach ($mails as $mail)
+                {
+                    $mailtoo = $mail->email;
+                }
+            }
+
+            else if ($investment->posisi == "manager_acc")
+            {
+
+                $investment->posisi = "direktur_acc";
+                $investment->approval_manager_acc = $investment->approval_manager_acc."/Approved/".date('Y-m-d H:i:s');
+
+                $direktur_acc_id = explode("/", $investment->approval_dir_acc);
+                $mailto = "select distinct email from users where username = '" .$direktur_acc_id[0]. "'";
+
+                $mails = DB::select($mailto);
+
+                foreach ($mails as $mail)
+                {
+                    $mailtoo = $mail->email;
+                }
+            }
+
+            else if ($investment->posisi == "direktur_acc")
+            {
+
+                $investment->posisi = "presdir";
+                $investment->approval_dir_acc = $investment->approval_dir_acc."/Approved/".date('Y-m-d H:i:s');
+
+                $presdir_id = explode("/", $investment->approval_presdir);
+                $mailto = "select distinct email from users where username = '" .$presdir_id[0]. "'";
+
+                $mails = DB::select($mailto);
+
+                foreach ($mails as $mail)
+                {
+                    $mailtoo = $mail->email;
+                }
+            }
+
+            else if ($investment->posisi == "presdir")
+            {
+                
+                $investment->posisi = "finished";
+                $investment->approval_presdir = $investment->approval_presdir."/Approved/".date('Y-m-d H:i:s');
+
+                //kirim email ke Mas Shega & Mas Erlangga
+                $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.department = 'Purchasing Control' and (employee_id = 'PI1908032' or employee_id = 'PI1810020')";
+                $mailtoo = DB::select($mails);
+            }
+
+            $investment->save();
+
+            $judul = substr($investment->reff_number, 0, 7);
+
+            $detail_inv = AccInvestment::select('acc_investments.*','acc_investment_details.no_item', 'acc_investment_details.detail', 'acc_investment_details.qty', 'acc_investment_details.price', 'acc_investment_details.vat_status', 'acc_investment_details.amount')
+            ->leftJoin('acc_investment_details', 'acc_investments.reff_number', '=', 'acc_investment_details.reff_number')
+            ->where('acc_investments.id', '=', $id)
+            ->get();
+
+            $inv_budget = AccInvestment::join('acc_investment_budgets', 'acc_investments.reff_number', '=', 'acc_investment_budgets.reff_number')
+            ->where('acc_investments.id', '=', $id)
+            ->get();
+
+            $pdf = \App::make('dompdf.wrapper');
+            $pdf->getDomPDF()->set_option("enable_php", true);
+            $pdf->setPaper('Legal', 'potrait');
+
+            $pdf->loadView('accounting_purchasing.report.report_investment', array(
+                'inv' => $detail_inv,
+                'inv_budget' => $inv_budget
+            ));
+
+            $pdf->save(public_path() . "/investment_list/INV_".$judul.".pdf");
+
+            $isimail = "select * FROM acc_investments where acc_investments.id = ".$investment->id;
+            $investe = db::select($isimail);
+
+            Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($investe, 'investment'));
+
+            return redirect('/investment/verifikasi/'.$id)->with('status', 'Investment Approved Successfully')
+            ->with('page', 'Investment');
+
+         
+        }
+        else
+        {
+            return redirect('/investment/verifikasi/' . $id)->with('error', 'Investment Not Approved')
+            ->with('page', 'Investment');
+        }
+    }
+
+
     // Terima Barang
 
     public function wh_receive_equipment(){
-
         $title = 'Receive Barang';
         $title_jp = '';
 
@@ -9537,6 +9713,5 @@ public function update_purchase_requisition_po(Request $request)
             'title' => $title,
             'title_jp' => $title_jp
         ))->with('page', 'Receive WH')->with('head', 'Receive Equipment WH');
-
     }
 }

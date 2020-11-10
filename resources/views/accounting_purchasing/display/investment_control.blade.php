@@ -166,8 +166,9 @@ hr { background-color: red; height: 1px; border: 0; }
                 <thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 12px;font-weight: bold">
                   <tr>
                     <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px" rowspan="2">No Investment</th>
-                    <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px" rowspan="2">Submission Date</th>
-                    <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px" rowspan="2">Department</th>
+                    <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px" rowspan="2">Subject</th>
+                    <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px" rowspan="2">Date</th>
+                    <th style="width: 3%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px" rowspan="2">Dept</th>
                     <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px">User</th>
                     <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px">Cek Budget</th>
                     <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px">Cek Pajak</th>
@@ -200,8 +201,8 @@ hr { background-color: red; height: 1px; border: 0; }
                 <thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 12px;font-weight: bold">
                   <tr>
                     <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;color: black;background-color: #3f51b5;color: white">Investment No</th>
-                    <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;color: black; background-color: #3f51b5;color: white">Submission Date</th>
-                    <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;color: black; background-color: #3f51b5;color: white">Department</th>
+                    <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;color: black; background-color: #3f51b5;color: white">Date</th>
+                    <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;color: black; background-color: #3f51b5;color: white">Dept</th>
                     <th style="width: 20%; padding: 5;vertical-align: middle;font-size: 16px;color: black; background-color: #3f51b5;color: white">Description</th>
                     <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;color: black; background-color: #3f51b5;color: white">Qty</th>
                     <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;color: black; background-color: #3f51b5;color: white">Status</th>
@@ -1067,6 +1068,7 @@ hr { background-color: red; height: 1px; border: 0; }
 
               table += '<tr style="font-size:16px">';
               table += '<td>'+value.reff_number+'</td>';
+              table += '<td>'+value.subject+'</td>';
               table += '<td>'+value.submission_date+'</td>';
               table += '<td>'+value.department_shortname+'</td>';
               table += '<td '+colorapplicant+'>'+user+'</td>';

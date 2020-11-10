@@ -58,9 +58,9 @@
 <section class="content-header">
   <h1>
     Check & Verifikasi {{ $page }}
-    <small>Form PR</small>
+    <small>Form Investment</small>
   </h1>
-  <ol class="breadcrumb">F
+  <ol class="breadcrumb">
  </ol>
 </section>
 @endsection

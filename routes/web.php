@@ -226,6 +226,7 @@ Route::post('index/injeksi/delete_ng_temp', 'InjectionsController@delete_ng_temp
 Route::get('index/in', 'InjectionsController@in');
 Route::post('scan/part_injeksi', 'InjectionsController@scanPartInjeksi');
 Route::get('scan/new_tag_injeksi', 'InjectionsController@scanNewTagInjeksi');
+Route::get('fetch/new_product', 'InjectionsController@getNewProductCavity');
 Route::get('scan/part_molding', 'InjectionsController@scanPartMolding');
 Route::get('send/Part', 'InjectionsController@sendPart');
 Route::get('get/Inpart', 'InjectionsController@getDataIn');
@@ -1440,6 +1441,11 @@ Route::get('investment/get_detailitem', 'AccountingController@getitemdesc')->nam
 Route::get('investment/report/{id}', 'AccountingController@report_investment');
 Route::get('investment/get_totalitem', 'AccountingController@gettotalamount')->name('admin.gettotalamount');
 
+//Approval Investment
+Route::get('investment/verifikasi/{id}', 'AccountingController@verifikasi_investment');
+Route::post('investment/approval/{id}', 'AccountingController@approval_investment');
+Route::post('investment/notapprove/{id}', 'AccountingController@reject_investment');
+
 //New Investment
 Route::get('investment/approvemanager/{id}', 'AccountingController@investment_approvalmanager');
 Route::get('investment/approvedgm/{id}', 'AccountingController@investment_approvaldgm');
@@ -2620,6 +2626,7 @@ Route::get('fetch/display/eff_scrap', 'DisplayController@fetchEffScrap');
 
 //DISPLAY EFFICIENCT
 Route::get('index/display/efficiency_monitoring', 'DisplayController@indexEfficiencyMonitoring');
+Route::get('index/display/efficiency_monitoring_monthly', 'DisplayController@indexEfficiencyMonitoringMonthly');
 Route::get('fetch/display/efficiency_monitoring', 'DisplayController@fetchEfficiencyMonitoring');
 
 
