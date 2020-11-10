@@ -170,11 +170,11 @@
 								<thead>
 									<tr>
 										<th style="width: 1%;">#</th>
-										<th style="width: 1%;">Material</th>
-										<th style="width: 6%;">Description</th>
-										<th style="width: 1%;">Color</th>
+										<th style="width: 2%;">Material</th>
+										<th style="width: 1%;">Dryer</th>
+										<th style="width: 2%;">Lot</th>
 										<th style="width: 1%;">Qty</th>
-										<th style="width: 1%;">Creator</th>
+										<th style="width: 2%;">Creator</th>
 										<th style="width: 1%;">Created</th>
 									</tr>
 								</thead>
@@ -502,9 +502,9 @@
 				$.each(result.datas, function(key, value) {
 					tableData += '<tr>';
 					tableData += '<td>'+ count +'</td>';
-					tableData += '<td>'+ value.material_number +'</td>';
-					tableData += '<td>'+ value.material_description +'</td>';
-					tableData += '<td>'+ value.color +'</td>';
+					tableData += '<td>'+ value.material_number +' - '+ value.material_description +'</td>';
+					tableData += '<td>'+ value.dryer +'</td>';
+					tableData += '<td>'+ value.lot_number +'</td>';
 					tableData += '<td>'+ value.qty +'</td>';
 					tableData += '<td>'+ value.name +'</td>';
 					tableData += '<td>'+ value.created +'</td>';
