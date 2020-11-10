@@ -237,14 +237,14 @@ class KnockDownController extends Controller{
 			WHERE ck.id_checkSheet = '".$container_id."'
 			AND ck.deleted_at IS NULL
 			AND m.category = 'KD'
-			GROUP BY ck.marking, ck.gmc
+			GROUP BY ck.marking, ck.gmc, m.material_description, m.category
 			UNION ALL
 			SELECT GROUP_CONCAT(ck.marking) AS marking, ck.gmc, m.material_description, m.category, SUM(ck.qty_qty) as ck_qty FROM detail_checksheets ck
 			LEFT JOIN materials m ON ck.gmc = m.material_number
 			WHERE ck.id_checkSheet = '".$container_id."'
 			AND ck.deleted_at IS NULL
 			AND m.category <> 'KD'
-			GROUP BY ck.gmc) AS ck
+			GROUP BY ck.gmc, m.material_description, m.category) AS ck
 			LEFT JOIN
 			(SELECT d.material_number, SUM(d.quantity) as st_qty FROM knock_down_details d
 			LEFT JOIN knock_downs k on k.kd_number = d.kd_number
