@@ -39,6 +39,8 @@ use App\InjectionHistoryMoldingLog;
 use App\InjectionMaintenanceMoldingLog;
 use App\InjectionMaintenanceMoldingTemp;
 use App\InjectionMachineMaster;
+use App\InjectionMachineWork;
+use App\InjectionMachineLog;
 use App\InjectionDryerLog;
 use App\InjectionDryer;
 use App\InjectionResin;
@@ -74,6 +76,17 @@ class InjectionsController extends Controller
           'Mesin 8',
           'Mesin 9',
           'Mesin 11',
+      ];
+
+      $this->dryer = [
+          '1',
+          '2 & 6',
+          '3',
+          '4',
+          '5',
+          '7',
+          '8',
+          '9',
       ];
 
       $this->color = [
@@ -124,11 +137,9 @@ class InjectionsController extends Controller
     }
 
     public function scanNewTagInjeksi(Request $request){
-        $tag = InjectionTag::where('tag', '=', $request->get('tag'))->where('availability', '=', null)->get();
+        $tag = InjectionTag::where('tag', '=', $request->get('tag'))->where('operator_id', '=', null)->first();
 
         // $product = DB::SELECT("SELECT id,part_name,CONCAT(SUBSTRING_INDEX(part_name, ' ', 1),'-',UPPER(part_code),'-',UPPER(color),'-',UPPER(gmc)) as product FROM `injection_parts` where part_code = '".$request->get('part_type')."'");
-
-        $product = DB::SELECT("SELECT id,part_name,CONCAT(SUBSTRING_INDEX(part_name, ' ', 1),'-',UPPER(part_code),'-',UPPER(color),'-',UPPER(gmc)) as product FROM `injection_parts` where remark = 'injection' and color = '".$request->get('color')."' and deleted_at is null ORDER BY part_name desc");
 
         // if ($request->get('part_type') == 'HJ') {
         //     $type = 'head';
@@ -147,17 +158,10 @@ class InjectionsController extends Controller
         //     WHERE
         //         type = '".$type."'");
 
-        $cavity = DB::SELECT("SELECT
-                * 
-            FROM
-                push_block_masters");
-
         if (count($tag) > 0) {
             $response = array(
                 'status' => true,
                 'tag' => $tag,
-                'product' => $product,
-                'cavity' => $cavity,
                 'message' => 'Scan Product Tag Success',
             );
         }
@@ -174,7 +178,7 @@ class InjectionsController extends Controller
     public function scanPartMolding(Request $request){
         $part = InjectionMoldingMaster::
         // where('tag', '=', $request->get('tag'))->
-        where('status_mesin', '=', $request->get('machine'))->first();
+        where('status_mesin', '=', $request->get('mesin'))->first();
 
         if (count($part) > 0) {
             $response = array(
@@ -215,6 +219,31 @@ class InjectionsController extends Controller
             $response = array(
                 'status' => false,
                 'message' => 'Employee ID Invalid'
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function getNewProductCavity(Request $request)
+    {
+        try {
+            $product = DB::SELECT("SELECT id,part_name,CONCAT(SUBSTRING_INDEX(part_name, ' ', 1),'-',UPPER(part_code),'-',UPPER(color),'-',UPPER(gmc)) as product FROM `injection_parts` where remark = 'injection' and color = '".$request->get('color')."' and deleted_at is null ORDER BY part_name desc");
+
+            $cavity = DB::SELECT("SELECT
+                    * 
+                FROM
+                    push_block_masters");
+
+            $response = array(
+                'status' => true,
+                'product' => $product,
+                'cavity' => $cavity,
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => 'Data Tidak Tersedia'
             );
             return Response::json($response);
         }
@@ -1303,6 +1332,7 @@ class InjectionsController extends Controller
             'title_jp' => $title_jp,
             'ng_lists' => $ng_lists,
             'mesin' => $this->mesin,
+            'dryer' => $this->dryer,
             'name' => Auth::user()->name
         ))->with('page', 'Injection Machine');
     }
@@ -1425,10 +1455,10 @@ class InjectionsController extends Controller
         try {
             $id_user = Auth::id();
             $injection = InjectionProcessTemp::create([
-                'tag_product' => $request->get('tag_product'),
+                // 'tag_product' => $request->get('tag_product'),
                 'tag_molding' => $request->get('tag_molding'),
                 'operator_id' => $request->get('operator_id'),
-                'start_time' => $request->get('start_time'),
+                'start_time' => date('Y-m-d H:i:s'),
                 'mesin' => $request->get('mesin'),
                 'part_name' => $request->get('part_name'),
                 'part_type' => $request->get('part_type'),
@@ -1441,9 +1471,27 @@ class InjectionsController extends Controller
                 'dryer_color' => $request->get('dryer_color'),
                 'created_by' => $id_user
             ]);
+
+            $machinework = InjectionMachineWork::where('mesin',$request->get('mesin'))->where('tag_molding',null)->first();
+            if (count($machinework) > 0) {
+                $machinework->part_name = $request->get('part_name');
+                $machinework->part_type = $request->get('part_type');
+                $machinework->color = $request->get('color');
+                $machinework->cavity = $request->get('cavity');
+                $machinework->molding = $request->get('molding');
+                $machinework->start_time = $request->get('start_time');
+                $machinework->tag_molding = $request->get('tag_molding');
+                $machinework->material_number = $request->get('material_number');
+                $machinework->dryer = $request->get('dryer');
+                $machinework->dryer_lot_number = $request->get('dryer_lot_number');
+                $machinework->dryer_color = $request->get('dryer_color');
+                $machinework->created_by = $id_user;
+                $machinework->save();
+            }
+
             $response = array(
                 'status' => true,
-                'message' => 'Temp Created',
+                'message' => 'Memulai Proses',
             );
             return Response::json($response);
         } catch (\Exception $e) {
@@ -1495,11 +1543,13 @@ class InjectionsController extends Controller
         // $tag_molding = $request->get('tag_molding');
 
         $temp = InjectionProcessTemp::where('mesin',$request->get('mesin'))->first();
+        $temp_machine = InjectionMachineWork::where('mesin',$request->get('mesin'))->where('tag_molding','!=',null)->first();
 
-        if (count($temp) > 0) {
+        if (count($temp_machine) > 0) {
             $response = array(
                 'status' => true,
                 'datas' => $temp,
+                'data_mesin' => $temp_machine,
                 'message' => 'Success get Temp'
             );
             return Response::json($response);
@@ -1516,7 +1566,7 @@ class InjectionsController extends Controller
         try {
             $id_user = Auth::id();
 
-            $temp = InjectionProcessTemp::where('tag_product',$request->get('tag_product'))
+            $temp = InjectionProcessTemp::where('mesin',$request->get('mesin'))
             ->where('tag_molding',$request->get('tag_molding'))
             ->first();
 
@@ -1582,6 +1632,13 @@ class InjectionsController extends Controller
             $tag = InjectionTag::where('tag',$request->get('tag_product'))->first();
             $tag->shot = $request->get('shot');
             $tag->location = 'RC11';
+            $tag->part_name = $request->get('part_name');
+            $tag->operator_id = $request->get('operator_id');
+            $tag->part_type = $request->get('part_type');
+            $tag->color = $request->get('color');
+            $tag->cavity = $request->get('cavity');
+            $tag->material_number = $request->get('material_number');
+            $tag->availability = 1;
             $tag->save();
 
             $temp = InjectionProcessTemp::where('mesin',$request->get('mesin'))->delete();
@@ -1669,6 +1726,56 @@ class InjectionsController extends Controller
             $response = array(
                 'status' => true,
                 'message' => 'Log Created',
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function inputMesinLog(Request $request)
+    {
+        try {
+            InjectionMachineLog::create([
+                'mesin' => $request->get('mesin'),
+                'material_number' => $request->get('material_number'),
+                'part_name' => $request->get('part_name'),
+                'part_type' => $request->get('part_type'),
+                'color' => $request->get('color'),
+                'cavity' => $request->get('cavity'),
+                'molding' => $request->get('molding'),
+                'dryer' =>  $request->get('dryer'),
+                'dryer_lot_number' =>  $request->get('dryer_lot_number'),
+                'dryer_color' =>  $request->get('dryer_color'),
+                'start_time' =>  $request->get('start_time'),
+                'end_time' =>  date('Y-m-d H:i:s'),
+                'created_by' => Auth::id()
+            ]);
+
+            $machinework = InjectionMachineWork::where('mesin',$request->get('mesin'))->first();
+            if (count($machinework) > 0) {
+                $machinework->tag_molding = null;
+                $machinework->part_name = null;
+                $machinework->part_type = null;
+                $machinework->color = null;
+                $machinework->cavity = null;
+                $machinework->molding = null;
+                $machinework->start_time = null;
+                $machinework->tag_molding = null;
+                $machinework->material_number = null;
+                $machinework->dryer = null;
+                $machinework->dryer_lot_number = null;
+                $machinework->dryer_color = null;
+                $machinework->save();
+            }
+            
+            $response = array(
+                'status' => true,
+                'message' => 'Proses Injeksi Selesai',
             );
             return Response::json($response);
         } catch (\Exception $e) {

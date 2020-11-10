@@ -76,7 +76,7 @@
 <section class="content" style="padding-top: 0;">
 	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
 		<p style="position: absolute; color: White; top: 45%; left: 35%;">
-			<span style="font-size: 40px">Uploading, please wait <i class="fa fa-spin fa-refresh"></i></span>
+			<span style="font-size: 40px">Please Wait...<i class="fa fa-spin fa-refresh"></i></span>
 		</p>
 	</div>
 	<input type="hidden" id="loc" value="{{ $title }} {{$title_jp}} }">
@@ -136,7 +136,7 @@
 					</div>
 				</div>
 			</div> -->
-			<div class="col-xs-12" style="padding: 0px;padding-bottom: 15.6px">
+			<div class="col-xs-8" style="padding: 0px;padding-bottom: 15.6px">
 				<input type="hidden" id="tag_molding" name="tag_molding" placeholder="Scan Tag Molding" >
 				<div class="input-group" style="padding-top: 10px;">
 					<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: black;">
@@ -145,6 +145,25 @@
 					<input type="text" style="text-align: center; border-color: black;font-size: 20px" class="form-control" id="tag_product" name="tag_product" placeholder="Scan Tag Product ..." required disabled>
 					<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: black;">
 						<i class="glyphicon glyphicon-qrcode"></i>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-4" style="padding: 0px;padding-bottom: 15.6px">
+				<button class="btn btn-warning" id="btnInputTag" style="width: 97%;margin-top: 10px;font-weight: bold;font-size: 15px" onclick="inputTag()">
+					Input Tag
+				</button>
+				<div class="col-xs-6">
+					<div class="row">
+						<button class="btn btn-danger" id="btnCancelTag" style="width: 97%;margin-top: 10px;font-weight: bold;font-size: 15px" onclick="cancelTag()">
+							Batal
+						</button>
+					</div>
+				</div>
+				<div class="col-xs-6">
+					<div class="row">
+						<button class="btn btn-success" id="btnSaveTag" style="width: 97%;margin-top: 10px;font-weight: bold;font-size: 15px" onclick="saveTag()">
+							Simpan
+						</button>
 					</div>
 				</div>
 			</div>
@@ -207,10 +226,11 @@
 
 			<div class="col-xs-12" style="padding: 0px;padding-top: 10px">
 				<input type="hidden" id="start_time">
+				<input type="hidden" id="start_time_product">
 				<input type="hidden" id="molding_part_type">
 				<input type="hidden" id="material_number">
 				<button class="btn btn-success" id="btn_mulai" style="font-size: 30px;font-weight: bold;width: 100%" onclick="mulaiProses()">
-					MULAI PROSES
+					MULAI PROSES INJEKSI
 				</button>
 			</div>
 			<div style="padding-top: 30px;" id="perolehan">
@@ -223,10 +243,10 @@
 						</tr>
 						<tr>
 							<td>
-								<input type="number" class="pull-right numpad2" name="total_shot" style="height: 4.5vw;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;" id="total_shot" placeholder="Total Shot">
+								<input type="number" class="pull-right numpad2" name="total_shot" style="height: 4.5vw;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;" id="total_shot" placeholder="Total Qty (Pcs)">
 							</td>
 							<td>
-								<input type="number" class="pull-right numpad" name="running_shot" style="height: 4.5vw;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;" id="running_shot" placeholder="Running Shot">
+								<input type="number" class="pull-right numpad" name="running_shot" style="height: 4.5vw;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;" id="running_shot" placeholder="Running Qty (Pcs)">
 							</td>
 						</tr>
 					</tbody>
@@ -234,7 +254,7 @@
 			</div>
 			<div class="col-xs-12" style="padding: 0px;padding-top: 10px">
 				<button class="btn btn-danger" id="btn_selesai" style="font-size: 30px;font-weight: bold;width: 100%" onclick="selesaiProses()">
-					SELESAI PROSES
+					SELESAI PROSES MESIN INJEKSI
 				</button>
 			</div>
 		</div>
@@ -274,20 +294,15 @@
 				</table>
 			</div>
 
-			<div class="col-xs-4" style="padding: 0px;padding-top: 10px;padding-right: 5px">
+			<div class="col-xs-6" style="padding: 0px;padding-top: 10px;padding-right: 5px">
 				<button class="btn btn-warning" id="btn_ganti" onclick="changeMesin()" style="font-size: 25px;font-weight: bold;width: 100%">
 					PILIH MESIN
 				</button>
 			</div>
-			<div class="col-xs-4" style="padding: 0px;padding-top: 10px;padding-left: 5px">
+			<div class="col-xs-6" style="padding: 0px;padding-top: 10px;padding-left: 5px">
 				<button class="btn btn-info" id="btn_ganti_op" onclick="location.reload()" style="font-size: 25px;font-weight: bold;width: 100%">
 					GANTI OPERATOR
 				</button>
-			</div>
-			<div class="col-xs-4" style="padding: 0px;padding-top: 10px;padding-left: 5px">
-				<a href="{{url('index/injection/molding')}}" target="_blank" class="btn btn-primary" style="font-size: 25px;font-weight: bold;width: 100%">
-					GANTI MOLDING
-				</a>
 			</div>
 		</div>
 	</div>
@@ -326,7 +341,7 @@
 					<div class="col-xs-12" id="mesin_choice" style="padding-top: 20px">
 						<div class="row">
 							<div class="col-xs-12">
-									<center><span style="font-weight: bold; font-size: 18px;">Pilih Mesin</span></center>
+								<center><span style="font-weight: bold; font-size: 18px;">Pilih Mesin</span></center>
 							</div>
 							<div class="col-xs-12" id="mesin_btn">
 								@foreach($mesin as $mesin)
@@ -342,15 +357,43 @@
 					<div class="col-xs-12" id="mesin_fix" style="padding-top: 20px">
 						<div class="row">
 							<div class="col-xs-12">
-								<div class="row">
-									<div class="col-xs-12">
-										<center><span style="font-weight: bold; font-size: 18px;">Pilih Mesin</span></center>
-									</div>
-								</div>
+								<center><span style="font-weight: bold; font-size: 18px;">Pilih Mesin</span></center>
 							</div>
 							<div class="col-xs-12" style="padding-top: 10px">
 								<button class="btn btn-primary" id="mesin_fix2" style="width: 100%;font-size: 20px;font-weight: bold;" onclick="changeMesin2()">
 									MESIN
+								</button>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12" id="dryer_choice" style="padding-top: 20px">
+						<div class="row">
+							<div class="col-xs-12">
+									<center><span style="font-weight: bold; font-size: 18px;">Pilih Dryer</span></center>
+							</div>
+							<div class="col-xs-12" id="dryer_btn">
+								@foreach($dryer as $dryer)
+								<div class="col-xs-3" style="padding-top: 5px">
+									<center>
+										<button class="btn btn-warning" id="{{$dryer}}" style="width: 200px;font-size: 15px;font-weight: bold;" onclick="getDryer(this.id)">{{$dryer}}</button>
+									</center>
+								</div>
+								@endforeach
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12" id="dryer_fix" style="padding-top: 20px">
+						<div class="row">
+							<div class="col-xs-12">
+								<div class="row">
+									<div class="col-xs-12">
+										<center><span style="font-weight: bold; font-size: 18px;">Pilih Dryer</span></center>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-12" style="padding-top: 10px">
+								<button class="btn btn-warning" id="dryer_fix2" style="width: 100%;font-size: 20px;font-weight: bold;" onclick="changeDryer2()">
+									DRYER
 								</button>
 							</div>
 						</div>
@@ -436,11 +479,21 @@
 						</div>
 					</div>
 					<div class="col-xs-12" style="padding-top: 20px">
-						<div class="modal-footer">
-							<button onclick="saveProduct()" class="btn btn-success pull-right">
-								CONFIRM
-							</button>
-							<button class="btn btn-warning pull-left" onclick="cancelProcess()">Cancel</button>
+						<div class="row">
+							<div class="modal-footer">
+								<div class="col-xs-6">
+									<div class="row">
+										<button class="btn btn-danger" style="font-weight: bold;font-size: 20px;width: 98%" onclick="cancelProcess()">CANCEL</button>
+									</div>
+								</div>
+								<div class="col-xs-6">
+									<div class="row">
+										<button onclick="saveProduct()" class="btn btn-success" style="font-weight: bold;font-size: 20px;width: 98%">
+											CONFIRM
+										</button>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -495,6 +548,7 @@
 	$.fn.numpad.defaults.onKeypadCreate = function(){$(this).find('.done').addClass('btn-primary');};
 
 	jQuery(document).ready(function() {
+		$('#start_time').val("");
 		$('#modalOperator').modal({
 			backdrop: 'static',
 			keyboard: false
@@ -510,8 +564,11 @@
 		$('#cavity_fix').hide();
 		$('#product_fix').hide();
 		$('#mesin_fix').hide();
+		$('#dryer_fix').hide();
 		$('#perolehan').hide();
-		$('#btn_selesai').hide();
+		// $('#btn_selesai').hide();
+		$('#btnSaveTag').hide();
+		$('#btnCancelTag').hide();
 		$('.numpad').numpad({
 			hidePlusMinusButton : true,
 			decimalSeparator : '.'
@@ -522,6 +579,22 @@
 			decimalSeparator : '.'
 		});
 	});
+
+	function inputTag() {
+		$('#tag_product').removeAttr('disabled');
+		$('#tag_product').focus();
+		$('#btnInputTag').hide();
+		$('#btnSaveTag').show();
+		$('#btnCancelTag').show();
+	}
+
+	function cancelTag() {
+		$('#tag_product').prop('disabled',true);
+		$('#tag_product').val("");
+		$('#btnInputTag').show();
+		$('#btnSaveTag').hide();
+		$('#btnCancelTag').hide();
+	}
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
@@ -544,10 +617,6 @@
 						$('#op').html(result.employee.employee_id);
 						$('#op2').html(result.employee.name);
 						$('#employee_id').val(result.employee.employee_id);
-						// $("#tag_molding").removeAttr('disabled');
-						// $('#tag_molding').focus();
-						// $("#tag_product").removeAttr('disabled');
-						// $('#tag_product').focus();
 					}
 					else{
 						audio_error.play();
@@ -569,32 +638,19 @@
 			if($("#tag_product").val().length >= 7){
 				var data = {
 					tag : $("#tag_product").val(),
-					color : $("#dryer_color").text()
 				}
 				
 				$.get('{{ url("scan/new_tag_injeksi") }}', data, function(result, status, xhr){
 					if(result.status){
-						openSuccessGritter('Success!', result.message);
-						$('#tag_product').prop('disabled', true);
-						var btn_product = "";
-						$('#product_btn').empty();
-						$.each(result.product, function(key, value) {
-							btn_product += '<div class="col-xs-4" style="padding-top: 5px">';
-							btn_product += '<center><button class="btn btn-primary" id="'+value.product+'" style="width: 250px;font-size: 17px" onclick="getProduct(this.id)">'+value.product+'';
-							btn_product += '</button></center>';
-							btn_product += '</div>';
-						});
-						$('#product_btn').append(btn_product);
-
-						var btn_cavity = "";
-						$('#cavity_btn').empty();
-						$.each(result.cavity, function(key, value) {
-							btn_cavity += '<div class="col-xs-3" style="padding-top: 5px">';
-							btn_cavity += '<center><button class="btn btn-info" id="'+value.no_cavity+'" style="width: 200px;font-size: 15px;font-weight:bold" onclick="getCavity(this.id)">'+value.type.toUpperCase()+'-'+value.no_cavity+'';
-							btn_cavity += '</button></center>';
-							btn_cavity += '</div>';
-						});
-						$('#cavity_btn').append(btn_cavity);
+						if (result.tag.material_number == $('#material_number').val()) {
+							openSuccessGritter('Success!', result.message);
+							$('#tag_product').prop('disabled', true);
+						}else{
+							openErrorGritter('Error!', 'Tag Invalid');
+							audio_error.play();
+							$("#tag_product").val("");
+							$("#tag_product").focus();
+						}
 					}
 					else{
 						openErrorGritter('Error!', 'Tag Invalid');
@@ -672,8 +728,21 @@
 		$('#mesin_fix2').html("MESIN");
 	}
 
+	function getDryer(value) {
+		$('#dryer_fix').show();
+		$('#dryer_choice').hide();
+		$('#dryer_fix2').html(value);
+	}
+
+	function changeDryer2() {
+		$('#dryer_fix').hide();
+		$('#dryer_choice').show();
+		$('#dryer_fix2').html("DRYER");
+	}
+
 	function changeMesin() {
 		changeMesin2();
+		changeDryer2();
 		$('#tag_product').val("");
 		$('#tag_molding').val("");
 		$('#tag_product').prop('disabled',true);
@@ -687,10 +756,10 @@
 		$('#dryer').html("-");
 		$('#dryer_lot_number').html("-");
 		$('#dryer_color').html("-");
-		$('#total_shot').val("");
 		$('#material_number').val("");
+		$('#total_shot').val("");
 		$('#btn_mulai').show();
-		$('#btn_selesai').hide();
+		// $('#btn_selesai').hide();
 		$('#perolehan').hide();
 		$('#modalProduct').modal('hide');
 		$('#modalMesin').modal('show');
@@ -737,7 +806,7 @@
 		$('#modalProduct').modal('hide');
 		intervalUpdate = setInterval(update_temp,10000);
 		create_temp();
-		update_tag();
+		// update_tag();
 	}
 
 	function saveMesin() {
@@ -756,9 +825,9 @@
 		// $('#start_time').html('-');
 		$('#part_type').html('-');
 		$('#part_name').html('-');
-		$('#tag_product').val('');
-		$('#tag_product').removeAttr('disabled');
-		$('#tag_product').focus();
+		// $('#tag_product').val('');
+		// $('#tag_product').removeAttr('disabled');
+		// $('#tag_product').focus();
 		$('#tag_molding').prop('disabled',true);
 	}
 
@@ -786,24 +855,58 @@
 	}
 
 	function mulaiProses() {
-		if ($('#tag_product').val() == "") {
-			openErrorGritter('Error!', "Scan Tag Product.");
-		}else{
+		// if ($('#tag_product').val() == "") {
+		// 	openErrorGritter('Error!', "Scan Tag Product.");
+		// }else{
+			var data = {
+				color : $("#dryer_color").text()
+			}
+			$.get('{{ url("fetch/new_product") }}', data, function(result, status, xhr){
+				if(result.status){
+					var btn_product = "";
+					$('#product_btn').empty();
+					$.each(result.product, function(key, value) {
+						btn_product += '<div class="col-xs-4" style="padding-top: 5px">';
+						btn_product += '<center><button class="btn btn-primary" id="'+value.product+'" style="width: 250px;font-size: 17px" onclick="getProduct(this.id)">'+value.product+'';
+						btn_product += '</button></center>';
+						btn_product += '</div>';
+					});
+					$('#product_btn').append(btn_product);
+
+					var btn_cavity = "";
+					$('#cavity_btn').empty();
+					$.each(result.cavity, function(key, value) {
+						btn_cavity += '<div class="col-xs-3" style="padding-top: 5px">';
+						btn_cavity += '<center><button class="btn btn-info" id="'+value.no_cavity+'" style="width: 200px;font-size: 15px;font-weight:bold" onclick="getCavity(this.id)">'+value.type.toUpperCase()+'-'+value.no_cavity+'';
+						btn_cavity += '</button></center>';
+						btn_cavity += '</div>';
+					});
+					$('#cavity_btn').append(btn_cavity);
+				}
+				else{
+					openErrorGritter('Error!', result.message);
+					audio_error.play();
+				}
+			});
+			
 			$('#modalProduct').modal('show');
-			countUpFromTime(getActualFullDate());
-			$('#start_time').val(getActualFullDate());
+			if ($('#start_time').val() == "") {
+				countUpFromTime(getActualFullDate());
+				$('#start_time').val(getActualFullDate());
+				$('#start_time_product').val(getActualFullDate());
+			}
 			// get_temp();
 			$('#btn_mulai').hide();
-			$('#btn_selesai').show();
+			// $('#btn_selesai').show();
 			$('#perolehan').show();
 			$('#btn_ganti').show();
-		}
+		// }
 	}
 
 	function create_temp() {
 		var start_time = $('#start_time').val();
 		var data = {
-			tag_product:$('#tag_product').val(),
+			// tag_product:$('#tag_product').val(),
 			tag_molding:$('#tag_molding').val(),
 			operator_id:$('#op').text(),
 			start_time:start_time,
@@ -860,47 +963,58 @@
 		$.get('{{ url("index/injeksi/get_temp") }}', data, function(result, status, xhr){
 			if(result.status){
 				openSuccessGritter('Success!', result.message);
-				var start_time = result.datas.start_time;
-				$('#tag_product').val(result.datas.tag_product);
-				$('#tag_molding').val(result.datas.tag_molding);
+				var start_time = result.data_mesin.start_time;
+				// $('#tag_product').val(result.datas.tag_product);
+				$('#mesin').html($('#mesin_fix2').text());
+				$('#tag_molding').val(result.data_mesin.tag_molding);
 				$('#tag_product').prop('disabled',true);
 				$('#tag_molding').prop('disabled',true);
 				$('#start_time').val(start_time);
-				$('#molding').html(result.datas.molding);
-				$('#part_name').html(result.datas.part_name);
-				$('#part_type').html(result.datas.part_type);
-				$('#color').html(result.datas.color);
-				$('#cavity').html(result.datas.cavity);
-				$('#total_shot').val(result.datas.shot);
-				$('#material_number').val(result.datas.material_number);
-				$('#dryer').html(result.datas.dryer);
-				$('#dryer_lot_number').html(result.datas.dryer_lot_number);
-				$('#dryer_color').html(result.datas.dryer_color);
+				$('#molding').html(result.data_mesin.molding);
+				$('#part_name').html(result.data_mesin.part_name);
+				$('#part_type').html(result.data_mesin.part_type);
+				$('#color').html(result.data_mesin.color);
+				$('#cavity').html(result.data_mesin.cavity);
+				$('#material_number').val(result.data_mesin.material_number);
+				$('#dryer').html(result.data_mesin.dryer);
+				$('#dryer_lot_number').html(result.data_mesin.dryer_lot_number);
+				$('#dryer_color').html(result.data_mesin.dryer_color);
 				countUpFromTime(new Date(start_time));
-				$('#btn_mulai').hide();
-				$('#btn_selesai').show();
-				$('#perolehan').show();
-				$('#modalProduct').modal('hide');
-				if (result.datas.ng_name != null) {
-					var ng_name = result.datas.ng_name.split(',');
-					var ng_count = result.datas.ng_count.split(',');
-					var jumlah_ng = '{{$nomor+1}}';
-					for (var i = 1; i <= jumlah_ng; i++ ) {
-						for (var j = 0; j < ng_name.length; j++ ) {
-							if($('#ng'+i).text() == ng_name[j]){
-								$('#count'+i).html(ng_count[j]);
+				if (result.datas != null) {
+					$('#btn_mulai').hide();
+					// $('#btn_selesai').show();
+					$('#perolehan').show();
+					$('#modalProduct').modal('hide');
+					$('#total_shot').val(result.datas.shot);
+					$('#start_time_product').val(result.datas.start_time);
+					if (result.datas.ng_name != null) {
+						var ng_name = result.datas.ng_name.split(',');
+						var ng_count = result.datas.ng_count.split(',');
+						var jumlah_ng = '{{$nomor+1}}';
+						for (var i = 1; i <= jumlah_ng; i++ ) {
+							for (var j = 0; j < ng_name.length; j++ ) {
+								if($('#ng'+i).text() == ng_name[j]){
+									$('#count'+i).html(ng_count[j]);
+								}
 							}
 						}
 					}
+					intervalUpdate = setInterval(update_temp,10000);
+					$('#btn_ganti').show();
+					$('#modalMesin').modal('hide');
+				}else{
+					$('#btn_mulai').show();
+					// $('#btn_selesai').hide();
+					$('#perolehan').hide();
+					// $('#modalProduct').modal('show');
+					$('#modalMesin').modal('hide');
 				}
-				intervalUpdate = setInterval(update_temp,10000);
-				$('#btn_ganti').show();
-				$('#modalMesin').modal('hide');
 			}
 			else{
+				$('#loading').show();
 				resulttrue = 0;
 				var data2 = {
-					machine:$('#mesin_fix2').text()
+					dryer:$('#dryer_fix2').text(),
 				}
 				$.get('{{ url("index/injection/fetch_dryer") }}', data2, function(result, status, xhr){
 					if(result.status){
@@ -910,25 +1024,32 @@
 						$('#dryer_lot_number').html(result.dryer.lot_number);
 						$('#dryer_color').html(result.dryer.color);
 					}else{
-						openErrorGritter('Error!','Mesin Belum Terset Dryer. Silahkan hubungi Leader Injeksi sebelum memulai proses');
+						$('#loading').hide();
+						openErrorGritter('Error!','Dryer Belum Terisi');
 					}
 				});
+
+				var data3 = {
+					mesin:$('#mesin_fix2').text(),
+				}
 				
-				$.get('{{ url("scan/part_molding") }}', data2, function(result, status, xhr){
+				$.get('{{ url("scan/part_molding") }}', data3, function(result, status, xhr){
 					if(result.status){
-						openSuccessGritter('Success!', result.message);
+						// openSuccessGritter('Success!', result.message);
 						$('#tag_molding').val(result.part.tag);
 						$('#tag_molding').prop('disabled', true);
 						$('#molding').html(result.part.part);
 						$('#molding_part_type').val(result.part.product);
-						$('#tag_product').removeAttr('disabled');
-						$('#tag_product').focus();
+						// $('#tag_product').removeAttr('disabled');
+						// $('#tag_product').focus();
 						resulttrue++;
 						if (resulttrue == 2) {
+							$('#loading').hide();
 							$('#modalMesin').modal('hide');
 						}
 					}
 					else{
+						$('#loading').hide();
 						openErrorGritter('Error!','Molding Belum Dipasang');
 						audio_error.play();
 					}
@@ -957,10 +1078,11 @@
 			}
 		}
 		var data = {
-			tag_product:$('#tag_product').val(),
+			// tag_product:$('#tag_product').val(),
 			tag_molding:$('#tag_molding').val(),
 			shot:shot,
 			running_shot:$('#running_shot').val(),
+			mesin:$('#mesin_fix2').text(),
 			ng_name:ng_name.join(),
 			ng_count:ng_count.join(),
 		}
@@ -977,8 +1099,7 @@
 		});
 	}
 
-	function selesaiProses() {
-		$('#selesai_button').prop('disabled', true);
+	function saveTag() {
 		$('#loading').show();
 		var ng_name = [];
 		var ng_count = [];
@@ -995,7 +1116,7 @@
 			tag_product:$('#tag_product').val(),
 			tag_molding:$('#tag_molding').val(),
 			operator_id:$('#op').text(),
-			start_time:$('#start_time').val(),
+			start_time:$('#start_time_product').val(),
 			mesin:$('#mesin').text(),
 			part_name:$('#part_name').text(),
 			part_type:$('#part_type').text(),
@@ -1012,6 +1133,43 @@
 			dryer_color:$('#dryer_color').text(),
 		}
 		$.post('{{ url("index/injeksi/create_log") }}', data, function(result, status, xhr){
+			if(result.status){
+				$('#loading').hide();
+				openSuccessGritter('Success!', result.message);
+				cancelTag();
+				clearInterval(intervalUpdate);
+				$('#total_shot').val("");
+				$('#btn_mulai').show();
+				// $('#btn_selesai').hide();
+				$('#perolehan').hide();
+			}
+			else{
+				openErrorGritter('Error!', result.message);
+				audio_error.play();
+			}
+		});
+	}
+
+	function selesaiProses() {
+		$('#selesai_button').prop('disabled', true);
+		$('#loading').show();
+		var data = {
+			tag_product:$('#tag_product').val(),
+			tag_molding:$('#tag_molding').val(),
+			operator_id:$('#op').text(),
+			start_time:$('#start_time').val(),
+			mesin:$('#mesin').text(),
+			part_name:$('#part_name').text(),
+			part_type:$('#part_type').text(),
+			color:$('#color').text(),
+			molding:$('#molding').text(),
+			cavity:$('#cavity').text(),
+			material_number:$('#material_number').val(),
+			dryer:$('#dryer').text(),
+			dryer_lot_number:$('#dryer_lot_number').text(),
+			dryer_color:$('#dryer_color').text(),
+		}
+		$.post('{{ url("input/injeksi/mesin_log") }}', data, function(result, status, xhr){
 			if(result.status){
 				$('#loading').hide();
 				openSuccessGritter('Success!', result.message);

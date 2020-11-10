@@ -35,7 +35,6 @@ table.table-bordered > tfoot > tr > th{
 <section class="content-header" >
 	<h1>
 		{{ $page }} - {{ $status }}<span class="text-purple"> {{ $title_jp }}</span>
-		{{-- <small>Flute <span class="text-purple"> ??? </span></small> --}}
 	</h1>
 </section>
 @stop
