@@ -161,7 +161,7 @@ hr { background-color: red; height: 1px; border: 0; }
               <div id="chart" style="width: 99%"></div>
           </div>
 
-          <div class="col-md-12" style="padding:0">
+          <div class="col-md-12" style="padding:0;overflow-x: auto;">
               <table id="tabelmonitor" class="table table-bordered" style="margin-top: 5px; width: 99%">
                 <thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 12px;font-weight: bold">
                   <tr>

@@ -518,7 +518,7 @@
            </div>
            <div class="form-group row" align="left">
             <div class="col-sm-1"></div>
-            <label class="col-sm-2">Deskripsi Item<span class="text-red">*</span></label>
+            <label class="col-sm-2">Deskripsi Item</label>
             <div class="col-sm-8">
               <select class="form-control select3" id="kode_item" name="kode_item" style="width: 100%;" data-placeholder="Pilih Nomor Item" required>
                 <option value=""></option>
