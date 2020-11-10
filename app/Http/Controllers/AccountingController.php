@@ -1661,7 +1661,7 @@ class AccountingController extends Controller
             $isimail = "select acc_purchase_requisitions.*,acc_purchase_requisition_items.item_stock, acc_purchase_requisition_items.item_desc, acc_purchase_requisition_items.kebutuhan, acc_purchase_requisition_items.peruntukan, acc_purchase_requisition_items.item_qty, acc_purchase_requisition_items.item_uom FROM acc_purchase_requisitions join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr where acc_purchase_requisitions.id= " . $pr->id;
             $pr_isi = db::select($isimail);
 
-            Mail::to($mailtoo)->send(new SendEmail($pr_isi, 'purchase_requisition'));
+            Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($pr_isi, 'purchase_requisition'));
 
             return redirect('/purchase_requisition/verifikasi/' . $id)->with('status', 'PR Approved')
             ->with('page', 'Purchase Requisition');
@@ -3681,7 +3681,7 @@ public function approval_purchase_order(Request $request, $id)
 
         $po_isi = db::select($isimail);
 
-        Mail::to($mailtoo)->send(new SendEmail($po_isi, 'purchase_order'));
+        Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($po_isi, 'purchase_order'));
 
         return redirect('/purchase_order/verifikasi/' . $id)->with('status', 'Purchase Order Approved')
         ->with('page', 'Purchase Requisition');
