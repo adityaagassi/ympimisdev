@@ -1087,6 +1087,7 @@ class GeneralController extends Controller{
 	public function fetchSafetyShoesDetail(Request $request){
 		$data = GeneralShoesStock::where('gender', $request->get('gender'))
 		->where('size', $request->get('size'))
+		->where('quantity', '>', 0)
 		->get();
 
 		$response = array(
@@ -1743,23 +1744,22 @@ public function scanSafetyShoes(Request $request){
 
 	$request_id = $request->get('request_id');
 
-	$data = GeneralShoesRequest::leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'general_shoes_requests.employee_id')
-	->leftJoin('users', 'users.id', '=', 'general_shoes_requests.created_by')
+	$data = GeneralShoesRequest::leftJoin('users', 'users.id', '=', 'general_shoes_requests.created_by')
 	->where('general_shoes_requests.request_id', $request_id)
 	->select(
-		'employee_syncs.gender',
+		'general_shoes_requests.gender',
 		'general_shoes_requests.merk',
 		'general_shoes_requests.size',
 		'users.name',
 		db::raw('COUNT(general_shoes_requests.id) AS qty')
 	)
 	->groupBy(
-		'employee_syncs.gender',
+		'general_shoes_requests.gender',
 		'general_shoes_requests.merk',
 		'general_shoes_requests.size',
 		'users.name'
 	)
-	->orderBy('employee_syncs.gender', 'ASC')
+	->orderBy('general_shoes_requests.gender', 'ASC')
 	->orderBy('general_shoes_requests.size', 'ASC')
 	->get();
 
