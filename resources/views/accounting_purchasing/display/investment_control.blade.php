@@ -166,8 +166,8 @@ hr { background-color: red; height: 1px; border: 0; }
                 <thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 12px;font-weight: bold">
                   <tr>
                     <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px" rowspan="2">No Investment</th>
-                    <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px" rowspan="2">Subject</th>
-                    <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px" rowspan="2">Date</th>
+                    <th style="width: 9%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px" rowspan="2">Subject</th>
+                    <th style="width: 4%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px" rowspan="2">Date</th>
                     <th style="width: 3%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px" rowspan="2">Dept</th>
                     <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px">User</th>
                     <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px">Cek Budget</th>
