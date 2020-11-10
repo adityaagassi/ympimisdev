@@ -260,7 +260,7 @@
 									<tr>
 										<th style="width: 3%;">NIK</th>
 										<th style="width: 4%;">Nama</th>
-										<th style="width: 3%;">Gender</th>
+										{{-- <th style="width: 3%;">Gender</th> --}}
 										<th style="width: 3%;">Bagian</th>
 										<th style="width: 3%;">Shoes</th>
 										<th style="width: 1%;">#</th>
@@ -355,11 +355,11 @@
 								<tr>
 									<th style="width: 1%;">Employee ID</th>
 									<th style="width: 4%;">Name</th>
-									<th style="width: 1%;">Gender</th>
+									{{-- <th style="width: 1%;">Gender</th> --}}
 									<th style="width: 5%;">Department</th>
 									<th style="width: 4%;">Section</th>
 									<th style="width: 4%;">Group</th>
-									<th style="width: 1%;">Size</th>
+									<th style="width: 6%;">Shoes</th>
 								</tr>
 							</thead>
 							<tbody id="tableDetailRequestBody">
@@ -388,7 +388,7 @@
 									<th style="width: 4%;">Merk</th>
 									<th style="width: 1%;">Gender</th>
 									<th style="width: 2%;">Size</th>
-									<th style="width: 2%;">Size</th>
+									<th style="width: 2%;">Stock</th>
 								</tr>
 							</thead>
 							<tbody id="tableDetailStockBody">
@@ -584,15 +584,18 @@
 					re += '<table style="text-align: center; width:100%;"><tbody>';	
 					for (var i = 0; i < result.data.length; i++) {
 						re += '<tr>';
+						re += '<td style="font-size: 2vw; font-weight: bold;">('+result.data[i].merk+')</td>';
 						re += '<td style="font-size: 2vw; font-weight: bold;">('+result.data[i].gender+')</td>';
 						re += '<td style="font-size: 2vw; font-weight: bold;">Size '+result.data[i].size+'</td>';
 						re += '<td style="font-size: 2vw; font-weight: bold;">-></td>';
-						re += '<td style="font-size: 2vw; font-weight: bold;">'+result.data[i].qty+' Pasang</td>';
+						re += '<td style="font-size: 2vw; font-weight: bold;">'+result.data[i].qty+'</td>';
+						re += '<td style="font-size: 2vw; font-weight: bold;"> Pasang</td>';
 						re += '</tr>';
 					}
 					re += '<tr>';
-					re += '<td colspan="2"><button id="reject+'+request_id+'" class="btn btn-danger" style="margin-top: 10%; width: 95%; font-size: 30px; font-weight:bold;" onclick="confirmReceive(id)">TOLAK</button></td>';
-					re += '<td colspan="2"><button id="receive+'+request_id+'" class="btn btn-success" style="margin-top: 10%; width: 95%; font-size: 30px; font-weight:bold;" onclick="confirmReceive(id)">TERIMA</button></td>';
+					re += '<td colspan="2"><button id="reject+'+request_id+'" class="btn btn-danger" style="margin-top: 10%; width: 80%; font-size: 30px; font-weight:bold;" onclick="confirmReceive(id)">TOLAK</button></td>';
+					re += '<td></td>';
+					re += '<td colspan="3"><button id="receive+'+request_id+'" class="btn btn-success" style="margin-top: 10%; width: 95%; font-size: 30px; font-weight:bold;" onclick="confirmReceive(id)">TERIMA</button></td>';
 					re += '</tr>';
 					re += '</tbody></table>';
 
@@ -601,6 +604,7 @@
 				}else{
 					$('#receiveShoes').html("");
 					showCheck();
+					openErrorGritter('Error!', 'Request Not Found');					
 				}
 
 			}else{
@@ -811,6 +815,9 @@
 
 		var data = message.split('_');
 		var department = data[4];
+		var gender = data[2];
+
+		console.log(gender);
 
 		var shoesMerk = '';
 		if(department != 'Maintenance' && department != 'Production Engineering'){
@@ -819,13 +826,26 @@
 
 		var message = '<option value=""></option>';
 		for(var i = 0; i < sizeChart.length; i++) {
-			if(shoesMerk == 'Cheetah'){
-				if(sizeChart[i].type == 'Cheetah'){
-					message += '<option value="'+sizeChart[i].ind+'(ime)( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'">( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'</option>';
+
+			if(gender == 'L'){
+				if(shoesMerk == 'Cheetah'){
+					if(sizeChart[i].type == 'Cheetah' && sizeChart[i].gender == gender){
+						message += '<option value="'+sizeChart[i].ind+'(ime)( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'">( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'</option>';
+					}
+				}else{
+					if(sizeChart[i].gender == gender){	
+						message += '<option value="'+sizeChart[i].ind+'(ime)( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'">( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'</option>';
+					}
 				}
 			}else{
-				message += '<option value="'+sizeChart[i].ind+'(ime)( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'">( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'</option>';
-			}
+				if(shoesMerk == 'Cheetah'){
+					if(sizeChart[i].type == 'Cheetah'){
+						message += '<option value="'+sizeChart[i].ind+'(ime)( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'">( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'</option>';
+					}
+				}else{
+					message += '<option value="'+sizeChart[i].ind+'(ime)( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'">( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'</option>';
+				}
+			}			
 		}
 		$("#reqSizeUk").html(message);
 	});
@@ -845,19 +865,20 @@
 			var data3 = data2.replaceAll(" ", "");
 			var data4 = data3.split('-');
 			var merk = data4[1];
+			var gender = data4[0];
 
 			var data = emp.split('_');
 
 			var employee_id = data[0];
 			var name = data[1];
-			var gender = data[2];
+			// var gender = data[2];
 			var group = data[3];
 
 			tableData = "";
 			tableData += "<tr id='rowReq"+employee_id+"'>";
 			tableData += '<td>'+employee_id+'</td>';
 			tableData += '<td>'+name+'</td>';
-			tableData += '<td>'+gender+'</td>';
+			// tableData += '<td>'+gender+'</td>';
 			tableData += '<td>'+group+'</td>';
 			tableData += '<td>'+shoes+'</td>';
 			tableData += "<td><a href='javascript:void(0)' onclick='remReq(id)' id='"+employee_id+"' class='btn btn-danger btn-xs' style='margin-right:5px;'><i class='fa fa-trash'></i></a></td>";
@@ -1011,11 +1032,11 @@
 					detail += '<tr>';
 					detail += '<td>'+value.employee_id+'</td>';
 					detail += '<td>'+value.name+'</td>';
-					detail += '<td>'+value.gender+'</td>';
+					// detail += '<td>'+value.gender+'</td>';
 					detail += '<td>'+value.department+'</td>';
 					detail += '<td>'+value.section+'</td>';
 					detail += '<td>'+(value.group || '')+'</td>';
-					detail += '<td>'+value.size+'</td>';
+					detail += '<td>('+value.gender+') - '+value.merk+' - Size EUR.'+value.size+'</td>';
 					detail += '</tr>';
 				});
 

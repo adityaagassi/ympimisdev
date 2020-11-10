@@ -316,7 +316,8 @@ class GeneralController extends Controller{
 			$request = GeneralShoesRequest::leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'general_shoes_requests.employee_id')
 			->where('general_shoes_requests.request_id', $request_id)
 			->select(
-				'employee_syncs.gender',
+				'general_shoes_requests.merk',
+				'general_shoes_requests.gender',
 				'general_shoes_requests.size',
 				'general_shoes_requests.employee_id',
 				'general_shoes_requests.created_by',
@@ -348,6 +349,7 @@ class GeneralController extends Controller{
 
 
 					$stock = GeneralShoesStock::where('gender', $request[$i]['gender'])
+					->where('merk', $request[$i]['merk'])
 					->where('size', $request[$i]['size'])
 					->first();
 
@@ -584,6 +586,7 @@ class GeneralController extends Controller{
 				$request = new GeneralShoesRequest([
 					'request_id' => $request_id,
 					'employee_id' => $employee[$i]['employee_id'],
+					'gender' => $employee[$i]['gender'],
 					'merk' => $employee[$i]['merk'],
 					'size' => $employee[$i]['size'],
 					'created_by' => Auth::id()
@@ -599,23 +602,22 @@ class GeneralController extends Controller{
 			}
 		}
 
-		$data = GeneralShoesRequest::leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'general_shoes_requests.employee_id')
-		->leftJoin('users', 'users.id', '=', 'general_shoes_requests.created_by')
+		$data = GeneralShoesRequest::leftJoin('users', 'users.id', '=', 'general_shoes_requests.created_by')
 		->where('general_shoes_requests.request_id', $request_id)
 		->select(
-			'employee_syncs.gender',
+			'general_shoes_requests.gender',
 			'general_shoes_requests.merk',
 			'general_shoes_requests.size',
 			'users.name',
 			db::raw('COUNT(general_shoes_requests.id) AS qty')
 		)
 		->groupBy(
-			'employee_syncs.gender',
+			'general_shoes_requests.gender',
 			'general_shoes_requests.merk',
 			'general_shoes_requests.size',
 			'users.name'
 		)
-		->orderBy('employee_syncs.gender', 'ASC')
+		->orderBy('general_shoes_requests.gender', 'ASC')
 		->orderBy('general_shoes_requests.size', 'ASC')
 		->get();
 
@@ -1052,6 +1054,8 @@ class GeneralController extends Controller{
 			'employee_syncs.department',
 			'employee_syncs.section',
 			'employee_syncs.group',
+			'general_shoes_requests.gender',
+			'general_shoes_requests.merk',
 			'general_shoes_requests.size',
 			db::raw('users.name AS requester')
 		)
@@ -1065,9 +1069,10 @@ class GeneralController extends Controller{
 	}
 
 	public function fetchSafetyShoes(){
-		$data = GeneralShoesStock::get();
+		$data = GeneralShoesStock::where('quantity', '>', 0)->get();
 
-		$resume = GeneralShoesStock::select('size', 'gender', db::raw('sum(quantity) AS quantity'))
+		$resume = GeneralShoesStock::where('quantity', '>', 0)
+		->select('size', 'gender', db::raw('sum(quantity) AS quantity'))
 		->groupBy('size', 'gender')
 		->get();
 
@@ -1743,12 +1748,14 @@ public function scanSafetyShoes(Request $request){
 	->where('general_shoes_requests.request_id', $request_id)
 	->select(
 		'employee_syncs.gender',
+		'general_shoes_requests.merk',
 		'general_shoes_requests.size',
 		'users.name',
 		db::raw('COUNT(general_shoes_requests.id) AS qty')
 	)
 	->groupBy(
 		'employee_syncs.gender',
+		'general_shoes_requests.merk',
 		'general_shoes_requests.size',
 		'users.name'
 	)

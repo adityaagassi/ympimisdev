@@ -11,7 +11,7 @@ class GeneralShoesRequest extends Model{
 	use SoftDeletes;
 	
 	protected $fillable = [
-		'request_id','employee_id','merk','size','quantity','created_by'
+		'request_id','employee_id','merk','gender','size','quantity','created_by'
 	];
 
 }
