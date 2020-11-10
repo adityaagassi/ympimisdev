@@ -275,6 +275,7 @@
 			<tbody>
 				<?php $no = 1; 
 				$total = 0;
+				$total_service = 0;
 				?>
 				@foreach($po as $pos)
 				<tr>
@@ -295,6 +296,7 @@
 					<?php
 						$price = $pos->service_price * $pos->qty;
 						$total = $total + $price;
+						$total_service = $total_service + $price;
 					?>
 
 					@endif
@@ -413,7 +415,7 @@
 					
 					<?php 
 						if ($po[0]->holding_tax != 0) {
-							$wh = (($total+$pajak) * $po[0]->holding_tax)/100;
+							$wh = ($total_service * $po[0]->holding_tax)/100;
 						}
 					?> 
 
