@@ -8,27 +8,29 @@
 		table {
 			border-collapse: collapse;
 		}
-		.name {
-			
+		.name {			
 			font-family: 'arial';
-			
 		}
 
 
 	</style>
 
-@php
-include(app_path() . '\barcode\barcode.php');
-@endphp
+  @php
+  include(app_path() . '\barcode\barcode.php');
+  @endphp
 
-<table border="0" >	
-	@foreach($barcode as $nomor => $barcode)	
-	<input type="text" name="codemodel" id="codemodel" value="{{$barcode->model}}" hidden="">
-	@endforeach	
-	<tr>
-		<td class="name" align="center" id="model" style="font-size: 40pt; -moz-transform:scale(1,1.6);">YAS-280//ID </td>
-	</tr>	
-</table>
+  <table border="0" id="tabel">
+    <input type="text" name="rem" id="rem" value="{{$remark}}" hidden="">    
+    <input type="text" name="codesn" id="codesn" value="{{$sn}}" hidden="">
+
+    @foreach($barcode as $nomor => $barcode) 
+    <input type="text" name="codemodel" id="codemodel" value="{{ str_replace(' ', '&nbsp;', $barcode->model) }}" hidden="">
+    @endforeach 
+
+    <tr>
+      <td class="name" align="center" id="model" style="font-size: 40pt; -moz-transform:scale(1,1.6);">YFL412</td>
+    </tr>	
+  </table>
 </body>
 </html>
 <script src="{{ url("bower_components/jquery/dist/jquery.min.js")}}"></script>
@@ -36,83 +38,108 @@ include(app_path() . '\barcode\barcode.php');
 	jQuery(document).ready(function() {		
 		day();		
     defineCustomPaperSize();
-		printWindow(window, 'Label Besar');
-
-				
-	});
+    printWindow(window, 'Label Besar');
+  });
 	function day() {
 		var models = $('#codemodel').val();
 		$('#model').text(models);		
 		var panjang = (models.length - 11)*2;
 		var	ukuran = 48;
-		if (models.length == 11) {
-			$('#model').css({"font-size":"40pt", "-moz-transform":"scale(1.1,2)","padding-top":"5px","padding-left":"35px"});
-		}
+		if (models.length <= 11) {
+      $('#model').css({"font-size":"38pt", "-moz-transform":"scale(1.1,1)","padding-top":"5px","padding-left":"20px"});
+    }
 
     if (models.length == 12) {
-      $('#model').css({"font-size":"40pt", "-moz-transform":"scale(1,2)","padding-top":"5px","padding-left":"20px"});
+      $('#model').css({"font-size":"38pt", "-moz-transform":"scale(1,1)","padding-top":"5px","padding-left":"5px"});
     }
 
     if (models.length == 13) {
-      $('#model').css({"font-size":"40pt", "-moz-transform":"scale(1,2)","padding-top":"5px"});
+      $('#model').css({"font-size":"38pt", "-moz-transform":"scale(1,1)","padding-top":"5px"});
     }
 
     if (models.length == 14) {
-      $('#model').css({"font-size":"38pt", "-moz-transform":"scale(1,2)","padding-top":"5px"});
+      $('#model').css({"font-size":"34pt", "-moz-transform":"scale(1,1)","padding-top":"5px"});
     }
 
     if (models.length == 15) {
-      $('#model').css({"font-size":"34pt", "-moz-transform":"scale(1,2)","padding-top":"10px"});
+      if(models.includes("PROTO")){
+        $('#model').css({"font-size":"32pt", "-moz-transform":"scale(0.9,1.1)","padding-top":"13px"});
+      }else{
+        $('#model').css({"font-size":"32pt", "-moz-transform":"scale(1,1)","padding-top":"10px"});
+      }
     }
 
     if (models.length == 16) {
-      $('#model').css({"font-size":"32pt", "-moz-transform":"scale(1,2)","padding-top":"10px"});
+      $('#model').css({"font-size":"30pt", "-moz-transform":"scale(1,1)","padding-top":"10px"});
     }
 
     if (models.length == 17) {
-      $('#model').css({"font-size":"28pt", "-moz-transform":"scale(1,2)","padding-top":"13px"});
-    }		
-	}
-	
+      $('#model').css({"font-size":"28pt", "-moz-transform":"scale(1,1)","padding-top":"13px"});
+    }
 
+    if(models.includes("WOCC")){
+      $('#model').css({"font-size":"36pt", "-moz-transform":"scale(0.7,1.1)","padding-top":"8px"});
+      $('#model').css({"position":"fixed", "left":"-28px", "top":"10px"});
+      $('#tabel').css({"position":"fixed", "left":"-25px", "top":"6px", "width":"28%"});
+    }
 
-// default print settings
-var printSettings = {
-	"printSilent": true,
-  "shrinkToFit": true,
-  "unwriteableMarginLeft": 0,
-  "unwriteableMarginRight": 0,
-  "unwriteableMarginTop": 0,
-  "unwriteableMarginBottom": 0,
-  "edgeLeft": 0,
-  "edgeRight": 0,
-  "edgeTop": 0,
-  "edgeBottom": 0,
-  "marginLeft": 1,
-  "marginRight": 0,
-  "marginTop": 4,
-  "marginBottom": 0,
-  "scaling": 1,
-  "title": "",
-  "docURL": "",
-  "headerStrLeft": "",
-  "headerStrCenter": "",
-  "headerStrRight": "",
-  "footerStrLeft": "",
-  "footerStrCenter": "",
-  "footerStrRight": "",
-   "printerName" : "SATO LC408e" 
-};
+    if(models.includes("WOB")){
+      $('#model').css({"font-size":"36pt", "-moz-transform":"scale(0.9,1.1)","padding-top":"7px"});
+      $('#tabel').css({"position":"fixed", "left":"0px", "top":"6px"});
+    }
+
+    if (models.length > 17) {
+      $('#model').css({"font-size":"18pt", "-moz-transform":"scale(0.68,2.5)","padding-top":"13px","float":"right"});
+      $('#model').css({"position":"fixed", "left":"-55px", "top":"10px"});
+      $('#tabel').css({"position":"fixed", "left":"-50px", "top":"30px", "width":"40%"});
+    }
+
+  }
+
+  var printSettings = {
+   "printSilent": true,
+   "shrinkToFit": true,
+   "unwriteableMarginLeft": 0,
+   "unwriteableMarginRight": 0,
+   "unwriteableMarginTop": 0,
+   "unwriteableMarginBottom": 0,
+   "edgeLeft": 0,
+   "edgeRight": 0,
+   "edgeTop": 0,
+   "edgeBottom": 0,
+   "marginLeft": 1,
+   "marginRight": 0,
+   "marginTop": 3,
+   "marginBottom": 0,
+   "scaling": 1,
+   "title": "",
+   "docURL": "",
+   "headerStrLeft": "",
+   "headerStrCenter": "",
+   "headerStrRight": "",
+   "footerStrLeft": "",
+   "footerStrCenter": "",
+   "footerStrRight": "",
+   "printerName" : "SATO CL4NX (203 dpi)"
+ };
+
+ function label_kecil2() {
+  var sn = $('#codesn').val();
+  window.open('{{ url("index/assembly/flute/label_kecil2") }}'+'/'+sn+'/P', '_blank');
+  window.close();
+}
+
+function tutup() {
+  window.close();
+}
 
 function defineCustomPaperSize() {
   console.log("Define custom paper size", false);
-  jsPrintSetup.definePaperSize(101, 101, 'Custom Size 1', 'Custom Size 1', 'My Test Custom Size 1', 80.0, 10.0, jsPrintSetup.kPaperSizeInches);
-  // w, h
+  jsPrintSetup.definePaperSize(101, 101, 'Custom Size 1', 'Custom Size 1', 'My Test Custom Size 1', 99, 29, jsPrintSetup.kPaperSizeInches);
   console.log(JSON.stringify(jsPrintSetup.getPaperSizeDataByID(101), null, "\t"), true);
 }
 
 function printWindow(win, what) {
-  // jsPrintSetup messages  
   function jspListener(event) {
   	console.log('event.data:'+JSON.stringify(event.data));
   	if (event.source == win 
@@ -154,10 +181,16 @@ function printWindow(win, what) {
   	});
   	win.addEventListener("afterprint", function(event) {
   		console.log("after print: "+what, true);
-  		
-  		// window.close();
 
-  	});
+      var sn = $('#codemodel').val();
+      var rem = $('#rem').val(); 
+
+      if (rem == "P") {
+        setTimeout(label_kecil2,1000);
+      }else{
+        setTimeout(tutup,1000);
+      }
+    });
   }
   
   win.jsPrintSetup.print(printSettings).then(
@@ -179,13 +212,12 @@ function checkJobInfo(what, win, jobId) {
 	var jobInfo = win.jsPrintSetup.getJobInfo(jobId);
 	console.log(what+ " Async Checking Ifo for Job:"+jobId, true);
 	if (jobInfo) {
-  //  jobInfo_1 = JSON.parse(jobInfo);
-  console.log("----- job info:"+JSON.stringify(jobInfo));
-  console.log(JSON.stringify(jobInfo, null, "\t"), true);
-} else {
-	console.log("----- Can't find jobInfo for jobId:"+jobId);
-	console.log("Can't find jobInfo for jobId:"+jobId, true);
-}
+    console.log("----- job info:"+JSON.stringify(jobInfo));
+    console.log(JSON.stringify(jobInfo, null, "\t"), true);
+  } else {
+   console.log("----- Can't find jobInfo for jobId:"+jobId);
+   console.log("Can't find jobInfo for jobId:"+jobId, true);
+ }
 }
 
 </script>

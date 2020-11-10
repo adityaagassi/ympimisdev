@@ -915,7 +915,7 @@
 		setTimeout(function() {
 			window.open('{{ url("index/kd_label_des_fl") }}'+'/'+gmc, '_blank');
 			$('.btn-kd-desc').prop('disabled', false);
-		}, 3000);
+		}, 1000);
 	}
 
 	function printKdBesar() {
@@ -925,7 +925,7 @@
 		setTimeout(function() {
 			window.open('{{ url("index/kd_label_besar_fl") }}'+'/'+gmc, '_blank');
 			$('.btn-kd-besar').prop('disabled', false);
-		}, 3000);
+		}, 1000);
 	}
 
 	function printKdCarb() {
@@ -935,7 +935,7 @@
 		setTimeout(function() {
 			window.open('{{ url("index/kd_label_carb_fl") }}'+'/'+gmc, '_blank');
 			$('.btn-kd-carb').prop('disabled', false);
-		}, 3000);
+		}, 1000);
 	}
 
 	function printKdOuter() {
@@ -945,7 +945,7 @@
 		setTimeout(function() {
 			window.open('{{ url("index/kd_label_besar_outer_fl") }}'+'/'+gmc, '_blank');
 			$('.btn-kd-outer').prop('disabled', false);
-		}, 3000);
+		}, 1000);
 	}
 
 </script>

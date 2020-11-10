@@ -9,24 +9,23 @@
 			border-collapse: collapse;
 			/*border: dashed;*/
 		}
-		.name {
-			
-			font-family: 'arial';
+		.name {			
+			font-family: 'arial' !important;
 			/*-moz-transform:scale(1.3,1);*/
 		}
 		.product {
 			font-size: 12pt;
-			font-family: 'arial';
+			font-family: 'arial' !important;
 		}
 
 		.kiri {
 			font-size: 6pt;
-			font-family: 'arial narrow';
+			font-family: 'arial' !important;
 			/*font-weight: bold;*/
 		}
 		.bawah {
 			font-size: 12pt;
-			font-family: 'arial';
+			font-family: 'arial' !important;
 			font-weight: bold;
 		}
 
@@ -36,13 +35,11 @@
 	include(app_path() . '\barcode\barcode.php');
 	@endphp
 
-
-
 	<table border="0" style="margin-left: 22px">
 
 		<input type="text" name="rem" id="rem" value="{{$remark}}" hidden="">
 		@foreach($barcode as $nomor => $barcode)
-		<input type="text" name="codesn" id="codesn" value="{{$barcode->serial_number}}" hidden="">
+		{{-- <input type="text" name="codesn" id="codesn" value="{{$barcode->serial_number}}" hidden=""> --}}
 		<input type="text" name="codemodel" id="codemodel" value="{{$barcode->model}}" hidden="">
 		<input type="text" name="codegmc" id="codegmc" value="{{$barcode->finished}}" hidden="">
 		<input type="text" name="codejan" id="codejan" value="{{$barcode->janean}}" hidden="">
@@ -51,8 +48,8 @@
 		<input type="text" name="codej" id="codej" value="{{$barcode->remark}}" hidden="">
 		@endforeach
 
-		@foreach($date2 as $nomor => $date2)
-		<input type="text" name="codeday" id="codeday" value="{{$date2->date_code}}" hidden="">
+		@foreach($date as $nomor => $date) 
+		<input type="text" name="codeday" id="codeday" value="{{$date->date_code}}" hidden="">
 		@endforeach
 
 		<tr>
@@ -66,7 +63,7 @@
 		</tr>		
 		<tr>
 			<td class="kiri" align="right"> 
-				<p style="font-size: 12pt; font-weight: bold;" id="janT"> JAN/EAN </p>
+				<p id="JAN-text" style="font-size: 12pt;" id="janT"> JAN/EAN </p>
 			</td>
 			<td class="kiri" align="right"> 
 				<img id="JAN" src="" style="height:80px;">
@@ -77,7 +74,7 @@
 		</tr>
 		<tr>
 			<td class="kiri" align="right"> 
-				<p style="font-size: 12pt; font-weight: bold;" id="janT"> UPC </p>
+				<p id="upc-text" style="font-size: 12pt;" id="janT"> UPC </p>
 			</td>
 			<td class="kiri" align="right"> 
 				<img id="upc" src="" style="height:80px;">
@@ -88,7 +85,7 @@
 		</tr>
 		<tr>
 			<td class="kiri" align="right"> 
-				<p style="font-size: 12pt; font-weight: bold;" id="janT"> GMC </p>
+				<p style="font-size: 12pt;" id="janT"> GMC </p>
 			</td>
 			<td class="kiri" align="right"> 
 				<img id="gmc" src="" style="height:80px;">
@@ -98,11 +95,16 @@
 			<td colspan="3" class="name" align="left" style="height: 50pt;"></td>
 		</tr>
 		<tr>
-			<td class="kiri" style="position: fixed; left: 150px;"> 
-				<p style="font-size: 12pt; font-weight: bold;" id="day"></p>
+			<td class="kiri" style="position: fixed; top:480px; left: 120px;"> 
+				<p style="font-size: 12pt;" id="day"></p>
 			</td>
-			<td class="kiri" style="position: fixed; left: 240px;"> 
+			<td class="kiri" style="position: fixed;  top:480px; left: 240px;"> 
 				<img id="gmc" src="{{ asset("/images/QC_BAR.jpg")}}" style="height:50px;">
+			</td>
+		</tr>
+		<tr>
+			<td colspan="3" class="kiri" style="position: fixed; top:-5px; left: -22px; width: 26%;"> 
+				<p id="kd_text" style="position: fixed; top:-5px; left: -175px;"></p>
 			</td>
 		</tr>
 	</table>
@@ -112,23 +114,20 @@
 <script src="{{ url("bower_components/jquery/dist/jquery.min.js")}}"></script>
 <script>
 	jQuery(document).ready(function() {
-		
-		
+
 		jan();
 		upc();
 		gmc();
 		day();
-		jumlah();
-
+		
 		defineCustomPaperSize();
-		printWindow(window, 'Label Besar');
+		setTimeout(function() {
+			printWindow(window, 'Label Besar');
+		}, 3000)
 
 		
 	});
 
-	function asd() {
-		window.open('{{ url("index/label_kecil") }}'+'/21N37897/RP', '_blank')
-	}
 	function day() {
 		var days = $('#codeday').val();
 		$('#day').text(days);
@@ -141,25 +140,38 @@
 		var models = $('#codemodel').val();
 		$('#model').text(models);		
 
+		
 		var panjang = (models.length - 11)*2;
-		var	ukuran = 20;
-		// if (models.length > 11) {
-		// 	$('#model').css({"font-size":ukuran-panjang+"pt"});
-		// }
-		// alert(panjang);
+		var	ukuran = 38;
+		if (models.length > 11) {
+			$('#model').css('font-size', (ukuran-panjang) + 'pt');
+		}
+
+
+		if(models.includes("FHJ-200U//02")){
+			$('#model').text('FHJ-200U//02');
+			$('#model').css('font-size', '36pt');
+			$('#model').css('visibility', 'hidden');
+
+			$('#kd_text').text(models);
+			$('#kd_text').css({"font-size":"20px","-moz-transform":"scale(0.6,2)","padding-left":"0px"});
+		}
+
 	}
+
 	function jan() {
 		var jan = $('#codejan').val();
 		var url1 = "{{url('/app/barcode/')}}";
 		var url2 ="/barcode.php?f=svg&s=ean-13&th=20&ts=20&w=300&h=100&pv=20&ph=0&wm=2&wq=2";
 		var code ="&d="+jan;
 		var janfix = url1.replace("/public","");
-		if (jan !="-") {
+		if (jan != "-") {
 			$("#JAN").attr("src",janfix+url2+code);
 		}else{
-			$("#JAN").attr("src",janfix+url2+code);
-			$("#JAN").css({"visibility":"hidden"});
-		}
+			$("#JAN").attr('src',janfix+url2+code);
+			$("#JAN-text").css('visibility', 'hidden');
+			$("#JAN").css('visibility', 'hidden');
+		} 
 	}
 
 	function upc() {
@@ -168,11 +180,12 @@
 		var url2 ="/barcode.php?f=svg&s=upc-a&th=20&ts=20&w=300&h=100&pv=20&ph=0&wm=2&wq=2";
 		var code ="&d="+upc;
 		var janfix = url1.replace("/public","");
-		if (upc !="-") {
+		if (upc != "-") {
 			$("#upc").attr("src",janfix+url2+code);
 		}else{
 			$("#upc").attr("src",janfix+url2+code);
-			$("#upc").css({"visibility":"hidden"});
+			$("#upc-text").css('visibility', 'hidden');
+			$("#upc").css('visibility', 'hidden');
 		}
 	}
 
@@ -183,78 +196,6 @@
 		var code ="&d="+gmc;
 		var janfix = url1.replace("/public","");
 		$("#gmc").attr("src",janfix+url2+code);
-	}
-
-	function jumlah() {
-		var upc = $('#codeupc').val(); 
-		var jan = $('#codejan').val();
-		var gmc = $('#codegmc').val();
-
-
-		var url1 = "{{url('/app/barcode/')}}";
-		var url2upc ="/barcode.php?f=svg&s=upc-a&th=20&ts=20&w=300&h=80&pv=0&ph=0&tf='Bahnschrift'&wm=2&wq=2";
-		var url2jan ="/barcode.php?f=svg&s=ean-13&th=20&ts=20&w=300&h=80&pv=0&ph=0&tf='Bahnschrift'&wm=2&wq=2";
-		var url2gmc ="/barcode.php?f=svg&s=code-128b&th=20&ts=18&w=300&h=100&pv=0&ph=2";
-		var codeupc ="&d="+upc;
-		var codejan ="&d="+jan;
-		var codegmc ="&d="+gmc;
-		var janfix = url1.replace("/public","");
-
-		if (upc =="-" ) {
-			$("#upcT").css({"display":"none"});
-			
-		}
-		if (jan =="-") {
-			$("#janT").css({"display":"none"});
-		}
-		if (upc !="-" && jan =="-") {
-			$("#upc_jan2").css({"visibility":"hidden"});
-			$("#upc").css({"visibility":"hidden"});
-			$("#JAN").css({"visibility":"hidden"});
-			$("#gmc").css({"visibility":"hidden"});			
-			$("#upcT").css({"display":"none"});
-			$("#gmcT").css({"display":"none"});
-			$("#upc_gmcT").css({"display":"block"});
-			$("#upc_janT").css({"display":"block"});
-			$("#upc_janT2").css({"display":"none"});
-			$("#upc_jan").attr("src",janfix+url2upc+codeupc);
-			$("#upc_jangmc").attr("src",janfix+url2gmc+codegmc);
-		}
-		if (jan !="-" && upc =="-") {
-			$("#upc_jan").css({"visibility":"hidden"});
-			$("#upc").css({"visibility":"hidden"});
-			$("#JAN").css({"visibility":"hidden"});
-			$("#gmc").css({"visibility":"hidden"});		
-			$("#janT").css({"display":"none"});
-			$("#gmcT").css({"display":"none"});
-			$("#upc_gmcT").css({"display":"block"});
-			$("#upc_janT").css({"display":"none"});
-			$("#upc_janT2").css({"display":"block"});
-			$("#upc_jan2").attr("src",janfix+url2jan+codejan);
-			$("#upc_jangmc").attr("src",janfix+url2gmc+codegmc);
-		}
-
-		if (jan !="-" && upc !="-") {
-			$("#upc_jangmcT").css({"display":"none"});
-			$("#upc_janT").css({"display":"none"});
-			$("#upc_janT2").css({"display":"none"});
-			$("#upc_jan2").css({"visibility":"hidden"});
-			$("#upc_jan").css({"visibility":"hidden"});
-			$("#upc_jangmc").css({"visibility":"hidden"});			
-			
-
-		}
-
-		if (jan =="-" && upc =="-") {
-			$("#upc_jan2").css({"visibility":"hidden"});
-			$("#upc_jan").css({"visibility":"hidden"});
-			$("#upc_gmcT").css({"display":"none"});
-			$("#gmcT").css({"display":"none"});
-			$("#gmc").css({"visibility":"hidden"});
-			$("#upc_janT").css({"display":"none"});
-			$("#upc_janT2").css({"display":"none"});
-			$("#upc_jangmc").attr("src",janfix+url2gmc+codegmc);
-		}
 	}
 
 
@@ -272,7 +213,7 @@ var printSettings = {
 	"edgeBottom": 0,
 	"marginLeft": 0,
 	"marginRight": 0,
-	"marginTop": 0,
+	"marginTop": 3,
 	"marginBottom": 0,
 	"scaling": 1,
 	"title": "",
@@ -292,6 +233,10 @@ function defineCustomPaperSize() {
 	jsPrintSetup.definePaperSize(101, 101, 'Custom Size 1', 'Custom Size 1', 'My Test Custom Size 1', 75.9, 35.0, jsPrintSetup.kPaperSizeInches);
   // w, h
   console.log(JSON.stringify(jsPrintSetup.getPaperSizeDataByID(101), null, "\t"), true);
+}
+
+function tutup() {
+	window.close();
 }
 
 function printWindow(win, what) {
@@ -343,9 +288,9 @@ function printWindow(win, what) {
   	win.addEventListener("afterprint", function(event) {
   		console.log("after print: "+what, true);
 
-  		// window.close();
-
-  	});
+  		setTimeout(tutup,1000);
+		// window.close();
+	});
   }
   
   win.jsPrintSetup.print(printSettings).then(
