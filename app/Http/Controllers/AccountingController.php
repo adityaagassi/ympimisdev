@@ -1218,14 +1218,14 @@ class AccountingController extends Controller
             }
 
 
-            $detail_pr = AccPurchaseRequisition::select('*',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
+            $detail_pr = AccPurchaseRequisition::select('acc_purchase_requisitions.*','acc_purchase_requisition_items.*','acc_budget_histories.beg_bal','acc_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
             ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
-            // ->leftJoin('acc_items', 'acc_purchase_requisition_items.item_code', '=', 'acc_items.kode_item')
             ->join('acc_budget_histories', function($join) {
                $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
                $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
            })
             ->where('acc_purchase_requisitions.id', '=', $data->id)
+            ->distinct()
             ->get();
 
             $exchange_rate = AccExchangeRate::select('*')
@@ -1397,14 +1397,14 @@ class AccountingController extends Controller
 
             $pr->save();
 
-            $detail_pr = AccPurchaseRequisition::select('*',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
+            $detail_pr = AccPurchaseRequisition::select('acc_purchase_requisitions.*','acc_purchase_requisition_items.*','acc_budget_histories.beg_bal','acc_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
             ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
-            // ->leftJoin('acc_items', 'acc_purchase_requisition_items.item_code', '=', 'acc_items.kode_item')
             ->join('acc_budget_histories', function($join) {
                $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
                $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
            })
             ->where('acc_purchase_requisitions.id', '=', $id)
+            ->distinct()
             ->get();
 
             $exchange_rate = AccExchangeRate::select('*')
@@ -1468,14 +1468,14 @@ class AccountingController extends Controller
             $pr->status = 'received';
             $pr->save();
 
-            $detail_pr = AccPurchaseRequisition::select('*',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
+            $detail_pr = AccPurchaseRequisition::select('acc_purchase_requisitions.*','acc_purchase_requisition_items.*','acc_budget_histories.beg_bal','acc_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
             ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
-            // ->leftJoin('acc_items', 'acc_purchase_requisition_items.item_code', '=', 'acc_items.kode_item')
             ->join('acc_budget_histories', function($join) {
                $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
                $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
            })
             ->where('acc_purchase_requisitions.id', '=', $id)
+            ->distinct()
             ->get();
 
             $exchange_rate = AccExchangeRate::select('*')
@@ -1507,13 +1507,14 @@ class AccountingController extends Controller
     //==================================//
     public function report_purchase_requisition($id){
 
-        $detail_pr = AccPurchaseRequisition::select('*',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
+        $detail_pr = AccPurchaseRequisition::select('acc_purchase_requisitions.*','acc_purchase_requisition_items.*','acc_budget_histories.beg_bal','acc_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
         ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
         ->join('acc_budget_histories', function($join) {
            $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
            $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
        })
         ->where('acc_purchase_requisitions.id', '=', $id)
+        ->distinct()
         ->get();
 
         $exchange_rate = AccExchangeRate::select('*')
@@ -1630,13 +1631,14 @@ class AccountingController extends Controller
 
             $pr->save();
 
-            $detail_pr = AccPurchaseRequisition::select('*',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
+            $detail_pr = AccPurchaseRequisition::select('acc_purchase_requisitions.*','acc_purchase_requisition_items.*','acc_budget_histories.beg_bal','acc_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
             ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
             ->join('acc_budget_histories', function($join) {
                $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
                $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
            })
             ->where('acc_purchase_requisitions.id', '=', $id)
+            ->distinct()
             ->get();
 
             $exchange_rate = AccExchangeRate::select('*')
@@ -1692,13 +1694,14 @@ class AccountingController extends Controller
 
                     $pr->save();
 
-                    $detail_pr = AccPurchaseRequisition::select('*',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
+                    $detail_pr = AccPurchaseRequisition::select('acc_purchase_requisitions.*','acc_purchase_requisition_items.*','acc_budget_histories.beg_bal','acc_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
                     ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
                     ->join('acc_budget_histories', function($join) {
                        $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
                        $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
                    })
                     ->where('acc_purchase_requisitions.id', '=', $id)
+                    ->distinct()
                     ->get();
 
                     $exchange_rate = AccExchangeRate::select('*')
@@ -1743,13 +1746,14 @@ class AccountingController extends Controller
 
                     $pr->save();
 
-                    $detail_pr = AccPurchaseRequisition::select('*',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
+                    $detail_pr = AccPurchaseRequisition::select('acc_purchase_requisitions.*','acc_purchase_requisition_items.*','acc_budget_histories.beg_bal','acc_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
                     ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
                     ->join('acc_budget_histories', function($join) {
                        $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
                        $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
                    })
                     ->where('acc_purchase_requisitions.id', '=', $id)
+                    ->distinct()
                     ->get();
 
                     $exchange_rate = AccExchangeRate::select('*')
@@ -1778,13 +1782,14 @@ class AccountingController extends Controller
                     $message = 'PR dengan Nomor '.$pr->no_pr;
                     $message2 ='Berhasil di approve';
 
-                    $detail_pr = AccPurchaseRequisition::select('*',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
+                    $detail_pr = AccPurchaseRequisition::select('acc_purchase_requisitions.*','acc_purchase_requisition_items.*','acc_budget_histories.beg_bal','acc_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
                     ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
                     ->join('acc_budget_histories', function($join) {
                        $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
                        $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
                    })
                     ->where('acc_purchase_requisitions.id', '=', $id)
+                    ->distinct()
                     ->get();
 
                     $exchange_rate = AccExchangeRate::select('*')
@@ -1847,13 +1852,14 @@ class AccountingController extends Controller
 
                 $pr->save();
 
-                $detail_pr = AccPurchaseRequisition::select('*',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
+                $detail_pr = AccPurchaseRequisition::select('acc_purchase_requisitions.*','acc_purchase_requisition_items.*','acc_budget_histories.beg_bal','acc_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
                 ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
                 ->join('acc_budget_histories', function($join) {
                    $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
                    $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
                })
                 ->where('acc_purchase_requisitions.id', '=', $id)
+                ->distinct()
                 ->get();
 
                 $exchange_rate = AccExchangeRate::select('*')
@@ -1882,13 +1888,14 @@ class AccountingController extends Controller
                 $message = 'PR dengan Nomor '.$pr->no_pr;
                 $message2 ='Berhasil di approve';
 
-                $detail_pr = AccPurchaseRequisition::select('*',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
+                $detail_pr = AccPurchaseRequisition::select('acc_purchase_requisitions.*','acc_purchase_requisition_items.*','acc_budget_histories.beg_bal','acc_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
                 ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
                 ->join('acc_budget_histories', function($join) {
                    $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
                    $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
                })
                 ->where('acc_purchase_requisitions.id', '=', $id)
+                ->distinct()
                 ->get();
 
                 $exchange_rate = AccExchangeRate::select('*')
@@ -1945,13 +1952,14 @@ class AccountingController extends Controller
 
                 $pr->save();
 
-                $detail_pr = AccPurchaseRequisition::select('*',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
+                $detail_pr = AccPurchaseRequisition::select('acc_purchase_requisitions.*','acc_purchase_requisition_items.*','acc_budget_histories.beg_bal','acc_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
                 ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
                 ->join('acc_budget_histories', function($join) {
                    $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
                    $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
                })
                 ->where('acc_purchase_requisitions.id', '=', $id)
+                ->distinct()
                 ->get();
 
                 $exchange_rate = AccExchangeRate::select('*')
@@ -1979,14 +1987,14 @@ class AccountingController extends Controller
                 $message = 'PR dengan Nomor '.$pr->no_pr;
                 $message2 ='Berhasil di approve';
 
-                $detail_pr = AccPurchaseRequisition::select('*',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
+                $detail_pr = AccPurchaseRequisition::select('acc_purchase_requisitions.*','acc_purchase_requisition_items.*','acc_budget_histories.beg_bal','acc_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
                 ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
-                // ->leftJoin('acc_items', 'acc_purchase_requisition_items.item_code', '=', 'acc_items.kode_item')
                 ->join('acc_budget_histories', function($join) {
                    $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
                    $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
                })
                 ->where('acc_purchase_requisitions.id', '=', $id)
+                ->distinct()
                 ->get();
 
                 $exchange_rate = AccExchangeRate::select('*')
@@ -2320,14 +2328,14 @@ class AccountingController extends Controller
                 $data3->save();
             }
 
-            $detail_pr = AccPurchaseRequisition::select('*',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
+            $detail_pr = AccPurchaseRequisition::select('acc_purchase_requisitions.*','acc_purchase_requisition_items.*','acc_budget_histories.beg_bal','acc_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
             ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
-            // ->leftJoin('acc_items', 'acc_purchase_requisition_items.item_code', '=', 'acc_items.kode_item')
             ->join('acc_budget_histories', function($join) {
                $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
                $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
            })
             ->where('acc_purchase_requisitions.id', '=', $request->get('id_edit_pr'))
+            ->distinct()
             ->get();
 
             $exchange_rate = AccExchangeRate::select('*')
@@ -4304,14 +4312,14 @@ public function update_purchase_requisition_po(Request $request)
                 ]);
             }
 
-            $detail_pr = AccPurchaseRequisition::select('*',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
+            $detail_pr = AccPurchaseRequisition::select('acc_purchase_requisitions.*','acc_purchase_requisition_items.*','acc_budget_histories.beg_bal','acc_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
             ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
-            // ->leftJoin('acc_items', 'acc_purchase_requisition_items.item_code', '=', 'acc_items.kode_item')
             ->join('acc_budget_histories', function($join) {
                $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
                $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
            })
             ->where('acc_purchase_requisitions.id', '=', $request->get('id_edit_pr'))
+            ->distinct()
             ->get();
 
             $exchange_rate = AccExchangeRate::select('*')
@@ -9521,7 +9529,14 @@ public function update_purchase_requisition_po(Request $request)
     // Terima Barang
 
     public function wh_receive_equipment(){
-        
-    }
 
+        $title = 'Receive Barang';
+        $title_jp = '';
+
+        return view('accounting_purchasing.master.receive_wh', array(
+            'title' => $title,
+            'title_jp' => $title_jp
+        ))->with('page', 'Receive WH')->with('head', 'Receive Equipment WH');
+
+    }
 }

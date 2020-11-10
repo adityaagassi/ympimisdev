@@ -1260,6 +1260,7 @@ Route::post('index/sakurentsu/upload_sakurentsu_translate/{id}', 'SakurentsuCont
 Route::get('fetch/sakurentsu', 'SakurentsuController@fetch_sakuretsu');
 Route::get('index/sakurentsu/monitoring', 'SakurentsuController@monitoring');
 Route::get('index/sakurentsu/detail/{id}', 'SakurentsuController@detail_sakurentsu');
+Route::get('fetch/sakurentsu/type', 'SakurentsuController@fetch_sakurentsu');
 
 //Supplier
 Route::get('index/supplier', 'AccountingController@master_supplier');
@@ -1489,6 +1490,8 @@ Route::get('upload_transaksi', 'AccountingController@upload_transaksi');
 Route::get('fetch/transaksi', 'AccountingController@fetch_upload_transaksi');
 Route::post('import/transaksi', 'AccountingController@import_transaksi');
 Route::post('delete/actual/transaksi', 'AccountingController@delete_transaksi');
+
+Route::get('warehouse/receive_equipment', 'AccountingController@wh_receive_equipment');
 
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 	Route::get('scan/middle/kensa', 'MiddleProcessController@ScanMiddleKensa');
@@ -3614,7 +3617,7 @@ Route::get('index/assembly/flute/label_besar/{id}/{gmc}/{remark}', 'AssemblyProc
 Route::get('index/assembly/flute/label_kecil/{id}/{remark}', 'AssemblyProcessController@labelKecilFl');
 Route::get('index/assembly/flute/label_kecil2/{id}/{remark}', 'AssemblyProcessController@labelKecil2Fl');
 Route::get('index/assembly/flute/label_deskripsi/{id}/{remark}', 'AssemblyProcessController@labelDeskripsi');
-Route::get('fetch/check_carb', 'AssemblyProcessController@fetchCheckCarb');
+Route::get('fetch/check_carb_new', 'AssemblyProcessController@fetchCheckCarb');
 
 
 
