@@ -37,7 +37,6 @@ class TransactionController extends Controller
 			'FL21',
 			'SX21',
 			'VN21',
-			'RC91',
 			'VNA0'
 		];
 	}
