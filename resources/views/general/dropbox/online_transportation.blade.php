@@ -422,11 +422,20 @@
 			processData: false,
 			success:function(data)
 			{
-				openSuccessGritter('Success','Input Data Transportation');
-				$('#loading').hide();
-				$('#modalRecord').modal('hide');
-				clearModal();
-				fetchRecordTable();
+				if (data.status) {
+					openSuccessGritter('Success','Success Input Data');
+					$('#loading').hide();
+					$('#modalRecord').modal('hide');
+					clearModal();
+					fetchRecordTable();
+				}else{
+					openErrorGritter('Error!',data.message);
+					$('#loading').hide();
+					// $('#modalRecord').modal('hide');
+					// clearModal();
+					// fetchRecordTable();
+				}
+				
 			}
 		})
 	}
