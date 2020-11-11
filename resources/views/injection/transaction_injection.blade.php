@@ -56,27 +56,27 @@ table.table-bordered > tfoot > tr > th{
 						<button class="btn btn-danger" style="width: 100%;height: 50px" onclick="cancelTag()">CANCEL</button>
 					</div>
 				</div>
+				<div class="input-group col-md-12" style="padding-top: 20px;">
+					<div class="input-group-addon" id="icon-serial" style="font-weight: bold; font-size: 2vw; border-color: red;">
+						<i class="glyphicon glyphicon-barcode"></i>
+					</div>
+					<input type="text" style="text-align: center; border-color: red; font-size: 2vw; height: 50px" class="form-control" id="tag_product" name="tag_product" placeholder="Scan Tag Here ..." required>
+					<div class="input-group-addon" id="icon-serial" style="font-weight: bold; font-size: 2vw; border-color: red;">
+						<i class="glyphicon glyphicon-barcode"></i>
+					</div>
+				</div>
 			<?php endif ?>
-			<div class="input-group col-md-12" style="padding-top: 20px;">
-				<div class="input-group-addon" id="icon-serial" style="font-weight: bold; font-size: 2vw; border-color: red;">
-					<i class="glyphicon glyphicon-barcode"></i>
-				</div>
-				<input type="text" style="text-align: center; border-color: red; font-size: 2vw; height: 50px" class="form-control" id="tag_product" name="tag_product" placeholder="Scan Tag Here ..." required>
-				<div class="input-group-addon" id="icon-serial" style="font-weight: bold; font-size: 2vw; border-color: red;">
-					<i class="glyphicon glyphicon-barcode"></i>
-				</div>
-			</div>
 			<div class="row">
-				<div class="col-md-12" style="padding-top: 20px;">
-					<span style="font-size: 24px;">Transaction:</span> 
+				<div class="col-md-12" style="">
+					<span style="font-size: 24px;">Transaction List:</span> 
 					<table id="resultScan" class="table table-bordered table-striped table-hover" style="width: 100%;">
 						<input type="hidden" id="operator_id">
 			            <thead style="background-color: rgba(126,86,134,.7);">
 			                <tr>
 			                  <th style="width: 5%;">Material Number</th>
-			                  <th style="width: 17%;">Part Name</th>
-			                  <th style="width: 17%;">Part Type</th>
-			                  <th style="width: 17%;">Color</th>
+			                  <th style="width: 5%;">Part Name</th>
+			                  <th style="width: 5%;">Part Type</th>
+			                  <th style="width: 5%;">Color</th>
 			                  <th style="width: 6%;">Cavity</th>
 			                  <th style="width: 6%;">Qty</th>
 			                  <th style="width: 6%;">Status</th>
@@ -132,7 +132,6 @@ table.table-bordered > tfoot > tr > th{
 				</div>
 			</div>
 		</div>
-		<input type="text" name="gmcPost" id="gmcPost" value="" hidden="">
 	</div>
 
 	<div class="modal fade" id="modalOperator">
@@ -144,6 +143,26 @@ table.table-bordered > tfoot > tr > th{
 							<label for="exampleInputEmail1">Employee ID</label>
 							<input class="form-control" style="width: 100%; text-align: center;" type="text" id="operator" placeholder="Scan ID Card" required>
 						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="modalCompletion">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="col-xs-12">
+						<center><h3 style="font-weight: bold;background-color: #17b80b;color: white;padding-top: 5px;padding-bottom: 5px">CEK DATA TRANSAKSI</h3></center>
+					</div>
+					<div class="modal-body" id="tableCompletion">
+
+					</div>
+					<div class="col-xs-12">
+						<button class="btn btn-success btn-block" style="font-weight: bold;font-size: 25px" onclick="completion()">
+							PROSES TRANSAKSI
+						</button>
 					</div>
 				</div>
 			</div>
@@ -178,6 +197,11 @@ table.table-bordered > tfoot > tr > th{
 			});
 		}
 		fillResult();
+
+		if ('{{$status}}' == 'IN') {
+			setInterval(checkInjections,10000);
+		}
+		// checkInjections();
 
       $('body').toggleClass("sidebar-collapse");
 		$("#tag_product").val("");
@@ -258,21 +282,23 @@ table.table-bordered > tfoot > tr > th{
 							bodyScan += '</tr>';
 
 							if (stts == 'OUT') {
-								ng_arr = value.ng_name.split(',');
-								qty_arr = value.ng_count.split(',');
+								if (value.ng_name != null) {
+									ng_arr = value.ng_name.split(',');
+									qty_arr = value.ng_count.split(',');
 
-								for(var i = 0; i < ng_arr.length; i++){
-									ngScan += '<tr>';
-									ngScan += '<td id="ng_name">'+ng_arr[i]+'</td>';
-									ngScan += '<td id="ng_qty">'+qty_arr[i]+'</td>';
+									for(var i = 0; i < ng_arr.length; i++){
+										ngScan += '<tr>';
+										ngScan += '<td id="ng_name">'+ng_arr[i]+'</td>';
+										ngScan += '<td id="ng_qty">'+qty_arr[i]+'</td>';
+										ngScan += '</tr>';
+										jumlah = jumlah + parseInt(qty_arr[i]);
+									}
+
+									ngScan += '<tr style="background-color:rgba(126,86,134,.7);">';
+									ngScan += '<td style="border:1px solid black;border-top:1px solid black" id="total_ng_name"><b>TOTAL</b></td>';
+									ngScan += '<td style="border:1px solid black;border-top:1px solid black" id="total_ng_qty"><b>'+jumlah+'</b></td>';
 									ngScan += '</tr>';
-									jumlah = jumlah + parseInt(qty_arr[i]);
 								}
-
-								ngScan += '<tr style="background-color:rgba(126,86,134,.7);">';
-								ngScan += '<td style="border:1px solid black;border-top:1px solid black" id="total_ng_name"><b>TOTAL</b></td>';
-								ngScan += '<td style="border:1px solid black;border-top:1px solid black" id="total_ng_qty"><b>'+jumlah+'</b></td>';
-								ngScan += '</tr>';
 							}
 
 							if (statustransaction == 'IN') {
@@ -302,18 +328,144 @@ table.table-bordered > tfoot > tr > th{
 		}
 	});
 
+	function checkInjections() {
+		var data = {
+			status : '{{$status}}'
+		}
+
+		var stts = '{{$status}}';
+
+		$.get('{{ url("fetch/injection/check_injections") }}', data, function(result, status, xhr){
+			if(result.status){
+				// openSuccessGritter('Success!', 'Transaction Success');
+				var bodyScan = "";
+				$('#resultScanBody').html("");
+				var ngScan = "";
+				$('#resultNGBody').html("");
+				var statustransaction = '{{$status}}';
+
+				var jumlah = 0;
+				fillResult();
+				$.each(result.data, function(key, value) {
+					bodyScan += '<tr style="cursor:pointer;font-size:20px" onclick="showModalCompletion(\''+value.injection_id+'\',\''+value.tag_rfid+'\',\''+value.material_number+'\',\''+value.part_name+'\',\''+value.part_type+'\',\''+value.color+'\',\''+value.cavity+'\',\''+value.shot+'\',\''+statustransaction+'\')">';
+					bodyScan += '<td>'+value.material_number+'</td>';
+					bodyScan += '<td>'+value.part_name+'</td>';
+					bodyScan += '<td>'+value.part_type+'</td>';
+					bodyScan += '<td>'+value.color+'</td>';
+					bodyScan += '<td>'+value.cavity+'</td>';
+					bodyScan += '<td>'+value.shot+'</td>';
+					bodyScan += '<td>'+statustransaction+'</td>';
+					bodyScan += '</tr>';
+					bodyScan += '<tr>';
+					// bodyScan += '<td colspan="7" style="padding:10px"><button class="btn btn-danger pull-left" onclick="cancel()">CANCEL</button><button class="btn btn-success pull-right" onclick="completion()">SUBMIT</button></td>';
+					bodyScan += '</tr>';
+
+					if (stts == 'OUT') {
+						ng_arr = value.ng_name.split(',');
+						qty_arr = value.ng_count.split(',');
+
+						for(var i = 0; i < ng_arr.length; i++){
+							ngScan += '<tr>';
+							ngScan += '<td id="ng_name">'+ng_arr[i]+'</td>';
+							ngScan += '<td id="ng_qty">'+qty_arr[i]+'</td>';
+							ngScan += '</tr>';
+							jumlah = jumlah + parseInt(qty_arr[i]);
+						}
+
+						ngScan += '<tr style="background-color:rgba(126,86,134,.7);">';
+						ngScan += '<td style="border:1px solid black;border-top:1px solid black" id="total_ng_name"><b>TOTAL</b></td>';
+						ngScan += '<td style="border:1px solid black;border-top:1px solid black" id="total_ng_qty"><b>'+jumlah+'</b></td>';
+						ngScan += '</tr>';
+					}
+
+					if (statustransaction == 'IN') {
+						$('#operator_id').val(value.operator_id);
+					}
+				})
+
+				$('#resultScanBody').append(bodyScan);
+				if (stts == 'OUT') {
+					$('#resultNGBody').append(ngScan);
+				}
+				// $('#tag_product').removeAttr("disabled");
+				// $("#tag_product").val("");
+				// $("#tag_product").focus();
+				// $('#operator_id').val("");
+			}
+			else{
+				openErrorGritter('Error!', 'Upload Failed.');
+				audio_error.play();
+			}
+		});
+	}
+
+	function showModalCompletion(id,tag_rfid,material_number,part_name,part_type,color,cavity,shot,status) {
+		$('#tableCompletion').empty();
+		var table = "";
+		table += '<table class="table table-bordered table-responsive">';
+		table += '<tr>';
+		table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Tag</td>';
+		table += '<td id="tag_product_rfid">'+tag_rfid+'</td>';
+		table += '</tr>';
+		table += '<tr>';
+		table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Material</td>';
+		table += '<td id="material_number">'+material_number+'</td>';
+		table += '</tr>';
+		table += '<tr>';
+		table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Part Name</td>';
+		table += '<td id="part_name">'+part_name+'</td>';
+		table += '</tr>';
+		table += '<tr>';
+		table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Part Type</td>';
+		table += '<td id="part_type">'+part_type+'</td>';
+		table += '</tr>';
+		table += '<tr>';
+		table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Color</td>';
+		table += '<td id="color">'+color+'</td>';
+		table += '</tr>';
+		table += '<tr>';
+		table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Cavity</td>';
+		table += '<td id="cavity">'+cavity+'</td>';
+		table += '</tr>';
+		table += '<tr>';
+		table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Qty</td>';
+		table += '<td id="qty">'+shot+'</td>';
+		table += '</tr>';
+		table += '<tr>';
+		table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Status</td>';
+		table += '<td id="status">'+status+'</td>';
+		table += '</tr>';
+		table += '</table>';
+		$('#tableCompletion').append(table);
+		$('#modalCompletion').modal('show');
+	}
+
 	function completion() {
 		$('#loading').show();
-		var data = {
-			tag:$('#tag_product').val(),
-			material_number:$('#material_number').text(),
-			part_name:$('#part_name').text(),
-			part_type:$('#part_type').text(),
-			color:$('#color').text(),
-			cavity:$('#cavity').text(),
-			qty:$('#qty').text(),
-			status:$('#status').text(),
-			operator_id:$('#operator_id').val()
+		if ('{{$status}}' == 'IN') {
+			var data = {
+				tag:$('#tag_product_rfid').text(),
+				material_number:$('#material_number').text(),
+				part_name:$('#part_name').text(),
+				part_type:$('#part_type').text(),
+				color:$('#color').text(),
+				cavity:$('#cavity').text(),
+				qty:$('#qty').text(),
+				status:$('#status').text(),
+				operator_id:$('#operator_id').val()
+			}
+		}else{
+			var data = {
+				tag:$('#tag_product').val(),
+				material_number:$('#material_number').text(),
+				part_name:$('#part_name').text(),
+				part_type:$('#part_type').text(),
+				color:$('#color').text(),
+				cavity:$('#cavity').text(),
+				qty:$('#qty').text(),
+				status:$('#status').text(),
+				operator_id:$('#operator_id').val()
+			}
 		}
 
 		$.post('{{ url("index/injection/completion") }}', data, function(result, status, xhr){
@@ -323,6 +475,8 @@ table.table-bordered > tfoot > tr > th{
 				$('#resultScanBody').html("");
 				$('#resultNGBody').html("");
 				fillResult();
+				checkInjections();
+				$('#modalCompletion').modal('hide');
 				$('#tag_product').removeAttr("disabled");
 				$("#tag_product").val("");
 				$("#tag_product").focus();

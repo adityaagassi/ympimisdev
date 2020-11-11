@@ -4792,6 +4792,39 @@ class InjectionsController extends Controller
         }   
     }
 
+    public function fetchCheckInjections(Request $request)
+    {
+        try {
+            if ($request->get('status') == 'IN') {
+                $remark = 'antenna-1';
+            }else{
+                $remark = 'antenna-2';
+            }
+
+            $transaction = DB::SELECT("SELECT
+                    -- ympirfid.injection_lists.tag 
+                    *,ympimis.injection_tags.id as injection_id,ympimis.injection_tags.tag as tag_rfid
+                FROM
+                    ympirfid.injection_lists
+                    JOIN ympimis.injection_tags ON ympimis.injection_tags.concat_kanban = ympirfid.injection_lists.tag 
+                WHERE
+                    ympirfid.injection_lists.remark = '".$remark."'
+                    AND ympimis.injection_tags.availability = 1");
+
+            $response = array(
+                'status' => true,
+                'data' => $transaction
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+            );
+            return Response::json($response);
+        }
+    }
+
     public function completion(Request $request)
     {
         try {
@@ -4799,6 +4832,7 @@ class InjectionsController extends Controller
             if ($request->get('status') == 'IN') {
                 $transaction = InjectionTag::where('tag',$request->get('tag'))->first();
                 $transaction->location = 'RC91';
+                $transaction->availability = 2;
                 $transaction->height_check = 'Uncheck';
                 $transaction->push_pull_check = 'Uncheck';
                 $transaction->torque_check = 'Uncheck';
@@ -4866,8 +4900,7 @@ class InjectionsController extends Controller
             }else{
                 $transaction = InjectionTag::where('tag',$request->get('tag'))->first();
                 $transaction->operator_id = $request->get('operator_id');
-                $transaction->availability = 2;
-                $transaction->remark = null;
+                $transaction->availability = 3;
                 $transaction->height_check = null;
                 $transaction->push_pull_check = null;
                 $transaction->torque_check = null;

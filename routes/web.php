@@ -214,6 +214,7 @@ Route::post('index/injeksi/create_temp', 'InjectionsController@create_temp');
 Route::post('index/injeksi/update_tag', 'InjectionsController@update_tag');
 Route::post('index/injeksi/update_temp', 'InjectionsController@update_temp');
 Route::post('index/injeksi/create_log', 'InjectionsController@create_log');
+Route::post('input/injeksi/mesin_log', 'InjectionsController@inputMesinLog');
 Route::post('index/injeksi/store_ng', 'InjectionsController@store_ng');
 Route::post('index/injeksi/store_ng_temp', 'InjectionsController@store_ng_temp');
 Route::post('index/injeksi/update_ng_temp', 'InjectionsController@update_ng_temp');
@@ -241,6 +242,7 @@ Route::get('get/Outpart', 'InjectionsController@getDataOut');
 Route::get('index/injection/transaction/{status}', 'InjectionsController@transaction');
 Route::get('scan/tag_product', 'InjectionsController@scanProduct');
 Route::get('fetch/injection/transaction', 'InjectionsController@fetchTransaction');
+Route::get('fetch/injection/check_injections', 'InjectionsController@fetchCheckInjections');
 Route::post('index/injection/completion', 'InjectionsController@completion');
 //end
 
@@ -2627,7 +2629,10 @@ Route::get('fetch/display/eff_scrap', 'DisplayController@fetchEffScrap');
 //DISPLAY EFFICIENCT
 Route::get('index/display/efficiency_monitoring', 'DisplayController@indexEfficiencyMonitoring');
 Route::get('index/display/efficiency_monitoring_monthly', 'DisplayController@indexEfficiencyMonitoringMonthly');
+
 Route::get('fetch/display/efficiency_monitoring', 'DisplayController@fetchEfficiencyMonitoring');
+
+
 
 
 //DISPLAY STUFFING TIME
@@ -3490,6 +3495,10 @@ Route::post('verify/maintenance/spk/danger_note', 'MaintenanceController@addDang
 Route::get('index/report/urgent_monitoring', 'MaintenanceController@indexSPKUrgentReport');
 Route::get('fetch/maintenance/spk/monitoring/urgent', 'MaintenanceController@fetchSPKUrgentReport');
 
+Route::get('index/maintenance/spk/monitoring', 'MaintenanceController@indexMaintenanceMonitoring');
+Route::get('fetch/maintenance/spk/monitoring', 'MaintenanceController@fetchSPKProgress');
+Route::get('fetch/maintenance/spk/monitoring/detail', 'MaintenanceController@fetchSPKProgressDetail');
+
 Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::get('index/maintenance/spk/operator', 'MaintenanceController@indexOperatorMonitoring');
 
@@ -3523,10 +3532,6 @@ Route::group(['nav' => 'S47', 'middleware' => 'permission'], function(){
 
 	Route::post('report/maintenance/spk', 'MaintenanceController@reportingSPK');
 	Route::post('report/maintenance/spk/pending', 'MaintenanceController@reportingSPKPending');
-
-	Route::get('index/maintenance/spk/monitoring', 'MaintenanceController@indexMaintenanceMonitoring');
-	Route::get('fetch/maintenance/spk/monitoring', 'MaintenanceController@fetchSPKProgress');
-	Route::get('fetch/maintenance/spk/monitoring/detail', 'MaintenanceController@fetchSPKProgressDetail');
 
 	// -----------  APAR -----------
 	Route::get('index/maintenance/apar', 'MaintenanceController@indexApar');
