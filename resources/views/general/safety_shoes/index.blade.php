@@ -827,25 +827,27 @@
 		var message = '<option value=""></option>';
 		for(var i = 0; i < sizeChart.length; i++) {
 
-			if(gender == 'L'){
-				if(shoesMerk == 'Cheetah'){
-					if(sizeChart[i].type == 'Cheetah' && sizeChart[i].gender == gender){
-						message += '<option value="'+sizeChart[i].ind+'(ime)( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'">( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'</option>';
-					}
-				}else{
-					if(sizeChart[i].gender == gender){	
-						message += '<option value="'+sizeChart[i].ind+'(ime)( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'">( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'</option>';
-					}
-				}
-			}else{
-				if(shoesMerk == 'Cheetah'){
-					if(sizeChart[i].type == 'Cheetah'){
-						message += '<option value="'+sizeChart[i].ind+'(ime)( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'">( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'</option>';
-					}
-				}else{
-					message += '<option value="'+sizeChart[i].ind+'(ime)( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'">( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'</option>';
-				}
-			}			
+			message += '<option value="'+sizeChart[i].ind+'(ime)( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'">( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'</option>';
+
+			// if(gender == 'L'){
+			// 	if(shoesMerk == 'Cheetah'){
+			// 		if(sizeChart[i].type == 'Cheetah' && sizeChart[i].gender == gender){
+			// 			message += '<option value="'+sizeChart[i].ind+'(ime)( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'">( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'</option>';
+			// 		}
+			// 	}else{
+			// 		if(sizeChart[i].gender == gender){	
+			// 			message += '<option value="'+sizeChart[i].ind+'(ime)( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'">( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'</option>';
+			// 		}
+			// 	}
+			// }else{
+			// 	if(shoesMerk == 'Cheetah'){
+			// 		if(sizeChart[i].type == 'Cheetah'){
+			// 			message += '<option value="'+sizeChart[i].ind+'(ime)( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'">( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'</option>';
+			// 		}
+			// 	}else{
+			// 		message += '<option value="'+sizeChart[i].ind+'(ime)( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'">( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'</option>';
+			// 	}
+			// }			
 		}
 		$("#reqSizeUk").html(message);
 	});
