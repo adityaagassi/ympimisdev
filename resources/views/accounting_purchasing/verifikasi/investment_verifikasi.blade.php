@@ -131,7 +131,10 @@
                   <div class="panel-heading">Approval : </div>
                   <div class="panel-body center-text"  style="padding: 20px">
                     <button type="submit" class="btn btn-success col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px">Verifikasi</button>
-                    <!-- <a data-toggle="modal" data-target="#notapproved" class="btn btn-danger col-sm-12" href="" style="width: 100%; font-weight: bold; font-size: 20px;margin-top: 10px">Reject</a> -->
+                    <a data-toggle="modal" data-target="#notapproved" class="btn btn-danger col-sm-12" href="" style="width: 100%; font-weight: bold; font-size: 20px;margin-top: 10px">Reject</a>
+
+                    <a target="_blank" class="btn btn-info col-sm-12" href="{{ url('investment/comment/'.$investment->id) }}" style="width: 100%; font-weight: bold; font-size: 20px;margin-top: 10px">Hold & Comment</a>
+
                   </div>
                 </div>
               </div>

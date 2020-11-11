@@ -9702,6 +9702,132 @@ public function update_purchase_requisition_po(Request $request)
         }
     }
 
+    public function reject_investment(Request $request, $id)
+    {
+        $reject_note = $request->get('alasan');
+
+        $investment = AccInvestment::find($id);
+        $investment->reject_note = $reject_note;
+
+        if ($investment->posisi == "acc_budget") {
+            $investment->posisi = "user";
+            $investment->reject = "acc_budget/".date('Y-m-d H:i:s');
+        }
+        else if($investment->posisi == "acc_pajak"){
+            $investment->posisi = "user";
+            $investment->reject = "acc_pajak/".date('Y-m-d H:i:s');
+        }
+        else if($investment->posisi == "manager"){
+            $investment->posisi = "user";
+            $investment->reject = "manager/".date('Y-m-d H:i:s');
+        }
+        else if($investment->posisi == "dgm"){
+            $investment->posisi = "user";
+            $investment->reject = "dgm/".date('Y-m-d H:i:s');
+
+            $manager = explode("/", $investment->approval_manager);
+            if(count($manager) > 1){
+                $investment->approval_manager = $manager[0]."/".$manager[1];
+            }
+        }
+        else if($investment->posisi == "gm"){
+            $investment->posisi = "user";
+            $investment->reject = "gm/".date('Y-m-d H:i:s');
+
+            $manager = explode("/", $investment->approval_manager);
+            $dgm = explode("/", $investment->approval_dgm);
+
+            if(count($manager) > 1){
+                $investment->approval_manager = $manager[0]."/".$manager[1];
+            }
+            if(count($dgm) > 1){
+                $investment->approval_dgm = $dgm[0]."/".$dgm[1];
+            } 
+        }
+        else if($investment->posisi == "manager_acc"){
+            $investment->posisi = "user";
+            $investment->reject = "manager_acc/".date('Y-m-d H:i:s');
+
+            $manager = explode("/", $investment->approval_manager);
+            $dgm = explode("/", $investment->approval_dgm);
+            $gm = explode("/", $investment->approval_gm);
+
+            if(count($manager) > 1){
+                $investment->approval_manager = $manager[0]."/".$manager[1];
+            }
+            if(count($dgm) > 1){
+                $investment->approval_dgm = $dgm[0]."/".$dgm[1];
+            }
+            if(count($gm) > 1){
+                $investment->approval_gm = $gm[0]."/".$gm[1];
+            }
+
+        }
+        else if($investment->posisi == "direktur_acc"){
+            $investment->posisi = "user";
+            $investment->reject = "direktur_acc/".date('Y-m-d H:i:s');
+
+            $manager = explode("/", $investment->approval_manager);
+            $dgm = explode("/", $investment->approval_dgm);
+            $gm = explode("/", $investment->approval_gm);
+            $manager_acc = explode("/", $investment->approval_manager_acc);
+
+            if(count($manager) > 1){
+                $investment->approval_manager = $manager[0]."/".$manager[1];
+            }
+            if(count($dgm) > 1){
+                $investment->approval_dgm = $dgm[0]."/".$dgm[1];
+            }
+            if(count($gm) > 1){
+                $investment->approval_gm = $gm[0]."/".$gm[1];
+            } 
+            if(count($manager_acc) > 1){
+                $investment->approval_manager_acc = $manager_acc[0]."/".$manager_acc[1];
+            } 
+
+        }
+        else if($investment->posisi == "presdir"){
+            $investment->posisi = "user";
+            $investment->reject = "presdir/".date('Y-m-d H:i:s');
+
+            $manager = explode("/", $investment->approval_manager);
+            $dgm = explode("/", $investment->approval_dgm);
+            $gm = explode("/", $investment->approval_gm);
+            $manager_acc = explode("/", $investment->approval_manager_acc);
+            $dir_acc = explode("/", $investment->approval_dir_acc);
+
+            if(count($manager) > 1){
+                $investment->approval_manager = $manager[0]."/".$manager[1];
+            }
+            if(count($dgm) > 1){
+                $investment->approval_dgm = $dgm[0]."/".$dgm[1];
+            }
+            if(count($gm) > 1){
+                $investment->approval_gm = $gm[0]."/".$gm[1];
+            } 
+            if(count($manager_acc) > 1){
+                $investment->approval_manager_acc = $manager_acc[0]."/".$manager_acc[1];
+            } 
+            if(count($dir_acc) > 1){
+                $investment->approval_dir_acc = $dir_acc[0]."/".$dir_acc[1];
+            }
+
+        }
+
+        $investment->save();
+
+        $isimail = "select * FROM acc_investments where acc_investments.id = ".$id;
+        $tolak = db::select($isimail);
+
+                  //kirim email ke Buyer
+        $mails = "select distinct email from users where users.username = '".$investment->applicant_id."'";
+        $mailtoo = DB::select($mails);
+
+        Mail::to($mailtoo)->send(new SendEmail($tolak, 'investment'));
+        return redirect('/investment/check/'.$id)->with('error', 'Investment Not Approved')->with('page', 'Investment');
+    }
+
+
 
     // Terima Barang
 
