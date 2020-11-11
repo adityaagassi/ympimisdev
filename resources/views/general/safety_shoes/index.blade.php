@@ -104,7 +104,7 @@
 
 		<div class="col-xs-2" style="padding-left: 0;">
 			@if($user)
-			@if(strpos(strtolower($user->position), 'operator') !== false || strpos(strtolower($user->position), 'Sub') !== false) 
+			@if( (strpos(strtolower($user->position), 'operator') !== false || strpos(strtolower($user->position), 'leader') !== false) && ($user->section !='Warehouse' || $user->assignment != 'LDR') ) 
 			
 			@else
 			<button data-toggle="modal" class="btn btn-primary" style="width: 100%; margin-bottom: 5px;" ata-toggle="modal" data-target="#modalRequest"><i class="fa fa-file-text-o"></i>&nbsp;&nbsp;&nbsp;Create Request</button>

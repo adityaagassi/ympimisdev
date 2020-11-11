@@ -332,6 +332,7 @@ class GeneralController extends Controller{
 			for ($i=0; $i < count($request); $i++) {
 				try {
 					$log = new GeneralShoesLog([
+						'merk' => $request[$i]['merk'],
 						'gender' => $request[$i]['gender'],
 						'size' => $request[$i]['size'],
 						'quantity' => -1,
@@ -482,6 +483,7 @@ class GeneralController extends Controller{
 
 
 				$log = new GeneralShoesLog([
+					'merk' => $stock[$i]['merk'],
 					'gender' => $stock[$i]['gender'],
 					'size' => $stock[$i]['size'],
 					'quantity' => $stock[$i]['qty'],
@@ -1004,6 +1006,7 @@ class GeneralController extends Controller{
 
 		$data = $data->orderBy('general_shoes_logs.created_at', 'desc')
 		->select(
+			'general_shoes_logs.merk',
 			'general_shoes_logs.status',
 			'general_shoes_logs.size',
 			'general_shoes_logs.gender',

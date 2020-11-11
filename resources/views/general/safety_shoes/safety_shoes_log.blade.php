@@ -202,6 +202,7 @@
 										<th style="width: 3%">Section</th>
 										<th style="width: 3%">Group</th>
 										<th style="width: 3%">Sub Group</th>
+										<th style="width: 1%">Merk</th>
 										<th style="width: 1%">Size</th>
 										<th style="width: 1%">Status</th>
 										<th style="width: 1%">Qty</th>
@@ -352,6 +353,7 @@
 			{ "data": "section" },
 			{ "data": "group" },
 			{ "data": "sub_group" },
+			{ "data": "merk" },
 			{ "data": "size" },
 			{ "data": "status" },
 			{ "data": "quantity" },
