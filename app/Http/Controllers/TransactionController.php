@@ -758,10 +758,10 @@ class TransactionController extends Controller
 			try{				
 				$file = $request->file('completion');
 				$file_name = 'import_cs_'.Auth::id().'('. date("y-m-d") .')'.'.'.$file->getClientOriginalExtension();
-				$file->move(public_path('uploads/sap/completion/'), $file_name);
+				$file->move(public_path('import/completion/'), $file_name);
 
 
-				$excel = public_path('uploads/sap/completion/') . $file_name;
+				$excel = public_path('import/completion/') . $file_name;
 				$rows = Excel::load($excel, function($reader) {
 					$reader->noHeading();
 					$reader->skipRows(1);

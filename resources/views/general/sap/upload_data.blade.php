@@ -77,7 +77,7 @@
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				<h4 class="modal-title" id="myModalLabel">Import Completion</h4>
-				Sample: <a href="{{ url('download/manual/import_completion.xlsx') }}">import_completion.xlsx</a>
+				Sample: <a href="{{ url('import/completion/sample/import_completion.xlsx') }}">import_completion.xlsx</a>
 			</div>
 			<div class="modal-body">
 				<div class="row">
