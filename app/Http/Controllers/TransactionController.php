@@ -6,15 +6,20 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
-use Mike42\Escpos\Printer;
+use Illuminate\Database\QueryException;
+use Yajra\DataTables\Exception;
+use Carbon\Carbon;
 use App\StorageLocation;
-use Response;
 use App\ReturnList;
 use App\User;
 use App\ReturnLog;
 use App\ReturnAdditional;
+use App\SapCompletion;
 use DataTables;
+use DateTime;
+use Response;
+use PDF;
+use Excel;
 
 
 class TransactionController extends Controller
@@ -45,9 +50,16 @@ class TransactionController extends Controller
 		$title = "Upload SAP Data";
 		$title_jp = "";
 
+		$cost_center_names = StorageLocation::whereNotNull('cost_center_name')
+		->select('cost_center_name')
+		->distinct()
+		->orderBy('cost_center_name', 'asc')
+		->get();
+
 		return view('general.sap.upload_data', array(
 			'title' => $title,
-			'title_jp' => $title_jp
+			'title_jp' => $title_jp,
+			'cost_center_names' => $cost_center_names
 		))->with('page', 'SAP Data');
 	}
 
@@ -739,6 +751,83 @@ class TransactionController extends Controller
 			'message' => 'Cetak slip return berhasil'
 		);
 		return Response::json($response);
+	}
 
+	public function importCompletion(Request $request){
+		if($request->hasFile('completion')) {
+			try{				
+				$file = $request->file('completion');
+				$file_name = 'import_cs_'.Auth::id().'('. date("y-m-d") .')'.'.'.$file->getClientOriginalExtension();
+				$file->move(public_path('uploads/sap/completion/'), $file_name);
+
+
+				$excel = public_path('uploads/sap/completion/') . $file_name;
+				$rows = Excel::load($excel, function($reader) {
+					$reader->noHeading();
+					$reader->skipRows(1);
+				})->get();
+				$rows = $rows->toArray();
+
+
+				// DB::beginTransaction();
+				$month = $request->get('date_completion');
+				$cc = $request->get('cc');
+				$cost_center_name = explode(",",$cc);
+
+
+				$existing = SapCompletion::leftJoin('storage_locations', 'storage_locations.storage_location', '=', 'sap_completions.storage_location')
+				->where(db::raw('DATE_FORMAT(sap_completions.posting_date, "%Y-%m")'), $month)
+				->whereIn('storage_locations.cost_center_name', $cost_center_name)
+				->delete();
+
+
+				for ($i=0; $i < count($rows); $i++) {
+					$entry_date = $rows[$i][0]->format('Y-m-d');
+					$posting_date = $rows[$i][3]->format('Y-m-d');
+					$movement_type = $rows[$i][4];
+					$material_number = $rows[$i][5];
+					$quantity = $rows[$i][8];
+					$storage_location = $rows[$i][12];
+					$reference = $rows[$i][15];
+
+					$log = new SapCompletion([
+						'entry_date' => $entry_date,
+						'posting_date' => $posting_date,
+						'movement_type' => $movement_type,
+						'material_number' => $material_number,
+						'quantity' => $quantity,
+						'storage_location' => $storage_location,
+						'reference' => $reference,
+						'created_by' => Auth::id()
+					]);
+					$log->save();
+
+				}
+
+				// DB::rollback();
+
+				
+				// DB::commit();
+
+				$response = array(
+					'status' => true,
+					'message' => 'Upload file success'
+				);
+				return Response::json($response);
+
+			}catch(\Exception $e){
+				$response = array(
+					'status' => false,
+					'message' => $e->getMessage(),
+				);
+				return Response::json($response);
+			}
+		}else{
+			$response = array(
+				'status' => false,
+				'message' => 'Upload failed, File not found',
+			);
+			return Response::json($response);
+		}
 	}
 }
