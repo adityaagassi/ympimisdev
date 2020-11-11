@@ -307,7 +307,7 @@
 											<label>Material<span class="text-red">*</span></label>
 											<select class="form-control select4" id="material" name="material" data-placeholder='Material Status' style="width: 100%">
 												<option value="">&nbsp;</option>
-												<option value="">None</option>
+												<option value="None">None</option>
 												<option value="Dipungut PPNBM">Dipungut PPNBM</option>
 												<option value="Tidak Dipungut PPNB">Tidak Dipungut PPNB</option>
 											</select>
@@ -321,6 +321,7 @@
 												<option value="">&nbsp;</option>
 												<option value="Include VAT">Include VAT</option>
 												<option value="Exclude VAT">Exclude VAT</option>
+												<option value="None">None</option>
 											</select>
 										</div>
 										<div class="form-group">

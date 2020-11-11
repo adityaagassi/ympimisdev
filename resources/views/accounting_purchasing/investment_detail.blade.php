@@ -147,6 +147,7 @@
               <option value="Constool" <?php if($investment->type == "Constool") echo "selected"; ?>>Constool</option>
               <option value="Professional Fee" <?php if($investment->type == "Professional Fee") echo "selected"; ?>>Proffesional Fee</option>
               <option value="Miscellaneous" <?php if($investment->type == "Miscellaneous") echo "selected"; ?>>Miscellaneous</option>
+              <option value="Information System" <?php if($investment->type == "Information System") echo "selected"; ?>>Information System</option>
               <option value="Others" <?php if($investment->type == "Others") echo "selected"; ?>>Others</option>
             </select>
           </div>
