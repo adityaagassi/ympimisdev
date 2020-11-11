@@ -4510,7 +4510,7 @@ public function update_purchase_requisition_po(Request $request)
                     $department = $department . ",";
                 }
             }
-            $adddepartment = "and acc_investments.Department in (" . $department . ") ";
+            $adddepartment = "and acc_investments.applicant_department in (" . $department . ") ";
         }
 
         //Get Employee Department

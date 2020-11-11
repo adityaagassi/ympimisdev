@@ -48,7 +48,7 @@
 
 
 	      .droid {
-	      	font-family: ipag;
+	      	/*font-family: ipag;*/
 	      }
 
 
@@ -85,13 +85,17 @@
 						<td colspan="10"><br></td>
 					</tr>				
 					<tr>
-						<td colspan="10" style="text-align: center;font-size: 16px;font-weight: bold">INVESTMENT-EXPENSE APPLICATION<br><span class="droid">資産・経費申請書</span></td>
+						<td colspan="10" style="text-align: center;font-size: 16px;font-weight: bold">INVESTMENT-EXPENSE APPLICATION<br>
+							<img src="{{ public_path() . '/files/jepang/Screenshot_42.png' }}" alt="" width="150">
+						</td>
 					</tr>
 					<tr>
 						<td colspan="10"><br></td>
 					</tr>
 					<tr>
-						<td colspan="1" style="font-size: 13px;width: 22%">Date Of Submission <span class="droid">申請日</span></td>
+						<td colspan="1" style="font-size: 13px;width: 22%">Date Of Submission 
+							<img src="{{ public_path() . '/files/jepang/Screenshot_43.png' }}" width="35">
+						</td>
 						<td colspan="3" style="font-size: 13px;color: blue;font-weight: bold">: <?= date('d-M-Y', strtotime($inv[0]->submission_date)) ?></td>
 
 						<td colspan="1" style="font-size: 13px;"></td>
@@ -103,7 +107,9 @@
 					</tr>
 
 					<tr>
-						<td colspan="1" style="font-size: 13px;width: 22%">Reff. Number <span class="droid">関連番号</span></td>
+						<td colspan="1" style="font-size: 13px;width: 22%">Reff. Number 
+							<img src="{{ public_path() . '/files/jepang/Screenshot_44.png' }}" width="40">
+						</td>
 						<td colspan="3" style="font-size: 13px;color: blue;font-weight: bold">: {{ $inv[0]->reff_number }}</td>
 						<td colspan="1" style="font-size: 13px;"></td>
 						<td colspan="1" rowspan="2" style="font-size: 11px;border: 1px solid black;text-align: center;">
@@ -256,65 +262,81 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td colspan="2" style="border: 1px solid black;">Kind Of Application {{$inv[0]->category}} <span class="droid">申請種類</span></td>
-						<td colspan="4" style="border: 1px solid black;<?php if ($inv[0]->category == "Investment") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">1. Investment (Role: IV Fixed Asset: 5) <span class="droid">資産（役割：IV 固定資産：5）</span></td>
-						<td colspan="4" style="border: 1px solid black;<?php if ($inv[0]->category == "Expense") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">2. Expense (2 Manajemen Bisnis: KG21) <span class="droid"> 経費　（2．経営管理：KG21)</span></td>
+						<td colspan="2" style="border: 1px solid black;">Kind Of Application {{$inv[0]->category}} 							
+							<br><img src="{{ public_path() . '/files/jepang/Screenshot_45.png' }}" width="40">
+						</td>
+						<td colspan="4" style="border: 1px solid black;<?php if ($inv[0]->category == "Investment") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">1. Investment (Role: IV Fixed Asset: 5) 						
+							<br><img src="{{ public_path() . '/files/jepang/Screenshot_46.png' }}" width="140">
+						</td>
+						<td colspan="4" style="border: 1px solid black;<?php if ($inv[0]->category == "Expense") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">2. Expense (2 Manajemen Bisnis: KG21) 					
+							<br><img src="{{ public_path() . '/files/jepang/Screenshot_47.png' }}" width="140">
+						</td>
 					</tr>
 					<tr>
-						<td colspan="2" style="border: 1px solid black;">Subject <span class="droid">件名</span></td>
-						<td colspan="8" style="border: 1px solid black;text-transform: uppercase;color: blue;font-weight: bold">{{ $inv[0]->subject }} <br> <span class="droid">{{ $inv[0]->subject_jpy }}</span></td>
+						<td colspan="2" style="border: 1px solid black;">Subject 
+							<img src="{{ public_path() . '/files/jepang/Screenshot_52.png' }}" width="20">
+						</td>
+						<td colspan="8" style="border: 1px solid black;text-transform: uppercase;color: blue;font-weight: bold">{{ $inv[0]->subject }} 
+						<!-- <br> <span class="droid">{{ $inv[0]->subject_jpy }}</span></td> -->
 					</tr>
 					<tr>
-						<td colspan="2" style="border: 1px solid black;">Class Of Assets / Kind Of Expense (Account) <span class="droid">資産・経費種類</span></td>
+						<td colspan="2" style="border: 1px solid black;">Class Of Assets / Kind Of Expense (Account) 
+							<br><img src="{{ public_path() . '/files/jepang/Screenshot_53.png' }}" width="70">
+						</td>
 						<td colspan="4" style="border: 1px solid black;">
-							<rio style="<?php if($inv[0]->type == "Building") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">1. Building <span class="droid">建物</span> </rio><rio style="<?php if($inv[0]->type == "Machine and Equipment") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">2. Machine & Equipment <span class="droid">機械・道具</span></rio>
-							<rio style="<?php if($inv[0]->type == "Vehicle") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">3. Vehicle <span class="droid">車両</span> </rio> 
-							<rio style="<?php if($inv[0]->type == "Tools, Jigs and Furniture") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">4. Tools, Jigs & Furniture <span class="droid">工具、治具、家具</span> </rio> 
-							<rio style="<?php if($inv[0]->type == "Moulding") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">5. Moulding <span class="droid">金型</span> </rio><br>
-							<rio style="<?php if($inv[0]->type == "PC and Printer") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">6. PC & Printer <span class="droid">パソコン・プリント機</span> </rio><br>
-							<rio style="<?php if($inv[0]->type == "Land Acquisition") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">7. Land Acquisition <span class="droid"> </span> </rio>
+							<rio style="<?php if($inv[0]->type == "Building") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">1. Building <img src="{{ public_path() . '/files/jepang/Screenshot_54.png' }}" width="20"> 
+							</rio><rio style="<?php if($inv[0]->type == "Machine and Equipment") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 2. Machine & Equipment <img src="{{ public_path() . '/files/jepang/Screenshot_55.png' }}" width="50"></rio>
+							<rio style="<?php if($inv[0]->type == "Vehicle") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 3. Vehicle <img src="{{ public_path() . '/files/jepang/Screenshot_56.png' }}" width="20"> </rio> 
+							<rio style="<?php if($inv[0]->type == "Tools, Jigs and Furniture") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 4. Tools, Jigs & Furniture <img src="{{ public_path() . '/files/jepang/Screenshot_57.png' }}" width="60"></rio> 
+							<rio style="<?php if($inv[0]->type == "Moulding") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 5. Moulding <img src="{{ public_path() . '/files/jepang/Screenshot_58.png' }}" width="20"> </rio>
+							<rio style="<?php if($inv[0]->type == "PC and Printer") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 6. PC & Printer <img src="{{ public_path() . '/files/jepang/Screenshot_59.png' }}" width="80"> </rio><br>
+							<rio style="<?php if($inv[0]->type == "Land Acquisition") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 7. Land Acquisition </rio>
 						</td>
 
 
 						<td colspan="4" style="border: 1px solid black;">
-							<rio style="<?php if($inv[0]->type == "Office Supplies") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">1. Office Supplies <span class="droid">事務用品</span> </rio> 
-							<rio style="<?php if($inv[0]->type == "Repair and Maintenance") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">2. Repair & Maintenance <span class="droid">修理・メンテナンス</span> </rio> 
-							<rio style="<?php if($inv[0]->type == "Constool") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">3. Constool <span class="droid">消耗費</span> </rio>
+							<rio style="<?php if($inv[0]->type == "Office Supplies") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 1. Office Supplies <img src="{{ public_path() . '/files/jepang/Screenshot_60.png' }}" width="40"> </rio> 
+							<rio style="<?php if($inv[0]->type == "Repair and Maintenance") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 2. Repair & Maintenance <br> <img src="{{ public_path() . '/files/jepang/Screenshot_62.png' }}" width="80"></rio> 
+							<rio style="<?php if($inv[0]->type == "Constool") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 3. Constool <img src="{{ public_path() . '/files/jepang/Screenshot_63.png' }}" width="30"> </rio>
 							<br>
-							<rio style="<?php if($inv[0]->type == "Professional Fee") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">4. Professional Fee <span class="droid">専門家鑑定料</span> </rio> 
-							<rio style="<?php if($inv[0]->type == "Miscellaneous") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">5. Miscellaneous <span class="droid">諸経費</span> </rio>
-							6. Others <span class="droid">その他</span>
+							<rio style="<?php if($inv[0]->type == "Professional Fee") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 4. Professional Fee <img src="{{ public_path() . '/files/jepang/Screenshot_64.png' }}" width="50"> </rio> 
+							<rio style="<?php if($inv[0]->type == "Miscellaneous") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 5. Miscellaneous <img src="{{ public_path() . '/files/jepang/Screenshot_66.png' }}" width="30"> </rio>
+							6. Others <img src="{{ public_path() . '/files/jepang/Screenshot_66.png' }}" width="30">
 						</td>
 					</tr>
 					<tr>
-						<td colspan="2" style="border: 1px solid black;">Department <span class="droid">部門</span></td>
+						<td colspan="2" style="border: 1px solid black;">Department 
+							<img src="{{ public_path() . '/files/jepang/Screenshot_67.png' }}" width="20">
+						</td>
 						<td colspan="8" style="border: 1px solid black;">
-							<rio style="<?php if($inv[0]->applicant_department == "Human Resources" || $inv[0]->applicant_department == "General Affairs") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">1. Administration <span class="droid">人事総</span></rio>
-							<rio style="<?php if($inv[0]->applicant_department == "Procurement" || $inv[0]->applicant_department == "Accounting") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 2. Finance & Accounting  <span class="droid">財務・経理</span></rio>
-							<rio style="<?php if($inv[0]->applicant_department == "Logistic") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 3. Logistic <span class="droid">物流</span> </rio>
-							<rio style="<?php if($inv[0]->applicant_department == "Quality Assurance") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 4. Quality Assurance <span class="droid">標準課</span> </rio>
-							<rio style="<?php if($inv[0]->applicant_department == "Purchasing Control") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 5. Purchasing <span class="droid">購買</span> </rio>
-							<rio style="<?php if($inv[0]->applicant_department == "Production Control") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 6. Production Control <span class="droid">生産管理</span> </rio>
-							<rio style="<?php if($inv[0]->applicant_department == "Assembly (WI-A)" || $inv[0]->applicant_department == "Welding-Surface Treatment (WI-WST)" || $inv[0]->applicant_department == "Educational Instrument (EI)" || $inv[0]->applicant_department == "Parts Process (WI-PP)") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 7. Production <span class="droid">生産</span> (<?php if($inv[0]->applicant_department == "Assembly (WI-A)" || $inv[0]->applicant_department == "Welding-Surface Treatment (WI-WST)" || $inv[0]->applicant_department == "Educational Instrument (EI)" || $inv[0]->applicant_department == "Parts Process (WI-PP)") { echo $inv[0]->applicant_department; } ?>)  <span class="droid"></span> </rio>
-							<rio style="<?php if($inv[0]->applicant_department == "Maintenance") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 8. Maintenance <span class="droid">保全</span> </rio>
-							<rio style="<?php if($inv[0]->applicant_department == "Production Engineering") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 9. Prod Engineering <span class="droid">生産技術</span> </rio>
-							<rio style="<?php if($inv[0]->applicant_department == "Management Information System") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 10. Management Information System <span class="droid">情報システム管理</span> </rio>
+							<rio style="<?php if($inv[0]->applicant_department == "Human Resources" || $inv[0]->applicant_department == "General Affairs") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">1. Administration <img src="{{ public_path() . '/files/jepang/Screenshot_70.png' }}" width="20"></rio>
+							<rio style="<?php if($inv[0]->applicant_department == "Procurement" || $inv[0]->applicant_department == "Accounting") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 2. Finance & Accounting  <img src="{{ public_path() . '/files/jepang/Screenshot_71.png' }}" width="40"></rio>
+							<rio style="<?php if($inv[0]->applicant_department == "Logistic") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 3. Logistic <img src="{{ public_path() . '/files/jepang/Screenshot_72.png' }}" width="20"> </rio>
+							<rio style="<?php if($inv[0]->applicant_department == "Quality Assurance") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 4. Quality Assurance <img src="{{ public_path() . '/files/jepang/Screenshot_73.png' }}" width="20"> </rio>
+							<rio style="<?php if($inv[0]->applicant_department == "Purchasing Control") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 5. Purchasing <img src="{{ public_path() . '/files/jepang/Screenshot_74.png' }}" width="20"> </rio>
+							<rio style="<?php if($inv[0]->applicant_department == "Production Control") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 6. Production Control <img src="{{ public_path() . '/files/jepang/Screenshot_75.png' }}" width="40"> </rio>
+							<rio style="<?php if($inv[0]->applicant_department == "Assembly (WI-A)" || $inv[0]->applicant_department == "Welding-Surface Treatment (WI-WST)" || $inv[0]->applicant_department == "Educational Instrument (EI)" || $inv[0]->applicant_department == "Parts Process (WI-PP)") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 7. Production <img src="{{ public_path() . '/files/jepang/Screenshot_76.png' }}" width="20"> (<?php if($inv[0]->applicant_department == "Assembly (WI-A)" || $inv[0]->applicant_department == "Welding-Surface Treatment (WI-WST)" || $inv[0]->applicant_department == "Educational Instrument (EI)" || $inv[0]->applicant_department == "Parts Process (WI-PP)") { echo $inv[0]->applicant_department; } ?>)  </rio>
+							<rio style="<?php if($inv[0]->applicant_department == "Maintenance") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 8. Maintenance <img src="{{ public_path() . '/files/jepang/Screenshot_77.png' }}" width="20"> </rio>
+							<rio style="<?php if($inv[0]->applicant_department == "Production Engineering") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 9. Prod Engineering <img src="{{ public_path() . '/files/jepang/Screenshot_78.png' }}" width="30"> </rio>
+							<rio style="<?php if($inv[0]->applicant_department == "Management Information System") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 10. Management Information System <img src="{{ public_path() . '/files/jepang/Screenshot_79.png' }}" width="60"> </rio>
 						</td>
 					</tr>
 					<tr>
-						<td colspan="2" style="border: 1px solid black;">Main Objective <span class="droid">目的</span></td>
+						<td colspan="2" style="border: 1px solid black;">Main Objective <img src="{{ public_path() . '/files/jepang/Screenshot_80_2.png' }}" width="20"> </td>
 						<td colspan="8" style="border: 1px solid black;">
-							<rio style="<?php if($inv[0]->objective == "Safety & Prevention of Pollution & Disaster") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">1. Safety & Prevention of Pollution & Disaster <span class="droid">汚染と災害の安全と防止、</span></rio>
-							<rio style="<?php if($inv[0]->objective == "R & D") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 2. R&D <span class="droid">研究開発,</span> 
+							<rio style="<?php if($inv[0]->objective == "Safety & Prevention of Pollution & Disaster") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>">1. Safety & Prevention of Pollution & Disaster <img src="{{ public_path() . '/files/jepang/Screenshot_80.png' }}" width="80"></rio>
+							<rio style="<?php if($inv[0]->objective == "R & D") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 2. R&D <img src="{{ public_path() . '/files/jepang/Screenshot_81.png' }}" width="40"> 
 								<br></rio>
-								<rio style="<?php if($inv[0]->objective == "Production of New Model") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 3. Production of New Model <span class="droid">新製品生産, </span></rio>
-								<rio style="<?php if($inv[0]->objective == "Rationalization") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 4. Rationalization <span class="droid">合理化</span></rio>
-								<rio style="<?php if($inv[0]->objective == "Production Increase") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 5. Production Increase <span class="droid">新製品生産,</span></rio>
-								<rio style="<?php if($inv[0]->objective == "Repair & Modification") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 6. Repair & Modification <span class="droid">修理・改造</span></rio></td>
+								<rio style="<?php if($inv[0]->objective == "Production of New Model") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 3. Production of New Model <img src="{{ public_path() . '/files/jepang/Screenshot_82.png' }}" width="40"></rio>
+								<rio style="<?php if($inv[0]->objective == "Rationalization") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 4. Rationalization <img src="{{ public_path() . '/files/jepang/Screenshot_83.png' }}" width="20"></rio>
+								<rio style="<?php if($inv[0]->objective == "Production Increase") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 5. Production Increase <img src="{{ public_path() . '/files/jepang/Screenshot_84.png' }}" width="40"></rio>
+								<rio style="<?php if($inv[0]->objective == "Repair & Modification") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 6. Repair & Modification <img src="{{ public_path() . '/files/jepang/Screenshot_85.png' }}" width="40"></rio></td>
 							</tr>
 							<tr>
-								<td colspan="2" style="border: 1px solid black;">Objective Explanation <span class="droid">目的説明</span></td>
-								<td colspan="8" style="border: 1px solid black;font-weight: bold;color: blue"><?= ucfirst($inv[0]->objective_detail) ?> <br> <span class="droid">{{ $inv[0]->objective_detail_jpy }}</span></td>
+								<td colspan="2" style="border: 1px solid black;">Objective Explanation <br><img src="{{ public_path() . '/files/jepang/Screenshot_86_2.png' }}" width="40"></td>
+								<td colspan="8" style="border: 1px solid black;font-weight: bold;color: blue"><?= ucfirst($inv[0]->objective_detail) ?> 
+								<!-- <br> <span class="droid">{{ $inv[0]->objective_detail_jpy }}</span> -->
+								</td>
 							</tr>
 							<?php
 							$jumlahitem = count($inv);
@@ -367,50 +389,55 @@
 
 							?>
 							<tr>
-								<td colspan="2" rowspan="{{ 10 + $jumlah }}" style="border: 1px solid black;">Description<br><br>For Taxation Purpose, Please break down good / material cost & Service expense (if possible) <br><br> <span class="droid">課税目的のため、可能<br>であれば材料費とサ><br>ービス費用の内訳をご<br>記入ください</span></td>
-								<td colspan="8" style="border-right: 1px solid black;font-weight: bold;"><u>Supplier <span class="droid">サプライヤー</span></u></td>
+								<td colspan="2" rowspan="{{ 10 + $jumlah }}" style="border: 1px solid black;">Description<br><br>For Taxation Purpose, Please break down good / material cost & Service expense (if possible) <br><br> 
+									<img src="{{ public_path() . '/files/jepang/Screenshot_97.png' }}" width="100">
+								</td>
+								<td colspan="8" style="border-right: 1px solid black;font-weight: bold;"><u>Supplier 
+									<img src="{{ public_path() . '/files/jepang/Screenshot_88.png' }}" width="50"></u>
+								</td>
 							</tr>
 							<tr>
-								<td colspan="2" style="">Company Name <span class="droid">会社名</span></td>
+								<td colspan="2" style="">Company Name <img src="{{ public_path() . '/files/jepang/Screenshot_89.png' }}" width="30"></td>
 								<td colspan="6" style="border-right: 1px solid black;color: blue;font-weight: bold">: <b> <?= $inv[0]->supplier_code ?> - <?= $inv[0]->supplier_name ?> </b></td>
 							</tr>
 							<tr>
-								<td colspan="2">PKP Status <span class="droid">課税事業者</span></td>
+								<td colspan="2">PKP Status <img src="{{ public_path() . '/files/jepang/Screenshot_90.png' }}" width="50"></td>
 
 								<td colspan="2" style="border: none">
-									: <rio style="<?php if($inv[0]->pkp == "Yes") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> Yes <span class="droid">はい</span></rio>
+									: <rio style="<?php if($inv[0]->pkp == "Yes") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> Yes <img src="{{ public_path() . '/files/jepang/Screenshot_92.png' }}" width="20"></rio>
 								</td>
 
 								<td colspan="4" style="border-right: 1px solid black;">
-									<rio style="<?php if($inv[0]->pkp == "No") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> No <span class="droid">いいえ</span></rio>
+									<rio style="<?php if($inv[0]->pkp == "No") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> No <img src="{{ public_path() . '/files/jepang/Screenshot_93.png' }}" width="20"></rio>
 								</td>
 
 							</tr>
 							<tr>
-								<td colspan="2" style="">NPWP <span class="droid">納税者登録番号</span></td>
+								<td colspan="2" style="">NPWP <img src="{{ public_path() . '/files/jepang/Screenshot_91.png' }}" width="60"></td>
 								<td colspan="2" style="border: none">
-									: <rio style="<?php if($inv[0]->npwp == "Yes") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> Yes <span class="droid">はい</span></rio>
+									: <rio style="<?php if($inv[0]->npwp == "Yes") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> Yes <img src="{{ public_path() . '/files/jepang/Screenshot_92.png' }}" width="20"></rio>
 								</td>
 
 								<td colspan="4" style="border-right: 1px solid black;">
-									<rio style="<?php if($inv[0]->npwp == "No") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> No <span class="droid">いいえ</span></rio>
+									<rio style="<?php if($inv[0]->npwp == "No") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> No <img src="{{ public_path() . '/files/jepang/Screenshot_93.png' }}" width="20"></rio>
 								</td>
 							</tr>
 							<tr>
-								<td colspan="2" style="">Constructor Certificate <span class="droid"></span></td>
+								<td colspan="2" style="">Constructor Certificate</td>
 								<td colspan="2" style="border: none">
-									: <rio style="<?php if($inv[0]->certificate == "Yes") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> Yes <span class="droid">はい</span></rio>
+									: <rio style="<?php if($inv[0]->certificate == "Yes") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> Yes <img src="{{ public_path() . '/files/jepang/Screenshot_92.png' }}" width="20"></rio>
 								</td>
 
 								<td colspan="4" style="border-right: 1px solid black;">
-									<rio style="<?php if($inv[0]->certificate == "No") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> No <span class="droid">いいえ</span></rio>
+									<rio style="<?php if($inv[0]->certificate == "No") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> No <img src="{{ public_path() . '/files/jepang/Screenshot_93.png' }}" width="20"></rio>
 								</td>
 							</tr>
+
 							<tr>
-								<td colspan="3" style="border: 1px solid black;">Specification <span class="droid">仕様</span></td>
-								<td colspan="1" style="border: 1px solid black;">Qty <span class="droid">数量</span></td>
-								<td colspan="2" style="border: 1px solid black;">Price <span class="droid">価格</span></td>
-								<td colspan="2" style="border: 1px solid black;">Amount <span class="droid">金額</span></td>
+								<td colspan="3" style="border: 1px solid black;">Specification <img src="{{ public_path() . '/files/jepang/Screenshot_96.png' }}" width="20"></td>
+								<td colspan="1" style="border: 1px solid black;">Qty <img src="{{ public_path() . '/files/jepang/Screenshot_98.png' }}" width="20"></td>
+								<td colspan="2" style="border: 1px solid black;">Price <img src="{{ public_path() . '/files/jepang/Screenshot_99.png' }}" width="20"></td>
+								<td colspan="2" style="border: 1px solid black;">Amount <img src="{{ public_path() . '/files/jepang/Screenshot_100.png' }}" width="20"></td>
 							</tr>
 							<?php 
 
@@ -453,34 +480,34 @@
 								<tr></tr>
 							<?php } ?>
 							<tr>
-								<td colspan="2" rowspan="3" style="border: 1px solid black;">Currency<br><span class="droid">通貨</span></td>
+								<td colspan="2" rowspan="3" style="border: 1px solid black;">Currency<br><img src="{{ public_path() . '/files/jepang/Screenshot_101.png' }}" width="20"></td>
 								<td colspan="2" rowspan="3" style="border: 1px solid black;color: blue;font-weight: bold">{{ $inv[0]->currency }}</td>
-								<td colspan="2" style="border: 1px solid black;">Sub Total <span class="droid">小計</span></td>
+								<td colspan="2" style="border: 1px solid black;">Sub Total <img src="{{ public_path() . '/files/jepang/Screenshot_102.png' }}" width="25"></td>
 								<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold;text-align: right;"><?= $ket_harga ?> <?= number_format($total,2,",",".");?></td>
 							</tr>
 							<tr>
-								<td colspan="2" style="border: 1px solid black;">VAT <span class="droid">付加価値税</span></td>
+								<td colspan="2" style="border: 1px solid black;">VAT <img src="{{ public_path() . '/files/jepang/Screenshot_103.png' }}" width="50"></td>
 								<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold;text-align: right;"><?= $ket_harga ?> <?= number_format($vat,2,",",".");?></td>
 							</tr>
 							<tr>
-								<td colspan="2" style="border: 1px solid black;">Total <span class="droid">合計</span></td>
+								<td colspan="2" style="border: 1px solid black;">Total <img src="{{ public_path() . '/files/jepang/Screenshot_104.png' }}" width="20"></td>
 								<?php $total_all = $total + $vat; ?>
 								<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold;text-align: right;"><?= $ket_harga ?> <?= number_format($total_all,2,",",".");?></td>
 							</tr>
 							<tr>
-								<td colspan="2" style="border: 1px solid black;">Delivery <span class="droid">納期</span></td>
-								<td colspan="4" style="border: 1px solid black;">Delivery Order <span class="droid">送付日付</span><br>&nbsp;&nbsp;<span style="color: blue;font-weight: bold"><?= date('d-M-Y', strtotime($inv[0]->delivery_order)) ?> </span></td>
-								<td colspan="4" style="border: 1px solid black;">Date Order <span class="droid">発注日</span><br>&nbsp;&nbsp;<span style="color: blue;font-weight: bold"><?= date('d-M-Y', strtotime($inv[0]->date_order)) ?> </span></td>
+								<td colspan="2" style="border: 1px solid black;">Delivery <img src="{{ public_path() . '/files/jepang/Screenshot_105.png' }}" width="30"></td>
+								<td colspan="4" style="border: 1px solid black;">Delivery Order <img src="{{ public_path() . '/files/jepang/Screenshot_106.png' }}" width="40"><br>&nbsp;&nbsp;<span style="color: blue;font-weight: bold"><?= date('d-M-Y', strtotime($inv[0]->delivery_order)) ?> </span></td>
+								<td colspan="4" style="border: 1px solid black;">Date Order <img src="{{ public_path() . '/files/jepang/Screenshot_107.png' }}" width="30"><br>&nbsp;&nbsp;<span style="color: blue;font-weight: bold"><?= date('d-M-Y', strtotime($inv[0]->date_order)) ?> </span></td>
 							</tr>
 							<tr>	
-								<td colspan="2" style="border: 1px solid black;">Payment Term <span class="droid">支払い条件</span></td>
+								<td colspan="2" style="border: 1px solid black;">Payment Term <img src="{{ public_path() . '/files/jepang/Screenshot_108.png' }}" width="40"></td>
 								<td colspan="4" style="border: 1px solid black;color: blue;font-weight: bold">{{ $inv[0]->payment_term }}</td>
-								<td colspan="2" style="border: 1px solid black;">Fill By Acc Dept W/H Tax (%) <span class="droid">経理課が記入W/H税（％)</span></td>
-								<td colspan="1" style="border: 1px solid black;">Total <br><span class="droid">合計</span><br> <span style="color: blue;font-weight: bold"> @if($inv[0]->total != null) <?= $inv[0]->total.'%' ?> @endif </span></td>
-								<td colspan="1" style="border: 1px solid black;">Service <span class="droid">サービス</span><br> <span style="color: blue;font-weight: bold"> @if($inv[0]->service != null) <?= $inv[0]->service.'%' ?> @endif </span></td>
+								<td colspan="2" style="border: 1px solid black;">Fill By Acc Dept W/H Tax (%) <img src="{{ public_path() . '/files/jepang/Screenshot_109.png' }}" width="80"></td>
+								<td colspan="1" style="border: 1px solid black;">Total <br><img src="{{ public_path() . '/files/jepang/Screenshot_110.png' }}" width="20"><br> <span style="color: blue;font-weight: bold"> @if($inv[0]->total != null) <?= $inv[0]->total.'%' ?> @endif </span></td>
+								<td colspan="1" style="border: 1px solid black;">Service <br><img src="{{ public_path() . '/files/jepang/Screenshot_111.png' }}" width="30"><br> <span style="color: blue;font-weight: bold"> @if($inv[0]->service != null) <?= $inv[0]->service.'%' ?> @endif </span></td>
 							</tr>
 							<tr>
-								<td colspan="2" style="border: 1px solid black;">Quotation <span class="droid">見積書</span> <br><b>*Other Quotation Must Be Attached</b><span class="droid">他の見積書も添付すること</span></td>
+								<td colspan="2" style="border: 1px solid black;">Quotation <img src="{{ public_path() . '/files/jepang/Screenshot_113.png' }}" width="30"> <br><b>*Other Quotation Must Be Attached</b><img src="{{ public_path() . '/files/jepang/Screenshot_112.png' }}" width="90"></td>
 								<td colspan="8" style="border: 1px solid black;color: blue;font-weight: bold"><?= $inv[0]->quotation_supplier ?></td>
 							</tr>
 
@@ -491,36 +518,36 @@
 
 								@foreach($inv_budget as $bud)
 								<tr>
-									<td colspan="2" rowspan="4" style="border: 1px solid black;">Budget No, Name & Balance<br><span class="droid">予算番号、名前、残高</span></td>
+									<td colspan="2" rowspan="4" style="border: 1px solid black;">Budget No, Name & Balance<br><img src="{{ public_path() . '/files/jepang/Screenshot_11.png' }}" width="100"></td>
 									<td colspan="2" style="border: 1px solid black;">Budget</td>
 									<td colspan="2" style="border: 1px solid black;">Budget No & Name</td>
-									<td colspan="1" style="border: 1px solid black;">Beg Bal <span class="droid">残高</span> <br> <span style="color: blue;font-weight: bold"></span></td>
-									<td colspan="1" style="border: 1px solid black;">Amount <span class="droid">金額</span><br> <span style="color: blue;font-weight: bold"></span></td>
-									<td colspan="2" style="border: 1px solid black;">End Bal (US$)<span class="droid">最終残高</span>  <span style="color: blue;font-weight: bold"></span></td>
+									<td colspan="1" style="border: 1px solid black;">Beg Bal <img src="{{ public_path() . '/files/jepang/Screenshot_8.png' }}" width="20"> <br> <span style="color: blue;font-weight: bold"></span></td>
+									<td colspan="1" style="border: 1px solid black;">Amount <img src="{{ public_path() . '/files/jepang/Screenshot_9.png' }}" width="20"><br> <span style="color: blue;font-weight: bold"></span></td>
+									<td colspan="2" style="border: 1px solid black;">End Bal (US$) <img src="{{ public_path() . '/files/jepang/Screenshot_10.png' }}" width="30">  <span style="color: blue;font-weight: bold"></span></td>
 								</tr>
 
 								@if($bud->category_budget == "On Budget")
 								<tr>
-									<td colspan="2" style="border: 1px solid black;">Budget No. <span class="droid">予算番号</span> <br> Budget Name <span class="droid">予算名前</span></td>
+									<td colspan="2" style="border: 1px solid black;">Budget No. <img src="{{ public_path() . '/files/jepang/Screenshot_12.png' }}" width="30"> <br> Budget Name <img src="{{ public_path() . '/files/jepang/Screenshot_13.png' }}" width="30"></td>
 									<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold">{{ $bud->budget_no }} <br> {{ $bud->budget_name }}</td>
 									<td colspan="1" style="border: 1px solid black;"><span style="color: blue;font-weight: bold">$ <?= number_format($bud->sisa,2,",",".");?></span></td>
 									<td colspan="1" style="border: 1px solid black;"><span style="color: blue;font-weight: bold"> $ <?= number_format($bud->total,2,",",".");?></span></td>
 									<td colspan="2" style="border: 1px solid black;"> <span style="color: blue;font-weight: bold">$ <?= number_format($bud->sisa - $bud->total, 2, ',', '.'); ?></span></td>
 								</tr>
 								<tr>
-									<td colspan="2" style="border: 1px solid black;">Shifting Budget No. <span class="droid">予算シフト</span> <br> Budget Name <span class="droid">予算名前</span></td>
+									<td colspan="2" style="border: 1px solid black;">Shifting Budget No. <img src="{{ public_path() . '/files/jepang/Screenshot_14.png' }}" width="40"> <br> Budget Name <img src="{{ public_path() . '/files/jepang/Screenshot_13.png' }}" width="30"></td>
 									<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold"> </td>
 									<td colspan="1" style="border: 1px solid black;"><span style="color: blue;font-weight: bold"> </span></td>
 									<td colspan="1" style="border: 1px solid black;"><span style="color: blue;font-weight: bold"></span></td>
 									<td colspan="2" style="border: 1px solid black;"><span style="color: blue;font-weight: bold"></span></td>
 								</tr>
 								<tr>
-									<td colspan="8" style="border: 1px solid black;">Out Of Budget <span class="droid">予算不足</span> ($)</td>
+									<td colspan="8" style="border: 1px solid black;">Out Of Budget <img src="{{ public_path() . '/files/jepang/Screenshot_16.png' }}" width="40"></td>
 								</tr>
 
 								@elseif($bud->category_budget == "Shifting")
 								<tr>
-									<td colspan="2" style="border: 1px solid black;">Budget No. <span class="droid">予算番号</span> <br> Budget Name <span class="droid">予算名前</span></td>
+									<td colspan="2" style="border: 1px solid black;">Budget No. <img src="{{ public_path() . '/files/jepang/Screenshot_12.png' }}" width="30"> <br> Budget Name <img src="{{ public_path() . '/files/jepang/Screenshot_13.png' }}" width="30"></td>
 									<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold"> </td>
 									<td colspan="1" style="border: 1px solid black;"><span style="color: blue;font-weight: bold"></span></td>
 									<td colspan="1" style="border: 1px solid black;"><span style="color: blue;font-weight: bold"> </span></td>
@@ -528,33 +555,33 @@
 								</tr>
 
 								<tr>
-									<td colspan="2" style="border: 1px solid black;">Shifting Budget No. <span class="droid">予算シフト</span> <br> Budget Name <span class="droid">予算名前</span></td>
+									<td colspan="2" style="border: 1px solid black;">Shifting Budget No. <img src="{{ public_path() . '/files/jepang/Screenshot_14.png' }}" width="40"> <br> Budget Name <img src="{{ public_path() . '/files/jepang/Screenshot_13.png' }}" width="30"></td>
 									<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold">{{ $bud->budget_no }} <br> {{ $bud->budget_name }}</td>
 									<td colspan="1" style="border: 1px solid black;"><span style="color: blue;font-weight: bold"> $ <?= number_format($bud->sisa,2,",",".");?></span></td>
 									<td colspan="1" style="border: 1px solid black;"><span style="color: blue;font-weight: bold">$ <?= number_format($bud->total,2,",",".");?></span></td>
 									<td colspan="2" style="border: 1px solid black;"><span style="color: blue;font-weight: bold">$ <?= number_format($bud->sisa - $bud->total,2,",",".");?></span></td>
 								</tr>
 								<tr>
-									<td colspan="8" style="border: 1px solid black;">Out Of Budget <span class="droid">予算不足</span> ($)</td>
+									<td colspan="8" style="border: 1px solid black;">Out Of Budget <img src="{{ public_path() . '/files/jepang/Screenshot_16.png' }}" width="40"></td>
 								</tr>
 
 								@elseif($bud->category_budget == "Out Of Budget")
 								<tr>
-									<td colspan="2" style="border: 1px solid black;">Budget No. <span class="droid">予算番号</span> <br> Budget Name <span class="droid">予算名前</span></td>
+									<td colspan="2" style="border: 1px solid black;">Budget No. <img src="{{ public_path() . '/files/jepang/Screenshot_12.png' }}" width="30"> <br> Budget Name <img src="{{ public_path() . '/files/jepang/Screenshot_13.png' }}" width="30"></td>
 									<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold"> </td>
 									<td colspan="1" style="border: 1px solid black;"><span style="color: blue;font-weight: bold"></span></td>
 									<td colspan="1" style="border: 1px solid black;"><span style="color: blue;font-weight: bold"> </span></td>
 									<td colspan="2" style="border: 1px solid black;"><span style="color: blue;font-weight: bold"></span></td>
 								</tr>
 								<tr>
-									<td colspan="2" style="border: 1px solid black;">Shifting Budget No. <span class="droid">予算シフト</span> <br> Budget Name <span class="droid">予算名前</span></td>
+									<td colspan="2" style="border: 1px solid black;">Shifting Budget No. <img src="{{ public_path() . '/files/jepang/Screenshot_14.png' }}" width="40"> <br> Budget Name <img src="{{ public_path() . '/files/jepang/Screenshot_13.png' }}" width="30"></td>
 									<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold"> </td>
 									<td colspan="1" style="border: 1px solid black;"><span style="color: blue;font-weight: bold"> </span></td>
 									<td colspan="1" style="border: 1px solid black;"><span style="color: blue;font-weight: bold"></span></td>
 									<td colspan="2" style="border: 1px solid black;"><span style="color: blue;font-weight: bold"></span></td>
 								</tr>
 								<tr>
-									<td colspan="2" style="border: 1px solid black;"><span style="color: blue;font-weight: bold">Out Of Budget <span class="droid">予算不足</span> ($)</span></td>
+									<td colspan="2" style="border: 1px solid black;"><span style="color: blue;font-weight: bold">Out Of Budget <img src="{{ public_path() . '/files/jepang/Screenshot_16.png' }}" width="40"></span></td>
 									<td colspan="2" style="border: 1px solid black;"><span style="color: blue;font-weight: bold"></span></td>
 									<td colspan="1" style="border: 1px solid black;"><span style="color: blue;font-weight: bold"></span></td>
 									<td colspan="1" style="border: 1px solid black;"><span style="color: blue;font-weight: bold">$ <?= number_format($bud->total,2,",",".");?></span></td>
@@ -567,29 +594,29 @@
 
 						<?php } else { ?>
 							<tr>
-								<td colspan="2" rowspan="4" style="border: 1px solid black;">Budget No, Name & Balance<br><span class="droid">予算番号、名前、残高</span></td>
+								<td colspan="2" rowspan="4" style="border: 1px solid black;">Budget No, Name & Balance<br><img src="{{ public_path() . '/files/jepang/Screenshot_11.png' }}" width="100"></td>
 								<td colspan="2" style="border: 1px solid black;">Budget</td>
 								<td colspan="2" style="border: 1px solid black;">Budget No & Name</td>
-								<td colspan="1" style="border: 1px solid black;">Beg Bal <span class="droid">残高</span> <br> <span style="color: blue;font-weight: bold"></span></td>
-								<td colspan="1" style="border: 1px solid black;">Amount <span class="droid">金額</span><br> <span style="color: blue;font-weight: bold"></span></td>
-								<td colspan="2" style="border: 1px solid black;">End Bal (US$)<span class="droid">最終残高</span>  <span style="color: blue;font-weight: bold"></span></td>
+								<td colspan="1" style="border: 1px solid black;">Beg Bal <img src="{{ public_path() . '/files/jepang/Screenshot_8.png' }}" width="20"> <br> <span style="color: blue;font-weight: bold"></span></td>
+								<td colspan="1" style="border: 1px solid black;">Amount <img src="{{ public_path() . '/files/jepang/Screenshot_9.png' }}" width="20"><br> <span style="color: blue;font-weight: bold"></span></td>
+								<td colspan="2" style="border: 1px solid black;">End Bal (US$) <img src="{{ public_path() . '/files/jepang/Screenshot_10.png' }}" width="30">  <span style="color: blue;font-weight: bold"></span></td>
 							</tr>
 							<tr>
-								<td colspan="2" style="border: 1px solid black;">Budget No. <span class="droid">予算番号</span> <br> Budget Name <span class="droid">予算名前</span></td>
+								<td colspan="2" style="border: 1px solid black;">Budget No. <img src="{{ public_path() . '/files/jepang/Screenshot_12.png' }}" width="30"> <br> Budget Name <img src="{{ public_path() . '/files/jepang/Screenshot_13.png' }}" width="30"></td>
 								<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold"> </td>
 								<td colspan="1" style="border: 1px solid black;"><span style="color: blue;font-weight: bold"></span></td>
 								<td colspan="1" style="border: 1px solid black;"><span style="color: blue;font-weight: bold"> </span></td>
 								<td colspan="2" style="border: 1px solid black;"> <span style="color: blue;font-weight: bold"></span></td>
 							</tr>
 							<tr>
-								<td colspan="2" style="border: 1px solid black;">Shifting Budget No. <span class="droid">予算シフト</span> <br> Budget Name <span class="droid">予算名前</span></td>
+								<td colspan="2" style="border: 1px solid black;">Shifting Budget No. <img src="{{ public_path() . '/files/jepang/Screenshot_14.png' }}" width="40"> <br> Budget Name <img src="{{ public_path() . '/files/jepang/Screenshot_13.png' }}" width="30"></td>
 								<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold"> </td>
 								<td colspan="1" style="border: 1px solid black;"><span style="color: blue;font-weight: bold"> </span></td>
 								<td colspan="1" style="border: 1px solid black;"><span style="color: blue;font-weight: bold"></span></td>
 								<td colspan="2" style="border: 1px solid black;"><span style="color: blue;font-weight: bold"></span></td>
 							</tr>
 							<tr>
-								<td colspan="8" style="border: 1px solid black;">Out Of Budget <span class="droid">予算不足</span> ($)</td>
+								<td colspan="8" style="border: 1px solid black;">Out Of Budget <img src="{{ public_path() . '/files/jepang/Screenshot_16.png' }}" width="40"></td>
 							</tr>
 						<?php } ?>
 					</tbody>
@@ -601,16 +628,16 @@
 					<table style="table-layout: fixed;width: 100%; font-family: arial; border-collapse: collapse; text-align: center;font-size: 12px;" border="1">
 						<thead>
 							<tr>
-								<td colspan="4" rowspan="3" style="text-align: left;margin-left: 10px">Note <span class="droid">備考</span>: <span style="color:blue;font-weight: bold"><br><?= $inv[0]->note ?> </span>
+								<td colspan="4" rowspan="3" style="text-align: left;margin-left: 10px">Note <img src="{{ public_path() . '/files/jepang/Screenshot_17.png' }}" width="20"> <span style="color:blue;font-weight: bold"><br><?= $inv[0]->note ?> </span>
 								</td>
 								<td colspan="2" rowspan="2">Approval By Acc Manager </td>
-								<td colspan="4">Checked By Acc Staff <span class="droid">経理担当が確認</span></td>
+								<td colspan="4">Checked By Acc Staff <img src="{{ public_path() . '/files/jepang/Screenshot_18.png' }}" width="60"></td>
 							</tr>
 						</thead>
 						<tbody>
 							<tr>
-								<td colspan="2">Tax Effect <span class="droid">税効果</span></td>
-								<td colspan="2">Budget Balance <span class="droid">予算残高</span></td>
+								<td colspan="2">Tax Effect <img src="{{ public_path() . '/files/jepang/Screenshot_19.png' }}" width="25"></td>
+								<td colspan="2">Budget Balance <img src="{{ public_path() . '/files/jepang/Screenshot_20.png' }}" width="30"></td>
 							</tr>
 							<tr>
 								<td colspan="2" style="height: 40px">
