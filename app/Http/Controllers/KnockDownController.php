@@ -1534,6 +1534,7 @@ class KnockDownController extends Controller{
 
 		$storage = '';
 		if($id == 'z-pro'){
+			$dateto = date('Y-m-d', strtotime('+30 day'));
 			$storage = "('ZPRO')";
 		}else if($id == 'sub-assy-sx'){
 			$storage = "('SUBASSY-SX', 'ASSY-SX')";
