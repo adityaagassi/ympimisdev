@@ -428,7 +428,7 @@ class FinishedGoodsController extends Controller
 
 		left join
 
-		(select year(shipment_schedules.bl_date) as year, concat('W', date_format(shipment_schedules.bl_date, '%U')+1) as week_name, shipment_schedules.id, shipment_schedules.material_number, shipment_schedules.quantity, flos.actual, shipment_schedules.bl_date as bl_plan, flos.bl_date as bl_actual from shipment_schedules left join flos on flos.shipment_schedule_id = shipment_schedules.id) as b on b.year = a.year and b.week_name = a.week_name
+		(select year(shipment_schedules.bl_date) as year, concat('W', date_format(shipment_schedules.bl_date, '%U')+1) as week_name, shipment_schedules.id, shipment_schedules.material_number, shipment_schedules.quantity, flos.actual, shipment_schedules.bl_date as bl_plan, flos.bl_date as bl_actual from shipment_schedules left join flos on flos.shipment_schedule_id = shipment_schedules.id) as b on b.year = a.year and b.week_name = a.week_name left join materials on material.material_number = shipment_scheules.material_number where materials.category = 'FG'
 		)
 		group by year, week_name, week_start, bl_target, id, bl_actual, material_number, quantity
 		) as c
