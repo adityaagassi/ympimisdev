@@ -524,6 +524,8 @@ class FinishedGoodsController extends Controller
 		week_start,
 		week_end 
 		" . $year . "
+		HAVING
+		plan IS NOT NULL
 		ORDER BY
 		week_start ASC";
 
