@@ -18,6 +18,7 @@ use App\BomOutput;
 use App\StocktakingCalendar;
 use App\StocktakingList;
 use App\StocktakingNewList;
+use App\StocktakingErrorList;
 use App\StocktakingOutput;
 use App\StocktakingLocationStock;
 use App\StocktakingInquiryLog;
@@ -167,7 +168,7 @@ class StockTakingController extends Controller{
 		$title_jp = "";
 
 		$storage_locations = StorageLocation::whereNotNull('area')->orderBy('storage_location', 'asc')->get();
-		$stores = StocktakingList::select('store')->distinct()->orderBy('store', 'asc')->get();
+		$stores = StocktakingNewList::select('store')->distinct()->orderBy('store', 'asc')->get();
 		$materials = MaterialPlantDataList::orderBy('material_number', 'asc')->get();
 
 		return view('stocktakings.monthly.report.stocktaking_list', array(
@@ -181,29 +182,29 @@ class StockTakingController extends Controller{
 
 	public function fetchMonthlyStocktakingList(Request $request){
 
-		$stocktaking_lists = StocktakingList::leftJoin('material_plant_data_lists', 'material_plant_data_lists.material_number', '=', 'stocktaking_lists.material_number')
-		->leftJoin('storage_locations', 'storage_locations.storage_location', '=', 'stocktaking_lists.location');
+		$stocktaking_lists = StocktakingNewList::leftJoin('material_plant_data_lists', 'material_plant_data_lists.material_number', '=', 'stocktaking_new_lists.material_number')
+		->leftJoin('storage_locations', 'storage_locations.storage_location', '=', 'stocktaking_new_lists.location');
 
 		if($request->get('store') != null){
-			$stocktaking_lists = $stocktaking_lists->whereIn('stocktaking_lists.store', $request->get('store'));
+			$stocktaking_lists = $stocktaking_lists->whereIn('stocktaking_new_lists.store', $request->get('store'));
 		}
 
 		if($request->get('material_number') != null){
-			$stocktaking_lists = $stocktaking_lists->whereIn('stocktaking_lists.material_number', $request->get('material_number'));
+			$stocktaking_lists = $stocktaking_lists->whereIn('stocktaking_new_lists.material_number', $request->get('material_number'));
 		}
 
 		if($request->get('storage_location') != null){
-			$stocktaking_lists = $stocktaking_lists->whereIn('stocktaking_lists.location', $request->get('storage_location'));
+			$stocktaking_lists = $stocktaking_lists->whereIn('stocktaking_new_lists.location', $request->get('storage_location'));
 		}
 
 		if($request->get('area') != null){
 			$stocktaking_lists = $stocktaking_lists->whereIn('storage_locations.area', $request->get('area'));
 		}
 
-		$stocktaking_lists = $stocktaking_lists->select('stocktaking_lists.id', 'storage_locations.area', 'stocktaking_lists.store', 'stocktaking_lists.material_number', 'material_plant_data_lists.material_description', 'material_plant_data_lists.bun', 'stocktaking_lists.location', 'stocktaking_lists.category', 'stocktaking_lists.process', 'stocktaking_lists.print_status')
+		$stocktaking_lists = $stocktaking_lists->select('stocktaking_new_lists.id', 'storage_locations.area', 'stocktaking_new_lists.store', 'stocktaking_new_lists.sub_store', 'stocktaking_new_lists.material_number', 'material_plant_data_lists.material_description', 'material_plant_data_lists.bun', 'stocktaking_new_lists.location', 'stocktaking_new_lists.category', 'stocktaking_new_lists.process', 'stocktaking_new_lists.print_status')
 		->orderBy('storage_locations.area', 'asc')
-		->orderBy('stocktaking_lists.store', 'asc')
-		->orderBy('stocktaking_lists.material_number', 'asc')
+		->orderBy('stocktaking_new_lists.store', 'asc')
+		->orderBy('stocktaking_new_lists.material_number', 'asc')
 		->get();
 
 		$response = array(
@@ -233,11 +234,157 @@ class StockTakingController extends Controller{
 		}
 	}
 
+	public function uploadMonthlyStocktakingList(Request $request){
+		
+		if($request->hasFile('file_list')) {
+			try{				
+				$file = $request->file('file_list');
+				$file_name = 'st_list_'.Auth::id().'('. date("ymdHi") .')'.'.'.$file->getClientOriginalExtension();
+				$file->move(public_path('uploads/stocktaking_list/'), $file_name);
+
+
+				$excel = public_path('uploads/stocktaking_list/') . $file_name;
+				$rows = Excel::load($excel, function($reader) {
+					$reader->noHeading();
+					$reader->skipRows(1);
+				})->get();
+				$rows = $rows->toArray();
+
+				$success = 0;
+				$total = 0;
+
+				for ($i=0; $i < count($rows); $i++) {
+					$location = preg_replace('/[^a-zA-Z0-9]+/', '', strtoupper($rows[$i][1]));
+					$store = preg_replace('/[^a-zA-Z0-9 ]+/', '', strtoupper($rows[$i][2]));
+					$sub_store = preg_replace('/[^a-zA-Z0-9 ]+/', '', strtoupper($rows[$i][3]));
+					$material_number = preg_replace('/[^a-zA-Z0-9]+/', '', strtoupper($rows[$i][4]));
+					$material_description = preg_replace('/[^a-zA-Z0-9 ]+/', '', strtoupper($rows[$i][5]));
+					$category = preg_replace('/[^a-zA-Z0-9]+/', '', strtoupper($rows[$i][6]));
+
+					if($location != '' || $store != '' || $sub_store != '' || $material_number != '' || $category != ''){
+						$total++;
+
+						$mpdl = MaterialPlantDataList::where('material_number', $material_number)->first();
+
+						if($mpdl){
+							$check = StocktakingNewList::where('location', $location)
+							->where('store', $store)
+							->where('sub_store', $sub_store)
+							->where('material_number', $material_number)
+							->where('category', $category)
+							->first();
+
+							if($check){
+								$error = new StocktakingErrorList([
+									'file_name' => $file_name,
+									'location' => $location,
+									'store' => $store,
+									'sub_store' => $sub_store,
+									'material_number' => $material_number,
+									'material_description' => $mpdl->material_description,
+									'category' => $category,
+									'error_message' => 'Item sudah ada di list',
+									'created_by' => Auth::id()
+								]);
+								$error->save();
+							}else{
+								if(($mpdl->valcl == 9040 || $mpdl->valcl == 9041) && $category == 'ASSY'){
+									$error = new StocktakingErrorList([
+										'file_name' => $file_name,
+										'location' => $location,
+										'store' => $store,
+										'sub_store' => $sub_store,
+										'material_number' => $material_number,
+										'material_description' => $mpdl->material_description,
+										'category' => $category,
+										'error_message' => 'Item tidak boleh ASSY',
+										'created_by' => Auth::id()
+									]);
+									$error->save();
+								}else{
+									$list = new StocktakingNewList([
+										'location' => $location,
+										'store' => $store,
+										'sub_store' => $sub_store,
+										'material_number' => $material_number,
+										'category' => $category,
+										'created_by' => Auth::id()
+									]);
+									$list->save();
+									$success++;
+								}							
+							}	
+						}else{
+							$error = new StocktakingErrorList([
+								'file_name' => $file_name,
+								'location' => $location,
+								'store' => $store,
+								'sub_store' => $sub_store,
+								'material_number' => $material_number,
+								'material_description' => $material_description,
+								'category' => $category,
+								'error_message' => 'Item tidak ada di MPDL',
+								'created_by' => Auth::id()
+							]);
+							$error->save();
+						}
+
+					}
+				}
+
+				$response = array(
+					'status' => true,
+					'message' => 'Upload file success',
+					'file_name' => $file_name,
+					'total' => $total,
+					'success' => $success
+				);
+				return Response::json($response);
+
+			}catch(\Exception $e){
+				$response = array(
+					'status' => false,
+					'message' => $e->getMessage(),
+				);
+				return Response::json($response);
+			}
+		}else{
+			$response = array(
+				'status' => false,
+				'message' => 'Upload failed, File not found',
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function exportErrorUpload(Request $request){
+
+		$file_name = $request->get('file_name');
+
+		$error = StocktakingErrorList::where('file_name', $file_name)->get(); 
+		
+
+		$title = 'Error_upload_stocktakinglist_'.str_replace('.xlsx','',$file_name);
+
+		$data = array(
+			'error' => $error
+		);
+
+		ob_clean();
+		Excel::create($title, function($excel) use ($data){
+			$excel->sheet('Error', function($sheet) use ($data) {
+				return $sheet->loadView('stocktakings.monthly.report.error_upload_stocktakinglist', $data);
+			});
+		})->export('xlsx');
+		
+	}
+
 	public function editMonthlyStocktakingList(Request $request){
 		try{
-			$stocktaking_list = StocktakingList::where('id', $request->get('id'))->first();
+			$stocktaking_list = StocktakingNewList::where('id', $request->get('id'))->first();
 
 			$stocktaking_list->store = $request->get('store');
+			$stocktaking_list->store = $request->get('substore');
 			$stocktaking_list->material_number = $request->get('material');
 			$stocktaking_list->location = $request->get('location');
 			$stocktaking_list->category = $request->get('category');
@@ -277,8 +424,8 @@ class StockTakingController extends Controller{
 	}
 
 	public function indexManageStore(){
-		$title = 'Manage Store';
-		$title_jp = 'ストアー管理';
+		$title = 'Summary of Counting';
+		$title_jp = '';
 
 		$printer_names = $this->printer_name;
 
@@ -288,14 +435,14 @@ class StockTakingController extends Controller{
 		->orderBy('area', 'ASC')
 		->get();
 
-		$locations = StocktakingList::select('stocktaking_lists.location')
+		$locations = StocktakingNewList::select('stocktaking_new_lists.location')
 		->distinct()
-		->orderBy('stocktaking_lists.location', 'ASC')
+		->orderBy('stocktaking_new_lists.location', 'ASC')
 		->get();
 
-		$stores = StocktakingList::select('stocktaking_lists.store')
+		$stores = StocktakingNewList::select('stocktaking_new_lists.store')
 		->distinct()
-		->orderBy('stocktaking_lists.store', 'ASC')
+		->orderBy('stocktaking_new_lists.store', 'ASC')
 		->get();
 
 		$materials = MaterialPlantDataList::select('material_number', 'material_description')->get();
@@ -509,16 +656,16 @@ class StockTakingController extends Controller{
 	}
 
 	public function countNewStcPISingle($location){
-		$single = StocktakingNewList::whereIn('location', $location)
-		->where('category', 'SINGLE')
-		->where('final_count', '>', 0)
-		->get();
+		$single = db::select("SELECT location, material_number, sum(final_count) AS final_count FROM stocktaking_new_lists
+			WHERE category = 'SINGLE'
+			AND final_count > 0
+			GROUP BY location, material_number");
 
 		for ($i=0; $i < count($single); $i++) {
 
 			$insert = new StocktakingOutput([
 				'material_number' => $single[$i]->material_number,
-				'store' => $single[$i]->store,
+				// 'store' => $single[$i]->store,
 				'location' => $single[$i]->location,
 				'quantity' => $single[$i]->final_count
 			]);
@@ -527,10 +674,10 @@ class StockTakingController extends Controller{
 	}
 
 	public function countNewStcPIAssy($location){
-		$assy = StocktakingNewList::whereIn('location', $location)
-		->where('category', 'ASSY')
-		->where('final_count', '>', 0)
-		->get();
+		$assy = db::select("SELECT location, material_number, sum(final_count) AS final_count FROM stocktaking_new_lists
+			WHERE category = 'ASSY'
+			AND final_count > 0
+			GROUP BY location, material_number");
 
 		for ($i=0; $i < count($assy); $i++) {
 			$breakdown = db::select("SELECT b.material_parent, b.material_child, b.`usage`, b.divider, m.spt
@@ -542,7 +689,7 @@ class StockTakingController extends Controller{
 				if($breakdown[$j]->spt == 50){
 					$row = array();
 					$row['material_number'] = $breakdown[$j]->material_child;
-					$row['store'] = $assy[$i]->store;
+					// $row['store'] = $assy[$i]->store;
 					$row['location'] = $assy[$i]->location;
 					$row['quantity'] = $assy[$i]->final_count * ($breakdown[$j]->usage / $breakdown[$j]->divider);
 					$row['created_at'] = Carbon::now();
@@ -552,7 +699,7 @@ class StockTakingController extends Controller{
 				}else{
 					$row = array();
 					$row['material_number'] = $breakdown[$j]->material_child;
-					$row['store'] = $assy[$i]->store;
+					// $row['store'] = $assy[$i]->store;
 					$row['location'] = $assy[$i]->location;
 					$row['quantity'] = $assy[$i]->final_count * ($breakdown[$j]->usage / $breakdown[$j]->divider);
 					$row['created_at'] = Carbon::now();
@@ -587,7 +734,7 @@ class StockTakingController extends Controller{
 				if($breakdown[$j]->spt == 50){
 					$row = array();
 					$row['material_number'] = $breakdown[$j]->material_child;
-					$row['store'] = $this->cek[$i]['store'];
+					// $row['store'] = $this->cek[$i]['store'];
 					$row['location'] = $this->cek[$i]['location'];
 					$row['quantity'] = $this->cek[$i]['quantity'] * ($breakdown[$j]->usage / $breakdown[$j]->divider) ;
 					$row['created_at'] = Carbon::now();
@@ -596,7 +743,7 @@ class StockTakingController extends Controller{
 				}else{
 					$row = array();
 					$row['material_number'] = $breakdown[$j]->material_child;
-					$row['store'] = $this->cek[$i]['store'];
+					// $row['store'] = $this->cek[$i]['store'];
 					$row['location'] = $this->cek[$i]['location'];
 					$row['quantity'] = $this->cek[$i]['quantity'] * ($breakdown[$j]->usage / $breakdown[$j]->divider) ;
 					$row['created_at'] = Carbon::now();
@@ -1209,6 +1356,7 @@ class StockTakingController extends Controller{
 			$lists = db::select("SELECT
 				s.id,
 				s.store, 
+				s.sub_store, 
 				s.category,
 				s.material_number,
 				mpdl.material_description,
@@ -1223,14 +1371,14 @@ class StockTakingController extends Controller{
 				IF
 				( s.location = mpdl.storage_location, v.lot_completion, v.lot_transfer ) AS lot 
 				FROM
-				stocktaking_lists s
+				stocktaking_new_lists s
 				LEFT JOIN materials m ON m.material_number = s.material_number
 				LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
 				LEFT JOIN material_volumes v ON v.material_number = s.material_number
 				WHERE s.id in (".$whereID.")
 				ORDER BY s.location, s.store, s.category, s.material_number ASC");
 
-			$update = StocktakingList::whereIn('id', $list_id)->update(['print_status' => 1]);
+			$update = StocktakingNewList::whereIn('id', $list_id)->update(['print_status' => 1]);
 
 			// $stores = StocktakingList::where('store', $lists[0]->store)->get();
 
@@ -1271,8 +1419,9 @@ class StockTakingController extends Controller{
 		$connector = new WindowsPrintConnector($printer_name);
 		$printer = new Printer($connector);
 
-		$id = $list->id;
+		$id = 'ST_'.$list->id;
 		$store = $list->store;
+		$sub_store = $list->sub_store;
 		$category = '('.$list->category.')';
 		$material_number = $list->material_number;
 		$sloc = $list->location;
@@ -1288,16 +1437,24 @@ class StockTakingController extends Controller{
 		$printer->setJustification(Printer::JUSTIFY_CENTER);
 		$printer->setEmphasis(true);
 		$printer->setReverseColors(true);
-		if($stocktaking){
-			$printer->setTextSize(1, 1);
-			$printer->text("   ".$stocktaking->activity."   \n");
-		}
 		$printer->setTextSize(2, 2);
 		$printer->text("  Summary of Counting  "."\n");
+		$printer->initialize();
+		$printer->setTextSize(1, 1);
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->text("STORE :\n");
 		$printer->initialize();
 		$printer->setTextSize(2, 2);
 		$printer->setJustification(Printer::JUSTIFY_CENTER);
 		$printer->text($store."\n");
+		$printer->initialize();
+		$printer->setTextSize(1, 1);
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->text("SUBSTORE :\n");
+		$printer->initialize();
+		$printer->setTextSize(2, 2);
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->text($sub_store."\n");
 		$printer->initialize();
 		$printer->setTextSize(3, 2);
 		$printer->setJustification(Printer::JUSTIFY_CENTER);
@@ -2082,13 +2239,13 @@ class StockTakingController extends Controller{
 	public function fetchGetStore(Request $request){
 		$location = $request->get('location');
 
-		$getStore = StocktakingList::leftJoin('storage_locations', 'stocktaking_lists.location', '=', 'storage_locations.storage_location')
-		->where('stocktaking_lists.location', $location)
+		$getStore = StocktakingNewList::leftJoin('storage_locations', 'stocktaking_new_lists.location', '=', 'storage_locations.storage_location')
+		->where('stocktaking_new_lists.location', $location)
 		->distinct()
-		->select('storage_locations.area', 'stocktaking_lists.location', 'stocktaking_lists.store')
+		->select('storage_locations.area', 'stocktaking_new_lists.location', 'stocktaking_new_lists.store')
 		->orderBy('storage_locations.area', 'ASC')
-		->orderBy('stocktaking_lists.location', 'ASC')
-		->orderBy('stocktaking_lists.store', 'ASC')
+		->orderBy('stocktaking_new_lists.location', 'ASC')
+		->orderBy('stocktaking_new_lists.store', 'ASC')
 		->get();		
 
 
@@ -2277,13 +2434,14 @@ class StockTakingController extends Controller{
 			sl.area AS `group`,
 			s.location,
 			s.store,
+			s.sub_store,
 			s.category,
 			s.material_number,
 			mpdl.material_description,
 			mpdl.bun AS uom,
 			s.print_status 
 			FROM
-			stocktaking_lists s
+			stocktaking_new_lists s
 			LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
 			LEFT JOIN storage_locations sl ON sl.storage_location = s.location ".$condition." 
 			ORDER BY
@@ -4213,11 +4371,13 @@ s.id ASC");
 
 	public function addMaterial(Request $request){
 		$store = $request->get('store');
+		$substore = $request->get('substore');
 		$category = $request->get('category');
 		$material = $request->get('material');
 		$location = $request->get('location');
 
-		$cek = StocktakingList::where('store', $store)
+		$cek = StocktakingNewList::where('store', $store)
+		->where('sub_store', $substore)
 		->where('category', $category)
 		->where('material_number', $material)
 		->where('location', $location)
@@ -4231,14 +4391,23 @@ s.id ASC");
 			return Response::json($response);
 		}
 
+		$mpdl = MaterialPlantDataList::where('material_number', $material)->first();
+
+		if(($mpdl->valcl == 9040 || $mpdl->valcl == 9041) && $category == 'ASSY'){
+			$response = array(
+				'status' => false,
+				'message' => 'Indirect Material atau Material Awal tidak boleh ASSY'
+			);
+			return Response::json($response);
+		}
+
 		try {
-			$add = new StocktakingList([
-				'store' => $store,
+			$add = new StocktakingNewList([
+				'store' => strtoupper($store),
+				'sub_store' => strtoupper($substore),
 				'category' => $category,
-				'material_number' => $material,
+				'material_number' => strtoupper($material),
 				'location' => $location,
-				'remark' => 'USE',
-				'process' => 0,
 				'created_by' => Auth::id()
 			]);
 			$add->save();

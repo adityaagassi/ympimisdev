@@ -40,7 +40,11 @@
 @section('header')
 <section class="content-header">
 	<button class="btn btn-success btn-sm pull-right" data-toggle="modal"  data-target="#add_material" style="margin-right: 5px">
-		Tambah List Baru
+		<i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;Tambah List Baru
+	</button>
+
+	<button class="btn btn-primary btn-sm pull-right" data-toggle="modal"  data-target="#upload_material" style="margin-right: 5px">
+		<i class="fa fa-file-excel-o"></i>&nbsp;&nbsp;&nbsp;Upload List Baru
 	</button>
 	<h1>
 		{{ $title }}
@@ -58,6 +62,26 @@
 		</p>
 	</div>
 	<div class="row">
+		<div class="col-xs-12">
+			<div class="alert alert-warning alert-dismissible" id="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				<h4><i class="icon fa fa-warning"></i> Alert!</h4>
+				<div class="row">
+					<div class="col-xs-10">
+						<span style="font-weight: bold; font-size: 18px;">Item successfully added to Stocktaking list: </span>
+						<span id="success" style="font-weight: bold; font-size: 24px; color: red;">0</span>
+						<span style="font-weight: bold; font-size: 16px; color: red;">of</span>
+						<span id="total" style="font-weight: bold; font-size: 16px; color: red;">0</span>
+					</div>
+					<div class="col-xs-2">
+						<form method="GET" action="{{ url("export/stocktaking/error_upload_stocktaking_list") }}">
+							<input type="text" name="file_name" id="file_name" hidden>
+							<button id="export_error" type="submit" class="btn btn-default btn-block" style="margin-top: 5px; font-size: 15px; border-color: white;"><i class="fa fa-file-excel-o"></i>&nbsp;&nbsp;&nbsp;Error Upload</button>
+						</form>
+					</div>
+				</div>				
+			</div>
+		</div>
 		<div class="col-xs-12">
 			<div class="box box-primary">
 				<div class="box-header">
@@ -80,7 +104,7 @@
 							<div class="col-md-4">
 								<div class="form-group">
 									<label>Material Number</label>
-									<select class="form-control select2" multiple="multiple" name="material_number" id='material_number' data-placeholder="Select Material Number" style="width: 100%;">
+									<select class="form-control select4" multiple="multiple" name="material_number" id='material_number' data-placeholder="Select Material Number" style="width: 100%;">
 										<option value=""></option>
 										@foreach($materials as $material)
 										<option value="{{ $material->material_number }}">{{ $material->material_number }} - {{ $material->material_description }}</option>
@@ -135,6 +159,7 @@
 									<tr>
 										<th style="width: 1%">Area</th>
 										<th style="width: 2%">Store</th>
+										<th style="width: 2%">Sub Store</th>
 										<th style="width: 1%">Material</th>
 										<th style="width: 6%">Description</th>
 										<th style="width: 1%">Uom</th>
@@ -154,6 +179,32 @@
 		</div>
 	</div>
 </section>
+
+<div class="modal fade" id="upload_material">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form id ="uploadMaterial" method="post" enctype="multipart/form-data" autocomplete="off">
+				<input type="hidden" value="{{csrf_token()}}" name="_token" />
+
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">Upload List Baru</h4>
+					Sample: <a href="{{ url('manual/upload_stocktaking_list.xlsx') }}">upload_stocktaking_list.xlsx</a>
+				</div>
+				<div class="modal-body">
+					<div class="row">						
+						<div class="col-xs-6 col-xs-offset-3">
+							<input type="file" name="file_list" id="file_list" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" style="text-align: right;">
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button id="modalImportButton" type="submit" class="btn btn-success pull-right">Import</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
 
 <div class="modal modal-default fade" id="add_material">
 	<div class="modal-dialog modal-lg">
@@ -211,6 +262,14 @@
 									<input class="form-control" type="text" id="other-store" name="other-store" placeholder="Fill Store Name">
 								</div>
 							</div>
+
+							<div class="form-group row" align="right">
+								<label class="col-sm-4">Substore<span class="text-red">*</span></label>
+								<div class="col-sm-4" align="left">
+									<input class="form-control" type="text" id="newSubstore" name="newSubstore" placeholder="Fill Subtore Name">
+								</div>
+							</div>
+
 
 							<div class="form-group row" align="right">
 								<label class="col-sm-4">Category<span class="text-red">*</span></label>
@@ -273,6 +332,12 @@
 								</div>
 							</div>
 							<div class="form-group row" align="right">
+								<label class="col-sm-4">Substore<span class="text-red">*</span></label>
+								<div class="col-sm-4">
+									<input type="text" style="width: 100%" class="form-control" id="editSubstore" placeholder="Enter Substore">
+								</div>
+							</div>
+							<div class="form-group row" align="right">
 								<label class="col-sm-4">Material<span class="text-red">*</span></label>
 								<div class="col-sm-4">
 									<input type="text" style="width: 100%" class="form-control" id="editMaterial" placeholder="Enter Material">
@@ -326,9 +391,74 @@
 	});
 
 	jQuery(document).ready(function() {
-		$('.select2').select2();
+		$('.select2').select2({
+			allowClear:true
+		});
+
+		$('#alert').hide();
+
+
+		$('.select4').select2({
+			allowClear:true,
+			dropdownAutoWidth : true,
+			minimumInputLength: 3
+		});
+
 		$('#other').hide();
 
+	});
+
+	$("form#uploadMaterial").submit(function(e) {
+		if ($('#file_list').val() == '') {
+			openErrorGritter('Error!', 'You need to select file');
+			return false;
+		}
+
+		$("#loading").show();
+
+		e.preventDefault();    
+		var formData = new FormData(this);
+
+		$.ajax({
+			url: '{{ url("upload/stocktaking/stocktaking_list") }}',
+			type: 'POST',
+			data: formData,
+			success: function (result, status, xhr) {
+				if(result.status){
+
+					$("#file_list").val('');
+					
+					$('#upload_material').modal('hide');
+					$("#loading").hide();
+
+
+					$("#success").text(result.success);
+					$("#total").text(result.total);
+					$("#file_name").val(result.file_name);
+
+					if(result.total == result.success){
+						$("#export_error").css('visibility', 'hidden');	
+					}else{
+						$("#export_error").css('visibility', 'visible');	
+					}
+
+					$('#alert').show();
+
+					openSuccessGritter('Success', result.message);
+
+				}else{
+					$("#loading").hide();
+					openErrorGritter('Error!', result.message);
+				}
+			},
+			error: function(result, status, xhr){
+				$("#loading").hide();				
+				openErrorGritter('Error!', result.message);
+			},
+			cache: false,
+			contentType: false,
+			processData: false
+		});
 	});
 
 	function fetchTable(){
@@ -355,6 +485,7 @@
 				$.each(result.stocktaking_lists, function(key, value){
 					dataTable += '<tr id="'+value.id+'">';
 					dataTable += '<td>'+value.area+'</td>';
+					dataTable += '<td>'+value.sub_store+'</td>';
 					dataTable += '<td>'+value.store+'</td>';
 					dataTable += '<td>'+value.material_number+'</td>';
 					dataTable += '<td>'+value.material_description+'</td>';
@@ -377,7 +508,7 @@
 						dataTable += '<td style="background-color: #d500f9;">Sudah Breakdown</td>';
 					}
 					dataTable += '<td>';
-					dataTable += '<button onCLick="editList(\''+value.id+'\''+','+'\''+value.store+'\''+','+'\''+value.material_number+'\''+','+'\''+value.location+'\''+','+'\''+value.category+'\')" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i></button>&nbsp;';
+					dataTable += '<button onCLick="editList(\''+value.id+'\''+','+'\''+value.store+'\''+','+'\''+value.sub_store+'\''+','+'\''+value.material_number+'\''+','+'\''+value.location+'\''+','+'\''+value.category+'\')" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i></button>&nbsp;';
 					dataTable += '<button onCLick="deleteList('+value.id+')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>';				
 					dataTable += '</td>';
 					dataTable += '</tr>';
@@ -450,12 +581,14 @@
 	function saveList(){
 		var id = $('#editId').val();
 		var store = $('#editStore').val();
+		var substore = $('#editSubstore').val();
 		var material = $('#editMaterial').val();
 		var location = $('#editLocation').val();
 		var category = $('#editCategory').val();
 		var data = {
 			id:id,
 			store:store,
+			substore:substore,
 			material:material,
 			location:location,
 			category:category
@@ -464,6 +597,7 @@
 			if(result.status){
 				$('#editId').val('');
 				$('#editStore').val('');
+				$('#editSubstore').val('');
 				$('#editMaterial').val('');
 				$('#editLocation').val('');
 				$('#editCategory').val('');
@@ -480,9 +614,10 @@
 		});
 	}
 
-	function editList(id, store, material_number, location, category){
+	function editList(id, store, substore, material_number, location, category){
 		$('#editId').val('');
 		$('#editStore').val('');
+		$('#editSubstore').val('');
 		$('#editMaterial').val('');
 		$('#editLocation').val('');
 		$('#editCategory').val('');
@@ -491,6 +626,7 @@
 		$('#editId').val(id);
 		$('#editId').prop('disabled', true);
 		$('#editStore').val(store);
+		$('#editSubstore').val(substore);
 		$('#editMaterial').val(material_number);
 		$('#editLocation').val(location);
 		$('#editCategory').val(category).trigger('change.select2');
@@ -499,6 +635,18 @@
 		$('#modalEdit').modal('show');
 
 	}
+
+	$("#newSub").change(function(){
+		var store = $(this).val(); 
+
+		if(store == 'LAINNYA'){
+			$('#other').show();
+		}else{
+			$('#other').hide();
+		}
+
+	});
+
 
 	$("#newStore").change(function(){
 		var store = $(this).val(); 
@@ -552,6 +700,7 @@
 	function addMaterial(argument) {
 		var location = $('#newLocation').val(); 
 		var store = $('#newStore').val();
+		var substore = $('#newSubstore').val();
 		var category = $('#newCategory').val(); 
 		var material = $('#newMaterial').val();
 		var material_description = $('#material_description').text();
@@ -568,6 +717,7 @@
 		var data = {
 			location : location,
 			store : store,
+			substore : substore,
 			category : category,
 			material : material
 		}
@@ -582,6 +732,7 @@
 				$("#newLocation").prop('selectedIndex', 0).change();
 				$("#newStore").prop('selectedIndex', 0).change();
 				$("#other-store").val("");
+				$("#newSubstore").val("");
 				$("#newCategory").prop('selectedIndex', 0).change();
 				$("#newMaterial").val("");
 				$('#material_description').text('');

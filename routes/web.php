@@ -22,8 +22,6 @@ Route::get('test2', 'TrialController@test2');
 Route::get('test3', 'TrialController@test3');
 Route::get('test4', 'TrialController@test4');
 
-
-
 Route::get('trial2', 'TrialController@trial2');
 
 Route::get('testmail', 'TrialController@testmail');
@@ -2271,7 +2269,7 @@ Route::group(['nav' => 'S36', 'middleware' => 'permission'], function(){
 	Route::post('delete/stocktaking/stocktaking_list', 'StockTakingController@deleteMonthlyStocktakingList');
 	Route::post('edit/stocktaking/stocktaking_list', 'StockTakingController@editMonthlyStocktakingList');
 	Route::post('upload/stocktaking/stocktaking_list', 'StockTakingController@uploadMonthlyStocktakingList');
-	Route::post('export/stocktaking/error_upload_stocktaking_list', 'StockTakingController@exportErrorUpload');
+	Route::get('export/stocktaking/error_upload_stocktaking_list', 'StockTakingController@exportErrorUpload');
 
 	//Revise
 	Route::get('index/stocktaking/revise', 'StockTakingController@indexRevise');

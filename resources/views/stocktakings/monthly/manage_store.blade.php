@@ -191,6 +191,7 @@
 									<th style="width: 5%">Group</th>
 									<th style="width: 10%">Location</th>
 									<th style="width: 20%">Store</th>
+									<th style="width: 20%">Subtore</th>
 									<th style="width: 10%">Category</th>
 									<th style="width: 10%">Material</th>
 									<th style="width: 30%">Material Description</th>
@@ -204,6 +205,7 @@
 							</tbody>
 							<tfoot>
 								<tr>
+									<th></th>
 									<th></th>
 									<th></th>
 									<th></th>
@@ -728,15 +730,16 @@
 					body += '<td onClick="countPicked(this)" id="td1+'+result.data[i].id+'">'+result.data[i].group+'</td>';
 					body += '<td onClick="countPicked(this)" id="td2+'+result.data[i].id+'">'+result.data[i].location+'</td>';
 					body += '<td onClick="countPicked(this)" id="td3+'+result.data[i].id+'">'+result.data[i].store+'</td>';
-					body += '<td onClick="countPicked(this)" id="td4+'+result.data[i].id+'">'+result.data[i].category+'</td>';
-					body += '<td onClick="countPicked(this)" id="td5+'+result.data[i].id+'">'+result.data[i].material_number+'</td>';
-					body += '<td onClick="countPicked(this)" id="td6+'+result.data[i].id+'">'+result.data[i].material_description+'</td>';
-					body += '<td onClick="countPicked(this)" id="td7+'+result.data[i].id+'">'+result.data[i].uom+'</td>';
+					body += '<td onClick="countPicked(this)" id="td4+'+result.data[i].id+'">'+result.data[i].sub_store+'</td>';
+					body += '<td onClick="countPicked(this)" id="td5+'+result.data[i].id+'">'+result.data[i].category+'</td>';
+					body += '<td onClick="countPicked(this)" id="td6+'+result.data[i].id+'">'+result.data[i].material_number+'</td>';
+					body += '<td onClick="countPicked(this)" id="td7+'+result.data[i].id+'">'+result.data[i].material_description+'</td>';
+					body += '<td onClick="countPicked(this)" id="td8+'+result.data[i].id+'">'+result.data[i].uom+'</td>';
 
 					if(result.data[i].print_status == 0){
-						body += '<td onClick="countPicked(this)" id="td8+'+result.data[i].id+'" style="font-size: 1vw;"><span class="label label-primary">PRINT</span></td>';
+						body += '<td onClick="countPicked(this)" id="td9+'+result.data[i].id+'" style="font-size: 1vw;"><span class="label label-primary">PRINT</span></td>';
 					}else{
-						body += '<td onClick="countPicked(this)" id="td9+'+result.data[i].id+'" style="font-size: 1vw;"><span class="label label-info">REPRINT</span></td>';
+						body += '<td onClick="countPicked(this)" id="td10+'+result.data[i].id+'" style="font-size: 1vw;"><span class="label label-info">REPRINT</span></td>';
 					}
 					
 
