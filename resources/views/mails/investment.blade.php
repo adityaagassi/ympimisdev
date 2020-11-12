@@ -40,6 +40,11 @@
 				<?php $comment = $datas->comment ?>
 				<?php $comment_note = $datas->comment_note ?>
 				<?php $reply = $datas->reply ?>
+				<?php $budget_no = $datas->budget_no ?>
+				<?php $budget_name = $datas->budget_name ?>
+				<?php $category_budget = $datas->category_budget ?>
+				<?php $total_budget = $datas->total_budget ?>
+				<?php $total_pengeluaran = $datas->total_pengeluaran ?>
 				<?php $status = $datas->status ?>
 			@endforeach
 
@@ -122,6 +127,48 @@
 				</tbody>
 			</table>
 			<br>
+			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
+				<thead style="background-color: #f5eb33">
+					<tr>
+						<th style="width: 1%; border:1px solid black;" colspan="2">Budget Information</th>
+					</tr>
+				</thead>
+				<tbody>
+					@if($category_budget != "Out Of Budget")
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Budget Number</td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;"><?= $budget_no ?> - <?= $budget_name ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Category Budget</td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;"><?= $category_budget ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Beginning Balance</td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= $total_budget ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Amount </td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= $total_pengeluaran ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Ending Balance</td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= $total_budget - $total_pengeluaran ?></td></td>
+					</tr>
+					@else					
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Category Budget</td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;"><?= $category_budget ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Amount </td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= $total_pengeluaran ?></td></td>
+					</tr>
+					@endif
+
+				</tbody>
+			</table>
+			<br>
 
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> &#8650;</span><br>
 			<a href="http://172.17.128.4/mirai/public/investment/check/{{ $id }}">Check Investment</a><br>
@@ -177,6 +224,49 @@
 			</table>
 			<br>
 
+			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
+				<thead style="background-color: #f5eb33">
+					<tr>
+						<th style="width: 1%; border:1px solid black;" colspan="2">Budget Information</th>
+					</tr>
+				</thead>
+				<tbody>
+					@if($category_budget != "Out Of Budget")
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Budget Number</td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;"><?= $budget_no ?> - <?= $budget_name ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Category Budget</td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;"><?= $category_budget ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Beginning Balance</td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= $total_budget ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Amount </td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= $total_pengeluaran ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Ending Balance</td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= $total_budget - $total_pengeluaran ?></td></td>
+					</tr>
+					@else					
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Category Budget</td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;"><?= $category_budget ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Amount </td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= $total_pengeluaran ?></td></td>
+					</tr>
+					@endif
+
+				</tbody>
+			</table>
+			<br>
+
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> &#8650;</span><br>
 			<a href="http://172.17.128.4/mirai/public/investment/check/{{ $id }}">Check Investment Tax</a><br>
 
@@ -226,6 +316,49 @@
 						<td style="border:1px solid black; text-align: left !important;"><?= $supplier_code ?> - <?= $supplier_name ?></td>
 					</tr>
 			
+				</tbody>
+			</table>
+			<br>
+
+			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
+				<thead style="background-color: #f5eb33">
+					<tr>
+						<th style="width: 1%; border:1px solid black;" colspan="2">Budget Information</th>
+					</tr>
+				</thead>
+				<tbody>
+					@if($category_budget != "Out Of Budget")
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Budget Number</td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;"><?= $budget_no ?> - <?= $budget_name ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Category Budget</td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;"><?= $category_budget ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Beginning Balance</td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= $total_budget ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Amount </td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= $total_pengeluaran ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Ending Balance</td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= $total_budget - $total_pengeluaran ?></td></td>
+					</tr>
+					@else					
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Category Budget</td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;"><?= $category_budget ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Amount </td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= $total_pengeluaran ?></td></td>
+					</tr>
+					@endif
+
 				</tbody>
 			</table>
 			<br>
@@ -288,6 +421,49 @@
 				</tbody>
 			</table>
 			<br>
+
+			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
+				<thead style="background-color: #f5eb33">
+					<tr>
+						<th style="width: 1%; border:1px solid black;" colspan="2">Budget Information</th>
+					</tr>
+				</thead>
+				<tbody>
+					@if($category_budget != "Out Of Budget")
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Budget Number</td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;"><?= $budget_no ?> - <?= $budget_name ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Category Budget</td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;"><?= $category_budget ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Beginning Balance</td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= $total_budget ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Amount </td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= $total_pengeluaran ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Ending Balance</td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= $total_budget - $total_pengeluaran ?></td></td>
+					</tr>
+					@else					
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Category Budget</td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;"><?= $category_budget ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Amount </td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= $total_pengeluaran ?></td></td>
+					</tr>
+					@endif
+
+				</tbody>
+			</table>
+			<br>
 			
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> &#8650;</span><br><br>
@@ -347,6 +523,49 @@
 				</tbody>
 			</table>
 			<br>
+
+			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
+				<thead style="background-color: #f5eb33">
+					<tr>
+						<th style="width: 1%; border:1px solid black;" colspan="2">Budget Information 予算情報</th>
+					</tr>
+				</thead>
+				<tbody>
+					@if($category_budget != "Out Of Budget")
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Budget Number (予算番号)</td>
+						<td style="width: 3%; border:1px solid black; text-align: left !important;"><?= $budget_no ?> - <?= $budget_name ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Category Budget (予算種類)</td>
+						<td style="width: 3%; border:1px solid black; text-align: left !important;"><?= $category_budget ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Beginning Balance (最初残高)</td>
+						<td style="width: 3%; border:1px solid black; text-align: left !important;">$ <?= $total_budget ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Amount (費用)</td>
+						<td style="width: 3%; border:1px solid black; text-align: left !important;">$ <?= $total_pengeluaran ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Ending Balance (最終残高)</td>
+						<td style="width: 3%; border:1px solid black; text-align: left !important;">$ <?= $total_budget - $total_pengeluaran ?></td></td>
+					</tr>
+					@else					
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Category Budget (予算種類)</td>
+						<td style="width: 3%; border:1px solid black; text-align: left !important;"><?= $category_budget ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Amount (費用)</td>
+						<td style="width: 3%; border:1px solid black; text-align: left !important;">$ <?= $total_pengeluaran ?></td></td>
+					</tr>
+					@endif
+
+				</tbody>
+			</table>
+			<br>
 			
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> &#8650;</span><br>(下をクリックしてください)<br>
@@ -402,6 +621,49 @@
 						<td style="border:1px solid black; text-align: left !important;"><?= $supplier_code ?> - <?= $supplier_name ?></td>
 					</tr>
 			
+				</tbody>
+			</table>
+			<br>
+
+			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
+				<thead style="background-color: #f5eb33">
+					<tr>
+						<th style="width: 1%; border:1px solid black;" colspan="2">Budget Information</th>
+					</tr>
+				</thead>
+				<tbody>
+					@if($category_budget != "Out Of Budget")
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Budget Number</td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;"><?= $budget_no ?> - <?= $budget_name ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Category Budget</td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;"><?= $category_budget ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Beginning Balance</td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= $total_budget ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Amount </td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= $total_pengeluaran ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Ending Balance</td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= $total_budget - $total_pengeluaran ?></td></td>
+					</tr>
+					@else					
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Category Budget</td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;"><?= $category_budget ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Amount </td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= $total_pengeluaran ?></td></td>
+					</tr>
+					@endif
+
 				</tbody>
 			</table>
 			<br>
@@ -466,14 +728,57 @@
 				</tbody>
 			</table>
 			<br>
+
+			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
+				<thead style="background-color: #f5eb33">
+					<tr>
+						<th style="width: 1%; border:1px solid black;" colspan="2">Budget Information 予算情報</th>
+					</tr>
+				</thead>
+				<tbody>
+					@if($category_budget != "Out Of Budget")
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Budget Number (予算番号)</td>
+						<td style="width: 3%; border:1px solid black; text-align: left !important;"><?= $budget_no ?> - <?= $budget_name ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Category Budget (予算種類)</td>
+						<td style="width: 3%; border:1px solid black; text-align: left !important;"><?= $category_budget ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Beginning Balance (最初残高)</td>
+						<td style="width: 3%; border:1px solid black; text-align: left !important;">$ <?= $total_budget ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Amount (費用)</td>
+						<td style="width: 3%; border:1px solid black; text-align: left !important;">$ <?= $total_pengeluaran ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Ending Balance (最終残高)</td>
+						<td style="width: 3%; border:1px solid black; text-align: left !important;">$ <?= $total_budget - $total_pengeluaran ?></td></td>
+					</tr>
+					@else					
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Category Budget (予算種類)</td>
+						<td style="width: 3%; border:1px solid black; text-align: left !important;"><?= $category_budget ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Amount (費用)</td>
+						<td style="width: 3%; border:1px solid black; text-align: left !important;">$ <?= $total_pengeluaran ?></td></td>
+					</tr>
+					@endif
+
+				</tbody>
+			</table>
+			<br>
 			
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> &#8650;</span><br><br>
-			<a style="background-color: green; width: 50px;text-decoration: none;color: white;font-size:20px;" href="{{ url("investment/approvediracc/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a style="background-color: green; width: 50px;text-decoration: none;color: white;font-size:20px;" href="{{ url("investment/approvediracc/".$id) }}">&nbsp;&nbsp;&nbsp; Approve (承認) &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-			<a style="background-color: blue; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/comment/".$id) }}">&nbsp;&nbsp;&nbsp; Hold & Comment &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a style="background-color: blue; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/comment/".$id) }}">&nbsp;&nbsp;&nbsp; Hold & Comment (保留・コメント) &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-			<a style="background-color: red; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/reject/".$id) }}">&nbsp; Reject &nbsp;</a><br>
+			<a style="background-color: red; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/reject/".$id) }}">&nbsp; Reject (却下) &nbsp;</a><br>
 
 			@elseif($posisi == "presdir" && $status == "approval")
 
@@ -526,14 +831,57 @@
 				</tbody>
 			</table>
 			<br>
+
+			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
+				<thead style="background-color: #f5eb33">
+					<tr>
+						<th style="width: 1%; border:1px solid black;" colspan="2">Budget Information 予算情報</th>
+					</tr>
+				</thead>
+				<tbody>
+					@if($category_budget != "Out Of Budget")
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Budget Number (予算番号)</td>
+						<td style="width: 3%; border:1px solid black; text-align: left !important;"><?= $budget_no ?> - <?= $budget_name ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Category Budget (予算種類)</td>
+						<td style="width: 3%; border:1px solid black; text-align: left !important;"><?= $category_budget ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Beginning Balance (最初残高)</td>
+						<td style="width: 3%; border:1px solid black; text-align: left !important;">$ <?= $total_budget ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Amount (費用)</td>
+						<td style="width: 3%; border:1px solid black; text-align: left !important;">$ <?= $total_pengeluaran ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Ending Balance (最終残高)</td>
+						<td style="width: 3%; border:1px solid black; text-align: left !important;">$ <?= $total_budget - $total_pengeluaran ?></td></td>
+					</tr>
+					@else					
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Category Budget (予算種類)</td>
+						<td style="width: 3%; border:1px solid black; text-align: left !important;"><?= $category_budget ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Amount (費用)</td>
+						<td style="width: 3%; border:1px solid black; text-align: left !important;">$ <?= $total_pengeluaran ?></td></td>
+					</tr>
+					@endif
+
+				</tbody>
+			</table>
+			<br>
 			
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> no&#8650;</span><br><br>
-			<a style="background-color: green; width: 50px;text-decoration: none;color: white;font-size:20px;" href="{{ url("investment/approvepresdir/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a style="background-color: green; width: 50px;text-decoration: none;color: white;font-size:20px;" href="{{ url("investment/approvepresdir/".$id) }}">&nbsp;&nbsp;&nbsp; Approve (承認) &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-			<a style="background-color: blue; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/comment/".$id) }}">&nbsp;&nbsp;&nbsp; Hold & Comment &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a style="background-color: blue; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/comment/".$id) }}">&nbsp;&nbsp;&nbsp; Hold & Comment (保留・コメント) &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-			<a style="background-color: red; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/reject/".$id) }}">&nbsp; Reject &nbsp;</a><br>
+			<a style="background-color: red; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/reject/".$id) }}">&nbsp; Reject (却下) &nbsp;</a><br>
 
 			@elseif($status == "comment" && ($posisi == "manager" || $posisi == "dgm" || $posisi == "gm" || $posisi == "manager_acc" || $posisi == "direktur_acc" || $posisi == "presdir"))
 

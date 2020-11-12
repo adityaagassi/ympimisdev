@@ -5452,7 +5452,7 @@ public function update_purchase_requisition_po(Request $request)
                 $mails = "select distinct email from users where users.username = 'PI0902001'";
                 $mailtoo = DB::select($mails);
 
-                $isimail = "select acc_investments.*, acc_investment_budgets.category_budget, acc_investment_budgets.sisa as total_budget, acc_investment_budgets.total as total_pengeluaran FROM acc_investments join acc_investment_budgets on acc_investments.reff_number = acc_investment_budgets.reff_number where acc_investments.id = ".$inv->id;
+                $isimail = "select acc_investments.*, acc_investment_budgets.budget_no, acc_investment_budgets.budget_name, acc_investment_budgets.category_budget, acc_investment_budgets.sisa as total_budget, acc_investment_budgets.total as total_pengeluaran FROM acc_investments join acc_investment_budgets on acc_investments.reff_number = acc_investment_budgets.reff_number where acc_investments.id = ".$inv->id;
                 $invest = db::select($isimail);
 
                 Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($invest, 'investment'));
@@ -5547,7 +5547,7 @@ public function update_purchase_requisition_po(Request $request)
             $mails = "select distinct email from users where users.username = 'PI9802001'";
             $mailtoo = DB::select($mails);
 
-            $isimail = "select * FROM acc_investments where acc_investments.id = ".$invest->id;
+            $isimail = "select acc_investments.*, acc_investment_budgets.budget_no, acc_investment_budgets.budget_name, acc_investment_budgets.category_budget, acc_investment_budgets.sisa as total_budget, acc_investment_budgets.total as total_pengeluaran FROM acc_investments join acc_investment_budgets on acc_investments.reff_number = acc_investment_budgets.reff_number where acc_investments.id = ".$invest->id;
             $investe = db::select($isimail);
 
             Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($investe, 'investment'));
@@ -5629,7 +5629,7 @@ public function update_purchase_requisition_po(Request $request)
             $mails = "select distinct email from users where users.username = '".$invest->applicant_id."'";
             $mailcc = DB::select($mails);
 
-            $isimail = "select * FROM acc_investments where acc_investments.id = ".$invest->id;
+            $isimail = "select acc_investments.*, acc_investment_budgets.budget_no, acc_investment_budgets.budget_name, acc_investment_budgets.category_budget, acc_investment_budgets.sisa as total_budget, acc_investment_budgets.total as total_pengeluaran FROM acc_investments join acc_investment_budgets on acc_investments.reff_number = acc_investment_budgets.reff_number where acc_investments.id = ".$invest->id;
             $investe = db::select($isimail);
 
             // Mail::to($mailtoo)->cc($mailcc)->bcc(['rio.irvansyah@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($investe, 'investment'));
@@ -5754,7 +5754,7 @@ public function update_purchase_requisition_po(Request $request)
                 $mails = "select distinct email from users where users.username = '".$user[0]."'";
                 $mailtoo = DB::select($mails);
 
-                $isimail = "select * FROM acc_investments where acc_investments.id = ".$invest->id;
+                $isimail = "select acc_investments.*, acc_investment_budgets.budget_no, acc_investment_budgets.budget_name, acc_investment_budgets.category_budget, acc_investment_budgets.sisa as total_budget, acc_investment_budgets.total as total_pengeluaran FROM acc_investments join acc_investment_budgets on acc_investments.reff_number = acc_investment_budgets.reff_number where acc_investments.id = ".$invest->id;
                 $investe = db::select($isimail);
 
                 Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($investe, 'investment'));
@@ -5818,7 +5818,7 @@ public function update_purchase_requisition_po(Request $request)
                 $mails = "select distinct email from users where users.username = '".$user[0]."'";
                 $mailtoo = DB::select($mails);
 
-                $isimail = "select * FROM acc_investments where acc_investments.id = ".$invest->id;
+                $isimail = "select acc_investments.*, acc_investment_budgets.budget_no, acc_investment_budgets.budget_name, acc_investment_budgets.category_budget, acc_investment_budgets.sisa as total_budget, acc_investment_budgets.total as total_pengeluaran FROM acc_investments join acc_investment_budgets on acc_investments.reff_number = acc_investment_budgets.reff_number where acc_investments.id = ".$invest->id;
                 $investe = db::select($isimail);
 
                 Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($investe, 'investment'));
@@ -5883,7 +5883,7 @@ public function update_purchase_requisition_po(Request $request)
                 $mails = "select distinct email from users where users.username = '".$user[0]."'";
                 $mailtoo = DB::select($mails);
 
-                $isimail = "select * FROM acc_investments where acc_investments.id = ".$invest->id;
+                $isimail = "select acc_investments.*, acc_investment_budgets.budget_no, acc_investment_budgets.budget_name, acc_investment_budgets.category_budget, acc_investment_budgets.sisa as total_budget, acc_investment_budgets.total as total_pengeluaran FROM acc_investments join acc_investment_budgets on acc_investments.reff_number = acc_investment_budgets.reff_number where acc_investments.id = ".$invest->id;
                 $investe = db::select($isimail);
 
                 Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($investe, 'investment'));
@@ -5948,7 +5948,7 @@ public function update_purchase_requisition_po(Request $request)
                 $mails = "select distinct email from users where users.username = '".$user[0]."'";
                 $mailtoo = DB::select($mails);
 
-                $isimail = "select * FROM acc_investments where acc_investments.id = ".$invest->id;
+                $isimail = "select acc_investments.*, acc_investment_budgets.budget_no, acc_investment_budgets.budget_name, acc_investment_budgets.category_budget, acc_investment_budgets.sisa as total_budget, acc_investment_budgets.total as total_pengeluaran FROM acc_investments join acc_investment_budgets on acc_investments.reff_number = acc_investment_budgets.reff_number where acc_investments.id = ".$invest->id;
                 $investe = db::select($isimail);
 
                 Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($investe, 'investment'));
@@ -6012,7 +6012,7 @@ public function update_purchase_requisition_po(Request $request)
                 $mails = "select distinct email from users where users.username = '".$user[0]."'";
                 $mailtoo = DB::select($mails);
 
-                $isimail = "select * FROM acc_investments where acc_investments.id = ".$invest->id;
+                $isimail = "select acc_investments.*, acc_investment_budgets.budget_no, acc_investment_budgets.budget_name, acc_investment_budgets.category_budget, acc_investment_budgets.sisa as total_budget, acc_investment_budgets.total as total_pengeluaran FROM acc_investments join acc_investment_budgets on acc_investments.reff_number = acc_investment_budgets.reff_number where acc_investments.id = ".$invest->id;
                 $investe = db::select($isimail);
 
                 Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($investe, 'investment'));
@@ -6079,7 +6079,7 @@ public function update_purchase_requisition_po(Request $request)
                 $mailcc = "select distinct email from users where users.username = '".$invest->applicant_id."'";
                 $mailtoocc = DB::select($mailcc);
 
-                $isimail = "select * FROM acc_investments where acc_investments.id = ".$invest->id;
+                $isimail = "select acc_investments.*, acc_investment_budgets.budget_no, acc_investment_budgets.budget_name, acc_investment_budgets.category_budget, acc_investment_budgets.sisa as total_budget, acc_investment_budgets.total as total_pengeluaran FROM acc_investments join acc_investment_budgets on acc_investments.reff_number = acc_investment_budgets.reff_number where acc_investments.id = ".$invest->id;
                 $investe = db::select($isimail);
 
                 Mail::to($mailtoo)->cc($mailtoocc)->bcc(['rio.irvansyah@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($investe, 'investment'));
@@ -6174,7 +6174,7 @@ public function update_purchase_requisition_po(Request $request)
         $mails = "select distinct email from users where users.username = '".$investment->applicant_id."'";
         $mailtoo = DB::select($mails);
 
-        $isimail = "select * FROM acc_investments where acc_investments.id = ".$id;
+        $isimail = "select acc_investments.*, acc_investment_budgets.budget_no, acc_investment_budgets.budget_name, acc_investment_budgets.category_budget, acc_investment_budgets.sisa as total_budget, acc_investment_budgets.total as total_pengeluaran FROM acc_investments join acc_investment_budgets on acc_investments.reff_number = acc_investment_budgets.reff_number where acc_investments.id = ".$id;
         $tolak = db::select($isimail);
 
         Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($tolak, 'investment'));
@@ -6192,7 +6192,7 @@ public function update_purchase_requisition_po(Request $request)
             $mailtoo = DB::select($mails);
 
 
-            $isimail = "select * FROM acc_investments where acc_investments.id = ".$id;
+            $isimail = "select acc_investments.*, acc_investment_budgets.budget_no, acc_investment_budgets.budget_name, acc_investment_budgets.category_budget, acc_investment_budgets.sisa as total_budget, acc_investment_budgets.total as total_pengeluaran FROM acc_investments join acc_investment_budgets on acc_investments.reff_number = acc_investment_budgets.reff_number where acc_investments.id = ".$id;
             $tolak = db::select($isimail);
 
             Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($tolak, 'investment'));
@@ -6307,7 +6307,7 @@ public function update_purchase_requisition_po(Request $request)
 
         $invest->save();
 
-        $isimail = "select * FROM acc_investments where acc_investments.id = ".$invest->id;
+        $isimail = "select acc_investments.*, acc_investment_budgets.budget_no, acc_investment_budgets.budget_name, acc_investment_budgets.category_budget, acc_investment_budgets.sisa as total_budget, acc_investment_budgets.total as total_pengeluaran FROM acc_investments join acc_investment_budgets on acc_investments.reff_number = acc_investment_budgets.reff_number where acc_investments.id = ".$invest->id;
         $tolak = db::select($isimail);
 
             //kirim email ke Buyer
@@ -6348,7 +6348,7 @@ public function update_purchase_requisition_po(Request $request)
 
     $investment->save();
 
-    $isimail = "select * FROM acc_investments where acc_investments.id = ".$id;
+    $isimail = "select acc_investments.*, acc_investment_budgets.budget_no, acc_investment_budgets.budget_name, acc_investment_budgets.category_budget, acc_investment_budgets.sisa as total_budget, acc_investment_budgets.total as total_pengeluaran FROM acc_investments join acc_investment_budgets on acc_investments.reff_number = acc_investment_budgets.reff_number where acc_investments.id = ".$id;
     $tolak = db::select($isimail);
 
               //kirim email ke Buyer
@@ -9698,7 +9698,7 @@ public function update_purchase_requisition_po(Request $request)
 
                 $pdf->save(public_path() . "/investment_list/INV_".$judul.".pdf");
 
-                $isimail = "select * FROM acc_investments where acc_investments.id = ".$investment->id;
+                $isimail = "select acc_investments.*, acc_investment_budgets.budget_no, acc_investment_budgets.budget_name, acc_investment_budgets.category_budget, acc_investment_budgets.sisa as total_budget, acc_investment_budgets.total as total_pengeluaran FROM acc_investments join acc_investment_budgets on acc_investments.reff_number = acc_investment_budgets.reff_number where acc_investments.id = ".$investment->id;
                 $investe = db::select($isimail);
 
                 Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($investe, 'investment'));
@@ -9837,7 +9837,7 @@ public function update_purchase_requisition_po(Request $request)
 
             $investment->save();
 
-            $isimail = "select * FROM acc_investments where acc_investments.id = ".$id;
+            $isimail = "select acc_investments.*, acc_investment_budgets.budget_no, acc_investment_budgets.budget_name, acc_investment_budgets.category_budget, acc_investment_budgets.sisa as total_budget, acc_investment_budgets.total as total_pengeluaran FROM acc_investments join acc_investment_budgets on acc_investments.reff_number = acc_investment_budgets.reff_number where acc_investments.id = ".$id;
             $tolak = db::select($isimail);
 
             //kirim email ke Buyer
