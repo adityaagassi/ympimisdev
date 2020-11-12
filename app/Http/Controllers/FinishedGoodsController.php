@@ -418,7 +418,7 @@ class FinishedGoodsController extends Controller
 			$year = "having year = '" . date('Y') . "' and week_start >= '" . $first . "' and week_start <= '" . $last . "'";
 		}
 
-		$query = "SELECT YEAR
+		$query = "SELECT YEAR as year
 		,
 		week_name,
 		week_start,

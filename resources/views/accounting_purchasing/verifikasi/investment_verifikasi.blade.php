@@ -113,8 +113,8 @@
       || (($user == $user_dgm[0] || Auth::user()->role_code == "MIS") && count($user_dgm) != 4 && $investment->posisi == "dgm")
       || (($user == $user_gm[0]) && count($user_gm) != 4 && $investment->posisi == "gm")
       || (($user == $user_manager_acc[0] || Auth::user()->role_code == "MIS") && count($user_manager_acc) != 4 && $investment->posisi == "manager_acc")
-      || (($user == $user_direktur_acc[0] || Auth::user()->role_code == "MIS") && count($user_direktur_acc) != 4 && $investment->posisi == "direktur_acc")
-      || (($user == $user_presdir[0] || Auth::user()->role_code == "MIS") && count($user_presdir) != 4 && $investment->posisi == "presdir")
+      || (($user == $user_direktur_acc[0]) && count($user_direktur_acc) != 4 && $investment->posisi == "direktur_acc")
+      || (($user == $user_presdir[0]) && count($user_presdir) != 4 && $investment->posisi == "presdir")
       )
 
       <form role="form" id="myForm" method="post" action="{{url('investment/approval/'.$investment->id)}}" enctype="multipart/form-data">
