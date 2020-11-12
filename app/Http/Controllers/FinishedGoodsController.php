@@ -418,25 +418,114 @@ class FinishedGoodsController extends Controller
 			$year = "having year = '" . date('Y') . "' and week_start >= '" . $first . "' and week_start <= '" . $last . "'";
 		}
 
-		$query = "select year, week_name, week_start, week_end, sum(plan) as plan, sum(actual_production) as actual_production, sum(diff_actual) as diff_actual, concat(truncate((sum(actual_production)/sum(plan))*100,2), '%') as prctg_actual, sum(actual_shipment) as actual_shipment, sum(diff_shipment) as diff_shipment, concat(truncate((sum(actual_shipment)/sum(plan))*100,2), '%') as prctg_shipment, sum(delay) as delay, concat(round(((sum(plan)-sum(delay))/sum(plan))*100,2), '%') as prctg_delay from
+		$query = "SELECT YEAR
+		,
+		week_name,
+		week_start,
+		week_end,
+		sum( plan ) AS plan,
+		sum( actual_production ) AS actual_production,
+		sum( diff_actual ) AS diff_actual,
+		concat( TRUNCATE (( sum( actual_production )/ sum( plan ))* 100, 2 ), '%' ) AS prctg_actual,
+		sum( actual_shipment ) AS actual_shipment,
+		sum( diff_shipment ) AS diff_shipment,
+		concat( TRUNCATE (( sum( actual_shipment )/ sum( plan ))* 100, 2 ), '%' ) AS prctg_shipment,
+		sum( delay ) AS delay,
+		concat( round((( sum( plan )- sum( delay ))/ sum( plan ))* 100, 2 ), '%' ) AS prctg_delay 
+		FROM
 		(
-		select year, week_name, week_start, bl_target as week_end, id, material_number, plan, sum(actual_production)as actual_production, sum(actual_production)-plan as diff_actual, sum(actual_shipment) as actual_shipment, sum(actual_shipment)-plan as diff_shipment, sum(delay) as delay from
+		SELECT YEAR
+		,
+		week_name,
+		week_start,
+		bl_target AS week_end,
+		id,
+		material_number,
+		plan,
+		sum( actual_production ) AS actual_production,
+		sum( actual_production )- plan AS diff_actual,
+		sum( actual_shipment ) AS actual_shipment,
+		sum( actual_shipment )- plan AS diff_shipment,
+		sum( delay ) AS delay 
+		FROM
 		(
-		select a.year, a.week_name, a.week_start, b.bl_actual, a.bl_target, b.id, b.material_number, b.quantity as plan, sum(b.actual) as actual_production, if(b.bl_actual is null, 0, sum(b.actual)) as actual_shipment, if(b.bl_actual > a.bl_target, sum(b.actual), 0) as delay from
+		SELECT
+		a.YEAR,
+		a.week_name,
+		a.week_start,
+		b.bl_actual,
+		a.bl_target,
+		b.id,
+		b.material_number,
+		b.quantity AS plan,
+		sum( b.actual ) AS actual_production,
+		IF
 		(
-		(select year(week_date) as year, week_name, min(week_date) as week_start, max(week_date) as bl_target from weekly_calendars group by year(week_date), week_name) as a
-
-		left join
-
-		(select year(shipment_schedules.bl_date) as year, concat('W', date_format(shipment_schedules.bl_date, '%U')+1) as week_name, shipment_schedules.id, shipment_schedules.material_number, shipment_schedules.quantity, flos.actual, shipment_schedules.bl_date as bl_plan, flos.bl_date as bl_actual from shipment_schedules left join flos on flos.shipment_schedule_id = shipment_schedules.id) as b on b.year = a.year and b.week_name = a.week_name left join materials on material.material_number = shipment_scheules.material_number where materials.category = 'FG'
-		)
-		group by year, week_name, week_start, bl_target, id, bl_actual, material_number, quantity
-		) as c
-		group by year, week_name, week_start, bl_target, material_number, id, plan
-		) as d
-		group by year, week_name, week_start, week_end
+		b.bl_actual IS NULL,
+		0,
+		sum( b.actual )) AS actual_shipment,
+		IF
+		( b.bl_actual > a.bl_target, sum( b.actual ), 0 ) AS delay 
+		FROM
+		(
+		(
+		SELECT YEAR
+		( week_date ) AS YEAR,
+		week_name,
+		min( week_date ) AS week_start,
+		max( week_date ) AS bl_target 
+		FROM
+		weekly_calendars 
+		GROUP BY
+		YEAR ( week_date ),
+		week_name 
+		) AS a
+		LEFT JOIN (
+		SELECT YEAR
+		( shipment_schedules.bl_date ) AS YEAR,
+		concat( 'W', date_format( shipment_schedules.bl_date, '%U' )+ 1 ) AS week_name,
+		shipment_schedules.id,
+		shipment_schedules.material_number,
+		shipment_schedules.quantity,
+		flos.actual,
+		shipment_schedules.bl_date AS bl_plan,
+		flos.bl_date AS bl_actual 
+		FROM
+		shipment_schedules
+		LEFT JOIN flos ON flos.shipment_schedule_id = shipment_schedules.id
+		LEFT JOIN materials ON materials.material_number = shipment_schedules.material_number 
+		WHERE
+		materials.category = 'FG' 
+		) AS b ON b.YEAR = a.YEAR 
+		AND b.week_name = a.week_name 
+		) 
+		GROUP BY
+		YEAR,
+		week_name,
+		week_start,
+		bl_target,
+		id,
+		bl_actual,
+		material_number,
+		quantity 
+		) AS c 
+		GROUP BY
+		YEAR,
+		week_name,
+		week_start,
+		bl_target,
+		material_number,
+		id,
+		plan 
+		) AS d 
+		GROUP BY
+		YEAR,
+		week_name,
+		week_start,
+		week_end 
 		" . $year . "
-		order by week_start asc";
+		ORDER BY
+		week_start ASC";
 
 		$weekly_calendars = DB::select($query);
 		return DataTables::of($weekly_calendars)->make(true);
