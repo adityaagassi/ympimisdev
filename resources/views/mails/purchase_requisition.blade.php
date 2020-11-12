@@ -92,6 +92,7 @@
 					<th style="width: 3%; border:1px solid black;">Item Desc</th>
 					<th style="width: 3%; border:1px solid black;">Peruntukan</th>
 					<th style="width: 1%; border:1px solid black;">Qty</th>
+					<th style="width: 1%; border:1px solid black;">UOM</th>
 					<th style="width: 1%; border:1px solid black;">Stok</th>
 					<th style="width: 1%; border:1px solid black;">Kebutuhan</th>
 				</tr>
@@ -101,7 +102,8 @@
 				<tr>
 					<td style="border:1px solid black; text-align: left !important;"><?= $datas->item_desc ?></td></td>
 					<td style="border:1px solid black; text-align: left !important;"><?= $datas->peruntukan ?></td>
-					<td style="border:1px solid black; text-align: center;"><?= $datas->item_qty ?> <?= $datas->item_uom ?></td>
+					<td style="border:1px solid black; text-align: center;"><?= $datas->item_qty ?></td>
+					<td style="border:1px solid black; text-align: center;"><?= $datas->item_uom ?></td>
 					<td style="border:1px solid black; text-align: center;"><?= $datas->item_stock ?></td>
 					<td style="border:1px solid black; text-align: center;"><?= $datas->kebutuhan ?></td>
 				</tr>
@@ -234,6 +236,8 @@
 				<tr>
 					<th style="width: 3%; border:1px solid black;">Item Desc</th>
 					<th style="width: 3%; border:1px solid black;">Peruntukan</th>
+					<th style="width: 1%; border:1px solid black;">Qty</th>
+					<th style="width: 1%; border:1px solid black;">UOM</th>
 					<th style="width: 1%; border:1px solid black;">Stok</th>
 					<th style="width: 1%; border:1px solid black;">Kebutuhan</th>
 				</tr>
@@ -243,6 +247,8 @@
 				<tr>
 					<td style="border:1px solid black; text-align: center;"><?= $datas->item_desc ?></td></td>
 					<td style="border:1px solid black; text-align: center;"><?= $datas->peruntukan ?></td>
+					<td style="border:1px solid black; text-align: center;"><?= $datas->item_qty ?></td>
+					<td style="border:1px solid black; text-align: center;"><?= $datas->item_uom ?></td>
 					<td style="border:1px solid black; text-align: center;"><?= $datas->item_stock ?></td>
 					<td style="border:1px solid black; text-align: center;"><?= $datas->kebutuhan ?></td>
 				</tr>
