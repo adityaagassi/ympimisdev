@@ -832,11 +832,11 @@
                             <td>
                                 <span style="font-weight: bold;">Check Material Dimensions (寸法測定結果)</span>
                                 <br>
-                                <a href="http://172.17.128.114/digital-ik-cdm/">
+                                <a href="http://10.109.52.11/digital-ik-cdm/">
                                     <i class="fa fa-caret-right"></i> Work Instruction Digital System (作業手順書デジタル化)
                                 </a>
                                 <br>
-                                <a href="http://172.17.128.114/cdm-new/">
+                                <a href="http://10.109.52.11/cdm-new/">
                                     <i class="fa fa-caret-right"></i> T-Pro CDM Charts (T-ProのCDMチャート)
                                 </a>
                             </td>
