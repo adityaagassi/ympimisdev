@@ -222,6 +222,8 @@ Route::post('index/injeksi/store_molding_log', 'InjectionsController@store_moldi
 Route::get('index/injeksi/get_ng_temp', 'InjectionsController@get_ng_temp');
 Route::get('index/injeksi/get_molding_log', 'InjectionsController@get_molding_log');
 Route::post('index/injeksi/delete_ng_temp', 'InjectionsController@delete_ng_temp');
+Route::get('input/reason_idle_trouble', 'InjectionsController@inputReasonIdleTrouble');
+Route::get('change/reason_idle_trouble', 'InjectionsController@changeReasonIdleTrouble');
 
 //in
 Route::get('index/in', 'InjectionsController@in');
@@ -1262,6 +1264,7 @@ Route::get('index/sakurentsu/upload_sakurentsu_translate/{id}', 'SakurentsuContr
 Route::post('index/sakurentsu/upload_sakurentsu_translate/{id}', 'SakurentsuController@upload_file_sakurentsu_translate');
 Route::get('fetch/sakurentsu', 'SakurentsuController@fetch_sakuretsu');
 Route::get('index/sakurentsu/monitoring', 'SakurentsuController@monitoring');
+Route::get('index/sakurentsu/list_sakurentsu', 'SakurentsuController@index_sakurentsu');
 Route::get('index/sakurentsu/detail/{id}', 'SakurentsuController@detail_sakurentsu');
 Route::get('fetch/sakurentsu/type', 'SakurentsuController@fetch_sakurentsu');
 
@@ -2218,7 +2221,6 @@ Route::get('print/stocktaking/summary_of_counting', 'StockTakingController@print
 Route::get('index/stocktaking/no_use', 'StockTakingController@indexNoUse');
 Route::post('fetch/stocktaking/update_no_use', 'StockTakingController@updateNoUse');
 
-
 //New No Use
 Route::get('index/stocktaking/no_use_new', 'StockTakingController@indexNoUseNew');
 Route::post('fetch/stocktaking/update_no_use_new', 'StockTakingController@updateNoUseNew');
@@ -2232,7 +2234,6 @@ Route::get('fetch/stocktaking/store_list', 'StockTakingController@fetchStoreList
 Route::post('fetch/stocktaking/update_count', 'StockTakingController@updateCount');
 
 //Count New
-
 Route::get('index/stocktaking/count_new', 'StockTakingController@indexCountNew');
 Route::get('fetch/stocktaking/material_detail_new', 'StockTakingController@fetchMaterialDetailNew');
 Route::get('fetch/stocktaking/store_list_new', 'StockTakingController@fetchStoreListNew');
@@ -2269,6 +2270,8 @@ Route::group(['nav' => 'S36', 'middleware' => 'permission'], function(){
 	Route::get('fetch/stocktaking/stocktaking_list', 'StockTakingController@fetchMonthlyStocktakingList');
 	Route::post('delete/stocktaking/stocktaking_list', 'StockTakingController@deleteMonthlyStocktakingList');
 	Route::post('edit/stocktaking/stocktaking_list', 'StockTakingController@editMonthlyStocktakingList');
+	Route::post('upload/stocktaking/stocktaking_list', 'StockTakingController@uploadMonthlyStocktakingList');
+	Route::post('export/stocktaking/error_upload_stocktaking_list', 'StockTakingController@exportErrorUpload');
 
 	//Revise
 	Route::get('index/stocktaking/revise', 'StockTakingController@indexRevise');
@@ -2631,6 +2634,7 @@ Route::get('index/display/efficiency_monitoring', 'DisplayController@indexEffici
 Route::get('index/display/efficiency_monitoring_monthly', 'DisplayController@indexEfficiencyMonitoringMonthly');
 
 Route::get('fetch/display/efficiency_monitoring', 'DisplayController@fetchEfficiencyMonitoring');
+Route::get('fetch/display/efficiency_monitoring_monthly', 'DisplayController@fetchEfficiencyMonitoringMonthly');
 
 
 
@@ -3532,6 +3536,7 @@ Route::group(['nav' => 'S47', 'middleware' => 'permission'], function(){
 
 	Route::post('report/maintenance/spk', 'MaintenanceController@reportingSPK');
 	Route::post('report/maintenance/spk/pending', 'MaintenanceController@reportingSPKPending');
+	Route::post('post/maintenance/spk/receipt', 'MaintenanceController@receiptSPK');
 
 	// -----------  APAR -----------
 	Route::get('index/maintenance/apar', 'MaintenanceController@indexApar');

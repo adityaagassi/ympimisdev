@@ -40,6 +40,7 @@ use App\InjectionMaintenanceMoldingLog;
 use App\InjectionMaintenanceMoldingTemp;
 use App\InjectionMachineMaster;
 use App\InjectionMachineWork;
+use App\InjectionMachineWorkingLog;
 use App\InjectionMachineLog;
 use App\InjectionDryerLog;
 use App\InjectionDryer;
@@ -1485,6 +1486,7 @@ class InjectionsController extends Controller
                 $machinework->dryer = $request->get('dryer');
                 $machinework->dryer_lot_number = $request->get('dryer_lot_number');
                 $machinework->dryer_color = $request->get('dryer_color');
+                $machinework->status = 'Working';
                 $machinework->created_by = $id_user;
                 $machinework->save();
             }
@@ -1529,6 +1531,70 @@ class InjectionsController extends Controller
             );
             return Response::json($response);
         } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function inputReasonIdleTrouble(Request $request)
+    {
+        try {
+            $reason = InjectionMachineWorkingLog::create([
+                'mesin' => $request->get('mesin'),
+                'status' => $request->get('status'),
+                'reason' => $request->get('reason'),
+                'color' => $request->get('color'),
+                'cavity' => $request->get('cavity'),
+                'molding' => $request->get('molding'),
+                'material_number' => $request->get('material_number'),
+                'dryer' => $request->get('dryer'),
+                'dryer_lot_number' => $request->get('dryer_lot_number'),
+                'start_time' => date('Y-m-d H:i:s'),
+                'remark' => 'Open',
+                'created_by' => Auth::id()
+            ]);
+
+            $temp = InjectionMachineWork::where('mesin',$request->get('mesin'))->first();
+            $temp->status = $request->get('status');
+            $temp->remark = $request->get('reason');
+            $temp->save();
+
+            $response = array(
+                'status' => true,
+                'message' => '',
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function changeReasonIdleTrouble(Request $request)
+    {
+        try {
+            $reason = InjectionMachineWorkingLog::where('mesin',$request->get('mesin'))->where('remark','Open')->first();
+            $reason->end_time = date('Y-m-d H:i:s');
+            $reason->remark = 'Close';
+            $reason->save();
+
+            $temp = InjectionMachineWork::where('mesin',$request->get('mesin'))->first();
+            $temp->status = 'Working';
+            $temp->remark = null;
+            $temp->save();
+
+            $response = array(
+                'status' => true,
+                'message' => '',
+            );
+            return Response::json($response);
+        } catch (Exception $e) {
             $response = array(
                 'status' => false,
                 'message' => $e->getMessage(),

@@ -295,13 +295,23 @@
 			</div>
 
 			<div class="col-xs-6" style="padding: 0px;padding-top: 10px;padding-right: 5px">
-				<button class="btn btn-warning" id="btn_ganti" onclick="changeMesin()" style="font-size: 25px;font-weight: bold;width: 100%">
+				<button class="btn btn-primary" id="btn_ganti" onclick="changeMesin()" style="font-size: 25px;font-weight: bold;width: 100%">
 					PILIH MESIN
 				</button>
 			</div>
 			<div class="col-xs-6" style="padding: 0px;padding-top: 10px;padding-left: 5px">
 				<button class="btn btn-info" id="btn_ganti_op" onclick="location.reload()" style="font-size: 25px;font-weight: bold;width: 100%">
 					GANTI OPERATOR
+				</button>
+			</div>
+			<div class="col-xs-6" style="padding: 0px;padding-top: 10px;padding-right: 5px">
+				<button class="btn btn-warning" id="btn_idle" onclick="idle_trouble('IDLE')" style="font-size: 25px;font-weight: bold;width: 100%">
+					IDLE
+				</button>
+			</div>
+			<div class="col-xs-6" style="padding: 0px;padding-top: 10px;padding-left: 5px">
+				<button class="btn btn-danger" id="btn_trouble" onclick="idle_trouble('TROUBLE')" style="font-size: 25px;font-weight: bold;width: 100%">
+					TROUBLE
 				</button>
 			</div>
 		</div>
@@ -502,22 +512,26 @@
 	</div>
 </div>
 
-<!-- <div class="modal fade" id="modalStatus">
+<div class="modal fade" id="modalStatus">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
-			<div class="modal-header"><center> <b id="statusa" style="font-size: 2vw"></b> </center>
+			<div class="modal-header"><center> <b id="status_idle_trouble" style="font-size: 2vw"></b> </center>
 				<div class="modal-body table-responsive no-padding">
 					<div class="form-group">
-						<label for="exampleInputEmail1">Reason</label>
-						<input class="form-control" style="width: 100%; text-align: center;" type="text" id="Reason" placeholder="Reason" required><br>
-						<button class="btn btn-warning pull-left" data-dismiss="modal">Cancel</button>
-						<button class="btn btn-success pull-right" onclick="saveStatus()">Confirm</button>
+						<center><label for="">Reason</label></center>
+						<input class="form-control" style="width: 100%; text-align: center;" type="text" id="reason" placeholder="Reason" required><br>
+					</div>
+					<div class="col-xs-6" style="padding-left: 0px">
+						<button class="btn btn-danger btn-block" style="font-weight: bold;font-size: 20px" data-dismiss="modal">Cancel</button>
+					</div>
+					<div class="col-xs-6" style="padding-right: 0px">
+						<button class="btn btn-success btn-block" style="font-weight: bold;font-size: 20px" onclick="saveStatus()">Confirm</button>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div> -->
+</div>
 
 @endsection
 @section('scripts')
@@ -740,6 +754,11 @@
 		$('#dryer_fix2').html("DRYER");
 	}
 
+	function idle_trouble(status) {
+		$('#modalStatus').modal('show');
+		$('#status_idle_trouble').html(status);
+	}
+
 	function changeMesin() {
 		changeMesin2();
 		changeDryer2();
@@ -809,8 +828,59 @@
 		// update_tag();
 	}
 
+	function saveStatus() {
+		var statuses = $('#status_idle_trouble').text();
+		var reason = $('#reason').val();
+
+
+		var data = {
+			status:statuses,
+			reason:reason,
+			mesin:$('#mesin').text(),
+			color:$('#color').text(),
+			molding:$('#molding').text(),
+			cavity:$('#cavity').text(),
+			material_number:$('#material_number').val(),
+			dryer:$('#dryer').text(),
+			dryer_lot_number:$('#dryer_lot_number').text(),
+		}
+
+		$.get('{{ url("input/reason_idle_trouble") }}', data, function(result, status, xhr){
+			if(result.status){
+				if (statuses == 'IDLE') {
+					alert('Mesin Dalam Kondisi Idle.');
+					location.reload();
+				}else{
+					alert('Mesin Dalam Kondisi Trouble. Silahkan hubungi bagian terkait.');
+					location.reload();
+				}
+			}else{
+				openErrorGritter('Error!',result.message);
+			}
+		});
+	}
+
+	function changeStatus(mesin) {
+		var data = {
+			mesin:mesin,
+		}
+
+		$.get('{{ url("change/reason_idle_trouble") }}', data, function(result, status, xhr){
+			if(result.status){
+				alert('Mesin Kembali Bekerja.');
+				get_temp();
+			}else{
+				openErrorGritter('Error!',result.message);
+			}
+		});
+	}
+
 	function saveMesin() {
-		get_temp();
+		if ($('#mesin_fix2').text() == 'MESIN' || $('#dryer_fix2').text() == 'DRYER') {
+			alert('Mesin & Dryer Harus Diisi.');
+		}else{
+			get_temp();
+		}
 	}
 
 	function changeProductFix() {
@@ -962,52 +1032,59 @@
 		}
 		$.get('{{ url("index/injeksi/get_temp") }}', data, function(result, status, xhr){
 			if(result.status){
-				openSuccessGritter('Success!', result.message);
-				var start_time = result.data_mesin.start_time;
-				// $('#tag_product').val(result.datas.tag_product);
-				$('#mesin').html($('#mesin_fix2').text());
-				$('#tag_molding').val(result.data_mesin.tag_molding);
-				$('#tag_product').prop('disabled',true);
-				$('#tag_molding').prop('disabled',true);
-				$('#start_time').val(start_time);
-				$('#molding').html(result.data_mesin.molding);
-				$('#part_name').html(result.data_mesin.part_name);
-				$('#part_type').html(result.data_mesin.part_type);
-				$('#color').html(result.data_mesin.color);
-				$('#cavity').html(result.data_mesin.cavity);
-				$('#material_number').val(result.data_mesin.material_number);
-				$('#dryer').html(result.data_mesin.dryer);
-				$('#dryer_lot_number').html(result.data_mesin.dryer_lot_number);
-				$('#dryer_color').html(result.data_mesin.dryer_color);
-				countUpFromTime(new Date(start_time));
-				if (result.datas != null) {
-					$('#btn_mulai').hide();
-					// $('#btn_selesai').show();
-					$('#perolehan').show();
-					$('#modalProduct').modal('hide');
-					$('#total_shot').val(result.datas.shot);
-					$('#start_time_product').val(result.datas.start_time);
-					if (result.datas.ng_name != null) {
-						var ng_name = result.datas.ng_name.split(',');
-						var ng_count = result.datas.ng_count.split(',');
-						var jumlah_ng = '{{$nomor+1}}';
-						for (var i = 1; i <= jumlah_ng; i++ ) {
-							for (var j = 0; j < ng_name.length; j++ ) {
-								if($('#ng'+i).text() == ng_name[j]){
-									$('#count'+i).html(ng_count[j]);
+				if (result.data_mesin.status == 'Working') {
+					openSuccessGritter('Success!', result.message);
+					var start_time = result.data_mesin.start_time;
+					// $('#tag_product').val(result.datas.tag_product);
+					$('#mesin').html($('#mesin_fix2').text());
+					$('#tag_molding').val(result.data_mesin.tag_molding);
+					$('#tag_product').prop('disabled',true);
+					$('#tag_molding').prop('disabled',true);
+					$('#start_time').val(start_time);
+					$('#molding').html(result.data_mesin.molding);
+					$('#part_name').html(result.data_mesin.part_name);
+					$('#part_type').html(result.data_mesin.part_type);
+					$('#color').html(result.data_mesin.color);
+					$('#cavity').html(result.data_mesin.cavity);
+					$('#material_number').val(result.data_mesin.material_number);
+					$('#dryer').html(result.data_mesin.dryer);
+					$('#dryer_lot_number').html(result.data_mesin.dryer_lot_number);
+					$('#dryer_color').html(result.data_mesin.dryer_color);
+					countUpFromTime(new Date(start_time));
+					if (result.datas != null) {
+						$('#btn_mulai').hide();
+						// $('#btn_selesai').show();
+						$('#perolehan').show();
+						$('#modalProduct').modal('hide');
+						$('#total_shot').val(result.datas.shot);
+						$('#start_time_product').val(result.datas.start_time);
+						if (result.datas.ng_name != null) {
+							var ng_name = result.datas.ng_name.split(',');
+							var ng_count = result.datas.ng_count.split(',');
+							var jumlah_ng = '{{$nomor+1}}';
+							for (var i = 1; i <= jumlah_ng; i++ ) {
+								for (var j = 0; j < ng_name.length; j++ ) {
+									if($('#ng'+i).text() == ng_name[j]){
+										$('#count'+i).html(ng_count[j]);
+									}
 								}
 							}
 						}
+						intervalUpdate = setInterval(update_temp,10000);
+						$('#btn_ganti').show();
+						$('#modalMesin').modal('hide');
+					}else{
+						$('#btn_mulai').show();
+						// $('#btn_selesai').hide();
+						$('#perolehan').hide();
+						// $('#modalProduct').modal('show');
+						$('#modalMesin').modal('hide');
 					}
-					intervalUpdate = setInterval(update_temp,10000);
-					$('#btn_ganti').show();
-					$('#modalMesin').modal('hide');
 				}else{
-					$('#btn_mulai').show();
-					// $('#btn_selesai').hide();
-					$('#perolehan').hide();
-					// $('#modalProduct').modal('show');
-					$('#modalMesin').modal('hide');
+					openErrorGritter('Error!','Mesin Dalam Status Idle / Trouble.');
+					if (confirm('Mesin Dalam Status Idle / Trouble. Apakah akan melanjutkan kerja mesin?')) {
+						changeStatus($('#mesin_fix2').text());
+					}
 				}
 			}
 			else{
