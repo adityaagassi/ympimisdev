@@ -4938,8 +4938,8 @@ public function update_purchase_requisition_po(Request $request)
             }
             //jika expense maka filter berdasarkan type
             else{
-                if($request->get('type') != "Others"){
-                    $typif ($request->get('type') == "Office Supplies") {
+                if($request->get('type') != "Others") {
+                    if($request->get('type') == "Office Supplies") {
                         $type = "Office supplies/facilities";
                     }
                     else if($request->get('type') == "Repair and Maintenance"){
