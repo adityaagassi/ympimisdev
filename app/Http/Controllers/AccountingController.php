@@ -4938,28 +4938,39 @@ public function update_purchase_requisition_po(Request $request)
             }
             //jika expense maka filter berdasarkan type
             else{
-                if ($request->get('type') == "Office Supplies") {
-                    $type = "Office supplies/facilities";
-                }
-                else if($request->get('type') == "Repair and Maintenance"){
-                    $type = "Repair Maintenance";
-                }
-                else if($request->get('type') == "Tools, Jigs and Furniture"){
-                    $type = "Tool, Jig, and Furniture";
-                }
-                else if($request->get('type') == "Moulding"){
-                    $type = "Molding";
+                if($request->get('type') != "Others"){
+                    $typif ($request->get('type') == "Office Supplies") {
+                        $type = "Office supplies/facilities";
+                    }
+                    else if($request->get('type') == "Repair and Maintenance"){
+                        $type = "Repair Maintenance";
+                    }
+                    else if($request->get('type') == "Tools, Jigs and Furniture"){
+                        $type = "Tool, Jig, and Furniture";
+                    }
+                    else if($request->get('type') == "Moulding"){
+                        $type = "Molding";
+                    }
+                    else{
+                        $type = $request->get('type');
+                    }
+                    
+                    $budgets = AccBudget::select('acc_budgets.budget_no', 'acc_budgets.description')
+                    ->where('department', '=', $dept)
+                    ->where('category', '=', $cat)
+                    ->where('account_name', '=', $type)
+                    ->distinct()
+                    ->get();
                 }
                 else{
-                    $type = $request->get('type');
+                    $budgets = AccBudget::select('acc_budgets.budget_no', 'acc_budgets.description')
+                    ->where('department', '=', $dept)
+                    ->where('category', '=', $cat)
+                    ->distinct()
+                    ->get();
                 }
+
                 
-                $budgets = AccBudget::select('acc_budgets.budget_no', 'acc_budgets.description')
-                ->where('department', '=', $dept)
-                ->where('category', '=', $cat)
-                ->where('account_name', '=', $type)
-                ->distinct()
-                ->get();
             }
         }
         else if ($request->get('budget') == "Shifting") {
@@ -5441,7 +5452,7 @@ public function update_purchase_requisition_po(Request $request)
                 $mails = "select distinct email from users where users.username = 'PI0902001'";
                 $mailtoo = DB::select($mails);
 
-                $isimail = "select * FROM acc_investments where acc_investments.id = ".$inv->id;
+                $isimail = "select acc_investments.*, acc_investment_budgets.category_budget, acc_investment_budgets.sisa as total_budget, acc_investment_budgets.total as total_pengeluaran FROM acc_investments join acc_investment_budgets on acc_investments.reff_number = acc_investment_budgets.reff_number where acc_investments.id = ".$inv->id;
                 $invest = db::select($isimail);
 
                 Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($invest, 'investment'));
