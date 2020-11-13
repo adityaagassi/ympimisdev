@@ -680,9 +680,7 @@ class StockTakingController extends Controller{
 			GROUP BY location, material_number");
 
 		for ($i=0; $i < count($assy); $i++) {
-			$breakdown = db::select("SELECT b.material_parent, b.material_child, b.`usage`, b.divider, m.spt
-				FROM bom_outputs b
-				LEFT JOIN material_plant_data_lists m ON m.material_number = b.material_child 
+			$breakdown = db::select("SELECT b.material_parent, b.material_child, b.`usage`, b.divider, b.spt FROM bom_outputs b
 				WHERE b.material_parent = '".$assy[$i]->material_number."'");
 
 			for ($j=0; $j < count($breakdown); $j++) {
@@ -724,9 +722,7 @@ class StockTakingController extends Controller{
 		$this->temp = array();
 
 		for ($i=0; $i < count($this->cek); $i++) {
-			$breakdown = db::select("SELECT b.material_parent, b.material_child, b.`usage`, b.divider, m.spt
-				FROM bom_outputs b
-				LEFT JOIN material_plant_data_lists m ON m.material_number = b.material_child 
+			$breakdown = db::select("SELECT b.material_parent, b.material_child, b.`usage`, b.divider, b.spt FROM bom_outputs b
 				WHERE b.material_parent = '".$this->cek[$i]['material_number']."'");
 
 			for ($j=0; $j < count($breakdown); $j++) {
