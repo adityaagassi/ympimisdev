@@ -49,7 +49,7 @@ class FormExperienceController extends Controller
     {
         $detail_table = DB::table('form_failures')
         ->leftjoin('employee_syncs','form_failures.employee_id','=','employee_syncs.employee_id')
-        ->select('form_failures.*')
+        ->select('form_failures.id', 'form_failures.employee_id','form_failures.employee_name','form_failures.tanggal_kejadian','form_failures.lokasi_kejadian','form_failures.equipment','form_failures.grup_kejadian','form_failures.kategori','form_failures.judul','form_failures.loss','form_failures.kerugian')
         ->whereNull('form_failures.deleted_at');
 
         if(strlen($request->get('department_id')) > 0){
