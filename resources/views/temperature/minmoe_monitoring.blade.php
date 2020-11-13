@@ -10,6 +10,7 @@
 	}
 	tbody>tr>td{
 		text-align:center;
+		vertical-align: middle;
 	}
 	tfoot>tr>th{
 		text-align:center;
@@ -39,6 +40,25 @@
 		font-size: 16px;
 		border:1px solid black;
 		background-color: #ffffc2;
+	}
+
+	.sedang {
+		/*width: 50px;
+		height: 50px;*/
+		-webkit-animation: sedang 1s infinite;  /* Safari 4+ */
+		-moz-animation: sedang 1s infinite;  /* Fx 5+ */
+		-o-animation: sedang 1s infinite;  /* Opera 12+ */
+		animation: sedang 1s infinite;  /* IE 10+, Fx 29+ */
+	}
+
+	@-webkit-keyframes sedang {
+		0%, 49% {
+			background: #ff0033;
+			color: white;
+		}
+		50%, 100% {
+			background-color: #ffccff;
+		}
 	}
 </style>
 @stop
@@ -86,6 +106,17 @@
 								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="total_check"></td>
 								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="total_uncheck"></td>
 							</tr>
+						</tbody>
+					</table>
+					<span style="color: white; font-size: 1.7vw; font-weight: bold;"><i class="fa fa-caret-right"></i> Detail Cek Suhu >= 37.5 °C</span>
+					<table class="table table-bordered" id="tableAbnormal" style="margin-bottom: 5px;">
+						<thead>
+							<tr>
+								<th style="color:white;width: 30%; font-size: 1.2vw; text-align: center;">Karyawan</th>
+								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Temp</th>
+							</tr>			
+						</thead>
+						<tbody id="tableAbnormalBody">
 						</tbody>
 					</table>
 					<span style="color: white; font-size: 1.7vw; font-weight: bold;"><i class="fa fa-caret-right"></i> Detail Belum Cek</span>
@@ -172,6 +203,7 @@
 		setInterval(fetchTemperature, 20000);
 	});
 
+
 	function fetchTemperature(){
 		var tanggal_from = $('#tanggal_from').val();
 		// var tanggal_to = $('#tanggal_to').val();
@@ -212,6 +244,21 @@
 			});
 
 			$('#tableNoCheckBody').append(resultData);
+
+			$('#tableAbnormalBody').html('');
+
+			var index = 1;
+			var resultDataAbnormal = "";
+
+			$.each(result.dataAbnormal, function(key, value) {
+				resultDataAbnormal += '<tr>';
+				resultDataAbnormal += '<td class="sedang" style="font-size: 1.5vw;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+value.employee_id+'<br>'+ value.name +'</td>';
+				resultDataAbnormal += '<td class="sedang" style="font-size: 1.7vw;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.temperature +'</td>';
+				resultDataAbnormal += '</tr>';
+				index++;
+			});
+
+			$('#tableAbnormalBody').append(resultDataAbnormal);
 
 			$('#total_check').html(check+' Person(s)');
 			$('#total_uncheck').html(uncheck+' Person(s)');

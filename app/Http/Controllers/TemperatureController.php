@@ -583,12 +583,42 @@ public function fetchMinMoeMonitoring(Request $request)
 
      $dateTitle = date("d M Y", strtotime($now));
 
+     $dataAbnormal = DB::SELECT("SELECT
+               a.employee_id,
+               employee_syncs.name,
+               a.group,(
+               SELECT
+                    MAX( ivms_temperatures.temperature ) 
+               FROM
+                    ivms_temperatures 
+               WHERE
+                    ivms_temperatures.date = '".$now."' 
+                    AND employee_id = a.employee_id 
+               ) AS temperature 
+          FROM
+               employee_groups a
+               LEFT JOIN employee_syncs ON employee_syncs.employee_id = a.employee_id 
+          WHERE
+               a.location = '".$request->get('location')."' 
+          AND
+               (SELECT
+                    MAX( ivms_temperatures.temperature ) 
+               FROM
+                    ivms_temperatures 
+               WHERE
+                    ivms_temperatures.date = '".$now."' 
+                    AND employee_id = a.employee_id 
+               ) >= 37.5 
+          ORDER BY
+               a.GROUP");
+
      $response = array(
           'status' => true,
           'message' => 'Get Data Success',
           'datatoday' => $datatoday,
           'dateTitle' => $dateTitle,
           'datacheck' => $datacheck,
+          'dataAbnormal' => $dataAbnormal,
           'attendance' => $attendance,
      );
 
