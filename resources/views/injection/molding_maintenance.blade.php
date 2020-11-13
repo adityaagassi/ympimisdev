@@ -89,17 +89,17 @@
 				<table class="table table-bordered" style="width: 100%; margin-bottom: 2px;" border="1">
 					<thead>
 						<tr>
-							<th colspan="3" style="width: 10%; background-color: rgb(220,220,220); padding:0;font-size: 20px;">PIC Molding <span style="color: red" id="counter"></span></th>
+							<th colspan="3" style="width: 10%; background-color: rgb(220,220,220); padding:0;font-size: 15px;">PIC Molding <span style="color: red" id="counter"></span></th>
 							
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
-							<td style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:2vw; width: 30%;" id="op">-</td>
-							<td colspan="2" style="background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 2vw;" id="op2">-</td>
+							<td style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:15px; width: 30%;" id="op">-</td>
+							<td colspan="2" style="background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 15px;" id="op2">-</td>
 						</tr>
 						<tr>
-							<td colspan="3" style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: white; width: 23%;background-color: rgb(220,220,220);color: black;font-size: 20px;"><b>Molding List</b></td>
+							<td colspan="3" style="width: 100%; margin-top: 10px; font-size: 15px; padding:0; font-weight: bold; border-color: black; color: white; width: 23%;background-color: rgb(220,220,220);color: black;font-size: 15px;"><b>Molding List</b></td>
 						</tr>
 					</tbody>
 				</table>
@@ -108,19 +108,19 @@
 				<table class="table table-bordered" style="width: 100%; margin-bottom: 2px;" border="1">
 					<thead>
 						<tr>
-							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 20px;">
+							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">
 								Product
 							</th>
-							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 20px;">
+							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">
 								Part
 							</th>
-							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 20px;">
+							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">
 								Status
 							</th>
-							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 20px;">
+							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">
 								Total Shot
 							</th>
-							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 20px;">
+							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">
 								Mesin
 							</th>
 						</tr>
@@ -129,7 +129,7 @@
 					</tbody>
 				</table>
 			</div>
-				<button id="change_operator" style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: white; width: 100%" onclick="location.reload()" class="btn btn-warning">GANTI OPERATOR</button>
+				<button id="change_operator" style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: white; width: 100%" onclick="location.reload()" class="btn btn-info">GANTI OPERATOR</button>
 		</div>
 
 		<div class="col-xs-6" style="padding-right: 0; padding-left: 10px">
@@ -137,28 +137,28 @@
 				<table style="width: 100%;" border="1">
 					<tbody>
 						<tr>
-							<td colspan="4" style="width: 1%; font-weight: bold; font-size: 20px; background-color: rgb(220,220,220);">Status</td>
+							<td colspan="4" style="width: 1%; font-weight: bold; font-size: 15px; background-color: rgb(220,220,220);">Status</td>
 						</tr>
 						<tr>
 							<td colspan="4" id="status" style="border:1px solid black;width: 4%; font-size: 2vw; font-weight: bold; background-color: rgb(50, 50, 50); color: yellow;">-</td>
 						</tr>
 						<tr>
-							<td style="width: 1%; font-weight: bold; font-size: 20px; background-color: rgb(220,220,220);">Product</td>
-							<td id="product" style="border:1px solid black;width: 4%; font-weight: bold; font-size: 20px; background-color: rgb(100,100,100); color: white;"></td>
-							<td style="width: 1%; font-weight: bold; font-size: 20px; background-color: rgb(220,220,220);">Part</td>
-							<td id="part" style="border:1px solid black; width: 4%; font-size: 20px; font-weight: bold; background-color: rgb(100,100,100); color: white;"></td>
+							<td style="width: 1%; font-weight: bold; font-size: 15px; background-color: rgb(220,220,220);">Product</td>
+							<td id="product" style="border:1px solid black;width: 4%; font-weight: bold; font-size: 15px; background-color: rgb(100,100,100); color: white;"></td>
+							<td style="width: 1%; font-weight: bold; font-size: 15px; background-color: rgb(220,220,220);">Part</td>
+							<td id="part" style="border:1px solid black; width: 4%; font-size: 15px; font-weight: bold; background-color: rgb(100,100,100); color: white;"></td>
 						</tr>
 						<tr>
-							<td style="width: 1%; font-weight: bold; font-size: 20px; background-color: rgb(220,220,220);">Mesin</td>
-							<td id="mesin" style="border:1px solid black; width: 4%; font-weight: bold; font-size: 20px; background-color: rgb(100,100,100); color: white;"></td>
-							<td style="width: 1%; font-weight: bold; font-size: 20px; background-color: rgb(220,220,220);">Last Counter</td>
-							<td id="last_counter" style="border:1px solid black; width: 4%; font-weight: bold; font-size: 20px; background-color: rgb(100,100,100); color: white;">-</td>
+							<td style="width: 1%; font-weight: bold; font-size: 15px; background-color: rgb(220,220,220);">Mesin</td>
+							<td id="mesin" style="border:1px solid black; width: 4%; font-weight: bold; font-size: 15px; background-color: rgb(100,100,100); color: white;"></td>
+							<td style="width: 1%; font-weight: bold; font-size: 15px; background-color: rgb(220,220,220);">Last Counter</td>
+							<td id="last_counter" style="border:1px solid black; width: 4%; font-weight: bold; font-size: 15px; background-color: rgb(100,100,100); color: white;">-</td>
 						</tr>
 						<tr id="perbaikantime">
 							<td colspan="4" style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: black; width: 23%;background-color: rgb(204,255,255);"><div class="timerperbaikan">
 					            <span class="hourperbaikan" id="hourperbaikan">00</span> h : <span class="minuteperbaikan" id="minuteperbaikan">00</span> m : <span class="secondperbaikan" id="secondperbaikan">00</span> s
-					            <input type="hidden" id="perbaikan" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" value="0:00:00" required>
-					            <input type="hidden" id="start_time_perbaikan" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" required>
+					            <input type="hidden" id="perbaikan" class="timepicker" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" value="0:00:00" required>
+					            <input type="hidden" id="start_time_perbaikan" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" required>
 					        	</div>
 					    	</td>
 						</tr>
@@ -231,7 +231,6 @@
 		$('#change_operator').hide();
 
 		setInterval(setTime, 1000);
-		setInterval(update_maintenance_temp,60000);
 
 		CKEDITOR.replace('noteperbaikan' ,{
       		filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
@@ -288,12 +287,12 @@
 				var color ="";
 				$.each(result.datas, function(key, value) {
 					if (no % 2 === 0 ) {
-						color = 'style="background-color: #fffcb7;font-size: 18.5px;"';
+						color = 'style="background-color: #fffcb7;font-size: 18.5px;padding-top:5px;padding-bottom:5px"';
 					} else {
-						color = 'style="background-color: #ffd8b7;font-size: 18.5px;"';
+						color = 'style="background-color: #ffd8b7;font-size: 18.5px;padding-top:5px;padding-bottom:5px"';
 					}
-					if (value.last_counter >= 15000) {
-						color = 'style="background-color: #ff3030;font-size: 18.5px;color:white"';
+					if (value.last_counter >= 15000 || value.status == 'HARUS MAINTENANCE') {
+						color = 'style="background-color: #ff3030;font-size: 18.5px;color:white;padding-top:5px;padding-bottom:5px"';
 					}
 					if ($('#status').text() == '-') {
 						moldingMaster += '<tr onclick="fetchCount(\''+value.id+'\')">';
@@ -355,6 +354,7 @@
 			alert('Pilih Molding yang Akan Di Perbaiki');
 		}
 		else{
+			setInterval(update_maintenance_temp,60000);
 			duration = 0;
 			count = true;
 			started_at = new Date(getActualFullDate());
@@ -477,6 +477,7 @@
 						$('#finish_perbaikan').show();
 						$('#perbaikannote').show();
 						$('#perbaikannote2').show();
+						setInterval(update_maintenance_temp,60000);
 					});
 				}
 				openSuccessGritter('Success!', result.message);

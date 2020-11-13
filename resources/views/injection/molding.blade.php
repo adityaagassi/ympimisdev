@@ -162,6 +162,26 @@
 							<td colspan="4" style="width: 100%; margin-top: 10px; font-size: 1.5vw; padding:0; font-weight: bold; border-color: black; color: white; width: 23%;color: black;background-color: rgb(220,220,220);" id="reason">-
 					    	</td>
 						</tr>
+						<!-- <tr>
+							<td colspan="4" style="width: 100%; margin-top: 10px; font-size: 1.5vw; padding:0; font-weight: bold; border-color: black; color: white; width: 23%;color: black;background-color: rgb(220,220,220);"> KEPUTUSAN
+					    	</td>
+						</tr> -->
+						<tr>
+							<td colspan="4" style="width: 100%; margin-top: 10px; font-size: 1.5vw; padding:0; font-weight: bold; border-color: black; color: white; width: 23%;color: black;background-color: rgb(220,220,220);">
+								<div class="col-xs-12" style="padding-left: 0px;padding-right: 5px" id="div_keputusan">
+									KEPUTUSAN
+								</div>
+								<div class="col-xs-6" style="padding-left: 0px;padding-right: 5px" id="div_maintenance">
+									<button id="btn_maintenance" style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: white; width: 100%" onclick="changeDecision('MAINTENANCE')" class="btn btn-warning">MAINTENANCE</button>
+								</div>
+								<div class="col-xs-6" style="padding-right: 0px;padding-left: 0px" id="div_ok">
+									<button id="btn_ok" style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: white; width: 100%" onclick="changeDecision('MASIH OK')" class="btn btn-success">MASIH OK</button>
+								</div>
+								<div class="col-xs-12" style="padding-right: 0px;padding-left: 0px;display: none;" id="div_decision">
+									<button id="btn_decision" style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: white; width: 100%" onclick="cancelDecision()" class="btn btn-info">TIDAK TAHU</button>
+								</div>
+							</td>
+						</tr>
 						<tr id="lepasnote">
 							<td colspan="4" style="width: 100%; margin-top: 10px; font-size: 1.5vw; padding:0; font-weight: bold; border-color: black; color: white; width: 23%;color: black;background-color: rgb(220,220,220);">
 								<span class="hourlepas" id="hourlepas">Note</span>
@@ -292,7 +312,7 @@
 		</div>
 		<div class="col-xs-12">
 			<div class="row">
-				<button id="change_operator" style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: white; width: 100%" onclick="changeOperator()" class="btn btn-warning">GANTI OPERATOR</button>
+				<button id="change_operator" style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: white; width: 100%" onclick="changeOperator()" class="btn btn-primary">GANTI OPERATOR</button>
 			</div>
 		</div>
 	</div>
@@ -340,6 +360,10 @@
 		$('#lepasnote2').hide();
 		$('#lepastime').hide();
 		$('#finish_lepas').hide();
+		$('#div_decision').hide();
+		$('#div_ok').hide();
+		$('#div_maintenance').hide();
+		$('#div_keputusan').hide();
 
 		$('#mesin_pasang').hide();
 		$('#pasangnote').hide();
@@ -350,12 +374,6 @@
 		$('#batal_lepas').hide();
 
 		$('#operator').val('');
-		// $('#tag').val('');
-		// getDataMesinStatusLog(mesin);
-		// getDataMesinShootLog();
-		// chart();
-		// $('#resetButton').hide();
-		// $('#finishButton').hide();
 		setInterval(setTime, 1000);
 		intervalUpdate = setInterval(update_history_temp,60000);
 	});
@@ -399,6 +417,20 @@
 		}
 	});
 
+	function changeDecision(value) {
+		$('#div_maintenance').hide();
+		$('#div_ok').hide();
+		$('#div_decision').show();
+		$('#btn_decision').html(value);
+	}
+
+	function cancelDecision() {
+		$('#div_maintenance').show();
+		$('#div_ok').show();
+		$('#div_decision').hide();
+		$('#btn_decision').html("TIDAK TAHU");
+	}
+
 	function getDataMesin(nomor_mesin) {
 		$('#mesin_pasang').html('Mesin ' + nomor_mesin);
 		$('#mesin_pasang_pilihan').hide();
@@ -433,7 +465,7 @@
 					if (value.shot >= 15000) {
 						color = 'style="background-color: #ff3030;font-size: 20px;color:white"';
 					}
-					moldingLog += '<tr onclick="fetchCount(\''+value.mesin+'\',\''+value.part+'\',\''+value.color+'\',\''+value.shot+'\')">';
+					moldingLog += '<tr onclick="fetchCount(\''+value.mesin+'\',\''+value.part+'\',\''+value.color+'\',\''+value.shot+'\')" style="padding-top:5px;padding-bottom:5px;">';
 					moldingLog += '<td '+color+'>'+value.mesin+'</td>';
 					moldingLog += '<td '+color+'>'+value.part+'</td>';
 					moldingLog += '<td '+color+'>'+value.color+'</td>';
@@ -473,9 +505,9 @@
 				var color ="";
 				$.each(result.datas, function(key, value) {
 					if (no % 2 === 0 ) {
-							color = 'style="background-color: #fffcb7;font-size: 25px;"';
+							color = 'style="background-color: #fffcb7;font-size: 25px;padding-top:5px;padding-bottom:5px;"';
 						} else {
-							color = 'style="background-color: #ffd8b7;font-size: 25px;"';
+							color = 'style="background-color: #ffd8b7;font-size: 25px;padding-top:5px;padding-bottom:5px;"';
 						}
 					moldingLogPasang += '<tr onclick="fetchCountPasang(\''+value.id+'\')">';
 					moldingLogPasang += '<td '+color+'>'+value.product+'</td>';
@@ -542,13 +574,16 @@
 		if ($('#mesin_lepas').text() == '') {
 			alert('Pilih Data Molding Yang Akan Dilepas.');
 		}else{
-			$('#reasonlepas').show();
+			// $('#reasonlepas').show();
 			$('#lepasnote').show();
 			$('#lepasnote2').show();
 			$('#lepastime').show();
 			$('#finish_lepas').show();
 			$('#batal_lepas').show();
 			$('#start_lepas').hide();
+			$('#div_ok').show();
+			$('#div_maintenance').show();
+			$('#div_keputusan').show();
 			store_history_temp('LEPAS');
 		}
 	}
@@ -582,6 +617,10 @@
 		        $('#color_lepas').html("");
 		        $('#mesin_lepas').html("");
 		        $('#reasonlepas').hide();
+		        $('#div_ok').hide();
+		        $('#div_maintenance').hide();
+		        $('#div_keputusan').hide();
+		        $('#div_decision').hide();
 			} else {
 				audio_error.play();
 				openErrorGritter('Error','Cancel Failed');
@@ -608,10 +647,11 @@
 		var running_time = $('#lepas').val();
 		var notelepas = $('#notelepas').val();
 		var reason = $('#reason').text();
+		var decision = $('#btn_decision').text();
 		// console.log(ng_name.join());
 		// console.log(ng_count.join());
 
-		if (reason == '-') {
+		if (reason == '-' || decision == 'TIDAK TAHU') {
 			alert('Semua Data Harus Diisi');
 		}else{
 			var data = {
@@ -626,6 +666,7 @@
 				end_time : end_time,
 				running_time : running_time,
 				notelepas : notelepas,
+				decision : decision,
 			}
 
 			$.post('{{ url("index/injeksi/store_history_molding") }}', data, function(result, status, xhr){
@@ -634,7 +675,6 @@
 					// reset();
 					$('#finish_lepas').hide();
 					$('#lepastime').hide();
-					$('#reasonlepas').hide();
 					$('#lepasnote').hide();
 					$('#lepasnote2').hide();
 					$('#batal_lepas').hide();
@@ -647,6 +687,10 @@
 			        $('#color_lepas').html("");
 			        $('#mesin_lepas').html("");
 			        $('#reasonlepas').hide();
+			        $('#div_ok').hide();
+			        $('#div_maintenance').hide();
+			        $('#div_keputusan').hide();
+			        $('#div_decision').hide();
 					getMoldingLog();
 				} else {
 					audio_error.play();
@@ -855,9 +899,12 @@
 							$('#finish_lepas').show();
 							$('#lepastime').show();
 							$('#lepasnote').show();
-							$('#reasonlepas').show();
+							// $('#reasonlepas').show();
 							$('#lepasnote2').show();
 							$('#batal_lepas').show();
+							$('#div_ok').show();
+							$('#div_maintenance').show();
+							$('#div_keputusan').show();
 						}
 						else if(value.type == 'PASANG'){
 							$('#mesin_pasang_pilihan').hide();

@@ -2,10 +2,10 @@
 @section('stylesheets')
 <style type="text/css">
 
-	/*table.table-bordered{
-  border:1px solid rgb(150,150,150);
+	table.table-bordered{
+  border:1px solid black;
 }
-table.table-bordered > thead > tr > th{
+/*table.table-bordered > thead > tr > th{
   border:1px solid rgb(54, 59, 56) !important;
   text-align: center;
   background-color: #212121;  
@@ -80,7 +80,7 @@ table > thead > tr > th{
 	}
 
   .gambar {
-    width: 350px;
+    width: 300px;
     height: 350px;
     background-color: none;
     border-radius: 15px;
@@ -103,24 +103,93 @@ table > thead > tr > th{
 <section class="content" style="padding-top: 0;">
 	<div class="row">
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top: 0px;">
-			<center><a style="font-size: 3vw; font-weight: bold;color: white"> MOLDING MAINTENANCE MONITORING </a><a style="font-size: 3vw; font-weight: bold; color: white"> (金型保全管理)</a></center>
+			<center><a style="font-size: 2vw; font-weight: bold;color: white"> MOLDING MAINTENANCE MONITORING </a><a style="font-size: 2vw; font-weight: bold; color: white"> (金型保全管理)</a></center>
 			<div class="row" style="margin:0px;">
-				<!-- <div class="col-xs-2">
-					<div class="input-group date">
-						<div class="input-group-addon bg-green" style="border: none;">
-							<i class="fa fa-calendar"></i>
-						</div>
-						<input type="text" class="form-control datepicker" id="tanggal" placeholder="Select Date">
-					</div>
-				</div>
-				<div class="col-xs-2">
-					<button class="btn btn-success" onclick="fillChart()">Update Chart</button>
-				</div> -->
 				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
 			</div>
 		</div>
-		<!-- <input type="text" id="jumlah_container"> -->
-		<div id="cont"></div>
+		<div class="col-xs-9">
+			<div class="row">
+				<div id="cont"></div>
+			</div>
+		</div>
+		<div class="col-xs-3">
+			<div class="box box-solid">
+				<div class="box-header" style="background-color: #65ff57;">
+					<center><span style="font-size: 22px; font-weight: bold; color: black;">MOLDING READY</span></center>
+				</div>
+				<ul class="nav nav-pills nav-stacked">
+					<li>
+						<table class="table-responsive" style="width: 100%;color: black;text-align: center;">
+							<thead>
+								<tr>
+									<td style="border-bottom: 2px solid #545454;border-right: 2px solid #ff0000">Molding</td>
+									<td style="border-bottom: 2px solid #545454;border-left: 2px solid #ff0000">Qty</td>
+									<td style="border-bottom: 2px solid #545454;border-left: 2px solid #ff0000">Lokasi</td>
+								</tr>
+							</thead>
+							<tbody id="bodyMoldingReady">
+								<tr>
+									<td>
+										
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</li>
+				</ul>
+			</div>
+			<div class="box box-solid">
+				<div class="box-header" style="background-color: #ff7878;">
+					<center><span style="font-size: 15px; font-weight: bold; color: black;">MOLDING BELUM MAINTENANCE</span></center>
+				</div>
+				<ul class="nav nav-pills nav-stacked">
+					<li>
+						<table class="table-responsive" style="width: 100%;color: black;text-align: center;">
+							<thead>
+								<tr>
+									<td style="border-bottom: 2px solid #545454;border-right: 2px solid #ff0000">Molding</td>
+									<td style="border-bottom: 2px solid #545454;border-left: 2px solid #ff0000">Qty</td>
+									<td style="border-bottom: 2px solid #545454;border-left: 2px solid #ff0000">Lokasi</td>
+								</tr>
+							</thead>
+							<tbody id="bodyMoldingNotReady">
+								<tr>
+									<td>
+										
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</li>
+				</ul>
+			</div>
+			<div class="box box-solid">
+				<div class="box-header" style="background-color: #ffcf30;">
+					<center><span style="font-size: 15px; font-weight: bold; color: black;">MOLDING SEDANG MAINTENANCE</span></center>
+				</div>
+				<ul class="nav nav-pills nav-stacked">
+					<li>
+						<table class="table-responsive" style="width: 100%;color: black;text-align: center;">
+							<thead>
+								<tr>
+									<td style="border-bottom: 2px solid #545454;border-right: 2px solid #ff0000">Molding</td>
+									<td style="border-bottom: 2px solid #545454;border-left: 2px solid #ff0000">Qty</td>
+									<td style="border-bottom: 2px solid #545454;border-left: 2px solid #ff0000">Lokasi</td>
+								</tr>
+							</thead>
+							<tbody id="bodyMoldingMaintenance">
+								<tr>
+									<td>
+										
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</li>
+				</ul>
+			</div>
+		</div>
 	</div>
 
 	
@@ -190,7 +259,7 @@ table > thead > tr > th{
 	jQuery(document).ready(function(){
 		$('.select2').select2();
 		fillChart();
-		setInterval(fillChart, 10000);
+		// setInterval(fillChart, 10000);
 	});
 
 	$('.datepicker').datepicker({
@@ -449,6 +518,51 @@ table > thead > tr > th{
 		$.get('{{ url("fetch/molding_monitoring") }}',data, function(result, status, xhr) {
 			if(xhr.status == 200){
 				if(result.status){
+					$('#bodyMoldingReady').html("");
+					$('#bodyMoldingNotReady').html("");
+					$('#bodyMoldingMaintenance').html("");
+
+					var moldingReady = "";
+					var moldingNotReady = "";
+					var moldingMaintenance = "";
+
+					$.each(result.query_ready, function(key, value) {
+						moldingReady += '<tr>';
+						moldingReady += '<td style="border: 1px solid #545454;">'+value.part+'</td>';
+						moldingReady += '<td style="border: 1px solid #545454;">'+value.last_counter+'</td>';
+						if (value.status == 'LEPAS') {
+							moldingReady += '<td style="border: 1px solid #545454;">STORAGE</td>';
+						}
+						moldingReady += '</tr>';
+					});
+					$('#bodyMoldingReady').append(moldingReady);
+
+					$.each(result.query_not_ready, function(key, value) {
+						moldingNotReady += '<tr>';
+						moldingNotReady += '<td>'+value.part+'</td>';
+						moldingNotReady += '<td>'+value.last_counter+'</td>';
+						if (value.status == 'LEPAS') {
+							moldingNotReady += '<td>STORAGE</td>';
+						}else{
+							moldingNotReady += '<td>'+status+'</td>';
+						}
+						moldingNotReady += '</tr>';
+					});
+					$('#bodyMoldingNotReady').append(moldingNotReady);
+
+					$.each(result.query_maintenance, function(key, value) {
+						moldingMaintenance += '<tr>';
+						moldingMaintenance += '<td>'+value.part+'</td>';
+						moldingMaintenance += '<td>'+value.last_counter+'</td>';
+						if (value.status == 'LEPAS') {
+							moldingMaintenance += '<td>STORAGE</td>';
+						}else{
+							moldingMaintenance += '<td>'+status+'</td>';
+						}
+						moldingMaintenance += '</tr>';
+					});
+					$('#bodyMoldingMaintenance').append(moldingMaintenance);
+
 					$('#cont').empty();
 
 					//Chart Machine Report
@@ -462,22 +576,22 @@ table > thead > tr > th{
 					var data = [];
 					var body = '';
 
-					for (var i = 0; i < result.datas.length; i++) {
-						part.push(result.datas[i].part);
-						product.push(result.datas[i].product);
-						// jumlah_ok.push(parseInt(result.datas[i].jumlah_ok));
-						last_counter.push(parseInt(result.datas[i].last_counter));
-						ng_count.push(parseInt(result.datas[i].ng_count));
-						if (result.datas[i].status_mesin == null) {
+					for (var i = 0; i < result.query_pasang.length; i++) {
+						part.push(result.query_pasang[i].part);
+						product.push(result.query_pasang[i].product);
+						// jumlah_ok.push(parseInt(result.query_pasang[i].jumlah_ok));
+						last_counter.push(parseInt(result.query_pasang[i].last_counter));
+						ng_count.push(parseInt(result.query_pasang[i].ng_count));
+						if (result.query_pasang[i].status_mesin == null) {
 							status_mesin.push('STORAGE');
 						}else{
-							status_mesin.push(result.datas[i].status_mesin);
+							status_mesin.push(result.query_pasang[i].status_mesin);
 						}
 
-						if(result.datas[i].last_counter >= 15000){
-							data.push([result.datas[i].last_counter]);
+						if(result.query_pasang[i].last_counter >= 15000){
+							data.push([result.query_pasang[i].last_counter]);
 						}else{
-							data.push([result.datas[i].last_counter])
+							data.push([result.query_pasang[i].last_counter])
 						}
 						var a = i+1;
 						body += '<div class="gambar" id="container'+a+'"></div>';
@@ -538,7 +652,7 @@ table > thead > tr > th{
 						            	color:'#fff',
 						            	fontSize:'20px'
 						            }
-						        }
+						        },
 						    },
 
 						    plotOptions: {
@@ -556,21 +670,21 @@ table > thead > tr > th{
 						var container = 'container'+a;
 						var b = data[j];
 						var tabel = 
-						'<table style="text-align:center;margin-right:-20px"><tr><td style="width:200px;border: 1px solid #fff !important;padding-left:40px;padding-right:40px;padding-top:2px;padding-bottom:2px;color:white;font-size:20px;text-align:left">SHOTS</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:20px">:</td><td style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:20px">'+last_counter[j]+'</td></tr>' +
+						'<table style="text-align:center;margin-right:-30px;"><tr><td style="width:200px;border: 1px solid #fff !important;padding-left:40px;padding-right:40px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px;text-align:left">SHOTS</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+last_counter[j]+'</td></tr>' +
 
-		            	'<tr><td style="border: 1px solid #fff !important;padding-left:40px;padding-right:40px;padding-top:2px;padding-bottom:2px;color:white;font-size:20px">NG</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:20px">:</td><td style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:20px">'+ng_count[j]+'</td></tr>' +
+		            	'<tr><td style="border: 1px solid #fff !important;padding-left:40px;padding-right:40px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">NG</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+ng_count[j]+'</td></tr>' +
 
-		            	'<tr><td style="border: 1px solid #fff !important;padding-left:40px;padding-right:40px;padding-top:2px;padding-bottom:2px;color:white;font-size:20px">LOC</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:20px">:</td><td style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:20px">'+status_mesin[j]+'</td></tr>' +
+		            	'<tr><td style="border: 1px solid #fff !important;padding-left:40px;padding-right:40px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">LOC</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+status_mesin[j]+'</td></tr>' +
 		            	'</table>';
 						// var parta = '<div style="font-size:40px;color:#fff;text-decoration: none">'+part[j]+'</div><br><div style="font-size:25px;color:#fff;text-decoration: none">SHOTS : '+last_counter[j]+'</div><br><div style="font-size:25px;color:#fff;text-decoration: none">NG : '+ng_count[j]+'</div><br><div style="font-size:25px;color:#fff;text-decoration: none">LOC : '+status_mesin[j]+'</div>';
 
-						var parta = '<div style="font-size:30px;color:#fff;text-decoration: none">'+part[j]+'</div>';
+						var parta = '<div style="font-size:25px;color:#fff;text-decoration: none">'+part[j]+'</div>';
 
 						// The speed gauge
 						var chartSpeed = Highcharts.chart(container, Highcharts.merge(gaugeOptions, {
 						    yAxis: {
 						        min: 0,
-						        max: 20000,
+						        max: 15000,
 						        title: {
 						            text: parta,
 						            style: {
@@ -579,7 +693,8 @@ table > thead > tr > th{
 											fontSize: '30px',
 										}
 									// enabled:false
-						        }
+						        },
+						        tickPositions: [0, 15000]
 						    },
 
 						    credits: {

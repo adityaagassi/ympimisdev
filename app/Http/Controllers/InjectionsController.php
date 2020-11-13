@@ -2990,13 +2990,30 @@ class InjectionsController extends Controller
             //     $tgl = $request->get('tgl');
             // }
 
-        $query = "SELECT * FROM `injection_molding_masters` where remark = 'RC'";
-
-
-        $dailyNG = DB::select($query);
+        $query_pasang = DB::SELECT("SELECT * FROM `injection_molding_masters` where remark = 'RC' and status = 'PASANG'");
+        $query_ready = DB::SELECT("SELECT * FROM `injection_molding_masters` where remark = 'RC' and status = 'LEPAS'");
+        $query_not_ready = DB::SELECT("SELECT
+            * 
+        FROM
+            `injection_molding_masters` 
+        WHERE
+            ( remark = 'RC' AND status = 'HARUS MAINTENANCE' ) 
+            OR (
+                remark = 'RC' 
+            AND status = 'LEPAS' 
+            AND last_counter >= 15000)");
+        $query_maintenance = DB::SELECT("SELECT
+            * 
+        FROM
+            `injection_molding_masters` 
+        WHERE
+            remark = 'RC' AND status = 'DIPERBAIKI'");
         $response = array(
             'status' => true,            
-            'datas' => $dailyNG
+            'query_pasang' => $query_pasang,
+            'query_ready' => $query_ready,
+            'query_not_ready' => $query_not_ready,
+            'query_maintenance' => $query_maintenance,
         );
         return Response::json($response);
     }
@@ -4542,6 +4559,7 @@ class InjectionsController extends Controller
             'end_time' => $request->get('end_time'),
             'running_time' => $request->get('running_time'),
             'note' => $request->get('notelepas'),
+            'decision' => $request->get('decision'),
             'created_by' => $id_user
         ]);
 
@@ -4565,7 +4583,11 @@ class InjectionsController extends Controller
        foreach ($molding_master as $molding_master) {
          $id_molding_master = $molding_master->id;
          $molding3 = InjectionMoldingMaster::find($id_molding_master);
-         $molding3->status = $request->get('reason');
+         if ($request->get('decision') == 'MAINTENANCE') {
+             $molding3->status = 'HARUS MAINTENANCE';
+         }else{
+            $molding3->status = $request->get('reason');
+         }
          $molding3->status_mesin = null;
          $molding3->save();
      }
@@ -4737,7 +4759,7 @@ class InjectionsController extends Controller
           foreach ($molding as $key) {
             $id_molding = $key->id;
             $molding2 = InjectionMoldingMaster::find($id_molding);
-            if ($molding2->mesin != null) {
+            if ($molding2->status_mesin != null) {
                 $molding2->status = 'PASANG';
             }else{
                 $molding2->status = 'LEPAS';

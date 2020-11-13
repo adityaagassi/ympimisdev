@@ -10,7 +10,7 @@ class InjectionHistoryMoldingLog extends Model
     use SoftDeletes;
 
     protected $fillable = [
-		'type','pic','mesin', 'part', 'color','total_shot','start_time','end_time','running_time','note','created_by'
+		'type','pic','mesin', 'part', 'color','total_shot','start_time','end_time','running_time','note','decision','created_by'
 	];
 
 	public function user()
