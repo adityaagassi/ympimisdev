@@ -106,7 +106,8 @@
                 <td>{{ $po->gl_number }}</td>
                 <td></td>
                 <td>{{ $po->cost_center }}</td>
-
+                <td></td>
+                <td></td>
                 <td>
                     @if($po->gl_number == "15100000" || $po->gl_number == "15300000" || $po->gl_number == "15400000" || $po->gl_number == "15500000" || $po->gl_number == "15600000" || $po->gl_number == "15700000")
                         A
