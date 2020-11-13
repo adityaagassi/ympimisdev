@@ -165,7 +165,7 @@
 					<a id="audit1_new" href="{{ secure_url("index/stocktaking/audit_new/"."1") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green; background-color: #ccff90;">Audit Internal</a>				
 
 					@if(in_array('S36', $navs))
-					<a id="revise" href="{{ secure_url("index/stocktaking/revise_new") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green;>Revise Physical Inventory (PI)</a>
+					<a id="revise" href="{{ secure_url("index/stocktaking/revise_new") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green;">Revise Physical Inventory (PI)</a>
 					@endif
 
 					<a id="check_new" href="{{ secure_url("index/stocktaking/check_input_new") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green;">Check Input</a>
