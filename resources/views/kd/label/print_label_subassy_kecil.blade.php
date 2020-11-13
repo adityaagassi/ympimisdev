@@ -94,7 +94,7 @@
 
 		setTimeout(function() {
 			printWindow(window, 'Label Kecil');
-		}, 2000)
+		}, 3000)
 
 	});
 

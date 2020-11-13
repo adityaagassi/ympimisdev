@@ -659,7 +659,7 @@
 						body += '<td '+css+'></td>';							
 					}
 					
-					body += '<td '+css+'>'+result.store[i].id+'</td>';
+					body += '<td '+css+'>ST_'+result.store[i].id+'</td>';
 
 					if(result.store[i].process == 1){
 						if (result.store[i].quantity != 0) {

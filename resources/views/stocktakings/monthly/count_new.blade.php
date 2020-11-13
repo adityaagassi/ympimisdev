@@ -142,10 +142,10 @@
 						</tbody>
 					</table>
 				</div>
-			<!-- </div> -->
-		</div>
+				<!-- </div> -->
+			</div>
 
-		<div class="col-xs-12 col-md-5 col-lg-5" style="margin-top: 2%;">
+			<div class="col-xs-12 col-md-5 col-lg-5" style="margin-top: 2%;">
 				<div class="col-xs-12">
 					<div class="form-group row" align="right">
 						<div class="col-xs-1 col-xs-offset-11" align="right">
@@ -157,18 +157,18 @@
 				<div class="col-xs-12">
 					<div class="form-group row" style="margin-bottom: 2%;">
 						<div class="col-xs-2" align="center" style="padding-left:0px;padding-right:0px">
-						<span style="font-weight: bold;color: yellow;font-size: 15px">QTY</span>
+							<span style="font-weight: bold;color: yellow;font-size: 15px">QTY</span>
 						</div>
 						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">X</label>
 						<div class="col-xs-2" align="center" style="padding-left:0px;padding-right:0px">
-						<span style="font-weight: bold;color: yellow;font-size: 15px">QTY LOT</span>
+							<span style="font-weight: bold;color: yellow;font-size: 15px">QTY LOT</span>
 						</div>
 						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">=</label>
 						<div class="col-xs-2" align="center" style="padding-left:0px;padding-right:0px">
-						<span style="font-weight: bold;color: yellow;font-size: 15px">TOTAL</span>
+							<span style="font-weight: bold;color: yellow;font-size: 15px">TOTAL</span>
 						</div>
 						<div class="col-xs-2" align="center">
-						
+							
 						</div>
 					</div>
 				</div>
@@ -281,22 +281,22 @@
 				</div>
 			</div>
 
-		<div class="col-xs-12">
-			<div class="col-xs-11" align="right">
-				<div class="input-group input-group-lg">
-					<button type="button" style="font-size:20px; height: 45px; font-weight: bold; padding-top: 0px; padding-bottom: 0px;" onclick="canc()" class="btn btn-danger">&nbsp;Cancel&nbsp;</button>
+			<div class="col-xs-12">
+				<div class="col-xs-11" align="right">
+					<div class="input-group input-group-lg">
+						<button type="button" style="font-size:20px; height: 45px; font-weight: bold; padding-top: 0px; padding-bottom: 0px;" onclick="canc()" class="btn btn-danger">&nbsp;Cancel&nbsp;</button>
 
-					<button id="save_button" type="button" style="font-size:20px; height: 45px; font-weight: bold; padding-top: 0px; padding-bottom: 0px;" onclick="save()" class="btn btn-success">&nbsp;<i class="fa fa-save"></i> &nbsp;Save&nbsp;</button>
+						<button id="save_button" type="button" style="font-size:20px; height: 45px; font-weight: bold; padding-top: 0px; padding-bottom: 0px;" onclick="save()" class="btn btn-success">&nbsp;<i class="fa fa-save"></i> &nbsp;Save&nbsp;</button>
+					</div>
 				</div>
 			</div>
-		</div>
-		
-		<div class="col-xs-12" style=" margin-top: 2%;overflow-x: scroll;">
-			<table class="table table-bordered" id="store_table">
-				<thead>
-					<tr>
-						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 25px;" colspan="8" id='store_title'>STORE</th>
-					</tr>
+			
+			<div class="col-xs-12" style=" margin-top: 2%;overflow-x: scroll;">
+				<table class="table table-bordered" id="store_table">
+					<thead>
+						<tr>
+							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 25px;" colspan="8" id='store_title'>STORE</th>
+						</tr>
 					{{-- <tr>
 						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 25px;" colspan="8" id='sub_store_title'>SUB STORE</th>
 					</tr> --}}
@@ -423,23 +423,23 @@
 
 		$add = '';
 		$add += '<div class="col-xs-12" id="count_'+ count +'">';
-			$add += '<div class="form-group row" style="margin-bottom: 2%;">';
-			$add += '<div class="col-xs-2" align="right" style="padding-left:0px;padding-right:0px">';
-			$add += '<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="qty_'+ count +'">';
-			$add += '</div>';
-			$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">X</label>';
-			$add += '<div class="col-xs-2" align="right" style="padding-left:0px;padding-right:0px">';
-			$add += '<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="koef_'+ count +'">';
-			$add += '</div>';
-			$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">=</label>';
-			$add += '<div class="col-xs-2" align="right" style="padding-left:0px;padding-right:0px">';
-			$add += '<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_'+ count +'" readonly="">';
-			$add += '</div>';
-			$add += '<div class="col-xs-2" align="right">';
-			$add += '<button class="btn btn-danger" id="remove_'+count+'" onclick="removeCount(id)"><i class="fa fa-close"></i></button>';
-			$add += '</div>';
-			$add += '</div>';
-			$add += '</div>';
+		$add += '<div class="form-group row" style="margin-bottom: 2%;">';
+		$add += '<div class="col-xs-2" align="right" style="padding-left:0px;padding-right:0px">';
+		$add += '<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="qty_'+ count +'">';
+		$add += '</div>';
+		$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">X</label>';
+		$add += '<div class="col-xs-2" align="right" style="padding-left:0px;padding-right:0px">';
+		$add += '<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="koef_'+ count +'">';
+		$add += '</div>';
+		$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">=</label>';
+		$add += '<div class="col-xs-2" align="right" style="padding-left:0px;padding-right:0px">';
+		$add += '<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_'+ count +'" readonly="">';
+		$add += '</div>';
+		$add += '<div class="col-xs-2" align="right">';
+		$add += '<button class="btn btn-danger" id="remove_'+count+'" onclick="removeCount(id)"><i class="fa fa-close"></i></button>';
+		$add += '</div>';
+		$add += '</div>';
+		$add += '</div>';
 
 		$('#count').append($add);
 		$('#qty_'+count).addClass('numpad');
@@ -692,70 +692,68 @@
 
 
 	function checkCode(code) {
-		codenew = code.split('_');
+		
+		var data = {
+			id : code
+		}
 
-		// if (codenew[0] == 'ST') {
-			var data = {
-				id : code
-			}
+		$.get('{{ url("fetch/stocktaking/material_detail_new") }}', data, function(result, status, xhr){
 
-			$.get('{{ url("fetch/stocktaking/material_detail_new") }}', data, function(result, status, xhr){
+			if (result.status) {
+				// if(result.material[0].remark == 'NO USE'){
+				// 	if(!confirm("Summary of Counting ini teridentifikasi NO USE.\nApakah anda ingin mengubah menjadi USE ?")){
+				// 		canc();
+				// 		return false;
+				// 	}
+				// }
 
-				if (result.status) {
-					if(result.material[0].remark == 'NO USE'){
-						if(!confirm("Summary of Counting ini teridentifikasi NO USE.\nApakah anda ingin mengubah menjadi USE ?")){
+				if(result.material[0].process <= 1){
+					if(result.material[0].quantity > 0){
+						if(!confirm("Summary of Counting ini sudah terinput.\nApakah anda ingin mengubah nilai input ?")){
 							canc();
 							return false;
 						}
 					}
-
-					if(result.material[0].process <= 1){
-						if(result.material[0].quantity > 0){
-							if(!confirm("Summary of Counting ini sudah terinput.\nApakah anda ingin mengubah nilai input ?")){
-								canc();
-								return false;
-							}
-						}
-						$('#save_button').prop('disabled', false);
-						openSuccessGritter('Success', 'QR Code Successfully');
-					}else{
-						$('#save_button').prop('disabled', true);
-						openErrorGritter('Error', 'Input PI dinonaktifkan,<br>Material telah diaudit');
-					}
-
-					$('#qr_code').prop('disabled', true);
-
-					$("#store").text(result.material[0].store);
-					$("#sub_store").text(result.material[0].sub_store);
-					$("#category").text(result.material[0].category);
-					$("#material_number").text(result.material[0].material_number);
-					$("#location").text(result.material[0].location);
-					$("#material_description").text(result.material[0].material_description);
-					$("#remark").text(result.material[0].remark);
-					$("#last_input").text((result.material[0].quantity || '0'));
-					$("#model_key_surface").text((result.material[0].model || '')+' '+(result.material[0].key || '')+' '+(result.material[0].surface || ''));
-					$("#lot_uom").text((result.material[0].lot || '-') + ' ' + result.material[0].bun);
-					lot_uom = (result.material[0].lot || 1);
-
-					if(result.material[0].lot > 0){
-						$("#text_lot").text(result.material[0].lot + ' x');
-					}else{
-						$("#text_lot").text('- x');
-						$('#lot').prop('disabled', true);
-					}
-
-					fillStore(result.material[0].store,result.material[0].sub_store);
-				} else {
-					openErrorGritter('Error', 'QR Code Tidak Terdaftar');
-					$('#scanModal').modal('hide');
-					canc();
-					resetCount();
+					$('#save_button').prop('disabled', false);
+					openSuccessGritter('Success', 'QR Code Successfully');
+				}else{
+					$('#save_button').prop('disabled', true);
+					openErrorGritter('Error', 'Input PI dinonaktifkan,<br>Material telah diaudit');
 				}
 
-				$('#scanner').hide();
+				$('#qr_code').prop('disabled', true);
+
+				$("#store").text(result.material[0].store);
+				$("#sub_store").text(result.material[0].sub_store);
+				$("#category").text(result.material[0].category);
+				$("#material_number").text(result.material[0].material_number);
+				$("#location").text(result.material[0].location);
+				$("#material_description").text(result.material[0].material_description);
+				$("#remark").text(result.material[0].remark);
+				$("#last_input").text((result.material[0].quantity || '0'));
+				$("#model_key_surface").text((result.material[0].model || '')+' '+(result.material[0].key || '')+' '+(result.material[0].surface || ''));
+				$("#lot_uom").text((result.material[0].lot || '-') + ' ' + result.material[0].bun);
+				lot_uom = (result.material[0].lot || 1);
+
+				if(result.material[0].lot > 0){
+					$("#text_lot").text(result.material[0].lot + ' x');
+				}else{
+					$("#text_lot").text('- x');
+					$('#lot').prop('disabled', true);
+				}
+
+				fillStore(result.material[0].store,result.material[0].sub_store);
+			} else {
+				openErrorGritter('Error', 'QR Code Tidak Terdaftar');
 				$('#scanModal').modal('hide');
-				$(".modal-backdrop").remove();
-			});
+				canc();
+				resetCount();
+			}
+
+			$('#scanner').hide();
+			$('#scanModal').modal('hide');
+			$(".modal-backdrop").remove();
+		});
 
 	}
 
