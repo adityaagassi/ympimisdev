@@ -616,8 +616,8 @@
                                     <i class="fa fa-caret-right"></i> SPK Monitoring (作業依頼書の管理)
                                 </a>
                                 <br>
-                                <a href="{{ url("index/maintenance/spk/operator") }}">
-                                    <i class="fa fa-caret-right"></i> Operator Monitoring (作業者の監視)
+                                <a href="{{ url("index/report/urgent_monitoring") }}">
+                                    <i class="fa fa-caret-right"></i> Urgent SPK Monitoring (??)
                                 </a>
                                 <br>
                             </td>
@@ -972,9 +972,13 @@
                                         <a href="{{ url("/index/ch_daily_production_result") }}">
                                             <i class="fa fa-caret-right"></i> Production Summary (生産まとめ)
                                         </a>
-                                        <br>
+                                       {{--  <br>
                                         <a href="{{ url("/index/display/efficiency_monitoring") }}">
-                                            <i class="fa fa-caret-right"></i> Efficiency Monitoring (効率の監視)
+                                            <i class="fa fa-caret-right"></i> Daily Efficiency Monitoring (日次効率の監視)
+                                        </a> --}}
+                                        <br>
+                                        <a href="{{ url("/index/display/efficiency_monitoring_monthly") }}">
+                                            <i class="fa fa-caret-right"></i> Monthly Efficiency Monitoring (月次効率の監視)
                                         </a>
                                         <br>
                                         <a href="{{ url("/index/display/eff_scrap") }}">

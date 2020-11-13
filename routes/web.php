@@ -1265,6 +1265,7 @@ Route::get('index/sakurentsu/monitoring', 'SakurentsuController@monitoring');
 Route::get('index/sakurentsu/list_sakurentsu', 'SakurentsuController@index_sakurentsu');
 Route::get('index/sakurentsu/detail/{id}', 'SakurentsuController@detail_sakurentsu');
 Route::get('fetch/sakurentsu/type', 'SakurentsuController@fetch_sakurentsu');
+Route::post('post/sakurentsu/type', 'SakurentsuController@post_sakurentsu_type');
 
 //Supplier
 Route::get('index/supplier', 'AccountingController@master_supplier');
@@ -1501,6 +1502,8 @@ Route::post('import/transaksi', 'AccountingController@import_transaksi');
 Route::post('delete/actual/transaksi', 'AccountingController@delete_transaksi');
 
 Route::get('warehouse/receive_equipment', 'AccountingController@wh_receive_equipment');
+Route::get('fetch/warehouse/equipment', 'AccountingController@fetch_receive_equipment');
+Route::post('fetch/warehouse/update_receive', 'AccountingController@update_receive');
 
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 	Route::get('scan/middle/kensa', 'MiddleProcessController@ScanMiddleKensa');
@@ -2633,6 +2636,7 @@ Route::get('index/display/efficiency_monitoring_monthly', 'DisplayController@ind
 
 Route::get('fetch/display/efficiency_monitoring', 'DisplayController@fetchEfficiencyMonitoring');
 Route::get('fetch/display/efficiency_monitoring_monthly', 'DisplayController@fetchEfficiencyMonitoringMonthly');
+Route::post('input/display/efficiency_monitoring_monthly', 'DisplayController@inputEfficiencyMonitoringMonthly');
 
 
 
