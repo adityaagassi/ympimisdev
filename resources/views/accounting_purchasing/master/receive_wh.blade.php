@@ -49,7 +49,7 @@
 	}
 	#loading, #error { display: none; }
 
-	#qr_code {
+	#no_po {
 		text-align: center;
 		font-weight: bold;
 	}
@@ -96,7 +96,7 @@
 					</div>
 					<input type="text" class="form-control" placeholder="Masukkan Nomor PO" id="no_po">
 					<span class="input-group-btn">
-						<button style="font-weight: bold;" href="javascript:void(0)" class="btn btn-success btn-flat"></i>&nbsp;&nbsp;Submit</button>
+						<button style="font-weight: bold;" onclick="cekPO()" class="btn btn-success btn-flat"></i>&nbsp;&nbsp;Submit</button>
 					</span>
 				</div>
 			</div>
@@ -109,17 +109,16 @@
 						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 25px;" colspan="9" id='po_title'>Nomor PO</th>
 					</tr>
 					<tr>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">#</th>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">GROUP</th>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">LOCATION</th>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">STORE</th>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">CATEGORY</th>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">MATERIAL NUMBER</th>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">MATERIAL DESCRIPTION</th>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">ACTION</th>
+						<th width="1%" style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">Nomor</th>
+						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">NO PO</th>
+						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">NO ITEM</th>
+						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">DETAIL ITEM</th>
+						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">QTY</th>
+						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">QTY RECEIVE</th>
+						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">RECEIVE DATE</th>
 					</tr>
 				</thead>
-				<tbody id="store_body">
+				<tbody id="po_body">
 				</tbody>
 			</table>
 		</div>
@@ -130,35 +129,6 @@
 			</div>
 		</div>
 	</div>
-
-	<div class="modal modal-default fade" id="scanModal">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title text-center"><b>SCAN QR CODE HERE</b></h4>
-				</div>
-				<div class="modal-body">
-					<div id='scanner' class="col-xs-12">
-						<div class="col-xs-10 col-xs-offset-1">
-							<div id="loadingMessage">
-								🎥 Unable to access video stream
-								(please make sure you have a webcam enabled)
-							</div>
-							<canvas style="width: 100%; height: 300px;" id="canvas" hidden></canvas>
-							<div id="output" hidden>
-								<div id="outputMessage">No QR code detected.</div>
-							</div>
-						</div>									
-					</div>
-
-					<p style="visibility: hidden;">camera</p>
-					<input type="hidden" id="code">
-				</div>
-			</div>
-		</div>
-	</div>
-
-
 </section>
 
 @endsection
@@ -177,178 +147,79 @@
 	
 	jQuery(document).ready(function() {
 
-		$('#qr_code').blur();
+		$('#no_po').blur();
 
 		$('#confirm').hide();
 
 	});
 
-	function stopScan() {
-		$('#scanModal').modal('hide');
-	}
-
-	function videoOff() {
-		vdo.pause();
-		vdo.src = "";
-		vdo.srcObject.getTracks()[0].stop();
-	}
-
-	$( "#scanModal" ).on('shown.bs.modal', function(){
-		showCheck('123');
-	});
-
-	$('#scanModal').on('hidden.bs.modal', function () {
-		videoOff();
-	});
-
-	$('#qr_code').keydown(function(event) {
+	$('#no_po').keydown(function(event) {
 		if (event.keyCode == 13 || event.keyCode == 9) {
-			var id = $("#qr_code").val();
-			if(numberValidation(id)){
-				checkCode(id);
-			}else{
-				canc();
-				openErrorGritter('Error', 'QR Code Tidak Terdaftar');
-			}
+			var id = $("#no_po").val();
+			checkCode(id);
+
 		}
 	});
 
-	function numberValidation(id){
-		var number = /^[0-9]+$/;
 
-		if(!id.match(number)){
-			return false;
-		}else{
-			return true;
-		}
+
+	function cekPO(){
+		var id = $("#no_po").val();
+		checkCode(id);
 	}
 
-	function showCheck(kode) {
-		$(".modal-backdrop").add();
-		$('#scanner').show();
 
-		var video = document.createElement("video");
-		vdo = video;
-		var canvasElement = document.getElementById("canvas");
-		var canvas = canvasElement.getContext("2d");
-		var loadingMessage = document.getElementById("loadingMessage");
-
-		var outputContainer = document.getElementById("output");
-		var outputMessage = document.getElementById("outputMessage");
-
-		function drawLine(begin, end, color) {
-			canvas.beginPath();
-			canvas.moveTo(begin.x, begin.y);
-			canvas.lineTo(end.x, end.y);
-			canvas.lineWidth = 4;
-			canvas.strokeStyle = color;
-			canvas.stroke();
-		}
-
-		navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
-			video.srcObject = stream;
-			video.setAttribute("playsinline", true);
-			video.play();
-			requestAnimationFrame(tick);
-		});
-
-		function tick() {
-			loadingMessage.innerText = "⌛ Loading video..."
-			if (video.readyState === video.HAVE_ENOUGH_DATA) {
-				loadingMessage.hidden = true;
-				canvasElement.hidden = false;
-
-				canvasElement.height = video.videoHeight;
-				canvasElement.width = video.videoWidth;
-				canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
-				var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
-				var code = jsQR(imageData.data, imageData.width, imageData.height, {
-					inversionAttempts: "dontInvert",
-				});
-
-				if (code) {
-					drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#FF3B58");
-					drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#FF3B58");
-					drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
-					drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
-					outputMessage.hidden = true;
-					videoOff();
-					document.getElementById("qr_code").value = code.data;
-
-					checkCode(code.data);
-
-				} else {
-					outputMessage.hidden = false;
-				}
-			}
-			requestAnimationFrame(tick);
-		}
-	}
-
-	var list = [];
 
 	function checkCode(code) {
 
 		var data = {
-			id : code
+			no_po : code
 		}
 
-		$.get('{{ url("fetch/stocktaking/material_detail") }}', data, function(result, status, xhr){
+		$.get('{{ url("fetch/warehouse/equipment") }}', data, function(result, status, xhr){
 
 			if (result.status) {
-				if(result.material.length > 0){
-					$('#scanner').hide();
-					$('#scanModal').modal('hide');
-					$(".modal-backdrop").remove();
+				if(result.datas.length > 0){
+					$("#po_body").append().empty();
+					list = [];
 
 
-					if(result.material[0].process > 1){
-						canc();
-						openErrorGritter('Error', 'Proses tidak sesuai urutan');
-						return false;
-					}
+					$.each(result.datas, function(index, value){
 
-					if(result.material[0].remark == 'NO USE'){
-						canc();
-						openErrorGritter('Error', 'QR Code No Use');
-						return false;
-					}
+						$(".modal-backdrop").remove();
+						var fillList = true;
 
-					var fillList = true;
-					for (var i = 0; i < list.length; i++) {
-						if(result.material[0].id == list[i][0]){
-							canc();
-							openErrorGritter('Error', 'Material sudah di Scan<br>Cek Tabel No Use');
-							fillList = false;
+						if(fillList){
+
+							list.push({
+								'id' : value.id, 
+								'no_po' : value.no_po, 
+								'no_item' : value.no_item, 
+								'nama_item' : value.nama_item, 
+								'qty' : value.qty,
+								'qty_receive' : value.qty_receive,
+								'date_receive' : value.date_receive
+							});
 						}
-					}
+					});
 
-					if(fillList){
-						var data = [];
-						data.push(result.material[0].id);
-						data.push(result.material[0].area);
-						data.push(result.material[0].location);
-						data.push(result.material[0].store);
-						data.push(result.material[0].category);
-						data.push(result.material[0].material_number);
-						data.push(result.material[0].material_description);
-						list.push(data);
+					canc();
+					fillStore();
 
-						canc();
-						fillStore();
-					}
+					// console.log(list);
+					// console.log(list.length);
+
 				} else {
 					canc();
-					openErrorGritter('Error', 'QR Code Tidak Terdaftar');
+					openErrorGritter('Error', 'Nomor PO Tidak Terdaftar');
 				}			
+
 
 			} else {
 				canc();
-				openErrorGritter('Error', 'QR Code Tidak Terdaftar');
+				openErrorGritter('Error', 'Nomor PO Tidak Terdaftar');
 			}
 
-			$('#scanner').hide();
-			$('#scanModal').modal('hide');
 			$(".modal-backdrop").remove();
 		});
 
@@ -356,79 +227,78 @@
 
 
 	function fillStore(){
-		$("#store_body").empty();
-
+		$("#po_body").empty();
+		// console.log(list);
 		var body = '';
 		var num = '';
 		for (var i = 0; i < list.length; i++) {
 			var css = 'style="padding: 0px; text-align: center; color: #000000; font-size: 15px;"';
-
 			num++;
 			body += '<tr>';
 			body += '<td '+css+'>'+num+'</td>';
-			body += '<td '+css+'>'+list[i][1]+'</td>';
-			body += '<td '+css+'>'+list[i][2]+'</td>';
-			body += '<td '+css+'>'+list[i][3]+'</td>';
-			body += '<td '+css+'>'+list[i][4]+'</td>';
-			body += '<td '+css+'>'+list[i][5]+'</td>';		
-			body += '<td '+css+'>'+list[i][6]+'</td>';		
-			body += '<td '+css+'><button style="width: 50%; height: 100%;" onclick="cancNoUse(\''+list[i][0]+'\')" class="btn btn-xs btn-danger form-control"><span><i class="fa fa-close"></i></span></button></td>';
+			body += '<td '+css+'>'+list[i].no_po+'</td>';
+			body += '<td '+css+'>'+list[i].no_item+'</td>';
+			body += '<td '+css+'>'+list[i].nama_item+'</td>';
+			body += '<td '+css+'>'+list[i].qty+'</td>';
+
+			if (list[i].qty_receive == 0) {
+				body += '<td style="padding:2px;text-align:left"> <input type="text" name="qty_receive_'+list[i].id+'" id="qty_receive_'+list[i].id+'" class="form-control qty" placeholder="Qty Receive"> </td>';
+			}
+			else if (list[i].qty != list[i].qty_receive) {
+				body += '<td style="padding:2px;text-align:left">Inputted : '+list[i].qty_receive+' | <input type="text" name="qty_receive_'+list[i].id+'" id="qty_receive_'+list[i].id+'" class="form-control qty" placeholder="Qty Receive"> </td>';	
+			}
+			else{
+				body += '<td '+css+'>'+list[i].qty_receive+'</td>';				
+			}
+
+			body += '<td '+css+'><input type="text" class="form-control pull-right datepicker dt" id="date_receive_'+list[i].id+'" name="date_receive_'+list[i].id+'" placeholder="Date Receive"></td>';
 
 			body += '</tr>';
 
 		}
-		$("#store_body").append(body);
+		$("#po_body").append(body);
 
 		if(list.length > 0){
 			$('#confirm').show();
 		}
 
+		$('.datepicker').datepicker({
+			autoclose: true,
+			todayHighlight: true,
+			format: "yyyy-mm-dd",
+			orientation: 'bottom auto',
+		});
+
 	}
 
 	function canc(){
-		$('#qr_code').val("");
-		$('#qr_code').focus();
-		$('#qr_code').blur();
+		$('#no_po').val("");
+		$('#no_po').focus();
+		$('#no_po').blur();
 
-	}
-
-	function cancNoUse(id) {
-		if(confirm("Hapus material dari List No Use ?")){
-			var index = -1;
-			for (var i = 0; i < list.length; i++) {
-				if(list[i][0] == id){
-					index = i;
-				}
-			}
-
-			if (index > -1) {
-				list.splice(index, 1);
-			}
-
-			fillStore();
-		}
 	}
 
 	function conf() {
 		$("#loading").show();
 
-		var id = [];
+		var arr_params = [];
 
-		for (var i = 0; i < list.length; i++) {
-			id.push(list[i][0]);
-		}
+		$('.qty').each(function(index, value) {
+			ids = $(this).attr('id').split('_');
+			arr_params.push({'id' : ids[2], 'qty' : $(this).val(), 'date' : $('#date_receive_'+ids[2]).val()});
+		});
 
 		var data = {
-			id : id
+			item : arr_params
 		}
 
 		if(confirm("Data akan simpan oleh sistem.\nData tidak dapat dikembalikan.")){
 
-			$.post('{{ url("fetch/stocktaking/update_no_use") }}', data, function(result, status, xhr){
+			$.post('{{ url("fetch/warehouse/update_receive") }}', data, function(result, status, xhr){
 				if (result.status) {
 					openSuccessGritter('Success', result.message);
 
-					$("#store_body").empty();
+					$("#po_body").empty();
 					$('#confirm').hide();
 					$("#loading").hide();
 					

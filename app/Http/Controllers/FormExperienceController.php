@@ -264,7 +264,17 @@ class FormExperienceController extends Controller
       $group = $request->get('group');
 
       $data = db::select("SELECT
-        * 
+        form_failures.id,
+        form_failures.employee_id,
+        form_failures.employee_name,
+        form_failures.tanggal_kejadian,
+        form_failures.lokasi_kejadian,
+        form_failures.equipment,
+        form_failures.grup_kejadian,
+        form_failures.kategori,
+        form_failures.judul,
+        form_failures.loss,
+        form_failures.kerugian
       FROM
         form_failures
         JOIN employee_syncs ON form_failures.employee_id = employee_syncs.employee_id

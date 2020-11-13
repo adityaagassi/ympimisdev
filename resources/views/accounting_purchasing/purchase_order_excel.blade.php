@@ -11,19 +11,32 @@
                 <th>PO No</th>
                 <th>PR No</th>
                 <th>PO Date</th>
-                <th>Supplier Code</th>
                 <th>Supplier</th>
                 <th>Currency</th>
-                <th>Cost Center</th>
-                <th>Budget</th>
+                <th>Supplier Code</th>
                 <th>Item Number</th>
-                <th>Item Name</th>
+                <th>Delivery Date</th>
                 <th>Qty</th>
                 <th>UOM</th>
                 <th>Goods Price</th>
                 <th>Amount</th>
-                <th>GL Number</th>
+                <th>Item Name</th>
+                <th>Item Name 2</th>
+                <!-- <th>Cost Center</th> -->
+                <!-- <th>GL Number</th> -->
+                <th>Budget</th>
                 
+                <th style="background-color: #ffeb3b;">User</th>
+                <th style="background-color: #ffeb3b;">Note</th>
+                <th style="background-color: #ffeb3b;">Budget</th>
+                <th style="background-color: #ffeb3b;">ID Code</th>
+                <th style="background-color: #ffeb3b;">Kode Vendor</th>
+                <th style="background-color: #ffeb3b;">PO / JO</th>
+                <th style="background-color: #ffeb3b;">GL Account</th>
+                <th style="background-color: #ffeb3b;">GL Desc</th>
+                <th style="background-color: #ffeb3b;">Cost Center</th>
+                <th style="background-color: #ffeb3b;">NO PO SAP</th>
+
                 <th style="background-color: #ffeb3b;color: #f44336">Item</th>
                 <th style="background-color: #ffeb3b;color: #f44336">A</th>
                 <th style="background-color: #ffeb3b;color: #f44336">I</th>
@@ -58,13 +71,11 @@
                 <td>{{ $po->no_po }}</td>
                 <td>{{ $po->no_pr }}</td>
                 <td>{{ $po->tgl_po }}</td>
-                <td>{{ $po->supplier_code }}</td>
                 <td>{{ $po->supplier_name }}</td>
                 <td>{{ $po->currency }}</td>
-                <td>{{ $po->cost_center }}</td>
-                <td>{{ $po->budget_item }}</td>
+                <td>{{ $po->supplier_code }}</td>
                 <td>{{ $po->no_item }}</td>
-                <td>{{ $po->nama_item }}</td>
+                <td><?php echo date('d.m.Y', strtotime($po->delivery_date)) ?></td>
                 <td>{{ $po->qty }}</td>
                 <td>{{ $po->uom }}</td>
                 <td>
@@ -75,8 +86,27 @@
                     @endif
                 </td>
                 <td><?= $amount ?> </td>
+                <td>{{ $po->nama_item }}</td>
+                <td></td>
+                <!-- <td>{{ $po->cost_center }}</td> -->
+                <!-- <td>{{ $po->gl_number }}</td> -->
+                <td>{{ $po->budget_item }}</td>
+
+                @if($po->remark == "PR")
+                <td>{{ $po->emp_name }}</td>
+                @else
+                <td>{{ $po->applicant_name }}</td>
+                @endif
+
+                <td>{{ $po->note }}</td>
+                <td>{{ $po->budget_item }}</td>
+                <td></td>
+                <td></td>
+                <td></td>
                 <td>{{ $po->gl_number }}</td>
                 <td></td>
+                <td>{{ $po->cost_center }}</td>
+
                 <td>
                     @if($po->gl_number == "15100000" || $po->gl_number == "15300000" || $po->gl_number == "15400000" || $po->gl_number == "15500000" || $po->gl_number == "15600000" || $po->gl_number == "15700000")
                         A
