@@ -518,7 +518,7 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    <a href="http://172.17.128.8/sf6/" target="_blank">
+                                    <a href="http://10.109.52.8/sf6/" target="_blank">
                                         <i class="fa fa-caret-right"></i> Sunfish (サンフィッシュ)
                                     </a>
                                     <br>
