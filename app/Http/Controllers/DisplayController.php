@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use Response;
 use App\OriginGroup;
 use App\KnockDownDetail;
+use App\WeeklyCalendar;
 use App\UserActivityLog;
+use App\EfficiencyUpload;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use DataTables;
@@ -17,8 +19,8 @@ class DisplayController extends Controller
 {
 	public function indexEfficiencyMonitoring(){
 
-		$title = 'Efficiency Monitoring';
-		$title_jp = '効率の監視';
+		$title = 'Daily Efficiency Monitoring';
+		$title_jp = '日次効率の監視';
 
 		return view('displays.efficiency_monitoring', array(
 			'title' => $title,
@@ -26,7 +28,207 @@ class DisplayController extends Controller
 		))->with('page', 'Display Efficiency Monitoring')->with('head', 'Display');
 	}
 
+	public function indexEfficiencyMonitoringMonthly(){
+
+		$title = 'Monthly Efficiency Monitoring';
+		$title_jp = '月次効率の監視';
+
+		$weeks = db::select("SELECT DISTINCT
+			fiscal_year,
+			DATE_FORMAT( week_date, '%M' ) AS bulan,
+			DATE_FORMAT( week_date, '%Y-%m' ) AS indek 
+			FROM
+			weekly_calendars 
+			WHERE
+			week_date >= '2020-04-01' 
+			AND week_date <= '2020-11-12'");
+
+		$cost_centers = db::select("SELECT DISTINCT
+			cost_center_eff 
+			FROM
+			cost_centers2 
+			WHERE
+			cost_center_eff IS NOT NULL 
+			ORDER BY
+			cost_center_eff ASC");
+
+		return view('displays.efficiencies.efficiency_monitoring_monthly', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'weeks' => $weeks,
+			'cost_centers' => $cost_centers
+		))->with('page', 'Display Efficiency Monitoring')->with('head', 'Display');
+	}
+
+	public function inputEfficiencyMonitoringMonthly(Request $request){
+
+		$newDate = $request->get('newDate');
+		$newCost = $request->get('newCost');
+		$newInput = $request->get('newInput');
+		$newOutput = $request->get('newOutput');
+
+		try {
+			$efficiency_uploads = EfficiencyUpload::updateOrCreate(
+				['cost_center_name' => $newCost, 'total_date' => $newDate],
+				['total_input' => $newInput, 'total_output' => $newOutput, 'created_by' => Auth::id(), 'updated_at' => Carbon::now()]
+			);
+			$efficiency_uploads->save();
+
+			$response = array(
+				'status' => true,
+				'message' => 'Data berhasil ditambahkan'
+			);
+			return Response::json($response);
+		} catch (Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}	
+
+		
+	}
+
+	public function fetchEfficiencyMonitoringMonthly(Request $request){
+
+		$month_target = date('Y-m');
+
+		if(strlen($request->get('period')) > 0){
+			$month_target = $request->get('period');
+		}
+
+		$weekly_calendar = WeeklyCalendar::whereRaw("DATE_FORMAT(week_date, '%Y-%m') = '".$month_target."'")
+		->select("fiscal_year", db::raw("date_format(week_date, '%Y-%m') as month_date"), db::raw("date_format(week_date, '%M') as month_name"))
+		->first();
+
+		$weekly_months = db::select("SELECT
+			wc.week_date,
+			cc.cost_center_name 
+			FROM
+			weekly_calendars AS wc
+			CROSS JOIN ( SELECT DISTINCT cost_center_eff AS cost_center_name FROM cost_centers2 WHERE cost_center_eff IS NOT NULL ) AS cc 
+			WHERE
+			DATE_FORMAT( wc.week_date, '%Y-%m') = '".$weekly_calendar->month_date."'
+			AND cc.cost_center_name IS NOT NULL
+			ORDER BY
+			wc.week_date ASC,
+			cc.cost_center_name ASC");
+
+		$months = db::select("SELECT
+			weekly_calendars.fiscal_year,
+			efficiency_uploads.cost_center_name,
+			weekly_calendars.week_date,
+			efficiency_uploads.total_input,
+			efficiency_uploads.total_output 
+			FROM
+			efficiency_uploads
+			LEFT JOIN weekly_calendars ON weekly_calendars.week_date = efficiency_uploads.total_date 
+			WHERE
+			date_format(weekly_calendars.week_date, '%Y-%m') = '".$weekly_calendar->month_date."'
+			ORDER BY
+			weekly_calendars.week_date ASC,
+			efficiency_uploads.cost_center_name ASC");
+
+		$result_months = array();
+
+		foreach($weekly_months as $weekly_month){
+			$week_date = $weekly_month->week_date;
+			$cost_center_name = $weekly_month->cost_center_name;
+			$total_input = 0;
+			$total_output = 0;
+
+			foreach ($months as $month) {
+				if($month->week_date == $week_date && $month->cost_center_name == $cost_center_name){
+					$total_input = $month->total_input;
+					$total_output = $month->total_output;
+				}
+			}
+
+			array_push($result_months,
+				[
+					'week_date' => $week_date,
+					'cost_center_name' => $cost_center_name,
+					'total_input' => $total_input,
+					'total_output' => $total_output
+				]);
+		}
+
+		$weekly_years = db::select("SELECT
+			DISTINCT
+			date_format( wc.week_date, '%Y-%m' ) AS month_date,
+			cc.cost_center_name 
+			FROM
+			weekly_calendars AS wc
+			CROSS JOIN ( SELECT DISTINCT cost_center_eff AS cost_center_name FROM cost_centers2 WHERE cost_center_eff IS NOT NULL ) AS cc 
+			WHERE
+			wc.fiscal_year = '".$weekly_calendar->fiscal_year."'
+			AND cc.cost_center_name IS NOT NULL
+			ORDER BY
+			wc.week_date ASC,
+			cc.cost_center_name ASC");
+
+		$years = db::select("SELECT
+			weekly_calendars.fiscal_year,
+			efficiency_uploads.cost_center_name,
+			date_format( weekly_calendars.week_date, '%Y-%m' ) AS month_date,
+			sum( efficiency_uploads.total_input ) AS total_input,
+			sum( efficiency_uploads.total_output ) AS total_output 
+			FROM
+			efficiency_uploads
+			LEFT JOIN weekly_calendars ON weekly_calendars.week_date = efficiency_uploads.total_date 
+			WHERE
+			weekly_calendars.fiscal_year = '".$weekly_calendar->fiscal_year."'
+			GROUP BY
+			weekly_calendars.fiscal_year,
+			efficiency_uploads.cost_center_name,
+			date_format( weekly_calendars.week_date, '%Y-%m' ) 
+			ORDER BY
+			weekly_calendars.week_date ASC,
+			efficiency_uploads.cost_center_name ASC");
+
+		$result_years = array();
+
+		foreach($weekly_years as $weekly_year){
+			$month_date = $weekly_year->month_date;
+			$cost_center_name = $weekly_year->cost_center_name;
+			$total_input = 0;
+			$total_output = 0;
+
+			foreach ($years as $year) {
+				if($year->month_date == $month_date && $year->cost_center_name == $cost_center_name){
+					$total_input = $year->total_input;
+					$total_output = $year->total_output;
+				}
+			}
+
+			array_push($result_years,
+				[
+					'month_date' => $month_date,
+					'cost_center_name' => $cost_center_name,
+					'total_input' => $total_input,
+					'total_output' => $total_output
+				]);
+		}
+
+		$response = array(
+			'status' => true,
+			'months' => $result_months,
+			'years' => $result_years,
+			'period' => $weekly_calendar->fiscal_year." ".$weekly_calendar->month_name
+		);
+		return Response::json($response);
+	}
+
 	public function fetchEfficiencyMonitoring(Request $request){
+
+		$first = date('Y-m-01');
+		$last = date('Y-m-t');
+
+		if(strlen($request->get('period')) > 0){
+			$first = date('Y-m-01', strtotime($request->get('period')));
+			$last = date('Y-m-t', strtotime($request->get('period')));
+		}
 
 		$employee_histories = db::select("SELECT
 			date_format( date_add( e.period, INTERVAL 5 DAY ), '%Y-%m' ) AS completion_month,
@@ -38,110 +240,200 @@ class DisplayController extends Controller
 			LEFT JOIN cost_centers2 AS c ON c.cost_center = e.cost_center_code 
 			WHERE
 			c.cost_center_eff IS NOT NULL 
-			AND date_format( e.period, '%Y-%m-%d' ) >= '2020-09-01' 
-			AND date_format( e.period, '%Y-%m-%d' ) <= '2020-09-30'");
+			AND date_format( e.period, '%Y-%m-%d' ) >= '2020-10-01' 
+			AND date_format( e.period, '%Y-%m-%d' ) <= '2020-10-31'");
+
+		$weekly_calendars = db::select("SELECT
+			wc.fiscal_year,
+			date_format( wc.week_date, '%Y-%m' ) AS completion_month,
+			wc.week_name,
+			wc.week_date,
+			cc.cost_center_name 
+			FROM
+			weekly_calendars AS wc
+			CROSS JOIN ( SELECT DISTINCT cost_center_eff AS cost_center_name FROM cost_centers2 WHERE cost_center_eff IS NOT NULL ) AS cc 
+			WHERE
+			wc.week_date >= '2020-11-01' 
+			AND wc.week_date <= '2020-11-30' 
+			AND cc.cost_center_name IS NOT NULL
+			-- AND cc.cost_center_name IN ( 'FINAL', 'MIDDLE', 'SOLDERING', 'INITIAL', 'RC ASSY', 'PN ASSY' )
+			ORDER BY
+			wc.week_date ASC,
+			cc.cost_center_name ASC");
 
 		$completion_times = db::select("SELECT
-			date_format( c.completion_date, '%Y-%m' ) AS completion_month,
-			DATE_FORMAT( c.completion_date, '%u' ) AS completion_week,
-			c.completion_date,
-			c.work_center_name,
-			sum( c.total_time ) AS total_time 
+			final.completion_month,
+			final.completion_week,
+			final.completion_date,
+			final.work_center_name,
+			sum( final.total_time ) AS total_time 
 			FROM
 			(
 			SELECT
-			date( kh.created_at ) AS completion_date,
-			km.material_number,
-			km.location,
-			kh.lot,
-			km.stdval,
-			kh.lot * km.stdval AS total_time,
-			yw.work_center_name 
-			FROM
-			kitto.histories AS kh
-			LEFT JOIN kitto.materials AS km ON km.id = kh.completion_material_id
-			LEFT JOIN ympimis.work_centers AS yw ON yw.work_center = km.work_center 
-			WHERE
-			date( kh.created_at ) >= '2020-10-01' 
-			AND date( kh.created_at ) <= '2020-10-12' 
-			AND kh.category IN ( 'completion', 'completion_cancel', 'completion_return', 'completion_adjustment' ) UNION ALL
-			SELECT
-			date( l.transaction_date ) AS completion_date,
-			l.material_number,
-			l.issue_storage_location AS location,
+			DATE_FORMAT( c.posting_date, '%Y-%m' ) AS completion_month,
+			DATE_FORMAT( c.posting_date, '%u' ) AS completion_week,
+			c.posting_date AS completion_date,
+			c.material_number,
+			c.storage_location,
+			w.work_center_name,
 			IF
 			(
-			l.mvt = '101',
-			l.qty,
+			c.movement_type = '101',
+			c.quantity,
 			-(
-			l.qty 
-			)) AS lot,
-			s.std_time AS stdval,
-			IF
-			(
-			l.mvt = '101',
-			l.qty,
-			-(
-			l.qty 
-			)) * s.std_time AS total_time,
-			w.work_center_name 
+			c.quantity 
+			)) * s.std_time AS total_time 
 			FROM
-			log_transactions AS l
-			LEFT JOIN sap_standard_times AS s ON s.material_number = l.material_number
+			sap_completions AS c
+			LEFT JOIN sap_standard_times AS s ON s.material_number = c.material_number
 			LEFT JOIN work_centers AS w ON w.work_center = s.work_center 
 			WHERE
-			date( l.transaction_date ) >= '2020-10-01'
-			AND date( l.transaction_date ) <= '2020-10-12'  
-			AND l.mvt IN ( '101', '102' ) UNION ALL
-			SELECT
-			date( t.created_at ) AS completion_date,
-			t.material_number,
-			t.issue_location AS location,
-			IF
-			(
-			t.movement_type = '101',
-			t.quantity,
-			-(
-			t.quantity 
-			)) AS lot,
-			s.std_time AS stdval,
-			IF
-			(
-			t.movement_type = '101',
-			t.quantity,
-			-(
-			t.quantity 
-			))* s.std_time AS total_time,
-			w.work_center_name 
-			FROM
-			transaction_completions t
-			LEFT JOIN sap_standard_times AS s ON s.material_number = t.material_number
-			LEFT JOIN work_centers AS w ON w.work_center = s.work_center 
-			WHERE
-			date( t.created_at ) >= '2020-10-01' 
-			AND date( t.created_at ) <= '2020-10-12' 
-			) AS c
+			c.movement_type IN ( '101', '102' ) 
+			AND w.work_center_name IS NOT NULL 
+			AND c.posting_date >= '2020-11-01' 
+			AND c.posting_date <= '2020-11-30' 
+			) AS final 
 			GROUP BY
-			completion_month,
-			completion_week,
-			c.completion_date,
-			c.work_center_name");
+			final.completion_month,
+			final.completion_week,
+			final.completion_date,
+			final.work_center_name 
+			ORDER BY
+			final.completion_date ASC,
+			final.work_center_name ASC");
+
+		// $completion_times = db::select("SELECT
+		// 	DATE_FORMAT( c.completion_date, '%Y-%m' ) AS completion_month,
+		// 	DATE_FORMAT( c.completion_date, '%u' ) AS completion_week,
+		// 	c.completion_date,
+		// 	c.work_center_name,
+		// 	sum( c.total_time ) AS total_time 
+		// 	FROM
+		// 	(
+		// 	SELECT
+		// 	date( kh.created_at ) AS completion_date,
+		// 	km.material_number,
+		// 	km.location,
+		// 	kh.lot,
+		// 	km.stdval,
+		// 	kh.lot * km.stdval AS total_time,
+		// 	yw.work_center_name 
+		// 	FROM
+		// 	kitto.histories AS kh
+		// 	LEFT JOIN kitto.materials AS km ON km.id = kh.completion_material_id
+		// 	LEFT JOIN ympimis.work_centers AS yw ON yw.work_center = km.work_center 
+		// 	WHERE
+		// 	date( kh.created_at ) >= '2020-10-01' 
+		// 	AND date( kh.created_at ) <= '2020-10-05' 
+		// 	AND kh.category IN ( 'completion', 'completion_cancel', 'completion_return', 'completion_adjustment' ) UNION ALL
+		// 	SELECT
+		// 	date( l.transaction_date ) AS completion_date,
+		// 	l.material_number,
+		// 	l.issue_storage_location AS location,
+		// 	IF
+		// 	(
+		// 	l.mvt = '101',
+		// 	l.qty,
+		// 	-(
+		// 	l.qty 
+		// 	)) AS lot,
+		// 	s.std_time AS stdval,
+		// 	IF
+		// 	(
+		// 	l.mvt = '101',
+		// 	l.qty,
+		// 	-(
+		// 	l.qty 
+		// 	)) * s.std_time AS total_time,
+		// 	w.work_center_name 
+		// 	FROM
+		// 	log_transactions AS l
+		// 	LEFT JOIN sap_standard_times AS s ON s.material_number = l.material_number
+		// 	LEFT JOIN work_centers AS w ON w.work_center = s.work_center 
+		// 	WHERE
+		// 	date( l.transaction_date ) >= '2020-10-01'
+		// 	AND date( l.transaction_date ) <= '2020-10-05'  
+		// 	AND l.mvt IN ( '101', '102' ) UNION ALL
+		// 	SELECT
+		// 	date( t.created_at ) AS completion_date,
+		// 	t.material_number,
+		// 	t.issue_location AS location,
+		// 	IF
+		// 	(
+		// 	t.movement_type = '101',
+		// 	t.quantity,
+		// 	-(
+		// 	t.quantity 
+		// 	)) AS lot,
+		// 	s.std_time AS stdval,
+		// 	IF
+		// 	(
+		// 	t.movement_type = '101',
+		// 	t.quantity,
+		// 	-(
+		// 	t.quantity 
+		// 	))* s.std_time AS total_time,
+		// 	w.work_center_name 
+		// 	FROM
+		// 	transaction_completions t
+		// 	LEFT JOIN sap_standard_times AS s ON s.material_number = t.material_number
+		// 	LEFT JOIN work_centers AS w ON w.work_center = s.work_center 
+		// 	WHERE
+		// 	date( t.created_at ) >= '2020-10-01' 
+		// 	AND date( t.created_at ) <= '2020-10-05' 
+		// 	) AS c
+		// 	GROUP BY
+		// 	completion_month,
+		// 	completion_week,
+		// 	c.completion_date,
+		// 	c.work_center_name
+		// 	ORDER BY
+		// 	c.completion_date ASC,
+		// 	c.work_center_name ASC");
 
 		$man_times = db::connection('sunfish')->select("SELECT
 			format ( a.shiftstarttime, 'yyyy-MM' ) AS completion_month,
 			DATEPART( wk, a.shiftstarttime ) AS completion_week,
 			format ( a.shiftstarttime, 'yyyy-MM-dd' ) AS completion_date,
 			a.emp_no AS employee_id,
-			datediff( MINUTE, starttime, endtime ) AS work_time,
+			IIF (
+			a.shiftdaily_code LIKE '%OFF%',
+			0,
+			IIF (
+			a.shiftdaily_code LIKE '%Shift_1%' 
+			AND a.Attend_Code LIKE '%PRS%',
+			480,
+			IIF (
+			a.shiftdaily_code LIKE '%Shift_2%' 
+			AND a.Attend_Code LIKE '%PRS%',
+			450,
+			IIF ( a.shiftdaily_code LIKE '%Shift_1%' AND a.Attend_Code LIKE '%PRS%', 420, 0 ) 
+			) 
+			) 
+			) AS work_time,
 			COALESCE ( b.break_time, 0 ) AS break_time,
 			COALESCE ( a.total_ot, 0 ) AS ot_time,
-			datediff( MINUTE, starttime, endtime ) + COALESCE ( b.break_time, 0 ) + COALESCE ( a.total_ot, 0 ) AS total_time 
+			IIF (
+			a.shiftdaily_code LIKE '%OFF%',
+			0,
+			IIF (
+			a.shiftdaily_code LIKE '%Shift_1%' 
+			AND a.Attend_Code LIKE '%PRS%',
+			480,
+			IIF (
+			a.shiftdaily_code LIKE '%Shift_2%' 
+			AND a.Attend_Code LIKE '%PRS%',
+			450,
+			IIF ( a.shiftdaily_code LIKE '%Shift_1%' AND a.Attend_Code LIKE '%PRS%', 420, 0 ) 
+			) 
+			) 
+			) + COALESCE ( a.total_ot, 0 ) AS total_time 
 			FROM
 			VIEW_YMPI_Emp_Attendance AS a
 			LEFT JOIN ( SELECT shiftdailycode, SUM ( datediff( MINUTE, breakovt_endtime, breakovt_starttime ) ) AS break_time FROM OVT_BREAK_YMPI GROUP BY shiftdailycode ) AS b ON b.shiftdailycode = a.shiftdaily_code 
 			WHERE
-			format ( a.shiftstarttime, 'yyyy-MM-dd' ) >= '2020-10-01'
-			AND format ( a.shiftstarttime, 'yyyy-MM-dd' ) <= '2020-10-12'");
+			format ( a.shiftstarttime, 'yyyy-MM-dd' ) >= '2020-11-01' 
+			AND format ( a.shiftstarttime, 'yyyy-MM-dd' ) <= '2020-11-30'");
 
 		$man_times2 = array();
 
@@ -182,25 +474,86 @@ class DisplayController extends Controller
 
 		$results = array();
 
-		foreach ($completion_times as $output) {
-			foreach ($groups as $input) {
-				if($output->completion_date == $input['completion_date'] && $output->work_center_name == $input['cost_center_name']){
-					array_push($results,
-						[
-							'completion_month' => $output->completion_month,
-							'completion_week' => $output->completion_week,
-							'completion_date' => $output->completion_date,
-							'cost_center_name' => $output->work_center_name,
-							'total_output' => $output->total_time,
-							'total_input' => $input['total_time']
-						]);
+		foreach($weekly_calendars as $weekly_calendar){
+
+			$fiscal = $weekly_calendar->fiscal_year;
+			$month = $weekly_calendar->completion_month;
+			$week_name = $weekly_calendar->week_name;
+			$week_date = $weekly_calendar->week_date;
+			$cost_center_name = $weekly_calendar->cost_center_name;
+			$output_total = 0;
+
+			foreach ($completion_times as $output) {
+				if($output->completion_date == $week_date && $output->work_center_name == $cost_center_name){
+					$output_total = $output->total_time;
 				}
 			}
+
+			array_push($results,
+				[
+					'fiscal' => $fiscal,
+					'month_name' => $month,
+					'week_name' => $week_name,
+					'week_date' => $week_date,
+					'cost_center_name' => $cost_center_name,
+					'total_output' => $output_total
+				]);
+
 		}
+
+
+		$finals = array();
+
+		foreach($results as $result){
+
+			$fiscal = $result['fiscal'];
+			$month = $result['month_name'];
+			$week_name = $result['week_name'];
+			$week_date = $result['week_date'];
+			$cost_center_name = $result['cost_center_name'];
+			$output_total = $result['total_output'];
+			$input_total = 0;
+
+			foreach($groups as $input){
+				if($input['completion_date'] == $week_date && $input['cost_center_name'] == $cost_center_name && $output_total > 0){
+					$input_total = $input['total_time'];
+				}				
+			}
+
+			array_push($finals,
+				[
+					'fiscal' => $fiscal,
+					'month_name' => $month,
+					'week_name' => $week_name,
+					'week_date' => $week_date,
+					'cost_center_name' => $cost_center_name,
+					'total_output' => $output_total,
+					'total_input' => $input_total
+				]);
+
+		}
+
+		// foreach ($completion_times as $output) {
+		// 	foreach ($groups as $input) {
+		// 		if($output->completion_date == $input['completion_date'] && $output->work_center_name == $input['cost_center_name']){
+		// 			array_push($results,
+		// 				[
+		// 					'completion_month' => $output->completion_month,
+		// 					'completion_week' => $output->completion_week,
+		// 					'completion_date' => $output->completion_date,
+		// 					'cost_center_name' => $output->work_center_name,
+		// 					'total_output' => $output->total_time,
+		// 					'total_input' => $input['total_time']
+		// 				]);
+		// 		}
+		// 	}
+		// }
 
 		$response = array(
 			'status' => true,
-			'tes' => $results,
+			'datas' => $finals,
+			'first' => date('d', strtotime($first)),
+			'last' => date('d F Y', strtotime($last))
 		);
 		return Response::json($response);
 		
