@@ -59,11 +59,20 @@
             </tr>
         </thead>
         <tbody>
-            <?php $num = 1;$amount=0; ?>
+            <?php 
+                $num = 1;
+                $amount=0; 
+            ?>
+
             @foreach($po_detail as $po)
 
             <?php
-                $amount = $po->goods_price * $po->qty;
+                if($po->goods_price != "0" || $po->goods_price != 0){
+                    $amount = $po->goods_price * $po->qty;                    
+                }else{
+                    $amount = $po->service_price * $po->qty; 
+                }
+
             ?>
 
             <tr>
@@ -79,9 +88,9 @@
                 <td>{{ $po->qty }}</td>
                 <td>{{ $po->uom }}</td>
                 <td>
-                    @if($po->goods_price != null || $po->goods_price != "0")
+                    @if($po->goods_price != "0" || $po->goods_price != 0)
                         {{ $po->goods_price }}
-                    @elseif ($po->service_price != null || $po->service_price != "0")
+                    @elseif($po->service_price != "0" || $po->service_price != 0)
                         {{ $po->service_price }}
                     @endif
                 </td>
@@ -123,9 +132,9 @@
                 <td></td>
                 <td><?php echo date('d.m.Y', strtotime($po->delivery_date)) ?></td>
                 <td>
-                    @if($po->goods_price != null)
+                    @if($po->goods_price != "0" || $po->goods_price != 0)
                         {{ $po->goods_price }}
-                    @elseif ($po->service_price != null)
+                    @elseif($po->service_price != "0" || $po->service_price != 0)
                         {{ $po->service_price }}
                     @endif
                 </td>
