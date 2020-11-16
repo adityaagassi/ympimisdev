@@ -111,6 +111,32 @@ class InjectionsController extends Controller
           'YRS',
           'YRF',
       ];
+
+      $this->jam_istirahat_biasa_1 = array(
+                    'ist1_start' => '08:00:00',
+                    'ist1_end' => '08:40:00', 
+                    'ist2_start' => '11:15:00',
+                    'ist2_end' => '12:40:00',
+                    'ist3_start' => '13:20:00',
+                    'ist3_end' => '14:00:00',
+                );
+      $this->jam_istirahat_jumat_1 = array(
+                    'ist1_start' => '08:00:00',
+                    'ist1_end' => '08:40:00', 
+                    'ist2_start' => '11:15:00',
+                    'ist2_end' => '13:10:00',
+                    'ist3_start' => '13:50:00',
+                    'ist3_end' => '14:30:00',
+                );
+
+      $this->jam_istirahat_2 = array(
+                    'ist1_start' => '17:35:00',
+                    'ist1_end' => '18:10:00', 
+                    'ist2_start' => '20:00:00',
+                    'ist2_end' => '21:10:00',
+                    'ist3_start' => '22:20:00',
+                    'ist3_end' => '22:50:00',
+                );
   }
 
 
@@ -4359,15 +4385,30 @@ class InjectionsController extends Controller
             'title' => $title,
             'title_jp' => $title_jp,
             'molding' => $molding,
+            'mesin' => $this->mesin,
             'name' => Auth::user()->name
         ))->with('page', 'Molding Setup');
     }
 
     public function get_molding(Request $request){
             // $tgl = $request->get('tgl');
-            // $tag = $request->get('tag');
+            $mesin = $request->get('mesin');
 
-        $molding = DB::SELECT("select injection_molding_masters.part,status_mesin as mesin,last_counter as shot,COALESCE(injection_molding_logs.color,'-') as color from injection_molding_masters left join injection_molding_logs on injection_molding_logs.tag_molding = injection_molding_masters.tag where remark = 'RC' and injection_molding_masters.status = 'PASANG'");
+        $molding = DB::SELECT("SELECT
+                injection_molding_masters.part,
+                status_mesin AS mesin,
+                COALESCE ( injection_molding_logs.color, '-' ) AS color,
+                ( SELECT pic FROM injection_history_molding_logs WHERE injection_history_molding_logs.mesin = status_mesin ORDER BY created_at DESC LIMIT 1 ) AS pic,
+                COALESCE(injection_molding_logs.total_running_shot/injection_machine_cycle_times.shoot,0) as shot
+            FROM
+                injection_molding_masters
+                LEFT JOIN injection_molding_logs ON injection_molding_logs.tag_molding = injection_molding_masters.tag 
+                LEFT JOIN injection_machine_cycle_times ON injection_molding_logs.part = injection_machine_cycle_times.part 
+                AND injection_molding_logs.color = injection_machine_cycle_times.color 
+            WHERE
+                remark = 'RC' 
+                AND injection_molding_masters.STATUS = 'PASANG'
+                and status_mesin = '".$mesin."'");
 
         $response = array(
             'status' => true,            
@@ -4482,9 +4523,9 @@ class InjectionsController extends Controller
 
     public function get_history_temp(Request $request){
             // $tgl = $request->get('tgl');
-        $pic = $request->get('pic');
+        $mesin = $request->get('mesin');
 
-        $molding = InjectionHistoryMoldingTemp::where('pic',$pic)->get();
+        $molding = InjectionHistoryMoldingTemp::where('mesin',$mesin)->get();
 
         $response = array(
             'status' => true,            
@@ -4496,10 +4537,10 @@ class InjectionsController extends Controller
 
     public function update_history_temp(Request $request){
             // $tgl = $request->get('tgl');
-        $pic = $request->get('pic');
+        $mesin = $request->get('mesin');
         $type = $request->get('type');
 
-        $history_temp = InjectionHistoryMoldingTemp::where('pic',$pic)->where('type',$type)->get();
+        $history_temp = InjectionHistoryMoldingTemp::where('mesin',$mesin)->where('type',$type)->get();
         foreach ($history_temp as $key) {
             $id_history_temp = $key->id;
         }
@@ -4517,7 +4558,7 @@ class InjectionsController extends Controller
     public function cancel_history_molding(Request $request)
     {
         try {
-            InjectionHistoryMoldingTemp::where('pic',$request->get('pic'))->where('type',$request->get('type'))->delete();
+            InjectionHistoryMoldingTemp::where('mesin',$request->get('mesin'))->where('type',$request->get('type'))->delete();
 
             if ($request->get('type') == 'LEPAS') {
                 $molding_master = InjectionMoldingLog::where('part',$request->get('part'))->where('status_maintenance',"Maintenance")->get();
@@ -4547,23 +4588,103 @@ class InjectionsController extends Controller
     {
         try{    
           $id_user = Auth::id();
+          $start_time = $request->get('start_time');
+          $end_time = $request->get('end_time');
+          $running_time = $request->get('running_time');
 
-          InjectionHistoryMoldingLog::create([
-            'type' => $request->get('type'),
-            'pic' => $request->get('pic'),
-            'mesin' => $request->get('mesin'),
-            'part' => $request->get('part'),
-            'color' => $request->get('color'),
-            'total_shot' => $request->get('total_shot'),
-            'start_time' => $request->get('start_time'),
-            'end_time' => $request->get('end_time'),
-            'running_time' => $request->get('running_time'),
-            'note' => $request->get('notelepas'),
-            'decision' => $request->get('decision'),
-            'created_by' => $id_user
-        ]);
+          if (date('D')=='Fri') {
+                if (date("H:i:s", strtotime($start_time)) < $this->jam_istirahat_jumat_1['ist1_start'] && date("H:i:s", strtotime($end_time)) > $this->jam_istirahat_jumat_1['ist1_end']) {
+                    $end_time = date('Y-m-d H:i:s',strtotime('-10 minutes',strtotime($end_time)));
+                }
 
-          InjectionHistoryMoldingTemp::where('pic',$request->get('pic'))->delete();
+                if (date("H:i:s", strtotime($start_time)) < $this->jam_istirahat_biasa_1['ist2_start'] && date("H:i:s", strtotime($end_time)) > $this->jam_istirahat_biasa_1['ist2_end']) {
+                    $end_time = date('Y-m-d H:i:s',strtotime('-40 minutes',strtotime($end_time)));
+                }
+
+                if (date("H:i:s", strtotime($start_time)) < $this->jam_istirahat_biasa_1['ist3_start'] && date("H:i:s", strtotime($end_time)) > $this->jam_istirahat_biasa_1['ist3_end']) {
+                    $end_time = date('Y-m-d H:i:s',strtotime('-10 minutes',strtotime($end_time)));
+                }
+          }else{
+                if (date("H:i:s", strtotime($start_time)) < $this->jam_istirahat_biasa_1['ist1_start'] && date("H:i:s", strtotime($end_time)) > $this->jam_istirahat_biasa_1['ist1_end']) {
+                    $end_time = date('Y-m-d H:i:s',strtotime('-10 minutes',strtotime($end_time)));
+                }
+
+                if (date("H:i:s", strtotime($start_time)) < $this->jam_istirahat_biasa_1['ist2_start'] && date("H:i:s", strtotime($end_time)) > $this->jam_istirahat_biasa_1['ist2_end']) {
+                    $end_time = date('Y-m-d H:i:s',strtotime('-40 minutes',strtotime($end_time)));
+                }
+
+                if (date("H:i:s", strtotime($start_time)) < $this->jam_istirahat_biasa_1['ist3_start'] && date("H:i:s", strtotime($end_time)) > $this->jam_istirahat_biasa_1['ist3_end']) {
+                    $end_time = date('Y-m-d H:i:s',strtotime('-10 minutes',strtotime($end_time)));
+                }
+          }
+          if (date("H:i:s", strtotime($start_time)) < $this->jam_istirahat_2['ist1_start'] && date("H:i:s", strtotime($end_time)) > $this->jam_istirahat_2['ist1_end']) {
+                $end_time = date('Y-m-d H:i:s',strtotime('-15 minutes',strtotime($end_time)));
+            }
+
+            if (date("H:i:s", strtotime($start_time)) < $this->jam_istirahat_2['ist2_start'] && date("H:i:s", strtotime($end_time)) > $this->jam_istirahat_2['ist2_end']) {
+                $end_time = date('Y-m-d H:i:s',strtotime('-25 minutes',strtotime($end_time)));
+            }
+
+            if (date("H:i:s", strtotime($start_time)) < $this->jam_istirahat_2['ist3_start'] && date("H:i:s", strtotime($end_time)) > $this->jam_istirahat_2['ist3_end']) {
+                $end_time = date('Y-m-d H:i:s',strtotime('-10 minutes',strtotime($end_time)));
+            }
+
+          $timenow = strtotime($end_time) - strtotime($start_time);
+
+          $years = floor($timenow / (365*60*60*24));  
+  
+            $months = floor(($timenow - $years * 365*60*60*24) 
+                                           / (30*60*60*24));  
+              
+            $days = floor(($timenow - $years * 365*60*60*24 -  
+                         $months*30*60*60*24)/ (60*60*24)); 
+              
+            $hours = floor(($timenow - $years * 365*60*60*24  
+                   - $months*30*60*60*24 - $days*60*60*24) 
+                                               / (60*60));  
+              
+            $minutes = floor(($timenow - $years * 365*60*60*24  
+                     - $months*30*60*60*24 - $days*60*60*24  
+                                      - $hours*60*60)/ 60);  
+              
+            $seconds = floor(($timenow - $years * 365*60*60*24  
+                     - $months*30*60*60*24 - $days*60*60*24 
+                            - $hours*60*60 - $minutes*60));  
+
+            $length = 2;
+
+            $running_time = str_pad($hours,$length,"0", STR_PAD_LEFT).':'.str_pad($minutes,$length,"0", STR_PAD_LEFT).':'.str_pad($seconds,$length,"0", STR_PAD_LEFT);
+
+            if ($request->get('pic_2') != '-') {
+                $pic = $request->get('pic_1').', '.$request->get('pic_2');
+            }
+
+            if ($request->get('pic_3') != '-') {
+                $pic = $request->get('pic_1').', '.$request->get('pic_2').', '.$request->get('pic_3');
+            }
+
+            if ($request->get('pic_2') == '-' && $request->get('pic_3') == '-') {
+                $pic = $request->get('pic_1');
+            }
+
+            InjectionHistoryMoldingLog::create([
+                'type' => $request->get('type'),
+                'pic' => $pic,
+                'mesin' => $request->get('mesin'),
+                'part' => $request->get('part'),
+                'color' => $request->get('color'),
+                'total_shot' => $request->get('total_shot'),
+                'start_time' => $request->get('start_time'),
+                'end_time' => $request->get('end_time'),
+                'running_time' => $running_time,
+                'note' => $request->get('notelepas'),
+                'decision' => $request->get('decision'),
+                'created_by' => $id_user
+            ]);
+
+          
+
+          InjectionHistoryMoldingTemp::where('mesin',$request->get('mesin'))->delete();
 
           if ($request->get('type') == 'LEPAS') {
             $molding = InjectionMoldingLog::where('mesin',$request->get('mesin'))->where('part',$request->get('part'))->where('color',$request->get('color'))->where('status','Running')->get();
@@ -4604,17 +4725,17 @@ class InjectionsController extends Controller
      }
     }
 
-    $response = array(
-        'status' => true
-    );
-    return Response::json($response);
-    }catch(\Exception $e){
-      $response = array(
-        'status' => false,
-        'message' => $e->getMessage(),
-    );
-      return Response::json($response);
-    }
+            $response = array(
+                'status' => true
+            );
+            return Response::json($response);
+        }catch(\Exception $e){
+          $response = array(
+            'status' => false,
+            'message' => $e->getMessage(),
+            );
+          return Response::json($response);
+        }
     }
 
     public function molding_maintenance()
@@ -4635,7 +4756,21 @@ class InjectionsController extends Controller
             // $tgl = $request->get('tgl');
             // $tag = $request->get('tag');
 
-        $molding = InjectionMoldingMaster::where('status','!=','DIPERBAIKI')->where('remark','=','RC')->get();
+        $molding = DB::SELECT("SELECT
+            injection_molding_masters.id as id_molding,
+            injection_molding_masters.product,
+            injection_molding_masters.part,
+            COALESCE(status_mesin,'-') AS mesin,
+            COALESCE ( injection_molding_logs.color, '-' ) AS color,
+            injection_molding_masters.status,
+            COALESCE ( injection_molding_logs.total_running_shot / injection_machine_cycle_times.shoot, 0 ) AS shot 
+        FROM
+            injection_molding_masters
+            LEFT JOIN injection_molding_logs ON injection_molding_logs.tag_molding = injection_molding_masters.tag
+            LEFT JOIN injection_machine_cycle_times ON injection_molding_logs.part = injection_machine_cycle_times.part 
+            AND injection_molding_logs.color = injection_machine_cycle_times.color 
+        WHERE
+            remark = 'RC' ");
 
         $response = array(
             'status' => true,            
@@ -4702,9 +4837,9 @@ class InjectionsController extends Controller
 
     public function get_maintenance_temp(Request $request){
             // $tgl = $request->get('tgl');
-        $pic = $request->get('pic');
+        $part = $request->get('part');
 
-        $molding = InjectionMaintenanceMoldingTemp::where('pic',$pic)->get();
+        $molding = InjectionMaintenanceMoldingTemp::where('part',$part)->get();
 
         $response = array(
             'status' => true,            
@@ -4716,9 +4851,9 @@ class InjectionsController extends Controller
 
     public function update_maintenance_temp(Request $request){
             // $tgl = $request->get('tgl');
-        $pic = $request->get('pic');
+        $part = $request->get('part');
 
-        $maintenance_temp = InjectionMaintenanceMoldingTemp::where('pic',$pic)->get();
+        $maintenance_temp = InjectionMaintenanceMoldingTemp::where('part',$part)->get();
         foreach ($maintenance_temp as $key) {
             $id_maintenance_temp = $key->id;
         }
@@ -4737,6 +4872,72 @@ class InjectionsController extends Controller
     {
         try{    
           $id_user = Auth::id();
+          $start_time = $request->get('start_time');
+          $end_time = $request->get('end_time');
+          $running_time = $request->get('running_time');
+
+          if (date('D')=='Fri') {
+                if (date("H:i:s", strtotime($start_time)) < $this->jam_istirahat_jumat_1['ist1_start'] && date("H:i:s", strtotime($end_time)) > $this->jam_istirahat_jumat_1['ist1_end']) {
+                    $end_time = date('Y-m-d H:i:s',strtotime('-10 minutes',strtotime($end_time)));
+                }
+
+                if (date("H:i:s", strtotime($start_time)) < $this->jam_istirahat_biasa_1['ist2_start'] && date("H:i:s", strtotime($end_time)) > $this->jam_istirahat_biasa_1['ist2_end']) {
+                    $end_time = date('Y-m-d H:i:s',strtotime('-40 minutes',strtotime($end_time)));
+                }
+
+                if (date("H:i:s", strtotime($start_time)) < $this->jam_istirahat_biasa_1['ist3_start'] && date("H:i:s", strtotime($end_time)) > $this->jam_istirahat_biasa_1['ist3_end']) {
+                    $end_time = date('Y-m-d H:i:s',strtotime('-10 minutes',strtotime($end_time)));
+                }
+          }else{
+                if (date("H:i:s", strtotime($start_time)) < $this->jam_istirahat_biasa_1['ist1_start'] && date("H:i:s", strtotime($end_time)) > $this->jam_istirahat_biasa_1['ist1_end']) {
+                    $end_time = date('Y-m-d H:i:s',strtotime('-10 minutes',strtotime($end_time)));
+                }
+
+                if (date("H:i:s", strtotime($start_time)) < $this->jam_istirahat_biasa_1['ist2_start'] && date("H:i:s", strtotime($end_time)) > $this->jam_istirahat_biasa_1['ist2_end']) {
+                    $end_time = date('Y-m-d H:i:s',strtotime('-40 minutes',strtotime($end_time)));
+                }
+
+                if (date("H:i:s", strtotime($start_time)) < $this->jam_istirahat_biasa_1['ist3_start'] && date("H:i:s", strtotime($end_time)) > $this->jam_istirahat_biasa_1['ist3_end']) {
+                    $end_time = date('Y-m-d H:i:s',strtotime('-10 minutes',strtotime($end_time)));
+                }
+          }
+          if (date("H:i:s", strtotime($start_time)) < $this->jam_istirahat_2['ist1_start'] && date("H:i:s", strtotime($end_time)) > $this->jam_istirahat_2['ist1_end']) {
+                $end_time = date('Y-m-d H:i:s',strtotime('-15 minutes',strtotime($end_time)));
+            }
+
+            if (date("H:i:s", strtotime($start_time)) < $this->jam_istirahat_2['ist2_start'] && date("H:i:s", strtotime($end_time)) > $this->jam_istirahat_2['ist2_end']) {
+                $end_time = date('Y-m-d H:i:s',strtotime('-25 minutes',strtotime($end_time)));
+            }
+
+            if (date("H:i:s", strtotime($start_time)) < $this->jam_istirahat_2['ist3_start'] && date("H:i:s", strtotime($end_time)) > $this->jam_istirahat_2['ist3_end']) {
+                $end_time = date('Y-m-d H:i:s',strtotime('-10 minutes',strtotime($end_time)));
+            }
+
+          $timenow = strtotime($end_time) - strtotime($start_time);
+
+          $years = floor($timenow / (365*60*60*24));  
+  
+            $months = floor(($timenow - $years * 365*60*60*24) 
+                                           / (30*60*60*24));  
+              
+            $days = floor(($timenow - $years * 365*60*60*24 -  
+                         $months*30*60*60*24)/ (60*60*24)); 
+              
+            $hours = floor(($timenow - $years * 365*60*60*24  
+                   - $months*30*60*60*24 - $days*60*60*24) 
+                                               / (60*60));  
+              
+            $minutes = floor(($timenow - $years * 365*60*60*24  
+                     - $months*30*60*60*24 - $days*60*60*24  
+                                      - $hours*60*60)/ 60);  
+              
+            $seconds = floor(($timenow - $years * 365*60*60*24  
+                     - $months*30*60*60*24 - $days*60*60*24 
+                            - $hours*60*60 - $minutes*60));  
+
+            $length = 2;
+
+            $running_time = str_pad($hours,$length,"0", STR_PAD_LEFT).':'.str_pad($minutes,$length,"0", STR_PAD_LEFT).':'.str_pad($seconds,$length,"0", STR_PAD_LEFT);
 
           InjectionMaintenanceMoldingLog::create([
             'pic' => $request->get('pic'),
@@ -4747,7 +4948,7 @@ class InjectionsController extends Controller
             'last_counter' => $request->get('last_counter'),
             'start_time' => $request->get('start_time'),
             'end_time' => $request->get('end_time'),
-            'running_time' => $request->get('running_time'),
+            'running_time' => $running_time,
             'note' => $request->get('note'),
             'created_by' => $id_user
         ]);

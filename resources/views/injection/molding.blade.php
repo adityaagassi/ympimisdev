@@ -88,7 +88,11 @@
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content" style="padding-top: 0;">
-
+	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+		<p style="position: absolute; color: White; top: 45%; left: 35%;">
+			<span style="font-size: 40px">Uploading, please wait <i class="fa fa-spin fa-refresh"></i></span>
+		</p>
+	</div>
 	<input type="hidden" id="loc" value="{{ $title }} {{$title_jp}} }">
 	
 	<div class="row" style="margin-left: 1%; margin-right: 1%;">
@@ -98,16 +102,17 @@
 				<table class="table table-bordered" style="width: 100%; margin-bottom: 2px;" border="1">
 					<thead>
 						<tr>
-							<th colspan="3" style="width: 10%; background-color: rgb(220,220,220); padding:0;font-size: 20px;">Maintenance Molding (LEPAS) <span style="color: red" id="counter"></span></th>
+							<th colspan="3" style="width: 10%; background-color: rgb(220,220,220); padding:0;font-size: 20px;">LEPAS MOLDING<span style="color: red" id="counter"></span></th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
-							<td style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:2vw; width: 30%;" id="op">-</td>
-							<td colspan="2" style="background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 2vw;" id="op2">-</td>
+							<td style="background-color: rgb(204,255,255); text-align: center; color: #000000; font-size:1vw; width: 1%;" id="op_0">-</td>
+							<td colspan="" style="background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 1vw;width: 1%" id="op_1">-</td>
+							<td colspan="" style="background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 1vw;width: 1%" id="op_2">-</td>
 						</tr>
 						<tr>
-							<td colspan="3" style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: white; width: 23%;background-color: rgb(220,220,220);color: black;font-size: 20px;"><b>Molding List (LEPAS)</b></td>
+							<td colspan="3" style="width: 100%; margin-top: 10px; font-size: 15px; padding:0; font-weight: bold; border-color: black; color: white; width: 23%;background-color: rgb(220,220,220);color: black;font-size: 20px;"><b>Molding List</b></td>
 						</tr>
 					</tbody>
 				</table>
@@ -116,17 +121,17 @@
 				<table class="table table-bordered" style="width: 100%; margin-bottom: 2px;" border="1">
 					<thead>
 						<tr>
-							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 20px;">
+							<th style="width:20%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 20px;">
+								PIC Pasang
+							</th>
+							<th style="width:10%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 20px;">
 								Mesin
 							</th>
-							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 20px;">
+							<th style="width:10%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 20px;">
 								Part
 							</th>
-							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 20px;">
-								Color
-							</th>
-							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 20px;">
-								Total Shot
+							<th style="width:10%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 20px;">
+								Shot
 							</th>
 						</tr>
 					</thead>
@@ -197,13 +202,13 @@
 			</div>
 
 			<div style="padding-top: 5px;">
-				<button id="start_lepas" style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: white; width: 100%" onclick="startLepas()" class="btn btn-success">MULAI LEPAS</button>
+				<button id="start_lepas" style="width: 100%; margin-top: 10px; font-size: 30px;  font-weight: bold; border-color: black; color: white; width: 100%" onclick="startLepas()" class="btn btn-success">MULAI LEPAS</button>
 			</div>
 			<div class="col-xs-6" style="padding-left: 0px;padding-right: 5px">
-				<button id="batal_lepas" style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: white; width: 100%" onclick="cancelLepas()" class="btn btn-danger">BATAL</button>	
+				<button id="batal_lepas" style="width: 100%; margin-top: 10px; font-size: 30px;  font-weight: bold; border-color: black; color: white; width: 100%" onclick="cancelLepas()" class="btn btn-danger">BATAL</button>	
 			</div>
 			<div class="col-xs-6" style="padding-right: 0px;padding-left: 0px">
-				<button id="finish_lepas" style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: white; width: 100%" onclick="finishLepas()" class="btn btn-success">SELESAI LEPAS</button>
+				<button id="finish_lepas" style="width: 100%; margin-top: 10px; font-size: 30px;  font-weight: bold; border-color: black; color: white; width: 100%" onclick="finishLepas()" class="btn btn-success">SELESAI LEPAS</button>
 			</div>
 		</div>
 
@@ -213,12 +218,12 @@
 				<table class="table table-bordered" style="width: 100%; margin-bottom: 2px;" border="1">
 					<thead>
 						<tr>
-							<th colspan="3" style="width: 10%; background-color: rgb(220,220,220); padding:0;font-size: 20px;">Maintenance Molding (PASANG) <span style="color: red" id="counter"></span></th>
+							<th colspan="3" style="width: 10%; background-color: rgb(220,220,220); padding:0;font-size: 20px;">PASANG MOLDING <span style="color: red" id="counter"></span></th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
-							<td id="mesin_pasang_pilihan" style="padding:0;background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:2vw; width: 30%;">
+							<!-- <td id="mesin_pasang_pilihan" style="padding:0;background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:2vw; width: 30%;">
 								<button class="btn btn-danger" onclick="getDataMesin(1);" id="#1">#1</button>
 								<button class="btn btn-danger" onclick="getDataMesin(2);" id="#2">#2</button>
 								<button class="btn btn-danger" onclick="getDataMesin(3);" id="#3">#3</button>
@@ -229,11 +234,11 @@
 								<button class="btn btn-danger" onclick="getDataMesin(8);" id="#8">#8</button>
 								<button class="btn btn-danger" onclick="getDataMesin(9);" id="#9">#9</button>
 								<button class="btn btn-danger" onclick="getDataMesin(11);" id="#11">#11</button>
-							</td>
-							<td style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:2vw; width: 30%;" id="mesin_pasang" onclick="changeMesin()">-</td>
+							</td> -->
+							<td style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:2vw; width: 30%;" id="mesin_pasang">-</td>
 						</tr>
 						<tr>
-							<td colspan="3" style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: white; width: 23%;background-color: rgb(220,220,220);color: black;font-size: 20px;"><b>Molding List (PASANG)</b><br>
+							<td colspan="3" style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: white; width: 23%;background-color: rgb(220,220,220);color: black;font-size: 20px;">
 							<span style="color: red"><i id="pesan_pasang" ></i></span></td>
 						</tr>
 					</tbody>
@@ -300,20 +305,31 @@
 			</div>
 
 			<div style="padding-top: 5px;">
-				<button id="start_pasang" style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: white; width: 100%" onclick="startPasang()" class="btn btn-success">MULAI PASANG</button>
+				<button id="start_pasang" style="width: 100%; margin-top: 10px; font-size: 30px;  font-weight: bold; border-color: black; color: white; width: 100%" onclick="startPasang()" class="btn btn-success">MULAI PASANG</button>
 				<!-- <input type="hidden" id="start_time_pasang"> -->
 			</div>
 			<div class="col-xs-6" style="padding-left: 0px;padding-right: 5px">
-				<button id="batal_pasang" style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: white; width: 100%" onclick="cancelPasang()" class="btn btn-danger">BATAL</button>
+				<button id="batal_pasang" style="width: 100%; margin-top: 10px; font-size: 30px;  font-weight: bold; border-color: black; color: white; width: 100%" onclick="cancelPasang()" class="btn btn-danger">BATAL</button>
 			</div>
 			<div class="col-xs-6" style="padding-right: 0px;padding-left: 5px">
-				<button id="finish_pasang" style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: white; width: 100%" onclick="finishPasang()" class="btn btn-success">SELESAI PASANG</button>
+				<button id="finish_pasang" style="width: 100%; margin-top: 10px; font-size: 30px;  font-weight: bold; border-color: black; color: white; width: 100%" onclick="finishPasang()" class="btn btn-success">SELESAI PASANG</button>
 			</div>
 		</div>
 		<div class="col-xs-12">
 			<div class="row">
-				<button id="change_operator" style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: white; width: 100%" onclick="changeOperator()" class="btn btn-primary">GANTI OPERATOR</button>
+				<div class="col-xs-6" style="padding-right: 5px;padding-left: 0px">
+					<!-- <div class="row"> -->
+						<button id="change_operator" style="width: 100%;  font-size: 30px;  font-weight: bold; border-color: black; color: white; width: 100%" onclick="changeOperator()" class="btn btn-info">GANTI OPERATOR</button>
+					<!-- </div> -->
+				</div>
+				<div class="col-xs-6" style="padding-left: 5px;padding-right: 0px">
+					<!-- <div class="row"> -->
+						<button id="change_mesin" style="width: 100%;  font-size: 30px;  font-weight: bold; border-color: black; color: white; width: 100%" onclick="changeMesin()" class="btn btn-warning">GANTI MESIN</button>
+					<!-- </div> -->
+				</div>
 			</div>
+		</div>
+		<div class="col-xs-6">
 		</div>
 	</div>
 </section>
@@ -324,8 +340,71 @@
 			<div class="modal-header">
 				<div class="modal-body table-responsive no-padding">
 					<div class="form-group">
-						<label for="exampleInputEmail1">Employee ID</label>
-						<input class="form-control" style="width: 100%; text-align: center;" type="text" id="operator" placeholder="Scan ID Card" required>
+						<label for="exampleInputEmail1">Employee ID 1</label>
+						<input class="form-control" style="width: 100%; text-align: center;" type="text" id="operator_0" placeholder="Scan ID Card">
+						<input class="form-control" style="width: 100%; text-align: center;" type="hidden" id="employee_id_0" placeholder="Scan ID Card">
+
+						<label for="exampleInputEmail1">Employee ID 2</label>
+						<input class="form-control" style="width: 100%; text-align: center;" type="text" id="operator_1" placeholder="Scan ID Card">
+						<input class="form-control" style="width: 100%; text-align: center;" type="hidden" id="employee_id_1" placeholder="Scan ID Card">
+
+						<label for="exampleInputEmail1">Employee ID 3</label>
+						<input class="form-control" style="width: 100%; text-align: center;" type="text" id="operator_2" placeholder="Scan ID Card">
+						<input class="form-control" style="width: 100%; text-align: center;" type="hidden" id="employee_id_2" placeholder="Scan ID Card">
+
+					</div>
+					<div class="col-xs-12">
+						<div class="row">
+							<button id="btn_operator" onclick="saveOperator()" class="btn btn-success btn-block" style="font-weight: bold;font-size: 20px">
+								CONFIRM
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalMesin">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header"><center> <b id="statusa" style="font-size: 2vw"></b> </center>
+				<div class="modal-body table-responsive no-padding">
+					<div class="col-xs-12" id="mesin_choice" style="padding-top: 20px">
+						<div class="row">
+							<div class="col-xs-12">
+								<center><span style="font-weight: bold; font-size: 18px;">Pilih Mesin</span></center>
+							</div>
+							<div class="col-xs-12" id="mesin_btn">
+								@foreach($mesin as $mesin)
+								<div class="col-xs-3" style="padding-top: 5px">
+									<center>
+										<button class="btn btn-primary" id="{{$mesin}}" style="width: 200px;font-size: 15px;font-weight: bold;" onclick="getMesin(this.id)">{{$mesin}}</button>
+									</center>
+								</div>
+								@endforeach
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12" id="mesin_fix" style="padding-top: 20px">
+						<div class="row">
+							<div class="col-xs-12">
+								<center><span style="font-weight: bold; font-size: 18px;">Pilih Mesin</span></center>
+							</div>
+							<div class="col-xs-12" style="padding-top: 10px">
+								<button class="btn btn-primary" id="mesin_fix2" style="width: 100%;font-size: 20px;font-weight: bold;" onclick="changeMesin2()">
+									MESIN
+								</button>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12" style="padding-top: 20px">
+						<div class="modal-footer">
+							<button onclick="saveMesin()" class="btn btn-success btn-block pull-right" style="font-size: 30px;font-weight: bold;">
+								CONFIRM
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -365,7 +444,7 @@
 		$('#div_maintenance').hide();
 		$('#div_keputusan').hide();
 
-		$('#mesin_pasang').hide();
+		// $('#mesin_pasang').hide();
 		$('#pasangnote').hide();
 		$('#pasangnote2').hide();
 		$('#pasangtime').hide();
@@ -373,49 +452,195 @@
 		$('#batal_pasang').hide();
 		$('#batal_lepas').hide();
 
-		$('#operator').val('');
+		$('#mesin_fix').hide();
+
+		$('#operator_0').val('');
+		$('#operator_1').val('');
+		$('#operator_2').val('');
 		setInterval(setTime, 1000);
-		intervalUpdate = setInterval(update_history_temp,60000);
 	});
 
 	$('#modalOperator').on('shown.bs.modal', function () {
-		$('#operator').focus();
+		$('#operator_0').focus();
 	});
 
-	$('#operator').keydown(function(event) {
+	$('#operator_0').keydown(function(event) {
 		if (event.keyCode == 13 || event.keyCode == 9) {
-			if($("#operator").val().length >= 8){
+			if($("#operator_0").val().length >= 8){
 				var data = {
-					employee_id : $("#operator").val()
+					employee_id : $("#operator_0").val()
 				}
 				
 				$.get('{{ url("scan/injeksi/operator") }}', data, function(result, status, xhr){
 					if(result.status){
 						openSuccessGritter('Success!', result.message);
-						$('#modalOperator').modal('hide');
-						$('#op').html(result.employee.employee_id);
-						$('#op2').html(result.employee.name);
-						$('#employee_id').val(result.employee.employee_id);
-						// fillResult(result.employee.employee_id);
-						// $('#tag').focus();
-						getMoldingLog();
-						// getMoldingLogPasang();
-						get_history_temp(result.employee.name);
+						// $('#modalOperator').modal('hide');
+						// $('#op').html(result.employee.employee_id);
+						// $('#op2').html(result.employee.name);
+						// $('#employee_id').val(result.employee.employee_id);
+						// $('#modalMesin').modal('show');
+						$('#operator_0').val(result.employee.name);
+						$('#op_0').html(result.employee.name.split(' ').slice(0,2).join(' '));
+						$('#employee_id_0').val(result.employee.employee_id);
+						$('#operator_0').prop('disabled',true);
+						$('#operator_1').focus();
+						// getMoldingLog();
+						// get_history_temp(result.employee.name);
 					}
 					else{
 						audio_error.play();
 						openErrorGritter('Error', result.message);
-						$('#operator').val('');
+						$('#operator_0').val('');
 					}
 				});
 			}
 			else{
 				openErrorGritter('Error!', 'Employee ID Invalid.');
 				audio_error.play();
-				$("#operator").val("");
+				$("#operator_0").val("");
 			}			
 		}
 	});
+
+	$('#operator_1').keydown(function(event) {
+		if (event.keyCode == 13 || event.keyCode == 9) {
+			if($("#operator_1").val().length >= 8){
+				var data = {
+					employee_id : $("#operator_1").val()
+				}
+				
+				$.get('{{ url("scan/injeksi/operator") }}', data, function(result, status, xhr){
+					if(result.status){
+						openSuccessGritter('Success!', result.message);
+						// $('#modalOperator').modal('hide');
+						// $('#op').html(result.employee.employee_id);
+						// $('#op2').html(result.employee.name);
+						// $('#employee_id').val(result.employee.employee_id);
+						// $('#modalMesin').modal('show');
+						$('#operator_1').val(result.employee.name);
+						$('#op_1').html(result.employee.name.split(' ').slice(0,2).join(' '));
+						$('#employee_id_1').val(result.employee.employee_id);
+						$('#operator_1').prop('disabled',true);
+						$('#operator_2').focus();
+						// getMoldingLog();
+						// get_history_temp(result.employee.name);
+					}
+					else{
+						audio_error.play();
+						openErrorGritter('Error', result.message);
+						$('#operator_1').val('');
+					}
+				});
+			}
+			else{
+				openErrorGritter('Error!', 'Employee ID Invalid.');
+				audio_error.play();
+				$("#operator_1").val("");
+			}			
+		}
+	});
+
+	$('#operator_2').keydown(function(event) {
+		if (event.keyCode == 13 || event.keyCode == 9) {
+			if($("#operator_2").val().length >= 8){
+				var data = {
+					employee_id : $("#operator_2").val()
+				}
+				
+				$.get('{{ url("scan/injeksi/operator") }}', data, function(result, status, xhr){
+					if(result.status){
+						openSuccessGritter('Success!', result.message);
+						// $('#modalOperator').modal('hide');
+						// $('#op').html(result.employee.employee_id);
+						// $('#op2').html(result.employee.name);
+						// $('#employee_id').val(result.employee.employee_id);
+						// $('#modalMesin').modal('show');
+						$('#operator_2').val(result.employee.name);
+						$('#op_2').html(result.employee.name.split(' ').slice(0,2).join(' '));
+						$('#employee_id_2').val(result.employee.employee_id);
+						$('#operator_2').prop('disabled',true);
+						// getMoldingLog();
+						// get_history_temp(result.employee.name);
+					}
+					else{
+						audio_error.play();
+						openErrorGritter('Error', result.message);
+						$('#operator_2').val('');
+					}
+				});
+			}
+			else{
+				openErrorGritter('Error!', 'Employee ID Invalid.');
+				audio_error.play();
+				$("#operator_2").val("");
+			}			
+		}
+	});
+
+	// $('#operator_3').keydown(function(event) {
+	// 	if (event.keyCode == 13 || event.keyCode == 9) {
+	// 		if($("#operator").val().length >= 8){
+	// 			var data = {
+	// 				employee_id : $("#operator").val()
+	// 			}
+				
+	// 			$.get('{{ url("scan/injeksi/operator") }}', data, function(result, status, xhr){
+	// 				if(result.status){
+	// 					openSuccessGritter('Success!', result.message);
+	// 					$('#modalOperator').modal('hide');
+	// 					$('#op').html(result.employee.employee_id);
+	// 					$('#op2').html(result.employee.name);
+	// 					$('#employee_id').val(result.employee.employee_id);
+	// 					$('#modalMesin').modal('show');
+	// 					// getMoldingLog();
+	// 					// get_history_temp(result.employee.name);
+	// 				}
+	// 				else{
+	// 					audio_error.play();
+	// 					openErrorGritter('Error', result.message);
+	// 					$('#operator').val('');
+	// 				}
+	// 			});
+	// 		}
+	// 		else{
+	// 			openErrorGritter('Error!', 'Employee ID Invalid.');
+	// 			audio_error.play();
+	// 			$("#operator").val("");
+	// 		}			
+	// 	}
+	// });
+
+	function saveOperator() {
+		$('#modalOperator').modal('hide');
+		// $('#op').html(result.employee.employee_id);
+		// $('#op2').html(result.employee.name);
+		// $('#employee_id').val(result.employee.employee_id);
+		$('#modalMesin').modal('show');
+	}
+
+	function saveMesin() {
+		if ($('#mesin_fix2').text() == 'MESIN') {
+			alert('Pilih Mesin');
+		}else{
+			$('#mesin_pasang').html($('#mesin_fix2').text());
+			getMoldingLogPasang($('#mesin_fix2').text());
+			$('#modalMesin').modal('hide');
+			getMoldingLog($('#mesin_fix2').text());
+			get_history_temp($('#mesin_fix2').text());
+		}
+	}
+
+	function getMesin(value) {
+		$('#mesin_fix').show();
+		$('#mesin_choice').hide();
+		$('#mesin_fix2').html(value);
+	}
+
+	function changeMesin2() {
+		$('#mesin_fix').hide();
+		$('#mesin_choice').show();
+		$('#mesin_fix2').html("MESIN");
+	}
 
 	function changeDecision(value) {
 		$('#div_maintenance').hide();
@@ -439,17 +664,24 @@
 	}
 
 	function changeMesin() {
-		$('#mesin_pasang_pilihan').show();
-		$('#mesin_pasang').hide();
-		$('#moldingLogPasang').html("");
+		$('#mesin_pasang').html('-');
+		// $('#mesin_pasang').hide();
+		// $('#moldingLogPasang').html("");
+		$('#modalMesin').modal("show");
+		$('#mesin_choice').show();
+		$('#mesin_fix').hide();
+		cancelAll();
 	}
 
 	function changeOperator() {
 		location.reload();
 	}
 
-	function getMoldingLog(){
-		$.get('{{ url("get/injeksi/get_molding") }}',  function(result, status, xhr){
+	function getMoldingLog(mesin){
+		var data = {
+			mesin:mesin
+		}
+		$.get('{{ url("get/injeksi/get_molding") }}', data, function(result, status, xhr){
 			if(result.status){
 
 				var moldingLog = '';
@@ -466,9 +698,9 @@
 						color = 'style="background-color: #ff3030;font-size: 20px;color:white"';
 					}
 					moldingLog += '<tr onclick="fetchCount(\''+value.mesin+'\',\''+value.part+'\',\''+value.color+'\',\''+value.shot+'\')" style="padding-top:5px;padding-bottom:5px;">';
+					moldingLog += '<td '+color+'>'+value.pic+'</td>';
 					moldingLog += '<td '+color+'>'+value.mesin+'</td>';
 					moldingLog += '<td '+color+'>'+value.part+'</td>';
-					moldingLog += '<td '+color+'>'+value.color+'</td>';
 					moldingLog += '<td '+color+'>'+value.shot+'</td>';
 					// moldingLog += '<td '+color+'>'+value.end_time+'</td>';
 					
@@ -499,27 +731,29 @@
 			if(result.status){
 				$('#pesan_pasang').html(result.pesan);
 
-				var moldingLogPasang = '';
-				$('#moldingLogPasang').html("");
-				var no = 1;
-				var color ="";
-				$.each(result.datas, function(key, value) {
-					if (no % 2 === 0 ) {
-							color = 'style="background-color: #fffcb7;font-size: 25px;padding-top:5px;padding-bottom:5px;"';
-						} else {
-							color = 'style="background-color: #ffd8b7;font-size: 25px;padding-top:5px;padding-bottom:5px;"';
-						}
-					moldingLogPasang += '<tr onclick="fetchCountPasang(\''+value.id+'\')">';
-					moldingLogPasang += '<td '+color+'>'+value.product+'</td>';
-					moldingLogPasang += '<td '+color+'>'+value.part+'</td>';
-					moldingLogPasang += '<td '+color+'>'+value.mesin+'</td>';
-					moldingLogPasang += '<td '+color+'>'+value.last_counter+'</td>';
-					// moldingLogPasang += '<td '+color+'>'+value.end_time+'</td>';
-					
-					moldingLogPasang += '</tr>';				
-				no++;
-				});
-				$('#moldingLogPasang').append(moldingLogPasang);
+				if (result.pesan.length == 0) {
+					var moldingLogPasang = '';
+					// $('#moldingLogPasang').html("");
+					var no = 1;
+					var color ="";
+					$.each(result.datas, function(key, value) {
+						if (no % 2 === 0 ) {
+								color = 'style="background-color: #fffcb7;font-size: 25px;padding-top:5px;padding-bottom:5px;"';
+							} else {
+								color = 'style="background-color: #ffd8b7;font-size: 25px;padding-top:5px;padding-bottom:5px;"';
+							}
+						moldingLogPasang += '<tr onclick="fetchCountPasang(\''+value.id+'\')">';
+						moldingLogPasang += '<td '+color+'>'+value.product+'</td>';
+						moldingLogPasang += '<td '+color+'>'+value.part+'</td>';
+						moldingLogPasang += '<td '+color+'>'+value.mesin+'</td>';
+						moldingLogPasang += '<td '+color+'>'+value.last_counter+'</td>';
+						// moldingLogPasang += '<td '+color+'>'+value.end_time+'</td>';
+						
+						moldingLogPasang += '</tr>';				
+					no++;
+					});
+					$('#moldingLogPasang').append(moldingLogPasang);
+				}
 
 				// $('#statusLog').text(result.log[0].status);
 				
@@ -584,8 +818,47 @@
 			$('#div_ok').show();
 			$('#div_maintenance').show();
 			$('#div_keputusan').show();
+			intervalUpdate = setInterval(update_history_temp,60000);
 			store_history_temp('LEPAS');
 		}
+	}
+
+	function cancelAll() {
+		$('#finish_lepas').hide();
+		$('#lepasnote').hide();
+		$('#lepasnote2').hide();
+		$('#batal_lepas').hide();
+		$('#lepastime').hide();
+		$('#start_lepas').show();
+		$('#secondlepas').html("00");
+        $('#minutelepas').html("00");
+        $('#hourlepas').html("00");
+        $('#part_lepas').html("");
+        $('#total_shot_lepas').html("");
+        $('#color_lepas').html("");
+        $('#mesin_lepas').html("");
+        $('#reasonlepas').hide();
+        $('#div_ok').hide();
+        $('#div_maintenance').hide();
+        $('#div_keputusan').hide();
+        $('#div_decision').hide();
+
+        $('#finish_pasang').hide();
+		$('#pasangnote').hide();
+		$('#pasangnote2').hide();
+		$('#batal_pasang').hide();
+		$('#pasangtime').hide();
+		$('#start_pasang').show();
+		$('#secondpasang').html("00");
+        $('#minutepasang').html("00");
+        $('#hourpasang').html("00");
+        $('#product_pasang').html("");
+        $('#part_pasang').html("");
+        $('#mesin_pasang_list').html("");
+        $('#last_counter_pasang').html("");
+        $('#moldingLogPasang').html("");
+        $('#mesin_pasang_pilihan').show();
+        // $('#mesin_pasang').hide();
 	}
 
 	function cancelLepas() {
@@ -602,7 +875,7 @@
 		$.post('{{ url("index/injeksi/cancel_history_molding") }}', data, function(result, status, xhr){
 			if(result.status){
 				openSuccessGritter('Success','Setup Molding Canceled');
-				getMoldingLog();
+				getMoldingLog($('#mesin_fix2').text());
 				$('#finish_lepas').hide();
 				$('#lepasnote').hide();
 				$('#lepasnote2').hide();
@@ -629,6 +902,7 @@
 	}
 
 	function finishLepas() {
+		$('#loading').show();
 		clearInterval(intervalUpdate);
 		count = false;
 		var detik = $('div.timerlepas span.secondlepas').text();
@@ -637,7 +911,9 @@
         var waktu = jam + ':' + menit + ':' + detik;
         $('#lepas').val(waktu);
 
-		var pic = $('#op2').text();
+		var pic_1 = $('#op_0').text();
+		var pic_2 = $('#op_1').text();
+		var pic_3 = $('#op_2').text();
 		var mesin = $('#mesin_lepas').text();
 		var part = $('#part_lepas').text();
 		var color = $('#color_lepas').text();
@@ -653,11 +929,14 @@
 
 		if (reason == '-' || decision == 'TIDAK TAHU') {
 			alert('Semua Data Harus Diisi');
+			$('#loading').hide();
 		}else{
 			var data = {
 				mesin : mesin,
 				type : 'LEPAS',
-				pic : pic,
+				pic_1 : pic_1,
+				pic_2 : pic_2,
+				pic_3 : pic_3,
 				reason : reason,
 				part : part,
 				color : color,
@@ -691,10 +970,13 @@
 			        $('#div_maintenance').hide();
 			        $('#div_keputusan').hide();
 			        $('#div_decision').hide();
-					getMoldingLog();
+					getMoldingLog($('#mesin_fix2').text());
+					getMoldingLogPasang($('#mesin_fix2').text());
+					$('#loading').hide();
 				} else {
 					audio_error.play();
 					openErrorGritter('Error','Create History Molding Temp Failed');
+					$('#loading').hide();
 				}
 			});
 		}
@@ -713,6 +995,7 @@
 			$('#finish_pasang').show();
 			$('#start_pasang').hide();
 			$('#batal_pasang').show();
+			intervalUpdate = setInterval(update_history_temp,60000);
 			store_history_temp('PASANG');
 		}
 	}
@@ -742,9 +1025,9 @@
 		        $('#part_pasang').html("");
 		        $('#mesin_pasang_list').html("");
 		        $('#last_counter_pasang').html("");
-		        $('#moldingLogPasang').html("");
+		        // $('#moldingLogPasang').html("");
 		        $('#mesin_pasang_pilihan').show();
-		        $('#mesin_pasang').hide();
+		        // $('#mesin_pasang').hide();
 			} else {
 				audio_error.play();
 				openErrorGritter('Error','Cancel Failed');
@@ -753,6 +1036,7 @@
 	}
 
 	function finishPasang() {
+		$('#loading').show();
 		clearInterval(intervalUpdate);
 		count_pasang = false;
 		var detik = $('div.timerpasang span.secondpasang').text();
@@ -761,7 +1045,9 @@
         var waktu = jam + ':' + menit + ':' + detik;
         $('#pasang').val(waktu);
 
-		var pic = $('#op2').text();
+		var pic_1 = $('#op_0').text();
+		var pic_2 = $('#op_1').text();
+		var pic_3 = $('#op_2').text();
 		var mesin = $('#mesin_pasang').text();
 		var part = $('#part_pasang').text();
 		var color = $('#product_pasang').text();
@@ -776,7 +1062,9 @@
 		var data = {
 			mesin : mesin,
 			type : 'PASANG',
-			pic : pic,
+			pic_1 : pic_1,
+			pic_2 : pic_2,
+			pic_3 : pic_3,
 			part : part,
 			color : color,
 			total_shot : total_shot,
@@ -803,19 +1091,25 @@
 		        $('#part_pasang').html("");
 		        $('#mesin_pasang_list').html("");
 		        $('#last_counter_pasang').html("");
-		        $('#moldingLogPasang').html("");
+		        // $('#moldingLogPasang').html("");
 		        $('#mesin_pasang_pilihan').show();
-		        $('#mesin_pasang').hide();
-		        getMoldingLog();
+		        // $('#mesin_pasang').hide();
+		        getMoldingLog($('#mesin_fix2').text());
+		        getMoldingLogPasang($('#mesin_fix2').text());
+		        $('#loading').hide();
 			} else {
 				audio_error.play();
 				openErrorGritter('Error','Create History Molding Failed');
+				$('#loading').hide();
 			}
 		});
 	}
 
 	function store_history_temp(type) {
-		var pic = $('#op2').text();
+		var pic_1 = $('#op_0').text();
+		var pic_2 = $('#op_1').text();
+		var pic_3 = $('#op_2').text();
+
 		var start_time = getActualFullDate();
 		if (type === 'LEPAS') {
 			var mesin = $('#mesin_lepas').text();
@@ -831,7 +1125,7 @@
 			duration = 0;
 			count = true;
 			started_at = new Date(start_time);
-			getMoldingLog();
+			getMoldingLog($('#mesin_fix2').text());
 		}
 		else if (type === 'PASANG') {
 			var mesin = $('#mesin_pasang').text();
@@ -844,8 +1138,20 @@
 			started_at = new Date(start_time);
 			getMoldingLogPasang(mesin);
 		}
-		// console.log(ng_name.join());
-		// console.log(ng_count.join());
+
+		var pic = [];
+
+		if (pic_1 != "-") {
+			pic.push(pic_1);
+		}
+
+		if (pic_2 != "-") {
+			pic.push(pic_2);
+		}
+
+		if (pic_3 != "-") {
+			pic.push(pic_3);
+		}
 
 		if (mesin == '-' || mesin == null) {
 			alert('Semua Data Harus Diisi');
@@ -853,7 +1159,7 @@
 			var data = {
 				mesin : mesin,
 				type : type,
-				pic : pic,
+				pic : pic.join(', '),
 				part : part,
 				color : color,
 				total_shot : total_shot,
@@ -864,6 +1170,7 @@
 				if(result.status){
 					openSuccessGritter('Success','History Molding Temp has been created');
 					// reset();
+					getMoldingLogPasang($('#mesin_fix2').text());
 				} else {
 					audio_error.play();
 					openErrorGritter('Error','Create History Molding Temp Failed');
@@ -872,14 +1179,14 @@
 		}
 	}
 
-	function get_history_temp(pic) {
+	function get_history_temp(mesin) {
 		var data = {
-			pic : pic
+			mesin : mesin
 		}
 		$.get('{{ url("index/injeksi/get_history_temp") }}',data,  function(result, status, xhr){
 			if(result.status){
 				if(result.datas.length != 0){
-					$.each(result.datas, function(key, value) {				
+					$.each(result.datas, function(key, value) {
 						if (value.type == "LEPAS") {
 							$('#mesin_lepas').html(value.mesin);
 							$('#part_lepas').html(value.part);
@@ -940,12 +1247,12 @@
 	}
 
 	function update_history_temp() {
-		var pic = $('#op2').text();
+		var mesin = $('#mesin_fix2').text();
 		var notelepas = $('#notelepas').val();
 		var notepasang = $('#notepasang').val();
 
 		var data = {
-			pic : pic,
+			mesin : mesin,
 			note : notelepas,
 			type : 'LEPAS'
 		}
@@ -961,7 +1268,7 @@
 		});
 
 		var data2 = {
-			pic : pic,
+			mesin : mesin,
 			note : notepasang,
 			type : 'PASANG'
 		}

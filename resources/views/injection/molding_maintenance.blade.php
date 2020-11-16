@@ -95,8 +95,9 @@
 					</thead>
 					<tbody>
 						<tr>
-							<td style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:15px; width: 30%;" id="op">-</td>
-							<td colspan="2" style="background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 15px;" id="op2">-</td>
+							<td style="background-color: rgb(204,255,255); text-align: center; color: #000000; font-size:1vw; width: 1%;" id="op_0">-</td>
+							<td colspan="" style="background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 1vw;width: 1%" id="op_1">-</td>
+							<td colspan="" style="background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 1vw;width: 1%" id="op_2">-</td>
 						</tr>
 						<tr>
 							<td colspan="3" style="width: 100%; margin-top: 10px; font-size: 15px; padding:0; font-weight: bold; border-color: black; color: white; width: 23%;background-color: rgb(220,220,220);color: black;font-size: 15px;"><b>Molding List</b></td>
@@ -104,7 +105,7 @@
 					</tbody>
 				</table>
 			</div>
-			<div id="molding">
+			<!-- <div id="molding">
 				<table class="table table-bordered" style="width: 100%; margin-bottom: 2px;" border="1">
 					<thead>
 						<tr>
@@ -128,15 +129,10 @@
 					<tbody id="moldingMaster">
 					</tbody>
 				</table>
-			</div>
-				<button id="change_operator" style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: white; width: 100%" onclick="location.reload()" class="btn btn-info">GANTI OPERATOR</button>
-		</div>
-
-		<div class="col-xs-6" style="padding-right: 0; padding-left: 10px">
-			<div>
-				<table style="width: 100%;" border="1">
-					<tbody>
-						<tr>
+			</div> -->
+			<table style="width: 100%;border: '1'">
+				<tbody>
+					<tr>
 							<td colspan="4" style="width: 1%; font-weight: bold; font-size: 15px; background-color: rgb(220,220,220);">Status</td>
 						</tr>
 						<tr>
@@ -162,6 +158,17 @@
 					        	</div>
 					    	</td>
 						</tr>
+				</tbody>
+			</table>
+			<button id="start_perbaikan" style="width: 100%; margin-top: 5px; font-size: 30px; padding-top:5px;padding-bottom: 5px; font-weight: bold; border-color: black; color: white; width: 100%" onclick="startPerbaikan()" class="btn btn-success">MULAI PERBAIKAN</button>
+				<button id="change_operator" style="width: 100%; margin-top: 10px; font-size: 30px; padding-top: 5px;padding-bottom: 5px; font-weight: bold; border-color: black; color: white; width: 100%" onclick="location.reload()" class="btn btn-info">GANTI OPERATOR</button>
+				<button id="change_molding" style="width: 100%; margin-top: 10px; font-size: 30px; padding-top: 5px;padding-bottom: 5px; font-weight: bold; border-color: black; color: white; width: 100%" onclick="change_molding()" class="btn btn-primary">GANTI MOLDING LAIN</button>
+		</div>
+
+		<div class="col-xs-6" style="padding-right: 0; padding-left: 10px">
+			<div>
+				<table style="width: 100%;" border="1">
+					<tbody>
 						<tr id="perbaikannote">
 							<td colspan="4" style="width: 100%; margin-top: 10px; font-size: 1.5vw; padding:0; font-weight: bold; border-color: black; color: white; width: 23%;color: black;background-color: rgb(220,220,220);">
 								<span class="hourperbaikan" id="hourperbaikan">Note</span>
@@ -177,9 +184,7 @@
 			</div>
 
 			<div style="padding-top: 5px;">
-				<button id="start_perbaikan" style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: white; width: 100%" onclick="startPerbaikan()" class="btn btn-success">MULAI PERBAIKAN</button>
-				<button id="finish_perbaikan" style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: white; width: 100%" onclick="finishPerbaikan()" class="btn btn-danger">SELESAI PERBAIKAN</button>
-				<button id="reset_perbaikan" style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: white; width: 100%" onclick="resetPerbaikan()" class="btn btn-warning">RESET</button>
+				<button id="finish_perbaikan" style="width: 100%; margin-top: 5px; font-size: 30px;padding-top: 5px padding-bottom: 5px;font-weight: bold; border-color: black; color: white; width: 100%" onclick="finishPerbaikan()" class="btn btn-danger">SELESAI PERBAIKAN</button>
 			</div>
 		</div>
 	</div>
@@ -191,8 +196,65 @@
 			<div class="modal-header">
 				<div class="modal-body table-responsive no-padding">
 					<div class="form-group">
-						<label for="exampleInputEmail1">Employee ID</label>
-						<input class="form-control" style="width: 100%; text-align: center;" type="text" id="operator" placeholder="Scan ID Card" required>
+						<label for="exampleInputEmail1">Employee ID 1</label>
+						<input class="form-control" style="width: 100%; text-align: center;" type="text" id="operator_0" placeholder="Scan ID Card">
+						<input class="form-control" style="width: 100%; text-align: center;" type="hidden" id="employee_id_0" placeholder="Scan ID Card">
+
+						<label for="exampleInputEmail1">Employee ID 2</label>
+						<input class="form-control" style="width: 100%; text-align: center;" type="text" id="operator_1" placeholder="Scan ID Card">
+						<input class="form-control" style="width: 100%; text-align: center;" type="hidden" id="employee_id_1" placeholder="Scan ID Card">
+
+						<label for="exampleInputEmail1">Employee ID 3</label>
+						<input class="form-control" style="width: 100%; text-align: center;" type="text" id="operator_2" placeholder="Scan ID Card">
+						<input class="form-control" style="width: 100%; text-align: center;" type="hidden" id="employee_id_2" placeholder="Scan ID Card">
+
+					</div>
+					<div class="col-xs-12">
+						<div class="row">
+							<button id="btn_operator" onclick="saveOperator()" class="btn btn-success btn-block" style="font-weight: bold;font-size: 20px">
+								CONFIRM
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalMolding">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header"><center> <b id="statusa" style="font-size: 2vw"></b> </center>
+				<div class="modal-body table-responsive no-padding">
+					<div class="col-xs-12" id="molding_choice" style="padding-top: 20px">
+						<div class="row">
+							<div class="col-xs-12">
+								<center><span style="font-weight: bold; font-size: 18px;">Pilih Molding</span></center>
+							</div>
+							<div class="col-xs-12" id="molding_btn">
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12" id="molding_fix" style="padding-top: 20px">
+						<div class="row">
+							<div class="col-xs-12">
+								<center><span style="font-weight: bold; font-size: 18px;">Pilih Molding</span></center>
+							</div>
+							<div class="col-xs-12" style="padding-top: 10px">
+								<button id="molding_fix2" style="width: 100%;font-size: 20px;font-weight: bold;" onclick="changeMolding2()">
+									MOLDING
+								</button>
+							</div>
+						</div>
+					</div>
+					<input type="hidden" id="id_molding">
+					<div class="col-xs-12" style="padding-top: 20px">
+						<div class="modal-footer">
+							<button onclick="saveMolding()" class="btn btn-success btn-block pull-right" style="font-size: 30px;font-weight: bold;">
+								CONFIRM
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -222,13 +284,15 @@
 			keyboard: false
 		});
 
-		$('#operator').val('');
+		$('#operator_0').val('');
+		$('#operator_1').val('');
+		$('#operator_2').val('');
 
 		$('#finish_perbaikan').hide();
-		$('#reset_perbaikan').hide();
 		$('#perbaikannote').hide();
 		$('#perbaikannote2').hide();
-		$('#change_operator').hide();
+
+		$('#molding_fix').hide();
 
 		setInterval(setTime, 1000);
 
@@ -238,82 +302,240 @@
 	});
 
 	$('#modalOperator').on('shown.bs.modal', function () {
-		$('#operator').focus();
+		$('#operator_0').focus();
 	});
 
-	$('#operator').keydown(function(event) {
+	function cancelAll() {
+		$('#finish_perbaikan').hide();
+		$('#start_perbaikan').show();
+		$('#perbaikannote').hide();
+		$('#perbaikannote2').hide();
+
+		$('#molding_fix').hide();
+		$('#molding_choice').show();
+
+		$('#status').html('-');
+		$('#product').html('');
+		$('#part').html('');
+		$('#mesin').html('');
+		$('#last_counter').html('');
+
+		count = false;
+
+		$('div.timerperbaikan span.secondperbaikan').html('00');
+        $('div.timerperbaikan span.minuteperbaikan').html('00');
+        $('div.timerperbaikan span.hourperbaikan').html('00');
+	}
+
+	$('#operator_0').keydown(function(event) {
 		if (event.keyCode == 13 || event.keyCode == 9) {
-			if($("#operator").val().length >= 8){
+			if($("#operator_0").val().length >= 8){
 				var data = {
-					employee_id : $("#operator").val()
+					employee_id : $("#operator_0").val()
 				}
 				
 				$.get('{{ url("scan/injeksi/operator") }}', data, function(result, status, xhr){
 					if(result.status){
 						openSuccessGritter('Success!', result.message);
-						$('#modalOperator').modal('hide');
-						$('#op').html(result.employee.employee_id);
-						$('#op2').html(result.employee.name);
-						$('#employee_id').val(result.employee.employee_id);
-						// fillResult(result.employee.employee_id);
-						// $('#tag').focus();
-						// getMoldingLogPasang();
-						get_maintenance_temp(result.employee.name);
-						getMoldingMaster();
-						$('#change_operator').show();
+						// $('#modalOperator').modal('hide');
+						// $('#op').html(result.employee.employee_id);
+						// $('#op2').html(result.employee.name);
+						// $('#employee_id').val(result.employee.employee_id);
+						// $('#modalMesin').modal('show');
+						$('#operator_0').val(result.employee.name);
+						$('#op_0').html(result.employee.name.split(' ').slice(0,2).join(' '));
+						$('#employee_id_0').val(result.employee.employee_id);
+						$('#operator_0').prop('disabled',true);
+						$('#operator_1').focus();
+						// getMoldingLog();
+						// get_history_temp(result.employee.name);
 					}
 					else{
 						audio_error.play();
 						openErrorGritter('Error', result.message);
-						$('#operator').val('');
+						$('#operator_0').val('');
 					}
 				});
 			}
 			else{
 				openErrorGritter('Error!', 'Employee ID Invalid.');
 				audio_error.play();
-				$("#operator").val("");
+				$("#operator_0").val("");
 			}			
 		}
 	});
+
+	$('#operator_1').keydown(function(event) {
+		if (event.keyCode == 13 || event.keyCode == 9) {
+			if($("#operator_1").val().length >= 8){
+				var data = {
+					employee_id : $("#operator_1").val()
+				}
+				
+				$.get('{{ url("scan/injeksi/operator") }}', data, function(result, status, xhr){
+					if(result.status){
+						openSuccessGritter('Success!', result.message);
+						// $('#modalOperator').modal('hide');
+						// $('#op').html(result.employee.employee_id);
+						// $('#op2').html(result.employee.name);
+						// $('#employee_id').val(result.employee.employee_id);
+						// $('#modalMesin').modal('show');
+						$('#operator_1').val(result.employee.name);
+						$('#op_1').html(result.employee.name.split(' ').slice(0,2).join(' '));
+						$('#employee_id_1').val(result.employee.employee_id);
+						$('#operator_1').prop('disabled',true);
+						$('#operator_2').focus();
+						// getMoldingLog();
+						// get_history_temp(result.employee.name);
+					}
+					else{
+						audio_error.play();
+						openErrorGritter('Error', result.message);
+						$('#operator_1').val('');
+					}
+				});
+			}
+			else{
+				openErrorGritter('Error!', 'Employee ID Invalid.');
+				audio_error.play();
+				$("#operator_1").val("");
+			}			
+		}
+	});
+
+	$('#operator_2').keydown(function(event) {
+		if (event.keyCode == 13 || event.keyCode == 9) {
+			if($("#operator_2").val().length >= 8){
+				var data = {
+					employee_id : $("#operator_2").val()
+				}
+				
+				$.get('{{ url("scan/injeksi/operator") }}', data, function(result, status, xhr){
+					if(result.status){
+						openSuccessGritter('Success!', result.message);
+						// $('#modalOperator').modal('hide');
+						// $('#op').html(result.employee.employee_id);
+						// $('#op2').html(result.employee.name);
+						// $('#employee_id').val(result.employee.employee_id);
+						// $('#modalMesin').modal('show');
+						$('#operator_2').val(result.employee.name);
+						$('#op_2').html(result.employee.name.split(' ').slice(0,2).join(' '));
+						$('#employee_id_2').val(result.employee.employee_id);
+						$('#operator_2').prop('disabled',true);
+						// getMoldingLog();
+						// get_history_temp(result.employee.name);
+					}
+					else{
+						audio_error.play();
+						openErrorGritter('Error', result.message);
+						$('#operator_2').val('');
+					}
+				});
+			}
+			else{
+				openErrorGritter('Error!', 'Employee ID Invalid.');
+				audio_error.play();
+				$("#operator_2").val("");
+			}			
+		}
+	});
+
+	// $('#operator').keydown(function(event) {
+	// 	if (event.keyCode == 13 || event.keyCode == 9) {
+	// 		if($("#operator").val().length >= 8){
+	// 			var data = {
+	// 				employee_id : $("#operator").val()
+	// 			}
+				
+	// 			$.get('{{ url("scan/injeksi/operator") }}', data, function(result, status, xhr){
+	// 				if(result.status){
+	// 					openSuccessGritter('Success!', result.message);
+	// 					$('#modalOperator').modal('hide');
+	// 					$('#op').html(result.employee.employee_id);
+	// 					$('#op2').html(result.employee.name);
+	// 					$('#employee_id').val(result.employee.employee_id);
+	// 					// fillResult(result.employee.employee_id);
+	// 					// $('#tag').focus();
+	// 					// getMoldingLogPasang();
+	// 					get_maintenance_temp(result.employee.name);
+	// 					getMoldingMaster();
+	// 					$('#change_operator').show();
+	// 				}
+	// 				else{
+	// 					audio_error.play();
+	// 					openErrorGritter('Error', result.message);
+	// 					$('#operator').val('');
+	// 				}
+	// 			});
+	// 		}
+	// 		else{
+	// 			openErrorGritter('Error!', 'Employee ID Invalid.');
+	// 			audio_error.play();
+	// 			$("#operator").val("");
+	// 		}			
+	// 	}
+	// });
 
 	function getMoldingMaster() {
 		$.get('{{ url("get/injeksi/get_molding_master") }}',  function(result, status, xhr){
 			if(result.status){
 
+				$('#molding_fix').hide();
+
 				var moldingMaster = '';
-				$('#moldingMaster').html("");
+				$('#molding_btn').html("");
 				var no = 1;
 				var color ="";
 				$.each(result.datas, function(key, value) {
-					if (no % 2 === 0 ) {
-						color = 'style="background-color: #fffcb7;font-size: 18.5px;padding-top:5px;padding-bottom:5px"';
-					} else {
-						color = 'style="background-color: #ffd8b7;font-size: 18.5px;padding-top:5px;padding-bottom:5px"';
-					}
-					if (value.last_counter >= 15000 || value.status == 'HARUS MAINTENANCE') {
-						color = 'style="background-color: #ff3030;font-size: 18.5px;color:white;padding-top:5px;padding-bottom:5px"';
-					}
-					if ($('#status').text() == '-') {
-						moldingMaster += '<tr onclick="fetchCount(\''+value.id+'\')">';
-					}
-					else{
-						moldingMaster += '<tr>';
-					}
-					moldingMaster += '<td '+color+'>'+value.product+'</td>';
-					moldingMaster += '<td '+color+'>'+value.part+'</td>';
-					moldingMaster += '<td '+color+'>'+value.status+'</td>';
-					moldingMaster += '<td '+color+'>'+value.last_counter+'</td>';
-					if (value.status_mesin == null) {
-						moldingMaster += '<td '+color+'>-</td>';
-					}else{
-						moldingMaster += '<td '+color+'>'+value.status_mesin+'</td>';
-					}
+				// 	if (no % 2 === 0 ) {
+				// 		color = 'style="background-color: #fffcb7;font-size: 18.5px;padding-top:5px;padding-bottom:5px"';
+				// 	} else {
+				// 		color = 'style="background-color: #ffd8b7;font-size: 18.5px;padding-top:5px;padding-bottom:5px"';
+				// 	}
+				// 	if (value.last_counter >= 15000 || value.status == 'HARUS MAINTENANCE') {
+				// 		color = 'style="background-color: #ff3030;font-size: 18.5px;color:white;padding-top:5px;padding-bottom:5px"';
+				// 	}
+				// 	if ($('#status').text() == '-') {
+				// 		moldingMaster += '<tr onclick="fetchCount(\''+value.id+'\')">';
+				// 	}
+				// 	else{
+				// 		moldingMaster += '<tr>';
+				// 	}
+				// 	moldingMaster += '<td '+color+'>'+value.product+'</td>';
+				// 	moldingMaster += '<td '+color+'>'+value.part+'</td>';
+				// 	moldingMaster += '<td '+color+'>'+value.status+'</td>';
+				// 	moldingMaster += '<td '+color+'>'+value.last_counter+'</td>';
+				// 	if (value.status_mesin == null) {
+				// 		moldingMaster += '<td '+color+'>-</td>';
+				// 	}else{
+				// 		moldingMaster += '<td '+color+'>'+value.status_mesin+'</td>';
+				// 	}
 					
-					moldingMaster += '</tr>';				
-				no++;
+				// 	moldingMaster += '</tr>';				
+				// no++;
+
+					if (value.status == 'HARUS MAINTENANCE') {
+						moldingMaster += '<div class="col-xs-3" style="padding-top: 5px">';
+						moldingMaster += '<center>';
+						moldingMaster += '<button class="btn btn-danger" id="'+value.part+'" style="width: 200px;font-size: 15px;font-weight: bold;" onclick="getMolding(this.id,\''+value.status+'\',\''+value.id_molding+'\')">'+value.product+' - '+value.part+'<br>'+value.shot+' Shot<br>Mesin: '+value.mesin+'<br>Status: '+value.status+'</button>';
+						moldingMaster += '</center>';
+						moldingMaster += '</div>';
+					}else if(value.status == 'DIPERBAIKI'){
+						moldingMaster += '<div class="col-xs-3" style="padding-top: 5px">';
+						moldingMaster += '<center>';
+						moldingMaster += '<button class="btn btn-warning" id="'+value.part+'" style="width: 200px;font-size: 15px;font-weight: bold;" onclick="getMolding(this.id,\''+value.status+'\',\''+value.id_molding+'\')">'+value.product+' - '+value.part+'<br>'+value.shot+' Shot<br>Mesin: '+value.mesin+'<br>Status: '+value.status+'</button>';
+						moldingMaster += '</center>';
+						moldingMaster += '</div>';
+					}else{
+						moldingMaster += '<div class="col-xs-3" style="padding-top: 5px">';
+						moldingMaster += '<center>';
+						moldingMaster += '<button class="btn btn-primary" id="'+value.part+'" style="width: 200px;font-size: 15px;font-weight: bold;" onclick="getMolding(this.id,\''+value.status+'\',\''+value.id_molding+'\')">'+value.product+' - '+value.part+'<br>'+value.shot+' Shot<br>Mesin: '+value.mesin+'<br>Status: '+value.status+'</button>';
+						moldingMaster += '</center>';
+						moldingMaster += '</div>';
+					}
 				});
-				$('#moldingMaster').append(moldingMaster);
+				$('#molding_btn').append(moldingMaster);
+				$('#modalMolding').modal('show');
 				
 
 				openSuccessGritter('Success!', result.message);
@@ -325,6 +547,42 @@
 				
 			}
 		});
+	}
+
+	function saveOperator() {
+		$('#modalOperator').modal('hide');
+		getMoldingMaster();
+	}
+
+	function getMolding(value,status,id) {
+		$('#molding_fix').show();
+		$('#molding_choice').hide();
+		$('#molding_fix2').html(value);
+		$('#id_molding').val(id);
+		if (status == 'DIPERBAIKI') {
+			$('#molding_fix2').prop('class','btn btn-warning');
+		}else if(status === 'HARUS MAINTENANCE'){
+			$('#molding_fix2').prop('class','btn btn-danger');
+		}else{
+			$('#molding_fix2').prop('class','btn btn-primary');
+		}
+	}
+
+	function changeMolding2() {
+		$('#molding_fix').hide();
+		$('#molding_choice').show();
+		$('#molding_fix2').html("MOLDING");
+	}
+
+	function change_molding() {
+		getMoldingMaster();
+		cancelAll();
+	}
+
+	function saveMolding() {
+		get_maintenance_temp($('#molding_fix2').text());
+		$('#modalMolding').modal('hide');
+		fetchCount($('#id_molding').val());
 	}
 
 	function fetchCount(id){
@@ -376,7 +634,20 @@
         var waktu = jam + ':' + menit + ':' + detik;
         $('#perbaikan').val(waktu);
 
-		var pic = $('#op2').text();
+		var pic = [];
+		var pic_1 = $('#op_0').text();
+		var pic_2 = $('#op_1').text();
+		var pic_3 = $('#op_2').text();
+
+		if (pic_1 != "-") {
+			pic.push(pic_1);
+		}
+		if (pic_2 != "-") {
+			pic.push(pic_2);
+		}
+		if (pic_3 != "-") {
+			pic.push(pic_3);
+		}
 		var mesin = $('#mesin').text();
 		var part = $('#part').text();
 		var product = $('#product').text();
@@ -390,7 +661,7 @@
 		
 		var data = {
 			mesin : mesin,
-			pic : pic,
+			pic : pic.join(', '),
 			product : product,
 			part : part,
 			status : status,
@@ -422,8 +693,20 @@
 
 	function store_maintenance_temp() {
 		var start_time = getActualFullDate();
+		var pic = [];
+		var pic_1 = $('#op_0').text();
+		var pic_2 = $('#op_1').text();
+		var pic_3 = $('#op_2').text();
 
-		var pic = $('#op2').text();
+		if (pic_1 != "-") {
+			pic.push(pic_1);
+		}
+		if (pic_2 != "-") {
+			pic.push(pic_2);
+		}
+		if (pic_3 != "-") {
+			pic.push(pic_3);
+		}
 		var mesin = $('#mesin').text();
 		var part = $('#part').text();
 		var product = $('#product').text();
@@ -432,7 +715,7 @@
 		var note = CKEDITOR.instances.noteperbaikan.getData();
 
 		var data = {
-			pic : pic,
+			pic : pic.join(', '),
 			mesin : mesin,
 			product : product,
 			part : part,
@@ -446,7 +729,7 @@
 			if(result.status){
 				openSuccessGritter('Success','Maintenance Molding Temp has been created');
 				// reset();
-				getMoldingMaster();
+				// getMoldingMaster();
 			} else {
 				audio_error.play();
 				openErrorGritter('Error','Create Maintenance Molding Temp Failed');
@@ -454,9 +737,9 @@
 		});
 	}
 
-	function get_maintenance_temp(pic) {
+	function get_maintenance_temp(part) {
 		var data = {
-			pic : pic
+			part : part
 		}
 		$.get('{{ url("index/injeksi/get_maintenance_temp") }}',data,  function(result, status, xhr){
 			if(result.status){
@@ -492,11 +775,11 @@
 	}
 
 	function update_maintenance_temp() {
-		var pic = $('#op2').text();
+		var part = $('#part').text();
 		var noteperbaikan = CKEDITOR.instances.noteperbaikan.getData();
 
 		var data = {
-			pic : pic,
+			part : part,
 			note : noteperbaikan
 		}
 
