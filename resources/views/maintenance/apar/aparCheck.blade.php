@@ -104,12 +104,11 @@
 		</div>
 
 		<div class="col-xs-12" style="padding-right: 0; padding-left: 0; margin-bottom: 2%;">
-
 			<div class="input-group input-group-lg">
 				<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: black; font-size: 20px;">
 					<i class="fa fa-qrcode"></i>
 				</div>
-				<input type="text" class="form-control" placeholder="APAR CODE / HYDRANT CODE" id="qr_apar" readonly>
+				<input type="text" class="form-control" placeholder="APAR CODE / HYDRANT CODE" id="qr_apar">
 				<span class="input-group-btn">
 					<button type="button" class="btn btn-success btn-flat" data-toggle="modal" data-target="#scanModal"><i class="fa fa-qrcode"></i> Scan QR</button>
 				</span>
