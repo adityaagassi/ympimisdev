@@ -52,11 +52,20 @@ class DisplayController extends Controller
 			ORDER BY
 			cost_center_eff ASC");
 
+		$last_datas = db::select("SELECT
+			cost_center_name,
+			max( total_date ) AS last_date 
+			FROM
+			efficiency_uploads 
+			GROUP BY
+			cost_center_name");
+
 		return view('displays.efficiencies.efficiency_monitoring_monthly', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
 			'weeks' => $weeks,
-			'cost_centers' => $cost_centers
+			'cost_centers' => $cost_centers,
+			'last_datas' => $last_datas
 		))->with('page', 'Display Efficiency Monitoring')->with('head', 'Display');
 	}
 

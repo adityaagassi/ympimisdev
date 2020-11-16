@@ -16,13 +16,7 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 	error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 }
 
-Route::get('printSummary', 'TrialController@printSummary');
-Route::get('test1', 'TrialController@test1');
-Route::get('test2', 'TrialController@test2');
-Route::get('test3', 'TrialController@test3');
-Route::get('test4', 'TrialController@test4');
-
-Route::get('trial2', 'TrialController@trial2');
+Route::get('label', 'TrialController@label_kedatangan');
 
 Route::get('testmail', 'TrialController@testmail');
 Route::get('testprint', 'TrialController@testPrint');
@@ -518,6 +512,10 @@ Route::group(['nav' => 'R10', 'middleware' => 'permission'], function(){
 	Route::post('confirm/general/surat_dokter_report', 'GeneralController@confirmSuratDokterReport');
 });
 
+
+Route::get('index/update_emp_data', 'EmployeeController@indexUpdateEmpData');
+Route::post('fetch/update_emp_data', 'EmployeeController@indexReportManpower');
+
 Route::get('index/report/manpower', 'EmployeeController@indexReportManpower');
 Route::get('fetch/report/manpower', 'EmployeeController@fetchReportManpower');
 Route::get('fetch/report/manpower_detail', 'EmployeeController@fetchReportManpowerDetail');
@@ -965,6 +963,7 @@ Route::group(['nav' => 'S37', 'middleware' => 'permission'], function(){
 	Route::get('reprint/return', 'TransactionController@reprintReturn');
 	Route::post('confirm/return', 'TransactionController@confirmReturn');
 	Route::post('delete/return', 'TransactionController@deleteReturn');
+	Route::post('input/display/efficiency_monitoring_monthly', 'DisplayController@inputEfficiencyMonitoringMonthly');
 });
 Route::get('index/return', 'TransactionController@indexReturn');
 Route::get('index/return/data', 'TransactionController@indexReturnData');
@@ -1266,6 +1265,12 @@ Route::get('index/sakurentsu/list_sakurentsu', 'SakurentsuController@index_sakur
 Route::get('index/sakurentsu/detail/{id}', 'SakurentsuController@detail_sakurentsu');
 Route::get('fetch/sakurentsu/type', 'SakurentsuController@fetch_sakurentsu');
 Route::post('post/sakurentsu/type', 'SakurentsuController@post_sakurentsu_type');
+
+//3M
+Route::get('index/sakurentsu/list_3m', 'SakurentsuController@index_tiga_em');
+Route::get('fetch/sakurentsu/list_3m', 'SakurentsuController@fetch_tiga_em');
+
+Route::get('index/sakurentsu/3m/{sakurentsu_number}', 'SakurentsuController@index_form_tiga_em');
 
 //Supplier
 Route::get('index/supplier', 'AccountingController@master_supplier');
@@ -2636,7 +2641,6 @@ Route::get('index/display/efficiency_monitoring_monthly', 'DisplayController@ind
 
 Route::get('fetch/display/efficiency_monitoring', 'DisplayController@fetchEfficiencyMonitoring');
 Route::get('fetch/display/efficiency_monitoring_monthly', 'DisplayController@fetchEfficiencyMonitoringMonthly');
-Route::post('input/display/efficiency_monitoring_monthly', 'DisplayController@inputEfficiencyMonitoringMonthly');
 
 
 
