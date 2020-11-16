@@ -389,7 +389,7 @@
 
 							?>
 							<tr>
-								<td colspan="2" rowspan="{{ 10 + $jumlah }}" style="border: 1px solid black;">Description<br><br>For Taxation Purpose, Please break down good / material cost & Service expense (if possible) <br><br> 
+								<td colspan="2" rowspan="{{ 11 + $jumlah }}" style="border: 1px solid black;">Description<br><br>For Taxation Purpose, Please break down good / material cost & Service expense (if possible) <br><br> 
 									<img src="{{ public_path() . '/files/jepang/Screenshot_97.jpg' }}" width="100">
 								</td>
 								<td colspan="8" style="border-right: 1px solid black;font-weight: bold;"><u>Supplier 
@@ -451,10 +451,10 @@
 								?>
 								@foreach($inv as $item)
 								<tr>
-									<td colspan="3" rowspan="2" style="border: 1px solid black;color: blue;font-weight: bold;vertical-align: top;">{{$item->detail}}</td>
-									<td colspan="1" rowspan="2" style="border: 1px solid black;color: blue;font-weight: bold;vertical-align: top;">{{$item->qty}} {{$item->uom}}</td>
-									<td colspan="2" rowspan="2" style="border: 1px solid black;color: blue;font-weight: bold;vertical-align: top;text-align: right;"><?= $ket_harga ?> <?= number_format($item->price,2,",",".");?></td>
-									<td colspan="2" rowspan="2" style="border: 1px solid black;color: blue;font-weight: bold;vertical-align: top;text-align: right;"><?= $ket_harga ?> <?= number_format($item->amount,2,",",".");?></td>
+									<td colspan="3" rowspan="3" style="border: 1px solid black;color: blue;font-weight: bold;vertical-align: top;">{{$item->detail}}</td>
+									<td colspan="1" rowspan="3" style="border: 1px solid black;color: blue;font-weight: bold;vertical-align: top;">{{$item->qty}} {{$item->uom}}</td>
+									<td colspan="2" rowspan="3" style="border: 1px solid black;color: blue;font-weight: bold;vertical-align: top;text-align: right;"><?= $ket_harga ?> <?= number_format($item->price,2,",",".");?></td>
+									<td colspan="2" rowspan="3" style="border: 1px solid black;color: blue;font-weight: bold;vertical-align: top;text-align: right;"><?= $ket_harga ?> <?= number_format($item->amount,2,",",".");?></td>
 
 									<?php 
 									if($item->vat_status == "Yes"){
@@ -462,6 +462,7 @@
 									} 
 									?>
 								</tr>
+								<tr></tr>
 								<tr></tr>
 								<?php
 								$total = $total + $item->amount;
@@ -472,16 +473,17 @@
 							} else { 
 								?>
 								<tr>
-									<td colspan="3" rowspan="2" style="border: 1px solid black;"></td>
-									<td colspan="1" rowspan="2" style="border: 1px solid black;"></td>
-									<td colspan="2" rowspan="2" style="border: 1px solid black;"></td>
-									<td colspan="2" rowspan="2" style="border: 1px solid black;"></td>
+									<td colspan="3" rowspan="3" style="border: 1px solid black;"></td>
+									<td colspan="1" rowspan="3" style="border: 1px solid black;"></td>
+									<td colspan="2" rowspan="3" style="border: 1px solid black;"></td>
+									<td colspan="2" rowspan="3" style="border: 1px solid black;"></td>
 								</tr>
+								<tr></tr>
 								<tr></tr>
 							<?php } ?>
 							<tr>
 								<td colspan="2" rowspan="3" style="border: 1px solid black;">Currency<br><img src="{{ public_path() . '/files/jepang/Screenshot_101.jpg' }}" width="20"></td>
-								<td colspan="2" rowspan="3" style="border: 1px solid black;color: blue;font-weight: bold">{{ $inv[0]->currency }}</td>
+								<td colspan="2" rowspan="3" style="border: 1px solid black;color: blue;font-weight: bold;">{{ $inv[0]->currency }}</td>
 								<td colspan="2" style="border: 1px solid black;">Sub Total <img src="{{ public_path() . '/files/jepang/Screenshot_102.jpg' }}" width="25"></td>
 								<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold;text-align: right;"><?= $ket_harga ?> <?= number_format($total,2,",",".");?></td>
 							</tr>
