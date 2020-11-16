@@ -79,9 +79,9 @@
                 <td>{{ $po->qty }}</td>
                 <td>{{ $po->uom }}</td>
                 <td>
-                    @if($po->goods_price != null)
+                    @if($po->goods_price != null || $po->goods_price != 0)
                         {{ $po->goods_price }}
-                    @elseif ($po->service_price != null)
+                    @elseif ($po->service_price != null || $po->service_price != 0)
                         {{ $po->service_price }}
                     @endif
                 </td>
