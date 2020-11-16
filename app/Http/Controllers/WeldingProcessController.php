@@ -3371,105 +3371,107 @@ class WeldingProcessController extends Controller
 				$usageserror = 0;
 
 				for ($i = 0; $i < count($jig_aliases); $i++) {
-					$jigbom = JigBom::where('jig_parent',$jig_parents[$i])->where('jig_child',$jig_childs[$i])->first();
-					$usage = $jigbom->usage;
+					if (stripos($jig_childs[$i], '-0') == FALSE) {
+						$jigbom = JigBom::where('jig_parent',$jig_parents[$i])->where('jig_child',$jig_childs[$i])->first();
+						$usage = $jigbom->usage;
 
-					$partsstock = JigPartStock::where('jig_id',$jig_aliases[$i])->get();
+						$partsstock = JigPartStock::where('jig_id',$jig_aliases[$i])->get();
 
-					foreach ($partsstock as $key) {
-						$id_partstock = $key->id;
-						$stock = $key->quantity;
-						$min_order = $key->min_order;
-						$material_jig = $key->material;
-						$remarkjig = $key->remark;
-					}
+						foreach ($partsstock as $key) {
+							$id_partstock = $key->id;
+							$stock = $key->quantity;
+							$min_order = $key->min_order;
+							$material_jig = $key->material;
+							$remarkjig = $key->remark;
+						}
 
-					if ($stock < $usage) {
-						$usageserror++;
-					}else{
-						if ($remarkjig == null) {
-							$date = date('Y-m-d');
-							$prefix_now = 'WJO'.date("y").date("m");
-							$code_generator = CodeGenerator::where('note','=','wjo')->first();
-							if ($prefix_now != $code_generator->prefix){
-								$code_generator->prefix = $prefix_now;
-								$code_generator->index = '0';
+						if ($stock < $usage) {
+							$usageserror++;
+						}else{
+							if ($remarkjig == null) {
+								$date = date('Y-m-d');
+								$prefix_now = 'WJO'.date("y").date("m");
+								$code_generator = CodeGenerator::where('note','=','wjo')->first();
+								if ($prefix_now != $code_generator->prefix){
+									$code_generator->prefix = $prefix_now;
+									$code_generator->index = '0';
+									$code_generator->save();
+								}
+
+								$jigs = Jig::where('jig_id',$jig_childs[$i])->get();
+
+								foreach ($jigs as $key) {
+									$item_name = $key->jig_name;
+								}
+
+								$sub_section = 'Welding Process_Koshuha Solder';
+								$item_name = $item_name;
+								$category = 'Jig';
+								$drawing_name = $item_name;
+								$item_number = $jig_childs[$i];
+								$part_number = $jig_aliases[$i];
+								$quantity = $min_order;
+								$priority = 'Normal';
+								$type = 'Pembuatan Baru';
+								$material = $material_jig;
+								$problem_desc = 'Pembuatan Part Kensa Jig Welding';
+
+								$remark;
+								if($priority == 'Normal'){
+									$remark = 1;
+								}else{
+									$remark = 0;
+								}
+
+								$request_date = date('Y-m-d', strtotime($date. ' + 14 days'));
+
+								$number = sprintf("%'.0" . $code_generator->length . "d", $code_generator->index+1);
+								$order_no = $code_generator->prefix . $number;
+								$code_generator->index = $code_generator->index+1;
 								$code_generator->save();
+
+								$file_name = $order_no.'.pdf';
+								$path = public_path(). '/workshop';
+								$file_path = public_path() . "/jig/drawing/" .$jig_parents[$i].'/'.$jig_childs[$i].'.pdf';
+
+								$newplace  = $path.'/'.$order_no.'.pdf';
+							    copy($file_path,$newplace);
+
+								$wjo = new WorkshopJobOrder([
+									'order_no' => $order_no,
+									'sub_section' => $sub_section,
+									'item_name' => $item_name,
+									'category' => $category,
+									'drawing_name' => $drawing_name,
+									'item_number' => $item_number,
+									'part_number' => $part_number,
+									'quantity' => $quantity,
+									'target_date' => $request_date,
+									'priority' => $priority,
+									'type' => $type,
+									'material' => $material,
+									'problem_description' => $problem_desc,
+									'remark' => $remark,
+									'attachment' => $file_name,
+									'created_by' => 'PI9902015',
+								]);
+
+								$wjo_log = new WorkshopJobOrderLog([
+									'order_no' => $order_no,
+									'remark' => $remark,
+									'created_by' => 'PI9902015',
+								]);
+
+								$wjo->save();
+								$wjo_log->save();
+
+								$partsstocks = JigPartStock::find($id_partstock);
+								$qtynew = $stock - $usage;
+								$partsstocks->quantity = $qtynew;
+								$partsstocks->quantity_order = $min_order;
+								$partsstocks->remark = $order_no;
+								$partsstocks->save();
 							}
-
-							$jigs = Jig::where('jig_id',$jig_childs[$i])->get();
-
-							foreach ($jigs as $key) {
-								$item_name = $key->jig_name;
-							}
-
-							$sub_section = 'Welding Process_Koshuha Solder';
-							$item_name = $item_name;
-							$category = 'Jig';
-							$drawing_name = $item_name;
-							$item_number = $jig_childs[$i];
-							$part_number = $jig_aliases[$i];
-							$quantity = $min_order;
-							$priority = 'Normal';
-							$type = 'Pembuatan Baru';
-							$material = $material_jig;
-							$problem_desc = 'Pembuatan Part Kensa Jig Welding';
-
-							$remark;
-							if($priority == 'Normal'){
-								$remark = 1;
-							}else{
-								$remark = 0;
-							}
-
-							$request_date = date('Y-m-d', strtotime($date. ' + 14 days'));
-
-							$number = sprintf("%'.0" . $code_generator->length . "d", $code_generator->index+1);
-							$order_no = $code_generator->prefix . $number;
-							$code_generator->index = $code_generator->index+1;
-							$code_generator->save();
-
-							$file_name = $order_no.'.pdf';
-							$path = public_path(). '/workshop';
-							$file_path = public_path() . "/jig/drawing/" .$jig_parents[$i].'/'.$jig_childs[$i].'.pdf';
-
-							$newplace  = $path.'/'.$order_no.'.pdf';
-						    copy($file_path,$newplace);
-
-							$wjo = new WorkshopJobOrder([
-								'order_no' => $order_no,
-								'sub_section' => $sub_section,
-								'item_name' => $item_name,
-								'category' => $category,
-								'drawing_name' => $drawing_name,
-								'item_number' => $item_number,
-								'part_number' => $part_number,
-								'quantity' => $quantity,
-								'target_date' => $request_date,
-								'priority' => $priority,
-								'type' => $type,
-								'material' => $material,
-								'problem_description' => $problem_desc,
-								'remark' => $remark,
-								'attachment' => $file_name,
-								'created_by' => 'PI9902015',
-							]);
-
-							$wjo_log = new WorkshopJobOrderLog([
-								'order_no' => $order_no,
-								'remark' => $remark,
-								'created_by' => 'PI9902015',
-							]);
-
-							$wjo->save();
-							$wjo_log->save();
-
-							$partsstocks = JigPartStock::find($id_partstock);
-							$qtynew = $stock - $usage;
-							$partsstocks->quantity = $qtynew;
-							$partsstocks->quantity_order = $min_order;
-							$partsstocks->remark = $order_no;
-							$partsstocks->save();
 						}
 					}
 				}
@@ -3558,24 +3560,7 @@ class WeldingProcessController extends Controller
 					$message = 'Repair Jig Selesai';
 				}
 			}else{
-				for ($k=0; $k < $check_indexes; $k++) { 
-					// $kensa = new JigKensa([
-					// 	'operator_id' => $operator_id,
-					// 	'jig_id' => $jig_id,
-					// 	'jig_index' => $jig_index,
-					// 	'check_index' => $check_index[$k],
-					// 	'check_name' => $check_name[$k],
-					// 	'upper_limit' => $upper_limit[$k],
-					// 	'lower_limit' => $lower_limit[$k],
-					// 	'value' => $value[$k],
-					// 	'result' => $result[$k],
-					// 	'jig_child' => $jig_child[$k],
-					// 	'status' => 'Open',
-					// 	'action' => $action[$k],
-					// 	'started_at' => $started_at,
-					// 	'finished_at' => $finished_at,
-					// 	'created_by' => $id_user,
-					// ]);
+				for ($k=0; $k < $check_indexes; $k++) {
 					$kensa = JigKensa::where('jig_id',$jig_id)->where('jig_index',$jig_index)->where('check_index',$check_index[$k])->first();
 					$kensa->action = $action[$k];
 					$kensa->save();
@@ -3594,32 +3579,6 @@ class WeldingProcessController extends Controller
 
 				$status = true;
 				$message = 'Jig Belum di Repair. Menunggu Part';
-
-				// $jigKensa = JigKensa::where('jig_kensas.jig_id', '=', $jig_id)
-				// 	->where('status','Repair')
-				// 	->get();
-
-				// foreach ($jigKensa as $key) {
-				// 	$kensa_jig = new JigKensaLog([
-				// 		'operator_id' => $key->operator_id,
-				// 		'jig_id' => $key->jig_id,
-				// 		'jig_index' => $key->jig_index,
-				// 		'check_index' => $key->check_index,
-				// 		'check_name' => $key->check_name,
-				// 		'upper_limit' => $key->upper_limit,
-				// 		'lower_limit' => $key->lower_limit,
-				// 		'value' => $key->value,
-				// 		'result' => $key->result,
-				// 		'status' => 'Repaired',
-				// 		'jig_child' => $key->jig_child,
-				// 		'started_at' => $key->started_at,
-				// 		'finished_at' => $key->finished_at,
-				// 		'created_by' => $id_user,
-				// 	]);
-				// 	$kensa_jig->save();
-
-				// 	$kensas = JigKensa::where('id',$key->id)->forceDelete();
-				// }
 			}
 
 			$response = array(
