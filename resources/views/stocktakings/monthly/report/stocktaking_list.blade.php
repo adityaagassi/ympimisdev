@@ -189,7 +189,8 @@
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 					<h4 class="modal-title" id="myModalLabel">Upload List Baru</h4>
-					Sample: <a href="{{ url('manuals/upload_stocktaking_list.xlsx') }}">upload_stocktaking_list.xlsx</a>
+					Sample: <a href="{{ url('manuals/upload_stocktaking_list.xlsx') }}">upload_stocktaking_list.xlsx</a><br>
+					Format : [Group][Location][Store][Substore][GMC][Description][Jenis Slip]
 				</div>
 				<div class="modal-body">
 					<div class="row">						

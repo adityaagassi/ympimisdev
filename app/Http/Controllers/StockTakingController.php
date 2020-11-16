@@ -255,8 +255,8 @@ class StockTakingController extends Controller{
 
 				for ($i=0; $i < count($rows); $i++) {
 					$location = preg_replace('/[^a-zA-Z0-9]+/', '', strtoupper($rows[$i][1]));
-					$store = preg_replace('/[^a-zA-Z0-9 ]+/', '', strtoupper($rows[$i][2]));
-					$sub_store = preg_replace('/[^a-zA-Z0-9 ]+/', '', strtoupper($rows[$i][3]));
+					$store = preg_replace('/[^a-zA-Z0-9 &-]+/', '', strtoupper($rows[$i][2]));
+					$sub_store = preg_replace('/[^a-zA-Z0-9 &-]+/', '', strtoupper($rows[$i][3]));
 					$material_number = preg_replace('/[^a-zA-Z0-9]+/', '', strtoupper($rows[$i][4]));
 					$material_description = preg_replace('/[^a-zA-Z0-9 ]+/', '', strtoupper($rows[$i][5]));
 					$category = preg_replace('/[^a-zA-Z0-9]+/', '', strtoupper($rows[$i][6]));
