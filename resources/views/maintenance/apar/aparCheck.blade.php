@@ -258,6 +258,13 @@
 			videoOff();
 		});
 
+		$('#qr_apar').keydown(function(event) {
+		if (event.keyCode == 13 || event.keyCode == 9) {
+			var id = $("#qr_apar").val();
+			checkCode('', id);
+		}
+	});
+
 		function showCheck(kode) {
 			var video = document.createElement("video");
 			vdo = video;
