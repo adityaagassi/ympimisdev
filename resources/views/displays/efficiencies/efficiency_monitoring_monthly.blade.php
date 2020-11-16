@@ -151,6 +151,7 @@
 	}
 
 	function addEfficiency(){
+		$('#loading').show();
 		if($('#newDate').val() != "" && $('#newCost').val() != "" && $('#newInput').val() != "" && $('#newOutput').val() != ""){
 			var newDate = $('#newDate').val();
 			var newCost = $('#newCost').val();
@@ -166,10 +167,12 @@
 
 			$.post('{{ url("input/display/efficiency_monitoring_monthly") }}', data, function(result, status, xhr){
 				if(result.status){
+					$('#loading').hide();
 					clearData();
 					$('#modalAdd').modal('hide');
 				}
 				else{
+					$('#loading').hide();
 					alert(result.message);
 					clearData();					
 				}
@@ -182,6 +185,7 @@
 	}
 
 	function fetchChart(id){
+		$('#loading').show();
 		var data = {
 			period:id
 		}
@@ -253,13 +257,22 @@
 					sum_output[cost_center_name_month[i]] = [];
 					sum_percentage[cost_center_name_month[i]] = [];
 
+					var max_height_percentage = 120;
+
 					$.each(month[cost_center_name_month[i]], function(key, value){
 						total_input += value.total_input;
 						total_output += value.total_output;
 						sum_input[cost_center_name_month[i]].push(total_input);
 						sum_output[cost_center_name_month[i]].push(total_output);
 						sum_percentage[cost_center_name_month[i]].push((total_output/total_input)*100);
+
+						if((total_output/total_input)*100 >= 120 && (total_output/total_input)*100 <= 200)
+						{
+							max_height_percentage = Math.round(((total_output/total_input)*100)+10);			
+						}
 					});
+
+
 
 					Highcharts.chart(id_div_month, {
 						chart: {
@@ -285,7 +298,7 @@
 							}
 						}, { 
 							min: 0,
-							max:120,
+							max:max_height_percentage,
 							title: {
 								text: null
 							},
@@ -399,10 +412,16 @@
 					data_output[cost_center_name_year[i]] = [];
 					data_percentage[cost_center_name_year[i]] = [];
 
+					var max_height_percentage = 120;
+
 					$.each(year[cost_center_name_year[i]], function(key, value){
 						data_input[cost_center_name_year[i]].push(value.total_input);
 						data_output[cost_center_name_year[i]].push(value.total_output);
 						data_percentage[cost_center_name_year[i]].push(value.total_percentage);
+
+						if(value.total_percentage >= 120 && value.total_percentage <= 200){
+							max_height_percentage = Math.round(value.total_percentage);
+						}
 					});
 
 					Highcharts.chart(id_div_year, {
@@ -429,7 +448,7 @@
 							}
 						}, { 
 							min: 0,
-							max:120,
+							max:max_height_percentage,
 							title: {
 								text: null
 							},
@@ -475,10 +494,11 @@
 						}]
 					});
 				}
-
+				$('#loading').hide();
 			}
 			else{
 				alert('Attempt to retrieve data failed');
+				$('#loading').hide();
 			}
 		});
 }
