@@ -31,9 +31,9 @@
 		</div>
 		<div class="col-xs-12">
 			<div class="row">
-				<div class="col-xs-5" id="eff_monitoring_year" style="padding-right: 0;">
+				<div class="col-xs-6" id="eff_monitoring_year" style="padding: 0;">
 				</div>
-				<div class="col-xs-7" id="eff_monitoring_month" style="padding-left: 0;">
+				<div class="col-xs-6" id="eff_monitoring_month" style="padding: 0;">
 				</div>
 			</div>
 		</div>
@@ -194,8 +194,11 @@
 						eff_monitoring_month += '<div class="col-xs-12" style="padding:0; height:300px;" id="eff_month_'+value.cost_center_name+'"></div><hr>';
 					}
 
-					if(jQuery.inArray(value.week_date, monthCategories) === -1){
-						monthCategories.push(value.week_date);
+					var cat = value.week_date.split('-');
+					// console.log(cat[2]);
+
+					if(jQuery.inArray(cat[2], monthCategories) === -1){
+						monthCategories.push(cat[2]);
 					}
 
 					month[value.cost_center_name].push({
@@ -204,6 +207,7 @@
 						total_output:value.total_output,
 					});
 				});
+
 
 				months.reduce(function (res, value) {
 					if (!res[value.week_date]) {
