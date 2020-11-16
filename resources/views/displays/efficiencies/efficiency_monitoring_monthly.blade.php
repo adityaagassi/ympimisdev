@@ -31,9 +31,9 @@
 		</div>
 		<div class="col-xs-12">
 			<div class="row">
-				<div class="col-xs-5" id="eff_monitoring_year">
+				<div class="col-xs-5" id="eff_monitoring_year" style="padding-right: 0;">
 				</div>
-				<div class="col-xs-7" id="eff_monitoring_month">
+				<div class="col-xs-7" id="eff_monitoring_month" style="padding-left: 0;">
 				</div>
 			</div>
 		</div>
@@ -171,7 +171,8 @@
 		}
 		$.get('{{ url("fetch/display/efficiency_monitoring_monthly") }}', data, function(result, status, xhr) {
 			if(result.status){
-				$('#title_text').text('Efficiency Data '+result.period);
+				var title = result.period.split(" ");
+				$('#title_text').text('Efficiency Data '+title[0]);
 				var h = $('#period_title').height();
 				$('#fiscal_year').css('height', h);
 
@@ -246,7 +247,7 @@
 							backgroundColor	: null
 						},
 						title: {
-							text: cost_center_name_month[i]
+							text: cost_center_name_month[i]+' '+title[1]
 						},
 						credits: {
 							enabled: false
@@ -390,7 +391,7 @@
 							backgroundColor	: null
 						},
 						title: {
-							text: cost_center_name_year[i]
+							text: cost_center_name_year[i]+' '+title[0]
 						},
 						credits: {
 							enabled: false

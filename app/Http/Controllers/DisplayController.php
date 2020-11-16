@@ -99,6 +99,7 @@ class DisplayController extends Controller
 		}
 
 		$weekly_calendar = WeeklyCalendar::whereRaw("DATE_FORMAT(week_date, '%Y-%m') = '".$month_target."'")
+		->whereRaw("week_date <= '".date('Y-m-d')."'")
 		->select("fiscal_year", db::raw("date_format(week_date, '%Y-%m') as month_date"), db::raw("date_format(week_date, '%M') as month_name"))
 		->first();
 
@@ -111,9 +112,10 @@ class DisplayController extends Controller
 			WHERE
 			DATE_FORMAT( wc.week_date, '%Y-%m') = '".$weekly_calendar->month_date."'
 			AND cc.cost_center_name IS NOT NULL
+			AND wc.week_date <= '".date('Y-m-d')."'
 			ORDER BY
-			wc.week_date ASC,
-			cc.cost_center_name ASC");
+			field( cc.cost_center_name, 'FINAL', 'MIDDLE', 'SOLDERING', 'INITIAL', 'PN ASSY', 'RC ASSY', 'INJECTION', 'VENOVA', 'MOUTHPIECE', 'CASE', 'PN REED PLATE' ),
+			wc.week_date ASC");
 
 		$months = db::select("SELECT
 			weekly_calendars.fiscal_year,
@@ -126,6 +128,7 @@ class DisplayController extends Controller
 			LEFT JOIN weekly_calendars ON weekly_calendars.week_date = efficiency_uploads.total_date 
 			WHERE
 			date_format(weekly_calendars.week_date, '%Y-%m') = '".$weekly_calendar->month_date."'
+			AND weekly_calendars.week_date <= '".date('Y-m-d')."'
 			ORDER BY
 			weekly_calendars.week_date ASC,
 			efficiency_uploads.cost_center_name ASC");
@@ -163,10 +166,11 @@ class DisplayController extends Controller
 			CROSS JOIN ( SELECT DISTINCT cost_center_eff AS cost_center_name FROM cost_centers2 WHERE cost_center_eff IS NOT NULL ) AS cc 
 			WHERE
 			wc.fiscal_year = '".$weekly_calendar->fiscal_year."'
+			AND wc.week_date <= '".date('Y-m-d')."'
 			AND cc.cost_center_name IS NOT NULL
 			ORDER BY
-			wc.week_date ASC,
-			cc.cost_center_name ASC");
+			field( cc.cost_center_name, 'FINAL', 'MIDDLE', 'SOLDERING', 'INITIAL', 'PN ASSY', 'RC ASSY', 'INJECTION', 'VENOVA', 'MOUTHPIECE', 'CASE', 'PN REED PLATE' ),
+			wc.week_date ASC");
 
 		$years = db::select("SELECT
 			weekly_calendars.fiscal_year,
@@ -179,6 +183,7 @@ class DisplayController extends Controller
 			LEFT JOIN weekly_calendars ON weekly_calendars.week_date = efficiency_uploads.total_date 
 			WHERE
 			weekly_calendars.fiscal_year = '".$weekly_calendar->fiscal_year."'
+			AND weekly_calendars.week_date <= '".date('Y-m-d')."'
 			GROUP BY
 			weekly_calendars.fiscal_year,
 			efficiency_uploads.cost_center_name,
