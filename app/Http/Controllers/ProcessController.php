@@ -3106,11 +3106,11 @@ public function fetchResultFlStamp(Request $request)
 
 	union all
 
-	select model, 0 as debt, 0 as plan, 0 as actual, sum(quantity) as wip, 0 as ng, 0 as stamp,0 as stamp_kd, 0 as h1,0 as h2 from stamp_inventories where origin_group_code = '041' and `status` is null group by model
+	select model, 0 as debt, 0 as plan, 0 as actual, sum(quantity) as wip, 0 as ng, 0 as stamp,0 as stamp_kd, 0 as h1,0 as h2 from stamp_inventories where origin_group_code = '041' and deleted_at is null and `status` is null group by model
 
 	union all
 
-	select model, 0 as debt, 0 as plan, 0 as actual, 0 as wip, sum(quantity) as ng, 0 as stamp,0 as stamp_kd, 0 as h1,0 as h2 from stamp_inventories where origin_group_code = '041' and `status` = 'ng' group by model
+	select model, 0 as debt, 0 as plan, 0 as actual, 0 as wip, sum(quantity) as ng, 0 as stamp,0 as stamp_kd, 0 as h1,0 as h2 from stamp_inventories where origin_group_code = '041' and deleted_at is null and `status` = 'ng' group by model
 
 	union all
 
