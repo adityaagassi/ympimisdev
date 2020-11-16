@@ -191,7 +191,7 @@
 					if(jQuery.inArray(value.cost_center_name, cost_center_name_month) === -1){
 						month[value.cost_center_name] = [];
 						cost_center_name_month.push(value.cost_center_name);
-						eff_monitoring_month += '<div class="col-xs-12" style="padding:0; height:300px;" id="eff_month_'+value.cost_center_name+'"></div><hr>';
+						eff_monitoring_month += '<div class="col-xs-12" style="padding:0; height:250px;" id="eff_month_'+value.cost_center_name+'"></div><hr>';
 					}
 
 					var cat = value.week_date.split('-');
