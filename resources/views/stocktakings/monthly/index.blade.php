@@ -155,8 +155,8 @@
 
 					<span style="font-size: 20px; color: green;"><i class="fa fa-angle-double-down"></i> New Process <i class="fa fa-angle-double-down"></i></span>
 
-					{{-- <a id="manage_store" href="{{ url("index/stocktaking/summary_new") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green;">Print Summary Of Counting</a> --}}
-					<a id="manage_store_past" href="{{ url("index/stocktaking/manage_store") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green;">Print Summary Of Counting</a>
+					<a id="manage_store" href="{{ url("index/stocktaking/summary_new") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green;">Print Summary Of Counting</a>
+					{{-- <a id="manage_store_past" href="{{ url("index/stocktaking/manage_store") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green;">Print Summary Of Counting</a> --}}
 
 					{{-- <a id="no_use" href="{{ secure_url("index/stocktaking/no_use_new") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green; background-color: #ffce5c;">Input No Use</a> --}}
 
@@ -858,13 +858,13 @@
 					$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
 
 					var location_new = [];
-					var fill_new = [];
-					var empty_new = [];
+					var use = [];
+					var no_use = [];
 
 					for (var i = 0; i < result.data.length; i++) {
 						location_new.push(result.data[i].location);
-						fill_new.push(parseInt(result.data[i].qty));
-						empty_new.push(parseInt(result.data[i].empty));
+						use.push(parseInt(result.data[i].use));
+						no_use.push(parseInt(result.data[i].no_use));
 					}
 
 					Highcharts.chart('container0', {
@@ -873,10 +873,21 @@
 							type: 'column'
 						},
 						title: {
-							text: 'Progress Input New'
+							text: 'Progress Input By Location'
 						},	
 						legend:{
-							enabled: false
+							align: 'right',
+							x: -30,
+							verticalAlign: 'top',
+							y: 0,
+							itemStyle:{
+								color: "white",
+								fontSize: "12px",
+								fontWeight: "bold",
+
+							},
+							floating: true,
+							shadow: false
 						},
 						credits:{	
 							enabled:false
@@ -930,12 +941,12 @@
 							}
 						},
 						series: [{
-							name: 'Empty',
-							data: empty_new,
+							name: 'NO USE',
+							data: no_use,
 							color: 'rgba(255, 0, 0, 0.25)'
 						}, {
-							name: 'Inputted',
-							data: fill_new,
+							name: 'USE',
+							data: use,
 							color: '#00a65a'
 						}]
 					});
@@ -1650,10 +1661,21 @@
 							type: 'column'
 						},
 						title: {
-							text: 'Progress Audit New'
+							text: 'Progress Audit'
 						},	
 						legend:{
-							enabled: false
+							align: 'right',
+							x: -30,
+							verticalAlign: 'top',
+							y: 0,
+							itemStyle:{
+								color: "white",
+								fontSize: "12px",
+								fontWeight: "bold",
+
+							},
+							floating: true,
+							shadow: false
 						},
 						credits:{	
 							enabled:false

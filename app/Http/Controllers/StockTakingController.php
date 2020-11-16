@@ -1705,13 +1705,6 @@ class StockTakingController extends Controller{
 		// return view('stocktakings.print_substore', array(
 		// 	'lists' => $lists
 		// ));
-		// } catch (Exception $e) {
-		// 	$response = array(
-		// 		'status' => false,
-		// 		'message' => $e->getMessage()
-		// 	);
-		// 	return Response::json($response);
-		// }
 
 
 	}
@@ -2945,47 +2938,19 @@ class StockTakingController extends Controller{
 		}
 
 		if($calendar->status != 'finished'){
-			$data = db::select("SELECT
-				area,
-				location,
-				sum( total ) - sum( qty ) AS empty,
-				sum( qty ) AS qty,
-				sum( total ) AS total 
-				FROM
-				(
-				SELECT
-				sl.area,
-				s.location,
-				0 AS qty,
-				count( s.id ) AS total 
-				FROM
-				stocktaking_new_lists s
+			$data = db::select("SELECT area, location, sum(`use`) AS `use`, sum(no_use) AS no_use FROM
+				(SELECT sl.area, s.location, 0 AS `use`, count(s.id) AS no_use FROM stocktaking_new_lists s
 				LEFT JOIN storage_locations sl ON sl.storage_location = s.location 
-				WHERE
-				s.print_status = 1 
-				GROUP BY
-				sl.area,
-				s.location UNION ALL
-				SELECT
-				sl.area,
-				s.location,
-				count( s.id ) AS qty,
-				0 AS total 
-				FROM
-				stocktaking_new_lists s
+				WHERE s.remark = 'NO USE' 
+				GROUP BY sl.area, s.location
+				UNION ALL
+				SELECT sl.area, s.location, count(s.id) AS `use`, 0 AS no_use FROM stocktaking_new_lists s
 				LEFT JOIN storage_locations sl ON sl.storage_location = s.location 
-				WHERE
-				s.print_status = 1 
-				AND s.quantity IS NOT NULL 
-				GROUP BY
-				sl.area,
-				s.location 
+				WHERE s.remark = 'USE'
+				GROUP BY sl.area, s.location 
 				) AS list 
-				GROUP BY
-				area,
-				location 
-				ORDER BY
-				area");
+				GROUP BY area, location 
+				ORDER BY area");
 		}else{
 			$data = db::select("SELECT area, location, sum(total) - sum(qty) AS empty, sum(qty) AS qty, sum(total) AS total FROM
 				(SELECT sl.area, s.location, 0 AS qty, count(s.id) AS total FROM stocktaking_inquiry_logs s
@@ -3488,7 +3453,7 @@ class StockTakingController extends Controller{
 			$data = db::select("SELECT storage_locations.area, audited.location, sum( audited ) AS audited, sum( not_audited ) AS not_audited FROM
 				(SELECT location, store, IF( total = audit, 1, 0 ) AS audited, IF( total <> audit, 1, 0 ) AS not_audited FROM
 				(SELECT stocktaking_new_lists.location, stocktaking_new_lists.store, count( stocktaking_new_lists.id ) AS total, SUM( IF ( stocktaking_new_lists.process >= 2, 1, 0 ) ) AS audit FROM stocktaking_new_lists
-				WHERE print_status = 1
+				WHERE remark = 'USE'
 				GROUP BY stocktaking_new_lists.location, stocktaking_new_lists.store
 				) audit
 				) AS audited
