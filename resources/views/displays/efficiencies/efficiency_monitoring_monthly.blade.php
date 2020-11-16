@@ -265,13 +265,13 @@
 						yAxis: [{
 							min: 0,
 							title: {
-								text: 'Hour(s)'
+								text: null
 							}
 						}, { 
 							min: 0,
 							max:120,
 							title: {
-								text: 'Percentage',
+								text: null
 							},
 							labels: {
 								format: '{value}%',
@@ -331,7 +331,7 @@
 					if(jQuery.inArray(value.cost_center_name, cost_center_name_year) === -1){
 						year[value.cost_center_name] = [];
 						cost_center_name_year.push(value.cost_center_name);
-						eff_monitoring_year += '<div class="col-xs-12" style="padding:0; height:300px;" id="eff_year_'+value.cost_center_name+'"></div><hr>';
+						eff_monitoring_year += '<div class="col-xs-12" style="padding:0; height:250px;" id="eff_year_'+value.cost_center_name+'"></div><hr>';
 					}
 
 					if(jQuery.inArray(value.month_date, yearCategories) === -1){
@@ -409,13 +409,13 @@
 						yAxis: [{
 							min: 0,
 							title: {
-								text: 'Hour(s)'
+								text: null
 							}
 						}, { 
 							min: 0,
 							max:120,
 							title: {
-								text: 'Percentage',
+								text: null
 							},
 							labels: {
 								format: '{value}%',
