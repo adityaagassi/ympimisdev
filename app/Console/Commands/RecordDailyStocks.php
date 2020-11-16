@@ -40,6 +40,8 @@ class RecordDailyStocks extends Command
      */
     public function handle()
     {
+        $truncate_session = db::connection('mysql2')->table('sessions')->truncate();
+        
         $query = "select material_number, issue_location, sum(lot) as quantity from kitto.inventories group by material_number, issue_location";
 
         $inventories = db::select($query);
