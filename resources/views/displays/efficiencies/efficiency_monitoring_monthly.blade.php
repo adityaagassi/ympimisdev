@@ -48,7 +48,7 @@
 				<h4 class="modal-title" id="modalDetailTitle"></h4>
 				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
 					<center>
-						<textarea id="rawData" style="height: 100px;"></textarea>
+						<textarea id="rawData" style="height: 100px; width: 100%;"></textarea>
 					</center>
 					<br>
 					<button class="btn btn-success" style="width: 100%; font-size: 1.5vw; margin-bottom: 10px;" onclick="genData()" id="btnGenerate">Update Data</button>
