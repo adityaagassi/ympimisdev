@@ -513,8 +513,9 @@ Route::group(['nav' => 'R10', 'middleware' => 'permission'], function(){
 });
 
 
-Route::get('index/update_emp_data', 'EmployeeController@indexUpdateEmpData');
-Route::post('fetch/update_emp_data', 'EmployeeController@indexReportManpower');
+Route::get('index/update_emp_data/{employee_id}', 'EmployeeController@indexUpdateEmpData');
+Route::get('fetch/fill_emp_data', 'EmployeeController@fetchFillEmpData');
+Route::post('fetch/update_emp_data', 'EmployeeController@fetchUpdateEmpData');
 
 Route::get('index/report/manpower', 'EmployeeController@indexReportManpower');
 Route::get('fetch/report/manpower', 'EmployeeController@fetchReportManpower');

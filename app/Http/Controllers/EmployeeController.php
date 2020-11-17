@@ -25,12 +25,14 @@ use App\KaizenForm;
 use App\KaizenScore;
 use App\KaizenNote;
 use App\Employee;
+use App\EmployeeUpdate;
 use App\EmployeeSync;
 use App\EmploymentLog;
 use App\OrganizationStructure;
 use App\StandartCost;
 use App\KaizenCalculation;
 use Session;
+use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
@@ -133,6 +135,158 @@ class EmployeeController extends Controller
                'title_jp' => $title_jp,
                'datas' => $datas
           ));
+     }
+
+
+     public function indexUpdateEmpData($employee_id){
+
+          $title = 'Employee Self Services';
+          $title_jp = '従業員の情報サービス';
+
+          return view('employees.service.updateData', array(
+               'employee_id' => $employee_id,
+               'title' => $title,
+               'title_jp' => $title_jp
+          ));
+     }
+
+     public function fetchFillEmpData(Request $request){
+          $employee_id = $request->get('emp_id');
+
+          $data = EmployeeUpdate::where('employee_id', $employee_id)->first();
+
+          $response = array(
+               'status' => true,
+               'data' => $data
+          );
+          return Response::json($response);
+     }
+
+     public function fetchUpdateEmpData(Request $request){
+
+          $nama_lengkap = $request->get('nama_lengkap');
+          $employee_id = $request->get('employee_id');
+          $nik = $request->get('nik');
+          $npwp = $request->get('npwp');
+          $tempat_lahir = $request->get('tempat_lahir');
+          $tanggal_lahir = date('Y-m-d', strtotime($request->get('tanggal_lahir')));
+          $agama = $request->get('agama');
+          $status_perkawinan = $request->get('status_perkawinan');
+          $alamat_asal = $request->get('alamat_asal');
+          $alamat_domisili = $request->get('alamat_domisili');
+          $telepon_rumah = $request->get('telepon_rumah');
+          $hp = $request->get('hp');
+          $email = $request->get('email');
+          $bpjskes = $request->get('bpjskes');
+          $faskes = $request->get('faskes');
+          $bpjstk = $request->get('bpjstk');
+
+          $f_ayah = $request->get('f_ayah');
+          $f_ibu = $request->get('f_ibu');
+          $f_saudara1 = $request->get('f_saudara1');
+          $f_saudara2 = $request->get('f_saudara2');
+          $f_saudara3 = $request->get('f_saudara3');
+          $f_saudara4 = $request->get('f_saudara4');
+          $f_saudara5 = $request->get('f_saudara5');
+          $f_saudara6 = $request->get('f_saudara6');
+          $f_saudara7 = $request->get('f_saudara7');
+          $f_saudara8 = $request->get('f_saudara8');
+          $f_saudara9 = $request->get('f_saudara9');
+          $f_saudara10 = $request->get('f_saudara10');
+          $f_saudara11 = $request->get('f_saudara11');
+          $f_saudara12 = $request->get('f_saudara12');
+
+          $m_pasangan = $request->get('m_pasangan');
+          $m_anak1 = $request->get('m_anak1');
+          $m_anak2 = $request->get('m_anak2');
+          $m_anak3 = $request->get('m_anak3');
+          $m_anak4 = $request->get('m_anak4');
+          $m_anak5 = $request->get('m_anak5');
+          $m_anak6 = $request->get('m_anak6');
+          $m_anak7 = $request->get('m_anak7');
+
+          $sd = $request->get('sd');
+          $smp = $request->get('smp');
+          $sma = $request->get('sma');
+          $s1 = $request->get('s1');
+          $s2 = $request->get('s2');
+          $s3 = $request->get('s3');
+
+          $emergency1 = $request->get('emergency1');
+          $emergency2 = $request->get('emergency2');
+          $emergency3 = $request->get('emergency3');
+
+          try {
+
+               $update = EmployeeUpdate::updateOrCreate(
+                    [
+                         'employee_id' => strtoupper($employee_id)
+                    ],[
+                         'name' => strtoupper($nama_lengkap),
+                         'nik' => $nik,
+                         'npwp' => $npwp,
+                         'birth_place' => strtoupper($tempat_lahir),
+                         'birth_date' => $tanggal_lahir,
+                         'religion' => $agama,
+                         'mariage_status' => $status_perkawinan,
+                         'address' => strtoupper($alamat_asal),
+                         'current_address' => strtoupper($alamat_domisili),
+                         'telephone' => $telepon_rumah,
+                         'handphone' => $hp,
+                         'email' => $email,
+                         'bpjskes' => $bpjskes,
+                         'faskes' => strtoupper($faskes),
+                         'bpjstk' => $bpjstk,
+                         'f_ayah' => strtoupper($f_ayah),
+                         'f_ibu' => strtoupper($f_ibu),
+                         'f_saudara1' => strtoupper($f_saudara1),
+                         'f_saudara2' => strtoupper($f_saudara2),
+                         'f_saudara3' => strtoupper($f_saudara3),
+                         'f_saudara4' => strtoupper($f_saudara4),
+                         'f_saudara5' => strtoupper($f_saudara5),
+                         'f_saudara6' => strtoupper($f_saudara6),
+                         'f_saudara7' => strtoupper($f_saudara7),
+                         'f_saudara8' => strtoupper($f_saudara8),
+                         'f_saudara9' => strtoupper($f_saudara9),
+                         'f_saudara10' => strtoupper($f_saudara10),
+                         'f_saudara11' => strtoupper($f_saudara11),
+                         'f_saudara12' => strtoupper($f_saudara12),
+                         'm_pasangan' => strtoupper($m_pasangan),
+                         'm_anak1' => strtoupper($m_anak1),
+                         'm_anak2' => strtoupper($m_anak2),
+                         'm_anak3' => strtoupper($m_anak3),
+                         'm_anak4' => strtoupper($m_anak4),
+                         'm_anak5' => strtoupper($m_anak5),
+                         'm_anak6' => strtoupper($m_anak6),
+                         'm_anak7' => strtoupper($m_anak7),
+                         'sd' => strtoupper($sd),
+                         'smp' => strtoupper($smp),
+                         'sma' => strtoupper($sma),
+                         's1' => strtoupper($s1),
+                         's2' => strtoupper($s2),
+                         's3' => strtoupper($s3),
+                         'emergency1' => strtoupper($emergency1),
+                         'emergency2' => strtoupper($emergency2),
+                         'emergency3' => strtoupper($emergency3),
+                         'created_by' => strtoupper(Auth::user()->username),
+                         'updated_at' => Carbon::now()
+                    ]);
+               $update->save();
+
+               $response = array(
+                    'status' => true,
+                    'message' => 'Update data karyawan berhasil',
+               );
+               return Response::json($response);
+               
+          } catch (Exception $e) {
+               $response = array(
+                    'status' => false,
+                    'message' => $e->getMessage(),
+               );
+               return Response::json($response);
+          }
+
      }
 
      public function fetchEmployeeResume(Request $request){
@@ -2684,9 +2838,9 @@ public function fetchChecklogData(Request $request)
      $qry = "SELECT
           * 
      FROM
-          employee_syncs 
+     employee_syncs 
      WHERE
-          end_date IS NULL
+     end_date IS NULL
      ".$adddepartment."".$addsection."".$addgrup."".$addnik."
      ORDER BY
      employee_syncs.employee_id ASC";
