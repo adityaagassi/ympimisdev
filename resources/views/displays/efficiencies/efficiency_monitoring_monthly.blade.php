@@ -116,9 +116,9 @@
 	});
 
 	jQuery(document).ready(function() {
-		$("#fiscal_year").prop('selectedIndex', 0).change();
 		clearData();
-		// fetchChart();
+		setInterval(fetchChart, 1000*60*60);
+		$("#fiscal_year").prop('selectedIndex', 0).change();
 		$('#newDate').datepicker({
 			autoclose: true,
 			format: 'yyyy-mm-dd',
@@ -272,7 +272,13 @@
 						}
 					});
 
-
+					var cc_name = cost_center_name_month[i];
+					if(cost_center_name_month[i] == 'FINAL'){
+						cc_name = 'ASSEMBLY';
+					}
+					if(cost_center_name_month[i] == 'MIDDLE'){
+						cc_name = 'SURFACE TREATMENT';
+					}
 
 					Highcharts.chart(id_div_month, {
 						chart: {
@@ -280,7 +286,7 @@
 							backgroundColor	: null
 						},
 						title: {
-							text: cost_center_name_month[i]+' '+title[1]
+							text: cc_name+' '+title[1]
 						},
 						credits: {
 							enabled: false
@@ -424,13 +430,21 @@
 						}
 					});
 
+					var cc_name = cost_center_name_month[i];
+					if(cost_center_name_month[i] == 'FINAL'){
+						cc_name = 'ASSEMBLY';
+					}
+					if(cost_center_name_month[i] == 'MIDDLE'){
+						cc_name = 'SURFACE TREATMENT';
+					}
+
 					Highcharts.chart(id_div_year, {
 						chart: {
 							type: 'column',
 							backgroundColor	: null
 						},
 						title: {
-							text: cost_center_name_year[i]+' '+title[0]
+							text: cc_name+' '+title[0]
 						},
 						credits: {
 							enabled: false
