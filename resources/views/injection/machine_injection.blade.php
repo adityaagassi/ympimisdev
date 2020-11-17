@@ -190,9 +190,9 @@
 					<td style="background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">
 						Lot Number
 					</td>
-					<td style="background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">
+					<!-- <td style="background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">
 						Dryer Color
-					</td>
+					</td> -->
 				</tr>
 				<tr>
 					<td id="molding" style="background-color: #6e81ff; text-align: center; color: #fff; font-size: 1.5vw;">-
@@ -209,8 +209,8 @@
 					</td>
 					<td id="dryer_lot_number" style="background-color: #6e81ff; text-align: center; color: #fff; font-size: 1.5vw;">-
 					</td>
-					<td id="dryer_color" style="background-color: #6e81ff; text-align: center; color: #fff; font-size: 1.5vw;">-
-					</td>
+					<!-- <td id="dryer_color" style="background-color: #6e81ff; text-align: center; color: #fff; font-size: 1.5vw;">-
+					</td> -->
 				</tr>
 			</table>
 
@@ -757,6 +757,7 @@
 	function idle_trouble(status) {
 		$('#modalStatus').modal('show');
 		$('#status_idle_trouble').html(status);
+		$('#reason').val('');
 	}
 
 	function changeMesin() {
@@ -774,7 +775,7 @@
 		$('#cavity').html("-");
 		$('#dryer').html("-");
 		$('#dryer_lot_number').html("-");
-		$('#dryer_color').html("-");
+		// $('#dryer_color').html("-");
 		$('#material_number').val("");
 		$('#total_shot').val("");
 		$('#btn_mulai').show();
@@ -929,7 +930,7 @@
 		// 	openErrorGritter('Error!', "Scan Tag Product.");
 		// }else{
 			var data = {
-				color : $("#dryer_color").text()
+				color : $("#color").text()
 			}
 			$.get('{{ url("fetch/new_product") }}', data, function(result, status, xhr){
 				if(result.status){
@@ -989,7 +990,7 @@
 			material_number:$('#material_number').val(),
 			dryer:$('#dryer').text(),
 			dryer_lot_number:$('#dryer_lot_number').text(),
-			dryer_color:$('#dryer_color').text(),
+			dryer_color:$('#color').text(),
 		}
 		$.post('{{ url("index/injeksi/create_temp") }}', data, function(result, status, xhr){
 			if(result.status){
@@ -1049,7 +1050,7 @@
 					$('#material_number').val(result.data_mesin.material_number);
 					$('#dryer').html(result.data_mesin.dryer);
 					$('#dryer_lot_number').html(result.data_mesin.dryer_lot_number);
-					$('#dryer_color').html(result.data_mesin.dryer_color);
+					// $('#dryer_color').html(result.data_mesin.dryer_color);
 					countUpFromTime(new Date(start_time));
 					if (result.datas != null) {
 						$('#btn_mulai').hide();
@@ -1099,7 +1100,7 @@
 						$('#mesin').html($('#mesin_fix2').text());
 						$('#dryer').html(result.dryer.dryer);
 						$('#dryer_lot_number').html(result.dryer.lot_number);
-						$('#dryer_color').html(result.dryer.color);
+						// $('#dryer_color').html(result.dryer.color);
 					}else{
 						$('#loading').hide();
 						openErrorGritter('Error!','Dryer Belum Terisi');
@@ -1207,7 +1208,7 @@
 			ng_counting:ng_counting,
 			dryer:$('#dryer').text(),
 			dryer_lot_number:$('#dryer_lot_number').text(),
-			dryer_color:$('#dryer_color').text(),
+			dryer_color:$('#color').text(),
 		}
 		$.post('{{ url("index/injeksi/create_log") }}', data, function(result, status, xhr){
 			if(result.status){
@@ -1219,6 +1220,9 @@
 				$('#btn_mulai').show();
 				// $('#btn_selesai').hide();
 				$('#perolehan').hide();
+				for (var i = 1; i <= jumlah_ng; i++ ) {
+					$('#count'+i).html('0');
+				}
 			}
 			else{
 				openErrorGritter('Error!', result.message);
@@ -1244,7 +1248,7 @@
 			material_number:$('#material_number').val(),
 			dryer:$('#dryer').text(),
 			dryer_lot_number:$('#dryer_lot_number').text(),
-			dryer_color:$('#dryer_color').text(),
+			dryer_color:$('#color').text(),
 		}
 		$.post('{{ url("input/injeksi/mesin_log") }}', data, function(result, status, xhr){
 			if(result.status){

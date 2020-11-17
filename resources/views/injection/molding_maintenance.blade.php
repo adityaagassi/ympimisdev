@@ -490,7 +490,11 @@
 				$('#molding_btn').html("");
 				var no = 1;
 				var color ="";
-				$('#modalMolding').modal('show');
+				// $('#modalMolding').modal('show');
+				$('#modalMolding').modal({
+					backdrop: 'static',
+					keyboard: false
+				});
 				$.each(result.datas, function(key, value) {
 					if (value.status == 'HARUS MAINTENANCE') {
 						moldingMaster += '<div class="col-xs-3" style="padding-top: 5px">';
