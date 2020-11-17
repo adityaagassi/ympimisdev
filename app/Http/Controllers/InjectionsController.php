@@ -5256,16 +5256,23 @@ class InjectionsController extends Controller
                 COALESCE (( SELECT shot FROM injection_process_temps WHERE mesin = injection_machine_masters.mesin AND injection_process_temps.deleted_at IS NULL ), 0 ) AS shot_mesin,
                 COALESCE ((
                     SELECT COALESCE
-                        ( ROUND( last_counter / injection_machine_cycle_times.shoot ), 0 ) AS shot 
+                        ( ROUND( last_counter / injection_molding_masters.qty_shot ), 0 ) AS shot 
                     FROM
                         injection_molding_masters
-                        LEFT JOIN injection_machine_cycle_times ON injection_machine_cycle_times.part = injection_molding_masters.product 
                     WHERE
                         injection_molding_masters.status_mesin = injection_machine_masters.mesin 
-                        AND injection_machine_cycle_times.color = ( SELECT color FROM injection_process_temps WHERE mesin = injection_machine_masters.mesin AND injection_process_temps.deleted_at IS NULL ) 
                         ),
                     0 
                 ) AS shot_molding,
+                COALESCE ((
+                    SELECT part 
+                    FROM
+                        injection_molding_masters
+                    WHERE
+                        injection_molding_masters.status_mesin = injection_machine_masters.mesin 
+                        ),
+                    '-'
+                ) AS molding,
                 COALESCE (( SELECT ng_count FROM injection_process_temps WHERE mesin = injection_machine_masters.mesin AND injection_process_temps.deleted_at IS NULL ), '' ) AS ng_count,
                 COALESCE ((
                     SELECT

@@ -263,7 +263,9 @@
 
 					$.each(result.data, function(key, value) {
 						persen = (parseFloat(value.shot_molding) / 15000) * 100;
-						$('#progress_text_machine'+index2).html("Shot: "+value.shot_molding);
+						if (value.molding != '-') {
+							$('#progress_text_machine'+index2).html("Shot "+value.molding+" : "+value.shot_molding);
+						}
 						$('#progress_bar_machine'+index2).css('width', persen.toFixed(1)+'%');
 						$('#progress_bar_machine'+index2).css('color', 'white');
 						$('#progress_bar_machine'+index2).css('font-weight', 'bold');
