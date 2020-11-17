@@ -254,17 +254,16 @@ class InjectionsController extends Controller
     public function getNewProductCavity(Request $request)
     {
         try {
-            $product = DB::SELECT("SELECT id,part_name,CONCAT(SUBSTRING_INDEX(part_name, ' ', 1),'-',UPPER(part_code),'-',UPPER(color),'-',UPPER(gmc)) as product FROM `injection_parts` where remark = 'injection' and color = '".$request->get('color')."' and deleted_at is null ORDER BY part_name desc");
+            $product = DB::SELECT("SELECT id,part_name,CONCAT(SUBSTRING_INDEX(part_name, ' ', 1),'-',UPPER(part_code),'-',UPPER(color),'-',UPPER(gmc)) as product FROM `injection_parts` where remark = 'injection' and color = '".$request->get('color')."' and part_code = '".$request->get('part')."' and deleted_at is null ORDER BY part_name desc");
 
-            $cavity = DB::SELECT("SELECT
-                    * 
-                FROM
-                    push_block_masters");
+            // $cavity = DB::SELECT("SELECT
+            //         * 
+            //     FROM
+            //         push_block_masters");
 
             $response = array(
                 'status' => true,
                 'product' => $product,
-                'cavity' => $cavity,
             );
             return Response::json($response);
         } catch (\Exception $e) {
@@ -5627,10 +5626,13 @@ class InjectionsController extends Controller
                 $dryer = InjectionDryer::where('machine',$request->get('machine'))->first();
             }
 
+            $product = DB::SELECT("SELECT id,part_name,CONCAT(SUBSTRING_INDEX(part_name, ' ', 1),'-',UPPER(part_code),'-',UPPER(color),'-',UPPER(gmc)) as product FROM `injection_parts` where remark = 'injection' and color = '".$dryer->color."' and part_code = '".$request->get('part')."' and deleted_at is null ORDER BY part_name desc");
+
             if (count($dryer) > 0) {
                 $response = array(
                     'status' => true,
-                    'dryer' => $dryer
+                    'dryer' => $dryer,
+                    'product' => $product
                 );
                 return Response::json($response);
             }else{
