@@ -499,19 +499,19 @@
 					if (value.status == 'HARUS MAINTENANCE') {
 						moldingMaster += '<div class="col-xs-3" style="padding-top: 5px">';
 						moldingMaster += '<center>';
-						moldingMaster += '<button class="btn btn-danger" id="'+value.part+'" style="width: 200px;font-size: 15px;font-weight: bold;" onclick="getMolding(this.id,\''+value.status+'\',\''+value.id_molding+'\')">'+value.product+' - '+value.part+'<br>'+value.shot+' Shot<br>Mesin: '+value.mesin+'<br>Status: '+value.status+'</button>';
+						moldingMaster += '<button class="btn btn-danger" id="'+value.part+'" style="width: 200px;font-size: 15px;font-weight: bold;" onclick="getMolding(this.id,\''+value.status+'\',\''+value.id_molding+'\')">'+value.product+' - '+value.part+'<br>'+value.shot+' Shot<br>Status: '+value.status+'</button>';
 						moldingMaster += '</center>';
 						moldingMaster += '</div>';
 					}else if(value.status == 'DIPERBAIKI'){
 						moldingMaster += '<div class="col-xs-3" style="padding-top: 5px">';
 						moldingMaster += '<center>';
-						moldingMaster += '<button class="btn btn-warning" id="'+value.part+'" style="width: 200px;font-size: 15px;font-weight: bold;" onclick="getMolding(this.id,\''+value.status+'\',\''+value.id_molding+'\')">'+value.product+' - '+value.part+'<br>'+value.shot+' Shot<br>Mesin: '+value.mesin+'<br>Status: '+value.status+'</button>';
+						moldingMaster += '<button class="btn btn-warning" id="'+value.part+'" style="width: 200px;font-size: 15px;font-weight: bold;" onclick="getMolding(this.id,\''+value.status+'\',\''+value.id_molding+'\')">'+value.product+' - '+value.part+'<br>'+value.shot+' Shot<br>Status: '+value.status+'</button>';
 						moldingMaster += '</center>';
 						moldingMaster += '</div>';
 					}else{
 						moldingMaster += '<div class="col-xs-3" style="padding-top: 5px">';
 						moldingMaster += '<center>';
-						moldingMaster += '<button class="btn btn-primary" id="'+value.part+'" style="width: 200px;font-size: 15px;font-weight: bold;" onclick="getMolding(this.id,\''+value.status+'\',\''+value.id_molding+'\')">'+value.product+' - '+value.part+'<br>'+value.shot+' Shot<br>Mesin: '+value.mesin+'<br>Status: '+value.status+'</button>';
+						moldingMaster += '<button class="btn btn-primary" id="'+value.part+'" style="width: 200px;font-size: 15px;font-weight: bold;" onclick="getMolding(this.id,\''+value.status+'\',\''+value.id_molding+'\')">'+value.product+' - '+value.part+'<br>'+value.shot+' Shot<br>Status: '+value.status+'</button>';
 						moldingMaster += '</center>';
 						moldingMaster += '</div>';
 					}
@@ -578,7 +578,7 @@
 				}else{
 					$('#mesin').html(result.datas.status_mesin);
 				}
-				$('#last_counter').html(result.datas.last_counter);
+				$('#last_counter').html((parseInt(result.datas.last_counter)/parseInt(result.datas.qty_shot)).toFixed(0));
 			}
 			else{
 				alert('Attempt to retrieve data failed');

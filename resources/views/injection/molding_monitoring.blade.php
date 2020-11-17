@@ -113,7 +113,7 @@ table > thead > tr > th{
 				<div id="cont"></div>
 			</div>
 		</div>
-		<div class="col-xs-3">
+		<!-- <div class="col-xs-3">
 			<div class="box box-solid">
 				<div class="box-header" style="background-color: #65ff57;">
 					<center><span style="font-size: 22px; font-weight: bold; color: black;">MOLDING READY</span></center>
@@ -190,7 +190,7 @@ table > thead > tr > th{
 				</ul>
 			</div>
 		</div>
-	</div>
+	</div> -->
 
 	
 </section>

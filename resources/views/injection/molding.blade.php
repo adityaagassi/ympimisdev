@@ -150,7 +150,7 @@
 							<td id="part_lepas" style="width: 4%; font-size: 20px; font-weight: bold; background-color: rgb(100,100,100); color: white;"></td>
 						</tr>
 						<tr>
-							<td style="width: 1%; font-weight: bold; font-size: 20px; background-color: rgb(220,220,220);">Color</td>
+							<td style="width: 1%; font-weight: bold; font-size: 20px; background-color: rgb(220,220,220);">Product</td>
 							<td id="color_lepas" style="width: 4%; font-weight: bold; font-size: 20px; background-color: rgb(100,100,100); color: white;"></td>
 							<td style="width: 1%; font-weight: bold; font-size: 20px; background-color: rgb(220,220,220);">Total Shot</td>
 							<td id="total_shot_lepas" style="width: 4%; font-weight: bold; font-size: 20px; background-color: rgb(100,100,100); color: white;"></td>
@@ -697,7 +697,7 @@
 					if (value.shot >= 15000) {
 						color = 'style="background-color: #ff3030;font-size: 20px;color:white"';
 					}
-					moldingLog += '<tr onclick="fetchCount(\''+value.mesin+'\',\''+value.part+'\',\''+value.color+'\',\''+value.shot+'\')" style="padding-top:5px;padding-bottom:5px;">';
+					moldingLog += '<tr onclick="fetchCount(\''+value.mesin+'\',\''+value.part+'\',\''+value.product+'\',\''+value.shot+'\')" style="padding-top:5px;padding-bottom:5px;">';
 					moldingLog += '<td '+color+'>'+value.pic+'</td>';
 					moldingLog += '<td '+color+'>'+value.mesin+'</td>';
 					moldingLog += '<td '+color+'>'+value.part+'</td>';
@@ -769,7 +769,7 @@
 		});
 	}
 
-	function fetchCount(mesin,part,color,shot){
+	function fetchCount(mesin,part,product,shot){
 		// var data = {
 		// 	id : id,
 		// }
@@ -777,7 +777,7 @@
 		// 	if(result.status){
 				$('#mesin_lepas').html(mesin);
 				$('#part_lepas').html(part);
-				$('#color_lepas').html(color);
+				$('#color_lepas').html(product);
 				$('#total_shot_lepas').html(shot);
 		// 	}
 		// 	else{
@@ -1190,7 +1190,7 @@
 						if (value.type == "LEPAS") {
 							$('#mesin_lepas').html(value.mesin);
 							$('#part_lepas').html(value.part);
-							$('#color_lepas').html(value.color);
+							$('#color_lepas').html(value.product);
 							$('#total_shot_lepas').html(value.total_shot);
 							$('#notelepas').val(value.note);
 							$('#start_time_lepas').val(value.start_time);

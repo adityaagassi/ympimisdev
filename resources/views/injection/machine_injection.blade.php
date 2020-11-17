@@ -883,6 +883,7 @@
 			alert('Mesin & Dryer Harus Diisi.');
 		}else{
 			get_temp();
+			$('#mesin').html($('#mesin_fix2').text());
 		}
 	}
 
@@ -929,55 +930,17 @@
 	}
 
 	function mulaiProses() {
-		// if ($('#tag_product').val() == "") {
-		// 	openErrorGritter('Error!', "Scan Tag Product.");
-		// }else{
-			// var data = {
-			// 	color : $("#color").text()
-			// }
-			// $.get('{{ url("fetch/new_product") }}', data, function(result, status, xhr){
-			// 	if(result.status){
-			// 		var btn_product = "";
-			// 		$('#product_btn').empty();
-			// 		$.each(result.product, function(key, value) {
-			// 			btn_product += '<div class="col-xs-4" style="padding-top: 5px">';
-			// 			btn_product += '<center><button class="btn btn-primary" id="'+value.product+'" style="width: 250px;font-size: 17px" onclick="getProduct(this.id)">'+value.product+'';
-			// 			btn_product += '</button></center>';
-			// 			btn_product += '</div>';
-			// 		});
-			// 		$('#product_btn').append(btn_product);
+		intervalUpdate = setInterval(update_temp,10000);
+		if ($('#start_time').val() == "") {
+			countUpFromTime(getActualFullDate());
+			$('#start_time').val(getActualFullDate());
+			$('#start_time_product').val(getActualFullDate());
+		}
 
-			// 		var btn_cavity = "";
-			// 		$('#cavity_btn').empty();
-			// 		$.each(result.cavity, function(key, value) {
-			// 			btn_cavity += '<div class="col-xs-3" style="padding-top: 5px">';
-			// 			btn_cavity += '<center><button class="btn btn-info" id="'+value.no_cavity+'" style="width: 200px;font-size: 15px;font-weight:bold" onclick="getCavity(this.id)">'+value.type.toUpperCase()+'-'+value.no_cavity+'';
-			// 			btn_cavity += '</button></center>';
-			// 			btn_cavity += '</div>';
-			// 		});
-			// 		$('#cavity_btn').append(btn_cavity);
-			// 	}
-			// 	else{
-			// 		openErrorGritter('Error!', result.message);
-			// 		audio_error.play();
-			// 	}
-			// });
-			
-			// $('#modalProduct').modal('show');
-			intervalUpdate = setInterval(update_temp,10000);
-			if ($('#start_time').val() == "") {
-				countUpFromTime(getActualFullDate());
-				$('#start_time').val(getActualFullDate());
-				$('#start_time_product').val(getActualFullDate());
-			}
-
-			create_temp();
-			// get_temp();
-			$('#btn_mulai').hide();
-			// $('#btn_selesai').show();
-			$('#perolehan').show();
-			$('#btn_ganti').show();
-		// }
+		create_temp();
+		$('#btn_mulai').hide();
+		$('#perolehan').show();
+		$('#btn_ganti').show();
 	}
 
 	function create_temp() {
@@ -1096,10 +1059,11 @@
 			}
 			else{
 				$('#loading').show();
-				resulttrue = 0;
+				// resulttrue = 0;
 
 				var data3 = {
 					mesin:$('#mesin_fix2').text(),
+					dryer:$('#dryer_fix2').text(),
 				}
 				
 				$.get('{{ url("scan/part_molding") }}', data3, function(result, status, xhr){
@@ -1109,23 +1073,7 @@
 						$('#molding').html(result.part.part);
 						$('#molding_part_type').val(result.part.product);
 						$('#cavity').html(result.part.cavity);
-						resulttrue++;
-					}
-					else{
-						$('#loading').hide();
-						openErrorGritter('Error!','Molding Belum Dipasang');
-						audio_error.play();
-					}
-				});
 
-				var data2 = {
-					dryer:$('#dryer_fix2').text(),
-					part:$('#molding_part_type').val()
-				}
-				$.get('{{ url("index/injection/fetch_dryer") }}', data2, function(result, status, xhr){
-					if(result.status){
-						resulttrue++;
-						$('#mesin').html($('#mesin_fix2').text());
 						$('#dryer').html(result.dryer.dryer);
 						$('#dryer_lot_number').html(result.dryer.lot_number);
 						$('#color').html(result.dryer.color);
@@ -1135,15 +1083,43 @@
 							$('#part_name').html(productSplit[0]);
 							$('#material_number').val(productSplit[3]);
 						});
-						if (resulttrue == 2) {
-							$('#loading').hide();
-							$('#modalMesin').modal('hide');
-						}
-					}else{
+
+						// resulttrue++;
 						$('#loading').hide();
-						openErrorGritter('Error!','Dryer Belum Terisi');
+						$('#modalMesin').modal('hide');
+					}
+					else{
+						$('#loading').hide();
+						openErrorGritter('Error!','Molding Belum Dipasang');
+						audio_error.play();
 					}
 				});
+
+				// var data2 = {
+				// 	dryer:$('#dryer_fix2').text(),
+				// 	part:$('#molding_part_type').val()
+				// }
+				// $.get('{{ url("index/injection/fetch_dryer") }}', data2, function(result, status, xhr){
+				// 	if(result.status){
+				// 		resulttrue++;
+				// 		$('#mesin').html($('#mesin_fix2').text());
+				// 		$('#dryer').html(result.dryer.dryer);
+				// 		$('#dryer_lot_number').html(result.dryer.lot_number);
+				// 		$('#color').html(result.dryer.color);
+				// 		$.each(result.product, function(key, value) {
+				// 			var productSplit = value.product.split("-");
+				// 			$('#part_type').html(productSplit[1]);
+				// 			$('#part_name').html(productSplit[0]);
+				// 			$('#material_number').val(productSplit[3]);
+				// 		});
+				// 		if (resulttrue == 2) {
+							
+				// 		}
+				// 	}else{
+				// 		$('#loading').hide();
+				// 		openErrorGritter('Error!','Dryer Belum Terisi');
+				// 	}
+				// });
 
 				// var data4 = {
 				// 	color : color,

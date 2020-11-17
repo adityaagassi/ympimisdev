@@ -203,14 +203,18 @@ class InjectionsController extends Controller
     }
 
     public function scanPartMolding(Request $request){
-        $part = InjectionMoldingMaster::
-        // where('tag', '=', $request->get('tag'))->
-        where('status_mesin', '=', $request->get('mesin'))->first();
+        $part = InjectionMoldingMaster::where('status_mesin', '=', $request->get('mesin'))->first();
+
+        $dryer = InjectionDryer::where('dryer',$request->get('dryer'))->first();
+
+        $product = DB::SELECT("SELECT id,part_name,CONCAT(SUBSTRING_INDEX(part_name, ' ', 1),'-',UPPER(part_code),'-',UPPER(color),'-',UPPER(gmc)) as product FROM `injection_parts` where remark = 'injection' and color = '".$dryer->color."' and part_code = '".$part->product."' and deleted_at is null ORDER BY part_name desc");
 
         if (count($part) > 0) {
             $response = array(
                 'status' => true,
                 'part' => $part,
+                'product' => $product,
+                'dryer' => $dryer,
                 'message' => 'Scan Molding Tag Success',
             );
         }
@@ -1861,8 +1865,11 @@ class InjectionsController extends Controller
                 $machinework->dryer = null;
                 $machinework->dryer_lot_number = null;
                 $machinework->dryer_color = null;
+                $machinework->status = null;
                 $machinework->save();
             }
+
+            InjectionProcessTemp::where('mesin',$request->get('mesin'))->forceDelete();
             
             $response = array(
                 'status' => true,
@@ -3015,7 +3022,7 @@ class InjectionsController extends Controller
             //     $tgl = $request->get('tgl');
             // }
 
-        $query_pasang = DB::SELECT("SELECT * FROM `injection_molding_masters` where remark = 'RC' and status = 'PASANG'");
+        $query_pasang = DB::SELECT("SELECT * FROM `injection_molding_masters` where remark = 'RC'");
         $query_ready = DB::SELECT("SELECT * FROM `injection_molding_masters` where remark = 'RC' and status = 'LEPAS'");
         $query_not_ready = DB::SELECT("SELECT
             * 
@@ -4395,19 +4402,16 @@ class InjectionsController extends Controller
 
         $molding = DB::SELECT("SELECT
                 injection_molding_masters.part,
+                injection_molding_masters.product,
                 status_mesin AS mesin,
-                COALESCE ( injection_molding_logs.color, '-' ) AS color,
                 ( SELECT pic FROM injection_history_molding_logs WHERE injection_history_molding_logs.mesin = status_mesin ORDER BY created_at DESC LIMIT 1 ) AS pic,
-                COALESCE(injection_molding_logs.total_running_shot/injection_machine_cycle_times.shoot,0) as shot
+                COALESCE ( injection_molding_masters.last_counter / injection_molding_masters.qty_shot, 0 ) AS shot 
             FROM
                 injection_molding_masters
-                LEFT JOIN injection_molding_logs ON injection_molding_logs.tag_molding = injection_molding_masters.tag 
-                LEFT JOIN injection_machine_cycle_times ON injection_molding_logs.part = injection_machine_cycle_times.part 
-                AND injection_molding_logs.color = injection_machine_cycle_times.color 
             WHERE
                 remark = 'RC' 
-                AND injection_molding_masters.STATUS = 'PASANG'
-                and status_mesin = '".$mesin."'");
+                AND injection_molding_masters.STATUS = 'PASANG' 
+                AND status_mesin = '".$mesin."'");
 
         $response = array(
             'status' => true,            
