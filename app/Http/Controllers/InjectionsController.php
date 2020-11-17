@@ -5253,7 +5253,19 @@ class InjectionsController extends Controller
                         ),
                     '' 
                 ) AS type,
-             COALESCE (( SELECT shot FROM injection_process_temps WHERE mesin = injection_machine_masters.mesin AND injection_process_temps.deleted_at IS NULL ), 0 ) AS shot_mesin,
+                COALESCE (( SELECT shot FROM injection_process_temps WHERE mesin = injection_machine_masters.mesin AND injection_process_temps.deleted_at IS NULL ), 0 ) AS shot_mesin,
+                COALESCE ((
+                    SELECT COALESCE
+                        ( ROUND( last_counter / injection_machine_cycle_times.shoot ), 0 ) AS shot 
+                    FROM
+                        injection_molding_masters
+                        LEFT JOIN injection_machine_cycle_times ON injection_machine_cycle_times.part = injection_molding_masters.product 
+                    WHERE
+                        injection_molding_masters.status_mesin = injection_machine_masters.mesin 
+                        AND injection_machine_cycle_times.color = ( SELECT color FROM injection_process_temps WHERE mesin = injection_machine_masters.mesin AND injection_process_temps.deleted_at IS NULL ) 
+                        ),
+                    0 
+                ) AS shot_molding,
                 COALESCE (( SELECT ng_count FROM injection_process_temps WHERE mesin = injection_machine_masters.mesin AND injection_process_temps.deleted_at IS NULL ), '' ) AS ng_count,
                 COALESCE ((
                     SELECT
@@ -5266,18 +5278,7 @@ class InjectionsController extends Controller
                         AND injection_process_temps.deleted_at IS NULL 
                         ),
                     '' 
-                ) AS operator,
-                COALESCE((SELECT COALESCE
-                    ( injection_molding_logs.total_running_shot / injection_machine_cycle_times.shoot, 0 ) AS shot 
-                FROM
-                    injection_molding_masters
-                    LEFT JOIN injection_molding_logs ON injection_molding_logs.tag_molding = injection_molding_masters.tag
-                    LEFT JOIN injection_machine_cycle_times ON injection_molding_logs.part = injection_machine_cycle_times.part 
-                    AND injection_molding_logs.color = injection_machine_cycle_times.color 
-                WHERE
-                    remark = 'RC' 
-                    AND status_mesin = injection_machine_masters.mesin 
-                ),0) AS shot 
+                ) AS operator 
             FROM
                 injection_machine_masters");
 

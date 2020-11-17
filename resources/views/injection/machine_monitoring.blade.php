@@ -175,7 +175,7 @@
 
 	jQuery(document).ready(function() {
 		fillTable();
-		setInterval(fillTable,10000);
+		// setInterval(fillTable,10000);
 	});
 
 	function fillTable() {
@@ -184,17 +184,8 @@
 				if (result.data.length > 0) {
 					var divMesin = "";
 					$('#tableMonitoring').empty();
-
-					// divMesin += '<table class="table table-borderd">';
-
-					// divMesin += '<tr>';
-					// divMesin += '<td colspan="2" style="border:2px solid white;color:white;font-size:20px;font-weight:bold;background-color:#2a2d51;padding-top:0px;padding-bottom:0px">Mesin</td>';
-					// // divMesin += '<td colspan="2" style="border:2px solid white;color:white;font-size:20px;font-weight:bold;background-color:#2a2d51;padding-top:0px;padding-bottom:0px">Part</td>';
-					// // divMesin += '<td colspan="2" style="border:2px solid white;color:white;font-size:20px;font-weight:bold;background-color:#2a2d51;padding-top:0px;padding-bottom:0px">Type</td>';
-					// divMesin += '<td colspan="2" style="border:2px solid white;color:white;font-size:20px;font-weight:bold;background-color:#2a2d51;padding-top:0px;padding-bottom:0px">Part</td>';
-					// divMesin += '<td colspan="2" style="border:2px solid white;color:white;font-size:20px;font-weight:bold;background-color:#2a2d51;padding-top:0px;padding-bottom:0px">Shot</td>';
-					// divMesin += '<td colspan="2" style="border:2px solid white;color:white;font-size:20px;font-weight:bold;background-color:#2a2d51;padding-top:0px;padding-bottom:0px">NG</td>';
-					// divMesin += '</tr>';
+					var index = 0;
+					var progress = [];
 					$.each(result.data, function(key, value) {
 
 						if (value.part != "") {
@@ -210,12 +201,31 @@
 						divMesin += '<div class="col-xs-4" style="padding:5px;padding-top:0px;">';
 						divMesin += '<table class="table table-bordered" style="margin-bottom:10px">';
 						divMesin += '<tr>';
-						divMesin += '<td colspan="3" style="border:1px solid white;color:white;padding:0;font-size:30px;font-weight:bold;background-color:#222222">'+value.mesin+'</td>';
+						divMesin += '<td colspan="3" style="border:1px solid white;color:white;padding:0;font-size:30px;font-weight:bold;background-color:#222222">'+value.mesin+'<br>';
+
+						divMesin += '<div class="col-md-12" style="width:100%">';
+						divMesin += '<div class="row">';
+						divMesin += '<div class="progress-group" id="progress_div">';
+						divMesin += '<div class="progress" style="height: 40px; border-style: solid;border-width: 1px;padding-top: -20px; border-color: #d3d3d3;">';
+						divMesin += '<span class="progress-text" id="progress_text_machine'+index+'" style="font-size: 20px;padding-top:0px;color:black"></span>';
+						divMesin += '<div class="progress-bar progress-bar-success progress-bar-striped" id="progress_bar_machine'+index+'" style="font-size: 2px;"></div>';
+						divMesin += '</div>';
+						divMesin += '</div>';
+						divMesin += '</div>';
+						divMesin += '</div>';
+
+						divMesin += '</td>';
+						divMesin += '</tr>';
+						divMesin += '<td colspan="3" style="border:1px solid white;color:white;padding:0;font-size:30px;font-weight:bold;background-color:#222222">';
+
+						
+
+						divMesin += '</td>';
 						divMesin += '</tr>';
 
 						divMesin += '<tr>';
 						divMesin += '<td style="border:1px solid black;border-bottom:2px solid black;color:black;padding:0;font-size:20px;background-color:#dcdcdc;font-weight:bold">PART</td>';
-						divMesin += '<td style="border:1px solid black;border-bottom:2px solid black;color:black;padding:0;font-size:20px;background-color:#dcdcdc;font-weight:bold">SHOT</td>';
+						divMesin += '<td style="border:1px solid black;border-bottom:2px solid black;color:black;padding:0;font-size:20px;background-color:#dcdcdc;font-weight:bold">QTY</td>';
 						divMesin += '<td style="border:1px solid black;border-bottom:2px solid black;color:black;padding:0;font-size:20px;background-color:#dcdcdc;font-weight:bold">NG</td>';
 						divMesin += '</tr>';
 						divMesin += '<tr>';
@@ -224,8 +234,8 @@
 						}else{
 							divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:20px;background-color:'+bgcolor+'">-<br>-<br>-</td>';
 						}
-						if (value.shot != 0) {
-							divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:30px;background-color:'+bgcolor+'" id="sedang">'+value.shot+'</td>';
+						if (value.shot_mesin != 0) {
+							divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:30px;background-color:'+bgcolor+'" id="sedang">'+value.shot_mesin+'</td>';
 						}else{
 							divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:30px;background-color:'+bgcolor+'">0</td>';
 						}
@@ -241,11 +251,24 @@
 						divMesin += '</tr>';
 						divMesin += '</table>';
 						divMesin += '</div>';
+						index++;
 					})
 
 					divMesin += '</table>';
 
 					$('#tableMonitoring').append(divMesin);
+					var index2 = 0;
+
+					var persen = 0;
+
+					$.each(result.data, function(key, value) {
+						persen = (parseFloat(value.shot_molding) / 15000) * 100;
+						$('#progress_text_machine'+index2).html("Shot: "+value.shot_molding);
+						$('#progress_bar_machine'+index2).css('width', persen.toFixed(1)+'%');
+						$('#progress_bar_machine'+index2).css('color', 'white');
+						$('#progress_bar_machine'+index2).css('font-weight', 'bold');
+						index2++;
+					});
 				}
 			}else{
 				alert('Attempt to retrieve data failed.');
