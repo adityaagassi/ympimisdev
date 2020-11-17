@@ -41,62 +41,51 @@
 </section>
 
 <div class="modal fade" id="modalAdd">
-	<div class="modal-dialog modal-sm">
+	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title" id="modalDetailTitle"></h4>
 				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
 					<div class="col-md-12">
-						<form class="form-horizontal">
-							<div class="form-group" style="margin-bottom: 0;">
-								<label for="newDate" class="col-sm-12 control-label">Tanggal<span class="text-red">*</span></label>
-								<div class="col-sm-12">
-									<input type="text" class="form-control pull-right" id="newDate" data-placeholder="Pilih Tanggal" name="newDate" value="{{date('Y-m-d')}}">
-								</div>
+						<div class="input-group date col-sm-3">
+							<div class="input-group-addon" style="background-color: rgba(248,161,63,0.9);">
+								<i class="fa fa-calendar"></i>
 							</div>
-							<div class="form-group" style="margin-bottom: 0;">
-								<label for="newCost" class="col-sm-12 control-label">Cost Center<span class="text-red">*</span></label>
-								<div class="col-sm-12">
-									<select class="form-control select2" name="newCost" id="newCost" data-placeholder="Pilih Cost Center" style="width: 100%;">
-										<option value=""></option>
-										@foreach($cost_centers as $cost_center)
-										<option value="{{ $cost_center->cost_center_eff }}">{{ $cost_center->cost_center_eff }}</option>
-										@endforeach
-									</select>
-								</div>
-							</div>
-							<div class="form-group" style="margin-bottom: 0;">
-								<label for="newInput" class="col-sm-12 control-label">Total Input<span class="text-red">*</span></label>
-								<div class="col-sm-12">
-									<input type="text" style="width: 100%" class="form-control" id="newInput" name="newInput" placeholder="Total Jam Input">
-								</div>
-							</div>
-							<div class="form-group" style="margin-bottom: 0;">
-								<label for="newOutput" class="col-sm-12 control-label">Total Output<span class="text-red">*</span></label>
-								<div class="col-sm-12">
-									<input type="text" style="width: 100%" class="form-control" id="newOutput" name="newOutput" placeholder="Total Jam Output">
-								</div>
-							</div>
-							<br>
-						</form>
-						<button class="btn btn-primary" style="width: 100%; font-size: 1.5vw; margin-bottom: 10px;" onclick="addEfficiency()">Update Data</button>
-						<table class="table table-hover table-bordered table-striped" border="1">
-							<thead style="background-color: rgba(126,86,134,.7);">
-								<tr>
-									<th>CC</th>
-									<th>Tanggal</th>
-								</tr>
-							</thead>
-							<tbody>
-								@foreach($last_datas as $last_data)
-								<tr>
-									<td style="padding: 0;">{{ $last_data->cost_center_name }}</td>
-									<td style="padding: 0;">{{ $last_data->last_date }}</td>
-								</tr>
+							<input type="text" class="form-control pull-right" id="newDate" data-placeholder="Pilih Tanggal" name="newDate" value="{{date('Y-m-d')}}">
+						</div>
+						<div class="col-sm-3">
+							<select class="form-control select2" name="newCost" id="newCost" data-placeholder="Pilih Cost Center" style="width: 100%;">
+								<option value=""></option>
+								@foreach($cost_centers as $cost_center)
+								<option value="{{ $cost_center->cost_center_eff }}">{{ $cost_center->cost_center_eff }}</option>
 								@endforeach
-							</tbody>
-						</table>
+							</select>
+						</div>
+						<div class="col-sm-3">
+							<input type="text" style="width: 100%" class="form-control" id="newInput" name="newInput" placeholder="Total Jam Input">
+						</div>
+						<div class="col-sm-3">
+							<input type="text" style="width: 100%" class="form-control" id="newOutput" name="newOutput" placeholder="Total Jam Output">
+						</div>
 					</div>
+					<br>
+					<button class="btn btn-primary" style="width: 100%; font-size: 1.5vw; margin-bottom: 10px;" onclick="addEfficiency()">Update Data</button>
+					<table class="table table-hover table-bordered table-striped" border="1">
+						<thead style="background-color: rgba(126,86,134,.7);">
+							<tr>
+								<th>CC</th>
+								<th>Tanggal</th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach($last_datas as $last_data)
+							<tr>
+								<td style="padding: 0;">{{ $last_data->cost_center_name }}</td>
+								<td style="padding: 0;">{{ $last_data->last_date }}</td>
+							</tr>
+							@endforeach
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>

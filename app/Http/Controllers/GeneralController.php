@@ -1786,7 +1786,6 @@ public function scanGeneralAttendanceCheck(Request $request){
 	}
 
 	$attendance = GeneralAttendance::where('employee_id', '=', $employee->employee_id)
-	->where('purpose_code', '=', $request->get('purpose_code'))
 	->where('due_date', '=', date('Y-m-d'))
 	->first();
 
@@ -1835,64 +1834,68 @@ public function scanGeneralAttendanceCheck(Request $request){
 
 public function fetchGeneralAttendanceCheck(Request $request){
 
-	if(strlen($request->get('purpose_code')) == 0){
-		$response = array(
-			'status' => false,
-			'message' => 'Silahkan memilih kode purpose'
-		);
-		return Response::json($response);
-	}
-
 	try{
 		$now = date('Y-m-d');
-			// $now = '2020-08-19';
 
-		$query = "SELECT DISTINCT
-		purpose_code,
-		employee_id,
-		due_date,
-		NAME,
-		departments.department_shortname AS department,
-		attend_date 
-		FROM
-		(
-		SELECT
-		general_attendances.purpose_code,
-		general_attendances.employee_id,
-		general_attendances.due_date,
-		employee_syncs.`name`,
-		employee_syncs.department,
-		DATE_FORMAT(general_attendances.attend_date, '%H:%i:%s') as attend_date
-		FROM
-		general_attendances
-		LEFT JOIN employee_syncs ON general_attendances.employee_id = employee_syncs.employee_id 
-		WHERE
-		general_attendances.due_date = '".$now."' AND general_attendances.purpose_code = '".$request->get('purpose_code')."' UNION ALL
-		SELECT
-		general_attendances.purpose_code,
-		general_attendances.employee_id,
-		general_attendances.due_date,
-		employee_syncs.`name`,
-		employee_syncs.department,
-		DATE_FORMAT(general_attendances.attend_date, '%H:%i:%s') as attend_date
-		FROM
-		general_attendances
-		LEFT JOIN employee_syncs ON general_attendances.employee_id = employee_syncs.employee_id 
-		WHERE
-		DATE( general_attendances.attend_date ) = '".$now."' AND general_attendances.purpose_code = '".$request->get('purpose_code')."'
-		) AS attendances 
-		LEFT JOIN
-		departments on departments.department_name = attendances.department
-		WHERE employee_id like 'PI%'
-		ORDER BY
-		attend_date DESC,
-		NAME ASC";
+		$attendance_lists = db::select("SELECT
+			ga.purpose_code,
+			ga.employee_id,
+			es.`name`,
+			ga.attend_date 
+			FROM
+			general_attendances AS ga
+			LEFT JOIN employee_syncs AS es ON ga.employee_id = es.employee_id 
+			WHERE
+			ga.due_date = '".$now."' 
+			ORDER BY
+			attend_date DESC");
 
-		$attendance_lists = db::select($query); 
+		// $query = "SELECT DISTINCT
+		// purpose_code,
+		// employee_id,
+		// due_date,
+		// NAME,
+		// departments.department_shortname AS department,
+		// attend_date 
+		// FROM
+		// (
+		// SELECT
+		// general_attendances.purpose_code,
+		// general_attendances.employee_id,
+		// general_attendances.due_date,
+		// employee_syncs.`name`,
+		// employee_syncs.department,
+		// DATE_FORMAT(general_attendances.attend_date, '%H:%i:%s') as attend_date
+		// FROM
+		// general_attendances
+		// LEFT JOIN employee_syncs ON general_attendances.employee_id = employee_syncs.employee_id 
+		// WHERE
+		// general_attendances.due_date = '".$now."' AND general_attendances.purpose_code = '".$request->get('purpose_code')."' UNION ALL
+		// SELECT
+		// general_attendances.purpose_code,
+		// general_attendances.employee_id,
+		// general_attendances.due_date,
+		// employee_syncs.`name`,
+		// employee_syncs.department,
+		// DATE_FORMAT(general_attendances.attend_date, '%H:%i:%s') as attend_date
+		// FROM
+		// general_attendances
+		// LEFT JOIN employee_syncs ON general_attendances.employee_id = employee_syncs.employee_id 
+		// WHERE
+		// DATE( general_attendances.attend_date ) = '".$now."' AND general_attendances.purpose_code = '".$request->get('purpose_code')."'
+		// ) AS attendances 
+		// LEFT JOIN
+		// departments on departments.department_name = attendances.department
+		// WHERE employee_id like 'PI%'
+		// ORDER BY
+		// attend_date DESC,
+		// NAME ASC";
+
+		// $attendance_lists = db::select($query); 
 
 		$response = array(
 			'status' => true,
-			'attendance_lists' => $attendance_lists
+			'attendance_lists' => $attendance_lists,
 		);
 		return Response::json($response);
 
