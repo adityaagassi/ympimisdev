@@ -71,7 +71,7 @@ class DisplayController extends Controller
 
 	public function inputEfficiencyMonitoringMonthly(Request $request){
 
-		$newDate = $request->get('newDate');
+		$newDate = date('Y-m-d', strtotime($request->get('newDate')));
 		$newCost = $request->get('newCost');
 		$newInput = $request->get('newInput');
 		$newOutput = $request->get('newOutput');

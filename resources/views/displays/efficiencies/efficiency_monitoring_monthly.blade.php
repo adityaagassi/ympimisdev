@@ -1,5 +1,6 @@
 @extends('layouts.display')
 @section('stylesheets')
+<link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
 	#loading { display: none; }
 </style>
@@ -41,35 +42,17 @@
 </section>
 
 <div class="modal fade" id="modalAdd">
-	<div class="modal-dialog modal-lg">
+	<div class="modal-dialog modal-sm">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title" id="modalDetailTitle"></h4>
 				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
-					<div class="col-md-12">
-						<div class="input-group date col-sm-3">
-							<div class="input-group-addon" style="background-color: rgba(248,161,63,0.9);">
-								<i class="fa fa-calendar"></i>
-							</div>
-							<input type="text" class="form-control pull-right" id="newDate" data-placeholder="Pilih Tanggal" name="newDate" value="{{date('Y-m-d')}}">
-						</div>
-						<div class="col-sm-3">
-							<select class="form-control select2" name="newCost" id="newCost" data-placeholder="Pilih Cost Center" style="width: 100%;">
-								<option value=""></option>
-								@foreach($cost_centers as $cost_center)
-								<option value="{{ $cost_center->cost_center_eff }}">{{ $cost_center->cost_center_eff }}</option>
-								@endforeach
-							</select>
-						</div>
-						<div class="col-sm-3">
-							<input type="text" style="width: 100%" class="form-control" id="newInput" name="newInput" placeholder="Total Jam Input">
-						</div>
-						<div class="col-sm-3">
-							<input type="text" style="width: 100%" class="form-control" id="newOutput" name="newOutput" placeholder="Total Jam Output">
-						</div>
-					</div>
+					<center>
+						<textarea id="rawData" style="height: 100px;"></textarea>
+					</center>
 					<br>
-					<button class="btn btn-primary" style="width: 100%; font-size: 1.5vw; margin-bottom: 10px;" onclick="addEfficiency()">Update Data</button>
+					<button class="btn btn-success" style="width: 100%; font-size: 1.5vw; margin-bottom: 10px;" onclick="genData()" id="btnGenerate">Update Data</button>
+					{{-- <button class="btn btn-primary" style="width: 100%; font-size: 1.5vw; margin-bottom: 10px;" onclick="addEfficiency()" id="btnUpdate">Update Data</button> --}}
 					<table class="table table-hover table-bordered table-striped" border="1">
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
@@ -93,6 +76,7 @@
 </div>
 @endsection
 @section('scripts')
+<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
 <script src="{{ url("js/highcharts.js")}}"></script>
 <script src="{{ url("js/highcharts-3d.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
@@ -133,45 +117,100 @@
 	};
 
 	function clearData(){
-		$('#newDate').val("");
-		$('#newInput').val("");
-		$('#newOutput').val("");
-		$("#newCost").prop('selectedIndex', 0).change();
+		$('#rawData').val("");
+		// $('#newDate').val("");
+		// $('#newInput').val("");
+		// $('#newOutput').val("");
+		// $("#newCost").prop('selectedIndex', 0).change();
 	}
 
-	function addEfficiency(){
-		$('#loading').show();
-		if($('#newDate').val() != "" && $('#newCost').val() != "" && $('#newInput').val() != "" && $('#newOutput').val() != ""){
-			var newDate = $('#newDate').val();
-			var newCost = $('#newCost').val();
-			var newInput = $('#newInput').val();
-			var newOutput = $('#newOutput').val();
+	function genData(){
+		var data = $('#rawData').val().split(/\r?\n/);
+		var row = "";
 
-			var data = {
-				newDate:newDate,
-				newCost:newCost,
-				newInput:newInput,
-				newOutput:newOutput			
+		for(var i = 0; i < data.length; i++){
+
+			row = data[i].split(/\t/);
+
+			if(row[0] != ""){
+				var info = {
+					newCost:row[0],
+					newDate:row[1],
+					newInput:row[2],
+					newOutput:row[3]
+				}
+				$.post('{{ url("input/display/efficiency_monitoring_monthly") }}', info, function(result, status, xhr){
+					if(result.status){
+						$('#loading').hide();
+						openSuccessGritter('Success', result.message);
+						clearData();
+					}
+					else{
+						$('#loading').hide();
+						alert(result.message);
+						clearData();					
+					}
+				});			
 			}
-
-			$.post('{{ url("input/display/efficiency_monitoring_monthly") }}', data, function(result, status, xhr){
-				if(result.status){
-					$('#loading').hide();
-					clearData();
-					$('#modalAdd').modal('hide');
-				}
-				else{
-					$('#loading').hide();
-					alert(result.message);
-					clearData();					
-				}
-			});
-		}
-		else{
-			alert('Lengkapi Data Terlebih Dahulu');
-			clearData();
 		}
 	}
+
+	function openSuccessGritter(title, message){
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-success',
+			image: '{{ url("images/image-screen.png") }}',
+			sticky: false,
+			time: '2000'
+		});
+	}
+
+	function openInfoGritter(title, message){
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-info',
+			image: '{{ url("images/image-unregistered.png") }}',
+			sticky: false,
+			time: '2000'
+		});
+	}
+
+
+	// function addEfficiency(){
+	// 	$('#loading').show();
+	// 	if($('#newDate').val() != "" && $('#newCost').val() != "" && $('#newInput').val() != "" && $('#newOutput').val() != ""){
+	// 		var newDate = $('#newDate').val();
+	// 		var newCost = $('#newCost').val();
+	// 		var newInput = $('#newInput').val();
+	// 		var newOutput = $('#newOutput').val();
+
+	// 		var data = {
+	// 			newDate:newDate,
+	// 			newCost:newCost,
+	// 			newInput:newInput,
+	// 			newOutput:newOutput			
+	// 		}
+
+	// 		$.post('{{ url("input/display/efficiency_monitoring_monthly") }}', data, function(result, status, xhr){
+	// 			if(result.status){
+	// 				$('#loading').hide();
+	// 				clearData();
+	// 				$('#modalAdd').modal('hide');
+	// 			}
+	// 			else{
+	// 				$('#loading').hide();
+	// 				alert(result.message);
+	// 				clearData();					
+	// 			}
+	// 		});
+	// 	}
+	// 	else{
+	// 		alert('Lengkapi Data Terlebih Dahulu');
+	// 		clearData();
+	// 	}
+	// }
 
 	function fetchChart(id){
 		$('#loading').show();
