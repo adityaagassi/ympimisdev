@@ -4757,17 +4757,17 @@ class InjectionsController extends Controller
             // $tag = $request->get('tag');
 
         $molding = DB::SELECT("SELECT
-            injection_molding_masters.id as id_molding,
+            injection_molding_masters.id AS id_molding,
             injection_molding_masters.product,
             injection_molding_masters.part,
-            COALESCE(status_mesin,'-') AS mesin,
+            COALESCE ( status_mesin, '-' ) AS mesin,
             COALESCE ( injection_molding_logs.color, '-' ) AS color,
             injection_molding_masters.status,
-            COALESCE ( injection_molding_logs.total_running_shot / injection_machine_cycle_times.shoot, 0 ) AS shot 
+            COALESCE ( ROUND(injection_molding_logs.total_running_shot / injection_machine_cycle_times.shoot,0), 0 ) AS shot
         FROM
             injection_molding_masters
-            LEFT JOIN injection_molding_logs ON injection_molding_logs.tag_molding = injection_molding_masters.tag
-            LEFT JOIN injection_machine_cycle_times ON injection_molding_logs.part = injection_machine_cycle_times.part 
+            LEFT JOIN injection_molding_logs ON injection_molding_logs.tag_molding = injection_molding_masters.tag and injection_molding_logs.status = 'Running'
+            LEFT JOIN injection_machine_cycle_times ON injection_molding_masters.product = injection_machine_cycle_times.part
             AND injection_molding_logs.color = injection_machine_cycle_times.color 
         WHERE
             remark = 'RC' ");
@@ -5253,7 +5253,7 @@ class InjectionsController extends Controller
                         ),
                     '' 
                 ) AS type,
-                COALESCE (( SELECT shot FROM injection_process_temps WHERE mesin = injection_machine_masters.mesin AND injection_process_temps.deleted_at IS NULL ), 0 ) AS shot,
+             COALESCE (( SELECT shot FROM injection_process_temps WHERE mesin = injection_machine_masters.mesin AND injection_process_temps.deleted_at IS NULL ), 0 ) AS shot_mesin,
                 COALESCE (( SELECT ng_count FROM injection_process_temps WHERE mesin = injection_machine_masters.mesin AND injection_process_temps.deleted_at IS NULL ), '' ) AS ng_count,
                 COALESCE ((
                     SELECT
@@ -5266,7 +5266,18 @@ class InjectionsController extends Controller
                         AND injection_process_temps.deleted_at IS NULL 
                         ),
                     '' 
-                ) AS operator 
+                ) AS operator,
+                COALESCE((SELECT COALESCE
+                    ( injection_molding_logs.total_running_shot / injection_machine_cycle_times.shoot, 0 ) AS shot 
+                FROM
+                    injection_molding_masters
+                    LEFT JOIN injection_molding_logs ON injection_molding_logs.tag_molding = injection_molding_masters.tag
+                    LEFT JOIN injection_machine_cycle_times ON injection_molding_logs.part = injection_machine_cycle_times.part 
+                    AND injection_molding_logs.color = injection_machine_cycle_times.color 
+                WHERE
+                    remark = 'RC' 
+                    AND status_mesin = injection_machine_masters.mesin 
+                ),0) AS shot 
             FROM
                 injection_machine_masters");
 

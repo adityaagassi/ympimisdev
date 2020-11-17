@@ -486,34 +486,8 @@
 				$('#molding_btn').html("");
 				var no = 1;
 				var color ="";
+				$('#modalMolding').modal('show');
 				$.each(result.datas, function(key, value) {
-				// 	if (no % 2 === 0 ) {
-				// 		color = 'style="background-color: #fffcb7;font-size: 18.5px;padding-top:5px;padding-bottom:5px"';
-				// 	} else {
-				// 		color = 'style="background-color: #ffd8b7;font-size: 18.5px;padding-top:5px;padding-bottom:5px"';
-				// 	}
-				// 	if (value.last_counter >= 15000 || value.status == 'HARUS MAINTENANCE') {
-				// 		color = 'style="background-color: #ff3030;font-size: 18.5px;color:white;padding-top:5px;padding-bottom:5px"';
-				// 	}
-				// 	if ($('#status').text() == '-') {
-				// 		moldingMaster += '<tr onclick="fetchCount(\''+value.id+'\')">';
-				// 	}
-				// 	else{
-				// 		moldingMaster += '<tr>';
-				// 	}
-				// 	moldingMaster += '<td '+color+'>'+value.product+'</td>';
-				// 	moldingMaster += '<td '+color+'>'+value.part+'</td>';
-				// 	moldingMaster += '<td '+color+'>'+value.status+'</td>';
-				// 	moldingMaster += '<td '+color+'>'+value.last_counter+'</td>';
-				// 	if (value.status_mesin == null) {
-				// 		moldingMaster += '<td '+color+'>-</td>';
-				// 	}else{
-				// 		moldingMaster += '<td '+color+'>'+value.status_mesin+'</td>';
-				// 	}
-					
-				// 	moldingMaster += '</tr>';				
-				// no++;
-
 					if (value.status == 'HARUS MAINTENANCE') {
 						moldingMaster += '<div class="col-xs-3" style="padding-top: 5px">';
 						moldingMaster += '<center>';
@@ -535,9 +509,6 @@
 					}
 				});
 				$('#molding_btn').append(moldingMaster);
-				$('#modalMolding').modal('show');
-				
-
 				openSuccessGritter('Success!', result.message);
 				
 			}
