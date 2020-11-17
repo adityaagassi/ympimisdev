@@ -79,7 +79,11 @@
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content" style="padding-top: 0;">
-
+	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+		<p style="position: absolute; color: White; top: 45%; left: 35%;">
+			<span style="font-size: 40px">Please Wait...<i class="fa fa-spin fa-refresh"></i></span>
+		</p>
+	</div>
 	<input type="hidden" id="loc" value="{{ $title }} {{$title_jp}} }">
 	
 	<div class="row" style="margin-left: 1%; margin-right: 1%;">
@@ -89,19 +93,19 @@
 				<table class="table table-bordered" style="width: 100%; margin-bottom: 2px;" border="1">
 					<thead>
 						<tr>
-							<th colspan="3" style="width: 10%; background-color: rgb(220,220,220); padding:0;font-size: 15px;">PIC Molding <span style="color: red" id="counter"></span></th>
+							<th colspan="3" style="width: 10%; background-color: rgb(220,220,220); padding:0;font-size: 20px;">PIC Molding <span style="color: red" id="counter"></span></th>
 							
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
-							<td style="background-color: rgb(204,255,255); text-align: center; color: #000000; font-size:1vw; width: 1%;" id="op_0">-</td>
-							<td colspan="" style="background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 1vw;width: 1%" id="op_1">-</td>
-							<td colspan="" style="background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 1vw;width: 1%" id="op_2">-</td>
+							<td style="background-color: rgb(204,255,255); text-align: center; color: #000000; font-size:16px; width: 1%;" id="op_0">-</td>
+							<td colspan="" style="background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 16px;width: 1%" id="op_1">-</td>
+							<td colspan="" style="background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 16px;width: 1%" id="op_2">-</td>
 						</tr>
-						<tr>
+						<!-- <tr>
 							<td colspan="3" style="width: 100%; margin-top: 10px; font-size: 15px; padding:0; font-weight: bold; border-color: black; color: white; width: 23%;background-color: rgb(220,220,220);color: black;font-size: 15px;"><b>Molding List</b></td>
-						</tr>
+						</tr> -->
 					</tbody>
 				</table>
 			</div>
@@ -132,23 +136,23 @@
 			</div> -->
 			<table style="width: 100%;border: '1'">
 				<tbody>
-					<tr>
-							<td colspan="4" style="width: 1%; font-weight: bold; font-size: 15px; background-color: rgb(220,220,220);">Status</td>
+						<tr>
+							<td colspan="4" style="width: 1%; font-weight: bold; font-size: 15px; background-color: rgb(220,220,220);display: none">Status</td>
 						</tr>
 						<tr>
-							<td colspan="4" id="status" style="border:1px solid black;width: 4%; font-size: 2vw; font-weight: bold; background-color: rgb(50, 50, 50); color: yellow;">-</td>
+							<td colspan="4" id="status" style="border:1px solid black;width: 4%; font-size: 2vw; font-weight: bold; background-color: rgb(50, 50, 50); color: yellow;display: none">-</td>
 						</tr>
 						<tr>
-							<td style="width: 1%; font-weight: bold; font-size: 15px; background-color: rgb(220,220,220);">Product</td>
-							<td id="product" style="border:1px solid black;width: 4%; font-weight: bold; font-size: 15px; background-color: rgb(100,100,100); color: white;"></td>
-							<td style="width: 1%; font-weight: bold; font-size: 15px; background-color: rgb(220,220,220);">Part</td>
-							<td id="part" style="border:1px solid black; width: 4%; font-size: 15px; font-weight: bold; background-color: rgb(100,100,100); color: white;"></td>
+							<td style="width: 1%; font-weight: bold; font-size: 20px; background-color: rgb(220,220,220);">Product</td>
+							<td id="product" style="border:1px solid black;width: 4%; font-weight: bold; font-size: 20px; background-color: rgb(100,100,100); color: white;"></td>
+							<td style="width: 1%; font-weight: bold; font-size: 20px; background-color: rgb(220,220,220);">Part</td>
+							<td id="part" style="border:1px solid black; width: 4%; font-size: 20px; font-weight: bold; background-color: rgb(100,100,100); color: white;"></td>
 						</tr>
 						<tr>
-							<td style="width: 1%; font-weight: bold; font-size: 15px; background-color: rgb(220,220,220);">Mesin</td>
-							<td id="mesin" style="border:1px solid black; width: 4%; font-weight: bold; font-size: 15px; background-color: rgb(100,100,100); color: white;"></td>
-							<td style="width: 1%; font-weight: bold; font-size: 15px; background-color: rgb(220,220,220);">Last Counter</td>
-							<td id="last_counter" style="border:1px solid black; width: 4%; font-weight: bold; font-size: 15px; background-color: rgb(100,100,100); color: white;">-</td>
+							<td style="width: 1%; font-weight: bold; font-size: 20px; background-color: rgb(220,220,220);">Mesin</td>
+							<td id="mesin" style="border:1px solid black; width: 4%; font-weight: bold; font-size: 20px; background-color: rgb(100,100,100); color: white;"></td>
+							<td style="width: 1%; font-weight: bold; font-size: 20px; background-color: rgb(220,220,220);">Last Counter</td>
+							<td id="last_counter" style="border:1px solid black; width: 4%; font-weight: bold; font-size: 20px; background-color: rgb(100,100,100); color: white;">-</td>
 						</tr>
 						<tr id="perbaikantime">
 							<td colspan="4" style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: black; width: 23%;background-color: rgb(204,255,255);"><div class="timerperbaikan">
@@ -162,7 +166,7 @@
 			</table>
 			<button id="start_perbaikan" style="width: 100%; margin-top: 5px; font-size: 30px; padding-top:5px;padding-bottom: 5px; font-weight: bold; border-color: black; color: white; width: 100%" onclick="startPerbaikan()" class="btn btn-success">MULAI PERBAIKAN</button>
 				<button id="change_operator" style="width: 100%; margin-top: 10px; font-size: 30px; padding-top: 5px;padding-bottom: 5px; font-weight: bold; border-color: black; color: white; width: 100%" onclick="location.reload()" class="btn btn-info">GANTI OPERATOR</button>
-				<button id="change_molding" style="width: 100%; margin-top: 10px; font-size: 30px; padding-top: 5px;padding-bottom: 5px; font-weight: bold; border-color: black; color: white; width: 100%" onclick="change_molding()" class="btn btn-primary">GANTI MOLDING LAIN</button>
+				<!-- <button id="change_molding" style="width: 100%; margin-top: 10px; font-size: 30px; padding-top: 5px;padding-bottom: 5px; font-weight: bold; border-color: black; color: white; width: 100%" onclick="change_molding()" class="btn btn-primary">GANTI MOLDING LAIN</button> -->
 		</div>
 
 		<div class="col-xs-6" style="padding-right: 0; padding-left: 10px">
@@ -222,7 +226,7 @@
 	</div>
 </div>
 
-<div class="modal fade" id="modalMolding">
+<div class="modal fade" id="modalMolding" style="overflow-y: auto;">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header"><center> <b id="statusa" style="font-size: 2vw"></b> </center>
@@ -597,6 +601,7 @@
 	}
 
 	function finishPerbaikan() {
+		$('#loading').show();
 		clearInterval(update_maintenance_temp);
 		count = false;
 		var detik = $('div.timerperbaikan span.secondperbaikan').text();
@@ -650,10 +655,12 @@
 				$('#finish_perbaikan').hide();
 				$('#perbaikannote').hide();
 				$('#perbaikannote2').hide();
+				$('#loading').hide();
 				location.reload();
 			} else {
 				audio_error.play();
-				openErrorGritter('Error','Create Maintenance Molding Temp Failed');
+				$('#loading').hide();
+				openErrorGritter('Error','Gagal Simpan Data');
 			}
 		});
 	}
@@ -698,12 +705,12 @@
 
 		$.post('{{ url("index/injeksi/store_maintenance_temp") }}', data, function(result, status, xhr){
 			if(result.status){
-				openSuccessGritter('Success','Maintenance Molding Temp has been created');
+				openSuccessGritter('Success','Mulai Perbaikan');
 				// reset();
 				// getMoldingMaster();
 			} else {
 				audio_error.play();
-				openErrorGritter('Error','Create Maintenance Molding Temp Failed');
+				openErrorGritter('Error','Gagal Memulai Perbaikan');
 			}
 		});
 	}
@@ -756,11 +763,11 @@
 
 		$.post('{{ url("index/injeksi/update_maintenance_temp") }}', data, function(result, status, xhr){
 			if(result.status){
-				openSuccessGritter('Success','Maintenance Molding Temp has been updated');
+				// openSuccessGritter('Success','Maintenance Molding Temp has been updated');
 				// reset();
 			} else {
-				audio_error.play();
-				openErrorGritter('Error','Update Maintenance Molding Temp Failed');
+				// audio_error.play();
+				// openErrorGritter('Error','Update Maintenance Molding Temp Failed');
 			}
 		});
 	}

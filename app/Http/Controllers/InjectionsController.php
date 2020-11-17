@@ -4770,7 +4770,8 @@ class InjectionsController extends Controller
             LEFT JOIN injection_machine_cycle_times ON injection_molding_masters.product = injection_machine_cycle_times.part
             AND injection_molding_logs.color = injection_machine_cycle_times.color 
         WHERE
-            remark = 'RC' ");
+            remark = 'RC'
+        AND injection_molding_masters.status != 'PASANG' ");
 
         $response = array(
             'status' => true,            
