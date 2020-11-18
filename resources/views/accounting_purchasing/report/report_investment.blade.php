@@ -344,47 +344,47 @@
 							if($jumlahitem < 2)
 								$jumlah = 1;
 							else if($jumlahitem == 2)
-								$jumlah = 3;
+								$jumlah = 4;
 							else if($jumlahitem == 3)
-								$jumlah = 5;
-							else if($jumlahitem == 4)
 								$jumlah = 7;
+							else if($jumlahitem == 4)
+								$jumlah = 10;
 							else if($jumlahitem == 5)
-								$jumlah = 9;
-							else if($jumlahitem == 6)
-								$jumlah = 11;
-							else if($jumlahitem == 7)
 								$jumlah = 13;
-							else if($jumlahitem == 8)
-								$jumlah = 15;
-							else if($jumlahitem == 9)
-								$jumlah = 17;
-							else if($jumlahitem == 10)
+							else if($jumlahitem == 6)
+								$jumlah = 16;
+							else if($jumlahitem == 7)
 								$jumlah = 19;
-							else if($jumlahitem == 11)
-								$jumlah = 21;
-							else if($jumlahitem == 12)
-								$jumlah = 23;
-							else if($jumlahitem == 13)
+							else if($jumlahitem == 8)
+								$jumlah = 22;
+							else if($jumlahitem == 9)
 								$jumlah = 25;
-							else if($jumlahitem == 14)
-								$jumlah = 27;
-							else if($jumlahitem == 15)
-								$jumlah = 29;
-							else if($jumlahitem == 16)
+							else if($jumlahitem == 10)
+								$jumlah = 28;
+							else if($jumlahitem == 11)
 								$jumlah = 31;
-							else if($jumlahitem == 17)
-								$jumlah = 33;
-							else if($jumlahitem == 18)
-								$jumlah = 35;
-							else if($jumlahitem == 19)
+							else if($jumlahitem == 12)
+								$jumlah = 34;
+							else if($jumlahitem == 13)
 								$jumlah = 37;
-							else if($jumlahitem == 20)
-								$jumlah = 39;
-							else if($jumlahitem == 21)
-								$jumlah = 41;
-							else if($jumlahitem == 22)
+							else if($jumlahitem == 14)
+								$jumlah = 40;
+							else if($jumlahitem == 15)
 								$jumlah = 43;
+							else if($jumlahitem == 16)
+								$jumlah = 46;
+							else if($jumlahitem == 17)
+								$jumlah = 49;
+							else if($jumlahitem == 18)
+								$jumlah = 52;
+							else if($jumlahitem == 19)
+								$jumlah = 55;
+							else if($jumlahitem == 20)
+								$jumlah = 58;
+							else if($jumlahitem == 21)
+								$jumlah = 61;
+							else if($jumlahitem == 22)
+								$jumlah = 64;
 							?>
 
 							?>
