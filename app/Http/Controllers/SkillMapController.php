@@ -105,7 +105,7 @@ class SkillMapController extends Controller
     		$skill_map = [];
             $skill_required = [];
     		foreach ($process as $key) {
-    			$emp[] = DB::SELECT("SELECT skill_employees.employee_id,name,skill_employees.process,skill_employees.location from skill_employees left join employee_syncs on skill_employees.employee_id = employee_syncs.employee_id where process = '".$key->process."' and location = '".$location."' and skill_employees.deleted_at is null");
+    			$emp[] = DB::SELECT("SELECT skill_employees.employee_id,name,skill_employees.process,skill_employees.location from skill_employees left join employee_syncs on skill_employees.employee_id = employee_syncs.employee_id where process = '".$key->process."' and location = '".$location."' and skill_employees.deleted_at is null");                
 
     			for ($i=0; $i < count($emp); $i++) { 
     				for ($j=0; $j < count($emp[$i]); $j++) { 
@@ -120,7 +120,7 @@ class SkillMapController extends Controller
 							LEFT JOIN skills ON skills.skill_code = skill_maps.skill_code 
 						WHERE
 							employee_id = '".$emp[$i][$j]->employee_id."'
-							AND skills.location = '".$emp[$i][$j]->location."'
+							AND skill_maps.process = '".$emp[$i][$j]->process."'
 							and skill_maps.deleted_at is null
 							and skills.deleted_at is null");
 
@@ -128,6 +128,7 @@ class SkillMapController extends Controller
     				}
     			}
     		}
+
 
     		$response = array(
 				'status' => true,
@@ -168,7 +169,8 @@ class SkillMapController extends Controller
 				LEFT JOIN employee_syncs ON skill_maps.employee_id = employee_syncs.employee_id
 			WHERE
 				skill_maps.employee_id = '".$employee_id."'
-				AND skills.location = '".$location."'
+                AND skill_maps.process = '".$process."'
+				AND skill_maps.location = '".$location."'
 				and skill_maps.deleted_at is null
 				and skills.deleted_at is null");
 

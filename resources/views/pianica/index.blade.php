@@ -89,9 +89,13 @@
 							</div>
 						</div>
 						<div class="col-xs-12">
+							<div class="row">
 							<div class="modal-footer">
-								<button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>
-								<button value="CONFIRM" onclick="confirm()" class="btn btn-success pull-right">CONFIRM</button>
+								<div class="row">
+									<button type="button" class="btn btn-danger pull-left" data-dismiss="modal" style="width: 100%">Close</button>
+								</div>
+								<!-- <button value="CONFIRM" onclick="confirm()" class="btn btn-success pull-right">CONFIRM</button> -->
+							</div>
 							</div>
 						</div>
 					</div>

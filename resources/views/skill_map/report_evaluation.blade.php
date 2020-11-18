@@ -61,7 +61,7 @@ table.table-bordered > tfoot > tr > th{
 				<div class="box-body">
 				  <div class="row">
 				  	<div class="col-xs-12">
-						<div class="box-header">
+						<!-- <div class="box-header">
 							<h3 class="box-title">Print Hasil Evaluasi</h3>
 						</div>
 						<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -88,7 +88,7 @@ table.table-bordered > tfoot > tr > th{
 							</div>
 						</div>
 					</div>
-				  </div>
+				  </div> -->
 				  <div class="row">
 				    <div class="col-xs-12">
 			          <table class="table table-bordered table-striped table-hover" id="tableEvaluation">
@@ -196,7 +196,7 @@ table.table-bordered > tfoot > tr > th{
 					tableData += '<td>'+ value.from_value +'</td>';
 					tableData += '<td>'+ value.to_value +'</td>';
 					tableData += '<td>'+ value.average +'</td>';
-					tableData += '<td><a href="{{ url("print/report/skill_map_evaluation") }}/'+location+'/'+value.evaluation_code+'" target="_blank" class="btn btn-primary"><i class="fa fa-print"></i> Print</a></td>';
+					tableData += '<td><a href="{{ url("print/report/skill_map_evaluation") }}/'+location+'/'+value.evaluation_code+'" target="_blank" class="btn btn-primary"><i class="fa fa-print"></i> Report</a></td>';
 					tableData += '</tr>';
 					index++;
 				});
