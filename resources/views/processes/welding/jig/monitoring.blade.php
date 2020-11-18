@@ -169,8 +169,8 @@
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 	jQuery(document).ready(function() {
-
 		fillList();
+		setInterval(fillList,60000);
 	});
 
 	function fillList(){

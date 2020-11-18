@@ -72,6 +72,7 @@
 								<th style="width: 1%">#</th>
 								<th style="width: 2%">Jig Parent</th>
 								<th style="width: 2%">Jig Child</th>
+								<th style="width: 2%">Jig Name</th>
 								<th style="width: 2%">Usage</th>
 								<th style="width: 3%">Created At</th>
 								<th style="width: 3%">Action</th>
@@ -285,6 +286,7 @@
 					jigtable += '<td>'+index+'</td>';
 					jigtable += '<td>'+value.jig_parent+'</td>';
 					jigtable += '<td>'+value.jig_child+'</td>';
+					jigtable += '<td>'+value.jig_name+'</td>';
 					jigtable += '<td>'+value.usage+'</td>';
 					jigtable += '<td>'+value.created_at+'</td>';
 					jigtable += '<td><button class="btn btn-warning btn-sm" onclick="editJigBom(\''+value.id_jig_bom+'\')" style="margin-right: 5px"><i class="fa fa-edit"></i>&nbsp;&nbsp;Edit</button><button data-toggle="modal" data-target="#myModal" class="btn btn-danger btn-sm" onclick="deleteJigBom(\''+value.id_jig_bom+'\',\''+value.jig_parent+'\',\''+value.jig_child+'\')" style="margin-right: 5px"><i class="fa fa-trash"></i>&nbsp;&nbsp;Delete</button></td>';

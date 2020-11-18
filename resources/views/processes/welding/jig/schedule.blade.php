@@ -71,6 +71,7 @@
 							<tr>
 								<th style="width: 1%">#</th>
 								<th style="width: 2%">Jig ID</th>
+								<th style="width: 2%">Jig Name</th>
 								<th style="width: 2%">Jig Index</th>
 								<th style="width: 2%">Schedule Date</th>
 								<th style="width: 2%">Kensa Time</th>
@@ -221,12 +222,13 @@
 					jigtable += '<tr>';
 					jigtable += '<td>'+index+'</td>';
 					jigtable += '<td>'+value.jig_id+'</td>';
+					jigtable += '<td>'+value.jig_name+'</td>';
 					jigtable += '<td>'+value.jig_index+'</td>';
 					jigtable += '<td>'+value.schedule_date+'</td>';
 					if (value.kensa_time != null) {
 						jigtable += '<td>'+value.kensa_time+'</td>';
 						jigtable += '<td>'+value.kensa_status+'</td>';
-						jigtable += '<td>'+value.kensa_pic+'</td>';
+						jigtable += '<td>'+value.kensa_pic+' - '+value.kensaname+'</td>';
 					}else{
 						jigtable += '<td><span class="label label-danger"></span></td>';
 						jigtable += '<td><span class="label label-danger"></span></td>';
@@ -235,7 +237,7 @@
 					if (value.repair_time != null) {
 						jigtable += '<td>'+value.repair_time+'</td>';
 						jigtable += '<td>'+value.repair_status+'</td>';
-						jigtable += '<td>'+value.repair_pic+'</td>';
+						jigtable += '<td>'+value.repair_pic+' - '+value.repairname+'</td>';
 					}else{
 						jigtable += '<td></td>';
 						jigtable += '<td></td>';

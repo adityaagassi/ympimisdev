@@ -3661,9 +3661,9 @@ class WeldingProcessController extends Controller
 					weekly_calendars 
 				WHERE
 					week_date BETWEEN DATE(
-					DATE_ADD( NOW(), INTERVAL - 6 MONTH )) 
+					NOW() )
 					AND DATE(
-					DATE_ADD( NOW(), INTERVAL + 1 MONTH )) UNION ALL
+					DATE_ADD( NOW(), INTERVAL + 6 MONTH )) UNION ALL
 				SELECT
 					DATE_FORMAT( jig_schedules.schedule_date, '%Y-%m' ) AS bulan,
 					COUNT(
@@ -3674,8 +3674,7 @@ class WeldingProcessController extends Controller
 				FROM
 					jig_schedules 
 				WHERE
-					schedule_date < DATE(
-					DATE_ADD( NOW(), INTERVAL - 6 MONTH )) 
+					schedule_date < DATE(NOW()) 
 					AND schedule_status = 'Open' 
 					AND kensa_time IS NULL 
 				GROUP BY
@@ -3773,8 +3772,7 @@ class WeldingProcessController extends Controller
 				JOIN jigs ON jigs.jig_id = jig_schedules.jig_id 
 			WHERE
 				schedule_status = 'Open' 
-				AND schedule_date < DATE(
-				DATE_ADD( NOW(), INTERVAL - 6 MONTH ))) b ORDER BY b.schedule_date");
+				AND schedule_date < DATE(NOW())) b ORDER BY b.schedule_date,b.repair_status,b.kensa_status");
 
 			$response = array(
 				'status' => true,
@@ -4080,7 +4078,7 @@ class WeldingProcessController extends Controller
 	public function fetchWeldingJigBom()
 	{
 		try {
-			$jigbom = JigBom::select('*','jig_boms.id as id_jig_bom')->get();
+			$jigbom = JigBom::select('*','jig_boms.id as id_jig_bom')->leftJoin('jigs','jigs.jig_id','jig_boms.jig_child')->get();
 
 			$response = array(
 				'status' => true,
@@ -4193,7 +4191,7 @@ class WeldingProcessController extends Controller
 	public function fetchWeldingJigSchedule()
 	{
 		try {
-			$jigschedule = JigSchedule::orderBy('schedule_status','desc')->orderBy('schedule_date','asc')->get();
+			$jigschedule = JigSchedule::select('*','namekensa.name as kensaname','namerepair.name as repairname')->leftJoin('jigs','jigs.jig_id','jig_schedules.jig_id')->leftJoin('employee_syncs AS namekensa','namekensa.employee_id','jig_schedules.kensa_pic')->leftJoin('employee_syncs as namerepair','namerepair.employee_id','jig_schedules.kensa_pic')->orderBy('schedule_status','desc')->orderBy('schedule_date','asc')->get();
 
 			$response = array(
 				'status' => true,

@@ -174,11 +174,7 @@
 					jigtable += '<td>'+value.started_at+'</td>';
 					jigtable += '<td>'+value.finished_at+'</td>';
 					jigtable += '<td>'+value.operator+'</td>';
-					if (value.result == 'OK') {
-						jigtable += '<td><span class="label label-success">'+value.result+' - '+value.status+'</span></td>';
-					}else{
-						jigtable += '<td><span class="label label-warning">'+value.result+' - '+value.status+'</span></td>';
-					}
+					jigtable += '<td><span class="label label-success">'+value.result+' - '+value.status+'</span></td>';
 					jigtable += '<td><button onclick="showModal(\''+value.jig_id+'\',\''+value.started_at+'\',\''+value.finished_at+'\')" class="btn btn-primary btn-sm">Detail</button></td>';
 					index++;
 				});
