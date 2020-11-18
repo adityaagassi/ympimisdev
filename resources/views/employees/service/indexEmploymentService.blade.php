@@ -774,7 +774,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 							<div class="carousel-inner">
 								<div class="item active">
 									<center>
-										<img class="img-responsive" src="{{url('images/announchement2.png')}}" alt="...">
+										<img class="img-responsive" src="{{url('images/update_data_karyawan_2.jpg')}}" alt="...">
 									</center>
 								</div>
 							</div>

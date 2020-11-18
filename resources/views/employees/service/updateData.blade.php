@@ -1046,7 +1046,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 						</div>
 
 						<div class="form-group row" align="center" style="margin-top: 5%; margin-bottom: 10%;">
-							<div class="col-xs-6 col-xs-offset-5">
+							<div class="col-xs-6 col-xs-offset-6">
 								<a style="margin-right: 3%;" class="btn btn-danger" href="{{ route('emp_service', ['id' =>'1']) }}"><i class="fa fa-close"></i> CANCEL</a>
 								<button type="submit" class="btn btn-success"><i class="fa fa-save"></i> SIMPAN</button>
 							</div>
@@ -1343,34 +1343,38 @@ $('#form_update').on('submit', function(event){
 		return false
 	}
 
-	event.preventDefault();
-	var formdata = new FormData(this);
+	if(confirm("Data yang anda input akan disimpan oleh sistem.\nApakah anda yakin ?")){
+		event.preventDefault();
+		var formdata = new FormData(this);
 
-	$("#loading").show();
+		$("#loading").show();
 
-	$.ajax({
-		url:"{{url('fetch/update_emp_data')}}",
-		method:'post',
-		data:formdata,
-		dataType:"json",
-		processData: false,
-		contentType: false,
-		cache: false,
-		success:function(result, status, xhr){
-			if(result.status){
-				openSuccessGritter('Success', result.message);
-				openHRq();
-			}else{
-				openErrorGritter('Error!', result.message);
-				$("#loading").hide();
+		$.ajax({
+			url:"{{url('fetch/update_emp_data')}}",
+			method:'post',
+			data:formdata,
+			dataType:"json",
+			processData: false,
+			contentType: false,
+			cache: false,
+			success:function(result, status, xhr){
+				if(result.status){
+					openSuccessGritter('Success', result.message);
+					openHRq();
+				}else{
+					openErrorGritter('Error!', result.message);
+					$("#loading").hide();
+				}
+
+			},
+			error: function(result, status, xhr){
+				$("#loading").hide();				
+				openErrorGritter('Error!', 'Update data karyawan gagal');
 			}
+		});
+	}
 
-		},
-		error: function(result, status, xhr){
-			$("#loading").hide();				
-			openErrorGritter('Error!', 'Update data karyawan gagal');
-		}
-	});
+	
 });
 
 function validateForm() {
@@ -1709,7 +1713,7 @@ function validateForm() {
 // 	var hubungan_darurat3 = $("#hubungan_darurat3").val();
 // 	var emergency3 = nama_darurat3+'_'+telp_darurat3+'_'+pekerjaan_darurat3+'_'+hubungan_darurat3;
 
-// 	if(confirm("Data yang anda input akan disimpan oleh sistem.\nApakah anda yakin ?")){
+// 	if(confirm("Data yang anda input akan disimpan oleh sistem.\nApakah anda yakin ?")){3
 // 		var data = {
 // 			nama_lengkap : nama_lengkap,
 // 			employee_id : employee_id,
