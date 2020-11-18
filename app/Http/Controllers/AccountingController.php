@@ -3087,7 +3087,7 @@ class AccountingController extends Controller
                 $last_price = "last_price" . $lp;
                 $service_price = "service_price" . $lp;
                 $konversi_dollar = "konversi_dollar" . $lp;
-                $gl_number = "gl_number" . $lp;
+                $gl_number = "gl_edit" . $lp;
 
                 $data2 = AccPurchaseOrderDetail::where('id', $lp)->update([
                     'no_item' => $request->get($no_item) , 

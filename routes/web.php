@@ -16,7 +16,6 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 	error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 }
 
-Route::get('label', 'TrialController@label_kedatangan');
 
 Route::get('testmail', 'TrialController@testmail');
 Route::get('testprint', 'TrialController@testPrint');
@@ -1510,6 +1509,8 @@ Route::post('delete/actual/transaksi', 'AccountingController@delete_transaksi');
 Route::get('warehouse/receive_equipment', 'AccountingController@wh_receive_equipment');
 Route::get('fetch/warehouse/equipment', 'AccountingController@fetch_receive_equipment');
 Route::post('fetch/warehouse/update_receive', 'AccountingController@update_receive');
+Route::get('print/warehouse/label/{id}', 'AccountingController@label_kedatangan');
+Route::get('warehouse/cetak_bukti', 'AccountingController@wh_cetak_bukti');
 
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 	Route::get('scan/middle/kensa', 'MiddleProcessController@ScanMiddleKensa');
@@ -2657,6 +2658,7 @@ Route::get('index/display/sub_assy/{id}', 'AssyProcessController@indexDisplayAss
 Route::get('fetch/display/sub_assy/{id}', 'AssyProcessController@fetchPicking');
 Route::get('fetch/display/welding/{id}', 'AssyProcessController@fetchPickingWelding');
 Route::get('index/display/body/{id}', 'AssyProcessController@indexDisplayBody');
+Route::get('fetch/display/body/{id}', 'AssyProcessController@fetchPickingBody');
 
 Route::get('fetch/chart/sub_assy', 'AssyProcessController@chartPicking');
 Route::get('fetch/detail/sub_assy', 'AssyProcessController@fetchPickingDetail');
