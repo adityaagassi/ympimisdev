@@ -155,7 +155,7 @@ hr { background-color: red; height: 1px; border: 0; }
                     <th style="width: 8%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;" rowspan="2">Tanggal PO</th>
                     <th style="width: 16%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;" rowspan="2">Supplier</th>
                     <th style="width: 8%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;" rowspan="2">Budget</th>
-                    <th style="width: 10%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;" rowspan="2">Net Payment</th>
+                    <th style="width: 10%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;" rowspan="2" colspan="2">Net Payment</th>
                     <th style="width: 50%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;" colspan="4">Progress Purchase Order</th>
                     <th style="width: 10%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;" rowspan="2">SAP</th>
                   </tr>
@@ -583,8 +583,9 @@ hr { background-color: red; height: 1px; border: 0; }
               }
 
                // '+value.amount+'
-               
-              table += '<td style="text-align:left !important">'+curr+' '+formatUang(value.amount,"")+'</td>';
+
+              table += '<td style="text-align:left !important;border-right:none">'+curr+'</td>';
+              table += '<td style="text-align:right !important;border-left:none">'+formatUang(value.amount,"")+'</td>';
               table += '<td '+colorbuyer+'>'+buyer+'</td>';  
               table += '<td '+colormanager+'>'+manager+'</td>';
               table += '<td '+colordgm+'>'+dgm+'</td>';
