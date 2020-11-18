@@ -913,7 +913,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 							</div>
 
 							<div class="col-xs-2" align="left" style="padding-left: 0px;">
-								<input type="number" class="form-control yearpicker" id="sma_lulus" name="sma_jurusan" placeholder="Tahun Lulus">
+								<input type="number" class="form-control yearpicker" id="sma_lulus" name="sma_lulus" placeholder="Tahun Lulus">
 							</div>
 						</div>
 

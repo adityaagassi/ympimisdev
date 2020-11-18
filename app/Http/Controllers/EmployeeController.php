@@ -182,41 +182,6 @@ class EmployeeController extends Controller
           $faskes = $request->get('faskes');
           $bpjstk = $request->get('bpjstk');
 
-          // $f_ayah = $request->get('f_ayah');
-          // $f_ibu = $request->get('f_ibu');
-          // $f_saudara1 = $request->get('f_saudara1');
-          // $f_saudara2 = $request->get('f_saudara2');
-          // $f_saudara3 = $request->get('f_saudara3');
-          // $f_saudara4 = $request->get('f_saudara4');
-          // $f_saudara5 = $request->get('f_saudara5');
-          // $f_saudara6 = $request->get('f_saudara6');
-          // $f_saudara7 = $request->get('f_saudara7');
-          // $f_saudara8 = $request->get('f_saudara8');
-          // $f_saudara9 = $request->get('f_saudara9');
-          // $f_saudara10 = $request->get('f_saudara10');
-          // $f_saudara11 = $request->get('f_saudara11');
-          // $f_saudara12 = $request->get('f_saudara12');
-
-          // $m_pasangan = $request->get('m_pasangan');
-          // $m_anak1 = $request->get('m_anak1');
-          // $m_anak2 = $request->get('m_anak2');
-          // $m_anak3 = $request->get('m_anak3');
-          // $m_anak4 = $request->get('m_anak4');
-          // $m_anak5 = $request->get('m_anak5');
-          // $m_anak6 = $request->get('m_anak6');
-          // $m_anak7 = $request->get('m_anak7');
-
-          // $sd = $request->get('sd');
-          // $smp = $request->get('smp');
-          // $sma = $request->get('sma');
-          // $s1 = $request->get('s1');
-          // $s2 = $request->get('s2');
-          // $s3 = $request->get('s3');
-
-          // $emergency1 = $request->get('emergency1');
-          // $emergency2 = $request->get('emergency2');
-          // $emergency3 = $request->get('emergency3');
-
           $nama_ayah = $request->get("nama_ayah");
           $kelamin_ayah = $request->get("kelamin_ayah");
           $tempat_lahir_ayah = $request->get("tempat_lahir_ayah");
@@ -374,12 +339,12 @@ class EmployeeController extends Controller
           $sd_nama = $request->get("sd");
           $sd_masuk = $request->get("sd_masuk");
           $sd_lulus = $request->get("sd_lulus");
-          $sd = $sd_nama+'_-_'+$sd_masuk.'_'.$sd_lulus;
+          $sd = $sd_nama.'_-_'.$sd_masuk.'_'.$sd_lulus;
 
           $smp_nama = $request->get("smp");
           $smp_masuk = $request->get("smp_masuk");
           $smp_lulus = $request->get("smp_lulus");
-          $smp = $smp_nama+'_-_'+$smp_masuk.'_'.$smp_lulus;
+          $smp = $smp_nama.'_-_'.$smp_masuk.'_'.$smp_lulus;
 
           $sma_nama = $request->get("sma");
           $sma_jurusan = $request->get("sma_jurusan");
