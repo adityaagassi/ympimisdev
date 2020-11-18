@@ -27,6 +27,7 @@ use App\KaizenNote;
 use App\Employee;
 use App\EmployeeUpdate;
 use App\EmployeeSync;
+use App\EmployeeAttachment;
 use App\EmploymentLog;
 use App\OrganizationStructure;
 use App\StandartCost;
@@ -181,42 +182,268 @@ class EmployeeController extends Controller
           $faskes = $request->get('faskes');
           $bpjstk = $request->get('bpjstk');
 
-          $f_ayah = $request->get('f_ayah');
-          $f_ibu = $request->get('f_ibu');
-          $f_saudara1 = $request->get('f_saudara1');
-          $f_saudara2 = $request->get('f_saudara2');
-          $f_saudara3 = $request->get('f_saudara3');
-          $f_saudara4 = $request->get('f_saudara4');
-          $f_saudara5 = $request->get('f_saudara5');
-          $f_saudara6 = $request->get('f_saudara6');
-          $f_saudara7 = $request->get('f_saudara7');
-          $f_saudara8 = $request->get('f_saudara8');
-          $f_saudara9 = $request->get('f_saudara9');
-          $f_saudara10 = $request->get('f_saudara10');
-          $f_saudara11 = $request->get('f_saudara11');
-          $f_saudara12 = $request->get('f_saudara12');
+          // $f_ayah = $request->get('f_ayah');
+          // $f_ibu = $request->get('f_ibu');
+          // $f_saudara1 = $request->get('f_saudara1');
+          // $f_saudara2 = $request->get('f_saudara2');
+          // $f_saudara3 = $request->get('f_saudara3');
+          // $f_saudara4 = $request->get('f_saudara4');
+          // $f_saudara5 = $request->get('f_saudara5');
+          // $f_saudara6 = $request->get('f_saudara6');
+          // $f_saudara7 = $request->get('f_saudara7');
+          // $f_saudara8 = $request->get('f_saudara8');
+          // $f_saudara9 = $request->get('f_saudara9');
+          // $f_saudara10 = $request->get('f_saudara10');
+          // $f_saudara11 = $request->get('f_saudara11');
+          // $f_saudara12 = $request->get('f_saudara12');
 
-          $m_pasangan = $request->get('m_pasangan');
-          $m_anak1 = $request->get('m_anak1');
-          $m_anak2 = $request->get('m_anak2');
-          $m_anak3 = $request->get('m_anak3');
-          $m_anak4 = $request->get('m_anak4');
-          $m_anak5 = $request->get('m_anak5');
-          $m_anak6 = $request->get('m_anak6');
-          $m_anak7 = $request->get('m_anak7');
+          // $m_pasangan = $request->get('m_pasangan');
+          // $m_anak1 = $request->get('m_anak1');
+          // $m_anak2 = $request->get('m_anak2');
+          // $m_anak3 = $request->get('m_anak3');
+          // $m_anak4 = $request->get('m_anak4');
+          // $m_anak5 = $request->get('m_anak5');
+          // $m_anak6 = $request->get('m_anak6');
+          // $m_anak7 = $request->get('m_anak7');
 
-          $sd = $request->get('sd');
-          $smp = $request->get('smp');
-          $sma = $request->get('sma');
-          $s1 = $request->get('s1');
-          $s2 = $request->get('s2');
-          $s3 = $request->get('s3');
+          // $sd = $request->get('sd');
+          // $smp = $request->get('smp');
+          // $sma = $request->get('sma');
+          // $s1 = $request->get('s1');
+          // $s2 = $request->get('s2');
+          // $s3 = $request->get('s3');
 
-          $emergency1 = $request->get('emergency1');
-          $emergency2 = $request->get('emergency2');
-          $emergency3 = $request->get('emergency3');
+          // $emergency1 = $request->get('emergency1');
+          // $emergency2 = $request->get('emergency2');
+          // $emergency3 = $request->get('emergency3');
+
+          $nama_ayah = $request->get("nama_ayah");
+          $kelamin_ayah = $request->get("kelamin_ayah");
+          $tempat_lahir_ayah = $request->get("tempat_lahir_ayah");
+          $tanggal_lahir_ayah = $request->get("tanggal_lahir_ayah");
+          $pekerjaan_ayah = $request->get("pekerjaan_ayah");
+          $f_ayah = $nama_ayah.'_'.$kelamin_ayah.'_'.$tempat_lahir_ayah.'_'.$tanggal_lahir_ayah.'_'.$pekerjaan_ayah;
+
+          $nama_ibu = $request->get("nama_ibu");
+          $kelamin_ibu = $request->get("kelamin_ibu");
+          $tempat_lahir_ibu = $request->get("tempat_lahir_ibu");
+          $tanggal_lahir_ibu = $request->get("tanggal_lahir_ibu");
+          $pekerjaan_ibu = $request->get("pekerjaan_ibu");
+          $f_ibu = $nama_ibu.'_'.$kelamin_ibu.'_'.$tempat_lahir_ibu.'_'.$tanggal_lahir_ibu.'_'.$pekerjaan_ibu;
+
+          $nama_saudara1 = $request->get("nama_saudara1");
+          $kelamin_saudara1 = $request->get("kelamin_saudara1");
+          $tempat_lahir_saudara1 = $request->get("tempat_lahir_saudara1");
+          $tanggal_lahir_saudara1 = $request->get("tanggal_lahir_saudara1");
+          $pekerjaan_saudara1 = $request->get("pekerjaan_saudara1");
+          $f_saudara1 = $nama_saudara1.'_'.$kelamin_saudara1.'_'.$tempat_lahir_saudara1.'_'.$tanggal_lahir_saudara1.'_'.$pekerjaan_saudara1;
+
+          $nama_saudara2 = $request->get("nama_saudara2");
+          $kelamin_saudara2 = $request->get("kelamin_saudara2");
+          $tempat_lahir_saudara2 = $request->get("tempat_lahir_saudara2");
+          $tanggal_lahir_saudara2 = $request->get("tanggal_lahir_saudara2");
+          $pekerjaan_saudara2 = $request->get("pekerjaan_saudara2");
+          $f_saudara2 = $nama_saudara2.'_'.$kelamin_saudara2.'_'.$tempat_lahir_saudara2.'_'.$tanggal_lahir_saudara2.'_'.$pekerjaan_saudara2;
+
+          $nama_saudara3 = $request->get("nama_saudara3");
+          $kelamin_saudara3 = $request->get("kelamin_saudara3");
+          $tempat_lahir_saudara3 = $request->get("tempat_lahir_saudara3");
+          $tanggal_lahir_saudara3 = $request->get("tanggal_lahir_saudara3");
+          $pekerjaan_saudara3 = $request->get("pekerjaan_saudara3");
+          $f_saudara3 = $nama_saudara3.'_'.$kelamin_saudara3.'_'.$tempat_lahir_saudara3.'_'.$tanggal_lahir_saudara3.'_'.$pekerjaan_saudara3;
+
+          $nama_saudara4 = $request->get("nama_saudara4");
+          $kelamin_saudara4 = $request->get("kelamin_saudara4");
+          $tempat_lahir_saudara4 = $request->get("tempat_lahir_saudara4");
+          $tanggal_lahir_saudara4 = $request->get("tanggal_lahir_saudara4");
+          $pekerjaan_saudara4 = $request->get("pekerjaan_saudara4");
+          $f_saudara4 = $nama_saudara4.'_'.$kelamin_saudara4.'_'.$tempat_lahir_saudara4.'_'.$tanggal_lahir_saudara4.'_'.$pekerjaan_saudara4;
+
+          $nama_saudara5 = $request->get("nama_saudara5");
+          $kelamin_saudara5 = $request->get("kelamin_saudara5");
+          $tempat_lahir_saudara5 = $request->get("tempat_lahir_saudara5");
+          $tanggal_lahir_saudara5 = $request->get("tanggal_lahir_saudara5");
+          $pekerjaan_saudara5 = $request->get("pekerjaan_saudara5");
+          $f_saudara5 = $nama_saudara5.'_'.$kelamin_saudara5.'_'.$tempat_lahir_saudara5.'_'.$tanggal_lahir_saudara5.'_'.$pekerjaan_saudara5;
+
+          $nama_saudara6 = $request->get("nama_saudara6");
+          $kelamin_saudara6 = $request->get("kelamin_saudara6");
+          $tempat_lahir_saudara6 = $request->get("tempat_lahir_saudara6");
+          $tanggal_lahir_saudara6 = $request->get("tanggal_lahir_saudara6");
+          $pekerjaan_saudara6 = $request->get("pekerjaan_saudara6");
+          $f_saudara6 = $nama_saudara6.'_'.$kelamin_saudara6.'_'.$tempat_lahir_saudara6.'_'.$tanggal_lahir_saudara6.'_'.$pekerjaan_saudara6;
+
+          $nama_saudara7 = $request->get("nama_saudara7");
+          $kelamin_saudara7 = $request->get("kelamin_saudara7");
+          $tempat_lahir_saudara7 = $request->get("tempat_lahir_saudara7");
+          $tanggal_lahir_saudara7 = $request->get("tanggal_lahir_saudara7");
+          $pekerjaan_saudara7 = $request->get("pekerjaan_saudara7");
+          $f_saudara7 = $nama_saudara7.'_'.$kelamin_saudara7.'_'.$tempat_lahir_saudara7.'_'.$tanggal_lahir_saudara7.'_'.$pekerjaan_saudara7;
+
+          $nama_saudara8 = $request->get("nama_saudara8");
+          $kelamin_saudara8 = $request->get("kelamin_saudara8");
+          $tempat_lahir_saudara8 = $request->get("tempat_lahir_saudara8");
+          $tanggal_lahir_saudara8 = $request->get("tanggal_lahir_saudara8");
+          $pekerjaan_saudara8 = $request->get("pekerjaan_saudara8");
+          $f_saudara8 = $nama_saudara8.'_'.$kelamin_saudara8.'_'.$tempat_lahir_saudara8.'_'.$tanggal_lahir_saudara8.'_'.$pekerjaan_saudara8;
+
+          $nama_saudara9 = $request->get("nama_saudara9");
+          $kelamin_saudara9 = $request->get("kelamin_saudara9");
+          $tempat_lahir_saudara9 = $request->get("tempat_lahir_saudara9");
+          $tanggal_lahir_saudara9 = $request->get("tanggal_lahir_saudara9");
+          $pekerjaan_saudara9 = $request->get("pekerjaan_saudara9");
+          $f_saudara9 = $nama_saudara9.'_'.$kelamin_saudara9.'_'.$tempat_lahir_saudara9.'_'.$tanggal_lahir_saudara9.'_'.$pekerjaan_saudara9;
+
+          $nama_saudara10 = $request->get("nama_saudara10");
+          $kelamin_saudara10 = $request->get("kelamin_saudara10");
+          $tempat_lahir_saudara10 = $request->get("tempat_lahir_saudara10");
+          $tanggal_lahir_saudara10 = $request->get("tanggal_lahir_saudara10");
+          $pekerjaan_saudara10 = $request->get("pekerjaan_saudara10");
+          $f_saudara10 = $nama_saudara10.'_'.$kelamin_saudara10.'_'.$tempat_lahir_saudara10.'_'.$tanggal_lahir_saudara10.'_'.$pekerjaan_saudara10;
+
+          $nama_saudara11 = $request->get("nama_saudara11");
+          $kelamin_saudara11 = $request->get("kelamin_saudara11");
+          $tempat_lahir_saudara11 = $request->get("tempat_lahir_saudara11");
+          $tanggal_lahir_saudara11 = $request->get("tanggal_lahir_saudara11");
+          $pekerjaan_saudara11 = $request->get("pekerjaan_saudara11");
+          $f_saudara11 = $nama_saudara11.'_'.$kelamin_saudara11.'_'.$tempat_lahir_saudara11.'_'.$tanggal_lahir_saudara11.'_'.$pekerjaan_saudara11;
+
+          $nama_saudara12 = $request->get("nama_saudara12");
+          $kelamin_saudara12 = $request->get("kelamin_saudara12");
+          $tempat_lahir_saudara12 = $request->get("tempat_lahir_saudara12");
+          $tanggal_lahir_saudara12 = $request->get("tanggal_lahir_saudara12");
+          $pekerjaan_saudara12 = $request->get("pekerjaan_saudara12");
+          $f_saudara12 = $nama_saudara12.'_'.$kelamin_saudara12.'_'.$tempat_lahir_saudara12.'_'.$tanggal_lahir_saudara12.'_'.$pekerjaan_saudara12;
+
+          $nama_pasangan = $request->get("nama_pasangan");
+          $kelamin_pasangan = $request->get("kelamin_pasangan");
+          $tempat_lahir_pasangan = $request->get("tempat_lahir_pasangan");
+          $tanggal_lahir_pasangan = $request->get("tanggal_lahir_pasangan");
+          $pekerjaan_pasangan = $request->get("pekerjaan_pasangan");
+          $m_pasangan = $nama_pasangan.'_'.$kelamin_pasangan.'_'.$tempat_lahir_pasangan.'_'.$tanggal_lahir_pasangan.'_'.$pekerjaan_pasangan;
+
+          $nama_anak1 = $request->get("nama_anak1");
+          $kelamin_anak1 = $request->get("kelamin_anak1");
+          $tempat_lahir_anak1 = $request->get("tempat_lahir_anak1");
+          $tanggal_lahir_anak1 = $request->get("tanggal_lahir_anak1");
+          $pekerjaan_anak1 = $request->get("pekerjaan_anak1");
+          $m_anak1 = $nama_anak1.'_'.$kelamin_anak1.'_'.$tempat_lahir_anak1.'_'.$tanggal_lahir_anak1.'_'.$pekerjaan_anak1;
+
+          $nama_anak2 = $request->get("nama_anak2");
+          $kelamin_anak2 = $request->get("kelamin_anak2");
+          $tempat_lahir_anak2 = $request->get("tempat_lahir_anak2");
+          $tanggal_lahir_anak2 = $request->get("tanggal_lahir_anak2");
+          $pekerjaan_anak2 = $request->get("pekerjaan_anak2");
+          $m_anak2 = $nama_anak2.'_'.$kelamin_anak2.'_'.$tempat_lahir_anak2.'_'.$tanggal_lahir_anak2.'_'.$pekerjaan_anak2;
+
+          $nama_anak3 = $request->get("nama_anak3");
+          $kelamin_anak3 = $request->get("kelamin_anak3");
+          $tempat_lahir_anak3 = $request->get("tempat_lahir_anak3");
+          $tanggal_lahir_anak3 = $request->get("tanggal_lahir_anak3");
+          $pekerjaan_anak3 = $request->get("pekerjaan_anak3");
+          $m_anak3 = $nama_anak3.'_'.$kelamin_anak3.'_'.$tempat_lahir_anak3.'_'.$tanggal_lahir_anak3.'_'.$pekerjaan_anak3;
+
+          $nama_anak4 = $request->get("nama_anak4");
+          $kelamin_anak4 = $request->get("kelamin_anak4");
+          $tempat_lahir_anak4 = $request->get("tempat_lahir_anak4");
+          $tanggal_lahir_anak4 = $request->get("tanggal_lahir_anak4");
+          $pekerjaan_anak4 = $request->get("pekerjaan_anak4");
+          $m_anak4 = $nama_anak4.'_'.$kelamin_anak4.'_'.$tempat_lahir_anak4.'_'.$tanggal_lahir_anak4.'_'.$pekerjaan_anak4;
+
+          $nama_anak5 = $request->get("nama_anak5");
+          $kelamin_anak5 = $request->get("kelamin_anak5");
+          $tempat_lahir_anak5 = $request->get("tempat_lahir_anak5");
+          $tanggal_lahir_anak5 = $request->get("tanggal_lahir_anak5");
+          $pekerjaan_anak5 = $request->get("pekerjaan_anak5");
+          $m_anak5 = $nama_anak5.'_'.$kelamin_anak5.'_'.$tempat_lahir_anak5.'_'.$tanggal_lahir_anak5.'_'.$pekerjaan_anak5;
+
+          $nama_anak6 = $request->get("nama_anak6");
+          $kelamin_anak6 = $request->get("kelamin_anak6");
+          $tempat_lahir_anak6 = $request->get("tempat_lahir_anak6");
+          $tanggal_lahir_anak6 = $request->get("tanggal_lahir_anak6");
+          $pekerjaan_anak6 = $request->get("pekerjaan_anak6");
+          $m_anak6 = $nama_anak6.'_'.$kelamin_anak6.'_'.$tempat_lahir_anak6.'_'.$tanggal_lahir_anak6.'_'.$pekerjaan_anak6;
+
+          $nama_anak7 = $request->get("nama_anak7");
+          $kelamin_anak7 = $request->get("kelamin_anak7");
+          $tempat_lahir_anak7 = $request->get("tempat_lahir_anak7");
+          $tanggal_lahir_anak7 = $request->get("tanggal_lahir_anak7");
+          $pekerjaan_anak7 = $request->get("pekerjaan_anak7");
+          $m_anak7 = $nama_anak7.'_'.$kelamin_anak7.'_'.$tempat_lahir_anak7.'_'.$tanggal_lahir_anak7.'_'.$pekerjaan_anak7;
+
+          $sd_nama = $request->get("sd");
+          $sd_masuk = $request->get("sd_masuk");
+          $sd_lulus = $request->get("sd_lulus");
+          $sd = $sd_nama+'_-_'+$sd_masuk.'_'.$sd_lulus;
+
+          $smp_nama = $request->get("smp");
+          $smp_masuk = $request->get("smp_masuk");
+          $smp_lulus = $request->get("smp_lulus");
+          $smp = $smp_nama+'_-_'+$smp_masuk.'_'.$smp_lulus;
+
+          $sma_nama = $request->get("sma");
+          $sma_jurusan = $request->get("sma_jurusan");
+          $sma_masuk = $request->get("sma_masuk");
+          $sma_lulus = $request->get("sma_lulus");
+          $sma = $sma_nama.'_'.$sma_jurusan.'_'.$sma_masuk.'_'.$sma_lulus;
+
+          $s1_nama = $request->get("s1");
+          $s1_jurusan = $request->get("s1_jurusan");
+          $s1_masuk = $request->get("s1_masuk");
+          $s1_lulus = $request->get("s1_lulus");
+          $s1 = $s1_nama.'_'.$s1_jurusan.'_'.$s1_masuk.'_'.$s1_lulus;
+
+          $s2_nama = $request->get("s2");
+          $s2_jurusan = $request->get("s2_jurusan");
+          $s2_masuk = $request->get("s2_masuk");
+          $s2_lulus = $request->get("s2_lulus");
+          $s2 = $s2_nama.'_'.$s2_jurusan.'_'.$s2_masuk.'_'.$s2_lulus;
+
+          $s3_nama = $request->get("s3");
+          $s3_jurusan = $request->get("s3_jurusan");
+          $s3_masuk = $request->get("s3_masuk");
+          $s3_lulus = $request->get("s3_lulus");
+          $s3 = $s3_nama.'_'.$s3_jurusan.'_'.$s3_masuk.'_'.$s3_lulus;
+
+          $nama_darurat1 = $request->get("nama_darurat1");
+          $telp_darurat1 = $request->get("telp_darurat1");
+          $pekerjaan_darurat1 = $request->get("pekerjaan_darurat1");
+          $hubungan_darurat1 = $request->get("hubungan_darurat1");
+          $emergency1 = $nama_darurat1.'_'.$telp_darurat1.'_'.$pekerjaan_darurat1.'_'.$hubungan_darurat1;
+
+          $nama_darurat2 = $request->get("nama_darurat2");
+          $telp_darurat2 = $request->get("telp_darurat2");
+          $pekerjaan_darurat2 = $request->get("pekerjaan_darurat2");
+          $hubungan_darurat2 = $request->get("hubungan_darurat2");
+          $emergency2 = $nama_darurat2.'_'.$telp_darurat2.'_'.$pekerjaan_darurat2.'_'.$hubungan_darurat2;
+
+          $nama_darurat3 = $request->get("nama_darurat3");
+          $telp_darurat3 = $request->get("telp_darurat3");
+          $pekerjaan_darurat3 = $request->get("pekerjaan_darurat3");
+          $hubungan_darurat3 = $request->get("hubungan_darurat3");
+          $emergency3 = $nama_darurat3.'_'.$telp_darurat3.'_'.$pekerjaan_darurat3.'_'.$hubungan_darurat3;
 
           try {
+
+               if($request->hasFile('attach')) {
+                    $empAtt = EmployeeAttachment::where('employee_id', $employee_id)->get();
+                    $count = count($empAtt);
+
+                    $files = $request->file('attach');
+                    foreach ($files as $file) {
+
+                         $file_name = $employee_id.'('.++$count.').'.$file->getClientOriginalExtension();
+                         $file->move(public_path('employee_files/'), $file_name);
+                         
+
+                         $attachment = new EmployeeAttachment([
+                              'employee_id' => $employee_id,
+                              'file_path' => "/employee_files/".$file_name,
+                              'created_by' => strtoupper(Auth::user()->username),
+                         ]);
+                         $attachment->save();
+                    } 
+               }
 
                $update = EmployeeUpdate::updateOrCreate(
                     [

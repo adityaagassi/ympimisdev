@@ -54,6 +54,8 @@ class EmployeeUpdate extends Model{
 		'emergency1',
 		'emergency2',
 		'emergency3',
+		'attachment',
+		'count_attachment',
 		'created_by'
 	];
 

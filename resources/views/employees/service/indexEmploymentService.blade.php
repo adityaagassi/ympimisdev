@@ -155,6 +155,9 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					<div class="col-xs-7" style="padding-left: 0; font-weight: bold; font-size: 1.2vw; padding-right: 0;">
 						<span>{{ strtoupper($emp_id) }}</span><br>
 						<span>{{ $profil[0]->name }}</span><br><br>
+
+						<a class="btn btn-primary" 
+						href="{{ url("index/update_emp_data/".strtoupper($emp_id)) }}"><i class="fa fa-edit"></i>&nbsp; Update Data Karyawan</a>
 						{{-- <span>{{ $profil[0]->birth_place }}, {{ date("d F Y",strtotime($profil[0]->birth_date)) }}</span> --}}
 					</div>
 					<div class="col-xs-12" style="padding-top: 10px;">
