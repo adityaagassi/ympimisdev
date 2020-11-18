@@ -4191,7 +4191,7 @@ class WeldingProcessController extends Controller
 	public function fetchWeldingJigSchedule()
 	{
 		try {
-			$jigschedule = JigSchedule::select('*','namekensa.name as kensaname','namerepair.name as repairname')->leftJoin('jigs','jigs.jig_id','jig_schedules.jig_id')->leftJoin('employee_syncs AS namekensa','namekensa.employee_id','jig_schedules.kensa_pic')->leftJoin('employee_syncs as namerepair','namerepair.employee_id','jig_schedules.kensa_pic')->orderBy('schedule_status','desc')->orderBy('schedule_date','asc')->get();
+			$jigschedule = JigSchedule::select('*','jig_schedules.id as id_jig_schedule','namekensa.name as kensaname','namerepair.name as repairname')->leftJoin('jigs','jigs.jig_id','jig_schedules.jig_id')->leftJoin('employee_syncs AS namekensa','namekensa.employee_id','jig_schedules.kensa_pic')->leftJoin('employee_syncs as namerepair','namerepair.employee_id','jig_schedules.kensa_pic')->orderBy('schedule_status','desc')->orderBy('schedule_date','asc')->get();
 
 			$response = array(
 				'status' => true,

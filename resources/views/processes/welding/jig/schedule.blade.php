@@ -248,7 +248,7 @@
 					}else{
 						jigtable += '<td><span class="label label-danger">'+value.schedule_status+'</span></td>';
 					}
-					jigtable += '<td><button class="btn btn-warning btn-sm" onclick="editJigSchedule(\''+value.id+'\')" style="margin-right: 5px"><i class="fa fa-edit"></i>&nbsp;&nbsp;Edit</button></td>';
+					jigtable += '<td><button class="btn btn-warning btn-sm" onclick="editJigSchedule(\''+value.id_jig_schedule+'\')" style="margin-right: 5px"><i class="fa fa-edit"></i>&nbsp;&nbsp;Edit</button></td>';
 					jigtable += '</tr>';
 
 					index++;
