@@ -76,7 +76,7 @@
 								<th style="width: 2%">Schedule Date</th>
 								<th style="width: 2%">Kensa Time</th>
 								<th style="width: 2%">Kensa Status</th>
-								<th style="width: 2%">PIC Kesna</th>
+								<th style="width: 2%">PIC Kensa</th>
 								<th style="width: 2%">Repair Time</th>
 								<th style="width: 2%">Repair Status</th>
 								<th style="width: 2%">PIC Repair</th>
