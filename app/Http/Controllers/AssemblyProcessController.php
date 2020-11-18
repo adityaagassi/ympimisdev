@@ -686,7 +686,7 @@ class AssemblyProcessController extends Controller
 	public function fetchCheckTag(Request $request){
 		$origin_group_code = $request->get('origin_group');		
 		$tag = $request->get('tag');
-		$tag = dechex($tag);
+		$tag = strtoupper(dechex($tag));
 
 		$data = AssemblyInventory::where('tag', $tag)
 		->where('location', 'qa-visual2')
@@ -1037,16 +1037,24 @@ class AssemblyProcessController extends Controller
 			$number = $loc[2];
 			$locfix = $loc[0]."-".$loc[1];
 			$assemblies = Assembly::where('location','=',$locfix)->where('location_number','=',$number)->where('remark','=','OTHER')->first();
-			$assemblies->online_time = date('Y-m-d H:i:s');
-			$assemblies->operator_id = $employee->employee_id;
-			$assemblies->save();
-			$response = array(
-				'status' => true,
-				'message' => 'Tag karyawan ditemukan',
-				'employee' => $employee,
-				'location' => $location
-			);
-			return Response::json($response);
+			if (count($assemblies) > 0) {
+				$assemblies->online_time = date('Y-m-d H:i:s');
+				$assemblies->operator_id = $employee->employee_id;
+				$assemblies->save();
+				$response = array(
+					'status' => true,
+					'message' => 'Tag karyawan ditemukan',
+					'employee' => $employee,
+					'location' => $location
+				);
+				return Response::json($response);
+			}else{
+				$response = array(
+					'status' => false,
+					'message' => 'Tag karyawan tidak ditemukan',
+				);
+				return Response::json($response);	
+			}
 		}
 	}
 

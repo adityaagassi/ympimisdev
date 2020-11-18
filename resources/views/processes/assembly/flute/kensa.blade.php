@@ -372,6 +372,8 @@
 						$('#operator').val('');
 					}
 				});
+			}else{
+				openErrorGritter('Error', 'Tag Tidak Ditemukan');
 			}
 		}
 	});
@@ -906,7 +908,7 @@
 
 		var btn = document.getElementById('confNgOnkoTanpoAwase');
 		btn.disabled = true;
-		btn.innerText = 'Posting...';
+		btn.innerText = 'Saving...';
 
 		$.get('{{ url("fetch/assembly/onko") }}',data, function(result, status, xhr){
 			$.each(result.onko, function(key, value) {
@@ -1045,7 +1047,7 @@
 
 		var btn = document.getElementById('conf1');
 		btn.disabled = true;
-		btn.innerText = 'Posting...';
+		btn.innerText = 'Saving...';
 
 		var data = {
 			tag : $('#tag2').val(),
@@ -1106,7 +1108,7 @@
 
 		$.get('{{ url("destroy/assembly/kensa") }}', data, function(result, status, xhr){
 			if(result.status){
-				openSuccessGritter('Success', result.message);
+				// openSuccessGritter('Success', result.message);
 			}
 			else{
 				audio_error.play();
@@ -1131,7 +1133,7 @@
 		$.get('{{ url("delete/assembly/delete_ng_temp") }}', data, function(result, status, xhr){
 			if (result.status) {
 				fetchNgTemp();
-				openSuccessGritter('Success',result.message);
+				// openSuccessGritter('Success',result.message);
 			}else{
 				openErrorGritter('Error!','Temp Not Found');
 			}
