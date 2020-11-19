@@ -3600,7 +3600,7 @@ class WeldingProcessController extends Controller
 		try {
 
 			$monitoring = DB::SELECT("SELECT
-				b.bulan,
+				b.week_date,
 				SUM( b.before_kensa ) AS before_kensa,
 				SUM( b.after_kensa ) AS after_kensa,
 				SUM( b.before_repair ) AS before_repair,
@@ -3608,8 +3608,7 @@ class WeldingProcessController extends Controller
 			FROM
 				(
 				SELECT DISTINCT
-					(
-					DATE_FORMAT( week_date, '%Y-%m' )) AS bulan,
+					( week_date ),
 					(
 					SELECT
 						COUNT(
@@ -3617,11 +3616,12 @@ class WeldingProcessController extends Controller
 					FROM
 						jig_schedules 
 					WHERE
-						DATE_FORMAT( jig_schedules.schedule_date, '%Y-%m' ) = bulan 
+						jig_schedules.schedule_date = week_date 
 						AND schedule_status = 'Open' 
 						AND kensa_time IS NULL 
 						AND repair_time IS NULL 
 					) AS before_kensa,
+					( SELECT COUNT( DISTINCT ( id )) FROM jig_schedules WHERE jig_schedules.schedule_date = week_date AND schedule_status = 'Close' AND kensa_time IS NOT NULL ) AS after_kensa,
 					(
 					SELECT
 						COUNT(
@@ -3629,18 +3629,7 @@ class WeldingProcessController extends Controller
 					FROM
 						jig_schedules 
 					WHERE
-						DATE_FORMAT( jig_schedules.schedule_date, '%Y-%m' ) = bulan 
-						AND schedule_status = 'Close' 
-						AND kensa_time IS NOT NULL 
-					) AS after_kensa,
-					(
-					SELECT
-						COUNT(
-						DISTINCT ( id )) 
-					FROM
-						jig_schedules 
-					WHERE
-						DATE_FORMAT( jig_schedules.schedule_date, '%Y-%m' ) = bulan 
+						jig_schedules.schedule_date = week_date 
 						AND schedule_status = 'Open' 
 						AND kensa_time IS NOT NULL 
 						AND repair_time IS NULL 
@@ -3652,7 +3641,7 @@ class WeldingProcessController extends Controller
 					FROM
 						jig_schedules 
 					WHERE
-						DATE_FORMAT( jig_schedules.schedule_date, '%Y-%m' ) = bulan 
+						jig_schedules.schedule_date = week_date 
 						AND schedule_status = 'Open' 
 						AND kensa_time IS NOT NULL 
 						AND repair_time IS NOT NULL 
@@ -3660,12 +3649,10 @@ class WeldingProcessController extends Controller
 				FROM
 					weekly_calendars 
 				WHERE
-					week_date BETWEEN DATE(
-					NOW() )
-					AND DATE(
-					DATE_ADD( NOW(), INTERVAL + 6 MONTH )) UNION ALL
+					week_date BETWEEN DATE_FORMAT( NOW(), '%Y-%m-01' ) 
+					AND DATE_FORMAT( LAST_DAY( NOW()), '%Y-%m-%d' ) UNION ALL
 				SELECT
-					DATE_FORMAT( jig_schedules.schedule_date, '%Y-%m' ) AS bulan,
+					jig_schedules.schedule_date,
 					COUNT(
 					DISTINCT ( id )) AS before_kensa,
 					0 AS after_kensa,
@@ -3674,16 +3661,16 @@ class WeldingProcessController extends Controller
 				FROM
 					jig_schedules 
 				WHERE
-					schedule_date < DATE(NOW()) 
+					schedule_date < DATE_FORMAT( NOW(), '%Y-%m-01' ) 
 					AND schedule_status = 'Open' 
 					AND kensa_time IS NULL 
 				GROUP BY
-					DATE_FORMAT( jig_schedules.schedule_date, '%Y-%m' ) 
+					jig_schedules.schedule_date
 				) b 
 			GROUP BY
-				b.bulan 
+				b.week_date 
 			ORDER BY
-				b.bulan ASC");
+				b.week_date ASC");
 
 			$resume = DB::SELECT("SELECT
 				a.week_date,
