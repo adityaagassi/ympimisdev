@@ -74,7 +74,7 @@
 @section('header')
 @endsection
 @section('content')
-	
+
 <div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
 	<p style="text-align: center; position: absolute; color: white; top: 45%; left: 40%;">
 		<span style="font-size: 50px;">Please wait ... </span><br>
@@ -102,9 +102,10 @@
 			<table class="table table-bordered" id="store_table">
 				<thead>
 					<tr>
-						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 25px;" colspan="9" id='store_title'>STORE</th>
+						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 25px;" colspan="10" id='store_title'>STORE</th>
 					</tr>
 					<tr>
+						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">#ID</th>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">Location</th>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">SUB STORE</th>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">CATEGORY</th>
@@ -113,7 +114,7 @@
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">UOM</th>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">COUNT PI</th>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">AUDIT 1</th>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">#ID</th>
+						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">FINAL PI</th>
 					</tr>
 				</thead>
 				<tbody id="store_body">
@@ -330,6 +331,7 @@
 					}					
 					num++;
 					body += '<tr '+ css +'">';
+					body += '<td '+css+'>'+result.store[i].id+'</td>';
 					body += '<td '+css+'>'+result.store[i].location+'</td>';
 					body += '<td '+css+'>'+result.store[i].sub_store+'</td>';
 					body += '<td '+css+'>'+result.store[i].category+'</td>';
@@ -347,8 +349,13 @@
 					}else{
 						body += '<td '+css+'></td>';							
 					}
+
+					if(result.store[i].final_count != null){
+						body += '<td '+css+'>'+result.store[i].final_count+'</td>';
+					}else{
+						body += '<td '+css+'></td>';							
+					}
 					
-					body += '<td '+css+'>'+result.store[i].id+'</td>';
 
 					// if(result.store[i].process == 1){
 					// 	if (result.store[i].quantity != 0) {

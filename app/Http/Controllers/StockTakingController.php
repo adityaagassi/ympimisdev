@@ -255,8 +255,8 @@ class StockTakingController extends Controller{
 
 				for ($i=0; $i < count($rows); $i++) {
 					$location = preg_replace('/[^a-zA-Z0-9]+/', '', strtoupper($rows[$i][1]));
-					$store = preg_replace('/[^a-zA-Z0-9 &-]+/', '', strtoupper($rows[$i][2]));
-					$sub_store = preg_replace('/[^a-zA-Z0-9 &-]+/', '', strtoupper($rows[$i][3]));
+					$store = preg_replace('/[^a-zA-Z0-9 &-_]+/', '', strtoupper($rows[$i][2]));
+					$sub_store = preg_replace('/[^a-zA-Z0-9 &-_]+/', '', strtoupper($rows[$i][3]));
 					$material_number = preg_replace('/[^a-zA-Z0-9]+/', '', strtoupper($rows[$i][4]));
 					$material_description = preg_replace('/[^a-zA-Z0-9 ]+/', '', strtoupper($rows[$i][5]));
 					$category = preg_replace('/[^a-zA-Z0-9]+/', '', strtoupper($rows[$i][6]));
@@ -1694,13 +1694,33 @@ class StockTakingController extends Controller{
 		$pdf->setPaper('A4', 'potrait');
 		$pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
 
-		$pdf->loadView('stocktakings.print_substore', array(
-			'lists' => $lists,
-			// 'qr_code' => $arr_qr,
-			'query' => DB::getQueryLog()
-		));
+		
 
-		return $pdf->stream($lists[0]->sub_store."_".$lists[0]->store.".pdf");
+		if($lists[0]->material_number == 'W934330' && $lists[0]->location == 'FL51'){
+			$pdf->loadView('stocktakings.monthly.print_substore_ag', array(
+				'lists' => $lists,
+			// 'qr_code' => $arr_qr,
+				'query' => DB::getQueryLog()
+			));
+
+			return $pdf->stream($lists[0]->sub_store."_".$lists[0]->store.".pdf");
+		}else if($lists[0]->material_number == 'ZN93390' && $lists[0]->location == 'FL51'){
+			$pdf->loadView('stocktakings.monthly.print_substore_gold', array(
+				'lists' => $lists,
+			// 'qr_code' => $arr_qr,
+				'query' => DB::getQueryLog()
+			));
+
+			return $pdf->stream($lists[0]->sub_store."_".$lists[0]->store.".pdf");
+		}else{
+			$pdf->loadView('stocktakings.monthly.print_substore', array(
+				'lists' => $lists,
+			// 'qr_code' => $arr_qr,
+				'query' => DB::getQueryLog()
+			));
+
+			return $pdf->stream($lists[0]->sub_store."_".$lists[0]->store.".pdf");
+		}
 
 		// return view('stocktakings.print_substore', array(
 		// 	'lists' => $lists
@@ -4288,7 +4308,8 @@ s.id ASC");
 			s.remark,
 			s.process,
 			s.quantity,
-			s.audit1
+			s.audit1,
+			s.final_count
 			FROM
 			stocktaking_new_lists s
 			LEFT JOIN materials m ON m.material_number = s.material_number
