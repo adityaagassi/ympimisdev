@@ -275,10 +275,10 @@
 		<br>
 		<h2>Purchase Requisition (PR) {{ $data[0]->no_pr }} Not Approved</h2>
 		
-		<?php if ($alasan != null) { ?>
+		<?php if ($data[0]->alasan != null) { ?>
 			<h3>Reason :<h3>
 			<h3>
-				<?= $alasan ?>	
+				<?= $data[0]->alasan ?>	
 			</h3>
 		<?php } ?>
 
