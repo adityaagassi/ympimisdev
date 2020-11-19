@@ -154,7 +154,9 @@ class EmployeeController extends Controller
      public function fetchFillEmpData(Request $request){
           $employee_id = $request->get('emp_id');
 
-          $data = EmployeeUpdate::where('employee_id', $employee_id)->first();
+          $data = EmployeeUpdate::where('employee_id', $employee_id)
+          ->select('employee_updates.*', db::raw('DATE_FORMAT(birth_date,"%d-%m-%Y") AS tgl_lahir'))
+          ->first();
 
           $response = array(
                'status' => true,

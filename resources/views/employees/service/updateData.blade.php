@@ -1115,7 +1115,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					$("#nik").val(result.data.nik);
 					$("#npwp").val(result.data.npwp);
 					$("#tempat_lahir").val(result.data.birth_place);
-					$("#tanggal_lahir").val(result.data.birth_date);
+					$("#tanggal_lahir").val(result.data.tgl_lahir);
 					$('#agama').val(result.data.religion).trigger('change.select2');
 					$('#status_perkawinan').val(result.data.mariage_status).trigger('change.select2');
 					$("#alamat_asal").val(result.data.address);
