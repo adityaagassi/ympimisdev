@@ -5192,11 +5192,20 @@ class InjectionsController extends Controller
                 // ]);
             }else{
                 $transaction = InjectionTag::where('tag',$request->get('tag'))->first();
-                $transaction->operator_id = $request->get('operator_id');
-                $transaction->availability = 3;
+                // $transaction->operator_id = $request->get('operator_id');
+                $transaction->operator_id = null;
+                $transaction->part_name = null;
+                $transaction->part_type = null;
+                $transaction->color = null;
+                $transaction->cavity = null;
+                $transaction->location = null;
+                $transaction->shot = null;
+                $transaction->availability = null;
+                // $transaction->availability = 3;
                 $transaction->height_check = null;
                 $transaction->push_pull_check = null;
                 $transaction->torque_check = null;
+                $transaction->remark = null;
                 $transaction->save();
 
                 InjectionTransaction::create([
