@@ -184,7 +184,7 @@
 				var waiting_part = [];
 
 				for (var i = 0; i < result.monitoring.length; i++) {
-					date.push(result.monitoring[i].bulan);
+					date.push(result.monitoring[i].week_date);
 					before_kensa.push(parseInt(result.monitoring[i].before_kensa));
 					after_kensa.push(parseInt(result.monitoring[i].after_kensa));
 					before_repair.push(parseInt(result.monitoring[i].before_repair));
