@@ -625,43 +625,43 @@ public function bara(Request $request){
 
 public function getReason(Request $request)
 {
- $reason = MasterChecksheet::where('id_checksheet','=', $request->get('id')) 
- ->select('reason','invoice_date')     
- ->first();
+    $reason = MasterChecksheet::where('id_checksheet','=', $request->get('id')) 
+    ->select('reason','invoice_date')     
+    ->first();
 
- $response = array(
-    'status' => true,
-    'message' => 'Update Success',
-    'reason' => $reason
-);
- return Response::json($response);
+    $response = array(
+      'status' => true,
+      'message' => 'Update Success',
+      'reason' => $reason
+ );
+    return Response::json($response);
 }
 
 public function edit(Request $request){
- $id_user = Auth::id();
- $master = MasterChecksheet::where('id_checksheet','=', $request->get('id_chek'))      
- ->first();
+    $id_user = Auth::id();
+    $master = MasterChecksheet::where('id_checksheet','=', $request->get('id_chek'))      
+    ->first();
 
- $master->countainer_number = $request->get('countainer_numberE');
- $master->seal_number = $request->get('seal_numberE');
- $master->no_pol = $request->get('nopolE');
- $master->invoice = $request->get('invoiceE');
- $master->destination = strtoupper($request->get('destinationE'));
- $master->shipped_to = $request->get('shipped_toE');
- $master->Stuffing_date = $request->get('Stuffing_dateE');
- $master->invoice_date = $request->get('invoice_dateE');
- $master->etd_sub = $request->get('etd_subE');
- $master->carier = $request->get('carierE');
- $master->payment = $request->get('paymentE');
- $master->reason = $request->get('reason');
- $master->created_by = $id_user;
- $master->save();
- $response = array(
-    'status' => true,
-    'message' => 'Update Success',
-);
+    $master->countainer_number = $request->get('countainer_numberE');
+    $master->seal_number = $request->get('seal_numberE');
+    $master->no_pol = $request->get('nopolE');
+    $master->invoice = $request->get('invoiceE');
+    $master->destination = strtoupper($request->get('destinationE'));
+    $master->shipped_to = $request->get('shipped_toE');
+    $master->Stuffing_date = $request->get('Stuffing_dateE');
+    $master->invoice_date = $request->get('invoice_dateE');
+    $master->etd_sub = $request->get('etd_subE');
+    $master->carier = $request->get('carierE');
+    $master->payment = $request->get('paymentE');
+    $master->reason = $request->get('reason');
+    $master->created_by = $id_user;
+    $master->save();
+    $response = array(
+      'status' => true,
+      'message' => 'Update Success',
+ );
 
- return redirect('/index/CheckSheet')->with('status', 'Check Sheet has been updated.')->with('page', 'Check Sheet');
+    return redirect('/index/CheckSheet')->with('status', 'Check Sheet has been updated.')->with('page', 'Check Sheet');
 }
 
 public function marking(Request $request){
@@ -706,17 +706,60 @@ public function mailStuffing($st_date){
      ->select('email')
      ->get();
 
-     $query = "select if(master_checksheets.`status` is not null, 'DEPARTED', if(actual_stuffing.total_actual>0, 'LOADING', '-')) as stats, master_checksheets.`status`, master_checksheets.id_checkSheet, master_checksheets.destination, shipment_conditions.shipment_condition_name, actual_stuffing.total_plan, actual_stuffing.total_actual, master_checksheets.reason, master_checksheets.start_stuffing, master_checksheets.finish_stuffing from master_checksheets left join shipment_conditions on shipment_conditions.shipment_condition_code = master_checksheets.carier 
-     left join
+     $query = "SELECT
+     IF
      (
-     select id_checkSheet, sum(plan_loading) as total_plan, sum(actual_loading) as total_actual from (
-     select id_checkSheet, qty_qty as plan_loading, (qty_qty/if(package_qty = '-' or package_qty is null, 1, package_qty))*if(confirm = 0 and bara = 0, 1, confirm) as actual_loading from detail_checksheets
-     where deleted_at is null) as stuffings
-     group by id_checkSheet
-     ) as actual_stuffing
-     on actual_stuffing.id_checkSheet = master_checksheets.id_checkSheet
-     where master_checksheets.deleted_at is null and master_checksheets.Stuffing_date = '".$st_date."'
-     order by field(stats, 'LOADING', 'INSPECTION', '-', 'DEPARTED')";
+     master_checksheets.`status` IS NOT NULL,
+     'DEPARTED',
+     IF
+     ( actual_stuffing.total_actual > 0, 'LOADING', '-' )) AS stats,
+     master_checksheets.`status`,
+     master_checksheets.id_checkSheet,
+     master_checksheets.destination,
+     shipment_conditions.shipment_condition_name,
+     actual_stuffing.total_plan,
+     actual_stuffing.total_actual,
+     master_checksheets.reason,
+     master_checksheets.start_stuffing,
+     master_checksheets.finish_stuffing,
+     TIMESTAMPDIFF( MINUTE, master_checksheets.start_stuffing, master_checksheets.finish_stuffing ) AS duration 
+     FROM
+     master_checksheets
+     LEFT JOIN shipment_conditions ON shipment_conditions.shipment_condition_code = master_checksheets.carier
+     LEFT JOIN (
+     SELECT
+     id_checkSheet,
+     sum( plan_loading ) AS total_plan,
+     sum( actual_loading ) AS total_actual 
+     FROM
+     (
+     SELECT
+     id_checkSheet,
+     qty_qty AS plan_loading,
+     (
+     qty_qty /
+     IF
+     ( package_qty = '-' OR package_qty IS NULL, 1, package_qty ))*
+     IF
+     ( confirm = 0 AND bara = 0, 1, confirm ) AS actual_loading 
+     FROM
+     detail_checksheets 
+     WHERE
+     deleted_at IS NULL 
+     ) AS stuffings 
+     GROUP BY
+     id_checkSheet 
+     ) AS actual_stuffing ON actual_stuffing.id_checkSheet = master_checksheets.id_checkSheet 
+     WHERE
+     master_checksheets.deleted_at IS NULL 
+     AND master_checksheets.Stuffing_date = '".$st_date."' 
+     ORDER BY
+     field(
+     stats,
+     'LOADING',
+     'INSPECTION',
+     '-',
+     'DEPARTED')";
 
      $stuffings = db::select($query);
 
@@ -774,10 +817,10 @@ public function deleteReimport(Request $request)
 
 
      $response = array(
-         'status' => true,
-         'message' => 'Update Success',
-         'reason' => 'ok'
-    );
+      'status' => true,
+      'message' => 'Update Success',
+      'reason' => 'ok'
+ );
      return Response::json($response);
 }
 

@@ -27,13 +27,14 @@
 						<th style="width: 1%; border:1px solid black;">#</th>
 						<th style="width: 1%; border:1px solid black;">Progress</th>
 						<th style="width: 1%; border:1px solid black;">Remark</th>
-						<th style="width: 1%; border:1px solid black;">Cont. ID</th>
+						<th style="width: 1%; border:1px solid black;">ID</th>
 						<th style="width: 1%; border:1px solid black;">Dest</th>
 						<th style="width: 1%; border:1px solid black;">Plan</th>
 						<th style="width: 1%; border:1px solid black;">Actual</th>
 						<th style="width: 1%; border:1px solid black;">Diff</th>
 						<th style="width: 1%; border:1px solid black;">Start</th>
 						<th style="width: 1%; border:1px solid black;">Finish</th>
+						<th style="width: 1%; border:1px solid black;">Duration</th>
 						<th style="width: 1%; border:1px solid black;">Departure</th>
 						<th style="width: 15%; border:1px solid black;">Remark</th>
 					</tr>
@@ -70,7 +71,9 @@
 						<?php } ?>
 						<?php if($col->stats == 'DEPARTED' ){ ?>
 						<td style="border:1px solid black; text-align: right;{{$color}}">{{date('H:i:s', strtotime($col->finish_stuffing))}}</td>
+						<td style="border:1px solid black; text-align: right;{{$color}}">{{ $col->duration }} Min(s)</td>
 						<?php }else{ ?>
+						<td style="border:1px solid black; text-align: right;{{$color}}">-</td>
 						<td style="border:1px solid black; text-align: right;{{$color}}">-</td>
 						<?php } ?>
 						<?php if($col->status != null ){ ?>
