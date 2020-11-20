@@ -7624,32 +7624,32 @@ public function import_receive(Request $request){
         ORDER BY
         submission_date ASC");
 
-      $data_po_belum_receive = db::select("
-        SELECT
-        acc_purchase_requisitions.no_pr,
-        sum( CASE WHEN acc_purchase_order_details.`status` IS NULL THEN 1 ELSE 0 END ) AS belum_close,
-        sum( CASE WHEN acc_purchase_order_details.`status` IS NOT NULL THEN 1 ELSE 0 END ) AS sudah_close 
-        FROM
-        acc_purchase_requisitions
-        LEFT JOIN acc_purchase_requisition_items ON acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr 
-        LEFT JOIN acc_purchase_order_details on acc_purchase_requisition_items.no_pr = acc_purchase_order_details.no_pr and acc_purchase_requisition_items.item_code = acc_purchase_order_details.no_item
-        WHERE
-        acc_purchase_requisitions.deleted_at IS NULL 
-        AND acc_purchase_requisition_items.sudah_po IS NOT NULL 
-        AND acc_purchase_requisitions.receive_date IS NOT NULL
-        AND DATE_FORMAT( submission_date, '%Y-%m' ) 
-        BETWEEN '".$datefrom."' AND '".$dateto."' ".$dep." 
-        GROUP BY
-        no_pr 
-        ORDER BY
-        submission_date ASC
-        ");
+      // $data_po_belum_receive = db::select("
+      //   SELECT
+      //   acc_purchase_requisitions.no_pr,
+      //   sum( CASE WHEN acc_purchase_order_details.`status` IS NULL THEN 1 ELSE 0 END ) AS belum_close,
+      //   sum( CASE WHEN acc_purchase_order_details.`status` IS NOT NULL THEN 1 ELSE 0 END ) AS sudah_close 
+      //   FROM
+      //   acc_purchase_requisitions
+      //   LEFT JOIN acc_purchase_requisition_items ON acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr 
+      //   LEFT JOIN acc_purchase_order_details on acc_purchase_requisition_items.no_pr = acc_purchase_order_details.no_pr and acc_purchase_requisition_items.item_code = acc_purchase_order_details.no_item
+      //   WHERE
+      //   acc_purchase_requisitions.deleted_at IS NULL 
+      //   AND acc_purchase_requisition_items.sudah_po IS NOT NULL 
+      //   AND acc_purchase_requisitions.receive_date IS NOT NULL
+      //   AND DATE_FORMAT( submission_date, '%Y-%m' ) 
+      //   BETWEEN '".$datefrom."' AND '".$dateto."' ".$dep." 
+      //   GROUP BY
+      //   no_pr 
+      //   ORDER BY
+      //   submission_date ASC
+      //   ");
 
       $response = array(
         'status' => true,
         'datas' => $data,
         'data_pr_belum_po' => $data_pr_belum_po,
-        'data_po_belum_receive' => $data_po_belum_receive,
+        // 'data_po_belum_receive' => $data_po_belum_receive,
         'tahun' => $tahun,
         'datefrom' => $datefrom,
         'dateto' => $dateto,

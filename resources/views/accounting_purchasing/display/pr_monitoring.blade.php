@@ -234,7 +234,7 @@ table > thead > tr > th{
         </div>
       </div>
 
-      <div class="col-xs-12">
+      <!-- <div class="col-xs-12">
         <div class="row">
           <hr style="border: 1px solid red;background-color: red">
         </div>
@@ -270,7 +270,7 @@ table > thead > tr > th{
           </table>
         </div>
       </div>
-
+ -->
     </div>
   </div>
 
@@ -687,97 +687,97 @@ table > thead > tr > th{
 
 
 
-          $('#chartactual').highcharts({
-            chart: {
-              type: 'column'
-            },
-            title: {
-              text: 'Outstanding PR Sudah PO (Belum Receive)',
-              style: {
-                fontSize: '24px',
-                fontWeight: 'bold'
-              }
-            },
-            xAxis: {
-              type: 'category',
-              categories: pr_close,
-              lineWidth:2,
-              lineColor:'#9e9e9e',
-              gridLineWidth: 1
-            },
-            yAxis: {
-              lineWidth:2,
-              lineColor:'#fff',
-              type: 'linear',
-              title: {
-                enabled:false
-              },
-              tickInterval: 3,  
-              stackLabels: {
-                  enabled: true,
-                  style: {
-                      fontWeight: 'bold',
-                      color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
-                  }
-              }
-            },
-            legend: {
-              enabled:true,
-              reversed: true,
-              itemStyle:{
-                color: "white",
-                fontSize: "12px",
-                fontWeight: "bold",
+          // $('#chartactual').highcharts({
+          //   chart: {
+          //     type: 'column'
+          //   },
+          //   title: {
+          //     text: 'Outstanding PR Sudah PO (Belum Receive)',
+          //     style: {
+          //       fontSize: '24px',
+          //       fontWeight: 'bold'
+          //     }
+          //   },
+          //   xAxis: {
+          //     type: 'category',
+          //     categories: pr_close,
+          //     lineWidth:2,
+          //     lineColor:'#9e9e9e',
+          //     gridLineWidth: 1
+          //   },
+          //   yAxis: {
+          //     lineWidth:2,
+          //     lineColor:'#fff',
+          //     type: 'linear',
+          //     title: {
+          //       enabled:false
+          //     },
+          //     tickInterval: 3,  
+          //     stackLabels: {
+          //         enabled: true,
+          //         style: {
+          //             fontWeight: 'bold',
+          //             color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+          //         }
+          //     }
+          //   },
+          //   legend: {
+          //     enabled:true,
+          //     reversed: true,
+          //     itemStyle:{
+          //       color: "white",
+          //       fontSize: "12px",
+          //       fontWeight: "bold",
 
-              },
-            },
-            plotOptions: {
-              series: {
-                cursor: 'pointer',
-                point: {
-                  events: {
-                    click: function () {
-                      ShowModalActual(this.category,this.series.name,result.datefrom,result.dateto,result.department);
-                    }
-                  }
-                },
-                borderWidth: 0,
-                dataLabels: {
-                  enabled: false,
-                  format: '{point.y}'
-                }
-              },
-              column: {
-                  color:  Highcharts.ColorString,
-                  stacking: 'normal',
-                  borderRadius: 1,
-                  dataLabels: {
-                      enabled: true
-                  }
-              }
-            },
-            credits: {
-              enabled: false
-            },
+          //     },
+          //   },
+          //   plotOptions: {
+          //     series: {
+          //       cursor: 'pointer',
+          //       point: {
+          //         events: {
+          //           click: function () {
+          //             ShowModalActual(this.category,this.series.name,result.datefrom,result.dateto,result.department);
+          //           }
+          //         }
+          //       },
+          //       borderWidth: 0,
+          //       dataLabels: {
+          //         enabled: false,
+          //         format: '{point.y}'
+          //       }
+          //     },
+          //     column: {
+          //         color:  Highcharts.ColorString,
+          //         stacking: 'normal',
+          //         borderRadius: 1,
+          //         dataLabels: {
+          //             enabled: true
+          //         }
+          //     }
+          //   },
+          //   credits: {
+          //     enabled: false
+          //   },
 
-            tooltip: {
-              formatter:function(){
-                return this.series.name+' : ' + this.y;
-              }
-            },
-            series: [
-              {
-                name: 'Belum Datang',
-                color: '#ff7043', //ff6666
-                data: belum_close
-              },
-              {
-                name: 'Sudah Datang',
-                color: '#00a65a',
-                data: sudah_close
-              }
-            ]
-          })
+          //   tooltip: {
+          //     formatter:function(){
+          //       return this.series.name+' : ' + this.y;
+          //     }
+          //   },
+          //   series: [
+          //     {
+          //       name: 'Belum Datang',
+          //       color: '#ff7043', //ff6666
+          //       data: belum_close
+          //     },
+          //     {
+          //       name: 'Sudah Datang',
+          //       color: '#00a65a',
+          //       data: sudah_close
+          //     }
+          //   ]
+          // })
 
 
         } else{
@@ -1038,29 +1038,29 @@ table > thead > tr > th{
           $('#tabelisipo_undone').append(table_belum_po);
 
 
-          $("#tabelisiactual").find("td").remove();  
-          $('#tabelisiactual').html("");
+          // $("#tabelisiactual").find("td").remove();  
+          // $('#tabelisiactual').html("");
           
-          var table_belum_actual = "";
+          // var table_belum_actual = "";
 
-          $.each(result.data_po_belum_receive, function(key, value) {
-            table_belum_actual += '<tr>';
-            table_belum_actual += '<td>'+value.no_pr+'</td>';
-            table_belum_actual += '<td>'+value.department_shortname+'</td>';
-            table_belum_actual += '<td>'+value.no_po+'</td>';
-            table_belum_actual += '<td>'+value.tgl_po+'</td>';
-            table_belum_actual += '<td>'+value.supplier_name+'</td>';
-            table_belum_actual += '<td>'+value.nama_item+'</td>';
-            if (value.status_po == 'PO Terkirim') {
-              table_belum_actual += '<td><span class="label label-success"> '+value.status_po+' </span></td>';              
-            }else if(value.status_po == 'PO Approval'){
-              table_belum_actual += '<td><span class="label label-warning">'+value.status_po+' </span></td>';   
-            }
+          // $.each(result.data_po_belum_receive, function(key, value) {
+          //   table_belum_actual += '<tr>';
+          //   table_belum_actual += '<td>'+value.no_pr+'</td>';
+          //   table_belum_actual += '<td>'+value.department_shortname+'</td>';
+          //   table_belum_actual += '<td>'+value.no_po+'</td>';
+          //   table_belum_actual += '<td>'+value.tgl_po+'</td>';
+          //   table_belum_actual += '<td>'+value.supplier_name+'</td>';
+          //   table_belum_actual += '<td>'+value.nama_item+'</td>';
+          //   if (value.status_po == 'PO Terkirim') {
+          //     table_belum_actual += '<td><span class="label label-success"> '+value.status_po+' </span></td>';              
+          //   }else if(value.status_po == 'PO Approval'){
+          //     table_belum_actual += '<td><span class="label label-warning">'+value.status_po+' </span></td>';   
+          //   }
             
-            table_belum_actual += '</tr>';
-          })
+          //   table_belum_actual += '</tr>';
+          // })
 
-          $('#tabelisiactual').append(table_belum_actual);
+          // $('#tabelisiactual').append(table_belum_actual);
 
         }
       }
