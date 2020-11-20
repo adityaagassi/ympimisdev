@@ -1271,6 +1271,7 @@ Route::get('index/sakurentsu/list_3m', 'SakurentsuController@index_tiga_em');
 Route::get('fetch/sakurentsu/list_3m', 'SakurentsuController@fetch_tiga_em');
 
 Route::get('index/sakurentsu/3m/{sakurentsu_number}', 'SakurentsuController@index_form_tiga_em');
+Route::post('post/sakurentsu/3m_form', 'SakurentsuController@save_tiga_em_form');
 
 //Supplier
 Route::get('index/supplier', 'AccountingController@master_supplier');
@@ -1506,11 +1507,19 @@ Route::get('fetch/transaksi', 'AccountingController@fetch_upload_transaksi');
 Route::post('import/transaksi', 'AccountingController@import_transaksi');
 Route::post('delete/actual/transaksi', 'AccountingController@delete_transaksi');
 
+//Receive Barang
 Route::get('warehouse/receive_equipment', 'AccountingController@wh_receive_equipment');
 Route::get('fetch/warehouse/equipment', 'AccountingController@fetch_receive_equipment');
 Route::post('fetch/warehouse/update_receive', 'AccountingController@update_receive');
+
+//Print Label Barang
+Route::get('warehouse/print_equipment', 'AccountingController@wh_print_equipment');
+Route::get('fetch/warehouse/print_equipment', 'AccountingController@fetch_print_equipment');
 Route::get('print/warehouse/label/{id}', 'AccountingController@label_kedatangan');
+
+//Cetak Bukti Kedatangan
 Route::get('warehouse/cetak_bukti', 'AccountingController@wh_cetak_bukti');
+Route::get('fetch/warehouse/cetak_bukti', 'AccountingController@fetch_cetak_bukti');
 
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 	Route::get('scan/middle/kensa', 'MiddleProcessController@ScanMiddleKensa');
@@ -2134,11 +2143,15 @@ Route::get('fetch/getReportVisualDaily', 'Pianica@getReportVisualDaily');
 Route::group(['nav' => 'M23', 'middleware' => 'permission'], function(){
 	Route::get('index/bom_output', 'StockTakingController@bom_output');
 	Route::get('fetch/bom_output', 'StockTakingController@fetch_bom_output');
+
+	Route::post('import/material/bom', 'StockTakingController@importbom');
 });
 
 Route::group(['nav' => 'M24', 'middleware' => 'permission'], function(){
 	Route::get('index/material_plant_data_list', 'StockTakingController@mpdl');
 	Route::get('fetch/material_plant_data_list', 'StockTakingController@fetchmpdl');
+
+	Route::post('import/material/mpdl', 'StockTakingController@importmpdl');
 });
 
 Route::group(['nav' => 'S22', 'middleware' => 'permission'], function(){
@@ -3664,6 +3677,9 @@ Route::get('fetch/assembly/production_result', 'AssemblyProcessController@fetchP
 
 Route::get('index/assembly/stamp_record', 'AssemblyProcessController@indexStampRecord');
 Route::get('fetch/assembly/stamp_record', 'AssemblyProcessController@fetchStampRecord');
+
+Route::get('index/assembly/ng_report/{process}', 'AssemblyProcessController@indexNgReport');
+Route::get('fetch/assembly/ng_report/{process}', 'AssemblyProcessController@fetchNgReport');
 
 
 Route::group(['nav' => 'M29', 'middleware' => 'permission'], function(){

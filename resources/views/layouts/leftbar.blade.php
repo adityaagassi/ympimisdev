@@ -529,8 +529,43 @@
     </a>
     <ul class="treeview-menu">
       @if(isset($page) && $page == "Upload Sakurentsu")<li class="active">@else<li>@endif
-        <a href="{{ url("/index/sakurentsu/upload_sakurentsu") }}"><i class="fa fa-files-o"></i><span>Upload Sakurentsu</span></a>
+        <a href="{{ url("/index/sakurentsu/upload_sakurentsu") }}"><i class="fa fa-upload"></i><span>Upload Sakurentsu</span></a>
       </li>
+
+      @if(isset($page) && $page == "Sakurentsu List")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/sakurentsu/list_sakurentsu") }}"><i class="fa fa-files-o"></i><span>Sakurentsu List</span></a>
+      </li>
+
+      @if(isset($page) && $page == "3M List")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/sakurentsu/list_3m") }}"><i class="fa fa-files-o"></i><span>3M List</span></a>
+      </li>
+
+      @if(isset($page) && $page == "Trial List")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/sakurentsu/list_trial") }}"><i class="fa fa-files-o"></i><span>Trial List</span></a>
+      </li>
+    </ul>
+  </li>
+  @endif
+
+  @if(in_array('S45', $navs))
+  @if(isset($head) && $head == "Receive Equipment WH")<li class="treeview active">@else<li class="treeview">@endif
+    <a href="#">
+      <i class="fa fa-money"></i> <span>Receive Equipment WH</span>
+      <span class="pull-right-container">
+        <i class="fa fa-angle-left pull-right"></i>
+      </span>
+    </a>
+    <ul class="treeview-menu">
+      @if(isset($page) && $page == "Receive WH")<li class="active">@else<li>@endif
+        <a href="{{ url("warehouse/receive_equipment") }}"><i class="fa fa-share-square-o"></i>Terima Barang</a>
+      </li>
+      @if(isset($page) && $page == "Print WH")<li class="active">@else<li>@endif
+        <a href="{{ url("warehouse/print_equipment") }}"><i class="fa fa-sticky-note-o"></i>Cetak Label Barang</a>
+      </li>
+      @if(isset($page) && $page == "Receive Bukti")<li class="active">@else<li>@endif
+        <a href="{{ url("warehouse/cetak_bukti") }}"><i class="fa fa-file-pdf-o"></i><span>Cetak Bukti Penerimaan Barang</span></a>
+      </li>
+      
     </ul>
   </li>
   @endif
@@ -824,7 +859,7 @@
 @endif
 
 @if(in_array('S13', $navs))
-@if(isset($head) && $head == "Purchase Order")<li class="treeview active">@else<li class="treeview">@endif
+@if(isset($head) && $head == "Purchase Order Material")<li class="treeview active">@else<li class="treeview">@endif
   <a href="#">
     <i class="fa fa-list-alt"></i> <span>Purchase Order Material</span>
     <span class="pull-right-container">
@@ -986,7 +1021,7 @@
       </li>
 
       @if(isset($page) && $page == "SPK")<li class="active">@else<li>@endif
-        <a href="{{ url("/index/maintenance/spk") }}"><i class="fa fa-gears"></i> <span>SPK Execution</span></a>
+        <a href="{{ secure_url("/index/maintenance/spk") }}"><i class="fa fa-gears"></i> <span>SPK Execution</span></a>
       </li>
     </ul>
   </li>

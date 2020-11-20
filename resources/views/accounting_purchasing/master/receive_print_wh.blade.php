@@ -96,7 +96,7 @@
 	<div class="row" style="margin-left: 1%; margin-right: 1%;" id="main">
 		<div class="col-xs-6 col-xs-offset-3" style="padding-left: 0px;">
 			<div class="col-xs-12" style="padding-right: 0; padding-left: 0; margin-bottom: 2%;">
-				
+
 				<select class="form-control select2" id="no_po" name="no_po" style="width: 100%;" data-placeholder="Pilih Nomor PO" onchange="cekPO()">
 	              <option value=""></option>
 	              @foreach($po_detail as $po)
@@ -113,6 +113,7 @@
 						<button style="font-weight: bold;" onclick="cekPO()" class="btn btn-success btn-flat"></i>&nbsp;&nbsp;Submit</button>
 					</span>
 				</div> -->
+
 			</div>
 		</div>
 
@@ -120,7 +121,6 @@
 			<table class="table table-bordered" id="store_table">
 				<thead>
 					<tr>
-
 						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 25px;" colspan="9" id='po_title'>Nomor PO</th>
 					</tr>
 					<tr>
@@ -132,7 +132,7 @@
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">QTY RECEIVE</th>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">RECEIVE DATE</th>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">SURAT JALAN</th>
-						<!-- <th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">PRINT</th> -->
+						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">PRINT</th>
 					</tr>
 				</thead>
 				<tbody id="po_body">
@@ -143,10 +143,9 @@
 		<div class="col-xs-12" style="padding: 0px;" id="confirm">
 			<br>
 			<div class="col-xs-6 pull-right" align="right" style="padding: 0px;">
-<!-- 				<span style="font-weight: bold; font-size: 20px;color: white">Item Print : </span>
+				<span style="font-weight: bold; font-size: 20px;color: white">Item Print : </span>
 				<span id="picked" style="font-weight: bold; font-size: 24px; color: red;">0</span>
-				<button type="button" style="font-size:20px; height: 40px; font-weight: bold; padding: 15%; padding-top: 0px; padding-bottom: 0px;" onclick="printLabel(this)" class="btn btn-primary"><i class="fa fa-print"></i> PRINT</button> -->
-				<button type="button" style="font-size:20px; height: 40px; font-weight: bold; padding: 15%; padding-top: 0px; padding-bottom: 0px;" onclick="conf()" class="btn btn-success"><i class="fa fa-edit"></i> SUBMIT</button>
+				<button type="button" style="font-size:20px; height: 40px; font-weight: bold; padding: 15%; padding-top: 0px; padding-bottom: 0px;" onclick="printLabel(this)" class="btn btn-primary"><i class="fa fa-print"></i> PRINT</button>
 			</div>
 			<div class="col-xs-3 pull-right" align="right" style="padding: 0px;">
 			</div>
@@ -204,7 +203,7 @@
 			no_po : code
 		}
 
-		$.get('{{ url("fetch/warehouse/equipment") }}', data, function(result, status, xhr){
+		$.get('{{ url("fetch/warehouse/print_equipment") }}', data, function(result, status, xhr){
 
 			if (result.status) {
 				if(result.datas.length > 0){
@@ -257,7 +256,6 @@
 
 	function fillStore(){
 
-
 		$('input:checkbox').prop('checked', false);
 		$('#picked').html(0);
 		total = 0;
@@ -280,50 +278,10 @@
 			body += '<td '+id+' '+css+' onclick="countPicked(this)">'+list[i].no_item+'</td>';
 			body += '<td '+id+' '+css+' onclick="countPicked(this)">'+list[i].nama_item+'</td>';
 			body += '<td '+id+' '+css+' onclick="countPicked(this)">'+list[i].qty+'</td>';
-
-			if (list[i].qty_receive == 0) 
-			{
-				body += '<td '+id+' onclick="countPicked(this)" style="padding:10px;text-align:left"><input type="hidden" name="no_po_'+list[i].id+'" id="no_po_'+list[i].id+'" value="'+list[i].no_po+'"><input type="hidden" name="no_item_'+list[i].id+'" id="no_item_'+list[i].id+'" value="'+list[i].no_item+'"> <input type="text" name="qty_receive_'+list[i].id+'" id="qty_receive_'+list[i].id+'" class="form-control qty" placeholder="Qty Receive"> </td>';
-			}
-			else if (list[i].qty != list[i].qty_receive) 
-			{
-				body += '<td '+id+' onclick="countPicked(this)" style="padding:10px;text-align:left"><input type="hidden" name="no_po_'+list[i].id+'" id="no_po_'+list[i].id+'" value="'+list[i].no_po+'"><input type="hidden" name="no_item_'+list[i].id+'" id="no_item_'+list[i].id+'" value="'+list[i].no_item+'">Sudah Diinput : '+list[i].qty_receive+' <br><input type="text" name="qty_receive_'+list[i].id+'" id="qty_receive_'+list[i].id+'" class="form-control qty" placeholder="Qty Receive"> </td>';	
-			}
-			else{
-				body += '<td '+id+' '+css+' onclick="countPicked(this)">'+list[i].qty_receive+'</td>';				
-			}
-
-			if (list[i].qty_receive == 0) 
-			{
-				body += '<td '+id+' onclick="countPicked(this)" style="padding:10px;text-align:left"><input type="text" class="form-control pull-right datepicker dt" id="date_receive_'+list[i].id+'" name="date_receive_'+list[i].id+'" placeholder="Date Receive"></td>';
-			}
-			else if (list[i].qty != list[i].qty_receive) {
-				body += '<td '+id+' onclick="countPicked(this)" style="padding:10px;text-align:left"><input type="text" class="form-control pull-right datepicker dt" id="date_receive_'+list[i].id+'" name="date_receive_'+list[i].id+'" placeholder="Date Receive"></td>';
-			}
-			else
-			{
-				body += '<td '+id+' '+css+' onclick="countPicked(this)">'+list[i].date_receive+'</td>';				
-			}
-
-			if (list[i].qty_receive == 0)
-			{
-				body += '<td '+id+' onclick="countPicked(this)" style="padding:10px;text-align:left"><input type="text" class="form-control pull-right" id="surat_jalan_'+list[i].id+'" name="surat_jalan_'+list[i].id+'" placeholder="Surat Jalan"></td>';
-			}
-			else if (list[i].qty != list[i].qty_receive) {
-				body += '<td '+id+' onclick="countPicked(this)" style="padding:10px;text-align:left"><input type="text" class="form-control pull-right" id="surat_jalan_'+list[i].id+'" name="surat_jalan_'+list[i].id+'" placeholder="Surat Jalan" value='+list[i].surat_jalan+'></td>';
-			}
-			else
-			{
-				body += '<td '+id+' '+css+' onclick="countPicked(this)">'+list[i].surat_jalan+'</td>';				
-			}
-
-			// if (list[i].qty_receive == 0) 
-			// {
-			// 	body += '<td><input type="checkbox" disabled></td>';
-			// }
-			// else{
-			// 	body += '<td '+id+' onclick="countPicked(this)"><input type="checkbox" name="print" id="print_'+list[i].id+'"></td>';
-			// }
+			body += '<td '+id+' '+css+' onclick="countPicked(this)">'+list[i].qty_receive+'</td>';				
+			body += '<td '+id+' '+css+' onclick="countPicked(this)">'+list[i].date_receive+'</td>';				
+			body += '<td '+id+' '+css+' onclick="countPicked(this)">'+list[i].surat_jalan+'</td>';				
+			body += '<td '+id+' onclick="countPicked(this)"><input type="checkbox" name="print" id="print_'+list[i].id+'"></td>';
 			body += '</tr>';
 
 		}
@@ -409,48 +367,7 @@
 
 	}
 
-	function conf() {
-		$("#loading").show();
-
-		var arr_params = [];
-
-		$('.qty').each(function(index, value) {
-			ids = $(this).attr('id').split('_');
-			arr_params.push({
-				'id' : ids[2], 
-				'qty' : $(this).val(), 
-				'date' : $('#date_receive_'+ids[2]).val(), 
-				'surat_jalan' : $('#surat_jalan_'+ids[2]).val(),
-				'no_po' : $('#no_po_'+ids[2]).val(),
-				'no_item' : $('#no_item_'+ids[2]).val(),
-			});
-		});
-
-		var data = {
-			item : arr_params
-		}
-
-		if(confirm("Data akan simpan oleh sistem.\nData tidak dapat dikembalikan.")){
-
-			$.post('{{ url("fetch/warehouse/update_receive") }}', data, function(result, status, xhr){
-				if (result.status) {
-					openSuccessGritter('Success', result.message);
-
-					$("#po_body").empty();
-					$('#confirm').hide();
-					$("#loading").hide();
-					
-					list = [];
-				}else{
-					$("#loading").hide();
-					openErrorGritter('Error', result.message);
-				}
-			});
-		}else{
-			$("#loading").hide();
-		}
-		
-	}
+	
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 

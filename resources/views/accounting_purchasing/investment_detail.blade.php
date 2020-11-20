@@ -1197,7 +1197,7 @@
 
         if (parseInt($("#amount_budget"+i).val()) > parseInt($("#sisa_budget"+i).val( ))) {
           $("#loading").hide();
-          openErrorGritter("Error!", "Budget Tidak Mencukupi, Silahkan Lakukan Transfer Budget Jika Diperlukan");
+          openErrorGritter("Error!", "Budget Tidak Mencukupi, Silahkan Menghubungi Accounting");
           return false;
         }
 

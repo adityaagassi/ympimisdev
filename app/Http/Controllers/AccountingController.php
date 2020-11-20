@@ -16,6 +16,7 @@ use App\AccItem;
 use App\AccItemCategory;
 use App\AccActual;
 use App\AccActualLog;
+use App\AccReceive;
 use App\AccBudget;
 use App\AccBudgetHistory;
 use App\AccBudgetTransfer;
@@ -7912,36 +7913,35 @@ public function fetchtablePR(Request $request)
     ORDER BY submission_date ASC");
 
 
-  $data_po_belum_receive = db::select("
-    SELECT DISTINCT
-    acc_purchase_requisitions.no_pr, 
-    departments.department_shortname,
-    acc_purchase_orders.no_po,
-    acc_purchase_orders.tgl_po,
-    acc_purchase_orders.supplier_name,
-    acc_purchase_order_details.nama_item,
-    IF(acc_purchase_orders.posisi = 'pch', 'PO Terkirim', 'PO Approval') as status_po
-    FROM acc_purchase_orders
-    LEFT JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po
-    LEFT JOIN acc_purchase_requisitions ON acc_purchase_order_details.no_pr = acc_purchase_requisitions.no_pr
-    LEFT JOIN acc_purchase_requisition_items ON acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr
-    JOIN departments ON acc_purchase_requisitions.department = departments.department_name 
-    WHERE
-    acc_purchase_requisitions.deleted_at IS NULL 
-    AND acc_purchase_requisitions.receive_date IS NOT NULL
-    AND acc_purchase_requisition_items.sudah_po IS NOT NULL 
-    AND acc_purchase_orders.deleted_at IS NULL
-    AND acc_purchase_order_details.`status` IS NULL 
-    AND DATE_FORMAT( tgl_po, '%Y-%m' ) BETWEEN '".$datefrom."' AND '".$dateto."' 
-    ".$dep." 
-    ORDER BY
-    tgl_po ASC ");
+  // $data_po_belum_receive = db::select("
+  //   SELECT DISTINCT
+  //   acc_purchase_requisitions.no_pr, 
+  //   departments.department_shortname,
+  //   acc_purchase_orders.no_po,
+  //   acc_purchase_orders.tgl_po,
+  //   acc_purchase_orders.supplier_name,
+  //   acc_purchase_order_details.nama_item,
+  //   IF(acc_purchase_orders.posisi = 'pch', 'PO Terkirim', 'PO Approval') as status_po
+  //   FROM acc_purchase_orders
+  //   LEFT JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po
+  //   LEFT JOIN acc_purchase_requisitions ON acc_purchase_order_details.no_pr = acc_purchase_requisitions.no_pr
+  //   LEFT JOIN acc_purchase_requisition_items ON acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr
+  //   JOIN departments ON acc_purchase_requisitions.department = departments.department_name 
+  //   WHERE
+  //   acc_purchase_requisitions.deleted_at IS NULL 
+  //   AND acc_purchase_requisitions.receive_date IS NOT NULL
+  //   AND acc_purchase_requisition_items.sudah_po IS NOT NULL 
+  //   AND acc_purchase_orders.deleted_at IS NULL
+  //   AND acc_purchase_order_details.`status` IS NULL 
+  //   AND DATE_FORMAT( tgl_po, '%Y-%m' ) BETWEEN '".$datefrom."' AND '".$dateto."' 
+  //   ".$dep." 
+  //   ORDER BY
+  //   tgl_po ASC ");
 
   $response = array(
     'status' => true,
     'datas' => $data,
-    'data_pr_belum_po' => $data_pr_belum_po,
-    'data_po_belum_receive' => $data_po_belum_receive
+    'data_pr_belum_po' => $data_pr_belum_po
 );
 
   return Response::json($response); 
@@ -9862,9 +9862,20 @@ public function transfer_approvalto($id){
         $title = 'Receive Barang';
         $title_jp = '';
 
+
+        $po_detail = db::select("
+            SELECT DISTINCT acc_purchase_order_details.no_po
+            from acc_purchase_orders 
+            join acc_purchase_order_details on
+            acc_purchase_orders.no_po = acc_purchase_order_details.no_po
+            WHERE
+            posisi = 'pch' and acc_purchase_order_details.`status` is null order by acc_purchase_order_details.id
+        ");
+
         return view('accounting_purchasing.master.receive_wh', array(
             'title' => $title,
-            'title_jp' => $title_jp
+            'title_jp' => $title_jp,
+            'po_detail' => $po_detail
         ))->with('page', 'Receive WH')->with('head', 'Receive Equipment WH');
     }
 
@@ -9890,11 +9901,67 @@ public function transfer_approvalto($id){
             $item = $request->get('item');
 
             foreach ($item as $itm) {
-                $inv = AccPurchaseOrderDetail::where('id', $itm['id'])
-                ->update([
-                    'qty_receive' => (int) $itm['qty'],
-                    'date_receive' => $itm['date']
-                ]);
+                if ($itm['qty'] != null && $itm['date'] != null) {
+
+                    //Get PO
+                    $po_detail = AccPurchaseOrderDetail::where('id', $itm['id'])
+                    ->first();
+
+                    if($po_detail->qty < ($po_detail->qty_receive + (int) $itm['qty']) ){
+                        $response = array(
+                             'status' => false,
+                             'message' => 'Jumlah Yang Dimasukkan Melebihi Pembelian Barang',
+                         );
+                         return Response::json($response);
+                    }
+
+                    $inv = AccPurchaseOrderDetail::where('id', $itm['id'])
+                    ->update([
+                        'qty_receive' => $po_detail->qty_receive + (int) $itm['qty'],
+                        'date_receive' => $itm['date'],
+                        'surat_jalan' => $itm['surat_jalan']
+                    ]);
+
+
+                    $receive = AccReceive::create([
+                        'no_po' => $itm['no_po'],
+                        'no_item' => $itm['no_item'],
+                        'nama_item' => $po_detail->nama_item,
+                        'qty' => $po_detail->qty,
+                        'qty_receive' => $itm['qty'],
+                        'date_receive' => $itm['date'],
+                        'surat_jalan' => $itm['surat_jalan'],
+                        'created_by' => Auth::id()
+                    ]);
+
+                    $receive->save();
+
+                    $budget_log = AccBudgetHistory::where('po_number','=',$itm['no_po'])
+                    ->where(DB::raw('SUBSTRING(no_item, 1, 7)'),'=',$itm['no_item'])
+                    ->first();
+
+                    // var_dump($itm['no_po']);
+                    // var_dump($itm['no_item']);
+                    // var_dump($budget_log);
+
+                    $update_budget_log = AccBudgetHistory::where('po_number','=',$itm['no_po'])
+                    ->where(DB::raw('SUBSTRING(no_item, 1, 7)'),'=',$itm['no_item'])
+                    ->update([
+                        'budget_month_receive' => strtolower(date('M')),
+                        'amount_receive' => $budget_log->amount_po,
+                        'status' => 'Actual'
+                    ]);
+
+                    //GET DATA
+                    $datapo =  AccPurchaseOrderDetail::where('id', $itm['id'])
+                    ->first();
+
+                    //UPDATE STATUS
+                    if ($datapo->qty_receive >= $datapo->qty) {
+                        $update_qty_receive = AccPurchaseOrderDetail::where('id','=',$itm['id'])
+                        ->update(['status' => 'close']);
+                    }
+                }
             }
             
             // for ($i=0; $i < count($id); $i++) { 
@@ -9917,6 +9984,77 @@ public function transfer_approvalto($id){
             );
             return Response::json($response);
         }
+    }
+
+    public function wh_print_equipment(){
+        $title = 'Print Barang';
+        $title_jp = '';
+
+        $po_detail = db::select("
+            SELECT DISTINCT acc_receives.no_po from acc_receives order by id desc");
+
+        return view('accounting_purchasing.master.receive_print_wh', array(
+            'title' => $title,
+            'title_jp' => $title_jp,
+            'po_detail' => $po_detail
+        ))->with('page', 'Print WH')->with('head', 'Print Equipment WH');
+    }
+
+    public function fetch_print_equipment(Request $request){
+        $data = db::select("
+            SELECT
+            acc_receives.* 
+            from acc_receives 
+            WHERE
+            acc_receives.no_po = '". $request->get('no_po')."'" );
+
+        $response = array(
+            'status' => true,
+            'datas' => $data,
+        );
+        return Response::json($response);
+    }
+
+    public function label_kedatangan($id){
+
+        //Get PO
+        $po_receive = AccReceive::where('id', $id)
+        ->first();
+
+        return view('accounting_purchasing.report.label_kedatangan', array(
+            'kode_item' => $po_receive->no_item,
+            'description' => $po_receive->nama_item,
+            'po' => $po_receive->no_po,
+            'date' => $po_receive->date_receive,
+            'quantity' => $po_receive->qty_receive
+        ));
+    }
+
+    // Terima Barang
+
+    public function wh_cetak_bukti(){
+        $title = 'Cetak Bukti Penerimaan';
+        $title_jp = '';
+
+        return view('accounting_purchasing.master.receive_cetak_bukti', array(
+            'title' => $title,
+            'title_jp' => $title_jp
+        ))->with('page', 'Receive Bukti')->with('head', 'Receive Cetak Bukti');
+    }
+
+    public function fetch_cetak_bukti(Request $request){
+        
+        //Get PO
+        $receive = AccReceive::where('no_po', $request->get('no_po'))
+        ->where('no_item', $request->get('no_item'))
+        ->where('qty_receive',$request->get('qty'))
+        ->first();
+
+        $response = array(
+            'status' => true,
+            'datas' => $receive,
+        );
+        return Response::json($response);
     }
 
 }
