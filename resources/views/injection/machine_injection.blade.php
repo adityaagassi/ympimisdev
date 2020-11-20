@@ -1018,7 +1018,7 @@
 		$.get('{{ url("index/injeksi/get_temp") }}', data, function(result, status, xhr){
 			if(result.status){
 				if (result.data_mesin.status == 'Working') {
-					openSuccessGritter('Success!', result.message);
+					openSuccessGritter('Success!', 'Melanjutkan Kerja Mesin');
 					var start_time = result.data_mesin.start_time;
 					// $('#tag_product').val(result.datas.tag_product);
 					$('#mesin').html($('#mesin_fix2').text());
@@ -1058,9 +1058,10 @@
 						intervalUpdate = setInterval(update_temp,10000);
 						$('#btn_ganti').show();
 						$('#modalMesin').modal('hide');
+						$('#loading').hide();
 					}else{
 						$('#btn_mulai').show();
-						// $('#btn_selesai').hide();
+						$('#loading').hide();
 						$('#perolehan').hide();
 						// $('#modalProduct').modal('show');
 						$('#modalMesin').modal('hide');
