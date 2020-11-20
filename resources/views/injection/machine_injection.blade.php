@@ -882,6 +882,21 @@
 		if ($('#mesin_fix2').text() == 'MESIN' || $('#dryer_fix2').text() == 'DRYER') {
 			alert('Mesin & Dryer Harus Diisi.');
 		}else{
+			$('#loading').show();
+			var data2 = {
+				dryer:$('#dryer_fix2').text(),
+			}
+			$.get('{{ url("index/injection/fetch_dryer") }}', data2, function(result, status, xhr){
+				if(result.status){
+					$('#mesin').html($('#mesin_fix2').text());
+					$('#dryer').html(result.dryer.dryer);
+					$('#dryer_lot_number').html(result.dryer.lot_number);
+					$('#color').html(result.dryer.color);
+				}else{
+					$('#loading').hide();
+					openErrorGritter('Error!','Dryer Belum Terisi');
+				}
+			});
 			get_temp();
 			$('#mesin').html($('#mesin_fix2').text());
 		}
@@ -1058,82 +1073,40 @@
 				}
 			}
 			else{
-				$('#loading').show();
 				// resulttrue = 0;
 
 				var data3 = {
 					mesin:$('#mesin_fix2').text(),
-					dryer:$('#dryer_fix2').text(),
+					color:$('#color').text(),
 				}
 				
 				$.get('{{ url("scan/part_molding") }}', data3, function(result, status, xhr){
 					if(result.status){
-						$('#tag_molding').val(result.part.tag);
-						$('#tag_molding').prop('disabled', true);
-						$('#molding').html(result.part.part);
-						$('#molding_part_type').val(result.part.product);
-						$('#cavity').html(result.part.cavity);
+						if (result.product.length > 0) {
+							$('#tag_molding').val(result.part.tag);
+							$('#tag_molding').prop('disabled', true);
+							$('#molding').html(result.part.part);
+							$('#molding_part_type').val(result.part.product);
+							$('#cavity').html(result.part.cavity);
 
-						$('#dryer').html(result.dryer.dryer);
-						$('#dryer_lot_number').html(result.dryer.lot_number);
-						$('#color').html(result.dryer.color);
-						$.each(result.product, function(key, value) {
-							var productSplit = value.product.split("-");
-							$('#part_type').html(productSplit[1]);
-							$('#part_name').html(productSplit[0]);
-							$('#material_number').val(productSplit[3]);
-						});
-
-						// resulttrue++;
-						$('#loading').hide();
-						$('#modalMesin').modal('hide');
+							$.each(result.product, function(key, value) {
+								var productSplit = value.product.split("-");
+								$('#part_type').html(productSplit[1]);
+								$('#part_name').html(productSplit[0]);
+								$('#material_number').val(productSplit[3]);
+							});
+							$('#loading').hide();
+							$('#modalMesin').modal('hide');
+						}else{
+							$('#loading').hide();
+						}
 					}
 					else{
 						$('#loading').hide();
-						openErrorGritter('Error!','Molding Belum Dipasang');
+						openErrorGritter('Error!','Molding Belum Dipasang / Dryer Belum Terisi');
 						audio_error.play();
 					}
 				});
-
-				// var data2 = {
-				// 	dryer:$('#dryer_fix2').text(),
-				// 	part:$('#molding_part_type').val()
-				// }
-				// $.get('{{ url("index/injection/fetch_dryer") }}', data2, function(result, status, xhr){
-				// 	if(result.status){
-				// 		resulttrue++;
-				// 		$('#mesin').html($('#mesin_fix2').text());
-				// 		$('#dryer').html(result.dryer.dryer);
-				// 		$('#dryer_lot_number').html(result.dryer.lot_number);
-				// 		$('#color').html(result.dryer.color);
-				// 		$.each(result.product, function(key, value) {
-				// 			var productSplit = value.product.split("-");
-				// 			$('#part_type').html(productSplit[1]);
-				// 			$('#part_name').html(productSplit[0]);
-				// 			$('#material_number').val(productSplit[3]);
-				// 		});
-				// 		if (resulttrue == 2) {
-							
-				// 		}
-				// 	}else{
-				// 		$('#loading').hide();
-				// 		openErrorGritter('Error!','Dryer Belum Terisi');
-				// 	}
-				// });
-
-				// var data4 = {
-				// 	color : color,
-				// 	part : $('#molding_part_type').val()
-				// }
-				// $.get('{{ url("fetch/new_product") }}', data4, function(result, status, xhr){
-				// 	if(result.status){
-						
-				// 	}
-				// 	else{
-				// 		openErrorGritter('Error!', result.message);
-				// 		audio_error.play();
-				// 	}
-				// });
 			}
 		});
 	}

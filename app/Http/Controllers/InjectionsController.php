@@ -205,27 +205,23 @@ class InjectionsController extends Controller
     public function scanPartMolding(Request $request){
         $part = InjectionMoldingMaster::where('status_mesin', '=', $request->get('mesin'))->first();
 
-        $dryer = InjectionDryer::where('dryer',$request->get('dryer'))->first();
-
-        $product = DB::SELECT("SELECT id,part_name,CONCAT(SUBSTRING_INDEX(part_name, ' ', 1),'-',UPPER(part_code),'-',UPPER(color),'-',UPPER(gmc)) as product FROM `injection_parts` where remark = 'injection' and color = '".$dryer->color."' and part_code = '".$part->product."' and deleted_at is null ORDER BY part_name desc");
-
         if (count($part) > 0) {
+            $product = DB::SELECT("SELECT id,part_name,CONCAT(SUBSTRING_INDEX(part_name, ' ', 1),'-',UPPER(part_code),'-',UPPER(color),'-',UPPER(gmc)) as product FROM `injection_parts` where remark = 'injection' and color = '".$request->get('color')."' and part_code = '".$part->product."' and deleted_at is null ORDER BY part_name desc");
+
             $response = array(
                 'status' => true,
                 'part' => $part,
                 'product' => $product,
-                'dryer' => $dryer,
                 'message' => 'Scan Molding Tag Success',
             );
-        }
-        else{
+            return Response::json($response);
+        }else{
             $response = array(
                 'status' => false,
                 'message' => 'Molding Invalid'
             );
             return Response::json($response);
         }
-        return Response::json($response);
     }
 
     public function scanInjectionOperator(Request $request){
@@ -5647,13 +5643,10 @@ class InjectionsController extends Controller
                 $dryer = InjectionDryer::where('machine',$request->get('machine'))->first();
             }
 
-            $product = DB::SELECT("SELECT id,part_name,CONCAT(SUBSTRING_INDEX(part_name, ' ', 1),'-',UPPER(part_code),'-',UPPER(color),'-',UPPER(gmc)) as product FROM `injection_parts` where remark = 'injection' and color = '".$dryer->color."' and part_code = '".$request->get('part')."' and deleted_at is null ORDER BY part_name desc");
-
             if (count($dryer) > 0) {
                 $response = array(
                     'status' => true,
                     'dryer' => $dryer,
-                    'product' => $product
                 );
                 return Response::json($response);
             }else{
