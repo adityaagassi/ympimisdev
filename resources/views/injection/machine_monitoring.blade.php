@@ -175,7 +175,7 @@
 
 	jQuery(document).ready(function() {
 		fillTable();
-		// setInterval(fillTable,10000);
+		setInterval(fillTable,10000);
 	});
 
 	function fillTable() {
