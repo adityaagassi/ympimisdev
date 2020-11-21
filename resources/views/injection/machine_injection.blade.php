@@ -1155,54 +1155,61 @@
 
 	function saveTag() {
 		$('#loading').show();
-		var ng_name = [];
-		var ng_count = [];
-		var ng_counting = 0;
-		var jumlah_ng = '{{$nomor+1}}';
-		for (var i = 1; i <= jumlah_ng; i++ ) {
-			if($('#count'+i).text() != 0){
-				ng_name.push($('#ng'+i).text());
-				ng_count.push($('#count'+i).text());
-				ng_counting = ng_counting + parseInt($('#count'+i).text());
-			}
-		}
-		var data = {
-			tag_product:$('#tag_product').val(),
-			tag_molding:$('#tag_molding').val(),
-			operator_id:$('#op').text(),
-			start_time:$('#start_time_product').val(),
-			mesin:$('#mesin').text(),
-			part_name:$('#part_name').text(),
-			part_type:$('#part_type').text(),
-			color:$('#color').text(),
-			molding:$('#molding').text(),
-			cavity:$('#cavity').text(),
-			shot:parseInt($('#total_shot').val()),
-			material_number:$('#material_number').val(),
-			ng_name:ng_name.join(),
-			ng_count:ng_count.join(),
-			ng_counting:ng_counting,
-			dryer:$('#dryer').text(),
-			dryer_lot_number:$('#dryer_lot_number').text(),
-			dryer_color:$('#color').text(),
-		}
-		$.post('{{ url("index/injeksi/create_log") }}', data, function(result, status, xhr){
-			if(result.status){
-				$('#loading').hide();
-				openSuccessGritter('Success!', result.message);
-				cancelTag();
-				clearInterval(intervalUpdate);
-				$('#total_shot').val("");
-				for (var i = 1; i <= jumlah_ng; i++ ) {
-					$('#count'+i).html('0');
+		if ($('#tag_product').val() == '') {
+			openErrorGritter('Error!','Scan Tag Produk');
+			$('#loading').hide();
+			$('#tag_product').focus();
+		}else{
+			var ng_name = [];
+			var ng_count = [];
+			var ng_counting = 0;
+			var jumlah_ng = '{{$nomor+1}}';
+			for (var i = 1; i <= jumlah_ng; i++ ) {
+				if($('#count'+i).text() != 0){
+					ng_name.push($('#ng'+i).text());
+					ng_count.push($('#count'+i).text());
+					ng_counting = ng_counting + parseInt($('#count'+i).text());
 				}
-				mulaiProses();
 			}
-			else{
-				openErrorGritter('Error!', result.message);
-				audio_error.play();
+			var data = {
+				tag_product:$('#tag_product').val(),
+				tag_molding:$('#tag_molding').val(),
+				operator_id:$('#op').text(),
+				start_time:$('#start_time_product').val(),
+				mesin:$('#mesin').text(),
+				part_name:$('#part_name').text(),
+				part_type:$('#part_type').text(),
+				color:$('#color').text(),
+				molding:$('#molding').text(),
+				cavity:$('#cavity').text(),
+				shot:parseInt($('#total_shot').val()),
+				material_number:$('#material_number').val(),
+				ng_name:ng_name.join(),
+				ng_count:ng_count.join(),
+				ng_counting:ng_counting,
+				dryer:$('#dryer').text(),
+				dryer_lot_number:$('#dryer_lot_number').text(),
+				dryer_color:$('#color').text(),
 			}
-		});
+			$.post('{{ url("index/injeksi/create_log") }}', data, function(result, status, xhr){
+				if(result.status){
+					$('#loading').hide();
+					openSuccessGritter('Success!', result.message);
+					cancelTag();
+					clearInterval(intervalUpdate);
+					$('#total_shot').val("");
+					for (var i = 1; i <= jumlah_ng; i++ ) {
+						$('#count'+i).html('0');
+					}
+					mulaiProses();
+				}
+				else{
+					openErrorGritter('Error!', 'Simpan Tag Gagal');
+					audio_error.play();
+					$('#loading').hide();
+				}
+			});
+		}
 	}
 
 	function selesaiProses() {
