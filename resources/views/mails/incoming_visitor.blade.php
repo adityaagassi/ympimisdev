@@ -50,7 +50,7 @@
 			</table>
 			<br>
 			<span style="font-weight: bold;"><i>Apakah Anda ingin mengonfirmasi bahwa karyawan Anda sudah menemui?</i></span><br>
-			<a style="background-color: green;color: white; width: 50px;" href="{{ url("visitor_confirm_manager/".$data[0]['id']) }}">&nbsp;&nbsp;&nbsp; Confirm / Sudah Ditemui &nbsp;&nbsp;&nbsp;</a>
+			<a style="background-color: green;color: white; width: 50px;" href="{{ url('visitor_confirm_manager/'.$data[0]['id']) }}">&nbsp;&nbsp;&nbsp; Confirm / Sudah Ditemui &nbsp;&nbsp;&nbsp;</a>
 		</center>
 	</div>
 </body>

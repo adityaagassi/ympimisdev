@@ -74,7 +74,7 @@
 				@if($comment != "")
 					<a href="{{ url("investment/comment/".$id) }}" style="font-size: 20px">Reply This Message</a><br>
 				@else
-					<a href="http://172.17.128.4/mirai/public/investment" style="font-size: 20px">Check Investment</a><br>
+					<a href="{{ url('investment') }}" style="font-size: 20px">Check Investment</a><br>
 				@endif
 
 
@@ -171,7 +171,7 @@
 			<br>
 
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> &#8650;</span><br>
-			<a href="http://172.17.128.4/mirai/public/investment/check/{{ $id }}">Check Investment</a><br>
+			<a href="{{url('investment/check/'.$id)}}">Check Investment</a><br>
 
 
 			@elseif($posisi == "acc_pajak")
@@ -268,7 +268,7 @@
 			<br>
 
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> &#8650;</span><br>
-			<a href="http://172.17.128.4/mirai/public/investment/check/{{ $id }}">Check Investment Tax</a><br>
+			<a href="{{ url('investment/check/'.$id) }}">Check Investment Tax</a><br>
 
 			@elseif($posisi == "manager" && $status == "approval")
 
@@ -959,7 +959,7 @@
 			<br>
 
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> &#8650;</span><br>
-			<a href="http://172.17.128.4/mirai/public/investment">Upload Bukti Approval Adagio</a><br>
+			<a href="{{url('investment')}}">Upload Bukti Approval Adagio</a><br>
 
 
 		@endif

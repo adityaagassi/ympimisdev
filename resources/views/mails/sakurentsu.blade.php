@@ -20,6 +20,7 @@
 			<?php $id = $datas->id ?>
 			<?php $sakurentsu_number = $datas->sakurentsu_number ?>
 			<?php $applicant = $datas->applicant ?>
+			<?php $title_jp = $datas->title_jp ?>
 			<?php $target_date = $datas->target_date ?>
 			<?php $translator = $datas->translator ?>
 			<?php $position = $datas->position ?>
@@ -44,6 +45,10 @@
 				<tr>
 					<td style="width: 2%; border:1px solid black;">Sakuretsu Number</td>
 					<td style="border:1px solid black; text-align: center;">{{$sakurentsu_number}}</td>
+				</tr>
+				<tr>
+					<td style="width: 2%; border:1px solid black;">Title</td>
+					<td style="border:1px solid black; text-align: center;">{{$title_jp}}</td>
 				</tr>
 				<tr>
 					<td style="width: 2%; border:1px solid black;">Applicant</td>

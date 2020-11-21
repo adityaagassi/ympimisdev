@@ -75,9 +75,9 @@
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
 			<!-- <a href="http://172.17.128.4/mirai/public/index/qc_report/print_cpar/{{ $id }}">See Report Data</a><br> -->
 			@if($posisi == "bagian")
-				<a href="http://172.17.128.4/mirai/public/index/qc_car/detail/{{$id_car}}">See CAR Data</a><br>
+				<a href="{{ url('index/qc_car/detail/'.$id_car) }}">See CAR Data</a><br>
 			@else
-				<a href="http://172.17.128.4/mirai/public/index/qc_report/verifikasicpar/{{ $id }}">CPAR Verification</a><br>
+				<a href="{{ url('index/qc_report/verifikasicpar/'.$id) }}">CPAR Verification</a><br>
 			@endif
 		</center>
 	</div>

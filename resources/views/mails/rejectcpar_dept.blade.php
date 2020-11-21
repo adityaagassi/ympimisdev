@@ -46,7 +46,7 @@
 			</h3>
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
-			<a href="http://172.17.128.4/mirai/public/index/form_ketidaksesuaian/detail/{{ $id }}">Detail Form Ketidaksesuaian</a>
+			<a href="{{ url('index/form_ketidaksesuaian/detail/'.$id) }}">Detail Form Ketidaksesuaian</a>
 
 			@elseif($posisi == "dept" || $posisi == "deptcf" || $posisi == "deptm")
 
@@ -62,7 +62,7 @@
 			</h3>
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
-			<a href="http://172.17.128.4/mirai/public/index/form_ketidaksesuaian/response/{{ $id }}">Detail Penanganan</a>
+			<a href="{{ url('index/form_ketidaksesuaian/response/'.$id) }}">Detail Penanganan</a>
 
 			@elseif($posisi == "verif")
 
@@ -82,7 +82,7 @@
 			<br>
 
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
-			<a href="http://172.17.128.4/mirai/public/index/form_ketidaksesuaian/response/{{ $id }}">Perbaikan Detail Penanganan</a>
+			<a href="{{ url('index/form_ketidaksesuaian/response/'.$id) }}">Perbaikan Detail Penanganan</a>
 
 			@endif
 

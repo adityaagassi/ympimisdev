@@ -59,7 +59,7 @@
 			</table>
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
-			<a href="http://172.17.128.4/miraidev/public/index/user_document">Users Document Details</a>
+			<a href="{{ url("user_document") }}">Users Document Details</a><br>
 		</center>
 	</div>
 </body>

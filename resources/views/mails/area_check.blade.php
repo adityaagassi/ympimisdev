@@ -55,7 +55,8 @@
 			</table>
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
-			<a href="http://172.17.128.4/mirai/public/index/area_check/print_area_check_email/{{ $activity_list_id }}/{{ $month }}">See Area Check Data / Approval Data</a><br>
+			<a href="{{ url('index/area_check/print_area_check_email/'.$activity_list_id.
+			'/'.$month) }}">See Area Check Data / Approval Data</a><br>
 		</center>
 	</div>
 </body>

@@ -58,7 +58,7 @@
 			</table>
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
-			<a href="http://172.17.128.4/mirai/public/index/ng_finding/print_ng_finding_email/{{ $activity_list_id }}/{{ $month }}">See Temuan NG Data / Approval Data</a><br>
+			<a href="{{ url('index/ng_finding/print_ng_finding_email/'.$activity_list_id.'/'.$month) }}">See Temuan NG Data / Approval Data</a><br>
 		</center>
 	</div>
 </body>

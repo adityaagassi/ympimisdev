@@ -258,7 +258,7 @@
 		<br>
 
 		<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here To</i> &#8650;</span><br>
-		<a href="http://172.17.128.4/mirai/public/purchase_requisition/check/{{ $data[0]->id }}">Check & Verifikasi PR oleh Purchasing</a><br>
+		<a href="{{ url('purchase_requisition/check/'.$data[0]->id) }}">Check & Verifikasi PR oleh Purchasing</a><br>
 		<br><br>
 
 		<span style="font-size: 20px">Best Regards,</span>
@@ -284,9 +284,9 @@
 
 		<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
 		
-		<a href="http://172.17.128.4/mirai/public/purchase_requisition/report/{{ $data[0]->id }}">PR Check</a>
+		<a href="{{ url('purchase_requisition/report/'.$data[0]->id) }}">PR Check</a>
 		<br>
-		<a href="http://172.17.128.4/mirai/public/purchase_requisition">PR List</a>
+		<a href="{{url('purchase_requisition')}}">PR List</a>
 
 		<br><br>
 

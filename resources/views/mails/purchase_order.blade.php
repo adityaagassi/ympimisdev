@@ -261,9 +261,9 @@
 			<h2>Purchase Order (PO) {{$no_po}} <br> Telah Berhasil Di Diverifikasi</h2>
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
-			<a href="http://172.17.128.4/mirai/public/purchase_order/report/{{ $id }}">Cek PO</a>
+			<a href="{{ url('purchase_order/report/'.$id) }}">Cek PO</a>
 			<br>
-			<a href="http://172.17.128.4/mirai/public/purchase_order">List PO</a>
+			<a href="{{url('purchase_order')}}">List PO</a>
 
 
 			<!-- Tolak -->
@@ -284,9 +284,9 @@
 			<?php } ?>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
 
-			<a href="http://172.17.128.4/mirai/public/purchase_order/report/{{ $id }}">Check PO</a>
+			<a href="{{ url('purchase_order/report/'.$id) }}">Cek PO</a>
 			<br>
-			<a href="http://172.17.128.4/mirai/public/purchase_order">List PO</a>
+			<a href="{{url('purchase_order')}}">List PO</a>
 
 			@endif
 			

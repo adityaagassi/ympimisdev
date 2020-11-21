@@ -53,9 +53,9 @@
 			</table>
 			<br>
 			<span style="font-weight: bold;"><i>Apakah anda menyetujui permohonan ini?</i></span><br>
-			<a class="btn btn-success" style="background-color: green; width: 50px;" href="{{ url("approve/ga_control/driver/".$id) }}">&nbsp;&nbsp;&nbsp; Ya &nbsp;&nbsp;&nbsp;</a>
+			<a class="btn btn-success" style="background-color: green; width: 50px;" href="{{ url('approve/ga_control/driver/'.$id) }}">&nbsp;&nbsp;&nbsp; Ya &nbsp;&nbsp;&nbsp;</a>
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<a class="btn btn-danger" style="background-color: orange; width: 50px;" href="{{ url("reject/ga_control/driver/".$id) }}">&nbsp; Tidak &nbsp;</a><br>
+			<a class="btn btn-danger" style="background-color: orange; width: 50px;" href="{{ url('reject/ga_control/driver/'.$id) }}">&nbsp; Tidak &nbsp;</a><br>
 		</center>
 	</div>
 </body>

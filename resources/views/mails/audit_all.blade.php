@@ -71,7 +71,7 @@
 			</table>
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Klik disini untuk</i> &#8650;</span><br>
-			<a href="http://172.17.128.4/mirai/public/index/audit/response/{{ $id }}">Response Audit {{ $auditor_jenis }}</a><br>
+			<a href="{{ url('index/audit/response/'.$id) }}">Response Audit {{ $auditor_jenis }}</a><br>
 
 			@elseif($posisi == "auditor_final")
 

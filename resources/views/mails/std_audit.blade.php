@@ -70,7 +70,7 @@
 			</table>
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Klik disini untuk</i> &#8650;</span><br>
-			<a href="http://172.17.128.4/mirai/public/index/audit_iso/verifikasistd/{{ $id }}">Detail dan Verifikasi</a><br>
+			<a href="{{ url("index/audit_iso/verifikasistd/".$id) }} ">Detail dan Verifikasi</a><br>
 
 			@elseif($status == "car")
 
@@ -113,7 +113,7 @@
 			</table>
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Klik disini untuk</i> &#8650;</span><br>
-			<a href="http://172.17.128.4/mirai/public/index/audit_iso/response/{{ $id }}">Response Audit Internal ISO</a><br>
+			<a href="{{ url("index/audit_iso/response/".$id) }} ">Detail dan Verifikasi</a><br>
 
 
 			@elseif($status == "commended")
@@ -130,7 +130,7 @@
 			</h3>
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
-			<a href="http://172.17.128.4/mirai/public/index/audit_iso/detail/{{ $id }}">Edit Form Audit ISO</a>
+			<a href="{{ url("index/audit_iso/detail/".$id) }} ">Edit Form Audit ISO</a>
 
 
 			@elseif($status == "rejected")
@@ -185,8 +185,8 @@
 			</table>
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Klik disini untuk</i> &#8650;</span><br>
-			<a href="http://172.17.128.4/mirai/public/index/audit_iso/print/{{ $id }}">Cek Penanganan</a><br>
-			<a href="http://172.17.128.4/mirai/public/index/audit_iso/detail/{{ $id }}">Tambahkan Catatan Audit</a><br>
+			<a href="{{ url("index/audit_iso/print/".$id) }} ">Cek Penanganan</a><br>
+			<a href="{{ url("index/audit_iso/detail/".$id) }} ">Tambahkan Catatan Audit</a>
 
 			@endif
 			

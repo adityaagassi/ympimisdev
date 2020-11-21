@@ -86,13 +86,13 @@
 			</table>
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Klik disini untuk</i> &#8650;</span><br>
-			<a href="http://172.17.128.4/mirai/public/index/form_ketidaksesuaian/print/{{ $id }}">Cek Report Form Ketidaksesuaian Material</a><br>
+			<a href="{{ url(index/form_ketidaksesuaian/print/'.$id) }}">Cek Report Form Ketidaksesuaian Material</a><br>
 
 			<br>
 			<span style="font-weight: bold;"><i>Apakah anda ingin menerbitkan CPAR Berdasarkan kasus ini ?</i></span><br>
-			<a style="background-color: green; width: 50px;" href="{{ url("index/form_ketidaksesuaian/approveqa/".$id) }}">&nbsp;&nbsp;&nbsp; Ya &nbsp;&nbsp;&nbsp;</a>
+			<a style="background-color: green; width: 50px;" href="{{ url(index/form_ketidaksesuaian/approveqa/'.$id) }}">&nbsp;&nbsp;&nbsp; Ya &nbsp;&nbsp;&nbsp;</a>
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<a style="background-color: orange; width: 50px;" href="{{ url("index/form_ketidaksesuaian/rejectqa/".$id) }}">&nbsp; Tidak &nbsp;</a><br>
+			<a style="background-color: orange; width: 50px;" href="{{ url('index/form_ketidaksesuaian/rejectqa/'.$id) }}">&nbsp; Tidak &nbsp;</a><br>
 
 			@elseif($posisi == "sl" || $posisi == "cf" || $posisi == "m")
 
@@ -132,9 +132,9 @@
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
 			
 			<?php if($posisi == "m") { ?>
-			<a href="http://172.17.128.4/mirai/public/index/form_ketidaksesuaian/response/{{ $id }}">Response Form</a><br>
+			<a href="{{ url('index/form_ketidaksesuaian/response/'.$id) }}">Response Form</a><br>
 			<?php } else { ?>
-			<a href="http://172.17.128.4/mirai/public/index/form_ketidaksesuaian/verifikasicpar/{{ $id }}">Verifikasi Form</a><br>
+			<a href="{{ url('index/form_ketidaksesuaian/verifikasicpar/'.$id) }}">Verifikasi Form</a><br>
 			<?php } ?>
 
 			@elseif($posisi == "dept" || $posisi == "deptcf")
@@ -173,7 +173,7 @@
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
 			
-			<a href="http://172.17.128.4/mirai/public/index/form_ketidaksesuaian/verifikasicar/{{ $id }}">Form Verification</a><br>
+			<a href="{{ url('index/form_ketidaksesuaian/verifikasicar/'.$id) }}">Form Verification</a><br>
 
 			@elseif ($posisi == "deptm") 
 
@@ -211,7 +211,7 @@
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
 			
-			<a href="http://172.17.128.4/mirai/public/index/form_ketidaksesuaian/verifikasibagian/{{ $id }}">Hasil Penanganan</a><br>
+			<a href="{{ url('index/form_ketidaksesuaian/verifikasibagian/'.$id) }}">Hasil Penanganan</a><br>
 
 			@endif
 			

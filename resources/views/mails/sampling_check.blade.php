@@ -63,7 +63,7 @@
 			@endforeach
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
-			<a href="http://172.17.128.4/mirai/public/index/sampling_check/print_sampling_email/{{ $activity_list_id }}/{{ substr($date,0,7) }}">See Sampling Check Data / Approval Data</a>
+			<a href="{{ url('index/sampling_check/print_sampling_email/'.$activity_list_id.'/'.substr($date,0,7)) }}">See Sampling Check Data / Approval Data</a>
 		</center>
 	</div>
 </body>

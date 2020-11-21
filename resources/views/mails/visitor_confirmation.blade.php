@@ -43,8 +43,7 @@
 				</tbody>
 			</table>
 			<br>
-			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
-			<a href="http://172.17.128.4/mirai/public/visitor_confirmation_manager">Visitor Confirmation</a><br>
+			<a href="{{ url("visitor_confirmation_manager") }}">Visitor Confirmation</a><br>
 		</center>
 	</div>
 </body>

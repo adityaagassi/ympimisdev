@@ -55,7 +55,7 @@
 			</table>
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
-			<a href="http://172.17.128.4/mirai/public/index/jishu_hozen/print_jishu_hozen_email/{{ $activity_list_id }}/{{ $jishu_hozen_id }}/{{ $month }}">See Jishu Hozen Data / Approval Data</a>
+			<a href="{{ url('index/jishu_hozen/print_jishu_hozen_email/'.$activity_list_id.'/'.$jishu_hozen_id.'/'.$month) }}">See Jishu Hozen Data / Approval Data</a>
 		</center>
 	</div>
 </body>

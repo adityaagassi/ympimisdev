@@ -53,7 +53,7 @@
 			</table>
 			<br>
 			<span style="font-weight: bold;"><i>Permohonan ini sudah disetujui atasan pihak terkait, mohon cek permohonan pada halaman berikut:</i></span><br>
-			<a href="http://172.17.128.4/mirai/public/index/ga_control/driver">Driver Monitoring System</a><br>
+			<a href="{{ url('index/ga_control/driver') }}">Driver Monitoring System</a><br>
 		</center>
 	</div>
 </body>

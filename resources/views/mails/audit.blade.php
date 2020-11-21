@@ -61,7 +61,8 @@
 			</table>
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
-			<a href="http://172.17.128.4/mirai/public/index/production_audit/print_audit_email/{{ $activity_list_id }}/{{ $month }}/{{ $product }}/{{ $proses }}">See Audit Data / Approval Data</a><br>
+			<a href="{{ url('index/production_audit/print_audit_email/'.$activity_list_id.
+			'/'.$month.'/'.$product.'/'.$proses) }}">See Audit Data / Approval Data</a><br>
 		</center>
 	</div>
 </body>

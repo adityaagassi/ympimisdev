@@ -55,7 +55,7 @@
 			</table>
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
-			<a href="http://172.17.128.4/mirai/public/index/middle/barrel_board/barrel-sx">SX Key Barrel Board</a>
+			<a href="{{url('index/middle/barrel_board/barrel-sx')}}">SX Key Barrel Board</a>
 		</center>
 	</div>
 </body>
