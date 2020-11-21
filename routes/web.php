@@ -1520,6 +1520,10 @@ Route::get('print/warehouse/label/{id}', 'AccountingController@label_kedatangan'
 //Cetak Bukti Kedatangan
 Route::get('warehouse/cetak_bukti', 'AccountingController@wh_cetak_bukti');
 Route::get('fetch/warehouse/cetak_bukti', 'AccountingController@fetch_cetak_bukti');
+Route::post('fetch/warehouse/create_bukti', 'AccountingController@create_cetak_bukti');
+
+Route::get('index/warehouse/report_bukti', 'AccountingController@bukti_penerimaan');
+Route::get('index/warehouse/report_bukti/{id}', 'AccountingController@cetak_bukti_penerimaan');
 
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 	Route::get('scan/middle/kensa', 'MiddleProcessController@ScanMiddleKensa');

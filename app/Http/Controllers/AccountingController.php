@@ -17,6 +17,7 @@ use App\AccItemCategory;
 use App\AccActual;
 use App\AccActualLog;
 use App\AccReceive;
+use App\AccReceiveReport;
 use App\AccBudget;
 use App\AccBudgetHistory;
 use App\AccBudgetTransfer;
@@ -9876,7 +9877,7 @@ public function transfer_approvalto($id){
             'title' => $title,
             'title_jp' => $title_jp,
             'po_detail' => $po_detail
-        ))->with('page', 'Receive WH')->with('head', 'Receive Equipment WH');
+        ))->with('page', 'Receive Warehouse')->with('head', 'Receive Equipment Warehouse');
     }
 
     public function fetch_receive_equipment(Request $request){
@@ -9997,7 +9998,7 @@ public function transfer_approvalto($id){
             'title' => $title,
             'title_jp' => $title_jp,
             'po_detail' => $po_detail
-        ))->with('page', 'Print WH')->with('head', 'Print Equipment WH');
+        ))->with('page', 'Print Warehouse')->with('head', 'Receive Equipment Warehouse');
     }
 
     public function fetch_print_equipment(Request $request){
@@ -10055,6 +10056,92 @@ public function transfer_approvalto($id){
             'datas' => $receive,
         );
         return Response::json($response);
+    }
+
+    public function create_cetak_bukti(Request $request){
+        try {
+            $receive = $request->get('receive');
+            $id_print = 'Receive_'.date('Y-m-d H:i:s');
+            foreach ($receive as $rcv) {
+
+                $receive = AccReceiveReport::create([
+                    'id_print' => $id_print,
+                    'no_po' => $rcv['no_po'],
+                    'no_item' => $rcv['no_item'],
+                    'nama_item' => $rcv['nama_item'],
+                    'qty_receive' => $rcv['qty_receive'],
+                    'date_receive' => $rcv['date_receive'],
+                    'created_by' => Auth::id()
+                ]);
+
+                $receive->save();
+            }
+
+            $response = array(
+                'status' => true,
+                'message' => 'Cetek Bukti Penerimaan Berhasil'
+            );
+            return Response::json($response);
+        } 
+        catch (Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function bukti_penerimaan()
+    {
+      try {
+        $receive = DB::SELECT("SELECT DISTINCT id_print from acc_receive_reports");
+
+        $response = array(
+          'status' => true,
+          'receive' => $receive
+        );
+
+        return Response::json($response); 
+      } catch (\Exception $e) {
+        $response = array(
+          'status' => false,
+          'message'=> $e->getMessage()
+        );
+
+        return Response::json($response); 
+      }
+    }
+
+    public function cetak_bukti_penerimaan($id)
+    {
+
+     $receives = db::select("
+        SELECT 
+            acc_receive_reports.no_po,
+            acc_receive_reports.nama_item,
+            acc_receive_reports.qty_receive,
+            acc_receive_reports.date_receive,
+            acc_purchase_orders.supplier_name
+            FROM
+            acc_receive_reports 
+            left join acc_purchase_orders
+            on acc_purchase_orders.no_po = acc_receive_reports.no_po
+            WHERE
+            id_print = '".$id."'
+            AND acc_receive_reports.deleted_at IS NULL
+        ");
+     
+
+         $pdf = \App::make('dompdf.wrapper');
+         $pdf->getDomPDF()->set_option("enable_php", true);
+         $pdf->setPaper('A4', 'potrait');
+
+         $pdf->loadView('accounting_purchasing.master.receive_print_report', array(
+              'receives' => $receives,
+         ));
+
+        return $pdf->stream($id.".pdf");
     }
 
 }

@@ -137,7 +137,32 @@
 			</div>
 		</div>
 	</div>
-</section>
+
+
+
+	<div class="row" style="margin-top: 200px;margin-left: 1%;margin-right: 1%">
+	    <div class="col-xs-12" style="padding:0">
+	      <div class="box">
+	        <div class="box-body">
+	           <div class="box-header">
+	              <h3 style="margin:0">Report Receive</h3>
+	            </div>
+	            <table id="tableHasil" class="table table-bordered table-striped table-hover">
+	              <thead style="background-color: rgba(126,86,134,.7);">
+	                <tr>
+	                  <th>No</th>
+	                  <th>Receive Report Date</th>
+	                  <th>Print Receive Report</th>	                  
+	                </tr>
+	              </thead>
+	              <tbody id="tableBodyHasil">
+	              </tbody>
+	            </table>
+	          </div>
+	        </div>
+	    </div>
+	  </div>
+	</section>
 
 @endsection
 @section('scripts')
@@ -156,6 +181,8 @@
 	jQuery(document).ready(function() {
 		$('#no_po').blur();
 		$('#confirm').hide();
+
+    	fillTableResult();
 	});
 
 	$('#no_po').keydown(function(event) {
@@ -260,7 +287,7 @@
 			num++;
 			body += '<tr>';
 			body += '<input type="hidden" val="'+list[i].id+'"  id="id_'+index+'">';
-			body += '<td '+css+'><input type="hidden" value="'+list[i].no_po+'"  id="no_po'+index+'">'+list[i].no_po+'</td>';
+			body += '<td '+css+'><input type="hidden" value="'+list[i].no_po+'"  id="no_po_'+index+'">'+list[i].no_po+'</td>';
 			body += '<td '+css+'><input type="hidden" value="'+list[i].no_item+'"  id="no_item_'+index+'">'+list[i].no_item+'</td>';
 			body += '<td '+css+'><input type="hidden" value="'+list[i].nama_item+'"  id="nama_item_'+index+'">'+list[i].nama_item+'</td>';
 			body += '<td '+css+'><input type="hidden" value="'+list[i].qty_receive+'"  id="qty_receive_'+index+'">'+list[i].qty_receive+'</td>';
@@ -296,7 +323,7 @@
 
 		var arr_params = [];
 
-		for (var i = 0;i<$('#count_po').val() ;i++) {
+		for (var i = 0;i < $('#count_po').val(); i++) {
 			arr_params.push({
 				'no_po' : $('#no_po_'+i).val(), 
 				'no_item' : $('#no_item_'+i).val(), 
@@ -307,29 +334,117 @@
 		}
 
 		var data = {
-			item : arr_params
+			receive : arr_params
 		}
 
-		// if(confirm("Data akan simpan oleh sistem.\nData tidak dapat dikembalikan.")){
+		if(confirm("Apakah anda yakin ingin mencetak bukti penerimaan ini?")){
 
-		// 	$.post('{{ url("fetch/warehouse/update_receive") }}', data, function(result, status, xhr){
-		// 		if (result.status) {
-		// 			openSuccessGritter('Success', result.message);
+			$.post('{{ url("fetch/warehouse/create_bukti") }}', data, function(result, status, xhr){
+				if (result.status) {
+					openSuccessGritter('Success', result.message);
 
-		// 			$("#po_body").empty();
-		// 			$('#confirm').hide();
-		// 			$("#loading").hide();
+					$("#po_body").empty();
+					$('#confirm').hide();
+					$("#loading").hide();
 					
-		// 			list = [];
-		// 		}else{
-		// 			$("#loading").hide();
-		// 			openErrorGritter('Error', result.message);
-		// 		}
-		// 	});
-		// }else{
-		// 	$("#loading").hide();
-		// }
+					list = [];
+				}else{
+					$("#loading").hide();
+					openErrorGritter('Error', result.message);
+				}
+			});
+		}else{
+			$("#loading").hide();
+		}
 		
+	}
+
+
+	function fillTableResult() {
+	    $.get('{{ url("index/warehouse/report_bukti") }}', function(result, status, xhr) {
+
+	    if(result.status){
+	      $('#tableHasil').DataTable().clear();
+	      $('#tableHasil').DataTable().destroy();
+	      $('#tableBodyHasil').html("");
+	      var tableIsi = "";
+	      var count = 1;
+	      
+	      $.each(result.receive, function(key, value) {
+
+	      	var sub = value.id_print.split("_");
+
+	        tableIsi += '<tr>';
+	        tableIsi += '<td width="5%" style="padding:5px">'+ count +'</td>';
+	        tableIsi += '<td width="30%" style="padding:5px">'+ sub[0] +' '+ sub[1] +'</td>';
+	        tableIsi += '<td><a class="btn btn-danger btn-sm" href="{{ url("index/warehouse/report_bukti") }}/'+value.id_print+'"><i class="fa fa-file-pdf-o"></i> Report Receive</a></td>';
+
+	        tableIsi += '</tr>';
+	        count += 1;
+	      });
+
+	      $('#tableBodyHasil').append(tableIsi);
+
+	      var table2 = $('#tableHasil').DataTable({
+	          'dom': 'Bfrtip',
+	          'responsive':true,
+	          'lengthMenu': [
+	          [ 5, 10, 25, -1 ],
+	          [ '5 rows', '10 rows', '25 rows', 'Show all' ]
+	          ],
+	          'buttons': {
+	            buttons:[
+	            {
+	              extend: 'pageLength',
+	              className: 'btn btn-default',
+	            },
+	            {
+	            extend: 'copy',
+	            className: 'btn btn-success',
+	            text: '<i class="fa fa-copy"></i> Copy',
+	            exportOptions: {
+	              columns: ':not(.notexport)'
+	            }
+	            },
+	            {
+	              extend: 'excel',
+	              className: 'btn btn-info',
+	              text: '<i class="fa fa-file-excel-o"></i> Excel',
+	              exportOptions: {
+	                columns: ':not(.notexport)'
+	              }
+	            },
+	            {
+	              extend: 'print',
+	              className: 'btn btn-warning',
+	              text: '<i class="fa fa-print"></i> Print',
+	              exportOptions: {
+	                columns: ':not(.notexport)'
+	              }
+	            },
+	            ]
+	          },
+	          'paging': true,
+	          'lengthChange': true,
+	          'pageLength': 5,
+	          'searching': false,
+	          'ordering': true,
+	          'order': [],
+	          'info': true,
+	          'autoWidth': true,
+	          "sPaginationType": "full_numbers",
+	          "bJQueryUI": true,
+	          "bAutoWidth": false,
+	          "processing": true
+	        });
+	      }
+	      else{
+	        alert('Attempt to retrieve data failed');
+	      }
+
+
+	  });
+
 	}
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');

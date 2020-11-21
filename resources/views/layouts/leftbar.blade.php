@@ -547,19 +547,19 @@
   </li>
   @endif
 
-  @if(in_array('S45', $navs))
-  @if(isset($head) && $head == "Receive Equipment WH")<li class="treeview active">@else<li class="treeview">@endif
+  @if(in_array('S48', $navs))
+  @if(isset($head) && $head == "Receive Equipment Warehouse")<li class="treeview active">@else<li class="treeview">@endif
     <a href="#">
-      <i class="fa fa-money"></i> <span>Receive Equipment WH</span>
+      <i class="fa fa-money"></i> <span>Receive Equipment Warehouse</span>
       <span class="pull-right-container">
         <i class="fa fa-angle-left pull-right"></i>
       </span>
     </a>
     <ul class="treeview-menu">
-      @if(isset($page) && $page == "Receive WH")<li class="active">@else<li>@endif
+      @if(isset($page) && $page == "Receive Warehouse")<li class="active">@else<li>@endif
         <a href="{{ url("warehouse/receive_equipment") }}"><i class="fa fa-share-square-o"></i>Terima Barang</a>
       </li>
-      @if(isset($page) && $page == "Print WH")<li class="active">@else<li>@endif
+      @if(isset($page) && $page == "Print Warehouse")<li class="active">@else<li>@endif
         <a href="{{ url("warehouse/print_equipment") }}"><i class="fa fa-sticky-note-o"></i>Cetak Label Barang</a>
       </li>
       @if(isset($page) && $page == "Receive Bukti")<li class="active">@else<li>@endif

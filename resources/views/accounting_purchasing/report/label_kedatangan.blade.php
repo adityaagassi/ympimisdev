@@ -121,11 +121,11 @@
 		$('#po').text(po);
 		$('#date').text(date);
 		$('#quantity').text(qty);
-		$('#po_code_item').text(po+kode_item);
+		$('#po_code_item').text(po+'_'+kode_item+'_'+qty);
 
 		var url1 = "{{url('/app/barcode/')}}";
 		var url2 ="/barcode.php?f=svg&s=code-128&w=200&h=30&p=0&wq=0";
-		var code ="&d="+ po+'_'+kode_item+'_'+quantity;
+		var code ="&d="+ po+'_'+kode_item+'_'+qty;
 		var janfix = url1.replace("/public","");
 		$('#barcode').attr("src", janfix + url2 + code);
 
