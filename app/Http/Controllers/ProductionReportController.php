@@ -899,6 +899,7 @@ class ProductionReportController extends Controller
                         and frequency = '".$frequency."'
                         and department_id = '".$id."'
                     and activity_name != 'Null'
+                    and deleted_at is null
                     GROUP BY activity_type, frequency,id,activity_name,leader_dept) detail");
         $monthTitle = date("F Y", strtotime($week_date));
 
