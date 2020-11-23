@@ -193,7 +193,7 @@ class AssemblyProcessController extends Controller
 					$counter->save();
 				});
 			}
-			$this->printStamp($request->get('tagName'), $request->get('serial'), $request->get('model'), 'print', 'MIS');
+			$this->printStamp($request->get('tagName'), $request->get('serial'), $request->get('model'), 'print', 'SUPERMAN');
 		}
 		catch(\Exception $e){
 			$response = array(
