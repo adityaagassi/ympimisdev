@@ -2588,35 +2588,42 @@ class MiddleProcessController extends Controller
 		$hour = (int)date('H');
 
 		
+		// if(strlen($request->get('tgl')) > 0){
+		// 	if($tgl == date('Y-m-d')){
+		// 		if($hour > 5){
+		// 			$tgl = date('Y-m-d');
+		// 			$until = date('Y-m-d');
+		// 		}else{
+		// 			$tgl = date('Y-m-d',strtotime("yesterday"));
+		// 			$until = date('Y-m-d');
+		// 		}
+		// 	}else{
+		// 		$tgl = date('Y-m-d',strtotime($request->get("tgl")));
+		// 		$until = date('Y-m-d', strtotime('tomorrow', strtotime($request->get("tgl"))));
+		// 	}
+		// }else{
+		// 	if($hour > 5){
+		// 		$tgl = date('Y-m-d');
+		// 		$until = date('Y-m-d',strtotime("tomorrow"));
+		// 	}else{
+		// 		$tgl = date('Y-m-d',strtotime("yesterday"));
+		// 		$until = date('Y-m-d');
+		// 	}
+		// }
+
+		// $tanggal = "date(l.created_at) = '".$tgl."'";
+		// $tanggal1 = "l.created_at >= '".$tgl." 06:00:00' and l.created_at <= '".$tgl." 16:00:00'";
+		// $tanggal2 = "l.created_at >= '".$tgl." 16:00:00' and l.created_at <= '".$until." 03:00:00'";
+
 		if(strlen($request->get('tgl')) > 0){
-			if($tgl == date('Y-m-d')){
-				if($hour > 5){
-					$tgl = date('Y-m-d');
-					$until = date('Y-m-d');
-				}else{
-					$tgl = date('Y-m-d',strtotime("yesterday"));
-					$until = date('Y-m-d');
-				}
-			}else{
-				$tgl = date('Y-m-d',strtotime($request->get("tgl")));
-				$until = date('Y-m-d', strtotime('tomorrow', strtotime($request->get("tgl"))));
-			}
-
-
+			$tgl = date('Y-m-d',strtotime($request->get("tgl")));
 		}else{
-			if($hour > 5){
-				$tgl = date('Y-m-d');
-				$until = date('Y-m-d',strtotime("tomorrow"));
-			}else{
-				$tgl = date('Y-m-d',strtotime("yesterday"));
-				$until = date('Y-m-d');
-			}
+			$tgl = date('Y-m-d');
 		}
 
-
-		$tanggal = "date(l.created_at) = '".$tgl."'";
-		$tanggal1 = "l.created_at >= '".$tgl." 06:00:00' and l.created_at <= '".$tgl." 16:00:00'";
-		$tanggal2 = "l.created_at >= '".$tgl." 16:00:00' and l.created_at <= '".$until." 03:00:00'";
+		$tanggal = "l.created_at >= '".$tgl." 06:00:01' and l.created_at <= '".$until." 15:00:00'";
+		$tanggal1 = "l.created_at >= '".$tgl." 15:00:01' and l.created_at <= '".$until." 23:59:59'";
+		$tanggal2 = "l.created_at >= '".$tgl." 00:00:01' and l.created_at <= '".$until." 06:00:00'";
 
 		$addlocation = "";
 		if($request->get('location') != null) {

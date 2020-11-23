@@ -71,12 +71,12 @@
 				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 2vw;"></div>
 			</div>
 			<div class="col-xs-12" style="padding: 0px; margin-top: 0;">
-				{{-- <table id="s3" class="table table-bordered" style="margin:0">
+				<table id="s3" class="table table-bordered" style="margin:0">
 					<thead id="head_s3">
 					</thead>
 					<tbody id="body_s3">
 					</tbody>
-				</table> --}}
+				</table>
 				<table id="s1" class="table table-bordered" style="margin:0">
 					<thead id="head_s1">
 					</thead>
@@ -158,153 +158,153 @@
 					var title = result.title;
 					$('#last_update').html('<b>'+ title +'</b>');
 
-					// var as_shift3 = [];
+					var as_shift3 = [];
 					var as_shift1 = [];
 					var as_shift2 = [];
 					var as_key = [];
 					var as_model = [];
 					for (var i = 0; i < result.alto.length; i++) {
-						// as_shift3.push(result.alto[i].shift3);
+						as_shift3.push(result.alto[i].shift3);
 						as_shift1.push(result.alto[i].shift1);
 						as_shift2.push(result.alto[i].shift2);
 						as_key.push(result.alto[i].key);
 						as_model.push(result.alto[i].model);
 					}
 
-					// var ts_shift3 = [];
+					var ts_shift3 = [];
 					var ts_shift1 = [];
 					var ts_shift2 = [];
 					var ts_key = [];
 					var ts_model = [];
 					for (var i = 0; i < result.tenor.length; i++) {
-						// ts_shift3.push(result.tenor[i].shift3);
+						ts_shift3.push(result.tenor[i].shift3);
 						ts_shift1.push(result.tenor[i].shift1);
 						ts_shift2.push(result.tenor[i].shift2);
 						ts_key.push(result.tenor[i].key);
 						ts_model.push(result.tenor[i].model);
 					}
 
-					// $('#head_s3').append().empty();
-					// $('#body_s3').append().empty();
+					$('#head_s3').append().empty();
+					$('#body_s3').append().empty();
 					$('#head_s1').append().empty();
 					$('#body_s1').append().empty();
 					$('#head_s2').append().empty();
 					$('#body_s2').append().empty();
 
 					//------------------------------------ Shift 3
-					// $('#head_s3').html("");
-					// var key = [];
-					// var head = '<tr style="background-color: rgba(126,86,134,.7);"><th style="padding: 0px;background-color: rgba(126,86,134,.7);width:1.5%;">Shift 3</th>';
+					$('#head_s3').html("");
+					var key = [];
+					var head = '<tr style="background-color: rgba(126,86,134,.7);"><th style="padding: 0px;background-color: rgba(126,86,134,.7);width:1.5%;">Shift 3</th>';
 
-					// for (var i = 0; i < result.key.length; i++) {
-					// 	key.push(result.key[i].key);
-					// 	head += '<th style="padding: 0px;width:1%;">'+ key[i] +'</th>';
-					// }
-					// head += '<th style="padding: 0px;width:1%;">Total</th>';
-					// head += '</tr>';
+					for (var i = 0; i < result.key.length; i++) {
+						key.push(result.key[i].key);
+						head += '<th style="padding: 0px;width:1%;">'+ key[i] +'</th>';
+					}
+					head += '<th style="padding: 0px;width:1%;">Total</th>';
+					head += '</tr>';
 
-					// var sum = [];
-					// var body = '';
+					var sum = [];
+					var body = '';
 
-					// //Alto Body
-					// var model_alto = [];
-					// var alto = [];
-					// var alto_key = [];
+					//Alto Body
+					var model_alto = [];
+					var alto = [];
+					var alto_key = [];
 
-					// for (var i = 0; i < result.model_alto.length; i++) {
-					// 	model_alto.push(result.model_alto[i].model);
-					// 	body += '<tr>';
-					// 	body += '<td style="background-color: #ffff66;color:black;">'+ model_alto[i] +'</td>';
-					// 	sum = [];
-					// 	for (var j = 0; j < result.key.length; j++) {
-					// 		var is = true;
-					// 		for (var k = 0; k < result.alto.length; k++) {
-					// 			if((model_alto[i] == as_model[k]) && (key[j] == as_key[k])){
-					// 				if(as_shift3[k] > 0){
-					// 					body += '<td style="background-color: #ffff66;color:black;">'+ as_shift3[k] +'</td>';
-					// 					sum.push(parseInt(as_shift3[k]));
-					// 				}
-					// 				else{
-					// 					body += '<td>'+ as_shift3[k] +'</td>';
-					// 					sum.push(parseInt(as_shift3[k]));
+					for (var i = 0; i < result.model_alto.length; i++) {
+						model_alto.push(result.model_alto[i].model);
+						body += '<tr>';
+						body += '<td style="background-color: #ffff66;color:black;">'+ model_alto[i] +'</td>';
+						sum = [];
+						for (var j = 0; j < result.key.length; j++) {
+							var is = true;
+							for (var k = 0; k < result.alto.length; k++) {
+								if((model_alto[i] == as_model[k]) && (key[j] == as_key[k])){
+									if(as_shift3[k] > 0){
+										body += '<td style="background-color: #ffff66;color:black;">'+ as_shift3[k] +'</td>';
+										sum.push(parseInt(as_shift3[k]));
+									}
+									else{
+										body += '<td>'+ as_shift3[k] +'</td>';
+										sum.push(parseInt(as_shift3[k]));
 
-					// 				}
-					// 				is = false;
-					// 			}
-					// 		}
-					// 		if(is){
-					// 			body += '<td>0</td>';
-					// 			sum.push(parseInt(0));
-					// 		}
-					// 	}
-					// 	alto.push(sum);
-					// 	body += '<td style="background-color: #ffff66;color:black;">'+sum.reduce(function(a,b){return a+b})+'</td>';
-					// 	body += '</tr>';
-					// }
-					// body += '<tr>';
-					// body += '<td style="background-color: #ffff66;color:black;">Total</td>';
-					// for (var i = 0; i < result.key.length; i++) {
-					// 	var temp = 0;
-					// 	for(var j = 0; j < result.model_alto.length; j++){
-					// 		temp += alto[j][i];
-					// 	}
-					// 	alto_key.push(temp);
-					// 	body += '<td style="background-color: #ffff66;color:black;">'+alto_key[i]+'</td>';
-					// }
-					// body += '<td style="background-color: #ffff66;color:black;">'+alto_key.reduce(function(a,b){return a+b})+'</td>';
-					// body += '<tr>';
-					// //End Alto Body
+									}
+									is = false;
+								}
+							}
+							if(is){
+								body += '<td>0</td>';
+								sum.push(parseInt(0));
+							}
+						}
+						alto.push(sum);
+						body += '<td style="background-color: #ffff66;color:black;">'+sum.reduce(function(a,b){return a+b})+'</td>';
+						body += '</tr>';
+					}
+					body += '<tr>';
+					body += '<td style="background-color: #ffff66;color:black;">Total</td>';
+					for (var i = 0; i < result.key.length; i++) {
+						var temp = 0;
+						for(var j = 0; j < result.model_alto.length; j++){
+							temp += alto[j][i];
+						}
+						alto_key.push(temp);
+						body += '<td style="background-color: #ffff66;color:black;">'+alto_key[i]+'</td>';
+					}
+					body += '<td style="background-color: #ffff66;color:black;">'+alto_key.reduce(function(a,b){return a+b})+'</td>';
+					body += '<tr>';
+					//End Alto Body
 
-					// //Tenor Body
-					// var tenor = [];
-					// var tenor_key = [];
-					// var model_tenor = [];
-					// for (var i = 0; i < result.model_tenor.length; i++) {
-					// 	model_tenor.push(result.model_tenor[i].model);
-					// 	body += '<tr>';
-					// 	body += '<td style="background-color: rgb(157, 255, 105);color:black;">'+ model_tenor[i] +'</td>';
-					// 	sum = [];
-					// 	for (var j = 0; j < result.key.length; j++) {
-					// 		var is = true;
-					// 		for (var k = 0; k < result.alto.length; k++) {
-					// 			if((model_tenor[i] == ts_model[k]) && (key[j] == ts_key[k])){
-					// 				if(ts_shift3[k] > 0){
-					// 					body += '<td style="background-color: rgb(157, 255, 105);color:black;">'+ ts_shift3[k] +'</td>';
-					// 					sum.push(parseInt(ts_shift3[k]));
-					// 				}
-					// 				else{
-					// 					body += '<td>'+ ts_shift3[k] +'</td>';
-					// 					sum.push(parseInt(ts_shift3[k]));
-					// 				}
-					// 				is = false;
-					// 			}
-					// 		}
-					// 		if(is){
-					// 			body += '<td>0</td>';
-					// 			sum.push(parseInt(0));
+					//Tenor Body
+					var tenor = [];
+					var tenor_key = [];
+					var model_tenor = [];
+					for (var i = 0; i < result.model_tenor.length; i++) {
+						model_tenor.push(result.model_tenor[i].model);
+						body += '<tr>';
+						body += '<td style="background-color: rgb(157, 255, 105);color:black;">'+ model_tenor[i] +'</td>';
+						sum = [];
+						for (var j = 0; j < result.key.length; j++) {
+							var is = true;
+							for (var k = 0; k < result.alto.length; k++) {
+								if((model_tenor[i] == ts_model[k]) && (key[j] == ts_key[k])){
+									if(ts_shift3[k] > 0){
+										body += '<td style="background-color: rgb(157, 255, 105);color:black;">'+ ts_shift3[k] +'</td>';
+										sum.push(parseInt(ts_shift3[k]));
+									}
+									else{
+										body += '<td>'+ ts_shift3[k] +'</td>';
+										sum.push(parseInt(ts_shift3[k]));
+									}
+									is = false;
+								}
+							}
+							if(is){
+								body += '<td>0</td>';
+								sum.push(parseInt(0));
 
-					// 		}			
-					// 	}
-					// 	tenor.push(sum);
-					// 	body += '<td style="background-color: rgb(157, 255, 105);color:black;">'+sum.reduce(function(a,b){return a+b})+'</td>';
-					// 	body += '</tr>';
-					// }
-					// body += '<tr>';
-					// body += '<td style="background-color: rgb(157, 255, 105);color:black;">Total</td>';
-					// for (var i = 0; i < result.key.length; i++) {
-					// 	var temp = 0;
-					// 	for(var j = 0; j < result.model_tenor.length; j++){
-					// 		temp += tenor[j][i];
-					// 	}
-					// 	tenor_key.push(temp);
-					// 	body += '<td style="background-color: rgb(157, 255, 105);color:black;">'+tenor_key[i]+'</td>';
-					// }
-					// body += '<td style="background-color: rgb(157, 255, 105);color:black;">'+tenor_key.reduce(function(a,b){return a+b})+'</td>';
-					// body += '<tr>';
-					// //End Tenor Body
+							}			
+						}
+						tenor.push(sum);
+						body += '<td style="background-color: rgb(157, 255, 105);color:black;">'+sum.reduce(function(a,b){return a+b})+'</td>';
+						body += '</tr>';
+					}
+					body += '<tr>';
+					body += '<td style="background-color: rgb(157, 255, 105);color:black;">Total</td>';
+					for (var i = 0; i < result.key.length; i++) {
+						var temp = 0;
+						for(var j = 0; j < result.model_tenor.length; j++){
+							temp += tenor[j][i];
+						}
+						tenor_key.push(temp);
+						body += '<td style="background-color: rgb(157, 255, 105);color:black;">'+tenor_key[i]+'</td>';
+					}
+					body += '<td style="background-color: rgb(157, 255, 105);color:black;">'+tenor_key.reduce(function(a,b){return a+b})+'</td>';
+					body += '<tr>';
+					//End Tenor Body
 
-					// $('#head_s3').append(head);
-					// $('#body_s3').append(body);
+					$('#head_s3').append(head);
+					$('#body_s3').append(body);
 
 
 
