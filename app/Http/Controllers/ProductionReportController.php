@@ -273,6 +273,7 @@ class ProductionReportController extends Controller
                         AND training_reports.leader = '".$dataleader."' 
                         AND training_reports.deleted_at IS NULL 
                         AND actlist.department_id = '".$id."' 
+                        AND actlist.deleted_at is null
                     GROUP BY
                         training_reports.leader 
                         ),
