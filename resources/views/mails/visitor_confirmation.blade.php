@@ -43,7 +43,7 @@
 				</tbody>
 			</table>
 			<br>
-			<a href="{{ url('visitor_confirmation_manager') }}">Visitor Confirmation</a><br>
+			<a href="http://10.109.52.4/mirai/public/visitor_confirmation_manager">Visitor Confirmation</a><br>
 		</center>
 	</div>
 </body>
