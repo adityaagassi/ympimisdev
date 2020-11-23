@@ -818,6 +818,10 @@
                                 <a href="{{ url("/index/display/sub_assy/assy_sax?date=&surface2=&key2=&model2=&hpl2=&order2=") }}">
                                     <i class="fa fa-caret-right"></i> Saxophone Picking Monitor (サックスのピッキング監視)
                                 </a>
+                                 <br>
+                                <a href="{{ url("/index/display/body/sax_body?date=&surface2=&key2=&model2=&hpl2=&order2=") }}">
+                                    <i class="fa fa-caret-right"></i> Saxophone Body Picking Monitor (??)
+                                </a>
                                 <br>
                                 <a href="{{ url("/index/display/sub_assy/assy_cl?date=&order2=") }}">
                                     <i class="fa fa-caret-right"></i> Clarinet Picking Monitor (クラリネットピッキング監視)
