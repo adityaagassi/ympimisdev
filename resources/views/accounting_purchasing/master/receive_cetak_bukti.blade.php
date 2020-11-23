@@ -113,7 +113,7 @@
 			<table class="table table-bordered" id="store_table">
 				<thead>
 					<tr>
-						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 25px;" colspan="9">Cetak Bukti Kedatangan Barang</th>
+						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 25px;" colspan="9">Kirim Barang</th>
 					</tr>
 					<tr>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">NO PO</th>
@@ -179,7 +179,7 @@
 	var vdo;
 	
 	jQuery(document).ready(function() {
-		$('#no_po').blur();
+		$('#no_po').focus();
 		$('#confirm').hide();
 
     	fillTableResult();
@@ -314,8 +314,6 @@
 	function canc(){
 		$('#no_po').val("");
 		$('#no_po').focus();
-		$('#no_po').blur();
-
 	}
 
 	function conf() {

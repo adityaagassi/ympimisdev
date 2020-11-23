@@ -10034,7 +10034,7 @@ public function transfer_approvalto($id){
     // Terima Barang
 
     public function wh_cetak_bukti(){
-        $title = 'Cetak Bukti Penerimaan';
+        $title = 'Kirim Barang';
         $title_jp = '';
 
         return view('accounting_purchasing.master.receive_cetak_bukti', array(
@@ -10079,7 +10079,7 @@ public function transfer_approvalto($id){
 
             $response = array(
                 'status' => true,
-                'message' => 'Cetek Bukti Penerimaan Berhasil'
+                'message' => 'Cetak Bukti Penerimaan Berhasil'
             );
             return Response::json($response);
         } 

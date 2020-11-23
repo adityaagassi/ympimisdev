@@ -563,7 +563,7 @@
         <a href="{{ url("warehouse/print_equipment") }}"><i class="fa fa-sticky-note-o"></i>Cetak Label Barang</a>
       </li>
       @if(isset($page) && $page == "Receive Bukti")<li class="active">@else<li>@endif
-        <a href="{{ url("warehouse/cetak_bukti") }}"><i class="fa fa-file-pdf-o"></i><span>Cetak Bukti Penerimaan Barang</span></a>
+        <a href="{{ url("warehouse/cetak_bukti") }}"><i class="fa fa-file-pdf-o"></i><span>Kirim Barang</span></a>
       </li>
       
     </ul>
