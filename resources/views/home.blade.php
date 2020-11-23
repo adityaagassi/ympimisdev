@@ -677,7 +677,7 @@
                             <td>
                                 <span style="font-weight: bold;">KITTO (きっと)</span>
                                 <br>
-                                <a href="http://172.17.128.4/kitto/public">
+                                <a href="http://10.109.52.4/kitto/public">
                                     <i class="fa fa-caret-right"></i> Kanban Monitoring (かんばん監視)
                                 </a>
                             </td>
@@ -816,11 +816,11 @@
                                 </a>
                                 <br>
                                 <a href="{{ url("/index/display/sub_assy/assy_sax?date=&surface2=&key2=&model2=&hpl2=&order2=") }}">
-                                    <i class="fa fa-caret-right"></i> Saxophone Picking Monitor (サックスのピッキング監視)
+                                    <i class="fa fa-caret-right"></i> Sax Key Picking Monitor (サックスのピッキング監視)
                                 </a>
                                  <br>
                                 <a href="{{ url("/index/display/body/sax_body?date=&surface2=&key2=&model2=&hpl2=&order2=") }}">
-                                    <i class="fa fa-caret-right"></i> Saxophone Body Picking Monitor (??)
+                                    <i class="fa fa-caret-right"></i> Sax Body Picking Monitor (サックスのピッキング監視)
                                 </a>
                                 <br>
                                 <a href="{{ url("/index/display/sub_assy/assy_cl?date=&order2=") }}">
