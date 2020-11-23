@@ -59,21 +59,55 @@ public function handle()
         $mon = date('Y-m', strtotime(Carbon::now()->subDays(1)));
     }
 
-    $datas = db::connection('sunfish')->select("select VIEW_YMPI_Emp_OrgUnit.cost_center_code, VIEW_YMPI_Emp_OrgUnit.Department, ot.emp_no as nik, VIEW_YMPI_Emp_OrgUnit.Full_name as name, VIEW_YMPI_Emp_OrgUnit.pos_name_en, ot.jam from
+    // $datas = db::connection('sunfish')->select("select VIEW_YMPI_Emp_OrgUnit.cost_center_code, VIEW_YMPI_Emp_OrgUnit.Department, ot.emp_no as nik, VIEW_YMPI_Emp_OrgUnit.Full_name as name, VIEW_YMPI_Emp_OrgUnit.pos_name_en, ot.jam from
+    //     (
+    //     select VIEW_YMPI_Emp_OvertimePlan.emp_no,
+    //     sum(
+    //     CASE
+    //     WHEN VIEW_YMPI_Emp_OvertimePlan.total_ot > 0 THEN
+    //     floor((VIEW_YMPI_Emp_OvertimePlan.total_ot / 60.0) * 2  + 0.5) / 2
+    //     ELSE
+    //     floor((VIEW_YMPI_Emp_OvertimePlan.TOTAL_OVT_PLAN / 60.0) * 2  + 0.5) / 2
+    //     END) as jam
+    //     from VIEW_YMPI_Emp_OvertimePlan
+    //     where VIEW_YMPI_Emp_OvertimePlan.emp_no <> 'SUNFISH' and VIEW_YMPI_Emp_OvertimePlan.ovtplanfrom >= '".$first." 00:00:00' and VIEW_YMPI_Emp_OvertimePlan.ovtplanfrom <= '".$now." 23:59:59'
+    //     group by VIEW_YMPI_Emp_OvertimePlan.emp_no
+    //     ) as ot left join VIEW_YMPI_Emp_OrgUnit on VIEW_YMPI_Emp_OrgUnit.Emp_no = ot.emp_no where jam > 0 order by ot.jam desc
+    //     ");
+
+    $datas = db::connection('sunfish')->select("SELECT
+        e.cost_center_code,
+        e.Department,
+        ot.emp_no AS nik,
+        e.Full_name AS name,
+        e.pos_name_en,
+        ot.jam 
+        FROM
         (
-        select VIEW_YMPI_Emp_OvertimePlan.emp_no,
-        sum(
+        SELECT
+        ot.emp_no,
+        SUM (
         CASE
-        WHEN VIEW_YMPI_Emp_OvertimePlan.total_ot > 0 THEN
-        floor((VIEW_YMPI_Emp_OvertimePlan.total_ot / 60.0) * 2  + 0.5) / 2
-        ELSE
-        floor((VIEW_YMPI_Emp_OvertimePlan.TOTAL_OVT_PLAN / 60.0) * 2  + 0.5) / 2
-        END) as jam
-        from VIEW_YMPI_Emp_OvertimePlan
-        where VIEW_YMPI_Emp_OvertimePlan.emp_no <> 'SUNFISH' and VIEW_YMPI_Emp_OvertimePlan.ovtplanfrom >= '".$first." 00:00:00' and VIEW_YMPI_Emp_OvertimePlan.ovtplanfrom <= '".$now." 23:59:59'
-        group by VIEW_YMPI_Emp_OvertimePlan.emp_no
-        ) as ot left join VIEW_YMPI_Emp_OrgUnit on VIEW_YMPI_Emp_OrgUnit.Emp_no = ot.emp_no where jam > 0 order by ot.jam desc
-        ");
+
+        WHEN ot.total_ot > 0 THEN
+        floor( ( ot.total_ot / 60.0 ) * 2 + 0.5 ) / 2 ELSE floor( ( ot.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 
+        END 
+        ) AS jam 
+        FROM
+        VIEW_YMPI_Emp_OvertimePlan AS ot 
+        WHERE
+        ot.emp_no <> 'SUNFISH' 
+        AND ot.ovtplanfrom >= '".$first." 00:00:00' 
+        AND ot.ovtplanfrom <= '".$now." 23:59:59' 
+        GROUP BY
+        ot.emp_no 
+        ) AS ot
+        LEFT JOIN VIEW_YMPI_Emp_OrgUnit AS e ON ot.emp_no = e.Emp_no 
+        WHERE
+        jam > 0
+        ORDER BY
+        ot.jam DESC");
+
     $ofc_1 = db::table('office_members')->get();
 
     $ofc = array();
@@ -82,7 +116,7 @@ public function handle()
         if($of->remark == 'office'){
             array_push($ofc, $of->employee_id);
         }
-        if($of->remark == 'driver'){
+        if($of->remark == 'driver' || $of->remark == 'security'){
             array_push($drv, $of->employee_id);
         }
     }
