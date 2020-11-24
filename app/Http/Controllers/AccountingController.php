@@ -3426,20 +3426,36 @@ class AccountingController extends Controller
                     // ->where('acc_purchase_orders.id', '=', $request->get('id'))
                     // ->get();
 
+                // $isimail = "
+                // select t1.*,  IF(t1.goods_price != 0,sum(t1.goods_price*t1.qty),sum(t1.service_price*t1.qty)) as amount from 
+                // (SELECT
+                // acc_purchase_orders.*,
+                // acc_purchase_order_details.budget_item,
+                // acc_purchase_order_details.goods_price,
+                // acc_purchase_order_details.service_price,
+                // acc_purchase_order_details.qty
+                // FROM
+                // acc_purchase_orders
+                // JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po 
+                // WHERE
+                // acc_purchase_orders.id = ".$request->get('id').")
+                // t1";
+
+
                 $isimail = "
-                select t1.*,  IF(t1.goods_price != 0,sum(t1.goods_price*t1.qty),sum(t1.service_price*t1.qty)) as amount from 
-                (SELECT
-                acc_purchase_orders.*,
+                SELECT acc_purchase_orders.*,
+                acc_purchase_order_details.nama_item,
                 acc_purchase_order_details.budget_item,
+                acc_purchase_order_details.delivery_date,
                 acc_purchase_order_details.goods_price,
                 acc_purchase_order_details.service_price,
-                acc_purchase_order_details.qty
+                acc_purchase_order_details.qty,
+                acc_purchase_order_details.uom
                 FROM
                 acc_purchase_orders
                 JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po 
                 WHERE
-                acc_purchase_orders.id = ".$request->get('id').")
-                t1";
+                acc_purchase_orders.id = ".$request->get('id')."";
 
                 $po_isi = db::select($isimail);
 
@@ -3666,20 +3682,35 @@ class AccountingController extends Controller
 
             // $isimail = "select acc_purchase_orders.*, acc_budget_histories.budget, SUM(acc_budget_histories.amount_po) as amount FROM acc_purchase_orders join acc_budget_histories on acc_purchase_orders.no_po = acc_budget_histories.po_number where acc_purchase_orders.id = ".$id;
 
+            // $isimail = "
+            // select t1.*,  IF(t1.goods_price != 0,sum(t1.goods_price*t1.qty),sum(t1.service_price*t1.qty)) as amount from 
+            // (SELECT
+            // acc_purchase_orders.*,
+            // acc_purchase_order_details.budget_item,
+            // acc_purchase_order_details.goods_price,
+            // acc_purchase_order_details.service_price,
+            // acc_purchase_order_details.qty
+            // FROM
+            // acc_purchase_orders
+            // JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po 
+            // WHERE
+            // acc_purchase_orders.id = ".$id.")
+            // t1";
+
             $isimail = "
-            select t1.*,  IF(t1.goods_price != 0,sum(t1.goods_price*t1.qty),sum(t1.service_price*t1.qty)) as amount from 
-            (SELECT
-            acc_purchase_orders.*,
-            acc_purchase_order_details.budget_item,
-            acc_purchase_order_details.goods_price,
-            acc_purchase_order_details.service_price,
-            acc_purchase_order_details.qty
-            FROM
-            acc_purchase_orders
-            JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po 
-            WHERE
-            acc_purchase_orders.id = ".$id.")
-            t1";
+                SELECT acc_purchase_orders.*,
+                acc_purchase_order_details.nama_item,
+                acc_purchase_order_details.budget_item,
+                acc_purchase_order_details.delivery_date,
+                acc_purchase_order_details.goods_price,
+                acc_purchase_order_details.service_price,
+                acc_purchase_order_details.qty,
+                acc_purchase_order_details.uom
+                FROM
+                acc_purchase_orders
+                JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po 
+                WHERE
+                acc_purchase_orders.id = ".$id."";
 
             $po_isi = db::select($isimail);
 
@@ -3740,20 +3771,35 @@ class AccountingController extends Controller
 
                 // $isimail = "select acc_purchase_orders.*, acc_budget_histories.budget, SUM(acc_budget_histories.amount_po) as amount FROM acc_purchase_orders join acc_budget_histories on acc_purchase_orders.no_po = acc_budget_histories.po_number where acc_purchase_orders.id = ".$id;
 
+                // $isimail = "
+                // select t1.*,  IF(t1.goods_price != 0,sum(t1.goods_price*t1.qty),sum(t1.service_price*t1.qty)) as amount from 
+                // (SELECT
+                // acc_purchase_orders.*,
+                // acc_purchase_order_details.budget_item,
+                // acc_purchase_order_details.goods_price,
+                // acc_purchase_order_details.service_price,
+                // acc_purchase_order_details.qty
+                // FROM
+                // acc_purchase_orders
+                // JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po 
+                // WHERE
+                // acc_purchase_orders.id = ".$id.")
+                // t1";
+
                 $isimail = "
-                select t1.*,  IF(t1.goods_price != 0,sum(t1.goods_price*t1.qty),sum(t1.service_price*t1.qty)) as amount from 
-                (SELECT
-                acc_purchase_orders.*,
+                SELECT acc_purchase_orders.*,
+                acc_purchase_order_details.nama_item,
                 acc_purchase_order_details.budget_item,
+                acc_purchase_order_details.delivery_date,
                 acc_purchase_order_details.goods_price,
                 acc_purchase_order_details.service_price,
-                acc_purchase_order_details.qty
+                acc_purchase_order_details.qty,
+                acc_purchase_order_details.uom
                 FROM
                 acc_purchase_orders
                 JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po 
                 WHERE
-                acc_purchase_orders.id = ".$id.")
-                t1";
+                acc_purchase_orders.id = ".$id."";
 
                 $po_isi = db::select($isimail);
 
@@ -3825,20 +3871,35 @@ class AccountingController extends Controller
 
                 $pdf->save(public_path() . "/po_list/".$detail_po[0]->no_po.".pdf");
 
+                // $isimail = "
+                // select t1.*,  IF(t1.goods_price != 0,sum(t1.goods_price*t1.qty),sum(t1.service_price*t1.qty)) as amount from 
+                // (SELECT
+                // acc_purchase_orders.*,
+                // acc_purchase_order_details.budget_item,
+                // acc_purchase_order_details.goods_price,
+                // acc_purchase_order_details.service_price,
+                // acc_purchase_order_details.qty
+                // FROM
+                // acc_purchase_orders
+                // JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po 
+                // WHERE
+                // acc_purchase_orders.id = ".$id.")
+                // t1";
+
                 $isimail = "
-                select t1.*,  IF(t1.goods_price != 0,sum(t1.goods_price*t1.qty),sum(t1.service_price*t1.qty)) as amount from 
-                (SELECT
-                acc_purchase_orders.*,
+                SELECT acc_purchase_orders.*,
+                acc_purchase_order_details.nama_item,
                 acc_purchase_order_details.budget_item,
+                acc_purchase_order_details.delivery_date,
                 acc_purchase_order_details.goods_price,
                 acc_purchase_order_details.service_price,
-                acc_purchase_order_details.qty
+                acc_purchase_order_details.qty,
+                acc_purchase_order_details.uom
                 FROM
                 acc_purchase_orders
                 JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po 
                 WHERE
-                acc_purchase_orders.id = ".$id.")
-                t1";
+                acc_purchase_orders.id = ".$id."";
 
                 $po_isi = db::select($isimail);
 
@@ -3912,20 +3973,35 @@ class AccountingController extends Controller
 
                 $pdf->save(public_path() . "/po_list/".$detail_po[0]->no_po.".pdf");
 
+                // $isimail = "
+                // select t1.*,  IF(t1.goods_price != 0,sum(t1.goods_price*t1.qty),sum(t1.service_price*t1.qty)) as amount from 
+                // (SELECT
+                // acc_purchase_orders.*,
+                // acc_purchase_order_details.budget_item,
+                // acc_purchase_order_details.goods_price,
+                // acc_purchase_order_details.service_price,
+                // acc_purchase_order_details.qty
+                // FROM
+                // acc_purchase_orders
+                // JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po 
+                // WHERE
+                // acc_purchase_orders.id = ".$id.")
+                // t1";
+
                 $isimail = "
-                select t1.*,  IF(t1.goods_price != 0,sum(t1.goods_price*t1.qty),sum(t1.service_price*t1.qty)) as amount from 
-                (SELECT
-                acc_purchase_orders.*,
+                SELECT acc_purchase_orders.*,
+                acc_purchase_order_details.nama_item,
                 acc_purchase_order_details.budget_item,
+                acc_purchase_order_details.delivery_date,
                 acc_purchase_order_details.goods_price,
                 acc_purchase_order_details.service_price,
-                acc_purchase_order_details.qty
+                acc_purchase_order_details.qty,
+                acc_purchase_order_details.uom
                 FROM
                 acc_purchase_orders
                 JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po 
                 WHERE
-                acc_purchase_orders.id = ".$id.")
-                t1";
+                acc_purchase_orders.id = ".$id."";
 
                 $po_isi = db::select($isimail);
 
@@ -3971,20 +4047,35 @@ class AccountingController extends Controller
         }
         $po->save();
 
+        // $isimail = "
+        // select t1.*,  IF(t1.goods_price != 0,sum(t1.goods_price*t1.qty),sum(t1.service_price*t1.qty)) as amount from 
+        // (SELECT
+        // acc_purchase_orders.*,
+        // acc_purchase_order_details.budget_item,
+        // acc_purchase_order_details.goods_price,
+        // acc_purchase_order_details.service_price,
+        // acc_purchase_order_details.qty
+        // FROM
+        // acc_purchase_orders
+        // JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po 
+        // WHERE
+        // acc_purchase_orders.id = ".$po->id.")
+        // t1";
+
         $isimail = "
-        select t1.*,  IF(t1.goods_price != 0,sum(t1.goods_price*t1.qty),sum(t1.service_price*t1.qty)) as amount from 
-        (SELECT
-        acc_purchase_orders.*,
+        SELECT acc_purchase_orders.*,
+        acc_purchase_order_details.nama_item,
         acc_purchase_order_details.budget_item,
+        acc_purchase_order_details.delivery_date,
         acc_purchase_order_details.goods_price,
         acc_purchase_order_details.service_price,
-        acc_purchase_order_details.qty
+        acc_purchase_order_details.qty,
+        acc_purchase_order_details.uom
         FROM
         acc_purchase_orders
         JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po 
         WHERE
-        acc_purchase_orders.id = ".$po->id.")
-        t1";
+        acc_purchase_orders.id = ".$po->id."";
 
         $tolak = db::select($isimail);
 
@@ -4026,20 +4117,35 @@ class AccountingController extends Controller
 
         $po->save();
 
+        // $isimail = "
+        // select t1.*,  IF(t1.goods_price != 0,sum(t1.goods_price*t1.qty),sum(t1.service_price*t1.qty)) as amount from 
+        // (SELECT
+        // acc_purchase_orders.*,
+        // acc_purchase_order_details.budget_item,
+        // acc_purchase_order_details.goods_price,
+        // acc_purchase_order_details.service_price,
+        // acc_purchase_order_details.qty
+        // FROM
+        // acc_purchase_orders
+        // JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po 
+        // WHERE
+        // acc_purchase_orders.id = ".$po->id.")
+        // t1";
+
         $isimail = "
-        select t1.*,  IF(t1.goods_price != 0,sum(t1.goods_price*t1.qty),sum(t1.service_price*t1.qty)) as amount from 
-        (SELECT
-        acc_purchase_orders.*,
+        SELECT acc_purchase_orders.*,
+        acc_purchase_order_details.nama_item,
         acc_purchase_order_details.budget_item,
+        acc_purchase_order_details.delivery_date,
         acc_purchase_order_details.goods_price,
         acc_purchase_order_details.service_price,
-        acc_purchase_order_details.qty
+        acc_purchase_order_details.qty,
+        acc_purchase_order_details.uom
         FROM
         acc_purchase_orders
         JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po 
         WHERE
-        acc_purchase_orders.id = ".$po->id.")
-        t1";
+        acc_purchase_orders.id = ".$po->id."";
 
         $tolak = db::select($isimail);
 
