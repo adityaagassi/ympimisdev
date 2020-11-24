@@ -83,6 +83,12 @@
 @endsection
 @section('content')
 <section class="content" style="padding-top: 0; overflow-y:hidden; overflow-x:scroll;">
+	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+		<p style="position: absolute; color: White; top: 45%; left: 35%;">
+			<span style="font-size: 40px"><i class="fa fa-spin fa-refresh"></i> Loading, Please wait ...</span>
+		</p>
+	</div>
+
 	<div class="row">
 		<div class="col-xs-12" style="height:100%">
 			<table id="assyTable" class="table table-bordered" style="padding: 0px; margin-bottom: 0px; height:100%;">
@@ -126,83 +132,144 @@
 			<div id="picking_chart" style="width: 100%; margin: auto"></div>
 		</div>
 		<div class="col-xs-12">
-			<!-- <div class="col-xs-3" style="padding: 0px 5px 0px 5px"> -->
-				<center><div id="judul" style="color:white; font-weight: bold; font-size: 2vw"></div></center>
-				<!-- </div> -->
-			</div>
-
-			<div class="modal fade" id="myModal">
-				<div class="modal-dialog modal-lg">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h4 style="float: right;" id="modal-title"></h4> 
-							<h4 class="modal-title"><b id="titel"></b></h4>
-						</div>
-						<div class="modal-body">
-							<div class="row">
-								<div class="col-md-12">
-									<table class="table table-bordered table-stripped table-responsive" style="width: 100%" id="detailTabel">
-										<thead style="background-color: rgba(126,86,134,.7);">
-											<tr>
-												<th>Tag</th>
-												<th>GMC</th>
-												<th>Description</th>
-												<th>Quantity</th>
-											</tr>
-										</thead>
-										<tbody>
-										</tbody>
-										<tfoot style="background-color: rgba(126,86,134,.7);">
-											<tr>
-												<th colspan="3" style="text-align:right">Total : </th>
-												<th></th>
-											</tr>
-										</tfoot>
-									</table>
-								</div>
-							</div>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
-						</div>
-					</div>
-					<!-- /.modal-content -->
-				</div>
-				<!-- /.modal-dialog -->
-			</div>
+			<center><div id="judul" style="color:white; font-weight: bold; font-size: 2vw"></div></center>
 		</div>
 
-	</section>
-	@endsection
-	@section('scripts')
-	<script src="{{ url("js/highcharts.js")}}"></script>
-	<script src="{{ url("js/exporting.js")}}"></script>
-	<script src="{{ url("js/export-data.js")}}"></script>
-	<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
+		<div class="col-xs-12" style="margin-top: 10px">
+			<form method="GET" action="{{ url('index/display/body/'.$option) }}">
+				<div class="col-xs-2" style="line-height: 1">
+					<div class="input-group date">
+						<div class="input-group-addon bg-green" style="border-color: #00a65a">
+							<i class="fa fa-calendar"></i>
+						</div>
+						<input type="text" class="form-control datepicker" id="tgl" name="date" placeholder="Select Date" style="border-color: #00a65a" <?php if (isset($_GET['date'])): ?>
+						<?php echo "value=".$_GET['date']; endif ?>>
+					</div>
+					<br>
+				</div>
+				<div class="col-xs-2">
+					<select class="form-control select2" multiple="multiple" id="key" onchange="change()" data-placeholder="Select Key">
+						@foreach($keys as $key)
+						<option value="{{ $key->key }}">{{ $key->key }}</option>
+						@endforeach
+					</select>
+					<input type="text" name="key2" id="dd" hidden>
+				</div>
+				<div class="col-xs-1">
+					<select class="form-control select2" multiple="multiple" id="modelselect" onchange="changeModel()" data-placeholder="Select Model">
+						@foreach($models as $model)
+						<option value="{{ $model->model }}">{{ $model->model }}</option>
+						@endforeach
+					</select>
+					<input type="text" name="model2" id="model2" hidden>
+				</div>
 
-	<script>
-		$.ajaxSetup({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				<!-- JIKA SUB ASSY -->
+
+				<div class="col-xs-2">
+					<select class="form-control select2" id="surface" multiple="multiple" onchange="changeSurface()" data-placeholder="Select Surface">
+						@foreach($surfaces as $surface)
+						<option value="{{ $surface[0] }}">{{ $surface[1] }}</option>
+						@endforeach
+					</select>
+				</div>
+				<input type="text" name="surface2" id="surface2" hidden>
+
+				<div class="col-xs-1">
+					<select class="form-control select2" id="hpl" multiple="multiple" onchange="changeHpl()" data-placeholder="Select HPL">
+						@foreach($hpls as $hpl)
+						<option value="{{ $hpl }}">{{ $hpl }}</option>
+						@endforeach
+					</select>
+					<input type="text" name="hpl2" id="hpl2" hidden>
+				</div>
+
+				<div class="col-xs-2">
+					<select class="form-control select2" id="order" onchange="changeOrder()" placeholder="Order by">
+						<option value="">Diff</option>
+						<option value="1" <?php if($_GET['order2'] == '1' ) echo "selected"; ?> >Stock Room</option>
+						<option value="2" <?php if($_GET['order2'] == '2' ) echo "selected"; ?> >Availibility</option>
+					</select>
+					<input type="text" name="order2" id="order2" hidden>
+				</div>
+				<div class="col-xs-1">
+					<button class="btn btn-success" type="submit">Cari</button>
+				</div>
+			</form>
+		</div>
+
+		<div class="modal fade" id="myModal">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 style="float: right;" id="modal-title"></h4> 
+						<h4 class="modal-title"><b id="titel"></b></h4>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-md-12">
+								<table class="table table-bordered table-stripped table-responsive" style="width: 100%" id="detailTabel">
+									<thead style="background-color: rgba(126,86,134,.7);">
+										<tr>
+											<th>Tag</th>
+											<th>GMC</th>
+											<th>Description</th>
+											<th>Quantity</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+									<tfoot style="background-color: rgba(126,86,134,.7);">
+										<tr>
+											<th colspan="3" style="text-align:right">Total : </th>
+											<th></th>
+										</tr>
+									</tfoot>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+	</div>
+
+</section>
+@endsection
+@section('scripts')
+<script src="{{ url("js/highcharts.js")}}"></script>
+<script src="{{ url("js/exporting.js")}}"></script>
+<script src="{{ url("js/export-data.js")}}"></script>
+<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
+
+<script>
+	$.ajaxSetup({
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		}
+	});
+
+	jQuery(document).ready(function(){
+		fill_table();
+		setInterval(fill_table, 30000);
+
+		var kunci = "{{$_GET['key2']}}";
+		var kuncies = kunci.split(",");
+		var kunciFilter = [];
+		ctg = "";
+
+		for(var i = 0; i < kuncies.length; i++){
+			ctg = kuncies[i];
+
+			if(kunciFilter.indexOf(ctg) === -1){
+				kunciFilter[kunciFilter.length] = ctg;
 			}
-		});
-
-		jQuery(document).ready(function(){
-			fill_table();
-			setInterval(fill_table, 30000);
-
-			var kunci = "{{$_GET['key2']}}";
-			var kuncies = kunci.split(",");
-			var kunciFilter = [];
-			ctg = "";
-
-			for(var i = 0; i < kuncies.length; i++){
-				ctg = kuncies[i].charAt(0);
-
-				if(kunciFilter.indexOf(ctg) === -1){
-					kunciFilter[kunciFilter.length] = ctg;
-				}
-			}
+		}
 		// alert(kunciFilter);
 
 		$("#judul").text(kunciFilter+"-{{$_GET['model2']}}-{{$_GET['surface2']}}-{{$_GET['hpl2']}}");
@@ -217,108 +284,109 @@
 		});
 	});
 
-		function change() {
-			$("#dd").val($("#key").val());
+	function change() {
+		$("#dd").val($("#key").val());
+	}
+
+	function changeModel() {
+		$("#model2").val($("#modelselect").val());
+	}
+	function changeSurface() {
+		$("#surface2").val($("#surface").val());
+	}
+	function changeHpl() {
+		$("#hpl2").val($("#hpl").val());
+	}
+	function changeOrder() {
+		$("#order2").val($("#order").val());
+	}
+
+	function fill_table() {
+		var data = {
+			tanggal:"{{$_GET['date']}}",
+			key:"{{$_GET['key2']}}",
+			model:"{{$_GET['model2']}}",
+			surface:"{{$_GET['surface2']}}",
+			hpl:"{{$_GET['hpl2']}}",
+			order:"{{$_GET['order2']}}"
 		}
+		diffs = [];
+		plans = [];
 
-		function changeModel() {
-			$("#model2").val($("#modelselect").val());
-		}
-		function changeSurface() {
-			$("#surface2").val($("#surface").val());
-		}
-		function changeHpl() {
-			$("#hpl2").val($("#hpl").val());
-		}
-		function changeOrder() {
-			$("#order2").val($("#order").val());
-		}
+		$.get('{{ url("fetch/display/body/".$option) }}', data, function(result, status, xhr){
+			if(result.status){
+				$("#loading").hide();
+				$("#model").empty();
+				$("#plan").empty();
+				$("#picking").empty();
+				$("#diff").empty();
 
-		function fill_table() {
-			var data = {
-				tanggal:"{{$_GET['date']}}",
-				key:"{{$_GET['key2']}}",
-				model:"{{$_GET['model2']}}",
-				surface:"{{$_GET['surface2']}}",
-				hpl:"{{$_GET['hpl2']}}",
-				order:"{{$_GET['order2']}}"
-			}
-			diffs = [];
-			plans = [];
+				$("#plan_acc").empty();
+				$("#picking_acc").empty();
+				$("#return_acc").empty();
 
-			$.get('{{ url("fetch/display/body/".$option) }}', data, function(result, status, xhr){
-				if(result.status){
-					$("#model").empty();
-					$("#plan").empty();
-					$("#picking").empty();
-					$("#diff").empty();
+				$("#stok").empty();
+				$("#stok_all").empty();
 
-					$("#plan_acc").empty();
-					$("#picking_acc").empty();
-					$("#return_acc").empty();
+				model = "<th style='width:45px'>#</th>";
+				totplan = "<th>Plan</th>";
+				picking = "<th>Pick</th>";
 
-					$("#stok").empty();
-					$("#stok_all").empty();
+				if ("{{$option}}".substr(0, 4) == "assy") {
+					diff = "<th>Diff</th>";
+				} else {
+					diff = "<th>Target</th>";
+				}
 
-					model = "<th style='width:45px'>#</th>";
-					totplan = "<th>Plan</th>";
-					picking = "<th>Pick</th>";
+				planAcc = "<th>Plan acc</th>";
+				pickAcc = "<th>Pick acc</th>";
+				retunAcc = "<th>Return acc</th>";
 
-					if ("{{$option}}".substr(0, 4) == "assy") {
-						diff = "<th>Diff</th>";
-					} else {
-						diff = "<th>Target</th>";
-					}
+				if ("{{$option}}".substr(0, 4) == "assy") {
+					stk = "<th style='border: 1px solid white;'>Stock Room</th>";
+				} else {
+					stk = "<th style='border: 1px solid white;'>Stock All</th>";
+				}
+				stk_als = "<th style='border: 1px solid white;' rowspan='2'>Availibility</th>";
 
-					planAcc = "<th>Plan acc</th>";
-					pickAcc = "<th>Pick acc</th>";
-					retunAcc = "<th>Return acc</th>";
+				var style = "";
 
-					if ("{{$option}}".substr(0, 4) == "assy") {
-						stk = "<th style='border: 1px solid white;'>Stock Room</th>";
-					} else {
-						stk = "<th style='border: 1px solid white;'>Stock All</th>";
-					}
-					stk_als = "<th style='border: 1px solid white;' rowspan='2'>Availibility</th>";
+				temporary = [];
 
-					var style = "";
+				for (var i = 0; i < result.plan.length; i++) {
+					var z = [];
+					z["model"] = result.plan[i].model;
+					z["key"] = result.plan[i].key;
 
-					temporary = [];
+					if(typeof result.plan[i].surface === 'undefined') 
+						z["surface"] = ""; 
+					else 
+						z["surface"] = result.plan[i].surface;
 
-					for (var i = 0; i < result.plan.length; i++) {
-						var z = [];
-						z["model"] = result.plan[i].model;
-						z["key"] = result.plan[i].key;
+					z["plan"] = result.plan[i].plan;
+					z["picking"] = result.plan[i].picking;
+					z["plus"] = result.plan[i].plus;
+					z["minus"] = result.plan[i].minus;
+					z["stock"] = result.plan[i].stock;
+					z["plan_ori"] = result.plan[i].plan_ori;
+					z["diff"] = result.plan[i].diff;
+					z["diff2"] = result.plan[i].diff2;
 
-						if(typeof result.plan[i].surface === 'undefined') 
-							z["surface"] = ""; 
-						else 
-							z["surface"] = result.plan[i].surface;
+					if("{{$option}}".substr(0, 4) == "assy") 
+						z["ava"] = result.plan[i].ava;
+					else 
+						z["ava"] = (parseInt(result.stok[i].welding) + parseInt(result.stok[i].stockroom) + result.stok[i].lacquering + result.stok[i].plating + result.stok[i].barrel + result.stok[i].buffing) / result.plan[i].plan;
 
-						z["plan"] = result.plan[i].plan;
-						z["picking"] = result.plan[i].picking;
-						z["plus"] = result.plan[i].plus;
-						z["minus"] = result.plan[i].minus;
-						z["stock"] = result.plan[i].stock;
-						z["plan_ori"] = result.plan[i].plan_ori;
-						z["diff"] = result.plan[i].diff;
-						z["diff2"] = result.plan[i].diff2;
+					z["stockroom"] = result.stok[i].stockroom;
+					z["barrel"] = result.stok[i].barrel;
+					z["lacquering"] = result.stok[i].lacquering;
+					z["plating"] = result.stok[i].plating;
+					z["welding"] = result.stok[i].welding;
+					z["buffing"] = result.stok[i].buffing;
 
-						if("{{$option}}".substr(0, 4) == "assy") 
-							z["ava"] = result.plan[i].ava;
-						else 
-							z["ava"] = (parseInt(result.stok[i].welding) + parseInt(result.stok[i].stockroom) + result.stok[i].lacquering + result.stok[i].plating + result.stok[i].barrel + result.stok[i].buffing) / result.plan[i].plan;
+					temporary.push(z);
 
-						z["stockroom"] = result.stok[i].stockroom;
-						z["barrel"] = result.stok[i].barrel;
-						z["lacquering"] = result.stok[i].lacquering;
-						z["plating"] = result.stok[i].plating;
-						z["welding"] = result.stok[i].welding;
-						z["buffing"] = result.stok[i].buffing;
-
-						temporary.push(z);
-
-					}
+				}
 					// console.log(result.plan.length+" "+result.stok.length);
 
 
@@ -331,8 +399,6 @@
 							return a['ava'] - b['ava'];
 						});
 					}
-
-					console.log(temporary);
 
 					var chart = "";
 					var max_tmp = [];
@@ -671,9 +737,6 @@
 			}
 		// 	diffs = [];
 	})
-.fail(function() {
-	alert( "Load Data Error!" );
-})
 
 }
 

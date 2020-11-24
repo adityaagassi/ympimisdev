@@ -20,7 +20,7 @@ class AssyProcessController extends Controller
 			$title = 'Saxophone Picking Monitor';
 			$title_jp = 'サックスのピッキング監視';
 
-			$keys = db::select("select DISTINCT `key` from materials order by `key` ASC");
+			$keys = db::select("select DISTINCT `key` from materials where issue_storage_location = 'SX51' order by `key` ASC");
 			$models = db::select("select DISTINCT model from materials where mrpc='S51' order by model ASC");
 			$surfaces = array
 			(
@@ -85,6 +85,19 @@ class AssyProcessController extends Controller
 
 	public function indexDisplayBody($id)
 	{
+		$keys = db::select("select DISTINCT `key` from materials where issue_storage_location = 'SX51' order by `key` ASC");
+		$models = db::select("select DISTINCT model from materials where mrpc='S51' order by model ASC");
+		$surfaces = array
+		(
+			array("","All"),
+			array("LCQ","Lacquering"),
+			array("PLT","Plating"),
+			array("W","Washed")
+		);
+
+		$hpls = array('All', 'ASKEY', 'TSKEY');
+
+
 		if ($id == 'sax_body') {
 			$title = 'Saxophone Body Picking Monitor';
 			$title_jp = '??';
@@ -92,6 +105,10 @@ class AssyProcessController extends Controller
 			return view('displays.assys.assy_body_sax', array(
 				'title' => $title,
 				'title_jp' => $title_jp,
+				'keys' => $keys,
+				'models' => $models,
+				'surfaces' => $surfaces,
+				'hpls' => $hpls,
 				'option' => $id
 			))->with('page', 'Assy Body Schedule')->with('head', '');
 		}
