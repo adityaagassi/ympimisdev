@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class BomOutput extends Model
 {
     protected $fillable = [
-		'material_parent', 'material_child', 'usage', 'divider', 'um', 'created_by'
+		'material_parent', 'material_child', 'usage', 'divider', 'uom', 'created_by'
 	];
 
 	public function user()

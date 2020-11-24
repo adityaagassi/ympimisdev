@@ -75,228 +75,228 @@
 <section class="content" style="padding-top: 0;">
 	<div class="row" style="">
 		
-		<div class="col-xs-12 col-md-7 col-lg-7" id="countPage">
-			<!-- <div class="col-xs-7" style="padding-left: 0px;"> -->
-				<div class="col-xs-12" style="padding-right: 0; padding-left: 0; margin-bottom: 2%;">
-					<p id="inputor_name" style="font-size:18px; text-align: center; color: yellow; padding: 0px; margin: 0px; font-weight: bold; text-transform: uppercase;"></p>
+		<div class="col-xs-12 col-md-6 col-lg-6" id="countPage">
+			<div class="col-xs-12" style="padding-right: 0; padding-left: 0; margin-bottom: 2%;">
+				<p id="inputor_name" style="font-size:18px; text-align: center; color: yellow; padding: 0px; margin: 0px; font-weight: bold; text-transform: uppercase;"></p>
 
-					<div class="input-group input-group-lg">
-						<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: none; font-size: 18px;">
-							<i class="fa fa-qrcode"></i>
-						</div>
-						<input type="text" class="form-control" placeholder="SCAN QR CODE" id="qr_code">
-						<span class="input-group-btn">
-							<button style="font-weight: bold;" href="javascript:void(0)" class="btn btn-success btn-flat" data-toggle="modal" data-target="#scanModal"><i class="fa fa-camera"></i>&nbsp;Scan QR</button>
-						</span>
+				<div class="input-group input-group-lg">
+					<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: none; font-size: 18px;">
+						<i class="fa fa-qrcode"></i>
 					</div>
+					<input type="text" class="form-control" placeholder="SCAN QR CODE" id="qr_code">
+					<span class="input-group-btn">
+						<button style="font-weight: bold;" href="javascript:void(0)" class="btn btn-success btn-flat" data-toggle="modal" data-target="#scanModal"><i class="fa fa-camera"></i>&nbsp;Scan QR</button>
+					</span>
 				</div>
-
-				<div class="col-xs-12" style="padding-right: 0; padding-left: 0; margin-bottom: 2%;">
-					<table class="table table-bordered" style="width: 100%; margin-bottom: 0px">
-						<thead>
-							<tr>
-								<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 18px;" colspan="2">SUMMARY OF COUNTING</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Store</td>
-								<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="store"></td>
-							</tr>
-							<tr>
-								<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Sub Store</td>
-								<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="sub_store"></td>
-							</tr>
-							<tr>
-								<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Category</td>
-								<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="category"></td>
-							</tr>
-							<tr>
-								<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Material Number</td>
-								<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="material_number"></td>
-							</tr>
-							<tr>
-								<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Location</td>
-								<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="location"></td>
-							</tr>
-							<tr>
-								<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Material Desc.</td>
-								<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="material_description"></td>
-							</tr>
-							<tr>
-								<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Model Key Surface</td>
-								<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="model_key_surface"></td>
-							</tr>
-							<tr>
-								<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Lot</td>
-								<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="lot_uom"></td>
-							</tr>
-							<tr>
-								<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Remark</td>
-								<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="remark"></td>
-							</tr>
-							<tr>
-								<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Last Input</td>
-								<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="last_input"></td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-				<!-- </div> -->
 			</div>
 
-			<div class="col-xs-12 col-md-5 col-lg-5" style="margin-top: 2%;">
-				<div class="col-xs-12">
-					<div class="form-group row" align="right">
-						<div class="col-xs-1 col-xs-offset-11" align="right">
-							<button class="btn btn-success" onclick="addCount()"><i class="fa fa-plus"></i></button>
-						</div>
-					</div>
-				</div>
+			<div class="col-xs-12" style="padding-right: 0; padding-left: 0; margin-bottom: 2%;">
+				<table class="table table-bordered" style="width: 100%; margin-bottom: 0px">
+					<thead>
+						<tr>
+							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 18px;" colspan="2">SUMMARY OF COUNTING</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Store</td>
+							<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="store"></td>
+						</tr>
+						<tr>
+							<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Sub Store</td>
+							<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="sub_store"></td>
+						</tr>
+						<tr>
+							<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Category</td>
+							<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="category"></td>
+						</tr>
+						<tr>
+							<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Material Number</td>
+							<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="material_number"></td>
+						</tr>
+						<tr>
+							<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Location</td>
+							<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="location"></td>
+						</tr>
+						<tr>
+							<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Material Desc.</td>
+							<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="material_description"></td>
+						</tr>
+						<tr>
+							<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Model Key Surface</td>
+							<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="model_key_surface"></td>
+						</tr>
+						<tr>
+							<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Lot</td>
+							<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="lot_uom"></td>
+						</tr>
+						<tr>
+							<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Remark</td>
+							<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="remark"></td>
+						</tr>
+						<tr>
+							<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Last Input</td>
+							<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="last_input"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<!-- </div> -->
+		</div>
 
-				<div class="col-xs-12">
-					<div class="form-group row" style="margin-bottom: 2%;">
-						<div class="col-xs-2" align="center" style="padding-left:0px;padding-right:0px">
-							<span style="font-weight: bold;color: yellow;font-size: 15px">QTY</span>
-						</div>
-						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">X</label>
-						<div class="col-xs-2" align="center" style="padding-left:0px;padding-right:0px">
-							<span style="font-weight: bold;color: yellow;font-size: 15px">QTY LOT</span>
-						</div>
-						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">=</label>
-						<div class="col-xs-2" align="center" style="padding-left:0px;padding-right:0px">
-							<span style="font-weight: bold;color: yellow;font-size: 15px">TOTAL</span>
-						</div>
-						<div class="col-xs-2" align="center">
-							
-						</div>
-					</div>
-				</div>
-
-				<div id="count">
-					{{-- 1 --}}
-					<div class="col-xs-12" id="count_1">
-						<div class="form-group row" style="margin-bottom: 2%;">
-							<div class="col-xs-3" align="right">
-								<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_1">
-							</div>
-							<!-- <label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">X</label> -->
-							<div class="col-xs-3" align="right">
-								<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_1"> =
-							</div>
-							<!-- <label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">=</label> -->
-							<div class="col-xs-3" align="right">
-								<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="total_1" readonly="">
-							</div>
-							<div class="col-xs-1" align="right">
-								<button class="btn btn-danger" id="remove_1" onclick="removeCount(id)"><i class="fa fa-close"></i></button>
-							</div>
-						</div>
-					</div>
-					{{-- 2 --}}
-					<div class="col-xs-12" id="count_2">
-						<div class="form-group row" style="margin-bottom: 2%;">
-							<div class="col-xs-3" align="right">
-								<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_2">
-							</div>
-							<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>
-							<div class="col-xs-3" align="right">
-								<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_2">
-							</div>
-							<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>
-							<div class="col-xs-3" align="right">
-								<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="total_2" readonly="">
-							</div>
-							<div class="col-xs-1" align="right">
-								<button class="btn btn-danger" id="remove_2" onclick="removeCount(id)"><i class="fa fa-close"></i></button>
-							</div>
-						</div>
-					</div>
-					{{-- 3 --}}
-					<div class="col-xs-12" id="count_3">
-						<div class="form-group row" style="margin-bottom: 2%;">
-							<div class="col-xs-3" align="right">
-								<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_3">
-							</div>
-							<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>
-							<div class="col-xs-3" align="right">
-								<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_3">
-							</div>
-							<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>
-							<div class="col-xs-3" align="right">
-								<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="total_3" readonly="">
-							</div>
-							<div class="col-xs-1" align="right">
-								<button class="btn btn-danger" id="remove_3" onclick="removeCount(id)"><i class="fa fa-close"></i></button>
-							</div>
-						</div>
-					</div>
-					{{-- 4 --}}
-					<div class="col-xs-12" id="count_4">
-						<div class="form-group row" style="margin-bottom: 2%;">
-							<div class="col-xs-3" align="right">
-								<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_4">
-							</div>
-							<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>
-							<div class="col-xs-3" align="right">
-								<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_4">
-							</div>
-							<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>
-							<div class="col-xs-3" align="right">
-								<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="total_4" readonly="">
-							</div>
-							<div class="col-xs-1" align="right">
-								<button class="btn btn-danger" id="remove_4" onclick="removeCount(id)"><i class="fa fa-close"></i></button>
-							</div>
-						</div>
-					</div>
-					{{-- 5 --}}
-					<div class="col-xs-12" id="count_5">
-						<div class="form-group row" style="margin-bottom: 2%;">
-							<div class="col-xs-3" align="right">
-								<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_5">
-							</div>
-							<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>
-							<div class="col-xs-3" align="right">
-								<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_5">
-							</div>
-							<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>
-							<div class="col-xs-3" align="right">
-								<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="total_5" readonly="">
-							</div>
-							<div class="col-xs-1" align="right">
-								<button class="btn btn-danger" id="remove_5" onclick="removeCount(id)"><i class="fa fa-close"></i></button>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="col-xs-12">	
-					<div class="form-group row" align="right">					
-						<label class="col-xs-1 col-xs-offset-2" style=" text-align: center; color: yellow; font-size:20px;">Total</label>
-						<div class="col-xs-3 col-xs-offset-2" align="right">
-							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="sum_total" readonly="">
-						</div>
+		<div class="col-xs-11 col-md-6 col-lg-6" style="margin-top: 2%;">
+			
+			<div class="col-xs-12">
+				<div class="form-group row" align="right">
+					<div class="col-xs-1 col-xs-offset-10" align="right">
+						<button class="btn btn-success" onclick="addCount()"><i class="fa fa-plus"></i></button>
 					</div>
 				</div>
 			</div>
 
 			<div class="col-xs-12">
-				<div class="col-xs-11" align="right">
-					<div class="input-group input-group-lg">
-						<button type="button" style="font-size:20px; height: 45px; font-weight: bold; padding-top: 0px; padding-bottom: 0px;" onclick="canc()" class="btn btn-danger">&nbsp;Cancel&nbsp;</button>
+				<div class="form-group row" style="margin-bottom: 2%;">
+					<div class="col-xs-3" align="center" style="padding-left:0px;padding-right:0px">
+						<span style="font-weight: bold;color: yellow;font-size: 15px">QTY</span>
+					</div>
+					<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">X</label>
+					<div class="col-xs-2" align="center" style="padding-left:0px;padding-right:0px">
+						<span style="font-weight: bold;color: yellow;font-size: 15px">QTY LOT</span>
+					</div>
+					<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">=</label>
+					<div class="col-xs-3" align="center" style="padding-left:0px;padding-right:0px">
+						<span style="font-weight: bold;color: yellow;font-size: 15px">TOTAL</span>
+					</div>
+					<div class="col-xs-2" align="center">
 
-						<button id="save_button" type="button" style="font-size:20px; height: 45px; font-weight: bold; padding-top: 0px; padding-bottom: 0px;" onclick="save()" class="btn btn-success">&nbsp;<i class="fa fa-save"></i> &nbsp;Save&nbsp;</button>
 					</div>
 				</div>
 			</div>
-			
-			<div class="col-xs-12" style=" margin-top: 2%;overflow-x: scroll;">
-				<table class="table table-bordered" id="store_table">
-					<thead>
-						<tr>
-							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 25px;" colspan="8" id='store_title'>STORE</th>
-						</tr>
+
+			<div id="count">
+				{{-- 1 --}}
+				<div class="col-xs-12" id="count_1">
+					<div class="form-group row" style="margin-bottom: 2%;">
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_1">
+						</div>
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">X</label>
+						<div class="col-xs-2" align="right">
+							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_1">
+						</div>
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">=</label>
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_1" readonly="">
+						</div>
+						<div class="col-xs-1" align="right">
+							<button class="btn btn-danger" id="remove_1" onclick="removeCount(id)"><i class="fa fa-close"></i></button>
+						</div>
+					</div>
+				</div>
+				{{-- 2 --}}
+				<div class="col-xs-12" id="count_2">
+					<div class="form-group row" style="margin-bottom: 2%;">
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_2">
+						</div>
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">X</label>
+						<div class="col-xs-2" align="right">
+							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_2">
+						</div>
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">=</label>
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_2" readonly="">
+						</div>
+						<div class="col-xs-1" align="right">
+							<button class="btn btn-danger" id="remove_2" onclick="removeCount(id)"><i class="fa fa-close"></i></button>
+						</div>
+					</div>
+				</div>
+				{{-- 3 --}}
+				<div class="col-xs-12" id="count_3">
+					<div class="form-group row" style="margin-bottom: 2%;">
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_3">
+						</div>
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">X</label>
+						<div class="col-xs-2" align="right">
+							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_3">
+						</div>
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">=</label>
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_3" readonly="">
+						</div>
+						<div class="col-xs-1" align="right">
+							<button class="btn btn-danger" id="remove_3" onclick="removeCount(id)"><i class="fa fa-close"></i></button>
+						</div>
+					</div>
+				</div>
+				{{-- 4 --}}
+				<div class="col-xs-12" id="count_4">
+					<div class="form-group row" style="margin-bottom: 2%;">
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_4">
+						</div>
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">X</label>
+						<div class="col-xs-2" align="right">
+							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_4">
+						</div>
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">=</label>
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_4" readonly="">
+						</div>
+						<div class="col-xs-1" align="right">
+							<button class="btn btn-danger" id="remove_4" onclick="removeCount(id)"><i class="fa fa-close"></i></button>
+						</div>
+					</div>
+				</div>
+				{{-- 5 --}}
+				<div class="col-xs-12" id="count_5">
+					<div class="form-group row" style="margin-bottom: 2%;">
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_5">
+						</div>
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">X</label>
+						<div class="col-xs-2" align="right">
+							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_5">
+						</div>
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">=</label>
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_5" readonly="">
+						</div>
+						<div class="col-xs-1" align="right">
+							<button class="btn btn-danger" id="remove_5" onclick="removeCount(id)"><i class="fa fa-close"></i></button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-xs-12">	
+				<div class="form-group row" align="right">					
+					<label class="col-xs-2 col-xs-offset-4" style=" text-align: center; color: yellow; font-size:20px;">Total</label>
+					<div class="col-xs-3 col-xs-offset-1" align="right">
+						<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="sum_total" readonly="">
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-xs-12">
+			<div class="col-xs-11" align="right">
+				<div class="input-group input-group-lg">
+					<button type="button" style="font-size:20px; height: 45px; font-weight: bold; padding-top: 0px; padding-bottom: 0px;" onclick="canc()" class="btn btn-danger">&nbsp;Cancel&nbsp;</button>
+
+					<button id="save_button" type="button" style="font-size:20px; height: 45px; font-weight: bold; padding-top: 0px; padding-bottom: 0px;" onclick="save()" class="btn btn-success">&nbsp;<i class="fa fa-save"></i> &nbsp;Save&nbsp;</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-xs-12" style=" margin-top: 2%;overflow-x: scroll;">
+			<table class="table table-bordered" id="store_table">
+				<thead>
+					<tr>
+						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 25px;" colspan="8" id='store_title'>STORE</th>
+					</tr>
 					{{-- <tr>
 						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 25px;" colspan="8" id='sub_store_title'>SUB STORE</th>
 					</tr> --}}
@@ -420,22 +420,22 @@
 	var count = 5;
 	function addCount(){
 		++count;
-
+		
 		$add = '';
 		$add += '<div class="col-xs-12" id="count_'+ count +'">';
 		$add += '<div class="form-group row" style="margin-bottom: 2%;">';
-		$add += '<div class="col-xs-2" align="right" style="padding-left:0px;padding-right:0px">';
-		$add += '<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="qty_'+ count +'">';
+		$add += '<div class="col-xs-3" align="right">';
+		$add += '<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="qty_'+ count +'">';
 		$add += '</div>';
-		$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">X</label>';
-		$add += '<div class="col-xs-2" align="right" style="padding-left:0px;padding-right:0px">';
-		$add += '<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="koef_'+ count +'">';
-		$add += '</div>';
-		$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">=</label>';
-		$add += '<div class="col-xs-2" align="right" style="padding-left:0px;padding-right:0px">';
-		$add += '<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_'+ count +'" readonly="">';
-		$add += '</div>';
+		$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>';
 		$add += '<div class="col-xs-2" align="right">';
+		$add += '<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="koef_'+ count +'">';
+		$add += '</div>';
+		$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>';
+		$add += '<div class="col-xs-3" align="right">';
+		$add += '<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="total_'+ count +'" readonly="">';
+		$add += '</div>';
+		$add += '<div class="col-xs-1" align="right">';
 		$add += '<button class="btn btn-danger" id="remove_'+count+'" onclick="removeCount(id)"><i class="fa fa-close"></i></button>';
 		$add += '</div>';
 		$add += '</div>';
@@ -485,18 +485,18 @@
 			$add = '';
 			$add += '<div class="col-xs-12" id="count_'+ i +'">';
 			$add += '<div class="form-group row" style="margin-bottom: 2%;">';
-			$add += '<div class="col-xs-2" align="right" style="padding-left:0px;padding-right:0px">';
+			$add += '<div class="col-xs-3" align="right">';
 			$add += '<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="qty_'+ i +'">';
 			$add += '</div>';
 			$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">X</label>';
-			$add += '<div class="col-xs-2" align="right" style="padding-left:0px;padding-right:0px">';
+			$add += '<div class="col-xs-2" align="right">';
 			$add += '<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="koef_'+ i +'">';
 			$add += '</div>';
 			$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">=</label>';
-			$add += '<div class="col-xs-2" align="right" style="padding-left:0px;padding-right:0px">';
+			$add += '<div class="col-xs-3" align="right">';
 			$add += '<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_'+ i +'" readonly="">';
 			$add += '</div>';
-			$add += '<div class="col-xs-2" align="right">';
+			$add += '<div class="col-xs-1" align="right">';
 			$add += '<button class="btn btn-danger" id="remove_'+count+'" onclick="removeCount(id)"><i class="fa fa-close"></i></button>';
 			$add += '</div>';
 			$add += '</div>';

@@ -60,8 +60,16 @@
 		<div class="col-xs-12 col-md-9 col-lg-9">
 			<h3 style="margin-top: 0px;">{{ $title }}<span class="text-purple"> {{ $title_jp }}</span></h3>
 		</div>
-		<div class="col-xs-12 col-md-3 col-lg-3">
-			<div class="pull-right" id="last_update" style="color: black; margin: 0px; padding-top: 0px; padding-right: 0px; font-size: 0.9vw;"></div>
+		<div class="col-xs-12 col-md-3 col-lg-3" >
+			{{-- <div class="pull-right" id="last_update" style="color: black; margin: 0px; padding-top: 0px; padding-right: 0px; font-size: 0.9vw;"></div> --}}
+
+
+			<div class="input-group date">
+				<div class="input-group-addon bg-green">
+					<i class="fa fa-calendar"></i>
+				</div>
+				<input style="text-align: center;" type="text" class="form-control datepicker" onchange="monthChange()" name="month" id="month" placeholder="Select Month" readonly>
+			</div>
 		</div>
 	</div>
 </section>
@@ -127,9 +135,9 @@
 				<div class="col-xs-12 col-md-3 col-lg-3" style="text-align: center;">
 					@if(in_array('S36', $navs))
 					<span style="font-size: 20px; color: black;"><i class="fa fa-angle-double-down"></i> Master <i class="fa fa-angle-double-down"></i></span>
-					{{-- <a href="" class="btn btn-default btn-block" style="border-color: black; font-size: 15px;">Upload Bom Output</a> --}}
-					{{-- <a href="javascript:void(0)"  data-toggle="modal" data-target="#importMPDLModal" class="btn btn-default btn-block" style="border-color: black; font-size: 15px;">Upload Material Plant Data List</a> --}}
-					<a href="javascript:void(0)"  data-toggle="modal" data-target="#importModal" class="btn btn-default btn-block" style="border-color: black; font-size: 15px;">Upload Storage Loc Stock</a>
+					<a href="javascript:void(0)" data-toggle="modal" data-target="#importBomModal" class="btn btn-default btn-block" style="border-color: black; font-size: 15px;">Upload Bom Output</a>
+					<a href="javascript:void(0)" data-toggle="modal" data-target="#importMPDLModal" class="btn btn-default btn-block" style="border-color: black; font-size: 15px;">Upload Material Plant Data List</a>
+					<a href="javascript:void(0)" data-toggle="modal" data-target="#importModal" class="btn btn-default btn-block" style="border-color: black; font-size: 15px;">Upload Storage Loc Stock</a>
 					{{-- <a href="" class="btn btn-default btn-block" style="border-color: black; font-size: 15px;">Master Storage Location</a> --}}
 					{{-- <a href="" class="btn btn-default btn-block" style="border-color: black; font-size: 15px;">Master Item Silver</a> --}}
 					{{-- <a href="" class="btn btn-default btn-block" style="border-color: black; font-size: 15px;">Master Stocktaking Calendar</a> --}}
@@ -162,7 +170,7 @@
 
 					<a id="input_pi" href="{{ secure_url('index/stocktaking/count_new') }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green; background-color: #ccff90;">Input Physical Inventory (PI)</a>
 
-					<a id="audit1_new" href="{{ secure_url("index/stocktaking/audit_new/"."1") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green; background-color: #ccff90;">Audit Internal</a>				
+					<a id="audit1" href="{{ secure_url("index/stocktaking/audit_new/"."1") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green; background-color: #ccff90;">Audit Internal</a>				
 
 					@if(in_array('S36', $navs))
 					<a id="revise" href="{{ secure_url("index/stocktaking/revise_new") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green;">Revise Physical Inventory (PI)</a>
@@ -190,8 +198,6 @@
 						<button id="variance" type="submit" class="btn btn-default btn-block" style="margin-top: 5px; font-size: 15px; border-color: purple; background-color: #e040fb;">Variance Report</button>
 					</form>
 
-
-
 					{{-- <a id="" href="{{ url("") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: purple;">Official Variance Report</a> --}}
 				</div>
 				<div class="col-xs-12 col-md-3 col-lg-3" style="text-align: center;">
@@ -204,59 +210,6 @@
 				</div>
 			</div>
 		</div>
-
-
-
-		{{-- <div class="col-xs-12 col-md-3 col-lg-3" style="text-align: center;">
-			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process <i class="fa fa-angle-double-down"></i></span>
-
-			<a id="manage_store" href="{{ url("index/stocktaking/manage_store") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Manage Store</a>
-
-			@if(in_array('S36', $navs))
-			<a id="summary_of_counting" href="{{ url("index/stocktaking/summary_of_counting") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Summary of Counting</a>
-			@endif
-			
-
-			<a id="no_use" href="{{ secure_url("index/stocktaking/no_use") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Input No Use</a>
-			<a id="input_pi" href="{{ secure_url("index/stocktaking/count") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Input PI</a>
-			<a id="audit1" href="{{ secure_url("index/stocktaking/audit/"."1") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Audit 1</a>
-
-			@if(in_array('S36', $navs))	 --}}
-			{{-- <a id="audit2" href="{{ url("index/stocktaking/audit/"."2") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Audit 2</a> --}}
-			{{-- <a id="breakdown" data-toggle="modal" data-target="#modalBreakdown" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Breakdown PI</a>
-			<a id="revise" href="{{ secure_url("index/stocktaking/revise") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Revise</a>
-			
-			@endif
-			<a id="unmatch" onclick="unmatch()" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Unmatch</a>
-
-			<br>
-
-			<span style="font-size: 30px; color: purple;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>
-
-			<form method="GET" action="{{ url("export/stocktaking/inquiry") }}">
-				<input type="text" name="month_inquiry" id="month_inquiry" placeholder="Select Month" hidden>
-				<button id="inquiry" type="submit" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple; margin-top: 5px;">Inquiry</button>
-			</form>
-			<form method="GET" action="{{ url("export/stocktaking/variance") }}">
-				<input type="text" name="month_variance" id="month_variance" placeholder="Select Month" hidden>
-				<button id="variance" type="submit" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple; margin-top: 5px;">Variance</button>
-			</form>
-
-			@if(in_array('S36', $navs))
-			<form method="GET" action="{{ url("export/stocktaking/official_variance") }}" target="_blank">
-				<input type="text" name="month_official_variance" id="month_official_variance" placeholder="Select Month" hidden>
-				<button id="variance" type="submit" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple; margin-top: 5px;">Official Variance</button>
-			</form>
-
-			<br>
-
-			<span style="font-size: 30px; color: red;"><i class="fa fa-angle-double-down"></i> Final <i class="fa fa-angle-double-down"></i></span>
-			<a id="upload_sap" onclick="uploadSap()" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Upload SAP</a>
-			<a id="export_log" onclick="exportLog()" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Export to Log</a>
-
-			@endif
-
-		</div> --}}
 	</div>
 
 	<div class="modal fade" id="modalVariance">
@@ -447,23 +400,46 @@
 	</div>
 </div>
 
+<div class="modal fade" id="importBomModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form id ="importFormBom" method="post" enctype="multipart/form-data">
+				<input type="hidden" value="{{csrf_token()}}" name="_token" />
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">Import Bom Output</h4>
+					Format: [Material Parent][Material Child][Usage][Divider][Uom]<br>
+					Sample: <a href="{{ url('download/manual/import_bom_output.xlsx') }}">import_bom_output.xlsx</a> Code: #Truncate
+				</div>
+				<div class="modal-body">
+					<input type="file" name="bom" id="bom" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					<button id="modalImportButtonBom" type="submit" class="btn btn-success">Import</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
 <div class="modal fade" id="importMPDLModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
-			<form id ="importForm" method="post" action="{{ url('import/material/mpdl') }}" enctype="multipart/form-data">
+			<form id ="importFormMpdl" method="post" action="{{ url('import/material/mpdl') }}" enctype="multipart/form-data">
 				<input type="hidden" value="{{csrf_token()}}" name="_token" />
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 					<h4 class="modal-title" id="myModalLabel">Import MPDL</h4>
-					Format: [Material Number][Material Description][SLoc][Unrestricted][Download Date][Download Time]<br>
-					Sample: <a href="{{ url('download/manual/import_mpdl.txt') }}">import_storage_location_stock.txt</a> Code: #Truncate
+					Format: [Material Number][Material Description][Bun[Spt]][SLoc][Valcl][Std Price]<br>
+					Sample: <a href="{{ url('download/manual/import_mpdl.xlsx') }}">import_mpdl.xlsx</a> Code: #Truncate
 				</div>
 				<div class="modal-body">
-					<input type="file" name="mpdl" id="mpdl" accept="text/plain">
+					<input type="file" name="mpdl" id="mpdl" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-					<button id="modalImportButton" type="submit" class="btn btn-success" onclick="loadingPage()">Import</button>
+					<button id="modalImportButtonMpdl" type="submit" class="btn btn-success" onclick="loadingPage()">Import</button>
 				</div>
 			</form>
 		</div>
@@ -507,35 +483,16 @@
 			endDate: '<?php echo $tgl_max ?>'	
 		});
 
-		var error = $('#msg_error').val();
-		// console.log(error);
-
-		if(error){
-			var error_message = error.split('(ime)');
-			var month = error_message[0];
-			var message = error_message[1];
+		if($('#month').val() == ''){
 			
+			var now = new Date();
+			var month = now.getMonth() + 1;
+			var year = now.getFullYear();
 
-			$('#month').val(month);
-			monthChange();
-			filledList();
-			auditedList();
-			// variance();
-
-			// console.log(error_message);
-			// console.log(month);
-
-			openErrorGritter('Error', message);
-		}else{
-			$('#modalMonth').modal({
-				backdrop: 'static',
-				keyboard: false
-			});
+			$('#month').val(year +'-'+ month);
 		}
-		
-		$('#month').blur();
-		$('#month').val('');
 
+		monthChange();
 		filledList();
 		auditedList();
 
@@ -547,6 +504,72 @@
 	function loadingPage(){
 		$("#loading").show();
 	}
+
+	$('#importFormBom').on('submit', function(event){
+		event.preventDefault();
+		var formdata = new FormData(this);
+
+		$("#loading").show();
+
+		$.ajax({
+			url:"{{ url('import/material/bom') }}",
+			method:'post',
+			data:formdata,
+			dataType:"json",
+			processData: false,
+			contentType: false,
+			cache: false,
+			success:function(result, status, xhr){
+				if(result.status){
+					$('#bom').val('');
+					$('#importBomModal').modal('hide');
+					openSuccessGritter('Success', result.message);
+					$("#loading").hide();
+				}else{
+					openErrorGritter('Error!', result.message);
+					$("#loading").hide();
+				}
+
+			},
+			error: function(result, status, xhr){
+				$("#loading").hide();				
+				openErrorGritter('Error!', 'Fatal Error');
+			}
+		});
+	});
+
+	$('#importFormMpdl').on('submit', function(event){
+		event.preventDefault();
+		var formdata = new FormData(this);
+
+		$("#loading").show();
+
+		$.ajax({
+			url:"{{ url('import/material/mpdl') }}",
+			method:'post',
+			data:formdata,
+			dataType:"json",
+			processData: false,
+			contentType: false,
+			cache: false,
+			success:function(result, status, xhr){
+				if(result.status){
+					$('#mpdl').val('');
+					$('#importMPDLModal').modal('hide');
+					openSuccessGritter('Success', result.message);
+					$("#loading").hide();
+				}else{
+					openErrorGritter('Error!', result.message);
+					$("#loading").hide();
+				}
+
+			},
+			error: function(result, status, xhr){
+				$("#loading").hide();				
+				openErrorGritter('Error!', 'Fatal Error');
+			}
+		});
+	});
 
 	function uploadSap() {
 		$("#loading").show();
@@ -629,6 +652,7 @@
 					$('#revise').addClass('disabled');
 					$('#upload_sap').addClass('disabled');
 					$('#export_log').addClass('disabled');
+					$('#check_new').addClass('disabled');
 				}else{
 					$('#manage_store').removeClass('disabled');
 					$('#summary_of_counting').removeClass('disabled');
@@ -641,6 +665,8 @@
 					$('#revise').removeClass('disabled');
 					$('#upload_sap').removeClass('disabled');
 					$('#export_log').removeClass('disabled');
+					$('#check_new').removeClass('disabled');
+
 				}
 
 				filledList();
@@ -763,94 +789,94 @@
 				month : month
 			}
 
-			$.get('{{ url("fetch/stocktaking/filled_list") }}', data, function(result, status, xhr){
-				if(result.status){
-					$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
+			// $.get('{{ url("fetch/stocktaking/filled_list") }}', data, function(result, status, xhr){
+			// 	if(result.status){
+			// 		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
 
-					var location = [];
-					var fill = [];
-					var empty = [];
+			// 		var location = [];
+			// 		var fill = [];
+			// 		var empty = [];
 
-					for (var i = 0; i < result.data.length; i++) {
-						location.push(result.data[i].location);
-						fill.push(parseInt(result.data[i].qty));
-						empty.push(parseInt(result.data[i].empty));
-					}
+			// 		for (var i = 0; i < result.data.length; i++) {
+			// 			location.push(result.data[i].location);
+			// 			fill.push(parseInt(result.data[i].qty));
+			// 			empty.push(parseInt(result.data[i].empty));
+			// 		}
 
-					// Highcharts.chart('container', {
-					// 	chart: {
-					// 		height: 225,
-					// 		type: 'column'
-					// 	},
-					// 	title: {
-					// 		text: 'Progress Input'
-					// 	},	
-					// 	legend:{
-					// 		enabled: false
-					// 	},
-					// 	credits:{	
-					// 		enabled:false
-					// 	},
-					// 	xAxis: {
-					// 		categories: location,
-					// 		type: 'category'
-					// 	},
-					// 	yAxis: {
-					// 		title: {
-					// 			enabled:false,
-					// 		},
-					// 		labels: {
-					// 			enabled:false
-					// 		}
-					// 	},
-					// 	tooltip: {
-					// 		formatter: function () {
-					// 			return '<b>' + this.x + '</b><br/>' +
-					// 			this.series.name + ': ' + this.y + '<br/>' +
-					// 			'Total Item: ' + this.point.stackTotal;
-					// 		}
-					// 	},
-					// 	plotOptions: {
-					// 		column: {
-					// 			stacking: 'percent',
-					// 		},
-					// 		series:{
-					// 			animation: false,
-					// 			pointPadding: 0.93,
-					// 			groupPadding: 0.93,
-					// 			borderWidth: 0.93,
-					// 			cursor: 'pointer',
-					// 			stacking: 'percent',
-					// 			dataLabels: {
-					// 				enabled: true,
-					// 				formatter: function() {
-					// 					return this.y;
-					// 				},
-					// 				style: {
-					// 					fontWeight: 'bold',
-					// 				}
-					// 			},
-					// 			point: {
-					// 				events: {
-					// 					click: function () {
-					// 						fillInputModal(this.category, this.series.name);
-					// 					}
-					// 				}
-					// 			}
-					// 		}
-					// 	},
-					// 	series: [{
-					// 		name: 'Empty',
-					// 		data: empty,
-					// 		color: 'rgba(255, 0, 0, 0.25)'
-					// 	}, {
-					// 		name: 'Inputted',
-					// 		data: fill,
-					// 		color: '#00a65a'
-					// 	}]
-					// });
-				}
-			});
+			// 		// Highcharts.chart('container', {
+			// 		// 	chart: {
+			// 		// 		height: 225,
+			// 		// 		type: 'column'
+			// 		// 	},
+			// 		// 	title: {
+			// 		// 		text: 'Progress Input'
+			// 		// 	},	
+			// 		// 	legend:{
+			// 		// 		enabled: false
+			// 		// 	},
+			// 		// 	credits:{	
+			// 		// 		enabled:false
+			// 		// 	},
+			// 		// 	xAxis: {
+			// 		// 		categories: location,
+			// 		// 		type: 'category'
+			// 		// 	},
+			// 		// 	yAxis: {
+			// 		// 		title: {
+			// 		// 			enabled:false,
+			// 		// 		},
+			// 		// 		labels: {
+			// 		// 			enabled:false
+			// 		// 		}
+			// 		// 	},
+			// 		// 	tooltip: {
+			// 		// 		formatter: function () {
+			// 		// 			return '<b>' + this.x + '</b><br/>' +
+			// 		// 			this.series.name + ': ' + this.y + '<br/>' +
+			// 		// 			'Total Item: ' + this.point.stackTotal;
+			// 		// 		}
+			// 		// 	},
+			// 		// 	plotOptions: {
+			// 		// 		column: {
+			// 		// 			stacking: 'percent',
+			// 		// 		},
+			// 		// 		series:{
+			// 		// 			animation: false,
+			// 		// 			pointPadding: 0.93,
+			// 		// 			groupPadding: 0.93,
+			// 		// 			borderWidth: 0.93,
+			// 		// 			cursor: 'pointer',
+			// 		// 			stacking: 'percent',
+			// 		// 			dataLabels: {
+			// 		// 				enabled: true,
+			// 		// 				formatter: function() {
+			// 		// 					return this.y;
+			// 		// 				},
+			// 		// 				style: {
+			// 		// 					fontWeight: 'bold',
+			// 		// 				}
+			// 		// 			},
+			// 		// 			point: {
+			// 		// 				events: {
+			// 		// 					click: function () {
+			// 		// 						fillInputModal(this.category, this.series.name);
+			// 		// 					}
+			// 		// 				}
+			// 		// 			}
+			// 		// 		}
+			// 		// 	},
+			// 		// 	series: [{
+			// 		// 		name: 'Empty',
+			// 		// 		data: empty,
+			// 		// 		color: 'rgba(255, 0, 0, 0.25)'
+			// 		// 	}, {
+			// 		// 		name: 'Inputted',
+			// 		// 		data: fill,
+			// 		// 		color: '#00a65a'
+			// 		// 	}]
+			// 		// });
+			// 	}
+			// });
 
 
 			$.get('{{ url("fetch/stocktaking/filled_list_new") }}', data, function(result, status, xhr){
@@ -1553,93 +1579,93 @@
 				month : month
 			}
 
-			$.get('{{ url("fetch/stocktaking/audited_list") }}', data, function(result, status, xhr){
-				if(result.status){
+			// $.get('{{ url("fetch/stocktaking/audited_list") }}', data, function(result, status, xhr){
+			// 	if(result.status){
 
-					var location = [];
-					var audited = [];
-					var notyet = [];
+			// 		var location = [];
+			// 		var audited = [];
+			// 		var notyet = [];
 
-					for (var i = 0; i < result.data.length; i++) {
-						location.push(result.data[i].location);
-						audited.push(parseInt(result.data[i].audited));
-						notyet.push(parseInt(result.data[i].not_audited));
-					}
+			// 		for (var i = 0; i < result.data.length; i++) {
+			// 			location.push(result.data[i].location);
+			// 			audited.push(parseInt(result.data[i].audited));
+			// 			notyet.push(parseInt(result.data[i].not_audited));
+			// 		}
 
-					// Highcharts.chart('container3', {
-					// 	chart: {
-					// 		height: 225,
-					// 		type: 'column'
-					// 	},
-					// 	title: {
-					// 		text: 'Progress Audit'
-					// 	},	
-					// 	legend:{
-					// 		enabled: false
-					// 	},
-					// 	credits:{	
-					// 		enabled:false
-					// 	},
-					// 	xAxis: {
-					// 		categories: location,
-					// 		type: 'category'
-					// 	},
-					// 	yAxis: {
-					// 		title: {
-					// 			enabled:false,
-					// 		},
-					// 		labels: {
-					// 			enabled:false
-					// 		}
-					// 	},
-					// 	tooltip: {
-					// 		formatter: function () {
-					// 			return '<b>' + this.x + '</b><br/>' +
-					// 			this.series.name + ': ' + this.y + '<br/>' +
-					// 			'Total Store: ' + this.point.stackTotal;
-					// 		}
-					// 	},
-					// 	plotOptions: {
-					// 		column: {
-					// 			stacking: 'percent',
-					// 		},
-					// 		series:{
-					// 			animation: false,
-					// 			pointPadding: 0.93,
-					// 			groupPadding: 0.93,
-					// 			borderWidth: 0.93,
-					// 			cursor: 'pointer',
-					// 			stacking: 'percent',
-					// 			dataLabels: {
-					// 				enabled: true,
-					// 				formatter: function() {
-					// 					return this.y;
-					// 				},
-					// 				style: {
-					// 					fontWeight: 'bold',
-					// 				}
-					// 			},
-					// 			point: {
-					// 				events: {
-					// 					click: function () {
-					// 						fillAuditModal(this.category, this.series.name);
-					// 					}
-					// 				}
-					// 			}
-					// 		}
-					// 	},
-					// 	series: [{
-					// 		name: 'Not yet',
-					// 		data: notyet,
-					// 		color: 'rgba(255, 0, 0, 0.25)'
-					// 	}, {
-					// 		name: 'Audited',
-					// 		data: audited,
-					// 		color: '#00a65a'
-					// 	}]
-					// });
-				}
-			});
+			// 		// Highcharts.chart('container3', {
+			// 		// 	chart: {
+			// 		// 		height: 225,
+			// 		// 		type: 'column'
+			// 		// 	},
+			// 		// 	title: {
+			// 		// 		text: 'Progress Audit'
+			// 		// 	},	
+			// 		// 	legend:{
+			// 		// 		enabled: false
+			// 		// 	},
+			// 		// 	credits:{	
+			// 		// 		enabled:false
+			// 		// 	},
+			// 		// 	xAxis: {
+			// 		// 		categories: location,
+			// 		// 		type: 'category'
+			// 		// 	},
+			// 		// 	yAxis: {
+			// 		// 		title: {
+			// 		// 			enabled:false,
+			// 		// 		},
+			// 		// 		labels: {
+			// 		// 			enabled:false
+			// 		// 		}
+			// 		// 	},
+			// 		// 	tooltip: {
+			// 		// 		formatter: function () {
+			// 		// 			return '<b>' + this.x + '</b><br/>' +
+			// 		// 			this.series.name + ': ' + this.y + '<br/>' +
+			// 		// 			'Total Store: ' + this.point.stackTotal;
+			// 		// 		}
+			// 		// 	},
+			// 		// 	plotOptions: {
+			// 		// 		column: {
+			// 		// 			stacking: 'percent',
+			// 		// 		},
+			// 		// 		series:{
+			// 		// 			animation: false,
+			// 		// 			pointPadding: 0.93,
+			// 		// 			groupPadding: 0.93,
+			// 		// 			borderWidth: 0.93,
+			// 		// 			cursor: 'pointer',
+			// 		// 			stacking: 'percent',
+			// 		// 			dataLabels: {
+			// 		// 				enabled: true,
+			// 		// 				formatter: function() {
+			// 		// 					return this.y;
+			// 		// 				},
+			// 		// 				style: {
+			// 		// 					fontWeight: 'bold',
+			// 		// 				}
+			// 		// 			},
+			// 		// 			point: {
+			// 		// 				events: {
+			// 		// 					click: function () {
+			// 		// 						fillAuditModal(this.category, this.series.name);
+			// 		// 					}
+			// 		// 				}
+			// 		// 			}
+			// 		// 		}
+			// 		// 	},
+			// 		// 	series: [{
+			// 		// 		name: 'Not yet',
+			// 		// 		data: notyet,
+			// 		// 		color: 'rgba(255, 0, 0, 0.25)'
+			// 		// 	}, {
+			// 		// 		name: 'Audited',
+			// 		// 		data: audited,
+			// 		// 		color: '#00a65a'
+			// 		// 	}]
+			// 		// });
+			// 	}
+			// });
 
 
 			$.get('{{ url("fetch/stocktaking/audited_list_new") }}', data, function(result, status, xhr){

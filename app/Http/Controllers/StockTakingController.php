@@ -357,12 +357,154 @@ class StockTakingController extends Controller{
 		}
 	}
 
+	public function importbom(Request $request){
+		if($request->hasFile('bom')) {
+			try{				
+				$file = $request->file('bom');
+				$file_name = 'bom_'.'('. date("ymdHi") .')'.'.'.$file->getClientOriginalExtension();
+				$file->move(public_path('import/bom/'), $file_name);
+
+			}catch(\Exception $e){
+				$response = array(
+					'status' => false,
+					'message' => $e->getMessage(),
+				);
+				return Response::json($response);
+			}
+		}else{
+			$response = array(
+				'status' => false,
+				'message' => 'Upload failed, File not found',
+			);
+			return Response::json($response);
+		}
+
+
+		
+		$excel = public_path('import/bom/') . $file_name;
+		$rows = Excel::load($excel, function($reader) {
+			$reader->noHeading();
+			$reader->skipRows(1);
+		})->get();
+		$rows = $rows->toArray();
+
+		DB::beginTransaction();
+		BomOutput::truncate();
+		for ($i=0; $i < count($rows); $i++) {
+			$material_parent = $rows[$i][0];
+			$material_child = $rows[$i][1];
+			$usage = $rows[$i][2];
+			$divider = $rows[$i][3];
+			$uom = $rows[$i][4];
+
+			try {
+				$bom = new BomOutput([
+					'material_parent' => $material_parent,
+					'material_child' => $material_child,
+					'usage' => $usage,
+					'divider' => $divider,
+					'uom' => $uom,
+					'created_by' => Auth::id()
+				]);
+				$bom->save();
+
+			} catch (Exception $e) {
+				DB::rollback();				
+				$response = array(
+					'status' => false,
+					'message' => $e->getMessage()
+				);
+				return Response::json($response);
+			}
+		}
+
+		DB::commit();
+		$response = array(
+			'status' => true,
+			'message' => 'Upload bom output success',
+		);
+		return Response::json($response);
+
+	}
+
+	public function importmpdl(Request $request){
+		
+		if($request->hasFile('mpdl')) {
+			try{				
+				$file = $request->file('mpdl');
+				$file_name = 'mpdl_'.'('. date("ymdHi") .')'.'.'.$file->getClientOriginalExtension();
+				$file->move(public_path('import/mpdl/'), $file_name);
+
+			}catch(\Exception $e){
+				$response = array(
+					'status' => false,
+					'message' => $e->getMessage(),
+				);
+				return Response::json($response);
+			}
+		}else{
+			$response = array(
+				'status' => false,
+				'message' => 'Upload failed, File not found',
+			);
+			return Response::json($response);
+		}
+
+		$excel = public_path('import/mpdl/') . $file_name;
+		$rows = Excel::load($excel, function($reader) {
+			$reader->noHeading();
+			$reader->skipRows(1);
+		})->get();
+		$rows = $rows->toArray();
+
+		DB::beginTransaction();
+		MaterialPlantDataList::truncate();
+		for ($i=0; $i < count($rows); $i++) {
+			$material_number = $rows[$i][0];
+			$material_description = $rows[$i][1];
+			$bun = $rows[$i][2];
+			$spt = $rows[$i][3];
+			$storage_location = $rows[$i][4];
+			$valcl = $rows[$i][5];
+			$standard_price = $rows[$i][6];
+
+			try {
+				$mpdl = new MaterialPlantDataList([
+					'material_number' => $material_number,
+					'material_description' => $material_description,
+					'bun' => $bun,
+					'spt' => $spt,
+					'storage_location' => $storage_location,
+					'valcl' => $valcl,
+					'standard_price' => $standard_price,
+					'created_by' => Auth::id()
+				]);
+				$mpdl->save();
+			} catch (Exception $e) {
+				DB::rollback();				
+				$response = array(
+					'status' => false,
+					'message' => $e->getMessage(),
+				);
+				return Response::json($response);				
+			}			
+		}
+
+		DB::commit();
+		$response = array(
+			'status' => true,
+			'message' => 'Upload file success',
+		);
+		return Response::json($response);
+
+	}
+
 	public function exportErrorUpload(Request $request){
 
 		$file_name = $request->get('file_name');
 
 		$error = StocktakingErrorList::where('file_name', $file_name)->get(); 
-		
+
 
 		$title = 'Error_upload_stocktakinglist_'.str_replace('.xlsx','',$file_name);
 
@@ -376,7 +518,7 @@ class StockTakingController extends Controller{
 				return $sheet->loadView('stocktakings.monthly.report.error_upload_stocktakinglist', $data);
 			});
 		})->export('xlsx');
-		
+
 	}
 
 	public function editMonthlyStocktakingList(Request $request){
@@ -1694,7 +1836,7 @@ class StockTakingController extends Controller{
 		$pdf->setPaper('A4', 'potrait');
 		$pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
 
-		
+
 
 		if($lists[0]->material_number == 'W934330' && $lists[0]->location == 'FL51'){
 			$pdf->loadView('stocktakings.monthly.print_substore_ag', array(
@@ -2962,11 +3104,13 @@ class StockTakingController extends Controller{
 				(SELECT sl.area, s.location, 0 AS `use`, count(s.id) AS no_use FROM stocktaking_new_lists s
 				LEFT JOIN storage_locations sl ON sl.storage_location = s.location 
 				WHERE s.remark = 'NO USE' 
+				AND s.print_status = 1
 				GROUP BY sl.area, s.location
 				UNION ALL
 				SELECT sl.area, s.location, count(s.id) AS `use`, 0 AS no_use FROM stocktaking_new_lists s
 				LEFT JOIN storage_locations sl ON sl.storage_location = s.location 
 				WHERE s.remark = 'USE'
+				AND s.print_status = 1
 				GROUP BY sl.area, s.location 
 				) AS list 
 				GROUP BY area, location 
@@ -3034,7 +3178,7 @@ class StockTakingController extends Controller{
 				s.store,
 				sl.area,
 				s.location 
-				
+
 				UNION ALL
 				SELECT
 				sl.area,
@@ -3124,7 +3268,7 @@ class StockTakingController extends Controller{
 				s.sub_store,
 				sl.area,
 				s.location 
-				
+
 				UNION ALL
 				SELECT
 				sl.area,
@@ -4206,7 +4350,7 @@ s.id ASC");
 	public function fetchAuditStoreListNew(Request $request){
 
 		$process = $request->get('process');
-		
+
 		$current = StocktakingNewList::where('store', $request->get('store'))
 		->where('print_status', 1)
 		->orderBy('process', 'ASC')
@@ -4583,15 +4727,17 @@ s.id ASC");
 
 		try {
 			$updateStore = StocktakingNewList::where('store', $request->get('store'))
-			->where('remark', 'USE')
+			->where('print_status', 1)
 			->update([
-				'process' => $process
+				'process' => $process,
+				'remark' => 'USE'
 			]);
 
 			//Audit 1 -> Update Final Count
 			if($audit == 'audit1'){
 				$store = StocktakingNewList::where('store', $request->get('store'))
 				->where('remark', 'USE')
+				->where('print_status', 1)
 				->get();
 
 				for ($i = 0; $i < count($store); $i++) {
@@ -4603,7 +4749,8 @@ s.id ASC");
 					}else{
 						$final = $store[$i]->quantity;
 					}
-					$updateStore = StocktakingList::where('id', $store[$i]->id)
+
+					$updateStore = StocktakingNewList::where('id', $store[$i]->id)
 					->update([
 						'final_count' => $final
 					]);
@@ -4800,7 +4947,7 @@ s.id ASC");
 			);
 			return Response::json($response);
 		}
-		
+
 	}
 
 
@@ -4854,7 +5001,7 @@ s.id ASC");
 				'quantity' => $quantity,
 				'inputed_by' => $inputor
 			]);
-			
+
 			$response = array(
 				'status' => true,
 				'message' => 'PI Berhasil Disimpan'
