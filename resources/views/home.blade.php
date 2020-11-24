@@ -586,7 +586,7 @@
                             <td>
                                 <span style="font-weight: bold;">Machine Monitoring (マシン監視)</span>
                                 <br>
-                                <a href="http://172.17.129.10/zed/dashboard/awal" target="_blank">
+                                <a href="http://10.109.52.7/zed/dashboard/awal" target="_blank">
                                     <i class="fa fa-caret-right"></i> Overall Equipment Efficiency (稼働率)
                                 </a>
                                 <br>
@@ -594,7 +594,7 @@
                                     <i class="fa fa-caret-right"></i> Machinery Monitoring (機械監視)
                                 </a>
                                 <br>
-                                <a href="http://172.17.129.10/mtnc/login/log" target="_blank">
+                                <a href="http://10.109.52.7/mtnc/login/log" target="_blank">
                                     <i class="fa fa-caret-right"></i> Planned Maintenance Activity Finding
                                 </a>
 
@@ -720,7 +720,7 @@
                                     <i class="fa fa-caret-right"></i> M-PRO Stock Trend (部品加工の在庫トレンド)
                                 </a>
                                 <br>
-                                <a href="http://172.17.129.10/tpro/" target="_blank">
+                                <a href="http://10.109.52.7/tpro/" target="_blank">
                                     <i class="fa fa-caret-right"></i> M-Pro Kanban Monitoring (Mプロかんばんの監視)
                                 </a>
                             </td>
