@@ -231,7 +231,8 @@ class KnockDownController extends Controller{
 		// 	LEFT JOIN materials ON resume.material_number = materials.material_number
 		// 	ORDER BY resume.marking, materials.material_description ASC");
 
-		$resume = db::select("SELECT ck.marking, ck.gmc AS material_number, ck.material_description, ck.category, ck.ck_qty, COALESCE(st.st_qty,0) AS st_qty FROM
+		$resume = db::select("SELECT ck.marking, ck.gmc AS material_number, ck.material_description, ck.category, ck.ck_qty, st_kd.st_qty as kd, st_fg.st_qty as fg,
+			iF(st_kd.st_qty IS NOT NULL, st_kd.st_qty, IF(st_fg.st_qty IS NOT NULL, st_fg.st_qty, 0)) AS st_qty FROM
 			(SELECT ck.marking, ck.gmc, m.material_description, m.category, SUM(ck.qty_qty) as ck_qty FROM detail_checksheets ck
 			LEFT JOIN materials m ON ck.gmc = m.material_number
 			WHERE ck.id_checkSheet = '".$container_id."'
@@ -246,15 +247,16 @@ class KnockDownController extends Controller{
 			AND m.category <> 'KD'
 			GROUP BY ck.gmc, m.material_description, m.category) AS ck
 			LEFT JOIN
-			(SELECT d.material_number, SUM(d.quantity) as st_qty FROM knock_down_details d
+			(SELECT k.marking, d.material_number, SUM(d.quantity) as st_qty FROM knock_down_details d
 			LEFT JOIN knock_downs k on k.kd_number = d.kd_number
 			WHERE k.container_id = '".$container_id."'
-			GROUP BY d.material_number
-			UNION ALL
-			SELECT material_number, SUM(actual) as st_qty FROM flos
+			GROUP BY k.marking, d.material_number) st_kd
+			ON ck.gmc = st_kd.material_number and ck.marking = st_kd.marking
+			LEFT JOIN
+			(SELECT material_number, SUM(actual) as st_qty FROM flos
 			WHERE container_id = '".$container_id."'
-			GROUP BY material_number) st
-			ON ck.gmc = st.material_number
+			GROUP BY material_number) st_fg
+			ON ck.gmc = st_fg.material_number
 			ORDER BY ck.marking, ck.material_description ASC");
 
 		$pallet = DetailChecksheet::where('id_checkSheet', $container_id)
