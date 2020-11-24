@@ -265,17 +265,17 @@
 			
 			<br><br><br>
 
-			<h3 style="text-align: left !important">Detail PO {{$data[0]->no_po}}</h3>
+			<h3 style="text-align: left !important">購入指示の内訳 {{$data[0]->no_po}}</h3>
 
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: #f5eb33">
 					<tr>
-						<th style="width: 3%; border:1px solid black;">Nama Item</th>
-						<th style="width: 1%; border:1px solid black;">Delivery Date</th>
-						<th style="width: 1%; border:1px solid black;">Qty</th>
-						<th style="width: 1%; border:1px solid black;">Uom</th>
-						<th style="width: 1%; border:1px solid black;">Price</th>
-						<th style="width: 1%; border:1px solid black;">Amount</th>
+						<th style="width: 3%; border:1px solid black;">Nama Item (アイテム名)</th>
+						<th style="width: 1%; border:1px solid black;">Delivery Date (納期)</th>
+						<th style="width: 1%; border:1px solid black;">Qty (数量)</th>
+						<th style="width: 1%; border:1px solid black;">Uom (単位)</th>
+						<th style="width: 1%; border:1px solid black;">Price (値段)</th>
+						<th style="width: 1%; border:1px solid black;">Amount (総額)</th>
 					</tr>
 				</thead>
 				<tbody>
