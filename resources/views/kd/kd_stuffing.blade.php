@@ -117,6 +117,8 @@
                     </div>
                </div>
 
+               <button style="margin: 1%;" class="btn btn-info pull-right" onClick="refreshTable()"><i class="fa fa-refresh"></i> Refresh Tabel Stuffing</button>
+
                <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
                          <li class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">KDO Stuffing Detail</a></li>
@@ -377,6 +379,11 @@
           });
      }
 
+     function refreshTable() {
+          $('#kdo_table').DataTable().ajax.reload();
+          $('#kdo_detail').DataTable().ajax.reload();
+     }
+
      function refresh(){
           $('#invoice_number').val('');
           $('#container_id').val('').change();
@@ -387,6 +394,8 @@
      }
 
      var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+     var audio_ok = new Audio('{{ url("sounds/sukses.mp3") }}');
+
 
      function deleteKDO(id){
           if(confirm("Are you sure you want to delete this data?")){
@@ -610,7 +619,7 @@
 
 
                var curr_qty = $('#'+marking+'_'+knock_down_details[i].material_number).find('td').eq(5).text();               
-               
+
                $('#'+marking+'_'+knock_down_details[i].material_number).find('td').eq(5).text(parseInt(curr_qty) + parseInt(knock_down_details[i].quantity));
 
 
@@ -703,6 +712,7 @@
           var marking = $("#marking").val();
           if(marking == ''){
                openErrorGritter('Error!', "Pilih Pallet Terlebih Dahulu");
+               audio_error.play();
                return false;
           }
           var data = {
@@ -715,17 +725,17 @@
           $.post('{{ url("scan/kd_stuffing") }}', data, function(result, status, xhr){
                if(xhr.status == 200){
                     if(result.status){
-                         openSuccessGritter('Success!', result.message);
-
                          updateResume(result.knock_down_details, marking);
 
-                         $('#kdo_table').DataTable().ajax.reload();
-                         $('#kdo_detail').DataTable().ajax.reload();
+                         // $('#kdo_table').DataTable().ajax.reload();
+                         // $('#kdo_detail').DataTable().ajax.reload();
                          $('#kdo_number_settlement').val('');
+                         openSuccessGritter('Success!', result.message);
+                         audio_ok.play();
                     }
                     else{
-                         openErrorGritter('Error!', result.message);
                          $('#kdo_number_settlement').val('');
+                         openErrorGritter('Error!', result.message);
                          audio_error.play();
                     }
                }

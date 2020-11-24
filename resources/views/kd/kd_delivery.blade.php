@@ -87,10 +87,11 @@
     </div>
   </div>
 </div>
-<button class="btn btn-info pull-right" onClick="refreshTable()"><i class="fa fa-refresh"></i> Refresh Tabel Delivery</button>
 
 <div class="row">
   <div class="col-xs-12" style="padding-top: 1%;">
+    <button style="margin: 1%;" class="btn btn-info pull-right" onClick="refreshTable()"><i class="fa fa-refresh"></i> Refresh Tabel Delivery</button>
+
     <div class="nav-tabs-custom">
       <ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
         <li class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">KDO Delivery Detail</a></li>
@@ -181,6 +182,8 @@
   })
 
   var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+  var audio_ok = new Audio('{{ url("sounds/sukses.mp3") }}');
+
 
   function openSuccessGritter(title, message){
     jQuery.gritter.add({
@@ -423,6 +426,7 @@
       }
       else{
         openErrorGritter('Error!', result.message);
+        audio_error.play();
         $("#kdo_number_delivery").val("");
         $("#kdo_number_delivery").focus();
       }
@@ -455,12 +459,15 @@
         if(result.update){
           // $('#kdo_table').DataTable().ajax.reload();
           // $('#kdo_detail').DataTable().ajax.reload();
+          audio_ok.play();
           openSuccessGritter('Success!', result.message);
         }else{
           openErrorGritter('Error!', result.message);
+          audio_error.play();
         }
       }else{
         openErrorGritter('Error!', result.message);
+        audio_error.play();
         $("#kdo_number_delivery").val("");
         $("#kdo_number_delivery").focus();
       }
