@@ -120,24 +120,24 @@
       <form role="form" id="myForm" method="post" action="{{url('investment/approval/'.$investment->id)}}" enctype="multipart/form-data">
         <input type="hidden" value="{{csrf_token()}}" name="_token" />  
         <table class="table table-bordered">
-          <tr id="show-att">
-            <td colspan="9" style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:16px;width: 75%;" colspan="2" id="text_attach_1">
-            </td>
-            <td colspan="3" style="font-size: 16px;width: 25%;">
-              <div class="col-md-12">
-                <div class="panel panel-default">
+          <tr>
+            <td colspan="12" style="font-size: 16px;padding: 0">
+              <div class="col-md-4" style="padding: 10px">
+                  <a data-toggle="modal" data-target="#notapproved" class="btn btn-danger col-sm-12" href="" style="width: 100%; font-weight: bold; font-size: 20px;margin-top: 10px">Reject</a>
+              </div>
+              <div class="col-md-4" style="padding: 10px">
+                  <a target="_blank" class="btn btn-info col-sm-12" href="{{ url('investment/comment/'.$investment->id) }}" style="width: 100%; font-weight: bold; font-size: 20px;margin-top: 10px">Hold & Comment</a>
+              </div>
+              <div class="col-md-4" style="padding: 10px">
                   <input type="hidden" value="{{csrf_token()}}" name="_token" />
                   <input type="hidden"  name="approve" id="approve" value="1" />
-                  <div class="panel-heading">Approval : </div>
-                  <div class="panel-body center-text"  style="padding: 20px">
-                    <button type="submit" class="btn btn-success col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px">Verifikasi</button>
-                    <a data-toggle="modal" data-target="#notapproved" class="btn btn-danger col-sm-12" href="" style="width: 100%; font-weight: bold; font-size: 20px;margin-top: 10px">Reject</a>
-
-                    <a target="_blank" class="btn btn-info col-sm-12" href="{{ url('investment/comment/'.$investment->id) }}" style="width: 100%; font-weight: bold; font-size: 20px;margin-top: 10px">Hold & Comment</a>
-
-                  </div>
-                </div>
+                  <button type="submit" class="btn btn-success col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px;margin-top: 10px">Verifikasi</button>
               </div>
+            </td>
+          </tr>
+          <br><br>
+          <tr id="show-att">
+            <td colspan="12" style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:16px;" colspan="2" id="text_attach_1">
             </td>
           </tr>
         </table>
