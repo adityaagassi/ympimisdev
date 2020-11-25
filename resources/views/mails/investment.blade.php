@@ -365,12 +365,19 @@
 			
 			<br>
 
-			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> &#8650;</span><br><br>
+			<span style="font-weight: bold;"><i>Do you want to Approve this Investment Request?</i></span><br>
+
 			<a style="background-color: green; width: 50px;text-decoration: none;color: white;font-size:20px;" href="{{ url("investment/approvemanager/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 			<a style="background-color: blue; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/comment/".$id) }}">&nbsp;&nbsp;&nbsp; Hold & Comment &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-			<a style="background-color: red; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/reject/".$id) }}">&nbsp; Reject &nbsp;</a><br>
+			<a style="background-color: red; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/reject/".$id) }}">&nbsp; Reject &nbsp;</a>
+	
+			<br><br><br>
+
+			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
+			<a href="{{ url('investment/control') }}">Investment Monitoring</a>
+	
 
 			@elseif($posisi == "dgm" && $status == "approval")
 
@@ -466,12 +473,19 @@
 			<br>
 			
 			<br>
-			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> &#8650;</span><br><br>
+
+			<span style="font-weight: bold;"><i>Do you want to Approve this Investment Request?</i></span><br>
+
 			<a style="background-color: green; width: 50px;text-decoration: none;color: white;font-size:20px;" href="{{ url("investment/approvedgm/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 			<a style="background-color: blue; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/comment/".$id) }}">&nbsp;&nbsp;&nbsp; Hold & Comment &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-			<a style="background-color: red; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/reject/".$id) }}">&nbsp; Reject &nbsp;</a><br>
+			<a style="background-color: red; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/reject/".$id) }}">&nbsp; Reject &nbsp;</a>
+
+			<br><br><br>
+
+			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
+			<a href="{{ url('investment/control') }}">Investment Monitoring</a>
 
 			@elseif($posisi == "gm" && $status == "approval")
 
@@ -573,7 +587,12 @@
 
 			<a style="background-color: blue; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/comment/".$id) }}">&nbsp;&nbsp;&nbsp; Hold & Comment (保留・コメント) &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-			<a style="background-color: red; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/reject/".$id) }}">&nbsp; Reject (却下) &nbsp;</a><br>
+			<a style="background-color: red; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/reject/".$id) }}">&nbsp; Reject (却下) &nbsp;</a>
+
+			<br><br><br>
+
+			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
+			<a href="{{ url('investment/control') }}">Investment Monitoring</a>
 
 			@elseif($posisi == "manager_acc" && $status == "approval")
 
@@ -675,7 +694,12 @@
 
 			<a style="background-color: blue; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/comment/".$id) }}">&nbsp;&nbsp;&nbsp; Hold & Comment &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-			<a style="background-color: red; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/reject/".$id) }}">&nbsp; Reject &nbsp;</a><br>
+			<a style="background-color: red; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/reject/".$id) }}">&nbsp; Reject &nbsp;</a>
+
+			<br><br><br>
+
+			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
+			<a href="{{ url('investment/control') }}">Investment Monitoring</a>
 
 			@elseif($posisi == "direktur_acc" && $status == "approval")
 
@@ -778,7 +802,12 @@
 
 			<a style="background-color: blue; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/comment/".$id) }}">&nbsp;&nbsp;&nbsp; Hold & Comment (保留・コメント) &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-			<a style="background-color: red; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/reject/".$id) }}">&nbsp; Reject (却下) &nbsp;</a><br>
+			<a style="background-color: red; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/reject/".$id) }}">&nbsp; Reject (却下) &nbsp;</a>
+
+			<br><br><br>
+
+			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
+			<a href="{{ url('investment/control') }}">Investment Monitoring</a>
 
 			@elseif($posisi == "presdir" && $status == "approval")
 
@@ -881,7 +910,12 @@
 
 			<a style="background-color: blue; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/comment/".$id) }}">&nbsp;&nbsp;&nbsp; Hold & Comment (保留・コメント) &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-			<a style="background-color: red; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/reject/".$id) }}">&nbsp; Reject (却下) &nbsp;</a><br>
+			<a style="background-color: red; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/reject/".$id) }}">&nbsp; Reject (却下) &nbsp;</a>
+
+			<br><br><br>
+
+			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
+			<a href="{{ url('investment/control') }}">Investment Monitoring</a>
 
 			@elseif($status == "comment" && ($posisi == "manager" || $posisi == "dgm" || $posisi == "gm" || $posisi == "manager_acc" || $posisi == "direktur_acc" || $posisi == "presdir"))
 

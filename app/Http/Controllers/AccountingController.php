@@ -48,7 +48,7 @@ class AccountingController extends Controller
 
     $this->transportation = ['AIR', 'BOAT', 'COURIER SERVICE', 'DHL', 'FEDEX', 'SUV-Car'];
 
-    $this->delivery = ['CIF Surabaya', 'CIP', 'Cost And Freight ', 'Delivered At Frontier', 'Delivered Duty Paid', 'Delivered Duty Unpaid', 'Delivered Ex Quay', 'Ex Works', 'Ex Factory', 'Ex Ship', 'FRANCO', 'Franco', 'FOB', 'Flee Alongside Ship', 'Free Carrier (FCA)', 'Letter Of Credits',];
+    $this->delivery = ['CIF Surabaya', 'CIP', 'Cost And Freight ', 'Delivered At Frontier', 'Delivered Duty Paid', 'Delivered Duty Unpaid', 'Delivered Ex Quay', 'Ex Works', 'Ex Factory', 'Ex Ship', 'FRANCO', 'Franco', 'FOB', 'Flee Alongside Ship', 'Free Carrier (FCA)', 'Letter Of Credits','DAP Consignee (Surabaya Factory)'];
 
         // $this->dgm = 'PI1910003';
         // $this->gm = 'PI1206001';
@@ -1062,9 +1062,6 @@ class AccountingController extends Controller
 
             $submission_date = $request->get('submission_date');
             $po_date = date('Y-m-d', strtotime($submission_date . ' + 7 days'));
-
-
-
 
 
             if($request->get('department') == "Human Resources" || $request->get('department') == "General Affairs"){
@@ -7215,6 +7212,18 @@ public function fetch_budget_table(Request $request)
 public function fetch_budget_summary(Request $request)
 {
 
+    $resume = db::select('
+        SELECT
+        category,
+        sum(amount) AS amount
+        FROM
+        acc_budgets
+        WHERE
+        acc_budgets.deleted_at IS NULL
+        GROUP BY
+        category
+        ');
+
     $category = db::select('
         SELECT
         category,
@@ -7242,7 +7251,8 @@ public function fetch_budget_summary(Request $request)
     $response = array(
         'status' => true,
         'cat_budget' => $category,
-        'type_budget' => $type
+        'type_budget' => $type,
+        'resume' => $resume
     );
 
     return Response::json($response); 
