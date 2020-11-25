@@ -216,8 +216,7 @@ class StockTakingController extends Controller{
 
 	public function deleteMonthlyStocktakingList(Request $request){
 		try{
-			$stocktaking_list = StocktakingList::where('id', $request->get('id'))->first();
-			$stocktaking_list->forceDelete();
+			$stocktaking_list = StocktakingNewList::where('id', $request->get('id'))->forceDelete();
 
 			$response = array(
 				'status' => true,
@@ -526,7 +525,7 @@ class StockTakingController extends Controller{
 			$stocktaking_list = StocktakingNewList::where('id', $request->get('id'))->first();
 
 			$stocktaking_list->store = $request->get('store');
-			$stocktaking_list->store = $request->get('substore');
+			$stocktaking_list->sub_store = $request->get('substore');
 			$stocktaking_list->material_number = $request->get('material');
 			$stocktaking_list->location = $request->get('location');
 			$stocktaking_list->category = $request->get('category');

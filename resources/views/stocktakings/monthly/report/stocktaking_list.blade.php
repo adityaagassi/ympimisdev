@@ -466,14 +466,14 @@
 		$('#loading').show();
 		var store = $('#store').val();
 		var material_number = $('#material_number').val();
-		var location = $('#location').val();
+		var storage_location = $('#storage_location').val();
 		var area = $('#area').val();
 
 		var data = {
 			store:store,
 			material_number:material_number,
 			area:area,
-			location:location
+			storage_location:storage_location
 		}
 
 		$.get('{{ url("fetch/stocktaking/stocktaking_list") }}', data, function(result, status, xhr) {
