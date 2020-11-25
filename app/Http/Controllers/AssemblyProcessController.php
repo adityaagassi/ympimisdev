@@ -1214,6 +1214,40 @@ class AssemblyProcessController extends Controller
 		return Response::json($response);
 	}
 
+	public function fetchNgLogs(Request $request)
+	{
+		$model = $request->get('model');
+		$serial_number = $request->get('serial_number');
+		$employee_id = $request->get('employee_id');
+		$tag = dechex($request->get('tag'));
+
+		$ng_logs = db::select("SELECT
+			* 
+			FROM
+			`assembly_ng_logs` 
+			WHERE
+			model = '".$model."'
+			AND serial_number = '".$serial_number."'
+			AND employee_id = '".$employee_id."'
+			AND tag = '".$tag."'
+			AND deleted_at is null");
+
+		if($ng_logs == null){
+			$response = array(
+				'status' => false,
+				'message' => 'NG Detail Tidak Ditemukan',
+			);
+			return Response::json($response);			
+		}
+
+		$response = array(
+			'status' => true,
+			// 'message' => 'Tag karyawan ditemukan',
+			'ng_logs' => $ng_logs,
+		);
+		return Response::json($response);
+	}
+
 	public function getProcessBefore(Request $request)
 	{
 		$model = $request->get('model');

@@ -51,6 +51,10 @@
 		height:200px;
 		overflow-y: scroll;
 	}
+	#ngHistory {
+		height:200px;
+		overflow-y: scroll;
+	}
 	#historyLocation{
 		overflow-x: scroll;
 	}
@@ -136,12 +140,31 @@
 					<table id="ngTempTable" class="table table-bordered" style="width: 100%; margin-bottom: 2px;" border="1">
 						<thead>
 							<tr>
-								<th style="width: 40%; background-color: rgb(220,220,220); padding:0;font-size: 20px;" >NG Name</th>
-								<th style="width: 40%; background-color: rgb(220,220,220); padding:0;font-size: 20px;" >Value / Jumlah</th>
-								<th style="width: 20%; background-color: rgb(220,220,220); padding:0;font-size: 20px;" >Onko</th>
+								<th style="width: 40%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Nama NG</th>
+								<th style="width: 40%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Value / Jumlah</th>
+								<th style="width: 20%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Onko</th>
 							</tr>
 						</thead>
 						<tbody id="ngTempBody">
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div style="padding-top: 5px;background-color: rgb(220,220,220);font-weight: bold;padding: 0px; font-size: 20px;border: 1px solid black;width: 100%">
+				<center>History NG</center>
+			</div>
+			<div style="padding-top: 5px">
+				<div id="ngHistory">
+					<table id="ngHistoryTable" class="table table-bordered" style="width: 100%; margin-bottom: 2px;" border="1">
+						<thead>
+							<tr>
+								<th style="width: 3%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Nama NG</th>
+								<th style="width: 1%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Value / Jumlah</th>
+								<th style="width: 1%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Onko</th>
+								<th style="width: 3%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Loc</th>
+							</tr>
+						</thead>
+						<tbody id="ngHistoryBody">
 						</tbody>
 					</table>
 				</div>
@@ -162,7 +185,7 @@
 				<table class="table table-bordered" style="width: 100%; margin-bottom: 2px;" border="1">
 					<thead>
 						<tr>
-							<th style="width: 65%; background-color: rgb(220,220,220); padding:0;font-size: 20px;" >NG Name</th>
+							<th style="width: 65%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >List NG</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -184,8 +207,8 @@
 			</div>
 			<div>
 				<center>
-					<button style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: white; width: 49%" onclick="canc()" class="btn btn-danger">CANCEL</button>
-					<button id="conf1" style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: white; width: 49%" onclick="conf()" class="btn btn-success">CONFIRM</button>
+					<button style="width: 100%; margin-top: 10px; font-size: 40px; padding:0; font-weight: bold; border-color: black; color: white; width: 49%" onclick="canc()" class="btn btn-danger">CANCEL</button>
+					<button id="conf1" style="width: 100%; margin-top: 10px; font-size: 40px; padding:0; font-weight: bold; border-color: black; color: white; width: 49%" onclick="conf()" class="btn btn-success">CONFIRM</button>
 				</center>
 			</div>
 		</div>
@@ -387,6 +410,8 @@
 		}
 
 		var tableData = "";
+
+		fetchNgHistory();
 
 		$.get('{{ url("scan/assembly/kensa") }}', data, function(result, status, xhr){
 			if(result.status){
@@ -795,6 +820,47 @@
 		}
 	}
 
+	function fetchNgHistory() {
+		var tag = $('#tag2').val();
+		var employee_id = $('#employee_id').val();
+		var serial_number = $('#serial_number2').val();
+		var model = $('#model2').val();
+
+		var data = {
+			tag:tag,
+			employee_id:employee_id,
+			serial_number:serial_number,
+			model:model
+		}
+
+		var bodyNgTemp = "";
+		$('#ngHistoryBody').html("");
+		var index = 1;
+
+		$.get('{{ url("fetch/assembly/ng_logs") }}', data, function(result, status, xhr){
+			$.each(result.ng_logs, function(key, value) {
+				if (index % 2 == 0) {
+					var color = 'style="background-color: #fffcb7"';
+				}else{
+					var color = 'style="background-color: #ffd8b7"'
+				}
+				index++;
+				bodyNgTemp += "<tr "+color+">";
+				bodyNgTemp += '<td style="font-size: 15px;">'+value.ng_name+'</td>';
+				if (value.value_bawah == null) {
+					bodyNgTemp += '<td style="font-size: 15px;">'+value.value_atas+'</td>';
+				}else{
+					bodyNgTemp += '<td style="font-size: 15px;">'+value.value_atas+' - '+value.value_bawah+'</td>';
+				}
+				bodyNgTemp += '<td style="font-size: 15px;">'+value.ongko+'</td>';
+				bodyNgTemp += '<td style="font-size: 15px;">'+value.location+'</td>';
+				bodyNgTemp += "</tr>";
+			});
+
+			$('#ngHistoryBody').append(bodyNgTemp);
+		});
+	}
+
 	function fetchNgTemp() {
 		var tag = $('#tag2').val();
 		var employee_id = $('#employee_id').val();
@@ -1074,6 +1140,7 @@
 				$('#tag').focus();
 				deleteNgTemp();
 				deleteAssemblies();
+				$('#ngHistoryBody').empty();
 			}
 			else{
 				var btn = document.getElementById('conf1');
@@ -1095,6 +1162,7 @@
 		$('#tag').focus();
 		deleteNgTemp();
 		deleteAssemblies();
+		$('#ngHistoryBody').empty();
 		timerkensa.stop();
 		timerkensa.reset();
 		$('div.timerkensa').show();

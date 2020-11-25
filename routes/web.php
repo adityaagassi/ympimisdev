@@ -109,6 +109,12 @@ Route::post('input/general/online_transportation', 'GeneralController@inputOnlin
 Route::post('delete/general/online_transportation', 'GeneralController@deleteOnlineTransportation');
 Route::get('fetch/general/online_transportation_data', 'GeneralController@fetchOnlineTransportationData');
 
+//AGREEMENT
+Route::get('index/general/agreement', 'GeneralController@indexAgreement');
+Route::get('fetch/general/agreement', 'GeneralController@fetchAgreement');
+Route::post('create/general/agreement', 'GeneralController@createAgreement');
+Route::post('edit/general/agreement', 'GeneralController@editAgreement');
+
 //SURAT DOKTER
 Route::get('index/general/surat_dokter', 'GeneralController@indexSuratDokter');
 Route::get('fetch/general/surat_dokter', 'GeneralController@fetchSuratDokter');
@@ -2446,8 +2452,13 @@ Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::get('fill/reason', 'CheckSheet@getReason');
 
 	Route::get('delete/deleteReimport', 'CheckSheet@deleteReimport');
-
 });
+
+Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
+	Route::get('index/shipping_order', 'ContainerScheduleController@indexShippingOrder');
+});
+
+
 Route::get('stamp/stamp', 'ProcessController@stamp');
 Route::post('reprint/stamp', 'ProcessController@reprint_stamp');
 
@@ -3563,6 +3574,7 @@ Route::group(['nav' => 'S47', 'middleware' => 'permission'], function(){
 	Route::post('report/maintenance/spk', 'MaintenanceController@reportingSPK');
 	Route::post('report/maintenance/spk/pending', 'MaintenanceController@reportingSPKPending');
 	Route::post('post/maintenance/spk/receipt', 'MaintenanceController@receiptSPK');
+	Route::post('post/maintenance/spk/pending/vendor/action', 'MaintenanceController@closePendingVendor');
 
 	// -----------  APAR -----------
 	Route::get('index/maintenance/apar', 'MaintenanceController@indexApar');
@@ -3643,6 +3655,7 @@ Route::get('fetch/assembly/ng_detail', 'AssemblyProcessController@showNgDetail')
 Route::get('fetch/assembly/onko', 'AssemblyProcessController@fetchOnko');
 Route::get('fetch/assembly/ng_temp', 'AssemblyProcessController@fetchNgTemp');
 Route::get('fetch/assembly/ng_temp_by_id', 'AssemblyProcessController@fetchNgTempById');
+Route::get('fetch/assembly/ng_logs', 'AssemblyProcessController@fetchNgLogs');
 Route::post('input/assembly/ng_temp', 'AssemblyProcessController@inputNgTemp');
 Route::get('delete/assembly/delete_ng_temp', 'AssemblyProcessController@deleteNgTemp');
 Route::post('input/assembly/ng_onko', 'AssemblyProcessController@inputNgOnko');
