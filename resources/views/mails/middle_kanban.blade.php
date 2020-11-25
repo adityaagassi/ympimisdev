@@ -61,7 +61,7 @@
 			</table>
 			{{-- <br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
-			<a href="http://localhost/ympimisdev/public/index/middle/barrel_board/barrel-sx">SX Key Barrel Board</a> --}}
+			<a href="http://10.109.52.4/mirai/public/index/middle/barrel_board/barrel-sx">SX Key Barrel Board</a> --}}
 		</center>
 	</div>
 </body>

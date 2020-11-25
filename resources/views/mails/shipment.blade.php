@@ -41,8 +41,8 @@
 			</table>
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
-			<a href="{{url('index/display/shipment_progress')}}">Realtime Hasil Produksi Terhadap Kebutuhan Ekspor</a><br>
-			<a href="{{url('index/display/stuffing_progress')}}">Realtime Today Loading Progress</a>
+			<a href="http://10.109.52.4/mirai/public/index/display/shipment_progress">Realtime Hasil Produksi Terhadap Kebutuhan Ekspor</a><br>
+			<a href="http://10.109.52.4/mirai/public/index/display/stuffing_progress">Realtime Today Loading Progress</a>
 		</center>
 	</div>
 </body>
