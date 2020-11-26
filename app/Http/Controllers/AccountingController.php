@@ -7087,14 +7087,14 @@ public function import_budget(Request $request){
                     $data2->jan_after_adj = $jan_adj;
                     $data2->feb_after_adj = $feb_adj;
                     $data2->mar_after_adj = $mar_adj;
-                    $data2->apr_sisa_budget = $apr_sisa;
-                    $data2->may_sisa_budget = $may_sisa;
-                    $data2->jun_sisa_budget = $jun_sisa;
-                    $data2->jul_sisa_budget = $jul_sisa;
-                    $data2->aug_sisa_budget = $aug_sisa;
-                    $data2->sep_sisa_budget = $sep_sisa;
-                    $data2->oct_sisa_budget = $oct_sisa;
-                    // $data2->nov_sisa_budget = $nov_sisa;
+                    // $data2->apr_sisa_budget = $apr_sisa;
+                    // $data2->may_sisa_budget = $may_sisa;
+                    // $data2->jun_sisa_budget = $jun_sisa;
+                    // $data2->jul_sisa_budget = $jul_sisa;
+                    // $data2->aug_sisa_budget = $aug_sisa;
+                    // $data2->sep_sisa_budget = $sep_sisa;
+                    // $data2->oct_sisa_budget = $oct_sisa;
+                    $data2->nov_sisa_budget = $nov_sisa;
                     $data2->dec_sisa_budget = $dec_sisa;
                     $data2->jan_sisa_budget = $jan_sisa;
                     $data2->feb_sisa_budget = $feb_sisa;
@@ -10211,7 +10211,7 @@ public function transfer_approvalto($id){
     public function bukti_penerimaan()
     {
       try {
-        $receive = DB::SELECT("SELECT DISTINCT id_print from acc_receive_reports");
+        $receive = DB::SELECT("SELECT DISTINCT id_print from acc_receive_reports order by id desc");
 
         $response = array(
           'status' => true,
@@ -10258,6 +10258,19 @@ public function transfer_approvalto($id){
          ));
 
         return $pdf->stream($id.".pdf");
+    }
+
+    public function cek_kedatangan(){
+        $title = 'Cek Kedatangan';
+        $title_jp = '';
+
+        $po_detail = db::select("SELECT DISTINCT acc_receives.no_po from acc_receives order by id desc");
+
+        return view('accounting_purchasing.master.receive_cek_kedatangan', array(
+            'title' => $title,
+            'title_jp' => $title_jp,
+            'po_detail' => $po_detail
+        ))->with('page', 'Print Warehouse')->with('head', 'Receive Equipment Warehouse');
     }
 
 }
