@@ -140,7 +140,7 @@ table > thead > tr > th{
 
 	jQuery(document).ready(function(){
 		fillChart();
-		// setInterval(fillChart, 10000);
+		setInterval(fillChart, 10000);
 	});
 
 	Highcharts.createElement('link', {

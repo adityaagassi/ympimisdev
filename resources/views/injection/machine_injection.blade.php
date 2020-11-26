@@ -252,7 +252,7 @@
 					</tbody>
 				</table>
 			</div>
-			<div class="col-xs-12" style="padding: 0px;padding-top: 10px">
+			<div class="col-xs-12" style="padding: 0px;padding-top: 62px">
 				<button class="btn btn-danger" id="btn_selesai" style="font-size: 30px;font-weight: bold;width: 100%" onclick="selesaiProses()">
 					SELESAI PROSES MESIN INJEKSI
 				</button>
