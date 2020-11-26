@@ -48,6 +48,22 @@
 			<button class="btn btn-success pull-right" onclick="newData('new')">Create New Agreement</button>
 		</div>
 		<div class="box-body">
+			<table id="resumeTable" class="table table-bordered table-striped table-hover" style="margin-bottom: 20px;">
+				<thead style="background-color: rgba(126,86,134,.7);">
+					<tr>
+						<th style="width: 30%; text-align: center; font-size: 1.5vw;">Safe</th>
+						<th style="width: 30%; text-align: center; font-size: 1.5vw;">< 90 Days Left</th>
+						<th style="width: 30%; text-align: center; font-size: 1.5vw;">< 30 Days Left</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td id="count_ok" style="background-color: #aee571; text-align: center; font-size: 1.8vw; font-weight: bold;"></td>
+						<td id="count_90" style="background-color: #ffb300; text-align: center; font-size: 1.8vw; font-weight: bold;"></td>
+						<td id="count_30" style="background-color: #ff5c8d; text-align: center; font-size: 1.8vw; font-weight: bold;"></td>
+					</tr>
+				</tbody>
+			</table>
 			<table id="listTable" class="table table-bordered table-striped table-hover">
 				<thead style="background-color: rgba(126,86,134,.7);">
 					<tr>
@@ -469,6 +485,11 @@
 				$('#listTable').DataTable().destroy();				
 				$('#listTableBody').html("");
 				var listTableBody = "";
+				var count_ok = 0;
+				var count_90 = 0;
+				var count_30 = 0;
+
+
 
 				$.each(result.agreements, function(key, value){
 					if(value.status == 'In Use'){
@@ -486,13 +507,16 @@
 					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:1%;">'+value.status+'</td>';
 					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:5%;">'+value.remark+'</td>';
 					if(value.validity < 30){
+						count_30 += 1;
 						listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:2%; background-color: #ff5c8d;">'+value.validity+' Day(s) left</td>';			
 					}
 					else if(value.validity < 90){
+						count_90 += 1;
 						listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:2%; background-color: #ffb300;">'+value.validity+' Day(s) left</td>';			
 					}
 					else
 					{
+						count_ok += 1;
 						listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:2%; background-color: #aee571;">'+value.validity+' Day(s) left</td>';			
 					}
 					listTableBody += '<td style="width:1%;"><a href="javascript:void(0)" onclick="modalDownload(\''+value.id+'\')">Att('+value.att+')</a></td>';
@@ -502,6 +526,9 @@
 					listTableBody += '</tr>';
 				});
 
+				$('#count_ok').text(count_ok);
+				$('#count_30').text(count_30);
+				$('#count_90').text(count_90);
 				$('#listTableBody').append(listTableBody);
 
 				$('#listTable').DataTable({
