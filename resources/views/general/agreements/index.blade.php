@@ -541,6 +541,10 @@
 					'buttons': {
 						buttons:[
 						{
+							extend: 'pageLength',
+							className: 'btn btn-default',
+						},
+						{
 							extend: 'copy',
 							className: 'btn btn-success',
 							text: '<i class="fa fa-copy"></i> Copy',
@@ -568,6 +572,7 @@
 					},
 					'paging': true,
 					'lengthChange': true,
+					'pageLength': 20,
 					'searching': true,
 					'ordering': true,
 					'order': [],
@@ -587,29 +592,29 @@
 				$('#loading').hide();
 			}
 		});
-	}
+}
 
-	function openSuccessGritter(title, message){
-		jQuery.gritter.add({
-			title: title,
-			text: message,
-			class_name: 'growl-success',
-			image: '{{ url("images/image-screen.png") }}',
-			sticky: false,
-			time: '3000'
-		});
-	}
+function openSuccessGritter(title, message){
+	jQuery.gritter.add({
+		title: title,
+		text: message,
+		class_name: 'growl-success',
+		image: '{{ url("images/image-screen.png") }}',
+		sticky: false,
+		time: '3000'
+	});
+}
 
-	function openErrorGritter(title, message) {
-		jQuery.gritter.add({
-			title: title,
-			text: message,
-			class_name: 'growl-danger',
-			image: '{{ url("images/image-stop.png") }}',
-			sticky: false,
-			time: '3000'
-		});
-	}
+function openErrorGritter(title, message) {
+	jQuery.gritter.add({
+		title: title,
+		text: message,
+		class_name: 'growl-danger',
+		image: '{{ url("images/image-stop.png") }}',
+		sticky: false,
+		time: '3000'
+	});
+}
 
 </script>
 @endsection
