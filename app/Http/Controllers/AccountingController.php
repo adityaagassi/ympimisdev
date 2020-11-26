@@ -10179,11 +10179,13 @@ public function transfer_approvalto($id){
     public function create_cetak_bukti(Request $request){
         try {
             $receive = $request->get('receive');
-            $id_print = 'Receive_'.date('Y-m-d H:i:s');
+            
+            $id_print = $request->get('tanggal_terima').' '.$request->get('date_terima');
+
             foreach ($receive as $rcv) {
 
                 $receive = AccReceiveReport::create([
-                    'id_print' => $id_print,
+                    'id_print' => 'Receive_'.$id_print,
                     'no_po' => $rcv['no_po'],
                     'no_item' => $rcv['no_item'],
                     'nama_item' => $rcv['nama_item'],

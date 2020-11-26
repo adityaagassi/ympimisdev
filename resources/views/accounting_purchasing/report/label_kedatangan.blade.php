@@ -13,7 +13,7 @@
 
 		table, th, td {
 			border: 0px solid;
-			padding: 1.5px;
+			padding: 1.3px;
 		}
 
 		p {
@@ -22,23 +22,24 @@
 		}
 
 		.top {
-			font-size: 8pt;
+			font-size: 7pt;
 			text-align: center;
 		}
 
 		.bottom {
-			font-size: 7pt;
+			font-size: 4pt;
+			font-weight: normal;
 			text-align: center;
-			-moz-transform:scale(1.2,1);
+			-moz-transform:scale(1.4,1);
 		}
 
 		.left {
-			font-size: 8pt;
+			font-size: 7pt;
 			text-align: left;
 		}
 
 		.text {
-			font-size: 8pt;
+			font-size: 7pt;
 			text-align: left;
 		}
 
@@ -116,8 +117,13 @@
 		var date = $('#param_date').val();
 		var qty = $('#param_qty').val();
 		
+		if(desc.length > 60) {
+    		$('#desc').text(desc.substring(0,60) + '...');
+		}
+		else{
+			$('#desc').text(desc);
+		}
 
-		$('#desc').text(desc);
 		$('#po').text(po);
 		$('#date').text(date);
 		$('#quantity').text(qty);

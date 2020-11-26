@@ -1,7 +1,7 @@
 @extends('layouts.display')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
-<link href="{{ url("css/jquery.numpad.css") }}" rel="stylesheet">
+<link rel="stylesheet" href="{{ url("plugins/timepicker/bootstrap-timepicker.min.css")}}">
 
 <style type="text/css">
 	thead>tr>th{
@@ -110,6 +110,15 @@
 
 		<div class="col-xs-12" style="padding-right: 0; padding-left: 0; margin-top: 0%;">
 			<input type="hidden" name="count_po" id="count_po">
+			
+			<div class="col-xs-2 pull-left" style="padding: 0px;">
+				<input type="text" name="tanggal_terima" id="tanggal_terima" class="form-control datepicker" placeholder="Pilih Tanggal Pengiriman Barang">
+			</div>
+
+			<div class="col-xs-2" style="padding:0;">
+				<input type="text" id="date_terima" name="date_terima" class="form-control timepicker" value="06:00">
+			</div>
+
 			<table class="table table-bordered" id="store_table">
 				<thead>
 					<tr>
@@ -132,8 +141,6 @@
 			<br>
 			<div class="col-xs-6 pull-right" align="right" style="padding: 0px;">
 				<button type="button" style="font-size:20px; height: 40px; font-weight: bold; padding: 15%; padding-top: 0px; padding-bottom: 0px;" onclick="conf()" class="btn btn-success"><i class="fa fa-check"></i> SAVE</button>
-			</div>
-			<div class="col-xs-3 pull-right" align="right" style="padding: 0px;">
 			</div>
 		</div>
 	</div>
@@ -166,6 +173,7 @@
 
 @endsection
 @section('scripts')
+<script src="{{ url("plugins/timepicker/bootstrap-timepicker.min.js")}}"></script>
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
 <script src="{{ url("js/jsQR.js")}}"></script>
 <script src="{{ url("js/jquery.numpad.js")}}"></script>
@@ -181,6 +189,18 @@
 	jQuery(document).ready(function() {
 		$('#no_po').focus();
 		$('#confirm').hide();
+
+		$('.timepicker').timepicker({
+			showInputs: false,
+			showMeridian: false,
+			defaultTime: '0:00',
+		});
+
+		$('.datepicker').datepicker({
+			autoclose: true,
+			format: 'yyyy-mm-dd',
+			todayHighlight: true
+		});
 
     	fillTableResult();
 	});
@@ -320,6 +340,8 @@
 		$("#loading").show();
 
 		var arr_params = [];
+		var tanggal_terima = $('#tanggal_terima').val();
+		var date_terima = $('#date_terima').val();
 
 		for (var i = 0;i < $('#count_po').val(); i++) {
 			arr_params.push({
@@ -332,7 +354,10 @@
 		}
 
 		var data = {
-			receive : arr_params
+			receive : arr_params,
+			tanggal_terima : tanggal_terima,
+			date_terima : date_terima
+
 		}
 
 		if(confirm("Apakah anda yakin ingin mencetak bukti penerimaan ini?")){
@@ -346,6 +371,7 @@
 					$("#loading").hide();
 					
 					list = [];
+					fillTableResult();
 				}else{
 					$("#loading").hide();
 					openErrorGritter('Error', result.message);
@@ -375,7 +401,7 @@
 	        tableIsi += '<tr>';
 	        tableIsi += '<td width="5%" style="padding:5px">'+ count +'</td>';
 	        tableIsi += '<td width="30%" style="padding:5px">'+ sub[0] +' '+ sub[1] +'</td>';
-	        tableIsi += '<td><a class="btn btn-danger btn-sm" href="{{ url("index/warehouse/report_bukti") }}/'+value.id_print+'"><i class="fa fa-file-pdf-o"></i> Report Receive</a></td>';
+	        tableIsi += '<td><a target="_blank" class="btn btn-danger btn-sm" href="{{ url("index/warehouse/report_bukti") }}/'+value.id_print+'"><i class="fa fa-file-pdf-o"></i> Report Receive</a></td>';
 
 	        tableIsi += '</tr>';
 	        count += 1;
