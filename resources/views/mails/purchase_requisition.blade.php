@@ -54,7 +54,7 @@
 		<br>
 
 		<span style="font-weight: bold; background-color: orange;">&#8650; <i>Klik disini untuk</i> &#8650;</span><br>
-		<a href="http://172.17.128.4/mirai/public/purchase_requisition/check/{{ $data[0]->id }}">Check PR</a><br>
+		<a href="http://10.109.52.4/mirai/public/purchase_requisition/check/{{ $data[0]->id }}">Check PR</a><br>
 
 		@elseif($data[0]->posisi == "manager" || $data[0]->posisi == "dgm")
 

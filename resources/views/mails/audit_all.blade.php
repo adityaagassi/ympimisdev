@@ -114,7 +114,7 @@
 			</table>
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Klik disini untuk</i> &#8650;</span><br>
-			<a href="http://172.17.128.4/mirai/public/index/audit/print/{{ $id }}">Lihat Report Perbaikan</a><br>
+			<a href="http://10.109.52.4/mirai/public/index/audit/print/{{ $id }}">Lihat Report Perbaikan</a><br>
 
 
 			@endif
