@@ -2621,8 +2621,8 @@ class MiddleProcessController extends Controller
 			$tgl = date('Y-m-d');
 		}
 
-		$tanggal1 = "l.created_at >= '".$tgl." 06:00:01' and l.created_at <= '".$tgl." 15:00:00'";
-		$tanggal2 = "l.created_at >= '".$tgl." 15:00:01' and l.created_at <= '".$tgl." 23:59:59'";
+		$tanggal1 = "l.created_at >= '".$tgl." 07:00:01' and l.created_at <= '".$tgl." 16:00:00'";
+		$tanggal2 = "l.created_at >= '".$tgl." 16:00:01' and l.created_at <= '".$tgl." 23:59:59'";
 		$tanggal = "l.created_at >= '".$tgl." 00:00:01' and l.created_at <= '".$tgl." 06:00:00'";
 
 		$addlocation = "";
