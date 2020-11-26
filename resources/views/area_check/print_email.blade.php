@@ -53,7 +53,7 @@
 		<table class="table" style="border: 1px solid black;">
 			<tbody>
 				<tr>
-					<td colspan="{{ $countdate+1 }}" style="border: 1px solid black;"><img width="80px" src="{{ asset('images/logo_yamaha2.png') }}" alt=""></td>
+					<td colspan="{{ $countdate+1 }}" style="border: 1px solid black;"><img width="80px" src="{{ public_path('images/logo_yamaha2.png') }}" alt=""></td>
 				</tr>
 				<tr>
 					<td style="border: 1px solid black;vertical-align: middle;padding-top: 0px;padding-bottom: 0px" colspan="{{ $countdate+1 }}">PT. YAMAHA MUSICAL PRODUCTS INDONESIA

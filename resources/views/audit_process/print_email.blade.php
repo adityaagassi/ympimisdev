@@ -49,7 +49,7 @@
 			<tbody>
 				<tr>
 					<td colspan="10" style="padding-top: 0px;padding-bottom: 0px;">
-						<img style="width: 80px" src="{{ asset('images/logo_yamaha2.png') }}" alt="">
+						<img style="width: 80px" src="{{ public_path('images/logo_yamaha2.png') }}" alt="">
 					</td>
 				</tr>
 				<tr>

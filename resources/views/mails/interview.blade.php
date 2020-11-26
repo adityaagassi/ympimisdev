@@ -48,7 +48,7 @@
 					<tr>
 						<td style="border:1px solid black; text-align: center;">{{$i}}</td>
 						<td style="border:1px solid black; text-align: center;">{{strtoupper($col->section)}}</td>
-						<td style="border:1px solid black; text-align: center;">strtoupper({{$col->subsection}})</td>
+						<td style="border:1px solid black; text-align: center;">{{strtoupper($col->subsection)}}</td>
 						<td style="border:1px solid black; text-align: center;">{{$col->periode}}</td>
 						<td style="border:1px solid black; text-align: center;">{{$col->date}}</td>
 						<td style="border:1px solid black; text-align: center;">{{$col->leader}}</td>

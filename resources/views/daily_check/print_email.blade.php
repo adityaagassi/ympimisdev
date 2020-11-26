@@ -49,7 +49,7 @@
 		<table class="table" style="border: 1px solid black;">
 			<tbody>
 				<tr>
-					<td colspan="12" style="border: 1px solid black;"><img width="80px" src="{{ asset('images/logo_yamaha2.png') }}" alt=""></td>
+					<td colspan="12" style="border: 1px solid black;"><img width="80px" src="{{ public_path('images/logo_yamaha2.png') }}" alt=""></td>
 				</tr>
 				<tr>
 					<td style="border: 1px solid black;vertical-align: middle;" colspan="12">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>

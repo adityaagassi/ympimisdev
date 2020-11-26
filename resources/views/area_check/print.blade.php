@@ -30,7 +30,7 @@ text-align: center
     <table style="width: 100%; border-collapse: collapse; text-align: left;" >
       <tbody style="font-size: 10px">
 		<tr>
-			<td colspan="{{$countdate+1}}" style="border: 1px solid black;"><img width="80px" src="{{ asset('images/logo_yamaha2.png') }}" alt=""></td>
+			<td colspan="{{$countdate+1}}" style="border: 1px solid black;"><img width="80px" src="{{ public_path('images/logo_yamaha2.png') }}" alt=""></td>
 		</tr>
 		<tr>
 			<td style="border: 1px solid black;vertical-align: middle;" colspan="{{$countdate+1}}">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>

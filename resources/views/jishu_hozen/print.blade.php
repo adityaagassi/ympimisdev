@@ -39,7 +39,7 @@ table > tbody > tr > td{
     <table style="width: 100%; border-collapse: collapse;" >
 			<tbody>
 				<tr>
-					<td colspan="8" style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;"><img width="80px" src="{{ asset('images/logo_yamaha2.png') }}" alt=""></td>
+					<td colspan="8" style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;"><img width="80px" src="{{ public_path('images/logo_yamaha2.png') }}" alt=""></td>
 				</tr>
 				<tr>
 					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;" colspan="8"  class="head">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
