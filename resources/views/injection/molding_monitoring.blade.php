@@ -102,151 +102,33 @@ table > thead > tr > th{
 @section('content')
 <section class="content" style="padding-top: 0;">
 	<div class="row">
-		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top: 0px;">
-			<center><a style="font-size: 2vw; font-weight: bold;color: white"> MOLDING MAINTENANCE MONITORING </a><a style="font-size: 2vw; font-weight: bold; color: white"> (金型保全管理)</a></center>
-			<div class="row" style="margin:0px;">
-				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
-			</div>
-		</div>
-		<div class="col-xs-9">
+		<div class="col-xs-12">
 			<div class="row">
+				<center><h4 style="font-weight: bold;font-size: 35px;padding: 10px;;background-color: #42d4f5;color: black">MOLDING TERPASANG</h4></center>
 				<div id="cont"></div>
 			</div>
 		</div>
-		<!-- <div class="col-xs-3">
-			<div class="box box-solid">
-				<div class="box-header" style="background-color: #65ff57;">
-					<center><span style="font-size: 22px; font-weight: bold; color: black;">MOLDING READY</span></center>
-				</div>
-				<ul class="nav nav-pills nav-stacked">
-					<li>
-						<table class="table-responsive" style="width: 100%;color: black;text-align: center;">
-							<thead>
-								<tr>
-									<td style="border-bottom: 2px solid #545454;border-right: 2px solid #ff0000">Molding</td>
-									<td style="border-bottom: 2px solid #545454;border-left: 2px solid #ff0000">Qty</td>
-									<td style="border-bottom: 2px solid #545454;border-left: 2px solid #ff0000">Lokasi</td>
-								</tr>
-							</thead>
-							<tbody id="bodyMoldingReady">
-								<tr>
-									<td>
-										
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</li>
-				</ul>
-			</div>
-			<div class="box box-solid">
-				<div class="box-header" style="background-color: #ff7878;">
-					<center><span style="font-size: 15px; font-weight: bold; color: black;">MOLDING BELUM MAINTENANCE</span></center>
-				</div>
-				<ul class="nav nav-pills nav-stacked">
-					<li>
-						<table class="table-responsive" style="width: 100%;color: black;text-align: center;">
-							<thead>
-								<tr>
-									<td style="border-bottom: 2px solid #545454;border-right: 2px solid #ff0000">Molding</td>
-									<td style="border-bottom: 2px solid #545454;border-left: 2px solid #ff0000">Qty</td>
-									<td style="border-bottom: 2px solid #545454;border-left: 2px solid #ff0000">Lokasi</td>
-								</tr>
-							</thead>
-							<tbody id="bodyMoldingNotReady">
-								<tr>
-									<td>
-										
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</li>
-				</ul>
-			</div>
-			<div class="box box-solid">
-				<div class="box-header" style="background-color: #ffcf30;">
-					<center><span style="font-size: 15px; font-weight: bold; color: black;">MOLDING SEDANG MAINTENANCE</span></center>
-				</div>
-				<ul class="nav nav-pills nav-stacked">
-					<li>
-						<table class="table-responsive" style="width: 100%;color: black;text-align: center;">
-							<thead>
-								<tr>
-									<td style="border-bottom: 2px solid #545454;border-right: 2px solid #ff0000">Molding</td>
-									<td style="border-bottom: 2px solid #545454;border-left: 2px solid #ff0000">Qty</td>
-									<td style="border-bottom: 2px solid #545454;border-left: 2px solid #ff0000">Lokasi</td>
-								</tr>
-							</thead>
-							<tbody id="bodyMoldingMaintenance">
-								<tr>
-									<td>
-										
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</li>
-				</ul>
+
+		<div class="col-xs-12">
+			<div class="row">
+				<center><h4 style="font-weight: bold;font-size: 35px;padding: 10px;;background-color: #69f542;color: black">MOLDING READY</h4></center>
+				<div id="cont3"></div>
 			</div>
 		</div>
-	</div> -->
 
-	
+		<div class="col-xs-12">
+			<div class="row">
+				<center><h4 style="font-weight: bold;font-size: 35px;padding: 10px;;background-color: #f59042;color: black">MOLDING PERIODIK</h4></center>
+				<div id="cont2"></div>
+			</div>
+		</div>
 </section>
-
-<div class="modal fade" id="myModal">
-    <div class="modal-dialog" style="width:1250px;">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 style="float: right;" id="modal-title"></h4>
-          <h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
-          <br><h4 class="modal-title" id="judul_table"></h4>
-        </div>
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-md-12">
-              <table id="tableResult" class="table table-striped table-bordered table-hover" style="width: 100%;"> 
-                <thead style="background-color: rgba(126,86,134,.7);">
-                  <tr>
-                  	<th>Nomor</th>
-                    <th>Mesin</th>
-                    <th>Part</th>
-                    <th>Color</th>    
-                    <th>Running Time</th>
-                    <th>NG</th>
-                    <th>PIC</th>
-                  </tr>
-                </thead>
-                <tbody id="tableBodyResult">
-                </tbody>
-                <tfoot>
-				</tfoot>
-              </table>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
 @endsection
 @section('scripts')
-<!-- <script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/highcharts-more.js"></script>
-<script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script src="https://code.highcharts.com/modules/export-data.js"></script>
-<script src="https://code.highcharts.com/modules/accessibility.js"></script> -->
-<!-- <script src="{{ url("js/highstock.js")}}"></script>
-<script src="{{ url("js/highcharts-3d.js")}}"></script> -->
 <script src="{{ url("js/highcharts.js")}}"></script>
 <script src="{{ url("js/highcharts-more.js")}}"></script>
 <script src="{{ url("js/solid-gauge.js")}}"></script>
 <script src="{{ url("js/accessibility.js")}}"></script>
-<!-- <script src="{{ url("js/export-data.js")}}"></script> -->
 <script src="{{ url("js/exporting.js")}}"></script>
 
 <script>
@@ -257,17 +139,8 @@ table > thead > tr > th{
 	});
 
 	jQuery(document).ready(function(){
-		$('.select2').select2();
 		fillChart();
-		setInterval(fillChart, 10000);
-	});
-
-	$('.datepicker').datepicker({
-		<?php $tgl_max = date('Y-m-d') ?>
-		autoclose: true,
-		format: "yyyy-mm-dd",
-		todayHighlight: true,	
-		endDate: '<?php echo $tgl_max ?>'
+		// setInterval(fillChart, 10000);
 	});
 
 	Highcharts.createElement('link', {
@@ -275,204 +148,6 @@ table > thead > tr > th{
 		rel: 'stylesheet',
 		type: 'text/css'
 	}, null, document.getElementsByTagName('head')[0]);
-
-	// Highcharts.theme = {
-	// 	colors: ['#90ee7e', '#2b908f', '#eeaaee', '#ec407a', '#7798BF', '#f45b5b',
-	// 	'#ff9800', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
-	// 	chart: {
-	// 		backgroundColor: {
-	// 			linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
-	// 			stops: [
-	// 			[0, '#2a2a2b'],
-	// 			[1, '#3e3e40']
-	// 			]
-	// 		},
-	// 		style: {
-	// 			fontFamily: 'sans-serif'
-	// 		},
-	// 		plotBorderColor: '#606063'
-	// 	},
-	// 	title: {
-	// 		style: {
-	// 			color: '#E0E0E3',
-	// 			textTransform: 'uppercase',
-	// 			fontSize: '20px'
-	// 		}
-	// 	},
-	// 	subtitle: {
-	// 		// style: {
-	// 		// 	color: '#E0E0E3',
-	// 		// 	textTransform: 'uppercase'
-	// 		// }
-	// 	},
-	// 	xAxis: {
-	// 		gridLineColor: '#707073',
-	// 		labels: {
-	// 			style: {
-	// 				color: '#E0E0E3'
-	// 			}
-	// 		},
-	// 		lineColor: '#707073',
-	// 		minorGridLineColor: '#505053',
-	// 		tickColor: '#707073',
-	// 		title: {
-	// 			style: {
-	// 				color: '#A0A0A3'
-
-	// 			}
-	// 		}
-	// 	},
-	// 	yAxis: {
-	// 		gridLineColor: '#707073',
-	// 		labels: {
-	// 			style: {
-	// 				color: '#E0E0E3'
-	// 			}
-	// 		},
-	// 		lineColor: '#707073',
-	// 		minorGridLineColor: '#505053',
-	// 		tickColor: '#707073',
-	// 		tickWidth: 1,
-	// 		title: {
-	// 			style: {
-	// 				color: '#A0A0A3'
-	// 			}
-	// 		}
-	// 	},
-	// 	tooltip: {
-	// 		backgroundColor: 'rgba(0, 0, 0, 0.85)',
-	// 		style: {
-	// 			color: '#F0F0F0'
-	// 		}
-	// 	},
-	// 	plotOptions: {
-	// 		series: {
-	// 			dataLabels: {
-	// 				color: 'white'
-	// 			},
-	// 			marker: {
-	// 				lineColor: '#333'
-	// 			}
-	// 		},
-	// 		boxplot: {
-	// 			fillColor: '#505053'
-	// 		},
-	// 		candlestick: {
-	// 			lineColor: 'white'
-	// 		},
-	// 		errorbar: {
-	// 			color: 'white'
-	// 		}
-	// 	},
-	// 	legend: {
-	// 		itemStyle: {
-	// 			color: '#E0E0E3'
-	// 		},
-	// 		itemHoverStyle: {
-	// 			color: '#FFF'
-	// 		},
-	// 		itemHiddenStyle: {
-	// 			color: '#606063'
-	// 		}
-	// 	},
-	// 	credits: {
-	// 		style: {
-	// 			color: '#666'
-	// 		}
-	// 	},
-	// 	labels: {
-	// 		style: {
-	// 			color: '#707073'
-	// 		}
-	// 	},
-
-	// 	drilldown: {
-	// 		activeAxisLabelStyle: {
-	// 			color: '#F0F0F3'
-	// 		},
-	// 		activeDataLabelStyle: {
-	// 			color: '#F0F0F3'
-	// 		}
-	// 	},
-
-	// 	navigation: {
-	// 		buttonOptions: {
-	// 			symbolStroke: '#DDDDDD',
-	// 			theme: {
-	// 				fill: '#505053'
-	// 			}
-	// 		}
-	// 	},
-
-	// 	rangeSelector: {
-	// 		buttonTheme: {
-	// 			fill: '#505053',
-	// 			stroke: '#000000',
-	// 			style: {
-	// 				color: '#CCC'
-	// 			},
-	// 			states: {
-	// 				hover: {
-	// 					fill: '#707073',
-	// 					stroke: '#000000',
-	// 					style: {
-	// 						color: 'white'
-	// 					}
-	// 				},
-	// 				select: {
-	// 					fill: '#000003',
-	// 					stroke: '#000000',
-	// 					style: {
-	// 						color: 'white'
-	// 					}
-	// 				}
-	// 			}
-	// 		},
-	// 		inputBoxBorderColor: '#505053',
-	// 		inputStyle: {
-	// 			backgroundColor: '#333',
-	// 			color: 'silver'
-	// 		},
-	// 		labelStyle: {
-	// 			color: 'silver'
-	// 		}
-	// 	},
-
-	// 	navigator: {
-	// 		handles: {
-	// 			backgroundColor: '#666',
-	// 			borderColor: '#AAA'
-	// 		},
-	// 		outlineColor: '#CCC',
-	// 		maskFill: 'rgba(255,255,255,0.1)',
-	// 		series: {
-	// 			color: '#7798BF',
-	// 			lineColor: '#A6C7ED'
-	// 		},
-	// 		xAxis: {
-	// 			gridLineColor: '#505053'
-	// 		}
-	// 	},
-
-	// 	scrollbar: {
-	// 		barBackgroundColor: '#808083',
-	// 		barBorderColor: '#808083',
-	// 		buttonArrowColor: '#CCC',
-	// 		buttonBackgroundColor: '#606063',
-	// 		buttonBorderColor: '#606063',
-	// 		rifleColor: '#FFF',
-	// 		trackBackgroundColor: '#404043',
-	// 		trackBorderColor: '#404043'
-	// 	},
-
-	// 	legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
-	// 	background2: '#505053',
-	// 	dataLabelsColor: '#B0B0B3',
-	// 	textColor: '#C0C0C0',
-	// 	contrastTextColor: '#F0F0F3',
-	// 	maskColor: 'rgba(255,255,255,0.3)'
-	// };
-	// Highcharts.setOptions(Highcharts.theme);
 
 	function addZero(i) {
 		if (i < 10) {
@@ -501,72 +176,15 @@ table > thead > tr > th{
 	}
 
 	function fillChart() {
-		// var proses = $('#process').val();
-		var tgl = $('#tanggal').val();
 
-		if (tgl == '') {
-			tgl = '{{ date("Y-m-d")}}';
-		}
-		
-		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
-		
-		var data = {
-			tgl:tgl
-			// proses:proses
-		}
-
-		$.get('{{ url("fetch/molding_monitoring") }}',data, function(result, status, xhr) {
+		$.get('{{ url("fetch/molding_monitoring") }}', function(result, status, xhr) {
 			if(xhr.status == 200){
 				if(result.status){
-					$('#bodyMoldingReady').html("");
-					$('#bodyMoldingNotReady').html("");
-					$('#bodyMoldingMaintenance').html("");
-
-					var moldingReady = "";
-					var moldingNotReady = "";
-					var moldingMaintenance = "";
-
-					$.each(result.query_ready, function(key, value) {
-						moldingReady += '<tr>';
-						moldingReady += '<td style="border: 1px solid #545454;">'+value.part+'</td>';
-						moldingReady += '<td style="border: 1px solid #545454;">'+value.last_counter+'</td>';
-						if (value.status == 'LEPAS') {
-							moldingReady += '<td style="border: 1px solid #545454;">STORAGE</td>';
-						}
-						moldingReady += '</tr>';
-					});
-					$('#bodyMoldingReady').append(moldingReady);
-
-					$.each(result.query_not_ready, function(key, value) {
-						moldingNotReady += '<tr>';
-						moldingNotReady += '<td>'+value.part+'</td>';
-						moldingNotReady += '<td>'+value.last_counter+'</td>';
-						if (value.status == 'LEPAS') {
-							moldingNotReady += '<td>STORAGE</td>';
-						}else{
-							moldingNotReady += '<td>'+status+'</td>';
-						}
-						moldingNotReady += '</tr>';
-					});
-					$('#bodyMoldingNotReady').append(moldingNotReady);
-
-					$.each(result.query_maintenance, function(key, value) {
-						moldingMaintenance += '<tr>';
-						moldingMaintenance += '<td>'+value.part+'</td>';
-						moldingMaintenance += '<td>'+value.last_counter+'</td>';
-						if (value.status == 'LEPAS') {
-							moldingMaintenance += '<td>STORAGE</td>';
-						}else{
-							moldingMaintenance += '<td>'+status+'</td>';
-						}
-						moldingMaintenance += '</tr>';
-					});
-					$('#bodyMoldingMaintenance').append(moldingMaintenance);
 
 					$('#cont').empty();
+					$('#cont2').empty();
+					$('#cont3').empty();
 
-					//Chart Machine Report
-					// var jumlah_ok = [];
 					var part = [];
 					var product = [];
 					var last_counter = [];
@@ -579,29 +197,21 @@ table > thead > tr > th{
 					for (var i = 0; i < result.query_pasang.length; i++) {
 						part.push(result.query_pasang[i].part);
 						product.push(result.query_pasang[i].product);
-						// jumlah_ok.push(parseInt(result.query_pasang[i].jumlah_ok));
-						last_counter.push(parseInt(result.query_pasang[i].last_counter));
+						last_counter.push(parseInt((parseInt(result.query_pasang[i].last_counter) / parseInt(result.query_pasang[i].qty_shot)).toFixed(0)));
 						ng_count.push(parseInt(result.query_pasang[i].ng_count));
 						if (result.query_pasang[i].status_mesin == null) {
 							status_mesin.push('STORAGE');
 						}else{
 							status_mesin.push(result.query_pasang[i].status_mesin);
 						}
+						data.push([parseInt((parseInt(result.query_pasang[i].last_counter) / parseInt(result.query_pasang[i].qty_shot)).toFixed(0))]);
 
-						if(result.query_pasang[i].last_counter >= 15000){
-							data.push([result.query_pasang[i].last_counter]);
-						}else{
-							data.push([result.query_pasang[i].last_counter])
-						}
 						var a = i+1;
 						body += '<div class="gambar" id="container'+a+'"></div>';
 					}
 					$('#cont').append(body);
 
-					// console.log(part.length);
-
 					for (var j = 0; j < part.length; j++) {
-						// console.log(part[j]);
 						var gaugeOptions = {
 						    chart: {
 						        type: 'solidgauge',
@@ -676,11 +286,9 @@ table > thead > tr > th{
 
 		            	'<tr><td style="border: 1px solid #fff !important;padding-left:40px;padding-right:40px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">LOC</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+status_mesin[j]+'</td></tr>' +
 		            	'</table>';
-						// var parta = '<div style="font-size:40px;color:#fff;text-decoration: none">'+part[j]+'</div><br><div style="font-size:25px;color:#fff;text-decoration: none">SHOTS : '+last_counter[j]+'</div><br><div style="font-size:25px;color:#fff;text-decoration: none">NG : '+ng_count[j]+'</div><br><div style="font-size:25px;color:#fff;text-decoration: none">LOC : '+status_mesin[j]+'</div>';
 
 						var parta = '<div style="font-size:25px;color:#fff;text-decoration: none">'+part[j]+'</div>';
 
-						// The speed gauge
 						var chartSpeed = Highcharts.chart(container, Highcharts.merge(gaugeOptions, {
 						    yAxis: {
 						        min: 0,
@@ -692,7 +300,6 @@ table > thead > tr > th{
 											textTransform: 'uppercase',
 											fontSize: '30px',
 										}
-									// enabled:false
 						        },
 						        tickPositions: [0, 15000]
 						    },
@@ -705,13 +312,8 @@ table > thead > tr > th{
 						        name: 'Shots',
 						        data: [b],
 						        dataLabels: {
-						        	// enabled:false
 						            format:
 						            	tabel
-						                // '<div style="text-align:center">' +
-						                // '<span style="font-size:40px;color:white">{y}</span><br/>' +
-						                // '<span style="font-size:12px;color:white">Shots</span>' +
-						                // '</div>'
 						        },
 						        animation: false,
 						        tooltip: {
@@ -720,93 +322,294 @@ table > thead > tr > th{
 						    }]
 
 						}));
+					}
 
-						
+					var part_maintenance = [];
+					var product_maintenance = [];
+					var last_counter_maintenance = [];
+					var ng_count_maintenance = [];
+					var color_maintenance = [];
+					var status_mesin_maintenance = [];
+					var data_maintenance = [];
+					var body_maintenance = '';
 
+					for (var i = 0; i < result.query_not_ready.length; i++) {
+						part_maintenance.push(result.query_not_ready[i].part);
+						product_maintenance.push(result.query_not_ready[i].product);
+						last_counter_maintenance.push(parseInt((parseInt(result.query_not_ready[i].last_counter) / parseInt(result.query_not_ready[i].qty_shot)).toFixed(0)));
+						ng_count_maintenance.push(parseInt(result.query_not_ready[i].ng_count));
+						if (result.query_not_ready[i].status_mesin == null && result.query_not_ready[i].status == "LEPAS") {
+							status_mesin_maintenance.push('STORAGE');
+						}else if(result.query_not_ready[i].status_mesin == null && result.query_not_ready[i].status == "DIPERBAIKI"){
+							status_mesin_maintenance.push('PERIODIK');
+						}else{
+							status_mesin_maintenance.push(result.query_not_ready[i].status_mesin);
+						}
+						data_maintenance.push([parseInt((parseInt(result.query_not_ready[i].last_counter) / parseInt(result.query_not_ready[i].qty_shot)).toFixed(0))]);
 
+						var a = i+1;
+						body_maintenance += '<div class="gambar" id="container2'+a+'"></div>';
+					}
+					$('#cont2').append(body_maintenance);
+
+					for (var k = 0; k < part_maintenance.length; k++) {
+						var gaugeOptions2 = {
+						    chart: {
+						        type: 'solidgauge',
+						        backgroundColor:null
+						    },
+
+						    title: null,
+
+						    pane: {
+						        center: ['50%', '50%'],
+						        size: '100%',
+						        startAngle: -90,
+						        endAngle: 90,
+						        background: {
+						            backgroundColor:
+						                Highcharts.defaultOptions.legend.backgroundColor || '#EEE',
+						            innerRadius: '60%',
+						            outerRadius: '100%',
+						            shape: 'arc'
+						        }
+						    },
+
+						    exporting: {
+						        enabled: false
+						    },
+
+						    tooltip: {
+						        enabled: false
+						    },
+
+						    // the value axis
+						    yAxis: {
+						        stops: [
+						            [0.1, '#55BF3B'], // green
+						            [0.5, '#DDDF0D'], // yellow
+						            [0.7, '#DF5353'] // red
+						        ],
+						        lineWidth: 0,
+						        tickWidth: 0,
+						        minorTickInterval: null,
+						        tickAmount: 2,
+						        title: {
+						            y: 125
+						        },
+						        labels: {
+						            y: 30,
+						            style:{
+						            	color:'#fff',
+						            	fontSize:'20px'
+						            }
+						        },
+						    },
+
+						    plotOptions: {
+						        solidgauge: {
+						            dataLabels: {
+						                y: 182,
+						                borderWidth: 0,
+						                useHTML: true
+						            }
+						        }
+						    }
+						};
+
+						var a = k+1;
+						var container = 'container2'+a;
+						var b = data_maintenance[k];
+						var tabel = 
+						'<table style="text-align:center;margin-right:-30px;"><tr><td style="width:200px;border: 1px solid #fff !important;padding-left:40px;padding-right:40px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px;text-align:left">SHOTS</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+last_counter_maintenance[k]+'</td></tr>' +
+
+		            	'<tr><td style="border: 1px solid #fff !important;padding-left:40px;padding-right:40px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">NG</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+ng_count_maintenance[k]+'</td></tr>' +
+
+		            	'<tr><td style="border: 1px solid #fff !important;padding-left:40px;padding-right:40px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">LOC</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+status_mesin_maintenance[k]+'</td></tr>' +
+		            	'</table>';
+
+						var parta = '<div style="font-size:25px;color:#fff;text-decoration: none">'+part_maintenance[k]+'</div>';
+
+						var chartSpeed2 = Highcharts.chart(container, Highcharts.merge(gaugeOptions2, {
+						    yAxis: {
+						        min: 0,
+						        max: 15000,
+						        title: {
+						            text: parta,
+						            style: {
+											color: '#000',
+											textTransform: 'uppercase',
+											fontSize: '30px',
+										}
+						        },
+						        tickPositions: [0, 15000]
+						    },
+
+						    credits: {
+						        enabled: false
+						    },
+
+						    series: [{
+						        name: 'Shots',
+						        data: [b],
+						        dataLabels: {
+						            format:
+						            	tabel
+						        },
+						        animation: false,
+						        tooltip: {
+						            valueSuffix: ' Shot'
+						        }
+						    }]
+
+						}));
+					}
+
+					var part_ready = [];
+					var product_ready = [];
+					var last_counter_ready = [];
+					var ng_count_ready = [];
+					var color_ready = [];
+					var status_mesin_ready = [];
+					var data_ready = [];
+					var body_ready = '';
+
+					for (var i = 0; i < result.query_ready.length; i++) {
+						part_ready.push(result.query_ready[i].part);
+						product_ready.push(result.query_ready[i].product);
+						last_counter_ready.push(parseInt((parseInt(result.query_ready[i].last_counter) / parseInt(result.query_ready[i].qty_shot)).toFixed(0)));
+						ng_count_ready.push(parseInt(result.query_ready[i].ng_count));
+						if (result.query_ready[i].status_mesin == null && result.query_ready[i].status == "LEPAS") {
+							status_mesin_ready.push('STORAGE');
+						}else if(result.query_ready[i].status_mesin == null && result.query_ready[i].status == "DIPERBAIKI"){
+							status_mesin_ready.push('PERIODIK');
+						}else{
+							status_mesin_ready.push(result.query_ready[i].status_mesin);
+						}
+						data_ready.push([parseInt((parseInt(result.query_ready[i].last_counter) / parseInt(result.query_ready[i].qty_shot)).toFixed(0))]);
+
+						var a = i+1;
+						body_ready += '<div class="gambar" id="container3'+a+'"></div>';
+					}
+					$('#cont3').append(body_ready);
+
+					for (var k = 0; k < part_ready.length; k++) {
+						var gaugeOptions2 = {
+						    chart: {
+						        type: 'solidgauge',
+						        backgroundColor:null
+						    },
+
+						    title: null,
+
+						    pane: {
+						        center: ['50%', '50%'],
+						        size: '100%',
+						        startAngle: -90,
+						        endAngle: 90,
+						        background: {
+						            backgroundColor:
+						                Highcharts.defaultOptions.legend.backgroundColor || '#EEE',
+						            innerRadius: '60%',
+						            outerRadius: '100%',
+						            shape: 'arc'
+						        }
+						    },
+
+						    exporting: {
+						        enabled: false
+						    },
+
+						    tooltip: {
+						        enabled: false
+						    },
+
+						    // the value axis
+						    yAxis: {
+						        stops: [
+						            [0.1, '#55BF3B'], // green
+						            [0.5, '#DDDF0D'], // yellow
+						            [0.7, '#DF5353'] // red
+						        ],
+						        lineWidth: 0,
+						        tickWidth: 0,
+						        minorTickInterval: null,
+						        tickAmount: 2,
+						        title: {
+						            y: 125
+						        },
+						        labels: {
+						            y: 30,
+						            style:{
+						            	color:'#fff',
+						            	fontSize:'20px'
+						            }
+						        },
+						    },
+
+						    plotOptions: {
+						        solidgauge: {
+						            dataLabels: {
+						                y: 182,
+						                borderWidth: 0,
+						                useHTML: true
+						            }
+						        }
+						    }
+						};
+
+						var a = k+1;
+						var container = 'container3'+a;
+						var b = data_ready[k];
+						var tabel = 
+						'<table style="text-align:center;margin-right:-30px;"><tr><td style="width:200px;border: 1px solid #fff !important;padding-left:40px;padding-right:40px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px;text-align:left">SHOTS</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+last_counter_ready[k]+'</td></tr>' +
+
+		            	'<tr><td style="border: 1px solid #fff !important;padding-left:40px;padding-right:40px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">NG</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+ng_count_ready[k]+'</td></tr>' +
+
+		            	'<tr><td style="border: 1px solid #fff !important;padding-left:40px;padding-right:40px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">LOC</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+status_mesin_ready[k]+'</td></tr>' +
+		            	'</table>';
+
+						var parta = '<div style="font-size:25px;color:#fff;text-decoration: none">'+part_ready[k]+'</div>';
+
+						var chartSpeed2 = Highcharts.chart(container, Highcharts.merge(gaugeOptions2, {
+						    yAxis: {
+						        min: 0,
+						        max: 15000,
+						        title: {
+						            text: parta,
+						            style: {
+											color: '#000',
+											textTransform: 'uppercase',
+											fontSize: '30px',
+										}
+						        },
+						        tickPositions: [0, 15000]
+						    },
+
+						    credits: {
+						        enabled: false
+						    },
+
+						    series: [{
+						        name: 'Shots',
+						        data: [b],
+						        dataLabels: {
+						            format:
+						            	tabel
+						        },
+						        animation: false,
+						        tooltip: {
+						            valueSuffix: ' Shot'
+						        }
+						    }]
+
+						}));
 					}
 				}
 			}
 		});
 
 	}
-
-	function ShowModal(mesin,tanggal) {
-
-	    $("#myModal").modal("show");
-
-	    var data = {
-	    	mesin:mesin,
-			tanggal:tanggal
-		}
-
-	    $.get('{{ url("fetch/detailDailyNG") }}', data, function(result, status, xhr){
-			if(result.status){
-				$('#tableResult').DataTable().clear();
-				$('#tableResult').DataTable().destroy();
-				$('#tableBodyResult').html("");
-				var tableData = "";
-				var count = 1;
-				var ng = [];
-				$.each(result.lists, function(key, value) {
-					tableData += '<tr>';
-					tableData += '<td>'+ count +'</td>';
-					tableData += '<td>'+ value.mesin +'</td>';
-					tableData += '<td>'+ value.part_name +'</td>';
-					tableData += '<td>'+ value.color +'</td>';
-					var a = value.running_time.split(':');
-					var minutes = (+a[0]) * 60 + (+a[1]) + ((+a[2]) / 60);
-					tableData += '<td>'+ parseFloat(minutes).toFixed(2) + ' Minutes</td>';
-					var ng_name = value.ng_name.split(",");
-					var ng_count = value.ng_count.split(",");
-					for (var i = 0; i < ng_name.length; i++) {
-						ng.push('<label class="label label-danger">'+ng_name[i] + ' = ' + ng_count[i] + '</label><br>');
-					}
-					tableData += '<td>'+ ng.join(' ') +'</td>';
-					tableData += '<td>'+ value.pic +'</td>';
-					tableData += '</tr>';
-					count += 1;
-				});
-				$('#tableBodyResult').append(tableData);
-				$('#tableResult').DataTable({
-					'dom': 'Bfrtip',
-					'responsive':true,
-					'lengthMenu': [
-					[ 5, 10, 25, -1 ],
-					[ '5 rows', '10 rows', '25 rows', 'Show all' ]
-					],
-					'buttons': {
-						buttons:[
-						{
-							extend: 'pageLength',
-							className: 'btn btn-default',
-						},
-						
-						]
-					},
-					'paging': true,
-					'lengthChange': true,
-					'pageLength': 5,
-					'searching': true,
-					'ordering': true,
-					'order': [],
-					'info': true,
-					'autoWidth': true,
-					"sPaginationType": "full_numbers",
-					"bJQueryUI": true,
-					"bAutoWidth": false,
-					"processing": true
-				});
-			}
-			else{
-				alert('Attempt to retrieve data failed');
-			}
-		});
-
-	    $('#judul_table').append().empty();
-	    $('#judul_table').append('<center>Daily NG Tanggal <b>'+tanggal+'</b> di <b>'+mesin+'</b></center>');
-	    
-	  }
 
 
 </script>

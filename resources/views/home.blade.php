@@ -88,6 +88,10 @@
                                 <i class="fa fa-caret-right"></i> Dropbox Surat Dokter (診断書のドロップボックス)
                             </a>
                             <br>
+                            <a href="{{ url("index/general/agreement") }}">
+                                <i class="fa fa-caret-right"></i> Company Agreement List (会社の契約書)
+                            </a>
+                            <br>
                         </td>
                     </tr>
                     <tr>
@@ -300,6 +304,10 @@
                             <br>
                             <a href="{{ url("/index/audit?category=kanban") }}">
                                 <i class="fa fa-caret-right"></i> Audit Kanban (かんばん監査)
+                            </a>
+                            <br>
+                            <a href="{{ url("/index/audit_internal_mis?category=audit_mis") }}">
+                                <i class="fa fa-caret-right"></i> Audit MIS ()
                             </a>
                             <br>
                             <a href="{{ url("/index/form_experience") }}">

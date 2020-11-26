@@ -3062,13 +3062,16 @@ class InjectionsController extends Controller
             //     $tgl = $request->get('tgl');
             // }
 
-        $query_pasang = DB::SELECT("SELECT * FROM `injection_molding_masters` where remark = 'RC'");
-        $query_ready = DB::SELECT("SELECT * FROM `injection_molding_masters` where remark = 'RC' and status = 'LEPAS'");
+        $query_pasang = DB::SELECT("SELECT * FROM `injection_molding_masters` where remark = 'RC' and status = 'PASANG' order by COALESCE(SUBSTR(status_mesin,LENGTH(SUBSTR(status_mesin,1,7)),8),0)");
+
+        $query_ready = DB::SELECT("SELECT * FROM `injection_molding_masters` where remark = 'RC' and status = 'LEPAS' order by COALESCE(SUBSTR(status_mesin,LENGTH(SUBSTR(status_mesin,1,7)),8),0)");
         $query_not_ready = DB::SELECT("SELECT
             * 
         FROM
             `injection_molding_masters` 
         WHERE
+        ( remark = 'RC' AND status = 'DIPERBAIKI' ) 
+        OR
             ( remark = 'RC' AND status = 'HARUS MAINTENANCE' ) 
             OR (
                 remark = 'RC' 

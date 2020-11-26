@@ -21,6 +21,8 @@ use App\GeneralShoesLog;
 use App\GeneralShoesRequest;
 use App\GeneralShoesStock;
 use App\User;
+use App\Agreement;
+use App\AgreementAttachment;
 use Auth;
 use DataTables;
 use Response;
@@ -48,6 +50,319 @@ class GeneralController extends Controller{
 			'Welding-Printer'
 		];
 
+		$this->agreement_statuses = [
+			'In Use',
+			'Terminated',
+		];
+
+	}
+
+	public function indexAgreement(){
+
+		$title = "Company Agreement List";
+		$title_jp = "会社の契約書";
+
+		$employees = EmployeeSync::orderBy('department', 'asc')->get();
+
+		return view('general.agreements.index', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'employees' => $employees,
+			'agreement_statuses' => $this->agreement_statuses
+		));
+
+	}
+
+	public function editAgreement(Request $request){
+		$filename = "";
+		$file_destination = 'files/agreements';
+
+		if (count($request->file('newAttachment')) > 0) {
+			$file = $request->file('newAttachment');
+			$filename = date('YmdHis').'.'.$request->input('extension');
+			$file->move($file_destination, $filename);
+		}
+		else{
+			$response = array(
+				'status' => false,
+				'message' => 'Please select file to attach'
+			);
+			return Response::json($response);
+		}
+
+		try{
+			$agreement = Agreement::where('id', '=', $request->get('newId'))->first();
+
+			if($agreement->department == $request->input('newDepartment') && $agreement->vendor == $request->input('newVendor') && $agreement->description == $request->input('newDescription') && $agreement->valid_from == $request->input('newValidFrom') && $agreement->valid_to == $request->input('newValidTo') && $agreement->status == $request->input('newStatus') && $agreement->remark == $request->input('newRemark')){
+
+				$response = array(
+					'status' => false,
+					'message' => 'Tidak ada perubahan yang dibuat'
+				);
+				return Response::json($response);
+
+			}
+
+			$agreement->department = $request->input('newDepartment');
+			$agreement->vendor = $request->input('newVendor');
+			$agreement->description = $request->input('newDescription');
+			$agreement->valid_from = $request->input('newValidFrom');
+			$agreement->valid_to = $request->input('newValidTo');
+			$agreement->status = $request->input('newStatus');
+			$agreement->remark = $request->input('newRemark');
+			$agreement->created_by = Auth::user()->username;
+			$agreement->save();
+
+			$attachment = new AgreementAttachment([
+				'agreement_id' => $request->get('newId'),
+				'file_name' => $filename,
+				'created_by' => Auth::user()->username
+			]);
+
+			$attachment->save();
+
+			$agreements = db::select("SELECT
+				'update_agreement' as cat,
+				a.id,
+				a.department,
+				d.department_shortname,
+				a.vendor,
+				a.description,
+				a.valid_from,
+				a.valid_to,
+				TIMESTAMPDIFF( DAY, a.valid_from, a.valid_to ) AS total_validity,
+				TIMESTAMPDIFF( DAY, date( now()), a.valid_to ) AS validity,
+				a.`status`,
+				a.remark,
+				a.created_at,
+				a.updated_at,
+				a.created_by,
+				es.`name`,
+				att.file_name 
+				FROM
+				agreements AS a
+				LEFT JOIN employee_syncs AS es ON es.employee_id = a.created_by
+				LEFT JOIN departments AS d ON d.department_name = a.department
+				LEFT JOIN (
+				SELECT
+				agreement_id,
+				file_name 
+				FROM
+				agreement_attachments 
+				WHERE
+				id = ( SELECT id FROM agreement_attachments WHERE agreement_id = ".$request->get('newId')." ORDER BY created_at DESC LIMIT 1 )) AS att ON att.agreement_id = a.id
+				WHERE
+				a.id = ".$request->get('newId')."");
+
+			$manager = db::select("select email from send_emails where remark = '".$request->input('newDepartment')."'");
+
+			Mail::to(['adhi.satya.indradhi@music.yamaha.com', Auth::user()->email])->cc(['prawoto@music.yamaha.com', $manager[0]->email])->bcc(['aditya.agassi@music.yamaha.com'])->send(new SendEmail($agreements, 'update_agreement'));
+
+			$response = array(
+				'status' => true,
+				'message' => 'Agreement Updated'
+			);
+			return Response::json($response);
+		}
+		catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+
+	}
+
+	public function downloadAgreement(Request $request){
+		$filenames = $request->get('file_name');
+		$paths = array();
+
+		if(is_array($filenames)){
+			foreach ($filenames as $filename) {
+				$path = "files/agreements/" . $filename;
+				array_push($paths, 
+					[
+						"download" => asset($path),
+						"filename" => $filename
+					]);
+			}
+		}
+		else{
+			$path = "files/agreements/" . $filenames;
+			array_push($paths, 
+				[
+					"download" => asset($path),
+					"filename" => $filenames
+				]);
+		}
+
+		$response = array(
+			'status' => true,
+			'file_paths' => $paths,
+		);
+		return Response::json($response);
+	}
+
+	public function fetchAgreementDetail(Request $request){
+		$employees = EmployeeSync::orderBy('department', 'asc')
+		->select('department')
+		->distinct()
+		->get();
+
+		$agreement = Agreement::where('agreements.id', '=', $request->get('id'))
+		->first();
+
+		$response = array(
+			'status' => true,
+			'employees' => $employees,
+			'agreement' => $agreement,
+			'agreement_statuses' => $this->agreement_statuses
+		);
+		return Response::json($response);
+	}
+
+	public function fetchAgreementDownload(Request $request){
+		$files = AgreementAttachment::where('id', '=', $request->get('id'))->orderBy('created_at', 'desc')->get();
+
+		$response = array(
+			'status' => true,
+			'files' => $files,
+		);
+		return Response::json($response);
+	}
+
+	public function createAgreement(Request $request){
+		$filename = "";
+		$file_destination = 'files/agreements';
+
+		if (count($request->file('newAttachment')) > 0) {
+			$file = $request->file('newAttachment');
+			$filename = date('YmdHis').'.'.$request->input('extension');
+			$file->move($file_destination, $filename);
+		}
+		else{
+			$response = array(
+				'status' => false,
+				'message' => 'Please select file to attach'
+			);
+			return Response::json($response);
+		}
+
+		try{
+			$agreement = new Agreement([
+				'department' => $request->input('newDepartment'),
+				'vendor' => $request->input('newVendor'),
+				'description' => $request->input('newDescription'),
+				'valid_from' => $request->input('newValidFrom'),
+				'valid_to' => $request->input('newValidTo'),
+				'status' => $request->input('newStatus'),
+				'remark' => $request->input('newRemark'),
+				'created_by' => Auth::user()->username
+			]);
+
+			$agreement->save();
+
+			$attachment = new AgreementAttachment([
+				'agreement_id' => $agreement->id,
+				'file_name' => $filename,
+				'created_by' => Auth::user()->username
+			]);
+
+			$attachment->save();
+
+			$agreements = db::select("SELECT
+				'new_agreement' as cat,
+				a.id,
+				a.department,
+				d.department_shortname,
+				a.vendor,
+				a.description,
+				a.valid_from,
+				a.valid_to,
+				TIMESTAMPDIFF( DAY, a.valid_from, a.valid_to ) AS total_validity,
+				TIMESTAMPDIFF( DAY, date( now()), a.valid_to ) AS validity,
+				a.`status`,
+				a.remark,
+				a.created_at,
+				a.updated_at,
+				a.created_by,
+				es.`name`,
+				att.file_name 
+				FROM
+				agreements AS a
+				LEFT JOIN employee_syncs AS es ON es.employee_id = a.created_by
+				LEFT JOIN departments AS d ON d.department_name = a.department
+				LEFT JOIN (
+				SELECT
+				agreement_id,
+				file_name 
+				FROM
+				agreement_attachments 
+				WHERE
+				id = ( SELECT id FROM agreement_attachments WHERE agreement_id = ".$agreement->id." ORDER BY created_at DESC LIMIT 1 )) AS att ON att.agreement_id = a.id
+				WHERE
+				a.id = ".$agreement->id."");
+
+			$manager = db::select("select email from send_emails where remark = '".$request->input('newDepartment')."'");
+
+			Mail::to(['adhi.satya.indradhi@music.yamaha.com', Auth::user()->email])->cc(['prawoto@music.yamaha.com', $manager[0]->email])->bcc(['aditya.agassi@music.yamaha.com'])->send(new SendEmail($agreements, 'new_agreement'));
+
+			$response = array(
+				'status' => true,
+				'message' => 'New Agreement Successfully Added'
+			);
+			return Response::json($response);
+		}
+		catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function fetchAgreement(){
+		$employee_id = Auth::user()->username;
+		$employee = EmployeeSync::where('employee_id', '=', $employee_id)->first();
+
+		$where = "";
+
+		if($employee->department != 'Management Information System' || $employee->department != 'Human Resources' || Auth::user()->role_code != 'S'){
+			$where = "WHERE a.department = '".$employee->department."'";
+		}
+
+		$agreements = db::select("SELECT
+			a.id,
+			a.department,
+			d.department_shortname,
+			a.vendor,
+			a.description,
+			a.valid_from,
+			a.valid_to,
+			TIMESTAMPDIFF( DAY, a.valid_from, a.valid_to ) AS total_validity,
+			TIMESTAMPDIFF( DAY, date( now()), a.valid_to ) AS validity,
+			a.`status`,
+			a.remark,
+			a.created_at,
+			a.updated_at,
+			a.created_by,
+			es.`name`,
+			COALESCE ( aa.att, 0 ) AS att 
+			FROM
+			agreements AS a
+			LEFT JOIN employee_syncs AS es ON es.employee_id = a.created_by
+			LEFT JOIN ( SELECT agreement_id, count( id ) AS att FROM agreement_attachments GROUP BY agreement_id ) AS aa ON aa.agreement_id = a.id
+			LEFT JOIN departments AS d ON d.department_name = a.department 
+			".$where."
+			");
+
+		$response = array(
+			'status' => true,
+			'agreements' => $agreements
+		);
+		return Response::json($response);
 	}
 
 	public function indexSafetyShoesLog(){

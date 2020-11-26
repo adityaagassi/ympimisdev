@@ -23,7 +23,7 @@ Route::get('tesurgent', 'MaintenanceController@indexSPKUrgent');
 
 
 Route::get('fetch_trial2', 'StockTakingController@printSummary');
-Route::get('trial_print', 'StockTakingController@printSummary');
+Route::get('test_print', 'TrialController@test_print');
 
 Route::get('trial_loc', 'TrialController@trialLoc');
 Route::get('trial_loc2/{lat}/{long}', 'TrialController@getLocation');
@@ -50,7 +50,7 @@ Route::get('tesseract', 'TrialController@testTesseract');
 Route::get('trialmail', 'TrialController@trialmail');
 
 Route::get('/trial', function () {
-	return view('processes.assembly.flute.stamp');
+	return view('mails.new_agreement');
 });
 Route::get('/trial3', function () {
 	return view('trial');
@@ -112,6 +112,9 @@ Route::get('fetch/general/online_transportation_data', 'GeneralController@fetchO
 //AGREEMENT
 Route::get('index/general/agreement', 'GeneralController@indexAgreement');
 Route::get('fetch/general/agreement', 'GeneralController@fetchAgreement');
+Route::get('fetch/general/agreement_detail', 'GeneralController@fetchAgreementDetail');
+Route::get('fetch/general/agreement_download', 'GeneralController@fetchAgreementDownload');
+Route::get('download/general/agreement', 'GeneralController@downloadAgreement');
 Route::post('create/general/agreement', 'GeneralController@createAgreement');
 Route::post('edit/general/agreement', 'GeneralController@editAgreement');
 
@@ -1279,6 +1282,9 @@ Route::get('fetch/sakurentsu/list_3m', 'SakurentsuController@fetch_tiga_em');
 Route::get('index/sakurentsu/3m/{sakurentsu_number}', 'SakurentsuController@index_form_tiga_em');
 Route::post('post/sakurentsu/3m_form', 'SakurentsuController@save_tiga_em_form');
 
+Route::get('index/sakurentsu/3m/premeeting/{id_three_m}', 'SakurentsuController@index_tiga_em_premeeting');
+Route::get('fetch/sakurentsu/3m/document', 'SakurentsuController@fetch_tiga_em_document');
+
 //Supplier
 Route::get('index/supplier', 'AccountingController@master_supplier');
 Route::get('fetch/supplier', 'AccountingController@fetch_supplier');
@@ -1522,6 +1528,8 @@ Route::post('fetch/warehouse/update_receive', 'AccountingController@update_recei
 Route::get('warehouse/print_equipment', 'AccountingController@wh_print_equipment');
 Route::get('fetch/warehouse/print_equipment', 'AccountingController@fetch_print_equipment');
 Route::get('print/warehouse/label/{id}', 'AccountingController@label_kedatangan');
+
+Route::get('warehouse/cek_kedatangan', 'AccountingController@cek_kedatangan');
 
 //Cetak Bukti Kedatangan
 Route::get('warehouse/cetak_bukti', 'AccountingController@wh_cetak_bukti');
@@ -2196,6 +2204,14 @@ Route::get('fetch/stocktaking/daily_report_modal', 'StockTakingController@fetchD
 Route::get('index/stocktaking/menu', 'StockTakingController@indexMonthlyStocktaking');
 
 Route::get('fetch/stocktaking/check_month', 'StockTakingController@fetchCheckMonth');
+Route::get('export/stocktaking/inquiry', 'StockTakingController@exportInquiry');
+Route::get('export/stocktaking/inquiry_new', 'StockTakingController@exportInquiryNew');
+Route::get('export/stocktaking/variance', 'StockTakingController@exportVariance');
+Route::get('export/stocktaking/official_variance', 'StockTakingController@exportOfficailVariance');
+
+
+//Monitoring
+Route::get('index/stocktaking/monitoring', 'StockTakingController@indexStocktakingMonitoring');
 Route::get('fetch/stocktaking/filled_list', 'StockTakingController@fetchfilledList');
 Route::get('fetch/stocktaking/filled_list_detail', 'StockTakingController@fetchfilledListDetail');
 Route::get('fetch/stocktaking/audited_list', 'StockTakingController@fetchAuditedList');
@@ -2215,11 +2231,6 @@ Route::get('fetch/stocktaking/filled_list_detail_by_substore', 'StockTakingContr
 Route::get('fetch/stocktaking/audited_list_new', 'StockTakingController@fetchAuditedListNew');
 Route::get('fetch/stocktaking/audited_list_detail_new', 'StockTakingController@fetchAuditedListDetailNew');
 
-
-Route::get('export/stocktaking/inquiry', 'StockTakingController@exportInquiry');
-Route::get('export/stocktaking/inquiry_new', 'StockTakingController@exportInquiryNew');
-Route::get('export/stocktaking/variance', 'StockTakingController@exportVariance');
-Route::get('export/stocktaking/official_variance', 'StockTakingController@exportOfficailVariance');
 
 //Manage Store
 Route::get('index/stocktaking/manage_store', 'StockTakingController@indexManageStore');
@@ -3328,6 +3339,7 @@ Route::get('index/audit_data/fetch', 'CparController@fetch_audit_all');
 Route::get('index/audit/print/{id}', 'CparController@print_audit_all');
 
 Route::get('index/audit', 'CparController@audit_kanban');
+Route::get('index/audit_internal_mis', 'CparController@audit_mis');
 Route::get('index/audit/point_check', 'CparController@audit_point_check');
 Route::get('index/audit/fetch_kategori_lokasi', 'CparController@fetchKategoriLokasiAudit');
 Route::get('index/audit/fetch_hasil_audit', 'CparController@fetchHasilAuditAll');

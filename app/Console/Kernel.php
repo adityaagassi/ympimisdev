@@ -46,6 +46,8 @@ class Kernel extends ConsoleKernel
         Commands\CostCenterHistoryCommand::class,
         Commands\InjectionScheduleCommand::class,
         Commands\KDShipment::class,
+        Commands\SendEmailSPKNotification::class,
+        Commands\EmailAgreement::class,
         
     ];
 
@@ -82,7 +84,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('email:shipment')->weekdays()->dailyAt('08:40');
         $schedule->command('email:overtime')->weekdays()->dailyAt('08:42');
         $schedule->command('email:shipment')->weekends()->dailyAt('13:00');
-        $schedule->command('email:overtime')->weekends()->dailyAt('13:02');
+        // $schedule->command('email:overtime')->weekends()->dailyAt('13:02');
         $schedule->command('email:middle_kanban')->weekdays()->dailyAt('07:00');
         $schedule->command('email:visitor_confirmation')->weekdays()->dailyAt('07:00');
         // $schedule->command('email:visitor_confirmation')->everyMinute();
@@ -101,6 +103,7 @@ class Kernel extends ConsoleKernel
         
         $schedule->command('update:address')->dailyAt('08:00');
         $schedule->command('update:address')->dailyAt('18:00');
+        $schedule->command('email:agreement')->dailyAt('07:50');
         
         // $schedule->command('scheduling:chemical')->dailyAt('07:20');
         // $schedule->command('scheduling:chemical')->dailyAt('13:20');
