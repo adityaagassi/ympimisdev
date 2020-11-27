@@ -93,8 +93,8 @@
     }
 
     if (models.length > 17) {
-      $('#model').css({"font-size":"18pt", "-moz-transform":"scale(0.68,2.5)","padding-top":"13px","float":"right"});
-      $('#model').css({"position":"fixed", "left":"-55px", "top":"10px"});
+      $('#model').css({"font-size":"30pt", "-moz-transform":"scale(0.7,1.25)","padding-top":"10px","float":"right"});
+      $('#model').css({"position":"fixed", "left":"-40px", "top":"5px"});
       $('#tabel').css({"position":"fixed", "left":"-50px", "top":"30px", "width":"40%"});
     }
 
