@@ -153,7 +153,7 @@
           $.each(result.resume, function(key, value) {
             fy = value.periode;
             bulan.push('April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember', 'Januari', 'Februari', 'Maret');
-            awal.push(value.apr_simulasi,value.may_simulasi,value.jun_simulasi,value.jul_simulasi,value.aug_simulasi,value.sep_simulasi,value.oct_simulasi,value.nov_simulasi,value.des_simulasi,value.jan_simulasi,value.feb_simulasi,value.mar_simulasi);
+            awal.push(value.apr_simulasi,value.may_simulasi,value.jun_simulasi,value.jul_simulasi,value.aug_simulasi,value.sep_simulasi,value.oct_simulasi,value.nov_simulasi,value.dec_simulasi,value.jan_simulasi,value.feb_simulasi,value.mar_simulasi);
           })
 
           $.each(result.act, function(key, value) {
