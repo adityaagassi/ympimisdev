@@ -98,10 +98,12 @@
 
 	@-webkit-keyframes sedang {
 		0%, 49% {
-			background: #222222;
+			background-color: black;
+			color: white;
 		}
 		50%, 100% {
-			background-color: #16a600;
+			background-color: #91ff5e;
+			color: black;
 		}
 	}
 
@@ -190,10 +192,10 @@
 
 						if (value.part != "") {
 							var color = '#a4fa98';
-							var bgcolor = '#0a991d';
+							var bgcolor = 'black';
 						}else{
 							var color = 'white';
-							var bgcolor = '#222222';
+							var bgcolor = 'black';
 						}
 
 						var total = 0;
@@ -201,7 +203,7 @@
 						divMesin += '<div class="col-xs-4" style="padding:5px;padding-top:0px;">';
 						divMesin += '<table class="table table-bordered" style="margin-bottom:10px">';
 						divMesin += '<tr>';
-						divMesin += '<td colspan="3" style="border:1px solid white;color:white;padding:0;font-size:30px;font-weight:bold;background-color:#222222">'+value.mesin+'<br>';
+						divMesin += '<td colspan="3" style="border:1px solid white;color:white;padding:0;font-size:30px;font-weight:bold;background-color:black">'+value.mesin+'<br>';
 
 						divMesin += '<div class="col-md-12" style="width:100%">';
 						divMesin += '<div class="row">';

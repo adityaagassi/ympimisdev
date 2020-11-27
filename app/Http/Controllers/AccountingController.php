@@ -7239,11 +7239,11 @@ public function fetch_budget_summary(Request $request)
             CASE
                 WHEN
                     a.bulan = "Jan" THEN
-                        1 
+                        13 
                         WHEN a.bulan = "Feb" THEN
-                        2 
+                        14 
                         WHEN a.bulan = "Mar" THEN
-                        3 
+                        15 
                         WHEN a.bulan = "Apr" THEN
                         4 
                         WHEN a.bulan = "May" THEN
@@ -7261,7 +7261,7 @@ public function fetch_budget_summary(Request $request)
                         WHEN a.bulan = "Nov" THEN
                         11 
                         WHEN a.bulan = "Dec" THEN
-                        10 
+                        12 
                     END AS month_number,
                     a.bulan,
                     SUM( a.actual ) AS Actual 
