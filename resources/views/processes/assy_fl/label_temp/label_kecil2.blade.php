@@ -103,6 +103,11 @@
 		$("#128").attr("src",janfix+url2+code);
 		var day	=$('#codeday').val();
 		var des	=$('#des').val();
+
+		if(des.length > 15){
+			$('.product').css({"font-size":"8pt"});
+		}
+
 		$('#day').text(day);
 		$('#dest').text(des);
 		$('#serial').text(sn.toUpperCase());
