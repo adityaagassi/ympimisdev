@@ -177,41 +177,6 @@
 		});
 	}
 
-
-	// function addEfficiency(){
-	// 	$('#loading').show();
-	// 	if($('#newDate').val() != "" && $('#newCost').val() != "" && $('#newInput').val() != "" && $('#newOutput').val() != ""){
-	// 		var newDate = $('#newDate').val();
-	// 		var newCost = $('#newCost').val();
-	// 		var newInput = $('#newInput').val();
-	// 		var newOutput = $('#newOutput').val();
-
-	// 		var data = {
-	// 			newDate:newDate,
-	// 			newCost:newCost,
-	// 			newInput:newInput,
-	// 			newOutput:newOutput			
-	// 		}
-
-	// 		$.post('{{ url("input/display/efficiency_monitoring_monthly") }}', data, function(result, status, xhr){
-	// 			if(result.status){
-	// 				$('#loading').hide();
-	// 				clearData();
-	// 				$('#modalAdd').modal('hide');
-	// 			}
-	// 			else{
-	// 				$('#loading').hide();
-	// 				alert(result.message);
-	// 				clearData();					
-	// 			}
-	// 		});
-	// 	}
-	// 	else{
-	// 		alert('Lengkapi Data Terlebih Dahulu');
-	// 		clearData();
-	// 	}
-	// }
-
 	function fetchChart(id){
 		$('#loading').show();
 		var data = {
@@ -370,7 +335,7 @@
 							dataLabels: {
 								enabled: true,
 								formatter: function () {
-									return Highcharts.numberFormat(this.y,2)+'%';
+									return Highcharts.numberFormat(this.y,1)+'%';
 								}
 							},
 							data: sum_percentage[cost_center_name_month[i]]
@@ -528,7 +493,7 @@
 							dataLabels: {
 								enabled: true,
 								formatter: function () {
-									return Highcharts.numberFormat(this.y,2)+'%';
+									return Highcharts.numberFormat(this.y,1)+'%';
 								}
 							},
 							data: data_percentage[cost_center_name_year[i]]
