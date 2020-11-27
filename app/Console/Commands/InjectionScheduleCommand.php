@@ -47,11 +47,11 @@ class InjectionScheduleCommand extends Command
     public function handle()
     {
 
-        $inventory = InjectionInventory::get();
-        foreach ($inventory as $key) {
-            $invent = InjectionInventory::find($key->id);
-            $invent->forceDelete();
-        }
+        // $inventory = InjectionInventory::get();
+        // foreach ($inventory as $key) {
+        //     $invent = InjectionInventory::find($key->id);
+        //     $invent->forceDelete();
+        // }
         // $j = 2;
         // $nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays($j)));
         // $weekly_calendars = DB::SELECT("SELECT * FROM `weekly_calendars`");
@@ -65,6 +65,8 @@ class InjectionScheduleCommand extends Command
         // if (date('D')=='Fri' || date('D')=='Sat') {
         //     $nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays($j)));
         // }
+
+        // // $nextdayplus1 = date('Y-m-t');
 
         // $first = date('Y-m-01');
         // $now = date('Y-m-d');
@@ -97,6 +99,7 @@ class InjectionScheduleCommand extends Command
         //         injection_parts 
         //     WHERE
         //         remark = 'injection' 
+        //         and deleted_at is null
 
         // UNION ALL
 
@@ -145,7 +148,7 @@ class InjectionScheduleCommand extends Command
         //             materials.category = 'FG' 
         //             AND materials.origin_group_code = '072' 
         //             AND DATE( flo_details.created_at ) BETWEEN '".$first."' 
-        //             AND '".$now."'
+        //             AND '".$nextdayplus1."'
         //         GROUP BY
         //             material_number,
         //             part,color,part_code
@@ -159,8 +162,8 @@ class InjectionScheduleCommand extends Command
 
         // foreach ($data as $key) {
         //     if ($key->debt != 0) {
-        //         $partpart = explode(' ',$key->part_code);
-        //         $colorcolor = explode(')',$key->color);
+        //         // $partpart = explode(' ',$key->part_code);
+        //         // $colorcolor = explode(')',$key->color);
 
         //         $schedule = InjectionScheduleTemp::firstOrNew([
         //             'material_number' => $key->material_number,
@@ -169,8 +172,8 @@ class InjectionScheduleCommand extends Command
         //         $schedule->date = date('Y-m-d');
         //         $schedule->due_date = $tomorrow;
         //         $schedule->material_description = $key->material_description;
-        //         $schedule->part = $partpart[0];
-        //         $schedule->color = $colorcolor[0];
+        //         $schedule->part = $key->part_code;
+        //         $schedule->color = $key->color;
         //         $schedule->stock = $key->stock;
         //         $schedule->plan = $key->plan;
         //         $schedule->diff = $key->diff;
@@ -180,190 +183,201 @@ class InjectionScheduleCommand extends Command
         //     }
         // }
 
-        // $debttoday = DB::SELECT('SELECT
-        //     *,
-        //     SPLIT_STRING ( machine, ",", 1 ) AS mesin1,
-        //     SPLIT_STRING ( machine, ",", 2 ) AS mesin2,
-        //     SPLIT_STRING ( machine, ",", 3 ) AS mesin3 
-        // FROM
-        //     injection_schedule_temps
-        //     LEFT JOIN injection_machine_cycle_times ON injection_machine_cycle_times.part = injection_schedule_temps.part 
-        //     AND injection_machine_cycle_times.color = injection_schedule_temps.color 
-        // WHERE
-        //     date = DATE(
-        //     NOW())');
+        // $debttoday = DB::SELECT("SELECT
+        //         date,
+        //         due_date,
+        //         material_number,
+        //         material_description,
+        //         b.part,
+        //         b.color,
+        //         stock,
+        //         plan,
+        //         diff,
+        //         debt,
+        //         model,
+        //         cycle,
+        //         shoot,
+        //         qty,
+        //         qty_hako,
+        //         machine,
+        //         CONCAT( 'Mesin ', SPLIT_STRING ( machine, ',', 1 ) ) AS mesin1,
+        //         CONCAT( 'Mesin ', SPLIT_STRING ( machine, ',', 2 ) ) AS mesin2,
+        //         CONCAT( 'Mesin ', SPLIT_STRING ( machine, ',', 3 ) ) AS mesin3,
+        //     IF
+        //         ((
+        //             SELECT
+        //                 machine 
+        //             FROM
+        //                 injection_schedule_logs 
+        //             WHERE
+        //                 machine = b.mesin1 
+        //                 AND DATE( end_time ) BETWEEN DATE(NOW()) AND b.due_date 
+        //                 ) IS NULL,
+        //             b.mesin1,
+        //         IF
+        //             ((
+        //                 SELECT
+        //                     machine 
+        //                 FROM
+        //                     injection_schedule_logs 
+        //                 WHERE
+        //                     machine = b.mesin2 
+        //                     AND DATE( end_time ) BETWEEN DATE(NOW()) AND b.due_date  
+        //                     ) IS NULL,
+        //             IF
+        //                 ( b.mesin2 = 'Mesin ', b.mesin1, b.mesin2 ),
+        //             IF
+        //                 ((
+        //                     SELECT
+        //                         machine 
+        //                     FROM
+        //                         injection_schedule_logs 
+        //                     WHERE
+        //                         machine = b.mesin3 
+        //                         AND DATE( end_time ) BETWEEN DATE(NOW()) AND b.due_date  
+        //                         ) IS NULL,
+        //                 IF
+        //                     ( b.mesin3 = 'Mesin ', b.mesin1, b.mesin3 ),
+        //                     b.mesin1 
+        //                 ) 
+        //             )) AS machine_now,
+        //             (
+        //             SELECT
+        //                 machine 
+        //             FROM
+        //                 injection_schedule_logs 
+        //             WHERE
+        //                 machine = b.mesin1 
+        //                 AND DATE( end_time ) BETWEEN DATE(NOW()) AND b.due_date  
+        //                 ) as mesin1work,
+        //                 (
+        //             SELECT
+        //                 machine 
+        //             FROM
+        //                 injection_schedule_logs 
+        //             WHERE
+        //                 machine = b.mesin2 
+        //                 AND DATE( end_time ) BETWEEN DATE(NOW()) AND b.due_date  
+        //                 ) as mesin2work,
+        //                 (
+        //             SELECT
+        //                 machine 
+        //             FROM
+        //                 injection_schedule_logs 
+        //             WHERE
+        //                 machine = b.mesin3 
+        //                 AND DATE( end_time ) BETWEEN DATE(NOW()) AND b.due_date  
+        //                 ) as mesin3work,
+        //         ROUND(((( b.debt / b.shoot )* b.cycle )/ 60 )/ 60 ) AS jam,
+        //         ROUND((( b.debt / b.shoot )* b.cycle )/ 60 ) AS menit,
+        //         ROUND(( b.debt / b.shoot )* b.cycle ) AS detik
+        //     FROM
+        //         (
+        //         SELECT
+        //             date,
+        //             due_date,
+        //             material_number,
+        //             material_description,
+        //             a.part,
+        //             a.color,
+        //             stock,
+        //             plan,
+        //             diff,
+        //             debt,
+        //             model,
+        //             cycle,
+        //             shoot,
+        //             qty,
+        //             qty_hako,
+        //             machine,
+        //             CONCAT( 'Mesin ', SPLIT_STRING ( machine, ',', 1 ) ) AS mesin1,
+        //             CONCAT( 'Mesin ', SPLIT_STRING ( machine, ',', 2 ) ) AS mesin2,
+        //             CONCAT( 'Mesin ', SPLIT_STRING ( machine, ',', 3 ) ) AS mesin3 
+        //         FROM
+        //             injection_schedule_temps AS a
+        //             LEFT JOIN injection_machine_cycle_times ON injection_machine_cycle_times.part = a.part 
+        //             AND injection_machine_cycle_times.color = a.color 
+        //         WHERE
+        //         date = DATE(
+        //         NOW())) b");
 
         // $schedules = [];
 
         // $count = 0;
 
         // foreach ($debttoday as $val) {
-        //     $shot = $val->debt/$val->shoot;
-        //     $time = $shot*$val->cycle;
-        //     $minute = $time / 60;
-        //     $hour = $minute / 60;
-        //     $day = $hour / 24;
-        //     $mesin = '';
-        //     $start_time = '';
-        //     $end_time = '';
+        //     $mesinwork = $val->machine_now;
+        //     if ($mesinwork == $val->mesin1work || $mesinwork == $val->mesin2work || $mesinwork == $val->mesin3work) {
+        //         $getMesinWork = DB::SELECT("SELECT * FROM injection_schedule_logs where machine = '".$mesinwork."' and DATE(end_time) <= '".$val->due_date."' ORDER BY id desc limit 1" );
+        //         foreach ($getMesinWork as $key) {
+        //             $schedules[] = array(
+        //                 'material_number' => $val->material_number,
+        //                 'material_description' => $val->material_description,
+        //                 'part' => $val->part,
+        //                 'color' => $val->color,
+        //                 'qty' => $val->debt,
+        //                 'start_time' => $key->end_time,
+        //                 'end_time' => date("Y-m-d H:i:s",strtotime(date($key->end_time))+$val->detik),
+        //                 'machine' => $mesinwork,
+        //                 'created_by' => 1,
+        //                 'created_at' => date('Y-m-d H:i:s'),
+        //                 'updated_at' => date('Y-m-d H:i:s'),
+        //             );
+        //         }
+        //     }else{
+        //         $start_time = date('Y-m-d H:i:s');
+        //         $end_time = date("Y-m-d H:i:s",strtotime(date('Y-m-d H:i:s'))+$val->detik);
+        //         if (count($schedules) > 0) {
+        //             for ($i = 0; $i < count($schedules); $i++) {
+        //                 if ($mesinwork == $schedules[$i]['machine']) {
+        //                     if ($val->mesin2 != "Mesin ") {
+        //                         $mesinwork = $val->mesin2;
+        //                     }else{
+        //                         $mesinwork = $val->mesin1;
+        //                     }
+        //                 }
+        //             }
 
-        //     $count = 0;
+        //             for ($j = 0; $j < count($schedules); $j++) {
+        //                 if ($mesinwork == $schedules[$j]['machine']) {
+        //                     if ($val->mesin3 != "Mesin ") {
+        //                         $mesinwork = $val->mesin3;
+        //                     }else{
+        //                         $mesinwork = $val->mesin1;
+        //                     }
+        //                 }
+        //             }
+        //         }
 
-        //     if ($val->mesin1 != "") {
-        //         $machineavl = $this->checkMachine($val->mesin1,$val->due_date);
-        //         if ($machineavl != "") {
-        //             $end_time = date("Y-m-d H:i:s",strtotime(date($machineavl))+$time);
-        //             $start_time = $machineavl;
-        //             $mesin = 'Mesin '.$val->mesin1;
-        //             $count++;
-        //         }else{
-        //             // $machineavl = $this->checkMachine($val->mesin1,$now);
-        //             // if (date('Y-m-d',strtotime($machineavl)) != $now) {
-        //             //     $end_time = date("Y-m-d H:i:s",strtotime(date($machineavl))+$time);
-        //             //     $start_time = $machineavl;
-        //             //     $mesin = 'Mesin '.$val->mesin2;
-        //             //     $count++;
-        //             // }else{
-        //                 $end_time = date("Y-m-d H:i:s",strtotime(date('Y-m-d H:i:s'))+$time);
+        //         for ($k = 0; $k < count($schedules); $k++) {
+        //             if ($mesinwork == $schedules[$k]['machine']) {
+        //                 $start_time = date("Y-m-d H:i:s",strtotime(date($schedules[$k]['end_time']))+7200);
+        //                 $end_time = date("Y-m-d H:i:s",strtotime(date($schedules[$k]['end_time']))+$val->detik);
+        //                 break;
+        //             }else{
         //                 $start_time = date('Y-m-d H:i:s');
-        //                 $mesin = 'Mesin '.$val->mesin2;
-        //                 $count++;
-        //             // }
-        //         }
-        //     }
-        //     if ($val->mesin2 != "") {
-        //         if ($count == 0) {
-        //             $machineavl = $this->checkMachine($val->mesin2,$val->due_date);
-        //             if ($machineavl != "") {
-        //                 $end_time = date("Y-m-d H:i:s",strtotime(date($machineavl))+$time);
-        //                 $start_time = $machineavl;
-        //                 $mesin = 'Mesin '.$val->mesin2;
-        //                 $count++;
-        //             }else{
-        //                 // $machineavl = $this->checkMachine($val->mesin2,$now);
-        //                 // if (date('Y-m-d',strtotime($machineavl)) != $now) {
-        //                 //     $end_time = date("Y-m-d H:i:s",strtotime(date($machineavl))+$time);
-        //                 //     $start_time = $machineavl;
-        //                 //     $mesin = 'Mesin '.$val->mesin3;
-        //                 //     $count++;
-        //                 // }else{
-        //                     $end_time = date("Y-m-d H:i:s",strtotime(date('Y-m-d H:i:s'))+$time);
-        //                     $start_time = date('Y-m-d H:i:s');
-        //                     $mesin = 'Mesin '.$val->mesin3;
-        //                     $count++;
-        //                 // }
+        //                 $end_time = date("Y-m-d H:i:s",strtotime(date('Y-m-d H:i:s'))+$val->detik);
         //             }
         //         }
-        //     }
-        //     if ($val->mesin3 != "") {
-        //         if ($count == 0) {
-        //             $machineavl = $this->checkMachine($val->mesin3,$val->due_date);
-        //             if ($machineavl != "") {
-        //                 $end_time = date("Y-m-d H:i:s",strtotime(date($machineavl))+$time);
-        //                 $start_time = $key->end_time;
-        //                 $mesin = 'Mesin '.$val->mesin3;
-        //                 $count++;
-        //             }else{
-        //                 // $machineavl = $this->checkMachine($val->mesin3,$now);
-        //                 // if (date('Y-m-d',strtotime($machineavl)) != $now) {
-        //                 //     $end_time = date("Y-m-d H:i:s",strtotime(date($machineavl))+$time);
-        //                 //     $start_time = $machineavl;
-        //                 //     $mesin = 'Mesin '.$val->mesin3;
-        //                 //     $count++;
-        //                 // }else{
-        //                     $end_time = date("Y-m-d H:i:s",strtotime(date('Y-m-d H:i:s'))+$time);
-        //                     $start_time = date('Y-m-d H:i:s');
-        //                     $mesin = 'Mesin '.$val->mesin3;
-        //                     $count++;
-        //                 // }
-        //             }
-        //         }
-        //     }
-        //     $schedules[] = array(
-        //         'material_number' => $val->material_number,
-        //         'material_description' => $val->material_description,
-        //         'part' => $val->part,
-        //         'color' => $val->color,
-        //         'qty' => $val->debt,
-        //         'start_time' => $start_time,
-        //         'end_time' => $end_time,
-        //         'machine' => $mesin,
-        //         'created_by' => 1,
-        //         'created_at' => date('Y-m-d H:i:s'),
-        //         'updated_at' => date('Y-m-d H:i:s'),
-        //     );
-        //     // $cycle =DB::SELECT("SELECT * FROM injection_machine_cycle_times where part = '".$val->part."' and color = '".$val->color."'");
-        //     // foreach ($cycle as $vul) {
-        //     //     $shot = $val->debt/$vul->shoot;
-        //     //     $time = $shot*$vul->cycle;
-        //     //     $minute = $time / 60;
-        //     //     $hour = $minute / 60;
-        //     //     $day = $hour / 24;
-        //     //     $machine = explode(',', $vul->machine);
-        //     //     $mesin = '';
-        //     //     $start_time = '';
-        //     //     $end_time = '';
-        //     //     for ($i = 0;$i < count($machine);$i++) {
-        //     //         $machineavl = DB::SELECT("SELECT * FROM injection_schedule_logs where machine = 'Mesin ".$machine[$i]."' ORDER BY id desc");
-        //     //         if (count($machineavl) > 0) {
-        //     //             foreach ($machineavl as $vol) {
-        //     //                 if (count($vol->end_time) > 0) {
-        //     //                     if (date('Y-m-d', strtotime($vol->end_time)) <= $nextdayplus1) {
-        //     //                         $end_time = date("Y-m-d H:i:s",strtotime(date($vol->end_time))+$time);
-        //     //                         $start_time = $vol->end_time;
-        //     //                         $mesin = $vol->machine;
 
-        //     //                         $schedules[] = array(
-        //     //                             'material_number' => $val->material_number,
-        //     //                             'material_description' => $val->material_description,
-        //     //                             'part' => $val->part,
-        //     //                             'color' => $val->color,
-        //     //                             'qty' => $val->debt,
-        //     //                             'start_time' => $start_time,
-        //     //                             'end_time' => $end_time,
-        //     //                             'machine' => $mesin,
-        //     //                             'created_by' => 1,
-        //     //                             'created_at' => date('Y-m-d H:i:s'),
-        //     //                             'updated_at' => date('Y-m-d H:i:s'),
-        //     //                         );
-        //     //                         break;
-        //     //                     }
-        //     //                 }else{
-        //     //                     $end_time = date("Y-m-d H:i:s",strtotime(date("Y-m-d H:i:s"))+$time);
-        //     //                     $start_time = date('Y-m-d H:i:s');
-        //     //                     $mesin = 'Mesin '.$machine[$i];
-        //     //                 }
-        //     //             }
-        //     //         }else{
-        //     //             // if ($schedules[]->part != $val->part) {
-        //     //                 $end_time = date("Y-m-d H:i:s",strtotime(date("Y-m-d H:i:s"))+$time);
-        //     //                 $start_time = date('Y-m-d H:i:s');
-        //     //                 $mesin = 'Mesin '.$machine[$i];
-
-        //     //                 $schedules[] = array(
-        //     //                     'material_number' => $val->material_number,
-        //     //                     'material_description' => $val->material_description,
-        //     //                     'part' => $val->part,
-        //     //                     'color' => $val->color,
-        //     //                     'qty' => $val->debt,
-        //     //                     'start_time' => $start_time,
-        //     //                     'end_time' => $end_time,
-        //     //                     'machine' => $mesin,
-        //     //                     'created_by' => 1,
-        //     //                     'created_at' => date('Y-m-d H:i:s'),
-        //     //                     'updated_at' => date('Y-m-d H:i:s'),
-        //     //                 );
-        //     //                 break;
-        //     //             // }
-        //     //         }
-        //     //     }
-        //     // }
+        //         $schedules[] = array(
+        //             'material_number' => $val->material_number,
+        //             'material_description' => $val->material_description,
+        //             'part' => $val->part,
+        //             'color' => $val->color,
+        //             'qty' => $val->debt,
+        //             'start_time' => $start_time,
+        //             'end_time' => $end_time,
+        //             'machine' => $mesinwork,
+        //             'created_by' => 1,
+        //             'created_at' => date('Y-m-d H:i:s'),
+        //             'updated_at' => date('Y-m-d H:i:s'),
+        //         );
+        //     }
         // }
 
-        // //var_dump($schedules);
+        // // var_dump($schedules);
 
-        // // $partinject = '';
-        // // $colorinject = '';
         // for ($i=0; $i < count($schedules); $i++) {
         //     DB::table('injection_schedule_logs')->insert([
         //         $schedules[$i]
