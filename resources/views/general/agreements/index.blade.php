@@ -2,6 +2,11 @@
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
+	thead input {
+		width: 100%;
+		padding: 3px;
+		box-sizing: border-box;
+	}
 	#listTableBody > tr:hover {
 		cursor: pointer;
 		background-color: #7dfa8c;
@@ -52,8 +57,8 @@
 				<thead style="background-color: rgba(126,86,134,.7);">
 					<tr>
 						<th style="width: 30%; text-align: center; font-size: 1.5vw;">Safe</th>
-						<th style="width: 30%; text-align: center; font-size: 1.5vw;">< 90 Days Left</th>
-						<th style="width: 30%; text-align: center; font-size: 1.5vw;">< 30 Days Left</th>
+						<th style="width: 30%; text-align: center; font-size: 1.5vw;">&#8804; 90 Days Left</th>
+						<th style="width: 30%; text-align: center; font-size: 1.5vw;">&#8804; 30 Days Left</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -84,7 +89,22 @@
 				</thead>
 				<tbody id="listTableBody">
 				</tbody>
-				<tfoot style="background-color: RGB(252, 248, 227);">
+				<tfoot>
+					<tr>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+					</tr>
 				</tfoot>
 			</table>
 		</div>
@@ -489,8 +509,6 @@
 				var count_90 = 0;
 				var count_30 = 0;
 
-
-
 				$.each(result.agreements, function(key, value){
 					if(value.status == 'In Use'){
 						listTableBody += '<tr>';
@@ -504,13 +522,13 @@
 					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:8%;">'+value.description+'</td>';
 					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:0.5%;">'+value.valid_from+'</td>';
 					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:0.5%;">'+value.valid_to+'</td>';
-					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:1%;">'+value.status+'</td>';
+					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:0.5%;">'+value.status+'</td>';
 					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:5%;">'+value.remark+'</td>';
-					if(value.validity < 30){
+					if(value.validity <= 30){
 						count_30 += 1;
 						listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:2%; background-color: #ff5c8d;">'+value.validity+' Day(s) left</td>';			
 					}
-					else if(value.validity < 90){
+					else if(value.validity <= 90){
 						count_90 += 1;
 						listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:2%; background-color: #ffb300;">'+value.validity+' Day(s) left</td>';			
 					}
@@ -519,7 +537,7 @@
 						count_ok += 1;
 						listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:2%; background-color: #aee571;">'+value.validity+' Day(s) left</td>';			
 					}
-					listTableBody += '<td style="width:1%;"><a href="javascript:void(0)" onclick="modalDownload(\''+value.id+'\')">Att('+value.att+')</a></td>';
+					listTableBody += '<td style="width:1%;" onclick="modalDownload(\''+value.id+'\')"><a href="javascript:void(0)" onclick="modalDownload(\''+value.id+'\')">Att('+value.att+')</a></td>';
 					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:2%;">'+value.created_by+'<br>'+value.name+'</td>';
 					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:1%;">'+value.created_at+'</td>';
 					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:1%;">'+value.updated_at+'</td>';
@@ -531,7 +549,12 @@
 				$('#count_90').text(count_90);
 				$('#listTableBody').append(listTableBody);
 
-				$('#listTable').DataTable({
+				$('#listTable tfoot th').each( function () {
+					var title = $(this).text();
+					$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="8"/>' );
+				} );
+
+				var table = $('#listTable').DataTable({
 					'dom': 'Bfrtip',
 					'responsive':true,
 					'lengthMenu': [
@@ -583,6 +606,21 @@
 					"bAutoWidth": false,
 					"processing": true
 				});
+
+				table.columns().every( function () {
+					var that = this;
+
+					$( 'input', this.footer() ).on( 'keyup change', function () {
+						if ( that.search() !== this.value ) {
+							that
+							.search( this.value )
+							.draw();
+						}
+					} );
+				} );
+
+				$('#listTable tfoot tr').appendTo('#listTable thead');
+
 				$('#loading').hide();
 
 			}
