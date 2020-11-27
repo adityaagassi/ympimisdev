@@ -180,6 +180,16 @@ class StockTakingController extends Controller{
 		))->with('page', 'Monthly Stock Taking')->with('head', 'Stocktaking');
 	}
 
+	public function indexStocktakingMonitoring(){
+		$title = "Stocktaking Monitoring";
+		$title_jp = "";
+
+		return view('stocktakings.monthly.report.monitoring', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'Monthly Stock Taking')->with('head', 'Stocktaking Monitoring');
+	}
+
 	public function fetchMonthlyStocktakingList(Request $request){
 
 		$stocktaking_lists = StocktakingNewList::leftJoin('material_plant_data_lists', 'material_plant_data_lists.material_number', '=', 'stocktaking_new_lists.material_number')
@@ -4997,6 +5007,7 @@ s.id ASC");
 			->update([
 				'remark' => 'USE',
 				'process' => 1,
+				'print_status' => 1,
 				'quantity' => $quantity,
 				'inputed_by' => $inputor
 			]);
