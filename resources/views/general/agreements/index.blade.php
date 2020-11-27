@@ -56,13 +56,15 @@
 			<table id="resumeTable" class="table table-bordered table-striped table-hover" style="margin-bottom: 20px;">
 				<thead style="background-color: rgba(126,86,134,.7);">
 					<tr>
-						<th style="width: 30%; text-align: center; font-size: 1.5vw;">Safe</th>
-						<th style="width: 30%; text-align: center; font-size: 1.5vw;">&#8804; 90 Days Left</th>
-						<th style="width: 30%; text-align: center; font-size: 1.5vw;">&#8804; 30 Days Left</th>
+						<th style="width: 25%; text-align: center; font-size: 1.5vw;">Total</th>
+						<th style="width: 25%; text-align: center; font-size: 1.5vw;">Safe</th>
+						<th style="width: 25%; text-align: center; font-size: 1.5vw;">&#8804; 90 Days Left</th>
+						<th style="width: 25%; text-align: center; font-size: 1.5vw;">&#8804; 30 Days Left</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
+						<td id="count_all" style="text-align: center; font-size: 1.8vw; font-weight: bold;"></td>
 						<td id="count_ok" style="background-color: #aee571; text-align: center; font-size: 1.8vw; font-weight: bold;"></td>
 						<td id="count_90" style="background-color: #ffb300; text-align: center; font-size: 1.8vw; font-weight: bold;"></td>
 						<td id="count_30" style="background-color: #ff5c8d; text-align: center; font-size: 1.8vw; font-weight: bold;"></td>
@@ -505,6 +507,7 @@
 				$('#listTable').DataTable().destroy();				
 				$('#listTableBody').html("");
 				var listTableBody = "";
+				var count_all = 0;
 				var count_ok = 0;
 				var count_90 = 0;
 				var count_30 = 0;
@@ -524,6 +527,7 @@
 					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:0.5%;">'+value.valid_to+'</td>';
 					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:0.5%;">'+value.status+'</td>';
 					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:5%;">'+value.remark+'</td>';
+					count_all += 1;
 					if(value.validity <= 30){
 						count_30 += 1;
 						listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:2%; background-color: #ff5c8d;">'+value.validity+' Day(s) left</td>';			
@@ -544,6 +548,7 @@
 					listTableBody += '</tr>';
 				});
 
+				$('#count_all').text(count_all);
 				$('#count_ok').text(count_ok);
 				$('#count_30').text(count_30);
 				$('#count_90').text(count_90);
