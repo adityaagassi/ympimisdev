@@ -189,7 +189,7 @@
 										<th>Purchase requisition ($)</th>
 										<th>Investment ($)</th>
 										<th>Purchase Order ($)</th>
-										<th>Transfer ($)</th>
+										<!-- <th>Transfer ($)</th> -->
 										<th>Actual ($)</th>
 										<th>Ending ($)</th>
 										<th>Detail</th>
@@ -208,7 +208,7 @@
 					                <th></th>
 					                <th></th>
 					                <th></th>
-					                <th></th>
+					                <!-- <th></th> -->
 					                <th></th>
 					                <th></th>
 					                <th></th>
@@ -381,17 +381,17 @@
 
 	          		<tr>
 	          			<th>Bulan</th>
-	          			<th>Budget Awal</th>
-	          			<th>Budget After Adjustment</th>
+	          			<!-- <th>Budget Awal</th> -->
+	          			<th>Budget Simulasi</th>
 	          			<th style="background-color: #ff7043">Sisa Budget</th>
 	          		</tr>
 	          		<tr>
 	          			<td>
 	          				April
 	          			</td>
-	          			<td>
+	          			<!-- <td>
 	          				<label id="budget_awal4" name="budget_awal4"></label>
-	          			</td>
+	          			</td> -->
 	          			<td>
 	          				<label id="budget_adj4" name="budget_adj4"></label>
 	          			</td>
@@ -403,9 +403,9 @@
 	          			<td>
 	          				Mei
 	          			</td>
-	          			<td>
+	          			<!-- <td>
 	          				<label id="budget_awal5" name="budget_awal5"></label>
-	          			</td>
+	          			</td> -->
 	          			<td>
 	          				<label id="budget_adj5" name="budget_adj5"></label>
 	          			</td>
@@ -417,9 +417,9 @@
 	          			<td>
 	          				Juni
 	          			</td>
-	          			<td>
+	          			<!-- <td>
 	          				<label id="budget_awal6" name="budget_awal6"></label>
-	          			</td>
+	          			</td> -->
 	          			<td>
 	          				<label id="budget_adj6" name="budget_adj6"></label>
 	          			</td>
@@ -431,9 +431,9 @@
 	          			<td>
 	          				Juli
 	          			</td>
-	          			<td>
+	          			<!-- <td>
 	          				<label id="budget_awal7" name="budget_awal7"></label>
-	          			</td>
+	          			</td> -->
 	          			<td>
 	          				<label id="budget_adj7" name="budget_adj7"></label>
 	          			</td>
@@ -445,9 +445,9 @@
 	          			<td>
 	          				Agustus
 	          			</td>
-	          			<td>
+	          			<!-- <td>
 	          				<label id="budget_awal8" name="budget_awal8"></label>
-	          			</td>
+	          			</td> -->
 	          			<td>
 	          				<label id="budget_adj8" name="budget_adj8"></label>
 	          			</td>
@@ -459,9 +459,9 @@
 	          			<td>
 	          				September
 	          			</td>
-	          			<td>
+	          			<!-- <td>
 	          				<label id="budget_awal9" name="budget_awal9"></label>
-	          			</td>
+	          			</td> -->
 	          			<td>
 	          				<label id="budget_adj9" name="budget_adj9"></label>
 	          			</td>
@@ -473,9 +473,9 @@
 	          			<td>
 	          				Oktober
 	          			</td>
-	          			<td>
+	          			<!-- <td>
 	          				<label id="budget_awal10" name="budget_awal10"></label>
-	          			</td>
+	          			</td> -->
 	          			<td>
 	          				<label id="budget_adj10" name="budget_adj10"></label>
 	          			</td>
@@ -487,9 +487,9 @@
 	          			<td>
 	          				November
 	          			</td>
-	          			<td>
+	          			<!-- <td>
 	          				<label id="budget_awal11" name="budget_awal11"></label>
-	          			</td>
+	          			</td> -->
 	          			<td>
 	          				<label id="budget_adj11" name="budget_adj11"></label>
 	          			</td>
@@ -501,9 +501,9 @@
 	          			<td>
 	          				December
 	          			</td>
-	          			<td>
+	          			<!-- <td>
 	          				<label id="budget_awal12" name="budget_awal12"></label>
-	          			</td>
+	          			</td> -->
 	          			<td>
 	          				<label id="budget_adj12" name="budget_adj12"></label>
 	          			</td>
@@ -515,9 +515,9 @@
 	          			<td>
 	          				Januari
 	          			</td>
-	          			<td>
+	          			<!-- <td>
 	          				<label id="budget_awal1" name="budget_awal1"></label>
-	          			</td>
+	          			</td> -->
 	          			<td>
 	          				<label id="budget_adj1" name="budget_adj1"></label>
 	          			</td>
@@ -529,9 +529,9 @@
 	          			<td>
 	          				Februari
 	          			</td>
-	          			<td>
+	          			<!-- <td>
 	          				<label id="budget_awal2" name="budget_awal2"></label>
-	          			</td>
+	          			</td> -->
 	          			<td>
 	          				<label id="budget_adj2" name="budget_adj2"></label>
 	          			</td>
@@ -543,9 +543,9 @@
 	          			<td>
 	          				Maret
 	          			</td>
-	          			<td>
+	          			<!-- <td>
 	          				<label id="budget_awal3" name="budget_awal3"></label>
-	          			</td>
+	          			</td> -->
 	          			<td>
 	          				<label id="budget_adj3" name="budget_adj3"></label>
 	          			</td>
@@ -558,9 +558,9 @@
 	          			<td style="background-color: #00a65a;color: white;border-top: 0">
 	          				Total
 	          			</td>
-	          			<td style="background-color: #00a65a;color: white;border-top: 0">
+	          			<!-- <td style="background-color: #00a65a;color: white;border-top: 0">
 	          				<label id="budget_awal_total" name="budget_awal_total"></label>
-	          			</td>
+	          			</td> -->
 	          			<td style="background-color: #00a65a;color: white;border-top: 0">
 	          				<label id="budget_adj_total" name="budget_adj_total"></label>
 	          			</td>
@@ -722,7 +722,7 @@
 	              table += '<td id="tdhover" style="cursor:pointer" onclick="detail_budget(\''+value.budget_no+'\',\'PR\')">'+value.PR.toLocaleString()+'</td>';
 	              table += '<td id="tdhover" style="cursor:pointer" onclick="detail_budget(\''+value.budget_no+'\',\'Investment\')">'+value.Investment.toLocaleString()+'</td>';
 	              table += '<td id="tdhover" style="cursor:pointer" onclick="detail_budget(\''+value.budget_no+'\',\'PO\')">'+value.PO.toLocaleString()+'</td>';
-	              table += '<td id="tdhover" style="cursor:pointer" onclick="detail_budget(\''+value.budget_no+'\',\'Transfer\')">'+value.Transfer.toLocaleString()+'</td>';
+	              // table += '<td id="tdhover" style="cursor:pointer" onclick="detail_budget(\''+value.budget_no+'\',\'Transfer\')">'+value.Transfer.toLocaleString()+'</td>';
 	              table += '<td id="tdhover" style="cursor:pointer" onclick="detail_budget(\''+value.budget_no+'\',\'Actual\')">'+value.Actual.toLocaleString()+'</td>';
 	              if (ending >= 0) {
 	              	table += '<td style="color:blue">'+ending.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })+'</td>';                
@@ -927,22 +927,22 @@
 
 	    	// if () {}
 
-	    	$("#budget_awal4").text('$'+result.datas.apr_budget_awal);
-	    	$("#budget_awal5").text('$'+result.datas.may_budget_awal);
-	    	$("#budget_awal6").text('$'+result.datas.jun_budget_awal);
-	    	$("#budget_awal7").text('$'+result.datas.jul_budget_awal);
-	    	$("#budget_awal8").text('$'+result.datas.aug_budget_awal);
-	    	$("#budget_awal9").text('$'+result.datas.sep_budget_awal);
-	    	$("#budget_awal10").text('$'+result.datas.oct_budget_awal);
-	    	$("#budget_awal11").text('$'+result.datas.nov_budget_awal);
-	    	$("#budget_awal12").text('$'+result.datas.dec_budget_awal);
-	    	$("#budget_awal1").text('$'+result.datas.jan_budget_awal);
-	    	$("#budget_awal2").text('$'+result.datas.feb_budget_awal);
-	    	$("#budget_awal3").text('$'+result.datas.mar_budget_awal);
+	    	// $("#budget_awal4").text('$'+result.datas.apr_budget_awal);
+	    	// $("#budget_awal5").text('$'+result.datas.may_budget_awal);
+	    	// $("#budget_awal6").text('$'+result.datas.jun_budget_awal);
+	    	// $("#budget_awal7").text('$'+result.datas.jul_budget_awal);
+	    	// $("#budget_awal8").text('$'+result.datas.aug_budget_awal);
+	    	// $("#budget_awal9").text('$'+result.datas.sep_budget_awal);
+	    	// $("#budget_awal10").text('$'+result.datas.oct_budget_awal);
+	    	// $("#budget_awal11").text('$'+result.datas.nov_budget_awal);
+	    	// $("#budget_awal12").text('$'+result.datas.dec_budget_awal);
+	    	// $("#budget_awal1").text('$'+result.datas.jan_budget_awal);
+	    	// $("#budget_awal2").text('$'+result.datas.feb_budget_awal);
+	    	// $("#budget_awal3").text('$'+result.datas.mar_budget_awal);
 
-	    	var budget_awal_total = result.datas.apr_budget_awal + result.datas.may_budget_awal + result.datas.jun_budget_awal + result.datas.jul_budget_awal + result.datas.aug_budget_awal + result.datas.sep_budget_awal + result.datas.oct_budget_awal + result.datas.nov_budget_awal + result.datas.dec_budget_awal + result.datas.jan_budget_awal + result.datas.feb_budget_awal + result.datas.mar_budget_awal;
+	    	// var budget_awal_total = result.datas.apr_budget_awal + result.datas.may_budget_awal + result.datas.jun_budget_awal + result.datas.jul_budget_awal + result.datas.aug_budget_awal + result.datas.sep_budget_awal + result.datas.oct_budget_awal + result.datas.nov_budget_awal + result.datas.dec_budget_awal + result.datas.jan_budget_awal + result.datas.feb_budget_awal + result.datas.mar_budget_awal;
 
-	    	$("#budget_awal_total").text('$'+budget_awal_total.toFixed(2));
+	    	// $("#budget_awal_total").text('$'+budget_awal_total.toFixed(2));
 
 	    	$("#budget_adj4").text('$'+result.datas.apr_after_adj);
 	    	$("#budget_adj5").text('$'+result.datas.may_after_adj);

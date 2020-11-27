@@ -7216,14 +7216,86 @@ public function fetch_budget_summary(Request $request)
 
     $resume = db::select('
         SELECT
-        category,
-        sum(amount) AS amount
+            periode,
+            SUM( jan_after_adj ) AS jan_simulasi,
+            SUM( feb_after_adj ) AS feb_simulasi,
+            SUM( mar_after_adj ) AS mar_simulasi,
+            SUM( apr_after_adj ) AS apr_simulasi,
+            SUM( may_after_adj ) AS may_simulasi,
+            SUM( jun_after_adj ) AS jun_simulasi,
+            SUM( jul_after_adj ) AS jul_simulasi,
+            SUM( aug_after_adj ) AS aug_simulasi,
+            SUM( sep_after_adj ) AS sep_simulasi,
+            SUM( oct_after_adj ) AS oct_simulasi,
+            SUM( nov_after_adj ) AS nov_simulasi,
+            SUM( dec_after_adj ) AS dec_simulasi
         FROM
-        acc_budgets
-        WHERE
-        acc_budgets.deleted_at IS NULL
-        GROUP BY
-        category
+            acc_budgets
+        GROUP BY periode
+        ');
+
+    $act = db::select('
+        SELECT
+            CASE
+                WHEN
+                    a.bulan = "Jan" THEN
+                        1 
+                        WHEN a.bulan = "Feb" THEN
+                        2 
+                        WHEN a.bulan = "Mar" THEN
+                        3 
+                        WHEN a.bulan = "Apr" THEN
+                        4 
+                        WHEN a.bulan = "May" THEN
+                        5 
+                        WHEN a.bulan = "Jun" THEN
+                        6 
+                        WHEN a.bulan = "Jul" THEN
+                        7 
+                        WHEN a.bulan = "Aug" THEN
+                        8 
+                        WHEN a.bulan = "Sep" THEN
+                        9 
+                        WHEN a.bulan = "Oct" THEN
+                        10 
+                        WHEN a.bulan = "Nov" THEN
+                        11 
+                        WHEN a.bulan = "Dec" THEN
+                        10 
+                    END AS month_number,
+                    a.bulan,
+                    SUM( a.actual ) AS Actual 
+                FROM
+                    (
+                    SELECT
+                        budget_month_receive AS bulan,
+                        ROUND( sum( CASE WHEN `status` = "Actual" THEN acc_budget_histories.amount_receive ELSE 0 END ), 2 ) AS Actual 
+                    FROM
+                        acc_budget_histories
+                        LEFT JOIN weekly_calendars ON date( acc_budget_histories.updated_at ) = weekly_calendars.week_date 
+                    WHERE
+                        budget_month_receive IS NOT NULL 
+                        AND fiscal_year = "FY197" 
+                    GROUP BY
+                        budget_month_receive UNION ALL
+                    SELECT
+                        month_date AS bulan,
+                        ROUND( SUM( local_amount ), 2 ) AS Actual 
+                    FROM
+                        acc_actual_logs
+                        LEFT JOIN weekly_calendars ON acc_actual_logs.post_date = weekly_calendars.week_date 
+                    WHERE
+                        acc_actual_logs.deleted_at IS NULL 
+                        AND fiscal_year = "FY197" 
+                    GROUP BY
+                        month_date 
+                    ) a 
+                GROUP BY
+                    a.bulan 
+                HAVING
+                    a.bulan IS NOT NULL 
+            ORDER BY
+                month_number
         ');
 
     $category = db::select('
@@ -7254,7 +7326,8 @@ public function fetch_budget_summary(Request $request)
         'status' => true,
         'cat_budget' => $category,
         'type_budget' => $type,
-        'resume' => $resume
+        'resume' => $resume,
+        'act' => $act
     );
 
     return Response::json($response); 
@@ -9992,6 +10065,33 @@ public function transfer_approvalto($id){
         ");
 
         return view('accounting_purchasing.master.receive_wh', array(
+            'title' => $title,
+            'title_jp' => $title_jp,
+            'po_detail' => $po_detail
+        ))->with('page', 'Receive Warehouse')->with('head', 'Receive Equipment Warehouse');
+    }
+
+    public function wh_receive_ga(){
+        $title = 'Receive Barang GA';
+        $title_jp = '';
+
+
+        $po_detail = db::select("
+            SELECT DISTINCT
+                acc_purchase_order_details.no_po 
+            FROM
+                acc_purchase_orders
+                JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po 
+                LEFT JOIN acc_purchase_requisitions ON acc_purchase_order_details.no_pr = acc_purchase_requisitions.no_pr
+            WHERE
+                acc_purchase_orders.posisi = 'pch' 
+                AND acc_purchase_order_details.`status` IS NULL 
+                AND acc_purchase_requisitions.department = 'General Affairs'
+            ORDER BY
+                acc_purchase_order_details.id
+        ");
+
+        return view('accounting_purchasing.master.receive_ga', array(
             'title' => $title,
             'title_jp' => $title_jp,
             'po_detail' => $po_detail

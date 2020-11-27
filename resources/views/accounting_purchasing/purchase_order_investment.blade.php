@@ -610,7 +610,7 @@
 											<label>Material<span class="text-red">*</span></label>
 											<select class="form-control select2" id="material_edit" name="material_edit" data-placeholder='Material Status' style="width: 100%">
 												<option value="">&nbsp;</option>
-												<option value="">None</option>
+												<option value="None">None</option>
 												<option value="Dipungut PPNBM">Dipungut PPNBM</option>
 												<option value="Tidak Dipungut PPNB">Tidak Dipungut PPNB</option>
 											</select>

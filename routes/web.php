@@ -1284,6 +1284,7 @@ Route::post('post/sakurentsu/3m_form', 'SakurentsuController@save_tiga_em_form')
 
 Route::get('index/sakurentsu/3m/premeeting/{id_three_m}', 'SakurentsuController@index_tiga_em_premeeting');
 Route::get('fetch/sakurentsu/3m/document', 'SakurentsuController@fetch_tiga_em_document');
+Route::post('upload/sakurentsu/3m/document', 'SakurentsuController@upload_tiga_em_document');
 
 //Supplier
 Route::get('index/supplier', 'AccountingController@master_supplier');
@@ -1523,6 +1524,10 @@ Route::post('delete/actual/transaksi', 'AccountingController@delete_transaksi');
 Route::get('warehouse/receive_equipment', 'AccountingController@wh_receive_equipment');
 Route::get('fetch/warehouse/equipment', 'AccountingController@fetch_receive_equipment');
 Route::post('fetch/warehouse/update_receive', 'AccountingController@update_receive');
+
+
+//Receive Barang
+Route::get('warehouse/receive_ga', 'AccountingController@wh_receive_ga');
 
 //Print Label Barang
 Route::get('warehouse/print_equipment', 'AccountingController@wh_print_equipment');
@@ -2467,6 +2472,7 @@ Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 
 Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::get('index/shipping_order', 'ContainerScheduleController@indexShippingOrder');
+	Route::get('fetch/shipping_order/get_carier', 'ContainerScheduleController@fetchCarier');
 });
 
 

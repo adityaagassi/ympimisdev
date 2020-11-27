@@ -3,116 +3,7 @@
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
 
-table.table-bordered{
-  border:1px solid rgb(150,150,150);
-}
-table.table-bordered > thead > tr > th{
-  border:1px solid rgb(54, 59, 56) !important;
-  text-align: center;
-  background-color: #fff;  
-  color:#eee;
-  font-size: 18px;
-}
-table.table-bordered > tbody > tr > td{
-  border:1px solid rgb(54, 59, 56);
-  background-color: #000;
-  color: white;
-  font-weight: bold;
-  vertical-align: middle;
-  text-align: center;
-  padding:8px;
-  font-size: 16px;
-}
-
-table.table-condensed > thead > tr > th{   
-  color: black
-}
-table.table-bordered > tfoot > tr > th{
-  /*border:1px solid rgb(150,150,150);*/
-  padding:0;
-}
-table.table-bordered > tbody > tr > td > p{
-  color: #abfbff;
-}
-
-table.table-striped > thead > tr > th{
-  border:1px solid black !important;
-  text-align: center;
-  background-color: rgba(126,86,134,.7) !important;  
-}
-
-table.table-striped > tbody > tr > td{
-  border: 1px solid #eeeeee !important;
-  border-collapse: collapse;
-  color: black;
-  padding: 3px;
-  vertical-align: middle;
-  text-align: center;
-  background-color: white;
-}
-
-thead input {
-  width: 100%;
-  padding: 3px;
-  box-sizing: border-box;
-}
-thead>tr>th{
-  text-align:center;
-}
-tfoot>tr>th{
-  text-align:center;
-}
-td:hover {
-  overflow: visible;
-}
-table > thead > tr > th{
-  border:2px solid #f4f4f4;
-  color: white;
-}
-#tabelmonitor{
-  font-size: 0.7vw;
-}
-
-.zoom{
-   -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -webkit-animation: zoomin 5s ease-in infinite;
-  animation: zoomin 5s ease-in infinite;
-  transition: all .5s ease-in-out;
-  overflow: hidden;
-}
-@-webkit-keyframes zoomin {
-  0% {transform: scale(0.7);}
-  50% {transform: scale(1);}
-  100% {transform: scale(0.7);}
-}
-@keyframes zoomin {
-  0% {transform: scale(0.7);}   
-  50% {transform: scale(1);}
-  100% {transform: scale(0.7);}
-} /*End of Zoom in Keyframes */
-
-/* Zoom out Keyframes */
-@-webkit-keyframes zoomout {
-  0% {transform: scale(0);}
-  50% {transform: scale(0.5);}
-  100% {transform: scale(0);}
-}
-@keyframes zoomout {
-    0% {transform: scale(0);}
-  50% {transform: scale(0.5);}
-  100% {transform: scale(0);}
-}/*End of Zoom out Keyframes */
-
-hr { background-color: red; height: 1px; border: 0; }
-#loading, #error { display: none; }
-
-#tablebudget > tr > td:hover {
-    /*cursor: pointer;*/
-    background-color: #36bf23;
-  }
-
+  #loading { display: none; }
 </style>
 @endsection
 @section('header')
@@ -125,11 +16,15 @@ hr { background-color: red; height: 1px; border: 0; }
 @endsection
 
 @section('content')
-<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8; display: none">
-    <p style="position: absolute; color: White; top: 45%; left: 35%;">
-      <span style="font-size: 40px">Loading, mohon tunggu . . . <i class="fa fa-spin fa-refresh"></i></span>
-    </p>
+
+<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+    <div>
+      <center>
+        <span style="font-size: 3vw; text-align: center;"><i class="fa fa-spin fa-hourglass-half"></i></span>
+      </center>
+    </div>
   </div>
+
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content" style="padding-top: 0; padding-bottom: 0">
   <div class="row">
@@ -156,40 +51,15 @@ hr { background-color: red; height: 1px; border: 0; }
 
       <div class="col-md-12">
           <div class="col-md-12" style="padding:0">
+              <div id="container_resume"></div>
+          </div>
+
+          <div class="col-md-12" style="padding:0">
               <div id="container_type"></div>
-<!--               <table id="tabelmonitor" class="table table-bordered" style="margin-top: 5px; width: 99%">
-                <thead>
-                  <tr>
-                    <th colspan="2" style="background-color: #0d47a1;">Summary By Type</th>
-                  </tr>
-                  <tr>
-                    <th style="height: 15px; background-color: #0d47a1;">Account Name</th>
-                    <th style="height: 15px; background-color: #0d47a1;">Amount</th>
-                  </tr>
-                </thead>
-                <tbody id="tabletype">
-                  
-                </tbody>
-              </table> -->
           </div>
 
           <div class="col-md-12" style="margin-top:20px;padding: 0">
               <div id="container"></div>
-
-              <!-- <table id="tabelmonitor" class="table table-bordered" style="margin-top: 5px; width: 99%">
-                <thead>
-                  <tr>
-                    <th colspan="2" style="background-color: #0d47a1;">Summary By Category Budget</th>
-                  </tr>
-                  <tr>
-                    <th style="height: 15px; background-color: #0d47a1;">Category</th>
-                    <th style="height: 15px; background-color: #0d47a1;">Amount</th>
-                  </tr>
-                </thead>
-                <tbody id="tablecategory">
-                  
-                </tbody>
-              </table> -->
           </div>
 
         </div>
@@ -249,6 +119,9 @@ hr { background-color: red; height: 1px; border: 0; }
 
   function drawChart() {
     // fetchTable();
+
+
+    $("#loading").show();
     
     var tglfrom = $('#tglfrom').val();
     var tglto = $('#tglto').val();
@@ -264,7 +137,8 @@ hr { background-color: red; height: 1px; border: 0; }
       if(xhr.status == 200){
         if(result.status){
 
-          var category = [], type = [], amount_category = [], amount_type = [];
+          var category = [], type = [], amount_category = [], amount_type = [], bulan = [], awal = [], sisa = [];
+          var fy;
 
           $.each(result.cat_budget, function(key, value) {
             category.push(value.category);
@@ -275,6 +149,86 @@ hr { background-color: red; height: 1px; border: 0; }
             type.push(value.account_name);
             amount_type.push(parseFloat(value.amount));
           })
+
+          $.each(result.resume, function(key, value) {
+            fy = value.periode;
+            bulan.push('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
+            awal.push(value.jan_simulasi,value.feb_simulasi,value.mar_simulasi,value.apr_simulasi,value.may_simulasi,value.jun_simulasi,value.jul_simulasi,value.aug_simulasi,value.sep_simulasi,value.oct_simulasi,value.nov_simulasi,value.des_simulasi);
+          })
+
+          $.each(result.act, function(key, value) {
+            sisa.push(value.Actual);
+          })
+
+          $('#container_resume').highcharts({
+            chart: {
+              type: 'column',
+              backgroundColor : null
+            },
+            title: {
+              text: 'Simulasi x Actual Budget '+fy,
+              style: {
+                fontSize: '24px',
+                fontWeight: 'bold'
+              }
+            },
+            xAxis: {
+              type: 'category',
+              tickInterval: 1,
+              gridLineWidth: 1,
+              categories: bulan,
+              crosshair: true,
+              lineWidth:2,
+              lineColor:'#9e9e9e'
+            },
+            yAxis: {
+              enabled:false,
+              title:""
+            },
+            legend: {
+              reversed: true,
+              itemStyle:{
+                color: "white",
+                fontSize: "12px",
+                fontWeight: "bold",
+
+              },
+            },
+            tooltip: {
+              headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+              pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+              '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+              footerFormat: '</table>',
+              shared: true,
+              useHTML: true
+            },
+            plotOptions: {
+              column: {
+                pointPadding: 0.05,
+                groupPadding: 0.1,
+                borderWidth: 0,
+                color:  Highcharts.ColorString,
+                borderRadius: 1,
+                dataLabels: {
+                    enabled: true
+                }
+              }
+            },
+            credits: {
+              enabled: false
+            },
+            series: [
+              {
+                name: 'Simulasi Budget',
+                data: awal
+              },
+              {
+                name: 'Actual Budget',
+                data: sisa
+              }
+            ]
+          })
+
 
           $('#container').highcharts({
             chart: {
@@ -425,6 +379,9 @@ hr { background-color: red; height: 1px; border: 0; }
               }
             ]
           })
+
+
+          $('#loading').hide();
 
         } else{
           alert('Attempt to retrieve data failed');
