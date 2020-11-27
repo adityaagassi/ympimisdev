@@ -69,7 +69,7 @@ public function handle()
         $row['gender'] = $data['gender'];
         $row['birthplace'] = $data['birthplace'];
         $row['birthdate'] = $data['birthdate'];
-        $row['address'] = $data['address'];
+        $row['address'] = $data['Current_Address'];
         $row['phone'] = $data['phone'];
         $row['identity_no'] = $data['identity_no'];
         $row['taxfilenumber'] = $data['taxfilenumber'];
