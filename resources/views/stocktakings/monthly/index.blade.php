@@ -663,7 +663,7 @@
 
 	function monitoring(){
 		var month = $('#month').val();
-		window.open('{{ url("index/stocktaking/monitoring") }}', '_blank');
+		window.open('{{ url("index/stocktaking/monitoring") }}', '_Self');
 	}
 
 	function monthChange(){

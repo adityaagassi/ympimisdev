@@ -57,19 +57,22 @@
 @section('header')
 <section class="content-header">
 	<div class="row">
-		<div class="col-xs-12 col-md-9 col-lg-9">
-			<h3 style="margin-top: 0px;">{{ $title }}<span class="text-purple"> {{ $title_jp }}</span></h3>
-		</div>
-		<div class="col-xs-12 col-md-3 col-lg-3" >
-			<table class="pull-right">
+		<div class="col-xs-12 col-md-12 col-lg-12" style="margin-bottom: 2%;">
+			<table style="width: 100%; vertical-align: middle;">
 				<tr>
-					<td>
-						<div id="last_update" style="color: black; margin: 0px; padding-top: 0px; padding-right: 0px; font-size: 15px;"></div>
+					<td width="50%">
+						<h3 class="pull-left" style="padding: 0px; margin: 0px;">{{ $title }}<span class="text-purple"> {{ $title_jp }}</span></h3>
+					</td>
+					<td width="50%">
+						<div id="last_update" class="pull-right" style="color: black; margin: 0px; padding: 0px; font-size: 15px;"></div>
 					</td>
 				</tr>
 				<tr>
-					<td>
-						<div class="input-group date">
+					<td width="50%">
+						<a class="btn btn-primary pull-left" href="{{ url("/index/stocktaking/menu") }}"><i class="fa fa-arrow-left"></i>&nbsp;&nbsp;&nbsp;KEMBALI</a>
+					</td>
+					<td width="50%">
+						<div class="input-group date pull-right col-xs-12 col-md-4 col-lg-4">
 							<div class="input-group-addon bg-green">
 								<i class="fa fa-calendar"></i>
 							</div>
@@ -78,7 +81,6 @@
 					</td>
 				</tr>
 			</table>
-
 		</div>
 	</div>
 </section>
@@ -314,61 +316,16 @@
 
 		$.get('{{ url("fetch/stocktaking/check_month") }}', data, function(result, status, xhr){
 			if(result.status){
-				$('#inquiry').removeClass('disabled');
-				$('#variance').removeClass('disabled');
-
-				if(result.data.status == 'finished'){
-					$('#manage_store').addClass('disabled');
-					$('#summary_of_counting').addClass('disabled');
-					$('#no_use').addClass('disabled');
-					$('#input_pi').addClass('disabled');
-					$('#audit1').addClass('disabled');
-					$('#audit2').addClass('disabled');
-					$('#breakdown').addClass('disabled');
-					$('#unmatch').addClass('disabled');
-					$('#revise').addClass('disabled');
-					$('#upload_sap').addClass('disabled');
-					$('#export_log').addClass('disabled');
-					$('#check_new').addClass('disabled');
-				}else{
-					$('#manage_store').removeClass('disabled');
-					$('#summary_of_counting').removeClass('disabled');
-					$('#no_use').removeClass('disabled');
-					$('#input_pi').removeClass('disabled');
-					$('#audit1').removeClass('disabled');
-					$('#audit2').removeClass('disabled');
-					$('#breakdown').removeClass('disabled');
-					$('#unmatch').removeClass('disabled');
-					$('#revise').removeClass('disabled');
-					$('#upload_sap').removeClass('disabled');
-					$('#export_log').removeClass('disabled');
-					$('#check_new').removeClass('disabled');
-
-				}
-
+			
 				filledList();
 				auditedList();	
-				variance();
+				// variance();
 
 				$('#modalMonth').modal('hide');
 
 			}else{
 				$('#modalMonth').modal('hide');
 				openErrorGritter('Error', result.message);
-
-				$('#manage_store').addClass('disabled');
-				$('#summary_of_counting').addClass('disabled');
-				$('#no_use').addClass('disabled');
-				$('#input_pi').addClass('disabled');
-				$('#audit1').addClass('disabled');
-				$('#audit2').addClass('disabled');
-				$('#breakdown').addClass('disabled');
-				$('#unmatch').addClass('disabled');
-				$('#revise').addClass('disabled');
-				$('#upload_sap').addClass('disabled');
-				$('#export_log').addClass('disabled');
-				$('#inquiry').addClass('disabled');
-				$('#variance').addClass('disabled');
 			}
 
 		});
@@ -1194,6 +1151,9 @@
 						audited_new.push(parseInt(result.data[i].audited));
 						notyet_new.push(parseInt(result.data[i].not_audited));
 					}
+
+					console.log(audited_new);
+					console.log(notyet_new);
 
 					Highcharts.chart('container4', {
 						chart: {
