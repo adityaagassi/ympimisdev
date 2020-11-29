@@ -3703,6 +3703,7 @@ class StockTakingController extends Controller{
 				(SELECT stocktaking_new_lists.location, stocktaking_new_lists.store, count( stocktaking_new_lists.id ) AS total, SUM( IF ( stocktaking_new_lists.process >= 2, 1, 0 ) ) AS audit FROM stocktaking_new_lists
 				WHERE stocktaking_new_lists.location = '".$group."'
 				AND stocktaking_new_lists.print_status = 1
+				AND stocktaking_new_lists.remark = 'USE'
 				GROUP BY stocktaking_new_lists.location, stocktaking_new_lists.store) audit) AS audited
 				LEFT JOIN storage_locations ON audited.location = storage_locations.storage_location
 				order by ord asc");
