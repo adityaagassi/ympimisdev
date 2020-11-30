@@ -806,11 +806,24 @@ class StockTakingController extends Controller{
 		))->with('page', 'Summary Of Counting')->with('head', 'Stocktaking');
 	}
 
-	public function countNewStcPISingle($location){
+	public function countNewStcPISingle($locations){
+
+		$loc = '';
+		$location = '';
+		for ($i=0; $i < count($locations); $i++) {
+			$location = $location."'".$locations[$i]."'";
+			if($i != (count($locations)-1)){
+				$location = $location.',';
+			}
+		}
+		$loc = " AND location IN (".$location.") ";
+
 		$single = db::select("SELECT location, material_number, sum(final_count) AS final_count FROM stocktaking_new_lists
 			WHERE category = 'SINGLE'
 			AND final_count > 0
+			".$loc."
 			GROUP BY location, material_number");
+
 
 		for ($i=0; $i < count($single); $i++) {
 
@@ -824,10 +837,22 @@ class StockTakingController extends Controller{
 		}
 	}
 
-	public function countNewStcPIAssy($location){
+	public function countNewStcPIAssy($locations){
+
+		$loc = '';
+		$location = '';
+		for ($i=0; $i < count($locations); $i++) {
+			$location = $location."'".$locations[$i]."'";
+			if($i != (count($locations)-1)){
+				$location = $location.',';
+			}
+		}
+		$loc = " AND location IN (".$location.") ";
+
 		$assy = db::select("SELECT location, material_number, sum(final_count) AS final_count FROM stocktaking_new_lists
 			WHERE category = 'ASSY'
 			AND final_count > 0
+			".$loc."
 			GROUP BY location, material_number");
 
 		for ($i=0; $i < count($assy); $i++) {
