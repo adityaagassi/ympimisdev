@@ -3414,6 +3414,7 @@ class StockTakingController extends Controller{
 			LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number 
 			WHERE
 			s.location = '".$group."' ".$quantity." 
+			and remark = 'NO USE'
 			AND s.print_status = 1 
 			ORDER BY
 			ord,
