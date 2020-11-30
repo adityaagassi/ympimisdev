@@ -102,7 +102,7 @@
       <?php $user = STRTOUPPER(Auth::user()->username)?>
 
       @if(
-      (($user == $po->authorized2 || Auth::user()->role_code == "MIS") && $po->approval_authorized2 == null && $po->posisi == "manager_pch") 
+      (($user == $po->authorized2 || $user == "PI9808012" || Auth::user()->role_code == "MIS") && $po->approval_authorized2 == null && $po->posisi == "manager_pch") 
       || (($user == $po->authorized3 || Auth::user()->role_code == "MIS") && $po->approval_authorized3 == null && $po->posisi == "dgm_pch")
       || (($user == $po->authorized4) && $po->approval_authorized4 == null && $po->posisi == "gm_pch"))
 

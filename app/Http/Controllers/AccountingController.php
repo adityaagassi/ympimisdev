@@ -7217,9 +7217,6 @@ public function fetch_budget_summary(Request $request)
     $resume = db::select('
         SELECT
             periode,
-            SUM( jan_after_adj ) AS jan_simulasi,
-            SUM( feb_after_adj ) AS feb_simulasi,
-            SUM( mar_after_adj ) AS mar_simulasi,
             SUM( apr_after_adj ) AS apr_simulasi,
             SUM( may_after_adj ) AS may_simulasi,
             SUM( jun_after_adj ) AS jun_simulasi,
@@ -7228,7 +7225,10 @@ public function fetch_budget_summary(Request $request)
             SUM( sep_after_adj ) AS sep_simulasi,
             SUM( oct_after_adj ) AS oct_simulasi,
             SUM( nov_after_adj ) AS nov_simulasi,
-            SUM( dec_after_adj ) AS dec_simulasi
+            SUM( dec_after_adj ) AS dec_simulasi,
+            SUM( jan_after_adj ) AS jan_simulasi,
+            SUM( feb_after_adj ) AS feb_simulasi,
+            SUM( mar_after_adj ) AS mar_simulasi
         FROM
             acc_budgets
         GROUP BY periode
