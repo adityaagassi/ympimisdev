@@ -81,10 +81,9 @@ table > thead > tr > th{
 
   .gambar {
     width: 300px;
-    height: 350px;
     background-color: none;
-    border-radius: 15px;
-    margin-left: 30px;
+    border-radius: 5px;
+    margin-left: 5px;
     margin-top: 15px;
     display: inline-block;
     border: 2px solid white;
@@ -94,6 +93,66 @@ table > thead > tr > th{
   	border: 1px solid #000 !important;
   	padding: 5px;
   }
+
+  #sedang {
+	/*width: 50px;
+	height: 50px;*/
+	-webkit-animation: sedang 1s infinite;  /* Safari 4+ */
+	-moz-animation: sedang 1s infinite;  /* Fx 5+ */
+	-o-animation: sedang 1s infinite;  /* Opera 12+ */
+	animation: sedang 1s infinite;  /* IE 10+, Fx 29+ */
+}
+
+@-webkit-keyframes sedang {
+	0%, 49% {
+		background-color: #3c3c3c;
+		color: white;
+	}
+	50%, 100% {
+		background-color: #91ff5e;
+		color: #3c3c3c;
+	}
+}
+
+#warning {
+	/*width: 50px;
+	height: 50px;*/
+	-webkit-animation: warning 1s infinite;  /* Safari 4+ */
+	-moz-animation: warning 1s infinite;  /* Fx 5+ */
+	-o-animation: warning 1s infinite;  /* Opera 12+ */
+	animation: warning 1s infinite;  /* IE 10+, Fx 29+ */
+}
+
+@-webkit-keyframes warning {
+	0%, 49% {
+		background-color: #3c3c3c;
+		color: white;
+	}
+	50%, 100% {
+		background-color: #ffea5e;
+		color: #3c3c3c;
+	}
+}
+
+#danger {
+	/*width: 50px;
+	height: 50px;*/
+	-webkit-animation: danger 1s infinite;  /* Safari 4+ */
+	-moz-animation: danger 1s infinite;  /* Fx 5+ */
+	-o-animation: danger 1s infinite;  /* Opera 12+ */
+	animation: danger 1s infinite;  /* IE 10+, Fx 29+ */
+}
+
+@-webkit-keyframes danger {
+	0%, 49% {
+		background-color: #3c3c3c;
+		color: white;
+	}
+	50%, 100% {
+		background-color: #ff5e5e;
+		color: #3c3c3c;
+	}
+}
 
 </style>
 @endsection
@@ -105,7 +164,7 @@ table > thead > tr > th{
 		<div class="col-xs-12">
 			<div class="row">
 				<center><h4 style="font-weight: bold;font-size: 35px;padding: 10px;;background-color: #42d4f5;color: black">MOLDING TERPASANG</h4></center>
-				<div id="cont"></div>
+				<div id="cont" style="margin-top: 0px"></div>
 			</div>
 		</div>
 
@@ -207,121 +266,40 @@ table > thead > tr > th{
 						data.push([parseInt((parseInt(result.query_pasang[i].last_counter) / parseInt(result.query_pasang[i].qty_shot)).toFixed(0))]);
 
 						var a = i+1;
-						body += '<div class="gambar" id="container'+a+'"></div>';
+						body += '<div class="gambar" style="margin-top:0px" id="container'+a+'"></div>';
 					}
 					$('#cont').append(body);
 
 					for (var j = 0; j < part.length; j++) {
-						var gaugeOptions = {
-						    chart: {
-						        type: 'solidgauge',
-						        backgroundColor:null
-						    },
-
-						    title: null,
-
-						    pane: {
-						        center: ['50%', '50%'],
-						        size: '100%',
-						        startAngle: -90,
-						        endAngle: 90,
-						        background: {
-						            backgroundColor:
-						                Highcharts.defaultOptions.legend.backgroundColor || '#EEE',
-						            innerRadius: '60%',
-						            outerRadius: '100%',
-						            shape: 'arc'
-						        }
-						    },
-
-						    exporting: {
-						        enabled: false
-						    },
-
-						    tooltip: {
-						        enabled: false
-						    },
-
-						    // the value axis
-						    yAxis: {
-						        stops: [
-						            [0.1, '#55BF3B'], // green
-						            [0.5, '#DDDF0D'], // yellow
-						            [0.7, '#DF5353'] // red
-						        ],
-						        lineWidth: 0,
-						        tickWidth: 0,
-						        minorTickInterval: null,
-						        tickAmount: 2,
-						        title: {
-						            y: 125
-						        },
-						        labels: {
-						            y: 30,
-						            style:{
-						            	color:'#fff',
-						            	fontSize:'20px'
-						            }
-						        },
-						    },
-
-						    plotOptions: {
-						        solidgauge: {
-						            dataLabels: {
-						                y: 182,
-						                borderWidth: 0,
-						                useHTML: true
-						            }
-						        }
-						    }
-						};
-
 						var a = j+1;
 						var container = 'container'+a;
-						var b = data[j];
-						var tabel = 
-						'<table style="text-align:center;margin-right:-30px;"><tr><td style="width:200px;border: 1px solid #fff !important;padding-left:40px;padding-right:40px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px;text-align:left">SHOTS</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+last_counter[j]+'</td></tr>' +
+						var containerin = "";
 
-		            	'<tr><td style="border: 1px solid #fff !important;padding-left:40px;padding-right:40px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">NG</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+ng_count[j]+'</td></tr>' +
+						containerin += '<table style="text-align:center;">';
 
-		            	'<tr><td style="border: 1px solid #fff !important;padding-left:40px;padding-right:40px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">LOC</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+status_mesin[j]+'</td></tr>' +
-		            	'</table>';
+						containerin += '<tr><td colspan="3" style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:black;background-color:white;font-size:30px">'+part[j]+'</td></tr>';
 
-						var parta = '<div style="font-size:25px;color:#fff;text-decoration: none">'+part[j]+'</div>';
+						if (last_counter[j] == 0) {
+							containerin += '<tr><td style="width:100%;border: 1px solid #fff !important;color:white;font-size:15px;text-align:center">SHOTS</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+last_counter[j]+'</td></tr>';
+						}else if (last_counter[j] > 0 && last_counter[j] <= 10000) {
+							containerin += '<tr><td style="width:100%;border: 1px solid #fff !important;color:white;font-size:15px;text-align:center">SHOTS</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td id="sedang" style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+last_counter[j]+'</td></tr>';
+						}else if (last_counter[j] > 10000  && last_counter[j] <= 15000){
+							containerin += '<tr><td style="width:100%;border: 1px solid #fff !important;color:white;font-size:15px;text-align:center">SHOTS</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td id="warning" style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+last_counter[j]+'</td></tr>';
+						}else if (last_counter[j] > 15000){
+							containerin += '<tr><td style="width:100%;border: 1px solid #fff !important;color:white;font-size:15px;text-align:center">SHOTS</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td id="danger" style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+last_counter[j]+'</td></tr>';
+						}
 
-						var chartSpeed = Highcharts.chart(container, Highcharts.merge(gaugeOptions, {
-						    yAxis: {
-						        min: 0,
-						        max: 15000,
-						        title: {
-						            text: parta,
-						            style: {
-											color: '#000',
-											textTransform: 'uppercase',
-											fontSize: '30px',
-										}
-						        },
-						        tickPositions: [0, 15000]
-						    },
+		            	if (ng_count[j] == 0) {
+		            		containerin += '<tr><td style="border: 1px solid #fff !important;color:white;font-size:15px">NG</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td style="border: 1px solid #fff !important;padding-left:30px;padding-right:30px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+ng_count[j]+' ( 0% )</td></tr>';
+		            	}else{
+		            		containerin += '<tr><td style="border: 1px solid #fff !important;color:white;font-size:15px">NG</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td style="border: 1px solid #fff !important;padding-left:30px;padding-right:30px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+ng_count[j]+' ( '+((ng_count[j] / last_counter[j])*100).toFixed(0)+'% )</td></tr>';
+		            	}
 
-						    credits: {
-						        enabled: false
-						    },
+		            	containerin += '<tr><td style="border: 1px solid #fff !important;color:white;font-size:15px">LOC</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td style="border: 1px solid #fff !important;padding-left:20px;padding-right:20px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+status_mesin[j]+'</td></tr>';
 
-						    series: [{
-						        name: 'Shots',
-						        data: [b],
-						        dataLabels: {
-						            format:
-						            	tabel
-						        },
-						        animation: false,
-						        tooltip: {
-						            valueSuffix: ' Shot'
-						        }
-						    }]
+		            	containerin += '</table>';
 
-						}));
+		            	$('#'+container).append(containerin);
 					}
 
 					var part_maintenance = [];
@@ -353,116 +331,35 @@ table > thead > tr > th{
 					$('#cont2').append(body_maintenance);
 
 					for (var k = 0; k < part_maintenance.length; k++) {
-						var gaugeOptions2 = {
-						    chart: {
-						        type: 'solidgauge',
-						        backgroundColor:null
-						    },
-
-						    title: null,
-
-						    pane: {
-						        center: ['50%', '50%'],
-						        size: '100%',
-						        startAngle: -90,
-						        endAngle: 90,
-						        background: {
-						            backgroundColor:
-						                Highcharts.defaultOptions.legend.backgroundColor || '#EEE',
-						            innerRadius: '60%',
-						            outerRadius: '100%',
-						            shape: 'arc'
-						        }
-						    },
-
-						    exporting: {
-						        enabled: false
-						    },
-
-						    tooltip: {
-						        enabled: false
-						    },
-
-						    // the value axis
-						    yAxis: {
-						        stops: [
-						            [0.1, '#55BF3B'], // green
-						            [0.5, '#DDDF0D'], // yellow
-						            [0.7, '#DF5353'] // red
-						        ],
-						        lineWidth: 0,
-						        tickWidth: 0,
-						        minorTickInterval: null,
-						        tickAmount: 2,
-						        title: {
-						            y: 125
-						        },
-						        labels: {
-						            y: 30,
-						            style:{
-						            	color:'#fff',
-						            	fontSize:'20px'
-						            }
-						        },
-						    },
-
-						    plotOptions: {
-						        solidgauge: {
-						            dataLabels: {
-						                y: 182,
-						                borderWidth: 0,
-						                useHTML: true
-						            }
-						        }
-						    }
-						};
-
 						var a = k+1;
-						var container = 'container2'+a;
-						var b = data_maintenance[k];
-						var tabel = 
-						'<table style="text-align:center;margin-right:-30px;"><tr><td style="width:200px;border: 1px solid #fff !important;padding-left:40px;padding-right:40px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px;text-align:left">SHOTS</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+last_counter_maintenance[k]+'</td></tr>' +
+						var container2 = 'container2'+a;
+						var containerin = "";
 
-		            	'<tr><td style="border: 1px solid #fff !important;padding-left:40px;padding-right:40px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">NG</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+ng_count_maintenance[k]+'</td></tr>' +
+						containerin += '<table style="text-align:center;">';
 
-		            	'<tr><td style="border: 1px solid #fff !important;padding-left:40px;padding-right:40px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">LOC</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+status_mesin_maintenance[k]+'</td></tr>' +
-		            	'</table>';
+						containerin += '<tr><td colspan="3" style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:black;background-color:white;font-size:30px">'+part_maintenance[k]+'</td></tr>';
 
-						var parta = '<div style="font-size:25px;color:#fff;text-decoration: none">'+part_maintenance[k]+'</div>';
+						if (last_counter_maintenance[k] == 0) {
+							containerin += '<tr><td style="width:100%;border: 1px solid #fff !important;color:white;font-size:15px;text-align:center">SHOTS</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+last_counter_maintenance[k]+'</td></tr>';
+						}else if (last_counter_maintenance[k] > 0 && last_counter_maintenance[k] <= 10000) {
+							containerin += '<tr><td style="width:100%;border: 1px solid #fff !important;color:white;font-size:15px;text-align:center">SHOTS</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td  style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+last_counter_maintenance[k]+'</td></tr>';
+						}else if (last_counter_maintenance[k] > 10000  && last_counter_maintenance[k] <= 15000){
+							containerin += '<tr><td style="width:100%;border: 1px solid #fff !important;color:white;font-size:15px;text-align:center">SHOTS</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td  style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+last_counter_maintenance[k]+'</td></tr>';
+						}else if (last_counter_maintenance[k] > 15000){
+							containerin += '<tr><td style="width:100%;border: 1px solid #fff !important;color:white;font-size:15px;text-align:center">SHOTS</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td  style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+last_counter_maintenance[k]+'</td></tr>';
+						}
 
-						var chartSpeed2 = Highcharts.chart(container, Highcharts.merge(gaugeOptions2, {
-						    yAxis: {
-						        min: 0,
-						        max: 15000,
-						        title: {
-						            text: parta,
-						            style: {
-											color: '#000',
-											textTransform: 'uppercase',
-											fontSize: '30px',
-										}
-						        },
-						        tickPositions: [0, 15000]
-						    },
+		            	if (ng_count_maintenance[k] == 0) {
+		            		containerin += '<tr><td style="border: 1px solid #fff !important;color:white;font-size:15px">NG</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td style="border: 1px solid #fff !important;padding-left:30px;padding-right:30px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+ng_count_maintenance[k]+' ( 0% )</td></tr>';
+		            	}else{
+		            		containerin += '<tr><td style="border: 1px solid #fff !important;color:white;font-size:15px">NG</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td style="border: 1px solid #fff !important;padding-left:30px;padding-right:30px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+ng_count_maintenance[k]+' ( '+((ng_count_maintenance[k] / last_counter_maintenance[k])*100).toFixed(0)+'% )</td></tr>';
+		            	}
 
-						    credits: {
-						        enabled: false
-						    },
+		            	containerin += '<tr><td style="border: 1px solid #fff !important;color:white;font-size:15px">LOC</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td style="border: 1px solid #fff !important;padding-left:20px;padding-right:20px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+status_mesin_maintenance[k]+'</td></tr>';
 
-						    series: [{
-						        name: 'Shots',
-						        data: [b],
-						        dataLabels: {
-						            format:
-						            	tabel
-						        },
-						        animation: false,
-						        tooltip: {
-						            valueSuffix: ' Shot'
-						        }
-						    }]
+		            	containerin += '</table>';
 
-						}));
+		            	$('#'+container2).append(containerin);
 					}
 
 					var part_ready = [];
@@ -494,116 +391,35 @@ table > thead > tr > th{
 					$('#cont3').append(body_ready);
 
 					for (var k = 0; k < part_ready.length; k++) {
-						var gaugeOptions2 = {
-						    chart: {
-						        type: 'solidgauge',
-						        backgroundColor:null
-						    },
-
-						    title: null,
-
-						    pane: {
-						        center: ['50%', '50%'],
-						        size: '100%',
-						        startAngle: -90,
-						        endAngle: 90,
-						        background: {
-						            backgroundColor:
-						                Highcharts.defaultOptions.legend.backgroundColor || '#EEE',
-						            innerRadius: '60%',
-						            outerRadius: '100%',
-						            shape: 'arc'
-						        }
-						    },
-
-						    exporting: {
-						        enabled: false
-						    },
-
-						    tooltip: {
-						        enabled: false
-						    },
-
-						    // the value axis
-						    yAxis: {
-						        stops: [
-						            [0.1, '#55BF3B'], // green
-						            [0.5, '#DDDF0D'], // yellow
-						            [0.7, '#DF5353'] // red
-						        ],
-						        lineWidth: 0,
-						        tickWidth: 0,
-						        minorTickInterval: null,
-						        tickAmount: 2,
-						        title: {
-						            y: 125
-						        },
-						        labels: {
-						            y: 30,
-						            style:{
-						            	color:'#fff',
-						            	fontSize:'20px'
-						            }
-						        },
-						    },
-
-						    plotOptions: {
-						        solidgauge: {
-						            dataLabels: {
-						                y: 182,
-						                borderWidth: 0,
-						                useHTML: true
-						            }
-						        }
-						    }
-						};
-
 						var a = k+1;
-						var container = 'container3'+a;
-						var b = data_ready[k];
-						var tabel = 
-						'<table style="text-align:center;margin-right:-30px;"><tr><td style="width:200px;border: 1px solid #fff !important;padding-left:40px;padding-right:40px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px;text-align:left">SHOTS</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+last_counter_ready[k]+'</td></tr>' +
+						var container3 = 'container3'+a;
+						var containerin = "";
 
-		            	'<tr><td style="border: 1px solid #fff !important;padding-left:40px;padding-right:40px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">NG</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+ng_count_ready[k]+'</td></tr>' +
+						containerin += '<table style="text-align:center;">';
 
-		            	'<tr><td style="border: 1px solid #fff !important;padding-left:40px;padding-right:40px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">LOC</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+status_mesin_ready[k]+'</td></tr>' +
-		            	'</table>';
+						containerin += '<tr><td colspan="3" style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:0px;padding-bottom:2px;color:black;background-color:white;font-size:30px">'+part_ready[k]+'</td></tr>';
 
-						var parta = '<div style="font-size:25px;color:#fff;text-decoration: none">'+part_ready[k]+'</div>';
+						if (last_counter_ready[k] == 0) {
+							containerin += '<tr><td style="width:100%;border: 1px solid #fff !important;color:white;font-size:15px;text-align:center">SHOTS</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+last_counter_ready[k]+'</td></tr>';
+						}else if (last_counter_ready[k] > 0 && last_counter_ready[k] <= 10000) {
+							containerin += '<tr><td style="width:100%;border: 1px solid #fff !important;color:white;font-size:15px;text-align:center">SHOTS</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td  style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+last_counter_ready[k]+'</td></tr>';
+						}else if (last_counter_ready[k] > 10000  && last_counter_ready[k] <= 15000){
+							containerin += '<tr><td style="width:100%;border: 1px solid #fff !important;color:white;font-size:15px;text-align:center">SHOTS</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td  style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+last_counter_ready[k]+'</td></tr>';
+						}else if (last_counter_ready[k] > 15000){
+							containerin += '<tr><td style="width:100%;border: 1px solid #fff !important;color:white;font-size:15px;text-align:center">SHOTS</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td  style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+last_counter_ready[k]+'</td></tr>';
+						}
 
-						var chartSpeed2 = Highcharts.chart(container, Highcharts.merge(gaugeOptions2, {
-						    yAxis: {
-						        min: 0,
-						        max: 15000,
-						        title: {
-						            text: parta,
-						            style: {
-											color: '#000',
-											textTransform: 'uppercase',
-											fontSize: '30px',
-										}
-						        },
-						        tickPositions: [0, 15000]
-						    },
+		            	if (ng_count_ready[k] == 0) {
+		            		containerin += '<tr><td style="border: 1px solid #fff !important;color:white;font-size:15px">NG</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td style="border: 1px solid #fff !important;padding-left:30px;padding-right:30px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+ng_count_ready[k]+' ( 0% )</td></tr>';
+		            	}else{
+		            		containerin += '<tr><td style="border: 1px solid #fff !important;color:white;font-size:15px">NG</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td style="border: 1px solid #fff !important;padding-left:30px;padding-right:30px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+ng_count_ready[k]+' ( '+((ng_count_ready[k] / last_counter_ready[k])*100).toFixed(0)+'% )</td></tr>';
+		            	}
 
-						    credits: {
-						        enabled: false
-						    },
+		            	containerin += '<tr><td style="border: 1px solid #fff !important;color:white;font-size:15px">LOC</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td style="border: 1px solid #fff !important;padding-left:20px;padding-right:20px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+status_mesin_ready[k]+'</td></tr>';
 
-						    series: [{
-						        name: 'Shots',
-						        data: [b],
-						        dataLabels: {
-						            format:
-						            	tabel
-						        },
-						        animation: false,
-						        tooltip: {
-						            valueSuffix: ' Shot'
-						        }
-						    }]
+		            	containerin += '</table>';
 
-						}));
+		            	$('#'+container3).append(containerin);
 					}
 				}
 			}
