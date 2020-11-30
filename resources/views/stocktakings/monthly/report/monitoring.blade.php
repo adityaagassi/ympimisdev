@@ -134,7 +134,7 @@
 				</ul>
 
 				<div class="tab-content">
-					<div class="tab-pane" id="tab_11">
+					<div class="tab-pane active" id="tab_11">
 						<div id="container2"></div>				
 					</div>
 				</div>
@@ -1403,7 +1403,6 @@
 					var location = [];
 					var variance = [];
 
-
 					for (var i = 0; i < result.variance.length; i++) {
 						location.push(result.variance[i].group);
 						variance.push(parseFloat(result.variance[i].percentage));
@@ -1457,14 +1456,15 @@
 									style: {
 										fontWeight: 'bold',
 									}
-								},
-								point: {
-									events: {
-										click: function () {
-											fillVarianceModal(this.category, this.series.name);
-										}
-									}
 								}
+								// ,
+								// point: {
+								// 	events: {
+								// 		click: function () {
+								// 			fillVarianceModal(this.category, this.series.name);
+								// 		}
+								// 	}
+								// }
 							}
 						},
 						series: [{
