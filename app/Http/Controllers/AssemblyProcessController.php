@@ -79,6 +79,31 @@ class AssemblyProcessController extends Controller
 		];
 	}
 
+	public function stampFluteAdjustSerial(Request $request){
+		if($request->get('adjust') == 'minus'){
+			$code_generator = CodeGenerator::where('note', '=', $request->get('origin_group_code'))->first();
+			$code_generator->index = $code_generator->index-1;
+			$code_generator->save();
+
+			$response = array(
+				'status' => true,
+				'message' => 'Serial number adjusted',
+			);
+			return Response::json($response);
+		}
+		else{
+			$code_generator = CodeGenerator::where('note', '=', $request->get('origin_group_code'))->first();
+			$code_generator->index = $code_generator->index+1;
+			$code_generator->save();
+
+			$response = array(
+				'status' => true,
+				'message' => 'Serial number adjusted',
+			);
+			return Response::json($response);
+		}		
+	}
+
 	public function indexFluteStamp(){
 
 		$models = db::table('materials')->where('origin_group_code', '=', '041')
@@ -102,16 +127,16 @@ class AssemblyProcessController extends Controller
 		->first();
 		$auth_id = Auth::id();
 
-		$plc = new ActMLEasyIf(0);
-		$datas = $plc->read_data('D0', 5);
+		// $plc = new ActMLEasyIf(0);
+		// $datas = $plc->read_data('D0', 5);
 
-		if($counter->plc_counter == $datas[0]){
-			$response = array(
-				'status' => true,
-				'status_code' => 'no_stamp',
-			);
-			return Response::json($response);
-		}
+		// if($counter->plc_counter == $datas[0]){
+		// 	$response = array(
+		// 		'status' => true,
+		// 		'status_code' => 'no_stamp',
+		// 	);
+		// 	return Response::json($response);
+		// }
 
 		try{
 			$cek_serial = new AssemblySerial([
@@ -139,7 +164,9 @@ class AssemblyProcessController extends Controller
 			}
 		}
 
-		$tag = AssemblyTag::where('remark', '=', $request->get('tagName'))->first();
+		$taghex = $this->dec2hex($request->get('tagBody'));
+
+		$tag = AssemblyTag::where('remark', '=', $request->get('tagName'))->where('tag', '=', $taghex)->first();
 		$material = db::table('materials')->where('model', '=', $request->get('model'))
 		->where('xy', '=', 'SP')->first();
 
@@ -173,7 +200,8 @@ class AssemblyProcessController extends Controller
 		$tag->model = $request->get('model');
 		$serial = CodeGenerator::where('note', '=', $request->get('origin_group_code'))->first();
 		$serial->index = $serial->index+1;
-		$counter->plc_counter = $datas[0];
+		// $counter->plc_counter = $datas[0];
+		$counter->plc_counter = 20;
 
 		try{
 			if($request->get('location') != 'stampkd-process'){
@@ -193,7 +221,7 @@ class AssemblyProcessController extends Controller
 					$counter->save();
 				});
 			}
-			$this->printStamp($request->get('tagName'), $request->get('serial'), $request->get('model'), 'print', 'SUPERMAN');
+			$this->printStamp($request->get('tagName'), $request->get('serial'), $request->get('model'), 'print', 'MIS');
 		}
 		catch(\Exception $e){
 			$response = array(
@@ -261,13 +289,13 @@ class AssemblyProcessController extends Controller
 		$first = date('Y-m-d', strtotime("-3 days"));
 		// $date = '2020-06-15';
 
-		$logs = AssemblyLog::leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'assembly_logs.operator_id')
-		->where('assembly_logs.origin_group_code', '=', $request->get('origin_group_code'))
-		->where(db::raw('date(assembly_logs.created_at)'), '>=', $first)
-		->where('assembly_logs.location', '=', 'stamp-process')
-		->whereOr('assembly_logs.location', '=', 'stampkd-process')
-		->select('assembly_logs.serial_number', 'assembly_logs.model', db::raw('if(location = "stamp-process", "FG", "KD") as category'), 'employee_syncs.name', 'assembly_logs.created_at')
-		->orderBy('assembly_logs.created_at', 'desc')
+		$logs = AssemblyDetail::leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'assembly_details.operator_id')
+		->where('assembly_details.origin_group_code', '=', $request->get('origin_group_code'))
+		->where(db::raw('date(assembly_details.created_at)'), '>=', $first)
+		->where('assembly_details.location', '=', 'stamp-process')
+		->whereOr('assembly_details.location', '=', 'stampkd-process')
+		->select('assembly_details.serial_number', 'assembly_details.model', db::raw('if(location = "stamp-process", "FG", "KD") as category'), 'employee_syncs.name', 'assembly_details.created_at')
+		->orderBy('assembly_details.created_at', 'desc')
 		->get();
 
 		$response = array(
@@ -2173,186 +2201,186 @@ class AssemblyProcessController extends Controller
 		) total";
 
 		$effData = DB::select($query2);
+	}
+	$response = array(
+		'status' => true,
+		'chartData' => $chartData,
+		'effData' => $effData,
+		'title_location' => $title_location
+	);
+	return Response::json($response);
+}
+
+public function indexStampRecord(){
+
+	$code = Process::where('remark','=','041')->orderBy('id', 'asc')
+	->get();
+	return view('processes.assembly.flute.report.resumes',array(
+		'code' => $code,
+	))
+
+	->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+}
+
+public function fetchStampRecord(Request $request){
+	$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+	$dateto = date('Y-m-d', strtotime($request->get('dateto')));
+	$datenow = date('Y-m-d');
+	$datefirst = date('Y-m-01');
+	if (strlen($request->get('code')) > 0) {
+		$code = 'Where location like "%'.$request->get('code').'%"';
+
+		if($request->get('dateto') == null){
+			if($request->get('datefrom') == null){
+				$date = "and date(created_at) BETWEEN '".$datefirst."' and '".$datenow."'";
+			}
+			elseif($request->get('datefrom') != null){
+				$date = "and date(created_at) BETWEEN '".$datefrom."' and '".$datenow."'";
+			}
 		}
+		elseif($request->get('dateto') != null){
+			if($request->get('datefrom') == null){
+				$date = "and date(created_at) <= '".$dateto."'";
+			}
+			elseif($request->get('datefrom') != null){
+				$date = "and date(created_at) BETWEEN '".$datefrom."' and '".$dateto."'";
+			}
+		}
+	}else{
+		$code = '';
+		if($request->get('dateto') == null){
+			if($request->get('datefrom') == null){
+				$date = "where date(created_at) BETWEEN '".$datefirst."' and '".$datenow."'";
+			}
+			elseif($request->get('datefrom') != null){
+				$date = "where date(created_at) BETWEEN '".$datefrom."' and '".$datenow."'";
+			}
+		}
+		elseif($request->get('dateto') != null){
+			if($request->get('datefrom') == null){
+				$date = "where date(created_at) <= '".$dateto."'";
+			}
+			elseif($request->get('datefrom') != null){
+				$date = "where date(created_at) BETWEEN '".$datefrom."' and '".$dateto."'";
+			}
+		}
+	}
+
+	$stamp_detail = DB::SELECT('SELECT *,1 as quantity,created_at as st_date,location as process_name FROM `assembly_logs` '.$code.' '.$date);
+
+	$response = array(
+		'status' => true,
+		'stamp_detail' => $stamp_detail,
+	);
+	return Response::json($response);
+}
+
+public function indexNgReport($process)
+{
+	if ($process == 'qa') {
+		$flow = AssemblyFlow::where('process','like','%qa%')->get();
+	}else{
+		$flow = AssemblyFlow::where('process','not like','%qa%')->get();
+	}
+
+	return view('processes.assembly.flute.report.ng_report',array(
+		'flow' => $flow,
+		'process' => $process,
+	))
+	->with('page', 'NG Report Assy Fl')->with('head', 'Assembly Process');
+}
+
+public function fetchNgReport($process,Request $request)
+{
+	$date_from = $request->get('datefrom');
+	$date_to = $request->get('dateto');
+	$location = $request->get('process');
+
+	if($date_to == null){
+		if($date_from == null){
+			$from = date('Y-m')."-01";
+			$now = date('Y-m-d');
+		}
+		elseif($date_from != null){
+			$from = $date_from;
+			$now = date('Y-m-d');
+		}
+	}
+	elseif($date_to != null){
+		if($date_from == null){
+			$from = date('Y-m')."-01";
+			$now = $date_to;
+		}
+		elseif($date_from != null){
+			$from = $request->get('date_from');
+			$now = $date_to;
+		}
+	}
+
+	if ($location != null) {
+		$locnow = "AND location = '".$location."'";
+	}else{
+		$locnow = "";
+	}
+
+	if ($process == 'qa') {
+		$ng_report = DB::SELECT("SELECT
+			*,
+			CONCAT( checked.employee_id, ' - ', checked.NAME ) AS checked_by,
+			COALESCE ( CONCAT( caused.employee_id, ' - ', caused.NAME ), operator_id ) AS caused_by,
+			assembly_ng_logs.created_at as created
+			FROM
+			`assembly_ng_logs`
+			LEFT JOIN employee_syncs checked ON checked.employee_id = assembly_ng_logs.employee_id
+			LEFT JOIN employee_syncs caused ON caused.employee_id = assembly_ng_logs.operator_id 
+			WHERE
+			location LIKE '%qa%'
+			".$locnow."
+			AND 
+			DATE(assembly_ng_logs.created_at) BETWEEN '".$from."' and '".$now."'");
+	}else{
+		$ng_report = DB::SELECT("SELECT
+			*,
+			CONCAT( checked.employee_id, ' - ', checked.NAME ) AS checked_by,
+			COALESCE ( CONCAT( caused.employee_id, ' - ', caused.NAME ), operator_id ) AS caused_by,
+			assembly_ng_logs.created_at as created
+			FROM
+			`assembly_ng_logs`
+			LEFT JOIN employee_syncs checked ON checked.employee_id = assembly_ng_logs.employee_id
+			LEFT JOIN employee_syncs caused ON caused.employee_id = assembly_ng_logs.operator_id 
+			WHERE
+			location NOT LIKE '%qa%'
+			".$locnow."
+			AND 
+			DATE(assembly_ng_logs.created_at) BETWEEN '".$from."' and '".$now."'");
+	}
+
+	try {
 		$response = array(
 			'status' => true,
-			'chartData' => $chartData,
-			'effData' => $effData,
-			'title_location' => $title_location
+			'ng_report' => $ng_report,
+		);
+		return Response::json($response);
+	} catch (\Exception $e) {
+		$response = array(
+			'status' => false,
+			'message' => $e->getMessage(),
 		);
 		return Response::json($response);
 	}
+}
 
-	public function indexStampRecord(){
+function dec2hex($number){
 
-		$code = Process::where('remark','=','041')->orderBy('id', 'asc')
-		->get();
-		return view('processes.assembly.flute.report.resumes',array(
-			'code' => $code,
-		))
-
-		->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
-	}
-
-	public function fetchStampRecord(Request $request){
-		$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
-		$dateto = date('Y-m-d', strtotime($request->get('dateto')));
-		$datenow = date('Y-m-d');
-		$datefirst = date('Y-m-01');
-		if (strlen($request->get('code')) > 0) {
-			$code = 'Where location like "%'.$request->get('code').'%"';
-
-			if($request->get('dateto') == null){
-				if($request->get('datefrom') == null){
-					$date = "and date(created_at) BETWEEN '".$datefirst."' and '".$datenow."'";
-				}
-				elseif($request->get('datefrom') != null){
-					$date = "and date(created_at) BETWEEN '".$datefrom."' and '".$datenow."'";
-				}
-			}
-			elseif($request->get('dateto') != null){
-				if($request->get('datefrom') == null){
-					$date = "and date(created_at) <= '".$dateto."'";
-				}
-				elseif($request->get('datefrom') != null){
-					$date = "and date(created_at) BETWEEN '".$datefrom."' and '".$dateto."'";
-				}
-			}
-		}else{
-			$code = '';
-			if($request->get('dateto') == null){
-				if($request->get('datefrom') == null){
-					$date = "where date(created_at) BETWEEN '".$datefirst."' and '".$datenow."'";
-				}
-				elseif($request->get('datefrom') != null){
-					$date = "where date(created_at) BETWEEN '".$datefrom."' and '".$datenow."'";
-				}
-			}
-			elseif($request->get('dateto') != null){
-				if($request->get('datefrom') == null){
-					$date = "where date(created_at) <= '".$dateto."'";
-				}
-				elseif($request->get('datefrom') != null){
-					$date = "where date(created_at) BETWEEN '".$datefrom."' and '".$dateto."'";
-				}
-			}
-		}
-
-		$stamp_detail = DB::SELECT('SELECT *,1 as quantity,created_at as st_date,location as process_name FROM `assembly_logs` '.$code.' '.$date);
-
-		$response = array(
-			'status' => true,
-			'stamp_detail' => $stamp_detail,
-		);
-		return Response::json($response);
-	}
-
-	public function indexNgReport($process)
+	$hexvalues = array('0','1','2','3','4','5','6','7',
+		'8','9','A','B','C','D','E','F');
+	$hexval = '';
+	while($number != '0')
 	{
-		if ($process == 'qa') {
-			$flow = AssemblyFlow::where('process','like','%qa%')->get();
-		}else{
-			$flow = AssemblyFlow::where('process','not like','%qa%')->get();
-		}
-
-		return view('processes.assembly.flute.report.ng_report',array(
-			'flow' => $flow,
-			'process' => $process,
-		))
-		->with('page', 'NG Report Assy Fl')->with('head', 'Assembly Process');
+		$hexval = $hexvalues[bcmod($number,'16')].$hexval;
+		$number = bcdiv($number,'16',0);
 	}
-
-	public function fetchNgReport($process,Request $request)
-	{
-		$date_from = $request->get('datefrom');
-		$date_to = $request->get('dateto');
-		$location = $request->get('process');
-
-		if($date_to == null){
-			if($date_from == null){
-				$from = date('Y-m')."-01";
-				$now = date('Y-m-d');
-			}
-			elseif($date_from != null){
-				$from = $date_from;
-				$now = date('Y-m-d');
-			}
-		}
-		elseif($date_to != null){
-			if($date_from == null){
-				$from = date('Y-m')."-01";
-				$now = $date_to;
-			}
-			elseif($date_from != null){
-				$from = $request->get('date_from');
-				$now = $date_to;
-			}
-		}
-
-		if ($location != null) {
-			$locnow = "AND location = '".$location."'";
-		}else{
-			$locnow = "";
-		}
-
-		if ($process == 'qa') {
-			$ng_report = DB::SELECT("SELECT
-				*,
-				CONCAT( checked.employee_id, ' - ', checked.NAME ) AS checked_by,
-				COALESCE ( CONCAT( caused.employee_id, ' - ', caused.NAME ), operator_id ) AS caused_by,
-				assembly_ng_logs.created_at as created
-			FROM
-				`assembly_ng_logs`
-				LEFT JOIN employee_syncs checked ON checked.employee_id = assembly_ng_logs.employee_id
-				LEFT JOIN employee_syncs caused ON caused.employee_id = assembly_ng_logs.operator_id 
-			WHERE
-				location LIKE '%qa%'
-			".$locnow."
-			AND 
-				DATE(assembly_ng_logs.created_at) BETWEEN '".$from."' and '".$now."'");
-		}else{
-			$ng_report = DB::SELECT("SELECT
-				*,
-				CONCAT( checked.employee_id, ' - ', checked.NAME ) AS checked_by,
-				COALESCE ( CONCAT( caused.employee_id, ' - ', caused.NAME ), operator_id ) AS caused_by,
-				assembly_ng_logs.created_at as created
-			FROM
-				`assembly_ng_logs`
-				LEFT JOIN employee_syncs checked ON checked.employee_id = assembly_ng_logs.employee_id
-				LEFT JOIN employee_syncs caused ON caused.employee_id = assembly_ng_logs.operator_id 
-			WHERE
-				location NOT LIKE '%qa%'
-			".$locnow."
-			AND 
-				DATE(assembly_ng_logs.created_at) BETWEEN '".$from."' and '".$now."'");
-		}
-
-		try {
-			$response = array(
-				'status' => true,
-				'ng_report' => $ng_report,
-			);
-			return Response::json($response);
-		} catch (\Exception $e) {
-			$response = array(
-				'status' => false,
-				'message' => $e->getMessage(),
-			);
-			return Response::json($response);
-		}
-	}
-
-	function dec2hex($number){
-
-		$hexvalues = array('0','1','2','3','4','5','6','7',
-			'8','9','A','B','C','D','E','F');
-		$hexval = '';
-		while($number != '0')
-		{
-			$hexval = $hexvalues[bcmod($number,'16')].$hexval;
-			$number = bcdiv($number,'16',0);
-		}
-		return $hexval;
-	}
+	return $hexval;
+}
 }
 

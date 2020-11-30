@@ -1108,6 +1108,7 @@ Route::group(['nav' => 'S10', 'middleware' => 'permission'], function(){
 	// NEW STAMP RFID
 	Route::get('scan/assembly/tag_stamp', 'AssemblyProcessController@scanTagStamp');
 	Route::post('stamp/assembly/flute', 'AssemblyProcessController@stampFlute');
+	Route::post('stamp/assembly/adjust_serial', 'AssemblyProcessController@stampFluteAdjustSerial');
 });
 Route::get('fetch/assembly/stamp_result', 'AssemblyProcessController@fetchStampResult');
 Route::get('fetch/assembly/serial', 'AssemblyProcessController@fetchSerialNumber');

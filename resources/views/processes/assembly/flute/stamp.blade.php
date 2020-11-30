@@ -50,7 +50,19 @@
 	</div>
 	<section class="content" style="padding-top: 0;">
 		<div class="row">
-			<div class="col-xs-4" style="padding: 0 0 0 10px;">
+			<div class="col-xs-4" style="padding: 0 0 0 0;">
+				<center>
+					<div style="font-weight: bold; font-size: 2.5vw; color: black; text-align: center; color: #3d9970;">
+						<i class="fa fa-arrow-down"></i> ➀ PILIH MODEL <i class="fa fa-arrow-down"></i>
+					</div>
+					<div>
+						@foreach($models as $model)
+						<button id="{{ $model->model }}" onclick="fetchModel(id)" type="button" class="btn bg-olive btn-lg" style="padding: 5px 1px 5px 1px; margin-top: 6px; margin-left: 2px; margin-right: 2px; width: 30%; font-size: 1.3vw">{{ $model->model }}</button>
+						@endforeach
+					</div>
+				</center>
+			</div>
+			<div class="col-xs-4" style="padding: 0 0 0 0;">
 				<center>
 					<div style="font-weight: bold; font-size: 2.5vw; color: black; text-align: center; color: #ffa500;">
 						<i class="fa fa-arrow-down"></i> STAMP <i class="fa fa-arrow-down"></i>
@@ -85,19 +97,7 @@
 				<input id="tagName" type="text" style="border:0; font-weight: bold; background-color: white; width: 100%; text-align: center; font-size: 4vw" disabled>
 				<input id="tagBody" type="text" style="border:0; background-color: #3c3c3c; width: 100%; text-align: center; font-size: 1vw">
 			</div>
-			<div class="col-xs-4" style="padding: 0;">
-				<center>
-					<div style="font-weight: bold; font-size: 2.5vw; color: black; text-align: center; color: #3d9970;">
-						<i class="fa fa-arrow-down"></i> PILIH MODEL <i class="fa fa-arrow-down"></i>
-					</div>
-					<div>
-						@foreach($models as $model)
-						<button id="{{ $model->model }}" onclick="fetchModel(id)" type="button" class="btn bg-olive btn-lg" style="padding: 5px 1px 5px 1px; margin-top: 6px; margin-left: 2px; margin-right: 2px; width: 30%; font-size: 1.3vw">{{ $model->model }}</button>
-						@endforeach
-					</div>
-				</center>
-			</div>
-			<div class="col-xs-4" style="padding: 0 10px 0 0;">
+			<div class="col-xs-4" style="padding: 0 10px 0 20px;">
 				<center>
 					<div style="font-weight: bold; font-size: 2.5vw; color: black; text-align: center; color: white;">
 						<i class="fa fa-arrow-down"></i> STAMP LOG <i class="fa fa-arrow-down"></i>
@@ -109,7 +109,7 @@
 									<th style="width: 1%">Serial</th>
 									<th style="width: 1%">Model</th>
 									<th style="width: 1%">Cat</th>
-									<th style="width: 1%">By</th>
+									<th style="width: 2%">By</th>
 									<th style="width: 1%">At</th>
 								</tr>
 							</thead>
@@ -210,7 +210,7 @@
 							if(result.status){
 								$('#tagName').val(result.tag.remark);
 								$('#started_at').val(result.started_at);
-								$('#tagBody').val('');
+								// $('#tagBody').val('');
 								stamp();
 							}
 							else{
@@ -279,6 +279,7 @@
 		var model = $('#model').val();
 		var serial = $('#nextCounter').val();
 		var tagName = $('#tagName').val();
+		var tagBody = $('#tagBody').val();
 		var op_id = $('#employee_id').val();
 		var started_at = $('#started_at').val();
 		if($('#category').val() == 'FG'){
@@ -293,6 +294,7 @@
 			model:model,
 			serial:serial,
 			tagName:tagName,
+			tagBody:tagBody,
 			op_id:op_id,
 			started_at:started_at,
 			location:location
@@ -319,6 +321,23 @@
 			else{
 				$('#pError').append('<br><br>'+result.message);
 				$('#error').show();
+			}
+		});
+	}
+
+	function adjustSerial(id){
+		var data ={
+			adjust:id,
+			origin_group_code:'041'
+		}
+		$.post('{{ url("stamp/assembly/adjust_serial") }}', data, function(result, status, xhr){
+			if(result.status){
+				fetchSerial();
+				openSuccessGritter('Success!', result.message);
+			}
+			else{
+				audio_error.play();
+				alert('Attempt to retrieve data failed');
 			}
 		});
 	}
