@@ -4934,13 +4934,7 @@ s.id ASC");
 		$ids = explode('_', $id);
 		$final_count = $request->get('quantity');
 		$reason = $request->get('reason');
-
-		$remark = '';
-		if($final_count > 0){
-			$remark = 'USE';
-		}else{
-			$remark = 'NO USE';
-		}
+		$remark = 'USE';
 
 		$material = StocktakingNewList::where('id', $ids[1])->first();
 
