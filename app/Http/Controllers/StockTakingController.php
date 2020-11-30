@@ -3404,25 +3404,23 @@ class StockTakingController extends Controller{
 				mpdl.material_description,
 				s.quantity,
 				s.audit1,
-			-- 	s.audit2,
-			s.final_count,
-			IF
-			( s.quantity IS NULL, 0, 1 ) AS ord 
-			FROM
-			stocktaking_new_lists s
-			LEFT JOIN storage_locations sl ON sl.storage_location = s.location
-			LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number 
-			WHERE
-			s.location = '".$group."' ".$quantity." 
-			and remark = 'NO USE'
-			AND s.print_status = 1 
-			ORDER BY
-			ord,
-			sl.area,
-			s.location,
-			s.store,
-			s.sub_store,
-			s.material_number ASC");
+				s.final_count,
+				IF
+				( s.remark = 'NO USE', 0, 1 ) AS ord 
+				FROM
+				stocktaking_new_lists s
+				LEFT JOIN storage_locations sl ON sl.storage_location = s.location
+				LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number 
+				WHERE
+				s.location = '".$group."' ".$quantity." 
+				AND s.print_status = 1 
+				ORDER BY
+				ord,
+				sl.area,
+				s.location,
+				s.store,
+				s.sub_store,
+				s.material_number ASC");
 		}else{
 			$input_detail = db::select("
 				SELECT sl.area, s.location, s.category, s.store, s.material_number, mpdl.material_description, NULL AS quantity, NULL AS audit1, NULL AS audit2, s.quantity AS final_count FROM stocktaking_inquiry_logs s

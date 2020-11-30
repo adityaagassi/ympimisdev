@@ -70,6 +70,8 @@
 				<tr>
 					<td width="50%">
 						<a class="btn btn-primary pull-left" href="{{ url("/index/stocktaking/menu") }}"><i class="fa fa-arrow-left"></i>&nbsp;&nbsp;&nbsp;KEMBALI</a>
+						{{-- <a class="btn btn-primary pull-left" href="{{ url("/index/stocktaking/menu") }}"><i class="fa fa-arrow-left"></i>&nbsp;&nbsp;&nbsp;KEMBALI</a> --}}
+						<button class="btn btn-success pull-left" style="margin-left: 1%;" onclick="monthChange()"><i class="fa fa-refresh"></i>&nbsp;&nbsp;&nbsp;REFRESH</button>
 					</td>
 					<td width="50%">
 						<div class="input-group date pull-right col-xs-12 col-md-4 col-lg-4">
@@ -1151,9 +1153,6 @@
 						audited_new.push(parseInt(result.data[i].audited));
 						notyet_new.push(parseInt(result.data[i].not_audited));
 					}
-
-					console.log(audited_new);
-					console.log(notyet_new);
 
 					Highcharts.chart('container4', {
 						chart: {
