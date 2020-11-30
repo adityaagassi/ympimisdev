@@ -2089,6 +2089,7 @@ class StockTakingController extends Controller{
 				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = stocktaking_new_lists.material_number
 				LEFT JOIN storage_locations ON storage_locations.storage_location = stocktaking_new_lists.location
 				where stocktaking_new_lists.print_status = 1
+				and stocktaking_new_lists.quantity > 0
 				ORDER BY storage_locations.area, stocktaking_new_lists.location, stocktaking_new_lists.material_number ASC");
 		}
 
