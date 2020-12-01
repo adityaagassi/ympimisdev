@@ -225,9 +225,13 @@ class AssyProcessController extends Controller
 		$first = date('Y-m-01',strtotime($tanggal));
 
 		if (substr($tanggal, -2) != "01") {
+			$first2 = date('Y-m-01',strtotime($tanggal));
 			$minsatu = date('Y-m-d',strtotime('-1 day', strtotime($tanggal)));
+			$minsatu2 = date('Y-m-d',strtotime('-1 day', strtotime($tanggal)));
 		} else {
+			$first2 = date('Y-m-02', strtotime($tanggal));
 			$minsatu = date('Y-m-d');
+			$minsatu2 = date('Y-m-02', strtotime($tanggal));
 		}
 
 		$table = "select materials.model, materials.`key`, materials.surface , sum(plan) as plan, sum(picking) as picking, sum(plus) as plus, sum(minus) as minus, sum(stock) as stock, sum(plan_ori) as plan_ori, (sum(plan)-sum(picking)) as diff, sum(stock) - (sum(plan)-sum(picking)) as diff2, round(sum(stock) / sum(plan), 1) as ava from
@@ -252,7 +256,7 @@ class AssyProcessController extends Controller
 		select materials.material_number, -(sum(if(histories.transfer_movement_type = '9I3', histories.lot, if(histories.transfer_movement_type = '9I4', IF(day(histories.created_at) < 3, 0, -(histories.lot)),0)))) as plan, 0 as plan_ori from
 		(
 		select materials.id, materials.material_number from kitto.materials where materials.location = '".$location."' and category = 'key'
-		) as materials left join kitto.histories on materials.id = histories.transfer_material_id where date(histories.created_at) >= '".$first."' and date(histories.created_at) <= '".$minsatu."' and histories.category in ('transfer', 'transfer_cancel', 'transfer_return', 'transfer_adjustment') group by materials.material_number
+		) as materials left join kitto.histories on materials.id = histories.transfer_material_id where date(histories.created_at) >= '".$first2."' and date(histories.created_at) <= '".$minsatu2."' and histories.category in ('transfer', 'transfer_cancel', 'transfer_return', 'transfer_adjustment') group by materials.material_number
 
 		union all
 
@@ -1011,9 +1015,13 @@ class AssyProcessController extends Controller
 		$first = date('Y-m-01',strtotime($tanggal));
 
 		if (substr($tanggal, -2) != "01") {
+			$first2 = date('Y-m-01',strtotime($tanggal));
 			$minsatu = date('Y-m-d',strtotime('-1 day', strtotime($tanggal)));
+			$minsatu2 = date('Y-m-d',strtotime('-1 day', strtotime($tanggal)));
 		} else {
+			$first2 = date('Y-m-02', strtotime($tanggal));
 			$minsatu = date('Y-m-d');
+			$minsatu2 = date('Y-m-02', strtotime($tanggal));
 		}
 
 		$table = "
@@ -1039,7 +1047,7 @@ class AssyProcessController extends Controller
 		select materials.material_number, -(sum(if(histories.transfer_movement_type = '9I3', histories.lot, if(histories.transfer_movement_type = '9I4', IF(day(histories.created_at) < 3, 0, -(histories.lot)),0)))) as plan, 0 as plan_ori from
 		(
 		select materials.id, materials.material_number from kitto.materials where materials.location = '".$location."' and category = 'body'
-		) as materials left join kitto.histories on materials.id = histories.transfer_material_id where date(histories.created_at) >= '".$first."' and date(histories.created_at) <= '".$minsatu."' and histories.category in ('transfer', 'transfer_cancel', 'transfer_return', 'transfer_adjustment') group by materials.material_number
+		) as materials left join kitto.histories on materials.id = histories.transfer_material_id where date(histories.created_at) >= '".$first2."' and date(histories.created_at) <= '".$minsatu2."' and histories.category in ('transfer', 'transfer_cancel', 'transfer_return', 'transfer_adjustment') group by materials.material_number
 
 		union all
 
