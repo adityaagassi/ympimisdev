@@ -377,7 +377,7 @@
 								<div class="input-group-addon bg-green">
 									<i class="fa fa-calendar"></i>
 								</div>
-								<input style="text-align: center;" type="text" class="form-control datepicker" onchange="monthChange()" name="month" id="month" placeholder="Select Month" readonly>
+								<input style="text-align: center;" type="text" class="form-control datepicker" onchange="monthChange()" name="month" id="month" placeholder="Select Month">
 							</div>
 						</div>
 					</div>
