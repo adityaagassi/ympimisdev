@@ -245,6 +245,7 @@ Route::get('index/injection/transaction/{status}', 'InjectionsController@transac
 Route::get('scan/tag_product', 'InjectionsController@scanProduct');
 Route::get('fetch/injection/transaction', 'InjectionsController@fetchTransaction');
 Route::get('fetch/injection/check_injections', 'InjectionsController@fetchCheckInjections');
+Route::get('fetch/injection/check_ng', 'InjectionsController@fetchCheckNg');
 Route::post('index/injection/completion', 'InjectionsController@completion');
 //end
 
@@ -1516,6 +1517,10 @@ Route::get('fetch/receive', 'AccountingController@fetch_receive');
 Route::get('receive/detail', 'AccountingController@receive_detail');
 Route::post('import/receive', 'AccountingController@import_receive');
 
+
+//Receive Report
+Route::get('receive_report', 'AccountingController@receive_report');
+
 Route::get('upload_transaksi', 'AccountingController@upload_transaksi');
 Route::get('fetch/transaksi', 'AccountingController@fetch_upload_transaksi');
 Route::post('import/transaksi', 'AccountingController@import_transaksi');
@@ -2474,6 +2479,8 @@ Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::get('index/shipping_order', 'ContainerScheduleController@indexShippingOrder');
 	Route::get('fetch/shipping_order/get_carier', 'ContainerScheduleController@fetchCarier');
+
+	Route::post('fetch/shipping_order/add_ship_reservation', 'ContainerScheduleController@addShipReservation');
 });
 
 

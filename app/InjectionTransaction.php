@@ -10,7 +10,7 @@ class InjectionTransaction extends Model
     use softDeletes;
 
 	protected $fillable = [
-		'material_number', 'location', 'quantity', 'status','operator_id', 'created_by'
+		'tag','material_number', 'location', 'quantity', 'status','operator_id', 'created_by'
 	];
 
 	public function user()

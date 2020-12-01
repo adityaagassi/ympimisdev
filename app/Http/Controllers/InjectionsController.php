@@ -1785,6 +1785,7 @@ class InjectionsController extends Controller
 
             //Transaction
             InjectionTransaction::create([
+                'tag' => $request->get('tag_product'),
                 'material_number' => $request->get('material_number'),
                 'location' => 'RC11',
                 'quantity' => $request->get('shot'),
@@ -1815,48 +1816,48 @@ class InjectionsController extends Controller
             //     ]);
 
             //SEMENTARA
-            $transaction = InjectionTag::where('tag',$request->get('tag_product'))->first();
-            $transaction->location = 'RC91';
-            $transaction->availability = 2;
-            $transaction->height_check = 'Uncheck';
-            $transaction->push_pull_check = 'Uncheck';
-            $transaction->torque_check = 'Uncheck';
-            $transaction->save();
+            // $transaction = InjectionTag::where('tag',$request->get('tag_product'))->first();
+            // $transaction->location = 'RC91';
+            // $transaction->availability = 2;
+            // $transaction->height_check = 'Uncheck';
+            // $transaction->push_pull_check = 'Uncheck';
+            // $transaction->torque_check = 'Uncheck';
+            // $transaction->save();
 
-            $inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $request->get('material_number'), 'storage_location' => 'RC11']);
-            $inventory->quantity = ($inventory->quantity-$request->get('shot'));
-            $inventory->save();
+            // $inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $request->get('material_number'), 'storage_location' => 'RC11']);
+            // $inventory->quantity = ($inventory->quantity-$request->get('shot'));
+            // $inventory->save();
 
-            $inventory2 = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $request->get('material_number'), 'storage_location' => 'RC91']);
-            $inventory2->quantity = ($inventory2->quantity+$request->get('shot'));
-            $inventory2->save();
+            // $inventory2 = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $request->get('material_number'), 'storage_location' => 'RC91']);
+            // $inventory2->quantity = ($inventory2->quantity+$request->get('shot'));
+            // $inventory2->save();
 
-            //send Inj Inventories
-            $injectionInventory = InjectionInventory::firstOrNew(['material_number' => $request->get('material_number'), 'location' => 'RC11']);
-            $injectionInventory->quantity = ($injectionInventory->quantity-$request->get('shot'));
-            $injectionInventory->save();
+            // //send Inj Inventories
+            // $injectionInventory = InjectionInventory::firstOrNew(['material_number' => $request->get('material_number'), 'location' => 'RC11']);
+            // $injectionInventory->quantity = ($injectionInventory->quantity-$request->get('shot'));
+            // $injectionInventory->save();
 
-            $injectionInventory2 = InjectionInventory::firstOrNew(['material_number' => $request->get('material_number'), 'location' => 'RC91']);
-            $injectionInventory2->quantity = ($injectionInventory2->quantity+$request->get('shot'));
-            $injectionInventory2->save();
+            // $injectionInventory2 = InjectionInventory::firstOrNew(['material_number' => $request->get('material_number'), 'location' => 'RC91']);
+            // $injectionInventory2->quantity = ($injectionInventory2->quantity+$request->get('shot'));
+            // $injectionInventory2->save();
 
-            InjectionTransaction::create([
-                'material_number' => $request->get('material_number'),
-                'location' => 'RC11',
-                'quantity' => $request->get('shot'),
-                'status' => 'OUT',
-                'operator_id' => $request->get('operator_id'),
-                'created_by' => $id_user
-            ]);
+            // InjectionTransaction::create([
+            //     'material_number' => $request->get('material_number'),
+            //     'location' => 'RC11',
+            //     'quantity' => $request->get('shot'),
+            //     'status' => 'OUT',
+            //     'operator_id' => $request->get('operator_id'),
+            //     'created_by' => $id_user
+            // ]);
 
-            InjectionTransaction::create([
-                'material_number' => $request->get('material_number'),
-                'location' => 'RC91',
-                'quantity' => $request->get('shot'),
-                'status' => 'IN',
-                'operator_id' => $request->get('operator_id'),
-                'created_by' => $id_user
-            ]);
+            // InjectionTransaction::create([
+            //     'material_number' => $request->get('material_number'),
+            //     'location' => 'RC91',
+            //     'quantity' => $request->get('shot'),
+            //     'status' => 'IN',
+            //     'operator_id' => $request->get('operator_id'),
+            //     'created_by' => $id_user
+            // ]);
 
             $response = array(
                 'status' => true,
@@ -5131,13 +5132,10 @@ class InjectionsController extends Controller
     public function fetchCheckInjections(Request $request)
     {
         try {
+            $operator_id = "";
             if ($request->get('status') == 'IN') {
-                $remark = 'antenna-1';
-            }else{
-                $remark = 'antenna-2';
-            }
-
-            $transaction = DB::SELECT("SELECT
+                $remark = 'antenna_1';
+                $transaction = DB::SELECT("SELECT
                     -- ympirfid.injection_lists.tag 
                     *,ympimis.injection_tags.id as injection_id,ympimis.injection_tags.tag as tag_rfid
                 FROM
@@ -5146,10 +5144,52 @@ class InjectionsController extends Controller
                 WHERE
                     ympirfid.injection_lists.remark = '".$remark."'
                     AND ympimis.injection_tags.availability = 1");
+                $operator_id = "";
+            }else{
+                $remark = 'antenna_2';
+                $transaction = DB::SELECT("SELECT
+                    -- ympirfid.injection_lists.tag 
+                    *,ympimis.injection_tags.id as injection_id,ympimis.injection_tags.tag as tag_rfid,ympimis.injection_process_logs.id as process_id
+                FROM
+                    ympirfid.injection_lists
+                    JOIN ympimis.injection_tags ON ympimis.injection_tags.concat_kanban = ympirfid.injection_lists.tag 
+                    LEFT JOIN  ympimis.injection_process_logs ON ympimis.injection_tags.tag = tag_product and ympimis.injection_tags.material_number = ympimis.injection_process_logs.material_number and ympimis.injection_tags.cavity = ympimis.injection_process_logs.cavity
+                WHERE
+                    ympirfid.injection_lists.remark = '".$remark."'
+                    AND ympimis.injection_tags.availability = 2");
+                $operator_id = DB::SELECT("SELECT * from ympirfid.injection_lists where tag like '%PI%'");
+            }
+
+            if ($operator_id == "") {
+                $response = array(
+                    'status' => true,
+                    'data' => $transaction,
+                );
+            }else{
+                $response = array(
+                    'status' => true,
+                    'data' => $transaction,
+                    'operator' => $operator_id
+                );
+            }
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function fetchCheckNg(Request $request)
+    {
+        try {
+            $ng = DB::SELECT("select * from injection_process_logs where id = '".$request->get('id')."'");
 
             $response = array(
                 'status' => true,
-                'data' => $transaction
+                'data' => $ng
             );
             return Response::json($response);
         } catch (\Exception $e) {
@@ -5167,6 +5207,7 @@ class InjectionsController extends Controller
             $id_user = Auth::id();
             if ($request->get('status') == 'IN') {
                 $transaction = InjectionTag::where('tag',$request->get('tag'))->first();
+                $concat_kanban = $transaction->concat_kanban;
                 $transaction->location = 'RC91';
                 $transaction->availability = 2;
                 $transaction->height_check = 'Uncheck';
@@ -5192,6 +5233,7 @@ class InjectionsController extends Controller
                 $injectionInventory2->save();
 
                 InjectionTransaction::create([
+                    'tag' => $request->get('tag'),
                     'material_number' => $request->get('material_number'),
                     'location' => 'RC11',
                     'quantity' => $request->get('qty'),
@@ -5201,6 +5243,7 @@ class InjectionsController extends Controller
                 ]);
 
                 InjectionTransaction::create([
+                    'tag' => $request->get('tag'),
                     'material_number' => $request->get('material_number'),
                     'location' => 'RC91',
                     'quantity' => $request->get('qty'),
@@ -5208,6 +5251,8 @@ class InjectionsController extends Controller
                     'operator_id' => $request->get('operator_id'),
                     'created_by' => $id_user
                 ]);
+
+                $deleteInjList = DB::SELECT("DELETE FROM ympirfid.injection_lists where tag = '".$concat_kanban."'");
 
                 // $material = db::connection('mysql2')->table('materials')
                 // ->where('material_number', '=', $request->get('material_number'))
@@ -5249,9 +5294,11 @@ class InjectionsController extends Controller
                 $transaction->push_pull_check = null;
                 $transaction->torque_check = null;
                 $transaction->remark = null;
+                $concat_kanban = $transaction->concat_kanban;
                 $transaction->save();
 
                 InjectionTransaction::create([
+                    'tag' => $request->get('tag'),
                     'material_number' => $request->get('material_number'),
                     'location' => 'RC91',
                     'quantity' => $request->get('qty'),
@@ -5267,6 +5314,8 @@ class InjectionsController extends Controller
                 $process = InjectionProcessLog::where('tag_product',$request->get('tag'))->where('material_number',$request->get('material_number'))->where('cavity',$request->get('cavity'))->where('remark',null)->first();
                 $process->remark = 'Close';
                 $process->save();
+
+                $deleteInjList = DB::SELECT("DELETE FROM ympirfid.injection_lists where tag = '".$concat_kanban."'");
             }
 
             $response = array(
