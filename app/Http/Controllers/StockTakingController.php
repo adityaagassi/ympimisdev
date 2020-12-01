@@ -2952,12 +2952,66 @@ class StockTakingController extends Controller{
 				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
 				WHERE storage_locations.area IS NOT NULL
 				AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')
-				AND storage_locations.area is not null
 				) AS official_variance
 				GROUP BY plnt, `group`");
+
+			$ympi = db::select("SELECT ympi, sum(var_amt_abs)/sum(book_amt)*100 AS percentage FROM
+				(SELECT storage_locations.area AS `group`,
+				'YMPI' as ympi,
+				storage_locations.plnt,
+				pi_book.material_number,
+				pi_book.location,
+				ROUND((material_plant_data_lists.standard_price/1000), 5) AS std,
+				pi_book.pi AS pi,
+				pi_book.book AS book,
+				(ROUND((material_plant_data_lists.standard_price/1000), 5) * pi_book.book) AS book_amt,
+				ABS((ROUND((material_plant_data_lists.standard_price/1000), 5) * (pi_book.pi - pi_book.book))) AS var_amt_abs
+				FROM
+				(SELECT location, material_number, sum(pi) AS pi, sum(book) AS book FROM
+				(SELECT location, material_number, sum(quantity) AS pi, 0 as book FROM stocktaking_outputs
+				GROUP BY location, material_number
+				UNION ALL
+				SELECT storage_location AS location, material_number, 0 as pi, sum(unrestricted) AS book FROM stocktaking_location_stocks
+				WHERE stock_date = '2020-11-30'
+				GROUP BY storage_location, material_number) AS union_pi_book
+				GROUP BY location, material_number) AS pi_book
+				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = pi_book.material_number
+				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
+				WHERE storage_locations.area IS NOT NULL
+				AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')
+				) AS official_variance
+				GROUP BY ympi");
 		}else{
 			$variance = db::select("SELECT plnt, `group`, sum(var_amt_abs)/sum(book_amt)*100 AS percentage FROM
 				(SELECT storage_locations.area AS `group`,
+				storage_locations.plnt,
+				pi_book.material_number,
+				pi_book.location,
+				ROUND((material_plant_data_lists.standard_price/1000), 5) AS std,
+				pi_book.pi AS pi,
+				pi_book.book AS book,
+				(ROUND((material_plant_data_lists.standard_price/1000), 5) * pi_book.book) AS book_amt,
+				ABS((ROUND((material_plant_data_lists.standard_price/1000), 5) * (pi_book.pi - pi_book.book))) AS var_amt_abs
+				FROM
+				(SELECT location, material_number, sum(pi) AS pi, sum(book) AS book FROM
+				(SELECT location, material_number, sum(quantity) AS pi, 0 as book FROM stocktaking_output_logs
+				WHERE stocktaking_date = '".$calendar->date."'
+				GROUP BY location, material_number
+				UNION ALL
+				SELECT storage_location AS location, material_number, 0 as pi, sum(unrestricted) AS book FROM storage_location_stocks
+				WHERE stock_date = '".$calendar->date."'
+				GROUP BY storage_location, material_number) AS union_pi_book
+				GROUP BY location, material_number) AS pi_book
+				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = pi_book.material_number
+				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
+				WHERE storage_locations.area IS NOT NULL
+				AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')
+				) AS official_variance
+				GROUP BY plnt, `group`");
+
+			$ympi = db::select("SELECT plnt, `group`, sum(var_amt_abs)/sum(book_amt)*100 AS percentage FROM
+				(SELECT storage_locations.area AS `group`,
+				'YMPI' as ympi,
 				storage_locations.plnt,
 				pi_book.material_number,
 				pi_book.location,
@@ -2986,7 +3040,8 @@ class StockTakingController extends Controller{
 
 		$response = array(
 			'status' => true,
-			'variance' => $variance
+			'variance' => $variance,
+			'ympi' => $ympi
 		);
 		return Response::json($response);
 	}

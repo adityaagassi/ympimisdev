@@ -111,32 +111,24 @@
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="nav-tabs-custom">
-				<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
-					<li class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">Progress Input By Location</a></li>
-					<li class="vendor-tab"><a href="#tab_2" data-toggle="tab" id="tab_header_2">Progress Audit By Location</a></li>
-				</ul>
-
 				<div class="tab-content">
-					<div class="tab-pane active" id="tab_1">
-						<div id="container0"></div>				
-					</div>
-					<div class="tab-pane" id="tab_2">
-						<div id="container4"></div>				
-					</div>
+					<div id="container0"></div>				
 				</div>
 			</div>
 		</div>
 
 		<div class="col-xs-12">
 			<div class="nav-tabs-custom">
-				<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
-					<li class="vendor-tab"><a href="#tab_11" data-toggle="tab" id="tab_header_11">Quick Count Variance</a></li>
-				</ul>
-
 				<div class="tab-content">
-					<div class="tab-pane active" id="tab_11">
-						<div id="container2"></div>				
-					</div>
+					<div id="container4"></div>				
+				</div>
+			</div>
+		</div>
+
+		<div class="col-xs-12">
+			<div class="nav-tabs-custom">
+				<div class="tab-content">
+					<div id="container2"></div>				
 				</div>
 			</div>
 		</div>
@@ -320,7 +312,7 @@
 
 		$.get('{{ url("fetch/stocktaking/check_month") }}', data, function(result, status, xhr){
 			if(result.status){
-			
+
 				filledList();
 				auditedList();	
 				variance();
@@ -1409,6 +1401,9 @@
 						location.push(result.variance[i].group);
 						variance.push(parseFloat(result.variance[i].percentage));
 					}
+
+					location.push(result.ympi[0].ympi);
+					variance.push(parseFloat(result.ympi[0].percentage));
 
 					Highcharts.chart('container2', {
 						chart: {
