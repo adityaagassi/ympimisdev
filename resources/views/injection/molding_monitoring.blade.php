@@ -288,8 +288,8 @@ table > thead > tr > th{
 
 						containerin += '<div class="progress-group" id="progress_div" style="padding-bottom:0px;margin-bottom:0px">';
 						containerin += '<div class="progress" style="height: 30px; border-style: solid;border-width: 1px; border-color: #d3d3d3;padding-bottom:0px;margin-bottom:0px">';
-						containerin += '<span class="progress-text" id="progress_text_molding'+j+'" style="font-size: 20px;padding-top:20px;color:black"></span>';
-						containerin += '<div id="progress_bar_molding'+j+'" style="font-size: 2px;"></div>';
+						containerin += '<span class="progress-text" id="progress_text_pasang'+j+'" style="font-size: 20px;padding-top:20px;color:black"></span>';
+						containerin += '<div id="progress_bar_pasang'+j+'" style="font-size: 2px;"></div>';
 						containerin += '</div>';
 						containerin += '</div>';
 
@@ -321,16 +321,16 @@ table > thead > tr > th{
 
 					for (var j = 0; j < part.length; j++) {
 						persen = (parseFloat(last_counter[j]) / 15000) * 100;
-						// $('#progress_text_molding'+j).html(persen.toFixed(1)+"%");
-						$('#progress_bar_molding'+j).css('width', persen.toFixed(1)+'%');
-						$('#progress_bar_molding'+j).css('color', 'white');
-						$('#progress_bar_molding'+j).css('font-weight', 'bold');
+						// $('#progress_text_pasang'+j).html(persen.toFixed(1)+"%");
+						$('#progress_bar_pasang'+j).css('width', persen.toFixed(1)+'%');
+						$('#progress_bar_pasang'+j).css('color', 'white');
+						$('#progress_bar_pasang'+j).css('font-weight', 'bold');
 						if (last_counter[j] > 0 && last_counter[j] <= 10000) {
-							$('#progress_bar_molding'+j).attr('class', 'progress-bar-success progress-bar progress-bar-striped');
+							$('#progress_bar_pasang'+j).attr('class', 'progress-bar-success progress-bar progress-bar-striped');
 						}else if(last_counter[j] > 10000 && last_counter[j] <= 15000){
-							$('#progress_bar_molding'+j).attr('class', 'progress-bar-warning progress-bar progress-bar-striped');
+							$('#progress_bar_pasang'+j).attr('class', 'progress-bar-warning progress-bar progress-bar-striped');
 						}else{
-							$('#progress_bar_molding'+j).attr('class', 'progress-bar-danger progress-bar progress-bar-striped');
+							$('#progress_bar_pasang'+j).attr('class', 'progress-bar-danger progress-bar progress-bar-striped');
 						}
 					};
 
@@ -371,6 +371,19 @@ table > thead > tr > th{
 
 						containerin += '<tr><td colspan="3" style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:black;background-color:white;font-size:30px">'+part_maintenance[k]+'</td></tr>';
 
+						containerin += '<tr>';
+						containerin += '<td colspan="3" style="width:100%;border: 1px solid #fff !important;color:white;font-size:15px;text-align:center">';
+
+						containerin += '<div class="progress-group" id="progress_div" style="padding-bottom:0px;margin-bottom:0px">';
+						containerin += '<div class="progress" style="height: 30px; border-style: solid;border-width: 1px; border-color: #d3d3d3;padding-bottom:0px;margin-bottom:0px">';
+						containerin += '<span class="progress-text" id="progress_text_maintenance'+j+'" style="font-size: 20px;padding-top:20px;color:black"></span>';
+						containerin += '<div id="progress_bar_maintenance'+k+'" style="font-size: 2px;"></div>';
+						containerin += '</div>';
+						containerin += '</div>';
+
+						containerin += '</td>';
+						containerin += '</tr>';
+
 						if (last_counter_maintenance[k] == 0) {
 							containerin += '<tr><td style="width:100%;border: 1px solid #fff !important;color:white;font-size:15px;text-align:center">SHOTS</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+last_counter_maintenance[k]+'</td></tr>';
 						}else if (last_counter_maintenance[k] > 0 && last_counter_maintenance[k] <= 10000) {
@@ -393,6 +406,21 @@ table > thead > tr > th{
 
 		            	$('#'+container2).append(containerin);
 					}
+
+					for (var j = 0; j < part_maintenance.length; j++) {
+						persen = (parseFloat(last_counter_maintenance[j]) / 15000) * 100;
+						// $('#progress_text_pasang'+j).html(persen.toFixed(1)+"%");
+						$('#progress_bar_maintenance'+j).css('width', persen.toFixed(1)+'%');
+						$('#progress_bar_maintenance'+j).css('color', 'white');
+						$('#progress_bar_maintenance'+j).css('font-weight', 'bold');
+						if (last_counter_maintenance[j] > 0 && last_counter_maintenance[j] <= 10000) {
+							$('#progress_bar_maintenance'+j).attr('class', 'progress-bar-success progress-bar progress-bar-striped');
+						}else if(last_counter_maintenance[j] > 10000 && last_counter_maintenance[j] <= 15000){
+							$('#progress_bar_maintenance'+j).attr('class', 'progress-bar-warning progress-bar progress-bar-striped');
+						}else{
+							$('#progress_bar_maintenance'+j).attr('class', 'progress-bar-danger progress-bar progress-bar-striped');
+						}
+					};
 
 					var part_ready = [];
 					var product_ready = [];
@@ -431,6 +459,19 @@ table > thead > tr > th{
 
 						containerin += '<tr><td colspan="3" style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:0px;padding-bottom:2px;color:black;background-color:white;font-size:30px">'+part_ready[k]+'</td></tr>';
 
+						containerin += '<tr>';
+						containerin += '<td colspan="3" style="width:100%;border: 1px solid #fff !important;color:white;font-size:15px;text-align:center">';
+
+						containerin += '<div class="progress-group" id="progress_div" style="padding-bottom:0px;margin-bottom:0px">';
+						containerin += '<div class="progress" style="height: 30px; border-style: solid;border-width: 1px; border-color: #d3d3d3;padding-bottom:0px;margin-bottom:0px">';
+						containerin += '<span class="progress-text" id="progress_text_ready'+j+'" style="font-size: 20px;padding-top:20px;color:black"></span>';
+						containerin += '<div id="progress_bar_ready'+k+'" style="font-size: 2px;"></div>';
+						containerin += '</div>';
+						containerin += '</div>';
+
+						containerin += '</td>';
+						containerin += '</tr>';
+
 						if (last_counter_ready[k] == 0) {
 							containerin += '<tr><td style="width:100%;border: 1px solid #fff !important;color:white;font-size:15px;text-align:center">SHOTS</td><td style="border: 1px solid #fff !important;padding-left:10px;padding-right:10px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">:</td><td style="border: 1px solid #fff !important;padding-left:50px;padding-right:50px;padding-top:2px;padding-bottom:2px;color:white;font-size:15px">'+last_counter_ready[k]+'</td></tr>';
 						}else if (last_counter_ready[k] > 0 && last_counter_ready[k] <= 10000) {
@@ -453,6 +494,21 @@ table > thead > tr > th{
 
 		            	$('#'+container3).append(containerin);
 					}
+
+					for (var j = 0; j < part_ready.length; j++) {
+						persen = (parseFloat(last_counter_ready[j]) / 15000) * 100;
+						// $('#progress_text_pasang'+j).html(persen.toFixed(1)+"%");
+						$('#progress_bar_ready'+j).css('width', persen.toFixed(1)+'%');
+						$('#progress_bar_ready'+j).css('color', 'white');
+						$('#progress_bar_ready'+j).css('font-weight', 'bold');
+						if (last_counter_ready[j] > 0 && last_counter_ready[j] <= 10000) {
+							$('#progress_bar_ready'+j).attr('class', 'progress-bar-success progress-bar progress-bar-striped');
+						}else if(last_counter_ready[j] > 10000 && last_counter_ready[j] <= 15000){
+							$('#progress_bar_ready'+j).attr('class', 'progress-bar-warning progress-bar progress-bar-striped');
+						}else{
+							$('#progress_bar_ready'+j).attr('class', 'progress-bar-danger progress-bar progress-bar-striped');
+						}
+					};
 				}
 			}
 		});
