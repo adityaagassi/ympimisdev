@@ -344,11 +344,11 @@
 					retunAcc = "<th>Return acc</th>";
 
 					if ("{{$option}}".substr(0, 4) == "assy") {
-						stk = "<th style='border: 1px solid white;'>Stock Room</th>";
+						stk = "<th style='border: 1px solid black;'>Stock Room</th>";
 					} else {
 						stk = "<th style='border: 1px solid white;'>Stock All</th>";
 					}
-					stk_als = "<th style='border: 1px solid white;' rowspan='2'>Availibility</th>";
+					stk_als = "<th style='border: 1px solid black;' rowspan='2'>Availibility</th>";
 
 					var style = "";
 

@@ -332,21 +332,16 @@
 				totplan = "<th>Plan</th>";
 				picking = "<th>Pick</th>";
 
-				if ("{{$option}}".substr(0, 4) == "assy") {
-					diff = "<th>Diff</th>";
-				} else {
-					diff = "<th>Target</th>";
-				}
+				diff = "<th>Diff</th>";
+				
 
 				planAcc = "<th>Plan acc</th>";
 				pickAcc = "<th>Pick acc</th>";
 				retunAcc = "<th>Return acc</th>";
 
-				if ("{{$option}}".substr(0, 4) == "assy") {
-					stk = "<th style='border: 1px solid white;'>Stock Room</th>";
-				} else {
-					stk = "<th style='border: 1px solid white;'>Stock All</th>";
-				}
+				
+				stk = "<th style='border: 1px solid white;'>Stock Room</th>";
+				
 				stk_als = "<th style='border: 1px solid white;' rowspan='2'>Availibility</th>";
 
 				var style = "";
@@ -372,11 +367,8 @@
 					z["diff"] = result.plan[i].diff;
 					z["diff2"] = result.plan[i].diff2;
 
-					if("{{$option}}".substr(0, 4) == "assy") 
-						z["ava"] = result.plan[i].ava;
-					else 
-						z["ava"] = (parseInt(result.stok[i].welding) + parseInt(result.stok[i].stockroom) + result.stok[i].lacquering + result.stok[i].plating + result.stok[i].barrel + result.stok[i].buffing) / result.plan[i].plan;
-
+					z["ava"] = result.plan[i].ava;
+					
 					z["stockroom"] = result.stok[i].stockroom;
 					z["barrel"] = result.stok[i].barrel;
 					z["lacquering"] = result.stok[i].lacquering;
@@ -425,12 +417,9 @@
 						model += "<th "+color+">"+value.model+"<br/>"+value.key+"<br/>"+value.surface+"</th>";
 						totplan += "<td>"+value.plan+"</td>";
 						picking += "<td>"+value.picking+"</td>";
-						if ("{{$option}}".substr(0, 4) == "assy") {
-							diff += "<td "+style+">"+(-value.diff)+"</td>";
-						} else {
-							diff += "<td "+style+">"+value.diff+"</td>";
-						}
 
+						diff += "<td "+style+">"+(-value.diff)+"</td>";
+						
 
 						diffs.push(value.diff);
 						plans.push(value.plan);
@@ -447,44 +436,23 @@
 						var categories = [];
 						var tmp = 0;
 
-						if ("{{$option}}".substr(0, 4) != "assy") {
-							tmp = (parseInt(value.barrel) + parseInt(value.lacquering) + parseInt(value.plating)+ parseInt(value.stockroom) + parseInt(value.welding) + parseInt(value.buffing));
-							if (tmp >= value.diff) {
-								color2 = "background-color:#00a65a";
-							} else {
-								color2 = "background-color:#f24b4b";
-							}
-
-							if (tmp / value.plan >= 3) {
-								colour = "background-color:#00a65a";
-							} else {
-								colour = "background-color:#f24b4b";
-							}
-
+						
+						if (value.stockroom >= value.diff) {
+							color2 = "background-color:#00a65a";
 						} else {
-							if (value.stockroom >= value.diff) {
-								color2 = "background-color:#00a65a";
-							} else {
-								color2 = "background-color:#f24b4b";
-							}
-
-							if (value.stockroom / value.plan >= 1) {
-								colour = "background-color:#00a65a";
-							} else {
-								colour = "background-color:#f24b4b";
-							}
-
+							color2 = "background-color:#f24b4b";
 						}
 
-						if ("{{$option}}".substr(0, 4) != "assy") {
-							stk += "<td style='border: 1px solid white; "+color2+"'>"+tmp+"</td>";
-
-							stk_als += "<td style='border: 1px solid white; "+colour+"'>"+(tmp / value.plan).toFixed(1)+"</td>";
+						if (value.stockroom / value.plan >= 1) {
+							colour = "background-color:#00a65a";
 						} else {
-							stk += "<td style='border: 1px solid white; "+color2+"'>"+value.stockroom+"</td>";
-
-							stk_als += "<td style='border: 1px solid white; "+colour+"'>"+value.ava+"</td>";
+							colour = "background-color:#f24b4b";
 						}
+
+
+						stk += "<td style='border: 1px solid white; "+color2+"'>"+value.stockroom+"</td>";
+
+						stk_als += "<td style='border: 1px solid white; "+colour+"'>"+value.ava+"</td>";
 
 						max_tmp.push(parseInt(value.barrel) + parseInt(value.lacquering) + parseInt(value.plating)+ parseInt(value.stockroom) + parseInt(value.welding) + parseInt(value.buffing));
 
