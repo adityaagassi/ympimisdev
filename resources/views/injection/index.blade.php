@@ -30,13 +30,11 @@
 
 			<a href="{{ url("index/indexPlanAll") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Make Schedule 3 Days</a> -->
 
-			<a href="{{ url("index/input_stock") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Input Daily Stock (Temp)</a>
+			<!-- <a href="{{ url("index/input_stock") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Input Daily Stock (Temp)</a> -->
 
 			<a href="{{ url("index/injection_machine") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Injection Machine</a>
 
 			<a href="{{ url("index/injection/dryer_resin") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Dryer - Resin</a>
-
-			<!-- <a href="{{ url("index/machine_operational") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Like Asprova View</a> -->
 
 			<a href="{{ url("index/injection/transaction","in") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Transaction IN</a>
 
