@@ -244,6 +244,7 @@ Route::get('get/Outpart', 'InjectionsController@getDataOut');
 Route::get('index/injection/transaction/{status}', 'InjectionsController@transaction');
 Route::get('scan/tag_product', 'InjectionsController@scanProduct');
 Route::get('fetch/injection/transaction', 'InjectionsController@fetchTransaction');
+Route::get('fetch/injection/detail_transaction', 'InjectionsController@fetchDetailTransaction');
 Route::get('fetch/injection/check_injections', 'InjectionsController@fetchCheckInjections');
 Route::get('fetch/injection/check_ng', 'InjectionsController@fetchCheckNg');
 Route::post('index/injection/completion', 'InjectionsController@completion');
@@ -2481,6 +2482,9 @@ Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::get('fetch/shipping_order/get_carier', 'ContainerScheduleController@fetchCarier');
 
 	Route::post('fetch/shipping_order/add_ship_reservation', 'ContainerScheduleController@addShipReservation');
+
+	Route::get('fetch/shipping_order/ship_reservation', 'ContainerScheduleController@fetchShipReservation');
+
 });
 
 

@@ -47,25 +47,6 @@ table.table-bordered > tfoot > tr > th{
 	</div>
 	<div class="row">
 		<div class="col-xs-6" style="text-align: center;">
-			<!-- <?php if ($status == 'OUT'): ?>
-				<div class="row">
-					<div class="col-xs-9">
-						<input type="text" style="text-align: center; border-color: red; font-size: 1.5vw; height: 50px" class="form-control" id="operator_name" name="operator_name" placeholder="" readonly>
-					</div>
-					<div class="col-xs-3">
-						<button class="btn btn-danger" style="width: 100%;height: 50px" onclick="cancelTag()">CANCEL</button>
-					</div>
-				</div>
-				<div class="input-group col-md-12" style="padding-top: 20px;">
-					<div class="input-group-addon" id="icon-serial" style="font-weight: bold; font-size: 2vw; border-color: red;">
-						<i class="glyphicon glyphicon-barcode"></i>
-					</div>
-					<input type="text" style="text-align: center; border-color: red; font-size: 2vw; height: 50px" class="form-control" id="tag_product" name="tag_product" placeholder="Scan Tag Here ..." required>
-					<div class="input-group-addon" id="icon-serial" style="font-weight: bold; font-size: 2vw; border-color: red;">
-						<i class="glyphicon glyphicon-barcode"></i>
-					</div>
-				</div>
-			<?php endif ?> -->
 			<div class="row">
 				<div class="col-md-12" style="">
 					<span style="font-size: 24px;">Transaction List:</span> 
@@ -103,6 +84,9 @@ table.table-bordered > tfoot > tr > th{
 									<th>Qty</th>
 									<th>Loc</th>
 									<th>Created At</th>
+									<?php if ($status == 'OUT') { ?>
+										<th>Detail</th>
+									<?php } ?>
 								</tr>
 							</thead>
 							<tbody id="tableHistoryBody">
@@ -161,6 +145,39 @@ table.table-bordered > tfoot > tr > th{
 					<div class="col-xs-12">
 						<button class="btn btn-success btn-block" style="font-weight: bold;font-size: 25px" onclick="completion()">
 							PROSES TRANSAKSI
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="modalDetail">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="col-xs-12">
+						<center><h3 style="font-weight: bold;background-color: #17b80b;color: white;padding-top: 5px;padding-bottom: 5px">DETAIL TRANSAKSI</h3></center>
+					</div>
+					<div class="modal-body" id="tableDetail">
+
+					</div>
+					<div class="col-md-12">
+						<span style="font-size: 24px;">NG List:</span> 
+						<table id="resultNGDetail" class="table table-bordered table-striped table-hover" style="width: 100%;">
+				            <thead style="background-color: #17b80b;">
+				                <tr>
+				                  <th style="width: 5%;">NG</th>
+				                  <th style="width: 17%;">Quantity</th>
+				                </tr>
+				            </thead >
+				            <tbody id="resultNGDetailBody">
+							</tbody>
+			            </table>
+					</div>
+					<div class="col-xs-12">
+						<button class="btn btn-danger pull-right" style="font-weight: bold;" data-dismiss="modal">
+							CLOSE
 						</button>
 					</div>
 				</div>
@@ -535,6 +552,9 @@ table.table-bordered > tfoot > tr > th{
 						tableData += '<td>'+ value.quantity +'</td>';
 						tableData += '<td>'+ value.location +'</td>';
 						tableData += '<td>'+ value.created_at +'</td>';
+						if ('{{$status}}' == 'OUT') {
+							tableData += '<td><button class="btn btn-primary" onclick="showModalDetail(\''+value.id+'\',)">Detail</button></td>';
+						}
 						tableData += '</tr>';
 					});
 				}
@@ -565,6 +585,92 @@ table.table-bordered > tfoot > tr > th{
 				alert('Attempt to retrieve data failed');
 			}
 		});
+	}
+
+	function showModalDetail(id) {
+		if ('{{$status}}' == 'OUT') {
+			var data = {
+				id:id,
+				status : '{{$status}}'
+			}
+			$.get('{{ url("fetch/injection/detail_transaction") }}', data, function(result, status, xhr){
+				if(result.status){
+					$('#tableDetail').empty();
+					var table = "";
+					var ngScan = "";
+					$('#resultNGDetailBody').html("");
+					var jumlah = 0;
+					$.each(result.data, function(key, value) {
+						table += '<table class="table table-bordered table-responsive">';
+						table += '<tr>';
+						table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Tag</td>';
+						table += '<td>'+value.tag+'</td>';
+						table += '</tr>';
+						table += '<tr>';
+						table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Material</td>';
+						table += '<td>'+value.material_number+'</td>';
+						table += '</tr>';
+						table += '<tr>';
+						table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Part Name</td>';
+						table += '<td>'+value.part_name+'</td>';
+						table += '</tr>';
+						table += '<tr>';
+						table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Part Type</td>';
+						table += '<td>'+value.part_code+'</td>';
+						table += '</tr>';
+						table += '<tr>';
+						table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Color</td>';
+						table += '<td>'+value.color+'</td>';
+						table += '</tr>';
+						table += '<tr>';
+						table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Cavity</td>';
+						table += '<td>'+value.cavity+'</td>';
+						table += '</tr>';
+						table += '<tr>';
+						table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Qty</td>';
+						table += '<td>'+value.quantity+'</td>';
+						table += '</tr>';
+						table += '<tr>';
+						table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Mesin</td>';
+						table += '<td>'+value.mesin+'</td>';
+						table += '</tr>';
+						table += '<tr>';
+						table += '<td style="background-color:#17b80b;color:white;font-weight:bold">OP Injeksi</td>';
+						table += '<td>'+value.employee_id+' - '+value.name+'</td>';
+						table += '</tr>';
+						table += '<tr>';
+						table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Status</td>';
+						table += '<td>'+value.status+'</td>';
+						table += '</tr>';
+						table += '</table>';
+
+						if (value.ng_name != null) {
+							ng_arr = value.ng_name.split(',');
+							qty_arr = value.ng_count.split(',');
+
+							for(var i = 0; i < ng_arr.length; i++){
+								ngScan += '<tr>';
+								ngScan += '<td id="ng_name">'+ng_arr[i]+'</td>';
+								ngScan += '<td id="ng_qty">'+qty_arr[i]+'</td>';
+								ngScan += '</tr>';
+								jumlah = jumlah + parseInt(qty_arr[i]);
+							}
+
+							ngScan += '<tr style="background-color:#17b80b">';
+							ngScan += '<td style="border:1px solid black;border-top:1px solid black" id="total_ng_name"><b>TOTAL</b></td>';
+							ngScan += '<td style="border:1px solid black;border-top:1px solid black" id="total_ng_qty"><b>'+jumlah+'</b></td>';
+							ngScan += '</tr>';
+						}
+					});
+					$('#tableDetail').append(table);
+					$('#resultNGDetailBody').append(ngScan);
+				}else{
+					openErrorGritter('Error!','Get Data Failed');
+				}
+			});
+		}
+
+		$('#modalDetail').modal('show');
 	}
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');

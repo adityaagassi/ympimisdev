@@ -5094,26 +5094,95 @@ class InjectionsController extends Controller
     public function fetchTransaction(Request $request)
     {
         try {
-            $now = date('Y-m-d');
             $transaction = DB::SELECT("SELECT
+                injection_transactions.id,
+                injection_transactions.tag,
                 injection_transactions.material_number,
-                SUBSTRING_INDEX(injection_parts.part_name, ' ', 1) as part_name,
+                SUBSTRING_INDEX( injection_parts.part_name, ' ', 1 ) AS part_name,
                 injection_parts.part_code,
                 injection_parts.part_type,
                 injection_parts.color,
                 injection_transactions.location,
                 injection_transactions.quantity,
                 injection_transactions.created_at,
-                injection_transactions.STATUS 
+                injection_transactions.status,
+                injection_process_logs.mesin,
+                injection_process_logs.cavity,
+                employee_syncs.employee_id,
+                employee_syncs.`name`,
+                injection_process_logs.updated_at,
+                injection_process_logs.ng_name,
+                injection_process_logs.ng_count 
             FROM
                 injection_transactions
-                LEFT JOIN injection_parts ON injection_transactions.material_number = injection_parts.gmc 
+                LEFT JOIN injection_parts ON injection_transactions.material_number = injection_parts.gmc
+                LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_transactions.tag 
+                AND injection_process_logs.updated_at = injection_transactions.created_at
+                LEFT JOIN employee_syncs ON employee_syncs.employee_id = injection_process_logs.operator_id 
             WHERE
-                injection_transactions.STATUS = '".$request->get('status')."' 
-                AND injection_transactions.location= 'RC91' 
-                AND DATE( injection_transactions.created_at ) = '".$now."'
-                AND injection_parts.deleted_at is null
-            ORDER BY injection_transactions.created_at DESC");
+                injection_transactions.status = '".$request->get('status')."' 
+                AND injection_transactions.location = 'RC91' 
+                AND DATE( injection_transactions.created_at ) BETWEEN DATE(
+                NOW()) - INTERVAL 3 DAY 
+                AND DATE(
+                NOW()) 
+                AND injection_parts.deleted_at IS NULL 
+            ORDER BY
+                injection_transactions.created_at DESC");
+
+            $response = array(
+                'status' => true,
+                'data' => $transaction
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+            );
+            return Response::json($response);
+        }   
+    }
+
+    public function fetchDetailTransaction(Request $request)
+    {
+        try {
+            $transaction = DB::SELECT("SELECT
+                injection_transactions.id,
+                injection_transactions.tag,
+                injection_transactions.material_number,
+                SUBSTRING_INDEX( injection_parts.part_name, ' ', 1 ) AS part_name,
+                injection_parts.part_code,
+                injection_parts.part_type,
+                injection_parts.color,
+                injection_transactions.location,
+                injection_transactions.quantity,
+                injection_transactions.created_at,
+                injection_transactions.status,
+                injection_process_logs.mesin,
+                injection_process_logs.cavity,
+                employee_syncs.employee_id,
+                employee_syncs.`name`,
+                injection_process_logs.updated_at,
+                injection_process_logs.ng_name,
+                injection_process_logs.ng_count 
+            FROM
+                injection_transactions
+                LEFT JOIN injection_parts ON injection_transactions.material_number = injection_parts.gmc
+                LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_transactions.tag 
+                AND injection_process_logs.updated_at = injection_transactions.created_at
+                LEFT JOIN employee_syncs ON employee_syncs.employee_id = injection_process_logs.operator_id 
+            WHERE
+                injection_transactions.status = '".$request->get('status')."' 
+                AND injection_transactions.location = 'RC91' 
+                AND DATE( injection_transactions.created_at ) BETWEEN DATE(
+                NOW()) - INTERVAL 3 DAY 
+                AND DATE(
+                NOW()) 
+                AND injection_parts.deleted_at IS NULL 
+                AND injection_transactions.id = '".$request->get('id')."'
+            ORDER BY
+                injection_transactions.created_at DESC");
 
             $response = array(
                 'status' => true,
