@@ -452,7 +452,7 @@
 
 						stk += "<td style='border: 1px solid white; "+color2+"'>"+value.stockroom+"</td>";
 
-						stk_als += "<td style='border: 1px solid white; "+colour+"'>"+value.ava+"</td>";
+						stk_als += "<td style='border: 1px solid white; "+colour+"'>"+(value.ava || '0')+"</td>";
 
 						max_tmp.push(parseInt(value.barrel) + parseInt(value.lacquering) + parseInt(value.plating)+ parseInt(value.stockroom) + parseInt(value.welding) + parseInt(value.buffing));
 
