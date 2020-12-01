@@ -7374,24 +7374,124 @@ public function fetch_budget_summary(Request $request)
         category
         ');
 
-    $type = db::select('
+    $act_category = db::select('
         SELECT
-        account_name,
-        sum(amount) AS amount
+            category,
+            ROUND( SUM( a.actual ), 2 ) AS Actual,
+            ROUND( SUM( a.PR ), 2 ) AS PR,
+            ROUND( SUM( a.Investment ), 2 ) AS Investment,
+            ROUND( SUM( a.PO ), 2 ) AS PO
         FROM
-        acc_budgets
-        WHERE
-        acc_budgets.deleted_at IS NULL
+            (
+            SELECT
+                category,
+                ROUND( sum( CASE WHEN `status` = "Actual" THEN acc_budget_histories.amount_receive ELSE 0 END ), 2 ) AS Actual,   
+                0 AS PR,
+                0 AS Investment,
+                0 AS PO
+            FROM
+                acc_budget_histories
+                                LEFT JOIN   acc_budgets ON acc_budgets.budget_no = acc_budget_histories.budget
+            WHERE
+                category is not null
+                AND periode = "FY197" 
+            GROUP BY
+                category 
+                
+                UNION ALL
+            
+            SELECT
+                category,
+                ROUND( SUM( local_amount ), 2 ) AS Actual,
+                0 AS PR,
+                0 AS Investment,
+                0 AS PO
+            FROM
+                acc_actual_logs
+                                LEFT JOIN   acc_budgets ON acc_budgets.budget_no = acc_actual_logs.budget_no
+            WHERE
+                category is not null
+                AND acc_budgets.periode = "FY197" 
+            GROUP BY
+                category
+                
+                UNION ALL
+                
+            SELECT 
+                category,
+                0 AS Actual,            
+                ROUND( sum( CASE WHEN `status` = "PR" THEN acc_budget_histories.amount ELSE 0 END ), 2 ) AS PR,
+                0 AS Investment,
+                0 AS PO
+            FROM
+                acc_budget_histories
+                                LEFT JOIN   acc_budgets ON acc_budgets.budget_no = acc_budget_histories.budget
+            WHERE
+                category is not null
+                AND periode = "FY197" 
+            GROUP BY
+                category
+            
+                UNION ALL
+                
+            SELECT 
+                category,
+                0 AS Actual,            
+                0 AS PR,
+                ROUND( sum( CASE WHEN `status` = "Investment" THEN acc_budget_histories.amount ELSE 0 END ), 2 ) AS Investment,
+                0 AS PO
+            FROM
+                acc_budget_histories
+                                LEFT JOIN   acc_budgets ON acc_budgets.budget_no = acc_budget_histories.budget
+            WHERE
+                category is not null
+                AND periode = "FY197" 
+            GROUP BY
+                category
+                
+                UNION ALL
+                
+            SELECT 
+                category,
+                0 AS Actual,            
+                0 AS PR,
+                0 AS Investment,
+                ROUND( sum( CASE WHEN `status` = "PO" THEN acc_budget_histories.amount_po ELSE 0 END ), 2 ) AS PO
+            FROM
+                acc_budget_histories
+                                LEFT JOIN   acc_budgets ON acc_budgets.budget_no = acc_budget_histories.budget
+            WHERE
+                category is not null
+                AND periode = "FY197" 
+            GROUP BY
+                category
+                
+            ) a 
         GROUP BY
-        account_name
-        ');
+            a.category 
+        HAVING
+            a.category IS NOT NULL 
+
+    ');
+
+    // $type = db::select('
+    //     SELECT
+    //     account_name,
+    //     sum(amount) AS amount
+    //     FROM
+    //     acc_budgets
+    //     WHERE
+    //     acc_budgets.deleted_at IS NULL
+    //     GROUP BY
+    //     account_name
+    //     ');
 
     $response = array(
         'status' => true,
         'cat_budget' => $category,
-        'type_budget' => $type,
         'resume' => $resume,
-        'act' => $act
+        'act' => $act,
+        'act_category' => $act_category
     );
 
     return Response::json($response); 

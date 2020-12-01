@@ -137,17 +137,13 @@
       if(xhr.status == 200){
         if(result.status){
 
-          var category = [], type = [], amount_category = [], amount_type = [], bulan = [], awal = [], sisa = [], pr = [], investment = [], po = [];
+          var bulan = [], awal = [], sisa = [], pr = [], investment = [], po = [];
+          var category = [], amount_category = [], act_category = [], pr_category = [], po_category = [], inv_category = [];
           var fy;
 
           $.each(result.cat_budget, function(key, value) {
             category.push(value.category);
             amount_category.push(parseFloat(value.amount));
-          })
-
-          $.each(result.type_budget, function(key, value) {
-            type.push(value.account_name);
-            amount_type.push(parseFloat(value.amount));
           })
 
           $.each(result.resume, function(key, value) {
@@ -161,6 +157,13 @@
             pr.push(value.PR);
             investment.push(value.Investment);
             po.push(value.PO);
+          })
+
+          $.each(result.act_category, function(key, value) {
+            act_category.push(value.Actual);
+            pr_category.push(value.PR);
+            inv_category.push(value.Investment);
+            po_category.push(value.PO);
           })
 
           $('#container_resume').highcharts({
@@ -254,10 +257,10 @@
           $('#container').highcharts({
             chart: {
               type: 'column',
-              height: '250px'
+              backgroundColor : null
             },
             title: {
-              text: 'Summary By Category',
+              text: 'Summary By Category Periode' +fy,
               style: {
                 fontSize: '24px',
                 fontWeight: 'bold'
@@ -268,15 +271,15 @@
               categories: category,
               lineWidth:2,
               lineColor:'#9e9e9e',
-              gridLineWidth: 1
+              gridLineWidth: 1,
+              tickInterval: 1,
+              crosshair: true
             },
             yAxis: {
               enabled:false,
               title:""
             },
             legend: {
-              enabled:false,
-              reversed: true,
               itemStyle:{
                 color: "white",
                 fontSize: "12px",
@@ -284,44 +287,60 @@
 
               },
             },
+            tooltip: {
+              headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+              pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+              '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+              footerFormat: '</table>',
+              shared: true,
+              useHTML: true
+            },
             plotOptions: {
-              series: {
-                cursor: 'pointer',
-                point: {
-                  events: {
-                    click: function () {
-                    }
-                  }
-                },
-                borderWidth: 0,
-                dataLabels: {
-                  enabled: false,
-                  format: '{point.y}'
-                }
-              },
               column: {
-                  color:  Highcharts.ColorString,
-                  stacking: 'normal',
-                  borderRadius: 1,
-                  dataLabels: {
-                      enabled: true
-                  }
+                stacking: 'normal',
+                pointPadding: 0.05,
+                groupPadding: 0.1,
+                borderWidth: 0,
+                color:  Highcharts.ColorString,
+                borderRadius: 1,
+                dataLabels: {
+                    enabled: true
+                }
               }
             },
             credits: {
               enabled: false
             },
-
-            tooltip: {
-              formatter:function(){
-                return this.series.name+' : ' + this.y;
-              }
-            },
             series: [
               {
-                name: 'Amount',
-                color: '#9c27b0',
-                data: amount_category
+                name: 'Total Amount',
+                color: '#ff851b',
+                data: amount_category,
+                stack: 'alone2'
+              },
+              {
+                name: 'Actual Budget',
+                data: act_category,
+                color: '#4caf50',
+                stack: 'all2'
+              },
+              {
+                name: 'Budget PR',
+                data: pr_category,
+                color: '#ffeb3b',
+                stack: 'all2'
+              },
+              {
+                name: 'Budget Investment',
+                data: inv_category,
+                color: '#795548',
+                stack: 'all2'
+              },
+              {
+                name: 'Budget PO',
+                data: po_category,
+                color: '#607d8b',
+                stack: 'all2'
               }
             ]
           })
