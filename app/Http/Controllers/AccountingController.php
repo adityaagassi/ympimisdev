@@ -7236,66 +7236,130 @@ public function fetch_budget_summary(Request $request)
 
     $act = db::select('
         SELECT
-            CASE
-                WHEN
-                    a.bulan = "Jan" THEN
-                        13 
-                        WHEN a.bulan = "Feb" THEN
-                        14 
-                        WHEN a.bulan = "Mar" THEN
-                        15 
-                        WHEN a.bulan = "Apr" THEN
-                        4 
-                        WHEN a.bulan = "May" THEN
-                        5 
-                        WHEN a.bulan = "Jun" THEN
-                        6 
-                        WHEN a.bulan = "Jul" THEN
-                        7 
-                        WHEN a.bulan = "Aug" THEN
-                        8 
-                        WHEN a.bulan = "Sep" THEN
-                        9 
-                        WHEN a.bulan = "Oct" THEN
-                        10 
-                        WHEN a.bulan = "Nov" THEN
-                        11 
-                        WHEN a.bulan = "Dec" THEN
-                        12 
-                    END AS month_number,
-                    a.bulan,
-                    SUM( a.actual ) AS Actual 
-                FROM
-                    (
-                    SELECT
-                        budget_month_receive AS bulan,
-                        ROUND( sum( CASE WHEN `status` = "Actual" THEN acc_budget_histories.amount_receive ELSE 0 END ), 2 ) AS Actual 
-                    FROM
-                        acc_budget_histories
-                        LEFT JOIN weekly_calendars ON date( acc_budget_histories.updated_at ) = weekly_calendars.week_date 
-                    WHERE
-                        budget_month_receive IS NOT NULL 
-                        AND fiscal_year = "FY197" 
-                    GROUP BY
-                        budget_month_receive UNION ALL
-                    SELECT
-                        month_date AS bulan,
-                        ROUND( SUM( local_amount ), 2 ) AS Actual 
-                    FROM
-                        acc_actual_logs
-                        LEFT JOIN weekly_calendars ON acc_actual_logs.post_date = weekly_calendars.week_date 
-                    WHERE
-                        acc_actual_logs.deleted_at IS NULL 
-                        AND fiscal_year = "FY197" 
-                    GROUP BY
-                        month_date 
-                    ) a 
-                GROUP BY
-                    a.bulan 
-                HAVING
-                    a.bulan IS NOT NULL 
-            ORDER BY
-                month_number
+    CASE    
+    WHEN
+        a.bulan = "Jan" THEN
+            13 
+            WHEN a.bulan = "Feb" THEN
+            14 
+            WHEN a.bulan = "Mar" THEN
+            15 
+            WHEN a.bulan = "Apr" THEN
+            4 
+            WHEN a.bulan = "May" THEN
+            5 
+            WHEN a.bulan = "Jun" THEN
+            6 
+            WHEN a.bulan = "Jul" THEN
+            7 
+            WHEN a.bulan = "Aug" THEN
+            8 
+            WHEN a.bulan = "Sep" THEN
+            9 
+            WHEN a.bulan = "Oct" THEN
+            10 
+            WHEN a.bulan = "Nov" THEN
+            11 
+            WHEN a.bulan = "Dec" THEN
+            12 
+            END AS month_number,
+            a.bulan,
+            ROUND( SUM( a.actual ), 2 ) AS Actual,
+            ROUND( SUM( a.PR ), 2 ) AS PR,
+            ROUND( SUM( a.Investment ), 2 ) AS Investment,
+            ROUND( SUM( a.PO ), 2 ) AS PO
+        FROM
+            (
+            SELECT
+                budget_month_receive AS bulan,
+                ROUND( sum( CASE WHEN `status` = "Actual" THEN acc_budget_histories.amount_receive ELSE 0 END ), 2 ) AS Actual,         
+                0 AS PR,
+                0 AS Investment,
+                0 AS PO
+            FROM
+                acc_budget_histories
+                LEFT JOIN weekly_calendars ON date( acc_budget_histories.updated_at ) = weekly_calendars.week_date 
+            WHERE
+                budget_month_receive IS NOT NULL 
+                AND fiscal_year = "FY197" 
+            GROUP BY
+                budget_month_receive 
+                
+                UNION ALL
+            
+            SELECT
+                month_date AS bulan,
+                ROUND( SUM( local_amount ), 2 ) AS Actual,
+                0 AS PR,
+                0 AS Investment,
+                0 AS PO
+            FROM
+                acc_actual_logs
+                LEFT JOIN weekly_calendars ON acc_actual_logs.post_date = weekly_calendars.week_date 
+            WHERE
+                acc_actual_logs.deleted_at IS NULL 
+                AND fiscal_year = "FY197" 
+            GROUP BY
+                month_date 
+                
+                UNION ALL
+                
+            SELECT 
+                budget_month AS bulan,
+                0 AS Actual,            
+                ROUND( sum( CASE WHEN `status` = "PR" THEN acc_budget_histories.amount ELSE 0 END ), 2 ) AS PR,
+                0 AS Investment,
+                0 AS PO
+            FROM
+                acc_budget_histories
+                LEFT JOIN weekly_calendars ON date( acc_budget_histories.updated_at ) = weekly_calendars.week_date 
+            WHERE
+                budget_month IS NOT NULL 
+                AND fiscal_year = "FY197" 
+            GROUP BY
+                budget_month
+            
+                UNION ALL
+                
+            SELECT 
+                budget_month AS bulan,
+                0 AS Actual,            
+                0 AS PR,
+                ROUND( sum( CASE WHEN `status` = "Investment" THEN acc_budget_histories.amount ELSE 0 END ), 2 ) AS Investment,
+                0 AS PO
+            FROM
+                acc_budget_histories
+                LEFT JOIN weekly_calendars ON date( acc_budget_histories.updated_at ) = weekly_calendars.week_date 
+            WHERE
+                budget_month IS NOT NULL 
+                AND fiscal_year = "FY197" 
+            GROUP BY
+                budget_month
+                
+                UNION ALL
+                
+            SELECT 
+                budget_month_po AS bulan,
+                0 AS Actual,            
+                0 AS PR,
+                0 AS Investment,
+                ROUND( sum( CASE WHEN `status` = "PO" THEN acc_budget_histories.amount_po ELSE 0 END ), 2 ) AS PO
+            FROM
+                acc_budget_histories
+                LEFT JOIN weekly_calendars ON date( acc_budget_histories.updated_at ) = weekly_calendars.week_date 
+            WHERE
+                budget_month_po IS NOT NULL 
+                AND fiscal_year = "FY197" 
+            GROUP BY
+                budget_month_po
+                
+            ) a 
+        GROUP BY
+            a.bulan 
+        HAVING
+            a.bulan IS NOT NULL 
+    ORDER BY
+        month_number
         ');
 
     $category = db::select('

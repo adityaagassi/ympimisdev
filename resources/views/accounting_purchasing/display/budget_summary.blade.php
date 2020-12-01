@@ -54,9 +54,9 @@
               <div id="container_resume"></div>
           </div>
 
-          <div class="col-md-12" style="padding:0">
+          <!-- <div class="col-md-12" style="padding:0">
               <div id="container_type"></div>
-          </div>
+          </div> -->
 
           <div class="col-md-12" style="margin-top:20px;padding: 0">
               <div id="container"></div>
@@ -137,7 +137,7 @@
       if(xhr.status == 200){
         if(result.status){
 
-          var category = [], type = [], amount_category = [], amount_type = [], bulan = [], awal = [], sisa = [];
+          var category = [], type = [], amount_category = [], amount_type = [], bulan = [], awal = [], sisa = [], pr = [], investment = [], po = [];
           var fy;
 
           $.each(result.cat_budget, function(key, value) {
@@ -158,6 +158,9 @@
 
           $.each(result.act, function(key, value) {
             sisa.push(value.Actual);
+            pr.push(value.PR);
+            investment.push(value.Investment);
+            po.push(value.PO);
           })
 
           $('#container_resume').highcharts({
@@ -186,7 +189,6 @@
               title:""
             },
             legend: {
-              reversed: true,
               itemStyle:{
                 color: "white",
                 fontSize: "12px",
@@ -204,6 +206,7 @@
             },
             plotOptions: {
               column: {
+                stacking: 'normal',
                 pointPadding: 0.05,
                 groupPadding: 0.1,
                 borderWidth: 0,
@@ -220,12 +223,30 @@
             series: [
               {
                 name: 'Simulasi Budget',
-                data: awal
+                data: awal,
+                stack: 'alone'
               },
               {
                 name: 'Actual Budget',
-                data: sisa
+                data: sisa,
+                stack: 'all'
+              },
+              {
+                name: 'Budget PR',
+                data: pr,
+                stack: 'all'
+              },
+              {
+                name: 'Budget Investment',
+                data: investment,
+                stack: 'all'
+              },
+              {
+                name: 'Budget PO',
+                data: po,
+                stack: 'all'
               }
+
             ]
           })
 
@@ -304,82 +325,6 @@
               }
             ]
           })
-
-          $('#container_type').highcharts({
-            chart: {
-              type: 'column',
-              height: '400px'
-            },
-            title: {
-              text: 'Summary By Type (Account Name)',
-              style: {
-                fontSize: '24px',
-                fontWeight: 'bold'
-              }
-            },
-            xAxis: {
-              type: 'category',
-              categories: type,
-              lineWidth:2,
-              lineColor:'#9e9e9e',
-              gridLineWidth: 1
-            },
-            yAxis: {
-              enabled:false,
-              title:""
-            },
-            legend: {
-              enabled:false,
-              reversed: true,
-              itemStyle:{
-                color: "white",
-                fontSize: "12px",
-                fontWeight: "bold",
-
-              },
-            },
-            plotOptions: {
-              series: {
-                cursor: 'pointer',
-                point: {
-                  events: {
-                    click: function () {
-                    }
-                  }
-                },
-                borderWidth: 0,
-                dataLabels: {
-                  enabled: false,
-                  format: '{point.y}'
-                }
-              },
-              column: {
-                  color:  Highcharts.ColorString,
-                  stacking: 'normal',
-                  borderRadius: 1,
-                  dataLabels: {
-                      enabled: true
-                  }
-              }
-            },
-            credits: {
-              enabled: false
-            },
-
-            tooltip: {
-              formatter:function(){
-                return this.series.name+' : ' + this.y;
-              }
-            },
-            series: [
-              {
-                name: 'Amount',
-                color: '#00a65a',
-                data: amount_type
-              }
-            ]
-          })
-
 
           $('#loading').hide();
 

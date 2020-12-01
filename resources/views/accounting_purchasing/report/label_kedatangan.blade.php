@@ -153,7 +153,7 @@
 		"edgeRight": 0,
 		"edgeTop": 0,
 		"edgeBottom": 0,
-		"marginLeft": 2,
+		"marginLeft": 5,
 		"marginRight": 0,
 		"marginTop": 0,
 		"marginBottom": 0,
