@@ -1369,20 +1369,30 @@ public function overtimeControl(Request $request)
 	}
 
 	if($tanggal >= '2020-01-01'){
-		$ot = db::connection('sunfish')->select("select ot.*, VIEW_YMPI_Emp_OrgUnit.cost_center_code, VIEW_YMPI_Emp_OrgUnit.cost_center_name from
+		$ot = db::connection('sunfish')->select("SELECT
+			ot.*,
+			VIEW_YMPI_Emp_OrgUnit.cost_center_code,
+			VIEW_YMPI_Emp_OrgUnit.cost_center_name 
+			FROM
 			(
-			select VIEW_YMPI_Emp_OvertimePlan.emp_no,
-			sum(
+			SELECT
+			VIEW_YMPI_Emp_OvertimePlan.emp_no,
+			SUM (
 			CASE
+
 			WHEN VIEW_YMPI_Emp_OvertimePlan.total_ot > 0 THEN
-			floor((VIEW_YMPI_Emp_OvertimePlan.total_ot / 60.0) * 2  + 0.5) / 2
-			ELSE
-			floor((VIEW_YMPI_Emp_OvertimePlan.TOTAL_OVT_PLAN / 60.0) * 2  + 0.5) / 2
-			END) as jam
-			from VIEW_YMPI_Emp_OvertimePlan
-			where VIEW_YMPI_Emp_OvertimePlan.ovtplanfrom >= '".$tanggal." 00:00:00' and VIEW_YMPI_Emp_OvertimePlan.ovtplanfrom <= '".$tanggal1." 23:59:59'
-			group by VIEW_YMPI_Emp_OvertimePlan.emp_no) as ot 
-			left join VIEW_YMPI_Emp_OrgUnit on VIEW_YMPI_Emp_OrgUnit.Emp_no = ot.emp_no");
+			floor( ( VIEW_YMPI_Emp_OvertimePlan.total_ot / 60.0 ) * 2 + 0.5 ) / 2 ELSE floor( ( VIEW_YMPI_Emp_OvertimePlan.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 
+			END 
+			) AS jam 
+			FROM
+			VIEW_YMPI_Emp_OvertimePlan 
+			WHERE
+			VIEW_YMPI_Emp_OvertimePlan.ShiftStart >= '".$tanggal." 00:00:00' 
+			AND VIEW_YMPI_Emp_OvertimePlan.ShiftEnd <= '".$tanggal1." 23:59:59' 
+			GROUP BY
+			VIEW_YMPI_Emp_OvertimePlan.emp_no 
+			) AS ot
+			LEFT JOIN VIEW_YMPI_Emp_OrgUnit ON VIEW_YMPI_Emp_OrgUnit.Emp_no = ot.emp_no");
 
 		$main_q = "select semua.cost_center, cost_center_name, SUM(bdg) as bdg, SUM(fq) as fq, DATE_FORMAT('".$tanggal1."','%d %M %Y') as tanggal from
 		(select cost_center, round(budget / DAY(LAST_DAY('".$tanggal1."')) * DAY('".$tanggal1."'),1) as bdg, 0 as fq from budgets 
