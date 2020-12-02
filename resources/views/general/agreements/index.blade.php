@@ -56,18 +56,24 @@
 			<table id="resumeTable" class="table table-bordered table-striped table-hover" style="margin-bottom: 20px;">
 				<thead style="background-color: rgba(126,86,134,.7);">
 					<tr>
-						<th style="width: 25%; text-align: center; font-size: 1.5vw;">Total</th>
-						<th style="width: 25%; text-align: center; font-size: 1.5vw;">Safe</th>
-						<th style="width: 25%; text-align: center; font-size: 1.5vw;">&#8804; 90 Days Left</th>
-						<th style="width: 25%; text-align: center; font-size: 1.5vw;">&#8804; 30 Days Left</th>
+						<th style="width: 14%; text-align: center; font-size: 1.5vw;">Total</th>
+						<th style="width: 14%; text-align: center; font-size: 1.5vw;">Terminated</th>
+						<th style="width: 14%; text-align: center; font-size: 1.5vw;">In Use</th>
+						<th style="width: 14%; text-align: center; font-size: 1.5vw;">Safe</th>
+						<th style="width: 14%; text-align: center; font-size: 1.5vw;">&#8804; 90 Days</th>
+						<th style="width: 14%; text-align: center; font-size: 1.5vw;">&#8804; 30 Days</th>
+						<th style="width: 14%; text-align: center; font-size: 1.5vw;">Expired</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
 						<td id="count_all" style="text-align: center; font-size: 1.8vw; font-weight: bold;"></td>
+						<td id="count_terminated" style="text-align: center; font-size: 1.8vw; font-weight: bold;"></td>
+						<td id="count_inuse" style="text-align: center; font-size: 1.8vw; font-weight: bold;"></td>
 						<td id="count_ok" style="background-color: #aee571; text-align: center; font-size: 1.8vw; font-weight: bold;"></td>
-						<td id="count_90" style="background-color: #ffb300; text-align: center; font-size: 1.8vw; font-weight: bold;"></td>
-						<td id="count_30" style="background-color: #ff5c8d; text-align: center; font-size: 1.8vw; font-weight: bold;"></td>
+						<td id="count_90" style="background-color: #ffeb3b; text-align: center; font-size: 1.8vw; font-weight: bold;"></td>
+						<td id="count_30" style="background-color: #f9a825; text-align: center; font-size: 1.8vw; font-weight: bold;"></td>
+						<td id="count_expired" style="background-color: #e53935; text-align: center; font-size: 1.8vw; font-weight: bold;"></td>
 					</tr>
 				</tbody>
 			</table>
@@ -508,9 +514,12 @@
 				$('#listTableBody').html("");
 				var listTableBody = "";
 				var count_all = 0;
+				var count_terminated = 0;
+				var count_inuse = 0;
 				var count_ok = 0;
 				var count_90 = 0;
 				var count_30 = 0;
+				var count_expired = 0;
 
 				$.each(result.agreements, function(key, value){
 					if(value.status == 'In Use'){
@@ -528,18 +537,36 @@
 					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:0.5%;">'+value.status+'</td>';
 					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:5%;">'+value.remark+'</td>';
 					count_all += 1;
-					if(value.validity <= 30){
-						count_30 += 1;
-						listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:2%; background-color: #ff5c8d;">'+value.validity+' Day(s) left</td>';			
+					if(value.status == "In Use"){
+						count_inuse += 1;
+					}
+					if(value.status == "Terminated"){
+						count_terminated += 1;
+					}
+					if(value.validity <= 0){
+						if(value.status == "In Use"){
+							count_expired += 1;
+						}
+						listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:2%; background-color: #e53935;">'+value.validity+' Day(s)</td>';			
+					}
+					else if(value.validity <= 30){
+						if(value.status == "In Use"){
+							count_30 += 1;
+						}
+						listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:2%; background-color: #f9a825;">'+value.validity+' Day(s)</td>';			
 					}
 					else if(value.validity <= 90){
-						count_90 += 1;
-						listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:2%; background-color: #ffb300;">'+value.validity+' Day(s) left</td>';			
+						if(value.status == "In Use"){
+							count_90 += 1;
+						}
+						listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:2%; background-color: #ffeb3b;">'+value.validity+' Day(s)</td>';			
 					}
 					else
 					{
-						count_ok += 1;
-						listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:2%; background-color: #aee571;">'+value.validity+' Day(s) left</td>';			
+						if(value.status == "In Use"){
+							count_ok += 1;
+						}
+						listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:2%; background-color: #aee571;">'+value.validity+' Day(s)</td>';			
 					}
 					listTableBody += '<td style="width:1%;" onclick="modalDownload(\''+value.id+'\')"><a href="javascript:void(0)" onclick="modalDownload(\''+value.id+'\')">Att('+value.att+')</a></td>';
 					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:2%;">'+value.created_by+'<br>'+value.name+'</td>';
@@ -549,9 +576,12 @@
 				});
 
 				$('#count_all').text(count_all);
+				$('#count_terminated').text(count_terminated);
+				$('#count_inuse').text(count_inuse);
 				$('#count_ok').text(count_ok);
 				$('#count_30').text(count_30);
 				$('#count_90').text(count_90);
+				$('#count_expired').text(count_expired);
 				$('#listTableBody').append(listTableBody);
 
 				$('#listTable tfoot th').each( function () {
