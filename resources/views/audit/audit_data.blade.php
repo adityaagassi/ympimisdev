@@ -249,19 +249,14 @@ td {
           tableData += '</td>';
         }
 
-        else if(username.toUpperCase() == value.auditor || username.toUpperCase() == value.auditee || "{{Auth::user()->role_code}}" == "MIS"){
+        else {
           tableData += '<td>';
 
           tableData += '<a href="{{ url("index/audit/print") }}/'+value.id+'" class="btn btn-success btn-xs"><i class="fa fa-file-pdf-o"></i> Report PDF</a>';
 
-          if(value.posisi == "auditee" && (username.toUpperCase() == value.auditee || "{{Auth::user()->role_code}}" == "MIS")) {
-            tableData += '<a href="{{ url("index/audit/response") }}/'+value.id+'" class="btn btn-warning btn-xs"><i class="fa fa-edit"></i> Penanganan</a>';
-          }
+          tableData += '<a href="{{ url("index/audit/response") }}/'+value.id+'" class="btn btn-warning btn-xs"><i class="fa fa-edit"></i> Penanganan</a>';
 
           tableData += '</td>';
-        }
-        else{
-          tableData += '<td width="15%"><a href="{{ url("index/audit/print") }}/'+value.id+'" class="btn btn-success btn-xs"><i class="fa fa-file-pdf-o"></i> Report PDF</a></td>';
         }
 
         tableData += '</tr>';
