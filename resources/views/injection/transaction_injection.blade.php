@@ -52,6 +52,7 @@ table.table-bordered > tfoot > tr > th{
 					<span style="font-size: 24px;">Transaction List:</span> 
 					<table id="resultScan" class="table table-bordered table-striped table-hover" style="width: 100%;">
 						<input type="hidden" id="operator_id">
+						<input type="hidden" id="operator_name">
 			            <thead style="background-color: rgba(126,86,134,.7);">
 			                <tr>
 			                  <th style="width: 5%;">Material Number</th>
@@ -83,7 +84,8 @@ table.table-bordered > tfoot > tr > th{
 									<th>Part Code - Color</th>
 									<th>Qty</th>
 									<th>Loc</th>
-									<th>Created At</th>
+									<th>By</th>
+									<th>At</th>
 									<?php if ($status == 'OUT') { ?>
 										<th>Detail</th>
 									<?php } ?>
@@ -122,7 +124,7 @@ table.table-bordered > tfoot > tr > th{
 			<div class="modal-content">
 				<div class="modal-header">
 					<div class="col-xs-12">
-						<center><h3 style="font-weight: bold;background-color: #17b80b;color: white;padding-top: 5px;padding-bottom: 5px">CEK DATA TRANSAKSI</h3></center>
+						<center><h3 style="font-weight: bold;background-color: #17b80b;color: white;padding-top: 10px;padding-bottom: 10px;font-size: 30px">CEK DATA TRANSAKSI</h3></center>
 					</div>
 					<div class="modal-body" id="tableCompletion">
 
@@ -157,7 +159,7 @@ table.table-bordered > tfoot > tr > th{
 			<div class="modal-content">
 				<div class="modal-header">
 					<div class="col-xs-12">
-						<center><h3 style="font-weight: bold;background-color: #17b80b;color: white;padding-top: 5px;padding-bottom: 5px">DETAIL TRANSAKSI</h3></center>
+						<center><h3 style="font-weight: bold;background-color: #17b80b;color: white;padding-top: 10px;padding-bottom: 10px;font-size: 30px">DETAIL TRANSAKSI</h3></center>
 					</div>
 					<div class="modal-body" id="tableDetail">
 
@@ -167,8 +169,8 @@ table.table-bordered > tfoot > tr > th{
 						<table id="resultNGDetail" class="table table-bordered table-striped table-hover" style="width: 100%;">
 				            <thead style="background-color: #17b80b;">
 				                <tr>
-				                  <th style="width: 5%;">NG</th>
-				                  <th style="width: 17%;">Quantity</th>
+				                  <th style="width: 10%;font-size: 25px;color: white;padding: 0px">NG</th>
+				                  <th style="width: 5%;font-size: 25px;color: white;padding: 0px">Quantity</th>
 				                </tr>
 				            </thead >
 				            <tbody id="resultNGDetailBody">
@@ -369,7 +371,7 @@ table.table-bordered > tfoot > tr > th{
 					bodyScan += '<td>'+value.cavity+'</td>';
 					bodyScan += '<td>'+value.shot+'</td>';
 					bodyScan += '<td>'+statustransaction+'</td>';
-					bodyScan += '<td><button class="btn btn-success" onclick="showModalCompletion(\''+value.process_id+'\',\''+value.injection_id+'\',\''+value.tag_rfid+'\',\''+value.material_number+'\',\''+value.part_name+'\',\''+value.part_type+'\',\''+value.color+'\',\''+value.cavity+'\',\''+value.shot+'\',\''+statustransaction+'\')">Transaksikan</button></td>';
+					bodyScan += '<td><button class="btn btn-success" style="height:100%;font-weight:bold" onclick="showModalCompletion(\''+value.process_id+'\',\''+value.injection_id+'\',\''+value.tag_rfid+'\',\''+value.material_number+'\',\''+value.part_name+'\',\''+value.part_type+'\',\''+value.color+'\',\''+value.cavity+'\',\''+value.shot+'\',\''+statustransaction+'\',\''+value.employee_id+'\',\''+value.name+'\')">TRANSAKSIKAN</button></td>';
 					bodyScan += '</tr>';
 					bodyScan += '<tr>';
 					bodyScan += '</tr>';
@@ -382,6 +384,7 @@ table.table-bordered > tfoot > tr > th{
 				if (result.operator != "") {
 					$.each(result.operator, function(key, value) {
 						$('#operator_id').val(value.tag);
+						$('#operator_name').val(value.name);
 					});
 				}
 
@@ -394,41 +397,45 @@ table.table-bordered > tfoot > tr > th{
 		});
 	}
 
-	function showModalCompletion(process_id,id,tag_rfid,material_number,part_name,part_type,color,cavity,shot,status) {
+	function showModalCompletion(process_id,id,tag_rfid,material_number,part_name,part_type,color,cavity,shot,status,employee_id,name) {
 		$('#tableCompletion').empty();
 		var table = "";
 		table += '<table class="table table-bordered table-responsive">';
 		table += '<tr>';
-		table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Tag</td>';
-		table += '<td id="tag_product_rfid">'+tag_rfid+'</td>';
+		table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">Tag</td>';
+		table += '<td style="font-size:20px" id="tag_product_rfid">'+tag_rfid+'</td>';
 		table += '</tr>';
 		table += '<tr>';
-		table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Material</td>';
-		table += '<td id="material_number">'+material_number+'</td>';
+		table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">Material</td>';
+		table += '<td style="font-size:20px" id="material_number">'+material_number+'</td>';
 		table += '</tr>';
 		table += '<tr>';
-		table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Part Name</td>';
-		table += '<td id="part_name">'+part_name+'</td>';
+		table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">Part Name</td>';
+		table += '<td style="font-size:20px" id="part_name">'+part_name+'</td>';
 		table += '</tr>';
 		table += '<tr>';
-		table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Part Type</td>';
-		table += '<td id="part_type">'+part_type+'</td>';
+		table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">Part Type</td>';
+		table += '<td style="font-size:20px" id="part_type">'+part_type+'</td>';
 		table += '</tr>';
 		table += '<tr>';
-		table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Color</td>';
-		table += '<td id="color">'+color+'</td>';
+		table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">Color</td>';
+		table += '<td style="font-size:20px" id="color">'+color+'</td>';
 		table += '</tr>';
 		table += '<tr>';
-		table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Cavity</td>';
-		table += '<td id="cavity">'+cavity+'</td>';
+		table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">Cavity</td>';
+		table += '<td style="font-size:20px" id="cavity">'+cavity+'</td>';
 		table += '</tr>';
 		table += '<tr>';
-		table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Qty</td>';
-		table += '<td id="qty">'+shot+'</td>';
+		table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">Qty</td>';
+		table += '<td style="font-size:20px" id="qty">'+shot+'</td>';
 		table += '</tr>';
 		table += '<tr>';
-		table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Status</td>';
-		table += '<td id="status">'+status+'</td>';
+		table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">Operator</td>';
+		if (status == 'IN') {
+			table += '<td style="font-size:20px" id="operator_injeksi">'+employee_id+' - '+name+'</td>';
+		}else{
+			table += '<td style="font-size:20px" id="operator_injeksi">'+$('#operator_id').val()+' - '+$('#operator_name').val()+'</td>';
+		}
 		table += '</tr>';
 		table += '</table>';
 		$('#tableCompletion').append(table);
@@ -483,7 +490,7 @@ table.table-bordered > tfoot > tr > th{
 				color:$('#color').text(),
 				cavity:$('#cavity').text(),
 				qty:$('#qty').text(),
-				status:$('#status').text(),
+				status:'IN',
 				operator_id:$('#operator_id').val()
 			}
 		}else{
@@ -495,7 +502,7 @@ table.table-bordered > tfoot > tr > th{
 				color:$('#color').text(),
 				cavity:$('#cavity').text(),
 				qty:$('#qty').text(),
-				status:$('#status').text(),
+				status:'OUT',
 				operator_id:$('#operator_id').val()
 			}
 		}
@@ -551,6 +558,7 @@ table.table-bordered > tfoot > tr > th{
 						tableData += '<td>'+ value.part_code +' - '+ value.color +'</td>';
 						tableData += '<td>'+ value.quantity +'</td>';
 						tableData += '<td>'+ value.location +'</td>';
+						tableData += '<td>'+ value.employee_id +' - '+ value.name.split(' ').slice(0,2).join(' ') +'</td>';
 						tableData += '<td>'+ value.created_at +'</td>';
 						if ('{{$status}}' == 'OUT') {
 							tableData += '<td><button class="btn btn-primary" onclick="showModalDetail(\''+value.id+'\',)">Detail</button></td>';
@@ -603,44 +611,44 @@ table.table-bordered > tfoot > tr > th{
 					$.each(result.data, function(key, value) {
 						table += '<table class="table table-bordered table-responsive">';
 						table += '<tr>';
-						table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Tag</td>';
-						table += '<td>'+value.tag+'</td>';
+						table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">Tag</td>';
+						table += '<td style="font-size:20px">'+value.tag+'</td>';
 						table += '</tr>';
 						table += '<tr>';
-						table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Material</td>';
-						table += '<td>'+value.material_number+'</td>';
+						table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">Material</td>';
+						table += '<td style="font-size:20px">'+value.material_number+'</td>';
 						table += '</tr>';
 						table += '<tr>';
-						table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Part Name</td>';
-						table += '<td>'+value.part_name+'</td>';
+						table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">Part Name</td>';
+						table += '<td style="font-size:20px">'+value.part_name+'</td>';
 						table += '</tr>';
 						table += '<tr>';
-						table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Part Type</td>';
-						table += '<td>'+value.part_code+'</td>';
+						table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">Part Type</td>';
+						table += '<td style="font-size:20px">'+value.part_code+'</td>';
 						table += '</tr>';
 						table += '<tr>';
-						table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Color</td>';
-						table += '<td>'+value.color+'</td>';
+						table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">Color</td>';
+						table += '<td style="font-size:20px">'+value.color+'</td>';
 						table += '</tr>';
 						table += '<tr>';
-						table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Cavity</td>';
-						table += '<td>'+value.cavity+'</td>';
+						table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">Cavity</td>';
+						table += '<td style="font-size:20px">'+value.cavity+'</td>';
 						table += '</tr>';
 						table += '<tr>';
-						table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Qty</td>';
-						table += '<td>'+value.quantity+'</td>';
+						table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">Qty</td>';
+						table += '<td style="font-size:20px">'+value.quantity+'</td>';
 						table += '</tr>';
 						table += '<tr>';
-						table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Mesin</td>';
-						table += '<td>'+value.mesin+'</td>';
+						table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">Mesin</td>';
+						table += '<td style="font-size:20px">'+value.mesin+'</td>';
 						table += '</tr>';
 						table += '<tr>';
-						table += '<td style="background-color:#17b80b;color:white;font-weight:bold">OP Injeksi</td>';
-						table += '<td>'+value.employee_id+' - '+value.name+'</td>';
+						table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">OP Injeksi</td>';
+						table += '<td style="font-size:20px">'+value.employee_id+' - '+value.name+'</td>';
 						table += '</tr>';
 						table += '<tr>';
-						table += '<td style="background-color:#17b80b;color:white;font-weight:bold">Status</td>';
-						table += '<td>'+value.status+'</td>';
+						table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">OP Assy</td>';
+						table += '<td style="font-size:20px">'+value.empidambil+' - '+value.nameambil+'</td>';
 						table += '</tr>';
 						table += '</table>';
 
@@ -650,15 +658,15 @@ table.table-bordered > tfoot > tr > th{
 
 							for(var i = 0; i < ng_arr.length; i++){
 								ngScan += '<tr>';
-								ngScan += '<td id="ng_name">'+ng_arr[i]+'</td>';
-								ngScan += '<td id="ng_qty">'+qty_arr[i]+'</td>';
+								ngScan += '<td style="font-size:20px" id="ng_name">'+ng_arr[i]+'</td>';
+								ngScan += '<td style="font-size:20px" id="ng_qty">'+qty_arr[i]+'</td>';
 								ngScan += '</tr>';
 								jumlah = jumlah + parseInt(qty_arr[i]);
 							}
 
 							ngScan += '<tr style="background-color:#17b80b">';
-							ngScan += '<td style="border:1px solid black;border-top:1px solid black" id="total_ng_name"><b>TOTAL</b></td>';
-							ngScan += '<td style="border:1px solid black;border-top:1px solid black" id="total_ng_qty"><b>'+jumlah+'</b></td>';
+							ngScan += '<td style="border:1px solid black;border-top:1px solid black;font-size:25px;color:white" id="total_ng_name"><b>TOTAL</b></td>';
+							ngScan += '<td style="border:1px solid black;border-top:1px solid black;font-size:25px;color:white" id="total_ng_qty"><b>'+jumlah+'</b></td>';
 							ngScan += '</tr>';
 						}
 					});

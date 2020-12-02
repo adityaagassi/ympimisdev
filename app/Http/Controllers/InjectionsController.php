@@ -5094,41 +5094,79 @@ class InjectionsController extends Controller
     public function fetchTransaction(Request $request)
     {
         try {
-            $transaction = DB::SELECT("SELECT
-                injection_transactions.id,
-                injection_transactions.tag,
-                injection_transactions.material_number,
-                SUBSTRING_INDEX( injection_parts.part_name, ' ', 1 ) AS part_name,
-                injection_parts.part_code,
-                injection_parts.part_type,
-                injection_parts.color,
-                injection_transactions.location,
-                injection_transactions.quantity,
-                injection_transactions.created_at,
-                injection_transactions.status,
-                injection_process_logs.mesin,
-                injection_process_logs.cavity,
-                employee_syncs.employee_id,
-                employee_syncs.`name`,
-                injection_process_logs.updated_at,
-                injection_process_logs.ng_name,
-                injection_process_logs.ng_count 
-            FROM
-                injection_transactions
-                LEFT JOIN injection_parts ON injection_transactions.material_number = injection_parts.gmc
-                LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_transactions.tag 
-                AND injection_process_logs.updated_at = injection_transactions.created_at
-                LEFT JOIN employee_syncs ON employee_syncs.employee_id = injection_process_logs.operator_id 
-            WHERE
-                injection_transactions.status = '".$request->get('status')."' 
-                AND injection_transactions.location = 'RC91' 
-                AND DATE( injection_transactions.created_at ) BETWEEN DATE(
-                NOW()) - INTERVAL 3 DAY 
-                AND DATE(
-                NOW()) 
-                AND injection_parts.deleted_at IS NULL 
-            ORDER BY
-                injection_transactions.created_at DESC");
+            if ($request->get('status') == 'IN') {
+                $transaction = DB::SELECT("SELECT
+                    injection_transactions.id,
+                    injection_transactions.tag,
+                    injection_transactions.material_number,
+                    SUBSTRING_INDEX( injection_parts.part_name, ' ', 1 ) AS part_name,
+                    injection_parts.part_code,
+                    injection_parts.part_type,
+                    injection_parts.color,
+                    injection_transactions.location,
+                    injection_transactions.quantity,
+                    injection_transactions.created_at,
+                    injection_transactions.status,
+                    injection_process_logs.mesin,
+                    injection_process_logs.cavity,
+                    employee_syncs.employee_id,
+                    employee_syncs.`name`,
+                    injection_process_logs.updated_at,
+                    injection_process_logs.ng_name,
+                    injection_process_logs.ng_count 
+                FROM
+                    injection_transactions
+                    LEFT JOIN injection_parts ON injection_transactions.material_number = injection_parts.gmc
+                    LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_transactions.tag 
+                    AND injection_process_logs.updated_at = injection_transactions.created_at
+                    LEFT JOIN employee_syncs ON employee_syncs.employee_id = injection_transactions.operator_id 
+                WHERE
+                    injection_transactions.status = '".$request->get('status')."' 
+                    AND injection_transactions.location = 'RC11' 
+                    AND DATE( injection_transactions.created_at ) BETWEEN DATE(
+                    NOW()) - INTERVAL 3 DAY 
+                    AND DATE(
+                    NOW()) 
+                    AND injection_parts.deleted_at IS NULL 
+                ORDER BY
+                    injection_transactions.created_at DESC");
+            }else{
+                $transaction = DB::SELECT("SELECT
+                    injection_transactions.id,
+                    injection_transactions.tag,
+                    injection_transactions.material_number,
+                    SUBSTRING_INDEX( injection_parts.part_name, ' ', 1 ) AS part_name,
+                    injection_parts.part_code,
+                    injection_parts.part_type,
+                    injection_parts.color,
+                    injection_transactions.location,
+                    injection_transactions.quantity,
+                    injection_transactions.created_at,
+                    injection_transactions.status,
+                    injection_process_logs.mesin,
+                    injection_process_logs.cavity,
+                    employee_syncs.employee_id,
+                    employee_syncs.`name`,
+                    injection_process_logs.updated_at,
+                    injection_process_logs.ng_name,
+                    injection_process_logs.ng_count 
+                FROM
+                    injection_transactions
+                    LEFT JOIN injection_parts ON injection_transactions.material_number = injection_parts.gmc
+                    LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_transactions.tag 
+                    AND injection_process_logs.updated_at = injection_transactions.created_at
+                    LEFT JOIN employee_syncs ON employee_syncs.employee_id = injection_transactions.operator_id 
+                WHERE
+                    injection_transactions.status = 'IN' 
+                    AND injection_transactions.location = 'RC91' 
+                    AND DATE( injection_transactions.created_at ) BETWEEN DATE(
+                    NOW()) - INTERVAL 3 DAY 
+                    AND DATE(
+                    NOW()) 
+                    AND injection_parts.deleted_at IS NULL 
+                ORDER BY
+                    injection_transactions.created_at DESC");
+            }
 
             $response = array(
                 'status' => true,
@@ -5165,15 +5203,18 @@ class InjectionsController extends Controller
                 employee_syncs.`name`,
                 injection_process_logs.updated_at,
                 injection_process_logs.ng_name,
-                injection_process_logs.ng_count 
+                injection_process_logs.ng_count,
+                empambil.employee_id as empidambil,
+                empambil.name as nameambil
             FROM
                 injection_transactions
                 LEFT JOIN injection_parts ON injection_transactions.material_number = injection_parts.gmc
                 LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_transactions.tag 
                 AND injection_process_logs.updated_at = injection_transactions.created_at
                 LEFT JOIN employee_syncs ON employee_syncs.employee_id = injection_process_logs.operator_id 
+                LEFT JOIN employee_syncs empambil ON empambil.employee_id = injection_transactions.operator_id
             WHERE
-                injection_transactions.status = '".$request->get('status')."' 
+                injection_transactions.status = 'IN' 
                 AND injection_transactions.location = 'RC91' 
                 AND DATE( injection_transactions.created_at ) BETWEEN DATE(
                 NOW()) - INTERVAL 3 DAY 
@@ -5210,6 +5251,7 @@ class InjectionsController extends Controller
                 FROM
                     ympirfid.injection_lists
                     JOIN ympimis.injection_tags ON ympimis.injection_tags.concat_kanban = ympirfid.injection_lists.tag 
+                    JOIN employee_syncs ON ympimis.employee_syncs.employee_id = ympimis.injection_tags.operator_id
                 WHERE
                     ympirfid.injection_lists.remark = '".$remark."'
                     AND ympimis.injection_tags.availability = 1");
@@ -5222,11 +5264,12 @@ class InjectionsController extends Controller
                 FROM
                     ympirfid.injection_lists
                     JOIN ympimis.injection_tags ON ympimis.injection_tags.concat_kanban = ympirfid.injection_lists.tag 
-                    LEFT JOIN  ympimis.injection_process_logs ON ympimis.injection_tags.tag = tag_product and ympimis.injection_tags.material_number = ympimis.injection_process_logs.material_number and ympimis.injection_tags.cavity = ympimis.injection_process_logs.cavity
+                    LEFT JOIN  ympimis.injection_process_logs ON ympimis.injection_tags.tag = tag_product and ympimis.injection_tags.material_number = ympimis.injection_process_logs.material_number and ympimis.injection_tags.cavity = ympimis.injection_process_logs.cavity AND ympimis.injection_process_logs.remark is null
+                    JOIN employee_syncs ON ympimis.employee_syncs.employee_id = ympimis.injection_tags.operator_id
                 WHERE
                     ympirfid.injection_lists.remark = '".$remark."'
                     AND ympimis.injection_tags.availability = 2");
-                $operator_id = DB::SELECT("SELECT * from ympirfid.injection_lists where tag like '%PI%'");
+                $operator_id = DB::SELECT("SELECT * from ympirfid.injection_lists left join ympimis.employee_syncs on ympimis.employee_syncs.employee_id = ympirfid.injection_lists.tag where tag like '%PI%'");
             }
 
             if ($operator_id == "") {
@@ -5277,11 +5320,69 @@ class InjectionsController extends Controller
             if ($request->get('status') == 'IN') {
                 $transaction = InjectionTag::where('tag',$request->get('tag'))->first();
                 $concat_kanban = $transaction->concat_kanban;
-                $transaction->location = 'RC91';
+                // $transaction->location = 'RC91';
                 $transaction->availability = 2;
-                $transaction->height_check = 'Uncheck';
-                $transaction->push_pull_check = 'Uncheck';
-                $transaction->torque_check = 'Uncheck';
+                // $transaction->height_check = 'Uncheck';
+                // $transaction->push_pull_check = 'Uncheck';
+                // $transaction->torque_check = 'Uncheck';
+                $transaction->save();
+
+                // $inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $request->get('material_number'), 'storage_location' => 'RC11']);
+                // $inventory->quantity = ($inventory->quantity-$request->get('qty'));
+                // $inventory->save();
+
+                // $inventory2 = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $request->get('material_number'), 'storage_location' => 'RC91']);
+                // $inventory2->quantity = ($inventory2->quantity+$request->get('qty'));
+                // $inventory2->save();
+
+                //send Inj Inventories
+                // $injectionInventory = InjectionInventory::firstOrNew(['material_number' => $request->get('material_number'), 'location' => 'RC11']);
+                // $injectionInventory->quantity = ($injectionInventory->quantity-$request->get('qty'));
+                // $injectionInventory->save();
+
+                // $injectionInventory2 = InjectionInventory::firstOrNew(['material_number' => $request->get('material_number'), 'location' => 'RC91']);
+                // $injectionInventory2->quantity = ($injectionInventory2->quantity+$request->get('qty'));
+                // $injectionInventory2->save();
+
+                // InjectionTransaction::create([
+                //     'tag' => $request->get('tag'),
+                //     'material_number' => $request->get('material_number'),
+                //     'location' => 'RC11',
+                //     'quantity' => $request->get('qty'),
+                //     'status' => 'OUT',
+                //     'operator_id' => $request->get('operator_id'),
+                //     'created_by' => $id_user
+                // ]);
+
+                // InjectionTransaction::create([
+                //     'tag' => $request->get('tag'),
+                //     'material_number' => $request->get('material_number'),
+                //     'location' => 'RC91',
+                //     'quantity' => $request->get('qty'),
+                //     'status' => 'IN',
+                //     'operator_id' => $request->get('operator_id'),
+                //     'created_by' => $id_user
+                // ]);
+
+                $deleteInjList = DB::SELECT("DELETE FROM ympirfid.injection_lists where tag = '".$concat_kanban."'");
+
+            }else{
+                $transaction = InjectionTag::where('tag',$request->get('tag'))->first();
+                // $transaction->operator_id = $request->get('operator_id');
+                $transaction->operator_id = null;
+                $transaction->part_name = null;
+                $transaction->part_type = null;
+                $transaction->color = null;
+                $transaction->cavity = null;
+                $transaction->location = null;
+                $transaction->shot = null;
+                $transaction->availability = null;
+                // $transaction->availability = 3;
+                $transaction->height_check = null;
+                $transaction->push_pull_check = null;
+                $transaction->torque_check = null;
+                $transaction->remark = null;
+                $concat_kanban = $transaction->concat_kanban;
                 $transaction->save();
 
                 $inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $request->get('material_number'), 'storage_location' => 'RC11']);
@@ -5321,6 +5422,24 @@ class InjectionsController extends Controller
                     'created_by' => $id_user
                 ]);
 
+                // InjectionTransaction::create([
+                //     'tag' => $request->get('tag'),
+                //     'material_number' => $request->get('material_number'),
+                //     'location' => 'RC91',
+                //     'quantity' => $request->get('qty'),
+                //     'status' => 'OUT',
+                //     'operator_id' => $request->get('operator_id'),
+                //     'created_by' => $id_user
+                // ]);
+
+                // $injectionInventory = InjectionInventory::firstOrNew(['material_number' => $request->get('material_number'), 'location' => 'RC91']);
+                // $injectionInventory->quantity = ($injectionInventory->quantity-$request->get('qty'));
+                // $injectionInventory->save();
+
+                $process = InjectionProcessLog::where('tag_product',$request->get('tag'))->where('material_number',$request->get('material_number'))->where('cavity',$request->get('cavity'))->where('remark',null)->first();
+                $process->remark = 'Close';
+                $process->save();
+
                 $deleteInjList = DB::SELECT("DELETE FROM ympirfid.injection_lists where tag = '".$concat_kanban."'");
 
                 // $material = db::connection('mysql2')->table('materials')
@@ -5347,44 +5466,6 @@ class InjectionsController extends Controller
                 //     'created_at' => date("Y-m-d H:i:s"),
                 //     'updated_at' => date("Y-m-d H:i:s")
                 // ]);
-            }else{
-                $transaction = InjectionTag::where('tag',$request->get('tag'))->first();
-                // $transaction->operator_id = $request->get('operator_id');
-                $transaction->operator_id = null;
-                $transaction->part_name = null;
-                $transaction->part_type = null;
-                $transaction->color = null;
-                $transaction->cavity = null;
-                $transaction->location = null;
-                $transaction->shot = null;
-                $transaction->availability = null;
-                // $transaction->availability = 3;
-                $transaction->height_check = null;
-                $transaction->push_pull_check = null;
-                $transaction->torque_check = null;
-                $transaction->remark = null;
-                $concat_kanban = $transaction->concat_kanban;
-                $transaction->save();
-
-                InjectionTransaction::create([
-                    'tag' => $request->get('tag'),
-                    'material_number' => $request->get('material_number'),
-                    'location' => 'RC91',
-                    'quantity' => $request->get('qty'),
-                    'status' => 'OUT',
-                    'operator_id' => $request->get('operator_id'),
-                    'created_by' => $id_user
-                ]);
-
-                $injectionInventory = InjectionInventory::firstOrNew(['material_number' => $request->get('material_number'), 'location' => 'RC91']);
-                $injectionInventory->quantity = ($injectionInventory->quantity-$request->get('qty'));
-                $injectionInventory->save();
-
-                $process = InjectionProcessLog::where('tag_product',$request->get('tag'))->where('material_number',$request->get('material_number'))->where('cavity',$request->get('cavity'))->where('remark',null)->first();
-                $process->remark = 'Close';
-                $process->save();
-
-                $deleteInjList = DB::SELECT("DELETE FROM ympirfid.injection_lists where tag = '".$concat_kanban."'");
             }
 
             $response = array(
