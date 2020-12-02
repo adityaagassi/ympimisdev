@@ -1014,7 +1014,7 @@
 
 			$.each(result.data_penggunaan, function(key, value) {
 		    	var total_penggunaan = value.PR + value.Investment + value.PO + value.Actual;
-		    	$("#budget_penggunaan"+value.month_number).text('$'+total_penggunaan);
+		    	$("#budget_penggunaan"+value.month_number).text('$'+total_penggunaan.toFixed(2));
 		    	budget_penggunaan_total = budget_penggunaan_total + total_penggunaan;
 	        })
 	    
