@@ -90,6 +90,7 @@
 
 	jQuery(document).ready(function() {
 		clearData();
+		fetchChart();
 		setInterval(fetchChart, 1000*60*60);
 		// $("#fiscal_year").prop('selectedIndex', 0).change();
 		$('#newDate').datepicker({
