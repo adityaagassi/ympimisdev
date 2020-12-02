@@ -222,6 +222,29 @@ class SendEmail extends Mailable
             }
         }
 
+        if($this->remark == 'new_agreement'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+            ->priority(1)
+            ->subject('New Agreement (????????)')
+            ->view('mails.new_agreement')
+            ->attach(public_path('files/agreements/'.$this->data[0]->file_name));
+        }
+
+        if($this->remark == 'update_agreement'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+            ->priority(1)
+            ->subject('Update Agreement (????????)')
+            ->view('mails.new_agreement')
+            ->attach(public_path('files/agreements/'.$this->data[0]->file_name));
+        }
+
+        if($this->remark == 'notif_agreement'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+            ->priority(1)
+            ->subject('Expiration Notification Agreement (????????)')
+            ->view('mails.notif_agreement');
+        }
+
         if($this->remark == 'investment'){
             if($this->data[0]->pdf != null && $this->data[0]->file != null){
                 $all_file = json_decode($this->data[0]->file);
