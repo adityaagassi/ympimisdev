@@ -23,7 +23,7 @@
 			<button class="btn btn-success pull-right"  data-toggle="modal" data-target="#modalAdd">Tambah Data</button>
 		</div>
 		<div class="col-xs-2">
-			<select class="form-control select2" id="fiscal_year" style="width: 100%;" data-placeholder="Select Fiscal Year" onchange="fetchChart(value)" required>
+			<select class="form-control select2" id="fiscal_year" style="width: 100%;" data-placeholder="Select Fiscal Year" onchange="fetchChart()" required>
 				<option value=""></option>
 				@foreach($weeks as $week)
 				<option value="{{ $week->indek }}">{{ $week->fiscal_year }} {{ $week->bulan }}</option>
@@ -179,8 +179,9 @@
 
 	function fetchChart(id){
 		$('#loading').show();
+		var period = $('#fiscal_year').val();
 		var data = {
-			period:id
+			period:period
 		}
 		$.get('{{ url("fetch/display/efficiency_monitoring_monthly") }}', data, function(result, status, xhr) {
 			if(result.status){
