@@ -164,7 +164,7 @@ table {
 					<div class="col-xs-12" style="vertical-align: middle;">
 			@foreach($trainingPicture as $trainingPicture)
 			<div class="col-xs-3">
-				<img width="150px" src="{{ url('/data_file/training/'.$trainingPicture->picture) }}">
+				<img width="150px" src="{{ url('/data_file/training/'.$trainingPicture->picture) }}" style="display: inline-block;">
 			</div>
 			@endforeach
 		</div>
