@@ -1816,48 +1816,48 @@ class InjectionsController extends Controller
             //     ]);
 
             //SEMENTARA
-            // $transaction = InjectionTag::where('tag',$request->get('tag_product'))->first();
-            // $transaction->location = 'RC91';
-            // $transaction->availability = 2;
-            // $transaction->height_check = 'Uncheck';
-            // $transaction->push_pull_check = 'Uncheck';
-            // $transaction->torque_check = 'Uncheck';
-            // $transaction->save();
+            $transaction = InjectionTag::where('tag',$request->get('tag_product'))->first();
+            $transaction->location = 'RC91';
+            $transaction->availability = 2;
+            $transaction->height_check = 'Uncheck';
+            $transaction->push_pull_check = 'Uncheck';
+            $transaction->torque_check = 'Uncheck';
+            $transaction->save();
 
-            // $inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $request->get('material_number'), 'storage_location' => 'RC11']);
-            // $inventory->quantity = ($inventory->quantity-$request->get('shot'));
-            // $inventory->save();
+            $inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $request->get('material_number'), 'storage_location' => 'RC11']);
+            $inventory->quantity = ($inventory->quantity-$request->get('shot'));
+            $inventory->save();
 
-            // $inventory2 = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $request->get('material_number'), 'storage_location' => 'RC91']);
-            // $inventory2->quantity = ($inventory2->quantity+$request->get('shot'));
-            // $inventory2->save();
+            $inventory2 = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $request->get('material_number'), 'storage_location' => 'RC91']);
+            $inventory2->quantity = ($inventory2->quantity+$request->get('shot'));
+            $inventory2->save();
 
-            // //send Inj Inventories
-            // $injectionInventory = InjectionInventory::firstOrNew(['material_number' => $request->get('material_number'), 'location' => 'RC11']);
-            // $injectionInventory->quantity = ($injectionInventory->quantity-$request->get('shot'));
-            // $injectionInventory->save();
+            //send Inj Inventories
+            $injectionInventory = InjectionInventory::firstOrNew(['material_number' => $request->get('material_number'), 'location' => 'RC11']);
+            $injectionInventory->quantity = ($injectionInventory->quantity-$request->get('shot'));
+            $injectionInventory->save();
 
-            // $injectionInventory2 = InjectionInventory::firstOrNew(['material_number' => $request->get('material_number'), 'location' => 'RC91']);
-            // $injectionInventory2->quantity = ($injectionInventory2->quantity+$request->get('shot'));
-            // $injectionInventory2->save();
+            $injectionInventory2 = InjectionInventory::firstOrNew(['material_number' => $request->get('material_number'), 'location' => 'RC91']);
+            $injectionInventory2->quantity = ($injectionInventory2->quantity+$request->get('shot'));
+            $injectionInventory2->save();
 
-            // InjectionTransaction::create([
-            //     'material_number' => $request->get('material_number'),
-            //     'location' => 'RC11',
-            //     'quantity' => $request->get('shot'),
-            //     'status' => 'OUT',
-            //     'operator_id' => $request->get('operator_id'),
-            //     'created_by' => $id_user
-            // ]);
+            InjectionTransaction::create([
+                'material_number' => $request->get('material_number'),
+                'location' => 'RC11',
+                'quantity' => $request->get('shot'),
+                'status' => 'OUT',
+                'operator_id' => $request->get('operator_id'),
+                'created_by' => $id_user
+            ]);
 
-            // InjectionTransaction::create([
-            //     'material_number' => $request->get('material_number'),
-            //     'location' => 'RC91',
-            //     'quantity' => $request->get('shot'),
-            //     'status' => 'IN',
-            //     'operator_id' => $request->get('operator_id'),
-            //     'created_by' => $id_user
-            // ]);
+            InjectionTransaction::create([
+                'material_number' => $request->get('material_number'),
+                'location' => 'RC91',
+                'quantity' => $request->get('shot'),
+                'status' => 'IN',
+                'operator_id' => $request->get('operator_id'),
+                'created_by' => $id_user
+            ]);
 
             $response = array(
                 'status' => true,
