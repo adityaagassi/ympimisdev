@@ -6981,9 +6981,142 @@ public function budget_detail(Request $request)
 {
     $detail = AccBudget::where('budget_no','=',$request->get('id'))->first();
 
+    $detail_penggunaan = db::select('
+        SELECT
+    CASE    
+            WHEN
+        a.bulan = "Jan" THEN
+            13 
+            WHEN a.bulan = "Feb" THEN
+            14 
+            WHEN a.bulan = "Mar" THEN
+            15 
+            WHEN a.bulan = "Apr" THEN
+            4 
+            WHEN a.bulan = "May" THEN
+            5 
+            WHEN a.bulan = "Jun" THEN
+            6 
+            WHEN a.bulan = "Jul" THEN
+            7 
+            WHEN a.bulan = "Aug" THEN
+            8 
+            WHEN a.bulan = "Sep" THEN
+            9 
+            WHEN a.bulan = "Oct" THEN
+            10 
+            WHEN a.bulan = "Nov" THEN
+            11 
+            WHEN a.bulan = "Dec" THEN
+            12 
+            END AS month_number,
+            a.bulan,
+            ROUND( SUM( a.actual ), 2 ) AS Actual,
+            ROUND( SUM( a.PR ), 2 ) AS PR,
+            ROUND( SUM( a.Investment ), 2 ) AS Investment,
+            ROUND( SUM( a.PO ), 2 ) AS PO
+        FROM
+            (
+            SELECT
+                budget_month_receive AS bulan,
+                ROUND( sum( CASE WHEN `status` = "Actual" THEN acc_budget_histories.amount_receive ELSE 0 END ), 2 ) AS Actual,         
+                0 AS PR,
+                0 AS Investment,
+                0 AS PO
+            FROM
+                acc_budget_histories
+                LEFT JOIN acc_budgets on acc_budgets.budget_no = acc_budget_histories.budget 
+            WHERE
+                budget_month_receive IS NOT NULL 
+                AND periode = "FY197"
+                AND budget_no = "'.$request->get('id').'"
+            GROUP BY
+                budget_month_receive 
+                
+                UNION ALL
+            
+            SELECT
+                month_date AS bulan,
+                ROUND( SUM( local_amount ), 2 ) AS Actual,
+                0 AS PR,
+                0 AS Investment,
+                0 AS PO
+            FROM
+                acc_actual_logs
+               LEFT JOIN acc_budgets on acc_budgets.budget_no = acc_actual_logs.budget_no 
+            WHERE
+                acc_actual_logs.deleted_at IS NULL 
+                AND acc_budgets.periode = "FY197"
+                AND acc_budgets.budget_no = "'.$request->get('id').'" 
+            GROUP BY
+                month_date 
+                
+                UNION ALL
+                
+            SELECT 
+                budget_month AS bulan,
+                0 AS Actual,            
+                ROUND( sum( CASE WHEN `status` = "PR" THEN acc_budget_histories.amount ELSE 0 END ), 2 ) AS PR,
+                0 AS Investment,
+                0 AS PO
+            FROM
+                acc_budget_histories
+                LEFT JOIN acc_budgets on acc_budgets.budget_no = acc_budget_histories.budget 
+            WHERE
+                budget_month IS NOT NULL 
+                AND periode = "FY197"  
+                AND budget_no = "'.$request->get('id').'"
+            GROUP BY
+                budget_month
+            
+                UNION ALL
+                
+            SELECT 
+                budget_month AS bulan,
+                0 AS Actual,            
+                0 AS PR,
+                ROUND( sum( CASE WHEN `status` = "Investment" THEN acc_budget_histories.amount ELSE 0 END ), 2 ) AS Investment,
+                0 AS PO
+            FROM
+                acc_budget_histories
+                LEFT JOIN acc_budgets on acc_budgets.budget_no = acc_budget_histories.budget 
+            WHERE
+                budget_month IS NOT NULL 
+                AND periode = "FY197" 
+                AND budget_no = "'.$request->get('id').'"
+            GROUP BY
+                budget_month
+                
+                UNION ALL
+                
+            SELECT 
+                budget_month_po AS bulan,
+                0 AS Actual,            
+                0 AS PR,
+                0 AS Investment,
+                ROUND( sum( CASE WHEN `status` = "PO" THEN acc_budget_histories.amount_po ELSE 0 END ), 2 ) AS PO
+            FROM
+                acc_budget_histories
+                LEFT JOIN acc_budgets on acc_budgets.budget_no = acc_budget_histories.budget 
+            WHERE
+                budget_month IS NOT NULL 
+                AND periode = "FY197"  
+                AND budget_no = "'.$request->get('id').'"
+            GROUP BY
+                budget_month_po
+            ) a 
+        GROUP BY
+            a.bulan 
+        HAVING
+            a.bulan IS NOT NULL 
+    ORDER BY
+        month_number
+        ');
+
     $response = array(
         'status' => true,
         'datas' => $detail,
+        'data_penggunaan' => $detail_penggunaan
     );
 
     return Response::json($response);
@@ -10539,6 +10672,24 @@ public function transfer_approvalto($id){
             'title_jp' => $title_jp,
             'po_detail' => $po_detail
         ))->with('page', 'Print Warehouse')->with('head', 'Receive Equipment Warehouse');
+    }
+
+
+
+    public function receive_report()
+    {
+        $title = 'Receive Report';
+        $title_jp = '';
+
+        $status = AccActual::select('*')->whereNull('acc_actuals.deleted_at')
+        ->distinct()
+        ->get();
+
+        return view('accounting_purchasing.master.receive_report', array(
+            'title' => $title,
+            'title_jp' => $title_jp,
+        ))->with('page', 'Receive Goods')
+        ->with('head', 'Receive Goods');
     }
 
 }

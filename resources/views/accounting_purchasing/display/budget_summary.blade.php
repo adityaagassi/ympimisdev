@@ -260,7 +260,7 @@
               backgroundColor : null
             },
             title: {
-              text: 'Summary By Category Periode' +fy,
+              text: 'Summary By Category Periode ' +fy,
               style: {
                 fontSize: '24px',
                 fontWeight: 'bold'

@@ -381,8 +381,8 @@
 
 	          		<tr>
 	          			<th>Bulan</th>
-	          			<!-- <th>Budget Awal</th> -->
 	          			<th>Budget Simulasi</th>
+	          			<th>Penggunaan Budget</th>
 	          			<th style="background-color: #ff7043">Sisa Budget</th>
 	          		</tr>
 	          		<tr>
@@ -394,6 +394,9 @@
 	          			</td> -->
 	          			<td>
 	          				<label id="budget_adj4" name="budget_adj4"></label>
+	          			</td>
+	          			<td>
+	          				<label id="budget_penggunaan4" name="budget_penggunaan4"></label>
 	          			</td>
 	          			<td class="sisa">
 	          				<label id="budget_sisa4" name="budget_sisa4"></label>
@@ -409,6 +412,9 @@
 	          			<td>
 	          				<label id="budget_adj5" name="budget_adj5"></label>
 	          			</td>
+	          			<td>
+	          				<label id="budget_penggunaan5" name="budget_penggunaan5"></label>
+	          			</td>
 	          			<td class="sisa">
 	          				<label id="budget_sisa5" name="budget_sisa5"></label>
 	          			</td>
@@ -422,6 +428,9 @@
 	          			</td> -->
 	          			<td>
 	          				<label id="budget_adj6" name="budget_adj6"></label>
+	          			</td>
+	          			<td>
+	          				<label id="budget_penggunaan6" name="budget_penggunaan6"></label>
 	          			</td>
 	          			<td class="sisa">
 	          				<label id="budget_sisa6" name="budget_sisa6"></label>
@@ -437,6 +446,9 @@
 	          			<td>
 	          				<label id="budget_adj7" name="budget_adj7"></label>
 	          			</td>
+	          			<td>
+	          				<label id="budget_penggunaan7" name="budget_penggunaan7"></label>
+	          			</td>
 	          			<td class="sisa">
 	          				<label id="budget_sisa7" name="budget_sisa7"></label>
 	          			</td>
@@ -450,6 +462,9 @@
 	          			</td> -->
 	          			<td>
 	          				<label id="budget_adj8" name="budget_adj8"></label>
+	          			</td>
+	          			<td>
+	          				<label id="budget_penggunaan8" name="budget_penggunaan8"></label>
 	          			</td>
 	          			<td class="sisa">
 	          				<label id="budget_sisa8" name="budget_sisa8"></label>
@@ -465,6 +480,9 @@
 	          			<td>
 	          				<label id="budget_adj9" name="budget_adj9"></label>
 	          			</td>
+	          			<td>
+	          				<label id="budget_penggunaan9" name="budget_penggunaan9"></label>
+	          			</td>
 	          			<td class="sisa">
 	          				<label id="budget_sisa9" name="budget_sisa9"></label>
 	          			</td>
@@ -478,6 +496,9 @@
 	          			</td> -->
 	          			<td>
 	          				<label id="budget_adj10" name="budget_adj10"></label>
+	          			</td>
+	          			<td>
+	          				<label id="budget_penggunaan10" name="budget_penggunaan10"></label>
 	          			</td>
 	          			<td class="sisa">
 	          				<label id="budget_sisa10" name="budget_sisa10"></label>
@@ -493,6 +514,9 @@
 	          			<td>
 	          				<label id="budget_adj11" name="budget_adj11"></label>
 	          			</td>
+	          			<td>
+	          				<label id="budget_penggunaan11" name="budget_penggunaan11"></label>
+	          			</td>
 	          			<td class="sisa">
 	          				<label id="budget_sisa11" name="budget_sisa11"></label>
 	          			</td>
@@ -506,6 +530,9 @@
 	          			</td> -->
 	          			<td>
 	          				<label id="budget_adj12" name="budget_adj12"></label>
+	          			</td>
+	          			<td>
+	          				<label id="budget_penggunaan12" name="budget_penggunaan12"></label>
 	          			</td>
 	          			<td class="sisa">
 	          				<label id="budget_sisa12" name="budget_sisa12"></label>
@@ -521,6 +548,9 @@
 	          			<td>
 	          				<label id="budget_adj1" name="budget_adj1"></label>
 	          			</td>
+	          			<td>
+	          				<label id="budget_penggunaan1" name="budget_penggunaan1"></label>
+	          			</td>
 	          			<td class="sisa">
 	          				<label id="budget_sisa1" name="budget_sisa1"></label>
 	          			</td>
@@ -534,6 +564,9 @@
 	          			</td> -->
 	          			<td>
 	          				<label id="budget_adj2" name="budget_adj2"></label>
+	          			</td>
+	          			<td>
+	          				<label id="budget_penggunaan2" name="budget_penggunaan2"></label>
 	          			</td>
 	          			<td class="sisa">
 	          				<label id="budget_sisa2" name="budget_sisa2"></label>
@@ -549,6 +582,9 @@
 	          			<td>
 	          				<label id="budget_adj3" name="budget_adj3"></label>
 	          			</td>
+	          			<td>
+	          				<label id="budget_penggunaan3" name="budget_penggunaan3"></label>
+	          			</td>
 	          			<td class="sisa">
 	          				<label id="budget_sisa3" name="budget_sisa3"></label>
 	          			</td>
@@ -558,11 +594,11 @@
 	          			<td style="background-color: #00a65a;color: white;border-top: 0">
 	          				Total
 	          			</td>
-	          			<!-- <td style="background-color: #00a65a;color: white;border-top: 0">
-	          				<label id="budget_awal_total" name="budget_awal_total"></label>
-	          			</td> -->
 	          			<td style="background-color: #00a65a;color: white;border-top: 0">
 	          				<label id="budget_adj_total" name="budget_adj_total"></label>
+	          			</td>
+	          			<td style="background-color: #00a65a;color: white;border-top: 0">
+	          				<label id="budget_penggunaan_total" name="budget_penggunaan_total"></label>
 	          			</td>
 	          			<td style="background-color: #00a65a;color: white;border-top: 0">
 	          				<label id="budget_sisa_total" name="budget_sisa_total"></label>
@@ -922,6 +958,19 @@
 
 	    	// $(".sisa").css({backgroundColor:'#ff7043', color:'#fff', borderTop:'0'});
 
+	    	$("#budget_penggunaan4").text('$0');
+	    	$("#budget_penggunaan5").text('$0');
+	    	$("#budget_penggunaan6").text('$0');
+	    	$("#budget_penggunaan7").text('$0');
+	    	$("#budget_penggunaan8").text('$0');
+	    	$("#budget_penggunaan9").text('$0');
+	    	$("#budget_penggunaan10").text('$0');
+	    	$("#budget_penggunaan11").text('$0');
+	    	$("#budget_penggunaan12").text('$0');
+	    	$("#budget_penggunaan1").text('$0');
+	    	$("#budget_penggunaan2").text('$0');
+	    	$("#budget_penggunaan3").text('$0');
+
 	    	var d = new Date();
 	    	var n = d.getMonth();
 
@@ -960,6 +1009,16 @@
 	    	var budget_adj_total = result.datas.apr_after_adj + result.datas.may_after_adj + result.datas.jun_after_adj + result.datas.jul_after_adj + result.datas.aug_after_adj + result.datas.sep_after_adj + result.datas.oct_after_adj + result.datas.nov_after_adj + result.datas.dec_after_adj + result.datas.jan_after_adj + result.datas.feb_after_adj + result.datas.mar_after_adj;
 
 	    	$("#budget_adj_total").text('$'+budget_adj_total.toFixed(2));
+
+	    	var budget_penggunaan_total = 0;
+
+			$.each(result.data_penggunaan, function(key, value) {
+		    	var total_penggunaan = value.PR + value.Investment + value.PO + value.Actual;
+		    	$("#budget_penggunaan"+value.month_number).text('$'+total_penggunaan);
+		    	budget_penggunaan_total = budget_penggunaan_total + total_penggunaan;
+	        })
+	    
+	    	$("#budget_penggunaan_total").text('$'+budget_penggunaan_total.toFixed(2));
 
 	    	$("#budget_sisa4").text('$'+result.datas.apr_sisa_budget);
 	    	$("#budget_sisa5").text('$'+result.datas.may_sisa_budget);

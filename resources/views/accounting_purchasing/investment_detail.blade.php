@@ -1027,7 +1027,34 @@
       else if(jen2 == "Miscellaneous"){
         jenis = "etc";
       }
+      else if(jen2 == "Information System"){
+        jenis = "Sys";
+      }
+      else if(jen2 == "Meal"){
+        jenis = "Me";
+      }
+      else if(jen2 == "Technical Assistant"){
+        jenis = "Te";
+      }
+      else if(jen2 == "Rent"){
+        jenis = "Rt";
+      }
+      else if(jen2 == "Transport Expense"){
+        jenis = "Tr";
+      }
+      else if(jen2 == "Postage and Telecomunication"){
+        jenis = "Po";
+      }
+      else if(jen2 == "Bussiness Trip"){
+        jenis = "Bt";
+      }
+      else if(jen2 == "Electricity, Water, and Gas"){
+        jenis = "Ewg";
+      }
       else if(jen2 == "Others"){
+        jenis = "etc";
+      }
+      else{
         jenis = "etc";
       }
 

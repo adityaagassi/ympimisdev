@@ -287,7 +287,7 @@
       if (jen2 == "Building") {
         jenis = "B";
       }
-    else if(jen2 == "Machine and Equipment"){
+      else if(jen2 == "Machine and Equipment"){
         jenis = "M";
       }
       else if(jen2 == "Vehicle"){
@@ -321,7 +321,34 @@
       else if(jen2 == "Miscellaneous"){
         jenis = "etc";
       }
+      else if(jen2 == "Information System"){
+        jenis = "Sys";
+      }
+      else if(jen2 == "Meal"){
+        jenis = "Me";
+      }
+      else if(jen2 == "Technical Assistant"){
+        jenis = "Te";
+      }
+      else if(jen2 == "Rent"){
+        jenis = "Rt";
+      }
+      else if(jen2 == "Transport Expense"){
+        jenis = "Tr";
+      }
+      else if(jen2 == "Postage and Telecomunication"){
+        jenis = "Po";
+      }
+      else if(jen2 == "Bussiness Trip"){
+        jenis = "Bt";
+      }
+      else if(jen2 == "Electricity, Water, and Gas"){
+        jenis = "Ewg";
+      }
       else if(jen2 == "Others"){
+        jenis = "etc";
+      }
+      else{
         jenis = "etc";
       }
 
@@ -523,11 +550,11 @@
           list += "<option value='Technical Assistant'>Technical Assistant</option>";
           list += "<option value='Rent'>Rent</option>";
           list += "<option value='Transport Expense'>Transport Expense</option>";
-          list += "<option value='Postage & Telecomunication'>Postage & Telecomunication</option>";
+          list += "<option value='Postage and Telecomunication'>Postage and Telecomunication</option>";
           list += "<option value='Bussiness Trip'>Bussiness Trip</option>";
           list += "<option value='Information System'>Information System</option>";
           list += "<option value='Packaging Cost'>Packaging Cost</option>";
-          list += "<option value='Electricity, Water, & Gas'>Electricity, Water, & Gas</option>";
+          list += "<option value='Electricity, Water, and Gas'>Electricity, Water, and Gas</option>";
           list += "<option value='Insurance'>Insurance</option>";
           list += "<option value='Meeting&Guest'>Meeting & Guest</option>";
           list += "<option value='Book&periodical'>Book & periodical</option>";

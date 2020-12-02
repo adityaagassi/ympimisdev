@@ -301,7 +301,29 @@
 							<br>
 							<rio style="<?php if($inv[0]->type == "Professional Fee") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 4. Professional Fee <img src="{{ public_path() . '/files/jepang/Screenshot_64.jpg' }}" width="50"> </rio> 
 							<rio style="<?php if($inv[0]->type == "Miscellaneous") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> 5. Miscellaneous <img src="{{ public_path() . '/files/jepang/Screenshot_66.jpg' }}" width="30"> </rio>
-							6. Others <img src="{{ public_path() . '/files/jepang/Screenshot_66.jpg' }}" width="30">
+							<?php 
+							if($inv[0]->type == "Miscellaneous" ||
+								$inv[0]->type == "Professional Fee" || 
+								$inv[0]->type == "Constool"  || 
+								$inv[0]->type == "Repair and Maintenance" || 
+								$inv[0]->type == "Office Supplies" || 
+								$inv[0]->type == "Building" || 
+								$inv[0]->type == "Machine and Equipment" || 
+								$inv[0]->type == "Vehicle" || 
+								$inv[0]->type == "Tools, Jigs and Furniture" ||
+								$inv[0]->type == "Moulding" || 
+								$inv[0]->type == "PC and Printer" || 
+								$inv[0]->type == "Land Acquisition") { 
+							?>
+								6. Others
+							<img src="{{ public_path() . '/files/jepang/Screenshot_66.jpg' }}" width="30">
+							<?php } else { ?>
+
+							<rio style="color:blue;font-weight: bold;text-decoration: underline;"> 	
+								6. Others (<?= $inv[0]->type ?>) 
+							</rio> 
+								<img src="{{ public_path() . '/files/jepang/Screenshot_66.jpg' }}" width="30">
+							<?php } ?>
 						</td>
 					</tr>
 					<tr>
