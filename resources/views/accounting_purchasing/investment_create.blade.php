@@ -348,9 +348,6 @@
       else if(jen2 == "Others"){
         jenis = "etc";
       }
-      else{
-        jenis = "etc";
-      }
 
 
       var reff_no = document.getElementById("reff_number");

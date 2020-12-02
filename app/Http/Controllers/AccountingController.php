@@ -7018,8 +7018,8 @@ public function budget_detail(Request $request)
         FROM
             (
             SELECT
-                                budget_month_receive as bulan,
-                ROUND( sum( CASE WHEN `status` = "Actual" and budget_month_receive = budget_month THEN acc_budget_histories.amount_receive ELSE 0 END ), 2 ) AS Actual,
+                budget_month_receive as bulan,
+                ROUND( sum( CASE WHEN `status` = "Actual" THEN acc_budget_histories.amount_receive ELSE 0 END ), 2 ) AS Actual,
                 0 AS PR,
                 0 AS Investment,
                 0 AS PO
