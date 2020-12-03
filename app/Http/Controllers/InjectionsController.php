@@ -5265,7 +5265,7 @@ class InjectionsController extends Controller
                     ympirfid.injection_lists
                     JOIN ympimis.injection_tags ON ympimis.injection_tags.concat_kanban = ympirfid.injection_lists.tag 
                     LEFT JOIN  ympimis.injection_process_logs ON ympimis.injection_tags.tag = tag_product and ympimis.injection_tags.material_number = ympimis.injection_process_logs.material_number and ympimis.injection_tags.cavity = ympimis.injection_process_logs.cavity AND ympimis.injection_process_logs.remark is null
-                    JOIN employee_syncs ON ympimis.employee_syncs.employee_id = ympimis.injection_tags.operator_id
+                    JOIN ympimis.employee_syncs ON ympimis.employee_syncs.employee_id = ympimis.injection_tags.operator_id
                 WHERE
                     ympirfid.injection_lists.remark = '".$remark."'
                     AND ympimis.injection_tags.availability = 2");

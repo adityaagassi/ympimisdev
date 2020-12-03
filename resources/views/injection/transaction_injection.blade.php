@@ -361,7 +361,7 @@ table.table-bordered > tfoot > tr > th{
 				var statustransaction = '{{$status}}';
 
 				var jumlah = 0;
-				fillResult();
+				// fillResult();
 				$.each(result.data, function(key, value) {
 					bodyScan += '<tr style="cursor:pointer;font-size:25px">';
 					bodyScan += '<td>'+value.material_number+'</td>';
