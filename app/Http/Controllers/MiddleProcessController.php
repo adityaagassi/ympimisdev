@@ -1399,10 +1399,15 @@ class MiddleProcessController extends Controller
 		$emp = db::select("select g.employee_id, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as `name` from employee_groups g left join employees e on e.employee_id = g.employee_id
 			where g.location = 'bff'");
 
+		$work_target = MiddleTarget::where('location', 'bff')
+		->where('target_name','Operator Productivity')
+		->first();
+
 		$response = array(
 			'status' => true,
 			'act' => $act,
 			'emp' => $emp,
+			'target' => $work_target->target,
 			'bulan' => $bulan,
 			'datefrom' => $datefrom,
 			'dateto' => $dateto

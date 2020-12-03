@@ -1447,6 +1447,7 @@ $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, 
 					enabled: true,
 					text: "Efficiency"
 				},
+				max: 300,
 				labels: {
 					enabled: false
 				},
@@ -1567,6 +1568,7 @@ $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, 
 					enabled: true,
 					text: "Efficiency"
 				},
+				max: 300,
 				labels: {
 					enabled: false
 				},
