@@ -600,7 +600,7 @@
 								else if(now.getDay() == 5){
 									$('#progress_text_production'+i).append().empty();
 									var total = 570;
-									var now_menit = ((now.getHours()-7)*60) + now.getMinutes();
+									var now_menit = ((now.getHours()-6)*60) + now.getMinutes();
 									var persen = (now_menit/total) * 100;
 									if(now.getHours() >= 6 && now_menit < total){
 										if(persen > 24){
@@ -630,21 +630,29 @@
 								else{
 									$('#progress_text_production'+i).append().empty();
 									var total = 540;
-									var now_menit = ((now.getHours()-7)*60) + now.getMinutes();
+									var now_menit = ((now.getHours()-6)*60) + now.getMinutes();
 									var persen = (now_menit/total) * 100;
-									if(persen > 24){
-										if(persen > 32){
-											$('#progress_bar_production'+i).html("Today's Working Time : "+persen.toFixed(2)+"%");
+									if(now.getHours() >= 6 && now_menit < total){
+										if(persen > 24){
+											if(persen > 32){
+												$('#progress_bar_production'+i).html("Today's Working Time : "+persen.toFixed(2)+"%");
+											}
+											else{
+												$('#progress_bar_production'+i).html("Working Time : "+persen.toFixed(2)+"%");
+											}	
 										}
 										else{
-											$('#progress_bar_production'+i).html("Working Time : "+persen.toFixed(2)+"%");
-										}	
+											$('#progress_bar_production'+i).html(persen.toFixed(2)+"%");
+										}
+										$('#progress_bar_production'+i).css('width', persen+'%');
+										$('#progress_bar_production'+i).addClass('active');
 									}
-									else{
-										$('#progress_bar_production'+i).html(persen.toFixed(2)+"%");
+									else if(now_menit >= total){
+										$('#progress_bar_production'+i).html("Today's Working Time : 100%");
+										$('#progress_bar_production'+i).css('width', '100%');
+										$('#progress_bar_production'+i).removeClass('active');
 									}
-									$('#progress_bar_production'+i).css('width', persen+'%');
-									$('#progress_bar_production'+i).css('color', 'white');
+									
 									$('#progress_bar_production'+i).css('font-weight', 'bold');
 									$('#progress_bar_production'+i).addClass('active');
 								}
