@@ -1060,7 +1060,7 @@ class AssyProcessController extends Controller
 
 		union all
 		
-		select materials.material_number, 0 as plan, 0 as picking, sum(if(histories.transfer_movement_type = '9I3', histories.lot,0)) as plus, sum( if(histories.transfer_movement_type = '9I4', -(histories.lot),0)) as minus, 0 as stock, 0 as plan_ori from
+		select materials.material_number, 0 as plan, 0 as picking, sum(if(histories.transfer_movement_type = '9I3', histories.lot,0)) as plus, sum( if(histories.transfer_movement_type = '9I4', (histories.lot),0)) as minus, 0 as stock, 0 as plan_ori from
 		(
 		select materials.id, materials.material_number from kitto.materials where materials.location = '".$location."' and category = 'body'
 		) as materials left join kitto.histories on materials.id = histories.transfer_material_id where date(histories.created_at) >= '".$first."' and date(histories.created_at) <= '".$tanggal."' and histories.category in ('transfer', 'transfer_cancel', 'transfer_return', 'transfer_adjustment') group by materials.material_number
