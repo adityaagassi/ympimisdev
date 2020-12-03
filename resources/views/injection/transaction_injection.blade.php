@@ -231,7 +231,7 @@ table.table-bordered > tfoot > tr > th{
 		checkInjections();
 
 		// if ('{{$status}}' == 'IN') {
-			setInterval(checkInjections,10000);
+			setInterval(checkInjections,5000);
 		// }
 		// checkInjections();
 
