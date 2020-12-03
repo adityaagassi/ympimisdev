@@ -1722,7 +1722,7 @@ class InjectionsController extends Controller
 
             $tag = InjectionTag::where('tag',$request->get('tag_product'))->first();
             $tag->shot = $request->get('shot');
-            $tag->location = 'RC11';
+            $tag->location = $request->get('mesin');
             $tag->part_name = $request->get('part_name');
             $tag->operator_id = $request->get('operator_id');
             $tag->part_type = $request->get('part_type');
@@ -1774,25 +1774,25 @@ class InjectionsController extends Controller
             ]);
 
             //send Inventories
-            $inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $request->get('material_number'), 'storage_location' => 'RC11']);
-            $inventory->quantity = ($inventory->quantity+$request->get('shot'));
-            $inventory->save();
+            // $inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $request->get('material_number'), 'storage_location' => 'RC11']);
+            // $inventory->quantity = ($inventory->quantity+$request->get('shot'));
+            // $inventory->save();
 
-            //send Inj Inventories
-            $injectionInventory = InjectionInventory::firstOrNew(['material_number' => $request->get('material_number'), 'location' => 'RC11']);
-            $injectionInventory->quantity = ($injectionInventory->quantity+$request->get('shot'));
-            $injectionInventory->save();
+            // //send Inj Inventories
+            // $injectionInventory = InjectionInventory::firstOrNew(['material_number' => $request->get('material_number'), 'location' => 'RC11']);
+            // $injectionInventory->quantity = ($injectionInventory->quantity+$request->get('shot'));
+            // $injectionInventory->save();
 
-            //Transaction
-            InjectionTransaction::create([
-                'tag' => $request->get('tag_product'),
-                'material_number' => $request->get('material_number'),
-                'location' => 'RC11',
-                'quantity' => $request->get('shot'),
-                'status' => 'IN',
-                'operator_id' =>  $request->get('operator_id'),
-                'created_by' => $id_user
-            ]);
+            // //Transaction
+            // InjectionTransaction::create([
+            //     'tag' => $request->get('tag_product'),
+            //     'material_number' => $request->get('material_number'),
+            //     'location' => 'RC11',
+            //     'quantity' => $request->get('shot'),
+            //     'status' => 'IN',
+            //     'operator_id' =>  $request->get('operator_id'),
+            //     'created_by' => $id_user
+            // ]);
 
             //COMPLETION KITTO
 
@@ -5320,7 +5320,7 @@ class InjectionsController extends Controller
             if ($request->get('status') == 'IN') {
                 $transaction = InjectionTag::where('tag',$request->get('tag'))->first();
                 $concat_kanban = $transaction->concat_kanban;
-                // $transaction->location = 'RC91';
+                $transaction->location = 'RC11';
                 $transaction->availability = 2;
                 // $transaction->height_check = 'Uncheck';
                 // $transaction->push_pull_check = 'Uncheck';
@@ -5363,6 +5363,26 @@ class InjectionsController extends Controller
                 //     'operator_id' => $request->get('operator_id'),
                 //     'created_by' => $id_user
                 // ]);
+
+                $inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $request->get('material_number'), 'storage_location' => 'RC11']);
+                $inventory->quantity = ($inventory->quantity+$request->get('qty'));
+                $inventory->save();
+
+                //send Inj Inventories
+                $injectionInventory = InjectionInventory::firstOrNew(['material_number' => $request->get('material_number'), 'location' => 'RC11']);
+                $injectionInventory->quantity = ($injectionInventory->quantity+$request->get('qty'));
+                $injectionInventory->save();
+
+                //Transaction
+                InjectionTransaction::create([
+                    'tag' => $request->get('tag'),
+                    'material_number' => $request->get('material_number'),
+                    'location' => 'RC11',
+                    'quantity' => $request->get('qty'),
+                    'status' => 'IN',
+                    'operator_id' =>  $request->get('operator_id'),
+                    'created_by' => $id_user
+                ]);
 
                 $deleteInjList = DB::SELECT("DELETE FROM ympirfid.injection_lists where tag = '".$concat_kanban."'");
 
