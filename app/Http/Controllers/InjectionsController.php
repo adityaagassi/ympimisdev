@@ -5683,7 +5683,7 @@ class InjectionsController extends Controller
                 (
                 SELECT
                     CONCAT( UPPER( injection_parts.part_code ), ' (', injection_parts.color, ')' ) AS part,
-                    COALESCE (( SELECT quantity FROM injection_inventories WHERE location = 'RC91' AND material_number = gmc ), 0 ) AS stock,
+                    COALESCE (( SELECT quantity FROM injection_inventories WHERE location = 'RC11' AND material_number = gmc ), 0 ) AS stock,
                     0 AS plan 
                 FROM
                     injection_parts where remark = 'injection'
