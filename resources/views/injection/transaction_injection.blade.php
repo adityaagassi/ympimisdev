@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.display')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
@@ -46,20 +46,25 @@ table.table-bordered > tfoot > tr > th{
 		</p>
 	</div>
 	<div class="row">
-		<div class="col-xs-6" style="text-align: center;">
+		<div class="col-xs-12" style="text-align: center;">
 			<div class="row">
-				<div class="col-md-12" style="">
-					<span style="font-size: 24px;">Transaction List:</span> 
+				<div class="col-md-1">
+				</div>
+				<div class="col-md-10">
 					<table id="resultScan" class="table table-bordered table-striped table-hover" style="width: 100%;">
 						<input type="hidden" id="operator_id">
 						<input type="hidden" id="operator_name">
-			            <thead style="background-color: rgba(126,86,134,.7);">
+			            <thead style="background-color: rgb(126,86,134); color: #FFD700;">
+			            	<tr>
+			            		<th colspan="9" style="font-size: 25px">LIST ITEM</th>
+			            	</tr>
 			                <tr>
 			                  <th style="width: 5%;">Material Number</th>
 			                  <th style="width: 5%;">Part Name</th>
 			                  <th style="width: 5%;">Part Type</th>
 			                  <th style="width: 5%;">Color</th>
 			                  <th style="width: 6%;">Cavity</th>
+			                  <th style="width: 6%;">No. Kanban</th>
 			                  <th style="width: 6%;">Qty</th>
 			                  <th style="width: 6%;">Status</th>
 			                  <th style="width: 6%;">Action</th>
@@ -69,25 +74,27 @@ table.table-bordered > tfoot > tr > th{
 						</tbody>
 		            </table>
 				</div>
+				<div class="col-md-1">
+				</div>
 			</div>
 		</div>
 
-		<div class="col-xs-6" style="padding-left: 0px">
+		<div class="col-xs-12" style="padding-left: 0px;padding-right: 0px">
 			<div class="col-md-12">
 				<div class="box box-solid">
 					<div class="box-body">
-						<span style="font-size: 20px;text-align: left;">Transaction History</span> 
+						<center><span style="font-size: 25px;text-align: center;font-weight: bold;">TRANSACTION HISTORY</span> </center>
 						<table id="tableHistory" class="table table-bordered table-striped table-hover" style="width: 100%">
 							<thead style="background-color: rgba(126,86,134,.7);">
 								<tr>
-									<th>Part Name</th>
-									<th>Part Code - Color</th>
-									<th>Qty</th>
-									<th>Loc</th>
-									<th>By</th>
-									<th>At</th>
+									<th style="width: 1%">Part Name</th>
+									<th style="width: 2%">Part Code - Color</th>
+									<th style="width: 1%">Qty</th>
+									<th style="width: 1%">Loc</th>
+									<th style="width: 3%">By</th>
+									<th style="width: 3%">At</th>
 									<?php if ($status == 'OUT') { ?>
-										<th>Detail</th>
+										<th style="width: 2%">Detail</th>
 									<?php } ?>
 								</tr>
 							</thead>
@@ -124,19 +131,22 @@ table.table-bordered > tfoot > tr > th{
 			<div class="modal-content">
 				<div class="modal-header">
 					<div class="col-xs-12">
-						<center><h3 style="font-weight: bold;background-color: #17b80b;color: white;padding-top: 10px;padding-bottom: 10px;font-size: 30px">CEK DATA TRANSAKSI</h3></center>
+						<center><h3 style="font-weight: bold;background-color: rgb(126,86,134); color: #FFD700;padding-top: 10px;padding-bottom: 10px;font-size: 30px">CEK DATA TRANSAKSI</h3></center>
 					</div>
 					<div class="modal-body" id="tableCompletion">
 
 					</div>
 					<?php if ($status == "OUT"): ?>
 						<div class="col-md-12">
-							<span style="font-size: 24px;">NG List:</span> 
+							<!-- <span style="font-size: 24px;">NG List:</span>  -->
 							<table id="resultNG" class="table table-bordered table-striped table-hover" style="width: 100%;">
-					            <thead style="background-color: #17b80b;">
+					            <thead style="background-color: rgb(126,86,134); color: #FFD700;">
+					            	<tr>
+					            		<th colspan="2" style="font-size: 20px;padding: 0px">NG LIST</th>
+					            	</tr>
 					                <tr>
-					                  <th style="width: 5%;">NG</th>
-					                  <th style="width: 17%;">Quantity</th>
+					                  <th style="width: 17%;padding: 0px">NG</th>
+					                  <th style="width: 5%;padding: 0px">Quantity</th>
 					                </tr>
 					            </thead >
 					            <tbody id="resultNGBody">
@@ -145,7 +155,7 @@ table.table-bordered > tfoot > tr > th{
 						</div>
 					<?php endif ?>
 					<div class="col-xs-12">
-						<button class="btn btn-success btn-block" style="font-weight: bold;font-size: 25px" onclick="completion()">
+						<button class="btn btn-primary btn-block" style="font-weight: bold;font-size: 25px" onclick="completion()">
 							PROSES TRANSAKSI
 						</button>
 					</div>
@@ -158,19 +168,22 @@ table.table-bordered > tfoot > tr > th{
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<div class="col-xs-12">
+					<!-- <div class="col-xs-12">
 						<center><h3 style="font-weight: bold;background-color: #17b80b;color: white;padding-top: 10px;padding-bottom: 10px;font-size: 30px">DETAIL TRANSAKSI</h3></center>
-					</div>
+					</div> -->
 					<div class="modal-body" id="tableDetail">
 
 					</div>
 					<div class="col-md-12">
-						<span style="font-size: 24px;">NG List:</span> 
+						<!-- <span style="font-size: 24px;">NG List:</span>  -->
 						<table id="resultNGDetail" class="table table-bordered table-striped table-hover" style="width: 100%;">
-				            <thead style="background-color: #17b80b;">
+				            <thead style="background-color: rgb(126,86,134); color: #FFD700;">
+				            	<tr>
+				            		<th colspan="2" style="font-size: 20px;padding: 0px">NG LIST</th>
+				            	</tr>
 				                <tr>
-				                  <th style="width: 10%;font-size: 25px;color: white;padding: 0px">NG</th>
-				                  <th style="width: 5%;font-size: 25px;color: white;padding: 0px">Quantity</th>
+				                  <th style="width: 17%;padding: 0px">NG</th>
+				                  <th style="width: 5%;padding: 0px">Quantity</th>
 				                </tr>
 				            </thead >
 				            <tbody id="resultNGDetailBody">
@@ -363,15 +376,16 @@ table.table-bordered > tfoot > tr > th{
 				var jumlah = 0;
 				// fillResult();
 				$.each(result.data, function(key, value) {
-					bodyScan += '<tr style="cursor:pointer;font-size:25px">';
+					bodyScan += '<tr style="cursor:pointer;font-size:17px">';
 					bodyScan += '<td>'+value.material_number+'</td>';
 					bodyScan += '<td>'+value.part_name+'</td>';
 					bodyScan += '<td>'+value.part_type+'</td>';
 					bodyScan += '<td>'+value.color+'</td>';
 					bodyScan += '<td>'+value.cavity+'</td>';
+					bodyScan += '<td>'+value.no_kanban+'</td>';
 					bodyScan += '<td>'+value.shot+'</td>';
 					bodyScan += '<td>'+statustransaction+'</td>';
-					bodyScan += '<td><button class="btn btn-success" style="height:100%;font-weight:bold" onclick="showModalCompletion(\''+value.process_id+'\',\''+value.injection_id+'\',\''+value.tag_rfid+'\',\''+value.material_number+'\',\''+value.part_name+'\',\''+value.part_type+'\',\''+value.color+'\',\''+value.cavity+'\',\''+value.shot+'\',\''+statustransaction+'\',\''+value.employee_id+'\',\''+value.name+'\')">TRANSAKSIKAN</button></td>';
+					bodyScan += '<td><button class="btn btn-primary" style="height:100%;font-weight:bold" onclick="showModalCompletion(\''+value.process_id+'\',\''+value.injection_id+'\',\''+value.tag_rfid+'\',\''+value.material_number+'\',\''+value.part_name+'\',\''+value.part_type+'\',\''+value.color+'\',\''+value.cavity+'\',\''+value.shot+'\',\''+statustransaction+'\',\''+value.employee_id+'\',\''+value.name+'\')">TRANSAKSIKAN</button></td>';
 					bodyScan += '</tr>';
 					bodyScan += '<tr>';
 					bodyScan += '</tr>';
@@ -402,39 +416,39 @@ table.table-bordered > tfoot > tr > th{
 		var table = "";
 		table += '<table class="table table-bordered table-responsive">';
 		table += '<tr>';
-		table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">Tag</td>';
-		table += '<td style="font-size:20px" id="tag_product_rfid">'+tag_rfid+'</td>';
+		table += '<td style="background-color: rgb(126,86,134); color: #FFD700;font-weight:bold;font-size:15px">Tag</td>';
+		table += '<td style="font-size:15px" id="tag_product_rfid">'+tag_rfid+'</td>';
 		table += '</tr>';
 		table += '<tr>';
-		table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">Material</td>';
-		table += '<td style="font-size:20px" id="material_number">'+material_number+'</td>';
+		table += '<td style="background-color: rgb(126,86,134); color: #FFD700;font-weight:bold;font-size:15px">Material</td>';
+		table += '<td style="font-size:15px" id="material_number">'+material_number+'</td>';
 		table += '</tr>';
 		table += '<tr>';
-		table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">Part Name</td>';
-		table += '<td style="font-size:20px" id="part_name">'+part_name+'</td>';
+		table += '<td style="background-color: rgb(126,86,134); color: #FFD700;font-weight:bold;font-size:15px">Part Name</td>';
+		table += '<td style="font-size:15px" id="part_name">'+part_name+'</td>';
 		table += '</tr>';
 		table += '<tr>';
-		table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">Part Type</td>';
-		table += '<td style="font-size:20px" id="part_type">'+part_type+'</td>';
+		table += '<td style="background-color: rgb(126,86,134); color: #FFD700;font-weight:bold;font-size:15px">Part Type</td>';
+		table += '<td style="font-size:15px" id="part_type">'+part_type+'</td>';
 		table += '</tr>';
 		table += '<tr>';
-		table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">Color</td>';
-		table += '<td style="font-size:20px" id="color">'+color+'</td>';
+		table += '<td style="background-color: rgb(126,86,134); color: #FFD700;font-weight:bold;font-size:15px">Color</td>';
+		table += '<td style="font-size:15px" id="color">'+color+'</td>';
 		table += '</tr>';
 		table += '<tr>';
-		table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">Cavity</td>';
-		table += '<td style="font-size:20px" id="cavity">'+cavity+'</td>';
+		table += '<td style="background-color: rgb(126,86,134); color: #FFD700;font-weight:bold;font-size:15px">Cavity</td>';
+		table += '<td style="font-size:15px" id="cavity">'+cavity+'</td>';
 		table += '</tr>';
 		table += '<tr>';
-		table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">Qty</td>';
-		table += '<td style="font-size:20px" id="qty">'+shot+'</td>';
+		table += '<td style="background-color: rgb(126,86,134); color: #FFD700;font-weight:bold;font-size:15px">Qty</td>';
+		table += '<td style="font-size:15px" id="qty">'+shot+'</td>';
 		table += '</tr>';
 		table += '<tr>';
-		table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">Operator</td>';
+		table += '<td style="background-color: rgb(126,86,134); color: #FFD700;font-weight:bold;font-size:15px">Operator</td>';
 		if (status == 'IN') {
-			table += '<td style="font-size:20px" id="operator_injeksi">'+employee_id+' - '+name+'</td>';
+			table += '<td style="font-size:15px" id="operator_injeksi">'+employee_id+' - '+name+'</td>';
 		}else{
-			table += '<td style="font-size:20px" id="operator_injeksi">'+$('#operator_id').val()+' - '+$('#operator_name').val()+'</td>';
+			table += '<td style="font-size:15px" id="operator_injeksi">'+$('#operator_id').val()+' - '+$('#operator_name').val()+'</td>';
 		}
 		table += '</tr>';
 		table += '</table>';
@@ -463,7 +477,7 @@ table.table-bordered > tfoot > tr > th{
 								jumlah = jumlah + parseInt(qty_arr[i]);
 							}
 
-							ngScan += '<tr style="background-color:#17b80b">';
+							ngScan += '<tr style="background-color: rgb(126,86,134); color: #FFD700;">';
 							ngScan += '<td style="border:1px solid black;border-top:1px solid black" id="total_ng_name"><b>TOTAL</b></td>';
 							ngScan += '<td style="border:1px solid black;border-top:1px solid black" id="total_ng_qty"><b>'+jumlah+'</b></td>';
 							ngScan += '</tr>';
@@ -616,44 +630,48 @@ table.table-bordered > tfoot > tr > th{
 					$.each(result.data, function(key, value) {
 						table += '<table class="table table-bordered table-responsive">';
 						table += '<tr>';
-						table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">Tag</td>';
-						table += '<td style="font-size:20px">'+value.tag+'</td>';
+						table += '<td colspan="2" style="background-color: rgb(126,86,134); color: #FFD700;font-weight:bold;font-size:20px">DETAIL TRANSAKSI</td>';
+						table += '</tr>';
+
+						table += '<tr>';
+						table += '<td style="background-color: rgb(126,86,134); color: #FFD700;font-weight:bold;font-size:17px">Tag</td>';
+						table += '<td style="font-size:17px">'+value.tag+'</td>';
 						table += '</tr>';
 						table += '<tr>';
-						table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">Material</td>';
-						table += '<td style="font-size:20px">'+value.material_number+'</td>';
+						table += '<td style="background-color: rgb(126,86,134); color: #FFD700;font-weight:bold;font-size:17px">Material</td>';
+						table += '<td style="font-size:17px">'+value.material_number+'</td>';
 						table += '</tr>';
 						table += '<tr>';
-						table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">Part Name</td>';
-						table += '<td style="font-size:20px">'+value.part_name+'</td>';
+						table += '<td style="background-color: rgb(126,86,134); color: #FFD700;font-weight:bold;font-size:17px">Part Name</td>';
+						table += '<td style="font-size:17px">'+value.part_name+'</td>';
 						table += '</tr>';
 						table += '<tr>';
-						table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">Part Type</td>';
-						table += '<td style="font-size:20px">'+value.part_code+'</td>';
+						table += '<td style="background-color: rgb(126,86,134); color: #FFD700;font-weight:bold;font-size:17px">Part Type</td>';
+						table += '<td style="font-size:17px">'+value.part_code+'</td>';
 						table += '</tr>';
 						table += '<tr>';
-						table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">Color</td>';
-						table += '<td style="font-size:20px">'+value.color+'</td>';
+						table += '<td style="background-color: rgb(126,86,134); color: #FFD700;font-weight:bold;font-size:17px">Color</td>';
+						table += '<td style="font-size:17px">'+value.color+'</td>';
 						table += '</tr>';
 						table += '<tr>';
-						table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">Cavity</td>';
-						table += '<td style="font-size:20px">'+value.cavity+'</td>';
+						table += '<td style="background-color: rgb(126,86,134); color: #FFD700;font-weight:bold;font-size:17px">Cavity</td>';
+						table += '<td style="font-size:17px">'+value.cavity+'</td>';
 						table += '</tr>';
 						table += '<tr>';
-						table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">Qty</td>';
-						table += '<td style="font-size:20px">'+value.quantity+'</td>';
+						table += '<td style="background-color: rgb(126,86,134); color: #FFD700;font-weight:bold;font-size:17px">Qty</td>';
+						table += '<td style="font-size:17px">'+value.quantity+'</td>';
 						table += '</tr>';
 						table += '<tr>';
-						table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">Mesin</td>';
-						table += '<td style="font-size:20px">'+value.mesin+'</td>';
+						table += '<td style="background-color: rgb(126,86,134); color: #FFD700;font-weight:bold;font-size:17px">Mesin</td>';
+						table += '<td style="font-size:17px">'+value.mesin+'</td>';
 						table += '</tr>';
 						table += '<tr>';
-						table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">OP Injeksi</td>';
-						table += '<td style="font-size:20px">'+value.employee_id+' - '+value.name+'</td>';
+						table += '<td style="background-color: rgb(126,86,134); color: #FFD700;font-weight:bold;font-size:17px">OP Injeksi</td>';
+						table += '<td style="font-size:17px">'+value.employee_id+' - '+value.name+'</td>';
 						table += '</tr>';
 						table += '<tr>';
-						table += '<td style="background-color:#17b80b;color:white;font-weight:bold;font-size:20px">OP Assy</td>';
-						table += '<td style="font-size:20px">'+value.empidambil+' - '+value.nameambil+'</td>';
+						table += '<td style="background-color: rgb(126,86,134); color: #FFD700;font-weight:bold;font-size:17px">OP Assy</td>';
+						table += '<td style="font-size:17px">'+value.empidambil+' - '+value.nameambil+'</td>';
 						table += '</tr>';
 						table += '</table>';
 
@@ -663,15 +681,15 @@ table.table-bordered > tfoot > tr > th{
 
 							for(var i = 0; i < ng_arr.length; i++){
 								ngScan += '<tr>';
-								ngScan += '<td style="font-size:20px" id="ng_name">'+ng_arr[i]+'</td>';
-								ngScan += '<td style="font-size:20px" id="ng_qty">'+qty_arr[i]+'</td>';
+								ngScan += '<td style="font-size:17px" id="ng_name">'+ng_arr[i]+'</td>';
+								ngScan += '<td style="font-size:17px" id="ng_qty">'+qty_arr[i]+'</td>';
 								ngScan += '</tr>';
 								jumlah = jumlah + parseInt(qty_arr[i]);
 							}
 
-							ngScan += '<tr style="background-color:#17b80b">';
-							ngScan += '<td style="border:1px solid black;border-top:1px solid black;font-size:25px;color:white" id="total_ng_name"><b>TOTAL</b></td>';
-							ngScan += '<td style="border:1px solid black;border-top:1px solid black;font-size:25px;color:white" id="total_ng_qty"><b>'+jumlah+'</b></td>';
+							ngScan += '<tr style="background-color: rgb(126,86,134); color: #FFD700;">';
+							ngScan += '<td style="border:1px solid black;border-top:1px solid black;color:#FFD700" id="total_ng_name"><b>TOTAL</b></td>';
+							ngScan += '<td style="border:1px solid black;border-top:1px solid black;color:#FFD700" id="total_ng_qty"><b>'+jumlah+'</b></td>';
 							ngScan += '</tr>';
 						}
 					});

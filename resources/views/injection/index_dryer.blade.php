@@ -57,38 +57,38 @@
 	<input type="hidden" id="location">
 	<div class="row">
 		<div class="col-xs-5">
-				<span style="font-weight: bold; font-size: 16px;">Scan ID Card:</span>
-				<div class="input-group" id="scan_tag" style="padding-bottom: 10px">
-					<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: black;">
-						<i class="glyphicon glyphicon-qrcode"></i>
-					</div>
-					<input type="text" style="text-align: center; border-color: black;font-size: 23px;height: 40px" class="form-control" id="tag" name="tag" placeholder="Scan ID Card" required>
-					<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: black;">
-						<i class="glyphicon glyphicon-qrcode"></i>
+			<span style="font-weight: bold; font-size: 16px;">Scan ID Card:</span>
+			<div class="input-group" id="scan_tag" style="padding-bottom: 10px">
+				<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: black;">
+					<i class="glyphicon glyphicon-qrcode"></i>
+				</div>
+				<input type="text" style="text-align: center; border-color: black;font-size: 17px;height: 30px" class="form-control" id="tag" name="tag" placeholder="Scan ID Card" required>
+				<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: black;">
+					<i class="glyphicon glyphicon-qrcode"></i>
+				</div>
+			</div>
+			<div class="input-group" id="scan_tag_success" style="padding-bottom: 10px">
+				<div class="col-xs-4">
+					<div class="row">
+						<input type="text" id="op" style="width: 100%; height: 30px; font-size: 17px; text-align: center;" disabled placeholder="Employee ID">
 					</div>
 				</div>
-				<div class="input-group" id="scan_tag_success" style="padding-bottom: 10px">
-					<div class="col-xs-4">
-						<div class="row">
-							<input type="text" id="op" style="width: 100%; height: 40px; font-size: 20px; text-align: center;" disabled placeholder="Employee ID">
-						</div>
-					</div>
-					<div class="col-xs-5">
-						<div class="row">
-							<input type="text" id="op2" style="width: 100%; height: 40px; font-size: 20px; text-align: center;" disabled placeholder="Name">
-						</div>
-					</div>
-					<div class="col-xs-3">
-						<div class="row" style="padding-left: 5px">
-							<button class="btn btn-danger" onclick="cancelEmp()" style="width: 100%;height: 40px;font-size: 20px;vertical-align: middle;">
-								<b>CLEAR</b>
-							</button>
-						</div>
+				<div class="col-xs-5">
+					<div class="row" style="padding-left: 5px">
+						<input type="text" id="op2" style="width: 100%; height: 30px; font-size: 17px; text-align: center;" disabled placeholder="Name">
 					</div>
 				</div>
+				<div class="col-xs-3">
+					<div class="row" style="padding-left: 5px">
+						<button class="btn btn-danger" onclick="cancelEmp()" style="width: 100%;height: 30px;font-size: 14px;vertical-align: middle;">
+							<b>CLEAR</b>
+						</button>
+					</div>
+				</div>
+			</div>
 			<div class="box box-solid">
 				<div class="box-body">
-					<span style="font-size: 20px; font-weight: bold;">DAFTAR ITEM:</span>
+					<span style="font-size: 20px; font-weight: bold;">ITEM RESIN:</span>
 					<table class="table table-hover table-striped" id="tableList" style="width: 100%;">
 						<thead>
 							<tr>
@@ -114,9 +114,13 @@
 		</div>
 		<div class="col-xs-7">
 			<div class="row">
-				<div class="col-xs-6">
+				<div class="col-xs-12" style="text-align: center;">
+					<span style="font-weight: bold;font-size: 30px;width: 100%;">DETAIL RESIN</span>
+				</div>
+				<div class="col-xs-6" style="padding-top: 10px">
 					<span style="font-weight: bold; font-size: 16px;">Dryer:</span>
 					<select name="dryer" id="dryer" class="form-group" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" data-placeholder="Select Dryer">
+						<option value="-">Pilih Dryer</option>
 						<option value="1">1</option>
 						<option value="2 & 6">2 & 6</option>
 						<option value="3">3</option>
@@ -126,23 +130,23 @@
 						<option value="9">9</option>
 					</select>
 				</div>
-				<div class="col-xs-6">
+				<div class="col-xs-6" style="padding-top: 10px">
 					<span style="font-weight: bold; font-size: 16px;">Material:</span>
 					<input type="text" id="material_number" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
 				</div>
-				<div class="col-xs-12">
+				<div class="col-xs-12" style="padding-top: 10px">
 					<span style="font-weight: bold; font-size: 16px;">Description:</span>
 					<input type="text" id="material_description" style="width: 100%; height: 50px; font-size: 24px; text-align: center;" disabled>
 				</div>
-				<div class="col-xs-6" style="padding-top: 10px">
+				<div class="col-xs-6" style="padding-top: 20px">
 					<span style="font-weight: bold; font-size: 16px;">Color:</span>
 					<input type="text" id="color" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
 				</div>
-				<div class="col-xs-6" style="padding-top: 10px">
+				<div class="col-xs-6" style="padding-top: 20px">
 					<span style="font-weight: bold; font-size: 16px;">Lot Number:</span>
 					<input type="text" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" placeholder="Lot Number" id="lot_number" onkeyup="upperLot(this.value)">
 				</div>
-				<div class="col-xs-12" style="padding-top: 10px">
+				<div class="col-xs-12" style="padding-top: 20px">
 					<span style="font-weight: bold; font-size: 16px;">Add Count:</span>
 				</div>
 				<div class="col-xs-6">
@@ -162,27 +166,28 @@
 						<i class="fa fa-send"></i> INPUT
 					</button>
 				</div>
-				<div class="col-xs-12" style="padding-top: 10px">
-					<div class="box box-solid">
-						<div class="box-body">
-							<span style="font-size: 20px; font-weight: bold;" id="">HISTORY PEMAKAIAN RESIN (<?php echo date('d-M-Y', strtotime('-1 week')); ?> - <?php echo date('d-M-Y'); ?>)</span>
-							<table class="table table-hover table-striped table-bordered" id="tableResume">
-								<thead>
-									<tr>
-										<th style="width: 1%;">#</th>
-										<th style="width: 2%;">Material</th>
-										<th style="width: 1%;">Dryer</th>
-										<th style="width: 2%;">Lot</th>
-										<th style="width: 1%;">Qty</th>
-										<th style="width: 2%;">Creator</th>
-										<th style="width: 1%;">Created</th>
-									</tr>
-								</thead>
-								<tbody id="tableBodyResume">
-								</tbody>
-							</table>
-						</div>
-					</div>
+				
+			</div>
+		</div>
+		<div class="col-xs-12">
+			<div class="box box-solid">
+				<div class="box-body">
+					<span style="font-size: 20px; font-weight: bold;" id="">HISTORY PEMAKAIAN RESIN (<?php echo date('d-M-Y', strtotime('-1 week')); ?> - <?php echo date('d-M-Y'); ?>)</span>
+					<table class="table table-hover table-striped table-bordered" id="tableResume">
+						<thead>
+							<tr>
+								<th style="width: 1%;">#</th>
+								<th style="width: 2%;">Material</th>
+								<th style="width: 1%;">Dryer</th>
+								<th style="width: 2%;">Lot</th>
+								<th style="width: 1%;">Qty</th>
+								<th style="width: 2%;">By</th>
+								<th style="width: 1%;">At</th>
+							</tr>
+						</thead>
+						<tbody id="tableBodyResume">
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>
@@ -324,7 +329,7 @@
 		$('#qty_adjust').val('');
 		$('#lot_number_adjust').val('');
 		$('#machine_adjust').val(null).trigger('change');
-		$('#dryer').val(null).trigger('change');
+		$('#dryer').val("-").trigger('change');
 	});
 
 	function upperLot(value) {
@@ -409,7 +414,7 @@
 		$('#lot_number').val('');
 		$('#lot_number').prop('disabled',true);
 		$('#dryer').prop('disabled',true);
-		$('#dryer').val(null).trigger('change');
+		$('#dryer').val("-").trigger('change');
 	}
 
 	$('#tag').keydown(function(event) {
@@ -574,7 +579,7 @@
 	}
 
 	function inputResin() {
-		if ($('#material_number').val() == "" || $('#quantity').val() == "0" || $('#dryer').val() == "" || $('#lot_number').val() == "") {
+		if ($('#material_number').val() == "" || $('#quantity').val() == "0" || $('#dryer').val() == "-" || $('#lot_number').val() == "") {
 			openErrorGritter('Error!', 'Semua Data Harus Diisi.');
 		}else{
 			var data = {
@@ -601,7 +606,7 @@
 					$('#dryer').prop("disabled",true);
 					fetchResinList();
 					fetchResumeResin();
-					$('#dryer').val(null).trigger('change');
+					$('#dryer').val("-").trigger('change');
 					location.reload();
 				}
 				else{
