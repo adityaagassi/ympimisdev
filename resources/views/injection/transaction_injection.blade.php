@@ -552,13 +552,18 @@ table.table-bordered > tfoot > tr > th{
 				$('#tableHistoryBody').html("");
 				var tableData = "";
 				if (result.data.length > 0) {
+					// console.table(result.data);
 					$.each(result.data, function(key, value) {
 						tableData += '<tr>';
 						tableData += '<td>'+ value.part_name +'</td>';
 						tableData += '<td>'+ value.part_code +' - '+ value.color +'</td>';
 						tableData += '<td>'+ value.quantity +'</td>';
 						tableData += '<td>'+ value.location +'</td>';
-						tableData += '<td>'+ value.employee_id +' - '+ value.name.split(' ').slice(0,2).join(' ') +'</td>';
+						if (value.name != null) {
+							tableData += '<td>'+ value.employee_id +' - '+ value.name.split(' ').slice(0,2).join(' ') +'</td>';
+						}else{
+							tableData += '<td></td>';
+						}
 						tableData += '<td>'+ value.created_at +'</td>';
 						if ('{{$status}}' == 'OUT') {
 							tableData += '<td><button class="btn btn-primary" onclick="showModalDetail(\''+value.id+'\',)">Detail</button></td>';
