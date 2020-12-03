@@ -61,6 +61,7 @@ class SendEmailKaizen extends Command
         ->whereRaw("position in ('foreman','chief','manager')")
         ->whereNotNull('email')
         ->where("id", "<>", "2254")
+        ->whereNull("end_date")
         ->select('employee_syncs.employee_id','employee_syncs.name','position', 'department','email')
         ->get();
 
