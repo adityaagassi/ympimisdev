@@ -825,15 +825,16 @@ table > thead > tr > th{
             table += '<td style="border-left:3px solid #f44336">'+capitalizeFirstLetter(sf[1])+'</td>';
             table += '<td style="border-left:3px solid #f44336">'+capitalizeFirstLetter(st[1])+'</td>';
             table += '<td style="border-left:3px solid #f44336">'+statusawal+'</td>';
-            table += '<td>'+statuscf+'</td>';
-            table += '<td>'+statusm+'</td>';
+            
             if (value.posisi != "qa") {
+              table += '<td>'+statuscf+'</td>';
+              table += '<td>'+statusm+'</td>';
               table += '<td style="border-left:3px solid #f44336">'+statuspic+'</td>';
               table += '<td>'+statuscfcar+'</td>';
               table += '<td>'+statusmcar+'</td>';
               table += '<td style="border-left:3px solid #f44336">'+statusverifikasi+'</td>';
             }else{
-              table += '<td colspan="4" '+qa+'>'+ketqa+'</td>';
+              table += '<td colspan="6" '+qa+'>'+ketqa+'</td>';
             }
           
             table += '</tr>';

@@ -86,11 +86,11 @@
 			</table>
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Klik disini untuk</i> &#8650;</span><br>
-			<a href="{{ url(index/form_ketidaksesuaian/print/'.$id) }}">Cek Report Form Ketidaksesuaian Material</a><br>
+			<a href="{{ url('index/form_ketidaksesuaian/print/'.$id) }}">Cek Report Form Ketidaksesuaian Material</a><br>
 
 			<br>
 			<span style="font-weight: bold;"><i>Apakah anda ingin menerbitkan CPAR Berdasarkan kasus ini ?</i></span><br>
-			<a style="background-color: green; width: 50px;" href="{{ url(index/form_ketidaksesuaian/approveqa/'.$id) }}">&nbsp;&nbsp;&nbsp; Ya &nbsp;&nbsp;&nbsp;</a>
+			<a style="background-color: green; width: 50px;" href="{{ url('index/form_ketidaksesuaian/approveqa/'.$id) }}">&nbsp;&nbsp;&nbsp; Ya &nbsp;&nbsp;&nbsp;</a>
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<a style="background-color: orange; width: 50px;" href="{{ url('index/form_ketidaksesuaian/rejectqa/'.$id) }}">&nbsp; Tidak &nbsp;</a><br>
 

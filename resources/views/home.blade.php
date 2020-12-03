@@ -1064,7 +1064,7 @@
                             <table class="table table-bordered">
                                 <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
                                     <tr>
-                                        <th>PR & Investment<br/> 購入依頼書・投資申請</th>
+                                        <th>PR, PO, Investment & Budget Control<br/> 購入依頼書・投資申請</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -1076,6 +1076,14 @@
                                             <br>
                                             <a href="{{ url("investment/control") }}">
                                                 <i class="fa fa-caret-right"></i> Investment Monitoring & Control (投資管理)
+                                            </a>
+                                            <br>
+                                            <a href="{{ url("purchase_order/monitoring") }}">
+                                                <i class="fa fa-caret-right"></i> PO Monitoring & Control (PO管理)
+                                            </a>
+                                            <br>
+                                            <a href="{{ url("budget/info") }}">
+                                                <i class="fa fa-caret-right"></i> Budget Information (予算情報)
                                             </a>
                                         </td>
                                     </tr>
