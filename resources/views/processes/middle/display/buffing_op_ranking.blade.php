@@ -303,12 +303,13 @@
 							xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
 						}
 
-						name.push(xAxis);
 						ng_rate.push(result.op_ng[i].ng_rate * 100);
 
 						if(ng_rate[i] < 15){
-							data.push({y: ng_rate[i], color: 'rgb(144,238,126)'});
+							// name.push(xAxis);
+							// data.push({y: ng_rate[i], color: 'rgb(144,238,126)'});
 						}else{
+							name.push(xAxis);
 							data.push({y: ng_rate[i], color: 'rgb(255,116,116)'})
 						}
 					}
@@ -489,7 +490,7 @@
 								zIndex: 5,
 								label: {
 									align:'right',
-									text: 'Target 420 Minutes',
+									text: 'Target '+target+' Minutes',
 									x:-7,
 									style: {
 										fontSize: '12px',
