@@ -30,7 +30,7 @@ class WorkshopNotificationController extends Controller{
 			$wjo->remark = 1;
 
 			$manager = EmployeeSync::where('position', '=', 'Manager')
-			->where('department', '=', 'Maintenance')
+			->where('department', 'like', '%Maintenance%')
 			->first();
 
 			$wjo_log = new WorkshopJobOrderLog([
@@ -85,7 +85,7 @@ class WorkshopNotificationController extends Controller{
 			}
 
 			$manager = EmployeeSync::where('position', '=', 'Manager')
-			->where('department', '=', 'Maintenance')
+			->where('department', 'like', '%Maintenance%')
 			->first();
 
 			$wjo_log = new WorkshopJobOrderLog([
