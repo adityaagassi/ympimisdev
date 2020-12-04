@@ -186,15 +186,10 @@ class QcReportController extends Controller
 
     public function create()
     {
-        $managers = Employee::select('employees.employee_id','employees.name','promotion_logs.position','mutation_logs.department')
-        ->join('promotion_logs','employees.employee_id','=','promotion_logs.employee_id')
-        ->join('mutation_logs','employees.employee_id','=','mutation_logs.employee_id')
-        ->join('departments','departments.department_name','=','mutation_logs.department')
-        ->whereNull('promotion_logs.valid_to')
-        ->whereNull('mutation_logs.valid_to')
-        ->whereNull('employees.end_date')
+        $managers = EmployeeSync::select('employee_syncs.employee_id','employee_syncs.name','employee_syncs.position','employee_syncs.department')
+        ->join('departments','departments.department_name','=','employee_syncs.department')
         ->whereNotIn('departments.id',['1','2','3','4','11','13','14'])
-        ->where('promotion_logs.position','manager')
+        ->where('position','manager')
         ->distinct()
         ->get();
 
@@ -391,15 +386,10 @@ class QcReportController extends Controller
         $emp_id = Auth::user()->username;
         $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
 
-        $managers = Employee::select('employees.employee_id','employees.name','promotion_logs.position','mutation_logs.department')
-        ->join('promotion_logs','employees.employee_id','=','promotion_logs.employee_id')
-        ->join('mutation_logs','employees.employee_id','=','mutation_logs.employee_id')
-        ->join('departments','departments.department_name','=','mutation_logs.department')
-        ->whereNull('promotion_logs.valid_to')
-        ->whereNull('mutation_logs.valid_to')
-        ->whereNull('employees.end_date')
+        $managers = EmployeeSync::select('employee_syncs.employee_id','employee_syncs.name','employee_syncs.position','employee_syncs.department')
+        ->join('departments','departments.department_name','=','employee_syncs.department')
         ->whereNotIn('departments.id',['1','2','3','4','11','13','14'])
-        ->where('promotion_logs.position','manager')
+        ->where('position','manager')
         ->distinct()
         ->get();
 
@@ -431,13 +421,13 @@ class QcReportController extends Controller
         // ->where('qc_cpar_items.cpar_no','=',$cpars->cpar_no)
         ->get();
 
-        $materials = MaterialPlantDataList::select('material_plant_data_lists.id','material_plant_data_lists.material_number','material_plant_data_lists.material_description')
-        ->orderBy('material_plant_data_lists.id','ASC')
-        ->get();
-
-        // $materials = Material::select('materials.id','materials.material_number','materials.material_description')
-        // ->orderBy('materials.id','ASC')
+        // $materials = MaterialPlantDataList::select('material_plant_data_lists.id','material_plant_data_lists.material_number','material_plant_data_lists.material_description')
+        // ->orderBy('material_plant_data_lists.id','ASC')
         // ->get();
+
+        $materials = Material::select('materials.id','materials.material_number','materials.material_description')
+        ->orderBy('materials.id','ASC')
+        ->get();
 
         return view('qc_report.edit', array(
             'cpars' => $cpars,
