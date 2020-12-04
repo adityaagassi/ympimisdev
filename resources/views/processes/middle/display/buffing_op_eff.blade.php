@@ -278,28 +278,22 @@
 						<div class="col-xs-12">
 							<div class="box-body">
 								<input type="hidden" value="{{csrf_token()}}" name="_token" />
-
-
-								<div id='scanner' class="col-xs-12">
-									<div class="col-xs-6 col-xs-offset-3">
-										<div id="loadingMessage">
-											🎥 Unable to access video stream (please make sure you have a webcam enabled)
-										</div>
-										<canvas style="width: 240px; height: 160px;" id="canvas" hidden></canvas>
-										<div id="output" hidden>
-											<div id="outputMessage">No QR code detected.</div>
-										</div>
-									</div>									
-								</div>
 								
+								<input type="hidden" id="date">
+
 								<div class="form-group row" align="right">
-									<label class="col-sm-4">NIK</label>
+									<label class="col-sm-4">Tag</label>
 									<div class="col-sm-5" align="left">
-										<input type="text" class="form-control" id="input_employee_id">
+										<input type="text" class="form-control" id="input_tag">
 									</div>
 								</div>
-								<input type="hidden" id="employee_id">
-								<input type="hidden" id="date">
+
+								<div class="form-group row" align="right" id="field-nik">
+									<label class="col-sm-4">NIK</label>
+									<div class="col-sm-5" align="left">
+										<input type="text" class="form-control" id="employee_id" readonly>
+									</div>
+								</div>
 
 								<div class="form-group row" align="right" id="field-name">
 									<label class="col-sm-4">Name</label>
@@ -639,104 +633,59 @@
 		$('#input_employee_id').focus();
 	});
 
-	$('#input_employee_id').keydown(function(event) {
+	$('#input_tag').keydown(function(event) {
 		if (event.keyCode == 13 || event.keyCode == 9) {
-			showData();
+			if($("#input_tag").val().length == 10){
+				var data = {
+					employee_id : $("#input_tag").val()
+				}
+				
+				$.get('{{ url("scan/middle/operator/rfid") }}', data, function(result, status, xhr){
+					if(result.status){
+						var employee_id = $("#employee_id").val();
+						if(employee_id == result.employee.employee_id){
+							showData();
+						}else{
+							audio_error.play();
+							openErrorGritter('Error', 'Tag OP Wrong');
+							$('#input_tag').val('');
+						}
+					}
+					else{
+						audio_error.play();
+						openErrorGritter('Error', result.message);
+						$('#input_tag').val('');
+					}
+				});
+			}
+			else{
+				openErrorGritter('Error!', 'Tag Invalid.');
+				audio_error.play();
+				$("#operator").val("");
+			}			
 		}
 	});
 
 	function showData() {
-		if($("#input_employee_id").val().length >= 8){
-			if($("#input_employee_id").val() == $("#employee_id").val()){
-				$('#scanner').hide();
-				$('#field-name').show();
-				$('#field-key').show();
-				$('#btn-check').show();
-			}else{
-				openErrorGritter('Error!', 'NIK not match');
-				audio_error.play();
-				$('#scanner').show();
-				$("#input_employee_id").val("");
-				$("#input_employee_id").focus();	
-			}
-		}
-		else{
-			openErrorGritter('Error!', 'NIK Invalid');
-			audio_error.play();
-			$('#scanner').show();
-			$("#input_employee_id").val("");
-			$("#input_employee_id").focus();
-		}
+		$('#field-nik').show();
+		$('#field-name').show();
+		$('#field-key').show();
+		$('#btn-check').show();
 	}
 
-	function stopScan() {
-		$('#check-modal').modal('hide');
-	}
 
 	function showCheck(nik, nama, kunci, tgl) {
-		var video = document.createElement("video");
-		var canvasElement = document.getElementById("canvas");
-		var canvas = canvasElement.getContext("2d");
-		var loadingMessage = document.getElementById("loadingMessage");
-
-		var outputContainer = document.getElementById("output");
-		var outputMessage = document.getElementById("outputMessage");
-
-		function drawLine(begin, end, color) {
-			canvas.beginPath();
-			canvas.moveTo(begin.x, begin.y);
-			canvas.lineTo(end.x, end.y);
-			canvas.lineWidth = 4;
-			canvas.strokeStyle = color;
-			canvas.stroke();
-		}
-
-		navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
-			video.srcObject = stream;
-			video.setAttribute("playsinline", true);
-			video.play();
-			requestAnimationFrame(tick);
-		});
-
-		function tick() {
-			loadingMessage.innerText = "⌛ Loading video..."
-			if (video.readyState === video.HAVE_ENOUGH_DATA) {
-				loadingMessage.hidden = true;
-				canvasElement.hidden = false;
-
-				canvasElement.height = video.videoHeight;
-				canvasElement.width = video.videoWidth;
-				canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
-				var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
-				var code = jsQR(imageData.data, imageData.width, imageData.height, {
-					inversionAttempts: "dontInvert",
-				});
-				if (code) {
-					drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#FF3B58");
-					drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#FF3B58");
-					drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
-					drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
-					outputMessage.hidden = true;
-					$('#scanner').hide();
-					document.getElementById("input_employee_id").value = code.data.substr(0, 9);
-					showData();
-				} else {
-					outputMessage.hidden = false;
-				}
-			}
-			requestAnimationFrame(tick);
-		}
 
 		document.getElementById("employee_id").value = nik;
 		document.getElementById("name").value = nama;
 		document.getElementById("key").value = kunci;
 		document.getElementById("date").value = tgl;
-		$('#scanner').show();
 
+		$('#field-nik').hide();
 		$('#field-name').hide();
 		$('#field-key').hide();
 		$('#btn-check').hide();
-
+		
 		$('#check-modal').modal('show');
 		$('#input_employee_id').val("");
 		$('#input_employee_id').focus();
@@ -1238,147 +1187,147 @@ function fillChart() {
 			});
 
 
-			var op_name = [];
-			var eff_value = [];
-			var data = [];
-			var loop = 0;
+			// var op_name = [];
+			// var eff_value = [];
+			// var data = [];
+			// var loop = 0;
 
-			for(var i = 0; i < result.time_eff.length; i++){
-				if(result.time_eff[i].group == 'C'){
-					loop += 1;
-					for(var j = 0; j < result.emp_name.length; j++){
-						if(result.emp_name[j].employee_id == result.time_eff[i].employee_id){
-							var name_temp = result.emp_name[j].name.split(" ");
-							var xAxis = '';
-							xAxis += result.time_eff[i].employee_id + ' - ';
+			// for(var i = 0; i < result.time_eff.length; i++){
+			// 	if(result.time_eff[i].group == 'C'){
+			// 		loop += 1;
+			// 		for(var j = 0; j < result.emp_name.length; j++){
+			// 			if(result.emp_name[j].employee_id == result.time_eff[i].employee_id){
+			// 				var name_temp = result.emp_name[j].name.split(" ");
+			// 				var xAxis = '';
+			// 				xAxis += result.time_eff[i].employee_id + ' - ';
 
-							if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad'){
-								xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
-							}else{
-								xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
-							}
-							op_name.push(xAxis);
-						}
-					}
+			// 				if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad'){
+			// 					xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
+			// 				}else{
+			// 					xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
+			// 				}
+			// 				op_name.push(xAxis);
+			// 			}
+			// 		}
 
-					var isEmpty = true;
-					for(var j = 0; j < result.rate.length; j++){
-						if(result.time_eff[i].employee_id == result.rate[j].operator_id){
-							eff_value.push(result.rate[j].rate * result.time_eff[i].eff * 100);
-							isEmpty = false;
-						}
-					}
-					if(isEmpty){
-						eff_value.push(0);
-					}
+			// 		var isEmpty = true;
+			// 		for(var j = 0; j < result.rate.length; j++){
+			// 			if(result.time_eff[i].employee_id == result.rate[j].operator_id){
+			// 				eff_value.push(result.rate[j].rate * result.time_eff[i].eff * 100);
+			// 				isEmpty = false;
+			// 			}
+			// 		}
+			// 		if(isEmpty){
+			// 			eff_value.push(0);
+			// 		}
 
 
-					if(eff_value[loop-1] > parseInt(target)){
-						data.push({y: eff_value[loop-1], color: 'rgb(144,238,126)'});
-					}else{
-						data.push({y: eff_value[loop-1], color: 'rgb(255,116,116)'})
-					}
-				}
+			// 		if(eff_value[loop-1] > parseInt(target)){
+			// 			data.push({y: eff_value[loop-1], color: 'rgb(144,238,126)'});
+			// 		}else{
+			// 			data.push({y: eff_value[loop-1], color: 'rgb(255,116,116)'})
+			// 		}
+			// 	}
 
-			}
+			// }
 
-			var chart = Highcharts.chart('container1_shiftc', {
-				chart: {
-					animation: false
-				},
-				title: {
-					text: 'Operators Overall Efficiency',
-					style: {
-						fontSize: '25px',
-						fontWeight: 'bold'
-					}
-				},
-				subtitle: {
-					text: 'Group C on '+ result.date,
-					style: {
-						fontSize: '1vw',
-						fontWeight: 'bold'
-					}
-				},
-				yAxis: {
-					title: {
-						enabled: true,
-						text: "Overall Efficiency (%)"
-					},
-					min: 0,
-					plotLines: [{
-						color: '#FF0000',
-						value: parseInt(target),
-						dashStyle: 'shortdash',
-						width: 2,
-						zIndex: 5,
-						label: {
-							align:'right',
-							text: 'Target '+parseInt(target)+'%',
-							x:-7,
-							style: {
-								fontSize: '12px',
-								color: '#FF0000',
-								fontWeight: 'bold'
-							}
-						}
-					}],
-					labels: {
-						enabled: false
-					}
-				},
-				xAxis: {
-					categories: op_name,
-					type: 'category',
-					gridLineWidth: 1,
-					gridLineColor: 'RGB(204,255,255)',
-					labels: {
-						rotation: -45,
-						style: {
-							fontSize: '13px'
-						}
-					},
-				},
-				tooltip: {
-					headerFormat: '<span>{point.category}</span><br/>',
-					pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
-				},
-				credits: {
-					enabled:false
-				},
-				plotOptions: {
-					series:{
-						dataLabels: {
-							enabled: true,
-							format: '{point.y:.2f}%',
-							rotation: -90,
-							style:{
-								fontSize: '15px'
-							}
-						},
-						animation: false,
-						pointPadding: 0.93,
-						groupPadding: 0.93,
-						borderWidth: 0.93,
-						cursor: 'pointer',
-						point: {
-							events: {
-								click: function (event) {
-									showDetail(result.date, event.point.category);
+			// var chart = Highcharts.chart('container1_shiftc', {
+			// 	chart: {
+			// 		animation: false
+			// 	},
+			// 	title: {
+			// 		text: 'Operators Overall Efficiency',
+			// 		style: {
+			// 			fontSize: '25px',
+			// 			fontWeight: 'bold'
+			// 		}
+			// 	},
+			// 	subtitle: {
+			// 		text: 'Group C on '+ result.date,
+			// 		style: {
+			// 			fontSize: '1vw',
+			// 			fontWeight: 'bold'
+			// 		}
+			// 	},
+			// 	yAxis: {
+			// 		title: {
+			// 			enabled: true,
+			// 			text: "Overall Efficiency (%)"
+			// 		},
+			// 		min: 0,
+			// 		plotLines: [{
+			// 			color: '#FF0000',
+			// 			value: parseInt(target),
+			// 			dashStyle: 'shortdash',
+			// 			width: 2,
+			// 			zIndex: 5,
+			// 			label: {
+			// 				align:'right',
+			// 				text: 'Target '+parseInt(target)+'%',
+			// 				x:-7,
+			// 				style: {
+			// 					fontSize: '12px',
+			// 					color: '#FF0000',
+			// 					fontWeight: 'bold'
+			// 				}
+			// 			}
+			// 		}],
+			// 		labels: {
+			// 			enabled: false
+			// 		}
+			// 	},
+			// 	xAxis: {
+			// 		categories: op_name,
+			// 		type: 'category',
+			// 		gridLineWidth: 1,
+			// 		gridLineColor: 'RGB(204,255,255)',
+			// 		labels: {
+			// 			rotation: -45,
+			// 			style: {
+			// 				fontSize: '13px'
+			// 			}
+			// 		},
+			// 	},
+			// 	tooltip: {
+			// 		headerFormat: '<span>{point.category}</span><br/>',
+			// 		pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
+			// 	},
+			// 	credits: {
+			// 		enabled:false
+			// 	},
+			// 	plotOptions: {
+			// 		series:{
+			// 			dataLabels: {
+			// 				enabled: true,
+			// 				format: '{point.y:.2f}%',
+			// 				rotation: -90,
+			// 				style:{
+			// 					fontSize: '15px'
+			// 				}
+			// 			},
+			// 			animation: false,
+			// 			pointPadding: 0.93,
+			// 			groupPadding: 0.93,
+			// 			borderWidth: 0.93,
+			// 			cursor: 'pointer',
+			// 			point: {
+			// 				events: {
+			// 					click: function (event) {
+			// 						showDetail(result.date, event.point.category);
 
-								}
-							}
-						},
-					}
-				},
-				series: [{
-					name:'OP Efficiency',
-					type: 'column',
-					data: data,
-					showInLegend: false
-				}]
+			// 					}
+			// 				}
+			// 			},
+			// 		}
+			// 	},
+			// 	series: [{
+			// 		name:'OP Efficiency',
+			// 		type: 'column',
+			// 		data: data,
+			// 		showInLegend: false
+			// 	}]
 
-			});
+			// });
 
 			$(document).scrollTop(position);
 
@@ -1627,122 +1576,122 @@ $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, 
 			}]
 		});
 
-		var op_c = [];
-		var name_c = [];
-		var key = [];
-		var eff = [];
-		var data = [];
-		var loop = 0;
-		var plotBands = [];
-		for(var i = 0; i < result.target.length; i++){
-			if(result.target[i].group == 'C'){
-				loop += 1;
-				for(var j = 0; j < result.emp_name.length; j++){
-					if(result.emp_name[j].employee_id == result.target[i].employee_id){
-						op_c.push(result.target[i].employee_id);
-						name_c.push(result.emp_name[j].name);
-						key.push(result.target[i].key || 'Not Found');
-						eff.push(result.target[i].eff * 100);
+		// var op_c = [];
+		// var name_c = [];
+		// var key = [];
+		// var eff = [];
+		// var data = [];
+		// var loop = 0;
+		// var plotBands = [];
+		// for(var i = 0; i < result.target.length; i++){
+		// 	if(result.target[i].group == 'C'){
+		// 		loop += 1;
+		// 		for(var j = 0; j < result.emp_name.length; j++){
+		// 			if(result.emp_name[j].employee_id == result.target[i].employee_id){
+		// 				op_c.push(result.target[i].employee_id);
+		// 				name_c.push(result.emp_name[j].name);
+		// 				key.push(result.target[i].key || 'Not Found');
+		// 				eff.push(result.target[i].eff * 100);
 
-					}
-				}
+		// 			}
+		// 		}
 
-				if(eff[loop-1] > parseInt(target)){
-					data.push({y: Math.ceil(eff[loop-1]), color: 'rgb(144,238,126)'});
-				}else{
-					data.push({y: Math.ceil(eff[loop-1]), color: 'rgb(255,116,116)'})
-				}
+		// 		if(eff[loop-1] > parseInt(target)){
+		// 			data.push({y: Math.ceil(eff[loop-1]), color: 'rgb(144,238,126)'});
+		// 		}else{
+		// 			data.push({y: Math.ceil(eff[loop-1]), color: 'rgb(255,116,116)'})
+		// 		}
 
-				if(eff[loop-1] < parseInt(target)){
-					if(result.target[i].check != null){
-						plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(25,118,210 ,.3)'});
-					}else{
-						plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .3)'});
-					}
-				}	
-			}			
-		}
-		var chart = Highcharts.chart('container4_shiftc', {
-			chart: {
-				animation: false
-			},
-			title: {
-				text: 'Last Operators Efficiency Less '+target+'%',
-				style: {
-					fontSize: '25px',
-					fontWeight: 'bold'
-				}
-			},
-			subtitle: {
-				text: 'Group C on '+ result.date,
-				style: {
-					fontSize: '1vw',
-					fontWeight: 'bold'
-				}
-			},
-			yAxis: {
-				title: {
-					enabled: true,
-					text: "Efficiency"
-				},
-				labels: {
-					enabled: false
-				},
-			},
-			xAxis:  {
-				categories: key,
-				gridLineWidth: 1,
-				gridLineColor: 'RGB(204,255,255)',
-				labels: {
-					rotation: -45,
-					style: {
-						fontSize: '13px'
-					}
-				},
-				plotBands: plotBands
-			},
-			tooltip: {
-				headerFormat: '<span>{point.category}</span><br/>',
-				pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
-			},
-			credits: {
-				enabled:false
-			},
-			legend : {
-				enabled:false
-			},
-			plotOptions: {
-				series:{				
-					dataLabels: {
-						enabled: true,
-						format: '{point.y:.2f}%',
-						rotation: -90,
-						style:{
-							fontSize: '15px'
-						}
-					},
-					animation: false,
-					pointPadding: 0.93,
-					groupPadding: 0.93,
-					borderWidth: 0.93,
-					cursor: 'pointer',
-					point: {
-						events: {
-							click: function (event) {
-								showCheck(op_c[event.point.index], name_c[event.point.index], event.point.category, result.date);
-							}
-						}
-					},
-				},
-			},
-			series: [{
-				name:'OP Efficiency',
-				type: 'column',
-				data: data,
-				showInLegend: false
-			}]
+		// 		if(eff[loop-1] < parseInt(target)){
+		// 			if(result.target[i].check != null){
+		// 				plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(25,118,210 ,.3)'});
+		// 			}else{
+		// 				plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .3)'});
+		// 			}
+		// 		}	
+		// 	}			
+		// }
+		// var chart = Highcharts.chart('container4_shiftc', {
+		// 	chart: {
+		// 		animation: false
+		// 	},
+		// 	title: {
+		// 		text: 'Last Operators Efficiency Less '+target+'%',
+		// 		style: {
+		// 			fontSize: '25px',
+		// 			fontWeight: 'bold'
+		// 		}
+		// 	},
+		// 	subtitle: {
+		// 		text: 'Group C on '+ result.date,
+		// 		style: {
+		// 			fontSize: '1vw',
+		// 			fontWeight: 'bold'
+		// 		}
+		// 	},
+		// 	yAxis: {
+		// 		title: {
+		// 			enabled: true,
+		// 			text: "Efficiency"
+		// 		},
+		// 		labels: {
+		// 			enabled: false
+		// 		},
+		// 	},
+		// 	xAxis:  {
+		// 		categories: key,
+		// 		gridLineWidth: 1,
+		// 		gridLineColor: 'RGB(204,255,255)',
+		// 		labels: {
+		// 			rotation: -45,
+		// 			style: {
+		// 				fontSize: '13px'
+		// 			}
+		// 		},
+		// 		plotBands: plotBands
+		// 	},
+		// 	tooltip: {
+		// 		headerFormat: '<span>{point.category}</span><br/>',
+		// 		pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
+		// 	},
+		// 	credits: {
+		// 		enabled:false
+		// 	},
+		// 	legend : {
+		// 		enabled:false
+		// 	},
+		// 	plotOptions: {
+		// 		series:{				
+		// 			dataLabels: {
+		// 				enabled: true,
+		// 				format: '{point.y:.2f}%',
+		// 				rotation: -90,
+		// 				style:{
+		// 					fontSize: '15px'
+		// 				}
+		// 			},
+		// 			animation: false,
+		// 			pointPadding: 0.93,
+		// 			groupPadding: 0.93,
+		// 			borderWidth: 0.93,
+		// 			cursor: 'pointer',
+		// 			point: {
+		// 				events: {
+		// 					click: function (event) {
+		// 						showCheck(op_c[event.point.index], name_c[event.point.index], event.point.category, result.date);
+		// 					}
+		// 				}
+		// 			},
+		// 		},
+		// 	},
+		// 	series: [{
+		// 		name:'OP Efficiency',
+		// 		type: 'column',
+		// 		data: data,
+		// 		showInLegend: false
+		// 	}]
 
-		});		
+		// });		
 
 		$(document).scrollTop(position);
 

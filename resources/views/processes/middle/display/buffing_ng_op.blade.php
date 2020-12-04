@@ -618,8 +618,6 @@
 				$("#operator").val("");
 			}			
 		}
-
-
 	});
 
 	function showData(){
@@ -990,137 +988,137 @@
 
 
 				// GROUP C
-				var op_name = [];
-				var rate = [];
-				var data = [];
-				var loop = 0;
+				// var op_name = [];
+				// var rate = [];
+				// var data = [];
+				// var loop = 0;
 
-				for(var i = 0; i < result.ng_rate.length; i++){
-					if(result.ng_rate[i].shift == 'C'){
-						loop += 1;
-						var name_temp = result.ng_rate[i].name.split(" ");
-						var xAxis = '';
-						xAxis += result.ng_rate[i].operator_id + ' - ';
+				// for(var i = 0; i < result.ng_rate.length; i++){
+				// 	if(result.ng_rate[i].shift == 'C'){
+				// 		loop += 1;
+				// 		var name_temp = result.ng_rate[i].name.split(" ");
+				// 		var xAxis = '';
+				// 		xAxis += result.ng_rate[i].operator_id + ' - ';
 
-						if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad'){
-							xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
-						}else{
-							xAxis += name_temp[0]+' '+name_temp[1].charAt(0);
-						}
+				// 		if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad'){
+				// 			xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
+				// 		}else{
+				// 			xAxis += name_temp[0]+' '+name_temp[1].charAt(0);
+				// 		}
 
-						op_name.push(xAxis);
+				// 		op_name.push(xAxis);
 
-						if(result.ng_rate[i].rate > 100){
-							rate.push(100);						
-						}else{
-							rate.push(result.ng_rate[i].rate);						
-						}
+				// 		if(result.ng_rate[i].rate > 100){
+				// 			rate.push(100);						
+				// 		}else{
+				// 			rate.push(result.ng_rate[i].rate);						
+				// 		}
 
-						if(rate[loop-1] > parseInt(target)){
-							data.push({y: rate[loop-1], color: 'rgb(255,116,116)'})
-						}else{
-							data.push({y: rate[loop-1], color: 'rgb(144,238,126)'});
-						}
-					}
-				}
+				// 		if(rate[loop-1] > parseInt(target)){
+				// 			data.push({y: rate[loop-1], color: 'rgb(255,116,116)'})
+				// 		}else{
+				// 			data.push({y: rate[loop-1], color: 'rgb(144,238,126)'});
+				// 		}
+				// 	}
+				// }
 
-				var chart = Highcharts.chart('container1_shiftc', {
-					chart: {
-						animation: false
-					},
-					title: {
-						text: 'Movement Average',
-						style: {
-							fontSize: '25px',
-							fontWeight: 'bold'
-						}
-					},
-					subtitle: {
-						text: 'Group C on '+date,
-						style: {
-							fontSize: '1vw',
-							fontWeight: 'bold'
-						}
-					},
-					yAxis: {
-						title: {
-							enabled: true,
-							text: "Minutes"
-						},
-						min: 0,
-						plotLines: [{
-							color: '#FF0000',
-							value: parseInt(target),
-							dashStyle: 'shortdash',
-							width: 2,
-							zIndex: 5,
-							label: {
-								align:'right',
-								text: 'Target '+parseInt(target)+'%',
-								x:-7,
-								style: {
-									fontSize: '12px',
-									color: '#FF0000',
-									fontWeight: 'bold'
-								}
-							}
-						}],
-						labels: {
-							enabled: false
-						}
-					},
-					xAxis: {
-						categories: op_name,
-						type: 'category',
-						gridLineWidth: 1,
-						gridLineColor: 'RGB(204,255,255)',
-						labels: {
-							rotation: -45,
-							style: {
-								fontSize: '13px'
-							}
-						},
-					},
-					tooltip: {
-						headerFormat: '<span>{point.category}</span><br/>',
-						pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
-					},
-					credits: {
-						enabled:false
-					},
-					legend: {
-						enabled:false
-					},
-					plotOptions: {
-						series:{
-							dataLabels: {
-								enabled: true,
-								format: '{point.y:.2f}%',
-								rotation: -90,
-								style:{
-									fontSize: '15px'
-								}
-							},
-							animation: false,
-							pointPadding: 0.93,
-							groupPadding: 0.93,
-							borderWidth: 0.93,
-							cursor: 'pointer',
-							point: {
-								events: {
-									click: function (event) {
-										showDetail(date, event.point.category);
-									}
-								}
-							},
-						}
-					},
-					series: [{
-						name:'NG Rate',
-						type: 'column',
-						data: data
-					}]
-				});
+				// var chart = Highcharts.chart('container1_shiftc', {
+				// 	chart: {
+				// 		animation: false
+				// 	},
+				// 	title: {
+				// 		text: 'Movement Average',
+				// 		style: {
+				// 			fontSize: '25px',
+				// 			fontWeight: 'bold'
+				// 		}
+				// 	},
+				// 	subtitle: {
+				// 		text: 'Group C on '+date,
+				// 		style: {
+				// 			fontSize: '1vw',
+				// 			fontWeight: 'bold'
+				// 		}
+				// 	},
+				// 	yAxis: {
+				// 		title: {
+				// 			enabled: true,
+				// 			text: "Minutes"
+				// 		},
+				// 		min: 0,
+				// 		plotLines: [{
+				// 			color: '#FF0000',
+				// 			value: parseInt(target),
+				// 			dashStyle: 'shortdash',
+				// 			width: 2,
+				// 			zIndex: 5,
+				// 			label: {
+				// 				align:'right',
+				// 				text: 'Target '+parseInt(target)+'%',
+				// 				x:-7,
+				// 				style: {
+				// 					fontSize: '12px',
+				// 					color: '#FF0000',
+				// 					fontWeight: 'bold'
+				// 				}
+				// 			}
+				// 		}],
+				// 		labels: {
+				// 			enabled: false
+				// 		}
+				// 	},
+				// 	xAxis: {
+				// 		categories: op_name,
+				// 		type: 'category',
+				// 		gridLineWidth: 1,
+				// 		gridLineColor: 'RGB(204,255,255)',
+				// 		labels: {
+				// 			rotation: -45,
+				// 			style: {
+				// 				fontSize: '13px'
+				// 			}
+				// 		},
+				// 	},
+				// 	tooltip: {
+				// 		headerFormat: '<span>{point.category}</span><br/>',
+				// 		pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
+				// 	},
+				// 	credits: {
+				// 		enabled:false
+				// 	},
+				// 	legend: {
+				// 		enabled:false
+				// 	},
+				// 	plotOptions: {
+				// 		series:{
+				// 			dataLabels: {
+				// 				enabled: true,
+				// 				format: '{point.y:.2f}%',
+				// 				rotation: -90,
+				// 				style:{
+				// 					fontSize: '15px'
+				// 				}
+				// 			},
+				// 			animation: false,
+				// 			pointPadding: 0.93,
+				// 			groupPadding: 0.93,
+				// 			borderWidth: 0.93,
+				// 			cursor: 'pointer',
+				// 			point: {
+				// 				events: {
+				// 					click: function (event) {
+				// 						showDetail(date, event.point.category);
+				// 					}
+				// 				}
+				// 			},
+				// 		}
+				// 	},
+				// 	series: [{
+				// 		name:'NG Rate',
+				// 		type: 'column',
+				// 		data: data
+				// 	}]
+				// });
 
 				$(document).scrollTop(position);
 			}
@@ -1542,207 +1540,207 @@ $.get('{{ url("fetch/middle/buffing_op_ng_target") }}', data, function(result, s
 
 
 
-		var op_c = [];
-		var name_c = [];
-		var cek_c = [];
+		// var op_c = [];
+		// var name_c = [];
+		// var cek_c = [];
 
-		var key = [];
-		var buff_tarinai = [];
-		var ng_soldering = [];
-		var kizu = [];
-		var others = [];
-		var buff_nagare = [];
+		// var key = [];
+		// var buff_tarinai = [];
+		// var ng_soldering = [];
+		// var kizu = [];
+		// var others = [];
+		// var buff_nagare = [];
 
-		var ng_rate = [];
-		var ng = [];
-		var qty = [];
+		// var ng_rate = [];
+		// var ng = [];
+		// var qty = [];
 
-		var plotBands = [];
+		// var plotBands = [];
 
-		var loop = 0;
-		for (var i = 0; i < result.operator.length; i++) {
+		// var loop = 0;
+		// for (var i = 0; i < result.operator.length; i++) {
 
-			if(result.operator[i].group == 'C'){
-				loop = loop + 1;
+		// 	if(result.operator[i].group == 'C'){
+		// 		loop = loop + 1;
 
-				buff_tarinai.push(0);
-				ng_soldering.push(0);
-				kizu.push(0);
-				others.push(0);
-				buff_nagare.push(0);
+		// 		buff_tarinai.push(0);
+		// 		ng_soldering.push(0);
+		// 		kizu.push(0);
+		// 		others.push(0);
+		// 		buff_nagare.push(0);
 
-				op_c.push(result.operator[i].employee_id);
-
-
-				for (var j = 0; j < result.target.length; j++) {
-					if(result.operator[i].employee_id == result.target[j].employee_id){
-
-						if(result.target[j].ng_name == 'Buff Tarinai'){
-							buff_tarinai[loop-1] = result.target[j].quantity;
-						}else if(result.target[j].ng_name == 'NG Soldering'){
-							ng_soldering[loop-1] = result.target[j].quantity;
-						}else if(result.target[j].ng_name == 'Kizu'){
-							kizu[loop-1] = result.target[j].quantity;
-						}else if(result.target[j].ng_name == 'Buff Others (Aus, Nami, dll)'){
-							others[loop-1] = result.target[j].quantity;
-						}else if(result.target[j].ng_name == 'Buff Nagare'){
-							buff_nagare[loop-1] = result.target[j].quantity;
-						}
-
-						if(j == 0){
-							key.push(result.target[j].key || 'Not Found');
-							name_c.push(result.target[j].name);
-							cek_c.push(result.target[j].check);
-						}else if(result.target[j].employee_id != result.target[j-1].employee_id){
-							key.push(result.target[j].key || 'Not Found');
-							name_c.push(result.target[j].name);
-							cek_c.push(result.target[j].check);
-						}
-
-					}
-
-				}
-
-				ng.push(buff_tarinai[loop-1] + ng_soldering[loop-1] + kizu[loop-1] + others[loop-1] + buff_nagare[loop-1]);
-
-				if(key[loop-1] != 'Not Found'){
-					if(key[loop-1] != 'A82Z'){
-						if(key[loop-1][0] == 'A'){
-							qty.push(15);
-						}else if(key[loop-1][0] == 'T'){
-							qty.push(8);
-						}
-					}else{
-						qty.push(10);
-					}
-				}else{
-					qty.push(0);
-				}
+		// 		op_c.push(result.operator[i].employee_id);
 
 
-				ng_rate.push(ng[loop-1] / qty[loop-1] * 100);
+		// 		for (var j = 0; j < result.target.length; j++) {
+		// 			if(result.operator[i].employee_id == result.target[j].employee_id){
 
-				if(ng_rate[loop-1] > parseInt(target)){
-					if(cek_c[loop-1] != null){
-						plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(25,118,210 ,.3)'});
-					}else{
-						plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .3)'});
-					}
-				}				
+		// 				if(result.target[j].ng_name == 'Buff Tarinai'){
+		// 					buff_tarinai[loop-1] = result.target[j].quantity;
+		// 				}else if(result.target[j].ng_name == 'NG Soldering'){
+		// 					ng_soldering[loop-1] = result.target[j].quantity;
+		// 				}else if(result.target[j].ng_name == 'Kizu'){
+		// 					kizu[loop-1] = result.target[j].quantity;
+		// 				}else if(result.target[j].ng_name == 'Buff Others (Aus, Nami, dll)'){
+		// 					others[loop-1] = result.target[j].quantity;
+		// 				}else if(result.target[j].ng_name == 'Buff Nagare'){
+		// 					buff_nagare[loop-1] = result.target[j].quantity;
+		// 				}
 
-			}
+		// 				if(j == 0){
+		// 					key.push(result.target[j].key || 'Not Found');
+		// 					name_c.push(result.target[j].name);
+		// 					cek_c.push(result.target[j].check);
+		// 				}else if(result.target[j].employee_id != result.target[j-1].employee_id){
+		// 					key.push(result.target[j].key || 'Not Found');
+		// 					name_c.push(result.target[j].name);
+		// 					cek_c.push(result.target[j].check);
+		// 				}
 
-		}
+		// 			}
 
-		var chart = Highcharts.chart('container2_shiftc', {
-			chart: {
-				type: 'column',
-			},
-			title: {
-				text: 'Last NG Rate By Operator Over '+target+'%',
-				style: {
-					fontSize: '25px',
-					fontWeight: 'bold'
-				}
-			},
-			subtitle: {
-				text: 'Group C on '+result.date,
-				style: {
-					fontSize: '1vw',
-					fontWeight: 'bold'
-				}
-			},
-			yAxis: {
-				title: {
-					enabled: true,
-					text: "PC(s)"
-				},
-				labels: {
-					enabled:false
-				},
-				stackLabels: {
-					enabled: true,
-					style: {
-						fontWeight: 'bold',
-						color: 'white',
-						fontSize: '1vw'
-					}
-				},
-			},
-			xAxis: {
-				categories: key,
-				type: 'category',
-				gridLineWidth: 1,
-				gridLineColor: 'RGB(204,255,255)',
-				labels: {
-					rotation: -45,
-					style: {
-						fontSize: '13px'
-					}
-				},
-				plotBands: plotBands
-			},
-			tooltip: {
-				headerFormat: '<span>{point.category}</span><br/>',
-				pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
-			},
-			credits: {
-				enabled:false
-			},
-			plotOptions: {
-				column: {
-					stacking: 'normal',
-				},
-				series:{
-					dataLabels: {
-						enabled: true,
-						format: '{point.y}',
-						style:{
-							fontSize: '15px'
-						}
-					},
-					animation: false,
-					pointPadding: 0.93,
-					groupPadding: 0.93,
-					borderWidth: 0.93,
-					cursor: 'pointer',
-					point: {
-						events: {
-							click: function (event) {
-								showCheck(op_c[event.point.index], name_c[event.point.index], event.point.category, result.date);
-							}
-						}
-					},
-				}
-			},
-			series: [
-			{
-				name: 'Buff Tarinai',
-				data: buff_tarinai,
-				color: '#00897B'
-			},
-			{
-				name: 'NG Soldering',
-				data: ng_soldering,
-				color: '#F9A825'
-			},
-			{
-				name: 'Kizu',
-				data: kizu,
-				color: '#aaeeee'
-			},
-			{
-				name: 'Buff Others (Aus, Nami, dll)',
-				data: others,
-				color: '#BCAAA4'
-			},
-			{
-				name: 'Buff Nagare',
-				data: buff_nagare,
-				color: '#7798BF'
-			}
-			]
-		});
+		// 		}
+
+		// 		ng.push(buff_tarinai[loop-1] + ng_soldering[loop-1] + kizu[loop-1] + others[loop-1] + buff_nagare[loop-1]);
+
+		// 		if(key[loop-1] != 'Not Found'){
+		// 			if(key[loop-1] != 'A82Z'){
+		// 				if(key[loop-1][0] == 'A'){
+		// 					qty.push(15);
+		// 				}else if(key[loop-1][0] == 'T'){
+		// 					qty.push(8);
+		// 				}
+		// 			}else{
+		// 				qty.push(10);
+		// 			}
+		// 		}else{
+		// 			qty.push(0);
+		// 		}
+
+
+		// 		ng_rate.push(ng[loop-1] / qty[loop-1] * 100);
+
+		// 		if(ng_rate[loop-1] > parseInt(target)){
+		// 			if(cek_c[loop-1] != null){
+		// 				plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(25,118,210 ,.3)'});
+		// 			}else{
+		// 				plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .3)'});
+		// 			}
+		// 		}				
+
+		// 	}
+
+		// }
+
+		// var chart = Highcharts.chart('container2_shiftc', {
+		// 	chart: {
+		// 		type: 'column',
+		// 	},
+		// 	title: {
+		// 		text: 'Last NG Rate By Operator Over '+target+'%',
+		// 		style: {
+		// 			fontSize: '25px',
+		// 			fontWeight: 'bold'
+		// 		}
+		// 	},
+		// 	subtitle: {
+		// 		text: 'Group C on '+result.date,
+		// 		style: {
+		// 			fontSize: '1vw',
+		// 			fontWeight: 'bold'
+		// 		}
+		// 	},
+		// 	yAxis: {
+		// 		title: {
+		// 			enabled: true,
+		// 			text: "PC(s)"
+		// 		},
+		// 		labels: {
+		// 			enabled:false
+		// 		},
+		// 		stackLabels: {
+		// 			enabled: true,
+		// 			style: {
+		// 				fontWeight: 'bold',
+		// 				color: 'white',
+		// 				fontSize: '1vw'
+		// 			}
+		// 		},
+		// 	},
+		// 	xAxis: {
+		// 		categories: key,
+		// 		type: 'category',
+		// 		gridLineWidth: 1,
+		// 		gridLineColor: 'RGB(204,255,255)',
+		// 		labels: {
+		// 			rotation: -45,
+		// 			style: {
+		// 				fontSize: '13px'
+		// 			}
+		// 		},
+		// 		plotBands: plotBands
+		// 	},
+		// 	tooltip: {
+		// 		headerFormat: '<span>{point.category}</span><br/>',
+		// 		pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
+		// 	},
+		// 	credits: {
+		// 		enabled:false
+		// 	},
+		// 	plotOptions: {
+		// 		column: {
+		// 			stacking: 'normal',
+		// 		},
+		// 		series:{
+		// 			dataLabels: {
+		// 				enabled: true,
+		// 				format: '{point.y}',
+		// 				style:{
+		// 					fontSize: '15px'
+		// 				}
+		// 			},
+		// 			animation: false,
+		// 			pointPadding: 0.93,
+		// 			groupPadding: 0.93,
+		// 			borderWidth: 0.93,
+		// 			cursor: 'pointer',
+		// 			point: {
+		// 				events: {
+		// 					click: function (event) {
+		// 						showCheck(op_c[event.point.index], name_c[event.point.index], event.point.category, result.date);
+		// 					}
+		// 				}
+		// 			},
+		// 		}
+		// 	},
+		// 	series: [
+		// 	{
+		// 		name: 'Buff Tarinai',
+		// 		data: buff_tarinai,
+		// 		color: '#00897B'
+		// 	},
+		// 	{
+		// 		name: 'NG Soldering',
+		// 		data: ng_soldering,
+		// 		color: '#F9A825'
+		// 	},
+		// 	{
+		// 		name: 'Kizu',
+		// 		data: kizu,
+		// 		color: '#aaeeee'
+		// 	},
+		// 	{
+		// 		name: 'Buff Others (Aus, Nami, dll)',
+		// 		data: others,
+		// 		color: '#BCAAA4'
+		// 	},
+		// 	{
+		// 		name: 'Buff Nagare',
+		// 		data: buff_nagare,
+		// 		color: '#7798BF'
+		// 	}
+		// 	]
+		// });
 
 		$(document).scrollTop(position);	
 	}
