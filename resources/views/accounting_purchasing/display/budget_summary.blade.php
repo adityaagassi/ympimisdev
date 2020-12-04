@@ -225,27 +225,27 @@
             },
             series: [
               {
-                name: 'Simulasi Budget',
+                name: 'Plan',
                 data: awal,
                 stack: 'alone'
               },
               {
-                name: 'Actual Budget',
+                name: 'Actual',
                 data: sisa,
                 stack: 'all'
               },
               {
-                name: 'Budget PR',
+                name: 'Unrelease PR',
                 data: pr,
                 stack: 'all'
               },
               {
-                name: 'Budget Investment',
+                name: 'Unrelease Investment',
                 data: investment,
                 stack: 'all'
               },
               {
-                name: 'Budget PO',
+                name: 'Unrelease PO',
                 data: po,
                 stack: 'all'
               }
@@ -313,31 +313,31 @@
             },
             series: [
               {
-                name: 'Total Amount',
+                name: 'Plan',
                 color: '#ff851b',
                 data: amount_category,
                 stack: 'alone2'
               },
               {
-                name: 'Actual Budget',
+                name: 'Actual',
                 data: act_category,
                 color: '#4caf50',
                 stack: 'all2'
               },
               {
-                name: 'Budget PR',
+                name: 'Unrelease PR',
                 data: pr_category,
                 color: '#ffeb3b',
                 stack: 'all2'
               },
               {
-                name: 'Budget Investment',
+                name: 'Unrelease Investment',
                 data: inv_category,
                 color: '#795548',
                 stack: 'all2'
               },
               {
-                name: 'Budget PO',
+                name: 'Unrelease PO',
                 data: po_category,
                 color: '#607d8b',
                 stack: 'all2'

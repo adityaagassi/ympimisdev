@@ -5516,39 +5516,31 @@ class InjectionsController extends Controller
 
             $data = DB::SELECT("SELECT
                 mesin,
-                COALESCE (( SELECT part_name FROM injection_process_temps WHERE mesin = injection_machine_masters.mesin AND injection_process_temps.deleted_at IS NULL ), '' ) AS part,
+                COALESCE (( SELECT part_name FROM injection_process_temps WHERE mesin = injection_machine_works.mesin AND injection_process_temps.deleted_at IS NULL ), '' ) AS part,
                 COALESCE ((
                     SELECT
                         CONCAT( '<br>(', part_type, ' - ', color, ')<br>', cavity ) 
                     FROM
                         injection_process_temps 
                     WHERE
-                        mesin = injection_machine_masters.mesin 
+                        mesin = injection_machine_works.mesin 
                         AND injection_process_temps.deleted_at IS NULL 
                         ),
                     '' 
                 ) AS type,
-                COALESCE (( SELECT shot FROM injection_process_temps WHERE mesin = injection_machine_masters.mesin AND injection_process_temps.deleted_at IS NULL ), 0 ) AS shot_mesin,
+                COALESCE (( SELECT shot FROM injection_process_temps WHERE mesin = injection_machine_works.mesin AND injection_process_temps.deleted_at IS NULL ), 0 ) AS shot_mesin,
                 COALESCE ((
                     SELECT COALESCE
                         ( ROUND( last_counter / injection_molding_masters.qty_shot ), 0 ) AS shot 
                     FROM
-                        injection_molding_masters
+                        injection_molding_masters 
                     WHERE
-                        injection_molding_masters.status_mesin = injection_machine_masters.mesin 
+                        injection_molding_masters.status_mesin = injection_machine_works.mesin 
                         ),
                     0 
                 ) AS shot_molding,
-                COALESCE ((
-                    SELECT part 
-                    FROM
-                        injection_molding_masters
-                    WHERE
-                        injection_molding_masters.status_mesin = injection_machine_masters.mesin 
-                        ),
-                    '-'
-                ) AS molding,
-                COALESCE (( SELECT ng_count FROM injection_process_temps WHERE mesin = injection_machine_masters.mesin AND injection_process_temps.deleted_at IS NULL ), '' ) AS ng_count,
+                COALESCE (( SELECT part FROM injection_molding_masters WHERE injection_molding_masters.status_mesin = injection_machine_works.mesin ), '-' ) AS molding,
+                COALESCE (( SELECT ng_count FROM injection_process_temps WHERE mesin = injection_machine_works.mesin AND injection_process_temps.deleted_at IS NULL ), '' ) AS ng_count,
                 COALESCE ((
                     SELECT
                         CONCAT( operator_id, '<br>', employee_syncs.`name` ) 
@@ -5556,13 +5548,15 @@ class InjectionsController extends Controller
                         injection_process_temps
                         LEFT JOIN employee_syncs ON employee_syncs.employee_id = injection_process_temps.operator_id 
                     WHERE
-                        mesin = injection_machine_masters.mesin 
+                        mesin = injection_machine_works.mesin 
                         AND injection_process_temps.deleted_at IS NULL 
                         ),
                     '' 
-                ) AS operator 
+                ) AS operator,
+                status,
+                remark
             FROM
-                injection_machine_masters");
+                injection_machine_works");
 
 
             $response = array(

@@ -107,6 +107,46 @@
 		}
 	}
 
+	#idle {
+		/*width: 50px;
+		height: 50px;*/
+		-webkit-animation: idle 1s infinite;  /* Safari 4+ */
+		-moz-animation: idle 1s infinite;  /* Fx 5+ */
+		-o-animation: idle 1s infinite;  /* Opera 12+ */
+		animation: idle 1s infinite;  /* IE 10+, Fx 29+ */
+	}
+
+	@-webkit-keyframes idle {
+		0%, 49% {
+			background-color: black;
+			color: white;
+		}
+		50%, 100% {
+			background-color: #ffe45e;
+			color: black;
+		}
+	}
+
+	#trouble {
+		/*width: 50px;
+		height: 50px;*/
+		-webkit-animation: trouble 1s infinite;  /* Safari 4+ */
+		-moz-animation: trouble 1s infinite;  /* Fx 5+ */
+		-o-animation: trouble 1s infinite;  /* Opera 12+ */
+		animation: trouble 1s infinite;  /* IE 10+, Fx 29+ */
+	}
+
+	@-webkit-keyframes trouble {
+		0%, 49% {
+			background-color: black;
+			color: white;
+		}
+		50%, 100% {
+			background-color: #ff5e5e;
+			color: black;
+		}
+	}
+
 	#shot {
 		/*width: 50px;
 		height: 50px;*/
@@ -231,30 +271,72 @@
 						divMesin += '<td style="border:1px solid black;border-bottom:2px solid black;color:black;padding:0;font-size:20px;background-color:#dcdcdc;font-weight:bold">NG</td>';
 						divMesin += '</tr>';
 						divMesin += '<tr>';
-						if (value.part != "") {
-							divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:20px;background-color:'+bgcolor+'" id="sedang">'+value.part+value.type+'</td>';
-						}else{
-							divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:20px;background-color:'+bgcolor+'">-<br>-<br>-</td>';
-						}
-						if (value.shot_mesin != 0) {
-							divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:30px;background-color:'+bgcolor+'" id="sedang">'+value.shot_mesin+'</td>';
-						}else{
-							divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:30px;background-color:'+bgcolor+'">0</td>';
-						}
-						if (value.ng_count != "") {
-							var ng = value.ng_count.split(',');
-							for (var i = 0; i < ng.length; i++) {
-								var total = total + parseFloat(ng[i]);
+						if (value.status == 'Working') {
+							if (value.part != "") {
+								divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:20px;background-color:'+bgcolor+'" id="sedang">'+value.part+value.type+'</td>';
+							}else{
+								divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:20px;background-color:'+bgcolor+'">-<br>-<br>-</td>';
 							}
-							divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:30px;background-color:'+bgcolor+'" id="sedang">'+total+'</td>';
-						}else{
-							divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:30px;background-color:'+bgcolor+'">0</td>';
+							if (value.shot_mesin != 0) {
+								divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:30px;background-color:'+bgcolor+'" id="sedang">'+value.shot_mesin+'</td>';
+							}else{
+								divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:30px;background-color:'+bgcolor+'">0</td>';
+							}
+							if (value.ng_count != "") {
+								var ng = value.ng_count.split(',');
+								for (var i = 0; i < ng.length; i++) {
+									var total = total + parseFloat(ng[i]);
+								}
+								divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:30px;background-color:'+bgcolor+'" id="sedang">'+total+'</td>';
+							}else{
+								divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:30px;background-color:'+bgcolor+'">0</td>';
+							}
+						}else if(value.status == 'IDLE'){
+							if (value.part != "") {
+								divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:20px;background-color:'+bgcolor+'" id="idle">'+value.part+value.type+'</td>';
+							}else{
+								divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:20px;background-color:'+bgcolor+'">-<br>-<br>-</td>';
+							}
+							if (value.shot_mesin != 0) {
+								divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:30px;background-color:'+bgcolor+'" id="idle">'+value.shot_mesin+'</td>';
+							}else{
+								divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:30px;background-color:'+bgcolor+'">0</td>';
+							}
+							if (value.ng_count != "") {
+								var ng = value.ng_count.split(',');
+								for (var i = 0; i < ng.length; i++) {
+									var total = total + parseFloat(ng[i]);
+								}
+								divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:30px;background-color:'+bgcolor+'" id="idle">'+total+'</td>';
+							}else{
+								divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:30px;background-color:'+bgcolor+'">0</td>';
+							}
+						}else if(value.status == 'TROUBLE'){
+							if (value.part != "") {
+								divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:20px;background-color:'+bgcolor+'" id="trouble">'+value.part+value.type+'</td>';
+							}else{
+								divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:20px;background-color:'+bgcolor+'">-<br>-<br>-</td>';
+							}
+							if (value.shot_mesin != 0) {
+								divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:30px;background-color:'+bgcolor+'" id="trouble">'+value.shot_mesin+'</td>';
+							}else{
+								divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:30px;background-color:'+bgcolor+'">0</td>';
+							}
+							if (value.ng_count != "") {
+								var ng = value.ng_count.split(',');
+								for (var i = 0; i < ng.length; i++) {
+									var total = total + parseFloat(ng[i]);
+								}
+								divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:30px;background-color:'+bgcolor+'" id="trouble">'+total+'</td>';
+							}else{
+								divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:30px;background-color:'+bgcolor+'">0</td>';
+							}
 						}
 						divMesin += '</tr>';
 						divMesin += '</table>';
 						divMesin += '</div>';
 						index++;
-					})
+					});
 
 					divMesin += '</table>';
 

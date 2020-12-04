@@ -109,7 +109,7 @@
 							</div>
 						</div>
 
-						<?php if(Auth::user()->role_code == "MIS" || $employee->department == "Accounting") { ?>
+						<?php if(Auth::user()->role_code == "MIS" || $employee->department == "Accounting Department") { ?>
 						<div class="col-md-3">
 							<div class="form-group">
 								<label>Department</label>

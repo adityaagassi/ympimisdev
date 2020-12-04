@@ -40,7 +40,7 @@ class AccountingController extends Controller
 {
     public function __construct()
     {
-        $this->dept = ['Management Information System', 'Accounting', 'Assembly (WI-A)', 'Educational Instrument (EI)', 'General Affairs', 'Human Resources', 'Logistic', 'Maintenance', 'Parts Process (WI-PP)', 'Procurement', 'Production Control', 'Production Engineering', 'Purchasing', 'Quality Assurance', 'Welding-Surface Treatment (WI-WST)'];
+        $this->dept = ['Management Information System Department', 'Accounting Department', 'Woodwind Instrument - Assembly (WI-A) Department', 'Educational Instrument (EI) Department', 'General Affairs Department', 'Human Resources Department', 'Logistic Department', 'Maintenance Department', 'Woodwind Instrument - Parts Process (WI-PP) Department', 'Procurement Department', 'Production Control Department', 'Production Engineering Department', 'Purchasing Control Department', 'Quality Assurance Department', 'Woodwind Instrument - Welding-Surface Treatment (WI-WST) Department'];
 
         $this->uom = ['bag', 'bar', 'batang', 'belt', 'botol', 'bottle', 'box', 'Btg', 'Btl', 'btng', 'buah', 'buku', 'Can', 'Case', 'container', 'cps', 'day', 'days', 'dos', 'doz', 'Drum', 'dus', 'dz', 'dzn', 'EA', 'G', 'galon', 'gr', 'hari', 'hour', 'job', 'JRG', 'kaleng', 'ken', 'Kg', 'kgm', 'klg', 'L', 'Lbr', 'lbs', 'lembar', 'License', 'lisence', 'lisensi', 'lmbr', 'lonjor', 'Lot', 'ls', 'ltr', 'lubang', 'lusin', 'm', 'm2', 'm²', 'm3', 'malam', 'meter', 'ml', 'month', 'Mtr', 'night', 'OH', 'Ons', 'orang', 'OT', 'Pac', 'Pack', 'package', 'pad', 'pail', 'pair', 'pairs', 'pak', 'Pasang', 'pc', 'Pca', 'Pce', 'Pck', 'pcs', 'Pcs', 'Person', 'pick up', 'pil', 'ply', 'point', 'pot', 'prs', 'prsn', 'psc', 'PSG', 'psn', 'Rim', 'rol', 'roll', 'rolls', 'sak', 'sampel', 'sample', 'Set', 'Set', 'Sets', 'sheet', 'shoot', 'slop', 'sum', 'tank', 'tbg', 'time', 'titik', 'ton', 'tube', 'Um', 'Unit', 'user', 'VA', 'yard', 'zak'
 
@@ -620,11 +620,11 @@ class AccountingController extends Controller
         ->select('department')
         ->first();
 
-        if (Auth::user()->role_code == "MIS" || $emp_dept->department == "Procurement" || $emp_dept->department == "Purchasing Control") {
+        if (Auth::user()->role_code == "MIS" || strpos($emp_dept->department, 'Procurement Department') !== false || strpos($emp_dept->department, 'Purchasing Control Department')) {
             $restrict_dept = "";
         }
         else{
-            $restrict_dept = "and department ='".$emp_dept->department."'";
+            $restrict_dept = "and department like '%".$emp_dept->department."%'";
         }
 
 
@@ -776,11 +776,11 @@ class AccountingController extends Controller
             $dept = "Human Resources";
             $budgets->where('department', '=', $dept);
         }
-        else if($request->get('department') == "Purchasing Control") {
-            $dept = "Procurement";
+        else if($request->get('department') == "Purchasing Control Department") {
+            $dept = "Procurement Department";
             $budgets->where('department', '=', $dept);
         }
-        else if ($request->get('department') == "Management Information System") {
+        else if ($request->get('department') == "Management Information System Department") {
         }
         else{
             $dept = $request->get('department');
@@ -891,72 +891,72 @@ class AccountingController extends Controller
             $nomor = "001";
         }
 
-        if ($dept == "Management Information System")
+        if ($dept == "Management Information System Department")
         {
             $dept = "IT";
         }
-        else if ($dept == "Accounting")
+        else if ($dept == "Accounting Department Department")
         {
             $dept = "AC";
         }
-        else if ($dept == "Assembly (WI-A)")
+        else if ($dept == "Woodwind Instrument - Assembly (WI-A) Department")
         {
             $dept = "AS";
         }
-        else if ($dept == "Educational Instrument (EI)")
+        else if ($dept == "Educational Instrument (EI) Department")
         {
             $dept = "EI";
         }
-        else if ($dept == "General Affairs")
+        else if ($dept == "General Affairs Department")
         {
             $dept = "GA";
         }
-        else if ($dept == "Human Resources")
+        else if ($dept == "Human Resources Department")
         {
             $dept = "HR";
         }
-        else if ($dept == "Logistic")
+        else if ($dept == "Logistic Department")
         {
             $dept = "LG";
         }
-        else if ($dept == "Maintenance")
+        else if ($dept == "Maintenance Department")
         {
             $dept = "PM";
         }
-        else if ($dept == "Parts Process (WI-PP)")
+        else if ($dept == "Woodwind Instrument - Parts Process (WI-PP) Department")
         {
-            if ($sect == "Key parts Process") {
+            if ($sect == "Key parts Process Section") {
                 $dept = "MP";
             }
             else{
                 $dept = "BP";
             }
         }
-        else if ($dept == "Procurement" || $dept == "Purchasing Control")
+        else if ($dept == "Procurement Department" || $dept == "Purchasing Control Department")
         {
             $dept = "PH";
         }
-        else if ($dept == "Production Control")
+        else if ($dept == "Production Control Department")
         {
             $dept = "PC";
         }
-        else if ($dept == "Production Engineering")
+        else if ($dept == "Production Engineering Department")
         {
             $dept = "PE";
         }
-        else if ($dept == "Quality Assurance")
+        else if ($dept == "Quality Assurance Department")
         {
-            if ($grp == "Standardization") {
+            if ($grp == "Standardization Process Control Section") {
                 $dept = "ST";
             }
-            else if($sect == "Chemical Process Control"){
+            else if($sect == "Chemical Process Control Section"){
                 $dept = "CM";
             }
             else{
                 $dept = "QC";
             }
         }
-        else if ($dept == "Welding-Surface Treatment (WI-WST)")
+        else if ($dept == "Woodwind Instrument - Welding-Surface Treatment (WI-WST) Department")
         {
             $dept = "WS";
         }
@@ -971,6 +971,27 @@ class AccountingController extends Controller
 
     public function create_purchase_requisition(Request $request)
     {
+
+        // $MAC = exec('getmac'); 
+  
+        // Storing 'getmac' value in $MAC 
+        // $MAC = strtok($MAC, ' ');
+
+        // var_dump($MAC);die();
+
+        // $_IP_ADDRESS = $_SERVER['REMOTE_ADDR'];
+
+        // $_PERINTAH = "arp -a $_IP_ADDRESS";
+        // ob_start();
+        // system($_PERINTAH);
+        // $_HASIL = ob_get_contents();
+        // ob_clean();
+        // $_PECAH = strstr($_HASIL, $_IP_ADDRESS);
+        // $_PECAH_STRING = explode($_IP_ADDRESS, str_replace(" ", "", $_PECAH));
+        // $_HASIL = substr($_PECAH_STRING[1], 0, 17);   
+
+        // var_dump($_HASIL);die();
+
         $id = Auth::id();
 
         $lop = $request->get('lop');
@@ -986,17 +1007,17 @@ class AccountingController extends Controller
 
             //jika PE maka Pak Alok
 
-            if($request->get('department') == "Production Engineering")
+            if($request->get('department') == "Production Engineering Department")
             {
-                $manag = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Maintenance' and position = 'manager'");
+                $manag = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Maintenance Department' and position = 'manager'");
             }
-            else if($request->get('department') == "Purchasing Control")
+            else if($request->get('department') == "Purchasing Control Department")
             {
-                $manag = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Procurement' and position = 'manager'");
+                $manag = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Procurement Department' and position = 'manager'");
             }
-            else if($request->get('department') == "General Affairs")
+            else if($request->get('department') == "General Affairs Department")
             {
-                $manag = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Human Resources' and position = 'manager'");
+                $manag = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Human Resources Department' and position = 'manager'");
             }
             else
             {
@@ -1064,7 +1085,7 @@ class AccountingController extends Controller
             $po_date = date('Y-m-d', strtotime($submission_date . ' + 7 days'));
 
 
-            if($request->get('department') == "Human Resources" || $request->get('department') == "General Affairs"){
+            if($request->get('department') == "Human Resources Department" || $request->get('department') == "General Affairs Department"){
                 $dgm = null;
 
                 //GM Pak Arief
@@ -1624,7 +1645,7 @@ class AccountingController extends Controller
                 $pr->status = "approval_acc";
 
                 //kirim email ke Mas Shega & Mas Erlangga
-                $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.department = 'Purchasing Control' and (employee_id = 'PI1908032' or employee_id = 'PI1810020')";
+                $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.department = 'Purchasing Control Department' and (employee_id = 'PI1908032' or employee_id = 'PI1810020')";
                 $mailtoo = DB::select($mails);
             }
 
@@ -1946,7 +1967,7 @@ class AccountingController extends Controller
                 $pr->status = "approval_acc";
 
                 //kirim email ke Mas Shega & Mas Erlangga
-                $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.department = 'Purchasing Control' and (employee_id = 'PI1908032' or employee_id = 'PI1810020')";
+                $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.department = 'Purchasing Control Department' and (employee_id = 'PI1908032' or employee_id = 'PI1810020')";
                 $mailtoo = DB::select($mails);
 
                 $pr->save();
@@ -2394,7 +2415,7 @@ class AccountingController extends Controller
         ->get();
 
         $authorized2 = EmployeeSync::select('employee_id', 'name')->where('position', '=', 'Manager')
-        ->where('department', '=', 'Procurement')
+        ->where('department', 'like', '%Procurement%')
         ->first();
 
         $authorized3 = EmployeeSync::select('employee_id', 'name')
@@ -3605,12 +3626,14 @@ class AccountingController extends Controller
         if ($approve == "1") {
 
             $po = AccPurchaseOrder::find($id);
+            $ip = $_SERVER['REMOTE_ADDR'];
 
             if ($po->posisi == "manager_pch")
             {
                 $po->posisi = "dgm_pch";
                 $po->approval_authorized2 = "Approved";
                 $po->date_approval_authorized2 = date('Y-m-d H:i:s');
+                $po->autentikasi_2 = $ip;
 
                 $mailto = "select distinct email from acc_purchase_orders join users on acc_purchase_orders.authorized3 = users.username where acc_purchase_orders.id = '" . $id . "'";
                 $mails = DB::select($mailto);
@@ -3625,6 +3648,7 @@ class AccountingController extends Controller
                 $po->posisi = "gm_pch";
                 $po->approval_authorized3 = "Approved";
                 $po->date_approval_authorized3 = date('Y-m-d H:i:s');
+                $po->autentikasi_3 = $ip;
 
                 $mailto = "select distinct email from acc_purchase_orders join users on acc_purchase_orders.authorized4 = users.username where acc_purchase_orders.id = '" . $id . "'";
                 $mails = DB::select($mailto);
@@ -3639,6 +3663,7 @@ class AccountingController extends Controller
                 $po->posisi = 'pch';
                 $po->approval_authorized4 = "Approved";
                 $po->date_approval_authorized4 = date('Y-m-d H:i:s');
+                $po->autentikasi_4 = $ip;
                 $po->status = "not_sap";
 
                     //kirim email Staff PCH sebagai pemberitahuan
@@ -4626,7 +4651,7 @@ class AccountingController extends Controller
         ->select('department')
         ->first();
 
-        if (Auth::user()->role_code == "MIS" || $emp_dept->department == "Accounting") {
+        if (Auth::user()->role_code == "MIS" || $emp_dept->department == "Accounting Department") {
             $restrict_dept = "";
         }
         else{
@@ -4817,19 +4842,19 @@ class AccountingController extends Controller
 
             //Get Manager
 
-            if ($request->get('applicant_department') == "Production Engineering")
+            if ($request->get('applicant_department') == "Production Engineering Department")
             {
                 $getmanager = EmployeeSync::select('employee_id', 'name', 'position', 'section')
                 ->whereNull('end_date')
-                ->where('department','=','Maintenance')
+                ->where('department','=','Maintenance Department')
                 ->where('position','=','Manager')
                 ->first();
             }
-            else if ($request->get('applicant_department') == "General Affairs")
+            else if ($request->get('applicant_department') == "General Affairs Department")
             {
                 $getmanager = EmployeeSync::select('employee_id', 'name', 'position', 'section')
                 ->whereNull('end_date')
-                ->where('department','=','Human Resources')
+                ->where('department','=','Human Resources Department')
                 ->where('position','=','Manager')
                 ->first();
             }
@@ -4857,7 +4882,7 @@ class AccountingController extends Controller
             ->first();
 
 
-            if($request->get('applicant_department') == "Human Resources" || $request->get('applicant_department') == "General Affairs"){
+            if($request->get('applicant_department') == "Human Resources Department" || $request->get('applicant_department') == "General Affairs Department"){
                 $dgm = null;
 
                 //GM Pak Arief
@@ -4878,7 +4903,7 @@ class AccountingController extends Controller
                 $gm = $getgm->employee_id."/".$getgm->name;
             }
 
-            if($request->get('applicant_department') == "Accounting"){
+            if($request->get('applicant_department') == "Accounting Department"){
                 $manager = null;
                 $dgm = null;
                 $gm = null;
@@ -5020,11 +5045,11 @@ class AccountingController extends Controller
             $cat = "Expenses";
         }
 
-        if ($request->get('department') == "General Affairs") {
-            $dept = "Human Resources";
+        if ($request->get('department') == "General Affairs Department") {
+            $dept = "Human Resources Department";
         } 
-        else if($request->get('department') == "Purchasing Control") {
-            $dept = "Procurement";
+        else if($request->get('department') == "Purchasing Control Department") {
+            $dept = "Procurement Department";
         }
         else{
             $dept = $request->get('department');
@@ -5816,7 +5841,7 @@ class AccountingController extends Controller
             if ($invest->posisi == "manager")
             {
 
-                if ($invest->applicant_department == "Human Resources" || $invest->applicant_department == "General Affairs") {
+                if ($invest->applicant_department == "Human Resources Department" || $invest->applicant_department == "General Affairs Department") {
                     $invest->posisi = "gm";
                 }
                 else{
@@ -6180,7 +6205,7 @@ class AccountingController extends Controller
                 $pdf->save(public_path() . "/investment_list/INV_".$judul.".pdf");
 
                 //kirim email ke Mas Shega & Mas Erlangga
-                $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.department = 'Purchasing Control' and (employee_id = 'PI1908032' or employee_id = 'PI1810020')";
+                $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.department = 'Purchasing Control Department' and (employee_id = 'PI1908032' or employee_id = 'PI1810020')";
                 $mailtoo = DB::select($mails);
 
 
@@ -6525,7 +6550,7 @@ public function purchase_order_investment()
     ->get();
 
     $authorized2 = EmployeeSync::select('employee_id', 'name')->where('position', '=', 'Manager')
-    ->where('department', '=', 'Procurement')
+    ->where('department', '=', 'Procurement Department')
     ->first();
 
     $authorized3 = EmployeeSync::select('employee_id', 'name')
@@ -6690,14 +6715,14 @@ public function fetch_budget_info(Request $request)
         //     $budget = $budget->whereIn('acc_budgets.category', $request->get('category'));
         // }
 
-        // if (Auth::user()->role_code == "MIS" || $emp_dept->department == "Accounting" || $emp_dept->department == "Procurement" || $emp_dept->department == "Purchasing Control") {
+        // if (Auth::user()->role_code == "MIS" || $emp_dept->department == "Accounting Department" || $emp_dept->department == "Procurement Department" || $emp_dept->department == "Purchasing Control Department") {
 
         // }
-        // else if ($emp_dept->department == "General Affairs"){
-        //     $budget = $budget->where('department','=','Human Resources');
+        // else if ($emp_dept->department == "General Affairs Department"){
+        //     $budget = $budget->where('department','=','Human Resources Department');
         // }
-        // else if($emp_dept->department == "Purchasing Control") {
-        //     $budget = $budget->where('department','=','Procurement');
+        // else if($emp_dept->department == "Purchasing Control Department") {
+        //     $budget = $budget->where('department','=','Procurement Department');
         // }
         // else {
         //     $budget = $budget->where('department','=',$emp_dept->department);
@@ -6768,16 +6793,16 @@ public function fetch_budget_info(Request $request)
 
   if ($department != null) {
 
-      if ($department[0] == "Maintenance") {
-        array_push($department,"Production Engineering");
+      if ($department[0] == "Maintenance Department") {
+        array_push($department,"Production Engineering Department");
     }
 
-    else if ($department[0] == "Procurement") {
-        array_push($department,"Purchasing Control");
+    else if ($department[0] == "Procurement Department") {
+        array_push($department,"Purchasing Control Department");
     }
 
-    else if ($department[0] == "Human Resources") {
-        array_push($department,"General Affairs");
+    else if ($department[0] == "Human Resources Department") {
+        array_push($department,"General Affairs Department");
     }
 
 
@@ -8057,16 +8082,16 @@ public function import_receive(Request $request){
       $department = $request->get('department');
 
       if ($department != null) {
-          if ($department[0] == "Maintenance") {
-              array_push($department,"Production Engineering");
+          if ($department[0] == "Maintenance Department") {
+              array_push($department,"Production Engineering Department");
           }
 
-          else if ($department[0] == "Procurement") {
-              array_push($department,"Purchasing Control");
+          else if ($department[0] == "Procurement Department") {
+              array_push($department,"Purchasing Control Department");
           }
 
-          else if ($department[0] == "Human Resources") {
-              array_push($department,"General Affairs");
+          else if ($department[0] == "Human Resources Department") {
+              array_push($department,"General Affairs Department");
           }
 
           $deptt = json_encode($department);
@@ -8169,16 +8194,16 @@ public function import_receive(Request $request){
 
       if ($department != null) {
 
-        if ($department[0] == "Maintenance") {
-          array_push($department,"Production Engineering");
+        if ($department[0] == "Maintenance Department") {
+          array_push($department,"Production Engineering Department");
       }
 
-      else if ($department[0] == "Procurement") {
-          array_push($department,"Purchasing Control");
+      else if ($department[0] == "Procurement Department") {
+          array_push($department,"Purchasing Control Department");
       }
 
-      else if ($department[0] == "Human Resources") {
-          array_push($department,"General Affairs");
+      else if ($department[0] == "Human Resources Department") {
+          array_push($department,"General Affairs Department");
       }
 
       $deptt = json_encode($department);
@@ -8224,7 +8249,7 @@ public function fetchMonitoringPRPch(Request $request){
   $datefrom = date("Y-m-d",  strtotime('-30 days'));
   $dateto = date("Y-m-d");
 
-  $last = AccPurchaseRequisition::whereNull('receive_date')
+  $last = AccPurchaseRequisition::whereNotNull('receive_date')
   ->orderBy('tanggal', 'asc')
   ->select(db::raw('date(submission_date) as tanggal'))
   ->first();
@@ -8290,7 +8315,7 @@ $data_dept = db::select("
     order by department asc");
 
 $data_pr_belum_po = db::select("
-    select acc_purchase_requisitions.no_pr, sum(case when sudah_po is null then 1 else 0 end) as belum_po, sum(case when sudah_po is not null then 1 else 0 end) as sudah_po from acc_purchase_requisitions left join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr where acc_purchase_requisitions.deleted_at is null and receive_date is not null and submission_date between '".$datefrom."' and '".$dateto."' ".$dep."  GROUP BY no_pr order by submission_date ASC");
+    select acc_purchase_requisitions.no_pr, sum(case when sudah_po is null then 1 else 0 end) as belum_po, sum(case when sudah_po is not null then 1 else 0 end) as sudah_po from acc_purchase_requisitions left join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr where acc_purchase_requisitions.deleted_at is null and receive_date is not null and submission_date between '".$datefrom."' and '".$dateto."' ".$dep."  GROUP BY no_pr order by submission_date asc");
 
 $year = date('Y');
 
@@ -8322,16 +8347,16 @@ public function fetchtablePR(Request $request)
 
   if ($department != null) {
 
-      if ($department[0] == "Maintenance") {
-          array_push($department,"Production Engineering");
+      if ($department[0] == "Maintenance Department") {
+          array_push($department,"Production Engineering Department");
       }
 
-      else if ($department[0] == "Procurement") {
-          array_push($department,"Purchasing Control");
+      else if ($department[0] == "Procurement Department") {
+          array_push($department,"Purchasing Control Department");
       }
 
-      else if ($department[0] == "Human Resources") {
-          array_push($department,"General Affairs");
+      else if ($department[0] == "Human Resources Department") {
+          array_push($department,"General Affairs Department");
       }
 
       $deptt = json_encode($department);
@@ -9776,19 +9801,19 @@ public function transfer_budget_post(Request $request)
 
         $posisi = null;
 
-        if($department_from->department == "Production Engineering")
+        if($department_from->department == "Production Engineering Department")
         {
-            $managfrom = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Maintenance' and position = 'manager'");
+            $managfrom = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Maintenance Department' and position = 'manager'");
         }
-        else if($department_from->department == "Purchasing Control")
+        else if($department_from->department == "Purchasing Control Department")
         {
-            $managfrom = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Procurement' and position = 'manager'");
+            $managfrom = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Procurement Department' and position = 'manager'");
         }
-        else if($department_from->department == "General Affairs")
+        else if($department_from->department == "General Affairs Department")
         {
-            $managfrom = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Human Resources' and position = 'manager'");
+            $managfrom = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Human Resources Department' and position = 'manager'");
         }
-        else if($department_from->department == "Management Information System")
+        else if($department_from->department == "Management Information System Department")
         {
             $managfrom = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and position = 'Deputy General Manager'");
         }
@@ -9812,19 +9837,19 @@ public function transfer_budget_post(Request $request)
 
 
 
-        if($department_to->department == "Production Engineering")
+        if($department_to->department == "Production Engineering Department")
         {
-            $managto = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Maintenance' and position = 'manager'");
+            $managto = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Maintenance Department' and position = 'manager'");
         }
-        else if($department_to->department == "Purchasing Control")
+        else if($department_to->department == "Purchasing Control Department")
         {
-            $managto = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Procurement' and position = 'manager'");
+            $managto = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Procurement Department' and position = 'manager'");
         }
-        else if($department_to->department == "General Affairs")
+        else if($department_to->department == "General Affairs Department")
         {
-            $managto = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Human Resources' and position = 'manager'");
+            $managto = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Human Resources Department' and position = 'manager'");
         }
-        else if($department_to->department == "Management Information System")
+        else if($department_to->department == "Management Information System Department")
         {
             $managto = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and position = 'Deputy General Manager'");
         }
@@ -10160,7 +10185,7 @@ public function transfer_approvalto($id){
                     $investment->approval_presdir = $investment->approval_presdir."/Approved/".date('Y-m-d H:i:s');
 
                     //kirim email ke Mas Shega & Mas Erlangga
-                    $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.department = 'Purchasing Control' and (employee_id = 'PI1908032' or employee_id = 'PI1810020')";
+                    $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.department = 'Purchasing Control Department' and (employee_id = 'PI1908032' or employee_id = 'PI1810020')";
                     $mailtoo = DB::select($mails);
                 }
 
@@ -10383,7 +10408,7 @@ public function transfer_approvalto($id){
             WHERE
                 acc_purchase_orders.posisi = 'pch' 
                 AND acc_purchase_order_details.`status` IS NULL 
-                AND acc_purchase_requisitions.department = 'General Affairs'
+                AND acc_purchase_requisitions.department = 'General Affairs Department'
             ORDER BY
                 acc_purchase_order_details.id
         ");
