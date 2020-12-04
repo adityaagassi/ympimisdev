@@ -772,7 +772,7 @@ class AccountingController extends Controller
         ->where('category', '=', 'Expenses')
         ->distinct();
 
-        if ($request->get('department') == "General Affairs") {
+        if ($request->get('department') == "General Affairs Department") {
             $dept = "Human Resources";
             $budgets->where('department', '=', $dept);
         }
@@ -2004,8 +2004,8 @@ class AccountingController extends Controller
 
                 Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($pr_isi, 'purchase_requisition'));
 
-                $message = 'PR dengan Nomor '.$pr->no_pr;
-                $message2 ='Berhasil di approve';
+                $message = 'PR No '.$pr->no_pr;
+                $message2 ='Successfully Approved';
 
                 $detail_pr = AccPurchaseRequisition::select('acc_purchase_requisitions.*','acc_purchase_requisition_items.*','acc_budget_histories.beg_bal','acc_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
                 ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
@@ -4029,12 +4029,12 @@ class AccountingController extends Controller
 
                 Mail::to($mailtoo)->send(new SendEmail($po_isi, 'purchase_order'));
 
-                $message = 'PO dengan Nomor '.$po->no_po;
-                $message2 ='Berhasil di approve';
+                $message = 'PO No. '.$po->no_po;
+                $message2 ='Successfully Approved';
             }
             else{
-                $message = 'PO dengan Nomor. '.$po->no_po;
-                $message2 ='Sudah di approve/reject';
+                $message = 'PO No. '.$po->no_po;
+                $message2 ='Already approved/rejected';
             }
 
             return view('accounting_purchasing.verifikasi.pr_message', array(
