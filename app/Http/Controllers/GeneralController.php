@@ -329,7 +329,7 @@ class GeneralController extends Controller{
 
 		$where = "";
 
-		if($employee->department != 'Management Information System' && $employee->department != 'Human Resources' && Auth::user()->role_code != 'S'){
+		if($employee->department != 'Management Information System Department' && $employee->department != 'Human Resources Department' && Auth::user()->role_code != 'S'){
 			$where = "WHERE a.department = '".$employee->department."'";
 		}
 
