@@ -277,27 +277,7 @@
 						divMesin += '<td style="border:1px solid black;border-bottom:2px solid black;color:black;padding:0;font-size:20px;background-color:#dcdcdc;font-weight:bold">NG</td>';
 						divMesin += '</tr>';
 						divMesin += '<tr>';
-						if (value.status == 'Working') {
-							if (value.part != "") {
-								divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:20px;background-color:'+bgcolor+'" id="sedang">'+value.part+value.type+'</td>';
-							}else{
-								divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:20px;background-color:'+bgcolor+'">-<br>-<br>-</td>';
-							}
-							if (value.shot_mesin != 0) {
-								divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:30px;background-color:'+bgcolor+'" id="sedang">'+value.shot_mesin+'</td>';
-							}else{
-								divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:30px;background-color:'+bgcolor+'">0</td>';
-							}
-							if (value.ng_count != "") {
-								var ng = value.ng_count.split(',');
-								for (var i = 0; i < ng.length; i++) {
-									var total = total + parseFloat(ng[i]);
-								}
-								divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:30px;background-color:'+bgcolor+'" id="sedang">'+total+'</td>';
-							}else{
-								divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:30px;background-color:'+bgcolor+'">0</td>';
-							}
-						}else if(value.status == 'IDLE'){
+						if(value.status == 'IDLE'){
 							if (value.part != "") {
 								divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:20px;background-color:'+bgcolor+'" id="idle">'+value.part+value.type+'</td>';
 							}else{
@@ -334,6 +314,26 @@
 									var total = total + parseFloat(ng[i]);
 								}
 								divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:30px;background-color:'+bgcolor+'" id="trouble">'+total+'</td>';
+							}else{
+								divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:30px;background-color:'+bgcolor+'">0</td>';
+							}
+						}else{
+							if (value.part != "") {
+								divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:20px;background-color:'+bgcolor+'" id="sedang">'+value.part+value.type+'</td>';
+							}else{
+								divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:20px;background-color:'+bgcolor+'">-<br>-<br>-</td>';
+							}
+							if (value.shot_mesin != 0) {
+								divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:30px;background-color:'+bgcolor+'" id="sedang">'+value.shot_mesin+'</td>';
+							}else{
+								divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:30px;background-color:'+bgcolor+'">0</td>';
+							}
+							if (value.ng_count != "") {
+								var ng = value.ng_count.split(',');
+								for (var i = 0; i < ng.length; i++) {
+									var total = total + parseFloat(ng[i]);
+								}
+								divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:30px;background-color:'+bgcolor+'" id="sedang">'+total+'</td>';
 							}else{
 								divMesin += '<td style="border:1px solid white;color:white;padding:0;font-size:30px;background-color:'+bgcolor+'">0</td>';
 							}
