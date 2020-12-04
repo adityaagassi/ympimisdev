@@ -40,6 +40,25 @@ class FloController extends Controller
 		$this->middleware('auth');
 	}
 
+	public function testPrint(){
+		$printer_name = 'MIS';
+
+		$connector = new WindowsPrintConnector($printer_name);
+		$printer = new Printer($connector);
+
+		$printer->feed(2);
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->barcode('T23 KEY TUBING 17', Printer::BARCODE_CODE38);
+		$printer->setTextSize(3, 1);
+		// $printer->text(."\n\n");
+		$printer->barcode('20000', Printer::BARCODE_CODE38);
+		$printer->setTextSize(3, 1);
+		// $printer->text(."\n\n");
+		$printer->cut();
+		$printer->close();
+
+	}
+
 	public function index_bi(){
 		$flos = Flo::orderBy('flo_number', 'asc')
 		->whereIn('flos.status', ['0', '1'])
@@ -847,6 +866,8 @@ class FloController extends Controller
 
 				$status = 'new';
 
+				
+
 			}
 			catch (QueryException $e){
 				$response = array(
@@ -883,7 +904,7 @@ class FloController extends Controller
 			}
 			if($material->origin_group_code == '043'){
 				$inventory_stamp = StampInventory::where('serial_number', '=', $request->get('serial_number'))
-				->where('origin_group_code', '=', $material->origin_group_code)
+				->where('origin_group_code', '=', '043')
 				->first();
 				if($inventory_stamp != null){
 					$inventory_stamp->forceDelete();
@@ -896,6 +917,25 @@ class FloController extends Controller
 				'message' => $e->getMessage(),
 			);
 			return Response::json($response);
+		}
+
+		//DIGITALISASI INJEKSI
+		if($material->origin_group_code == '072' && $material->category == 'FG'){
+			try{
+				$update_stock = db::select("UPDATE injection_inventories AS ii
+					LEFT JOIN injection_part_details AS ipd ON ipd.gmc = ii.material_number 
+					SET ii.quantity = ii.quantity - ".$material_volume->lot_completion." 
+					WHERE
+					ipd.model = '".$material->model."' 
+					AND ii.location = '".$material->issue_storage_location."'");
+			}
+			catch (QueryException $e){
+				$error_log = new ErrorLog([
+					'error_message' => $e->getMessage(),
+					'created_by' => $id
+				]);
+				$error_log->save();
+			}
 		}
 
 		$response = array(
