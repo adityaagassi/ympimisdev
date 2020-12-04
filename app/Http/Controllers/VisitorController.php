@@ -170,7 +170,7 @@ class VisitorController extends Controller
 					}
 
 					if ($department == null && $name == 'Budhi Apriyanto') {
-						$department = 'Management Information System';
+						$department = 'Management Information System Department';
 						$mail_to = DB::SELECT("SELECT
 							email 
 						FROM
@@ -187,7 +187,7 @@ class VisitorController extends Controller
 		                    'id' => $id->id
 		                ];
 					}elseif ($department == null && $name == 'Arief Soekamto') {
-						$department = 'Human Resources';
+						$department = 'Human Resources Department';
 						$mail_to = DB::SELECT("SELECT
 							email 
 						FROM
@@ -726,7 +726,7 @@ public function getNotifVisitor()
 							WHERE
 								(
 								visitors.remark IS NULL 
-								AND employee_syncs.department = 'Management Information System')
+								AND employee_syncs.department = 'Management Information System Department')
 								OR (
 								visitors.remark IS NULL 
 								AND employee_syncs.name = 'Budhi Apriyanto')");
@@ -759,10 +759,10 @@ public function getNotifVisitor()
 								LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
 								LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
 							WHERE
-								( visitors.remark IS NULL AND employee_syncs.department = 'Human Resources' ) 
+								( visitors.remark IS NULL AND employee_syncs.department = 'Human Resources Department' ) 
 								OR (
 								visitors.remark IS NULL 
-								AND employee_syncs.department = 'General Affairs')
+								AND employee_syncs.department = 'General Affairs Department')
 								OR (
 								visitors.remark IS NULL 
 								AND employee_syncs.name = 'Arief Soekamto')");
@@ -774,10 +774,10 @@ public function getNotifVisitor()
 								LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
 								LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
 							WHERE
-								( visitors.remark IS NULL AND employee_syncs.department = 'Maintenance' ) 
+								( visitors.remark IS NULL AND employee_syncs.department = 'Maintenance Department' ) 
 								OR (
 								visitors.remark IS NULL 
-								AND employee_syncs.department = 'Production Engineering')");
+								AND employee_syncs.department = 'Production Engineering Department')");
 				}elseif ($name == 'Prawoto') {
 					$lists = DB::SELECT("SELECT
 								count( visitors.id ) AS notif 
@@ -786,10 +786,10 @@ public function getNotifVisitor()
 								LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
 								LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
 							WHERE
-								( visitors.remark IS NULL AND employee_syncs.department = 'Human Resources' ) 
+								( visitors.remark IS NULL AND employee_syncs.department = 'Human Resources Department' ) 
 		                        OR (
 		                        visitors.remark IS NULL 
-		                        AND employee_syncs.department = 'General Affairs')
+		                        AND employee_syncs.department = 'General Affairs Department')
 		                        OR (
 		                        visitors.remark IS NULL 
 		                        AND employee_syncs.name = 'Arief Soekamto')");
@@ -833,7 +833,7 @@ public function confirmation_manager()
 						IF
 						( position LIKE '%Foreman%', TRUE, IF
 						( position LIKE '%Leader%', TRUE, FALSE ) ))) position_bolean,
-						IF(department = 'Logistic',true,false) as is_logistic,
+						IF(department = 'Logistic Department',true,false) as is_logistic,
 						IF(position = 'Foreman',true,false) as is_foreman
 				FROM
 					`employee_syncs` 
@@ -901,7 +901,7 @@ public function fetchVisitorByManager()
 					LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
 					LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
 				WHERE
-					( visitors.remark IS NULL AND employee_syncs.department = 'Management Information System' )
+					( visitors.remark IS NULL AND employee_syncs.department = 'Management Information System Department' )
 					OR ( visitors.remark IS NULL AND employee_syncs.name = 'Budhi Apriyanto' ) 
 				ORDER BY
 					id DESC");
@@ -973,8 +973,8 @@ public function fetchVisitorByManager()
 					LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
 					LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
 				WHERE
-					( visitors.remark IS NULL AND employee_syncs.department = 'Human Resources' ) 
-					OR ( visitors.remark IS NULL AND employee_syncs.department = 'General Affairs' )
+					( visitors.remark IS NULL AND employee_syncs.department = 'Human Resources Department' ) 
+					OR ( visitors.remark IS NULL AND employee_syncs.department = 'General Affairs Department' )
 					OR ( visitors.remark IS NULL AND employee_syncs.name = 'Arief Soekamto' ) 
 				ORDER BY
 					id DESC");
@@ -998,8 +998,8 @@ public function fetchVisitorByManager()
 					LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
 					LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
 				WHERE
-					( visitors.remark IS NULL AND employee_syncs.department = 'Maintenance' ) 
-					OR ( visitors.remark IS NULL AND employee_syncs.department = 'Production Engineering' )
+					( visitors.remark IS NULL AND employee_syncs.department = 'Maintenance Department' ) 
+					OR ( visitors.remark IS NULL AND employee_syncs.department = 'Production Engineering Department' )
 				ORDER BY
 					id DESC");
 			}elseif ($name == 'Prawoto') {
@@ -1022,8 +1022,8 @@ public function fetchVisitorByManager()
 					LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
 					LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
 				WHERE
-					( visitors.remark IS NULL AND employee_syncs.department = 'Human Resources' ) 
-					OR ( visitors.remark IS NULL AND employee_syncs.department = 'General Affairs' )
+					( visitors.remark IS NULL AND employee_syncs.department = 'Human Resources Department' ) 
+					OR ( visitors.remark IS NULL AND employee_syncs.department = 'General Affairs Department' )
 					OR ( visitors.remark IS NULL AND employee_syncs.name = 'Arief Soekamto' )
 				ORDER BY
 					id DESC");
@@ -1047,8 +1047,8 @@ public function fetchVisitorByManager()
 					LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
 					LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
 				WHERE
-					( visitors.remark IS NULL AND employee_syncs.department = 'Procurement' ) 
-					OR ( visitors.remark IS NULL AND employee_syncs.department = 'Purchasing Control' )
+					( visitors.remark IS NULL AND employee_syncs.department = 'Procurement Department' ) 
+					OR ( visitors.remark IS NULL AND employee_syncs.department = 'Purchasing Control Department' )
 				ORDER BY
 					id DESC");
 			}else{
