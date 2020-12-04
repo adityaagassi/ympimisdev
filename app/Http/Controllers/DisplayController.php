@@ -41,7 +41,9 @@ class DisplayController extends Controller
 			weekly_calendars 
 			WHERE
 			week_date >= '2020-04-01' 
-			AND week_date <= '2020-11-12'");
+			AND week_date <= '".date('Y-m-d')."'
+			ORDER BY
+			week_date DESC");
 
 		$cost_centers = db::select("SELECT DISTINCT
 			cost_center_eff 
