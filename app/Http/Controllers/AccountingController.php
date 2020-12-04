@@ -773,7 +773,7 @@ class AccountingController extends Controller
         ->distinct();
 
         if ($request->get('department') == "General Affairs Department") {
-            $dept = "Human Resources";
+            $dept = "Human Resources Department";
             $budgets->where('department', '=', $dept);
         }
         else if($request->get('department') == "Purchasing Control Department") {
