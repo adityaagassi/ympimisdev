@@ -243,7 +243,13 @@
 						divMesin += '<div class="col-xs-4" style="padding:5px;padding-top:0px;">';
 						divMesin += '<table class="table table-bordered" style="margin-bottom:10px">';
 						divMesin += '<tr>';
-						divMesin += '<td colspan="3" style="border:1px solid white;color:white;padding:0;font-size:30px;font-weight:bold;background-color:black">'+value.mesin+'<br>';
+						if (value.status == 'IDLE') {
+							divMesin += '<td colspan="3" style="border:1px solid white;color:white;padding:0;font-size:30px;font-weight:bold;background-color:black">'+value.mesin+' (IDLE)<br>';
+						}else if(value.status == 'TROUBLE'){
+							divMesin += '<td colspan="3" style="border:1px solid white;color:white;padding:0;font-size:30px;font-weight:bold;background-color:black">'+value.mesin+' (TROUBLE)<br>';
+						}else{
+							divMesin += '<td colspan="3" style="border:1px solid white;color:white;padding:0;font-size:30px;font-weight:bold;background-color:black">'+value.mesin+'<br>';
+						}
 
 						divMesin += '<div class="col-md-12" style="width:100%">';
 						divMesin += '<div class="row">';
