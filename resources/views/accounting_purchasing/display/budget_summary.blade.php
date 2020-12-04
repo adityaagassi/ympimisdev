@@ -235,17 +235,17 @@
                 stack: 'all'
               },
               {
-                name: 'Unrelease PR',
+                name: 'Unrealized PR',
                 data: pr,
                 stack: 'all'
               },
               {
-                name: 'Unrelease Investment',
+                name: 'Unrealized Investment',
                 data: investment,
                 stack: 'all'
               },
               {
-                name: 'Unrelease PO',
+                name: 'Unrealized PO',
                 data: po,
                 stack: 'all'
               }
@@ -325,19 +325,19 @@
                 stack: 'all2'
               },
               {
-                name: 'Unrelease PR',
+                name: 'Unrealized PR',
                 data: pr_category,
                 color: '#ffeb3b',
                 stack: 'all2'
               },
               {
-                name: 'Unrelease Investment',
+                name: 'Unrealized Investment',
                 data: inv_category,
                 color: '#795548',
                 stack: 'all2'
               },
               {
-                name: 'Unrelease PO',
+                name: 'Unrealized PO',
                 data: po_category,
                 color: '#607d8b',
                 stack: 'all2'

@@ -112,7 +112,7 @@
         <div class="form-group row" align="left">
           <label class="col-sm-1">Kepada<span class="text-red">*</span></label>
           <div class="col-sm-5" align="left">
-            <input type="text" class="form-control" id="employee_id" name="employee_id" value="{{ $cpars->manager }}">            
+            <input type="text" class="form-control" id="employee_id" name="employee_id" value="{{ $cpars->employee_id }}" readonly>            
           </div>
           <label class="col-sm-1">Judul Komplain<span class="text-red">*</span></label>
           <div class="col-sm-5">
