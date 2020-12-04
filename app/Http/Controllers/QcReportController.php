@@ -19,7 +19,7 @@ use App\Department;
 use App\Employee;
 use App\EmployeeSync;
 use App\Material;
-use App\MaterialPlantDataList;
+// use App\MaterialPlantDataList;
 use App\Status;
 use App\WeeklyCalendar;
 use App\Destination;
@@ -394,32 +394,13 @@ class QcReportController extends Controller
         ->get();
 
         $productions = Department::select('departments.*')
-        ->join('divisions','departments.id_division','=','divisions.id')
-        ->where('id_division','=','5')
-        ->whereNotIn('departments.id',['10','11','14'])
         ->get();
-
-        $procurements = Department::select('departments.*')
-        ->where('id','=','7')
-        ->get();
-
-        $others = Department::select('departments.*')
-        ->join('divisions','departments.id_division','=','divisions.id')
-        ->where('id_division','<>','5')
-        ->whereNotIn('departments.id',['1','2','3','4','7'])
-        ->get();
-
         $cpars = QcCpar::find($id);
 
         $destinations = Destination::select('destinations.*')->get();
 
         $vendors = "select id, vendor, name from vendors where vendor != 'Y31504'";
         $vendor = DB::select($vendors);
-
-        $parts = QcCparItem::select('qc_cpar_items.*')
-        ->join('qc_cpars','qc_cpar_items.cpar_no','=','qc_cpars.cpar_no')
-        // ->where('qc_cpar_items.cpar_no','=',$cpars->cpar_no)
-        ->get();
 
         // $materials = MaterialPlantDataList::select('material_plant_data_lists.id','material_plant_data_lists.material_number','material_plant_data_lists.material_description')
         // ->orderBy('material_plant_data_lists.id','ASC')
@@ -433,11 +414,8 @@ class QcReportController extends Controller
             'cpars' => $cpars,
             'managers' => $managers,
             'productions'  => $productions,
-            'procurements' => $procurements,
-            'others' =>  $others,
             'destinations' => $destinations,
             'vendors' => $vendor,
-            'parts' => $parts,
             'materials' =>  $materials
         ))->with('page', 'CPAR');
     }
@@ -2240,7 +2218,7 @@ class QcReportController extends Controller
       public function getmaterialsbymaterialsnumber(Request $request)
       {
           $html = array();
-          $materials_number = MaterialPlantDataList::where('material_number',$request->materials_number)->get();
+          $materials_number = Material::where('material_number',$request->materials_number)->get();
           foreach ($materials_number as $material) {
               $html = array(
                 'material_description' => $material->material_description

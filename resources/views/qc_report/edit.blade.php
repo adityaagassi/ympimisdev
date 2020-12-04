@@ -94,12 +94,8 @@
        
        <a href="{{url('index/qc_report/print_cpar', $cpars['id'])}}" data-toggle="tooltip" class="btn btn-warning btn-sm pull-right" title="Lihat Report"  target="_blank">Preview Report</a>
 
-       <a data-toggle="modal" data-target="#statusmodal{{$cpars->id}}" class="btn btn-primary btn-sm pull-right" style="color:white;margin-right: 5px">Cek Status Verifikasi</a>
-
        @if($cpars->email_status == NULL && $cpars->posisi == "staff" && Auth::user()->username == $cpars->staff) <!-- Mas Said -->
            <a class="btn btn-sm btn-info pull-right" data-toggle="tooltip" title="Send Email Ke Chief" onclick="sendemail({{ $cpars->id }})" style="margin-right: 5px">Send Email Ke Chief</a>
-          
-          <!-- <a href="{{url('index/qc_report/sendemail/'.$cpars['id'].'/'.$cpars['posisi'])}}" class="btn btn-sm ">Email </a> -->
 
        @elseif($cpars->email_status == NULL && $cpars->posisi == "leader" && Auth::user()->username == $cpars->leader)
            <a class="btn btn-sm btn-info pull-right" data-toggle="tooltip" title="Send Email Ke Chief / Foreman" onclick="sendemail({{ $cpars->id }})" style="margin-right: 5px">Send Email Ke Chief / Foreman</a>
@@ -107,8 +103,6 @@
        @else
            <label class="label label-success pull-right" style="margin-right: 5px; margin-top: 8px">Email Sudah Terkirim</label>
        @endif
-
-       <!-- <a href="{{url('index/qc_report/statuscpar', $cpars['id'])}}" data-toggle="tooltip" class="btn btn-primary btn-sm pull-right" title="Status Verifikasi" style="margin-right: 5px">Cek Status Verifikasi</a> -->
       
     </div>  
 
@@ -118,21 +112,7 @@
         <div class="form-group row" align="left">
           <label class="col-sm-1">Kepada<span class="text-red">*</span></label>
           <div class="col-sm-5" align="left">
-            <select class="form-control select2" name="employee_id" style="width: 100%;" data-placeholder="Pilih Manager" required>
-              <option value=""></option>
-              @foreach($managers as $manager)
-              @if($manager->employee_id == $cpars->employee_id)
-              <option value="{{ $manager->employee_id }}" selected="">{{ $manager->name }} - {{ $manager->position }} {{ $manager->department }}</option>
-              @else
-              <option value="{{ $manager->employee_id }}">{{ $manager->name }} - {{ $manager->position }} {{ $manager->department }}</option>
-              @endif
-              @endforeach
-
-              @if($cpars->employee_id == "PI0109004")
-              <option value="PI0109004" selected="">Budhi Apriyanto - Manager production engineering</option>
-              @endif
-              
-            </select>
+            <input type="text" class="form-control" id="employee_id" name="employee_id" value="{{ $cpars->manager }}">            
           </div>
           <label class="col-sm-1">Judul Komplain<span class="text-red">*</span></label>
           <div class="col-sm-5">
@@ -166,8 +146,7 @@
           </div>
           <label class="col-sm-1">Departemen Penerima<span class="text-red">*</span></label>
           <div class="col-sm-5">
-            <select class="form-control select2" name="department_id" id="department_id" style="width: 100%;" data-placeholder="Pilih Departemen" onchange="selectdepartemen()" required>
-              <optgroup label="Production">
+            <select class="form-control select2" name="department_id" id="department_id" style="width: 100%;" data-placeholder="Pilih Departemen"required>
                 @foreach($productions as $production)
                 @if($production->id == $cpars->department_id)
                 <option value="{{ $production->id }}" selected>{{ $production->department_name }}</option>
@@ -175,25 +154,6 @@
                 <option value="{{ $production->id }}">{{ $production->department_name }}</option>
                 @endif
                 @endforeach
-              </optgroup>
-              <optgroup label="Procurement">
-                @foreach($procurements as $procurment)
-                @if($procurment->id == $cpars->department_id)
-                <option value="{{ $procurment->id }}" selected>{{ $procurment->department_name }}</option>
-                @else
-                <option value="{{ $procurment->id }}">{{ $procurment->department_name }}</option>
-                @endif
-                @endforeach
-              </optgroup>
-              <optgroup label="Other">
-                @foreach($others as $other)
-                @if($other->id == $cpars->department_id)
-                <option value="{{ $other->id }}" selected>{{ $other->department_name }}</option>
-                @else
-                <option value="{{ $other->id }}">{{ $other->department_name }}</option>
-                @endif
-                @endforeach
-              </optgroup>
             </select>
           </div>
         </div>
@@ -209,7 +169,7 @@
           </div>
           <label class="col-sm-1">Sumber Komplain<span class="text-red">*</span></label>
           <div class="col-sm-5">
-            <select class="form-control select2" id="sumber_komplain" name="sumber_komplain" style="width: 100%;" data-placeholder="Sumber Komplain" onchange="selectsumber()" required>
+            <select class="form-control select2" id="sumber_komplain" name="sumber_komplain" style="width: 100%;" data-placeholder="Sumber Komplain" required>
               @if($cpars->sumber_komplain == "Eksternal Complaint")
               <option value="Eksternal Complaint" selected>Eksternal Complaint</option>
               <option value="Audit QA">Audit QA</option>
@@ -373,26 +333,7 @@
                 </tr>
               </thead>
               <tbody>
-                <!-- @foreach($parts as $part)
-                <tr>
-                  <td>{{ $part->cpar_no }}</td>
-                  <td>{{ $part->part_item }}</td>
-                  <td>{{ $part->no_invoice }}</td>
-                  <td>{{ $part->lot_qty }}</td>
-                  <td>{{ $part->sample_qty }}</td>
-                  <td>{{ $part->detail_problem }}</td>
-                  <td>{{ $part->defect_qty }}</td>
-                  <td>{{ $part->defect_presentase }} %</td>
-                  <td style="width: 10%">
-                    <center>
-                      <a href="{{url('index/qc_report/update', $part['id'])}}" class="btn btn-warning btn-xs">Edit</a>
-                      <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/qc_report/delete") }}', '{{ $part['part_item'] }}', '{{ $part['id'] }}');">
-                        Delete
-                      </a>
-                    </center>
-                  </td>
-                </tr>
-                @endforeach -->
+                
               </tbody>
               <tfoot>
                 <tr>
@@ -593,129 +534,6 @@
             <label class="col-sm-2">Created At</label>
             <div class="col-sm-6" align="left" id="created_at_view"></div>
           </div>
-        </div>    
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="statusmodal{{$cpars->id}}" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Status CPAR Sekarang</h4>
-      </div>
-      <div class="modal-body">
-        <div class="box-body">
-          <table class="table table-hover">
-          <form role="form" method="post" action="{{url('index/qc_report/checked/'.$cpars->id)}}">
-            <tbody>
-              <input type="hidden" value="{{csrf_token()}}" name="_token" />  
-                <tr style="background-color: #4caf50;color: white">
-                    <td colspan="2" style="width: 33%"><b>Position</b></td>
-                    <td colspan="2" style="width: 33%"><b>Action</b></td>
-                    <td colspan="2" style="width: 33%"><b>Email</b></td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                      <b>
-                        @if($cpars->staff != NULL) 
-                            Staff
-                        @elseif($cpars->leader != NULL) 
-                            Staff / Leader
-                        @endif
-                      </b>
-                    </td>
-                    <td colspan="2"><b><span class="label label-success">Already Created</span></b></td>
-                    @if($cpars->email_status == NULL && $cpars->posisi == "staff" || $cpars->posisi == "leader")
-                      <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
-                    @else
-                      <td colspan="2"><b><span class="label label-success">Sent</span></b></td>
-                    @endif
-                </tr>
-                @if($cpars->chief != NULL || $cpars->foreman != NULL)
-                <tr>
-                    <td colspan="2"><b>
-                        @if($cpars->staff != NULL) 
-                            Chief
-                        @elseif($cpars->leader != NULL) 
-                            Chief / Foreman
-                        @endif</b></td>
-                    <td colspan="2"><b>
-                      @if($cpars->checked_chief == "Checked" || $cpars->checked_foreman == "Checked")
-                      <span class="label label-success">Checked</span>
-                      @else
-                      <span class="label label-danger">Not Checked</span>
-                      @endif</b>
-                    </td>
-                    @if(($cpars->email_status == "SentManager" || $cpars->email_status == "SentDGM" || $cpars->email_status == "SentGM" || $cpars->email_status == "SentBagian") &&  ($cpars->posisi == "manager" || $cpars->posisi == "dgm" || $cpars->posisi == "gm" || $cpars->posisi == "bagian"))
-                      <td colspan="2"><b><span class="label label-success">Sent</span></b></td>
-                    @else
-                      <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
-                    @endif
-                </tr>
-                @endif
-                <tr>
-                    <td colspan="2"><b>Manager</b></td>
-                    <td colspan="2"><b>
-                      @if($cpars->checked_manager == "Checked")
-                      <span class="label label-success">Checked</span>
-                      @else
-                      <span class="label label-danger">Not Checked</span>
-                      @endif</b>
-                    </td>
-                    @if(($cpars->email_status == "SentDGM" || $cpars->email_status == "SentGM" || $cpars->email_status == "SentBagian") && ($cpars->posisi == "dgm" || $cpars->posisi == "gm" || $cpars->posisi == "bagian"))
-                      <td colspan="2"><b><span class="label label-success">Sent</span></b></td>
-                    @else
-                      <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
-                    @endif
-                </tr>
-                <tr>
-                    <td colspan="2"><b>DGM</b></td>
-                    <td colspan="2"><b>
-                      @if($cpars->approved_dgm == "Checked")
-                      <span class="label label-success">Checked</span>
-                      @else
-                      <span class="label label-danger">Not Checked</span>
-                      @endif</b>
-                    </td>
-                    @if(($cpars->email_status == "SentGM" || $cpars->email_status == "SentBagian") && ($cpars->posisi == "gm" || $cpars->posisi == "bagian"))
-                      <td colspan="2"><b><span class="label label-success">Sent</span></b></td>
-                    @else
-                      <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
-                    @endif
-                </tr>
-                <tr>
-                    <td colspan="2"><b>GM</b></td>
-                    <td colspan="2"><b>
-                      @if($cpars->approved_gm == "Checked")
-                      <span class="label label-success">Checked</span>
-                      @else
-                      <span class="label label-danger">Not Checked</span>
-                      @endif</b>
-                    </td>
-                    @if($cpars->email_status == "SentBagian" && $cpars->posisi == "bagian")
-                      <td colspan="2"><b><span class="label label-success">Sent</span></b></td>
-                    @else
-                      <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
-                    @endif
-                </tr>
-                <tr>
-                    <td colspan="2"><b>Bagian</b></td>
-                    <td colspan="2"><b>
-                      @if($cpars->received_manager == "Received")
-                      <span class="label label-success">Received</span>
-                      @else
-                      <span class="label label-danger">Not Received</span>
-                      @endif</b>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
         </div>    
       </div>
       <div class="modal-footer">
@@ -1090,81 +908,6 @@
         i = "0" + i;
       }
       return i;
-    }
-
-    function selectdepartemen(){
-
-      $.ajax({
-           url: "{{ url('index/qc_report/get_fiscal_year') }}", // your php file
-           type : 'GET', // type of the HTTP request
-           success : function(data){
-              var obj = jQuery.parseJSON(data);
-              var lastthree = obj.substr(obj.length - 3);
-              // nomorcpar.value = "no/"+lastthree+"."+kategori+"/"+romawi+"/"+year;
-              $('#lastthree').val(lastthree);
-           }
-        });
-    }
-
-
-    function selectsumber() {
-
-        var sumber = document.getElementById("sumber_komplain");
-        var departemen = document.getElementById("department_id");
-        var nomorcpar = document.getElementById("cpar_no");
-        var kategori_cpar = document.getElementById("kategori");
-        var getdepartemen = departemen.options[departemen.selectedIndex].value;
-        var getsumber = sumber.options[sumber.selectedIndex].value;
-        var kategori;
-
-        var lastthree = $('#lastthree').val();
-
-        if (getsumber == "Eksternal Complaint"){
-          kategori = "E";
-        }
-        else if ((getdepartemen == 7 && getsumber == "Audit QA") || (getdepartemen == 7 && getsumber == "Production Finding")){
-          kategori = "S";
-        }
-        else if (getdepartemen != 7 && getsumber == "Production Finding" || getsumber == "Audit QA"){
-          kategori = "I";
-        }
-
-        if (kategori == "E") {
-          kategori_cpar.value = "Eksternal";
-          $("#customer").show();
-          $("#supplier").hide();
-        } else if (kategori == "S"){
-          kategori_cpar.value = "Supplier";
-          $("#supplier").show();
-          $("#customer").hide();
-        } else if (kategori == "I"){
-          kategori_cpar.value = "Internal";
-          $("#customer").hide();
-          $("#supplier").hide();
-        }
-
-        var bulan = new Date().getMonth()+1;
-        var romawi = romanize(bulan);
-        var year = new Date().getFullYear();
-
-        $.ajax({
-           url: "{{ url('index/qc_report/get_nomor_depan') }}?kategori=" + kategori_cpar.value, 
-           type : 'GET', 
-           success : function(data){
-              var obj = jQuery.parseJSON(data);
-              var nomordepan = obj;
-              // if (nomordepan == "") {
-              //   nomordepan = 1;
-              // }
-              var no = nomordepan.split("/");
-              var number = parseInt(no[0])
-              $('#nomordepan').val(number+1);
-              var nomordepan = $('#nomordepan').val();
-              var truenumber = addZero(nomordepan);
-              // var nomorsplit = nomor.split("/");
-              nomorcpar.value = truenumber+"/"+lastthree+"."+kategori+"/"+romawi+"/"+year;
-           }
-        });
     }
 
 
