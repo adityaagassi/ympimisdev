@@ -415,7 +415,13 @@
 					
 					<?php 
 						if ($po[0]->holding_tax != 0) {
-							$wh = ($total_service * $po[0]->holding_tax)/100;
+							if ($po[0]->supplier_code == "G918Q") {
+								$wh = ($total * $po[0]->holding_tax)/100;
+							}
+							else{
+								$wh = ($total_service * $po[0]->holding_tax)/100;						
+							}
+
 						}
 					?> 
 
@@ -485,16 +491,21 @@
 			<table style="width: 100%; font-family: TimesNewRoman; border-collapse: collapse;">
 				<thead>
 					<tr>
+						<td colspan="12" style="font-weight: bold;color: red;font-size: 12px">
+							*Pembuatan Dokumen (Surat Jalan dan Faktur Pajak) Sesuiakan Dengan Deskripsi PO
+						</td>
+					</tr>
+					<tr>
 						<td colspan="12" style="font-size: 12px;font-weight: bold">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
 					</tr>
 					<tr>
 						<td colspan="3" style="width: 40%">
 							@if($po[0]->buyer_id == "PI1908032")
 								<img width="100" src="{{ public_path() . '/files/ttd_pr_po/ttd_erlangga.png' }}" alt="" style="padding: 0">
-								<span style="position: absolute;left: 11px;width: 75px;font-size: 10px;font-weight: bold;top: 81px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->tgl_po)) ?></span>
+								<span style="position: absolute;left: 11px;width: 75px;font-size: 10px;font-weight: bold;top: 101px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->tgl_po)) ?></span>
 							@elseif($po[0]->buyer_id == "PI1810020")
 								<img width="75" src="{{ public_path() . '/files/ttd_pr_po/ttd_shega.png' }}" alt="" style="padding: 0">
-								<span style="position: absolute;left: 25px;width: 75px;font-size: 10px;font-weight: bold;top: 80px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->tgl_po)) ?></span>
+								<span style="position: absolute;left: 25px;width: 75px;font-size: 10px;font-weight: bold;top: 100px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->tgl_po)) ?></span>
 							@else
 								<?= $po[0]->buyer_name ?>
 							@endif
@@ -502,20 +513,20 @@
 						<td colspan="3" style="width: 30%">
 							@if($po[0]->approval_authorized2 == "Approved")
 								<img width="70" src="{{ public_path() . '/files/ttd_pr_po/ttd_pak_imron.jpg' }}" alt="" style="padding: 0">
-								<span style="position: absolute;left: 220px;width: 75px;font-size: 10px;font-weight: bold;top: 81px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->date_approval_authorized2)) ?></span>
+								<span style="position: absolute;left: 220px;width: 75px;font-size: 10px;font-weight: bold;top: 101px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->date_approval_authorized2)) ?></span>
 							@endif
 						</td>
 						<td colspan="3" style="width: 30%">
 							@if($po[0]->approval_authorized3 == "Approved")
 								<img width="90" src="{{ public_path() . '/files/ttd_pr_po/ttd_pak_budhi.jpg' }}" alt="" style="padding: 0">
-								<span style="position: absolute;left: 380px;width: 75px;font-size: 10px;font-weight: bold;top: 81px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->date_approval_authorized3)) ?></span>
+								<span style="position: absolute;left: 380px;width: 75px;font-size: 10px;font-weight: bold;top: 101px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->date_approval_authorized3)) ?></span>
 							@endif
 						</td>
 
 						<td colspan="3" style="width: 30%">
 							@if($po[0]->approval_authorized4 == "Approved")
 								<img width="90" src="{{ public_path() . '/files/ttd_pr_po/ttd_pak_hayakawa.png' }}" alt="" style="padding: 0">
-								<span style="position: absolute;left: 540px;width: 75px;font-size: 10px;font-weight: bold;top: 81px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->date_approval_authorized4)) ?></span>
+								<span style="position: absolute;left: 540px;width: 75px;font-size: 10px;font-weight: bold;top: 101px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->date_approval_authorized4)) ?></span>
 							@endif
 						</td>
 					</tr>
