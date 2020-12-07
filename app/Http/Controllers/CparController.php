@@ -869,7 +869,7 @@ class CparController extends Controller
 
           // $getchief = "SELECT employee_id, email FROM `employee_syncs` join users on employee_syncs.employee_id = users.username where section = 'QA Process Control' and position = 'Chief'";
 
-          $getchief = "SELECT employee_id, email FROM `employee_syncs` join users on employee_syncs.employee_id = users.username where employee_id='PI1108002'";
+          $getchief = "SELECT employee_id, email FROM `employee_syncs` join users on employee_syncs.employee_id = users.username where employee_id='PI1108002' or employee_id = 'PI9707001'";
 
           $chief = DB::select($getchief);
           
@@ -882,7 +882,7 @@ class CparController extends Controller
           $isimail = "select * FROM cpar_departments where cpar_departments.id = ".$cpar->id;
           $cpar_dept = db::select($isimail);
 
-          Mail::to($cfh)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($cpar_dept, 'cpar_dept'));
+          Mail::to($cfh)->cc('ratri.sulistyorini@music.yamaha.com')->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($cpar_dept, 'cpar_dept'));
           
     }
 

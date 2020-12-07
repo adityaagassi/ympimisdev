@@ -47,12 +47,12 @@ text-align: center
     <table style="width: 100%; border-collapse: collapse; text-align: left;" >
       <thead>
        <tr>
-        <td colspan="6" style="font-weight: bold;font-size: 13px; width: 50%">
+        <td colspan="6" style="font-weight: bold;font-size: 14px; width: 50%">
           <b>
-            PT.YAMAHA MUSICAL PRODUCTS INDONESIA
+            PT. YAMAHA MUSICAL PRODUCTS INDONESIA
           </b>
         </td>
-        <td colspan="6" style="font-size: 12px; width: 50%;text-align: right;">
+        <td colspan="6" style="font-size: 14px; width: 50%;text-align: right;">
           Daftar Distribusi Barang Dari Warehouse
         </td>
       </tr>
@@ -64,7 +64,7 @@ text-align: center
   <table style="width: 100%;border-collapse: collapse;">
     <thead>
       <tr>
-        <th colspan="2" style="border: none;padding: 0"><h1><center>Penerimaan Barang Warehouse</center></h1></th>
+        <th colspan="2" style="border: none;padding: 0"><h1><center>Penerimaan Barang Equipment Warehouse</center></h1></th>
       </tr>
     </thead>
   </table>
@@ -72,24 +72,24 @@ text-align: center
   <table border="1" width="99%" style="width: 100%; border-collapse: collapse;" id="isi" >
     <thead>
       <tr id="cargo">
-        <th style="border: 1px solid;padding: 5px;width: 5%"><center>No</center></th>
-        <th style="border: 1px solid;padding: 5px;width: 15%"><center>No PO</center></th>
-        <th style="border: 1px solid;padding: 5px;width: 15%"><center>Description</center></th>
-        <th style="border: 1px solid;padding: 5px;width: 5%"><center>Qty</center></th>
-        <th style="border: 1px solid;padding: 5px;width: 10%"><center>Tanggal Terima</center></th>   
-        <th style="border: 1px solid;padding: 5px;width: 5%"><center>TTD</center></th>
+        <th style="border: 1px solid;font-size:16px;padding: 5px;width: 5%"><center>No</center></th>
+        <th style="border: 1px solid;font-size:16px;padding: 5px;width: 15%"><center>Nomor PO</center></th>
+        <th style="border: 1px solid;font-size:16px;padding: 5px;width: 20%"><center>Deskripsi Item</center></th>
+        <th style="border: 1px solid;font-size:16px;padding: 5px;width: 5%"><center>Qty</center></th>
+        <th style="border: 1px solid;font-size:16px;padding: 5px;width: 10%"><center>Tanggal Terima</center></th>   
+        <th style="border: 1px solid;font-size:16px;padding: 5px;width: 5%"><center>TTD</center></th>
       </tr>
     </thead>
     <tbody>
       <?php $count = 1; ?>
       @foreach($receives as $receive)
       <tr>
-        <td style="border-right: 1px solid;padding: 5px;border-left: 1px solid" align="center">{{ $count }}</td>
-        <td style="border-right: 1px solid;padding: 5px;border-left: 1px solid;text-align: left">{{$receive->no_po }}<br>{{$receive->supplier_name }}</td>
-        <td style="border-right: 1px solid;padding: 5px;border-left: 1px solid;text-align: left;" align="left">{{$receive->nama_item}}</td>
-        <td style="border-right: 1px solid;padding: 5px;border-left: 1px solid;" align="left">{{$receive->qty_receive}}</td>
-        <td style="border-right: 1px solid;padding: 5px;border-left: 1px solid;" align="left">{{date('d-M-Y', strtotime($receive->date_receive))}} </td>
-        <td style="border-right: 1px solid;padding: 5px;border-left: 1px solid;text-align: left" align="left">&nbsp;</td>
+        <td style="border-right: 1px solid;padding: 5px;font-size:14px;border-left: 1px solid" align="center">{{ $count }}</td>
+        <td style="border-right: 1px solid;padding: 5px;font-size:14px;border-left: 1px solid;text-align: left">{{$receive->no_po }}<br>{{$receive->supplier_name }}</td>
+        <td style="border-right: 1px solid;padding: 5px;font-size:14px;border-left: 1px solid;text-align: left;" align="left">{{$receive->nama_item}}</td>
+        <td style="border-right: 1px solid;padding: 5px;font-size:14px;border-left: 1px solid;" align="left">{{$receive->qty_receive}}</td>
+        <td style="border-right: 1px solid;padding: 5px;font-size:14px;border-left: 1px solid;" align="left">{{date('d-M-Y', strtotime($receive->date_receive))}} </td>
+        <td style="border-right: 1px solid;padding: 5px;font-size:14px;border-left: 1px solid;text-align: left" align="left">&nbsp;</td>
       </tr>
       <?php $count++ ?>
       @endforeach
@@ -98,8 +98,8 @@ text-align: center
   <br>
   <table width="100%"> 
     <tr>
-      <td style="border: none;font-size: 12px; font-weight: bold; text-align: left;">Warehouse</td>
-      <td style="border: none;font-size: 12px; font-weight: bold; text-align: center;">Penerima</td>
+      <td style="border: none;font-size: 14px; font-weight: bold; text-align: left;">Warehouse</td>
+      <td style="border: none;font-size: 14px; font-weight: bold; text-align: center;">Penerima</td>
     </tr>
   </table>
 </main>

@@ -93,11 +93,11 @@
 			            ?>
 			             <?php
 			                if($datas->goods_price != "0" || $datas->goods_price != 0){ ?>
-								<td style="border:1px solid black; text-align: center;"><?= $datas->goods_price ?></td>
+								<td style="border:1px solid black; text-align: center;"><?= number_format($datas->goods_price,2,",",".") ?></td>
 			                <?php } else { ?>
-								<td style="border:1px solid black; text-align: center;"><?= $datas->service_price ?></td>
+								<td style="border:1px solid black; text-align: center;"><?= number_format($datas->service_price,2,",",".") ?></td>
 			                <?php } ?>
-						<td style="border:1px solid black; text-align: center;"><?= $amount ?></td>
+						<td style="border:1px solid black; text-align: center;"><?= number_format($amount,2,",",".") ?></td>
 					</tr>
 					@endforeach
 				</tbody>
@@ -192,11 +192,11 @@
 			            ?>
 			             <?php
 			                if($datas->goods_price != "0" || $datas->goods_price != 0){ ?>
-								<td style="border:1px solid black; text-align: center;"><?= $datas->goods_price ?></td>
+								<td style="border:1px solid black; text-align: center;"><?= number_format($datas->goods_price,2,",",".") ?></td>
 			                <?php } else { ?>
-								<td style="border:1px solid black; text-align: center;"><?= $datas->service_price ?></td>
+								<td style="border:1px solid black; text-align: center;"><?= number_format($datas->service_price,2,",",".") ?></td>
 			                <?php } ?>
-						<td style="border:1px solid black; text-align: center;"><?= $amount ?></td>
+						<td style="border:1px solid black; text-align: center;"><?= number_format($amount,2,",",".") ?></td>
 					</tr>
 					@endforeach
 				</tbody>
@@ -294,11 +294,11 @@
 			            ?>
 			             <?php
 			                if($datas->goods_price != "0" || $datas->goods_price != 0){ ?>
-								<td style="border:1px solid black; text-align: center;"><?= $datas->goods_price ?></td>
+								<td style="border:1px solid black; text-align: center;"><?= number_format($datas->goods_price,2,",",".") ?></td>
 			                <?php } else { ?>
-								<td style="border:1px solid black; text-align: center;"><?= $datas->service_price ?></td>
+								<td style="border:1px solid black; text-align: center;"><?= number_format($datas->service_price,2,",",".") ?></td>
 			                <?php } ?>
-						<td style="border:1px solid black; text-align: center;"><?= $amount ?></td>
+						<td style="border:1px solid black; text-align: center;"><?= number_format($amount,2,",",".") ?></td>
 					</tr>
 					@endforeach
 				</tbody>
