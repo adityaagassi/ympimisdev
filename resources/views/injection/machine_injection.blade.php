@@ -1155,8 +1155,8 @@
 
 	function saveTag() {
 		$('#loading').show();
-		if ($('#tag_product').val() == '') {
-			openErrorGritter('Error!','Scan Tag Produk');
+		if ($('#tag_product').val() == '' || $('#total_shot').val() == '0' || $('#total_shot').val() == '') {
+			openErrorGritter('Error!','Data Harus Lengkap!');
 			$('#loading').hide();
 			$('#tag_product').focus();
 		}else{
@@ -1197,7 +1197,7 @@
 					openSuccessGritter('Success!', result.message);
 					cancelTag();
 					clearInterval(intervalUpdate);
-					$('#total_shot').val("");
+					$('#total_shot').val("0");
 					for (var i = 1; i <= jumlah_ng; i++ ) {
 						$('#count'+i).html('0');
 					}
