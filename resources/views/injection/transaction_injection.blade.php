@@ -87,6 +87,8 @@ table.table-bordered > tfoot > tr > th{
 						<table id="tableHistory" class="table table-bordered table-striped table-hover" style="width: 100%">
 							<thead style="background-color: rgba(126,86,134,.7);">
 								<tr>
+									<th style="width: 1%">Material</th>
+									<th style="width: 1%">Desc</th>
 									<th style="width: 1%">Part Name</th>
 									<th style="width: 2%">Part Code - Color</th>
 									<th style="width: 1%">Qty</th>
@@ -569,6 +571,8 @@ table.table-bordered > tfoot > tr > th{
 					// console.table(result.data);
 					$.each(result.data, function(key, value) {
 						tableData += '<tr>';
+						tableData += '<td>'+ value.material_number +'</td>';
+						tableData += '<td>'+ value.material_description +'</td>';
 						tableData += '<td>'+ value.part_name +'</td>';
 						tableData += '<td>'+ value.part_code +' - '+ value.color +'</td>';
 						tableData += '<td>'+ value.quantity +'</td>';
@@ -593,19 +597,57 @@ table.table-bordered > tfoot > tr > th{
 				});
 				
 				var table = $('#tableHistory').DataTable({
-					"sDom": '<"top"i>rt<"bottom"flp><"clear">',
-					'paging'      	: true,
-					'lengthChange'	: false,
+					'dom': 'Bfrtip',
+					'lengthMenu': [
+					[ 10, 25, 50, -1 ],
+					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
+						{
+							extend: 'pageLength',
+							className: 'btn btn-default',
+						},
+						{
+							extend: 'copy',
+							className: 'btn btn-success',
+							text: '<i class="fa fa-copy"></i> Copy',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'excel',
+							className: 'btn btn-info',
+							text: '<i class="fa fa-file-excel-o"></i> Excel',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'print',
+							className: 'btn btn-warning',
+							text: '<i class="fa fa-print"></i> Print',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						}
+						]
+					},
+					'paging': true,
+					'lengthChange': true,
+					'pageLength': 10,
 					'searching'   	: true,
-					'ordering'		: false,
+					'ordering'		: true,
+					'order': [],
 					'info'       	: true,
 					'autoWidth'		: false,
 					"sPaginationType": "full_numbers",
 					"bJQueryUI": true,
 					"bAutoWidth": false,
-					"infoCallback": function( settings, start, end, max, total, pre ) {
-						return "<b>Total "+ total +" pc(s)</b>";
-					}
+					// "infoCallback": function( settings, start, end, max, total, pre ) {
+					// 	return "<b>Total "+ total +" pc(s)</b>";
+					// }
 				});
 			}
 			else{
@@ -640,6 +682,9 @@ table.table-bordered > tfoot > tr > th{
 						table += '<tr>';
 						table += '<td style="background-color: rgb(126,86,134); color: #FFD700;font-weight:bold;font-size:17px">Material</td>';
 						table += '<td style="font-size:17px">'+value.material_number+'</td>';
+						table += '</tr>';
+						table += '<td style="background-color: rgb(126,86,134); color: #FFD700;font-weight:bold;font-size:17px">Desc</td>';
+						table += '<td style="font-size:17px">'+value.material_description+'</td>';
 						table += '</tr>';
 						table += '<tr>';
 						table += '<td style="background-color: rgb(126,86,134); color: #FFD700;font-weight:bold;font-size:17px">Part Name</td>';

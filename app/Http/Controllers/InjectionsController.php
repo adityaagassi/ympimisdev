@@ -166,25 +166,6 @@ class InjectionsController extends Controller
     public function scanNewTagInjeksi(Request $request){
         $tag = InjectionTag::where('tag', '=', $request->get('tag'))->where('operator_id', '=', null)->first();
 
-        // $product = DB::SELECT("SELECT id,part_name,CONCAT(SUBSTRING_INDEX(part_name, ' ', 1),'-',UPPER(part_code),'-',UPPER(color),'-',UPPER(gmc)) as product FROM `injection_parts` where part_code = '".$request->get('part_type')."'");
-
-        // if ($request->get('part_type') == 'HJ') {
-        //     $type = 'head';
-        // }else if($request->get('part_type') == 'FJ'){
-        //     $type = 'foot';
-        // }else if($request->get('part_type') == 'MJG' || $request->get('part_type') == 'MJB'){
-        //     $type = 'middle';
-        // }else if($request->get('part_type') == 'BJ'){
-        //     $type = 'block';
-        // }
-
-        // $cavity = DB::SELECT("SELECT
-        //         * 
-        //     FROM
-        //         push_block_masters 
-        //     WHERE
-        //         type = '".$type."'");
-
         if (count($tag) > 0) {
             $response = array(
                 'status' => true,
@@ -255,11 +236,6 @@ class InjectionsController extends Controller
     {
         try {
             $product = DB::SELECT("SELECT id,part_name,CONCAT(SUBSTRING_INDEX(part_name, ' ', 1),'-',UPPER(part_code),'-',UPPER(color),'-',UPPER(gmc)) as product FROM `injection_parts` where remark = 'injection' and color = '".$request->get('color')."' and part_code = '".$request->get('part')."' and deleted_at is null ORDER BY part_name desc");
-
-            // $cavity = DB::SELECT("SELECT
-            //         * 
-            //     FROM
-            //         push_block_masters");
 
             $response = array(
                 'status' => true,
@@ -5100,6 +5076,7 @@ class InjectionsController extends Controller
                     injection_transactions.tag,
                     injection_transactions.material_number,
                     SUBSTRING_INDEX( injection_parts.part_name, ' ', 1 ) AS part_name,
+                    injection_parts.part_name as material_description,
                     injection_parts.part_code,
                     injection_parts.part_type,
                     injection_parts.color,
@@ -5136,6 +5113,7 @@ class InjectionsController extends Controller
                     injection_transactions.tag,
                     injection_transactions.material_number,
                     SUBSTRING_INDEX( injection_parts.part_name, ' ', 1 ) AS part_name,
+                    injection_parts.part_name as material_description,
                     injection_parts.part_code,
                     injection_parts.part_type,
                     injection_parts.color,
@@ -5189,6 +5167,7 @@ class InjectionsController extends Controller
                 injection_transactions.id,
                 injection_transactions.tag,
                 injection_transactions.material_number,
+                injection_parts.part_name as material_description,
                 SUBSTRING_INDEX( injection_parts.part_name, ' ', 1 ) AS part_name,
                 injection_parts.part_code,
                 injection_parts.part_type,
@@ -6058,5 +6037,16 @@ class InjectionsController extends Controller
             );
             return Response::json($response);
         }
+    }
+
+    public function indexInjectionTag()
+    {
+        $title = 'Injection Tag';
+        $title_jp = '???';
+        return view('injection.tag',array(
+            'title' => $title,
+            'title_jp' => $title_jp,
+            'materials' => $materials,
+        ))->with('page', 'Input Daily Stock Recorder')->with('jpn', '???');
     }
 }
