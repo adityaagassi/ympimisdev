@@ -485,14 +485,14 @@
 	<footer>
 
 		@if($po[0]->approval_authorized4 == "Approved")
-		<img width="100" src="{{ public_path() . '/files/ttd_pr_po/stempel_ympi.png' }}" alt="" style="padding: 0;position: absolute;top: 830px;left: 600px;z-index: 200">
+		<img width="100" src="{{ public_path() . '/files/ttd_pr_po/stempel_ympi.png' }}" alt="" style="padding: 0;position: absolute;top: 845px;left: 600px;z-index: 200">
 		@endif
 		<div class="footer">
 			<table style="width: 100%; font-family: TimesNewRoman; border-collapse: collapse;">
 				<thead>
 					<tr>
 						<td colspan="12" style="font-weight: bold;color: red;font-size: 12px">
-							*Pembuatan Dokumen (Surat Jalan dan Faktur Pajak) Sesuiakan Dengan Deskripsi PO
+							*Deskripsi dan UM Dokument (Surat Jalan dan Faktur Pajak) Sesuaikan Dengan PO - For Local Supplier
 						</td>
 					</tr>
 					<tr>

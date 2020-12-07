@@ -211,8 +211,12 @@ td {
 
   function fillTable(tanggal) {
 
+
+    var category = "{{$_GET['category']}}";
+
     var data = {
-        tanggal:tanggal
+      category:category,
+      tanggal:tanggal
     }
 
     $.get('{{ url("index/audit_data/fetch") }}', data, function(result, status, xhr) {

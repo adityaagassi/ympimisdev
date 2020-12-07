@@ -306,8 +306,8 @@
                                 <i class="fa fa-caret-right"></i> Audit Kanban (かんばん監査)
                             </a>
                             <br>
-                            <a href="{{ url("/index/audit_internal_mis?category=audit_mis") }}">
-                                <i class="fa fa-caret-right"></i> Audit MIS ()
+                            <a href="{{ url("/index/audit_internal_mis?category=Audit_MIS") }}">
+                                <i class="fa fa-caret-right"></i> Audit MIS (MIS課内部監査)
                             </a>
                             <br>
                             <a href="{{ url("/index/form_experience") }}">

@@ -56,8 +56,7 @@ td {
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content-header">
   <h1>
-    Checklist {{ $page }}
-    <b>Kanban</b>
+    Checklist <b>{{$_GET['category']}}</b>
   </h1>
   <ol class="breadcrumb">
     <?php 

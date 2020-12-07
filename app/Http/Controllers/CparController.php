@@ -2693,11 +2693,13 @@ class CparController extends Controller
 
       $location = StandarisasiAuditChecklist::orderBy('lokasi', 'asc')
       ->select('lokasi')
+      ->whereIn('kategori',array('ISO 45001','ISO 14001','ISO 9001'))
       ->distinct()
       ->get();
 
       $category = StandarisasiAuditChecklist::orderBy('kategori', 'asc')
       ->select('kategori')
+      ->whereIn('kategori',array('ISO 45001','ISO 14001','ISO 9001'))
       ->distinct()
       ->get();
 
@@ -3011,6 +3013,7 @@ class CparController extends Controller
     public function fetch_audit_all(Request $request)
     {
       $tanggal = $request->get("tanggal");
+      $category = $request->get('category');
 
       if ($tanggal == null) {
         $tgl = '';
@@ -3019,7 +3022,7 @@ class CparController extends Controller
         $tgl = "and auditor_date = '".$tanggal."'"; 
       }
 
-      $query = "SELECT * FROM audit_alls where deleted_at is null ".$tgl." order by id desc";
+      $query = "SELECT * FROM audit_alls where deleted_at is null AND auditor_jenis = '".$category."' ".$tgl." order by id desc";
       $detail = db::select($query);
 
       $response = array(
@@ -3074,13 +3077,13 @@ class CparController extends Controller
       $location = StandarisasiAuditChecklist::orderBy('lokasi', 'asc')
       ->select('lokasi')
       ->distinct()
-      ->where('kategori','=','audit_mis')
+      ->where('kategori','=','Audit_MIS')
       ->get();
 
       $category = StandarisasiAuditChecklist::orderBy('kategori', 'asc')
       ->select('kategori')
       ->distinct()
-      ->where('kategori','=','audit_mis')
+      ->where('kategori','=','Audit_MIS')
       ->get();
 
       $auditee = db::select("select DISTINCT employee_id, name, section, position from employee_syncs
