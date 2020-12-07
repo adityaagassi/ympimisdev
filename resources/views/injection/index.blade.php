@@ -32,13 +32,15 @@
 
 			<!-- <a href="{{ url("index/input_stock") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Input Daily Stock (Temp)</a> -->
 
-			<a href="{{ url("index/injection_machine") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Injection Machine</a>
+			<a href="{{ url('index/injection_machine') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Injection Machine</a>
 
-			<a href="{{ url("index/injection/dryer_resin") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Dryer - Resin</a>
+			<a href="{{ url('index/injection/dryer_resin') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Dryer - Resin</a>
 
-			<a href="{{ url("index/injection/transaction","in") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Transaction IN</a>
+			<a href="{{ url('index/injection/transaction','in') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Transaction IN</a>
 
-			<a href="{{ url("index/injection/transaction","out") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Transaction OUT</a>
+			<a href="{{ url('index/injection/transaction','out') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Transaction OUT</a>
+
+			<a href="{{ url('index/injection/tag') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Injection Tag</a>
 
 			<span style="font-size: 3vw; color: green;"><i class="fa fa-angle-double-down"></i> Molding <i class="fa fa-angle-double-down"></i></span>
 
@@ -56,8 +58,13 @@
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: red;">
 			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> Display <i class="fa fa-angle-double-down"></i></span>
+
+			<a href='{{ url("index/injection_schedule") }}' class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Injection Schedule</a>
+
 			<a href="{{ url("/index/injection/machine_monitoring") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Machine Monitoring</a>
+
 			<a href="{{ url("/index/injection/stock_monitoring") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Stock Monitoring</a>
+
 			<a href="{{ url("index/molding_monitoring") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Maintenance Molding Monitoring</a>
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
