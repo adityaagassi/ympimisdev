@@ -1099,7 +1099,7 @@ class FloController extends Controller
 			->leftJoin('material_volumes', 'material_volumes.material_number', '=', 'shipment_schedules.material_number')
 			->leftJoin('materials', 'materials.material_number', '=', 'flo_details.material_number')
 			->where('flo_details.id', '=', $request->get('id'))
-			->select('material_volumes.lot_completion', 'materials.material_number', 'materials.issue_storage_location')
+			->select('material_volumes.lot_completion', 'materials.material_number', 'materials.issue_storage_location', 'materials.model', 'materials.category', 'materials.origin_group_code')
 			->first();
 
 			$flo->actual = $flo->actual-$actual->lot_completion;
@@ -1110,6 +1110,25 @@ class FloController extends Controller
 			$inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $actual->material_number, 'storage_location' => $actual->issue_storage_location]);
 			$inventory->quantity = ($inventory->quantity-$actual->lot_completion);
 			$inventory->save();
+
+				//DIGITALISASI INJEKSI
+			if($actual->origin_group_code == '072' && $actual->category == 'FG'){
+				try{
+					$update_stock = db::select("UPDATE injection_inventories AS ii
+						LEFT JOIN injection_part_details AS ipd ON ipd.gmc = ii.material_number 
+						SET ii.quantity = ii.quantity + ".$actual->lot_completion." 
+						WHERE
+						ipd.model = '".$actual->model."' 
+						AND ii.location = '".$actual->issue_storage_location."'");
+				}
+				catch (QueryException $e){
+					$error_log = new ErrorLog([
+						'error_message' => $e->getMessage(),
+						'created_by' => $id
+					]);
+					$error_log->save();
+				}
+			}
 
 			$response = array(
 				'status' => true,

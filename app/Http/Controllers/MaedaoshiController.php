@@ -640,6 +640,25 @@ class MaedaoshiController extends Controller
 				$inventory->quantity = ($inventory->quantity+$actual);
 				$inventory->save();
 
+					//DIGITALISASI INJEKSI
+				if($material->origin_group_code == '072' && $material->category == 'FG'){
+					try{
+						$update_stock = db::select("UPDATE injection_inventories AS ii
+							LEFT JOIN injection_part_details AS ipd ON ipd.gmc = ii.material_number 
+							SET ii.quantity = ii.quantity + ".$material_volume->lot_completion." 
+							WHERE
+							ipd.model = '".$material->model."' 
+							AND ii.location = '".$material->issue_storage_location."'");
+					}
+					catch (QueryException $e){
+						$error_log = new ErrorLog([
+							'error_message' => $e->getMessage(),
+							'created_by' => $id
+						]);
+						$error_log->save();
+					}
+				}	
+
 				$flo = Flo::where('flo_number', '=', $request->get('maedaoshi'))->first();
 				$flo->actual = $flo->actual+$actual;
 				$flo->save();
@@ -739,6 +758,25 @@ class MaedaoshiController extends Controller
 				$inventory->quantity = ($inventory->quantity+$actual);
 				$inventory->save();
 
+					//DIGITALISASI INJEKSI
+				if($material->origin_group_code == '072' && $material->category == 'FG'){
+					try{
+						$update_stock = db::select("UPDATE injection_inventories AS ii
+							LEFT JOIN injection_part_details AS ipd ON ipd.gmc = ii.material_number 
+							SET ii.quantity = ii.quantity + ".$material_volume->lot_completion." 
+							WHERE
+							ipd.model = '".$material->model."' 
+							AND ii.location = '".$material->issue_storage_location."'");
+					}
+					catch (QueryException $e){
+						$error_log = new ErrorLog([
+							'error_message' => $e->getMessage(),
+							'created_by' => $id
+						]);
+						$error_log->save();
+					}
+				}	
+
 				$flo_log = FloLog::updateOrCreate(
 					['flo_number' => 'Maedaoshi'.$request->get('material'), 'status_code' => 'M'],
 					['flo_number' => 'Maedaoshi'.$request->get('material'), 'created_by' => $id, 'status_code' => 'M', 'updated_at' => Carbon::now()]
@@ -804,7 +842,7 @@ class MaedaoshiController extends Controller
 					if($inventory_stamp != null){
 						$inventory_stamp->forceDelete();
 					}
-				}				
+				}	
 
 				$response = array(
 					'status' => true,
