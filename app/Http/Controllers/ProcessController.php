@@ -589,15 +589,15 @@ class ProcessController extends Controller
 		try{
 			if ($request->get('originGroupCode') =='041') {
 				$plc = new ActMLEasyIf(0);
-				$datas = $plc->read_data('D0', 5);
+				$datas = $plc->read_data('D50', 5);
 				$plc_counter = PlcCounter::where('origin_group_code', '=', $request->get('originGroupCode'))->first();	
 			}else if ($request->get('originGroupCode') =='042') {
 				$plc = new ActMLEasyIf(0);
-				$datas = $plc->read_data('D20', 5);
+				$datas = $plc->read_data('D70', 5);
 				$plc_counter = PlcCounter::where('origin_group_code', '=', $request->get('originGroupCode'))->first();	
 			}else if ($request->get('originGroupCode') =='043') {
 				$plc = new ActMLEasyIf(0);
-				$datas = $plc->read_data('D10', 15);
+				$datas = $plc->read_data('D60', 15);
 				$plc_counter = PlcCounter::where('origin_group_code', '=', $request->get('originGroupCode'))->first();	
 			}
 			$data = $datas[0];
