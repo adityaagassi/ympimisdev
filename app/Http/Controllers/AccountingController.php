@@ -972,25 +972,6 @@ class AccountingController extends Controller
     public function create_purchase_requisition(Request $request)
     {
 
-        // $MAC = exec('getmac'); 
-  
-        // Storing 'getmac' value in $MAC 
-        // $MAC = strtok($MAC, ' ');
-
-        // var_dump($MAC);die();
-
-        // $_IP_ADDRESS = $_SERVER['REMOTE_ADDR'];
-
-        // $_PERINTAH = "arp -a $_IP_ADDRESS";
-        // ob_start();
-        // system($_PERINTAH);
-        // $_HASIL = ob_get_contents();
-        // ob_clean();
-        // $_PECAH = strstr($_HASIL, $_IP_ADDRESS);
-        // $_PECAH_STRING = explode($_IP_ADDRESS, str_replace(" ", "", $_PECAH));
-        // $_HASIL = substr($_PECAH_STRING[1], 0, 17);   
-
-        // var_dump($_HASIL);die();
 
         $id = Auth::id();
 
@@ -3623,17 +3604,28 @@ class AccountingController extends Controller
     {
         $approve = $request->get('approve');
 
+        // $_IP_ADDRESS = $_SERVER['REMOTE_ADDR'];
+
+        // $_PERINTAH = "arp -a $_IP_ADDRESS";
+        // ob_start();
+        // system($_PERINTAH);
+        // $_HASIL = ob_get_contents();
+        // ob_clean();
+        // $_PECAH = strstr($_HASIL, $_IP_ADDRESS);
+        // $_PECAH_STRING = explode($_IP_ADDRESS, str_replace(" ", "", $_PECAH));
+        // $_HASIL = substr($_PECAH_STRING[1], 0, 17);   
+
         if ($approve == "1") {
 
             $po = AccPurchaseOrder::find($id);
-            $ip = $_SERVER['REMOTE_ADDR'];
+            
 
             if ($po->posisi == "manager_pch")
             {
                 $po->posisi = "dgm_pch";
                 $po->approval_authorized2 = "Approved";
                 $po->date_approval_authorized2 = date('Y-m-d H:i:s');
-                $po->autentikasi_2 = $ip;
+                // $po->autentikasi_2 = $_HASIL;
 
                 $mailto = "select distinct email from acc_purchase_orders join users on acc_purchase_orders.authorized3 = users.username where acc_purchase_orders.id = '" . $id . "'";
                 $mails = DB::select($mailto);
@@ -3648,7 +3640,7 @@ class AccountingController extends Controller
                 $po->posisi = "gm_pch";
                 $po->approval_authorized3 = "Approved";
                 $po->date_approval_authorized3 = date('Y-m-d H:i:s');
-                $po->autentikasi_3 = $ip;
+                // $po->autentikasi_3 = $_HASIL;
 
                 $mailto = "select distinct email from acc_purchase_orders join users on acc_purchase_orders.authorized4 = users.username where acc_purchase_orders.id = '" . $id . "'";
                 $mails = DB::select($mailto);
@@ -3663,7 +3655,7 @@ class AccountingController extends Controller
                 $po->posisi = 'pch';
                 $po->approval_authorized4 = "Approved";
                 $po->date_approval_authorized4 = date('Y-m-d H:i:s');
-                $po->autentikasi_4 = $ip;
+                // $po->autentikasi_4 = $_HASIL;
                 $po->status = "not_sap";
 
                     //kirim email Staff PCH sebagai pemberitahuan
