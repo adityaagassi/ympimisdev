@@ -56,12 +56,19 @@ class ApdCheckController extends Controller
         $foreman = $activityList->foreman_dept;
         $frequency = $activityList->frequency;
         // var_dump($productionAudit);
-        $querySubSection = "select sub_section_name,section_name from sub_sections join sections on sections.id =  sub_sections.id_section join departments on sections.id_department = departments.id where departments.department_name = '".$departments."'";
+        $querySubSection = "SELECT
+            employee_syncs.group AS sub_section_name 
+          FROM
+            employee_syncs 
+          WHERE
+          employee_syncs.group is not null
+          AND
+            department LIKE '%".$departments."%'";
         $subsection = DB::select($querySubSection);
         $subsection2 = DB::select($querySubSection);
         $subsection3 = DB::select($querySubSection);
 
-        $querypic = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department = '".$departments."'";
+        $querypic = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department like '%".$departments."%'";
         $pic = DB::select($querypic);
         $pic2 = DB::select($querypic);
 
@@ -99,12 +106,19 @@ class ApdCheckController extends Controller
         $emp_id = Auth::user()->username;
         $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
 
-        $querySubSection = "select sub_section_name,section_name from sub_sections join sections on sections.id =  sub_sections.id_section join departments on sections.id_department = departments.id where departments.department_name = '".$departments."'";
+        $querySubSection = "SELECT
+            employee_syncs.group AS sub_section_name 
+          FROM
+            employee_syncs 
+          WHERE
+          employee_syncs.group is not null
+          AND
+            department LIKE '%".$departments."%'";
         $sub_section = DB::select($querySubSection);
         $subsection2 = DB::select($querySubSection);
         $subsection3 = DB::select($querySubSection);
 
-        $querypic = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department = '".$departments."'";
+        $querypic = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department like '%".$departments."%'";
         $pic = DB::select($querypic);
         $pic2 = DB::select($querypic);
 

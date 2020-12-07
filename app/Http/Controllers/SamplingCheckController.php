@@ -48,7 +48,14 @@ class SamplingCheckController extends Controller
         $frequency = $activityList->frequency;
         $leader = $activityList->leader_dept;
         // var_dump($productionAudit);
-        $querySubSection = "select sub_section_name,section_name from sub_sections join sections on sections.id =  sub_sections.id_section join departments on sections.id_department = departments.id where departments.department_name = '".$departments."'";
+        $querySubSection = "SELECT
+            DISTINCT(employee_syncs.group) AS sub_section_name 
+          FROM
+            employee_syncs 
+          WHERE
+          employee_syncs.group is not null
+          AND
+            department LIKE '%".$departments."%'";
         $subsection = DB::select($querySubSection);
         $subsection2 = DB::select($querySubSection);
         $subsection3 = DB::select($querySubSection);
@@ -79,7 +86,14 @@ class SamplingCheckController extends Controller
         $leader = $activityList->leader_dept;
         // var_dump($request->get('product'));
         // var_dump($request->get('date'));
-        $querySubSection = "select sub_section_name,section_name from sub_sections join sections on sections.id =  sub_sections.id_section join departments on sections.id_department = departments.id where departments.department_name = '".$departments."'";
+        $querySubSection = "SELECT
+            DISTINCT(employee_syncs.group) AS sub_section_name 
+          FROM
+            employee_syncs 
+          WHERE
+          employee_syncs.group is not null
+          AND
+            department LIKE '%".$departments."%'";
         $sub_section = DB::select($querySubSection);
         $subsection2 = DB::select($querySubSection);
         $subsection3 = DB::select($querySubSection);
@@ -176,10 +190,23 @@ class SamplingCheckController extends Controller
         $leader = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
 
-        $querySection = "select * from sections where id_department = '".$id_departments."'";
-        $section = DB::select($querySection);
+        $querySection = "SELECT
+            DISTINCT(employee_syncs.section) AS section_name
+          FROM
+            employee_syncs 
+          WHERE
+          employee_syncs.section is not null
+          AND
+            department LIKE '%".$departments."%'";
 
-        $querySubSection = "select sub_section_name from sub_sections join sections on sections.id = sub_sections.id_section where sections.id_department = '".$id_departments."'";
+        $querySubSection = "SELECT
+            DISTINCT(employee_syncs.group) AS sub_section_name 
+          FROM
+            employee_syncs 
+          WHERE
+          employee_syncs.group is not null
+          AND
+            department LIKE '%".$departments."%'";
         $subsection = DB::select($querySubSection);
 
         $queryProduct = "select * from origin_groups";
@@ -237,10 +264,24 @@ class SamplingCheckController extends Controller
         $leader = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
 
-        $querySection = "select * from sections where id_department = '".$id_departments."'";
+        $querySection = "SELECT
+            DISTINCT(employee_syncs.section) AS section_name
+          FROM
+            employee_syncs 
+          WHERE
+          employee_syncs.section is not null
+          AND
+            department LIKE '%".$departments."%'";
         $section = DB::select($querySection);
 
-        $querySubSection = "select sub_section_name from sub_sections join sections on sections.id = sub_sections.id_section where sections.id_department = '".$id_departments."'";
+        $querySubSection = "SELECT
+            DISTINCT(employee_syncs.group) AS sub_section_name 
+          FROM
+            employee_syncs 
+          WHERE
+          employee_syncs.group is not null
+          AND
+            department LIKE '%".$departments."%'";
         $subsection = DB::select($querySubSection);
 
         $queryProduct = "select * from origin_groups";
@@ -352,9 +393,9 @@ class SamplingCheckController extends Controller
         FROM
             employee_syncs
         WHERE
-            ( employee_syncs.department = '".$departments."' AND employee_syncs.position = 'Leader' ) 
+            ( employee_syncs.department like '%".$departments."%' AND employee_syncs.position = 'Leader' ) 
             OR (
-            employee_syncs.department = '".$departments."' 
+            employee_syncs.department like '%".$departments."%' 
             AND employee_syncs.position = 'Foreman')";
         $queryForeman = "SELECT DISTINCT
             ( employee_syncs.name ),
@@ -363,19 +404,34 @@ class SamplingCheckController extends Controller
             employee_syncs
         WHERE
             (
-            employee_syncs.department = '".$departments."' 
+            employee_syncs.department like '%".$departments."%' 
             AND employee_syncs.position = 'Foreman')";
 
         $leaderForeman = DB::select($queryLeaderForeman);
         $foreman = DB::select($queryForeman);
 
-        $querySection = "select * from sections where id_department = '".$id_departments."'";
+        $querySection = "SELECT
+            DISTINCT(employee_syncs.section) AS section_name
+          FROM
+            employee_syncs 
+          WHERE
+          employee_syncs.section is not null
+          AND
+            department LIKE '%".$departments."%'";
         $section = DB::select($querySection);
 
-        $querySubSection = "select sub_section_name from sub_sections join sections on sections.id = sub_sections.id_section where sections.id_department = '".$id_departments."'";
+        
+        $querySubSection = "SELECT
+            DISTINCT(employee_syncs.group) AS sub_section_name 
+          FROM
+            employee_syncs 
+          WHERE
+          employee_syncs.group is not null
+          AND
+            department LIKE '%".$departments."%'";
         $subsection = DB::select($querySubSection);
 
-        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department = '".$departments."'";
+        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department like '%".$departments."%'";
         $operator = DB::select($queryOperator);
 
         $data = array(
@@ -436,9 +492,9 @@ class SamplingCheckController extends Controller
         FROM
             employee_syncs
         WHERE
-            ( employee_syncs.department = '".$departments."' AND employee_syncs.position = 'Leader' ) 
+            ( employee_syncs.department like '%".$departments."%' AND employee_syncs.position = 'Leader' ) 
             OR (
-            employee_syncs.department = '".$departments."' 
+            employee_syncs.department like '%".$departments."%' 
             AND employee_syncs.position = 'Foreman')";
         $queryForeman = "SELECT DISTINCT
             ( employee_syncs.name ),
@@ -447,19 +503,34 @@ class SamplingCheckController extends Controller
             employee_syncs
         WHERE
             (
-            employee_syncs.department = '".$departments."' 
+            employee_syncs.department like '%".$departments."%' 
             AND employee_syncs.position = 'Foreman')";
 
         $leaderForeman = DB::select($queryLeaderForeman);
         $foreman = DB::select($queryForeman);
 
-        $querySection = "select * from sections where id_department = '".$id_departments."'";
+        $querySection = "SELECT
+            DISTINCT(employee_syncs.section) AS section_name
+          FROM
+            employee_syncs 
+          WHERE
+          employee_syncs.section is not null
+          AND
+            department LIKE '%".$departments."%'";
         $section = DB::select($querySection);
 
-        $querySubSection = "select sub_section_name from sub_sections join sections on sections.id = sub_sections.id_section where sections.id_department = '".$id_departments."'";
+        
+        $querySubSection = "SELECT
+            DISTINCT(employee_syncs.group) AS sub_section_name 
+          FROM
+            employee_syncs 
+          WHERE
+          employee_syncs.group is not null
+          AND
+            department LIKE '%".$departments."%'";
         $subsection = DB::select($querySubSection);
 
-        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department = '".$departments."'";
+        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department like '%".$departments."%'";
         $operator = DB::select($queryOperator);
 
         $samplingCheckDetails = SamplingCheckDetail::find($sampling_check_details_id);

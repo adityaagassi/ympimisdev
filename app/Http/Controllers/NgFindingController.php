@@ -45,7 +45,7 @@ class NgFindingController extends Controller
         $frequency = $activityList->frequency;
         $leader = $activityList->leader_dept;
 
-        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department = '".$departments."'";
+        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department like '%".$departments."%'";
         $operator = DB::select($queryOperator);
         $operator2 = DB::select($queryOperator);
 
@@ -115,7 +115,7 @@ class NgFindingController extends Controller
                 ->get();
         }
 
-        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department = '".$departments."'";
+        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department like '%".$departments."%'";
         $operator = DB::select($queryOperator);
         $operator2 = DB::select($queryOperator);
 

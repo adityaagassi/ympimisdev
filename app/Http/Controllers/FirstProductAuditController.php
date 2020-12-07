@@ -125,7 +125,14 @@ class FirstProductAuditController extends Controller
         $leader = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
 
-        $querySubSection = "select sub_section_name from sub_sections join sections on sections.id = sub_sections.id_section where sections.id_department = '".$id_departments."'";
+        $querySubSection = "SELECT
+            DISTINCT(employee_syncs.group) AS sub_section_name 
+          FROM
+            employee_syncs 
+          WHERE
+          employee_syncs.group is not null
+          AND
+            department LIKE '%".$departments."%'";
         $subsection = DB::select($querySubSection);
 
         $data = array(
@@ -172,7 +179,14 @@ class FirstProductAuditController extends Controller
         $leader = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
 
-        $querySubSection = "select sub_section_name from sub_sections join sections on sections.id = sub_sections.id_section where sections.id_department = '".$id_departments."'";
+        $querySubSection = "SELECT
+            DISTINCT(employee_syncs.group) AS sub_section_name 
+          FROM
+            employee_syncs 
+          WHERE
+          employee_syncs.group is not null
+          AND
+            department LIKE '%".$departments."%'";
         $subsection = DB::select($querySubSection);
 
         $first_product_audit = FirstProductAudit::find($first_product_audit_id);
@@ -237,7 +251,7 @@ class FirstProductAuditController extends Controller
         $leader2 = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
 
-        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs where department = '".$departments."'";
+        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs where department like '%".$departments."%'";
         $operator = DB::select($queryOperator);
         $operator2 = DB::select($queryOperator);
 
@@ -291,7 +305,7 @@ class FirstProductAuditController extends Controller
         $leader2 = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
 
-        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs where department = '".$departments."'";
+        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs where department like '%".$departments."%'";
         $operator = DB::select($queryOperator);
         $operator2 = DB::select($queryOperator);
 

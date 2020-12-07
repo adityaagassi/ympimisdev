@@ -68,9 +68,9 @@
                   <option value=""></option>
                   @foreach($operator as $operator)
                   @if($audit_process->operator == $operator->name)
-                    <option value="{{ $operator->name }}" selected>{{ $operator->name }}</option>
+                    <option value="{{ $operator->name }}" selected>{{ $operator->employee_id }} - {{ $operator->name }}</option>
                   @else
-                    <option value="{{ $operator->name }}">{{ $operator->name }}</option>
+                    <option value="{{ $operator->name }}">{{ $operator->employee_id }} - {{ $operator->name }}</option>
                   @endif
                   @endforeach
               </select>
@@ -83,9 +83,9 @@
                   <option value=""></option>
                   @foreach($auditor as $auditor)
                   @if($audit_process->auditor == $auditor->name)
-                    <option value="{{ $auditor->name }}" selected>{{ $auditor->name }}</option>
+                    <option value="{{ $auditor->name }}" selected>{{ $operator->employee_id }} - {{ $auditor->name }}</option>
                   @else
-                    <option value="{{ $auditor->name }}">{{ $auditor->name }}</option>
+                    <option value="{{ $auditor->name }}">{{ $operator->employee_id }} - {{ $auditor->name }}</option>
                   @endif
                   @endforeach
               </select>

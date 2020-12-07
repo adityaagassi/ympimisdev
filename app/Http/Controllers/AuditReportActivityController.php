@@ -47,7 +47,14 @@ class AuditReportActivityController extends Controller
         $frequency = $activityList->frequency;
         $leader = $activityList->leader_dept;
         // var_dump($productionAudit);
-        $querySubSection = "select sub_section_name,section_name from sub_sections join sections on sections.id =  sub_sections.id_section join departments on sections.id_department = departments.id where departments.department_name = '".$departments."'";
+        $querySubSection = "SELECT
+            DISTINCT(employee_syncs.group) AS sub_section_name 
+          FROM
+            employee_syncs 
+          WHERE
+          employee_syncs.group is not null
+          AND
+            department LIKE '%".$departments."%'";
         $subsection = DB::select($querySubSection);
         $subsection2 = DB::select($querySubSection);
         $subsection3 = DB::select($querySubSection);
@@ -78,21 +85,24 @@ class AuditReportActivityController extends Controller
         $leader = $activityList->leader_dept;
         // var_dump($request->get('product'));
         // var_dump($request->get('date'));
-        $querySubSection = "select sub_section_name,section_name from sub_sections join sections on sections.id =  sub_sections.id_section join departments on sections.id_department = departments.id where departments.department_name = '".$departments."'";
+        $querySubSection = "SELECT
+            DISTINCT(employee_syncs.group) AS sub_section_name 
+          FROM
+            employee_syncs 
+          WHERE
+          employee_syncs.group is not null
+          AND
+            department LIKE '%".$departments."%'";
         $sub_section = DB::select($querySubSection);
         $subsection2 = DB::select($querySubSection);
         $subsection3 = DB::select($querySubSection);
 
         if($request->get('subsection') != null && strlen($request->get('month')) != null){
             $subsection = $request->get('subsection');
-            // $date = date('Y-m',$request->get('month'));
-            // $year = date_format($date, 'Y');
-            // $month = date_format($date, 'm');
             $year = substr($request->get('month'),0,4);
             $month = substr($request->get('month'),-2);
             $auditReportActivity = AuditReportActivity::where('activity_list_id',$id)
                 ->where('subsection',$subsection)
-                // ->where(DATE_FORMAT('date',"%Y-%m"),$month)
                 ->whereYear('date', '=', $year)
                 ->whereMonth('date', '=', $month)
                 ->orderBy('audit_report_activities.id','desc')
@@ -102,7 +112,6 @@ class AuditReportActivityController extends Controller
             $year = substr($request->get('month'),0,4);
             $month = substr($request->get('month'),-2);
             $auditReportActivity = AuditReportActivity::where('activity_list_id',$id)
-                // ->where(DATE_FORMAT('date',"%Y-%m"),$month)
                 ->whereYear('date', '=', $year)
                 ->whereMonth('date', '=', $month)
                 ->orderBy('audit_report_activities.id','desc')
@@ -140,12 +149,10 @@ class AuditReportActivityController extends Controller
     {
         $activityList = ActivityList::find($id);
         $auditReportActivity = AuditReportActivity::find($audit_report_id);
-        // foreach ($activityList as $activityList) {
-            $activity_name = $activityList->activity_name;
-            $departments = $activityList->departments->department_name;
-            $activity_alias = $activityList->activity_alias;
+        $activity_name = $activityList->activity_name;
+        $departments = $activityList->departments->department_name;
+        $activity_alias = $activityList->activity_alias;
 
-        // }
         $data = array('audit_report_activity' => $auditReportActivity,
                       'departments' => $departments,
                       'activity_name' => $activity_name,
@@ -179,13 +186,27 @@ class AuditReportActivityController extends Controller
 
         $guidance = DB::SELECT("SELECT * FROM audit_guidances where activity_list_id = '".$id."' and deleted_at is null and status = 'Belum Dikerjakan'");
 
-        $querySection = "select * from sections where id_department = '".$id_departments."'";
+        $querySection = "SELECT
+            DISTINCT(employee_syncs.section) AS section_name
+          FROM
+            employee_syncs 
+          WHERE
+          employee_syncs.section is not null
+          AND
+            department LIKE '%".$departments."%'";
         $section = DB::select($querySection);
 
-        $querySubSection = "select sub_section_name from sub_sections join sections on sections.id = sub_sections.id_section where sections.id_department = '".$id_departments."'";
+        $querySubSection = "SELECT
+            DISTINCT(employee_syncs.group) AS sub_section_name 
+          FROM
+            employee_syncs 
+          WHERE
+          employee_syncs.group is not null
+          AND
+            department LIKE '%".$departments."%'";
         $subsection = DB::select($querySubSection);
 
-        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs where department = '".$departments."'";
+        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs where department LIKE '%".$departments."%'";
         $operator = DB::select($queryOperator);
 
         $data = array(
@@ -245,18 +266,32 @@ class AuditReportActivityController extends Controller
         $leader = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
 
-        $querySection = "select * from sections where id_department = '".$id_departments."'";
+        $querySection = "SELECT
+            DISTINCT(employee_syncs.section) AS section_name 
+          FROM
+            employee_syncs 
+          WHERE
+          employee_syncs.section is not null
+          AND
+            department LIKE '%".$departments."%'";
         $section = DB::select($querySection);
+
+        $querySubSection = "SELECT
+            DISTINCT(employee_syncs.group) AS sub_section_name 
+          FROM
+            employee_syncs 
+          WHERE
+          employee_syncs.group is not null
+          AND
+            department LIKE '%".$departments."%'";
+        $subsection = DB::select($querySubSection);
+
+        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs where department LIKE '%".$departments."%'";
+        $operator = DB::select($queryOperator);
 
         $bulan = date('Y-m');
 
         $guidance = DB::SELECT("SELECT * FROM audit_guidances where activity_list_id = '".$id."' ");
-
-        $querySubSection = "select sub_section_name from sub_sections join sections on sections.id = sub_sections.id_section where sections.id_department = '".$id_departments."'";
-        $subsection = DB::select($querySubSection);
-
-        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs where department = '".$departments."'";
-        $operator = DB::select($queryOperator);
 
         $audit_report_activity = AuditReportActivity::find($audit_report_id);
 

@@ -63,7 +63,7 @@
               <select class="form-control select2" name="operator" style="width: 100%;" data-placeholder="Pilih Operator..." required id="operator">
                   <option value=""></option>
                   @foreach($operator as $operator)
-                    <option value="{{ $operator->name }}">{{ $operator->name }}</option>
+                    <option value="{{ $operator->name }}">{{ $operator->employee_id }} - {{ $operator->name }}</option>
                   @endforeach
               </select>
             </div>
@@ -74,7 +74,7 @@
               <select class="form-control select2" name="auditor" style="width: 100%;" data-placeholder="Pilih Auditor..." required id="auditor">
                   <option value=""></option>
                   @foreach($auditor as $auditor)
-                    <option value="{{ $auditor->name }}">{{ $auditor->name }}</option>
+                    <option value="{{ $auditor->name }}">{{ $operator->employee_id }} - {{ $auditor->name }}</option>
                   @endforeach
               </select>
             </div>

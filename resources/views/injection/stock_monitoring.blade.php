@@ -414,7 +414,7 @@ table > thead > tr > th{
 						// series.push([part[i], jml[i], colors[i]]);
 						series.push({y: jml[i],name:part[i], color: colors[i]});
 						plan.push(result.datas[i].plan);
-						series2.push({y: plan[i],name:part[i]})
+						series2.push({y: plan[i],name:part[i]});
 					}
 
 					Highcharts.chart('container1', {

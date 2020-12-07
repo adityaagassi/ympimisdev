@@ -48,13 +48,27 @@ class InterviewController extends Controller
         $foreman = $activityList->foreman_dept;
         $frequency = $activityList->frequency;
 
-        $querySubSection = "select sub_section_name,section_name from sub_sections join sections on sections.id =  sub_sections.id_section join departments on sections.id_department = departments.id where departments.department_name = '".$departments."'";
+        $querySubSection = "SELECT
+            DISTINCT(employee_syncs.group) AS sub_section_name 
+          FROM
+            employee_syncs 
+          WHERE
+          employee_syncs.group is not null
+          AND
+            department LIKE '%".$departments."%'";
         $subsection = DB::select($querySubSection);
         $subsection2 = DB::select($querySubSection);
         $subsection3 = DB::select($querySubSection);
         $subsection4 = DB::select($querySubSection);
 
-        $querySection = "select * from sections where id_department = '".$id_departments."'";
+        $querySection = "SELECT
+            DISTINCT(employee_syncs.section) AS section_name
+          FROM
+            employee_syncs 
+          WHERE
+          employee_syncs.section is not null
+          AND
+            department LIKE '%".$departments."%'";
         $section = DB::select($querySection);
 
         // var_dump($productionAudit);
@@ -87,13 +101,27 @@ class InterviewController extends Controller
         $foreman = $activityList->foreman_dept;
         $frequency = $activityList->frequency;
 
-        $querySubSection = "select sub_section_name,section_name from sub_sections join sections on sections.id =  sub_sections.id_section join departments on sections.id_department = departments.id where departments.department_name = '".$departments."'";
+        $querySubSection = "SELECT
+            DISTINCT(employee_syncs.group) AS sub_section_name 
+          FROM
+            employee_syncs 
+          WHERE
+          employee_syncs.group is not null
+          AND
+            department LIKE '%".$departments."%'";
         $sub_section = DB::select($querySubSection);
         $subsection2 = DB::select($querySubSection);
         $subsection3 = DB::select($querySubSection);
         $subsection4 = DB::select($querySubSection);
 
-        $querySection = "select * from sections where id_department = '".$id_departments."'";
+        $querySection = "SELECT
+            DISTINCT(employee_syncs.section) AS section_name
+          FROM
+            employee_syncs 
+          WHERE
+          employee_syncs.section is not null
+          AND
+            department LIKE '%".$departments."%'";
         $section = DB::select($querySection);
 
         if($request->get('subsection') != null && strlen($request->get('month')) != null){
@@ -190,13 +218,27 @@ class InterviewController extends Controller
         $leader = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
 
-        $querySection = "select * from sections where id_department = '".$id_departments."'";
+        $querySection = "SELECT
+            DISTINCT(employee_syncs.section) AS section_name
+          FROM
+            employee_syncs 
+          WHERE
+          employee_syncs.section is not null
+          AND
+            department LIKE '%".$departments."%'";
         $section = DB::select($querySection);
 
-        $querySubSection = "select sub_section_name from sub_sections join sections on sections.id = sub_sections.id_section where sections.id_department = '".$id_departments."'";
+        $querySubSection = "SELECT
+            DISTINCT(employee_syncs.group) AS sub_section_name 
+          FROM
+            employee_syncs 
+          WHERE
+          employee_syncs.group is not null
+          AND
+            department LIKE '%".$departments."%'";
         $subsection = DB::select($querySubSection);
 
-        $queryFY = "select DISTINCT(fiscal_year)from weekly_calendars";
+        $queryFY = "select DISTINCT(fiscal_year) from weekly_calendars";
         $fy = DB::select($queryFY);
 
         $data = array(
@@ -243,10 +285,24 @@ class InterviewController extends Controller
         $leader = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
 
-        $querySection = "select * from sections where id_department = '".$id_departments."'";
+        $querySection = "SELECT
+            DISTINCT(employee_syncs.section) AS section_name
+          FROM
+            employee_syncs 
+          WHERE
+          employee_syncs.section is not null
+          AND
+            department LIKE '%".$departments."%'";
         $section = DB::select($querySection);
 
-        $querySubSection = "select sub_section_name from sub_sections join sections on sections.id = sub_sections.id_section where sections.id_department = '".$id_departments."'";
+        $querySubSection = "SELECT
+            DISTINCT(employee_syncs.group) AS sub_section_name 
+          FROM
+            employee_syncs 
+          WHERE
+          employee_syncs.group is not null
+          AND
+            department LIKE '%".$departments."%'";
         $subsection = DB::select($querySubSection);
 
         $queryFY = "select DISTINCT(fiscal_year)from weekly_calendars";
@@ -314,7 +370,7 @@ class InterviewController extends Controller
         $activity_id = $interview->activity_lists->id;
         $leader = $interview->activity_lists->leader_dept;
 
-        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department = '".$departments."'";
+        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department like '%".$departments."%'";
         $operator = DB::select($queryOperator);
         $operator2 = DB::select($queryOperator);
 

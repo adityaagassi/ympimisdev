@@ -148,19 +148,26 @@ class TrainingReportController extends Controller
 
         $queryLeaderForeman = "select DISTINCT(employee_syncs.name), employee_syncs.employee_id
             from employee_syncs
-            where (department = '".$departments."' and position = 'leader')";
+            where (department like '%".$departments."%' and position = 'leader')";
         $queryForeman = "select DISTINCT(employee_syncs.name), employee_syncs.employee_id
             from employee_syncs
-            where (department = '".$departments."' and position = 'foreman')";
+            where (department like '%".$departments."%' and position = 'foreman')";
         $queryTrainer = "select DISTINCT(employee_syncs.name), employee_syncs.employee_id
             from employee_syncs
-            where (department = '".$departments."' and position = 'leader')
-                        or (department = '".$departments."' and position = 'sub leader')";
+            where (department like '%".$departments."%' and position = 'leader')
+                        or (department like '%".$departments."%' and position = 'sub leader')";
         $leaderForeman = DB::select($queryLeaderForeman);
         $foreman = DB::select($queryForeman);
         $trainer = DB::select($queryTrainer);
 
-        $querySection = "select * from sections where id_department = '".$id_departments."'";
+        $querySection = "SELECT
+            DISTINCT(employee_syncs.section) AS section_name
+          FROM
+            employee_syncs 
+          WHERE
+          employee_syncs.section is not null
+          AND
+            department LIKE '%".$departments."%'";
         $section = DB::select($querySection);
 
         $queryProduct = "select * from origin_groups";
@@ -222,20 +229,27 @@ class TrainingReportController extends Controller
 
         $queryLeaderForeman = "select DISTINCT(employee_syncs.name), employee_syncs.employee_id
             from employee_syncs
-            where (department = '".$departments."' and position = 'leader')";
+            where (department like '%".$departments."%' and position = 'leader')";
         $queryForeman = "select DISTINCT(employee_syncs.name), employee_syncs.employee_id
             from employee_syncs
-            where (department = '".$departments."' and position = 'foreman')";
+            where (department like '%".$departments."%' and position = 'foreman')";
         $queryTrainer = "select DISTINCT(employee_syncs.name), employee_syncs.employee_id
             from employee_syncs
-            where (department = '".$departments."' and position = 'leader')
-                        or (department = '".$departments."' and position = 'sub leader')";
+            where (department like '%".$departments."%' and position = 'leader')
+                        or (department like '%".$departments."%' and position = 'sub leader')";
 
         $leaderForeman = DB::select($queryLeaderForeman);
         $foreman = DB::select($queryForeman);
         $trainer = DB::select($queryTrainer);
 
-        $querySection = "select * from sections where id_department = '".$id_departments."'";
+        $querySection = "SELECT
+            DISTINCT(employee_syncs.section) AS section_name
+          FROM
+            employee_syncs 
+          WHERE
+          employee_syncs.section is not null
+          AND
+            department LIKE '%".$departments."%'";
         $section = DB::select($querySection);
 
         $queryProduct = "select * from origin_groups";
@@ -330,7 +344,7 @@ class TrainingReportController extends Controller
 
         // var_dump($trainingReport->section);
 
-        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id,section,employee_syncs.group as sub_section from employee_syncs where department = '".$departments."' and section = '".$trainingReport->section."' and end_date is null";
+        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id,section,employee_syncs.group as sub_section from employee_syncs where department like '%".$departments."%' and section like '%".$trainingReport->section."%' and end_date is null";
         $operator = DB::select($queryOperator);
         $operator2 = DB::select($queryOperator);
         $operator3 = DB::select($queryOperator);

@@ -5599,7 +5599,7 @@ class InjectionsController extends Controller
                 )) =  '".$request->get('color').")'";
             }
 
-            $j = 2;
+            $j = 3;
             $nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays($j)));
             $weekly_calendars = DB::SELECT("SELECT * FROM `weekly_calendars`");
             foreach ($weekly_calendars as $key) {

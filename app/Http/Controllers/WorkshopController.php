@@ -1452,7 +1452,7 @@ class WorkshopController extends Controller{
 			left join workshop_tag_availabilities tag
 			on tag.tag = wjo.tag
 			where emp.`name` like "%'.$name.'%"
-			and emp.`group` = "Workshop"
+			and emp.`group` = "Workshop Group"
 			order by target_date asc');
 
 		$response = array(

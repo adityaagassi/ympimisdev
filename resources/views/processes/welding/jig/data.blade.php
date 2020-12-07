@@ -422,7 +422,7 @@
 					jigtable += '<td>'+value.jig_name+'</td>';
 					jigtable += '<td>'+value.jig_alias+'</td>';
 					jigtable += '<td>'+value.category+'</td>';
-					jigtable += '<td><a target="_blank" class="btn btn-primari btn-sm" href="{{ url("/jig/drawing/") }}/'+value.jig_parent+'/'+value.file_name+'"><i class="fa fa-file-pdf-o"></i></a></td>';
+					jigtable += '<td><a target="_blank" class="btn btn-primary btn-sm btn-block" href="{{ url("/jig/drawing/") }}/'+value.jig_parent+'/'+value.file_name+'"><i class="fa fa-file-pdf-o"></i> &nbsp;Drawing</a></td>';
 					if (value.jig_tag == null) {
 						jigtable += '<td></td>';
 					}else{

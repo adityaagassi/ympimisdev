@@ -153,7 +153,7 @@ class AuditProcessController extends Controller
         	$fy = $fyHasil->fiscal_year;
         }
 
-        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department = '".$departments."'";
+        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department like '%".$departments."%'";
         $operator = DB::select($queryOperator);
 
         $queryAuditor = "SELECT DISTINCT
@@ -162,9 +162,9 @@ class AuditProcessController extends Controller
           FROM
             employee_syncs
           WHERE
-            ( employee_syncs.department = '".$departments."' AND employee_syncs.position = 'Leader' ) 
+            ( employee_syncs.department like '%".$departments."%' AND employee_syncs.position = 'Leader' ) 
             OR (
-            employee_syncs.department = '".$departments."' 
+            employee_syncs.department like '%".$departments."%' 
             AND employee_syncs.position = 'Sub Leader')";
         $auditor = DB::select($queryAuditor);
 
@@ -236,7 +236,7 @@ class AuditProcessController extends Controller
           $fy = $fyHasil->fiscal_year;
         }
 
-        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department = '".$departments."'";
+        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department like '%".$departments."%'";
         $operator = DB::select($queryOperator);
 
         $queryAuditor = "SELECT DISTINCT
@@ -245,9 +245,9 @@ class AuditProcessController extends Controller
           FROM
             employee_syncs
           WHERE
-            ( employee_syncs.department = '".$departments."' AND employee_syncs.position = 'Leader' ) 
+            ( employee_syncs.department like '%".$departments."%' AND employee_syncs.position = 'Leader' ) 
             OR (
-            employee_syncs.department = '".$departments."' 
+            employee_syncs.department like '%".$departments."%' 
             AND employee_syncs.position = 'Sub Leader')";
         $auditor = DB::select($queryAuditor);
 

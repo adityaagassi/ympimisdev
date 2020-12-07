@@ -247,7 +247,7 @@ class ProductionAuditController extends Controller
         // $queryProduct = "select * from origin_groups";
         // $product = DB::select($queryProduct);
 
-        $querypic = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department = '".$departments."'";
+        $querypic = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department like '%".$departments."%'";
         $pic = DB::select($querypic);
 
         // $queryProses = "select DISTINCT(point_check_audits.proses),point_check_audits.product from point_check_audits where point_check_audits.activity_list_id = '".$id."'";
@@ -281,7 +281,7 @@ class ProductionAuditController extends Controller
           $empid_leader = $lead->employee_id;
         }
 
-        $querypic = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department = '".$departments."'";
+        $querypic = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department like '%".$departments."%'";
         $pic = DB::select($querypic);
 
         $pointCheckAudit = PointCheckAudit::find($point_check_id);
@@ -352,7 +352,7 @@ class ProductionAuditController extends Controller
 
         $productionAudit = ProductionAudit::find($audit_id);
 
-        $querypic = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department = '".$departments."'";
+        $querypic = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department like '%".$departments."%'";
         $pic = DB::select($querypic);
 
         $queryPointCheck = "SELECT * FROM `point_check_audits` where product = '".$productionAudit->point_check_audit->product."' and proses = '".$productionAudit->point_check_audit->proses."'";
