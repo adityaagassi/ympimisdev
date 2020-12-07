@@ -64,7 +64,7 @@
 
 	<div class="row">
 		@if($user)
-		@if($user->department == 'Management Information System' || $user->group == 'Standardization')
+		@if($user->department == 'Management Information System Department' || $user->group == 'Standardization Group')
 		<div class="col-xs-12 pull-right" style="padding-left: 0;">
 			<button class="btn btn-success pull-right" style="margin-left: 5px; width: 16%;" data-toggle="modal" data-target="#modalCreate"><i class="fa fa-plus"></i>&nbsp;Add Stock</button>
 		</div>
@@ -104,7 +104,7 @@
 
 		<div class="col-xs-2" style="padding-left: 0;">
 			@if($user)
-			@if( (strpos(strtolower($user->position), 'operator') !== false || strpos(strtolower($user->position), 'leader') !== false) && ($user->section !='Warehouse' || $user->assignment != 'LDR') ) 
+			@if( (strpos(strtolower($user->position), 'operator') !== false || strpos(strtolower($user->position), 'leader') !== false) && ($user->section !='Warehouse Section' || $user->assignment != 'LDR') ) 
 			
 			@else
 			<button data-toggle="modal" class="btn btn-primary" style="width: 100%; margin-bottom: 5px;" ata-toggle="modal" data-target="#modalRequest"><i class="fa fa-file-text-o"></i>&nbsp;&nbsp;&nbsp;Create Request</button>
@@ -112,7 +112,7 @@
 
 
 			@if(!strpos(strtolower($user->position), 'operator'))
-			@if($user->department == 'Management Information System' || ($user->section == 'Warehouse' && ($user->assignment == 'FRM' || $user->assignment == 'LDR')))
+			@if($user->department == 'Management Information System Department' || ($user->section == 'Warehouse Section' && ($user->assignment == 'FRM' || $user->assignment == 'LDR')))
 			<button data-toggle="modal" data-target="#modalScan" class="btn btn-success" style="width: 100%; margin-bottom: 5px;"><i class="fa fa-camera"></i>&nbsp;&nbsp;&nbsp;Scan Request</button>
 			@endif
 			@endif
