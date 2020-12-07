@@ -387,7 +387,7 @@ table.table-bordered > tfoot > tr > th{
 					bodyScan += '<td>'+value.no_kanban+'</td>';
 					bodyScan += '<td>'+value.shot+'</td>';
 					bodyScan += '<td>'+statustransaction+'</td>';
-					bodyScan += '<td><button class="btn btn-primary" style="height:100%;font-weight:bold" onclick="showModalCompletion(\''+value.process_id+'\',\''+value.injection_id+'\',\''+value.tag_rfid+'\',\''+value.material_number+'\',\''+value.part_name+'\',\''+value.part_type+'\',\''+value.color+'\',\''+value.cavity+'\',\''+value.shot+'\',\''+statustransaction+'\',\''+value.employee_id+'\',\''+value.name+'\')">TRANSAKSIKAN</button></td>';
+					bodyScan += '<td><button class="btn btn-primary" style="height:100%;font-weight:bold" onclick="showModalCompletion(\''+value.process_id+'\',\''+value.injection_id+'\',\''+value.tag_rfid+'\',\''+value.material_number+'\',\''+value.part_name+'\',\''+value.part_type+'\',\''+value.color+'\',\''+value.cavity+'\',\''+value.shot+'\',\''+statustransaction+'\',\''+value.employee_id+'\',\''+value.name+'\')">TRANSAKSIKAN</button><button class="btn btn-danger" style="height:100%;font-weight:bold;padding-left:10px" onclick="deleteCompletion(\''+value.concat_kanban+'\')">CANCEL</button></td>';
 					bodyScan += '</tr>';
 					bodyScan += '<tr>';
 					bodyScan += '</tr>';
@@ -493,6 +493,21 @@ table.table-bordered > tfoot > tr > th{
 		}
 
 		$('#modalCompletion').modal('show');
+	}
+
+	function deleteCompletion(concat_kanban) {
+		if (confirm('Apakah Anda yakin akan membatalkan transaksi?')) {
+			var data = {
+				concat_kanban:concat_kanban
+			}
+			$.post('{{ url("index/injection/cancel_completion") }}', data, function(result, status, xhr){
+				if(result.status){
+					openSuccessGritter('Success','Sukses Membatalkan');
+				}else{
+					openErrorGritter('Error!','Gagal Membatalkan.');
+				}
+			});
+		}
 	}
 
 	function completion() {

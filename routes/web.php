@@ -21,10 +21,10 @@ Route::get('testmail', 'TrialController@testmail');
 Route::get('testprint', 'TrialController@testPrint');
 Route::get('tesurgent', 'MaintenanceController@indexSPKUrgent');
 
-
 Route::get('fetch_trial2', 'StockTakingController@printSummary');
 Route::get('test_print', 'TrialController@test_print');
 
+Route::get('trial_load', 'TrialController@trialload');
 Route::get('trial_loc', 'TrialController@trialLoc');
 Route::get('trial_loc2/{lat}/{long}', 'TrialController@getLocation');
 
@@ -50,9 +50,6 @@ Route::get('tesseract', 'TrialController@testTesseract');
 Route::get('trialmail', 'TrialController@trialmail');
 
 Route::get('/trial', function () {
-	return view('mails.new_agreement');
-});
-Route::get('/trial3', function () {
 	return view('trial');
 });
 
@@ -248,6 +245,7 @@ Route::get('fetch/injection/detail_transaction', 'InjectionsController@fetchDeta
 Route::get('fetch/injection/check_injections', 'InjectionsController@fetchCheckInjections');
 Route::get('fetch/injection/check_ng', 'InjectionsController@fetchCheckNg');
 Route::post('index/injection/completion', 'InjectionsController@completion');
+Route::post('index/injection/cancel_completion', 'InjectionsController@cancelCompletion');
 //end
 
 // ---- dailyStock
@@ -345,16 +343,6 @@ Route::get('index/reportStockMonitoring', 'InjectionsController@reportStockMonit
 Route::get('fetch/getTargetWeek', 'InjectionsController@getTargetWeek');
 //end report
 
-//report balance mesin
-
-Route::get('index/reportBalanceMesin', 'InjectionsController@reportBalanceMesin');
-Route::get('fetch/getBalanceMesin', 'InjectionsController@getBalanceMesin');
-
-Route::post('input/makePlan', 'InjectionsController@makePlan');
-Route::get('fetch/getBalanceMesinChart', 'InjectionsController@getBalanceMesinChart');
-//end balance mesin
-
-
 
 //master machine
 Route::get('index/masterMachine', 'InjectionsController@masterMachine');
@@ -371,10 +359,7 @@ Route::get('fetch/chartMasterCycleMachine', 'InjectionsController@chartMasterCyc
 
 
 Route::get('get/workingPartMesin', 'InjectionsController@workingPartMesin');
-
-
 //end master machine
-
 
 // ------------- start 3 hari
 
@@ -433,7 +418,10 @@ Route::post('input/injection/stock', 'InjectionsController@inputStock');
 Route::get('index/injection_schedule', 'InjectionsController@indexInjectionSchedule');
 Route::get('fetch/injection_schedule', 'InjectionsController@fetchInjectionSchedule');
 
-
+Route::group(['nav' => 'M31', 'middleware' => 'permission'], function(){
+	Route::get('index/injection/tag', 'InjectionsController@indexInjectionTag');
+	Route::get('fetch/injection/tag', 'InjectionsController@fetchInjectionTag');
+});
 
 // end mesin injeksi
 
@@ -1269,9 +1257,11 @@ Route::get('fetch/welding/detail_repair_jig_report', 'WeldingProcessController@f
 //Sakurentsu
 Route::get('index/sakurentsu/upload_sakurentsu', 'SakurentsuController@upload_sakurentsu');
 Route::post('index/sakurentsu/upload_sakurentsu', 'SakurentsuController@upload_file_sakurentsu');
+Route::get('index/sakurentsu/list_sakurentsu_translate', 'SakurentsuController@index_translate_sakurentsu');
 Route::get('index/sakurentsu/upload_sakurentsu_translate/{id}', 'SakurentsuController@upload_sakurentsu_translate');
 Route::post('index/sakurentsu/upload_sakurentsu_translate/{id}', 'SakurentsuController@upload_file_sakurentsu_translate');
 Route::get('fetch/sakurentsu', 'SakurentsuController@fetch_sakuretsu');
+Route::get('fetch/sakurentsu/translate', 'SakurentsuController@fetch_translate_sakurentsu');
 Route::get('index/sakurentsu/monitoring', 'SakurentsuController@monitoring');
 Route::get('index/sakurentsu/list_sakurentsu', 'SakurentsuController@index_sakurentsu');
 Route::get('index/sakurentsu/detail/{id}', 'SakurentsuController@detail_sakurentsu');
@@ -1286,8 +1276,12 @@ Route::get('index/sakurentsu/3m/{sakurentsu_number}', 'SakurentsuController@inde
 Route::post('post/sakurentsu/3m_form', 'SakurentsuController@save_tiga_em_form');
 
 Route::get('index/sakurentsu/3m/premeeting/{id_three_m}', 'SakurentsuController@index_tiga_em_premeeting');
+Route::post('post/sakurentsu/3m/premeeting', 'SakurentsuController@post_tiga_em_premeeting');
 Route::get('fetch/sakurentsu/3m/document', 'SakurentsuController@fetch_tiga_em_document');
 Route::post('upload/sakurentsu/3m/document', 'SakurentsuController@upload_tiga_em_document');
+Route::post('mail/sakurentsu/3m/document', 'SakurentsuController@mail_tiga_em_document');
+
+Route::get('index/sakurentsu/3m/document/upload/{id_three_m}', 'SakurentsuController@index_tiga_em_upload');
 
 //Supplier
 Route::get('index/supplier', 'AccountingController@master_supplier');
@@ -2482,8 +2476,14 @@ Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::get('fetch/shipping_order/get_carier', 'ContainerScheduleController@fetchCarier');
 
 	Route::post('fetch/shipping_order/add_ship_reservation', 'ContainerScheduleController@addShipReservation');
+	Route::post('fetch/shipping_order/edit_ship_reservation', 'ContainerScheduleController@editShipReservation');
+	Route::post('fetch/shipping_order/upload_ship_reservation', 'ContainerScheduleController@uploadShipReservation');
 
 	Route::get('fetch/shipping_order/ship_reservation', 'ContainerScheduleController@fetchShipReservation');
+	Route::get('fetch/shipping_order/excel_ship_reservation', 'ContainerScheduleController@excelShipReservation');
+
+	Route::get('index/resume_shipping_order', 'ContainerScheduleController@indexResumeShippingOrder');
+	
 
 });
 

@@ -5480,6 +5480,23 @@ class InjectionsController extends Controller
         }
     }
 
+    public function cancelCompletion(Request $request)
+    {
+        try {
+            $delete = DB::CONNECTION('rfid')->SELECT("DELETE FROM ympirfid.injection_lists WHERE tag = '".$request->get('concat_kanban')."'");
+            $response = array(
+                'status' => true
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+            );
+            return Response::json($response);
+        }
+    }
+
     public function indexMachineMonitoring()
     {
         return view('injection.machine_monitoring')
@@ -6046,7 +6063,38 @@ class InjectionsController extends Controller
         return view('injection.tag',array(
             'title' => $title,
             'title_jp' => $title_jp,
-            'materials' => $materials,
-        ))->with('page', 'Input Daily Stock Recorder')->with('jpn', '???');
+        ))->with('page', 'Injection Tag')->with('jpn', '???');
+    }
+
+    public function fetchInjectionTag(Request $request)
+    {
+        try {
+            $tag = DB::SELECT('SELECT
+                injection_tags.*,
+                injection_parts.*,
+                employee_syncs.*,
+                concat( injection_tags.part_name, "<br>", injection_tags.part_type, " - ", injection_tags.color, "<br>", injection_tags.cavity ) AS partsall,
+                injection_parts.part_name AS material_description,
+                injection_tags.updated_at AS last_update,
+                injection_tags.id AS id_tag 
+            FROM
+                injection_tags
+                LEFT JOIN injection_parts ON injection_parts.gmc = injection_tags.material_number
+                LEFT JOIN employee_syncs ON injection_tags.operator_id = employee_syncs.employee_id 
+            WHERE
+                injection_parts.deleted_at IS NULL');
+
+            $response = array(
+                'status' => true,
+                'tag' => $tag
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+            return Response::json($response);
+        }
     }
 }
