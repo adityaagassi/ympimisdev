@@ -19,7 +19,7 @@ use App\Department;
 use App\Employee;
 use App\EmployeeSync;
 use App\Material;
-// use App\MaterialPlantDataList;
+use App\MaterialPlantDataList;
 use App\Status;
 use App\WeeklyCalendar;
 use App\Destination;
@@ -402,13 +402,13 @@ class QcReportController extends Controller
         $vendors = "select id, vendor, name from vendors where vendor != 'Y31504'";
         $vendor = DB::select($vendors);
 
-        // $materials = MaterialPlantDataList::select('material_plant_data_lists.id','material_plant_data_lists.material_number','material_plant_data_lists.material_description')
-        // ->orderBy('material_plant_data_lists.id','ASC')
-        // ->get();
-
-        $materials = Material::select('materials.id','materials.material_number','materials.material_description')
-        ->orderBy('materials.id','ASC')
+        $materials = MaterialPlantDataList::select('material_plant_data_lists.id','material_plant_data_lists.material_number','material_plant_data_lists.material_description')
+        ->orderBy('material_plant_data_lists.id','ASC')
         ->get();
+
+        // $materials = Material::select('materials.id','materials.material_number','materials.material_description')
+        // ->orderBy('materials.id','ASC')
+        // ->get();
 
         return view('qc_report.edit', array(
             'cpars' => $cpars,
