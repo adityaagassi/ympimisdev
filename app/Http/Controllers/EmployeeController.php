@@ -951,7 +951,7 @@ class EmployeeController extends Controller
 
      public function makeKaizen($id, $name, $section, $group){
           $ldr = "position = 'Leader'";
-          if ($section == 'Assembly Process Control') {
+          if ($section == 'Assembly Process Control Section') {
                $ldr = "grade_name = 'Staff'";
           }
 
@@ -990,7 +990,7 @@ class EmployeeController extends Controller
           $group = "";
 
           $ldr = "position = 'Leader'";
-          if ($section == 'Assembly Process Control') {
+          if ($section == 'Assembly Process Control Section') {
                $ldr = "grade_name = 'Staff'";
           }
 
