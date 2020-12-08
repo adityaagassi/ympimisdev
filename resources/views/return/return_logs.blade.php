@@ -162,12 +162,12 @@
 							<table id="logTable" class="table table-bordered table-striped table-hover" style="width: 100%;">
 								<thead style="background-color: rgba(126,86,134,.7);" >
 									<tr>
-										<th style="width: 1%">Material</th>
-										<th style="width: 5%">Material Desc.</th>
-										<th style="width: 2%">Issue Location</th>
-										<th style="width: 1%">Receive Location</th>
+										<th style="width: 0.1%">Material</th>
+										<th style="width: 15%">Material Desc.</th>
+										<th style="width: 0.1%">Issue Loc</th>
+										<th style="width: 0.1%">Receive Loc</th>
 										<th style="width: 1%">Qty</th>
-										<th style="width: 1%">Status</th>
+										<th style="width: 0.1%">Status</th>
 										<th style="width: 1%">Printed at</th>
 										<th style="width: 1%">Printed by</th>
 										<th style="width: 1%">Received at</th>
