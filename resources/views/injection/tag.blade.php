@@ -41,9 +41,9 @@
 	<h1>
 		{{ $title }}
 		<small><span class="text-purple"> {{ $title_jp }}</span></small>
-		<!-- <button class="btn btn-info pull-right" data-toggle="modal"  data-target="#create_modal" style="margin-right: 5px">
+		<button class="btn btn-info pull-right" data-toggle="modal"  data-target="#create_modal" style="margin-right: 5px">
 			<i class="fa fa-plus"></i>&nbsp;&nbsp;Tambahkan Data
-		</button> -->
+		</button>
 	</h1>
 
 	<ol class="breadcrumb">
@@ -81,7 +81,7 @@
 								<th style="width: 1%">Qty</th>
 								<th style="width: 1%">Avail</th>
 								<th style="width: 1%">Updated At</th>
-								<!-- <th style="width: 1%">Action</th> -->
+								<th style="width: 1%">Action</th>
 							</tr>
 						</thead>
 						<tbody id="bodyTagTable">
@@ -103,84 +103,49 @@
 								&times;
 							</span>
 						</button>
-						<h1 style="text-align: center; margin:5px; font-weight: bold;color: white">Tambah Jig Data</h1>
+						<h1 style="text-align: center; margin:5px; font-weight: bold;color: white">Tambah Injection Tag Data</h1>
 					</div>
 				</div>
 				<div class="modal-body">
 					<div class="row">
 						<div class="box-body">
-							<div class="col-xs-6">
+							<div class="col-xs-12">
 								<div class="row">
 									<input type="hidden" value="{{csrf_token()}}" name="_token" />
 
 									<div class="form-group row" align="right">
-										<label class="col-sm-3">Jig Parent<span class="text-red">*</span></label>
+										<label class="col-sm-3">Material<span class="text-red">*</span></label>
 										<div class="col-sm-7" align="left">
-											<input type="text" class="form-control" id="jig_parent" placeholder="Jig Parent" required>
-										</div>
-									</div>
-									<div class="form-group row" align="right">
-										<label class="col-sm-3">Jig ID<span class="text-red">*</span></label>
-										<div class="col-sm-7" align="left">
-											<input type="text" class="form-control" id="jig_id" placeholder="Jig ID" required>
-										</div>
-									</div>
-									<div class="form-group row" align="right">
-										<label class="col-sm-3">Jig Index<span class="text-red">*</span></label>
-										<div class="col-sm-7">
-											<input type="text" class="form-control" id="jig_index" placeholder="Jig Index" required>
-										</div>
-									</div>
-									<div class="form-group row" align="right">
-										<label class="col-sm-3">Jig Name<span class="text-red">*</span></label>
-										<div class="col-sm-7" align="left">
-											<input type="text" class="form-control" id="jig_name" placeholder="Jig Name" required>
-										</div>
-									</div>
-									<div class="form-group row" align="right">
-										<label class="col-sm-3">Jig Alias<span class="text-red">*</span></label>
-										<div class="col-sm-7" align="left">
-											<input type="text" class="form-control" id="jig_alias" placeholder="Jig Alias (Berdasarkan Drawing)" required>
-											Contoh : <b>TS-J-15619-6</b> atau <b>SP-0129</b>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-xs-6">
-								<div class="row">
-									<div class="form-group row" align="right">
-										<label class="col-sm-3">Category<span class="text-red">*</span></label>
-										<div class="col-sm-7" align="left">
-											<select class="form-control select2" data-placeholder="Select Category" name="category" id="category" onchange="changeCategory(this.value)" style="width: 100%">
+											<select class="form-control select2" data-placeholder="Select Material" onchange="changeMaterial(this.value)" name="material_number" id="material_number" style="width: 100%">
 												<option value=""></option>
-												<option value="KENSA">KENSA</option>
-												<option value="PART">PART</option>
+												@foreach($material as $material)
+												<option value="{{$material->gmc}}">{{$material->gmc}} - {{$material->part_name}}</option>
+												@endforeach
 											</select>
 										</div>
 									</div>
-									<div class="form-group row" align="right" id="tagjig" style="display: none">
-										<label class="col-sm-3">Jig Tag<span class="text-red">*</span></label>
+									<div class="form-group row" align="right">
+										<label class="col-sm-3">Desc<span class="text-red">*</span></label>
 										<div class="col-sm-7" align="left">
-											<input type="text" class="form-control" id="jig_tag" placeholder="Tap RFID Jig Here" required>
-											<input type="hidden" class="form-control" id="type">
-										</div>
-									</div>
-									<div class="form-group row" align="right" id="periodcheck" style="display: none">
-										<label class="col-sm-3">Check Period (Hari)<span class="text-red">*</span></label>
-										<div class="col-sm-7" align="left">
-											<input type="text" class="form-control" id="check_period" placeholder="Check Period" required>
-										</div>
-									</div>
-									<div class="form-group row" align="right" id="jigusage" style="display: none">
-										<label class="col-sm-3">Usage<span class="text-red">*</span></label>
-										<div class="col-sm-7" align="left">
-											<input type="text" class="form-control" id="usage" placeholder="Usage" required value="1">
+											<input type="text" class="form-control" id="mat_desc" placeholder="Material Desc" readonly required>
 										</div>
 									</div>
 									<div class="form-group row" align="right">
-										<label class="col-sm-3">Drawing<span class="text-red">*</span></label>
+										<label class="col-sm-3">No. Kanban<span class="text-red">*</span></label>
 										<div class="col-sm-7" align="left">
-											<input type="file" class="form-control" id="drawing" placeholder="Drawing" required>
+											<input type="text" class="form-control" id="no_kanban" placeholder="No. Kanban" readonly required>
+										</div>
+									</div>
+									<div class="form-group row" align="right">
+										<label class="col-sm-3">Kanban Code<span class="text-red">*</span></label>
+										<div class="col-sm-7">
+											<input type="text" class="form-control" id="concat_kanban" placeholder="Kanban Code" readonly required>
+										</div>
+									</div>
+									<div class="form-group row" align="right">
+										<label class="col-sm-3">Tag<span class="text-red">*</span></label>
+										<div class="col-sm-7" align="left">
+											<input type="text" class="form-control" id="tag" placeholder="Scan Tag Here" required>
 										</div>
 									</div>
 								</div>
@@ -189,7 +154,7 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button class="btn btn-success" onclick="addJigData()"><i class="fa fa-plus"></i>&nbsp;&nbsp;Simpan</button>
+					<button class="btn btn-success" onclick="addTagData()"><i class="fa fa-plus"></i>&nbsp;&nbsp;Simpan</button>
 				</div>
 			</div>
 		</div>
@@ -205,85 +170,49 @@
 								&times;
 							</span>
 						</button>
-						<h1 style="text-align: center; margin:5px; font-weight: bold;color: white">Edit Jig Data</h1>
+						<h1 style="text-align: center; margin:5px; font-weight: bold;color: white">Edit Injection Tag Data</h1>
 					</div>
 				</div>
 				<div class="modal-body">
 					<div class="row">
 						<div class="box-body">
-							<div class="col-xs-6">
+							<div class="col-xs-12">
 								<div class="row">
 									<input type="hidden" value="{{csrf_token()}}" name="_token" />
-									<input type="hidden" id="id_jig">
+									<input type="hidden" id="id_tag">
 									<div class="form-group row" align="right">
-										<label class="col-sm-3">Jig Parent<span class="text-red">*</span></label>
+										<label class="col-sm-3">Material<span class="text-red">*</span></label>
 										<div class="col-sm-7" align="left">
-											<input type="text" class="form-control" id="jig_parent_edit" placeholder="Jig Parent" required>
-										</div>
-									</div>
-									<div class="form-group row" align="right">
-										<label class="col-sm-3">Jig ID<span class="text-red">*</span></label>
-										<div class="col-sm-7" align="left">
-											<input type="text" class="form-control" id="jig_id_edit" placeholder="Jig ID" required>
-										</div>
-									</div>
-									<div class="form-group row" align="right">
-										<label class="col-sm-3">Jig Index<span class="text-red">*</span></label>
-										<div class="col-sm-7">
-											<input type="text" class="form-control" id="jig_index_edit" placeholder="Jig Index" required>
-										</div>
-									</div>
-									<div class="form-group row" align="right">
-										<label class="col-sm-3">Jig Name<span class="text-red">*</span></label>
-										<div class="col-sm-7" align="left">
-											<input type="text" class="form-control" id="jig_name_edit" placeholder="Jig Name" required>
-										</div>
-									</div>
-									<div class="form-group row" align="right">
-										<label class="col-sm-3">Jig Alias<span class="text-red">*</span></label>
-										<div class="col-sm-7" align="left">
-											<input type="text" class="form-control" id="jig_alias_edit" placeholder="Jig Alias (Berdasarkan Drawing)" required>
-											Contoh : <b>TS-J-15619-6</b> atau <b>SP-0129</b>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-xs-6">
-								<div class="row">
-									<div class="form-group row" align="right">
-										<label class="col-sm-3">Category<span class="text-red">*</span></label>
-										<div class="col-sm-7" align="left">
-											<select class="form-control select3" data-placeholder="Select Category" name="category_edit" id="category_edit" onchange="changeCategoryEdit(this.value)" style="width: 100%">
+											<select class="form-control select3" data-placeholder="Select Material" onchange="changeMaterial2(this.value)" name="material_number_edit" id="material_number_edit" style="width: 100%">
 												<option value=""></option>
-												<option value="KENSA">KENSA</option>
-												<option value="PART">PART</option>
+												@foreach($material2 as $material2)
+												<option value="{{$material2->gmc}}">{{$material2->gmc}} - {{$material2->part_name}}</option>
+												@endforeach
 											</select>
 										</div>
 									</div>
-									<div class="form-group row" align="right" id="tagjig_edit" style="display: none">
-										<label class="col-sm-3">Jig Tag<span class="text-red">*</span></label>
+									<div class="form-group row" align="right">
+										<label class="col-sm-3">Desc<span class="text-red">*</span></label>
 										<div class="col-sm-7" align="left">
-											<input type="text" class="form-control" id="jig_tag_edit" placeholder="Tap RFID Jig Here" required>
-											<input type="hidden" class="form-control" id="type_edit">
-										</div>
-									</div>
-									<div class="form-group row" align="right" id="periodcheck_edit" style="display: none">
-										<label class="col-sm-3">Check Period (Hari)<span class="text-red">*</span></label>
-										<div class="col-sm-7" align="left">
-											<input type="text" class="form-control" id="check_period_edit" placeholder="Check Period" required>
-										</div>
-									</div>
-									<div class="form-group row" align="right" id="jigusage_edit" style="display: none">
-										<label class="col-sm-3">Usage<span class="text-red">*</span></label>
-										<div class="col-sm-7" align="left">
-											<input type="text" class="form-control" id="usage_edit" placeholder="Usage" required>
+											<input type="text" class="form-control" id="mat_desc_edit" placeholder="Material Desc" readonly required>
 										</div>
 									</div>
 									<div class="form-group row" align="right">
-										<label class="col-sm-3">Drawing<span class="text-red">*</span></label>
+										<label class="col-sm-3">No. Kanban<span class="text-red">*</span></label>
 										<div class="col-sm-7" align="left">
-											<input type="file" class="form-control" id="drawing_edit" placeholder="Drawing" required>
-											<span id="drawing_now"></span>
+											<input type="text" class="form-control" id="no_kanban_edit" placeholder="No. Kanban" required>
+										</div>
+									</div>
+									<div class="form-group row" align="right">
+										<label class="col-sm-3">Kanban Code<span class="text-red">*</span></label>
+										<div class="col-sm-7">
+											<input type="text" class="form-control" id="concat_kanban_edit" readonly placeholder="Kanban Code" required>
+										</div>
+									</div>
+									<div class="form-group row" align="right">
+										<label class="col-sm-3">Tag<span class="text-red">*</span></label>
+										<div class="col-sm-7" align="left">
+											<input type="text" class="form-control" id="tag_edit" placeholder="Scan Tag Here" required>
 										</div>
 									</div>
 								</div>
@@ -292,7 +221,7 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button class="btn btn-success" onclick="updateJigData()"><i class="fa fa-save"></i>&nbsp;&nbsp;Simpan</button>
+					<button class="btn btn-success" onclick="updateTagData()"><i class="fa fa-save"></i>&nbsp;&nbsp;Simpan</button>
 				</div>
 			</div>
 		</div>
@@ -305,7 +234,7 @@
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 					<h4 class="modal-title" id="myModalLabel">Delete Confirmation</h4>
 				</div>
-				<div class="modal-body">
+				<div class="modal-body" id="modal_body_delete">
 					Are you sure delete?
 				</div>
 				<div class="modal-footer">
@@ -355,54 +284,61 @@
 	});
 
 	function emptyAll() {
-		$('#category').val('').trigger('change');
-		$('#jig_parent').val('');
-		$('#jig_id').val('');
-		$('#usage').val('');
-		$('#jig_index').val('');
-		$('#jig_alias').val('');
-		$('#jig_name').val('');
-		$('#jig_tag').val('');
-		$('#check_period').val('');
-		$('#drawing').val('');
-
-		$('#category_edit').val('').trigger('change');
-		$('#jig_parent_edit').val('');
-		$('#jig_id_edit').val('');
-		$('#usage_edit').val('');
-		$('#jig_index_edit').val('');
-		$('#jig_alias_edit').val('');
-		$('#jig_name_edit').val('');
-		$('#jig_tag_edit').val('');
-		$('#check_period_edit').val('');
-		$('#drawing_edit').val('');
+		$('#material_number').val('').trigger('change');
+		$('#no_kanban').val('');
+		$('#mat_desc').val('');
+		$('#concat_kanban').val('');
+		$('#tag').val('');
 	}
 
-	function changeCategory(value) {
-		if (value === 'KENSA') {
-			$('#tagjig').show();
-			$('#periodcheck').show();
-			$('#type').val('JIG');
-			$('#jigusage').hide();
-		}else{
-			$('#tagjig').hide();
-			$('#periodcheck').hide();
-			$('#jigusage').show();
-			$('#type').val('PART');
+	function changeMaterial(material_number) {
+		if ($('#material_number').val() !== "") {
+			var data = {
+				material_number:material_number
+			}
+			$.get('{{ url("fetch/injection/material") }}',data, function(result, status, xhr){
+				if(result.status){
+					var no_kanban = parseInt(result.material.no_kanban)+1;
+					if (no_kanban.toString().length < 2) {
+						no_kanban = "0"+no_kanban;
+					}
+					$('#no_kanban').val(no_kanban.toString());
+					var concat_kanban = parseInt(result.materialall.concat_kanban.split('RC')[1])+1;
+					if (concat_kanban.toString().length == 1) {
+						concat_kanban = "000000"+concat_kanban;
+					}else if(concat_kanban.toString().length == 2){
+						concat_kanban = "00000"+concat_kanban;
+					}else if(concat_kanban.toString().length == 3){
+						concat_kanban = "0000"+concat_kanban;
+					}else if(concat_kanban.toString().length == 4){
+						concat_kanban = "000"+concat_kanban;
+					}else if(concat_kanban.toString().length == 5){
+						concat_kanban = "00"+concat_kanban;
+					}else if(concat_kanban.toString().length == 6){
+						concat_kanban = "0"+concat_kanban;
+					}
+					$('#concat_kanban').val("RC"+concat_kanban);
+					$('#mat_desc').val(result.material.part_name);
+					$('#tag').focus();
+				}else{
+					openErrorGritter('Error!','Gagal Mendapatkan Data');
+				}
+			});
 		}
 	}
 
-	function changeCategoryEdit(value) {
-		if (value === 'KENSA') {
-			$('#tagjig_edit').show();
-			$('#periodcheck_edit').show();
-			$('#type_edit').val('JIG');
-			$('#jigusage_edit').hide();
-		}else{
-			$('#tagjig_edit').hide();
-			$('#periodcheck_edit').hide();
-			$('#jigusage_edit').show();
-			$('#type_edit').val('PART');
+	function changeMaterial2(material_number) {
+		if ($('#material_number_edit').val() !== "") {
+			var data = {
+				material_number:material_number
+			}
+			$.get('{{ url("fetch/injection/material_edit") }}',data, function(result, status, xhr){
+				if(result.status){
+					$('#mat_desc_edit').val(result.material.part_name);
+				}else{
+					openErrorGritter('Error!','Gagal Mendapatkan Data');
+				}
+			});
 		}
 	}
 
@@ -437,8 +373,8 @@
 						tagtable += '<td></td>';
 					}
 					tagtable += '<td>'+value.last_update+'</td>';
-					// tagtable += '<td><button class="btn btn-warning btn-sm" onclick="editJigData(\''+value.id_tag+'\')" style="margin-right: 5px"><i class="fa fa-edit"></i>&nbsp;&nbsp;Edit</button><button data-toggle="modal" data-target="#myModal" class="btn btn-danger btn-sm" onclick="deleteJigData(\''+value.id_tag+'\',\''+value.injection_tag+'\',\''+value.material_number+'\',\''+value.material_description+'\',\''+value.no_kanban+'\')" style="margin-right: 5px"><i class="fa fa-trash"></i>&nbsp;&nbsp;Delete</button></td>';
-					// tagtable += '</tr>';
+					tagtable += '<td><button class="btn btn-warning btn-sm" onclick="editTagData(\''+value.id_tag+'\')" style="margin-right: 5px"><i class="fa fa-edit"></i>&nbsp;&nbsp;Edit</button><button data-toggle="modal" data-target="#myModal" class="btn btn-danger btn-sm" onclick="deleteTagData(\''+value.id_tag+'\',\''+value.injection_tag+'\',\''+value.material_number+'\',\''+value.material_description+'\',\''+value.no_kanban+'\')" style="margin-right: 5px"><i class="fa fa-trash"></i>&nbsp;&nbsp;Delete</button></td>';
+					tagtable += '</tr>';
 					index++;
 				});
 
@@ -503,152 +439,93 @@
 		});
 	}
 
-	function addJigData() {
-		if ($('#jig_parent').val() == "" || $('#jig_id').val() == "" || $('#jig_index').val() == "" || $('#jig_name').val() == "" || $('#jig_alias').val() == "" || $('#category').val() == "" || $('#drawing').val() == "") {
+	function addTagData() {
+		if ($('#material_number').val() == "" || $('#no_kanban').val() == "" || $('#concat_kanban').val() == "" || $('#mat_desc').val() == "" || $('#tag').val() == "") {
 			alert('Semua Data Harus Diisi');
 			$('#loading').hide();
 		}else{
 			$('#loading').show();
-			var jig_parent = $('#jig_parent').val();
-			var jig_id = $('#jig_id').val();
-			var usage = $('#usage').val();
-			var jig_index = $('#jig_index').val();
-			var jig_name = $('#jig_name').val();
-			var jig_alias = $('#jig_alias').val();
-			var category = $('#category').val();
-			if (category == 'KENSA') {
-				var jig_tag = $('#jig_tag').val();
-				var check_period = $('#check_period').val();
-			}else{
-				var jig_tag = '';
-				var check_period = '';
+			var material_number = $('#material_number').val();
+			var no_kanban = $('#no_kanban').val();
+			var concat_kanban = $('#concat_kanban').val();
+			var tag = $('#tag').val();
+			var mat_desc = $('#mat_desc').val();
+
+			var data = {
+				material_number:material_number,
+				no_kanban:no_kanban,
+				concat_kanban:concat_kanban,
+				tag:tag,
+				mat_desc:mat_desc,
 			}
-			var type = $('#type').val();
-			var fileData  = $('#drawing').prop('files')[0];
-			var file=$('#drawing').val().replace(/C:\\fakepath\\/i, '').split(".");
-
-			var formData = new FormData();
-			formData.append('fileData', fileData);
-			formData.append('jig_parent', jig_parent);
-			formData.append('jig_id', jig_id);
-			formData.append('usage', usage);
-			formData.append('jig_index', jig_index);
-			formData.append('jig_name', jig_name);
-			formData.append('jig_alias', jig_alias);
-			formData.append('category', category);
-			formData.append('jig_tag', jig_tag);
-			formData.append('check_period', check_period);
-			formData.append('type', type);
-			formData.append('extension', file[1]);
-			formData.append('file_name', file[0]);
-
-			$.ajax({
-				url:"{{ url('input/welding/jig_data') }}",
-				method:"POST",
-				data:formData,
-				dataType:'JSON',
-				contentType: false,
-				cache: false,
-				processData: false,
-				success:function(data)
-				{
+			
+			$.post('{{ url("input/injection/tag") }}',data, function(result, status, xhr){
+				if(result.status){
 					$('#loading').hide();
-					$('#create_modal').modal('hide');
-					emptyAll();
 					getData();
-					openSuccessGritter('Success!','Success Input Data');
+					openSuccessGritter('Success','Tambah Data Berhasil');
+					emptyAll();
+					$('#create_modal').modal('hide');
+				}else{
+					$('#loading').hide();
+					openErrorGritter('Error!','Tambah Data Gagal');
 				}
 			});
 		}
 	}
 
-	function editJigData(id) {
+	function editTagData(id) {
 		var data = {
 			id:id
 		}
-		$('#drawing_now').html("");
-		$.get('{{ url("edit/welding/jig_data") }}', data,function(result, status, xhr){
+		$.get('{{ url("edit/injection/tag") }}', data,function(result, status, xhr){
 			if(result.status){
-				$.each(result.jigs, function(key, value) {
-					$('#jig_parent_edit').val(value.jig_parent);
-					$('#jig_id_edit').val(value.jig_id);
-					$('#usage_edit').val(value.usage);
-					$('#jig_index_edit').val(value.jig_index);
-					$('#jig_name_edit').val(value.jig_name);
-					$('#jig_alias_edit').val(value.jig_alias);
-					$('#category_edit').val(value.category).trigger('change');
-					$('#jig_tag_edit').val(value.jig_tag);
-					$('#check_period_edit').val(value.check_period);
-					$('#drawing_now').html("Drawing : "+value.file_name);
-					$('#id_jig').val(value.id_jig);
-				});
+					$('#material_number_edit').val(result.tag.material_number).trigger('change');
+					$('#no_kanban_edit').val(result.tag.no_kanban);
+					$('#concat_kanban_edit').val(result.tag.concat_kanban);
+					$('#tag_edit').val(result.tag.tag);
+					$('#id_tag').val(result.tag.id);
 
 				$('#edit_modal').modal('show');
 			}
 		});
 	}
 
-	function updateJigData() {
+	function updateTagData() {
 		$('#loading').show();
 
-		var jig_parent = $('#jig_parent_edit').val();
-		var jig_id = $('#jig_id_edit').val();
-		var id_jig = $('#id_jig').val();
-		var usage = $('#usage_edit').val();
-		var jig_index = $('#jig_index_edit').val();
-		var jig_name = $('#jig_name_edit').val();
-		var jig_alias = $('#jig_alias_edit').val();
-		var category = $('#category_edit').val();
-		if (category == 'KENSA') {
-			var jig_tag = $('#jig_tag_edit').val();
-			var check_period = $('#check_period_edit').val();
-		}else{
-			var jig_tag = '';
-			var check_period = '';
+		var material_number = $('#material_number_edit').val();
+		var mat_desc = $('#mat_desc_edit').val();
+		var no_kanban = $('#no_kanban_edit').val();
+		var tag = $('#tag_edit').val();
+		var id_tag = $('#id_tag').val();
+
+		var data = {
+			material_number:material_number,
+			mat_desc:mat_desc,
+			no_kanban:no_kanban,
+			tag:tag,
+			id_tag:id_tag,
 		}
-		var type = $('#type_edit').val();
-		var fileData  = $('#drawing_edit').prop('files')[0];
-		var file=$('#drawing_edit').val().replace(/C:\\fakepath\\/i, '').split(".");
-
-		var formData = new FormData();
-		formData.append('fileData', fileData);
-		formData.append('jig_parent', jig_parent);
-		formData.append('jig_id', jig_id);
-		formData.append('id_jig', id_jig);
-		formData.append('usage', usage);
-		formData.append('jig_index', jig_index);
-		formData.append('jig_name', jig_name);
-		formData.append('jig_alias', jig_alias);
-		formData.append('category', category);
-		formData.append('jig_tag', jig_tag);
-		formData.append('check_period', check_period);
-		formData.append('type', type);
-		formData.append('extension', file[1]);
-		formData.append('file_name', file[0]);
-
-		$.ajax({
-			url:"{{ url('update/welding/jig_data') }}",
-			method:"POST",
-			data:formData,
-			dataType:'JSON',
-			contentType: false,
-			cache: false,
-			processData: false,
-			success:function(data)
-			{
+		
+		$.post('{{ url("update/injection/tag") }}',data, function(result, status, xhr){
+			if(result.status){
 				$('#loading').hide();
-				$('#edit_modal').modal('hide');
-				emptyAll();
 				getData();
-				openSuccessGritter('Success!','Success Delete Data');
+				openSuccessGritter('Success','Update Data Berhasil');
+				emptyAll();
+				$('#edit_modal').modal('hide');
+			}else{
+				$('#loading').hide();
+				openErrorGritter('Error!','Update Data Gagal');
 			}
 		});
 	}
 
-	function deleteJigData(id,jig_id,jig_name,jig_parent) {
-		var url = "{{ url('delete/welding/jig_data') }}";
-		jQuery('.modal-body').text("Are you sure want to delete '" + jig_id + " - " + jig_name + "'?");
-		jQuery('#modalDeleteButton').attr("href", url+'/'+id+'/'+jig_id+'/'+jig_parent);
+	function deleteTagData(id,tag,material_number,mat_desc,no_kanban) {
+		var url = "{{ url('delete/injection/tag') }}";
+		jQuery('#modal_body_delete').text("Are you sure want to delete '" + material_number + " - " + mat_desc + " - No. Kanban : " + no_kanban + "'?");
+		jQuery('#modalDeleteButton').attr("href", url+'/'+id);
 	}
 
 	function openSuccessGritter(title, message){

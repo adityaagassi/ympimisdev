@@ -6184,13 +6184,51 @@ class InjectionsController extends Controller
     public function editInjectionTag(Request $request)
     {
         try {
-            $material = InjectionTag::where('material_number',$request->get('material_number'))->orderBy('injection_tags.id','desc')->first();
+            $tag = InjectionTag::where('injection_tags.id',$request->get('id'))->first();
 
             $response = array(
                 'status' => true,
                 'tag' => $tag
             );
             return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function updateInjectionTag(Request $request)
+    {
+        try {
+            $id_user = Auth::id();
+            $tag = InjectionTag::where('injection_tags.id',$request->get('id_tag'))->first();
+            $tag->material_number = $request->get('material_number');
+            $tag->mat_desc = $request->get('mat_desc');
+            $tag->no_kanban = $request->get('no_kanban');
+            $tag->tag = $request->get('tag');
+            $tag->save();
+            
+            $response = array(
+                'status' => true,
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function deleteInjectionTag($id)
+    {
+        try {
+            InjectionTag::where('id',$id)->forceDelete();
+            return redirect('index/injection/tag');
         } catch (\Exception $e) {
             $response = array(
                 'status' => false,

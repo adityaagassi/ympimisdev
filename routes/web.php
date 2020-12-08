@@ -422,6 +422,8 @@ Route::group(['nav' => 'M31', 'middleware' => 'permission'], function(){
 	Route::get('fetch/injection/material_edit', 'InjectionsController@fetchInjectionMaterialEdit');
 	Route::post('input/injection/tag', 'InjectionsController@inputInjectionTag');
 	Route::get('edit/injection/tag', 'InjectionsController@editInjectionTag');
+	Route::post('update/injection/tag', 'InjectionsController@updateInjectionTag');
+	Route::get('delete/injection/tag/{id}', 'InjectionsController@deleteInjectionTag');
 });
 
 // end mesin injeksi
@@ -2486,6 +2488,10 @@ Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 
 	Route::get('index/resume_shipping_order', 'ContainerScheduleController@indexResumeShippingOrder');
 	Route::get('fetch/resume_shipping_order', 'ContainerScheduleController@fetchResumeShippingOrder');
+
+	Route::get('index/shipping_agency', 'ContainerScheduleController@indexShippingAgency');
+	Route::get('fetch/shipping_agency', 'ContainerScheduleController@fetchShippingAgency');
+
 	
 
 });
