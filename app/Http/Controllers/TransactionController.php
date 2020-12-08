@@ -436,7 +436,7 @@ class TransactionController extends Controller
 
 		$condition = $date . $issue . $receive . $material . $remark;
 
-		if($request->get('remark') == 'Pending'){
+		if($request->get('remark') == 'pending'){
 			$condition = $date_pending . $issue . $receive . $material . $remark;
 			$log = "SELECT
 			rl.id,
@@ -446,7 +446,7 @@ class TransactionController extends Controller
 			rl.receive_location,
 			rl.material_description,
 			rl.quantity,
-			'Pending' AS remark,
+			'pending' AS remark,
 			rl.created_at AS printed_at,
 			u.`name` AS printed_by,
 			'-' AS received_at,

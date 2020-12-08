@@ -136,14 +136,13 @@
 								<label>Status</label>
 								{{-- <select class="form-control select2" multiple="multiple" name="remark" id='remark' data-placeholder="Select Status" style="width: 100%; height: 100px;">
 									<option value=""></option>
-									<option value="received">Pending</option>
 									<option value="received">Received</option>
 									<option value="deleted">Deleted</option>
 									<option value="rejected">Rejected</option>
 								</select> --}}
 								<select class="form-control select2" name="remark" id='remark' data-placeholder="Select Status" style="width: 100%; height: 100px;">
 									<option value=""></option>
-									<option value="received">Pending</option>
+									<option value="pending">Pending</option>
 									<option value="received">Received</option>
 									<option value="deleted">Deleted</option>
 									<option value="rejected">Rejected</option>
