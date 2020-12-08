@@ -1541,6 +1541,7 @@ Route::get('fetch/warehouse/print_equipment', 'AccountingController@fetch_print_
 Route::get('print/warehouse/label/{id}', 'AccountingController@label_kedatangan');
 
 Route::get('warehouse/cek_kedatangan', 'AccountingController@cek_kedatangan');
+Route::get('fetch/warehouse/cek_kedatangan', 'AccountingController@fetch_kedatangan');
 
 //Cetak Bukti Kedatangan
 Route::get('warehouse/cetak_bukti', 'AccountingController@wh_cetak_bukti');
