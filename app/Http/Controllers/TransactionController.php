@@ -437,7 +437,7 @@ class TransactionController extends Controller
 		$condition = $date . $issue . $receive . $material . $remark;
 
 		if($request->get('remark') == 'pending'){
-			$condition = $date_pending . $issue . $receive . $material . $remark;
+			$condition = $date_pending . $issue . $receive . $material;
 			$log = db::select("SELECT
 				rl.id,
 				rl.id AS return_id,
@@ -497,9 +497,7 @@ class TransactionController extends Controller
 				LEFT JOIN (SELECT id, concat(SPLIT_STRING(`name`, ' ', 1), ' ', SPLIT_STRING(`name`, ' ', 2)) as `name` FROM users) AS cancel_user ON cancel_user.id = cancel.created_by
 				ORDER BY non.slip_created");
 		}
-		
 
-		
 		return DataTables::of($log)
 		->addColumn('cancel', function($data){
 			if($data->remark == 'received'){
