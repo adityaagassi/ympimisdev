@@ -10716,12 +10716,12 @@ public function transfer_approvalto($id){
             $price = $kedatangan->price;
             $qty_receive = $kedatangan->qty_receive;
 
-            return number_format($price * $qty_receive,2,",",".");  
+            return number_format($price * $qty_receive,2,".",",");  
         })
 
         ->editColumn('price', function ($kedatangan)
         {
-            return number_format($kedatangan->price,2,",",".");  
+            return number_format($kedatangan->price,2,".",",");  
         })
 
         ->rawColumns(['price' => 'price','amount_po' => 'amount_po'])

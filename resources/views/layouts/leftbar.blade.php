@@ -551,7 +551,9 @@
       @if(isset($page) && $page == "Receive Bukti")<li class="active">@else<li>@endif
         <a href="{{ url("warehouse/cetak_bukti") }}"><i class="fa fa-file-pdf-o"></i><span>Kirim Barang</span></a>
       </li>
-      
+      @if(isset($page) && $page == "Cek Kedatangan")<li class="active">@else<li>@endif
+        <a href="{{ url("warehouse/cek_kedatangan") }}"><i class="fa fa-sticky-note-o"></i>Report Kedatangan Barang</a>
+      </li>
     </ul>
   </li>
   @endif

@@ -275,8 +275,8 @@
 			{ "data": "qty_receive"},
 			{ "data": "date_receive"},
 			{ "data": "surat_jalan"},
-			{ "data": "price"},
-			{ "data": "amount_po"}
+			{ "data": "price","className" : "text-right"},
+			{ "data": "amount_po","className" : "text-right"}
 			]
 		});
 
