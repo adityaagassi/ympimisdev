@@ -54,9 +54,9 @@
             </div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Sub Section<span class="text-red">*</span></label>
+            <label class="col-sm-4">Group<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Pilih Sub Section..." required>
+              <select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Pilih Group..." required>
                 <option value=""></option>
                 @foreach($subsection as $subsection)
                 <option value="{{ $subsection->sub_section_name }}">{{ $subsection->sub_section_name }}</option>

@@ -45,7 +45,7 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Section<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="section" style="width: 100%;" data-placeholder="Choose a Section..." required>
+              <select class="form-control select2" name="section" style="width: 100%;" data-placeholder="Pilih Section..." required>
                 <option value=""></option>
                 @foreach($section as $section)
                   @if($sampling_check->section == $section->section_name)
@@ -58,9 +58,9 @@
             </div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Sub Section<span class="text-red">*</span></label>
+            <label class="col-sm-4">Group<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Choose a Sub Section..." required>
+              <select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Pilih Group..." required>
                 <option value=""></option>
                 @foreach($subsection as $subsection)
                   @if($sampling_check->subsection == $subsection->sub_section_name)
@@ -75,7 +75,7 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Product<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              {{-- <select class="form-control select2" name="product" style="width: 100%;" data-placeholder="Choose a Product..." required>
+              {{-- <select class="form-control select2" name="product" style="width: 100%;" data-placeholder="Pilih Product..." required>
                 <option value=""></option>
                 @foreach($product as $product)
                   @if($sampling_check->product == $product->origin_group_name)

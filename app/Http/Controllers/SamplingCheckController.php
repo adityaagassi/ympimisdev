@@ -198,6 +198,7 @@ class SamplingCheckController extends Controller
           employee_syncs.section is not null
           AND
             department LIKE '%".$departments."%'";
+            $section = DB::select($querySection);
 
         $querySubSection = "SELECT
             DISTINCT(employee_syncs.group) AS sub_section_name 
