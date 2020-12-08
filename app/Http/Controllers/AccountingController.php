@@ -10691,6 +10691,43 @@ public function transfer_approvalto($id){
         ))->with('page', 'Print Warehouse')->with('head', 'Receive Equipment Warehouse');
     }
 
+    public function fetch_kedatangan(Request $request)
+    {
+
+        $tanggal = "";
+
+        if (strlen($request->get('tanggal')) > 0)
+        {
+            $tanggal = "and acc_receives.date_receive = '".$request->get('tanggal')."'";
+        }
+
+        $kedatangan = DB::select("
+            SELECT DISTINCT
+                acc_receives.*, acc_purchase_order_details.no_pr, IF(goods_price != 0,goods_price,service_price) as price
+            FROM
+            `acc_receives`
+            LEFT JOIN acc_purchase_order_details ON acc_receives.no_po = acc_purchase_order_details.no_po 
+            AND acc_receives.no_item = acc_purchase_order_details.no_item
+            WHERE acc_receives.deleted_at IS NULL " . $tanggal . " order by acc_receives.id DESC");
+
+        return DataTables::of($kedatangan)
+        ->addColumn('amount_po', function ($kedatangan)
+        {
+            $price = $kedatangan->price;
+            $qty_receive = $kedatangan->qty_receive;
+
+            return number_format($price * $qty_receive,2,",",".");  
+        })
+
+        ->editColumn('price', function ($kedatangan)
+        {
+            return number_format($kedatangan->price,2,",",".");  
+        })
+
+        ->rawColumns(['price' => 'price','amount_po' => 'amount_po'])
+        ->make(true);
+    }
+
 
 
     public function receive_report()

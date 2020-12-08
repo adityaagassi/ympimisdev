@@ -148,6 +148,12 @@
               <option value="Professional Fee" <?php if($investment->type == "Professional Fee") echo "selected"; ?>>Proffesional Fee</option>
               <option value="Miscellaneous" <?php if($investment->type == "Miscellaneous") echo "selected"; ?>>Miscellaneous</option>
               <option value="Information System" <?php if($investment->type == "Information System") echo "selected"; ?>>Information System</option>
+              <option value="Transport Expense" <?php if($investment->type == "Transport Expense") echo "selected"; ?>>Transport Expense</option>
+              <option value="Postage and Telecomunication" <?php if($investment->type == "Postage and Telecomunication") echo "selected"; ?>>Postage and Telecomunication</option>
+              <option value="Meal" <?php if($investment->type == "Meal") echo "selected"; ?>>Meal</option>
+              <option value="Bussiness Trip" <?php if($investment->type == "Bussiness Trip") echo "selected"; ?>>Bussiness Trip</option>
+              <option value="Electricity, Water, and Gas" <?php if($investment->type == "Electricity, Water, and Gas") echo "selected"; ?>>Electricity, Water, and Gas</option>
+              <option value="Technical Assistant" <?php if($investment->type == "Technical Assistant") echo "selected"; ?>>Technical Assistant</option>
               <option value="Others" <?php if($investment->type == "Others") echo "selected"; ?>>Others</option>
             </select>
           </div>

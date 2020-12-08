@@ -265,33 +265,33 @@
       @endif
 
       @if(in_array('M16', $navs))
-        @if(isset($head) && $head == "Employees Data")
-        <li class="treeview active">@else<li class="treeview">
+      @if(isset($head) && $head == "Employees Data")
+      <li class="treeview active">@else<li class="treeview">
         @endif
-          <a href="#">
-            <i class="fa fa-users"></i> <span>Master Employee</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            @if(isset($page) && $page == "Master Employee")<li class="active">@else<li>@endif
-              <a href="{{ url("index/MasterKaryawan") }}"><i class="fa fa-list-ol"></i>Employee Data</a>
-            </li>
+        <a href="#">
+          <i class="fa fa-users"></i> <span>Master Employee</span>
+          <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+          </span>
+        </a>
+        <ul class="treeview-menu">
+          @if(isset($page) && $page == "Master Employee")<li class="active">@else<li>@endif
+            <a href="{{ url("index/MasterKaryawan") }}"><i class="fa fa-list-ol"></i>Employee Data</a>
+          </li>
 
-            @if(isset($page) && $page == "Mutation")<li class="active">@else<li>@endif
-              <a href="{{ url("/index/mutation") }}"><i class="fa fa-clock-o"></i><span>Mutation</span></a>
-            </li>
+          @if(isset($page) && $page == "Mutation")<li class="active">@else<li>@endif
+            <a href="{{ url("/index/mutation") }}"><i class="fa fa-clock-o"></i><span>Mutation</span></a>
+          </li>
 
-            @if(isset($page) && $page == "Promotion")<li class="active">@else<li>@endif
-              <a href="{{ url("/index/promotion") }}"><i class="fa fa-clock-o"></i><span>Promotion</span></a>
-            </li>
+          @if(isset($page) && $page == "Promotion")<li class="active">@else<li>@endif
+            <a href="{{ url("/index/promotion") }}"><i class="fa fa-clock-o"></i><span>Promotion</span></a>
+          </li>
 
-            @if(isset($page) && $page == "Termination")<li class="active">@else<li>@endif
-              <a href="{{ url("/index/termination") }}"><i class="fa fa-clock-o"></i><span>Termination</span></a>
-            </li>
-          </ul>
-        </li>
+          @if(isset($page) && $page == "Termination")<li class="active">@else<li>@endif
+            <a href="{{ url("/index/termination") }}"><i class="fa fa-clock-o"></i><span>Termination</span></a>
+          </li>
+        </ul>
+      </li>
       @endif
 
    {{--  @if(in_array('M22', $navs))
@@ -309,7 +309,7 @@
     </ul>
   </li>
   @endif
-   --}}
+  --}}
 
   @if(in_array('S0', $navs))
   <li class="header">Service Menu</li>
@@ -337,6 +337,9 @@
       @if(isset($page) && $page == "Budget")<li class="active">@else<li>@endif
         <a href="{{ url("budget/info") }}"><i class="fa fa-money"></i><span>Budget Info</span></a>
       </li>
+      @if(isset($page) && $page == "Cek Kedatangan")<li class="active">@else<li>@endif
+        <a href="{{ url("warehouse/cek_kedatangan") }}"><i class="fa fa-sticky-note-o"></i>Cek Kedatangan Barang</a>
+      </li>
     </ul>
   </li>
   @endif
@@ -362,6 +365,9 @@
       </li>
       @if(isset($page) && $page == "Budget")<li class="active">@else<li>@endif
         <a href="{{ url("budget/info") }}"><i class="fa fa-money"></i><span>Budget Info</span></a>
+      </li>
+      @if(isset($page) && $page == "Cek Kedatangan")<li class="active">@else<li>@endif
+        <a href="{{ url("warehouse/cek_kedatangan") }}"><i class="fa fa-sticky-note-o"></i>Cek Kedatangan Barang</a>
       </li>
     </ul>
   </li>
@@ -437,6 +443,10 @@
 
       @if(isset($page) && $page == "Budget")<li class="active">@else<li>@endif
         <a href="{{ url("budget/info") }}"><i class="fa fa-money"></i><span>Budget Info</span></a>
+      </li>
+
+      @if(isset($page) && $page == "Cek Kedatangan")<li class="active">@else<li>@endif
+        <a href="{{ url("warehouse/cek_kedatangan") }}"><i class="fa fa-sticky-note-o"></i>Cek Kedatangan Barang</a>
       </li>
 
     </ul>
@@ -515,33 +525,9 @@
       @if(isset($page) && $page == "Upload Transaksi")<li class="active">@else<li>@endif
         <a href="{{ url("upload_transaksi") }}"><i class="fa fa-upload"></i>Upload Transaksi Non-PO</a>
       </li>
-    </ul>
-  </li>
-  @endif
 
-  @if(in_array('S39', $navs))
-  @if(isset($head) && $head == "Sakurentsu")<li class="treeview active">@else<li class="treeview">@endif
-    <a href="#">
-      <i class="fa fa-file-pdf-o"></i> <span>Sakurentsu</span>
-      <span class="pull-right-container">
-        <i class="fa fa-angle-left pull-right"></i>
-      </span>
-    </a>
-    <ul class="treeview-menu">
-      @if(isset($page) && $page == "Upload Sakurentsu")<li class="active">@else<li>@endif
-        <a href="{{ url("/index/sakurentsu/upload_sakurentsu") }}"><i class="fa fa-upload"></i><span>Upload Sakurentsu</span></a>
-      </li>
-
-      @if(isset($page) && $page == "Sakurentsu List")<li class="active">@else<li>@endif
-        <a href="{{ url("/index/sakurentsu/list_sakurentsu") }}"><i class="fa fa-files-o"></i><span>Sakurentsu List</span></a>
-      </li>
-
-      @if(isset($page) && $page == "3M List")<li class="active">@else<li>@endif
-        <a href="{{ url("/index/sakurentsu/list_3m") }}"><i class="fa fa-files-o"></i><span>3M List</span></a>
-      </li>
-
-      @if(isset($page) && $page == "Trial List")<li class="active">@else<li>@endif
-        <a href="{{ url("/index/sakurentsu/list_trial") }}"><i class="fa fa-files-o"></i><span>Trial List</span></a>
+      @if(isset($page) && $page == "Cek Kedatangan")<li class="active">@else<li>@endif
+        <a href="{{ url("warehouse/cek_kedatangan") }}"><i class="fa fa-sticky-note-o"></i>Cek Kedatangan Barang</a>
       </li>
     </ul>
   </li>
@@ -581,6 +567,56 @@
     <ul class="treeview-menu">
       @if(isset($page) && $page == "Receive GA")<li class="active">@else<li>@endif
         <a href="{{ url("warehouse/receive_ga") }}"><i class="fa fa-share-square-o"></i>Terima Barang</a>
+      </li>
+    </ul>
+  </li>
+  @endif
+
+  @if(in_array('S43', $navs))
+  @if(isset($head) && $head == "Invoice Check")<li class="treeview active">@else<li class="treeview">@endif
+    <a href="#">
+      <i class="fa fa-money"></i> <span>Invoice Check</span>
+      <span class="pull-right-container">
+        <i class="fa fa-angle-left pull-right"></i>
+      </span>
+    </a>
+    <ul class="treeview-menu">
+
+      @if(isset($page) && $page == "Receive Report")<li class="active">@else<li>@endif
+        <a href="{{ url("receive_report") }}"><i class="fa fa-upload"></i>Upload Receive Report</a>
+      </li>
+
+    </ul>
+  </li>
+  @endif
+
+  @if(in_array('S39', $navs))
+  @if(isset($head) && $head == "Sakurentsu")<li class="treeview active">@else<li class="treeview">@endif
+    <a href="#">
+      <i class="fa fa-file-pdf-o"></i> <span>Sakurentsu</span>
+      <span class="pull-right-container">
+        <i class="fa fa-angle-left pull-right"></i>
+      </span>
+    </a>
+    <ul class="treeview-menu">
+      @if(isset($page) && $page == "Upload Sakurentsu")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/sakurentsu/upload_sakurentsu") }}"><i class="fa fa-upload"></i><span>Upload Sakurentsu</span></a>
+      </li>
+
+      @if(isset($page) && $page == "Sakurentsu List")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/sakurentsu/list_sakurentsu") }}"><i class="fa fa-files-o"></i><span>Sakurentsu List</span></a>
+      </li>
+
+      @if(isset($page) && $page == "Sakurentsu Translate List")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/sakurentsu/list_sakurentsu_translate") }}"><i class="fa fa-files-o"></i><span>Translate List</span></a>
+      </li>
+
+      @if(isset($page) && $page == "3M List")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/sakurentsu/list_3m") }}"><i class="fa fa-files-o"></i><span>3M List</span></a>
+      </li>
+
+      @if(isset($page) && $page == "Trial List")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/sakurentsu/list_trial") }}"><i class="fa fa-files-o"></i><span>Trial List</span></a>
       </li>
     </ul>
   </li>
