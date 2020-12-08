@@ -500,21 +500,20 @@ class TransactionController extends Controller
 
 		return DataTables::of($log)
 		->addColumn('cancel', function($data){
-			if($data->remark == 'received'){
-				if(Auth::user()->role_code == "MIS" || Auth::user()->role_code == "PROD"){
-					if($request->get('remark') == 'pending'){
-
-						return '<button style="width: 50%; height: 100%;" onclick="deleteReturn(\''.$data->id.'\')" class="btn btn-xs btn-danger form-control"><span><i class="fa fa-close"></i></span></button>';
-					}
-					else{
-						return '<button style="width: 50%; height: 100%;" onclick="cancelReturn(\''.$data->id.'\')" class="btn btn-xs btn-danger form-control"><span><i class="fa fa-close"></i></span></button>';						
-					}
-				}else{
-					return '-';
+			if(Auth::user()->role_code == "MIS" || Auth::user()->role_code == "PROD"){
+				if($data->remark == 'pending'){
+					return '<button style="width: 50%; height: 100%;" onclick="deleteReturn(\''.$data->id.'\')" class="btn btn-xs btn-danger form-control"><span><i class="fa fa-close"></i></span></button>';
 				}
-			}else{
+				else if($data->remark == 'received'){
+					return '<button style="width: 50%; height: 100%;" onclick="cancelReturn(\''.$data->id.'\')" class="btn btn-xs btn-danger form-control"><span><i class="fa fa-close"></i></span></button>';						
+				}
+				else{
+					return '-';					
+				}
+			}
+			else{
 				return '-';
-			}		
+			}
 		})
 		->rawColumns([ 'cancel' => 'cancel'])
 		->make(true);
