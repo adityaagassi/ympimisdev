@@ -125,7 +125,7 @@ table > thead > tr > th{
 	jQuery(document).ready(function(){
 		$('.select2').select2();
 		fillChart();
-		setInterval(fillChart, 7000);
+		setInterval(fillChart, 10000);
 	});
 
 	$('.datepicker').datepicker({
@@ -380,14 +380,18 @@ table > thead > tr > th{
 					//Chart Machine Report
 					var part = [];
 					var jml = [];
+					var jml_assy = [];
 					var series = [];
 					var series2 = [];
+					var series3 = [];
 					var colors = [];
+					var colors2 = [];
 					var plan = [];
 
 					for (var i = 0; i < result.datas.length; i++) {
 						part.push(result.datas[i].part);
 						jml.push(parseInt(result.datas[i].stock));
+						jml_assy.push(parseInt(result.datas[i].stock_assy));
 						var color1 = result.datas[i].part.split(' ');
 						var color2 = color1.slice(-1);
 						// var color2 = color1[1].slice(0);
@@ -396,23 +400,32 @@ table > thead > tr > th{
 						// console.log(result.datas[i].color);
 						if (result.datas[i].color == 'BLUE)') {
 							colors.push('#4287f5');
+							colors2.push('#a6c8ff');
 						}else if(result.datas[i].color == 'PINK)'){
 							colors.push('#f542dd');
+							colors2.push('#ffa3f3');
 						}else if(result.datas[i].color == 'GREEN)'){
 							colors.push('#7bff63');
+							colors2.push('#adff9e');
 						}else if(result.datas[i].color == 'RED)'){
 							colors.push('#ff4a4a');
+							colors2.push('#ff8787');
 						}else if(result.datas[i].color == 'IVORY)'){
 							colors.push('#fff7ba');
+							colors2.push('#fffce6');
 						}else if(result.datas[i].color == 'BROWN)'){
 							colors.push('#856111');
+							colors2.push('#ccae6c');
 						}else if(result.datas[i].color == 'BEIGE)'){
 							colors.push('#e0b146');
+							colors2.push('#e8c066');
 						}else{
 							colors.push('#000');
+							colors2.push('#000');
 						}
 						// series.push([part[i], jml[i], colors[i]]);
-						series.push({y: jml[i],name:part[i], color: colors[i]});
+						series.push({y: jml[i],name:part[i], color: colors2[i]});
+						series3.push({y: jml_assy[i],name:part[i], color: colors[i]});
 						plan.push(result.datas[i].plan);
 						series2.push({y: plan[i],name:part[i]});
 					}
@@ -500,14 +513,16 @@ table > thead > tr > th{
 									enabled: true,
 									format: '{point.y}',
 									style:{
-										fontSize: '1vw'
+										fontSize: '10px'
 									}
 								},
 								animation: false,
 								pointPadding: 0.93,
 								groupPadding: 0.93,
 								borderWidth: 0.93,
-								cursor: 'pointer'
+								cursor: 'pointer',
+								borderColor: 'black',
+								borderWidth: 1.3,
 							},
 						},credits: {
 							enabled: false
@@ -515,9 +530,18 @@ table > thead > tr > th{
 						series: [{
 							type: 'column',
 							data: series,
-							name: 'Stock',
+							name: 'Stock Store',
 							colorByPoint: false,
 							// color: colors
+							stacking:true
+						},
+						{
+							type: 'column',
+							data: series3,
+							name: 'Stock Assy',
+							colorByPoint: false,
+							// color: colors
+							stacking:true
 						},
 						{
 						    animation: false,

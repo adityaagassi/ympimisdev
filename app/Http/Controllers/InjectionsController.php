@@ -5621,12 +5621,14 @@ class InjectionsController extends Controller
                     )
                 ) as color,
                 SUM( c.stock ) AS stock,
+                SUM( c.stock_assy ) AS stock_assy,
                 SUM( c.plan ) AS plan 
             FROM
                 (
                 SELECT
                     CONCAT( UPPER( injection_parts.part_code ), ' (', injection_parts.color, ')' ) AS part,
                     COALESCE (( SELECT quantity FROM injection_inventories WHERE location = 'RC11' AND material_number = gmc ), 0 ) AS stock,
+                    COALESCE (( SELECT quantity FROM injection_inventories WHERE location = 'RC91' AND material_number = gmc ), 0 ) AS stock_assy,
                     0 AS plan 
                 FROM
                     injection_parts where remark = 'injection'
@@ -5634,6 +5636,7 @@ class InjectionsController extends Controller
                 SELECT
                     part,
                     0 AS stock,
+                    0 AS stock_assy,
                     sum( a.plan )- sum( a.stamp ) AS plan 
                 FROM
                     (
@@ -5688,12 +5691,14 @@ class InjectionsController extends Controller
                     )
                 ) as color,
                 SUM( c.stock ) AS stock,
+                SUM( c.stock_assy ) AS stock_assy,
                 SUM( c.plan ) AS plan 
             FROM
                 (
                 SELECT
                     CONCAT( UPPER( injection_parts.part_code ), ' (', injection_parts.color, ')' ) AS part,
                     COALESCE (( SELECT quantity FROM injection_inventories WHERE location = 'RC11' AND material_number = gmc ), 0 ) AS stock,
+                    COALESCE (( SELECT quantity FROM injection_inventories WHERE location = 'RC91' AND material_number = gmc ), 0 ) AS stock_assy,
                     0 AS plan 
                 FROM
                     injection_parts where remark = 'injection'
@@ -5701,6 +5706,7 @@ class InjectionsController extends Controller
                 SELECT
                     part,
                     0 AS stock,
+                    0 AS stock_assy,
                     sum( a.plan )- sum( a.stamp ) AS plan 
                 FROM
                     (
@@ -5754,6 +5760,7 @@ class InjectionsController extends Controller
                     'part' => $key->part,
                     'color' => $key->color,
                     'stock' => $key->stock,
+                    'stock_assy' => $key->stock_assy,
                     'plan' => $key->plan, );
             }
 
@@ -5762,6 +5769,7 @@ class InjectionsController extends Controller
                     'part' => $key->part,
                     'color' => $key->color,
                     'stock' => $key->stock,
+                    'stock_assy' => $key->stock_assy,
                     'plan' => $key->plan, );
             }
 
@@ -6058,11 +6066,16 @@ class InjectionsController extends Controller
 
     public function indexInjectionTag()
     {
+
+        $material = DB::SELECT("SELECT *,gmc as material_number, part_name as material_description FROM `injection_parts` where remark = 'injection' and deleted_at is null");
+
         $title = 'Injection Tag';
         $title_jp = '???';
         return view('injection.tag',array(
             'title' => $title,
             'title_jp' => $title_jp,
+            'material' => $material,
+            'material2' => $material,
         ))->with('page', 'Injection Tag')->with('jpn', '???');
     }
 
@@ -6083,6 +6096,95 @@ class InjectionsController extends Controller
                 LEFT JOIN employee_syncs ON injection_tags.operator_id = employee_syncs.employee_id 
             WHERE
                 injection_parts.deleted_at IS NULL');
+
+            $response = array(
+                'status' => true,
+                'tag' => $tag
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function fetchInjectionMaterial(Request $request)
+    {
+        try {
+            $material = InjectionTag::join('injection_parts','injection_parts.gmc','injection_tags.material_number')->where('material_number',$request->get('material_number'))->orderBy('injection_tags.id','desc')->first();
+
+            $materialall = InjectionTag::orderBy('id','desc')->first();
+
+            $response = array(
+                'status' => true,
+                'material' => $material,
+                'materialall' => $materialall
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function fetchInjectionMaterialEdit(Request $request)
+    {
+        try {
+            $material = InjectionTag::join('injection_parts','injection_parts.gmc','injection_tags.material_number')->where('material_number',$request->get('material_number'))->orderBy('injection_tags.id','desc')->first();
+
+            $materialall = InjectionTag::orderBy('id','desc')->first();
+
+            $response = array(
+                'status' => true,
+                'material' => $material,
+                'materialall' => $materialall
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function inputInjectionTag(Request $request)
+    {
+        try {
+            $id_user = Auth::id();
+            InjectionTag::create([
+                'material_number' => $request->get('material_number'),
+                'no_kanban' => $request->get('no_kanban'),
+                'concat_kanban' => $request->get('concat_kanban'),
+                'tag' => $request->get('tag'),
+                'mat_desc' => $request->get('mat_desc'),
+                'created_by' => $id_user
+            ]);
+            
+            $response = array(
+                'status' => true,
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function editInjectionTag(Request $request)
+    {
+        try {
+            $material = InjectionTag::where('material_number',$request->get('material_number'))->orderBy('injection_tags.id','desc')->first();
 
             $response = array(
                 'status' => true,
