@@ -411,7 +411,7 @@ table > thead > tr > th{
 							colors.push('#ff4a4a');
 							colors2.push('#ff8787');
 						}else if(result.datas[i].color == 'IVORY)'){
-							colors.push('#fff7ba');
+							colors.push('#fff5a6');
 							colors2.push('#fffce6');
 						}else if(result.datas[i].color == 'BROWN)'){
 							colors.push('#856111');
@@ -424,8 +424,8 @@ table > thead > tr > th{
 							colors2.push('#000');
 						}
 						// series.push([part[i], jml[i], colors[i]]);
-						series.push({y: jml[i],name:part[i], color: colors2[i]});
-						series3.push({y: jml_assy[i],name:part[i], color: colors[i]});
+						series.push({y: jml[i],name:part[i], color: colors[i]});
+						series3.push({y: jml_assy[i],name:part[i], color: colors2[i]});
 						plan.push(result.datas[i].plan);
 						series2.push({y: plan[i],name:part[i]});
 					}
@@ -513,7 +513,7 @@ table > thead > tr > th{
 									enabled: true,
 									format: '{point.y}',
 									style:{
-										fontSize: '10px'
+										fontSize: '11px'
 									}
 								},
 								animation: false,
@@ -527,18 +527,18 @@ table > thead > tr > th{
 						},credits: {
 							enabled: false
 						},
-						series: [{
-							type: 'column',
-							data: series,
-							name: 'Stock Store',
-							colorByPoint: false,
-							// color: colors
-							stacking:true
-						},
+						series: [
 						{
 							type: 'column',
 							data: series3,
 							name: 'Stock Assy',
+							colorByPoint: false,
+							// color: colors
+							stacking:true
+						},{
+							type: 'column',
+							data: series,
+							name: 'Stock Store',
 							colorByPoint: false,
 							// color: colors
 							stacking:true
