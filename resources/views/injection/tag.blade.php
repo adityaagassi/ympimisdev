@@ -373,7 +373,11 @@
 						tagtable += '<td></td>';
 					}
 					tagtable += '<td>'+value.last_update+'</td>';
-					tagtable += '<td><button class="btn btn-warning btn-sm" onclick="editTagData(\''+value.id_tag+'\')" style="margin-right: 5px"><i class="fa fa-edit"></i>&nbsp;&nbsp;Edit</button><button data-toggle="modal" data-target="#myModal" class="btn btn-danger btn-sm" onclick="deleteTagData(\''+value.id_tag+'\',\''+value.injection_tag+'\',\''+value.material_number+'\',\''+value.material_description+'\',\''+value.no_kanban+'\')" style="margin-right: 5px"><i class="fa fa-trash"></i>&nbsp;&nbsp;Delete</button></td>';
+					tagtable += '<td><button class="btn btn-warning btn-sm" onclick="editTagData(\''+value.id_tag+'\')" style="margin-right: 5px"><i class="fa fa-edit"></i>&nbsp;&nbsp;Edit</button><button data-toggle="modal" data-target="#myModal" class="btn btn-danger btn-sm" onclick="deleteTagData(\''+value.id_tag+'\',\''+value.injection_tag+'\',\''+value.material_number+'\',\''+value.material_description+'\',\''+value.no_kanban+'\')" style="margin-right: 5px"><i class="fa fa-trash"></i>&nbsp;&nbsp;Delete</button>';
+					if (value.partsall != null) {
+						tagtable += '<button class="btn btn-success btn-sm" onclick="removeTagData(\''+value.id_tag+'\',\''+value.tag+'\',\''+value.material_number+'\',\''+value.cavity+'\')" style="margin-right: 5px"><i class="fa fa-window-close"></i>&nbsp;&nbsp;Kosongkan</button>';
+					}
+					tagtable += '</td>';
 					tagtable += '</tr>';
 					index++;
 				});
@@ -518,6 +522,29 @@
 			}else{
 				$('#loading').hide();
 				openErrorGritter('Error!','Update Data Gagal');
+			}
+		});
+	}
+
+	function removeTagData(id,tag,material_number,cavity) {
+		$('#loading').show();
+
+		var data = {
+			id:id,
+			tag:tag,
+			material_number:material_number,
+			cavity:cavity,
+		}
+		
+		$.post('{{ url("remove/injection/tag") }}',data, function(result, status, xhr){
+			if(result.status){
+				$('#loading').hide();
+				getData();
+				openSuccessGritter('Success','Remove Data Berhasil');
+				emptyAll();
+			}else{
+				$('#loading').hide();
+				openErrorGritter('Error!','Remove Data Gagal');
 			}
 		});
 	}

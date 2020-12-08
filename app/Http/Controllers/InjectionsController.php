@@ -6237,4 +6237,39 @@ class InjectionsController extends Controller
             return Response::json($response);
         }
     }
+
+    public function removeInjectionTag(Request $request)
+    {
+        try {
+            $transaction = InjectionTag::where('tag',$request->get('tag'))->first();
+            $transaction->operator_id = null;
+            $transaction->part_name = null;
+            $transaction->part_type = null;
+            $transaction->color = null;
+            $transaction->cavity = null;
+            $transaction->location = null;
+            $transaction->shot = null;
+            $transaction->availability = null;
+            $transaction->height_check = null;
+            $transaction->push_pull_check = null;
+            $transaction->torque_check = null;
+            $transaction->remark = null;
+            $transaction->save();
+
+            $process = InjectionProcessLog::where('tag_product',$request->get('tag'))->where('material_number',$request->get('material_number'))->where('cavity',$request->get('cavity'))->where('remark',null)->first();
+                $process->remark = 'Close';
+                $process->save();
+
+            $response = array(
+                'status' => true
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+            return Response::json($response);
+        }
+    }
 }
