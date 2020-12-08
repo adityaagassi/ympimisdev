@@ -19,7 +19,7 @@ use App\Department;
 use App\Employee;
 use App\EmployeeSync;
 use App\Material;
-use App\MaterialPlantDataList;
+use App\MaterialQaComplaint;
 use App\Status;
 use App\WeeklyCalendar;
 use App\Destination;
@@ -268,11 +268,11 @@ class QcReportController extends Controller
 
           if ($request->get('kategori') == "Internal") {
 
-            $ceklogin = "select grade_name,department from users join mutation_logs on users.username = mutation_logs.employee_id join promotion_logs on users.username = promotion_logs.employee_id where users.username='".Auth::user()->username."' and mutation_logs.valid_to IS NULL and promotion_logs.valid_to IS NULL and department = 'Quality Assurance'";
+            $ceklogin = "select position from employee_syncs where employee_id='".Auth::user()->username."'";
             $loginstaff = DB::select($ceklogin);
 
             if ($loginstaff != null) {
-              if ($loginstaff[0]->grade_name == "Staff" || $loginstaff[0]->grade_name == "Senior Staff") {
+              if ($loginstaff[0]->position == "Staff" || $loginstaff[0]->position == "Senior Staff") {
                 $staff = null;
                 $leader = Auth::user()->username;
                 $posisi = "leader";
@@ -285,7 +285,7 @@ class QcReportController extends Controller
                 $posisi = "leader";
                 $chief = null;
 
-                $getforeman = "select employees.employee_id,users.username,employees.`name`,mutation_logs.department from employees join mutation_logs on employees.employee_id = mutation_logs.employee_id join promotion_logs on employees.employee_id = promotion_logs.employee_id join departments on mutation_logs.department = departments.department_name join users on users.username = employees.employee_id where promotion_logs.position = 'foreman' and promotion_logs.valid_to is null and mutation_logs.valid_to is null and mutation_logs.department='Quality Assurance'";
+                $getforeman = "select users.username from employee_syncs join users on users.username = employee_syncs.employee_id where position = 'foreman' and department = 'Quality Assurance Department'";
 
                 $fore = DB::select($getforeman);
                 
@@ -309,7 +309,7 @@ class QcReportController extends Controller
               $posisi = "leader";
               $chief = null;
 
-              $getforeman = "select employees.employee_id,users.username,employees.`name`,mutation_logs.department from employees join mutation_logs on employees.employee_id = mutation_logs.employee_id join promotion_logs on employees.employee_id = promotion_logs.employee_id join departments on mutation_logs.department = departments.department_name join users on users.username = employees.employee_id where promotion_logs.position = 'foreman' and promotion_logs.valid_to is null and mutation_logs.valid_to is null and mutation_logs.department='Quality Assurance' ";
+              $getforeman = "select users.username from employee_syncs join users on users.username = employee_syncs.employee_id where position = 'foreman' and department = 'Quality Assurance Department' ";
               $fore = DB::select($getforeman);
               
               if ($fore != null) {
@@ -402,8 +402,8 @@ class QcReportController extends Controller
         $vendors = "select id, vendor, name from vendors where vendor != 'Y31504'";
         $vendor = DB::select($vendors);
 
-        $materials = MaterialPlantDataList::select('material_plant_data_lists.id','material_plant_data_lists.material_number','material_plant_data_lists.material_description')
-        ->orderBy('material_plant_data_lists.id','ASC')
+        $materials = MaterialQaComplaint::select('material_qa_complaints.id','material_qa_complaints.material_number','material_qa_complaints.material_description')
+        ->orderBy('material_qa_complaints.id','ASC')
         ->get();
 
         // $materials = Material::select('materials.id','materials.material_number','materials.material_description')
