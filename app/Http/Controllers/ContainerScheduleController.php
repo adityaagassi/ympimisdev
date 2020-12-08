@@ -15,6 +15,7 @@ use App\ShipmentReservationTemp;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Response;
+use DataTables;
 use Excel;
 use File;
 
@@ -32,10 +33,10 @@ class ContainerScheduleController extends Controller{
             'OTHER'
         ];
         $this->application_rate = [
-         'CONTRACTED RATE',
-         'SPOT/EXTRA RATE'
-     ];
- }
+           'CONTRACTED RATE',
+           'SPOT/EXTRA RATE'
+       ];
+   }
     /**
      * Display a listing of the resource.
      *
@@ -45,7 +46,7 @@ class ContainerScheduleController extends Controller{
 
     public function indexShippingOrder(){
 
-        $title = 'Booking Management List';
+        $title = 'Ship Booking Management List';
         $title_jp = '';
 
         $pods = ShipmentNomination::distinct()->select('port_of_delivery', 'country')->orderBy('country')->get();
@@ -64,13 +65,51 @@ class ContainerScheduleController extends Controller{
     }
 
     public function indexResumeShippingOrder(){
-        $title = 'YMPI Booking Management List';
+        $title = 'Ship Booking Management List';
         $title_jp = '';
 
         return view('container_schedules.shipping_order.resume', array(
             'title' => $title,
             'title_jp' => $title_jp
-        ))->with('page', $title)->with('head', 'Resume Booking Management');    
+        ))->with('page', 'Booking Management List')->with('head', $title);    
+    }
+
+    public function indexShippingAgency(){
+        $title = 'Shipping Agency';
+        $title_jp = '';
+
+        $port_of_discharge = ShipmentNomination::distinct()->select('port_of_discharge')->orderBy('port_of_discharge')->get();
+        $port_of_delivery = ShipmentNomination::distinct()->select('port_of_delivery')->orderBy('port_of_delivery')->get();
+        $consignee = ShipmentNomination::distinct()->select('consignee')->orderBy('consignee')->get();
+
+        return view('container_schedules.shipping_order.shipping_agency', array(
+            'title' => $title,
+            'title_jp' => $title_jp,
+            'port_of_discharge' => $port_of_discharge,
+            'port_of_delivery' => $port_of_delivery,
+            'consignee' => $consignee
+        ))->with('page', 'Booking Management List')->with('head', $title);    
+    }
+
+    public function fetchShippingAgency(Request $request){
+
+        $agency = ShipmentNomination::whereNull('deleted_at');
+
+        if($request->get('consignee') != null ){
+            $agency = $agency->where('consignee', $request->get('consignee'));
+        }
+        if($request->get('port_of_delivery') != null ){
+            $agency = $agency->where('port_of_delivery', $request->get('port_of_delivery'));           
+        }
+        if($request->get('port_of_discharge') != null ){
+            $agency = $agency->where('port_of_discharge', $request->get('port_of_discharge'));
+        }
+
+        $agency = $agency->orderBy('port_of_delivery', 'ASC')->get();
+
+
+        return DataTables::of($agency)->make(true);
+
     }
 
     public function fetchCarier(Request $request){
@@ -302,6 +341,49 @@ class ContainerScheduleController extends Controller{
             'month' => $month
         );
         return Response::json($response);  
+    }
+
+    public function addShippingAgency(Request $request){
+        $ship_id = $request->get('ship_id');
+        $shipper = $request->get('shipper');
+        $port_loading = $request->get('port_loading');
+        $consignee = $request->get('consignee');
+        $transship_port = $request->get('transship_port');
+        $port_of_discharge = $request->get('port_of_discharge');
+        $port_of_delivery = $request->get('port_of_delivery');
+        $country = $request->get('country');
+        $carier = $request->get('carier');
+        $nomination = $request->get('nomination');
+        
+        try {
+            $agency = new ShipmentNomination([
+                'ship_id' => strtoupper($ship_id),
+                'shipper' => strtoupper($shipper),
+                'port_loading' => strtoupper($port_loading),
+                'consignee' => strtoupper($consignee),
+                'transship_port' => strtoupper($transship_port),
+                'port_of_discharge' => strtoupper($port_of_discharge),
+                'port_of_delivery' => strtoupper($port_of_delivery),
+                'country' => strtoupper($country),
+                'carier' => strtoupper($carier),
+                'nomination' => strtoupper($nomination),
+                'created_by' => Auth::id()
+            ]);
+            $agency->save();
+
+
+            $response = array(
+                'status' => true,
+                'message' => 'Shipment Agency Added Successfullly'
+            );
+            return Response::json($response);            
+        } catch (Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+            );
+            return Response::json($response);
+        }
     }
 
     public function addShipReservation(Request $request){

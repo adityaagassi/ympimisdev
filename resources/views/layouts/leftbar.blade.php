@@ -695,8 +695,21 @@
   @endif
 
   @if(in_array('S11', $navs))
-  @if(isset($page) && $page == "Booking Management List")<li class="active">@else<li>@endif
-    <a href="{{ url("/index/shipping_order") }}"><i class="fa fa-ship"></i> <span>Booking Management List</span></a>
+  @if(isset($head) && $head == "Ship Booking Management List")<li class="treeview active">@else<li class="treeview">@endif
+    <a href="#">
+      <i class="fa fa-ship"></i> <span>Ship Booking Management List</span>
+      <span class="pull-right-container">
+        <i class="fa fa-angle-left pull-right"></i>
+      </span>
+    </a>
+    <ul class="treeview-menu">
+      @if(isset($page) && $page == "Ship Booking Management List")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/shipping_order") }}"><i class="fa fa-ship"></i> <span>Ship Booking Management List</span></a>
+      </li>
+      @if(isset($page) && $page == "Shipping Agency")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/shipping_agency") }}"><i class="fa fa-cubes"></i>Shipping Agency</a>
+      </li>
+    </ul>
   </li>
   @endif
 

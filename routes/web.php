@@ -2492,7 +2492,7 @@ Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 
 	Route::get('index/shipping_agency', 'ContainerScheduleController@indexShippingAgency');
 	Route::get('fetch/shipping_agency', 'ContainerScheduleController@fetchShippingAgency');
-	Route::get('fetch/add_shipping_agency', 'ContainerScheduleController@addShippingAgency');	
+	Route::post('fetch/add_shipping_agency', 'ContainerScheduleController@addShippingAgency');	
 
 });
 
