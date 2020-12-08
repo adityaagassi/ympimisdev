@@ -438,30 +438,32 @@ class TransactionController extends Controller
 
 		if($request->get('remark') == 'pending'){
 			$condition = $date_pending . $issue . $receive . $material . $remark;
-			$log = "SELECT
-			rl.id,
-			rl.id AS return_id,
-			rl.material_number,
-			rl.issue_location,
-			rl.receive_location,
-			rl.material_description,
-			rl.quantity,
-			'pending' AS remark,
-			rl.created_at AS printed_at,
-			u.`name` AS printed_by,
-			'-' AS received_at,
-			'-' AS received_by,
-			'-' AS rejected_at,
-			'-' AS rejected_by,
-			'-' AS deleted_at,
-			'-' AS deleted_by,
-			'-' AS canceled_at,
-			'-' AS canceled_by 
-			FROM
-			return_lists AS rl
-			LEFT JOIN users AS u ON u.id = rl.created_by 
-			WHERE
-			deleted_at IS NOT NULL ".$condition."";
+			$log = db::select("SELECT
+				rl.id,
+				rl.id AS return_id,
+				rl.material_number,
+				rl.issue_location,
+				rl.receive_location,
+				rl.material_description,
+				rl.quantity,
+				'pending' AS remark,
+				rl.created_at AS printed_at,
+				u.`name` AS printed_by,
+				'-' AS received_at,
+				'-' AS received_by,
+				'-' AS rejected_at,
+				'-' AS rejected_by,
+				'-' AS deleted_at,
+				'-' AS deleted_by,
+				'-' AS canceled_at,
+				'-' AS canceled_by 
+				FROM
+				return_lists AS rl
+				LEFT JOIN users AS u ON u.id = rl.created_by 
+				WHERE
+				rl.deleted_at IS NULL ".$condition."
+				ORDER BY
+				rl.created_at");
 		}
 		else{
 			$log = db::select("SELECT
