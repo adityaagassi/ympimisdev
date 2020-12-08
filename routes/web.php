@@ -35,7 +35,6 @@ Route::get('index_push_pull_trial', 'TrialController@index_push_pull_trial');
 Route::post('push_pull_trial', 'TrialController@push_pull_trial');
 Route::get('fetch_push_pull_trial', 'TrialController@fetch_push_pull_trial');
 
-
 Route::get('/index/emergency_response', 'TrialController@tes2');
 Route::get('/index/trials', 'TrialController@tes');
 Route::get('/index/unification_uniform', 'VoteController@indexUnificationUniform');
@@ -45,7 +44,6 @@ Route::get('happybirthday', function ()
 	return view('trials.birthday');
 });
 Route::get('tesseract', 'TrialController@testTesseract');
-
 
 Route::get('trialmail', 'TrialController@trialmail');
 
@@ -178,7 +176,6 @@ Route::get('scan/visitor/lobby', 'VisitorController@scanVisitorLobby');
 //end visitor control 
 
 //VISITOR TEMPERATURE
-
 Route::get('index/temperature', 'TemperatureController@index');
 Route::get('index/temperature/body_temperature_report', 'TemperatureController@indexBodyTemperatureReport');
 Route::get('fetch/temperature/body_temp_report', 'TemperatureController@fetchBodyTemperatureReport');
@@ -421,6 +418,10 @@ Route::get('fetch/injection_schedule', 'InjectionsController@fetchInjectionSched
 Route::group(['nav' => 'M31', 'middleware' => 'permission'], function(){
 	Route::get('index/injection/tag', 'InjectionsController@indexInjectionTag');
 	Route::get('fetch/injection/tag', 'InjectionsController@fetchInjectionTag');
+	Route::get('fetch/injection/material', 'InjectionsController@fetchInjectionMaterial');
+	Route::get('fetch/injection/material_edit', 'InjectionsController@fetchInjectionMaterialEdit');
+	Route::post('input/injection/tag', 'InjectionsController@inputInjectionTag');
+	Route::get('edit/injection/tag', 'InjectionsController@editInjectionTag');
 });
 
 // end mesin injeksi
@@ -1282,6 +1283,7 @@ Route::post('upload/sakurentsu/3m/document', 'SakurentsuController@upload_tiga_e
 Route::post('mail/sakurentsu/3m/document', 'SakurentsuController@mail_tiga_em_document');
 
 Route::get('index/sakurentsu/3m/document/upload/{id_three_m}', 'SakurentsuController@index_tiga_em_upload');
+Route::post('upload/sakurentsu/3m/document/upload', 'SakurentsuController@upload_tiga_em_upload');
 
 //Supplier
 Route::get('index/supplier', 'AccountingController@master_supplier');
@@ -2483,6 +2485,7 @@ Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::get('fetch/shipping_order/excel_ship_reservation', 'ContainerScheduleController@excelShipReservation');
 
 	Route::get('index/resume_shipping_order', 'ContainerScheduleController@indexResumeShippingOrder');
+	Route::get('fetch/resume_shipping_order', 'ContainerScheduleController@fetchResumeShippingOrder');
 	
 
 });

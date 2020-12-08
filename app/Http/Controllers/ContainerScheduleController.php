@@ -9,21 +9,571 @@ use App\ContainerSchedule;
 use App\Container;
 use App\Destination;
 use App\CodeGenerator;
+use App\ShipmentNomination;
+use App\ShipmentReservation;
+use App\ShipmentReservationTemp;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
+use Response;
+use Excel;
+use File;
 
-class ContainerScheduleController extends Controller
-{
-    public function __construct()
-    {
+
+class ContainerScheduleController extends Controller{
+
+    public function __construct(){
         $this->middleware('auth');
-    }
+        $this->status = [
+            'BOOKING REQUESTED',
+            'BOOKING UNACCEPTED',
+            'NO ACTION YET',
+            'BOOKING CONFIRMED',
+            'NO NEED ANYMORE',
+            'OTHER'
+        ];
+        $this->application_rate = [
+         'CONTRACTED RATE',
+         'SPOT/EXTRA RATE'
+     ];
+ }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     
+
+    public function indexShippingOrder(){
+
+        $title = 'Booking Management List';
+        $title_jp = '';
+
+        $pods = ShipmentNomination::distinct()->select('port_of_delivery', 'country')->orderBy('country')->get();
+        $cariers = ShipmentNomination::distinct()->select('carier')->orderBy('carier')->get();
+        $nominations = ShipmentNomination::distinct()->select('nomination')->orderBy('nomination')->get();
+
+        return view('container_schedules.shipping_order.index', array(
+            'title' => $title,
+            'title_jp' => $title_jp,
+            'pods' => $pods,
+            'cariers' => $cariers,
+            'nominations' => $nominations,
+            'statuses' => $this->status,
+            'application_rates' => $this->application_rate,
+        ))->with('page', $title)->with('head', $title);      
+    }
+
+    public function indexResumeShippingOrder(){
+        $title = 'YMPI Booking Management List';
+        $title_jp = '';
+
+        return view('container_schedules.shipping_order.resume', array(
+            'title' => $title,
+            'title_jp' => $title_jp
+        ))->with('page', $title)->with('head', 'Resume Booking Management');    
+    }
+
+    public function fetchCarier(Request $request){
+        $pod = $request->get('pod');
+        $country = $request->get('country');
+
+        $nominations = ShipmentNomination::where('port_of_delivery', $pod)
+        ->where('country', $country)
+        ->select('carier', 'nomination')
+        ->orderBy('nomination', 'ASC')
+        ->get();
+
+        echo '<option value=""></option>';
+        for($i=0; $i < count($nominations); $i++) {
+            echo '<option value="'.$nominations[$i]['carier'].'-'.$nominations[$i]['nomination'].'">'.$nominations[$i]['carier'].' - '.$nominations[$i]['nomination'].'</option>';
+        }    
+    }
+
+    public function fetchShipReservation(Request $request){
+
+        $data = ShipmentReservation::whereNull('deleted_at');
+
+        if(strlen($request->get('stuffingFrom')) > 0 ){
+            $stuffingFrom = date('Y-m-d', strtotime($request->get('stuffingFrom')));
+            $data = $data->where('stuffing_date', '>=', $stuffingFrom);
+        }
+        if(strlen($request->get('stuffingTo')) > 0 ){
+            $stuffingTo = date('Y-m-d', strtotime($request->get('stuffingTo')));
+            $data = $data->where('stuffing_date', '<=', $stuffingTo);
+        }
+        if(strlen($request->get('etdFrom')) > 0 ){
+            $etdFrom = date('Y-m-d', strtotime($request->get('etdFrom')));
+            $data = $data->where('etd_date', '>=', $etdFrom);
+        }
+        if(strlen($request->get('etdTo')) > 0 ){
+            $etdTo = date('Y-m-d', strtotime($request->get('etdTo')));
+            $data = $data->where('etd_date', '<=', $etdTo);
+        }
+        if(strlen($request->get('dueFrom')) > 0 ){
+            $dueFrom = date('Y-m-d', strtotime($request->get('dueFrom')));
+            $data = $data->where('due_date', '>=', $stuffingFrom);
+        }
+        if(strlen($request->get('dueTo')) > 0 ){
+            $dueTo = date('Y-m-d', strtotime($request->get('dueTo')));
+            $data = $data->where('due_date', '<=', $stuffingTo);
+        }
+
+
+
+        if($request->get('search_period') != null ){
+            $data = $data->where('period', $request->get('search_period'));
+        }
+        if($request->get('search_ycj_ref') != null ){
+            $data = $data->where('ycj_ref_number', $request->get('search_ycj_ref'));           
+        }
+        if($request->get('search_bl') != null ){
+            $data = $data->where('booking_number', $request->get('search_bl'));
+        }
+        if($request->get('search_invoice') != null ){
+            $data = $data->where('invoice_number', $request->get('search_invoice'));
+        }
+
+
+
+        if($request->get('search_help') != null ){
+            $data = $data->whereIn('help', $request->get('search_help'));
+        }
+        if($request->get('search_status') != null ){
+            $data = $data->whereIn('status', $request->get('search_status'));
+        }
+        if($request->get('serach_application_rate') != null ){
+            $data = $data->whereIn('application_rate', $request->get('serach_application_rate'));
+        }
+        if($request->get('serach_pod') != null ){
+            $data = $data->whereIn('port_of_delivery', $request->get('serach_pod'));
+        }
+
+
+
+        if($request->get('serach_carier') != null ){
+            $data = $data->whereIn('carier', $request->get('serach_carier'));
+        }
+        if($request->get('search_nomination') != null ){
+            $data = $data->whereIn('nomination', $request->get('search_nomination'));
+        }
+
+        $data = $data->get();
+
+
+        $response = array(
+            'status' => true,
+            'data' => $data
+        );
+        return Response::json($response);       
+    }
+
+    public function excelShipReservation(Request $request){
+        $period = '';
+        $excel = ShipmentReservation::whereNull('deleted_at');
+
+        if(strlen($request->get('stuffingFrom')) > 0 ){
+            $stuffingFrom = date('Y-m-d', strtotime($request->get('stuffingFrom')));
+            $excel = $excel->where('stuffing_date', '>=', $stuffingFrom);
+        }
+        if(strlen($request->get('stuffingTo')) > 0 ){
+            $stuffingTo = date('Y-m-d', strtotime($request->get('stuffingTo')));
+            $excel = $excel->where('stuffing_date', '<=', $stuffingTo);
+        }
+        if(strlen($request->get('etdFrom')) > 0 ){
+            $etdFrom = date('Y-m-d', strtotime($request->get('etdFrom')));
+            $excel = $excel->where('etd_date', '>=', $etdFrom);
+        }
+        if(strlen($request->get('etdTo')) > 0 ){
+            $etdTo = date('Y-m-d', strtotime($request->get('etdTo')));
+            $excel = $excel->where('etd_date', '<=', $etdTo);
+        }
+        if(strlen($request->get('dueFrom')) > 0 ){
+            $dueFrom = date('Y-m-d', strtotime($request->get('dueFrom')));
+            $excel = $excel->where('due_date', '>=', $stuffingFrom);
+        }
+        if(strlen($request->get('dueTo')) > 0 ){
+            $dueTo = date('Y-m-d', strtotime($request->get('dueTo')));
+            $excel = $excel->where('due_date', '<=', $dueTo);
+        }
+
+
+
+        if($request->get('search_period') != null ){
+            $excel = $excel->where('period', $request->get('search_period'));
+            $period = ' '. date('M Y', strtotime($request->get('search_period')));
+        }
+        if($request->get('search_ycj_ref') != null ){
+            $excel = $excel->where('ycj_ref_number', $request->get('search_ycj_ref'));           
+        }
+        if($request->get('search_bl') != null ){
+            $excel = $excel->where('booking_number', $request->get('search_bl'));
+        }
+        if($request->get('search_invoice') != null ){
+            $excel = $excel->where('invoice_number', $request->get('search_invoice'));
+        }
+
+
+
+        if($request->get('search_help') != null ){
+            $excel = $excel->whereIn('help', $request->get('search_help'));
+        }
+        if($request->get('search_status') != null ){
+            $excel = $excel->whereIn('status', $request->get('search_status'));
+        }
+        if($request->get('serach_application_rate') != null ){
+            $excel = $excel->whereIn('application_rate', $request->get('serach_application_rate'));
+        }
+        if($request->get('serach_pod') != null ){
+            $excel = $excel->whereIn('port_of_delivery', $request->get('serach_pod'));
+        }
+
+
+
+        if($request->get('serach_carier') != null ){
+            $excel = $excel->whereIn('carier', $request->get('serach_carier'));
+        }
+        if($request->get('search_nomination') != null ){
+            $excel = $excel->whereIn('nomination', $request->get('search_nomination'));
+        }
+
+        $excel = $excel->orderBy('period', 'ASC')
+        ->orderBy('ycj_ref_number', 'ASC')
+        ->get();
+
+        $resumes = [];
+        for ($i=0; $i < count($excel); $i++) {
+            $key = $excel[$i]->ycj_ref_number;
+
+            if (!array_key_exists($key, $resumes)) {
+                $resumes[$key] = array(
+                    'key' => $excel[$i]->ycj_ref_number,
+                    'qty' => 1
+                );
+            } else {
+                $resumes[$key]['qty'] = (int) $resumes[$key]['qty'] + 1;
+            }
+        }
+
+        $data = array(
+            'excel' => $excel,
+            'resumes' => $resumes
+        );
+
+        // return view('container_schedules.shipping_order.excel_shipping_order', $data);
+
+        ob_clean();
+        Excel::create('Booking Management List'.$period, function($excel) use ($data){
+            $excel->sheet('Booking Management List', function($sheet) use ($data) {
+                return $sheet->loadView('container_schedules.shipping_order.excel_shipping_order', $data);
+            });
+        })->export('xlsx');
+
+    }
+
+    public function fetchResumeShippingOrder(Request $request){
+
+        $period = '';
+        if(strlen($request->get('period')) > 0){
+            $period = $request->get('period');
+        }else{
+            $period = date('Y-m');
+        }
+
+        $month = date('M Y', strtotime($period));
+
+
+        $data = db::select("SELECT plan.port_of_delivery, plan.plan, COALESCE(confirmed.confirmed,0) AS confirmed, plan.plan - COALESCE(confirmed.confirmed,0) AS not_confirmed FROM
+            (SELECT port_of_delivery, COUNT(ycj_ref_number) AS plan FROM
+            (SELECT DISTINCT ycj_ref_number, port_of_delivery FROM shipment_reservations
+            WHERE period = '".$period."') shipment
+            GROUP BY port_of_delivery) plan
+            LEFT JOIN 
+            (SELECT port_of_delivery, COUNT(ycj_ref_number) AS confirmed FROM
+            (SELECT port_of_delivery, ycj_ref_number FROM shipment_reservations
+            WHERE period = '".$period."'
+            AND `status` = 'BOOKING CONFIRMED') shipment
+            GROUP BY port_of_delivery) confirmed
+            ON plan.port_of_delivery = confirmed.port_of_delivery
+            ORDER BY not_confirmed DESC");
+        
+        $response = array(
+            'status' => true,
+            'data' => $data,
+            'month' => $month
+        );
+        return Response::json($response);  
+    }
+
+    public function addShipReservation(Request $request){
+        $period = $request->get('period');
+        $ycj_ref_number = $request->get('ycj_ref_no');
+        $help = $request->get('help');
+        $status = $request->get('status');
+        $shipper = $request->get('shipper');
+        $pol = $request->get('pol');
+        $pod = $request->get('pod');
+        $bl = $request->get('bl');
+        $fortyhc = $request->get('fortyhc');
+        $forty = $request->get('forty');
+        $twenty = $request->get('twenty');
+        $carier = $request->get('carier');
+        $stuffing = $request->get('stuffing');
+        $etd = $request->get('etd');
+        $application_rate = $request->get('application_rate');
+        $remark = $request->get('remark');
+        $due_date = $request->get('due_date');
+        $invoice = $request->get('invoice');
+        $ref = $request->get('ref');
+
+        $data_pod = explode('-', $pod);
+        $port_of_delivery = $data_pod[1];
+        $country = $data_pod[0];
+
+        $data_carier = explode('-', $carier);
+        $carier = $data_carier[0];
+        $nomination = $data_carier[1];
+
+        try {
+            $reservation = new ShipmentReservation([
+                'period' => $period,
+                'ycj_ref_number' => $ycj_ref_number,
+                'help' => $help,
+                'status' => $status,
+                'shipper' => $shipper,
+                'port_loading' => $pol,
+                'port_of_delivery' => $port_of_delivery,
+                'country' => $country,
+                'carier' => $carier,
+                'nomination' => $nomination,
+                'fortyhc' => $fortyhc,
+                'forty' => $forty,
+                'twenty' => $twenty,
+                'booking_number' => $bl,
+                'stuffing_date' => $stuffing,
+                'etd_date' => $etd,
+                'application_rate' => $application_rate,
+                'remark' => $remark,
+                'due_date' => $due_date,
+                'invoice_number' => $invoice,
+                'ref' => $ref,
+                'created_by' => Auth::id()
+            ]);
+            $reservation->save();
+
+
+            $response = array(
+                'status' => true,
+                'message' => 'Shipment Reservation Added Successfullly'
+            );
+            return Response::json($response);            
+        } catch (Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function editShipReservation(Request $request){
+        $id = $request->get('shipment_reservation_id');
+        $period = $request->get('period');
+        $ycj_ref_number = $request->get('ycj_ref_no');
+        $help = $request->get('help');
+        $status = $request->get('status');
+        $bl = $request->get('bl');
+        $fortyhc = $request->get('fortyhc');
+        $forty = $request->get('forty');
+        $twenty = $request->get('twenty');
+        $stuffing = $request->get('stuffing');
+        $etd = $request->get('etd');
+        $remark = $request->get('remark');
+        $due_date = $request->get('due_date');
+        $invoice = $request->get('invoice');
+        $ref = $request->get('ref');
+
+
+        $check = ShipmentReservation::where('id', $id)->first();
+
+        if($check->ycj_ref_number != $ycj_ref_number){
+            $shipment_reservations = ShipmentReservation::where('period', $period)
+            ->where('id', '>', $id)
+            ->get();
+
+            for ($i=0; $i < count($shipment_reservations); $i++) {
+                $reservation = ShipmentReservation::where('id', $shipment_reservations[$i]->id)->first();
+
+                $ref_number = (int)str_replace('YMPI','', $shipment_reservations[$i]->ycj_ref_number);
+                $new_ref = 'YMPI'. sprintf("%'.0" . 3 . "d", $ref_number+1);
+                $reservation->ycj_ref_number = $new_ref;
+
+                try {
+                    $reservation->save();
+                } catch (Exception $e) {
+                    $response = array(
+                        'status' => false,
+                        'message' => $e->getMessage(),
+                    );
+                    return Response::json($response);
+                }
+            }
+        }
+
+        try {
+            $update = ShipmentReservation::where('id', $id)
+            ->update([
+                'period' => $period,
+                'ycj_ref_number' => $ycj_ref_number,
+                'help' => $help,
+                'status' => $status,
+                'fortyhc' => $fortyhc,
+                'forty' => $forty,
+                'twenty' => $twenty,
+                'booking_number' => $bl,
+                'stuffing_date' => $stuffing,
+                'etd_date' => $etd,
+                'remark' => $remark,
+                'due_date' => $due_date,
+                'invoice_number' => $invoice,
+                'ref' => $ref,
+            ]);
+
+            $response = array(
+                'status' => true,
+                'message' => 'Shipment Reservation Edited Successfullly'
+            );
+            return Response::json($response); 
+        } catch (Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function uploadShipReservation(Request $request){
+        if($request->hasFile('upload_file')) {
+            try{                
+                $file = $request->file('upload_file');
+                $file_name = 'weekly_shipment_'.'('. $request->get('upload_period') .')'.'.'.$file->getClientOriginalExtension();
+                $file->move(public_path('uploads/shipment/'), $file_name);
+
+            }catch(\Exception $e){
+                $response = array(
+                    'status' => false,
+                    'message' => $e->getMessage(),
+                );
+                return Response::json($response);
+            }
+        }else{
+            $response = array(
+                'status' => false,
+                'message' => 'Upload failed, File not found',
+            );
+            return Response::json($response);
+        }
+
+
+        $excel = public_path('uploads/shipment/') . $file_name;        
+        $rows = Excel::load($excel, function($reader) {
+            $reader->noHeading();
+            $reader->skipRows(1);
+        })->get();
+        $rows = $rows->toArray();
+
+        DB::beginTransaction();
+        $period = $request->get('upload_period');
+
+        $checkTemp = ShipmentReservationTemp::where('period', $period)->get();
+        if(count($checkTemp) > 0){
+            $checkTemp = ShipmentReservationTemp::where('period', $period)->delete();
+        }
+
+        for ($i=0; $i < count($rows); $i++) {
+            $stuffing = $rows[$i][0];
+            $bl_date = $rows[$i][1];
+            $destination = $rows[$i][2];
+            $transportation = $rows[$i][3];
+
+            if($transportation == 'SEA'){
+                $destinations = ShipmentNomination::where('consignee', 'like', '%'.$destination.'%')->first();
+
+                if($destinations){
+                    try {
+                        $temp = new ShipmentReservationTemp([
+                            'period' => $period,
+                            'stuffing' => $stuffing,
+                            'bl_date' => $bl_date,
+                            'port_of_delivery' => $destinations->port_of_delivery,
+                            'country' => $destinations->country,
+                            'created_by' => Auth::id()
+                        ]);
+                        $temp->save();
+
+                    } catch (Exception $e) {
+                        DB::rollback();             
+                        $response = array(
+                            'status' => false,
+                            'message' => $e->getMessage()
+                        );
+                        return Response::json($response);
+                    }
+                }else{
+                    $response = array(
+                        'status' => false,
+                        'message' => "Destination Not Found"
+                    );
+                    return Response::json($response);
+                }
+            }
+        }
+
+        $checkReservation = ShipmentReservation::where('period', $period)->get();
+        if(count($checkTemp) > 0){
+            $checkReservation = ShipmentReservation::where('period', $period)->delete();
+        }
+
+
+        $reservations = ShipmentReservationTemp::where('period', $period)
+        ->select('stuffing', 'port_of_delivery', 'country')
+        ->distinct()
+        ->get();
+
+        for ($i=0; $i < count($reservations); $i++) {            
+            $nominations = ShipmentNomination::where('port_of_delivery', $reservations[$i]->port_of_delivery)
+            ->where('country', $reservations[$i]->country)
+            ->get();
+
+            $index = $i + 1;
+
+            for ($j=0; $j < count($nominations); $j++) { 
+                $reservation = new ShipmentReservation([
+                    'period' => $period,
+                    'ycj_ref_number' => 'YMPI'. sprintf("%'.0" . 3 . "d", $index),
+                    'help' => 'NO',
+                    'status' => 'OTHER',
+                    'shipper' => 'YMPI',
+                    'port_loading' => 'SURABAYA',
+                    'port_of_delivery' => $nominations[$j]->port_of_delivery,
+                    'country' => $nominations[$j]->country,
+                    'carier' => $nominations[$j]->carier,
+                    'nomination' => $nominations[$j]->nomination,
+                    'stuffing_date' => $reservations[$i]->stuffing,
+                    'created_by' => Auth::id()
+                ]);
+                $reservation->save();              
+            }
+        }
+
+        DB::commit();
+        $response = array(
+            'status' => true,
+            'message' => 'Upload shipment reservation success',
+        );
+        return Response::json($response);
+    }
+
     public function indexContainerAttachment(){
         return view('container_schedules.attachment')->with('page', 'Container Attachment');
     }
