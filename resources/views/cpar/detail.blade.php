@@ -676,7 +676,10 @@
         return false;
       }
 
+      $("#loading").show();
+
       $.get('{{ url("index/form_ketidaksesuaian/sendemailqa/$cpar->id") }}', data, function(result, status, xhr){
+        $("#loading").hide();
         openSuccessGritter("Success","Email Has Been Sent");
         window.location.reload();
       })

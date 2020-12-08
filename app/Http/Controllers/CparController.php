@@ -14,7 +14,7 @@ use App\CparDepartment;
 use App\Mail\SendEmail;
 use Illuminate\Support\Facades\Mail;
 use App\EmployeeSync;
-use App\MaterialPlantDataList;
+use App\MaterialQaComplaint;
 use App\CparItem;
 use App\StandarisasiAudit;
 use App\StandarisasiAuditChecklist;
@@ -165,9 +165,9 @@ class CparController extends Controller
 
       //get chief foreman manager from departemen
 
-      if ($dept->department == 'Educational Instrument (EI)') {
+      if ($dept->department == 'Educational Instrument (EI) Department') {
   
-        $cfm = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Educational Instrument (EI)' and employee_id in ('PI1110001','PI9906002')");
+        $cfm = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Educational Instrument (EI) Department' and employee_id in ('PI1110001','PI9906002')");
   
       }else{
         $cfm = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = '".$dept->department."' and position in ('chief','foreman','manager')");
@@ -285,8 +285,8 @@ class CparController extends Controller
       and grade_code not like '%L%'
       order by department, section, `group` asc");
 
-    $materials = MaterialPlantDataList::select('material_plant_data_lists.id','material_plant_data_lists.material_number','material_plant_data_lists.material_description')
-    ->orderBy('material_plant_data_lists.id','ASC')
+    $materials = MaterialQaComplaint::select('material_qa_complaints.id','material_qa_complaints.material_number','material_qa_complaints.material_description')
+    ->orderBy('material_qa_complaints.id','ASC')
     ->get();
 
     return view('cpar.detail', array(
@@ -632,7 +632,7 @@ class CparController extends Controller
 
     $items = CparItem::select('cpar_items.*')
     ->join('cpar_departments','cpar_items.id_cpar','=','cpar_departments.id')
-        // ->join('material_plant_data_lists','cpar_items.item','=','material_plant_data_lists.material_number')
+        // ->join('material_qa_complaints','cpar_items.item','=','material_qa_complaints.material_number')
     ->where('cpar_departments.id','=',$id)
     ->get();
 
@@ -861,28 +861,36 @@ class CparController extends Controller
           $id_user = Auth::id();
           $cpar = CparDepartment::find($id);
 
-          if ($cpar->posisi == "sl") {
-            $cpar->posisi = "qa";
-          }
+          $cpar->posisi = "qa";
           
           $cpar->save();
 
-          // $getchief = "SELECT employee_id, email FROM `employee_syncs` join users on employee_syncs.employee_id = users.username where section = 'QA Process Control' and position = 'Chief'";
+          $mailtoo = array();
 
-          $getchief = "SELECT employee_id, email FROM `employee_syncs` join users on employee_syncs.employee_id = users.username where employee_id='PI1108002' or employee_id = 'PI9707001'";
+          //getQA
 
-          $chief = DB::select($getchief);
-          
-          if ($chief != null) {
-            foreach ($chief as $cf) {
-              $cfh = $cf->email;
-            }             
+          $getqa = "SELECT employee_id, email FROM `employee_syncs` join users on employee_syncs.employee_id = users.username where employee_id='PI1108002' or employee_id = 'PI9707001'";
+
+          $chief = DB::select($getqa);
+
+          foreach ($chief as $cf) {
+            array_push($mailtoo,$cf->email);
           }
+
+          $getproduksi= "SELECT employee_id, email FROM `employee_syncs` join users on employee_syncs.employee_id = users.username where employee_id='".$cpar->foreman."' or employee_id = '".$cpar->manager."'";
+
+          $produksi = DB::select($getproduksi);
+
+          foreach ($produksi as $pd) {
+            array_push($mailtoo,$pd->email);
+          }
+
+          //Get Foreman Manager
 
           $isimail = "select * FROM cpar_departments where cpar_departments.id = ".$cpar->id;
           $cpar_dept = db::select($isimail);
 
-          Mail::to($cfh)->cc('ratri.sulistyorini@music.yamaha.com')->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($cpar_dept, 'cpar_dept'));
+          Mail::to($mailtoo)->cc('ratri.sulistyorini@music.yamaha.com')->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($cpar_dept, 'cpar_dept'));
           
     }
 
@@ -1077,7 +1085,7 @@ class CparController extends Controller
 
     $items = CparItem::select('cpar_items.*')
     ->join('cpar_departments','cpar_items.id_cpar','=','cpar_departments.id')
-        // ->join('material_plant_data_lists','cpar_items.item','=','material_plant_data_lists.material_number')
+        // ->join('material_qa_complaints','cpar_items.item','=','material_qa_complaints.material_number')
     ->where('cpar_departments.id','=',$id)
     ->get();
 
