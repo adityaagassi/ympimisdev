@@ -78,7 +78,6 @@ class TransactionController extends Controller
 		->orderBy('material_number', 'ASC')
 		->get();
 
-
 		return view('return.return_logs', array(
 			'title' => 'Return Logs',
 			'title_jp' => '??',
@@ -375,6 +374,16 @@ class TransactionController extends Controller
 			}
 		}
 
+		$date_pending = '';
+		if(strlen($request->get('datefrom')) > 0){
+			$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+			$date_pending = "AND date(rl.created_at) >= '".$datefrom."' ";
+			if(strlen($request->get('dateto')) > 0){
+				$dateto = date('Y-m-d', strtotime($request->get('dateto')));
+				$date_pending = $date_pending . "AND date(rl.created_at) <= '".$dateto."' ";
+			}
+		}
+
 		$issue = '';
 		if($request->get('issue') != null){
 			$issues =  $request->get('issue');
@@ -413,48 +422,80 @@ class TransactionController extends Controller
 
 		$remark = '';
 		if($request->get('remark') != null){
-			$remarks =  $request->get('remark');
-			for ($i=0; $i < count($remarks); $i++) {
-				$remark = $remark."'".$remarks[$i]."'";
-				if($i != (count($remarks)-1)){
-					$remark = $remark.',';
-				}
-			}
-			$remark = " AND remark IN (".$remark.") ";
+			// $remarks =  $request->get('remark');
+			// for ($i=0; $i < count($remarks); $i++) {
+			// 	$remark = $remark."'".$remarks[$i]."'";
+			// 	if($i != (count($remarks)-1)){
+			// 		$remark = $remark.',';
+			// 	}
+			// }
+			// $remark = " AND remark IN (".$remark.") ";
+
+			$remark = " AND remark = '".$request->get('remark')."' ";
 		}
 
 		$condition = $date . $issue . $receive . $material . $remark;
 
-		$log = db::select("SELECT
-			non.id,
-			non.return_id,
-			non.material_number,
-			non.issue_location,
-			non.receive_location,
-			non.material_description,
-			non.quantity,
-			IF(cancel.remark is null, non.remark, cancel.remark) AS remark,
-			non.slip_created AS printed_at,
-			return_user.`name` AS printed_by,
-			IF(non.remark = 'received', non.created_at, '-') AS received_at,
-			IF(non.remark = 'received', non_user.`name`, '-') AS received_by,
-			IF(non.remark = 'rejected', non.created_at, '-') AS rejected_at,
-			IF(non.remark = 'rejected', non_user.`name`, '-') AS rejected_by,
-			IF(non.remark = 'deleted', non.created_at, '-') AS deleted_at,
-			IF(non.remark = 'deleted', non_user.`name`, '-') AS deleted_by,
-			COALESCE(cancel.created_at, '-') AS canceled_at,
-			COALESCE(cancel_user.`name`, '-') AS canceled_by
+		if($request->get('remark') == 'Pending'){
+			$condition = $date_pending . $issue . $receive . $material . $remark;
+			$log = "SELECT
+			rl.id,
+			rl.id AS return_id,
+			rl.material_number,
+			rl.issue_location,
+			rl.receive_location,
+			rl.material_description,
+			rl.quantity,
+			'Pending' AS remark,
+			rl.created_at AS printed_at,
+			u.`name` AS printed_by,
+			'-' AS received_at,
+			'-' AS received_by,
+			'-' AS rejected_at,
+			'-' AS rejected_by,
+			'-' AS deleted_at,
+			'-' AS deleted_by,
+			'-' AS canceled_at,
+			'-' AS canceled_by 
 			FROM
-			(SELECT id, return_id, material_number, material_description, issue_location, receive_location, quantity, remark, slip_created, returned_by, created_at, created_by FROM `return_logs`
-			where remark <> 'canceled' ".$condition." ) AS non
-			LEFT JOIN
-			(SELECT id, return_id, remark, created_at, created_by FROM `return_logs`
-			where remark = 'canceled' ".$condition." ) AS cancel
-			ON non.return_id = cancel.return_id
-			LEFT JOIN (SELECT id, concat(SPLIT_STRING(`name`, ' ', 1), ' ', SPLIT_STRING(`name`, ' ', 2)) as `name` FROM users) AS return_user ON return_user.id = non.returned_by
-			LEFT JOIN (SELECT id, concat(SPLIT_STRING(`name`, ' ', 1), ' ', SPLIT_STRING(`name`, ' ', 2)) as `name` FROM users) AS non_user ON non_user.id = non.created_by
-			LEFT JOIN (SELECT id, concat(SPLIT_STRING(`name`, ' ', 1), ' ', SPLIT_STRING(`name`, ' ', 2)) as `name` FROM users) AS cancel_user ON cancel_user.id = cancel.created_by
-			ORDER BY non.slip_created");
+			return_lists AS rl
+			LEFT JOIN users AS u ON u.id = rl.created_by 
+			WHERE
+			deleted_at IS NOT NULL ".$condition."";
+		}
+		else{
+			$log = db::select("SELECT
+				non.id,
+				non.return_id,
+				non.material_number,
+				non.issue_location,
+				non.receive_location,
+				non.material_description,
+				non.quantity,
+				IF(cancel.remark is null, non.remark, cancel.remark) AS remark,
+				non.slip_created AS printed_at,
+				return_user.`name` AS printed_by,
+				IF(non.remark = 'received', non.created_at, '-') AS received_at,
+				IF(non.remark = 'received', non_user.`name`, '-') AS received_by,
+				IF(non.remark = 'rejected', non.created_at, '-') AS rejected_at,
+				IF(non.remark = 'rejected', non_user.`name`, '-') AS rejected_by,
+				IF(non.remark = 'deleted', non.created_at, '-') AS deleted_at,
+				IF(non.remark = 'deleted', non_user.`name`, '-') AS deleted_by,
+				COALESCE(cancel.created_at, '-') AS canceled_at,
+				COALESCE(cancel_user.`name`, '-') AS canceled_by
+				FROM
+				(SELECT id, return_id, material_number, material_description, issue_location, receive_location, quantity, remark, slip_created, returned_by, created_at, created_by FROM `return_logs`
+				where remark <> 'canceled' ".$condition." ) AS non
+				LEFT JOIN
+				(SELECT id, return_id, remark, created_at, created_by FROM `return_logs`
+				where remark = 'canceled' ".$condition." ) AS cancel
+				ON non.return_id = cancel.return_id
+				LEFT JOIN (SELECT id, concat(SPLIT_STRING(`name`, ' ', 1), ' ', SPLIT_STRING(`name`, ' ', 2)) as `name` FROM users) AS return_user ON return_user.id = non.returned_by
+				LEFT JOIN (SELECT id, concat(SPLIT_STRING(`name`, ' ', 1), ' ', SPLIT_STRING(`name`, ' ', 2)) as `name` FROM users) AS non_user ON non_user.id = non.created_by
+				LEFT JOIN (SELECT id, concat(SPLIT_STRING(`name`, ' ', 1), ' ', SPLIT_STRING(`name`, ' ', 2)) as `name` FROM users) AS cancel_user ON cancel_user.id = cancel.created_by
+				ORDER BY non.slip_created");
+		}
+		
 
 		
 		return DataTables::of($log)
@@ -608,7 +649,7 @@ class TransactionController extends Controller
 				$printer_name = 'MIS';
 			}
 		}
-		
+
 		$connector = new WindowsPrintConnector($printer_name);
 		$printer = new Printer($connector);
 
@@ -808,7 +849,7 @@ class TransactionController extends Controller
 
 				// DB::rollback();
 
-				
+
 				// DB::commit();
 
 				$response = array(

@@ -117,8 +117,16 @@
 								<label>Material</label>
 								<select class="form-control select2" multiple="multiple" name="material" id='material' data-placeholder="Select Material" style="width: 100%; height: 100px;">
 									<option value=""></option>
+									@php
+									$material_number = array();
+									@endphp
 									@foreach($materials as $material)
+									@if(!in_array($material->material_number, $material_number))
 									<option value="{{ $material->material_number }}">{{ $material->material_number }} - {{ $material->description }}</option>
+									@php
+									array_push($material_number, $material->material_number);
+									@endphp
+									@endif
 									@endforeach
 								</select>
 							</div>
@@ -126,8 +134,16 @@
 						<div class="col-md-4">
 							<div class="form-group">
 								<label>Status</label>
-								<select class="form-control select2" multiple="multiple" name="remark" id='remark' data-placeholder="Select Status" style="width: 100%; height: 100px;">
+								{{-- <select class="form-control select2" multiple="multiple" name="remark" id='remark' data-placeholder="Select Status" style="width: 100%; height: 100px;">
 									<option value=""></option>
+									<option value="received">Pending</option>
+									<option value="received">Received</option>
+									<option value="deleted">Deleted</option>
+									<option value="rejected">Rejected</option>
+								</select> --}}
+								<select class="form-control select2" name="remark" id='remark' data-placeholder="Select Status" style="width: 100%; height: 100px;">
+									<option value=""></option>
+									<option value="received">Pending</option>
 									<option value="received">Received</option>
 									<option value="deleted">Deleted</option>
 									<option value="rejected">Rejected</option>
