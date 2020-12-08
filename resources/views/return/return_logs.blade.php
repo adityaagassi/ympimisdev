@@ -245,12 +245,7 @@
 			receive:receive,
 			material:material,
 			remark:remark
-		}
-
-		// $.get('{{ url("fetch/return_logs") }}', data, function(result, status, xhr){
-
-		// });
-		
+		}		
 
 		var table = $('#logTable').DataTable({
 			'dom': 'Bfrtip',
@@ -343,7 +338,6 @@
 				if(result.status){
 					openSuccessGritter('Success', result.message);
 					$("#loading").hide();
-
 					$('#logTable').DataTable().ajax.reload();
 				}else{
 					openErrorGritter('Error', result.message);
@@ -353,6 +347,30 @@
 			$("#loading").hide();
 		}
 
+	}
+
+	function deleteReturn(id){
+		$("#loading").show();
+
+		var data = {
+			id:id
+		}
+
+		if(confirm("Apa Anda yakin anda akan mendelete slip return?")){
+			$.post('{{ url("delete/return") }}', data, function(result, status, xhr){
+				if(result.status){
+					openSuccessGritter('Success!', result.message);
+					$("#loading").hide();
+					$('#logTable').DataTable().ajax.reload();
+				}
+				else{
+					openErrorGritter('Error!', result.message);
+				}
+			});
+		}
+		else{
+			$("#loading").hide();
+		}
 	}
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
