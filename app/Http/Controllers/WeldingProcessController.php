@@ -1026,7 +1026,9 @@ class WeldingProcessController extends Controller
 				LEFT JOIN ympimis.materials m_akan ON m_akan.material_number = m_mesin.order_id_akan_gmc
 				LEFT JOIN ympimis.materials m_sedang ON m_sedang.material_number = m_mesin.order_id_sedang_gmc 
 				WHERE
-				m_mesin.mesin_type = 2 
+				(m_mesin.mesin_type = 2 )
+				OR
+				(m_ws.ws_name like '%Burner%')
 				ORDER BY
 				m_ws.ws_id");
 		}elseif ($loc == 'phs-sx') {
@@ -1078,17 +1080,20 @@ class WeldingProcessController extends Controller
 				CONCAT( m_akan.model, ' ', m_akan.`key` ) AS akan_name,
 				order_id_akan_name AS gmcdescakan,
 				order_id_akan_date AS waktu_akan 
-				FROM
+			FROM
 				m_mesin
 				LEFT JOIN m_ws ON m_ws.ws_id = m_mesin.ws_id
 				LEFT JOIN m_operator ON m_operator.operator_id = m_mesin.operator_id
 				LEFT JOIN ympimis.materials m_akan ON m_akan.material_number = m_mesin.order_id_akan_gmc
 				LEFT JOIN ympimis.materials m_sedang ON m_sedang.material_number = m_mesin.order_id_sedang_gmc 
-				WHERE
-				m_mesin.mesin_type = 1 
-				AND m_mesin.department_id = 4 
-				ORDER BY
-				m_ws.ws_id");
+			WHERE
+				(m_mesin.mesin_type = 1 
+				AND m_mesin.department_id = 4 )
+				OR
+				(m_mesin.mesin_type = 1 
+				AND m_ws.ws_id = 27 )
+			ORDER BY
+				m_ws.department_id desc,m_ws.ws_id");
 		}elseif ($loc == 'cuci-solder') {
 			$work_stations = DB::connection('welding_controller')->select("SELECT
 				a.date as store_date,
@@ -5161,7 +5166,7 @@ class WeldingProcessController extends Controller
 		$tag = $this->dec2hex($request->get('tag'));
 
 		if($location == 'phs'){
-			$zed_material = db::connection('welding')->table('m_phs_kartu')->leftJoin('m_phs', 'm_phs_kartu.phs_id', '=', 'm_phs.phs_id')
+			$zed_material = db::connection('welding_controller')->table('m_phs_kartu')->leftJoin('m_phs', 'm_phs_kartu.phs_id', '=', 'm_phs.phs_id')
 			->where('m_phs_kartu.phs_kartu_code', '=', $tag)
 			->first();
 
@@ -5173,7 +5178,7 @@ class WeldingProcessController extends Controller
 				return Response::json($response);
 			}
 
-			$zed_operator = db::connection('welding')->table('m_phs_kartu')
+			$zed_operator = db::connection('welding_controller')->table('m_phs_kartu')
 			->leftJoin('t_kensa', 't_kensa.part_id', '=', 'm_phs_kartu.phs_id')
 			->leftJoin('m_operator', 'm_operator.operator_id', '=', 't_kensa.operator_id')
 			->where('m_phs_kartu.phs_kartu_code', '=', $tag)
@@ -5189,7 +5194,7 @@ class WeldingProcessController extends Controller
 			->first();
 		}
 		else if($location == 'hsa'){
-			$zed_material = db::connection('welding')->table('m_hsa_kartu')->leftJoin('m_hsa', 'm_hsa_kartu.hsa_id', '=', 'm_hsa.hsa_id')
+			$zed_material = db::connection('welding_controller')->table('m_hsa_kartu')->leftJoin('m_hsa', 'm_hsa_kartu.hsa_id', '=', 'm_hsa.hsa_id')
 			->where('m_hsa_kartu.hsa_kartu_code', '=', $tag)
 			->first();
 
@@ -5201,7 +5206,7 @@ class WeldingProcessController extends Controller
 				return Response::json($response);
 			}
 
-			$zed_operator = db::connection('welding')->table('m_hsa_kartu')
+			$zed_operator = db::connection('welding_controller')->table('m_hsa_kartu')
 			->leftJoin('t_kensa', 't_kensa.part_id', '=', 'm_hsa_kartu.hsa_id')
 			->leftJoin('m_operator', 'm_operator.operator_id', '=', 't_kensa.operator_id')
 			->where('m_hsa_kartu.hsa_kartu_code', '=', $tag)
