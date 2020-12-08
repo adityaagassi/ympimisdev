@@ -668,39 +668,34 @@
 							<span style="font-size: 20px; font-weight: bold;" id="">HASIL CEK PRODUK PERTAMA RECORDER (<?php echo date('d-M-Y', strtotime('-1 month')); ?> - <?php echo date('d-M-Y'); ?>)</span>
 							<table class="table table-hover table-striped table-bordered" id="tableResume">
 								<thead>
-									<tr>
-										<th style="width: 1%;" rowspan="2">#</th>
+									<tr style="text-align:center">
+										<th style="width: 1%;" rowspan="2">No.</th>
 										<th style="width: 1%;" rowspan="2">Product</th>
-										<th style="width: 6%;" rowspan="2">Type</th>
-										<th style="width: 1%;" rowspan="2">Part</th>
-										<th style="width: 1%;" rowspan="2">Color</th>
-										<th style="width: 1%;" rowspan="2">Injection Date</th>
-										<th style="width: 1%;" rowspan="2">Machine</th>
-										<th style="width: 1%;" rowspan="2">Cavity</th>
+										<th style="width: 1%;" rowspan="2">Injection</th>
 										<th style="width: 1%;background-color: #ffd6a5" colspan="4">Awal</th>
 										<th style="width: 1%;background-color: #9bf6ff" colspan="4">Istirahat 1</th>
 										<th style="width: 1%;background-color: #ffc6ff" colspan="4">Istirahat 2</th>
 										<th style="width: 1%;background-color: #caffbf" colspan="4">Istirahat 3</th>
-										<th style="width: 1%;" rowspan="2">Creator</th>
-										<th style="width: 1%;" rowspan="2">Created</th>
+										<th style="width: 1%;" rowspan="2">By</th>
+										<th style="width: 1%;" rowspan="2">At</th>
 									</tr>
 									<tr>
 										<th style="width: 1%;background-color: #ffd6a5">A</th>
 										<th style="width: 1%;background-color: #ffd6a5">B</th>
 										<th style="width: 1%;background-color: #ffd6a5">C</th>
-										<th style="width: 1%;background-color: #ffd6a5">Status</th>
+										<th style="width: 1%;background-color: #ffd6a5">Stts</th>
 										<th style="width: 1%;background-color: #9bf6ff">A</th>
 										<th style="width: 1%;background-color: #9bf6ff">B</th>
 										<th style="width: 1%;background-color: #9bf6ff">C</th>
-										<th style="width: 1%;background-color: #9bf6ff">Status</th>
+										<th style="width: 1%;background-color: #9bf6ff">Stts</th>
 										<th style="width: 1%;background-color: #ffc6ff">A</th>
 										<th style="width: 1%;background-color: #ffc6ff">B</th>
 										<th style="width: 1%;background-color: #ffc6ff">C</th>
-										<th style="width: 1%;background-color: #ffc6ff">Status</th>
+										<th style="width: 1%;background-color: #ffc6ff">Stts</th>
 										<th style="width: 1%;background-color: #caffbf">A</th>
 										<th style="width: 1%;background-color: #caffbf">B</th>
 										<th style="width: 1%;background-color: #caffbf">C</th>
-										<th style="width: 1%;background-color: #caffbf">Status</th>
+										<th style="width: 1%;background-color: #caffbf">Stts</th>
 									</tr>
 								</thead>
 								<tbody id="tableBodyResume">
@@ -1262,13 +1257,8 @@
 				$.each(result.datas, function(key, value) {
 					tableData += '<tr onclick="fetchCdm('+value.id_cdm+')">';
 					tableData += '<td>'+ count +'</td>';
-					tableData += '<td>'+ value.product +'</td>';
-					tableData += '<td>'+ value.type +'</td>';
-					tableData += '<td>'+ value.part +'</td>';
-					tableData += '<td>'+ value.color +'</td>';
-					tableData += '<td>'+ value.injection_date +'</td>';
-					tableData += '<td>'+ value.machine +'</td>';
-					tableData += '<td>'+ value.cavity +'</td>';
+					tableData += '<td style="text-align:center">'+ value.product +'<br>'+value.part+' - '+value.color+'<br>'+value.cavity+'</td>';
+					tableData += '<td style="text-align:center">'+ value.injection_date +'<br>Mesin '+value.machine+'</td>';
 					tableData += '<td style="background-color: #ffd6a5">'+ value.awal_a +'</td>';
 					tableData += '<td style="background-color: #ffd6a5">'+ value.awal_b +'</td>';
 					tableData += '<td style="background-color: #ffd6a5">'+ value.awal_c +'</td>';
