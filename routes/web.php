@@ -18,6 +18,7 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 
 
 Route::get('testmail', 'TrialController@testmail');
+Route::get('testmail2', 'AccountingController@coba');
 Route::get('testprint', 'TrialController@testPrint');
 Route::get('tesurgent', 'MaintenanceController@indexSPKUrgent');
 
@@ -1275,6 +1276,7 @@ Route::post('post/sakurentsu/type', 'SakurentsuController@post_sakurentsu_type')
 //3M
 Route::get('index/sakurentsu/list_3m', 'SakurentsuController@index_tiga_em');
 Route::get('fetch/sakurentsu/list_3m', 'SakurentsuController@fetch_tiga_em');
+Route::get('index/sakurentsu/3m/translate/{id}', 'SakurentsuController@index_translate_tiga_em');
 
 Route::get('index/sakurentsu/3m/{sakurentsu_number}', 'SakurentsuController@index_form_tiga_em');
 Route::post('post/sakurentsu/3m_form', 'SakurentsuController@save_tiga_em_form');
@@ -1287,6 +1289,8 @@ Route::post('mail/sakurentsu/3m/document', 'SakurentsuController@mail_tiga_em_do
 
 Route::get('index/sakurentsu/3m/document/upload/{id_three_m}', 'SakurentsuController@index_tiga_em_upload');
 Route::post('upload/sakurentsu/3m/document/upload', 'SakurentsuController@upload_tiga_em_upload');
+
+Route::get('index/sakurentsu/3m/finalmeeting/{id_three_m}', 'SakurentsuController@index_tiga_em_finalmeeting');
 
 //Supplier
 Route::get('index/supplier', 'AccountingController@master_supplier');
@@ -2711,6 +2715,11 @@ Route::get('index/display/efficiency_monitoring_monthly', 'DisplayController@ind
 Route::get('fetch/display/efficiency_monitoring', 'DisplayController@fetchEfficiencyMonitoring');
 Route::get('fetch/display/efficiency_monitoring_monthly', 'DisplayController@fetchEfficiencyMonitoringMonthly');
 
+//DISPLAY RAW MATERIAL
+Route::get('index/material/material_monitoring', 'MaterialController@indexMaterialMonitoring');
+Route::get('fetch/material/material_monitoring', 'MaterialController@fetchMaterialMonitoring');
+
+
 
 
 
@@ -3187,7 +3196,9 @@ Route::get('fetch/recorder/cdm_report', 'RecorderProcessController@fetchCdmRepor
 
 //NG RATE ASSY RC
 Route::get('index/recorder/kensa_initial', 'RecorderProcessController@indexKensaInitial');
+Route::get('fetch/recorder/kensa_initial', 'RecorderProcessController@fetchKensaInitial');
 Route::get('scan/recorder/kensa_initial', 'RecorderProcessController@scanKensaInitial');
+Route::post('input/recorder/kensa_initial', 'RecorderProcessController@inputKensaInitial');
 
 //WEBCAM
 Route::get('index/webcam', 'WebcamController@index');
@@ -3382,7 +3393,9 @@ Route::get('index/audit/response/{id}', 'CparController@audit_response_all');
 Route::post('index/audit/update_response/{id}', 'CparController@update_response_all');
 Route::get('index/audit/sendemailpenanganan/{id}', 'CparController@sendemailpenanganan_all');
 
-
+//5S Patrol
+Route::get('index/audit_patrol', 'AuditController@index');
+Route::get('fetch/audit_patrol', 'AuditController@fetch_audit');
 
 //Audit Internal ISO
 Route::get('index/audit_iso', 'CparController@audit');
