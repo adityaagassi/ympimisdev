@@ -34,12 +34,15 @@
 @stop
 @section('header')
 <section class="content-header">
-	<div class="col-xs-2 input-group date" style="text-align: center;">
-		<div class="input-group-addon bg-green">
-			<i class="fa fa-calendar"></i>
+	<h1>
+		{{ $title }}<span class="text-purple"> {{ $title_jp }}</span>
+		<div class="col-xs-2 input-group date pull-right" style="text-align: center;">
+			<div class="input-group-addon bg-green">
+				<i class="fa fa-calendar"></i>
+			</div>
+			<input type="text" class="form-control monthpicker" name="period" id="period" onchange="fillTable()" placeholder="Select Period">	
 		</div>
-		<input type="text" class="form-control monthpicker" name="period" id="period" onchange="fillTable()" placeholder="Select Period">	
-	</div>
+	</h1>
 </section>
 @stop
 @section('content')
@@ -47,10 +50,9 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
 	<div class="row">		
-		<div class="col-xs-8 col-xs-offset-2">
-			<h2 style="text-align: center; text-transform: uppercase;" id="table_header">{{ $title }}</h2>
-			<div class="row" style="margin-top: 3%;">
-				<div class="col-xs-4">
+		<div class="col-xs-12">
+			<div class="col-xs-3" style="padding: 0px;">
+				<div class="col-xs-12">
 					<div class="info-box">
 						<span class="info-box-icon bg-aqua"><i class="fa fa-ship"></i></span>
 
@@ -60,8 +62,7 @@
 						</div>
 					</div>
 				</div>
-
-				<div class="col-xs-4">
+				<div class="col-xs-12">
 					<div class="info-box">
 						<span class="info-box-icon bg-green"><i class="glyphicon glyphicon-ok"></i></span>
 
@@ -71,8 +72,7 @@
 						</div>
 					</div>
 				</div>
-
-				<div class="col-xs-4">
+				<div class="col-xs-12">
 					<div class="info-box">
 						<span class="info-box-icon bg-red"><i class="glyphicon glyphicon-remove"></i></span>
 
@@ -81,17 +81,21 @@
 							<span class="info-box-number" style="font-size: 30px;" id="total_not_confirmed"></span>
 						</div>
 					</div>
+					
 				</div>
 			</div>
+			<div class="col-xs-9" style="padding: 0px;">
+				<div id="container1"></div>				
+			</div>
 
-			<div class="col-xs-12" style="padding: 0px;">
+			<div class="col-xs-12" style="padding-right: 0px;">
 				<table id="tableList" class="table table-bordered" style="width: 100%; font-size: 16px;">
 					<thead style="background-color: rgba(126,86,134,.7);">
 						<tr>
-							<th style="width: 1%;">DESTINATION</th>
-							<th style="width: 1%;">PLAN</th>
-							<th style="width: 1%;">CONFIRMED</th>
-							<th style="width: 1%;">NOT CONFIRMED</th>
+							<th style="width: 40%;">DESTINATION</th>
+							<th style="width: 20%;">PLAN</th>
+							<th style="width: 20%;">CONFIRMED</th>
+							<th style="width: 20%;">NOT CONFIRMED</th>
 						</tr>
 					</thead>
 					<tbody id="tableBodyList">
@@ -115,6 +119,11 @@
 <script src="{{ url("js/vfs_fonts.js")}}"></script>
 <script src="{{ url("js/buttons.html5.min.js")}}"></script>
 <script src="{{ url("js/buttons.print.min.js")}}"></script>
+
+<script src="{{ url("js/highstock.js")}}"></script>
+<script src="{{ url("js/highcharts-3d.js")}}"></script>
+<script src="{{ url("js/exporting.js")}}"></script>
+<script src="{{ url("js/export-data.js")}}"></script>
 <script>
 
 	$.ajaxSetup({
@@ -136,40 +145,6 @@
 		});
 		fillTable();
 
-	});
-
-	$('#uploadReservation').on('submit', function(event){
-		event.preventDefault();
-		var formdata = new FormData(this);
-
-		$("#loading").show();
-
-		$.ajax({
-			url:"{{ url('fetch/shipping_order/upload_ship_reservation') }}",
-			method:'post',
-			data:formdata,
-			dataType:"json",
-			processData: false,
-			contentType: false,
-			cache: false,
-			success:function(result, status, xhr){
-				if(result.status){
-					$('#upload_period').val('');
-					$('#upload_file').val('');
-					$('#modalUpload').modal('hide');
-					openSuccessGritter('Success', result.message);
-					$("#loading").hide();
-				}else{
-					openErrorGritter('Error!', result.message);
-					$("#loading").hide();
-				}
-
-			},
-			error: function(result, status, xhr){
-				$("#loading").hide();				
-				openErrorGritter('Error!', 'Fatal Error');
-			}
-		});
 	});
 
 	function clearConfirmation(){
@@ -208,9 +183,9 @@
 						tableData += '<td>'+ result.data[i].not_confirmed +'</td>';
 					}
 
-					total_plan += result.data[i].plan;
-					total_confirmed += result.data[i].confirmed;
-					total_not_confirmed += result.data[i].not_confirmed;
+					total_plan += parseInt(result.data[i].plan);
+					total_confirmed += parseInt(result.data[i].confirmed);
+					total_not_confirmed += parseInt(result.data[i].not_confirmed);
 
 					tableData += '</tr>';
 				}
@@ -221,9 +196,87 @@
 				$('#total_plan').text(total_plan);
 				$('#total_confirmed').html(total_confirmed + ' <small style="font-size: 20px; text-style: italic;">('+ percen_confirmed +')</small>');
 				$('#total_not_confirmed').html(total_not_confirmed + ' <small style="font-size: 20px; text-style: italic;">('+ percen_not_confirmed +')</small>');
-				$('#table_header').text('YMPI Booking Management List ' + result.month);
 
 				$('#tableBodyList').append(tableData);
+
+
+				var date = [];
+				var plan = [];
+				var confirmed = [];
+				var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+				for (var i = 0; i < result.ship_by_dates.length; i++) {
+					var d = new Date(result.ship_by_dates[i].week_date)
+
+					date.push(d.getDate()+'-'+monthNames[d.getMonth()]);
+					plan.push(parseInt(result.ship_by_dates[i].plan));
+					confirmed.push(parseInt(result.ship_by_dates[i].confirmed));
+				}
+
+				console.log(date);
+				console.log(plan);
+				console.log(confirmed);
+
+
+				Highcharts.chart('container1', {
+					chart: {
+						height: 300,
+						type: 'column'
+					},
+					title: {
+						text: 'Shipping Booking Management List ' + result.month,
+						style: {
+							textTransform: 'uppercase',
+							fontSize: '20px'
+						}
+					},
+					xAxis: {
+						categories: date,
+						labels: {
+							rotation: -60
+						}
+					},
+					yAxis: {
+						min: 0,
+						stackLabels: {
+							enabled: true,
+							style: {
+								fontWeight: 'bold',
+							}
+						},
+						visible: false
+					},
+					legend: {
+						enabled: true
+					},
+					exporting: {
+						enabled: false
+					},
+					tooltip: {
+						headerFormat: '<b>{point.x}</b><br/>',
+						pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+					},
+					credits: {
+						enabled: false
+					},
+					plotOptions: {
+						column: {
+							stacking: 'normal',
+							dataLabels: {
+								enabled: true
+							}
+						}
+					},
+					series: [{
+						name: 'NOT CONFIRMED',
+						data: plan,
+						color: '#dd4b39'
+					}, {
+						name: 'CONFIRMED',
+						data: confirmed,
+						color: '#00a65a'
+					}]
+				});
 
 			}
 		});

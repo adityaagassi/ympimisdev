@@ -339,8 +339,8 @@
 
 							<div class="form-group row" align="right">
 								<label class="col-xs-3">Help<span class="text-red">*</span></label>
-								<div class="col-xs-5" align="left">
-									<select class="form-control select3" data-placeholder="Select Help" name="help" id="help" style="width: 100%">
+								<div class="col-xs-5" align="left" id="selectHelp">
+									<select class="form-control selectHelp" data-placeholder="Select Help" name="help" id="help" style="width: 100%">
 										<option value=""></option>
 										<option value="YES">YES</option>
 										<option value="NO">NO</option>
@@ -350,8 +350,8 @@
 
 							<div class="form-group row" align="right">
 								<label class="col-xs-3">Status<span class="text-red">*</span></label>
-								<div class="col-xs-5" align="left">
-									<select class="form-control select3" data-placeholder="Select Status" name="status" id="status" style="width: 100%">
+								<div class="col-xs-5" align="left" id="selectStatus">
+									<select class="form-control selectStatus" data-placeholder="Select Status" name="status" id="status" style="width: 100%">
 										<option value=""></option>
 										@foreach($statuses as $status) 
 										<option value="{{ $status }}">{{ $status }}</option>
@@ -469,7 +469,7 @@
 							</div>
 
 							<div class="form-group row" align="right">
-								<label class="col-xs-3">Due Date<span class="text-red">*</span></label>
+								<label class="col-xs-3">Due Date</label>
 								<div class="col-xs-5">
 									<div class="input-group date">
 										<div class="input-group-addon bg-green" style="border: none;">
@@ -498,7 +498,7 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-				<a class="btn btn-danger" href=""><i class="fa fa-close"></i> CANCEL</a>
+				<a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close"></i> CANCEL</a>
 				<button class="btn btn-success" onclick="saveList()"><i class="fa fa-check-square-o"></i> SUBMIT</button>
 			</div>
 		</div>
@@ -527,7 +527,7 @@
 										<div class="input-group-addon bg-green" style="border: none;">
 											<i class="fa fa-calendar"></i>
 										</div>
-										<input type="text" class="form-control monthpicker" name="edit_period" id="edit_period" placeholder="select Shipment Period">
+										<input type="text" class="form-control monthpicker" name="edit_period" id="edit_period" placeholder="select Shipment Period" readonly>
 									</div>
 								</div>
 							</div>
@@ -541,8 +541,8 @@
 
 							<div class="form-group row" align="right">
 								<label class="col-xs-3">Help<span class="text-red">*</span></label>
-								<div class="col-xs-5" align="left">
-									<select class="form-control select4" data-placeholder="Select Help" name="edit_help" id="edit_help" style="width: 100%">
+								<div class="col-xs-5" align="left" id="selectEditHelp">
+									<select class="form-control selectEditHelp" data-placeholder="Select Help" name="edit_help" id="edit_help" style="width: 100%">
 										<option value=""></option>
 										<option value="YES">YES</option>
 										<option value="NO">NO</option>
@@ -552,8 +552,8 @@
 
 							<div class="form-group row" align="right">
 								<label class="col-xs-3">Status<span class="text-red">*</span></label>
-								<div class="col-xs-5" align="left">
-									<select class="form-control select4" data-placeholder="Select Status" name="edit_status" id="edit_status" style="width: 100%">
+								<div class="col-xs-5" align="left" id="selectEditStatus">
+									<select class="form-control selectEditStatus" data-placeholder="Select Status" name="edit_status" id="edit_status" style="width: 100%">
 										<option value=""></option>
 										@foreach($statuses as $status) 
 										<option value="{{ $status }}">{{ $status }}</option>
@@ -563,21 +563,21 @@
 							</div>
 
 							<div class="form-group row" align="right">
-								<label class="col-xs-3">Shipper<span class="text-red">*</span></label>
+								<label class="col-xs-3">Shipper</label>
 								<div class="col-xs-5">
 									<input type="text" style="width: 100%" class="form-control" name="edit_shipper" id="edit_shipper" placeholder="Enter Shipper" value="YMPI" readonly>
 								</div>
 							</div>
 
 							<div class="form-group row" align="right">
-								<label class="col-xs-3">POL<span class="text-red">*</span></label>
+								<label class="col-xs-3">POL</label>
 								<div class="col-xs-5">
 									<input type="text" style="width: 100%" class="form-control" name="edit_pol" id="edit_pol" placeholder="Enter Pol" value="SURABAYA" readonly>
 								</div>
 							</div>
 
 							<div class="form-group row" align="right">
-								<label class="col-xs-3">POD<span class="text-red">*</span></label>
+								<label class="col-xs-3">POD</label>
 								<div class="col-xs-7" align="left" id="selectEditPod">
 									<input type="text" style="width: 100%" class="form-control" name="edit_pod" id="edit_pod" placeholder="Select POD" readonly>
 								</div>
@@ -615,7 +615,7 @@
 							</div>
 
 							<div class="form-group row" align="right">
-								<label class="col-xs-3">Carrier/FWD<span class="text-red">*</span></label>
+								<label class="col-xs-3">Carrier/FWD</label>
 								<div class="col-xs-7" align="left" id="selectEditCarier">
 									<input type="text" style="width: 100%" class="form-control" name="edit_carier" id="edit_carier" placeholder="Select Carrier/FWD" readonly>
 								</div>
@@ -634,7 +634,7 @@
 							</div>
 
 							<div class="form-group row" align="right">
-								<label class="col-xs-3">ETD Date<span class="text-red">*</span></label>
+								<label class="col-xs-3">ETD Date</label>
 								<div class="col-xs-5">
 									<div class="input-group date">
 										<div class="input-group-addon bg-green" style="border: none;">
@@ -665,7 +665,7 @@
 							</div>
 
 							<div class="form-group row" align="right">
-								<label class="col-xs-3">Due Date<span class="text-red">*</span></label>
+								<label class="col-xs-3">Due Date</label>
 								<div class="col-xs-5">
 									<div class="input-group date">
 										<div class="input-group-addon bg-green" style="border: none;">
@@ -694,7 +694,7 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-				<a class="btn btn-danger" href=""><i class="fa fa-close"></i> CANCEL</a>
+				<a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close"></i> CANCEL</a>
 				<button class="btn btn-success" onclick="editList()"><i class="fa fa-check-square-o"></i> SUBMIT</button>
 			</div>
 		</div>
@@ -716,7 +716,7 @@
 				</div>
 				<div class="modal-body">
 					<div class="form-group">
-						<label>Shipment Period</label>
+						<label>Shipment Period<span class="text-red">*</span></label>
 						<div class="input-group date">
 							<input type="text" placeholder="Select Shipment Period" class="form-control monthpicker" name="upload_period" id="upload_period">
 						</div>
@@ -727,8 +727,8 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<a class="btn btn-danger" href=""><i class="fa fa-close"></i> CANCEL</a>
-					<button id="modalUpload" type="submit" class="btn btn-success"><i class="fa fa-check-square-o"></i> SUBMIT</button>
+					<a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close"></i> CANCEL</a>
+					<button type="submit" class="btn btn-success"><i class="fa fa-check-square-o"></i> SUBMIT</button>
 				</div>
 			</form>
 		</div>
@@ -773,30 +773,58 @@
 			todayHighlight: true
 		});
 
-		$('.select2').select2();
+		$('.select2').select2({
+			allowClear: true
+		});
 
 		$('.select3').select2({
-			dropdownParent: $('#modalAdd')
+			dropdownParent: $('#modalAdd'),
+			allowClear: true
+		});
+
+		$('.selectHelp').select2({
+			dropdownParent: $('#selectHelp'),
+			allowClear: true
+		});
+
+		$('.selectStatus').select2({
+			dropdownParent: $('#selectStatus'),
+			allowClear: true
 		});
 
 		$('.selectPod').select2({
-			dropdownParent: $('#selectPod')
+			dropdownParent: $('#selectPod'),
+			allowClear: true
 		});
 
 		$('.selectCarier').select2({
-			dropdownParent: $('#selectCarier')
+			dropdownParent: $('#selectCarier'),
+			allowClear: true
 		});
 
 		$('.selectRate').select2({
-			dropdownParent: $('#selectRate')
+			dropdownParent: $('#selectRate'),
+			allowClear: true
 		});
 
 		$('.select4').select2({
-			dropdownParent: $('#modalEdit')
+			dropdownParent: $('#modalEdit'),
+			allowClear: true
+		});
+
+		$('.selectEditHelp').select2({
+			dropdownParent: $('#selectEditHelp'),
+			allowClear: true
+		});
+
+		$('.selectEditStatus').select2({
+			dropdownParent: $('#selectEditStatus'),
+			allowClear: true
 		});
 
 		$('.selectEditRate').select2({
-			dropdownParent: $('#selectEditRate')
+			dropdownParent: $('#selectEditRate'),
+			allowClear: true
 		});
 
 		// fillTable();
@@ -845,6 +873,12 @@
 		event.preventDefault();
 		var formdata = new FormData(this);
 
+		var period = $('#upload_period').val();
+		if(period == ''){
+			openErrorGritter('Error!', '(*) must be filled');
+			return false;
+		}
+
 		$("#loading").show();
 
 		$.ajax({
@@ -857,8 +891,7 @@
 			cache: false,
 			success:function(result, status, xhr){
 				if(result.status){
-					$('#upload_period').val('');
-					$('#upload_file').val('');
+					clearAll();
 					$('#modalUpload').modal('hide');
 					openSuccessGritter('Success', result.message);
 					$("#loading").hide();
@@ -874,6 +907,48 @@
 			}
 		});
 	});
+
+	function clearAll(){
+		$('#upload_period').val('');
+		$('#upload_file').val('');
+
+		$("#period").val('');
+		$("#ycj_ref_no").val('');
+		$("#help").prop('selectedIndex', 0).change();
+		$("#status").prop('selectedIndex', 0).change();
+		$("#shipper").val('');
+		$("#pol").val('');
+		$("#pod").prop('selectedIndex', 0).change();
+		$("#bl").val('');
+		$("#fortyhc").val('');
+		$("#forty").val('');
+		$("#twenty").val('');
+		$("#carier").prop('selectedIndex', 0).change();
+		$("#stuffing").val('');
+		$("#etd").val('');
+		$("#application_rate").prop('selectedIndex', 0).change();
+		$("#remark").val('');
+		$("#due_date").val('');
+		$("#invoice").val('');
+		$("#ref").val('');
+
+		$("#shipment_reservation_id").val('');
+		$("#edit_period").val('');
+		$("#edit_ycj_ref_no").val('');
+		$("#edit_help").prop('selectedIndex', 0).change();	
+		$("#edit_status").prop('selectedIndex', 0).change();		
+		$("#edit_bl").val('');
+		$("#edit_fortyhc").val('');
+		$("#edit_forty").val('');
+		$("#edit_twenty").val('');
+		$("#edit_stuffing").val('');
+		$("#edit_etd").val('');
+		$("#edit_application_rate").prop('selectedIndex', 0).change();
+		$("#edit_remark").val('');
+		$("#edit_due_date").val('');
+		$("#edit_invoice").val('');
+		$("#edit_ref").val('');
+	}
 
 	function clearConfirmation(){
 		location.reload(true);		
@@ -919,8 +994,6 @@
 			serach_carier : serach_carier,
 			search_nomination : search_nomination,
 		}
-
-		console.log(data);
 
 		$.get('{{ url("fetch/shipping_order/ship_reservation") }}', data, function(result, status, xhr){
 			if(result.status){
@@ -1077,12 +1150,13 @@
 		var twenty = $("#edit_twenty").val();
 		var stuffing = $("#edit_stuffing").val();
 		var etd = $("#edit_etd").val();
+		var application_rate = $("#edit_application_rate").val();
 		var remark = $("#edit_remark").val();
 		var due_date = $("#edit_due_date").val();
 		var invoice = $("#edit_invoice").val();
 		var ref = $("#edit_ref").val();
 
-		if(ycj_ref_no == '' && help == '' && status == '' && stuffing == '' && etd == '' && application_rate == '' && remark == '' && due_date == '' && invoice == ''){
+		if(ycj_ref_no == '' || help == '' || status == '' || stuffing == '' || application_rate == ''){
 			openErrorGritter('Error!', '(*) must be filled');
 			return false;
 		}
@@ -1106,6 +1180,7 @@
 			stuffing : stuffing,
 			etd : etd,
 			remark : remark,
+			application_rate : application_rate,
 			due_date : due_date,
 			invoice : invoice,
 			ref : ref
@@ -1116,6 +1191,7 @@
 		$.post('{{ url("fetch/shipping_order/edit_ship_reservation") }}', data,  function(result, status, xhr){
 			if(result.status){
 				fillTable();
+				clearAll();
 				$("#loading").hide();
 				$("#modalEdit").modal('hide');
 				openSuccessGritter('Success', result.message);
@@ -1148,7 +1224,7 @@
 		var invoice = $("#invoice").val();
 		var ref = $("#ref").val();
 
-		if(period == '' && ycj_ref_no == '' && help == '' && status == '' && shipper == '' && pol == '' && pod == '' && carier == '' && stuffing == '' && etd == '' && application_rate == '' && remark == '' && due_date == '' && invoice == ''){
+		if(period == '' || ycj_ref_no == '' || help == '' || status == '' || shipper == ''|| pol == ''|| pod == '' || carier == '' || stuffing == '' || application_rate == ''){
 			openErrorGritter('Error!', '(*) must be filled');
 			return false;
 		}
@@ -1186,6 +1262,7 @@
 		$.post('{{ url("fetch/shipping_order/add_ship_reservation") }}', data,  function(result, status, xhr){
 			if(result.status){
 				fillTable();
+				clearAll();
 				$("#loading").hide();
 				$("#modalAdd").modal('hide');
 				openSuccessGritter('Success', result.message);

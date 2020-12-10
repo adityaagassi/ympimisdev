@@ -274,7 +274,7 @@
 												<label>File Terlampir (Optional)</label>
 												<input type="file" id="reportAttachment" name="reportAttachment[]" multiple="">
 											</div>
-											@if($employee->position == "Leader" && $employee->department != "Logistic")
+											@if($employee->position == "Leader" && $employee->department != "Logistic Department")
 											<div class="form-group">
 												<label>Staff</label>
 												<select class="form-control select2" data-placeholder="Pilih Staff" name="staff" id="staff" style="width: 100% height: 35px;" required>
