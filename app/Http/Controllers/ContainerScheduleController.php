@@ -649,6 +649,24 @@ class ContainerScheduleController extends Controller{
             $destination = $rows[$i][2];
             $transportation = $rows[$i][3];
 
+            if(!is_string($stuffing)){
+                DB::rollback();             
+                $response = array(
+                    'status' => false,
+                    'message' => "Change Format Cell in Ms Excel to Text. Then Upload Excel File Again"
+                );
+                return Response::json($response);
+            }
+
+            if(!is_string($bl_date)){
+                DB::rollback();             
+                $response = array(
+                    'status' => false,
+                    'message' => "Change Format Cell in Ms Excel to Text. Then Upload Excel File Again"
+                );
+                return Response::json($response);
+            }
+
             if($transportation == 'SEA'){
                 $destinations = ShipmentNomination::where('consignee', 'like', '%'.$destination.'%')->first();
 

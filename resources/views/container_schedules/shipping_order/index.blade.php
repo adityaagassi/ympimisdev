@@ -711,8 +711,9 @@
 			</div>
 			<form id ="uploadReservation" method="post" enctype="multipart/form-data">
 				<div class="modal-header">
-					Format: [Stuffing Date][BL Date][Destination][TRANSPORTATION]<br>
-					Sample: <a href="{{ url('download/manual/upload_shipment_reservation.xlsx') }}">upload_shipment_reservation.xlsx</a> Code: #Truncate
+					Format: [Stuffing Date][BL Date][Destination][Transportation]<br>
+					<b><i>Format Cell  in Ms Excel must be in Text</i></b> <br>
+					Sample: <a href="{{ url('manuals/upload_shipment_reservation.xlsx') }}">upload_shipment_reservation.xlsx</a> Code: #Truncate
 				</div>
 				<div class="modal-body">
 					<div class="form-group">
@@ -907,6 +908,34 @@
 			}
 		});
 	});
+
+	$('#modalUpload').on('hidden.bs.modal', function () {
+		$('#upload_period').val('');
+		$('#upload_file').val('');
+	})
+
+	$('#modalAdd').on('hidden.bs.modal', function () {
+		$("#period").val('');
+		$("#ycj_ref_no").val('');
+		$("#help").prop('selectedIndex', 0).change();
+		$("#status").prop('selectedIndex', 0).change();
+		$("#shipper").val('');
+		$("#pol").val('');
+		$("#pod").prop('selectedIndex', 0).change();
+		$("#bl").val('');
+		$("#fortyhc").val('');
+		$("#forty").val('');
+		$("#twenty").val('');
+		$("#carier").prop('selectedIndex', 0).change();
+		$("#stuffing").val('');
+		$("#etd").val('');
+		$("#application_rate").prop('selectedIndex', 0).change();
+		$("#remark").val('');
+		$("#due_date").val('');
+		$("#invoice").val('');
+		$("#ref").val('');
+	})
+
 
 	function clearAll(){
 		$('#upload_period').val('');
