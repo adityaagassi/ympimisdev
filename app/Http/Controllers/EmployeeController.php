@@ -2438,8 +2438,14 @@ public function fetchReportManpower(){
 
 public function fetchReportManpowerDetail(Request $request){
 
+
      $where = "";
      $where = "and ".$request->get('filter')." = '".$request->get('category')."'";
+
+     if($request->get('filter') == 'Department' && $request->get('category') == 'Management'){
+          $where = "and Department is null";
+     }
+
 
      $manpowers = db::connection("sunfish")->select("select Emp_no, Full_name, Division, Department, Section, Groups, Sub_Groups, convert(varchar, start_date, 105) as start_date, employ_code, grade_code, pos_name_en, gender, case when [Labour_Union] is null then 'NONE' else [Labour_Union] end as [union] FROM [dbo].[VIEW_YMPI_Emp_OrgUnit] where end_date is null ".$where." order by Emp_no asc");
 
