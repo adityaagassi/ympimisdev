@@ -21,6 +21,7 @@ use App\PlcCounter;
 use App\PushBlockTorqueTemp;
 use App\PushBlockTorque;
 use App\InjectionTag;
+use App\RcKensaInitial;
 use App\Libraries\ActMLEasyIf;
 use Response;
 use DataTables;
@@ -3451,6 +3452,266 @@ class RecorderProcessController extends Controller
               'message' => $e->getMessage(),
           );
           return Response::json($response);
+      }
+    }
+
+    public function indexKensaInitial()
+    {
+      return view('recorder.process.kensa_initial')
+      ->with('title', 'Inisialisasi Kensa Recorder')
+      ->with('product_type',$this->product_type)
+      ->with('title_jp', '??')
+      ->with('page', 'Inisialisasi Kensa Recorder');
+    }
+
+    public function scanKensaInitial(Request $request)
+    {
+      try {
+        $part_type = $request->get('type');
+        if ($part_type == 'head') {
+          $part = 'HJ';
+        }else if($part_type == 'middle'){
+          $part = 'MJ';
+        }else if($part_type == 'foot'){
+          $part = 'FJ';
+        }else if($part_type == 'block'){
+          $part = 'BJ';
+        }else if($part_type == 'head_yrf'){
+          $part = 'A YRF H';
+        }else if($part_type == 'body_yrf'){
+          $part = 'A YRF B';
+        }else if($part_type == 'stopper_yrf'){
+          $part = 'A YRF S';
+        }
+
+        $tag = InjectionTag::where('tag',$request->get('tag'))->where('part_type','like','%'.$part.'%')->first();
+
+        if (count($tag) > 0) {
+          $response = array(
+              'status' => true,
+              'message' => 'Scan Tag Success',
+              'tag' => $tag,
+          );
+        }else{
+          $response = array(
+              'status' => false,
+              'message' => 'Tag Tidak Ditemukan',
+          );
+        }
+        return Response::json($response);
+      } catch (\Exception $e) {
+        $response = array(
+            'status' => false,
+            'message' => $e->getMessage(),
+        );
+        return Response::json($response);
+      }
+    }
+
+    public function inputKensaInitial(Request $request)
+    {
+      try {
+        $rckensa = RcKensaInitial::where('status','Open')->get();
+        foreach ($rckensa as $key) {
+          $kensaold = RcKensaInitial::find($key->id);
+          $kensaold->status = 'Close';
+          $kensaold->save();
+        }
+        if (str_contains($request->get('product'), 'YRS')) {
+          $product = $request->get('product');
+          $tag_head = $request->get('tag_head');
+          $tag_middle = $request->get('tag_middle');
+          $tag_foot = $request->get('tag_foot');
+          $tag_block = $request->get('tag_block');
+
+          $material_number_head = $request->get('material_number_head');
+          $part_name_head = $request->get('part_name_head');
+          $part_type_head = $request->get('part_type_head');
+          $color_head = $request->get('color_head');
+          $cavity_head = $request->get('cavity_head');
+          $location_head = $request->get('location_head');
+
+          $material_number_middle = $request->get('material_number_middle');
+          $part_name_middle = $request->get('part_name_middle');
+          $part_type_middle = $request->get('part_type_middle');
+          $color_middle = $request->get('color_middle');
+          $cavity_middle = $request->get('cavity_middle');
+          $location_middle = $request->get('location_middle');
+
+          $material_number_foot = $request->get('material_number_foot');
+          $part_name_foot = $request->get('part_name_foot');
+          $part_type_foot = $request->get('part_type_foot');
+          $color_foot = $request->get('color_foot');
+          $cavity_foot = $request->get('cavity_foot');
+          $location_foot = $request->get('location_foot');
+
+          $material_number_block = $request->get('material_number_block');
+          $part_name_block = $request->get('part_name_block');
+          $part_type_block = $request->get('part_type_block');
+          $color_block = $request->get('color_block');
+          $cavity_block = $request->get('cavity_block');
+          $location_block = $request->get('location_block');
+
+          RcKensaInitial::create([
+            'product' => $product,
+            'material_number' => $material_number_head,
+            'part_name' => $part_name_head,
+            'part_type' => $part_type_head,
+            'color' => $color_head,
+            'cavity' => $cavity_head,
+            'location' => $location_head,
+            'tag' => $tag_head,
+            'status' => 'Open',
+            'created_by' => Auth::id()
+          ]);
+
+          RcKensaInitial::create([
+             'product' => $product,
+             'material_number' => $material_number_middle,
+             'part_name' => $part_name_middle,
+             'part_type' => $part_type_middle,
+             'color' => $color_middle,
+             'cavity' => $cavity_middle,
+             'location' => $location_middle,
+             'tag' => $tag_middle,
+             'status' => 'Open',
+            'created_by' => Auth::id()
+          ]);
+
+          RcKensaInitial::create([
+            'product' => $product,
+            'material_number' => $material_number_foot,
+            'part_name' => $part_name_foot,
+            'part_type' => $part_type_foot,
+            'color' => $color_foot,
+            'cavity' => $cavity_foot,
+            'location' => $location_foot,
+            'tag' => $tag_foot,
+            'status' => 'Open',
+            'created_by' => Auth::id()
+          ]);
+
+          RcKensaInitial::create([
+            'product' => $product,
+            'material_number' => $material_number_block,
+            'part_name' => $part_name_block,
+            'part_type' => $part_type_block,
+            'color' => $color_block,
+            'cavity' => $cavity_block,
+            'location' => $location_block,
+            'tag' => $tag_block,
+            'status' => 'Open',
+            'created_by' => Auth::id()
+          ]);
+        }else{
+          $product = $request->get('product');
+          $tag_head_yrf = $request->get('tag_head_yrf');
+          $tag_body_yrf = $request->get('tag_body_yrf');
+          $tag_stopper_yrf = $request->get('tag_stopper_yrf');
+
+          $material_number_head_yrf = $request->get('material_number_head_yrf');
+          $part_name_head_yrf = $request->get('part_name_head_yrf');
+          $part_type_head_yrf = $request->get('part_type_head_yrf');
+          $color_head_yrf = $request->get('color_head_yrf');
+          $cavity_head_yrf = $request->get('cavity_head_yrf');
+          $location_head_yrf = $request->get('location_head_yrf');
+
+          $material_number_body_yrf = $request->get('material_number_body_yrf');
+          $part_name_body_yrf = $request->get('part_name_body_yrf');
+          $part_type_body_yrf = $request->get('part_type_body_yrf');
+          $color_body_yrf = $request->get('color_body_yrf');
+          $cavity_body_yrf = $request->get('cavity_body_yrf');
+          $location_body_yrf = $request->get('location_body_yrf');
+
+          $material_number_stopper_yrf = $request->get('material_number_stopper_yrf');
+          $part_name_stopper_yrf = $request->get('part_name_stopper_yrf');
+          $part_type_stopper_yrf = $request->get('part_type_stopper_yrf');
+          $color_stopper_yrf = $request->get('color_stopper_yrf');
+          $cavity_stopper_yrf = $request->get('cavity_stopper_yrf');
+          $location_stopper_yrf = $request->get('location_stopper_yrf');
+
+          RcKensaInitial::create([
+            'product' => $product,
+            'material_number' => $material_number_head_yrf,
+            'part_name' => $part_name_head_yrf,
+            'part_type' => $part_type_head_yrf,
+            'color' => $color_head_yrf,
+            'cavity' => $cavity_head_yrf,
+            'location' => $location_head_yrf,
+            'tag' => $tag_head_yrf,
+            'status' => 'Open',
+            'created_by' => Auth::id()
+          ]);
+
+          RcKensaInitial::create([
+            'product' => $product,
+            'material_number' => $material_number_body_yrf,
+            'part_name' => $part_name_body_yrf,
+            'part_type' => $part_type_body_yrf,
+            'color' => $color_body_yrf,
+            'cavity' => $cavity_body_yrf,
+            'location' => $location_body_yrf,
+            'tag' => $tag_body_yrf,
+            'status' => 'Open',
+            'created_by' => Auth::id()
+          ]);
+
+          RcKensaInitial::create([
+            'product' => $product,
+            'material_number' => $material_number_stopper_yrf,
+            'part_name' => $part_name_stopper_yrf,
+            'part_type' => $part_type_stopper_yrf,
+            'color' => $color_stopper_yrf,
+            'cavity' => $cavity_stopper_yrf,
+            'location' => $location_stopper_yrf,
+            'tag' => $tag_stopper_yrf,
+            'status' => 'Open',
+            'created_by' => Auth::id()
+          ]);
+        }
+        $response = array(
+              'status' => true,
+          );
+        return Response::json($response);
+      } catch (\Exception $e) {
+        $response = array(
+            'status' => false,
+            'message' => $e->getMessage(),
+        );
+        return Response::json($response);
+      }
+    }
+
+    public function fetchKensaInitial()
+    {
+      try {
+        $datas = DB::SELECT("SELECT
+          *,
+          injection_parts.part_name as mat_desc,
+          rc_kensa_initials.created_at as kensa_created,
+          rc_kensa_initials.part_type as typepart,
+          rc_kensa_initials.part_name as part_kensa
+        FROM
+          rc_kensa_initials
+          JOIN injection_parts ON injection_parts.gmc = rc_kensa_initials.material_number 
+        WHERE
+          injection_parts.deleted_at IS NULL 
+          AND DATE( rc_kensa_initials.created_at ) BETWEEN DATE(
+          NOW()) - INTERVAL 3 DAY 
+          AND DATE(
+          NOW())");
+
+        $response = array(
+              'status' => true,
+              'datas' => $datas
+          );
+        return Response::json($response);
+      } catch (\Exception $e) {
+        $response = array(
+            'status' => false,
+            'message' => $e->getMessage(),
+        );
+        return Response::json($response);
       }
     }
 }
