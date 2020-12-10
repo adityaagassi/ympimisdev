@@ -35,32 +35,34 @@
 @section('content')
 <section class="content" style="padding-top: 0;">
 	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
-		<p style="position: absolute; color: White; top: 45%; left: 35%;">
-			<span style="font-size: 40px">Loading, please wait <i class="fa fa-spin fa-spinner"></i></span>
-		</p>
+		<div>
+			<center>
+				<span style="font-size: 3vw; text-align: center;"><i class="fa fa-spin fa-hourglass-half"></i></span>
+			</center>
+		</div>
 	</div>
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="row">
 				<div class="col-xs-4">
-					<div id="chartStatus" style="width: 100%;">By Status (雇用形態別)</div>
+					<div id="chartStatus" style="width: 100%;"></div>
 				</div>
 				<div class="col-xs-4">
-					<div id="chartUnion" style="width: 100%;">By Union ()</div>
+					<div id="chartUnion" style="width: 100%;"></div>
 				</div>
 				<div class="col-xs-4">
-					<div id="chartGender" style="width: 100%;">By Gender (性別)</div>
+					<div id="chartGender" style="width: 100%;"></div>
 				</div>
 			</div>
 		</div>
 		<div class="col-xs-12" style="padding-top: 10px;">
-			<div id="chartDepartment" style="width: 100%;">By Department (部門別)</div>
-		</div>
+			<div id="chartDepartment" style="width: 100%;">/div>
+			</div>
 		{{-- <div class="col-xs-12" style="padding-top: 10px;">
 			<div id="chartGrade" style="width: 100%;">By Grade (等級別)</div>
 		</div> --}}
 		<div class="col-xs-12" style="padding-top: 10px;">
-			<div id="chartPosition" style="width: 100%;">By Position (役職別)</div>
+			<div id="chartPosition" style="width: 100%;"></div>
 		</div>
 	</div>
 </section>
@@ -337,35 +339,35 @@
 				var tableData = "";
 				$('#tableDetailBody').html("");
 				var count = 1;
-			// $('#tableDetail').DataTable().clear();
-			// $('#tableDetail').DataTable().destroy();
+				$('#tableDetail').DataTable().clear();
+				$('#tableDetail').DataTable().destroy();
 
-			$.each(result.details, function(key, value) {
-				tableData += "<tr>";
-				tableData += "<td>"+count+"</td>";
-				tableData += "<td>"+value.Emp_no+"</td>";
-				tableData += "<td>"+value.Full_name+"</td>";
-				tableData += "<td>"+value.Department+"</td>";
-				tableData += "<td>"+value.Section+"</td>";
-				tableData += "<td>"+value.Groups+"</td>";
-				tableData += "<td>"+value.Sub_Groups+"</td>";
-				tableData += "<td>"+value.start_date+"</td>";
-				tableData += "<td>"+value.pos_name_en+"</td>";
-				tableData += "<td>"+value.employ_code+"</td>";
-				tableData += "</tr>";
-				count += 1;
-			});
-			$('#tableDetailBody').append(tableData);
-			$('#tableDetail').DataTable({
-				'dom': 'Bfrtip',
-				'responsive':true,
-				"pageLength": 30,
-				'lengthMenu': [
-				[ 10, 25, 50, -1 ],
-				[ '10 rows', '25 rows', '50 rows', 'Show all' ]
-				],
-				'buttons': {
-					buttons:[
+				$.each(result.details, function(key, value) {
+					tableData += "<tr>";
+					tableData += "<td>"+count+"</td>";
+					tableData += "<td>"+value.Emp_no+"</td>";
+					tableData += "<td>"+value.Full_name+"</td>";
+					tableData += "<td>"+value.Department+"</td>";
+					tableData += "<td>"+value.Section+"</td>";
+					tableData += "<td>"+value.Groups+"</td>";
+					tableData += "<td>"+value.Sub_Groups+"</td>";
+					tableData += "<td>"+value.start_date+"</td>";
+					tableData += "<td>"+value.pos_name_en+"</td>";
+					tableData += "<td>"+value.employ_code+"</td>";
+					tableData += "</tr>";
+					count += 1;
+				});
+				$('#tableDetailBody').append(tableData);
+				$('#tableDetail').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					"pageLength": 30,
+					'lengthMenu': [
+					[ 10, 25, 50, -1 ],
+					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
 					// {
 					// 	extend: 'pageLength',
 					// 	className: 'btn btn-default',
@@ -408,13 +410,13 @@
 				"bAutoWidth": false,
 				"processing": true
 			});
-			$("#loading").hide();
-			$('#modalDetail').modal('show');
-		}
-		else{
-			alert(result.message);
-		}
-	});
+				$("#loading").hide();
+				$('#modalDetail').modal('show');
+			}
+			else{
+				alert(result.message);
+			}
+		});
 	}
 
 	function addZero(i) {
@@ -444,35 +446,47 @@
 	});
 
 	function fetchChart(){
-		var data = {
-
-		}
-		$.get('{{ url("fetch/report/manpower") }}', data, function(result, status, xhr) {
+		$('#loading').show();
+		$.get('{{ url("fetch/report/manpower") }}', function(result, status, xhr) {
 			if(result.status){
 				var xStatus = [];
-				var xDepartment = [];
 				var xGrade = [];
-				var xPosition = [];
 				var xGender = [];
 				var xUnion = [];
 				var countStatus = [];
-				var countDepartment = [];
 				var countGrade = [];
-				var countPosition = [];
 				var countGender = [];
 				var countUnion = [];
 				var seriesStatus = [];
-				var seriesDepartment = [];
 				var seriesGrade = [];
-				var seriesPosition = [];
 				var seriesGender = [];
 				var seriesUnion = [];
 
+				var xDepartment = [];
+				var seriesDepartment = [];
+
+				$.each(result.by_departments, function(key, value){
+					if(xDepartment.indexOf(value.Department) === -1){
+						xDepartment[xDepartment.length] = value.Department;
+					}
+					seriesDepartment.push(parseInt(value.total));
+				});
+
+
+				var xPosition = [];
+				var seriesPosition = [];
+
+				$.each(result.by_positions, function(key, value){
+					if(xPosition.indexOf(value.pos_name_en) === -1){
+						xPosition[xPosition.length] = value.pos_name_en;
+					}
+					seriesPosition.push(parseInt(value.total));
+				});
+
+
 				$.each(result.manpowers, function(key, value) {
 					var catStatus = value.employ_code;
-					var catDepartment = value.Department;
 					var catGrade = value.grade_code;
-					var catPosition = value.pos_name_en;
 					var catGender = value.gender;
 					var catUnion = value.union;
 
@@ -481,20 +495,10 @@
 					}
 					countStatus[catStatus]++;
 
-					if(!countDepartment[catDepartment]) {
-						countDepartment[catDepartment] = 0;
-					}
-					countDepartment[catDepartment]++;
-
 					if(!countGrade[catGrade]) {
 						countGrade[catGrade] = 0;
 					}
 					countGrade[catGrade]++;
-
-					if(!countPosition[catPosition]) {
-						countPosition[catPosition] = 0;
-					}
-					countPosition[catPosition]++;
 
 					if(!countGender[catGender]) {
 						countGender[catGender] = 0;
@@ -509,14 +513,8 @@
 					if(xStatus.indexOf(catStatus) === -1){
 						xStatus[xStatus.length] = catStatus;
 					}
-					if(xDepartment.indexOf(catDepartment) === -1){
-						xDepartment[xDepartment.length] = catDepartment;
-					}
 					if(xGrade.indexOf(catGrade) === -1){
 						xGrade[xGrade.length] = catGrade;
-					}
-					if(xPosition.indexOf(catPosition) === -1){
-						xPosition[xPosition.length] = catPosition;
 					}
 					if(xGender.indexOf(catGender) === -1){
 						xGender[xGender.length] = catGender;
@@ -529,14 +527,8 @@
 				for(var prop in countStatus){
 					seriesStatus.push(countStatus[prop]);
 				}
-				for(var prop in countDepartment){
-					seriesDepartment.push(countDepartment[prop]);
-				}
 				for(var prop in countGrade){
 					seriesGrade.push(countGrade[prop]);
-				}
-				for(var prop in countPosition){
-					seriesPosition.push(countPosition[prop]);
 				}
 				for(var prop in countGender){
 					var objGender = {};
@@ -610,7 +602,7 @@
 
 				Highcharts.chart('chartUnion', {
 					title: {
-						text: 'By Union ()',
+						text: 'By Union (労働組合別)',
 						style: {
 							fontSize: '30px',
 							fontWeight: 'bold'
@@ -908,8 +900,12 @@
 						showInLegend: false
 					}]
 				});
+
+				$('#loading').hide();
 			}
 			else{
+
+				$('#loading').hide();
 				alert('Error!', result.message);
 			}
 		});

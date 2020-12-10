@@ -2360,9 +2360,78 @@ public function fetchReportManpower(){
           WHERE
           end_date IS NULL");
 
+     $by_departments = db::connection('sunfish')->select("SELECT
+     * 
+          FROM
+          (
+          SELECT
+          IIF ( Department IS NULL, NULL, Division ) AS Division,
+          IIF ( Department IS NULL, 'Management', Department ) AS Department,
+          COUNT ( Emp_no ) AS total 
+          FROM
+          VIEW_YMPI_Emp_OrgUnit 
+          WHERE
+          end_date IS NULL 
+          GROUP BY
+          IIF ( Department IS NULL, NULL, Division ),
+          IIF ( Department IS NULL, 'Management', Department ) 
+          ) AS by_department 
+          ORDER BY
+          Division ASC,
+          total DESC,
+          Department ASC");
+
+     $by_positions = db::connection('sunfish')->select("SELECT
+          pos_name_en,
+          COUNT ( Emp_no ) AS total 
+          FROM
+          VIEW_YMPI_Emp_OrgUnit 
+          WHERE
+          end_date IS NULL 
+          GROUP BY
+          pos_name_en 
+          ORDER BY
+          CASE
+          pos_name_en 
+          WHEN 'Operator Contract' THEN
+          1 
+          WHEN 'Operator' THEN
+          2 
+          WHEN 'Senior Operator' THEN
+          3 
+          WHEN 'Sub Leader' THEN
+          4 
+          WHEN 'Leader' THEN
+          5 
+          WHEN 'Staff' THEN
+          6 
+          WHEN 'Senior Staff' THEN
+          7 
+          WHEN 'Coordinator' THEN
+          8 
+          WHEN 'Senior Coordinator' THEN
+          9 
+          WHEN 'Foreman' THEN
+          10 
+          WHEN 'Chief' THEN
+          11 
+          WHEN 'Manager' THEN
+          12 
+          WHEN 'Deputy General Manager' THEN
+          13 
+          WHEN 'General Manager' THEN
+          14 
+          WHEN 'Director' THEN
+          15 
+          WHEN 'President Director' THEN
+          16 ELSE 17 
+          END");
+
      $response = array(
           'status' => true,
           'manpowers' => $manpowers,
+          'by_departments' => $by_departments,
+          'by_positions' => $by_positions
      );
      return Response::json($response); 
 }
