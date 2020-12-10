@@ -1312,7 +1312,7 @@
 
 	    var qty = document.getElementById("qty"+num).value;
       	// var hasil = parseInt(qty) * parseInt(prc); //Dikalikan qty
-      	var hasil = parseInt(qty) * parseFloat(price);
+      	var hasil = parseFloat(qty) * parseFloat(price);
 
       	var moq = document.getElementById("moq"+num).value;
 
@@ -1431,7 +1431,7 @@
 
 	    var qty = $("#qty_edit"+num).val();
       	// var hasil = parseInt(qty) * parseInt(prc); //Dikalikan qty
-      	var hasil = parseInt(qty) * parseFloat(price);
+      	var hasil = parseFloat(qty) * parseFloat(price);
 
       	// var moq = document.getElementById("moq"+num).value;
 

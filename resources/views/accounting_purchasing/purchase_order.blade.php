@@ -2234,7 +2234,7 @@
       	var hasil = parseInt(qty) * parseInt(prc); //Dikalikan qty
 
       	if (!isNaN(hasil)) {
-    		$("#amount_edit"+num).val(rubah(hasil));
+    		$("#amount_edit"+num).val(hasil);
 	    	var dollar = document.getElementById('konversi_dollar'+num);
 
 	    	total_usd = 0;
