@@ -61,7 +61,7 @@
 		{{-- <div class="col-xs-12" style="padding-top: 10px;">
 			<div id="chartGrade" style="width: 100%;">By Grade (等級別)</div>
 		</div> --}}
-		<div id="chartPosition" style="width: 100%;"></div>
+		<div id="chartPosition" style="width: 100%; padding-top: 10px;"></div>
 	</div>
 </section>
 
