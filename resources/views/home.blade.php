@@ -939,6 +939,10 @@
                                             <i class="fa fa-caret-right"></i> All Stock (全在庫)
                                         </a>
                                         <br>
+                                        <a href="{{ url("index/resume_shipping_order") }}">
+                                            <i class="fa fa-caret-right"></i> Shipping Booking Management List (船便予約管理リスト)
+                                        </a>
+                                        <br>
                                         <a href="{{ url("/index/fg_shipment_schedule") }}">
                                             <i class="fa fa-caret-right"></i> Shipment Schedule Data (出荷スケジュールデータ)
                                         </a>
