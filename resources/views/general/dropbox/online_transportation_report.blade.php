@@ -385,8 +385,8 @@
 					detailTable += '<td style="width: 1%;">(IN = '+value.destination_in+') - (OUT = '+value.destination_out+')</td>';
 					detailTable += '<td style="width: 1%;">'+value.highway_amount_total+'</td>';
 					detailTable += '<td style="width: 1%;">'+value.distance_total+'</td>';
-					detailTable += '<td style="width: 1%;">'+value.fuel+'</td>';
-					detailTable += '<td style="width: 1%;">'+value.total_amount+'</td>';
+					detailTable += '<td style="width: 1%;">'+value.fuel.toFixed(0)+'</td>';
+					detailTable += '<td style="width: 1%;">'+value.total_amount.toFixed(0)+'</td>';
 					// detailTable += '<td style="width: 1%;">';
 					// if(value.att_in != '{{ url("files/general_transportation/0") }}'){
 					// 	detailTable += '<a href="javascript:void(0)" id="'+ value.att_in +'" onClick="downloadAtt(id)" class="fa fa-paperclip"> in</a>';
@@ -426,7 +426,7 @@
 					resumeTable += '<td>'+value.name+'</td>';
 					resumeTable += '<td>'+value.grade+'</td>';
 					resumeTable += '<td>'+value.attend_count+'</td>';
-					resumeTable += '<td>'+value.total_amount+'</td>';
+					resumeTable += '<td>'+value.total_amount.toFixed(0)+'</td>';
 					resumeTable += '</tr>';
 				});
 				$('#resumeTableBody').append(resumeTable);
