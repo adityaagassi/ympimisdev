@@ -707,8 +707,8 @@ Route::group(['nav' => 'A8', 'middleware' => 'permission'], function(){
 	Route::post('post/middle/new/barrel_inactive', 'MiddleProcessController@CreateInactive');
 	Route::post('import/barrel_inactive', 'MiddleProcessController@importInactive');
 
-	Route::get('index/resume_kanban', 'MiddleProcessController@indexResumeKanban');
-	Route::get('fetch/resume_kanban', 'MiddleProcessController@fetchResumeKanban');
+	Route::get('index/middle/resume_kanban', 'MiddleProcessController@indexResumeKanban');
+	Route::get('fetch/middle/resume_kanban', 'MiddleProcessController@fetchResumeKanban');
 
 });
 
@@ -846,6 +846,10 @@ Route::group(['nav' => 'M7', 'middleware' => 'permission'], function(){
 	Route::post('edit/production_schedule_kd', 'ProductionScheduleController@editKD');
 	Route::get('view/production_schedule', 'ProductionScheduleController@show');
 	Route::post('import/production_schedule', 'ProductionScheduleController@import');
+
+
+	Route::get('index/generate_production_schedule', 'ProductionScheduleController@indexGenerateSchedule');
+	Route::get('fetch/generate_production_schedule', 'ProductionScheduleController@fetchGenerateSchedule');
 });
 
 Route::group(['nav' => 'M10', 'middleware' => 'permission'], function(){
@@ -1197,6 +1201,9 @@ Route::get('fetch/welding/current_welding', 'WeldingProcessController@fetchCurre
 Route::get('index/welding/op_trend', 'WeldingProcessController@indexWeldingTrend');
 Route::get('fetch/welding/op_trend', 'WeldingProcessController@fetchWeldingTrend');
 
+Route::get('index/welding/resume_kanban', 'WeldingProcessController@indexResumeKanban');
+Route::get('fetch/welding/resume_kanban', 'WeldingProcessController@fetchResumeKanban');
+
 //JIG
 Route::group(['nav' => 'M27', 'middleware' => 'permission'], function(){
 	Route::get('index/welding/jig_bom', 'WeldingProcessController@indexWeldingJigBom');
@@ -1291,6 +1298,7 @@ Route::get('index/sakurentsu/3m/document/upload/{id_three_m}', 'SakurentsuContro
 Route::post('upload/sakurentsu/3m/document/upload', 'SakurentsuController@upload_tiga_em_upload');
 
 Route::get('index/sakurentsu/3m/finalmeeting/{id_three_m}', 'SakurentsuController@index_tiga_em_finalmeeting');
+Route::get('fetch/sakurentsu/3m/document/{id_three_m}', 'SakurentsuController@fetch_tiga_em_document_by_id');
 
 //Supplier
 Route::get('index/supplier', 'AccountingController@master_supplier');
@@ -3396,6 +3404,8 @@ Route::get('index/audit/sendemailpenanganan/{id}', 'CparController@sendemailpena
 //5S Patrol
 Route::get('index/audit_patrol', 'AuditController@index');
 Route::get('fetch/audit_patrol', 'AuditController@fetch_audit');
+Route::post('post/audit_patrol', 'AuditController@post_audit');
+Route::post('post/audit_patrol_file', 'AuditController@post_audit_file');
 
 //Audit Internal ISO
 Route::get('index/audit_iso', 'CparController@audit');

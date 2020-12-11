@@ -120,9 +120,9 @@
 										<th style="width:4%;">Nomor PR / Inv</th>
 										<th style="width:4%;">Nomor PO</th>
 										<th style="width:8%;">Nama Item</th>
-										<th style="width:2%;">Qty Receive</th>
 										<th style="width:2%;">Date Receive</th>
 										<th style="width:3%;">Surat Jalan</th>
+										<th style="width:2%;">Qty Receive</th>
 										<th style="width:3%;">Unit Price</th>
 										<th style="width:3%;">Amount</th>
 									</tr>
@@ -272,9 +272,9 @@
 			{ "data": "no_pr"},
 			{ "data": "no_po"},
 			{ "data": "nama_item"},
-			{ "data": "qty_receive"},
 			{ "data": "date_receive"},
 			{ "data": "surat_jalan"},
+			{ "data": "qty_receive"},
 			{ "data": "price","className" : "text-right"},
 			{ "data": "amount_po","className" : "text-right"}
 			]

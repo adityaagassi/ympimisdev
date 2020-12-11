@@ -310,6 +310,10 @@
                                 <i class="fa fa-caret-right"></i> Audit MIS (MIS課内部監査)
                             </a>
                             <br>
+                            <a href="{{ url("/index/audit_patrol") }}">
+                                <i class="fa fa-caret-right"></i> 5S Patrol GM / Presdir ()
+                            </a>
+                            <br>
                             <a href="{{ url("/index/form_experience") }}">
                                 <i class="fa fa-caret-right"></i> (One For All) Form Permasalahan & Kegagalan (問題・失敗のフォーム)
                             </a>
@@ -355,7 +359,7 @@
 
         </div>
         <div class="col-md-3" style="padding-left: 3px; padding-right: 3px;">
-         {{--  <table class="table table-bordered">
+          <table class="table table-bordered">
             <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
                 <tr>
                     <th>Raw Material<br/>素材</th>
@@ -364,13 +368,13 @@
             <tbody>
                 <tr>
                     <td>
-                        <a href="#">
+                        <a href="{{ url("/index/material/material_monitoring") }}">
                             <i class="fa fa-caret-right"></i> Raw Material Monitoring (素材監視)
                         </a>
                     </td>
                 </tr>
             </tbody>
-        </table> --}}
+        </table>
 
         <table class="table table-bordered">
             <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
