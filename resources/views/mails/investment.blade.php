@@ -2,16 +2,24 @@
 <html>
 <head>
 	<style type="text/css">
+		
+		table {
+			border-collapse: collapse;
+		}
+
 		td{
 			padding-right: 5px;
 			padding-left: 5px;
 			padding-top: 0px;
 			padding-bottom: 0px;
 		}
+		
 		th{
 			padding-right: 5px;
 			padding-left: 5px;			
 		}
+
+
 	</style>
 </head>
 <body>
@@ -69,7 +77,7 @@
 					<h2>Not Approved</h2>
 				@endif
 				<hr>
-				<span style="font-weight: bold; background-color: orange;" style="font-size: 20px">&#8650; <i>Click Here For</i> &#8650;</span><br>
+				<span style="font-weight: bold; background-color: orange;" style="font-size: 20px;">&#8650; <i>Click Here For</i> &#8650;</span><br>
 				
 				@if($comment != "")
 					<a href="{{ url("investment/comment/".$id) }}" style="font-size: 20px">Reply This Message</a><br>
@@ -97,15 +105,15 @@
 				<tbody>
 					<tr>
 						<td style="width: 1%; border:1px solid black;">Applicant</td>
-						<td style="border:1px solid black; text-align: left !important;"><?= $applicant_name ?></td></td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $applicant_name ?></td>
 					</tr>
 					<tr>
 						<td style="width: 1%; border:1px solid black;">Department</td>
-						<td style="border:1px solid black; text-align: left !important;"><?= $applicant_department ?></td></td>
+						<td style="border:1px solid black; text-align: left !important;"><?= $applicant_department ?></td>
 					</tr>
 					<tr>
 						<td style="width: 1%; border:1px solid black;">Submission Date</td>
-						<td style="border:1px solid black; text-align: left !important;"><?php echo date('d F Y', strtotime($submission_date)) ?></td></td>
+						<td style="border:1px solid black; text-align: left !important;"><?php echo date('d F Y', strtotime($submission_date)) ?></td>
 					</tr>
 					<tr>
 						<td style="width: 1%; border:1px solid black;">Category</td>
@@ -127,7 +135,7 @@
 				</tbody>
 			</table>
 			<br>
-			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
+			<table style="border:1px solid black;border-collapse: collapse;" width="80%">
 				<thead style="background-color: #f5eb33">
 					<tr>
 						<th style="width: 1%; border:1px solid black;" colspan="2">Budget Information</th>
@@ -145,15 +153,15 @@
 					</tr>
 					<tr>
 						<td style="width: 1%; border:1px solid black;">Beginning Balance</td>
-						<td style="width: 4%; border:1px solid black; text-align: right !important;">$ <?= number_format($total_budget,2,",",".") ?></span></td>
+						<td style="width: 4%; border:1px solid black; text-align: right;">$ <?= number_format($total_budget,2,",",".") ?> </td>
 					</tr>
 					<tr>
-						<td style="width: 1%; border:1px solid black;">Amount </td>
-						<td style="width: 4%; border:1px solid black; text-align: right !important;">$ <?= number_format($total_pengeluaran,2,",",".") ?></td>
+						<td style="width: 1%; border:1px solid black; text-align: left;">Amount </td>
+						<td style="width: 4%; border:1px solid black; text-align: right;">$ <?= number_format($total_pengeluaran,2,",",".") ?></td>
 					</tr>
 					<tr>
 						<td style="width: 1%; border:1px solid black;">Ending Balance</td>
-						<td style="width: 4%; border:1px solid black; text-align: right !important;">$ <?= number_format($total_budget - $total_pengeluaran,2,",",".") ?></td>
+						<td style="width: 4%; border:1px solid black; text-align: right;">$ <?= number_format($total_budget - $total_pengeluaran,2,",",".") ?></td>
 					</tr>
 					@else					
 					<tr>
@@ -162,7 +170,7 @@
 					</tr>
 					<tr>
 						<td style="width: 1%; border:1px solid black;">Amount </td>
-						<td style="width: 4%; border:1px solid black; text-align: right !important;">$ <?= number_format($total_pengeluaran,2,",",".") ?></td>
+						<td style="width: 4%; border:1px solid black; text-align: right;">$ <?= number_format($total_pengeluaran,2,",",".") ?></td>
 					</tr>
 					@endif
 
@@ -242,15 +250,15 @@
 					</tr>
 					<tr>
 						<td style="width: 1%; border:1px solid black;">Beginning Balance</td>
-						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= number_format($total_budget,2,",",".") ?></td></td>
+						<td style="width: 4%; border:1px solid black; text-align: right;">$ <?= number_format($total_budget,2,",",".") ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 1%; border:1px solid black;">Amount </td>
-						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= number_format($total_pengeluaran,2,",",".") ?></td></td>
+						<td style="width: 4%; border:1px solid black; text-align: right;">$ <?= number_format($total_pengeluaran,2,",",".") ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 1%; border:1px solid black;">Ending Balance</td>
-						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= number_format($total_budget - $total_pengeluaran,2,",",".") ?></td></td>
+						<td style="width: 4%; border:1px solid black; text-align: right;">$ <?= number_format($total_budget - $total_pengeluaran,2,",",".") ?></td></td>
 					</tr>
 					@else					
 					<tr>
@@ -259,7 +267,7 @@
 					</tr>
 					<tr>
 						<td style="width: 1%; border:1px solid black;">Amount </td>
-						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= number_format($total_pengeluaran,2,",",".") ?></td></td>
+						<td style="width: 4%; border:1px solid black; text-align: right;">$ <?= number_format($total_pengeluaran,2,",",".") ?></td></td>
 					</tr>
 					@endif
 
@@ -338,15 +346,15 @@
 					</tr>
 					<tr>
 						<td style="width: 1%; border:1px solid black;">Beginning Balance</td>
-						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= number_format($total_budget,2,",",".") ?></td></td>
+						<td style="width: 4%; border:1px solid black; text-align: right">$ <?= number_format($total_budget,2,",",".") ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 1%; border:1px solid black;">Amount </td>
-						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= number_format($total_pengeluaran,2,",",".") ?></td></td>
+						<td style="width: 4%; border:1px solid black; text-align: right">$ <?= number_format($total_pengeluaran,2,",",".") ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 1%; border:1px solid black;">Ending Balance</td>
-						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= number_format($total_budget - $total_pengeluaran,2,",",".") ?></td></td>
+						<td style="width: 4%; border:1px solid black; text-align: right">$ <?= number_format($total_budget - $total_pengeluaran,2,",",".") ?></td></td>
 					</tr>
 					@else					
 					<tr>
@@ -355,7 +363,7 @@
 					</tr>
 					<tr>
 						<td style="width: 1%; border:1px solid black;">Amount </td>
-						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= number_format($total_pengeluaran,2,",",".") ?></td></td>
+						<td style="width: 4%; border:1px solid black; text-align: right">$ <?= number_format($total_pengeluaran,2,",",".") ?></td></td>
 					</tr>
 					@endif
 
@@ -447,15 +455,15 @@
 					</tr>
 					<tr>
 						<td style="width: 1%; border:1px solid black;">Beginning Balance</td>
-						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= number_format($total_budget,2,",",".") ?></td></td>
+						<td style="width: 4%; border:1px solid black; text-align: right">$ <?= number_format($total_budget,2,",",".") ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 1%; border:1px solid black;">Amount </td>
-						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= number_format($total_pengeluaran,2,",",".") ?></td></td>
+						<td style="width: 4%; border:1px solid black; text-align: right">$ <?= number_format($total_pengeluaran,2,",",".") ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 1%; border:1px solid black;">Ending Balance</td>
-						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= number_format($total_budget - $total_pengeluaran,2,",",".") ?></td></td>
+						<td style="width: 4%; border:1px solid black; text-align: right">$ <?= number_format($total_budget - $total_pengeluaran,2,",",".") ?></td></td>
 					</tr>
 					@else					
 					<tr>
@@ -464,7 +472,7 @@
 					</tr>
 					<tr>
 						<td style="width: 1%; border:1px solid black;">Amount </td>
-						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= number_format($total_pengeluaran,2,",",".") ?></td></td>
+						<td style="width: 4%; border:1px solid black; text-align: right">$ <?= number_format($total_pengeluaran,2,",",".") ?></td></td>
 					</tr>
 					@endif
 
@@ -556,15 +564,15 @@
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Beginning Balance (最初残高)</td>
-						<td style="width: 3%; border:1px solid black; text-align: left !important;">$ <?= number_format($total_budget,2,",",".") ?></td></td>
+						<td style="width: 3%; border:1px solid black; text-align: right;">$ <?= number_format($total_budget,2,",",".") ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Amount (費用)</td>
-						<td style="width: 3%; border:1px solid black; text-align: left !important;">$ <?= number_format($total_pengeluaran,2,",",".") ?></td></td>
+						<td style="width: 3%; border:1px solid black; text-align: right;">$ <?= number_format($total_pengeluaran,2,",",".") ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Ending Balance (最終残高)</td>
-						<td style="width: 3%; border:1px solid black; text-align: left !important;">$ <?= number_format($total_budget - $total_pengeluaran,2,",",".") ?></td></td>
+						<td style="width: 3%; border:1px solid black; text-align: right;">$ <?= number_format($total_budget - $total_pengeluaran,2,",",".") ?></td></td>
 					</tr>
 					@else					
 					<tr>
@@ -573,7 +581,7 @@
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Amount (費用)</td>
-						<td style="width: 3%; border:1px solid black; text-align: left !important;">$ <?= number_format($total_pengeluaran,2,",",".") ?></td></td>
+						<td style="width: 3%; border:1px solid black; text-align: right;">$ <?= number_format($total_pengeluaran,2,",",".") ?></td></td>
 					</tr>
 					@endif
 
@@ -662,15 +670,15 @@
 					</tr>
 					<tr>
 						<td style="width: 1%; border:1px solid black;">Beginning Balance</td>
-						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= number_format($total_budget,2,",",".") ?></td></td>
+						<td style="width: 4%; border:1px solid black; text-align: right;">$ <?= number_format($total_budget,2,",",".") ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 1%; border:1px solid black;">Amount </td>
-						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= number_format($total_pengeluaran,2,",",".") ?></td></td>
+						<td style="width: 4%; border:1px solid black; text-align: right;">$ <?= number_format($total_pengeluaran,2,",",".") ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 1%; border:1px solid black;">Ending Balance</td>
-						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= number_format($total_budget - $total_pengeluaran,2,",",".") ?></td></td>
+						<td style="width: 4%; border:1px solid black; text-align: right;">$ <?= number_format($total_budget - $total_pengeluaran,2,",",".") ?></td></td>
 					</tr>
 					@else					
 					<tr>
@@ -679,7 +687,7 @@
 					</tr>
 					<tr>
 						<td style="width: 1%; border:1px solid black;">Amount </td>
-						<td style="width: 4%; border:1px solid black; text-align: left !important;">$ <?= number_format($total_pengeluaran,2,",",".") ?></td></td>
+						<td style="width: 4%; border:1px solid black; text-align: right;">$ <?= number_format($total_pengeluaran,2,",",".") ?></td></td>
 					</tr>
 					@endif
 
@@ -771,15 +779,15 @@
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Beginning Balance (最初残高)</td>
-						<td style="width: 3%; border:1px solid black; text-align: left !important;">$ <?= number_format($total_budget,2,",",".") ?></td></td>
+						<td style="width: 3%; border:1px solid black; text-align: right">$ <?= number_format($total_budget,2,",",".") ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Amount (費用)</td>
-						<td style="width: 3%; border:1px solid black; text-align: left !important;">$ <?= number_format($total_pengeluaran,2,",",".") ?></td></td>
+						<td style="width: 3%; border:1px solid black; text-align: right">$ <?= number_format($total_pengeluaran,2,",",".") ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Ending Balance (最終残高)</td>
-						<td style="width: 3%; border:1px solid black; text-align: left !important;">$ <?= number_format($total_budget - $total_pengeluaran,2,",",".") ?></td></td>
+						<td style="width: 3%; border:1px solid black; text-align: right">$ <?= number_format($total_budget - $total_pengeluaran,2,",",".") ?></td></td>
 					</tr>
 					@else					
 					<tr>
@@ -788,7 +796,7 @@
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Amount (費用)</td>
-						<td style="width: 3%; border:1px solid black; text-align: left !important;">$ <?= number_format($total_pengeluaran,2,",",".") ?></td></td>
+						<td style="width: 3%; border:1px solid black; text-align: right">$ <?= number_format($total_pengeluaran,2,",",".") ?></td></td>
 					</tr>
 					@endif
 
@@ -879,15 +887,15 @@
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Beginning Balance (最初残高)</td>
-						<td style="width: 3%; border:1px solid black; text-align: left !important;">$ <?= number_format($total_budget,2,",",".") ?></td></td>
+						<td style="width: 3%; border:1px solid black; text-align: right;">$ <?= number_format($total_budget,2,",",".") ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Amount (費用)</td>
-						<td style="width: 3%; border:1px solid black; text-align: left !important;">$ <?= number_format($total_pengeluaran,2,",",".") ?></td></td>
+						<td style="width: 3%; border:1px solid black; text-align: right;">$ <?= number_format($total_pengeluaran,2,",",".") ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Ending Balance (最終残高)</td>
-						<td style="width: 3%; border:1px solid black; text-align: left !important;">$ <?= number_format($total_budget - $total_pengeluaran,2,",",".") ?></td></td>
+						<td style="width: 3%; border:1px solid black; text-align: right;">$ <?= number_format($total_budget - $total_pengeluaran,2,",",".") ?></td></td>
 					</tr>
 					@else					
 					<tr>
@@ -896,7 +904,7 @@
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Amount (費用)</td>
-						<td style="width: 3%; border:1px solid black; text-align: left !important;">$ <?= number_format($total_pengeluaran,2,",",".") ?></td></td>
+						<td style="width: 3%; border:1px solid black; text-align: right;">$ <?= number_format($total_pengeluaran,2,",",".") ?></td></td>
 					</tr>
 					@endif
 

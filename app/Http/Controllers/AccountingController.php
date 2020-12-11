@@ -3670,12 +3670,23 @@ class AccountingController extends Controller
 
             $po->save();
 
-            $detail_po = AccPurchaseOrder::select('*')
-            ->leftJoin('acc_purchase_order_details', 'acc_purchase_orders.no_po', '=', 'acc_purchase_order_details.no_po')
-            ->leftJoin('acc_suppliers', 'acc_purchase_orders.supplier_code', '=', 'acc_suppliers.vendor_code')
-            ->leftJoin('acc_purchase_requisitions', 'acc_purchase_order_details.no_pr', '=', 'acc_purchase_requisitions.no_pr')
-            ->where('acc_purchase_orders.id', '=', $id)
-            ->get();
+            if($po->remark == "Investment"){
+                $detail_po = AccPurchaseOrder::select('acc_purchase_orders.*','acc_suppliers.*','acc_purchase_order_details.*','acc_investments.applicant_department')
+                ->leftJoin('acc_purchase_order_details', 'acc_purchase_orders.no_po', '=', 'acc_purchase_order_details.no_po')
+                ->leftJoin('acc_suppliers', 'acc_purchase_orders.supplier_code', '=', 'acc_suppliers.vendor_code')
+                ->leftJoin('acc_investments', 'acc_purchase_order_details.no_pr', '=', 'acc_investments.reff_number')
+                ->where('acc_purchase_orders.id', '=', $id)
+                ->get();
+            }
+
+            else if($po->remark == "PR"){
+                $detail_po = AccPurchaseOrder::select('acc_purchase_orders.*','acc_suppliers.*','acc_purchase_order_details.*','acc_purchase_requisitions.department')
+                ->leftJoin('acc_purchase_order_details', 'acc_purchase_orders.no_po', '=', 'acc_purchase_order_details.no_po')
+                ->leftJoin('acc_suppliers', 'acc_purchase_orders.supplier_code', '=', 'acc_suppliers.vendor_code')
+                ->leftJoin('acc_purchase_requisitions', 'acc_purchase_order_details.no_pr', '=', 'acc_purchase_requisitions.no_pr')
+                ->where('acc_purchase_orders.id', '=', $id)
+                ->get();
+            }
 
             $pr = AccPurchaseOrder::select('no_pr')
             ->leftJoin('acc_purchase_order_details', 'acc_purchase_orders.no_po', '=', 'acc_purchase_order_details.no_po')
@@ -3759,13 +3770,24 @@ class AccountingController extends Controller
 
                 $po->save();
 
-                $detail_po = AccPurchaseOrder::select('*')
-                ->leftJoin('acc_purchase_order_details', 'acc_purchase_orders.no_po', '=', 'acc_purchase_order_details.no_po')
-                ->leftJoin('acc_suppliers', 'acc_purchase_orders.supplier_code', '=', 'acc_suppliers.vendor_code')
-                ->leftJoin('acc_purchase_requisitions', 'acc_purchase_order_details.no_pr', '=', 'acc_purchase_requisitions.no_pr')
-                ->where('acc_purchase_orders.id', '=', $id)
-                ->get();
+                if($po->remark == "Investment"){
+                    $detail_po = AccPurchaseOrder::select('acc_purchase_orders.*','acc_suppliers.*','acc_purchase_order_details.*','acc_investments.applicant_department')
+                    ->leftJoin('acc_purchase_order_details', 'acc_purchase_orders.no_po', '=', 'acc_purchase_order_details.no_po')
+                    ->leftJoin('acc_suppliers', 'acc_purchase_orders.supplier_code', '=', 'acc_suppliers.vendor_code')
+                    ->leftJoin('acc_investments', 'acc_purchase_order_details.no_pr', '=', 'acc_investments.reff_number')
+                    ->where('acc_purchase_orders.id', '=', $id)
+                    ->get();
+                }
 
+                else if($po->remark == "PR"){
+                    $detail_po = AccPurchaseOrder::select('acc_purchase_orders.*','acc_suppliers.*','acc_purchase_order_details.*','acc_purchase_requisitions.department')
+                    ->leftJoin('acc_purchase_order_details', 'acc_purchase_orders.no_po', '=', 'acc_purchase_order_details.no_po')
+                    ->leftJoin('acc_suppliers', 'acc_purchase_orders.supplier_code', '=', 'acc_suppliers.vendor_code')
+                    ->leftJoin('acc_purchase_requisitions', 'acc_purchase_order_details.no_pr', '=', 'acc_purchase_requisitions.no_pr')
+                    ->where('acc_purchase_orders.id', '=', $id)
+                    ->get();
+                }
+                
                 $pr = AccPurchaseOrder::select('no_pr')
                 ->leftJoin('acc_purchase_order_details', 'acc_purchase_orders.no_po', '=', 'acc_purchase_order_details.no_po')
                 ->where('acc_purchase_orders.id', '=', $id)
@@ -3861,12 +3883,23 @@ class AccountingController extends Controller
 
                 $po->save();
 
-                $detail_po = AccPurchaseOrder::select('*')
-                ->leftJoin('acc_purchase_order_details', 'acc_purchase_orders.no_po', '=', 'acc_purchase_order_details.no_po')
-                ->leftJoin('acc_suppliers', 'acc_purchase_orders.supplier_code', '=', 'acc_suppliers.vendor_code')
-                ->leftJoin('acc_purchase_requisitions', 'acc_purchase_order_details.no_pr', '=', 'acc_purchase_requisitions.no_pr')
-                ->where('acc_purchase_orders.id', '=', $id)
-                ->get();
+                if($po->remark == "Investment"){
+                    $detail_po = AccPurchaseOrder::select('acc_purchase_orders.*','acc_suppliers.*','acc_purchase_order_details.*','acc_investments.applicant_department')
+                    ->leftJoin('acc_purchase_order_details', 'acc_purchase_orders.no_po', '=', 'acc_purchase_order_details.no_po')
+                    ->leftJoin('acc_suppliers', 'acc_purchase_orders.supplier_code', '=', 'acc_suppliers.vendor_code')
+                    ->leftJoin('acc_investments', 'acc_purchase_order_details.no_pr', '=', 'acc_investments.reff_number')
+                    ->where('acc_purchase_orders.id', '=', $id)
+                    ->get();
+                }
+
+                else if($po->remark == "PR"){
+                    $detail_po = AccPurchaseOrder::select('acc_purchase_orders.*','acc_suppliers.*','acc_purchase_order_details.*','acc_purchase_requisitions.department')
+                    ->leftJoin('acc_purchase_order_details', 'acc_purchase_orders.no_po', '=', 'acc_purchase_order_details.no_po')
+                    ->leftJoin('acc_suppliers', 'acc_purchase_orders.supplier_code', '=', 'acc_suppliers.vendor_code')
+                    ->leftJoin('acc_purchase_requisitions', 'acc_purchase_order_details.no_pr', '=', 'acc_purchase_requisitions.no_pr')
+                    ->where('acc_purchase_orders.id', '=', $id)
+                    ->get();
+                }
 
                 $pr = AccPurchaseOrder::select('no_pr')
                 ->leftJoin('acc_purchase_order_details', 'acc_purchase_orders.no_po', '=', 'acc_purchase_order_details.no_po')
@@ -3963,12 +3996,23 @@ class AccountingController extends Controller
 
                 $po->save();
 
-                $detail_po = AccPurchaseOrder::select('*')
-                ->leftJoin('acc_purchase_order_details', 'acc_purchase_orders.no_po', '=', 'acc_purchase_order_details.no_po')
-                ->leftJoin('acc_suppliers', 'acc_purchase_orders.supplier_code', '=', 'acc_suppliers.vendor_code')
-                ->leftJoin('acc_purchase_requisitions', 'acc_purchase_order_details.no_pr', '=', 'acc_purchase_requisitions.no_pr')
-                ->where('acc_purchase_orders.id', '=', $id)
-                ->get();
+                if($po->remark == "Investment"){
+                    $detail_po = AccPurchaseOrder::select('acc_purchase_orders.*','acc_suppliers.*','acc_purchase_order_details.*','acc_investments.applicant_department')
+                    ->leftJoin('acc_purchase_order_details', 'acc_purchase_orders.no_po', '=', 'acc_purchase_order_details.no_po')
+                    ->leftJoin('acc_suppliers', 'acc_purchase_orders.supplier_code', '=', 'acc_suppliers.vendor_code')
+                    ->leftJoin('acc_investments', 'acc_purchase_order_details.no_pr', '=', 'acc_investments.reff_number')
+                    ->where('acc_purchase_orders.id', '=', $id)
+                    ->get();
+                }
+
+                else if($po->remark == "PR"){
+                    $detail_po = AccPurchaseOrder::select('acc_purchase_orders.*','acc_suppliers.*','acc_purchase_order_details.*','acc_purchase_requisitions.department')
+                    ->leftJoin('acc_purchase_order_details', 'acc_purchase_orders.no_po', '=', 'acc_purchase_order_details.no_po')
+                    ->leftJoin('acc_suppliers', 'acc_purchase_orders.supplier_code', '=', 'acc_suppliers.vendor_code')
+                    ->leftJoin('acc_purchase_requisitions', 'acc_purchase_order_details.no_pr', '=', 'acc_purchase_requisitions.no_pr')
+                    ->where('acc_purchase_orders.id', '=', $id)
+                    ->get();
+                }
 
                 $pr = AccPurchaseOrder::select('no_pr')
                 ->leftJoin('acc_purchase_order_details', 'acc_purchase_orders.no_po', '=', 'acc_purchase_order_details.no_po')
@@ -6789,12 +6833,12 @@ public function fetch_budget_info(Request $request)
         array_push($department,"Production Engineering Department");
     }
 
-    else if ($department[0] == "Procurement Department") {
-        array_push($department,"Purchasing Control Department");
+    else if ($department[0] == "Purchasing Control Department") {
+        array_push($department,"Procurement Department");
     }
 
-    else if ($department[0] == "Human Resources Department") {
-        array_push($department,"General Affairs Department");
+    else if ($department[0] == "General Affairs Department") {
+        array_push($department,"Human Resources Department");
     }
 
 
@@ -10745,5 +10789,15 @@ public function transfer_approvalto($id){
         ))->with('page', 'Receive Goods')
         ->with('head', 'Receive Goods');
     }
+
+    // public function coba()
+    // {
+    //     $isimail = "select acc_investments.*, acc_investment_budgets.budget_no, acc_investment_budgets.budget_name, acc_investment_budgets.category_budget, acc_investment_budgets.sisa as total_budget, acc_investment_budgets.total as total_pengeluaran FROM acc_investments join acc_investment_budgets on acc_investments.reff_number = acc_investment_budgets.reff_number where acc_investments.id = 22";
+    //             $invest = db::select($isimail);
+
+    //             return view('mails.investment', array(
+    //         'data' => $invest,
+    //     ));
+    // }
 
 }
