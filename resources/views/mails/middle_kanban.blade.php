@@ -32,12 +32,13 @@
 					<tr>
 						<th style="width: 1%; border:1px solid black;">#</th>
 						<th style="width: 1%; border:1px solid black;">Tag</th>
-						<th style="width: 2%; border:1px solid black;">Material</th>
-						<th style="width: 2%; border:1px solid black;">Model</th>
-						<th style="width: 2%; border:1px solid black;">Key</th>
-						<th style="width: 2%; border:1px solid black;">Surface</th>
-						<th style="width: 3%; border:1px solid black;">Qty</th>
-						<th style="width: 4%; border:1px solid black;">Created At</th>
+						<th style="width: 1%; border:1px solid black;">Material</th>
+						<th style="width: 1%; border:1px solid black;">Model</th>
+						<th style="width: 1%; border:1px solid black;">Key</th>
+						<th style="width: 1%; border:1px solid black;">Surface</th>
+						<th style="width: 1%; border:1px solid black;">Lot</th>
+						<th style="width: 3%; border:1px solid black;">Last Location</th>
+						<th style="width: 4%; border:1px solid black;">Printed At</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -54,6 +55,7 @@
 						<td style="border:1px solid black;"><?php echo $col->key; ?></td>
 						<td style="border:1px solid black;"><?php echo $col->surface; ?></td>
 						<td style="border:1px solid black; text-align: right;"><?php echo $col->quantity; ?></td>
+						<td style="border:1px solid black; text-align: right;"><?php echo $col->location; ?></td>
 						<td style="border:1px solid black; text-align: right;"><?php echo $col->created_at; ?></td>
 					</tr>
 					<?php } ?>

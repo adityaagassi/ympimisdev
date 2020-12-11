@@ -48,15 +48,30 @@ class EmailMiddleKanban extends Command
         ->select('email')
         ->get();
 
-        $queryKanban = "select middle_inventories.tag, middle_inventories.material_number, materials.model, materials.`key`, materials.surface, middle_inventories.quantity, middle_inventories.created_at, middle_inventories.remark, DATEDIFF(CURRENT_TIMESTAMP, middle_inventories.created_at) AS diff
-        from middle_inventories left join materials
-        on middle_inventories.material_number = materials.material_number
-        WHERE DATEDIFF(CURRENT_TIMESTAMP, middle_inventories.created_at) > 4";
+        $queryKanban = "SELECT
+        middle_inventories.tag,
+        middle_inventories.material_number,
+        materials.model,
+        materials.`key`,
+        materials.surface,
+        middle_inventories.quantity,
+        middle_inventories.created_at,
+        middle_inventories.remark,
+        middle_inventories.location,
+        DATEDIFF( CURRENT_TIMESTAMP, middle_inventories.created_at ) AS diff 
+        FROM
+        middle_inventories
+        LEFT JOIN materials ON middle_inventories.material_number = materials.material_number 
+        WHERE
+        DATEDIFF( CURRENT_TIMESTAMP, middle_inventories.created_at ) > 4";
 
-        $queryJml = "select count(middle_inventories.material_number) as jml
-        from middle_inventories left join materials
-        on middle_inventories.material_number = materials.material_number
-        WHERE DATEDIFF(CURRENT_TIMESTAMP, middle_inventories.created_at) > 4";
+        $queryJml = "SELECT
+        count( middle_inventories.material_number ) AS jml 
+        FROM
+        middle_inventories
+        LEFT JOIN materials ON middle_inventories.material_number = materials.material_number 
+        WHERE
+        DATEDIFF( CURRENT_TIMESTAMP, middle_inventories.created_at ) > 4";
 
         $dataKanban = db::select($queryKanban);
         $dataJml = db::select($queryJml);
