@@ -153,6 +153,10 @@
 							<td style="padding: 0px; background-color: rgb(32, 145, 121); text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Category</td>
 							<td colspan="2" style="padding: 0px; background-color: rgb(0, 217, 255); text-align: center; color: #000000; font-size: 20px;border: 1px solid black" id="category"></td>
 						</tr>
+						<tr>
+							<td style="padding: 0px; background-color: rgb(32, 145, 121); text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Location</td>
+							<td colspan="2" style="padding: 0px; background-color: rgb(0, 217, 255); text-align: center; color: #000000; font-size: 20px;border: 1px solid black" id="location"></td>
+						</tr>
 					</tbody>
 				</table>
 			</div>
@@ -169,7 +173,6 @@
 				<table class="table table-bordered" style="width: 100%; color: white;" id="tableResult">
 					<thead style="font-weight: bold; color: white; background-color: #000000;">
 						<tr>
-							<th style="color: white;border-right: 1px solid white">Location</th>
 							<th style="color: white;border-right: 1px solid white">Patrol Detail / Topic</th>
 							<th style="color: white;border-right: 1px solid white">Photo</th>
 							<th style="color: white;border-right: 1px solid white">Problem</th>
@@ -180,24 +183,25 @@
 					<tbody id="body_cek">
 						<tr class="member">
 							<td width="10%">
-								<select class="form-control select2 patrol_lokasi" id="patrol_lokasi" data-placeholder="Pilih Lokasi..." style="width: 100%; font-size: 20px;" required>
+								<!-- <input type="text" class="form-control patrol_detail" id="patrol_detail" name="patrol_detail" placeholder="Patrol Detail" required=""> -->
+								<select class="form-control select3 patrol_detail" id="patrol_detail" data-placeholder="Patrol Topic" style="width: 100%; font-size: 20px;">
 									<option></option>
-									@foreach($location as $loc)
-									<option value="{{ $loc }}">{{ $loc }}</option>
-									@endforeach
+									<option value="S-Up and 5S">S-Up and 5S</option>
+									<option value="Environment">Environment</option>
+									<option value="Health">Health</option>
+									<option value="Safety">Safety</option>
 								</select>
 							</td>
 							<td width="10%">
-								<input type="text" class="form-control patrol_detail" id="patrol_detail" name="patrol_detail" placeholder="Patrol Detail" required="">
-							</td>
-							<td width="10%">
-								<input type="file" onchange="readURL(this,'');" id="file" style="display:none" class="file">
-								<button class="btn btn-primary btn-lg" id="btnImage" value="Photo" onclick="buttonImage(this)">Photo</button>
+								<center>
+									<input type="file" onchange="readURL(this,'');" id="file" style="display:none" class="file">
+									<button class="btn btn-primary btn-lg" id="btnImage" value="Photo" onclick="buttonImage(this)">Photo</button>
 
-								<img width="150px" id="blah" src="" style="display: none" alt="your image" />
+									<img width="150px" id="blah" src="" style="display: none" alt="your image" />
+								</center>
 							</td>
 							<td width="10%">
-								<textarea id="patrol_note" height="50%" class="note"></textarea>
+								<textarea id="patrol_note" height="100%" class="form-control note"></textarea>
 							</td>
 							<td width="10%">
 								<select class="form-control select2 patrol_pic" id="patrol_pic" data-placeholder="Pilih PIC" style="width: 100%; font-size: 20px;">
@@ -226,9 +230,19 @@
 				<div class="modal-body table-responsive no-padding">
 					<div class="form-group">
 						<label>Pilih Kategori</label>
-						<select class="form-control select2" id="selectCategory" data-placeholder="Pilih Kategori..." style="width: 100%; font-size: 20px;">
+						<select class="form-control select3" id="selectCategory" data-placeholder="Pilih Kategori..." style="width: 100%; font-size: 20px;">
 							<option value="S-Up And EHS Patrol Presdir">S-Up And EHS Patrol Presdir</option>
 							<option value="5S Patrol GM">5S Patrol GM</option>
+						</select>
+					</div>
+
+					<div class="form-group">
+						<label>Pilih Lokasi</label>
+						<select class="form-control select3" id="selectLocation" data-placeholder="Pilih Lokasi..." style="width: 100%; font-size: 20px;">
+							<option></option>
+							@foreach($location as $loc)
+							<option value="{{ $loc }}">{{ $loc }}</option>
+							@endforeach
 						</select>
 					</div>
 
@@ -291,6 +305,12 @@
 				allowClear:true
 			});
 
+			$('.select3').select2({
+				minimumResultsForSearch : -1,
+				dropdownAutoWidth : true,
+				allowClear:true
+			});
+
 			$('#modalFirst').modal({
 				backdrop: 'static',
 				keyboard: false
@@ -300,6 +320,7 @@
 		function selectData(id){
 
 			var kategori = $('#selectCategory').val();
+			var lokasi = $('#selectLocation').val();
 
 			if(kategori == ""){
 				$("#loading").hide();
@@ -320,9 +341,18 @@
 				$('#employee_id').val("{{$employee->employee_id}}");
 			}
 
+
+			if(lokasi == ""){
+				$("#loading").hide();
+				alert("Kolom Lokasi Harap diisi");
+				$("html").scrollTop(0);
+				return false;
+			}
+
 			$('#modalFirst').modal('hide');
 
 			$('#category').html(kategori);
+			$('#location').html(lokasi);
 
 		}
 
@@ -377,10 +407,10 @@
 			body = "";
 
 			body += '<tr class="member">';
-			body += '<td width="10%"><select class="form-control select3 patrol_lokasi" id="patrol_lokasi" data-placeholder="Pilih Lokasi..." style="width: 100%; font-size: 20px;" required><option></option>@foreach($location as $loc)<option value="{{ $loc }}">{{ $loc }}</option>@endforeach</select></td>'; 
-			body += '<td width="10%"><input type="text" class="form-control patrol_detail" id="patrol_detail" name="patrol_detail" placeholder="Patrol Detail" required=""></td>';
-			body += '<td width="10%"><input type="file" onchange="readURL(this,\'\');" id="file2" style="display:none" class="file"><button class="btn btn-primary btn-lg" id="btnImage" value="Photo" onclick="buttonImage(this)">Photo</button><img width="150px" id="blah" src="" style="display: none" alt="your image" /></td>';
-			body += '<td width="10%"><textarea id="patrol_note" height="50%" class="note"></textarea></td>';
+			// body += '<td width="10%"><select class="form-control select3 patrol_lokasi" id="patrol_lokasi" data-placeholder="Pilih Lokasi..." style="width: 100%; font-size: 20px;" required><option></option>@foreach($location as $loc)<option value="{{ $loc }}">{{ $loc }}</option>@endforeach</select></td>'; 
+			body += '<td width="10%"><select class="form-control select3 patrol_detail" id="patrol_detail" data-placeholder="Patrol Topic" style="width: 100%; font-size: 20px;"><option></option><option value="S-Up and 5S">S-Up and 5S</option><option value="Environment">Environment</option><option value="Health">Health</option><option value="Safety">Safety</option></select></td>';
+			body += '<td width="10%"><center><input type="file" onchange="readURL(this,\'\');" id="file" style="display:none" class="file"><button class="btn btn-primary btn-lg" id="btnImage" value="Photo" onclick="buttonImage(this)">Photo</button><img width="150px" id="blah" src="" style="display: none" alt="your image" /></center></td>';
+			body += '<td width="10%"><textarea id="patrol_note" height="50%" class="form-control note"></textarea></td>';
 			body += '<td width="10%"><select class="form-control select3 patrol_pic" id="patrol_pic"  data-placeholder="Pilih PIC" style="width: 100%; font-size: 20px;"><option></option>@foreach($auditee as $audite)<option value="{{ $audite->name }}">{{ $audite->employee_id }} - {{ $audite->name }}</option>@endforeach</select></td>';
 			body +=	'<td><button class="btn btn-danger" onclick="delete_confirmation(this)"><i class="fa fa-close"></i></button></td>';
 
@@ -425,7 +455,7 @@
 				$('#loading').show();
 
 				var audit_data = [];
-				var patrol_lokasi = [];
+				// var patrol_lokasi = [];
 				var patrol_detail = [];
 				var note = [];
 				var patrol_pic = [];
@@ -496,6 +526,7 @@
 
 				formData.append('jumlah', len);				
 				formData.append('category', $('#category').text());
+				formData.append('location', $('#location').text());
 				formData.append('auditor_id', $('#employee_id').text());
 				formData.append('auditor_name',  $('#employee_name').text());
 
@@ -507,9 +538,9 @@
 					formData.append('foto_name_'+i, file[0]);
 				})	
 
-				$('.patrol_lokasi').each(function(i, obj) {
-					formData.append('patrol_lokasi_'+i, $(this).val());
-				})
+				// $('.patrol_lokasi').each(function(i, obj) {
+				// 	formData.append('patrol_lokasi_'+i, $(this).val());
+				// })
 
 				$('.patrol_detail').each(function(i, obj) {
 					formData.append('patrol_detail_'+i, $(this).val());

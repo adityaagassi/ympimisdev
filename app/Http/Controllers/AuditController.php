@@ -102,10 +102,10 @@ class AuditController extends Controller
 				AuditAllResult::create([
 					'tanggal' => date('Y-m-d'),
 					'kategori' => $request->input('category'),
+					'lokasi' => $request->input('location'),
 					'auditor_id' => $request->input('auditor_id'),
 					'auditor_name' => $request->input('auditor_name'),
 					'auditee_name' => $request->input('patrol_pic_'.$i),
-					'lokasi' => $request->input('patrol_lokasi_'.$i),
 					'point_judul' => $request->input('patrol_detail_'.$i),
 					'note' => $request->input('note_'.$i),
 					'foto' => $filename,
