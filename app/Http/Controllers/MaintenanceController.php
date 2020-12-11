@@ -44,7 +44,7 @@ class MaintenanceController extends Controller
 	public function __construct(){
 		// $this->middleware('auth');
 
-		$this->mt_employee = EmployeeSync::where("department", "=", "Maintenance")
+		$this->mt_employee = EmployeeSync::where("department", "like", "%Maintenance%")
 		->whereNull("end_date")
 		->whereNotNull("group")
 		->select("employee_id", db::raw("SUBSTRING_INDEX(`name`,' ',3) as name"))
@@ -371,7 +371,7 @@ class MaintenanceController extends Controller
 		
 
 		$op_mtc = EmployeeSync::leftJoin('employees', 'employees.employee_id', '=', 'employee_syncs.employee_id')
-		->whereRaw('(department = "Maintenance" OR department = "Management Information System")')
+		->whereRaw('(department = "Maintenance Department" OR department = "Management Information System Department")')
 		->whereNull('employee_syncs.end_date')
 		->select('tag', 'employee_syncs.name', 'employee_syncs.employee_id')
 		->get();
