@@ -196,7 +196,7 @@
 				"processing": true,
 				"ajax": {
 					"type" : "get",
-					"url" : "{{ url("fetch/resume_kanban") }}"
+					"url" : "{{ url('fetch/middle/resume_kanban') }}"
 				},
 				"columnDefs": [ {
 					"targets": [9],

@@ -539,6 +539,17 @@ class WeldingProcessController extends Controller
 		))->with('page', 'Welding Process');		
 	}
 
+	public function indexResumeKanban()
+	{
+		$title = 'Welding Resume Kanban';
+		$title_jp = '??';
+
+		return view('processes.welding.report.resume_kanban', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+		))->with('page', 'Welding Resume Kanban')->with('head','Resume Kanban');
+	}
+
 	public function fetchWeldingData(Request $request){
 		$jigs = Jig::orderBy('jig_id', 'asc')->get();
 
@@ -5552,6 +5563,224 @@ class WeldingProcessController extends Controller
 			return Response::json($response);
 		}
 
+	}
+
+	public function fetchResumeKanban()
+	{
+		try {
+			$weldings = db::connection('welding_controller')->select("
+				SELECT
+					a.material_number,
+					SUM( a.qty_solder ) AS qty_solder,
+					SUM( a.qty_cuci ) AS qty_cuci,
+					SUM( a.qty_queue ) AS qty_queue 
+				FROM
+					(
+					SELECT
+						material_number,
+						count( material_number ) AS qty_solder,
+						0 AS qty_cuci,
+						0 AS qty_queue 
+					FROM
+						(
+						SELECT
+							order_id_sedang_gmc AS material_number 
+						FROM
+							m_mesin 
+						WHERE
+							order_id_sedang_gmc IS NOT NULL 
+							AND order_id_sedang_gmc <> '' UNION ALL
+						SELECT
+							order_id_akan_gmc AS material_number 
+						FROM
+							m_mesin 
+						WHERE
+							order_id_akan_gmc IS NOT NULL 
+							AND order_id_akan_gmc <> '' 
+						) solder 
+					GROUP BY
+						material_number UNION ALL
+					SELECT
+						material_number,
+						0 AS qty_solder,
+						sum( qty ) AS qty_cuci,
+						0 AS qty_queue 
+					FROM
+						(
+						SELECT
+							m_hsa.hsa_kito_code AS material_number,
+							count( m_hsa.hsa_kito_code ) AS qty 
+						FROM
+							t_before_cuci
+							LEFT JOIN m_hsa ON m_hsa.hsa_id = t_before_cuci.part_id 
+						WHERE
+							t_before_cuci.part_type = 2 
+							AND t_before_cuci.order_status = 0 
+						GROUP BY
+							m_hsa.hsa_kito_code UNION ALL
+						SELECT
+							m_hsa.hsa_kito_code AS material_number,
+							count( m_hsa.hsa_kito_code ) AS qty 
+						FROM
+							t_cuci
+							LEFT JOIN m_hsa_kartu ON m_hsa_kartu.hsa_kartu_code = t_cuci.kartu_code
+							LEFT JOIN m_hsa ON m_hsa.hsa_id = m_hsa_kartu.hsa_id 
+						WHERE
+							m_hsa.hsa_kito_code IS NOT NULL 
+						GROUP BY
+							m_hsa.hsa_kito_code 
+						) cuci 
+					GROUP BY
+						material_number UNION ALL
+					SELECT COALESCE
+						( m_hsa.hsa_kito_code, m_phs.phs_code ) AS material_number,
+						0 AS qty_solder,
+						0 AS qty_cuci,
+						count(
+						COALESCE ( m_hsa.hsa_kito_code, m_phs.phs_code )) AS qty_queue 
+					FROM
+						t_proses
+						LEFT JOIN m_hsa ON m_hsa.hsa_id = t_proses.part_id
+						LEFT JOIN m_phs ON m_phs.phs_id = t_proses.part_id
+						LEFT JOIN m_ws AS ws_phs ON m_phs.ws_id = ws_phs.ws_id
+						LEFT JOIN m_ws AS ws_hsa ON m_hsa.ws_id = ws_hsa.ws_id 
+					WHERE
+						( t_proses.proses_status = 0 AND t_proses.part_type = 1 ) 
+						OR ( t_proses.proses_status = 0 AND t_proses.part_type = 2 ) 
+					GROUP BY
+						material_number 
+					) a
+					LEFT JOIN ympimis.materials b ON b.material_number = a.material_number 
+				GROUP BY
+					a.material_number");
+
+			$kensas = db::select("select material_number, count(material_number) as qty from welding_inventories
+				where location like '%hsa%'
+				group by material_number");
+
+			$afters = db::connection('mysql2')->select("select * from inventories left join ympimis.material_volumes on ympimis.material_volumes.material_number = inventories.material_number where lot > 0 and issue_location = 'SX21'");
+
+			$materials = db::connection('welding_controller')->select("SELECT * FROM `ympimis`.`materials` WHERE `issue_storage_location` LIKE '%SX21%' AND `hpl` NOT LIKE '%BODY%'");
+
+			$wip_tigas = DB::CONNECTION('welding_controller')->SELECT("SELECT
+				a.material_number,
+				SUM( a.qty_tiga ) AS qty_tiga 
+			FROM
+				(
+				SELECT
+					material_number,
+					count( material_number ) AS qty_tiga 
+				FROM
+					(
+					SELECT
+						order_id_sedang_gmc AS material_number 
+					FROM
+						m_mesin 
+					WHERE
+						order_id_sedang_gmc IS NOT NULL 
+						AND order_id_sedang_gmc <> '' 
+						AND DATE( order_id_sedang_date ) < DATE_ADD( DATE( NOW()), INTERVAL - 3 DAY ) UNION ALL
+					SELECT
+						order_id_akan_gmc AS material_number 
+					FROM
+						m_mesin 
+					WHERE
+						order_id_akan_gmc IS NOT NULL 
+						AND order_id_akan_gmc <> '' 
+						AND DATE( order_id_sedang_date ) < DATE_ADD( DATE( NOW()), INTERVAL - 3 DAY ) 
+					) solder 
+				GROUP BY
+					material_number UNION ALL
+				SELECT
+					material_number,
+					sum( qty ) AS qty_tiga 
+				FROM
+					(
+					SELECT
+						m_hsa.hsa_kito_code AS material_number,
+						count( m_hsa.hsa_kito_code ) AS qty 
+					FROM
+						t_before_cuci
+						LEFT JOIN m_hsa ON m_hsa.hsa_id = t_before_cuci.part_id 
+					WHERE
+						t_before_cuci.part_type = 2 
+						AND t_before_cuci.order_status = 0 
+						AND DATE( order_store_date ) < DATE_ADD( DATE( NOW()), INTERVAL - 3 DAY ) 
+					GROUP BY
+						m_hsa.hsa_kito_code 
+					) cuci 
+				GROUP BY
+					material_number 
+				) a
+				LEFT JOIN ympimis.materials b ON b.material_number = a.material_number 
+			GROUP BY
+				a.material_number");
+
+
+			$log_request = array();
+			foreach ($materials as $material) {
+				
+				$qty_solder = 0;
+				$qty_cuci = 0;
+				$qty_queue = 0;
+				$qty_after = 0;
+				$qty_kensa = 0;
+				$qty_tiga = 0;
+
+				foreach ($weldings as $welding) {
+					if($material->material_number == $welding->material_number){
+						$qty_solder = $welding->qty_solder;
+						$qty_cuci = $welding->qty_cuci;
+						$qty_queue = $welding->qty_queue;
+					}
+				}
+
+				foreach ($kensas as $kensa) {
+					if($material->material_number == $kensa->material_number){
+						$qty_kensa = $kensa->qty;
+					}
+				}
+
+				foreach ($afters as $after) {
+					if($material->material_number == $after->material_number){
+						$qty_after = $after->lot / $after->lot_completion;
+					}
+				}
+
+				foreach ($wip_tigas as $wip_tiga) {
+					if($material->material_number == $wip_tiga->material_number){
+						$qty_tiga = $wip_tiga->qty_tiga;
+					}
+				}
+
+
+				array_push($log_request, [
+					"material_number" => $material->material_number,
+					"material_description" => $material->material_description,
+					"model" => $material->model,
+					"key" => $material->key,
+					"surface" => $material->surface,
+					"qty_queue" => $qty_queue,
+					"qty_solder" => $qty_solder,
+					"qty_cuci" => $qty_cuci,
+					"qty_kensa" => $qty_kensa,
+					"qty_after" => $qty_after,
+					"wip_tiga" => $qty_tiga
+				]);
+			}
+
+			$response = array(
+				'status' => true,
+				'datas' => $log_request,
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
 	}
 
 	function dec2hex($number){

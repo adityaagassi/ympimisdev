@@ -57,13 +57,13 @@ class MiddleProcessController extends Controller
 	}
 
 	public function indexResumeKanban(){
-		$title = 'Resume Kanban';
+		$title = 'Middle Resume Kanban';
 		$title_jp = '??';
 
 		return view('processes.middle.resume_kanban', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
-		))->with('page', 'Resume Kanban');
+		))->with('page', 'Middle Resume Kanban')->with('head','Resume Kanban');
 	}
 
 	public function indexOpAnalysis(){

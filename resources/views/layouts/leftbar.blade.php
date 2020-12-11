@@ -115,9 +115,31 @@
       @endif
 
       @if(in_array('A8', $navs))
-      @if(isset($page) && $page == "Resume Kanban")<li class="active">@else<li>@endif
-        <a href="{{ url("/index/resume_kanban") }}"><i class="fa fa-list-ol"></i> <span>Resume Kanban</span></a>
+      @if(isset($head) && $head == "Resume Kanban")
+        <li class="treeview active">@else<li class="treeview">@endif
+          <a href="#">
+           <i class="fa fa-credit-card"></i> <span>Resume Kanban</span>
+           <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+          </span>
+        </a>
+        <ul class="treeview-menu">
+
+          @if(isset($page) && $page == "Welding Resume Kanban")<li class="active">@else<li>@endif
+            <a href="{{ url('/index/welding/resume_kanban') }}"><i class="fa fa-exchange"></i> <span>Welding Resume Kanban</span></a>
+          </li>
+
+          @if(isset($page) && $page == "Middle Resume Kanban")<li class="active">@else<li>@endif
+            <a href="{{ url('/index/middle/resume_kanban') }}"><i class="fa fa-exchange"></i> <span>Middle Resume Kanban</span></a>
+          </li>
+
+        </ul>
       </li>
+      
+      <!-- @if(isset($head) && $head == "Resume Kanban")
+      <li class="active">@else<li>@endif
+        <a href="{{ url("/index/resume_kanban") }}"><i class="fa fa-list-ol"></i> <span>Resume Kanban</span></a>
+      </li> -->
       @endif
 
       @if(in_array('M0', $navs))
