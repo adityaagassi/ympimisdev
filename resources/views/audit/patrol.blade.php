@@ -229,7 +229,7 @@
 						<select class="form-control select2" id="selectCategory" data-placeholder="Pilih Kategori..." style="width: 100%; font-size: 20px;">
 							<option value="5S Patrol GM">5S Patrol GM</option>
 							<option value="5S Patrol Presdir">5S Patrol Presdir</option>
-							<!-- <option value="MIS Patrol">MIS Patrol</option> -->
+							<option value="EHS Patrol">EHS Patrol</option>
 						</select>
 					</div>
 
@@ -534,6 +534,7 @@
 					cache: false,
 					processData: false,
 					success: function (response) {
+						$("#loading").hide();
 						openSuccessGritter("Success", "Audit Berhasil Diinput");
 						location.reload();
 					},
