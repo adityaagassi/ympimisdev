@@ -288,7 +288,6 @@
 			$('body').toggleClass("sidebar-collapse");
 			$('.select2').prop('selectedIndex', 0).change();
 			$('.select2').select2({
-				minimumResultsForSearch : -1,
 				dropdownAutoWidth : true,
 				allowClear:true
 			});
