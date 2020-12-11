@@ -307,7 +307,7 @@
 				$("html").scrollTop(0);
 				return false;
 			}
-			else if(kategori == "5S Patrol Presdir"){
+			else if(kategori == "S-Up And EHS Patrol Presdir"){
 				$('#employee_name').html("Hiroshi Ura");
 				$('#employee_id').val("PI1301001");
 			}
