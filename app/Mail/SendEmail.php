@@ -305,6 +305,10 @@ class SendEmail extends Mailable
             }
         }
 
+        if($this->remark == '3m_document'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('3M Document(s) Requirement')->view('mails.three_M_document');
+        }
+
         if($this->remark == 'transfer_budget'){
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
             ->priority(1)

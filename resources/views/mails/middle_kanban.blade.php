@@ -34,8 +34,8 @@
 						<th style="width: 1%; border:1px solid black;">Tag</th>
 						<th style="width: 1%; border:1px solid black;">Material</th>
 						<th style="width: 1%; border:1px solid black;">Model</th>
-						<th style="width: 1%; border:1px solid black;">Key</th>
-						<th style="width: 1%; border:1px solid black;">Surface</th>
+						<th style="width: 2%; border:1px solid black;">Key</th>
+						<th style="width: 2%; border:1px solid black;">Surface</th>
 						<th style="width: 1%; border:1px solid black;">Lot</th>
 						<th style="width: 3%; border:1px solid black;">Last Location</th>
 						<th style="width: 4%; border:1px solid black;">Printed At</th>
