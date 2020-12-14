@@ -92,10 +92,10 @@
 				<table id="tableList" class="table table-bordered" style="width: 100%; font-size: 16px;">
 					<thead style="background-color: rgba(126,86,134,.7);">
 						<tr>
-							<th style="width: 40%;">DESTINATION</th>
-							<th style="width: 20%;">PLAN</th>
-							<th style="width: 20%;">CONFIRMED</th>
-							<th style="width: 20%;">NOT CONFIRMED</th>
+							<th style="width: 40%">DESTINATION</th>
+							<th style="width: 20%">PLAN</th>
+							<th style="width: 20%">CONFIRMED</th>
+							<th style="width: 20%">NOT CONFIRMED</th>
 						</tr>
 					</thead>
 					<tbody id="tableBodyList">
@@ -209,7 +209,7 @@
 					var d = new Date(result.ship_by_dates[i].week_date)
 
 					date.push(d.getDate()+'-'+monthNames[d.getMonth()]);
-					plan.push(parseInt(result.ship_by_dates[i].plan));
+					plan.push(parseInt(result.ship_by_dates[i].plan) - parseInt(result.ship_by_dates[i].confirmed));
 					confirmed.push(parseInt(result.ship_by_dates[i].confirmed));
 				}
 
@@ -235,6 +235,11 @@
 						labels: {
 							rotation: -60
 						}
+						// plotLines: [{
+						// 	color: '#FF0000',
+						// 	width: 2,
+						// 	value: 6
+						// }]
 					},
 					yAxis: {
 						min: 0,
@@ -263,7 +268,14 @@
 						column: {
 							stacking: 'normal',
 							dataLabels: {
-								enabled: true
+								enabled: true,
+								formatter: function() {
+									if (this.y != 0) {
+										return this.y;
+									} else {
+										return null;
+									}
+								}
 							}
 						}
 					},

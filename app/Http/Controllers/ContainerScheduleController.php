@@ -34,10 +34,10 @@ class ContainerScheduleController extends Controller{
             'OTHER'
         ];
         $this->application_rate = [
-         'CONTRACTED RATE',
-         'SPOT/EXTRA RATE'
-     ];
- }
+           'CONTRACTED RATE',
+           'SPOT/EXTRA RATE'
+       ];
+   }
     /**
      * Display a listing of the resource.
      *
@@ -379,9 +379,11 @@ class ContainerScheduleController extends Controller{
             AND DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$dateto->week_date."') AS date
             LEFT JOIN
             (SELECT stuffing_date, SUM(quantity) AS plan FROM
+            (SELECT ycj_ref_number, quantity, MIN(stuffing_date) AS stuffing_date FROM
             (SELECT DISTINCT stuffing_date, ycj_ref_number, (COALESCE(fortyhc,0) + COALESCE(forty,0) + COALESCE(twenty,0)) AS quantity FROM shipment_reservations
             WHERE period = '".$period."'
-            AND `status` <> 'NO NEED ANYMORE') shipment
+            AND `status` <> 'NO NEED ANYMORE') AS shipment
+            GROUP BY ycj_ref_number, quantity) AS shipment
             GROUP BY stuffing_date) AS plan
             ON plan.stuffing_date = date.week_date
             LEFT JOIN
