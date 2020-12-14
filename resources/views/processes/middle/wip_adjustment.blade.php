@@ -94,13 +94,14 @@
 			</p>
 		</div>
 
-		<div class="col-xs-6">
+		<div class="col-xs-7">
 			<table id="tableAdjust" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
 				<thead style="background-color: rgb(126,86,134); color: #FFD700;">
 					<tr>
 						<th width="15%">Tag</th>
 						<th width="10%">Material</th>
 						<th>Material Description</th>
+						<th width="1%">Location</th>
 						<th width="1%">Quantity</th>
 						<th>Created at</th>
 						<th width="1%"> Check</th>					
@@ -110,6 +111,7 @@
 				</tbody>
 				<tfoot>
 					<tr style="color: black">
+						<th></th>
 						<th></th>
 						<th></th>
 						<th></th>
@@ -131,7 +133,7 @@
 		</div>
 
 
-		<div class="col-xs-6">
+		<div class="col-xs-5">
 			<table id="tableInactive" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
 				<thead style="background-color: rgb(126,86,134); color: #FFD700;">
 					<tr>
@@ -337,6 +339,7 @@
 				{ "data": "tag"},
 				{ "data": "material_number"},
 				{ "data": "material_description" },
+				{ "data": "location"},
 				{ "data": "quantity"},
 				{ "data": "created_at"},
 				{ "data": "check" }]
