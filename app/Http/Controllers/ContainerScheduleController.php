@@ -34,8 +34,14 @@ class ContainerScheduleController extends Controller{
             'OTHER'
         ];
         $this->application_rate = [
-           'CONTRACTED RATE',
-           'SPOT/EXTRA RATE'
+            'CONTRACTED RATE',
+            'SPOT/EXTRA RATE'
+        ];
+        $this->nomination = [
+           'MAIN',
+           'SUB',
+           'BACK UP',
+           'OTHER'
        ];
    }
     /**
@@ -86,6 +92,7 @@ class ContainerScheduleController extends Controller{
         return view('container_schedules.shipping_order.shipping_agency', array(
             'title' => $title,
             'title_jp' => $title_jp,
+            'nominations' => $this->nomination,
             'port_of_discharge' => $port_of_discharge,
             'port_of_delivery' => $port_of_delivery,
             'consignee' => $consignee
