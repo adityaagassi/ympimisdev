@@ -256,7 +256,7 @@
 				<div class="box-body">
 					<div class="col-xs-12">
 						<div class="form-group pull-left">
-							<a href="{{ url("index/resume_shipping_order") }}" target="_blank" class="btn btn-primary pull-left">
+							<a href="{{ url("index/resume_shipping_order") }}" class="btn btn-primary pull-left">
 								<span class="fa fa-bar-chart"></span>&nbsp;&nbsp; Booking Resume
 							</a>
 						</div>
