@@ -630,7 +630,7 @@
 
 
 	$('#check-modal').on('shown.bs.modal', function () {
-		$('#input_employee_id').focus();
+		$('#input_tag').focus();
 	});
 
 	$('#input_tag').keydown(function(event) {
@@ -687,8 +687,8 @@
 		$('#btn-check').hide();
 		
 		$('#check-modal').modal('show');
-		$('#input_employee_id').val("");
-		$('#input_employee_id').focus();
+		$('#input_tag').val("");
+		$('#input_tag').focus();
 
 	}
 
