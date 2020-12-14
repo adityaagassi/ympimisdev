@@ -49,58 +49,63 @@
 <input type="hidden" id="green">
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
-	<div class="row">		
+	<div class="row">
+		<div class="col-xs-12" style="padding-bottom: 10px;">
+			<div class="row">
+				<div class="col-xs-3" style="padding-right: 0;">
+					<div class="col-xs-12">
+						<div class="info-box">
+							<span class="info-box-icon bg-aqua"><i class="fa fa-ship"></i></span>
+
+							<div class="info-box-content">
+								<span class="info-box-text">PLAN</span>
+								<span class="info-box-number" style="font-size: 2vw;" id="total_plan"></span>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12">
+						<div class="info-box">
+							<span class="info-box-icon bg-green"><i class="glyphicon glyphicon-ok"></i></span>
+
+							<div class="info-box-content">
+								<span class="info-box-text">CONFIRMED</span>
+								<span class="info-box-number" style="font-size: 2vw;" id="total_confirmed"></span>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12">
+						<div class="info-box">
+							<span class="info-box-icon bg-red"><i class="glyphicon glyphicon-remove"></i></span>
+
+							<div class="info-box-content">
+								<span class="info-box-text">NOT CONFIRMED</span>
+								<span class="info-box-number" style="font-size: 2vw;" id="total_not_confirmed"></span>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="col-xs-9" style="padding-left: 0;">
+					<div id="container1" style="height: 400px;"></div>				
+				</div>
+			</div>
+		</div>
 		<div class="col-xs-12">
-			<div class="col-xs-3" style="padding: 0px;">
-				<div class="col-xs-12">
-					<div class="info-box">
-						<span class="info-box-icon bg-aqua"><i class="fa fa-ship"></i></span>
-
-						<div class="info-box-content">
-							<span class="info-box-text">PLAN</span>
-							<span class="info-box-number" style="font-size: 30px;" id="total_plan"></span>
-						</div>
-					</div>
+			<div class="box box-solid">
+				<div class="box-body">
+					<table id="tableList" class="table table-bordered" style="width: 100%; font-size: 16px;">
+						<thead style="background-color: rgba(126,86,134,.7);">
+							<tr>
+								<th style="width: 40%">DESTINATION</th>
+								<th style="width: 20%">PLAN</th>
+								<th style="width: 20%">CONFIRMED</th>
+								<th style="width: 20%">NOT CONFIRMED</th>
+							</tr>
+						</thead>
+						<tbody id="tableBodyList">
+						</tbody>
+					</table>
 				</div>
-				<div class="col-xs-12">
-					<div class="info-box">
-						<span class="info-box-icon bg-green"><i class="glyphicon glyphicon-ok"></i></span>
-
-						<div class="info-box-content">
-							<span class="info-box-text">CONFIRMED</span>
-							<span class="info-box-number" style="font-size: 30px;" id="total_confirmed"></span>
-						</div>
-					</div>
-				</div>
-				<div class="col-xs-12">
-					<div class="info-box">
-						<span class="info-box-icon bg-red"><i class="glyphicon glyphicon-remove"></i></span>
-
-						<div class="info-box-content">
-							<span class="info-box-text">NOT CONFIRMED</span>
-							<span class="info-box-number" style="font-size: 30px;" id="total_not_confirmed"></span>
-						</div>
-					</div>
-					
-				</div>
-			</div>
-			<div class="col-xs-9" style="padding: 0px;">
-				<div id="container1"></div>				
-			</div>
-
-			<div class="col-xs-12" style="padding-right: 0px;">
-				<table id="tableList" class="table table-bordered" style="width: 100%; font-size: 16px;">
-					<thead style="background-color: rgba(126,86,134,.7);">
-						<tr>
-							<th style="width: 40%">DESTINATION</th>
-							<th style="width: 20%">PLAN</th>
-							<th style="width: 20%">CONFIRMED</th>
-							<th style="width: 20%">NOT CONFIRMED</th>
-						</tr>
-					</thead>
-					<tbody id="tableBodyList">
-					</tbody>
-				</table>
 			</div>
 		</div>
 	</div>
@@ -220,36 +225,21 @@
 
 				Highcharts.chart('container1', {
 					chart: {
-						height: 300,
 						type: 'column'
 					},
 					title: {
-						text: 'Shipping Booking Management List ' + result.month,
-						style: {
-							textTransform: 'uppercase',
-							fontSize: '20px'
-						}
+						text: 'Shipping Booking Management List '
+					},
+					subtitle: {
+						text: result.month
 					},
 					xAxis: {
-						categories: date,
-						labels: {
-							rotation: -60
-						}
-						// plotLines: [{
-						// 	color: '#FF0000',
-						// 	width: 2,
-						// 	value: 6
-						// }]
+						categories: date
 					},
 					yAxis: {
-						min: 0,
-						stackLabels: {
-							enabled: true,
-							style: {
-								fontWeight: 'bold',
-							}
-						},
-						visible: false
+						enabled: true,
+						title: null,
+						tickInterval: 1
 					},
 					legend: {
 						enabled: true
@@ -267,8 +257,15 @@
 					plotOptions: {
 						column: {
 							stacking: 'normal',
+							pointPadding: 0.93,
+							groupPadding: 0.93,
+							borderWidth: 1,
+							borderColor: '#212121',
 							dataLabels: {
 								enabled: true,
+								style:{
+									textOutline: false
+								},
 								formatter: function() {
 									if (this.y != 0) {
 										return this.y;
@@ -280,11 +277,11 @@
 						}
 					},
 					series: [{
-						name: 'NOT CONFIRMED',
+						name: 'Not Confirmed',
 						data: plan,
 						color: '#dd4b39'
 					}, {
-						name: 'CONFIRMED',
+						name: 'Confirmed',
 						data: confirmed,
 						color: '#00a65a'
 					}]
