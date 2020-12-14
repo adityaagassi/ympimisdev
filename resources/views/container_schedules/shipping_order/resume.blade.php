@@ -52,37 +52,36 @@
 	<div class="row">
 		<div class="col-xs-12" style="padding-bottom: 10px;">
 			<div class="row">
-				<div class="col-xs-3" style="padding-right: 0;">
-					<div class="col-xs-12">
-						<div class="info-box">
-							<span class="info-box-icon bg-aqua"><i class="fa fa-ship"></i></span>
+				<div class="col-xs-3" style="padding-right: 10px;">
+					<div class="info-box">
+						<span class="info-box-icon bg-aqua"><i class="fa fa-ship"></i></span>
 
-							<div class="info-box-content">
-								<span class="info-box-text">PLAN</span>
-								<span class="info-box-number" style="font-size: 2vw;" id="total_plan"></span>
-							</div>
+						<div class="info-box-content">
+							<span class="info-box-text">PLAN</span>
+							<span class="info-box-number" style="font-size: 2vw;" id="total_plan"></span>
 						</div>
 					</div>
-					<div class="col-xs-12">
-						<div class="info-box">
-							<span class="info-box-icon bg-green"><i class="glyphicon glyphicon-ok"></i></span>
+					<div class="info-box">
+						<span class="info-box-icon bg-green"><i class="glyphicon glyphicon-ok"></i></span>
 
-							<div class="info-box-content">
-								<span class="info-box-text">CONFIRMED</span>
-								<span class="info-box-number" style="font-size: 2vw;" id="total_confirmed"></span>
-							</div>
+						<div class="info-box-content">
+							<span class="info-box-text">CONFIRMED</span>
+							<span class="info-box-number" style="font-size: 2vw;" id="total_confirmed"></span>
 						</div>
 					</div>
-					<div class="col-xs-12">
-						<div class="info-box">
-							<span class="info-box-icon bg-red"><i class="glyphicon glyphicon-remove"></i></span>
+					<div class="info-box">
+						<span class="info-box-icon bg-red"><i class="glyphicon glyphicon-remove"></i></span>
 
-							<div class="info-box-content">
-								<span class="info-box-text">NOT CONFIRMED</span>
-								<span class="info-box-number" style="font-size: 2vw;" id="total_not_confirmed"></span>
-							</div>
+						<div class="info-box-content">
+							<span class="info-box-text">NOT CONFIRMED</span>
+							<span class="info-box-number" style="font-size: 2vw;" id="total_not_confirmed"></span>
 						</div>
-
+					</div>
+					<div class="col-xs-6">
+						<a href="{{ url("/index/shipping_agency") }}" class="btn btn-primary" style="width: 100%; font-weight: bold; font-size: 1vw;"><i class="fa fa-list"></i> Shipping Line</a>
+					</div>
+					<div class="col-xs-6">
+						<a href="{{ url("/index/shipping_order") }}" class="btn btn-success" style="width: 100%; font-weight: bold; font-size: 1vw;"><i class="fa fa-list"></i> Booking List</a>
 					</div>
 				</div>
 				<div class="col-xs-9" style="padding-left: 0;">
