@@ -77,10 +77,10 @@
 							<span class="info-box-number" style="font-size: 2vw;" id="total_not_confirmed"></span>
 						</div>
 					</div>
-					<div class="col-xs-6">
+					<div class="col-xs-6" style="padding-left: 0px; padding-right: 5px;">
 						<a href="{{ url("/index/shipping_agency") }}" class="btn btn-primary" style="width: 100%; font-weight: bold; font-size: 1vw;"><i class="fa fa-list"></i> Shipping Line</a>
 					</div>
-					<div class="col-xs-6">
+					<div class="col-xs-6" style="padding-left: 5px; padding-right: 0px;">
 						<a href="{{ url("/index/shipping_order") }}" class="btn btn-success" style="width: 100%; font-weight: bold; font-size: 1vw;"><i class="fa fa-list"></i> Booking List</a>
 					</div>
 				</div>

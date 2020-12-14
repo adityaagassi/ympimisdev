@@ -230,10 +230,15 @@
 								</div>
 							</div>
 
-							<div class="form-group row" align="right">
-								<label class="col-xs-4">Nomination<span class="text-red">*</span></label>
+							<div class="form-group row">
+								<label class="col-xs-4" style="text-align: right;">Nomination<span class="text-red">*</span></label>
 								<div class="col-xs-6">
-									<input type="text" class="form-control" name="nomination" id="nomination" placeholder="Input Nomination">
+									<select class="form-control select2" data-placeholder="Select Nomination" name="nomination" id="nomination" style="width: 100%">
+										<option value=""></option>
+										@foreach($nominations as $nomination) 
+										<option value="{{ $nomination }}">{{ $nomination }}</option>
+										@endforeach
+									</select>
 								</div>
 							</div>
 						</div>
@@ -324,6 +329,17 @@
 		$.post('{{ url("fetch/add_shipping_agency") }}', data,  function(result, status, xhr){
 			if(result.status){
 				fillTable();
+
+				$("#ship_id").val('');
+				$("#shipper").val('');
+				$("#port_loading").val('');
+				$("#consignee").val('');
+				$("#transship_port").val('');
+				$("#port_of_discharge").val('');
+				$("#port_of_delivery").val('');
+				$("#country").val('');
+				$("#carier").val('');
+				$("#nomination").prop('selectedIndex', 0).change();
 
 				$("#loading").hide();
 				$("#modalAdd").modal('hide');
