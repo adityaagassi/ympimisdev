@@ -754,7 +754,7 @@
   </li>
   @endif
 
-  @if(in_array('S11', $navs))
+  {{-- @if(in_array('S11', $navs))
   @if(isset($head) && $head == "Shipping Booking Management List")<li class="treeview active">@else<li class="treeview">@endif
     <a href="#">
       <i class="fa fa-ship"></i> <span>Ship Booking Management List</span>
@@ -771,7 +771,7 @@
       </li>
     </ul>
   </li>
-  @endif
+  @endif --}}
 
   @if(in_array('S1', $navs))
   @if(isset($page) && $page == "FLO Band Instrument")<li class="active">@else<li>@endif

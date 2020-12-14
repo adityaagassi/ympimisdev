@@ -983,7 +983,7 @@
 		location.reload(true);		
 	}
 
-	function fillTable(){
+	function fillTable(param){
 
 		var stuffingFrom = $('#stuffingFrom').val();
 		var stuffingTo = $('#stuffingTo').val();
@@ -1069,12 +1069,27 @@
 
 				$('#tableBodyList').append(tableData);
 
+				var lengthMenu;
+				var menu = param;
+				if(menu == 'showAll'){
+					lengthMenu = [
+					[ -1 ],[ 'Show all' ]
+					];
+				}else{
+					lengthMenu = [
+					[ 10, 25, 50, -1 ],
+					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					];
+				}
+
+				console.log(menu);
+				console.log(lengthMenu);
+
+
 				var table = $('#tableList').DataTable({
 					'dom': 'Bfrtip',	
 					'responsive':true,
-					'lengthMenu': [
-					[ 10, 25, 50, -1 ],
-					[ '10 rows', '25 rows', '50 rows', 'Show all' ]],
+					'lengthMenu': lengthMenu,
 					'buttons':{
 						buttons:
 						[{
@@ -1219,7 +1234,9 @@
 
 		$.post('{{ url("fetch/shipping_order/edit_ship_reservation") }}', data,  function(result, status, xhr){
 			if(result.status){
-				fillTable();
+				fillTable('showAll');
+				// $('#tableList').DataTable().ajax.reload();
+
 				clearAll();
 				$("#loading").hide();
 				$("#modalEdit").modal('hide');
@@ -1290,7 +1307,9 @@
 
 		$.post('{{ url("fetch/shipping_order/add_ship_reservation") }}', data,  function(result, status, xhr){
 			if(result.status){
-				fillTable();
+				fillTable('showAll');
+				// $('#tableList').DataTable().ajax.reload();
+
 				clearAll();
 				$("#loading").hide();
 				$("#modalAdd").modal('hide');

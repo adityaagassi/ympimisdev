@@ -137,7 +137,7 @@
 	});
 
 	jQuery(document).ready(function() {
-		$('body').toggleClass("sidebar-collapse");
+		// $('body').toggleClass("sidebar-collapse");
 
 		
 		$('.monthpicker').datepicker({
@@ -179,7 +179,12 @@
 
 					tableData += '<td>'+ result.data[i].port_of_delivery +'</td>';
 					tableData += '<td>'+ result.data[i].plan +'</td>';
-					tableData += '<td>'+ result.data[i].confirmed +'</td>';
+
+					if(result.data[i].confirmed == result.data[i].plan){
+						tableData += '<td style="background-color: rgb(204, 255, 255);">'+ result.data[i].confirmed +'</td>';
+					}else{
+						tableData += '<td>'+ result.data[i].confirmed +'</td>';
+					}
 
 					if(result.data[i].not_confirmed > 0){
 						tableData += '<td style="background-color: rgb(255, 204, 255);">'+ result.data[i].not_confirmed +'</td>';
