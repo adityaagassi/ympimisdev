@@ -849,7 +849,9 @@ Route::group(['nav' => 'M7', 'middleware' => 'permission'], function(){
 
 
 	Route::get('index/generate_production_schedule', 'ProductionScheduleController@indexGenerateSchedule');
-	Route::get('fetch/generate_production_schedule', 'ProductionScheduleController@fetchGenerateSchedule');
+	Route::get('fetch/generate_production_schedule', 'ProductionScheduleController@generateScheduleStepOne');
+
+	Route::get('fetch/view_production_schedule_step_one', 'ProductionScheduleController@fetchViewScheduleStepOne');
 });
 
 Route::group(['nav' => 'M10', 'middleware' => 'permission'], function(){
@@ -1299,6 +1301,8 @@ Route::post('upload/sakurentsu/3m/document/upload', 'SakurentsuController@upload
 
 Route::get('index/sakurentsu/3m/finalmeeting/{id_three_m}', 'SakurentsuController@index_tiga_em_finalmeeting');
 Route::get('fetch/sakurentsu/3m/document/{id_three_m}', 'SakurentsuController@fetch_tiga_em_document_by_id');
+Route::get('detail/sakurentsu/3m/{id_three_m}', 'SakurentsuController@index_tiga_em_detail');
+Route::get('generate/sakurentsu/3m/pdf/{id_three_m}', 'SakurentsuController@generate_tiga_em_pdf');
 
 //Supplier
 Route::get('index/supplier', 'AccountingController@master_supplier');
@@ -1520,6 +1524,7 @@ Route::post('import/budget', 'AccountingController@import_budget');
 Route::get('transfer/budget', 'AccountingController@transfer_budget');
 Route::get('fetch/transfer', 'AccountingController@fetch_transfer_budget');
 Route::post('transfer/budget', 'AccountingController@transfer_budget_post');
+Route::post('transfer/budget/new', 'AccountingController@transfer_budget_post_new');
 Route::get('transfer_budget/approvemanagerfrom/{id}', 'AccountingController@transfer_approvalfrom');
 Route::get('transfer_budget/approvemanagerto/{id}', 'AccountingController@transfer_approvalto');
 
@@ -3406,6 +3411,11 @@ Route::get('index/audit_patrol', 'AuditController@index');
 Route::get('fetch/audit_patrol', 'AuditController@fetch_audit');
 Route::post('post/audit_patrol', 'AuditController@post_audit');
 Route::post('post/audit_patrol_file', 'AuditController@post_audit_file');
+
+Route::get('index/audit_patrol/monitoring', 'AuditController@indexMonitoring');
+Route::get('fetch/audit_patrol/monitoring', 'AuditController@fetchMonitoring');
+Route::get('index/audit_patrol/detail', 'AuditController@detailMonitoring');
+Route::get('index/audit_patrol/table', 'AuditController@fetchTable_audit');
 
 //Audit Internal ISO
 Route::get('index/audit_iso', 'CparController@audit');
