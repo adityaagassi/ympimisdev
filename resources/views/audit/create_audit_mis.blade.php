@@ -183,7 +183,9 @@
 					</tbody>
 				</table>
 				<br>
-				<button class="btn btn-success" style="width: 100%" onclick="cek()"><i class="fa fa-check"></i>Check</button>
+				<!-- <button class="btn btn-success" style="width: 100%" onclick="cek()"><i class="fa fa-check"></i>Check</button> -->
+
+				<button class="btn btn-success" style="width: 100%;font-size: 25px" onclick="cek()"><i class="fa fa-check"></i> Submit</button>
 			</div>
 		</div>
 	</div>

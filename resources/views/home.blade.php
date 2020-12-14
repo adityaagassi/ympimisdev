@@ -281,26 +281,57 @@
                             </a>
                         </td>
                     </tr>
-                    <tr>
-                        <td>
-                            <span style="font-weight: bold;">Audit Internal ISO E-IRCA (ISO内部監査のCPAR)</span>
-                            <br>
-                            <a href="{{ url("/index/audit_iso/create_audit") }}">
-                                <i class="fa fa-caret-right"></i> Audit Internal ISO (ISO内部監査のCPARを作成)
-                            </a>
-                            <br>
-                            <a href="{{ url("/index/audit_iso") }}">
-                                <i class="fa fa-caret-right"></i> Create Audit Internal ISO (ISO内部監査のCPARを作成)
-                            </a>
-                            <br>
-                            <a href="{{ url("/index/audit_iso/monitoring") }}">
-                                <i class="fa fa-caret-right"></i> Report Audit Internal ISO (ISO内部監査のCPARを報告)
-                            </a>
-                        </td>
-                    </tr>
+                   
                     <tr>
                         <td>
                             <span style="font-weight: bold;">Others (他の情報)</span>
+                            <br>
+                            <a href="{{ url("/index/form_experience") }}">
+                                <i class="fa fa-caret-right"></i> (One For All) Form Permasalahan & Kegagalan (問題・失敗のフォーム)
+                            </a>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+            <table class="table table-bordered">
+                <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
+                    <tr>
+                        <th>Audit / Patrol Internal<br>内部監査・パトロール </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">Patrol (パトロール)</span>
+                            <br>
+                            <a href="{{ url("/index/audit_patrol") }}">
+                                <i class="fa fa-caret-right"></i> 5S Patrol GM / Presdir (社長パトロール)
+                            </a>
+                            <br>
+                            <a href="{{ url("/index/audit_patrol/monitoring") }}">
+                                <i class="fa fa-caret-right"></i> Patrol Monitoring (パトロール監視)
+                            </a>
+                           
+                            
+                        </td>                     
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">Audit (内部監査)</span>
+                            <br>
+                            <a href="{{ url("/index/audit_iso/create_audit") }}">
+                                <i class="fa fa-caret-right"></i> Audit ISO (ISO内部監査のCPARを作成)
+                            </a>
+                            <!-- <br>
+                            <a href="{{ url("/index/audit_iso") }}">
+                                <i class="fa fa-caret-right"></i> Create Audit ISO (ISO内部監査のCPARを作成)
+                            </a> -->
+                            <br>
+                            <a href="{{ url("/index/audit_iso/monitoring") }}">
+                                <i class="fa fa-caret-right"></i> Monitoring Audit ISO (ISO内部監査のCPARを報告)
+                            </a>
                             <br>
                             <a href="{{ url("/index/audit?category=kanban") }}">
                                 <i class="fa fa-caret-right"></i> Audit Kanban (かんばん監査)
@@ -309,17 +340,13 @@
                             <a href="{{ url("/index/audit_internal_mis?category=Audit_MIS") }}">
                                 <i class="fa fa-caret-right"></i> Audit MIS (MIS課内部監査)
                             </a>
-                            <br>
-                            <a href="{{ url("/index/audit_patrol") }}">
-                                <i class="fa fa-caret-right"></i> 5S Patrol GM / Presdir ()
-                            </a>
-                            <br>
-                            <a href="{{ url("/index/form_experience") }}">
-                                <i class="fa fa-caret-right"></i> (One For All) Form Permasalahan & Kegagalan (問題・失敗のフォーム)
-                            </a>
+                            <!-- <br>
+                            <a href="{{ url("/index/audit_internal_monitoring") }}">
+                                <i class="fa fa-caret-right"></i> All Audit Monitoring (全監査の監視)
+                            </a> -->
                         </td>
                     </tr>
-
+                    
                 </tbody>
             </table>
 

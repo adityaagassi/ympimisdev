@@ -164,10 +164,10 @@
 			<div class="col-xs-12" style="overflow-x: scroll;padding: 0">
 
 				<div class="pull-right">
-					<a type="button" class="btn btn-success" onclick='tambah();'><i class='fa fa-plus' ></i> Tambah Data</a>
+					<a type="button" class="btn btn-success btn-lg" onclick='tambah();'><i class='fa fa-plus' ></i> Tambah Data</a>
 				</div>
 
-				<br><br>
+				<br><br><br>
 				
 
 				<table class="table table-bordered" style="width: 100%; color: white;" id="tableResult">
@@ -217,7 +217,7 @@
 					</tbody>
 				</table>
 				<br>
-				<button class="btn btn-success" style="width: 100%" onclick="cek()"><i class="fa fa-check"></i>Check</button>
+				<button class="btn btn-success" style="width: 100%;font-size: 25px" onclick="cek()"><i class="fa fa-check"></i> Submit</button>
 			</div>
 		</div>
 	</div>
