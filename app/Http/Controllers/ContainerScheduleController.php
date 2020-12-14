@@ -339,7 +339,8 @@ class ContainerScheduleController extends Controller{
         $data = db::select("SELECT plan.port_of_delivery, plan.plan, COALESCE(confirmed.confirmed,0) AS confirmed, plan.plan - COALESCE(confirmed.confirmed,0) AS not_confirmed FROM
             (SELECT port_of_delivery, SUM(quantity) AS plan FROM
             (SELECT DISTINCT ycj_ref_number, port_of_delivery, (COALESCE(fortyhc,0) + COALESCE(forty,0) + COALESCE(twenty,0)) AS quantity FROM shipment_reservations
-            WHERE period = '".$period."') shipment
+            WHERE period = '".$period."'
+            AND `status` <> 'NO NEED ANYMORE') shipment
             GROUP BY port_of_delivery) plan
             LEFT JOIN 
             (SELECT port_of_delivery, SUM(quantity) AS confirmed FROM
@@ -379,7 +380,8 @@ class ContainerScheduleController extends Controller{
             LEFT JOIN
             (SELECT stuffing_date, SUM(quantity) AS plan FROM
             (SELECT DISTINCT stuffing_date, ycj_ref_number, (COALESCE(fortyhc,0) + COALESCE(forty,0) + COALESCE(twenty,0)) AS quantity FROM shipment_reservations
-            WHERE period = '".$period."') shipment
+            WHERE period = '".$period."'
+            AND `status` <> 'NO NEED ANYMORE') shipment
             GROUP BY stuffing_date) AS plan
             ON plan.stuffing_date = date.week_date
             LEFT JOIN
