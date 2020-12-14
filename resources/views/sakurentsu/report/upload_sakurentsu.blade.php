@@ -5,169 +5,181 @@
 <link href="{{ url("css/dropzone.min.css") }}" rel="stylesheet">
 <link href="{{ url("css/basic.min.css") }}" rel="stylesheet">
 <style type="text/css">
-     thead>tr>th{
-          text-align:center;
-     }
-     tbody>tr>td{
-          text-align:center;
-     }
-     tfoot>tr>th{
-          text-align:center;
-     }
-     td:hover {
-          overflow: visible;
-     }
-     table.table-bordered{
-          border:1px solid black;
-     }
-     table.table-bordered > thead > tr > th{
-          border:1px solid black;
-     }
-     table.table-bordered > tbody > tr > td{
-          border:1px solid green;
-          padding-top: 0;
-          padding-bottom: 0;
-     }
-     table.table-bordered > tfoot > tr > th{
-          border:1px solid rgb(211,211,211);
-     }
-     #loading { display: none; }
+ thead>tr>th{
+  text-align:center;
+}
+tbody>tr>td{
+  text-align:center;
+}
+tfoot>tr>th{
+  text-align:center;
+}
+td:hover {
+  overflow: visible;
+}
+table.table-bordered{
+  border:1px solid black;
+}
+table.table-bordered > thead > tr > th{
+  border:1px solid black;
+}
+table.table-bordered > tbody > tr > td{
+  border:1px solid green;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+table.table-bordered > tfoot > tr > th{
+  border:1px solid rgb(211,211,211);
+}
+#loading { display: none; }
 </style>
 @endsection
 @section('header')
 <section class="content-header">
-     <h1>
-          Sakurentsu <span class="text-purple"> {{ $title_jp }}</span>
-     </h1>
-     <ol class="breadcrumb">
-     </ol>
+ <h1>
+  Sakurentsu <span class="text-purple"> {{ $title_jp }}</span>
+</h1>
+<ol class="breadcrumb">
+</ol>
 </section>
 @endsection
 
 @section('content')
 <section class="content">
-     @if (session('success'))
-     <div class="alert alert-success alert-dismissible">
-          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-          <h4><i class="icon fa fa-thumbs-o-up"></i> Success!</h4>
-          {{ session('success') }}
-     </div>
-     @endif
-     @if (session('error'))
-     <div class="alert alert-danger alert-dismissible">
-          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-          <h4><i class="icon fa fa-ban"></i> Error!</h4>
-          {{ session('error') }}
-     </div>
-     @endif
+ @if (session('success'))
+ <div class="alert alert-success alert-dismissible">
+  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+  <h4><i class="icon fa fa-thumbs-o-up"></i> Success!</h4>
+  {{ session('success') }}
+</div>
+@endif
+@if (session('error'))
+<div class="alert alert-danger alert-dismissible">
+  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+  <h4><i class="icon fa fa-ban"></i> Error!</h4>
+  {{ session('error') }}
+</div>
+@endif
 
-     <div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
-          <p style="position: absolute; color: White; top: 45%; left: 35%;">
-               <span style="font-size: 40px">Please wait a moment...<i class="fa fa-spin fa-refresh"></i></span>
-          </p>
-     </div>
+<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+  <p style="position: absolute; color: White; top: 45%; left: 35%;">
+   <span style="font-size: 40px">Please wait a moment...<i class="fa fa-spin fa-refresh"></i></span>
+ </p>
+</div>
 
+<div class="row">
+  <div class="col-xs-6" style="padding-right: 0">
+   <div class="box box-solid">
+    <div class="box-header">
+     <h3 class="box-title">Upload File<span class="text-purple"> Sakurentsu</span></h3>
+   </div>
+   <div class="box-body">
      <div class="row">
-          <div class="col-xs-6" style="padding-right: 0">
-               <div class="box box-solid">
-                    <div class="box-header">
-                         <h3 class="box-title">Upload File<span class="text-purple"> Sakurentsu</span></h3>
-                    </div>
-                    <div class="box-body">
-                         <div class="row">
-                              <div class="col-xs-12">
-                                   <div class="form-group">
+      <div class="col-xs-12">
+       <div class="form-group">
 
-                                      <form action="/" enctype="multipart/form-data" method="POST"  >
-                                        <div class="col-xs-12" style="padding: 0">
+        <form action="/" enctype="multipart/form-data" method="POST">
+          <div class="col-xs-12" style="padding: 0">
 
-                                          <input type="hidden" value="{{csrf_token()}}" name="_token" />
-                                          <input type="hidden" id="applicant" name="applicant" class="form-control" value="{{$employee->name}}" readonly>
-                                          
-                                          <div class="col-xs-4" style="padding: 1px">
-                                            <div class="form-group">
-                                                <label for="input">Sakuretsu Number</label>
-                                                <input type="text" name="sakurentsu_number1" id="sakurentsu_number1" placeholder="Sakurentsu Number" class="form-control" value="KC" readonly="">
-                                            </div>
-                                          </div>
+            <input type="hidden" value="{{csrf_token()}}" name="_token" />
+            <input type="hidden" id="applicant" name="applicant" class="form-control" value="{{$employee->name}}" readonly>
+            
+            <div class="col-xs-4" style="padding: 1px">
+              <div class="form-group">
+                <label for="input">Sakuretsu Number</label>
+                <input type="text" name="sakurentsu_number1" id="sakurentsu_number1" placeholder="Sakurentsu Number" class="form-control" value="KC" readonly="">
+              </div>
+            </div>
 
-                                          <div class="col-xs-4" style="padding: 1px">
-                                            <div class="form-group">
-                                                <label for="input">&nbsp;</label>
-                                                <input type="text" name="sakurentsu_number2" id="sakurentsu_number2" placeholder="Nomor, e.g 001" class="form-control">
-                                            </div>
-                                          </div>
-                                          <div class="col-xs-4" style="padding: 1px">
-                                            <div class="form-group">
-                                                <label for="input">&nbsp;</label>
-                                                <input type="text" name="sakurentsu_number3" id="sakurentsu_number3" placeholder="Revisi, e.g 00" class="form-control">
-                                            </div>
-                                          </div>
-                                          <!-- <div class="form-group">
-                                              <label for="input">Target Date</label>
-                                              <input type="text" name="target_date" id="target_date" placeholder="Target Date" class="form-control">
-                                          </div> -->
-
-                                        </div>
-                                        <div class="col-xs-12" style="padding: 0">
-                                            <div class="form-group">
-                                              <label>Target Date</label>
-                                              <div class="input-group date">
-                                                <div class="input-group-addon">
-                                                  <i class="fa fa-calendar"></i>
-                                                </div>
-                                                <input type="text" class="form-control pull-right" id="target_date" name="target_date" placeholder="Due Date">
-                                              </div>
-                                            </div>
-
-                                            <div class="form-group">
-                                              <label>Sakurentsu File</label>
-                                              <div class="dropzone" id="my-dropzone" name="mainFileUploader">
-                                                 <div class="fallback">
-                                                     <input name="file" type="file" multiple />
-                                                 </div>
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </form>
-                                      <div>
-                                         <!-- <button type="submit" id="submit-all" class="btn btn-success pull-right" style="margin-top: 10px" onclick="location.reload()">Upload</button> -->
-                                         <button type="submit" id="submit-all" class="btn btn-success pull-right" style="margin-top: 10px">Upload</button>
-                                     </div>
-                                 </div>
-                            </div>
-                              
-                         </div>
-                    </div>
-               </div>
+            <div class="col-xs-4" style="padding: 1px">
+              <div class="form-group">
+                <label for="input">&nbsp;</label>
+                <input type="text" name="sakurentsu_number2" id="sakurentsu_number2" placeholder="Nomor, e.g 001" class="form-control">
+              </div>
+            </div>
+            <div class="col-xs-4" style="padding: 1px">
+              <div class="form-group">
+                <label for="input">&nbsp;</label>
+                <input type="text" name="sakurentsu_number3" id="sakurentsu_number3" placeholder="Revisi, e.g 00" class="form-control">
+              </div>
+            </div>
+            <div class="col-xs-12" style="padding: 1px">
+              <div class="form-group">
+                <label for="input">Title (Japanese)</label>
+                <input type="text" name="title_jp" id="title_jp" placeholder="Title Japanese" class="form-control">
+              </div>
+            </div>
+            <div class="col-xs-12" style="padding: 1px">
+              <div class="form-group">
+                <label for="sakurentsu_category">Sakurentsu Category</label><br>
+                <select class="select2" name="sakurentsu_category" id="sakurentsu_category" data-placeholder="Select Category" style="width: 100%">
+                  <option value=""></option>
+                  <option value="3M">3M</option>
+                  <option value="Trial">Trial Request</option>
+                  <option value="Information">Information</option>
+                </select>
+              </div>
+            </div>
           </div>
-          <div class="col-xs-6" style="padding: 0">
-               <div class="col-xs-12">
-                    <div class="box box-solid">
-                    <div class="box-header">
-                         <h3 class="box-title">List Outstanding<span class="text-purple"> Sakurentsu</span></h3><br>
-                    </div>
-                    <div class="box-body">
-                         <div class="col-xs-12">
-                              <table id="sakurentsuTable" class="table table-bordered" style="width: 100%">
-                              <thead style="background-color: rgba(126,86,134,.7);">
-                                   <tr>
-                                        <th width="1%">Applicant</th>
-                                        <th width="1%">Number</th>
-                                        <th width="1%">Target Date</th>
-                                        <th width="1%">File</th>
-                                        <th width="1%">Status</th>
-                                   </tr>
-                              </thead>
-                              <tbody id="tableSakurentsu">
-                              </tbody>
-                         </table>
-                         </div>
-                    </div>
+          <div class="col-xs-12" style="padding: 0">
+            <div class="form-group">
+              <label>Target Date</label>
+              <div class="input-group date">
+                <div class="input-group-addon">
+                  <i class="fa fa-calendar"></i>
+                </div>
+                <input type="text" class="form-control pull-right" id="target_date" name="target_date" placeholder="Due Date">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Sakurentsu File</label>
+              <div class="dropzone" id="my-dropzone" name="mainFileUploader">
+               <div class="fallback">
+                 <input name="file" type="file" multiple />
                </div>
-               </div>
-          </div>
+             </div>
+           </div>
+         </div>
+       </form>
+       <div>
+         <!-- <button type="submit" id="submit-all" class="btn btn-success pull-right" style="margin-top: 10px" onclick="location.reload()">Upload</button> -->
+         <button type="submit" id="submit-all" class="btn btn-success pull-right" style="margin-top: 10px">Upload</button>
+       </div>
      </div>
+   </div>
+
+ </div>
+</div>
+</div>
+</div>
+<div class="col-xs-6" style="padding: 0">
+ <div class="col-xs-12">
+  <div class="box box-solid">
+    <div class="box-header">
+     <h3 class="box-title">List Outstanding<span class="text-purple"> Sakurentsu</span></h3><br>
+   </div>
+   <div class="box-body">
+     <div class="col-xs-12">
+      <table id="sakurentsuTable" class="table table-bordered" style="width: 100%">
+        <thead style="background-color: rgba(126,86,134,.7);">
+         <tr>
+          <th width="1%">Applicant</th>
+          <th width="1%">Number</th>
+          <th width="1%">Target Date</th>
+          <th width="1%">File</th>
+          <th width="1%">Status</th>
+        </tr>
+      </thead>
+      <tbody id="tableSakurentsu">
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </section>
 @endsection
 
@@ -182,169 +194,174 @@
 <script src="{{ url("js/buttons.print.min.js")}}"></script>
 <script src="{{ url("js/jquery.tagsinput.min.js") }}"></script>
 <script>
-     $.ajaxSetup({
-          headers: {
-               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-          }
-     });
+ $.ajaxSetup({
+  headers: {
+   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+ }
+});
 
-     jQuery(document).ready(function() {
+ jQuery(document).ready(function() {
 
-          fetchTable();  
+  fetchTable();  
 
-          $('#target_date').datepicker({
-            autoclose: true,
-            todayHighlight: true,
-            format: 'yyyy-mm-dd',
-            orientation: "bottom auto"
-          });
+  $('#target_date').datepicker({
+    autoclose: true,
+    todayHighlight: true,
+    format: 'yyyy-mm-dd',
+    orientation: "bottom auto"
+  });
 
-     });
+  $(".select2").select2();
 
-     Dropzone.options.myDropzone = {
-          headers: {
-               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-          },
+});
 
-          url: "{{ url('index/sakurentsu/upload_sakurentsu')}}",
-          autoProcessQueue: false,
-          uploadMultiple: true,
-          parallelUploads: 100,
-          maxFiles: 100,
-          // acceptedFiles: "image/*",
+ Dropzone.options.myDropzone = {
+  headers: {
+   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+ },
 
-          init: function () {
+ url: "{{ url('index/sakurentsu/upload_sakurentsu')}}",
+ autoProcessQueue: false,
+ uploadMultiple: true,
+ parallelUploads: 100,
+ maxFiles: 100,
 
-                var submitButton = document.querySelector("#submit-all");
-                var wrapperThis = this;
+ init: function () {
 
-                submitButton.addEventListener("click", function () {
-                    if (!confirm("Are you sure want to create this sakurentsu and send to interpreter?")) {
-                         return false;
-                    } else {
-                         wrapperThis.processQueue();
-                         setTimeout(function(){ fetchTable() }, 3000);
-                    }
-                });
+  var submitButton = document.querySelector("#submit-all");
+  var wrapperThis = this;
 
-                this.on("addedfile", function (file) {
+  submitButton.addEventListener("click", function () {
+    if (!confirm("Are you sure want to create this sakurentsu and send to interpreter?")) {
+     return false;
+   } else {
+     wrapperThis.processQueue();
+     $("#loading").show();
+     setTimeout(function(){ location.reload() }, 4000);
+   }
+ });
 
-                    // Create the remove button
-                    var removeButton = Dropzone.createElement("<button class='btn btn-lg dark'>Remove File</button>");
+  this.on("addedfile", function (file) {
 
-                    // Listen to the click event
-                    removeButton.addEventListener("click", function (e) {
-                        // Make sure the button click doesn't submit the form:
-                        e.preventDefault();
-                        e.stopPropagation();
+    // Create the remove button
+    var removeButton = Dropzone.createElement("<button class='btn btn-lg dark'>Remove File</button>");
 
-                        // Remove the file preview.
-                        wrapperThis.removeFile(file);
-                        // If you want to the delete the file on the server as well,
-                        // you can do the AJAX request here.
-                    });
+    // Listen to the click event
+    removeButton.addEventListener("click", function (e) {
+      // Make sure the button click doesn't submit the form:
+      e.preventDefault();
+      e.stopPropagation();
 
-                    // Add the button to the file preview element.
-                    file.previewElement.appendChild(removeButton);
-                });
+      // Remove the file preview.
+      wrapperThis.removeFile(file);
+      // If you want to the delete the file on the server as well,
+      // you can do the AJAX request here.
+    });
 
-                this.on('sendingmultiple', function (data, xhr, formData) {
-                    formData.append("sakurentsu_number", $("#sakurentsu_number").val());
-                    formData.append("applicant", $("#applicant").val());
-                    formData.append("target_date", $("#target_date").val());
-                });
-            }
+    // Add the button to the file preview element.
+    file.previewElement.appendChild(removeButton);
+  });
 
-        };
+  this.on('sendingmultiple', function (data, xhr, formData) {
+    formData.append("sakurentsu_number1", $("#sakurentsu_number1").val());
+    formData.append("sakurentsu_number2", $("#sakurentsu_number2").val());
+    formData.append("sakurentsu_number3", $("#sakurentsu_number3").val());
+    formData.append("title_jp", $("#title_jp").val());
+    formData.append("sakurentsu_category", $("#sakurentsu_category").val());
+    formData.append("applicant", $("#applicant").val());
+    formData.append("target_date", $("#target_date").val());
+  });
+}
 
-     var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+};
 
-
-
-     function fetchTable(){
-
-          var data = {
-          }
-
-         $.get('{{ url("fetch/sakurentsu") }}', data, function(result, status, xhr){
-           if(xhr.status == 200){
-             if(result.status){
-
-               $('#sakurentsuTable').DataTable().clear();
-               $('#sakurentsuTable').DataTable().destroy();
-
-               $("#tableSakurentsu").find("td").remove();  
-               $('#tableSakurentsu').html("");
-
-               var table = "";
+var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 
-               $.each(result.datas, function(key, value) {
+function fetchTable(){
 
-                    var obj = JSON.parse(value.file);
-                    var app = "";
-                    for (var i = 0; i < obj.length; i++) {
-                         app += "<a href='../../uploads/sakurentsu/"+obj[i]+"' target='_blank'><i class='fa fa-file-pdf-o'></i> </a>";
-                    }
+  var data = {
+  }
 
-                   table += '<tr>';
-                   table += '<td width="1%">'+value.applicant+'</td>';
-                   table += '<td width="1%">'+value.sakurentsu_number+'</td>';
-                   table += '<td width="1%">'+value.target_date+'</td>';
-                   table += '<td width="1%">'+app+'</td>';
-                   if (value.status == "translate") {
-                         table += '<td width="1%" style="background-color:yellow">Translating</td>';                    
-                   }else{
-                         table += '<td width="1%" style="background-color:green;color:white">Finish Translating</td>';
-                   }
+  $.get('{{ url("fetch/sakurentsu") }}', data, function(result, status, xhr){
+   if(xhr.status == 200){
+     if(result.status){
 
-                   table += '</tr>';
-               })
+       $('#sakurentsuTable').DataTable().clear();
+       $('#sakurentsuTable').DataTable().destroy();
 
-               $('#tableSakurentsu').append(table);
+       $("#tableSakurentsu").find("td").remove();  
+       $('#tableSakurentsu').html("");
 
-                     var table = $('#sakurentsuTable').DataTable({
-                       'responsive':true,
-                       'paging': false,
-                       'searching': true,
-                       'ordering': false,
-                       'order': [],
-                       'info': true,
-                       'autoWidth': true,
-                       "sPaginationType": "full_numbers",
-                       "bJQueryUI": true,
-                       "bAutoWidth": false,
-                       "processing": true
-                     });
-             }
-             else{
-                alert('Attempt to retrieve data failed');
-              }
-           }
-         });
+       var table = "";
+
+
+       $.each(result.datas, function(key, value) {
+
+        var obj = JSON.parse(value.file);
+        var app = "";
+        for (var i = 0; i < obj.length; i++) {
+         app += "<a href='"+"{{ url('uploads/sakurentsu/original/') }}/"+obj[i]+"' target='_blank'><i class='fa fa-file-pdf-o'></i> </a>";
        }
 
-     function openErrorGritter(title, message) {
-          jQuery.gritter.add({
-               title: title,
-               text: message,
-               class_name: 'growl-danger',
-               image: '{{ url("images/image-stop.png") }}',
-               sticky: false,
-               time: '2000'
-          });
-     }
+       table += '<tr>';
+       table += '<td width="1%">'+value.applicant+'</td>';
+       table += '<td width="1%">'+value.sakurentsu_number+'</td>';
+       table += '<td width="1%">'+value.target_date+'</td>';
+       table += '<td width="1%">'+app+'</td>';
+       if (value.status == "translate") {
+         table += '<td width="1%" style="background-color:yellow">Translating</td>';                    
+       }else{
+         table += '<td width="1%" style="background-color:green;color:white">Finish Translating</td>';
+       }
 
-     function openSuccessGritter(title, message){
-          jQuery.gritter.add({
-               title: title,
-               text: message,
-               class_name: 'growl-success',
-               image: '{{ url("images/image-screen.png") }}',
-               sticky: false,
-               time: '2000'
-          });
+       table += '</tr>';
+     })
+
+       $('#tableSakurentsu').append(table);
+
+       var table = $('#sakurentsuTable').DataTable({
+         'responsive':true,
+         'paging': false,
+         'searching': true,
+         'ordering': false,
+         'order': [],
+         'info': true,
+         'autoWidth': true,
+         "sPaginationType": "full_numbers",
+         "bJQueryUI": true,
+         "bAutoWidth": false,
+         "processing": true
+       });
      }
+     else{
+      alert('Attempt to retrieve data failed');
+    }
+  }
+});
+}
+
+function openErrorGritter(title, message) {
+  jQuery.gritter.add({
+   title: title,
+   text: message,
+   class_name: 'growl-danger',
+   image: '{{ url("images/image-stop.png") }}',
+   sticky: false,
+   time: '2000'
+ });
+}
+
+function openSuccessGritter(title, message){
+  jQuery.gritter.add({
+   title: title,
+   text: message,
+   class_name: 'growl-success',
+   image: '{{ url("images/image-screen.png") }}',
+   sticky: false,
+   time: '2000'
+ });
+}
 
 </script>
 

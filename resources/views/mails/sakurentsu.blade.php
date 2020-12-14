@@ -23,6 +23,7 @@
 			<?php $title_jp = $datas->title_jp ?>
 			<?php $target_date = $datas->target_date ?>
 			<?php $translator = $datas->translator ?>
+			<?php $category = $datas->category ?>
 			<?php $position = $datas->position ?>
 			<?php $status = $datas->status ?>
 		@endforeach
@@ -53,7 +54,11 @@
 				<tr>
 					<td style="width: 2%; border:1px solid black;">Applicant</td>
 					<td style="border:1px solid black; text-align: center;">{{$applicant}}</td>
-				</tr>				
+				</tr>
+				<tr>
+					<td style="width: 2%; border:1px solid black;">Sakurentsu Category</td>
+					<td style="border:1px solid black; text-align: center;">{{$category}}</td>
+				</tr>
 				<tr>
 					<td style="width: 2%; border:1px solid black;">Date Implementation Target</td>
 					<td style="border:1px solid black; text-align: center;"><?php echo date('d F Y', strtotime($target_date)) ?></td></td>
