@@ -11,6 +11,7 @@
 	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
 		<div>
 			<center>
+				<br><br><br>
 				<span style="font-size: 3vw; text-align: center;"><i class="fa fa-spin fa-hourglass-half"></i></span>
 			</center>
 		</div>
@@ -63,7 +64,7 @@
 </div>
 @endsection
 @section('scripts')
-<script src="{{ url("js/highcharts.js")}}"></script>
+<script src="{{ url("js/highstock.js")}}"></script>
 <script src="{{ url("js/highcharts-3d.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>

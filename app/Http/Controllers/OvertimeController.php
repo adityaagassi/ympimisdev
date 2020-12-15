@@ -1377,13 +1377,13 @@ public function overtimeControl(Request $request)
 			(
 			SELECT
 			VIEW_YMPI_Emp_OvertimePlan.emp_no,
-			SUM (
+			ROUND(SUM (
 			CASE
-
-			WHEN VIEW_YMPI_Emp_OvertimePlan.total_ot > 0 THEN
-			floor( ( VIEW_YMPI_Emp_OvertimePlan.total_ot / 60.0 ) * 2 + 0.5 ) / 2 ELSE floor( ( VIEW_YMPI_Emp_OvertimePlan.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 
+			
+			WHEN COALESCE ( VIEW_YMPI_Emp_OvertimePlan.total_ot, 0 ) > 0 THEN
+			cast(VIEW_YMPI_Emp_OvertimePlan.total_ot as float)/ 60 ELSE cast(VIEW_YMPI_Emp_OvertimePlan.TOTAL_OVT_PLAN as float) / 60
 			END 
-			) AS jam 
+			), 2) AS jam
 			FROM
 			VIEW_YMPI_Emp_OvertimePlan 
 			WHERE
@@ -2408,7 +2408,7 @@ public function fetchGAReport(Request $request)
 
 			CASE
 			WHEN
-			SHIFT_OVTPLAN LIKE '%Shift_2%' and DATEDIFF(minute, ovtplanfrom, ovtplanto) >= 130
+			SHIFT_OVTPLAN LIKE '%Shift_2%' and DATEDIFF(minute, ovtplanfrom, ovtplanto) >= 120
 			THEN 1 
 			ELSE null
 			END AS extra2,
