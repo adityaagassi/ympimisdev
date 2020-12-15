@@ -204,7 +204,9 @@ class ContainerScheduleController extends Controller{
             $data = $data->whereIn('nomination', $request->get('search_nomination'));
         }
 
-        $data = $data->get();
+        $data = $data->orderBy('ycj_ref_number', 'ASC')
+        ->orderBy('stuffing_date', 'ASC')
+        ->get();
 
 
         $response = array(
@@ -317,6 +319,64 @@ class ContainerScheduleController extends Controller{
 
     }
 
+    public function fetchResumeShippingOrderDetail(Request $request){
+        $year = '';
+        if(strlen($request->get('period')) > 0){
+            $period = $request->get('period');
+            $year = date('Y', strtotime($period));
+        }else{
+            $year = date('Y');
+        }
+
+        $date = $request->get('date');
+        $st_date = date('Y-m-d', strtotime($date.'-'.$year));
+
+        $resume = ShipmentReservation::where('stuffing_date', $st_date)
+        ->where('status', '<>', 'NO NEED ANYMORE')
+        ->select(
+            'period',
+            'ycj_ref_number',
+            'shipper',
+            'port_loading',
+            'port_of_delivery',
+            'country',
+            'fortyhc',
+            'forty',
+            'twenty',
+            'port_of_delivery',
+            'stuffing_date'
+        )
+        ->distinct()
+        ->get();
+
+        $detail = ShipmentReservation::where('stuffing_date', $st_date)
+        ->where('status', '<>', 'NO NEED ANYMORE')
+        ->select(
+            'period',
+            'ycj_ref_number',
+            'shipper',
+            'port_loading',
+            'port_of_delivery',
+            'country',
+            'fortyhc',
+            'forty',
+            'twenty',
+            'port_of_delivery',
+            'stuffing_date',
+            'etd_date',
+            'status'
+        )
+        ->get();
+
+        $response = array(
+            'status' => true,
+            'resume' => $resume,
+            'detail' => $detail,
+
+        );
+        return Response::json($response);  
+    }
+
     public function fetchResumeShippingOrder(Request $request){
 
         $period = '';
@@ -401,7 +461,7 @@ class ContainerScheduleController extends Controller{
             GROUP BY stuffing_date) AS confirmed
             ON confirmed.stuffing_date = date.week_date
             ORDER BY date.week_date ASC");
-        
+
         $response = array(
             'status' => true,
             'data' => $data,
@@ -423,7 +483,7 @@ class ContainerScheduleController extends Controller{
         $country = $request->get('country');
         $carier = $request->get('carier');
         $nomination = $request->get('nomination');
-        
+
         try {
             $agency = new ShipmentNomination([
                 'ship_id' => strtoupper($ship_id),
@@ -544,32 +604,6 @@ class ContainerScheduleController extends Controller{
         $invoice = $request->get('invoice');
         $ref = $request->get('ref');
 
-        $check = ShipmentReservation::where('id', $id)->first();
-
-        if($check->ycj_ref_number != $ycj_ref_number){
-            $shipment_reservations = ShipmentReservation::where('period', $period)
-            ->where('id', '>', $id)
-            ->get();
-
-            for ($i=0; $i < count($shipment_reservations); $i++) {
-                $reservation = ShipmentReservation::where('id', $shipment_reservations[$i]->id)->first();
-
-                $ref_number = (int)str_replace('YMPI','', $shipment_reservations[$i]->ycj_ref_number);
-                $new_ref = 'YMPI'. sprintf("%'.0" . 3 . "d", $ref_number+1);
-                $reservation->ycj_ref_number = $new_ref;
-
-                try {
-                    $reservation->save();
-                } catch (Exception $e) {
-                    $response = array(
-                        'status' => false,
-                        'message' => $e->getMessage(),
-                    );
-                    return Response::json($response);
-                }
-            }
-        }
-
         try {
             $update = ShipmentReservation::where('id', $id)
             ->update([
@@ -592,9 +626,6 @@ class ContainerScheduleController extends Controller{
             $update_ref_number = ShipmentReservation::where('ycj_ref_number', $ycj_ref_number)
             ->where('period', $period)
             ->update([
-                'fortyhc' => $fortyhc,
-                'forty' => $forty,
-                'twenty' => $twenty,
                 'stuffing_date' => $stuffing,
                 'etd_date' => $etd,
                 'remark' => $remark,
