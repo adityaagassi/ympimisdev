@@ -1379,7 +1379,7 @@ public function overtimeControl(Request $request)
 			VIEW_YMPI_Emp_OvertimePlan.emp_no,
 			ROUND(SUM (
 			CASE
-			
+
 			WHEN COALESCE ( VIEW_YMPI_Emp_OvertimePlan.total_ot, 0 ) > 0 THEN
 			cast(VIEW_YMPI_Emp_OvertimePlan.total_ot as float)/ 60 ELSE cast(VIEW_YMPI_Emp_OvertimePlan.TOTAL_OVT_PLAN as float) / 60
 			END 
@@ -1941,28 +1941,63 @@ public function overtimeDetail(Request $request)
 		$cost_center = db::table('cost_centers2')->where('cost_center_name',$request->get('cc'))
 		->select('cost_center')->first();
 
-		$datas = db::connection('sunfish')->select("
-			select ot.emp_no as nik, VIEW_YMPI_Emp_OrgUnit.Full_name as name, ot.jam, ot.kep from
+		$datas = db::connection('sunfish')->select("SELECT
+			ot.Emp_no as nik,
+			VIEW_YMPI_Emp_OrgUnit.Full_name as name,
+			ot.jam,
+			ot.kep
+			FROM
 			(
-			select A.emp_no,
-			sum(
+			SELECT
+			VIEW_YMPI_Emp_OvertimePlan.emp_no,
+			ROUND(SUM (
 			CASE
-			WHEN A.total_ot > 0 THEN
-			floor((A.total_ot / 60.0) * 2  + 0.5) / 2
-			ELSE
-			floor((A.TOTAL_OVT_PLAN / 60.0) * 2  + 0.5) / 2
-			END) as jam,
+
+			WHEN COALESCE ( VIEW_YMPI_Emp_OvertimePlan.total_ot, 0 ) > 0 THEN
+			cast(VIEW_YMPI_Emp_OvertimePlan.total_ot as float)/ 60 ELSE cast(VIEW_YMPI_Emp_OvertimePlan.TOTAL_OVT_PLAN as float) / 60
+			END 
+			), 2) AS jam,
 			STUFF((
 			SELECT distinct ',' + T.remark
 			FROM VIEW_YMPI_Emp_OvertimePlan T
-			WHERE A.emp_no = T.emp_no
-			and T.ovtplanfrom >= '".$from." 00:00:00' 
-			and T.ovtplanto <= '".$to." 23:59:59'
+			WHERE VIEW_YMPI_Emp_OvertimePlan.emp_no = T.emp_no
+			and T.ShiftStart >= '".$from." 00:00:00' 
+			and T.ShiftEnd <= '".$to." 23:59:59'
 			FOR XML PATH('')), 1, 1, '') as kep
-			from VIEW_YMPI_Emp_OvertimePlan A
-			where A.ovtplanfrom >= '".$from." 00:00:00' and A.ovtplanfrom <= '".$to." 23:59:59'
-			group by A.emp_no
-		) as ot left join VIEW_YMPI_Emp_OrgUnit on VIEW_YMPI_Emp_OrgUnit.Emp_no = ot.emp_no where VIEW_YMPI_Emp_OrgUnit.cost_center_code = '".$cost_center->cost_center."' order by ot.jam desc");
+			FROM
+			VIEW_YMPI_Emp_OvertimePlan 
+			WHERE
+			VIEW_YMPI_Emp_OvertimePlan.ShiftStart >= '".$from." 00:00:00' 
+			AND VIEW_YMPI_Emp_OvertimePlan.ShiftEnd <= '".$to." 23:59:59'
+			GROUP BY
+			VIEW_YMPI_Emp_OvertimePlan.emp_no 
+			) AS ot
+			LEFT JOIN VIEW_YMPI_Emp_OrgUnit ON VIEW_YMPI_Emp_OrgUnit.Emp_no = ot.emp_no
+			where 
+			VIEW_YMPI_Emp_OrgUnit.cost_center_name  = '".$request->get('cc')."'");
+
+		// $datas = db::connection('sunfish')->select("
+		// 	select ot.emp_no as nik, VIEW_YMPI_Emp_OrgUnit.Full_name as name, ot.jam, ot.kep from
+		// 	(
+		// 	select A.emp_no,
+		// 	sum(
+		// 	CASE
+		// 	WHEN A.total_ot > 0 THEN
+		// 	floor((A.total_ot / 60.0) * 2  + 0.5) / 2
+		// 	ELSE
+		// 	floor((A.TOTAL_OVT_PLAN / 60.0) * 2  + 0.5) / 2
+		// 	END) as jam,
+		// 	STUFF((
+		// 	SELECT distinct ',' + T.remark
+		// 	FROM VIEW_YMPI_Emp_OvertimePlan T
+		// 	WHERE A.emp_no = T.emp_no
+		// 	and T.ShiftStart >= '".$from." 00:00:00' 
+		// 	and T.ShiftEnd <= '".$to." 23:59:59'
+		// 	FOR XML PATH('')), 1, 1, '') as kep
+		// 	from VIEW_YMPI_Emp_OvertimePlan A
+		// 	where A.ovtplanfrom >= '".$from." 00:00:00' and A.ovtplanfrom <= '".$to." 23:59:59'
+		// 	group by A.emp_no
+		// ) as ot left join VIEW_YMPI_Emp_OrgUnit on VIEW_YMPI_Emp_OrgUnit.Emp_no = ot.emp_no where VIEW_YMPI_Emp_OrgUnit.cost_center_code = '".$cost_center->cost_center."' order by ot.jam desc");
 	}
 	else{
 		$cost_center = db::table('cost_centers')->where('cost_center_name',$request->get('cc'))
