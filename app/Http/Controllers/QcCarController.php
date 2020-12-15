@@ -137,14 +137,15 @@ class QcCarController extends Controller
        $departemen = DB::select($dept); 
 
 
-       if ($departemen[0]->department_name == "production engineering") {
-         $getpic = "select employees.employee_id, employees.name, mutation_logs.department from employees join mutation_logs on employees.employee_id = mutation_logs.employee_id join promotion_logs on employees.employee_id = promotion_logs.employee_id where mutation_logs.department='".$departemen[0]->department_name."' and (promotion_logs.position like '%chief%' or promotion_logs.position like '%foreman%') and mutation_logs.valid_to IS NULL and promotion_logs.valid_to IS NULL";
+       if ($departemen[0]->department_name == "Production Engineering Department") {
+
+        $getpic = "select employee_id, `name`, department from employee_syncs where department = '".$departemen[0]->department_name."' and (position like '%chief%' or position like '%foreman%')";
 
          $pic = DB::select($getpic);
        } 
 
        else{
-         $getpic = "select employees.employee_id, employees.name, mutation_logs.department from employees join mutation_logs on employees.employee_id = mutation_logs.employee_id join promotion_logs on employees.employee_id = promotion_logs.employee_id where mutation_logs.department='".$departemen[0]->department_name."' and (promotion_logs.grade_name like '%staff%' or promotion_logs.position like '%foreman%') and mutation_logs.valid_to IS NULL and promotion_logs.valid_to IS NULL";
+         $getpic = "select employee_id, `name`, department from employee_syncs where department = '".$departemen[0]->department_name."' and (position like '%staff%' or position like '%foreman%')";
 
          $pic = DB::select($getpic);
        }

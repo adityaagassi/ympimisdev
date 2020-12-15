@@ -315,7 +315,7 @@ table > thead > tr > th{
                 title: {
                   text: 'Total Temuan'
                 },
-              tickInterval: 1,  
+              tickInterval: 5,  
               stackLabels: {
                   enabled: true,
                   style: {
@@ -325,19 +325,13 @@ table > thead > tr > th{
               }
             },
             legend: {
-              align: 'right',
-              x: -30,
-              verticalAlign: 'top',
-              y: 20,
               reversed: true,
               itemStyle:{
                 color: "white",
                 fontSize: "12px",
                 fontWeight: "bold",
 
-              },
-              floating: true,
-              shadow: false
+              }
             },
             plotOptions: {
               series: {
@@ -506,7 +500,7 @@ table > thead > tr > th{
             table += '<td style="border-left:3px solid #f44336">'+value.auditee_name+'</span></td>';
             table += '<td style="border-left:3px solid #f44336">'+value.note+'</td>';
             // table += "<td style='border-left:3px solid #f44336'><img src='"+"{{ url('files/patrol') }}/"+value.foto+"' width='150'></td>";  
-            table += '<td style="border-left:3px solid #f44336"><button class="btn btn-warning btn-md">Lakukan Penanganan</button></td>';            
+            table += '<td style="border-left:3px solid #f44336"><button style="width: 50%; height: 100%;" onclick="penanganan(\''+value.id+'\')" class="btn btn-xs btn-warning form-control"><span>Lakukan Penanganan</span></button></td>';            
             table += '</tr>';
           })
 

@@ -99,9 +99,9 @@
 	<ol class="breadcrumb">
 		<?php $user = STRTOUPPER(Auth::user()->username) ?>
 
-		<!-- <button class="btn btn-success btn-sm" style="margin-right: 5px" onclick="location.reload()">
+		<button class="btn btn-success btn-sm" style="margin-right: 5px" onclick="location.reload()">
 			<i class="fa fa-refresh"></i>&nbsp;&nbsp;Ganti Lokasi
-		</button> -->
+		</button>
 
 	</ol>
 </section>
@@ -163,11 +163,11 @@
 
 			<div class="col-xs-12" style="overflow-x: scroll;padding: 0">
 
-				<div class="pull-right">
+				<!-- <div class="pull-right">
 					<a type="button" class="btn btn-success btn-lg" onclick='tambah();'><i class='fa fa-plus' ></i> Tambah Data</a>
-				</div>
+				</div> -->
 
-				<br><br><br>
+				<!-- <br><br><br> -->
 				
 
 				<table class="table table-bordered" style="width: 100%; color: white;" id="tableResult">
@@ -565,8 +565,13 @@
 					processData: false,
 					success: function (response) {
 						$("#loading").hide();
-						openSuccessGritter("Success", "Audit Berhasil Diinput");
-						location.reload();
+						$("#patrol_detail").val("").trigger("change");
+						$("#patrol_note").val("");
+						$("#patrol_pic").val("").trigger("change");
+						$("#blah").hide();
+						$("#btnImage").show();
+						openSuccessGritter("Success", "Audit Berhasil Disimpan");
+						// location.reload();
 					},
 					error: function (response) {
 						console.log(response.message);
