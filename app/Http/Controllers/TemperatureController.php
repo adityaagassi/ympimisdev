@@ -279,7 +279,7 @@ class TemperatureController extends Controller
      public function indexMinMoe($location)
      {
           if ($location == 'office') {
-               $loc = 'YMPI-OFFICE';
+               $loc = 'OFC';
           }
           return view('temperature.index_minmoe', array(
                'loc' => $loc,
@@ -307,7 +307,7 @@ class TemperatureController extends Controller
                     }
                }
 
-               $minmoeall = DB::SELECT('SELECT person_id,employee_syncs.employee_id,ivms_temperatures.location,employee_syncs.name,ivms_temperatures.date_in,ivms_temperatures.point,ivms_temperatures.temperature,ivms_temperatures.abnormal_status from ivms_temperatures left join employee_groups on employee_groups.group = ivms_temperatures.person_id left join employee_syncs on employee_groups.employee_id = employee_syncs.employee_id where employee_groups.location = "'.$request->get('location').'" '.$where.' order by date_in desc');
+               $minmoeall = DB::SELECT('SELECT employees.employee_id,ivms_temperatures.location,employees.name,ivms_temperatures.date_in,ivms_temperatures.point,ivms_temperatures.temperature,ivms_temperatures.abnormal_status from ivms_temperatures left join employees on ivms_temperatures.employee_id = employees.employee_id where (employees.remark = "'.$request->get('location').'" '.$where.') OR (employees.remark = "Jps" '.$where.') order by date_in desc');
 
                $response = array(
                     'status' => true,
@@ -345,7 +345,6 @@ class TemperatureController extends Controller
                 });
            })->toObject();
 
-            // var_dump($rows[0][1]);
              $person = [];
 
              $persondata = [];
@@ -355,25 +354,21 @@ class TemperatureController extends Controller
              for ($i=0; $i < count($rows); $i++) {
                if ($rows[$i][1] == 'Face Authentication Passed') {
                     if ($rows[$i][4] != '-') {
-                         $empid = explode(' ', $rows[$i][2]);
+                         // var_dump($rows[$i][2]);
+                         // $empid = explode(' ', $rows[$i][2]);
                          $temps = explode('°', $rows[$i][4]);
 
-                         $personid = DB::SELECT('SELECT
-                                    *,employee_groups.group as geroups
-                             FROM
-                             employee_groups
-                             JOIN employee_syncs ON employee_syncs.employee_id = employee_groups.employee_id 
-                             WHERE
-                             employee_groups.employee_id = "'.$empid[0].'"');
 
-                         foreach ($personid as $key) {
-                              $person_id = $key->geroups;
+                         $empys = DB::SELECT('select * from employees where name like "'.$rows[$i][2].'%"');
+
+                         foreach ($empys as $key) {
+                              $employee_id = $key->employee_id;
                               $name = $key->name;
                          }
 
                          $ivms = IvmsTemperatureTemp::create([
-                              'person_id' => $person_id,
-                              'employee_id' => $empid[0],
+                              // 'person_id' => $person_id,
+                              'employee_id' => $employee_id,
                               'name' => $name,
                               'location' => $request->get('location'),
                               'date' => date('Y-m-d', strtotime($rows[$i][6])),
@@ -384,47 +379,10 @@ class TemperatureController extends Controller
                               'created_by' => $id_user,
                          ]);
                     }
-
-                    // if (in_array($rows[$i][2], $person)) {
-
-                    // }else{
-                    //      if ($rows[$i][4] != '-') {
-                    //           $temps = explode('°', $rows[$i][4]);
-
-                    //           $empid = explode(' ', $rows[$i][2]);
-
-                    //           $person[] = $rows[$i][2];
-                    //           $personid = DB::SELECT('SELECT
-                    //                *,employee_groups.group as geroups
-                    //           FROM
-                    //                employee_groups
-                    //                JOIN employee_syncs ON employee_syncs.employee_id = employee_groups.employee_id 
-                    //           WHERE
-                    //                employee_groups.employee_id = "'.$empid[0].'"');
-                    //           foreach ($personid as $key) {
-                    //                $person_id = $key->geroups;
-                    //                $name = $key->name;
-                    //           }
-
-                    //           $persondata[$i][]
-                    //           // $ivms = IvmsTemperature::firstOrNew(['employee_id' => $empid[0], 'date' => date('Y-m-d', strtotime($rows[$i][6]))]);
-                    //           // $ivms->person_id = $person_id;
-                    //           // $ivms->employee_id = $empid[0];
-                    //           // $ivms->name = $name;
-                    //           // $ivms->location = $request->get('location');
-                    //           // $ivms->date = date('Y-m-d', strtotime($rows[$i][6]));
-                    //           // $ivms->date_in = $rows[$i][6];
-                    //           // $ivms->point = $rows[$i][8];
-                    //           // $ivms->temperature = $temps[0];
-                    //           // $ivms->abnormal_status = $rows[$i][5];
-                    //           // $ivms->created_by = $id_user;
-                    //           // $ivms->save();
-                    //      }
-                    // }
                }
           }
 
-          $ivmstemp = DB::SELECT("SELECT DISTINCT ( a.employee_id ), name, person_id,( SELECT MAX( temperature ) FROM ivms_temperature_temps WHERE employee_id = a.employee_id ) AS temperature,
+          $IvmsTemperature = DB::SELECT("SELECT DISTINCT ( a.employee_id ), name, ( SELECT MAX( temperature ) FROM ivms_temperature_temps WHERE employee_id = a.employee_id ) AS temperature,
                ( SELECT MIN( date_in ) FROM ivms_temperature_temps WHERE employee_id = a.employee_id ) AS date_in,
                location,
                point,
@@ -433,9 +391,9 @@ class TemperatureController extends Controller
                FROM
                `ivms_temperature_temps` AS a");
 
-          foreach ($ivmstemp as $key) {
+          foreach ($IvmsTemperature as $key) {
                $ivms = IvmsTemperature::firstOrNew(['employee_id' => $key->employee_id, 'date' => $key->date]);
-               $ivms->person_id = $key->person_id;
+               // $ivms->person_id = $key->person_id;
                $ivms->employee_id = $key->employee_id;
                $ivms->name = $key->name;
                $ivms->location = $key->location;
@@ -450,13 +408,17 @@ class TemperatureController extends Controller
 
           IvmsTemperatureTemp::truncate();
 
-          $miraimobile =DB::SELECT("SELECT *,miraimobile.quiz_logs.created_at as date_in FROM employee_groups join miraimobile.quiz_logs on employee_groups.employee_id = miraimobile.quiz_logs.employee_id where location = 'YMPI-OFFICE' and miraimobile.quiz_logs.answer_date = '".date('Y-m-d')."' and miraimobile.quiz_logs.question = 'Suhu Tubuh'");
+          if ($request->get('location') == 'OFC') {
+               $miraimobile =DB::SELECT("SELECT *,miraimobile.quiz_logs.created_at as date_in FROM employees join miraimobile.quiz_logs on employees.employee_id = miraimobile.quiz_logs.employee_id where (employees.remark = '".$request->get('location')."' and miraimobile.quiz_logs.answer_date = '".date('Y-m-d')."' and miraimobile.quiz_logs.question = 'Suhu Tubuh') OR (employees.remark = 'Jps' and miraimobile.quiz_logs.answer_date = '".date('Y-m-d')."' and miraimobile.quiz_logs.question = 'Suhu Tubuh')");
+          }else{
+               $miraimobile =DB::SELECT("SELECT *,miraimobile.quiz_logs.created_at as date_in FROM employees join miraimobile.quiz_logs on employees.employee_id = miraimobile.quiz_logs.employee_id where employees.remark = '".$request->get('location')."' and miraimobile.quiz_logs.answer_date = '".date('Y-m-d')."' and miraimobile.quiz_logs.question = 'Suhu Tubuh'");
+          }
 
             // var_dump($miraimobile);
 
           foreach ($miraimobile as $val) {
                $ivms = IvmsTemperature::firstOrNew(['employee_id' => $val->employee_id, 'date' => $val->answer_date]);
-               $ivms->person_id = $val->group;
+               // $ivms->person_id = $val->group;
                $ivms->employee_id = $val->employee_id;
                $ivms->name = $val->name;
                $ivms->location = $val->location;
@@ -517,7 +479,7 @@ public function fetchMinMoeMonitoring(Request $request)
           $now  = $date_from;
      }
 
-     $datatoday = DB::SELECT("SELECT DISTINCT ( a.temperature ),( SELECT count( person_id ) FROM ivms_temperatures WHERE DATE( date_in ) = '".$now."' AND temperature = a.temperature ) AS jumlah 
+     $datatoday = DB::SELECT("SELECT DISTINCT ( a.temperature ),( SELECT count( employee_id ) FROM ivms_temperatures WHERE DATE( date_in ) = '".$now."' AND temperature = a.temperature ) AS jumlah 
           FROM
           `ivms_temperatures` AS a 
           WHERE

@@ -194,7 +194,6 @@
 					<table id="example1" class="table table-bordered table-striped table-hover">
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
-								<th>Person ID</th>
 								<th>Employee ID</th>
 								<th>Name</th>
 								<th>Location</th>
@@ -208,7 +207,6 @@
 						</tbody>
 						<tfoot>
 							<tr>
-								<th></th>
 								<th></th>
 								<th></th>
 								<th></th>
@@ -362,7 +360,6 @@
 				var tableData = "";
 				$.each(result.datas, function(key, value) {
 					tableData += '<tr>';
-					tableData += '<td>'+ value.person_id +'</td>';
 					tableData += '<td>'+ value.employee_id +'</td>';
 					tableData += '<td>'+ value.name +'</td>';
 					tableData += '<td>'+ value.location +'</td>';
