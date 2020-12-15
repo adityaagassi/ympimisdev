@@ -284,8 +284,8 @@
 			var month = now.getMonth() + 1;
 			var year = now.getFullYear();
 
-			// $('#month').val(year +'-'+ month);
-			$('#month').val('2020-11');
+			$('#month').val(year +'-'+ month);
+			// $('#month').val('2020-11');
 		}
 
 		monthChange();
@@ -297,8 +297,8 @@
 	}
 
 	function monthChange(){
-		// var month = $('#month').val();
-		var month = '2020-11';
+		var month = $('#month').val();
+		// var month = '2020-11';
 
 		$('#month_inquiry').val(month);
 		$('#month_variance').val(month);
