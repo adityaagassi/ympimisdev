@@ -467,7 +467,12 @@
 							
 							elseif($status == "1")
 							{
-								$vat = $pajak;
+								if ($po[0]->material == "Dipungut PPNBM") {
+									$vat = $pajak;
+								}
+								else if ($po[0]->material == "Tidak Dipungut PPNB"){
+									$vat = 0;
+								}
 							}
 
 
