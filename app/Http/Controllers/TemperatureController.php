@@ -490,15 +490,15 @@ public function fetchMinMoeMonitoring(Request $request)
           a.temperature asc");
 
      if ($request->get('location') == 'OFC') {
-          $employee_groups = DB::SELECT("SELECT employee_id from employees where remark = '".$request->get('location')."' or remark = 'Jps'");
+          $employee_groups = DB::SELECT("SELECT employee_id from employees where (remark = '".$request->get('location')."' and end_date is null) or (remark = 'Jps' and end_date is null)");
 
           $attendance = [];
 
           foreach ($employee_groups as $key) {
                $attendance[] = DB::connection('sunfish')->select("SELECT
                     IIF (
-                    Attend_Code LIKE '%Mangkir%',
-                    'Mangkir',
+                    Attend_Code LIKE '%ABS%',
+                    'ABS',
                     IIF (
                     Attend_Code LIKE '%CK%' 
                     OR Attend_Code LIKE '%CUTI%' 
@@ -624,7 +624,7 @@ public function fetchMinMoeMonitoring(Request $request)
                (a.remark = 'Jps' 
                AND ( SELECT MAX( ivms_temperatures.temperature ) FROM ivms_temperatures WHERE ivms_temperatures.date = '".$now."' AND employee_id = a.employee_id ) >= 37.5)");
      }else{
-          $employee_groups = DB::SELECT("SELECT employee_id from employees where remark = '".$request->get('location')."'");
+          $employee_groups = DB::SELECT("SELECT employee_id from employees where remark = '".$request->get('location')."' and end_date is null");
 
           $attendance = [];
 
