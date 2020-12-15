@@ -283,7 +283,7 @@
 									<th style="width: 1%;">40HC</th>
 									<th style="width: 1%;">40'</th>
 									<th style="width: 1%;">20'</th>
-									<th style="width: 1%;">Booking No.</th>
+									<th style="width: 1%;">Booking No. or B/L No.</th>
 									<th style="width: 1%;">Carrier</th>
 									<th style="width: 1%;">Nomination</th>
 									<th style="width: 1%;">Stuffing</th>
@@ -411,7 +411,7 @@
 							</div>
 
 							<div class="form-group row" align="right">
-								<label class="col-xs-3">B/L no.</label>
+								<label class="col-xs-3">Booking No. or B/L No.</label>
 								<div class="col-xs-5">
 									<input type="text" style="width: 100%" class="form-control" name="bl" id="bl" placeholder="B/L No. or Booking No.">
 								</div>
@@ -608,7 +608,7 @@
 							</div>
 
 							<div class="form-group row" align="right">
-								<label class="col-xs-3">B/L no.</label>
+								<label class="col-xs-3">Booking No. or B/L No.</label>
 								<div class="col-xs-5">
 									<input type="text" style="width: 100%" class="form-control" name="edit_bl" id="edit_bl" placeholder="B/L No. or Booking No.">
 								</div>

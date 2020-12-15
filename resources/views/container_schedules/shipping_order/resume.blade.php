@@ -110,6 +110,74 @@
 	</div>
 </section>
 
+<div class="modal fade" id="modalDetail">
+	<div class="modal-dialog modal-lg" style="width: 90%;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<center>
+					<span id="title_modal" style="font-weight: bold; font-size: 1.5vw;"></span>
+				</center>
+				<hr>
+				<div class="modal-body table-responsive no-padding" style="min-height: 100px; padding-bottom: 5px;">
+					<div class="col-xs-8 col-xs-offset-2" style="padding-bottom: 5px;">
+						<table class="table table-hover table-bordered table-striped" id="tableDetail">
+							<thead style="background-color: rgba(126,86,134,.7);">
+								<tr>
+									<th style="width: 2%; vertical-align: middle;" colspan="8">RESUME</th>
+								</tr>
+								<tr>
+									<th style="width: 2%; vertical-align: middle;" rowspan="2">YCJ Ref No.</th>
+									<th style="width: 1%; vertical-align: middle;" rowspan="2">Shipper</th>
+									<th style="width: 2%; vertical-align: middle;" rowspan="2">Port Loading</th>
+									<th style="width: 4%; vertical-align: middle;" rowspan="2">Port of Delivery</th>
+									<th style="width: 4%; vertical-align: middle;" rowspan="2">Country</th>
+									<th style="width: 2%; vertical-align: middle;" colspan="3">Container Size</th>
+								</tr>
+								<tr>
+									<th style="width: 1%;">40HC</th>
+									<th style="width: 1%;">40'</th>
+									<th style="width: 1%;">20'</th>									
+								</tr>
+							</thead>
+							<tbody id="tableDetailBody">
+							</tbody>
+						</table>
+					</div>
+					<div class="col-xs-12" style="padding-bottom: 5px;">
+						<table class="table table-hover table-bordered table-striped" id="tableDetailRef">
+							<thead style="background-color: rgba(126,86,134,.7);">
+								<tr>
+									<th style="width: 2%; vertical-align: middle;" colspan="13">BOOKING DETAILS</th>
+								</tr>
+								<tr>
+									<th style="width: 2%; vertical-align: middle;" rowspan="2">YCJ Ref No.</th>
+									<th style="width: 1%; vertical-align: middle;" rowspan="2">Shipper</th>
+									<th style="width: 2%; vertical-align: middle;" rowspan="2">Port Loading</th>
+									<th style="width: 4%; vertical-align: middle;" rowspan="2">Port of Delivery</th>
+									<th style="width: 4%; vertical-align: middle;" rowspan="2">Country</th>
+									<th style="width: 2%; vertical-align: middle;" colspan="3">Container Size</th>
+									<th style="width: 4%; vertical-align: middle;" rowspan="2">Booking No. or B/L No.</th>
+									<th style="width: 2%; vertical-align: middle;" rowspan="2">Carier</th>
+									<th style="width: 2%; vertical-align: middle;" rowspan="2">Nomination</th>
+									<th style="width: 2%; vertical-align: middle;" rowspan="2">Application Rate</th>
+									<th style="width: 2%; vertical-align: middle;" rowspan="2">Status</th>
+								</tr>
+								<tr>
+									<th style="width: 1%;">40HC</th>
+									<th style="width: 1%;">40'</th>
+									<th style="width: 1%;">20'</th>									
+								</tr>
+							</thead>
+							<tbody id="tableDetailRefBody">
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 
 @endsection
 @section('scripts')
@@ -222,11 +290,6 @@
 					confirmed.push(parseInt(result.ship_by_dates[i].confirmed));
 				}
 
-				console.log(date);
-				console.log(plan);
-				console.log(confirmed);
-
-
 				Highcharts.chart('container1', {
 					chart: {
 						type: 'column'
@@ -277,8 +340,19 @@
 										return null;
 									}
 								}
-							}
-						}
+							},
+						}, 
+						series: {
+							cursor : 'pointer',
+							point: {
+								events: {
+									click: function (event) {
+										showDetail(event.point.category);
+
+									}
+								}
+							},
+						},
 					},
 					series: [{
 						name: 'Not Confirmed',
@@ -291,6 +365,81 @@
 					}]
 				});
 
+			}
+		});
+	}
+
+	function showDetail(category) {
+		var period = $('#period').val();
+		var date = category;
+
+		var data = {
+			period : period,
+			date : date
+		}
+
+		$.get('{{ url("fetch/resume_shipping_order_detail") }}', data, function(result, status, xhr){
+			if(result.status){
+				$('#tableDetailBody').html("");
+				$('#tableDetailRefBody').html("");
+
+				$('#title_modal').text('Shipping Booking Management Booking Details on ' + result.st_date);
+
+				var detail = '';
+				$.each(result.resume, function(key, value){
+					var color = '';
+					if(value.status){
+						color = 'style="background-color: rgb(204, 255, 255);"';
+					}else{
+						color = 'style="background-color: rgb(255, 204, 255);"';
+					}
+
+					detail += '<tr>';
+					detail += '<td '+color+'>'+value.ycj_ref_number+'</td>';
+					detail += '<td '+color+'>'+value.shipper+'</td>';
+					detail += '<td '+color+'>'+value.port_loading+'</td>';
+					detail += '<td '+color+'>'+value.port_of_delivery+'</td>';
+					detail += '<td '+color+'>'+value.country+'</td>';
+					detail += '<td '+color+'>'+(value.fortyhc || '' )+'</td>';
+					detail += '<td '+color+'>'+(value.fourty || '' )+'</td>';
+					detail += '<td '+color+'>'+(value.twenty || '' )+'</td>';
+					detail += '</tr>';
+				});
+				$('#tableDetailBody').append(detail);
+
+
+				var detail = '';
+				$.each(result.detail, function(key, value){
+					var color = '';
+					console.log(value.status);
+					if(value.status == 'BOOKING CONFIRMED'){
+						color = 'style="background-color: rgb(204, 255, 255);"';
+					}
+
+
+					detail += '<tr>';
+					detail += '<td '+color+'>'+value.ycj_ref_number+'</td>';
+					detail += '<td '+color+'>'+value.shipper+'</td>';
+					detail += '<td '+color+'>'+value.port_loading+'</td>';
+					detail += '<td '+color+'>'+value.port_of_delivery+'</td>';
+					detail += '<td '+color+'>'+value.country+'</td>';
+					detail += '<td '+color+'>'+(value.fortyhc || '' )+'</td>';
+					detail += '<td '+color+'>'+(value.fourty || '' )+'</td>';
+					detail += '<td '+color+'>'+(value.twenty || '' )+'</td>';
+					detail += '<td '+color+'>'+value.booking_number+'</td>';
+					detail += '<td '+color+'>'+value.carier+'</td>';
+					detail += '<td '+color+'>'+value.nomination+'</td>';
+					detail += '<td '+color+'>'+value.application_rate+'</td>';
+					detail += '<td '+color+'>'+value.status+'</td>';
+					detail += '</tr>';
+				});
+				$('#tableDetailRefBody').append(detail);
+
+
+				$('#modalDetail').modal('show');
+			}
+			else{
+				openErrorGritter('Error!', result.message);
 			}
 		});
 	}

@@ -2507,6 +2507,7 @@ Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 
 	Route::get('index/resume_shipping_order', 'ContainerScheduleController@indexResumeShippingOrder');
 	Route::get('fetch/resume_shipping_order', 'ContainerScheduleController@fetchResumeShippingOrder');
+	Route::get('fetch/resume_shipping_order_detail', 'ContainerScheduleController@fetchResumeShippingOrderDetail');
 
 	Route::get('index/shipping_agency', 'ContainerScheduleController@indexShippingAgency');
 	Route::get('fetch/shipping_agency', 'ContainerScheduleController@fetchShippingAgency');

@@ -38,12 +38,12 @@ class ContainerScheduleController extends Controller{
             'SPOT/EXTRA RATE'
         ];
         $this->nomination = [
-           'MAIN',
-           'SUB',
-           'BACK UP',
-           'OTHER'
-       ];
-   }
+         'MAIN',
+         'SUB',
+         'BACK UP',
+         'OTHER'
+     ];
+ }
     /**
      * Display a listing of the resource.
      *
@@ -331,23 +331,16 @@ class ContainerScheduleController extends Controller{
         $date = $request->get('date');
         $st_date = date('Y-m-d', strtotime($date.'-'.$year));
 
-        $resume = ShipmentReservation::where('stuffing_date', $st_date)
-        ->where('status', '<>', 'NO NEED ANYMORE')
-        ->select(
-            'period',
-            'ycj_ref_number',
-            'shipper',
-            'port_loading',
-            'port_of_delivery',
-            'country',
-            'fortyhc',
-            'forty',
-            'twenty',
-            'port_of_delivery',
-            'stuffing_date'
-        )
-        ->distinct()
-        ->get();
+        $resume = db::select("SELECT plan.*, confirm.`status` FROM
+            (SELECT DISTINCT period, ycj_ref_number, shipper, port_loading, port_of_delivery, country, fortyhc, forty, twenty, stuffing_date FROM shipment_reservations
+            WHERE stuffing_date = '".$st_date."'
+
+            AND `status` <> 'NO NEED ANYMORE') AS plan
+            LEFT JOIN
+            (SELECT DISTINCT ycj_ref_number, `status` FROM shipment_reservations
+            WHERE stuffing_date = '".$st_date."'
+            AND `status` = 'BOOKING CONFIRMED ') AS confirm
+            ON plan.ycj_ref_number = confirm.ycj_ref_number");
 
         $detail = ShipmentReservation::where('stuffing_date', $st_date)
         ->where('status', '<>', 'NO NEED ANYMORE')
@@ -361,18 +354,23 @@ class ContainerScheduleController extends Controller{
             'fortyhc',
             'forty',
             'twenty',
-            'port_of_delivery',
+            'booking_number',
+            'carier',
+            'nomination',
             'stuffing_date',
             'etd_date',
+            'application_rate',
             'status'
         )
+        ->orderBy('ycj_ref_number', 'ASC')
+        ->orderBy('stuffing_date', 'ASC')
         ->get();
 
         $response = array(
             'status' => true,
             'resume' => $resume,
             'detail' => $detail,
-
+            'st_date' => date('d F Y', strtotime($st_date)),
         );
         return Response::json($response);  
     }
