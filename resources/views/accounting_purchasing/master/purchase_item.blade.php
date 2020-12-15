@@ -223,6 +223,12 @@
 
 	});
 
+	$('#keyword2').keydown(function(event) {
+		if (event.keyCode == 13 || event.keyCode == 9) {
+			fetchTable();
+		}
+	});
+
 	function clearSearch(){
 		location.reload(true);
 	}

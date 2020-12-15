@@ -144,7 +144,7 @@
         <div class="row" style="margin-top: 10px">
           <label class="col-sm-2 col-md-offset-1">Kode Item<span class="text-red">*</span></label>
           <div class="col-sm-6" align="left">
-            <input type="text" class="form-control" id="item_code" placeholder="Kode Item" readonly="" value="{{$item->kode_item}}">
+            <input type="text" class="form-control" id="item_code" placeholder="Kode Item" value="{{$item->kode_item}}">
           </div>
         </div>
 

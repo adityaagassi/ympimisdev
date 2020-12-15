@@ -403,7 +403,7 @@ class AccountingController extends Controller
     {
         $kategori = $request->kategori;
 
-        $query = "SELECT kode_item FROM `acc_items` where kategori='$kategori' order by id DESC LIMIT 1";
+        $query = "SELECT kode_item FROM `acc_items` where kategori='$kategori' order by kode_item DESC LIMIT 1";
         $nomorurut = DB::select($query);
 
         if ($nomorurut != null)
