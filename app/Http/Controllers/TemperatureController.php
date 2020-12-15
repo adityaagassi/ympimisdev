@@ -794,10 +794,9 @@ public function fetchDetailMinMoeMonitoring(Request $request)
                     * 
           FROM
           ivms_temperatures 
-          LEFT JOIN employee_groups ON employee_groups.GROUP = ivms_temperatures.person_id
-          LEFT JOIN employee_syncs ON employee_syncs.employee_id = employee_groups.employee_id 
+          LEFT JOIN employees ON employees.employee_id = ivms_temperatures.employee_id 
           WHERE
-          employee_groups.location = '".$request->get('location')."' 
+          employees.remark = '".$request->get('location')."' 
           AND DATE( date_in ) = '".$now."' 
           AND temperature = ".$temperature."");
 

@@ -424,10 +424,10 @@ table > thead > tr > th{
 							colors2.push('#000');
 						}
 						// series.push([part[i], jml[i], colors[i]]);
-						series.push({y: jml[i],name:part[i], color: colors[i]});
-						series3.push({y: jml_assy[i],name:part[i], color: colors2[i]});
+						series.push({y: jml[i],name:part[i], color: colors[i], key: 'RC11'});
+						series3.push({y: jml_assy[i],name:part[i], color: colors2[i], key: 'RC91'});
 						plan.push(result.datas[i].plan);
-						series2.push({y: plan[i],name:part[i]});
+						series2.push({y: plan[i],name:part[i], key: 'Plan'});
 					}
 
 					Highcharts.chart('container1', {
@@ -482,22 +482,23 @@ table > thead > tr > th{
 					    ],
 						tooltip: {
 							headerFormat: '<span>Part</span><br/>',
-							pointFormat: '<span style="color:{point.color};font-weight: bold;">{point.name} </span>: <b>{point.y}</b><br/>',
+							pointFormat: '<span style="color:{point.color};font-weight: bold;">{point.name} </span>: <b>{point.y}</b><br> on {point.key}',
 						},
 						legend: {
-							layout: 'horizontal',
-							align: 'right',
-							verticalAlign: 'top',
-							x: -40,
-							y: 20,
-							floating: true,
-							borderWidth: 1,
-							backgroundColor:
-							Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
-							shadow: true,
-							itemStyle: {
-				                fontSize:'16px',
-				            },
+							enabled:false
+							// layout: 'horizontal',
+							// align: 'right',
+							// verticalAlign: 'top',
+							// x: -40,
+							// y: 20,
+							// floating: true,
+							// borderWidth: 1,
+							// backgroundColor:
+							// Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
+							// shadow: true,
+							// itemStyle: {
+				   //              fontSize:'16px',
+				   //          },
 						},	
 						plotOptions: {
 							series:{
@@ -511,7 +512,7 @@ table > thead > tr > th{
 				                },
 								dataLabels: {
 									enabled: true,
-									format: '{point.y}',
+									format: '<center>{point.key}<br>{point.y}</center>',
 									style:{
 										fontSize: '11px'
 									}
