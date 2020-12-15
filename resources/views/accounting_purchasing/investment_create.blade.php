@@ -345,6 +345,9 @@
       else if(jen2 == "Electricity, Water, and Gas"){
         jenis = "Ewg";
       }
+      else if(jen2 == "Medical"){
+        jenis = "Med";
+      }
       else if(jen2 == "Others"){
         jenis = "etc";
       }

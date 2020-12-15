@@ -1060,6 +1060,9 @@
       else if(jen2 == "Others"){
         jenis = "etc";
       }
+      else if(jen2 == "Medical"){
+        jenis = "Med";
+      }
       else{
         jenis = "etc";
       }

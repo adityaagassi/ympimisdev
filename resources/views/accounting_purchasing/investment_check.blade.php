@@ -216,7 +216,7 @@
                   <label class="col-sm-4">Total</label>
                   <div class="col-sm-8">
                     <div class="input-group">
-                      <input type="number" class="form-control" id="total" name="total" placeholder="Total (%)">
+                      <input type="text" class="form-control" id="total" name="total" placeholder="Total (%)">
                       <span class="input-group-addon">%</span>
                     </div>
                   </div>
@@ -226,7 +226,7 @@
                   <label class="col-sm-4">Service</label>
                   <div class="col-sm-8">
                     <div class="input-group">
-                      <input type="number" class="form-control" id="service" name="service" placeholder="Service (%)">
+                      <input type="text" class="form-control" id="service" name="service" placeholder="Service (%)">
                       <span class="input-group-addon">%</span>
                     </div>
                   </div>
