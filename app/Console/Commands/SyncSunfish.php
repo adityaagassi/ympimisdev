@@ -127,6 +127,13 @@ public function handle()
                 'created_by' => '1'
             ]);
             $insert_employee->save();
+        }else{
+            if(!is_null($data->end_date)){
+                $update_employee = Employee::where('employee_id', $data->Emp_no)
+                ->update([
+                    'end_date' => $data->end_date
+                ]);
+            }
         }
     }
 

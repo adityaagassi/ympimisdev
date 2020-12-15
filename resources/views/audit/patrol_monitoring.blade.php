@@ -467,8 +467,8 @@ table > thead > tr > th{
           {"data": "auditor_name" , "width": "10%"},
           {"data": "auditee_name" , "width": "10%"},
           {"data": "point_judul", "width": "7%"},
-          {"data": "note", "width": "7%"}
-          // {"data": "foto", "width": "7%"}
+          {"data": "note", "width": "7%"},
+          {"data": "foto", "width": "7%"}
         ]    
       });
 
