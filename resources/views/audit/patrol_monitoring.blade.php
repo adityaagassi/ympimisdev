@@ -27,9 +27,6 @@ table.table-bordered > tfoot > tr > th{
   border:1px solid rgb(150,150,150);
   padding:0;
 }
-table.table-bordered > tbody > tr > td > p{
-  color: #abfbff;
-}
 
 table.table-striped > thead > tr > th{
   border:1px solid black !important;
@@ -202,11 +199,11 @@ table > thead > tr > th{
                     <th>Kategori</th>
                     <th>Tanggal</th>
                     <th>Lokasi</th>
-                    <th>Auditor</th>
                     <th>Auditee</th>
                     <th>Poin Judul</th>
                     <th>Note</th>
                     <th>Foto</th>
+                    <th>Penanganan</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -222,6 +219,51 @@ table > thead > tr > th{
     </div>
   </div>
 
+  <div class="modal fade" id="modalPenanganan" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Detail Temuan Audit</h4>
+          </div>
+          <div class="modal-body">
+            <div class="box-body">
+              <input type="hidden" value="{{csrf_token()}}" name="_token" />
+              <div class="row">
+                <div class="col-md-5">
+                  <div class="col-md-12">
+                    <label for="lokasi">Lokasi</label>
+                    : <span name="lokasi" id="lokasi"> </span>
+                  </div>
+                  <div class="col-md-12">
+                    <label for="tanggal">Tanggal</label>
+                    : <span name="tanggal" id="tanggal"> </span>
+                  </div>
+                  <div class="col-md-12">
+                    <label for="note">Note</label>
+                    : <span name="note" id="note"> </span>
+                  </div>
+                  <div class="col-md-12">
+                    <label for="image">Temuan</label>
+                    : <div name="image" id="image"></div>
+                  </div>
+                </div>
+                <div class="col-md-7">
+                  <h4>Bukti Penanganan</h4>
+                  <textarea class="form-control" required="" name="penanganan" style="height: 250px;"></textarea> 
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+          <input type="hidden" id="id_penanganan">
+          <button type="button" onclick="update_penanganan()" class="btn btn-success" data-dismiss="modal"><i class="fa fa-pencil"></i> Close Temuan Audit</button>
+        </div>
+      </div>
+  </div>
+</div>
+
 </section>
 @endsection
 
@@ -231,7 +273,7 @@ table > thead > tr > th{
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
 <script src="{{ url("js/accessibility.js")}}"></script>
-<script src="{{ url("js/drilldown.js")}}"></script>
+<script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
 
 <script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
 <script src="{{ url("js/buttons.flash.min.js")}}"></script>
@@ -252,6 +294,11 @@ table > thead > tr > th{
     fetchTable();
     setInterval(fetchTable, 300000);
   });
+
+  CKEDITOR.replace('penanganan' ,{
+        filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
+        height: '250px'
+    });
 
   $('.datepicker').datepicker({
     autoclose: true,
@@ -369,14 +416,14 @@ table > thead > tr > th{
             },
             series: [
               {
-                  name: 'Sudah Ditangani',
-                  data: sudah_ditangani,
-                  color : '#5cb85c' //5cb85c
-              },
-              {
                   name: 'Belum Ditangani',
                   data: belum_ditangani,
                   color : '#ff6666' //ff6666
+              },
+              {
+                  name: 'Sudah Ditangani',
+                  data: sudah_ditangani,
+                  color : '#5cb85c' //5cb85c
               }
             ]
           })
@@ -455,14 +502,14 @@ table > thead > tr > th{
           }
         },
       "columns": [
-          {"data": "kategori", "width": "10%"},
-          {"data": "tanggal" , "width": "10%"},
-          {"data": "lokasi" , "width": "10%"},
-          {"data": "auditor_name" , "width": "10%"},
-          {"data": "auditee_name" , "width": "10%"},
-          {"data": "point_judul", "width": "7%"},
-          {"data": "note", "width": "7%"},
-          {"data": "foto", "width": "7%"}
+          {"data": "kategori", "width": "5%"},
+          {"data": "tanggal" , "width": "5%"},
+          {"data": "lokasi" , "width": "5%"},
+          {"data": "auditee_name" , "width": "5%"},
+          {"data": "point_judul", "width": "5%"},
+          {"data": "note", "width": "10%"},
+          {"data": "foto", "width": "25%"},
+          {"data": "penanganan", "width": "25%"}
         ]    
       });
 
@@ -508,6 +555,57 @@ table > thead > tr > th{
       }
     })
   }
+
+  function penanganan(id) {
+
+    $('#modalPenanganan').modal("show");
+    
+    var data = {
+      id : id
+    }
+
+    $.get('{{ url("index/audit_patrol/detail_penanganan") }}', data, function(result, status, xhr){
+
+      var images = "";
+      $("#image").html("");
+
+      if (result.status) {
+        $("#id_penanganan").val(id);
+        $("#lokasi").text(result.audit[0].lokasi);
+        $("#tanggal").text(result.audit[0].tanggal);
+        $("#note").text(result.audit[0].note);
+        images += '<img src="{{ url("files/patrol") }}/'+result.audit[0].foto+'" width="300">';
+        $("#image").append(images);
+
+      } else {
+        openErrorGritter('Error');
+      }
+
+    }); 
+  }
+
+  function update_penanganan() {
+
+      var data = {
+        id: $("#id_penanganan").val(),
+        penanganan : CKEDITOR.instances.penanganan.getData()
+      };
+
+      if (CKEDITOR.instances.penanganan.getData() == null || CKEDITOR.instances.penanganan.getData() == "") {
+        openErrorGritter("Error","Penanganan Harus Diisi");
+        return false;
+      }
+
+      $.post('{{ url("post/audit_patrol/penanganan") }}', data, function(result, status, xhr){
+        if (result.status == true) {
+          $('#poTable').DataTable().ajax.reload(null, false);
+          openSuccessGritter("Success","Audit Berhasil Ditangani");
+        } else {
+          openErrorGritter("Error",result.datas);
+        }
+      })
+    }
+
 
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);

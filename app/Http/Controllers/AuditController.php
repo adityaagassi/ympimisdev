@@ -266,15 +266,31 @@ class AuditController extends Controller
 
       return DataTables::of($detail)
 
+      ->editColumn('kategori', function($detail){
+        $kategori = '';
+	        
+        if($detail->kategori == "S-Up And EHS Patrol Presdir"){
+        	$kategori = "Presdir";
+        }else if ($detail->kategori == "5S Patrol GM"){
+        	$kategori = "GM";
+        }
+
+        return $kategori;
+      })
+
       ->editColumn('tanggal', function($detail){
-        return date('d F Y', strtotime($detail->tanggal));
+        return date('d-M-Y', strtotime($detail->tanggal));
       })
 
       ->editColumn('foto', function($detail){
-        return '<img src="'.url('files/patrol').'/'.$detail->foto.'" width="100">';
+        return '<img src="'.url('files/patrol').'/'.$detail->foto.'" width="150">';
       })
 
-      ->rawColumns(['tanggal' => 'tanggal', 'foto' => 'foto'])
+      ->editColumn('penanganan', function($detail){
+        return $detail->penanganan;
+      })
+
+      ->rawColumns(['tanggal' => 'tanggal', 'foto' => 'foto','penanganan' => 'penanganan'])
       ->make(true);
   }
 
@@ -330,5 +346,51 @@ class AuditController extends Controller
 
       return Response::json($response); 
     }
+
+
+    public function detailPenanganan(Request $request){
+		$audit = db::select("SELECT
+			* from audit_all_results where id = ". $request->get('id'));
+
+		$response = array(
+			'status' => true,
+			'audit' => $audit,
+		);
+		return Response::json($response);
+	}
+
+	public function postPenanganan(Request $request)
+    {
+        try{
+            $audit = AuditAllResult::find($request->get("id"));
+            $audit->penanganan = $request->get('penanganan');
+            $audit->tanggal_penanganan = date('Y-m-d');
+            $audit->status_ditangani = 'close';
+            $audit->save();
+
+            $response = array(
+              'status' => true,
+              'datas' => "Berhasil",
+          );
+            return Response::json($response);
+        }
+        catch (QueryException $e){
+            $error_code = $e->errorInfo[1];
+            if($error_code == 1062){
+               $response = array(
+                  'status' => false,
+                  'datas' => "Audit Already Exist",
+              );
+               return Response::json($response);
+           }
+           else{
+               $response = array(
+                  'status' => false,
+                  'datas' => $e->getMessage(),
+              );
+               return Response::json($response);
+           }
+       }
+   }
 
 }
