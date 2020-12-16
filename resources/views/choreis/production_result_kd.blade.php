@@ -109,10 +109,10 @@
 		<div class="col-md-12">
 			<div class="nav-tabs-custom">
 				<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
-					<li class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">Production Result<br><span class="text-purple">生産実績</span></a></li>
+					<li class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">KD Production Result<br><span class="text-purple">KD生産実績</span></a></li>
 					<li class="vendor-tab"><a href="#tab_2" data-toggle="tab" id="tab_header_2">KD Production Accuracy<br><span class="text-purple">KD週次出荷</span></a></li>
-					<li class="vendor-tab"><a href="#tab_3" data-toggle="tab" id="tab_header_3">KD Weekly Shipment<br><span class="text-purple">KD週次出荷</span></a></li>
-					<li class="vendor-tab"><a href="#tab_7" data-toggle="tab" id="tab_header_7">Chorei Text<br><span class="text-purple">朝礼用の生産報告文章</span></a></li>
+					{{-- <li class="vendor-tab"><a href="#tab_3" data-toggle="tab" id="tab_header_3">KD Weekly Shipment<br><span class="text-purple">KD週次出荷</span></a></li> --}}
+					{{-- <li class="vendor-tab"><a href="#tab_7" data-toggle="tab" id="tab_header_7">Chorei Text<br><span class="text-purple">朝礼用の生産報告文章</span></a></li> --}}
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane active" id="tab_1" style="height: 580px;">
@@ -1131,7 +1131,7 @@ function modalBL(hpl, name, week, date){
 		week:'W'+week.substring(5),
 		date:date,
 	}
-	$.get('{{ url("fetch/production_bl_modal") }}', data, function(result, status, xhr){
+	$.get('{{ url("fetch/production_bl_modal_kd") }}', data, function(result, status, xhr){
 		console.log(status);
 		console.log(result);
 		console.log(xhr);
