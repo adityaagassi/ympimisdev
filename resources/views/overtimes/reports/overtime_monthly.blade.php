@@ -631,7 +631,7 @@ function modalTampil(costCenter, date) {
 
       for (var i = 0; i <   data.datas.length; i++) {
 
-        var jam = data.datas[i].jam;
+        var jam = parseFloat(data.datas[i].jam);
 
         dataT += '<tr>';
         dataT += '<td>'+ no++; +'</td>';
