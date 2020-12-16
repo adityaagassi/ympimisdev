@@ -134,6 +134,11 @@ public function handle()
                     'end_date' => $data->end_date
                 ]);
             }
+
+            $update_name = Employee::where('employee_id', $data->Emp_no)
+            ->update([
+                'name' => ucwords($data->Full_name)
+            ]);
         }
     }
 

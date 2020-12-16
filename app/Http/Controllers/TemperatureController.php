@@ -354,30 +354,48 @@ class TemperatureController extends Controller
              for ($i=0; $i < count($rows); $i++) {
                if ($rows[$i][1] == 'Face Authentication Passed') {
                     if ($rows[$i][4] != '-') {
-                         // var_dump($rows[$i][2]);
-                         // $empid = explode(' ', $rows[$i][2]);
                          $temps = explode('°', $rows[$i][4]);
 
 
-                         $empys = DB::SELECT('select * from employees where name like "'.$rows[$i][2].'%"');
+                         $empys = DB::SELECT('select * from employees where name = "'.$rows[$i][2].'"');
 
-                         foreach ($empys as $key) {
-                              $employee_id = $key->employee_id;
-                              $name = $key->name;
+                         if (count($empys) > 0) {
+                              foreach ($empys as $key) {
+                                   $employee_id = $key->employee_id;
+                                   $name = $key->name;
+                              }
+
+                              $ivms = IvmsTemperatureTemp::create([
+                                   'employee_id' => $employee_id,
+                                   'name' => $name,
+                                   'location' => $request->get('location'),
+                                   'date' => date('Y-m-d', strtotime($rows[$i][6])),
+                                   'date_in' => $rows[$i][6],
+                                   'point' => $rows[$i][8],
+                                   'temperature' => $temps[0],
+                                   'abnormal_status' => $rows[$i][5],
+                                   'created_by' => $id_user,
+                              ]);
+                         }else{
+                              $empys = DB::SELECT('select * from employees where name like "'.$rows[$i][2].'%"');
+
+                              foreach ($empys as $key) {
+                                   $employee_id = $key->employee_id;
+                                   $name = $key->name;
+                              }
+
+                              $ivms = IvmsTemperatureTemp::create([
+                                   'employee_id' => $employee_id,
+                                   'name' => $name,
+                                   'location' => $request->get('location'),
+                                   'date' => date('Y-m-d', strtotime($rows[$i][6])),
+                                   'date_in' => $rows[$i][6],
+                                   'point' => $rows[$i][8],
+                                   'temperature' => $temps[0],
+                                   'abnormal_status' => $rows[$i][5],
+                                   'created_by' => $id_user,
+                              ]);
                          }
-
-                         $ivms = IvmsTemperatureTemp::create([
-                              // 'person_id' => $person_id,
-                              'employee_id' => $employee_id,
-                              'name' => $name,
-                              'location' => $request->get('location'),
-                              'date' => date('Y-m-d', strtotime($rows[$i][6])),
-                              'date_in' => $rows[$i][6],
-                              'point' => $rows[$i][8],
-                              'temperature' => $temps[0],
-                              'abnormal_status' => $rows[$i][5],
-                              'created_by' => $id_user,
-                         ]);
                     }
                }
           }
@@ -393,7 +411,6 @@ class TemperatureController extends Controller
 
           foreach ($IvmsTemperature as $key) {
                $ivms = IvmsTemperature::firstOrNew(['employee_id' => $key->employee_id, 'date' => $key->date]);
-               // $ivms->person_id = $key->person_id;
                $ivms->employee_id = $key->employee_id;
                $ivms->name = $key->name;
                $ivms->location = $key->location;
@@ -413,12 +430,8 @@ class TemperatureController extends Controller
           }else{
                $miraimobile =DB::SELECT("SELECT *,miraimobile.quiz_logs.created_at as date_in FROM employees join miraimobile.quiz_logs on employees.employee_id = miraimobile.quiz_logs.employee_id where employees.remark = '".$request->get('location')."' and miraimobile.quiz_logs.answer_date = '".date('Y-m-d')."' and miraimobile.quiz_logs.question = 'Suhu Tubuh'");
           }
-
-            // var_dump($miraimobile);
-
           foreach ($miraimobile as $val) {
                $ivms = IvmsTemperature::firstOrNew(['employee_id' => $val->employee_id, 'date' => $val->answer_date]);
-               // $ivms->person_id = $val->group;
                $ivms->employee_id = $val->employee_id;
                $ivms->name = $val->name;
                $ivms->location = $val->location;
