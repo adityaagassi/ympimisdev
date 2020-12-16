@@ -648,11 +648,14 @@ Route::get('fetch/production_achievement', 'ChoreiController@fetchProductionAchi
 
 Route::group(['nav' => 'R4', 'middleware' => 'permission'], function(){
 	Route::get('index/ch_daily_production_result', 'ChoreiController@index_ch_daily_production_result');
+	Route::get('index/ch_daily_production_result_kd', 'ChoreiController@index_ch_daily_production_result_kd');
 	Route::get('fetch/daily_production_result_week', 'ChoreiController@fetch_daily_production_result_week');
 	Route::get('fetch/daily_production_result_date', 'ChoreiController@fetch_daily_production_result_date');
 	Route::get('fetch/daily_production_result', 'ChoreiController@fetch_daily_production_result');
+	Route::get('fetch/daily_production_result_kd', 'ChoreiController@fetch_daily_production_result_kd');
 	Route::get('fetch/production_result_modal', 'ChoreiController@fetch_production_result_modal');
 	Route::get('fetch/production_accuracy_modal', 'ChoreiController@fetch_production_accuracy_modal');
+	Route::get('fetch/production_accuracy_modal_kd', 'ChoreiController@fetch_production_accuracy_modal_kd');
 	Route::get('fetch/production_bl_modal', 'ChoreiController@fetch_production_bl_modal');
 });
 

@@ -626,7 +626,7 @@
                                 <span style="font-weight: bold;">Machine Monitoring (マシン監視)</span>
                                 <br>
                                 <a href="http://10.109.52.7/zed/dashboard/awal" target="_blank">
-                                    <i class="fa fa-caret-right"></i> Overall Equipment Efficiency (稼働率)
+                                    <i class="fa fa-caret-right"></i> Overall Equipment Efficiency (稼働率) (OEE)
                                 </a>
                                 <br>
                                 <a href="{{ url("/machinery_monitoring?mesin=") }}">
@@ -1017,7 +1017,11 @@
                                         <span style="font-weight: bold;">Chorei (朝礼)</span>
                                         <br>
                                         <a href="{{ url("/index/ch_daily_production_result") }}">
-                                            <i class="fa fa-caret-right"></i> Production Summary (生産まとめ)
+                                            <i class="fa fa-caret-right"></i>FG Production Summary (FG生産まとめ)
+                                        </a>
+                                        <br>
+                                        <a href="{{ url("/index/ch_daily_production_result_kd") }}">
+                                            <i class="fa fa-caret-right"></i>KD Production Summary (KD生産まとめ)
                                         </a>
                                        {{--  <br>
                                         <a href="{{ url("/index/display/efficiency_monitoring") }}">
