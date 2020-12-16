@@ -205,8 +205,7 @@
 	});
 
 	jQuery(document).ready(function() {
-		// $('body').toggleClass("sidebar-collapse");
-
+		$('body').toggleClass("sidebar-collapse");
 		
 		$('.monthpicker').datepicker({
 			format: "yyyy-mm",
@@ -216,6 +215,8 @@
 			todayHighlight: true
 		});
 		fillTable();
+		setInterval(fillTable, 60*60*1000);
+
 
 	});
 
@@ -305,7 +306,10 @@
 					},
 					yAxis: {
 						enabled: true,
-						title: null,
+						title: {
+							enabled: true,
+							text: "Qty Container"
+						},
 						tickInterval: 1
 					},
 					legend: {
