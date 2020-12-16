@@ -508,7 +508,7 @@ public function fetchMinMoeMonitoring(Request $request)
           $attendance = [];
 
           foreach ($employee_groups as $key) {
-               $attendance[] = DB::connection('sunfish')->select("SELECT
+               $attendances = DB::connection('sunfish')->select("SELECT
                     IIF (
                     Attend_Code LIKE '%ABS%',
                     'ABS',
@@ -533,8 +533,38 @@ public function fetchMinMoeMonitoring(Request $request)
                     FROM
                     VIEW_YMPI_Emp_Attendance 
                     WHERE
-                    Emp_no = '".$key->employee_id."'
-                    AND FORMAT ( shiftstarttime, 'yyyy-MM-dd' ) = '".$now."'");
+                    (Emp_no = '".$key->employee_id."'
+                    AND FORMAT ( shiftstarttime, 'yyyy-MM-dd' ) = '".$now."')");
+
+               if (count($attendances) == 0) {
+                    $miraimobile = DB::SELECT("SELECT * FROM miraimobile.quiz_logs where miraimobile.quiz_logs.answer_date = '".$now."' and miraimobile.quiz_logs.employee_id = '".$key->employee_id."'");
+                    if (count($miraimobile) > 0) {
+                         $attendances = (object) array(
+                              '0' => (object) array(
+                                        'attend_code' => 'SBH',
+                                        'emp_no' => $key->employee_id
+                                    ),
+                         );
+                    }
+                    $attendance[] = $attendances;
+               }else{
+                    foreach ($attendances as $val) {
+                         if ($val->attend_code == 'ABS') {
+                              $miraimobile = DB::SELECT("SELECT * FROM miraimobile.quiz_logs where miraimobile.quiz_logs.answer_date = '".$now."' and miraimobile.quiz_logs.employee_id = '".$key->employee_id."'");
+                              if (count($miraimobile) > 0) {
+                                   $attendances = (object) array(
+                                        '0' => (object) array(
+                                                  'attend_code' => 'SBH',
+                                                  'emp_no' => $key->employee_id
+                                              ),
+                                   );
+                              }
+                              $attendance[] = $attendances;
+                         }else{
+                              $attendance[] = $attendances;
+                         }
+                    }
+               }
           }
 
           $datacheck = DB::SELECT("SELECT
