@@ -635,7 +635,7 @@ function modalTampil(costCenter, date) {
         dataT += '<td>'+ no++; +'</td>';
         dataT += '<td>'+ data.datas[i].nik +'</td>';
         dataT += '<td>'+ data.datas[i].name +'</td>';           
-        dataT += '<td>'+ data.datas[i].jam +'</td>';
+        dataT += '<td>'+ data.datas[i].jam.toFixed(2) +'</td>';
         dataT += '<td style="text-align:left"> <span class="more">'+ data.datas[i].kep +'</span></td>';
         dataT += '</tr>';
         jml += parseFloat(data.datas[i].jam);
