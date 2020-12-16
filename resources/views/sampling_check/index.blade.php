@@ -39,7 +39,7 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		Sampling Check - {{$leader}}
+		{{$activity_name}} - {{$leader}}
 		<a href="{{ url('index/sampling_check/create/'.$id) }}" class="btn btn-primary pull-right">Buat Audit</a>
 	</h1>
 	<ol class="breadcrumb">
@@ -69,15 +69,15 @@
 				<div class="box-body">
 					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
-							<h3 class="box-title">Filter Sampling Check</h3>
+							<h3 class="box-title">Filter</h3>
 						</div>
 						<form role="form" method="post" action="{{url('index/sampling_check/filter_sampling/'.$id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
 									<div class="form-group">
-										<label>Sub Section</label>
-										<select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Pilih Sub Section...">
+										<label>Group</label>
+										<select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Pilih Group...">
 											<option value=""></option>
 											@foreach($subsection as $subsection)
 											<option value="{{ $subsection->sub_section_name }}">{{ $subsection->sub_section_name }}</option>
@@ -111,7 +111,7 @@
 					</div>
 					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
-							<h3 class="box-title">Cetak Sampling Check</h3>
+							<h3 class="box-title">Cetak</h3>
 						</div>
 						<!-- <form target="_blank" role="form" method="post" action="{{url('index/sampling_check/print_sampling/'.$id)}}"> -->
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -145,8 +145,8 @@
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
 									<div class="form-group">
-										<label>Sub Section</label>
-										<select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Pilih Sub Section..." required>
+										<label>Group</label>
+										<select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Pilih Group..." required>
 											<option value=""></option>
 											@foreach($subsection3 as $subsection3)
 											<option value="{{ $subsection3->sub_section_name }}">{{ $subsection3->sub_section_name }}</option>
@@ -181,7 +181,7 @@
 							<table id="example1" class="table table-bordered table-striped table-hover">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th>Sub Section</th>
+										<th>Group</th>
 										<th>Date</th>
 										<th>Product</th>
 										<th>No. Seri / Part</th>

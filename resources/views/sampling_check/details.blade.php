@@ -61,7 +61,7 @@ table.table-bordered > tfoot > tr > th{
 		<div class="col-xs-12">
 			<div class="box box-solid">
 				<div class="box-header">
-					<h3 class="box-title">Detail Sampling Check</h3>
+					<h3 class="box-title">Detail</h3>
 				</div>
 				<div class="box-body">
 				  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
@@ -75,7 +75,7 @@ table.table-bordered > tfoot > tr > th{
 							<td>{{strtoupper($sampling_check->section)}}</td>
 						</tr>
 						<tr>
-							<td><b>Subsection</b></td>
+							<td><b>Group</b></td>
 							<td>{{$sampling_check->subsection}}</td>
 						</tr>
 						<tr>
