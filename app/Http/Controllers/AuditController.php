@@ -209,7 +209,7 @@ class AuditController extends Controller
       }
 
       //per tgl
-      $data = db::select("select tanggal, sum(case when status_ditangani is null then 1 else 0 end) as jumlah_belum, sum(case when status_ditangani is not null then 1 else 0 end) as jumlah_sudah from audit_all_results group by tanggal");
+      $data = db::select("select tanggal, sum(case when status_ditangani is null and kategori = '5S Patrol GM' then 1 else 0 end) as jumlah_belum_gm, sum(case when status_ditangani is not null and kategori = '5S Patrol GM' then 1 else 0 end) as jumlah_sudah_gm, sum(case when status_ditangani is null and kategori = 'S-Up And EHS Patrol Presdir' then 1 else 0 end) as jumlah_belum_presdir, sum(case when status_ditangani is not null and kategori = 'S-Up And EHS Patrol Presdir' then 1 else 0 end) as jumlah_sudah_presdir from audit_all_results group by tanggal");
       $year = date('Y');
 
       $response = array(
@@ -237,13 +237,17 @@ class AuditController extends Controller
 
       if ($status != null) {
 
-	      if ($status == "Belum Ditangani") {
-	        
-	      	$stat = 'and audit_all_results.status_ditangani is null';
+	      if ($status == "Belum Ditangani GM Patrol") {
+	      	$stat = 'and audit_all_results.status_ditangani is null and kategori = "5S Patrol GM"';
 	      }
-
-	      if ($status == "Sudah Ditangani") {
-	      	$stat = 'and audit_all_results.status_ditangani = "close"';
+	      else if ($status == "Belum Ditangani Patrol Presdir"){
+	      	$stat = 'and audit_all_results.status_ditangani is null and kategori = "S-Up And EHS Patrol Presdir"';
+	      }
+	      else if ($status == "Sudah Ditangani GM Patrol") {
+	      	$stat = 'and audit_all_results.status_ditangani = "close" and kategori = "5S Patrol GM"';
+	      }
+	      else if ($status == "Sudah Ditangani Patrol Presdir") {
+	      	$stat = 'and audit_all_results.status_ditangani = "close" and kategori = "S-Up And EHS Patrol Presdir"';
 	      }
 
       
@@ -283,7 +287,7 @@ class AuditController extends Controller
       })
 
       ->editColumn('foto', function($detail){
-        return '<img src="'.url('files/patrol').'/'.$detail->foto.'" width="150">';
+        return '<img src="'.url('files/patrol').'/'.$detail->foto.'" width="250">';
       })
 
       ->editColumn('penanganan', function($detail){
@@ -358,6 +362,38 @@ class AuditController extends Controller
 		);
 		return Response::json($response);
 	}
+
+	public function editAudit(Request $request)
+    {
+        try{
+            $audit = AuditAllResult::find($request->get("id"));
+            $audit->note = $request->get('note');
+            $audit->save();
+
+            $response = array(
+              'status' => true,
+              'datas' => "Berhasil",
+          );
+            return Response::json($response);
+        }
+        catch (QueryException $e){
+            $error_code = $e->errorInfo[1];
+            if($error_code == 1062){
+               $response = array(
+                  'status' => false,
+                  'datas' => "Audit Already Exist",
+              );
+               return Response::json($response);
+           }
+           else{
+               $response = array(
+                  'status' => false,
+                  'datas' => $e->getMessage(),
+              );
+               return Response::json($response);
+           }
+       }
+   }
 
 	public function postPenanganan(Request $request)
     {

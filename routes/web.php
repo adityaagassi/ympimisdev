@@ -657,6 +657,7 @@ Route::group(['nav' => 'R4', 'middleware' => 'permission'], function(){
 	Route::get('fetch/production_accuracy_modal', 'ChoreiController@fetch_production_accuracy_modal');
 	Route::get('fetch/production_accuracy_modal_kd', 'ChoreiController@fetch_production_accuracy_modal_kd');
 	Route::get('fetch/production_bl_modal', 'ChoreiController@fetch_production_bl_modal');
+	Route::get('fetch/production_bl_modal_kd', 'ChoreiController@fetch_production_bl_modal_kd');
 });
 
 Route::group(['nav' => 'R2', 'middleware' => 'permission'], function(){
@@ -1687,6 +1688,7 @@ Route::get('upload_kd', 'KnockDownController@indexUploadSch');
 Route::get('fetch/kd/{id}', 'KnockDownController@fetchKd');
 Route::get('fetch/kd_new/{id}', 'KnockDownController@fetchKdNew');
 Route::get('fetch/kd_pack/{id}', 'KnockDownController@fetchKdPack');
+Route::get('fetch/check_kd', 'KnockDownController@fetchCheckKd');
 Route::get('fetch/kd_delivery_closure', 'KnockDownController@fetchKdDeliveryClosure');
 // Route::get('fetch/kd_print', 'KnockDownController@fetchKdPrint');
 Route::get('fetch/kd_detail', 'KnockDownController@fetchKdDetail');
@@ -2509,23 +2511,24 @@ Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::get('delete/deleteReimport', 'CheckSheet@deleteReimport');
 });
 
+Route::get('index/shipping_order', 'ContainerScheduleController@indexShippingOrder');
+Route::get('fetch/shipping_order/get_carier', 'ContainerScheduleController@fetchCarier');
+Route::get('fetch/shipping_order/ship_reservation', 'ContainerScheduleController@fetchShipReservation');
+Route::get('fetch/shipping_order/excel_ship_reservation', 'ContainerScheduleController@excelShipReservation');
+
+Route::get('index/resume_shipping_order', 'ContainerScheduleController@indexResumeShippingOrder');
+Route::get('fetch/resume_shipping_order', 'ContainerScheduleController@fetchResumeShippingOrder');
+Route::get('fetch/resume_shipping_order_detail', 'ContainerScheduleController@fetchResumeShippingOrderDetail');
+
+Route::get('index/shipping_agency', 'ContainerScheduleController@indexShippingAgency');
+Route::get('fetch/shipping_agency', 'ContainerScheduleController@fetchShippingAgency');
+
 Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
-	Route::get('index/shipping_order', 'ContainerScheduleController@indexShippingOrder');
-	Route::get('fetch/shipping_order/get_carier', 'ContainerScheduleController@fetchCarier');
 
 	Route::post('fetch/shipping_order/add_ship_reservation', 'ContainerScheduleController@addShipReservation');
 	Route::post('fetch/shipping_order/edit_ship_reservation', 'ContainerScheduleController@editShipReservation');
 	Route::post('fetch/shipping_order/upload_ship_reservation', 'ContainerScheduleController@uploadShipReservation');
-
-	Route::get('fetch/shipping_order/ship_reservation', 'ContainerScheduleController@fetchShipReservation');
-	Route::get('fetch/shipping_order/excel_ship_reservation', 'ContainerScheduleController@excelShipReservation');
-
-	Route::get('index/resume_shipping_order', 'ContainerScheduleController@indexResumeShippingOrder');
-	Route::get('fetch/resume_shipping_order', 'ContainerScheduleController@fetchResumeShippingOrder');
-	Route::get('fetch/resume_shipping_order_detail', 'ContainerScheduleController@fetchResumeShippingOrderDetail');
-
-	Route::get('index/shipping_agency', 'ContainerScheduleController@indexShippingAgency');
-	Route::get('fetch/shipping_agency', 'ContainerScheduleController@fetchShippingAgency');
+	
 	Route::post('fetch/add_shipping_agency', 'ContainerScheduleController@addShippingAgency');	
 
 });
@@ -3434,6 +3437,7 @@ Route::get('index/audit_patrol/detail', 'AuditController@detailMonitoring');
 Route::get('index/audit_patrol/table', 'AuditController@fetchTable_audit');
 Route::get('index/audit_patrol/detail_penanganan', 'AuditController@detailPenanganan');
 Route::post('post/audit_patrol/penanganan', 'AuditController@postPenanganan');
+Route::post('post/audit_patrol/edit', 'AuditController@editAudit');
 
 
 //Audit Internal ISO

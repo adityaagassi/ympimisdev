@@ -135,7 +135,7 @@ table > thead > tr > th{
             <input type="text" class="form-control datepicker" id="dateto" placeholder="Select Date To">
           </div>
         </div>
-        <div class="col-xs-2">
+        <!-- <div class="col-xs-2">
           <div class="input-group">
             <div class="input-group-addon bg-blue">
               <i class="fa fa-search"></i>
@@ -145,7 +145,7 @@ table > thead > tr > th{
                 <option value="Sudah Ditangani">Sudah Ditangani</option>
             </select>
           </div>
-        </div>
+        </div> -->
 
         <div class="col-xs-1">
           <button class="btn btn-success" onclick="drawChart()">Update Chart</button>
@@ -163,27 +163,36 @@ table > thead > tr > th{
           <table id="tabelmonitor" class="table table-bordered" style="margin-top: 5px; width: 99%">
             <thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 12px;font-weight: bold">
               <tr>
-                <th style="width: 10%; padding: 0;vertical-align: middle;;font-size: 16px;">Kategori Audit</th>
-                <th style="width: 10%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;">Tanggal</th>
-                <th style="width: 10%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;">Lokasi</th>
-                <th style="width: 10%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;">Auditor</th>
-                <th style="width: 10%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;">Auditee</th>
-                <th style="width: 20%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;">Note</th>
-                <!-- <th style="width: 25%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;">Foto</th> -->
-                <th style="width: 20%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;">Penanganan</th>
+                <th style="width: 10%; vertical-align: middle;;font-size: 16px;">Kategori Audit</th>
+                <th style="width: 10%; vertical-align: middle;border-left:3px solid yellow !important;font-size: 16px;">Tanggal</th>
+                <th style="width: 10%; vertical-align: middle;border-left:3px solid yellow !important;font-size: 16px;">Lokasi</th>
+                <th style="width: 10%; vertical-align: middle;border-left:3px solid yellow !important;font-size: 16px;">Auditor</th>
+                <th style="width: 10%; vertical-align: middle;border-left:3px solid yellow !important;font-size: 16px;">Auditee</th>
+                <th style="width: 20%; vertical-align: middle;border-left:3px solid yellow !important;font-size: 16px;">Note</th>
+                <!-- <th style="width: 25%; vertical-align: middle;border-left:3px solid yellow !important;font-size: 16px;">Foto</th> -->
+                <th style="width: 20%; vertical-align: middle;border-left:3px solid yellow !important;font-size: 16px;">Penanganan</th>
               </tr>
             </thead>
             <tbody id="tabelisi">
             </tbody>
             <tfoot>
-            </tfoot>
+                <tr>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </tfoot>
           </table>
       </div>
     </div>
   </div>
 
   <div class="modal fade" id="myModal">
-    <div class="modal-dialog" style="width:1250px;">
+    <div class="modal-dialog modal-lg" style="width:1250px;">
       <div class="modal-content">
         <div class="modal-header">
           <h4 style="float: right;" id="modal-title"></h4>
@@ -219,8 +228,59 @@ table > thead > tr > th{
     </div>
   </div>
 
-  <div class="modal fade" id="modalPenanganan" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal fade" id="modalEdit" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Edit Temuan Audit</h4>
+          </div>
+          <div class="modal-body">
+            <div class="box-body">
+              <input type="hidden" value="{{csrf_token()}}" name="_token" />
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="col-md-12">
+                    <label for="tanggal_edit">Tanggal</label>
+                    : <span name="tanggal_edit" id="tanggal_edit"> </span>
+                  </div>
+                  <div class="col-md-12">
+                    <label for="lokasi_edit">Lokasi</label>
+                    : <span name="lokasi_edit" id="lokasi_edit"> </span>
+                  </div>
+                  <div class="col-md-12">
+                    <label for="poin_edit">Kategori Patrol</label>
+                    : <span name="poin_edit" id="poin_edit"> </span>
+                  </div>
+                  <div class="col-md-12">
+                    <label for="pic_edit">PIC</label>
+                    : <span name="pic_edit" id="pic_edit"> </span>
+                  </div>
+                  <div class="col-md-12">
+                    <label for="note_edit">Note</label>
+                    <textarea class="form-control" id="note_edit" name="note_edit"></textarea>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="col-md-12">
+                    <label for="image_edit">Temuan</label>
+                    : <div name="image_edit" id="image_edit"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+          <input type="hidden" id="id_penanganan_edit">
+          <button type="button" onclick="post_edit()" class="btn btn-success" data-dismiss="modal"><i class="fa fa-pencil"></i> Update Audit</button>
+        </div>
+      </div>
+  </div>
+</div>
+
+  <div class="modal fade" id="modalPenanganan" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
       <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -258,7 +318,7 @@ table > thead > tr > th{
         <div class="modal-footer">
           <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
           <input type="hidden" id="id_penanganan">
-          <button type="button" onclick="update_penanganan()" class="btn btn-success" data-dismiss="modal"><i class="fa fa-pencil"></i> Close Temuan Audit</button>
+          <button type="button" onclick="update_penanganan()" class="btn btn-success" data-dismiss="modal"><i class="fa fa-pencil"></i> Submit Penanganan Audit</button>
         </div>
       </div>
   </div>
@@ -323,13 +383,17 @@ table > thead > tr > th{
         if(result.status){
 
           var tgl = [];
-          var belum_ditangani = [];
-          var sudah_ditangani = [];
+          var belum_ditangani_gm = [];
+          var sudah_ditangani_gm = [];
+          var belum_ditangani_presdir = [];
+          var sudah_ditangani_presdir = [];
 
           $.each(result.datas, function(key, value) {
             tgl.push(value.tanggal);
-            belum_ditangani.push(parseInt(value.jumlah_belum));
-            sudah_ditangani.push(parseInt(value.jumlah_sudah));
+            belum_ditangani_gm.push(parseInt(value.jumlah_belum_gm));
+            sudah_ditangani_gm.push(parseInt(value.jumlah_sudah_gm));
+            belum_ditangani_presdir.push(parseInt(value.jumlah_belum_presdir));
+            sudah_ditangani_presdir.push(parseInt(value.jumlah_sudah_presdir));
           })
 
           $('#chart').highcharts({
@@ -416,14 +480,28 @@ table > thead > tr > th{
             },
             series: [
               {
-                  name: 'Belum Ditangani',
-                  data: belum_ditangani,
-                  color : '#ff6666' //ff6666
+                  name: 'Belum Ditangani Patrol Presdir',
+                  data: belum_ditangani_presdir,
+                  color : '#f15c80',
+                  stack : 'presdir'
               },
               {
-                  name: 'Sudah Ditangani',
-                  data: sudah_ditangani,
-                  color : '#5cb85c' //5cb85c
+                  name: 'Belum Ditangani GM Patrol',
+                  data: belum_ditangani_gm,
+                  color : '#c04f50',
+                  stack : 'gm'
+              },
+              {
+                  name: 'Sudah Ditangani Patrol Presdir',
+                  data: sudah_ditangani_presdir,
+                  color : '#90ed7d',
+                  stack : 'presdir'
+              },
+              {
+                  name: 'Sudah Ditangani GM Patrol',
+                  data: sudah_ditangani_gm,
+                  color : '#00c853',
+                  stack : 'gm'
               }
             ]
           })
@@ -507,8 +585,8 @@ table > thead > tr > th{
           {"data": "lokasi" , "width": "5%"},
           {"data": "auditee_name" , "width": "5%"},
           {"data": "point_judul", "width": "5%"},
-          {"data": "note", "width": "10%"},
-          {"data": "foto", "width": "25%"},
+          {"data": "note", "width": "15%"},
+          {"data": "foto", "width": "20%"},
           {"data": "penanganan", "width": "25%"}
         ]    
       });
@@ -533,6 +611,11 @@ table > thead > tr > th{
 
     $.get('{{ url("index/audit_patrol/table") }}', data, function(result, status, xhr){
       if(result.status){
+
+          $('#tabelmonitor').DataTable().clear();
+          $('#tabelmonitor').DataTable().destroy();
+
+
           $("#tabelisi").find("td").remove();  
           $('#tabelisi').html("");
           var table = "";
@@ -541,17 +624,33 @@ table > thead > tr > th{
 
             table += '<tr>';
             table += '<td>'+value.kategori+'</td>';
-            table += '<td style="border-left:3px solid #f44336">'+value.tanggal+'</span></td>';
-            table += '<td style="border-left:3px solid #f44336">'+value.lokasi+'</td>';
-            table += '<td style="border-left:3px solid #f44336">'+value.auditor_name+'</td>';
-            table += '<td style="border-left:3px solid #f44336">'+value.auditee_name+'</span></td>';
-            table += '<td style="border-left:3px solid #f44336">'+value.note+'</td>';
-            // table += "<td style='border-left:3px solid #f44336'><img src='"+"{{ url('files/patrol') }}/"+value.foto+"' width='150'></td>";  
-            table += '<td style="border-left:3px solid #f44336"><button style="width: 50%; height: 100%;" onclick="penanganan(\''+value.id+'\')" class="btn btn-xs btn-warning form-control"><span>Lakukan Penanganan</span></button></td>';            
+            table += '<td style="border-left:3px solid yellow">'+value.tanggal+'</span></td>';
+            table += '<td style="border-left:3px solid yellow">'+value.lokasi+'</td>';
+            table += '<td style="border-left:3px solid yellow">'+value.auditor_name+'</td>';
+            table += '<td style="border-left:3px solid yellow">'+value.auditee_name+'</span></td>';
+            table += '<td style="border-left:3px solid yellow">'+value.note+'</td>';
+            // table += "<td style='border-left:3px solid yellow'><img src='"+"{{ url('files/patrol') }}/"+value.foto+"' width='150'></td>";  
+            table += '<td style="border-left:3px solid yellow"><button style="width: 25%; height: 100%;" onclick="edit(\''+value.id+'\')" class="btn btn-xs btn-primary form-control"><span>Edit Audit</span></button>&nbsp;&nbsp;&nbsp;<button style="width: 50%; height: 100%;" onclick="penanganan(\''+value.id+'\')" class="btn btn-xs btn-warning form-control"><span>Lakukan Penanganan</span></button></td>';            
             table += '</tr>';
           })
 
           $('#tabelisi').append(table);
+
+          $('#tabelmonitor').DataTable({
+            'responsive':true,
+            'paging': true,
+            'lengthChange': false,
+            'pageLength': 10,
+            'searching': false,
+            'ordering': true,
+            'order': [],
+            'info': false,
+            'autoWidth': true,
+            "sPaginationType": "full_numbers",
+            "bJQueryUI": true,
+            "bAutoWidth": false,
+            "processing": true
+          });
       }
     })
   }
@@ -586,20 +685,70 @@ table > thead > tr > th{
 
   function update_penanganan() {
 
-      var data = {
-        id: $("#id_penanganan").val(),
-        penanganan : CKEDITOR.instances.penanganan.getData()
-      };
+    var data = {
+      id: $("#id_penanganan").val(),
+      penanganan : CKEDITOR.instances.penanganan.getData()
+    };
 
-      if (CKEDITOR.instances.penanganan.getData() == null || CKEDITOR.instances.penanganan.getData() == "") {
-        openErrorGritter("Error","Penanganan Harus Diisi");
-        return false;
+    if (CKEDITOR.instances.penanganan.getData() == null || CKEDITOR.instances.penanganan.getData() == "") {
+      openErrorGritter("Error","Penanganan Harus Diisi");
+      return false;
+    }
+
+    $.post('{{ url("post/audit_patrol/penanganan") }}', data, function(result, status, xhr){
+      if (result.status == true) {
+        openSuccessGritter("Success","Audit Berhasil Ditangani");
+        fetchTable();
+        drawChart();
+      } else {
+        openErrorGritter("Error",result.datas);
+      }
+    })
+  }
+
+  function edit(id) {
+
+    $('#modalEdit').modal("show");
+    
+    var data = {
+      id : id
+    }
+
+    $.get('{{ url("index/audit_patrol/detail_penanganan") }}', data, function(result, status, xhr){
+
+      var images = "";
+      $("#image").html("");
+
+      if (result.status) {
+        $("#id_penanganan_edit").val(id);
+        $("#tanggal_edit").text(result.audit[0].tanggal);
+        $("#lokasi_edit").text(result.audit[0].lokasi);
+        $("#poin_edit").text(result.audit[0].point_judul);
+        $("#pic_edit").text(result.audit[0].auditee_name);
+        $("#note_edit").val(result.audit[0].note);
+
+        images += '<img src="{{ url("files/patrol") }}/'+result.audit[0].foto+'" width="300">';
+        $("#image_edit").append(images);
+
+      } else {
+        openErrorGritter('Error');
       }
 
-      $.post('{{ url("post/audit_patrol/penanganan") }}', data, function(result, status, xhr){
+    }); 
+  }
+
+  
+  function post_edit() {
+
+      var data = {
+        id: $("#id_penanganan_edit").val(),
+        note : $("#note_edit").val(),
+      };
+
+      $.post('{{ url("post/audit_patrol/edit") }}', data, function(result, status, xhr){
         if (result.status == true) {
-          $('#poTable').DataTable().ajax.reload(null, false);
-          openSuccessGritter("Success","Audit Berhasil Ditangani");
+          openSuccessGritter("Success","Audit Berhasil Diedit");
+          fetchTable();
         } else {
           openErrorGritter("Error",result.datas);
         }
