@@ -277,9 +277,6 @@
 
 	function fillPlan(){
 		$.get('{{ url("stamp/fetchPlan") }}'+'/YFL', function(result, status, xhr){
-			console.log(status);
-			console.log(result);
-			console.log(xhr);
 			if(xhr.status = 200){
 				if(result.status){
 					$('#planTable').DataTable().destroy();
@@ -361,9 +358,6 @@
 			originGroupCode:originGroupCode,
 		}
 		$.get('{{ url("stamp/fetchSerialNumber") }}', data, function(result, status, xhr){
-			console.log(status);
-			console.log(result);
-			console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
 					$("#lastCounter").val(result.lastCounter);
@@ -392,9 +386,6 @@
 			originGroupCode:'041'
 		}
 		$.get('{{ url("stamp/adjust") }}', data, function(result, status, xhr){
-			console.log(status);
-			console.log(result);
-			console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
 					$('#prefix').val(result.prefix);
@@ -422,9 +413,6 @@
 			originGroupCode:'041'
 		}
 		$.post('{{ url("stamp/adjust") }}', data, function(result, status, xhr){
-			console.log(status);
-			console.log(result);
-			console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
 					$('#prefix').val("");
@@ -451,9 +439,6 @@
 			originGroupCode:'041'
 		}
 		$.post('{{ url("stamp/adjustSerial") }}', data, function(result, status, xhr){
-			console.log(status);
-			console.log(result);
-			console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
 					fillSerialNumber();
@@ -471,9 +456,6 @@
 
 	function fillResult(){
 		$.get('{{ url("stamp/fetchResult") }}'+'/YFL', function(result, status, xhr){
-			console.log(status);
-			console.log(result);
-			console.log(xhr);
 			$('#resultTable').DataTable().destroy();
 			if(xhr.status == 200){
 				if(result.status){
@@ -532,9 +514,6 @@
 			manPower:manPower
 		}
 		$.get('{{ url("stamp/stamp") }}', data, function(result, status, xhr){
-			console.log(status);
-			console.log(result);
-			console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
 					if(result.statusCode == 'stamp'){
@@ -548,8 +527,13 @@
 				}
 				else{
 					audio_error.play();
-					$("#pError").html('<span style="font-size: 40px"><i class="fa fa-unlink"></i> '+ result.message +'</span>');
-					$("#error").show();
+					var msg = result.message;
+					if (msg.match(/Failed to create COM object*/)) {
+						stamp();
+					}else{
+						$("#pError").html('<span style="font-size: 40px"><i class="fa fa-unlink"></i> '+ result.message +'</span>');
+						$("#error").show();
+					}
 				}
 			}
 			else{
@@ -564,9 +548,6 @@
 			id:id
 		}
 		$.get('{{ url("edit/stamp") }}', data, function(result, status, xhr){
-			console.log(status);
-			console.log(result);
-			console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
 					$('#modelText').val(result.logProcess.model);
@@ -597,9 +578,6 @@
 		}
 		if(confirm("Are you sure you want to delete this data?")){
 			$.post('{{ url("destroy/stamp") }}', data, function(result, status, xhr){
-				console.log(status);
-				console.log(result);
-				console.log(xhr);
 				if(xhr.status == 200){
 					if(result.status){
 						$('#idStamp').val('');
@@ -633,9 +611,6 @@
 			processCode:'1',
 		}
 		$.post('{{ url("edit/stamp") }}', data, function(result, status, xhr){
-			console.log(status);
-			console.log(result);
-			console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
 					$('#idStamp').val('');
