@@ -716,8 +716,8 @@ table > thead > tr > th{
 
     $.get('{{ url("index/audit_patrol/detail_penanganan") }}', data, function(result, status, xhr){
 
-      var images = "";
-      $("#image").html("");
+      var images_edit = "";
+      $("#image_edit").html("");
 
       if (result.status) {
         $("#id_penanganan_edit").val(id);
@@ -727,8 +727,8 @@ table > thead > tr > th{
         $("#pic_edit").text(result.audit[0].auditee_name);
         $("#note_edit").val(result.audit[0].note);
 
-        images += '<img src="{{ url("files/patrol") }}/'+result.audit[0].foto+'" width="300">';
-        $("#image_edit").append(images);
+        images_edit += '<img src="{{ url("files/patrol") }}/'+result.audit[0].foto+'" width="300">';
+        $("#image_edit").append(images_edit);
 
       } else {
         openErrorGritter('Error');
