@@ -717,6 +717,12 @@ Route::group(['nav' => 'A9', 'middleware' => 'permission'], function(){
 	Route::get('fetch/middle/buffing_canceled', 'MiddleProcessController@fetchBuffingCanceled');
 	Route::post('delete/middle/buffing_canceled', 'MiddleProcessController@deleteBuffingCanceled');
 
+	Route::get('index/middle/buffing_operator/{loc}', 'MiddleProcessController@indexBuffingOperator');
+	Route::get('fetch/middle/buffing_operator/{loc}', 'MiddleProcessController@fetchBuffingOperator');
+	Route::post('update/middle/buffing_operator', 'MiddleProcessController@updateBuffingOperator');
+	Route::post('delete/middle/buffing_operator', 'MiddleProcessController@deleteBuffingOperator');
+
+
 	Route::get('index/middle/buffing_target/{loc}', 'MiddleProcessController@indexBuffingTarget');
 	Route::get('fetch/middle/buffing_target/{loc}', 'MiddleProcessController@fetchBuffingTarget');
 	Route::post('update/middle/buffing_target', 'MiddleProcessController@updateBuffingTarget');
@@ -1625,6 +1631,12 @@ Route::group(['nav' => 'S24', 'middleware' => 'permission'], function(){
 	Route::post('fetch/kd_force_print_zpro', 'KnockDownController@forcePrintLabel');
 
 	Route::get('index/print_label_zpro/{id}', 'KnockDownController@indexPrintLabelZpro');
+
+
+
+
+	Route::get('index/kd_tpro/{id}', 'KnockDownController@indexKD');
+
 
 });
 
@@ -3417,6 +3429,9 @@ Route::get('index/audit_patrol/monitoring', 'AuditController@indexMonitoring');
 Route::get('fetch/audit_patrol/monitoring', 'AuditController@fetchMonitoring');
 Route::get('index/audit_patrol/detail', 'AuditController@detailMonitoring');
 Route::get('index/audit_patrol/table', 'AuditController@fetchTable_audit');
+Route::get('index/audit_patrol/detail_penanganan', 'AuditController@detailPenanganan');
+Route::post('post/audit_patrol/penanganan', 'AuditController@postPenanganan');
+
 
 //Audit Internal ISO
 Route::get('index/audit_iso', 'CparController@audit');
