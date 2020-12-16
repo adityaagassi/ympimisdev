@@ -177,7 +177,7 @@
 							<th style="color: white;border-right: 1px solid white">Photo</th>
 							<th style="color: white;border-right: 1px solid white">Problem</th>
 							<th style="color: white;border-right: 1px solid white">PIC</th>
-							<th style="color: white;border-right: 1px solid white;width: 1%">Act</th>
+							<!-- <th style="color: white;border-right: 1px solid white;width: 1%">Act</th> -->
 						</tr>
 					</thead>
 					<tbody id="body_cek">
@@ -212,7 +212,7 @@
 								</select>
 								<!-- <input type="hidden" id="patrol_pic_name"> -->
 							</td>
-							<td><button class="btn btn-danger" onclick="delete_confirmation(this)"><i class="fa fa-close"></i></button></td>
+							<!-- <td><button class="btn btn-danger" onclick="delete_confirmation(this)"><i class="fa fa-close"></i></button></td> -->
 						</tr>
 					</tbody>
 				</table>
