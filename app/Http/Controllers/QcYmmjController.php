@@ -70,17 +70,20 @@ class QcYmmjController extends Controller
           })
 
           ->editColumn('file', function($qc_ymmj){
+            $fl = "";
             if ($qc_ymmj->file != null) {
               $data = json_decode($qc_ymmj->file);
               for ($i = 0; $i < count($data); $i++) {
                 $data[$i];
-                return '<a href="../files/'.$data[$i].'" target="_blank" class="fa fa-paperclip"></a>';
+                $fl .= '<a href="../files/'.$data[$i].'" target="_blank" class="fa fa-paperclip"></a>';
               }
               
             }
             else{
-              return '-';
+               $fl = '-';
             }
+
+            return $fl;
             
           })
 
@@ -371,21 +374,24 @@ class QcYmmjController extends Controller
           else if($detail->penanganan == "Replacement") {
             return '<label class="label label-primary">'.$detail->penanganan. '</label>';
           }
+          else if($detail->penanganan == "Special Acceptance") {
+            return '<label class="label label-primary">'.$detail->penanganan. '</label>';
+          }
         })
 
         ->editColumn('file', function($qc_ymmj){
+            $fl = "";
             if ($qc_ymmj->file != null) {
               $data = json_decode($qc_ymmj->file);
               for ($i = 0; $i < count($data); $i++) {
                 $data[$i];
-                return '<a href="../../files/'.$data[$i].'" target="_blank" class="fa fa-paperclip"></a>';
+                $fl .= '<a href="../../files/'.$data[$i].'" target="_blank" class="fa fa-paperclip"></a>';
               }
-              
             }
             else{
-              return '-';
+              $fl = '-';
             }
-            
+            return $fl;
           })
 
       ->rawColumns(['action' => 'action', 'penanganan' => 'penanganan','file' => 'file'])

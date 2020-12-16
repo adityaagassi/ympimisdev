@@ -442,6 +442,9 @@ table > thead > tr > th{
             else if (value.penanganan == "Replacement" || value.penanganan == "replacement")  {
               table += '<td style="background-color:purple">'+value.penanganan+'</td>';
             }
+            else if (value.penanganan == "Special Acceptance" || value.penanganan == "Spesial acceptance")  {
+              table += '<td style="background-color:yellow;color:black">'+value.penanganan+'</td>';
+            }
             // table += '<td>'+value.file+'</td>';
             table += '</tr>';
 
