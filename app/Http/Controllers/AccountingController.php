@@ -7912,12 +7912,12 @@ public function import_receive(Request $request){
                              ->where('no_item',$item_no)
                              ->first();
 
-                             $total_all = $po_detail->qty_receive + $qty;
+                             // $total_all = $po_detail->qty_receive + $qty;
 
                                 //Update QTY RECEIVE PO
-                             $update_qty_receive = AccPurchaseOrderDetail::where('no_po','=',$po_detail->no_po)
-                             ->where('no_item','=',$item_no)
-                             ->update(['qty_receive' => $total_all, 'date_receive' => $receive_date]);
+                             // $update_qty_receive = AccPurchaseOrderDetail::where('no_po','=',$po_detail->no_po)
+                             // ->where('no_item','=',$item_no)
+                             // ->update(['qty_receive' => $total_all, 'date_receive' => $receive_date]);
 
                                 //get log amount
 
@@ -8042,16 +8042,16 @@ public function import_receive(Request $request){
                         }
 
                         //GET DATA
-                        $datapo = AccPurchaseOrderDetail::where('no_po','=',$po_detail->no_po)
-                        ->where('no_item','=',$item_no)
-                        ->first();
+                        // $datapo = AccPurchaseOrderDetail::where('no_po','=',$po_detail->no_po)
+                        // ->where('no_item','=',$item_no)
+                        // ->first();
 
                         //UPDATE STATUS
-                        if ($datapo->qty_receive >= $datapo->qty) {
-                            $update_qty_receive = AccPurchaseOrderDetail::where('no_po','=',$po_detail->no_po)
-                            ->where('no_item','=',$item_no)
-                            ->update(['status' => 'close']);
-                        }
+                        // if ($datapo->qty_receive >= $datapo->qty) {
+                        //     $update_qty_receive = AccPurchaseOrderDetail::where('no_po','=',$po_detail->no_po)
+                        //     ->where('no_item','=',$item_no)
+                        //     ->update(['status' => 'close']);
+                        // }
                     }
                 }       
 
