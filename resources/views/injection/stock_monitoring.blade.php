@@ -464,6 +464,7 @@ table > thead > tr > th{
 							},
 						},
 						yAxis: [{
+							// type: 'logarithmic',
 							title: {
 								text: 'Total Stock',
 								style: {
@@ -474,6 +475,9 @@ table > thead > tr > th{
 			                    }
 							},
 							labels:{
+								formatter: function() {
+						          return this.value / 1000 + 'K';
+						        },
 					        	style:{
 									fontSize:"13px"
 								}
@@ -628,6 +632,7 @@ table > thead > tr > th{
 							},
 						},
 						yAxis: [{
+							// type: 'logarithmic',
 							title: {
 								text: 'Total Stock',
 								style: {
@@ -638,6 +643,9 @@ table > thead > tr > th{
 			                    }
 							},
 							labels:{
+								formatter: function() {
+						          return this.value / 1000 + 'K';
+						        },
 					        	style:{
 									fontSize:"13px"
 								}
