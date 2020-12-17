@@ -51,6 +51,16 @@ class KnockDownController extends Controller{
 				'location' => $id,
 			))->with('page', $title)->with('head', $title);
 		}
+		else if($id == 'm-pro'){
+			$title = 'KD M-PRO';
+			$title_jp = '';
+
+			return view('kd.index_kd_mpro', array(
+				'title' => $title,
+				'title_jp' => $title_jp,
+				'location' => $id,
+			))->with('page', $title)->with('head', $title);
+		}
 		else if($id == 'mouthpiece-packed'){
 			$title = 'KD Mouthpiece';
 			$title_jp = '';
@@ -160,6 +170,46 @@ class KnockDownController extends Controller{
 		return view('kd.label.print_label_zpro', array(
 			'knock_down_detail' => $knock_down_detail,
 		));
+	}
+
+	public function indexPrintLabelMpro($shipment_schedule_id, $kd_number){
+		$shipment;;
+		if($shipment_schedule_id != 'null'){
+			$shipment = ShipmentSchedule::leftJoin('materials','materials.material_number','=','shipment_schedules.material_number')
+			->where('shipment_schedules.id', $shipment_schedule_id)
+			->select(
+				'shipment_schedules.material_number',
+				'materials.material_description',
+				db::raw('COALESCE(materials.xy,"-") AS xy'),
+				db::raw('COALESCE(materials.mj,"-") AS mj'),
+				'shipment_schedules.quantity'
+			)
+			->first();
+		}else{
+			$shipment = KnockDownDetail::leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'knock_down_details.shipment_schedule_id')
+			->leftJoin('materials', 'materials.material_number', '=', 'knock_down_details.material_number')
+			->where('knock_down_details.kd_number', $kd_number)
+			->select(
+				'knock_down_details.material_number',
+				'materials.material_description',
+				db::raw('COALESCE(materials.xy,"-") AS xy'),
+				db::raw('COALESCE(materials.mj,"-") AS mj'),
+				'shipment_schedules.quantity'
+			)
+			->first();
+		}
+
+		$pdf = \App::make('dompdf.wrapper');
+		$pdf->getDomPDF()->set_option("enable_php", true);
+		$pdf->setPaper('A6', 'landscape');
+		$pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
+
+		$pdf->loadView('kd.label.print_label_mpro', array(
+			'shipment' => $shipment,
+			'kd_number' => $kd_number
+		));
+		return $pdf->stream("label_".$shipment->material_number.".pdf");
+
 	}
 
 	public function indexPrintLabelSubassy($id){
@@ -1445,12 +1495,12 @@ class KnockDownController extends Controller{
 			'storage_locations.location',
 			'shipment_schedules.st_date',
 			'destinations.destination_shortname',
-			'knock_downs.updated_at',
-			'knock_downs.updated_at',
+			'knock_down_details.updated_at',
 			'knock_downs.invoice_number',
 			'knock_downs.container_id',
 			'knock_down_details.quantity')
 		->orderBy('knock_down_details.kd_number', 'DESC')
+		->orderBy('knock_down_details.updated_at', 'ASC')
 		->get();
 
 		return DataTables::of($knock_down_details)
@@ -1535,19 +1585,36 @@ class KnockDownController extends Controller{
 		$dateto = date('Y-m-d', strtotime('+14 day'));
 
 		$storage = '';
+		$order = '';
 		if($id == 'z-pro'){
 			$dateto = date('Y-m-d', strtotime('+30 day'));
 			$storage = "('ZPRO')";
+			$order = 'sh.st_date ASC, box DESC';
+
+		}else if($id == 'm-pro'){
+			$storage = "('MPRO')";
+			$order = 'sh.st_date ASC, sh.actual_quantity DESC, target DESC';		
+
 		}else if($id == 'sub-assy-sx'){
 			$storage = "('SUBASSY-SX', 'ASSY-SX')";
+			$order = 'sh.st_date ASC, box DESC';
+
 		}else if($id == 'sub-assy-fl'){
 			$storage = "('SUBASSY-FL')";
+			$order = 'sh.st_date ASC, box DESC';
+
 		}else if($id == 'sub-assy-cl'){
 			$storage = "('SUBASSY-CL')";
+			$order = 'sh.st_date ASC, box DESC';
+
 		}else if($id == 'mouthpiece'){
 			$storage = "('MP') AND m.kd_name = 'SINGLE'";
+			$order = 'sh.st_date ASC, box DESC';
+
 		}else if($id == 'mouthpiece-packed'){
 			$storage = "('MP') AND m.kd_name = 'MP'";
+			$order = 'sh.st_date ASC, box DESC';
+
 		}
 
 		$target = db::select("SELECT
@@ -1558,25 +1625,44 @@ class KnockDownController extends Controller{
 			m.hpl,
 			m.surface,
 			d.destination_shortname,
+			sh.quantity,
+			sh.actual_quantity,
 			( sh.quantity - sh.actual_quantity ) AS target,
 			v.lot_completion,
 			(( sh.quantity - sh.actual_quantity ) / v.lot_completion ) AS box 
-			FROM
-			shipment_schedules sh
+			FROM shipment_schedules sh
 			LEFT JOIN materials m ON m.material_number = sh.material_number
 			LEFT JOIN destinations d ON d.destination_code = sh.destination_code
 			LEFT JOIN material_volumes v ON v.material_number = sh.material_number 
-			WHERE
-			sh.st_date <= '".$dateto."' AND m.category = 'KD' AND m.hpl IN ".$storage." HAVING target > 0 
-			ORDER BY
-			sh.st_date ASC,
-			box DESC");
+			WHERE sh.st_date <= '".$dateto."'
+			AND m.category = 'KD'
+			AND m.hpl IN ".$storage."
+			HAVING target > 0 
+			ORDER BY ". $order);
 
 		$response = array(
 			'status' => true,
 			'target' => $target,
 		);
 		return Response::json($response);
+	}
+
+	public function fetchCheckKd(Request $request){
+
+		$knock_down = KnockDownDetail::where('shipment_schedule_id', $request->get('shipment_schedule_id'))->first();
+
+		if($knock_down){
+			$response = array(
+				'status' => true,
+				'kd_number' => $knock_down->kd_number,
+			);
+			return Response::json($response);
+		}else{
+			$response = array(
+				'status' => false
+			);
+			return Response::json($response);
+		}
 	}
 
 	public function fetchKdPack($id){
@@ -2105,6 +2191,202 @@ class KnockDownController extends Controller{
 		}		
 	}
 
+	public function printLabelNewParsial(Request $request){
+		//Inisialiasi Variabel
+		$kd_number = $request->get('kd_number');
+		$shipment_id = $request->get('shipment_id');
+		$material_number = $request->get('material_number');
+		$quantity = $request->get('quantity');
+		$location = $request->get('location');
+
+
+		$storage_location = Material::where('material_number','=',$material_number)
+		->select('issue_storage_location')
+		->first();
+		$storage_location = $storage_location->issue_storage_location;
+
+		$max_count = 1;
+		$status = 1;
+		if($location == 'z-pro' || $location == 'm-pro'){
+			$max_count = 100;
+			$status = 0;
+		}
+
+
+		//KnockDown
+		$knock_down;
+		if(strlen($kd_number) > 0){
+			$knock_down = KnockDown::where('kd_number','=', $kd_number)
+			->where('status','=', 0)
+			->first();
+
+			if($knock_down){
+				$knock_down->actual_count = $knock_down->actual_count + 1;
+			}else{
+				$response = array(
+					'status' => false,
+					'message' => 'KDO Number Not Found'
+				);
+				return Response::json($response);
+			}
+		}else{
+			$prefix_now = 'KD'.date("y").date("m");
+			$code_generator = CodeGenerator::where('note','=','kd')->first();
+			if ($prefix_now != $code_generator->prefix){
+				$code_generator->prefix = $prefix_now;
+				$code_generator->index = '0';
+				$code_generator->save();
+			}
+
+			$number = sprintf("%'.0" . $code_generator->length . "d", $code_generator->index+1);
+			$kd_number = $code_generator->prefix . $number;
+			$code_generator->index = $code_generator->index+1;
+			$code_generator->save();
+
+			$knock_down = new KnockDown([
+				'kd_number' => $kd_number,
+				'created_by' => Auth::id(),
+				'max_count' => $max_count,
+				'actual_count' => 1,
+				'remark' => $location,
+				'status' => $status,
+			]);
+
+		}	
+
+
+		//KnockDown Log
+		$knock_down_log;	
+		if($location == 'z-pro' || $location == 'm-pro'){
+			$knock_down_log = KnockDownLog::updateOrCreate(
+				['kd_number' => $kd_number, 'status' => 0],
+				['created_by' => Auth::id(), 'status' => 0, 'updated_at' => Carbon::now()]
+			);
+		}else{
+			$knock_down_log = KnockDownLog::updateOrCreate(
+				['kd_number' => $kd_number, 'status' => 1],
+				['created_by' => Auth::id(), 'status' => 1, 'updated_at' => Carbon::now()]
+			);
+		}
+
+
+		//KnockDown Detail
+		$knock_down_detail = new KnockDownDetail([
+			'kd_number' => $kd_number,
+			'material_number' => $material_number,
+			'quantity' => $quantity,
+			'shipment_schedule_id' => $shipment_id,
+			'storage_location' => $storage_location,
+			'created_by' => Auth::id(),
+		]);
+
+
+		//Shipment Schedule
+		$shipment_schedule = ShipmentSchedule::where('id', '=', $shipment_id)->first();
+		$shipment_schedule->actual_quantity = $shipment_schedule->actual_quantity + $quantity;
+
+		$closeKDO = false;
+		if($shipment_schedule->quantity == $shipment_schedule->actual_quantity){
+			$closeKDO = true;
+		}		
+
+		//Inventory
+		$inventory = Inventory::where('plant','=','8190')
+		->where('material_number','=',$material_number)
+		->where('storage_location','=',$storage_location)
+		->first();
+
+
+		if($inventory){
+			$inventory->quantity = $inventory->quantity + $quantity;
+		}else{	
+			$inventory = new Inventory([
+				'plant' => '8190',
+				'material_number' => $material_number,
+				'storage_location' => $storage_location,
+				'quantity' => $quantity,
+			]);
+		}
+
+		$child = BomComponent::where('material_parent', $material_number)->get();
+		for ($i=0; $i < count($child); $i++) { 
+			$inv_child = Inventory::where('plant','=','8190')
+			->where('material_number','=',$child[$i]->material_child)
+			->where('storage_location','=',$storage_location)
+			->first();
+
+			if($inv_child){
+				$inv_child->quantity = $inv_child->quantity - ($quantity * $child[$i]->usage);
+				$inv_child->save();
+			}
+		}
+
+
+		//Transaction Completion
+		$transaction_completion = new TransactionCompletion([
+			'serial_number' => $kd_number,
+			'material_number' => $material_number,
+			'issue_plant' => '8190',
+			'issue_location' => $storage_location,
+			'quantity' => $quantity,
+			'movement_type' => '101',
+			'created_by' => Auth::id(),
+		]);
+
+
+
+		try{
+			DB::transaction(function() use ($knock_down, $knock_down_detail, $shipment_schedule, $inventory, $transaction_completion, $knock_down_log){
+				$knock_down->save();
+				$knock_down_detail->save();
+				$shipment_schedule->save();
+				$inventory->save();
+				$transaction_completion->save();
+				$knock_down_log->save();
+			});
+
+			if($closeKDO){
+				$knock_down = KnockDown::where('kd_number', $kd_number)
+				->update([
+					'status' => 1
+				]);
+
+				$knock_down_log = KnockDownLog::updateOrCreate(
+					['kd_number' => $kd_number, 'status' => 1],
+					['created_by' => Auth::id(), 'status' => 1, 'updated_at' => Carbon::now()]
+				);
+				$knock_down_log->save();
+			}
+
+			$knock_down = KnockDown::where('remark','=',$location)
+			->where('status','=',0)
+			->orderBy('kd_number', 'desc')
+			->first();
+
+			$knock_down = KnockDown::where('kd_number', '=', $kd_number)->first();
+
+			$knock_down_detail = KnockDownDetail::where('kd_number', '=', $kd_number)
+			->select('knock_down_details.id')
+			->orderBy('knock_down_details.created_at', 'desc')
+			->first();
+
+			$response = array(
+				'status' => true,
+				'message' => 'Material Sukses Ditambahkan',
+				'actual_count' => $knock_down->actual_count,
+				'knock_down_detail_id' => $knock_down_detail->id,
+				'kd_number' => $kd_number
+			);
+			return Response::json($response);
+		}catch(Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}		
+	}
+
 	public function printLabel(Request $request){
 		$prefix_now = 'KD'.date("y").date("m");
 		$code_generator = CodeGenerator::where('note','=','kd')->first();
@@ -2120,13 +2402,13 @@ class KnockDownController extends Controller{
 
 
 		// dd(count($picks));
-		
+
 		$count = 0;
 
 		for ($i=0; $i < count($picks); $i++) {
 
 			$loop = $picks[$i]['quantity'];
-			
+
 			for ($j=0; $j < $loop; $j++) {
 
 				//Inisiasi Variabel
@@ -2435,7 +2717,7 @@ class KnockDownController extends Controller{
 		$material_description = substr($knock_down_details->material_description, 0,31);
 		$material_description = $this->writeString($material_description, 31, ' ');
 		$printer->text($knock_down_details->material_number." | ".$material_description." | ".$qty);
-		
+
 		$printer->feed(3);
 		$printer->initialize();
 		$printer->setJustification(Printer::JUSTIFY_CENTER);

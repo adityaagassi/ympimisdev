@@ -1635,13 +1635,15 @@ Route::group(['nav' => 'S24', 'middleware' => 'permission'], function(){
 	Route::post('fetch/kd_force_print_zpro', 'KnockDownController@forcePrintLabel');
 
 	Route::get('index/print_label_zpro/{id}', 'KnockDownController@indexPrintLabelZpro');
+});
 
 
-
-
-	Route::get('index/kd_tpro/{id}', 'KnockDownController@indexKD');
-
-
+//MPRO
+Route::group(['nav' => 'S51', 'middleware' => 'permission'], function(){
+	Route::get('index/kd_mpro/{id}', 'KnockDownController@indexKD');
+	//Based on shipment sch parsial
+	Route::post('fetch/kd_print_mpro', 'KnockDownController@printLabelNewParsial');
+	Route::get('index/print_label_mpro/{shipment_schedule_id}/{kd_number}', 'KnockDownController@indexPrintLabelMpro');
 });
 
 

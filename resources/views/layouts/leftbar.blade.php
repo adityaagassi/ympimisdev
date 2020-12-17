@@ -833,6 +833,12 @@
   </li>
   @endif
 
+  @if(in_array('S24', $navs))
+  @if(isset($page) && $page == "KD M-PRO")<li class="active">@else<li>@endif
+    <a href="{{ url("index/kd_mpro/"."m-pro") }}"><i class="fa fa-pencil-square-o"></i> <span>KD  <i class="fa fa-angle-right"></i> M-PRO</span></a>
+  </li>
+  @endif
+
   @if(in_array('S26', $navs))
   @if(isset($head) && $head == "KD Mouthpiece")<li class="treeview active">@else<li class="treeview">@endif
     <a href="#">
