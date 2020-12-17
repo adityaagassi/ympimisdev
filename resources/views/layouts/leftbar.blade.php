@@ -614,7 +614,7 @@
   </li>
   @endif
 
-  @if(in_array('S39', $navs))
+  @if(in_array('S50', $navs))
   @if(isset($head) && $head == "Sakurentsu")<li class="treeview active">@else<li class="treeview">@endif
     <a href="#">
       <i class="fa fa-file-pdf-o"></i> <span>Sakurentsu</span>

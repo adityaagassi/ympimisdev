@@ -169,7 +169,7 @@ class SakurentsuController extends Controller
         $title_jp = '??';
 
         $data = SakurentsuThreeM::where('id', '=', $id_three_m)->first();
-        $docs = SakurentsuThreeMDocument::where('form_id', '=', $id_three_m)->get(); 
+        $docs = SakurentsuThreeMDocument::where('form_id', '=', $id_three_m)->select('form_id', 'document_name', 'document_description', 'pic', db::raw('DATE_FORMAT(target_date, "%d %M %Y") as target'), db::raw('DATE_FORMAT(finish_date, "%d %M %Y") as finish'))->get(); 
 
         return view('sakurentsu.report.detail_3m', array(
             'title' => $title,
@@ -188,9 +188,13 @@ class SakurentsuController extends Controller
         $title = 'Sakurentsu';
         $title_jp = '作連通';
 
-        $employee = EmployeeSync::where('employee_id', Auth::user()->username)
-        ->select('employee_id', 'name', 'position')->first();
+        // $employee = EmployeeSync::where('employee_id', Auth::user()->username)
+        // ->select('employee_id', 'name', 'position')->first();
 
+
+        $employee = User::where('username', Auth::user()->username)
+        ->select('name')->first();
+        
         return view('sakurentsu.report.upload_sakurentsu', array(
             'title' => $title,
             'title_jp' => $title_jp,

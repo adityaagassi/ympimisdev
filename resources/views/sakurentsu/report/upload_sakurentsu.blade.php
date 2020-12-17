@@ -71,7 +71,7 @@ table.table-bordered > tfoot > tr > th{
   <div class="col-xs-6" style="padding-right: 0">
    <div class="box box-solid">
     <div class="box-header">
-     <h3 class="box-title">Upload File<span class="text-purple"> Sakurentsu</span></h3>
+      <h3 class="box-title">Upload File Sakurentsu <span class="text-purple">作連通ファイルアップロード</span></h3>
    </div>
    <div class="box-body">
      <div class="row">
@@ -84,56 +84,56 @@ table.table-bordered > tfoot > tr > th{
             <input type="hidden" value="{{csrf_token()}}" name="_token" />
             <input type="hidden" id="applicant" name="applicant" class="form-control" value="{{$employee->name}}" readonly>
             
+            <div class="col-xs-12">
+              <label for="input">Sakuretsu Number <span class="text-purple">作連通番号</span></label>              
+            </div>
             <div class="col-xs-4" style="padding: 1px">
               <div class="form-group">
-                <label for="input">Sakuretsu Number</label>
                 <input type="text" name="sakurentsu_number1" id="sakurentsu_number1" placeholder="Sakurentsu Number" class="form-control" value="KC" readonly="">
               </div>
             </div>
 
             <div class="col-xs-4" style="padding: 1px">
               <div class="form-group">
-                <label for="input">&nbsp;</label>
                 <input type="text" name="sakurentsu_number2" id="sakurentsu_number2" placeholder="Nomor, e.g 001" class="form-control">
               </div>
             </div>
             <div class="col-xs-4" style="padding: 1px">
               <div class="form-group">
-                <label for="input">&nbsp;</label>
                 <input type="text" name="sakurentsu_number3" id="sakurentsu_number3" placeholder="Revisi, e.g 00" class="form-control">
               </div>
             </div>
             <div class="col-xs-12" style="padding: 1px">
               <div class="form-group">
-                <label for="input">Title (Japanese)</label>
-                <input type="text" name="title_jp" id="title_jp" placeholder="Title Japanese" class="form-control">
+                <label for="input">Sakurentsu Title <span class="text-purple">作連通の表題</span></label>
+                <input type="text" name="title_jp" id="title_jp" placeholder="Write title here" class="form-control">
               </div>
             </div>
             <div class="col-xs-12" style="padding: 1px">
               <div class="form-group">
-                <label for="sakurentsu_category">Sakurentsu Category</label><br>
+                <label for="sakurentsu_category">Sakurentsu Category <span class="text-purple">作連通のカテゴリ</span></label><br>
                 <select class="select2" name="sakurentsu_category" id="sakurentsu_category" data-placeholder="Select Category" style="width: 100%">
                   <option value=""></option>
                   <option value="3M">3M</option>
-                  <option value="Trial">Trial Request</option>
-                  <option value="Information">Information</option>
+                  <option value="Trial">Trial Request 試作依頼</option>
+                  <option value="Information">Information 情報</option>
                 </select>
               </div>
             </div>
           </div>
           <div class="col-xs-12" style="padding: 0">
             <div class="form-group">
-              <label>Target Date</label>
+              <label>Target Date <span class="text-purple">締切</span></label>
               <div class="input-group date">
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
                 </div>
-                <input type="text" class="form-control pull-right" id="target_date" name="target_date" placeholder="Due Date">
+                <input type="text" class="form-control pull-right" id="target_date" name="target_date" placeholder="Select Target Date">
               </div>
             </div>
 
             <div class="form-group">
-              <label>Sakurentsu File</label>
+              <label>Sakurentsu File <span class="text-purple">作連通ファイル</span></label>
               <div class="dropzone" id="my-dropzone" name="mainFileUploader">
                <div class="fallback">
                  <input name="file" type="file" multiple />
@@ -157,7 +157,7 @@ table.table-bordered > tfoot > tr > th{
  <div class="col-xs-12">
   <div class="box box-solid">
     <div class="box-header">
-     <h3 class="box-title">List Outstanding<span class="text-purple"> Sakurentsu</span></h3><br>
+     <h3 class="box-title">List Outstanding Sakurentsu <span class="text-purple">未解決作連通のリスト</span></h3><br>
    </div>
    <div class="box-body">
      <div class="col-xs-12">
@@ -237,7 +237,7 @@ table.table-bordered > tfoot > tr > th{
    } else {
      wrapperThis.processQueue();
      $("#loading").show();
-     setTimeout(function(){ location.reload() }, 4000);
+     // setTimeout(function(){ location.reload() }, 4000);
    }
  });
 
@@ -271,6 +271,10 @@ table.table-bordered > tfoot > tr > th{
     formData.append("applicant", $("#applicant").val());
     formData.append("target_date", $("#target_date").val());
   });
+}, success: function(file, response) {
+  $("#loading").hide();
+  openSuccessGritter('Success', 'Sakurentsu has been uploaded & send to Interpreter');
+  fetchTable();
 }
 
 };
