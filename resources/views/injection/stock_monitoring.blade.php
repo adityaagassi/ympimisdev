@@ -64,9 +64,10 @@ table > thead > tr > th{
   border:2px solid #f4f4f4;
   color: white;
 }
-	.content{
+	.content-wrapper{
 		color: white;
 		font-weight: bold;
+		background-color: #313132 !important;
 	}
 	#loading, #error { display: none; }
 
@@ -101,10 +102,20 @@ table > thead > tr > th{
 				<div class="col-xs-2">
 					<button class="btn btn-success" onclick="fillChart()">Update Chart</button>
 				</div>
-				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
+				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;"></div>
 			</div>
-			<div class="col-xs-12" style="margin-top: 5px;">
-				<div id="container1" style="width: 100%;height: 600px"></div>
+			<!-- <div class="col-xs-12" style="margin-top: 5px;background-color: #313132;">
+				<center><span style="font-size: 30px;font-weight: bold;"></span></center>
+			</div> -->
+			<div class="col-xs-8" style="margin-top: 5px;">
+				<!-- <div class="row"> -->
+					<div id="container1" style="width: 100%;height: 600px;"></div>
+				<!-- </div> -->
+			</div>
+			<div class="col-xs-4" style="margin-top: 5px;padding-left: 0px">
+				<!-- <div class="row"> -->
+					<div id="container2" style="width: 100%;height: 600px;"></div>
+				<!-- </div> -->
 			</div>
 		</div>
 	</div>
@@ -150,7 +161,7 @@ table > thead > tr > th{
 				linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
 				stops: [
 				[0, '#2a2a2b'],
-				[1, '#3e3e40']
+				[1, '#2a2a2b']
 				]
 			},
 			style: {
@@ -370,6 +381,7 @@ table > thead > tr > th{
 	}
 
 	function fillChart() {
+		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
 		var data = {
 			color:$('#color').val()
 		}
@@ -377,57 +389,52 @@ table > thead > tr > th{
 			if(xhr.status == 200){
 				if(result.status){
 
-					//Chart Machine Report
-					var part = [];
-					var jml = [];
-					var jml_assy = [];
-					var series = [];
-					var series2 = [];
-					var series3 = [];
-					var colors = [];
-					var colors2 = [];
-					var plan = [];
+					//Chart Skeleton
+					var part_skeleton = [];
+					var jml_skeleton = [];
+					var jml_assy_skeleton = [];
+					var series_skeleton = [];
+					var series2_skeleton = [];
+					var series3_skeleton = [];
+					var colors_skeleton = [];
+					var colors2_skeleton = [];
+					var plan_skeleton = [];
 
-					for (var i = 0; i < result.datas.length; i++) {
-						part.push(result.datas[i].part);
-						jml.push(parseInt(result.datas[i].stock));
-						jml_assy.push(parseInt(result.datas[i].stock_assy));
-						var color1 = result.datas[i].part.split(' ');
-						var color2 = color1.slice(-1);
-						// var color2 = color1[1].slice(0);
-						// var color3 = color2[1].split(')');
-						// var color4 = color3[0];
-						// console.log(result.datas[i].color);
-						if (result.datas[i].color == 'BLUE)') {
-							colors.push('#4287f5');
-							colors2.push('#a6c8ff');
-						}else if(result.datas[i].color == 'PINK)'){
-							colors.push('#f542dd');
-							colors2.push('#ffa3f3');
-						}else if(result.datas[i].color == 'GREEN)'){
-							colors.push('#7bff63');
-							colors2.push('#adff9e');
-						}else if(result.datas[i].color == 'RED)'){
-							colors.push('#ff4a4a');
-							colors2.push('#ff8787');
-						}else if(result.datas[i].color == 'IVORY)'){
-							colors.push('#fff5a6');
-							colors2.push('#fffce6');
-						}else if(result.datas[i].color == 'BROWN)'){
-							colors.push('#856111');
-							colors2.push('#ccae6c');
-						}else if(result.datas[i].color == 'BEIGE)'){
-							colors.push('#e0b146');
-							colors2.push('#e8c066');
+					for (var i = 0; i < result.datas_skeleton.length; i++) {
+						part_skeleton.push(result.datas_skeleton[i].part);
+						jml_skeleton.push(parseInt(result.datas_skeleton[i].stock));
+						jml_assy_skeleton.push(parseInt(result.datas_skeleton[i].stock_assy));
+						var color1_skeleton = result.datas_skeleton[i].part.split(' ');
+						var color2_skeleton = color1_skeleton.slice(-1);
+						if (result.datas_skeleton[i].color == 'BLUE)') {
+							colors_skeleton.push('#4287f5');
+							colors2_skeleton.push('#a6c8ff');
+						}else if(result.datas_skeleton[i].color == 'PINK)'){
+							colors_skeleton.push('#f542dd');
+							colors2_skeleton.push('#ffa3f3');
+						}else if(result.datas_skeleton[i].color == 'GREEN)'){
+							colors_skeleton.push('#7bff63');
+							colors2_skeleton.push('#adff9e');
+						}else if(result.datas_skeleton[i].color == 'RED)'){
+							colors_skeleton.push('#ff4a4a');
+							colors2_skeleton.push('#ff8787');
+						}else if(result.datas_skeleton[i].color == 'IVORY)'){
+							colors_skeleton.push('#fff5a6');
+							colors2_skeleton.push('#fffce6');
+						}else if(result.datas_skeleton[i].color == 'BROWN)'){
+							colors_skeleton.push('#856111');
+							colors2_skeleton.push('#ccae6c');
+						}else if(result.datas_skeleton[i].color == 'BEIGE)'){
+							colors_skeleton.push('#e0b146');
+							colors2_skeleton.push('#e8c066');
 						}else{
-							colors.push('#000');
-							colors2.push('#000');
+							colors_skeleton.push('#000');
+							colors2_skeleton.push('#000');
 						}
-						// series.push([part[i], jml[i], colors[i]]);
-						series.push({y: jml[i],name:part[i], color: colors[i], key: 'RC11'});
-						series3.push({y: jml_assy[i],name:part[i], color: colors2[i], key: 'RC91'});
-						plan.push(result.datas[i].plan);
-						series2.push({y: plan[i],name:part[i], key: 'Plan'});
+						series_skeleton.push({y: jml_skeleton[i],name:part_skeleton[i], color: colors_skeleton[i], key: 'RC11'});
+						series3_skeleton.push({y: jml_assy_skeleton[i],name:part_skeleton[i], color: colors2_skeleton[i], key: 'RC91'});
+						plan_skeleton.push(result.datas_skeleton[i].plan);
+						series2_skeleton.push({y: plan_skeleton[i],name:part_skeleton[i], key: 'Plan'});
 					}
 
 					Highcharts.chart('container1', {
@@ -435,22 +442,16 @@ table > thead > tr > th{
 							type: 'column'
 						},
 						title: {
-							text: 'Daily After Injection Stock Monitoring',
-							style: {
-								fontSize: '30px',
-								fontWeight: 'bold'
+							text: 'STOCK AFTER INJECTION TRANSLUCENT',
+							style:{
+								fontSize: '20px'
 							}
 						},
 						subtitle: {
-							// text: '<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>',
-							text: '<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualDate() +'</p>',
-							style: {
-								fontSize: '1vw',
-								fontWeight: 'bold'
-							}
+							text: '',
 						},
 						xAxis: {
-							categories: part,
+							categories: part_skeleton,
 							type: 'category',
 							gridLineWidth: 0,
 							gridLineColor: 'RGB(204,255,255)',
@@ -458,7 +459,7 @@ table > thead > tr > th{
 							lineColor:'#9e9e9e',
 							labels: {
 								style: {
-									fontSize: '15px'
+									fontSize: '13px'
 								}
 							},
 						},
@@ -474,7 +475,7 @@ table > thead > tr > th{
 							},
 							labels:{
 					        	style:{
-									fontSize:"15px"
+									fontSize:"13px"
 								}
 					        },
 							type: 'linear'
@@ -506,7 +507,6 @@ table > thead > tr > th{
 				                point: {
 				                  events: {
 				                    click: function () {
-				                      // ShowModal(this.category,result.date);
 				                    }
 				                  }
 				                },
@@ -531,185 +531,191 @@ table > thead > tr > th{
 						series: [
 						{
 							type: 'column',
-							data: series3,
+							data: series3_skeleton,
 							name: 'Stock Assy',
 							colorByPoint: false,
-							// color: colors
 							stacking:true
 						},{
 							type: 'column',
-							data: series,
+							data: series_skeleton,
 							name: 'Stock Store',
 							colorByPoint: false,
-							// color: colors
 							stacking:true
 						},
 						{
 						    animation: false,
 					    	type: 'spline',
 					        name: 'Plan',
-					        data: series2,
+					        data: series2_skeleton,
 					        colorByPoint:false,
 					        color:'#ff0066',
 					    }
 						]
 					});
 
-					//Chart Press Machine Per Operator
-					// var operator = [];
-					// var operator2 = [];
-					// var jmlop = [];
-					// var waktu = [];
-					// var color = [];
-					// var series = [];
-					// var series2 = [];
+					// Chart Ivory
+					var part_ivory = [];
+					var jml_ivory = [];
+					var jml_assy_ivory = [];
+					var series_ivory = [];
+					var series2_ivory = [];
+					var series3_ivory = [];
+					var colors_ivory = [];
+					var colors2_ivory = [];
+					var plan_ivory = [];
 
-					// for (var i = 0; i < result.operator.length; i++) {
-					// 	operator.push(result.operator[i].name);
-					// 	jmlop.push(parseInt(result.operator[i].actual_shot));
-					// 	// color.push('#90ee7e');
+					for (var i = 0; i < result.datas_ivory.length; i++) {
+						part_ivory.push(result.datas_ivory[i].part);
+						jml_ivory.push(parseInt(result.datas_ivory[i].stock));
+						jml_assy_ivory.push(parseInt(result.datas_ivory[i].stock_assy));
+						var color1_ivory = result.datas_ivory[i].part.split(' ');
+						var color2_ivory = color1_ivory.slice(-1);
+						if (result.datas_ivory[i].color == 'BLUE)') {
+							colors_ivory.push('#4287f5');
+							colors2_ivory.push('#a6c8ff');
+						}else if(result.datas_ivory[i].color == 'PINK)'){
+							colors_ivory.push('#f542dd');
+							colors2_ivory.push('#ffa3f3');
+						}else if(result.datas_ivory[i].color == 'GREEN)'){
+							colors_ivory.push('#7bff63');
+							colors2_ivory.push('#adff9e');
+						}else if(result.datas_ivory[i].color == 'RED)'){
+							colors_ivory.push('#ff4a4a');
+							colors2_ivory.push('#ff8787');
+						}else if(result.datas_ivory[i].color == 'IVORY)'){
+							colors_ivory.push('#fff5a6');
+							colors2_ivory.push('#fffce6');
+						}else if(result.datas_ivory[i].color == 'BROWN)'){
+							colors_ivory.push('#856111');
+							colors2_ivory.push('#ccae6c');
+						}else if(result.datas_ivory[i].color == 'BEIGE)'){
+							colors_ivory.push('#e0b146');
+							colors2_ivory.push('#e8c066');
+						}else{
+							colors_ivory.push('#000');
+							colors2_ivory.push('#000');
+						}
+						series_ivory.push({y: jml_ivory[i],name:part_ivory[i], color: colors_ivory[i], key: 'RC11'});
+						series3_ivory.push({y: jml_assy_ivory[i],name:part_ivory[i], color: colors2_ivory[i], key: 'RC91'});
+						plan_ivory.push(result.datas_ivory[i].plan);
+						series2_ivory.push({y: plan_ivory[i],name:part_ivory[i], key: 'Plan'});
+					}
 
-					// 	series.push([operator[i], jmlop[i]]);
-					// 	// console.table(series);
-
-					// 	operator2.push(result.operator[i].name);
-					// 	waktu.push(parseFloat(result.operator[i].waktu_total));
-					// 	series2.push([operator2[i], waktu[i]]);
-					// 	// console.table(series2);
-					// 	// series.push({name : operator[i], data: jmlop[i], color: color[i]});
-					// }
-
-					// Highcharts.chart('container2', {
-					// 	chart: {
-					// 		type: 'column'
-					// 	},
-					// 	title: {
-					// 		text: 'Press Machine Result By Operator',
-					// 		style: {
-					// 			fontSize: '30px',
-					// 			fontWeight: 'bold'
-					// 		}
-					// 	},
-					// 	subtitle: {
-					// 		text: 'on '+result.dateTitle,
-					// 		style: {
-					// 			fontSize: '1vw',
-					// 			fontWeight: 'bold'
-					// 		}
-					// 	},
-					// 	xAxis: {
-					// 		categories: operator,
-					// 		type: 'category',
-					// 		gridLineWidth: 1,
-					// 		gridLineColor: 'RGB(204,255,255)',
-					// 		lineWidth:2,
-					// 		lineColor:'#9e9e9e',
-					// 		labels: {
-					// 			style: {
-					// 				fontSize: '18px'
-					// 			}
-					// 		},
-					// 	},
-					// 	yAxis: [{
-					// 		title: {
-					// 			text: 'Total Actual Shot',
-					// 			style: {
-			  //                       color: '#eee',
-			  //                       fontSize: '25px',
-			  //                       fontWeight: 'bold',
-			  //                       fill: '#6d869f'
-			  //                   }
-					// 		},
-					// 		labels:{
-					// 			style:{
-					// 				fontSize:"20px"
-					// 			}
-					// 		},
-					// 		type: 'linear',
-					// 		opposite: true
-					// 	},
-					// 	, { // Secondary yAxis
-					//         title: {
-					//             text: 'Total Process Time (Minute)',
-					//             style: {
-			  //                       color: '#eee',
-			  //                       fontSize: '19px',
-			  //                       fontWeight: 'bold',
-			  //                       fill: '#6d869f'
-			  //                   }
-					//         },
-					//         labels:{
-					//         	style:{
-					// 				fontSize:"20px"
-					// 			}
-					//         },
-					//         type: 'linear',
-					        
-					//     }],
-					// 	legend: {
-					// 		layout: 'horizontal',
-					// 		align: 'right',
-					// 		verticalAlign: 'top',
-					// 		x: -90,
-					// 		y: 20,
-					// 		floating: true,
-					// 		borderWidth: 1,
-					// 		backgroundColor:
-					// 		Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
-					// 		shadow: true,
-					// 		itemStyle: {
-				 //                fontSize:'16px',
-				 //            },
-					// 	},
-						
-					// 	tooltip: {
-					// 		headerFormat: '<span>Operator</span><br/>',
-					// 		pointFormat: '<span style="color:{point.color};font-weight: bold;">{point.name}</span>: <b>{point.y}</b><br/>',
-					// 	},
-					// 	plotOptions: {
-					// 		series:{
-					// 			cursor: 'pointer',
-				 //                point: {
-				 //                  events: {
-				 //                    click: function () {
-				 //                      ShowModalpic(this.category,result.date);
-				 //                    }
-				 //                  }
-				 //                },
-					// 			dataLabels: {
-					// 				enabled: true,
-					// 				format: '{point.y}',
-					// 				style:{
-					// 					fontSize: '1vw'
-					// 				}
-					// 			},
-					// 			animation: false,
-					// 			pointPadding: 0.93,
-					// 			groupPadding: 0.93,
-					// 			borderWidth: 0.93,
-					// 			cursor: 'pointer'
-					// 		},
-					// 	},credits: {
-					// 		enabled: false
-					// 	},
-					// 	series :  [{
-					// 		type: 'column',
-					// 		data: series,
-					// 		name: 'Actual Shot',
-					// 		colorByPoint: false,
-					// 		color: "#009688"
-					// 	},{
-					// 		type: 'column',
-					// 		data: series2,
-					// 		name: 'Process Time',
-					// 		yAxis:2,
-					// 		colorByPoint: false,
-					// 		color:'#cddc39'
-					// 	},
-					// 	]
-					// });
-
-
+					Highcharts.chart('container2', {
+						chart: {
+							type: 'column'
+						},
+						title: {
+							text: 'STOCK AFTER INJECTION IVORY',
+							style:{
+								fontSize: '20px'
+							}
+						},
+						subtitle: {
+							text: '',
+						},
+						xAxis: {
+							categories: part_ivory,
+							type: 'category',
+							gridLineWidth: 0,
+							gridLineColor: 'RGB(204,255,255)',
+							lineWidth:2,
+							lineColor:'#9e9e9e',
+							labels: {
+								style: {
+									fontSize: '12px'
+								}
+							},
+						},
+						yAxis: [{
+							title: {
+								text: 'Total Stock',
+								style: {
+			                        color: '#eee',
+			                        fontSize: '15px',
+			                        fontWeight: 'bold',
+			                        fill: '#6d869f'
+			                    }
+							},
+							labels:{
+					        	style:{
+									fontSize:"13px"
+								}
+					        },
+							type: 'linear'
+						},
+					    ],
+						tooltip: {
+							headerFormat: '<span>Part</span><br/>',
+							pointFormat: '<span style="color:{point.color};font-weight: bold;">{point.name} </span>: <b>{point.y}</b><br> on {point.key}',
+						},
+						legend: {
+							enabled:false
+							// layout: 'horizontal',
+							// align: 'right',
+							// verticalAlign: 'top',
+							// x: -40,
+							// y: 20,
+							// floating: true,
+							// borderWidth: 1,
+							// backgroundColor:
+							// Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
+							// shadow: true,
+							// itemStyle: {
+				   //              fontSize:'16px',
+				   //          },
+						},	
+						plotOptions: {
+							series:{
+								cursor: 'pointer',
+				                point: {
+				                  events: {
+				                    click: function () {
+				                    }
+				                  }
+				                },
+								dataLabels: {
+									enabled: true,
+									format: '<center>{point.key}<br>{point.y}</center>',
+									style:{
+										fontSize: '11px'
+									}
+								},
+								animation: false,
+								pointPadding: 0.93,
+								groupPadding: 0.93,
+								borderWidth: 0.93,
+								cursor: 'pointer',
+								borderColor: 'black',
+								borderWidth: 1.3,
+							},
+						},credits: {
+							enabled: false
+						},
+						series: [
+						{
+							type: 'column',
+							data: series3_ivory,
+							name: 'Stock Assy',
+							colorByPoint: false,
+							stacking:true
+						},{
+							type: 'column',
+							data: series_ivory,
+							name: 'Stock Store',
+							colorByPoint: false,
+							stacking:true
+						},
+						{
+						    animation: false,
+					    	type: 'spline',
+					        name: 'Plan',
+					        data: series2_ivory,
+					        colorByPoint:false,
+					        color:'#ff0066',
+					    }
+						]
+					});
 				}
 			}
 		});

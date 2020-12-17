@@ -5588,7 +5588,7 @@ class InjectionsController extends Controller
             if ($request->get('color') == "" || $request->get('color') == "All") {
                 $color = "";
             }else{
-                $color = "where TRIM( 
+                $color = "AND TRIM( 
                 RIGHT(
                         c.part, 
                         (LENGTH(c.part) - LOCATE('(',c.part)) 
@@ -5612,7 +5612,7 @@ class InjectionsController extends Controller
             $first = date('Y-m-01');
             $now = date('Y-m-d');
 
-            $data1 = DB::SELECT("SELECT
+            $data_skeleton = DB::SELECT("SELECT
                 c.part,
                 TRIM( 
                     RIGHT(
@@ -5682,7 +5682,7 @@ class InjectionsController extends Controller
                 c.part ORDER BY color");
 
             
-            $data2 = DB::SELECT("SELECT
+            $data_ivory = DB::SELECT("SELECT
                 c.part,
                 TRIM( 
                     RIGHT(
@@ -5753,10 +5753,11 @@ class InjectionsController extends Controller
             GROUP BY
                 c.part ORDER BY part");
 
-            $datas = [];
+            $datas_skeleton = [];
+            $datas_ivory = [];
 
-            foreach ($data1 as $key) {
-                $datas[] = array(
+            foreach ($data_ivory as $key) {
+                $datas_ivory[] = array(
                     'part' => $key->part,
                     'color' => $key->color,
                     'stock' => $key->stock,
@@ -5764,8 +5765,8 @@ class InjectionsController extends Controller
                     'plan' => $key->plan, );
             }
 
-            foreach ($data2 as $key) {
-                $datas[] = array(
+            foreach ($data_skeleton as $key) {
+                $datas_skeleton[] = array(
                     'part' => $key->part,
                     'color' => $key->color,
                     'stock' => $key->stock,
@@ -5775,7 +5776,8 @@ class InjectionsController extends Controller
 
             $response = array(
                 'status' => true,
-                'datas' => $datas
+                'datas_skeleton' => $datas_skeleton,
+                'datas_ivory' => $datas_ivory,
             );
             return Response::json($response);
         } catch (\Exception $e) {
