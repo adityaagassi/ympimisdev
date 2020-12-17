@@ -2,7 +2,9 @@
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
-
+body{
+  color:#fff;
+}
 table.table-bordered{
   border:1px solid rgb(150,150,150);
 }
