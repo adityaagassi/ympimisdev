@@ -584,8 +584,6 @@ function fetchConfirmTable(){
 			var confirmTable = "";
 			$('#confirmTableBody').html('');
 
-			console.log(result.transportations);
-
 			$.each(result.transportations, function(key, value){
 				confirmTable += '<tr id="confirm_'+value.id+'">';
 				confirmTable += '<td>'+value.employee_id+'</td>';

@@ -170,6 +170,13 @@
 							</tfoot>
 						</table>
 					</div>
+					<div class="col-xs-12">
+						<center>
+							<button class="btn btn-success" style="font-weight: bold; width: 50%; font-size: 1.5vw; margin-bottom: 10px;" onclick="openModalCreate()">
+								<i class="fa fa-pencil-square-o"></i> Tambah Laporan <i class="fa fa-pencil-square-o"></i>
+							</button>
+						</center>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -484,11 +491,11 @@
 
 		$.get('{{ url("fetch/general/online_transportation_data") }}', data, function(result, status, xhr){
 			if (result.status) {
-					$('#newVehicle').val(result.datas.vehicle).trigger('change');
-					$('#newOrigin').val(result.datas.origin);
-					$('#newDestination').val(result.datas.destination);
-					$('#newDistance').val(result.datas.distance);
-					$('#newHighwayAmount').val(result.datas.highway_amount);
+				$('#newVehicle').val(result.datas.vehicle).trigger('change');
+				$('#newOrigin').val(result.datas.origin);
+				$('#newDestination').val(result.datas.destination);
+				$('#newDistance').val(result.datas.distance);
+				$('#newHighwayAmount').val(result.datas.highway_amount);
 			}else{
 				openErrorGritter('Error!','Data Tidak Tersedia');
 			}
