@@ -707,6 +707,25 @@ class FloController extends Controller
 		$code_generator_pd->index = $code_generator_pd->index+1;
 		$code_generator_pd->save();
 
+		//DIGITALISASI INJEKSI
+		if($material->origin_group_code == '072' && $material->category == 'FG'){
+			try{
+				$update_stock = db::select("UPDATE injection_inventories AS ii
+					LEFT JOIN injection_part_details AS ipd ON ipd.gmc = ii.material_number 
+					SET ii.quantity = ii.quantity - ".$material_volume->lot_completion." 
+					WHERE
+					ipd.model = '".$material->model."' 
+					AND ii.location = '".$material->issue_storage_location."'");
+			}
+			catch (QueryException $e){
+				$error_log = new ErrorLog([
+					'error_message' => $e->getMessage(),
+					'created_by' => $id
+				]);
+				$error_log->save();
+			}
+		}
+
 		$response = array(
 			'status' => true,
 			'message' => 'Scan FLO berhasil dilakukan.',
@@ -920,6 +939,7 @@ class FloController extends Controller
 		}
 
 		//DIGITALISASI INJEKSI
+
 		if($material->origin_group_code == '072' && $material->category == 'FG'){
 			try{
 				$update_stock = db::select("UPDATE injection_inventories AS ii
