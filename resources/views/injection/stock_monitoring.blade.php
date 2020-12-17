@@ -476,7 +476,7 @@ table > thead > tr > th{
 							},
 							labels:{
 								formatter: function() {
-						          return this.value / 1000 + 'K';
+						          return this.value;
 						        },
 					        	style:{
 									fontSize:"13px"
@@ -644,7 +644,7 @@ table > thead > tr > th{
 							},
 							labels:{
 								formatter: function() {
-						          return this.value / 1000 + 'K';
+						          return this.value;
 						        },
 					        	style:{
 									fontSize:"13px"
