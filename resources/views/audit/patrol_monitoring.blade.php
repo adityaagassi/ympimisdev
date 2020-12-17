@@ -75,6 +75,12 @@ table > thead > tr > th{
   transition: all .5s ease-in-out;
   overflow: hidden;
 }
+
+p > img{
+  max-width: 300px;
+  height: auto !important;
+}
+
 @-webkit-keyframes zoomin {
   0% {transform: scale(0.7);}
   50% {transform: scale(1);}
