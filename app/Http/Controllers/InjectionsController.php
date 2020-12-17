@@ -5595,8 +5595,12 @@ class InjectionsController extends Controller
                 )) =  '".$request->get('color').")'";
             }
 
-            $j = 3;
+            $j = 4;
             $nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays($j)));
+            if (date('D')=='Thu') {
+                $nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(++$j)));
+            }
+            var_dump($nextdayplus1);
             $weekly_calendars = DB::SELECT("SELECT * FROM `weekly_calendars`");
             foreach ($weekly_calendars as $key) {
                 if ($key->week_date == $nextdayplus1) {
@@ -5606,8 +5610,9 @@ class InjectionsController extends Controller
                 }
             }
             if (date('D')=='Fri' || date('D')=='Sat') {
-                $nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays($j)));
+                $nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(++$j)));
             }
+            var_dump($nextdayplus1);
 
             $first = date('Y-m-01');
             $now = date('Y-m-d');
