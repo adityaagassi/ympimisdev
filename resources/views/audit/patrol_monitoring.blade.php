@@ -27,6 +27,14 @@
     padding:0;
   }
 
+  #example2{
+    border:1px solid black;    
+  }
+
+  #example2 > tbody > tr > td {
+    color: black;
+  }
+
   .dataTables_length {
     color: white;
   }
@@ -152,13 +160,13 @@
           <thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 12px;font-weight: bold">
             <tr>
               <th style="width: 1%; vertical-align: middle;;font-size: 16px;">Kategori Audit</th>
-              <th style="width: 1%; vertical-align: middle;border-left:3px solid yellow !important;font-size: 16px;">Tanggal</th>
-              <th style="width: 1%; vertical-align: middle;border-left:3px solid yellow !important;font-size: 16px;">Lokasi</th>
-              <th style="width: 1%; vertical-align: middle;border-left:3px solid yellow !important;font-size: 16px;">Auditor</th>
-              <th style="width: 1%; vertical-align: middle;border-left:3px solid yellow !important;font-size: 16px;">Auditee</th>
-              <th style="width: 5%; vertical-align: middle;border-left:3px solid yellow !important;font-size: 16px;">Note</th>
-              <!-- <th style="width: 25%; vertical-align: middle;border-left:3px solid yellow !important;font-size: 16px;">Foto</th> -->
-              <th style="width: 2%; vertical-align: middle;border-left:3px solid yellow !important;font-size: 16px;">Penanganan</th>
+              <th style="width: 1%; vertical-align: middle;border-left:1px solid yellow !important;font-size: 16px;">Tanggal</th>
+              <th style="width: 1%; vertical-align: middle;border-left:1px solid yellow !important;font-size: 16px;">Lokasi</th>
+              <th style="width: 1%; vertical-align: middle;border-left:1px solid yellow !important;font-size: 16px;">Auditor</th>
+              <th style="width: 1%; vertical-align: middle;border-left:1px solid yellow !important;font-size: 16px;">Auditee</th>
+              <th style="width: 5%; vertical-align: middle;border-left:1px solid yellow !important;font-size: 16px;">Note</th>
+              <!-- <th style="width: 25%; vertical-align: middle;border-left:1px solid yellow !important;font-size: 16px;">Foto</th> -->
+              <th style="width: 2%; vertical-align: middle;border-left:1px solid yellow !important;font-size: 16px;">Penanganan</th>
             </tr>
           </thead>
           <tbody id="tabelisi">
@@ -616,13 +624,13 @@
 
           table += '<tr>';
           table += '<td>'+value.kategori+'</td>';
-          table += '<td style="border-left:3px solid yellow; text-align: center;">'+value.tanggal+'</span></td>';
-          table += '<td style="border-left:3px solid yellow">'+value.lokasi+'</td>';
-          table += '<td style="border-left:3px solid yellow">'+value.auditor_name+'</td>';
-          table += '<td style="border-left:3px solid yellow">'+value.auditee_name+'</span></td>';
-          table += '<td style="border-left:3px solid yellow">'+value.note+'</td>';
-            // table += "<td style='border-left:3px solid yellow'><img src='"+"{{ url('files/patrol') }}/"+value.foto+"' width='150'></td>";  
-            table += '<td style="border-left:3px solid yellow; text-align: center;"><button style="width: 25%; height: 100%;" onclick="edit(\''+value.id+'\')" class="btn btn-xs btn-primary form-control"><span>Edit </span></button>&nbsp;&nbsp;&nbsp;<button style="width: 50%; height: 100%;" onclick="penanganan(\''+value.id+'\')" class="btn btn-xs btn-warning form-control"><span>Penanganan</span></button></td>';            
+          table += '<td style="border-left:1px solid yellow; text-align: center;">'+value.tanggal+'</span></td>';
+          table += '<td style="border-left:1px solid yellow">'+value.lokasi+'</td>';
+          table += '<td style="border-left:1px solid yellow">'+value.auditor_name+'</td>';
+          table += '<td style="border-left:1px solid yellow">'+value.auditee_name+'</span></td>';
+          table += '<td style="border-left:1px solid yellow">'+value.note+'</td>';
+            // table += "<td style='border-left:1px solid yellow'><img src='"+"{{ url('files/patrol') }}/"+value.foto+"' width='150'></td>";  
+            table += '<td style="border-left:1px solid yellow; text-align: center;"><button style="width: 25%; height: 100%;" onclick="edit(\''+value.id+'\')" class="btn btn-xs btn-primary form-control"><span>Edit </span></button>&nbsp;&nbsp;&nbsp;<button style="width: 50%; height: 100%;" onclick="penanganan(\''+value.id+'\')" class="btn btn-xs btn-warning form-control"><span>Penanganan</span></button></td>';            
             table += '</tr>';
           })
 
