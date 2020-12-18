@@ -159,274 +159,256 @@ class AuditController extends Controller
 
 	public function indexMonitoring(){
 
-	    return view('audit.patrol_monitoring',  
-	      array(
-	          'title' => 'Patrol Monitoring', 
-	          'title_jp' => 'パトロール監視',
-	        )
-	      )->with('page', 'Audit Patrol');
-	}
+   return view('audit.patrol_monitoring',  
+     array(
+       'title' => 'Patrol Monitoring', 
+       'title_jp' => 'パトロール監視',
+     )
+   )->with('page', 'Audit Patrol');
+ }
 
-	public function fetchMonitoring(Request $request){
+ public function fetchMonitoring(Request $request){
 
-      $datefrom = date("Y-m-d",  strtotime('-30 days'));
-      $dateto = date("Y-m-d");
+  $first = date("Y-m-d", strtotime('-30 days'));
 
-      $last = AuditAllResult::whereNull('status_ditangani')
-      ->orderBy('tanggal', 'asc')
-      ->select(db::raw('date(tanggal) as audit_date'))
-      ->first();
+  $check = AuditAllResult::whereNull('status_ditangani')
+  ->orderBy('tanggal', 'asc')
+  ->select(db::raw('date(tanggal) as audit_date'))
+  ->first();
 
-      if(strlen($request->get('datefrom')) > 0){
-        $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
-      }else{
-        if($last){
-          $tanggal = date_create($last->audit_date);
-          $now = date_create(date('Y-m-d'));
-          $interval = $now->diff($tanggal);
-          $diff = $interval->format('%a%');
-
-          if($diff > 30){
-            $datefrom = date('Y-m-d', strtotime($last->audit_date));
-          }
-        }
-      }
-
-
-      if(strlen($request->get('dateto')) > 0){
-        $dateto = date('Y-m-d', strtotime($request->get('dateto')));
-      }
-
-      $status = $request->get('status');
-
-      if ($status != null) {
-          $cat = json_encode($status);
-          $kat = str_replace(array("[","]"),array("(",")"),$cat);
-
-          $kate = 'and audit_all_results.status_ditangani in'.$kat;
-      }else{
-          $kate = '';
-      }
-
-      //per tgl
-      $data = db::select("select tanggal, sum(case when status_ditangani is null and kategori = '5S Patrol GM' then 1 else 0 end) as jumlah_belum_gm, sum(case when status_ditangani is not null and kategori = '5S Patrol GM' then 1 else 0 end) as jumlah_sudah_gm, sum(case when status_ditangani is null and kategori = 'S-Up And EHS Patrol Presdir' then 1 else 0 end) as jumlah_belum_presdir, sum(case when status_ditangani is not null and kategori = 'S-Up And EHS Patrol Presdir' then 1 else 0 end) as jumlah_sudah_presdir from audit_all_results group by tanggal");
-      $year = date('Y');
-
-      $response = array(
-        'status' => true,
-        'datas' => $data,
-        'year' => $year
-      );
-
-      return Response::json($response);
+  if($first > date("Y-m-d", strtotime($check->tanggal))){
+    $first = date("Y-m-d", strtotime($check->tanggal));
   }
 
-  public function detailMonitoring(Request $request){
+  $data = db::select("SELECT
+    date_format(tanggal, '%a, %d %b %Y') AS tanggal,
+    sum( CASE WHEN status_ditangani IS NULL AND kategori = '5S Patrol GM' THEN 1 ELSE 0 END ) AS jumlah_belum_gm,
+    sum( CASE WHEN status_ditangani IS NOT NULL AND kategori = '5S Patrol GM' THEN 1 ELSE 0 END ) AS jumlah_sudah_gm,
+    sum( CASE WHEN status_ditangani IS NULL AND kategori = 'S-Up And EHS Patrol Presdir' THEN 1 ELSE 0 END ) AS jumlah_belum_presdir,
+    sum( CASE WHEN status_ditangani IS NOT NULL AND kategori = 'S-Up And EHS Patrol Presdir' THEN 1 ELSE 0 END ) AS jumlah_sudah_presdir 
+    FROM
+    audit_all_results 
+    WHERE
+    tanggal >= '".$first."'
+    GROUP BY
+    tanggal");
+  $year = date('Y');
 
-      $tgl = $request->get("tgl");
+  $response = array(
+    'status' => true,
+    'datas' => $data,
+    'year' => $year
+  );
 
-      if(strlen($request->get('datefrom')) > 0){
-        $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
-      }
+  return Response::json($response);
+}
 
-      if(strlen($request->get('dateto')) > 0){
-        $dateto = date('Y-m-d', strtotime($request->get('dateto')));
-      }
+public function detailMonitoring(Request $request){
 
-      $status = $request->get('status');
+  $tgl = $request->get("tgl");
 
-      if ($status != null) {
-
-	      if ($status == "Temuan GM Open") {
-	      	$stat = 'and audit_all_results.status_ditangani is null and kategori = "5S Patrol GM"';
-	      }
-	      else if ($status == "Temuan Presdir Open"){
-	      	$stat = 'and audit_all_results.status_ditangani is null and kategori = "S-Up And EHS Patrol Presdir"';
-	      }
-	      else if ($status == "Temuan GM Close") {
-	      	$stat = 'and audit_all_results.status_ditangani = "close" and kategori = "5S Patrol GM"';
-	      }
-	      else if ($status == "Temuan Presdir Close") {
-	      	$stat = 'and audit_all_results.status_ditangani = "close" and kategori = "S-Up And EHS Patrol Presdir"';
-	      }
-
-      
-      } else{
-          $stat = '';
-      }
-
-      $datefrom = $request->get('datefrom');
-      $dateto = $request->get('dateto');
-
-      if ($datefrom != null && $dateto != null) {
-          $df = 'and audit_all_results.tanggal between "'.$datefrom.'" and "'.$dateto.'"';
-      }else{
-          $df = '';
-      }
-
-      $query = "select audit_all_results.* FROM audit_all_results where audit_all_results.deleted_at is null and tanggal = '".$tgl."' ".$stat."";
-
-      $detail = db::select($query);
-
-      return DataTables::of($detail)
-
-      ->editColumn('kategori', function($detail){
-        $kategori = '';
-	        
-        if($detail->kategori == "S-Up And EHS Patrol Presdir"){
-        	$kategori = "Presdir";
-        }else if ($detail->kategori == "5S Patrol GM"){
-        	$kategori = "GM";
-        }
-
-        return $kategori;
-      })
-
-      ->editColumn('tanggal', function($detail){
-        return date('d-M-Y', strtotime($detail->tanggal));
-      })
-
-      ->editColumn('foto', function($detail){
-        return '<img src="'.url('files/patrol').'/'.$detail->foto.'" width="250">';
-      })
-
-      ->editColumn('penanganan', function($detail){
-        return $detail->penanganan;
-      })
-
-      ->rawColumns(['tanggal' => 'tanggal', 'foto' => 'foto','penanganan' => 'penanganan'])
-      ->make(true);
+  if(strlen($request->get('datefrom')) > 0){
+    $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
   }
 
-  public function fetchtable_audit(Request $request)
-    {
+  if(strlen($request->get('dateto')) > 0){
+    $dateto = date('Y-m-d', strtotime($request->get('dateto')));
+  }
 
-      $datefrom = date("Y-m-d",  strtotime('-30 days'));
-      $dateto = date("Y-m-d");
+  $status = $request->get('status');
 
-      $last = AuditAllResult::whereNull('status_ditangani')
-      ->orderBy('tanggal', 'asc')
-      ->select(db::raw('date(tanggal) as audit_date'))
-      ->first();
+  if ($status != null) {
 
-      if(strlen($request->get('datefrom')) > 0){
-        $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
-      }else{
-        if($last){
-          $tanggal = date_create($last->audit_date);
-          $now = date_create(date('Y-m-d'));
-          $interval = $now->diff($tanggal);
-          $diff = $interval->format('%a%');
+   if ($status == "Temuan GM Open") {
+    $stat = 'and audit_all_results.status_ditangani is null and kategori = "5S Patrol GM"';
+  }
+  else if ($status == "Temuan Presdir Open"){
+    $stat = 'and audit_all_results.status_ditangani is null and kategori = "S-Up And EHS Patrol Presdir"';
+  }
+  else if ($status == "Temuan GM Close") {
+    $stat = 'and audit_all_results.status_ditangani = "close" and kategori = "5S Patrol GM"';
+  }
+  else if ($status == "Temuan Presdir Close") {
+    $stat = 'and audit_all_results.status_ditangani = "close" and kategori = "S-Up And EHS Patrol Presdir"';
+  }
 
-          if($diff > 30){
-            $datefrom = date('Y-m-d', strtotime($last->audit_date));
-          }
-        }
+
+} else{
+  $stat = '';
+}
+
+$datefrom = $request->get('datefrom');
+$dateto = $request->get('dateto');
+
+if ($datefrom != null && $dateto != null) {
+  $df = 'and audit_all_results.tanggal between "'.$datefrom.'" and "'.$dateto.'"';
+}else{
+  $df = '';
+}
+
+$query = "select audit_all_results.* FROM audit_all_results where audit_all_results.deleted_at is null and tanggal = '".$tgl."' ".$stat."";
+
+$detail = db::select($query);
+
+return DataTables::of($detail)
+
+->editColumn('kategori', function($detail){
+  $kategori = '';
+
+  if($detail->kategori == "S-Up And EHS Patrol Presdir"){
+   $kategori = "Presdir";
+ }else if ($detail->kategori == "5S Patrol GM"){
+   $kategori = "GM";
+ }
+
+ return $kategori;
+})
+
+->editColumn('tanggal', function($detail){
+  return date('d-M-Y', strtotime($detail->tanggal));
+})
+
+->editColumn('foto', function($detail){
+  return '<img src="'.url('files/patrol').'/'.$detail->foto.'" width="250">';
+})
+
+->editColumn('penanganan', function($detail){
+  return $detail->penanganan;
+})
+
+->rawColumns(['tanggal' => 'tanggal', 'foto' => 'foto','penanganan' => 'penanganan'])
+->make(true);
+}
+
+public function fetchtable_audit(Request $request)
+{
+
+  $datefrom = date("Y-m-d",  strtotime('-30 days'));
+  $dateto = date("Y-m-d");
+
+  $last = AuditAllResult::whereNull('status_ditangani')
+  ->orderBy('tanggal', 'asc')
+  ->select(db::raw('date(tanggal) as audit_date'))
+  ->first();
+
+  if(strlen($request->get('datefrom')) > 0){
+    $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+  }else{
+    if($last){
+      $tanggal = date_create($last->audit_date);
+      $now = date_create(date('Y-m-d'));
+      $interval = $now->diff($tanggal);
+      $diff = $interval->format('%a%');
+
+      if($diff > 30){
+        $datefrom = date('Y-m-d', strtotime($last->audit_date));
       }
-
-
-      if(strlen($request->get('dateto')) > 0){
-        $dateto = date('Y-m-d', strtotime($request->get('dateto')));
-      }
-
-      $status = $request->get('status');
-
-      if ($status != null) {
-          $cat = json_encode($status);
-          $kat = str_replace(array("[","]"),array("(",")"),$cat);
-
-          $kate = 'and audit_all_results.status_ditangani in'.$kat;
-      }else{
-          $kate = 'and audit_all_results.status_ditangani is null';
-      }
-
-
-      $data = db::select("select * from audit_all_results where audit_all_results.deleted_at is null and tanggal between '".$datefrom."' and '".$dateto."' ".$kate." ");
-
-      $response = array(
-        'status' => true,
-        'datas' => $data
-      );
-
-      return Response::json($response); 
     }
+  }
 
 
-    public function detailPenanganan(Request $request){
-		$audit = db::select("SELECT
-			* from audit_all_results where id = ". $request->get('id'));
+  if(strlen($request->get('dateto')) > 0){
+    $dateto = date('Y-m-d', strtotime($request->get('dateto')));
+  }
 
-		$response = array(
-			'status' => true,
-			'audit' => $audit,
-		);
-		return Response::json($response);
-	}
+  $status = $request->get('status');
 
-	public function editAudit(Request $request)
-    {
-        try{
-            $audit = AuditAllResult::find($request->get("id"));
-            $audit->note = $request->get('note');
-            $audit->save();
+  if ($status != null) {
+    $cat = json_encode($status);
+    $kat = str_replace(array("[","]"),array("(",")"),$cat);
 
-            $response = array(
-              'status' => true,
-              'datas' => "Berhasil",
-          );
-            return Response::json($response);
-        }
-        catch (QueryException $e){
-            $error_code = $e->errorInfo[1];
-            if($error_code == 1062){
-               $response = array(
-                  'status' => false,
-                  'datas' => "Audit Already Exist",
-              );
-               return Response::json($response);
-           }
-           else{
-               $response = array(
-                  'status' => false,
-                  'datas' => $e->getMessage(),
-              );
-               return Response::json($response);
-           }
-       }
+    $kate = 'and audit_all_results.status_ditangani in'.$kat;
+  }else{
+    $kate = 'and audit_all_results.status_ditangani is null';
+  }
+
+
+  $data = db::select("select * from audit_all_results where audit_all_results.deleted_at is null and tanggal between '".$datefrom."' and '".$dateto."' ".$kate." ");
+
+  $response = array(
+    'status' => true,
+    'datas' => $data
+  );
+
+  return Response::json($response); 
+}
+
+
+public function detailPenanganan(Request $request){
+  $audit = db::select("SELECT
+   * from audit_all_results where id = ". $request->get('id'));
+
+    $response = array(
+     'status' => true,
+     'audit' => $audit,
+   );
+    return Response::json($response);
+  }
+
+  public function editAudit(Request $request)
+  {
+    try{
+      $audit = AuditAllResult::find($request->get("id"));
+      $audit->note = $request->get('note');
+      $audit->save();
+
+      $response = array(
+        'status' => true,
+        'datas' => "Berhasil",
+      );
+      return Response::json($response);
+    }
+    catch (QueryException $e){
+      $error_code = $e->errorInfo[1];
+      if($error_code == 1062){
+       $response = array(
+        'status' => false,
+        'datas' => "Audit Already Exist",
+      );
+       return Response::json($response);
+     }
+     else{
+       $response = array(
+        'status' => false,
+        'datas' => $e->getMessage(),
+      );
+       return Response::json($response);
+     }
    }
+ }
 
-	public function postPenanganan(Request $request)
-    {
-        try{
-            $audit = AuditAllResult::find($request->get("id"));
-            $audit->penanganan = $request->get('penanganan');
-            $audit->tanggal_penanganan = date('Y-m-d');
-            $audit->status_ditangani = 'close';
-            $audit->save();
+ public function postPenanganan(Request $request)
+ {
+  try{
+    $audit = AuditAllResult::find($request->get("id"));
+    $audit->penanganan = $request->get('penanganan');
+    $audit->tanggal_penanganan = date('Y-m-d');
+    $audit->status_ditangani = 'close';
+    $audit->save();
 
-            $response = array(
-              'status' => true,
-              'datas' => "Berhasil",
-          );
-            return Response::json($response);
-        }
-        catch (QueryException $e){
-            $error_code = $e->errorInfo[1];
-            if($error_code == 1062){
-               $response = array(
-                  'status' => false,
-                  'datas' => "Audit Already Exist",
-              );
-               return Response::json($response);
-           }
-           else{
-               $response = array(
-                  'status' => false,
-                  'datas' => $e->getMessage(),
-              );
-               return Response::json($response);
-           }
-       }
+    $response = array(
+      'status' => true,
+      'datas' => "Berhasil",
+    );
+    return Response::json($response);
+  }
+  catch (QueryException $e){
+    $error_code = $e->errorInfo[1];
+    if($error_code == 1062){
+     $response = array(
+      'status' => false,
+      'datas' => "Audit Already Exist",
+    );
+     return Response::json($response);
    }
+   else{
+     $response = array(
+      'status' => false,
+      'datas' => $e->getMessage(),
+    );
+     return Response::json($response);
+   }
+ }
+}
 
 }
