@@ -6277,4 +6277,140 @@ class InjectionsController extends Controller
             return Response::json($response);
         }
     }
+
+    public function indexInjectionTraceability()
+    {
+        $title = 'Injection Traceability';
+        $title_jp = '???';
+        return view('injection.traceability',array(
+            'title' => $title,
+            'title_jp' => $title_jp,
+        ))->with('page', 'Injection Traceability')->with('jpn', '???');
+    }
+
+    public function fetchInjectionTraceability(Request $request)
+    {
+        try {
+            $injection_process = DB::SELECT("SELECT
+                injection_process_logs.tag_product,
+                injection_tags.material_number,
+                injection_tags.mat_desc,
+                injection_tags.no_kanban,
+                injection_process_logs.start_time,
+                injection_process_logs.end_time,
+                injection_process_logs.mesin,
+                injection_process_logs.part_name,
+                injection_process_logs.part_type,
+                injection_process_logs.color,
+                injection_process_logs.cavity,
+                injection_process_logs.molding,
+                injection_process_logs.shot as qty,
+                injection_process_logs.dryer,
+                injection_process_logs.dryer_lot_number,
+                injection_process_logs.ng_name,
+                injection_process_logs.ng_count,
+                opmesin.employee_id,
+                opmesin.name
+            FROM
+                injection_tags
+                LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_tags.tag
+                LEFT JOIN employee_syncs opmesin ON opmesin.employee_id = injection_process_logs.operator_id
+            WHERE
+                injection_process_logs.tag_product = '".$request->get('tag')."'  
+            ORDER BY
+                injection_process_logs.created_at DESC
+                LIMIT 1
+                ");
+
+            $molding = DB::SELECT("SELECT
+                injection_history_molding_logs.pic,
+                injection_history_molding_logs.mesin AS mesin,
+                injection_history_molding_logs.part,
+                injection_history_molding_logs.total_shot/injection_molding_masters.qty_shot AS last_shot_pasang,
+                injection_molding_logs.total_running_shot/injection_molding_masters.qty_shot AS last_shot_running,
+                injection_history_molding_logs.start_time,
+                injection_history_molding_logs.end_time,
+                injection_history_molding_logs.running_time,
+                injection_history_molding_logs.note,
+                COALESCE(injection_history_molding_logs.decision,'Tidak Ada') as decision
+            FROM
+                injection_tags
+                LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_tags.tag
+                LEFT JOIN injection_history_molding_logs ON injection_process_logs.molding = injection_history_molding_logs.part
+                LEFT JOIN employee_syncs opmesin ON opmesin.employee_id = injection_process_logs.operator_id 
+                LEFT JOIN injection_molding_masters ON injection_molding_masters.part = injection_history_molding_logs.part 
+                left join injection_molding_logs on injection_molding_logs.part = injection_process_logs.molding and injection_process_logs.created_at = injection_molding_logs.created_at
+            WHERE
+                injection_process_logs.tag_product = '".$request->get('tag')."'  
+                AND injection_history_molding_logs.created_at <= injection_process_logs.start_time 
+                AND injection_history_molding_logs.type = 'PASANG' 
+            ORDER BY
+                injection_process_logs.created_at DESC,
+                injection_history_molding_logs.created_at DESC,
+                injection_molding_logs.created_at DESC 
+                LIMIT 1");
+
+            $dryer = DB::SELECT("SELECT
+                injection_dryer_logs.material_number,
+                injection_dryer_logs.material_description,
+                injection_dryer_logs.dryer,
+                injection_dryer_logs.color,
+                injection_dryer_logs.qty,
+                injection_dryer_logs.lot_number,
+                injection_dryer_logs.created_at,
+                opresin.employee_id,
+                opresin.name
+            FROM
+                injection_tags
+                LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_tags.tag
+                LEFT JOIN injection_dryer_logs ON injection_dryer_logs.lot_number = injection_process_logs.dryer_lot_number 
+                AND injection_dryer_logs.dryer = injection_process_logs.dryer
+                LEFT JOIN employee_syncs opresin ON opresin.employee_id = injection_dryer_logs.employee_id 
+            WHERE
+                injection_process_logs.tag_product = '".$request->get('tag')."' 
+                AND injection_dryer_logs.created_at <= injection_process_logs.start_time 
+            ORDER BY
+                injection_process_logs.created_at DESC,
+                injection_dryer_logs.created_at DESC
+                LIMIT 1");
+
+            $transaction = DB::SELECT("
+                SELECT
+                    injection_transactions.material_number,
+                    injection_tags.mat_desc,
+                    injection_transactions.location,
+                    injection_transactions.quantity,
+                    injection_transactions.status,
+                    opinjeksi.employee_id,
+                    opinjeksi.name,
+                    injection_transactions.created_at 
+                FROM
+                    injection_tags
+                    LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_tags.tag
+                    LEFT JOIN injection_transactions ON injection_transactions.tag = injection_process_logs.tag_product
+                    LEFT JOIN employee_syncs opinjeksi ON opinjeksi.employee_id = injection_transactions.operator_id 
+                WHERE
+                    injection_process_logs.tag_product = '".$request->get('tag')."' 
+                    AND injection_transactions.created_at >= injection_process_logs.end_time 
+                ORDER BY
+                    injection_process_logs.created_at DESC, 
+                    injection_transactions.created_at ASC 
+                    LIMIT 3");
+
+            $response = array(
+                'status' => true,
+                'injection_process' => $injection_process,
+                'molding' => $molding,
+                'dryer' => $dryer,
+                'transaction' => $transaction,
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+            return Response::json($response);
+        }
+    }
 }

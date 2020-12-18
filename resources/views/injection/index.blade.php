@@ -42,6 +42,8 @@
 
 			<a href="{{ url('index/injection/tag') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Injection Tag</a>
 
+			<a href="{{ url('index/injection/traceability') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Injection Traceability</a>
+
 			<span style="font-size: 3vw; color: green;"><i class="fa fa-angle-double-down"></i> Molding <i class="fa fa-angle-double-down"></i></span>
 
 			<button type="button" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;" data-toggle="modal" data-target="#push-pull-check-modal">

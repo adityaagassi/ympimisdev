@@ -428,6 +428,9 @@ Route::group(['nav' => 'M31', 'middleware' => 'permission'], function(){
 	Route::post('remove/injection/tag', 'InjectionsController@removeInjectionTag');
 });
 
+Route::get('index/injection/traceability', 'InjectionsController@indexInjectionTraceability');
+Route::get('fetch/injection/traceability', 'InjectionsController@fetchInjectionTraceability');
+
 // end mesin injeksi
 
 Route::group(['nav' => 'R5', 'middleware' => 'permission'], function(){
@@ -1314,6 +1317,8 @@ Route::get('index/sakurentsu/3m/finalmeeting/{id_three_m}', 'SakurentsuControlle
 Route::get('fetch/sakurentsu/3m/document/{id_three_m}', 'SakurentsuController@fetch_tiga_em_document_by_id');
 Route::get('detail/sakurentsu/3m/{id_three_m}', 'SakurentsuController@index_tiga_em_detail');
 Route::get('generate/sakurentsu/3m/pdf/{id_three_m}', 'SakurentsuController@generate_tiga_em_pdf');
+Route::get('get/sakurentsu/3m', 'SakurentsuController@get_employee_sign');
+Route::post('post/sakurentsu/3m/sign', 'SakurentsuController@signing_tiga_em');
 
 //Supplier
 Route::get('index/supplier', 'AccountingController@master_supplier');
@@ -1647,6 +1652,12 @@ Route::group(['nav' => 'S51', 'middleware' => 'permission'], function(){
 	Route::get('index/print_label_mpro/{shipment_schedule_id}/{kd_number}', 'KnockDownController@indexPrintLabelMpro');
 });
 
+
+//CASE
+Route::group(['nav' => 'S51', 'middleware' => 'permission'], function(){
+	Route::get('index/kd_case/{id}', 'KnockDownController@indexKD');
+
+});
 
 
 //SUBASSY
