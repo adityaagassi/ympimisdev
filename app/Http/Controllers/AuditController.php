@@ -162,7 +162,7 @@ class AuditController extends Controller
 	    return view('audit.patrol_monitoring',  
 	      array(
 	          'title' => 'Patrol Monitoring', 
-	          'title_jp' => '',
+	          'title_jp' => 'パトロール監視',
 	        )
 	      )->with('page', 'Audit Patrol');
 	}
