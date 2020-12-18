@@ -433,7 +433,6 @@
             title: {
               text: 'Total Temuan'
             },
-            tickInterval: 5,  
             stackLabels: {
               enabled: true,
               style: {
