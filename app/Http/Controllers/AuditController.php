@@ -205,7 +205,7 @@ class AuditController extends Controller
 
 public function detailMonitoring(Request $request){
 
-  $tgl = $request->get("tgl");
+  $tgl = date('Y-m-d', strtotime($request->get("tgl")));
 
   if(strlen($request->get('datefrom')) > 0){
     $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
