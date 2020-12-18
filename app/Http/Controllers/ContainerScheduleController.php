@@ -415,6 +415,7 @@ class ContainerScheduleController extends Controller{
             sum( IF(STATUS = 'BOOKING CONFIRMED', COALESCE ( fortyhc, 0 ) + COALESCE ( forty, 0 ) + COALESCE ( twenty, 0 ),0 ) ) AS confirmed 
             FROM shipment_reservations 
             WHERE period = '".$period."'
+            AND `status` <> 'NO NEED ANYMORE'
             GROUP BY ycj_ref_number, port_of_delivery ) AS resume
             GROUP BY port_of_delivery
             order by not_confirmed DESC");
