@@ -39,7 +39,7 @@ table.table-bordered > tfoot > tr > th{
 @section('header')
 <section class="content-header">
 	<h1>
-		Finished Goods Stock <span class="text-purple">完成品在庫</span>
+		KD Parts Stock <span class="text-purple">KD部品在庫</span>
 		<small>By Each Location <span class="text-purple">ロケーション毎</span></small>
 	</h1>
 	<ol class="breadcrumb" id="last_update">
