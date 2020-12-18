@@ -950,6 +950,7 @@ Route::get('index/material/monitoring', 'InitialProcessController@indexMonitorin
 Route::group(['nav' => 'M20', 'middleware' => 'permission'], function(){
 	Route::get('index/user_document', 'UserDocumentController@index');
 	Route::get('fetch/user_document', 'UserDocumentController@fetchUserDocument');
+	Route::get('fetch/resume_user_document', 'UserDocumentController@fetchResumeUserDocument');
 	Route::get('fetch/user_document_detail', 'UserDocumentController@fetchUserDocumentDetail');
 	Route::post('fetch/user_document_renew', 'UserDocumentController@fetchUserDocumentRenew');
 	Route::post('fetch/user_document_update', 'UserDocumentController@fetchUserDocumentUpdate');

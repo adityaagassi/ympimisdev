@@ -69,7 +69,10 @@ class EmailUserDocument extends Command
         ];
 
         if(count($user_documents) > 0){
-            Mail::to($mail_to)->send(new SendEmail($data, 'user_document'));
+            Mail::to(['eko.junaedi@music.yamaha.com', 'harjati.handajani@music.yamaha.com'])
+            ->cc(['budhi.apriyanto@music.yamaha.com'])
+            ->bcc(['aditya.agassi@music.yamaha.com', 'muhammad.ikhlas@music.yamaha.com'])
+            ->send(new SendEmail($data, 'user_document'));
         }
     }
 }

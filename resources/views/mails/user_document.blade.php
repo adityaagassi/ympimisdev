@@ -20,21 +20,21 @@
 	<div>
 		<center>
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
-			<p style="font-size: 18px;">User Documents lebih dari remider</p>
-			<p style="font-weight: bold;">Total Document: <?php echo $data['jml']; ?></p>
+			<p style="font-size: 18px;">Dokumen karyawan yang akan kadaluwarsa :</p>
+			<p style="font-weight: bold;">Total Dokumen: <?php echo $data['jml']; ?></p>
 			This is an automatic notification. Please do not reply to this address.
 			<table style="border:1px solid black; border-collapse: collapse;" width="70%">
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
 						<th style="width: 1%; border:1px solid black;">#</th>
-						<th style="width: 1%; border:1px solid black;">Category</th>
-						<th style="width: 1%; border:1px solid black;">Document Number</th>
-						<th style="width: 2%; border:1px solid black;">Employee ID</th>
-						<th style="width: 2%; border:1px solid black;">Name</th>
-						<th style="width: 2%; border:1px solid black;">Valid From</th>
-						<th style="width: 2%; border:1px solid black;">Valid To</th>
-						<th style="width: 2%; border:1px solid black;">Condition</th>
-						<th style="width: 4%; border:1px solid black;">Validity Days</th>
+						<th style="width: 1%; border:1px solid black;">Kategori</th>
+						<th style="width: 1%; border:1px solid black;">Dok. No.</th>
+						<th style="width: 2%; border:1px solid black;">NIK</th>
+						<th style="width: 2%; border:1px solid black;">Nama</th>
+						<th style="width: 2%; border:1px solid black;">Valid Dari</th>
+						<th style="width: 2%; border:1px solid black;">Valid Hingga</th>
+						<th style="width: 2%; border:1px solid black;">Kondisi</th>
+						<th style="width: 4%; border:1px solid black;">Sisa</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -52,7 +52,7 @@
 						<td style="border:1px solid black;"><?php echo $col->valid_from; ?></td>
 						<td style="border:1px solid black;"><?php echo $col->valid_to; ?></td>
 						<td style="border:1px solid black;"><?php echo $col->condition; ?></td>
-						<td style="border:1px solid black; text-align: right;"><?php echo $col->diff; ?></td>
+						<td style="border:1px solid black; text-align: right;"><?php echo $col->diff; ?> Hari</td>
 					</tr>
 					<?php } ?>
 				</tbody>

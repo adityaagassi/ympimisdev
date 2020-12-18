@@ -70,7 +70,21 @@ class UserDocumentController extends Controller
 			$document = $document->whereIn('user_documents.category', $request->get('category'));
 		}
 
-		$document = $document->select('user_documents.document_number', 'user_documents.employee_id', 'employee_syncs.name', 'employee_syncs.position', 'user_documents.valid_from', 'user_documents.valid_to', 'user_documents.category', 'user_documents.status', 'user_documents.condition')->orderBy('employee_id', 'asc')->get();
+		$document = $document->select(
+			'user_documents.document_number',
+			'user_documents.employee_id',
+			'employee_syncs.name',
+			'employee_syncs.position',
+			'user_documents.valid_from',
+			'user_documents.valid_to',
+			'user_documents.category',
+			'user_documents.status',
+			'user_documents.condition'
+		)
+		->orderBy(db::raw('FIELD(user_documents.status ,"Active", "Inactive")'))
+		->orderBy(db::raw('FIELD(user_documents.condition ,"Expired", "At Risk", "Safe")'))
+		->orderBy('employee_id', 'asc')
+		->get();
 
 		return DataTables::of($document)
 		->addColumn('button', function($document){
@@ -97,6 +111,19 @@ class UserDocumentController extends Controller
 		$response = array(
 			'status' => true,
 			'document' => $document,
+		);
+		return Response::json($response);
+	}
+
+	public function fetchResumeUserDocument(){
+		$resume =UserDocument::where('status', 'Active')
+		->select('category', 'condition', db::raw('COUNT(id) AS quantity'))
+		->groupBy('category', 'condition')
+		->get();
+
+		$response = array(
+			'status' => true,
+			'resume' => $resume
 		);
 		return Response::json($response);
 	}

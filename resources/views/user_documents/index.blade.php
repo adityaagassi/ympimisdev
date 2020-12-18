@@ -93,6 +93,19 @@
 								</select>
 							</div>
 						</div>
+
+						<div class="col-md-2">
+							<div class="form-group">
+								<label>Category:</label>
+								<select class="form-control select2" multiple="multiple" id='category' data-placeholder="Select Category" style="width: 100%;">
+									<option></option>
+									@foreach($categories as $category)
+									<option value="{{ $category }}">{{ $category }}</option>
+									@endforeach
+								</select>
+							</div>
+						</div>
+
 						<div class="col-md-1">
 							<div class="form-group">
 								<label style="color: white;"> x</label>
@@ -102,6 +115,131 @@
 					</div>
 				</div>
 			</div>
+
+			<div class="row">
+				<div class="col-xs-2" style="padding-right: 0.5%">
+					<table class="table table-bordered table-striped table-hover" style="background-color: #ffffff;">
+						<thead>
+							<tr>
+								<th colspan="3">KITAS</th>
+							</tr>
+							<tr>
+								<th width="34%" style="background-color : rgba(33,33,33 ,1); color: white">Expired</th>
+								<th width="33%" style="background-color : rgba(242, 75, 75, 0.8);">At Risk</th>
+								<th width="33%" style="background-color : rgba(107, 255, 104, 0.6);">Safe</th>
+							</tr>
+							<tr>
+								<th id="kitas_expired">0</th>
+								<th id="kitas_atrisk">0</th>
+								<th id="kitas_safe">0</th>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div class="col-xs-2" style="padding-left: 0.5%; padding-right: 0.5%">
+					<table class="table table-bordered table-striped table-hover" style="background-color: #ffffff;">
+						<thead>
+							<tr>
+								<th colspan="3">MERP</th>
+							</tr>
+							<tr>
+								<th width="34%" style="background-color : rgba(33,33,33 ,1); color: white">Expired</th>
+								<th width="33%" style="background-color : rgba(242, 75, 75, 0.8);">At Risk</th>
+								<th width="33%" style="background-color : rgba(107, 255, 104, 0.6);">Safe</th>
+							</tr>
+							<tr>
+								<th id="merp_expired">0</th>
+								<th id="merp_atrisk">0</th>
+								<th id="merp_safe">0</th>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div class="col-xs-2" style="padding-left: 0.5%; padding-right: 0.5%">
+					<table class="table table-bordered table-striped table-hover" style="background-color: #ffffff;">
+						<thead>
+							<tr>
+								<th colspan="3">NOTIF</th>
+							</tr>
+							<tr>
+								<th width="34%" style="background-color : rgba(33,33,33 ,1); color: white">Expired</th>
+								<th width="33%" style="background-color : rgba(242, 75, 75, 0.8);">At Risk</th>
+								<th width="33%" style="background-color : rgba(107, 255, 104, 0.6);">Safe</th>
+							</tr>
+							<tr>
+								<th id="notif_expired">0</th>
+								<th id="notif_atrisk">0</th>
+								<th id="notif_safe">0</th>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div class="col-xs-2" style="padding-left: 0.5%; padding-right: 0.5%">
+					<table class="table table-bordered table-striped table-hover" style="background-color: #ffffff;">
+						<thead>
+							<tr>
+								<th colspan="3">PASPOR</th>
+							</tr>
+							<tr>
+								<th width="34%" style="background-color : rgba(33,33,33 ,1); color: white">Expired</th>
+								<th width="33%" style="background-color : rgba(242, 75, 75, 0.8);">At Risk</th>
+								<th width="33%" style="background-color : rgba(107, 255, 104, 0.6);">Safe</th>
+							</tr>
+							<tr>
+								<th id="paspor_expired">0</th>
+								<th id="paspor_atrisk">0</th>
+								<th id="paspor_safe">0</th>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div class="col-xs-2" style="padding-left: 0.5%; padding-right: 0.5%">
+					<table class="table table-bordered table-striped table-hover" style="background-color: #ffffff;">
+						<thead>
+							<tr>
+								<th colspan="3">SKJ</th>
+							</tr>
+							<tr>
+								<th width="34%" style="background-color : rgba(33,33,33 ,1); color: white">Expired</th>
+								<th width="33%" style="background-color : rgba(242, 75, 75, 0.8);">At Risk</th>
+								<th width="33%" style="background-color : rgba(107, 255, 104, 0.6);">Safe</th>
+							</tr>
+							<tr>
+								<th id="skj_expired">0</th>
+								<th id="skj_atrisk">0</th>
+								<th id="skj_safe">0</th>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div class="col-xs-2" style="padding-left: 0.5%">
+					<table class="table table-bordered table-striped table-hover" style="background-color: #ffffff;">
+						<thead>
+							<tr>
+								<th colspan="3">SKLD</th>
+							</tr>
+							<tr>
+								<th width="34%" style="background-color : rgba(33,33,33 ,1); color: white">Expired</th>
+								<th width="33%" style="background-color : rgba(242, 75, 75, 0.8);">At Risk</th>
+								<th width="33%" style="background-color : rgba(107, 255, 104, 0.6);">Safe</th>
+							</tr>
+							<tr>
+								<th id="skld_expired">0</th>
+								<th id="skld_atrisk">0</th>
+								<th id="skld_safe">0</th>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+			</div>
+
+
 			<div class="row">
 				<div class="col-md-12">
 					<div class="box no-border">
@@ -113,9 +251,10 @@
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
 										<th style="">Employee ID</th>
+										<th style="width: 20%">Name</th>
+										<th style="">Posisi</th>
 										<th style="">Category</th>
 										<th style="">No. Document</th>
-										<th style="width: 20%">Name</th>
 										<th style="">Valid From</th>
 										<th style="">Valid To</th>
 										<th style="">Status</th>
@@ -185,7 +324,7 @@
 										</select>
 									</div>
 								</div>
-								
+
 								<div class="form-group row" align="right">
 									<label class="col-sm-4">Valid From<span class="text-red">*</span></label>
 									<div class="col-sm-4" align="left">
@@ -391,6 +530,8 @@
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
+
 		$('.select2').select2();
 		fillTable();
 	});
@@ -505,7 +646,7 @@
 				"data" : data
 			},
 			"columnDefs": [ {
-				"targets": [7],
+				"targets": [8],
 				"createdCell": function (td, cellData, rowData, row, col) {
 					if ( cellData =='Safe' ) {
 						$(td).css('background-color', 'rgba(107, 255, 104, 0.6)');
@@ -529,7 +670,7 @@
 					}
 				}
 			},{
-				"targets": [6],
+				"targets": [7],
 				"createdCell": function (td, cellData, rowData, row, col) {
 					if ( cellData =='Active' ) {
 						$(td).css('background-color', 'rgba(107, 255, 104, 0.6)');
@@ -545,9 +686,10 @@
 			}],
 			"columns": [
 			{ "data": "employee_id" },
+			{ "data": "name" },
+			{ "data": "position" },
 			{ "data": "category" },
 			{ "data": "document_number" },
-			{ "data": "name" },
 			{ "data": "valid_from" },
 			{ "data": "valid_to" },
 			{ "data": "status" },
@@ -556,6 +698,40 @@
 			]
 		});	
 
+		$('#kitas_expired').text(0);
+		$('#kitas_atrisk').text(0);
+		$('#kitas_safe').text(0);
+		
+		$('#merp_expired').text(0);
+		$('#merp_atrisk').text(0);
+		$('#merp_safe').text(0);
+
+		$('#notif_expired').text(0);
+		$('#notif_atrisk').text(0);
+		$('#notif_safe').text(0);
+
+		$('#paspor_expired').text(0);
+		$('#paspor_atrisk').text(0);
+		$('#paspor_safe').text(0);
+
+		$('#skj_expired').text(0);
+		$('#skj_atrisk').text(0);
+		$('#skj_safe').text(0);
+		
+		$('#skld_expired').text(0);
+		$('#skld_atrisk').text(0);
+		$('#skld_safe').text(0);
+
+		$.get('{{ url("fetch/resume_user_document") }}', data, function(result, status, xhr){
+			if(result.status){
+				for (var i = 0; i < result.resume.length; i++) {
+					var key = result.resume[i].category + '_' + result.resume[i].condition.replace(' ', '');
+					$('#' + key.toLowerCase()).text(result.resume[i].quantity);
+					
+					console.log(key.toLowerCase());
+				}
+			}
+		});	
 	}
 
 	$('#create_modal').on('hidden.bs.modal', function () {
