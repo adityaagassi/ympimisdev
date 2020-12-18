@@ -401,20 +401,23 @@ class ContainerScheduleController extends Controller{
         ON plan.port_of_delivery = confirmed.port_of_delivery
         ORDER BY not_confirmed DESC";
 
-        $data = db::select("SELECT plan.port_of_delivery, plan.plan, COALESCE(confirmed.confirmed,0) AS confirmed, plan.plan - COALESCE(confirmed.confirmed,0) AS not_confirmed FROM
-            (SELECT port_of_delivery, SUM(quantity) AS plan FROM
-            (SELECT DISTINCT ycj_ref_number, port_of_delivery, (COALESCE(fortyhc,0) + COALESCE(forty,0) + COALESCE(twenty,0)) AS quantity FROM shipment_reservations
+        $data = db::select("SELECT port_of_delivery,
+            SUM(container) as plan,
+            SUM(IF(confirmed > 0, confirmed, 0)) as confirmed,
+            SUM(IF(total_container = rejected, container, 0)) as rejected,
+            SUM(container-IF(confirmed > 0, confirmed, 0)-IF(total_container = rejected, container, 0)) as not_confirmed
+            FROM
+            (SELECT ycj_ref_number,
+            port_of_delivery,
+            max( COALESCE ( fortyhc, 0 ) + COALESCE ( forty, 0 ) + COALESCE ( twenty, 0 ) ) AS container,
+            sum( COALESCE ( fortyhc, 0 ) + COALESCE ( forty, 0 ) + COALESCE ( twenty, 0 ) ) AS total_container,
+            sum( IF(STATUS = 'BOOKING UNACCEPTED',COALESCE ( fortyhc, 0 ) + COALESCE ( forty, 0 ) + COALESCE ( twenty, 0 ),0 ) ) AS rejected,
+            sum( IF(STATUS = 'BOOKING CONFIRMED', COALESCE ( fortyhc, 0 ) + COALESCE ( forty, 0 ) + COALESCE ( twenty, 0 ),0 ) ) AS confirmed 
+            FROM shipment_reservations 
             WHERE period = '".$period."'
-            AND `status` <> 'NO NEED ANYMORE') shipment
-            GROUP BY port_of_delivery) plan
-            LEFT JOIN 
-            (SELECT port_of_delivery, SUM(quantity) AS confirmed FROM
-            (SELECT DISTINCT ycj_ref_number, port_of_delivery, (COALESCE(fortyhc,0) + COALESCE(forty,0) + COALESCE(twenty,0)) AS quantity FROM shipment_reservations
-            WHERE period = '".$period."'
-            AND `status` = 'BOOKING CONFIRMED') shipment
-            GROUP BY port_of_delivery) confirmed
-            ON plan.port_of_delivery = confirmed.port_of_delivery
-            ORDER BY not_confirmed DESC");
+            GROUP BY ycj_ref_number, port_of_delivery ) AS resume
+            GROUP BY port_of_delivery
+            order by not_confirmed DESC");
 
         $datefrom = ShipmentReservation::where('period', $period)->orderBy('stuffing_date', 'ASC')->first();
         $dateto = WeeklyCalendar::where(db::raw('DATE_FORMAT(week_date,"%Y-%m")'), $period)->orderBy('week_date', 'DESC')->first();
@@ -438,26 +441,27 @@ class ContainerScheduleController extends Controller{
         GROUP BY stuffing_date) confirmed
         ON plan.week_date = confirmed.stuffing_date";
 
-        $ship_by_dates = db::select("SELECT date.week_date, COALESCE(plan.plan,0) AS plan, COALESCE(confirmed.confirmed,0) AS confirmed FROM
+        $ship_by_dates = db::select("SELECT date.week_date, COALESCE(plan.reject,0) AS reject, COALESCE(plan.confirm,0) AS confirm, COALESCE(plan.not_confirm,0) AS not_confirm FROM
             (SELECT week_date, remark FROM weekly_calendars
             WHERE DATE_FORMAT(week_date,'%Y-%m-%d') >= '".$datefrom->stuffing_date."'
             AND DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$dateto->week_date."') AS date
             LEFT JOIN
-            (SELECT stuffing_date, SUM(quantity) AS plan FROM
+            (SELECT stuffing_date, SUM(reject) AS reject, SUM(confirm) AS confirm, SUM(not_confirm) AS not_confirm FROM
+            (SELECT shipment.stuffing_date, shipment.ycj_ref_number, IF(resume.reject = 1, shipment.quantity, 0) AS reject, IF(resume.confirm = 1, shipment.quantity, 0) AS confirm, IF(resume.reject = 0 AND resume.confirm = 0, shipment.quantity, 0) AS not_confirm FROM
             (SELECT ycj_ref_number, quantity, MIN(stuffing_date) AS stuffing_date FROM
             (SELECT DISTINCT stuffing_date, ycj_ref_number, (COALESCE(fortyhc,0) + COALESCE(forty,0) + COALESCE(twenty,0)) AS quantity FROM shipment_reservations
             WHERE period = '".$period."'
             AND `status` <> 'NO NEED ANYMORE') AS shipment
             GROUP BY ycj_ref_number, quantity) AS shipment
+            LEFT JOIN
+            (SELECT stuffing_date, ycj_ref_number, IF(SUM(count) = SUM(reject), 1, 0) AS reject, IF(SUM(confirm) > 0, 1, 0) AS confirm FROM
+            (SELECT stuffing_date, ycj_ref_number, `status`, 1 AS count, IF(`status` = 'BOOKING UNACCEPTED', 1, 0) AS reject, IF(`status` = 'BOOKING CONFIRMED', 1, 0) AS confirm FROM shipment_reservations
+            WHERE period = '".$period."'
+            AND `status` <> 'NO NEED ANYMORE') AS shipment
+            GROUP BY stuffing_date, ycj_ref_number) AS resume
+            ON shipment.ycj_ref_number = resume.ycj_ref_number AND shipment.stuffing_date = resume.stuffing_date) AS shipment
             GROUP BY stuffing_date) AS plan
             ON plan.stuffing_date = date.week_date
-            LEFT JOIN
-            (SELECT stuffing_date , SUM(quantity) AS confirmed FROM
-            (SELECT DISTINCT stuffing_date, ycj_ref_number, (COALESCE(fortyhc,0) + COALESCE(forty,0) + COALESCE(twenty,0)) AS quantity FROM shipment_reservations
-            WHERE period = '".$period."'
-            AND `status` = 'BOOKING CONFIRMED') shipment
-            GROUP BY stuffing_date) AS confirmed
-            ON confirmed.stuffing_date = date.week_date
             ORDER BY date.week_date ASC");
 
         $response = array(

@@ -53,24 +53,32 @@
 		<div class="col-xs-12" style="padding-bottom: 10px;">
 			<div class="row">
 				<div class="col-xs-3" style="padding-right: 10px;">
-					<div class="info-box">
-						<span class="info-box-icon bg-aqua"><i class="fa fa-ship"></i></span>
+					<div class="info-box" style="min-height: 75px;">
+						<span class="info-box-icon bg-aqua" style="height: 75px;"><i class="fa fa-ship"></i></span>
 
 						<div class="info-box-content">
 							<span class="info-box-text">PLAN</span>
 							<span class="info-box-number" style="font-size: 2vw;" id="total_plan"></span>
 						</div>
 					</div>
-					<div class="info-box">
-						<span class="info-box-icon bg-green"><i class="glyphicon glyphicon-ok"></i></span>
+					<div class="info-box" style="min-height: 75px;">
+						<span class="info-box-icon bg-green" style="height: 75px;"><i class="glyphicon glyphicon-ok"></i></span>
 
 						<div class="info-box-content">
 							<span class="info-box-text">CONFIRMED</span>
 							<span class="info-box-number" style="font-size: 2vw;" id="total_confirmed"></span>
 						</div>
 					</div>
-					<div class="info-box">
-						<span class="info-box-icon bg-red"><i class="glyphicon glyphicon-remove"></i></span>
+					<div class="info-box" style="min-height: 75px;">
+						<span class="info-box-icon" style="background-color: #455a64; color: white; height: 75px;"><i class="fa fa-exclamation-triangle"></i></span>
+
+						<div class="info-box-content">
+							<span class="info-box-text">REJECTED</span>
+							<span class="info-box-number" style="font-size: 2vw;" id="total_rejected"></span>
+						</div>
+					</div>
+					<div class="info-box" style="min-height: 75px;">
+						<span class="info-box-icon bg-red" style="height: 75px;"><i class="glyphicon glyphicon-remove"></i></span>
 
 						<div class="info-box-content">
 							<span class="info-box-text">NOT CONFIRMED</span>
@@ -95,10 +103,11 @@
 					<table id="tableList" class="table table-bordered" style="width: 100%; font-size: 16px;">
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
-								<th style="width: 40%">DESTINATION</th>
-								<th style="width: 20%">PLAN</th>
-								<th style="width: 20%">CONFIRMED</th>
-								<th style="width: 20%">NOT CONFIRMED</th>
+								<th style="width: 3%">DESTINATION</th>
+								<th style="width: 1%">PLAN</th>
+								<th style="width: 1%">CONFIRMED</th>
+								<th style="width: 1%">REJECTED</th>
+								<th style="width: 1%">NOT CONFIRMED</th>
 							</tr>
 						</thead>
 						<tbody id="tableBodyList">
@@ -240,6 +249,7 @@
 				var tableData = "";
 				var total_plan = 0;
 				var total_confirmed = 0;
+				var total_rejected = 0;
 				var total_not_confirmed = 0;
 
 				for (var i = 0; i < result.data.length; i++) {
@@ -249,10 +259,16 @@
 					tableData += '<td>'+ result.data[i].port_of_delivery +'</td>';
 					tableData += '<td>'+ result.data[i].plan +'</td>';
 
-					if(result.data[i].confirmed == result.data[i].plan){
+					if(result.data[i].confirmed > 0){
 						tableData += '<td style="background-color: rgb(204, 255, 255);">'+ result.data[i].confirmed +'</td>';
 					}else{
 						tableData += '<td>'+ result.data[i].confirmed +'</td>';
+					}
+
+					if(result.data[i].rejected > 0){
+						tableData += '<td style="background-color: #455a64; color: white;">'+ result.data[i].rejected +'</td>';
+					}else{
+						tableData += '<td>'+ result.data[i].rejected +'</td>';
 					}
 
 					if(result.data[i].not_confirmed > 0){
@@ -263,6 +279,7 @@
 
 					total_plan += parseInt(result.data[i].plan);
 					total_confirmed += parseInt(result.data[i].confirmed);
+					total_rejected += parseInt(result.data[i].rejected);
 					total_not_confirmed += parseInt(result.data[i].not_confirmed);
 
 					tableData += '</tr>';
@@ -270,25 +287,30 @@
 
 				var percen_confirmed = (total_confirmed/total_plan * 100).toFixed(2) + '%';
 				var percen_not_confirmed = (total_not_confirmed/total_plan * 100).toFixed(2) + '%';
+				var percen_rejected = (total_rejected/total_plan * 100).toFixed(2) + '%';
 
 				$('#total_plan').text(total_plan);
 				$('#total_confirmed').html(total_confirmed + ' <small style="font-size: 20px; text-style: italic;">('+ percen_confirmed +')</small>');
 				$('#total_not_confirmed').html(total_not_confirmed + ' <small style="font-size: 20px; text-style: italic;">('+ percen_not_confirmed +')</small>');
+				$('#total_rejected').html(total_rejected + ' <small style="font-size: 20px; text-style: italic;">('+ percen_rejected +')</small>');
 
 				$('#tableBodyList').append(tableData);
 
 
 				var date = [];
-				var plan = [];
-				var confirmed = [];
+				var not_confirm = [];
+				var confirm = [];
+				var rejected = [];
+
 				var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 				for (var i = 0; i < result.ship_by_dates.length; i++) {
 					var d = new Date(result.ship_by_dates[i].week_date)
 
 					date.push(d.getDate()+'-'+monthNames[d.getMonth()]);
-					plan.push(parseInt(result.ship_by_dates[i].plan) - parseInt(result.ship_by_dates[i].confirmed));
-					confirmed.push(parseInt(result.ship_by_dates[i].confirmed));
+					not_confirm.push(parseInt(result.ship_by_dates[i].not_confirm));
+					confirm.push(parseInt(result.ship_by_dates[i].confirm));
+					rejected.push(parseInt(result.ship_by_dates[i].reject));
 				}
 
 				Highcharts.chart('container1', {
@@ -359,116 +381,120 @@
 						},
 					},
 					series: [{
+						name: 'Rejected',
+						data: rejected,
+						color: '#455a64'
+					},{
 						name: 'Not Confirmed',
-						data: plan,
+						data: not_confirm,
 						color: '#dd4b39'
 					}, {
 						name: 'Confirmed',
-						data: confirmed,
+						data: confirm,
 						color: '#00a65a'
 					}]
 				});
 
 			}
 		});
+}
+
+function showDetail(category) {
+	var period = $('#period').val();
+	var date = category;
+
+	var data = {
+		period : period,
+		date : date
 	}
 
-	function showDetail(category) {
-		var period = $('#period').val();
-		var date = category;
+	$.get('{{ url("fetch/resume_shipping_order_detail") }}', data, function(result, status, xhr){
+		if(result.status){
+			$('#tableDetailBody').html("");
+			$('#tableDetailRefBody').html("");
 
-		var data = {
-			period : period,
-			date : date
+			$('#title_modal').text('Shipping Booking Management Booking Details on ' + result.st_date);
+
+			var detail = '';
+			$.each(result.resume, function(key, value){
+				var color = '';
+				if(value.status){
+					color = 'style="background-color: rgb(204, 255, 255);"';
+				}else{
+					color = 'style="background-color: rgb(255, 204, 255);"';
+				}
+
+				detail += '<tr>';
+				detail += '<td '+color+'>'+value.ycj_ref_number+'</td>';
+				detail += '<td '+color+'>'+value.shipper+'</td>';
+				detail += '<td '+color+'>'+value.port_loading+'</td>';
+				detail += '<td '+color+'>'+value.port_of_delivery+'</td>';
+				detail += '<td '+color+'>'+value.country+'</td>';
+				detail += '<td '+color+'>'+(value.fortyhc || '' )+'</td>';
+				detail += '<td '+color+'>'+(value.fourty || '' )+'</td>';
+				detail += '<td '+color+'>'+(value.twenty || '' )+'</td>';
+				detail += '</tr>';
+			});
+			$('#tableDetailBody').append(detail);
+
+
+			var detail = '';
+			$.each(result.detail, function(key, value){
+				var color = '';
+				console.log(value.status);
+				if(value.status == 'BOOKING CONFIRMED'){
+					color = 'style="background-color: rgb(204, 255, 255);"';
+				}
+
+
+				detail += '<tr>';
+				detail += '<td '+color+'>'+value.ycj_ref_number+'</td>';
+				detail += '<td '+color+'>'+value.shipper+'</td>';
+				detail += '<td '+color+'>'+value.port_loading+'</td>';
+				detail += '<td '+color+'>'+value.port_of_delivery+'</td>';
+				detail += '<td '+color+'>'+value.country+'</td>';
+				detail += '<td '+color+'>'+(value.fortyhc || '' )+'</td>';
+				detail += '<td '+color+'>'+(value.fourty || '' )+'</td>';
+				detail += '<td '+color+'>'+(value.twenty || '' )+'</td>';
+				detail += '<td '+color+'>'+value.booking_number+'</td>';
+				detail += '<td '+color+'>'+value.carier+'</td>';
+				detail += '<td '+color+'>'+value.nomination+'</td>';
+				detail += '<td '+color+'>'+value.application_rate+'</td>';
+				detail += '<td '+color+'>'+value.status+'</td>';
+				detail += '</tr>';
+			});
+			$('#tableDetailRefBody').append(detail);
+
+
+			$('#modalDetail').modal('show');
 		}
+		else{
+			openErrorGritter('Error!', result.message);
+		}
+	});
+}
 
-		$.get('{{ url("fetch/resume_shipping_order_detail") }}', data, function(result, status, xhr){
-			if(result.status){
-				$('#tableDetailBody').html("");
-				$('#tableDetailRefBody').html("");
+function openSuccessGritter(title, message){
+	jQuery.gritter.add({
+		title: title,
+		text: message,
+		class_name: 'growl-success',
+		image: '{{ url("images/image-screen.png") }}',
+		sticky: false,
+		time: '3000'
+	});
+}
 
-				$('#title_modal').text('Shipping Booking Management Booking Details on ' + result.st_date);
-
-				var detail = '';
-				$.each(result.resume, function(key, value){
-					var color = '';
-					if(value.status){
-						color = 'style="background-color: rgb(204, 255, 255);"';
-					}else{
-						color = 'style="background-color: rgb(255, 204, 255);"';
-					}
-
-					detail += '<tr>';
-					detail += '<td '+color+'>'+value.ycj_ref_number+'</td>';
-					detail += '<td '+color+'>'+value.shipper+'</td>';
-					detail += '<td '+color+'>'+value.port_loading+'</td>';
-					detail += '<td '+color+'>'+value.port_of_delivery+'</td>';
-					detail += '<td '+color+'>'+value.country+'</td>';
-					detail += '<td '+color+'>'+(value.fortyhc || '' )+'</td>';
-					detail += '<td '+color+'>'+(value.fourty || '' )+'</td>';
-					detail += '<td '+color+'>'+(value.twenty || '' )+'</td>';
-					detail += '</tr>';
-				});
-				$('#tableDetailBody').append(detail);
-
-
-				var detail = '';
-				$.each(result.detail, function(key, value){
-					var color = '';
-					console.log(value.status);
-					if(value.status == 'BOOKING CONFIRMED'){
-						color = 'style="background-color: rgb(204, 255, 255);"';
-					}
-
-
-					detail += '<tr>';
-					detail += '<td '+color+'>'+value.ycj_ref_number+'</td>';
-					detail += '<td '+color+'>'+value.shipper+'</td>';
-					detail += '<td '+color+'>'+value.port_loading+'</td>';
-					detail += '<td '+color+'>'+value.port_of_delivery+'</td>';
-					detail += '<td '+color+'>'+value.country+'</td>';
-					detail += '<td '+color+'>'+(value.fortyhc || '' )+'</td>';
-					detail += '<td '+color+'>'+(value.fourty || '' )+'</td>';
-					detail += '<td '+color+'>'+(value.twenty || '' )+'</td>';
-					detail += '<td '+color+'>'+value.booking_number+'</td>';
-					detail += '<td '+color+'>'+value.carier+'</td>';
-					detail += '<td '+color+'>'+value.nomination+'</td>';
-					detail += '<td '+color+'>'+value.application_rate+'</td>';
-					detail += '<td '+color+'>'+value.status+'</td>';
-					detail += '</tr>';
-				});
-				$('#tableDetailRefBody').append(detail);
-
-
-				$('#modalDetail').modal('show');
-			}
-			else{
-				openErrorGritter('Error!', result.message);
-			}
-		});
-	}
-
-	function openSuccessGritter(title, message){
-		jQuery.gritter.add({
-			title: title,
-			text: message,
-			class_name: 'growl-success',
-			image: '{{ url("images/image-screen.png") }}',
-			sticky: false,
-			time: '3000'
-		});
-	}
-
-	function openErrorGritter(title, message) {
-		jQuery.gritter.add({
-			title: title,
-			text: message,
-			class_name: 'growl-danger',
-			image: '{{ url("images/image-stop.png") }}',
-			sticky: false,
-			time: '3000'
-		});
-	}
+function openErrorGritter(title, message) {
+	jQuery.gritter.add({
+		title: title,
+		text: message,
+		class_name: 'growl-danger',
+		image: '{{ url("images/image-stop.png") }}',
+		sticky: false,
+		time: '3000'
+	});
+}
 
 
 </script>
