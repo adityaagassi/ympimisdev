@@ -200,7 +200,7 @@
 			endDate: '<?php echo $tgl_max ?>'
 		});
 		fetchTemperature();
-		setInterval(fetchTemperature, 20000);
+		// setInterval(fetchTemperature, 20000);
 	});
 
 
@@ -215,208 +215,134 @@
 		}
 
 		$.get('{{ url("fetch/temperature/minmoe_monitoring") }}', data, function(result, status, xhr) {
+			if (xhr.status == 200) {
+				if (result.status) {
+					$('#tableNoCheckBody').html('');
 
-			$('#tableNoCheckBody').html('');
+					var index = 1;
+					var check = 0;
+					var uncheck = 0;
+					var resultData = "";
 
-			var index = 1;
-			var check = 0;
-			var uncheck = 0;
-			var resultData = "";
-
-			$.each(result.datacheck, function(key, value) {
-				if (value.checks == null) {
-					if (result.attendance[key][0] != undefined) {
-						var attnd = result.attendance[key][0].attend_code;
-					}else{
-						var attnd = '-';
-					}
-					resultData += '<tr>';
-					resultData += '<td style="font-size: 1vw;">'+ index +'</td>';
-					resultData += '<td style="font-size: 1vw;">'+ value.employee_id +'</td>';
-					resultData += '<td style="font-size: 1vw;">'+ value.name +'</td>';
-					resultData += '<td style="font-size: 1vw;">'+ attnd +'</td>';
-					resultData += '</tr>';
-					index++;
-					uncheck++;
-				}else{
-					check++;
-				}
-			});
-
-			$('#tableNoCheckBody').append(resultData);
-
-			$('#tableAbnormalBody').html('');
-
-			var index = 1;
-			var resultDataAbnormal = "";
-
-			$.each(result.dataAbnormal, function(key, value) {
-				resultDataAbnormal += '<tr>';
-				resultDataAbnormal += '<td class="sedang" style="font-size: 1.5vw;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+value.employee_id+'<br>'+ value.name +'</td>';
-				resultDataAbnormal += '<td class="sedang" style="font-size: 1.7vw;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.temperature +'</td>';
-				resultDataAbnormal += '</tr>';
-				index++;
-			});
-
-			$('#tableAbnormalBody').append(resultDataAbnormal);
-
-			$('#total_check').html(check+' Person(s)');
-			$('#total_uncheck').html(uncheck+' Person(s)');
-
-			var categories1 = [];
-			var series1 = [];
-
-			$.each(result.datatoday, function(key, value) {
-				categories1.push(value.temperature+' °C');
-				series1.push({y:parseFloat(value.jumlah),key:value.temperature});
-			});
-
-			$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Update: '+ getActualFullDate() +'</p>');
-
-			var chart = Highcharts.chart('container1', {
-				chart: {
-					type: 'column',
-					backgroundColor: null
-				},
-				title: {
-					text: 'Employees Temperature Monitoring <br>On '+result.dateTitle,
-					style: {
-						fontSize: '25px',
-						fontWeight: 'bold'
-					}
-				},
-				yAxis: {
-					title: {
-						text: 'Count Person(s)'
-					}
-				},
-				xAxis: {
-					categories: categories1,
-					type: 'category',
-					gridLineWidth: 1,
-					gridLineColor: 'RGB(204,255,255)',
-					labels: {
-						style: {
-							fontSize: '20px'
+					$.each(result.datacheck, function(key, value) {
+						if (value.checks == null) {
+							if (result.attendance[key][0] != undefined) {
+								var attnd = result.attendance[key][0].attend_code;
+							}else{
+								var attnd = '-';
+							}
+							resultData += '<tr>';
+							resultData += '<td style="font-size: 1vw;">'+ index +'</td>';
+							resultData += '<td style="font-size: 1vw;">'+ value.employee_id +'</td>';
+							resultData += '<td style="font-size: 1vw;">'+ value.name +'</td>';
+							resultData += '<td style="font-size: 1vw;">'+ attnd +'</td>';
+							resultData += '</tr>';
+							index++;
+							uncheck++;
+						}else{
+							check++;
 						}
-					},
-				},
-				credits: {
-					enabled:false
-				},
-				plotOptions: {
-					series:{
-						dataLabels: {
-							enabled: true,
-							format: '{point.y}',
-							style:{
-								textOutline: false,
-								fontSize: '20px'
+					});
+
+					$('#tableNoCheckBody').append(resultData);
+
+					$('#tableAbnormalBody').html('');
+
+					var index = 1;
+					var resultDataAbnormal = "";
+
+					$.each(result.dataAbnormal, function(key, value) {
+						resultDataAbnormal += '<tr>';
+						resultDataAbnormal += '<td class="sedang" style="font-size: 1.5vw;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+value.employee_id+'<br>'+ value.name +'</td>';
+						resultDataAbnormal += '<td class="sedang" style="font-size: 1.7vw;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.temperature +'</td>';
+						resultDataAbnormal += '</tr>';
+						index++;
+					});
+
+					$('#tableAbnormalBody').append(resultDataAbnormal);
+
+					$('#total_check').html(check+' Person(s)');
+					$('#total_uncheck').html(uncheck+' Person(s)');
+
+					var categories1 = [];
+					var series1 = [];
+
+					$.each(result.datatoday, function(key, value) {
+						categories1.push(value.temperature+' °C');
+						series1.push({y:parseFloat(value.jumlah),key:value.temperature});
+					});
+
+					$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Update: '+ getActualFullDate() +'</p>');
+
+					var chart = Highcharts.chart('container1', {
+						chart: {
+							type: 'column',
+							backgroundColor: null
+						},
+						title: {
+							text: 'Employees Temperature Monitoring <br>On '+result.dateTitle,
+							style: {
+								fontSize: '25px',
+								fontWeight: 'bold'
 							}
 						},
-						animation: false,
-						pointPadding: 0.93,
-						groupPadding: 0.93,
-						borderWidth: 0.93,
-						cursor: 'pointer',
-						point: {
-							events: {
-								click: function () {
-									fetchTemperatureDetail(this.key);
+						yAxis: {
+							title: {
+								text: 'Count Person(s)'
+							}
+						},
+						xAxis: {
+							categories: categories1,
+							type: 'category',
+							gridLineWidth: 1,
+							gridLineColor: 'RGB(204,255,255)',
+							labels: {
+								style: {
+									fontSize: '20px'
+								}
+							},
+						},
+						credits: {
+							enabled:false
+						},
+						plotOptions: {
+							series:{
+								dataLabels: {
+									enabled: true,
+									format: '{point.y}',
+									style:{
+										textOutline: false,
+										fontSize: '20px'
+									}
+								},
+								animation: false,
+								pointPadding: 0.93,
+								groupPadding: 0.93,
+								borderWidth: 0.93,
+								cursor: 'pointer',
+								point: {
+									events: {
+										click: function () {
+											fetchTemperatureDetail(this.key);
+										}
+									}
 								}
 							}
-						}
-					}
-				},
-				series: [{
-					name:'Person(s)',
-					type: 'column',
-					data: series1,
-					showInLegend: false,
-					color: '#00a65a'
-				}]
+						},
+						series: [{
+							name:'Person(s)',
+							type: 'column',
+							data: series1,
+							showInLegend: false,
+							color: '#00a65a'
+						}]
 
-			});
-
-			// var categories2 = [];
-			// var series2 = [];
-
-			// $.each(result.hourly, function(key, value) {
-			// 	categories2.push(value.jam);
-			// 	series2.push(value.qty_visit);
-			// });
-
-			// var chart2 = Highcharts.chart('container2', {
-			// 	chart: {
-			// 		type: 'column',
-			// 		backgroundColor: null
-			// 	},
-			// 	title: {
-			// 		text: 'Pantry Visitor By Hour (07:00 - 16:00 exclude break)',
-			// 		style: {
-			// 			fontSize: '30px',
-			// 			fontWeight: 'bold'
-			// 		}
-			// 	},
-			// 	subtitle: {
-			// 		text: 'Last Update: '+getActualFullDate(),
-			// 		style: {
-			// 			fontSize: '18px',
-			// 			fontWeight: 'bold'
-			// 		}
-			// 	},
-			// 	yAxis: {
-			// 		title: {
-			// 			text: 'Count Person(s)'
-			// 		}
-			// 	},
-			// 	xAxis: {
-			// 		categories: categories2,
-			// 		type: 'category',
-			// 		gridLineWidth: 1,
-			// 		gridLineColor: 'RGB(204,255,255)',
-			// 		labels: {
-			// 			style: {
-			// 				fontSize: '26px'
-			// 			}
-			// 		},
-			// 	},
-			// 	credits: {
-			// 		enabled:false
-			// 	},
-			// 	plotOptions: {
-			// 		series:{
-			// 			dataLabels: {
-			// 				enabled: true,
-			// 				format: '{point.y}',
-			// 				style:{
-			// 					textOutline: false,
-			// 					fontSize: '26px'
-			// 				}
-			// 			},
-			// 			animation: false,
-			// 			pointPadding: 0.93,
-			// 			groupPadding: 0.93,
-			// 			borderWidth: 0.93,
-			// 			cursor: 'pointer',
-			// 			point: {
-			// 				events: {
-			// 					click: function () {
-			// 						fetchVisitorDetail(this.category, 'hour');
-			// 					}
-			// 				}
-			// 			}
-			// 		}
-			// 	},
-			// 	series: [{
-			// 		name:'Person(s)',
-			// 		type: 'column',
-			// 		data: series2,
-			// 		showInLegend: false,
-			// 		color: '#ff851b'
-			// 	}]
-
-			// });
+					});
+					fetchTemperature();
+				}else{
+					alert('Failed to Retrieve Data');
+				}
+			}
 		});		
 	}
 
