@@ -366,52 +366,52 @@
 							if($jumlahitem < 2)
 								$jumlah = 1;
 							else if($jumlahitem == 2)
-								$jumlah = 3;
+								$jumlah = 2;
 							else if($jumlahitem == 3)
-								$jumlah = 5;
+								$jumlah = 3;
 							else if($jumlahitem == 4)
-								$jumlah = 7;
+								$jumlah = 4;
 							else if($jumlahitem == 5)
-								$jumlah = 9;
+								$jumlah = 5;
 							else if($jumlahitem == 6)
-								$jumlah = 11;
+								$jumlah = 6;
 							else if($jumlahitem == 7)
-								$jumlah = 13;
+								$jumlah = 7;
 							else if($jumlahitem == 8)
-								$jumlah = 15;
+								$jumlah = 8;
 							else if($jumlahitem == 9)
-								$jumlah = 17;
+								$jumlah = 9;
 							else if($jumlahitem == 10)
-								$jumlah = 19;
+								$jumlah = 10;
 							else if($jumlahitem == 11)
-								$jumlah = 21;
+								$jumlah = 11;
 							else if($jumlahitem == 12)
-								$jumlah = 23;
+								$jumlah = 12;
 							else if($jumlahitem == 13)
-								$jumlah = 25;
+								$jumlah = 13;
 							else if($jumlahitem == 14)
-								$jumlah = 27;
+								$jumlah = 14;
 							else if($jumlahitem == 15)
-								$jumlah = 29;
+								$jumlah = 15;
 							else if($jumlahitem == 16)
-								$jumlah = 31;
+								$jumlah = 16;
 							else if($jumlahitem == 17)
-								$jumlah = 33;
+								$jumlah = 17;
 							else if($jumlahitem == 18)
-								$jumlah = 35;
+								$jumlah = 18;
 							else if($jumlahitem == 19)
-								$jumlah = 37;
+								$jumlah = 19;
 							else if($jumlahitem == 20)
-								$jumlah = 39;
+								$jumlah = 20;
 							else if($jumlahitem == 21)
-								$jumlah = 41;
+								$jumlah = 21;
 							else if($jumlahitem == 22)
-								$jumlah = 43;
+								$jumlah = 22;
 							?>
 
 							?>
 							<tr>
-								<td colspan="2" rowspan="{{ 10 + $jumlah }}" style="border: 1px solid black;">Description<br><br>For Taxation Purpose, Please break down good / material cost & Service expense (if possible) <br><br> 
+								<td colspan="2" rowspan="{{ 9 + $jumlah }}" style="border: 1px solid black;">Description<br><br>For Taxation Purpose, Please break down good / material cost & Service expense (if possible) <br><br> 
 									<img src="{{ public_path() . '/files/jepang/Screenshot_97.jpg' }}" width="100">
 								</td>
 								<td colspan="8" style="border-right: 1px solid black;font-weight: bold;"><u>Supplier 
@@ -473,10 +473,10 @@
 								?>
 								@foreach($inv as $item)
 								<tr>
-									<td colspan="3" rowspan="2" style="border: 1px solid black;color: blue;font-weight: bold;vertical-align: top;">{{$item->detail}}</td>
-									<td colspan="1" rowspan="2" style="border: 1px solid black;color: blue;font-weight: bold;vertical-align: top;">{{$item->qty}} {{$item->uom}}</td>
-									<td colspan="2" rowspan="2" style="border: 1px solid black;color: blue;font-weight: bold;vertical-align: top;text-align: right;"><?= $ket_harga ?> <?= number_format($item->price,2,",",".");?></td>
-									<td colspan="2" rowspan="2" style="border: 1px solid black;color: blue;font-weight: bold;vertical-align: top;text-align: right;"><?= $ket_harga ?> <?= number_format($item->amount,2,",",".");?></td>
+									<td colspan="3" style="border: 1px solid black;color: blue;font-weight: bold;height:2%;">{{$item->detail}}</td>
+									<td colspan="1" style="border: 1px solid black;color: blue;font-weight: bold;height:2%;">{{$item->qty}} {{$item->uom}}</td>
+									<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold;height:2%;text-align: right;"><?= $ket_harga ?> <?= number_format($item->price,2,",",".");?></td>
+									<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold;height:2%;text-align: right;"><?= $ket_harga ?> <?= number_format($item->amount,2,",",".");?></td>
 
 									<?php 
 									if($item->vat_status == "Yes"){
@@ -484,7 +484,6 @@
 									} 
 									?>
 								</tr>
-								<tr></tr>
 								<?php
 								$total = $total + $item->amount;
 								?>
@@ -494,12 +493,11 @@
 							} else { 
 								?>
 								<tr>
-									<td colspan="3" rowspan="2" style="border: 1px solid black;">&nbsp;</td>
-									<td colspan="1" rowspan="2" style="border: 1px solid black;">&nbsp;</td>
-									<td colspan="2" rowspan="2" style="border: 1px solid black;">&nbsp;</td>
-									<td colspan="2" rowspan="2" style="border: 1px solid black;">&nbsp;</td>
+									<td colspan="3" style="border: 1px solid black;">&nbsp;</td>
+									<td colspan="1" style="border: 1px solid black;">&nbsp;</td>
+									<td colspan="2" style="border: 1px solid black;">&nbsp;</td>
+									<td colspan="2" style="border: 1px solid black;">&nbsp;</td>
 								</tr>
-								<tr></tr>
 							<?php } ?>
 							<tr>
 								<td colspan="2" rowspan="3" style="border: 1px solid black;">Currency<br><img src="{{ public_path() . '/files/jepang/Screenshot_101.jpg' }}" width="20"></td>
