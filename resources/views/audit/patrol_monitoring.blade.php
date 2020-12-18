@@ -325,12 +325,11 @@
 
 @section('scripts')
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
-<script src="{{ url("js/highstock.js")}}"></script>
-<script src="{{ url("js/highcharts-3d.js")}}"></script>
+<script src="{{ url("js/highcharts.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
-<script src="{{ url("js/accessibility.js")}}"></script>
 <script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
+<script src="{{ url("js/pattern-fill.js")}}"></script>
 
 <script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
 <script src="{{ url("js/buttons.flash.min.js")}}"></script>
@@ -391,7 +390,7 @@
           sudah_ditangani_gm.push(parseInt(value.jumlah_sudah_gm));
           belum_ditangani_presdir.push(parseInt(value.jumlah_belum_presdir));
           sudah_ditangani_presdir.push(parseInt(value.jumlah_sudah_presdir));
-        })
+        });
 
         $('#chart').highcharts({
           chart: {
@@ -432,7 +431,7 @@
             align: 'right',
             x: -30,
             verticalAlign: 'top',
-            y: 35,
+            y: 10,
             floating: true,
             borderWidth: 1,
             shadow: false,
@@ -454,7 +453,6 @@
                   }
                 }
               },
-              borderWidth: 0,
               dataLabels: {
                 enabled: false,
                 format: '{point.y}'
@@ -463,7 +461,9 @@
             column: {
               color:  Highcharts.ColorString,
               stacking: 'normal',
-              borderRadius: 1,
+              pointPadding: 0.93,
+              groupPadding: 0.93,
+              borderWidth: 1,
               dataLabels: {
                 enabled: true
               }
@@ -482,26 +482,36 @@
           {
             name: 'Temuan Presdir Open',
             data: belum_ditangani_presdir,
-            color : '#f15c80',
-            stack : 'presdir'
+            color: { 
+              pattern: {
+                path: 'M 0 1.5 L 2.5 1.5 L 2.5 0 M 2.5 5 L 2.5 3.5 L 5 3.5',
+                color: "#dd4b39",
+                width: 5,
+                height: 5
+              }
+            }
           },
           {
             name: 'Temuan GM Open',
             data: belum_ditangani_gm,
-            color : '#c04f50',
-            stack : 'gm'
+            color: "#dd4b39"
           },
           {
             name: 'Temuan Presdir Close',
             data: sudah_ditangani_presdir,
-            color : '#90ed7d',
-            stack : 'presdir'
+            color: { 
+              pattern: {
+                path: 'M 0 1.5 L 2.5 1.5 L 2.5 0 M 2.5 5 L 2.5 3.5 L 5 3.5',
+                color: "#00a65a",
+                width: 5,
+                height: 5
+              }
+            }
           },
           {
             name: 'Temuan GM Close',
             data: sudah_ditangani_gm,
-            color : '#00c853',
-            stack : 'gm'
+            color: "#00a65a"
           }
           ]
         })
@@ -509,26 +519,26 @@
         alert('Attempt to retrieve data failed');
       }
     })
-  }
+}
 
-  function ShowModal(tgl, status, datefrom, dateto) {
-    tabel = $('#example2').DataTable();
-    tabel.destroy();
+function ShowModal(tgl, status, datefrom, dateto) {
+  tabel = $('#example2').DataTable();
+  tabel.destroy();
 
-    $("#myModal").modal("show");
+  $("#myModal").modal("show");
 
-    var table = $('#example2').DataTable({
-      'dom': 'Bfrtip',
-      'responsive': true,
-      'lengthMenu': [
-      [ 10, 25, 50, -1 ],
-      [ '10 rows', '25 rows', '50 rows', 'Show all' ]
-      ],
-      'buttons': {
-        buttons:[
-        {
-          extend: 'pageLength',
-          className: 'btn btn-default',
+  var table = $('#example2').DataTable({
+    'dom': 'Bfrtip',
+    'responsive': true,
+    'lengthMenu': [
+    [ 10, 25, 50, -1 ],
+    [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+    ],
+    'buttons': {
+      buttons:[
+      {
+        extend: 'pageLength',
+        className: 'btn btn-default',
           // text: '<i class="fa fa-print"></i> Show',
         },
         {
@@ -591,269 +601,269 @@
       ]    
     });
 
-    $('#judul_table').append().empty();
-    $('#judul_table').append('<center><b>Temuan Patrol Tanggal '+tgl+'</b></center>'); 
-  }
+  $('#judul_table').append().empty();
+  $('#judul_table').append('<center><b>Temuan Patrol Tanggal '+tgl+'</b></center>'); 
+}
 
 
 
-  function fetchTable(){
+function fetchTable(){
 
-    var datefrom = $('#datefrom').val();
-    var dateto = $('#dateto').val();
-    var status = $('#status').val();
+  var datefrom = $('#datefrom').val();
+  var dateto = $('#dateto').val();
+  var status = $('#status').val();
 
-    var data = {
-      datefrom: datefrom,
-      dateto: dateto,
-      status: status
-    };
+  var data = {
+    datefrom: datefrom,
+    dateto: dateto,
+    status: status
+  };
 
-    $.get('{{ url("index/audit_patrol/table") }}', data, function(result, status, xhr){
-      if(result.status){
+  $.get('{{ url("index/audit_patrol/table") }}', data, function(result, status, xhr){
+    if(result.status){
 
-        $('#tabelmonitor').DataTable().clear();
-        $('#tabelmonitor').DataTable().destroy();
+      $('#tabelmonitor').DataTable().clear();
+      $('#tabelmonitor').DataTable().destroy();
 
 
-        $("#tabelisi").find("td").remove();  
-        $('#tabelisi').html("");
-        var table = "";
+      $("#tabelisi").find("td").remove();  
+      $('#tabelisi').html("");
+      var table = "";
 
-        $.each(result.datas, function(key, value) {
+      $.each(result.datas, function(key, value) {
 
-          table += '<tr>';
-          table += '<td>'+value.kategori+'</td>';
-          table += '<td style="border-left:1px solid yellow; text-align: center;">'+value.tanggal+'</span></td>';
-          table += '<td style="border-left:1px solid yellow">'+value.lokasi+'</td>';
-          table += '<td style="border-left:1px solid yellow">'+value.auditor_name+'</td>';
-          table += '<td style="border-left:1px solid yellow">'+value.auditee_name+'</span></td>';
-          table += '<td style="border-left:1px solid yellow">'+value.note+'</td>';
+        table += '<tr>';
+        table += '<td>'+value.kategori+'</td>';
+        table += '<td style="border-left:1px solid yellow; text-align: center;">'+value.tanggal+'</span></td>';
+        table += '<td style="border-left:1px solid yellow">'+value.lokasi+'</td>';
+        table += '<td style="border-left:1px solid yellow">'+value.auditor_name+'</td>';
+        table += '<td style="border-left:1px solid yellow">'+value.auditee_name+'</span></td>';
+        table += '<td style="border-left:1px solid yellow">'+value.note+'</td>';
             // table += "<td style='border-left:1px solid yellow'><img src='"+"{{ url('files/patrol') }}/"+value.foto+"' width='150'></td>";  
             table += '<td style="border-left:1px solid yellow; text-align: center;"><button style="width: 25%; height: 100%;" onclick="edit(\''+value.id+'\')" class="btn btn-xs btn-primary form-control"><span>Edit </span></button>&nbsp;&nbsp;&nbsp;<button style="width: 50%; height: 100%;" onclick="penanganan(\''+value.id+'\')" class="btn btn-xs btn-warning form-control"><span>Penanganan</span></button></td>';            
             table += '</tr>';
           })
 
-        $('#tabelisi').append(table);
+      $('#tabelisi').append(table);
 
-        $('#tabelmonitor').DataTable({
-          'responsive':true,
-          'paging': true,
-          'lengthChange': false,
-          'pageLength': 25,
-          'searching': true,
-          'ordering': true,
-          'order': [],
-          'info': false,
-          'autoWidth': true,
-          "sPaginationType": "full_numbers",
-          "bJQueryUI": true,
-          "bAutoWidth": false,
-          "processing": true
-        });
-      }
-    })
+      $('#tabelmonitor').DataTable({
+        'responsive':true,
+        'paging': true,
+        'lengthChange': false,
+        'pageLength': 25,
+        'searching': true,
+        'ordering': true,
+        'order': [],
+        'info': false,
+        'autoWidth': true,
+        "sPaginationType": "full_numbers",
+        "bJQueryUI": true,
+        "bAutoWidth": false,
+        "processing": true
+      });
+    }
+  })
+}
+
+function penanganan(id) {
+
+  $('#modalPenanganan').modal("show");
+
+  var data = {
+    id : id
   }
 
-  function penanganan(id) {
+  $.get('{{ url("index/audit_patrol/detail_penanganan") }}', data, function(result, status, xhr){
 
-    $('#modalPenanganan').modal("show");
-    
-    var data = {
-      id : id
+    var images = "";
+    $("#image").html("");
+
+    if (result.status) {
+      $("#id_penanganan").val(id);
+      $("#lokasi").text(result.audit[0].lokasi);
+      $("#tanggal").text(result.audit[0].tanggal);
+      $("#note").text(result.audit[0].note);
+      images += '<img src="{{ url("files/patrol") }}/'+result.audit[0].foto+'" width="300">';
+      $("#image").append(images);
+
+    } else {
+      openErrorGritter('Error');
     }
 
-    $.get('{{ url("index/audit_patrol/detail_penanganan") }}', data, function(result, status, xhr){
+  }); 
+}
 
-      var images = "";
-      $("#image").html("");
+function update_penanganan() {
 
-      if (result.status) {
-        $("#id_penanganan").val(id);
-        $("#lokasi").text(result.audit[0].lokasi);
-        $("#tanggal").text(result.audit[0].tanggal);
-        $("#note").text(result.audit[0].note);
-        images += '<img src="{{ url("files/patrol") }}/'+result.audit[0].foto+'" width="300">';
-        $("#image").append(images);
+  var data = {
+    id: $("#id_penanganan").val(),
+    penanganan : CKEDITOR.instances.penanganan.getData()
+  };
 
-      } else {
-        openErrorGritter('Error');
-      }
-
-    }); 
+  if (CKEDITOR.instances.penanganan.getData() == null || CKEDITOR.instances.penanganan.getData() == "") {
+    openErrorGritter("Error","Penanganan Harus Diisi");
+    return false;
   }
 
-  function update_penanganan() {
+  $.post('{{ url("post/audit_patrol/penanganan") }}', data, function(result, status, xhr){
+    if (result.status == true) {
+      openSuccessGritter("Success","Audit Berhasil Ditangani");
+      fetchTable();
+      drawChart();
+    } else {
+      openErrorGritter("Error",result.datas);
+    }
+  })
+}
 
-    var data = {
-      id: $("#id_penanganan").val(),
-      penanganan : CKEDITOR.instances.penanganan.getData()
-    };
+function edit(id) {
 
-    if (CKEDITOR.instances.penanganan.getData() == null || CKEDITOR.instances.penanganan.getData() == "") {
-      openErrorGritter("Error","Penanganan Harus Diisi");
-      return false;
+  $('#modalEdit').modal("show");
+
+  var data = {
+    id : id
+  }
+
+  $.get('{{ url("index/audit_patrol/detail_penanganan") }}', data, function(result, status, xhr){
+
+    var images_edit = "";
+    $("#image_edit").html("");
+
+    if (result.status) {
+      $("#id_penanganan_edit").val(id);
+      $("#tanggal_edit").text(result.audit[0].tanggal);
+      $("#lokasi_edit").text(result.audit[0].lokasi);
+      $("#poin_edit").text(result.audit[0].point_judul);
+      $("#pic_edit").text(result.audit[0].auditee_name);
+      $("#note_edit").val(result.audit[0].note);
+
+      images_edit += '<img src="{{ url("files/patrol") }}/'+result.audit[0].foto+'" width="300">';
+      $("#image_edit").append(images_edit);
+
+    } else {
+      openErrorGritter('Error');
     }
 
-    $.post('{{ url("post/audit_patrol/penanganan") }}', data, function(result, status, xhr){
-      if (result.status == true) {
-        openSuccessGritter("Success","Audit Berhasil Ditangani");
-        fetchTable();
-        drawChart();
-      } else {
-        openErrorGritter("Error",result.datas);
-      }
-    })
-  }
+  }); 
+}
 
-  function edit(id) {
 
-    $('#modalEdit').modal("show");
-    
-    var data = {
-      id : id
+function post_edit() {
+
+  var data = {
+    id: $("#id_penanganan_edit").val(),
+    note : $("#note_edit").val(),
+  };
+
+  $.post('{{ url("post/audit_patrol/edit") }}', data, function(result, status, xhr){
+    if (result.status == true) {
+      openSuccessGritter("Success","Audit Berhasil Diedit");
+      fetchTable();
+    } else {
+      openErrorGritter("Error",result.datas);
     }
-
-    $.get('{{ url("index/audit_patrol/detail_penanganan") }}', data, function(result, status, xhr){
-
-      var images_edit = "";
-      $("#image_edit").html("");
-
-      if (result.status) {
-        $("#id_penanganan_edit").val(id);
-        $("#tanggal_edit").text(result.audit[0].tanggal);
-        $("#lokasi_edit").text(result.audit[0].lokasi);
-        $("#poin_edit").text(result.audit[0].point_judul);
-        $("#pic_edit").text(result.audit[0].auditee_name);
-        $("#note_edit").val(result.audit[0].note);
-
-        images_edit += '<img src="{{ url("files/patrol") }}/'+result.audit[0].foto+'" width="300">';
-        $("#image_edit").append(images_edit);
-
-      } else {
-        openErrorGritter('Error');
-      }
-
-    }); 
-  }
-
-  
-  function post_edit() {
-
-    var data = {
-      id: $("#id_penanganan_edit").val(),
-      note : $("#note_edit").val(),
-    };
-
-    $.post('{{ url("post/audit_patrol/edit") }}', data, function(result, status, xhr){
-      if (result.status == true) {
-        openSuccessGritter("Success","Audit Berhasil Diedit");
-        fetchTable();
-      } else {
-        openErrorGritter("Error",result.datas);
-      }
-    })
-  }
+  })
+}
 
 
-  function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
-  Highcharts.createElement('link', {
-    href: '{{ url("fonts/UnicaOne.css")}}',
-    rel: 'stylesheet',
-    type: 'text/css'
-  }, null, document.getElementsByTagName('head')[0]);
+Highcharts.createElement('link', {
+  href: '{{ url("fonts/UnicaOne.css")}}',
+  rel: 'stylesheet',
+  type: 'text/css'
+}, null, document.getElementsByTagName('head')[0]);
 
-  Highcharts.theme = {
-    colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
-    '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
-    chart: {
-      backgroundColor: {
-        linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
-        stops: [
-        [0, '#2a2a2b']
-        ]
-      },
-      style: {
-        fontFamily: 'sans-serif'
-      },
-      plotBorderColor: '#606063'
+Highcharts.theme = {
+  colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
+  '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+  chart: {
+    backgroundColor: {
+      linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
+      stops: [
+      [0, '#2a2a2b']
+      ]
     },
+    style: {
+      fontFamily: 'sans-serif'
+    },
+    plotBorderColor: '#606063'
+  },
+  title: {
+    style: {
+      color: '#E0E0E3',
+      textTransform: 'uppercase',
+      fontSize: '20px'
+    }
+  },
+  subtitle: {
+    style: {
+      color: '#E0E0E3',
+      textTransform: 'uppercase'
+    }
+  },
+  xAxis: {
+    gridLineColor: '#707073',
+    labels: {
+      style: {
+        color: '#E0E0E3'
+      }
+    },
+    lineColor: '#707073',
+    minorGridLineColor: '#505053',
+    tickColor: '#707073',
     title: {
       style: {
-        color: '#E0E0E3',
-        textTransform: 'uppercase',
-        fontSize: '20px'
-      }
-    },
-    subtitle: {
-      style: {
-        color: '#E0E0E3',
-        textTransform: 'uppercase'
-      }
-    },
-    xAxis: {
-      gridLineColor: '#707073',
-      labels: {
-        style: {
-          color: '#E0E0E3'
-        }
-      },
-      lineColor: '#707073',
-      minorGridLineColor: '#505053',
-      tickColor: '#707073',
-      title: {
-        style: {
-          color: '#A0A0A3'
+        color: '#A0A0A3'
 
-        }
       }
-    },
-    yAxis: {
-      gridLineColor: '#707073',
-      labels: {
-        style: {
-          color: '#E0E0E3'
-        }
-      },
-      lineColor: '#707073',
-      minorGridLineColor: '#505053',
-      tickColor: '#707073',
-      tickWidth: 1,
-      title: {
-        style: {
-          color: '#A0A0A3'
-        }
-      }
-    },
-    tooltip: {
-      backgroundColor: 'rgba(0, 0, 0, 0.85)',
+    }
+  },
+  yAxis: {
+    gridLineColor: '#707073',
+    labels: {
       style: {
-        color: '#F0F0F0'
+        color: '#E0E0E3'
       }
     },
-    plotOptions: {
-      series: {
-        dataLabels: {
-          color: 'white'
-        },
-        marker: {
-          lineColor: '#333'
-        }
-      },
-      boxplot: {
-        fillColor: '#505053'
-      },
-      candlestick: {
-        lineColor: 'white'
-      },
-      errorbar: {
+    lineColor: '#707073',
+    minorGridLineColor: '#505053',
+    tickColor: '#707073',
+    tickWidth: 1,
+    title: {
+      style: {
+        color: '#A0A0A3'
+      }
+    }
+  },
+  tooltip: {
+    backgroundColor: 'rgba(0, 0, 0, 0.85)',
+    style: {
+      color: '#F0F0F0'
+    }
+  },
+  plotOptions: {
+    series: {
+      dataLabels: {
         color: 'white'
+      },
+      marker: {
+        lineColor: '#333'
       }
     },
-    legend: {
+    boxplot: {
+      fillColor: '#505053'
+    },
+    candlestick: {
+      lineColor: 'white'
+    },
+    errorbar: {
+      color: 'white'
+    }
+  },
+  legend: {
         // itemStyle: {
         //   color: '#E0E0E3'
         // },
