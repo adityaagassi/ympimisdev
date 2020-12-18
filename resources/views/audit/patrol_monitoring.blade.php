@@ -3,12 +3,13 @@
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
   table.table-bordered{
-    border:1px solid rgb(150,150,150);
+    border:1px solid white;
   }
   table.table-bordered > thead > tr > th{
     border:1px solid rgb(54, 59, 56) !important;
+    background-color: #212121;
     text-align: center;
-    background-color: #212121;  
+    vertical-align: middle;
     color:white;
   }
   table.table-bordered > tbody > tr > td{
@@ -16,8 +17,7 @@
     background-color: null;
     color: white;
     vertical-align: middle;
-    text-align: center;
-    padding:3px;
+    padding: 2px 5px 2px 5px;
   }
   table.table-condensed > thead > tr > th{   
     color: black
@@ -25,22 +25,6 @@
   table.table-bordered > tfoot > tr > th{
     border:1px solid rgb(150,150,150);
     padding:0;
-  }
-
-  table.table-striped > thead > tr > th{
-    border:1px solid black !important;
-    text-align: center;
-    background-color: rgba(126,86,134,.7) !important;  
-  }
-
-  table.table-striped > tbody > tr > td{
-    border: 1px solid #eeeeee !important;
-    border-collapse: collapse;
-    color: black;
-    padding: 3px;
-    vertical-align: middle;
-    text-align: center;
-    background-color: white;
   }
 
   .dataTables_length {
@@ -56,21 +40,16 @@
     padding: 3px;
     box-sizing: border-box;
   }
-  thead>tr>th{
-    text-align:center;
-  }
-  tfoot>tr>th{
-    text-align:center;
-  }
   td:hover {
     overflow: visible;
   }
-  table > thead > tr > th{
-    border:2px solid #f4f4f4;
-    color: white;
-  }
   #tabelmonitor{
     font-size: 0.83vw;
+  }
+
+  #tabelisi > tr:hover {
+    cursor: pointer;
+    background-color: #212121;
   }
 
   .zoom{
@@ -172,14 +151,14 @@
         <table id="tabelmonitor" class="table table-bordered" style="margin-top: 5px; width: 99%">
           <thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 12px;font-weight: bold">
             <tr>
-              <th style="width: 10%; vertical-align: middle;;font-size: 16px;">Kategori Audit</th>
-              <th style="width: 10%; vertical-align: middle;border-left:3px solid yellow !important;font-size: 16px;">Tanggal</th>
-              <th style="width: 10%; vertical-align: middle;border-left:3px solid yellow !important;font-size: 16px;">Lokasi</th>
-              <th style="width: 10%; vertical-align: middle;border-left:3px solid yellow !important;font-size: 16px;">Auditor</th>
-              <th style="width: 10%; vertical-align: middle;border-left:3px solid yellow !important;font-size: 16px;">Auditee</th>
-              <th style="width: 20%; vertical-align: middle;border-left:3px solid yellow !important;font-size: 16px;">Note</th>
+              <th style="width: 1%; vertical-align: middle;;font-size: 16px;">Kategori Audit</th>
+              <th style="width: 1%; vertical-align: middle;border-left:3px solid yellow !important;font-size: 16px;">Tanggal</th>
+              <th style="width: 1%; vertical-align: middle;border-left:3px solid yellow !important;font-size: 16px;">Lokasi</th>
+              <th style="width: 1%; vertical-align: middle;border-left:3px solid yellow !important;font-size: 16px;">Auditor</th>
+              <th style="width: 1%; vertical-align: middle;border-left:3px solid yellow !important;font-size: 16px;">Auditee</th>
+              <th style="width: 5%; vertical-align: middle;border-left:3px solid yellow !important;font-size: 16px;">Note</th>
               <!-- <th style="width: 25%; vertical-align: middle;border-left:3px solid yellow !important;font-size: 16px;">Foto</th> -->
-              <th style="width: 20%; vertical-align: middle;border-left:3px solid yellow !important;font-size: 16px;">Penanganan</th>
+              <th style="width: 2%; vertical-align: middle;border-left:3px solid yellow !important;font-size: 16px;">Penanganan</th>
             </tr>
           </thead>
           <tbody id="tabelisi">
@@ -637,13 +616,13 @@
 
           table += '<tr>';
           table += '<td>'+value.kategori+'</td>';
-          table += '<td style="border-left:3px solid yellow">'+value.tanggal+'</span></td>';
+          table += '<td style="border-left:3px solid yellow; text-align: center;">'+value.tanggal+'</span></td>';
           table += '<td style="border-left:3px solid yellow">'+value.lokasi+'</td>';
           table += '<td style="border-left:3px solid yellow">'+value.auditor_name+'</td>';
           table += '<td style="border-left:3px solid yellow">'+value.auditee_name+'</span></td>';
           table += '<td style="border-left:3px solid yellow">'+value.note+'</td>';
             // table += "<td style='border-left:3px solid yellow'><img src='"+"{{ url('files/patrol') }}/"+value.foto+"' width='150'></td>";  
-            table += '<td style="border-left:3px solid yellow"><button style="width: 25%; height: 100%;" onclick="edit(\''+value.id+'\')" class="btn btn-xs btn-primary form-control"><span>Edit Audit</span></button>&nbsp;&nbsp;&nbsp;<button style="width: 50%; height: 100%;" onclick="penanganan(\''+value.id+'\')" class="btn btn-xs btn-warning form-control"><span>Lakukan Penanganan</span></button></td>';            
+            table += '<td style="border-left:3px solid yellow; text-align: center;"><button style="width: 25%; height: 100%;" onclick="edit(\''+value.id+'\')" class="btn btn-xs btn-primary form-control"><span>Edit </span></button>&nbsp;&nbsp;&nbsp;<button style="width: 50%; height: 100%;" onclick="penanganan(\''+value.id+'\')" class="btn btn-xs btn-warning form-control"><span>Penanganan</span></button></td>';            
             table += '</tr>';
           })
 
