@@ -13,7 +13,7 @@
   }
   table.table-bordered > tbody > tr > td{
     border:1px solid rgb(54, 59, 56);
-    background-color: #212121;
+    background-color: null;
     color: white;
     vertical-align: middle;
     text-align: center;
@@ -511,7 +511,7 @@
             stack : 'presdir'
           },
           {
-            name: 'Temuan GM Open',
+            name: 'Temuan GM Close',
             data: sudah_ditangani_gm,
             color : '#00c853',
             stack : 'gm'

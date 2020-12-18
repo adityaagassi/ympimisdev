@@ -237,16 +237,16 @@ class AuditController extends Controller
 
       if ($status != null) {
 
-	      if ($status == "Belum Ditangani GM Patrol") {
+	      if ($status == "Temuan GM Open") {
 	      	$stat = 'and audit_all_results.status_ditangani is null and kategori = "5S Patrol GM"';
 	      }
-	      else if ($status == "Belum Ditangani Patrol Presdir"){
+	      else if ($status == "Temuan Presdir Open"){
 	      	$stat = 'and audit_all_results.status_ditangani is null and kategori = "S-Up And EHS Patrol Presdir"';
 	      }
-	      else if ($status == "Sudah Ditangani GM Patrol") {
+	      else if ($status == "Temuan GM Close") {
 	      	$stat = 'and audit_all_results.status_ditangani = "close" and kategori = "5S Patrol GM"';
 	      }
-	      else if ($status == "Sudah Ditangani Patrol Presdir") {
+	      else if ($status == "Temuan Presdir Close") {
 	      	$stat = 'and audit_all_results.status_ditangani = "close" and kategori = "S-Up And EHS Patrol Presdir"';
 	      }
 
