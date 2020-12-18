@@ -279,6 +279,9 @@ class CparController extends Controller
     $emp = EmployeeSync::where('employee_id', $cpar->pelapor)
     ->select('employee_id', 'name')->first();
 
+    $cpar_item = CparDepartment::join('cpar_items', 'cpar_departments.id', '=', 'cpar_items.id_cpar')->where('cpar_departments.id', '=', $id)
+    ->get();
+
     $sections = db::select("select DISTINCT department, section, `group` from employee_syncs
       where department is not null
       and section is not null
@@ -293,7 +296,8 @@ class CparController extends Controller
       'cpar' => $cpar,
       'emp' => $emp,
       'sections' => $sections,
-      'materials' => $materials
+      'materials' => $materials,
+      'cpar_item' => $cpar_item
     ))->with('page', 'Form Laporan Ketidaksesuaian');
   }
 

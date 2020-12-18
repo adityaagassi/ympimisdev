@@ -468,7 +468,7 @@
           <div class="col-sm-11" style="padding-top: 30px">
             @if($investment->posisi == "user" && ($investment->currency == null || $investment->subject_jpy == null || $investment->objective_detail_jpy == null || count($investment_budget) == 0 || count($investment_item) == 0))
             <div class="btn-group pull-right">
-              <button type="button"class="btn btn-success" onclick="sendEmail({{$investment->id}})" data-toggle="tooltip" title="Send Email" disabled=""><i class="fa fa-envelope"></i> Kirim Email Ke Accounting</button>
+              <button type="button"class="btn btn-success" data-toggle="tooltip" title="Send Email" disabled=""><i class="fa fa-envelope"></i> Kirim Email Ke Accounting</button>
             </div>
 
             @elseif($investment->posisi == "user" && ($investment->currency != null || $investment->subject_jpy != null || $investment->objective_detail_jpy != null || count($investment_budget) > 0  || count($investment_item) > 0))

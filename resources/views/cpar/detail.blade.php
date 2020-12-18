@@ -77,10 +77,34 @@
    <?php $user = STRTOUPPER(Auth::user()->username)?>
 
    @if($cpar->posisi == "sl" && ($cpar->kategori == "Service" || $cpar->kategori == "Kualitas") && ($user == $cpar->pelapor || Auth::user()->role_code == "MIS"))
-   <a class="btn btn-sm btn-success pull-right" data-toggle="tooltip" title="Send Email" onclick="sendemail({{ $cpar->id }})" style="width:200px">Send Email</a>
+
+     @if(count($cpar_item) > 0)
+
+     <a class="btn btn-sm btn-success pull-right" data-toggle="tooltip" title="Send Email" onclick="sendemail({{ $cpar->id }})" style="width:200px">
+     Send Email</a>
+
+     @else 
+
+     <a class="btn btn-sm btn-success pull-right" data-toggle="tooltip" title="Lengkapi Data Item Untuk Send Email" style="width:200px" disabled>
+     Send Email</a>
+
+     @endif
+
 
    @elseif($cpar->posisi == "sl" && ($cpar->kategori == "Kualitas_Spec" || $cpar->kategori == "Kualitas_Part" || $cpar->kategori == "Kualitas_Fungsi" || $cpar->kategori == "Kualitas_Luka" || $cpar->kategori == "Kualitas_Recheck") && ($user == $cpar->pelapor || Auth::user()->role_code == "MIS"))
-   <a class="btn btn-sm btn-success pull-right" data-toggle="tooltip" title="Send Email" onclick="sendemailqa({{ $cpar->id }})" style="width:200px">Send Email</a>
+   
+
+   @if(count($cpar_item) > 0)
+
+   <a class="btn btn-sm btn-success pull-right" data-toggle="tooltip" title="Send Email" onclick="sendemailqa({{ $cpar->id }})" style="width:200px">
+   Send Email</a>
+
+   @else 
+
+   <a class="btn btn-sm btn-success pull-right" data-toggle="tooltip" title="Lengkapi Data Item Untuk Send Email" style="width:200px" disabled>
+   Send Email</a>
+
+   @endif
 
    @elseif($cpar->posisi != "sl" && ($user == $cpar->pelapor || Auth::user()->role_code == "MIS"))
    <label class="label label-success pull-right" style="margin-right: 5px; margin-top: 8px">Email Sudah Terkirim</label>
@@ -737,6 +761,7 @@
         if (result.status == true) {
           $('#example1').DataTable().ajax.reload(null, false);
           openSuccessGritter("Success","New item has been created.");
+          location.reload();
         } else {
           openErrorGritter("Error","item not created.");
         }
