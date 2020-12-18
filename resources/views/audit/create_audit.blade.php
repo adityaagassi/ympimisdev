@@ -225,17 +225,17 @@
 
 						<button class="btn btn-success pull-right" onclick="selectData()" style="width: 33%">Submit</button>
 
-						<a href="{{ url("index/audit/cek_report?category=")}}{{$_GET['category']}}" class="btn btn-danger btn-sm" target="_blank" style="color:white;width: 100%;margin-top: 5px"><i class="fa fa-file-pdf-o"></i> Cek Laporan Hasil Audit {{$_GET['category']}} </a>
-						<br>
+						<!-- <a href="{{ url("index/audit/cek_report?category=")}}{{$_GET['category']}}" class="btn btn-danger btn-sm" target="_blank" style="color:white;width: 100%;margin-top: 5px"><i class="fa fa-file-pdf-o"></i> Cek Laporan Hasil Audit {{$_GET['category']}} </a>
+						<br> -->
 						<a class="btn btn-info btn-sm" style="width: 100%;margin-top: 5px" href="{{ url("/index/audit_data?category=")}}{{$_GET['category']}}"> 
-							<i class="fa fa-file-pdf-o"></i>&nbsp;&nbsp;Laporan Data Hasil Audit {{$_GET['category']}}
+							<i class="fa fa-file-pdf-o"></i>&nbsp;&nbsp;Laporan Temuan Hasil Audit {{$_GET['category']}}
 						</a>
 
-						@if(Auth::user()->role_code == "MIS" || $user == "PI1911001")
+						@if(Auth::user()->role_code == "MIS" || $user == "PI1911001" || $user == "PI1106001")
 						
 						<a class="btn btn-primary btn-sm" style="width: 100%;margin-top: 5px" 
 						href="{{ url("/index/audit/point_check?category=") }}{{$_GET['category']}}"> 
-							<i class="fa fa-plus"></i>&nbsp;&nbsp;Point Check & Hasil Audit {{$_GET['category']}}
+							<i class="fa fa-plus"></i>&nbsp;&nbsp;Point Check & Hasil Pelaksanaan Audit {{$_GET['category']}}
 						</a>
 						@endif
 
