@@ -486,7 +486,7 @@
 			{ "data": "kd_number" },
 			{ "data": "actual_count" },
 			{ "data": "remark" },
-			{ "data": "updated_at" },
+			{ "data": "detail_updated_at" },
 			{ "data": "reprintKDO" }
 			// { "data": "deleteKDO" }
 			]

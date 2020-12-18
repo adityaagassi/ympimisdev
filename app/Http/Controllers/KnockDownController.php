@@ -1495,7 +1495,8 @@ class KnockDownController extends Controller{
 			'storage_locations.location',
 			'shipment_schedules.st_date',
 			'destinations.destination_shortname',
-			'knock_down_details.updated_at',
+			db::raw('knock_down_details.updated_at AS detail_updated_at'),
+			'knock_downs.updated_at',
 			'knock_downs.invoice_number',
 			'knock_downs.container_id',
 			'knock_down_details.quantity')
