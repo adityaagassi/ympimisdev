@@ -385,7 +385,7 @@
         var sudah_ditangani_presdir = [];
 
         $.each(result.datas, function(key, value) {
-          tgl.push(value.cat);
+          tgl.push(value.tanggal);
           belum_ditangani_gm.push(parseInt(value.jumlah_belum_gm));
           sudah_ditangani_gm.push(parseInt(value.jumlah_sudah_gm));
           belum_ditangani_presdir.push(parseInt(value.jumlah_belum_presdir));
