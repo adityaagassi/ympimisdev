@@ -114,7 +114,7 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <section class="content" style="padding-top: 0; padding-bottom: 0">
     <div class="row">
-      <div class="col-md-12" style="padding: 1px !important">
+      <!-- <div class="col-md-12" style="padding: 1px !important">
         <div class="col-xs-2">
           <div class="input-group date">
             <div class="input-group-addon bg-green" style="border: none;">
@@ -131,7 +131,7 @@
             <input type="text" class="form-control datepicker" id="dateto" placeholder="Select Date To">
           </div>
         </div>
-        <!-- <div class="col-xs-2">
+        <div class="col-xs-2">
           <div class="input-group">
             <div class="input-group-addon bg-blue">
               <i class="fa fa-search"></i>
@@ -141,13 +141,13 @@
                 <option value="Sudah Ditangani">Sudah Ditangani</option>
             </select>
           </div>
-        </div> -->
+        </div>
 
         <div class="col-xs-1">
           <button class="btn btn-success" onclick="drawChart()">Update Chart</button>
         </div>
 
-      </div>
+      </div> -->
 
       
       

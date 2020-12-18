@@ -5605,6 +5605,7 @@ class AccountingController extends Controller
 
             // return view('accounting_purchasing.report.report_investment', array(
             //  'inv' => $detail_inv,
+            //  'inv_budget' => $inv_budget
             // ))->with('page', 'Inv')->with('head', 'Inv List');
     }
 
@@ -7290,7 +7291,7 @@ public function import_budget(Request $request){
                     // $data2->aug_sisa_budget = $aug_sisa;
                     // $data2->sep_sisa_budget = $sep_sisa;
                     // $data2->oct_sisa_budget = $oct_sisa;
-                    // $data2->nov_sisa_budget = $nov_sisa;
+                    $data2->nov_sisa_budget = $nov_sisa;
                     $data2->dec_sisa_budget = $dec_sisa;
                     $data2->jan_sisa_budget = $jan_sisa;
                     $data2->feb_sisa_budget = $feb_sisa;
@@ -7885,7 +7886,7 @@ public function import_receive(Request $request){
                                 'receive_date' => $receive_date,
                                 'document_no' => $document_no,
                                 'invoice_no' => $invoice_no,
-                                'no_po_sap' => $no_po_sap[0],
+                                'no_po_sap' => (int)$no_po_sap[0],
                                 'no_urut' => $no_po_sap[1],
                                 'no_po' => $no_po,
                                 'category' => $category,
@@ -7927,15 +7928,15 @@ public function import_receive(Request $request){
                              ->first();
 
                              $amount = $budget_log->amount_po;
-                             $datenow = date('Y-m-d');
+                             $datereceive = $data2->date_receive;
                                 //Get Data From Budget Master
-                             $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$datenow'");
+                             $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$datereceive'");
 
                              foreach ($fy as $fys) {
                                 $fiscal = $fys->fiscal_year;
                             }
 
-                            $bulan = strtolower(date("M",strtotime($datenow)));
+                            $bulan = strtolower(date("M",strtotime($datereceive)));
 
                             $sisa_bulan = $bulan.'_sisa_budget';
 
@@ -7972,7 +7973,7 @@ public function import_receive(Request $request){
                             ->where(DB::raw('SUBSTRING(no_item, 1, 7)'),'=',$item_no)
                             ->where('budget','=',$po_detail->budget_item)
                             ->update([
-                                'budget_month_receive' => strtolower(date('M')),
+                                'budget_month_receive' => strtolower(date("M",strtotime($datereceive))),
                                 'amount_original' => $total_budget_ori,
                                 'amount_receive' => $total_budget,
                                 'status' => 'Actual'
@@ -8010,10 +8011,10 @@ public function import_receive(Request $request){
 
                             
                            //Get PO
-                            $po_detail = AccPurchaseOrder::join('acc_purchase_order_details','acc_purchase_orders.no_po','=','acc_purchase_order_details.no_po')
-                            ->where('no_po_sap', $no_po_sap[0])
-                            ->where('no_item',$item_no)
-                            ->first();
+                            // $po_detail = AccPurchaseOrder::join('acc_purchase_order_details','acc_purchase_orders.no_po','=','acc_purchase_order_details.no_po')
+                            // ->where('no_po_sap', $no_po_sap[0])
+                            // ->where('no_item',$item_no)
+                            // ->first();
 
                             // $data2->currency = $currency;
                             // $data2->vendor_code = $vendor_code;
