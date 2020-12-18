@@ -2277,7 +2277,7 @@ class StockTakingController extends Controller{
 
 			try{
 				File::put($filepath, $upload_text);
-				$success = self::uploadFTP($filepath, $filedestination);
+				// $success = self::uploadFTP($filepath, $filedestination);
 
 				$response = array(
 					'status' => true
@@ -4902,10 +4902,13 @@ s.id ASC");
 		$auditor = $request->get('auditor');
 
 		$field = '';
+		$field_time = '';
 		if($audit == 'audit1'){
 			$field = 'audit1_by';
+			$field_time = 'audit1_at';
 		}else if($audit == 'audit2'){
 			$field = 'audit2_by';
+			$field_time = 'audit2_at';
 		}
 
 		try {
@@ -4913,6 +4916,7 @@ s.id ASC");
 			->update([
 				$audit => $quantity,
 				$field => $auditor,
+				$field_time => date('Y-m-d H:i:s')
 			]);
 
 			$response = array(
@@ -5016,6 +5020,7 @@ s.id ASC");
 				'quantity' => $quantity,
 				'final_count' => $final_count,
 				'revised_by' => Auth::user()->username,
+				'revised_at' => date('Y-m-d H:i:s'),
 				'reason' => $reason
 			]);
 
@@ -5084,7 +5089,8 @@ s.id ASC");
 				'process' => 1,
 				'print_status' => 1,
 				'quantity' => $quantity,
-				'inputed_by' => $inputor
+				'inputed_by' => $inputor,
+				'inputed_at' => date('Y-m-d H:i:s')
 			]);
 
 			$response = array(

@@ -125,13 +125,13 @@
 			</div>
 		</div>
 
-		<div class="col-xs-12">
+		{{-- <div class="col-xs-12">
 			<div class="nav-tabs-custom">
 				<div class="tab-content">
 					<div id="container2"></div>				
 				</div>
 			</div>
-		</div>
+		</div> --}}
 	</div>
 
 	<div class="modal fade" id="modalVariance">
@@ -315,7 +315,7 @@
 
 				filledList();
 				auditedList();	
-				variance();
+				// variance();
 
 				$('#modalMonth').modal('hide');
 
