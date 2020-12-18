@@ -411,32 +411,28 @@
 
 							?>
 							<tr>
-								<td colspan="2" rowspan="{{ 9 + $jumlah }}" style="border: 1px solid black;">Description<br><br>For Taxation Purpose, Please break down good / material cost & Service expense (if possible) <br><br> 
-									<img src="{{ public_path() . '/files/jepang/Screenshot_97.jpg' }}" width="100">
-								</td>
-								<td colspan="8" style="border-right: 1px solid black;font-weight: bold;"><u>Supplier 
+								<td colspan="10" style="border: 1px solid black;font-weight: bold;"><u>Supplier 
 									<img src="{{ public_path() . '/files/jepang/Screenshot_88.jpg' }}" width="50"></u>
 								</td>
 							</tr>
 							<tr>
-								<td colspan="2" style="">Company Name <img src="{{ public_path() . '/files/jepang/Screenshot_89.jpg' }}" width="30"></td>
-								<td colspan="6" style="border-right: 1px solid black;color: blue;font-weight: bold">: <b> <?= $inv[0]->supplier_code ?> - <?= $inv[0]->supplier_name ?> </b></td>
+								<td colspan="3" style="border-left: 1px solid black;">Company Name <img src="{{ public_path() . '/files/jepang/Screenshot_89.jpg' }}" width="30"></td>
+								<td colspan="7" style="border-right: 1px solid black;color: blue;font-weight: bold">: <b> <?= $inv[0]->supplier_code ?> - <?= $inv[0]->supplier_name ?> </b></td>
 							</tr>
 							<tr>
-								<td colspan="2">PKP Status <img src="{{ public_path() . '/files/jepang/Screenshot_90.jpg' }}" width="50"></td>
+								<td colspan="3" style="border-left: 1px solid black">PKP Status <img src="{{ public_path() . '/files/jepang/Screenshot_90.jpg' }}" width="50"></td>
 
-								<td colspan="2" style="border: none">
+								<td colspan="3" style="border: none">
 									: <rio style="<?php if($inv[0]->pkp == "Yes") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> Yes <img src="{{ public_path() . '/files/jepang/Screenshot_92.jpg' }}" width="20"></rio>
 								</td>
 
 								<td colspan="4" style="border-right: 1px solid black;">
 									<rio style="<?php if($inv[0]->pkp == "No") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> No <img src="{{ public_path() . '/files/jepang/Screenshot_93.jpg' }}" width="20"></rio>
 								</td>
-
 							</tr>
 							<tr>
-								<td colspan="2" style="">NPWP <img src="{{ public_path() . '/files/jepang/Screenshot_91.jpg' }}" width="60"></td>
-								<td colspan="2" style="border: none">
+								<td colspan="3" style="border-left: 1px solid black">NPWP <img src="{{ public_path() . '/files/jepang/Screenshot_91.jpg' }}" width="60"></td>
+								<td colspan="3" style="border: none">
 									: <rio style="<?php if($inv[0]->npwp == "Yes") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> Yes <img src="{{ public_path() . '/files/jepang/Screenshot_92.jpg' }}" width="20"></rio>
 								</td>
 
@@ -445,8 +441,8 @@
 								</td>
 							</tr>
 							<tr>
-								<td colspan="2" style="">Constructor Certificate</td>
-								<td colspan="2" style="border: none">
+								<td colspan="3" style="border-left: 1px solid black">Constructor Certificate</td>
+								<td colspan="3" style="border: none">
 									: <rio style="<?php if($inv[0]->certificate == "Yes") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> Yes <img src="{{ public_path() . '/files/jepang/Screenshot_92.jpg' }}" width="20"></rio>
 								</td>
 
@@ -454,12 +450,19 @@
 									<rio style="<?php if($inv[0]->certificate == "No") { echo 'color:blue;font-weight: bold;text-decoration: underline;'; } ?>"> No <img src="{{ public_path() . '/files/jepang/Screenshot_93.jpg' }}" width="20"></rio>
 								</td>
 							</tr>
+							<tr>
+								<td colspan="10" style="border: 1px solid black;">
+									<center>
+										<b>Description - For Taxation Purpose, Please break down good / material cost & Service expense (if possible)</b>
+									</center>
+								</td>
+							</tr>
 
 							<tr>
-								<td colspan="3" style="border: 1px solid black;">Specification <img src="{{ public_path() . '/files/jepang/Screenshot_96.jpg' }}" width="20"></td>
-								<td colspan="1" style="border: 1px solid black;">Qty <img src="{{ public_path() . '/files/jepang/Screenshot_98.jpg' }}" width="20"></td>
-								<td colspan="2" style="border: 1px solid black;">Price <img src="{{ public_path() . '/files/jepang/Screenshot_99.jpg' }}" width="20"></td>
-								<td colspan="2" style="border: 1px solid black;">Amount <img src="{{ public_path() . '/files/jepang/Screenshot_100.jpg' }}" width="20"></td>
+								<td colspan="5" style="border: 1px solid black;text-align: center;">Specification <img src="{{ public_path() . '/files/jepang/Screenshot_96.jpg' }}" width="20"></td>
+								<td colspan="1" style="border: 1px solid black;text-align: center;">Qty <img src="{{ public_path() . '/files/jepang/Screenshot_98.jpg' }}" width="20"></td>
+								<td colspan="2" style="border: 1px solid black;text-align: center;">Price <img src="{{ public_path() . '/files/jepang/Screenshot_99.jpg' }}" width="20"></td>
+								<td colspan="2" style="border: 1px solid black;text-align: center;">Amount <img src="{{ public_path() . '/files/jepang/Screenshot_100.jpg' }}" width="20"></td>
 							</tr>
 							<?php 
 
@@ -473,7 +476,7 @@
 								?>
 								@foreach($inv as $item)
 								<tr>
-									<td colspan="3" style="border: 1px solid black;color: blue;font-weight: bold;height:2%;">{{$item->detail}}</td>
+									<td colspan="5" style="border: 1px solid black;color: blue;font-weight: bold;height:2%;">{{$item->detail}}</td>
 									<td colspan="1" style="border: 1px solid black;color: blue;font-weight: bold;height:2%;">{{$item->qty}} {{$item->uom}}</td>
 									<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold;height:2%;text-align: right;"><?= $ket_harga ?> <?= number_format($item->price,2,",",".");?></td>
 									<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold;height:2%;text-align: right;"><?= $ket_harga ?> <?= number_format($item->amount,2,",",".");?></td>
@@ -493,15 +496,16 @@
 							} else { 
 								?>
 								<tr>
-									<td colspan="3" style="border: 1px solid black;">&nbsp;</td>
+									<td colspan="5" style="border: 1px solid black;">&nbsp;</td>
 									<td colspan="1" style="border: 1px solid black;">&nbsp;</td>
 									<td colspan="2" style="border: 1px solid black;">&nbsp;</td>
 									<td colspan="2" style="border: 1px solid black;">&nbsp;</td>
 								</tr>
 							<?php } ?>
+
 							<tr>
 								<td colspan="2" rowspan="3" style="border: 1px solid black;">Currency<br><img src="{{ public_path() . '/files/jepang/Screenshot_101.jpg' }}" width="20"></td>
-								<td colspan="2" rowspan="3" style="border: 1px solid black;color: blue;font-weight: bold;">{{ $inv[0]->currency }}</td>
+								<td colspan="4" rowspan="3" style="border: 1px solid black;color: blue;font-weight: bold;">{{ $inv[0]->currency }}</td>
 								<td colspan="2" style="border: 1px solid black;">Sub Total <img src="{{ public_path() . '/files/jepang/Screenshot_102.jpg' }}" width="25"></td>
 								<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold;text-align: right;"><?= $ket_harga ?> <?= number_format($total,2,",",".");?></td>
 							</tr>
@@ -514,6 +518,8 @@
 								<?php $total_all = $total + $vat; ?>
 								<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold;text-align: right;"><?= $ket_harga ?> <?= number_format($total_all,2,",",".");?></td>
 							</tr>
+
+
 							<tr>
 								<td colspan="2" style="border: 1px solid black;">Delivery <img src="{{ public_path() . '/files/jepang/Screenshot_105.jpg' }}" width="30"></td>
 								<td colspan="4" style="border: 1px solid black;">Delivery Order <img src="{{ public_path() . '/files/jepang/Screenshot_106.jpg' }}" width="40"><br>&nbsp;&nbsp;<span style="color: blue;font-weight: bold"><?= date('d-M-Y', strtotime($inv[0]->delivery_order)) ?> </span></td>
