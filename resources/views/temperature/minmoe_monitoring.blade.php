@@ -259,7 +259,8 @@
 							resultData += '<td style="font-size: 1vw;">'+ index +'</td>';
 							resultData += '<td style="font-size: 1vw;">'+ value.employee_id +'</td>';
 							resultData += '<td style="font-size: 1vw;">'+ value.name +'</td>';
-							resultData += '<td style="font-size: 1vw;">'+ value.department_shortname +'<br>'+ value.section +'</td>';
+							// resultData += '<td style="font-size: 1vw;">'+ value.department_shortname +'<br>'+ value.section +'</td>';
+							resultData += '<td style="font-size: 1vw;">'+ value.department_shortname +'</td>';
 							resultData += '<td style="font-size: 1vw;">'+ attnd +'</td>';
 							resultData += '</tr>';
 							index++;
