@@ -98,44 +98,9 @@
 							<div class="col-xs-12" style="background-color: #78a1d0; text-align: center; margin-bottom: 5px;">
 								<span style="font-weight: bold; font-size: 1.6vw;">BELUM DI KONFIRMASI (<span id="periode1"></span>)</span>
 							</div>
-							<table id="confirmTable" class="table table-bordered table-striped table-hover">
-								<thead style="background-color: rgba(126,86,134,.7);">
-									<tr>
-										<th style="width: 1%">ID</th>
-										<th style="width: 5%">Nama</th>
-										<th style="width: 1%">Grade</th>
-										<th style="width: 1%">Tanggal</th>
-										<th style="width: 1%">Kehadiran</th>
-										<th style="width: 1%">Kendaraan</th>
-										<th style="width: 1%">Asal</th>
-										<th style="width: 1%">Tujuan</th>
-										<th style="width: 1%">Tol</th>
-										<th style="width: 1%">Jarak</th>
-										<!-- <th style="width: 1%">Lampiran</th> -->
-										<th style="width: 1%">Confirm</th>
-										<th style="width: 1%">Action</th>
-									</tr>
-								</thead>
-								<tbody id="confirmTableBody">
-								</tbody>
-								<tfoot style="background-color: RGB(252, 248, 227);">
-									<tr>
-										<th></th>
-										<th></th>
-										<th></th>
-										<th></th>
-										<th></th>
-										<th></th>
-										<th></th>
-										<th></th>
-										<th></th>
-										<th></th>
-										<!-- <th></th> -->
-										<th></th>
-										<th></th>
-									</tr>
-								</tfoot>
-							</table>
+							<div id="divConfirmTable">
+								
+							</div>
 						</div>
 						<div class="col-md-12">
 							<div class="col-xs-12" style="background-color: orange; text-align: center; margin-bottom: 5px;">
@@ -323,8 +288,10 @@
 
 		});
 		$('.select2').select2();
-		fetchConfirmTable();
-		fetchResumeTable();
+		fetchTable();
+		// appendConfirmTable();
+		// fetchConfirmTable();
+		// fetchResumeTable();
 
 		$('#editDate').datepicker({
 			autoclose: true,
@@ -345,8 +312,7 @@
 		}
 		$.post('{{ url("confirm/general/online_transportation_report") }}', data, function(result, status, xhr){
 			if(result.status){
-				$('#confirm_'+id).remove();
-				fetchResumeTable();
+				fetchTable();
 				$('#loading').hide();
 				openSuccessGritter('Success', result.message);
 			}
@@ -567,63 +533,108 @@
 		});
 }
 
+function appendConfirmTable() {
+	var divConfirmTable = "";
+	$('#divConfirmTable').html('');
+
+	divConfirmTable += '<table id="confirmTable" class="table table-bordered table-striped table-hover"></table>';
+
+	$('#divConfirmTable').append(divConfirmTable);
+
+	var confirmTable = "";
+	$('#confirmTable').html('');
+
+	confirmTable += '<thead style="background-color: rgba(126,86,134,.7);" id="confirmTableHead">';
+	confirmTable += '<tr>';
+	confirmTable += '<th style="width: 1%">ID</th>';
+	confirmTable += '<th style="width: 5%">Nama</th>';
+	confirmTable += '<th style="width: 1%">Grade</th>';
+	confirmTable += '<th style="width: 1%">Tanggal</th>';
+	confirmTable += '<th style="width: 1%">Kehadiran</th>';
+	confirmTable += '<th style="width: 1%">Kendaraan</th>';
+	confirmTable += '<th style="width: 1%">Asal</th>';
+	confirmTable += '<th style="width: 1%">Tujuan</th>';
+	confirmTable += '<th style="width: 1%">Tol</th>';
+	confirmTable += '<th style="width: 1%">Jarak</th>';
+	confirmTable += '<th style="width: 1%">Confirm</th>';
+	confirmTable += '<th style="width: 1%">Action</th>';
+	confirmTable += '</tr>';
+	confirmTable += '</thead>';
+
+	confirmTable += '<tbody id="confirmTableBody"></tbody>';
+
+	confirmTable += '<tfoot id="confirmTableFoot" style="background-color: RGB(252, 248, 227);">';
+	confirmTable += '<tr>';
+	confirmTable += '<th></th>';
+	confirmTable += '<th></th>';
+	confirmTable += '<th></th>';
+	confirmTable += '<th></th>';
+	confirmTable += '<th></th>';
+	confirmTable += '<th></th>';
+	confirmTable += '<th></th>';
+	confirmTable += '<th></th>';
+	confirmTable += '<th></th>';
+	confirmTable += '<th></th>';
+	confirmTable += '<th></th>';
+	confirmTable += '<th></th>';
+	confirmTable += '</tr>';
+	confirmTable += '</tfoot>';
+	$('#confirmTable').append(confirmTable);
+}
+
 function fetchConfirmTable(){
 	$('#loading').show();
 	var month_from = $('#monthfrom').val();
 	var data = {
 		month_from:month_from
 	}
+
 	$.get('{{ url("fetch/general/online_transportation_report") }}', data, function(result, status, xhr){
 		if(result.status){
 			$('#periode1').text(result.period);
 			$('#periode2').text(result.period);
 			$('#periode3').text(result.period);
-			$('#confirmTable').DataTable().clear();
-			$('#confirmTable').DataTable().destroy();
 
-			var confirmTable = "";
+			appendConfirmTable();
+
+			var confirmTableBody = "";
 			$('#confirmTableBody').html('');
 
 			$.each(result.transportations, function(key, value){
-				confirmTable += '<tr id="confirm_'+value.id+'">';
-				confirmTable += '<td>'+value.employee_id+'</td>';
-				confirmTable += '<td>'+value.name+'</td>';
-				confirmTable += '<td>'+value.grade_code+'</td>';
-				confirmTable += '<td>'+value.check_date+'</td>';
-				confirmTable += '<td>'+value.attend_code.toUpperCase()+'</td>';
+				confirmTableBody += '<tr id="confirm_'+value.id+'">';
+				confirmTableBody += '<td>'+value.employee_id+'</td>';
+				confirmTableBody += '<td>'+value.name+'</td>';
+				confirmTableBody += '<td>'+value.grade_code+'</td>';
+				confirmTableBody += '<td>'+value.check_date+'</td>';
+				confirmTableBody += '<td>'+value.attend_code.toUpperCase()+'</td>';
 				if (value.vehicle == null) {
-					confirmTable += '<td></td>';
+					confirmTableBody += '<td></td>';
 				}else{
-					confirmTable += '<td>'+value.vehicle.toUpperCase()+'</td>';
+					confirmTableBody += '<td>'+value.vehicle.toUpperCase()+'</td>';
 				}
 				if (value.vehicle == null) {
-					confirmTable += '<td></td>';
+					confirmTableBody += '<td></td>';
 				}else{
-					confirmTable += '<td>'+value.origin+'</td>';
+					confirmTableBody += '<td>'+value.origin+'</td>';
 				}
 				if (value.vehicle == null) {
-					confirmTable += '<td></td>';
+					confirmTableBody += '<td></td>';
 				}else{
-					confirmTable += '<td>'+value.destination+'</td>';
+					confirmTableBody += '<td>'+value.destination+'</td>';
 				}
 				if (value.highway_amount == null) {
-					confirmTable += '<td>0</td>';
+					confirmTableBody += '<td>0</td>';
 				}else{
-					confirmTable += '<td>'+value.highway_amount+'</td>';
+					confirmTableBody += '<td>'+value.highway_amount+'</td>';
 				}
-				confirmTable += '<td>'+value.distance+'</td>';
-				// confirmTable += '<td><a href="javascript:void(0)" id="'+ value.highway_attachment +'" onClick="downloadAtt(id)" class="fa fa-paperclip"> Struk</a></td>';
-				confirmTable += '<td><button class="btn btn-success btn-xs" onclick="confirmRecord(\''+value.id+'\')">Confirm</button></td>';
-				confirmTable += '<td><button class="btn btn-warning btn-xs" onclick="openModalEdit(\''+value.id+'\')">Edit</button></td>';
-				confirmTable += '</tr>';
+				confirmTableBody += '<td>'+value.distance+'</td>';
+				// confirmTableBody += '<td><a href="javascript:void(0)" id="'+ value.highway_attachment +'" onClick="downloadAtt(id)" class="fa fa-paperclip"> Struk</a></td>';
+				confirmTableBody += '<td><button class="btn btn-success btn-xs" onclick="confirmRecord(\''+value.id+'\')">Confirm</button></td>';
+				confirmTableBody += '<td><button class="btn btn-warning btn-xs" onclick="openModalEdit(\''+value.id+'\')">Edit</button></td>';
+				confirmTableBody += '</tr>';
 			});
 
-			$('#confirmTableBody').append(confirmTable);
-
-			$('#confirmTable tfoot th').each(function(){
-				var title = $(this).text();
-				$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="4"/>' );
-			});
+			$('#confirmTableBody').append(confirmTableBody);
 
 			var table = $('#confirmTable').DataTable({
 				'dom': 'Bfrtip',
@@ -667,6 +678,11 @@ function fetchConfirmTable(){
 				"bJQueryUI": true,
 				"bAutoWidth": false,
 				"processing": true
+			});
+
+			$('#confirmTable tfoot th').each(function(){
+				var title = $(this).text();
+				$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="4"/>' );
 			});
 
 			table.columns().every( function () {
