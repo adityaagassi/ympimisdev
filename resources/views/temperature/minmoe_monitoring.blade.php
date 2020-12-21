@@ -60,6 +60,12 @@
 			background-color: #ffccff;
 		}
 	}
+
+	.dataTables_info,
+	.dataTables_length {
+		color: white;
+	}
+
 </style>
 @stop
 @section('header')
@@ -78,21 +84,25 @@
 							<input type="text" class="form-control datepicker" id="tanggal_from" name="tanggal_from" placeholder="Select Date" onchange="fetchTemperature()">
 						</div>
 					</div>
-					<!-- <div class="col-xs-2" style="padding-right: 0;">
-						<div class="input-group date">
-							<div class="input-group-addon bg-green" style="border: none; background-color: #605ca8; color: white;">
-								<i class="fa fa-calendar"></i>
-							</div>
-							<input type="text" class="form-control datepicker" id="tanggal_to" name="tanggal_to" placeholder="Select Date To" onchange="fetchTemperature()">
-						</div>
-					</div> -->
+					<div class="col-md-3" style="padding-left: 3px;padding-right: 0px">
+			            <div class="input-group">
+			              <div class="input-group-addon bg-blue">
+			                <i class="fa fa-search"></i>
+			              </div>
+			              <select class="form-control select2" multiple="multiple" id="department" data-placeholder="Select Department" style="border-color: #605ca8" onchange="fetchTemperature()">
+			                  @foreach($dept as $dept)
+			                    <option value="{{ $dept->department }}">{{ $dept->department }}</option>
+			                  @endforeach
+			                </select>
+			            </div>
+			        </div>
 					<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 1vw	;font-size: 1vw;color: white"></div>
 				</form>
 			</div>
 		</div>
 		<div class="col-xs-12" style="padding-bottom: 5px;">
 			<div class="row">
-				<div class="col-xs-4">
+				<div class="col-xs-5">
 					<span style="color: white; font-size: 1.7vw; font-weight: bold;"><i class="fa fa-caret-right"></i> Cek Hari Ini</span>
 					<table class="table table-bordered" id="tableTotal" style="margin-bottom: 5px;">
 						<thead>
@@ -126,6 +136,7 @@
 								<th style="color:white;width: 1%; font-size: 1.2vw;">#</th>
 								<th style="color:white;width: 5%; font-size: 1.2vw; text-align: center;">ID</th>
 								<th style="color:white;width: 30%; font-size: 1.2vw; text-align: center;">Name</th>
+								<th style="color:white;width: 30%; font-size: 1.2vw; text-align: center;">Dept</th>
 								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Attendance</th>
 							</tr>					
 						</thead>
@@ -133,7 +144,7 @@
 						</tbody>
 					</table>
 				</div>
-				<div class="col-xs-8">
+				<div class="col-xs-7">
 					<div id="container1" class="container1" style="width: 100%;height: 600px"></div>
 					<!-- <div id="container2" class="container2" style="width: 100%;"></div> -->
 				</div>
@@ -191,6 +202,8 @@
 		}
 	});
 
+	var intervaltemp;
+
 	jQuery(document).ready(function() {
 		$('.datepicker').datepicker({
 			<?php $tgl_max = date('Y-m-d') ?>
@@ -199,24 +212,27 @@
 			todayHighlight: true,	
 			endDate: '<?php echo $tgl_max ?>'
 		});
+		$('.select2').select2();
 		fetchTemperature();
-		// setInterval(fetchTemperature, 20000);
+		intervaltemp = setInterval(fetchTemperature,30000);
 	});
 
 
 	function fetchTemperature(){
 		var tanggal_from = $('#tanggal_from').val();
-		// var tanggal_to = $('#tanggal_to').val();
+		var department = $('#department').val();
 
 		var data = {
 			tanggal_from:tanggal_from,
-			// tanggal_to:tanggal_to,
-			location:'{{$loc}}'
+			department:department,
+			location:'{{$loc}}',
 		}
 
 		$.get('{{ url("fetch/temperature/minmoe_monitoring") }}', data, function(result, status, xhr) {
 			if (xhr.status == 200) {
 				if (result.status) {
+					$('#tableNoCheck').DataTable().clear();
+					$('#tableNoCheck').DataTable().destroy();
 					$('#tableNoCheckBody').html('');
 
 					var index = 1;
@@ -224,27 +240,68 @@
 					var uncheck = 0;
 					var resultData = "";
 
+					var dataPersonTemperature = [];
+					var dataTemperature = [];
+
 					$.each(result.datacheck, function(key, value) {
+						var attnd = '-';
+						var emp_no = value.employee_id;
 						if (value.checks == null) {
-							if (result.attendance[key][0] != undefined) {
-								var attnd = result.attendance[key][0].attend_code;
-							}else{
-								var attnd = '-';
-							}
+							$.each(result.attendance, function(key, value2) {
+								if (value2.length > 0) {
+									if (emp_no == value2[0].emp_no) {
+										attnd = value2[0].attend_code;
+									}
+								}else{
+								}
+							});
 							resultData += '<tr>';
 							resultData += '<td style="font-size: 1vw;">'+ index +'</td>';
 							resultData += '<td style="font-size: 1vw;">'+ value.employee_id +'</td>';
 							resultData += '<td style="font-size: 1vw;">'+ value.name +'</td>';
+							resultData += '<td style="font-size: 1vw;">'+ value.department_shortname +'<br>'+ value.section +'</td>';
 							resultData += '<td style="font-size: 1vw;">'+ attnd +'</td>';
 							resultData += '</tr>';
 							index++;
 							uncheck++;
 						}else{
+							if (value.temperature != null) {
+								dataPersonTemperature.push({employee_id:value.employee_id,temperature:value.temperature});
+								dataTemperature.push(value.temperature);
+							}
 							check++;
 						}
 					});
 
 					$('#tableNoCheckBody').append(resultData);
+
+					var table = $('#tableNoCheck').DataTable({
+						'dom': 'Bfrtip',
+						'responsive':true,
+						'lengthMenu': [
+						[ 10, 25, 50, -1 ],
+						[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+						],'buttons': {
+							buttons:[
+							{
+								extend: 'pageLength',
+								className: 'btn btn-default',
+							}
+							]
+						},
+						'paging': true,
+						'lengthChange': true,
+						'pageLength': 10,
+						'searching': false	,
+						'ordering': false,
+						'order': [],
+						'info': true,
+						'autoWidth': true,
+						"sPaginationType": "full_numbers",
+						"bJQueryUI": true,
+						"bAutoWidth": false,
+						"processing": true
+					});
 
 					$('#tableAbnormalBody').html('');
 
@@ -269,7 +326,7 @@
 
 					$.each(result.datatoday, function(key, value) {
 						categories1.push(value.temperature+' °C');
-						series1.push({y:parseFloat(value.jumlah),key:value.temperature});
+						series1.push({y:parseFloat(value.count),key:value.temperature});
 					});
 
 					$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Update: '+ getActualFullDate() +'</p>');
@@ -338,7 +395,6 @@
 						}]
 
 					});
-					fetchTemperature();
 				}else{
 					alert('Failed to Retrieve Data');
 				}
@@ -347,18 +403,19 @@
 	}
 
 	function fetchTemperatureDetail(temperature){
+		clearInterval(intervaltemp);
 		$('#modalDetail').modal('show');
 		$('#loading').show();
 		$('#modalDetailTitle').html("");
 		$('#tableDetail').hide();
 
 		var tanggal_from = $('#tanggal_from').val();
-		// var tanggal_to = $('#tanggal_to').val();
+		var department = $('#department').val();
 
 		var data = {
 			tanggal_from:tanggal_from,
-			// tanggal_to:tanggal_to,
 			temperature:temperature,
+			department:department,
 			location:'{{$loc}}'
 		}
 
@@ -386,6 +443,7 @@
 				$('#modalDetailTitle').html("<center><span style='font-size: 20px; font-weight: bold;'>Detail Employees on "+temperature+" °C</span></center>");
 				$('#loading').hide();
 				$('#tableDetail').show();
+				intervaltemp = setInterval(fetchTemperature,30000);
 			}
 			else{
 				alert('Attempt to retrieve data failed');
