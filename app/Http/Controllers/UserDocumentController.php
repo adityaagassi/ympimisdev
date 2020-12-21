@@ -36,8 +36,8 @@ class UserDocumentController extends Controller
 		];
 		$this->condition = [
 			'Safe',
-			'InProcess',
-			'AtRisk'
+			'At Risk',
+			'Expired'
 		];
 	}
 
@@ -49,6 +49,7 @@ class UserDocumentController extends Controller
 
 		return view('user_documents.index', array(
 			'categories' => $this->category,
+			'conditions' => $this->condition,
 			'document_numbers' => $document_numbers,
 			'users' => $users,
 			'employees' => $employees,
@@ -68,6 +69,10 @@ class UserDocumentController extends Controller
 
 		if($request->get('category') != null){
 			$document = $document->whereIn('user_documents.category', $request->get('category'));
+		}
+
+		if($request->get('condition') != null){
+			$document = $document->whereIn('user_documents.condition', $request->get('condition'));
 		}
 
 		$document = $document->select(
@@ -124,6 +129,35 @@ class UserDocumentController extends Controller
 		$response = array(
 			'status' => true,
 			'resume' => $resume
+		);
+		return Response::json($response);
+	}
+
+	public function fetchResumeUserDocumentDetail(Request $request){
+
+		$detail =UserDocument::leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'user_documents.employee_id')
+		->where('user_documents.category', $request->get('category'))
+		->where('user_documents.condition', $request->get('condition'))
+		->where('user_documents.status', 'Active')
+		->select(
+			'user_documents.employee_id',
+			'employee_syncs.name',
+			'employee_syncs.position',
+			'user_documents.category',
+			'user_documents.document_number',
+			'user_documents.valid_from',
+			'user_documents.valid_to',
+			'user_documents.status',
+			'user_documents.condition',
+			'user_documents.reminder',
+			db::raw('DATEDIFF(user_documents.valid_to, NOW()) as diff')
+		)
+		->orderBy('valid_to', 'ASC')
+		->get();
+
+		$response = array(
+			'status' => true,
+			'detail' => $detail
 		);
 		return Response::json($response);
 	}

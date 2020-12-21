@@ -3,6 +3,10 @@
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <link href="{{ url("css/jquery.tagsinput.css") }}" rel="stylesheet">
 <style type="text/css">
+	table.table-hover > tbody > tr > td:hover {
+		cursor: pointer;
+		background-color: #7dfa8c;
+	}
 	input {
 		line-height: 24px;
 	}
@@ -96,11 +100,11 @@
 
 						<div class="col-md-2">
 							<div class="form-group">
-								<label>Category:</label>
-								<select class="form-control select2" multiple="multiple" id='category' data-placeholder="Select Category" style="width: 100%;">
+								<label>Condition:</label>
+								<select class="form-control select2" multiple="multiple" id='condition' data-placeholder="Select Condition" style="width: 100%;">
 									<option></option>
-									@foreach($categories as $category)
-									<option value="{{ $category }}">{{ $category }}</option>
+									@foreach($conditions as $condition)
+									<option value="{{ $condition }}">{{ $condition }}</option>
 									@endforeach
 								</select>
 							</div>
@@ -117,6 +121,28 @@
 			</div>
 
 			<div class="row">
+				<div class="col-xs-2" style="padding-left: 0.5%; padding-right: 0.5%">
+					<table class="table table-bordered table-striped table-hover" style="background-color: #ffffff;">
+						<thead>
+							<tr>
+								<th colspan="3">PASPOR</th>
+							</tr>
+							<tr>
+								<th width="34%" style="background-color : rgba(33,33,33 ,1); color: white">Expired</th>
+								<th width="33%" style="background-color : rgba(242, 75, 75, 0.8);">At Risk</th>
+								<th width="33%" style="background-color : rgba(107, 255, 104, 0.6);">Safe</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td style="padding: 10px;" onclick="detail(id)" id="paspor_expired">0</td>
+								<td style="padding: 10px;" onclick="detail(id)" id="paspor_at_risk">0</td>
+								<td style="padding: 10px;" onclick="detail(id)" id="paspor_safe">0</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
 				<div class="col-xs-2" style="padding-right: 0.5%">
 					<table class="table table-bordered table-striped table-hover" style="background-color: #ffffff;">
 						<thead>
@@ -128,10 +154,12 @@
 								<th width="33%" style="background-color : rgba(242, 75, 75, 0.8);">At Risk</th>
 								<th width="33%" style="background-color : rgba(107, 255, 104, 0.6);">Safe</th>
 							</tr>
+						</thead>
+						<tbody>
 							<tr>
-								<th id="kitas_expired">0</th>
-								<th id="kitas_atrisk">0</th>
-								<th id="kitas_safe">0</th>
+								<td style="padding: 10px;" onclick="detail(id)" id="kitas_expired">0</td>
+								<td style="padding: 10px;" onclick="detail(id)" id="kitas_at_risk">0</td>
+								<td style="padding: 10px;" onclick="detail(id)" id="kitas_safe">0</td>
 							</tr>
 						</tbody>
 					</table>
@@ -148,10 +176,12 @@
 								<th width="33%" style="background-color : rgba(242, 75, 75, 0.8);">At Risk</th>
 								<th width="33%" style="background-color : rgba(107, 255, 104, 0.6);">Safe</th>
 							</tr>
+						</thead>
+						<tbody>
 							<tr>
-								<th id="merp_expired">0</th>
-								<th id="merp_atrisk">0</th>
-								<th id="merp_safe">0</th>
+								<td style="padding: 10px;" onclick="detail(id)" id="merp_expired">0</td>
+								<td style="padding: 10px;" onclick="detail(id)" id="merp_at_risk">0</td>
+								<td style="padding: 10px;" onclick="detail(id)" id="merp_safe">0</td>
 							</tr>
 						</tbody>
 					</table>
@@ -168,30 +198,12 @@
 								<th width="33%" style="background-color : rgba(242, 75, 75, 0.8);">At Risk</th>
 								<th width="33%" style="background-color : rgba(107, 255, 104, 0.6);">Safe</th>
 							</tr>
+						</thead>
+						<tbody>
 							<tr>
-								<th id="notif_expired">0</th>
-								<th id="notif_atrisk">0</th>
-								<th id="notif_safe">0</th>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-
-				<div class="col-xs-2" style="padding-left: 0.5%; padding-right: 0.5%">
-					<table class="table table-bordered table-striped table-hover" style="background-color: #ffffff;">
-						<thead>
-							<tr>
-								<th colspan="3">PASPOR</th>
-							</tr>
-							<tr>
-								<th width="34%" style="background-color : rgba(33,33,33 ,1); color: white">Expired</th>
-								<th width="33%" style="background-color : rgba(242, 75, 75, 0.8);">At Risk</th>
-								<th width="33%" style="background-color : rgba(107, 255, 104, 0.6);">Safe</th>
-							</tr>
-							<tr>
-								<th id="paspor_expired">0</th>
-								<th id="paspor_atrisk">0</th>
-								<th id="paspor_safe">0</th>
+								<td style="padding: 10px;" onclick="detail(id)" id="notif_expired">0</td>
+								<td style="padding: 10px;" onclick="detail(id)" id="notif_at_risk">0</td>
+								<td style="padding: 10px;" onclick="detail(id)" id="notif_safe">0</td>
 							</tr>
 						</tbody>
 					</table>
@@ -208,10 +220,12 @@
 								<th width="33%" style="background-color : rgba(242, 75, 75, 0.8);">At Risk</th>
 								<th width="33%" style="background-color : rgba(107, 255, 104, 0.6);">Safe</th>
 							</tr>
+						</thead>
+						<tbody>
 							<tr>
-								<th id="skj_expired">0</th>
-								<th id="skj_atrisk">0</th>
-								<th id="skj_safe">0</th>
+								<td style="padding: 10px;" onclick="detail(id)" id="skj_expired">0</td>
+								<td style="padding: 10px;" onclick="detail(id)" id="skj_at_risk">0</td>
+								<td style="padding: 10px;" onclick="detail(id)" id="skj_safe">0</td>
 							</tr>
 						</tbody>
 					</table>
@@ -228,10 +242,12 @@
 								<th width="33%" style="background-color : rgba(242, 75, 75, 0.8);">At Risk</th>
 								<th width="33%" style="background-color : rgba(107, 255, 104, 0.6);">Safe</th>
 							</tr>
+						</thead>
+						<tbody>
 							<tr>
-								<th id="skld_expired">0</th>
-								<th id="skld_atrisk">0</th>
-								<th id="skld_safe">0</th>
+								<td style="padding: 10px;" onclick="detail(id)" id="skld_expired">0</td>
+								<td style="padding: 10px;" onclick="detail(id)" id="skld_at_risk">0</td>
+								<td style="padding: 10px;" onclick="detail(id)" id="skld_safe">0</td>
 							</tr>
 						</tbody>
 					</table>
@@ -247,7 +263,7 @@
 							<button class="btn btn-primary pull-right" data-toggle="modal" data-target="#create_modal"><span><i class="fa fa-plus"></i> Create</span></button>
 						</div>
 						<div class="box-body" style="padding-top: 0;">
-							<table id="docTable" class="table table-bordered table-striped table-hover">
+							<table id="docTable" class="table table-bordered table-striped">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
 										<th style="">Employee ID</th>
@@ -505,6 +521,75 @@
 		</div>
 	</div>
 
+	{{-- Modal Detail --}}
+	<div class="modal modal-default fade" id="detail_modal">
+		<div class="modal-dialog modal-lg" style="width: 85%;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">
+							&times;
+						</span>
+					</button>
+					<h2 class="modal-title" id="detail_title"></h2>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-xs-4">
+							<div class="col-xs-3" style="padding-right: 0px; text-align: center;">
+								<span class="label" style="background-color: black; color: white">Expired</span>
+							</div>
+							<div class="col-xs-9" style="padding-left: 0px;">
+								<p>Dokumen melebihi tanggal valid</p>
+							</div>
+						</div>
+						<div class="col-xs-4">
+							<div class="col-xs-3" style="padding-right: 0px; text-align: center;">
+								<span class="label label-danger">At Risk</span>
+							</div>
+							<div class="col-xs-9" style="padding-left: 0px;">
+								<p>Dokumen kurang 210 hari lagi expired</p>
+							</div>
+						</div>		
+						<div class="col-xs-4">
+							<div class="col-xs-3" style="padding-right: 0px; text-align: center;">
+								<span class="label label-success">Safe</span>
+							</div>
+							<div class="col-xs-9" style="padding-left: 0px;">
+								<p>Masa aktif dokumen lebih dari 210 hari</p>
+							</div>
+
+						</div>					
+					</div>
+
+					<div class="row">
+						<div class="col-xs-12">
+							<table id="detailTable" class="table table-bordered table-striped">
+								<thead style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th style="">Employee ID</th>
+										<th style="width: 20%">Name</th>
+										<th style="">Posisi</th>
+										<th style="">Category</th>
+										<th style="">No. Document</th>
+										<th style="">Valid From</th>
+										<th style="">Valid To</th>
+										<th style="">Status</th>
+										<th style="">Condition</th>
+										<th style="">Reminder</th>
+										<th style="">Active</th>
+									</tr>
+								</thead>
+								<tbody id="detailBody">
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
 
 </section>
 
@@ -566,6 +651,71 @@
 		todayHighlight: true,	
 	});
 
+	function capitalizeFirstLetter(string) {
+		return string.charAt(0).toUpperCase() + string.slice(1);
+	}
+
+	function detail(id) {
+		var data = id.split('_');
+
+		var category = data[0];
+		var condition = '';
+
+		for (var i = 1; i < data.length; i++) {
+			condition += data[i];
+
+			if(i != data.length-1){
+				condition += ' ';
+			}
+		}
+		
+		var data = {
+			category : category.toUpperCase(),
+			condition : capitalizeFirstLetter(condition)	
+		}
+
+		$.get('{{ url("fetch/resume_user_document_detail") }}', data, function(result, status, xhr){
+			if(result.status){
+
+				$("#detail_title").html('');
+				$("#detail_title").html('<center>RESUME ' + category.toUpperCase() + ' ' + condition.toUpperCase() + '</center>');
+
+				if(result.detail.length > 0){
+					$('#detailBody').html("");
+
+					var tableData = '';
+
+					for (var i = 0; i < result.detail.length; i++) {
+						tableData += '<tr>';
+
+						tableData += '<td>'+ result.detail[i].employee_id +'</td>';
+						tableData += '<td>'+ result.detail[i].name +'</td>';
+						tableData += '<td>'+ result.detail[i].position +'</td>';
+						tableData += '<td>'+ result.detail[i].category +'</td>';
+						tableData += '<td>'+ result.detail[i].document_number +'</td>';
+						tableData += '<td>'+ result.detail[i].valid_from +'</td>';
+						tableData += '<td>'+ result.detail[i].valid_to +'</td>';
+						tableData += '<td>'+ result.detail[i].status +'</td>';
+						if(result.detail[i].condition == 'Expired'){
+							tableData += '<td><span class="label" style="background-color: black; color: white">'+ result.detail[i].condition +'</span></td>';
+						}else if(result.detail[i].condition == 'At Risk'){
+							tableData += '<td><span class="label label-danger">'+ result.detail[i].condition +'</span></td>';
+						}else if(result.detail[i].condition == 'Safe'){
+							tableData += '<td><span class="label label-success">'+ result.detail[i].condition +'</span></td>';
+						}
+						tableData += '<td>'+ result.detail[i].reminder +' Days Before Expired</td>';
+						tableData += '<td>'+ result.detail[i].diff +' Days Remaining</td>';
+
+						tableData += '</tr>';
+					}
+
+					$('#detailBody').append(tableData);
+				}
+				$("#detail_modal").modal('show');
+
+			}
+		});	
+	}
 
 	function fillTable(){
 		$('#docTable').DataTable().destroy();
@@ -574,11 +724,13 @@
 		var documentNumber = $('#documentNumber').val();
 		var employeId = $('#employeId').val();
 		var category = $('#category').val();
+		var condition = $('#condition').val();
 		
 		var data = {
 			documentNumber:documentNumber,
 			employeId:employeId,
-			category:category
+			category:category,
+			condition:condition
 		}
 
 		var table = $('#docTable').DataTable({
@@ -590,17 +742,10 @@
 			],
 			"pageLength": 10,
 			'buttons': {
-				// dom: {
-				// 	button: {
-				// 		tag:'button',
-				// 		className:''
-				// 	}
-				// },
 				buttons:[
 				{
 					extend: 'pageLength',
-					className: 'btn btn-default',
-					// text: '<i class="fa fa-print"></i> Show',
+					className: 'btn btn-default'
 				},
 				{
 					extend: 'copy',
@@ -699,36 +844,34 @@
 		});	
 
 		$('#kitas_expired').text(0);
-		$('#kitas_atrisk').text(0);
+		$('#kitas_at_risk').text(0);
 		$('#kitas_safe').text(0);
 		
 		$('#merp_expired').text(0);
-		$('#merp_atrisk').text(0);
+		$('#merp_at_risk').text(0);
 		$('#merp_safe').text(0);
 
 		$('#notif_expired').text(0);
-		$('#notif_atrisk').text(0);
+		$('#notif_at_risk').text(0);
 		$('#notif_safe').text(0);
 
 		$('#paspor_expired').text(0);
-		$('#paspor_atrisk').text(0);
+		$('#paspor_at_risk').text(0);
 		$('#paspor_safe').text(0);
 
 		$('#skj_expired').text(0);
-		$('#skj_atrisk').text(0);
+		$('#skj_at_risk').text(0);
 		$('#skj_safe').text(0);
 		
 		$('#skld_expired').text(0);
-		$('#skld_atrisk').text(0);
+		$('#skld_at_risk').text(0);
 		$('#skld_safe').text(0);
 
 		$.get('{{ url("fetch/resume_user_document") }}', data, function(result, status, xhr){
 			if(result.status){
 				for (var i = 0; i < result.resume.length; i++) {
-					var key = result.resume[i].category + '_' + result.resume[i].condition.replace(' ', '');
+					var key = result.resume[i].category + '_' + result.resume[i].condition.replace(' ', '_');
 					$('#' + key.toLowerCase()).text(result.resume[i].quantity);
-					
-					console.log(key.toLowerCase());
 				}
 			}
 		});	
