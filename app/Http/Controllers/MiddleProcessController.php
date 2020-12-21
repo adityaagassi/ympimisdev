@@ -34,6 +34,7 @@ use App\MiddleRequestHelper;
 use App\MiddleRequestLog;
 use App\MiddleMaterialRequest;
 use App\Employee;
+use App\EmployeeSync;
 use App\Mail\SendEmail;
 use App\RfidBuffingDataLog;
 use App\RfidBuffingInventory;
@@ -1366,7 +1367,7 @@ class MiddleProcessController extends Controller
 			GROUP BY d.operator_id, tgl
 			HAVING act > 60");
 
-		$emp = Employee::where('employee_id', '=', $request->get('nik'))->select('employee_id', db::raw('concat(SPLIT_STRING(employees.name, " ", 1), " ", SPLIT_STRING(employees.name, " ", 2)) as name'))->get();
+		$emp = EmployeeSync::where('employee_id', '=', $request->get('nik'))->select('employee_id', db::raw('concat(SPLIT_STRING(employees.name, " ", 1), " ", SPLIT_STRING(employees.name, " ", 2)) as name'))->get();
 
 		$response = array(
 			'status' => true,
