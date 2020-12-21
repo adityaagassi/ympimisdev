@@ -96,6 +96,10 @@ class MiddleProcessController extends Controller
 		))->with('page', 'buffing-cancel');
 	}
 
+	public function indexBuffingOperator($loc){
+		return view('processes.middle.buffing_operator')->with('page', 'queue')->with('head', 'Buffing Operator');
+	}
+
 	public function indexBuffingTarget($loc){
 		if($loc == 'bff'){
 			return view('processes.middle.buffing_target')->with('page', 'queue')->with('head', 'Buffing target');
@@ -829,6 +833,48 @@ class MiddleProcessController extends Controller
 
 	}
 
+	public function updateBuffingOperator(Request $request){
+		try{
+			$emp = DB::table('employees')
+			->where('employee_id', '=', $request->get('employee_id'))
+			->update([
+				'tag' => $request->get('new_tag'),
+			]);
+
+			$response = array(
+				'status' => true,
+				'message' => 'update successful',	
+			);
+			return Response::json($response);
+		}catch(\Exception $e){
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function deleteBuffingOperator(Request $request){
+		try{
+			$delete = DB::table('employee_groups')
+			->where('employee_id', '=', $request->get('employee_id'))
+			->delete();
+
+			$response = array(
+				'status' => true,
+				'message' => 'update successful',	
+			);
+			return Response::json($response);
+		}catch(\Exception $e){
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
 	public function updateBuffingTarget(Request $request){
 		try{
 			$update = MiddleTarget::where('id', '=', $request->get('id'))->update([
@@ -1006,6 +1052,27 @@ class MiddleProcessController extends Controller
 		$response = array(
 			'status' => true,
 			'target' => $target,
+		);
+		return Response::json($response);
+	}
+
+	public function fetchBuffingOperator($loc){
+		$operator = DB::table('employee_groups')
+		->leftJoin('employees', 'employees.employee_id', '=', 'employee_groups.employee_id')
+		->where('employee_groups.location', $loc)
+		->select(
+			'employee_groups.employee_id',
+			'employees.name',
+			'employee_groups.group',	
+			'employees.tag'
+		)
+		->orderBy('employee_groups.group', 'ASC')
+		->orderBy('employees.name', 'ASC')
+		->get();
+
+		$response = array(
+			'status' => true,
+			'operator' => $operator,
 		);
 		return Response::json($response);
 	}
@@ -1477,7 +1544,7 @@ class MiddleProcessController extends Controller
 				and DATE_FORMAT(l.buffing_time,'%a') != 'Sat'
 				GROUP BY l.operator_id) g
 				on ng.operator_id = g.operator_id) rate
-				left join employee_syncs e on e.employee_id = rate.operator_id
+				left join employees e on e.employee_id = rate.operator_id
 				order by rate.ng_rate asc");
 			
 		}else{
