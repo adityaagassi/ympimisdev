@@ -404,7 +404,8 @@
 							<label><input type="checkbox" class="minimal" id="PP">&nbsp;&nbsp;Parts Process</label><br>
 							<label><input type="checkbox" class="minimal" id="EI">&nbsp;&nbsp;Educational Instrument</label><br>
 							<label><input type="checkbox" class="minimal" id="WAREHOUSE">&nbsp;&nbsp;Warehouse</label><br>
-							<label><input type="checkbox" class="minimal" id="FG">&nbsp;&nbsp;Finished Goods</label>
+							<label><input type="checkbox" class="minimal" id="FG">&nbsp;&nbsp;Finished Goods</label><br>
+							<label><input type="checkbox" class="minimal" id="SUBCONT">&nbsp;&nbsp;Subcont</label>
 						</div>
 					</div>
 
@@ -782,6 +783,9 @@
 		if($('#FG').is(":checked")){
 			group.push('FINISHED GOODS');
 		}
+		if($('#SUBCONT').is(":checked")){
+			group.push('SUBCONT');
+		}
 
 
 		if(group.length > 0){
@@ -801,6 +805,7 @@
 					$('#EI').iCheck('uncheck');
 					$('#WAREHOUSE').iCheck('uncheck');
 					$('#FG').iCheck('uncheck');
+					$('#SUBCONT').iCheck('uncheck');
 
 					// variance();
 					openSuccessGritter('Success', result.message);

@@ -310,6 +310,19 @@ class StockTakingController extends Controller{
 										'created_by' => Auth::id()
 									]);
 									$error->save();
+								}else if ($mpdl->spt == 50 && $category == 'SINGLE') {
+									$error = new StocktakingErrorList([
+										'file_name' => $file_name,
+										'location' => $location,
+										'store' => $store,
+										'sub_store' => $sub_store,
+										'material_number' => $material_number,
+										'material_description' => $mpdl->material_description,
+										'category' => $category,
+										'error_message' => 'Item tidak boleh SINGLE',
+										'created_by' => Auth::id()
+									]);
+									$error->save();
 								}else{
 									$list = new StocktakingNewList([
 										'location' => $location,
@@ -1939,9 +1952,12 @@ class StockTakingController extends Controller{
 				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = pi_book.material_number
 				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
 				WHERE storage_locations.area IS NOT NULL
-				AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')
+				AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','MMJR')
 				) AS official_variance
 				GROUP BY plnt, `group`, location");
+
+			// AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')
+
 		}else{
 			$variances = db::select("SELECT plnt, `group`, location, sum(pi_amt) AS sumof_pi_amt, sum(book_amt) AS sumof_book_amt, sum(diff_amt) AS sumof_diff_amt, sum(var_amt_min) AS sumof_var_amt_min, sum(var_amt_plus) AS sumof_var_amt_plus, sum(var_amt_abs) AS sumof_var_amt_abs, sum(var_amt_abs)/sum(book_amt)*100 AS percentage FROM
 				(SELECT storage_locations.area AS `group`,
@@ -1970,7 +1986,7 @@ class StockTakingController extends Controller{
 				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = pi_book.material_number
 				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
 				WHERE storage_locations.area IS NOT NULL
-				AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')
+				AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','MMJR')
 				) AS official_variance
 				GROUP BY plnt, `group`, location");
 		}
@@ -2089,7 +2105,7 @@ class StockTakingController extends Controller{
 				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = stocktaking_new_lists.material_number
 				LEFT JOIN storage_locations ON storage_locations.storage_location = stocktaking_new_lists.location
 				where stocktaking_new_lists.print_status = 1
-				and stocktaking_new_lists.quantity > 0
+				and stocktaking_new_lists.final_count > 0
 				ORDER BY storage_locations.area, stocktaking_new_lists.location, stocktaking_new_lists.material_number ASC");
 		}
 
@@ -2147,11 +2163,13 @@ class StockTakingController extends Controller{
 				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = pi_book.material_number
 				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
 				LEFT JOIN stocktaking_material_notes ON stocktaking_material_notes.material_number = pi_book.material_number
-				WHERE storage_locations.area is not null and pi_book.location not in ('203', '214', '216', '217', 'MSCR', 'WSCR')
+				WHERE storage_locations.area is not null and pi_book.location not in ('MSCR', 'WSCR')
 				ORDER BY
 				storage_locations.area,
 				pi_book.location,
 				pi_book.material_number ASC");
+
+			// WHERE storage_locations.area is not null and pi_book.location not in ('203', '214', '216', '217', 'MSCR', 'WSCR')		
 
 		}else{
 			$variances = db::select("SELECT
@@ -2186,7 +2204,7 @@ class StockTakingController extends Controller{
 				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = pi_book.material_number
 				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
 				LEFT JOIN stocktaking_material_notes ON stocktaking_material_notes.material_number = pi_book.material_number
-				WHERE storage_locations.area is not null and pi_book.location not in ('203', '214', '216', '217', 'MSCR', 'WSCR')
+				WHERE storage_locations.area is not null and pi_book.location not in ('MSCR', 'WSCR')
 				ORDER BY
 				storage_locations.area,
 				pi_book.location,
@@ -2248,8 +2266,11 @@ class StockTakingController extends Controller{
 				GROUP BY location, material_number) AS pi_book
 				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
 				WHERE storage_locations.area IS NOT NULL
-				AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','203','208','214','216','217','MMJR')
+				AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','MMJR')
 				AND ROUND(ABS(pi_book.pi - pi_book.book),3) > 0");
+
+			// AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','203','208','214','216','217','MMJR')
+
 
 
 			$upload_text = "";
@@ -2815,12 +2836,14 @@ class StockTakingController extends Controller{
 				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_kitto.location
 				WHERE pi_kitto.book is null
 				AND pi_kitto.pi > 0
-				AND pi_kitto.location not in ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')
+				AND pi_kitto.location not in ('WCJR','WSCR','MSCR','YCJP','401','MMJR')
 				AND storage_locations.area is not null
 				ORDER BY storage_locations.area, pi_kitto.location, pi_kitto.material_number");
 
 			return DataTables::of($data)->make(true);
 		}
+
+		// AND pi_kitto.location not in ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')
 
 	}
 
@@ -2843,12 +2866,14 @@ class StockTakingController extends Controller{
 				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_kitto.location
 				WHERE pi_kitto.pi is null
 				AND pi_kitto.book > 0
-				AND pi_kitto.location not in ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')
+				AND pi_kitto.location not in ('WCJR','WSCR','MSCR','YCJP','401','MMJR')
 				AND storage_locations.area is not null
 				ORDER BY storage_locations.area, pi_kitto.location, pi_kitto.material_number");
 
 			return DataTables::of($data)->make(true);
 		}
+
+		// AND pi_kitto.location not in ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')
 
 	}
 
@@ -2951,9 +2976,12 @@ class StockTakingController extends Controller{
 				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = pi_book.material_number
 				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
 				WHERE storage_locations.area IS NOT NULL
-				AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')
+				AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','MMJR')
 				) AS official_variance
 				GROUP BY plnt, `group`");
+
+			// AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')
+
 
 			$ympi = db::select("SELECT ympi, sum(var_amt_abs)/sum(book_amt)*100 AS percentage FROM
 				(SELECT storage_locations.area AS `group`,
@@ -2978,9 +3006,12 @@ class StockTakingController extends Controller{
 				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = pi_book.material_number
 				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
 				WHERE storage_locations.area IS NOT NULL
-				AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')
+				AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','MMJR')
 				) AS official_variance
 				GROUP BY ympi");
+
+			// AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')
+
 		}else{
 			$variance = db::select("SELECT plnt, `group`, sum(var_amt_abs)/sum(book_amt)*100 AS percentage FROM
 				(SELECT storage_locations.area AS `group`,
@@ -3005,9 +3036,12 @@ class StockTakingController extends Controller{
 				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = pi_book.material_number
 				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
 				WHERE storage_locations.area IS NOT NULL
-				AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')
+				AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','MMJR')
 				) AS official_variance
 				GROUP BY plnt, `group`");
+
+			// AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')
+
 
 			$ympi = db::select("SELECT plnt, `group`, sum(var_amt_abs)/sum(book_amt)*100 AS percentage FROM
 				(SELECT storage_locations.area AS `group`,
@@ -3033,9 +3067,12 @@ class StockTakingController extends Controller{
 				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = pi_book.material_number
 				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
 				WHERE storage_locations.area IS NOT NULL
-				AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')
+				AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','MMJR')
 				) AS official_variance
 				GROUP BY plnt, `group`");
+
+			// AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')
+
 		}
 
 		$response = array(
@@ -4613,6 +4650,12 @@ s.id ASC");
 			$response = array(
 				'status' => false,
 				'message' => 'Indirect Material atau Material Awal tidak boleh ASSY'
+			);
+			return Response::json($response);
+		}else if($mpdl->spt == 50 && $category == 'SINGLE') {
+			$response = array(
+				'status' => false,
+				'message' => 'Material number dengan spt 50 harus ASSY'
 			);
 			return Response::json($response);
 		}

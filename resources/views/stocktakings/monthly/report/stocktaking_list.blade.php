@@ -711,7 +711,7 @@
 		}
 
 		if(material_description == ''){
-			alert("Input material number");
+			openErrorGritter('Error', "Material number invalid");
 			return false;
 		}
 
