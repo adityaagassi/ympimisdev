@@ -601,9 +601,9 @@ function ShowModal(tgl, status, datefrom, dateto) {
       ]    
     });
 
-  $('#judul_table').append().empty();
-  $('#judul_table').append('<center><b>Temuan Patrol Tanggal '+tgl+'</b></center>'); 
-}
+    $('#judul_table').append().empty();
+    $('#judul_table').append('<center><b>Temuan Patrol '+tgl+'</b></center>'); 
+  }
 
 
 

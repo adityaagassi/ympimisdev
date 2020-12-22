@@ -281,7 +281,7 @@
                             </a>
                         </td>
                     </tr>
-                   
+
                     <tr>
                         <td>
                             <span style="font-weight: bold;">Others (他の情報)</span>
@@ -313,7 +313,7 @@
                             <a href="{{ url("/index/audit_patrol/monitoring") }}">
                                 <i class="fa fa-caret-right"></i> Patrol Monitoring (パトロール監視)
                             </a>
-                           
+
                             
                         </td>                     
                     </tr>
@@ -329,8 +329,12 @@
                                 <i class="fa fa-caret-right"></i> Create Audit ISO (ISO内部監査のCPARを作成)
                             </a> -->
                             <br>
+                            <a href="{{ url("/index/audit_iso/monitoring2") }}">
+                                <i class="fa fa-caret-right"></i> Audit ISO 14001 (ISO内部監査のCPARを報告)
+                            </a>
+                            <br>
                             <a href="{{ url("/index/audit_iso/monitoring") }}">
-                                <i class="fa fa-caret-right"></i> Monitoring Audit ISO (ISO内部監査のCPARを報告)
+                                <i class="fa fa-caret-right"></i> Audit ISO 45001 (ISO内部監査のCPARを報告)
                             </a>
                             <br>
                             <a href="{{ url("/index/audit?category=kanban") }}">
@@ -411,7 +415,7 @@
             </thead>
             <tbody>
                 <tr>
-                   <td>
+                 <td>
                     {{--     <a href="{{ url("index/report/overtime_outsource") }}">
                         <i class="fa fa-caret-right"></i> Outsource OT (派遣社員の残業管理)
                     </a> --}}
@@ -857,7 +861,7 @@
                                 <a href="{{ url("/index/display/sub_assy/assy_sax?date=&surface2=&key2=&model2=&hpl2=&order2=") }}">
                                     <i class="fa fa-caret-right"></i> Sax Key Picking Monitor (サックスのピッキング監視)
                                 </a>
-                                 <br>
+                                <br>
                                 <a href="{{ url("/index/display/body/sax_body?date=&surface2=&key2=&model2=&hpl2=&order2=") }}">
                                     <i class="fa fa-caret-right"></i> Sax Body Picking Monitor (サックスのピッキング監視)
                                 </a>

@@ -1317,9 +1317,12 @@ Route::post('upload/sakurentsu/3m/document/upload', 'SakurentsuController@upload
 Route::get('index/sakurentsu/3m/finalmeeting/{id_three_m}', 'SakurentsuController@index_tiga_em_finalmeeting');
 Route::get('fetch/sakurentsu/3m/document/{id_three_m}', 'SakurentsuController@fetch_tiga_em_document_by_id');
 Route::get('detail/sakurentsu/3m/{id_three_m}', 'SakurentsuController@index_tiga_em_detail');
+Route::get('detail/sakurentsu/3m/{id_three_m}/{position}', 'SakurentsuController@index_tiga_em_detail2');
 Route::get('generate/sakurentsu/3m/pdf/{id_three_m}', 'SakurentsuController@generate_tiga_em_pdf');
 Route::get('get/sakurentsu/3m', 'SakurentsuController@get_employee_sign');
 Route::post('post/sakurentsu/3m/sign', 'SakurentsuController@signing_tiga_em');
+
+Route::post('post/sakurentsu/3m/receive_std', 'SakurentsuController@receive_tiga_em');
 
 //Supplier
 Route::get('index/supplier', 'AccountingController@master_supplier');
@@ -1486,6 +1489,9 @@ Route::post('delete/investment', 'AccountingController@delete_investment');
 Route::get('investment/get_nomor_investment', 'AccountingController@get_nomor_inv');
 Route::get('fetch/investment/invbudgetlist', 'AccountingController@fetchInvBudgetList');
 
+
+Route::get('export/investment/list', 'AccountingController@exportInvestment');
+
 //Upload Adagio
 Route::post('investment/adagio', 'AccountingController@post_adagio');
 
@@ -1551,10 +1557,6 @@ Route::get('fetch/receive', 'AccountingController@fetch_receive');
 Route::get('receive/detail', 'AccountingController@receive_detail');
 Route::post('import/receive', 'AccountingController@import_receive');
 
-
-//Receive Report
-Route::get('receive_report', 'AccountingController@receive_report');
-
 Route::get('upload_transaksi', 'AccountingController@upload_transaksi');
 Route::get('fetch/transaksi', 'AccountingController@fetch_upload_transaksi');
 Route::post('import/transaksi', 'AccountingController@import_transaksi');
@@ -1564,7 +1566,6 @@ Route::post('delete/actual/transaksi', 'AccountingController@delete_transaksi');
 Route::get('warehouse/receive_equipment', 'AccountingController@wh_receive_equipment');
 Route::get('fetch/warehouse/equipment', 'AccountingController@fetch_receive_equipment');
 Route::post('fetch/warehouse/update_receive', 'AccountingController@update_receive');
-
 
 //Receive Barang
 Route::get('warehouse/receive_ga', 'AccountingController@wh_receive_ga');
@@ -1584,6 +1585,11 @@ Route::post('fetch/warehouse/create_bukti', 'AccountingController@create_cetak_b
 
 Route::get('index/warehouse/report_bukti', 'AccountingController@bukti_penerimaan');
 Route::get('index/warehouse/report_bukti/{id}', 'AccountingController@cetak_bukti_penerimaan');
+
+//Invoice Check
+Route::get('invoice/receive_report', 'AccountingController@invoice_receive_report');
+Route::get('invoice/fetch_receive', 'AccountingController@invoice_fetch_receive');
+Route::post('invoice/import_receive', 'AccountingController@invoice_import_receive');
 
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 	Route::get('scan/middle/kensa', 'MiddleProcessController@ScanMiddleKensa');
@@ -2763,7 +2769,7 @@ Route::get('fetch/display/efficiency_monitoring', 'DisplayController@fetchEffici
 Route::get('fetch/display/efficiency_monitoring_monthly', 'DisplayController@fetchEfficiencyMonitoringMonthly');
 
 //DISPLAY RAW MATERIAL
-Route::get('index/material/material_monitoring', 'MaterialController@indexMaterialMonitoring');
+Route::get('index/material/material_monitoring/{id}', 'MaterialController@indexMaterialMonitoring');
 Route::get('fetch/material/material_monitoring', 'MaterialController@fetchMaterialMonitoring');
 
 
@@ -3242,10 +3248,10 @@ Route::get('index/recorder/cdm_report', 'RecorderProcessController@indexCdmRepor
 Route::get('fetch/recorder/cdm_report', 'RecorderProcessController@fetchCdmReport');
 
 //NG RATE ASSY RC
-Route::get('index/recorder/kensa_initial', 'RecorderProcessController@indexKensaInitial');
-Route::get('fetch/recorder/kensa_initial', 'RecorderProcessController@fetchKensaInitial');
-Route::get('scan/recorder/kensa_initial', 'RecorderProcessController@scanKensaInitial');
-Route::post('input/recorder/kensa_initial', 'RecorderProcessController@inputKensaInitial');
+Route::get('index/recorder/kensa', 'RecorderProcessController@indexKensa');
+Route::get('fetch/recorder/kensa', 'RecorderProcessController@fetchKensa');
+Route::get('scan/recorder/kensa', 'RecorderProcessController@scanKensa');
+Route::post('input/recorder/kensa_product', 'RecorderProcessController@inputKensaProduct');
 
 //WEBCAM
 Route::get('index/webcam', 'WebcamController@index');
@@ -3480,6 +3486,11 @@ Route::get('fetch/audit_iso/monitoring', 'CparController@fetchMonitoring_audit')
 Route::get('index/audit_iso/detail', 'CparController@detailMonitoring_audit');
 Route::get('index/audit_iso/table', 'CparController@fetchTable_audit');
 
+Route::get('index/audit_iso/monitoring2', 'CparController@monitoring_audit2');
+Route::get('fetch/audit_iso/monitoring2', 'CparController@fetchMonitoring_audit2');
+Route::get('index/audit_iso/detail2', 'CparController@detailMonitoring_audit2');
+Route::get('index/audit_iso/table2', 'CparController@fetchTable_audit2');
+
 //checklist
 Route::get('index/audit_iso/check', 'CparController@check_audit');
 Route::get('index/audit_iso/point_check/{kategori}/{lokasi}', 'CparController@indexPointCheck');
@@ -3522,6 +3533,11 @@ Route::get('index/reedplate/working_time','ReedplateController@reed');
 Route::get('fetch/reedplate/user','ReedplateController@getUser');
 Route::get('fetch/reedplate/log','ReedplateController@fetch_log');
 Route::post('index/reedplate/reader', 'ReedplateController@inputTemp');
+
+
+//DRIVER MANAGER
+Route::get('index/driver_manager','ReedplateController@driver');
+Route::get('fetch/driver_manager', 'ReedplateController@fetchDriver');
 
 //TEMPERATURE / SUHU
 Route::get('index/grafikServer','TemperatureController@grafikServer');

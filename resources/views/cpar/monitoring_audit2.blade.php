@@ -284,7 +284,7 @@ table > thead > tr > th{
       status: status,
     };
 
-    $.get('{{ url("fetch/audit_iso/monitoring") }}', data, function(result, status, xhr) {
+    $.get('{{ url("fetch/audit_iso/monitoring2") }}', data, function(result, status, xhr) {
         if(result.status){
 
           var month = []; 
@@ -490,7 +490,7 @@ table > thead > tr > th{
       "serverSide": true,
       "ajax": {
           "type" : "get",
-          "url" : "{{ url("index/audit_iso/detail") }}",
+          "url" : "{{ url("index/audit_iso/detail2") }}",
           "data" : {
             tgl : tgl,
             status : status,
@@ -527,7 +527,7 @@ table > thead > tr > th{
       status: status
     };
 
-    $.get('{{ url("index/audit_iso/table") }}', data, function(result, status, xhr){
+    $.get('{{ url("index/audit_iso/table2") }}', data, function(result, status, xhr){
       if(result.status){
 
 
