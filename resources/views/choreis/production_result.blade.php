@@ -352,13 +352,18 @@
 				todayHighlight: true
 			});
 			$('body').toggleClass("sidebar-collapse");
-			fillWeek();
-			fillDate();
+			// fillWeek();
+			// fillDate();
 			fillChart($('#dateHidden').val());
 			setInterval(function(){
 				fillChart($('#dateHidden').val());
 			}, 10000);
 		});
+		var req = "";
+
+		function canc(){
+			req.abort();
+		}		
 
 		var th = ['','thousand','million', 'billion','trillion'];
 
@@ -420,6 +425,7 @@
 
 		function fillWeek(){
 			$.get('{{ url("fetch/daily_production_result_week") }}', function(result, status, xhr){
+				req = xhr;
 				if(xhr.status == 200){
 					if(result.status){
 						$('#weekResult').html('');
@@ -718,7 +724,7 @@
 							enabled: false
 						},
 						title: {
-							text: '<span style="font-size: 3vw;">Production Result</span><br> <span style="color: rgba(61, 153, 112);">'+ result.dateTitle +'</span><span style="color: rgba(96, 92, 168);"> (On '+ result.week +'</span>)',
+							text: '<span style="font-size: 2vw;">Production Result ('+ result.dateTitle +')</span><br><span style="color: rgba(96, 92, 168);"> On '+ result.week +' ('+ result.week_min_max[0].min_date +'-'+ result.week_min_max[0].max_date +')</span>',
 							style: {
 								fontSize: '30px',
 								fontWeight: 'bold'
@@ -987,7 +993,7 @@
 							type: 'column'
 						},
 						title: {
-							text: '<span style="font-size: 3vw;">Production Accuracy</span><br> <span style="color: rgba(61, 153, 112);">'+ result.dateTitle +'</span><span style="color: rgba(96, 92, 168);"> (On '+ result.week +'</span>)',
+							text: '<span style="font-size: 2vw;">Production Accuracy ('+ result.dateTitle +')</span><br><span style="color: rgba(96, 92, 168);"> On '+ result.week +' ('+ result.week_min_max[0].min_date +'-'+ result.week_min_max[0].max_date +')</span>',
 							style: {
 								fontSize: '30px',
 								fontWeight: 'bold'
@@ -1066,7 +1072,7 @@
 							type: 'column'
 						},
 						title: {
-							text: '<span style="font-size: 3vw;">Production Accuracy</span><br> <span style="color: rgba(61, 153, 112);">'+ result.dateTitle +'</span><span style="color: rgba(96, 92, 168);"> (On '+ result.week +'</span>)',
+							text: '<span style="font-size: 2vw;">Production Result ('+ result.dateTitle +')</span><br><span style="color: rgba(96, 92, 168);"> On '+ result.week +' ('+ result.week_min_max[0].min_date +'-'+ result.week_min_max[0].max_date +')</span>',
 							style: {
 								fontSize: '30px',
 								fontWeight: 'bold'
@@ -1207,7 +1213,7 @@
 							enabled: false
 						},
 						title: {
-							text: '<span style="font-size: 3vw;">Weekly Shipment ETD YMPI</span><br><span style="color: rgba(96, 92, 168);">'+ result.weekTitle +'</span>',
+							text: '<span style="font-size: 2vw;">Weekly Shipment ETD YMPI</span><br><span style="color: rgba(96, 92, 168);"> On '+ result.week +' ('+ result.week_min_max[0].min_date +'-'+ result.week_min_max[0].max_date +')</span>',
 							style: {
 								fontSize: '30px',
 								fontWeight: 'bold'
@@ -1316,7 +1322,7 @@
 							enabled: false
 						},
 						title: {
-							text: '<span style="font-size: 3vw;">Weekly Shipment ETD YMPI</span><br><span style="color: rgba(96, 92, 168);">'+ result.weekTitle +'</span>',
+							text: '<span style="font-size: 2vw;">Weekly Shipment ETD YMPI</span><br><span style="color: rgba(96, 92, 168);"> On '+ result.week +' ('+ result.week_min_max[0].min_date +'-'+ result.week_min_max[0].max_date +')</span>',
 							style: {
 								fontSize: '30px',
 								fontWeight: 'bold'
