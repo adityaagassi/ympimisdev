@@ -98,12 +98,6 @@
 	<ol class="breadcrumb">
 		<?php $user = STRTOUPPER(Auth::user()->username) ?>
 
-		@if(Auth::user()->role_code == "MIS" || $user == "PI1211001" || $user == "PI0904007")
-		<a class="btn btn-primary btn-sm" style="margin-right: 5px" href="{{ url("/index/audit_iso/check") }}">
-			<i class="fa fa-plus"></i>&nbsp;&nbsp;Point Check & Hasil Audit
-		</a>
-		@endif
-
 		<button class="btn btn-success btn-sm" style="margin-right: 5px" onclick="location.reload()">
 			<i class="fa fa-edit"></i>&nbsp;&nbsp;Ganti Lokasi
 		</button>
@@ -230,6 +224,14 @@
 					<div class="form-group">
 						<a href="{{ url("index/audit_iso/cek_report")}}" class="btn btn-danger btn-sm" target="_blank" style="color:white;margin-right: 5px"><i class="fa fa-file-pdf-o"></i> Cek Laporan Hasil {{ $page }} </a>
 						<button class="btn btn-success pull-right" onclick="selectData()">Submit</button>
+
+
+						@if(Auth::user()->role_code == "MIS" || $user == "PI1211001" || $user == "PI0904007" || $user == "PI0805002" || $user == "PI0904001")
+						<br><br>
+						<a class="btn btn-primary btn-sm" style="width: 100%" href="{{ url("/index/audit_iso/check") }}">
+							<i class="fa fa-plus"></i>&nbsp;&nbsp;Point Check & Hasil Audit
+						</a>
+						@endif
 
 					</div>
 
