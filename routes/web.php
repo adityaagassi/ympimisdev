@@ -728,6 +728,7 @@ Route::group(['nav' => 'A9', 'middleware' => 'permission'], function(){
 	Route::get('fetch/middle/buffing_operator/{loc}', 'MiddleProcessController@fetchBuffingOperator');
 	Route::post('update/middle/buffing_operator', 'MiddleProcessController@updateBuffingOperator');
 	Route::post('delete/middle/buffing_operator', 'MiddleProcessController@deleteBuffingOperator');
+	Route::post('insert/middle/buffing_operator', 'MiddleProcessController@insertBuffingOperator');
 
 
 	Route::get('index/middle/buffing_target/{loc}', 'MiddleProcessController@indexBuffingTarget');

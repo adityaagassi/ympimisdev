@@ -98,7 +98,16 @@ class MiddleProcessController extends Controller
 	}
 
 	public function indexBuffingOperator($loc){
-		return view('processes.middle.buffing_operator')->with('page', 'queue')->with('head', 'Buffing Operator');
+
+		$employees = db::select("SELECT * FROM employee_syncs
+			WHERE end_date is null
+			AND employee_id NOT IN (
+			SELECT DISTINCT employee_id FROM employee_groups
+			WHERE location = 'bff')");
+
+		return view('processes.middle.buffing_operator', array(
+			'employees' => $employees
+		))->with('page', 'queue')->with('head', 'Buffing Operator');
 	}
 
 	public function indexBuffingTarget($loc){
@@ -834,12 +843,70 @@ class MiddleProcessController extends Controller
 
 	}
 
+	public function insertBuffingOperator(Request $request){
+		try{
+			$emp = DB::table('employees')
+			->where('employee_id', '=', $request->get('employee_id'))
+			->update([
+				'tag' => $request->get('tag'),
+			]);
+
+			$employee_groups = DB::table('employee_groups')
+			->insert([
+				'employee_id' => $request->get('employee_id'),
+				'location' => 'bff',
+				'group' => $request->get('group'),
+				'created_at' => date('Y-m-d H:i:s'),
+				'updated_at' => date('Y-m-d H:i:s')
+			]);
+
+			$employee_groups = DB::connection('digital_kanban')
+			->table('employee_groups')
+			->insert([
+				'employee_id' => $request->get('employee_id'),
+				'location' => 'bff',
+				'group' => $request->get('group'),
+				'created_at' => date('Y-m-d H:i:s'),
+				'updated_at' => date('Y-m-d H:i:s')
+			]);
+
+			$response = array(
+				'status' => true,
+				'message' => 'update successful',	
+			);
+			return Response::json($response);
+		}catch(\Exception $e){
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
 	public function updateBuffingOperator(Request $request){
 		try{
 			$emp = DB::table('employees')
 			->where('employee_id', '=', $request->get('employee_id'))
 			->update([
 				'tag' => $request->get('new_tag'),
+			]);
+
+			$employee_groups = DB::table('employee_groups')
+			->where('employee_id', '=', $request->get('employee_id'))			
+			->update([
+				'employee_id' => $request->get('employee_id'),
+				'group' => $request->get('group'),
+				'updated_at' => date('Y-m-d H:i:s')
+			]);
+
+			$employee_groups = DB::connection('digital_kanban')
+			->table('employee_groups')
+			->where('employee_id', '=', $request->get('employee_id'))
+			->update([
+				'employee_id' => $request->get('employee_id'),
+				'group' => $request->get('group'),
+				'updated_at' => date('Y-m-d H:i:s')
 			]);
 
 			$response = array(

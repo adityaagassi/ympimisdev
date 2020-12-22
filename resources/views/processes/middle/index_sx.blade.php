@@ -24,6 +24,12 @@
 
 	<div class="row">
 		<div class="col-xs-4" style="text-align: center;">
+			@if(in_array('A9', $navs))
+			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Master Buffing <i class="fa fa-angle-double-down"></i></span>
+			<a href="{{ url("/index/middle/buffing_operator", "bff-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Buffing Operator</a>
+			<a href="{{ url("/index/middle/buffing_target", "bff") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Buffing Target</a>
+			@endif
+
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process Buffing <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/middle/request/043?filter=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Request Saxophone</a>
 			<a href="{{ url("index/middle/buffing_work_order", "bff-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Saxophone Work Order</a>
@@ -31,9 +37,7 @@
 			@if(in_array('A9', $navs))
 			<a href="{{ url("/index/middle/buffing_canceled") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Buffing Cancel</a>
 			@endif
-			@if(in_array('A9', $navs))
-			<a href="{{ url("/index/middle/buffing_target", "bff") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Buffing Target</a>
-			@endif
+			
 
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process Barrel <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/process_middle_barrel", "barrel-sx-lcq") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Lacquering</a>
