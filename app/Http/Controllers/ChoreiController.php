@@ -119,6 +119,80 @@ class ChoreiController extends Controller
 		return Response::json($response);
 	}
 
+	public function fetch_production_bl_modal_kd(Request $request){
+		$year = date('Y', strtotime($request->get('date')));
+		$last_date = DB::table('weekly_calendars')
+		->where('week_name', '=', $request->get('week'))
+		->where(db::raw('year(weekly_calendars.week_date)'), '=', $year)
+		->select(db::raw('min(week_date) as week_date'))
+		->first();
+
+		$query1 = "select material_number, material_description, sum(quantity) as quantity from
+		(
+		select shipment_schedules.material_number, materials.material_description, if(sum(shipment_schedules.quantity)<sum(flos.actual), sum(shipment_schedules.quantity), sum(flos.actual)) as quantity 
+		from shipment_schedules
+		left join materials on materials.material_number = shipment_schedules.material_number
+		left join weekly_calendars on weekly_calendars.week_date = shipment_schedules.st_date
+		left join (select shipment_schedule_id, sum(actual) as actual from flos group by shipment_schedule_id) as flos 
+		on flos.shipment_schedule_id = shipment_schedules.id
+		where weekly_calendars.week_name = '".$request->get('week')."' and materials.category = 'FG' and materials.hpl = '".$request->get('hpl')."' and year(weekly_calendars.week_date) = '" . $year . "'
+		group by shipment_schedules.material_number, materials.material_description
+		having if(sum(shipment_schedules.quantity)<sum(flos.actual), sum(shipment_schedules.quantity), sum(flos.actual)) > 0
+
+		union all
+
+		select shipment_schedules.material_number, materials.material_description, if(sum(shipment_schedules.quantity)<sum(flos.actual), sum(shipment_schedules.quantity), sum(flos.actual)) as quantity 
+		from shipment_schedules
+		left join materials on materials.material_number = shipment_schedules.material_number
+		left join weekly_calendars on weekly_calendars.week_date = shipment_schedules.st_date
+		left join (select shipment_schedule_id, sum(actual) as actual from flos group by shipment_schedule_id) as flos 
+		on flos.shipment_schedule_id = shipment_schedules.id
+		where weekly_calendars.week_date < '".$last_date->week_date."' and materials.category = 'FG' and materials.hpl = '".$request->get('hpl')."' and year(weekly_calendars.week_date) = '" . $year . "' and flos.actual < shipment_schedules.quantity
+		group by shipment_schedules.material_number, materials.material_description
+		) as result1
+		group by material_number, material_description";
+
+		$query2 = "select material_number, material_description, sum(quantity) as quantity from
+		(
+		select shipment_schedules.material_number, materials.material_description, if(sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0) < 0, 0, sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0)) as quantity
+		from shipment_schedules
+		left join materials on materials.material_number = shipment_schedules.material_number
+		left join weekly_calendars on weekly_calendars.week_date = shipment_schedules.st_date
+		left join (select shipment_schedule_id, sum(actual) as actual from flos group by shipment_schedule_id) as flos 
+		on flos.shipment_schedule_id = shipment_schedules.id
+		where weekly_calendars.week_name = '".$request->get('week')."' and materials.category = 'FG' and materials.hpl = '".$request->get('hpl')."' and year(weekly_calendars.week_date) = '" . $year . "'
+		group by shipment_schedules.material_number, materials.material_description
+		having if(sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0) < 0, 0, sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0)) > 0
+
+		union all
+
+		select shipment_schedules.material_number, materials.material_description, if(sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0) < 0, 0, sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0)) as quantity
+		from shipment_schedules
+		left join materials on materials.material_number = shipment_schedules.material_number
+		left join weekly_calendars on weekly_calendars.week_date = shipment_schedules.st_date
+		left join (select shipment_schedule_id, sum(actual) as actual from flos group by shipment_schedule_id) as flos 
+		on flos.shipment_schedule_id = shipment_schedules.id
+		where weekly_calendars.week_date < '".$last_date->week_date."' and materials.category = 'FG' and materials.hpl = '".$request->get('hpl')."' and year(weekly_calendars.week_date) = '" . $year . "'
+		group by shipment_schedules.material_number, materials.material_description
+		having if(sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0) < 0, 0, sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0)) > 0 and sum(flos.actual) < sum(shipment_schedules.quantity)
+		) as result1
+		group by material_number, material_description";
+
+		if($request->get('name') == 'Actual'){
+			$blData = db::select($query1);
+		}
+		if($request->get('name') == 'Plan'){
+			$blData = db::select($query2);
+		}
+
+		$response = array(
+			'status' => true,
+			'blData' => $blData,
+			'tes' => $last_date,
+		);
+		return Response::json($response);
+	}
+
 	public function fetch_production_accuracy_modal_kd(Request $request){
 		$query = "select materials.material_number, materials.material_description, final.plus, final.minus from
 		(
@@ -649,6 +723,12 @@ class ChoreiController extends Controller
 
 		$chartResult3 = DB::select($query3);
 
+		$week_min_max = DB::table('weekly_calendars')->where('week_name', '=', $week->week_name)
+		->whereRaw('year(weekly_calendars.week_date) = "'.$year.'"')
+		->select('week_name', db::raw('date_format(min(week_date), "%d") as min_date'), db::raw('date_format(max(week_date), "%d %b %Y") as max_date'))
+		->groupBy('week_name')
+		->get();
+
 		$response = array(
 			'status' => true,
 			'chartResult1' => $chartResult1,
@@ -660,6 +740,7 @@ class ChoreiController extends Controller
 			'now' => $now,
 			'first' => $first,
 			'last' => $last,
+			'week_min_max' => $week_min_max
 		);
 		return Response::json($response);
 	}
