@@ -2218,7 +2218,7 @@ class QcReportController extends Controller
       public function getmaterialsbymaterialsnumber(Request $request)
       {
           $html = array();
-          $materials_number = Material::where('material_number',$request->materials_number)->get();
+          $materials_number = MaterialQaComplaint::where('material_number',$request->materials_number)->get();
           foreach ($materials_number as $material) {
               $html = array(
                 'material_description' => $material->material_description
