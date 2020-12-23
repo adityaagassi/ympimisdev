@@ -327,7 +327,7 @@
 						enabled: true,
 						title: {
 							enabled: true,
-							text: "Qty Container"
+							text: "Quantity Container<br>(コンテナ台数)"
 						},
 						tickInterval: 1
 					},
@@ -378,20 +378,19 @@
 						},
 					},
 					series: [{
-						name: 'Rejected',
-						data: rejected,
-						color: '#455a64'
-					},{
-						name: 'Not Confirmed',
+						name: 'Not Confirmed (未定)',
 						data: not_confirm,
 						color: '#dd4b39'
 					}, {
-						name: 'Confirmed',
+						name: 'Rejected (拒否)',
+						data: rejected,
+						color: '#455a64'
+					},{
+						name: 'Confirmed (確保済み)',
 						data: confirm,
 						color: '#00a65a'
 					}]
 				});
-
 			}
 		});
 }
