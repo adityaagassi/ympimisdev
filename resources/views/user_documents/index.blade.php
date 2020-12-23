@@ -3,7 +3,7 @@
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <link href="{{ url("css/jquery.tagsinput.css") }}" rel="stylesheet">
 <style type="text/css">
-	table.table-hover > tbody > tr > td:hover {
+	table.table-hover > tbody > tr > td:hover, table.table-hover > thead > tr > th:hover {
 		cursor: pointer;
 		background-color: #7dfa8c;
 	}
@@ -121,21 +121,27 @@
 			</div>
 
 			<div class="row">
-				<div class="col-xs-2" style="padding-left: 0.5%; padding-right: 0.5%">
+				<div class="col-xs-2" style="padding-right: 0.5%">
 					<table class="table table-bordered table-striped table-hover" style="background-color: #ffffff;">
 						<thead>
 							<tr>
 								<th colspan="3">PASPOR</th>
 							</tr>
 							<tr>
-								<th width="34%" style="background-color : rgba(33,33,33 ,1); color: white">Expired</th>
-								<th width="33%" style="background-color : rgba(242, 75, 75, 0.8);">At Risk</th>
-								<th width="33%" style="background-color : rgba(107, 255, 104, 0.6);">Safe</th>
+								<th width="34%" style="background-color : rgba(33,33,33 ,1); padding: 0px; color: white">Expired
+									<br><span style="color: white; font-size: 7pt;">Now <br>> ValidTo</span>
+								</th>
+								<th width="33%" style="background-color : rgba(242, 75, 75, 0.8); padding: 0px;">At Risk
+									<br><span style="color: black; font-size: 7pt;">ValidTo <br>< 210 Days</span>
+								</th>
+								<th width="33%" style="background-color : rgba(107, 255, 104, 0.6); padding: 0px;">Safe
+									<br><span style="color: black; font-size: 7pt;">ValidTo <br>> 210 Days</span>
+								</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr>
-								<td style="padding: 10px;" onclick="detail(id)" id="paspor_expired">0</td>
+								<td style="padding: 10px;" onclick="detail(id)" id="paspor_expired" title="PASPOR Expired">0</td>
 								<td style="padding: 10px;" onclick="detail(id)" id="paspor_at_risk">0</td>
 								<td style="padding: 10px;" onclick="detail(id)" id="paspor_safe">0</td>
 							</tr>
@@ -143,16 +149,22 @@
 					</table>
 				</div>
 
-				<div class="col-xs-2" style="padding-right: 0.5%">
+				<div class="col-xs-2" style="padding-left: 0.5%; padding-right: 0.5%;">
 					<table class="table table-bordered table-striped table-hover" style="background-color: #ffffff;">
 						<thead>
 							<tr>
 								<th colspan="3">KITAS</th>
 							</tr>
 							<tr>
-								<th width="34%" style="background-color : rgba(33,33,33 ,1); color: white">Expired</th>
-								<th width="33%" style="background-color : rgba(242, 75, 75, 0.8);">At Risk</th>
-								<th width="33%" style="background-color : rgba(107, 255, 104, 0.6);">Safe</th>
+								<th width="34%" style="background-color : rgba(33,33,33 ,1); padding: 0px; color: white">Expired
+									<br><span style="color: white; font-size: 7pt;">Now <br>> ValidTo</span>
+								</th>
+								<th width="33%" style="background-color : rgba(242, 75, 75, 0.8); padding: 0px;">At Risk
+									<br><span style="color: black; font-size: 7pt;">ValidTo <br>< 210 Days</span>
+								</th>
+								<th width="33%" style="background-color : rgba(107, 255, 104, 0.6); padding: 0px;">Safe
+									<br><span style="color: black; font-size: 7pt;">ValidTo <br>> 210 Days</span>
+								</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -165,16 +177,22 @@
 					</table>
 				</div>
 
-				<div class="col-xs-2" style="padding-left: 0.5%; padding-right: 0.5%">
+				<div class="col-xs-2" style="padding-left: 0.5%; padding-right: 0.5%;">
 					<table class="table table-bordered table-striped table-hover" style="background-color: #ffffff;">
 						<thead>
 							<tr>
 								<th colspan="3">MERP</th>
 							</tr>
 							<tr>
-								<th width="34%" style="background-color : rgba(33,33,33 ,1); color: white">Expired</th>
-								<th width="33%" style="background-color : rgba(242, 75, 75, 0.8);">At Risk</th>
-								<th width="33%" style="background-color : rgba(107, 255, 104, 0.6);">Safe</th>
+								<th width="34%" style="background-color : rgba(33,33,33 ,1); padding: 0px; color: white">Expired
+									<br><span style="color: white; font-size: 7pt;">Now <br>> ValidTo</span>
+								</th>
+								<th width="33%" style="background-color : rgba(242, 75, 75, 0.8); padding: 0px;">At Risk
+									<br><span style="color: black; font-size: 7pt;">ValidTo <br>< 210 Days</span>
+								</th>
+								<th width="33%" style="background-color : rgba(107, 255, 104, 0.6); padding: 0px;">Safe
+									<br><span style="color: black; font-size: 7pt;">ValidTo <br>> 210 Days</span>
+								</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -187,16 +205,22 @@
 					</table>
 				</div>
 
-				<div class="col-xs-2" style="padding-left: 0.5%; padding-right: 0.5%">
+				<div class="col-xs-2" style="padding-left: 0.5%; padding-right: 0.5%;">
 					<table class="table table-bordered table-striped table-hover" style="background-color: #ffffff;">
 						<thead>
 							<tr>
 								<th colspan="3">NOTIF</th>
 							</tr>
 							<tr>
-								<th width="34%" style="background-color : rgba(33,33,33 ,1); color: white">Expired</th>
-								<th width="33%" style="background-color : rgba(242, 75, 75, 0.8);">At Risk</th>
-								<th width="33%" style="background-color : rgba(107, 255, 104, 0.6);">Safe</th>
+								<th width="34%" style="background-color : rgba(33,33,33 ,1); padding: 0px; color: white">Expired
+									<br><span style="color: white; font-size: 7pt;">Now <br>> ValidTo</span>
+								</th>
+								<th width="33%" style="background-color : rgba(242, 75, 75, 0.8); padding: 0px;">At Risk
+									<br><span style="color: black; font-size: 7pt;">ValidTo <br>< 210 Days</span>
+								</th>
+								<th width="33%" style="background-color : rgba(107, 255, 104, 0.6); padding: 0px;">Safe
+									<br><span style="color: black; font-size: 7pt;">ValidTo <br>> 210 Days</span>
+								</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -209,16 +233,22 @@
 					</table>
 				</div>
 
-				<div class="col-xs-2" style="padding-left: 0.5%; padding-right: 0.5%">
+				<div class="col-xs-2" style="padding-left: 0.5%; padding-right: 0.5%;">
 					<table class="table table-bordered table-striped table-hover" style="background-color: #ffffff;">
 						<thead>
 							<tr>
 								<th colspan="3">SKJ</th>
 							</tr>
 							<tr>
-								<th width="34%" style="background-color : rgba(33,33,33 ,1); color: white">Expired</th>
-								<th width="33%" style="background-color : rgba(242, 75, 75, 0.8);">At Risk</th>
-								<th width="33%" style="background-color : rgba(107, 255, 104, 0.6);">Safe</th>
+								<th width="34%" style="background-color : rgba(33,33,33 ,1); padding: 0px; color: white">Expired
+									<br><span style="color: white; font-size: 7pt;">Now <br>> ValidTo</span>
+								</th>
+								<th width="33%" style="background-color : rgba(242, 75, 75, 0.8); padding: 0px;">At Risk
+									<br><span style="color: black; font-size: 7pt;">ValidTo <br>< 210 Days</span>
+								</th>
+								<th width="33%" style="background-color : rgba(107, 255, 104, 0.6); padding: 0px;">Safe
+									<br><span style="color: black; font-size: 7pt;">ValidTo <br>> 210 Days</span>
+								</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -231,16 +261,22 @@
 					</table>
 				</div>
 
-				<div class="col-xs-2" style="padding-left: 0.5%">
+				<div class="col-xs-2" style="padding-left: 0.5%;">
 					<table class="table table-bordered table-striped table-hover" style="background-color: #ffffff;">
 						<thead>
 							<tr>
 								<th colspan="3">SKLD</th>
 							</tr>
 							<tr>
-								<th width="34%" style="background-color : rgba(33,33,33 ,1); color: white">Expired</th>
-								<th width="33%" style="background-color : rgba(242, 75, 75, 0.8);">At Risk</th>
-								<th width="33%" style="background-color : rgba(107, 255, 104, 0.6);">Safe</th>
+								<th width="34%" style="background-color : rgba(33,33,33 ,1); padding: 0px; color: white">Expired
+									<br><span style="color: white; font-size: 7pt;">Now <br>> ValidTo</span>
+								</th>
+								<th width="33%" style="background-color : rgba(242, 75, 75, 0.8); padding: 0px;">At Risk
+									<br><span style="color: black; font-size: 7pt;">ValidTo <br>< 210 Days</span>
+								</th>
+								<th width="33%" style="background-color : rgba(107, 255, 104, 0.6); padding: 0px;">Safe
+									<br><span style="color: black; font-size: 7pt;">ValidTo <br>> 210 Days</span>
+								</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -668,7 +704,7 @@
 				condition += ' ';
 			}
 		}
-		
+
 		var data = {
 			category : category.toUpperCase(),
 			condition : capitalizeFirstLetter(condition)	
@@ -725,7 +761,7 @@
 		var employeId = $('#employeId').val();
 		var category = $('#category').val();
 		var condition = $('#condition').val();
-		
+
 		var data = {
 			documentNumber:documentNumber,
 			employeId:employeId,
@@ -846,7 +882,7 @@
 		$('#kitas_expired').text(0);
 		$('#kitas_at_risk').text(0);
 		$('#kitas_safe').text(0);
-		
+
 		$('#merp_expired').text(0);
 		$('#merp_at_risk').text(0);
 		$('#merp_safe').text(0);
@@ -862,7 +898,7 @@
 		$('#skj_expired').text(0);
 		$('#skj_at_risk').text(0);
 		$('#skj_safe').text(0);
-		
+
 		$('#skld_expired').text(0);
 		$('#skld_at_risk').text(0);
 		$('#skld_safe').text(0);
@@ -891,7 +927,7 @@
 		var category = $('#create_category').val();
 		var validFrom = $('#create_valid_from').val();
 		var validTo = $('#create_valid_to').val();
-		
+
 		var data = {
 			documentNumber:documentNumber,
 			employeId:employeId,
@@ -953,7 +989,7 @@
 		var category = $('#renew_category').val();
 		var validFrom = $('#renew_valid_from').val();
 		var validTo = $('#renew_valid_to').val();
-		
+
 		var data = {
 			documentNumber:documentNumber,
 			employee_id:employee_id,
