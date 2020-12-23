@@ -11,6 +11,7 @@ use Response;
 use DataTables;
 use PDF;
 use App\FormFailure;
+use App\FormFailureAttendance;
 use App\Department;
 use App\EmployeeSync;
 
@@ -82,11 +83,13 @@ class FormExperienceController extends Controller
             return '
               <a href="form_experience/edit/'.$id.'" class="btn btn-primary btn-xs">Edit</a>
               <a target="_blank" href="form_experience/print/'.$id.'" class="btn btn-warning btn-xs">Detail PDF</a>
+              <a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-success" onClick="sosialisasi('.$id.')"><i class="fa fa-users"></i> Sosialisasi</a>
             ';
           }
           else{
             return '
               <a href="form_experience/print/'.$id.'" class="btn btn-warning btn-xs">Detail PDF</a>
+              <a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-success" onClick="sosialisasi('.$id.')"><i class="fa fa-users"></i> Sosialisasi</a>
             ';
           }
         })
@@ -251,7 +254,16 @@ class FormExperienceController extends Controller
     }
 
     public function fetchChart(Request $request){
-      $detail = db::select("SELECT departments.department_name as department,COUNT(form_failures.id) as total FROM `form_failures` join employee_syncs on form_failures.employee_id = employee_syncs.employee_id RIGHT JOIN departments on employee_syncs.department = departments.department_name where id_division = '5' or id_division = '4' or id_division = '2' group by departments.department_name");
+      $detail = db::select("SELECT
+          employee_syncs.department AS department,
+          COUNT( form_failures.id ) AS total 
+        FROM
+          `form_failures`
+          LEFT JOIN employee_syncs ON form_failures.employee_id = employee_syncs.employee_id
+          where employee_syncs.division in ('Production Division') 
+        GROUP BY
+          department
+      ");
 
       $response = array(
         'status' => true,
@@ -284,6 +296,82 @@ class FormExperienceController extends Controller
     $response = array(
       'status' => true,
       'data' => $data
+    );
+    return Response::json($response);
+  }
+
+
+  public function scanEmployee(Request $request){
+    $id = Auth::id();
+    $employee = db::table('employees')->where('tag', '=', $request->get('tag'))->first();
+
+    if($employee == null){
+      $response = array(
+        'status' => false,
+        'message' => 'ID Card not found'
+      );
+      return Response::json($response);
+    }
+
+    try{
+
+      $form_detail = FormFailureAttendance::where('form_id', '=', $request->get('form_id'))
+      ->where('employee_id', '=', $employee->employee_id)
+      ->first();
+      
+      if($form_detail != null){
+          $response = array(
+            'status' => false,
+            'message' => 'Already attended',
+          );
+          return Response::json($response);
+      }
+      else{
+
+        $form_detail = new FormFailureAttendance([
+          'form_id' => $request->get('form_id'),
+          'employee_tag' => $employee->tag,
+          'employee_id' => $employee->employee_id,
+          'status' => 'ok',
+          'attend_time' => date('Y-m-d H:i:s'),
+          'created_by' => $id
+        ]);
+      }
+      $form_detail->save();
+
+    }
+    catch(\Exception $e){
+      $response = array(
+        'status' => false,
+        'message' => $e->getMessage(),
+      );
+      return Response::json($response);
+    }
+
+    $response = array(
+      'status' => true,
+      'message' => 'Attendance success'
+    );
+    return Response::json($response);
+  }
+
+
+  public function fetchAttendance(Request $request){
+
+    $form = FormFailure::where('form_failures.id', '=', $request->get('id'))
+    ->select('form_failures.id', 'form_failures.kategori', 'form_failures.judul')
+    ->first();
+
+    $form_details = FormFailureAttendance::where('form_failure_attendances.form_id', '=', $request->get('id'))
+    ->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'form_failure_attendances.employee_id')
+    ->select('form_failure_attendances.id', 'form_failure_attendances.form_id', 'form_failure_attendances.employee_id', 'employee_syncs.name', 'employee_syncs.department', 'form_failure_attendances.status')
+    ->orderBy('form_failure_attendances.id', 'asc')
+    ->get();
+
+    $response = array(
+      'status' => true,
+      'form' => $form,
+      'form_details' => $form_details
     );
     return Response::json($response);
   }

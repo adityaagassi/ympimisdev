@@ -186,6 +186,64 @@ td{
     </div>
   </div>
 
+<div class="modal fade" id="modalDetail">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="modalDetailTitle"></h4>
+        <div class="modal-body table-responsive no-padding" style="min-height: 100px">
+          <center>
+            <i class="fa fa-spinner fa-spin" id="loading" style="font-size: 80px;"></i>
+          </center>
+          <form class="form-horizontal">
+            <div class="col-xs-12">
+              <input type="hidden" id="form_id">
+              <table id="resumeTable" class="table table-bordered table-striped table-hover" style="margin-bottom: 20px;">
+                <thead style="background-color: rgba(126,86,134,.7);">
+                  <tr>
+                    <th style="width: 20%; text-align: center; font-size: 1vw;">Total Employee</th>
+                    <th style="width: 80%; text-align: center; font-size: 1vw;">Title</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td id="count_all" style="text-align: center; font-size: 1.8vw; font-weight: bold;"></td>
+                    <td id="judul" style="text-align: center; font-size: 1.8vw; font-weight: bold;">
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </form>
+          <div class="col-xs-12">
+            <div class="input-group" style="padding-bottom: 5px;">
+              <input type="text" style="text-align: center; border-color: black;" class="form-control input-lg" id="tag" name="tag" placeholder="Scan ID Card Here..." required>
+              <div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: black;">
+                <i class="glyphicon glyphicon-credit-card"></i>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-12" style="padding-top: 10px;">
+            <table class="table table-hover table-bordered table-striped" id="tableDetail">
+              <thead style="background-color: rgba(126,86,134,.7);">
+                <tr>
+                  <th style="width: 1%;">#</th>
+                  <th style="width: 2%;">ID</th>
+                  <th style="width: 5%;">Name</th>
+                  <th style="width: 5%;">Dept</th>
+                  <!-- <th style="width: 1%;">Action</th> -->
+                </tr>
+              </thead>
+              <tbody id="tableDetailBody">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal modal-danger fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -226,6 +284,8 @@ td{
 
   jQuery(document).ready(function() {
     $('body').toggleClass("sidebar-collapse");
+    $('#tag').val('');
+    // setInterval(foc, 20000);
     fillForm();
     fillChart();
     $("#navbar-collapse").text('');
@@ -239,10 +299,52 @@ td{
     });
 
 
+  $('#modalDetail').on('shown.bs.modal', function () {
+    $('#tag').focus();
+  }) 
+
   function clearConfirmation(){
     location.reload(true);
   }
 
+  function foc(){
+    $('#tag').focus();
+  }
+
+  $('#tag').keydown(function(event) {
+    if (event.keyCode == 13 || event.keyCode == 9) {
+      if(this.value.length > 7){
+        scanTag(this.value);
+      }
+      else{
+        $('#tag').val("");
+        $('#tag').focus();
+        openErrorGritter('Error!', 'ID Card invalid');
+      }
+    }
+  });
+
+  function scanTag(id){
+    var form_id = $('#form_id').val();
+    var data = {
+      tag:id,
+      form_id:form_id
+    }
+
+    $.post('{{ url("scan/form_experience/attendance") }}', data, function(result, status, xhr){
+      if(result.status){
+        $('#tag').val("");
+        $('#tag').focus();
+        fetchAttendance(form_id);
+        openSuccessGritter('Success!', result.message);
+      }
+      else{
+        $('#tag').val("");
+        $('#tag').focus();
+        openErrorGritter('Error!', result.message);
+      }
+    });
+  }
   
   function fillForm(){
     $('#example1').DataTable().destroy();
@@ -523,6 +625,90 @@ td{
     jQuery('#modalDeleteButton').attr("href", '{{ url("index/qc_report/delete") }}'+'/'+id);
   }
 
+  function sosialisasi(id){
+    var data = {
+      id:id
+    }
+
+    $.get('{{ url("fetch/form_experience/attendance") }}', data, function(result, status, xhr) {
+      $('#modalDetail').modal('show');
+      foc();
+      $('#loading').show();
+        if(result.status){
+          $('#loading').hide();
+          $('#judul').text(result.form.judul);
+          $('#form_id').val(result.form.id);
+          
+          foc();
+
+          var tableData = "";
+          var count = 1;
+          var count_all = 0;
+          $('#tableDetailBody').html("");
+
+          $.each(result.form_details, function(key, value) {
+            tableData += "<tr id='"+value.id+"''>";
+            tableData += "<td>"+count+"</td>";
+            tableData += "<td>"+value.employee_id+"</td>";
+            tableData += "<td>"+value.name+"</td>";
+            tableData += "<td>"+value.department+"</td>";
+            // tableData += "<td><button class='btn btn-danger btn-sm' id='"+value.id+"' onclick='deleteAudience(id)'><i class='fa fa-trash'></i></button></td>";
+            tableData += "</tr>";
+            count += 1;
+            count_all += 1;
+          });
+          $('#count_all').text(count_all);
+          $('#tableDetailBody').append(tableData);
+        }
+        else{
+          audio_error.play();
+          $('#loading').hide();
+          $('#modalDetail').modal('hide');
+          openErrorGritter('Error!', 'Attempt to retrieve data failed');
+        }
+
+      });
+  }
+
+
+  function fetchAttendance(id){
+    var data = {
+      id:id
+    }
+
+    $.get('{{ url("fetch/form_experience/attendance") }}', data, function(result, status, xhr) {
+        
+        if(result.status){
+          var tableData = "";
+          var count = 1;
+          var count_all = 0;
+          $('#tableDetailBody').html("");
+
+          $.each(result.form_details, function(key, value) {
+            tableData += "<tr id='"+value.id+"''>";
+            tableData += "<td>"+count+"</td>";
+            tableData += "<td>"+value.employee_id+"</td>";
+            tableData += "<td>"+value.name+"</td>";
+            tableData += "<td>"+value.department+"</td>";
+            tableData += "<td><button class='btn btn-danger btn-sm' id='"+value.id+"' onclick='deleteAudience(id)'><i class='fa fa-trash'></i></button></td>";
+            tableData += "</tr>";
+            count += 1;
+            count_all += 1;
+          });
+          $('#count_all').text(count_all);
+          $('#tableDetailBody').append(tableData);
+        }
+        else{
+          audio_error.play();
+          $('#loading').hide();
+          $('#modalDetail').modal('hide');
+          openErrorGritter('Error!', 'Attempt to retrieve data failed');
+        }
+
+      });
+  }
+
+
 
   Highcharts.createElement('link', {
     href: '{{ url("fonts/UnicaOne.css")}}',
@@ -728,6 +914,28 @@ td{
     };
     Highcharts.setOptions(Highcharts.theme);
   
+
+  function openSuccessGritter(title, message){
+    jQuery.gritter.add({
+      title: title,
+      text: message,
+      class_name: 'growl-success',
+      image: '{{ url("images/image-screen.png") }}',
+      sticky: false,
+      time: '3000'
+    });
+  }
+
+  function openErrorGritter(title, message) {
+    jQuery.gritter.add({
+      title: title,
+      text: message,
+      class_name: 'growl-danger',
+      image: '{{ url("images/image-stop.png") }}',
+      sticky: false,
+      time: '3000'
+    });
+  }
 
 </script>
 

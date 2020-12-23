@@ -3637,6 +3637,7 @@ Route::get('fetch/form_experience/chart', 'FormExperienceController@fetchChart')
 Route::get('fetch/form_experience/detail_chart', 'FormExperienceController@fetchDetailChart');
 
 Route::get('fetch/form_experience/attendance', 'FormExperienceController@fetchAttendance');
+Route::post('scan/form_experience/attendance', 'FormExperienceController@scanEmployee');
 
 
 //IP
