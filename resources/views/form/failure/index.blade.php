@@ -652,7 +652,6 @@ td{
             tableData += "<td>"+value.employee_id+"</td>";
             tableData += "<td>"+value.name+"</td>";
             tableData += "<td>"+value.department+"</td>";
-            // tableData += "<td><button class='btn btn-danger btn-sm' id='"+value.id+"' onclick='deleteAudience(id)'><i class='fa fa-trash'></i></button></td>";
             tableData += "</tr>";
             count += 1;
             count_all += 1;
@@ -690,7 +689,6 @@ td{
             tableData += "<td>"+value.employee_id+"</td>";
             tableData += "<td>"+value.name+"</td>";
             tableData += "<td>"+value.department+"</td>";
-            tableData += "<td><button class='btn btn-danger btn-sm' id='"+value.id+"' onclick='deleteAudience(id)'><i class='fa fa-trash'></i></button></td>";
             tableData += "</tr>";
             count += 1;
             count_all += 1;
