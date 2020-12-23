@@ -231,6 +231,11 @@
 						<a class="btn btn-primary btn-sm" style="width: 100%" href="{{ url("/index/audit_iso/check") }}">
 							<i class="fa fa-plus"></i>&nbsp;&nbsp;Point Check & Hasil Audit
 						</a>
+
+						<a class="btn btn-warning btn-sm" style="width: 100%;margin-top: 5px" 
+						href="{{ url("/index/audit_iso") }}"> 
+							<i class="fa fa-file"></i>&nbsp;&nbsp;CPAR Data
+						</a>
 						@endif
 
 					</div>

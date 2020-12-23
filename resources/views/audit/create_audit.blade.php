@@ -237,6 +237,7 @@
 						href="{{ url("/index/audit/point_check?category=") }}{{$_GET['category']}}"> 
 							<i class="fa fa-plus"></i>&nbsp;&nbsp;Point Check & Hasil Pelaksanaan Audit {{$_GET['category']}}
 						</a>
+
 						@endif
 
 					</div>
