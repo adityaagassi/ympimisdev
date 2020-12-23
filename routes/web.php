@@ -431,6 +431,12 @@ Route::group(['nav' => 'M31', 'middleware' => 'permission'], function(){
 Route::get('index/injection/traceability', 'InjectionsController@indexInjectionTraceability');
 Route::get('fetch/injection/traceability', 'InjectionsController@fetchInjectionTraceability');
 
+Route::get('index/injection/inventories', 'InjectionsController@indexInjectionInventories');
+Route::get('fetch/injection/inventories', 'InjectionsController@fetchInjectionInventories');
+
+Route::get('index/injection/transactions', 'InjectionsController@indexInjectionTransaction');
+Route::get('fetch/injection/transactions', 'InjectionsController@fetchInjectionTransaction');
+
 // end mesin injeksi
 
 Route::group(['nav' => 'R5', 'middleware' => 'permission'], function(){
@@ -1324,6 +1330,7 @@ Route::get('get/sakurentsu/3m', 'SakurentsuController@get_employee_sign');
 Route::post('post/sakurentsu/3m/sign', 'SakurentsuController@signing_tiga_em');
 
 Route::post('post/sakurentsu/3m/receive_std', 'SakurentsuController@receive_tiga_em');
+Route::get('index/sakurentsu/3m/implement/{id_three_m}', 'SakurentsuController@index_tiga_em_implement');
 
 //Supplier
 Route::get('index/supplier', 'AccountingController@master_supplier');
@@ -1587,10 +1594,18 @@ Route::post('fetch/warehouse/create_bukti', 'AccountingController@create_cetak_b
 Route::get('index/warehouse/report_bukti', 'AccountingController@bukti_penerimaan');
 Route::get('index/warehouse/report_bukti/{id}', 'AccountingController@cetak_bukti_penerimaan');
 
-//Invoice Check
+//Invoice Receive Report
 Route::get('invoice/receive_report', 'AccountingController@invoice_receive_report');
 Route::get('invoice/fetch_receive', 'AccountingController@invoice_fetch_receive');
+Route::get('invoice/fetch_receive_data', 'AccountingController@invoice_fetch_receive_data');
 Route::post('invoice/import_receive', 'AccountingController@invoice_import_receive');
+
+//Invoice Tanda Terima
+Route::get('invoice/tanda_terima', 'AccountingController@indexAgreement');
+Route::get('fetch/invoice/tanda_terima', 'AccountingController@fetchAgreement');
+Route::get('invoice/tanda_terima_detail', 'AccountingController@fetchAgreementDetail');
+Route::post('create/invoice/tanda_terima', 'AccountingController@createAgreement');
+Route::post('edit/invoice/tanda_terima', 'AccountingController@editAgreement');
 
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 	Route::get('scan/middle/kensa', 'MiddleProcessController@ScanMiddleKensa');
@@ -3620,6 +3635,9 @@ Route::get('index/form_experience/get_nama', 'FormExperienceController@get_nik')
 
 Route::get('fetch/form_experience/chart', 'FormExperienceController@fetchChart');
 Route::get('fetch/form_experience/detail_chart', 'FormExperienceController@fetchDetailChart');
+
+Route::get('fetch/form_experience/attendance', 'FormExperienceController@fetchAttendance');
+
 
 //IP
 Route::group(['nav' => 'S40', 'middleware' => 'permission'], function(){

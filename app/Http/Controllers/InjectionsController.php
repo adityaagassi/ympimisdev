@@ -6413,4 +6413,33 @@ class InjectionsController extends Controller
             return Response::json($response);
         }
     }
+
+    public function indexInjectionInventories()
+    {
+        $title = 'Injection Inventories';
+        $title_jp = '???';
+        return view('injection.inventory',array(
+            'title' => $title,
+            'title_jp' => $title_jp,
+        ))->with('page', 'Injection Inventories')->with('jpn', '???');
+    }
+
+    public function fetchInjectionInventories(Request $request)
+    {
+        try {
+            $data = InjectionInventory::select('*','injection_inventories.updated_at as update_inventories')->join('injection_parts','injection_parts.gmc','injection_inventories.material_number')->where('injection_parts.deleted_at',null)->get();
+
+            $response = array(
+                'status' => true,
+                'datas' => $data
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+            return Response::json($response);
+        }
+    }
 }
