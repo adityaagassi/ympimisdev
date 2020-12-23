@@ -57,7 +57,7 @@
 						<span class="info-box-icon bg-aqua" style="height: 75px;"><i class="fa fa-ship"></i></span>
 
 						<div class="info-box-content">
-							<span class="info-box-text">PLAN</span>
+							<span class="info-box-text">PLAN <span style="color: rgba(96, 92, 168);">計画</span></span>
 							<span class="info-box-number" style="font-size: 2vw;" id="total_plan"></span>
 						</div>
 					</div>
@@ -65,7 +65,7 @@
 						<span class="info-box-icon bg-green" style="height: 75px;"><i class="glyphicon glyphicon-ok"></i></span>
 
 						<div class="info-box-content">
-							<span class="info-box-text">CONFIRMED</span>
+							<span class="info-box-text">CONFIRMED <span style="color: rgba(96, 92, 168);">確保済み</span></span>
 							<span class="info-box-number" style="font-size: 2vw;" id="total_confirmed"></span>
 						</div>
 					</div>
@@ -73,7 +73,7 @@
 						<span class="info-box-icon" style="background-color: #455a64; color: white; height: 75px;"><i class="fa fa-exclamation-triangle"></i></span>
 
 						<div class="info-box-content">
-							<span class="info-box-text">REJECTED</span>
+							<span class="info-box-text">REJECTED <span style="color: rgba(96, 92, 168);">拒否</span></span>
 							<span class="info-box-number" style="font-size: 2vw;" id="total_rejected"></span>
 						</div>
 					</div>
@@ -81,7 +81,7 @@
 						<span class="info-box-icon bg-red" style="height: 75px;"><i class="glyphicon glyphicon-remove"></i></span>
 
 						<div class="info-box-content">
-							<span class="info-box-text">NOT CONFIRMED</span>
+							<span class="info-box-text">NOT CONFIRMED <span style="color: rgba(96, 92, 168);">未定</span></span>
 							<span class="info-box-number" style="font-size: 2vw;" id="total_not_confirmed"></span>
 						</div>
 					</div>
@@ -103,11 +103,11 @@
 					<table id="tableList" class="table table-bordered" style="width: 100%; font-size: 16px;">
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
-								<th style="width: 3%">DESTINATION</th>
-								<th style="width: 1%">PLAN</th>
-								<th style="width: 1%">CONFIRMED</th>
-								<th style="width: 1%">REJECTED</th>
-								<th style="width: 1%">NOT CONFIRMED</th>
+								<th style="width: 3%">DESTINATION<br><span style="color: purple;">仕向け地</span></th>
+								<th style="width: 1%">PLAN<br><span style="color: purple;">計画</span></th>
+								<th style="width: 1%">CONFIRMED<br><span style="color: purple;">確保済み</span></th>
+								<th style="width: 1%">REJECTED<br><span style="color: purple;">拒否</span></th>
+								<th style="width: 1%">NOT CONFIRMED<br><span style="color: purple;">未定</span></th>
 							</tr>
 						</thead>
 						<tbody id="tableBodyList">
@@ -318,10 +318,7 @@
 						type: 'column'
 					},
 					title: {
-						text: 'Shipping Booking Management List '
-					},
-					subtitle: {
-						text: result.month
+						text: 'Shipping Booking Management List ('+result.month+')<br><span style="color: rgba(96, 92, 168);">船便予約管理リスト 「'+result.year+'年 '+result.mon+'月」</span>'
 					},
 					xAxis: {
 						categories: date
