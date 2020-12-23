@@ -833,7 +833,7 @@
   </li>
   @endif
 
-  @if(in_array('S24', $navs))
+  @if(in_array('S51', $navs))
   @if(isset($page) && $page == "KD M-PRO")<li class="active">@else<li>@endif
     <a href="{{ url("index/kd_mpro/"."m-pro") }}"><i class="fa fa-pencil-square-o"></i> <span>KD  <i class="fa fa-angle-right"></i> M-PRO</span></a>
   </li>
