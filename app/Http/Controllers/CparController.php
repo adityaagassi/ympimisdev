@@ -1921,7 +1921,7 @@ class CparController extends Controller
 
         $audits->save();
 
-        $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.`group` = 'Standardization'";
+        $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.`group` = 'Standardization Group'";
         $mailtoo = DB::select($mails);
 
         $isimail = "select * FROM standarisasi_audits where standarisasi_audits.id = ".$audits->id;
