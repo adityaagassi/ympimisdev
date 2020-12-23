@@ -145,6 +145,7 @@
 							<table id="transactionTable" class="table table-bordered table-striped table-hover">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
+										<th style="width:5%;">Ref</th>
 										<th style="width:5%;">Material</th>
 										<th style="width:35%;">Description</th>
 										<th style="width:5%;">SLoc</th>
@@ -371,6 +372,7 @@
 				"data" : data
 			},
 			"columns": [
+			{ "data": "ref"},
 			{ "data": "material_number"},
 			{ "data": "material_description"},
 			{ "data": "issue_storage_location"},
