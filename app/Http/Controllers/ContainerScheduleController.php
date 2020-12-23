@@ -38,12 +38,12 @@ class ContainerScheduleController extends Controller{
             'SPOT/EXTRA RATE'
         ];
         $this->nomination = [
-         'MAIN',
-         'SUB',
-         'BACK UP',
-         'OTHER'
-     ];
- }
+           'MAIN',
+           'SUB',
+           'BACK UP',
+           'OTHER'
+       ];
+   }
     /**
      * Display a listing of the resource.
      *
@@ -470,7 +470,9 @@ class ContainerScheduleController extends Controller{
             'data' => $data,
             'ship_by_dates' => $ship_by_dates,
             'period' => $period,
-            'month' => $month
+            'month' => $month,
+            'mon' => date("n", strtotime($month)),
+            'year' => date("Y", strtotime($month))
         );
         return Response::json($response);  
     }
