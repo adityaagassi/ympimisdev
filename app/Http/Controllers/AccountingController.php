@@ -7836,8 +7836,6 @@ public function import_receive(Request $request){
             $file->move(public_path('uploads/receive/'), $file_name);
             $excel = public_path('uploads/receive/') . $file_name;
 
-                //podo lho padahal 
-
             $rows = Excel::load($excel, function($reader) {
                 $reader->noHeading();
                         //Skip Header
@@ -9223,26 +9221,26 @@ $data_investment_belum_po = db::select("
     submission_date ASC
     ");
 
-$data_investment_belum_receive = db::select("
-    SELECT
-    acc_investments.reff_number,
-    sum( CASE WHEN acc_purchase_order_details.`status` IS NULL THEN 1 ELSE 0 END ) AS belum_close,
-    sum( CASE WHEN acc_purchase_order_details.`status` IS NOT NULL THEN 1 ELSE 0 END ) AS sudah_close 
-    FROM
-    acc_investments
-    LEFT JOIN acc_investment_details ON acc_investments.reff_number = acc_investment_details.reff_number 
-    LEFT JOIN acc_purchase_order_details on acc_investment_details.reff_number = acc_purchase_order_details.no_pr 
-    and acc_investment_details.no_item = acc_purchase_order_details.no_item
-    WHERE
-    acc_investments.deleted_at IS NULL 
-    AND acc_investment_details.sudah_po IS NOT NULL 
-    AND acc_investments.receive_date IS NOT NULL
-    ".$dep." 
-    GROUP BY
-    reff_number 
-    ORDER BY
-    submission_date ASC
-    ");
+// $data_investment_belum_receive = db::select("
+//     SELECT
+//     acc_investments.reff_number,
+//     sum( CASE WHEN acc_purchase_order_details.`status` IS NULL THEN 1 ELSE 0 END ) AS belum_close,
+//     sum( CASE WHEN acc_purchase_order_details.`status` IS NOT NULL THEN 1 ELSE 0 END ) AS sudah_close 
+//     FROM
+//     acc_investments
+//     LEFT JOIN acc_investment_details ON acc_investments.reff_number = acc_investment_details.reff_number 
+//     LEFT JOIN acc_purchase_order_details on acc_investment_details.reff_number = acc_purchase_order_details.no_pr 
+//     and acc_investment_details.no_item = acc_purchase_order_details.no_item
+//     WHERE
+//     acc_investments.deleted_at IS NULL 
+//     AND acc_investment_details.sudah_po IS NOT NULL 
+//     AND acc_investments.receive_date IS NOT NULL
+//     ".$dep." 
+//     GROUP BY
+//     reff_number 
+//     ORDER BY
+//     submission_date ASC
+//     ");
 
 $year = date('Y');
 
@@ -9250,8 +9248,8 @@ $response = array(
     'status' => true,
     'datas' => $data,
     'year' => $year,
-    'data_investment_belum_po' => $data_investment_belum_po,
-    'data_investment_belum_receive' => $data_investment_belum_receive
+    'data_investment_belum_po' => $data_investment_belum_po
+    // 'data_investment_belum_receive' => $data_investment_belum_receive
 );
 
 return Response::json($response);

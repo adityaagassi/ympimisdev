@@ -187,7 +187,7 @@ hr { background-color: red; height: 1px; border: 0; }
               </table>
           </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-12">
             <div class="col-md-12" style="margin-top: 5px; padding:0 !important">
                 <div id="chartundone" style="width: 99%"></div>
             </div>
@@ -216,14 +216,14 @@ hr { background-color: red; height: 1px; border: 0; }
             </div>
           </div>
 
-          <div class="col-md-6">
+          <!-- <div class="col-md-6">
             <div class="col-md-12" style="margin-top: 5px; padding:0 !important">
                 <div id="chartActual" style="width: 99%"></div>
             </div>
 
-<!--             <div class="col-md-12" style="margin-top: 5px;background-color: #000;text-align: center;">
+            <div class="col-md-12" style="margin-top: 5px;background-color: #000;text-align: center;">
                 <span style="font-size: 24px;font-weight: bold;color: white">Outstanding Investment Belum PO (Per Item)</span>
-            </div> -->
+            </div>
 
             <div class="col-md-12" style="padding:0;">
               <table id="tabelmonitor" class="table table-bordered" style="margin-top: 5px; width: 99%">
@@ -244,7 +244,7 @@ hr { background-color: red; height: 1px; border: 0; }
                 </tfoot>
               </table>
             </div>
-          </div>
+          </div> -->
       </div>
     </div>
   </div>
@@ -447,13 +447,13 @@ hr { background-color: red; height: 1px; border: 0; }
             sudah_po.push(parseInt(value.sudah_po));
           })
 
-          $.each(result.data_investment_belum_receive, function(key, value) {
-            if (value.belum_close != 0) {
-              inv_close.push(value.reff_number);
-              belum_close.push(parseInt(value.belum_close));
-              sudah_close.push(parseInt(value.sudah_close));              
-            }
-          })
+          // $.each(result.data_investment_belum_receive, function(key, value) {
+          //   if (value.belum_close != 0) {
+          //     inv_close.push(value.reff_number);
+          //     belum_close.push(parseInt(value.belum_close));
+          //     sudah_close.push(parseInt(value.sudah_close));              
+          //   }
+          // })
 
           $('#chart').highcharts({
             chart: {
@@ -646,98 +646,98 @@ hr { background-color: red; height: 1px; border: 0; }
             ]
           })
 
-          $('#chartActual').highcharts({
-            chart: {
-              type: 'column',
-              height: 250
-            },
-            title: {
-              text: 'Outstanding Investment Sudah PO (Belum Receive)',
-              style: {
-                fontSize: '24px',
-                fontWeight: 'bold'
-              }
-            },
-            xAxis: {
-              type: 'category',
-              categories: inv_close,
-              lineWidth:2,
-              lineColor:'#9e9e9e',
-              gridLineWidth: 1
-            },
-            yAxis: {
-              lineWidth:2,
-              lineColor:'#fff',
-              type: 'linear',
-              title: {
-                enabled:false
-              },
-              tickInterval: 3,  
-              stackLabels: {
-                  enabled: true,
-                  style: {
-                      fontWeight: 'bold',
-                      color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
-                  }
-              }
-            },
-            legend: {
-              enabled:true,
-              reversed: true,
-              itemStyle:{
-                color: "white",
-                fontSize: "12px",
-                fontWeight: "bold",
+          // $('#chartActual').highcharts({
+          //   chart: {
+          //     type: 'column',
+          //     height: 250
+          //   },
+          //   title: {
+          //     text: 'Outstanding Investment Sudah PO (Belum Receive)',
+          //     style: {
+          //       fontSize: '24px',
+          //       fontWeight: 'bold'
+          //     }
+          //   },
+          //   xAxis: {
+          //     type: 'category',
+          //     categories: inv_close,
+          //     lineWidth:2,
+          //     lineColor:'#9e9e9e',
+          //     gridLineWidth: 1
+          //   },
+          //   yAxis: {
+          //     lineWidth:2,
+          //     lineColor:'#fff',
+          //     type: 'linear',
+          //     title: {
+          //       enabled:false
+          //     },
+          //     tickInterval: 3,  
+          //     stackLabels: {
+          //         enabled: true,
+          //         style: {
+          //             fontWeight: 'bold',
+          //             color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+          //         }
+          //     }
+          //   },
+          //   legend: {
+          //     enabled:true,
+          //     reversed: true,
+          //     itemStyle:{
+          //       color: "white",
+          //       fontSize: "12px",
+          //       fontWeight: "bold",
 
-              },
-            },
-            plotOptions: {
-              series: {
-                cursor: 'pointer',
-                point: {
-                  events: {
-                    click: function () {
-                      ShowModalActual(this.category,this.series.name,result.datefrom,result.dateto,result.department);
-                    }
-                  }
-                },
-                borderWidth: 0,
-                dataLabels: {
-                  enabled: false,
-                  format: '{point.y}'
-                }
-              },
-              column: {
-                  color:  Highcharts.ColorString,
-                  stacking: 'normal',
-                  borderRadius: 1,
-                  dataLabels: {
-                      enabled: true
-                  }
-              }
-            },
-            credits: {
-              enabled: false
-            },
+          //     },
+          //   },
+          //   plotOptions: {
+          //     series: {
+          //       cursor: 'pointer',
+          //       point: {
+          //         events: {
+          //           click: function () {
+          //             ShowModalActual(this.category,this.series.name,result.datefrom,result.dateto,result.department);
+          //           }
+          //         }
+          //       },
+          //       borderWidth: 0,
+          //       dataLabels: {
+          //         enabled: false,
+          //         format: '{point.y}'
+          //       }
+          //     },
+          //     column: {
+          //         color:  Highcharts.ColorString,
+          //         stacking: 'normal',
+          //         borderRadius: 1,
+          //         dataLabels: {
+          //             enabled: true
+          //         }
+          //     }
+          //   },
+          //   credits: {
+          //     enabled: false
+          //   },
 
-            tooltip: {
-              formatter:function(){
-                return this.series.name+' : ' + this.y;
-              }
-            },
-            series: [
-              {
-                name: 'Belum Datang',
-                color: '#ff6666', //ff6666
-                data: belum_close
-              },
-              {
-                name: 'Sudah Datang',
-                color: '#00a65a',
-                data: sudah_close
-              }
-            ]
-          })
+          //   tooltip: {
+          //     formatter:function(){
+          //       return this.series.name+' : ' + this.y;
+          //     }
+          //   },
+          //   series: [
+          //     {
+          //       name: 'Belum Datang',
+          //       color: '#ff6666', //ff6666
+          //       data: belum_close
+          //     },
+          //     {
+          //       name: 'Sudah Datang',
+          //       color: '#00a65a',
+          //       data: sudah_close
+          //     }
+          //   ]
+          // })
 
         } else{
           alert('Attempt to retrieve data failed');

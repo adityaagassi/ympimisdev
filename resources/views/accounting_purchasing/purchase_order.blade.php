@@ -1969,6 +1969,27 @@
       })
     }
 
+    function currency(elem){
+
+		var no = elem.id.match(/\d/g);
+		no = no.join("");
+
+		var mata_uang = $('#item_currency'+no).val();
+		var mata_uang_text = $('#item_currency_text'+no).val();
+
+		if (mata_uang == "USD") {
+			$('#ket_harga'+no).text("$");
+		}
+
+		else if (mata_uang == "IDR") {
+			$('#ket_harga'+no).text("Rp. ");		
+		}
+
+		else if (mata_uang == "JPY") {
+			$('#ket_harga'+no).text("¥");
+		}
+	}
+
     function editPR(id){
       var isi = "";
       $('#modalEditPR').modal("show");
@@ -2203,13 +2224,14 @@
         var prc = price.replace(/\D/g, ""); //get angka saja
 
         var qty = document.getElementById("qty"+num).value;
-          var hasil = parseInt(qty) * parseInt(prc); //Dikalikan qty
+          var hasil = parseInt(qty) * parseFloat(prc); //Dikalikan qty
 
           if (!isNaN(hasil)) {
 
 	            var amount = document.getElementById('amount'+num);
-	            amount.value = rubah(hasil);
-
+	            // amount.value = rubah(hasil);
+	            amount.value = hasil.toFixed(2);
+	            
 		        var mata_uang = $('#item_currency'+num).val();
 				var mata_uang_text = $('#item_currency_text'+num).val();
 
