@@ -13,8 +13,13 @@
 			text-align: center;
 		}
 
+		table.table > tbody > tr > td{
+			padding-top: 0px;
+			padding-bottom: 0px;
+		}
+
 		@page {
-			margin-top: 7%; 
+			margin-top: 26%; 
 			margin-bottom: 0px; 
 			vertical-align: middle;
 		}
@@ -46,7 +51,7 @@
 	<table class="table table-bordered">
 		<tbody>
 			<tr> 
-				<td colspan="3" class="material_description">{{ $shipment->material_description }}</td>
+				<td colspan="3" style="vertical-align: middle; text-align: center; height: 80px;" class="material_description">{{ $shipment->material_description }}</td>
 			</tr>
 
 			<tr>

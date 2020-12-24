@@ -42,6 +42,9 @@
 	}
 	table.table-bordered > tbody > tr > td{
 		border:1px solid rgb(211,211,211);
+		overflow: block;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 	}
 	table.table-bordered > tfoot > tr > th{
 		border:1px solid rgb(211,211,211);
@@ -88,8 +91,9 @@
 									<tr>
 										<th style="width: 15%;">Stuffing Date</th>
 										<th style="width: 10%;">Material</th>
-										<th style="width: 60%;">Description</th>
-										<th style="width: 10%;">Destination</th>
+										<th style="width: 55%;">Description</th>
+										<th style="width: 10%;">Dest.</th>
+										<th style="width: 5%;">Max Box</th>
 										<th style="width: 5%;">Total Target</th>
 										<th style="width: 5%;">Actual Packing</th>
 										<th style="width: 5%;">Sisa Target</th>
@@ -99,6 +103,7 @@
 								</tbody>
 								<tfoot style="background-color: rgb(252, 248, 227);">
 									<tr>
+										<th></th>
 										<th colspan="4" style="text-align:center;">Total:</th>
 										<th></th>
 										<th></th>
@@ -486,7 +491,7 @@
 			{ "data": "kd_number" },
 			{ "data": "actual_count" },
 			{ "data": "remark" },
-			{ "data": "detail_updated_at" },
+			{ "data": "updated_at" },
 			{ "data": "reprintKDO" }
 			// { "data": "deleteKDO" }
 			]
@@ -596,7 +601,7 @@
 		var material_number = $('#'+param).find('td').eq(1).text();
 		var material_description = $('#'+param).find('td').eq(2).text();
 		var destination = $('#'+param).find('td').eq(3).text();
-		var target = $('#'+param).find('td').eq(6).text();
+		var target = $('#'+param).find('td').eq(7).text();
 
 		$('#shipment_id').val(id);
 		$('#st_date').val(st_date);
@@ -644,6 +649,7 @@
 				tableData += '<td>'+ value.material_number +'</td>';
 				tableData += '<td>'+ value.material_description +'</td>';
 				tableData += '<td>'+ value.destination_shortname +'</td>';
+				tableData += '<td>'+ value.lot_carton +'</td>';
 				tableData += '<td>'+ value.quantity +'</td>';
 				tableData += '<td>'+ value.actual_quantity +'</td>';
 				tableData += '<td>'+ value.target +'</td>';
@@ -700,16 +706,16 @@
 						i : 0;
 					};
 					var api = this.api();
-					var totalPlan = api.column(4).data().reduce(function (a, b) {
+					var totalPlan = api.column(5).data().reduce(function (a, b) {
 						return intVal(a)+intVal(b);
 					}, 0)
-					$(api.column(4).footer()).html(totalPlan);
+					$(api.column(5).footer()).html(totalPlan);
 
 					var api = this.api();
-					var totalPlan = api.column(6).data().reduce(function (a, b) {
+					var totalPlan = api.column(7).data().reduce(function (a, b) {
 						return intVal(a)+intVal(b);
 					}, 0)
-					$(api.column(6).footer()).html(totalPlan);
+					$(api.column(7).footer()).html(totalPlan);
 				},
 				'paging': true,
 				'lengthChange': true,

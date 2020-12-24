@@ -536,7 +536,7 @@
 					var totalPlan = api.column(4).data().reduce(function (a, b) {
 						return intVal(a)+intVal(b);
 					}, 0)
-					$(api.column(4).footer()).html(totalPlan.toLocaleString());
+					$(api.column(4).footer()).html(totalPlan);
 				},
 				'paging': true,
 				'lengthChange': true,

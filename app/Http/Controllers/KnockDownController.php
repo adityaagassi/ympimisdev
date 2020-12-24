@@ -210,6 +210,12 @@ class KnockDownController extends Controller{
 		));
 		return $pdf->stream("label_".$shipment->material_number.".pdf");
 
+
+		// return view('kd.label.print_label_mpro', array(
+		// 	'shipment' => $shipment,
+		// 	'kd_number' => $kd_number
+		// ));
+
 	}
 
 	public function indexPrintLabelSubassy($id){
@@ -410,7 +416,13 @@ class KnockDownController extends Controller{
 			$shipment_progress = $shipment_progress->where('materials.hpl', '=', $hpl);
 		}
 
-		$shipment_progress = $shipment_progress->select('shipment_schedules.material_number', 'materials.material_description', 'destinations.destination_shortname', db::raw('sum(shipment_schedules.quantity) as plan'), db::raw('sum(shipment_schedules.actual_quantity) as actual'), db::raw('sum(shipment_schedules.actual_quantity)-sum(shipment_schedules.quantity) as diff'))
+		$shipment_progress = $shipment_progress->select(
+			'shipment_schedules.material_number',
+			'materials.material_description',
+			'destinations.destination_shortname',
+			db::raw('sum(shipment_schedules.quantity) as plan'),
+			db::raw('sum(shipment_schedules.actual_quantity) as actual'),
+			db::raw('sum(shipment_schedules.actual_quantity)-sum(shipment_schedules.quantity) as diff'))
 		->groupBy('shipment_schedules.material_number', 'materials.material_description', 'destinations.destination_shortname')
 		->get();
 
@@ -1630,6 +1642,7 @@ class KnockDownController extends Controller{
 			sh.actual_quantity,
 			( sh.quantity - sh.actual_quantity ) AS target,
 			v.lot_completion,
+			v.lot_carton,
 			(( sh.quantity - sh.actual_quantity ) / v.lot_completion ) AS box 
 			FROM shipment_schedules sh
 			LEFT JOIN materials m ON m.material_number = sh.material_number
@@ -1650,20 +1663,66 @@ class KnockDownController extends Controller{
 
 	public function fetchCheckKd(Request $request){
 
-		$knock_down = KnockDownDetail::where('shipment_schedule_id', $request->get('shipment_schedule_id'))->first();
+		$shipment = ShipmentSchedule::leftJoin('material_volumes', 'material_volumes.material_number', '=', 'shipment_schedules.material_number')
+		->where('shipment_schedules.id', $request->get('shipment_schedule_id'))
+		->where('shipment_schedules.actual_quantity', '>',  0)
+		->select(
+			'shipment_schedules.st_date',
+			'shipment_schedules.material_number',
+			'shipment_schedules.st_date',
+			'shipment_schedules.actual_quantity',
+			'material_volumes.lot_carton'
+		)
+		->first();
 
-		if($knock_down){
-			$response = array(
-				'status' => true,
-				'kd_number' => $knock_down->kd_number,
-			);
-			return Response::json($response);
-		}else{
-			$response = array(
-				'status' => false
-			);
-			return Response::json($response);
+		if($shipment){
+			if($shipment->lot_carton > 0){
+				$mod = $shipment->actual_quantity % $shipment->lot_carton;
+				$knock_down = KnockDownDetail::where('shipment_schedule_id', $request->get('shipment_schedule_id'))
+				->orderBy('created_at', 'DESC')
+				->first();
+
+				if($mod > 0){
+					$response = array(
+						'status' => true,
+						'kd_number' => $knock_down->kd_number,
+					);
+					return Response::json($response);
+				}else{
+					$knock_down = KnockDown::where('kd_number', $knock_down->kd_number)->first();
+					$knock_down->status = 1;
+
+					$knock_down_log = KnockDownLog::updateOrCreate(
+						['kd_number' => $knock_down->kd_number, 'status' => 1],
+						['created_by' => Auth::id(), 'status' => 1, 'updated_at' => Carbon::now()]
+					);
+
+					try {
+						DB::transaction(function() use ($knock_down, $knock_down_log){
+							$knock_down->save();
+							$knock_down_log->save();
+						});
+
+						$response = array(
+							'status' => false
+						);
+						return Response::json($response);
+
+					} catch (Exception $e) {
+						$response = array(
+							'status' => false
+						);
+						return Response::json($response);
+					}
+				}
+			}
 		}
+
+		$response = array(
+			'status' => false
+		);
+		return Response::json($response);
+		
 	}
 
 	public function fetchKdPack($id){

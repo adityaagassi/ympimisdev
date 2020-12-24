@@ -281,11 +281,10 @@
 	}
 
 	function fillTableDetail(){
-		var location = "{{ $location }}";
 
 		var data = {
-			status : 1,
-			remark : location
+			status : 0,
+			remark : "{{ $location }}"
 		}
 
 		$('#kdo_detail tfoot th').each( function () {
@@ -526,12 +525,12 @@
 					var totalPlan = api.column(5).data().reduce(function (a, b) {
 						return intVal(a)+intVal(b);
 					}, 0)
-					$(api.column(5).footer()).html(totalPlan.toLocaleString());
+					$(api.column(5).footer()).html(totalPlan);
 
 					var totalPlan = api.column(7).data().reduce(function (a, b) {
 						return intVal(a)+intVal(b);
 					}, 0)
-					$(api.column(7).footer()).html(totalPlan.toLocaleString());
+					$(api.column(7).footer()).html(totalPlan);
 				},
 				'paging': true,
 				'lengthChange': true,
