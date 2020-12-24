@@ -10,6 +10,6 @@ class MaintenancePlanItemCheck extends Model
     Use SoftDeletes;
 
     protected $fillable = [
-    	'item_code', 'part_check', 'itm_check', 'period', 'check', 'check_value', 'check_after', 'photo_before', 'photo_after', 'remark', 'created_by'
+    	'id','item_code', 'itm_check', 'period', 'check', 'check_value', 'check_after', 'photo_before', 'photo_after', 'remark', 'created_by'
     ];
 }

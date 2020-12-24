@@ -425,6 +425,42 @@
 
 							<!-- <button class="btn btn-success pull-right" id="btn_open" onclick="open_spk()">OPEN SPK</button> -->
 						</div>
+
+						<div class="col-xs-12" style="display: none" id="pending_vendor">
+							<div class="form-group row" align="right">
+								<label class="col-xs-2" style="margin-top: 1%;">Nama Vendor<span class="text-red">*</span></label>
+								<div class="col-xs-6">
+									<input type="text" class="form-control" placeholder="Isikan Nama Vendor Terkait" id="vendor_name">
+								</div>
+							</div>
+
+							<div class="form-group row" align="right">
+								<label class="col-xs-2" style="margin-top: 1%;">Nomor PO<span class="text-red">*</span></label>
+								<div class="col-xs-3">
+									<input type="text" class="form-control" placeholder="Isikan Nomor PO Vendor" id="vendor_po">
+								</div>
+							</div>
+
+							<div class="form-group row" align="right">
+								<label class="col-xs-2" style="margin-top: 1%;">Plan<span class="text-red">*</span></label>
+								<div class="col-xs-2">
+									<input type="text" class="form-control" placeholder="Plan Start Kerja" id="vendor_start">
+								</div>
+
+								<div class="col-xs-1" style="padding: 0px; text-align: center;">&rarr;</div>
+
+								<div class="col-xs-2">
+									<input type="text" class="form-control" placeholder="Plan Finish Kerja" id="vendor_finish">
+								</div>
+							</div>
+
+							<div class="form-group row" align="right">
+								<div class="col-xs-12">
+									<button class="btn btn-success pull-right" id="vendor_close" style="margin-right: 20px" onclick="close_vendor()"><i class="fa fa-check"></i> Close SPK</button>
+								</div>
+							</div>
+						</div>
+
 						<div class="col-xs-12"><hr style="margin-top: 10px; margin-bottom: 10px"></div>
 						<div id="approval">
 							<div class="col-xs-12">
@@ -568,6 +604,18 @@
 		$('#pic_ubah').select2({
 			// dropdownAutoWidth : true,
 			dropdownParent: $(".class_pic_ubah")
+		});
+
+		$('#vendor_start').datepicker({
+			autoclose: true,
+			format: "yyyy-mm-dd",
+			todayHighlight: true
+		});
+		
+		$('#vendor_finish').datepicker({
+			autoclose: true,
+			format: "yyyy-mm-dd",
+			todayHighlight: true
 		});
 	})
 
@@ -767,7 +815,6 @@
 	}
 
 	function showJobModal(order_no) {
-		$("#detailModal").modal("show");
 		$("#pic_member").empty();
 		$("#pic_member2").empty();
 		counter = 1;
@@ -779,6 +826,7 @@
 		}
 
 		$.get('{{ url("fetch/maintenance/detail") }}', data,  function(result, status, xhr){
+			$("#detailModal").modal("show");
 			$("#spk_detail").val(result.detail[0].order_no);
 			$("#pengaju_detail").val(result.detail[0].name);
 			$("#tanggal_detail").val(result.detail[0].date);
@@ -809,7 +857,10 @@
 			$("#prog").empty();
 			$("#pending").empty();
 
-			if (result.detail[0].process_name == "Pending") {
+			if (result.detail[0].process_name == "Pending" && result.detail[0].status == "Vendor") {
+				$("#open_session").hide();
+				$("#pending_vendor").show();
+			} else if(result.detail[0].process_name == "Pending" && result.detail[0].status != "Vendor") {
 				$("#open_session").show();
 			} else {
 				$("#open_session").hide();
@@ -838,7 +889,7 @@
 
 					progress += '<div class="col-xs-3 '+col+'" align="left"><input type="text" name="prog_name_'+index+'" id="prog_name_'+index+'" class="form-control" value="'+value.name_op+'" readonly></div>';
 					progress += '<div class="col-xs-2" align="left" style="padding-right: 0px"><input type="text" name="prog_start_'+index+'" id="prog_start_'+index+'"class="form-control" value="'+value.start_actual+'" readonly></div>';
-					progress += '<div class="col-xs-1" style="padding: 0px"><center><b> ~ </b></center></div>';
+					progress += '<div class="col-xs-1" style="padding: 0px"><center><b> &rarr; </b></center></div>';
 					progress += '<div class="col-xs-2" align="left" style="padding-left: 0px"><input type="text" name="prog_finish_'+index+'" name="prog_finish_'+index+'" class="form-control" value="'+(value.finish_actual || '' )+'" readonly></div>';
 
 					photo = value.photo;
@@ -932,7 +983,7 @@ function job_ok() {
 			'start_date': $('#start_date_'+ids).val(),
 			'start_time': format_two_digits($('#start_time_'+ids).val().split(':')[0])+":"+ $('#start_time_'+ids).val().split(':')[1],
 			'finish_date': $('#finish_date_'+ids).val(),
-			'finish_time': format_two_digits($('#finish_time_'+ids).val().split(':')[0])+":"+ $('#finish_time_'+ids).val().split(':')[1],	
+			'finish_time': format_two_digits($('#finish_time_'+ids).val().split(':')[0])+":"+ $('#finish_time_'+ids).val().split(':')[1]
 		});
 	});
 
@@ -1106,6 +1157,33 @@ function format_two_digits(n) {
 
 function pad(numb) {
 	return (numb < 10 ? '0' : '') + numb;
+}
+
+function close_vendor() {
+	var spk_number = $("#spk_detail").val();
+	var vendor_name = $("#vendor_name").val();
+	var vendor_po = $("#vendor_po").val();
+
+	var vendor_start = $("#vendor_start").val();
+	var vendor_finish = $("#vendor_finish").val();
+
+	var data = {
+		spk_number : spk_number,
+		vendor_name : vendor_name,
+		vendor_po : vendor_po,
+		vendor_start : vendor_start,
+		vendor_finish : vendor_finish
+	}
+
+	$.post('{{ url("post/maintenance/spk/pending/vendor/action") }}', data,  function(result, status, xhr){
+		if (result.status) {
+			openSuccessGritter('Success', 'Success Close SPK by Vendor');
+			$("#detailModal").modal('hide');
+			fillTable();
+		} else {
+			openErrorGritter('Error');
+		}
+	})
 }
 
 function openSuccessGritter(title, message){

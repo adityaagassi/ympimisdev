@@ -669,7 +669,8 @@ class MaintenanceController extends Controller
 				// ->bcc(['aditya.agassi@music.yamaha.com', 'nasiqul.ibat@music.yamaha.com'])
 				// ->send(new SendEmail($data, 'chemical_spk'));
 
-					Mail::to(['nasiqul.ibat@music.yamaha.com'])
+					Mail::to(['rizal.yohandhi@music.yamaha.com', 'whica.parama@music.yamaha.com'])
+					->cc(['aditya.agassi@music.yamaha.com', 'nasiqul.ibat@music.yamaha.com'])
 					->send(new SendEmail($data, 'chemical_spk'));
 				}
 			}
@@ -1061,7 +1062,7 @@ class MaintenanceController extends Controller
 		// $spk->note = "Chemical_OK Manager_None";
 
 		$chemical = EmployeeSync::whereNull('group')
-		->where('section', '=', 'Chemical Process Control')
+		->where('section', '=', 'Chemical Process Control Section')
 		->first();
 
 		$spk_log = new MaintenanceJobOrderLog([

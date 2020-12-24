@@ -63,7 +63,7 @@
 		</li>
 		<li>
 			<?php 
-			if (strpos(strtolower($employee->position), 'operator') !== false || strpos(strtolower($employee->position), 'sub') !== false) {
+			if (strpos(strtolower($employee->position), 'operator') !== false) {
 				// echo $employee->position;
 			} else {
 				echo '<a data-toggle="modal" data-target="#createModal" class="btn btn-success btn-md" style="color:white"><i class="fa fa-plus"></i>Buat SPK Baru</a>';
@@ -78,6 +78,12 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">	
 	<div class="col-md-12" style="padding-top: 10px;">
+		<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+			<p style="position: absolute; color: White; top: 45%; left: 35%;">
+				<span style="font-size: 40px">Loading, Mohon tunggu...<i class="fa fa-spin fa-refresh"></i></span>
+			</p>
+		</div>
+
 		<div class="row">
 			<table id="masterTable" class="table table-bordered table-striped table-hover">
 				<thead style="background-color: rgba(126,86,134,.7);">
@@ -190,7 +196,6 @@
 								</div>
 								<div class="col-xs-6">
 									<select class="form-control select3" id="bahaya" name="bahaya[]" data-placeholder="Pilih Bahaya yang Mungkin Terjadi" multiple="multiple" required>
-										<option></option>
 										<option>Bahan Kimia Beracun</option>
 										<option>Tersengat Listrik</option>
 										<option>Terjepit</option>
@@ -845,6 +850,7 @@
 		}
 
 		$("#create_btn").attr("disabled", true);
+		$("#loading").show();
 
 		e.preventDefault();
 		var formData = new FormData(this);
@@ -861,6 +867,7 @@
 					$('#createModal').modal('hide');
 					$("#create_btn").attr("disabled", false);
 					openSuccessGritter("Success", result.message);
+					$("#loading").hide();
 					$("#createForm")[0].reset();
 					$('#prioritas').prop('selectedIndex', 0).change();
 					$('#kondisi_mesin').prop('selectedIndex', 0).change();
@@ -872,6 +879,7 @@
 					get_data("all");
 				} else {
 					$("#create_btn").prop("disabled", false);
+					$("#loading").hide();
 					openErrorGritter("Error", result.message);
 				}
 			},

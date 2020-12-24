@@ -10,6 +10,6 @@ class MaintenanceJobPending extends Model
 	Use SoftDeletes;
 
 	protected $fillable = [
-		'order_no', 'status', 'remark', 'description', 'created_by'
+		'order_no', 'status', 'remark', 'description','time', 'created_by'
 	];
 }
