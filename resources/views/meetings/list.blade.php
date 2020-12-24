@@ -195,6 +195,7 @@
 	});
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+	var audio_ok = new Audio('{{ url("sounds/sukses.mp3") }}');
 
 	function foc(){
 		$('#tag').focus();
@@ -222,12 +223,14 @@
 
 		$.post('{{ url("scan/meeting/attendance") }}', data, function(result, status, xhr){
 			if(result.status){
+				audio_ok.play();
 				$('#tag').val("");
 				$('#tag').focus();
 				fetchAttendance(meeting_id);
 				openSuccessGritter('Success!', result.message);
 			}
 			else{
+				audio_error.play();
 				$('#tag').val("");
 				$('#tag').focus();
 				openErrorGritter('Error!', result.message);
