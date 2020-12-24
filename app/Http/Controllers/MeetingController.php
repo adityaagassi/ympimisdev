@@ -404,12 +404,14 @@ class MeetingController extends Controller
 	public function editMeeting(Request $request){
 		$meeting = Meeting::find($request->get('id'));
 
-		if(Auth::user()->username != $meeting->organizer_id){
-			$response = array(
-				'status' => false,
-				'message' => "You don't have permission"
-			);
-			return Response::json($response);
+		if(Auth::user()->role_code != 'MIS'){
+			if(Auth::user()->username != $meeting->organizer_id){
+				$response = array(
+					'status' => false,
+					'message' => "You don't have permission"
+				);
+				return Response::json($response);
+			}
 		}
 
 		try{
@@ -463,12 +465,14 @@ class MeetingController extends Controller
 					return Response::json($response);
 				}
 
-				if(Auth::user()->username != $meeting->organizer_id){
-					$response = array(
-						'status' => false,
-						'message' => "You don't have permission"
-					);
-					return Response::json($response);
+				if(Auth::user()->role_code != 'MIS'){
+					if(Auth::user()->username != $meeting->organizer_id){
+						$response = array(
+							'status' => false,
+							'message' => "You don't have permission"
+						);
+						return Response::json($response);
+					}
 				}
 				$delete->delete();
 
@@ -491,12 +495,15 @@ class MeetingController extends Controller
 			$delete = Meeting::where('meetings.id', '=', $request->get('id'))
 			->first();
 
-			if(Auth::user()->username != $delete->organizer_id){
-				$response = array(
-					'status' => false,
-					'message' => "You don't have permission"
-				);
-				return Response::json($response);
+
+			if(Auth::user()->role_code != 'MIS'){
+				if(Auth::user()->username != $delete->organizer_id){
+					$response = array(
+						'status' => false,
+						'message' => "You don't have permission"
+					);
+					return Response::json($response);
+				}
 			}
 
 			$delete2 = MeetingDetail::where('meeting_details.meeting_id', '=', $delete->id)
