@@ -1901,6 +1901,11 @@ Route::get('fetch/middle/report_buffing_operator_time', 'MiddleProcessController
 Route::get('fetch/middle/report_buffing_operator_time_qty', 'MiddleProcessController@fetchReportOpTimeQty');
 Route::get('index/middle/report_buffing_canceled_log', 'MiddleProcessController@indexReportBuffingCancelled');
 Route::get('fetch/middle/report_buffing_canceled_log', 'MiddleProcessController@fetchReportBuffingCancelled');
+Route::get('index/middle/report_buffing_traing_ng_operator', 'MiddleProcessController@indexReportTrainingOpNg');
+Route::get('fetch/middle/report_buffing_traing_ng_operator', 'MiddleProcessController@fetchReportTrainingOpNg');
+Route::get('index/middle/report_buffing_traing_eff_operator', 'MiddleProcessController@indexReportTrainingOpEFf');
+Route::get('fetch/middle/report_buffing_traing_eff_operator', 'MiddleProcessController@fetchReportTrainingOpEff');
+
 
 //Display Buffing
 Route::get('fetch/middle/buffing_hourly_ng', 'MiddleProcessController@fetchBuffingHourlyNg');

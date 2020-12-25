@@ -67,8 +67,8 @@
 			<a href="{{ url("index/middle/buffing_ng") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">NG Rate</a>
 			<a href="{{ url("index/middle/buffing_op_ranking?bulan=&target=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Resume NG Rate & Productivity</a>
 			<a href="{{ url("index/middle/buffing_trend_op_eff") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Daily Operator Trends</a>
-			<a href="{{ secure_url("index/middle/buffing_op_ng?tanggal=&group=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">NG Rate by Operator</a>
-			<a href="{{ secure_url("index/middle/buffing_op_eff?tanggal=&group=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Operator Overall Efficiency</a>
+			<a href="{{ url("index/middle/buffing_op_ng?tanggal=&group=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">NG Rate by Operator</a>
+			<a href="{{ url("index/middle/buffing_op_eff?tanggal=&group=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Operator Overall Efficiency</a>
 			<a href="{{ url("index/middle/buffing_group_achievement") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Group Achievement</a>
 			<a href="{{ url("index/middle/buffing_group_balance") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Group Work Balance</a>
 			<a href="{{ url("index/middle/buffing_operator_assesment") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Operator Evaluation</a>
@@ -87,6 +87,8 @@
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Report Buffing <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/middle/report_buffing_ng?bulan=&fy=&hpl=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Resume</a>
 			<a href="{{ url("index/middle/report_buffing_operator_time") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Operator Time</a>
+			<a href="{{ url("index/middle/report_buffing_traing_ng_operator") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Training NG Operator</a>
+			<a href="{{ url("index/middle/report_buffing_traing_eff_operator") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Training Efficiency Operator</a>
 			<a href="{{ url("index/middle/report_buffing_canceled_log") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Buffing Canceled Log</a>
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Report Barrel<i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/report_middle", "slip-fulfillment") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">ID Slip Fulfillment</a>

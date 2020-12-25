@@ -168,6 +168,25 @@ class MiddleProcessController extends Controller
 		))->with('page', 'Operator Buffing Time');
 	}
 
+	public function indexReportTrainingOpNg(){
+		$title = 'Buffing Training NG Operator';
+		$title_jp = '';
+
+		return view('processes.middle.report.training_ng_operator', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+		))->with('page', 'Operator Buffing Time');
+	}
+
+	public function indexReportTrainingOpEff(){
+		$title = 'Buffing Training Efficiency Operator';
+		$title_jp = '';
+
+		return view('processes.middle.report.training_eff_operator', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+		))->with('page', 'Operator Buffing Time');
+	}
 
 	public function indexBuffingAdjustment(){
 		$title = 'Saxophone Buffing Adjustment';
@@ -1192,6 +1211,67 @@ class MiddleProcessController extends Controller
 		return DataTables::of($data)->make(true);
 	}
 
+	public function fetchReportTrainingOpNg(Request $request){
+		$tanggal = "";
+		if(strlen($request->get('datefrom')) > 0){
+			$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+			$tanggal = "and date(check_time) >= '".$datefrom."' ";
+			if(strlen($request->get('dateto')) > 0){
+				$dateto = date('Y-m-d', strtotime($request->get('dateto')));
+				$tanggal = $tanggal."and date(check_time) <= '".$dateto."' ";
+			}
+		}
+
+		$data = db::select("SELECT ng.operator_id, op.`name` AS operator, ng.material_number, m.model, m.`key`, ng.ng, ng.buffing_time, trainer.`name` AS trainer, kensa.`name` AS op_kensa FROM
+			(SELECT employee_id, tag, material_number, operator_id, `check`, buffing_time, GROUP_CONCAT(ng_name, '[',quantity,']',' ') AS ng FROM middle_ng_logs
+			WHERE location = 'bff-kensa'
+			AND check_time IS NOT NULL
+			".$tanggal."
+			GROUP BY employee_id, tag, material_number, operator_id, `check`, buffing_time) AS ng
+			LEFT JOIN materials m ON m.material_number = ng.material_number
+			LEFT JOIN employees op ON op.employee_id = ng.operator_id
+			LEFT JOIN employees kensa ON kensa.employee_id = ng.employee_id
+			LEFT JOIN users trainer ON trainer.id = ng.`check`
+			ORDER BY ng.buffing_time ASC");
+
+		return DataTables::of($data)->make(true);
+	}
+
+	public function fetchReportTrainingOpEff(Request $request){
+		$tanggal = "";
+		if(strlen($request->get('datefrom')) > 0){
+			$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+			$tanggal = "and date(check_time) >= '".$datefrom."' ";
+			if(strlen($request->get('dateto')) > 0){
+				$dateto = date('Y-m-d', strtotime($request->get('dateto')));
+				$tanggal = $tanggal."and date(check_time) <= '".$dateto."' ";
+			}
+		}
+
+		$data = db::connection('digital_kanban')->select("SELECT l.operator_id,
+			op.`name`,
+			l.material_number,
+			m.`key`, m.model,
+			std.time,
+			l.sedang_start_time,
+			l.selesai_start_time,
+			ROUND((std.time * l.material_qty/60),2) AS std,
+			ROUND((TIMESTAMPDIFF(SECOND,l.sedang_start_time,l.selesai_start_time)/60),2) AS actual,
+			ROUND(((std.time * l.material_qty/60)/(TIMESTAMPDIFF(SECOND,l.sedang_start_time,l.selesai_start_time)/60)*100),2) AS eff,
+			trainer.`name` AS trainer
+			FROM data_log l
+			LEFT JOIN ympimis.materials m ON m.material_number = l.material_number
+			LEFT JOIN standard_times std ON std.material_number = l.material_number
+			LEFT JOIN ympimis.employees op ON op.employee_id = l.operator_id
+			LEFT JOIN ympimis.users trainer ON trainer.id = l.`check`
+			WHERE check_time IS NOT NULL
+			".$tanggal."
+			ORDER BY l.sedang_start_time ASC");
+
+		return DataTables::of($data)->make(true);
+	}
+
+
 	public function fetchReportOpTimeQty(Request $request){
 		$tanggal = "";
 		if(strlen($request->get('datefrom')) > 0){
@@ -1507,11 +1587,16 @@ class MiddleProcessController extends Controller
 				$dateto = date('Y-m-d', strtotime($request->get('dateto')));
 			}
 
-			$act = db::connection('digital_kanban')->select("select d.operator_id, DATE(d.selesai_start_time) as tgl, SUM(TIMESTAMPDIFF(MINUTE,d.sedang_start_time,d.selesai_start_time)) as act, SUM((s.time*d.material_qty))/60 as std from data_log d
+			$act = db::connection('digital_kanban')->select("SELECT prod.operator_id, e.`name`, AVG(prod.act) as act, AVG(prod.std) as std FROM 
+				(select d.operator_id, DATE(d.selesai_start_time) as tgl, SUM(TIMESTAMPDIFF(MINUTE,d.sedang_start_time,d.selesai_start_time)) as act, SUM((s.time*d.material_qty))/60 as std from data_log d
 				left join standard_times s on s.material_number = d.material_number
 				where DATE_FORMAT(d.selesai_start_time,'%Y-%m-%d') between '".$datefrom."' and '".$dateto."'
+				and d.operator_id not like '%PG%'
 				GROUP BY d.operator_id, tgl
-				HAVING act > 60");
+				HAVING act > 60) prod
+				LEFT JOIN ympimis.employees e ON e.employee_id = prod.operator_id
+				GROUP BY prod.operator_id, e.`name`
+				ORDER BY std DESC");
 		}else{
 			if(strlen($request->get('bulan')) > 0){
 				$bulan = $request->get('bulan');
