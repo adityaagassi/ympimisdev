@@ -948,6 +948,11 @@ class MiddleProcessController extends Controller
 			->where('employee_id', '=', $request->get('employee_id'))
 			->delete();
 
+			$delete_op = DB::connection('digital_kanban')
+			->table('employee_groups')
+			->where('employee_id', '=', $request->get('employee_id'))
+			->delete();
+
 			$response = array(
 				'status' => true,
 				'message' => 'update successful',	
