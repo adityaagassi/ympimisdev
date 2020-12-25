@@ -202,7 +202,8 @@
 						<table id="store_detail" class="table table-bordered table-striped table-hover" style="width: 100%;">
 							<thead style="background-color: rgba(126,86,134,.7);">
 								<tr>
-									<th style="width: 5%">Group</th>
+									<th style="width: 5%">ID</th>
+									<th style="width: 10%">Group</th>
 									<th style="width: 10%">Location</th>
 									<th style="width: 20%">Store</th>
 									<th style="width: 20%">SubStore</th>
@@ -211,13 +212,14 @@
 									<th style="width: 30%">Material Description</th>
 									<th style="width: 5%">UOM</th>
 									<th style="width: 10%">Print Status</th>
-									<th style="width: 10%">Check</th>		
+									<th style="width: 5%">Check</th>		
 								</tr>
 							</thead>
 							<tbody id="store_detail_body">
 							</tbody>
 							<tfoot>
 								<tr>
+									<th></th>
 									<th></th>
 									<th></th>
 									<th></th>
@@ -744,6 +746,7 @@
 				for (var i = 0; i < result.data.length; i++) {
 
 					body += '<tr id="tr+'+result.data[i].id+'">';
+					body += '<td onClick="countPicked(this)" id="td0+'+result.data[i].id+'">ST_'+result.data[i].id+'</td>';
 					body += '<td onClick="countPicked(this)" id="td1+'+result.data[i].id+'">'+result.data[i].group+'</td>';
 					body += '<td onClick="countPicked(this)" id="td2+'+result.data[i].id+'">'+result.data[i].location+'</td>';
 					body += '<td onClick="countPicked(this)" id="td3+'+result.data[i].id+'">'+result.data[i].store+'</td>';
@@ -754,9 +757,9 @@
 					body += '<td onClick="countPicked(this)" id="td7+'+result.data[i].id+'">'+result.data[i].uom+'</td>';
 
 					if(result.data[i].print_status == 0){
-						body += '<td onClick="countPicked(this)" id="td8+'+result.data[i].id+'" style="font-size: 1vw;"><span class="label label-primary">PRINT</span></td>';
+						body += '<td style="background-color: #ff1744;" id="td8+'+result.data[i].id+'">Belum Cetak</td>';
 					}else{
-						body += '<td onClick="countPicked(this)" id="td9+'+result.data[i].id+'" style="font-size: 1vw;"><span class="label label-info">REPRINT</span></td>';
+						body += '<td style="background-color: #ffea00;" id="td8+'+result.data[i].id+'">Sudah Cetak</td>';
 					}
 
 					if(result.data[i].print_status == 0){

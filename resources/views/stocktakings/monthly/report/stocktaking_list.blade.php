@@ -157,6 +157,7 @@
 							<table id="resumeTable" class="table table-bordered table-striped table-hover">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
+										<th style="width: 1%">ID</th>
 										<th style="width: 1%">Area</th>
 										<th style="width: 2%">Store</th>
 										<th style="width: 2%">Sub Store</th>
@@ -485,6 +486,7 @@
 
 				$.each(result.stocktaking_lists, function(key, value){
 					dataTable += '<tr id="'+value.id+'">';
+					dataTable += '<td>ST_'+value.id+'</td>';
 					dataTable += '<td>'+value.area+'</td>';
 					dataTable += '<td>'+value.sub_store+'</td>';
 					dataTable += '<td>'+value.store+'</td>';
@@ -497,17 +499,20 @@
 						dataTable += '<td style="background-color: #ff1744;">Belum Cetak</td>';
 					}
 					else if(value.print_status == 1){
-						dataTable += '<td style="background-color: #ffea00;">Sudah Cetak</td>';
+						if(value.process == 0){
+							dataTable += '<td style="background-color: #ffea00;">Sudah Cetak</td>';
+						}
+						else if(value.process == 1){
+							dataTable += '<td style="background-color: #76ff03;">Sudah Input</td>';
+						}
+						else if(value.process == 2){
+							dataTable += '<td style="background-color: #00e5ff;">Sudah Audit</td>';
+						}
+						else if(value.process == 4){
+							dataTable += '<td style="background-color: #d500f9;">Sudah Breakdown</td>';
+						}
 					}
-					else if(value.process == 1){
-						dataTable += '<td style="background-color: #76ff03;">Sudah Input</td>';
-					}
-					else if(value.process == 2){
-						dataTable += '<td style="background-color: #00e5ff;">Sudah Audit</td>';
-					}
-					else if(value.process == 4){
-						dataTable += '<td style="background-color: #d500f9;">Sudah Breakdown</td>';
-					}
+					
 					dataTable += '<td>';
 					dataTable += '<button onCLick="editList(\''+value.id+'\''+','+'\''+value.store+'\''+','+'\''+value.sub_store+'\''+','+'\''+value.material_number+'\''+','+'\''+value.location+'\''+','+'\''+value.category+'\')" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i></button>&nbsp;';
 					dataTable += '<button onCLick="deleteList('+value.id+')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>';				
