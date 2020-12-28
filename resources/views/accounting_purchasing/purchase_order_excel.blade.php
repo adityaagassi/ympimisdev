@@ -56,6 +56,7 @@
                 <th style="background-color: #ffeb3b;color: #f44336">Batch</th>
                 <th style="background-color: #ffeb3b;color: #f44336">Reqmnt No</th>
                 <th style="background-color: #ffeb3b;color: #f44336">Requisitioner</th>
+                <th>Material</th>
             </tr>
         </thead>
         <tbody>
@@ -155,6 +156,7 @@
                     <?= substr($po->no_po,1,8); ?><?= substr($po->no_po,10,2); ?>
                 </td>
                 <td>{{$po->no_po}}</td>
+                <td>{{$po->material}}</td>
             </tr>
 
             @endforeach
