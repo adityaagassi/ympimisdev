@@ -426,7 +426,7 @@
             </thead>
             <tbody>
                 <tr>
-                 <td>
+                   <td>
                     {{--     <a href="{{ url("index/report/overtime_outsource") }}">
                         <i class="fa fa-caret-right"></i> Outsource OT (派遣社員の残業管理)
                     </a> --}}
@@ -584,19 +584,19 @@
                                         <i class="fa fa-caret-right"></i> Sharepoint;
                                     </a>
                                     <a href="https://a01.yamaha.co.jp/fw/dfw/SAP2/Citrix/XenApp/site/default.aspx" target="_blank">
-                                       SAP;
-                                   </a>
-                                   <a href="https://adagio.yamaha.co.jp/imart/default.portal" target="_blank">
-                                       Adagio;
-                                   </a>
-                                   <a href="https://a01.yamaha.co.jp/fw/dfw/MA5/ma5/EntranceServlet" target="_blank">
-                                       MA5;
-                                   </a>
-                               </td>     
-                           </tr>                                                                             
-                       </tbody>
-                   </table>
-                   <table class="table table-bordered">
+                                     SAP;
+                                 </a>
+                                 <a href="https://adagio.yamaha.co.jp/imart/default.portal" target="_blank">
+                                     Adagio;
+                                 </a>
+                                 <a href="https://a01.yamaha.co.jp/fw/dfw/MA5/ma5/EntranceServlet" target="_blank">
+                                     MA5;
+                                 </a>
+                             </td>     
+                         </tr>                                                                             
+                     </tbody>
+                 </table>
+                 <table class="table table-bordered">
                     <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
                         <tr>
                             <th>Workshop<br>ワークショップ</th>
@@ -952,7 +952,7 @@
                                         </a> --}}
                                         <br>
                                         <a href="{{ url("/index/fg_traceability") }}">
-                                            <i class="fa fa-caret-right"></i> Traceability (完成品追跡)
+                                            <i class="fa fa-caret-right"></i>FG Traceability (FG完成品追跡)
                                         </a>
                                     </td>
                                 </tr>
@@ -970,6 +970,10 @@
                                         <br>
                                         <a href="{{ url("/index/kd_stock") }}">
                                             <i class="fa fa-caret-right"></i> KD Parts Stock (KD部品在庫)
+                                        </a>
+                                        <br>
+                                        <a href="{{ url("/index/kd_traceability") }}">
+                                            <i class="fa fa-caret-right"></i>KD Traceability (KD完成品追跡)
                                         </a>
                                        {{--  <br>
                                         <a href="{{ url("/index/kd_shipment_progress") }}">
@@ -1144,7 +1148,7 @@
                                 </tbody>
                             </table>
 
-                            <table class="table table-bordered">
+                        {{--     <table class="table table-bordered">
                                 <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
                                     <tr>
                                         <th>
@@ -1162,7 +1166,7 @@
                                     </tr>
                                 </tbody>
                             </table>
-
+                            --}}
                            <!--  <table class="table table-bordered">
                                 <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
                                     <tr>

@@ -638,8 +638,6 @@ Route::group(['nav' => 'R3', 'middleware' => 'permission'], function(){
 	Route::get('index/fg_monthly_summary', 'FinishedGoodsController@index_fg_monthly_summary');
 	Route::get('fetch/fg_monthly_summary', 'FinishedGoodsController@fetch_fg_monthly_summary');
 	Route::get('fetch/tb_monthly_summary', 'FinishedGoodsController@fetch_tb_monthly_summary');
-	Route::get('index/fg_traceability', 'FinishedGoodsController@index_fg_traceability');
-	Route::get('fetch/fg_traceability', 'FinishedGoodsController@fetch_fg_traceability');
 	Route::get('index/fg_shipment_schedule', 'FinishedGoodsController@index_fg_shipment_schedule');
 	Route::get('fetch/fg_shipment_schedule', 'FinishedGoodsController@fetch_fg_shipment_schedule');
 	Route::get('index/fg_shipment_result', 'FinishedGoodsController@index_fg_shipment_result');
@@ -647,6 +645,8 @@ Route::group(['nav' => 'R3', 'middleware' => 'permission'], function(){
 	Route::get('fetch/tb_shipment_result', 'FinishedGoodsController@fetch_tb_shipment_result');
 	Route::get('index/fg_production_monitoring', 'ProductionScheduleController@indexProductionMonitoring');
 });
+Route::get('index/fg_traceability', 'FinishedGoodsController@index_fg_traceability');
+Route::get('fetch/fg_traceability', 'FinishedGoodsController@fetch_fg_traceability');
 
 Route::get('index/fg_production_schedule', 'ProductionScheduleController@indexProductionData');
 Route::get('fetch/fg_production_schedule', 'ProductionScheduleController@fetchProductionData');
@@ -1218,6 +1218,11 @@ Route::get('fetch/welding/kanban', 'WeldingProcessController@fetchMasterKanban')
 Route::get('fetch/welding/show_edit_kanban', 'WeldingProcessController@fetchShowEdit');
 Route::post('post/welding/edit_kanban', 'WeldingProcessController@editKanban');
 
+Route::group(['nav' => 'A10', 'middleware' => 'permission'], function(){
+	// Route::post('update/welding/op_ng_check', 'WeldingProcessController@updateNgCheck');
+});
+Route::post('update/welding/op_ng_check', 'WeldingProcessController@updateNgCheck');
+
 
 Route::get('index/welding/destroy_kanban/{loc}/{id}', 'WeldingProcessController@destroyKanban');
 Route::get('index/welding/current_welding', 'WeldingProcessController@indexCurrentWelding');
@@ -1331,6 +1336,7 @@ Route::post('post/sakurentsu/3m/sign', 'SakurentsuController@signing_tiga_em');
 
 Route::post('post/sakurentsu/3m/receive_std', 'SakurentsuController@receive_tiga_em');
 Route::get('index/sakurentsu/3m/implement/{id_three_m}', 'SakurentsuController@index_tiga_em_implement');
+Route::post('post/sakurentsu/3m/implement', 'SakurentsuController@post_tiga_em_implement');
 
 //Supplier
 Route::get('index/supplier', 'AccountingController@master_supplier');
@@ -1744,6 +1750,9 @@ Route::get('fetch/kdo', 'KnockDownController@fetchKDO');
 Route::get('fetch/kdo_detail', 'KnockDownController@fetchKDODetail');
 Route::get('fetch/kd_reprint_kdo', 'KnockDownController@reprintKDO');
 Route::get('fetch/container_resume', 'KnockDownController@fetchContainerResume');
+
+Route::get('index/kd_traceability', 'KnockDownController@indexKdTraceability');
+Route::get('fetch/kd_traceability', 'KnockDownController@fetchKdTraceability');
 
 //END KD
 
@@ -3273,6 +3282,9 @@ Route::get('index/recorder/kensa', 'RecorderProcessController@indexKensa');
 Route::get('fetch/recorder/kensa', 'RecorderProcessController@fetchKensa');
 Route::get('scan/recorder/kensa', 'RecorderProcessController@scanKensa');
 Route::post('input/recorder/kensa_product', 'RecorderProcessController@inputKensaProduct');
+Route::post('input/recorder/kensa', 'RecorderProcessController@inputKensa');
+Route::get('index/recorder/kensa_report', 'RecorderProcessController@indexKensaReport');
+Route::get('fetch/recorder/kensa_report', 'RecorderProcessController@fetchKensaReport');
 
 //WEBCAM
 Route::get('index/webcam', 'WebcamController@index');
@@ -3469,6 +3481,7 @@ Route::get('index/audit/sendemailpenanganan/{id}', 'CparController@sendemailpena
 
 //5S Patrol
 Route::get('index/audit_patrol', 'AuditController@index');
+Route::get('index/audit_patrol_mis', 'AuditController@index_mis');
 Route::get('fetch/audit_patrol', 'AuditController@fetch_audit');
 Route::post('post/audit_patrol', 'AuditController@post_audit');
 Route::post('post/audit_patrol_file', 'AuditController@post_audit_file');

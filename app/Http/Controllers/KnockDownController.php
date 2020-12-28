@@ -40,6 +40,173 @@ class KnockDownController extends Controller{
 		$this->middleware('auth');
 	}
 
+	public function indexKdTraceability(){
+		$origin_groups = DB::table('origin_groups')->orderBy('origin_group_code', 'asc')->get();
+		$materials = DB::table('materials')->where('category', '=', 'KD')->orderBy('material_number', 'asc')->get();
+		$destinations = DB::table('destinations')->orderBy('destination_code', 'asc')->get();
+
+		return view('kd.traceability', array(
+			'origin_groups' => $origin_groups,
+			'materials' => $materials,
+			'destinations' => $destinations,
+		))->with('page', 'KD Traceability')->with('head', 'Knock Downs');
+	}
+
+	public function fetchKdTraceability(Request $request){
+
+		$prodFrom = "";
+		$prodTo = "";
+		$addmaterial = "";
+		$addhpl = "";
+		$kdoNumber = "";
+		$delivFrom = "";
+		$delivTo = "";
+		$invoiceNumber = "";
+		$addorigin = "";
+		$adddestination = "";
+		$shipFrom = "";
+		$shipTo = "";
+
+		if(strlen($request->get('prodFrom')) > 0){
+			$prod_from = date('Y-m-d', strtotime($request->get('prodFrom')));
+			$prodFrom = " AND kdd.created_at >= '".$prod_from."'";
+		}
+
+		if(strlen($request->get('prodTo')) > 0){
+			$prod_to = date('Y-m-d', strtotime($request->get('prodTo')));
+			$prodTo = " AND kdd.created_at <= '".$prod_to."'";
+		}
+
+		if($request->get('materialNumber') != null){
+			$materials = $request->get('materialNumber');
+			$materiallength = count($materials);
+			$material = "";
+
+			for($x = 0; $x < $materiallength; $x++) {
+				$material = $material."'".$materials[$x]."'";
+				if($x != $materiallength-1){
+					$material = $material.",";
+				}
+			}
+			$addmaterial = "and kdd.material_number in (".$material.") ";
+		}
+
+		if($request->get('hpl') != null){
+			$hpls = $request->get('hpl');
+			$hpllength = count($hpls);
+			$hpl = "";
+
+			for($x = 0; $x < $hpllength; $x++) {
+				$hpl = $hpl."'".$hpls[$x]."'";
+				if($x != $hpllength-1){
+					$hpl = $hpl.",";
+				}
+			}
+			$addhpl = "and m.hpl in (".$hpl.") ";
+
+		}
+
+		if(strlen($request->get('kdoNumber')) > 0){
+			$kdoNumber = " AND kdd.kd_number = '".$request->get('kdoNumber')."'";
+		}
+
+		if(strlen($request->get('delivFrom')) > 0){
+			$deliv_from = date('Y-m-d', strtotime($request->get('delivFrom')));
+			$delivFrom = " AND del.deliv >= '".$deliv_from."'";
+
+		}
+
+		if(strlen($request->get('delivTo')) > 0){
+			$deliv_to = date('Y-m-d', strtotime($request->get('delivTo')));
+			$delivTo = " AND del.deliv <= '".$deliv_to."'";
+		}
+
+		if(strlen($request->get('invoiceNumber')) > 0){
+			$invoiceNumber = " AND kd.invoice_number = '".$request->get('invoiceNumber')."'";
+		}
+
+		if($request->get('originGroup') != null){
+			$origins = $request->get('originGroup');
+			$originlength = count($origins);
+			$origin = "";
+
+			for($x = 0; $x < $originlength; $x++) {
+				$origin = $origin."'".$origins[$x]."'";
+				if($x != $originlength-1){
+					$origin = $origin.",";
+				}
+			}
+			$addorigin = "and m.origin_group_code in (".$origin.") ";
+		}
+
+		if($request->get('destination') != null){
+			$destinations = $request->get('destination');
+			$destinationlength = count($destinations);
+			$destination = "";
+
+			for($x = 0; $x < $destinationlength; $x++) {
+				$destination = $destination."'".$destinations[$x]."'";
+				if($x != $destinationlength-1){
+					$destination = $destination.",";
+				}
+			}
+			$adddestination= "and ss.destination_code in (".$destination.") ";
+		}
+
+		if(strlen($request->get('shipFrom')) > 0){
+			$ship_from = date('Y-m-d', strtotime($request->get('shipFrom')));
+			$shipFrom = " AND ss.st_date >= '".$ship_from."'";
+
+		}
+
+		if(strlen($request->get('shipTo')) > 0){
+			$ship_to = date('Y-m-d', strtotime($request->get('shipTo')));
+			$shipTo = " AND ss.st_date <= '".$ship_to."'";
+		}
+
+		$knock_down_details = DB::select("SELECT
+			kdd.kd_number,
+			kdd.material_number,
+			m.material_description,
+			kdd.quantity,
+			kdd.created_at,
+			del.deliv,
+			ss.st_date,
+			ss.bl_date,
+			kd.`status`,
+			kd.invoice_number,
+			ss.sales_order,
+			d.destination_shortname 
+			FROM
+			knock_down_details AS kdd
+			LEFT JOIN materials AS m ON m.material_number = kdd.material_number
+			LEFT JOIN ( SELECT kd_number, created_at AS deliv FROM knock_down_logs WHERE STATUS = 2 ) AS del ON del.kd_number = kdd.kd_number
+			LEFT JOIN shipment_schedules AS ss ON ss.id = kdd.shipment_schedule_id
+			LEFT JOIN knock_downs AS kd ON kd.kd_number = kdd.kd_number
+			LEFT JOIN destinations AS d ON d.destination_code = ss.destination_code 
+			WHERE
+			kdd.deleted_at IS NULL
+			".$prodFrom."
+			".$prodTo."
+			".$addmaterial."
+			".$addhpl."
+			".$kdoNumber."
+			".$delivFrom."
+			".$delivTo."
+			".$invoiceNumber."
+			".$addorigin."
+			".$adddestination."
+			".$shipFrom."
+			".$shipTo."
+			");
+
+		$response = array(
+			'status' => true,
+			'knock_down_details' => $knock_down_details,
+		);
+		return Response::json($response);
+	}
+
 	public function indexKD($id){
 		if($id == 'z-pro'){
 			$title = 'KD Z-PRO';
