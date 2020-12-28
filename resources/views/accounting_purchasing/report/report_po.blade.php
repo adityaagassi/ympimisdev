@@ -415,7 +415,7 @@
 					
 					<?php 
 						if ($po[0]->holding_tax != 0) {
-							if ($po[0]->supplier_code == "G918Q") {
+							if ($po[0]->supplier_code == "G918Q" || $po[0]->supplier_code == "G1003Q") {
 								$wh = ($total * $po[0]->holding_tax)/100;
 							}
 							else{
