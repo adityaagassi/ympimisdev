@@ -1,5 +1,6 @@
 @extends('layouts.display')
 @section('stylesheets')
+<link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
 	thead>tr>th{
 		text-align:center;
@@ -108,6 +109,67 @@
 	</div>
 </section>
 
+<div class="modal fade" id="check-modal">
+		<div class="modal-dialog modal-md">
+			<div class="modal-content" style="color: black;">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">
+							&times;
+						</span>
+					</button>
+					<h4 class="modal-title" style="text-align: center;">
+						Handling Operator's NG Rate
+					</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="box-body">
+								<input type="hidden" value="{{csrf_token()}}" name="_token" />						
+								
+								<input type="hidden" id="date">
+
+								<div class="form-group row" align="right">
+									<label class="col-sm-4">Tag</label>
+									<div class="col-sm-5" align="left">
+										<input type="text" class="form-control" id="input_tag">
+									</div>
+								</div>
+
+								<div class="form-group row" align="right" id="field-nik" >
+									<label class="col-sm-4">NIK</label>
+									<div class="col-sm-5" align="left">
+										<input type="text" class="form-control" id="employee_id" readonly>
+									</div>
+								</div>
+
+								<div class="form-group row" align="right" id="field-name" >
+									<label class="col-sm-4">Name</label>
+									<div class="col-sm-5" align="left">
+										<input type="text" class="form-control" id="name" readonly>
+									</div>
+								</div>
+
+								<div class="form-group row" align="right" id="field-key" >
+									<label class="col-sm-4">Key</label>
+									<div class="col-sm-5" align="left">
+										<input type="text" class="form-control" id="key" readonly>
+									</div>
+								</div>
+								
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-danger" onclick="stopScan()"><span><i class="glyphicon glyphicon-remove-sign"></i> Cancel</span></button>
+					<button id="btn-check" class="btn btn-success" onclick="checkNg()"><span><i class="fa fa-check-square-o"></i> Check</span></button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 <!-- start modal -->
 <div class="modal fade" id="myModal" style="color: black;">
 	<div class="modal-dialog modal-lg">
@@ -201,12 +263,15 @@
 <script src="{{ url("js/highcharts-3d.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
+<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
 <script>
 	$.ajaxSetup({
 		headers: {
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		}
 	});
+
+	var refreshIntervalId;
 
 	jQuery(document).ready(function(){
 		$('#tanggal').datepicker({
@@ -215,7 +280,16 @@
 		});
 		$('.select2').select2();
 		fetchChart();
-		setInterval(fetchChart, 20000);
+		refreshIntervalId = setInterval(fetchChart, 20000);
+	});
+
+	$('#myModal').on('shown.bs.modal', function () {
+		clearInterval(refreshIntervalId);
+	});
+
+	$('#myModal').on('hidden.bs.modal', function () {
+		fetchChart();
+		refreshIntervalId = setInterval(fetchChart, 20000);
 	});
 
 	Highcharts.createElement('link', {
@@ -1151,6 +1225,8 @@
 
 				var plotBands = [];
 
+				var check = [];
+
 				var loop = 0;
 
 				for (var i = 0; i < result.operator.length; i++) {
@@ -1164,6 +1240,7 @@
 						toke.push(0);
 						bari.push(0);
 						ro_oi.push(0);
+						check.push(0);
 
 						op_a.push(result.operator[i].employee_id);
 
@@ -1193,6 +1270,8 @@
 									key.push(result.target[j].key || 'None');
 									name_a.push(result.target[j].name);
 								}
+
+								check[loop-1] = result.target[j].check;
 							}
 						}
 
@@ -1215,7 +1294,11 @@
 						ng_rate.push(ng[loop-1] / qty[loop-1] * 100);
 
 						if(ng_rate[loop-1] > 30){
-							plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .3)'});
+							if (check[loop-1] == null) {
+								plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .3)'});
+							}else{
+								plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(116, 116, 255, .3)'});
+							}
 						}			
 
 
@@ -1295,7 +1378,14 @@
 							pointPadding: 0.93,
 							groupPadding: 0.93,
 							borderWidth: 0.93,
-							cursor: 'pointer'
+							cursor: 'pointer',
+							point: {
+								events: {
+									click: function (event) {
+										showCheck(op_a[event.point.index], name_a[event.point.index], event.point.category, result.dateTitle);
+									}
+								}
+							},
 						},
 					},
 					credits: {
@@ -1362,6 +1452,8 @@
 
 				var plotBands = [];
 
+				var check = [];
+
 				var loop = 0;
 
 				for (var i = 0; i < result.operator.length; i++) {
@@ -1375,6 +1467,7 @@
 						toke.push(0);
 						bari.push(0);
 						ro_oi.push(0);
+						check.push(0);
 
 						op_b.push(result.operator[i].employee_id);
 
@@ -1396,6 +1489,8 @@
 								}else if(result.target[j].ng_name == 'Ro Oi'){
 									ro_oi[loop-1] = result.target[j].quantity;
 								}
+
+								check[loop-1] = result.target[j].check;
 
 								if(j == 0){
 									key.push(result.target[j].key || 'None');
@@ -1426,7 +1521,11 @@
 						ng_rate.push(ng[loop-1] / qty[loop-1] * 100);
 
 						if(ng_rate[loop-1] > 30){
-							plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .3)'});
+							if (check[loop-1] == null) {
+								plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .3)'});
+							}else{
+								plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(116, 116, 255, .3)'});
+							}
 						}	
 
 					}
@@ -1504,7 +1603,15 @@
 							pointPadding: 0.93,
 							groupPadding: 0.93,
 							borderWidth: 0.93,
-							cursor: 'pointer'
+							cursor: 'pointer',
+							point: {
+								events: {
+									click: function (event) {
+										showCheck(op_b[event.point.index], name_b[event.point.index], event.point.category, result.dateTitle);
+									}
+								}
+							},
+
 						},
 					},
 					credits: {
@@ -1773,6 +1880,84 @@
 	}
 });
 }
+
+function showCheck(nik, nama, kunci, tgl) {
+	$("#employee_id").val(nik);
+	$("#name").val(nama);
+	$("#key").val(kunci);
+	$("#date").val(tgl);
+
+	$('#check-modal').modal('show');
+	$('#input_tag').val("");
+	$('#input_tag').focus();
+}
+
+function checkNg() {
+		var employee_id = $("#employee_id").val();
+		var name = $("#name").val();
+		var key = $("#key").val();
+		var date = $("#date").val();
+
+		var data = {
+			employee_id: employee_id,
+			name: name,
+			key: key,
+			date: date,
+		}
+
+		$("#loading").show();
+
+
+		$.post('{{ url("update/welding/op_ng_check") }}', data, function(result, status, xhr) {
+			if(result.status){
+				$("#loading").hide();
+
+				openSuccessGritter('Success!', result.message);
+				$('#check-modal').modal('hide');
+			}else{
+				$("#loading").hide();
+				openErrorGritter('Error!', result.message);
+			}
+
+		});
+	}
+
+	function stopScan() {
+		$('#check-modal').modal('hide');
+	}
+
+	$('#check-modal').on('shown.bs.modal', function () {
+		$('#input_tag').focus();
+		clearInterval(refreshIntervalId);
+	});
+
+	$('#check-modal').on('hidden.bs.modal', function () {
+		fetchChart();
+		refreshIntervalId = setInterval(fetchChart, 20000);
+	});
+	function openSuccessGritter(title, message){
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-success',
+			image: '{{ url("images/image-screen.png") }}',
+			sticky: false,
+			time: '2000'
+		});
+	}
+
+	function openErrorGritter(title, message) {
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-danger',
+			image: '{{ url("images/image-stop.png") }}',
+			sticky: false,
+			time: '2000'
+		});
+	}
+
+	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 $.date = function(dateObject) {
 	var d = new Date(dateObject);

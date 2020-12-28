@@ -2061,7 +2061,7 @@ class WeldingProcessController extends Controller
 			where eg.location = 'soldering'
 			ORDER BY eg.`group`, e.`name` asc");
 
-		$target = db::select("select eg.`group`, eg.employee_id, e.name, ng.material_number, concat(m.model, ' ', m.`key`) as `key`, ng.ng_name, ng.quantity, ng.created_at from employee_groups eg left join 
+		$target = db::select("select eg.`group`, eg.employee_id, e.name, ng.material_number, concat(m.model, ' ', m.`key`) as `key`, ng.ng_name, ng.quantity, ng.created_at,ng.check,ng.check_time from employee_groups eg left join 
 			(select * from welding_ng_logs where deleted_at is null ".$addlocation." and remark in 
 			(select remark.remark from
 			(select operator_id, max(remark) as remark from welding_ng_logs where DATE(welding_time) ='".$now."' ".$addlocation." group by operator_id) 
@@ -5775,6 +5775,44 @@ class WeldingProcessController extends Controller
 			);
 			return Response::json($response);
 		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function updateNgCheck(Request $request){
+		$data = $request->get('key');
+
+		try{
+			$material = Material::where(db::raw('concat(model," ",`key`)'), '=', $data)
+			->where('issue_storage_location', '=', 'SX21')
+			->first();
+
+			$ng_log = WeldingNgLog::where('operator_id', '=', $request->get('employee_id'))
+			->where('material_number', '=', $material->material_number)
+			->where(db::raw('date(welding_time)'), '=', $request->get('date'))
+			->orderBy('welding_time', 'desc')
+			->first();
+
+			$update = db::table('welding_ng_logs')
+			->where('remark', '=', $ng_log->remark)
+			->update([
+				'check' => Auth::id(),
+				'check_time' => date('Y-m-d H:i:s')
+			]);
+
+			$response = array(
+				'status' => true,
+				'message' => 'Check NG Rate successful',
+				'material' => $material,
+				'ng_log' => $ng_log,
+			);
+			return Response::json($response);
+
+		}catch(\Exception $e){
 			$response = array(
 				'status' => false,
 				'message' => $e->getMessage(),
