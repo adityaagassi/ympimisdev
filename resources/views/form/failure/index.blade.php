@@ -127,6 +127,7 @@ td{
                 <th>Kategori</th>
                 <th>Loss</th>
                 <th>Estimasi Kerugian</th>
+                <th>Jumlah Sosialiasi</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -135,6 +136,7 @@ td{
             <tfoot>
               <tr>
                 <!-- <th></th> -->
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -422,6 +424,7 @@ td{
           { "data": "kategori", "width": "10%"},
           { "data": "loss", "width": "10%"},
           { "data": "kerugian", "width": "15%"},
+          { "data": "jumlah_sosialisasi", "width": "15%"},
           { "data": "action", "width": "10%"}
         ]
       });

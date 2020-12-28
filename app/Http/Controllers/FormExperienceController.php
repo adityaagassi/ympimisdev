@@ -50,8 +50,10 @@ class FormExperienceController extends Controller
     {
         $detail_table = DB::table('form_failures')
         ->leftjoin('employee_syncs','form_failures.employee_id','=','employee_syncs.employee_id')
-        ->select('form_failures.id', 'form_failures.employee_id','form_failures.employee_name','form_failures.tanggal_kejadian','form_failures.lokasi_kejadian','form_failures.equipment','form_failures.grup_kejadian','form_failures.kategori','form_failures.judul','form_failures.loss','form_failures.kerugian')
-        ->whereNull('form_failures.deleted_at');
+        ->leftjoin('form_failure_attendances','form_failures.id','=','form_failure_attendances.form_id')
+        ->select('form_failures.id','form_failures.employee_id','form_failures.employee_name','form_failures.tanggal_kejadian','form_failures.lokasi_kejadian','form_failures.equipment','form_failures.grup_kejadian','form_failures.kategori','form_failures.judul','form_failures.loss','form_failures.kerugian', DB::raw('count(form_failure_attendances.id) as jumlah'))
+        ->whereNull('form_failures.deleted_at')
+        ->groupBy('form_failures.id','form_failures.employee_id','form_failures.employee_name','form_failures.tanggal_kejadian','form_failures.lokasi_kejadian','form_failures.equipment','form_failures.grup_kejadian','form_failures.kategori','form_failures.judul','form_failures.loss','form_failures.kerugian');
 
         if(strlen($request->get('department_id')) > 0){
           $detail_table = $detail_table->where('form_failures.department', '=', $request->get('department_id'));
@@ -73,6 +75,10 @@ class FormExperienceController extends Controller
         ->editColumn('kerugian',function($details){
             return $details->kerugian;
           })
+
+        ->addColumn('jumlah_sosialisasi',function($details){
+          return $details->jumlah;
+        })
 
         ->addColumn('action', function($details){
           $id = $details->id;
