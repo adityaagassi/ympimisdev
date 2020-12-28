@@ -2071,9 +2071,9 @@ class MiddleProcessController extends Controller
 			(select b.material_child, ROUND(sum(a.quantity * t.time / 60),2) as plan from assy_picking_schedules a
 			left join bom_components b on a.material_number = b.material_parent
 			left join standard_times t on b.material_child = t.material_number
-			where quantity > 0
-			and due_date = '".$tanggal."'
-			and remark = 'SX51'
+			where a.quantity > 0
+			and a.due_date = '".$tanggal."'
+			and a.remark = 'SX51'
 			group by b.material_child) plan
 			left join materials m on plan.material_child = m.material_number
 			group by LEFT(m.`key`,1)) plan
@@ -2088,6 +2088,7 @@ class MiddleProcessController extends Controller
 
 		$key = db::connection('digital_kanban')->select("select RIGHT(dev_name,1) as `key`, (count(dev_name)*2) as jml from dev_list
 			where dev_name in ('SXKEY-C','SXKEY-D','SXKEY-E','SXKEY-F','SXKEY-G','SXKEY-H','SXKEY-J')
+			and date(dev_online_time) = '".date('Y-m-d')."'
 			GROUP BY dev_name");
 
 		$response = array(
