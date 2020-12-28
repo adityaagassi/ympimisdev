@@ -581,37 +581,57 @@ class WeldingProcessController extends Controller
 
 	public function addOperator(Request $request)
 	{
-		$list_op = DB::SELECT("SELECT
-			* 
-			FROM
-			`employee_syncs` 
-			WHERE
-			department = 'Woodwind Instrument - Welding-Surface Treatment (WI-WST) Department' 
-			AND section = 'Welding Process Section' 
-			AND employee_id = '".$request->get('operator')."'");
+		try {
+			$listop = DB::connection('welding_controller')
+			->table('m_operator')->where('operator_nik',$request->get('operator'))->get();
 
-		foreach ($list_op as $key) {
-			$operator_name = $key->name;
+			if (count($listop) == 0) {
+				$list_op = DB::SELECT("SELECT
+					* 
+					FROM
+					`employee_syncs` 
+					WHERE
+					department = 'Woodwind Instrument - Welding-Surface Treatment (WI-WST) Department' 
+					AND section = 'Welding Process Section' 
+					AND employee_id = '".$request->get('operator')."'");
+
+				foreach ($list_op as $key) {
+					$operator_name = $key->name;
+				}
+
+				$tag = dechex($request->get('operator_code'));
+
+				$lists = DB::connection('welding_controller')
+				->table('m_operator')
+				->insert([
+					'operator_name' => strtoupper($operator_name),
+					'operator_code' => strtoupper($tag),
+					'department_id' => 0,
+					'ws_id' => 0,
+					'operator_nik' => $request->get('operator'),
+					'group' => $request->get('group'),
+					'operator_create_date' => date('Y-m-d H:i:s'),
+					'created_by' => Auth::id()]);
+
+				$response = array(
+					'status' => true
+				);
+				return Response::json($response);
+			}else{
+				$response = array(
+					'status' => false,
+					'message' => 'Operator Sudah Ada'
+				);
+				return Response::json($response);
+			}
+			
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
 		}
-
-		$tag = dechex($request->get('operator_code'));
-
-		$lists = DB::connection('welding_controller')
-		->table('m_operator')
-		->insert([
-			'operator_name' => strtoupper($operator_name),
-			'operator_code' => strtoupper($tag),
-			'department_id' => 0,
-			'ws_id' => 0,
-			'operator_nik' => $request->get('operator'),
-			'group' => $request->get('group'),
-			'operator_create_date' => date('Y-m-d H:i:s'),
-			'created_by' => Auth::id()]);
-
-		$response = array(
-			'status' => true
-		);
-		return Response::json($response);
 	}
 
 	public function destroyOperator($id)
@@ -648,37 +668,45 @@ class WeldingProcessController extends Controller
 
 	public function updateOperator(Request $request)
 	{
-		$list_op = DB::SELECT("SELECT
-			* 
-			FROM
-			`employee_syncs` 
-			WHERE
-			department = 'Woodwind Instrument - Welding-Surface Treatment (WI-WST) Department' 
-			AND section = 'Welding Process Section' 
-			AND employee_id = '".$request->get('operator')."'");
+		try {
+			$list_op = DB::SELECT("SELECT
+				* 
+				FROM
+				`employee_syncs` 
+				WHERE
+				department = 'Woodwind Instrument - Welding-Surface Treatment (WI-WST) Department' 
+				AND section = 'Welding Process Section' 
+				AND employee_id = '".$request->get('operator')."'");
 
-		foreach ($list_op as $key) {
-			$operator_name = $key->name;
+			foreach ($list_op as $key) {
+				$operator_name = $key->name;
+			}
+
+			// $tag = dechex($request->get('operator_code'));
+
+			$lists = DB::connection('welding_controller')
+			->table('m_operator')
+			->where('operator_id',$request->get('operator_id'))
+			->update([
+				'operator_name' => strtoupper($operator_name),
+				// 'operator_code' => strtoupper($tag),
+				'department_id' => 0,
+				'ws_id' => 0,
+				'operator_nik' => $request->get('operator'),
+				'group' => $request->get('group'),
+				'operator_create_date' => date('Y-m-d H:i:s')]);
+
+			$response = array(
+				'status' => true
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
 		}
-
-		// $tag = dechex($request->get('operator_code'));
-
-		$lists = DB::connection('welding_controller')
-		->table('m_operator')
-		->where('operator_id',$request->get('operator_id'))
-		->update([
-			'operator_name' => strtoupper($operator_name),
-			// 'operator_code' => strtoupper($tag),
-			'department_id' => 0,
-			'ws_id' => 0,
-			'operator_nik' => $request->get('operator'),
-			'group' => $request->get('group'),
-			'operator_create_date' => date('Y-m-d H:i:s')]);
-
-		$response = array(
-			'status' => true
-		);
-		return Response::json($response);
 	}
 
 	public function editKanban(Request $request){

@@ -466,7 +466,7 @@
 			}
 			else{
 				audio_error.play();
-				openErrorGritter('Error','Update Failed');
+				openErrorGritter('Error',result.message);
 			}
 		});
 	}
@@ -498,12 +498,12 @@
 					openSuccessGritter('Success','Insert Operator Success');
 				} else {
 					audio_error.play();
-					openErrorGritter('Error','Insert Failed');
+					openErrorGritter('Error!',result.message);
 				}
 			})
 		} else {
 			audio_error.play();
-			openErrorGritter('Error','Invalid Value');
+			openErrorGritter('Error!',result.message);
 		}
 
 	}
