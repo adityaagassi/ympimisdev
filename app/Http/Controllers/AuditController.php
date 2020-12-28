@@ -53,6 +53,26 @@ class AuditController extends Controller
 		))->with('page', 'Audit Patrol');
 	}
 
+  public function index_mis()
+  {
+    $title = "Audit MIS";
+    $title_jp = "";
+
+    $emp = EmployeeSync::where('employee_id', Auth::user()->username)
+    ->select('employee_id', 'name', 'position', 'department')->first();
+
+    $auditee = db::select("select DISTINCT employee_id, name, section, position from employee_syncs
+      where end_date is null and (position like '%Staff%' or position like '%Chief%' or position like '%Foreman%' or position like 'Manager%')");
+
+    return view('audit.patrol_mis', array(
+      'title' => $title,
+      'title_jp' => $title_jp,
+      'employee' => $emp,
+      'auditee' => $auditee,
+      'location' => $this->location
+    ))->with('page', 'Audit Patrol MIS');
+  }
+
 
 	public function post_audit(Request $request)
 	{
@@ -190,6 +210,7 @@ class AuditController extends Controller
     audit_all_results 
     WHERE
     tanggal >= '".$first."'
+    and kategori in ('S-Up And EHS Patrol Presdir','5S Patrol GM')
     GROUP BY
     tanggal");
   $year = date('Y');
@@ -323,7 +344,7 @@ public function fetchtable_audit(Request $request)
   }
 
 
-  $data = db::select("select * from audit_all_results where audit_all_results.deleted_at is null and tanggal between '".$datefrom."' and '".$dateto."' ".$kate." ");
+  $data = db::select("select * from audit_all_results where audit_all_results.deleted_at is null and kategori in ('S-Up And EHS Patrol Presdir','5S Patrol GM') and tanggal between '".$datefrom."' and '".$dateto."' ".$kate." ");
 
   $response = array(
     'status' => true,
