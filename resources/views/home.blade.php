@@ -973,7 +973,7 @@
                                         </a>
                                         <br>
                                         <a href="{{ url("/index/kd_traceability") }}">
-                                            <i class="fa fa-caret-right"></i>KD Traceability (KD完成品追跡)
+                                            <i class="fa fa-caret-right"></i> KD Traceability (KD完成品追跡)
                                         </a>
                                        {{--  <br>
                                         <a href="{{ url("/index/kd_shipment_progress") }}">
@@ -1036,11 +1036,11 @@
                                         <span style="font-weight: bold;">Chorei (朝礼)</span>
                                         <br>
                                         <a href="{{ url("/index/ch_daily_production_result") }}">
-                                            <i class="fa fa-caret-right"></i>FG Production Summary (FG生産まとめ)
+                                            <i class="fa fa-caret-right"></i> FG Production Summary (FG生産まとめ)
                                         </a>
                                         <br>
                                         <a href="{{ url("/index/ch_daily_production_result_kd") }}">
-                                            <i class="fa fa-caret-right"></i>KD Production Summary (KD生産まとめ)
+                                            <i class="fa fa-caret-right"></i> KD Production Summary (KD生産まとめ)
                                         </a>
                                        {{--  <br>
                                         <a href="{{ url("/index/display/efficiency_monitoring") }}">
