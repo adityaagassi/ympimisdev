@@ -70,7 +70,7 @@
 	</div>
 	<div class="row">
 		<div class="col-xs-12">
-			<div class="box box-primary">
+			<div class="box box-solid">
 				<div class="box-body">
 					<div class="col-xs-12">
 						<div class="col-xs-3">
@@ -79,125 +79,64 @@
 							<div class="box-header">
 								<h3 class="box-title">Filter</h3>
 							</div>
-								<input type="hidden" value="{{csrf_token()}}" name="_token" />
-								<div class="col-md-12">
-									<div class="col-md-6">
-										<div class="form-group">
-											<label for="">Check Date From</label>
-											<div class="input-group date">
-												<div class="input-group-addon bg-white">
-													<i class="fa fa-calendar"></i>
-												</div>
-												<input type="text" class="form-control datepicker" id="date_from" name="date_from" placeholder="Select Date From" autocomplete="off">
+							<input type="hidden" value="{{csrf_token()}}" name="_token" />
+							<div class="col-md-12">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label for="">Check Date From</label>
+										<div class="input-group date">
+											<div class="input-group-addon bg-white">
+												<i class="fa fa-calendar"></i>
 											</div>
+											<input type="text" class="form-control datepicker" id="date_from" name="date_from" placeholder="Select Date From" autocomplete="off">
 										</div>
 									</div>
-									<div class="col-md-6">
-										<div class="form-group">
-											<label for="">Check Date To</label>
-											<div class="input-group date">
-												<div class="input-group-addon bg-white">
-													<i class="fa fa-calendar"></i>
-												</div>
-												<input type="text" class="form-control datepicker" id="date_to" name="date_to" placeholder="Select Date To" autocomplete="off">
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label for="">Check Date To</label>
+										<div class="input-group date">
+											<div class="input-group-addon bg-white">
+												<i class="fa fa-calendar"></i>
 											</div>
+											<input type="text" class="form-control datepicker" id="date_to" name="date_to" placeholder="Select Date To" autocomplete="off">
 										</div>
 									</div>
 								</div>
+							</div>
+							<div class="col-md-12">
 								<div class="col-md-12">
-									<div class="col-md-6">
-										<div class="form-group">
-											<label for="">Mesin</label>
-											<select class="form-control select2" multiple="multiple" name="machineSelect" id='machineSelect'data-placeholder="Select Mesin" style="width: 100%;" onchange="changeMesin()">
-												<option value=""></option>
-												@foreach($machine as $machine)
-							                		<option value="{{$machine}}">{{$machine}}</option>
-							                	@endforeach
-											</select>
-										</div>
-										<input type="hidden" id="machine">
-									</div>
-									<div class="col-md-6">
-										<div class="form-group">
-											<label for="">Type</label>
-											<select class="form-control select2" id='type' data-placeholder="Select Type" style="width: 100%;">
-												<option value=""></option>
-												<option value="HEAD">HEAD</option>
-												<option value="MIDDLE">MIDDLE</option>
-												<option value="FOOT">FOOT</option>
-											</select>
-										</div>
+									<div class="form-group pull-right">
+										<button onclick="location.reload()" style="margin-right: 10px" class="btn btn-danger">Clear</button>
+										<button type="submit" onclick="fetchReportCdm()" class="btn btn-primary col-sm-14">Search</button>
 									</div>
 								</div>
-								<div class="col-md-12">
-									<div class="col-md-12">
-										<div class="form-group pull-right">
-											<button onclick="location.reload()" style="margin-right: 10px" class="btn btn-danger">Clear</button>
-											<button type="submit" onclick="fetchReportCdm()" class="btn btn-primary col-sm-14">Search</button>
-										</div>
-									</div>
-								</div>
+							</div>
 						</div>
 						<div class="col-xs-3">
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-xs-12" style="overflow-x: scroll;">
-							<table id="tableReportCdm" class="table table-bordered table-striped table-hover">
+						<div class="col-xs-12">
+							<table id="tableReportKensa" class="table table-bordered table-striped table-hover">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th rowspan="2">#</th>
-										<th rowspan="2">Product</th>
-										<th rowspan="2">Type</th>
-										<th rowspan="2">Part</th>
-										<th rowspan="2">Color</th>
-										<th rowspan="2">Injection Date</th>
-										<th rowspan="2">Machine</th>
-										<th rowspan="2">Cavity</th>
-										<th colspan="4">Awal</th>
-										<th colspan="4">Istirahat 1</th>
-										<th colspan="4">Istirahat 2</th>
-										<th colspan="4">Istirahat 3</th>
-										<th rowspan="2">Creator</th>
-										<th rowspan="2">Created At</th>
-									</tr>
-									<tr>
-										<th>A</th>
-										<th>B</th>
-										<th>C</th>
-										<th>Status</th>
-										<th>A</th>
-										<th>B</th>
-										<th>C</th>
-										<th>Status</th>
-										<th>A</th>
-										<th>B</th>
-										<th>C</th>
-										<th>Status</th>
-										<th>A</th>
-										<th>B</th>
-										<th>C</th>
-										<th>Status</th>
+										<th width="1%">#</th>
+										<th width="1%">Kensa Code</th>
+										<th width="1%">Product</th>
+										<th width="1%">Material</th>
+										<th width="2%">Desc</th>
+										<th width="1%">Cav</th>
+										<th width="2%">Start</th>
+										<th width="2%">Finish</th>
+										<th width="3%">NG</th>
+										<th width="3%">By</th>
+										<th width="3%">At</th>
 									</tr>
 								</thead>
-								<tbody id="bodyReportCdm">
+								<tbody id="bodyReportKensa">
 								</tbody>
 								<tfoot>
-									<th></th>
-									<th></th>
-									<th></th>
-									<th></th>
-									<th></th>
-									<th></th>
-									<th></th>
-									<th></th>
-									<th></th>
-									<th></th>
-									<th></th>
-									<th></th>
-									<th></th>
-									<th></th>
-									<th></th>
 									<th></th>
 									<th></th>
 									<th></th>
@@ -256,57 +195,47 @@
 		var data = {
 			date_from:$('#date_from').val(),
 			date_to:$('#date_to').val(),
-			machine:$('#machine').val(),
-			type:$('#type').val(),
 		}
 
-		$.get('{{ url("fetch/recorder/cdm_report") }}', data, function(result, status, xhr){
+		$.get('{{ url("fetch/recorder/kensa_report") }}', data, function(result, status, xhr){
 			if(result.status){
 				openSuccessGritter('Success!', result.message);
-				$('#tableReportCdm').DataTable().clear();
-				$('#tableReportCdm').DataTable().destroy();
-				$('#bodyReportCdm').html("");
+				$('#tableReportKensa').DataTable().clear();
+				$('#tableReportKensa').DataTable().destroy();
+				$('#bodyReportKensa').html("");
 				var tableData = "";
 				var count = 1;
 				$.each(result.datas, function(key, value) {
 					tableData += '<tr>';
 					tableData += '<td>'+ count +'</td>';
+					tableData += '<td>'+ value.serial_number +'</td>';
 					tableData += '<td>'+ value.product +'</td>';
-					tableData += '<td>'+ value.type +'</td>';
-					tableData += '<td>'+ value.part +'</td>';
-					tableData += '<td>'+ value.color +'</td>';
-					tableData += '<td>'+ value.injection_date +'</td>';
-					tableData += '<td>'+ value.machine +'</td>';
+					tableData += '<td>'+ value.material_number +'</td>';
+					tableData += '<td>'+ value.part_name +'</td>';
 					tableData += '<td>'+ value.cavity +'</td>';
-					tableData += '<td style="background-color: #ffd6a5">'+ value.awal_a +'</td>';
-					tableData += '<td style="background-color: #ffd6a5">'+ value.awal_b +'</td>';
-					tableData += '<td style="background-color: #ffd6a5">'+ value.awal_c +'</td>';
-					tableData += '<td style="background-color: #ffd6a5">'+ value.awal_status +'</td>';
-					tableData += '<td style="background-color: #9bf6ff">'+ value.ist_1_a +'</td>';
-					tableData += '<td style="background-color: #9bf6ff">'+ value.ist_1_b +'</td>';
-					tableData += '<td style="background-color: #9bf6ff">'+ value.ist_1_c +'</td>';
-					tableData += '<td style="background-color: #9bf6ff">'+ value.ist_1_status +'</td>';
-					tableData += '<td style="background-color: #ffc6ff">'+ value.ist_2_a +'</td>';
-					tableData += '<td style="background-color: #ffc6ff">'+ value.ist_2_b +'</td>';
-					tableData += '<td style="background-color: #ffc6ff">'+ value.ist_2_c +'</td>';
-					tableData += '<td style="background-color: #ffc6ff">'+ value.ist_2_status +'</td>';
-					tableData += '<td style="background-color: #caffbf">'+ value.ist_3_a +'</td>';
-					tableData += '<td style="background-color: #caffbf">'+ value.ist_3_b +'</td>';
-					tableData += '<td style="background-color: #caffbf">'+ value.ist_3_c +'</td>';
-					tableData += '<td style="background-color: #caffbf">'+ value.ist_3_status +'</td>';
-					tableData += '<td>'+ value.name +'</td>';
+					tableData += '<td>'+ value.start_time +'</td>';
+					tableData += '<td>'+ value.end_time +'</td>';
+					ng_arr = value.ng_name.split(',');
+					qty_arr = value.ng_count.split(',');
+
+					tableData += '<td>';
+					for(var i = 0; i < ng_arr.length; i++){
+						tableData += ng_arr[i] +' = '+ qty_arr[i]+'<br>';
+					}
+					tableData += '</td>';
+					tableData += '<td>'+ value.employee_id +' - '+ value.name +'</td>';
 					tableData += '<td>'+ value.created +'</td>';
 					tableData += '</tr>';
 
 					count++;
-				})
-				$('#bodyReportCdm').append(tableData);
+				});
+				$('#bodyReportKensa').append(tableData);
 
-				$('#tableReportCdm tfoot th').each( function () {
+				$('#tableReportKensa tfoot th').each( function () {
 					var title = $(this).text();
 					$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
 				});
-				var table = $('#tableReportCdm').DataTable({
+				var table = $('#tableReportKensa').DataTable({
 					'dom': 'Bfrtip',
 					'responsive':true,
 					'lengthMenu': [
@@ -371,7 +300,7 @@
 					} );
 				});
 
-				$('#tableReportCdm tfoot tr').appendTo('#tableReportCdm thead');
+				$('#tableReportKensa tfoot tr').appendTo('#tableReportKensa thead');
 			}
 			else{
 				audio_error.play();
