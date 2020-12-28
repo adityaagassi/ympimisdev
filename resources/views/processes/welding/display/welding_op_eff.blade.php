@@ -274,28 +274,23 @@
 						<div class="col-xs-12">
 							<div class="box-body">
 								<input type="hidden" value="{{csrf_token()}}" name="_token" />
-
-
-								<div id='scanner' class="col-xs-12">
-									<div class="col-xs-6 col-xs-offset-3">
-										<div id="loadingMessage">
-											🎥 Unable to access video stream (please make sure you have a webcam enabled)
-										</div>
-										<canvas style="width: 240px; height: 160px;" id="canvas" hidden></canvas>
-										<div id="output" hidden>
-											<div id="outputMessage">No QR code detected.</div>
-										</div>
-									</div>									
-								</div>
 								
+								<input type="hidden" id="m_operator">
+								<input type="hidden" id="date">
+
 								<div class="form-group row" align="right">
-									<label class="col-sm-4">NIK</label>
+									<label class="col-sm-4">Tag</label>
 									<div class="col-sm-5" align="left">
-										<input type="text" class="form-control" id="input_employee_id">
+										<input type="text" class="form-control" id="input_tag">
 									</div>
 								</div>
-								<input type="hidden" id="employee_id">
-								<input type="hidden" id="date">
+
+								<div class="form-group row" align="right" id="field-nik">
+									<label class="col-sm-4">NIK</label>
+									<div class="col-sm-5" align="left">
+										<input type="text" class="form-control" id="employee_id" readonly>
+									</div>
+								</div>
 
 								<div class="form-group row" align="right" id="field-name">
 									<label class="col-sm-4">Name</label>
@@ -316,7 +311,7 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button class="btn btn-danger" onclick="stopScan()"><span><i class="glyphicon glyphicon-remove-sign"></i> Cancel</span></button>
+					<button class="btn btn-danger" data-dismiss="modal"><span><i class="glyphicon glyphicon-remove-sign"></i> Cancel</span></button>
 					<button id="btn-check" class="btn btn-success" onclick="checkEff()"><span><i class="fa fa-check-square-o"></i> Check</span></button>
 				</div>
 			</div>
@@ -851,6 +846,7 @@ function fillChart() {
 						text: "Overall Efficiency (%)"
 					},
 					min: 0,
+					max: 500,
 					plotLines: [{
 						color: '#FF0000',
 						value: parseInt(target),
@@ -982,6 +978,7 @@ function fillChart() {
 						text: "Overall Efficiency (%)"
 					},
 					min: 0,
+					max: 500,
 					plotLines: [{
 						color: '#FF0000',
 						value: parseInt(target),
@@ -1091,7 +1088,11 @@ $.get('{{ url("fetch/welding/welding_op_eff_target") }}', data, function(result,
 				}
 
 				if(eff[loop-1] < parseInt(target)){
-					plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .3)'});
+					if(result.target[i].check != null){
+						plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(25,118,210 ,.3)'});
+					}else{
+						plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .3)'});
+					}
 				}
 			}			
 		}
@@ -1121,6 +1122,7 @@ $.get('{{ url("fetch/welding/welding_op_eff_target") }}', data, function(result,
 				labels: {
 					enabled: false
 				},
+				max: 300
 			},
 			xAxis:  {
 				categories: key,
@@ -1203,7 +1205,11 @@ $.get('{{ url("fetch/welding/welding_op_eff_target") }}', data, function(result,
 				}
 
 				if(eff[loop-1] < parseInt(target)){
-					plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .3)'});
+					if(result.target[i].check != null){
+						plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(25,118,210 ,.3)'});
+					}else{
+						plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .3)'});
+					}
 				}
 			}			
 		}
@@ -1234,6 +1240,7 @@ $.get('{{ url("fetch/welding/welding_op_eff_target") }}', data, function(result,
 				labels: {
 					enabled: false
 				},
+				max: 300
 			},
 			xAxis:  {
 				categories: key,
@@ -1293,6 +1300,97 @@ $.get('{{ url("fetch/welding/welding_op_eff_target") }}', data, function(result,
 
 	}
 });
+
+}
+
+function checkEff() {
+	var m_operator = $("#m_operator").val();
+	var employee_id = $("#employee_id").val();
+	var name = $("#name").val();
+	var key = $("#key").val();
+	var date = $("#date").val();
+
+	var data = {
+		m_operator: m_operator,
+		employee_id: employee_id,
+		name: name,
+		key: key,
+		date: date,
+	}
+
+	$.post('{{ url("update/welding/welding_op_eff_check") }}', data, function(result, status, xhr) {
+		if(result.status){
+			openSuccessGritter('Success!', result.message);
+			$('#check-modal').modal('hide');
+		}else{
+			openErrorGritter('Error!', result.message);
+			$('#check-modal').modal('hide');
+		}
+
+	});
+}
+
+$('#check-modal').on('shown.bs.modal', function () {
+	$('#input_tag').focus();
+});
+
+$('#input_tag').keydown(function(event) {
+	if (event.keyCode == 13 || event.keyCode == 9) {
+		if($("#input_tag").val().length == 10){
+			var data = {
+				employee_id : $("#input_tag").val()
+			}
+
+			$.get('{{ url("scan/welding/operator/rfid") }}', data, function(result, status, xhr){
+				if(result.status){
+					var employee_id = $("#employee_id").val();
+					if(employee_id == result.employee.operator_nik){
+						$("#m_operator").val(result.employee.operator_id);
+						showData();
+					}else{
+						audio_error.play();
+						openErrorGritter('Error', 'Tag OP Wrong');
+						$('#input_tag').val('');
+					}
+				}
+				else{
+					audio_error.play();
+					openErrorGritter('Error', result.message);
+					$('#input_tag').val('');
+				}
+			});
+		}
+		else{
+			openErrorGritter('Error!', 'Tag Invalid.');
+			audio_error.play();
+			$("#operator").val("");
+		}			
+	}
+});
+
+function showData() {
+	$('#field-nik').show();
+	$('#field-name').show();
+	$('#field-key').show();
+	$('#btn-check').show();
+}
+
+
+function showCheck(nik, nama, kunci, tgl) {
+
+	document.getElementById("employee_id").value = nik;
+	document.getElementById("name").value = nama;
+	document.getElementById("key").value = kunci;
+	document.getElementById("date").value = tgl;
+
+	$('#field-nik').hide();
+	$('#field-name').hide();
+	$('#field-key').hide();
+	$('#btn-check').hide();
+
+	$('#check-modal').modal('show');
+	$('#input_tag').val("");
+	$('#input_tag').focus();
 
 }
 

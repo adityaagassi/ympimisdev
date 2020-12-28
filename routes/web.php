@@ -1186,6 +1186,8 @@ Route::get('fetch/welding/welding_op_eff', 'WeldingProcessController@fetchWeldin
 Route::get('index/welding/welding_eff', 'WeldingProcessController@indexWeldingEff');
 Route::get('fetch/welding/welding_op_eff_ongoing', 'WeldingProcessController@fetchWeldingEffOngoing');
 Route::get('fetch/welding/welding_op_eff_target', 'WeldingProcessController@fetchWeldingOpEffTarget');
+Route::post('update/welding/welding_op_eff_check', 'WeldingProcessController@updateEffCheck');
+Route::get('scan/welding/operator/rfid', 'WeldingProcessController@scanWeldingOperatorToHex');
 Route::get('index/welding/production_result', 'WeldingProcessController@indexProductionResult');
 Route::get('fetch/welding/production_result', 'WeldingProcessController@fetchProductionResult');
 Route::get('index/welding/kensa/{id}', 'WeldingProcessController@indexWeldingKensa');

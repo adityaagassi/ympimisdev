@@ -1119,19 +1119,19 @@ class WeldingProcessController extends Controller
 				CONCAT( m_akan.model, ' ', m_akan.`key` ) AS akan_name,
 				order_id_akan_name AS gmcdescakan,
 				order_id_akan_date AS waktu_akan 
-			FROM
+				FROM
 				m_mesin
 				LEFT JOIN m_ws ON m_ws.ws_id = m_mesin.ws_id
 				LEFT JOIN m_operator ON m_operator.operator_id = m_mesin.operator_id
 				LEFT JOIN ympimis.materials m_akan ON m_akan.material_number = m_mesin.order_id_akan_gmc
 				LEFT JOIN ympimis.materials m_sedang ON m_sedang.material_number = m_mesin.order_id_sedang_gmc 
-			WHERE
+				WHERE
 				(m_mesin.mesin_type = 1 
 				AND m_mesin.department_id = 4 )
 				OR
 				(m_mesin.mesin_type = 1 
 				AND m_ws.ws_id = 27 )
-			ORDER BY
+				ORDER BY
 				m_ws.department_id desc,m_ws.ws_id");
 		}elseif ($loc == 'cuci-solder') {
 			$work_stations = DB::connection('welding_controller')->select("SELECT
@@ -2394,10 +2394,9 @@ class WeldingProcessController extends Controller
 		->first();
 
 		$rate = db::select("select op.employee_id, concat(SPLIT_STRING(op.`name`, ' ', 1),' ',SPLIT_STRING(op.`name`, ' ', 2)) as `name`, op.`group`, eff.eff, rate.post, (eff.eff * COALESCE(rate.post,1) * 100) as oof  from
-			(select g.employee_id, e.`name`, g.`group` from ympimis.employee_groups g
-			left join ympimis.employee_syncs e
-			on g.employee_id = e.employee_id
-			where location = 'soldering' and g.deleted_at is null) op
+			(select operator_nik as employee_id, concat(SPLIT_STRING(operator_name, ' ', 1), ' ', SPLIT_STRING(operator_name, ' ', 2)) as `name`, `group` from soldering_db.m_operator
+			where operator_name not like '%PENGGANTI%'
+			order by `group`, `name`) op
 			left join
 			(select solder.operator_nik, sum(solder.actual) as actual, sum(solder.std) as std, sum(solder.std)/sum(solder.actual) as eff from
 			(select time.operator_nik, sum(time.actual) actual, sum(time.std) std from
@@ -2485,6 +2484,31 @@ class WeldingProcessController extends Controller
 		return Response::json($response);
 	}
 
+	public function scanWeldingOperatorToHex(Request $request){
+
+		$tag = $this->dec2hex($request->get('employee_id'));
+
+		$employee = db::connection('welding_controller')
+		->table('m_operator')
+		->where('operator_code', '=', $tag)
+		->first();
+
+		if($employee){
+			$response = array(
+				'status' => true,
+				'message' => 'Logged In',
+				'employee' => $employee,
+			);
+			return Response::json($response);
+		}
+		else{
+			$response = array(
+				'status' => false,
+				'message' => 'Employee Tag Invalid',
+			);
+			return Response::json($response);
+		}
+	}
 
 	public function fetchWeldingOpEffTarget(Request $request){
 		$date = '';
@@ -2500,14 +2524,13 @@ class WeldingProcessController extends Controller
 		->select('target')
 		->first();
 
-		$target = db::connection('welding')->select("select op.`group`, op.employee_id, op.`name`, eff.material_number, CONCAT(m.model,' ',m.`key`) as `key`, eff.finish, eff.act, (std.time*eff.qty) as std, (std.time*eff.qty/eff.act) as eff from
-			(select g.employee_id, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as `name`,
-			g.`group` from ympimis.employee_groups g
-			left join ympimis.employees e on e.employee_id = g.employee_id
-			where g.location = 'soldering') op
+		$target = db::connection('welding_controller')->select("select op.`group`, op.employee_id, op.`name`, eff.material_number, CONCAT(m.model,' ',m.`key`) as `key`, eff.finish, eff.act, (std.time*eff.qty) as std, (std.time*eff.qty/eff.act) as eff, eff.`check` from
+			(select operator_nik as employee_id, concat(SPLIT_STRING(operator_name, ' ', 1), ' ', SPLIT_STRING(operator_name, ' ', 2)) as `name`, `group` from m_operator
+			where operator_name not like '%PENGGANTI%'
+			order by `group`, `name` ) op
 			left join
-			(select op.operator_nik, dl.part_type, hsa.hsa_kito_code as hsa_material_number, phs.phs_code as phs_material_number, IF(dl.part_type = 1, phs.phs_code, hsa.hsa_kito_code) as material_number, dl.finish, dl.perolehan_jumlah, perolehan_jumlah as qty, dl.act, ((dl.perolehan_jumlah * hsa.hsa_timing)/dl.act) as eff from
-			(select a.operator_id, a.part_type, a.part_id, time(a.perolehan_finish_date) as finish, timestampdiff(second, a.perolehan_start_date, a.perolehan_finish_date) as act, a.perolehan_jumlah from
+			(select op.operator_nik, dl.part_type, hsa.hsa_kito_code as hsa_material_number, phs.phs_code as phs_material_number, IF(dl.part_type = 1, phs.phs_code, hsa.hsa_kito_code) as material_number, dl.finish, dl.perolehan_jumlah, perolehan_jumlah as qty, dl.act, ((dl.perolehan_jumlah * hsa.hsa_timing)/dl.act) as eff, dl.`check` from
+			(select a.operator_id, a.part_type, a.part_id, time(a.perolehan_finish_date) as finish, timestampdiff(second, a.perolehan_start_date, a.perolehan_finish_date) as act, a.perolehan_jumlah, a.`check` from
 			(select * from t_perolehan
 			where date(tanggaljam) = '".$date."'
 			and flow_id = '1') a
@@ -3479,7 +3502,7 @@ class WeldingProcessController extends Controller
 								$file_path = public_path() . "/jig/drawing/" .$jig_parents[$i].'/'.$jig_childs[$i].'.pdf';
 
 								$newplace  = $path.'/'.$order_no.'.pdf';
-							    copy($file_path,$newplace);
+								copy($file_path,$newplace);
 
 								$wjo = new WorkshopJobOrder([
 									'order_no' => $order_no,
@@ -3584,20 +3607,20 @@ class WeldingProcessController extends Controller
 
 					$jig_schedule = JigSchedule::where('jig_id',$jig_id)->where('jig_index',$jig_index)->where('schedule_status','Open')->first();
 					if (count($jig_schedule) > 0) {
-							$jig_schedule->repair_time = $finished_at;
-							$jig_schedule->repair_pic = $operator_id;
-							$jig_schedule->repair_status = 'Finish Repair';
-							$jig_schedule->schedule_status = 'Close';
-							$jig_schedule->save();
+						$jig_schedule->repair_time = $finished_at;
+						$jig_schedule->repair_pic = $operator_id;
+						$jig_schedule->repair_status = 'Finish Repair';
+						$jig_schedule->schedule_status = 'Close';
+						$jig_schedule->save();
 
-							$schedule = new JigSchedule([
-								'jig_id' => $jig_id,
-								'jig_index' => $jig_index,
-								'schedule_date' => date('Y-m-d', strtotime($now. ' + '.$check_period.' days')),
-								'schedule_status' => 'Open',
-								'created_by' => $id_user,
-							]);
-							$schedule->save();
+						$schedule = new JigSchedule([
+							'jig_id' => $jig_id,
+							'jig_index' => $jig_index,
+							'schedule_date' => date('Y-m-d', strtotime($now. ' + '.$check_period.' days')),
+							'schedule_status' => 'Open',
+							'created_by' => $id_user,
+						]);
+						$schedule->save();
 					}
 
 					$status = true;
@@ -3649,121 +3672,121 @@ class WeldingProcessController extends Controller
 				SUM( b.after_kensa ) AS after_kensa,
 				SUM( b.before_repair ) AS before_repair,
 				SUM( b.waiting_part ) AS waiting_part 
-			FROM
+				FROM
 				(
 				SELECT DISTINCT
-					( week_date ),
-					(
-					SELECT
-						COUNT(
-						DISTINCT ( id )) 
-					FROM
-						jig_schedules 
-					WHERE
-						jig_schedules.schedule_date = week_date 
-						AND schedule_status = 'Open' 
-						AND kensa_time IS NULL 
-						AND repair_time IS NULL 
-					) AS before_kensa,
-					( SELECT COUNT( DISTINCT ( id )) FROM jig_schedules WHERE jig_schedules.schedule_date = week_date AND schedule_status = 'Close' AND kensa_time IS NOT NULL ) AS after_kensa,
-					(
-					SELECT
-						COUNT(
-						DISTINCT ( id )) 
-					FROM
-						jig_schedules 
-					WHERE
-						jig_schedules.schedule_date = week_date 
-						AND schedule_status = 'Open' 
-						AND kensa_time IS NOT NULL 
-						AND repair_time IS NULL 
-					) AS before_repair,
-					(
-					SELECT
-						COUNT(
-						DISTINCT ( id )) 
-					FROM
-						jig_schedules 
-					WHERE
-						jig_schedules.schedule_date = week_date 
-						AND schedule_status = 'Open' 
-						AND kensa_time IS NOT NULL 
-						AND repair_time IS NOT NULL 
-					) AS waiting_part 
-				FROM
-					weekly_calendars 
-				WHERE
-					week_date BETWEEN DATE_FORMAT( NOW(), '%Y-%m-01' ) 
-					AND DATE_FORMAT( LAST_DAY( NOW()), '%Y-%m-%d' ) UNION ALL
+				( week_date ),
+				(
 				SELECT
-					jig_schedules.schedule_date,
-					COUNT(
-					DISTINCT ( id )) AS before_kensa,
-					0 AS after_kensa,
-					0 AS before_repair,
-					0 AS waiting_part 
+				COUNT(
+				DISTINCT ( id )) 
 				FROM
-					jig_schedules 
+				jig_schedules 
 				WHERE
-					schedule_date < DATE_FORMAT( NOW(), '%Y-%m-01' ) 
-					AND schedule_status = 'Open' 
-					AND kensa_time IS NULL 
+				jig_schedules.schedule_date = week_date 
+				AND schedule_status = 'Open' 
+				AND kensa_time IS NULL 
+				AND repair_time IS NULL 
+				) AS before_kensa,
+				( SELECT COUNT( DISTINCT ( id )) FROM jig_schedules WHERE jig_schedules.schedule_date = week_date AND schedule_status = 'Close' AND kensa_time IS NOT NULL ) AS after_kensa,
+				(
+				SELECT
+				COUNT(
+				DISTINCT ( id )) 
+				FROM
+				jig_schedules 
+				WHERE
+				jig_schedules.schedule_date = week_date 
+				AND schedule_status = 'Open' 
+				AND kensa_time IS NOT NULL 
+				AND repair_time IS NULL 
+				) AS before_repair,
+				(
+				SELECT
+				COUNT(
+				DISTINCT ( id )) 
+				FROM
+				jig_schedules 
+				WHERE
+				jig_schedules.schedule_date = week_date 
+				AND schedule_status = 'Open' 
+				AND kensa_time IS NOT NULL 
+				AND repair_time IS NOT NULL 
+				) AS waiting_part 
+				FROM
+				weekly_calendars 
+				WHERE
+				week_date BETWEEN DATE_FORMAT( NOW(), '%Y-%m-01' ) 
+				AND DATE_FORMAT( LAST_DAY( NOW()), '%Y-%m-%d' ) UNION ALL
+				SELECT
+				jig_schedules.schedule_date,
+				COUNT(
+				DISTINCT ( id )) AS before_kensa,
+				0 AS after_kensa,
+				0 AS before_repair,
+				0 AS waiting_part 
+				FROM
+				jig_schedules 
+				WHERE
+				schedule_date < DATE_FORMAT( NOW(), '%Y-%m-01' ) 
+				AND schedule_status = 'Open' 
+				AND kensa_time IS NULL 
 				GROUP BY
-					jig_schedules.schedule_date
+				jig_schedules.schedule_date
 				) b 
-			GROUP BY
+				GROUP BY
 				b.week_date 
-			ORDER BY
+				ORDER BY
 				b.week_date ASC");
 
 			$resume = DB::SELECT("SELECT
 				a.week_date,
 				(
 				SELECT
-					COUNT(
-					DISTINCT ( id )) 
+				COUNT(
+				DISTINCT ( id )) 
 				FROM
-					jig_schedules 
+				jig_schedules 
 				WHERE
-					jig_schedules.schedule_date = a.week_date 
-					AND schedule_status = 'Open' 
-					AND kensa_time IS NULL 
-					AND repair_time IS NULL 
+				jig_schedules.schedule_date = a.week_date 
+				AND schedule_status = 'Open' 
+				AND kensa_time IS NULL 
+				AND repair_time IS NULL 
 				) AS before_kensa,
 				( SELECT COUNT( DISTINCT ( id )) FROM jig_schedules WHERE jig_schedules.schedule_date = a.week_date AND schedule_status = 'Close' AND kensa_time IS NOT NULL ) AS after_kensa,
 				(
 				SELECT
-					COUNT(
-					DISTINCT ( id )) 
+				COUNT(
+				DISTINCT ( id )) 
 				FROM
-					jig_schedules 
+				jig_schedules 
 				WHERE
-					jig_schedules.schedule_date = a.week_date 
-					AND schedule_status = 'Open' 
-					AND kensa_time IS NOT NULL 
-					AND repair_time IS NULL 
+				jig_schedules.schedule_date = a.week_date 
+				AND schedule_status = 'Open' 
+				AND kensa_time IS NOT NULL 
+				AND repair_time IS NULL 
 				) AS before_repair,
 				(
 				SELECT
-					COUNT(
-					DISTINCT ( id )) 
+				COUNT(
+				DISTINCT ( id )) 
 				FROM
-					jig_schedules 
+				jig_schedules 
 				WHERE
-					jig_schedules.schedule_date = a.week_date 
-					AND schedule_status = 'Open' 
-					AND kensa_time IS NOT NULL 
-					AND repair_time IS NOT NULL 
+				jig_schedules.schedule_date = a.week_date 
+				AND schedule_status = 'Open' 
+				AND kensa_time IS NOT NULL 
+				AND repair_time IS NOT NULL 
 				) AS waiting_part 
-			FROM
+				FROM
 				weekly_calendars a 
-			WHERE
+				WHERE
 				a.week_date = DATE(
 				NOW())");
 
 			$outstanding = DB::SELECT("SELECT b.*
-			FROM
-			(SELECT
+				FROM
+				(SELECT
 				jig_schedules.jig_id,
 				jigs.jig_name,
 				COALESCE ( kensa_time, '' ) AS kensa_time,
@@ -3774,18 +3797,18 @@ class WeldingProcessController extends Controller
 				COALESCE ( repair_status, '' ) AS repair_status,
 				schedule_status,
 				schedule_date 
-			FROM
+				FROM
 				`jig_schedules`
 				LEFT JOIN employee_syncs empkensa ON empkensa.employee_id = jig_schedules.kensa_pic
 				LEFT JOIN employee_syncs emprepair ON emprepair.employee_id = jig_schedules.repair_pic
 				JOIN jigs ON jigs.jig_id = jig_schedules.jig_id 
-			WHERE
+				WHERE
 				schedule_status = 'Open' 
 				AND schedule_date BETWEEN DATE(
 				DATE_ADD( NOW(), INTERVAL - 6 MONTH )) 
 				AND DATE(
 				DATE_ADD( NOW(), INTERVAL + 1 MONTH )) UNION
-			SELECT
+				SELECT
 				jig_schedules.jig_id,
 				jigs.jig_name,
 				COALESCE ( kensa_time, '' ) AS kensa_time,
@@ -3796,12 +3819,12 @@ class WeldingProcessController extends Controller
 				COALESCE ( repair_status, '' ) AS repair_status,
 				schedule_status,
 				schedule_date 
-			FROM
+				FROM
 				`jig_schedules`
 				LEFT JOIN employee_syncs empkensa ON empkensa.employee_id = jig_schedules.kensa_pic
 				LEFT JOIN employee_syncs emprepair ON emprepair.employee_id = jig_schedules.repair_pic
 				JOIN jigs ON jigs.jig_id = jig_schedules.jig_id 
-			WHERE
+				WHERE
 				schedule_status = 'Open' 
 				AND schedule_date < DATE(NOW())) b ORDER BY b.schedule_date,b.repair_status,b.kensa_status");
 
@@ -3844,16 +3867,16 @@ class WeldingProcessController extends Controller
 					$detail[$key->jig_id] = DB::SELECT("SELECT
 						*,
 						CONCAT(
-							SPLIT_STRING ( empkensa.NAME, ' ', 1 ),
-							' ',
+						SPLIT_STRING ( empkensa.NAME, ' ', 1 ),
+						' ',
 						SPLIT_STRING ( empkensa.NAME, ' ', 2 )) AS kensaemp 
-					FROM
+						FROM
 						jig_schedules
 						JOIN jig_kensa_logs ON jig_kensa_logs.jig_id = jig_schedules.jig_id 
 						AND DATE( finished_at ) = schedule_date
 						JOIN jigs ON jigs.jig_id = jig_schedules.jig_id
 						LEFT JOIN employee_syncs empkensa ON empkensa.employee_id = jig_schedules.kensa_pic 
-					WHERE
+						WHERE
 						schedule_date = '".$date."' 
 						AND schedule_status = 'Close' 
 						AND jig_schedules.jig_id = '".$key->jig_id."'");
@@ -3867,16 +3890,16 @@ class WeldingProcessController extends Controller
 					$detail[$key->jig_id] = DB::SELECT("SELECT
 						*,
 						CONCAT(
-							SPLIT_STRING ( empkensa.NAME, ' ', 1 ),
-							' ',
+						SPLIT_STRING ( empkensa.NAME, ' ', 1 ),
+						' ',
 						SPLIT_STRING ( empkensa.NAME, ' ', 2 )) AS kensaemp 
-					FROM
+						FROM
 						jig_schedules
 						JOIN jig_kensas ON jig_kensas.jig_id = jig_schedules.jig_id 
 						AND DATE( finished_at ) = schedule_date
 						JOIN jigs ON jigs.jig_id = jig_schedules.jig_id 
 						LEFT JOIN employee_syncs empkensa ON empkensa.employee_id = jig_schedules.kensa_pic 
-					WHERE
+						WHERE
 						schedule_date = '".$date."' 
 						AND schedule_status = 'Open' 
 						AND jig_schedules.jig_id = '".$key->jig_id."' 
@@ -3892,16 +3915,16 @@ class WeldingProcessController extends Controller
 					$detail[$key->jig_id] = DB::SELECT("SELECT
 						* ,
 						CONCAT(
-							SPLIT_STRING ( empkensa.NAME, ' ', 1 ),
-							' ',
+						SPLIT_STRING ( empkensa.NAME, ' ', 1 ),
+						' ',
 						SPLIT_STRING ( empkensa.NAME, ' ', 2 )) AS kensaemp 
-					FROM
+						FROM
 						jig_schedules
 						JOIN jig_kensas ON jig_kensas.jig_id = jig_schedules.jig_id 
 						AND DATE( finished_at ) = schedule_date
 						JOIN jigs ON jigs.jig_id = jig_schedules.jig_id 
 						LEFT JOIN employee_syncs empkensa ON empkensa.employee_id = jig_schedules.kensa_pic 
-					WHERE
+						WHERE
 						schedule_date = '".$date."' 
 						AND schedule_status = 'Open' 
 						AND jig_schedules.jig_id = '".$key->jig_id."' 
@@ -3988,28 +4011,28 @@ class WeldingProcessController extends Controller
 
 			$tujuan_upload = 'jig/drawing/'.$jig_parent;
 
-          	$filename = $jig_id.'.'.$request->input('extension');
-          	$file->move($tujuan_upload,$filename);
+			$filename = $jig_id.'.'.$request->input('extension');
+			$file->move($tujuan_upload,$filename);
 
-          	$jigs = Jig::firstOrNew(['jig_id' => $jig_id, 'jig_index' => $jig_index]);
-            $jigs->jig_id = $jig_id;
-            $jigs->jig_index = $jig_index;
-            $jigs->jig_name = $jig_name;
-            $jigs->jig_alias = $jig_alias;
-            $jigs->category = $category;
-            $jigs->jig_tag = $jig_tag;
-            $jigs->check_period = $check_period;
-            $jigs->type = $type;
-            $jigs->file_name = $filename;
-            $jigs->created_by = Auth::id();
+			$jigs = Jig::firstOrNew(['jig_id' => $jig_id, 'jig_index' => $jig_index]);
+			$jigs->jig_id = $jig_id;
+			$jigs->jig_index = $jig_index;
+			$jigs->jig_name = $jig_name;
+			$jigs->jig_alias = $jig_alias;
+			$jigs->category = $category;
+			$jigs->jig_tag = $jig_tag;
+			$jigs->check_period = $check_period;
+			$jigs->type = $type;
+			$jigs->file_name = $filename;
+			$jigs->created_by = Auth::id();
 
 			$jigbom = JigBom::firstOrNew(['jig_parent' => $jig_parent, 'jig_child' => $jig_id]);
-            $jigbom->jig_parent = $jig_parent;
-            $jigbom->jig_child = $jig_id;
-            $jigbom->created_by = Auth::id();
-            $jigbom->usage = $usage;
+			$jigbom->jig_parent = $jig_parent;
+			$jigbom->jig_child = $jig_id;
+			$jigbom->created_by = Auth::id();
+			$jigbom->usage = $usage;
 
-            $jigbom->save();
+			$jigbom->save();
 			$jigs->save();
 
 			$response = array(
@@ -4045,29 +4068,29 @@ class WeldingProcessController extends Controller
 			$file_name = $request->get('file_name');
 
 			$jigs = Jig::find($id_jig);
-            $jigs->jig_id = $jig_id;
-            $jigs->jig_index = $jig_index;
-            $jigs->jig_name = $jig_name;
-            $jigs->jig_alias = $jig_alias;
-            $jigs->category = $category;
-            $jigs->jig_tag = $jig_tag;
-            $jigs->check_period = $check_period;
-            $jigs->type = $type;
+			$jigs->jig_id = $jig_id;
+			$jigs->jig_index = $jig_index;
+			$jigs->jig_name = $jig_name;
+			$jigs->jig_alias = $jig_alias;
+			$jigs->category = $category;
+			$jigs->jig_tag = $jig_tag;
+			$jigs->check_period = $check_period;
+			$jigs->type = $type;
 
 			if ($file_name != null) {
 				$tujuan_upload = 'jig/drawing/'.$jig_parent;
-	          	$filename = $jig_id.'.'.$request->input('extension');
-	          	$file->move($tujuan_upload,$filename);
+				$filename = $jig_id.'.'.$request->input('extension');
+				$file->move($tujuan_upload,$filename);
 
-	          	$jigs->file_name = $filename;
+				$jigs->file_name = $filename;
 			}          	
 
 			$jigbom = JigBom::firstOrNew(['jig_parent' => $jig_parent, 'jig_child' => $jig_id]);
-            $jigbom->jig_parent = $jig_parent;
-            $jigbom->jig_child = $jig_id;
-            $jigbom->usage = $usage;
+			$jigbom->jig_parent = $jig_parent;
+			$jigbom->jig_child = $jig_id;
+			$jigbom->usage = $usage;
 
-            $jigbom->save();
+			$jigbom->save();
 			$jigs->save();
 
 			$response = array(
@@ -4133,11 +4156,11 @@ class WeldingProcessController extends Controller
 			$jig_child = $request->get('jig_child');
 			$usage = $request->get('usage');
 
-          	$jigs = JigBom::firstOrNew(['jig_parent' => $jig_parent, 'jig_child' => $jig_child]);
-            $jigs->jig_parent = $jig_parent;
-            $jigs->jig_child = $jig_child;
-            $jigs->usage = $usage;
-            $jigs->created_by = Auth::id();
+			$jigs = JigBom::firstOrNew(['jig_parent' => $jig_parent, 'jig_child' => $jig_child]);
+			$jigs->jig_parent = $jig_parent;
+			$jigs->jig_child = $jig_child;
+			$jigs->usage = $usage;
+			$jigs->created_by = Auth::id();
 			$jigs->save();
 
 			$response = array(
@@ -4182,10 +4205,10 @@ class WeldingProcessController extends Controller
 			$usage = $request->get('usage');
 			$id_jig_bom = $request->get('id_jig_bom');
 
-          	$jigs = JigBom::find($id_jig_bom);
-            $jigs->jig_parent = $jig_parent;
-            $jigs->jig_child = $jig_child;
-            $jigs->usage = $usage;
+			$jigs = JigBom::find($id_jig_bom);
+			$jigs->jig_parent = $jig_parent;
+			$jigs->jig_child = $jig_child;
+			$jigs->usage = $usage;
 			$jigs->save();
 
 			$response = array(
@@ -4313,7 +4336,7 @@ class WeldingProcessController extends Controller
 
 			$checkindex = JigKensaCheck::where('jig_id',$jig_parent)->orderBy('check_index','desc')->first();
 
-          	$kensapoint = new JigKensaCheck([
+			$kensapoint = new JigKensaCheck([
 				'jig_id' => $jig_parent,
 				'jig_child' => $jig_child,
 				'jig_alias' => $jigalias->jig_alias,
@@ -4538,7 +4561,7 @@ class WeldingProcessController extends Controller
 
 			if ($request->get('month') == "") {
 				$now = 'DATE(
-					DATE_ADD( NOW(), INTERVAL - 6 MONTH ))';
+				DATE_ADD( NOW(), INTERVAL - 6 MONTH ))';
 			}else{
 				$now = $request->get('month').'-01';
 			}
@@ -4554,27 +4577,27 @@ class WeldingProcessController extends Controller
 				started_at,
 				finished_at,
 				NAME AS operator,
-			IF
+				IF
 				((
-					SELECT
-						count(
-						DISTINCT ( result )) 
-					FROM
-						jig_kensa_logs 
-					WHERE
-						jig_kensa_logs.jig_id = a.jig_id 
-						AND jig_kensa_logs.finished_at = a.finished_at 
-						) > 1,
-					'NG',
-					'OK' 
+				SELECT
+				count(
+				DISTINCT ( result )) 
+				FROM
+				jig_kensa_logs 
+				WHERE
+				jig_kensa_logs.jig_id = a.jig_id 
+				AND jig_kensa_logs.finished_at = a.finished_at 
+				) > 1,
+				'NG',
+				'OK' 
 				) AS result,
 				COALESCE (( SELECT DISTINCT ( STATUS ) FROM jig_kensa_logs WHERE jig_kensa_logs.jig_id = a.jig_id AND jig_kensa_logs.finished_at = a.finished_at ), 'No Repair' ) AS status,
 				'OK Kensa, No Need Action' AS action 
-			FROM
+				FROM
 				`jig_kensa_logs` a
 				JOIN employee_syncs ON operator_id = employee_id
 				JOIN jigs ON jigs.jig_id = a.jig_id
-			WHERE
+				WHERE
 				DATE(finished_at) BETWEEN '".$now."'
 				AND DATE(
 				DATE_ADD( NOW(), INTERVAL + 1 MONTH ))");
@@ -4602,11 +4625,11 @@ class WeldingProcessController extends Controller
 
 			$detail = DB::SELECT("SELECT
 				* 
-			FROM
+				FROM
 				jig_kensa_logs a
 				JOIN employee_syncs ON operator_id = employee_id
 				JOIN jigs ON jigs.jig_id = a.jig_id 
-			WHERE
+				WHERE
 				a.jig_id = '".$jig_id."' 
 				AND a.started_at = '".$started_at."' 
 				AND a.finished_at = '".$finished_at."'");
@@ -4630,56 +4653,56 @@ class WeldingProcessController extends Controller
 		try {
 			if ($request->get('month') == "") {
 				$now = 'DATE(
-					DATE_ADD( NOW(), INTERVAL - 6 MONTH ))';
+				DATE_ADD( NOW(), INTERVAL - 6 MONTH ))';
 			}else{
 				$now = $request->get('month').'-01';
 			}
 
 			$jig_no_repair = DB::SELECT("	
 				SELECT DISTINCT
-					( a.jig_id ) AS jig_id,
-					jigs.jig_name,
-					started_at,
-					finished_at,
-					NAME AS operator,
-					NOW(),
+				( a.jig_id ) AS jig_id,
+				jigs.jig_name,
+				started_at,
+				finished_at,
+				NAME AS operator,
+				NOW(),
 				IF
-					((
-						SELECT
-							count(
-							DISTINCT ( result )) 
-						FROM
-							jig_kensas 
-						WHERE
-							jig_kensas.jig_id = a.jig_id 
-							AND jig_kensas.finished_at = a.finished_at 
-							) > 1,
-						'NG',
-						'OK' 
-					) AS result,
-					COALESCE (( SELECT DISTINCT ( STATUS ) FROM jig_kensas WHERE jig_kensas.jig_id = a.jig_id AND jig_kensas.finished_at = a.finished_at ), 'No Repair' ) AS status,
-				IF
-					((
-						SELECT
-							COUNT(
-							DISTINCT ( action )) 
-						FROM
-							jig_kensas 
-						WHERE
-							jig_kensas.jig_id = a.jig_id 
-							AND jig_kensas.finished_at = a.finished_at 
-							) > 1,
-						'Open',
-						'OK Kensa, No Action' 
-					) AS action 
+				((
+				SELECT
+				count(
+				DISTINCT ( result )) 
 				FROM
-					`jig_kensas` a
-					JOIN employee_syncs ON operator_id = employee_id
-					JOIN jigs ON jigs.jig_id = a.jig_id
+				jig_kensas 
 				WHERE
-					DATE(finished_at) BETWEEN '".$now."'
-					AND DATE(
-					DATE_ADD( NOW(), INTERVAL + 1 MONTH ))");
+				jig_kensas.jig_id = a.jig_id 
+				AND jig_kensas.finished_at = a.finished_at 
+				) > 1,
+				'NG',
+				'OK' 
+				) AS result,
+				COALESCE (( SELECT DISTINCT ( STATUS ) FROM jig_kensas WHERE jig_kensas.jig_id = a.jig_id AND jig_kensas.finished_at = a.finished_at ), 'No Repair' ) AS status,
+				IF
+				((
+				SELECT
+				COUNT(
+				DISTINCT ( action )) 
+				FROM
+				jig_kensas 
+				WHERE
+				jig_kensas.jig_id = a.jig_id 
+				AND jig_kensas.finished_at = a.finished_at 
+				) > 1,
+				'Open',
+				'OK Kensa, No Action' 
+				) AS action 
+				FROM
+				`jig_kensas` a
+				JOIN employee_syncs ON operator_id = employee_id
+				JOIN jigs ON jigs.jig_id = a.jig_id
+				WHERE
+				DATE(finished_at) BETWEEN '".$now."'
+				AND DATE(
+				DATE_ADD( NOW(), INTERVAL + 1 MONTH ))");
 
 			$jig_repaired = DB::SELECT("SELECT DISTINCT
 				( a.jig_id ) AS jig_id,
@@ -4687,27 +4710,27 @@ class WeldingProcessController extends Controller
 				started_at,
 				finished_at,
 				NAME AS operator,
-			IF
+				IF
 				((
-					SELECT
-						count(
-						DISTINCT ( result )) 
-					FROM
-						jig_repair_logs 
-					WHERE
-						jig_repair_logs.jig_id = a.jig_id 
-						AND jig_repair_logs.finished_at = a.finished_at 
-						) > 1,
-					'NG',
-					'OK' 
+				SELECT
+				count(
+				DISTINCT ( result )) 
+				FROM
+				jig_repair_logs 
+				WHERE
+				jig_repair_logs.jig_id = a.jig_id 
+				AND jig_repair_logs.finished_at = a.finished_at 
+				) > 1,
+				'NG',
+				'OK' 
 				) AS result,
 				COALESCE (( SELECT DISTINCT ( STATUS ) FROM jig_repair_logs WHERE jig_repair_logs.jig_id = a.jig_id AND jig_repair_logs.finished_at = a.finished_at ), 'No Repair' ) AS status,
 				COALESCE (( SELECT DISTINCT ( action) FROM jig_repair_logs WHERE jig_repair_logs.jig_id = a.jig_id AND jig_repair_logs.finished_at = a.finished_at ),'OK') AS action 
-			FROM
+				FROM
 				`jig_repair_logs` a
 				JOIN employee_syncs ON operator_id = employee_id
 				JOIN jigs ON jigs.jig_id = a.jig_id
-			WHERE
+				WHERE
 				DATE(finished_at) BETWEEN '".$now."'
 				AND DATE(
 				DATE_ADD( NOW(), INTERVAL + 1 MONTH ))");
@@ -4738,22 +4761,22 @@ class WeldingProcessController extends Controller
 			if ($stts == 'Repaired') {
 				$detail = DB::SELECT("SELECT
 					* 
-				FROM
+					FROM
 					jig_repair_logs a
 					JOIN employee_syncs ON operator_id = employee_id
 					JOIN jigs ON jigs.jig_id = a.jig_id 
-				WHERE
+					WHERE
 					a.jig_id = '".$jig_id."' 
 					AND a.started_at = '".$started_at."' 
 					AND a.finished_at = '".$finished_at."'");
 			}else{
 				$detail = DB::SELECT("SELECT
 					* 
-				FROM
+					FROM
 					jig_kensas a
 					JOIN employee_syncs ON operator_id = employee_id
 					JOIN jigs ON jigs.jig_id = a.jig_id 
-				WHERE
+					WHERE
 					a.jig_id = '".$jig_id."' 
 					AND a.started_at = '".$started_at."' 
 					AND a.finished_at = '".$finished_at."'");
@@ -5598,89 +5621,89 @@ class WeldingProcessController extends Controller
 		try {
 			$weldings = db::connection('welding_controller')->select("
 				SELECT
-					a.material_number,
-					SUM( a.qty_solder ) AS qty_solder,
-					SUM( a.qty_cuci ) AS qty_cuci,
-					SUM( a.qty_queue ) AS qty_queue 
+				a.material_number,
+				SUM( a.qty_solder ) AS qty_solder,
+				SUM( a.qty_cuci ) AS qty_cuci,
+				SUM( a.qty_queue ) AS qty_queue 
 				FROM
-					(
-					SELECT
-						material_number,
-						count( material_number ) AS qty_solder,
-						0 AS qty_cuci,
-						0 AS qty_queue 
-					FROM
-						(
-						SELECT
-							order_id_sedang_gmc AS material_number 
-						FROM
-							m_mesin 
-						WHERE
-							order_id_sedang_gmc IS NOT NULL 
-							AND order_id_sedang_gmc <> '' UNION ALL
-						SELECT
-							order_id_akan_gmc AS material_number 
-						FROM
-							m_mesin 
-						WHERE
-							order_id_akan_gmc IS NOT NULL 
-							AND order_id_akan_gmc <> '' 
-						) solder 
-					GROUP BY
-						material_number UNION ALL
-					SELECT
-						material_number,
-						0 AS qty_solder,
-						sum( qty ) AS qty_cuci,
-						0 AS qty_queue 
-					FROM
-						(
-						SELECT
-							m_hsa.hsa_kito_code AS material_number,
-							count( m_hsa.hsa_kito_code ) AS qty 
-						FROM
-							t_before_cuci
-							LEFT JOIN m_hsa ON m_hsa.hsa_id = t_before_cuci.part_id 
-						WHERE
-							t_before_cuci.part_type = 2 
-							AND t_before_cuci.order_status = 0 
-						GROUP BY
-							m_hsa.hsa_kito_code UNION ALL
-						SELECT
-							m_hsa.hsa_kito_code AS material_number,
-							count( m_hsa.hsa_kito_code ) AS qty 
-						FROM
-							t_cuci
-							LEFT JOIN m_hsa_kartu ON m_hsa_kartu.hsa_kartu_code = t_cuci.kartu_code
-							LEFT JOIN m_hsa ON m_hsa.hsa_id = m_hsa_kartu.hsa_id 
-						WHERE
-							m_hsa.hsa_kito_code IS NOT NULL 
-						GROUP BY
-							m_hsa.hsa_kito_code 
-						) cuci 
-					GROUP BY
-						material_number UNION ALL
-					SELECT COALESCE
-						( m_hsa.hsa_kito_code, m_phs.phs_code ) AS material_number,
-						0 AS qty_solder,
-						0 AS qty_cuci,
-						count(
-						COALESCE ( m_hsa.hsa_kito_code, m_phs.phs_code )) AS qty_queue 
-					FROM
-						t_proses
-						LEFT JOIN m_hsa ON m_hsa.hsa_id = t_proses.part_id
-						LEFT JOIN m_phs ON m_phs.phs_id = t_proses.part_id
-						LEFT JOIN m_ws AS ws_phs ON m_phs.ws_id = ws_phs.ws_id
-						LEFT JOIN m_ws AS ws_hsa ON m_hsa.ws_id = ws_hsa.ws_id 
-					WHERE
-						( t_proses.proses_status = 0 AND t_proses.part_type = 1 ) 
-						OR ( t_proses.proses_status = 0 AND t_proses.part_type = 2 ) 
-					GROUP BY
-						material_number 
-					) a
-					LEFT JOIN ympimis.materials b ON b.material_number = a.material_number 
+				(
+				SELECT
+				material_number,
+				count( material_number ) AS qty_solder,
+				0 AS qty_cuci,
+				0 AS qty_queue 
+				FROM
+				(
+				SELECT
+				order_id_sedang_gmc AS material_number 
+				FROM
+				m_mesin 
+				WHERE
+				order_id_sedang_gmc IS NOT NULL 
+				AND order_id_sedang_gmc <> '' UNION ALL
+				SELECT
+				order_id_akan_gmc AS material_number 
+				FROM
+				m_mesin 
+				WHERE
+				order_id_akan_gmc IS NOT NULL 
+				AND order_id_akan_gmc <> '' 
+				) solder 
 				GROUP BY
-					a.material_number");
+				material_number UNION ALL
+				SELECT
+				material_number,
+				0 AS qty_solder,
+				sum( qty ) AS qty_cuci,
+				0 AS qty_queue 
+				FROM
+				(
+				SELECT
+				m_hsa.hsa_kito_code AS material_number,
+				count( m_hsa.hsa_kito_code ) AS qty 
+				FROM
+				t_before_cuci
+				LEFT JOIN m_hsa ON m_hsa.hsa_id = t_before_cuci.part_id 
+				WHERE
+				t_before_cuci.part_type = 2 
+				AND t_before_cuci.order_status = 0 
+				GROUP BY
+				m_hsa.hsa_kito_code UNION ALL
+				SELECT
+				m_hsa.hsa_kito_code AS material_number,
+				count( m_hsa.hsa_kito_code ) AS qty 
+				FROM
+				t_cuci
+				LEFT JOIN m_hsa_kartu ON m_hsa_kartu.hsa_kartu_code = t_cuci.kartu_code
+				LEFT JOIN m_hsa ON m_hsa.hsa_id = m_hsa_kartu.hsa_id 
+				WHERE
+				m_hsa.hsa_kito_code IS NOT NULL 
+				GROUP BY
+				m_hsa.hsa_kito_code 
+				) cuci 
+				GROUP BY
+				material_number UNION ALL
+				SELECT COALESCE
+				( m_hsa.hsa_kito_code, m_phs.phs_code ) AS material_number,
+				0 AS qty_solder,
+				0 AS qty_cuci,
+				count(
+				COALESCE ( m_hsa.hsa_kito_code, m_phs.phs_code )) AS qty_queue 
+				FROM
+				t_proses
+				LEFT JOIN m_hsa ON m_hsa.hsa_id = t_proses.part_id
+				LEFT JOIN m_phs ON m_phs.phs_id = t_proses.part_id
+				LEFT JOIN m_ws AS ws_phs ON m_phs.ws_id = ws_phs.ws_id
+				LEFT JOIN m_ws AS ws_hsa ON m_hsa.ws_id = ws_hsa.ws_id 
+				WHERE
+				( t_proses.proses_status = 0 AND t_proses.part_type = 1 ) 
+				OR ( t_proses.proses_status = 0 AND t_proses.part_type = 2 ) 
+				GROUP BY
+				material_number 
+				) a
+				LEFT JOIN ympimis.materials b ON b.material_number = a.material_number 
+				GROUP BY
+				a.material_number");
 
 			$kensas = db::select("select material_number, count(material_number) as qty from welding_inventories
 				where location like '%hsa%'
@@ -5693,55 +5716,55 @@ class WeldingProcessController extends Controller
 			$wip_tigas = DB::CONNECTION('welding_controller')->SELECT("SELECT
 				a.material_number,
 				SUM( a.qty_tiga ) AS qty_tiga 
-			FROM
+				FROM
 				(
 				SELECT
-					material_number,
-					count( material_number ) AS qty_tiga 
+				material_number,
+				count( material_number ) AS qty_tiga 
 				FROM
-					(
-					SELECT
-						order_id_sedang_gmc AS material_number 
-					FROM
-						m_mesin 
-					WHERE
-						order_id_sedang_gmc IS NOT NULL 
-						AND order_id_sedang_gmc <> '' 
-						AND DATE( order_id_sedang_date ) < DATE_ADD( DATE( NOW()), INTERVAL - 3 DAY ) UNION ALL
-					SELECT
-						order_id_akan_gmc AS material_number 
-					FROM
-						m_mesin 
-					WHERE
-						order_id_akan_gmc IS NOT NULL 
-						AND order_id_akan_gmc <> '' 
-						AND DATE( order_id_sedang_date ) < DATE_ADD( DATE( NOW()), INTERVAL - 3 DAY ) 
-					) solder 
-				GROUP BY
-					material_number UNION ALL
+				(
 				SELECT
-					material_number,
-					sum( qty ) AS qty_tiga 
+				order_id_sedang_gmc AS material_number 
 				FROM
-					(
-					SELECT
-						m_hsa.hsa_kito_code AS material_number,
-						count( m_hsa.hsa_kito_code ) AS qty 
-					FROM
-						t_before_cuci
-						LEFT JOIN m_hsa ON m_hsa.hsa_id = t_before_cuci.part_id 
-					WHERE
-						t_before_cuci.part_type = 2 
-						AND t_before_cuci.order_status = 0 
-						AND DATE( order_store_date ) < DATE_ADD( DATE( NOW()), INTERVAL - 3 DAY ) 
-					GROUP BY
-						m_hsa.hsa_kito_code 
-					) cuci 
+				m_mesin 
+				WHERE
+				order_id_sedang_gmc IS NOT NULL 
+				AND order_id_sedang_gmc <> '' 
+				AND DATE( order_id_sedang_date ) < DATE_ADD( DATE( NOW()), INTERVAL - 3 DAY ) UNION ALL
+				SELECT
+				order_id_akan_gmc AS material_number 
+				FROM
+				m_mesin 
+				WHERE
+				order_id_akan_gmc IS NOT NULL 
+				AND order_id_akan_gmc <> '' 
+				AND DATE( order_id_sedang_date ) < DATE_ADD( DATE( NOW()), INTERVAL - 3 DAY ) 
+				) solder 
 				GROUP BY
-					material_number 
+				material_number UNION ALL
+				SELECT
+				material_number,
+				sum( qty ) AS qty_tiga 
+				FROM
+				(
+				SELECT
+				m_hsa.hsa_kito_code AS material_number,
+				count( m_hsa.hsa_kito_code ) AS qty 
+				FROM
+				t_before_cuci
+				LEFT JOIN m_hsa ON m_hsa.hsa_id = t_before_cuci.part_id 
+				WHERE
+				t_before_cuci.part_type = 2 
+				AND t_before_cuci.order_status = 0 
+				AND DATE( order_store_date ) < DATE_ADD( DATE( NOW()), INTERVAL - 3 DAY ) 
+				GROUP BY
+				m_hsa.hsa_kito_code 
+				) cuci 
+				GROUP BY
+				material_number 
 				) a
 				LEFT JOIN ympimis.materials b ON b.material_number = a.material_number 
-			GROUP BY
+				GROUP BY
 				a.material_number");
 
 
@@ -5847,6 +5870,40 @@ class WeldingProcessController extends Controller
 			);
 			return Response::json($response);
 		}
+	}
+
+	public function updateEffCheck(Request $request){
+		$id = $request->get('m_operator');
+
+		try{			
+			$perolehan = db::connection('welding_controller')
+			->table('t_perolehan')
+			->where('operator_id', $id)
+			->orderBy('tanggaljam', 'DESC')
+			->first();
+
+			$update = db::connection('welding_controller')
+			->table('t_perolehan')
+			->where('perolehan_id', '=', $perolehan->perolehan_id)
+			->update([
+				'check' => Auth::id(),
+				'check_time' => date('Y-m-d H:i:s')
+			]);
+
+			$response = array(
+				'status' => true,
+				'message' => 'Check Efficiency successful',
+			);
+			return Response::json($response);
+
+		}catch(\Exception $e){
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+
 	}
 
 	function dec2hex($number){

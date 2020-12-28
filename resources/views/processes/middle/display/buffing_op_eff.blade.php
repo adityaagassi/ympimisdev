@@ -314,7 +314,7 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button class="btn btn-danger" onclick="stopScan()"><span><i class="glyphicon glyphicon-remove-sign"></i> Cancel</span></button>
+					<button class="btn btn-danger" data-dismiss="modal"><span><i class="glyphicon glyphicon-remove-sign"></i> Cancel</span></button>
 					<button id="btn-check" class="btn btn-success" onclick="checkEff()"><span><i class="fa fa-check-square-o"></i> Check</span></button>
 				</div>
 			</div>
