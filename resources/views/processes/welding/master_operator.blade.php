@@ -89,11 +89,11 @@
 			<table id="tableOperator" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
 				<thead style="background-color: rgb(126,86,134); color: #FFD700;">
 					<tr>
-						<th>NIK</th>
-						<th>Nama Operator</th>
-						<th width="10%">Shift</th>
-						<th>Created at</th>
-						<th>Action</th>
+						<th width="1%">Employee ID</th>
+						<th width="3%">Name</th>
+						<th width="1%">Group</th>
+						<th width="2%">Created at</th>
+						<th width="2%">Action</th>
 					</tr>
 				</thead>
 				<tbody id="bodyTableOperator">
@@ -166,13 +166,13 @@
 									</div>
 								</div>
 								<div class="form-group row" align="right">
-									<label class="col-sm-4">Shift<span class="text-red">*</span></label>
+									<label class="col-sm-4">Group<span class="text-red">*</span></label>
 									<div class="col-sm-5" align="left">
-										<select class="form-control select2" data-placeholder="Select Shift" name="group" id="group" style="width: 100%">
+										<select class="form-control select2" data-placeholder="Select Group" name="group" id="group" style="width: 100%">
 											<option value=""></option>
-											<option value="A">Shift 1</option>
-											<option value="B">Shift 2</option>
-											<option value="C">Shift 3</option>
+											<option value="A">Group A</option>
+											<option value="B">Group B</option>
+											<option value="C">Group C</option>
 										</select>
 									</div>
 								</div>
@@ -224,13 +224,13 @@
 									</div>
 								</div>
 								<div class="form-group row" align="right">
-									<label class="col-sm-4">Shift<span class="text-red">*</span></label>
+									<label class="col-sm-4">Group<span class="text-red">*</span></label>
 									<div class="col-sm-5" align="left">
-										<select class="form-control select3" data-placeholder="Select Shift" name="editgroup" id="editgroup" style="width: 100%">
+										<select class="form-control select3" data-placeholder="Select Group" name="editgroup" id="editgroup" style="width: 100%">
 											<option value=""></option>
-											<option value="A">Shift 1</option>
-											<option value="B">Shift 2</option>
-											<option value="C">Shift 3</option>
+											<option value="A">Group A</option>
+											<option value="B">Group B</option>
+											<option value="C">Group C</option>
 										</select>
 									</div>
 								</div>
@@ -278,10 +278,13 @@
 
 		fillList();
 
+		clearAll();
+
 		$('.datetime').datetimepicker({
 			format: 'YYYY-MM-DD HH:mm:ss'
 		});
 	});
+
 
 	$(function () {
 		$('.select2').select2({
@@ -290,7 +293,16 @@
 		$('.select3').select2({
 			dropdownParent: $('#edit-modal')
 		});
-	})
+	});
+
+	function clearAll() {
+		$('#operator').val('').trigger('change');
+		$('#operator_code').val('');
+		$('#group').val('').trigger('change');
+		$('#editoperator').val('').trigger('change');
+		$('#editoperator_code').val('');
+		$('#editgroup').val('').trigger('change');
+	}
 
 	function openSuccessGritter(title, message){
 		jQuery.gritter.add({
@@ -325,13 +337,7 @@
 					tableData += '<tr>';
 					tableData += '<td>'+ value.operator_nik +'</td>';
 					tableData += '<td>'+ value.operator_name +'</td>';
-					if (value.group == 'A') {
-						tableData += '<td>Shift 1</td>';
-					}else if (value.group == 'B') {
-						tableData += '<td>Shift 2</td>';
-					}else if (value.group == 'C') {
-						tableData += '<td>Shift 3</td>';
-					}
+					tableData += '<td>'+ value.group +'</td>';
 					tableData += '<td>'+ value.operator_create_date +'</td>';
 					tableData += '<td>';
 					tableData += '<a style="margin-right: 2%; padding: 3%; padding-top: 1%; padding-bottom: 1%; margin-top: 2%; margin-bottom: 2%;" type="button" class="btn btn-warning" data-toggle="modal" data-target="#edit-modal" onclick="editOperator(\''+value.operator_id+'\');">Edit</a>';
@@ -427,6 +433,7 @@
 	}
 
 	function editOperator(id) {
+		clearAll();
 		var data = {
 			id:id
 		}
