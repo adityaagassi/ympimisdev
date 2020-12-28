@@ -586,8 +586,8 @@ class WeldingProcessController extends Controller
 			FROM
 			`employee_syncs` 
 			WHERE
-			department = 'Welding-Surface Treatment (WI-WST)' 
-			AND section = 'Welding Process' 
+			department = 'Woodwind Instrument - Welding-Surface Treatment (WI-WST) Department' 
+			AND section = 'Welding Process Section' 
 			AND employee_id = '".$request->get('operator')."'");
 
 		foreach ($list_op as $key) {
@@ -653,8 +653,8 @@ class WeldingProcessController extends Controller
 			FROM
 			`employee_syncs` 
 			WHERE
-			department = 'Welding-Surface Treatment (WI-WST)' 
-			AND section = 'Welding Process' 
+			department = 'Woodwind Instrument - Welding-Surface Treatment (WI-WST) Department' 
+			AND section = 'Welding Process Section' 
 			AND employee_id = '".$request->get('operator')."'");
 
 		foreach ($list_op as $key) {
