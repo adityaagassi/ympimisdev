@@ -30,7 +30,7 @@
   <div class="row">
     <div class="col-md-12" style="padding: 1px !important">
         @if(Auth::user()->role_code == "MIS" || Auth::user()->role_code == "ACC-SPL")
-        <div class="col-md-2">
+        <!-- <div class="col-md-2">
             <div class="input-group">
               <div class="input-group-addon bg-blue">
                 <i class="fa fa-search"></i>
@@ -39,6 +39,19 @@
                   @foreach($department as $dept)
                     <option value="{{ $dept->department }}">{{ $dept->department }}</option>
                   @endforeach
+                </select>
+            </div>
+        </div> -->
+
+        <div class="col-md-2">
+            <div class="input-group">
+              <div class="input-group-addon bg-blue">
+                <i class="fa fa-search"></i>
+              </div>
+              <select class="form-control select2" multiple="multiple" onchange="drawChart()" id="category" data-placeholder="Select Category" style="border-color: #605ca8" >
+                  <option value=""></option>
+                  <option value="Fixed Asset">Fixed Asset</option>
+                  <option value="Expenses">Expenses</option>
                 </select>
             </div>
         </div>
@@ -121,15 +134,10 @@
 
 
     $("#loading").show();
-    
-    var tglfrom = $('#tglfrom').val();
-    var tglto = $('#tglto').val();
-    var department = $('#department').val();
+    var category = $('#category').val();
 
     var data = {
-      tglfrom: tglfrom,
-      tglto: tglto,
-      department: department,
+      category: category,
     };
 
     $.get('{{ url("fetch/budget/summary") }}', data, function(result, status, xhr) {

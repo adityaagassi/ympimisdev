@@ -29,6 +29,8 @@ use App\AccPurchaseOrderDetail;
 use App\AccInvestment;
 use App\AccInvestmentDetail;
 use App\AccInvestmentBudget;
+use App\AccInvoiceReceiveReport;
+use App\AccInvoicePaymentTerm;
 use App\EmployeeSync;
 use App\UtilityItemNumber;
 use App\UtilityOrder;
@@ -7409,6 +7411,17 @@ public function fetch_budget_table(Request $request)
 public function fetch_budget_summary(Request $request)
 {
 
+    $category = $request->get('category');
+
+      if ($category != null) {
+          $cattt = json_encode($category);
+          $catt = str_replace(array("[","]"),array("(",")"),$cattt);
+
+          $cat = 'and acc_budgets.category in '.$catt;
+      } else {
+          $cat = '';
+      }
+
     $resume = db::select('
         SELECT
             periode,
@@ -7426,6 +7439,8 @@ public function fetch_budget_summary(Request $request)
             SUM( mar_after_adj ) AS mar_simulasi
         FROM
             acc_budgets
+            where acc_budgets.deleted_at is null
+            '.$cat.'
         GROUP BY periode
         ');
 
@@ -7473,10 +7488,11 @@ public function fetch_budget_summary(Request $request)
                 0 AS PO
             FROM
                 acc_budget_histories
-                LEFT JOIN weekly_calendars ON date( acc_budget_histories.updated_at ) = weekly_calendars.week_date 
+                LEFT JOIN acc_budgets ON acc_budget_histories.budget = acc_budgets.budget_no 
             WHERE
                 budget_month_receive IS NOT NULL 
-                AND fiscal_year = "FY197" 
+                AND acc_budgets.periode = "FY197"
+                '.$cat.' 
             GROUP BY
                 budget_month_receive 
                 
@@ -7490,10 +7506,11 @@ public function fetch_budget_summary(Request $request)
                 0 AS PO
             FROM
                 acc_actual_logs
-                LEFT JOIN weekly_calendars ON acc_actual_logs.post_date = weekly_calendars.week_date 
+                LEFT JOIN acc_budgets ON acc_actual_logs.budget_no = acc_budgets.budget_no 
             WHERE
                 acc_actual_logs.deleted_at IS NULL 
-                AND fiscal_year = "FY197" 
+                AND acc_budgets.periode = "FY197"
+                '.$cat.'   
             GROUP BY
                 month_date 
                 
@@ -7507,10 +7524,11 @@ public function fetch_budget_summary(Request $request)
                 0 AS PO
             FROM
                 acc_budget_histories
-                LEFT JOIN weekly_calendars ON date( acc_budget_histories.updated_at ) = weekly_calendars.week_date 
+                LEFT JOIN acc_budgets ON acc_budget_histories.budget = acc_budgets.budget_no 
             WHERE
                 budget_month IS NOT NULL 
-                AND fiscal_year = "FY197" 
+                AND acc_budgets.periode = "FY197"
+                '.$cat.'  
             GROUP BY
                 budget_month
             
@@ -7524,10 +7542,11 @@ public function fetch_budget_summary(Request $request)
                 0 AS PO
             FROM
                 acc_budget_histories
-                LEFT JOIN weekly_calendars ON date( acc_budget_histories.updated_at ) = weekly_calendars.week_date 
+                LEFT JOIN acc_budgets ON acc_budget_histories.budget = acc_budgets.budget_no 
             WHERE
                 budget_month IS NOT NULL 
-                AND fiscal_year = "FY197" 
+                AND acc_budgets.periode = "FY197"
+                '.$cat.'  
             GROUP BY
                 budget_month
                 
@@ -7541,10 +7560,11 @@ public function fetch_budget_summary(Request $request)
                 ROUND( sum( CASE WHEN `status` = "PO" THEN acc_budget_histories.amount_po ELSE 0 END ), 2 ) AS PO
             FROM
                 acc_budget_histories
-                LEFT JOIN weekly_calendars ON date( acc_budget_histories.updated_at ) = weekly_calendars.week_date 
+                LEFT JOIN acc_budgets ON acc_budget_histories.budget = acc_budgets.budget_no 
             WHERE
                 budget_month_po IS NOT NULL 
-                AND fiscal_year = "FY197" 
+                AND acc_budgets.periode = "FY197"
+                '.$cat.'  
             GROUP BY
                 budget_month_po
                 
@@ -7586,7 +7606,7 @@ public function fetch_budget_summary(Request $request)
                 0 AS PO
             FROM
                 acc_budget_histories
-                                LEFT JOIN   acc_budgets ON acc_budgets.budget_no = acc_budget_histories.budget
+                LEFT JOIN   acc_budgets ON acc_budgets.budget_no = acc_budget_histories.budget
             WHERE
                 category is not null
                 AND periode = "FY197" 
@@ -7595,7 +7615,7 @@ public function fetch_budget_summary(Request $request)
                 
                 UNION ALL
             
-            SELECT
+             SELECT
                 category,
                 ROUND( SUM( local_amount ), 2 ) AS Actual,
                 0 AS PR,
@@ -7603,9 +7623,9 @@ public function fetch_budget_summary(Request $request)
                 0 AS PO
             FROM
                 acc_actual_logs
-                                LEFT JOIN   acc_budgets ON acc_budgets.budget_no = acc_actual_logs.budget_no
+                LEFT JOIN acc_budgets ON acc_actual_logs.budget_no = acc_budgets.budget_no 
             WHERE
-                category is not null
+                acc_actual_logs.deleted_at IS NULL 
                 AND acc_budgets.periode = "FY197" 
             GROUP BY
                 category
@@ -7620,7 +7640,7 @@ public function fetch_budget_summary(Request $request)
                 0 AS PO
             FROM
                 acc_budget_histories
-                                LEFT JOIN   acc_budgets ON acc_budgets.budget_no = acc_budget_histories.budget
+                LEFT JOIN   acc_budgets ON acc_budgets.budget_no = acc_budget_histories.budget
             WHERE
                 category is not null
                 AND periode = "FY197" 
@@ -7637,7 +7657,7 @@ public function fetch_budget_summary(Request $request)
                 0 AS PO
             FROM
                 acc_budget_histories
-                                LEFT JOIN   acc_budgets ON acc_budgets.budget_no = acc_budget_histories.budget
+                LEFT JOIN   acc_budgets ON acc_budgets.budget_no = acc_budget_histories.budget
             WHERE
                 category is not null
                 AND periode = "FY197" 
@@ -7654,7 +7674,7 @@ public function fetch_budget_summary(Request $request)
                 ROUND( sum( CASE WHEN `status` = "PO" THEN acc_budget_histories.amount_po ELSE 0 END ), 2 ) AS PO
             FROM
                 acc_budget_histories
-                                LEFT JOIN   acc_budgets ON acc_budgets.budget_no = acc_budget_histories.budget
+                LEFT JOIN   acc_budgets ON acc_budgets.budget_no = acc_budget_histories.budget
             WHERE
                 category is not null
                 AND periode = "FY197" 
