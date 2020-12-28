@@ -341,7 +341,10 @@
                                 <i class="fa fa-caret-right"></i> Audit Kanban (かんばん監査)
                             </a>
                             <br>
-                            <a href="{{ url("/index/audit_internal_mis?category=Audit_MIS") }}">
+                            <!-- <a href="{{ url("/index/audit_internal_mis?category=Audit_MIS") }}">
+                                <i class="fa fa-caret-right"></i> Audit MIS (MIS課内部監査)
+                            </a> -->
+                            <a href="{{ url("/index/audit_patrol_mis") }}">
                                 <i class="fa fa-caret-right"></i> Audit MIS (MIS課内部監査)
                             </a>
                             <!-- <br>
@@ -399,8 +402,16 @@
             <tbody>
                 <tr>
                     <td>
-                        <a href="{{ url("/index/material/material_monitoring") }}">
-                            <i class="fa fa-caret-right"></i> Raw Material Monitoring (素材監視)
+                        <a href="{{ url("/index/material/material_monitoring/direct") }}">
+                            <i class="fa fa-caret-right"></i> Raw Material Monitoring (Direct) (素材監視「」)
+                        </a>
+                        <br>
+                        <a href="{{ url("/index/material/material_monitoring/indirect") }}">
+                            <i class="fa fa-caret-right"></i> Raw Material Monitoring (Indirect) (素材監視「」)
+                        </a>
+                        <br>
+                        <a href="{{ url("/index/material/material_monitoring/subcon") }}">
+                            <i class="fa fa-caret-right"></i> Raw Material Monitoring (Subcon) (素材監視「」)
                         </a>
                     </td>
                 </tr>
@@ -573,19 +584,19 @@
                                         <i class="fa fa-caret-right"></i> Sharepoint;
                                     </a>
                                     <a href="https://a01.yamaha.co.jp/fw/dfw/SAP2/Citrix/XenApp/site/default.aspx" target="_blank">
-                                     SAP;
-                                 </a>
-                                 <a href="https://adagio.yamaha.co.jp/imart/default.portal" target="_blank">
-                                     Adagio;
-                                 </a>
-                                 <a href="https://a01.yamaha.co.jp/fw/dfw/MA5/ma5/EntranceServlet" target="_blank">
-                                     MA5;
-                                 </a>
-                             </td>     
-                         </tr>                                                                             
-                     </tbody>
-                 </table>
-                 <table class="table table-bordered">
+                                       SAP;
+                                   </a>
+                                   <a href="https://adagio.yamaha.co.jp/imart/default.portal" target="_blank">
+                                       Adagio;
+                                   </a>
+                                   <a href="https://a01.yamaha.co.jp/fw/dfw/MA5/ma5/EntranceServlet" target="_blank">
+                                       MA5;
+                                   </a>
+                               </td>     
+                           </tr>                                                                             
+                       </tbody>
+                   </table>
+                   <table class="table table-bordered">
                     <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
                         <tr>
                             <th>Workshop<br>ワークショップ</th>
@@ -935,10 +946,10 @@
                                         <a href="{{ url("/index/fg_stock") }}">
                                             <i class="fa fa-caret-right"></i> Finished Goods Stock (完成品在庫)
                                         </a>
-                                        <br>
+                                       {{--  <br>
                                         <a href="{{ url("/index/display/shipment_progress") }}">
                                             <i class="fa fa-caret-right"></i> FG Shipment Progress (出荷結果)
-                                        </a>
+                                        </a> --}}
                                         <br>
                                         <a href="{{ url("/index/fg_traceability") }}">
                                             <i class="fa fa-caret-right"></i> Traceability (完成品追跡)
@@ -960,10 +971,10 @@
                                         <a href="{{ url("/index/kd_stock") }}">
                                             <i class="fa fa-caret-right"></i> KD Parts Stock (KD部品在庫)
                                         </a>
-                                        <br>
+                                       {{--  <br>
                                         <a href="{{ url("/index/kd_shipment_progress") }}">
                                             <i class="fa fa-caret-right"></i> KD Shipment Progress (出荷結果)
-                                        </a>
+                                        </a> --}}
                                     </td>
                                 </tr>
                                 <tr>
@@ -1128,6 +1139,25 @@
                                             <a href="{{ url("budget/info") }}">
                                                 <i class="fa fa-caret-right"></i> Budget Information (予算情報)
                                             </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table class="table table-bordered">
+                                <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
+                                    <tr>
+                                        <th>
+                                            <span style="font-weight: bold;">Internet of Things<br>モノのインターネット</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <a href="{{ url("index/driver_manager") }}">
+                                                <i class="fa fa-caret-right"></i> Report Driver IN / OUT <span style="color:red"> *Beacon </span>
+                                            </a>                           
                                         </td>
                                     </tr>
                                 </tbody>

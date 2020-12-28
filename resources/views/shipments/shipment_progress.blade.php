@@ -374,6 +374,9 @@
 		if(name == 'SXBODY'){
 			var hpl = 'ASSY-SX';
 		}
+		if(name == 'MPRO'){
+			var hpl = 'MPRO';
+		}
 		if(name == 'ZPRO'){
 			var hpl = 'ZPRO';
 		}
@@ -804,6 +807,9 @@ $.get('{{ url("fetch/kd_shipment_progress") }}', data, function(result, status, 
 		var planZPRO = [];
 		var actualZPRO = [];
 
+		var planMPRO = [];
+		var actualMPRO = [];
+
 		var planSubAssySX = [];
 		var actualSubAssySX = [];
 
@@ -834,6 +840,10 @@ $.get('{{ url("fetch/kd_shipment_progress") }}', data, function(result, status, 
 			if(data[i].hpl == 'ZPRO'){
 				planZPRO.push(data[i].plan-data[i].act);
 				actualZPRO.push(data[i].act);
+			}
+			if(data[i].hpl == 'MPRO'){
+				planMPRO.push(data[i].plan-data[i].act);
+				actualMPRO.push(data[i].act);
 			}
 			if(data[i].hpl == 'SUBASSY-SX'){
 				planSubAssySX.push(data[i].plan-data[i].act);
@@ -999,6 +1009,12 @@ $.get('{{ url("fetch/kd_shipment_progress") }}', data, function(result, status, 
 				color: 'rgba(255, 0, 0, 0.25)'
 			}, {
 				name: 'Plan',
+				data: planMPRO,
+				stack: 'MPRO',
+				color: 'rgba(255, 0, 0, 0.25)',
+				showInLegend: false
+			}, {
+				name: 'Plan',
 				data: planMP,
 				stack: 'MP',
 				color: 'rgba(255, 0, 0, 0.25)',
@@ -1032,6 +1048,12 @@ $.get('{{ url("fetch/kd_shipment_progress") }}', data, function(result, status, 
 				data: actualZPRO,
 				stack: 'ZPRO',
 				color: 'rgba(0, 255, 0, 0.90)'
+			}, {
+				name: 'Actual',
+				data: actualMPRO,
+				stack: 'MPRO',
+				color: 'rgba(0, 255, 0, 0.90)',
+				showInLegend: false
 			}, {
 				name: 'Actual',
 				data: actualMP,
