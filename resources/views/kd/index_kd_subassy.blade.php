@@ -283,7 +283,7 @@
 	function fillTableDetail(){
 
 		var data = {
-			status : 0,
+			status : 1,
 			remark : "{{ $location }}"
 		}
 
