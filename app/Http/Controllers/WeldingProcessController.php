@@ -90,8 +90,8 @@ class WeldingProcessController extends Controller
 			FROM
 			`employee_syncs` 
 			WHERE
-			department = 'Welding-Surface Treatment (WI-WST)' 
-			AND section = 'Welding Process'");
+			department = 'Woodwind Instrument - Welding-Surface Treatment (WI-WST) Department' 
+			AND section = 'Welding Process Section'");
 
 		return view('processes.welding.master_operator', array(
 			'title' => $title,
