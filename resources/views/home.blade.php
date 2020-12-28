@@ -698,7 +698,7 @@
                                 <br>
                             </td>
                         </tr>
-                        <tr>
+                       <!--  <tr>
                             <td>
                                 <span style="font-weight: bold;">Planned Maintenance (予定保全)</span>
                                 <br>
@@ -715,7 +715,7 @@
                                 </a>
                                 <br>
                             </td>
-                        </tr>
+                        </tr> -->
                     </tbody>
                 </table>
             </div>
