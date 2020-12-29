@@ -5020,7 +5020,7 @@ class RecorderProcessController extends Controller
           $ng_name_body_yrf = $request->get('ng_name_body_yrf');
           $ng_name_stopper_yrf = $request->get('ng_name_stopper_yrf');
 
-          $ng_count_head_yrf = $request->get('ng_count_head');
+          $ng_count_head_yrf = $request->get('ng_count_head_yrf');
           $ng_count_body_yrf = $request->get('ng_count_body_yrf');
           $ng_count_stopper_yrf = $request->get('ng_count_stopper_yrf');
 
