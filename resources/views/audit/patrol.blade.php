@@ -231,8 +231,9 @@
 					<div class="form-group">
 						<label>Pilih Kategori</label>
 						<select class="form-control select3" id="selectCategory" data-placeholder="Pilih Kategori..." style="width: 100%; font-size: 20px;">
-							<option value="S-Up And EHS Patrol Presdir">S-Up And EHS Patrol Presdir</option>
+							<option value=""></option>
 							<option value="5S Patrol GM">5S Patrol GM</option>
+							<option value="S-Up And EHS Patrol Presdir">S-Up And EHS Patrol Presdir</option>
 						</select>
 					</div>
 

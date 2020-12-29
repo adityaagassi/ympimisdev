@@ -144,8 +144,7 @@
                     <label class="col-sm-4 control-label">Related Department<span class="text-red">*</span></label>
 
                     <div class="col-sm-8">
-                      <select data-placeholder="Select Related Department" id="select_dept_form" style="width: 100%" multiple="">
-                        <option value=""></option>
+                      <select data-placeholder="Select Related Department" id="select_dept_form" style="width: 100%" multiple="multiple">
                         @foreach($depts as $dept)
                         <option value="{{ $dept->department_name }}">{{ $dept->department_name }}</option>
                         @endforeach                        
@@ -398,7 +397,6 @@
   jQuery(document).ready(function() {
     $('body').toggleClass("sidebar-collapse");
 
-    getDatas();
 
     $('.select2').select2();
     $('#select_dept_form').select2();
@@ -406,6 +404,7 @@
     $("#select_form").val("").trigger("change");
     $("#select_dept_form").val("").trigger("change");
 
+    getDatas();
     // CKEDITOR.replace('sebelum' ,{
     //   filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
     // });
@@ -455,6 +454,9 @@
 
       $("#sk_number_jp").val(result.datas.sakurentsu_number);
       $("#sk_title_jp").val(result.datas.title_jp);
+      $("#select_form").val(result.datas.category).trigger("change");
+
+
       $("#sk_file_jp").append(app2);
     })
     
@@ -473,12 +475,17 @@
       sort_dept : sort_dept
     }
 
+    $("#loading").show();
+
     $.post('{{ url("post/sakurentsu/type") }}', data, function(result, status, xhr){
       if (result.status) {
+        $("#loading").hide();
         openSuccessGritter('Success', '');
         $("#select_form").val("").trigger("change");
         $("#select_dept_form").val("").trigger("change");
+        window.setTimeout( window.location.replace('{{ url("index/sakurentsu/list_sakurentsu") }}'), 3000 );
       } else {
+        $("#loading").hide();
         openErrorGritter('Error', result.message);
       }
     })

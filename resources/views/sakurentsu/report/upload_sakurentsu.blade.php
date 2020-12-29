@@ -72,8 +72,8 @@ table.table-bordered > tfoot > tr > th{
    <div class="box box-solid">
     <div class="box-header">
       <h3 class="box-title">Upload File Sakurentsu <span class="text-purple">作連通ファイルアップロード</span></h3>
-   </div>
-   <div class="box-body">
+    </div>
+    <div class="box-body">
      <div class="row">
       <div class="col-xs-12">
        <div class="form-group">
@@ -84,29 +84,16 @@ table.table-bordered > tfoot > tr > th{
             <input type="hidden" value="{{csrf_token()}}" name="_token" />
             <input type="hidden" id="applicant" name="applicant" class="form-control" value="{{$employee->name}}" readonly>
             
-            <div class="col-xs-12">
-              <label for="input">Sakuretsu Number <span class="text-purple">作連通番号</span></label>              
-            </div>
-            <div class="col-xs-4" style="padding: 1px">
+            <div class="col-xs-12" style="padding: 1px">
               <div class="form-group">
-                <input type="text" name="sakurentsu_number1" id="sakurentsu_number1" placeholder="Sakurentsu Number" class="form-control" value="KC" readonly="">
-              </div>
-            </div>
-
-            <div class="col-xs-4" style="padding: 1px">
-              <div class="form-group">
-                <input type="text" name="sakurentsu_number2" id="sakurentsu_number2" placeholder="Nomor, e.g 001" class="form-control">
-              </div>
-            </div>
-            <div class="col-xs-4" style="padding: 1px">
-              <div class="form-group">
-                <input type="text" name="sakurentsu_number3" id="sakurentsu_number3" placeholder="Revisi, e.g 00" class="form-control">
+                <label for="input">Sakuretsu Number <span class="text-purple">作連通番号</span></label>              
+                <input type="text" name="sakurentsu_number1" id="sakurentsu_number1" placeholder="Input Sakurentsu Number or Reff Number" class="form-control">
               </div>
             </div>
             <div class="col-xs-12" style="padding: 1px">
               <div class="form-group">
                 <label for="input">Sakurentsu Title <span class="text-purple">作連通の表題</span></label>
-                <input type="text" name="title_jp" id="title_jp" placeholder="Write title here" class="form-control">
+                <input type="text" name="title_jp" id="title_jp" placeholder="Input title here" class="form-control">
               </div>
             </div>
             <div class="col-xs-12" style="padding: 1px">
@@ -264,8 +251,6 @@ table.table-bordered > tfoot > tr > th{
 
   this.on('sendingmultiple', function (data, xhr, formData) {
     formData.append("sakurentsu_number1", $("#sakurentsu_number1").val());
-    formData.append("sakurentsu_number2", $("#sakurentsu_number2").val());
-    formData.append("sakurentsu_number3", $("#sakurentsu_number3").val());
     formData.append("title_jp", $("#title_jp").val());
     formData.append("sakurentsu_category", $("#sakurentsu_category").val());
     formData.append("applicant", $("#applicant").val());
