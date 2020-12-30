@@ -9354,37 +9354,37 @@ $data_investment_belum_po = db::select("
     submission_date ASC
     ");
 
-$data_po_belum_receive = db::select("
-    SELECT DISTINCT
-    acc_investments.reff_number, 
-    departments.department_shortname,
-    acc_purchase_orders.no_po,
-    acc_purchase_orders.tgl_po,
-    acc_purchase_orders.supplier_name,
-    acc_purchase_order_details.nama_item,
-    IF(acc_purchase_orders.posisi = 'pch', 'PO Terkirim', 'PO Approval') as status_po
-    FROM acc_purchase_orders
-    LEFT JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po
-    LEFT JOIN acc_investments ON acc_purchase_order_details.no_pr = acc_investments.reff_number
-    LEFT JOIN acc_investment_details ON acc_investments.reff_number = acc_investment_details.reff_number
-    JOIN departments ON acc_investments.applicant_department = departments.department_name 
-    WHERE
-    acc_investments.deleted_at IS NULL 
-    AND acc_investments.receive_date IS NOT NULL
-    AND acc_investment_details.sudah_po IS NOT NULL 
-    AND acc_purchase_orders.deleted_at IS NULL
-    AND acc_purchase_order_details.`status` IS NULL 
-    AND DATE_FORMAT( tgl_po, '%Y-%m' ) BETWEEN '".$datefrom."' AND '".$dateto."' 
-    ".$dep." 
-    ORDER BY
-    tgl_po ASC 
-    ");
+// $data_po_belum_receive = db::select("
+//     SELECT DISTINCT
+//     acc_investments.reff_number, 
+//     departments.department_shortname,
+//     acc_purchase_orders.no_po,
+//     acc_purchase_orders.tgl_po,
+//     acc_purchase_orders.supplier_name,
+//     acc_purchase_order_details.nama_item,
+//     IF(acc_purchase_orders.posisi = 'pch', 'PO Terkirim', 'PO Approval') as status_po
+//     FROM acc_purchase_orders
+//     LEFT JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po
+//     LEFT JOIN acc_investments ON acc_purchase_order_details.no_pr = acc_investments.reff_number
+//     LEFT JOIN acc_investment_details ON acc_investments.reff_number = acc_investment_details.reff_number
+//     JOIN departments ON acc_investments.applicant_department = departments.department_name 
+//     WHERE
+//     acc_investments.deleted_at IS NULL 
+//     AND acc_investments.receive_date IS NOT NULL
+//     AND acc_investment_details.sudah_po IS NOT NULL 
+//     AND acc_purchase_orders.deleted_at IS NULL
+//     AND acc_purchase_order_details.`status` IS NULL 
+//     AND DATE_FORMAT( tgl_po, '%Y-%m' ) BETWEEN '".$datefrom."' AND '".$dateto."' 
+//     ".$dep." 
+//     ORDER BY
+//     tgl_po ASC 
+//     ");
 
 $response = array(
     'status' => true,
     'datas' => $data,
-    'data_investment_belum_po' => $data_investment_belum_po,
-    'data_po_belum_receive' => $data_po_belum_receive
+    'data_investment_belum_po' => $data_investment_belum_po
+    // 'data_po_belum_receive' => $data_po_belum_receive
 );
 
 return Response::json($response); 
@@ -9984,11 +9984,14 @@ public function transfer_budget_post_new(Request $request)
         }
 
         $sisa_bulan = strtolower(date('M')).'_sisa_budget';
+        $sisa_simulasi_bulan = strtolower(date('M')).'_after_adj';
 
         $budget_from_awal = AccBudget::where('budget_no', $budget_from)->where('periode', $fiscal)->first();
 
         // Dikurangi dulu dari budget awal
-        $totalfrom = $budget_from_awal->$sisa_bulan - $amount; //sisa budget 
+        $totalfrom = $budget_from_awal->$sisa_bulan - $amount; //sisa budget
+        $simulasi_from = $budget_from_awal->$sisa_simulasi_bulan - $amount;
+        $amountfrom = $budget_from_awal->amount - $amount;
 
         if ($totalfrom < 0) {
             $response = array(
@@ -9999,7 +10002,9 @@ public function transfer_budget_post_new(Request $request)
         }
 
         $dataupdate = AccBudget::where('budget_no', $budget_from)->where('periode', $fiscal)->update([
-            $sisa_bulan => $totalfrom
+            $sisa_bulan => $totalfrom,
+            $sisa_simulasi_bulan => $simulasi_from,
+            'amount' => $amountfrom
         ]);
 
         // Ditambah Ke Budget Tujuan
@@ -10007,9 +10012,13 @@ public function transfer_budget_post_new(Request $request)
         $budget_to_akhir = AccBudget::where('budget_no', $budget_to)->where('periode', $fiscal)->first();
 
         $totalto = $budget_to_akhir->$sisa_bulan + $amount; //sisa budget 
+        $simulasito = $budget_to_akhir->$sisa_simulasi_bulan + $amount;
+        $amountto = $budget_to_akhir->amount + $amount;
 
         $dataupdate = AccBudget::where('budget_no', $budget_to)->where('periode', $fiscal)->update([
-            $sisa_bulan => $totalto
+            $sisa_bulan => $totalto,
+            $sisa_simulasi_bulan => $simulasito,
+            'amount' => $amountto
         ]);
 
         $acc = AccBudgetTransfer::create([

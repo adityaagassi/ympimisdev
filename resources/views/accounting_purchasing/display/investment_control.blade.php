@@ -1104,30 +1104,30 @@ hr { background-color: red; height: 1px; border: 0; }
 
           $('#tabelisipo_undone').append(table_belum_po);
 
-          $("#tabelisiactual").find("td").remove();  
-          $('#tabelisiactual').html("");
+          // $("#tabelisiactual").find("td").remove();  
+          // $('#tabelisiactual').html("");
           
-          var table_belum_actual = "";
+          // var table_belum_actual = "";
 
-          $.each(result.data_po_belum_receive, function(key, value) {
-            table_belum_actual += '<tr>';
-            table_belum_actual += '<td>'+value.reff_number+'</td>';
-            table_belum_actual += '<td>'+value.department_shortname+'</td>';
-            table_belum_actual += '<td>'+value.no_po+'</td>';
-            table_belum_actual += '<td>'+value.tgl_po+'</td>';
-            table_belum_actual += '<td>'+value.supplier_name+'</td>';
-            table_belum_actual += '<td>'+value.nama_item+'</td>';
+          // $.each(result.data_po_belum_receive, function(key, value) {
+          //   table_belum_actual += '<tr>';
+          //   table_belum_actual += '<td>'+value.reff_number+'</td>';
+          //   table_belum_actual += '<td>'+value.department_shortname+'</td>';
+          //   table_belum_actual += '<td>'+value.no_po+'</td>';
+          //   table_belum_actual += '<td>'+value.tgl_po+'</td>';
+          //   table_belum_actual += '<td>'+value.supplier_name+'</td>';
+          //   table_belum_actual += '<td>'+value.nama_item+'</td>';
 
-            if (value.status_po == 'PO Terkirim') {
-              table_belum_actual += '<td><span class="label label-success"> '+value.status_po+' </span></td>';              
-            }else if(value.status_po == 'PO Approval'){
-              table_belum_actual += '<td><span class="label label-warning">'+value.status_po+' </span></td>';   
-            }
+          //   if (value.status_po == 'PO Terkirim') {
+          //     table_belum_actual += '<td><span class="label label-success"> '+value.status_po+' </span></td>';              
+          //   }else if(value.status_po == 'PO Approval'){
+          //     table_belum_actual += '<td><span class="label label-warning">'+value.status_po+' </span></td>';   
+          //   }
             
-            table_belum_actual += '</tr>';
-          })
+          //   table_belum_actual += '</tr>';
+          // })
 
-          $('#tabelisiactual').append(table_belum_actual);
+          // $('#tabelisiactual').append(table_belum_actual);
 
         }
       }
