@@ -154,6 +154,7 @@
               <option value="Bussiness Trip" <?php if($investment->type == "Bussiness Trip") echo "selected"; ?>>Bussiness Trip</option>
               <option value="Electricity, Water, and Gas" <?php if($investment->type == "Electricity, Water, and Gas") echo "selected"; ?>>Electricity, Water, and Gas</option>
               <option value="Technical Assistant" <?php if($investment->type == "Technical Assistant") echo "selected"; ?>>Technical Assistant</option>
+              <option value="Wellfare" <?php if($investment->type == "Wellfare") echo "selected"; ?>>Wellfare</option>
               <option value="Others" <?php if($investment->type == "Others") echo "selected"; ?>>Others</option>
             </select>
           </div>
