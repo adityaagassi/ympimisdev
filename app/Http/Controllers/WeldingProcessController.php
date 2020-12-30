@@ -32,6 +32,7 @@ use App\JigPartStock;
 use App\SolderingStandardTime;
 use App\WorkshopJobOrderLog;
 use App\WorkshopJobOrder;
+use App\EmployeeGroup;
 use Carbon\Carbon;
 use DateTime;
 use FTP;
@@ -585,7 +586,10 @@ class WeldingProcessController extends Controller
 			$listop = DB::connection('welding_controller')
 			->table('m_operator')->where('operator_nik',$request->get('operator'))->get();
 
-			if (count($listop) == 0) {
+			$listop2 = DB::connection('welding')
+			->table('m_operator')->where('operator_nik',$request->get('operator'))->get();
+
+			if (count($listop) == 0 || count($listop2) == 0) {
 				$list_op = DB::SELECT("SELECT
 					* 
 					FROM
@@ -613,6 +617,24 @@ class WeldingProcessController extends Controller
 					'operator_create_date' => date('Y-m-d H:i:s'),
 					'created_by' => Auth::id()]);
 
+				$lists2 = DB::connection('welding')
+				->table('m_operator')
+				->insert([
+					'operator_name' => strtoupper($operator_name),
+					'operator_code' => strtoupper($tag),
+					'department_id' => 0,
+					'ws_id' => 0,
+					'operator_nik' => $request->get('operator'),
+					'group' => $request->get('group'),
+					'operator_create_date' => date('Y-m-d H:i:s'),
+					'created_by' => Auth::id()]);
+
+				$opgroup = EmployeeGroup::firstOrNew(['employee_id' => $request->get('operator')]);
+				$opgroup->employee_id = $request->get('operator');
+				$opgroup->group = $request->get('group');
+				$opgroup->save();
+
+
 				$response = array(
 					'status' => true
 				);
@@ -637,6 +659,10 @@ class WeldingProcessController extends Controller
 	public function destroyOperator($id)
 	{
 		DB::connection('welding_controller')
+		->table('m_operator')
+		->where('operator_id','=',$id)->delete();
+
+		DB::connection('welding')
 		->table('m_operator')
 		->where('operator_id','=',$id)->delete();
 
@@ -695,6 +721,23 @@ class WeldingProcessController extends Controller
 				'operator_nik' => $request->get('operator'),
 				'group' => $request->get('group'),
 				'operator_create_date' => date('Y-m-d H:i:s')]);
+
+			$lists = DB::connection('welding')
+			->table('m_operator')
+			->where('operator_id',$request->get('operator_id'))
+			->update([
+				'operator_name' => strtoupper($operator_name),
+				// 'operator_code' => strtoupper($tag),
+				'department_id' => 0,
+				'ws_id' => 0,
+				'operator_nik' => $request->get('operator'),
+				'group' => $request->get('group'),
+				'operator_create_date' => date('Y-m-d H:i:s')]);
+
+			$opgroup = EmployeeGroup::firstOrNew(['employee_id' => $request->get('operator')]);
+			$opgroup->employee_id = $request->get('operator');
+			$opgroup->group = $request->get('group');
+			$opgroup->save();
 
 			$response = array(
 				'status' => true
