@@ -57,6 +57,7 @@
 					<select class="form-control select2" id="status_cari" data-placeholder="Pilih Status" onchange="get_data('')" style="width: 100%;">
 						<option></option>
 						<option value="Finished">Finished</option>
+						<option value="Open">Open</option>
 					</select>
 				</div>
 			</div>

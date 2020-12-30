@@ -216,12 +216,13 @@
 											<div class="col-md-4">
 												<div class="form-group">
 													<label>Status</label>
-													<select class="form-control select2" data-placeholder="Pilih Approver" name="approvedBy" id="approvedBy" style="width: 100% height: 35px; font-size: 15px;">
+													<select class="form-control select2" data-placeholder="Pilih Status Pending" name="status" id="status" style="width: 100% height: 35px; font-size: 15px;">
 														<option value=""></option>
 														<option value="-">-</option>
 														<option value="No Part">Part Tidak Ada</option>
 														<option value="Vendor">Proyek Vendor</option>
 														<option value="WJO">Menunggu WJO</option>
+														<option value="Call Friend">Call Friend</option>
 													</select>
 												</div>
 											</div>
@@ -232,7 +233,7 @@
 						</div>
 						<div class="col-md-12">
 							<div class="form-group pull-right">
-								<a href="javascript:void(0)" onClick="clearConfirmation()" class="btn btn-danger">Clear</a>
+								<a href="javascript:void(0)" onClick="location.reload()" class="btn btn-danger">Clear</a>
 								<button type="submit" class="btn btn-success"><i class="fa fa-download"></i> Excel</button>
 								<a href="javascript:void(0)" onClick="fillTable()" class="btn btn-primary"><span class="fa fa-search"></span> Search</a>
 							</div>
@@ -355,6 +356,13 @@
 						</div>
 
 						<div class="col-xs-12">
+							<div class="form-group row" align="right">
+								<label class="col-xs-2" style="margin-top: 1%;">Nama Mesin</label>
+								<div class="col-xs-10" align="left">
+									<input type="text" class="form-control" id="nama_mesin" readonly>
+								</div>
+							</div>
+
 							<div class="form-group row" align="right">
 								<label class="col-xs-2" style="margin-top: 1%;">Uraian Permintaan</label>
 								<div class="col-xs-10" align="left">
@@ -632,7 +640,8 @@
 		var section = $('#section').val();
 		var workType = $('#workType').val();
 		var remark = $('#remark').val(); 
-		var approvedBy = $('#approvedBy').val(); 
+		var status = $('#status').val();
+
 		var data = {
 			reqFrom:reqFrom,
 			reqTo:reqTo,
@@ -644,7 +653,7 @@
 			section:section,
 			workType:workType,
 			remark:remark,
-			approvedBy:approvedBy
+			status:status
 		}
 
 		$.get('{{ url("fetch/maintenance/list_spk") }}', data, function(result, status, xhr){
@@ -846,6 +855,13 @@
 			$("#kategori_detail").val(result.detail[0].category);
 			$("#mesin_detail").val(result.detail[0].machine_condition);
 			$("#bahaya_detail").val(result.detail[0].danger);
+
+			if (result.detail[0].machine_name == 'Lain - lain') {
+				$("#nama_mesin").val(result.detail[0].machine_name+"  _  "+result.detail[0].machine_remark);
+			} else {
+				$("#nama_mesin").val(result.detail[0].machine_desc);
+			}
+
 			$("#uraian_detail").val(result.detail[0].description);
 			$("#keamanan_detail").val(result.detail[0].safety_note);
 			$("#target_detail").val(result.detail[0].target_date);

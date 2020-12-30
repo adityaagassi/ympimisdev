@@ -115,7 +115,7 @@
 					</div>
 				</div>
 				<div class="modal-body">
-					<form method="POST" id="createForm" autocomplete="off">
+					<form method="POST" id="createForm" autocomplete="off" enctype="multipart/form-data">
 						<div class="row">
 							<div class="col-xs-12" style="padding-bottom: 1%;">
 								<div class="col-xs-4" style="padding: 0px;" align="right">
@@ -151,6 +151,7 @@
 										<option>Pemasangan</option>
 										<option>Pelepasan</option>
 										<option>Penggantian</option>
+										<option>Relayout</option>
 									</select>
 								</div>
 							</div>
@@ -172,6 +173,13 @@
 											<option>Kelistrikan Mesin</option>
 											<option>Mekanis Mesin</option>
 											<option>Otomatisasi Mesin</option>
+										</optgroup>
+										<optgroup label="WWT" value="WWT">
+											<option>Suplai Air</option>
+											<option>Pembuangan Limbah</option>
+										</optgroup>
+										<optgroup label="Lain - lain">
+											<option>Informasi</option>
 										</optgroup>
 									</select>
 								</div>
@@ -195,8 +203,11 @@
 									<span style="font-weight: bold; font-size: 16px;">Sumber bahaya yang harus diperhatikan:<span class="text-red">*</span></span>
 								</div>
 								<div class="col-xs-6">
-									<select class="form-control select3" id="bahaya" name="bahaya[]" data-placeholder="Pilih Bahaya yang Mungkin Terjadi" multiple="multiple" required>
+									<select class="form-control select3" id="bahaya" name="bahaya[]" placeholder="Pilih Bahaya yang Mungkin Terjadi" multiple="multiple" required>
 										<option>Bahan Kimia Beracun</option>
+										<option>Permukaan Panas</option>
+										<option>Bekerja di Ketinggian</option>
+										<option>Bekerja di Tempat Terbatas</option>
 										<option>Tersengat Listrik</option>
 										<option>Terjepit</option>
 										<option>Putaran Mesin</option>
@@ -213,6 +224,16 @@
 									</select>
 								</div>
 							</div>
+
+							<div class="col-xs-12" style="padding-bottom: 1%; display: none" id="mesin_detail_div">
+								<div class="col-xs-4" style="padding: 0px;" align="right">
+									<span style="font-weight: bold; font-size: 16px;">Nama Mesin:<span class="text-red">*</span></span>
+								</div>
+								<div class="col-xs-7">
+									<input type="text" class="form-control" name="nama_mesin_detail" id="nama_mesin_detail" placeholder="Masukkan Nama Mesin">
+								</div>
+							</div>
+
 							<div class="col-xs-12" style="padding-bottom: 1%;">
 								<div class="col-xs-4" style="padding: 0px;" align="right">
 									<span style="font-weight: bold; font-size: 16px;">Penjelasan Pekerjaan:<span class="text-red">*</span></span>
@@ -273,6 +294,15 @@
 
 								<div class="col-xs-5">
 									<textarea class="form-control" placeholder="Isikan Catatan Urgent" name="reason_urgent" id="reason_urgent" rows="1"></textarea>
+								</div>
+							</div>
+
+							<div class="col-xs-12" style="padding-bottom: 1%;">
+								<div class="col-xs-4" style="padding: 0px;" align="right">
+									<span style="font-weight: bold; font-size: 16px;">Lampiran:</span>
+								</div>
+								<div class="col-xs-4">
+									<input type="file" name="lampiran" id="lampiran">
 								</div>
 							</div>
 						</div>
@@ -569,6 +599,7 @@
 											<option>Pemasangan</option>
 											<option>Pelepasan</option>
 											<option>Penggantian</option>
+											<option>Relayout</option>
 										</select>
 									</div>
 								</div>
@@ -591,6 +622,10 @@
 												<option>Mekanis Mesin</option>
 												<option>Otomatisasi Mesin</option>
 											</optgroup>
+											<optgroup label="WWT" value="WWT">
+												<option>Suplai Air</option>
+												<option>Pembuangan Limbah</option>
+											</optgroup>
 										</select>
 									</div>
 								</div>
@@ -610,8 +645,10 @@
 									<label class="col-xs-4" style="margin-top: 1%;">Potensi Bahaya<span class="text-red">*</span></label>
 									<div class="col-xs-7" align="left">
 										<select class="form-control" id="bahaya_edit" name="bahaya_edit[]" data-placeholder="Pilih Bahaya yang Mungkin Terjadi" multiple="multiple" required>
-											<option></option>
 											<option>Bahan Kimia Beracun</option>
+											<option>Permukaan Panas</option>
+											<option>Bekerja di Ketinggian</option>
+											<option>Bekerja di Tempat Terbatas</option>
 											<option>Tersengat Listrik</option>
 											<option>Terjepit</option>
 											<option>Putaran Mesin</option>
@@ -625,8 +662,14 @@
 									<label class="col-xs-2" style="margin-top: 1%;">Mesin</label>
 									<div class="col-xs-10 mesin_div2" align="left">
 										<select class="form-control" id="mesin_edit" name="mesin_edit" data-placeholder="pilih mesin (Bila berhubungan mesin)">
-											<option value=""></option>
 										</select>
+									</div>
+								</div>
+
+								<div class="form-group row" align="right" style="display: none" id="mesin_edit_detail_div">
+									<label class="col-xs-2" style="margin-top: 1%;">Nama Mesin<span class="text-red">*</span></label>
+									<div class="col-xs-10" align="left">
+										<input type="text" class="form-control" name="mesin_edit_detail" id="mesin_edit_detail" placeholder="Masukkan Nama Mesin">
 									</div>
 								</div>
 
@@ -638,7 +681,7 @@
 								</div>
 
 								<div class="form-group row" align="right">
-									<label class="col-xs-2" style="margin-top: 1%;">Catatan Keamanan<span class="text-red">**</span></label>
+									<label class="col-xs-2" style="margin-top: 1%;">Catatan Keamanan</label>
 									<div class="col-xs-8" align="left">
 										<textarea class="form-control" id="keamanan_edit" name="keamanan_edit" rows="1" ></textarea>
 									</div>
@@ -658,9 +701,9 @@
 
 								<div class="row">
 									<div class="col-xs-10" style="font-weight: bold !important">
-										<br>
 										<span style="color: red !important; background-color: yellow">Note : </span><br>
 										<span style="color: red !important; background-color: yellow">*) Wajib diisi</span><br>
+										<span style="color: red !important; background-color: yellow; font-weight: bold;">Prioritas "Urgent" untuk mesin yang menyebabkan aliran produksi berhenti, tidak terdapat mesin cadangan</span>
 									</div>
 								</div>
 
@@ -810,6 +853,11 @@
 		})
 	}
 
+	// $('#modalEdit').on('shown.bs.modal', function () {
+	// 	get_machine('all');
+	// 	console.log('tes');
+	// }) 
+
 
 	$('#bahaya').on('change', function() {
 		var first = $('#bahaya option:eq(1)').text();
@@ -849,6 +897,11 @@
 			return false;
 		}
 
+		if ($("#nama_mesin option:selected").text() == "Lain - lain" && $("#nama_mesin_detail").val().length <= 0) {
+			openErrorGritter('Gagal', 'Harap Mengisi Nama Mesin');
+			return false;
+		}
+
 		$("#create_btn").attr("disabled", true);
 		$("#loading").show();
 
@@ -858,10 +911,11 @@
 		$.ajax({
 			url: '{{ url("create/maintenance/spk") }}',
 			type: 'POST',
+			enctype: 'multipart/form-data',
 			data: formData,
 			processData: false,
-			cache: false,
 			contentType: false,
+			cache: false,
 			success: function (result, status, xhr) {
 				if(result.status) {
 					$('#createModal').modal('hide');
@@ -876,7 +930,8 @@
 					$("#bahaya").prop('selectedIndex', 0).change();
 					$("#nama_mesin").prop('selectedIndex', 0).change();
 
-					get_data("all");
+					// get_data("all");
+					location.reload();
 				} else {
 					$("#create_btn").prop("disabled", false);
 					$("#loading").hide();
@@ -918,7 +973,7 @@
 			if (result.detail[0].machine_description) {
 				$("#mesin_detail").val(result.detail[0].machine_description+" | "+result.detail[0].machine_name);
 			} else {
-				$("#mesin_detail").val("");
+				$("#mesin_detail").val(result.detail[0].machine_name+" | "+result.detail[0].machine_remark);
 			}
 
 			$("#bahaya_detail").val(result.detail[0].danger);
@@ -931,6 +986,11 @@
 			$("#penanganan_detail").val(result.detail[0].handling);
 
 			$("#reason_urgent_detail").val(result.detail[0].note);
+
+			if ($("#nama_mesin option:selected").text() == "Lain - lain" && $("#nama_mesin_detail").val().length <= 0) {
+				openErrorGritter('Gagal', 'Harap Mengisi Nama Mesin');
+				return false;
+			}
 
 			var stat = 0;
 			$.each(result.detail, function(index, value){
@@ -1007,6 +1067,7 @@
 
 		console.log(mesin_cat);
 		var options = "";
+		var options2 = "";
 
 		var data = {
 			kategori : mesin_cat
@@ -1017,12 +1078,17 @@
 
 		$.get('{{ url("fetch/maintenance/list_mc") }}', data,  function(result, status, xhr){
 			options += "<option></option>";
+			options2 += "<option></option>";
 			$.each(result.datas, function(index, value){
 				options += "<option value='"+value.machine_id+"'>"+value.description+" --- "+value.area+"</option>";
+				options2 += "<option value='"+value.machine_id+"'>"+value.description+" --- "+value.area+"</option>";
 			})
 
+			options += "<option value='Lain - lain'>Lain - lain</option>";
+			options2 += "<option value='Lain - lain'>Lain - lain</option>";
+
 			$("#nama_mesin").append(options);
-			$("#mesin_edit").append(options);
+			$("#mesin_edit").append(options2);
 			
 			$('#nama_mesin').select2({
 				dropdownParent: $('.mesin_div'),
@@ -1053,10 +1119,22 @@
 			$("#tanggal_edit").val(result.detail[0].date);
 			$("#bagian_edit").val(result.detail[0].section);
 			$("#reason_urgent_edit").val(result.detail[0].note);
-			$("#mesin_edit").val(result.detail[0].machine_name).trigger("change");
+			$("#kategori_edit").val(result.detail[0].category).trigger("change");
+
+			setTimeout(function() {
+				$("#mesin_edit").val(result.detail[0].machine_name).trigger("change");
+
+				if ($("#mesin_edit").val() == 'Lain - lain') {
+					$("#mesin_edit_detail").val(result.detail[0].machine_remark);
+					$("#mesin_edit_detail_div").show();
+				} else {
+					$("#mesin_edit_detail").val("");
+					$("#mesin_edit_detail_div").hide();
+				}
+			}, 3000);
+
 			$("#prioritas_edit").val(result.detail[0].priority).trigger("change");
 			$("#workType_edit").val(result.detail[0].type).trigger("change");
-			$("#kategori_edit").val(result.detail[0].category).trigger("change");
 			$("#kondisi_mesin_edit").val(result.detail[0].machine_condition).trigger("change");
 
 			var danger = result.detail[0].danger.split(', ');
@@ -1074,7 +1152,18 @@
 	}
 
 	$("form#editForm").submit(function(e){
+		if ($("#mesin_edit option:selected").text() == "Lain - lain" && $("#mesin_edit_detail").val().length <= 0) {
+			openErrorGritter('Gagal', 'Harap Mengisi Nama Mesin');
+			return false;
+		}
+
+		if ($("#prioritas_edit option:selected").text() == "Urgent" && $("#reason_urgent_edit").val().length <= 0) {
+			openErrorGritter('Gagal', 'Harap Mengisi Catatan Urgent');
+			return false;
+		}
+
 		$("#edit_btn").attr("disabled", true);
+		$("#loading").show();
 		e.preventDefault();
 		var formData = new FormData(this);
 
@@ -1089,11 +1178,13 @@
 				if(result.status) {
 					$('#editModal').modal('hide');
 					$("#edit_btn").attr("disabled", false);
+					$("loading").hide();
 					openSuccessGritter("Success", result.message);
 
 					get_data("all");
 				} else {
 					$("#edit_btn").prop("disabled", false);
+					$("#loading").hide();
 					openErrorGritter("Error", result.message);
 				}
 			},
@@ -1122,17 +1213,40 @@
 		}
 	}
 
-	function insert() {
-		$("#tanggal").val();
-		$("#bagian").val();
-		$("#prioritas").val();
-		$("#jenis_pekerjaan").val();
-		$("#kondisi_mesin").val();
-		$("#bahaya").val();
-		$("#detail").val();
-		$("#target").val();
-		$("#safety").val();
-	}
+	$('#nama_mesin').on('change', function() {
+		var data = $("#nama_mesin option:selected").text();
+		if (data == 'Lain - lain') {
+			$("#nama_mesin_detail").val("");
+			$("#mesin_detail_div").show();
+		} else {
+			$("#mesin_detail_div").hide();
+			$("#nama_mesin_detail").val("");
+		}
+	})
+
+	$('#mesin_edit').on('change', function() {
+		var data = $("#mesin_edit option:selected").text();
+		if (data == 'Lain - lain') {
+			$("#mesin_edit_detail").val("");
+			$("#mesin_edit_detail_div").show();
+		} else {
+			$("#mesin_edit_detail_div").hide();
+			$("#mesin_edit_detail").val("");
+		}
+	})
+
+	$('#prioritas_edit').on('change', function() {
+		var data = $("#prioritas_edit option:selected").text();
+
+		if (data == 'Urgent') {
+			$("#reason_urgent_edit").val("");
+			$("#div_reason_edit").show();
+		} else {
+			$("#div_reason_edit").hide();
+			$("#reason_urgent_edit").val("");
+		}
+	})
+	
 
 	function openSuccessGritter(title, message){
 		jQuery.gritter.add({

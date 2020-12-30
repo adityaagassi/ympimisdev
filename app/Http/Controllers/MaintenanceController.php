@@ -562,7 +562,25 @@ class MaintenanceController extends Controller
 		$bahaya = implode(", ", $request->get('bahaya'));
 		$detail = $request->get('detail');
 		$machine_name = $request->get('nama_mesin');
+		$machine_detail = $request->get('nama_mesin_detail');
 		$reason_urgent = $request->get('reason_urgent');
+		
+		if (count($request->file('lampiran')) > 0) {
+			$num = 1;
+			$file = $request->file('lampiran');
+
+			$nama = $file->getClientOriginalName();
+
+			$filename = pathinfo($nama, PATHINFO_FILENAME);
+			$extension = pathinfo($nama, PATHINFO_EXTENSION);
+
+			$att = $filename.'_'.date('YmdHis').$num.'.'.$extension;
+
+			$file->move('maintenance/spk_att/', $att);
+
+		} else {
+			$att = null;
+		}
 
 		// if ($prioritas == "Urgent") {
 		$target_time = $request->get('jam_target');
@@ -595,6 +613,7 @@ class MaintenanceController extends Controller
 			'type' => $jenis_pekerjaan,
 			'category' => $kategori,
 			'machine_name' => $machine_name,
+			'machine_remark' => $machine_detail,
 			'machine_condition' => $kondisi_mesin,
 			'danger' => $bahaya,
 			'description' => $detail,
@@ -602,6 +621,7 @@ class MaintenanceController extends Controller
 			'safety_note' => $safety,
 			'remark' => $remark,
 			'note' => $reason_urgent,
+			'att' => $att,
 			'created_by' => Auth::user()->username,
 		]);
 
@@ -698,6 +718,7 @@ class MaintenanceController extends Controller
 			'category' => $request->get("kategori_edit"),
 			'danger' => implode(", ", $request->get('bahaya_edit')),
 			'machine_name' => $request->get('mesin_edit'),
+			'machine_remark' => $request->get('nama_mesin_detail'),
 			'description' => $request->get('uraian_edit'),
 			'safety_note' => $request->get('keamanan_edit'),
 			'note' => $request->get('reason_urgent_edit')
@@ -858,8 +879,8 @@ class MaintenanceController extends Controller
 		}else{
 			$maintenance_job_orders = $maintenance_job_orders->whereIn('maintenance_job_orders.remark', [0,2]);
 		}
-		if(strlen($request->get('approvedBy')) > 0){
-			$maintenance_job_orders = $maintenance_job_orders->where('maintenance_job_orders.approved_by', '=', $request->get('approvedBy'));
+		if(strlen($request->get('status')) > 0){
+			$maintenance_job_orders = $maintenance_job_orders->where('maintenance_job_pendings.status', '=', $request->get('status'));
 		}
 		if(strlen($request->get('username')) > 0){
 			$maintenance_job_orders = $maintenance_job_orders->where('maintenance_job_orders.created_by', '=', $request->get('username'));
