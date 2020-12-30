@@ -558,7 +558,7 @@
   @if(in_array('S48', $navs))
   @if(isset($head) && $head == "Receive Equipment Warehouse")<li class="treeview active">@else<li class="treeview">@endif
     <a href="#">
-      <i class="fa fa-money"></i> <span>Receive Equipment Warehouse</span>
+      <i class="fa fa-truck"></i> <span>Receive Equipment Warehouse</span>
       <span class="pull-right-container">
         <i class="fa fa-angle-left pull-right"></i>
       </span>
@@ -583,7 +583,7 @@
   @if(in_array('S49', $navs))
   @if(isset($head) && $head == "Receive GA")<li class="treeview active">@else<li class="treeview">@endif
     <a href="#">
-      <i class="fa fa-money"></i> <span>Receive Barang GA</span>
+      <i class="fa fa-truck"></i> <span>Receive Barang GA</span>
       <span class="pull-right-container">
         <i class="fa fa-angle-left pull-right"></i>
       </span>
@@ -592,14 +592,17 @@
       @if(isset($page) && $page == "Receive GA")<li class="active">@else<li>@endif
         <a href="{{ url("warehouse/receive_ga") }}"><i class="fa fa-share-square-o"></i>Terima Barang</a>
       </li>
+      @if(isset($page) && $page == "Cek Kedatangan GA")<li class="active">@else<li>@endif
+        <a href="{{ url("ga/cek_kedatangan") }}"><i class="fa fa-sticky-note-o"></i>Report Kedatangan Barang</a>
+      </li>
     </ul>
   </li>
   @endif
 
   @if(in_array('S43', $navs))
-  @if(isset($head) && $head == "Invoice Check")<li class="treeview active">@else<li class="treeview">@endif
+  @if(isset($head) && $head == "Tanda Terima Pembayaran")<li class="treeview active">@else<li class="treeview">@endif
     <a href="#">
-      <i class="fa fa-money"></i> <span>Invoice Check</span>
+      <i class="fa fa-money"></i> <span>Tanda Terima Pembayaran</span>
       <span class="pull-right-container">
         <i class="fa fa-angle-left pull-right"></i>
       </span>
@@ -607,7 +610,10 @@
     <ul class="treeview-menu">
 
       @if(isset($page) && $page == "Receive Report")<li class="active">@else<li>@endif
-        <a href="{{ url("receive_report") }}"><i class="fa fa-upload"></i>Upload Receive Report</a>
+        <a href="{{ url("invoice/receive_report") }}"><i class="fa fa-upload"></i>Upload Receive Report</a>
+      </li>
+      @if(isset($page) && $page == "Tanda Terima")<li class="active">@else<li>@endif
+        <a href="{{ url("invoice/tanda_terima") }}"><i class="fa fa-files-o"></i>Tanda Terima</a>
       </li>
 
     </ul>

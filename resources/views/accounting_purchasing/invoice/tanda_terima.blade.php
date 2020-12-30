@@ -49,8 +49,8 @@
 	</div>
 	<div class="box">
 		<div class="box-header">
-			<h3 class="box-title">Invoice Lists<span class="text-purple"> ??</span></span></h3>
-			<button class="btn btn-success pull-right" onclick="newData('new')">Create New Invoice</button>
+			<h3 class="box-title">List Tanda Terima<span class="text-purple"> ??</span></span></h3>
+			<button class="btn btn-success pull-right" onclick="newData('new')">Buat Tanda Terima</button>
 		</div>
 		<div class="box-body">
 			<table id="listTable" class="table table-bordered table-striped table-hover">
@@ -63,13 +63,19 @@
 						<th>Surat Jalan</th>
 						<th>PO Number</th>
 						<th>Payment Term</th>
+						<th>Currency</th>
 						<th>Amount</th>
+						<th>Due Date</th>
+						<th>Action</th>
 					</tr>
 				</thead>
 				<tbody id="listTableBody">
 				</tbody>
 				<tfoot>
 					<tr>
+						<th></th>
+						<th></th>
+						<th></th>
 						<th></th>
 						<th></th>
 						<th></th>
@@ -91,7 +97,7 @@
 			<div class="modal-header" style="padding-top: 0;">
 				<center><h3 style="font-weight: bold; padding: 3px;" id="modalNewTitle"></h3></center>
 				<div class="row">
-					<input type="hidden" id="newId">
+					<input type="hidden" id="id_edit">
 					<div class="col-md-6">
 
 						<div class="col-md-12" style="margin-bottom: 5px;">
@@ -101,7 +107,7 @@
 									<div class="input-group-addon">	
 										<i class="fa fa-calendar"></i>
 									</div>
-									<input type="text" class="form-control pull-right datepicker" id="invoice_date" name="invoice_date" value="<?= date('Y-m-d') ?>">
+									<input type="text" class="form-control pull-right datepicker" id="invoice_date" name="invoice_date" value="<?php echo date('Y-m-d') ?>" placeholder="Invoice Date">
 								</div>
 							</div>
 						</div>
@@ -130,9 +136,19 @@
 							</div>
 						</div>
 						<div class="col-md-12" style="margin-bottom: 5px;">
-							<label for="surat_jalan" class="col-sm-3 control-label">Surat Jalan<span class="text-red">*</span></label>
+							<!-- <label for="surat_jalan" class="col-sm-3 control-label">Surat Jalan</label>
 							<div class="col-sm-9">
 								<input type="text" class="form-control pull-right" id="surat_jalan" name="surat_jalan" placeholder="Surat Jalan">
+							</div> -->
+
+							<label for="surat_jalan" class="col-sm-3 control-label">Surat Jalan</label>
+							<div class="col-sm-9">
+								<select class="form-control select4" id="surat_jalan" name="surat_jalan" data-placeholder='Pilih Surat Jalan' style="width: 100%">
+									<option value="">&nbsp;</option>
+									@foreach($surat_jalan as $sj)
+									<option value="{{$sj->invoice_no}}">{{$sj->invoice_no}}</option>
+									@endforeach
+								</select>
 							</div>
 						</div>
 						<div class="col-md-12" style="margin-bottom: 5px;">
@@ -148,9 +164,9 @@
 							</div>
 						</div>
 						<div class="col-md-12" style="margin-bottom: 5px;">
-							<label for="faktur" class="col-sm-3 control-label">Faktur Pajak<span class="text-red">*</span></label>
+							<label for="faktur_pajak" class="col-sm-3 control-label">Faktur Pajak<span class="text-red">*</span></label>
 							<div class="col-sm-9">
-								<input type="text" class="form-control pull-right" id="faktur" name="faktur"  placeholder="Faktur Pajak">
+								<input type="text" class="form-control pull-right" id="faktur_pajak" name="faktur_pajak"  placeholder="Faktur Pajak">
 							</div>
 						</div>
 						
@@ -262,31 +278,6 @@
 	</div>
 </div>
 
-<div class="modal fade" id="modalDownload">
-	<div class="modal-dialog modal-sm">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title">Download Attachment</h4>
-			</div>
-			<div class="modal-body">
-				<input type="hidden" id="downloadId">
-				<center>
-					<div class="form-group">
-						<label>Select File(s) to Download</label>
-						<select multiple class="form-control" style="height: 180px;" id="selectDownload">
-						</select>
-					</div>
-				</center>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-primary" onclick="downloadAtt()">Download</button>
-			</div>
-		</div>
-	</div>
-</div>
-
 @endsection
 
 @section('scripts')
@@ -306,6 +297,9 @@
 	});
 
 	jQuery(document).ready(function() {
+
+    	$('body').toggleClass("sidebar-collapse");
+
 		$('.datepicker').datepicker({
 			autoclose: true,
 			format: "yyyy-mm-dd",
@@ -338,55 +332,119 @@
 	var audio_ok = new Audio('{{ url("sounds/sukses.mp3") }}');
 
 	function newData(id){
+
 		if(id == 'new'){
-			$('#modalNewTitle').text('Create New Invoice');
+
+			$('#modalNewTitle').text('Buat Tanda Terima');
 			$('#newButton').show();
 			$('#updateButton').hide();
 			clearNew();
 			$('#modalNew').modal('show');
 		}
 		else{
-			$('#newAttachment').val('');
 			$('#newButton').hide();
 			$('#updateButton').show();
 			var data = {
 				id:id
 			}
-			$.get('{{ url("fetch/general/agreement_detail") }}', data, function(result, status, xhr){
+			$.get('{{ url("invoice/tanda_terima_detail") }}', data, function(result, status, xhr){
 				if(result.status){
 
-					$('#newDepartment').html('');
-					$('#newStatus').html('');
+					$('#supplier_code').html('');
+					$('#surat_jalan').html('');
+					$('#po_number').html('');
+					$('#payment_term').html('');
+					$('#currency').html('');
 
-					var newDepartment = "";
-					var newStatus = "";
+					var supplier_code = "";
+					var surat_jalan = "";
+					var po_number = "";
+					var payment_term = "";
+					var currency = "";
 
-					$.each(result.employees, function(key, value){
-						if(value.department == result.agreement.department){
-							newDepartment += '<option value="'+value.department+'" selected>'+value.department+'</option>';
+					$('#invoice_date').val(result.invoice.invoice_date);
+
+					$.each(result.vendor, function(key, value){
+						if(value.vendor_code == result.invoice.supplier_code){
+							supplier_code += '<option value="'+value.vendor_code+'" selected>'+value.vendor_code+' - '+value.supplier_name+'</option>';
 						}
 						else{
-							newDepartment += '<option value="'+value.department+'">'+value.department+'</option>';
+							supplier_code += '<option value="'+value.vendor_code+'">'+value.vendor_code+' - '+value.supplier_name+'</option>';
 						}
 					});
-					$('#newDepartment').append(newDepartment);
-					$('#newVendor').val(result.agreement.vendor);
-					$('#newDescription').val(result.agreement.description);
-					$('#newValidFrom').val(result.agreement.valid_from);
-					$('#newValidTo').val(result.agreement.valid_to);
-					$.each(result.agreement_statuses, function(key, value){
-						if(value == result.agreement.status){
-							newStatus += '<option value="'+value+'" selected>'+value+'</option>';
+
+					$('#supplier_code').append(supplier_code);
+
+					$('#supplier_name').val(result.invoice.supplier_name);
+					$('#invoice_no').val(result.invoice.invoice_no);
+					$('#kwitansi').val(result.invoice.kwitansi);
+
+					$.each(result.surat_jalan, function(key, value){
+						if(value.invoice_no == result.invoice.surat_jalan){
+							surat_jalan += '<option value="'+value.invoice_no+'" selected>'+value.invoice_no+'</option>';
 						}
 						else{
-							newStatus += '<option value="'+value+'">'+value+'</option>';
+							surat_jalan += '<option value="'+value.invoice_no+'">'+value.invoice_no+'</option>';
 						}
 					});
-					$('#newStatus').append(newStatus);
-					$('#newRemark').val(result.agreement.remark);
-					$('#newId').val(result.agreement.id);
 
-					$('#modalNewTitle').text('Update Invoice');
+
+					$('#surat_jalan').append(surat_jalan);
+
+					// $('#surat_jalan').val(result.invoice.surat_jalan);
+					
+					$('#bap').val(result.invoice.bap);
+					$('#npwp').val(result.invoice.npwp);
+					$('#faktur_pajak').val(result.invoice.faktur_pajak);
+
+					$.each(result.no_po, function(key, value){
+						if(value.no_po_sap == result.invoice.po_number){
+							po_number += '<option value="'+value.no_po_sap+'" selected>'+value.no_po_sap+'</option>';
+						}
+						else{
+							po_number += '<option value="'+value.no_po_sap+'">'+value.no_po_sap+'</option>';
+						}
+					});
+
+					$('#po_number').append(po_number);
+
+
+					$.each(result.payment_term, function(key, value){
+						if(value.payment_term == result.invoice.payment_term){
+							payment_term += '<option value="'+value.payment_term+'" selected>'+value.payment_term+'</option>';
+						}
+						else{
+							payment_term += '<option value="'+value.payment_term+'">'+value.payment_term+'</option>';
+						}
+					});
+
+					$('#payment_term').append(payment_term);
+
+					if(result.invoice.currency == "USD"){
+						currency += '<option value="USD" selected>USD</option>';
+						currency += '<option value="IDR">IDR</option>';
+						currency += '<option value="JPY">JPY</option>';
+					}
+					else if (result.invoice.currency == "IDR"){
+						currency += '<option value="USD">USD</option>';
+						currency += '<option value="IDR" selected>IDR</option>';
+						currency += '<option value="JPY">JPY</option>';
+					}
+					else if (result.invoice.currency == "JPY"){
+						currency += '<option value="USD">USD</option>';
+						currency += '<option value="IDR">IDR</option>';
+						currency += '<option value="JPY" selected>JPY</option>';
+					}
+
+					$('#currency').append(currency);
+
+					$('#amount').val(result.invoice.amount);
+					$('#do_date').val(result.invoice.do_date);
+					$('#due_date').val(result.invoice.due_date);
+					$('#distribution_date').val(result.invoice.distribution_date);
+
+					$('#id_edit').val(result.invoice.id);
+					$('#modalNewTitle').text('Update Tanda Terima');
 					$('#loading').hide();
 					$('#modalNew').modal('show');
 				}
@@ -401,31 +459,36 @@
 
 	function SaveInvoice(id){
 		$('#loading').show();
+
 		if(id == 'new'){
-			if($("#newDepartment").val() == "" || $('#newVendor').val() == "" || $('#newDescription').val() == "" || $('#newStatus').val() == "" || $('#validFrom').val() == "" || $('#validTo').val() == ""){
-				$('#loading').modal('hide');
+			if($("#invoice_date").val() == "" || $('#supplier_code').val() == null || $('#invoice_no').val() == "" || $('#faktur_pajak').val() == "" || $('#po_number').val() == "" || $('#payment_term').val() == "" || $('#currency').val() == "" || $('#amount').val() == "" || $('#do_date').val() == "" || $('#due_date').val() == ""){
+				
+				$('#loading').hide();
 				openErrorGritter('Error', "Please fill field with (*) sign.");
 				return false;
 			}
 
 			var formData = new FormData();
-			var newAttachment  = $('#newAttachment').prop('files')[0];
-			var file = $('#newAttachment').val().replace(/C:\\fakepath\\/i, '').split(".");
+			formData.append('invoice_date', $("#invoice_date").val());
+			formData.append('supplier_code', $("#supplier_code").val());
+			formData.append('supplier_name', $("#supplier_name").val());
+			formData.append('kwitansi', $("#kwitansi").val());
+			formData.append('invoice_no', $("#invoice_no").val());
+			formData.append('surat_jalan', $("#surat_jalan").val());
+			formData.append('bap', $("#bap").val());
+			formData.append('npwp', $("#npwp").val());
+			formData.append('faktur_pajak', $("#faktur_pajak").val());
 
-			formData.append('newAttachment', newAttachment);
-			formData.append('newDepartment', $("#newDepartment").val());
-			formData.append('newVendor', $("#newVendor").val());
-			formData.append('newDescription', $("#newDescription").val());
-			formData.append('newValidFrom', $("#newValidFrom").val());
-			formData.append('newValidTo', $("#newValidTo").val());
-			formData.append('newStatus', $("#newStatus").val());
-			formData.append('newRemark', $("#newRemark").val());
-
-			formData.append('extension', file[1]);
-			formData.append('file_name', file[0]);
+			formData.append('po_number', $("#po_number").val());
+			formData.append('payment_term', $("#payment_term").val());
+			formData.append('currency', $("#currency").val());
+			formData.append('amount', $("#amount").val());
+			formData.append('do_date', $("#do_date").val());
+			formData.append('due_date', $("#due_date").val());
+			formData.append('distribution_date', $("#distribution_date").val());
 
 			$.ajax({
-				url:"{{ url('create/general/agreement') }}",
+				url:"{{ url('create/invoice/tanda_terima') }}",
 				method:"POST",
 				data:formData,
 				dataType:'JSON',
@@ -451,31 +514,35 @@
 			});
 		}
 		else{
-			if($("#newDepartment").val() == "" || $('#newVendor').val() == "" || $('#newDescription').val() == "" || $('#newStatus').val() == "" || $('#validFrom').val() == "" || $('#validTo').val() == ""){
-				$('#loading').modal('hide');
+			if($("#invoice_date").val() == "" || $('#supplier_code').val() == "" || $('#invoice_no').val() == "" || $('#faktur_pajak').val() == "" || $('#po_number').val() == "" || $('#payment_term').val() == "" || $('#currency').val() == "" || $('#amount').val() == "" || $('#do_date').val() == "" || $('#due_date').val() == ""){
+				
+				$('#loading').hide();
 				openErrorGritter('Error', "Please fill field with (*) sign.");
 				return false;
 			}
 
 			var formData = new FormData();
-			var newAttachment  = $('#newAttachment').prop('files')[0];
-			var file = $('#newAttachment').val().replace(/C:\\fakepath\\/i, '').split(".");
+			formData.append('id_edit', $("#id_edit").val());
+			formData.append('invoice_date', $("#invoice_date").val());
+			formData.append('supplier_code', $("#supplier_code").val());
+			formData.append('supplier_name', $("#supplier_name").val());
+			formData.append('kwitansi', $("#kwitansi").val());
+			formData.append('invoice_no', $("#invoice_no").val());
+			formData.append('surat_jalan', $("#surat_jalan").val());
+			formData.append('bap', $("#bap").val());
+			formData.append('npwp', $("#npwp").val());
+			formData.append('faktur_pajak', $("#faktur_pajak").val());
 
-			formData.append('newId', $("#newId").val());
-			formData.append('newAttachment', newAttachment);
-			formData.append('newDepartment', $("#newDepartment").val());
-			formData.append('newVendor', $("#newVendor").val());
-			formData.append('newDescription', $("#newDescription").val());
-			formData.append('newValidFrom', $("#newValidFrom").val());
-			formData.append('newValidTo', $("#newValidTo").val());
-			formData.append('newStatus', $("#newStatus").val());
-			formData.append('newRemark', $("#newRemark").val());
-
-			formData.append('extension', file[1]);
-			formData.append('file_name', file[0]);
+			formData.append('po_number', $("#po_number").val());
+			formData.append('payment_term', $("#payment_term").val());
+			formData.append('currency', $("#currency").val());
+			formData.append('amount', $("#amount").val());
+			formData.append('do_date', $("#do_date").val());
+			formData.append('due_date', $("#due_date").val());
+			formData.append('distribution_date', $("#distribution_date").val());
 
 			$.ajax({
-				url:"{{ url('edit/general/agreement') }}",
+				url:"{{ url('edit/invoice/tanda_terima') }}",
 				method:"POST",
 				data:formData,
 				dataType:'JSON',
@@ -503,16 +570,23 @@
 	}
 
 	function clearNew(){
-		$("#newDepartment").prop('selectedIndex', 0).change();
-		$('#newVendor').val('');
-		$('#newDescription').val('');
-		$('#newValidFrom').val("");
-		$('#newValidTo').val("");
-		$('#newAttachment').val('');
-		$("#newStatus").prop('selectedIndex', 0).change();
-		$('#newRemark').val('');
-		$('#newId').val('');
-		$('#downloadId').val('');
+		$('#id_edit').val('');
+		$("#invoice_date").val('');
+		$("#supplier_code").val('').trigger('change');
+		$("#supplier_name").val('');
+		$('#invoice_no').val('');
+		$('#kwitansi').val('');
+		$('#surat_jalan').val('').trigger('change');
+		$('#bap').val("");
+		$('#npwp').val("");
+		$('#faktur_pajak').val('');
+		$("#po_number").val('').trigger('change');
+		$("#payment_term").val('').trigger('change');
+		$("#currency").val('').trigger('change');
+		$('#amount').val('');
+		$('#do_date').val('');
+		$('#due_date').val('');
+		$('#distribution_date').val('');
 	}
 
 	function fetchTable(){
@@ -529,13 +603,17 @@
 					listTableBody += '<tr>';
 					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:0.1%;">'+parseInt(key+1)+'</td>';
 					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:1%;">'+value.invoice_date+'</td>';
-					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:3%;">'+value.supplier_name+'</td>';
-					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:8%;">'+value.invoice_no+'</td>';
-					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:0.5%;">'+value.surat_jalan+'</td>';
-					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:0.5%;">'+value.po_number+'</td>';
-					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:0.5%;">'+value.payment_term+'</td>';
-					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:5%;">'+value.amount+'</td>';
+					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:3%;">'+value.supplier_code+' - '+value.supplier_name+'</td>';
+					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:2%;">'+value.invoice_no+'</td>';
+					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:1%;">'+value.surat_jalan+'</td>';
+					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:1%;">'+value.po_number+'</td>';
+					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:3%;">'+value.payment_term+'</td>';
+					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:0.1%;">'+value.currency+'</td>';
+					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:1%;text-align:right">'+value.amount+'</td>';
+					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:1%;">'+value.due_date+'</td>';
+					listTableBody += '<td style="width:2%;"><center><button class="btn btn-md btn-warning" onclick="newData(\''+value.id+'\')"><i class="fa fa-eye"></i> </button>  <a class="btn btn-md btn-danger" target="_blank" href="{{ url("invoice/report") }}/'+value.id+'"><i class="fa fa-file-pdf-o"></i> </a></center></td>';
 					listTableBody += '</tr>';
+
 
 					count_all += 1;
 				});

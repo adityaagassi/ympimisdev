@@ -909,6 +909,11 @@ Route::group(['nav' => 'M16', 'middleware' => 'permission'], function(){
 	Route::get('index/bagian/export', 'EmployeeController@exportBagian');
 	Route::get('fetch/cost_center', 'EmployeeController@getCostCenter');
 
+	Route::get('index/emp_data', 'EmployeeController@indexEmpData');
+	Route::get('fetch/emp_data', 'EmployeeController@fetchEmpData');
+	Route::get('fetch/excel_emp_data', 'EmployeeController@fetchExcelEmpData');
+
+
 	//insert
 	Route::get('index/insertEmp', 'EmployeeController@insertEmp');
 	Route::get('index/updateEmp/{nik}', 'EmployeeController@updateEmp');
@@ -1594,6 +1599,9 @@ Route::get('print/warehouse/label/{id}', 'AccountingController@label_kedatangan'
 Route::get('warehouse/cek_kedatangan', 'AccountingController@cek_kedatangan');
 Route::get('fetch/warehouse/cek_kedatangan', 'AccountingController@fetch_kedatangan');
 
+Route::get('ga/cek_kedatangan', 'AccountingController@cek_kedatangan_ga');
+Route::get('fetch/ga/cek_kedatangan', 'AccountingController@fetch_kedatangan_ga');
+
 //Cetak Bukti Kedatangan
 Route::get('warehouse/cetak_bukti', 'AccountingController@wh_cetak_bukti');
 Route::get('fetch/warehouse/cetak_bukti', 'AccountingController@fetch_cetak_bukti');
@@ -1609,11 +1617,12 @@ Route::get('invoice/fetch_receive_data', 'AccountingController@invoice_fetch_rec
 Route::post('invoice/import_receive', 'AccountingController@invoice_import_receive');
 
 //Invoice Tanda Terima
-Route::get('invoice/tanda_terima', 'AccountingController@indexAgreement');
-Route::get('fetch/invoice/tanda_terima', 'AccountingController@fetchAgreement');
-Route::get('invoice/tanda_terima_detail', 'AccountingController@fetchAgreementDetail');
-Route::post('create/invoice/tanda_terima', 'AccountingController@createAgreement');
-Route::post('edit/invoice/tanda_terima', 'AccountingController@editAgreement');
+Route::get('invoice/tanda_terima', 'AccountingController@index_invoice');
+Route::get('fetch/invoice/tanda_terima', 'AccountingController@fetch_invoice');
+Route::get('invoice/tanda_terima_detail', 'AccountingController@fetch_invoice_detail');
+Route::post('create/invoice/tanda_terima', 'AccountingController@create_invoice');
+Route::post('edit/invoice/tanda_terima', 'AccountingController@edit_invoice');
+Route::get('invoice/report/{id}', 'AccountingController@report_invoice');
 
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 	Route::get('scan/middle/kensa', 'MiddleProcessController@ScanMiddleKensa');

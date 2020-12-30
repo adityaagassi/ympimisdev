@@ -30,8 +30,6 @@
 	}
 	table.table-bordered > tbody > tr > td{
 	  border:1px solid rgb(211,211,211);
-	  padding-top: 0;
-	  padding-bottom: 0;
 	}
 	table.table-bordered > tfoot > tr > th{
 	  border:1px solid rgb(211,211,211);
@@ -114,12 +112,19 @@
 					</div>
 
 					<div class="col-xs-12" id="amount_hide">
-						<div class="col-md-4">
+						<div class="col-md-2">
 						</div>
 						<div class="col-md-4">
 							<div class="form-group">
 								<label>Amount ($)</label>
 								<input type="text" id="amount" name="amount" class="form-control" placeholder="Jumlah">
+							</div>
+						</div>
+
+						<div class="col-md-4">
+							<div class="form-group">
+								<label>Note</label>
+								<textarea id="note" name="note" class="form-control" placeholder="Masukkan Catatan"></textarea>
 							</div>
 						</div>
 					</div>
@@ -144,10 +149,8 @@
 									<tr>
 										<th style="width:5%;">Request Date</th>
 										<th style="width:5%;">Budget From - To</th>
-										<th style="width:5%;">Manager Status</th>
-										<th style="width:5%;">Manager Status</th>
-										<th style="width:5%;">Transfer Date</th>
 										<th style="width:5%;">Amount ($)</th>
+										<th style="width:5%;">Note</th>
 									</tr>
 								</thead>
 								<tbody id="tablefrom">
@@ -157,9 +160,7 @@
 					                <th></th>
 					                <th></th>
 					                <th></th>
-					                <th></th>  
-					                <th></th>
-					                <th></th>  
+					                <th></th>   
 					              </tr>
 					            </tfoot>
 							</table>
@@ -231,6 +232,7 @@
 		var amount = $('#amount').val();
 		var budget_from = $('#budget_from').val();
 		var budget_to = $('#budget_to').val();
+		var note = $('#note').val();
 
 		$("#loading").show();
 
@@ -241,16 +243,31 @@
 		    return false;
 		}
 
+		if (note == "") {
+			$("#loading").hide();
+		    alert("Kolom Catatan Harap diisi");
+		    $("html").scrollTop(0);
+		    return false;
+		}
+
+		if (budget_from == "" || budget_to == "") {
+			$("#loading").hide();
+		    alert("Kolom Budget Harap diisi");
+		    $("html").scrollTop(0);
+		    return false;
+		}
+
 		var data = {
 		    amount: amount,
 		    budget_from: budget_from,
-		    budget_to: budget_to
+		    budget_to: budget_to,
+		    note: note
 	    };
 
-	    $.post('{{ url("transfer/budget") }}', data, function(result, status, xhr){
+	    $.post('{{ url("transfer/budget/new") }}', data, function(result, status, xhr){
 		    if(result.status == true){
 		    	$("#loading").hide();
-		        openSuccessGritter("Success","Berhasil Dibuat");
+		        openSuccessGritter("Success","Budget Berhasil Di Transfer");
 		        location.reload();
 		    }
 		    else {
@@ -284,30 +301,31 @@
 	              table += '<td>'+value.request_date+'</td>';
 	              table += '<td>'+value.budget_from+' -> '+value.budget_to+'</td>';
 	              
-	              if (value.date_approval_from == null) {
-		            table += '<td><label class="label label-danger"><i class="fa fa-close"> Unverified</label></td>';	              	
-	              }
-	              else{
-	              	table += '<td><label class="label label-success"><i class="fa fa-check"> Verified</label></td>';
-	              }
+	    //           if (value.date_approval_from == null) {
+		   //          table += '<td><label class="label label-danger"><i class="fa fa-close"> Unverified</label></td>';	              	
+	    //           }
+	    //           else{
+	    //           	table += '<td><label class="label label-success"><i class="fa fa-check"> Verified</label></td>';
+	    //           }
 
 
-	              if (value.date_approval_to == null) {
-		            table += '<td><label class="label label-danger"><i class="fa fa-close"> Unverified</label></td>';	              	
-	              }
-	              else{
-	              	table += '<td><label class="label label-success"><i class="fa fa-check"> Verified</label></td>';
-	              }
+	    //           if (value.date_approval_to == null) {
+		   //          table += '<td><label class="label label-danger"><i class="fa fa-close"> Unverified</label></td>';	              	
+	    //           }
+	    //           else{
+	    //           	table += '<td><label class="label label-success"><i class="fa fa-check"> Verified</label></td>';
+	    //           }
 	                
-	              if (value.date_approval_to == null) {
-		            table += '<td></td>';	              	
-	              }
-	              else{
-					var approval = value.date_approval_to.split("_");
-	              	table += '<td>'+approval[1]+'</td>';
-	              }
+	    //           if (value.date_approval_to == null) {
+		   //          table += '<td></td>';	              	
+	    //           }
+	    //           else{
+					// var approval = value.date_approval_to.split("_");
+	    //           	table += '<td>'+approval[1]+'</td>';
+	    //           }
 
-	              table += '<td>'+value.amount+'</td>';
+	              table += '<td>$ '+value.amount+'</td>';
+	              table += '<td>'+value.note+'</td>';
 	              table += '</tr>';
 	          })
 

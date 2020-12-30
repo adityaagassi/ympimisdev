@@ -29,6 +29,7 @@ use App\AccPurchaseOrderDetail;
 use App\AccInvestment;
 use App\AccInvestmentDetail;
 use App\AccInvestmentBudget;
+use App\AccInvoice;
 use App\AccInvoiceReceiveReport;
 use App\AccInvoicePaymentTerm;
 use App\EmployeeSync;
@@ -9965,6 +9966,84 @@ public function transfer_budget_post(Request $request)
   }
 }
 
+public function transfer_budget_post_new(Request $request)
+{
+    try {
+ 
+        $budget_from = $request->get('budget_from');
+        $budget_to = $request->get('budget_to');
+        $amount = $request->get('amount');
+        $id_user = Auth::id();
+
+        $date = date('Y-m-d');
+                //FY
+        $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$date'");
+
+        foreach ($fy as $fys) {
+            $fiscal = $fys->fiscal_year;
+        }
+
+        $sisa_bulan = strtolower(date('M')).'_sisa_budget';
+
+        $budget_from_awal = AccBudget::where('budget_no', $budget_from)->where('periode', $fiscal)->first();
+
+        // Dikurangi dulu dari budget awal
+        $totalfrom = $budget_from_awal->$sisa_bulan - $amount; //sisa budget 
+
+        if ($totalfrom < 0) {
+            $response = array(
+                'status' => false,
+                'datas' => "Budget Awal Tidak Mencukupi",
+            );
+            return Response::json($response);
+        }
+
+        $dataupdate = AccBudget::where('budget_no', $budget_from)->where('periode', $fiscal)->update([
+            $sisa_bulan => $totalfrom
+        ]);
+
+        // Ditambah Ke Budget Tujuan
+
+        $budget_to_akhir = AccBudget::where('budget_no', $budget_to)->where('periode', $fiscal)->first();
+
+        $totalto = $budget_to_akhir->$sisa_bulan + $amount; //sisa budget 
+
+        $dataupdate = AccBudget::where('budget_no', $budget_to)->where('periode', $fiscal)->update([
+            $sisa_bulan => $totalto
+        ]);
+
+        $acc = AccBudgetTransfer::create([
+            'request_date' => date('Y-m-d'),
+            'budget_from' => $budget_from,
+            'budget_to' => $budget_to,
+            'amount' => $amount,
+            'note' => $request->get('note'),
+            'approval_f' => null,
+            'approval_t' => null,
+            'approval_from' => null,
+            'approval_to' => null,
+            'posisi' => null,
+            'created_by' => $id_user
+         ]);
+
+        $acc->save();
+
+
+        $response = array(
+            'status' => true,
+            'datas' => "Berhasil",
+        );
+        return Response::json($response);
+
+    } catch (QueryException $e){
+      $response = array(
+         'status' => false,
+         'datas' => $e->getMessage()
+     );
+      return Response::json($response);
+  }
+}
+
 public function fetch_transfer_budget(){
     $data = db::select('
         select * from acc_budget_transfers where deleted_at is null
@@ -10751,7 +10830,7 @@ public function transfer_approvalto($id){
             'title' => $title,
             'title_jp' => $title_jp,
             'po_detail' => $po_detail
-        ))->with('page', 'Print Warehouse')->with('head', 'Receive Equipment Warehouse');
+        ))->with('page', 'Cek Kedatangan')->with('head', 'Receive Equipment Warehouse');
     }
 
     public function fetch_kedatangan(Request $request)
@@ -10766,10 +10845,11 @@ public function transfer_approvalto($id){
 
         $kedatangan = DB::select("
             SELECT DISTINCT
-                acc_receives.*, acc_purchase_order_details.no_pr, IF(goods_price != 0,goods_price,service_price) as price
+                acc_receives.*, acc_purchase_order_details.no_pr, IF(goods_price != 0,goods_price,service_price) as price, acc_purchase_orders.no_po_sap, acc_purchase_orders.supplier_code, acc_purchase_orders.supplier_name
             FROM
             `acc_receives`
             LEFT JOIN acc_purchase_order_details ON acc_receives.no_po = acc_purchase_order_details.no_po 
+            JOIN acc_purchase_orders on acc_purchase_orders.no_po = acc_receives.no_po
             AND acc_receives.no_item = acc_purchase_order_details.no_item
             WHERE acc_receives.deleted_at IS NULL " . $tanggal . " order by acc_receives.id DESC");
 
@@ -10782,6 +10862,67 @@ public function transfer_approvalto($id){
             return number_format($price * $qty_receive,2,".",",");  
         })
 
+        ->editColumn('supplier_code', function ($kedatangan)
+        {
+            return $kedatangan->supplier_code.' - '.$kedatangan->supplier_name;  
+        })
+
+        ->editColumn('price', function ($kedatangan)
+        {
+            return number_format($kedatangan->price,2,".",",");  
+        })
+
+        ->rawColumns(['price' => 'price','amount_po' => 'amount_po'])
+        ->make(true);
+    }
+
+    public function cek_kedatangan_ga(){
+        $title = 'Cek Kedatangan GA';
+        $title_jp = '';
+
+        $po_detail = db::select("SELECT DISTINCT acc_receives.no_po from acc_receives order by id desc");
+
+        return view('accounting_purchasing.master.receive_cek_kedatangan_ga', array(
+            'title' => $title,
+            'title_jp' => $title_jp,
+            'po_detail' => $po_detail
+        ))->with('page', 'Cek Kedatangan GA')->with('head', 'Receive Equipment Warehouse');
+    }
+
+    public function fetch_kedatangan_ga(Request $request)
+    {
+
+        $tanggal = "";
+
+        if (strlen($request->get('tanggal')) > 0)
+        {
+            $tanggal = "and acc_receives.date_receive = '".$request->get('tanggal')."'";
+        }
+
+        $kedatangan = DB::select("
+            SELECT DISTINCT
+                acc_receives.*, acc_purchase_order_details.no_pr, IF(goods_price != 0,goods_price,service_price) as price, acc_purchase_orders.no_po_sap, acc_purchase_orders.supplier_code, acc_purchase_orders.supplier_name
+            FROM
+            `acc_receives`
+            LEFT JOIN acc_purchase_order_details ON acc_receives.no_po = acc_purchase_order_details.no_po 
+            JOIN acc_purchase_orders on acc_purchase_orders.no_po = acc_receives.no_po
+            AND acc_receives.no_item = acc_purchase_order_details.no_item
+            WHERE acc_receives.deleted_at IS NULL and acc_receives.no_po LIKE '%GA%' " . $tanggal . " order by acc_receives.id DESC");
+
+        return DataTables::of($kedatangan)
+        ->addColumn('amount_po', function ($kedatangan)
+        {
+            $price = $kedatangan->price;
+            $qty_receive = $kedatangan->qty_receive;
+
+            return number_format($price * $qty_receive,2,".",",");  
+        })
+
+        ->editColumn('supplier_code', function ($kedatangan)
+        {
+            return $kedatangan->supplier_code.' - '.$kedatangan->supplier_name;  
+        })
+
         ->editColumn('price', function ($kedatangan)
         {
             return number_format($kedatangan->price,2,".",",");  
@@ -10792,23 +10933,6 @@ public function transfer_approvalto($id){
     }
 
 
-
-    public function receive_report()
-    {
-        $title = 'Receive Report';
-        $title_jp = '';
-
-        $status = AccActual::select('*')->whereNull('acc_actuals.deleted_at')
-        ->distinct()
-        ->get();
-
-        return view('accounting_purchasing.master.receive_report', array(
-            'title' => $title,
-            'title_jp' => $title_jp,
-        ))->with('page', 'Receive Goods')
-        ->with('head', 'Receive Goods');
-    }
-
     // public function coba()
     // {
     //     $isimail = "select acc_investments.*, acc_investment_budgets.budget_no, acc_investment_budgets.budget_name, acc_investment_budgets.category_budget, acc_investment_budgets.sisa as total_budget, acc_investment_budgets.total as total_pengeluaran FROM acc_investments join acc_investment_budgets on acc_investments.reff_number = acc_investment_budgets.reff_number where acc_investments.id = 22";
@@ -10818,5 +10942,439 @@ public function transfer_approvalto($id){
     //         'data' => $invest,
     //     ));
     // }
+
+
+    public function exportInvestment(Request $request){
+
+        $time = date('d-m-Y H;i;s');
+
+        $tanggal = "";
+
+        if (strlen($request->get('bulan')) > 0)
+        {
+            $datefrom = date('Y-m-d', strtotime($request->get('bulan')));
+            $tanggal = "and submission_date = '" . $datefrom . "'";
+        }
+
+        $investment_detail = db::select(
+            "SELECT acc_purchase_orders.no_po, acc_purchase_orders.no_po_sap, acc_purchase_orders.remark, acc_purchase_orders.note, acc_purchase_order_details.no_pr, acc_purchase_orders.tgl_po, acc_purchase_orders.supplier_code , acc_purchase_orders.supplier_name, acc_purchase_orders.currency, acc_purchase_orders.material, acc_purchase_order_details.no_item, acc_purchase_order_details.nama_item, acc_purchase_order_details.delivery_date, acc_purchase_order_details.qty, acc_purchase_order_details.uom, acc_purchase_order_details.goods_price, acc_purchase_order_details.service_price, acc_purchase_order_details.budget_item, acc_purchase_orders.cost_center, acc_purchase_order_details.gl_number, acc_purchase_requisitions.emp_name, acc_investments.applicant_name from acc_purchase_orders left join acc_purchase_order_details on acc_purchase_orders.no_po = acc_purchase_order_details.no_po left join acc_purchase_requisitions on acc_purchase_order_details.no_pr = acc_purchase_requisitions.no_pr left join acc_investments on acc_purchase_order_details.no_pr = acc_investments.reff_number WHERE acc_purchase_orders.deleted_at IS NULL " . $tanggal . " order by acc_purchase_orders.no_po ASC
+            ");
+
+        $data = array(
+            'investment_detail' => $investment_detail
+        );
+
+        ob_clean();
+
+        Excel::create('Investment List '.$time, function($excel) use ($data){
+            $excel->sheet('Data', function($sheet) use ($data) {
+              return $sheet->loadView('accounting_purchasing.investment_excel', $data);
+          });
+        })->export('xlsx');
+    }
+
+
+
+    // Invoice Check
+
+    public function invoice_receive_report()
+    {
+        $title = 'Receive Report Master';
+        $title_jp = '';
+
+        $status = AccInvoiceReceiveReport::select('*')->whereNull('acc_invoice_receive_reports.deleted_at')
+        ->distinct()
+        ->get();
+
+        return view('accounting_purchasing.invoice.receive_report', array(
+            'title' => $title,
+            'title_jp' => $title_jp,
+        ))->with('page', 'Receive Report')
+        ->with('head', 'Receive Report');
+    }
+
+    public function invoice_fetch_receive()
+    {
+      try {
+        $invoice = DB::SELECT("SELECT DISTINCT tanggal_upload from acc_invoice_receive_reports order by id desc");
+
+        $jumlah = DB::SELECT("SELECT count(id) as jumlah from acc_invoice_receive_reports ");
+
+        $response = array(
+          'status' => true,
+          'invoice' => $invoice,
+          'jumlah' => $jumlah
+        );
+
+        return Response::json($response); 
+      } catch (\Exception $e) {
+        $response = array(
+          'status' => false,
+          'message'=> $e->getMessage()
+        );
+
+        return Response::json($response); 
+      }
+    }
+
+    // public function invoice_fetch_receive(Request $request)
+    // {
+    //     $actual = AccInvoiceReceiveReport::orderBy('acc_invoice_receive_reports.id', 'desc');
+
+    //     if ($request->get('category') != null)
+    //     {
+    //         $actual = $actual->whereIn('acc_invoice_receive_reports.category', $request->get('category'));
+    //     }
+
+    //     $actual = $actual->select('*')->get();
+
+    //     return DataTables::of($actual)
+
+    //     ->editColumn('vendor_code', function ($actual)
+    //     {
+    //         return $actual->vendor_code. ' - ' .$actual->vendor_name;
+    //     })
+
+    //     ->editColumn('amount', function ($actual)
+    //     {
+    //         return '$'.$actual->amount;
+    //     })
+
+    //     ->addColumn('action', function ($actual)
+    //     {
+    //         $id = $actual->id;
+
+    //         return ' 
+    //         <button class="btn btn-xs btn-info" data-toggle="tooltip" title="Details" onclick="modalView('.$id.')"><i class="fa fa-eye"></i> Detail</button>
+    //         ';
+    //     })
+
+    //     ->rawColumns(['action' => 'action'])
+    //     ->make(true);
+    // }
+
+    public function invoice_import_receive(Request $request){
+        if($request->hasFile('upload_file')) {
+            try{                
+                $file = $request->file('upload_file');
+                $file_name = 'receive_'. date("ymd_h.i") .'.'.$file->getClientOriginalExtension();
+                $file->move(public_path('uploads/invoice/'), $file_name);
+                $excel = public_path('uploads/invoice/') . $file_name;
+
+                $rows = Excel::load($excel, function($reader) {
+                    $reader->noHeading();
+                    $reader->skipRows(1);
+                })->get();
+
+                $rows = $rows->toArray();
+
+                for ($i=0; $i < count($rows); $i++) {
+                    $currency  = $rows[$i][1];
+                    $vendor_code = $rows[$i][4];
+                    $vendor_name = $rows[$i][5];                    
+                    $receive_date = $rows[$i][14];
+                    $document_no = $rows[$i][15];
+                    $invoice_no = $rows[$i][17];    
+                    $no_po_sap_urut = $rows[$i][18];
+                    $no_po = $rows[$i][19];
+                    $category = $rows[$i][20];
+                    $material = $rows[$i][21];
+                    $item_description = $rows[$i][22];
+                    $qty = $rows[$i][23];
+                    $uom = $rows[$i][24];
+                    $price = $rows[$i][27];
+                    $amount = $rows[$i][28];
+                    $amount_dollar = $rows[$i][31];
+                    $gl_number = $rows[$i][40];
+                    $gl_description = $rows[$i][41];
+                    $cost_center = $rows[$i][42];
+                    $cost_description = $rows[$i][43];
+                    $pch_code = $rows[$i][44];
+
+                    $no_po_sap = explode("-", trim($no_po_sap_urut));
+                    $item_no = substr($item_description,0,7); //get 7 char kode item
+
+
+                    $actual = AccInvoiceReceiveReport::where('document_no', $document_no)
+                    ->select('document_no')
+                    ->first();
+
+                    if (count($actual) == 0) { //kalo insert
+
+                     $data2 = AccInvoiceReceiveReport::create([
+                        'tanggal_upload' => date('Y-m-d'),
+                        'currency' => $currency,
+                        'vendor_code' => $vendor_code,
+                        'vendor_name' => $vendor_name,
+                        'receive_date' => $receive_date,
+                        'document_no' => $document_no,
+                        'invoice_no' => $invoice_no,
+                        'no_po_sap' => (int)$no_po_sap[0],
+                        'no_urut' => $no_po_sap[1],
+                        'no_po' => $no_po,
+                        'category' => $category,
+                        'material' => $material,
+                        'item_no' => $item_no,
+                        'item_description' => $item_description,
+                        'qty' => $qty,
+                        'uom' => $uom,
+                        'price' => $price,
+                        'amount' => $amount,
+                        'amount_dollar' => $amount_dollar,
+                        'gl_number' => $gl_number,
+                        'gl_description' => $gl_description,
+                        'cost_center' => $cost_center,
+                        'cost_description' => $cost_description,
+                        'pch_code' => $pch_code,
+                        'created_by' => Auth::id()
+                    ]);
+
+                     $data2->save();
+
+                   } else if (count($actual) > 0){ 
+
+                    $data2 = AccInvoiceReceiveReport::where('document_no','=',$document_no)
+                    ->update([
+                        'tanggal_upload' => date('Y-m-d'),
+                        'currency' => $currency,
+                        'vendor_code' => $vendor_code,
+                        'vendor_name' => $vendor_name,
+                        'receive_date' => $receive_date,
+                        'document_no' => $document_no,
+                        'invoice_no' => $invoice_no,
+                        'no_po_sap' => $no_po_sap[0],
+                        'no_urut' => $no_po_sap[1],
+                        'no_po' => $no_po,
+                        'category' => $category,
+                        'material' => $material,
+                        'item_no' => $item_no,
+                        'item_description' => $item_description,
+                        'qty' => $qty,
+                        'uom' => $uom,
+                        'price' => $price,
+                        'amount' => $amount,
+                        'amount_dollar' => $amount_dollar,
+                        'gl_number' => $gl_number,
+                        'gl_description' => $gl_description,
+                        'cost_center' => $cost_center,
+                        'cost_description' => $cost_description,
+                        'pch_code' => $pch_code,
+                        'created_by' => Auth::id()
+                    ]);
+                    }
+                }       
+
+                $response = array(
+                    'status' => true,
+                    'message' => 'Upload Berhasil',
+                );
+                return Response::json($response);
+
+            }catch(\Exception $e){
+                $response = array(
+                    'status' => false,
+                    'message' => $e->getMessage(),
+                );
+                return Response::json($response);
+            }
+        }else{
+            $response = array(
+                'status' => false,
+                'message' => 'Upload failed, File not found',
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function invoice_fetch_receive_data(Request $request){
+        $tanggal = $request->get("tanggal");
+
+        $qry = "select * from acc_invoice_receive_reports where tanggal_upload = '".$tanggal."' ";
+
+        $bud = DB::select($qry);
+
+        $response = array(
+            'status' => true,
+            'datas' => $bud
+        );
+
+        return Response::json($response); 
+    }
+
+    public function index_invoice(){
+
+        $title = "List Tanda Terima";
+        $title_jp = "";
+
+        $employees = EmployeeSync::orderBy('department', 'asc')->get();
+
+        $vendor = AccSupplier::select('acc_suppliers.*')->whereNull('acc_suppliers.deleted_at')
+        ->distinct()
+        ->get();
+
+        $payment_term = AccInvoicePaymentTerm::select('*')->whereNull('deleted_at')
+        ->distinct()
+        ->get();
+
+        $no_po = AccInvoiceReceiveReport::select('no_po_sap')->whereNull('deleted_at')
+        ->distinct()
+        ->get();
+
+        $surat_jalan = AccInvoiceReceiveReport::select('invoice_no')->whereNull('deleted_at')
+        ->distinct()
+        ->get();
+
+        return view('accounting_purchasing.invoice.tanda_terima', array(
+            'title' => $title,
+            'title_jp' => $title_jp,
+            'employees' => $employees,
+            'vendor' => $vendor,
+            'payment_term' => $payment_term,
+            'no_po' => $no_po,
+            'surat_jalan' => $surat_jalan
+        ));
+
+    }
+
+    public function fetch_invoice(){
+        $invoice = db::select("SELECT
+            *
+            FROM
+            acc_invoices
+            order by id desc
+            ");
+
+        $response = array(
+            'status' => true,
+            'invoice' => $invoice
+        );
+        return Response::json($response);
+    }
+
+    public function create_invoice(Request $request){
+        try{
+            $invoice = new AccInvoice([
+                'invoice_date' => $request->input('invoice_date'),
+                'supplier_code' => $request->input('supplier_code'),
+                'supplier_name' => $request->input('supplier_name'),
+                'kwitansi' => $request->input('kwitansi'),
+                'invoice_no' => $request->input('invoice_no'),
+                'surat_jalan' => $request->input('surat_jalan'),
+                'bap' => $request->input('bap'),
+                'npwp' => $request->input('npwp'),
+                'faktur_pajak' => $request->input('faktur_pajak'),
+                'po_number' => $request->input('po_number'),
+                'payment_term' => $request->input('payment_term'),
+                'surat_jalan' => $request->input('surat_jalan'),
+                'currency' => $request->input('currency'),
+                'amount' => $request->input('amount'),
+                'do_date' => $request->input('do_date'),
+                'due_date' => $request->input('due_date'),
+                'distribution_date' => $request->input('distribution_date'),
+                'created_by' => Auth::user()->username
+            ]);
+
+            $invoice->save();
+
+            $response = array(
+                'status' => true,
+                'message' => 'New Invoice Successfully Added'
+            );
+            return Response::json($response);
+        }
+        catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function fetch_invoice_detail(Request $request){
+        $invoice = AccInvoice::find($request->get('id'));
+
+        $vendor = AccSupplier::select('acc_suppliers.*')->whereNull('acc_suppliers.deleted_at')
+        ->distinct()
+        ->get();
+
+        $payment_term = AccInvoicePaymentTerm::select('*')->whereNull('deleted_at')
+        ->distinct()
+        ->get();
+
+        $no_po = AccInvoiceReceiveReport::select('no_po_sap')->whereNull('deleted_at')
+        ->distinct()
+        ->get();
+
+        $surat_jalan = AccInvoiceReceiveReport::select('invoice_no')->whereNull('deleted_at')
+        ->distinct()
+        ->get();
+
+        $response = array(
+            'status' => true,
+            'invoice' => $invoice,
+            'vendor' => $vendor,
+            'payment_term' => $payment_term,
+            'no_po' => $no_po,
+            'surat_jalan' => $surat_jalan
+        );
+        return Response::json($response);
+    }
+
+    public function edit_invoice(Request $request){
+        try{
+            $invoice = AccInvoice::where('id', '=', $request->get('id_edit'))->first();
+
+            $invoice->invoice_date = $request->input('invoice_date');
+            $invoice->supplier_code = $request->input('supplier_code');
+            $invoice->supplier_name = $request->input('supplier_name');
+            $invoice->kwitansi = $request->input('kwitansi');
+            $invoice->invoice_no = $request->input('invoice_no');
+            $invoice->surat_jalan = $request->input('surat_jalan');
+            $invoice->bap = $request->input('bap');
+            $invoice->npwp = $request->input('npwp');
+            $invoice->faktur_pajak = $request->input('faktur_pajak');
+            $invoice->po_number = $request->input('po_number');
+            $invoice->payment_term = $request->input('payment_term');
+            $invoice->surat_jalan = $request->input('surat_jalan');
+            $invoice->currency = $request->input('currency');
+            $invoice->amount = $request->input('amount');
+            $invoice->do_date = $request->input('do_date');
+            $invoice->due_date = $request->input('due_date');
+            $invoice->distribution_date = $request->input('distribution_date');
+            $invoice->created_by = Auth::user()->username;
+            $invoice->save();
+
+            $response = array(
+                'status' => true,
+                'message' => 'Invoice Updated'
+            );
+            return Response::json($response);
+        }
+        catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+            return Response::json($response);
+        }
+
+    }
+
+    public function report_invoice($id){
+
+        $invoice = AccInvoice::find($id);
+
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->getDomPDF()->set_option("enable_php", true);
+        $pdf->setPaper('A4', 'potrait');
+
+        $pdf->loadView('accounting_purchasing.invoice.report_invoice', array(
+            'invoice' => $invoice,
+        ));
+        return $pdf->stream("Invoice ".$invoice->no_po. ".pdf");
+    }
+
+
 
 }

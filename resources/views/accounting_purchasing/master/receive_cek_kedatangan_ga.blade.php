@@ -269,7 +269,7 @@
 			"serverSide": true,
 			"ajax": {
 				"type" : "get",
-				"url" : "{{ url("fetch/warehouse/cek_kedatangan") }}",
+				"url" : "{{ url("fetch/ga/cek_kedatangan") }}",
 				"data" : data
 			},
 			"columns": [

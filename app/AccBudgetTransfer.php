@@ -10,7 +10,7 @@ class AccBudgetTransfer extends Model
 	use SoftDeletes;
 	
 	protected $fillable = [	
-		'request_date','budget_from','budget_to','amount','approval_f','approval_from','date_approval_from','approval_t','approval_to','date_approval_to','posisi','created_by'
+		'request_date','budget_from','budget_to','amount','note','approval_f','approval_from','date_approval_from','approval_t','approval_to','date_approval_to','posisi','created_by'
 	];
 
 	public function user()

@@ -30,8 +30,7 @@
 	}
 	table.table-bordered > tbody > tr > td{
 	  border:1px solid rgb(211,211,211);
-	  padding-top: 0;
-	  padding-bottom: 0;
+	  vertical-align: middle;
 	}
 	table.table-bordered > tfoot > tr > th{
 	  border:1px solid rgb(211,211,211);
@@ -103,56 +102,27 @@
 							<table id="resumeTable" class="table table-bordered table-striped table-hover" style="margin-bottom: 20px;">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th style="width: 14%; text-align: center; font-size: 1.5vw;">Total</th>
-										<th style="width: 14%; text-align: center; font-size: 1.5vw;">Terminated</th>
-										<th style="width: 14%; text-align: center; font-size: 1.5vw;">In Use</th>
-										<th style="width: 14%; text-align: center; font-size: 1.5vw;">Safe</th>
-										<th style="width: 14%; text-align: center; font-size: 1.5vw;">&#8804; 90 Days</th>
-										<th style="width: 14%; text-align: center; font-size: 1.5vw;">&#8804; 30 Days</th>
-										<th style="width: 14%; text-align: center; font-size: 1.5vw;">Expired</th>
+										<th style="width: 14%; text-align: center; font-size: 1.5vw;">Total Uploaded</th>
+										<th style="width: 14%; text-align: center; font-size: 1.5vw;">Total Data</th>
 									</tr>
 								</thead>
 								<tbody>
 									<tr>
 										<td id="count_all" style="text-align: center; font-size: 1.8vw; font-weight: bold;"></td>
-										<td id="count_terminated" style="text-align: center; font-size: 1.8vw; font-weight: bold;"></td>
-										<td id="count_inuse" style="text-align: center; font-size: 1.8vw; font-weight: bold;"></td>
-										<td id="count_ok" style="background-color: #aee571; text-align: center; font-size: 1.8vw; font-weight: bold;"></td>
-										<td id="count_90" style="background-color: #ffeb3b; text-align: center; font-size: 1.8vw; font-weight: bold;"></td>
-										<td id="count_30" style="background-color: #f9a825; text-align: center; font-size: 1.8vw; font-weight: bold;"></td>
-										<td id="count_expired" style="background-color: #e53935; text-align: center; font-size: 1.8vw; font-weight: bold;"></td>
+										<td id="count_data" style="text-align: center; font-size: 1.8vw; font-weight: bold;"></td>
 									</tr>
 								</tbody>
 							</table>
 							<table id="ReceiveTable" class="table table-bordered table-striped table-hover">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th style="width:5%;">Receive Date</th>
-										<th style="width:6%;">No Document</th>
-										<th style="width:5%;">Vendor</th>
-										<th style="width:5%;">No PO SAP</th>
-										<th style="width:5%;">Category</th>
-										<th style="width:5%;">Description</th>
-										<th style="width:7%;">GL Number</th>	
-										<th style="width:6%;">Cost Center</th>
-										<th style="width:6%;">Action</th>
+										<th style="width:5%;">Nomor</th>
+										<th style="width:6%;">Uploaded Date</th>
+										<th style="width:5%;">Action</th>
 									</tr>
 								</thead>
-								<tbody>
+								<tbody id="tableBodyHasil">
 								</tbody>
-								<tfoot>
-					              <tr>
-					                <th></th>
-					                <th></th>
-					                <th></th>
-					                <th></th>
-					                <th></th>
-					                <th></th>
-					                <th></th>
-					                <th></th>
-					                <th></th>
-					              </tr>
-					            </tfoot>
 							</table>
 						</div>
 					</div>
@@ -186,6 +156,49 @@
 		</div>
 	</div>
 
+	<div class="modal fade" id="myModal">
+	    <div class="modal-dialog" style="width:1250px;">
+	      <div class="modal-content">
+	        <div class="modal-header">
+	          <h4 style="float: right;" id="modal-title"></h4>
+	          <h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
+	          <br><h4 class="modal-title" id="judul_table"></h4>
+	        </div>
+	        <div class="modal-body">
+	          <div class="row">
+	            <div class="col-md-12">
+	              <table id="tableResult" class="table table-striped table-bordered table-hover" style="width: 100%;"> 
+	                <thead style="background-color: rgba(126,86,134,.7);">
+	                  <tr>
+	                    <th width="10%">Receive Date</th>
+	                    <th width="10%">Vendor</th>
+	                    <th width="10%">Surat Jalan</th>
+	                    <th width="10%">Category</th>
+	                    <th width="10%">Detail Item</th>
+	                    <th width="10%">Amount ($)</th>
+	                  </tr>
+	                </thead>
+	                <tbody id="tableBodyResult">
+	                </tbody>
+	                <tfoot style="background-color: RGB(252, 248, 227);">
+	                <th></th>
+	                <th></th>
+	                <th></th>
+	                <th></th>
+	                <th>Total</th>
+	                <th id="resultTotal"></th>
+	              </tfoot>
+	              </table>
+	            </div>
+	          </div>
+	        </div>
+	        <div class="modal-footer">
+	          <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
+
 @endsection
 
 @section('scripts')
@@ -208,7 +221,7 @@
 
 	jQuery(document).ready(function() {
 		$('.select2').select2();
-		fetchTable();
+		fillTableResult();
 		$('body').toggleClass("sidebar-collapse");
 	});
 
@@ -220,110 +233,198 @@
 		$("#loading").show();
 	}
 
-	function fetchTable(){
-		$('#ReceiveTable').DataTable().destroy();
-		
-		var category = $('#category').val();
-		var data = {
-			category:category
-		}
-		
-		$('#ReceiveTable tfoot th').each( function () {
-	      var title = $(this).text();
-	      $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
-	    } );
+	function fillTableResult() {
+	    $.get('{{ url("invoice/fetch_receive") }}', function(result, status, xhr) {
 
-		var table = $('#ReceiveTable').DataTable({
-			'dom': 'Bfrtip',
-			'responsive': true,
-			'lengthMenu': [
-			[ 10, 25, 50, -1 ],
-			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
-			],
-			"pageLength": 25,
-			'buttons': {
-				// dom: {
-				// 	button: {
-				// 		tag:'button',
-				// 		className:''
-				// 	}
-				// },
-				buttons:[
-				{
-					extend: 'pageLength',
-					className: 'btn btn-default',
-					// text: '<i class="fa fa-print"></i> Show',
-				},
-				{
-					extend: 'copy',
-					className: 'btn btn-success',
-					text: '<i class="fa fa-copy"></i> Copy',
-					exportOptions: {
-						columns: ':not(.notexport)'
-					}
-				},
-				{
-					extend: 'excel',
-					className: 'btn btn-info',
-					text: '<i class="fa fa-file-excel-o"></i> Excel',
-					exportOptions: {
-						columns: ':not(.notexport)'
-					}
-				},
-				{
-					extend: 'print',
-					className: 'btn btn-warning',
-					text: '<i class="fa fa-print"></i> Print',
-					exportOptions: {
-						columns: ':not(.notexport)'
-					}
-				}
-				]
-			},
-			'paging': true,
-			'lengthChange': true,
-			'searching': true,
-			'ordering': true,
-			'order': [],
-			'info': true,
-			'autoWidth': true,
-			"sPaginationType": "full_numbers",
-			"bJQueryUI": true,
-			"bAutoWidth": false,
-			"processing": true,
-			"serverSide": true,
-			"ajax": {
-				"type" : "get",
-				"url" : "{{ url("invoice/fetch_receive") }}",
-				"data" : data
-			},
-			"columns": [
-				{ "data": "receive_date", "width":"8%"},
-				{ "data": "document_no", "width":"8%"},
-				{ "data": "vendor_code", "width":"20%"},
-				{ "data": "no_po_sap"},
-				{ "data": "category"},
-				{ "data": "item_description"},
-				{ "data": "gl_number"},
-				{ "data": "cost_center"},
-				{ "data": "action"}
-			]
-		});
+	    if(result.status){
+	      $('#ReceiveTable').DataTable().clear();
+	      $('#ReceiveTable').DataTable().destroy();
+	      $('#tableBodyHasil').html("");
+	      var tableIsi = "";
+	      var count = 1;
+	      var count_all = 0;
+	      
+	      $.each(result.invoice, function(key, value) {
+	        tableIsi += '<tr>';
+	        tableIsi += '<td width="5%" style="padding:5px">'+ count +'</td>';
+	        tableIsi += '<td width="30%" style="padding:5px">'+ value.tanggal_upload +'</td>';
+	        tableIsi += '<td><a target="_blank" class="btn btn-primary btn-md" onclick="detail(\''+value.tanggal_upload+'\')"><i class="fa fa-eye"></i> Cek Data</a></td>';
 
-		table.columns().every( function () {
-	        var that = this;
+	        tableIsi += '</tr>';
+	        count += 1;
+	        count_all += 1;
+	      });
 
-	        $( 'input', this.footer() ).on( 'keyup change', function () {
-	          if ( that.search() !== this.value ) {
-	            that
-	            .search( this.value )
-	            .draw();
-	          }
-	        } );
-	      } );
-		
-      	$('#ReceiveTable tfoot tr').appendTo('#ReceiveTable thead');
+		  $('#count_all').text(count_all +" File(s)");
+		  $('#count_data').text(result.jumlah[0].jumlah +" Data");
+	      $('#tableBodyHasil').append(tableIsi);
+
+	      var table2 = $('#ReceiveTable').DataTable({
+	          'dom': 'Bfrtip',
+	          'responsive':true,
+	          'lengthMenu': [
+	          [ 5, 10, 25, -1 ],
+	          [ '5 rows', '10 rows', '25 rows', 'Show all' ]
+	          ],
+	          'buttons': {
+	            buttons:[
+	            {
+	              extend: 'pageLength',
+	              className: 'btn btn-default',
+	            },
+	            {
+	            extend: 'copy',
+	            className: 'btn btn-success',
+	            text: '<i class="fa fa-copy"></i> Copy',
+	            exportOptions: {
+	              columns: ':not(.notexport)'
+	            }
+	            },
+	            {
+	              extend: 'excel',
+	              className: 'btn btn-info',
+	              text: '<i class="fa fa-file-excel-o"></i> Excel',
+	              exportOptions: {
+	                columns: ':not(.notexport)'
+	              }
+	            },
+	            {
+	              extend: 'print',
+	              className: 'btn btn-warning',
+	              text: '<i class="fa fa-print"></i> Print',
+	              exportOptions: {
+	                columns: ':not(.notexport)'
+	              }
+	            },
+	            ]
+	          },
+	          'paging': true,
+	          'lengthChange': true,
+	          'pageLength': 5,
+	          'searching': false,
+	          'ordering': true,
+	          'order': [],
+	          'info': true,
+	          'autoWidth': true,
+	          "sPaginationType": "full_numbers",
+	          "bJQueryUI": true,
+	          "bAutoWidth": false,
+	          "processing": true
+	        });
+	      }
+	      else{
+	        alert('Attempt to retrieve data failed');
+	      }
+
+
+	  });
+
 	}
+
+	// function fetchTable(){
+	// 	$('#ReceiveTable').DataTable().destroy();
+		
+	// 	var category = $('#category').val();
+	// 	var data = {
+	// 		category:category
+	// 	}
+		
+	// 	$('#ReceiveTable tfoot th').each( function () {
+	//       var title = $(this).text();
+	//       $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
+	//     } );
+
+	// 	var table = $('#ReceiveTable').DataTable({
+	// 		'dom': 'Bfrtip',
+	// 		'responsive': true,
+	// 		'lengthMenu': [
+	// 		[ 10, 25, 50, -1 ],
+	// 		[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+	// 		],
+	// 		"pageLength": 25,
+	// 		'buttons': {
+	// 			// dom: {
+	// 			// 	button: {
+	// 			// 		tag:'button',
+	// 			// 		className:''
+	// 			// 	}
+	// 			// },
+	// 			buttons:[
+	// 			{
+	// 				extend: 'pageLength',
+	// 				className: 'btn btn-default',
+	// 				// text: '<i class="fa fa-print"></i> Show',
+	// 			},
+	// 			{
+	// 				extend: 'copy',
+	// 				className: 'btn btn-success',
+	// 				text: '<i class="fa fa-copy"></i> Copy',
+	// 				exportOptions: {
+	// 					columns: ':not(.notexport)'
+	// 				}
+	// 			},
+	// 			{
+	// 				extend: 'excel',
+	// 				className: 'btn btn-info',
+	// 				text: '<i class="fa fa-file-excel-o"></i> Excel',
+	// 				exportOptions: {
+	// 					columns: ':not(.notexport)'
+	// 				}
+	// 			},
+	// 			{
+	// 				extend: 'print',
+	// 				className: 'btn btn-warning',
+	// 				text: '<i class="fa fa-print"></i> Print',
+	// 				exportOptions: {
+	// 					columns: ':not(.notexport)'
+	// 				}
+	// 			}
+	// 			]
+	// 		},
+	// 		'paging': true,
+	// 		'lengthChange': true,
+	// 		'searching': true,
+	// 		'ordering': true,
+	// 		'order': [],
+	// 		'info': true,
+	// 		'autoWidth': true,
+	// 		"sPaginationType": "full_numbers",
+	// 		"bJQueryUI": true,
+	// 		"bAutoWidth": false,
+	// 		"processing": true,
+	// 		"serverSide": true,
+	// 		"ajax": {
+	// 			"type" : "get",
+	// 			"url" : "{{ url("invoice/fetch_receive") }}",
+	// 			"data" : data
+	// 		},
+	// 		"columns": [
+	// 			{ "data": "receive_date", "width":"8%"},
+	// 			{ "data": "document_no", "width":"8%"},
+	// 			{ "data": "vendor_code", "width":"20%"},
+	// 			{ "data": "no_po_sap"},
+	// 			{ "data": "category"},
+	// 			{ "data": "item_description"},
+	// 			{ "data": "gl_number"},
+	// 			{ "data": "cost_center"},
+	// 			{ "data": "action"}
+	// 		]
+	// 	});
+
+	// 	table.columns().every( function () {
+	//         var that = this;
+
+	//         $( 'input', this.footer() ).on( 'keyup change', function () {
+	//           if ( that.search() !== this.value ) {
+	//             that
+	//             .search( this.value )
+	//             .draw();
+	//           }
+	//         } );
+	//       } );
+		
+ //      	$('#ReceiveTable tfoot tr').appendTo('#ReceiveTable thead');
+	// }
 
 	$("form#importForm").submit(function(e) {
 		if ($('#upload_file').val() == '') {
@@ -343,11 +444,10 @@
 			success: function (result, status, xhr) {
 				if(result.status){
 					$("#loading").hide();
-					$('#ReceiveTable').DataTable().ajax.reload();
 					$("#upload_file").val('');
 					$('#upload_receive').modal('hide');
 					openSuccessGritter('Success', result.message);
-
+					fillTableResult();
 				}else{
 					$("#loading").hide();
 
@@ -364,6 +464,110 @@
 			processData: false
 		});
 	});
+
+	function detail(tanggal){
+	    $("#myModal").modal("show");
+
+	    var data = {
+	        tanggal:tanggal
+	    }
+
+	    $("#loading").show();
+	    $.get('{{ url("invoice/fetch_receive_data") }}', data, function(result, status, xhr) {
+
+
+	      $("#loading").hide();
+	      if(result.status){
+	        $('#tableResult').DataTable().clear();
+	        $('#tableResult').DataTable().destroy();
+	        $('#tableBodyResult').html("");
+
+	        var tableData = "";
+	        var total = 0;
+	        var count = 1;
+	        
+	        $.each(result.datas, function(key, value) {
+		        tableData += '<tr>';
+	            tableData += '<td>'+ value.receive_date +'</td>';
+	            tableData += '<td>'+ value.vendor_code +' - '+ value.vendor_name +'</td>';
+	            tableData += '<td>'+ value.invoice_no +'</td>';
+	            tableData += '<td>'+ value.category +'</td>';
+	            tableData += '<td>'+ value.item_description+ '</td>';
+	            tableData += '<td>'+ value.amount_dollar.toLocaleString() +'</td>'; 
+	            total += parseFloat(value.amount_dollar);           
+
+	          	tableData += '</tr>';
+	         	count += 1;
+	        });
+
+	        $('#tableBodyResult').append(tableData);
+	        $('#resultTotal').html('');
+	        $('#resultTotal').append(total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+
+
+	        $('#tableResult').DataTable({
+		      'dom': 'Bfrtip',
+		      'responsive': true,
+		      'lengthMenu': [
+		      [ 10, 25, 50, -1 ],
+		      [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+		      ],
+		      'buttons': {
+		        buttons:[
+		        {
+		          extend: 'pageLength',
+		          className: 'btn btn-default',
+		          // text: '<i class="fa fa-print"></i> Show',
+		        },
+		        {
+		          extend: 'copy',
+		          className: 'btn btn-success',
+		          text: '<i class="fa fa-copy"></i> Copy',
+		          exportOptions: {
+		            columns: ':not(.notexport)'
+		          }
+		        },
+		        {
+		          extend: 'excel',
+		          className: 'btn btn-info',
+		          text: '<i class="fa fa-file-excel-o"></i> Excel',
+		          exportOptions: {
+		            columns: ':not(.notexport)'
+		          }
+		        },
+		        {
+		          extend: 'print',
+		          className: 'btn btn-warning',
+		          text: '<i class="fa fa-print"></i> Print',
+		          exportOptions: {
+		            columns: ':not(.notexport)'
+		          }
+		        },
+		        ]
+		      },
+		      'paging': true,
+		      'lengthChange': true,
+		      'searching': true,
+		      'ordering': true,
+		      'order': [],
+		      'info': true,
+		      'autoWidth': true,
+		      "sPaginationType": "full_numbers",
+		      "bJQueryUI": true,
+		      "bAutoWidth": false,
+		      "processing": true,
+		    });
+	      }
+	      else{
+	        alert('Attempt to retrieve data failed');
+	      }
+
+	    });
+
+	    $('#judul_table').append().empty();
+	    $('#judul_table').append('<center><b> List Data uploaded Tanggal '+tanggal+'</center></b>');
+	    
+	  }
 
 	function openSuccessGritter(title, message){
       jQuery.gritter.add({
