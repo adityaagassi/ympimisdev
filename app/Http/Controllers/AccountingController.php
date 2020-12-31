@@ -7929,7 +7929,7 @@ public function import_receive(Request $request){
 
                                //Get PO
                              $po_detail = AccPurchaseOrder::join('acc_purchase_order_details','acc_purchase_orders.no_po','=','acc_purchase_order_details.no_po')
-                             ->where('no_po_sap', $no_po_sap[0])
+                             ->where('no_po_sap', (int)$no_po_sap[0])
                              ->where('no_item',$item_no)
                              ->first();
 
@@ -8010,7 +8010,7 @@ public function import_receive(Request $request){
                                 'receive_date' => $receive_date,
                                 'document_no' => $document_no,
                                 'invoice_no' => $invoice_no,
-                                'no_po_sap' => $no_po_sap[0],
+                                'no_po_sap' => (int)$no_po_sap[0],
                                 'no_urut' => $no_po_sap[1],
                                 'no_po' => $no_po,
                                 'category' => $category,
@@ -11229,7 +11229,7 @@ public function transfer_approvalto($id){
                         'receive_date' => $receive_date,
                         'document_no' => $document_no,
                         'invoice_no' => $invoice_no,
-                        'no_po_sap' => $no_po_sap[0],
+                        'no_po_sap' => (int)$no_po_sap[0],
                         'no_urut' => $no_po_sap[1],
                         'no_po' => $no_po,
                         'category' => $category,
