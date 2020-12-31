@@ -151,6 +151,18 @@ class EmployeeController extends Controller
           ));
      }
 
+     public function indexEmpData(){
+
+          $title = 'Employee Data';
+          $title_jp = '';
+
+          return view('employees.report.employee_data', array(
+               'title' => $title,
+               'title_jp' => $title_jp
+          ));
+          
+     }
+
      public function fetchFillEmpData(Request $request){
           $employee_id = $request->get('emp_id');
 
@@ -480,6 +492,31 @@ class EmployeeController extends Controller
                );
                return Response::json($response);
           }
+     }
+
+     public function fetchEmpData(Request $request){
+
+          $data = EmployeeUpdate::orderBy('name', 'ASC')->get();
+
+          return DataTables::of($data)->make(true);
+     }
+
+     public function fetchExcelEmpData(Request $request){
+
+          $emp = EmployeeUpdate::orderBy('name', 'ASC')->get();
+
+          $data = array(
+               'emp' => $emp
+          );
+
+          // return view('employees.report.employee_data_excel', $data);
+
+          ob_clean();
+          Excel::create('Employee_Data_('.date('ymd H-i').')', function($excel) use ($data){
+               $excel->sheet('Employee Data', function($sheet) use ($data) {
+                    return $sheet->loadView('employees.report.employee_data_excel', $data);
+               });
+          })->export('xlsx');
 
      }
 
@@ -2271,7 +2308,7 @@ public function postChat(Request $request)
 
 public function postComment(Request $request)
 {
-// $remark = 0;
+
      $id = $request->get('id');
 
      if($request->get("from") == "HR") {
@@ -2280,23 +2317,33 @@ public function postComment(Request $request)
           $remark = 1;
      }
 
-     $questDetail = new HrQuestionDetail([
-          'message' => $request->get('message'),
-          'message_id' =>  $id,
-          'created_by' => $request->get("from")
-     ]);
+     try {
+          $questDetail = new HrQuestionDetail([
+               'message' => $request->get('message'),
+               'message_id' =>  $id,
+               'created_by' => $request->get("from")
+          ]);
 
-     $questDetail->save();
+          $questDetail->save();
 
-     HrQuestionLog::where('id', $id)
-     ->update(['remark' => $remark]);
+          HrQuestionLog::where('id', $id)
+          ->update(['remark' => $remark]);
 
-     $response = array(
-          'status' => true,
-          'remark' => $remark
-     );
+          $response = array(
+               'status' => true,
+               'remark' => $remark
+          );
 
-     return Response::json($response); 
+          return Response::json($response); 
+     } catch (QueryException $e) {
+          $response = array(
+               'status' => false,
+               'message' => 'Error'
+          );
+
+          return Response::json($response); 
+     }
+
 }
 // -------------------------  End Employee Service --------------------
 

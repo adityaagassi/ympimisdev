@@ -116,26 +116,26 @@
 
       @if(in_array('A8', $navs))
       @if(isset($head) && $head == "Resume Kanban")
-        <li class="treeview active">@else<li class="treeview">@endif
-          <a href="#">
-           <i class="fa fa-credit-card"></i> <span>Resume Kanban</span>
-           <span class="pull-right-container">
-            <i class="fa fa-angle-left pull-right"></i>
-          </span>
-        </a>
-        <ul class="treeview-menu">
+      <li class="treeview active">@else<li class="treeview">@endif
+        <a href="#">
+         <i class="fa fa-credit-card"></i> <span>Resume Kanban</span>
+         <span class="pull-right-container">
+          <i class="fa fa-angle-left pull-right"></i>
+        </span>
+      </a>
+      <ul class="treeview-menu">
 
-          @if(isset($page) && $page == "Welding Resume Kanban")<li class="active">@else<li>@endif
-            <a href="{{ url('/index/welding/resume_kanban') }}"><i class="fa fa-exchange"></i> <span>Welding Resume Kanban</span></a>
-          </li>
+        @if(isset($page) && $page == "Welding Resume Kanban")<li class="active">@else<li>@endif
+          <a href="{{ url('/index/welding/resume_kanban') }}"><i class="fa fa-exchange"></i> <span>Welding Resume Kanban</span></a>
+        </li>
 
-          @if(isset($page) && $page == "Middle Resume Kanban")<li class="active">@else<li>@endif
-            <a href="{{ url('/index/middle/resume_kanban') }}"><i class="fa fa-exchange"></i> <span>Middle Resume Kanban</span></a>
-          </li>
+        @if(isset($page) && $page == "Middle Resume Kanban")<li class="active">@else<li>@endif
+          <a href="{{ url('/index/middle/resume_kanban') }}"><i class="fa fa-exchange"></i> <span>Middle Resume Kanban</span></a>
+        </li>
 
-        </ul>
-      </li>
-      
+      </ul>
+    </li>
+
       <!-- @if(isset($head) && $head == "Resume Kanban")
       <li class="active">@else<li>@endif
         <a href="{{ url("/index/resume_kanban") }}"><i class="fa fa-list-ol"></i> <span>Resume Kanban</span></a>
@@ -1219,7 +1219,7 @@
   @if(isset($page) && $page == "Surgical Mask Logs")<li class="active">@else<li>@endif
     <a href="{{ url("index/mask_visit_log") }}"><i class="fa fa-list-ul"></i> <span>Surgical Mask Logs</span></a>
   </li>
-  
+
 </ul>
 </li>
 @endif
@@ -1274,7 +1274,7 @@
   @if(isset($page) && $page == "Request")<li class="active">@else<li>@endif
     <a href="{{ secure_url("index/indirect_material_request/chm") }}"><i class="fa fa-forward"></i> <span>Request</span></a>
   </li>
-  
+
   @if(isset($page) && $page == "Chemical Picking Schedule")<li class="active">@else<li>@endif
     <a href="{{ url("index/chm_picking_schedule") }}"><i class="fa fa-calendar-check-o "></i> <span>Picking Schedule</span></a>
   </li>
@@ -1476,8 +1476,8 @@
 @endif
 
 @if(in_array('R4', $navs))
-@if(isset($page) && $page == "Chorei Production Result")<li class="active">@else<li>@endif
- <a href="{{ url("/index/ch_daily_production_result") }}"><i class="fa fa-tv"></i> <span>Chorei</span></a>
+@if(isset($page) && $page == "Chorei Production Result FG")<li class="active">@else<li>@endif
+ <a href="{{ url("/index/ch_daily_production_result") }}"><i class="fa fa-tv"></i> <span>FG Chorei</span></a>
 </li>
 @endif
 
@@ -1497,6 +1497,10 @@
 
   @if(isset($page) && $page == "Report Surat Dokter")<li class="active">@else<li>@endif
     <a href="{{ url("/index/general/report_surat_dokter") }}"><i class="fa fa-medkit"></i> <span>Report Surat Dokter</span></a>
+  </li>
+
+  @if(isset($page) && $page == "Master Employee")<li class="active">@else<li>@endif
+    <a href="{{ url("index/emp_data") }}"><i class="fa fa-list-ol"></i>Employee Data</a>
   </li>
 </ul>
 </li>
