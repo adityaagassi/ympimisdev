@@ -123,6 +123,7 @@ td {
                   <th>Lokasi</th> 
                   <th>Auditee</th>
                   <th>Due Date Auditee</th>
+                  <th>Permasalahan</th>
                   <th>Status</th>
                   <th>Action</th>
                 </tr>
@@ -131,6 +132,7 @@ td {
               </tbody>
               <tfoot>
                 <tr>
+                  <th></th>
                   <th></th>
                   <th></th>
                   <th></th>
@@ -236,6 +238,7 @@ td {
         tableData += '<td>'+ value.auditor_lokasi +'</td>';
         tableData += '<td>'+ value.auditee_name+ '</td>';
         tableData += '<td width="12%">'+ value.auditee_due_date +'</td>';
+        tableData += '<td width="12%">'+ value.auditor_permasalahan +'</td>';
    
         if (value.posisi == "auditee") {
           tableData += '<td><span class="label label-warning" style="font-size: 13px"> Penanganan </span></td>';          

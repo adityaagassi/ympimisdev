@@ -2000,7 +2000,7 @@ class CparController extends Controller
         $data3 = StandarisasiAuditIso::where('id', $request->get('id_checklist'))
         ->update(['status_ditangani' => 'true']);
 
-        $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.`group` = 'Standardization'";
+        $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.`group` = 'Standardization Group'";
         $mailtoo = DB::select($mails);
 
         $isimail = "select * FROM standarisasi_audits where standarisasi_audits.id = ".$audits->id;
@@ -2272,7 +2272,7 @@ class CparController extends Controller
         		$audit->status = "cpar";
         		$audit->save();
 		                
-		        $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.`group` = 'Standardization'";
+		        $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.`group` = 'Standardization Group'";
 		        $mailtoo = DB::select($mails);
 
 		        $isimail = "select * FROM standarisasi_audits where standarisasi_audits.id = ".$audit->id;
@@ -2311,7 +2311,7 @@ class CparController extends Controller
             $mailto = "select distinct employees.name,email from standarisasi_audits join employees on standarisasi_audits.auditor = employees.employee_id join users on employees.employee_id = users.username where standarisasi_audits.id = '".$auditee->id."'";
             $mails = DB::select($mailto);
 
-            $mailtostd = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.`group` = 'Standardization'";
+            $mailtostd = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.`group` = 'Standardization Group'";
             $mailstd = DB::select($mailtostd);
 
           }
@@ -3645,6 +3645,226 @@ class CparController extends Controller
       ));
 
       return $pdf->stream("Form Audit.pdf");
+    }
+
+
+    //Monitoring Audit Kanban
+
+    public function monitoring_audit_kanban(){
+
+      return view('cpar.monitoring_audit_kanban',  
+        array(
+            'title' => 'Monitoring Audit Kanban', 
+            'title_jp' => '',
+          )
+        )->with('page', 'Audit Kanban');
+    }
+
+    public function fetch_monitoring_audit_kanban(Request $request){
+
+        $datefrom = date("Y-m-d",  strtotime('-30 days'));
+        $dateto = date("Y-m-d");
+
+        $last = AuditAll::where('posisi', '<>', 'auditor_final')
+        ->orderBy('auditor_date', 'asc')
+        ->select(db::raw('date(auditor_date) as auditor_date'))
+        ->first();
+
+        if(strlen($request->get('datefrom')) > 0){
+          $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+        }else{
+          if($last){
+            $tanggal = date_create($last->auditor_date);
+            $now = date_create(date('Y-m-d'));
+            $interval = $now->diff($tanggal);
+            $diff = $interval->format('%a%');
+
+            if($diff > 30){
+              $datefrom = date('Y-m-d', strtotime($last->auditor_date));
+            }
+          }
+        }
+
+
+        if(strlen($request->get('dateto')) > 0){
+          $dateto = date('Y-m-d', strtotime($request->get('dateto')));
+        }
+
+        $status = $request->get('status');
+
+        if ($status != null) {
+            $cat = json_encode($status);
+            $kat = str_replace(array("[","]"),array("(",")"),$cat);
+
+            $kate = 'and audit_all.status in'.$kat;
+        }else{
+            $kate = '';
+        }
+
+        $data = DB::select("SELECT
+          date_format(auditor_date, '%a, %d %b %Y') AS tanggal,
+          sum( CASE WHEN deleted_at IS null AND `posisi` = 'auditee' THEN 1 ELSE 0 END ) AS `penanganan`,
+          sum( CASE WHEN deleted_at IS null AND `posisi` = 'auditor_final' THEN 1 ELSE 0 END ) AS `close`
+          FROM
+          audit_alls
+          WHERE 
+          deleted_at is null and auditor_date between '".$datefrom."' and '".$dateto."' ".$kate."
+          GROUP BY
+          auditor_date
+        ");
+
+        $year = date('Y');
+
+        $response = array(
+          'status' => true,
+          'datas' => $data,
+          'year' => $year
+        );
+
+        return Response::json($response);
+    }
+
+    public function detail_monitoring_audit_kanban(Request $request){
+
+      $tgl = date('Y-m-d', strtotime($request->get("tgl")));
+
+      if(strlen($request->get('datefrom')) > 0){
+        $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+      }
+
+      if(strlen($request->get('dateto')) > 0){
+        $dateto = date('Y-m-d', strtotime($request->get('dateto')));
+      }
+
+      $status = $request->get('status');
+
+      if ($status != null) {
+
+          if ($status == "cpar") {
+            $status = "cpar";
+          }
+
+          if ($status == "car") {
+            $status = "penanganan";
+          }
+
+          if ($status == "Verifikasi") {
+            $status = "verif";
+          }
+
+          if ($status == "Revised") {
+            $status = "commended";
+          }
+
+          if ($status == "Reject") {
+            $status = "rejected";
+          }
+
+          $stat = 'and standarisasi_audits.status = "'.$status.'"';
+      }else{
+          $stat = '';
+      }
+
+      $datefrom = $request->get('datefrom');
+      $dateto = $request->get('dateto');
+
+      if ($datefrom != null && $dateto != null) {
+          $df = 'and standarisasi_audits.tanggal between "'.$datefrom.'" and "'.$dateto.'"';
+      }else{
+          $df = '';
+      }
+
+      $query = "select standarisasi_audits.* FROM standarisasi_audits where standarisasi_audits.deleted_at is null and auditor_kategori = 'ISO 45001' and auditor_date = '".$tgl."' ".$stat." ".$df."";
+
+      $detail = db::select($query);
+
+      return DataTables::of($detail)
+
+      ->addColumn('action', function($detail){
+        $id = $detail->id;
+        return '<a href="print/'.$id.'" class="btn btn-warning btn-xs" target="_blank">Report</a>';
+      })
+
+      ->editColumn('auditor_date', function($detail){
+        return date('d F Y', strtotime($detail->auditor_date));
+      })
+
+      ->editColumn('status', function($detail){
+        if($detail->status == "cpar") {
+            return '<label class="label label-danger"> Verifikasi STD </label>';
+          }
+          else if($detail->status == "car"){
+            return '<label class="label label-warning"> Pembuatan Penanganan </label>';
+          }
+          else if($detail->status == "verif"){
+            return '<label class="label label-primary"> Verifikasi Auditor </label>';
+          }
+          else if($detail->status == "close"){
+            return '<label class="label label-success"> Closed </label>';
+          }
+          else if($detail->status == "rejected"){
+            return '<label class="label label-danger"> Rejected </label>';
+          }
+          else if($detail->status == "commended"){
+            return '<label class="label label-warning"> Revised </label>';
+          }
+      })
+
+
+      ->rawColumns(['action' => 'action','status' => 'status'])
+      ->make(true);
+  }
+
+
+  public function fetch_table_audit_kanban(Request $request)
+    {
+
+      $datefrom = date("Y-m-d",  strtotime('-30 days'));
+      $dateto = date("Y-m-d");
+
+      $last = StandarisasiAudit::where('status', '<>', 'close')
+      ->orderBy('auditor_date', 'asc')
+      ->select(db::raw('date(auditor_date) as auditor_date'))
+      ->first();
+
+      if(strlen($request->get('datefrom')) > 0){
+        $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+      }else{
+        if($last){
+          $tanggal = date_create($last->auditor_date);
+          $now = date_create(date('Y-m-d'));
+          $interval = $now->diff($tanggal);
+          $diff = $interval->format('%a%');
+
+          if($diff > 30){
+            $datefrom = date('Y-m-d', strtotime($last->auditor_date));
+          }
+        }
+      }
+
+      if(strlen($request->get('dateto')) > 0){
+        $dateto = date('Y-m-d', strtotime($request->get('dateto')));
+      }
+
+      $status = $request->get('status');
+
+      if ($status != null) {
+          $cat = json_encode($status);
+          $kat = str_replace(array("[","]"),array("(",")"),$cat);
+
+          $kate = 'and standarisasi_audits.status in'.$kat;
+      }else{
+          $kate = 'and standarisasi_audits.status not in ("close","rejected")';
+      }
+
+      $data = db::select("select * from standarisasi_audits where standarisasi_audits.deleted_at is null and auditor_kategori = 'ISO 45001' and auditor_date between '".$datefrom."' and '".$dateto."' ".$kate." ");
+
+      $response = array(
+        'status' => true,
+        'datas' => $data
+      );
+
+      return Response::json($response); 
     }
 
 }

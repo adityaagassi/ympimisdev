@@ -341,9 +341,10 @@
                                 <i class="fa fa-caret-right"></i> Audit Kanban (かんばん監査)
                             </a>
                             <br>
-                            <!-- <a href="{{ url("/index/audit_internal_mis?category=Audit_MIS") }}">
-                                <i class="fa fa-caret-right"></i> Audit MIS (MIS課内部監査)
-                            </a> -->
+                            <a href="{{ url("/index/audit_kanban/monitoring") }}">
+                                <i class="fa fa-caret-right"></i> Audit Kanban Monitoring ()
+                            </a>
+                            <br>
                             <a href="{{ url("/index/audit_patrol_mis") }}">
                                 <i class="fa fa-caret-right"></i> Audit MIS (MIS課内部監査)
                             </a>
