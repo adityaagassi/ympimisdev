@@ -190,11 +190,11 @@ Route::get('fetch/temperature/omron', 'TemperatureController@fetchOmron');
 Route::post('input/temperature/omron_operator', 'TemperatureController@inputOmronOperator');
 
 //HIKVISION TEMPERATURE
-Route::get('index/temperature/minmoe/{location}', 'TemperatureController@indexMinMoe');
+Route::get('index/temperature/minmoe', 'TemperatureController@indexMinMoe');
 Route::get('fetch/temperature/minmoe', 'TemperatureController@fetchMinMoe');
 Route::post('import/temperature/minmoe', 'TemperatureController@importMinMoe');
 
-Route::get('index/temperature/minmoe_monitoring/{location}', 'TemperatureController@indexMinMoeMonitoring');
+Route::get('index/temperature/minmoe_monitoring', 'TemperatureController@indexMinMoeMonitoring');
 Route::get('fetch/temperature/minmoe_monitoring', 'TemperatureController@fetchMinMoeMonitoring');
 Route::get('fetch/temperature/detail_minmoe_monitoring', 'TemperatureController@fetchDetailMinMoeMonitoring');
 
@@ -1589,6 +1589,7 @@ Route::post('delete/actual/transaksi', 'AccountingController@delete_transaksi');
 Route::get('warehouse/receive_equipment', 'AccountingController@wh_receive_equipment');
 Route::get('fetch/warehouse/equipment', 'AccountingController@fetch_receive_equipment');
 Route::post('fetch/warehouse/update_receive', 'AccountingController@update_receive');
+Route::post('fetch/warehouse/update_receive_ga', 'AccountingController@update_receive_ga');
 
 //Receive Barang
 Route::get('warehouse/receive_ga', 'AccountingController@wh_receive_ga');
@@ -1671,8 +1672,18 @@ Route::group(['nav' => 'S26', 'middleware' => 'permission'], function(){
 
 
 	Route::get('index/kd_mouthpiece/{id}', 'KnockDownController@indexKD');
-	Route::post('fetch/kd_print', 'KnockDownController@printLabelNew');
+	Route::post('fetch/kd_print_mp', 'KnockDownController@printLabelNew');
 	Route::get('index/print_label_mouthpiece/{id}', 'KnockDownController@indexPrintLabelSubassy');
+});
+
+//CASE
+Route::group(['nav' => 'S53', 'middleware' => 'permission'], function(){
+	Route::get('index/kd_case/{id}', 'KnockDownController@indexKD');
+	Route::post('fetch/kd_print_case', 'KnockDownController@printLabelNew');
+	Route::get('index/print_label_case/{id}', 'KnockDownController@indexPrintLabelSubassy');
+
+
+
 });
 
 //ZPRO
@@ -1692,13 +1703,6 @@ Route::group(['nav' => 'S51', 'middleware' => 'permission'], function(){
 	//Based on shipment sch parsial
 	Route::post('fetch/kd_print_mpro', 'KnockDownController@printLabelNewParsial');
 	Route::get('index/print_label_mpro/{shipment_schedule_id}/{kd_number}', 'KnockDownController@indexPrintLabelMpro');
-});
-
-
-//CASE
-Route::group(['nav' => 'S51', 'middleware' => 'permission'], function(){
-	Route::get('index/kd_case/{id}', 'KnockDownController@indexKD');
-
 });
 
 

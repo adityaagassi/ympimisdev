@@ -432,7 +432,7 @@
 
 		if(confirm("Data akan simpan oleh sistem.\nData tidak dapat dikembalikan.")){
 
-			$.post('{{ url("fetch/warehouse/update_receive") }}', data, function(result, status, xhr){
+			$.post('{{ url("fetch/warehouse/update_receive_ga") }}', data, function(result, status, xhr){
 				if (result.status) {
 					openSuccessGritter('Success', result.message);
 

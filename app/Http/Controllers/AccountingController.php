@@ -10621,21 +10621,21 @@ public function transfer_approvalto($id){
 
                     $receive->save();
 
-                    $budget_log = AccBudgetHistory::where('po_number','=',$itm['no_po'])
-                    ->where(DB::raw('SUBSTRING(no_item, 1, 7)'),'=',$itm['no_item'])
-                    ->first();
+                    // $budget_log = AccBudgetHistory::where('po_number','=',$itm['no_po'])
+                    // ->where(DB::raw('SUBSTRING(no_item, 1, 7)'),'=',$itm['no_item'])
+                    // ->first();
 
                     // var_dump($itm['no_po']);
                     // var_dump($itm['no_item']);
                     // var_dump($budget_log);
 
-                    $update_budget_log = AccBudgetHistory::where('po_number','=',$itm['no_po'])
-                    ->where(DB::raw('SUBSTRING(no_item, 1, 7)'),'=',$itm['no_item'])
-                    ->update([
-                        'budget_month_receive' => strtolower(date('M')),
-                        'amount_receive' => $budget_log->amount_po,
-                        'status' => 'Actual'
-                    ]);
+                    // $update_budget_log = AccBudgetHistory::where('po_number','=',$itm['no_po'])
+                    // ->where(DB::raw('SUBSTRING(no_item, 1, 7)'),'=',$itm['no_item'])
+                    // ->update([
+                    //     'budget_month_receive' => strtolower(date('M')),
+                    //     'amount_receive' => $budget_log->amount_po,
+                    //     'status' => 'Actual'
+                    // ]);
 
                     //GET DATA
                     $datapo =  AccPurchaseOrderDetail::where('id', $itm['id'])
@@ -10655,6 +10655,83 @@ public function transfer_approvalto($id){
             //     $total_all = $po_id->qty_receive + $qty;
 
             // }
+
+            $response = array(
+                'status' => true,
+                'message' => 'Update Receive Berhasil'
+            );
+            return Response::json($response);
+        } 
+        catch (Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function update_receive_ga(Request $request){
+        try {
+            $item = $request->get('item');
+
+            foreach ($item as $itm) {
+                if ($itm['qty'] != null && $itm['date'] != null) {
+
+                    //Get PO
+                    $po_detail = AccPurchaseOrderDetail::where('id', $itm['id'])
+                    ->first();
+
+                    if($po_detail->qty < ($po_detail->qty_receive + (int) $itm['qty']) ){
+                        $response = array(
+                             'status' => false,
+                             'message' => 'Jumlah Yang Dimasukkan Melebihi Pembelian Barang',
+                         );
+                         return Response::json($response);
+                    }
+
+                    $inv = AccPurchaseOrderDetail::where('id', $itm['id'])
+                    ->update([
+                        'qty_receive' => $po_detail->qty_receive + (int) $itm['qty'],
+                        'date_receive' => $itm['date'],
+                        'surat_jalan' => $itm['surat_jalan']
+                    ]);
+
+
+                    $receive = AccReceive::create([
+                        'no_po' => $itm['no_po'],
+                        'no_item' => $itm['no_item'],
+                        'nama_item' => $po_detail->nama_item,
+                        'qty' => $po_detail->qty,
+                        'qty_receive' => $itm['qty'],
+                        'date_receive' => $itm['date'],
+                        'surat_jalan' => $itm['surat_jalan'],
+                        'created_by' => Auth::id()
+                    ]);
+
+                    $receive->save();
+
+                    $budget_log = AccBudgetHistory::where('po_number','=',$itm['no_po'])
+                    ->where(DB::raw('SUBSTRING(no_item, 1, 7)'),'=',$itm['no_item'])
+                    ->first();
+
+                    $update_budget_log = AccBudgetHistory::where('po_number','=',$itm['no_po'])
+                    ->where(DB::raw('SUBSTRING(no_item, 1, 7)'),'=',$itm['no_item'])
+                    ->update([
+                        'budget_month_receive' => strtolower(date('M')),
+                        'amount_receive' => $budget_log->amount_po,
+                        'status' => 'Actual'
+                    ]);
+
+                    $datapo =  AccPurchaseOrderDetail::where('id', $itm['id'])
+                    ->first();
+
+                    if ($datapo->qty_receive >= $datapo->qty) {
+                        $update_qty_receive = AccPurchaseOrderDetail::where('id','=',$itm['id'])
+                        ->update(['status' => 'close']);
+                    }
+                }
+            }
 
             $response = array(
                 'status' => true,
