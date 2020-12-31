@@ -69,8 +69,8 @@
 								<label>Document Number:</label>
 								<select class="form-control select2" multiple="multiple" id='documentNumber' data-placeholder="Select Doc. Number" style="width: 100%;">
 									<option></option>
-									@foreach($document_numbers as $document_number)
-									<option value="{{ $document_number->document_number }}">{{ $document_number->document_number }}</option>
+									@foreach($documents as $document)
+									<option value="{{ $document->document_number }}">{{ $document->document_number }}</option>
 									@endforeach
 								</select>
 							</div>
@@ -132,10 +132,10 @@
 									<br><span style="color: white; font-size: 7pt;">Now <br>> ValidTo</span>
 								</th>
 								<th width="33%" style="background-color : rgba(242, 75, 75, 0.8); padding: 0px;">At Risk
-									<br><span style="color: black; font-size: 7pt;">ValidTo <br>< 210 Days</span>
+									<br><span style="color: black; font-size: 7pt;">ValidTo <br>< {{ $exp_paspor }} Days</span>
 								</th>
 								<th width="33%" style="background-color : rgba(107, 255, 104, 0.6); padding: 0px;">Safe
-									<br><span style="color: black; font-size: 7pt;">ValidTo <br>> 210 Days</span>
+									<br><span style="color: black; font-size: 7pt;">ValidTo <br>> {{ $exp_paspor }} Days</span>
 								</th>
 							</tr>
 						</thead>
@@ -160,10 +160,10 @@
 									<br><span style="color: white; font-size: 7pt;">Now <br>> ValidTo</span>
 								</th>
 								<th width="33%" style="background-color : rgba(242, 75, 75, 0.8); padding: 0px;">At Risk
-									<br><span style="color: black; font-size: 7pt;">ValidTo <br>< 210 Days</span>
+									<br><span style="color: black; font-size: 7pt;">ValidTo <br>< {{ $exp_kitas }} Days</span>
 								</th>
 								<th width="33%" style="background-color : rgba(107, 255, 104, 0.6); padding: 0px;">Safe
-									<br><span style="color: black; font-size: 7pt;">ValidTo <br>> 210 Days</span>
+									<br><span style="color: black; font-size: 7pt;">ValidTo <br>> {{ $exp_kitas }} Days</span>
 								</th>
 							</tr>
 						</thead>
@@ -188,10 +188,10 @@
 									<br><span style="color: white; font-size: 7pt;">Now <br>> ValidTo</span>
 								</th>
 								<th width="33%" style="background-color : rgba(242, 75, 75, 0.8); padding: 0px;">At Risk
-									<br><span style="color: black; font-size: 7pt;">ValidTo <br>< 210 Days</span>
+									<br><span style="color: black; font-size: 7pt;">ValidTo <br>< {{ $exp_merp }} Days</span>
 								</th>
 								<th width="33%" style="background-color : rgba(107, 255, 104, 0.6); padding: 0px;">Safe
-									<br><span style="color: black; font-size: 7pt;">ValidTo <br>> 210 Days</span>
+									<br><span style="color: black; font-size: 7pt;">ValidTo <br>> {{ $exp_merp }} Days</span>
 								</th>
 							</tr>
 						</thead>
@@ -216,10 +216,10 @@
 									<br><span style="color: white; font-size: 7pt;">Now <br>> ValidTo</span>
 								</th>
 								<th width="33%" style="background-color : rgba(242, 75, 75, 0.8); padding: 0px;">At Risk
-									<br><span style="color: black; font-size: 7pt;">ValidTo <br>< 210 Days</span>
+									<br><span style="color: black; font-size: 7pt;">ValidTo <br>< {{ $exp_notif }} Days</span>
 								</th>
 								<th width="33%" style="background-color : rgba(107, 255, 104, 0.6); padding: 0px;">Safe
-									<br><span style="color: black; font-size: 7pt;">ValidTo <br>> 210 Days</span>
+									<br><span style="color: black; font-size: 7pt;">ValidTo <br>> {{ $exp_notif }} Days</span>
 								</th>
 							</tr>
 						</thead>
@@ -244,10 +244,10 @@
 									<br><span style="color: white; font-size: 7pt;">Now <br>> ValidTo</span>
 								</th>
 								<th width="33%" style="background-color : rgba(242, 75, 75, 0.8); padding: 0px;">At Risk
-									<br><span style="color: black; font-size: 7pt;">ValidTo <br>< 210 Days</span>
+									<br><span style="color: black; font-size: 7pt;">ValidTo <br>< {{ $exp_skj }} Days</span>
 								</th>
 								<th width="33%" style="background-color : rgba(107, 255, 104, 0.6); padding: 0px;">Safe
-									<br><span style="color: black; font-size: 7pt;">ValidTo <br>> 210 Days</span>
+									<br><span style="color: black; font-size: 7pt;">ValidTo <br>> {{ $exp_skj }} Days</span>
 								</th>
 							</tr>
 						</thead>
@@ -272,10 +272,10 @@
 									<br><span style="color: white; font-size: 7pt;">Now <br>> ValidTo</span>
 								</th>
 								<th width="33%" style="background-color : rgba(242, 75, 75, 0.8); padding: 0px;">At Risk
-									<br><span style="color: black; font-size: 7pt;">ValidTo <br>< 210 Days</span>
+									<br><span style="color: black; font-size: 7pt;">ValidTo <br>< {{ $exp_skld }} Days</span>
 								</th>
 								<th width="33%" style="background-color : rgba(107, 255, 104, 0.6); padding: 0px;">Safe
-									<br><span style="color: black; font-size: 7pt;">ValidTo <br>> 210 Days</span>
+									<br><span style="color: black; font-size: 7pt;">ValidTo <br>> {{ $exp_skld }} Days</span>
 								</th>
 							</tr>
 						</thead>
@@ -576,7 +576,7 @@
 								<span class="label" style="background-color: black; color: white">Expired</span>
 							</div>
 							<div class="col-xs-9" style="padding-left: 0px;">
-								<p>Dokumen melebihi tanggal valid</p>
+								<p id="detail_text_expired">Dokumen melebihi tanggal valid</p>
 							</div>
 						</div>
 						<div class="col-xs-4">
@@ -584,15 +584,15 @@
 								<span class="label label-danger">At Risk</span>
 							</div>
 							<div class="col-xs-9" style="padding-left: 0px;">
-								<p>Dokumen kurang 210 hari lagi expired</p>
+								<p id="detail_text_at_risk">Dokumen kurang 210 hari lagi expired</p>
 							</div>
 						</div>		
 						<div class="col-xs-4">
 							<div class="col-xs-3" style="padding-right: 0px; text-align: center;">
 								<span class="label label-success">Safe</span>
 							</div>
-							<div class="col-xs-9" style="padding-left: 0px;">
-								<p>Masa aktif dokumen lebih dari 210 hari</p>
+							<div class="col-xs-9" style="padding-right: 0px; padding-left: 0px; ">
+								<p id="detail_text_safe">Masa aktif dokumen lebih dari 210 hari</p>
 							</div>
 
 						</div>					
@@ -719,8 +719,12 @@
 				if(result.detail.length > 0){
 					$('#detailBody').html("");
 
-					var tableData = '';
+					$('#detail_text_expired').text("Document expired");
+					$('#detail_text_at_risk').text("Document is less than "+ result.detail[0].reminder +" days to expire");
+					$('#detail_text_safe').text("Document Active period more than "+ result.detail[0].reminder +" days");
 
+
+					var tableData = '';
 					for (var i = 0; i < result.detail.length; i++) {
 						tableData += '<tr>';
 

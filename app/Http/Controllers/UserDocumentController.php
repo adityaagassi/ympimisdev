@@ -42,17 +42,57 @@ class UserDocumentController extends Controller
 	}
 
 	public function index(){
-		$document_numbers = UserDocument::select('document_number')->get();
-		$users = UserDocument::leftJoin('users', 'users.username', '=', 'user_documents.employee_id')->select('user_documents.employee_id', 'users.name')->distinct()->get();
+		$document = UserDocument::get();
+		
+		$users = UserDocument::leftJoin('users', 'users.username', '=', 'user_documents.employee_id')
+		->select('user_documents.employee_id', 'users.name')
+		->distinct()
+		->get();
 
-		$employees = EmployeeSync::get();
+		$employees = EmployeeSync::whereNull('end_date')->get();
+
+		$exp_paspor = 0;
+		$exp_kitas = 0;
+		$exp_merp = 0;
+		$exp_notif = 0;
+		$exp_skj = 0;
+		$exp_skld = 0;
+
+		for ($i=0; $i < count($document); $i++) { 
+			switch ($document[$i]->category) {
+				case "PASPOR":
+				$exp_paspor = $document[$i]->reminder;
+				break;
+				case "KITAS":
+				$exp_kitas = $document[$i]->reminder;
+				break;
+				case "MERP":
+				$exp_merp = $document[$i]->reminder;
+				break;
+				case "NOTIF":
+				$exp_notif = $document[$i]->reminder;
+				break;
+				case "SKJ":
+				$exp_skj = $document[$i]->reminder;
+				break;
+				case "SKLD":
+				$exp_skld = $document[$i]->reminder;
+				break;	
+			}			
+		}
 
 		return view('user_documents.index', array(
 			'categories' => $this->category,
 			'conditions' => $this->condition,
-			'document_numbers' => $document_numbers,
+			'documents' => $document,
 			'users' => $users,
 			'employees' => $employees,
+			'exp_paspor' => $exp_paspor,
+			'exp_kitas' => $exp_kitas,
+			'exp_merp' => $exp_merp,
+			'exp_notif' => $exp_notif,
+			'exp_skj' => $exp_skj,
+			'exp_skld' => $exp_skld,
 		))->with('page', 'User Document');
 	}
 

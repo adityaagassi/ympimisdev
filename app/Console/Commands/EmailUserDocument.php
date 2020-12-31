@@ -40,10 +40,11 @@ class EmailUserDocument extends Command
      * @return mixed
      */
     public function handle(){
-        $mail_to = db::select("select u.email from user_documents d 
-            left join users u on d.employee_id = u.username
-            where (d.`condition` = 'At Risk' or  d.`condition` = 'Expired')
-            and `status` = 'Active'");
+        $user_reminder = db::select("SELECT DISTINCT d.employee_id, u.email FROM user_documents d 
+            LEFT JOIN users u ON d.employee_id = u.username
+            WHERE (d.`condition` = 'At Risk' OR  d.`condition` = 'Expired')
+            AND d.`status` = 'Active'
+            AND u.email like '%music.yamaha.com%'");
 
         $safe = db::select("UPDATE user_documents
             SET `condition` = 'Safe'
@@ -57,21 +58,63 @@ class EmailUserDocument extends Command
             SET `condition` = 'Expired'
             WHERE now() > valid_to");
 
-        $user_documents = db::select("select d.category, d.document_number, d.employee_id, u.`name`, d.valid_from, d.valid_to, d.`condition`, DATEDIFF(valid_to, NOW()) as diff from user_documents d
-            left join users u on d.employee_id = u.username
-            where (d.`condition` = 'At Risk' or  d.`condition` = 'Expired')
-            and `status` = 'Active'
-            order by diff asc");
+
+        for ($x=0; $x < count($user_reminder) ; $x++) {
+            $user_documents = db::select("SELECT d.category,
+                d.document_number,
+                d.employee_id,
+                u.`name`,
+                d.valid_from,
+                d.valid_to,
+                d.`condition`,
+                DATEDIFF(valid_to, NOW()) as diff
+                FROM user_documents d
+                LEFT JOIN users u ON d.employee_id = u.username
+                WHERE (d.`condition` = 'At Risk' OR  d.`condition` = 'Expired')
+                AND d.`status` = 'Active'
+                AND d.employee_id = '".$user_reminder[$x]->employee_id."'
+                ORDER BY diff ASC");
+
+            $data = [
+                'user_documents' => $user_documents,
+                'jml' => count($user_documents),
+                'type' => 'user'
+            ];
+
+            if(count($user_documents) > 0){
+                Mail::to([$user_reminder[$x]->email])
+                ->bcc(['aditya.agassi@music.yamaha.com', 'muhammad.ikhlas@music.yamaha.com', 'agus.yulianto@music.yamaha.com'])
+                ->send(new SendEmail($data, 'user_document'));
+            }
+            
+        }
+
+
+
+        $resume = db::select("SELECT d.category,
+            d.document_number,
+            d.employee_id,
+            u.`name`,
+            d.valid_from,
+            d.valid_to,
+            d.`condition`,
+            DATEDIFF(valid_to, NOW()) as diff
+            FROM user_documents d
+            LEFT JOIN users u ON d.employee_id = u.username
+            WHERE (d.`condition` = 'At Risk' OR  d.`condition` = 'Expired')
+            AND d.`status` = 'Active'
+            ORDER BY diff ASC");
 
         $data = [
-            'user_documents' => $user_documents,
-            'jml' => count($user_documents)
+            'user_documents' => $resume,
+            'jml' => count($resume),
+            'type' => 'resume'
         ];
 
         if(count($user_documents) > 0){
             Mail::to(['eko.junaedi@music.yamaha.com', 'harjati.handajani@music.yamaha.com'])
             ->cc(['budhi.apriyanto@music.yamaha.com'])
-            ->bcc(['aditya.agassi@music.yamaha.com', 'muhammad.ikhlas@music.yamaha.com'])
+            ->bcc(['aditya.agassi@music.yamaha.com', 'muhammad.ikhlas@music.yamaha.com', 'agus.yulianto@music.yamaha.com'])
             ->send(new SendEmail($data, 'user_document'));
         }
     }
