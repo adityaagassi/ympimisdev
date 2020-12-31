@@ -750,8 +750,20 @@
 					}
 
 					$('#detailBody').append(tableData);
+				}else{
+					$('#detailBody').html("");
+					var tableData = '';
+
+					tableData += '<tr>';
+					tableData += '<td colspan="11">No data available in table</td>';
+					tableData += '</tr>';
+
+					$('#detailBody').append(tableData);
 				}
+
+
 				$("#detail_modal").modal('show');
+
 
 			}
 		});	
