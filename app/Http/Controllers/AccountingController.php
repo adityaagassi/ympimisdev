@@ -7948,7 +7948,7 @@ public function import_receive(Request $request){
                              ->first();
 
                              $amount = $budget_log->amount_po;
-                             $datereceive = $data2->date_receive;
+                             $datereceive = $data2->receive_date;
                                 //Get Data From Budget Master
                              $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$datereceive'");
 
