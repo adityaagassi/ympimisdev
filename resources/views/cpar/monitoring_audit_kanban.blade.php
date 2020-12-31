@@ -175,13 +175,13 @@ table > thead > tr > th{
           <table id="tabelmonitor" class="table table-bordered" style="margin-top: 5px; width: 99%">
             <thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 12px;font-weight: bold">
               <tr>
-                <th style="width: 10%;vertical-align: middle;;font-size: 16px;">Audit Kategori</th>
-                <th style="width: 10%;vertical-align: middle;border-left:3px solid #357a38 !important;font-size: 16px;">Tanggal</th>
-                <th style="width: 15%;vertical-align: middle;border-left:3px solid #357a38 !important;font-size: 16px;">Lokasi</th>
-                <th style="width: 15%;vertical-align: middle;border-left:3px solid #357a38 !important;font-size: 16px;">CPAR</th>
-                <th style="width: 15%;vertical-align: middle;border-left:3px solid #357a38 !important;font-size: 16px;">Standarisasi</th>
-                <th style="width: 15%;vertical-align: middle;border-left:3px solid #357a38 !important;font-size: 16px;">Penanganan</th>
-                <th style="width: 15%;vertical-align: middle;border-left:3px solid #357a38 !important;font-size: 16px;background-color:#448aff;">Verification</th>
+                <th style="width: 1%;vertical-align: middle;;font-size: 16px;">Audit Kategori</th>
+                <th style="width: 1%;vertical-align: middle;border-left:3px solid #357a38 !important;font-size: 16px;">Tanggal</th>
+                <th style="width: 1%;vertical-align: middle;border-left:3px solid #357a38 !important;font-size: 16px;">Lokasi</th>
+                <th style="width: 10%;vertical-align: middle;border-left:3px solid #357a38 !important;font-size: 16px;">Permasalahan</th>
+                <th style="width: 1%;vertical-align: middle;border-left:3px solid #357a38 !important;font-size: 16px;">Auditor</th>
+                <th style="width: 2%;vertical-align: middle;border-left:3px solid #357a38 !important;font-size: 16px;">Penanganan</th>
+                <th style="width: 2%;vertical-align: middle;border-left:3px solid #357a38 !important;font-size: 16px;">Report</th>
               </tr>
             </thead>
             <tbody id="tabelisi">
@@ -467,21 +467,19 @@ table > thead > tr > th{
           }
         },
       "columns": [
-          { "data": "audit_no", "width": "5%"},
-          { "data": "auditor_kategori", "width": "10%"},
+          { "data": "id", "width": "5%"},
+          { "data": "auditor_jenis", "width": "10%"},
           { "data": "auditor_date" , "width": "10%"},
           { "data": "auditor_name" , "width": "10%"},
           { "data": "auditee_name" , "width": "10%"},
           { "data": "auditor_lokasi" , "width": "10%"},
-          { "data": "status", "width": "7%"},
+          { "data": "posisi", "width": "7%"},
           { "data": "action", "width": "5%"}
         ]    });
 
     $('#judul_table').append().empty();
-    $('#judul_table').append('<center><b>List Audit ISO '+tgl+'</b></center>'); 
+    $('#judul_table').append('<center><b>List Audit Kanban '+tgl+'</b></center>'); 
   }
-
-
 
   function fetchTable(){
 
@@ -497,18 +495,16 @@ table > thead > tr > th{
 
     $.get('{{ url("index/audit_kanban/table") }}', data, function(result, status, xhr){
       if(result.status){
-
-
           $('#tabelmonitor').DataTable().clear();
           $('#tabelmonitor').DataTable().destroy();
 
           $("#tabelisi").find("td").remove();  
           $('#tabelisi').html("");
+
           var table = "";
           var statusauditor = "";
-          var statusstd = "";
           var statusauditee = "";
-          var statusverif = "";
+          var statusfinal = "";
           var reject = "";
 
           $.each(result.datas, function(key, value) {
@@ -520,16 +516,15 @@ table > thead > tr > th{
             var nama_auditee = value.auditee_name;
             var nama_auditee2 = nama_auditee.split(' ').slice(0,2).join(' ');
 
-
             var color = "";
             var d = 0;
 
-            var urldetail = '{{ url("index/audit_iso/detail/") }}';
-            var urlverifikasi = '{{ url("index/audit_iso/verifikasistd/") }}';
-            var urlresponse = '{{ url("index/audit_iso/response/") }}';
-            var urlprint = '{{ url("index/audit_iso/print/") }}';
+            var urldetail = '{{ url("index/audit/detail/") }}';
+            var urlverifikasi = '{{ url("index/audit/verifikasistd/") }}';
+            var urlresponse = '{{ url("index/audit/response/") }}';
+            var urlprint = '{{ url("index/audit/print/") }}';
             
-            var urldetailcar = '{{ url("index/audit_iso/response/") }}';
+            var urldetailcar = '{{ url("index/audit/response/") }}';
 
             if (value.posisi != "auditor") {
               statusauditor = '<a href="'+urlprint+'/'+value.id+'"><span class="label label-success">'+nama_auditor2+'</span></a>';
@@ -546,27 +541,7 @@ table > thead > tr > th{
                 }
             }
 
-            if (value.posisi == "std" && value.posisi != "auditor") {
-              if (d == 0) {
-                statusstd = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger"> Verifikasi Standarisasi </span></a>';   
-                color = 'style="background-color:red"';                  
-                d = 1;
-              } else {
-                statusstd = '';
-              }
-            }
-            else{
-              if (d == 0) {
-                statusstd = '<a href="'+urlprint+'/'+value.id+'"><span class="label label-success"> Verifikasi Standarisasi </span></a>';
-                color = 'style="background-color:green"';                 
-              }
-              else{
-                statusstd = '';
-              }
-
-            }
-
-            if (value.posisi == "auditee" && value.status == "car") {
+            if (value.posisi == "auditee") {
               if (d == 0) {
                 statusauditee = '<a href="'+urlresponse+'/'+value.id+'"><span class="label label-danger">'+nama_auditee2+'</span></a>';   
                 color = 'style="background-color:red"';                  
@@ -585,33 +560,33 @@ table > thead > tr > th{
                 } 
             }
 
-            if (value.posisi == "auditor_final" && value.status == "verif") {
+            if (value.posisi == "auditor_final") {
               if (d == 0) {
-                statusverif = '<a href="'+urldetail+'/'+value.id+'"><span class="label label-danger">'+nama_auditor2+'</span></a>';   
+                statusfinal = '<a href="'+urldetail+'/'+value.id+'"><span class="label label-danger">'+nama_auditor2+'</span></a>';   
                 color = 'style="background-color:red"';                  
                 d = 1;
               } else {
-                statusverif = '';
+                statusfinal = '';
               }
             }
             else{
                 if (d == 0) {
-                  statusverif = '<a href="'+urlprint+'/'+value.id+'"><span class="label label-success">'+nama_auditor2+'</span></a>';
+                  statusfinal = '<a href="'+urlprint+'/'+value.id+'"><span class="label label-success">'+nama_auditor2+'</span></a>';
                   color = 'style="background-color:green"';                
                 }
                 else{
-                  statusverif = '';
+                  statusfinal = '';
                 } 
             }
 
             table += '<tr>';
-            table += '<td>'+value.audit_no+' - '+value.auditor_kategori+'</td>';
+            table += '<td>Audit Kanban</td>';
             table += '<td style="border-left:3px solid #357a38"><span class="label label-warning">'+value.auditor_date+'</span></td>';
             table += '<td style="border-left:3px solid #357a38">'+value.auditor_lokasi+'</td>';
+            table += '<td style="border-left:3px solid #357a38">'+value.auditor_permasalahan+'</td>';
             table += '<td style="border-left:3px solid #357a38">'+statusauditor+'</td>';
-            table += '<td style="border-left:3px solid #357a38">'+statusstd+'</td>';
             table += '<td style="border-left:3px solid #357a38">'+statusauditee+'</td>';
-            table += '<td style="border-left:3px solid #357a38">'+statusverif+'</td>';
+            table += '<td style="border-left:3px solid #357a38"><a class="btn btn-md btn-danger" target="_blank" href="{{ url("index/audit/print") }}/'+value.id+'"><i class="fa fa-file-pdf-o"></i> </a></td>';
             table += '</tr>';
           })
 

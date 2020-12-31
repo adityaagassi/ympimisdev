@@ -2601,6 +2601,7 @@ class AccountingController extends Controller
                 <a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-warning" class="btn btn-primary btn-sm" onClick="editPO(' . $id . ')"><i class="fa fa-edit"></i> Edit</a>
                 <a href="purchase_order/report/' . $id . '" target="_blank" class="btn btn-danger btn-xs"  data-toggle="tooltip" title="PO Report PDF"><i class="fa fa-file-pdf-o"></i> Report</a>
                 <button class="btn btn-xs btn-success" data-toggle="tooltip" title="Send Email" style="margin-right:5px;"  onclick="sendEmail(' . $id .')"><i class="fa fa-envelope"></i> Send Email</button>
+                <a href="javascript:void(0)" class="btn btn-xs btn-danger" onClick="cancelPO('.$id.')" data-toggle="modal" data-target="#modalcancelPO"  title="Delete PO"><i class="fa fa-trash"></i> Delete PO</a>
                 ';
             }
 

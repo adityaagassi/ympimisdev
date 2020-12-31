@@ -3696,7 +3696,7 @@ class CparController extends Controller
             $cat = json_encode($status);
             $kat = str_replace(array("[","]"),array("(",")"),$cat);
 
-            $kate = 'and audit_all.status in'.$kat;
+            $kate = 'and audit_all.posisi in'.$kat;
         }else{
             $kate = '';
         }
@@ -3728,6 +3728,9 @@ class CparController extends Controller
 
       $tgl = date('Y-m-d', strtotime($request->get("tgl")));
 
+      $datefrom = null;
+      $dateto = null;
+
       if(strlen($request->get('datefrom')) > 0){
         $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
       }
@@ -3736,45 +3739,32 @@ class CparController extends Controller
         $dateto = date('Y-m-d', strtotime($request->get('dateto')));
       }
 
-      $status = $request->get('status');
-
-      if ($status != null) {
-
-          if ($status == "cpar") {
-            $status = "cpar";
-          }
-
-          if ($status == "car") {
-            $status = "penanganan";
-          }
-
-          if ($status == "Verifikasi") {
-            $status = "verif";
-          }
-
-          if ($status == "Revised") {
-            $status = "commended";
-          }
-
-          if ($status == "Reject") {
-            $status = "rejected";
-          }
-
-          $stat = 'and standarisasi_audits.status = "'.$status.'"';
-      }else{
-          $stat = '';
-      }
-
-      $datefrom = $request->get('datefrom');
-      $dateto = $request->get('dateto');
-
       if ($datefrom != null && $dateto != null) {
-          $df = 'and standarisasi_audits.tanggal between "'.$datefrom.'" and "'.$dateto.'"';
+          $df = 'and audit_alls.auditor_date between "'.$datefrom.'" and "'.$dateto.'"';
       }else{
           $df = '';
       }
 
-      $query = "select standarisasi_audits.* FROM standarisasi_audits where standarisasi_audits.deleted_at is null and auditor_kategori = 'ISO 45001' and auditor_date = '".$tgl."' ".$stat." ".$df."";
+      $status = $request->get('status');
+
+      if ($status != null) {
+
+          if ($status == "Close") {
+            $status = "auditor_final";
+          }
+
+          if ($status == "Penanganan") {
+            $status = "auditee";
+          }
+
+          $stat = 'and audit_alls.posisi = "'.$status.'"';
+
+      }else{
+          $stat = '';
+      }
+
+
+      $query = "select audit_alls.* FROM audit_alls where audit_alls.deleted_at is null and auditor_date = '".$tgl."' ".$stat." ".$df."";
 
       $detail = db::select($query);
 
@@ -3789,29 +3779,17 @@ class CparController extends Controller
         return date('d F Y', strtotime($detail->auditor_date));
       })
 
-      ->editColumn('status', function($detail){
-        if($detail->status == "cpar") {
-            return '<label class="label label-danger"> Verifikasi STD </label>';
-          }
-          else if($detail->status == "car"){
+      ->editColumn('posisi', function($detail){
+          if($detail->posisi == "auditee"){
             return '<label class="label label-warning"> Pembuatan Penanganan </label>';
           }
-          else if($detail->status == "verif"){
-            return '<label class="label label-primary"> Verifikasi Auditor </label>';
-          }
-          else if($detail->status == "close"){
+          else if($detail->posisi == "auditor_final"){
             return '<label class="label label-success"> Closed </label>';
-          }
-          else if($detail->status == "rejected"){
-            return '<label class="label label-danger"> Rejected </label>';
-          }
-          else if($detail->status == "commended"){
-            return '<label class="label label-warning"> Revised </label>';
           }
       })
 
 
-      ->rawColumns(['action' => 'action','status' => 'status'])
+      ->rawColumns(['action' => 'action','posisi' => 'posisi'])
       ->make(true);
   }
 
@@ -3822,7 +3800,7 @@ class CparController extends Controller
       $datefrom = date("Y-m-d",  strtotime('-30 days'));
       $dateto = date("Y-m-d");
 
-      $last = StandarisasiAudit::where('status', '<>', 'close')
+      $last = AuditAll::where('posisi', '<>', 'auditor_final')
       ->orderBy('auditor_date', 'asc')
       ->select(db::raw('date(auditor_date) as auditor_date'))
       ->first();
@@ -3852,12 +3830,12 @@ class CparController extends Controller
           $cat = json_encode($status);
           $kat = str_replace(array("[","]"),array("(",")"),$cat);
 
-          $kate = 'and standarisasi_audits.status in'.$kat;
+          $kate = 'and audit_alls.posisi in'.$kat;
       }else{
-          $kate = 'and standarisasi_audits.status not in ("close","rejected")';
+          $kate = 'and audit_alls.posisi not in ("auditor_final")';
       }
 
-      $data = db::select("select * from standarisasi_audits where standarisasi_audits.deleted_at is null and auditor_kategori = 'ISO 45001' and auditor_date between '".$datefrom."' and '".$dateto."' ".$kate." ");
+      $data = db::select("select * from audit_alls where audit_alls.deleted_at is null and auditor_date between '".$datefrom."' and '".$dateto."' ".$kate." ");
 
       $response = array(
         'status' => true,

@@ -953,7 +953,7 @@
 
 				@elseif($posisi == "manager_acc")
 
-				<a style="background-color: green; width: 50px;text-decoration: none;color: white;font-size:20px;" href="{{ url("investment/approvemanageracc/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\
+				<a style="background-color: green; width: 50px;text-decoration: none;color: white;font-size:20px;" href="{{ url("investment/approvemanageracc/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 				@elseif($posisi == "direktur_acc")
 
