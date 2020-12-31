@@ -31,6 +31,7 @@ Route::get('trial_loc2/{lat}/{long}', 'TrialController@getLocation');
 
 Route::get('index/whatsapp_api', 'ChatBotController@index');
 Route::get('whatsapp_api', 'TrialController@whatsapp_api');
+Route::get('kirimTelegram/{pesan}', 'TrialController@kirimTelegram');
 
 Route::get('index_push_pull_trial', 'TrialController@index_push_pull_trial');
 Route::post('push_pull_trial', 'TrialController@push_pull_trial');
@@ -1170,7 +1171,7 @@ Route::get('index/welding/operator', 'WeldingProcessController@indexMasterOperat
 Route::get('fetch/welding/operator', 'WeldingProcessController@fetchMasterOperator');
 Route::post('post/welding/add_operator', 'WeldingProcessController@addOperator');
 Route::post('post/welding/add_kanban', 'WeldingProcessController@addKanban');
-Route::get('index/welding/destroy_operator/{id}', 'WeldingProcessController@destroyOperator');
+Route::get('index/welding/destroy_operator/{id}/{employee_id}', 'WeldingProcessController@destroyOperator');
 Route::get('fetch/welding/get_operator', 'WeldingProcessController@getOperator');
 Route::post('index/welding/update_operator', 'WeldingProcessController@updateOperator');
 Route::get('index/welding/display_production_result', 'WeldingProcessController@indexDisplayProductionResult');
@@ -1323,6 +1324,7 @@ Route::get('index/sakurentsu/3m/translate/{id}', 'SakurentsuController@index_tra
 
 Route::get('index/sakurentsu/3m/{sakurentsu_number}', 'SakurentsuController@index_form_tiga_em');
 Route::post('post/sakurentsu/3m_form', 'SakurentsuController@save_tiga_em_form');
+Route::post('post/sakurentsu/3m/translate', 'SakurentsuController@save_tiga_em_translate');
 
 Route::get('index/sakurentsu/3m/premeeting/{id_three_m}', 'SakurentsuController@index_tiga_em_premeeting');
 Route::post('post/sakurentsu/3m/premeeting', 'SakurentsuController@post_tiga_em_premeeting');
@@ -3489,6 +3491,11 @@ Route::post('post/audit/create', 'CparController@audit_post_create_checklist_all
 Route::get('index/audit/response/{id}', 'CparController@audit_response_all');
 Route::post('index/audit/update_response/{id}', 'CparController@update_response_all');
 Route::get('index/audit/sendemailpenanganan/{id}', 'CparController@sendemailpenanganan_all');
+
+Route::get('index/audit_kanban/monitoring', 'CparController@monitoring_audit_kanban');
+Route::get('fetch/audit_kanban/monitoring', 'CparController@fetch_monitoring_audit_kanban');
+Route::get('index/audit_kanban/detail', 'CparController@detail_monitoring_audit_kanban');
+Route::get('index/audit_kanban/table', 'CparController@fetch_table_audit_kanban');
 
 //5S Patrol
 Route::get('index/audit_patrol', 'AuditController@index');

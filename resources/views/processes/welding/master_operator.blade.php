@@ -429,7 +429,7 @@
 	function deleteConfirmation(name,id) {
 		var url	= '{{ url("index/welding/destroy_operator") }}';
 		jQuery('.modal-body').text("Are you sure want to delete '" + name + "'?");
-		jQuery('#modalDeleteButton').attr("href", url+'/'+id);
+		jQuery('#modalDeleteButton').attr("href", url+'/'+id+'/'+name);
 	}
 
 	function editOperator(id) {

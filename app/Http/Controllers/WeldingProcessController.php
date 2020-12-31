@@ -90,9 +90,10 @@ class WeldingProcessController extends Controller
 			* 
 			FROM
 			`employee_syncs` 
-			WHERE
-			department = 'Woodwind Instrument - Welding-Surface Treatment (WI-WST) Department' 
-			AND section = 'Welding Process Section'");
+			-- WHERE
+			-- department = 'Woodwind Instrument - Welding-Surface Treatment (WI-WST) Department' 
+			-- AND section = 'Welding Process Section'
+			");
 
 		return view('processes.welding.master_operator', array(
 			'title' => $title,
@@ -595,9 +596,10 @@ class WeldingProcessController extends Controller
 					FROM
 					`employee_syncs` 
 					WHERE
-					department = 'Woodwind Instrument - Welding-Surface Treatment (WI-WST) Department' 
-					AND section = 'Welding Process Section' 
-					AND employee_id = '".$request->get('operator')."'");
+					-- department = 'Woodwind Instrument - Welding-Surface Treatment (WI-WST) Department' 
+					-- AND section = 'Welding Process Section' 
+					-- AND 
+					employee_id = '".$request->get('operator')."'");
 
 				foreach ($list_op as $key) {
 					$operator_name = $key->name;
@@ -629,7 +631,7 @@ class WeldingProcessController extends Controller
 					'operator_create_date' => date('Y-m-d H:i:s'),
 					'created_by' => Auth::id()]);
 
-				$opgroup = EmployeeGroup::firstOrNew(['employee_id' => $request->get('operator')]);
+				$opgroup = EmployeeGroup::firstOrNew(['employee_id' => $request->get('operator'),'location' => 'soldering']);
 				$opgroup->employee_id = $request->get('operator');
 				$opgroup->group = $request->get('group');
 				$opgroup->save();
@@ -656,17 +658,19 @@ class WeldingProcessController extends Controller
 		}
 	}
 
-	public function destroyOperator($id)
+	public function destroyOperator($id,$employee_id)
 	{
-		DB::connection('welding_controller')
+		$welcon = DB::connection('welding_controller')
 		->table('m_operator')
-		->where('operator_id','=',$id)->delete();
+		->where('operator_nik','=',$employee_id)->delete();
 
-		DB::connection('welding')
+		$wel = DB::connection('welding')
 		->table('m_operator')
-		->where('operator_id','=',$id)->delete();
+		->where('operator_nik','=',$employee_id)->delete();
 
-		return redirect('index/welding/operator');
+		EmployeeGroup::where('employee_id', $employee_id)->where('location', 'soldering')->forceDelete();
+
+		return redirect('index/welding/operator')->with('status','Success Delete Operator');
 	}
 
 	public function getOperator(Request $request)
@@ -734,7 +738,7 @@ class WeldingProcessController extends Controller
 				'group' => $request->get('group'),
 				'operator_create_date' => date('Y-m-d H:i:s')]);
 
-			$opgroup = EmployeeGroup::firstOrNew(['employee_id' => $request->get('operator')]);
+			$opgroup = EmployeeGroup::firstOrNew(['employee_id' => $request->get('operator'),'location' => 'soldering']);
 			$opgroup->employee_id = $request->get('operator');
 			$opgroup->group = $request->get('group');
 			$opgroup->save();
