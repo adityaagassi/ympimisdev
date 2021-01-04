@@ -761,11 +761,12 @@ class MaintenanceController extends Controller
 			left join maintenance_job_pendings on maintenance_job_orders.order_no = maintenance_job_pendings.order_no
 			left join departments on SUBSTRING_INDEX(maintenance_job_orders.section,"_",1) = departments.department_name
 			where maintenance_job_orders.remark <> 7
+			and maintenance_job_orders.deleted_at is null
 			order by target asc
 			) as awal
 			union all
 			
-			SELECT order_no, null priority, null bagian,null	description,null	request_date,null	requester,null 	inprogress,null	pic,null	target_date,null	target,null	process_code,null	process_name,null	`status`, cause, handling FROM maintenance_job_reports where id in (SELECT max(id) FROM maintenance_job_reports GROUP BY order_no)) alls
+			SELECT order_no, null priority, null bagian, null	description,null	request_date,null	requester,null 	inprogress,null	pic,null	target_date,null	target,null	process_code,null	process_name,null	`status`, cause, handling FROM maintenance_job_reports where id in (SELECT max(id) FROM maintenance_job_reports GROUP BY order_no)) alls
 			group by order_no
 			order by target asc			
 			');
