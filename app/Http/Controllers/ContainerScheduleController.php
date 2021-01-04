@@ -320,29 +320,38 @@ class ContainerScheduleController extends Controller{
     }
 
     public function fetchResumeShippingOrderDetail(Request $request){
-        $year = '';
+        $period = '';
         if(strlen($request->get('period')) > 0){
             $period = $request->get('period');
-            $year = date('Y', strtotime($period));
         }else{
-            $year = date('Y');
+            $period = date('Y-m');
         }
 
         $date = $request->get('date');
-        $st_date = date('Y-m-d', strtotime($date.'-'.$year));
+        $st_date = date('m-d', strtotime($date));
 
-        $resume = db::select("SELECT plan.*, confirm.`status` FROM
-            (SELECT DISTINCT period, ycj_ref_number, shipper, port_loading, port_of_delivery, country, fortyhc, forty, twenty, stuffing_date FROM shipment_reservations
-            WHERE stuffing_date = '".$st_date."'
-
+        $resume = db::select("SELECT DISTINCT plan.*, confirm.`status`, cek.ycj_ref_number FROM
+            (SELECT period, ycj_ref_number, shipper, port_loading, port_of_delivery, country, fortyhc, forty, twenty, stuffing_date, ( COALESCE ( fortyhc, 0 ) + COALESCE ( forty, 0 ) + COALESCE ( twenty, 0 ) ) AS qty FROM shipment_reservations
+            WHERE DATE_FORMAT(stuffing_date,'%m-%d') = '".$st_date."'
+            AND period = '".$period."'
             AND `status` <> 'NO NEED ANYMORE') AS plan
             LEFT JOIN
+            (SELECT ycj_ref_number, max( COALESCE ( fortyhc, 0 ) + COALESCE ( forty, 0 ) + COALESCE ( twenty, 0 ) ) AS qty FROM shipment_reservations
+            WHERE DATE_FORMAT(stuffing_date,'%m-%d') = '".$st_date."'
+            AND period = '".$period."'
+            AND `status` <> 'NO NEED ANYMORE'
+            GROUP BY ycj_ref_number) AS cek
+            ON cek.ycj_ref_number = plan.ycj_ref_number AND cek.qty = plan.qty
+            LEFT JOIN
             (SELECT DISTINCT ycj_ref_number, `status` FROM shipment_reservations
-            WHERE stuffing_date = '".$st_date."'
+            WHERE DATE_FORMAT(stuffing_date,'%m-%d') = '".$st_date."'
+            AND period = '".$period."'
             AND `status` = 'BOOKING CONFIRMED ') AS confirm
-            ON plan.ycj_ref_number = confirm.ycj_ref_number");
+            ON plan.ycj_ref_number = confirm.ycj_ref_number
+            WHERE cek.ycj_ref_number IS NOT NULL");
 
-        $detail = ShipmentReservation::where('stuffing_date', $st_date)
+        $detail = ShipmentReservation::where(db::raw("DATE_FORMAT(stuffing_date,'%m-%d')"), $st_date)
+        ->where('period', $period)
         ->where('status', '<>', 'NO NEED ANYMORE')
         ->select(
             'period',
@@ -370,7 +379,7 @@ class ContainerScheduleController extends Controller{
             'status' => true,
             'resume' => $resume,
             'detail' => $detail,
-            'st_date' => date('d F Y', strtotime($st_date)),
+            'st_date' => date('d F', strtotime($st_date)),
         );
         return Response::json($response);  
     }
@@ -474,11 +483,11 @@ class ContainerScheduleController extends Controller{
             LEFT JOIN
             (SELECT stuffing_date, SUM(reject) AS reject, SUM(confirm) AS confirm, SUM(not_confirm) AS not_confirm FROM
             (SELECT shipment.stuffing_date, shipment.ycj_ref_number, IF(resume.reject = 1, shipment.quantity, 0) AS reject, IF(resume.confirm = 1, shipment.quantity, 0) AS confirm, IF(resume.reject = 0 AND resume.confirm = 0, shipment.quantity, 0) AS not_confirm FROM
-            (SELECT ycj_ref_number, quantity, MIN(stuffing_date) AS stuffing_date FROM
+            (SELECT ycj_ref_number, MAX(quantity) AS quantity, MIN(stuffing_date) AS stuffing_date FROM
             (SELECT DISTINCT stuffing_date, ycj_ref_number, (COALESCE(fortyhc,0) + COALESCE(forty,0) + COALESCE(twenty,0)) AS quantity FROM shipment_reservations
             WHERE period = '".$period."'
             AND `status` <> 'NO NEED ANYMORE') AS shipment
-            GROUP BY ycj_ref_number, quantity) AS shipment
+            GROUP BY ycj_ref_number) AS shipment
             LEFT JOIN
             (SELECT stuffing_date, ycj_ref_number, IF(SUM(count) = SUM(reject), 1, 0) AS reject, IF(SUM(confirm) > 0, 1, 0) AS confirm FROM
             (SELECT stuffing_date, ycj_ref_number, `status`, 1 AS count, IF(`status` = 'BOOKING UNACCEPTED', 1, 0) AS reject, IF(`status` = 'BOOKING CONFIRMED', 1, 0) AS confirm FROM shipment_reservations
