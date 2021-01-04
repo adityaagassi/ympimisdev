@@ -723,8 +723,9 @@ class ChoreiController extends Controller
 
 		$chartResult3 = DB::select($query3);
 
-		$week_min_max = DB::table('weekly_calendars')->where('week_name', '=', $week->week_name)
-		->whereRaw('year(weekly_calendars.week_date) = "'.$year.'"')
+		$week_min_max = DB::table('weekly_calendars')->where('week_name', '=', $week2->week_name)
+		// ->whereRaw('year(weekly_calendars.week_date) = "'.$year.'"')
+		->where('fiscal_year',$week2->fiscal_year)
 		->select('week_name', db::raw('date_format(min(week_date), "%d") as min_date'), db::raw('date_format(max(week_date), "%d %b %Y") as max_date'))
 		->groupBy('week_name')
 		->get();
