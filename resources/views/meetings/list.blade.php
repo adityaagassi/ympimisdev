@@ -333,7 +333,7 @@
 					'searching': true	,
 					'ordering': true,
 					'order': [],
-					'info': true,
+					'info': false,
 					'autoWidth': true,
 					"sPaginationType": "full_numbers",
 					"bJQueryUI": true,
