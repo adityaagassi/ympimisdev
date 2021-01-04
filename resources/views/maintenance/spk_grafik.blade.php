@@ -57,7 +57,7 @@
 					<select class="form-control select2" id="status_cari" data-placeholder="Pilih Status" onchange="get_data('')" style="width: 100%;">
 						<option></option>
 						<option value="Finished">Finished</option>
-						<option value="Open">Open</option>
+						<option value="">Open</option>
 					</select>
 				</div>
 			</div>
@@ -193,11 +193,11 @@
 			$('#tableBody').html("");
 			var tableData = "";
 
-			var colors = ["default", "info", "warning", "primary", "danger", "success"];
+			var colors = ["default", "info", "warning", "primary", "danger", "success", "success"];
 
 			$.each(result.datas, function(index, value){
 
-				var st = ["Requested", "Received", "Listed", "InProgress", "Pending"];
+				var st = ["Requested", "Received", "Listed", "InProgress", "Pending", "Wait Acc"];
 
 				if (statuses == value.process_name || (statuses == '' && st.indexOf(value.process_name) >= 0)) {
 					var stat = 0;

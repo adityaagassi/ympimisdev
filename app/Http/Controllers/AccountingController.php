@@ -7284,7 +7284,7 @@ public function import_budget(Request $request){
                     // $data2->sep_after_adj = $sep_adj;
                     // $data2->oct_after_adj = $oct_adj;
                     // $data2->nov_after_adj = $nov_adj;
-                    $data2->dec_after_adj = $dec_adj;
+                    // $data2->dec_after_adj = $dec_adj;
                     $data2->jan_after_adj = $jan_adj;
                     $data2->feb_after_adj = $feb_adj;
                     $data2->mar_after_adj = $mar_adj;
@@ -7296,7 +7296,7 @@ public function import_budget(Request $request){
                     // $data2->sep_sisa_budget = $sep_sisa;
                     // $data2->oct_sisa_budget = $oct_sisa;
                     // $data2->nov_sisa_budget = $nov_sisa;
-                    $data2->dec_sisa_budget = $dec_sisa;
+                    // $data2->dec_sisa_budget = $dec_sisa;
                     $data2->jan_sisa_budget = $jan_sisa;
                     $data2->feb_sisa_budget = $feb_sisa;
                     $data2->mar_sisa_budget = $mar_sisa;
@@ -7994,6 +7994,7 @@ public function import_receive(Request $request){
                             ->where('budget','=',$po_detail->budget_item)
                             ->update([
                                 'budget_month_receive' => strtolower(date("M",strtotime($datereceive))),
+                                'currency_original' => $currency,
                                 'amount_original' => $total_budget_ori,
                                 'amount_receive' => $total_budget,
                                 'status' => 'Actual'
