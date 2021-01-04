@@ -194,7 +194,7 @@ Route::get('index/temperature/minmoe', 'TemperatureController@indexMinMoe');
 Route::get('fetch/temperature/minmoe', 'TemperatureController@fetchMinMoe');
 Route::post('import/temperature/minmoe', 'TemperatureController@importMinMoe');
 
-Route::get('index/temperature/minmoe_monitoring', 'TemperatureController@indexMinMoeMonitoring');
+Route::get('index/temperature/minmoe_monitoring/{location}', 'TemperatureController@indexMinMoeMonitoring');
 Route::get('fetch/temperature/minmoe_monitoring', 'TemperatureController@fetchMinMoeMonitoring');
 Route::get('fetch/temperature/detail_minmoe_monitoring', 'TemperatureController@fetchDetailMinMoeMonitoring');
 
@@ -1681,9 +1681,12 @@ Route::group(['nav' => 'S53', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_case/{id}', 'KnockDownController@indexKD');
 	Route::post('fetch/kd_print_case', 'KnockDownController@printLabelNew');
 	Route::get('index/print_label_case/{id}', 'KnockDownController@indexPrintLabelSubassy');
+});
 
-
-
+//TANPO
+Route::group(['nav' => 'S53', 'middleware' => 'permission'], function(){
+	Route::get('index/kd_tanpo/{id}', 'KnockDownController@indexKD');
+	
 });
 
 //ZPRO

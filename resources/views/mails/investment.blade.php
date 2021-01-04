@@ -504,7 +504,8 @@
 			自動通知です。返事しないでください。<br>
 
 			<h2>投資番号 : {{$reff_number}} <br>
-			件名 : <?= $subject_jpy ?></h2>
+			件名 : <?= $subject_jpy ?> <br> 
+			Subject : <?= ucfirst($subject) ?></h2>
 
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">

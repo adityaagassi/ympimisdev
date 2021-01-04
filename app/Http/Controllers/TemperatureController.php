@@ -168,9 +168,11 @@ class TemperatureController extends Controller
 
      public function index()
      {
+          $department = DB::SELECT('SELECT * FROM departments where department_name != "japan staff"');
           return view('temperature.index', array(
                'title' => 'Temperature',
-               'title_jp' => '温度'
+               'title_jp' => '温度',
+               'department' => $department
           ))->with('page', 'Temperature');
      }
 
@@ -276,14 +278,9 @@ class TemperatureController extends Controller
           return Response::json($response);
      }
 
-     public function indexMinMoe($location)
+     public function indexMinMoe()
      {
-          if ($location == 'office') {
-               $loc = 'OFC';
-          }
           return view('temperature.index_minmoe', array(
-               'loc' => $loc,
-               'location' => $location,
           ))->with('page', 'Temperature');
      }
 
@@ -307,7 +304,7 @@ class TemperatureController extends Controller
                     }
                }
 
-               $minmoeall = DB::SELECT('SELECT employees.employee_id,ivms_temperatures.location,employees.name,ivms_temperatures.date_in,ivms_temperatures.point,ivms_temperatures.temperature,ivms_temperatures.abnormal_status from ivms_temperatures left join employees on ivms_temperatures.employee_id = employees.employee_id where (employees.remark = "'.$request->get('location').'" '.$where.') OR (employees.remark = "Jps" '.$where.') order by date_in desc');
+               $minmoeall = DB::SELECT('SELECT employees.employee_id,ivms_temperatures.location,employees.name,ivms_temperatures.date_in,ivms_temperatures.point,ivms_temperatures.temperature,ivms_temperatures.abnormal_status from ivms_temperatures left join employees on ivms_temperatures.employee_id = employees.employee_id where employees.end_date is null order by date_in desc');
 
                $response = array(
                     'status' => true,
@@ -356,8 +353,14 @@ class TemperatureController extends Controller
                     if ($rows[$i][4] != '-') {
                          $temps = explode('°', $rows[$i][4]);
 
+                         if (str_contains($rows[$i][2], "''")) {
+                              $empname = str_replace("''","'",$rows[$i][2]);
+                         }else{
+                              $empname = $rows[$i][2];
+                         }
 
-                         $empys = DB::SELECT('select * from employees where name = "'.$rows[$i][2].'"');
+
+                         $empys = DB::SELECT('select * from employees where name = "'.$empname.'"');
 
                          if (count($empys) > 0) {
                               foreach ($empys as $key) {
@@ -368,7 +371,6 @@ class TemperatureController extends Controller
                               $ivms = IvmsTemperatureTemp::create([
                                    'employee_id' => $employee_id,
                                    'name' => $name,
-                                   'location' => $request->get('location'),
                                    'date' => date('Y-m-d', strtotime($rows[$i][6])),
                                    'date_in' => $rows[$i][6],
                                    'point' => $rows[$i][9],
@@ -377,7 +379,7 @@ class TemperatureController extends Controller
                                    'created_by' => $id_user,
                               ]);
                          }else{
-                              $empys = DB::SELECT('select * from employees where name like "'.$rows[$i][2].'%"');
+                              $empys = DB::SELECT('select * from employees where name like "'.$empname.'%"');
 
                               foreach ($empys as $key) {
                                    $employee_id = $key->employee_id;
@@ -387,7 +389,6 @@ class TemperatureController extends Controller
                               $ivms = IvmsTemperatureTemp::create([
                                    'employee_id' => $employee_id,
                                    'name' => $name,
-                                   'location' => $request->get('location'),
                                    'date' => date('Y-m-d', strtotime($rows[$i][6])),
                                    'date_in' => $rows[$i][6],
                                    'point' => $rows[$i][9],
@@ -402,7 +403,6 @@ class TemperatureController extends Controller
 
           $IvmsTemperature = DB::SELECT("SELECT DISTINCT ( a.employee_id ), name, ( SELECT MAX( temperature ) FROM ivms_temperature_temps WHERE employee_id = a.employee_id ) AS temperature,
                ( SELECT MIN( date_in ) FROM ivms_temperature_temps WHERE employee_id = a.employee_id ) AS date_in,
-               location,
                point,
                abnormal_status ,
                date
@@ -413,7 +413,6 @@ class TemperatureController extends Controller
                $ivms = IvmsTemperature::firstOrNew(['employee_id' => $key->employee_id, 'date' => $key->date]);
                $ivms->employee_id = $key->employee_id;
                $ivms->name = $key->name;
-               $ivms->location = $key->location;
                $ivms->date = $key->date;
                $ivms->date_in = $key->date_in;
                $ivms->point = $key->point;
@@ -424,17 +423,11 @@ class TemperatureController extends Controller
           }
 
           IvmsTemperatureTemp::truncate();
-
-          if ($request->get('location') == 'OFC') {
-               $miraimobile =DB::SELECT("SELECT *,miraimobile.quiz_logs.created_at as date_in FROM employees join miraimobile.quiz_logs on employees.employee_id = miraimobile.quiz_logs.employee_id where (employees.remark = '".$request->get('location')."' and miraimobile.quiz_logs.answer_date = '".date('Y-m-d')."' and miraimobile.quiz_logs.question = 'Suhu Tubuh') OR (employees.remark = 'Jps' and miraimobile.quiz_logs.answer_date = '".date('Y-m-d')."' and miraimobile.quiz_logs.question = 'Suhu Tubuh')");
-          }else{
-               $miraimobile =DB::SELECT("SELECT *,miraimobile.quiz_logs.created_at as date_in FROM employees join miraimobile.quiz_logs on employees.employee_id = miraimobile.quiz_logs.employee_id where employees.remark = '".$request->get('location')."' and miraimobile.quiz_logs.answer_date = '".date('Y-m-d')."' and miraimobile.quiz_logs.question = 'Suhu Tubuh'");
-          }
+          $miraimobile =DB::SELECT("SELECT *,miraimobile.quiz_logs.created_at as date_in FROM employees join miraimobile.quiz_logs on employees.employee_id = miraimobile.quiz_logs.employee_id where employees.end_date is null and miraimobile.quiz_logs.answer_date = '".date('Y-m-d')."' and miraimobile.quiz_logs.question = 'Suhu Tubuh'");
           foreach ($miraimobile as $val) {
                $ivms = IvmsTemperature::firstOrNew(['employee_id' => $val->employee_id, 'date' => $val->answer_date]);
                $ivms->employee_id = $val->employee_id;
                $ivms->name = $val->name;
-               $ivms->location = $val->location;
                $ivms->date = $val->answer_date;
                $ivms->date_in = $val->date_in;
                $ivms->point = "Mirai Mobile";
@@ -464,22 +457,43 @@ class TemperatureController extends Controller
    }
 }
 
-public function indexMinMoeMonitoring($location)
+public function indexMinMoeMonitoring($dept)
 {
 
      $title = "Resume Pengecekan Suhu Tubuh Karyawan";
      $title_jp = "従業員の検温のまとめ";
 
-     if ($location == 'office') {
+     if ($dept == 'office') {
           $loc = 'OFC';
+     }else{
+          $loc = $dept;
      }
-     $dept = db::select("select DISTINCT department from employee_syncs");
+
+     if ($loc == 'OFC') {
+          // $section = db::select("SELECT DISTINCT
+          //      ( section ) AS grp 
+          // FROM
+          //      employee_syncs
+          //      JOIN employees ON employees.employee_id = employee_syncs.employee_id 
+          // WHERE
+          //      remark = '".$loc."' 
+          //      AND section IS NOT NULL");
+          $group = db::select("select DISTINCT(`group`) as grp from employee_syncs where department = '".$loc."' and `group` is not null");
+          // return view('temperature.minmoe_monitoring', array(
+          //      'title' => $title,
+          //      'title_jp' => $title_jp,
+          //      'section' => $section,
+          //      'group' => $group,
+          //      'loc' => $loc,
+          // ))->with('page', 'Temperature');
+     }else{
+          $group = db::select("select DISTINCT(`group`) as grp from employee_syncs where department = '".$loc."' and `group` is not null");
+     }
      return view('temperature.minmoe_monitoring', array(
-          'loc' => $loc,
-          'location' => $location,
           'title' => $title,
           'title_jp' => $title_jp,
-          'dept' => $dept,
+          'group' => $group,
+          'loc' => $loc,
      ))->with('page', 'Temperature');
 }
 
@@ -493,43 +507,95 @@ public function fetchMinMoeMonitoring(Request $request)
           $now  = $date_from;
      }
 
-     $department = '';
-      if(count($request->get('department')) > 0){
-        for ($i=0; $i < count($request->get('department')); $i++) {
-          $department = $department."'".$request->get('department')[$i]."'";
-          if($i != (count($request->get('department'))-1)){
-            $department = $department.',';
+     $group = '';
+      if(count($request->get('group')) > 0){
+        for ($i=0; $i < count($request->get('group')); $i++) {
+          $group = $group."'".$request->get('group')[$i]."'";
+          if($i != (count($request->get('group'))-1)){
+            $group = $group.',';
           }
         }
-        $departmentin = " and `department` in (".$department.") ";
+        $groupin = " and `group` in (".$group.") ";
       }
       else{
-        $departmentin = "";
+        $groupin = "";
       }
 
-     $datatoday = DB::SELECT("
+     if ($request->get('location') == 'OFC') {
+          $datatoday = DB::SELECT("
           SELECT
                count( temperature ) AS count,
                temperature 
           FROM
-               `ivms_temperatures` 
-               left join employee_syncs on employee_syncs.employee_id = ivms_temperatures.employee_id
+               `ivms_temperatures`
+               LEFT JOIN employee_syncs ON employee_syncs.employee_id = ivms_temperatures.employee_id
+               LEFT JOIN employees ON employees.employee_id = employee_syncs.employee_id 
           WHERE
-               DATE( date_in ) = '".$now."' 
-               ".$departmentin."
+               ( DATE( date_in ) = '".$now."' AND employee_syncs.end_date IS NULL AND employees.remark = 'OFC' ".$groupin.") 
+               OR ( DATE( date_in ) = '".$now."' AND employee_syncs.end_date IS NULL AND employees.remark = 'Jps' ".$groupin.")
           GROUP BY
                temperature ASC");
+     }else{
+          $datatoday = DB::SELECT("
+          SELECT
+               count( temperature ) AS count,
+               temperature 
+          FROM
+               `ivms_temperatures`
+               LEFT JOIN employee_syncs ON employee_syncs.employee_id = ivms_temperatures.employee_id
+               LEFT JOIN employees ON employees.employee_id = employee_syncs.employee_id 
+          WHERE
+               ( DATE( date_in ) = '".$now."' AND employee_syncs.end_date IS NULL AND employees.remark != 'OFC' and employee_syncs.department = '".$request->get('location')."' ".$groupin.") 
+               OR ( DATE( date_in ) = '".$now."' AND employee_syncs.end_date IS NULL AND employees.remark != 'Jps' and employee_syncs.department = '".$request->get('location')."' ".$groupin.")
+          GROUP BY
+               temperature ASC");
+     }
 
           $attendance = [];
 
-          $datacheck = DB::SELECT("SELECT
-               a.employee_id,
-               employee_syncs.department,
-               departments.department_shortname,
-               COALESCE(employee_syncs.section,'') as section,
-               a.name,(
-               SELECT DISTINCT
-                    (
+          if ($request->get('location') == 'OFC') {
+               $datacheck = DB::SELECT("SELECT
+                    a.employee_id,
+                    employee_syncs.department,
+                    departments.department_shortname,
+                    COALESCE(employee_syncs.section,'') as section,
+                    a.name,(
+                    SELECT DISTINCT
+                         (
+                         IF
+                              (
+                                   ivms_attendance.auth_datetime < '2020-12-14 10:00:00',
+                                   SPLIT_STRING ( person_name, ' ', 1 ),
+                              IF
+                                   (
+                                        LENGTH( attend_id ) = 6,
+                                        CONCAT( 'PI0', attend_id ),
+                                   IF
+                                        (
+                                             LENGTH( attend_id ) = 5,
+                                             CONCAT( 'PI00', attend_id ),
+                                        IF
+                                             (
+                                                  LENGTH( attend_id ) = 4,
+                                                  CONCAT( 'PI000', attend_id ),
+                                             IF
+                                                  (
+                                                       LENGTH( attend_id ) = 3,
+                                                       CONCAT( 'PI0000', attend_id ),
+                                                  IF
+                                                       (
+                                                            LENGTH( attend_id ) = 2,
+                                                            CONCAT( 'PI00000', attend_id ),
+                                                       IF
+                                                            (
+                                                                 LENGTH( attend_id ) = 1,
+                                                                 CONCAT( 'PI000000', attend_id ),
+                                                            CONCAT( 'PI', attend_id ))))))))) 
+                    FROM
+                         ivms.ivms_attendance 
+                    WHERE
+                         ivms.ivms_attendance.auth_date = '".$now."' 
+                    AND
                     IF
                          (
                               ivms_attendance.auth_datetime < '2020-12-14 10:00:00',
@@ -558,53 +624,104 @@ public function fetchMinMoeMonitoring(Request $request)
                                                        (
                                                             LENGTH( attend_id ) = 1,
                                                             CONCAT( 'PI000000', attend_id ),
-                                                       CONCAT( 'PI', attend_id ))))))))) 
+                                                       CONCAT( 'PI', attend_id )))))))) = a.employee_id 
+                    ) AS checks,
+                    (select MAX(temperature) from ivms_temperatures where employee_id = a.employee_id and ivms_temperatures.date = '".$now."') as temperature
                FROM
-                    ivms.ivms_attendance 
+                    employees a
+                    JOIN employee_syncs ON employee_syncs.employee_id = a.employee_id 
+                    JOIN departments ON employee_syncs.department = departments.department_name 
                WHERE
-                    ivms.ivms_attendance.auth_date = '".$now."' 
-               AND
-               IF
-                    (
-                         ivms_attendance.auth_datetime < '2020-12-14 10:00:00',
-                         SPLIT_STRING ( person_name, ' ', 1 ),
-                    IF
+                    ( a.remark = 'OFC' AND a.end_date IS NULL ".$groupin.") 
+                    OR (
+                         a.remark = 'Jps' 
+                    AND a.end_date IS NULL ".$groupin."
+                    )");
+          }else{
+               $datacheck = DB::SELECT("SELECT
+                    a.employee_id,
+                    employee_syncs.department,
+                    departments.department_shortname,
+                    COALESCE(employee_syncs.section,'') as section,
+                    a.name,(
+                    SELECT DISTINCT
                          (
-                              LENGTH( attend_id ) = 6,
-                              CONCAT( 'PI0', attend_id ),
                          IF
                               (
-                                   LENGTH( attend_id ) = 5,
-                                   CONCAT( 'PI00', attend_id ),
+                                   ivms_attendance.auth_datetime < '2020-12-14 10:00:00',
+                                   SPLIT_STRING ( person_name, ' ', 1 ),
                               IF
                                    (
-                                        LENGTH( attend_id ) = 4,
-                                        CONCAT( 'PI000', attend_id ),
+                                        LENGTH( attend_id ) = 6,
+                                        CONCAT( 'PI0', attend_id ),
                                    IF
                                         (
-                                             LENGTH( attend_id ) = 3,
-                                             CONCAT( 'PI0000', attend_id ),
+                                             LENGTH( attend_id ) = 5,
+                                             CONCAT( 'PI00', attend_id ),
                                         IF
                                              (
-                                                  LENGTH( attend_id ) = 2,
-                                                  CONCAT( 'PI00000', attend_id ),
+                                                  LENGTH( attend_id ) = 4,
+                                                  CONCAT( 'PI000', attend_id ),
                                              IF
                                                   (
-                                                       LENGTH( attend_id ) = 1,
-                                                       CONCAT( 'PI000000', attend_id ),
-                                                  CONCAT( 'PI', attend_id )))))))) = a.employee_id 
-               ) AS checks,
-               (select temperature from ivms_temperatures where employee_id = a.employee_id and ivms_temperatures.date = '".$now."') as temperature
-          FROM
-               employees a
-               JOIN employee_syncs ON employee_syncs.employee_id = a.employee_id 
-               JOIN departments ON employee_syncs.department = departments.department_name 
-          WHERE
-               ( a.remark = '".$request->get('location')."' AND a.end_date IS NULL ".$departmentin.") 
-               OR (
-                    a.remark = 'Jps' 
-               AND a.end_date IS NULL ".$departmentin."
-               )");
+                                                       LENGTH( attend_id ) = 3,
+                                                       CONCAT( 'PI0000', attend_id ),
+                                                  IF
+                                                       (
+                                                            LENGTH( attend_id ) = 2,
+                                                            CONCAT( 'PI00000', attend_id ),
+                                                       IF
+                                                            (
+                                                                 LENGTH( attend_id ) = 1,
+                                                                 CONCAT( 'PI000000', attend_id ),
+                                                            CONCAT( 'PI', attend_id ))))))))) 
+                    FROM
+                         ivms.ivms_attendance 
+                    WHERE
+                         ivms.ivms_attendance.auth_date = '".$now."' 
+                    AND
+                    IF
+                         (
+                              ivms_attendance.auth_datetime < '2020-12-14 10:00:00',
+                              SPLIT_STRING ( person_name, ' ', 1 ),
+                         IF
+                              (
+                                   LENGTH( attend_id ) = 6,
+                                   CONCAT( 'PI0', attend_id ),
+                              IF
+                                   (
+                                        LENGTH( attend_id ) = 5,
+                                        CONCAT( 'PI00', attend_id ),
+                                   IF
+                                        (
+                                             LENGTH( attend_id ) = 4,
+                                             CONCAT( 'PI000', attend_id ),
+                                        IF
+                                             (
+                                                  LENGTH( attend_id ) = 3,
+                                                  CONCAT( 'PI0000', attend_id ),
+                                             IF
+                                                  (
+                                                       LENGTH( attend_id ) = 2,
+                                                       CONCAT( 'PI00000', attend_id ),
+                                                  IF
+                                                       (
+                                                            LENGTH( attend_id ) = 1,
+                                                            CONCAT( 'PI000000', attend_id ),
+                                                       CONCAT( 'PI', attend_id )))))))) = a.employee_id 
+                    ) AS checks,
+                    (select MAX(temperature) from ivms_temperatures where employee_id = a.employee_id and ivms_temperatures.date = '".$now."') as temperature
+               FROM
+                    employees a
+                    JOIN employee_syncs ON employee_syncs.employee_id = a.employee_id 
+                    JOIN departments ON employee_syncs.department = departments.department_name 
+               WHERE
+                    ( a.remark != 'OFC' and employee_syncs.department = '".$request->get('location')."' AND a.end_date IS NULL ".$groupin.") 
+                    OR (
+                         a.remark != 'Jps' and employee_syncs.department = '".$request->get('location')."'
+                    AND a.end_date IS NULL ".$groupin."
+                    )");
+          }
           
           foreach ($datacheck as $key) {
                if ($key->checks == null) {
@@ -670,16 +787,37 @@ public function fetchMinMoeMonitoring(Request $request)
 
           $dateTitle = date("d M Y", strtotime($now));
 
-          $dataAbnormal = DB::SELECT("SELECT
+         if ($request->get('location') == 'OFC') {
+               $dataAbnormal = DB::SELECT("SELECT
+                    employee_syncs.employee_id,
+                    employee_syncs.name,
+                    ivms_temperatures.temperature 
+               FROM
+                    ivms_temperatures
+                    LEFT JOIN employee_syncs ON employee_syncs.employee_id = ivms_temperatures.employee_id 
+                    LEFT JOIN employees ON employees.employee_id = employee_syncs.employee_id 
+               WHERE
+                    (employees.remark = 'OFC'  and ivms_temperatures.date = '".$now."' 
+                    AND ivms_temperatures.temperature >= 37.5)
+                     OR
+                     (employees.remark = 'Jps' and ivms_temperatures.date = '".$now."' 
+                    AND ivms_temperatures.temperature >= 37.5) ".$groupin);
+         }else{
+           $dataAbnormal = DB::SELECT("SELECT
                employee_syncs.employee_id,
                employee_syncs.name,
                ivms_temperatures.temperature 
           FROM
                ivms_temperatures
                LEFT JOIN employee_syncs ON employee_syncs.employee_id = ivms_temperatures.employee_id 
+               LEFT JOIN employees ON employees.employee_id = employee_syncs.employee_id 
           WHERE
-               ivms_temperatures.date = '".$now."' 
-               AND ivms_temperatures.temperature >= 37.5 ".$departmentin);
+               (employees.remark != 'OFC' and employee_syncs.department = '".$request->get('location')."' and ivms_temperatures.date = '".$now."' 
+               AND ivms_temperatures.temperature >= 37.5)
+                OR
+                (employees.remark != 'Jps' and employee_syncs.department = '".$request->get('location')."' and ivms_temperatures.date = '".$now."' 
+               AND ivms_temperatures.temperature >= 37.5) ".$groupin);
+         }
 
      $response = array(
           'status' => true,
@@ -714,21 +852,22 @@ public function fetchDetailMinMoeMonitoring(Request $request)
 
      $temperature = $request->get('temperature');
 
-     $department = '';
-      if(count($request->get('department')) > 0){
-        for ($i=0; $i < count($request->get('department')); $i++) {
-          $department = $department."'".$request->get('department')[$i]."'";
-          if($i != (count($request->get('department'))-1)){
-            $department = $department.',';
+     $group = '';
+      if(count($request->get('group')) > 0){
+        for ($i=0; $i < count($request->get('group')); $i++) {
+          $group = $group."'".$request->get('group')[$i]."'";
+          if($i != (count($request->get('group'))-1)){
+            $group = $group.',';
           }
         }
-        $departmentin = " and `department` in (".$department.") ";
+        $groupin = " and `group` in (".$group.") ";
       }
       else{
-        $departmentin = "";
+        $groupin = "";
       }
 
-     $detail = DB::SELECT("SELECT
+     if ($request->get('location') == 'OFC') {
+          $detail = DB::SELECT("SELECT
                     * 
           FROM
           ivms_temperatures 
@@ -738,13 +877,34 @@ public function fetchDetailMinMoeMonitoring(Request $request)
           (employees.remark = '".$request->get('location')."' 
           AND DATE( date_in ) = '".$now."' 
           AND temperature = ".$temperature."
-          ".$departmentin.")
+          ".$groupin.")
           OR
           (employees.remark = 'Jps' 
           AND DATE( date_in ) = '".$now."' 
           AND temperature = ".$temperature."
-          ".$departmentin.")
+          ".$groupin.")
           ");
+     }else{
+          $detail = DB::SELECT("SELECT
+                    * 
+          FROM
+          ivms_temperatures 
+          LEFT JOIN employees ON employees.employee_id = ivms_temperatures.employee_id 
+          LEFT JOIN employee_syncs ON employee_syncs.employee_id = employees.employee_id 
+          WHERE
+          (employees.remark != '".$request->get('location')."' 
+          AND DATE( date_in ) = '".$now."' 
+          AND temperature = ".$temperature."
+          and employee_syncs.department = '".$request->get('location')."'
+          ".$groupin.")
+          OR
+          (employees.remark != 'Jps' 
+          AND DATE( date_in ) = '".$now."' 
+          AND temperature = ".$temperature."
+          and employee_syncs.department = '".$request->get('location')."'
+          ".$groupin.")
+          ");
+     }
 
 
      $response = array(

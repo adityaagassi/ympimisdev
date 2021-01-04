@@ -118,7 +118,7 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		HikVision MinMoe Temperature - {{$loc}} <span class="text-purple">??</span>
+		HikVision MinMoe Temperature <span class="text-purple">??</span>
 		<button class="btn btn-primary pull-right" data-toggle="modal" data-target="#importExcel">
 			<i class="fa fa-file-excel-o"></i>&nbsp;&nbsp;
 			Upload Excel
@@ -185,7 +185,7 @@
 							<div class="col-md-10">
 								<div class="form-group pull-right">
 									<a href="{{ url('index/temperature') }}" class="btn btn-warning">Back</a>
-									<a href="{{ url('index/temperature/minmoe/'.$location) }}" class="btn btn-danger">Clear</a>
+									<a href="{{ url('index/temperature/minmoe') }}" class="btn btn-danger">Clear</a>
 									<button class="btn btn-primary col-sm-14" onclick="fillList()">Search</button>
 								</div>
 							</div>
@@ -196,7 +196,6 @@
 							<tr>
 								<th>Employee ID</th>
 								<th>Name</th>
-								<th>Location</th>
 								<th>Check Date</th>
 								<th>Check Point</th>
 								<th>Temperature</th>
@@ -207,7 +206,6 @@
 						</tbody>
 						<tfoot>
 							<tr>
-								<th></th>
 								<th></th>
 								<th></th>
 								<th></th>
@@ -250,7 +248,6 @@
 					<h4 class="modal-title" id="myModalLabel">Upload Temperature</h4>
 				</div>
 				<div class="modal-body">
-					<input type="hidden" id="location" name="location" value="{{$loc}}">
 					Upload Excel file here:<span class="text-red">*</span>
 					<input type="file" name="file" id="file" required>
 				</div>
@@ -349,8 +346,7 @@
 
 	var data = {
 		tanggal_from:tanggal_from,
-		tanggal_to:tanggal_to,
-		location:'{{$loc}}'
+		tanggal_to:tanggal_to
 	}
 	$.get('{{ url("fetch/temperature/minmoe") }}',data, function(result, status, xhr){
 			if(result.status){
@@ -362,7 +358,6 @@
 					tableData += '<tr>';
 					tableData += '<td>'+ value.employee_id +'</td>';
 					tableData += '<td>'+ value.name +'</td>';
-					tableData += '<td>'+ value.location +'</td>';
 					tableData += '<td>'+ value.date_in +'</td>';
 					tableData += '<td>'+ value.point +'</td>';
 					tableData += '<td>'+ value.temperature +'</td>';

@@ -66,6 +66,22 @@
 		color: white;
 	}
 
+	div.dataTables_filter label, 
+     div.dataTables_wrapper div.dataTables_info {
+	     color: white;
+	}
+
+	 div#tableDetail_info.dataTables_info,
+	 div#tableDetail_filter.dataTables_filter label,
+	 div#tableDetail_wrapper.dataTables_wrapper{
+		color: black;
+	}
+
+	#tableDetail_info.dataTables_info,
+	#tableDetail_info.dataTables_length {
+		color: black;
+	}
+
 </style>
 @stop
 @section('header')
@@ -85,17 +101,17 @@
 						</div>
 					</div>
 					<div class="col-md-3" style="padding-left: 3px;padding-right: 0px">
-			            <div class="input-group">
-			              <div class="input-group-addon bg-blue">
-			                <i class="fa fa-search"></i>
-			              </div>
-			              <select class="form-control select2" multiple="multiple" id="department" data-placeholder="Select Department" style="border-color: #605ca8" onchange="fetchTemperature()">
-			                  @foreach($dept as $dept)
-			                    <option value="{{ $dept->department }}">{{ $dept->department }}</option>
-			                  @endforeach
-			                </select>
-			            </div>
-			        </div>
+						<div class="input-group">
+							<div class="input-group-addon bg-blue">
+								<i class="fa fa-search"></i>
+							</div>
+							<select class="form-control select2" multiple="multiple" id="group" data-placeholder="Select Group" style="border-color: #605ca8" onchange="fetchTemperature()">
+								@foreach($group as $group)
+								<option value="{{ $group->grp }}">{{ $group->grp }}</option>
+								@endforeach
+							</select>
+						</div>
+					</div>
 					<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 1vw	;font-size: 1vw;color: white"></div>
 				</form>
 			</div>
@@ -136,7 +152,7 @@
 								<th style="color:white;width: 1%; font-size: 1.2vw;">#</th>
 								<th style="color:white;width: 5%; font-size: 1.2vw; text-align: center;">ID</th>
 								<th style="color:white;width: 30%; font-size: 1.2vw; text-align: center;">Name</th>
-								<th style="color:white;width: 30%; font-size: 1.2vw; text-align: center;">Dept</th>
+								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Dept</th>
 								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Attendance</th>
 							</tr>					
 						</thead>
@@ -214,17 +230,17 @@
 		});
 		$('.select2').select2();
 		fetchTemperature();
-		intervaltemp = setInterval(fetchTemperature,30000);
+		intervaltemp = setInterval(fetchTemperature,1000*60*60);
 	});
 
 
 	function fetchTemperature(){
 		var tanggal_from = $('#tanggal_from').val();
-		var department = $('#department').val();
+		var group = $('#group').val();
 
 		var data = {
 			tanggal_from:tanggal_from,
-			department:department,
+			group:group,
 			location:'{{$loc}}',
 		}
 
@@ -293,7 +309,7 @@
 						'paging': true,
 						'lengthChange': true,
 						'pageLength': 10,
-						'searching': false	,
+						'searching': true,
 						'ordering': false,
 						'order': [],
 						'info': true,
@@ -324,11 +340,19 @@
 
 					var categories1 = [];
 					var series1 = [];
+					var temp = [];
 
 					$.each(result.datatoday, function(key, value) {
 						categories1.push(value.temperature+' °C');
+						temp.push(parseFloat(value.temperature));
 						series1.push({y:parseFloat(value.count),key:value.temperature});
 					});
+
+					var total = 0;
+					for(var i = 0; i < temp.length; i++) {
+						total += temp[i];
+					}
+					var avg = total / temp.length;
 
 					$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Update: '+ getActualFullDate() +'</p>');
 
@@ -401,277 +425,334 @@
 				}
 			}
 		});		
+}
+
+function fetchTemperatureDetail(temperature){
+	clearInterval(intervaltemp);
+	$('#modalDetail').modal('show');
+	$('#loading').show();
+	$('#modalDetailTitle').html("");
+	$('#tableDetail').hide();
+
+	var tanggal_from = $('#tanggal_from').val();
+	var group = $('#group').val();
+
+	var data = {
+		tanggal_from:tanggal_from,
+		temperature:temperature,
+		group:group,
+		location:'{{$loc}}'
 	}
 
-	function fetchTemperatureDetail(temperature){
-		clearInterval(intervaltemp);
-		$('#modalDetail').modal('show');
-		$('#loading').show();
-		$('#modalDetailTitle').html("");
-		$('#tableDetail').hide();
+	$.get('{{ url("fetch/temperature/detail_minmoe_monitoring") }}', data, function(result, status, xhr) {
+		if(result.status){
+			$('#tableDetailBody').html('');
 
-		var tanggal_from = $('#tanggal_from').val();
-		var department = $('#department').val();
+			$('#tableDetail').DataTable().clear();
+			$('#tableDetail').DataTable().destroy();
 
-		var data = {
-			tanggal_from:tanggal_from,
-			temperature:temperature,
-			department:department,
-			location:'{{$loc}}'
-		}
+			var index = 1;
+			var resultData = "";
+			var total = 0;
 
-		$.get('{{ url("fetch/temperature/detail_minmoe_monitoring") }}', data, function(result, status, xhr) {
-			if(result.status){
-				$('#tableDetailBody').html('');
+			$.each(result.details, function(key, value) {
+				resultData += '<tr>';
+				resultData += '<td>'+ index +'</td>';
+				resultData += '<td>'+ value.employee_id +'</td>';
+				resultData += '<td>'+ value.name +'</td>';
+				resultData += '<td>'+ value.date_in +'</td>';
+				resultData += '<td>'+ value.point +'</td>';
+				resultData += '<td>'+ value.temperature +' °C</td>';
+				resultData += '<td>'+ value.abnormal_status +'</td>';
+				resultData += '</tr>';
+				index += 1;
+			});
+			$('#tableDetailBody').append(resultData);
+			$('#modalDetailTitle').html("<center><span style='font-size: 20px; font-weight: bold;'>Detail Employees on "+temperature+" °C</span></center>");
 
-				var index = 1;
-				var resultData = "";
-				var total = 0;
-
-				$.each(result.details, function(key, value) {
-					resultData += '<tr>';
-					resultData += '<td>'+ index +'</td>';
-					resultData += '<td>'+ value.employee_id +'</td>';
-					resultData += '<td>'+ value.name +'</td>';
-					resultData += '<td>'+ value.date_in +'</td>';
-					resultData += '<td>'+ value.point +'</td>';
-					resultData += '<td>'+ value.temperature +' °C</td>';
-					resultData += '<td>'+ value.abnormal_status +'</td>';
-					resultData += '</tr>';
-					index += 1;
-				});
-				$('#tableDetailBody').append(resultData);
-				$('#modalDetailTitle').html("<center><span style='font-size: 20px; font-weight: bold;'>Detail Employees on "+temperature+" °C</span></center>");
-				$('#loading').hide();
-				$('#tableDetail').show();
-				intervaltemp = setInterval(fetchTemperature,30000);
-			}
-			else{
-				alert('Attempt to retrieve data failed');
-			}
-		});
-	}
-
-	Highcharts.createElement('link', {
-		href: '{{ url("fonts/UnicaOne.css")}}',
-		rel: 'stylesheet',
-		type: 'text/css'
-	}, null, document.getElementsByTagName('head')[0]);
-
-	Highcharts.theme = {
-		colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
-		'#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
-		chart: {
-			backgroundColor: {
-				linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
-				stops: [
-				[0, '#2a2a2b'],
-				[1, '#3e3e40']
-				]
-			},
-			style: {
-				fontFamily: 'sans-serif'
-			},
-			plotBorderColor: '#606063'
-		},
-		title: {
-			style: {
-				color: '#E0E0E3',
-				textTransform: 'uppercase',
-				fontSize: '20px'
-			}
-		},
-		subtitle: {
-			style: {
-				color: '#E0E0E3',
-				textTransform: 'uppercase'
-			}
-		},
-		xAxis: {
-			gridLineColor: '#707073',
-			labels: {
-				style: {
-					color: '#E0E0E3'
-				}
-			},
-			lineColor: '#707073',
-			minorGridLineColor: '#505053',
-			tickColor: '#707073',
-			title: {
-				style: {
-					color: '#A0A0A3'
-
-				}
-			}
-		},
-		yAxis: {
-			gridLineColor: '#707073',
-			labels: {
-				style: {
-					color: '#E0E0E3'
-				}
-			},
-			lineColor: '#707073',
-			minorGridLineColor: '#505053',
-			tickColor: '#707073',
-			tickWidth: 1,
-			title: {
-				style: {
-					color: '#A0A0A3'
-				}
-			}
-		},
-		tooltip: {
-			backgroundColor: 'rgba(0, 0, 0, 0.85)',
-			style: {
-				color: '#F0F0F0'
-			}
-		},
-		plotOptions: {
-			series: {
-				dataLabels: {
-					color: 'white'
-				},
-				marker: {
-					lineColor: '#333'
-				}
-			},
-			boxplot: {
-				fillColor: '#505053'
-			},
-			candlestick: {
-				lineColor: 'white'
-			},
-			errorbar: {
-				color: 'white'
-			}
-		},
-		legend: {
-			itemStyle: {
-				color: '#E0E0E3'
-			},
-			itemHoverStyle: {
-				color: '#FFF'
-			},
-			itemHiddenStyle: {
-				color: '#606063'
-			}
-		},
-		credits: {
-			style: {
-				color: '#666'
-			}
-		},
-		labels: {
-			style: {
-				color: '#707073'
-			}
-		},
-
-		drilldown: {
-			activeAxisLabelStyle: {
-				color: '#F0F0F3'
-			},
-			activeDataLabelStyle: {
-				color: '#F0F0F3'
-			}
-		},
-
-		navigation: {
-			buttonOptions: {
-				symbolStroke: '#DDDDDD',
-				theme: {
-					fill: '#505053'
-				}
-			}
-		},
-
-		rangeSelector: {
-			buttonTheme: {
-				fill: '#505053',
-				stroke: '#000000',
-				style: {
-					color: '#CCC'
-				},
-				states: {
-					hover: {
-						fill: '#707073',
-						stroke: '#000000',
-						style: {
-							color: 'white'
+			var table = $('#tableDetail').DataTable({
+				'dom': 'Bfrtip',
+				'responsive':true,
+				'lengthMenu': [
+				[ 10, 25, 50, -1 ],
+				[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+				],
+				'buttons': {
+					buttons:[
+					{
+						extend: 'pageLength',
+						className: 'btn btn-default',
+					},
+					{
+						extend: 'copy',
+						className: 'btn btn-success',
+						text: '<i class="fa fa-copy"></i> Copy',
+						exportOptions: {
+							columns: ':not(.notexport)'
 						}
 					},
-					select: {
-						fill: '#000003',
-						stroke: '#000000',
-						style: {
-							color: 'white'
+					{
+						extend: 'excel',
+						className: 'btn btn-info',
+						text: '<i class="fa fa-file-excel-o"></i> Excel',
+						exportOptions: {
+							columns: ':not(.notexport)'
+						}
+					},
+					{
+						extend: 'print',
+						className: 'btn btn-warning',
+						text: '<i class="fa fa-print"></i> Print',
+						exportOptions: {
+							columns: ':not(.notexport)'
 						}
 					}
-				}
-			},
-			inputBoxBorderColor: '#505053',
-			inputStyle: {
-				backgroundColor: '#333',
-				color: 'silver'
-			},
-			labelStyle: {
-				color: 'silver'
-			}
-		},
+					]
+				},
+				'paging': true,
+				'lengthChange': true,
+				'pageLength': 10,
+				'searching': true	,
+				'ordering': true,
+				'order': [],
+				'info': true,
+				'autoWidth': true,
+				"sPaginationType": "full_numbers",
+				"bJQueryUI": true,
+				"bAutoWidth": false,
+				"processing": true
+			});
 
-		navigator: {
-			handles: {
-				backgroundColor: '#666',
-				borderColor: '#AAA'
-			},
-			outlineColor: '#CCC',
-			maskFill: 'rgba(255,255,255,0.1)',
-			series: {
-				color: '#7798BF',
-				lineColor: '#A6C7ED'
-			},
-			xAxis: {
-				gridLineColor: '#505053'
-			}
-		},
-
-		scrollbar: {
-			barBackgroundColor: '#808083',
-			barBorderColor: '#808083',
-			buttonArrowColor: '#CCC',
-			buttonBackgroundColor: '#606063',
-			buttonBorderColor: '#606063',
-			rifleColor: '#FFF',
-			trackBackgroundColor: '#404043',
-			trackBorderColor: '#404043'
-		},
-
-		legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
-		background2: '#505053',
-		dataLabelsColor: '#B0B0B3',
-		textColor: '#C0C0C0',
-		contrastTextColor: '#F0F0F3',
-		maskColor: 'rgba(255,255,255,0.3)'
-	};
-	Highcharts.setOptions(Highcharts.theme);
-
-	function addZero(i) {
-		if (i < 10) {
-			i = "0" + i;
+			$('#loading').hide();
+			$('#tableDetail').show();
+			intervaltemp = setInterval(fetchTemperature,30000);
 		}
-		return i;
+		else{
+			alert('Attempt to retrieve data failed');
+		}
+	});
+}
+
+Highcharts.createElement('link', {
+	href: '{{ url("fonts/UnicaOne.css")}}',
+	rel: 'stylesheet',
+	type: 'text/css'
+}, null, document.getElementsByTagName('head')[0]);
+
+Highcharts.theme = {
+	colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
+	'#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+	chart: {
+		backgroundColor: {
+			linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
+			stops: [
+			[0, '#2a2a2b'],
+			[1, '#3e3e40']
+			]
+		},
+		style: {
+			fontFamily: 'sans-serif'
+		},
+		plotBorderColor: '#606063'
+	},
+	title: {
+		style: {
+			color: '#E0E0E3',
+			textTransform: 'uppercase',
+			fontSize: '20px'
+		}
+	},
+	subtitle: {
+		style: {
+			color: '#E0E0E3',
+			textTransform: 'uppercase'
+		}
+	},
+	xAxis: {
+		gridLineColor: '#707073',
+		labels: {
+			style: {
+				color: '#E0E0E3'
+			}
+		},
+		lineColor: '#707073',
+		minorGridLineColor: '#505053',
+		tickColor: '#707073',
+		title: {
+			style: {
+				color: '#A0A0A3'
+
+			}
+		}
+	},
+	yAxis: {
+		gridLineColor: '#707073',
+		labels: {
+			style: {
+				color: '#E0E0E3'
+			}
+		},
+		lineColor: '#707073',
+		minorGridLineColor: '#505053',
+		tickColor: '#707073',
+		tickWidth: 1,
+		title: {
+			style: {
+				color: '#A0A0A3'
+			}
+		}
+	},
+	tooltip: {
+		backgroundColor: 'rgba(0, 0, 0, 0.85)',
+		style: {
+			color: '#F0F0F0'
+		}
+	},
+	plotOptions: {
+		series: {
+			dataLabels: {
+				color: 'white'
+			},
+			marker: {
+				lineColor: '#333'
+			}
+		},
+		boxplot: {
+			fillColor: '#505053'
+		},
+		candlestick: {
+			lineColor: 'white'
+		},
+		errorbar: {
+			color: 'white'
+		}
+	},
+	legend: {
+		itemStyle: {
+			color: '#E0E0E3'
+		},
+		itemHoverStyle: {
+			color: '#FFF'
+		},
+		itemHiddenStyle: {
+			color: '#606063'
+		}
+	},
+	credits: {
+		style: {
+			color: '#666'
+		}
+	},
+	labels: {
+		style: {
+			color: '#707073'
+		}
+	},
+
+	drilldown: {
+		activeAxisLabelStyle: {
+			color: '#F0F0F3'
+		},
+		activeDataLabelStyle: {
+			color: '#F0F0F3'
+		}
+	},
+
+	navigation: {
+		buttonOptions: {
+			symbolStroke: '#DDDDDD',
+			theme: {
+				fill: '#505053'
+			}
+		}
+	},
+
+	rangeSelector: {
+		buttonTheme: {
+			fill: '#505053',
+			stroke: '#000000',
+			style: {
+				color: '#CCC'
+			},
+			states: {
+				hover: {
+					fill: '#707073',
+					stroke: '#000000',
+					style: {
+						color: 'white'
+					}
+				},
+				select: {
+					fill: '#000003',
+					stroke: '#000000',
+					style: {
+						color: 'white'
+					}
+				}
+			}
+		},
+		inputBoxBorderColor: '#505053',
+		inputStyle: {
+			backgroundColor: '#333',
+			color: 'silver'
+		},
+		labelStyle: {
+			color: 'silver'
+		}
+	},
+
+	navigator: {
+		handles: {
+			backgroundColor: '#666',
+			borderColor: '#AAA'
+		},
+		outlineColor: '#CCC',
+		maskFill: 'rgba(255,255,255,0.1)',
+		series: {
+			color: '#7798BF',
+			lineColor: '#A6C7ED'
+		},
+		xAxis: {
+			gridLineColor: '#505053'
+		}
+	},
+
+	scrollbar: {
+		barBackgroundColor: '#808083',
+		barBorderColor: '#808083',
+		buttonArrowColor: '#CCC',
+		buttonBackgroundColor: '#606063',
+		buttonBorderColor: '#606063',
+		rifleColor: '#FFF',
+		trackBackgroundColor: '#404043',
+		trackBorderColor: '#404043'
+	},
+
+	legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
+	background2: '#505053',
+	dataLabelsColor: '#B0B0B3',
+	textColor: '#C0C0C0',
+	contrastTextColor: '#F0F0F3',
+	maskColor: 'rgba(255,255,255,0.3)'
+};
+Highcharts.setOptions(Highcharts.theme);
+
+function addZero(i) {
+	if (i < 10) {
+		i = "0" + i;
 	}
-	
-	function getActualFullDate() {
-		var d = new Date();
-		var day = addZero(d.getDate());
-		var month = addZero(d.getMonth()+1);
-		var year = addZero(d.getFullYear());
-		var h = addZero(d.getHours());
-		var m = addZero(d.getMinutes());
-		var s = addZero(d.getSeconds());
-		return day + "-" + month + "-" + year + " (" + h + ":" + m + ":" + s +")";
-	}
+	return i;
+}
+
+function getActualFullDate() {
+	var d = new Date();
+	var day = addZero(d.getDate());
+	var month = addZero(d.getMonth()+1);
+	var year = addZero(d.getFullYear());
+	var h = addZero(d.getHours());
+	var m = addZero(d.getMinutes());
+	var s = addZero(d.getSeconds());
+	return day + "-" + month + "-" + year + " (" + h + ":" + m + ":" + s +")";
+}
 </script>
 @endsection

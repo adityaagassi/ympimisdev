@@ -9147,18 +9147,18 @@ public function fetchInvestmentControl(Request $request){
 
   if(strlen($request->get('datefrom')) > 0){
     $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
-}
-else{
-    if($last){
-      $tanggal = date_create($last->tanggal);
-      $now = date_create(date('Y-m-d'));
-      $interval = $now->diff($tanggal);
-      $diff = $interval->format('%a%');
-
-      if($diff > 30){
-        $datefrom = date('Y-m-d', strtotime($last->tanggal));
     }
-}
+    else{
+        if($last){
+          $tanggal = date_create($last->tanggal);
+          $now = date_create(date('Y-m-d'));
+          $interval = $now->diff($tanggal);
+          $diff = $interval->format('%a%');
+
+          if($diff > 30){
+            $datefrom = date('Y-m-d', strtotime($last->tanggal));
+        }
+    }
 }
 
 
@@ -9169,6 +9169,19 @@ if(strlen($request->get('dateto')) > 0){
 $department = $request->get('department');
 
 if ($department != null) {
+
+    if ($department[0] == "Maintenance Department") {
+      array_push($department,"Production Engineering Department");
+  }
+
+  else if ($department[0] == "Procurement Department") {
+      array_push($department,"Purchasing Control Department");
+  }
+
+  else if ($department[0] == "Human Resources Department") {
+      array_push($department,"General Affairs Department");
+  }
+
   $deptt = json_encode($department);
   $dept = str_replace(array("[","]"),array("(",")"),$deptt);
 
@@ -9314,6 +9327,19 @@ if(strlen($request->get('dateto')) > 0){
 $department = $request->get('department');
 
 if ($department != null) {
+
+    if ($department[0] == "Maintenance Department") {
+          array_push($department,"Production Engineering Department");
+      }
+
+      else if ($department[0] == "Procurement Department") {
+          array_push($department,"Purchasing Control Department");
+      }
+
+      else if ($department[0] == "Human Resources Department") {
+          array_push($department,"General Affairs Department");
+      }
+      
   $deptt = json_encode($department);
   $dept = str_replace(array("[","]"),array("(",")"),$deptt);
 
