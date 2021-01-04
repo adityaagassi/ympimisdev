@@ -48,6 +48,16 @@
 	}
 	#loading, #error { display: none; }
 
+	.dataTables_info,
+	.dataTables_length {
+		color: white;
+		align-content: left
+	}
+
+	div.dataTables_filter label, 
+     div.dataTables_wrapper div.dataTables_info {
+	     color: white;
+	}
 </style>
 @stop
 @section('header')
@@ -313,6 +323,23 @@
 				$('#meet9').text(total_undangan);
 
 				$('#tableAttendanceBody').append(tableData);
+
+				var table = $('#tableAttendance').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'paging': false,
+					'lengthChange': false,
+					// 'pageLength': 10,
+					'searching': true	,
+					'ordering': true,
+					'order': [],
+					'info': true,
+					'autoWidth': true,
+					"sPaginationType": "full_numbers",
+					"bJQueryUI": true,
+					"bAutoWidth": false,
+					"processing": true
+				});
 				$('#tag').focus();
 				openSuccessGritter('Success!', result.message);
 			}

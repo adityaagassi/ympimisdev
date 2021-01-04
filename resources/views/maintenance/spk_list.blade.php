@@ -371,6 +371,13 @@
 							</div>
 
 							<div class="form-group row" align="right">
+								<label class="col-xs-2" style="margin-top: 1%;">Lampiran</label>
+								<div class="col-xs-10" align="left" id="lampiran_detail">
+									
+								</div>
+							</div>
+
+							<div class="form-group row" align="right">
 								<label class="col-xs-2" style="margin-top: 1%;">Catatan Keamanan</label>
 								<div class="col-xs-8" align="left">
 									<textarea class="form-control" id="keamanan_detail" rows="1" readonly></textarea>
@@ -865,6 +872,8 @@
 			$("#uraian_detail").val(result.detail[0].description);
 			$("#keamanan_detail").val(result.detail[0].safety_note);
 			$("#target_detail").val(result.detail[0].target_date);
+			$("#lampiran_detail").empty();
+			$("#lampiran_detail").append("<a href='{{ url('maintenance/spk_att/') }}/"+result.detail[0].att+"' target='_blank'>"+result.detail[0].att+"</a>");
 
 			$("#penyebab_detail").val(result.detail[0].cause);
 			$("#penanganan_detail").val(result.detail[0].handling);
