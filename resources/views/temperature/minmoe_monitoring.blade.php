@@ -184,10 +184,10 @@
 								<th style="width: 1%;">#</th>
 								<th style="width: 3%;">Employee ID</th>
 								<th style="width: 9%;">Name</th>
-								<th style="width: 3%;">Check Time</th>
-								<th style="width: 3%;">Check Point</th>
-								<th style="width: 2%;">Temperature</th>
-								<th style="width: 2%;">Abnormal Status</th>
+								<th style="width: 3%;">Time</th>
+								<th style="width: 3%;">Point</th>
+								<th style="width: 2%;">Temp</th>
+								<th style="width: 2%;">Abnormal</th>
 							</tr>
 						</thead>
 						<tbody id="tableDetailBody">
