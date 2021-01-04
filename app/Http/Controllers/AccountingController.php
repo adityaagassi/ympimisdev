@@ -2994,12 +2994,23 @@ class AccountingController extends Controller
                 ]);
             }
 
-            $detail_po = AccPurchaseOrder::select('*')
-            ->leftJoin('acc_purchase_order_details', 'acc_purchase_orders.no_po', '=', 'acc_purchase_order_details.no_po')
-            ->leftJoin('acc_suppliers', 'acc_purchase_orders.supplier_code', '=', 'acc_suppliers.vendor_code')
-            ->leftJoin('acc_purchase_requisitions', 'acc_purchase_order_details.no_pr', '=', 'acc_purchase_requisitions.no_pr')
-            ->where('acc_purchase_orders.id', '=', $data->id)
-            ->get();
+            if($request->get('remark') == "Investment"){
+                $detail_po = AccPurchaseOrder::select('acc_purchase_orders.*','acc_suppliers.*','acc_purchase_order_details.*','acc_investments.applicant_department')
+                ->leftJoin('acc_purchase_order_details', 'acc_purchase_orders.no_po', '=', 'acc_purchase_order_details.no_po')
+                ->leftJoin('acc_suppliers', 'acc_purchase_orders.supplier_code', '=', 'acc_suppliers.vendor_code')
+                ->leftJoin('acc_investments', 'acc_purchase_order_details.no_pr', '=', 'acc_investments.reff_number')
+                ->where('acc_purchase_orders.id', '=', $data->id)
+                ->get();
+            }
+
+            else if($request->get('remark') == "PR"){
+                $detail_po = AccPurchaseOrder::select('acc_purchase_orders.*','acc_suppliers.*','acc_purchase_order_details.*','acc_purchase_requisitions.department')
+                ->leftJoin('acc_purchase_order_details', 'acc_purchase_orders.no_po', '=', 'acc_purchase_order_details.no_po')
+                ->leftJoin('acc_suppliers', 'acc_purchase_orders.supplier_code', '=', 'acc_suppliers.vendor_code')
+                ->leftJoin('acc_purchase_requisitions', 'acc_purchase_order_details.no_pr', '=', 'acc_purchase_requisitions.no_pr')
+                ->where('acc_purchase_orders.id', '=', $data->id)
+                ->get();
+            }
 
             $pr = AccPurchaseOrder::select('no_pr')
             ->leftJoin('acc_purchase_order_details', 'acc_purchase_orders.no_po', '=', 'acc_purchase_order_details.no_po')
@@ -3279,7 +3290,7 @@ class AccountingController extends Controller
                 
             }
 
-            $detail_po = AccPurchaseOrder::select('*')
+            $detail_po = AccPurchaseOrder::select('acc_purchase_orders.*','acc_suppliers.*','acc_purchase_order_details.*')
             ->leftJoin('acc_purchase_order_details', 'acc_purchase_orders.no_po', '=', 'acc_purchase_order_details.no_po')
             ->leftJoin('acc_suppliers', 'acc_purchase_orders.supplier_code', '=', 'acc_suppliers.vendor_code')
             ->leftJoin('acc_purchase_requisitions', 'acc_purchase_order_details.no_pr', '=', 'acc_purchase_requisitions.no_pr')
@@ -9339,7 +9350,7 @@ if ($department != null) {
       else if ($department[0] == "Human Resources Department") {
           array_push($department,"General Affairs Department");
       }
-      
+
   $deptt = json_encode($department);
   $dept = str_replace(array("[","]"),array("(",")"),$deptt);
 

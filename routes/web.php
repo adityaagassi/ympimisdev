@@ -3507,6 +3507,7 @@ Route::get('index/audit_kanban/table', 'CparController@fetch_table_audit_kanban'
 //5S Patrol
 Route::get('index/audit_patrol', 'AuditController@index');
 Route::get('index/audit_patrol_mis', 'AuditController@index_mis');
+Route::get('index/audit_patrol_std', 'AuditController@index_std');
 Route::get('fetch/audit_patrol', 'AuditController@fetch_audit');
 Route::post('post/audit_patrol', 'AuditController@post_audit');
 Route::post('post/audit_patrol_file', 'AuditController@post_audit_file');
@@ -3717,6 +3718,7 @@ Route::post('create/maintenance/spk', 'MaintenanceController@createSPK');
 Route::post('edit/maintenance/spk', 'MaintenanceController@editSPK');
 Route::get('fetch/maintenance/detail', 'MaintenanceController@fetchMaintenanceDetail');
 Route::get('index/maintenance/spk/grafik', 'MaintenanceController@indexSPKGrafik');
+Route::get('export/maintenance/list_spk', 'MaintenanceController@exportSPKList');
 
 Route::get('verify/maintenance/spk/approve_urgent', 'MaintenanceController@verifySPK');
 Route::get('verify/maintenance/spk/danger_note/{order_no}', 'MaintenanceController@indexDangerNote');

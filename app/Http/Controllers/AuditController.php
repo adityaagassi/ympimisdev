@@ -73,6 +73,26 @@ class AuditController extends Controller
     ))->with('page', 'Audit Patrol MIS');
   }
 
+  public function index_std()
+  {
+    $title = "EHS & 5S Bulanan";
+    $title_jp = "";
+
+    $emp = EmployeeSync::where('employee_id', Auth::user()->username)
+    ->select('employee_id', 'name', 'position', 'department')->first();
+
+    $auditee = db::select("select DISTINCT employee_id, name, section, position from employee_syncs
+      where end_date is null and (position like '%Staff%' or position like '%Chief%' or position like '%Foreman%' or position like 'Manager%')");
+
+    return view('audit.patrol_std', array(
+      'title' => $title,
+      'title_jp' => $title_jp,
+      'employee' => $emp,
+      'auditee' => $auditee,
+      'location' => $this->location
+    ))->with('page', 'EHS dan 5S Bulanan');
+  }
+
 
 	public function post_audit(Request $request)
 	{
