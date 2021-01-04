@@ -1,5 +1,6 @@
 @extends('layouts.display')
 @section('stylesheets')
+<link rel="stylesheet" href="{{ url("plugins/timepicker/bootstrap-timepicker.min.css")}}">
 <style type="text/css">
 	thead>tr>th{
 		text-align:center;
@@ -73,7 +74,23 @@
 							<input type="text" class="form-control datepicker" name="tanggal" id="tanggal" placeholder="Select Date">
 						</div>
 					</div>
-					<div class="col-xs-3">
+					<div class="col-xs-2" style="padding-left: 0px">
+						<div class="input-group time">
+							<div class="input-group-addon bg-green" style="border: none;">
+								<i class="fa fa-clock-o"></i>
+							</div>
+							<input type="text" class="form-control timepicker" name="time_from" id="time_from" placeholder="Select Time From" value="00:00">
+						</div>
+					</div>
+					<div class="col-xs-2" style="padding-left: 0px">
+						<div class="input-group time">
+							<div class="input-group-addon bg-green" style="border: none;">
+								<i class="fa fa-clock-o"></i>
+							</div>
+							<input type="text" class="form-control timepicker" name="time_to" id="time_to" placeholder="Select Time From" value="00:00">
+						</div>
+					</div>
+					<div class="col-xs-2" style="padding-left: 0px">
 						<div class="form-group" style="color: black;">
 							<select class="form-control select3" multiple="multiple" id='wsSelect' onchange="changeWs()" data-placeholder="Select Work Station" style="width: 100%;">
 								<option value=""></option>
@@ -84,15 +101,18 @@
 							<input type="text" name="ws" id="ws" hidden>
 						</div>
 					</div>
-					<div class="col-xs-2">
+					<div class="col-xs-2" style="padding-left: 0px">
 						<button class="btn btn-success" type="submit">Update Chart</button>
 					</div>
 				</form>
-				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
+				<div class="col-xs-2" style="padding-left: 0px">
+					<!-- <div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div> -->
+				</div>
 			</div>
 
 			<div class="col-xs-12" style="margin-top: 5px;">
 				<h2 style="text-transform: uppercase; font-weight: bold; text-align: center;">Daily qty of incoming instruction Vs Actual result qty</h2>
+				<div id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;text-align:center;"></div>
 			</div>
 
 			<div class="row">
@@ -222,6 +242,7 @@
 <script src="{{ url("js/highcharts-3d.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
+<script src="{{ url("plugins/timepicker/bootstrap-timepicker.min.js")}}"></script>
 <script>
 	$.ajaxSetup({
 		headers: {
@@ -233,7 +254,11 @@
 		$('.select2').select2();
 		fillChart();
 		setInterval(fillChart, 60000);
-
+		$('.timepicker').timepicker({
+	      showInputs: false,
+	      showMeridian: false,
+	      defaultTime: '00:00',
+	    });
 	});
 
 	function changeWs() {
@@ -470,6 +495,8 @@
 
 	function fillChart() {
 		var tanggal = "{{$_GET['tanggal']}}";
+		var time_from = "{{$_GET['time_from']}}";
+		var time_to = "{{$_GET['time_to']}}";
 		var ws = "{{$_GET['ws']}}";
 
 		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
@@ -477,15 +504,14 @@
 
 		var data = {
 			tanggal:tanggal,
+			time_from:time_from,
+			time_to:time_to,
 		}
 		var workstations = ws.split(",");
 
 
 		$.get('{{ url("fetch/welding/group_achievement") }}', data, function(result, status, xhr) {
 			if(result.status){
-
-				console.log(workstations);
-				console.log(workstations.length);
 				
 				if(workstations.toString() != ""){
 					var key = [];
@@ -500,7 +526,7 @@
 					}
 					var chart = Highcharts.chart('container', {
 						title: {
-							text: workstations.toString() + ' on '+ result.tanggal,
+							text: workstations.toString() + ' on '+ result.tanggal + '<br>'+result.time_from+ ' - '+result.time_to,
 							style: {
 								fontSize: '18px',
 								fontWeight: 'bold'
@@ -588,7 +614,7 @@
 						}
 						var chart = Highcharts.chart(''+ result.ws[h].ws_id +'', {
 							title: {
-								text: result.ws[h].ws_name + ' on '+result.tanggal,
+								text: result.ws[h].ws_name + ' on '+result.tanggal + '<br>'+result.time_from+ ' - '+result.time_to,
 								style: {
 									fontSize: '18px',
 									fontWeight: 'bold'

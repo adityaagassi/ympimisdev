@@ -474,10 +474,28 @@ class MaintenanceController extends Controller
 		$title = 'Urgent Maintenance SPK';
 		$title_jp = '??';
 
+		$data = db::select("SELECT mjo.order_no, department_shortname as department, priority, description, date(mjo.created_at) as req_date, start_actual, process_name from maintenance_job_orders as mjo
+			left join departments on departments.department_name = SUBSTRING_INDEX(mjo.section,'_',1)
+			left join (select process_code, process_name from processes where remark = 'Maintenance') as prs on prs.process_code = mjo.remark
+			left join maintenance_job_processes as mjp on mjo.order_no = mjp.order_no
+			where priority = 'Urgent' and mjo.remark <> 6");
+
 		return view('maintenance.maintenance_urgent', array(
 			'title' => $title,
-			'title_jp' => $title_jp
+			'title_jp' => $title_jp,
+			'datas' => $data
 		))->with('head', 'Maintenance');
+	}
+
+	public function indexSPKUrgentReport()
+	{
+		$title = 'Urgent Maintenance SPK Monitoring';
+		$title_jp = '??';
+
+		return view('maintenance.maintenance_urgent_monitoring', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page','Urgent Maintenance SPK Monitoring')->with('head', 'Maintenance');
 	}
 
 	// -----------------------  END INDEX --------------------
@@ -513,7 +531,7 @@ class MaintenanceController extends Controller
 		->whereNull('maintenance_job_processes.deleted_at')
 		->whereNull('maintenance_job_orders.deleted_at')
 		// ->whereNull('maintenance_job_processes.finish_actual')
-		->whereRaw("maintenance_job_orders.remark in (3,4,5)")
+		->whereRaw("maintenance_job_orders.remark in (3,4,5,6)")
 		->select("maintenance_job_orders.order_no", "maintenance_job_orders.section", "priority", "type", "category", "machine_condition", "danger", "description", "target_date", "safety_note", "start_plan", "finish_plan", "start_actual", "finish_actual", db::raw("DATE_FORMAT(maintenance_job_orders.created_at,'%d-%m-%Y') as request_date"), 'name', "maintenance_job_orders.remark", "process_name")
 		->orderBy("maintenance_job_orders.remark", "asc")
 		->get();
@@ -738,7 +756,7 @@ class MaintenanceController extends Controller
 	{
 		MaintenanceJobOrder::where('order_no', '=', $request->get("order_no"))
 		->update([
-			'remark' => 7
+			'remark' => 8
 		]);
 
 		$response = array(
@@ -764,7 +782,7 @@ class MaintenanceController extends Controller
 			left join (select process_code, process_name from processes where remark = "maintenance") l_pcr on l_pcr.process_code = maintenance_job_orders.remark
 			left join maintenance_job_pendings on maintenance_job_orders.order_no = maintenance_job_pendings.order_no
 			left join departments on SUBSTRING_INDEX(maintenance_job_orders.section,"_",1) = departments.department_name
-			where maintenance_job_orders.remark <> 7
+			where maintenance_job_orders.remark <> 8
 			and maintenance_job_orders.deleted_at is null
 			order by target asc
 			) as awal
@@ -784,10 +802,10 @@ class MaintenanceController extends Controller
 
 		$data_bar = db::select('SELECT DATE_FORMAT(mstr.dt,"%d %b %Y") dt, mstr.process_code, mstr.process_name, IFNULL(datas.jml,0) jml from
 			(select * from
-			(select date(created_at) as dt from maintenance_job_orders where remark <> 7 group by date(created_at)) tgl
+			(select date(created_at) as dt from maintenance_job_orders where remark <> 8 group by date(created_at)) tgl
 			cross join (select process_code, process_name from processes where remark = "maintenance") as prs
 			) as mstr
-			left join (select remark ,date(created_at) as dt, count(remark) as jml from maintenance_job_orders where remark <> 7 group by remark, date(created_at)) as datas on mstr.dt = datas.dt and mstr.process_code = datas.remark
+			left join (select remark ,date(created_at) as dt, count(remark) as jml from maintenance_job_orders where remark <> 8 group by remark, date(created_at)) as datas on mstr.dt = datas.dt and mstr.process_code = datas.remark
 			order by mstr.dt asc, mstr.process_code asc');
 
 		$response = array(
@@ -2425,11 +2443,17 @@ class MaintenanceController extends Controller
 		// }
 		
 		$verif = true;
-		foreach ($request->get('ng') as $ngs) {
-			if ($request->session()->get('pm.description'.$ngs) == "" || $request->session()->get('pm.before'.$ngs) == "") {
-				$verif = false;
+		if ($request->get('ng')) {
+			$arr_ng = $request->get('ng');
+
+			foreach ($request->get('ng') as $ngs) {
+				if ($request->session()->get('pm.description'.$ngs) == "" || $request->session()->get('pm.before'.$ngs) == "") {
+					$verif = false;
+				}
 			}
-		}
+		} else {
+			$arr_ng = [];
+		} 
 
 		if ($verif == false) {
 			$response = array(
@@ -2437,9 +2461,55 @@ class MaintenanceController extends Controller
 				'message' => 'Harap melengkapi kolom NG'
 			);
 			return Response::json($response);
-		}
+		} else {
+			$mtc_item_check = MaintenancePlanItemCheck::select('id','machine_name', 'item_check', 'substance', 'remark')->whereIn('id', $request->get('ids'))->get();
 
-		
+			// $mtc_item_check = MaintenancePlanItem::select('id','machine_name', 'item_check', 'substance', 'remark')->where('machine_name', '')->get();
+
+			foreach ($mtc_item_check as $itm) {
+				$mtc_check = new MaintenancePlanCheck;
+				if (in_array($itm->id, $arr_ng))
+				{
+					$remark = $request->session()->get('pm.description'.$itm->id);
+					$before = $request->session()->get('pm.before'.$itm->id);
+					$after = $request->session()->get('pm.after'.$itm->id);
+
+					$before_name = $request->get('operator')."_before_".$itm->id."_".date('Y-m-d H:i');
+					$after_name = $request->get('operator')."_after_".$itm->id."_".date('Y-m-d H:i');
+
+					file_put_contents(public_path('images/planned_maintenance')."/".$before_name.".png", $before);
+					file_put_contents(public_path('images/planned_maintenance')."/".$after_name.".png", $after);
+
+					$check = "NG";
+
+				} else {
+					$check = "OK";
+					$before_name = null;
+					$after_name = null;
+					$remark = null;
+				}
+				$mtc_check->item_code = $itm->machine_name;
+
+				$mtc_check->item_check = $itm->item_check;
+				$mtc_check->substance = $itm->substance;
+				$mtc_check->period = $itm->remark;
+				$mtc_check->check = $check;
+				$mtc_check->photo_before = $before_name;
+				$mtc_check->photo_after = $after_name;
+				$mtc_check->remark = $remark;
+
+				// $mtc_check->check_value = $val[4];
+				$mtc_check->created_by = $request->get('operator');
+
+				$mtc_check->save();
+			}
+
+			$response = array(
+				'status' => true,
+				'message' => 'OK'
+			);
+			return Response::json($response);
+		}
 		
 	}
 

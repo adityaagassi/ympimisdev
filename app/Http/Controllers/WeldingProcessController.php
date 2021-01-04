@@ -4894,24 +4894,42 @@ class WeldingProcessController extends Controller
 			$tanggal = date('Y-m-d',strtotime($request->get('tanggal')));
 		}
 
+		if (date('H:i:s',strtotime($request->get('time_from'))) == '00:00:00') {
+			if (date('H:i:s',strtotime($request->get('time_to'))) == '00:00:00') {
+				$time_from = date('H:i:01',strtotime($request->get('time_from')));
+				$time_to = date('H:i:s');
+			}else if(date('H:i:s',strtotime($request->get('time_to'))) != '00:00:00'){
+				$time_from = date('H:i:01',strtotime($request->get('time_from')));
+				$time_to = date('H:i:s',strtotime($request->get('time_to')));
+			}
+		}else if(date('H:i:s',strtotime($request->get('time_from'))) != '00:00:00'){
+			if (date('H:i:s',strtotime($request->get('time_to'))) == '00:00:00') {
+				$time_from = date('H:i:s',strtotime($request->get('time_from')));
+				$time_to = date('H:i:s');
+			}else if(date('H:i:s',strtotime($request->get('time_to'))) != '00:00:00'){
+				$time_from = date('H:i:s',strtotime($request->get('time_from')));
+				$time_to = date('H:i:s',strtotime($request->get('time_to')));
+			}
+		}
+
 		$data = db::select("select ws.ws_name, material.material_number, material.model, material.`key`, COALESCE(bff.jml,0) as bff, COALESCE(wld.jml,0) as wld from
 			(select l.material_number, m.hpl, m.model, m.`key` from 
 			(select distinct l.material_number from middle_request_logs l
-			where DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$tanggal."'
+			where l.created_at between '".$tanggal." ".$time_from."' and '".$tanggal." ".$time_to."'
 			union
 			select distinct w.material_number from welding_logs w
 			where w.location = 'hsa-visual-sx'
-			and DATE_FORMAT(w.created_at,'%Y-%m-%d') = '".$tanggal."') l
+			and w.created_at between '".$tanggal." ".$time_from."' and '".$tanggal." ".$time_to."') l
 			left join materials m on l.material_number = m.material_number) as material
 			left join
 			(select l.material_number, count(l.material_number) as jml, 'bff' as remark from middle_request_logs l
-			where DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$tanggal."'
+			where l.created_at between '".$tanggal." ".$time_from."' and '".$tanggal." ".$time_to."'
 			group by l.material_number) bff
 			on material.material_number = bff.material_number
 			left join
 			(select w.material_number, count(w.material_number) as jml, 'wld' as remark from welding_logs w
 			where w.location = 'hsa-visual-sx'
-			and DATE_FORMAT(w.created_at,'%Y-%m-%d') = '".$tanggal."'
+			and w.created_at between '".$tanggal." ".$time_from."' and '".$tanggal." ".$time_to."'
 			group by w.material_number) wld
 			on material.material_number = wld.material_number
 			left join
@@ -4930,6 +4948,8 @@ class WeldingProcessController extends Controller
 			'status' => true,
 			'data' => $data,
 			'tanggal' => $tanggal,
+			'time_from' => $time_from,
+			'time_to' => $time_to,
 			'ws' => $ws
 		);
 		return Response::json($response);

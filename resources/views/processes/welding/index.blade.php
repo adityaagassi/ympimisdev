@@ -56,7 +56,7 @@
 			<a href="{{ url("index/welding/welding_eff?tanggal=&group=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Operator Efficiency</a>
 			<a href="{{ url("index/welding/welding_op_eff?tanggal=&group=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Operator Overall Efficiency</a>
 			<a href="{{ url("index/welding/op_analysis") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Welding OP Analysis</a>
-			<a href="{{ url("index/welding/group_achievement?tanggal=&ws=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">WS Achievement</a>
+			<a href="{{ url("index/welding/group_achievement?tanggal=&ws=&time_from=&time_to=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">WS Achievement</a>
 			<a href="{{ url("index/welding/eff_handling?tanggal=&location=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Average Working Time</a>
 			<a href="{{ url("index/welding/current_welding") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Ongoing Welding</a>
 
