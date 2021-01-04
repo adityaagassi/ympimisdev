@@ -2237,13 +2237,40 @@ class StockTakingController extends Controller{
 		$month = $request->get('month');
 		$calendar = StocktakingCalendar::where(db::raw("DATE_FORMAT(date,'%Y-%m')"), $month)->first();
 
-		$date = date('Ymd');
+		// $date = date('Ymd');
+		$date = '20201231';
 
 		if($calendar){
 			$filename = 'ympipi_upload_' . $date . '.txt';
 			$filepath = public_path() . "/uploads/sap/stocktaking/" . $filename;
 			// $filepath = public_path('files') . $filename;
 			$filedestination = "ma/ympipi/" . $filename;
+
+			// $datas = db::select("SELECT storage_locations.area AS `group`,
+			// 	storage_locations.plnt,
+			// 	pi_book.location,
+			// 	storage_locations.cost_center,
+			// 	pi_book.material_number,
+			// 	pi_book.pi AS pi,
+			// 	pi_book.book AS book,
+			// 	(pi_book.pi - pi_book.book) AS diff_qty,
+			// 	ROUND(ABS(pi_book.pi - pi_book.book),3) AS diff_abs,
+			// 	if((pi_book.pi - pi_book.book) > 0, '9671003', '9681003') AS type 
+			// 	FROM
+			// 	(SELECT location, material_number, sum(pi) AS pi, sum(book) AS book FROM
+			// 	(SELECT location, material_number, sum(quantity) AS pi, 0 as book FROM stocktaking_outputs
+			// 	GROUP BY location, material_number
+			// 	UNION ALL
+			// 	SELECT storage_location AS location, material_number, 0 as pi, sum(unrestricted) AS book FROM stocktaking_location_stocks
+			// 	WHERE stock_date = '".$calendar->date."'
+			// 	GROUP BY storage_location, material_number) AS union_pi_book
+			// 	GROUP BY location, material_number) AS pi_book
+			// 	LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
+			// 	WHERE storage_locations.area IS NOT NULL
+			// 	AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','MMJR')
+			// 	AND ROUND(ABS(pi_book.pi - pi_book.book),3) > 0");
+			// AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','203','208','214','216','217','MMJR')
+
 
 			$datas = db::select("SELECT storage_locations.area AS `group`,
 				storage_locations.plnt,
@@ -2255,21 +2282,11 @@ class StockTakingController extends Controller{
 				(pi_book.pi - pi_book.book) AS diff_qty,
 				ROUND(ABS(pi_book.pi - pi_book.book),3) AS diff_abs,
 				if((pi_book.pi - pi_book.book) > 0, '9671003', '9681003') AS type 
-				FROM
-				(SELECT location, material_number, sum(pi) AS pi, sum(book) AS book FROM
-				(SELECT location, material_number, sum(quantity) AS pi, 0 as book FROM stocktaking_outputs
-				GROUP BY location, material_number
-				UNION ALL
-				SELECT storage_location AS location, material_number, 0 as pi, sum(unrestricted) AS book FROM stocktaking_location_stocks
-				WHERE stock_date = '".$calendar->date."'
-				GROUP BY storage_location, material_number) AS union_pi_book
-				GROUP BY location, material_number) AS pi_book
+				FROM stocktaking_ftp_files AS pi_book
 				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
 				WHERE storage_locations.area IS NOT NULL
 				AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','MMJR')
 				AND ROUND(ABS(pi_book.pi - pi_book.book),3) > 0");
-
-			// AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','203','208','214','216','217','MMJR')
 
 
 
@@ -2286,7 +2303,8 @@ class StockTakingController extends Controller{
 				$upload_text .= $this->writeDecimal(round($data->diff_abs,3), 13, "0");
 				$upload_text .= $this->writeStringReserve($data->cost_center, 10, "0");
 				$upload_text .= $this->writeString('', 10, " ");
-				$upload_text .= $this->writeDate($calendar->date, "transfer");
+				$upload_text .= $this->writeDate('2020-12-31', "transfer");
+				// $upload_text .= $this->writeDate($calendar->date, "transfer");
 				$upload_text .= $this->writeString('MB1C', 20, " ");
 				$upload_text .= $data->type;
 
