@@ -63,7 +63,7 @@
 		<div class="col-xs-12">
 			<div class="box box-solid">
 				<div class="box-body">
-					<form method="GET" action="{{ url("export/workshop/list_wjo") }}">
+					<form method="GET" action="{{ url("export/maintenance/list_spk") }}">
 						<div class="col-md-4">
 							<div class="box box-primary box-solid">
 								<div class="box-body">
@@ -926,7 +926,7 @@
 
 						$.each(arr_photo,function(index2, value2){
 							if (value2.substring(11, 20).toLowerCase() == value.id_op.toLowerCase()) {
-								img += '<img src="{{ url("maintenance/spk_report") }}/'+value2+'" id="img_detail_'+(index2+1)+'" style="width: 30%">';
+								img += '<img src="{{ url("maintenance/spk_report") }}/'+value2+'" id="img_detail_'+(index2+1)+'" style="width: 30%; margin-right: 10px">';
 							}
 						})
 					}

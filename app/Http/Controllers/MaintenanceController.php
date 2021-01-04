@@ -2560,12 +2560,205 @@ class MaintenanceController extends Controller
 
 	public function getPlannedSchedule(Request $request)
 	{
-		$datas = db::select('SELECT machine_name FROM `maintenance_plan_item_checks` where remark = "1-HARI" group by machine_name');
+		$daily = MaintenancePlanItemCheck::leftJoin('maintenance_plan_items', 'maintenance_plan_items.machine_name', '=', 'maintenance_plan_item_checks.machine_name')
+		->where('maintenance_plan_item_checks.remark', 'like', '%HARI%')
+		->select('maintenance_plan_item_checks.machine_name', 'maintenance_plan_item_checks.remark', 'maintenance_plan_items.category')
+		->groupBy('maintenance_plan_item_checks.machine_name', 'maintenance_plan_item_checks.remark', 'maintenance_plan_items.category')
+		->orderBy('maintenance_plan_item_checks.machine_name', 'asc')
+		->get();
+
+		$weekly = MaintenancePlanItemCheck::leftJoin('maintenance_plan_items', 'maintenance_plan_items.machine_name', '=', 'maintenance_plan_item_checks.machine_name')
+		->where('maintenance_plan_item_checks.remark', 'like', '%MINGGU%')
+		->select('maintenance_plan_item_checks.machine_name', 'maintenance_plan_item_checks.remark', 'maintenance_plan_items.category')
+		->groupBy('maintenance_plan_item_checks.machine_name', 'maintenance_plan_item_checks.remark', 'maintenance_plan_items.category')
+		->orderBy('maintenance_plan_item_checks.machine_name', 'asc')
+		->get();
+
+		$monthly = MaintenancePlanItemCheck::leftJoin('maintenance_plan_items', 'maintenance_plan_items.machine_name', '=', 'maintenance_plan_item_checks.machine_name')
+		->where('maintenance_plan_item_checks.remark', 'like', '%BULAN%')
+		->select('maintenance_plan_item_checks.machine_name', 'maintenance_plan_item_checks.remark', 'maintenance_plan_items.category')
+		->groupBy('maintenance_plan_item_checks.machine_name', 'maintenance_plan_item_checks.remark', 'maintenance_plan_items.category')
+		->orderBy('maintenance_plan_item_checks.machine_name', 'asc')
+		->get();
+
+		$yearly = MaintenancePlanItemCheck::leftJoin('maintenance_plan_items', 'maintenance_plan_items.machine_name', '=', 'maintenance_plan_item_checks.machine_name')
+		->where('maintenance_plan_item_checks.remark', 'like', '%TAHUN%')
+		->select('maintenance_plan_item_checks.machine_name', 'maintenance_plan_item_checks.remark', 'maintenance_plan_items.category')
+		->groupBy('maintenance_plan_item_checks.machine_name', 'maintenance_plan_item_checks.remark', 'maintenance_plan_items.category')
+		->orderBy('maintenance_plan_item_checks.machine_name', 'asc')
+		->get();
+
+		$last_date = date("t");
+		$date = date("d");
+
+		$weeks = db::select('SELECT week_name FROM weekly_calendars where DATE_FORMAT(week_date,"%Y-%m") = DATE_FORMAT(now(),"%Y-%m") group by week_name');
+
+		$mons = db::select('SELECT DATE_FORMAT(week_date,"%b %y") mon from weekly_calendars where fiscal_year = "FY197" 
+			group by DATE_FORMAT(week_date,"%b %y")
+			order by week_date asc');
 
 		$response = array(
 			'status' => true,
-			'datas' => $datas
+			'daily' => $daily,
+			'weekly' => $weekly,
+			'monthly' => $monthly,
+			'yearly' => $yearly,
+			'dt' => $last_date,
+			'now' => $date,
+			'week' => $weeks,
+			'mon' => $mons
 		);
 		return Response::json($response);
+	}
+
+	public function closePendingVendor(Request $request)
+	{		
+		// DB::transaction(function () use ($request) {
+		MaintenanceJobPending::where('order_no', '=', $request->get('spk_number'))
+		->update([
+			'description' => $request->get('vendor_po')." ~ ".$request->get('vendor_name'), 
+			'time' => $request->get('vendor_start')." ~ ".$request->get('vendor_finish')
+		]);
+
+		MaintenanceJobOrder::where('order_no', $request->get('spk_number'))
+		->update(['remark' => 7 ]);
+
+		$spk_log = new MaintenanceJobOrderLog;
+		$spk_log->order_no = $request->get('order_no');
+		$spk_log->remark = 7;
+		$spk_log->created_by = Auth::user()->username;
+		$spk_log->save();
+
+		// });
+
+		$response = array(
+			'status' => true,
+		);
+		return Response::json($response);
+	}
+
+	public function fetchSPKUrgentReport(Request $request)
+	{
+		$master = MaintenanceJobOrder::leftJoin("employee_syncs", "employee_syncs.employee_id", "=", "maintenance_job_orders.created_by")
+		->leftJoin(db::raw('(SELECT process_code ,process_name from processes where remark = "maintenance") as process'), 'process.process_code', '=', 'maintenance_job_orders.remark')
+		->where("priority", "=", "Urgent")
+		->select("order_no", db::raw("name AS requester"), "priority", "category", "description", "process_name", "note")
+		->get();
+
+		$details = db::select("select maintenance_job_orders.order_no, maintenance_job_reports.operator_id, cause, handling, photo, maintenance_job_processes.operator_id as operator_process, start_actual, finish_actual from maintenance_job_orders 
+			left join maintenance_job_reports on maintenance_job_reports.order_no = maintenance_job_orders.order_no
+			left join maintenance_job_processes on maintenance_job_processes.order_no = maintenance_job_orders.order_no
+			where priority = 'Urgent' and maintenance_job_orders.remark < 6");
+
+		$response = array(
+			'status' => true,
+			'datas' => $master
+		);
+		return Response::json($response);
+	}
+
+	public function receiptSPK(Request $request)
+	{
+		MaintenanceJobOrder::where('order_no', '=', $request->get('order_no'))
+		->update(['remark' => 7]);
+
+		$spk_log = MaintenanceJobOrderLog::firstOrNew(array(
+			'order_no' => $request->get('order_no'),
+			'remark' => 7
+		));
+		$spk_log->created_by = Auth::user()->username;
+		$spk_log->save();
+
+		MaintenanceJobReport::where('order_no', '=', $request->get('order_no'))
+		->where('operator_id', '=', Auth::user()->username)
+		->update(['receipt_id' => $request->get('employee_id')]);
+
+		$response = array(
+			'status' => true,
+		);
+		return Response::json($response);
+	}
+
+	public function exportSPKList(Request $request)
+	{
+		DB::connection()->enableQueryLog();
+		$maintenance_job_orders = MaintenanceJobOrder::whereNull('maintenance_job_processes.deleted_at')
+		->leftJoin("employee_syncs", "employee_syncs.employee_id", "=", "maintenance_job_orders.created_by")
+		->leftJoin("maintenance_job_processes", "maintenance_job_processes.order_no", "=", "maintenance_job_orders.order_no")
+		->leftJoin('maintenance_job_reports', function($join)
+		{
+			$join->on('maintenance_job_reports.order_no', '=', 'maintenance_job_processes.order_no');
+			$join->on('maintenance_job_reports.operator_id','=', 'maintenance_job_processes.operator_id');
+		})
+		->leftJoin("maintenance_job_pendings", "maintenance_job_orders.order_no", "=", "maintenance_job_pendings.order_no")
+		->leftJoin(db::raw("employee_syncs as  es"), "es.employee_id", "=", "maintenance_job_processes.operator_id")
+		->leftJoin(db::raw("(select process_code, process_name from processes where remark = 'maintenance') AS process"), "maintenance_job_orders.remark", "=", "process.process_code")
+		->leftJoin("maintenance_plan_items", "maintenance_plan_items.machine_id", "=", "maintenance_job_orders.machine_name")
+		->select("maintenance_job_orders.order_no", "employee_syncs.name", db::raw('DATE_FORMAT(maintenance_job_orders.created_at, "%Y-%m-%d") as date'), "priority", "maintenance_job_orders.section", "type", "maintenance_job_orders.category", "machine_condition", "danger", "maintenance_job_orders.description", "safety_note", "target_date", "process_name", db::raw("es.name as name_op"), db::raw("es.employee_id as id_op"), db::raw("DATE_FORMAT(maintenance_job_processes.start_actual, '%Y-%m-%d %H:%i') start_actual"), db::raw("DATE_FORMAT(maintenance_job_processes.finish_actual, '%Y-%m-%d %H:%i') finish_actual"), "maintenance_job_pendings.status", db::raw("maintenance_job_pendings.description as pending_desc"), "maintenance_job_orders.machine_name", "cause", "handling", "photo", "note", "machine_remark", db::raw("maintenance_plan_items.description as machine_desc"), "maintenance_plan_items.location");
+
+		if(strlen($request->get('reqFrom')) > 0 ){
+			$reqFrom = date('Y-m-d', strtotime($request->get('reqFrom')));
+			$maintenance_job_orders = $maintenance_job_orders->where(db::raw('date(maintenance_job_orders.created_at)'), '>=', $reqFrom);
+		}
+		if(strlen($request->get('reqTo')) > 0 ){
+			$reqTo = date('Y-m-d', strtotime($request->get('reqTo')));
+			$maintenance_job_orders = $maintenance_job_orders->where(db::raw('date(maintenance_job_orders.created_at)'), '<=', $reqTo);
+		}
+		if(strlen($request->get('targetFrom')) > 0 ){
+			$targetFrom = date('Y-m-d', strtotime($request->get('targetFrom')));
+			$maintenance_job_orders = $maintenance_job_orders->where(db::raw('date(maintenance_job_orders.created_at)'), '>=', $targetFrom);
+		}
+		if(strlen($request->get('targetTo')) > 0 ){
+			$targetTo = date('Y-m-d', strtotime($request->get('targetTo')));
+			$maintenance_job_orders = $maintenance_job_orders->where(db::raw('date(maintenance_job_orders.created_at)'), '<=', $targetTo);
+		}
+		if(strlen($request->get('finFrom')) > 0 ){
+			$finFrom = date('Y-m-d', strtotime($request->get('finFrom')));
+			$maintenance_job_orders = $maintenance_job_orders->where(db::raw('date(maintenance_job_orders.created_at)'), '>=', $finFrom);
+		}
+		if(strlen($request->get('finTo')) > 0 ){
+			$finTo = date('Y-m-d', strtotime($request->get('finTo')));
+			$maintenance_job_orders = $maintenance_job_orders->where(db::raw('date(maintenance_job_orders.created_at)'), '<=', $finTo);
+		}
+		if(strlen($request->get('orderNo')) > 0 ){
+			$maintenance_job_orders = $maintenance_job_orders->where('maintenance_job_orders.order_no', '=', $request->get('orderNo'));
+		}
+		if(strlen($request->get('section')) > 0 ){
+			$maintenance_job_orders = $maintenance_job_orders->where('maintenance_job_orders.section', '=', $request->get('section'));
+		}
+		if(strlen($request->get('priority')) > 0 ){
+			$maintenance_job_orders = $maintenance_job_orders->where('maintenance_job_orders.priority', '=', $request->get('priority'));
+		}
+		if(strlen($request->get('workType')) > 0 ){
+			$maintenance_job_orders = $maintenance_job_orders->where('maintenance_job_orders.type', '=', $request->get('workType'));
+		}
+		if(strlen($request->get('remark')) > 0){
+			if($request->get('remark') != 'all'){
+				$maintenance_job_orders = $maintenance_job_orders->where('maintenance_job_orders.remark', '=', $request->get('remark'));
+			}
+		}else{
+			$maintenance_job_orders = $maintenance_job_orders->whereIn('maintenance_job_orders.remark', [6]);
+		}
+		if(strlen($request->get('status')) > 0){
+			$maintenance_job_orders = $maintenance_job_orders->where('maintenance_job_pendings.status', '=', $request->get('status'));
+		}
+		if(strlen($request->get('username')) > 0){
+			$maintenance_job_orders = $maintenance_job_orders->where('maintenance_job_orders.created_by', '=', $request->get('username'));
+		}
+
+		$maintenance_job_orders = $maintenance_job_orders->orderBy('maintenance_job_orders.created_at', 'desc')
+		->get();
+
+		$data = array(
+
+			'maintenance_job_orders' => $maintenance_job_orders,
+			'query' => DB::getQueryLog()
+		);
+		ob_clean();
+		Excel::create('List SPK', function($excel) use ($data){
+			$excel->sheet('SPK', function($sheet) use ($data) {
+				return $sheet->loadView('maintenance.spk_excel', $data);
+			});
+		})->export('xlsx');
 	}
 }
