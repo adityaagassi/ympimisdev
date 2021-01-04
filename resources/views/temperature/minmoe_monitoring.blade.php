@@ -470,6 +470,8 @@ function fetchTemperatureDetail(temperature){
 			$('#tableDetailBody').append(resultData);
 			$('#modalDetailTitle').html("<center><span style='font-size: 20px; font-weight: bold;'>Detail Employees on "+temperature+" °C</span></center>");
 
+			$('#loading').hide();
+			$('#tableDetail').show();
 			var table = $('#tableDetail').DataTable({
 				'dom': 'Bfrtip',
 				'responsive':true,
@@ -522,9 +524,6 @@ function fetchTemperatureDetail(temperature){
 				"bAutoWidth": false,
 				"processing": true
 			});
-
-			$('#loading').hide();
-			$('#tableDetail').show();
 			intervaltemp = setInterval(fetchTemperature,30000);
 		}
 		else{
