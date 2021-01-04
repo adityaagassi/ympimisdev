@@ -899,6 +899,7 @@ class MaintenanceController extends Controller
 
 	public function fetchMaintenanceDetail(Request $request)
 	{
+		DB::connection()->enableQueryLog();
 		$detail = MaintenanceJobOrder::where("maintenance_job_orders.order_no", "=", $request->get('order_no'))
 		->whereNull('maintenance_job_processes.deleted_at')
 		->leftJoin("employee_syncs", "employee_syncs.employee_id", "=", "maintenance_job_orders.created_by")
@@ -911,7 +912,8 @@ class MaintenanceController extends Controller
 		->leftJoin("maintenance_job_pendings", "maintenance_job_orders.order_no", "=", "maintenance_job_pendings.order_no")
 		->leftJoin(db::raw("employee_syncs as  es"), "es.employee_id", "=", "maintenance_job_processes.operator_id")
 		->leftJoin(db::raw("(select process_code, process_name from processes where remark = 'maintenance') AS process"), "maintenance_job_orders.remark", "=", "process.process_code")
-		->select("maintenance_job_orders.order_no", "employee_syncs.name", db::raw('DATE_FORMAT(maintenance_job_orders.created_at, "%Y-%m-%d") as date'), "priority", "maintenance_job_orders.section", "type", "maintenance_job_orders.category", "machine_condition", "danger", "maintenance_job_orders.description", "safety_note", "target_date", "process_name", db::raw("es.name as name_op"), db::raw("es.employee_id as id_op"), db::raw("DATE_FORMAT(maintenance_job_processes.start_actual, '%Y-%m-%d %H:%i') start_actual"), db::raw("DATE_FORMAT(maintenance_job_processes.finish_actual, '%Y-%m-%d %H:%i') finish_actual"), "maintenance_job_pendings.status", db::raw("maintenance_job_pendings.description as pending_desc"), "machine_name", "cause", "handling", "photo", "note")
+		->leftJoin("maintenance_plan_items", "maintenance_plan_items.machine_id", "=", "maintenance_job_orders.machine_name")
+		->select("maintenance_job_orders.order_no", "employee_syncs.name", db::raw('DATE_FORMAT(maintenance_job_orders.created_at, "%Y-%m-%d") as date'), "priority", "maintenance_job_orders.section", "type", "maintenance_job_orders.category", "machine_condition", "danger", "maintenance_job_orders.description", "safety_note", "target_date", "process_name", db::raw("es.name as name_op"), db::raw("es.employee_id as id_op"), db::raw("DATE_FORMAT(maintenance_job_processes.start_actual, '%Y-%m-%d %H:%i') start_actual"), db::raw("DATE_FORMAT(maintenance_job_processes.finish_actual, '%Y-%m-%d %H:%i') finish_actual"), "maintenance_job_pendings.status", db::raw("maintenance_job_pendings.description as pending_desc"), "maintenance_job_orders.machine_name", "cause", "handling", "photo", "note", "machine_remark", db::raw("maintenance_plan_items.description as machine_desc"), "maintenance_plan_items.area", "att")
 		->get();
 
 		$parts = MaintenanceJobOrder::where('maintenance_job_orders.order_no', '=', $request->get('order_no'))
@@ -923,7 +925,8 @@ class MaintenanceController extends Controller
 		$response = array(
 			'status' => true,
 			'detail' => $detail,
-			'part' => $parts
+			'part' => $parts,
+			'query' => DB::getQueryLog()
 		);
 		return Response::json($response);
 	}
