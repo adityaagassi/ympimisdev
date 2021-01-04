@@ -4894,19 +4894,19 @@ class WeldingProcessController extends Controller
 			$tanggal = date('Y-m-d',strtotime($request->get('tanggal')));
 		}
 
-		if (date('H:i:s',strtotime($request->get('time_from'))) == '00:00:00') {
-			if (date('H:i:s',strtotime($request->get('time_to'))) == '00:00:00') {
-				$time_from = date('H:i:01',strtotime($request->get('time_from')));
+		if (date('H:i:s',strtotime($request->get('time_from'))) == '00:00:00' || $request->get('time_from') == null) {
+			if (date('H:i:s',strtotime($request->get('time_to'))) == '00:00:00' || $request->get('time_to') == null) {
+				$time_from = date('00:00:01');
 				$time_to = date('H:i:s');
-			}else if(date('H:i:s',strtotime($request->get('time_to'))) != '00:00:00'){
-				$time_from = date('H:i:01',strtotime($request->get('time_from')));
+			}else if(date('H:i:s',strtotime($request->get('time_to'))) != '00:00:00' || $request->get('time_to') != null){
+				$time_from = date('00:00:01');
 				$time_to = date('H:i:s',strtotime($request->get('time_to')));
 			}
-		}else if(date('H:i:s',strtotime($request->get('time_from'))) != '00:00:00'){
-			if (date('H:i:s',strtotime($request->get('time_to'))) == '00:00:00') {
+		}else if(date('H:i:s',strtotime($request->get('time_from'))) != '00:00:00' || $request->get('time_from') != null){
+			if (date('H:i:s',strtotime($request->get('time_to'))) == '00:00:00' || $request->get('time_to') == null) {
 				$time_from = date('H:i:s',strtotime($request->get('time_from')));
 				$time_to = date('H:i:s');
-			}else if(date('H:i:s',strtotime($request->get('time_to'))) != '00:00:00'){
+			}else if(date('H:i:s',strtotime($request->get('time_to'))) != '00:00:00' || $request->get('time_to') != null){
 				$time_from = date('H:i:s',strtotime($request->get('time_from')));
 				$time_to = date('H:i:s',strtotime($request->get('time_to')));
 			}
