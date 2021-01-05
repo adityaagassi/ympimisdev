@@ -586,7 +586,7 @@
 					var priority = '<span style="font-size: 13px;" class="label label-default">Normal</span>';
 				}
 				body += "<td>"+priority+"</td>";
-				body += "<td>"+value.process_name+"</td>";
+				body += "<td>"+value.process_name+"<br><span>"+(value.stat || '')+"</span></td>";
 
 				op = [];
 				var start_actual = "";
@@ -608,13 +608,31 @@
 				// 	}
 				// })
 
-				body += "<td>"+(value.start_actual || '-')+"</td>";
+				var op = [];
+
+				$.each(result.op_list, function(index2, value2){
+					if (value2.order_no == value.order_no) {
+						if (value.start_actual) {
+							body += "<td>"+value.start_actual+"<br><span class='label label-success'>"+value2.op_name+"</span></td>";
+						} else {
+							body += "<td><span class='label label-success'>"+value2.op_name+"</span></td>";
+						}
+					}
+				})
 
 
 				if (value.start_actual != null) {
 					if (value.remark == '5') {
 						body += "<td><button class='btn btn-warning' onclick='modalWork(\""+value.order_no+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\",\""+value.name+"\",\""+value.target_date+"\",\""+value.safety_note+"\",\""+value.priority+"\", \"rework\", "+index+")'><i class='fa fa-rocket'></i>&nbsp; Lanjutkan</button></td>";
 						desc_new.push(value.description);
+					// } else if (value.remark == '6') {
+					// 	if (value.finish_actual != null) {
+					// 		body += "<td><button class='btn btn-success' onclick='modalScan(\""+value.order_no+"\")'><i class='fa fa-hand-lizard-o'></i>&nbsp; Tanda Terima</button></td>";
+					// 	} else {
+					// 		body += "<td><button class='btn btn-success' onclick='modalAfterWork(\""+value.order_no+"\",\""+$("#op").text()+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\", "+index+")'><i class='fa fa-file'></i>&nbsp; Buat Laporan</button></td>";
+					// 		desc_new.push(value.description);
+					// 	}
+						
 					} else {
 						body += "<td><button class='btn btn-success' onclick='modalAfterWork(\""+value.order_no+"\",\""+$("#op").text()+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\", "+index+")'><i class='fa fa-file'></i>&nbsp; Buat Laporan</button></td>";
 						desc_new.push(value.description);

@@ -532,8 +532,14 @@ class MaintenanceController extends Controller
 		->whereNull('maintenance_job_orders.deleted_at')
 		// ->whereNull('maintenance_job_processes.finish_actual')
 		->whereRaw("maintenance_job_orders.remark in (3,4,5)")
-		->select("maintenance_job_orders.order_no", "maintenance_job_orders.section", "priority", "type", "category", "machine_condition", "danger", "description", "target_date", "safety_note", "start_plan", "finish_plan", "start_actual", "finish_actual", db::raw("DATE_FORMAT(maintenance_job_orders.created_at,'%d-%m-%Y') as request_date"), 'name', "maintenance_job_orders.remark", "process_name")
+		->select("maintenance_job_orders.order_no", "maintenance_job_orders.section", "priority", "type", "category", "machine_condition", "danger", "description", "target_date", "safety_note", "start_plan", "finish_plan", "start_actual", "finish_actual", db::raw("DATE_FORMAT(maintenance_job_orders.created_at,'%d-%m-%Y') as request_date"), 'name', "maintenance_job_orders.remark", "process_name", db::raw("maintenance_job_processes.remark as stat"))
 		->orderBy("maintenance_job_orders.remark", "asc")
+		->get();
+
+		$op_list = MaintenanceJobOrder::join('maintenance_job_processes', 'maintenance_job_processes.order_no', '=', 'maintenance_job_orders.order_no')
+		->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'maintenance_job_processes.operator_id')
+		->select('maintenance_job_orders.order_no', db::raw('GROUP_CONCAT(SUBSTRING_INDEX(`name`," ",2)) as op_name'))
+		->groupBy('maintenance_job_orders.order_no')
 		->get();
 
 		// $spk = MaintenanceJobOrder::leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'maintenance_job_orders.created_by')
@@ -557,6 +563,7 @@ class MaintenanceController extends Controller
 		$response = array(
 			'status' => false,
 			'datas' => $spk,
+			'op_list' => $op_list,
 			'query' => DB::getQueryLog()
 			// 'proses_log' => $proc_log
 		);
@@ -1302,7 +1309,7 @@ class MaintenanceController extends Controller
 
 			MaintenanceJobProcess::where("order_no", "=", $request->get('order_no'))
 			->where("operator_id", "=", strtoupper(Auth::user()->username))
-			->update(['finish_actual' => date("Y-m-d H:i:s")]);
+			->update(['finish_actual' => date("Y-m-d H:i:s"), 'remark' => $request->get('status')]);
 
 			$proc = MaintenanceJobProcess::where('order_no', '=', $request->get('order_no'))
 			->where('operator_id', '=', strtoupper(Auth::user()->username))
