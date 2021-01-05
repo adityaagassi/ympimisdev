@@ -190,9 +190,11 @@ Route::get('fetch/temperature/omron', 'TemperatureController@fetchOmron');
 Route::post('input/temperature/omron_operator', 'TemperatureController@inputOmronOperator');
 
 //HIKVISION TEMPERATURE
-Route::get('index/temperature/minmoe', 'TemperatureController@indexMinMoe');
-Route::get('fetch/temperature/minmoe', 'TemperatureController@fetchMinMoe');
-Route::post('import/temperature/minmoe', 'TemperatureController@importMinMoe');
+Route::group(['nav' => 'S57', 'middleware' => 'permission'], function(){
+	Route::get('index/temperature/minmoe', 'TemperatureController@indexMinMoe');
+	Route::get('fetch/temperature/minmoe', 'TemperatureController@fetchMinMoe');
+	Route::post('import/temperature/minmoe', 'TemperatureController@importMinMoe');
+});
 
 Route::get('index/temperature/minmoe_monitoring/{location}', 'TemperatureController@indexMinMoeMonitoring');
 Route::get('fetch/temperature/minmoe_monitoring', 'TemperatureController@fetchMinMoeMonitoring');

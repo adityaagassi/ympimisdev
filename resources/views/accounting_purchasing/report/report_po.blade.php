@@ -507,7 +507,7 @@
 						<td colspan="3" style="width: 40%">
 							@if($po[0]->buyer_id == "PI1908032")
 								<img width="100" src="{{ public_path() . '/files/ttd_pr_po/ttd_erlangga.png' }}" alt="" style="padding: 0">
-								<span style="position: absolute;left: 11px;width: 75px;font-size: 10px;font-weight: bold;top: 101px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->tgl_po)) ?></span>
+								<span style="position: absolute;left: 11px;width: 75px;font-size: 10px;font-weight: bold;top: 97px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->tgl_po)) ?></span>
 							@elseif($po[0]->buyer_id == "PI1810020")
 								<img width="75" src="{{ public_path() . '/files/ttd_pr_po/ttd_shega.png' }}" alt="" style="padding: 0">
 								<span style="position: absolute;left: 25px;width: 75px;font-size: 10px;font-weight: bold;top: 100px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->tgl_po)) ?></span>
