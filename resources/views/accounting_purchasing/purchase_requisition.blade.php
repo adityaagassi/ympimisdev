@@ -1824,6 +1824,7 @@
 
   function editPR(id){
   	var isi = "";
+  	var isi_other = "";
   	$('#modalEdit').modal("show");
   	
   	var data = {
@@ -1854,6 +1855,7 @@
   				$('#bulanbudgetedit').text(obj.namabulan);
   			}
   		});
+
 
   		$.each(result.purchase_requisition_item, function(key, value) {
   			
@@ -1961,6 +1963,20 @@
   			$('#SisaBudgetEdit').val(total_sisa.toFixed(2));
 
   		});
+
+		if (result.purchase_requisition_item.length == 0) {
+
+  			isi_other = "<div class='col-md-12' style='margin-bottom : 5px'>";
+
+	  		isi_other += "<button type='button' class='btn btn-success' onclick='tambah(\"tambah2\",\"lop2\");'><i class='fa fa-plus' ></i></button>";
+
+  			isi_other += "</div>";
+
+
+  			$('#modalDetailBodyEdit').append(isi_other);
+
+		}
+
 	});
 }
 
