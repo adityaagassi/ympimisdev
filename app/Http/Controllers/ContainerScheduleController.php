@@ -379,7 +379,7 @@ class ContainerScheduleController extends Controller{
             'status' => true,
             'resume' => $resume,
             'detail' => $detail,
-            'st_date' => date('d F', strtotime($st_date)),
+            'st_date' => $date,
         );
         return Response::json($response);  
     }
