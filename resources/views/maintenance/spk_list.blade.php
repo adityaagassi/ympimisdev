@@ -59,6 +59,12 @@
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
+	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 500; opacity: 0.8;">
+		<p style="position: absolute; color: White; top: 45%; left: 35%;">
+			<span style="font-size: 40px">Please wait a moment...<i class="fa fa-spin fa-refresh"></i></span>
+		</p>
+	</div>
+	
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="box box-solid">
@@ -605,7 +611,9 @@
 
 		fillTable();
 
-		$('.select2').select2();
+		$('.select2').select2({
+			allowClear: true
+		});
 
 		
 	});
@@ -1017,11 +1025,13 @@ function job_ok() {
 		member : arr_member
 	}
 
+	$("#loading").show();
 	$.post('{{ url("post/maintenance/member") }}', data,  function(result, status, xhr){
 		$("#pic_member").empty();
 		$("#detailModal").modal('hide');
 		fillTable();
 
+		$("#loading").hide();
 		openSuccessGritter("Success", "SPK Berhasil Ditugaskan");
 	})
 }
