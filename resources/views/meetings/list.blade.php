@@ -261,6 +261,8 @@
 				$('#meet3').text(result.attendances[0].end_time);
 				$('#meet4').text(result.attendances[0].diff+ " Minute(s)");
 
+				$('#tableAttendance').DataTable().clear();
+				$('#tableAttendance').DataTable().destroy();
 				$('#modalMeeting').modal('hide');
 
 				var tableData = "";
