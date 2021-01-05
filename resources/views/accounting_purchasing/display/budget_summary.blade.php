@@ -160,17 +160,17 @@
           })
 
           $.each(result.act, function(key, value) {
-            sisa.push(value.Actual);
             pr.push(value.PR);
             investment.push(value.Investment);
             po.push(value.PO);
+            sisa.push(value.Actual);
           })
 
           $.each(result.act_category, function(key, value) {
-            act_category.push(value.Actual);
             pr_category.push(value.PR);
             inv_category.push(value.Investment);
             po_category.push(value.PO);
+            act_category.push(value.Actual);
           })
 
           $('#container_resume').highcharts({
@@ -237,23 +237,27 @@
                 stack: 'alone'
               },
               {
-                name: 'Actual',
-                data: sisa,
-                stack: 'all'
-              },
-              {
                 name: 'Unrealized PR',
                 data: pr,
+                color: '#ffeb3b',
                 stack: 'all'
               },
               {
                 name: 'Unrealized Investment',
                 data: investment,
+                color: '#795548',
                 stack: 'all'
               },
               {
                 name: 'Unrealized PO',
                 data: po,
+                color: '#607d8b',
+                stack: 'all'
+              },
+              {
+                name: 'Actual',
+                data: sisa,
+                color: '#90ee7e',
                 stack: 'all'
               }
 
@@ -326,12 +330,6 @@
                 stack: 'alone2'
               },
               {
-                name: 'Actual',
-                data: act_category,
-                color: '#4caf50',
-                stack: 'all2'
-              },
-              {
                 name: 'Unrealized PR',
                 data: pr_category,
                 color: '#ffeb3b',
@@ -347,6 +345,12 @@
                 name: 'Unrealized PO',
                 data: po_category,
                 color: '#607d8b',
+                stack: 'all2'
+              },
+              {
+                name: 'Actual',
+                data: act_category,
+                color: '#90ee7e',
                 stack: 'all2'
               }
             ]

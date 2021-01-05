@@ -219,6 +219,8 @@ td {
               <div class="form-group row" align="right">
                 <label class="col-sm-2">Lokasi<span class="text-red">*</span></label>
                 <div class="col-sm-9" align="left">
+                  <input type="text" id="inputlokasi" name="inputlokasi" class="form-control" placeholder="Masukkan Lokasi..">
+                  <!-- 
                   <select class="form-control select2" id="inputlokasi" data-placeholder="Pilih Lokasi..." style="width: 100%; font-size: 20px;" required>
                     <option></option>
                     <option value="Assembly">Assembly</option>
@@ -240,7 +242,7 @@ td {
                     <option value="Production Control">Production Control</option>
                     <option value="Warehouse">Warehouse</option>
                     <option value="Welding Process">Welding Process</option>
-                  </select>
+                  </select> -->
                 </div>
               </div>
               <div class="form-group row" align="right">
