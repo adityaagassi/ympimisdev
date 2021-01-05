@@ -4,13 +4,9 @@
 <link rel="stylesheet" href="{{ url("plugins/timepicker/bootstrap-timepicker.min.css")}}">
 <section class="content-header">
   <h1>
-    Create {{ $activity_name }}
-    <small>it all starts here</small>
+    Buat {{ $activity_name }}
   </h1>
   <ol class="breadcrumb">
-   {{--  <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-   <li><a href="#">Examples</a></li>
-   <li class="active">Blank page</li> --}}
  </ol>
 </section>
 @endsection
@@ -35,10 +31,7 @@
 
 
   <!-- SELECT2 EXAMPLE -->
-  <div class="box box-primary">
-    <div class="box-header with-border">
-      {{-- <h3 class="box-title">Create New User</h3> --}}
-    </div>  
+  <div class="box box-solid">
     <form role="form" method="post" action="{{url('index/interview/store/'.$id)}}" enctype="multipart/form-data">
       <div class="box-body">
         <input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -52,7 +45,7 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Section<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="section" style="width: 100%;" data-placeholder="Choose a Section..." required>
+              <select class="form-control select2" name="section" style="width: 100%;" data-placeholder="Pilih Section..." required>
                 <option value=""></option>
                 @foreach($section as $section)
                 <option value="{{ $section->section_name }}">{{ $section->section_name }}</option>
@@ -61,9 +54,9 @@
             </div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Sub Section<span class="text-red">*</span></label>
+            <label class="col-sm-4">Group<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Choose a Sub Section..." required>
+              <select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Pilih Group..." required>
                 <option value=""></option>
                 @foreach($subsection as $subsection)
                 <option value="{{ $subsection->sub_section_name }}">{{ $subsection->sub_section_name }}</option>
@@ -82,7 +75,7 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Periode<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="periode" style="width: 100%;" data-placeholder="Choose a Periode..." required>
+              <select class="form-control select2" name="periode" style="width: 100%;" data-placeholder="Pilih Periode..." required>
                 <option value=""></option>
                 @foreach($fy as $fy)
                 <option value="{{ $fy->fiscal_year }}">{{ $fy->fiscal_year }}</option>
@@ -132,6 +125,7 @@
     jQuery(document).ready(function() {
       $('#email').val('');
       $('#password').val('');
+      $('body').toggleClass("sidebar-collapse");
     });
     CKEDITOR.replace('editor1' ,{
       filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'

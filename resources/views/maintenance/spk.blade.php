@@ -230,6 +230,23 @@
 										<div id="sp_other">
 										</div>
 									</div>
+									<div class="form-group row" align="right">
+										<label class="col-xs-2" style="margin-top: 1%; margin-bottom: 0px">Spare Part Lain</label>
+										<div class="col-xs-5" align="left">
+											<select class="form-control part" data-placeholder="Pilih Part yang digunakan" style="width: 100%;" id="part_detail_1" onchange="get_stock(this)">
+												<option value=""></option>
+											</select>
+										</div>
+										<div class="col-xs-2" align="left">
+											<div class="input-group">
+												<span class="input-group-addon"><b>Nama Spare Part</b></span>
+												<input type="number" id="part_lain_1" class="form-control" style="text-align: center;" readonly>
+											</div>
+										</div>
+										<div class="col-xs-1" align="left">
+											<button class="btn btn-success spare_part" onclick="add_part_lain()" id="btn_lain_1"><i class="fa fa-plus"></i></button>
+										</div>
+									</div>
 
 									<div class="form-group row" align="right">
 										<label class="col-xs-2" style="margin-top: 1%;">Foto<span class="text-red">*</span></label>
@@ -381,6 +398,32 @@
 		</div>
 	</div>
 
+	<div class="modal fade" id="scanModal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title text-center"><b>SCAN QR HERE</b></h4>
+				</div>
+				<div class="modal-body">
+					<div id='scanner' class="col-xs-12">
+						<div class="col-xs-12">
+							<div id="loadingMessage">
+								🎥 Unable to access video stream (please make sure you have a webcam enabled)
+							</div>
+							<canvas style="width: 100%;" id="canvas" hidden></canvas>
+							<div id="output" hidden>
+								<div id="outputMessage">No QR code detected.</div>
+							</div>
+						</div>									
+					</div>
+
+					<p style="visibility: hidden;">camera</p>
+					<input type="hidden" id="employee">
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<!-- <div class="modal fade" id="modalAfterWork" style="color: black;">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
@@ -521,6 +564,7 @@
 <script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
 <script src="{{ url("js/buttons.flash.min.js")}}"></script>
 <script src="{{ url("js/jquery.numpad.js") }}"></script>
+<script src="{{ url("js/jsQR.js")}}"></script>
 
 <script>
 	$.ajaxSetup({
@@ -681,71 +725,71 @@
 				// setTime();
 				// setInterval(setTime, 1000);
 			})
-	}
+}
 
 
-	function setTime() {
-		for (var i = 0; i < start_working.length; i++) {
-			if (start_working[i][0] != "") {
-				if (start_working[i][1] != "") {
-					var duration = diff_seconds(start_working[i][1], start_working[i][0]);
-					document.getElementById("hours"+i).innerHTML = pad(parseInt(duration / 3600));
-					document.getElementById("minutes"+i).innerHTML = pad(parseInt((duration % 3600) / 60));
-					document.getElementById("seconds"+i).innerHTML = pad(duration % 60);
-				} else {
-					var duration = diff_seconds(new Date(), start_working[i][0]);
-					document.getElementById("hours"+i).innerHTML = pad(parseInt(duration / 3600));
-					document.getElementById("minutes"+i).innerHTML = pad(parseInt((duration % 3600) / 60));
-					document.getElementById("seconds"+i).innerHTML = pad(duration % 60);
-				}
+function setTime() {
+	for (var i = 0; i < start_working.length; i++) {
+		if (start_working[i][0] != "") {
+			if (start_working[i][1] != "") {
+				var duration = diff_seconds(start_working[i][1], start_working[i][0]);
+				document.getElementById("hours"+i).innerHTML = pad(parseInt(duration / 3600));
+				document.getElementById("minutes"+i).innerHTML = pad(parseInt((duration % 3600) / 60));
+				document.getElementById("seconds"+i).innerHTML = pad(duration % 60);
+			} else {
+				var duration = diff_seconds(new Date(), start_working[i][0]);
+				document.getElementById("hours"+i).innerHTML = pad(parseInt(duration / 3600));
+				document.getElementById("minutes"+i).innerHTML = pad(parseInt((duration % 3600) / 60));
+				document.getElementById("seconds"+i).innerHTML = pad(duration % 60);
 			}
 		}
 	}
+}
 
-	function modalWork(order_no, pekerjaan, request_date, bagian, nama, target_date, safety_note, priority, stat, index) {
-		if (stat == "work") {
-			$("#btn_work").show();
-			$("#btn_resume").hide();
-		} else {
-			$("#btn_resume").show();
-			$("#btn_work").hide();
-		}
-
-		$("#modalWork").modal('show');
-
-		$("#spk_work").val(order_no);
-		$("#pekerjaan_work").val(pekerjaan);
-		$("#tanggal_work").val(request_date);
-
-		if(priority == 'Urgent'){
-			var prioritas = '<span style="font-size: 13px;" class="label label-danger">Urgent</span>';
-		}else{
-			var prioritas = '<span style="font-size: 13px;" class="label label-default">Normal</span>';
-		}
-
-		$("#prioritas_work").html(prioritas);
-		$("#bagian_work").val(bagian);
-		$("#nama_work").val(nama);
-		$("#target_work").val(target_date);
-		$("#desc_work").text(desc_new[index]);
-
-		if (safety_note != 'null') {
-			$("#safety_work").text(safety_note);
-		}
+function modalWork(order_no, pekerjaan, request_date, bagian, nama, target_date, safety_note, priority, stat, index) {
+	if (stat == "work") {
+		$("#btn_work").show();
+		$("#btn_resume").hide();
+	} else {
+		$("#btn_resume").show();
+		$("#btn_work").hide();
 	}
 
-	function startWork() {
-		var data = {
-			order_no : $("#spk_work").val()
-		};
+	$("#modalWork").modal('show');
 
-		$.get('{{ url("work/maintenance/spk") }}', data, function(result, status, xhr){
-			openSuccessGritter('Success', '');
+	$("#spk_work").val(order_no);
+	$("#pekerjaan_work").val(pekerjaan);
+	$("#tanggal_work").val(request_date);
 
-			$("#modalWork").modal('hide');
-			get_spk();
-		})
+	if(priority == 'Urgent'){
+		var prioritas = '<span style="font-size: 13px;" class="label label-danger">Urgent</span>';
+	}else{
+		var prioritas = '<span style="font-size: 13px;" class="label label-default">Normal</span>';
 	}
+
+	$("#prioritas_work").html(prioritas);
+	$("#bagian_work").val(bagian);
+	$("#nama_work").val(nama);
+	$("#target_work").val(target_date);
+	$("#desc_work").text(desc_new[index]);
+
+	if (safety_note != 'null') {
+		$("#safety_work").text(safety_note);
+	}
+}
+
+function startWork() {
+	var data = {
+		order_no : $("#spk_work").val()
+	};
+
+	$.get('{{ url("work/maintenance/spk") }}', data, function(result, status, xhr){
+		openSuccessGritter('Success', '');
+
+		$("#modalWork").modal('hide');
+		get_spk();
+	})
+}
 
 		// function changepart(elem) {
 		// 	// console.log($(elem).val());
@@ -1067,6 +1111,110 @@
 				openSuccessGritter('Success', '');
 
 				$("#modalWork").modal('hide');
+				get_spk();
+			})
+		}
+
+		function modalScan(order_no) {
+			$("#scanModal").modal('show');
+
+			// order_no = $("#order_no_ket").val();
+			showCheck(order_no);
+		}
+
+		function stopScan() {
+			$('#scanModal').modal('hide');
+		}
+
+		function videoOff() {
+			vdo.pause();
+			vdo.src = "";
+			vdo.srcObject.getTracks()[0].stop();
+		}
+
+		// $( "#scanModal" ).on('shown.bs.modal', function(){
+		// 	showCheck();
+		// });
+
+		$('#scanModal').on('hidden.bs.modal', function () {
+			videoOff();
+		});
+
+		function showCheck(order_no) {
+			var video = document.createElement("video");
+			vdo = video;
+			var canvasElement = document.getElementById("canvas");
+			var canvas = canvasElement.getContext("2d");
+			var loadingMessage = document.getElementById("loadingMessage");
+
+			var outputContainer = document.getElementById("output");
+			var outputMessage = document.getElementById("outputMessage");
+
+			function drawLine(begin, end, color) {
+				canvas.beginPath();
+				canvas.moveTo(begin.x, begin.y);
+				canvas.lineTo(end.x, end.y);
+				canvas.lineWidth = 4;
+				canvas.strokeStyle = color;
+				canvas.stroke();
+			}
+
+			navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
+				video.srcObject = stream;
+				video.setAttribute("playsinline", true);
+				video.play();
+				requestAnimationFrame(tick);
+			});
+
+			function tick() {
+				loadingMessage.innerText = "⌛ Loading video..."
+				if (video.readyState === video.HAVE_ENOUGH_DATA) {
+					loadingMessage.hidden = true;
+					canvasElement.hidden = false;
+
+					canvasElement.height = video.videoHeight;
+					canvasElement.width = video.videoWidth;
+					canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+					var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+					var code = jsQR(imageData.data, imageData.width, imageData.height, {
+						inversionAttempts: "dontInvert",
+					});
+
+					if (code) {
+						drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#FF3B58");
+						drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#FF3B58");
+						drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
+						drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
+						outputMessage.hidden = true;
+
+						document.getElementById("employee").value = code.data;
+
+						checkCode(video, code.data, order_no);
+
+					} else {
+						outputMessage.hidden = false;
+					}
+				}
+				requestAnimationFrame(tick);
+			}
+
+			$('#scanner').show();
+
+			$('#field-name').hide();
+			$('#field-key').hide();
+		}
+
+		function checkCode(video, data, order_no) {
+			var datas = {
+				employee_id : data,
+				order_no : order_no
+			}
+
+			$.post('{{ url("post/maintenance/spk/receipt") }}', datas, function(result, status, xhr){
+				openSuccessGritter('Success', 'SPK Sukses Diterima');
+				$('#scanner').hide();
+				$('#scanModal').modal('hide');
+				videoOff();
 				get_spk();
 			})
 		}

@@ -662,10 +662,10 @@
                                 <a href="{{ url("index/maintenance/list/user") }}">
                                     <i class="fa fa-caret-right"></i> Create SPK (作業依頼書を作成)
                                 </a>
-                                <!-- <br>
-                                <a href="{{ url("index/maintenance/spk/monitoring") }}">
-                                    <i class="fa fa-caret-right"></i> SPK Monitoring (作業依頼書の管理)
-                                </a> -->
+                                <br>
+                                <a href="{{ url("index/maintenance/spk/weekly") }}">
+                                    <i class="fa fa-caret-right"></i> SPK Weekly Report (??)
+                                </a>
                                 <br>
                                 <a href="{{ url("index/maintenance/spk/grafik") }}">
                                     <i class="fa fa-caret-right"></i> SPK Monitoring (作業依頼書の管理)
@@ -697,6 +697,9 @@
                                     <i class="fa fa-caret-right"></i> PIC List (担当者リスト)
                                 </a>
                                 <br>
+                                <a href="{{ url("/index/production_report/index/10") }}">
+                                    <i class="fa fa-caret-right"></i> Maintenance Report (??)
+                                </a>
                             </td>
                         </tr>
                        <!--  <tr>
@@ -953,7 +956,7 @@
                                         </a> --}}
                                         <br>
                                         <a href="{{ url("/index/fg_traceability") }}">
-                                            <i class="fa fa-caret-right"></i>FG Traceability (FG完成品追跡)
+                                            <i class="fa fa-caret-right"></i> FG Traceability (FG完成品追跡)
                                         </a>
                                     </td>
                                 </tr>
@@ -1149,7 +1152,7 @@
                                 </tbody>
                             </table>
 
-                        {{--     <table class="table table-bordered">
+                            <table class="table table-bordered">
                                 <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
                                     <tr>
                                         <th>
@@ -1167,7 +1170,7 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            --}}
+                            
                            <!--  <table class="table table-bordered">
                                 <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
                                     <tr>

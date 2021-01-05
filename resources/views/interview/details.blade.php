@@ -47,7 +47,7 @@ table.table-bordered > tfoot > tr > th{
 		{{ $activity_name }} - {{ $leader }}
 		<a class="btn btn-warning pull-right" href="{{ url('index/interview/index/'.$activity_id) }}">Kembali</a>
 		<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal" style="margin-right: 5px">
-	        Masukkan Peserta
+	        Tambah Peserta
 	    </button>
 	</h1>
 	<ol class="breadcrumb">
@@ -108,11 +108,12 @@ table.table-bordered > tfoot > tr > th{
 				  	</table>
 				  </div>
 				  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-					<h3 class="box-title">Peserta Interview Pointing Call <span class="text-purple"></span></h3>
-			          <table id="example1" class="table table-bordered table-striped table-hover">
+			        <div class="row">
+			        	<h4 class="box-title">Peserta Interview Pointing Call <span class="text-purple"></span></h4>
+			        	<table id="example1" class="table table-bordered table-striped table-hover">
 			            <thead style="background-color: rgba(126,86,134,.7);">
 			              <tr>
-			                <th>Participant</th>
+			                <th>Peserta</th>
 			                <th>Filosofi YAMAHA</th>
 			                <th>Aturan K3 YAHAMA</th>
 			                <th>10 Komitmen Berkendara</th>
@@ -174,7 +175,7 @@ table.table-bordered > tfoot > tr > th{
 			          <table id="example2" class="table table-bordered table-striped table-hover">
 			            <thead style="background-color: rgba(126,86,134,.7);">
 			              <tr>
-			                <th>Participant</th>
+			                <th>Peserta</th>
 			                <th>6 Pasal Keselamatan Lalu Lintas</th>
 			                <th>Budaya Kerja YMPI</th>
 			                <th>5S</th>
@@ -233,59 +234,60 @@ table.table-bordered > tfoot > tr > th{
 			              @endforeach
 			            </tbody>
 			          </table>
+			        </div>
 				  </div>
 				</div>
 			</div>
 
 			<div class="box box-solid">
-				      	<div class="box-header">
-							<h3 class="box-title">Foto Interview<span class="text-purple"></span></h3>
-							<form role="form" method="post" action="{{url('index/interview/insertpicture/'.$interview_id)}}" enctype="multipart/form-data">
-								<input type="hidden" value="{{csrf_token()}}" name="_token" />
+		      	<div class="box-header">
+					<h3 class="box-title">Foto Interview<span class="text-purple"></span></h3>
+					<form role="form" method="post" action="{{url('index/interview/insertpicture/'.$interview_id)}}" enctype="multipart/form-data">
+						<input type="hidden" value="{{csrf_token()}}" name="_token" />
 
-								<div class="form-group">
-									<input type="file" class="btn btn-primary" id="" placeholder="Input field" name="file" onchange="readURL(this);" required>
-									<br>
-									<img width="200px" id="blah" src="" style="display: none" alt="your image" />
-								</div>
-								<br>
-								<button type="submit" class="btn btn-primary ">Upload</button>
-							</form>
+						<div class="form-group">
+							<input type="file" class="btn btn-primary" id="" placeholder="Input field" name="file" onchange="readURL(this);" required>
+							<br>
+							<img width="200px" id="blah" src="" style="display: none" alt="your image" />
 						</div>
-				        <div class="box-body">
-				          <table id="example3" class="table table-bordered table-striped table-hover">
-				            <thead style="background-color: rgba(126,86,134,.7);">
-				              <tr>
-				                <th>Pictures / Files</th>
-				                <th>Action</th>
-				              </tr>
-				            </thead>
-				            <tbody>
-				              @foreach($interview_picture as $interview_picture)
-				              <tr>
-				                <td>
-				                	@if($interview_picture->extension == 'jpg' || $interview_picture->extension == 'png' || $interview_picture->extension == 'jpeg' || $interview_picture->extension == 'JPG')
-				                	<a target="_blank" href="{{ url('/data_file/interview/'.$interview_picture->picture) }}" class="btn"><img width="100px" src="{{ url('/data_file/interview/'.$interview_picture->picture) }}"></a>
-				                	@else
-				                	<a target="_blank" href="{{ url('/data_file/interview/'.$interview_picture->picture) }}" class="btn"><img width="100px" src="{{ url('/images/file.png') }}"></a>
-				                	@endif
-				                </td>
-				                <td>
-				                  <center>
-				                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal-picture" onclick="editpicture('{{ url("index/interview/editpicture") }}','{{ url('/data_file/interview/') }}', '{{ $interview_picture->picture }}','{{ $interview_id }}', '{{ $interview_picture->id }}');">
-						               <i class="fa fa-edit"></i>
-						            </button>
-				                    <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation2('{{ url("index/interview/destroypicture") }}', '{{ $interview_picture->picture }}','{{ $interview_id }}', '{{ $interview_picture->id }}');">
-				                      <i class="fa fa-trash"></i>
-				                    </a>
-				                  </center>
-				                </td>
-				              </tr>
-				              @endforeach
-				            </tbody>
-				          </table>
-				        </div>
-				      </div>
+						<br>
+						<button type="submit" class="btn btn-primary ">Upload</button>
+					</form>
+				</div>
+		        <div class="box-body">
+		          <table id="example3" class="table table-bordered table-striped table-hover">
+		            <thead style="background-color: rgba(126,86,134,.7);">
+		              <tr>
+		                <th>Pictures / Files</th>
+		                <th>Action</th>
+		              </tr>
+		            </thead>
+		            <tbody>
+		              @foreach($interview_picture as $interview_picture)
+		              <tr>
+		                <td>
+		                	@if($interview_picture->extension == 'jpg' || $interview_picture->extension == 'png' || $interview_picture->extension == 'jpeg' || $interview_picture->extension == 'JPG')
+		                	<a target="_blank" href="{{ url('/data_file/interview/'.$interview_picture->picture) }}" class="btn"><img width="100px" src="{{ url('/data_file/interview/'.$interview_picture->picture) }}"></a>
+		                	@else
+		                	<a target="_blank" href="{{ url('/data_file/interview/'.$interview_picture->picture) }}" class="btn"><img width="100px" src="{{ url('/images/file.png') }}"></a>
+		                	@endif
+		                </td>
+		                <td>
+		                  <center>
+		                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal-picture" onclick="editpicture('{{ url("index/interview/editpicture") }}','{{ url('/data_file/interview/') }}', '{{ $interview_picture->picture }}','{{ $interview_id }}', '{{ $interview_picture->id }}');">
+				               <i class="fa fa-edit"></i>
+				            </button>
+		                    <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation2('{{ url("index/interview/destroypicture") }}', '{{ $interview_picture->picture }}','{{ $interview_id }}', '{{ $interview_picture->id }}');">
+		                      <i class="fa fa-trash"></i>
+		                    </a>
+		                  </center>
+		                </td>
+		              </tr>
+		              @endforeach
+		            </tbody>
+		          </table>
+		        </div>
+		      </div>
 		</div>
 	</div>
 </section>
@@ -321,7 +323,7 @@ table.table-bordered > tfoot > tr > th{
         <div>
         	{{-- <form role="form" method="post" action="{{url('index/interview/create_participant/'.$interview_id)}}" enctype="multipart/form-data"> --}}
           <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>"> 
-          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
           		<center>
           			<a id="scan" class="btn btn-primary" onclick="scanQrCode()">Scan QR Code</a>
           			<video width="200px" id="preview"></video><br>
@@ -330,13 +332,13 @@ table.table-bordered > tfoot > tr > th{
 		            </div>
           			<a id="cancel" class="btn btn-primary" onclick="cancelScan()">Cancel</a>
           		</center>
-          	</div>        
+          	</div> -->        
           	<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
           	</div>
           	<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
           		<div class="form-group" id="nik_operator">
-	              <label for="exampleInputEmail1">Participant Name</label> 
-	              <select class="form-control select3" name="nik" id="nik" style="width: 100%;" data-placeholder="Choose a Participant..." required>
+	              <label for="exampleInputEmail1">Nama Karyawan</label> 
+	              <select class="form-control select3" name="nik" id="nik" style="width: 100%;" data-placeholder="Pilih Karyawan..." required>
 					<option value=""></option>
 					@foreach($operator as $operator)
 						<option value="{{ $operator->employee_id }}">{{ $operator->employee_id }} - {{ $operator->name }}</option>
@@ -933,11 +935,11 @@ table.table-bordered > tfoot > tr > th{
 			$.post('{{ url("index/interview/create_participant") }}', data, function(result, status, xhr){
 				if(result.status){
 					$("#create-modal").modal('hide');
-					openSuccessGritter('Success','New Participant has been created');
+					openSuccessGritter('Success','Berhasil Tambah Peserta');
 					window.location.reload();
 				} else {
 					audio_error.play();
-					openErrorGritter('Error','Create Participant Failed');
+					openErrorGritter('Error','Gagal Tambah Peserta');
 				}
 			});
 		}
