@@ -364,25 +364,22 @@
 											<input type="hidden" id="buyer_name" name="buyer_name" value="{{$employee->name}}">
 										</div>
 										<div class="form-group">
-											<label>Authorized 2<span class="text-red">*</span></label>
+											<label>Authorized 2 / Manager<span class="text-red">*</span></label>
 											<input type="text" class="form-control" id="authorized2_name" name="authorized2_name" readonly="" value="{{$authorized2->name}}">
 											<input type="hidden" class="form-control" id="authorized2" name="authorized2" readonly="" value="{{$authorized2->employee_id}}">
 										</div>
 										<div class="form-group">
-											<label>Authorized 3<span class="text-red">*</span></label>
+											<label>Authorized 3 / General Manager<span class="text-red">*</span></label>
 											<input type="text" class="form-control" id="authorized3_name" name="authorized3_name" readonly="" value="{{$authorized3->name}}">
 											<input type="hidden" class="form-control" id="authorized3" name="authorized3" readonly="" value="{{$authorized3->employee_id}}">
 										</div>
-										<div class="form-group">
+										<!-- <div class="form-group">
 											<label>Authorized 4<span class="text-red">*</span></label>
 											<select class="form-control select4" id="authorized4" name="authorized4" data-placeholder='Pilih Authorized 4' style="width: 100%" onchange="getAuthorized4(this);">
 												<option value="">&nbsp;</option>
-												@foreach($authorized4 as $author4)
-												<option value="{{$author4->employee_id}}">{{$author4->name}}</option>
-												@endforeach
 											</select>
 											<input type="hidden" class="form-control" id="authorized4_name" name="authorized4_name" readonly="">
-										</div>
+										</div> -->
 										<div class="form-group">
 											<label>Catatan / Keterangan</label>
 											<textarea class="form-control pull-right" id="note" name="note"></textarea>
@@ -669,25 +666,22 @@
 											<input type="text" class="form-control" id="buyer_name_edit" name="buyer_name_edit" readonly="">
 										</div>
 										<div class="form-group">
-											<label>Authorized 2<span class="text-red">*</span></label>
+											<label>Authorized 2 / Manager<span class="text-red">*</span></label>
 											<input type="text" class="form-control" id="authorized2_name" name="authorized2_name" readonly="" value="{{$authorized2->name}}">
 											<input type="hidden" class="form-control" id="authorized2" name="authorized2" readonly="" value="{{$authorized2->employee_id}}">
 										</div>
 										<div class="form-group">
-											<label>Authorized 3<span class="text-red">*</span></label>
+											<label>Authorized 3 / General Manager<span class="text-red">*</span></label>
 											<input type="text" class="form-control" id="authorized3_name" name="authorized3_name" readonly="" value="{{$authorized3->name}}">
 											<input type="hidden" class="form-control" id="authorized3" name="authorized3" readonly="" value="{{$authorized3->employee_id}}">
 										</div>
-										<div class="form-group">
+										<!-- <div class="form-group">
 											<label>Authorized 4<span class="text-red">*</span></label>
 											<select class="form-control select5" id="authorized4_edit" name="authorized4_edit" data-placeholder='Pilih Authorized 3' style="width: 100%" onchange="getAuthorized4Edit(this)">
 												<option value="">&nbsp;</option>
-												@foreach($authorized4 as $author4)
-												<option value="{{$author4->employee_id}}">{{$author4->name}}</option>
-												@endforeach
 											</select>
 											<input type="hidden" class="form-control" id="authorized4_name_edit" name="authorized4_name_edit" readonly="">
-										</div>
+										</div> -->
 										<div class="form-group">
 											<label>Catatan / Keterangan</label>
 											<textarea class="form-control pull-right" id="note_edit" name="note_edit"></textarea>
@@ -966,9 +960,9 @@
 			var price_vat = $('#price_vat').val();
 			var delivery_term = $('#delivery_term').val();
 			var currency = $('#currency').val();
-			var authorized4 = $('#authorized4').val();
+			// var authorized4 = $('#authorized4').val();
 
-			if(no_po2 == '' || supplier == "" || material == "" || price_vat == "" || delivery_term == "" || currency == "" || authorized4 == ""){
+			if(no_po2 == '' || supplier == "" || material == "" || price_vat == "" || delivery_term == "" || currency == ""){
 				alert('All field must be filled');	
 			}	
 			else{
@@ -982,9 +976,9 @@
 			var price_vat = $('#price_vat_edit').val();
 			var delivery_term = $('#delivery_term_edit').val();
 			var currency = $('#currency_edit').val();
-			var authorized4 = $('#authorized4_edit').val();
+			// var authorized4 = $('#authorized4_edit').val();
 
-			if( supplier == "" || material == "" || price_vat == "" || delivery_term == "" || currency == "" || authorized4 == ""){
+			if( supplier == "" || material == "" || price_vat == "" || delivery_term == "" || currency == ""){
 				alert('All field must be filled');	
 			}	
 			else{
@@ -1290,31 +1284,31 @@
 		});
 	}
 
-	function getAuthorized4(elem){
+	// function getAuthorized4(elem){
 
-		$.ajax({
-			url: "{{ route('admin.pogetname') }}?authorized4="+elem.value,
-			method: 'GET',
-			success: function(data) {
-				var json = data,
-				obj = JSON.parse(json);
-				$('#authorized4_name').val(obj.name);
-			} 
-		});
-	}
+	// 	$.ajax({
+	// 		url: "{{ route('admin.pogetname') }}?authorized4="+elem.value,
+	// 		method: 'GET',
+	// 		success: function(data) {
+	// 			var json = data,
+	// 			obj = JSON.parse(json);
+	// 			$('#authorized4_name').val(obj.name);
+	// 		} 
+	// 	});
+	// }
 
-	function getAuthorized4Edit(elem){
+	// function getAuthorized4Edit(elem){
 
-		$.ajax({
-			url: "{{ route('admin.pogetname') }}?authorized4="+elem.value,
-			method: 'GET',
-			success: function(data) {
-				var json = data,
-				obj = JSON.parse(json);
-				$('#authorized4_name_edit').val(obj.name);
-			} 
-		});
-	}
+	// 	$.ajax({
+	// 		url: "{{ route('admin.pogetname') }}?authorized4="+elem.value,
+	// 		method: 'GET',
+	// 		success: function(data) {
+	// 			var json = data,
+	// 			obj = JSON.parse(json);
+	// 			$('#authorized4_name_edit').val(obj.name);
+	// 		} 
+	// 	});
+	// }
 
 	function getInvList() {
 		$.get('{{ url("fetch/purchase_order/invlist") }}', function(result, status, xhr) {
@@ -1577,7 +1571,7 @@
     		$("#currency_edit").val(result.purchase_order.currency).trigger('change.select2');
     		$("#buyer_id_edit").val(result.purchase_order.buyer_id);
     		$("#buyer_name_edit").val(result.purchase_order.buyer_name);
-    		$("#authorized4_edit").val(result.purchase_order.authorized4).trigger('change.select2');
+    		// $("#authorized4_edit").val(result.purchase_order.authorized4).trigger('change.select2');
     		$("#note_edit").val(result.purchase_order.note).trigger('change.select2');
 
 

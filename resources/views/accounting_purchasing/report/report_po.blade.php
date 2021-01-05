@@ -489,8 +489,8 @@
 
 	<footer>
 
-		@if($po[0]->approval_authorized4 == "Approved")
-		<img width="100" src="{{ public_path() . '/files/ttd_pr_po/stempel_ympi.png' }}" alt="" style="padding: 0;position: absolute;top: 845px;left: 600px;z-index: 200">
+		@if($po[0]->approval_authorized3 == "Approved")
+		<img width="100" src="{{ public_path() . '/files/ttd_pr_po/stempel_ympi.png' }}" alt="" style="padding: 0;position: absolute;top: 840px;left: 570px;z-index: 200">
 		@endif
 		<div class="footer">
 			<table style="width: 100%; font-family: TimesNewRoman; border-collapse: collapse;">
@@ -515,25 +515,25 @@
 								<?= $po[0]->buyer_name ?>
 							@endif
 						</td>
-						<td colspan="3" style="width: 30%">
+						<td colspan="3" style="width: 40%">
 							@if($po[0]->approval_authorized2 == "Approved")
 								<img width="70" src="{{ public_path() . '/files/ttd_pr_po/ttd_pak_imron.jpg' }}" alt="" style="padding: 0">
-								<span style="position: absolute;left: 220px;width: 75px;font-size: 10px;font-weight: bold;top: 101px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->date_approval_authorized2)) ?></span>
+								<span style="position: absolute;left: 270px;width: 75px;font-size: 10px;font-weight: bold;top: 101px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->date_approval_authorized2)) ?></span>
 							@endif
 						</td>
 						<td colspan="3" style="width: 30%">
 							@if($po[0]->approval_authorized3 == "Approved")
 								<img width="90" src="{{ public_path() . '/files/ttd_pr_po/ttd_pak_budhi.jpg' }}" alt="" style="padding: 0">
-								<span style="position: absolute;left: 380px;width: 75px;font-size: 10px;font-weight: bold;top: 101px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->date_approval_authorized3)) ?></span>
+								<span style="position: absolute;left: 530px;width: 75px;font-size: 10px;font-weight: bold;top: 101px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->date_approval_authorized3)) ?></span>
 							@endif
 						</td>
 
-						<td colspan="3" style="width: 30%">
+						<!-- <td colspan="3" style="width: 30%">
 							@if($po[0]->approval_authorized4 == "Approved")
 								<img width="90" src="{{ public_path() . '/files/ttd_pr_po/ttd_pak_hayakawa.png' }}" alt="" style="padding: 0">
 								<span style="position: absolute;left: 540px;width: 75px;font-size: 10px;font-weight: bold;top: 101px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->date_approval_authorized4)) ?></span>
 							@endif
-						</td>
+						</td> -->
 					</tr>
 
 				</thead>
@@ -543,13 +543,13 @@
 						<td colspan="3" style="height: 26px;padding: 0;font-weight: bold;text-decoration: underline;">{{ $po[0]->buyer_name }}</td>
 						<td colspan="3" style="font-weight: bold;text-decoration: underline;">{{ $po[0]->authorized2_name }}</td>
 						<td colspan="3" style="font-weight: bold;text-decoration: underline;">{{ $po[0]->authorized3_name }}</td>
-						<td colspan="3" style="font-weight: bold;text-decoration: underline;">{{ $po[0]->authorized4_name }}</td>
+						<!-- <td colspan="3" style="font-weight: bold;text-decoration: underline;">{{ $po[0]->authorized4_name }}</td> -->
 					</tr>
 					<tr>
 						<td colspan="3">Procurement Staff</td>
 						<td colspan="3">Procurement Manager</td>
-						<td colspan="3">DGM Production</td>
-						<td colspan="3">GM Production</td>
+						<td colspan="3">GM Production Support</td>
+						<!-- <td colspan="3">DGM Production</td> -->
 					</tr>
 				</tbody>
 			</table>

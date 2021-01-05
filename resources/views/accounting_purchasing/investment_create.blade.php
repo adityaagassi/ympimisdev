@@ -348,9 +348,37 @@
       else if(jen2 == "Medical"){
         jenis = "Med";
       }
+      else if(jen2 == "Wellfare"){
+        jenis = "Wf";
+      }
+      else if(jen2 == "Training and Development"){
+        jenis = "Td";
+      }
+      else if(jen2 == "Expatriate permittance"){
+        jenis = "Ep";
+      }
+      else if(jen2 == "Recruitment"){
+        jenis = "Rcr";
+      }
+      else if(jen2 == "Insurance"){
+        jenis = "I";
+      }
+      else if(jen2 == "Meeting and Guest"){
+        jenis = "Mg";
+      }
+      else if(jen2 == "Book and Periodical"){
+        jenis = "Bp";
+      }
+      else if(jen2 == "Tax and Publicdues"){
+        jenis = "Tp";
+      }
+      else if(jen2 == "Photocopy and Printing"){
+        jenis = "Pp";
+      }
       else if(jen2 == "Others"){
         jenis = "etc";
       }
+
 
 
       var reff_no = document.getElementById("reff_number");
@@ -556,14 +584,14 @@
           list += "<option value='Packaging Cost'>Packaging Cost</option>";
           list += "<option value='Electricity, Water, and Gas'>Electricity, Water, and Gas</option>";
           list += "<option value='Insurance'>Insurance</option>";
-          list += "<option value='Meeting&Guest'>Meeting & Guest</option>";
-          list += "<option value='Book&periodical'>Book & periodical</option>";
-          list += "<option value='Tax&Publicdues'>Tax & Publicdues</option>";
+          list += "<option value='Meeting and Guest'>Meeting and Guest</option>";
+          list += "<option value='Book and Periodical'>Bookand Periodical</option>";
+          list += "<option value='Tax and Publicdues'>Tax and Publicdues</option>";
           list += "<option value='Medical'>Medical</option>";
-          list += "<option value='Photocopy&printing'>Photocopy & printing</option>";
+          list += "<option value='Photocopy and Printing'>Photocopy and Printing</option>";
           list += "<option value='Expatriate permittance'>Expatriate permittance</option>";
           list += "<option value='Wellfare'>Wellfare</option>";
-          list += "<option value='Training&Development'>Training & Development</option>";
+          list += "<option value='Training and Development'>Training and Development</option>";
           list += "<option value='Recruitment'>Recruitment</option>";
           list += "<option value='Others'>Others</option>";
         }

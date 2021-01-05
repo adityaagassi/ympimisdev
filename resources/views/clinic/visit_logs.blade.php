@@ -216,6 +216,7 @@
 										<th style="width: 20%;">Department</th>
 										<th style="width: 15%;">Paramedic</th>
 										<th style="width: 20%;">Purpose</th>
+										<th style="width: 10%;">Bed</th>
 										<th style="width: 5%;">Action</th>
 									</tr>
 								</thead>
@@ -223,6 +224,7 @@
 								</tbody>
 								<tfoot>
 									<tr style="color: black">
+										<th></th>
 										<th></th>
 										<th></th>
 										<th></th>
@@ -492,6 +494,11 @@
 						tableData += '<td>'+ (result.logs[i].department || 'Not Found') +'</td>';
 						tableData += '<td>'+ result.logs[i].paramedic +'</td>';
 						tableData += '<td>'+ result.logs[i].purpose +'</td>';
+						if (result.logs[i].note == null) {
+							tableData += '<td>No</td>';
+						}else{
+							tableData += '<td>'+ result.logs[i].note +'</td>';
+						}
 						tableData += '<td style="text-align: center;">';
 						tableData += '<button style="width: 80%; height: 100%;" class="btn btn-xs btn-warning form-control" onclick="showEdit(\''+result.logs[i].patient_list_id+'\')"><span><i class="fa fa-pencil-square-o"></i>&nbsp;Edit</span></button>';
 						tableData += '</td>';

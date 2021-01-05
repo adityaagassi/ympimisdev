@@ -155,6 +155,14 @@
               <option value="Electricity, Water, and Gas" <?php if($investment->type == "Electricity, Water, and Gas") echo "selected"; ?>>Electricity, Water, and Gas</option>
               <option value="Technical Assistant" <?php if($investment->type == "Technical Assistant") echo "selected"; ?>>Technical Assistant</option>
               <option value="Wellfare" <?php if($investment->type == "Wellfare") echo "selected"; ?>>Wellfare</option>
+              <option value="Training and Development" <?php if($investment->type == "Training and Development") echo "selected"; ?>>Training and Development</option>
+              <option value="Expatriate permittance" <?php if($investment->type == "Expatriate permittance") echo "selected"; ?>>Expatriate permittance</option>
+              <option value="Recruitment" <?php if($investment->type == "Recruitment") echo "selected"; ?>>Recruitment</option>
+              <option value="Insurance" <?php if($investment->type == "Insurance") echo "selected"; ?>>Insurance</option>
+              <option value="Meeting and Guest" <?php if($investment->type == "Meeting and Guest") echo "selected"; ?>>Meeting and Guest</option>
+              <option value="Book and Periodical" <?php if($investment->type == "Book and Periodical") echo "selected"; ?>>Book and Periodical</option>
+              <option value="Tax and Publicdues" <?php if($investment->type == "Tax and Publicdues") echo "selected"; ?>>Tax and Publicdues</option>
+              <option value="Photocopy and Printing" <?php if($investment->type == "Photocopy and Printing") echo "selected"; ?>>Photocopy and Printing</option>
               <option value="Others" <?php if($investment->type == "Others") echo "selected"; ?>>Others</option>
             </select>
           </div>
@@ -1436,20 +1444,20 @@
           list += "<option value='Technical Assistant'>Technical Assistant</option>";
           list += "<option value='Rent'>Rent</option>";
           list += "<option value='Transport Expense'>Transport Expense</option>";
-          list += "<option value='Postage & Telecomunication'>Postage & Telecomunication</option>";
+          list += "<option value='Postage and Telecomunication'>Postage and Telecomunication</option>";
           list += "<option value='Bussiness Trip'>Bussiness Trip</option>";
           list += "<option value='Information System'>Information System</option>";
           list += "<option value='Packaging Cost'>Packaging Cost</option>";
-          list += "<option value='Electricity, Water, & Gas'>Electricity, Water, & Gas</option>";
+          list += "<option value='Electricity, Water, and Gas'>Electricity, Water, and Gas</option>";
           list += "<option value='Insurance'>Insurance</option>";
-          list += "<option value='Meeting&Guest'>Meeting & Guest</option>";
-          list += "<option value='Book&periodical'>Book & periodical</option>";
-          list += "<option value='Tax&Publicdues'>Tax & Publicdues</option>";
+          list += "<option value='Meeting and Guest'>Meeting and Guest</option>";
+          list += "<option value='Book and Periodical'>Bookand Periodical</option>";
+          list += "<option value='Tax and Publicdues'>Tax and Publicdues</option>";
           list += "<option value='Medical'>Medical</option>";
-          list += "<option value='Photocopy&printing'>Photocopy & printing</option>";
+          list += "<option value='Photocopy and printing'>Photocopy and printing</option>";
           list += "<option value='Expatriate permittance'>Expatriate permittance</option>";
           list += "<option value='Wellfare'>Wellfare</option>";
-          list += "<option value='Training&Development'>Training & Development</option>";
+          list += "<option value='Training and Development'>Training and Development</option>";
           list += "<option value='Recruitment'>Recruitment</option>";
           list += "<option value='Others'>Others</option>";
         }

@@ -356,7 +356,8 @@ class ClinicController extends Controller{
 			'patient.name',
 			'patient.department',
 			'clinic_patient_details.paramedic',
-			'clinic_patient_details.purpose');
+			'clinic_patient_details.purpose',
+			'logs.note');
 		$clinic_visit_logs = $clinic_visit_logs->orderBy('clinic_patient_details.visited_at', 'desc')
 		->select(
 			'clinic_patient_details.visited_at',
@@ -368,6 +369,7 @@ class ClinicController extends Controller{
 			'patient.department',
 			'clinic_patient_details.paramedic',
 			'clinic_patient_details.purpose',
+			'logs.note',
 			db::raw('group_concat(diagnose) as diagnose')
 		)->get();
 

@@ -2406,9 +2406,9 @@ class AccountingController extends Controller
         ->where('position', '=', 'Deputy General Manager')
         ->first();
 
-        $authorized4 = EmployeeSync::select('employee_id', 'name')->where('position', '=', 'Director')
-        ->Orwhere('position', '=', 'General Manager')
-        ->get();
+        // $authorized4 = EmployeeSync::select('employee_id', 'name')->where('position', '=', 'Director')
+        // ->Orwhere('position', '=', 'General Manager')
+        // ->get();
 
         return view('accounting_purchasing.purchase_order', array(
             'title' => $title,
@@ -2419,7 +2419,7 @@ class AccountingController extends Controller
             'transportation' => $this->transportation,
             'authorized2' => $authorized2,
             'authorized3' => $authorized3,
-            'authorized4' => $authorized4,
+            // 'authorized4' => $authorized4,
             'uom' => $this->uom
         ))
         ->with('page', 'Purchase Order')
@@ -2855,8 +2855,8 @@ class AccountingController extends Controller
                 'authorized2_name' => $request->get('authorized2_name') , 
                 'authorized3' => $request->get('authorized3') , 
                 'authorized3_name' => $request->get('authorized3_name') , 
-                'authorized4' => $request->get('authorized4') , 
-                'authorized4_name' => $request->get('authorized4_name'), 
+                // 'authorized4' => $request->get('authorized4') , 
+                // 'authorized4_name' => $request->get('authorized4_name'), 
                 'file_pdf' => $nopo.'.pdf' , 
                 'note' => $request->get('note') , 
                 'cost_center' => $cost , 
@@ -3078,8 +3078,8 @@ class AccountingController extends Controller
                 'delivery_term' => $request->get('delivery_term_edit') , 
                 'holding_tax' => $request->get('holding_tax_edit') , 
                 'currency' => $request->get('currency_edit') , 
-                'authorized4' => $request->get('authorized4_edit') , 
-                'authorized4_name' => $request->get('authorized4_name_edit') , 
+                // 'authorized4' => $request->get('authorized4_edit') , 
+                // 'authorized4_name' => $request->get('authorized4_name_edit') , 
                 'note' => $request->get('note_edit') 
             ]);
 
@@ -3652,25 +3652,9 @@ class AccountingController extends Controller
             }
             else if ($po->posisi == "dgm_pch")
             {
-                $po->posisi = "gm_pch";
+                $po->posisi = 'pch';
                 $po->approval_authorized3 = "Approved";
                 $po->date_approval_authorized3 = date('Y-m-d H:i:s');
-                // $po->autentikasi_3 = $_HASIL;
-
-                $mailto = "select distinct email from acc_purchase_orders join users on acc_purchase_orders.authorized4 = users.username where acc_purchase_orders.id = '" . $id . "'";
-                $mails = DB::select($mailto);
-
-                foreach ($mails as $mail)
-                {
-                    $mailtoo = $mail->email;
-                }
-            }
-            else if ($po->posisi == "gm_pch")
-            {
-                $po->posisi = 'pch';
-                $po->approval_authorized4 = "Approved";
-                $po->date_approval_authorized4 = date('Y-m-d H:i:s');
-                // $po->autentikasi_4 = $_HASIL;
                 $po->status = "not_sap";
 
                     //kirim email Staff PCH sebagai pemberitahuan
@@ -3681,7 +3665,37 @@ class AccountingController extends Controller
                 {
                     $mailtoo = $mail->email;
                 }
+
+                // $po->posisi = "gm_pch";
+                // $po->approval_authorized3 = "Approved";
+                // $po->date_approval_authorized3 = date('Y-m-d H:i:s');
+                // // $po->autentikasi_3 = $_HASIL;
+
+                // $mailto = "select distinct email from acc_purchase_orders join users on acc_purchase_orders.authorized4 = users.username where acc_purchase_orders.id = '" . $id . "'";
+                // $mails = DB::select($mailto);
+
+                // foreach ($mails as $mail)
+                // {
+                //     $mailtoo = $mail->email;
+                // }
             }
+            // else if ($po->posisi == "gm_pch")
+            // {
+            //     $po->posisi = 'pch';
+            //     $po->approval_authorized4 = "Approved";
+            //     $po->date_approval_authorized4 = date('Y-m-d H:i:s');
+            //     // $po->autentikasi_4 = $_HASIL;
+            //     $po->status = "not_sap";
+
+            //         //kirim email Staff PCH sebagai pemberitahuan
+            //     $mailto = "select distinct email from acc_purchase_orders join users on acc_purchase_orders.buyer_id = users.username where acc_purchase_orders.id = '" . $id . "'";
+            //     $mails = DB::select($mailto);
+
+            //     foreach ($mails as $mail)
+            //     {
+            //         $mailtoo = $mail->email;
+            //     }
+            // }
 
             $po->save();
 
@@ -3884,17 +3898,31 @@ class AccountingController extends Controller
         try{
             if ($po->posisi == "dgm_pch")
             {
-                $po->posisi = "gm_pch";
+                $po->posisi = 'pch';
                 $po->approval_authorized3 = "Approved";
                 $po->date_approval_authorized3 = date('Y-m-d H:i:s');
+                $po->status = "not_sap";
 
-                $mailto = "select distinct email from acc_purchase_orders join users on acc_purchase_orders.authorized4 = users.username where acc_purchase_orders.id = '" . $id . "'";
+                    //kirim email Staff PCH sebagai pemberitahuan
+                $mailto = "select distinct email from acc_purchase_orders join users on acc_purchase_orders.buyer_id = users.username where acc_purchase_orders.id = '" . $id . "'";
                 $mails = DB::select($mailto);
 
                 foreach ($mails as $mail)
                 {
                     $mailtoo = $mail->email;
                 }
+                
+                // $po->posisi = "gm_pch";
+                // $po->approval_authorized3 = "Approved";
+                // $po->date_approval_authorized3 = date('Y-m-d H:i:s');
+
+                // $mailto = "select distinct email from acc_purchase_orders join users on acc_purchase_orders.authorized4 = users.username where acc_purchase_orders.id = '" . $id . "'";
+                // $mails = DB::select($mailto);
+
+                // foreach ($mails as $mail)
+                // {
+                //     $mailtoo = $mail->email;
+                // }
 
                 $po->save();
 
@@ -5019,7 +5047,7 @@ class AccountingController extends Controller
             $tahun = '21';
         }
 
-        $query = "SELECT reff_number FROM `acc_investments` where DATE_FORMAT(submission_date, '%y') = '$tahun' order by id DESC LIMIT 1";
+        $query = "SELECT reff_number FROM `acc_investments` order by id DESC LIMIT 1";
         $nomorurut = DB::select($query);
 
         if ($nomorurut != null)
@@ -6609,9 +6637,9 @@ public function purchase_order_investment()
     ->where('position', '=', 'Deputy General Manager')
     ->first();
 
-    $authorized4 = EmployeeSync::select('employee_id', 'name')->where('position', '=', 'Director')
-    ->Orwhere('position', '=', 'General Manager')
-    ->get();
+    // $authorized4 = EmployeeSync::select('employee_id', 'name')->where('position', '=', 'Director')
+    // ->Orwhere('position', '=', 'General Manager')
+    // ->get();
 
     return view('accounting_purchasing.purchase_order_investment', array(
         'title' => $title,
@@ -6622,7 +6650,7 @@ public function purchase_order_investment()
         'transportation' => $this->transportation,
         'authorized2' => $authorized2,
         'authorized3' => $authorized3,
-        'authorized4' => $authorized4,
+        // 'authorized4' => $authorized4,
         'uom' => $this->uom
     ))
     ->with('page', 'Purchase Order Investment')

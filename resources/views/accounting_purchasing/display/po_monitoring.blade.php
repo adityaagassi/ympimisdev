@@ -156,14 +156,14 @@ hr { background-color: red; height: 1px; border: 0; }
                     <th style="width: 16%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;" rowspan="2">Supplier</th>
                     <th style="width: 8%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;" rowspan="2">Budget</th>
                     <th style="width: 10%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;" rowspan="2" colspan="2">Net Payment</th>
-                    <th style="width: 50%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;" colspan="4">Progress Purchase Order</th>
+                    <th style="width: 50%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;" colspan="3">Progress Purchase Order</th>
                     <th style="width: 10%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;" rowspan="2">SAP</th>
                   </tr>
                   <tr>
                     <th style="width: 10%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;">Buyer</th>
                     <th style="width: 10%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;">Manager</th>
-                    <th style="width: 10%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;">DGM</th>
-                    <th style="width: 10%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;">GM</th>
+                    <th style="width: 10%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;">General Manager</th>
+                    <!-- <th style="width: 10%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;">GM</th> -->
                   </tr>
                 </thead>
                 <tbody id="tabelisi">
@@ -432,9 +432,6 @@ hr { background-color: red; height: 1px; border: 0; }
             var dgmname = dgm_name.split(' ').slice(0,2).join(' ');
             var colordgm = "";
 
-            var gm_name = value.authorized4_name;
-            var gmname = gm_name.split(' ').slice(0,2).join(' ');
-            var colorgm = "";
             var colorsap = "";
 
             var d = 0;
@@ -514,30 +511,30 @@ hr { background-color: red; height: 1px; border: 0; }
               }
 
               //GM
-              if (value.approval_authorized4 == "Approved") {
-                  if (value.posisi == "gm") {
-                      if (d == 0) {  
-                        gm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+gmname+'</span></a>';
-                        colorgm = 'style="background-color:#dd4b39"'; 
-                        d = 1;
-                      } else {
-                        gm = '';
-                      }
-                  } else {
-                    gm = '<a href="'+urlreport+'/'+value.id+'"><span class="label label-success">'+gmname+'</span></a>'; 
-                    colorgm = 'style="background-color:#00a65a"'; 
-                  }
-              } 
+              // if (value.approval_authorized4 == "Approved") {
+              //     if (value.posisi == "gm") {
+              //         if (d == 0) {  
+              //           gm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+gmname+'</span></a>';
+              //           colorgm = 'style="background-color:#dd4b39"'; 
+              //           d = 1;
+              //         } else {
+              //           gm = '';
+              //         }
+              //     } else {
+              //       gm = '<a href="'+urlreport+'/'+value.id+'"><span class="label label-success">'+gmname+'</span></a>'; 
+              //       colorgm = 'style="background-color:#00a65a"'; 
+              //     }
+              // } 
 
-              else {
-                if (d == 0) {  
-                  gm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+gmname+'</span></a>';
-                  colorgm = 'style="background-color:#dd4b39"'; 
-                  d = 1;
-                } else {
-                  gm = '';
-                }
-              }
+              // else {
+              //   if (d == 0) {  
+              //     gm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+gmname+'</span></a>';
+              //     colorgm = 'style="background-color:#dd4b39"'; 
+              //     d = 1;
+              //   } else {
+              //     gm = '';
+              //   }
+              // }
 
               //SAP
               if (value.posisi == "pch") {
@@ -588,7 +585,7 @@ hr { background-color: red; height: 1px; border: 0; }
               table += '<td '+colorbuyer+'>'+buyer+'</td>';  
               table += '<td '+colormanager+'>'+manager+'</td>';
               table += '<td '+colordgm+'>'+dgm+'</td>';
-              table += '<td '+colorgm+'>'+gm+'</td>';
+              // table += '<td '+colorgm+'>'+gm+'</td>';
               table += '<td '+colorsap+'>'+sap+'</td>';
 
               
