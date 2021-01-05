@@ -22,6 +22,7 @@
 		<div class="col-xs-4" style="text-align: center; color: red;">
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Display <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url('index/temperature/body_temp_monitoring?tanggal=') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Visitor Temperature Monitoring</a>
+			<a href="{{ url('index/temperature/minmoe_monitoring','all') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">All YMPI Temperature Monitoring</a>
 			<a href="{{ url('index/temperature/minmoe_monitoring','office') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Office Temperature Monitoring</a>
 			@foreach($department as $dept)
 			<a href="{{ url('index/temperature/minmoe_monitoring',$dept->department_name) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">{{$dept->department_shortname}} Temperature Monitoring</a>

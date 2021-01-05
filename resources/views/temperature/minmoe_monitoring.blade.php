@@ -522,7 +522,7 @@ function fetchTemperatureDetail(temperature){
 					"bAutoWidth": false,
 					"processing": true
 				});
-			intervaltemp = setInterval(fetchTemperature,30000);
+			intervaltemp = setInterval(fetchTemperature,1000*60*60);
 		}
 		else{
 			alert('Attempt to retrieve data failed');
