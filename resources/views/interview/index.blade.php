@@ -69,15 +69,15 @@
 				<div class="box-body">
 					<div class="col-md-6 col-md-offset-3">
 						<div class="box-header">
-							<h3 class="box-title">Filter {{ $activity_name }}</h3>
+							<h3 class="box-title">Filter</h3>
 						</div>
 						<form role="form" method="post" action="{{url('index/interview/filter_interview/'.$id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-6">
 									<div class="form-group">
-										<label>Sub Section</label>
-										<select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Choose a Sub Section...">
+										<label>Group</label>
+										<select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Pilih Group...">
 											<option value=""></option>
 											@foreach($subsection as $subsection)
 											<option value="{{ $subsection->sub_section_name }}">{{ $subsection->sub_section_name }}</option>
@@ -156,18 +156,18 @@
 						                	@endif</td>
 										<td>
 											<center>
-												<a class="btn btn-primary btn-sm" href="{{secure_url('index/interview/details/'.$interview->id)}}">Peserta Interview</a>
-												<a class="btn btn-success btn-sm" href="{{url('index/interview/print_interview/'.$interview->id)}}">Cetak</a>
+												<a class="btn btn-primary btn-sm" href="{{secure_url('index/interview/details/'.$interview->id)}}"><b>Peserta Interview</b></a>
+												<a target="_blank" class="btn btn-success btn-sm" href="{{url('index/interview/print_interview/'.$interview->id)}}"><b>Cetak</b></a>
 												@if($interview->send_status == "")
-							                		<a class="btn btn-info btn-sm" href="{{url('index/interview/sendemail/'.$interview->id)}}">Send Email</a>
+							                		<a class="btn btn-info btn-sm" href="{{url('index/interview/sendemail/'.$interview->id)}}"><b>Kirim Email</b></a>
 							                	@endif
 											</center>
 										</td>
 										<td>
 											<center>
-												<a href="{{url('index/interview/edit/'.$id.'/'.$interview->id)}}" class="btn btn-warning">Edit</a>
+												<a href="{{url('index/interview/edit/'.$id.'/'.$interview->id)}}" class="btn btn-warning"><b>Edit</b></a>
 												<a href="javascript:void(0)" class="btn btn-danger" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/interview/destroy") }}', '{{ $interview->activity_lists->activity_name }} - {{ $interview->date }} - {{ $interview->periode }}','{{ $id }}', '{{ $interview->id }}');">
-													Delete
+													<b>Delete</b>
 												</a>
 											</center>
 										</td>
