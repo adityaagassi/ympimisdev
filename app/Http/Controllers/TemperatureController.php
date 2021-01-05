@@ -292,31 +292,68 @@ class TemperatureController extends Controller
 
                if ($date_from == '') {
                     if ($date_to == '') {
-                         $where = "AND DATE(date_in) BETWEEN CONCAT(DATE_FORMAT(NOW() - INTERVAL 7 DAY,'%Y-%m-%d')) AND DATE(NOW())";
+                         $whereDate = 'AND DATE(date_in) BETWEEN CONCAT(DATE_FORMAT(NOW() - INTERVAL 7 DAY,"%Y-%m-%d")) AND DATE(NOW())';
                     }else{
-                         $where = "AND DATE(date_in) BETWEEN CONCAT(DATE_FORMAT(".$date_to." - INTERVAL 7 DAY,'%Y-%m-%d')) AND '".$date_to."'";
+                         $whereDate = 'AND DATE(date_in) BETWEEN CONCAT(DATE_FORMAT("'.$date_to.'" - INTERVAL 7 DAY,"%Y-%m-%d")) AND "'.$date_to.'"';
                     }
                }else{
                     if ($date_to == '') {
-                         $where = "AND DATE(date_in) BETWEEN '".$date_from."' AND DATE(NOW())";
+                         $whereDate = 'AND DATE(date_in) BETWEEN "'.$date_from.'" AND DATE(NOW())';
                     }else{
-                         $where = "AND DATE(date_in) BETWEEN '".$date_from."' AND '".$date_to."'";
+                         $whereDate = 'AND DATE(date_in) BETWEEN "'.$date_from.'" AND "'.$date_to.'"';
                     }
                }
 
-               $minmoeall = DB::SELECT('SELECT employees.employee_id,ivms_temperatures.location,employees.name,ivms_temperatures.date_in,ivms_temperatures.point,ivms_temperatures.temperature,ivms_temperatures.abnormal_status from ivms_temperatures left join employees on ivms_temperatures.employee_id = employees.employee_id where employees.end_date is null order by date_in desc');
+               $temp_from = $request->get('temp_from');
+               $temp_to = $request->get('temp_to');
+
+               if ($temp_from == '') {
+                    if ($temp_to == '') {
+                         $whereTemp = '';
+                    }else{
+                         $whereTemp = 'AND temperature <= "'.$temp_to.'"';
+                    }
+               }else{
+                    if ($temp_to == '') {
+                         $whereTemp = 'AND temperature >= "'.$temp_from.'"';
+                    }else{
+                         $whereTemp = 'AND temperature BETWEEN "'.$temp_from.'" AND "'.$temp_to.'"';
+                    }
+               }
+
+               $minmoeall = DB::SELECT('SELECT
+                         employees.employee_id,
+                         ivms_temperatures.location,
+                         employees.name,
+                         COALESCE ( employee_syncs.department, "" ) as department,
+                         COALESCE ( employee_syncs.section, "" ) as section,
+                         COALESCE ( employee_syncs.`group`, "" ) as `group`,
+                         ivms_temperatures.date_in,
+                         ivms_temperatures.point,
+                         ivms_temperatures.temperature,
+                         ivms_temperatures.abnormal_status 
+                    FROM
+                         ivms_temperatures
+                         LEFT JOIN employees ON ivms_temperatures.employee_id = employees.employee_id
+                         LEFT JOIN employee_syncs ON employee_syncs.employee_id = employees.employee_id 
+                    WHERE
+                         employee_syncs.end_date IS NULL 
+                         '.$whereDate.'
+                         '.$whereTemp.'
+                    ORDER BY
+                         date_in DESC');
+
 
                $response = array(
                     'status' => true,
                     'message' => 'Get Data Success',
                     'datas' => $minmoeall
                );
-
                return Response::json($response);
           } catch (\Exception $e) {
                $response = array(
                     'status' => false,
-                    'message' => 'Get Data Failed'
+                    'message' => $e->getMessage()
                );
 
                return Response::json($response);

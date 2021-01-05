@@ -135,8 +135,8 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
 	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
-		<p style="position: absolute; color: White; top: 45%; left: 35%;">
-			<span style="font-size: 40px">Uploading, please wait <i class="fa fa-spin fa-refresh"></i></span>
+		<p style="position: absolute; color: white; top: 45%; left: 35%;">
+			<span style="font-size: 40px">Please wait . . . <i class="fa fa-spin fa-refresh"></i></span>
 		</p>
 	</div>
 	@if (session('status'))
@@ -181,6 +181,28 @@
 								</div>
 							</div>
 						</div>
+						<div class="col-md-4 col-md-offset-2">
+							<span style="font-weight: bold;">Temp From</span>
+							<div class="form-group">
+								<div class="input-group date">
+									<div class="input-group-addon bg-white">
+										<i class="fa fa-thermometer-empty"></i>
+									</div>
+									<input type="text" class="form-control" id="temp_from" name="temp_from" placeholder="Input Temp From (Ex: 36.5)" autocomplete="off">
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<span style="font-weight: bold;">Temp To</span>
+							<div class="form-group">
+								<div class="input-group date">
+									<div class="input-group-addon bg-white">
+										<i class="fa fa-thermometer-full"></i>
+									</div>
+									<input type="text" class="form-control" id="temp_to"name="temp_to" placeholder="Input Temp To (Ex: 37.5)" autocomplete="off">
+								</div>
+							</div>
+						</div>
 						<div class="col-md-6 col-md-offset-2">
 							<div class="col-md-10">
 								<div class="form-group pull-right">
@@ -191,30 +213,10 @@
 							</div>
 						</div>
 					</div>
-					<table id="example1" class="table table-bordered table-striped table-hover">
-						<thead style="background-color: rgba(126,86,134,.7);">
-							<tr>
-								<th>Employee ID</th>
-								<th>Name</th>
-								<th>Check Date</th>
-								<th>Check Point</th>
-								<th>Temperature</th>
-								<th>Abnormal Status</th>
-							</tr>
-						</thead>
-						<tbody id="example1Body">
-						</tbody>
-						<tfoot>
-							<tr>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-							</tr>
-						</tfoot>
-					</table>
+					<div class="col-xs-12">
+						<div class="row" id="divTable">
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -340,24 +342,71 @@
 		});
 	});
 
+	function initiateTable() {
+		$('#divTable').html("");
+		var tableData = "";
+		tableData += "<table id='example1' class='table table-bordered table-striped table-hover'>";
+		tableData += '<thead style="background-color: rgba(126,86,134,.7);">';
+		tableData += '<tr>';
+		tableData += '<th>Employee ID</th>';
+		tableData += '<th>Name</th>';
+		tableData += '<th>Department</th>';
+		tableData += '<th>Section</th>';
+		tableData += '<th>Group</th>';
+		tableData += '<th>Date</th>';
+		tableData += '<th>Point</th>';
+		tableData += '<th>Temperature</th>';
+		tableData += '<th>Abnormal</th>';
+		tableData += '</tr>';
+		tableData += '</thead>';
+		tableData += '<tbody id="example1Body">';
+		tableData += "</tbody>";
+		tableData += "<tfoot>";
+		tableData += "<tr>";
+		tableData += "<th></th>";
+		tableData += "<th></th>";
+		tableData += "<th></th>";
+		tableData += "<th></th>";
+		tableData += "<th></th>";
+		tableData += "<th></th>";
+		tableData += "<th></th>";
+		tableData += "<th></th>";
+		tableData += "<th></th>";
+		tableData += "</tr>";
+		tableData += "</tfoot>";
+		tableData += "</table>";
+		$('#divTable').append(tableData);
+	}
+
 	function fillList(){
+	$('#loading').show();
 	var tanggal_from = $('#tanggal_from').val();
 	var tanggal_to = $('#tanggal_to').val();
+	var temp_from = $('#temp_from').val();
+	var temp_to = $('#temp_to').val();
 
 	var data = {
 		tanggal_from:tanggal_from,
-		tanggal_to:tanggal_to
+		tanggal_to:tanggal_to,
+		temp_from:temp_from,
+		temp_to:temp_to,
 	}
 	$.get('{{ url("fetch/temperature/minmoe") }}',data, function(result, status, xhr){
 			if(result.status){
-				$('#example1').DataTable().clear();
-				$('#example1').DataTable().destroy();
-				$('#example1Body').html("");
+
+				initiateTable();
+				
 				var tableData = "";
+				// $('#example1').DataTable().destroy();
+				// $('#example1').DataTable().clear();
+				
 				$.each(result.datas, function(key, value) {
 					tableData += '<tr>';
 					tableData += '<td>'+ value.employee_id +'</td>';
 					tableData += '<td>'+ value.name +'</td>';
+					tableData += '<td>'+ value.department +'</td>';
+					tableData += '<td>'+ value.section +'</td>';
+					tableData += '<td>'+ value.group +'</td>';
 					tableData += '<td>'+ value.date_in +'</td>';
 					tableData += '<td>'+ value.point +'</td>';
 					tableData += '<td>'+ value.temperature +'</td>';
@@ -438,10 +487,12 @@
 				} );
 
 				$('#example1 tfoot tr').appendTo('#example1 thead');
+				$('#loading').hide();
 
 			}
 			else{
 				alert('Attempt to retrieve data failed');
+				$('#loading').hide();
 			}
 		});
 	}
