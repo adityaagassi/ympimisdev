@@ -1152,7 +1152,7 @@
                                 </tbody>
                             </table>
 
-                            <table class="table table-bordered">
+                            {{--  <table class="table table-bordered">
                                 <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
                                     <tr>
                                         <th>
@@ -1169,7 +1169,7 @@
                                         </td>
                                     </tr>
                                 </tbody>
-                            </table>
+                            </table> --}}
                             
                            <!--  <table class="table table-bordered">
                                 <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">

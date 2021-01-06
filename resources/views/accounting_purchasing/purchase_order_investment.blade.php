@@ -901,6 +901,24 @@
 	</div>
 </div>
 
+<div class="modal modal-danger fade" id="modalcancelPO" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	        <h4 class="modal-title" id="myModalLabel">Konfirmasi Hapus Data</h4>
+	      </div>
+	      <div class="modal-body">
+	        Apakah anda yakin ingin cancel PO Ini ?
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+	        <a id="a" name="modalbuttoncancel" type="button"  onclick="cancel_po(this.id)" class="btn btn-danger">Yes</a>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
 @endsection
 
 @section('scripts')
@@ -1675,6 +1693,10 @@
 		$('[name=modalDeleteButton]').attr("id",id);
 	}
 
+	function cancelPO(id) {
+		$('[name=modalbuttoncancel]').attr("id",id);
+	}
+
 	function delete_item(id) {
 		var data = {
 			id:id,
@@ -1687,28 +1709,6 @@
 		$('#modaldanger').modal('hide');
 		$('#'+id).css("display","none");
 	}
-
-	function openSuccessGritter(title, message){
-      jQuery.gritter.add({
-        title: title,
-        text: message,
-        class_name: 'growl-success',
-        image: '{{ url("images/image-screen.png") }}',
-        sticky: false,
-        time: '3000'
-      });
-    }
-
-    function openErrorGritter(title, message) {
-        jQuery.gritter.add({
-          title: title,
-          text: message,
-          class_name: 'growl-danger',
-          image: '{{ url("images/image-stop.png") }}',
-          sticky: false,
-          time: '2000'
-        });
-    }
 
 	function sendEmail(id) {
       var data = {
@@ -1839,6 +1839,49 @@
 
         	});
       	});
+    }
+
+    function cancel_po(id){
+
+		var data = {
+			id:id,
+		}
+
+		$("#loading").show();
+
+		$.post('{{ url("cancel/purchase_order") }}', data, function(result, status, xhr){
+			if (result.status == true) {
+	        	openSuccessGritter("Success","Data Berhasil Diupdate");
+	        	$("#loading").hide();
+	        	setTimeout(function(){  window.location.reload() }, 2500);
+			}
+			else{
+				openErrorGritter("Success","Data Gagal Diupdate");
+			}
+		});
+	}
+
+	
+	function openSuccessGritter(title, message){
+      jQuery.gritter.add({
+        title: title,
+        text: message,
+        class_name: 'growl-success',
+        image: '{{ url("images/image-screen.png") }}',
+        sticky: false,
+        time: '3000'
+      });
+    }
+
+    function openErrorGritter(title, message) {
+        jQuery.gritter.add({
+          title: title,
+          text: message,
+          class_name: 'growl-danger',
+          image: '{{ url("images/image-stop.png") }}',
+          sticky: false,
+          time: '2000'
+        });
     }
 
 

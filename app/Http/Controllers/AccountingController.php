@@ -3569,7 +3569,7 @@ class AccountingController extends Controller
                 
                 foreach ($data3 as $datainv) {
                     $data3 = AccInvestmentDetail::where('no_item', $datainv->no_item)
-                    ->where('reff_number', $datainv->reff_number)
+                    ->where('reff_number', $datainv->no_pr)
                     ->update(['sudah_po' => null]);
                 }
             }
