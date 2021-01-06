@@ -899,16 +899,20 @@ public function fetchMinMoeMonitoring(Request $request)
                                    VIEW_YMPI_Emp_Attendance 
                               WHERE
                                    ( Emp_no = '".$key->employee_id."' AND FORMAT ( shiftstarttime, 'yyyy-MM-dd' ) = '".$now."' )");
-                         foreach ($shiftcode as $val) {
-                              $shiftdaily_code = $val->shiftdaily_code;
+                         if (count($shiftcode) > 0) {
+                              foreach ($shiftcode as $val) {
+                                   $shiftdaily_code = $val->shiftdaily_code;
+                              }
+                         }else{
+                              $shiftdaily_code = '-';
                          }
                          if (count($miraimobile) > 0) {
                               $attendances = (object) array(
                                    '0' => (object) array(
-                                             'attend_code' => 'SBH',
-                                             'shiftdaily_code' => $shiftdaily_code,
-                                             'emp_no' => $key->employee_id
-                                         ),
+                                        'attend_code' => 'SBH',
+                                        'shiftdaily_code' => $shiftdaily_code,
+                                        'emp_no' => $key->employee_id
+                                    ),
                               );
                          }
                          $attendance[] = $attendances;
@@ -923,8 +927,12 @@ public function fetchMinMoeMonitoring(Request $request)
                                              VIEW_YMPI_Emp_Attendance 
                                         WHERE
                                              ( Emp_no = '".$key->employee_id."' AND FORMAT ( shiftstarttime, 'yyyy-MM-dd' ) = '".$now."' )");
-                                   foreach ($shiftcode as $val) {
-                                        $shiftdaily_code = $val->shiftdaily_code;
+                                   if (count($shiftcode) > 0) {
+                                        foreach ($shiftcode as $val) {
+                                             $shiftdaily_code = $val->shiftdaily_code;
+                                        }
+                                   }else{
+                                        $shiftdaily_code = '-';
                                    }
                                    if (count($miraimobile) > 0) {
                                         $attendances = (object) array(
