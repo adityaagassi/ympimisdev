@@ -183,8 +183,8 @@
 		var dateto = $('#dateto').val();
 		var location = $('#location').val();
 
-		if(datefrom == "" || dateto == ""){
-			alert("Masukkan tanggal dari dan sampai");
+		if(datefrom == "" || dateto == "" || location == ""){
+			alert("Masukkan tanggal dan lokasi");
 			return false;
 		}
 
