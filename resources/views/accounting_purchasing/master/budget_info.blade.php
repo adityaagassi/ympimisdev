@@ -549,7 +549,7 @@
 	          				<label id="budget_adj1" name="budget_adj1"></label>
 	          			</td>
 	          			<td>
-	          				<label id="budget_penggunaan1" name="budget_penggunaan1"></label>
+	          				<label id="budget_penggunaan13" name="budget_penggunaan13"></label>
 	          			</td>
 	          			<td class="sisa">
 	          				<label id="budget_sisa1" name="budget_sisa1"></label>
@@ -566,7 +566,7 @@
 	          				<label id="budget_adj2" name="budget_adj2"></label>
 	          			</td>
 	          			<td>
-	          				<label id="budget_penggunaan2" name="budget_penggunaan2"></label>
+	          				<label id="budget_penggunaan14" name="budget_penggunaan14"></label>
 	          			</td>
 	          			<td class="sisa">
 	          				<label id="budget_sisa2" name="budget_sisa2"></label>
@@ -583,7 +583,7 @@
 	          				<label id="budget_adj3" name="budget_adj3"></label>
 	          			</td>
 	          			<td>
-	          				<label id="budget_penggunaan3" name="budget_penggunaan3"></label>
+	          				<label id="budget_penggunaan15" name="budget_penggunaan15"></label>
 	          			</td>
 	          			<td class="sisa">
 	          				<label id="budget_sisa3" name="budget_sisa3"></label>
@@ -967,9 +967,9 @@
 	    	$("#budget_penggunaan10").text('$0');
 	    	$("#budget_penggunaan11").text('$0');
 	    	$("#budget_penggunaan12").text('$0');
-	    	$("#budget_penggunaan1").text('$0');
-	    	$("#budget_penggunaan2").text('$0');
-	    	$("#budget_penggunaan3").text('$0');
+	    	$("#budget_penggunaan13").text('$0');
+	    	$("#budget_penggunaan14").text('$0');
+	    	$("#budget_penggunaan15").text('$0');
 
 	    	var d = new Date();
 	    	var n = d.getMonth();

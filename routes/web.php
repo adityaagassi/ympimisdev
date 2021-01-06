@@ -1568,6 +1568,9 @@ Route::get('fetch/budget/detail_table', 'AccountingController@fetch_budget_detai
 Route::get('budget/detail', 'AccountingController@budget_detail');
 Route::post('import/budget', 'AccountingController@import_budget');
 
+Route::get('budget/log', 'AccountingController@budget_log');
+Route::get('fetch/budget/log', 'AccountingController@fetch_budget_log');
+
 //Transfer Budget
 Route::get('transfer/budget', 'AccountingController@transfer_budget');
 Route::get('fetch/transfer', 'AccountingController@fetch_transfer_budget');
@@ -1688,8 +1691,12 @@ Route::group(['nav' => 'S53', 'middleware' => 'permission'], function(){
 //TANPO
 Route::group(['nav' => 'S53', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_tanpo/{id}', 'KnockDownController@indexKD');
-	
+	Route::post('fetch/kd_print_tanpo', 'KnockDownController@printLabelNew');
+	Route::post('fetch/kd_force_print_tanpo', 'KnockDownController@forcePrintLabel');
+
+	Route::get('index/print_label_tanpo/{kd_number}', 'KnockDownController@indexPrintLabelTanpo');	
 });
+
 
 //ZPRO
 Route::group(['nav' => 'S24', 'middleware' => 'permission'], function(){
@@ -3733,6 +3740,8 @@ Route::get('fetch/maintenance/spk/monitoring/urgent', 'MaintenanceController@fet
 Route::get('index/maintenance/spk/monitoring', 'MaintenanceController@indexMaintenanceMonitoring');
 Route::get('fetch/maintenance/spk/monitoring', 'MaintenanceController@fetchSPKProgress');
 Route::get('fetch/maintenance/spk/monitoring/detail', 'MaintenanceController@fetchSPKProgressDetail');
+
+Route::get('index/maintenance/spk/weekly', 'MaintenanceController@indexSPKWeekly');
 
 Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::get('index/maintenance/spk/operator', 'MaintenanceController@indexOperatorMonitoring');

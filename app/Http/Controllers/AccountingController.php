@@ -7082,6 +7082,71 @@ return Response::json($response);
 
 }
 
+public function budget_log()
+{
+    $title = 'Budget Log';
+    $title_jp = '';
+
+    $data = AccBudgetHistory::select('*')->whereNull('acc_budget_histories.deleted_at')
+    ->distinct()
+    ->get();
+
+    $status = AccBudgetHistory::select('status')->whereNull('acc_budget_histories.deleted_at')
+    ->distinct()
+    ->get();
+
+    return view('accounting_purchasing.master.budget_log', array(
+        'title' => $title,
+        'title_jp' => $title_jp,
+        'status' => $status
+    ))->with('page', 'Budget Log')
+    ->with('head', 'Budget Log');
+}
+
+public function fetch_budget_log(Request $request)
+    {
+        $budgetlog = AccBudgetHistory::where('id','>','3135')->orderBy('acc_budget_histories.id', 'desc');
+
+        if ($request->get('status') != null)
+        {
+            $budgetlog = $budgetlog->whereIn('acc_budget_histories.status', $request->get('status'));
+        }
+
+        $budgetlog = $budgetlog->select('*')
+        ->get();
+
+        return DataTables::of($budgetlog)
+
+        ->editColumn('budget_month', function ($budgetlog)
+        {
+            if ($budgetlog->status == "PR" || $budgetlog->status == "Investment") {
+                return $budgetlog->budget_month;           
+            }
+            else if ($budgetlog->status == "PO") {
+                return $budgetlog->budget_month. ' - ' .$budgetlog->budget_month_po;           
+            }
+            else if ($budgetlog->status == "Actual") {
+                return $budgetlog->budget_month. ' - ' .$budgetlog->budget_month_po. ' - ' .$budgetlog->budget_month_receive;           
+            }
+
+        })
+
+        ->addColumn('action', function ($budgetlog)
+        {
+            $id = $budgetlog->id;
+            if (Auth::user()->role_code == "MIS" || Auth::user()->role_code == "ACC" || Auth::user()->role_code == "ACC-SPL") {
+                return ' 
+                <a href="" class="btn btn-warning btn-xs"><i class="fa fa-eye"></i></a> 
+                ';
+            }else{
+                return '-';       
+            }
+        })
+        ->rawColumns(['budget_month' => 'budget_month','action' => 'action'])
+
+        ->make(true);
+    }
+
 public function budget_detail(Request $request)
 {
     $detail = AccBudget::where('budget_no','=',$request->get('id'))->first();
