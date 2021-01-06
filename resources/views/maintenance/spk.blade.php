@@ -656,10 +656,20 @@
 
 				$.each(result.op_list, function(index2, value2){
 					if (value2.order_no == value.order_no) {
+						// if (value2.op_name) {}
+						var op = value2.op_name.split(',');
 						if (value.start_actual) {
-							body += "<td>"+value.start_actual+"<br><span class='label label-success'>"+value2.op_name+"</span></td>";
+							body += "<td>"+value.start_actual+"<br>";
+							$.each(op, function(index3, value3){
+								body += "<span class='label label-success'>"+value3+"</span><br>";
+							})
+							body += "</td>";
 						} else {
-							body += "<td><span class='label label-success'>"+value2.op_name+"</span></td>";
+							body += "<td>";
+							$.each(op, function(index3, value3){
+								body += "<span class='label label-success'>"+value3+"</span><br>";
+							})
+							body += "</td>";
 						}
 					}
 				})
