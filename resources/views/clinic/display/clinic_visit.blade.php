@@ -82,11 +82,11 @@
 			<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
 		</div>	
 
-		<div class="col-xs-8">
+		<div class="col-xs-12">
 			<div id="container1" style="min-width: 300px; height: 200px; margin: 0 auto"></div>
 			<div id="container2" style="min-width: 300px; margin: 0 auto"></div>
 		</div>
-		<div class="col-xs-4">
+		<div class="col-xs-12" style="visibility: hidden;">
 			<div id="container3" style="height: 600px; margin: 0 auto"></div>
 		</div>
 	</div>
@@ -277,6 +277,7 @@
 				var konsultasi = [];
 				var istirahat = [];
 				var kecelakaan = [];
+				var pulang = [];
 
 				// var sum = 0;
 
@@ -301,6 +302,8 @@
 								istirahat.push(result.clinic_visit_detail[j].qty);
 							}else if(result.clinic_visit_detail[j].purpose == 'Kecelakaan Kerja'){
 								kecelakaan.push(result.clinic_visit_detail[j].qty);
+							}else if(result.clinic_visit_detail[j].purpose == 'Pulang (Sakit)'){
+								pulang.push(result.clinic_visit_detail[j].qty);
 							}
 						}
 					}
@@ -442,7 +445,17 @@
 						tooltip: {
 							valueSuffix: ' Person(s)'
 						}
-					},{
+					},
+					{
+						name: 'Pulang (Sakit)',
+						type: 'column',
+						data: pulang,
+						color: '#eeaaee',
+						tooltip: {
+							valueSuffix: ' Person(s)'
+						}
+					},
+					{
 						name: 'Percent Employees',
 						data: percentage,
 						yAxis: 1,

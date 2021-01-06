@@ -131,7 +131,7 @@
 							</div>
 
 							<div id='pemeriksaan-kesehatan'>
-								<div class="col-xs-12" style="margin-top: 1%; margin-left: 1%;">
+								<div class="col-xs-12" id="family-menu" style="margin-top: 1%; margin-left: 1%;">
 									<label>
 										<input id="family-check-box" type="checkbox" onchange="familyChange()">
 										Family Check Up
@@ -280,6 +280,8 @@
 	}
 
 	$('#purpose').on('change', function() {
+		$('#family-menu').show();
+
 		if(this.value == 'Pemeriksaan Kesehatan'){
 			$('#pemeriksaan-kesehatan').show();
 			$('#bed-field').show();
@@ -291,6 +293,11 @@
 		}else if(this.value == 'Istirahat Sakit'){
 			$('#pemeriksaan-kesehatan').hide();
 			$('#bed-field').show();
+			$('#cek-suhu').hide();
+		}else if(this.value == 'Pulang (Sakit)'){
+			$('#pemeriksaan-kesehatan').show();
+			$('#family-menu').hide();
+			$('#bed-field').hide();
 			$('#cek-suhu').hide();
 		}else if(this.value == 'Petugas Cek Suhu'){
 			$('#pemeriksaan-kesehatan').hide();

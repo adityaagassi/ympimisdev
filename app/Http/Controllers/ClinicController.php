@@ -130,6 +130,7 @@ class ClinicController extends Controller{
 			'Pemeriksaan Kesehatan',
 			'Konsultasi Kesehatan',
 			'Istirahat Sakit',
+			'Pulang (Sakit)',
 			'Laktasi',			
 			'Kecelakaan Kerja',
 			'Medical Check Up',
@@ -436,7 +437,7 @@ class ClinicController extends Controller{
 			(SELECT DISTINCT date( visited_at ) as tanggal, patient_list_id FROM clinic_patient_details
 			WHERE DATE_FORMAT( visited_at, '%Y-%m-%d' ) >= '".$datefrom."'
 			AND DATE_FORMAT( visited_at, '%Y-%m-%d' ) <= '".$dateto."'
-			AND purpose IN ('Pemeriksaan Kesehatan', 'Konsultasi Kesehatan', 'Istirahat Sakit', 'Kecelakaan Kerja')) AS log
+			AND purpose IN ('Pemeriksaan Kesehatan', 'Konsultasi Kesehatan', 'Istirahat Sakit', 'Pulang (Sakit)', 'Kecelakaan Kerja')) AS log
 			GROUP BY tanggal) AS log
 			ON date.week_date = log.tanggal");
 
@@ -464,7 +465,7 @@ class ClinicController extends Controller{
 			(select distinct c.employee_id, c.patient_list_id from clinic_patient_details c
 			where DATE_FORMAT(c.created_at,'%Y-%m-%d') >= '".$datefrom."'
 			and DATE_FORMAT(c.created_at,'%Y-%m-%d') <= '".$dateto."'
-			and c.purpose in ('Pemeriksaan Kesehatan', 'Konsultasi Kesehatan', 'Istirahat Sakit', 'Kecelakaan Kerja')) visit
+			and c.purpose in ('Pemeriksaan Kesehatan', 'Konsultasi Kesehatan', 'Istirahat Sakit', 'Pulang (Sakit)', 'Kecelakaan Kerja')) visit
 			left join employee_syncs e on visit.employee_id = e.employee_id
 			where e.department is not null
 			group by e.department
@@ -482,13 +483,15 @@ class ClinicController extends Controller{
 			UNION ALL
 			SELECT 'Istirahat Sakit' AS purpose
 			UNION ALL
+			SELECT 'Pulang (Sakit)' AS purpose
+			UNION ALL
 			SELECT 'Kecelakaan Kerja' AS purpose) as purpose) as dept
 			left join
 			(SELECT e.department, visit.purpose, count( visit.employee_id ) AS qty FROM
 			(SELECT DISTINCT c.employee_id, c.patient_list_id, c.purpose FROM clinic_patient_details c 
 			WHERE	DATE_FORMAT( c.created_at, '%Y-%m-%d' ) >= '".$datefrom."'
 			AND	DATE_FORMAT( c.created_at, '%Y-%m-%d' ) <= '".$dateto."'
-			AND c.purpose IN ( 'Pemeriksaan Kesehatan', 'Konsultasi Kesehatan', 'Istirahat Sakit', 'Kecelakaan Kerja' ) 
+			AND c.purpose IN ( 'Pemeriksaan Kesehatan', 'Konsultasi Kesehatan', 'Istirahat Sakit', 'Pulang (Sakit)', 'Kecelakaan Kerja' ) 
 			) visit
 			LEFT JOIN employee_syncs e ON visit.employee_id = e.employee_id 
 			WHERE e.department IS NOT NULL 
