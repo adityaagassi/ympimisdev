@@ -153,6 +153,7 @@
 								<th style="color:white;width: 5%; font-size: 1.2vw; text-align: center;">ID</th>
 								<th style="color:white;width: 30%; font-size: 1.2vw; text-align: center;">Name</th>
 								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Dept</th>
+								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Shift</th>
 								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Attendance</th>
 							</tr>					
 						</thead>
@@ -267,12 +268,14 @@
 
 					$.each(result.datacheck, function(key, value) {
 						var attnd = '-';
+						var shiftdaily_code = '-';
 						var emp_no = value.employee_id;
 						if (value.checks == null) {
 							$.each(result.attendance, function(key, value2) {
 								if (value2.length > 0) {
 									if (emp_no == value2[0].emp_no) {
 										attnd = value2[0].attend_code;
+										shiftdaily_code = value2[0].shiftdaily_code;
 									}
 								}else{
 								}
@@ -281,8 +284,8 @@
 							resultData += '<td style="font-size: 1vw;">'+ index +'</td>';
 							resultData += '<td style="font-size: 1vw;">'+ value.employee_id +'</td>';
 							resultData += '<td style="font-size: 1vw;">'+ value.name +'</td>';
-							// resultData += '<td style="font-size: 1vw;">'+ value.department_shortname +'<br>'+ value.section +'</td>';
 							resultData += '<td style="font-size: 1vw;">'+ value.department_shortname +'</td>';
+							resultData += '<td style="font-size: 1vw;">'+ shiftdaily_code +'</td>';
 							resultData += '<td style="font-size: 1vw;">'+ attnd +'</td>';
 							resultData += '</tr>';
 							index++;
@@ -426,11 +429,59 @@
 						}]
 
 					});
+					sortTable();
+					changeNumber();
 				}else{
 					alert('Failed to Retrieve Data');
 				}
 			}
 		});		
+}
+
+function sortTable() {
+  var table, rows, switching, i, x, y, shouldSwitch;
+  table = document.getElementById("tableNoCheck");
+  switching = true;
+  /*Make a loop that will continue until
+  no switching has been done:*/
+  while (switching) {
+    //start by saying: no switching is done:
+    switching = false;
+    rows = table.rows;
+    /*Loop through all table rows (except the
+    first, which contains table headers):*/
+    for (i = 1; i < (rows.length - 1); i++) {
+      //start by saying there should be no switching:
+      shouldSwitch = false;
+      /*Get the two elements you want to compare,
+      one from current row and one from the next:*/
+      x = rows[i].getElementsByTagName("TD")[4];
+      y = rows[i + 1].getElementsByTagName("TD")[4];
+      //check if the two rows should switch place:
+      if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+        //if so, mark as a switch and break the loop:
+        shouldSwitch = true;
+        break;
+      }
+    }
+    if (shouldSwitch) {
+      /*If a switch has been marked, make the switch
+      and mark that a switch has been done:*/
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+    }
+  }
+}
+
+function changeNumber() {
+	table = document.getElementById("tableNoCheck");
+	rows = table.rows;
+	var index = 1;
+	for (i = 1; i < rows.length; i++) {
+		x = rows[i].getElementsByTagName("TD")[0];
+		x.innerHTML = index;
+		index++;
+	}
 }
 
 function fetchTemperatureDetail(temperature){

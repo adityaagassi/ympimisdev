@@ -605,8 +605,7 @@ public function fetchMinMoeMonitoring(Request $request)
                LEFT JOIN employee_syncs ON employee_syncs.employee_id = ivms_temperatures.employee_id
                LEFT JOIN employees ON employees.employee_id = employee_syncs.employee_id 
           WHERE
-               ( DATE( date_in ) = '".$now."' AND employee_syncs.end_date IS NULL AND employees.remark != 'OFC' and employee_syncs.department = '".$request->get('location')."' ".$groupin.") 
-               OR ( DATE( date_in ) = '".$now."' AND employee_syncs.end_date IS NULL AND employees.remark != 'Jps' and employee_syncs.department = '".$request->get('location')."' ".$groupin.")
+                DATE( date_in ) = '".$now."' AND employee_syncs.end_date IS NULL AND employees.remark != 'OFC' AND employees.remark != 'Jps' and employee_syncs.department = '".$request->get('location')."' ".$groupin."
           GROUP BY
                temperature ASC");
      }
@@ -856,11 +855,7 @@ public function fetchMinMoeMonitoring(Request $request)
                     JOIN employee_syncs ON employee_syncs.employee_id = a.employee_id 
                     JOIN departments ON employee_syncs.department = departments.department_name 
                WHERE
-                    ( a.remark != 'OFC' and employee_syncs.department = '".$request->get('location')."' AND a.end_date IS NULL ".$groupin.") 
-                    OR (
-                         a.remark != 'Jps' and employee_syncs.department = '".$request->get('location')."'
-                    AND a.end_date IS NULL ".$groupin."
-                    )");
+                    a.remark != 'OFC' and a.remark != 'Jps' and employee_syncs.department = '".$request->get('location')."' AND a.end_date IS NULL ".$groupin);
           }
           
           foreach ($datacheck as $key) {
@@ -886,6 +881,7 @@ public function fetchMinMoeMonitoring(Request $request)
                          ) 
                          ) 
                          ) as attend_code,
+                         shiftdaily_code,
                          emp_no 
                          FROM
                          VIEW_YMPI_Emp_Attendance 
@@ -895,10 +891,22 @@ public function fetchMinMoeMonitoring(Request $request)
 
                     if (count($attendances) == 0) {
                          $miraimobile = DB::SELECT("SELECT * FROM miraimobile.quiz_logs where miraimobile.quiz_logs.answer_date = '".$now."' and miraimobile.quiz_logs.employee_id = '".$key->employee_id."'");
+
+                         $shiftcode = DB::connection('sunfish')->select("SELECT
+                                   shiftdaily_code,
+                                   emp_no 
+                              FROM
+                                   VIEW_YMPI_Emp_Attendance 
+                              WHERE
+                                   ( Emp_no = '".$key->employee_id."' AND FORMAT ( shiftstarttime, 'yyyy-MM-dd' ) = '".$now."' )");
+                         foreach ($shiftcode as $val) {
+                              $shiftdaily_code = $val->shiftdaily_code;
+                         }
                          if (count($miraimobile) > 0) {
                               $attendances = (object) array(
                                    '0' => (object) array(
                                              'attend_code' => 'SBH',
+                                             'shiftdaily_code' => $shiftdaily_code,
                                              'emp_no' => $key->employee_id
                                          ),
                               );
@@ -908,10 +916,21 @@ public function fetchMinMoeMonitoring(Request $request)
                          foreach ($attendances as $val) {
                               if ($val->attend_code == 'ABS') {
                                    $miraimobile = DB::SELECT("SELECT * FROM miraimobile.quiz_logs where miraimobile.quiz_logs.answer_date = '".$now."' and miraimobile.quiz_logs.employee_id = '".$key->employee_id."'");
+                                   $shiftcode = DB::connection('sunfish')->select("SELECT
+                                             shiftdaily_code,
+                                             emp_no 
+                                        FROM
+                                             VIEW_YMPI_Emp_Attendance 
+                                        WHERE
+                                             ( Emp_no = '".$key->employee_id."' AND FORMAT ( shiftstarttime, 'yyyy-MM-dd' ) = '".$now."' )");
+                                   foreach ($shiftcode as $val) {
+                                        $shiftdaily_code = $val->shiftdaily_code;
+                                   }
                                    if (count($miraimobile) > 0) {
                                         $attendances = (object) array(
                                              '0' => (object) array(
                                                        'attend_code' => 'SBH',
+                                                       'shiftdaily_code' => $shiftdaily_code,
                                                        'emp_no' => $key->employee_id
                                                    ),
                                         );
