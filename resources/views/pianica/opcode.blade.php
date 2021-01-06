@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @section('stylesheets')
+<link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
 thead input {
   width: 100%;
@@ -42,7 +43,7 @@ table.table-bordered > tfoot > tr > th{
     <span class="text-purple"> 作業者のリスト</span>
   </h1>
   <ol class="breadcrumb">
-    <li><a onclick="addOP()" class="btn btn-primary btn-sm" style="color:white">Create {{ $page }}</a></li>
+    <!-- <li><a onclick="addOP()" class="btn btn-primary btn-sm" style="color:white">Create {{ $page }}</a></li> -->
   </ol>
 </section>
 @endsection
@@ -63,28 +64,18 @@ table.table-bordered > tfoot > tr > th{
       <div class="box">
         <div class="box-body">
           <table id="example1" class="table table-bordered table-striped table-hover">
-            <thead style="background-color: rgba(126,86,134,.7);">
+            <thead style="background-color: rgb(126,86,134); color: #FFD700;">
               <tr>
-                <th>Operator</th>
-                <th>Code</th>
-                <th>Nik</th>
-                <th>Name</th>                
-                <th>Edit</th>
+                <th>NIK</th>
+                <th>Nama Karyawan</th>          
+                <th>Bagian</th>
+                <th>Code</th>      
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
              
             </tbody>
-            <tfoot>
-              <tr>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                
-              </tr>
-            </tfoot>
           </table>
         </div>
       </div>
@@ -121,9 +112,9 @@ table.table-bordered > tfoot > tr > th{
         
       </div>
       <div class="modal-footer">
-                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-warning">Update</button>
-              </div>
+          <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-warning">Update</button>
+        </div>
     </div>
   </div>
 </form>
@@ -148,6 +139,7 @@ table.table-bordered > tfoot > tr > th{
     }
   });
   jQuery(document).ready(function() { 
+    $('body').toggleClass("sidebar-collapse");
     fillexample1();
     $('.select2').select2({
       dropdownAutoWidth : true,
@@ -217,13 +209,11 @@ function fillexample1(){
       "url" : "{{ url("index/FillOpcode") }}",
     },
     "columns": [   
-    { "data": "bagian"}, 
-    { "data": "kode"},
     { "data": "nik"},
-    { "data": "nama"},        
-    { "data": "edit"}
-    // { "data": "hapus"}
-      ]
+    { "data": "nama"},       
+    { "data": "bagian"}, 
+    { "data": "kode"}, 
+    { "data": "action"}      ]
     });
 
   table.columns().every( function () {

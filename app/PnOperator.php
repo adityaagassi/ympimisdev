@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 class PnOperator extends Model
 {
-    use SoftDeletes;
+    // use SoftDeletes;
 
        protected $fillable = [
         'nik','nama','bagian','tag','line','created_by'

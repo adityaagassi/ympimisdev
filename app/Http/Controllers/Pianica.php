@@ -22,6 +22,8 @@ use DataTables;
 use Carbon\Carbon;
 use App\SkillEmployee;
 use App\SkillMap;
+use App\EmployeeSync;
+use App\Employee;
 
 
 class Pianica extends Controller{
@@ -238,28 +240,26 @@ class Pianica extends Controller{
 ///-------------- operator 
     public function op()
     {
+        $employees = EmployeeSync::where('section','Pianica Process Section')->get();
         $lines = $this->line;
         $bagians = $this->bagian;
         return view('pianica.op',array(        
             'lines' => $lines,
             'bagians' => $bagians,
+            'employees' => $employees
         ))->with('page', 'Operator');
     }
 
     public function fillop($value='')
     {
-        $op = "select * from pn_operators";
+        $op = "select * from pn_operators order by nama asc";
         $ops = DB::select($op);
         return DataTables::of($ops)
 
-        ->addColumn('edit', function($ops){
-            return '<a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-warning" onClick="editop(id)" id="' . $ops->id . '"><i class="fa fa-edit"></i></a>';
+        ->addColumn('action', function($ops){
+            return '<a href="javascript:void(0)" data-toggle="modal" class="btn btn-warning" onClick="editop(id)" id="' . $ops->id . '">Edit</a>&nbsp;<a href="javascript:void(0)" class="btn btn-danger" onClick="deleteop(id)" id="' . $ops->id . '" data-target="#modaldeleteOP" data-toggle="modal" title="Delete Operator">Delete</a>';
         })
-        ->addColumn('hapus', function($ops){
-            return '<a href="javascript:void(0)" class="btn btn-xs btn-danger" onClick="detailReport(id)" id="' . $ops->id . '">Delete</a>';
-        })
-        ->rawColumns(['edit' => 'edit', 'hapus'=>'hapus'])
-
+        ->rawColumns(['action' => 'action'])
         ->make(true);
     }
 
@@ -281,9 +281,9 @@ class Pianica extends Controller{
         try {  
             $op = PnOperator::where('id','=', $request->get('id'))       
             ->first(); 
-            $op->tag = $request->get('tag');
-            $op->nama = $request->get('nama');
-            $op->nik = $request->get('nik');
+            // $op->tag = $request->get('tag');
+            // $op->nama = $request->get('nama');
+            // $op->nik = $request->get('nik');
             $op->line = $request->get('line');
             $op->bagian = $request->get('bagian');
             $op->created_by = $id_user;
@@ -304,12 +304,13 @@ class Pianica extends Controller{
     public function addop(Request $request){
         $id_user = Auth::id();
 
+        $dataemp = EmployeeSync::select('name')->where('employee_id','=',$request->get('nik'))->first();
+        $datatag = Employee::select('tag')->where('employee_id','=',$request->get('nik'))->first();
         try { 
-
             $head = new PnOperator([
-                'tag' => $request->get('tag'),
-                'nama' => $request->get('nama'),
                 'nik' => $request->get('nik'),
+                'tag' => $datatag->tag,
+                'nama' => $dataemp->name,
                 'line' => $request->get('line'),
                 'bagian' => $request->get('bagian'),
                 'created_by' => $id_user
@@ -326,6 +327,31 @@ class Pianica extends Controller{
         }catch (QueryException $e){
             return redirect('/index/Op')->with('error', $e->getMessage())->with('page', 'Master Operator');
         }
+
+    }
+
+    public function deleteop(Request $request)
+   {
+    try
+    {
+        $deletePN = PnOperator::where('id', '=', $request->get('id'))->delete();
+
+        $response = array(
+            'status' => true,
+        );
+
+        return Response::json($response);
+
+    }
+    catch(QueryException $e)
+    {
+        $response = array(
+            'status' => false,
+            'message' => $e->getMessage()
+        );
+
+        return Response::json($response);
+    }
 
     }
 
@@ -421,17 +447,24 @@ public function input2(Request $request)
 public function op_pureto(Request $request)
 {  
     try {
+
+
         $op_pureto = PnOperator::where('tag', '=', $request->get('pureto'))
         ->where('bagian','=' ,$request->get('op'))
         ->select('nik', 'nama', 'tag')
         ->first();
 
+
         $employee_id = $op_pureto->nik;
 
         $skillemp = SkillEmployee::where('employee_id',$employee_id)->first();
 
+        var_dump($skillemp);
         $process = $skillemp->process;
         $location = $skillemp->location;
+
+
+
 
         if($op_pureto == null){
             $response = array(
@@ -2911,10 +2944,11 @@ public function getKensaBensuki3(Request $request)
 
 public function opcode()
 {
-   $dataop = "SELECT nik,nama from pn_operators";
-   $op = DB::select($dataop);
-   return view('pianica.opcode', array(
-    'op' => $op))->with('page', 'Master Code Operator');
+    $dataop = "SELECT nik,nama from pn_operators";
+    $op = DB::select($dataop);
+    return view('pianica.opcode', array(
+        'op' => $op)
+    )->with('page', 'Master Code Operator');
 }
 
 public function fillopcode($value='')
@@ -2924,13 +2958,12 @@ public function fillopcode($value='')
     $ops = DB::select($op);
     return DataTables::of($ops)
 
-    ->addColumn('edit', function($ops){
-        return '<a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-warning" onClick="editop(id)" id="' . $ops->id . '"><i class="fa fa-edit"></i></a>';
+    // <a href="javascript:void(0)" class="btn btn-xs btn-danger" onClick="detailReport(id)" id="' . $ops->id . '">Delete</a>
+
+    ->addColumn('action', function($ops){
+        return '<a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-warning" onClick="editop(id)" id="' . $ops->id . '"><i class="fa fa-edit"></i> Edit</a>';
     })
-    ->addColumn('hapus', function($ops){
-        return '<a href="javascript:void(0)" class="btn btn-xs btn-danger" onClick="detailReport(id)" id="' . $ops->id . '">Delete</a>';
-    })
-    ->rawColumns(['edit' => 'edit', 'hapus'=>'hapus'])
+    ->rawColumns(['action' => 'action'])
 
     ->make(true);
 }

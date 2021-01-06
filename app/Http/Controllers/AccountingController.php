@@ -1079,6 +1079,13 @@ class AccountingController extends Controller
 
                 $gm = $getgm->employee_id;
             }
+            //if Production Support Maka GM Pak Budhi
+            else if($request->get('department') == "Logistic Department" || $request->get('department') == "Production Control Department" || $request->get('department') == "Purchasing Control Department" || $request->get('department') == "Procurement Department" ){
+
+                $dgm = null;
+                $gm = $this->dgm;
+
+            }
             else{
                 $dgm = $this->dgm;
                 $gm = $this->gm;

@@ -2150,9 +2150,11 @@ Route::group(['nav' => 'S18', 'middleware' => 'permission'], function(){
 
 	//-----master op
 	Route::get('index/Op', 'Pianica@op');
+	Route::get('index/FillOp', 'Pianica@fillop');
 	Route::get('edit/Op', 'Pianica@editop');
 	Route::post('update/Op', 'Pianica@updateop');
 	Route::post('add/Op', 'Pianica@addop');
+	Route::post('delete/Op', 'Pianica@deleteop');
 
 
 	//----------bensuki
@@ -2184,8 +2186,6 @@ Route::group(['nav' => 'S18', 'middleware' => 'permission'], function(){
 	//------------ kakuning visual
 	Route::get('index/KakuningVisual', 'Pianica@kakuningvisual');
 	Route::post('index/SaveKakuningVisual', 'Pianica@saveKakuningVisual');
-	
-	Route::get('index/FillOp', 'Pianica@fillop');
 });
 
 Route::get('index/Pianica', 'Pianica@index');

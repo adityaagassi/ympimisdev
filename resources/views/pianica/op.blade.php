@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @section('stylesheets')
+<link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
 thead input {
   width: 100%;
@@ -40,10 +41,8 @@ table.table-bordered > tfoot > tr > th{
   <h1>
     List of {{ $page }}s
     <span class="text-purple"> 作業者のリスト</span>
+    <a onclick="addOP()" class="btn btn-primary btn-sm pull-right" style="color:white">Tambah Operator</a>
   </h1>
-  <ol class="breadcrumb">
-    <li><a onclick="addOP()" class="btn btn-primary btn-sm" style="color:white">Create {{ $page }}</a></li>
-  </ol>
 </section>
 @endsection
 
@@ -60,34 +59,22 @@ table.table-bordered > tfoot > tr > th{
   @endif
   <div class="row">
     <div class="col-xs-12">
-      <div class="box">
+      <div class="box box-solid">
         <div class="box-body">
           <table id="example1" class="table table-bordered table-striped table-hover">
-            <thead style="background-color: rgba(126,86,134,.7);">
+            <thead style="background-color: rgb(126,86,134); color: #FFD700;">
               <tr>
-                <th>Nik</th>
-                <th>Nama</th>
+                <th>NIK</th>
+                <th>Nama Karyawan</th>
                 <th>Bagian</th>
                 <th>Tag</th>
-                <th>Line</th>                
-                <th>Edit</th>
-                {{-- <th>Hapus</th> --}}
+                <th>Line</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
              
             </tbody>
-            <tfoot>
-              <tr>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                {{-- <th></th> --}}
-              </tr>
-            </tfoot>
           </table>
         </div>
       </div>
@@ -101,12 +88,9 @@ table.table-bordered > tfoot > tr > th{
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <h4 class="modal-title">Edit Operator</h4>
-        <br>
-        <h4 class="modal-title" id="modalDetailTitle"></h4>
+        <center><h4 class="modal-title" id="modalDetailTitle" style="background-color: rgb(126,86,134);color: white;font-weight: bold;font-size: 25px">Edit Operator</h4></center>
+      </div>
+      <div class="modal-body">
         <div class="row">
           <div class="col-md-12">
             <div class="col-md-10">
@@ -114,19 +98,13 @@ table.table-bordered > tfoot > tr > th{
                 
               </div>
             </div>
-        
           </div>
         </div>
-
-        <div id="tambah2">
-        <input type="text" name="lop2" id="lop2" value="1" hidden="">
-        </div>
-        
       </div>
       <div class="modal-footer">
-                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-warning">Update</button>
-              </div>
+        <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-success">Update</button>
+      </div>
     </div>
   </div>
 </form>
@@ -138,53 +116,84 @@ table.table-bordered > tfoot > tr > th{
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <h4 class="modal-title">Add Operator</h4>
-        <br>
-        <h4 class="modal-title" id="modalDetailTitle"></h4>
+        <center><h4 class="modal-title" id="modalDetailTitle" style="background-color: rgb(126,86,134);color: white;font-weight: bold;font-size: 25px">Tambah Operator</h4></center>
+      </div>
+      <div class="modal-body">
         <div class="row">
           <div class="col-md-12">
-            <div class="col-md-10">
-              <div class="form-group" id="modalDetailBodyEditHeaders">
+              <div class="form-group row">
                 <input type="text" name="cat" id="cat" value="" hidden>
-                <input type="text" name="loc" id="loc" value="'+ value.bagian +'" hidden>
-                <input type="text" name="id" value="'+ value.id +'" hidden>
-                <label>TAG</label>
-                <input class="form-control" style="width: 100%;" id="tag" name="tag" data-placeholder="Input a TAG..." value="">
-                <label>Nama<span class="text-red">*</span></label>
-                <input class="form-control" style="width: 100%;" id="nama" name="nama" data-placeholder="Input a NAMA..." required value="">
-                <label>NIK<span class="text-red">*</span></label>
-                <input class="form-control" style="width: 100%;" id="nik" name="nik" data-placeholder="Input a NIK..." required value="">
-                <label>Line</label>
-                <select class="form-control select2" style="width: 100%;" id="line" name="line" data-placeholder="Choose a Line..."><option></option>@foreach($lines as $lines1)<option value="{{ $lines1 }}">{{ $lines1 }}</option> @endforeach</select></div><div class="form-group">
-                  <label>Bagian<span class="text-red">*</span></label><select class="form-control select2" style="width: 100%;" id="bagian" name="bagian" data-placeholder="Choose a Bagian..." required>>@foreach($bagians as $bagians1)<option value="{{ $bagians1 }}">{{ $bagians1 }}</option>@endforeach</select></div><div class="form-group">
+                <input type="text" name="loc" id="loc" value="" hidden>
+                <input type="text" name="id" value="" hidden>
+                <label class="col-xs-4" style="text-align:right">Employee ID<span class="text-red">*</span></label>
+                <div class="col-sm-5">
+                  <select class="form-control select2" style="width: 100%;" id="nik" name="nik" data-placeholder="Pilih Operator . . .">
+                    <option value=""></option>
+                    @foreach($employees as $employees)
+                    <option value="{{ $employees->employee_id }}">{{ $employees->employee_id }} - {{ $employees->name }}</option>
+                    @endforeach
+                  </select>
+                </div>
               </div>
-            </div>
-        
+              <div class="form-group row">
+                <label class="col-sm-4" style="text-align:right">Line<span class="text-red">*</span></label>
+                <div class="col-sm-5">
+                  <select class="form-control select2" style="width: 100%;" id="line" name="line" data-placeholder="Pilih Line . . ." required="">
+                    <option value=""></option>
+                    @foreach($lines as $lines1)
+                    <option value="{{ $lines1 }}">{{ $lines1 }}</option>
+                    @endforeach
+                  </select>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4" style="text-align:right">Bagian<span class="text-red">*</span></label>
+                <div class="col-sm-5">
+                  <select class="form-control select2" style="width: 100%;" id="bagian" name="bagian" data-placeholder="Pilih Bagian . . ." required>>@foreach($bagians as $bagians1)<option value="{{ $bagians1 }}">{{ $bagians1 }}</option>@endforeach</select>
+                </div>
+              </div>
+              <!-- <div class="form-group row">
+                <label class="col-sm-4" style="text-align:right">Tag</label>
+                <div class="col-sm-5">
+                  <input class="form-control" style="width: 100%;" id="tag" name="tag" placeholder="Scan Tag RFID . . ." value="">
+                </div>
+              </div> -->
           </div>
         </div>
-
-        <div id="tambah2">
-        <input type="text" name="lop2" id="lop2" value="1" hidden="">
-        </div>
-        
       </div>
       <div class="modal-footer">
-                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-warning">Add</button>
-              </div>
+        <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-success"><i class="fa fa-plus"></i> Add</button>
+      </div>
     </div>
   </div>
 </form>
 </div>
+
+<div class="modal modal-danger fade" id="modaldeleteOP" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title" id="myModalLabel">Konfirmasi Hapus Data</h4>
+        </div>
+        <div class="modal-body">
+          Apakah anda yakin ingin menghapus Operator Ini ?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+          <a id="a" name="modalbuttondelete" type="button"  onclick="delete_op(this.id)" class="btn btn-danger">Yes</a>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
 @stop
 
 @section('scripts')
 <script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
+<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
 <script src="{{ url("js/buttons.flash.min.js")}}"></script>
 <script src="{{ url("js/jszip.min.js")}}"></script>
 <script src="{{ url("js/vfs_fonts.js")}}"></script>
@@ -197,23 +206,17 @@ table.table-bordered > tfoot > tr > th{
     }
   });
   jQuery(document).ready(function() { 
+    $('body').toggleClass("sidebar-collapse");
     fillexample1();
     $('.select2').select2({
       dropdownAutoWidth : true,
       width: '100%',
     });
+    clearAll();
   });
   
-  function deleteConfirmation(url, name, id) {
-    jQuery('.modal-body').text("Are you sure want to delete '" + name + "'");
-    jQuery('#modalDeleteButton').attr("href", url+'/'+id);
-  }
 
 function fillexample1(){
-  $('#example1 tfoot th').each( function () {
-    var title = $(this).text();
-    $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
-  });
   var table = $('#example1').DataTable({
     'dom': 'Bfrtip',
     'responsive': true,
@@ -275,24 +278,15 @@ function fillexample1(){
     { "data": "bagian"},
     { "data": "tag"},
     { "data": "line"},    
-    { "data": "edit"}
-    // { "data": "hapus"}
+    { "data": "action"}
       ]
     });
+}
 
-  table.columns().every( function () {
-    var that = this;
-
-    $( 'input', this.footer() ).on( 'keyup change', function () {
-      if ( that.search() !== this.value ) {
-        that
-        .search( this.value )
-        .draw();
-      }
-    } );
-  });
-
-  $('#example1 tfoot tr').appendTo('#example1 thead');
+function clearAll() {
+  $('#employee_id').val('').trigger('change');
+  $('#bagian').val('').trigger('change');
+  $('#line').val('').trigger('change');
 }
 
 function addOP() {
@@ -304,9 +298,6 @@ function editop(id){
       id : id
     }
     $.get('{{ url("edit/Op") }}', data, function(result, status, xhr){
-      console.log(status);
-      console.log(result);
-      console.log(xhr);
       if(xhr.status == 200){
         if(result.status){
           $('#modalDetailBodyEdit').html('');
@@ -314,7 +305,7 @@ function editop(id){
           
           $.each(result.id_op, function(key, value) {
             
-            $('#modalDetailBodyEditHeader').append('<input type="text" name="cat" id="cat" value="'+ value.line +'" hidden><input type="text" name="loc" id="loc" value="'+ value.bagian +'" hidden><input type="text" name="id" value="'+ value.id +'" hidden><label>TAG<span class="text-red">*</span></label><input class="form-control" style="width: 100%;" id="tag" name="tag" data-placeholder="Input a TAG..." required value="'+ value.tag +'"><label>Nama<span class="text-red">*</span></label><input class="form-control" style="width: 100%;" id="nama" name="nama" data-placeholder="Input a NAMA..." required value="'+ value.nama +'"><label>NIK<span class="text-red">*</span></label><input class="form-control" style="width: 100%;" id="nik" name="nik" data-placeholder="Input a NIK..." required value="'+ value.nik +'"><label>Line<span class="text-red">*</span></label><select class="form-control select2" style="width: 100%;" id="line" name="line" data-placeholder="Choose a Line..."><option></option>@foreach($lines as $lines)<option value="{{ $lines }}">{{ $lines }}</option> @endforeach</select></div><div class="form-group"><label>Bagian<span class="text-red">*</span></label><select class="form-control select2" style="width: 100%;" id="bagian" name="bagian" data-placeholder="Choose a Bagian..." required>>@foreach($bagians as $bagians)<option value="{{ $bagians }}">{{ $bagians }}</option>@endforeach</select></div><div class="form-group">').find('.select2').select2();
+            $('#modalDetailBodyEditHeader').append('<input type="text" name="cat" id="cat" value="'+ value.line +'" hidden><input type="text" name="loc" id="loc" value="'+ value.bagian +'" hidden><input type="text" name="id" value="'+ value.id +'" hidden><label>NIK<span class="text-red">*</span></label><input class="form-control" style="width: 100%;" id="nik" name="nik" data-placeholder="Input a NIK..." required readonly="" value="'+ value.nik +'"><label>Nama<span class="text-red">*</span></label><input class="form-control" style="width: 100%;" id="nama" name="nama" data-placeholder="Input a NAMA..." required readonly="" value="'+ value.nama +'"><label>TAG<span class="text-red">*</span></label><input class="form-control" style="width: 100%;" id="tag" name="tag" data-placeholder="Input a TAG..." readonly="" value="'+ value.tag +'"><label>Line<span class="text-red">*</span></label><select class="form-control select2" style="width: 100%;" id="line" name="line" data-placeholder="Choose a Line..."><option></option>@foreach($lines as $lines)<option value="{{ $lines }}">{{ $lines }}</option> @endforeach</select></div><div class="form-group"><label>Bagian<span class="text-red">*</span></label><select class="form-control select2" style="width: 100%;" id="bagian" name="bagian" data-placeholder="Choose a Bagian..." required>>@foreach($bagians as $bagians)<option value="{{ $bagians }}">{{ $bagians }}</option>@endforeach</select></div><div class="form-group">').find('.select2').select2();
            
           });    
 
@@ -334,6 +325,53 @@ function editop(id){
       }
     });
 }
+
+  function deleteop(id) {
+    $('[name=modalbuttondelete]').attr("id",id);
+  }
+
+  function delete_op(id){
+
+    var data = {
+      id:id,
+    }
+
+    $("#loading").show();
+
+    $.post('{{ url("delete/Op") }}', data, function(result, status, xhr){
+      if (result.status == true) {
+            openSuccessGritter("Success","Data Berhasil Diupdate");
+            $("#loading").hide();
+            setTimeout(function(){  window.location.reload() }, 2500);
+      }
+      else{
+        openErrorGritter("Success","Data Gagal Diupdate");
+      }
+    });
+  }
+
+  function openSuccessGritter(title, message){
+      jQuery.gritter.add({
+        title: title,
+        text: message,
+        class_name: 'growl-success',
+        image: '{{ url("images/image-screen.png") }}',
+        sticky: false,
+        time: '3000'
+      });
+    }
+
+    function openErrorGritter(title, message) {
+        jQuery.gritter.add({
+          title: title,
+          text: message,
+          class_name: 'growl-danger',
+          image: '{{ url("images/image-stop.png") }}',
+          sticky: false,
+          time: '2000'
+        });
+    }
+
 </script>
 
 @stop
