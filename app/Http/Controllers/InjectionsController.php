@@ -5223,18 +5223,29 @@ class InjectionsController extends Controller
         try {
             $operator_id = "";
             if ($request->get('status') == 'IN') {
-                $remark = 'antenna_1';
-                $transaction = DB::SELECT("SELECT
-                    -- ympirfid.injection_lists.tag 
-                    *,ympimis.injection_tags.id as injection_id,ympimis.injection_tags.tag as tag_rfid
-                FROM
-                    ympirfid.injection_lists
-                    JOIN ympimis.injection_tags ON ympimis.injection_tags.concat_kanban = ympirfid.injection_lists.tag 
-                    JOIN employee_syncs ON ympimis.employee_syncs.employee_id = ympimis.injection_tags.operator_id
-                WHERE
-                    ympirfid.injection_lists.remark = '".$remark."'
-                    AND ympimis.injection_tags.availability = 1");
-                $operator_id = "";
+                if ($request->get('tag_product') == '') {
+                    $remark = 'antenna_1';
+                    $transaction = DB::SELECT("SELECT
+                        -- ympirfid.injection_lists.tag 
+                        *,ympimis.injection_tags.id as injection_id,ympimis.injection_tags.tag as tag_rfid
+                    FROM
+                        ympirfid.injection_lists
+                        JOIN ympimis.injection_tags ON ympimis.injection_tags.concat_kanban = ympirfid.injection_lists.tag 
+                        JOIN employee_syncs ON ympimis.employee_syncs.employee_id = ympimis.injection_tags.operator_id
+                    WHERE
+                        ympirfid.injection_lists.remark = '".$remark."'
+                        AND ympimis.injection_tags.availability = 1");
+                    $operator_id = "";
+                }else{
+                    $transaction = DB::SELECT("SELECT
+                        *,ympimis.injection_tags.id as injection_id,ympimis.injection_tags.tag as tag_rfid
+                    FROM
+                        ympimis.injection_tags 
+                        JOIN employee_syncs ON ympimis.employee_syncs.employee_id = ympimis.injection_tags.operator_id
+                    WHERE
+                        ympimis.injection_tags.tag = '".$request->get('tag_product')."'
+                        AND ympimis.injection_tags.availability = 1");
+                }
             }else{
                 $remark = 'antenna_2';
                 $transaction = DB::SELECT("SELECT

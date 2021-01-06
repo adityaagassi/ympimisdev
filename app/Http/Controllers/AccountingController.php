@@ -3193,7 +3193,12 @@ class AccountingController extends Controller
 
             for ($i = 2;$i <= $lop2;$i++)
             {
-                $no_pr2 = "no_pr" . $i;
+                if ($po_data->remark == "PR"){
+                    $no_pr2 = "no_pr" . $i;
+                }
+                else if ($po_data->remark == "Investment"){
+                    $no_pr2 = "reff_number" . $i;
+                }
                 $no_item2 = "no_item" . $i;
                 $nama_item2 = "nama_item" . $i;
                 $item_budget2 = "item_budget" . $i;

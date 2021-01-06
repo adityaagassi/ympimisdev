@@ -46,7 +46,21 @@ table.table-bordered > tfoot > tr > th{
 		</p>
 	</div>
 	<div class="row">
-		<div class="col-xs-12" style="text-align: center;">
+		<?php if ($status == 'IN'): ?>
+			<div class="col-xs-12" style="text-align: center;">
+				<div class="row">
+					<div class="col-xs-8 col-xs-offset-1">
+						<input type="text" id="tag_product" placeholder="Scan Kanban Here . . ." style="width: 100%;font-size: 20px;text-align:center;padding: 10px">
+					</div>
+					<div class="col-xs-2">
+						<button class="btn btn-danger" onclick="cancel()" style="width:100%;font-size: 20px;font-weight: bold;">
+							CANCEL
+						</button>
+					</div>
+				</div>
+			</div>
+		<?php endif ?>
+		<div class="col-xs-12" style="text-align: center;padding-top: 10px">
 			<div class="row">
 				<div class="col-md-1">
 				</div>
@@ -220,8 +234,10 @@ table.table-bordered > tfoot > tr > th{
 
 	var counter = 0;
 	var arrPart = [];
+	var intervalCheck;
 
 	jQuery(document).ready(function() {
+		$('#resultScanBody').html("");
 		var status = '{{$status}}';
 		// if (status == 'OUT') {
 		// 	$('#modalOperator').modal({
@@ -233,7 +249,7 @@ table.table-bordered > tfoot > tr > th{
 		checkInjections();
 
 		// if ('{{$status}}' == 'IN') {
-			setInterval(checkInjections,5000);
+			intervalCheck = setInterval(checkInjections,5000);
 		// }
 		// checkInjections();
 
@@ -279,6 +295,21 @@ table.table-bordered > tfoot > tr > th{
 	// 		}			
 	// 	}
 	// });
+
+	$('#tag_product').keyup(function(event) {
+		if (event.keyCode == 13 || event.keyCode == 9) {
+			if(isNaN($('#tag_product').val()) == false){
+				checkInjections();
+				clearInterval(intervalCheck);
+				$('#tag_product').prop('disabled',true);
+			}else{
+				$('#tag_product').val('');
+				$('#tag_product').focus();
+				intervalCheck = setInterval(checkInjections,5000);
+				openErrorGritter('Error!','Tag Invalid');
+			}
+		}
+	});
 
 	// $('#tag_product').keyup(function(event) {
 	// 	if (event.keyCode == 13 || event.keyCode == 9) {
@@ -363,51 +394,61 @@ table.table-bordered > tfoot > tr > th{
 	// });
 
 	function checkInjections() {
+		$('#resultScanBody').html("");
+		var tag_product = $('#tag_product').val();
 		var data = {
-			status : '{{$status}}'
+			status : '{{$status}}',
+			tag_product:tag_product
 		}
 
 		var stts = '{{$status}}';
 
 		$.get('{{ url("fetch/injection/check_injections") }}', data, function(result, status, xhr){
 			if(result.status){
-				var bodyScan = "";
-				$('#resultScanBody').html("");
-				var statustransaction = '{{$status}}';
+				if (result.data.length > 0) {
+					var bodyScan = "";
+					$('#resultScanBody').html("");
+					var statustransaction = '{{$status}}';
 
-				var jumlah = 0;
-				// fillResult();
-				$.each(result.data, function(key, value) {
-					bodyScan += '<tr style="cursor:pointer;font-size:17px">';
-					bodyScan += '<td>'+value.material_number+'</td>';
-					bodyScan += '<td>'+value.part_name+'</td>';
-					bodyScan += '<td>'+value.part_type+'</td>';
-					bodyScan += '<td>'+value.color+'</td>';
-					bodyScan += '<td>'+value.cavity+'</td>';
-					bodyScan += '<td>'+value.no_kanban+'</td>';
-					bodyScan += '<td>'+value.shot+'</td>';
-					bodyScan += '<td>'+statustransaction+'</td>';
-					bodyScan += '<td><button class="btn btn-primary" style="height:100%;font-weight:bold" onclick="showModalCompletion(\''+value.process_id+'\',\''+value.injection_id+'\',\''+value.tag_rfid+'\',\''+value.material_number+'\',\''+value.part_name+'\',\''+value.part_type+'\',\''+value.color+'\',\''+value.cavity+'\',\''+value.shot+'\',\''+statustransaction+'\',\''+value.employee_id+'\',\''+value.name+'\')">TRANSAKSIKAN</button><button class="btn btn-danger" style="height:100%;font-weight:bold;padding-left:10px" onclick="deleteCompletion(\''+value.concat_kanban+'\')">CANCEL</button></td>';
-					bodyScan += '</tr>';
-					bodyScan += '<tr>';
-					bodyScan += '</tr>';
+					var jumlah = 0;
+					// fillResult();
+					$.each(result.data, function(key, value) {
+						bodyScan += '<tr style="cursor:pointer;font-size:17px">';
+						bodyScan += '<td>'+value.material_number+'</td>';
+						bodyScan += '<td>'+value.part_name+'</td>';
+						bodyScan += '<td>'+value.part_type+'</td>';
+						bodyScan += '<td>'+value.color+'</td>';
+						bodyScan += '<td>'+value.cavity+'</td>';
+						bodyScan += '<td>'+value.no_kanban+'</td>';
+						bodyScan += '<td>'+value.shot+'</td>';
+						bodyScan += '<td>'+statustransaction+'</td>';
+						// bodyScan += '<td><button class="btn btn-primary" style="height:100%;font-weight:bold" onclick="showModalCompletion(\''+value.process_id+'\',\''+value.injection_id+'\',\''+value.tag_rfid+'\',\''+value.material_number+'\',\''+value.part_name+'\',\''+value.part_type+'\',\''+value.color+'\',\''+value.cavity+'\',\''+value.shot+'\',\''+statustransaction+'\',\''+value.employee_id+'\',\''+value.name+'\')">TRANSAKSIKAN</button><button class="btn btn-danger" style="height:100%;font-weight:bold;padding-left:10px" onclick="deleteCompletion(\''+value.concat_kanban+'\')">CANCEL</button></td>';
+						bodyScan += '<td><button class="btn btn-primary" style="height:100%;font-weight:bold" onclick="showModalCompletion(\''+value.process_id+'\',\''+value.injection_id+'\',\''+value.tag_rfid+'\',\''+value.material_number+'\',\''+value.part_name+'\',\''+value.part_type+'\',\''+value.color+'\',\''+value.cavity+'\',\''+value.shot+'\',\''+statustransaction+'\',\''+value.employee_id+'\',\''+value.name+'\')">TRANSAKSIKAN</button></td>';
+						bodyScan += '</tr>';
+						bodyScan += '<tr>';
+						bodyScan += '</tr>';
 
-					if (statustransaction == 'IN') {
-						$('#operator_id').val(value.operator_id);
-					}
-				});
-
-				if (result.operator != "") {
-					$.each(result.operator, function(key, value) {
-						$('#operator_id').val(value.tag);
-						$('#operator_name').val(value.name);
+						if (statustransaction == 'IN') {
+							$('#operator_id').val(value.operator_id);
+						}
 					});
-				}
 
-				$('#resultScanBody').append(bodyScan);
+					if (result.operator != "") {
+						$.each(result.operator, function(key, value) {
+							$('#operator_id').val(value.tag);
+							$('#operator_name').val(value.name);
+						});
+					}
+
+					$('#resultScanBody').append(bodyScan);
+				}else{
+					cancel();
+					openErrorGritter('Error!', 'Tag Invalid.');
+					audio_error.play();
+				}
 			}
 			else{
-				openErrorGritter('Error!', 'Upload Failed.');
+				openErrorGritter('Error!', 'Failed.');
 				audio_error.play();
 			}
 		});
@@ -502,6 +543,10 @@ table.table-bordered > tfoot > tr > th{
 			}
 			$.post('{{ url("index/injection/cancel_completion") }}', data, function(result, status, xhr){
 				if(result.status){
+					$('#tag_product').val('');
+					$('#tag_product').removeAttr('disabled');
+					$('#tag_product').focus();
+					$('#resultScanBody').html("");
 					openSuccessGritter('Success','Sukses Membatalkan');
 				}else{
 					openErrorGritter('Error!','Gagal Membatalkan.');
@@ -551,6 +596,10 @@ table.table-bordered > tfoot > tr > th{
 				$("#tag_product").val("");
 				$("#tag_product").focus();
 				$('#operator_id').val("");
+				$('#tag_product').val('');
+				$('#tag_product').removeAttr('disabled');
+				$('#resultScanBody').html("");
+				intervalCheck = setInterval(checkInjections,5000);
 			}
 			else{
 				openErrorGritter('Error!', 'Upload Failed.');
