@@ -443,8 +443,8 @@ table.table-bordered > tfoot > tr > th{
 					$('#resultScanBody').append(bodyScan);
 				}else{
 					cancel();
-					openErrorGritter('Error!', 'Tag Invalid.');
-					audio_error.play();
+					// openErrorGritter('Error!', 'Tag Invalid.');
+					// audio_error.play();
 				}
 			}
 			else{
