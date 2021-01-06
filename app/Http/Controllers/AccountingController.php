@@ -3225,11 +3225,23 @@ class AccountingController extends Controller
                 ]);
 
                 $data->save();
-                $data3 = AccPurchaseRequisitionItem::where('item_code', $request->get($no_item2))
-                ->where('no_pr', $request->get($no_pr2))
-                ->update([
-                    'sudah_po' => 'true'
-                ]);
+
+                if ($po_data->remark == "PR") {
+                    $data3 = AccPurchaseRequisitionItem::where('item_code', $request->get($no_item2))
+                    ->where('no_pr', $request->get($no_pr2))
+                    ->update([
+                        'sudah_po' => 'true'
+                    ]);
+
+                }else if ($po_data->remark == "Investment"){
+                    $data3 = AccInvestmentDetail::where('no_item', $request->get($no_item2))
+                    ->where('reff_number', $request->get($no_pr2))
+                    ->update([
+                        'sudah_po' => 'true'
+                    ]);
+                }
+
+                
 
                  //Get Total Amount From Budget Log
 
