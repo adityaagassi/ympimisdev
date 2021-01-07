@@ -49,7 +49,7 @@ table.table-bordered > tfoot > tr > th{
 			<?php if ($status == 'OUT'): ?>
 				<div class="col-xs-12" style="text-align: center;">
 				<div class="row">
-					<div class="col-xs-10 col-xs-offset-1">
+					<div class="col-xs-10 col-xs-offset-1" style="padding-right: 0px;padding-left: 0px">
 						<input type="text" id="operator_name" placeholder="Operator" style="width: 100%;font-size: 17px;text-align:center;padding: 10px">
 					</div>
 				</div>
@@ -57,12 +57,17 @@ table.table-bordered > tfoot > tr > th{
 			<?php endif ?>
 			<div class="col-xs-12" style="text-align: center;">
 				<div class="row">
-					<div class="col-xs-8 col-xs-offset-1">
+					<div class="col-xs-8 col-xs-offset-1" style="padding-right: 0px;padding-left: 0px">
 						<input type="text" id="tag_product" placeholder="Scan Kanban Here . . ." style="width: 100%;font-size: 20px;text-align:center;padding: 10px">
 					</div>
-					<div class="col-xs-2">
+					<div class="col-xs-1" style="padding-right: 0px;padding-left: 0px">
 						<button class="btn btn-danger" onclick="cancel()" style="width:100%;font-size: 20px;font-weight: bold;">
 							CANCEL
+						</button>
+					</div>
+					<div class="col-xs-1" style="padding-right: 0px;padding-left: 0px">
+						<button class="btn btn-warning" onclick="location.reload()" style="width:100%;font-size: 20px;font-weight: bold;">
+							REFRESH
 						</button>
 					</div>
 				</div>
@@ -71,7 +76,7 @@ table.table-bordered > tfoot > tr > th{
 			<div class="row">
 				<div class="col-md-1">
 				</div>
-				<div class="col-md-10">
+				<div class="col-md-10" style="padding-right: 0px;padding-left: 0px">
 					<table id="resultScan" class="table table-bordered table-striped table-hover" style="width: 100%;">
 						<input type="hidden" id="operator_id">
 						<input type="hidden" id="operator_name">
