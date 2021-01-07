@@ -5247,19 +5247,31 @@ class InjectionsController extends Controller
                         AND ympimis.injection_tags.availability = 1");
                 }
             }else{
-                $remark = 'antenna_2';
-                $transaction = DB::SELECT("SELECT
-                    -- ympirfid.injection_lists.tag 
-                    *,ympimis.injection_tags.id as injection_id,ympimis.injection_tags.tag as tag_rfid,ympimis.injection_process_logs.id as process_id
-                FROM
-                    ympirfid.injection_lists
-                    JOIN ympimis.injection_tags ON ympimis.injection_tags.concat_kanban = ympirfid.injection_lists.tag 
-                    LEFT JOIN  ympimis.injection_process_logs ON ympimis.injection_tags.tag = tag_product and ympimis.injection_tags.material_number = ympimis.injection_process_logs.material_number and ympimis.injection_tags.cavity = ympimis.injection_process_logs.cavity AND ympimis.injection_process_logs.remark is null
-                    JOIN ympimis.employee_syncs ON ympimis.employee_syncs.employee_id = ympimis.injection_tags.operator_id
-                WHERE
-                    ympirfid.injection_lists.remark = '".$remark."'
-                    AND ympimis.injection_tags.availability = 2");
-                $operator_id = DB::SELECT("SELECT * from ympirfid.injection_lists left join ympimis.employee_syncs on ympimis.employee_syncs.employee_id = ympirfid.injection_lists.tag where tag like '%PI%'");
+                if ($request->get('tag_product') == '') {
+                    $remark = 'antenna_2';
+                    $transaction = DB::SELECT("SELECT
+                        -- ympirfid.injection_lists.tag 
+                        *,ympimis.injection_tags.id as injection_id,ympimis.injection_tags.tag as tag_rfid,ympimis.injection_process_logs.id as process_id
+                    FROM
+                        ympirfid.injection_lists
+                        JOIN ympimis.injection_tags ON ympimis.injection_tags.concat_kanban = ympirfid.injection_lists.tag 
+                        LEFT JOIN  ympimis.injection_process_logs ON ympimis.injection_tags.tag = tag_product and ympimis.injection_tags.material_number = ympimis.injection_process_logs.material_number and ympimis.injection_tags.cavity = ympimis.injection_process_logs.cavity AND ympimis.injection_process_logs.remark is null
+                        JOIN ympimis.employee_syncs ON ympimis.employee_syncs.employee_id = ympimis.injection_tags.operator_id
+                    WHERE
+                        ympirfid.injection_lists.remark = '".$remark."'
+                        AND ympimis.injection_tags.availability = 2");
+                    $operator_id = DB::SELECT("SELECT * from ympirfid.injection_lists left join ympimis.employee_syncs on ympimis.employee_syncs.employee_id = ympirfid.injection_lists.tag where tag like '%PI%'");
+                }else{
+                    $transaction = DB::SELECT("SELECT
+                        *,ympimis.injection_tags.id as injection_id,ympimis.injection_tags.tag as tag_rfid
+                    FROM
+                        ympimis.injection_tags 
+                        JOIN employee_syncs ON ympimis.employee_syncs.employee_id = ympimis.injection_tags.operator_id
+                    WHERE
+                        ympimis.injection_tags.tag = '".$request->get('tag_product')."'
+                        AND ympimis.injection_tags.availability = 2");
+                    $operator_id = "";
+                }
             }
 
             if ($operator_id == "") {

@@ -77,7 +77,7 @@ table.table-bordered > tfoot > tr > th{
 			<div class="col-md-12" style="padding-right: 2px">
 				<div class="box box-solid">
 					<div class="box-body">
-						<center style="background-color: #33d6ff;border-bottom: 3px solid black;border-top:0px;border-left:0px;border-right:0px;padding: 4px"><span style="font-size: 25px;text-align: center;font-weight: bold;">RESIN</span></center>
+						<center style="background-color: #33d6ff;border-bottom: 3px solid black;border-top:0px;border-left:0px;border-right:0px;"><span style="font-size: 25px;text-align: center;font-weight: bold;">RESIN</span></center>
 						<table id="tableResin" class="table table-bordered table-striped table-hover" style="width: 100%;padding-top: 0px">
 							
 						</table>
@@ -89,7 +89,7 @@ table.table-bordered > tfoot > tr > th{
 			<div class="col-md-12" style="padding-right: 2px;padding-left: 2px">
 				<div class="box box-solid">
 					<div class="box-body">
-						<center style="background-color: #33ff92;border-bottom: 3px solid black;border-top:0px;border-left:0px;border-right:0px;padding: 4px"><span style="font-size: 25px;text-align: center;font-weight: bold;">MOLDING</span></center>
+						<center style="background-color: #33ff92;border-bottom: 3px solid black;border-top:0px;border-left:0px;border-right:0px;"><span style="font-size: 25px;text-align: center;font-weight: bold;">MOLDING</span></center>
 						<table id="tableMolding" class="table table-bordered table-striped table-hover" style="width: 100%;padding-top: 0px">
 							
 						</table>
@@ -101,7 +101,7 @@ table.table-bordered > tfoot > tr > th{
 			<div class="col-md-12" style="padding-left: 2px">
 				<div class="box box-solid">
 					<div class="box-body">
-						<center style="background-color: #ffd333;border-bottom: 3px solid black;border-top:0px;border-left:0px;border-right:0px;padding: 4px"><span style="font-size: 25px;text-align: center;font-weight: bold;">INJECTION</span></center>
+						<center style="background-color: #ffd333;border-bottom: 3px solid black;border-top:0px;border-left:0px;border-right:0px;"><span style="font-size: 25px;text-align: center;font-weight: bold;">INJECTION</span></center>
 						<table id="tableInjection" class="table table-bordered table-striped table-hover" style="width: 100%;padding-top: 0px">
 
 						</table>
@@ -113,7 +113,7 @@ table.table-bordered > tfoot > tr > th{
 			<div class="col-md-12" style="padding-right: 2px">
 				<div class="box box-solid">
 					<div class="box-body">
-						<center style="background-color: #ff6e6e;border-bottom: 3px solid black;border-top:0px;border-left:0px;border-right:0px;padding: 4px"><span style="font-size: 25px;text-align: center;font-weight: bold;">NG LIST</span></center>
+						<center style="background-color: #ff6e6e;border-bottom: 3px solid black;border-top:0px;border-left:0px;border-right:0px;"><span style="font-size: 25px;text-align: center;font-weight: bold;">NG LIST INJECTION PROCESS</span></center>
 						<table id="tableNG" class="table table-bordered table-striped table-hover" style="width: 100%;padding-top: 0px">
 
 						</table>
@@ -125,7 +125,7 @@ table.table-bordered > tfoot > tr > th{
 			<div class="col-md-12" style="padding-left: 2px">
 				<div class="box box-solid">
 					<div class="box-body">
-						<center style="background-color: #cc6eff;border-bottom: 3px solid black;border-top:0px;border-left:0px;border-right:0px;padding: 4px"><span style="font-size: 25px;text-align: center;font-weight: bold;">TRANSACTION</span></center>
+						<center style="background-color: #cc6eff;border-bottom: 3px solid black;border-top:0px;border-left:0px;border-right:0px;"><span style="font-size: 25px;text-align: center;font-weight: bold;">TRANSACTION</span></center>
 						<table id="tableTransaction" class="table table-bordered table-striped table-hover" style="width: 100%;padding-top: 0px">
 							
 						</table>
@@ -137,7 +137,7 @@ table.table-bordered > tfoot > tr > th{
 			<div class="col-md-12" style="padding-left: 2px">
 				<div class="box box-solid">
 					<div class="box-body">
-						<center style="background-color: #cc6eff;border-bottom: 3px solid black;border-top:0px;border-left:0px;border-right:0px;padding: 4px"><span style="font-size: 25px;text-align: center;font-weight: bold;">KENSA KAKUNING</span></center>
+						<center style="background-color: #cc6eff;border-bottom: 3px solid black;border-top:0px;border-left:0px;border-right:0px;"><span style="font-size: 25px;text-align: center;font-weight: bold;">KENSA KAKUNING</span></center>
 						<table id="tableKensa" class="table table-bordered table-striped table-hover" style="width: 100%;padding-top: 0px">
 							
 						</table>
@@ -1247,35 +1247,35 @@ table.table-bordered > tfoot > tr > th{
 							$.each(result.injection_process, function(key, value) {
 								tableInjection += '<thead style="vertical-align:middle">';
 								tableInjection += '<tr>';
-								tableInjection += '<th style="width: 1%;font-weight: bold;border-top:0px;padding:0px">Material</th>';
-								tableInjection += '<th style="width: 1%;border-top:0px;padding:0px">'+value.material_number+'<br>'+value.mat_desc+'</th>';
+								tableInjection += '<th style="width: 1%;font-weight: bold;border-top:0px;padding:0px;padding:0px;font-size:20px;">Material</th>';
+								tableInjection += '<th style="width: 1%;border-top:0px;padding:0px;padding:0px;font-size:20px;">'+value.material_number+'<br>'+value.mat_desc+'</th>';
 								tableInjection += '</tr>';
 								tableInjection += '<tr>';
-								tableInjection += '<th style="width: 1%;font-weight: bold">Cavity</th>';
-								tableInjection += '<th style="width: 1%">'+value.cavity+'</th>';
+								tableInjection += '<th style="width: 1%;font-weight: bold;padding:0px;font-size:20px;">Cavity</th>';
+								tableInjection += '<th style="width: 1%;padding:0px;font-size:20px;">'+value.cavity+'</th>';
 								tableInjection += '</tr>';
 								tableInjection += '<tr>';
-								tableInjection += '<th style="width: 1%;font-weight: bold">No. Kanban</th>';
-								tableInjection += '<th style="width: 1%">'+value.no_kanban+'</th>';
+								tableInjection += '<th style="width: 1%;font-weight: bold;padding:0px;font-size:20px;">No. Kanban</th>';
+								tableInjection += '<th style="width: 1%;padding:0px;font-size:20px;">'+value.no_kanban+'</th>';
 								tableInjection += '</tr>';
 								tableInjection += '<tr>';
-								tableInjection += '<th style="width: 1%;font-weight: bold">Mulai Injeksi Kanban</th>';
-								tableInjection += '<th style="width: 1%">'+value.start_time+'</th>';
+								tableInjection += '<th style="width: 1%;font-weight: bold;padding:0px;font-size:20px;">Mulai Injeksi Kanban</th>';
+								tableInjection += '<th style="width: 1%;padding:0px;font-size:20px;">'+value.start_time+'</th>';
 								tableInjection += '</tr>';
 								tableInjection += '<tr>';
-								tableInjection += '<th style="width: 1%;font-weight: bold">Selesai Injeksi Kanban</th>';
-								tableInjection += '<th style="width: 1%">'+value.end_time+'</th>';
+								tableInjection += '<th style="width: 1%;font-weight: bold;padding:0px;font-size:20px;">Selesai Injeksi Kanban</th>';
+								tableInjection += '<th style="width: 1%;padding:0px;font-size:20px;">'+value.end_time+'</th>';
 								tableInjection += '</tr>';
-								tableInjection += '<th style="width: 1%;font-weight: bold">Mesin</th>';
-								tableInjection += '<th style="width: 1%">'+value.mesin+'</th>';
-								tableInjection += '</tr>';
-								tableInjection += '<tr>';
-								tableInjection += '<th style="width: 1%;font-weight: bold">Quantity</th>';
-								tableInjection += '<th style="width: 1%">'+value.qty+'</th>';
+								tableInjection += '<th style="width: 1%;font-weight: bold;padding:0px;font-size:20px;">Mesin</th>';
+								tableInjection += '<th style="width: 1%;padding:0px;font-size:20px;">'+value.mesin+'</th>';
 								tableInjection += '</tr>';
 								tableInjection += '<tr>';
-								tableInjection += '<th style="width: 1%;font-weight: bold">Operator</th>';
-								tableInjection += '<th style="width: 1%">'+value.employee_id+'<br>'+value.name+'</th>';
+								tableInjection += '<th style="width: 1%;font-weight: bold;padding:0px;font-size:20px;">Quantity</th>';
+								tableInjection += '<th style="width: 1%;padding:0px;font-size:20px;">'+value.qty+'</th>';
+								tableInjection += '</tr>';
+								tableInjection += '<tr>';
+								tableInjection += '<th style="width: 1%;font-weight: bold;padding:0px;font-size:20px;">Operator</th>';
+								tableInjection += '<th style="width: 1%;padding:0px;font-size:20px;">'+value.employee_id+'<br>'+value.name+'</th>';
 								tableInjection += '</tr>';
 								tableInjection += '</thead>';
 							});
@@ -1289,32 +1289,32 @@ table.table-bordered > tfoot > tr > th{
 							$.each(result.molding, function(key, value) {
 								tableMolding += '<thead style="vertical-align:middle">';
 								tableMolding += '<tr>';
-								tableMolding += '<th style="width: 1%;font-weight: bold;border-top:0px">Molding</th>';
-								tableMolding += '<th style="width: 1%;border-top:0px">'+value.part+'</th>';
+								tableMolding += '<th style="width: 1%;font-weight: bold;border-top:0px;padding:0px;font-size:20px;">Molding</th>';
+								tableMolding += '<th style="width: 1%;border-top:0px;padding:0px;font-size:20px;">'+value.part+'</th>';
 								tableMolding += '</tr>';
 								tableMolding += '<tr>';
-								tableMolding += '<th style="width: 1%;font-weight: bold">Last Shot Saat Pasang</th>';
-								tableMolding += '<th style="width: 1%">'+value.last_shot_pasang+'</th>';
+								tableMolding += '<th style="width: 1%;font-weight: bold;padding:0px;font-size:20px;">Last Shot Saat Pasang</th>';
+								tableMolding += '<th style="width: 1%;padding:0px;font-size:20px;">'+value.last_shot_pasang+'</th>';
 								tableMolding += '</tr>';
 								tableMolding += '<tr>';
-								tableMolding += '<th style="width: 1%;font-weight: bold">Last Shot Sebelum Injeksi</th>';
-								tableMolding += '<th style="width: 1%">'+value.last_shot_running+'</th>';
+								tableMolding += '<th style="width: 1%;font-weight: bold;padding:0px;font-size:20px;">Last Shot Sebelum Injeksi</th>';
+								tableMolding += '<th style="width: 1%;padding:0px;font-size:20px;">'+value.last_shot_running+'</th>';
 								tableMolding += '</tr>';
 								tableMolding += '<tr>';
-								tableMolding += '<th style="width: 1%;font-weight: bold">Mulai Pasang Molding</th>';
-								tableMolding += '<th style="width: 1%">'+value.start_time+'</th>';
+								tableMolding += '<th style="width: 1%;font-weight: bold;padding:0px;font-size:20px;">Mulai Pasang Molding</th>';
+								tableMolding += '<th style="width: 1%;padding:0px;font-size:20px;">'+value.start_time+'</th>';
 								tableMolding += '</tr>';
 								tableMolding += '<tr>';
-								tableMolding += '<th style="width: 1%;font-weight: bold">Selesai Pasang Molding</th>';
-								tableMolding += '<th style="width: 1%">'+value.end_time+'</th>';
+								tableMolding += '<th style="width: 1%;font-weight: bold;padding:0px;font-size:20px;">Selesai Pasang Molding</th>';
+								tableMolding += '<th style="width: 1%;padding:0px;font-size:20px;">'+value.end_time+'</th>';
 								tableMolding += '</tr>';
 								tableMolding += '<tr>';
-								tableMolding += '<th style="width: 1%;font-weight: bold">Note</th>';
-								tableMolding += '<th style="width: 1%">'+value.note+'</th>';
+								tableMolding += '<th style="width: 1%;font-weight: bold;padding:0px;font-size:20px;">Note</th>';
+								tableMolding += '<th style="width: 1%;padding:0px;font-size:20px;">'+value.note+'</th>';
 								tableMolding += '</tr>';
 								tableMolding += '<tr>';
-								tableMolding += '<th style="width: 1%;font-weight: bold">Operator</th>';
-								tableMolding += '<th style="width: 1%">'+value.pic+'</th>';
+								tableMolding += '<th style="width: 1%;font-weight: bold;padding:0px;font-size:20px;">Operator</th>';
+								tableMolding += '<th style="width: 1%;padding:0px;font-size:20px;">'+value.pic+'</th>';
 								tableMolding += '</tr>';
 								tableMolding += '</thead>';
 							});
@@ -1328,32 +1328,32 @@ table.table-bordered > tfoot > tr > th{
 							$.each(result.dryer, function(key, value) {
 								tableResin += '<thead style="vertical-align:middle">';
 								tableResin += '<tr>';
-								tableResin += '<th style="width: 1%;font-weight: bold;border-top:0px">Material</th>';
-								tableResin += '<th style="width: 1%;border-top:0px">'+value.material_number+'<br>'+value.material_description+'</th>';
+								tableResin += '<th style="width: 1%;font-weight: bold;border-top:0px;padding:0px;font-size:20px;">Material</th>';
+								tableResin += '<th style="width: 1%;border-top:0px;padding:0px;font-size:20px;">'+value.material_number+'<br>'+value.material_description+'</th>';
 								tableResin += '</tr>';
 								tableResin += '<tr>';
-								tableResin += '<th style="width: 1%;font-weight: bold">Dryer</th>';
-								tableResin += '<th style="width: 1%">'+value.dryer+'</th>';
+								tableResin += '<th style="width: 1%;font-weight: bold;padding:0px;font-size:20px;">Dryer</th>';
+								tableResin += '<th style="width: 1%;padding:0px;font-size:20px;">'+value.dryer+'</th>';
 								tableResin += '</tr>';
 								tableResin += '<tr>';
-								tableResin += '<th style="width: 1%;font-weight: bold">Lot</th>';
-								tableResin += '<th style="width: 1%">'+value.lot_number+'</th>';
+								tableResin += '<th style="width: 1%;font-weight: bold;padding:0px;font-size:20px;">Lot</th>';
+								tableResin += '<th style="width: 1%;padding:0px;font-size:20px;">'+value.lot_number+'</th>';
 								tableResin += '</tr>';
 								tableResin += '<tr>';
-								tableResin += '<th style="width: 1%;font-weight: bold">Warna</th>';
-								tableResin += '<th style="width: 1%">'+value.color+'</th>';
+								tableResin += '<th style="width: 1%;font-weight: bold;padding:0px;font-size:20px;">Warna</th>';
+								tableResin += '<th style="width: 1%;padding:0px;font-size:20px;">'+value.color+'</th>';
 								tableResin += '</tr>';
 								tableResin += '<tr>';
-								tableResin += '<th style="width: 1%;font-weight: bold">Quantity</th>';
-								tableResin += '<th style="width: 1%">'+value.qty+'</th>';
+								tableResin += '<th style="width: 1%;font-weight: bold;padding:0px;font-size:20px;">Quantity</th>';
+								tableResin += '<th style="width: 1%;padding:0px;font-size:20px;">'+value.qty+'</th>';
 								tableResin += '</tr>';
 								tableResin += '<tr>';
-								tableResin += '<th style="width: 1%;font-weight: bold">Waktu Pengisian</th>';
-								tableResin += '<th style="width: 1%">'+value.created_at+'</th>';
+								tableResin += '<th style="width: 1%;font-weight: bold;padding:0px;font-size:20px;">Waktu Pengisian</th>';
+								tableResin += '<th style="width: 1%;padding:0px;font-size:20px;">'+value.created_at+'</th>';
 								tableResin += '</tr>';
 								tableResin += '<tr>';
-								tableResin += '<th style="width: 1%;font-weight: bold">Operator</th>';
-								tableResin += '<th style="width: 1%">'+value.employee_id+'<br>'+value.name+'</th>';
+								tableResin += '<th style="width: 1%;font-weight: bold;padding:0px;font-size:20px;">Operator</th>';
+								tableResin += '<th style="width: 1%;padding:0px;font-size:20px;">'+value.employee_id+'<br>'+value.name+'</th>';
 								tableResin += '</tr>';
 								tableResin += '</thead>';
 							});
@@ -1376,8 +1376,8 @@ table.table-bordered > tfoot > tr > th{
 
 									for(var i = 0; i < ng_arr.length; i++){
 										tableNG += '<tr>';
-										tableNG += '<th>'+ng_arr[i]+'</th>';
-										tableNG += '<th>'+qty_arr[i]+'</th>';
+										tableNG += '<th style="padding:0px;font-size:20px;">'+ng_arr[i]+'</th>';
+										tableNG += '<th style="padding:0px;font-size:20px;">'+qty_arr[i]+'</th>';
 										tableNG += '</tr>';
 									}
 								}
@@ -1403,12 +1403,12 @@ table.table-bordered > tfoot > tr > th{
 							tableTransaction += '</tr>';
 							$.each(result.transaction, function(key, value) {
 								tableTransaction += '<tr>';
-								tableTransaction += '<th>'+value.material_number+'<br>'+value.mat_desc+'</th>';
-								tableTransaction += '<th>'+value.location+'</th>';
-								tableTransaction += '<th>'+value.quantity+'</th>';
-								tableTransaction += '<th>'+value.status+'</th>';
-								tableTransaction += '<th>'+value.employee_id+'<br>'+value.name+'</th>';
-								tableTransaction += '<th>'+value.created_at+'</th>';
+								tableTransaction += '<th style="padding:0px;font-size:20px;">'+value.material_number+'<br>'+value.mat_desc+'</th>';
+								tableTransaction += '<th style="padding:0px;font-size:20px;">'+value.location+'</th>';
+								tableTransaction += '<th style="padding:0px;font-size:20px;">'+value.quantity+'</th>';
+								tableTransaction += '<th style="padding:0px;font-size:20px;">'+value.status+'</th>';
+								tableTransaction += '<th style="padding:0px;font-size:20px;">'+value.employee_id+'<br>'+value.name+'</th>';
+								tableTransaction += '<th style="padding:0px;font-size:20px;">'+value.created_at+'</th>';
 								tableTransaction += '</tr>';
 							});
 							tableTransaction += '</thead>';	

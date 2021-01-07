@@ -46,7 +46,15 @@ table.table-bordered > tfoot > tr > th{
 		</p>
 	</div>
 	<div class="row">
-		<?php if ($status == 'IN'): ?>
+			<?php if ($status == 'OUT'): ?>
+				<div class="col-xs-12" style="text-align: center;">
+				<div class="row">
+					<div class="col-xs-10 col-xs-offset-1">
+						<input type="text" id="operator_name" placeholder="Operator" style="width: 100%;font-size: 17px;text-align:center;padding: 10px">
+					</div>
+				</div>
+			</div>
+			<?php endif ?>
 			<div class="col-xs-12" style="text-align: center;">
 				<div class="row">
 					<div class="col-xs-8 col-xs-offset-1">
@@ -59,7 +67,6 @@ table.table-bordered > tfoot > tr > th{
 					</div>
 				</div>
 			</div>
-		<?php endif ?>
 		<div class="col-xs-12" style="text-align: center;padding-top: 10px">
 			<div class="row">
 				<div class="col-md-1">
@@ -239,73 +246,78 @@ table.table-bordered > tfoot > tr > th{
 	jQuery(document).ready(function() {
 		$('#resultScanBody').html("");
 		var status = '{{$status}}';
-		// if (status == 'OUT') {
-		// 	$('#modalOperator').modal({
-		// 		backdrop: 'static',
-		// 		keyboard: false
-		// 	});
-		// }
+		if (status == 'OUT') {
+			$('#modalOperator').modal({
+				backdrop: 'static',
+				keyboard: false
+			});
+		}
 		fillResult();
-		checkInjections();
+		// checkInjections();
 
 		// if ('{{$status}}' == 'IN') {
-			intervalCheck = setInterval(checkInjections,5000);
+			// intervalCheck = setInterval(checkInjections,5000);
 		// }
 		// checkInjections();
 
       $('body').toggleClass("sidebar-collapse");
 		$("#tag_product").val("");
-		$('#tag_product').focus();
+		
 		$("#operator").val("");
-		$('#operator').focus();
+		if ('{{$status}}' == 'IN') {
+			$('#tag_product').focus();
+		}else{
+			$('#operator').focus();
+		}
 		$("#operator_id").val("");
 		$("#operator_name").val("-");
 	});
 
-	// $('#modalOperator').on('shown.bs.modal', function () {
-	// 	$('#operator').focus();
-	// });
+	$('#modalOperator').on('shown.bs.modal', function () {
+		$('#operator').focus();
+	});
 
-	// $('#operator').keydown(function(event) {
-	// 	if (event.keyCode == 13 || event.keyCode == 9) {
-	// 		if($("#operator").val().length >= 8){
-	// 			var data = {
-	// 				employee_id : $("#operator").val()
-	// 			}
+	$('#operator').keydown(function(event) {
+		if (event.keyCode == 13 || event.keyCode == 9) {
+			if($("#operator").val().length >= 8){
+				var data = {
+					employee_id : $("#operator").val()
+				}
 				
-	// 			$.get('{{ url("scan/injeksi/operator") }}', data, function(result, status, xhr){
-	// 				if(result.status){
-	// 					openSuccessGritter('Success!', result.message);
-	// 					$('#modalOperator').modal('hide');
-	// 					$('#operator_name').val(result.employee.employee_id+' - '+result.employee.name);
-	// 					$('#operator_id').val(result.employee.employee_id);
-	// 					$('#tag_product').focus();
-	// 				}
-	// 				else{
-	// 					audio_error.play();
-	// 					openErrorGritter('Error', result.message);
-	// 					$('#operator').val('');
-	// 				}
-	// 			});
-	// 		}
-	// 		else{
-	// 			openErrorGritter('Error!', 'Employee ID Invalid.');
-	// 			audio_error.play();
-	// 			$("#operator").val("");
-	// 		}			
-	// 	}
-	// });
+				$.get('{{ url("scan/injeksi/operator") }}', data, function(result, status, xhr){
+					if(result.status){
+						openSuccessGritter('Success!', result.message);
+						$('#modalOperator').modal('hide');
+						$('#operator_name').val(result.employee.employee_id+' - '+result.employee.name);
+						$('#operator_name').prop('disabled',true);
+						$('#operator_id').val(result.employee.employee_id);
+						$('#tag_product').focus();
+					}
+					else{
+						audio_error.play();
+						openErrorGritter('Error', result.message);
+						$('#operator').val('');
+					}
+				});
+			}
+			else{
+				openErrorGritter('Error!', 'Employee ID Invalid.');
+				audio_error.play();
+				$("#operator").val("");
+			}			
+		}
+	});
 
 	$('#tag_product').keyup(function(event) {
 		if (event.keyCode == 13 || event.keyCode == 9) {
 			if(isNaN($('#tag_product').val()) == false){
 				checkInjections();
-				clearInterval(intervalCheck);
+				// clearInterval(intervalCheck);
 				$('#tag_product').prop('disabled',true);
 			}else{
 				$('#tag_product').val('');
 				$('#tag_product').focus();
-				intervalCheck = setInterval(checkInjections,5000);
+				// intervalCheck = setInterval(checkInjections,5000);
 				openErrorGritter('Error!','Tag Invalid');
 			}
 		}
@@ -438,6 +450,8 @@ table.table-bordered > tfoot > tr > th{
 							$('#operator_id').val(value.tag);
 							$('#operator_name').val(value.name);
 						});
+					}else{
+
 					}
 
 					$('#resultScanBody').append(bodyScan);
@@ -491,7 +505,7 @@ table.table-bordered > tfoot > tr > th{
 		if (status == 'IN') {
 			table += '<td style="font-size:15px" id="operator_injeksi">'+employee_id+' - '+name+'</td>';
 		}else{
-			table += '<td style="font-size:15px" id="operator_injeksi">'+$('#operator_id').val()+' - '+$('#operator_name').val()+'</td>';
+			table += '<td style="font-size:15px" id="operator_injeksi">'+$('#operator_name').val()+'</td>';
 		}
 		table += '</tr>';
 		table += '</table>';
@@ -586,20 +600,25 @@ table.table-bordered > tfoot > tr > th{
 		$.post('{{ url("index/injection/completion") }}', data, function(result, status, xhr){
 			if(result.status){
 				openSuccessGritter('Success!', 'Transaction Success');
-				$('#loading').hide();
-				$('#resultScanBody').html("");
-				$('#resultNGBody').html("");
-				fillResult();
-				checkInjections();
-				$('#modalCompletion').modal('hide');
-				$('#tag_product').removeAttr("disabled");
-				$("#tag_product").val("");
-				$("#tag_product").focus();
-				$('#operator_id').val("");
-				$('#tag_product').val('');
-				$('#tag_product').removeAttr('disabled');
-				$('#resultScanBody').html("");
-				intervalCheck = setInterval(checkInjections,5000);
+				if ('{{$status}}' == "IN") {
+					$('#loading').hide();
+					$('#resultScanBody').html("");
+					$('#resultNGBody').html("");
+					fillResult();
+					checkInjections();
+					$('#modalCompletion').modal('hide');
+					$('#tag_product').removeAttr("disabled");
+					$("#tag_product").val("");
+					$("#tag_product").focus();
+					$('#operator_id').val("");
+					$('#tag_product').val('');
+					$('#tag_product').removeAttr('disabled');
+					$('#resultScanBody').html("");
+					// intervalCheck = setInterval(checkInjections,5000);
+				}else{
+					openSuccessGritter('Success','Sukses Transaksi');
+					location.reload();
+				}
 			}
 			else{
 				openErrorGritter('Error!', 'Upload Failed.');
