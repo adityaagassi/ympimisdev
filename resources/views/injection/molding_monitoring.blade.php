@@ -240,9 +240,9 @@ table > thead > tr > th{
 			if(xhr.status == 200){
 				if(result.status){
 
-					$('#cont').empty();
-					$('#cont2').empty();
-					$('#cont3').empty();
+					$('#cont').html("");
+					$('#cont2').html("");
+					$('#cont3').html("");
 
 					var part = [];
 					var product = [];
@@ -343,19 +343,19 @@ table > thead > tr > th{
 					var data_maintenance = [];
 					var body_maintenance = '';
 
-					for (var i = 0; i < result.query_not_ready.length; i++) {
-						part_maintenance.push(result.query_not_ready[i].part);
-						product_maintenance.push(result.query_not_ready[i].product);
-						last_counter_maintenance.push(parseInt((parseInt(result.query_not_ready[i].last_counter) / parseInt(result.query_not_ready[i].qty_shot)).toFixed(0)));
-						ng_count_maintenance.push(parseInt(result.query_not_ready[i].ng_count));
-						if (result.query_not_ready[i].status_mesin == null && result.query_not_ready[i].status == "LEPAS") {
+					for (var i = 0; i < result.query_maintenance.length; i++) {
+						part_maintenance.push(result.query_maintenance[i].part);
+						product_maintenance.push(result.query_maintenance[i].product);
+						last_counter_maintenance.push(parseInt((parseInt(result.query_maintenance[i].last_counter) / parseInt(result.query_maintenance[i].qty_shot)).toFixed(0)));
+						ng_count_maintenance.push(parseInt(result.query_maintenance[i].ng_count));
+						if (result.query_maintenance[i].status_mesin == null && result.query_maintenance[i].status == "LEPAS") {
 							status_mesin_maintenance.push('STORAGE');
-						}else if(result.query_not_ready[i].status_mesin == null && result.query_not_ready[i].status == "DIPERBAIKI"){
+						}else if(result.query_maintenance[i].status_mesin == null && result.query_maintenance[i].status == "DIPERBAIKI"){
 							status_mesin_maintenance.push('PERIODIK');
 						}else{
-							status_mesin_maintenance.push(result.query_not_ready[i].status_mesin);
+							status_mesin_maintenance.push(result.query_maintenance[i].status_mesin);
 						}
-						data_maintenance.push([parseInt((parseInt(result.query_not_ready[i].last_counter) / parseInt(result.query_not_ready[i].qty_shot)).toFixed(0))]);
+						data_maintenance.push([parseInt((parseInt(result.query_maintenance[i].last_counter) / parseInt(result.query_maintenance[i].qty_shot)).toFixed(0))]);
 
 						var a = i+1;
 						body_maintenance += '<div class="gambar" id="container2'+a+'"></div>';
@@ -366,6 +366,7 @@ table > thead > tr > th{
 						var a = k+1;
 						var container2 = 'container2'+a;
 						var containerin = "";
+						$('#'+container2).html("");
 
 						containerin += '<table style="text-align:center;">';
 
