@@ -264,7 +264,7 @@ class WeldingProcessController extends Controller
 	public function indexKensaJigReport()
 	{
 		$title = 'Kensa Welding Jig Report';
-		$title_jp = '??';
+		$title_jp = '溶接検査治の報告';
 
 		return view('processes.welding.jig.kensa_report', array(
 			'title' => $title,
@@ -275,7 +275,7 @@ class WeldingProcessController extends Controller
 	public function indexRepairJigReport()
 	{
 		$title = 'Repair Welding Jig Report';
-		$title_jp = '??';
+		$title_jp = '溶接処理治具の報告';
 
 		return view('processes.welding.jig.repair_report', array(
 			'title' => $title,

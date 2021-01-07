@@ -6104,7 +6104,7 @@ class InjectionsController extends Controller
             'title_jp' => $title_jp,
             'material' => $material,
             'material2' => $material,
-        ))->with('page', 'Injection Tag')->with('jpn', '???');
+        ))->with('page', 'Injection Tag')->with('jpn', '成形タグ');
     }
 
     public function fetchInjectionTag(Request $request)
@@ -6308,7 +6308,7 @@ class InjectionsController extends Controller
         return view('injection.traceability',array(
             'title' => $title,
             'title_jp' => $title_jp,
-        ))->with('page', 'Injection Traceability')->with('jpn', '???');
+        ))->with('page', 'Injection Traceability')->with('jpn', '成形トレーサビリティ');
     }
 
     public function fetchInjectionTraceability(Request $request)
@@ -6496,7 +6496,7 @@ class InjectionsController extends Controller
         return view('injection.inventory',array(
             'title' => $title,
             'title_jp' => $title_jp,
-        ))->with('page', 'Injection Inventories')->with('jpn', '???');
+        ))->with('page', 'Injection Inventories')->with('jpn', '成形在庫');
     }
 
     public function fetchInjectionInventories(Request $request)
