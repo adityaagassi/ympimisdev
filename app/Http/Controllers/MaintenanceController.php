@@ -589,7 +589,7 @@ class MaintenanceController extends Controller
 		$kategori = $request->get('kategori');
 		$kondisi_mesin = $request->get('kondisi_mesin');
 		$bahaya = implode(", ", $request->get('bahaya'));
-		$detail = $request->get('detail');
+		$detail = str_replace('\n', ' ', $request->get('detail'));
 		$machine_name = $request->get('nama_mesin');
 		$machine_detail = $request->get('nama_mesin_detail');
 		$reason_urgent = $request->get('reason_urgent');
@@ -966,6 +966,8 @@ class MaintenanceController extends Controller
 		$order_no = $request->get("order_no");
 		$member = $request->get("member");
 		$datas = [];
+
+		MaintenanceJobProcess::where('order_no', '=', $order_no)->forceDelete();
 
 		foreach ($member as $mbr) {
 			$jp = new MaintenanceJobProcess;

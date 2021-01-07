@@ -680,7 +680,7 @@
 				var tableData = "";
 				$.each(result.tableData ,function(index, value){
 					click = "";
-					if (value.remark == "0" || value.remark == "2" || value.remark == "4" || value.remark == "5" || value.remark == "6") {
+					if (value.remark == "0" || value.remark == "2" || value.remark == "3" || value.remark == "4" || value.remark == "5" || value.remark == "6") {
 						click = "onclick='showJobModal(\""+value.order_no+"\")'";
 					}
 
