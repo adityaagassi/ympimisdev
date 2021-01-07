@@ -284,7 +284,7 @@ class SendEmail extends Mailable
                     ->view('mails.sakurentsu');
 
                     for ($i=0; $i < count($all_file); $i++) { 
-                        $email->attach(public_path('uploads/sakurentsu/'.$all_file[$i]));
+                        $email->attach(public_path('uploads/sakurentsu/original/'.$all_file[$i]));
                     }
 
                     return $email;
@@ -306,6 +306,24 @@ class SendEmail extends Mailable
                     return $email;
                 }
             }
+            else if ($this->data[0]->position == 'PIC'){
+                $all_file = json_decode($this->data[0]->file_translate);
+
+                $email = $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+                ->priority(1)
+                ->subject('Sakurentsu (作連通)')
+                ->view('mails.sakurentsu');
+
+                for ($i=0; $i < count($all_file); $i++) { 
+                    $email->attach(public_path('uploads/sakurentsu/translated/'.$all_file[$i]));
+                }
+
+                return $email;
+            }
+        }
+
+        if($this->remark == '3m_approval'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('3M Application (3M申請書)')->view('mails.three_M_approval');
         }
 
         if($this->remark == '3m_document'){
