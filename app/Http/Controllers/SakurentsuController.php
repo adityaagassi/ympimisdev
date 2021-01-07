@@ -368,7 +368,7 @@ class SakurentsuController extends Controller
             $sakurentsuisi = db::select($isimail);
 
             // Mail::to($mailtoo)->cc($mailtoocc)->bcc('nasiqul.ibat@music.yamaha.com','Nasiqul Ibat')->send(new SendEmail($sakurentsuisi, 'sakurentsu'));
-            Mail::to('nasiqul.ibat@music.yamaha.com','Nasiqul Ibat')->send(new SendEmail($sakurentsuisi, 'sakurentsu'));
+            Mail::to('nasiqul.ibat@music.yamaha.com')->send(new SendEmail($sakurentsuisi, 'sakurentsu'));
 
             $response = array(
                 'status' => true,
