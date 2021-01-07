@@ -43,7 +43,7 @@ class AccountingController extends Controller
 {
     public function __construct()
     {
-        $this->dept = ['Management Information System Department', 'Accounting Department', 'Woodwind Instrument - Assembly (WI-A) Department', 'Educational Instrument (EI) Department', 'General Affairs Department', 'Human Resources Department', 'Logistic Department', 'Maintenance Department', 'Woodwind Instrument - Parts Process (WI-PP) Department', 'Procurement Department', 'Production Control Department', 'Production Engineering Department', 'Purchasing Control Department', 'Quality Assurance Department', 'Woodwind Instrument - Welding-Surface Treatment (WI-WST) Department'];
+        $this->dept = ['Management Information System Department', 'Accounting Department', 'Woodwind Instrument - Assembly (WI-A) Department', 'Educational Instrument (EI) Department', 'General Affairs Department', 'Human Resources Department', 'Logistic Department', 'Maintenance Department', 'Woodwind Instrument - Key Parts Process (WI-KPP) Department', 'Procurement Department', 'Production Control Department', 'Production Engineering Department', 'Purchasing Control Department', 'Quality Assurance Department', 'Woodwind Instrument - Welding-Surface Treatment (WI-WST) Department'];
 
         $this->uom = ['bag', 'bar', 'batang', 'belt', 'botol', 'bottle', 'box', 'Btg', 'Btl', 'btng', 'buah', 'buku', 'Can', 'Case', 'container', 'cps', 'day', 'days', 'dos', 'doz', 'Drum', 'dus', 'dz', 'dzn', 'EA', 'G', 'galon', 'gr', 'hari', 'hour', 'job', 'JRG', 'kaleng', 'ken', 'Kg', 'kgm', 'klg', 'L', 'Lbr', 'lbs', 'lembar', 'License', 'lisence', 'lisensi', 'lmbr', 'lonjor', 'Lot', 'ls', 'ltr', 'lubang', 'lusin', 'm', 'm2', 'm²', 'm3', 'malam', 'meter', 'ml', 'month', 'Mtr', 'night', 'OH', 'Ons', 'orang', 'OT', 'Pac', 'Pack', 'package', 'pad', 'pail', 'pair', 'pairs', 'pak', 'Pasang', 'pc', 'Pca', 'Pce', 'Pck', 'pcs', 'Pcs', 'Person', 'pick up', 'pil', 'ply', 'point', 'pot', 'prs', 'prsn', 'psc', 'PSG', 'psn', 'Rim', 'rol', 'roll', 'rolls', 'sak', 'sampel', 'sample', 'Set', 'Set', 'Sets', 'sheet', 'shoot', 'slop', 'sum', 'tank', 'tbg', 'time', 'titik', 'ton', 'tube', 'Um', 'Unit', 'user', 'VA', 'yard', 'zak'
 
@@ -926,7 +926,7 @@ class AccountingController extends Controller
         {
             $dept = "PM";
         }
-        else if ($dept == "Woodwind Instrument - Parts Process (WI-PP) Department")
+        else if ($dept == "Woodwind Instrument - Key Parts Process (WI-KPP) Department")
         {
             if ($sect == "Key parts Process Section") {
                 $dept = "MP";
@@ -4994,6 +4994,11 @@ class AccountingController extends Controller
                 ->first();
 
                 $gm = $getgm->employee_id."/".$getgm->name;
+            }
+            else if($request->get('applicant_department') == "Logistic Department" || $request->get('applicant_department') == "Production Control Department" || $request->get('applicant_department') == "Purchasing Control Department" || $request->get('applicant_department') == "Procurement Department"){
+                $dgm = null;
+                //GM Pak Budhi
+                $gm = $getdgm->employee_id."/".$getdgm->name;
             }
             else{
 
