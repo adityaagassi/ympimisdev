@@ -25,9 +25,10 @@
 		<center>
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
 			<p style="font-size: 22px; font-weight: bold;">
+				<?php $ids = $data["datas"]['id']; ?>
 				<?php if ($data["position"] == "PRESDIR") { ?>
 					3M変更申請の承認 Approval 3M Application
-				<?php } else if ($data["position"] == "STD" || $data["position"] == "ALL" || $data["position"] == "IMPLEMENT") { ?>
+				<?php } else if ($data["position"] == "STD" || $data["position"] == "ALL" || $data["position"] == "IMPLEMENT" || $data["position"] == "TRANSLATE" || $data["position"] == "INTERPRETER") { ?>
 					3M申請書 3M Application
 				<?php } ?>
 				<br>
@@ -42,6 +43,12 @@
 				<?php } else if ($data["position"] == "IMPLEMENT") { ?>
 					This 3M Application has been implemented and checked by PIC. <br>
 					Please verify this Implementation Report. <br><br>
+				<?php } else if ($data["position"] == "INTERPRETER") { ?>
+					This 3M Application has been created. <br>
+					Please Translate this 3M Application. <br><br>
+				<?php } else if ($data["position"] == "TRANSLATE") { ?>
+					This 3M Application has been translated. <br>
+					Please Check and don't forget to schedule a meeting. <br><br>
 				<?php } ?>
 			</p>
 
@@ -167,12 +174,15 @@
 			<a style="background-color: green; width: 50px;text-decoration: none;color: white;font-size:20px; text-decoration: none;" href="{{ url('detail/sakurentsu/3m/'.$id.'/view') }}">&nbsp;&nbsp;&nbsp; 3M Detail &nbsp;&nbsp;&nbsp; <br>&nbsp;&nbsp;&nbsp; 3M変更の詳細 &nbsp;&nbsp;&nbsp;</a>
 			<?php }  else if ($data["position"] == "IMPLEMENT") { $id = $data["datas"]['id']; ?>
 			<a style="background-color: green; width: 50px;text-decoration: none;color: white;font-size:20px; text-decoration: none;" href="{{ url('detail/sakurentsu/3m/'.$id.'/implement') }}">&nbsp;&nbsp;&nbsp; 3M Detail &nbsp;&nbsp;&nbsp; <br>&nbsp;&nbsp;&nbsp; 3M変更の詳細 &nbsp;&nbsp;&nbsp;</a>
+			<?php }  else if ($data["position"] == "TRANSLATE") { $id = $data["datas"]['id']; ?>
+			<a style="background-color: green; width: 50px;text-decoration: none;color: white;font-size:20px; text-decoration: none;" href="{{ url('index/sakurentsu/list_3m') }}">&nbsp;&nbsp;&nbsp; view 3M List &nbsp;&nbsp;&nbsp; <br>&nbsp;&nbsp;&nbsp; ?? &nbsp;&nbsp;&nbsp;</a>
+			<?php }  else if ($data["position"] == "INTERPRETER") { $id = $data["datas"]['id']; ?>
+			<a style="background-color: green; width: 50px;text-decoration: none;color: white;font-size:20px; text-decoration: none;" href="{{ url('index/sakurentsu/3m/translate/'.$id) }}">&nbsp;&nbsp;&nbsp; Translate 3M &nbsp;&nbsp;&nbsp; <br>&nbsp;&nbsp;&nbsp; ?? &nbsp;&nbsp;&nbsp;</a>
 			<?php } ?>
-
 <br>
 <br>
 <span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br><br>
-<a style="background-color: blue; width: 50px;text-decoration: none;color: white;font-size:15px; text-decoration: none;" href="{{ url('detail/sakurentsu/3m/'.$id.'/view') }}">&nbsp;&nbsp;&nbsp; 3M Monitoring &nbsp;&nbsp;&nbsp; <br>&nbsp;&nbsp;&nbsp; 3M変更監視 &nbsp;&nbsp;&nbsp;</a>
+<a style="background-color: blue; width: 50px;text-decoration: none;color: white;font-size:15px; text-decoration: none;" href="{{ url('detail/sakurentsu/3m/'.$ids.'/view') }}">&nbsp;&nbsp;&nbsp; 3M Monitoring &nbsp;&nbsp;&nbsp; <br>&nbsp;&nbsp;&nbsp; 3M変更監視 &nbsp;&nbsp;&nbsp;</a>
 </center>
 </div>
 </body>

@@ -498,8 +498,8 @@
                     <input type="hidden" name="doc_name_8" value="QC Kouteihyou (Production Process Control List)">
                     <input type="text" class="form-control" placeholder="note..." name="doc_note_8">
                   </td>
-                  <td><input type="text" class="form-control datepicker" placeholder="Target Date" name="doc_note_8"></td>
-                  <td><input type="text" class="form-control datepicker" placeholder="Finish Date" name="doc_note_8"></td>
+                  <td><input type="text" class="form-control datepicker" placeholder="Target Date" name="doc_target_8"></td>
+                  <td><input type="text" class="form-control datepicker" placeholder="Finish Date" name="doc_finish_8"></td>
                   <td>
                     <select class='form-control select3' name="doc_pic_8" id='doc_pic_8' data-placeholder="pic" style="width:100%">
                       <option value=""></option>
@@ -723,7 +723,7 @@
                 <td colspan="5"></td>
                 <td>
                   ※事後申請案件で内容に疑義がある場合、決裁者からの対応指示事項（⇒後日、発議責任者は対応結果を同欄に記入）<br>
-                  Pada subjek after request, bila ada hal yang kurang jelas pada isi, lihat poin instruksi penanganan oleh approver (⇒selanjutnya, pihak yang bertanggung jawab akan mencantumkan hasil penanganannya di kolom yang sama)
+                  Pada subjek after request, bila ada hal yang kurang jelas pada isi, lihat poin instruksi penanganan oleh approver (⇒selanjutnya, pihak yang bertanggung jawab akan mencantumkan hasil penanganannya di kolom yang sama)removeAttr( "title" )
                 </td>
                 <td></td>
                 <td></td>
@@ -763,7 +763,8 @@
             <input type="hidden" name="id_doc_upload" id="id_doc_upload">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <br>
-            <button class="btn btn-success btn-sm" style="width: 100%" type="button" onclick="do_upload()"><i class="fa fa-plus"></i>&nbsp; Upload</button>
+            <center><i class="fa fa-spin fa-refresh" style="display: none" id="loading-upload"></i></center>
+            <button class="btn btn-success btn-sm" style="width: 100%" type="button" onclick="do_upload(this)" id="btn-upload-file"><i class="fa fa-plus"></i>&nbsp; Upload</button>
           </form>
         </div>
       </div>
@@ -790,7 +791,7 @@
             </tbody>
           </table>
 
-          <button class="btn btn-danger pull-left"><i class="fa fa-close"></i>&nbsp; Cancel</button>
+          <button class="btn btn-danger pull-left" data-dismiss="modal"><i class="fa fa-close"></i>&nbsp; Cancel</button>
           <button class="btn btn-primary pull-right" onclick="sendMail()"><i class="fa fa-envelope"></i>&nbsp; Send Mail(s)</button>
         </div>
       </div>
@@ -991,8 +992,19 @@ $('#main_form').on('submit', function (e) {
   formData.append('special_item', CKEDITOR.instances.item_khusus.getData());
   formData.append('sakurentsu_number', $("#sk_number").val());
   formData.append('related_department', $("#related_department").val());
+  formData.append('bom_change', $("input[name='bom_change']:checked").val());
   formData.append('stat', 3);
   // formData.append('file', $("#lampiran").prop('files')[0]);
+  for (var i = 1; i <= 17; i++) {
+    formData.append('doc_'+i, $("input[name='doc_"+i+"']:checked").val());
+    formData.append('doc_name_'+i, $("input[name='doc_name_"+i+"']").val());
+    formData.append('doc_note_'+i, $("input[name='doc_note_"+i+"']").val());
+    formData.append('doc_target_'+i, $("input[name='doc_target_"+i+"']").val());
+    formData.append('doc_finish_'+i, $("input[name='doc_finish_"+i+"']").val());
+    formData.append('doc_pic_'+i, $("#doc_pic_"+i).val());
+  }
+
+
   $.each($('input[name="file[]"]'),function(i, obj) {
     $.each(obj.files,function(j,file){
       formData.append('file['+i+']['+j+']', file);
@@ -1056,7 +1068,6 @@ $('#main_form').on('submit', function (e) {
 $(".btn-upload").click(function() {
   var ido = $(this).attr('id').split('_')[1];
 
-
   var text = $("#head_"+ido).text();
 
   var data = {
@@ -1073,14 +1084,14 @@ $(".btn-upload").click(function() {
     if (result.status) {
       body_file = "";
       $.each(result.docs, function(key, value) {  
-        var obj = JSON.parse(value.file_name); 
-        $.each(obj, function(index, val) {  
+        // var obj = JSON.parse(value.file_name); 
+        // $.each(obj, function(index, val) {  
           body_file += "<tr>";
           body_file += "<td>";
-          body_file += "<a href='"+"{{ url('uploads/sakurentsu/three_m/doc/') }}/"+val+"' target='_blank'><i class='fa fa-file-pdf-o'></i> "+val+"</a>";
+          body_file += "<a href='"+"{{ url('uploads/sakurentsu/three_m/doc/') }}/"+value.file_name+"' target='_blank'><i class='fa fa-file-pdf-o'></i> "+value.file_name+"</a>";
           body_file += "</td>";
           body_file += "</tr>";
-        })
+        // })
       });
 
       $("#bodyFile").append(body_file);
@@ -1128,8 +1139,10 @@ function getFileInfo(num, sk_num) {
   $("#modalFile").modal('show');
 }
 
-function do_upload()
+function do_upload(elem)
 {
+  $(elem).attr('disabled','disabled');
+  $("#loading-upload").show();
   document.getElementById('form_upload').target = 'my_iframe';
   document.getElementById('form_upload').submit();
 }
@@ -1168,6 +1181,9 @@ function getdata(doc_name) {
   id : "{{ Request::segment(5) }}",
   doc_desc : doc_name
 }
+
+$("#btn-upload-file").removeAttr("disabled");
+$("#loading-upload").hide();
 
 $.get('{{ url("fetch/sakurentsu/3m/document") }}', data, function(result, status, xhr){
   $("#bodyFile").empty();
@@ -1234,7 +1250,10 @@ function sendMail() {
 
   $.post('{{ url("mail/sakurentsu/3m/document") }}', data, function(result, status, xhr){
     if (result.status) {
-
+      $("#modal_email").modal('hide');
+      openSuccessGritter('Success', 'Document Reminder has been Informed to PIC Document');
+    } else {
+      openErrorGritter('Error', result.message);
     }
   })
 }

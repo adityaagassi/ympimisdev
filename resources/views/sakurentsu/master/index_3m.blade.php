@@ -82,7 +82,7 @@
         <div class="box-body">
           <div class="row">
             <div class="col-xs-12">
-              Sakurentsu - Request 3M
+              <center><h3>Sakurentsu - Request 3M</h3></center>
               <table class="table table-bordered" style="width: 100%" id="master">
                 <thead style="background-color: rgba(126,86,134,.7);">
                   <tr>
@@ -112,7 +112,7 @@
         <div class="box-body">
           <div class="row">
             <div class="col-xs-12">
-              3M List
+              <center><h3>3M List</h3></center>
               <table class="table table-bordered" style="width: 100%" id="list">
                 <thead style="background-color: rgba(126,86,134,.7);">
                   <tr>
@@ -182,42 +182,46 @@
     body_list = "";
 
     $.get('{{ url("fetch/sakurentsu/list_3m") }}', function(result, status, xhr){
-      $.each(result.requested, function(key, value) {   
-        body += "<tr>";
-        body += "<td>"+value.sakurentsu_number+"</td>";
-        body += "<td>"+value.title+"</td>";
-        body += "<td>"+value.applicant+"</td>";
-        body += "<td>"+value.target_date+"</td>";
-        body += "<td>"+value.upload_date+"</td>";
-        body += "<td>"+('<button class="btn btn-xs" onclick="getFileInfo('+key+',\''+value.sakurentsu_number+'\')"><i class="fa fa-paperclip"></i></button>' || '')+"</td>";
-        body += "<td>"+value.status+"</td>";
-        body += "<td><a href='"+"{{ url('index/sakurentsu/3m/') }}/"+value.sakurentsu_number+"'><button class='btn btn-xs btn-success'>Make 3M</button></a></td>";
-        body += "</tr>";
+      $.each(result.requested, function(key, value) {
+        if (value.pic == result.dept.department) {
+          body += "<tr>";
+          body += "<td>"+value.sakurentsu_number+"</td>";
+          body += "<td>"+value.title+"</td>";
+          body += "<td>"+value.applicant+"</td>";
+          body += "<td>"+value.target_date+"</td>";
+          body += "<td>"+value.upload_date+"</td>";
+          body += "<td>"+('<button class="btn btn-xs" onclick="getFileInfo('+key+',\''+value.sakurentsu_number+'\')"><i class="fa fa-paperclip"></i></button>' || '')+"</td>";
+          body += "<td>"+value.status+"</td>";
+          body += "<td><a href='"+"{{ url('index/sakurentsu/3m/') }}/"+value.sakurentsu_number+"'><button class='btn btn-xs btn-success'>Make 3M</button></a></td>";
+          body += "</tr>";
 
-        file.push({'sk_number' : value.sakurentsu_number, 'file' : value.file_translate});
+          file.push({'sk_number' : value.sakurentsu_number, 'file' : value.file_translate});
+        }
       })
       $("#body_master").append(body);
 
-
       $.each(result.three_m_list, function(key, value) {
-       body_list += "<tr>";
-       body_list += "<td>"+value.sakurentsu_number+"</td>";
-       body_list += "<td>"+value.title+"</td>";
-       body_list += "<td>"+value.product_name+"</td>";
-       body_list += "<td>"+value.proccess_name+"</td>";
-       body_list += "<td>"+value.category+"</td>";
-       body_list += "<td>"+value.process_name+"</td>";
-       body_list += "<td>";
-       if (value.remark == 2) {
-         body_list += "<a href='#'><button class='btn btn-xs btn-primary'>Edit</button></a><br>";
-         body_list += "<a href='"+"{{ url('index/sakurentsu/3m/premeeting/') }}/"+value.id+"'><button class='btn btn-xs btn-warning' style='margin-top: 2px'>Pre-Meeting</button></a>";
-       } else if (value.remark == 4) {
-         body_list += "<a href='"+"{{ url('index/sakurentsu/3m/finalmeeting/') }}/"+value.id+"'><button class='btn btn-xs btn-success' style='margin-top: 2px'>Final-Meeting</button></a>";
-       } else if (value.remark == 7) {
-         body_list += "<a href='"+"{{ url('index/sakurentsu/3m/implement/') }}/"+value.id+"'><button class='btn btn-xs btn-danger' style='margin-top: 2px'>Make Implement Form</button></a>";
+        if (value.department == result.dept.department) {
+
+         body_list += "<tr>";
+         body_list += "<td>"+value.sakurentsu_number+"</td>";
+         body_list += "<td>"+value.title+"</td>";
+         body_list += "<td>"+value.product_name+"</td>";
+         body_list += "<td>"+value.proccess_name+"</td>";
+         body_list += "<td>"+value.category+"</td>";
+         body_list += "<td>"+value.process_name+"</td>";
+         body_list += "<td>";
+         if (value.remark == 2) {
+           body_list += "<a href='#'><button class='btn btn-xs btn-primary'>Edit</button></a><br>";
+           body_list += "<a href='"+"{{ url('index/sakurentsu/3m/premeeting/') }}/"+value.id+"'><button class='btn btn-xs btn-warning' style='margin-top: 2px'>Pre-Meeting</button></a>";
+         } else if (value.remark == 4) {
+           body_list += "<a href='"+"{{ url('index/sakurentsu/3m/finalmeeting/') }}/"+value.id+"'><button class='btn btn-xs btn-success' style='margin-top: 2px'>Final-Meeting</button></a>";
+         } else if (value.remark == 7) {
+           body_list += "<a href='"+"{{ url('index/sakurentsu/3m/implement/') }}/"+value.id+"'><button class='btn btn-xs btn-danger' style='margin-top: 2px'>Make Implement Form</button></a>";
+         }
+         body_list += "</td>";
+         body_list += "</tr>";
        }
-       body_list += "</td>";
-       body_list += "</tr>";
      })
       $("#body_list").append(body_list);
     })

@@ -386,7 +386,6 @@
         <div class="form-group">
           <label for="related_department">Related Department</label>
           <select class="form-control" name="related_department[]" id="related_department" data-placeholder="Select Related Department" multiple="">
-            <option value=""></option>
             @foreach($departemen as $dpr)
             <option value="{{ $dpr->department }}">{{ $dpr->department }}</option>
             @endforeach
@@ -601,7 +600,7 @@
     formData.append('sakurentsu_number', sakurentsu_number);
     formData.append('related_department', related_department);
     formData.append('file_datas', $("#lampiran").prop('files')[0]);
-   
+
     $.each($('input[name="file[]"]'),function(i, obj) {
       $.each(obj.files,function(j,file){
         formData.append('file_datas['+i+']['+j+']', file);
@@ -610,16 +609,23 @@
 
 
     var url = "{{ url('post/sakurentsu/3m_form')}}";
+    $("#loading").show();
 
     $.ajax({
       url: url,
       type: 'POST',
       data: formData,
       success: function (response) {
-        console.log(response.message);
+        console.log(response.status);
+        $("#loading").hide();
+        openSuccessGritter('Success', '3M Has Been Created Successfully');
+        setTimeout( function() {window.location.replace("{{ url('index/sakurentsu/list_3m') }}")}, 3000);
+
       },
       error: function (response) {
         console.log(response.message);
+        $("#loading").hide();
+        openErrorGritter('Error', '');
       },
       contentType: false,
       processData: false

@@ -56,24 +56,35 @@ class SakurentsuController extends Controller
     public function index_form_tiga_em($sk_number)
     {
         $title = '3M Form';
-        $title_jp = '??';
+        $title_jp = '3Mフォーム';
 
         $judul = Sakurentsu::where('sakurentsu_number', '=', $sk_number)->select('sakurentsu_number', 'title', db::raw('DATE_FORMAT(target_date, "%d %M %Y") as tgl_target'))->first();
 
         $departments = EmployeeSync::whereNull('end_date')->select('department')->groupBy('department')->get();
 
-        return view('sakurentsu.master.index_3m_form', array(
-            'title' => $title,
-            'title_jp' => $title_jp,
-            'judul' => $judul,
-            'departemen' => $departments
-        ))->with('page', '3M Form')
-        ->with('head', 'Sakurentsu');  
+        $ava = SakurentsuThreeM::where('sakurentsu_number', '=', $sk_number)->select('sakurentsu_number')->first();
+
+        if (count($ava) == 0) {
+            return view('sakurentsu.master.index_3m_form', array(
+                'title' => $title,
+                'title_jp' => $title_jp,
+                'judul' => $judul,
+                'departemen' => $departments
+            ))->with('page', '3M Form')
+            ->with('head', 'Sakurentsu');  
+        } else {
+            return view('sakurentsu.master.index_3m', array(
+                'title' => $title,
+                'title_jp' => $title_jp,
+            ))->with('page', '3M List')
+            ->with('head', 'Sakurentsu');
+        }
+
     }
 
     public function index_tiga_em_premeeting($id_three_m)
     {
-        $title = '3M Pre-Meeting';
+        $title = '3M PreMeeting';
         $title_jp = '??';
 
         $data = SakurentsuThreeM::where('id', '=', $id_three_m)->select('id', 'sakurentsu_number', 'title', 'product_name', 'proccess_name', 'unit', 'category', 'reason', 'benefit', 'check_before', 'started_date', 'special_items', 'related_department', 'remark', 'att')->first();
@@ -103,7 +114,7 @@ class SakurentsuController extends Controller
         return view('sakurentsu.master.index_translate_sakurentsu', array(
             'title' => $title,
             'title_jp' => $title_jp
-        ))->with('page', 'Translate List')
+        ))->with('page', 'Sakurentsu Translate List')
         ->with('head', 'Sakurentsu'); 
     }
 
@@ -116,11 +127,14 @@ class SakurentsuController extends Controller
 
         $judul = Sakurentsu::where('sakurentsu_number', '=', $data_tiga_em->sakurentsu_number)->select('sakurentsu_number', 'title', db::raw('DATE_FORMAT(target_date, "%d %M %Y") as tgl_target'))->first();
 
+        $departments = EmployeeSync::whereNull('end_date')->select('department')->groupBy('department')->get();
+
         return view('sakurentsu.master.index_3m_translate', array(
             'title' => $title,
             'title_jp' => $title_jp,
             'tiga_m' => $data_tiga_em,
-            'judul' => $judul
+            'judul' => $judul,
+            'departemen' => $departments
         ))->with('page', '3M Translate')
         ->with('head', 'Sakurentsu'); 
     }
@@ -353,7 +367,8 @@ class SakurentsuController extends Controller
             $isimail = "select * FROM sakurentsus where sakurentsus.id =".$data2->id;
             $sakurentsuisi = db::select($isimail);
 
-            Mail::to($mailtoo)->cc($mailtoocc)->bcc('nasiqul.ibat@music.yamaha.com','Nasiqul Ibat')->send(new SendEmail($sakurentsuisi, 'sakurentsu'));
+            // Mail::to($mailtoo)->cc($mailtoocc)->bcc('nasiqul.ibat@music.yamaha.com','Nasiqul Ibat')->send(new SendEmail($sakurentsuisi, 'sakurentsu'));
+            Mail::to('nasiqul.ibat@music.yamaha.com','Nasiqul Ibat')->send(new SendEmail($sakurentsuisi, 'sakurentsu'));
 
             $response = array(
                 'status' => true,
@@ -559,7 +574,6 @@ class SakurentsuController extends Controller
             ->update([
                 'status' => 'determined',
                 'position' => 'PIC',
-                'position' => $request->get('sort_dept'),
                 'pic' => implode(',', $request->get('dept')),
                 'category' => $request->get('ctg'),
             ]);
@@ -567,12 +581,96 @@ class SakurentsuController extends Controller
 
         }
 
-        //  ------------------------  BELUM EMAIL KE PIC DEPT -----------------------------
+        $mails = EmployeeSync::leftJoin('users', 'users.username', '=', 'employee_syncs.employee_id')
+        ->whereIn('department', $request->get('dept'))
+        ->where('position', 'not like', '%Operator%')
+        ->where('position', 'not like', '%Leader%')
+        ->select('users.email')
+        ->get();
+
+        $mailtoo = [];
+
+        foreach ($mails as $mail) {
+            $mailtoo[] = $mail['email'];
+        }
+
+        $mailcc = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where employee_id = 'PI0008010' or employee_id = 'PI9905001'";
+        $mailtoocc = DB::select($mailcc);
+
+            // $isimail = "select * FROM sakurentsus where sakurentsus.sakurentsu_number = '".$request->get("sakurentsu_number")."'";
+        $isimail = "select * from sakurentsus where sakurentsu_number = '".$request->get("sk_number")."'";
+
+        $sakurentsuisi = db::select($isimail);
+
+        Mail::to($mailtoo)->cc($mailtoocc)->bcc(['aditya.agassi@music.yamaha.com', 'nasiqul.ibat@music.yamaha.com'])->send(new SendEmail($sakurentsuisi, 'sakurentsu'));
 
         $response = array(
             'status' => true
         );
         return Response::json($response);
+    }
+
+    public function save_tiga_em_translate(Request $request)
+    {
+        try {
+            SakurentsuThreeM::where('id', $request->get('id'))
+            ->update([
+                'title' => $request->get('title_name'),
+                'product_name' => $request->get('product_name'),
+                'proccess_name' => $request->get('proccess_name'),
+                'unit' => $request->get('unit_name'),
+                'reason' => $request->get('isi'),
+                'benefit' => $request->get('keuntungan'),
+                'check_before' => $request->get('kualitas_before'),
+                'started_date' => $request->get('tgl_rencana'),
+                'special_items' => $request->get('item_khusus'),
+                'remark' => 2
+            ]);
+
+            $data_tiga_em = SakurentsuThreeM::leftJoin('sakurentsus', 'sakurentsus.sakurentsu_number', '=', 'sakurentsu_three_ms.sakurentsu_number')->where('sakurentsu_three_ms.id', '=', $request->get('id'))->select('sakurentsu_three_ms.id','sakurentsu_three_ms.title', 'product_name', 'proccess_name', 'unit', 'sakurentsu_three_ms.category', 'sakurentsu_three_ms.created_at', 'sakurentsu_three_ms.sakurentsu_number', db::raw('sakurentsus.title as title_sakurentsu'), db::raw('sakurentsus.title_jp as title_sakurentsu_jp'), 'sakurentsus.applicant', 'upload_date', 'target_date')->first();
+
+            $data_imp = SakurentsuThreeMImplementation::leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'sakurentsu_three_m_implementations.created_by')
+            ->where('sakurentsu_three_m_implementations.form_id', '=', $request->get('form_id'))
+            ->select('sakurentsu_three_m_implementations.form_number', 'form_date', 'sakurentsu_three_m_implementations.section', 'sakurentsu_three_m_implementations.name', 'title', 'reason', 'started_date', 'actual_date', 'check_date', 'checker', 'att')
+            ->first();
+
+            $data = [
+                "datas" => $data_tiga_em,
+                "position" => 'TRANSLATE'
+            ];
+
+            $mailtoo = SakurentsuThreeM::leftJoin('users', 'users.username', '=', 'sakurentsu_three_ms.created_by')
+            ->where('sakurentsu_three_ms.id', $request->get('id'))
+            ->select('users.email')
+            ->first();
+
+            $mailto = [];
+
+            // foreach ($mail_dept as $ml_dept) {
+            //     $mailtoo[] = $ml_dept['email'];
+            // }
+
+            // if (in_array("Production Engineering Department", $dept_arr)) 
+            // { 
+            //     array_push($mailtoo, 'susilo.basri@music.yamaha.com');
+            // } 
+
+            array_push($mailto, $mailtoo->email);
+
+            Mail::to($mailto)->bcc(['aditya.agassi@music.yamaha.com', 'nasiqul.ibat@music.yamaha.com'])->send(new SendEmail($data, '3m_approval'));
+
+            $response = array(
+                'status' => true
+            );
+            return Response::json($response);
+        } catch (QueryException $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+            return Response::json($response);
+        }
+
     }
 
     public function save_tiga_em_form(Request $request)
@@ -630,20 +728,31 @@ class SakurentsuController extends Controller
 
             $tiga_em->save();
 
-            $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where employee_id = 'PI0812002'";  
+            $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where section = 'Secretary Admin Section' and employee_id != 'PI9704001'";  
             $mailtoo = DB::select($mails);
 
             $mailcc = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where employee_id = 'PI0008010' or employee_id = 'PI9905001'";
             $mailtoocc = DB::select($mailcc);
 
-            $isimail = "select * FROM sakurentsus where sakurentsus.id =".$id;
-            $sakurentsuisi = db::select($isimail);
+            // $isimail = "select * FROM sakurentsus where sakurentsus.sakurentsu_number = '".$request->get("sakurentsu_number")."'";
+            // $isimail = "select ms.id, ms.sakurentsu_number, ms.title, ms.product_name, ms.proccess_name, unit, ms.category, started_date, `name`, DATE_FORMAT(ms.created_at, '%Y-%m-%d') as created_date, sakurentsus.position from sakurentsu_three_ms ms 
+            // left join sakurentsus on ms.sakurentsu_number = sakurentsus.sakurentsu_number
+            // left join employee_syncs on employee_syncs.employee_id = ms.created_by
+            // where ms.sakurentsu_number = '".$request->get("sakurentsu_number")."'";
 
-            Mail::to($mailtoo)->cc($mailtoocc)->bcc(['aditya.agassi@music.yamaha.com', 'nasiqul.ibat@music.yamaha.com'])->send(new SendEmail($sakurentsuisi, 'sakurentsu'));
+            // $sakurentsuisi = db::select($isimail);
+
+            $data_tiga_em = SakurentsuThreeM::leftJoin('sakurentsus', 'sakurentsus.sakurentsu_number', '=', 'sakurentsu_three_ms.sakurentsu_number')->where('sakurentsu_three_ms.sakurentsu_number', '=', $request->get('sakurentsu_number'))->select('sakurentsu_three_ms.id','sakurentsu_three_ms.title', 'product_name', 'proccess_name', 'unit', 'sakurentsu_three_ms.category', 'sakurentsu_three_ms.created_at', 'sakurentsu_three_ms.sakurentsu_number', db::raw('sakurentsus.title as title_sakurentsu'), db::raw('sakurentsus.title_jp as title_sakurentsu_jp'), 'sakurentsus.applicant', 'upload_date', 'target_date')->first();
+
+            $data = [
+                "datas" => $data_tiga_em,
+                "position" => 'INTERPRETER'
+            ];
+
+            Mail::to($mailtoo)->cc($mailtoocc)->bcc(['aditya.agassi@music.yamaha.com', 'nasiqul.ibat@music.yamaha.com'])->send(new SendEmail($data, '3m_approval'));
 
             $response = array(
-                'status' => true,
-                'message' => $num
+                'status' => true
             );
             return Response::json($response);
         } catch (QueryException $e) {
@@ -681,14 +790,22 @@ class SakurentsuController extends Controller
 
     public function fetch_tiga_em(Request $request)
     {
-        $sakurentsu_req = Sakurentsu::where('category', '=', "3M")->where('status', '=', 'determined')->select('sakurentsu_number', 'title', 'applicant', 'file_translate', 'upload_date', 'target_date', 'status')->get();
+        $sakurentsu_req = Sakurentsu::where('category', '=', "3M")
+        ->where('status', '=', 'determined')
+        ->select('sakurentsu_number', 'title', 'applicant', 'file_translate', 'upload_date', 'target_date', 'status', 'pic')
+        ->get();
 
-        $three_m_list = SakurentsuThreeM::leftJoin(db::raw('(select * from processes where remark = "3M") as prcs'), 'prcs.process_code', '=', 'sakurentsu_three_ms.remark')->select('sakurentsu_three_ms.id', 'sakurentsu_number', 'title', 'product_name', 'proccess_name', 'category', 'sakurentsu_three_ms.remark', 'process_name')->get();
+        $dept = EmployeeSync::where('employee_id', '=', Auth::user()->username)->select('department')->first();
+
+        $three_m_list = SakurentsuThreeM::leftJoin(db::raw('(select * from processes where remark = "3M") as prcs'), 'prcs.process_code', '=', 'sakurentsu_three_ms.remark')
+        ->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'sakurentsu_three_ms.created_by')
+        ->select('sakurentsu_three_ms.id', 'sakurentsu_number', 'title', 'product_name', 'proccess_name', 'category', 'sakurentsu_three_ms.remark', 'process_name', 'employee_syncs.department')->get();
 
         $response = array(
             'status' => true,
             'requested' => $sakurentsu_req,
-            'three_m_list' => $three_m_list
+            'three_m_list' => $three_m_list,
+            'dept' => $dept
         );
         return Response::json($response);
     }
@@ -769,7 +886,7 @@ class SakurentsuController extends Controller
                        $file->move('uploads/sakurentsu/three_m/att/', $file_name);
                        $data[] = $file_name;
                        $num++;      
-                       $new_filename = implode(',', $data);
+                       $new_filename = '|'.implode(',', $data);
 
                    }
 
@@ -784,20 +901,20 @@ class SakurentsuController extends Controller
 
            SakurentsuThreeM::where('id', $request->get('id'))
            ->update([
-            'title' => $request->get('title_name'),
-            'product_name' => $request->get('product_name'),
-            'proccess_name' => $request->get('proccess_name'),
+            'title' => $request->get('title'),
+            'product_name' => $request->get('product'),
+            'proccess_name' => $request->get('proccess'),
             'unit' => $request->get('unit_name'),
             'category' => $request->get('category'),
-            'reason' => $request->get('isi'),
-            'benefit' => $request->get('keuntungan'),
+            'reason' => $request->get('content'),
+            'benefit' => $request->get('benefit'),
             'check_before' => $request->get('kualitas_before'),
-            'started_date' => $request->get('tgl_rencana'),
-            'special_items' => $request->get('item_khusus'),
+            'started_date' => $request->get('planned_date'),
+            'special_items' => $request->get('special_item'),
             'bom_change' => $request->get('bom_change'),
             'related_department' => $request->get('related_department'),
             'remark' => $request->get('stat'),
-            'att' => $threem->att.'|'.$new_filename,
+            'att' => $threem->att.$new_filename,
         ]);
 
            $need_name = [];
@@ -837,41 +954,56 @@ class SakurentsuController extends Controller
 
 public function mail_tiga_em_document(Request $request)
 {
-    $doc_list = SakurentsuThreeMDocument::where('form_id', '=', $request->get('three_m_id'))->select('document_name', 'document_description', db::raw('DATE_FORMAT(target_date, "%d %M %Y") as target'), db::raw('DATE_FORMAT(finish_date, "%d %M %Y") as finish'), 'pic')->get();
+    try {
+        $doc_list = SakurentsuThreeMDocument::where('form_id', '=', $request->get('three_m_id'))->select('document_name', 'document_description', db::raw('DATE_FORMAT(target_date, "%d %M %Y") as target'), db::raw('DATE_FORMAT(finish_date, "%d %M %Y") as finish'), 'pic')->get();
 
         // $arr_pos = ['Manager', 'Foreman','Chief', 'Coordinator', 'Staff', 'Senior Staff'];
-    $arr_pos = ['Manager', 'Foreman','Chief', 'Coordinator'];
+        $arr_pos = ['Manager', 'Foreman','Chief', 'Coordinator'];
 
-    $isi = SakurentsuThreeM::where('id', '=', $request->get('three_m_id'))->first();
+        $isi = SakurentsuThreeM::where('id', '=', $request->get('three_m_id'))->first();
 
-    $arr_doc_dept = [];
+        $arr_doc_dept = [];
 
-    foreach ($doc_list as $docs) {
-        if (count($arr_doc_dept) > 0) {
-            if(!in_array($arr_doc_dept, $docs->department, true)){
-                array_push($arr_doc_dept, $docs->department);
+        foreach ($doc_list as $docs) {
+            if (count($arr_doc_dept) > 0) {
+                if(!in_array($arr_doc_dept, $docs->pic, true)){
+                    array_push($arr_doc_dept, $docs->pic);
+                }
+            } else {
+                array_push($arr_doc_dept, $docs->pic);
             }
-        } else {
-            array_push($arr_doc_dept, $docs->department);
         }
+
+        $email_list = EmployeeSync::leftJoin('users', 'users.username', '=', 'employee_syncs.employee_id')
+        ->whereIn('department', $arr_doc_dept)
+        ->whereIn('position', $arr_pos)
+        ->whereNull('end_date')
+        ->select('email')
+        ->get();
+
+        $datas = [
+            'documents' => $doc_list,
+            'departments' => $arr_doc_dept,
+            'tiga_m' => $isi,
+            'form_id' => $request->get('three_m_id')
+        ];
+
+
+        Mail::to($email_list)->bcc(['nasiqul.ibat@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($datas, '3m_document'));
+
+        $response = array(
+            'status' => true
+        );
+
+        return Response::json($response);
+    } catch (Exception $e) {
+        $response = array(
+            'status' => false,
+            'message' => $e->getMessage()
+        );
+
+        return Response::json($response);
     }
-
-    $email_list = EmployeeSync::leftJoin('users', 'users.username', '=', 'employee_syncs.employee_id')
-    ->whereIn('department', $arr_doc_dept)
-    ->whereIn('position', $arr_pos)
-    ->whereNull('end_date')
-    ->select('email')
-    ->get();
-
-    $datas = [
-        'documents' => $doc_list,
-        'departments' => $arr_doc_dept,
-        'tiga_m' => $isi,
-        'form_id' => $request->get('three_m_id')
-    ];
-
-
-    Mail::to($email_list)->bcc(['nasiqul.ibat@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($datas, '3m_document'));
 }
 
 public function upload_tiga_em_upload(Request $request)
