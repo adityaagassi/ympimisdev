@@ -266,7 +266,7 @@ class FormExperienceController extends Controller
         FROM
           `form_failures`
           LEFT JOIN employee_syncs ON form_failures.employee_id = employee_syncs.employee_id
-          where employee_syncs.division in ('Production Division') 
+          where employee_syncs.division in ('Production Division','Production Support') 
         GROUP BY
           department
       ");
