@@ -46,16 +46,17 @@ class EmailUserDocument extends Command
 
         $at_risk = db::select("UPDATE user_documents
             SET `condition` = 'At Risk'
-            WHERE DATEDIFF(valid_to, NOW()) < reminder");
+            WHERE DATEDIFF(valid_to, NOW()) < reminder AND notification = 0");
 
         $expired = db::select("UPDATE user_documents
             SET `condition` = 'Expired'
-            WHERE now() > valid_to");
+            WHERE now() > valid_to AND notification = 0");
 
         $user_reminder = db::select("SELECT DISTINCT d.employee_id, u.email FROM user_documents d 
             LEFT JOIN users u ON d.employee_id = u.username
             WHERE (d.`condition` = 'At Risk' OR  d.`condition` = 'Expired')
             AND d.`status` = 'Active'
+            AND d.notification = 0
             AND u.email like '%music.yamaha.com%'");
 
         $cc = array();
@@ -76,12 +77,12 @@ class EmailUserDocument extends Command
             LEFT JOIN users u ON d.employee_id = u.username
             WHERE (d.`condition` = 'At Risk' OR  d.`condition` = 'Expired')
             AND d.`status` = 'Active'
+            AND d.notification = 0
             ORDER BY diff ASC");
 
         $data = [
             'user_documents' => $resume,
-            'jml' => count($resume),
-            'type' => 'resume'
+            'jml' => count($resume)
         ];
 
 
@@ -93,6 +94,15 @@ class EmailUserDocument extends Command
             ->cc($cc)
             ->bcc($bcc)
             ->send(new SendEmail($data, 'user_document'));
+
+            for ($i=0; $i < count($resume); $i++) { 
+                $update = db::table('user_documents')
+                ->where('document_number', $resume[$i]->document_number)
+                ->where('employee_id', $resume[$i]->employee_id)
+                ->update([
+                    'notification' => 1
+                ]);
+            }
         }
     }
 }

@@ -210,6 +210,7 @@ class UserDocumentController extends Controller
 				'document_number' => $request->get('documentNumber'),
 				'valid_from' => $request->get('validFrom'),
 				'valid_to' => $request->get('validTo'),
+				'notification' => 0,
 			]);
 
 			// $safe = UserDocument::where(db::raw('DATEDIFF(valid_to, NOW())'), '>', 'reminder')->update([
@@ -280,9 +281,9 @@ class UserDocumentController extends Controller
 
 				//define reminder
 				$reminder = 0;
-				if($category == 'Passport'){
+				if($category == 'PASPOR'){
 					$reminder = 210;
-				}elseif ($category == 'IMTA') {
+				}else{
 					$reminder = 90;
 				}
 

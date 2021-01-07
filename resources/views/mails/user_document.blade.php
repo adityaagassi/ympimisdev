@@ -58,10 +58,8 @@
 			</table>
 			<br>
 
-			@if($data['type'] = 'resume')
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
 			<a href="{{ url("user_document") }}">Users Document Details</a><br>
-			@endif
 
 		</center>
 	</div>
