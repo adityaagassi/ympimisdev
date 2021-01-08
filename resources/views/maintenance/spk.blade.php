@@ -204,6 +204,13 @@
 									</div>
 
 									<div class="form-group row" align="right">
+										<label class="col-xs-2" style="margin-top: 1%;">Pencegahan<span class="text-red">*</span></label>
+										<div class="col-xs-10" align="left">
+											<textarea class="form-control" id="pencegahan_detail" placeholder="Isikan Pencegahan Agar tidak terjadi lagi"></textarea>
+										</div>
+									</div>
+
+									<div class="form-group row" align="right">
 										<label class="col-xs-2" style="margin-top: 1%; margin-bottom: 0px">Spare Part</label>
 										<div class="col-xs-5" align="left">
 											<select class="form-control part" data-placeholder="Pilih Part yang digunakan" style="width: 100%;" id="part_detail_1" onchange="get_stock(this)">
@@ -231,26 +238,10 @@
 										</div>
 
 										<!-- SPARE PART LAIN -->
-										<!-- <div class="col-xs-5" align="left">
-											<select class="form-control part" data-placeholder="Pilih Part yang digunakan" style="width: 100%;" id="part_detail_1" onchange="get_stock(this)">
-												<option value=""></option>
-											</select>
+										<label class="col-xs-2" style="margin-top: 5px">Spare Part lain</label>
+										<div class="col-xs-5" align="left" style="margin-top: 5px">
+											<input type="text" class="form-control" placeholder="Isikan Spare part (Apabila tidak ada dalam daftar)" id="spare_part_lain">
 										</div>
-										<div class="col-xs-2" align="left">
-											<div class="input-group">
-												<span class="input-group-addon"><b>Stock</b></span>
-												<input type="number" id="stock_1" class="form-control" style="text-align: center;" readonly>
-											</div>
-										</div>
-										<div class="col-xs-2" align="left">
-											<div class="input-group">
-												<span class="input-group-addon"><b>Qty</b></span>
-												<input id="qty_1" style="text-align: center;" type="number" class="form-control numpad" value="0" placeholder="Qty">
-											</div>
-										</div>
-										<div class="col-xs-1" align="left">
-											<button class="btn btn-success spare_part" onclick="add_part()" id="btn_1"><i class="fa fa-plus"></i></button>
-										</div> -->
 									</div>
 								<!-- 	<div class="form-group row" align="right">
 										<label class="col-xs-2" style="margin-top: 1%; margin-bottom: 0px">Spare Part Lain</label>
@@ -861,9 +852,10 @@ function startWork() {
 		function postFinish() {
 			var penyebab = $("#penyebab_detail").val();
 			var penanganan = $("#penanganan_detail").val();
+			var pencegahan = $("#pencegahan_detail").val();
 			var spk_detail = $("#spk_detail").val();
 
-			if (penyebab == "" || penanganan == "") {
+			if (penyebab == "" || penanganan == "" || pencegahan == "") {
 				openErrorGritter('Error', 'Ada Kolom yang Kosong');
 				return false;
 			}
@@ -880,11 +872,6 @@ function startWork() {
 				tmp_ids = ids.split('_')[2];
 
 				if ($("#part_detail_"+tmp_ids).val() != "") {
-					// if ($("#part_qty_"+tmp_ids).val() > $("#part_stock_"+tmp_ids).val()) {
-					// 	openErrorGritter('Fail', 'Melebihi Stok');
-					// 	return false;	
-					// }
-
 					part.push({'part_number' : $("#part_detail_"+tmp_ids).val(), 'qty' : $("#qty_"+tmp_ids).val()});
 				}
 			});
@@ -893,6 +880,7 @@ function startWork() {
 				order_no : spk_detail,
 				penyebab : penyebab,
 				penanganan : penanganan,
+				pencegahan : pencegahan,
 				spare_part : part,
 				foto : foto
 			}
@@ -901,7 +889,6 @@ function startWork() {
 				$.post('{{ url("report/maintenance/spk") }}', data, function(result, status, xhr){
 					if (result.status) {
 						openSuccessGritter('Success', 'SPK Terselesaikan');
-						// $("#modalAfterWork").modal('hide');
 						$("#div_master").show();
 						$("#div_after").hide();
 						$("#part_detail_1").val("");
@@ -1033,11 +1020,11 @@ function startWork() {
 					penanganan : penanganan,
 					spare_part : part,
 					foto : foto,
-					status : stat
+					status : stat,
+					other_part : $("#spare_part_lain").val()
 				}
 
 				if (ido != "btn_no_part") {
-					
 					$.post('{{ url("report/maintenance/spk/pending") }}', data, function(result, status, xhr){
 						if (result.status) {
 							openSuccessGritter('Success', 'SPK Status Pending');
@@ -1049,23 +1036,7 @@ function startWork() {
 						}
 					})
 				} else {
-					if (part[0].part_number != "") {
-						
-						// var part_detail = [];
-
-						// for (var i = 1; i <= no; i++) {
-						// 	var part_name = $("#part_detail_"+i).val();
-						// 	var part_qty = $("#qty_"+i).val();
-
-						// 	part_detail.push(part_name+" : "+part_qty);
-						// }
-
-						// var data = {
-						// 	order_no : spk_detail,
-						// 	status : stat,
-						// 	part : part_detail.toString()
-						// }
-
+					if (part.length > 0 || $("#spare_part_lain").val()) {
 						$.post('{{ url("report/maintenance/spk/pending") }}', data, function(result, status, xhr){
 							if (result.status) {
 								openSuccessGritter('Success', 'SPK Status Pending');
@@ -1078,7 +1049,6 @@ function startWork() {
 						})
 					} else {
 						openErrorGritter('Gagal', 'Part Harus Diisi');
-						return false;
 					}
 				}
 			}

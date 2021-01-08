@@ -962,7 +962,7 @@
 				if (result.detail[0].process_name == "Pending") {
 					$("#pilih_pic").hide();
 					pending += '<div class="col-xs-2" align="left"><input type="text" name="pending_status" id="pending_status" class="form-control" value="'+result.detail[0].status+'" readonly></div>';
-					pending += '<div class="col-xs-6" align="left" style="padding-right: 0px"><input type="text" name="pending_desc" id="pending_desc" class="form-control" value="'+result.detail[0].pending_desc+'" readonly></div>';
+					pending += '<div class="col-xs-6" align="left" style="padding-right: 0px"><input type="text" name="pending_desc" id="pending_desc" class="form-control" value="'+result.detail[0].pending_desc+" | "+result.detail[0].pending_remark+'" readonly></div>';
 
 					$("#pending").show();
 					$("#report_list").hide();
