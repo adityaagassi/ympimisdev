@@ -2609,12 +2609,12 @@ class AccountingController extends Controller
 
             else if ($po->posisi == "manager_pch")
             {
-                return '<label class="label label-primary">Diverifikasi Manager</label>';
+                return '<label class="label label-warning">Diverifikasi Manager</label>';
             }
 
             else if ($po->posisi == "dgm_pch")
             {
-                return '<label class="label label-primary">Diverifikasi DGM</label>';
+                return '<label class="label label-primary">Diverifikasi GM Support</label>';
             }
 
             else if ($po->posisi == "gm_pch")
