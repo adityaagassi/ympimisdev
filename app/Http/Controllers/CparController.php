@@ -2488,11 +2488,25 @@ class CparController extends Controller
       
       ");
 
+      $data_klausul = DB::select("SELECT
+        klausul,
+        sum( CASE WHEN `status` = 'Good' THEN 1 ELSE 0 END ) AS good,
+        sum( CASE WHEN `status` = 'None' THEN 1 ELSE 0 END ) AS `none`,
+        sum( CASE WHEN `status` = 'Not Good' THEN 1 ELSE 0 END ) AS `not_good`
+        FROM
+        standarisasi_audit_isos
+        WHERE 
+        kategori = 'ISO 45001' and deleted_at is null 
+        GROUP BY
+        klausul
+      ");
+
       $year = date('Y');
 
       $response = array(
         'status' => true,
         'datas' => $data,
+        'data_klausul' => $data_klausul,
         'year' => $year
       );
 
@@ -2711,7 +2725,19 @@ class CparController extends Controller
       auditor_kategori = 'ISO 14001' and deleted_at is null and auditor_date between '".$datefrom."' and '".$dateto."' ".$kate."
       GROUP BY
       auditor_date
-      
+      ");
+
+      $data_klausul = DB::select("SELECT
+        klausul,
+        sum( CASE WHEN `status` = 'Good' THEN 1 ELSE 0 END ) AS good,
+        sum( CASE WHEN `status` = 'None' THEN 1 ELSE 0 END ) AS `none`,
+        sum( CASE WHEN `status` = 'Not Good' THEN 1 ELSE 0 END ) AS `not_good`
+        FROM
+        standarisasi_audit_isos
+        WHERE 
+        kategori = 'ISO 14001' and deleted_at is null 
+        GROUP BY
+        klausul
       ");
 
       $year = date('Y');
@@ -2719,6 +2745,7 @@ class CparController extends Controller
       $response = array(
         'status' => true,
         'datas' => $data,
+        'data_klausul' => $data_klausul,
         'year' => $year
       );
 
@@ -3655,7 +3682,7 @@ class CparController extends Controller
       return view('cpar.monitoring_audit_kanban',  
         array(
             'title' => 'Monitoring Audit Kanban', 
-            'title_jp' => '',
+            'title_jp' => '監査かんばんに対する監視',
           )
         )->with('page', 'Audit Kanban');
     }

@@ -194,6 +194,10 @@ table > thead > tr > th{
             </tfoot>
           </table>
       </div>
+
+      <div class="col-md-12" style="margin-top: 5px; padding-right: 0;padding-left: 10px">
+          <div id="chart_klausul" style="width: 99%; height: 300px;"></div>
+      </div>
     </div>
   </div>
 
@@ -296,6 +300,11 @@ table > thead > tr > th{
           var reject = [];
           var revised = [];
 
+          var klausul = [];
+          var good = [];
+          var not_good = [];
+          var none = [];
+
           $.each(result.datas, function(key, value) {
             tgl.push(value.tanggal);
             cpar.push(parseInt(value.cpar));
@@ -304,6 +313,13 @@ table > thead > tr > th{
             close.push(parseInt(value.close));
             reject.push(parseInt(value.rejected));
             revised.push(parseInt(value.revised));
+          });
+
+          $.each(result.data_klausul, function(key, value) {
+            klausul.push(parseFloat(value.klausul));
+            good.push(parseInt(value.good));
+            not_good.push(parseInt(value.not_good));
+            none.push(parseInt(value.none));
           })
 
           $('#chart').highcharts({
@@ -393,9 +409,9 @@ table > thead > tr > th{
             },
             series: [
               {
-                  name: 'Close',
-                  data: close,
-                  color : '#5cb85c' //00f57f
+                  name: 'CPAR',
+                  data: cpar,
+                  color: '#ff6666',
               },
               {
                   name: 'Reject',
@@ -418,9 +434,113 @@ table > thead > tr > th{
                   color : '#f0ad4e' //f5f500
               },
               {
-                  name: 'CPAR',
-                  data: cpar,
-                  color: '#ff6666',
+                  name: 'Close',
+                  data: close,
+                  color : '#5cb85c' //00f57f
+              }
+            ]
+          });
+
+          $('#chart_klausul').highcharts({
+            chart: {
+              type: 'column'
+            },
+            title: {
+              text: 'Report Audit By Klausul'
+            },
+            xAxis: {
+              type: 'category',
+              categories: klausul,
+              lineWidth:2,
+              lineColor:'#9e9e9e',
+              gridLineWidth: 1,
+              labels: {
+                style: {
+                    fontWeight:'Bold'
+                  }
+              }
+            },
+            yAxis: {
+              lineWidth:2,
+              lineColor:'#fff',
+              type: 'linear',
+                title: {
+                  text: 'Total Temuan'
+                },
+              tickInterval: 2,  
+              stackLabels: {
+                  enabled: true,
+                  style: {
+                      fontWeight: 'bold',
+                      color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+                  }
+              }
+            },
+            legend: {
+              align: 'right',
+              x: -30,
+              verticalAlign: 'top',
+              y: 10,
+              floating: true,
+              borderWidth: 1,
+              shadow: false,
+              reversed: true,
+              itemStyle:{
+                color: "white",
+                fontSize: "12px",
+                fontWeight: "bold",
+
+              }
+            },
+            plotOptions: {
+              series: {
+                cursor: 'pointer',
+                point: {
+                  events: {
+                    click: function () {
+                      // ShowModal(this.category,this.series.name,result.datefrom,result.dateto);
+                    }
+                  }
+                },
+                borderWidth: 0,
+                dataLabels: {
+                  enabled: false,
+                  format: '{point.y}'
+                }
+              },
+              column: {
+                  color:  Highcharts.ColorString,
+                  stacking: 'normal',
+                  borderRadius: 1,
+                  dataLabels: {
+                      enabled: true
+                  }
+              }
+            },
+            credits: {
+              enabled: false
+            },
+
+            tooltip: {
+              formatter:function(){
+                return this.series.name+' : ' + this.y;
+              }
+            },
+            series: [
+              {
+                  name: 'None',
+                  data: none,
+                  color : '#00ffff' //00f57f
+              },
+              {
+                  name: 'Not Good',
+                  data: not_good,
+                  color : '#ff6666' //00f57f
+              },
+              {
+                  name: 'Good',
+                  data: good,
+                  color : '#5cb85c' //00f57f
               }
             ]
           })

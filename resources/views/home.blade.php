@@ -342,7 +342,7 @@
                             </a>
                             <br>
                             <a href="{{ url("/index/audit_kanban/monitoring") }}">
-                                <i class="fa fa-caret-right"></i> Audit Kanban Monitoring ()
+                                <i class="fa fa-caret-right"></i> Audit Kanban Monitoring (監査かんばんに対する監視)
                             </a>
                             <br>
                             <a href="{{ url("/index/audit_patrol_mis") }}">
@@ -1152,7 +1152,7 @@
                                 </tbody>
                             </table>
 
-                            <table class="table table-bordered">
+                            {{-- <table class="table table-bordered">
                                 <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
                                     <tr>
                                         <th>
@@ -1169,7 +1169,7 @@
                                         </td>
                                     </tr>
                                 </tbody>
-                            </table>
+                            </table> --}}
                             
                            <!--  <table class="table table-bordered">
                                 <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
