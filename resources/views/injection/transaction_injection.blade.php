@@ -46,7 +46,7 @@ table.table-bordered > tfoot > tr > th{
 		</p>
 	</div>
 	<div class="row">
-			<?php if ($status == 'OUT'): ?>
+			<!-- <?php if ($status == 'OUT'): ?>
 				<div class="col-xs-12" style="text-align: center;">
 				<div class="row">
 					<div class="col-xs-10 col-xs-offset-1" style="padding-right: 0px;padding-left: 0px">
@@ -71,7 +71,7 @@ table.table-bordered > tfoot > tr > th{
 						</button>
 					</div>
 				</div>
-			</div>
+			</div> -->
 		<div class="col-xs-12" style="text-align: center;padding-top: 10px">
 			<div class="row">
 				<div class="col-md-1">
@@ -249,166 +249,86 @@ table.table-bordered > tfoot > tr > th{
 	var intervalCheck;
 
 	jQuery(document).ready(function() {
-		$('#resultScanBody').html("");
+		// $('#resultScanBody').html("");
 		var status = '{{$status}}';
-		if (status == 'OUT') {
-			$('#modalOperator').modal({
-				backdrop: 'static',
-				keyboard: false
-			});
-		}
+		// if (status == 'OUT') {
+		// 	$('#modalOperator').modal({
+		// 		backdrop: 'static',
+		// 		keyboard: false
+		// 	});
+		// }
 		fillResult();
-		// checkInjections();
+		checkInjections();
 
 		// if ('{{$status}}' == 'IN') {
-			// intervalCheck = setInterval(checkInjections,5000);
+			intervalCheck = setInterval(checkInjections,5000);
 		// }
 		// checkInjections();
 
       $('body').toggleClass("sidebar-collapse");
-		$("#tag_product").val("");
+		// $("#tag_product").val("");
 		
-		$("#operator").val("");
-		if ('{{$status}}' == 'IN') {
-			$('#tag_product').focus();
-		}else{
-			$('#operator').focus();
-		}
+		// $("#operator").val("");
+		// if ('{{$status}}' == 'IN') {
+		// 	$('#tag_product').focus();
+		// }else{
+		// 	$('#operator').focus();
+		// }
 		$("#operator_id").val("");
 		$("#operator_name").val("-");
 	});
 
-	$('#modalOperator').on('shown.bs.modal', function () {
-		$('#operator').focus();
-	});
+	// $('#modalOperator').on('shown.bs.modal', function () {
+	// 	$('#operator').focus();
+	// });
 
-	$('#operator').keydown(function(event) {
-		if (event.keyCode == 13 || event.keyCode == 9) {
-			if($("#operator").val().length >= 8){
-				var data = {
-					employee_id : $("#operator").val()
-				}
-				
-				$.get('{{ url("scan/injeksi/operator") }}', data, function(result, status, xhr){
-					if(result.status){
-						openSuccessGritter('Success!', result.message);
-						$('#modalOperator').modal('hide');
-						$('#operator_name').val(result.employee.employee_id+' - '+result.employee.name);
-						$('#operator_name').prop('disabled',true);
-						$('#operator_id').val(result.employee.employee_id);
-						$('#tag_product').focus();
-					}
-					else{
-						audio_error.play();
-						openErrorGritter('Error', result.message);
-						$('#operator').val('');
-					}
-				});
-			}
-			else{
-				openErrorGritter('Error!', 'Employee ID Invalid.');
-				audio_error.play();
-				$("#operator").val("");
-			}			
-		}
-	});
-
-	$('#tag_product').keyup(function(event) {
-		if (event.keyCode == 13 || event.keyCode == 9) {
-			if(isNaN($('#tag_product').val()) == false){
-				checkInjections();
-				// clearInterval(intervalCheck);
-				$('#tag_product').prop('disabled',true);
-			}else{
-				$('#tag_product').val('');
-				$('#tag_product').focus();
-				// intervalCheck = setInterval(checkInjections,5000);
-				openErrorGritter('Error!','Tag Invalid');
-			}
-		}
-	});
-
-	// $('#tag_product').keyup(function(event) {
+	// $('#operator').keydown(function(event) {
 	// 	if (event.keyCode == 13 || event.keyCode == 9) {
-	// 		if($("#tag_product").val().length >= 7){
-	// 			var stts = '{{$status}}';
+	// 		if($("#operator").val().length >= 8){
 	// 			var data = {
-	// 				tag : $("#tag_product").val(),
-	// 				status : stts,
+	// 				employee_id : $("#operator").val()
 	// 			}
-
-	// 			var bodyScan = "";
-	// 			$('#resultScanBody').html("");
-	// 			var ngScan = "";
-	// 			$('#resultNGBody').html("");
-	// 			var statustransaction = '{{$status}}';
-
-	// 			var jumlah = 0;
-
-	// 			$.get('{{ url("scan/tag_product") }}', data, function(result, status, xhr){
+				
+	// 			$.get('{{ url("scan/injeksi/operator") }}', data, function(result, status, xhr){
 	// 				if(result.status){
-	// 					openSuccessGritter('Success!', 'Scan Tag Success');
-	// 					$('#tag_product').prop('disabled',true);
-	// 					$.each(result.data, function(key, value) {
-	// 						bodyScan += '<tr>';
-	// 						bodyScan += '<td id="material_number">'+value.material_number+'</td>';
-	// 						bodyScan += '<td id="part_name">'+value.part_name+'</td>';
-	// 						bodyScan += '<td id="part_type">'+value.part_type+'</td>';
-	// 						bodyScan += '<td id="color">'+value.color+'</td>';
-	// 						bodyScan += '<td id="cavity">'+value.cavity+'</td>';
-	// 						bodyScan += '<td id="qty">'+value.shot+'</td>';
-	// 						bodyScan += '<td id="status">'+statustransaction+'</td>';
-	// 						bodyScan += '</tr>';
-	// 						bodyScan += '<tr>';
-	// 						bodyScan += '<td colspan="7" style="padding:10px"><button class="btn btn-danger pull-left" onclick="cancel()">CANCEL</button><button class="btn btn-success pull-right" onclick="completion()">SUBMIT</button></td>';
-	// 						bodyScan += '</tr>';
-
-	// 						if (stts == 'OUT') {
-	// 							if (value.ng_name != null) {
-	// 								ng_arr = value.ng_name.split(',');
-	// 								qty_arr = value.ng_count.split(',');
-
-	// 								for(var i = 0; i < ng_arr.length; i++){
-	// 									ngScan += '<tr>';
-	// 									ngScan += '<td id="ng_name">'+ng_arr[i]+'</td>';
-	// 									ngScan += '<td id="ng_qty">'+qty_arr[i]+'</td>';
-	// 									ngScan += '</tr>';
-	// 									jumlah = jumlah + parseInt(qty_arr[i]);
-	// 								}
-
-	// 								ngScan += '<tr style="background-color:rgba(126,86,134,.7);">';
-	// 								ngScan += '<td style="border:1px solid black;border-top:1px solid black" id="total_ng_name"><b>TOTAL</b></td>';
-	// 								ngScan += '<td style="border:1px solid black;border-top:1px solid black" id="total_ng_qty"><b>'+jumlah+'</b></td>';
-	// 								ngScan += '</tr>';
-	// 							}
-	// 						}
-
-	// 						if (statustransaction == 'IN') {
-	// 							$('#operator_id').val(value.operator_id);
-	// 						}
-	// 					})
-
-	// 					$('#resultScanBody').append(bodyScan);
-	// 					if (stts == 'OUT') {
-	// 						$('#resultNGBody').append(ngScan);
-	// 					}
+	// 					openSuccessGritter('Success!', result.message);
+	// 					$('#modalOperator').modal('hide');
+	// 					$('#operator_name').val(result.employee.employee_id+' - '+result.employee.name);
+	// 					$('#operator_name').prop('disabled',true);
+	// 					$('#operator_id').val(result.employee.employee_id);
+	// 					$('#tag_product').focus();
 	// 				}
 	// 				else{
-	// 					openErrorGritter('Error!', 'Tag Invalid');
 	// 					audio_error.play();
-	// 					$("#tag_product").val("");
-	// 					$("#tag_product").focus();
+	// 					openErrorGritter('Error', result.message);
+	// 					$('#operator').val('');
 	// 				}
 	// 			});
 	// 		}
 	// 		else{
-	// 			openErrorGritter('Error!', 'Tag Invalid');
+	// 			openErrorGritter('Error!', 'Employee ID Invalid.');
 	// 			audio_error.play();
-	// 			$("#tag_product").val("");
-	// 			$("#tag_product").focus();
+	// 			$("#operator").val("");
 	// 		}			
 	// 	}
 	// });
+
+	// $('#tag_product').keyup(function(event) {
+	// 	if (event.keyCode == 13 || event.keyCode == 9) {
+	// 		if(isNaN($('#tag_product').val()) == false){
+	// 			checkInjections();
+	// 			// clearInterval(intervalCheck);
+	// 			$('#tag_product').prop('disabled',true);
+	// 		}else{
+	// 			$('#tag_product').val('');
+	// 			$('#tag_product').focus();
+	// 			// intervalCheck = setInterval(checkInjections,5000);
+	// 			openErrorGritter('Error!','Tag Invalid');
+	// 		}
+	// 	}
+	// });
+
+	
 
 	function checkInjections() {
 		$('#resultScanBody').html("");
@@ -439,8 +359,8 @@ table.table-bordered > tfoot > tr > th{
 						bodyScan += '<td>'+value.no_kanban+'</td>';
 						bodyScan += '<td>'+value.shot+'</td>';
 						bodyScan += '<td>'+statustransaction+'</td>';
-						// bodyScan += '<td><button class="btn btn-primary" style="height:100%;font-weight:bold" onclick="showModalCompletion(\''+value.process_id+'\',\''+value.injection_id+'\',\''+value.tag_rfid+'\',\''+value.material_number+'\',\''+value.part_name+'\',\''+value.part_type+'\',\''+value.color+'\',\''+value.cavity+'\',\''+value.shot+'\',\''+statustransaction+'\',\''+value.employee_id+'\',\''+value.name+'\')">TRANSAKSIKAN</button><button class="btn btn-danger" style="height:100%;font-weight:bold;padding-left:10px" onclick="deleteCompletion(\''+value.concat_kanban+'\')">CANCEL</button></td>';
-						bodyScan += '<td><button class="btn btn-primary" style="height:100%;font-weight:bold" onclick="showModalCompletion(\''+value.process_id+'\',\''+value.injection_id+'\',\''+value.tag_rfid+'\',\''+value.material_number+'\',\''+value.part_name+'\',\''+value.part_type+'\',\''+value.color+'\',\''+value.cavity+'\',\''+value.shot+'\',\''+statustransaction+'\',\''+value.employee_id+'\',\''+value.name+'\')">TRANSAKSIKAN</button></td>';
+						bodyScan += '<td><button class="btn btn-primary" style="height:100%;font-weight:bold" onclick="showModalCompletion(\''+value.process_id+'\',\''+value.injection_id+'\',\''+value.tag_rfid+'\',\''+value.material_number+'\',\''+value.part_name+'\',\''+value.part_type+'\',\''+value.color+'\',\''+value.cavity+'\',\''+value.shot+'\',\''+statustransaction+'\',\''+value.employee_id+'\',\''+value.name+'\')">TRANSAKSIKAN</button><button class="btn btn-danger" style="height:100%;font-weight:bold;padding-left:10px" onclick="deleteCompletion(\''+value.concat_kanban+'\')">CANCEL</button></td>';
+						// bodyScan += '<td><button class="btn btn-primary" style="height:100%;font-weight:bold" onclick="showModalCompletion(\''+value.process_id+'\',\''+value.injection_id+'\',\''+value.tag_rfid+'\',\''+value.material_number+'\',\''+value.part_name+'\',\''+value.part_type+'\',\''+value.color+'\',\''+value.cavity+'\',\''+value.shot+'\',\''+statustransaction+'\',\''+value.employee_id+'\',\''+value.name+'\')">TRANSAKSIKAN</button></td>';
 						bodyScan += '</tr>';
 						bodyScan += '<tr>';
 						bodyScan += '</tr>';
@@ -605,9 +525,9 @@ table.table-bordered > tfoot > tr > th{
 		$.post('{{ url("index/injection/completion") }}', data, function(result, status, xhr){
 			if(result.status){
 				openSuccessGritter('Success!', 'Transaction Success');
-				if ('{{$status}}' == "IN") {
+				// if ('{{$status}}' == "IN") {
 					$('#loading').hide();
-					$('#resultScanBody').html("");
+					// $('#resultScanBody').html("");
 					$('#resultNGBody').html("");
 					fillResult();
 					checkInjections();
@@ -620,10 +540,10 @@ table.table-bordered > tfoot > tr > th{
 					$('#tag_product').removeAttr('disabled');
 					$('#resultScanBody').html("");
 					// intervalCheck = setInterval(checkInjections,5000);
-				}else{
-					openSuccessGritter('Success','Sukses Transaksi');
-					location.reload();
-				}
+				// }else{
+				// 	openSuccessGritter('Success','Sukses Transaksi');
+				// 	location.reload();
+				// }
 			}
 			else{
 				openErrorGritter('Error!', 'Upload Failed.');
