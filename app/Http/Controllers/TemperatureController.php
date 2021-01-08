@@ -1263,7 +1263,7 @@ public function fetchMinMoeMonitoring(Request $request)
                     FROM
                          ivms.ivms_attendance 
                     WHERE
-                         ivms.ivms_attendance.auth_date = '2021-01-08' 
+                         ivms.ivms_attendance.auth_date = '".$now."' 
                     AND
                     IF
                          (
@@ -1384,7 +1384,7 @@ public function fetchMinMoeMonitoring(Request $request)
                     FROM
                          ivms.ivms_attendance 
                     WHERE
-                         ivms.ivms_attendance.auth_date = '2021-01-08' 
+                         ivms.ivms_attendance.auth_date = '".$now."' 
                     AND
                     IF
                          (
@@ -1502,7 +1502,7 @@ public function fetchMinMoeMonitoring(Request $request)
                     FROM
                          ivms.ivms_attendance 
                     WHERE
-                         ivms.ivms_attendance.auth_date = '2021-01-08' 
+                         ivms.ivms_attendance.auth_date = '".$now."' 
                     AND
                     IF
                          (
