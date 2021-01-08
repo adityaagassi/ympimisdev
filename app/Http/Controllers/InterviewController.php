@@ -370,7 +370,7 @@ class InterviewController extends Controller
         $activity_id = $interview->activity_lists->id;
         $leader = $interview->activity_lists->leader_dept;
 
-        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department like '%".$departments."%'";
+        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department like '%".$departments."%' and employee_syncs.end_date is null";
         $operator = DB::select($queryOperator);
         $operator2 = DB::select($queryOperator);
 

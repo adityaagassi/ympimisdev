@@ -157,7 +157,7 @@
 							<table id="example1" class="table table-bordered table-striped table-hover">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th>Sub Section</th>
+										<th>Group</th>
 										<th>Point Check</th>
 										<th>Date</th>
 										<th>Condition</th>
@@ -260,8 +260,8 @@
 				  <input type="text" name="department" id="inputdepartment" class="form-control" value="{{ $departments }}" readonly required="required" title="">
 	            </div>
 	            <div class="form-group">
-	             <label>Sub Section<span class="text-red">*</span></label>
-	                <select class="form-control" name="inputsubsection" id="inputsubsection" style="width: 100%;" data-placeholder="Pilih Sub Section..." required>
+	             <label>Group</label>
+	                <select class="form-control" name="inputsubsection" id="inputsubsection" style="width: 100%;" data-placeholder="Pilih Group..." required>
 	                  <!-- <option value=""></option> -->
 	                  @foreach($subsection as $subsection)
 	                  <option value="{{ $subsection->sub_section_name }}">{{ $subsection->sub_section_name }}</option>
@@ -276,7 +276,7 @@
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
             	<div class="form-group">
             		<?php $no = 1 ?>
-	              <label>Point Check<span class="text-red">*</span></label>
+	              <label>Point Check</label>
 	                <select class="form-control" name="inputpoint_check" id="inputpoint_check" style="width: 100%;" data-placeholder="Pilih Point Check..." required>
 	                  <!-- <option value=""></option> -->
 	                  @foreach($point_check as $point_check)
@@ -295,7 +295,7 @@
 				  </div>
 	            </div>
 	            <div class="form-group">
-	              <label>PIC<span class="text-red">*</span></label>
+	              <label>PIC</label>
 	                <select class="form-control select2" name="inputpic" id="inputpic" style="width: 100%;" data-placeholder="Pilih PIC..." required>
 	                  <option value=""></option>
 	                  @foreach($pic as $pic)
@@ -336,8 +336,8 @@
 				  <input type="text" name="department" id="editdepartment" class="form-control" value="" readonly required="required" title="">
 	            </div>
 	            <div class="form-group">
-	             <label>Sub Section<span class="text-red">*</span></label>
-	                <select class="form-control" name="editsubsection" id="editsubsection" style="width: 100%;" data-placeholder="Pilih Sub Section..." required>
+	             <label>Group</label>
+	                <select class="form-control" name="editsubsection" id="editsubsection" style="width: 100%;" data-placeholder="Pilih Group..." required>
 	                  <!-- <option value=""></option> -->
 	                  @foreach($subsection2 as $subsection2)
 	                  <option value="{{ $subsection2->sub_section_name }}">{{ $subsection2->sub_section_name }}</option>
@@ -351,7 +351,7 @@
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
             	<div class="form-group">
-	              <label>Point Check<span class="text-red">*</span></label>
+	              <label>Point Check</label>
 	              <?php $no = 1 ?>
 	                <select class="form-control" name="editpoint_check" id="editpoint_check" style="width: 100%;" data-placeholder="Pilih Point Check..." required>
 	                  <!-- <option value=""></option> -->
@@ -371,7 +371,7 @@
 				  </div>
 	            </div>
 	            <div class="form-group">
-	              <label>PIC<span class="text-red">*</span></label>
+	              <label>PIC</label>
 	                <select class="form-control select2" name="editpic" id="editpic" style="width: 100%;" data-placeholder="Pilih PIC..." required>
 	                  <option value=""></option>
 	                  @foreach($pic2 as $pic2)

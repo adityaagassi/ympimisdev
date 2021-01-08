@@ -107,7 +107,7 @@ table {
 						@elseif($detail->filosofi_yamaha == 'OK (Kurang Lancar)')
 							<center><label class="label label-warning">X</label></center>
 						@else
-							<center><label class="label label-danger">-</label></center>
+							<center><label class="label label-danger"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
 						@endif
 					</td>
 					<td style="border: 1px solid black;font-size: 10px;">
@@ -116,7 +116,7 @@ table {
 						@elseif($detail->aturan_k3 == 'OK (Kurang Lancar)')
 							<center><label class="label label-warning">X</label></center>
 						@else
-							<center><label class="label label-danger">-</label></center>
+							<center><label class="label label-danger"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
 						@endif
 					</td>
 					<td style="border: 1px solid black;font-size: 10px;">
@@ -125,7 +125,7 @@ table {
 						@elseif($detail->komitmen_berkendara == 'OK (Kurang Lancar)')
 							<center><label class="label label-warning">X</label></center>
 						@else
-							<center><label class="label label-danger">-</label></center>
+							<center><label class="label label-danger"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
 						@endif
 					</td>
 					<td style="border: 1px solid black;font-size: 10px;">
@@ -134,7 +134,7 @@ table {
 						@elseif($detail->kebijakan_mutu == 'OK (Kurang Lancar)')
 							<center><label class="label label-warning">X</label></center>
 						@else
-							<center><label class="label label-danger">-</label></center>
+							<center><label class="label label-danger"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
 						@endif
 					</td>
 					<td style="border: 1px solid black;font-size: 10px;">
@@ -143,7 +143,7 @@ table {
 						@elseif($detail->dasar_tindakan_bekerja == 'OK (Kurang Lancar)')
 							<center><label class="label label-warning">X</label></center>
 						@else
-							<center><label class="label label-danger">-</label></center>
+							<center><label class="label label-danger"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
 						@endif
 					</td>
 					<td style="border: 1px solid black;font-size: 10px;">
@@ -152,7 +152,7 @@ table {
 						@elseif($detail->enam_pasal_keselamatan == 'OK (Kurang Lancar)')
 							<center><label class="label label-warning">X</label></center>
 						@else
-							<center><label class="label label-danger">-</label></center>
+							<center><label class="label label-danger"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
 						@endif
 					</td>
 					<td style="border: 1px solid black;font-size: 10px;">
@@ -161,7 +161,7 @@ table {
 						@elseif($detail->budaya_kerja == 'OK (Kurang Lancar)')
 							<center><label class="label label-warning">X</label></center>
 						@else
-							<center><label class="label label-danger">-</label></center>
+							<center><label class="label label-danger"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
 						@endif
 					</td>
 					<td style="border: 1px solid black;font-size: 10px;">
@@ -170,7 +170,7 @@ table {
 						@elseif($detail->budaya_5s == 'OK (Kurang Lancar)')
 							<center><label class="label label-warning">X</label></center>
 						@else
-							<center><label class="label label-danger">-</label></center>
+							<center><label class="label label-danger"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
 						@endif
 					</td>
 					<td style="border: 1px solid black;font-size: 10px;">
@@ -179,7 +179,7 @@ table {
 						@elseif($detail->komitmen_hotel_konsep == 'OK (Kurang Lancar)')
 							<center><label class="label label-warning">X</label></center>
 						@else
-							<center><label class="label label-danger">-</label></center>
+							<center><label class="label label-danger"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
 						@endif
 					</td>
 					<td style="border: 1px solid black;font-size: 10px;">
@@ -188,7 +188,7 @@ table {
 						@elseif($detail->janji_tindakan_dasar == 'OK (Kurang Lancar)')
 							<center><label class="label label-warning">X</label></center>
 						@else
-							<center><label class="label label-danger">-</label></center>
+							<center><label class="label label-danger"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
 						@endif
 					</td>
 				</tr>

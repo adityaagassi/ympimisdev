@@ -156,7 +156,7 @@
 						                	@endif</td>
 										<td>
 											<center>
-												<a class="btn btn-primary btn-sm" href="{{secure_url('index/interview/details/'.$interview->id)}}"><b>Peserta Interview</b></a>
+												<a class="btn btn-primary btn-sm" href="{{url('index/interview/details/'.$interview->id)}}"><b>Peserta Interview</b></a>
 												<a target="_blank" class="btn btn-success btn-sm" href="{{url('index/interview/print_interview/'.$interview->id)}}"><b>Cetak</b></a>
 												@if($interview->send_status == "")
 							                		<a class="btn btn-info btn-sm" href="{{url('index/interview/sendemail/'.$interview->id)}}"><b>Kirim Email</b></a>
