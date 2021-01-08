@@ -82,6 +82,25 @@
 		color: black;
 	}
 
+	div#tableDetailCheck_info.dataTables_info,
+	 div#tableDetailCheck_filter.dataTables_filter label,
+	 div#tableDetailCheck_wrapper.dataTables_wrapper{
+		color: black;
+	}
+
+	#tableDetailCheck_info.dataTables_info,
+	#tableDetailCheck_info.dataTables_length {
+		color: black;
+	}
+
+	#tableTotalOfc tr td {
+		cursor: pointer;
+	}
+
+	#tableTotalPrd tr td {
+		cursor: pointer;
+	}
+
 </style>
 @stop
 @section('header')
@@ -119,18 +138,65 @@
 		<div class="col-xs-12" style="padding-bottom: 5px;">
 			<div class="row">
 				<div class="col-xs-5">
-					<span style="color: white; font-size: 1.7vw; font-weight: bold;"><i class="fa fa-caret-right"></i> Cek Hari Ini</span>
-					<table class="table table-bordered" id="tableTotal" style="margin-bottom: 5px;">
+					<span style="color: white; font-size: 1.7vw; font-weight: bold;"><i class="fa fa-caret-right"></i> Office</span>
+					<table class="table table-bordered" id="tableTotalOfc" style="margin-bottom: 5px;">
 						<thead>
 							<tr>
-								<th style="width: 50%; text-align: center;color: white; font-size: 1.2vw;">Sudah Cek</th>
-								<th style="width: 50%; text-align: center;color: white; font-size: 1.2vw">Belum Cek</th>;
-							</tr>			
+								<th style="width:2%; text-align: center;color: white; font-size: 1.2vw;border-bottom: 2px solid black">Shift Schedule</th>
+								<th style="width: 3%; text-align: center;color: white; font-size: 1.2vw;border-bottom: 2px solid black">Hadir</th>
+								<th style="width: 3%; text-align: center;color: white; font-size: 1.2vw;border-bottom: 2px solid black">Belum Hadir</th>
+								<th style="width: 3%; text-align: center;color: white; font-size: 1.2vw;border-bottom: 2px solid black">Total</th>
+							</tr>
 						</thead>
-						<tbody id="tableTotalBody">
+						<tbody id="tableTotalBodyOfc">
 							<tr>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="total_check"></td>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="total_uncheck"></td>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="">Shift 1</td>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_check_ofc_1"></td>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_uncheck_ofc_1"></td>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_person_ofc_1"></td>
+							</tr>
+							<tr>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="">Shift 2</td>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_check_ofc_2"></td>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_uncheck_ofc_2"></td>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_person_ofc_2"></td>
+							</tr>
+							<!-- <tr>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="">Shift 3</td>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="total_check_ofc_3"></td>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="total_uncheck_ofc_3"></td>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="total_person_ofc_3"></td>
+							</tr> -->
+						</tbody>
+					</table>
+					<span style="color: white; font-size: 1.7vw; font-weight: bold;"><i class="fa fa-caret-right"></i> Production</span>
+					<table class="table table-bordered" id="tableTotalPrd" style="margin-bottom: 5px;">
+						<thead>
+							<tr>
+								<th style="width:2%; text-align: center;color: white; font-size: 1.2vw;">Shift Schedule</th>
+								<th style="width: 3%; text-align: center;color: white; font-size: 1.2vw;">Hadir</th>
+								<th style="width: 3%; text-align: center;color: white; font-size: 1.2vw">Belum Hadir</th>
+								<th style="width: 3%; text-align: center;color: white; font-size: 1.2vw">Total</th>
+							</tr>
+						</thead>
+						<tbody id="tableTotalBodyPrd">
+							<tr>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="">Shift 1</td>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="total_check_prd_1"></td>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="total_uncheck_prd_1"></td>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="total_person_prd_1"></td>
+							</tr>
+							<tr>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="">Shift 2</td>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="total_check_prd_2"></td>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="total_uncheck_prd_2"></td>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="total_person_prd_2"></td>
+							</tr>
+							<tr>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="">Shift 3</td>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="total_check_prd_3"></td>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="total_uncheck_prd_3"></td>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="total_person_prd_3"></td>
 							</tr>
 						</tbody>
 					</table>
@@ -145,7 +211,7 @@
 						<tbody id="tableAbnormalBody">
 						</tbody>
 					</table>
-					<span style="color: white; font-size: 1.7vw; font-weight: bold;"><i class="fa fa-caret-right"></i> Detail Belum Cek</span>
+					<!-- <span style="color: white; font-size: 1.7vw; font-weight: bold;"><i class="fa fa-caret-right"></i> Detail Belum Cek</span>
 					<table class="table table-bordered" id="tableNoCheck" style="margin-bottom: 5px;">
 						<thead>
 							<tr>
@@ -159,7 +225,7 @@
 						</thead>
 						<tbody id="tableNoCheckBody">
 						</tbody>
-					</table>
+					</table> -->
 				</div>
 				<div class="col-xs-7">
 					<div id="container1" class="container1" style="width: 100%;height: 600px"></div>
@@ -177,7 +243,7 @@
 				<h4 style="padding-bottom: 15px" class="modal-title" id="modalDetailTitle"></h4>
 				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
 					<center>
-						<i class="fa fa-spinner fa-spin" id="loading" style="font-size: 80px;"></i>
+						<i class="fa fa-spinner fa-spin" id="loadingDetail" style="font-size: 80px;"></i>
 					</center>
 					<table class="table table-hover table-bordered table-striped" id="tableDetail">
 						<thead style="background-color: rgba(126,86,134,.7);">
@@ -192,6 +258,42 @@
 							</tr>
 						</thead>
 						<tbody id="tableDetailBody">
+						</tbody>
+						<!-- <tfoot>
+							<tr>
+								<th colspan="5">Total Duration</th>
+								<th id="totalDetail">9</th>
+							</tr>
+						</tfoot> -->
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalDetailCheck">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 style="padding-bottom: 15px" class="modal-title" id="modalDetailTitleCheck"></h4>
+				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
+					<center>
+						<i class="fa fa-spinner fa-spin" id="loadingDetailCheck" style="font-size: 80px;"></i>
+					</center>
+					<table class="table table-hover table-bordered table-striped" id="tableDetailCheck">
+						<thead style="background-color: rgba(126,86,134,.7);">
+							<tr style="color: white">
+								<th style="color:white;width: 1%; font-size: 1.2vw;">#</th>
+								<th style="color:white;width: 5%; font-size: 1.2vw; text-align: center;">ID</th>
+								<th style="color:white;width: 30%; font-size: 1.2vw; text-align: center;">Name</th>
+								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Dept</th>
+								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Shift</th>
+								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Attendance</th>
+								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Time In</th>
+							</tr>
+						</thead>
+						<tbody id="tableDetailCheckBody">
 						</tbody>
 						<!-- <tfoot>
 							<tr>
@@ -256,78 +358,476 @@
 				if (result.status) {
 					$('#tableNoCheck').DataTable().clear();
 					$('#tableNoCheck').DataTable().destroy();
-					$('#tableNoCheckBody').html('');
+					// $('#tableNoCheckBody').html('');
 
 					var index = 1;
-					var check = 0;
-					var uncheck = 0;
+
+					var check_ofc_1 = 0;
+					var uncheck_ofc_1 = 0;
+					var check_ofc_2 = 0;
+					var uncheck_ofc_2 = 0;
+					var total_ofc_1 = 0;
+					var total_ofc_2 = 0;
+
+					var check_prd_1 = 0;
+					var uncheck_prd_1 = 0;
+					var check_prd_2 = 0;
+					var uncheck_prd_2 = 0;
+					var check_prd_3 = 0;
+					var uncheck_prd_3 = 0;
+					var total_prd_1 = 0;
+					var total_prd_2 = 0;
+					var total_prd_3 = 0;
+
+					var detail_check_ofc_1 = [];
+					var detail_uncheck_ofc_1 = [];
+					var detail_check_ofc_2 = [];
+					var detail_uncheck_ofc_2 = [];
+					var detail_total_ofc_1 = [];
+					var detail_total_ofc_2 = [];
+
+					var detail_check_prd_1 = [];
+					var detail_uncheck_prd_1 = [];
+					var detail_check_prd_2 = [];
+					var detail_uncheck_prd_2 = [];
+					var detail_check_prd_3 = [];
+					var detail_uncheck_prd_3 = [];
+					var detail_total_prd_1 = [];
+					var detail_total_prd_2 = [];
+					var detail_total_prd_3 = [];
+
 					var resultData = "";
 
 					var dataPersonTemperature = [];
 					var dataTemperature = [];
 
 					$.each(result.datacheck, function(key, value) {
+						console.log(value.time_in);
+						console.log(result.now+' 04:00:00');
+						console.log(result.yesterday+' 23:00:00');
 						var attnd = '-';
 						var shiftdaily_code = '-';
 						var emp_no = value.employee_id;
-						if (value.checks == null) {
-							$.each(result.attendance, function(key, value2) {
-								if (value2.length > 0) {
-									if (emp_no == value2[0].emp_no) {
-										attnd = value2[0].attend_code;
-										shiftdaily_code = value2[0].shiftdaily_code;
+						if (value.remark == 'OFC' || value.remark == 'Jps') {
+							if (value.checks == null) {
+								$.each(result.attendance, function(key, value2) {
+									if (value2.length > 0) {
+										if (emp_no == value2[0].emp_no) {
+											attnd = value2[0].attend_code;
+											shiftdaily_code = value2[0].shiftdaily_code;
+										}
+									}else{
 									}
+								});
+
+								if (shiftdaily_code.match(/Shift_1/gi)) {
+									uncheck_ofc_1++;
+									total_ofc_1++;
+									detail_uncheck_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+									detail_total_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+								}else if(shiftdaily_code.match(/Shift_2/gi)){
+									uncheck_ofc_2++;
+									total_ofc_2++;
+									detail_uncheck_ofc_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+									detail_total_ofc_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
 								}else{
+									uncheck_ofc_1++;
+									total_ofc_1++;
+									detail_uncheck_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+									detail_total_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
 								}
-							});
-							resultData += '<tr>';
-							resultData += '<td style="font-size: 1vw;">'+ index +'</td>';
-							resultData += '<td style="font-size: 1vw;">'+ value.employee_id +'</td>';
-							resultData += '<td style="font-size: 1vw;">'+ value.name +'</td>';
-							resultData += '<td style="font-size: 1vw;">'+ value.department_shortname +'</td>';
-							resultData += '<td style="font-size: 1vw;">'+ shiftdaily_code +'</td>';
-							resultData += '<td style="font-size: 1vw;">'+ attnd +'</td>';
-							resultData += '</tr>';
-							index++;
-							uncheck++;
+							}else{
+								$.each(result.attendance, function(key, value2) {
+									if (value2.length > 0) {
+										if (emp_no == value2[0].emp_no) {
+											attnd = value2[0].attend_code;
+											shiftdaily_code = value2[0].shiftdaily_code;
+										}
+									}else{
+									}
+								});
+
+								if (shiftdaily_code.match(/Shift_1/gi)) {
+									check_ofc_1++;
+									total_ofc_1++;
+									detail_check_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+									detail_total_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+								}else if(shiftdaily_code.match(/Shift_2/gi)){
+									check_ofc_2++;
+									total_ofc_2++;
+									detail_check_ofc_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+									detail_total_ofc_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+								}else if(shiftdaily_code.match(/Shift_3/gi)){
+									check_ofc_3++;
+									total_ofc_3++;
+									detail_check_ofc_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+									detail_total_ofc_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+								}else{
+									check_ofc_1++;
+									total_ofc_1++;
+									detail_check_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+									detail_total_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+								}
+							}
 						}else{
-							if (value.temperature != null) {
-								dataPersonTemperature.push({employee_id:value.employee_id,temperature:value.temperature});
-								dataTemperature.push(value.temperature);
+							if (value.checks == null) {
+								$.each(result.attendance, function(key, value2) {
+									if (value2.length > 0) {
+										if (emp_no == value2[0].emp_no) {
+											attnd = value2[0].attend_code;
+											shiftdaily_code = value2[0].shiftdaily_code;
+										}
+									}else{
+									}
+								});
+
+								if (shiftdaily_code.match(/Shift_1/gi)) {
+									uncheck_prd_1++;
+									total_prd_1++;
+									detail_uncheck_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+									detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+								}else if(shiftdaily_code.match(/Shift_2/gi)){
+									uncheck_prd_2++;
+									total_prd_2++;
+									detail_uncheck_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+									detail_total_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+								}else if(shiftdaily_code.match(/Shift_3/gi)){
+									uncheck_prd_3++;
+									total_prd_3++;
+									detail_uncheck_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+									detail_total_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+								}else{
+									uncheck_prd_1++;
+									total_prd_1++;
+									detail_uncheck_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+									detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+								}
+							}else{
+								$.each(result.attendance, function(key, value2) {
+									if (value2.length > 0) {
+										if (emp_no == value2[0].emp_no) {
+											attnd = value2[0].attend_code;
+											shiftdaily_code = value2[0].shiftdaily_code;
+										}
+									}else{
+									}
+								});
+
+								if (value.time_in >= result.now+' 04:00:00' && value.time_in <= result.now+' 08:00:00') {
+									check_prd_1++;
+									total_prd_1++;
+									detail_check_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+									detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+								}else if(value.time_in >= result.now+' 15:00:00' && value.time_in <= result.now+' 18:00:00'){
+									check_prd_2++;
+									total_prd_2++;
+									detail_check_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+									detail_total_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+								}else if(value.time_in >= result.yesterday+' 22:00:00' && value.time_in <= result.yesterday+' 23:59:00'){
+									check_prd_3++;
+									total_prd_3++;
+									detail_check_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+									detail_total_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+								}else{
+									if (shiftdaily_code.match(/Shift_1/gi)) {
+										uncheck_prd_1++;
+										total_prd_1++;
+										detail_uncheck_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+										detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+									}else if(shiftdaily_code.match(/Shift_2/gi)){
+										uncheck_prd_2++;
+										total_prd_2++;
+										detail_uncheck_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+										detail_total_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+									}else if(shiftdaily_code.match(/Shift_3/gi)){
+										uncheck_prd_3++;
+										total_prd_3++;
+										detail_uncheck_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+										detail_total_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+									}else{
+										uncheck_prd_1++;
+										total_prd_1++;
+										detail_uncheck_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+										detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+									}
+								}
 							}
-							check++;
 						}
+						// if (value.checks == null) {
+						// 	if (value.remark == 'OFC' || value.remark == 'Jps' ) {
+						// 		$.each(result.attendance, function(key, value2) {
+						// 			if (value2.length > 0) {
+						// 				if (emp_no == value2[0].emp_no) {
+						// 					attnd = value2[0].attend_code;
+						// 					shiftdaily_code = value2[0].shiftdaily_code;
+						// 				}
+						// 			}else{
+						// 			}
+						// 		});
+						// 		if (value.grade.match(/E/gi)) {
+						// 			shiftdaily_code = 'Shift_1';
+						// 		}else{
+						// 			shiftdaily_code = shiftdaily_code;
+						// 		}
+						// 		if (shiftdaily_code.match(/Shift_2/gi)) {
+						// 			detail_uncheck_ofc_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
+						// 			detail_total_ofc_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
+						// 			uncheck_ofc_2++;
+						// 			total_ofc_2++;
+						// 		}else{
+						// 			detail_uncheck_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
+						// 			detail_total_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
+						// 			uncheck_ofc_1++;
+						// 			total_ofc_1++;
+						// 		}
+						// 	}else{
+						// 		$.each(result.attendance, function(key, value2) {
+						// 			if (value2.length > 0) {
+						// 				if (emp_no == value2[0].emp_no) {
+						// 					attnd = value2[0].attend_code;
+						// 					shiftdaily_code = value2[0].shiftdaily_code;
+						// 				}
+						// 			}else{
+						// 			}
+						// 		});
+						// 		if (shiftdaily_code.match(/Shift_1/gi)) {
+						// 			detail_uncheck_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
+						// 			detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
+						// 			uncheck_prd_1++;
+						// 			total_prd_1++;
+						// 		}else if (shiftdaily_code.match(/Shift_2/gi)) {
+						// 			detail_uncheck_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
+						// 			detail_total_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
+						// 			uncheck_prd_2++;
+						// 			total_prd_2++;
+						// 		}else if (shiftdaily_code.match(/Shift_3/gi)) {
+						// 			detail_uncheck_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
+						// 			detail_total_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
+						// 			uncheck_prd_3++;
+						// 			total_prd_3++;
+						// 		}else if (shiftdaily_code.match(/OFF/gi)) {
+						// 			detail_uncheck_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
+						// 			detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
+						// 			uncheck_prd_1++;
+						// 			total_prd_1++;
+						// 		}else{
+						// 			detail_uncheck_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
+						// 			detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
+						// 			uncheck_prd_1++;
+						// 			total_prd_1++;
+						// 		}
+						// 	}
+						// }else{
+						// 	if (value.remark == 'OFC' || value.remark == 'Jps') {
+						// 		$.each(result.attendance, function(key, value2) {
+						// 			if (value2.length > 0) {
+						// 				if (emp_no == value2[0].emp_no) {
+						// 					attnd = value2[0].attend_code;
+						// 					shiftdaily_code = value2[0].shiftdaily_code;
+						// 				}
+						// 			}else{
+						// 			}
+						// 		});
+						// 		if (value.grade.match(/E/gi)) {
+						// 			shiftdaily_code = 'Shift_1';
+						// 		}else{
+						// 			shiftdaily_code = shiftdaily_code;
+						// 		}
+						// 		if (shiftdaily_code.match(/Shift_2/gi)) {
+						// 			detail_check_ofc_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
+						// 			detail_total_ofc_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
+						// 			check_ofc_2++;
+						// 			total_ofc_2++;
+						// 		}else {
+						// 			detail_check_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
+						// 			detail_total_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
+						// 			check_ofc_1++;
+						// 			total_ofc_1++;
+						// 		}
+						// 	}else{
+						// 		$.each(result.attendance, function(key, value2) {
+						// 			if (value2.length > 0) {
+						// 				if (emp_no == value2[0].emp_no) {
+						// 					attnd = value2[0].attend_code;
+						// 					shiftdaily_code = value2[0].shiftdaily_code;
+						// 				}
+						// 			}else{
+						// 			}
+						// 		});
+						// 		if (shiftdaily_code.match(/Shift_1/gi)) {
+						// 			detail_check_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
+						// 			detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
+						// 			check_prd_1++;
+						// 			total_prd_1++;
+						// 		}else if (shiftdaily_code.match(/Shift_2/gi)) {
+						// 			detail_check_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
+						// 			detail_total_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
+						// 			check_prd_2++;
+						// 			total_prd_2++;
+						// 		}else if (shiftdaily_code.match(/Shift_3/gi)) {
+						// 			detail_check_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
+						// 			detail_total_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
+						// 			check_prd_3++;
+						// 			total_prd_3++;
+						// 		}else if (shiftdaily_code.match(/OFF/gi)) {
+						// 			detail_uncheck_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
+						// 			detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
+						// 			uncheck_prd_1++;
+						// 			total_prd_1++;
+						// 		}else{
+						// 			detail_check_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
+						// 			detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
+						// 			check_prd_1++;
+						// 			total_prd_1++;
+						// 		}
+						// 	}
+						// }
+						
 					});
 
-					$('#tableNoCheckBody').append(resultData);
+					$('#total_check_ofc_1').html(check_ofc_1);
+					$('#total_uncheck_ofc_1').html(uncheck_ofc_1);
+					$('#total_person_ofc_1').html(total_ofc_1);
 
-					var table = $('#tableNoCheck').DataTable({
-						'dom': 'Bfrtip',
-						'responsive':true,
-						'lengthMenu': [
-						[ 10, 25, 50, -1 ],
-						[ '10 rows', '25 rows', '50 rows', 'Show all' ]
-						],'buttons': {
-							buttons:[
-							{
-								extend: 'pageLength',
-								className: 'btn btn-default',
-							}
-							]
-						},
-						'paging': true,
-						'lengthChange': true,
-						'pageLength': 10,
-						'searching': true,
-						'ordering': false,
-						'order': [],
-						'info': true,
-						'autoWidth': true,
-						"sPaginationType": "full_numbers",
-						"bJQueryUI": true,
-						"bAutoWidth": false,
-						"processing": true
+					$('#total_check_ofc_2').html(check_ofc_2);
+					$('#total_uncheck_ofc_2').html(uncheck_ofc_2);
+					$('#total_person_ofc_2').html(total_ofc_2);
+
+					var elem_total_check_ofc_1 = document.getElementById('total_check_ofc_1');
+
+					elem_total_check_ofc_1.addEventListener('click', function(){
+					    checkDetails(detail_check_ofc_1);
 					});
+
+					var elem_total_uncheck_ofc_1 = document.getElementById('total_uncheck_ofc_1');
+
+					elem_total_uncheck_ofc_1.addEventListener('click', function(){
+					    checkDetails(detail_uncheck_ofc_1);
+					});
+
+					var elem_total_person_ofc_1 = document.getElementById('total_person_ofc_1');
+
+					elem_total_person_ofc_1.addEventListener('click', function(){
+					    checkDetails(detail_total_ofc_1);
+					});
+
+					var elem_total_check_ofc_2 = document.getElementById('total_check_ofc_2');
+
+					elem_total_check_ofc_2.addEventListener('click', function(){
+					    checkDetails(detail_check_ofc_2);
+					});
+
+					var elem_total_uncheck_ofc_2 = document.getElementById('total_uncheck_ofc_2');
+
+					elem_total_uncheck_ofc_2.addEventListener('click', function(){
+					    checkDetails(detail_uncheck_ofc_2);
+					});
+
+					var elem_total_person_ofc_2 = document.getElementById('total_person_ofc_2');
+
+					elem_total_person_ofc_2.addEventListener('click', function(){
+					    checkDetails(detail_total_ofc_2);
+					});
+
+					// $('#total_check_ofc_3').html(check_ofc_3+' Person(s)');
+					// $('#total_uncheck_ofc_3').html(uncheck_ofc_3+' Person(s)');
+					// $('#total_person_ofc_3').html(total_ofc_3+' Person(s)');
+
+					$('#total_check_prd_1').html(check_prd_1);
+					$('#total_uncheck_prd_1').html(uncheck_prd_1);
+					$('#total_person_prd_1').html(total_prd_1);
+
+					$('#total_check_prd_2').html(check_prd_2);
+					$('#total_uncheck_prd_2').html(uncheck_prd_2);
+					$('#total_person_prd_2').html(total_prd_2);
+
+					$('#total_check_prd_3').html(check_prd_3);
+					$('#total_uncheck_prd_3').html(uncheck_prd_3);
+					$('#total_person_prd_3').html(total_prd_3);
+
+					var elem_total_check_prd_1 = document.getElementById('total_check_prd_1');
+
+					elem_total_check_prd_1.addEventListener('click', function(){
+					    checkDetails(detail_check_prd_1);
+					});
+
+					var elem_total_uncheck_prd_1 = document.getElementById('total_uncheck_prd_1');
+
+					elem_total_uncheck_prd_1.addEventListener('click', function(){
+					    checkDetails(detail_uncheck_prd_1);
+					});
+
+					var elem_total_person_prd_1 = document.getElementById('total_person_prd_1');
+
+					elem_total_person_prd_1.addEventListener('click', function(){
+					    checkDetails(detail_total_prd_1);
+					});
+
+					var elem_total_check_prd_2 = document.getElementById('total_check_prd_2');
+
+					elem_total_check_prd_2.addEventListener('click', function(){
+					    checkDetails(detail_check_prd_2);
+					});
+
+					var elem_total_uncheck_prd_2 = document.getElementById('total_uncheck_prd_2');
+
+					elem_total_uncheck_prd_2.addEventListener('click', function(){
+					    checkDetails(detail_uncheck_prd_2);
+					});
+
+					var elem_total_person_prd_2 = document.getElementById('total_person_prd_2');
+
+					elem_total_person_prd_2.addEventListener('click', function(){
+					    checkDetails(detail_total_prd_2);
+					});
+
+					var elem_total_check_prd_3 = document.getElementById('total_check_prd_3');
+
+					elem_total_check_prd_3.addEventListener('click', function(){
+					    checkDetails(detail_check_prd_3);
+					});
+
+					var elem_total_uncheck_prd_3 = document.getElementById('total_uncheck_prd_3');
+
+					elem_total_uncheck_prd_3.addEventListener('click', function(){
+					    checkDetails(detail_uncheck_prd_3);
+					});
+
+					var elem_total_person_prd_3 = document.getElementById('total_person_prd_3');
+
+					elem_total_person_prd_3.addEventListener('click', function(){
+					    checkDetails(detail_total_prd_3);
+					});
+
+					// $('#tableNoCheckBody').append(resultData);
+
+					// var table = $('#tableNoCheck').DataTable({
+					// 	'dom': 'Bfrtip',
+					// 	'responsive':true,
+					// 	'lengthMenu': [
+					// 	[ 10, 25, 50, -1 ],
+					// 	[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					// 	],'buttons': {
+					// 		buttons:[
+					// 		{
+					// 			extend: 'pageLength',
+					// 			className: 'btn btn-default',
+					// 		}
+					// 		]
+					// 	},
+					// 	'paging': true,
+					// 	'lengthChange': true,
+					// 	'pageLength': 10,
+					// 	'searching': true,
+					// 	'ordering': false,
+					// 	'order': [],
+					// 	'info': true,
+					// 	'autoWidth': true,
+					// 	"sPaginationType": "full_numbers",
+					// 	"bJQueryUI": true,
+					// 	"bAutoWidth": false,
+					// 	"processing": true
+					// });
 
 					$('#tableAbnormalBody').html('');
 
@@ -343,9 +843,6 @@
 					});
 
 					$('#tableAbnormalBody').append(resultDataAbnormal);
-
-					$('#total_check').html(check+' Person(s)');
-					$('#total_uncheck').html(uncheck+' Person(s)');
 
 					var categories1 = [];
 					var series1 = [];
@@ -429,8 +926,8 @@
 						}]
 
 					});
-					sortTable();
-					changeNumber();
+					// sortTable();
+					// changeNumber();
 				}else{
 					alert('Failed to Retrieve Data');
 				}
@@ -438,56 +935,56 @@
 		});		
 }
 
-function sortTable() {
-  var table, rows, switching, i, x, y, shouldSwitch;
-  table = document.getElementById("tableNoCheck");
-  switching = true;
-  /*Make a loop that will continue until
-  no switching has been done:*/
-  while (switching) {
-    //start by saying: no switching is done:
-    switching = false;
-    rows = table.rows;
-    /*Loop through all table rows (except the
-    first, which contains table headers):*/
-    for (i = 1; i < (rows.length - 1); i++) {
-      //start by saying there should be no switching:
-      shouldSwitch = false;
-      /*Get the two elements you want to compare,
-      one from current row and one from the next:*/
-      x = rows[i].getElementsByTagName("TD")[4];
-      y = rows[i + 1].getElementsByTagName("TD")[4];
-      //check if the two rows should switch place:
-      if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-        //if so, mark as a switch and break the loop:
-        shouldSwitch = true;
-        break;
-      }
-    }
-    if (shouldSwitch) {
-      /*If a switch has been marked, make the switch
-      and mark that a switch has been done:*/
-      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-      switching = true;
-    }
-  }
-}
+// function sortTable() {
+//   var table, rows, switching, i, x, y, shouldSwitch;
+//   table = document.getElementById("tableNoCheck");
+//   switching = true;
+//   /*Make a loop that will continue until
+//   no switching has been done:*/
+//   while (switching) {
+//     //start by saying: no switching is done:
+//     switching = false;
+//     rows = table.rows;
+//     /*Loop through all table rows (except the
+//     first, which contains table headers):*/
+//     for (i = 1; i < (rows.length - 1); i++) {
+//       //start by saying there should be no switching:
+//       shouldSwitch = false;
+//       /*Get the two elements you want to compare,
+//       one from current row and one from the next:*/
+//       x = rows[i].getElementsByTagName("TD")[4];
+//       y = rows[i + 1].getElementsByTagName("TD")[4];
+//       //check if the two rows should switch place:
+//       if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+//         //if so, mark as a switch and break the loop:
+//         shouldSwitch = true;
+//         break;
+//       }
+//     }
+//     if (shouldSwitch) {
+//       /*If a switch has been marked, make the switch
+//       and mark that a switch has been done:*/
+//       rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+//       switching = true;
+//     }
+//   }
+// }
 
-function changeNumber() {
-	table = document.getElementById("tableNoCheck");
-	rows = table.rows;
-	var index = 1;
-	for (i = 1; i < rows.length; i++) {
-		x = rows[i].getElementsByTagName("TD")[0];
-		x.innerHTML = index;
-		index++;
-	}
-}
+// function changeNumber() {
+// 	table = document.getElementById("tableNoCheck");
+// 	rows = table.rows;
+// 	var index = 1;
+// 	for (i = 1; i < rows.length; i++) {
+// 		x = rows[i].getElementsByTagName("TD")[0];
+// 		x.innerHTML = index;
+// 		index++;
+// 	}
+// }
 
 function fetchTemperatureDetail(temperature){
 	clearInterval(intervaltemp);
 	$('#modalDetail').modal('show');
-	$('#loading').show();
+	$('#loadingDetail').show();
 	$('#modalDetailTitle').html("");
 	$('#tableDetail').hide();
 
@@ -527,7 +1024,7 @@ function fetchTemperatureDetail(temperature){
 			$('#tableDetailBody').append(resultData);
 			$('#modalDetailTitle').html("<center><span style='font-size: 20px; font-weight: bold;'>Detail Employees on "+temperature+" °C</span></center>");
 
-			$('#loading').hide();
+			$('#loadingDetail').hide();
 			$('#tableDetail').show();
 			var table = $('#tableDetail').DataTable({
 					'dom': 'Bfrtip',
@@ -579,6 +1076,86 @@ function fetchTemperatureDetail(temperature){
 			alert('Attempt to retrieve data failed');
 		}
 	});
+}
+
+function checkDetails(checkParam) {
+	clearInterval(intervaltemp);
+	$('#modalDetailCheck').modal('show');
+	$('#loadingDetailCheck').show();
+	$('#modalDetailTitleCheck').html("");
+	$('#tableDetailCheck').hide();
+
+	$('#tableDetailCheckBody').html('');
+
+	$('#tableDetailCheck').DataTable().clear();
+	$('#tableDetailCheck').DataTable().destroy();
+
+	var index = 1;
+	var resultData = "";
+	var total = 0;
+
+	$.each(checkParam, function(key, value) {
+		resultData += '<tr>';
+		resultData += '<td>'+ index +'</td>';
+		resultData += '<td>'+ value.employee_id +'</td>';
+		resultData += '<td>'+ value.name +'</td>';
+		resultData += '<td>'+ value.dept +'</td>';
+		resultData += '<td>'+ value.shift +'</td>';
+		resultData += '<td>'+ value.attnd +'</td>';
+		resultData += '<td>'+ value.time_in +'</td>';
+		resultData += '</tr>';
+		index += 1;
+	});
+	$('#tableDetailCheckBody').append(resultData);
+	$('#modalDetailTitleCheck').html("<center><span style='font-size: 20px; font-weight: bold;'>Detail Employees</span></center>");
+
+	$('#loadingDetailCheck').hide();
+	$('#tableDetailCheck').show();
+	var table = $('#tableDetailCheck').DataTable({
+			'dom': 'Bfrtip',
+			'responsive':true,
+			'lengthMenu': [
+			[ 10, 25, 50, -1 ],
+			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+			],
+			'buttons': {
+				buttons:[
+				{
+					extend: 'pageLength',
+					className: 'btn btn-default',
+				},
+				{
+					extend: 'excel',
+					className: 'btn btn-info',
+					text: '<i class="fa fa-file-excel-o"></i> Excel',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'print',
+					className: 'btn btn-warning',
+					text: '<i class="fa fa-print"></i> Print',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				}
+				]
+			},
+			'paging': true,
+			'lengthChange': true,
+			'pageLength': 10,
+			'searching': true	,
+			'ordering': true,
+			'order': [],
+			'info': true,
+			'autoWidth': true,
+			"sPaginationType": "full_numbers",
+			"bJQueryUI": true,
+			"bAutoWidth": false,
+			"processing": true
+		});
+	intervaltemp = setInterval(fetchTemperature,1000*60*60);
 }
 
 Highcharts.createElement('link', {
