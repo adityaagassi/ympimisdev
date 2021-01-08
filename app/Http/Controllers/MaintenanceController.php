@@ -498,6 +498,17 @@ class MaintenanceController extends Controller
 		))->with('page','Urgent Maintenance SPK Monitoring')->with('head', 'Maintenance');
 	}
 
+	public function indexSPKWeekly()
+	{
+		$title = 'Maintenance SPK Weekly Report';
+		$title_jp = '??';
+
+		return view('maintenance.maintenance_spk_weekly', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page','Maintenance SPK Weekly Report')->with('head', 'Maintenance');
+	}
+
 	// -----------------------  END INDEX --------------------
 
 	public function fetchMaintenance(Request $request)
@@ -1236,6 +1247,7 @@ class MaintenanceController extends Controller
 			$rpt->operator_id = $operator_id;
 			$rpt->cause = $request->get('penyebab');
 			$rpt->handling = $request->get('penanganan');
+			$rpt->prevention = $request->get('pencegahan');
 			
 			$rpt->photo = implode(", ",$upload);
 			$rpt->remark = 'OK';
@@ -1340,8 +1352,14 @@ class MaintenanceController extends Controller
 				$part = implode("; ", $arr_part);
 			}
 
+			$other_part = "";
+			if ($request->get('other_part')) {
+				$other_part = $request->get('other_part');
+			}
+
 			$spk_pending = MaintenanceJobPending::firstOrNew(array('order_no' => $request->get('order_no')));
 			$spk_pending->order_no = $request->get('order_no');
+			$spk_pending->remark = $other_part;
 			$spk_pending->description = $part;
 			$spk_pending->status = $request->get('status');
 
