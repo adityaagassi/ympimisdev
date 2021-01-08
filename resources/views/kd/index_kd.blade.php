@@ -381,7 +381,16 @@
 	}
 
 	function printLabelSubassy(kd_detail,windowName) {
-		newwindow = window.open('{{ url("index/print_label_mouthpiece/") }}'+'/'+kd_detail, windowName, 'height=250,width=450');
+		var location = "{{ $location }}";
+
+		var url = '';
+		if(location == 'case'){
+			url = '{{ url("index/print_label_case") }}'+'/'+kd_detail;
+		}else if(location == 'mouthpiece-packed'){
+			url = '{{ url("index/print_label_mouthpiece") }}'+'/'+kd_detail;
+		}
+
+		newwindow = window.open(url, windowName, 'height=250,width=450');
 
 		if (window.focus) {
 			newwindow.focus();
@@ -397,6 +406,13 @@
 		var quantity = $("#qty_packing").val();
 		var location = "{{ $location }}";
 
+		var url = '';
+		if(location == 'case'){
+			url = '{{ url("fetch/kd_print_case") }}';
+		}else if(location == 'mouthpiece-packed'){
+			url = '{{ url("fetch/kd_print_mp") }}';
+		}
+
 		var data = {
 			shipment_id : shipment_id,
 			material_number : material_number,
@@ -411,7 +427,7 @@
 
 
 		$("#loading").show();
-		$.post('{{ url("fetch/kd_print") }}', data,  function(result, status, xhr){
+		$.post(url, data,  function(result, status, xhr){
 			if(result.status){
 				var id = result.knock_down_detail_id;
 				printLabelSubassy(id, ('print'+id));
@@ -425,7 +441,7 @@
 				$('#qty_packing').val('');
 
 				$("#loading").hide();
-				
+
 				fillTableList();
 				$('#kdo_detail').DataTable().ajax.reload();
 				openSuccessGritter('Success', result.message);
@@ -435,8 +451,6 @@
 			}
 
 		});
-
-
 	}
 
 	function fillField(param) {
