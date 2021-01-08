@@ -870,7 +870,7 @@ function getpureto() {
     var pureto = $('#oppureto').val();
     var data ={
       pureto:pureto,
-      op:'kensa akhir',
+      op:'Kensa Akhir',
     }
     $.get('{{ url("index/op_Pureto") }}', data, function(result, status, xhr){
       if(xhr.status == 200){

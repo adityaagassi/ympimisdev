@@ -780,7 +780,7 @@
              var pureto = $('#oppureto').val();
              var data ={
               pureto:pureto,
-              op:'kakuning visual',
+              op:'Kakuning Visual',
             }
             $.get('{{ url("index/op_Pureto") }}', data, function(result, status, xhr){
               

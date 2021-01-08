@@ -454,17 +454,12 @@ public function op_pureto(Request $request)
         ->select('nik', 'nama', 'tag')
         ->first();
 
-
         $employee_id = $op_pureto->nik;
 
         $skillemp = SkillEmployee::where('employee_id',$employee_id)->first();
 
-        var_dump($skillemp);
         $process = $skillemp->process;
         $location = $skillemp->location;
-
-
-
 
         if($op_pureto == null){
             $response = array(

@@ -407,7 +407,7 @@
            var pureto = $('#oppureto').val();
            var data ={
             pureto:pureto,
-             op:'pureto',
+             op:'Pureto',
           }
           $.get('{{ url("index/op_Pureto") }}', data, function(result, status, xhr){
             console.log(status);
@@ -419,21 +419,21 @@
                 $('#p_pureto_nik').text(result.nik);
                 $('#edit').modal('hide');
                 $('#rfid').focus();
-            // $('#tag_material').val(result.tag);
-            openSuccessGritter('Success!', result.message);
-          }
-          else{
-           $('#oppureto').val("");
-            // $('#oppureto').removeAttr('disabled');
-            $('#oppureto').focus();
-            openErrorGritter('Error!', result.message);
-          }
-        }
-        else{
+                // $('#tag_material').val(result.tag);
+                openSuccessGritter('Success!', result.message);
+              }
+              else{
+               $('#oppureto').val("");
+                // $('#oppureto').removeAttr('disabled');
+                $('#oppureto').focus();
+                openErrorGritter('Error!', result.message);
+              }
+            }
+            else{
 
-          alert("Disconnected from server");
-        }
-      });
+              alert("Disconnected from server");
+            }
+          });
 
         }
 
