@@ -402,9 +402,6 @@
 					var dataTemperature = [];
 
 					$.each(result.datacheck, function(key, value) {
-						console.log(value.time_in);
-						console.log(result.now+' 04:00:00');
-						console.log(result.yesterday+' 23:00:00');
 						var attnd = '-';
 						var shiftdaily_code = '-';
 						var emp_no = value.employee_id;
