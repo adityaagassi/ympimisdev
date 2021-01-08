@@ -578,22 +578,41 @@ class TemperatureController extends Controller
                // }
           }
 
-          // $contactList = [];
-          // $contactList[0] = 'mokhamad.khamdan.khabibi@music.yamaha.com';
+          $contactList = [];
+          $contactList[0] = 'mokhamad.khamdan.khabibi@music.yamaha.com';
 
-          // $contactList2 = [];
-          // $contactList2[0] = 'mokhamad.khamdan.khabibi@music.yamaha.com';
-          // $contactList2[1] = 'rio.irvansyah@music.yamaha.com';
-          // $contactList2[2] = 'nasiqul.ibat@music.yamaha.com';
-          // $contactList2[3] = 'anton.budi.santoso@music.yamaha.com';
+          $contactList2 = [];
+          $contactList2[0] = 'prawoto@music.yamaha.com';
+          $contactList2[1] = 'putri.sukma.riyanti@music.yamaha.com';
+          $contactList2[2] = 'mahendra.putra@music.yamaha.com';
 
-          // $mail_to = [];
+          $mail_to = [];
 
-          // foreach ($suhu as $key) {
-          //      $foreman = 
-          // }
+          
 
-          // Mail::to($mail_to)->bcc($contactList,'Contact List')->send(new SendEmail($suhu, 'temperature'));
+          for ($i = 0;$i < count($suhu); $i++) {
+               $fc = DB::SELECT("SELECT
+                    employee_id,
+                    employee_syncs.name,
+                    email 
+               FROM
+                    employee_syncs
+                    JOIN users ON users.username = employee_syncs.employee_id 
+               WHERE
+                    ( position LIKE '%Foreman%' AND department = '".$suhu[$i]['department']."' and email like '%music.yamaha.com%' and employee_syncs.end_date is null) 
+                    OR (
+                    position LIKE '%Chief%' 
+                    AND department = '".$suhu[$i]['department']."' and email like '%music.yamaha.com%' and employee_syncs.end_date is null)");
+
+
+               if (count($fc) > 0) {
+                    foreach ($fc as $val) {
+                         array_push($mail_to, $val->email);
+                    }
+               }
+          }
+
+          Mail::to($mail_to)->cc($contactList2,'CC')->bcc($contactList,'BCC')->send(new SendEmail($suhu, 'temperature'));
 
           $response = array(
            'status' => true,

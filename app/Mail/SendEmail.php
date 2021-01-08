@@ -362,6 +362,12 @@ class SendEmail extends Mailable
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
             ->subject('Maintenance SPK Urgent Notification')
             ->view('mails.maintenance_urgent');
+        }   
+
+        if($this->remark == 'temperature'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+            ->subject('Abnormal Employee Temperature')
+            ->view('mails.temperature');
         }    
     }
 }
