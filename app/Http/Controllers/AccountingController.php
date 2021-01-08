@@ -43,21 +43,21 @@ class AccountingController extends Controller
 {
     public function __construct()
     {
-        $this->dept = ['Management Information System Department', 'Accounting Department', 'Woodwind Instrument - Assembly (WI-A) Department', 'Educational Instrument (EI) Department', 'General Affairs Department', 'Human Resources Department', 'Logistic Department', 'Maintenance Department', 'Woodwind Instrument - Key Parts Process (WI-KPP) Department', 'Procurement Department', 'Production Control Department', 'Production Engineering Department', 'Purchasing Control Department', 'Quality Assurance Department', 'Woodwind Instrument - Welding-Surface Treatment (WI-WST) Department'];
+        $this->dept = ['Management Information System Department', 'Accounting Department', 'Woodwind Instrument - Final Assembly (WI-FA) Department', 'Educational Instrument (EI) Department', 'General Affairs Department', 'Human Resources Department', 'Logistic Department', 'Maintenance Department', 'Woodwind Instrument - Key Parts Process (WI-KPP) Department', 'Procurement Department', 'Production Control Department', 'Production Engineering Department', 'Purchasing Control Department', 'Quality Assurance Department', 'Woodwind Instrument - Welding Process (WI-WP) Department', 'Woodwind Instrument - Body Parts Process (WI-BPP) Department', 'Woodwind Instrument - Surface Treatment (WI-ST) Department'];
 
         $this->uom = ['bag', 'bar', 'batang', 'belt', 'botol', 'bottle', 'box', 'Btg', 'Btl', 'btng', 'buah', 'buku', 'Can', 'Case', 'container', 'cps', 'day', 'days', 'dos', 'doz', 'Drum', 'dus', 'dz', 'dzn', 'EA', 'G', 'galon', 'gr', 'hari', 'hour', 'job', 'JRG', 'kaleng', 'ken', 'Kg', 'kgm', 'klg', 'L', 'Lbr', 'lbs', 'lembar', 'License', 'lisence', 'lisensi', 'lmbr', 'lonjor', 'Lot', 'ls', 'ltr', 'lubang', 'lusin', 'm', 'm2', 'm²', 'm3', 'malam', 'meter', 'ml', 'month', 'Mtr', 'night', 'OH', 'Ons', 'orang', 'OT', 'Pac', 'Pack', 'package', 'pad', 'pail', 'pair', 'pairs', 'pak', 'Pasang', 'pc', 'Pca', 'Pce', 'Pck', 'pcs', 'Pcs', 'Person', 'pick up', 'pil', 'ply', 'point', 'pot', 'prs', 'prsn', 'psc', 'PSG', 'psn', 'Rim', 'rol', 'roll', 'rolls', 'sak', 'sampel', 'sample', 'Set', 'Set', 'Sets', 'sheet', 'shoot', 'slop', 'sum', 'tank', 'tbg', 'time', 'titik', 'ton', 'tube', 'Um', 'Unit', 'user', 'VA', 'yard', 'zak'
 
-    ];
+        ];
 
-    $this->transportation = ['AIR', 'BOAT', 'COURIER SERVICE', 'DHL', 'FEDEX', 'SUV-Car'];
+        $this->transportation = ['AIR', 'BOAT', 'COURIER SERVICE', 'DHL', 'FEDEX', 'SUV-Car'];
 
-    $this->delivery = ['CIF Surabaya', 'CIP', 'Cost And Freight ', 'Delivered At Frontier', 'Delivered Duty Paid', 'Delivered Duty Unpaid', 'Delivered Ex Quay', 'Ex Works', 'Ex Factory', 'Ex Ship', 'FRANCO', 'Franco', 'FOB', 'Flee Alongside Ship', 'Free Carrier (FCA)', 'Letter Of Credits','DAP Consignee (Surabaya Factory)'];
+        $this->delivery = ['CIF Surabaya', 'CIP', 'Cost And Freight ', 'Delivered At Frontier', 'Delivered Duty Paid', 'Delivered Duty Unpaid', 'Delivered Ex Quay', 'Ex Works', 'Ex Factory', 'Ex Ship', 'FRANCO', 'Franco', 'FOB', 'Flee Alongside Ship', 'Free Carrier (FCA)', 'Letter Of Credits','DAP Consignee (Surabaya Factory)'];
 
-        // $this->dgm = 'PI1910003';
-        // $this->gm = 'PI1206001';
+            // $this->dgm = 'PI1910003';
+            // $this->gm = 'PI1206001';
 
-    $this->dgm = 'PI0109004';
-    $this->gm = 'PI1206001';
+        $this->dgm = 'PI0109004';
+        $this->gm = 'PI1206001';
 
         $this->manager_acc = 'PI9902017/Romy Agung Kurniawan'; //Pak Romy
         $this->dir_acc = 'PI1712018/Kyohei Iida'; //Pak Ida
@@ -783,6 +783,14 @@ class AccountingController extends Controller
             $dept = "Procurement Department";
             $budgets->where('department', '=', $dept);
         }
+        else if($request->get('department') == "Woodwind Instrument - Body Parts Process (WI-BPP) Department") {
+            $dept = "Woodwind Instrument - Key Parts Process (WI-KPP) Department";
+            $budgets->where('department', '=', $dept);
+        }
+        else if($request->get('department') == "Woodwind Instrument - Surface Treatment (WI-ST) Department") {
+            $dept = "Woodwind Instrument - Welding Process (WI-WP) Department";
+            $budgets->where('department', '=', $dept);
+        }
         else if ($request->get('department') == "Management Information System Department") {
         }
         else{
@@ -902,7 +910,7 @@ class AccountingController extends Controller
         {
             $dept = "AC";
         }
-        else if ($dept == "Woodwind Instrument - Assembly (WI-A) Department")
+        else if ($dept == "Woodwind Instrument - Final Assembly (WI-FA) Department")
         {
             $dept = "AS";
         }
@@ -928,12 +936,11 @@ class AccountingController extends Controller
         }
         else if ($dept == "Woodwind Instrument - Key Parts Process (WI-KPP) Department")
         {
-            if ($sect == "Key parts Process Section") {
-                $dept = "MP";
-            }
-            else{
-                $dept = "BP";
-            }
+            $dept = "KP";
+        }
+        else if ($dept == "Woodwind Instrument - Body Parts Process (WI-BPP) Department")
+        {
+            $dept = "BP";
         }
         else if ($dept == "Procurement Department" || $dept == "Purchasing Control Department")
         {
@@ -950,7 +957,7 @@ class AccountingController extends Controller
         else if ($dept == "Quality Assurance Department")
         {
             if ($grp == "Standardization Process Control Section") {
-                $dept = "ST";
+                $dept = "SR";
             }
             else if($sect == "Chemical Process Control Section"){
                 $dept = "CM";
@@ -959,9 +966,12 @@ class AccountingController extends Controller
                 $dept = "QC";
             }
         }
-        else if ($dept == "Woodwind Instrument - Welding-Surface Treatment (WI-WST) Department")
+        else if ($dept == "Woodwind Instrument - Welding Process (WI-WP) Department")
         {
-            $dept = "WS";
+            $dept = "WP";
+        }
+        else if ($dept == "Woodwind Instrument - Surface Treatment (WI-ST) Department"){
+            $dept = "ST";
         }
 
         $result['tahun'] = $tahun;
@@ -995,14 +1005,31 @@ class AccountingController extends Controller
             {
                 $manag = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Maintenance Department' and position = 'manager'");
             }
+
+            //Jika Pch / Proc maka pak imron
             else if($request->get('department') == "Purchasing Control Department")
             {
                 $manag = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Procurement Department' and position = 'manager'");
             }
+
+            //Jika GA pak arief
             else if($request->get('department') == "General Affairs Department")
             {
                 $manag = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Human Resources Department' and position = 'manager'");
             }
+
+            //Jika KP maka EI
+            else if($request->get('department') == "Woodwind Instrument - Key Parts Process (WI-KPP) Department")
+            {
+                $manag = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Educational Instrument (EI) Department' and position = 'manager'");
+            }
+
+            //Jika BP maka WP
+            else if($request->get('department') == "Woodwind Instrument - Body Parts Process (WI-BPP) Department")
+            {
+                $manag = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Woodwind Instrument - Welding Process (WI-WP) Department' and position = 'manager'");
+            }
+
             else
             {
                 // Get Manager
@@ -2410,7 +2437,8 @@ class AccountingController extends Controller
         ->first();
 
         $authorized3 = EmployeeSync::select('employee_id', 'name')
-        ->where('position', '=', 'Deputy General Manager')
+        ->where('position', '=', 'General Manager')
+        ->where('division', '=', 'Production Support')
         ->first();
 
         // $authorized4 = EmployeeSync::select('employee_id', 'name')->where('position', '=', 'Director')
@@ -4961,6 +4989,30 @@ class AccountingController extends Controller
                 ->where('position','=','Manager')
                 ->first();
             }
+            else if ($request->get('applicant_department') == "Purchasing Control Department")
+            {
+                $getmanager = EmployeeSync::select('employee_id', 'name', 'position', 'section')
+                ->whereNull('end_date')
+                ->where('department','=','Procurement Department')
+                ->where('position','=','Manager')
+                ->first();
+            }
+            else if ($request->get('applicant_department') == "Woodwind Instrument - Key Parts Process (WI-KPP) Department")
+            {
+                $getmanager = EmployeeSync::select('employee_id', 'name', 'position', 'section')
+                ->whereNull('end_date')
+                ->where('department','=','Educational Instrument (EI) Department')
+                ->where('position','=','Manager')
+                ->first();
+            }
+            else if ($request->get('applicant_department') == "Woodwind Instrument - Body Parts Process (WI-BPP) Department")
+            {
+                $getmanager = EmployeeSync::select('employee_id', 'name', 'position', 'section')
+                ->whereNull('end_date')
+                ->where('department','=','Woodwind Instrument - Welding Process (WI-WP) Department')
+                ->where('position','=','Manager')
+                ->first();
+            }
             else
             {
                 $getmanager = EmployeeSync::select('employee_id', 'name', 'position', 'section')
@@ -4981,7 +5033,7 @@ class AccountingController extends Controller
 
             $getdgm = EmployeeSync::select('employee_id', 'name', 'position')
             ->whereNull('end_date')
-            ->where('position','=','Deputy General Manager')
+            ->where('employee_id', '=', 'PI0109004')
             ->first();
 
 
@@ -5158,6 +5210,12 @@ class AccountingController extends Controller
         } 
         else if($request->get('department') == "Purchasing Control Department") {
             $dept = "Procurement Department";
+        }
+        else if($request->get('department') == "Woodwind Instrument - Body Parts Process (WI-BPP) Department") {
+            $dept = "Woodwind Instrument - Key Parts Process (WI-KPP) Department";
+        }
+        else if($request->get('department') == "Woodwind Instrument - Surface Treatment (WI-ST) Department") {
+            $dept = "Woodwind Instrument - Welding Process (WI-WP) Department";
         }
         else{
             $dept = $request->get('department');
@@ -6663,7 +6721,8 @@ public function purchase_order_investment()
     ->first();
 
     $authorized3 = EmployeeSync::select('employee_id', 'name')
-    ->where('position', '=', 'Deputy General Manager')
+    ->where('position', '=', 'General Manager')
+    ->where('division', '=', 'Production Support')
     ->first();
 
     // $authorized4 = EmployeeSync::select('employee_id', 'name')->where('position', '=', 'Director')
@@ -6912,6 +6971,12 @@ public function fetch_budget_info(Request $request)
 
     else if ($department[0] == "General Affairs Department") {
         array_push($department,"Human Resources Department");
+    }
+    else if ($department[0] == "Woodwind Instrument - Body Parts Process (WI-BPP) Department") {
+        array_push($department,"Woodwind Instrument - Key Parts Process (WI-KPP) Department");
+    }
+    else if ($department[0] == "Woodwind Instrument - Surface Treatment (WI-ST) Department") {
+        array_push($department,"Woodwind Instrument - Welding Process (WI-WP) Department");
     }
 
 
@@ -8285,6 +8350,14 @@ public function import_receive(Request $request){
               array_push($department,"General Affairs Department");
           }
 
+          else if ($department[0] == "Woodwind Instrument - Key Parts Process (WI-KPP) Department") {
+              array_push($department,"Woodwind Instrument - Body Parts Process (WI-BPP) Department");
+          }
+
+          else if ($department[0] == "Woodwind Instrument - Welding Process (WI-WP) Department") {
+            array_push($department,"Woodwind Instrument - Surface Treatment (WI-ST) Department");
+          }
+
           $deptt = json_encode($department);
           $dept = str_replace(array("[","]"),array("(",")"),$deptt);
 
@@ -8395,6 +8468,13 @@ public function import_receive(Request $request){
 
       else if ($department[0] == "Human Resources Department") {
           array_push($department,"General Affairs Department");
+      }
+       else if ($department[0] == "Woodwind Instrument - Key Parts Process (WI-KPP) Department") {
+          array_push($department,"Woodwind Instrument - Body Parts Process (WI-BPP) Department");
+      }
+      
+      else if ($department[0] == "Woodwind Instrument - Welding Process (WI-WP) Department") {
+        array_push($department,"Woodwind Instrument - Surface Treatment (WI-ST) Department");
       }
 
       $deptt = json_encode($department);
@@ -8548,6 +8628,14 @@ public function fetchtablePR(Request $request)
 
       else if ($department[0] == "Human Resources Department") {
           array_push($department,"General Affairs Department");
+      }
+
+       else if ($department[0] == "Woodwind Instrument - Key Parts Process (WI-KPP) Department") {
+          array_push($department,"Woodwind Instrument - Body Parts Process (WI-BPP) Department");
+      }
+      
+      else if ($department[0] == "Woodwind Instrument - Welding Process (WI-WP) Department") {
+        array_push($department,"Woodwind Instrument - Surface Treatment (WI-ST) Department");
       }
 
       $deptt = json_encode($department);
@@ -9314,6 +9402,13 @@ if ($department != null) {
   else if ($department[0] == "Human Resources Department") {
       array_push($department,"General Affairs Department");
   }
+   else if ($department[0] == "Woodwind Instrument - Key Parts Process (WI-KPP) Department") {
+      array_push($department,"Woodwind Instrument - Body Parts Process (WI-BPP) Department");
+  }
+  
+  else if ($department[0] == "Woodwind Instrument - Welding Process (WI-WP) Department") {
+    array_push($department,"Woodwind Instrument - Surface Treatment (WI-ST) Department");
+  }
 
   $deptt = json_encode($department);
   $dept = str_replace(array("[","]"),array("(",")"),$deptt);
@@ -9471,6 +9566,13 @@ if ($department != null) {
 
       else if ($department[0] == "Human Resources Department") {
           array_push($department,"General Affairs Department");
+      }
+       else if ($department[0] == "Woodwind Instrument - Key Parts Process (WI-KPP) Department") {
+          array_push($department,"Woodwind Instrument - Body Parts Process (WI-BPP) Department");
+      }
+      
+      else if ($department[0] == "Woodwind Instrument - Welding Process (WI-WP) Department") {
+        array_push($department,"Woodwind Instrument - Surface Treatment (WI-ST) Department");
       }
 
   $deptt = json_encode($department);
