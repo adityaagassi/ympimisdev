@@ -158,7 +158,7 @@
 							<table id="example1" class="table table-bordered table-striped table-hover">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th>Sub Section</th>
+										<th>Group</th>
 										<th>Date</th>
 										<th>PIC</th>
 										<th>Proses</th>
@@ -264,8 +264,8 @@
 				  <input type="text" name="department" id="inputdepartment" class="form-control" value="{{ $departments }}" readonly required="required" title="">
 	            </div>
 	            <div class="form-group">
-	             <label>Sub Section<span class="text-red">*</span></label>
-	                <select class="form-control" name="inputsubsection" id="inputsubsection" style="width: 100%;" data-placeholder="Pilih Sub Section..." required>
+	             <label>Group<span class="text-red">*</span></label>
+	                <select class="form-control" name="inputsubsection" id="inputsubsection" style="width: 100%;" data-placeholder="Pilih Group..." required>
 	                  @foreach($subsection as $subsection)
 	                  <option value="{{ $subsection->sub_section_name }}">{{ $subsection->sub_section_name }}</option>
 	                  @endforeach
@@ -347,8 +347,8 @@
 				  <input type="hidden" name="url" id="url_edit" class="form-control" value="">
 	            </div>
 	            <div class="form-group">
-	             <label>Sub Section<span class="text-red">*</span></label>
-	                <select class="form-control" name="editsubsection" id="editsubsection" style="width: 100%;" data-placeholder="Pilih Sub Section..." required>
+	             <label>Group<span class="text-red">*</span></label>
+	                <select class="form-control" name="editsubsection" id="editsubsection" style="width: 100%;" data-placeholder="Pilih Group..." required>
 	                  @foreach($subsection2 as $subsection2)
 	                  <option value="{{ $subsection2->sub_section_name }}">{{ $subsection2->sub_section_name }}</option>
 	                  @endforeach

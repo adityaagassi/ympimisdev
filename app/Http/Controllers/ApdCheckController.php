@@ -57,7 +57,7 @@ class ApdCheckController extends Controller
         $frequency = $activityList->frequency;
         // var_dump($productionAudit);
         $querySubSection = "SELECT
-            employee_syncs.group AS sub_section_name 
+            DISTINCT(employee_syncs.group) AS sub_section_name 
           FROM
             employee_syncs 
           WHERE
@@ -68,7 +68,7 @@ class ApdCheckController extends Controller
         $subsection2 = DB::select($querySubSection);
         $subsection3 = DB::select($querySubSection);
 
-        $querypic = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department like '%".$departments."%'";
+        $querypic = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department like '%".$departments."%' and employee_syncs.end_date is null";
         $pic = DB::select($querypic);
         $pic2 = DB::select($querypic);
 
@@ -107,7 +107,7 @@ class ApdCheckController extends Controller
         $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
 
         $querySubSection = "SELECT
-            employee_syncs.group AS sub_section_name 
+            DISTINCT(employee_syncs.group) AS sub_section_name 
           FROM
             employee_syncs 
           WHERE
@@ -118,7 +118,7 @@ class ApdCheckController extends Controller
         $subsection2 = DB::select($querySubSection);
         $subsection3 = DB::select($querySubSection);
 
-        $querypic = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department like '%".$departments."%'";
+        $querypic = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department like '%".$departments."%' and employee_syncs.end_date is null";
         $pic = DB::select($querypic);
         $pic2 = DB::select($querypic);
 
