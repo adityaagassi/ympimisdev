@@ -3776,6 +3776,7 @@ Route::group(['nav' => 'S47', 'middleware' => 'permission'], function(){
 
 	Route::post('report/maintenance/spk', 'MaintenanceController@reportingSPK');
 	Route::post('report/maintenance/spk/pending', 'MaintenanceController@reportingSPKPending');
+	Route::post('report/maintenance/spk/jeda', 'MaintenanceController@reportingSPKPause');
 	Route::post('post/maintenance/spk/receipt', 'MaintenanceController@receiptSPK');
 	Route::post('post/maintenance/spk/pending/vendor/action', 'MaintenanceController@closePendingVendor');
 

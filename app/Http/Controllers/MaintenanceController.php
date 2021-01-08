@@ -531,7 +531,7 @@ class MaintenanceController extends Controller
 		->whereNull('maintenance_job_processes.deleted_at')
 		->whereNull('maintenance_job_orders.deleted_at')
 		// ->whereNull('maintenance_job_processes.finish_actual')
-		->whereRaw("maintenance_job_orders.remark in (3,4,5)")
+		->whereRaw("maintenance_job_orders.remark in (3,4,5,9)")
 		->select("maintenance_job_orders.order_no", "maintenance_job_orders.section", "priority", "type", "category", "machine_condition", "danger", "description", "target_date", "safety_note", "start_plan", "finish_plan", "start_actual", "finish_actual", db::raw("DATE_FORMAT(maintenance_job_orders.created_at,'%d-%m-%Y') as request_date"), 'name', "maintenance_job_orders.remark", "process_name", db::raw("maintenance_job_processes.remark as stat"))
 		->orderBy("maintenance_job_orders.remark", "asc")
 		->get();
@@ -1355,6 +1355,88 @@ class MaintenanceController extends Controller
 			$spk_log = MaintenanceJobOrderLog::firstOrNew(array(
 				'order_no' => $request->get('order_no'),
 				'remark' => 5
+			));
+			$spk_log->created_by = Auth::user()->username;
+			$spk_log->save();
+
+			$response = array(
+				'status' => true,
+				'message' => 'OK'
+			);
+			return Response::json($response);
+		} catch (QueryException $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function reportingSPKPause(Request $request)
+	{
+		try {
+			$no = 1;
+			$operator_id = Auth::user()->username;
+
+			$data = $request->get('foto');
+			define('UPLOAD_DIR', 'images/');
+			$upload = [];
+
+			foreach ($data as $key) {
+				if ($key != "") {
+					$image_parts = explode(";base64,", $key);
+					$image_type_aux = explode("image/", $image_parts[0]);
+					$image_type = $image_type_aux[1];
+					$image_base64 = base64_decode($image_parts[1]);
+
+					$file = public_path().'\maintenance\\spk_report\\'.$request->get('order_no').$operator_id.$no.'.png';
+					$file2 = $request->get('order_no').$operator_id.$no.'.png';
+
+					file_put_contents($file, $image_base64);
+
+					array_push($upload, $file2);
+					$no++;
+				}
+			}
+
+			MaintenanceJobProcess::where("order_no", "=", $request->get('order_no'))
+			->where("operator_id", "=", strtoupper(Auth::user()->username))
+			->update(['finish_actual' => date("Y-m-d H:i:s"), 'remark' => $request->get('status')]);
+
+			$proc = MaintenanceJobProcess::where('order_no', '=', $request->get('order_no'))
+			->where('operator_id', '=', strtoupper(Auth::user()->username))
+			->first();
+
+			$rpt = new MaintenanceJobReport;
+			$rpt->order_no = $request->get('order_no');
+			$rpt->operator_id = $operator_id;
+			$rpt->cause = $request->get('penyebab');
+			$rpt->handling = $request->get('penanganan');
+			$rpt->started_at = $proc->start_actual;
+			$rpt->finished_at = date('Y-m-d H:i:s');
+			
+			$rpt->photo = implode(", ",$upload);
+			$rpt->created_by = $operator_id;
+
+			$rpt->save();
+
+			$arr_part = [];
+			$part = '';
+			if (count($request->get('spare_part')) > 0) {
+				foreach ($request->get('spare_part') as $prt) {
+					array_push($arr_part, $prt['part_number']." : ".$prt['qty']);
+				}
+
+				$part = implode("; ", $arr_part);
+			}
+
+			MaintenanceJobOrder::where('order_no', '=', $request->get('order_no'))
+			->update(['remark' => 9]);
+
+			$spk_log = MaintenanceJobOrderLog::firstOrNew(array(
+				'order_no' => $request->get('order_no'),
+				'remark' => 9
 			));
 			$spk_log->created_by = Auth::user()->username;
 			$spk_log->save();

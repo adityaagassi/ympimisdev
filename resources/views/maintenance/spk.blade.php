@@ -143,7 +143,7 @@
 
 			<div id="div_after" style="display: none">
 				<button class="btn btn-sm btn-success" id="btn_back"><i class="fa fa-arrow-left"></i>&nbsp;Kembali</button>
-				<table class="table" style="width: 100%" id="table_after">
+				<table class="table" style="width: 100%; margin-bottom: 0px" id="table_after">
 					<tr>
 						<td>
 							<div class="row">
@@ -229,8 +229,30 @@
 
 										<div id="sp_other">
 										</div>
+
+										<!-- SPARE PART LAIN -->
+										<!-- <div class="col-xs-5" align="left">
+											<select class="form-control part" data-placeholder="Pilih Part yang digunakan" style="width: 100%;" id="part_detail_1" onchange="get_stock(this)">
+												<option value=""></option>
+											</select>
+										</div>
+										<div class="col-xs-2" align="left">
+											<div class="input-group">
+												<span class="input-group-addon"><b>Stock</b></span>
+												<input type="number" id="stock_1" class="form-control" style="text-align: center;" readonly>
+											</div>
+										</div>
+										<div class="col-xs-2" align="left">
+											<div class="input-group">
+												<span class="input-group-addon"><b>Qty</b></span>
+												<input id="qty_1" style="text-align: center;" type="number" class="form-control numpad" value="0" placeholder="Qty">
+											</div>
+										</div>
+										<div class="col-xs-1" align="left">
+											<button class="btn btn-success spare_part" onclick="add_part()" id="btn_1"><i class="fa fa-plus"></i></button>
+										</div> -->
 									</div>
-									<div class="form-group row" align="right">
+								<!-- 	<div class="form-group row" align="right">
 										<label class="col-xs-2" style="margin-top: 1%; margin-bottom: 0px">Spare Part Lain</label>
 										<div class="col-xs-5" align="left">
 											<select class="form-control part" data-placeholder="Pilih Part yang digunakan" style="width: 100%;" id="part_detail_1" onchange="get_stock(this)">
@@ -246,7 +268,7 @@
 										<div class="col-xs-1" align="left">
 											<button class="btn btn-success spare_part" onclick="add_part_lain()" id="btn_lain_1"><i class="fa fa-plus"></i></button>
 										</div>
-									</div>
+									</div> -->
 
 									<div class="form-group row" align="right">
 										<label class="col-xs-2" style="margin-top: 1%;">Foto<span class="text-red">*</span></label>
@@ -290,7 +312,18 @@
 									<button type="button" class="btn btn-warning pull-left" onclick="pending_action(this, 'Vendor')" id="btn_vendor" style="margin-right: 3px"><i class="fa fa-exclamation-circle"></i> Vendor</button>
 									<button type="button" class="btn btn-primary pull-left" onclick="pending_action(this, 'masih WJO')" id="btn_wjo" style="margin-right: 3px"><i class="fa fa-exclamation-circle"></i> masih WJO</button>
 									<button type="button" class="btn btn-primary pull-left" onclick="pending_action(this, 'Part Tidak Ada')" id="btn_no_part" style="margin-right: 3px"><i class="fa fa-exclamation-circle"></i> Part Tidak Ada</button>
-									<button type="button" class="btn btn-primary pull-left" onclick="pending_action(this, 'Call Friend')" id="btn_friend"><i class="fa fa-exclamation-circle"></i> Call Friend</button>
+									<button type="button" style='margin-right:3px' class="btn btn-primary pull-left" onclick="pending_action(this, 'Call Friend')" id="btn_friend"><i class="fa fa-exclamation-circle"></i> Call Friend</button>
+									<button class='btn btn-danger pull-left' onclick='jeda(this)'><i class='fa fa-pause'></i>&nbsp; Jeda</button>
+
+									<!-- <div class="btn-group">
+										<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+											<span class="caret"></span>
+										</button>
+										<ul class="dropdown-menu" style="z-index: 5000">
+											<li><a href="#">Dropdown link</a></li>
+											<li><a href="#">Dropdown link</a></li>
+										</ul>
+									</div> -->
 
 									<button type="button" class="btn btn-success pull-left" style="display: none; margin-right: 5px" onclick="pending_action(this, 'No Part')" id="btn_no_part_yes"><i class="fa fa-check"></i> YES</button>
 									<button type="button" class="btn btn-danger pull-left" style="display: none" onclick="pending_action(this, 'No Part')" id="btn_no_part_no"><i class="fa fa-close"></i> NO</button>
@@ -679,17 +712,13 @@
 					if (value.remark == '5') {
 						body += "<td><button class='btn btn-warning' onclick='modalWork(\""+value.order_no+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\",\""+value.name+"\",\""+value.target_date+"\",\""+value.safety_note+"\",\""+value.priority+"\", \"rework\", "+index+")'><i class='fa fa-rocket'></i>&nbsp; Lanjutkan</button></td>";
 						desc_new.push(value.description);
-					// } else if (value.remark == '6') {
-					// 	if (value.finish_actual != null) {
-					// 		body += "<td><button class='btn btn-success' onclick='modalScan(\""+value.order_no+"\")'><i class='fa fa-hand-lizard-o'></i>&nbsp; Tanda Terima</button></td>";
-					// 	} else {
-					// 		body += "<td><button class='btn btn-success' onclick='modalAfterWork(\""+value.order_no+"\",\""+$("#op").text()+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\", "+index+")'><i class='fa fa-file'></i>&nbsp; Buat Laporan</button></td>";
-					// 		desc_new.push(value.description);
-					// 	}
-						
+					} else if (value.remark == '9') {
+						body += "<td><button class='btn btn-warning' onclick='modalWork(\""+value.order_no+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\",\""+value.name+"\",\""+value.target_date+"\",\""+value.safety_note+"\",\""+value.priority+"\", \"rework\", "+index+")'><i class='fa fa-play'></i>&nbsp; Resume</button></td>";
+						desc_new.push(value.description);
 					} else {
 						body += "<td><button class='btn btn-success' onclick='modalAfterWork(\""+value.order_no+"\",\""+$("#op").text()+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\", "+index+")'><i class='fa fa-file'></i>&nbsp; Buat Laporan</button></td>";
 						desc_new.push(value.description);
+
 					}
 				} else {
 
@@ -1110,6 +1139,61 @@ function startWork() {
 					return false;
 				}
 			})
+		}
+
+		function jeda(elem) {
+			var penyebab = $("#penyebab_detail").val();
+			var penanganan = $("#penanganan_detail").val();
+			var spk_detail = $("#spk_detail").val();
+
+			if (penyebab == "" || penanganan == "") {
+				openErrorGritter('Error', 'Ada Kolom yang Kosong');
+				return false;
+			}
+
+			var foto = [];
+			var part = [];
+
+			$('#box > img').each(function () {
+				foto.push($(this).attr("src"));
+			});
+
+			if ($("#profile-img1").attr("src") == "") {
+				openErrorGritter('Error', 'Foto Harap Diisi');
+				return false;
+			}
+
+			$('.part').each(function(index, value) {
+				ids = $(this).attr("id");
+				tmp_ids = ids.split('_')[2];
+
+				if ($("#part_detail_"+tmp_ids).val() != "") {
+					part.push({'part_number' : $("#part_detail_"+tmp_ids).val(), 'qty' : $("#qty_"+tmp_ids).val()});
+				}
+			});
+
+			if (confirm("Apakah Anda Yakin Jeda SPK Ini ?")) {
+				var data = {
+					order_no : spk_detail,
+					penyebab : penyebab,
+					penanganan : penanganan,
+					spare_part : part,
+					foto : foto
+				}
+
+				
+
+				$.post('{{ url("report/maintenance/spk/jeda") }}', data, function(result, status, xhr){
+					if (result.status) {
+						openSuccessGritter('Success', 'SPK Status Paused');
+						$("#div_master").show();
+						$("#div_after").hide();
+						get_spk();
+					} else {
+						openErrorGritter('Error', result.message);
+					}
+				})
+			}
 		}
 
 		function startPending() {
