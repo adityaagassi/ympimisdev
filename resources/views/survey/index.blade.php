@@ -540,13 +540,13 @@ table > thead > tr > th{
 							data: series,
 							name: 'Yes',
 							colorByPoint: false,
-							color: "#32a852"
+							color: "#c7c118"
 						},{
 							type: 'column',
 							data: series2,
 							name: 'No',
 							colorByPoint: false,
-							color:'#32a89e'
+							color:'#32a852'
 						}
 						,{
 							type: 'column',
@@ -598,12 +598,12 @@ table > thead > tr > th{
 					            sliced: true,
 					            selected: true,
 					            colorByPoint: false,
-								color: "#32a852"
+								color: "#c7c118"
 					        }, {
 					            name: 'No',
 					            y: tidak,
 					            colorByPoint: false,
-								color:'#32a89e'
+								color:'#32a852'
 					        }, {
 					            name: 'Not Answer',
 					            y: belum,
