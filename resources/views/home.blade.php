@@ -495,6 +495,10 @@
                             <a href="{{ secure_url("index/std_control/safety_shoes") }}">
                                 <i class="fa fa-caret-right"></i> Safety Shoes Control (安全靴管理システム)
                             </a>
+                            <br>
+                            <a href="{{ secure_url("index/survey") }}">
+                                <i class="fa fa-caret-right"></i> Emergency Survey (??)
+                            </a>
                             <!-- <br>
                             <a href="{{ url("index/display/office_clock") }}">
                                 <i class="fa fa-caret-right"></i> Office Clock (??)

@@ -1688,6 +1688,12 @@ Route::group(['nav' => 'S53', 'middleware' => 'permission'], function(){
 	Route::get('index/print_label_case/{id}', 'KnockDownController@indexPrintLabelSubassy');
 });
 
+//CASE
+Route::group(['nav' => 'S53', 'middleware' => 'permission'], function(){
+	Route::get('index/kd_cl_body/{id}', 'KnockDownController@indexKD');
+
+});
+
 //TANPO
 Route::group(['nav' => 'S53', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_tanpo/{id}', 'KnockDownController@indexKD');
@@ -4028,6 +4034,11 @@ Route::post('update/inventory_mis/data', 'DailyReportController@updateInventoryM
 Route::post('delete/inventory_mis', 'DailyReportController@deleteInventoryMIS');
 
 Route::get('print/inventory_mis/{id}', 'DailyReportController@printInventory');
+
+//Emergency Survey
+Route::get('index/survey', 'SurveyController@indexSurvey');
+Route::get('fetch/survey', 'SurveyController@fetchSurvey');
+Route::get('fetch/survey/detail', 'SurveyController@fetchSurveyDetail');
 
 
 
