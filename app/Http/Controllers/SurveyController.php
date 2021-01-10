@@ -111,10 +111,10 @@ class SurveyController extends Controller
 
 			if ($dept == "") {
 				if ($answer == null) {
-					$surveys = DB::SELECT("SELECT
+					$survey = DB::SELECT("SELECT
 						employee_syncs.employee_id,
 						employee_syncs.name,
-						COALESCE(department_shortname,'') as department,
+						'' as department,
 						COALESCE(answer,'') as answer,
 						COALESCE(relationship,'') as relationship,
 						COALESCE(family_name,'') as family_name
@@ -129,7 +129,7 @@ class SurveyController extends Controller
 					$survey = DB::SELECT("SELECT
 						employee_syncs.employee_id,
 						employee_syncs.name,
-						COALESCE(department_shortname,'') as department,
+						'' as department,
 						COALESCE(answer,'') as answer,
 						COALESCE(relationship,'') as relationship,
 						COALESCE(family_name,'') as family_name
