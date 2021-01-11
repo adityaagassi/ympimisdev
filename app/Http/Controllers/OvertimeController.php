@@ -1933,7 +1933,6 @@ public function fetchCostCenterBudget(Request $request)
 
 public function overtimeDetail(Request $request)
 {
-	DB::connection()->enableQueryLog();
 	$from = date('Y-m-01',strtotime($request->get('tgl')));
 	$to = date('Y-m-d',strtotime($request->get('tgl')));
 
@@ -1941,6 +1940,7 @@ public function overtimeDetail(Request $request)
 
 		$cost_center = db::table('cost_centers2')->where('cost_center_name',$request->get('cc'))
 		->select('cost_center')->first();
+		DB::connection()->enableQueryLog();
 
 		$datas = db::connection('sunfish')->select("SELECT
 			ot.Emp_no as nik,
@@ -2029,7 +2029,7 @@ public function overtimeDetail(Request $request)
 		'status' => true,
 		'datas' => $datas,
 		'cc' => $cost_center,
-		'query' => DB::getQueryLog()
+		'dt' => $to
 	);
 
 	return Response::json($response);

@@ -204,32 +204,21 @@
 					<table class="table table-bordered" id="tableAbnormal" style="margin-bottom: 5px;">
 						<thead>
 							<tr>
-								<th style="color:white;width: 30%; font-size: 1.2vw; text-align: center;">Karyawan</th>
-								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Temp</th>
+								<th style="width: 1%;">#</th>
+								<th style="width: 3%;">ID</th>
+								<th style="width: 9%;">Name</th>
+								<th style="width: 3%;">Dept</th>
+								<th style="width: 3%;">Shift</th>
+								<th style="width: 2%;">Time</th>
+								<th style="width: 2%;">Temp</th>
 							</tr>			
 						</thead>
 						<tbody id="tableAbnormalBody">
 						</tbody>
 					</table>
-					<!-- <span style="color: white; font-size: 1.7vw; font-weight: bold;"><i class="fa fa-caret-right"></i> Detail Belum Cek</span>
-					<table class="table table-bordered" id="tableNoCheck" style="margin-bottom: 5px;">
-						<thead>
-							<tr>
-								<th style="color:white;width: 1%; font-size: 1.2vw;">#</th>
-								<th style="color:white;width: 5%; font-size: 1.2vw; text-align: center;">ID</th>
-								<th style="color:white;width: 30%; font-size: 1.2vw; text-align: center;">Name</th>
-								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Dept</th>
-								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Shift</th>
-								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Attendance</th>
-							</tr>					
-						</thead>
-						<tbody id="tableNoCheckBody">
-						</tbody>
-					</table> -->
 				</div>
 				<div class="col-xs-7">
 					<div id="container1" class="container1" style="width: 100%;height: 600px"></div>
-					<!-- <div id="container2" class="container2" style="width: 100%;"></div> -->
 				</div>
 			</div>
 		</div>
@@ -259,12 +248,6 @@
 						</thead>
 						<tbody id="tableDetailBody">
 						</tbody>
-						<!-- <tfoot>
-							<tr>
-								<th colspan="5">Total Duration</th>
-								<th id="totalDetail">9</th>
-							</tr>
-						</tfoot> -->
 					</table>
 				</div>
 			</div>
@@ -396,289 +379,127 @@
 					var detail_total_prd_2 = [];
 					var detail_total_prd_3 = [];
 
+					var detail_abnormal = [];
+
 					var resultData = "";
 
 					var dataPersonTemperature = [];
 					var dataTemperature = [];
 
 					$.each(result.datacheck, function(key, value) {
-						var attnd = '-';
-						var shiftdaily_code = '-';
 						var emp_no = value.employee_id;
+						if (value.temperature >= 37.5) {
+							detail_abnormal.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,temp:value.temperature});
+						}
 						if (value.remark == 'OFC' || value.remark == 'Jps') {
 							if (value.checks == null) {
-								$.each(result.attendance, function(key, value2) {
-									if (value2.length > 0) {
-										if (emp_no == value2[0].emp_no) {
-											attnd = value2[0].attend_code;
-											shiftdaily_code = value2[0].shiftdaily_code;
-										}
-									}else{
-									}
-								});
 
-								if (shiftdaily_code.match(/Shift_1/gi)) {
+								if (value.shiftdaily_code.match(/Shift_1/gi)) {
 									uncheck_ofc_1++;
 									total_ofc_1++;
-									detail_uncheck_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
-									detail_total_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
-								}else if(shiftdaily_code.match(/Shift_2/gi)){
+									detail_uncheck_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+									detail_total_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+								}else if(value.shiftdaily_code.match(/Shift_2/gi)){
 									uncheck_ofc_2++;
 									total_ofc_2++;
-									detail_uncheck_ofc_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
-									detail_total_ofc_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+									detail_uncheck_ofc_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+									detail_total_ofc_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
 								}else{
 									uncheck_ofc_1++;
 									total_ofc_1++;
-									detail_uncheck_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
-									detail_total_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+									detail_uncheck_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+									detail_total_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
 								}
 							}else{
-								$.each(result.attendance, function(key, value2) {
-									if (value2.length > 0) {
-										if (emp_no == value2[0].emp_no) {
-											attnd = value2[0].attend_code;
-											shiftdaily_code = value2[0].shiftdaily_code;
-										}
-									}else{
-									}
-								});
 
-								if (shiftdaily_code.match(/Shift_1/gi)) {
+								if (value.shiftdaily_code.match(/Shift_1/gi)) {
 									check_ofc_1++;
 									total_ofc_1++;
-									detail_check_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
-									detail_total_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
-								}else if(shiftdaily_code.match(/Shift_2/gi)){
+									detail_check_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+									detail_total_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+								}else if(value.shiftdaily_code.match(/Shift_2/gi)){
 									check_ofc_2++;
 									total_ofc_2++;
-									detail_check_ofc_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
-									detail_total_ofc_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
-								}else if(shiftdaily_code.match(/Shift_3/gi)){
+									detail_check_ofc_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+									detail_total_ofc_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+								}else if(value.shiftdaily_code.match(/Shift_3/gi)){
 									check_ofc_3++;
 									total_ofc_3++;
-									detail_check_ofc_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
-									detail_total_ofc_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+									detail_check_ofc_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+									detail_total_ofc_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
 								}else{
 									check_ofc_1++;
 									total_ofc_1++;
-									detail_check_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
-									detail_total_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+									detail_check_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+									detail_total_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
 								}
 							}
 						}else{
 							if (value.checks == null) {
-								$.each(result.attendance, function(key, value2) {
-									if (value2.length > 0) {
-										if (emp_no == value2[0].emp_no) {
-											attnd = value2[0].attend_code;
-											shiftdaily_code = value2[0].shiftdaily_code;
-										}
-									}else{
-									}
-								});
 
-								if (shiftdaily_code.match(/Shift_1/gi)) {
+								if (value.shiftdaily_code.match(/Shift_1/gi)) {
 									uncheck_prd_1++;
 									total_prd_1++;
-									detail_uncheck_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
-									detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
-								}else if(shiftdaily_code.match(/Shift_2/gi)){
+									detail_uncheck_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+									detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+								}else if(value.shiftdaily_code.match(/Shift_2/gi)){
 									uncheck_prd_2++;
 									total_prd_2++;
-									detail_uncheck_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
-									detail_total_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
-								}else if(shiftdaily_code.match(/Shift_3/gi)){
+									detail_uncheck_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+									detail_total_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+								}else if(value.shiftdaily_code.match(/Shift_3/gi)){
 									uncheck_prd_3++;
 									total_prd_3++;
-									detail_uncheck_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
-									detail_total_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+									detail_uncheck_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+									detail_total_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
 								}else{
 									uncheck_prd_1++;
 									total_prd_1++;
-									detail_uncheck_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
-									detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+									detail_uncheck_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+									detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
 								}
 							}else{
-								$.each(result.attendance, function(key, value2) {
-									if (value2.length > 0) {
-										if (emp_no == value2[0].emp_no) {
-											attnd = value2[0].attend_code;
-											shiftdaily_code = value2[0].shiftdaily_code;
-										}
-									}else{
-									}
-								});
 
 								if (value.time_in >= result.now+' 04:00:00' && value.time_in <= result.now+' 08:00:00') {
 									check_prd_1++;
 									total_prd_1++;
-									detail_check_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
-									detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+									detail_check_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+									detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
 								}else if(value.time_in >= result.now+' 15:00:00' && value.time_in <= result.now+' 18:00:00'){
 									check_prd_2++;
 									total_prd_2++;
-									detail_check_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
-									detail_total_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+									detail_check_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+									detail_total_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
 								}else if(value.time_in >= result.yesterday+' 22:00:00' && value.time_in <= result.yesterday+' 23:59:00'){
 									check_prd_3++;
 									total_prd_3++;
-									detail_check_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
-									detail_total_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+									detail_check_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+									detail_total_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
 								}else{
-									if (shiftdaily_code.match(/Shift_1/gi)) {
+									if (value.shiftdaily_code.match(/Shift_1/gi)) {
 										uncheck_prd_1++;
 										total_prd_1++;
-										detail_uncheck_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
-										detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
-									}else if(shiftdaily_code.match(/Shift_2/gi)){
+										detail_uncheck_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+										detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+									}else if(value.shiftdaily_code.match(/Shift_2/gi)){
 										uncheck_prd_2++;
 										total_prd_2++;
-										detail_uncheck_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
-										detail_total_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
-									}else if(shiftdaily_code.match(/Shift_3/gi)){
+										detail_uncheck_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+										detail_total_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+									}else if(value.shiftdaily_code.match(/Shift_3/gi)){
 										uncheck_prd_3++;
 										total_prd_3++;
-										detail_uncheck_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
-										detail_total_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+										detail_uncheck_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+										detail_total_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
 									}else{
 										uncheck_prd_1++;
 										total_prd_1++;
-										detail_uncheck_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
-										detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd,time_in:value.time_in});
+										detail_uncheck_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+										detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
 									}
 								}
 							}
 						}
-						// if (value.checks == null) {
-						// 	if (value.remark == 'OFC' || value.remark == 'Jps' ) {
-						// 		$.each(result.attendance, function(key, value2) {
-						// 			if (value2.length > 0) {
-						// 				if (emp_no == value2[0].emp_no) {
-						// 					attnd = value2[0].attend_code;
-						// 					shiftdaily_code = value2[0].shiftdaily_code;
-						// 				}
-						// 			}else{
-						// 			}
-						// 		});
-						// 		if (value.grade.match(/E/gi)) {
-						// 			shiftdaily_code = 'Shift_1';
-						// 		}else{
-						// 			shiftdaily_code = shiftdaily_code;
-						// 		}
-						// 		if (shiftdaily_code.match(/Shift_2/gi)) {
-						// 			detail_uncheck_ofc_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
-						// 			detail_total_ofc_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
-						// 			uncheck_ofc_2++;
-						// 			total_ofc_2++;
-						// 		}else{
-						// 			detail_uncheck_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
-						// 			detail_total_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
-						// 			uncheck_ofc_1++;
-						// 			total_ofc_1++;
-						// 		}
-						// 	}else{
-						// 		$.each(result.attendance, function(key, value2) {
-						// 			if (value2.length > 0) {
-						// 				if (emp_no == value2[0].emp_no) {
-						// 					attnd = value2[0].attend_code;
-						// 					shiftdaily_code = value2[0].shiftdaily_code;
-						// 				}
-						// 			}else{
-						// 			}
-						// 		});
-						// 		if (shiftdaily_code.match(/Shift_1/gi)) {
-						// 			detail_uncheck_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
-						// 			detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
-						// 			uncheck_prd_1++;
-						// 			total_prd_1++;
-						// 		}else if (shiftdaily_code.match(/Shift_2/gi)) {
-						// 			detail_uncheck_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
-						// 			detail_total_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
-						// 			uncheck_prd_2++;
-						// 			total_prd_2++;
-						// 		}else if (shiftdaily_code.match(/Shift_3/gi)) {
-						// 			detail_uncheck_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
-						// 			detail_total_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
-						// 			uncheck_prd_3++;
-						// 			total_prd_3++;
-						// 		}else if (shiftdaily_code.match(/OFF/gi)) {
-						// 			detail_uncheck_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
-						// 			detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
-						// 			uncheck_prd_1++;
-						// 			total_prd_1++;
-						// 		}else{
-						// 			detail_uncheck_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
-						// 			detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
-						// 			uncheck_prd_1++;
-						// 			total_prd_1++;
-						// 		}
-						// 	}
-						// }else{
-						// 	if (value.remark == 'OFC' || value.remark == 'Jps') {
-						// 		$.each(result.attendance, function(key, value2) {
-						// 			if (value2.length > 0) {
-						// 				if (emp_no == value2[0].emp_no) {
-						// 					attnd = value2[0].attend_code;
-						// 					shiftdaily_code = value2[0].shiftdaily_code;
-						// 				}
-						// 			}else{
-						// 			}
-						// 		});
-						// 		if (value.grade.match(/E/gi)) {
-						// 			shiftdaily_code = 'Shift_1';
-						// 		}else{
-						// 			shiftdaily_code = shiftdaily_code;
-						// 		}
-						// 		if (shiftdaily_code.match(/Shift_2/gi)) {
-						// 			detail_check_ofc_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
-						// 			detail_total_ofc_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
-						// 			check_ofc_2++;
-						// 			total_ofc_2++;
-						// 		}else {
-						// 			detail_check_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
-						// 			detail_total_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
-						// 			check_ofc_1++;
-						// 			total_ofc_1++;
-						// 		}
-						// 	}else{
-						// 		$.each(result.attendance, function(key, value2) {
-						// 			if (value2.length > 0) {
-						// 				if (emp_no == value2[0].emp_no) {
-						// 					attnd = value2[0].attend_code;
-						// 					shiftdaily_code = value2[0].shiftdaily_code;
-						// 				}
-						// 			}else{
-						// 			}
-						// 		});
-						// 		if (shiftdaily_code.match(/Shift_1/gi)) {
-						// 			detail_check_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
-						// 			detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
-						// 			check_prd_1++;
-						// 			total_prd_1++;
-						// 		}else if (shiftdaily_code.match(/Shift_2/gi)) {
-						// 			detail_check_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
-						// 			detail_total_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
-						// 			check_prd_2++;
-						// 			total_prd_2++;
-						// 		}else if (shiftdaily_code.match(/Shift_3/gi)) {
-						// 			detail_check_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
-						// 			detail_total_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
-						// 			check_prd_3++;
-						// 			total_prd_3++;
-						// 		}else if (shiftdaily_code.match(/OFF/gi)) {
-						// 			detail_uncheck_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
-						// 			detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
-						// 			uncheck_prd_1++;
-						// 			total_prd_1++;
-						// 		}else{
-						// 			detail_check_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
-						// 			detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: shiftdaily_code,attnd:attnd});
-						// 			check_prd_1++;
-						// 			total_prd_1++;
-						// 		}
-						// 	}
-						// }
 						
 					});
 
@@ -725,10 +546,6 @@
 					elem_total_person_ofc_2.addEventListener('click', function(){
 					    checkDetails(detail_total_ofc_2);
 					});
-
-					// $('#total_check_ofc_3').html(check_ofc_3+' Person(s)');
-					// $('#total_uncheck_ofc_3').html(uncheck_ofc_3+' Person(s)');
-					// $('#total_person_ofc_3').html(total_ofc_3+' Person(s)');
 
 					$('#total_check_prd_1').html(check_prd_1);
 					$('#total_uncheck_prd_1').html(uncheck_prd_1);
@@ -796,45 +613,20 @@
 					    checkDetails(detail_total_prd_3);
 					});
 
-					// $('#tableNoCheckBody').append(resultData);
-
-					// var table = $('#tableNoCheck').DataTable({
-					// 	'dom': 'Bfrtip',
-					// 	'responsive':true,
-					// 	'lengthMenu': [
-					// 	[ 10, 25, 50, -1 ],
-					// 	[ '10 rows', '25 rows', '50 rows', 'Show all' ]
-					// 	],'buttons': {
-					// 		buttons:[
-					// 		{
-					// 			extend: 'pageLength',
-					// 			className: 'btn btn-default',
-					// 		}
-					// 		]
-					// 	},
-					// 	'paging': true,
-					// 	'lengthChange': true,
-					// 	'pageLength': 10,
-					// 	'searching': true,
-					// 	'ordering': false,
-					// 	'order': [],
-					// 	'info': true,
-					// 	'autoWidth': true,
-					// 	"sPaginationType": "full_numbers",
-					// 	"bJQueryUI": true,
-					// 	"bAutoWidth": false,
-					// 	"processing": true
-					// });
-
 					$('#tableAbnormalBody').html('');
 
 					var index = 1;
 					var resultDataAbnormal = "";
 
-					$.each(result.dataAbnormal, function(key, value) {
+					$.each(detail_abnormal, function(key, value) {
 						resultDataAbnormal += '<tr>';
-						resultDataAbnormal += '<td class="sedang" style="font-size: 1.5vw;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+value.employee_id+'<br>'+ value.name +'</td>';
-						resultDataAbnormal += '<td class="sedang" style="font-size: 1.7vw;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.temperature +'</td>';
+						resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+index+'</td>';
+						resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+value.employee_id+'</td>';
+						resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.name +'</td>';
+						resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.dept +'</td>';
+						resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.shift +'</td>';
+						resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.time_in +'</td>';
+						resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.temp +'</td>';
 						resultDataAbnormal += '</tr>';
 						index++;
 					});
@@ -923,60 +715,12 @@
 						}]
 
 					});
-					// sortTable();
-					// changeNumber();
 				}else{
 					alert('Failed to Retrieve Data');
 				}
 			}
 		});		
 }
-
-// function sortTable() {
-//   var table, rows, switching, i, x, y, shouldSwitch;
-//   table = document.getElementById("tableNoCheck");
-//   switching = true;
-//   /*Make a loop that will continue until
-//   no switching has been done:*/
-//   while (switching) {
-//     //start by saying: no switching is done:
-//     switching = false;
-//     rows = table.rows;
-//     /*Loop through all table rows (except the
-//     first, which contains table headers):*/
-//     for (i = 1; i < (rows.length - 1); i++) {
-//       //start by saying there should be no switching:
-//       shouldSwitch = false;
-//       /*Get the two elements you want to compare,
-//       one from current row and one from the next:*/
-//       x = rows[i].getElementsByTagName("TD")[4];
-//       y = rows[i + 1].getElementsByTagName("TD")[4];
-//       //check if the two rows should switch place:
-//       if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-//         //if so, mark as a switch and break the loop:
-//         shouldSwitch = true;
-//         break;
-//       }
-//     }
-//     if (shouldSwitch) {
-//       /*If a switch has been marked, make the switch
-//       and mark that a switch has been done:*/
-//       rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-//       switching = true;
-//     }
-//   }
-// }
-
-// function changeNumber() {
-// 	table = document.getElementById("tableNoCheck");
-// 	rows = table.rows;
-// 	var index = 1;
-// 	for (i = 1; i < rows.length; i++) {
-// 		x = rows[i].getElementsByTagName("TD")[0];
-// 		x.innerHTML = index;
-// 		index++;
-// 	}
-// }
 
 function fetchTemperatureDetail(temperature){
 	clearInterval(intervaltemp);
@@ -1098,7 +842,7 @@ function checkDetails(checkParam) {
 		resultData += '<td>'+ value.name +'</td>';
 		resultData += '<td>'+ value.dept +'</td>';
 		resultData += '<td>'+ value.shift +'</td>';
-		resultData += '<td>'+ value.attnd +'</td>';
+		resultData += '<td>'+ value.attend_code +'</td>';
 		resultData += '<td>'+ value.time_in +'</td>';
 		resultData += '</tr>';
 		index += 1;
