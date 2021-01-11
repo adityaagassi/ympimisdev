@@ -23,7 +23,7 @@
 			<table style="border-color: black">
 				<thead style="background-color: rgb(126,86,134);">
 					<tr style="color: white; background-color: #7e5686">
-						<th style="width: 3%; border:1px solid black;">Department</th>
+						<th style="width: 4%; border:1px solid black;">Department</th>
 						<th style="width: 3%; border:1px solid black;">Section</th>
 						<th style="width: 2%; border:1px solid black;">Unverified Chief / Foreman</th>
 						<th style="width: 2%; border:1px solid black;">Unverified Manager</th>

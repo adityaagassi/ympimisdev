@@ -799,7 +799,7 @@ class EmployeeController extends Controller
 
           $emp = User::join('employee_syncs','employee_syncs.employee_id','=','users.username')
           ->where('employee_syncs.employee_id','=', $username)
-          ->whereRaw('(employee_syncs.position in ("Foreman","Manager","Chief") or role_code = "MIS")')
+          ->whereRaw('(employee_syncs.position in ("Foreman","Manager","Chief","Deputy Foreman") or role_code = "MIS")')
           ->select('position')
           ->first();
 
@@ -830,7 +830,7 @@ class EmployeeController extends Controller
 
           $emp = User::leftJoin('employee_syncs','employee_syncs.employee_id','=','users.username')
           ->where('employee_syncs.employee_id','=', $username)
-          ->whereRaw('(employee_syncs.position in ("Foreman","Manager","Chief") or username in ("'.$this->usr.'"))')
+          ->whereRaw('(employee_syncs.position in ("Foreman","Manager","Chief","Deputy Foreman") or username in ("'.$this->usr.'"))')
           ->select('position')
           ->first();
 
@@ -888,14 +888,14 @@ class EmployeeController extends Controller
                     $d = "where department = '".$get_department->department."'";
 
                     if ($get_department->department == 'Maintenance') {
-                         $d .= " or department = 'Production Engineering'";
+                         $d .= " or department = 'Production Engineering Department'";
                     }
                }
           }
 
           $q_data = "select bagian.*, IFNULL(kz.count,0) as count  from 
           (select fr.employee_id, `name`, position, fr.department, struktur.section from
-          (select employee_id, `name`, position, department, section from employee_syncs where end_date is null and position in ('foreman', 'chief')) as fr
+          (select employee_id, `name`, position, department, section from employee_syncs where end_date is null and position in ('foreman', 'chief', 'Deputy Foreman')) as fr
           left join 
           (select department, section from employee_syncs where department is not null and section is not null group by department, section) as struktur on fr.department = struktur.department) as bagian
           left join
@@ -924,7 +924,7 @@ class EmployeeController extends Controller
           $section = explode(" ~",$data[0]->section)[0];
 
           $ldr = "position = 'Leader'";
-          if ($section == 'Assembly Process Control') {
+          if ($section == 'Assembly Process Control Section') {
                $ldr = "grade_name = 'Staff'";
           }
 
@@ -974,7 +974,7 @@ class EmployeeController extends Controller
 
           $user = db::select("select username from users 
                left join employee_syncs on employee_syncs.employee_id = users.username
-               where username = '".$username."' AND (role_code = 'MIS' OR username = 'PI0904007' OR position in ('Manager','foreman'))");
+               where username = '".$username."' AND (role_code = 'MIS' OR username = 'PI0904007' OR position in ('Manager','foreman','Deputy Foreman'))");
 
           if ($user) {
                return view('employees.report.report_kaizen_reward', array(

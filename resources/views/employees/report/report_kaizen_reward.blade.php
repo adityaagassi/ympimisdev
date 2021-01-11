@@ -40,7 +40,7 @@
 @endsection
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<section class="content" style="padding-left: 0px; padding-right: 0px; padding-top: 0px">
+<section class="content" style="padding-left: 0px; padding-right: 0px; padding-top: 0px; overflow-y:hidden; overflow-x:scroll;">
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="col-xs-12">
