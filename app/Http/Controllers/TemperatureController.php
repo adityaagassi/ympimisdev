@@ -1138,7 +1138,6 @@ public function fetchMinMoeMonitoring(Request $request)
  try {
      $date_from = $request->get('tanggal_from');
      $now  = date('Y-m-d');
-     // $yesterday  = date('Y-m-d',strtotime( '-1 days' ));
 
      if ($date_from != null) {
           $now  = $date_from;
