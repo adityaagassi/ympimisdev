@@ -340,30 +340,41 @@ class KnockDownController extends Controller{
 	}
 
 	public function indexPrintLabelMpro($shipment_schedule_id, $kd_number){
-		$shipment;;
+		$shipment;
 		if($shipment_schedule_id != 'null'){
-			$shipment = ShipmentSchedule::leftJoin('materials','materials.material_number','=','shipment_schedules.material_number')
-			->where('shipment_schedules.id', $shipment_schedule_id)
-			->select(
-				'shipment_schedules.material_number',
-				'materials.material_description',
-				db::raw('COALESCE(materials.xy,"-") AS xy'),
-				db::raw('COALESCE(materials.mj,"-") AS mj'),
-				'shipment_schedules.quantity'
-			)
-			->first();
+			$shipment = db::select("SELECT kd.*, IF(resume.quantity IS NULL, kd.lot, (resume.target-resume.quantity) % resume.lot_carton) AS quantity FROM
+				(SELECT knock_down_details.kd_number, knock_down_details.shipment_schedule_id, knock_down_details.material_number, materials.material_description, COALESCE(materials.xy, '-') AS xy, COALESCE(materials.mj, '-') AS mj,
+				IF(shipment_schedules.quantity % material_volumes.lot_carton = 0,
+				IF(shipment_schedules.quantity / material_volumes.lot_carton > 1, material_volumes.lot_carton, shipment_schedules.quantity), 
+				IF(CEIL(shipment_schedules.quantity / material_volumes.lot_carton ) > 1 , material_volumes.lot_carton, shipment_schedules.quantity % material_volumes.lot_carton) 
+				) AS lot  FROM knock_down_details
+				LEFT JOIN materials ON materials.material_number = knock_down_details.material_number
+				LEFT JOIN material_volumes ON material_volumes.material_number = knock_down_details.material_number
+				LEFT JOIN shipment_schedules ON shipment_schedules.id = knock_down_details.shipment_schedule_id
+				WHERE knock_down_details.kd_number = '".$kd_number."') kd
+				LEFT JOIN 
+				(SELECT knock_down_details.shipment_schedule_id, knock_down_details.material_number, shipment_schedules.quantity AS target, material_volumes.lot_carton, SUM(knock_down_details.quantity) AS quantity FROM knock_down_details
+				LEFT JOIN knock_downs ON knock_downs.kd_number = knock_down_details.kd_number
+				LEFT JOIN shipment_schedules ON shipment_schedules.id = knock_down_details.shipment_schedule_id
+				LEFT JOIN material_volumes On material_volumes.material_number = knock_down_details.material_number
+				WHERE knock_down_details.shipment_schedule_id = '".$shipment_schedule_id."'
+				AND knock_downs.`status` = 1
+				GROUP BY knock_down_details.shipment_schedule_id, knock_down_details.material_number, target, material_volumes.lot_carton) resume
+				ON kd.shipment_schedule_id = resume.shipment_schedule_id");
+
 		}else{
-			$shipment = KnockDownDetail::leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'knock_down_details.shipment_schedule_id')
-			->leftJoin('materials', 'materials.material_number', '=', 'knock_down_details.material_number')
+			$shipment = KnockDownDetail::leftJoin('materials', 'materials.material_number', '=', 'knock_down_details.material_number')
 			->where('knock_down_details.kd_number', $kd_number)
 			->select(
 				'knock_down_details.material_number',
 				'materials.material_description',
 				db::raw('COALESCE(materials.xy,"-") AS xy'),
 				db::raw('COALESCE(materials.mj,"-") AS mj'),
-				'shipment_schedules.quantity'
+				db::raw('SUM(knock_down_details.quantity) AS quantity')
 			)
-			->first();
+			->groupBy('knock_down_details.material_number', 'materials.material_description', 'xy', 'mj')
+			->get();
+
 		}
 
 		$pdf = \App::make('dompdf.wrapper');
@@ -375,7 +386,7 @@ class KnockDownController extends Controller{
 			'shipment' => $shipment,
 			'kd_number' => $kd_number
 		));
-		return $pdf->stream("label_".$shipment->material_number.".pdf");
+		return $pdf->stream("label_".$shipment[0]->material_number.".pdf");
 
 
 		// return view('kd.label.print_label_mpro', array(
@@ -385,10 +396,44 @@ class KnockDownController extends Controller{
 
 	}
 
+	public function indexPrintLabelTanpo($kd_number){
+
+		$knock_down_details = KnockDownDetail::leftJoin('materials', 'materials.material_number', '=', 'knock_down_details.material_number')
+		->leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'knock_down_details.shipment_schedule_id')
+		->where('knock_down_details.kd_number','=',$kd_number)
+		->select('knock_down_details.kd_number',
+			'knock_down_details.material_number',
+			'shipment_schedules.st_date',
+			'materials.material_description',
+			'materials.base_unit',
+			db::raw('sum(knock_down_details.quantity) as quantity'))
+		->groupBy('knock_down_details.kd_number','knock_down_details.material_number', 'materials.material_description', 'materials.base_unit', 'shipment_schedules.st_date')
+		->get();
+
+		$pdf = \App::make('dompdf.wrapper');
+		$pdf->getDomPDF()->set_option("enable_php", true);
+		$pdf->setPaper('A6', 'landscape');
+		$pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
+
+		$pdf->loadView('kd.label.print_label_tanpo', array(
+			'kd_number' => $kd_number,
+			'knock_down_details' => $knock_down_details
+		));
+		return $pdf->stream("label_".$kd_number.".pdf");
+
+		// return view('kd.label.print_label_tanpo', array(
+		// 	'kd_number' => $kd_number,
+		// 	'knock_down_details' => $knock_down_details
+		// ));
+
+	}
+
 	public function indexPrintLabelSubassy($id){
 		$knock_down_detail = KnockDownDetail::leftJoin('materials','materials.material_number','=','knock_down_details.material_number')
 		->leftJoin('material_volumes', 'material_volumes.material_number', '=', 'knock_down_details.material_number')
 		->leftJoin('storage_locations', 'storage_locations.storage_location', '=', 'knock_down_details.storage_location')
+		->leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'knock_down_details.shipment_schedule_id')
+		->leftJoin('destinations', 'destinations.destination_code', '=', 'shipment_schedules.destination_code')
 		->where('knock_down_details.id','=',$id)
 		->select('knock_down_details.kd_number',
 			'knock_down_details.material_number',
@@ -398,6 +443,8 @@ class KnockDownController extends Controller{
 			'materials.kd_name',
 			'storage_locations.location',
 			'material_volumes.label',
+			'shipment_schedules.st_date',
+			'destinations.destination_shortname',
 			db::raw('if(materials.xy is not null, materials.xy, "-") as xy'),
 			db::raw('if(materials.mj is not null, materials.mj, "-") as mj')
 		)

@@ -51,11 +51,11 @@
 	<table class="table table-bordered">
 		<tbody>
 			<tr> 
-				<td colspan="3" style="vertical-align: middle; text-align: center; height: 80px;" class="material_description">{{ $shipment->material_description }}</td>
+				<td colspan="3" style="vertical-align: middle; text-align: center; height: 80px;" class="material_description">{{ $shipment[0]->material_description }}</td>
 			</tr>
 
 			<tr>
-				<td colspan="2" class="material_number">{{ $shipment->material_number }}</td>
+				<td colspan="2" class="material_number">{{ $shipment[0]->material_number }}</td>
 				<td rowspan="4" style="vertical-align: middle; text-align: center;">
 					<img id="barcode" src="{{ public_path() . '/qr_code'.$kd_number.'.png' }}">
 					<p id="kd_number">{{ $kd_number }}</p>
@@ -64,17 +64,17 @@
 
 			<tr>
 				<td width="25%" class="xy">XY</td>
-				<td width="70%" class="xy">{{ $shipment->xy }}</td>
+				<td width="70%" class="xy">{{ $shipment[0]->xy }}</td>
 			</tr>
 
 			<tr>
 				<td width="25%" class="mj">MJ</td>
-				<td width="70%" class="mj">{{ $shipment->mj }}</td>
+				<td width="70%" class="mj">{{ $shipment[0]->mj }}</td>
 			</tr>
 
 			<tr>
 				<td width="25%" class="quantity">QTY</td>
-				<td width="70%" class="quantity">{{ $shipment->quantity }} PC(s)</td>
+				<td width="70%" class="quantity">{{ $shipment[0]->quantity }} PC(s)</td>
 			</tr>
 		</tbody>
 	</table>
