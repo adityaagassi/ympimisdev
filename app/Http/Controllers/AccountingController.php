@@ -8680,6 +8680,7 @@ public function fetchtablePR(Request $request)
     JOIN departments ON acc_purchase_requisitions.department = department_name 
     WHERE
     acc_purchase_requisitions.STATUS != 'received' 
+    AND posisi != 'user'
     AND acc_purchase_requisitions.deleted_at IS NULL 
     AND DATE_FORMAT( submission_date, '%Y-%m' ) BETWEEN '".$datefrom."' 
     AND '".$dateto."' ".$dep." 

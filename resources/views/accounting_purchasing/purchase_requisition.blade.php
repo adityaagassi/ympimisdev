@@ -926,6 +926,22 @@
         	else{
         		$('.nav-tabs > .active').next('li').find('a').trigger('click');
         	}
+
+        	var nomorpr = document.getElementById("no_pr");
+			
+			$.ajax({
+				url: "{{ url('purchase_requisition/get_nomor_pr') }}?dept=<?= $employee->department ?>&sect=<?= $employee->section ?>&group=<?= $employee->group ?>", 
+				type : 'GET', 
+				success : function(data){
+					var obj = jQuery.parseJSON(data);
+					var no = obj.no_urut;
+					var tahun = obj.tahun;
+					var bulan = obj.bulan;
+					var dept = obj.dept;
+
+					nomorpr.value = dept+tahun+bulan+no;
+				}
+			});
         });
 
         $('.btnNext3').click(function(){
@@ -953,6 +969,24 @@
         	else{
         		$('.nav-tabs > .active').next('li').find('a').trigger('click');
         	}
+
+
+			var nomorpr = document.getElementById("no_pr");
+
+			$.ajax({
+				url: "{{ url('purchase_requisition/get_nomor_pr') }}?dept=<?= $employee->department ?>&sect=<?= $employee->section ?>&group=<?= $employee->group ?>", 
+				type : 'GET', 
+				success : function(data){
+					var obj = jQuery.parseJSON(data);
+					var no = obj.no_urut;
+					var tahun = obj.tahun;
+					var bulan = obj.bulan;
+					var dept = obj.dept;
+
+					nomorpr.value = dept+tahun+bulan+no;
+				}
+			});
+
         });
 
         $('.btnNextEdit').click(function(){
