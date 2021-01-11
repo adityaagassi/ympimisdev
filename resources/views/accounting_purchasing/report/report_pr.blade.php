@@ -330,6 +330,9 @@
 											@elseif($pr[0]->approvalgm == "Approved" && $pr[0]->gm == "PI9709001")
 												<img width="70" src="{{ public_path() . '/files/ttd_pr_po/stempel_pak_arief.jpg' }}" alt="" style="padding: 0">
 												<span style="position: absolute;left: 504px;width: 75px;font-size: 8px;color: #f84c32;top: 179px;font-family: arial-narrow"><?= date('d F Y', strtotime($pr[0]->dateapprovalgm)) ?></span>
+											@elseif($pr[0]->approvalgm == "Approved" && $pr[0]->gm == "PI0109004")
+												<img width="70" src="{{ public_path() . '/files/ttd_pr_po/stempel_pak_budhi.jpg' }}" alt="" style="padding: 0">
+												<span style="position: absolute;left: 504px;width: 75px;font-size: 8px;color: #f84c32;top: 179px;font-family: arial-narrow"><?= date('d F Y', strtotime($pr[0]->dateapprovalgm)) ?></span>
 											@endif
 										</td>
 									</tr>
