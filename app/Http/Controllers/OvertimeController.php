@@ -1975,7 +1975,7 @@ public function overtimeDetail(Request $request)
 			) AS ot
 			LEFT JOIN VIEW_YMPI_Emp_OrgUnit ON VIEW_YMPI_Emp_OrgUnit.Emp_no = ot.emp_no
 			where 
-			VIEW_YMPI_Emp_OrgUnit.cost_center_code  = '".$request->get('cc')."'");
+			VIEW_YMPI_Emp_OrgUnit.cost_center_code  = '".$cost_center->cost_center."'");
 
 		// $datas = db::connection('sunfish')->select("
 		// 	select ot.emp_no as nik, VIEW_YMPI_Emp_OrgUnit.Full_name as name, ot.jam, ot.kep from
