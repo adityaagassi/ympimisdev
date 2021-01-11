@@ -49,6 +49,7 @@ class Kernel extends ConsoleKernel
         Commands\KDShipment::class,
         Commands\SendEmailSPKNotification::class,
         Commands\EmailAgreement::class,
+        Commands\SyncShiftSunfish::class,
         
     ];
 
@@ -93,6 +94,12 @@ class Kernel extends ConsoleKernel
 
         // $schedule->command('plan:injections')->weekdays()->dailyAt('08:40');
         $schedule->command('sync:sunfish')->weekdays()->dailyAt('03:01');
+        $schedule->command('sync:shift_sunfish')->weekdays()->dailyAt('05:30');
+        $schedule->command('sync:shift_sunfish')->weekdays()->dailyAt('09:30');
+        $schedule->command('sync:shift_sunfish')->weekdays()->dailyAt('12:30');
+        $schedule->command('sync:shift_sunfish')->weekdays()->dailyAt('14:30');
+        $schedule->command('sync:shift_sunfish')->weekdays()->dailyAt('16:30');
+        $schedule->command('sync:shift_sunfish')->weekdays()->dailyAt('19:30');
         $schedule->command('email:kaizen')->weekdays()->dailyAt('08:45');
         $schedule->command('email:hrq')->weekdays()->dailyAt('07:45');
         $schedule->command('log:room_temperature')->everyThirtyMinutes();

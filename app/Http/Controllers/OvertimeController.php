@@ -1933,6 +1933,7 @@ public function fetchCostCenterBudget(Request $request)
 
 public function overtimeDetail(Request $request)
 {
+	DB::connection()->enableQueryLog();
 	$from = date('Y-m-01',strtotime($request->get('tgl')));
 	$to = date('Y-m-d',strtotime($request->get('tgl')));
 
@@ -2027,7 +2028,8 @@ public function overtimeDetail(Request $request)
 	$response = array(
 		'status' => true,
 		'datas' => $datas,
-		'cc' => $cost_center
+		'cc' => $cost_center,
+		'query' => DB::getQueryLog()
 	);
 
 	return Response::json($response);
