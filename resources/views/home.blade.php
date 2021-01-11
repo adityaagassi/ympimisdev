@@ -496,7 +496,7 @@
                                 <i class="fa fa-caret-right"></i> Safety Shoes Control (安全靴管理システム)
                             </a>
                             <br>
-                            <a href="{{ secure_url("index/survey") }}">
+                            <a href="{{ url("index/survey") }}">
                                 <i class="fa fa-caret-right"></i> Emergency Survey (??)
                             </a>
                             <!-- <br>
