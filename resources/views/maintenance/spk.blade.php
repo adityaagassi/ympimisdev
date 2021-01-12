@@ -726,7 +726,7 @@
 					}
 				} else {
 
-					body += "<td><button class='btn btn-primary' onclick='modalWork(\""+value.order_no+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\",\""+value.name+"\",\""+value.target_date+"\",\""+value.safety_note+"\",\""+value.priority+"\", \"work\", "+index+", \""+value.machine_desc+"\", \""+value.att+"\", , \""+value.machine_remark+"\")'><i class='fa fa-gears'></i>&nbsp; Kerjakan</button></td>";
+					body += "<td><button class='btn btn-primary' onclick='modalWork(\""+value.order_no+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\",\""+value.name+"\",\""+value.target_date+"\",\""+value.safety_note+"\",\""+value.priority+"\", \"work\", "+index+", \""+value.machine_desc+"\", \""+value.att+"\", \""+value.machine_remark+"\")'><i class='fa fa-gears'></i>&nbsp; Kerjakan</button></td>";
 					desc_new.push(value.description);
 				}
 
