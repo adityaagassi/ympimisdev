@@ -137,6 +137,36 @@
 						</div>
 					</div>
 				</div>
+
+				<?php if(Auth::user()->role_code == "MIS" || $employee->department == "Accounting Department") { ?>
+				<div class="row">
+					<input type="hidden" value="{{csrf_token()}}" name="_token" />
+					<form method="GET" action="{{ url("export/investment/list") }}">
+						<div class="col-xs-12">
+							<div class="col-md-2">
+								<div class="form-group">
+									<label>Month</label>
+									<div class="input-group date">
+										<div class="input-group-addon">
+											<i class="fa fa-calendar"></i>
+										</div>
+										<input type="text" class="form-control pull-right" id="bulan" name="bulan">
+									</div>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<div class="col-md-5" style="padding-right: 0;">
+										<label style="color: white;"> x</label>
+										<button type="submit" class="btn btn-success form-control"><i class="fa fa-download"></i> Export List Investment</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>
+					</form>
+				</div>
+				<?php } ?>
 			</div>
 			
 			<div class="row">
@@ -256,6 +286,13 @@
 			autoclose: true,
 			todayHighlight: true
 		});
+
+		$('#bulan').datepicker({
+        	format: "yyyy-mm",
+	        startView: "months", 
+	        minViewMode: "months",
+	        autoclose: true
+	      });
 	});
 
 	function clearConfirmation(){

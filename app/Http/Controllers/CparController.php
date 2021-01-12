@@ -3799,7 +3799,7 @@ class CparController extends Controller
 
       ->addColumn('action', function($detail){
         $id = $detail->id;
-        return '<a href="print/'.$id.'" class="btn btn-warning btn-xs" target="_blank">Report</a>';
+        return '<a href="../audit/print/'.$id.'" class="btn btn-warning btn-xs" target="_blank">Report</a>';
       })
 
       ->editColumn('auditor_date', function($detail){

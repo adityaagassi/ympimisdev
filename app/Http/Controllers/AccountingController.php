@@ -8520,7 +8520,7 @@ public function fetchMonitoringPRPch(Request $request){
   $datefrom = date("Y-m-d",  strtotime('-30 days'));
   $dateto = date("Y-m-d");
 
-  $last = AccPurchaseRequisition::whereNotNull('receive_date')
+  $last = AccPurchaseRequisition::whereNull('receive_date')
   ->orderBy('tanggal', 'asc')
   ->select(db::raw('date(submission_date) as tanggal'))
   ->first();
@@ -8586,7 +8586,7 @@ $data_dept = db::select("
     order by department asc");
 
 $data_pr_belum_po = db::select("
-    select acc_purchase_requisitions.no_pr, sum(case when sudah_po is null then 1 else 0 end) as belum_po, sum(case when sudah_po is not null then 1 else 0 end) as sudah_po from acc_purchase_requisitions left join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr where acc_purchase_requisitions.deleted_at is null and receive_date is not null and submission_date between '".$datefrom."' and '".$dateto."' ".$dep."  GROUP BY no_pr order by submission_date asc");
+    select acc_purchase_requisitions.no_pr, sum(case when sudah_po is null then 1 else 0 end) as belum_po, sum(case when sudah_po is not null then 1 else 0 end) as sudah_po from acc_purchase_requisitions left join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr where acc_purchase_requisitions.deleted_at is null and receive_date is not null ".$dep."  GROUP BY no_pr order by submission_date asc");
 
 $year = date('Y');
 
@@ -8885,7 +8885,7 @@ public function detailMonitoringPR(Request $request){
     {
         for ($i = 0;$i < count($data);$i++)
         {
-            $fl .= '<a href="files/pr/' . $data[$i] . '" target="_blank" class="fa fa-paperclip"></a>';
+            $fl .= '<a href="../files/pr/' . $data[$i] . '" target="_blank" class="fa fa-paperclip"></a>';
         }
     }
     else
@@ -8987,7 +8987,7 @@ public function detailMonitoringPRPch(Request $request){
     {
         for ($i = 0;$i < count($data);$i++)
         {
-            $fl .= '<a href="files/pr/' . $data[$i] . '" target="_blank" class="fa fa-paperclip"></a>';
+            $fl .= '<a href="../files/pr/' . $data[$i] . '" target="_blank" class="fa fa-paperclip"></a>';
         }
     }
     else
@@ -9159,7 +9159,7 @@ $data = db::select("
     (select week_date from weekly_calendars 
     where date(week_date) >= '".$datefrom."'
     and date(week_date) <= '".$dateto."') date
-    left join
+    join
     (select date(tgl_po) as date, count(id) as total from acc_purchase_orders
     where date(tgl_po) >= '".$datefrom."' and date(tgl_po) <= '".$dateto."' and acc_purchase_orders.deleted_at is null and posisi = 'pch' and (`status` = 'sap' or `status` = 'not_sap')
     group by date(tgl_po)) sudah_diterima
@@ -11307,8 +11307,7 @@ public function transfer_approvalto($id){
         }
 
         $investment_detail = db::select(
-            "SELECT acc_purchase_orders.no_po, acc_purchase_orders.no_po_sap, acc_purchase_orders.remark, acc_purchase_orders.note, acc_purchase_order_details.no_pr, acc_purchase_orders.tgl_po, acc_purchase_orders.supplier_code , acc_purchase_orders.supplier_name, acc_purchase_orders.currency, acc_purchase_orders.material, acc_purchase_order_details.no_item, acc_purchase_order_details.nama_item, acc_purchase_order_details.delivery_date, acc_purchase_order_details.qty, acc_purchase_order_details.uom, acc_purchase_order_details.goods_price, acc_purchase_order_details.service_price, acc_purchase_order_details.budget_item, acc_purchase_orders.cost_center, acc_purchase_order_details.gl_number, acc_purchase_requisitions.emp_name, acc_investments.applicant_name from acc_purchase_orders left join acc_purchase_order_details on acc_purchase_orders.no_po = acc_purchase_order_details.no_po left join acc_purchase_requisitions on acc_purchase_order_details.no_pr = acc_purchase_requisitions.no_pr left join acc_investments on acc_purchase_order_details.no_pr = acc_investments.reff_number WHERE acc_purchase_orders.deleted_at IS NULL " . $tanggal . " order by acc_purchase_orders.no_po ASC
-            ");
+            "SELECT DISTINCT acc_investments.reff_number, acc_investments.category, acc_investments.type, acc_investments.objective, ycj_approval, submission_date, acc_investments.note, acc_investment_budgets.budget_no, acc_investments.applicant_department, acc_investment_details.detail, acc_investments.currency, acc_investment_details.amount, acc_investments.supplier_code, acc_investments.supplier_name, acc_investment_budgets.category_budget, acc_investments.delivery_order, acc_purchase_order_details.no_po, acc_investment_details.dollar, acc_investments.posisi from acc_investments left join acc_investment_details on acc_investments.reff_number = acc_investment_details.reff_number left join acc_investment_budgets on acc_investments.reff_number = acc_investment_budgets.reff_number left join acc_purchase_order_details on acc_investments.reff_number = acc_purchase_order_details.no_pr and acc_investment_details.detail = acc_purchase_order_details.nama_item WHERE acc_investments.deleted_at IS NULL " . $tanggal . " order by acc_investments.reff_number ASC");
 
         $data = array(
             'investment_detail' => $investment_detail

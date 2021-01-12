@@ -182,7 +182,7 @@ hr { background-color: red; height: 1px; border: 0; }
           <div class="col-md-12" style="margin-top: 5px;background-color: #000;text-align: center;">
               <span style="font-size: 24px;font-weight: bold;color: white">Outstanding PR Belum Received</span>
           </div>
-          <table id="tabelmonitor" class="table table-bordered" style="margin-top: 5px; width: 100%">
+          <table id="tabelmonitor2" class="table table-bordered" style="margin-top: 5px; width: 100%">
             <thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 12px;font-weight: bold">
               <tr>
                 <th style="width: 15%; padding: 0;vertical-align: middle;font-size: 16px;" rowspan="2">No PR</th>
@@ -677,8 +677,9 @@ hr { background-color: red; height: 1px; border: 0; }
       if(xhr.status == 200){
         if(result.status){
 
-          $("#tabelisi").find("td").remove();  
-          $('#tabelisi').html("");
+          $('#tabelmonitor').DataTable().clear();
+          $('#tabelmonitor').DataTable().destroy();
+
           
           var table = "";
           var user = "";
@@ -854,11 +855,10 @@ hr { background-color: red; height: 1px; border: 0; }
             table += '<td>'+value.submission_date+'</td>';
             table += '<td>'+capitalizeFirstLetter(value.department)+'</td>';
             table += '<td '+colorpch+'>'+pch+'</td>';
-              
+            table += '</tr>';
           })
 
           $('#tabelisi').append(table);
-
 
           $("#tabelisipo_undone").find("td").remove();  
           $('#tabelisipo_undone').html("");
@@ -878,6 +878,34 @@ hr { background-color: red; height: 1px; border: 0; }
 
           $('#tabelisipo_undone').append(table_belum_po);
 
+          $('#tabelmonitor').DataTable( {
+            'dom': 'Bfrtip',
+            'responsive':true,
+            'lengthMenu': [
+            [ 10, 25, 50, -1 ],
+            [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+            ],
+            'buttons': {
+              buttons:[
+              {
+                extend: 'pageLength',
+                className: 'btn btn-default',
+              },
+              ]
+            },
+            'paging': true,
+            'lengthChange': true,
+            'searching': true,
+            'ordering': true,
+            'info': true,
+            'autoWidth': true,
+            "sPaginationType": "full_numbers",
+            "bJQueryUI": true,
+            "bAutoWidth": false,
+            "processing": true,
+            "order": [[ 2, 'desc' ]]
+
+          } );
         }
       }
     })
