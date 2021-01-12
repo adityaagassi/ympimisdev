@@ -559,12 +559,13 @@ class MaintenanceController extends Controller
 		$spk = MaintenanceJobProcess::leftJoin("maintenance_job_orders", "maintenance_job_orders.order_no", "=", "maintenance_job_processes.order_no")
 		->leftJoin(db::raw('(select * from processes where remark = "maintenance") as prc'), 'prc.process_code', '=', 'maintenance_job_orders.remark')
 		->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'maintenance_job_orders.created_by')
+		->leftJoin('maintenance_plan_items', 'maintenance_plan_items.machine_id', '=', 'maintenance_job_orders.machine_name')
 		->where("operator_id", "=", Auth::user()->username)
 		->whereNull('maintenance_job_processes.deleted_at')
 		->whereNull('maintenance_job_orders.deleted_at')
 		// ->whereNull('maintenance_job_processes.finish_actual')
 		->whereRaw("maintenance_job_orders.remark in (3,4,5,9)")
-		->select("maintenance_job_orders.order_no", "maintenance_job_orders.section", "priority", "type", "category", "machine_condition", "danger", "description", "target_date", "safety_note", "start_plan", "finish_plan", "start_actual", "finish_actual", db::raw("DATE_FORMAT(maintenance_job_orders.created_at,'%d-%m-%Y') as request_date"), 'name', "maintenance_job_orders.remark", "process_name", db::raw("maintenance_job_processes.remark as stat"))
+		->select("maintenance_job_orders.order_no", "maintenance_job_orders.section", "priority", "type", "maintenance_job_orders.category", "machine_condition", "danger", "maintenance_job_orders.description", "target_date", "safety_note", "start_plan", "finish_plan", "start_actual", "finish_actual", db::raw("DATE_FORMAT(maintenance_job_orders.created_at,'%d-%m-%Y') as request_date"), 'name', "maintenance_job_orders.remark", "process_name", db::raw("maintenance_job_processes.remark as stat"), db::raw('maintenance_plan_items.description as machine_desc'), 'att', 'machine_remark')
 		->orderBy("maintenance_job_orders.remark", "asc")
 		->get();
 

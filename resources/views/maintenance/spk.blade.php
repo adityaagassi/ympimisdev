@@ -395,6 +395,13 @@
 							</div>
 
 							<div class="form-group row" align="right">
+								<label class="col-xs-2" style="margin-top: 1%;">Nama Mesin</label>
+								<div class="col-xs-3" align="left">
+									<input type="text" class="form-control" id="nama_mesin" readonly>
+								</div>
+							</div>
+
+							<div class="form-group row" align="right">
 								<label class="col-xs-2" style="margin-top: 1%;">Deskripsi Pekerjaan</label>
 								<div class="col-xs-9" align="left">
 									<textarea class="form-control" id="desc_work" readonly></textarea>
@@ -405,6 +412,12 @@
 								<label class="col-xs-2" style="margin-top: 1%;">Catatan Safety</label>
 								<div class="col-xs-9" align="left">
 									<textarea class="form-control" id="safety_work" readonly></textarea>
+								</div>
+							</div>
+
+							<div class="form-group row" align="right">
+								<label class="col-xs-2" style="margin-top: 1%;">Lampiran</label>
+								<div class="col-xs-9" align="left" id="alamat_lampiran">
 								</div>
 							</div>
 						</div>
@@ -701,10 +714,10 @@
 
 				if (value.start_actual != null) {
 					if (value.remark == '5') {
-						body += "<td><button class='btn btn-warning' onclick='modalWork(\""+value.order_no+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\",\""+value.name+"\",\""+value.target_date+"\",\""+value.safety_note+"\",\""+value.priority+"\", \"rework\", "+index+")'><i class='fa fa-rocket'></i>&nbsp; Lanjutkan</button></td>";
+						body += "<td><button class='btn btn-warning' onclick='modalWork(\""+value.order_no+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\",\""+value.name+"\",\""+value.target_date+"\",\""+value.safety_note+"\",\""+value.priority+"\", \"rework\", "+index+", \""+value.machine_desc+"\", \""+value.att+"\", \""+value.machine_remark+"\")'><i class='fa fa-rocket'></i>&nbsp; Lanjutkan</button></td>";
 						desc_new.push(value.description);
 					} else if (value.remark == '9') {
-						body += "<td><button class='btn btn-warning' onclick='modalWork(\""+value.order_no+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\",\""+value.name+"\",\""+value.target_date+"\",\""+value.safety_note+"\",\""+value.priority+"\", \"rework\", "+index+")'><i class='fa fa-play'></i>&nbsp; Resume</button></td>";
+						body += "<td><button class='btn btn-warning' onclick='modalWork(\""+value.order_no+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\",\""+value.name+"\",\""+value.target_date+"\",\""+value.safety_note+"\",\""+value.priority+"\", \"rework\", "+index+", \""+value.machine_desc+"\", \""+value.att+"\", \""+value.machine_remark+"\")'><i class='fa fa-play'></i>&nbsp; Resume</button></td>";
 						desc_new.push(value.description);
 					} else {
 						body += "<td><button class='btn btn-success' onclick='modalAfterWork(\""+value.order_no+"\",\""+$("#op").text()+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\", "+index+")'><i class='fa fa-file'></i>&nbsp; Buat Laporan</button></td>";
@@ -713,7 +726,7 @@
 					}
 				} else {
 
-					body += "<td><button class='btn btn-primary' onclick='modalWork(\""+value.order_no+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\",\""+value.name+"\",\""+value.target_date+"\",\""+value.safety_note+"\",\""+value.priority+"\", \"work\", "+index+")'><i class='fa fa-gears'></i>&nbsp; Kerjakan</button></td>";
+					body += "<td><button class='btn btn-primary' onclick='modalWork(\""+value.order_no+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\",\""+value.name+"\",\""+value.target_date+"\",\""+value.safety_note+"\",\""+value.priority+"\", \"work\", "+index+", \""+value.machine_desc+"\", \""+value.att+"\", , \""+value.machine_remark+"\")'><i class='fa fa-gears'></i>&nbsp; Kerjakan</button></td>";
 					desc_new.push(value.description);
 				}
 
@@ -776,7 +789,7 @@ function setTime() {
 	}
 }
 
-function modalWork(order_no, pekerjaan, request_date, bagian, nama, target_date, safety_note, priority, stat, index) {
+function modalWork(order_no, pekerjaan, request_date, bagian, nama, target_date, safety_note, priority, stat, index, machine_desc, att, machine_other) {
 	if (stat == "work") {
 		$("#btn_work").show();
 		$("#btn_resume").hide();
@@ -790,6 +803,9 @@ function modalWork(order_no, pekerjaan, request_date, bagian, nama, target_date,
 	$("#spk_work").val(order_no);
 	$("#pekerjaan_work").val(pekerjaan);
 	$("#tanggal_work").val(request_date);
+	$("#alamat_lampiran").empty();
+	$("#alamat_lampiran").append("<a href='{{ url('maintenance/spk_att/') }}/"+att+"' target='_blank'>"+att+"</a>");
+
 
 	if(priority == 'Urgent'){
 		var prioritas = '<span style="font-size: 13px;" class="label label-danger">Urgent</span>';
@@ -801,6 +817,8 @@ function modalWork(order_no, pekerjaan, request_date, bagian, nama, target_date,
 	$("#bagian_work").val(bagian);
 	$("#nama_work").val(nama);
 	$("#target_work").val(target_date);
+	$("#nama_mesin").val(machine_desc+" | "+machine_other);
+
 	$("#desc_work").text(desc_new[index]);
 
 	if (safety_note != 'null') {

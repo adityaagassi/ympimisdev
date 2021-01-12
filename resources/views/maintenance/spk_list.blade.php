@@ -68,7 +68,7 @@
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="box box-solid">
-				<div class="box-body">
+				<div class="box-body">					
 					<form method="GET" action="{{ url("export/maintenance/list_spk") }}">
 						<div class="col-md-4">
 							<div class="box box-primary box-solid">
@@ -183,13 +183,12 @@
 											</div>
 											<div class="col-md-4">
 												<div class="form-group">
-													<label>Potensi Bahaya</label>
-													<select class="form-control select2" data-placeholder="Pilih Potensi Bahaya" name="danger" id="danger" style="width: 100% height: 35px; font-size: 15px;">
+													<label>PIC</label>
+													<select class="form-control select2" data-placeholder="Pilih PIC" name="pic" id="pic" style="width: 100% height: 35px; font-size: 15px;">
 														<option value=""></option>
-														<option value="Bahan Kimia Beracun">Bahan Kimia Beracun</option>
-														<option value="Listrik">Listrik</option>
-														<option value="Terjepit">Terjepit</option>
-														<option value="Putaran Mesin">Putaran Mesin</option>
+														@foreach($mt_employees as $pic)
+														<option value="{{ $pic->employee_id }}">{{ $pic->name }}</option>
+														@endforeach
 													</select>
 												</div>
 											</div>
@@ -199,11 +198,13 @@
 										<div class="row">
 											<div class="col-md-4">
 												<div class="form-group">
-													<label>Kondisi Mesin</label>
-													<select class="form-control select2" data-placeholder="Pilih Kondisi Mesin" name="machineStatus" id="machineStatus" style="width: 100% height: 35px; font-size: 15px;">
-														<option value=""></option>
-														<option value="Berhenti">Berhenti</option>
-														<option value="Berjalan">Berjalan</option>
+													<label>Kategori</label>
+													<select class="form-control select2" data-placeholder="Pilih kategori" name="categoryStatus" id="categoryStatus" style="width: 100% height: 35px; font-size: 15px;">
+														<option></option>
+														<option value="all">All</option>
+														@foreach($category as $ctg)
+														<option value="{{ $ctg }}">{{ $ctg }}</option>
+														@endforeach
 													</select>
 												</div>
 											</div>
@@ -614,7 +615,6 @@
 		$('.select2').select2({
 			allowClear: true
 		});
-
 		
 	});
 
@@ -656,6 +656,8 @@
 		var workType = $('#workType').val();
 		var remark = $('#remark').val(); 
 		var status = $('#status').val();
+		var ctg = $('#categoryStatus').val();
+		var pic = $('#pic').val();
 
 		var data = {
 			reqFrom:reqFrom,
@@ -668,7 +670,9 @@
 			section:section,
 			workType:workType,
 			remark:remark,
-			status:status
+			status:status,
+			category:ctg,
+			pic:pic
 		}
 
 		$.get('{{ url("fetch/maintenance/list_spk") }}', data, function(result, status, xhr){
