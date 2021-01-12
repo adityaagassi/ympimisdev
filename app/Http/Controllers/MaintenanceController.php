@@ -859,13 +859,24 @@ class MaintenanceController extends Controller
 
 	public function fetchSPKProgressDetail(Request $request)
 	{
-		$bar_detail = db::select('SELECT maintenance_job_orders.order_no, department_shortname as bagian, priority, type, category, machine_name, description, DATE_FORMAT(maintenance_job_orders.created_at,"%d %b %Y") target_date, process_code, employee_syncs.name, date(maintenance_job_orders.created_at) as dt, cause, handling from maintenance_job_orders 
-			left join (select process_code, process_name from processes where remark = "maintenance") prs on prs.process_code = maintenance_job_orders.remark
-			left join employee_syncs on employee_syncs.employee_id = maintenance_job_orders.created_by
-			left join departments on departments.department_name = SUBSTRING_INDEX(maintenance_job_orders.section,"_",1)
-			left join (SELECT order_no, operator_id, cause, handling FROM maintenance_job_reports where id in (SELECT max(id) FROM maintenance_job_reports GROUP BY order_no)) as rpt on maintenance_job_orders.order_no = rpt.order_no
-			where DATE_FORMAT(maintenance_job_orders.created_at,"%d %b %Y") = "'.$request->get('date').'" and process_name = "'.$request->get('process_name').'"
-			order by order_no asc');
+		$detail = 'SELECT maintenance_job_orders.order_no, department_shortname as bagian, priority, type, category, machine_name, description, DATE_FORMAT(maintenance_job_orders.created_at,"%d %b %Y") target_date, process_code, employee_syncs.name, date(maintenance_job_orders.created_at) as dt';
+
+		if ($request->get('process_name') != 'Listed') {
+			$detail .= ', cause, handling';
+		}
+
+		$detail .= ' from maintenance_job_orders 
+		left join (select process_code, process_name from processes where remark = "maintenance") prs on prs.process_code = maintenance_job_orders.remark
+		left join employee_syncs on employee_syncs.employee_id = maintenance_job_orders.created_by
+		left join departments on departments.department_name = SUBSTRING_INDEX(maintenance_job_orders.section,"_",1)';
+
+		if ($request->get('process_name') != 'Listed') {
+			$detail .= 'left join (SELECT order_no, operator_id, cause, handling FROM maintenance_job_reports where id in (SELECT max(id) FROM maintenance_job_reports GROUP BY order_no)) as rpt on maintenance_job_orders.order_no = rpt.order_no';
+		}
+
+		$detail .='where DATE_FORMAT(maintenance_job_orders.created_at,"%d %b %Y") = "'.$request->get('date').'" and process_name = "'.$request->get('process_name').'" order by order_no asc';
+
+		$bar_detail = db::select($detail);
 
 		$response = array(
 			'status' => true,
@@ -1288,7 +1299,7 @@ class MaintenanceController extends Controller
 			$rpt->prevention = $request->get('pencegahan');
 			
 			$rpt->photo = implode(", ",$upload);
-			$rpt->remark = 'OK';
+			$rpt->remark = $request->get('other_part');
 			$rpt->started_at = $proc->start_actual;
 			$rpt->finished_at = date('Y-m-d H:i:s');
 			$rpt->created_by = $operator_id;

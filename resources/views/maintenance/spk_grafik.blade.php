@@ -499,8 +499,8 @@ function showModalDetail(ctg, date) {
 			body += "<td>"+value.description+"</td>";
 			body += "<td>"+value.target_date+"</td>";
 			body += "<td></td>";
-			body += "<td>"+value.cause+"</td>";
-			body += "<td>"+value.handling+"</td>";
+			body += "<td>"+(value.cause || '-')+"</td>";
+			body += "<td>"+(value.handling || '-')+"</td>";
 			body += "</tr>";
 		})
 
