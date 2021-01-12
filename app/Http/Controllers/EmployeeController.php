@@ -3088,10 +3088,10 @@ public function fetchChecklogData(Request $request)
 
      if(strlen($request->get('datefrom')) > 0){
           $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
-          $tanggal = "and DATE(checklog) >= '".$datefrom." 00:00:00' ";
+          $tanggal = "and auth_datetime >= '".$datefrom." 00:00:00' ";
           if(strlen($request->get('dateto')) > 0){
                $dateto = date('Y-m-d', strtotime($request->get('dateto')));
-               $tanggal = $tanggal."and DATE(checklog) <= '".$dateto." 23:59:59' ";
+               $tanggal = $tanggal."and auth_datetime <= '".$dateto." 23:59:59' ";
           }
      }
 
@@ -3166,17 +3166,17 @@ public function fetchChecklogData(Request $request)
      $datachecklog = [];
 
      foreach ($emp as $key) {
-          $checklog = DB::CONNECTION('ftm')->SELECT("SELECT *,date(checklog) as date FROM `sunfish` where nik = '".$key->employee_id."' ".$tanggal."");
+          $checklog = DB::SELECT("SELECT * FROM ivms.ivms_attendance_triggers where employee_id = '".$key->employee_id."' ".$tanggal."");
 
           foreach ($checklog as $val) {
                $datachecklog[] = array(
                     'employee_id' => $key->employee_id,
-                    'date' => $val->date,
+                    'date' => $val->auth_date,
                     'name' => $key->name,
                     'department' => $key->department,
                     'section' => $key->section,
                     'group' => $key->group,
-                    'checklog' => $val->checklog,
+                    'checklog' => $val->auth_datetime,
                );
           }
      }
