@@ -1212,28 +1212,77 @@ public function fetchMinMoeMonitoring(Request $request)
                     COALESCE (( SELECT department_shortname FROM departments WHERE department_name = employee_syncs.department ), '' ) AS department_shortname,
                     COALESCE ( employee_syncs.section, '' ) AS section,
                     (
-                    SELECT DISTINCT
-                         ( ivms.ivms_attendance_triggers.employee_id ) 
-                    FROM
-                         ivms.ivms_attendance_triggers 
-                    WHERE
-                         ivms.ivms_attendance_triggers.employee_id = a.employee_id 
-                         AND auth_date = '".$now."' 
-                    ) AS checks,
-               COALESCE(IF
-                    (
-                         ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_3%',
+                    IF
                          (
-                         SELECT
-                              MAX( auth_datetime ) 
-                         FROM
-                              ivms.ivms_attendance_triggers 
-                         WHERE
-                              ivms.ivms_attendance_triggers.employee_id = a.employee_id 
-                              AND auth_date = DATE( '".$now."' ) - INTERVAL 1 DAY 
-                         ),
-                         ( SELECT min( auth_datetime ) FROM ivms.ivms_attendance_triggers WHERE ivms.ivms_attendance_triggers.employee_id = a.employee_id AND auth_date = '".$now."' ) 
-                    ),'-') AS time_in,
+                              ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_3%',
+                              (
+                              SELECT DISTINCT
+                                   ( ivms.ivms_attendance_triggers.employee_id ) 
+                              FROM
+                                   ivms.ivms_attendance_triggers 
+                              WHERE
+                                   ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+                                   AND auth_date = DATE( '".$now."' ) - INTERVAL 1 DAY 
+                              ),
+                         IF
+                              (
+                                   ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_2%',(
+                                   SELECT DISTINCT
+                                        ( ivms.ivms_attendance_triggers.employee_id ) 
+                                   FROM
+                                        ivms.ivms_attendance_triggers 
+                                   WHERE
+                                        ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+                                        AND auth_date = '".$now."' 
+                                        AND auth_datetime BETWEEN '".$now." 14:30:00' 
+                                        AND '".$now." 17:00:00' 
+                                        ),(
+                                   SELECT DISTINCT
+                                        ( ivms.ivms_attendance_triggers.employee_id ) 
+                                   FROM
+                                        ivms.ivms_attendance_triggers 
+                                   WHERE
+                                        ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+                                        AND auth_date = '".$now."' 
+                                   ) 
+                              ) 
+                         )) AS checks,
+                    COALESCE (
+                    IF
+                         (
+                              ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_3%',
+                              (
+                              SELECT
+                                   MAX( auth_datetime ) 
+                              FROM
+                                   ivms.ivms_attendance_triggers 
+                              WHERE
+                                   ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+                                   AND auth_date = DATE( '".$now."' ) - INTERVAL 1 DAY 
+                              ),
+                         IF
+                              (
+                                   ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_2%',(
+                                   SELECT
+                                        min( auth_datetime ) 
+                                   FROM
+                                        ivms.ivms_attendance_triggers 
+                                   WHERE
+                                        ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+                                        AND auth_date = '".$now."' 
+                                        AND auth_datetime BETWEEN '".$now." 14:30:00' 
+                                        AND '".$now." 17:00:00' 
+                                        ),(
+                                   SELECT
+                                        min( auth_datetime ) 
+                                   FROM
+                                        ivms.ivms_attendance_triggers 
+                                   WHERE
+                                        ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+                                        AND auth_date = '".$now."' 
+                                   ) 
+                              ) 
+                         ),'-') AS time_in,
                     ivms.sunfish_shift_syncs.shiftdaily_code,
                     ( SELECT MAX( temperature ) FROM ivms_temperatures WHERE employee_id = a.employee_id AND ivms_temperatures.date = '".$now."' ) AS temperature,
                IF
@@ -1307,28 +1356,77 @@ public function fetchMinMoeMonitoring(Request $request)
                     COALESCE (( SELECT department_shortname FROM departments WHERE department_name = employee_syncs.department ), '' ) AS department_shortname,
                     COALESCE ( employee_syncs.section, '' ) AS section,
                     (
-                    SELECT DISTINCT
-                         ( ivms.ivms_attendance_triggers.employee_id ) 
-                    FROM
-                         ivms.ivms_attendance_triggers 
-                    WHERE
-                         ivms.ivms_attendance_triggers.employee_id = a.employee_id 
-                         AND auth_date = '".$now."' 
-                    ) AS checks,
-               COALESCE(IF
-                    (
-                         ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_3%',
+                    IF
                          (
-                         SELECT
-                              MAX( auth_datetime ) 
-                         FROM
-                              ivms.ivms_attendance_triggers 
-                         WHERE
-                              ivms.ivms_attendance_triggers.employee_id = a.employee_id 
-                              AND auth_date = DATE( '".$now."' ) - INTERVAL 1 DAY 
-                         ),
-                         ( SELECT min( auth_datetime ) FROM ivms.ivms_attendance_triggers WHERE ivms.ivms_attendance_triggers.employee_id = a.employee_id AND auth_date = '".$now."' ) 
-                    ),'-') AS time_in,
+                              ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_3%',
+                              (
+                              SELECT DISTINCT
+                                   ( ivms.ivms_attendance_triggers.employee_id ) 
+                              FROM
+                                   ivms.ivms_attendance_triggers 
+                              WHERE
+                                   ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+                                   AND auth_date = DATE( '".$now."' ) - INTERVAL 1 DAY 
+                              ),
+                         IF
+                              (
+                                   ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_2%',(
+                                   SELECT DISTINCT
+                                        ( ivms.ivms_attendance_triggers.employee_id ) 
+                                   FROM
+                                        ivms.ivms_attendance_triggers 
+                                   WHERE
+                                        ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+                                        AND auth_date = '".$now."' 
+                                        AND auth_datetime BETWEEN '".$now." 14:30:00' 
+                                        AND '".$now." 17:00:00' 
+                                        ),(
+                                   SELECT DISTINCT
+                                        ( ivms.ivms_attendance_triggers.employee_id ) 
+                                   FROM
+                                        ivms.ivms_attendance_triggers 
+                                   WHERE
+                                        ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+                                        AND auth_date = '".$now."' 
+                                   ) 
+                              ) 
+                         )) AS checks,
+                    COALESCE (
+                    IF
+                         (
+                              ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_3%',
+                              (
+                              SELECT
+                                   MAX( auth_datetime ) 
+                              FROM
+                                   ivms.ivms_attendance_triggers 
+                              WHERE
+                                   ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+                                   AND auth_date = DATE( '".$now."' ) - INTERVAL 1 DAY 
+                              ),
+                         IF
+                              (
+                                   ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_2%',(
+                                   SELECT
+                                        min( auth_datetime ) 
+                                   FROM
+                                        ivms.ivms_attendance_triggers 
+                                   WHERE
+                                        ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+                                        AND auth_date = '".$now."' 
+                                        AND auth_datetime BETWEEN '".$now." 14:30:00' 
+                                        AND '".$now." 17:00:00' 
+                                        ),(
+                                   SELECT
+                                        min( auth_datetime ) 
+                                   FROM
+                                        ivms.ivms_attendance_triggers 
+                                   WHERE
+                                        ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+                                        AND auth_date = '".$now."' 
+                                   ) 
+                              ) 
+                         ),'-') AS time_in,
                     ivms.sunfish_shift_syncs.shiftdaily_code,
                     ( SELECT MAX( temperature ) FROM ivms_temperatures WHERE employee_id = a.employee_id AND ivms_temperatures.date = '".$now."' ) AS temperature,
                IF
@@ -1399,28 +1497,77 @@ public function fetchMinMoeMonitoring(Request $request)
                     COALESCE (( SELECT department_shortname FROM departments WHERE department_name = employee_syncs.department ), '' ) AS department_shortname,
                     COALESCE ( employee_syncs.section, '' ) AS section,
                     (
-                    SELECT DISTINCT
-                         ( ivms.ivms_attendance_triggers.employee_id ) 
-                    FROM
-                         ivms.ivms_attendance_triggers 
-                    WHERE
-                         ivms.ivms_attendance_triggers.employee_id = a.employee_id 
-                         AND auth_date = '".$now."' 
-                    ) AS checks,
-               COALESCE(IF
-                    (
-                         ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_3%',
+                    IF
                          (
-                         SELECT
-                              MAX( auth_datetime ) 
-                         FROM
-                              ivms.ivms_attendance_triggers 
-                         WHERE
-                              ivms.ivms_attendance_triggers.employee_id = a.employee_id 
-                              AND auth_date = DATE( '".$now."' ) - INTERVAL 1 DAY 
-                         ),
-                         ( SELECT min( auth_datetime ) FROM ivms.ivms_attendance_triggers WHERE ivms.ivms_attendance_triggers.employee_id = a.employee_id AND auth_date = '".$now."' ) 
-                    ),'-') AS time_in,
+                              ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_3%',
+                              (
+                              SELECT DISTINCT
+                                   ( ivms.ivms_attendance_triggers.employee_id ) 
+                              FROM
+                                   ivms.ivms_attendance_triggers 
+                              WHERE
+                                   ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+                                   AND auth_date = DATE( '".$now."' ) - INTERVAL 1 DAY 
+                              ),
+                         IF
+                              (
+                                   ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_2%',(
+                                   SELECT DISTINCT
+                                        ( ivms.ivms_attendance_triggers.employee_id ) 
+                                   FROM
+                                        ivms.ivms_attendance_triggers 
+                                   WHERE
+                                        ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+                                        AND auth_date = '".$now."' 
+                                        AND auth_datetime BETWEEN '".$now." 14:30:00' 
+                                        AND '".$now." 17:00:00' 
+                                        ),(
+                                   SELECT DISTINCT
+                                        ( ivms.ivms_attendance_triggers.employee_id ) 
+                                   FROM
+                                        ivms.ivms_attendance_triggers 
+                                   WHERE
+                                        ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+                                        AND auth_date = '".$now."' 
+                                   ) 
+                              ) 
+                         )) AS checks,
+                    COALESCE (
+                    IF
+                         (
+                              ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_3%',
+                              (
+                              SELECT
+                                   MAX( auth_datetime ) 
+                              FROM
+                                   ivms.ivms_attendance_triggers 
+                              WHERE
+                                   ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+                                   AND auth_date = DATE( '".$now."' ) - INTERVAL 1 DAY 
+                              ),
+                         IF
+                              (
+                                   ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_2%',(
+                                   SELECT
+                                        min( auth_datetime ) 
+                                   FROM
+                                        ivms.ivms_attendance_triggers 
+                                   WHERE
+                                        ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+                                        AND auth_date = '".$now."' 
+                                        AND auth_datetime BETWEEN '".$now." 14:30:00' 
+                                        AND '".$now." 17:00:00' 
+                                        ),(
+                                   SELECT
+                                        min( auth_datetime ) 
+                                   FROM
+                                        ivms.ivms_attendance_triggers 
+                                   WHERE
+                                        ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+                                        AND auth_date = '".$now."' 
+                                   ) 
+                              ) 
+                         ),'-') AS time_in,
                     ivms.sunfish_shift_syncs.shiftdaily_code,
                     ( SELECT MAX( temperature ) FROM ivms_temperatures WHERE employee_id = a.employee_id AND ivms_temperatures.date = '".$now."' ) AS temperature,
                IF
