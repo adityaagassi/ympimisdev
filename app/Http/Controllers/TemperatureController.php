@@ -1387,7 +1387,8 @@ public function fetchMinMoeMonitoring(Request $request)
                     JOIN employee_syncs ON employee_syncs.employee_id = a.employee_id
                     JOIN ivms.sunfish_shift_syncs ON ivms.sunfish_shift_syncs.employee_id = employee_syncs.employee_id 
                WHERE
-                    employee_syncs.end_date IS NULL  ".$groupin);
+                    employee_syncs.end_date IS NULL
+                    AND ivms.sunfish_shift_syncs.shift_date = '".$now."'  ".$groupin);
           }else{
                $datacheck = DB::SELECT("SELECT
                     a.employee_id,
