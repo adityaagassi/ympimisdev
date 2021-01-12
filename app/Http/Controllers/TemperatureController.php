@@ -1195,7 +1195,16 @@ public function fetchMinMoeMonitoring(Request $request)
                LEFT JOIN employee_syncs ON employee_syncs.employee_id = ivms_temperatures.employee_id
                LEFT JOIN employees ON employees.employee_id = employee_syncs.employee_id 
           WHERE
-                DATE( date_in ) = '".$now."' AND employee_syncs.end_date IS NULL AND employees.remark != 'OFC' AND employees.remark != 'Jps' and employee_syncs.department = '".$request->get('location')."' ".$groupin."
+                (DATE( date_in ) = '".$now."' 
+               AND employee_syncs.end_date IS NULL 
+               AND employees.remark != 'OFC' 
+               AND employees.remark != 'Jps' 
+               AND employee_syncs.department = '".$request->get('location')."' ".$groupin.")
+               OR
+               (DATE( date_in ) = '".$now."' 
+               AND employee_syncs.end_date IS NULL 
+               AND employees.remark is null
+               AND employee_syncs.department = '".$request->get('location')."' ".$groupin.")
           GROUP BY
                temperature ASC");
      }
@@ -1626,11 +1635,16 @@ public function fetchMinMoeMonitoring(Request $request)
                     JOIN employee_syncs ON employee_syncs.employee_id = a.employee_id
                     JOIN ivms.sunfish_shift_syncs ON ivms.sunfish_shift_syncs.employee_id = employee_syncs.employee_id 
                WHERE
-                    employee_syncs.end_date IS NULL 
+                    (employee_syncs.end_date IS NULL 
                     AND a.remark != 'OFC' 
                     AND a.remark != 'Jps' 
                     AND employee_syncs.department = '".$request->get('location')."' 
-                    AND ivms.sunfish_shift_syncs.shift_date = '".$now."' ".$groupin);
+                    AND ivms.sunfish_shift_syncs.shift_date = '".$now."' ".$groupin.")
+                    or(
+                    employee_syncs.end_date IS NULL 
+                    AND a.remark is null
+                    AND employee_syncs.department = '".$request->get('location')."' 
+                    AND ivms.sunfish_shift_syncs.shift_date = '".$now."' ".$groupin.")");
           }
 
           $dateTitle = date("d M Y", strtotime($now));
@@ -1721,11 +1735,16 @@ public function fetchDetailMinMoeMonitoring(Request $request)
           LEFT JOIN employees ON employees.employee_id = ivms_temperatures.employee_id 
           LEFT JOIN employee_syncs ON employee_syncs.employee_id = employees.employee_id 
           WHERE
-          employees.remark != 'OFC' and employees.remark != 'Jps' 
+          (employees.remark != 'OFC' 
+          AND employees.remark != 'Jps' 
           AND DATE( date_in ) = '".$now."' 
-          AND temperature = ".$temperature."
-          and employee_syncs.department = '".$request->get('location')."'
-          ".$groupin."
+          AND temperature = ".$temperature." 
+          AND employee_syncs.department = '".$request->get('location')."' ".$groupin.")
+          OR
+          (employees.remark is null
+          AND DATE( date_in ) = '".$now."' 
+          AND temperature = ".$temperature." 
+          AND employee_syncs.department = '".$request->get('location')."' ".$groupin.")
           ");
      }
 
