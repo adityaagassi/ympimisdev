@@ -83,7 +83,7 @@ class ProductionReportController extends Controller
 
         $role_code = Auth::user()->role_code;
         $name = Auth::user()->name;
-        if ($role_code == 'MIS') {
+        if ($role_code == 'MIS' || $role_code == "S" || $role_code == "F" || $role_code == "F-SPL"  || $role_code == "M" || $role_code == "G") {
             $queryActivity = "SELECT DISTINCT(activity_type),frequency,no FROM activity_lists where department_id = '".$id."' and activity_lists.activity_name is not null and activity_lists.deleted_at is null ORDER BY frequency";
         }else{
             $queryActivity = "SELECT DISTINCT(activity_type),frequency,no,leader_dept FROM activity_lists where department_id = '".$id."' and activity_lists.activity_name is not null and activity_lists.deleted_at is null ORDER BY frequency";

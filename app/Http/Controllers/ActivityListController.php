@@ -138,8 +138,8 @@ class ActivityListController extends Controller
           $frekuensi = 'Kondisional';
         }
 
-        if($role_code == "MIS" || $role_code == "S"){
-          $activityList = ActivityList::where('department_id',$id)->where('activity_type',$activity_type)->where('activity_name','!=','Null')->where('frequency',$frequency)->get();
+        if($role_code == "MIS" || $role_code == "S" || $role_code == "F" || $role_code == "F-SPL"  || $role_code == "M" || $role_code == "G"){
+          $activityList = ActivityList::where('department_id',$id)->where('activity_type',$activity_type)->where('activity_name','!=','Null')->where('frequency',$frequency)->distinct()->get();
         }
         else{
           $activityList = ActivityList::where('department_id',$id)->where('activity_type',$activity_type)->where('leader_dept',$name)->where('activity_name','!=','Null')->where('frequency',$frequency)->get();

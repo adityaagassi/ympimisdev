@@ -70,6 +70,8 @@
                 <td>
                     @if($investment->posisi == "finished")
                         Approval Completed
+                    @elseif($investment->posisi == "user")
+                        Saved
                     @else
                         On Going
                     @endif

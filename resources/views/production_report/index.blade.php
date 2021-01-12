@@ -29,7 +29,7 @@
 		<div class="col-xs-4" style="text-align: center;">
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process <i class="fa fa-angle-double-down"></i></span>
 			<?php $no = 1 ?>
-			<?php if ($role_code == 'MIS'){ ?>
+			<?php if ($role_code == 'MIS' || $role_code == 'M' || $role_code == 'F-SPL' || $role_code == 'M'){ ?>
 				@foreach($activity_list as $activity_list)
 					@if($activity_list->frequency == "Daily")
 						<?php $bgcolor = "background-color:#2A3E79;color:white" ?>

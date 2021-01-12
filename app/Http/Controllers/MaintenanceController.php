@@ -70,6 +70,17 @@ class MaintenanceController extends Controller
 		->groupBy('location')
 		->orderBy('location', 'asc')
 		->get();
+
+		$this->spk_category = [
+			['category' => 'utility', 'value' => 'Listrik'],
+			['category' => 'utility', 'value' => 'Jaringan'],
+			['category' => 'utility', 'value' => 'Mesin Utilitas'],
+			['category' => 'utility', 'value' => 'Utilitas Umum'],
+			['category' => 'Mesin Produksi', 'value' => 'Kelistrikan Mesin'],
+			['category' => 'Mesin Produksi', 'value' => 'Mekanis Mesin'],
+			['category' => 'Mesin Produksi', 'value' => 'Otomatisasi Mesin'],
+			['category' => 'Informasi', 'value' => 'Informasi']
+		];
 	}
 
 	// -----------------------  START INDEX --------------------
@@ -115,12 +126,22 @@ class MaintenanceController extends Controller
 		->orderBy('employee_id', 'asc')
 		->get();
 
+		$keys = [];
+		foreach($this->spk_category as $row) {
+			foreach($row as $key) {
+				if (!in_array($row['category'], $keys)) {
+					array_push($keys, $row['category']);
+				}
+			}
+		}
+
 		return view('maintenance.spk_list', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
 			'statuses' => $statuses,
 			'employees' => $employees,
-			'mt_employees' => $this->mt_employee
+			'mt_employees' => $this->mt_employee,
+			'category' => $keys
 		))->with('page', 'Maintenance List')->with('head2', 'SPK')->with('head', 'Maintenance');	
 	}
 
@@ -925,6 +946,22 @@ class MaintenanceController extends Controller
 		}
 		if(strlen($request->get('username')) > 0){
 			$maintenance_job_orders = $maintenance_job_orders->where('maintenance_job_orders.created_by', '=', $request->get('username'));
+		}
+		if(strlen($request->get('category')) > 0){
+			if($request->get('category') != 'all'){
+				$keys = [];
+				foreach ($this->spk_category as $ctg) {
+					if ($ctg['category'] === $request->get('category')) {
+						array_push($keys, $ctg['value']);
+					}
+				}
+
+				$maintenance_job_orders = $maintenance_job_orders->whereIn('maintenance_job_orders.category', $keys);
+			}
+		}
+
+		if(strlen($request->get('pic')) > 0){
+			$maintenance_job_orders = $maintenance_job_orders->where('maintenance_job_processes.operator_id', '=', $request->get('pic'));
 		}
 
 		$maintenance_job_orders = $maintenance_job_orders->orderBy('maintenance_job_orders.created_at', 'desc')
