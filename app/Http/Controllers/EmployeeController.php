@@ -3166,7 +3166,7 @@ public function fetchChecklogData(Request $request)
      $datachecklog = [];
 
      foreach ($emp as $key) {
-          $checklog = DB::SELECT("SELECT *,TIME(auth_datetime) as time_in FROM ivms.ivms_attendance_triggers where employee_id = '".$key->employee_id."' ".$tanggal."");
+          $checklog = DB::SELECT("SELECT *,DATE_FORMAT(auth_datetime,'%H:%i') as time_in FROM ivms.ivms_attendance_triggers where employee_id = '".$key->employee_id."' ".$tanggal."");
 
           foreach ($checklog as $val) {
                $datachecklog[] = array(
