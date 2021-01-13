@@ -1106,7 +1106,7 @@ class AccountingController extends Controller
 
                 $gm = $getgm->employee_id;
             }
-            //if Production Support Maka GM Pak Budhi
+            //if Production Support Division Maka GM Pak Budhi
             else if($request->get('department') == "Logistic Department" || $request->get('department') == "Production Control Department" || $request->get('department') == "Purchasing Control Department" || $request->get('department') == "Procurement Department" ){
 
                 $dgm = null;
@@ -2438,7 +2438,7 @@ class AccountingController extends Controller
 
         $authorized3 = EmployeeSync::select('employee_id', 'name')
         ->where('position', '=', 'General Manager')
-        ->where('division', '=', 'Production Support')
+        ->where('division', '=', 'Production Support Division')
         ->first();
 
         // $authorized4 = EmployeeSync::select('employee_id', 'name')->where('position', '=', 'Director')
@@ -6722,7 +6722,7 @@ public function purchase_order_investment()
 
     $authorized3 = EmployeeSync::select('employee_id', 'name')
     ->where('position', '=', 'General Manager')
-    ->where('division', '=', 'Production Support')
+    ->where('division', '=', 'Production Support Division')
     ->first();
 
     // $authorized4 = EmployeeSync::select('employee_id', 'name')->where('position', '=', 'Director')
