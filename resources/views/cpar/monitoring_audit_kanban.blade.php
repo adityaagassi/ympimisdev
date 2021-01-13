@@ -381,14 +381,14 @@ table > thead > tr > th{
             },
             series: [
               {
-                  name: 'Close',
-                  data: close,
-                  color : '#5cb85c' //00f57f
-              },
-              {
                   name: 'Penanganan',
                   data: penanganan,
                   color : '#f0ad4e' //f5f500
+              },
+              {
+                  name: 'Close',
+                  data: close,
+                  color : '#5cb85c' //00f57f
               }
             ]
           })
