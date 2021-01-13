@@ -20,29 +20,24 @@
 	<div>
 		<center>
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
-			<p style="font-size: 18px;">Data Kunjungan Klinik {{ date('d F Y', strtotime($data['date'])) }}</p>
+			<p style="font-size: 18px;">Clinic Visit Data</p>
 
 			This is an automatic notification. Please do not reply to this address.
-			<table style="border:1px solid black; border-collapse: collapse;" width="70%">
+			<table style="border:1px solid black; border-collapse: collapse;" width="90%">
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
-						<th style="width: 1%; border:1px solid black;">#</th>
-						<th style="width: 2%; border:1px solid black;">NIK</th>
-						<th style="width: 2%; border:1px solid black;">Nama</th>
-						<th style="width: 2%; border:1px solid black;">Departemen</th>
-						<th style="width: 2%; border:1px solid black;">Tujuan</th>
-						<th style="width: 2%; border:1px solid black;">Paramedis</th>
-						<th style="width: 4%; border:1px solid black;">Diagnosa</th>
-						<th style="width: 4%; border:1px solid black;">Jam Berkunjung</th>
+						<th style="width: 2%; border:1px solid black;">Employee ID</th>
+						<th style="width: 4%; border:1px solid black;">Name</th>
+						<th style="width: 4%; border:1px solid black;">Departement</th>
+						<th style="width: 2%; border:1px solid black;">Purpose</th>
+						<th style="width: 2%; border:1px solid black;">Paramedic</th>
+						<th style="width: 4%; border:1px solid black;">Diagnose</th>
+						<th style="width: 3%; border:1px solid black;">Visited At</th>
 					</tr>
 				</thead>
-				<tbody>
-
-					@php $i = 1; @endphp
-					
+				<tbody>					
 					@foreach($data['resume'] as $col)
 					<tr>
-						<td style="border:1px solid black;">{{ $i++ }}</td>
 						<td style="border:1px solid black;">{{ $col->employee_id }}</td>
 						<td style="border:1px solid black;">{{ $col->name }}</td>
 						<td style="border:1px solid black;">{{ $col->department }}</td>

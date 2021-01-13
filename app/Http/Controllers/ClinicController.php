@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
+use App\Mail\SendEmail;
+use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use App\CodeGenerator;
 use App\EmployeeSync;
 use App\ClinicPatient;
@@ -865,6 +867,38 @@ class ClinicController extends Controller{
 					'status' => 'Yes',
 					'note' => $bed
 				]);
+			}
+
+
+			$to = db::select("SELECT users.email FROM employee_syncs
+				LEFT JOIN users ON users.username = employee_syncs.employee_id
+				WHERE employee_syncs.division = 'Human Resources & General Affairs Division'
+				AND employee_syncs.position IN ('Chief', 'Manager')");
+
+			$cc = db::select("SELECT email FROM send_emails
+				WHERE remark = (SELECT section FROM employee_syncs WHERE employee_id = '".$employee_id."')");
+
+			$bcc = array();
+			array_push($bcc, 'anton.budi.santoso@music.yamaha.com', 'muhammad.ikhlas@music.yamaha.com');
+
+			$resume = db::select("SELECT cl.employee_id, e.`name`, e.department, cl.purpose, cl.paramedic, GROUP_CONCAT(' ', cl.diagnose) AS diagnose, MAX(cl.visited_at) AS visited_at FROM clinic_patient_details cl
+				LEFT JOIN employee_syncs e ON e.employee_id = cl.employee_id
+				WHERE cl.purpose IN ('Pemeriksaan Kesehatan', 'Istirahat Sakit', 'Kecelakaan Kerja', 'Pulang (Sakit)')
+				AND cl.employee_id = '".$employee_id."'
+				AND cl.patient_list_id = '".$idx."'
+				GROUP BY cl.employee_id, e.`name`, e.department, cl.purpose, cl.paramedic");
+
+
+			$data = [
+				'resume' => $resume
+			];
+
+
+			if(count($resume) > 0){
+				Mail::to($to)
+				->cc($cc)
+				->bcc($bcc)
+				->send(new SendEmail($data, 'clinic_visit'));
 			}		
 
 			$response = array(

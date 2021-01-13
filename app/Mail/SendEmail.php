@@ -70,7 +70,7 @@ class SendEmail extends Mailable
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Users Documents Reminder (ユーザ資料関連の催促メール)')->view('mails.user_document');
         }
         if($this->remark == 'clinic_visit'){
-            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Data Kunjungan Klinik')->view('mails.clinic_visit');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Clinic Visit Data')->view('mails.clinic_visit');
         }
         if($this->remark == 'audit'){
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Audit NG Jelas (生産監査報告)')->view('mails.audit');
