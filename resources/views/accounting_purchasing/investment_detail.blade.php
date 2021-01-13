@@ -163,6 +163,7 @@
               <option value="Book and Periodical" <?php if($investment->type == "Book and Periodical") echo "selected"; ?>>Book and Periodical</option>
               <option value="Tax and Publicdues" <?php if($investment->type == "Tax and Publicdues") echo "selected"; ?>>Tax and Publicdues</option>
               <option value="Photocopy and Printing" <?php if($investment->type == "Photocopy and Printing") echo "selected"; ?>>Photocopy and Printing</option>
+              <option value="Rent" <?php if($investment->type == "Rent") echo "selected"; ?>>Rent</option>
               <option value="Others" <?php if($investment->type == "Others") echo "selected"; ?>>Others</option>
             </select>
           </div>
