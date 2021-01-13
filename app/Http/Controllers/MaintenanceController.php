@@ -810,7 +810,10 @@ class MaintenanceController extends Controller
 		if ($request->get('from')) {
 			$from = $request->get('from');
 		} else {
-			$from = '2020-01-01';
+			$from = date('Y-m-d', strtotime("-1 month"));
+			if ($from < '2021-01-01') {
+				$from = '2021-01-01';
+			}
 		}
 
 		if ($request->get('to')) {
@@ -818,7 +821,7 @@ class MaintenanceController extends Controller
 		} else if($request->get('from')){
 			$to = $request->get('from');
 		} else {
-			$to = '2020-01-01';
+			$to = date('Y-m-d');
 		}
 
 		$get_data = db::select('
