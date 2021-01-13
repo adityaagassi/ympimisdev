@@ -500,18 +500,28 @@ class TemperatureController extends Controller
 
           foreach ($IvmsTemperature as $key) {
                $ivmscheck = IvmsTemperature::where('employee_id',$key->employee_id)->where('date',$key->date)->first();
-               $ivms = IvmsTemperature::firstOrNew(['employee_id' => $key->employee_id, 'date' => $key->date]);
-               $ivms->employee_id = $key->employee_id;
-               $ivms->name = $key->name;
-               $ivms->date = $key->date;
-               $ivms->date_in = $key->date_in;
-               $ivms->point = $key->point;
-               $ivms->temperature = $key->temperature;
-               $ivms->abnormal_status = $key->abnormal_status;
-               $ivms->created_by = $id_user;
-               $ivms->save();
+               // $ivms = IvmsTemperature::firstOrNew(['employee_id' => $key->employee_id, 'date' => $key->date]);
+               // $ivms->employee_id = $key->employee_id;
+               // $ivms->name = $key->name;
+               // $ivms->date = $key->date;
+               // $ivms->date_in = $key->date_in;
+               // $ivms->point = $key->point;
+               // $ivms->temperature = $key->temperature;
+               // $ivms->abnormal_status = $key->abnormal_status;
+               // $ivms->created_by = $id_user;
+               // $ivms->save();
 
                if (count($ivmscheck) == 0) {
+                    $ivms = IvmsTemperature::create([
+                         'employee_id' => $key->employee_id,
+                         'name' => $key->name,
+                         'date' => $key->date,
+                         'date_in' => $key->date_in,
+                         'point' => $key->point,
+                         'temperature' => $key->temperature,
+                         'abnormal_status' => $key->abnormal_status,
+                         'created_by' => $id_user,
+                    ]);
                     if ($key->temperature >= '37.5') {
                          $suhutinggi = array(
                               'employee_id' => $key->employee_id,
@@ -588,8 +598,6 @@ class TemperatureController extends Controller
 
           $mail_to = [];
 
-          
-
           for ($i = 0;$i < count($suhu); $i++) {
                $fc = DB::SELECT("SELECT
                     employee_id,
@@ -612,7 +620,9 @@ class TemperatureController extends Controller
                }
           }
 
-          Mail::to($mail_to)->cc($contactList2,'CC')->bcc($contactList,'BCC')->send(new SendEmail($suhu, 'temperature'));
+          if (count($suhu) > 0) {
+               Mail::to($mail_to)->cc($contactList2,'CC')->bcc($contactList,'BCC')->send(new SendEmail($suhu, 'temperature'));
+          }
 
           $response = array(
            'status' => true,
