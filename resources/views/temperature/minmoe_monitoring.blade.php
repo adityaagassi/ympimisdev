@@ -322,7 +322,7 @@
 		});
 		$('.select2').select2();
 		fetchTemperature();
-		intervaltemp = setInterval(fetchTemperature,1000*60*60);
+		intervaltemp = setInterval(fetchTemperature,180000);
 	});
 
 
@@ -386,7 +386,7 @@
 					var dataPersonTemperature = [];
 					var dataTemperature = [];
 
-					$.each(result.datacheck, function(key, value) {
+					$.each(result.attendance, function(key, value) {
 						var emp_no = value.employee_id;
 						if (value.temperature != null && value.temperature >= 37.5) {
 							detail_abnormal.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,temp:value.temperature});
@@ -794,7 +794,7 @@ function fetchTemperatureDetail(temperature){
 					"bAutoWidth": false,
 					"processing": true
 				});
-			intervaltemp = setInterval(fetchTemperature,1000*60*60);
+			intervaltemp = setInterval(fetchTemperature,180000);
 		}
 		else{
 			alert('Attempt to retrieve data failed');
@@ -879,7 +879,7 @@ function checkDetails(checkParam) {
 			"bAutoWidth": false,
 			"processing": true
 		});
-	intervaltemp = setInterval(fetchTemperature,1000*60*60);
+	intervaltemp = setInterval(fetchTemperature,180000);
 }
 
 Highcharts.createElement('link', {

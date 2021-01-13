@@ -68,10 +68,10 @@ class SyncShiftSunfish extends Command
             $insert[] = $row;
         }
 
-        DB::table('ivms.sunfish_shift_syncs')->truncate();
+        DB::table('sunfish_shift_syncs')->truncate();
         foreach (array_chunk($insert,1000) as $t)  
         {
-            DB::table('ivms.sunfish_shift_syncs')->insert($t);
+            DB::table('sunfish_shift_syncs')->insert($t);
         }
     }
 }

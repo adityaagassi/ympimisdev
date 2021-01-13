@@ -1133,6 +1133,544 @@ public function indexMinMoeMonitoring($dept)
 // }
 // }
 
+// public function fetchMinMoeMonitoring(Request $request)
+// {
+//  try {
+//      $date_from = $request->get('tanggal_from');
+//      $now  = date('Y-m-d');
+
+//      if ($date_from != null) {
+//           $now  = $date_from;
+//      }
+//      $yesterday = date('Y-m-d', strtotime('-1 days', strtotime($now)));
+
+//      $group = '';
+//       if(count($request->get('group')) > 0){
+//         for ($i=0; $i < count($request->get('group')); $i++) {
+//           $group = $group."'".$request->get('group')[$i]."'";
+//           if($i != (count($request->get('group'))-1)){
+//             $group = $group.',';
+//           }
+//         }
+//         $groupin = " and `group` in (".$group.") ";
+//       }
+//       else{
+//         $groupin = "";
+//       }
+
+//      if ($request->get('location') == 'OFC') {
+//           $datatoday = DB::SELECT("
+//           SELECT
+//                count( temperature ) AS count,
+//                temperature 
+//           FROM
+//                `ivms_temperatures`
+//                LEFT JOIN employee_syncs ON employee_syncs.employee_id = ivms_temperatures.employee_id
+//                LEFT JOIN employees ON employees.employee_id = employee_syncs.employee_id 
+//           WHERE
+//                ( DATE( date_in ) = '".$now."' AND employee_syncs.end_date IS NULL AND employees.remark = 'OFC' ".$groupin.") 
+//                OR ( DATE( date_in ) = '".$now."' AND employee_syncs.end_date IS NULL AND employees.remark = 'Jps' ".$groupin.")
+//           GROUP BY
+//                temperature ASC");
+//      }else if($request->get('location') == 'ALL'){
+//           $datatoday = DB::SELECT("
+//           SELECT
+//                count( temperature ) AS count,
+//                temperature 
+//           FROM
+//                `ivms_temperatures`
+//                LEFT JOIN employee_syncs ON employee_syncs.employee_id = ivms_temperatures.employee_id
+//                LEFT JOIN employees ON employees.employee_id = employee_syncs.employee_id 
+//           WHERE
+//                DATE( date_in ) = '".$now."' AND employee_syncs.end_date IS NULL ".$groupin."
+//           GROUP BY
+//                temperature ASC");
+//      }else{
+//           $datatoday = DB::SELECT("
+//           SELECT
+//                count( temperature ) AS count,
+//                temperature 
+//           FROM
+//                `ivms_temperatures`
+//                LEFT JOIN employee_syncs ON employee_syncs.employee_id = ivms_temperatures.employee_id
+//                LEFT JOIN employees ON employees.employee_id = employee_syncs.employee_id 
+//           WHERE
+//                 (DATE( date_in ) = '".$now."' 
+//                AND employee_syncs.end_date IS NULL 
+//                AND employees.remark != 'OFC' 
+//                AND employees.remark != 'Jps' 
+//                AND employee_syncs.department = '".$request->get('location')."' ".$groupin.")
+//                OR
+//                (DATE( date_in ) = '".$now."' 
+//                AND employee_syncs.end_date IS NULL 
+//                AND employees.remark is null
+//                AND employee_syncs.department = '".$request->get('location')."' ".$groupin.")
+//           GROUP BY
+//                temperature ASC");
+//      }
+
+//           $attendance = [];
+
+//           if ($request->get('location') == 'OFC') {
+//                $datacheck = DB::SELECT("SELECT
+//                     a.employee_id,
+//                     a.name,
+//                     COALESCE ( employee_syncs.department, '' ) AS department,
+//                     COALESCE ( employee_syncs.grade_code, '' ) AS grade,
+//                     a.remark,
+//                     COALESCE (( SELECT department_shortname FROM departments WHERE department_name = employee_syncs.department ), '' ) AS department_shortname,
+//                     COALESCE ( employee_syncs.section, '' ) AS section,
+//                     (
+//                     IF
+//                          (
+//                               ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_3%',
+//                               (
+//                               SELECT DISTINCT
+//                                    ( ivms.ivms_attendance_triggers.employee_id ) 
+//                               FROM
+//                                    ivms.ivms_attendance_triggers 
+//                               WHERE
+//                                    ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+//                                    AND auth_date = DATE( '".$now."' ) - INTERVAL 1 DAY 
+//                               ),
+//                          IF
+//                               (
+//                                    ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_2%',(
+//                                    SELECT DISTINCT
+//                                         ( ivms.ivms_attendance_triggers.employee_id ) 
+//                                    FROM
+//                                         ivms.ivms_attendance_triggers 
+//                                    WHERE
+//                                         ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+//                                         AND auth_date = '".$now."' 
+//                                         AND auth_datetime BETWEEN '".$now." 14:30:00' 
+//                                         AND '".$now." 17:00:00' 
+//                                         ),(
+//                                    SELECT DISTINCT
+//                                         ( ivms.ivms_attendance_triggers.employee_id ) 
+//                                    FROM
+//                                         ivms.ivms_attendance_triggers 
+//                                    WHERE
+//                                         ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+//                                         AND auth_date = '".$now."' 
+//                                    ) 
+//                               ) 
+//                          )) AS checks,
+//                     COALESCE (
+//                     IF
+//                          (
+//                               ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_3%',
+//                               (
+//                               SELECT
+//                                    MAX( auth_datetime ) 
+//                               FROM
+//                                    ivms.ivms_attendance_triggers 
+//                               WHERE
+//                                    ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+//                                    AND auth_date = DATE( '".$now."' ) - INTERVAL 1 DAY 
+//                               ),
+//                          IF
+//                               (
+//                                    ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_2%',(
+//                                    SELECT
+//                                         min( auth_datetime ) 
+//                                    FROM
+//                                         ivms.ivms_attendance_triggers 
+//                                    WHERE
+//                                         ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+//                                         AND auth_date = '".$now."' 
+//                                         AND auth_datetime BETWEEN '".$now." 14:30:00' 
+//                                         AND '".$now." 17:00:00' 
+//                                         ),(
+//                                    SELECT
+//                                         min( auth_datetime ) 
+//                                    FROM
+//                                         ivms.ivms_attendance_triggers 
+//                                    WHERE
+//                                         ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+//                                         AND auth_date = '".$now."' 
+//                                    ) 
+//                               ) 
+//                          ),'-') AS time_in,
+//                     ivms.sunfish_shift_syncs.shiftdaily_code,
+//                     ( SELECT MAX( temperature ) FROM ivms_temperatures WHERE employee_id = a.employee_id AND ivms_temperatures.date = '".$now."' ) AS temperature,
+//                IF
+//                     (
+//                          ivms.sunfish_shift_syncs.attend_code LIKE '%ABS%',
+//                     IF
+//                          ((
+//                               SELECT
+//                                    count( answer_date ) 
+//                               FROM
+//                                    miraimobile.quiz_logs 
+//                               WHERE
+//                                    miraimobile.quiz_logs.answer_date = '".$now."' 
+//                                    AND miraimobile.quiz_logs.employee_id = a.employee_id 
+//                                    ) > 0,
+//                               'SBH',
+//                               ivms.sunfish_shift_syncs.attend_code 
+//                          ),
+//                     IF
+//                          (
+//                               ivms.sunfish_shift_syncs.attend_code LIKE '%ABS%',
+//                               'ABS',
+//                          IF
+//                               (
+//                                    ivms.sunfish_shift_syncs.attend_code LIKE '%CK%' 
+//                                    OR ivms.sunfish_shift_syncs.attend_code LIKE '%CUTI%' 
+//                                    OR ivms.sunfish_shift_syncs.attend_code LIKE '%UPL%',
+//                                    'Cuti',
+//                               IF
+//                                    (
+//                                         ivms.sunfish_shift_syncs.attend_code LIKE '%Izin%',
+//                                         'Izin',
+//                                    IF
+//                                         (
+//                                              ivms.sunfish_shift_syncs.attend_code LIKE '%SAKIT%',
+//                                              'Sakit',
+//                                         IF
+//                                              (
+//                                                   ivms.sunfish_shift_syncs.attend_code LIKE '%LTI%' 
+//                                                   OR ivms.sunfish_shift_syncs.attend_code LIKE '%TELAT%',
+//                                                   'Terlambat',
+//                                              IF
+//                                                   (
+//                                                        ivms.sunfish_shift_syncs.attend_code LIKE '%LTI%',
+//                                                        'Pulang Cepat',
+//                                                   IF
+//                                                        ( ivms.sunfish_shift_syncs.attend_code LIKE '%PRS%', 'Present', ivms.sunfish_shift_syncs.attend_code ) 
+//                                                   ) 
+//                                              ) 
+//                                         ) 
+//                                    ) 
+//                               ) 
+//                          )) AS attend_code 
+//                FROM
+//                     employees a
+//                     JOIN employee_syncs ON employee_syncs.employee_id = a.employee_id
+//                     JOIN ivms.sunfish_shift_syncs ON ivms.sunfish_shift_syncs.employee_id = employee_syncs.employee_id 
+//                WHERE
+//                     ( a.remark = 'OFC' AND a.end_date IS NULL AND ivms.sunfish_shift_syncs.shift_date = '".$now."' ".$groupin." ) 
+//                     OR (
+//                          a.remark = 'Jps' 
+//                     AND a.end_date IS NULL 
+//                     AND ivms.sunfish_shift_syncs.shift_date = '".$now."' ".$groupin.")");
+//           }else if($request->get('location') == 'ALL'){
+//                $datacheck = DB::SELECT("SELECT
+//                     a.employee_id,
+//                     a.name,
+//                     COALESCE ( employee_syncs.department, '' ) AS department,
+//                     COALESCE ( employee_syncs.grade_code, '' ) AS grade,
+//                     a.remark,
+//                     COALESCE (( SELECT department_shortname FROM departments WHERE department_name = employee_syncs.department ), '' ) AS department_shortname,
+//                     COALESCE ( employee_syncs.section, '' ) AS section,
+//                     (
+//                     IF
+//                          (
+//                               ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_3%',
+//                               (
+//                               SELECT DISTINCT
+//                                    ( ivms.ivms_attendance_triggers.employee_id ) 
+//                               FROM
+//                                    ivms.ivms_attendance_triggers 
+//                               WHERE
+//                                    ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+//                                    AND auth_date = DATE( '".$now."' ) - INTERVAL 1 DAY 
+//                               ),
+//                          IF
+//                               (
+//                                    ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_2%',(
+//                                    SELECT DISTINCT
+//                                         ( ivms.ivms_attendance_triggers.employee_id ) 
+//                                    FROM
+//                                         ivms.ivms_attendance_triggers 
+//                                    WHERE
+//                                         ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+//                                         AND auth_date = '".$now."' 
+//                                         AND auth_datetime BETWEEN '".$now." 14:30:00' 
+//                                         AND '".$now." 17:00:00' 
+//                                         ),(
+//                                    SELECT DISTINCT
+//                                         ( ivms.ivms_attendance_triggers.employee_id ) 
+//                                    FROM
+//                                         ivms.ivms_attendance_triggers 
+//                                    WHERE
+//                                         ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+//                                         AND auth_date = '".$now."' 
+//                                    ) 
+//                               ) 
+//                          )) AS checks,
+//                     COALESCE (
+//                     IF
+//                          (
+//                               ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_3%',
+//                               (
+//                               SELECT
+//                                    MAX( auth_datetime ) 
+//                               FROM
+//                                    ivms.ivms_attendance_triggers 
+//                               WHERE
+//                                    ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+//                                    AND auth_date = DATE( '".$now."' ) - INTERVAL 1 DAY 
+//                               ),
+//                          IF
+//                               (
+//                                    ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_2%',(
+//                                    SELECT
+//                                         min( auth_datetime ) 
+//                                    FROM
+//                                         ivms.ivms_attendance_triggers 
+//                                    WHERE
+//                                         ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+//                                         AND auth_date = '".$now."' 
+//                                         AND auth_datetime BETWEEN '".$now." 14:30:00' 
+//                                         AND '".$now." 17:00:00' 
+//                                         ),(
+//                                    SELECT
+//                                         min( auth_datetime ) 
+//                                    FROM
+//                                         ivms.ivms_attendance_triggers 
+//                                    WHERE
+//                                         ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+//                                         AND auth_date = '".$now."' 
+//                                    ) 
+//                               ) 
+//                          ),'-') AS time_in,
+//                     ivms.sunfish_shift_syncs.shiftdaily_code,
+//                     ( SELECT MAX( temperature ) FROM ivms_temperatures WHERE employee_id = a.employee_id AND ivms_temperatures.date = '".$now."' ) AS temperature,
+//                IF
+//                     (
+//                          ivms.sunfish_shift_syncs.attend_code LIKE '%ABS%',
+//                     IF
+//                          ((
+//                               SELECT
+//                                    count( answer_date ) 
+//                               FROM
+//                                    miraimobile.quiz_logs 
+//                               WHERE
+//                                    miraimobile.quiz_logs.answer_date = '".$now."' 
+//                                    AND miraimobile.quiz_logs.employee_id = a.employee_id 
+//                                    ) > 0,
+//                               'SBH',
+//                               ivms.sunfish_shift_syncs.attend_code 
+//                          ),
+//                     IF
+//                          (
+//                               ivms.sunfish_shift_syncs.attend_code LIKE '%ABS%',
+//                               'ABS',
+//                          IF
+//                               (
+//                                    ivms.sunfish_shift_syncs.attend_code LIKE '%CK%' 
+//                                    OR ivms.sunfish_shift_syncs.attend_code LIKE '%CUTI%' 
+//                                    OR ivms.sunfish_shift_syncs.attend_code LIKE '%UPL%',
+//                                    'Cuti',
+//                               IF
+//                                    (
+//                                         ivms.sunfish_shift_syncs.attend_code LIKE '%Izin%',
+//                                         'Izin',
+//                                    IF
+//                                         (
+//                                              ivms.sunfish_shift_syncs.attend_code LIKE '%SAKIT%',
+//                                              'Sakit',
+//                                         IF
+//                                              (
+//                                                   ivms.sunfish_shift_syncs.attend_code LIKE '%LTI%' 
+//                                                   OR ivms.sunfish_shift_syncs.attend_code LIKE '%TELAT%',
+//                                                   'Terlambat',
+//                                              IF
+//                                                   (
+//                                                        ivms.sunfish_shift_syncs.attend_code LIKE '%LTI%',
+//                                                        'Pulang Cepat',
+//                                                   IF
+//                                                        ( ivms.sunfish_shift_syncs.attend_code LIKE '%PRS%', 'Present', ivms.sunfish_shift_syncs.attend_code ) 
+//                                                   ) 
+//                                              ) 
+//                                         ) 
+//                                    ) 
+//                               ) 
+//                          ))  as attend_code
+//                FROM
+//                     employees a
+//                     JOIN employee_syncs ON employee_syncs.employee_id = a.employee_id
+//                     JOIN ivms.sunfish_shift_syncs ON ivms.sunfish_shift_syncs.employee_id = employee_syncs.employee_id 
+//                WHERE
+//                     employee_syncs.end_date IS NULL
+//                     AND ivms.sunfish_shift_syncs.shift_date = '".$now."'  ".$groupin);
+//           }else{
+//                $datacheck = DB::SELECT("SELECT
+//                     a.employee_id,
+//                     a.name,
+//                     COALESCE ( employee_syncs.department, '' ) AS department,
+//                     COALESCE ( employee_syncs.grade_code, '' ) AS grade,
+//                     a.remark,
+//                     COALESCE (( SELECT department_shortname FROM departments WHERE department_name = employee_syncs.department ), '' ) AS department_shortname,
+//                     COALESCE ( employee_syncs.section, '' ) AS section,
+//                     (
+//                     IF
+//                          (
+//                               ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_3%',
+//                               (
+//                               SELECT DISTINCT
+//                                    ( ivms.ivms_attendance_triggers.employee_id ) 
+//                               FROM
+//                                    ivms.ivms_attendance_triggers 
+//                               WHERE
+//                                    ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+//                                    AND auth_date = DATE( '".$now."' ) - INTERVAL 1 DAY 
+//                               ),
+//                          IF
+//                               (
+//                                    ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_2%',(
+//                                    SELECT DISTINCT
+//                                         ( ivms.ivms_attendance_triggers.employee_id ) 
+//                                    FROM
+//                                         ivms.ivms_attendance_triggers 
+//                                    WHERE
+//                                         ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+//                                         AND auth_date = '".$now."' 
+//                                         AND auth_datetime BETWEEN '".$now." 14:30:00' 
+//                                         AND '".$now." 17:00:00' 
+//                                         ),(
+//                                    SELECT DISTINCT
+//                                         ( ivms.ivms_attendance_triggers.employee_id ) 
+//                                    FROM
+//                                         ivms.ivms_attendance_triggers 
+//                                    WHERE
+//                                         ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+//                                         AND auth_date = '".$now."' 
+//                                    ) 
+//                               ) 
+//                          )) AS checks,
+                    // COALESCE (
+                    // IF
+                    //      (
+                    //           ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_3%',
+                    //           (
+                    //           SELECT
+                    //                MAX( auth_datetime ) 
+                    //           FROM
+                    //                ivms.ivms_attendance_triggers 
+                    //           WHERE
+                    //                ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+                    //                AND auth_date = DATE( '".$now."' ) - INTERVAL 1 DAY 
+                    //           ),
+                    //      IF
+                    //           (
+                    //                ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_2%',(
+                    //                SELECT
+                    //                     min( auth_datetime ) 
+                    //                FROM
+                    //                     ivms.ivms_attendance_triggers 
+                    //                WHERE
+                    //                     ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+                    //                     AND auth_date = '".$now."' 
+                    //                     AND auth_datetime BETWEEN '".$now." 14:30:00' 
+                    //                     AND '".$now." 17:00:00' 
+                    //                     ),(
+                    //                SELECT
+                    //                     min( auth_datetime ) 
+                    //                FROM
+                    //                     ivms.ivms_attendance_triggers 
+                    //                WHERE
+                    //                     ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+                    //                     AND auth_date = '".$now."' 
+                    //                ) 
+                    //           ) 
+                    //      ),'-') AS time_in,
+//                     ivms.sunfish_shift_syncs.shiftdaily_code,
+//                     ( SELECT MAX( temperature ) FROM ivms_temperatures WHERE employee_id = a.employee_id AND ivms_temperatures.date = '".$now."' ) AS temperature,
+//                IF
+//                     (
+//                          ivms.sunfish_shift_syncs.attend_code LIKE '%ABS%',
+//                     IF
+//                          ((
+//                               SELECT
+//                                    count( answer_date ) 
+//                               FROM
+//                                    miraimobile.quiz_logs 
+//                               WHERE
+//                                    miraimobile.quiz_logs.answer_date = '".$now."' 
+//                                    AND miraimobile.quiz_logs.employee_id = a.employee_id 
+//                                    ) > 0,
+//                               'SBH',
+//                               ivms.sunfish_shift_syncs.attend_code 
+//                          ),
+//                     IF
+//                          (
+//                               ivms.sunfish_shift_syncs.attend_code LIKE '%ABS%',
+//                               'ABS',
+//                          IF
+//                               (
+//                                    ivms.sunfish_shift_syncs.attend_code LIKE '%CK%' 
+//                                    OR ivms.sunfish_shift_syncs.attend_code LIKE '%CUTI%' 
+//                                    OR ivms.sunfish_shift_syncs.attend_code LIKE '%UPL%',
+//                                    'Cuti',
+//                               IF
+//                                    (
+//                                         ivms.sunfish_shift_syncs.attend_code LIKE '%Izin%',
+//                                         'Izin',
+//                                    IF
+//                                         (
+//                                              ivms.sunfish_shift_syncs.attend_code LIKE '%SAKIT%',
+//                                              'Sakit',
+//                                         IF
+//                                              (
+//                                                   ivms.sunfish_shift_syncs.attend_code LIKE '%LTI%' 
+//                                                   OR ivms.sunfish_shift_syncs.attend_code LIKE '%TELAT%',
+//                                                   'Terlambat',
+//                                              IF
+//                                                   (
+//                                                        ivms.sunfish_shift_syncs.attend_code LIKE '%LTI%',
+//                                                        'Pulang Cepat',
+//                                                   IF
+//                                                        ( ivms.sunfish_shift_syncs.attend_code LIKE '%PRS%', 'Present', ivms.sunfish_shift_syncs.attend_code ) 
+//                                                   ) 
+//                                              ) 
+//                                         ) 
+//                                    ) 
+//                               ) 
+//                          ))  as attend_code
+//                FROM
+//                     employees a
+//                     JOIN employee_syncs ON employee_syncs.employee_id = a.employee_id
+//                     JOIN ivms.sunfish_shift_syncs ON ivms.sunfish_shift_syncs.employee_id = employee_syncs.employee_id 
+//                WHERE
+//                     (employee_syncs.end_date IS NULL 
+//                     AND a.remark != 'OFC' 
+//                     AND a.remark != 'Jps' 
+//                     AND employee_syncs.department = '".$request->get('location')."' 
+//                     AND ivms.sunfish_shift_syncs.shift_date = '".$now."' ".$groupin.")
+//                     or(
+//                     employee_syncs.end_date IS NULL 
+//                     AND a.remark is null
+//                     AND employee_syncs.department = '".$request->get('location')."' 
+//                     AND ivms.sunfish_shift_syncs.shift_date = '".$now."' ".$groupin.")");
+//           }
+
+//           $dateTitle = date("d M Y", strtotime($now));
+
+//      $response = array(
+//           'status' => true,
+//           'message' => 'Get Data Success',
+//           'datatoday' => $datatoday,
+//           'dateTitle' => $dateTitle,
+//           'now' => $now,
+//           'yesterday' => $yesterday,
+//           'datacheck' => $datacheck,
+//           'attendance' => $attendance,
+//      );
+
+//      return Response::json($response);
+// } catch (\Exception $e) {
+//      $response = array(
+//           'status' => false,
+//           'message' => $e->getMessage()
+//      );
+
+//      return Response::json($response);
+// }
+// }
+
 public function fetchMinMoeMonitoring(Request $request)
 {
  try {
@@ -1213,356 +1751,130 @@ public function fetchMinMoeMonitoring(Request $request)
 
           if ($request->get('location') == 'OFC') {
                $datacheck = DB::SELECT("SELECT
-                    a.employee_id,
-                    a.name,
-                    COALESCE ( employee_syncs.department, '' ) AS department,
-                    COALESCE ( employee_syncs.grade_code, '' ) AS grade,
-                    a.remark,
-                    COALESCE (( SELECT department_shortname FROM departments WHERE department_name = employee_syncs.department ), '' ) AS department_shortname,
-                    COALESCE ( employee_syncs.section, '' ) AS section,
-                    (
-                    IF
-                         (
-                              ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_3%',
-                              (
-                              SELECT DISTINCT
-                                   ( ivms.ivms_attendance_triggers.employee_id ) 
-                              FROM
-                                   ivms.ivms_attendance_triggers 
-                              WHERE
-                                   ivms.ivms_attendance_triggers.employee_id = a.employee_id 
-                                   AND auth_date = DATE( '".$now."' ) - INTERVAL 1 DAY 
-                              ),
-                         IF
-                              (
-                                   ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_2%',(
-                                   SELECT DISTINCT
-                                        ( ivms.ivms_attendance_triggers.employee_id ) 
-                                   FROM
-                                        ivms.ivms_attendance_triggers 
-                                   WHERE
-                                        ivms.ivms_attendance_triggers.employee_id = a.employee_id 
-                                        AND auth_date = '".$now."' 
-                                        AND auth_datetime BETWEEN '".$now." 14:30:00' 
-                                        AND '".$now." 17:00:00' 
-                                        ),(
-                                   SELECT DISTINCT
-                                        ( ivms.ivms_attendance_triggers.employee_id ) 
-                                   FROM
-                                        ivms.ivms_attendance_triggers 
-                                   WHERE
-                                        ivms.ivms_attendance_triggers.employee_id = a.employee_id 
-                                        AND auth_date = '".$now."' 
-                                   ) 
-                              ) 
-                         )) AS checks,
-                    COALESCE (
-                    IF
-                         (
-                              ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_3%',
-                              (
-                              SELECT
-                                   MAX( auth_datetime ) 
-                              FROM
-                                   ivms.ivms_attendance_triggers 
-                              WHERE
-                                   ivms.ivms_attendance_triggers.employee_id = a.employee_id 
-                                   AND auth_date = DATE( '".$now."' ) - INTERVAL 1 DAY 
-                              ),
-                         IF
-                              (
-                                   ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_2%',(
-                                   SELECT
-                                        min( auth_datetime ) 
-                                   FROM
-                                        ivms.ivms_attendance_triggers 
-                                   WHERE
-                                        ivms.ivms_attendance_triggers.employee_id = a.employee_id 
-                                        AND auth_date = '".$now."' 
-                                        AND auth_datetime BETWEEN '".$now." 14:30:00' 
-                                        AND '".$now." 17:00:00' 
-                                        ),(
-                                   SELECT
-                                        min( auth_datetime ) 
-                                   FROM
-                                        ivms.ivms_attendance_triggers 
-                                   WHERE
-                                        ivms.ivms_attendance_triggers.employee_id = a.employee_id 
-                                        AND auth_date = '".$now."' 
-                                   ) 
-                              ) 
-                         ),'-') AS time_in,
-                    ivms.sunfish_shift_syncs.shiftdaily_code,
-                    ( SELECT MAX( temperature ) FROM ivms_temperatures WHERE employee_id = a.employee_id AND ivms_temperatures.date = '".$now."' ) AS temperature,
-               IF
-                    (
-                         ivms.sunfish_shift_syncs.attend_code LIKE '%ABS%',
-                    IF
-                         ((
-                              SELECT
-                                   count( answer_date ) 
-                              FROM
-                                   miraimobile.quiz_logs 
-                              WHERE
-                                   miraimobile.quiz_logs.answer_date = '".$now."' 
-                                   AND miraimobile.quiz_logs.employee_id = a.employee_id 
-                                   ) > 0,
-                              'SBH',
-                              ivms.sunfish_shift_syncs.attend_code 
-                         ),
-                    IF
-                         (
-                              ivms.sunfish_shift_syncs.attend_code LIKE '%ABS%',
-                              'ABS',
-                         IF
-                              (
-                                   ivms.sunfish_shift_syncs.attend_code LIKE '%CK%' 
-                                   OR ivms.sunfish_shift_syncs.attend_code LIKE '%CUTI%' 
-                                   OR ivms.sunfish_shift_syncs.attend_code LIKE '%UPL%',
-                                   'Cuti',
-                              IF
-                                   (
-                                        ivms.sunfish_shift_syncs.attend_code LIKE '%Izin%',
-                                        'Izin',
-                                   IF
-                                        (
-                                             ivms.sunfish_shift_syncs.attend_code LIKE '%SAKIT%',
-                                             'Sakit',
-                                        IF
-                                             (
-                                                  ivms.sunfish_shift_syncs.attend_code LIKE '%LTI%' 
-                                                  OR ivms.sunfish_shift_syncs.attend_code LIKE '%TELAT%',
-                                                  'Terlambat',
-                                             IF
-                                                  (
-                                                       ivms.sunfish_shift_syncs.attend_code LIKE '%LTI%',
-                                                       'Pulang Cepat',
-                                                  IF
-                                                       ( ivms.sunfish_shift_syncs.attend_code LIKE '%PRS%', 'Present', ivms.sunfish_shift_syncs.attend_code ) 
-                                                  ) 
-                                             ) 
-                                        ) 
-                                   ) 
-                              ) 
-                         )) AS attend_code 
+                    employees.employee_id,
+                    employees.name,
+                    sunfish_shift_syncs.shiftdaily_code,
+                    sunfish_shift_syncs.attend_code,
+                    COALESCE ( department_shortname, '' ) AS department_shortname,
+                    employees.remark 
                FROM
-                    employees a
-                    JOIN employee_syncs ON employee_syncs.employee_id = a.employee_id
-                    JOIN ivms.sunfish_shift_syncs ON ivms.sunfish_shift_syncs.employee_id = employee_syncs.employee_id 
+                    employees
+                    LEFT JOIN employee_syncs ON employee_syncs.employee_id = employees.employee_id
+                    LEFT JOIN sunfish_shift_syncs ON sunfish_shift_syncs.employee_id = employee_syncs.employee_id
+                    LEFT JOIN departments ON departments.department_name = employee_syncs.department 
                WHERE
-                    ( a.remark = 'OFC' AND a.end_date IS NULL AND ivms.sunfish_shift_syncs.shift_date = '".$now."' ".$groupin." ) 
-                    OR (
-                         a.remark = 'Jps' 
-                    AND a.end_date IS NULL 
-                    AND ivms.sunfish_shift_syncs.shift_date = '".$now."' ".$groupin.")");
-          }else if($request->get('location') == 'ALL'){
+                    (employees.remark = 'OFC' and
+                    employee_syncs.end_date IS NULL 
+                    AND sunfish_shift_syncs.shift_date = '".$now."')
+                    OR
+                    (employees.remark = 'Jps' and
+                    employee_syncs.end_date IS NULL 
+                    AND sunfish_shift_syncs.shift_date = '".$now."')");
+          }else if ($request->get('location') == 'ALL') {
                $datacheck = DB::SELECT("SELECT
-                    a.employee_id,
-                    a.name,
-                    COALESCE ( employee_syncs.department, '' ) AS department,
-                    COALESCE ( employee_syncs.grade_code, '' ) AS grade,
-                    a.remark,
-                    COALESCE (( SELECT department_shortname FROM departments WHERE department_name = employee_syncs.department ), '' ) AS department_shortname,
-                    COALESCE ( employee_syncs.section, '' ) AS section,
-                    (
-                    IF
-                         (
-                              ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_3%',
-                              (
-                              SELECT DISTINCT
-                                   ( ivms.ivms_attendance_triggers.employee_id ) 
-                              FROM
-                                   ivms.ivms_attendance_triggers 
-                              WHERE
-                                   ivms.ivms_attendance_triggers.employee_id = a.employee_id 
-                                   AND auth_date = DATE( '".$now."' ) - INTERVAL 1 DAY 
-                              ),
-                         IF
-                              (
-                                   ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_2%',(
-                                   SELECT DISTINCT
-                                        ( ivms.ivms_attendance_triggers.employee_id ) 
-                                   FROM
-                                        ivms.ivms_attendance_triggers 
-                                   WHERE
-                                        ivms.ivms_attendance_triggers.employee_id = a.employee_id 
-                                        AND auth_date = '".$now."' 
-                                        AND auth_datetime BETWEEN '".$now." 14:30:00' 
-                                        AND '".$now." 17:00:00' 
-                                        ),(
-                                   SELECT DISTINCT
-                                        ( ivms.ivms_attendance_triggers.employee_id ) 
-                                   FROM
-                                        ivms.ivms_attendance_triggers 
-                                   WHERE
-                                        ivms.ivms_attendance_triggers.employee_id = a.employee_id 
-                                        AND auth_date = '".$now."' 
-                                   ) 
-                              ) 
-                         )) AS checks,
-                    COALESCE (
-                    IF
-                         (
-                              ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_3%',
-                              (
-                              SELECT
-                                   MAX( auth_datetime ) 
-                              FROM
-                                   ivms.ivms_attendance_triggers 
-                              WHERE
-                                   ivms.ivms_attendance_triggers.employee_id = a.employee_id 
-                                   AND auth_date = DATE( '".$now."' ) - INTERVAL 1 DAY 
-                              ),
-                         IF
-                              (
-                                   ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_2%',(
-                                   SELECT
-                                        min( auth_datetime ) 
-                                   FROM
-                                        ivms.ivms_attendance_triggers 
-                                   WHERE
-                                        ivms.ivms_attendance_triggers.employee_id = a.employee_id 
-                                        AND auth_date = '".$now."' 
-                                        AND auth_datetime BETWEEN '".$now." 14:30:00' 
-                                        AND '".$now." 17:00:00' 
-                                        ),(
-                                   SELECT
-                                        min( auth_datetime ) 
-                                   FROM
-                                        ivms.ivms_attendance_triggers 
-                                   WHERE
-                                        ivms.ivms_attendance_triggers.employee_id = a.employee_id 
-                                        AND auth_date = '".$now."' 
-                                   ) 
-                              ) 
-                         ),'-') AS time_in,
-                    ivms.sunfish_shift_syncs.shiftdaily_code,
-                    ( SELECT MAX( temperature ) FROM ivms_temperatures WHERE employee_id = a.employee_id AND ivms_temperatures.date = '".$now."' ) AS temperature,
-               IF
-                    (
-                         ivms.sunfish_shift_syncs.attend_code LIKE '%ABS%',
-                    IF
-                         ((
-                              SELECT
-                                   count( answer_date ) 
-                              FROM
-                                   miraimobile.quiz_logs 
-                              WHERE
-                                   miraimobile.quiz_logs.answer_date = '".$now."' 
-                                   AND miraimobile.quiz_logs.employee_id = a.employee_id 
-                                   ) > 0,
-                              'SBH',
-                              ivms.sunfish_shift_syncs.attend_code 
-                         ),
-                    IF
-                         (
-                              ivms.sunfish_shift_syncs.attend_code LIKE '%ABS%',
-                              'ABS',
-                         IF
-                              (
-                                   ivms.sunfish_shift_syncs.attend_code LIKE '%CK%' 
-                                   OR ivms.sunfish_shift_syncs.attend_code LIKE '%CUTI%' 
-                                   OR ivms.sunfish_shift_syncs.attend_code LIKE '%UPL%',
-                                   'Cuti',
-                              IF
-                                   (
-                                        ivms.sunfish_shift_syncs.attend_code LIKE '%Izin%',
-                                        'Izin',
-                                   IF
-                                        (
-                                             ivms.sunfish_shift_syncs.attend_code LIKE '%SAKIT%',
-                                             'Sakit',
-                                        IF
-                                             (
-                                                  ivms.sunfish_shift_syncs.attend_code LIKE '%LTI%' 
-                                                  OR ivms.sunfish_shift_syncs.attend_code LIKE '%TELAT%',
-                                                  'Terlambat',
-                                             IF
-                                                  (
-                                                       ivms.sunfish_shift_syncs.attend_code LIKE '%LTI%',
-                                                       'Pulang Cepat',
-                                                  IF
-                                                       ( ivms.sunfish_shift_syncs.attend_code LIKE '%PRS%', 'Present', ivms.sunfish_shift_syncs.attend_code ) 
-                                                  ) 
-                                             ) 
-                                        ) 
-                                   ) 
-                              ) 
-                         ))  as attend_code
+                    employee_syncs.employee_id,
+                    sunfish_shift_syncs.shiftdaily_code,
+                    sunfish_shift_syncs.attend_code,
+                    COALESCE ( department_shortname, '' ) AS department_shortname,
+                    employees.remark,
+                    employee_syncs.name
                FROM
-                    employees a
-                    JOIN employee_syncs ON employee_syncs.employee_id = a.employee_id
-                    JOIN ivms.sunfish_shift_syncs ON ivms.sunfish_shift_syncs.employee_id = employee_syncs.employee_id 
+                    employees
+                    JOIN employee_syncs ON employee_syncs.employee_id = employees.employee_id
+                    LEFT JOIN sunfish_shift_syncs ON sunfish_shift_syncs.employee_id = employee_syncs.employee_id 
+                    LEFT JOIN departments ON departments.department_name = employee_syncs.department 
                WHERE
-                    employee_syncs.end_date IS NULL
-                    AND ivms.sunfish_shift_syncs.shift_date = '".$now."'  ".$groupin);
+                    employee_syncs.end_date IS NULL 
+                    AND sunfish_shift_syncs.shift_date = '".$now."'");
           }else{
                $datacheck = DB::SELECT("SELECT
-                    a.employee_id,
-                    a.name,
-                    COALESCE ( employee_syncs.department, '' ) AS department,
-                    COALESCE ( employee_syncs.grade_code, '' ) AS grade,
-                    a.remark,
-                    COALESCE (( SELECT department_shortname FROM departments WHERE department_name = employee_syncs.department ), '' ) AS department_shortname,
-                    COALESCE ( employee_syncs.section, '' ) AS section,
+                    employees.employee_id,
+                    employees.NAME,
+                    sunfish_shift_syncs.shiftdaily_code,
+                    sunfish_shift_syncs.attend_code,
+                    COALESCE ( department_shortname, '' ) AS department_shortname,
+                    employees.remark 
+               FROM
+                    employees
+                    LEFT JOIN employee_syncs ON employee_syncs.employee_id = employees.employee_id
+                    LEFT JOIN sunfish_shift_syncs ON sunfish_shift_syncs.employee_id = employee_syncs.employee_id
+                    LEFT JOIN departments ON departments.department_name = employee_syncs.department 
+               WHERE
                     (
+                         employees.remark != 'OFC' 
+                         AND employees.remark != 'Jps' 
+                         AND employee_syncs.end_date IS NULL 
+                         AND employee_syncs.department = '".$request->get('location')."' 
+                         AND sunfish_shift_syncs.shift_date = '".$now."' 
+                    ) 
+                    OR (
+                         employees.remark IS NULL 
+                         AND employee_syncs.end_date IS NULL 
+                    AND employee_syncs.department = '".$request->get('location')."' 
+                    AND sunfish_shift_syncs.shift_date = '".$now."')");
+          }
+
+          foreach ($datacheck as $key) {
+               $checks = null;
+               $time_in = '-';
+               $attendances = DB::SELECT("SELECT
+               IF
+                    (
+                         '".$key->shiftdaily_code."' LIKE '%Shift_3%',
+                         (
+                         SELECT DISTINCT
+                              ( ivms.ivms_attendance_triggers.employee_id ) 
+                         FROM
+                              ivms.ivms_attendance_triggers 
+                         WHERE
+                              ivms.ivms_attendance_triggers.employee_id = employee_syncs.employee_id 
+                              AND auth_date = DATE( '".$now."' ) - INTERVAL 1 DAY 
+                         ),
                     IF
                          (
-                              ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_3%',
-                              (
+                              '".$key->shiftdaily_code."' LIKE '%Shift_2%',(
                               SELECT DISTINCT
                                    ( ivms.ivms_attendance_triggers.employee_id ) 
                               FROM
                                    ivms.ivms_attendance_triggers 
                               WHERE
-                                   ivms.ivms_attendance_triggers.employee_id = a.employee_id 
-                                   AND auth_date = DATE( '".$now."' ) - INTERVAL 1 DAY 
-                              ),
-                         IF
-                              (
-                                   ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_2%',(
-                                   SELECT DISTINCT
-                                        ( ivms.ivms_attendance_triggers.employee_id ) 
-                                   FROM
-                                        ivms.ivms_attendance_triggers 
-                                   WHERE
-                                        ivms.ivms_attendance_triggers.employee_id = a.employee_id 
-                                        AND auth_date = '".$now."' 
-                                        AND auth_datetime BETWEEN '".$now." 14:30:00' 
-                                        AND '".$now." 17:00:00' 
-                                        ),(
-                                   SELECT DISTINCT
-                                        ( ivms.ivms_attendance_triggers.employee_id ) 
-                                   FROM
-                                        ivms.ivms_attendance_triggers 
-                                   WHERE
-                                        ivms.ivms_attendance_triggers.employee_id = a.employee_id 
-                                        AND auth_date = '".$now."' 
-                                   ) 
+                                   ivms.ivms_attendance_triggers.employee_id = employee_syncs.employee_id 
+                                   AND auth_date = '".$now."' 
+                                   AND auth_datetime BETWEEN '".$now." 14:30:00' 
+                                   AND '".$now." 17:00:00' 
+                                   ),(
+                              SELECT DISTINCT
+                                   ( ivms.ivms_attendance_triggers.employee_id ) 
+                              FROM
+                                   ivms.ivms_attendance_triggers 
+                              WHERE
+                                   ivms.ivms_attendance_triggers.employee_id = employee_syncs.employee_id 
+                                   AND auth_date = '".$now."' 
                               ) 
-                         )) AS checks,
+                         ) 
+                    ) AS checks,
                     COALESCE (
                     IF
                          (
-                              ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_3%',
+                              '".$key->shiftdaily_code."' LIKE '%Shift_3%',
                               (
                               SELECT
                                    MAX( auth_datetime ) 
                               FROM
                                    ivms.ivms_attendance_triggers 
                               WHERE
-                                   ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+                                   ivms.ivms_attendance_triggers.employee_id = employee_syncs.employee_id 
                                    AND auth_date = DATE( '".$now."' ) - INTERVAL 1 DAY 
                               ),
                          IF
                               (
-                                   ivms.sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_2%',(
+                                   '".$key->shiftdaily_code."' LIKE '%Shift_2%',(
                                    SELECT
                                         min( auth_datetime ) 
                                    FROM
                                         ivms.ivms_attendance_triggers 
                                    WHERE
-                                        ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+                                        ivms.ivms_attendance_triggers.employee_id = employee_syncs.employee_id 
                                         AND auth_date = '".$now."' 
                                         AND auth_datetime BETWEEN '".$now." 14:30:00' 
                                         AND '".$now." 17:00:00' 
@@ -1572,79 +1884,32 @@ public function fetchMinMoeMonitoring(Request $request)
                                    FROM
                                         ivms.ivms_attendance_triggers 
                                    WHERE
-                                        ivms.ivms_attendance_triggers.employee_id = a.employee_id 
+                                        ivms.ivms_attendance_triggers.employee_id = employee_syncs.employee_id 
                                         AND auth_date = '".$now."' 
                                    ) 
                               ) 
-                         ),'-') AS time_in,
-                    ivms.sunfish_shift_syncs.shiftdaily_code,
-                    ( SELECT MAX( temperature ) FROM ivms_temperatures WHERE employee_id = a.employee_id AND ivms_temperatures.date = '".$now."' ) AS temperature,
-               IF
-                    (
-                         ivms.sunfish_shift_syncs.attend_code LIKE '%ABS%',
-                    IF
-                         ((
-                              SELECT
-                                   count( answer_date ) 
-                              FROM
-                                   miraimobile.quiz_logs 
-                              WHERE
-                                   miraimobile.quiz_logs.answer_date = '".$now."' 
-                                   AND miraimobile.quiz_logs.employee_id = a.employee_id 
-                                   ) > 0,
-                              'SBH',
-                              ivms.sunfish_shift_syncs.attend_code 
-                         ),
-                    IF
-                         (
-                              ivms.sunfish_shift_syncs.attend_code LIKE '%ABS%',
-                              'ABS',
-                         IF
-                              (
-                                   ivms.sunfish_shift_syncs.attend_code LIKE '%CK%' 
-                                   OR ivms.sunfish_shift_syncs.attend_code LIKE '%CUTI%' 
-                                   OR ivms.sunfish_shift_syncs.attend_code LIKE '%UPL%',
-                                   'Cuti',
-                              IF
-                                   (
-                                        ivms.sunfish_shift_syncs.attend_code LIKE '%Izin%',
-                                        'Izin',
-                                   IF
-                                        (
-                                             ivms.sunfish_shift_syncs.attend_code LIKE '%SAKIT%',
-                                             'Sakit',
-                                        IF
-                                             (
-                                                  ivms.sunfish_shift_syncs.attend_code LIKE '%LTI%' 
-                                                  OR ivms.sunfish_shift_syncs.attend_code LIKE '%TELAT%',
-                                                  'Terlambat',
-                                             IF
-                                                  (
-                                                       ivms.sunfish_shift_syncs.attend_code LIKE '%LTI%',
-                                                       'Pulang Cepat',
-                                                  IF
-                                                       ( ivms.sunfish_shift_syncs.attend_code LIKE '%PRS%', 'Present', ivms.sunfish_shift_syncs.attend_code ) 
-                                                  ) 
-                                             ) 
-                                        ) 
-                                   ) 
-                              ) 
-                         ))  as attend_code
+                         ),'-') AS time_in
                FROM
-                    employees a
-                    JOIN employee_syncs ON employee_syncs.employee_id = a.employee_id
-                    JOIN ivms.sunfish_shift_syncs ON ivms.sunfish_shift_syncs.employee_id = employee_syncs.employee_id 
+                    employee_syncs 
                WHERE
-                    (employee_syncs.end_date IS NULL 
-                    AND a.remark != 'OFC' 
-                    AND a.remark != 'Jps' 
-                    AND employee_syncs.department = '".$request->get('location')."' 
-                    AND ivms.sunfish_shift_syncs.shift_date = '".$now."' ".$groupin.")
-                    or(
                     employee_syncs.end_date IS NULL 
-                    AND a.remark is null
-                    AND employee_syncs.department = '".$request->get('location')."' 
-                    AND ivms.sunfish_shift_syncs.shift_date = '".$now."' ".$groupin.")");
+                    AND employee_syncs.employee_id = '".$key->employee_id."'");
+
+               foreach ($attendances as $val) {
+                    $checks = $val->checks;
+                    $time_in = $val->time_in;
+               }
+
+               $attendances2 = array(
+                              'employee_id' => $key->employee_id,
+                              'name' => $key->name,
+                              'shiftdaily_code' => $key->shiftdaily_code,
+                              'attend_code' => $key->attend_code,
+                              'department_shortname' => $key->department_shortname,
+                              'remark' => $key->remark,
+                              'checks' => $checks,
+                              'time_in' => $time_in,);
+               $attendance[] = $attendances2;
           }
 
           $dateTitle = date("d M Y", strtotime($now));
@@ -1656,7 +1921,6 @@ public function fetchMinMoeMonitoring(Request $request)
           'dateTitle' => $dateTitle,
           'now' => $now,
           'yesterday' => $yesterday,
-          'datacheck' => $datacheck,
           'attendance' => $attendance,
      );
 
@@ -1708,11 +1972,13 @@ public function fetchDetailMinMoeMonitoring(Request $request)
           (employees.remark = '".$request->get('location')."' 
           AND DATE( date_in ) = '".$now."' 
           AND temperature = ".$temperature."
+          and employee_syncs.end_date is null
           ".$groupin.")
           OR
           (employees.remark = 'Jps' 
           AND DATE( date_in ) = '".$now."' 
           AND temperature = ".$temperature."
+          and employee_syncs.end_date is null
           ".$groupin.")
           ");
      }else if($request->get('location') == 'ALL'){
@@ -1725,6 +1991,7 @@ public function fetchDetailMinMoeMonitoring(Request $request)
           WHERE
           DATE( date_in ) = '".$now."' 
           AND temperature = ".$temperature."
+          and employee_syncs.end_date is null
           ".$groupin."
           ");
      }else{
@@ -1739,12 +2006,14 @@ public function fetchDetailMinMoeMonitoring(Request $request)
           AND employees.remark != 'Jps' 
           AND DATE( date_in ) = '".$now."' 
           AND temperature = ".$temperature." 
-          AND employee_syncs.department = '".$request->get('location')."' ".$groupin.")
+          AND employee_syncs.department = '".$request->get('location')."'
+          and employee_syncs.end_date is null ".$groupin.")
           OR
           (employees.remark is null
           AND DATE( date_in ) = '".$now."' 
           AND temperature = ".$temperature." 
-          AND employee_syncs.department = '".$request->get('location')."' ".$groupin.")
+          AND employee_syncs.department = '".$request->get('location')."'
+          and employee_syncs.end_date is null ".$groupin.")
           ");
      }
 
