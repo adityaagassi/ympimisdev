@@ -29,51 +29,7 @@
 		<div class="col-xs-4" style="text-align: center;">
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process <i class="fa fa-angle-double-down"></i></span>
 			<?php $no = 1 ?>
-			<?php if ($role_code == 'MIS' || $role_code == 'M' || $role_code == 'F-SPL' || $role_code == 'M'){ ?>
-				@foreach($activity_list as $activity_list)
-					@if($activity_list->frequency == "Daily")
-						<?php $bgcolor = "background-color:#2A3E79;color:white" ?>
-						
-					@elseif($activity_list->frequency == "Weekly")
-						<?php $bgcolor = "background-color:#B93A2B;color:white" ?>
-						
-					@elseif($activity_list->frequency == "Monthly")
-						<?php $bgcolor = "background-color:#90EE7E" ?>
-						
-					@else($activity_list->frequency == "Conditional")
-						<?php $bgcolor = "background-color:white" ?>
-					@endif
-					
-					@if($activity_list->activity_type == "Pengecekan Foto")
-						<button onclick="activityList('{{$id}}','{{$activity_list->no}}','{{$activity_list->frequency}}')" class="btn btn-default btn-block" style="font-size: 20px; border-color: green;{{$bgcolor}}">Cek FG / KD</button>
-
-					@elseif($activity_list->activity_type == "Laporan Aktivitas")
-						<button onclick="activityList('{{$id}}','{{$activity_list->no}}','{{$activity_list->frequency}}')" class="btn btn-default btn-block" style="font-size: 20px; border-color: green;{{$bgcolor}}">Laporan Audit IK</button>
-
-					@elseif($activity_list->activity_type == "Pengecekan")
-						<button onclick="activityList('{{$id}}','{{$activity_list->no}}','{{$activity_list->frequency}}')" class="btn btn-default btn-block" style="font-size: 20px; border-color: green;{{$bgcolor}}">Audit Produk Pertama</button>
-
-					@elseif($activity_list->activity_type == "Labelisasi")
-						<button onclick="activityList('{{$id}}','{{$activity_list->no}}','{{$activity_list->frequency}}')" class="btn btn-default btn-block" style="font-size: 20px; border-color: green;{{$bgcolor}}">Audit Label Safety</button>
-
-					@elseif($activity_list->activity_type == "Audit")
-						<button onclick="activityList('{{$id}}','{{$activity_list->no}}','{{$activity_list->frequency}}')" class="btn btn-default btn-block" style="font-size: 20px; border-color: green;{{$bgcolor}}">Audit NG Jelas</button>
-
-					@elseif($activity_list->activity_type == "Pemahaman Proses")
-						<button onclick="activityList('{{$id}}','{{$activity_list->no}}','{{$activity_list->frequency}}')" class="btn btn-default btn-block" style="font-size: 20px; border-color: green;{{$bgcolor}}">Audit Pemahaman Proses</button>
-
-					@elseif($activity_list->activity_type == "Jishu Hozen")
-						<button onclick="activityList('{{$id}}','{{$activity_list->no}}','{{$activity_list->frequency}}')" class="btn btn-default btn-block" style="font-size: 20px; border-color: green;{{$bgcolor}}">Audit Jishu Hozen</button>
-
-					@elseif($activity_list->activity_type == "Interview")
-						<button onclick="activityList('{{$id}}','{{$activity_list->no}}','{{$activity_list->frequency}}')" class="btn btn-default btn-block" style="font-size: 20px; border-color: green;{{$bgcolor}}">Interview Pointing Call</button>
-
-					@else
-						<button onclick="activityList('{{$id}}','{{$activity_list->no}}','{{$activity_list->frequency}}')" class="btn btn-default btn-block" style="font-size: 20px; border-color: green;{{$bgcolor}}">{{ $activity_list->activity_type }}</button>
-					@endif
-				<?php $no++ ?>
-				@endforeach
-			<?php }else { ?>
+			<?php if (stripos($role_code, 'L-') !== FALSE || stripos($role_code, 'Leader') !== FALSE){ ?>
 				@foreach($activity_list as $activity_list)
 					@if($activity_list->frequency == "Daily")
 						<?php $bgcolor = "background-color:#2A3E79;color:white" ?>
@@ -116,6 +72,50 @@
 						@else
 							<button onclick="activityList('{{$id}}','{{$activity_list->no}}','{{$activity_list->frequency}}')" class="btn btn-default btn-block" style="font-size: 20px; border-color: green;{{$bgcolor}}">{{ $activity_list->activity_type }}</button>
 						@endif
+					@endif
+				<?php $no++ ?>
+				@endforeach
+			<?php }else { ?>
+				@foreach($activity_list as $activity_list)
+					@if($activity_list->frequency == "Daily")
+						<?php $bgcolor = "background-color:#2A3E79;color:white" ?>
+						
+					@elseif($activity_list->frequency == "Weekly")
+						<?php $bgcolor = "background-color:#B93A2B;color:white" ?>
+						
+					@elseif($activity_list->frequency == "Monthly")
+						<?php $bgcolor = "background-color:#90EE7E" ?>
+						
+					@else($activity_list->frequency == "Conditional")
+						<?php $bgcolor = "background-color:white" ?>
+					@endif
+					
+					@if($activity_list->activity_type == "Pengecekan Foto")
+						<button onclick="activityList('{{$id}}','{{$activity_list->no}}','{{$activity_list->frequency}}')" class="btn btn-default btn-block" style="font-size: 20px; border-color: green;{{$bgcolor}}">Cek FG / KD</button>
+
+					@elseif($activity_list->activity_type == "Laporan Aktivitas")
+						<button onclick="activityList('{{$id}}','{{$activity_list->no}}','{{$activity_list->frequency}}')" class="btn btn-default btn-block" style="font-size: 20px; border-color: green;{{$bgcolor}}">Laporan Audit IK</button>
+
+					@elseif($activity_list->activity_type == "Pengecekan")
+						<button onclick="activityList('{{$id}}','{{$activity_list->no}}','{{$activity_list->frequency}}')" class="btn btn-default btn-block" style="font-size: 20px; border-color: green;{{$bgcolor}}">Audit Produk Pertama</button>
+
+					@elseif($activity_list->activity_type == "Labelisasi")
+						<button onclick="activityList('{{$id}}','{{$activity_list->no}}','{{$activity_list->frequency}}')" class="btn btn-default btn-block" style="font-size: 20px; border-color: green;{{$bgcolor}}">Audit Label Safety</button>
+
+					@elseif($activity_list->activity_type == "Audit")
+						<button onclick="activityList('{{$id}}','{{$activity_list->no}}','{{$activity_list->frequency}}')" class="btn btn-default btn-block" style="font-size: 20px; border-color: green;{{$bgcolor}}">Audit NG Jelas</button>
+
+					@elseif($activity_list->activity_type == "Pemahaman Proses")
+						<button onclick="activityList('{{$id}}','{{$activity_list->no}}','{{$activity_list->frequency}}')" class="btn btn-default btn-block" style="font-size: 20px; border-color: green;{{$bgcolor}}">Audit Pemahaman Proses</button>
+
+					@elseif($activity_list->activity_type == "Jishu Hozen")
+						<button onclick="activityList('{{$id}}','{{$activity_list->no}}','{{$activity_list->frequency}}')" class="btn btn-default btn-block" style="font-size: 20px; border-color: green;{{$bgcolor}}">Audit Jishu Hozen</button>
+
+					@elseif($activity_list->activity_type == "Interview")
+						<button onclick="activityList('{{$id}}','{{$activity_list->no}}','{{$activity_list->frequency}}')" class="btn btn-default btn-block" style="font-size: 20px; border-color: green;{{$bgcolor}}">Interview Pointing Call</button>
+
+					@else
+						<button onclick="activityList('{{$id}}','{{$activity_list->no}}','{{$activity_list->frequency}}')" class="btn btn-default btn-block" style="font-size: 20px; border-color: green;{{$bgcolor}}">{{ $activity_list->activity_type }}</button>
 					@endif
 				<?php $no++ ?>
 				@endforeach
