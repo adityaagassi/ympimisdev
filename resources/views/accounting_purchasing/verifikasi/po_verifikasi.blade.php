@@ -67,6 +67,7 @@
 
 @endsection
 @section('content')
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
   @if (session('status'))
   <div class="alert alert-success alert-dismissible">
@@ -115,7 +116,7 @@
             <td colspan="3" style="font-size: 16px;width: 25%;">
               <div class="col-md-12">
                 <div class="panel panel-default">
-                  <input type="hidden" value="{{csrf_token()}}" name="_token" />
+                  {{-- <input type="hidden" value="{{csrf_token()}}" name="_token" /> --}}
                   <input type="hidden"  name="approve" id="approve" value="1" />
                   <div class="panel-heading">Approval : </div>
                   <div class="panel-body center-text"  style="padding: 20px">
