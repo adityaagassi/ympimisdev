@@ -44,15 +44,15 @@ table {
     <table style="width: 100%; border-collapse: collapse;" >
 			<tbody>
 				<tr>
-					<td colspan="12" style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;"><img width="80px" src="{{ public_path('images/logo_yamaha2.png') }}" alt=""></td>
+					<td colspan="11" style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;"><img width="80px" src="{{ public_path('images/logo_yamaha2.png') }}" alt=""></td>
 				</tr>
 				<tr>
-					<td style="border: 1px solid black;vertical-align: middle;padding-top: 0px;padding-bottom: 0px;" colspan="12">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
+					<td style="border: 1px solid black;vertical-align: middle;padding-top: 0px;padding-bottom: 0px;" colspan="11">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
 				</tr>
 				<tr>
 					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;" colspan="2">Department</td>
 					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;" colspan="3">{{ strtoupper($departments) }}</td>
-					<td rowspan="5" colspan="5" style="border: 1px solid black;padding: 15px;vertical-align: middle;padding-top: 0px;padding-bottom: 0px;"><center><b>{{ $activity_name }}</b></center></td>
+					<td rowspan="5" colspan="4" style="border: 1px solid black;padding: 15px;vertical-align: middle;padding-top: 0px;padding-bottom: 0px;"><center><b>{{ $activity_name }}</b></center></td>
 					<td style="border: 1px solid black;vertical-align: middle;padding-top: 0px;padding-bottom: 0px;" rowspan="5"><center>Checked<br>
 						@if($interview->approval != Null)
 							<b style='color:green'>Approved</b><br>
@@ -89,7 +89,6 @@ table {
 					<td style="border: 1px solid black;font-weight: bold; font-size: 10px;"><center>Aturan K3 Yamaha</center></td>
 					<td style="border: 1px solid black;font-weight: bold; font-size: 10px;"><center>10 Komitmen Berkendara</center></td>
 					<td style="border: 1px solid black;font-weight: bold; font-size: 10px;"><center>Kebijakan Mutu</center></td>
-					<td style="border: 1px solid black;font-weight: bold; font-size: 10px;"><center>5 Dasar Tindakan Bekerja</center></td>
 					<td style="border: 1px solid black;font-weight: bold; font-size: 10px;"><center>6 Pasal Keselamatan Lalu Lintas</center></td>
 					<td style="border: 1px solid black;font-weight: bold; font-size: 10px;"><center>Budaya Kerja YMPI</center></td>
 					<td style="border: 1px solid black;font-weight: bold; font-size: 10px;"><center>5S</center></td>
@@ -105,118 +104,96 @@ table {
 						@if($detail->filosofi_yamaha == 'OK')
 							<center><label class="label label-success">O</label></center>
 						@elseif($detail->filosofi_yamaha == 'OK (Kurang Lancar)')
-							<center><label class="label label-warning">X</label></center>
+							<center><label class="label label-warning"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
 						@else
-							<center><label class="label label-danger"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
+							<center><label class="label label-danger">X</label></center>
 						@endif
 					</td>
 					<td style="border: 1px solid black;font-size: 10px;">
 						@if($detail->aturan_k3 == 'OK')
 							<center><label class="label label-success">O</label></center>
 						@elseif($detail->aturan_k3 == 'OK (Kurang Lancar)')
-							<center><label class="label label-warning">X</label></center>
+							<center><label class="label label-warning"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
 						@else
-							<center><label class="label label-danger"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
+							<center><label class="label label-danger">X</label></center>
 						@endif
 					</td>
 					<td style="border: 1px solid black;font-size: 10px;">
 						@if($detail->komitmen_berkendara == 'OK')
 							<center><label class="label label-success">O</label></center>
 						@elseif($detail->komitmen_berkendara == 'OK (Kurang Lancar)')
-							<center><label class="label label-warning">X</label></center>
+							<center><label class="label label-warning"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
 						@else
-							<center><label class="label label-danger"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
+							<center><label class="label label-danger">X</label></center>
 						@endif
 					</td>
 					<td style="border: 1px solid black;font-size: 10px;">
 						@if($detail->kebijakan_mutu == 'OK')
 							<center><label class="label label-success">O</label></center>
 						@elseif($detail->kebijakan_mutu == 'OK (Kurang Lancar)')
-							<center><label class="label label-warning">X</label></center>
+							<center><label class="label label-warning"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
 						@else
-							<center><label class="label label-danger"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
-						@endif
-					</td>
-					<td style="border: 1px solid black;font-size: 10px;">
-						@if($detail->dasar_tindakan_bekerja == 'OK')
-							<center><label class="label label-success">O</label></center>
-						@elseif($detail->dasar_tindakan_bekerja == 'OK (Kurang Lancar)')
-							<center><label class="label label-warning">X</label></center>
-						@else
-							<center><label class="label label-danger"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
+							<center><label class="label label-danger">X</label></center>
 						@endif
 					</td>
 					<td style="border: 1px solid black;font-size: 10px;">
 						@if($detail->enam_pasal_keselamatan == 'OK')
 							<center><label class="label label-success">O</label></center>
 						@elseif($detail->enam_pasal_keselamatan == 'OK (Kurang Lancar)')
-							<center><label class="label label-warning">X</label></center>
+							<center><label class="label label-warning"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
 						@else
-							<center><label class="label label-danger"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
+							<center><label class="label label-danger">X</label></center>
 						@endif
 					</td>
 					<td style="border: 1px solid black;font-size: 10px;">
 						@if($detail->budaya_kerja == 'OK')
 							<center><label class="label label-success">O</label></center>
 						@elseif($detail->budaya_kerja == 'OK (Kurang Lancar)')
-							<center><label class="label label-warning">X</label></center>
+							<center><label class="label label-warning"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
 						@else
-							<center><label class="label label-danger"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
+							<center><label class="label label-danger">X</label></center>
 						@endif
 					</td>
 					<td style="border: 1px solid black;font-size: 10px;">
 						@if($detail->budaya_5s == 'OK')
 							<center><label class="label label-success">O</label></center>
 						@elseif($detail->budaya_5s == 'OK (Kurang Lancar)')
-							<center><label class="label label-warning">X</label></center>
+							<center><label class="label label-warning"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
 						@else
-							<center><label class="label label-danger"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
+							<center><label class="label label-danger">X</label></center>
 						@endif
 					</td>
 					<td style="border: 1px solid black;font-size: 10px;">
 						@if($detail->komitmen_hotel_konsep == 'OK')
 							<center><label class="label label-success">O</label></center>
 						@elseif($detail->komitmen_hotel_konsep == 'OK (Kurang Lancar)')
-							<center><label class="label label-warning">X</label></center>
+							<center><label class="label label-warning"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
 						@else
-							<center><label class="label label-danger"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
+							<center><label class="label label-danger">X</label></center>
 						@endif
 					</td>
 					<td style="border: 1px solid black;font-size: 10px;">
 						@if($detail->janji_tindakan_dasar == 'OK')
 							<center><label class="label label-success">O</label></center>
 						@elseif($detail->janji_tindakan_dasar == 'OK (Kurang Lancar)')
-							<center><label class="label label-warning">X</label></center>
+							<center><label class="label label-warning"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
 						@else
-							<center><label class="label label-danger"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
+							<center><label class="label label-danger">X</label></center>
 						@endif
 					</td>
 				</tr>
 				<?php $no++ ?>
 				@endforeach
-				<tr>
-					<td colspan="12" style="padding: 10px 10px">Foto :</td>
-				</tr>
-				<tr>
-					<td colspan="12">
-						<div class="col-xs-12" style="padding: 10px 10px 10px 10px">
-							@foreach($interviewPicture as $interviewPicture)
-								<div class="col-xs-4">
-									<img width="150px" src="{{ url('/data_file/interview/'.$interviewPicture->picture) }}" alt="">
-								</div>
-							@endforeach
-						</div>
-					</td>
-				</tr>
-				<!-- <tr>
-					<td colspan="2" style="border-top: 1px solid black">Keterangan :</td>
-					<td style="vertical-align: middle;border-top: 1px solid black"><center><label class="label label-success">OK</label></center></td>
-					<td style="vertical-align: middle;border-top: 1px solid black"><center><label class="label label-warning">OK (Kurang Lancar)</label></center></td>
-					<td style="vertical-align: middle;border-top: 1px solid black"><center><label class="label label-danger">Not OK</label></center></td>
-					<td colspan="8" style="border-top: 1px solid black"></td>
-				</tr> -->
 			</tbody>
 		</table>
+		<div class="col-xs-12" style="border:1px solid black;">
+			<center style="vertical-align: middle;font-size: 15px">Foto Interview</center>
+		</div>
+		<div class="col-xs-12" style="padding-top: 20px;border:1px solid black">
+			@foreach($interviewPicture as $interviewPicture)
+				<img width="120px" style="padding-left: 2px" src="{{ url('/data_file/interview/'.$interviewPicture->picture) }}" alt="">
+			@endforeach
+		</div>
 </header>
 <main>
 </main>
