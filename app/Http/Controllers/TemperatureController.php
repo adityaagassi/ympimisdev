@@ -1752,7 +1752,7 @@ public function fetchMinMoeMonitoring(Request $request)
           if ($request->get('location') == 'OFC') {
                $datacheck = DB::SELECT("SELECT
                     employees.employee_id,
-                    employees.name,
+                    employee_syncs.name,
                     sunfish_shift_syncs.shiftdaily_code,
                     sunfish_shift_syncs.attend_code,
                     COALESCE ( department_shortname, '' ) AS department_shortname,
@@ -1789,7 +1789,7 @@ public function fetchMinMoeMonitoring(Request $request)
           }else{
                $datacheck = DB::SELECT("SELECT
                     employees.employee_id,
-                    employees.NAME,
+                    employee_syncs.name,
                     sunfish_shift_syncs.shiftdaily_code,
                     sunfish_shift_syncs.attend_code,
                     COALESCE ( department_shortname, '' ) AS department_shortname,
