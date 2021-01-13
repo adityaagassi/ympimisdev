@@ -807,6 +807,20 @@ class MaintenanceController extends Controller
 
 	public function fetchSPKProgress(Request $request)
 	{
+		if ($request->get('from')) {
+			$from = $request->get('from');
+		} else {
+			$from = '2020-01-01';
+		}
+
+		if ($request->get('to')) {
+			$to = $request->get('to');
+		} else if($request->get('from')){
+			$to = $request->get('from');
+		} else {
+			$to = '2020-01-01';
+		}
+
 		$get_data = db::select('
 			SELECT order_no, GROUP_CONCAT(priority) as priority, GROUP_CONCAT(bagian) bagian,GROUP_CONCAT(description)	description,GROUP_CONCAT(request_date)	request_date,GROUP_CONCAT(requester)	requester,GROUP_CONCAT(inprogress) 	inprogress,GROUP_CONCAT(pic)	pic,GROUP_CONCAT(target_date)	target_date,GROUP_CONCAT(target)	target,GROUP_CONCAT(process_code)	process_code,GROUP_CONCAT(process_name)	process_name,GROUP_CONCAT(`status`)	`status`,GROUP_CONCAT(cause) cause,GROUP_CONCAT(handling) handling from 
 			(select * from
@@ -829,16 +843,17 @@ class MaintenanceController extends Controller
 			union all
 			
 			SELECT order_no, null priority, null bagian, null	description,null	request_date,null	requester,null 	inprogress,null	pic,null	target_date,null	target,null	process_code,null	process_name,null	`status`, cause, handling FROM maintenance_job_reports where id in (SELECT max(id) FROM maintenance_job_reports GROUP BY order_no)) alls
+			where request_date >= "'.$from.'" and request_date <= "'.$to.'"
 			group by order_no
 			order by target asc			
 			');
 
-		$data_progress = db::select('
-			SELECT maintenance_job_orders.order_no, IF(TIMESTAMPDIFF(SECOND, maintenance_job_order_logs.created_at, target_date) < 0, 0, TIMESTAMPDIFF(SECOND, maintenance_job_order_logs.created_at, target_date)) as plan_time,  TIMESTAMPDIFF(SECOND, maintenance_job_order_logs.created_at, now()) as act_time from maintenance_job_orders 
-			left join maintenance_job_order_logs on maintenance_job_order_logs.order_no = maintenance_job_orders.order_no 
-			where maintenance_job_orders.remark = 4 and maintenance_job_order_logs.remark = 4 and maintenance_job_order_logs.deleted_at is null
-			order by maintenance_job_orders.order_no
-			');
+		// $data_progress = db::select('
+		// 	SELECT maintenance_job_orders.order_no, IF(TIMESTAMPDIFF(SECOND, maintenance_job_order_logs.created_at, target_date) < 0, 0, TIMESTAMPDIFF(SECOND, maintenance_job_order_logs.created_at, target_date)) as plan_time,  TIMESTAMPDIFF(SECOND, maintenance_job_order_logs.created_at, now()) as act_time from maintenance_job_orders 
+		// 	left join maintenance_job_order_logs on maintenance_job_order_logs.order_no = maintenance_job_orders.order_no 
+		// 	where maintenance_job_orders.remark = 4 and maintenance_job_order_logs.remark = 4 and maintenance_job_order_logs.deleted_at is null
+		// 	order by maintenance_job_orders.order_no
+		// 	');
 
 		$data_bar = db::select('SELECT DATE_FORMAT(mstr.dt,"%d %b %Y") dt, mstr.process_code, mstr.process_name, IFNULL(datas.jml,0) jml from
 			(select * from
@@ -846,12 +861,13 @@ class MaintenanceController extends Controller
 			cross join (select process_code, process_name from processes where remark = "maintenance") as prs
 			) as mstr
 			left join (select remark ,date(created_at) as dt, count(remark) as jml from maintenance_job_orders where remark <> 8 group by remark, date(created_at)) as datas on mstr.dt = datas.dt and mstr.process_code = datas.remark
+			where mstr.dt >= "'.$from.'" and mstr.dt <= "'.$to.'"
 			order by mstr.dt asc, mstr.process_code asc');
 
 		$response = array(
 			'status' => true,
 			'datas' => $get_data,
-			'progress' => $data_progress,
+			// 'progress' => $data_progress,
 			'data_bar' => $data_bar
 		);
 		return Response::json($response);

@@ -56,9 +56,31 @@
 					</div>
 					<select class="form-control select2" id="status_cari" data-placeholder="Pilih Status" onchange="get_data('')" style="width: 100%;">
 						<option></option>
-						<option value="Finished">Finished</option>
 						<option value="">Open</option>
+						<option value="Finished">Finished</option>
 					</select>
+				</div>
+			</div>
+
+			<div class="col-xs-2">
+				<div class="input-group date">
+					<div class="input-group-addon bg-blue">
+						<i class="fa fa-calendar"></i>
+					</div>
+					<input type="text" id="from" class="form-control datepicker" placeholder="Select Date From">
+				</div>
+			</div>
+
+			<div class="col-xs-1" style="padding: 0px; color: white; font-size: 20pt; width: 1vw">
+				<i class="fa fa-chevron-right"></i>
+			</div>
+
+			<div class="col-xs-2">
+				<div class="input-group date">
+					<div class="input-group-addon bg-blue">
+						<i class="fa fa-calendar"></i>
+					</div>
+					<input type="text" id="to" class="form-control datepicker" placeholder="Select Date To">
 				</div>
 			</div>
 		</div>
@@ -166,19 +188,24 @@
 
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
+		$('.datepicker').datepicker({
+			autoclose: true,
+			format: "yyyy-mm-dd",
+		});
 
 		$('.select2').select2({
 			allowClear: true,
 		});
 
-		get_data('');
+		get_data();
 
-		setInterval( function() { get_data(''); }, 10000 );
+		setInterval( function() { get_data(); }, 10000 );
 	})
 
-	function get_data(mon) {
+	function get_data() {
 		var data = {
-			mon:mon
+			from:$("#from").val(),
+			to:$("#to").val(),
 		}
 
 		var statuses = $("#status_cari option:selected").val();
@@ -201,24 +228,24 @@
 
 				if (statuses == value.process_name || (statuses == '' && st.indexOf(value.process_name) >= 0)) {
 					var stat = 0;
-					var progress = "0%";
-					var cls_prog = "progress-bar-success";
+					// var progress = "0%";
+					// var cls_prog = "progress-bar-success";
 
-					$.each(result.progress, function(index2, value2){
-						if (value.order_no == value2.order_no) {
-							stat = 1;
+					// $.each(result.progress, function(index2, value2){
+					// 	if (value.order_no == value2.order_no) {
+					// 		stat = 1;
 
-							tmp = (value2.act_time / value2.plan_time * 100).toFixed(0);
+					// 		tmp = (value2.act_time / value2.plan_time * 100).toFixed(0);
 
-							if (tmp == 'Infinity') {
-								progress = "500%";
-								cls_prog = "progress-bar-danger";
-							} else {
-								progress = tmp+"%";
-								cls_prog = "progress-bar-success";
-							}
-						}
-					})
+					// 		if (tmp == 'Infinity') {
+					// 			progress = "500%";
+					// 			cls_prog = "progress-bar-danger";
+					// 		} else {
+					// 			progress = tmp+"%";
+					// 			cls_prog = "progress-bar-success";
+					// 		}
+					// 	}
+					// })
 
 					tableData += '<tr>';
 					tableData += '<td>'+ value.order_no +'</td>';
@@ -288,7 +315,7 @@
 
 					tableData += '<td style="border-left: 1px solid #363b38"><span class="label label-'+colors[st.indexOf(value.process_name)]+'">'+value.process_name+'</span>'+status_pending+'</td>';
 
-					if (value.process_name == "Pending" || value.process_name == "Finished") {
+					if (value.process_name == "Pending" || value.process_name == "Finished" || value.process_name == "Wait Acc") {
 						tableData += '<td style="border-left: 3px solid #f44336"><span class="more">'+(value.cause || '' )+'</span></td>';	
 						tableData += '<td style="border-left: 3px solid #f44336"><span class="more">'+(value.handling || '' )+'</span></td>';	
 					}
