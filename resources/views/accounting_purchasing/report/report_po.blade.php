@@ -718,6 +718,9 @@
 							else if ($po[0]->material == "Tidak Dipungut PPNB"){
 								echo "(Not Collected)";
 							}
+							else{
+								echo "";
+							}
 						?>
 					</td>
 					<td colspan="1" style="font-weight: bold;font-size: 12px;text-align: right;padding-right: 5px">
@@ -817,6 +820,9 @@
 									else if ($po[0]->material == "Tidak Dipungut PPNB"){
 										$vat = 0;
 									}
+									else{
+										$vat = 0;
+									}
 									
 								}
 								else if($po[0]->supplier_status == "Non PKP" || $po[0]->supplier_status == "Import"){
@@ -831,6 +837,9 @@
 									$vat = $pajak;
 								}
 								else if ($po[0]->material == "Tidak Dipungut PPNB"){
+									$vat = 0;
+								}
+								else{
 									$vat = 0;
 								}
 							}
