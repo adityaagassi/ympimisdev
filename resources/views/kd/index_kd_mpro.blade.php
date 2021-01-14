@@ -173,6 +173,7 @@
 				<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
 					<li class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">KDO Detail</a></li>
 					<li class="vendor-tab"><a href="#tab_2" data-toggle="tab" id="tab_header_2">KDO</a></li>
+					<li class="vendor-tab"><a href="#tab_3" data-toggle="tab" id="tab_header_3">KDO Open</a></li>
 				</ul>
 
 				<div class="tab-content">
@@ -236,6 +237,40 @@
 							</tfoot>
 						</table>
 					</div>
+					<div class="tab-pane" id="tab_3">
+						<table id="kdo_open" class="table table-bordered table-striped table-hover" style="width: 100%;">
+							<thead style="background-color: rgba(126,86,134,.7);">
+								<tr>
+									<th style="width: 2%">KD Number</th>
+									<th style="width: 2%">Material Number</th>
+									<th style="width: 5%">Material Description</th>
+									<th style="width: 2%">Location</th>
+									<th style="width: 1%">Qty</th>
+									<th style="width: 2%">Stuffing Date</th>
+									<th style="width: 2%">Destination</th>
+									<th style="width: 3%">Created At</th>
+									{{-- <th style="width: 1%">Reprint</th> --}}
+									{{-- <th style="width: 1%">Delete</th> --}}
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+							<tfoot>
+								<tr>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									{{-- <th></th> --}}
+									{{-- <th></th> --}}
+								</tr>
+							</tfoot>
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -266,6 +301,7 @@
 		fillTableList();
 		fillTable();
 		fillTableDetail();
+		fillTableOpen();
 
 	});
 
@@ -416,6 +452,104 @@
 		});
 
 		$('#kdo_detail tfoot tr').appendTo('#kdo_detail thead');
+	}
+
+	function fillTableOpen(){
+		var location = "{{ $location }}";
+
+		var data = {
+			status : 0,
+			remark : location
+		}
+
+		$('#kdo_open tfoot th').each( function () {
+			var title = $(this).text();
+			$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
+		});
+		var table = $('#kdo_open').DataTable( {
+			'paging'        : true,
+			'dom': 'Bfrtip',
+			'responsive': true,
+			'responsive': true,
+			'lengthMenu': [
+			[ 10, 25, 50, -1 ],
+			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+			],
+			'buttons': {
+				buttons:[
+				{
+					extend: 'pageLength',
+					className: 'btn btn-default',
+				},
+				{
+					extend: 'copy',
+					className: 'btn btn-success',
+					text: '<i class="fa fa-copy"></i> Copy',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'excel',
+					className: 'btn btn-info',
+					text: '<i class="fa fa-file-excel-o"></i> Excel',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'print',
+					className: 'btn btn-warning',
+					text: '<i class="fa fa-print"></i> Print',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				]
+			},
+			'lengthChange'  : true,
+			'searching'     : true,
+			'ordering'      : true,
+			'info'        : true,
+			'order'       : [],
+			'autoWidth'   : true,
+			"sPaginationType": "full_numbers",
+			"bJQueryUI": true,
+			"bAutoWidth": false,
+			"processing": true,
+			"serverSide": true,
+			"ajax": {
+				"type" : "get",
+				"url" : "{{ url("fetch/kdo_detail") }}",
+				"data" : data,
+			},
+			"columns": [
+			{ "data": "kd_number" },
+			{ "data": "material_number" },
+			{ "data": "material_description" },
+			{ "data": "location" },
+			{ "data": "quantity" },
+			{ "data": "st_date" },
+			{ "data": "destination_shortname" },
+			{ "data": "updated_at" }
+			// { "data": "reprintKDO" },
+			// { "data": "deleteKDO" }
+			]
+		});
+
+		table.columns().every( function () {
+			var that = this;
+
+			$( 'input', this.footer() ).on( 'keyup change', function () {
+				if ( that.search() !== this.value ) {
+					that
+					.search( this.value )
+					.draw();
+				}
+			});
+		});
+
+		$('#kdo_open tfoot tr').appendTo('#kdo_open thead');
 	}
 
 	function fillTable(){
@@ -579,6 +713,7 @@
 				fillTableList();
 				$('#kdo_table').DataTable().ajax.reload();
 				$('#kdo_detail').DataTable().ajax.reload();
+				$('#kdo_open').DataTable().ajax.reload();
 				openSuccessGritter('Success', result.message);
 			}else{
 				$("#loading").hide();
