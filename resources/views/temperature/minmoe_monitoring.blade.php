@@ -240,6 +240,9 @@
 								<th style="width: 1%;">#</th>
 								<th style="width: 3%;">Employee ID</th>
 								<th style="width: 9%;">Name</th>
+								<th style="width: 9%;">Dept</th>
+								<th style="width: 9%;">Sect</th>
+								<th style="width: 9%;">Group</th>
 								<th style="width: 3%;">Time</th>
 								<th style="width: 3%;">Point</th>
 								<th style="width: 2%;">Temp</th>
@@ -271,6 +274,8 @@
 								<th style="color:white;width: 5%; font-size: 1.2vw; text-align: center;">ID</th>
 								<th style="color:white;width: 30%; font-size: 1.2vw; text-align: center;">Name</th>
 								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Dept</th>
+								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Sect</th>
+								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Group</th>
 								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Shift</th>
 								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Attendance</th>
 								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Time In</th>
@@ -389,7 +394,7 @@
 					$.each(result.attendance, function(key, value) {
 						var emp_no = value.employee_id;
 						if (value.temperature != null && value.temperature >= 37.5) {
-							detail_abnormal.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,temp:value.temperature});
+							detail_abnormal.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups,temp:value.temperature});
 						}
 						if (value.remark == 'OFC' || value.remark == 'Jps') {
 							if (value.checks == null) {
@@ -397,41 +402,41 @@
 								if (value.shiftdaily_code.match(/Shift_1/gi)) {
 									uncheck_ofc_1++;
 									total_ofc_1++;
-									detail_uncheck_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
-									detail_total_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+									detail_uncheck_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups,section:value.section,group:value.groups});
+									detail_total_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups});
 								}else if(value.shiftdaily_code.match(/Shift_2/gi)){
 									uncheck_ofc_2++;
 									total_ofc_2++;
-									detail_uncheck_ofc_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
-									detail_total_ofc_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+									detail_uncheck_ofc_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups});
+									detail_total_ofc_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups});
 								}else{
 									uncheck_ofc_1++;
 									total_ofc_1++;
-									detail_uncheck_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
-									detail_total_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+									detail_uncheck_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups});
+									detail_total_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups});
 								}
 							}else{
 
 								if (value.shiftdaily_code.match(/Shift_1/gi)) {
 									check_ofc_1++;
 									total_ofc_1++;
-									detail_check_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
-									detail_total_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+									detail_check_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups});
+									detail_total_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups});
 								}else if(value.shiftdaily_code.match(/Shift_2/gi)){
 									check_ofc_2++;
 									total_ofc_2++;
-									detail_check_ofc_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
-									detail_total_ofc_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+									detail_check_ofc_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups});
+									detail_total_ofc_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups});
 								}else if(value.shiftdaily_code.match(/Shift_3/gi)){
 									check_ofc_3++;
 									total_ofc_3++;
-									detail_check_ofc_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
-									detail_total_ofc_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+									detail_check_ofc_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups});
+									detail_total_ofc_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups});
 								}else{
 									check_ofc_1++;
 									total_ofc_1++;
-									detail_check_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
-									detail_total_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+									detail_check_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups});
+									detail_total_ofc_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups});
 								}
 							}
 						}else{
@@ -440,46 +445,46 @@
 								if (value.shiftdaily_code.match(/Shift_1/gi)) {
 									uncheck_prd_1++;
 									total_prd_1++;
-									detail_uncheck_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
-									detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+									detail_uncheck_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups});
+									detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups});
 								}else if(value.shiftdaily_code.match(/Shift_2/gi)){
 									uncheck_prd_2++;
 									total_prd_2++;
-									detail_uncheck_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
-									detail_total_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+									detail_uncheck_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups});
+									detail_total_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups});
 								}else if(value.shiftdaily_code.match(/Shift_3/gi)){
 									uncheck_prd_3++;
 									total_prd_3++;
-									detail_uncheck_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
-									detail_total_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+									detail_uncheck_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups});
+									detail_total_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups});
 								}else{
 									uncheck_prd_1++;
 									total_prd_1++;
-									detail_uncheck_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
-									detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+									detail_uncheck_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups});
+									detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups});
 								}
 							}else{
 
 								if (value.shiftdaily_code.match(/Shift_1/gi)) {
 									check_prd_1++;
 									total_prd_1++;
-									detail_check_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
-									detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+									detail_check_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups});
+									detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups});
 								}else if(value.shiftdaily_code.match(/Shift_2/gi)){
 									check_prd_2++;
 									total_prd_2++;
-									detail_check_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
-									detail_total_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+									detail_check_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups});
+									detail_total_prd_2.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups});
 								}else if(value.shiftdaily_code.match(/Shift_3/gi)){
 									check_prd_3++;
 									total_prd_3++;
-									detail_check_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
-									detail_total_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+									detail_check_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups});
+									detail_total_prd_3.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups});
 								}else{
 									check_prd_1++;
 									total_prd_1++;
-									detail_check_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
-									detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in});
+									detail_check_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups});
+									detail_total_prd_1.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups});
 								}
 							}
 						}
@@ -738,6 +743,9 @@ function fetchTemperatureDetail(temperature){
 				resultData += '<td>'+ index +'</td>';
 				resultData += '<td>'+ value.employee_id +'</td>';
 				resultData += '<td>'+ value.name +'</td>';
+				resultData += '<td>'+ value.department_shortname +'</td>';
+				resultData += '<td>'+ value.section +'</td>';
+				resultData += '<td>'+ value.groups +'</td>';
 				resultData += '<td>'+ value.date_in +'</td>';
 				resultData += '<td>'+ value.point +'</td>';
 				resultData += '<td>'+ value.temperature +' °C</td>';
@@ -824,6 +832,8 @@ function checkDetails(checkParam) {
 		resultData += '<td>'+ value.employee_id +'</td>';
 		resultData += '<td>'+ value.name +'</td>';
 		resultData += '<td>'+ value.dept +'</td>';
+		resultData += '<td>'+ value.section +'</td>';
+		resultData += '<td>'+ value.group +'</td>';
 		resultData += '<td>'+ value.shift +'</td>';
 		resultData += '<td>'+ value.attend_code +'</td>';
 		resultData += '<td>'+ value.time_in +'</td>';

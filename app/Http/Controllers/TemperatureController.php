@@ -1766,6 +1766,8 @@ public function fetchMinMoeMonitoring(Request $request)
                     sunfish_shift_syncs.shiftdaily_code,
                     sunfish_shift_syncs.attend_code,
                     COALESCE ( department_shortname, '' ) AS department_shortname,
+                    COALESCE ( employee_syncs.section, '' ) AS section,
+                    COALESCE ( employee_syncs.`group`, '' ) AS groups,
                     employees.remark 
                FROM
                     employees
@@ -1786,6 +1788,8 @@ public function fetchMinMoeMonitoring(Request $request)
                     sunfish_shift_syncs.shiftdaily_code,
                     sunfish_shift_syncs.attend_code,
                     COALESCE ( department_shortname, '' ) AS department_shortname,
+                    COALESCE ( employee_syncs.section, '' ) AS section,
+                    COALESCE ( employee_syncs.`group`, '' ) AS groups,
                     employees.remark,
                     employee_syncs.name
                FROM
@@ -1803,6 +1807,8 @@ public function fetchMinMoeMonitoring(Request $request)
                     sunfish_shift_syncs.shiftdaily_code,
                     sunfish_shift_syncs.attend_code,
                     COALESCE ( department_shortname, '' ) AS department_shortname,
+                    COALESCE ( employee_syncs.section, '' ) AS section,
+                    COALESCE ( employee_syncs.`group`, '' ) AS groups,
                     employees.remark 
                FROM
                     employees
@@ -1916,6 +1922,8 @@ public function fetchMinMoeMonitoring(Request $request)
                               'shiftdaily_code' => $key->shiftdaily_code,
                               'attend_code' => $key->attend_code,
                               'department_shortname' => $key->department_shortname,
+                              'section' => $key->section,
+                              'groups' => $key->groups,
                               'remark' => $key->remark,
                               'checks' => $checks,
                               'time_in' => $time_in,);
@@ -1973,11 +1981,20 @@ public function fetchDetailMinMoeMonitoring(Request $request)
 
      if ($request->get('location') == 'OFC') {
           $detail = DB::SELECT("SELECT
-                    * 
+               employee_syncs.employee_id,
+               employee_syncs.name,
+               ivms_temperatures.date_in,
+               ivms_temperatures.point,
+               ivms_temperatures.temperature,
+               ivms_temperatures.abnormal_status,
+               COALESCE ( departments.department_shortname, '' ) AS department_shortname,
+               COALESCE ( employee_syncs.section, '' ) AS section,
+               COALESCE ( employee_syncs.`group`, '' ) AS groups 
           FROM
           ivms_temperatures 
           LEFT JOIN employees ON employees.employee_id = ivms_temperatures.employee_id 
           LEFT JOIN employee_syncs ON employee_syncs.employee_id = employees.employee_id 
+          LEFT JOIN departments ON employee_syncs.department = departments.department_name
           WHERE
           (employees.remark = '".$request->get('location')."' 
           AND DATE( date_in ) = '".$now."' 
@@ -1993,11 +2010,20 @@ public function fetchDetailMinMoeMonitoring(Request $request)
           ");
      }else if($request->get('location') == 'ALL'){
           $detail = DB::SELECT("SELECT
-                    * 
+               employee_syncs.employee_id,
+               employee_syncs.name,
+               ivms_temperatures.date_in,
+               ivms_temperatures.point,
+               ivms_temperatures.temperature,
+               ivms_temperatures.abnormal_status,
+               COALESCE ( departments.department_shortname, '' ) AS department_shortname,
+               COALESCE ( employee_syncs.section, '' ) AS section,
+               COALESCE ( employee_syncs.`group`, '' ) AS groups 
           FROM
           ivms_temperatures 
           LEFT JOIN employees ON employees.employee_id = ivms_temperatures.employee_id 
           LEFT JOIN employee_syncs ON employee_syncs.employee_id = employees.employee_id 
+          LEFT JOIN departments ON employee_syncs.department = departments.department_name
           WHERE
           DATE( date_in ) = '".$now."' 
           AND temperature = ".$temperature."
@@ -2006,11 +2032,20 @@ public function fetchDetailMinMoeMonitoring(Request $request)
           ");
      }else{
           $detail = DB::SELECT("SELECT
-                    * 
+               employee_syncs.employee_id,
+               employee_syncs.name,
+               ivms_temperatures.date_in,
+               ivms_temperatures.point,
+               ivms_temperatures.temperature,
+               ivms_temperatures.abnormal_status,
+               COALESCE ( departments.department_shortname, '' ) AS department_shortname,
+               COALESCE ( employee_syncs.section, '' ) AS section,
+               COALESCE ( employee_syncs.`group`, '' ) AS groups 
           FROM
           ivms_temperatures 
           LEFT JOIN employees ON employees.employee_id = ivms_temperatures.employee_id 
-          LEFT JOIN employee_syncs ON employee_syncs.employee_id = employees.employee_id 
+          LEFT JOIN employee_syncs ON employee_syncs.employee_id = employees.employee_id
+          LEFT JOIN departments ON employee_syncs.department = departments.department_name 
           WHERE
           (employees.remark != 'OFC' 
           AND employees.remark != 'Jps' 
