@@ -54,10 +54,11 @@
 					<div class="input-group-addon bg-green">
 						<i class="fa fa-flag"></i>
 					</div>
-					<select class="form-control select2" id="status_cari" data-placeholder="Pilih Status" onchange="get_data('')" style="width: 100%;">
+					<select class="form-control select2" id="status_cari" data-placeholder="Pilih Status" onchange="get_data()" style="width: 100%;">
 						<option></option>
 						<option value="">Open</option>
 						<option value="Finished">Finished</option>
+						<option value="Pending">Pending</option>
 					</select>
 				</div>
 			</div>

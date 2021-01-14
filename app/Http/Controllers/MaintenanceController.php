@@ -840,15 +840,15 @@ class MaintenanceController extends Controller
 			left join maintenance_job_pendings on maintenance_job_orders.order_no = maintenance_job_pendings.order_no
 			left join departments on SUBSTRING_INDEX(maintenance_job_orders.section,"_",1) = departments.department_name
 			where maintenance_job_orders.remark <> 8
+			and date(maintenance_job_orders.created_at) >= "'.$from.'" and date(maintenance_job_orders.created_at) <= "'.$to.'"
 			and maintenance_job_orders.deleted_at is null
 			order by target asc
 			) as awal
 			union all
 			
-			SELECT order_no, null priority, null bagian, null	description,null	request_date,null	requester,null 	inprogress,null	pic,null	target_date,null	target,null	process_code,null	process_name,null	`status`, cause, handling FROM maintenance_job_reports where id in (SELECT max(id) FROM maintenance_job_reports GROUP BY order_no)) alls
-			where request_date >= "'.$from.'" and request_date <= "'.$to.'"
+			SELECT maintenance_job_reports.order_no, null priority, null bagian, null	description,null	request_date,null	requester,null 	inprogress,null	pic,null	target_date,null	target,null	process_code,null	process_name,null	`status`, cause, handling FROM maintenance_job_reports left join maintenance_job_orders on maintenance_job_orders.order_no = maintenance_job_reports.order_no where maintenance_job_reports.id in (SELECT max(id) FROM maintenance_job_reports GROUP BY order_no) and date(maintenance_job_orders.created_at) >= "'.$from.'" and date(maintenance_job_orders.created_at) <= "'.$to.'") alls
 			group by order_no
-			order by target asc			
+			order by target asc		
 			');
 
 		// $data_progress = db::select('

@@ -894,13 +894,16 @@ function startWork() {
 				}
 			});
 
+			var part_lain = $("#spare_part_lain").val();
+
 			var data = {
 				order_no : spk_detail,
 				penyebab : penyebab,
 				penanganan : penanganan,
 				pencegahan : pencegahan,
 				spare_part : part,
-				foto : foto
+				foto : foto,
+				other_part : part_lain
 			}
 
 			if ($("#profile-img1").attr("src") != "" || $("#profile-img2").attr("src") != "") {
