@@ -94,6 +94,7 @@
 		</p>
 	</div>
 	<input type="hidden" id="loc" value="{{ $title }} {{$title_jp}} }">
+	<input type="hidden" id="molding_code" value="">
 	
 	<div class="row" style="margin-left: 1%; margin-right: 1%;">
 		<div class="col-xs-6" style="padding-right: 5px; padding-left: 0">
@@ -204,6 +205,9 @@
 			<div style="padding-top: 5px;">
 				<button id="start_lepas" style="width: 100%; margin-top: 10px; font-size: 30px;  font-weight: bold; border-color: black; color: white; width: 100%" onclick="startLepas()" class="btn btn-success">MULAI LEPAS</button>
 			</div>
+			<div class="col-xs-12" style="padding-left: 0px;padding-right: 5px">
+				<button id="pause_lepas" style="width: 100%; margin-top: 10px; font-size: 30px;  font-weight: bold; border-color: black; color: white; width: 100%" onclick="pause('LEPAS')" class="btn btn-warning">PAUSE</button>
+			</div>
 			<div class="col-xs-6" style="padding-left: 0px;padding-right: 5px">
 				<button id="batal_lepas" style="width: 100%; margin-top: 10px; font-size: 30px;  font-weight: bold; border-color: black; color: white; width: 100%" onclick="cancelLepas()" class="btn btn-danger">BATAL</button>	
 			</div>
@@ -308,6 +312,9 @@
 				<button id="start_pasang" style="width: 100%; margin-top: 10px; font-size: 30px;  font-weight: bold; border-color: black; color: white; width: 100%" onclick="startPasang()" class="btn btn-success">MULAI PASANG</button>
 				<!-- <input type="hidden" id="start_time_pasang"> -->
 			</div>
+			<div class="col-xs-12" style="padding-left: 0px;padding-right: 5px">
+				<button id="pause_pasang" style="width: 100%; margin-top: 10px; font-size: 30px;  font-weight: bold; border-color: black; color: white; width: 100%" onclick="pause('PASANG')" class="btn btn-warning">PAUSE</button>
+			</div>
 			<div class="col-xs-6" style="padding-left: 0px;padding-right: 5px">
 				<button id="batal_pasang" style="width: 100%; margin-top: 10px; font-size: 30px;  font-weight: bold; border-color: black; color: white; width: 100%" onclick="cancelPasang()" class="btn btn-danger">BATAL</button>
 			</div>
@@ -324,7 +331,7 @@
 				</div>
 				<div class="col-xs-6" style="padding-left: 5px;padding-right: 0px">
 					<!-- <div class="row"> -->
-						<button id="change_mesin" style="width: 100%;  font-size: 30px;  font-weight: bold; border-color: black; color: white; width: 100%" onclick="changeMesin()" class="btn btn-warning">GANTI MESIN</button>
+						<button id="change_mesin" style="width: 100%;  font-size: 30px;  font-weight: bold; border-color: black; color: white; width: 100%" onclick="changeMesin()" class="btn btn-primary">GANTI MESIN</button>
 					<!-- </div> -->
 				</div>
 			</div>
@@ -400,11 +407,36 @@
 						</div>
 					</div>
 					<div class="col-xs-12" style="padding-top: 20px">
-						<div class="modal-footer">
-							<button onclick="saveMesin()" class="btn btn-success btn-block pull-right" style="font-size: 30px;font-weight: bold;">
-								CONFIRM
-							</button>
+						<div class="row">
+							<div class="modal-footer">
+								<button onclick="saveMesin()" class="btn btn-success btn-block pull-right" style="font-size: 30px;font-weight: bold;">
+									CONFIRM
+								</button>
+							</div>
 						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalStatus">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<center> <b style="font-size: 2vw">PAUSE</b> </center>
+				<input type="hidden" id="typePause">
+				<div class="modal-body table-responsive no-padding">
+					<div class="form-group">
+						<center><label for="">Reason</label></center>
+						<input class="form-control" style="width: 100%; text-align: center;" type="text" id="reasonPause" placeholder="Reason" required><br>
+					</div>
+					<div class="col-xs-6" style="padding-left: 0px">
+						<button class="btn btn-danger btn-block" style="font-weight: bold;font-size: 20px" data-dismiss="modal">Cancel</button>
+					</div>
+					<div class="col-xs-6" style="padding-right: 0px">
+						<button class="btn btn-success btn-block" style="font-weight: bold;font-size: 20px" onclick="saveStatus()">Confirm</button>
 					</div>
 				</div>
 			</div>
@@ -457,6 +489,8 @@
 		$('#operator_0').val('');
 		$('#operator_1').val('');
 		$('#operator_2').val('');
+
+		$('#molding_code').val('');
 		setInterval(setTime, 1000);
 	});
 
@@ -858,6 +892,8 @@
         $('#last_counter_pasang').html("");
         $('#moldingLogPasang').html("");
         $('#mesin_pasang_pilihan').show();
+
+        $('#molding_code').val('');
         // $('#mesin_pasang').hide();
 	}
 
@@ -924,6 +960,7 @@
 		var notelepas = $('#notelepas').val();
 		var reason = $('#reason').text();
 		var decision = $('#btn_decision').text();
+		var molding_code = $('#molding_code').val();
 		// console.log(ng_name.join());
 		// console.log(ng_count.join());
 
@@ -946,6 +983,7 @@
 				running_time : running_time,
 				notelepas : notelepas,
 				decision : decision,
+				molding_code : molding_code,
 			}
 
 			$.post('{{ url("index/injeksi/store_history_molding") }}', data, function(result, status, xhr){
@@ -973,6 +1011,7 @@
 					getMoldingLog($('#mesin_fix2').text());
 					getMoldingLogPasang($('#mesin_fix2').text());
 					$('#loading').hide();
+					location.reload();
 				} else {
 					audio_error.play();
 					openErrorGritter('Error','Create History Molding Temp Failed');
@@ -1056,6 +1095,7 @@
 		var end_time = getActualFullDate();
 		var running_time = $('#pasang').val();
 		var notepasang = $('#notepasang').val();
+		var molding_code = $('#molding_code').val();
 		// console.log(ng_name.join());
 		// console.log(ng_count.join());
 
@@ -1072,6 +1112,7 @@
 			end_time : end_time,
 			running_time : running_time,
 			notelepas : notepasang,
+			molding_code : molding_code,
 		}
 
 		$.post('{{ url("index/injeksi/store_history_molding") }}', data, function(result, status, xhr){
@@ -1097,6 +1138,7 @@
 		        getMoldingLog($('#mesin_fix2').text());
 		        getMoldingLogPasang($('#mesin_fix2').text());
 		        $('#loading').hide();
+		        location.reload();
 			} else {
 				audio_error.play();
 				openErrorGritter('Error','Create History Molding Failed');
@@ -1157,6 +1199,7 @@
 			alert('Semua Data Harus Diisi');
 		}else{
 			var data = {
+				molding_code:type+'_'+pic+'_'+mesin+'_'+color+'_'+getActualFullDate(),
 				mesin : mesin,
 				type : type,
 				pic : pic.join(', '),
@@ -1171,6 +1214,7 @@
 					openSuccessGritter('Success','History Molding Temp has been created');
 					// reset();
 					getMoldingLogPasang($('#mesin_fix2').text());
+					$('#molding_code').val(result.molding_code);
 				} else {
 					audio_error.play();
 					openErrorGritter('Error','Create History Molding Temp Failed');
@@ -1187,51 +1231,109 @@
 			if(result.status){
 				if(result.datas.length != 0){
 					$.each(result.datas, function(key, value) {
-						if (value.type == "LEPAS") {
-							$('#mesin_lepas').html(value.mesin);
-							$('#part_lepas').html(value.part);
-							$('#color_lepas').html(value.product);
-							$('#total_shot_lepas').html(value.total_shot);
-							$('#notelepas').val(value.note);
-							$('#start_time_lepas').val(value.start_time);
-							if (parseInt(value.total_shot) < 15000) {
-								$('#reason').html('LEPAS');
-							}else if (parseInt(value.total_shot) >= 15000){
-								$('#reason').html('MAINTENANCE');
+						if (value.remark == 'PAUSE') {
+							if (confirm('Pekerjaan dalam kondisi Pause. Apakah Anda ingin melanjutkan?')) {
+								$('#molding_code').val(value.molding_code);
+								changeStatus(value.molding_code);
+								if (value.type == "LEPAS") {
+									$('#mesin_lepas').html(value.mesin);
+									$('#part_lepas').html(value.part);
+									$('#color_lepas').html(value.product);
+									$('#total_shot_lepas').html(value.total_shot);
+									$('#notelepas').val(value.note);
+									$('#start_time_lepas').val(value.start_time);
+									if (parseInt(value.total_shot) < 15000) {
+										$('#reason').html('LEPAS');
+									}else if (parseInt(value.total_shot) >= 15000){
+										$('#reason').html('MAINTENANCE');
+									}
+									duration = 0;
+									count = true;
+									started_at = new Date(value.start_time);
+									$('#start_lepas').hide();
+									$('#finish_lepas').show();
+									$('#lepastime').show();
+									$('#lepasnote').show();
+									// $('#reasonlepas').show();
+									$('#lepasnote2').show();
+									$('#batal_lepas').show();
+									$('#div_ok').show();
+									$('#div_maintenance').show();
+									$('#div_keputusan').show();
+								}
+								else if(value.type == 'PASANG'){
+									$('#mesin_pasang_pilihan').hide();
+									$('#mesin_pasang').show();
+									$('#mesin_pasang').html(value.mesin);
+									$('#mesin_pasang_list').html(value.mesin);
+									$('#part_pasang').html(value.color);
+									$('#product_pasang').html(value.part);
+									$('#last_counter_pasang').html(value.total_shot);
+									$('#notepasang').val(value.note);
+									$('#start_time_pasang').val(value.start_time);
+									duration = 0;
+									count_pasang = true;
+									started_at = new Date(value.start_time);
+									$('#start_pasang').hide();
+									$('#finish_pasang').show();
+									$('#pasangtime').show();
+									$('#pasangnote').show();
+									$('#pasangnote2').show();
+									$('#batal_pasang').show();
+								}								
+								intervalUpdate = setInterval(update_history_temp,60000);
+							}else{
+								changeMesin();
 							}
-							duration = 0;
-							count = true;
-							started_at = new Date(value.start_time);
-							$('#start_lepas').hide();
-							$('#finish_lepas').show();
-							$('#lepastime').show();
-							$('#lepasnote').show();
-							// $('#reasonlepas').show();
-							$('#lepasnote2').show();
-							$('#batal_lepas').show();
-							$('#div_ok').show();
-							$('#div_maintenance').show();
-							$('#div_keputusan').show();
-						}
-						else if(value.type == 'PASANG'){
-							$('#mesin_pasang_pilihan').hide();
-							$('#mesin_pasang').show();
-							$('#mesin_pasang').html(value.mesin);
-							$('#mesin_pasang_list').html(value.mesin);
-							$('#part_pasang').html(value.color);
-							$('#product_pasang').html(value.part);
-							$('#last_counter_pasang').html(value.total_shot);
-							$('#notepasang').val(value.note);
-							$('#start_time_pasang').val(value.start_time);
-							duration = 0;
-							count_pasang = true;
-							started_at = new Date(value.start_time);
-							$('#start_pasang').hide();
-							$('#finish_pasang').show();
-							$('#pasangtime').show();
-							$('#pasangnote').show();
-							$('#pasangnote2').show();
-							$('#batal_pasang').show();
+						}else{
+							$('#molding_code').val(value.molding_code);
+							if (value.type == "LEPAS") {
+								$('#mesin_lepas').html(value.mesin);
+								$('#part_lepas').html(value.part);
+								$('#color_lepas').html(value.product);
+								$('#total_shot_lepas').html(value.total_shot);
+								$('#notelepas').val(value.note);
+								$('#start_time_lepas').val(value.start_time);
+								if (parseInt(value.total_shot) < 15000) {
+									$('#reason').html('LEPAS');
+								}else if (parseInt(value.total_shot) >= 15000){
+									$('#reason').html('MAINTENANCE');
+								}
+								duration = 0;
+								count = true;
+								started_at = new Date(value.start_time);
+								$('#start_lepas').hide();
+								$('#finish_lepas').show();
+								$('#lepastime').show();
+								$('#lepasnote').show();
+								// $('#reasonlepas').show();
+								$('#lepasnote2').show();
+								$('#batal_lepas').show();
+								$('#div_ok').show();
+								$('#div_maintenance').show();
+								$('#div_keputusan').show();
+							}
+							else if(value.type == 'PASANG'){
+								$('#mesin_pasang_pilihan').hide();
+								$('#mesin_pasang').show();
+								$('#mesin_pasang').html(value.mesin);
+								$('#mesin_pasang_list').html(value.mesin);
+								$('#part_pasang').html(value.color);
+								$('#product_pasang').html(value.part);
+								$('#last_counter_pasang').html(value.total_shot);
+								$('#notepasang').val(value.note);
+								$('#start_time_pasang').val(value.start_time);
+								duration = 0;
+								count_pasang = true;
+								started_at = new Date(value.start_time);
+								$('#start_pasang').hide();
+								$('#finish_pasang').show();
+								$('#pasangtime').show();
+								$('#pasangnote').show();
+								$('#pasangnote2').show();
+								$('#batal_pasang').show();
+							}								
+							intervalUpdate = setInterval(update_history_temp,60000);
 						}
 					});
 				}
@@ -1283,6 +1385,79 @@
 			}
 		});
 	}
+
+	function pause(type) {
+		$('#modalStatus').modal('show');
+		$('#typePause').val(type);
+		$('#reasonPause').val('');
+	}
+
+	function saveStatus() {
+		var reason = $('#reasonPause').val();
+
+		var pic_1 = $('#op_0').text();
+		var pic_2 = $('#op_1').text();
+		var pic_3 = $('#op_2').text();
+
+		var pic = [];
+
+		if (pic_1 != "-") {
+			pic.push(pic_1);
+		}
+
+		if (pic_2 != "-") {
+			pic.push(pic_2);
+		}
+
+		if (pic_3 != "-") {
+			pic.push(pic_3);
+		}
+
+		var type=$('#typePause').val();
+
+		if (type == 'PASANG') {
+			var mesin = $('#mesin_pasang').text();
+			var part = $('#part_pasang').text();
+		}else{
+			var mesin = $('#mesin_lepas').text();
+			var part = $('#part_lepas').text();
+		}
+
+		var data = {
+			type:$('#typePause').val(),
+			molding_code:$('#molding_code').val(),
+			status:'PAUSE',
+			pic:pic.join(),
+			mesin:mesin,
+			part:part,
+			reason:reason,
+			start_time:getActualFullDate(),
+		}
+
+		$.get('{{ url("input/reason_pause") }}', data, function(result, status, xhr){
+			if(result.status){
+				alert('Pemasangan / Pelepasan Molding Dihentikan Sementara.');
+				location.reload();
+				$('#reasonPause').val('');
+			}else{
+				openErrorGritter('Error!',result.message);
+			}
+		});
+	}
+
+	function changeStatus(molding_code) {
+		var data = {
+			molding_code:molding_code
+		}
+		$.get('{{ url("change/reason_pause") }}', data, function(result, status, xhr){
+			if(result.status){
+				alert('Pemasangan / Pelepasan Molding Dilanjutkan.');
+			}else{
+				openErrorGritter('Error!',result.message);
+			}
+		});
+	}
+
 
 	var duration = 0;
 	var count = false;

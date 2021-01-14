@@ -46,6 +46,7 @@ use App\InjectionDryerLog;
 use App\InjectionDryer;
 use App\InjectionResin;
 use App\EmployeeSync;
+use App\InjectionHistoryMoldingWorks;
 use Response;
 use DataTables;
 use Carbon\Carbon;
@@ -77,6 +78,28 @@ class InjectionsController extends Controller
           'Mesin 8',
           'Mesin 9',
           'Mesin 11',
+      ];
+
+      $this->mesin_molding = [
+          'Mesin 1',
+          'Mesin 2',
+          'Mesin 3',
+          'Mesin 4',
+          'Mesin 5',
+          'Mesin 6',
+          'Mesin 7',
+          'Mesin 8',
+          'Mesin 9',
+          'Mesin 10',
+          'Mesin 11',
+          'Mesin 12',
+          'Mesin 13',
+          'Mesin 14',
+          'Mesin 15',
+          'Mesin 16',
+          'Mesin 17',
+          'Mesin 18',
+          'Mesin 19',
       ];
 
       $this->dryer = [
@@ -4411,7 +4434,7 @@ class InjectionsController extends Controller
             'title' => $title,
             'title_jp' => $title_jp,
             'molding' => $molding,
-            'mesin' => $this->mesin,
+            'mesin' => $this->mesin_molding,
             'name' => Auth::user()->name
         ))->with('page', 'Molding Setup');
     }
@@ -4429,8 +4452,9 @@ class InjectionsController extends Controller
             FROM
                 injection_molding_masters
             WHERE
-                remark = 'RC' 
-                AND injection_molding_masters.STATUS = 'PASANG' 
+                -- remark = 'RC' 
+                -- AND 
+                injection_molding_masters.STATUS = 'PASANG' 
                 AND status_mesin = '".$mesin."'");
 
         $response = array(
@@ -4447,8 +4471,9 @@ class InjectionsController extends Controller
 
 
         $molding = InjectionMoldingMaster::where('status','LEPAS')->
-        where('mesin','like','%'.$mesin.'%')->
-        where('remark','=','RC')->get();
+        where('mesin','like','%'.$mesin.'%')
+        // ->where('remark','=','RC')
+        ->get();
 
         $molding2 = InjectionMoldingMaster::where('status','PASANG')->where('mesin','like','%'.$mesin.'%')->get();
 
@@ -4505,6 +4530,7 @@ class InjectionsController extends Controller
           $id_user = Auth::id();
 
           InjectionHistoryMoldingTemp::create([
+            'molding_code' => $request->get('molding_code'),
             'type' => $request->get('type'),
             'pic' => $request->get('pic'),
             'mesin' => $request->get('mesin'),
@@ -4530,7 +4556,8 @@ class InjectionsController extends Controller
 
        $response = array(
         'status' => true,
-        'start_time' => $request->get('start_time')
+        'start_time' => $request->get('start_time'),
+        'molding_code' => $request->get('molding_code'),
     );
                   // return redirect('index/interview/details/'.$interview_id)
                   // ->with('page', 'Interview Details')->with('status', 'New Participant has been created.');
@@ -4691,6 +4718,7 @@ class InjectionsController extends Controller
             }
 
             InjectionHistoryMoldingLog::create([
+                'molding_code' => $request->get('molding_code'),
                 'type' => $request->get('type'),
                 'pic' => $pic,
                 'mesin' => $request->get('mesin'),
@@ -6513,6 +6541,65 @@ class InjectionsController extends Controller
             $response = array(
                 'status' => false,
                 'message' => $e->getMessage()
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function inputReasonPause(Request $request)
+    {
+        try {
+            $reason = InjectionHistoryMoldingWorks::create([
+                'molding_code' => $request->get('molding_code'),
+                'type' => $request->get('type'),
+                'pic' => $request->get('pic'),
+                'mesin' => $request->get('mesin'),
+                'part' => $request->get('part'),
+                'start_time' => $request->get('start_time'),
+                'reason' => $request->get('reason'),
+                'created_by' => Auth::id()
+            ]);
+
+            $temp = InjectionHistoryMoldingTemp::where('molding_code',$request->get('molding_code'))->first();
+            $temp->remark = 'PAUSE';
+            $temp->reason = $request->get('reason');
+            $temp->save();
+
+            $response = array(
+                'status' => true,
+                'message' => '',
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function changeReasonPause(Request $request)
+    {
+        try {
+            $work = InjectionHistoryMoldingWorks::where('molding_code',$request->get('molding_code'))->where('end_time',null)->first();
+            $work->end_time = date('Y-m-d H:i:s');
+            $work->save();
+
+            $temp = InjectionHistoryMoldingTemp::where('molding_code',$request->get('molding_code'))->where('remark','PAUSE')->first();
+            $temp->remark = null;
+            $temp->reason = null;
+            $temp->save();
+
+            $response = array(
+                'status' => true,
+                'message' => '',
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
             );
             return Response::json($response);
         }
