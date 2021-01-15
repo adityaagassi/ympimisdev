@@ -134,7 +134,7 @@
 								</div>
 							</div>
 						</div>
-						<?php if(Auth::user()->role_code == "MIS" || strpos($employee->department, 'Procurement') !== false || strpos($employee->department, 'Purchasing Control')) { ?>
+						<?php if(Auth::user()->role_code == "MIS" || Auth::user()->role_code == "PCH" || strpos($employee->department, 'Procurement') !== false || strpos($employee->department, 'Purchasing Control') !== false) { ?>
 							<div class="col-md-3">
 								<div class="form-group">
 									<label>Departemen</label>
