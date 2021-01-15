@@ -164,90 +164,90 @@
                                 <td>
                                     <span style="font-weight: bold;">Presence Information (出勤情報)</span>
                                     {{-- <br>
-                                    <a href="{{ url("index/general/online_transportation") }}">
-                                        <i class="fa fa-caret-right"></i> Online Attendance And Transportation Report (出席・移動のオンライン報告)
-                                    </a> --}}
-                                    <br>
-                                    <a href="{{ url("index/report/employee_resume") }}">
-                                        <i class="fa fa-caret-right"></i> Employee Resume (従業員のまとめ)
-                                    </a>
-                                    <br>
-                                    {{--  <a href="{{ url("index/report/daily_attendance")}}">
-                                        <i class="fa fa-caret-right"></i>Attendance (出勤)
-                                    </a>
-                                    <br> --}}
-                                    <a href="{{ url("index/report/absence") }}">
-                                        <i class="fa fa-caret-right"></i> Absence (欠勤)
-                                    </a>
-                                    <br>
-                                    <a href="{{ url("index/report/attendance_data")}}">
-                                        <i class="fa fa-caret-right"></i> Attendance Data (出席データ)
-                                    </a>
-                                    <br>
-                                    <a href="{{ url("index/report/checklog_data")}}">
-                                        <i class="fa fa-caret-right"></i> Checklog Data (出退勤登録データ)
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <span style="font-weight: bold;">General Affair (総務課)</span>
-                                    <br>
-                                    <a href="{{ url("index/ga_control/driver") }}">
-                                        <i class="fa fa-caret-right"></i> Driver Monitoring System (ドライバー管理システム)
-                                    </a>
-                                    <br>
-                                    <a href="#">
-                                        <i class="fa fa-caret-right"></i> Live Cooking Order (ライブクッキングの予約)
-                                    </a>
-                                    <br>
-                                    <a href="#">
-                                        <i class="fa fa-caret-right"></i> Japanese Food Order (和食弁当の予約)
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <span style="font-weight: bold;">Quality Assurance (品保)</span>
-                                    <br>                            
-                                    <a href="{{ url("index/qc_report/grafik_cpar") }}">
-                                        <i class="fa fa-caret-right"></i> CPAR & CAR Monitoring (是正予防策・是正策監視)
-                                    </a>
-                                    <br>
-                                    <a href="{{ url("index/qc_report") }}">
-                                        <i class="fa fa-caret-right"></i> Corrective & Preventive Action Request (是正予防策依頼)
-                                    </a>
-                                    <br>
-                                    <a href="{{ url("index/qc_car") }}">
-                                        <i class="fa fa-caret-right"></i> Corrective Action Report (是正策リポート)
-                                    </a>
-                                    <br>
-                                    <a href="{{ url("index/cpar/resume") }}">
-                                        <i class="fa fa-caret-right"></i> Resume CPAR & CAR (是正予防策・是正策のまとめ)
-                                    </a>
-                                    <br>
-                                    <a href="{{ url("index/qc_report/grafik_kategori") }}">
-                                        <i class="fa fa-caret-right"></i> Report CPAR By Category (種類別の是正処置報告書)
-                                    </a>
-                                    <br>                   
-                                    <a href="{{ url("index/qa_ymmj") }}">
-                                        <i class="fa fa-caret-right"></i> Form Ketidaksesuaian YMMJ (YMMJ不具合リポート)
-                                    </a>
-                                    <br>
-                                    <a href="{{ url("index/qa_ymmj/grafik_ymmj") }}">
-                                        <i class="fa fa-caret-right"></i> Report YMMJ (YMMJへの報告)
-                                    </a>
-                                </td>
-                            </tr>
-                            {{-- <tr>
-                                <td>                        
-                                    <a href="{{ url("index/qa_ymmj") }}">
-                                        <i class="fa fa-caret-right"></i> Form Ketidaksesuaian YMMJ (YMMJ不具合リポート)
-                                    </a>
-                                    <br>
-                                    <a href="{{ url("index/qa_ymmj/grafik_ymmj") }}">
-                                        <i class="fa fa-caret-right"></i> Report YMMJ (YMMJへの報告)
-                                    </a>
+                                        <a href="{{ url("index/general/online_transportation") }}">
+                                            <i class="fa fa-caret-right"></i> Online Attendance And Transportation Report (出席・移動のオンライン報告)
+                                        </a> --}}
+                                        <br>
+                                        <a href="{{ url("index/report/employee_resume") }}">
+                                            <i class="fa fa-caret-right"></i> Employee Resume (従業員のまとめ)
+                                        </a>
+                                        <br>
+                                        {{--  <a href="{{ url("index/report/daily_attendance")}}">
+                                            <i class="fa fa-caret-right"></i>Attendance (出勤)
+                                        </a>
+                                        <br> --}}
+                                        <a href="{{ url("index/report/absence") }}">
+                                            <i class="fa fa-caret-right"></i> Absence (欠勤)
+                                        </a>
+                                        <br>
+                                        <a href="{{ url("index/report/attendance_data")}}">
+                                            <i class="fa fa-caret-right"></i> Attendance Data (出席データ)
+                                        </a>
+                                        <br>
+                                        <a href="{{ url("index/report/checklog_data")}}">
+                                            <i class="fa fa-caret-right"></i> Checklog Data (出退勤登録データ)
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span style="font-weight: bold;">General Affair (総務課)</span>
+                                        <br>
+                                        <a href="{{ url("index/ga_control/driver") }}">
+                                            <i class="fa fa-caret-right"></i> Driver Monitoring System (ドライバー管理システム)
+                                        </a>
+                                        <br>
+                                        <a href="#">
+                                            <i class="fa fa-caret-right"></i> Live Cooking Order (ライブクッキングの予約)
+                                        </a>
+                                        <br>
+                                        <a href="#">
+                                            <i class="fa fa-caret-right"></i> Japanese Food Order (和食弁当の予約)
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span style="font-weight: bold;">Quality Assurance (品保)</span>
+                                        <br>                            
+                                        <a href="{{ url("index/qc_report/grafik_cpar") }}">
+                                            <i class="fa fa-caret-right"></i> CPAR & CAR Monitoring (是正予防策・是正策監視)
+                                        </a>
+                                        <br>
+                                        <a href="{{ url("index/qc_report") }}">
+                                            <i class="fa fa-caret-right"></i> Corrective & Preventive Action Request (是正予防策依頼)
+                                        </a>
+                                        <br>
+                                        <a href="{{ url("index/qc_car") }}">
+                                            <i class="fa fa-caret-right"></i> Corrective Action Report (是正策リポート)
+                                        </a>
+                                        <br>
+                                        <a href="{{ url("index/cpar/resume") }}">
+                                            <i class="fa fa-caret-right"></i> Resume CPAR & CAR (是正予防策・是正策のまとめ)
+                                        </a>
+                                        <br>
+                                        <a href="{{ url("index/qc_report/grafik_kategori") }}">
+                                            <i class="fa fa-caret-right"></i> Report CPAR By Category (種類別の是正処置報告書)
+                                        </a>
+                                        <br>                   
+                                        <a href="{{ url("index/qa_ymmj") }}">
+                                            <i class="fa fa-caret-right"></i> Form Ketidaksesuaian YMMJ (YMMJ不具合リポート)
+                                        </a>
+                                        <br>
+                                        <a href="{{ url("index/qa_ymmj/grafik_ymmj") }}">
+                                            <i class="fa fa-caret-right"></i> Report YMMJ (YMMJへの報告)
+                                        </a>
+                                    </td>
+                                </tr>
+                                {{-- <tr>
+                                    <td>                        
+                                        <a href="{{ url("index/qa_ymmj") }}">
+                                            <i class="fa fa-caret-right"></i> Form Ketidaksesuaian YMMJ (YMMJ不具合リポート)
+                                        </a>
+                                        <br>
+                                        <a href="{{ url("index/qa_ymmj/grafik_ymmj") }}">
+                                            <i class="fa fa-caret-right"></i> Report YMMJ (YMMJへの報告)
+                                        </a>
                             <!-- <br>
                             <a href="{{ url("index/request_qa") }}">
                                 <i class="fa fa-caret-right"></i> Form Request CPAR QA (品保是正予防策依頼書)
@@ -427,7 +427,7 @@
             </thead>
             <tbody>
                 <tr>
-                   <td>
+                 <td>
                     {{--     <a href="{{ url("index/report/overtime_outsource") }}">
                         <i class="fa fa-caret-right"></i> Outsource OT (派遣社員の残業管理)
                     </a> --}}
@@ -436,7 +436,7 @@
                             <i class="fa fa-caret-right"></i> Clinic Visit ()
                         </a> 
                         <br>--}}
-                       {{--  <a href="{{ url("index/general/mosaic") }}">
+                        {{--  <a href="{{ url("index/general/mosaic") }}">
                             <i class="fa fa-caret-right"></i> Yamaha Day Mosaic Art Project
                         </a>
                         <br> --}}
@@ -517,199 +517,199 @@
                 <tbody>
                     <tr>
                         <td>
-                            <!-- <a href="{{ url("index/employee/service/1") }}"> -->
-                                <a href="{{ route('emp_service', ['id' =>'1']) }}">
-                                    <i class="fa fa-caret-right"></i> HRqu (従業員の情報サービス)
-                                </a>
-                                <br>
-                                <!-- <a href="{{ url("index/employee/service/2") }}"> -->
-                                    <a href="{{ route('emp_service', ['id' => '2']) }}">
-                                        <i class="fa fa-caret-right"></i> e-Kaizen (E-改善)
-                                    </a>
-                                    <br>
-                                    <a href="{{ url("/index/kaizen/aproval/resume") }}">
-                                        <i class="fa fa-caret-right"></i> Resume e-Kaizen Progress (E-改善進捗のまとめ)
-                                    </a>
-                                    <br>
-                                    <a href="{{ url("/index/kaizen") }}">
-                                        <i class="fa fa-caret-right"></i> List Unverified e-Kaizen (未承認E-改善のリスト)
-                                    </a>
-                                    <br>
-                                    {{-- <a href="#">
-                                        <i class="fa fa-caret-right"></i> List Verified e-Kaizen (承認済E-改善のリスト)
-                                    </a>
-                                    <br> --}}
-                                    {{-- <a href="{{ url("/index/kaizen/applied") }}">
-                                        <i class="fa fa-caret-right"></i> List Applied e-Kaizen (適用済E-改善のリスト)
-                                    </a>
-                                    <br> --}}
-                                    <a href="{{ url("/index/kaizen2/resume") }}">
-                                        <i class="fa fa-caret-right"></i> Report All Kaizen (全改善のリポート)
-                                    </a>
-                                    <br>
-                                    <a href="{{ url("index/kaizen2/report") }}">
-                                        <i class="fa fa-caret-right"></i> Report Kaizen Excellent (エクセレント改善のリポート)
-                                    </a>
-                                    <br>
-                                    <a href="{{ url("index/kaizen2/value") }}">
-                                        <i class="fa fa-caret-right"></i> Report Kaizen Reward (改善リポートのリワード)
-                                    </a>
-                                    <br>
-                                </td>
-                            </tr>
-                            {{--  <tr>
-                                <td>
-                                    <a href="{{ url("index/upload_kaizen") }}">
-                                        <i class="fa fa-caret-right"></i> Upload Kaizen Images (改善写真のアップロード)
-                                    </a>
-                                    <br>
-                                </td>
-                            </tr> --}}
-                        </tbody>
-                    </table>
+                            <?php $tahun = date('Y'); ?>
+                            <a href="{{ route('emp_service', ['id' =>'1', 'tahun' => $tahun]) }}">
+                                <i class="fa fa-caret-right"></i> HRqu (従業員の情報サービス)
+                            </a>
+                            <br>
 
-                    <table class="table table-bordered">
-                        <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
-                            <tr>
-                                <th>YMPI Supporting System<br> YMPI サポートシステム</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <a href="http://10.109.52.8/sf6/" target="_blank">
-                                        <i class="fa fa-caret-right"></i> Sunfish (サンフィッシュ)
-                                    </a>
-                                    <br>
-                                    <a href="https://a01.yamaha.co.jp/fw/dfw/CERT/Portal.php" target="_blank">
-                                        <i class="fa fa-caret-right"></i> IDM Portal (IDMポータル)
-                                    </a>
-                                    <br>
-                                    <a href="https://yamahagroup.sharepoint.com/sites/prj00220" target="_blank">
-                                        <i class="fa fa-caret-right"></i> Sharepoint;
-                                    </a>
-                                    <a href="https://a01.yamaha.co.jp/fw/dfw/SAP2/Citrix/XenApp/site/default.aspx" target="_blank">
-                                     SAP;
-                                 </a>
-                                 <a href="https://adagio.yamaha.co.jp/imart/default.portal" target="_blank">
-                                     Adagio;
-                                 </a>
-                                 <a href="https://a01.yamaha.co.jp/fw/dfw/MA5/ma5/EntranceServlet" target="_blank">
-                                     MA5;
-                                 </a>
-                             </td>     
-                         </tr>                                                                             
-                     </tbody>
-                 </table>
-                 <table class="table table-bordered">
-                    <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
-                        <tr>
-                            <th>Workshop<br>ワークショップ</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <a href="{{ url("index/workshop/create_wjo") }}">
-                                    <i class="fa fa-caret-right"></i> Create WJO (作業依頼書の作成)
-                                </a>
-                                <br>
-                                <a href="{{ url("index/workshop/wjo_monitoring") }}">
-                                    <i class="fa fa-caret-right"></i> WJO Monitoring (作業依頼書の監視)
-                                </a>
-                                <br>
-                                <a href="{{ url("index/workshop/productivity") }}">
-                                    <i class="fa fa-caret-right"></i> Workshop Productivity (作業依頼書の実現力)
-                                </a>
-                                <br>
-                                <a href="{{ url("index/workshop/workload") }}">
-                                    <i class="fa fa-caret-right"></i> Workshop Workload (作業依頼書一覧)
-                                </a>
-                                <br>
-                                <a href="{{ url("index/workshop/operatorload") }}">
-                                    <i class="fa fa-caret-right"></i> Workshop Operator Work Schedule (ワークショップ作業者の作業予定)
-                                </a>
-                                <br>
-                            </td>                        
-                        </tr>
-                    </tbody>
-                </table>
-                <table class="table table-bordered">
-                    <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
-                        <tr>
-                            <th>Plant Maintenance<br>工場保全管理</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <span style="font-weight: bold;">Machine Monitoring (マシン監視)</span>
-                                <br>
-                                <a href="http://10.109.52.7/zed/dashboard/awal" target="_blank">
-                                    <i class="fa fa-caret-right"></i> Overall Equipment Efficiency (稼働率) (OEE)
-                                </a>
-                                <br>
-                                <a href="{{ url("/machinery_monitoring?mesin=") }}">
-                                    <i class="fa fa-caret-right"></i> Machinery Monitoring (機械監視)
-                                </a>
-                                <br>
-                                <a href="http://10.109.52.7/mtnc/login/log" target="_blank">
-                                    <i class="fa fa-caret-right"></i> Planned Maintenance Activity Finding
-                                </a>
+                            <a href="{{ route('emp_service', ['id' => '2', 'tahun' => $tahun]) }}">
+                                <i class="fa fa-caret-right"></i> e-Kaizen (E-改善)
+                            </a>
+                            <br>
+                            <a href="{{ url("/index/kaizen/aproval/resume") }}">
+                                <i class="fa fa-caret-right"></i> Resume e-Kaizen Progress (E-改善進捗のまとめ)
+                            </a>
+                            <br>
+                            <a href="{{ url("/index/kaizen") }}">
+                                <i class="fa fa-caret-right"></i> List Unverified e-Kaizen (未承認E-改善のリスト)
+                            </a>
+                            <br>
+                            {{-- <a href="#">
+                                <i class="fa fa-caret-right"></i> List Verified e-Kaizen (承認済E-改善のリスト)
+                            </a>
+                            <br> --}}
+                            {{-- <a href="{{ url("/index/kaizen/applied") }}">
+                                <i class="fa fa-caret-right"></i> List Applied e-Kaizen (適用済E-改善のリスト)
+                            </a>
+                            <br> --}}
+                            <a href="{{ url("/index/kaizen2/resume") }}">
+                                <i class="fa fa-caret-right"></i> Report All Kaizen (全改善のリポート)
+                            </a>
+                            <br>
+                            <a href="{{ url("index/kaizen2/report") }}">
+                                <i class="fa fa-caret-right"></i> Report Kaizen Excellent (エクセレント改善のリポート)
+                            </a>
+                            <br>
+                            <a href="{{ url("index/kaizen2/value") }}">
+                                <i class="fa fa-caret-right"></i> Report Kaizen Reward (改善リポートのリワード)
+                            </a>
+                            <br>
+                        </td>
+                    </tr>
+                    {{--  <tr>
+                        <td>
+                            <a href="{{ url("index/upload_kaizen") }}">
+                                <i class="fa fa-caret-right"></i> Upload Kaizen Images (改善写真のアップロード)
+                            </a>
+                            <br>
+                        </td>
+                    </tr> --}}
+                </tbody>
+            </table>
 
-                            </td>                     
-                        </tr>
-                        <tr>
-                            <td>
-                                <span style="font-weight: bold;">SPK (メンテナンス作業依頼書)</span>
-                                <br>
-                                <a href="{{ url("index/maintenance/list/user") }}">
-                                    <i class="fa fa-caret-right"></i> Create SPK (作業依頼書を作成)
-                                </a>
-                                <br>
-                                <a href="{{ url("index/maintenance/spk/weekly") }}">
-                                    <i class="fa fa-caret-right"></i> SPK Weekly Report (??)
-                                </a>
-                                <br>
-                                <a href="{{ url("index/maintenance/spk/grafik") }}">
-                                    <i class="fa fa-caret-right"></i> SPK Monitoring (作業依頼書の管理)
-                                </a>
-                                <br>
-                                <a href="{{ url("index/report/urgent_monitoring") }}">
-                                    <i class="fa fa-caret-right"></i> Urgent SPK Monitoring (??)
-                                </a>
-                                <br>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span style="font-weight: bold;">Utility (ユーティリティー)</span>
-                                <br>
-                                <a href="{{ url("index/maintenance/apar") }}">
-                                    <i class="fa fa-caret-right"></i> APAR Check Schedule (消火器・消火栓の点検日程)
-                                </a>
-                                <br>
-                                <a href="{{ secure_url("/index/maintenance/apar/expire") }}">
-                                    <i class="fa fa-caret-right"></i> APAR Expired List 消火器・消火栓の使用期限一覧)
-                                </a>
-                                <br>
-                                <a href="{{ url("index/maintenance/apar/resume") }}">
-                                    <i class="fa fa-caret-right"></i> APAR Resume (消火栓・消火器の点検進捗のまとめ)
-                                </a>
-                                <br>
-                                <a href="{{ url("index/maintenance/pic/Utility") }}">
-                                    <i class="fa fa-caret-right"></i> PIC List (担当者リスト)
-                                </a>
-                                <br>
-                                <a href="{{ url("/index/production_report/index/10") }}">
-                                    <i class="fa fa-caret-right"></i> Maintenance Report (メンテナンスリポート)
-                                </a>
-                                <br>
-                                <a href="{{ url("/index/production_report/index/13") }}">
-                                    <i class="fa fa-caret-right"></i> PE Field Report (??)
-                                </a>
-                            </td>
-                        </tr>
+            <table class="table table-bordered">
+                <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
+                    <tr>
+                        <th>YMPI Supporting System<br> YMPI サポートシステム</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <a href="http://10.109.52.8/sf6/" target="_blank">
+                                <i class="fa fa-caret-right"></i> Sunfish (サンフィッシュ)
+                            </a>
+                            <br>
+                            <a href="https://a01.yamaha.co.jp/fw/dfw/CERT/Portal.php" target="_blank">
+                                <i class="fa fa-caret-right"></i> IDM Portal (IDMポータル)
+                            </a>
+                            <br>
+                            <a href="https://yamahagroup.sharepoint.com/sites/prj00220" target="_blank">
+                                <i class="fa fa-caret-right"></i> Sharepoint;
+                            </a>
+                            <a href="https://a01.yamaha.co.jp/fw/dfw/SAP2/Citrix/XenApp/site/default.aspx" target="_blank">
+                               SAP;
+                           </a>
+                           <a href="https://adagio.yamaha.co.jp/imart/default.portal" target="_blank">
+                               Adagio;
+                           </a>
+                           <a href="https://a01.yamaha.co.jp/fw/dfw/MA5/ma5/EntranceServlet" target="_blank">
+                               MA5;
+                           </a>
+                       </td>     
+                   </tr>                                                                             
+               </tbody>
+           </table>
+           <table class="table table-bordered">
+            <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
+                <tr>
+                    <th>Workshop<br>ワークショップ</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <a href="{{ url("index/workshop/create_wjo") }}">
+                            <i class="fa fa-caret-right"></i> Create WJO (作業依頼書の作成)
+                        </a>
+                        <br>
+                        <a href="{{ url("index/workshop/wjo_monitoring") }}">
+                            <i class="fa fa-caret-right"></i> WJO Monitoring (作業依頼書の監視)
+                        </a>
+                        <br>
+                        <a href="{{ url("index/workshop/productivity") }}">
+                            <i class="fa fa-caret-right"></i> Workshop Productivity (作業依頼書の実現力)
+                        </a>
+                        <br>
+                        <a href="{{ url("index/workshop/workload") }}">
+                            <i class="fa fa-caret-right"></i> Workshop Workload (作業依頼書一覧)
+                        </a>
+                        <br>
+                        <a href="{{ url("index/workshop/operatorload") }}">
+                            <i class="fa fa-caret-right"></i> Workshop Operator Work Schedule (ワークショップ作業者の作業予定)
+                        </a>
+                        <br>
+                    </td>                        
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-bordered">
+            <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
+                <tr>
+                    <th>Plant Maintenance<br>工場保全管理</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <span style="font-weight: bold;">Machine Monitoring (マシン監視)</span>
+                        <br>
+                        <a href="http://10.109.52.7/zed/dashboard/awal" target="_blank">
+                            <i class="fa fa-caret-right"></i> Overall Equipment Efficiency (稼働率) (OEE)
+                        </a>
+                        <br>
+                        <a href="{{ url("/machinery_monitoring?mesin=") }}">
+                            <i class="fa fa-caret-right"></i> Machinery Monitoring (機械監視)
+                        </a>
+                        <br>
+                        <a href="http://10.109.52.7/mtnc/login/log" target="_blank">
+                            <i class="fa fa-caret-right"></i> Planned Maintenance Activity Finding
+                        </a>
+
+                    </td>                     
+                </tr>
+                <tr>
+                    <td>
+                        <span style="font-weight: bold;">SPK (メンテナンス作業依頼書)</span>
+                        <br>
+                        <a href="{{ url("index/maintenance/list/user") }}">
+                            <i class="fa fa-caret-right"></i> Create SPK (作業依頼書を作成)
+                        </a>
+                        <br>
+                        <a href="{{ url("index/maintenance/spk/weekly") }}">
+                            <i class="fa fa-caret-right"></i> SPK Weekly Report (??)
+                        </a>
+                        <br>
+                        <a href="{{ url("index/maintenance/spk/grafik") }}">
+                            <i class="fa fa-caret-right"></i> SPK Monitoring (作業依頼書の管理)
+                        </a>
+                        <br>
+                        <a href="{{ url("index/report/urgent_monitoring") }}">
+                            <i class="fa fa-caret-right"></i> Urgent SPK Monitoring (??)
+                        </a>
+                        <br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span style="font-weight: bold;">Utility (ユーティリティー)</span>
+                        <br>
+                        <a href="{{ url("index/maintenance/apar") }}">
+                            <i class="fa fa-caret-right"></i> APAR Check Schedule (消火器・消火栓の点検日程)
+                        </a>
+                        <br>
+                        <a href="{{ secure_url("/index/maintenance/apar/expire") }}">
+                            <i class="fa fa-caret-right"></i> APAR Expired List 消火器・消火栓の使用期限一覧)
+                        </a>
+                        <br>
+                        <a href="{{ url("index/maintenance/apar/resume") }}">
+                            <i class="fa fa-caret-right"></i> APAR Resume (消火栓・消火器の点検進捗のまとめ)
+                        </a>
+                        <br>
+                        <a href="{{ url("index/maintenance/pic/Utility") }}">
+                            <i class="fa fa-caret-right"></i> PIC List (担当者リスト)
+                        </a>
+                        <br>
+                        <a href="{{ url("/index/production_report/index/10") }}">
+                            <i class="fa fa-caret-right"></i> Maintenance Report (メンテナンスリポート)
+                        </a>
+                        <br>
+                        <a href="{{ url("/index/production_report/index/13") }}">
+                            <i class="fa fa-caret-right"></i> PE Field Report (??)
+                        </a>
+                    </td>
+                </tr>
                        <!--  <tr>
                             <td>
                                 <span style="font-weight: bold;">Planned Maintenance (予定保全)</span>
@@ -938,27 +938,27 @@
                                 <a href="{{ url("/index/fg_production_schedule") }}">
                                     <i class="fa fa-caret-right"></i> Production Schedule Data (生産スケジュールデータ)
                                 </a>
-                                    {{-- <br>
-                                        <a href="{{ url("/index/fg_production_monitoring") }}">
-                                            <i class="fa fa-caret-right"></i> Production Schedule Monitoring (生産予定監視)
-                                        </a> --}}
-                                        <br>
-                                        <a href="{{ url("/index/dp_production_result") }}">
-                                            <i class="fa fa-caret-right"></i> Daily Production Result (日常生産実績)
-                                        </a>
-                                        <br>
-                                        <a href="{{ url("/index/dp_fg_accuracy") }}">
-                                            <i class="fa fa-caret-right"></i> FG Accuracy (FG週次出荷)
-                                        </a>
-                                        <br>
-                                        <a href="{{ url("/index/fg_production") }}">
-                                            <i class="fa fa-caret-right"></i> Production Result (生産実績)
-                                        </a>
-                                        <br>
-                                        <a href="{{ url("/index/fg_stock") }}">
-                                            <i class="fa fa-caret-right"></i> Finished Goods Stock (完成品在庫)
-                                        </a>
-                                       {{--  <br>
+                                {{-- <br>
+                                    <a href="{{ url("/index/fg_production_monitoring") }}">
+                                        <i class="fa fa-caret-right"></i> Production Schedule Monitoring (生産予定監視)
+                                    </a> --}}
+                                    <br>
+                                    <a href="{{ url("/index/dp_production_result") }}">
+                                        <i class="fa fa-caret-right"></i> Daily Production Result (日常生産実績)
+                                    </a>
+                                    <br>
+                                    <a href="{{ url("/index/dp_fg_accuracy") }}">
+                                        <i class="fa fa-caret-right"></i> FG Accuracy (FG週次出荷)
+                                    </a>
+                                    <br>
+                                    <a href="{{ url("/index/fg_production") }}">
+                                        <i class="fa fa-caret-right"></i> Production Result (生産実績)
+                                    </a>
+                                    <br>
+                                    <a href="{{ url("/index/fg_stock") }}">
+                                        <i class="fa fa-caret-right"></i> Finished Goods Stock (完成品在庫)
+                                    </a>
+                                    {{--  <br>
                                         <a href="{{ url("/index/display/shipment_progress") }}">
                                             <i class="fa fa-caret-right"></i> FG Shipment Progress (出荷結果)
                                         </a> --}}
@@ -972,213 +972,213 @@
                                     <td>
                                         <span style="font-weight: bold;">KD Parts Control (KD部品管理)</span>
                                         {{-- <br>
-                                        <a href="{{ url("/index/kd_production_schedule_data") }}">
-                                            <i class="fa fa-caret-right"></i> Production Schedule Data (生産スケジュールデータ)
-                                        </a> --}}
-                                      {{--   <br>
-                                        <a href="{{ url("/index/kd_daily_production_result") }}">
-                                            <i class="fa fa-caret-right"></i> Daily Production Result (日常生産実績)
-                                        </a> --}}
-                                        <br>
-                                        <a href="{{ url("/index/kd_stock") }}">
-                                            <i class="fa fa-caret-right"></i> KD Parts Stock (KD部品在庫)
-                                        </a>
-                                        <br>
-                                        <a href="{{ url("/index/kd_traceability") }}">
-                                            <i class="fa fa-caret-right"></i> KD Traceability (KD完成品追跡)
-                                        </a>
-                                       {{--  <br>
-                                        <a href="{{ url("/index/kd_shipment_progress") }}">
-                                            <i class="fa fa-caret-right"></i> KD Shipment Progress (出荷結果)
-                                        </a> --}}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span style="font-weight: bold;">Shipment Control (出荷管理)</span>
-                                        <br>
-                                        <a href="{{ url("/index/display/all_stock") }}">
-                                            <i class="fa fa-caret-right"></i> All Stock (全在庫)
-                                        </a>
-                                        <br>
-                                        <a href="{{ url("index/resume_shipping_order") }}">
-                                            <i class="fa fa-caret-right"></i> Shipping Booking Management List (船便予約管理リスト)
-                                        </a>
-                                        <br>
-                                        <a href="{{ url("/index/fg_shipment_schedule") }}">
-                                            <i class="fa fa-caret-right"></i> Shipment Schedule Data (出荷スケジュールデータ)
-                                        </a>
-                                        <br>
-                                        <a href="{{ url("/index/fg_shipment_result") }}">
-                                            <i class="fa fa-caret-right"></i> Shipment Result (出荷結果)
-                                        </a>
-                                        <br>
-                                        <a href="{{ url("/index/display/shipment_progress_all") }}">
-                                            <i class="fa fa-caret-right"></i> Shipment Progress (出荷結果)
-                                        </a>
-                                        <br>
-                                        <a href="{{ url("/index/display/shipment_report") }}">
-                                            <i class="fa fa-caret-right"></i> Weekly Shipment ETD SUB (週次出荷　スラバヤ着荷)
-                                        </a>
-                                        <br>
-                                        <a href="{{ url("/index/fg_container_departure") }}">
-                                            <i class="fa fa-caret-right"></i> Container Departure (コンテナー出発)
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span style="font-weight: bold;">Shipment Performance (出荷管理)</span>
-                                        <br>
-                                        <a href="{{ url("/index/display/stuffing_monitoring") }}">
-                                            <i class="fa fa-caret-right"></i> Stuffing Monitoring (荷積み監視)
-                                        </a>
-                                        <br>
-                                        <a href="{{ url("/index/fg_weekly_summary") }}">
-                                            <i class="fa fa-caret-right"></i> Weekly Summary (週次まとめ)
-                                        </a>
-                                        <br>
-                                        <a href="{{ url("/index/fg_monthly_summary") }}">
-                                            <i class="fa fa-caret-right"></i> Monthly Summary (月次まとめ)
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span style="font-weight: bold;">Chorei (朝礼)</span>
-                                        <br>
-                                        <a href="{{ url("/index/ch_daily_production_result") }}">
-                                            <i class="fa fa-caret-right"></i> FG Production Summary (FG生産まとめ)
-                                        </a>
-                                        <br>
-                                        <a href="{{ url("/index/ch_daily_production_result_kd") }}">
-                                            <i class="fa fa-caret-right"></i> KD Production Summary (KD生産まとめ)
-                                        </a>
-                                       {{--  <br>
-                                        <a href="{{ url("/index/display/efficiency_monitoring") }}">
-                                            <i class="fa fa-caret-right"></i> Daily Efficiency Monitoring (日次効率の監視)
-                                        </a> --}}
-                                        <br>
-                                        <a href="{{ url("/index/display/efficiency_monitoring_monthly") }}">
-                                            <i class="fa fa-caret-right"></i> Monthly Efficiency Monitoring (月次効率の監視)
-                                        </a>
-                                        <br>
-                                        <a href="{{ url("/index/display/eff_scrap") }}">
-                                            <i class="fa fa-caret-right"></i> Scrap Monitoring (スクラップの監視)
-                                        </a>
-                                        <br>
-                                        <a href="{{ url("/index/general/pointing_call/japanese") }}">
-                                            <i class="fa fa-caret-right"></i> Japanese Pointing Call (駐在員指差し呼称)
-                                        </a>
-                                        {{-- <br>
-                                            <a href="{{ url("/index/production_achievement") }}">
-                                                <i class="fa fa-caret-right"></i> Production Achievement ()
+                                            <a href="{{ url("/index/kd_production_schedule_data") }}">
+                                                <i class="fa fa-caret-right"></i> Production Schedule Data (生産スケジュールデータ)
                                             </a> --}}
-                                        </td>
-                                    </tr>
-                                    {{-- <tr>
-                                        <td>
-                                            <span style="font-weight: bold;">Additional</span>
-                                            <br>
-                                            <a href="{{ url("flute_repair") }}">
-                                                <i class="fa fa-caret-right"></i> Flute Repair
-                                            </a>
-                                            <br>
-                                            <a href="{{ url("recorder_repair") }}">
-                                                <i class="fa fa-caret-right"></i> Recorder Repair
-                                            </a>
-                                        </td>
-                                    </tr> --}}
-                                    {{-- <tr>
-                                        <td>
-                                            <span style="font-weight: bold;">Display (表示)</span>
-                                            <br>
-                                            <a href="{{ url("/index/display/stuffing_progress") }}">
-                                                <i class="fa fa-caret-right"></i> Stuffing Progress (荷積み進捗)
-                                            </a>
-                                            <br>
-                                            <a href="{{ url("/index/display/stuffing_time") }}">
-                                                <i class="fa fa-caret-right"></i> Stuffing Time (荷積み時間)
-                                            </a>
-                                        </td>
-                                    </tr> --}}
-                                </tbody>
-                            </table>
+                                            {{--   <br>
+                                                <a href="{{ url("/index/kd_daily_production_result") }}">
+                                                    <i class="fa fa-caret-right"></i> Daily Production Result (日常生産実績)
+                                                </a> --}}
+                                                <br>
+                                                <a href="{{ url("/index/kd_stock") }}">
+                                                    <i class="fa fa-caret-right"></i> KD Parts Stock (KD部品在庫)
+                                                </a>
+                                                <br>
+                                                <a href="{{ url("/index/kd_traceability") }}">
+                                                    <i class="fa fa-caret-right"></i> KD Traceability (KD完成品追跡)
+                                                </a>
+                                                {{--  <br>
+                                                    <a href="{{ url("/index/kd_shipment_progress") }}">
+                                                        <i class="fa fa-caret-right"></i> KD Shipment Progress (出荷結果)
+                                                    </a> --}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <span style="font-weight: bold;">Shipment Control (出荷管理)</span>
+                                                    <br>
+                                                    <a href="{{ url("/index/display/all_stock") }}">
+                                                        <i class="fa fa-caret-right"></i> All Stock (全在庫)
+                                                    </a>
+                                                    <br>
+                                                    <a href="{{ url("index/resume_shipping_order") }}">
+                                                        <i class="fa fa-caret-right"></i> Shipping Booking Management List (船便予約管理リスト)
+                                                    </a>
+                                                    <br>
+                                                    <a href="{{ url("/index/fg_shipment_schedule") }}">
+                                                        <i class="fa fa-caret-right"></i> Shipment Schedule Data (出荷スケジュールデータ)
+                                                    </a>
+                                                    <br>
+                                                    <a href="{{ url("/index/fg_shipment_result") }}">
+                                                        <i class="fa fa-caret-right"></i> Shipment Result (出荷結果)
+                                                    </a>
+                                                    <br>
+                                                    <a href="{{ url("/index/display/shipment_progress_all") }}">
+                                                        <i class="fa fa-caret-right"></i> Shipment Progress (出荷結果)
+                                                    </a>
+                                                    <br>
+                                                    <a href="{{ url("/index/display/shipment_report") }}">
+                                                        <i class="fa fa-caret-right"></i> Weekly Shipment ETD SUB (週次出荷　スラバヤ着荷)
+                                                    </a>
+                                                    <br>
+                                                    <a href="{{ url("/index/fg_container_departure") }}">
+                                                        <i class="fa fa-caret-right"></i> Container Departure (コンテナー出発)
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <span style="font-weight: bold;">Shipment Performance (出荷管理)</span>
+                                                    <br>
+                                                    <a href="{{ url("/index/display/stuffing_monitoring") }}">
+                                                        <i class="fa fa-caret-right"></i> Stuffing Monitoring (荷積み監視)
+                                                    </a>
+                                                    <br>
+                                                    <a href="{{ url("/index/fg_weekly_summary") }}">
+                                                        <i class="fa fa-caret-right"></i> Weekly Summary (週次まとめ)
+                                                    </a>
+                                                    <br>
+                                                    <a href="{{ url("/index/fg_monthly_summary") }}">
+                                                        <i class="fa fa-caret-right"></i> Monthly Summary (月次まとめ)
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <span style="font-weight: bold;">Chorei (朝礼)</span>
+                                                    <br>
+                                                    <a href="{{ url("/index/ch_daily_production_result") }}">
+                                                        <i class="fa fa-caret-right"></i> FG Production Summary (FG生産まとめ)
+                                                    </a>
+                                                    <br>
+                                                    <a href="{{ url("/index/ch_daily_production_result_kd") }}">
+                                                        <i class="fa fa-caret-right"></i> KD Production Summary (KD生産まとめ)
+                                                    </a>
+                                                    {{--  <br>
+                                                        <a href="{{ url("/index/display/efficiency_monitoring") }}">
+                                                            <i class="fa fa-caret-right"></i> Daily Efficiency Monitoring (日次効率の監視)
+                                                        </a> --}}
+                                                        <br>
+                                                        <a href="{{ url("/index/display/efficiency_monitoring_monthly") }}">
+                                                            <i class="fa fa-caret-right"></i> Monthly Efficiency Monitoring (月次効率の監視)
+                                                        </a>
+                                                        <br>
+                                                        <a href="{{ url("/index/display/eff_scrap") }}">
+                                                            <i class="fa fa-caret-right"></i> Scrap Monitoring (スクラップの監視)
+                                                        </a>
+                                                        <br>
+                                                        <a href="{{ url("/index/general/pointing_call/japanese") }}">
+                                                            <i class="fa fa-caret-right"></i> Japanese Pointing Call (駐在員指差し呼称)
+                                                        </a>
+                                                        {{-- <br>
+                                                            <a href="{{ url("/index/production_achievement") }}">
+                                                                <i class="fa fa-caret-right"></i> Production Achievement ()
+                                                            </a> --}}
+                                                        </td>
+                                                    </tr>
+                                                    {{-- <tr>
+                                                        <td>
+                                                            <span style="font-weight: bold;">Additional</span>
+                                                            <br>
+                                                            <a href="{{ url("flute_repair") }}">
+                                                                <i class="fa fa-caret-right"></i> Flute Repair
+                                                            </a>
+                                                            <br>
+                                                            <a href="{{ url("recorder_repair") }}">
+                                                                <i class="fa fa-caret-right"></i> Recorder Repair
+                                                            </a>
+                                                        </td>
+                                                    </tr> --}}
+                                                    {{-- <tr>
+                                                        <td>
+                                                            <span style="font-weight: bold;">Display (表示)</span>
+                                                            <br>
+                                                            <a href="{{ url("/index/display/stuffing_progress") }}">
+                                                                <i class="fa fa-caret-right"></i> Stuffing Progress (荷積み進捗)
+                                                            </a>
+                                                            <br>
+                                                            <a href="{{ url("/index/display/stuffing_time") }}">
+                                                                <i class="fa fa-caret-right"></i> Stuffing Time (荷積み時間)
+                                                            </a>
+                                                        </td>
+                                                    </tr> --}}
+                                                </tbody>
+                                            </table>
 
-                      {{--       <table class="table table-bordered">
-                                <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
-                                    <tr>
-                                        <th>Chorei<br/> 朝礼</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <a href="{{ url("/index/ch_daily_production_result") }}">
-                                                <i class="fa fa-caret-right"></i> Production Summary (生産まとめ)
-                                            </a>
-                                            <br>
-                                            <a href="{{ url("/index/display/eff_scrap") }}">
-                                                <i class="fa fa-caret-right"></i> Scrap Monitoring (スクラップの監視)
-                                            </a>
-                                            <br>
-                                            <a href="{{ url("/index/general/pointing_call/japanese") }}">
-                                                <i class="fa fa-caret-right"></i> Japanese Pointing Call (駐在員指差し呼称)
-                                            </a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table> --}}
+                                            {{--       <table class="table table-bordered">
+                                                <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
+                                                    <tr>
+                                                        <th>Chorei<br/> 朝礼</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <a href="{{ url("/index/ch_daily_production_result") }}">
+                                                                <i class="fa fa-caret-right"></i> Production Summary (生産まとめ)
+                                                            </a>
+                                                            <br>
+                                                            <a href="{{ url("/index/display/eff_scrap") }}">
+                                                                <i class="fa fa-caret-right"></i> Scrap Monitoring (スクラップの監視)
+                                                            </a>
+                                                            <br>
+                                                            <a href="{{ url("/index/general/pointing_call/japanese") }}">
+                                                                <i class="fa fa-caret-right"></i> Japanese Pointing Call (駐在員指差し呼称)
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table> --}}
 
 
-                            <table class="table table-bordered">
-                                <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
-                                    <tr>
-                                        <th>PR, PO, Investment & Budget Control<br/> 購入依頼書・投資申請</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <a href="{{ url("purchase_requisition/monitoring") }}">
-                                                <i class="fa fa-caret-right"></i> PR Monitoring & Control (PR監視・管理)
-                                            </a>
-                                            <br>
-                                            <a href="{{ url("investment/control") }}">
-                                                <i class="fa fa-caret-right"></i> Investment Monitoring & Control (投資管理)
-                                            </a>
-                                            <br>
-                                            <a href="{{ url("purchase_order/monitoring") }}">
-                                                <i class="fa fa-caret-right"></i> PO Monitoring & Control (PO管理)
-                                            </a>
-                                            <br>
-                                            <a href="{{ url("budget/info") }}">
-                                                <i class="fa fa-caret-right"></i> Budget Information (予算情報)
-                                            </a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                            <table class="table table-bordered">
+                                                <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
+                                                    <tr>
+                                                        <th>PR, PO, Investment & Budget Control<br/> 購入依頼書・投資申請</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <a href="{{ url("purchase_requisition/monitoring") }}">
+                                                                <i class="fa fa-caret-right"></i> PR Monitoring & Control (PR監視・管理)
+                                                            </a>
+                                                            <br>
+                                                            <a href="{{ url("investment/control") }}">
+                                                                <i class="fa fa-caret-right"></i> Investment Monitoring & Control (投資管理)
+                                                            </a>
+                                                            <br>
+                                                            <a href="{{ url("purchase_order/monitoring") }}">
+                                                                <i class="fa fa-caret-right"></i> PO Monitoring & Control (PO管理)
+                                                            </a>
+                                                            <br>
+                                                            <a href="{{ url("budget/info") }}">
+                                                                <i class="fa fa-caret-right"></i> Budget Information (予算情報)
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
 
-                            {{-- <table class="table table-bordered">
-                                <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
-                                    <tr>
-                                        <th>
-                                            <span style="font-weight: bold;">Internet of Things<br>モノのインターネット</span>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <a href="{{ url("index/driver_manager") }}">
-                                                <i class="fa fa-caret-right"></i> Report Driver IN / OUT <span style="color:red"> *Beacon </span>
-                                            </a>                           
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table> --}}
-                            
+                                            {{-- <table class="table table-bordered">
+                                                <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
+                                                    <tr>
+                                                        <th>
+                                                            <span style="font-weight: bold;">Internet of Things<br>モノのインターネット</span>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <a href="{{ url("index/driver_manager") }}">
+                                                                <i class="fa fa-caret-right"></i> Report Driver IN / OUT <span style="color:red"> *Beacon </span>
+                                                            </a>                           
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table> --}}
+
                            <!--  <table class="table table-bordered">
                                 <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
                                     <tr>
