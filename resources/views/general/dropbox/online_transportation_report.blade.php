@@ -112,6 +112,9 @@
 										<th style="width: 1%">ID</th>
 										<th style="width: 3%">Nama</th>
 										<th style="width: 1%">Grade</th>
+										<th style="width: 1%">Mobil</th>
+										<th style="width: 1%">Shuttle</th>
+										<th style="width: 1%">Lainnya</th>
 										<th style="width: 1%">Total Kehadiran</th>
 										<th style="width: 1%">Total Amount</th>
 									</tr>
@@ -120,6 +123,9 @@
 								</tbody>
 								<tfoot style="background-color: RGB(252, 248, 227);">
 									<tr>
+										<th></th>
+										<th></th>
+										<th></th>
 										<th></th>
 										<th></th>
 										<th></th>
@@ -375,6 +381,9 @@
 						res[value.employee_id] = {
 							total_amount: 0,
 							attend_count: 0,
+							car: 0,
+							shuttle: 0,
+							lainnya: 0,
 							employee_id: value.employee_id,
 							name: value.name,
 							grade: value.grade,
@@ -383,6 +392,16 @@
 					}
 					res[value.employee_id].total_amount += value.total_amount
 					res[value.employee_id].attend_count += value.attend_count
+					if (value.vehicle == 'car') {
+						res[value.employee_id].car += 1
+					}
+					if (value.vehicle == 'shuttle') {
+						res[value.employee_id].shuttle += 1
+					}
+					if (value.vehicle == 'lainnya') {
+						res[value.employee_id].lainnya += 1
+					}
+					if (true) {}
 					return res;
 				}, {});
 
@@ -391,6 +410,9 @@
 					resumeTable += '<td>'+value.employee_id+'</td>';
 					resumeTable += '<td>'+value.name+'</td>';
 					resumeTable += '<td>'+value.grade+'</td>';
+					resumeTable += '<td>'+value.car+'</td>';
+					resumeTable += '<td>'+value.shuttle+'</td>';
+					resumeTable += '<td>'+value.lainnya+'</td>';
 					resumeTable += '<td>'+value.attend_count+'</td>';
 					resumeTable += '<td>'+value.total_amount.toFixed(0)+'</td>';
 					resumeTable += '</tr>';
