@@ -623,7 +623,7 @@ class AccountingController extends Controller
         ->select('department')
         ->first();
 
-        if (Auth::user()->role_code == "MIS" || Auth::user()->role_code == "STD-SPL" || strpos($emp_dept->department, 'Procurement Department') !== false || strpos($emp_dept->department, 'Purchasing Control Department')) {
+        if (Auth::user()->role_code == "MIS" || Auth::user()->role_code == "PCH" || strpos($emp_dept->department, 'Procurement Department') !== false || strpos($emp_dept->department, 'Purchasing Control Department') !== false) {
             $restrict_dept = "";
         }
         else{
