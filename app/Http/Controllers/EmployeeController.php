@@ -26,6 +26,7 @@ use App\KaizenScore;
 use App\KaizenNote;
 use App\Employee;
 use App\EmployeeUpdate;
+use App\EmployeeTax;
 use App\EmployeeSync;
 use App\EmployeeAttachment;
 use App\EmploymentLog;
