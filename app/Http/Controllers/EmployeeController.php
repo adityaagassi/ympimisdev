@@ -520,6 +520,147 @@ class EmployeeController extends Controller
 
      }
 
+     public function indexEmpDataPajak($employee_id){
+
+          $title = 'Employee Tax Services';
+          $title_jp = '';
+
+          return view('employees.service.perpajakanData', array(
+               'employee_id' => $employee_id,
+               'title' => $title,
+               'title_jp' => $title_jp
+          ));
+     }
+
+     public function fetchFillPerpajakanData(Request $request){
+          $employee_id = $request->get('emp_id');
+
+          $data = EmployeeTax::where('employee_id', $employee_id)
+          ->select('employee_taxes.*', db::raw('DATE_FORMAT(tanggal_lahir,"%d-%m-%Y") AS tgl_lahir'))
+          ->first();
+
+          $response = array(
+               'status' => true,
+               'data' => $data
+          );
+          return Response::json($response);
+     }
+
+     public function fetchUpdatePerpajakanData(Request $request){
+
+          $employee_id = $request->get('employee_id');
+          $nama_lengkap = $request->get('nama_lengkap');
+          $nik = $request->get('nik');
+          $tempat_lahir = $request->get('tempat_lahir');
+          $tanggal_lahir = date('Y-m-d', strtotime($request->get('tanggal_lahir')));
+          $jenis_kelamin = $request->get('jenis_kelamin');
+
+          $jalan = $request->get('jalan');
+          $rtrw = $request->get('rtrw');
+          $kelurahan = $request->get('kelurahan');
+          $kecamatan = $request->get('kecamatan');
+          $kota = $request->get('kota');
+
+          $status_perkawinan = $request->get('status_perkawinan');
+
+          $tanggal_nikah = $request->get("tanggal_nikah");
+          $nama_istri = $request->get("nama_istri");
+          $tanggal_lahir_istri = $request->get("tanggal_lahir_istri");
+          $pekerjaan_istri = $request->get("pekerjaan_istri");
+          $istri = $tanggal_nikah.'_'.$nama_istri.'_'.$tanggal_lahir_istri.'_'.$pekerjaan_istri;
+
+          $nama_anak1 = $request->get("nama_anak1");
+          $kelamin_anak1 = $request->get("kelamin_anak1");
+          $tempat_lahir_anak1 = $request->get("tempat_lahir_anak1");
+          $tanggal_lahir_anak1 = $request->get("tanggal_lahir_anak1");
+          $status_anak1 = $request->get("status_anak1");
+          $anak1 = $nama_anak1.'_'.$kelamin_anak1.'_'.$tempat_lahir_anak1.'_'.$tanggal_lahir_anak1.'_'.$status_anak1;
+
+          $nama_anak2 = $request->get("nama_anak2");
+          $kelamin_anak2 = $request->get("kelamin_anak2");
+          $tempat_lahir_anak2 = $request->get("tempat_lahir_anak2");
+          $tanggal_lahir_anak2 = $request->get("tanggal_lahir_anak2");
+          $status_anak2 = $request->get("status_anak2");
+          $anak2 = $nama_anak2.'_'.$kelamin_anak2.'_'.$tempat_lahir_anak2.'_'.$tanggal_lahir_anak2.'_'.$status_anak2;
+
+          $nama_anak3 = $request->get("nama_anak3");
+          $kelamin_anak3 = $request->get("kelamin_anak3");
+          $tempat_lahir_anak3 = $request->get("tempat_lahir_anak3");
+          $tanggal_lahir_anak3 = $request->get("tanggal_lahir_anak3");
+          $status_anak3 = $request->get("status_anak3");
+          $anak3 = $nama_anak3.'_'.$kelamin_anak3.'_'.$tempat_lahir_anak3.'_'.$tanggal_lahir_anak3.'_'.$status_anak3;
+
+          $npwp_kepemilikan = $request->get('npwp_kepemilikan');
+          $npwp_status = $request->get('npwp_status');
+          $npwp_nama = $request->get('npwp_nama');
+          $npwp_nomor = $request->get('npwp_nomor');
+          $npwp_alamat = $request->get('npwp_alamat');
+
+          try {
+
+               $files = array();
+               $file = new EmployeeTax();
+
+               if($request->hasFile('attach')) {
+                    $files = $request->file('attach');
+                    $nomor = 1;
+                    foreach ($files as $file) {
+                         $file_name = $employee_id.'('.$nomor.').'.$file->getClientOriginalExtension();
+                         $file->move(public_path('tax_files/'), $file_name);
+                         
+                         $data[] = $file_name;
+                         $nomor++;
+                    } 
+
+                    $file->filename = json_encode($data);
+               }else{
+                    $file->filename = NULL;
+               }
+
+               $update = EmployeeTax::updateOrCreate(
+                    [
+                         'employee_id' => strtoupper($employee_id)
+                    ],[
+                         'nama' => $nama_lengkap,
+                         'nik' => $nik,
+                         'tempat_lahir' => $tempat_lahir,
+                         'tanggal_lahir' => $tanggal_lahir,
+                         'jenis_kelamin' => $jenis_kelamin,
+                         'jalan' => $jalan,
+                         'rtrw' => $rtrw,
+                         'kelurahan' => $kelurahan,
+                         'kecamatan' => $kecamatan,
+                         'kota' => $kota,
+                         'status_perkawinan' => $status_perkawinan,
+                         'istri' => $istri,
+                         'anak1' => $anak1,
+                         'anak2' => $anak2,
+                         'anak3' => $anak3,
+                         'npwp_kepemilikan' => $npwp_kepemilikan,
+                         'npwp_status' => $npwp_status,
+                         'npwp_nama' => $npwp_nama,
+                         'npwp_nomor' => $npwp_nomor,
+                         'npwp_alamat' => $npwp_alamat,
+                         'npwp_file' => $file->filename,
+                         'created_by' => strtoupper(Auth::user()->username)
+                    ]);
+               $update->save();
+
+               $response = array(
+                    'status' => true,
+                    'message' => 'Update data karyawan berhasil',
+               );
+               return Response::json($response);
+               
+          } catch (Exception $e) {
+               $response = array(
+                    'status' => false,
+                    'message' => $e->getMessage(),
+               );
+               return Response::json($response);
+          }
+     }
+
      public function fetchEmployeeResume(Request $request){
 
           $tanggal = "";
