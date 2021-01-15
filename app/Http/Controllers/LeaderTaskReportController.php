@@ -592,7 +592,7 @@ class LeaderTaskReportController extends Controller
             $leader = $request->get('leader');
             $id = $request->get('id');
 
-            $activity = ActivityList::where('leader_dept',$leader)->where('department_id',$id)->get();
+            $activity = ActivityList::where('leader_dept',$leader)->where('department_id',$id)->where('activity_name','!=',null)->get();
 
             $response = array(
                 'status' => true,
