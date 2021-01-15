@@ -355,7 +355,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 						<div class="form-group row data_npwp" align="left">
 							<label class="col-xs-3 label-pad">Apakah NPWP anda atas nama sendiri atau ikut NPWP suami? <span class="text-red">*</span></label>
 							<div class="col-xs-5" align="left">
-								<select class="form-control select2" data-placeholder="Pilih NPWP" id="npwp_status" name="npwp_status" style="width: 100%">
+								<select class="form-control select2" data-placeholder="Pilih NPWP" id="npwp_status" name="npwp_status" style="width: 100%" onchange="npwp_milik(this)">
 									<option style="color:grey;" value="">Pilih Status</option>
 									<option value="Nama Sendiri">Nama Sendiri</option>
 									<option value="Ikut Suami">Ikut Suami</option>
@@ -365,21 +365,21 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 
 
 						<div class="form-group row data_npwp" align="left">
-							<label class="col-xs-3 label-pad">Nama sesuai NPWP Sendiri<span class="text-red">*</span></label>
+							<label class="col-xs-3 label-pad">Nama sesuai NPWP <span class="keterangan_npwp"></span><span class="text-red">*</span></label>
 							<div class="col-xs-5" align="left">
 								<input type="text" class="form-control" id="npwp_nama" name="npwp_nama" placeholder="Nama Sesuai NPWP">
 							</div>
 						</div>
 
 						<div class="form-group row data_npwp" align="left">
-							<label class="col-xs-3 label-pad">Nomor NPWP Sendiri<span class="text-red">*</span></label>
+							<label class="col-xs-3 label-pad">Nomor NPWP <span class="keterangan_npwp"></span><span class="text-red">*</span></label>
 							<div class="col-xs-5" align="left">
 								<input type="text" class="form-control" id="npwp_nomor" name="npwp_nomor" placeholder="Nomor NPWP">
 							</div>
 						</div>
 
 						<div class="form-group row data_npwp" align="left">
-							<label class="col-xs-3 label-pad">Alamat Sesuai NPWP Sendiri<span class="text-red">*</span></label>
+							<label class="col-xs-3 label-pad">Alamat Sesuai NPWP <span class="keterangan_npwp"></span><span class="text-red">*</span></label>
 							<div class="col-xs-5" align="left">
 								<textarea id="npwp_alamat" name="npwp_alamat" class="form-control" rows="3" placeholder="Alamat Sesuai NPWP"></textarea>
 							</div>
@@ -387,7 +387,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 
 
 						<div class="form-group row data_npwp">
-							<label class="col-xs-3 label-pad">Foto Kartu NPWP Sendiri (Upload Foto kartu jika ada, format .jpg)</label>
+							<label class="col-xs-3 label-pad">Foto Kartu NPWP (Upload Foto kartu jika ada, format .jpg)</label>
 							<div class="col-xs-5" align="left">
 									<input type="file" id="attach" name="attach[]" multiple="">
 									<label><i class="fa fa-paperclip"></i> </label>
@@ -438,6 +438,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 		$('.anak_data').hide();
 		$('#istri_data').hide();
     	$('.data_npwp').hide();
+    	$('.keterangan_npwp').html("");
 
 		$('.datepicker').datepicker({
 			<?php $tgl_max = date('d-m-Y') ?>
@@ -725,6 +726,19 @@ function npwp_stat(elem){
     }
 
 }
+
+function npwp_milik(elem){
+    var npwp = elem.value;
+
+    if (npwp == "Nama Sendiri") {
+    	$('.keterangan_npwp').html("Sendiri");
+    }
+    else if (npwp == "Ikut Suami"){
+    	$('.keterangan_npwp').html("Suami");
+    }
+
+}
+
 
 function openHRq() {
 	window.open('{{ route('emp_service', ['id' =>'1']) }}', '_self');

@@ -144,6 +144,12 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 @endphp
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content" style="padding-top: 0px;">
+	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+		<p style="position: absolute; color: White; top: 45%; left: 35%;">
+			<span style="font-size: 40px">Please wait a moment...<i class="fa fa-spin fa-refresh"></i></span>
+		</p>
+	</div>
+
 	<div class="row">
 		<div class="col-md-4" style="padding-right: 0;">
 			<!-- Profile Image -->
@@ -157,6 +163,8 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 						<span>{{ $profil[0]->name }}</span><br><br>
 
 						<a class="btn btn-primary" href="{{ url("index/update_emp_data/".strtoupper($emp_id)) }}"><i class="fa fa-edit"></i>&nbsp; Update Data Karyawan</a>
+						
+						<a class="btn btn-warning" style="margin-top: 5px;" href="{{ url("index/perpajakan/".strtoupper($emp_id)) }}"><i class="fa fa-file"></i>&nbsp; Update Data NPWP / Perpajakan</a>
 						{{-- <span>{{ $profil[0]->birth_place }}, {{ date("d F Y",strtotime($profil[0]->birth_date)) }}</span> --}}
 					</div>
 					<div class="col-xs-12" style="padding-top: 10px;">
@@ -309,11 +317,13 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 				<button class="btn btn-default" onclick="kembali()" style="display: none" id="btnKembali"><i class="fa fa-angle-double-left"></i>&nbsp; Kembali</button>
 
 				<?php if (strpos($profil[0]->position, 'Operator') !== false) { ?>
-				<button class="btn btn-primary" onclick="ekaizen()" id="btnKaizen"><i class="fa  fa-bullhorn"></i>&nbsp; e - Kaizen &nbsp;<i class="fa fa-angle-double-right"></i></button>
+					<button class="btn btn-primary" onclick="ekaizen()" id="btnKaizen"><i class="fa  fa-bullhorn"></i>&nbsp; e - Kaizen &nbsp;<i class="fa fa-angle-double-right"></i></button>
 				<?php } ?>
 				<div class="pull-right">
-					<select class="form-control select2">
-						<option>2020</option>
+					<select class="form-control select2" onchange="get_data(this)" data-placeholder='tahun'>
+						<option></option>
+						<option <?php if(isset($_GET['tahun']) && $_GET['tahun'] == '2020') echo 'selected'; ?>>2020</option>
+						<option <?php if(isset($_GET['tahun']) && $_GET['tahun'] == '2021') echo 'selected'; ?>>2021</option>
 					</select>
 				</div>
 			</div>
@@ -449,350 +459,350 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 										</div>
 									</div>
 								</li>
-					{{-- <li class="time-label">
-						<span style="background-color: #605ca8; color: white;">
-							01 January 2020
-						</span>
-					</li> --}}
-					{{-- <li>
-						<i class="fa fa-info-circle" style="background-color: #605ca8; color: white;"></i>
-						<div class="timeline-item">
-							<h3 class="timeline-header" style="color: #605ca8; font-weight: bold;">Sunfish</h3>
-							<div class="timeline-body">
-								Diinformasikan bahwa per tanggal <i style="color: red;">01 Januari 2020</i>, pembuatan <i style="color: red;">form lembur</i> menggunakan <i style="color: red;">Sunfish</i> pada link berikut:
-								<br>
-								<a href="http://172.17.128.8/sf6/"><i class="fa fa-angle-double-right"></i><i class="fa fa-angle-double-right"></i> Link Sunfish Overtime <i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-left"></i></a>
-							</div>
+								{{-- <li class="time-label">
+									<span style="background-color: #605ca8; color: white;">
+										01 January 2020
+									</span>
+								</li> --}}
+								{{-- <li>
+									<i class="fa fa-info-circle" style="background-color: #605ca8; color: white;"></i>
+									<div class="timeline-item">
+										<h3 class="timeline-header" style="color: #605ca8; font-weight: bold;">Sunfish</h3>
+										<div class="timeline-body">
+											Diinformasikan bahwa per tanggal <i style="color: red;">01 Januari 2020</i>, pembuatan <i style="color: red;">form lembur</i> menggunakan <i style="color: red;">Sunfish</i> pada link berikut:
+											<br>
+											<a href="http://172.17.128.8/sf6/"><i class="fa fa-angle-double-right"></i><i class="fa fa-angle-double-right"></i> Link Sunfish Overtime <i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-left"></i></a>
+										</div>
+									</div>
+								</li> --}}
+								<li>
+									<i class="fa fa-dot-circle-o bg-gray"></i>
+								</li>
+							</ul>
 						</div>
-					</li> --}}
-					<li>
-						<i class="fa fa-dot-circle-o bg-gray"></i>
-					</li>
-				</ul>
-			</div>
-			<!-- <small style="color: red; background-color: yellow">NB : Untuk Melihat data detail bisa dilakukan dengan menekan angka pada kategori.</small> -->
-		</div>
-		<!-- /.box-body -->
-	</div>
-
-	<!-- QUESTION & ANSWER -->
-
-	<div class="box" id="question" style="display: none;">
-		<div class="box-header">
-			<h3 class="box-title">Question & Answer</h3>
-		</div>
-		<div class="box-body">
-			<div class="col-xs-12">
-				<div class="row">
-					<div class="col-xs-2">
-						<select class="form-control select2" style="width: 100%" id="category">
-							<option disabled selected value="">Category</option>
-							<option value="Great Day">Great Day</option>
-							<option value="Absensi">Absensi</option>
-							<option value="Lembur">Lembur</option>
-							<option value="Cuti">Cuti</option>
-							<option value="PKB">PKB</option>
-							<option value="Penggajian">Penggajian</option>
-							<option value="BPJS Kes">BPJS Kes</option>
-							<option value="BPJS TK">BPJS TK</option>
-						</select>
+						<!-- <small style="color: red; background-color: yellow">NB : Untuk Melihat data detail bisa dilakukan dengan menekan angka pada kategori.</small> -->
 					</div>
-					<div class="col-xs-10">
-						<div class="input-group input-group">
-							<input type="text" class="form-control" id="msg" placeholder="Write a Message...">
-							<span class="input-group-btn">
-								<button type="button" class="btn btn-success btn-flat" onclick="posting()"><i class="fa fa-send-o"></i>&nbsp; Post</button>
-							</span>
-						</div>
+					<!-- /.box-body -->
+				</div>
+
+				<!-- QUESTION & ANSWER -->
+
+				<div class="box" id="question" style="display: none;">
+					<div class="box-header">
+						<h3 class="box-title">Question & Answer</h3>
 					</div>
-				</div>
-			</div>
-			<div class="col-xs-12">
-				<hr>
-				<div id="chat">
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!-- E-KAIZEN -->
-
-	<div class="box" id="kaizen" style="display: none;">
-		<div class="box-header">
-			<h3 class="box-title">E-Kaizen</h3>
-			<?php $grp = str_replace("/"," ",$profil[0]->group); ?>
-			<a class="btn btn-primary pull-right" 
-			href="{{ url("create/ekaizen/".$emp_id."/".$profil[0]->name."/".$profil[0]->section."/".$grp) }}"><i class="fa fa-bullhorn"></i>&nbsp; Buat Kaizen</a>
-		</div>
-		<div class="box-body">
-			<div class="row">
-				<div class="col-xs-1">
-					<label>Filter :</label>
-				</div>
-				<div class="col-xs-4">
-					<input type="text" id="bulanAwal" class="form-control datepicker" placeholder="Tanggal dari..">
-				</div>
-				<div class="col-xs-4">
-					<input type="text" id="bulanAkhir" class="form-control datepicker" placeholder="Tanggal sampai..">
-				</div>
-				<div class="col-xs-2">
-					<button class="btn btn-default" onclick="fill_kaizen()">Cari</button>
-				</div>
-			</div>
-			<hr>
-			<table class="table table-bordered" id="tableKaizen" width="100%">
-				<thead style="background-color: rgb(126,86,134); color: #FFD700;">
-					<tr>
-						<th style="width: 900px">Id</th>
-						<th>Tanggal</th>
-						<th>Usulan</th>
-						<th>Kategori</th>
-						<th>Status</th>
-						<th>Aplikasi</th>
-						<th>Action</th>
-					</tr>
-				</thead>
-				<tbody>
-				</tbody>
-			</table>
-			<font style="color: red">* NB : Jika kategori "Terdapat Catatan" maka terdapat catatan dari Foreman / Manager, tekan tombol "details" untuk melihat catatan dan lakukan perubahan pada kaizen teian</font>
-		</div>
-	</div>
-</div>
-</div>
-</div>
-
-<div class="modal fade" id="modalDetail">
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
-			<div class="modal-body">
-				<div class="row">
-					<div class="col-xs-12">
-						<p style="font-size: 25px; font-weight: bold; text-align: center" id="kz_title"></p>
-						<table id="tabelDetail" width="100%">
-							<tr>
-								<th>NIK/Name </th>
-								<td> : </td>
-								<td id="kz_nik"></td>
-								<th>Date</th>
-								<td> : </td>
-								<td id="kz_tanggal"></td>
-							</tr>
-							<tr>
-								<th>Section</th>
-								<td> : </td>
-								<td id="kz_section"></td>
-								<th>Area Kaizen</th>
-								<td> : </td>
-								<td id="kz_area"></td>
-							</tr>
-							<tr>
-								<th>Leader</th>
-								<td> : </td>
-								<td id="kz_leader"></td>
-							</tr>
-							<tr>
-								<td colspan="6"><hr style="margin: 5px 0px 5px 0px; border-color: black"></td>
-							</tr>
-						</table>
-						<table width="100%" border="1" id="tabel_Kz">
-							<tr>
-								<th style="border-bottom: 1px solid black" width="50%">BEFORE :</th>
-								<th style="border-bottom: 1px solid black; border-left: 1px" width="50%">AFTER :</th>
-							</tr>
-							<tr>
-								<td id="kz_before"></td>
-								<td id="kz_after"></td>
-							</tr>
-						</table>
-						<table id="tableEstimasi" style="border: 1px solid black" width="100%"></table>
-						<table width="100%" id="tabel_note">
-							<tr><th colspan="2">Note :</th></tr>
-							<tr><th style="border: 1px solid black;" width="50%">Foreman</th><th style="border: 1px solid black;" width="50%">Manager</th></tr>
-							<tr><td style="text-align: left; border: 1px solid" id="note_foreman"></td><td style="text-align: left; border: 1px solid" id="note_manager"></td></tr>
-						</table>
-						<br>
-						<table width="100%" border="1" id="tabel_assess">
-							<tr>
-								<th colspan="4">TABEL NILAI KAIZEN</th>
-							</tr>
-							<tr>
-								<th width="5%">No</th>
-								<th>Kategori</th>
-								<th>Foreman / Chief</th>
-								<th>Manager</th>
-							</tr>
-							<tr>
-								<th>1</th>
-								<th>Estimasi Hasil</th>
-								<td id="foreman_point1"></td>
-								<td id="manager_point1"></td>
-							</tr>
-							<tr>
-								<th>2</th>
-								<th>Ide</th>
-								<td id="foreman_point2"></td>
-								<td id="manager_point2"></td>
-							</tr>
-							<tr>
-								<th>3</th>
-								<th>Implementasi</th>
-								<td id="foreman_point3"></td>
-								<td id="manager_point3"></td>
-							</tr>
-							<tr>
-								<th colspan="2"> TOTAL</th>
-								<td id="foreman_total" style="font-weight: bold;"></td>
-								<td id="manager_total" style="font-weight: bold;"></td>
-							</tr>
-						</table>
-						<br>
-						<table width="100%" id="tabel_nilai_all" border="1">
-							<tr>
-								<th>No</th>
-								<th>Total Nilai</th>
-								<th>Point</th>
-								<th>Keterangan</th>
-								<th>Reward Aplikasi</th>
-							</tr>
-							<tr>
-								<td>1</td>
-								<td><300</td>
-								<td>2</td>
-								<td>Kurang</td>
-								<td>Rp 2.000,-</td>
-							</tr>
-
-							<tr>
-								<td>2</td>
-								<td>300 - 350</td>
-								<td>4</td>
-								<td>Cukup</td>
-								<td>Rp 5.000,-</td>
-							</tr>
-
-							<tr>
-								<td>3</td>
-								<td>351 - 400</td>
-								<td>6</td>
-								<td>Baik</td>
-								<td>Rp 10.000,-</td>
-							</tr>
-
-							<tr>
-								<td>4</td>
-								<td>401 - 450</td>
-								<td>8</td>
-								<td>Sangat Baik</td>
-								<td>Rp 25,000,-</td>
-							</tr>
-
-							<tr>
-								<td>5</td>
-								<td>> 450</td>
-								<td>10</td>
-								<td>Potensi Excellent</td>
-								<td>Rp 50,000,-</td>
-							</tr>
-						</table>
-					</div>
-				</div>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
-			</div>
-		</div>
-	</div>
-</div>
-
-<div class="modal fade" id="modalDelete">
-	<div class="modal-dialog modal-md modal-danger">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title"><b>Apakah anda yakin ingin menghapus kaizen ?</b></h4>
-			</div>
-			<div class="modal-body">
-				<div class="row">
-					<div class="col-md-12">
-						<p id="kz_title_delete"></p>
-						<input type="hidden" id="id_delete">
-					</div>
-				</div>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-success pull-left" data-dismiss="modal" onclick="deleteKaizen()"><i class="fa fa-close"></i> YES</button>
-				<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> NO</button>
-			</div>
-		</div>
-	</div>
-</div>
-
-<div class="modal fade" id="modalAbsenceDetail">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-
-			</div>
-			<div class="modal-body">
-				<div class="row">
-					<div class="col-md-12">
-						<table class="table table-bordered">
-							<thead style="background-color: rgb(126,86,134); color: #FFD700;">
-								<tr>
-									<th>Tanggal</th>
-									<th>Cek Log Masuk</th>
-									<th>Cek Log Pulang</th>
-									<th>Keterangan</th>
-								</tr>
-								<tr id="laoding_absence">
-									<th colspan="4"><i class="fa fa-spinner fa-pulse"></i> Loading</th>
-								</tr>
-							</thead>
-							<tbody id="body_absence"></tbody>
-						</table>
-					</div>
-				</div>
-			</div>				
-		</div>
-	</div>
-</div>
-
-<div class="modal fade" id="modalBerita">
-	<div class="modal-dialog modal-lg modal-default" style="width: 80%;">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				<center><h4 class="modal-title"><b>YMPI Announcement</b></h4></center>
-			</div>
-			<div class="modal-body">
-				<div class="row">
-					<div class="col-md-12">
-						<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-							<div class="carousel-inner">
-								<div class="item active">
-									<center>
-										<img class="img-responsive" src="{{url('images/update_data_karyawan_2.jpg')}}" alt="...">
-									</center>
+					<div class="box-body">
+						<div class="col-xs-12">
+							<div class="row">
+								<div class="col-xs-2">
+									<select class="form-control select2" style="width: 100%" id="category">
+										<option disabled selected value="">Category</option>
+										<option value="Great Day">Great Day</option>
+										<option value="Absensi">Absensi</option>
+										<option value="Lembur">Lembur</option>
+										<option value="Cuti">Cuti</option>
+										<option value="PKB">PKB</option>
+										<option value="Penggajian">Penggajian</option>
+										<option value="BPJS Kes">BPJS Kes</option>
+										<option value="BPJS TK">BPJS TK</option>
+									</select>
+								</div>
+								<div class="col-xs-10">
+									<div class="input-group input-group">
+										<input type="text" class="form-control" id="msg" placeholder="Write a Message...">
+										<span class="input-group-btn">
+											<button type="button" class="btn btn-success btn-flat" onclick="posting()"><i class="fa fa-send-o"></i>&nbsp; Post</button>
+										</span>
+									</div>
 								</div>
 							</div>
-							<a class="left carousel-control" style="color: black;" href="#carousel-example-generic" role="button" data-slide="prev">
-								<span class="glyphicon glyphicon-chevron-left"></span>
-							</a>
-							<a class="right carousel-control" style="color: black;" href="#carousel-example-generic" role="button" data-slide="next">
-								<span class="glyphicon glyphicon-chevron-right"></span>
-							</a>
+						</div>
+						<div class="col-xs-12">
+							<hr>
+							<div id="chat">
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+
+				<!-- E-KAIZEN -->
+
+				<div class="box" id="kaizen" style="display: none;">
+					<div class="box-header">
+						<h3 class="box-title">E-Kaizen</h3>
+						<?php $grp = str_replace("/"," ",$profil[0]->group); ?>
+						<a class="btn btn-primary pull-right" 
+						href="{{ url("create/ekaizen/".$emp_id."/".$profil[0]->name."/".$profil[0]->section."/".$grp) }}"><i class="fa fa-bullhorn"></i>&nbsp; Buat Kaizen</a>
+					</div>
+					<div class="box-body">
+						<div class="row">
+							<div class="col-xs-1">
+								<label>Filter :</label>
+							</div>
+							<div class="col-xs-4">
+								<input type="text" id="bulanAwal" class="form-control datepicker" placeholder="Tanggal dari..">
+							</div>
+							<div class="col-xs-4">
+								<input type="text" id="bulanAkhir" class="form-control datepicker" placeholder="Tanggal sampai..">
+							</div>
+							<div class="col-xs-2">
+								<button class="btn btn-default" onclick="fill_kaizen()">Cari</button>
+							</div>
+						</div>
+						<hr>
+						<table class="table table-bordered" id="tableKaizen" width="100%">
+							<thead style="background-color: rgb(126,86,134); color: #FFD700;">
+								<tr>
+									<th style="width: 900px">Id</th>
+									<th>Tanggal</th>
+									<th>Usulan</th>
+									<th>Kategori</th>
+									<th>Status</th>
+									<th>Aplikasi</th>
+									<th>Action</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+						<font style="color: red">* NB : Jika kategori "Terdapat Catatan" maka terdapat catatan dari Foreman / Manager, tekan tombol "details" untuk melihat catatan dan lakukan perubahan pada kaizen teian</font>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
+
+	<div class="modal fade" id="modalDetail">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-xs-12">
+							<p style="font-size: 25px; font-weight: bold; text-align: center" id="kz_title"></p>
+							<table id="tabelDetail" width="100%">
+								<tr>
+									<th>NIK/Name </th>
+									<td> : </td>
+									<td id="kz_nik"></td>
+									<th>Date</th>
+									<td> : </td>
+									<td id="kz_tanggal"></td>
+								</tr>
+								<tr>
+									<th>Section</th>
+									<td> : </td>
+									<td id="kz_section"></td>
+									<th>Area Kaizen</th>
+									<td> : </td>
+									<td id="kz_area"></td>
+								</tr>
+								<tr>
+									<th>Leader</th>
+									<td> : </td>
+									<td id="kz_leader"></td>
+								</tr>
+								<tr>
+									<td colspan="6"><hr style="margin: 5px 0px 5px 0px; border-color: black"></td>
+								</tr>
+							</table>
+							<table width="100%" border="1" id="tabel_Kz">
+								<tr>
+									<th style="border-bottom: 1px solid black" width="50%">BEFORE :</th>
+									<th style="border-bottom: 1px solid black; border-left: 1px" width="50%">AFTER :</th>
+								</tr>
+								<tr>
+									<td id="kz_before"></td>
+									<td id="kz_after"></td>
+								</tr>
+							</table>
+							<table id="tableEstimasi" style="border: 1px solid black" width="100%"></table>
+							<table width="100%" id="tabel_note">
+								<tr><th colspan="2">Note :</th></tr>
+								<tr><th style="border: 1px solid black;" width="50%">Foreman</th><th style="border: 1px solid black;" width="50%">Manager</th></tr>
+								<tr><td style="text-align: left; border: 1px solid" id="note_foreman"></td><td style="text-align: left; border: 1px solid" id="note_manager"></td></tr>
+							</table>
+							<br>
+							<table width="100%" border="1" id="tabel_assess">
+								<tr>
+									<th colspan="4">TABEL NILAI KAIZEN</th>
+								</tr>
+								<tr>
+									<th width="5%">No</th>
+									<th>Kategori</th>
+									<th>Foreman / Chief</th>
+									<th>Manager</th>
+								</tr>
+								<tr>
+									<th>1</th>
+									<th>Estimasi Hasil</th>
+									<td id="foreman_point1"></td>
+									<td id="manager_point1"></td>
+								</tr>
+								<tr>
+									<th>2</th>
+									<th>Ide</th>
+									<td id="foreman_point2"></td>
+									<td id="manager_point2"></td>
+								</tr>
+								<tr>
+									<th>3</th>
+									<th>Implementasi</th>
+									<td id="foreman_point3"></td>
+									<td id="manager_point3"></td>
+								</tr>
+								<tr>
+									<th colspan="2"> TOTAL</th>
+									<td id="foreman_total" style="font-weight: bold;"></td>
+									<td id="manager_total" style="font-weight: bold;"></td>
+								</tr>
+							</table>
+							<br>
+							<table width="100%" id="tabel_nilai_all" border="1">
+								<tr>
+									<th>No</th>
+									<th>Total Nilai</th>
+									<th>Point</th>
+									<th>Keterangan</th>
+									<th>Reward Aplikasi</th>
+								</tr>
+								<tr>
+									<td>1</td>
+									<td><300</td>
+									<td>2</td>
+									<td>Kurang</td>
+									<td>Rp 2.000,-</td>
+								</tr>
+
+								<tr>
+									<td>2</td>
+									<td>300 - 350</td>
+									<td>4</td>
+									<td>Cukup</td>
+									<td>Rp 5.000,-</td>
+								</tr>
+
+								<tr>
+									<td>3</td>
+									<td>351 - 400</td>
+									<td>6</td>
+									<td>Baik</td>
+									<td>Rp 10.000,-</td>
+								</tr>
+
+								<tr>
+									<td>4</td>
+									<td>401 - 450</td>
+									<td>8</td>
+									<td>Sangat Baik</td>
+									<td>Rp 25,000,-</td>
+								</tr>
+
+								<tr>
+									<td>5</td>
+									<td>> 450</td>
+									<td>10</td>
+									<td>Potensi Excellent</td>
+									<td>Rp 50,000,-</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="modalDelete">
+		<div class="modal-dialog modal-md modal-danger">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title"><b>Apakah anda yakin ingin menghapus kaizen ?</b></h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+							<p id="kz_title_delete"></p>
+							<input type="hidden" id="id_delete">
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-success pull-left" data-dismiss="modal" onclick="deleteKaizen()"><i class="fa fa-close"></i> YES</button>
+					<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> NO</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="modalAbsenceDetail">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+							<table class="table table-bordered">
+								<thead style="background-color: rgb(126,86,134); color: #FFD700;">
+									<tr>
+										<th>Tanggal</th>
+										<th>Cek Log Masuk</th>
+										<th>Cek Log Pulang</th>
+										<th>Keterangan</th>
+									</tr>
+									<tr id="laoding_absence">
+										<th colspan="4"><i class="fa fa-spinner fa-pulse"></i> Loading</th>
+									</tr>
+								</thead>
+								<tbody id="body_absence"></tbody>
+							</table>
+						</div>
+					</div>
+				</div>				
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="modalBerita">
+		<div class="modal-dialog modal-lg modal-default" style="width: 80%;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<center><h4 class="modal-title"><b>YMPI Announcement</b></h4></center>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+							<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+								<div class="carousel-inner">
+									<div class="item active">
+										<center>
+											<img class="img-responsive" src="{{url('images/update_data_karyawan_2.jpg')}}" alt="...">
+										</center>
+									</div>
+								</div>
+								<a class="left carousel-control" style="color: black;" href="#carousel-example-generic" role="button" data-slide="prev">
+									<span class="glyphicon glyphicon-chevron-left"></span>
+								</a>
+								<a class="right carousel-control" style="color: black;" href="#carousel-example-generic" role="button" data-slide="next">
+									<span class="glyphicon glyphicon-chevron-right"></span>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 </section>
 @endsection
@@ -838,6 +848,12 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 			format: 'yyyy-mm-dd',
 		})
 	});
+
+	function get_data(elem) {
+		var thn = $(elem).val();
+		window.location.href = '{{ url("index/employee/service?id=1") }}&tahun='+thn;
+		$("#loading").show();
+	}
 
 	$(window).on('pageshow', function(){
 		$("#bulanAwal").val("");

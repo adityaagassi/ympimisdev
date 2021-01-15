@@ -87,7 +87,7 @@ Route::get('/', function () {
 	if (Auth::check()) {
 		if (Auth::user()->role_code == 'emp-srv') {
 			// return redirect()->action('EmployeeController@indexEmployeeService', ['id' => 1]);
-			return redirect()->route('emp_service', ['id' => 1]);
+			return \redirect()->route('emp_service', ['id' => 1, 'tahun' => date('Y')]);
 			// return redirect()->route('index/employee/service/{ctg}', ['ctg' => 'home']);
 		} else {
 			return view('home');

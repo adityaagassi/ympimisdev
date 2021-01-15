@@ -524,7 +524,7 @@ class EmployeeController extends Controller
      public function indexEmpDataPajak($employee_id){
 
           $title = 'Employee Tax Services';
-          $title_jp = '';
+          $title_jp = '従業員税金サービス';
 
           return view('employees.service.perpajakanData', array(
                'employee_id' => $employee_id,
@@ -2326,6 +2326,12 @@ public function indexEmployeeService(Request $request)
      $profil = db::select("select * from employee_syncs where employee_id = '".$emp_id."'
           ");
 
+     if ($request->get('tahun')) {
+          $tahun = $request->get('tahun');
+     } else {
+          $tahun = date('Y');
+     }
+
      try{
           $presences = db::connection('sunfish')->select("SELECT
                Emp_no,
@@ -2365,7 +2371,7 @@ public function indexEmployeeService(Request $request)
                VIEW_YMPI_Emp_Attendance 
                WHERE
                Emp_no = '".$emp_id."'
-               AND YEAR ( shiftstarttime ) = '2020' 
+               AND YEAR ( shiftstarttime ) = '".$tahun."' 
                AND shiftstarttime <= '".$now."' 
                GROUP BY
                format ( shiftstarttime, 'MMMM yyyy' ),
@@ -3325,13 +3331,6 @@ public function fetchChecklogData(Request $request)
      }
 
      return DataTables::of($datachecklog)->make(true);
-
-// $response = array(
-//      'status' => true,
-//      'attendances' => $attendances,
-//      'qry' => $qry
-// );
-// return Response::json($response);
 }
 
 public function editNumber(Request $request)
