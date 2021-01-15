@@ -17,6 +17,8 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 }
 
 
+Route::get('minkd', 'TrialController@minkd');
+
 Route::get('testmail', 'TrialController@testmail');
 Route::get('testmail2', 'AccountingController@coba');
 Route::get('testprint', 'TrialController@testPrint');
@@ -222,6 +224,8 @@ Route::get('index/injeksi/get_molding_log', 'InjectionsController@get_molding_lo
 Route::post('index/injeksi/delete_ng_temp', 'InjectionsController@delete_ng_temp');
 Route::get('input/reason_idle_trouble', 'InjectionsController@inputReasonIdleTrouble');
 Route::get('change/reason_idle_trouble', 'InjectionsController@changeReasonIdleTrouble');
+Route::get('input/reason_pause', 'InjectionsController@inputReasonPause');
+Route::get('change/reason_pause', 'InjectionsController@changeReasonPause');
 
 //in
 Route::get('index/in', 'InjectionsController@in');
@@ -531,6 +535,10 @@ Route::group(['nav' => 'R10', 'middleware' => 'permission'], function(){
 Route::get('index/update_emp_data/{employee_id}', 'EmployeeController@indexUpdateEmpData');
 Route::get('fetch/fill_emp_data', 'EmployeeController@fetchFillEmpData');
 Route::post('fetch/update_emp_data', 'EmployeeController@fetchUpdateEmpData');
+
+Route::get('index/perpajakan/{employee_id}', 'EmployeeController@indexEmpDataPajak');
+Route::get('fetch/fill_perpajakan_data', 'EmployeeController@fetchFillPerpajakanData');
+Route::post('fetch/update_perpajakan_data', 'EmployeeController@fetchUpdatePerpajakanData');
 
 Route::get('index/report/manpower', 'EmployeeController@indexReportManpower');
 Route::get('fetch/report/manpower', 'EmployeeController@fetchReportManpower');
@@ -1333,6 +1341,7 @@ Route::post('post/sakurentsu/3m/premeeting', 'SakurentsuController@post_tiga_em_
 Route::get('fetch/sakurentsu/3m/document', 'SakurentsuController@fetch_tiga_em_document');
 Route::post('upload/sakurentsu/3m/document', 'SakurentsuController@upload_tiga_em_document');
 Route::post('mail/sakurentsu/3m/document', 'SakurentsuController@mail_tiga_em_document');
+Route::post('post/sakurentsu/3m/finalmeeting', 'SakurentsuController@post_tiga_em_finalmeeting');
 
 Route::get('index/sakurentsu/3m/document/upload/{id_three_m}', 'SakurentsuController@index_tiga_em_upload');
 Route::post('upload/sakurentsu/3m/document/upload', 'SakurentsuController@upload_tiga_em_upload');
