@@ -9899,9 +9899,14 @@ public function fetch_upload_transaksi(Request $request)
 {
     $actual = AccActualLog::orderBy('acc_actual_logs.id', 'desc');
 
-    if ($request->get('category') != null)
+    if ($request->get('periode') != null)
     {
         $actual = $actual->whereIn('acc_actual_logs.periode', $request->get('periode'));
+    }
+
+    if ($request->get('month') != null)
+    {
+        $actual = $actual->where('acc_actual_logs.month_date', $request->get('month'));
     }
 
     $actual = $actual->select('*')->get();

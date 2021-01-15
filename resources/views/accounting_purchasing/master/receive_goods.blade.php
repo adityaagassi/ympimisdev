@@ -127,10 +127,11 @@
 										<th style="width:6%;">No Document</th>
 										<th style="width:5%;">Vendor</th>
 										<th style="width:5%;">No PO SAP</th>
-										<th style="width:5%;">Category</th>
+										<th style="width:3%;">Category</th>
 										<th style="width:5%;">Description</th>
 										<th style="width:7%;">GL Number</th>	
 										<th style="width:6%;">Cost Center</th>
+										<th style="width:6%;">Amount ($)</th>
 										<th style="width:6%;">Action</th>
 									</tr>
 								</thead>
@@ -138,6 +139,7 @@
 								</tbody>
 								<tfoot>
 					              <tr>
+					                <th></th>
 					                <th></th>
 					                <th></th>
 					                <th></th>
@@ -302,6 +304,7 @@
 				{ "data": "item_description"},
 				{ "data": "gl_number"},
 				{ "data": "cost_center"},
+				{ "data": "amount_dollar"},
 				{ "data": "action"}
 			]
 		});

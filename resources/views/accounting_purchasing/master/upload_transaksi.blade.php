@@ -95,6 +95,26 @@
 								</select>
 							</div>
 						</div>
+						<div class="col-md-2">
+							<div class="form-group">
+								<label>Month</label>
+								<select class="form-control select2" id='month' data-placeholder="Select Month" style="width: 100%;">
+									<option value=""></option>
+									<option value="jan">jan</option>
+									<option value="feb">feb</option>
+									<option value="mar">mar</option>
+									<option value="apr">apr</option>
+									<option value="may">may</option>
+									<option value="jun">jun</option>
+									<option value="jul">jul</option>
+									<option value="aug">aug</option>
+									<option value="sep">sep</option>
+									<option value="oct">oct</option>
+									<option value="nov">nov</option>
+									<option value="dec">dec</option>
+								</select>
+							</div>
+						</div>
 						<div class="col-md-4">
 							<div class="form-group">
 								<div class="col-md-4" style="padding-right: 0;">
@@ -208,7 +228,7 @@
 
 	jQuery(document).ready(function() {
 		$('.select2').select2();
-		fetchTable();
+		// fetchTable();
 		$('body').toggleClass("sidebar-collapse");
 	});
 
@@ -265,8 +285,10 @@
 		$('#TranskasiTable').DataTable().destroy();
 		
 		var periode = $('#periode').val();
+		var month = $('#month').val();
 		var data = {
-			periode:periode
+			periode:periode,
+			month:month
 		}
 		
 		$('#TranskasiTable tfoot th').each( function () {
