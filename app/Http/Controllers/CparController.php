@@ -215,6 +215,11 @@ class CparController extends Controller
             } else {
 
               if ($dept->department == "Woodwind Instrument - Surface Treatment (WI-ST) Department") {
+                
+                if ($sec[1] == "Body Buffing-Barrel Process Section") {
+                  $sec[1] == "Buffing Key Process Section";
+                }
+
                 $f = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = '".$dept->department."' and position = 'Foreman' and section='".$sec[1]."'");
               }
               else{
