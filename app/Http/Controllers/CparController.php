@@ -213,7 +213,15 @@ class CparController extends Controller
               $foreman = $position->employee_id;
               $foremancount = 1;
             } else {
-              $f = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = '".$dept->department."' and position = 'Foreman' and section='".$sec[1]."'");
+
+              if ($dept->department == "Woodwind Instrument - Surface Treatment (WI-ST) Department") {
+                $f = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = '".$dept->department."' and position = 'Foreman' and section='".$sec[1]."'");
+              }
+              else{
+                $f = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = '".$dept->department."' and position = 'Foreman'");
+              }
+
+
 
               $foreman = $f[0]->employee_id;
             }
