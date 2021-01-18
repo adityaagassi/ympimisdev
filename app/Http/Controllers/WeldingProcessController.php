@@ -2913,19 +2913,24 @@ class WeldingProcessController extends Controller
 			$jam = date('Y-m-d H:i:s');
 			if ($jam > date('Y-m-d').' 00:00:01' && $jam < date('Y-m-d').' 02:00:00' && $tgl == date('Y-m-d')) {
 				$nextday =  date('Y-m-d', strtotime($tgl));
+				$yesterday = date('Y-m-d',strtotime("-1 days"));
 			}else{
 				$nextday =  date('Y-m-d', strtotime($tgl . " +1 days"));
+				$yesterday = date('Y-m-d');
 			}
 		}else{
 			$tgl = date("Y-m-d");
 			$jam = date('Y-m-d H:i:s');
 			if ($jam > date('Y-m-d').' 00:00:01' && $jam < date('Y-m-d').' 02:00:00') {
 				$nextday = date('Y-m-d');
+				$yesterday = date('Y-m-d',strtotime("-1 days"));
 			}else{
 				$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(1)));
+				$yesterday = date('Y-m-d');
 			}
 		}
-		$tanggal = "DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$tgl."' and";
+
+		$tanggal = "DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$yesterday."' and";
 
 		$addlocation = "";
 		if($request->get('location') != null) {
@@ -2950,9 +2955,7 @@ class WeldingProcessController extends Controller
 			left join ympimis.materials m on m.material_number = hsa.hsa_kito_code
 			where p.part_type = '2'
 			and p.flow_id = '1'
-			and date(p.tanggaljam) = '".$tgl."'
-			and TIME(p.tanggaljam) > '00:00:00'
-			and TIME(p.tanggaljam) < '07:00:00'
+			and p.tanggaljam BETWEEN '".$yesterday." 00:00:00' AND '".$yesterday." 07:00:00'
 			and m.hpl = 'ASKEY'
 			and m.issue_storage_location = 'SX21'
 			GROUP BY m.`key`, m.model) s3
@@ -2963,9 +2966,7 @@ class WeldingProcessController extends Controller
 			left join ympimis.materials m on m.material_number = hsa.hsa_kito_code
 			where p.part_type = '2'
 			and p.flow_id = '1'
-			and date(p.tanggaljam) = '".$tgl."'
-			and TIME(p.tanggaljam) > '06:00:00'
-			and TIME(p.tanggaljam) < '15:00:00'
+			and p.tanggaljam BETWEEN '".$yesterday." 06:00:00' AND '".$yesterday." 15:00:00'
 			and m.hpl = 'ASKEY'
 			and m.issue_storage_location = 'SX21'
 			GROUP BY m.`key`, m.model) s1
@@ -2976,9 +2977,7 @@ class WeldingProcessController extends Controller
 			left join ympimis.materials m on m.material_number = hsa.hsa_kito_code
 			where p.part_type = '2'
 			and p.flow_id = '1'
-			and date(p.tanggaljam) = '".$tgl."'
-			and TIME(p.tanggaljam) > '16:30:00'
-			and p.tanggaljam < '".$nextday." 00:50:00'
+			and p.tanggaljam BETWEEN '".$yesterday." 16:30:00' AND '".$nextday." 01:00:00'
 			and m.hpl = 'ASKEY'
 			and m.issue_storage_location = 'SX21'
 			GROUP BY m.`key`, m.model) s2
@@ -2994,9 +2993,7 @@ class WeldingProcessController extends Controller
 			left join ympimis.materials m on m.material_number = hsa.hsa_kito_code
 			where p.part_type = '2'
 			and p.flow_id = '1'
-			and date(p.tanggaljam) = '".$tgl."'
-			and TIME(p.tanggaljam) > '00:00:00'
-			and TIME(p.tanggaljam) < '07:00:00'
+			and p.tanggaljam BETWEEN '".$yesterday." 00:00:00' AND '".$yesterday." 07:00:00'
 			and m.hpl = 'TSKEY'
 			and m.issue_storage_location = 'SX21'
 			GROUP BY m.`key`, m.model) s3
@@ -3007,9 +3004,7 @@ class WeldingProcessController extends Controller
 			left join ympimis.materials m on m.material_number = hsa.hsa_kito_code
 			where p.part_type = '2'
 			and p.flow_id = '1'
-			and date(p.tanggaljam) = '".$tgl."'
-			and TIME(p.tanggaljam) > '06:00:00'
-			and TIME(p.tanggaljam) < '15:00:00'
+			and p.tanggaljam BETWEEN '".$yesterday." 06:00:00' AND '".$yesterday." 15:00:00'
 			and m.hpl = 'TSKEY'
 			and m.issue_storage_location = 'SX21'
 			GROUP BY m.`key`, m.model) s1
@@ -3020,9 +3015,7 @@ class WeldingProcessController extends Controller
 			left join ympimis.materials m on m.material_number = hsa.hsa_kito_code
 			where p.part_type = '2'
 			and p.flow_id = '1'
-			and date(p.tanggaljam) = '".$tgl."'
-			and TIME(p.tanggaljam) > '16:30:00'
-			and p.tanggaljam < '".$nextday." 00:50:00'
+			and p.tanggaljam BETWEEN '".$yesterday." 16:30:00' AND '".$nextday." 01:00:00'
 			and m.hpl = 'TSKEY'
 			and m.issue_storage_location = 'SX21'
 			GROUP BY m.`key`, m.model) s2
@@ -3036,19 +3029,19 @@ class WeldingProcessController extends Controller
 			left join
 			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from welding_logs l
 			left join materials m on l.material_number = m.material_number
-			WHERE ".$tanggal." TIME(l.created_at) > '00:00:00' and TIME(l.created_at) < '07:00:00' and m.hpl = 'ASKEY' and m.issue_storage_location = 'SX21' ".$addlocation."
+			WHERE l.created_at BETWEEN '".$yesterday." 00:00:00' AND '".$yesterday." 07:00:00' and m.hpl = 'ASKEY' and m.issue_storage_location = 'SX21' ".$addlocation."
 			GROUP BY m.`key`, m.model) s3
 			on a.keymodel = s3.keymodel
 			left join
 			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from welding_logs l
 			left join materials m on l.material_number = m.material_number
-			WHERE ".$tanggal." TIME(l.created_at) > '06:00:00' and TIME(l.created_at) < '15:00:00' and m.hpl = 'ASKEY' and m.issue_storage_location = 'SX21' ".$addlocation."
+			WHERE l.created_at BETWEEN '".$yesterday." 06:00:00' AND '".$yesterday." 15:00:00' and m.hpl = 'ASKEY' and m.issue_storage_location = 'SX21' ".$addlocation."
 			GROUP BY m.`key`, m.model) s1
 			on a.keymodel = s1.keymodel
 			left join
 			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from welding_logs l
 			left join materials m on l.material_number = m.material_number
-			WHERE ".$tanggal." TIME(l.created_at) > '16:30:00' and l.created_at < '".$nextday." 00:50:00' and m.hpl = 'ASKEY' and m.issue_storage_location = 'SX21' ".$addlocation."
+			WHERE l.created_at BETWEEN '".$yesterday." 16:30:00' AND '".$nextday." 01:00:00' and m.hpl = 'ASKEY' and m.issue_storage_location = 'SX21' ".$addlocation."
 			GROUP BY m.`key`, m.model) s2
 			on a.keymodel = s2.keymodel
 			ORDER BY `key`";
@@ -3059,19 +3052,19 @@ class WeldingProcessController extends Controller
 			left join
 			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from welding_logs l
 			left join materials m on l.material_number = m.material_number
-			WHERE ".$tanggal." TIME(l.created_at) > '00:00:00' and TIME(l.created_at) < '07:00:00' and m.hpl = 'TSKEY' and m.issue_storage_location = 'SX21' ".$addlocation."
+			WHERE l.created_at BETWEEN '".$yesterday." 00:00:00' AND '".$yesterday." 07:00:00' and m.hpl = 'TSKEY' and m.issue_storage_location = 'SX21' ".$addlocation."
 			GROUP BY m.`key`, m.model) s3
 			on a.keymodel = s3.keymodel
 			left join
 			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from welding_logs l
 			left join materials m on l.material_number = m.material_number
-			WHERE ".$tanggal." TIME(l.created_at) > '06:00:00' and TIME(l.created_at) < '15:00:00' and m.hpl = 'TSKEY' and m.issue_storage_location = 'SX21' ".$addlocation."
+			WHERE l.created_at BETWEEN '".$yesterday." 06:00:00' AND '".$yesterday." 15:00:00' and m.hpl = 'TSKEY' and m.issue_storage_location = 'SX21' ".$addlocation."
 			GROUP BY m.`key`, m.model) s1
 			on a.keymodel = s1.keymodel
 			left join
 			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from welding_logs l
 			left join materials m on l.material_number = m.material_number
-			WHERE ".$tanggal." TIME(l.created_at) > '16:30:00' and l.created_at < '".$nextday." 00:50:00' and m.hpl = 'TSKEY' and m.issue_storage_location = 'SX21' ".$addlocation."
+			WHERE l.created_at BETWEEN '".$yesterday." 16:30:00' AND '".$nextday." 01:00:00' and m.hpl = 'TSKEY' and m.issue_storage_location = 'SX21' ".$addlocation."
 			GROUP BY m.`key`, m.model) s2
 			on a.keymodel = s2.keymodel
 			ORDER BY `key`";
