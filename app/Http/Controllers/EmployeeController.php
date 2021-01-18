@@ -606,7 +606,7 @@ class EmployeeController extends Controller
                     $files = $request->file('attach');
                     $nomor = 1;
                     foreach ($files as $file) {
-                         $file_name = $employee_id.'('.$nomor.').'.$file->getClientOriginalExtension();
+                         $file_name = $employee_id.'('.$nomor.')_'.$nama_lengkap.'_NPWP.'.$file->getClientOriginalExtension();
                          $file->move(public_path('tax_files/'), $file_name);
                          
                          $data[] = $file_name;

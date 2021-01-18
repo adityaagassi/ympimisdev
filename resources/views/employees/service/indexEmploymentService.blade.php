@@ -163,8 +163,8 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 						<span>{{ $profil[0]->name }}</span><br><br>
 
 						<a class="btn btn-primary" href="{{ url("index/update_emp_data/".strtoupper($emp_id)) }}"><i class="fa fa-edit"></i>&nbsp; Update Data Karyawan</a>
-						<!-- 
-						<a class="btn btn-warning" style="margin-top: 5px;" href="{{ url("index/perpajakan/".strtoupper($emp_id)) }}"><i class="fa fa-file"></i>&nbsp; Update Data NPWP / Perpajakan</a> -->
+						
+						<a class="btn btn-warning" style="margin-top: 5px;" href="{{ url("index/perpajakan/".strtoupper($emp_id)) }}"><i class="fa fa-file"></i>&nbsp; Update Data NPWP / Perpajakan</a>
 						{{-- <span>{{ $profil[0]->birth_place }}, {{ date("d F Y",strtotime($profil[0]->birth_date)) }}</span> --}}
 					</div>
 					<div class="col-xs-12" style="padding-top: 10px;">
@@ -783,7 +783,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 								<div class="carousel-inner">
 									<div class="item active">
 										<center>
-											<img class="img-responsive" src="{{url('images/update_data_karyawan_2.jpg')}}" alt="...">
+											<img class="img-responsive" src="{{url('images/update_data_npwp.jpg')}}" alt="...">
 										</center>
 									</div>
 								</div>

@@ -8145,7 +8145,7 @@ public function import_receive(Request $request){
                              ->where('budget','=',$po_detail->budget_item)
                              ->first();
 
-                             $amount = $budget_log->amount_po;
+                             $amount_po = $budget_log->amount_po;
                              $datereceive = $data2->receive_date;
                                 //Get Data From Budget Master
                              $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$datereceive'");
@@ -8163,7 +8163,7 @@ public function import_receive(Request $request){
                                 $budgetdata = AccBudget::where('budget_no','=',$po_detail->budget_item)->where('periode','=', $fiscal)->first();
 
                                     //Tambahkan Budget Skrg Dengan PO yang Ada Di Log
-                                $totalPlusPO = $budgetdata->$sisa_bulan + $amount;
+                                $totalPlusPO = $budgetdata->$sisa_bulan + $amount_po;
 
                                 $updatebudget = AccBudget::where('budget_no','=',$po_detail->budget_item)->where('periode','=', $fiscal)
                                 ->update([
