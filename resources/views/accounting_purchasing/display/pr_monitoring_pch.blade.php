@@ -197,6 +197,12 @@ hr { background-color: red; height: 1px; border: 0; }
             </tfoot>
           </table>
 
+
+
+            <div class="col-md-12" style="margin-top: 5px; padding:0 !important">
+                <div id="chartundone_investment" style="width: 99%"></div>
+            </div>
+
           <div class="col-md-12" style="margin-top: 5px;background-color: #000;text-align: center;">
               <span style="font-size: 24px;font-weight: bold;color: white">Outstanding Investment Belum Received</span>
           </div>
@@ -364,7 +370,7 @@ hr { background-color: red; height: 1px; border: 0; }
       if(xhr.status == 200){
         if(result.status){
 
-          var tgl = [], jml = [], dept = [], jml_dept = [], not_sign = [], sign = [], no_pr = [], belum_po = [], sudah_po = [];
+          var tgl = [], jml = [], dept = [], jml_dept = [], not_sign = [], sign = [], no_pr = [], reff_number = [], belum_po = [], sudah_po = [], belum_po_inv = [], sudah_po_inv = [];
 
           $.each(result.datas, function(key, value) {
             tgl.push(value.week_date);
@@ -389,6 +395,14 @@ hr { background-color: red; height: 1px; border: 0; }
               no_pr.push(value.no_pr);
               belum_po.push(parseInt(value.belum_po));
               sudah_po.push(parseInt(value.sudah_po));              
+            }
+          })
+
+          $.each(result.data_investment_belum_po, function(key, value) {
+            if (value.belum_po != 0) {
+              reff_number.push(value.reff_number);
+              belum_po_inv.push(parseInt(value.belum_po));
+              sudah_po_inv.push(parseInt(value.sudah_po));
             }
           })
 
@@ -580,6 +594,99 @@ hr { background-color: red; height: 1px; border: 0; }
                 name: 'Sudah PO',
                 color: '#00a65a',
                 data: sudah_po
+              }
+            ]
+          })
+
+          $('#chartundone_investment').highcharts({
+            chart: {
+              type: 'column',
+              height: 250
+            },
+            title: {
+              text: 'Outstanding Investment Belum PO (Per Investment Number)',
+              style: {
+                fontSize: '24px',
+                fontWeight: 'bold'
+              }
+            },
+            xAxis: {
+              type: 'category',
+              categories: reff_number,
+              lineWidth:2,
+              lineColor:'#9e9e9e',
+              gridLineWidth: 1
+            },
+            yAxis: {
+              lineWidth:2,
+              lineColor:'#fff',
+              type: 'linear',
+              title: {
+                enabled:false
+              },
+              tickInterval: 3,  
+              stackLabels: {
+                  enabled: true,
+                  style: {
+                      fontWeight: 'bold',
+                      color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+                  }
+              }
+            },
+            legend: {
+              enabled:true,
+              reversed: true,
+              itemStyle:{
+                color: "white",
+                fontSize: "12px",
+                fontWeight: "bold",
+
+              },
+            },
+            plotOptions: {
+              series: {
+                cursor: 'pointer',
+                point: {
+                  events: {
+                    click: function () {
+                      ShowModalTableInv(this.category,this.series.name,result.datefrom,result.dateto,result.department);
+                    }
+                  }
+                },
+                borderWidth: 0,
+                dataLabels: {
+                  enabled: false,
+                  format: '{point.y}'
+                }
+              },
+              column: {
+                  color:  Highcharts.ColorString,
+                  stacking: 'normal',
+                  borderRadius: 1,
+                  dataLabels: {
+                      enabled: true
+                  }
+              }
+            },
+            credits: {
+              enabled: false
+            },
+
+            tooltip: {
+              formatter:function(){
+                return this.series.name+' : ' + this.y;
+              }
+            },
+            series: [
+              {
+                name: 'Belum PO',
+                color: '#ff6666', //ff6666
+                data: belum_po_inv
+              },
+              {
+                name: 'Sudah PO',
+                color: '#00a65a',
+                data: sudah_po_inv
               }
             ]
           })

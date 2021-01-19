@@ -442,9 +442,11 @@ hr { background-color: red; height: 1px; border: 0; }
           })
 
           $.each(result.data_investment_belum_po, function(key, value) {
-            reff_number.push(value.reff_number);
-            belum_po.push(parseInt(value.belum_po));
-            sudah_po.push(parseInt(value.sudah_po));
+            if (value.belum_po != 0) {
+              reff_number.push(value.reff_number);
+              belum_po.push(parseInt(value.belum_po));
+              sudah_po.push(parseInt(value.sudah_po));
+            }
           })
 
           // $.each(result.data_investment_belum_receive, function(key, value) {
