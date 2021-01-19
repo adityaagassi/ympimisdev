@@ -540,6 +540,10 @@ Route::get('index/perpajakan/{employee_id}', 'EmployeeController@indexEmpDataPaj
 Route::get('fetch/fill_perpajakan_data', 'EmployeeController@fetchFillPerpajakanData');
 Route::post('fetch/update_perpajakan_data', 'EmployeeController@fetchUpdatePerpajakanData');
 
+Route::get('index/resume_pajak', 'EmployeeController@indexResumePajak');
+Route::get('fetch/resume_pajak', 'EmployeeController@fetchResumePajak');
+Route::get('fetch/resume_pajak/detail', 'EmployeeController@fetchResumePajakDetail');
+
 Route::get('index/report/manpower', 'EmployeeController@indexReportManpower');
 Route::get('fetch/report/manpower', 'EmployeeController@fetchReportManpower');
 Route::get('fetch/report/manpower_detail', 'EmployeeController@fetchReportManpowerDetail');
