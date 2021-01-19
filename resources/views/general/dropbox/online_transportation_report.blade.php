@@ -652,7 +652,7 @@ function fetchConfirmTable(){
 				confirmTableBody += '<td>'+value.distance+'</td>';
 				// confirmTableBody += '<td><a href="javascript:void(0)" id="'+ value.highway_attachment +'" onClick="downloadAtt(id)" class="fa fa-paperclip"> Struk</a></td>';
 				confirmTableBody += '<td><button class="btn btn-success btn-xs" onclick="confirmRecord(\''+value.id+'\')">Confirm</button></td>';
-				confirmTableBody += '<td><button class="btn btn-warning btn-xs" onclick="openModalEdit(\''+value.id+'\')">Edit</button></td>';
+				confirmTableBody += '<td><button class="btn btn-warning btn-xs" onclick="openModalEdit(\''+value.id+'\')">Edit</button><br><button class="btn btn-danger btn-xs" onclick="openModalDelete(\''+value.id+'\')">Delete</button></td>';
 				confirmTableBody += '</tr>';
 			});
 
@@ -782,6 +782,26 @@ function updateData() {
 			$('#loading').hide();
 		}
 	});
+}
+
+function openModalDelete(id) {
+	if (confirm('Apakah Anda yakin akan menghapus data?')) {
+		$('#loading').show();
+		var data = {
+			id:id
+		}
+
+		$.post('{{ url("delete/general/online_transportation") }}', data,function(result, status, xhr){
+			if(result.status){
+				openSuccessGritter('Success','Delete Data Berhasil.');
+				$('#loading').hide();
+				fetchTable();
+			}else{
+				openErrorGritter('Error!','Delete Data Gagal.');
+				$('#loading').hide();
+			}
+		});
+	}
 }
 
 
