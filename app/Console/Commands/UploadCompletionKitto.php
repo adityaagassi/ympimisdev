@@ -129,7 +129,7 @@ class UploadCompletionKitto extends Command
             $success = self::uploadFTP($kittofilepath, $kittofiledestination);
 
             $title = "Kitto Upload Completion Berhasil";
-            $body = "Count Upload = ".count($row_count)."\n\nKeterangan: Upload Berhasil";
+            $body = "Count Upload = ".$row_count."\n\nKeterangan: Upload Berhasil";
             self::mailReport($title, $body, $mail_to);
             exit;
         }
@@ -158,78 +158,78 @@ class UploadCompletionKitto extends Command
     }
 
     function mailReport($title, $body, $mail_to){
-     Mail::raw([], function($message) use($title, $body, $mail_to){
-      $message->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia');
-      $message->to($mail_to);
-      $message->subject($title);
-      $message->setBody($body, 'text/plain');}
-  ); 
- }
-
- function uploadFTP($from, $to) {
-    $upload = FTP::connection()->uploadFile($from, $to);
-    return $upload;
-}
-
-function writeString($text, $maxLength, $char) {
-    if ($maxLength > 0) {
-        $textLength = 0;
-        if ($text != null) {
-            $textLength = strlen($text);
-        }
-        else {
-            $text = "";
-        }
-        for ($i = 0; $i < ($maxLength - $textLength); $i++) {
-            $text .= $char;
-        }
+        Mail::raw([], function($message) use($title, $body, $mail_to){
+          $message->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia');
+          $message->to($mail_to);
+          $message->subject($title);
+          $message->setBody($body, 'text/plain');}
+      ); 
     }
-    return strtoupper($text);
-}
 
-function writeDecimal($text, $maxLength, $char) {
-    if ($maxLength > 0) {
-        $textLength = 0;
-        if ($text != null) {
-            if(fmod($text,1) > 0){
-                $decimal = self::decimal(fmod($text,1));
-                $decimalLength = strlen($decimal);
+    function uploadFTP($from, $to) {
+        $upload = FTP::connection()->uploadFile($from, $to);
+        return $upload;
+    }
 
-                for ($j = 0; $j < (3- $decimalLength); $j++) {
-                    $decimal = $decimal . $char;
+    function writeString($text, $maxLength, $char) {
+        if ($maxLength > 0) {
+            $textLength = 0;
+            if ($text != null) {
+                $textLength = strlen($text);
+            }
+            else {
+                $text = "";
+            }
+            for ($i = 0; $i < ($maxLength - $textLength); $i++) {
+                $text .= $char;
+            }
+        }
+        return strtoupper($text);
+    }
+
+    function writeDecimal($text, $maxLength, $char) {
+        if ($maxLength > 0) {
+            $textLength = 0;
+            if ($text != null) {
+                if(fmod($text,1) > 0){
+                    $decimal = self::decimal(fmod($text,1));
+                    $decimalLength = strlen($decimal);
+
+                    for ($j = 0; $j < (3- $decimalLength); $j++) {
+                        $decimal = $decimal . $char;
+                    }
                 }
+                else{
+                    $decimal = $char . $char . $char;
+                }
+                $textLength = strlen(floor($text));
+                $text = floor($text);
             }
-            else{
-                $decimal = $char . $char . $char;
+            else {
+                $text = "";
             }
-            $textLength = strlen(floor($text));
-            $text = floor($text);
+            for ($i = 0; $i < (($maxLength - 4) - $textLength); $i++) {
+                $text = $char . $text;
+            }
+        }
+        $text .= "." . $decimal;
+        return $text;
+    }
+
+    function writeDate($created_at, $type) {
+        $datetime = strtotime($created_at);
+        if ($type == "completion") {
+            $text = date("dmY", $datetime);
+            return $text;
         }
         else {
-            $text = "";
-        }
-        for ($i = 0; $i < (($maxLength - 4) - $textLength); $i++) {
-            $text = $char . $text;
+            $text = date("Ymd", $datetime);
+            return $text;
         }
     }
-    $text .= "." . $decimal;
-    return $text;
-}
 
-function writeDate($created_at, $type) {
-    $datetime = strtotime($created_at);
-    if ($type == "completion") {
-        $text = date("dmY", $datetime);
-        return $text;
+    function decimal($number){
+        $num = explode('.', $number);
+        return $num[1];
     }
-    else {
-        $text = date("Ymd", $datetime);
-        return $text;
-    }
-}
-
-function decimal($number){
-    $num = explode('.', $number);
-    return $num[1];
-}
 }
