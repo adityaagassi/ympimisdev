@@ -441,6 +441,8 @@ table > thead > tr > th{
 							status_mesin_ready.push('STORAGE');
 						}else if(result.query_ready[i].status_mesin == null && result.query_ready[i].status == "DIPERBAIKI"){
 							status_mesin_ready.push('PERIODIK');
+						}else if(result.query_ready[i].status_mesin == null && result.query_ready[i].status == "HARUS MAINTENANCE"){
+							status_mesin_ready.push('HARUS PERIODIK');
 						}else{
 							status_mesin_ready.push(result.query_ready[i].status_mesin);
 						}

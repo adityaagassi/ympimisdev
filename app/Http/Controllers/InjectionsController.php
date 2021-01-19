@@ -3064,7 +3064,18 @@ class InjectionsController extends Controller
 
         $query_pasang = DB::SELECT("SELECT * FROM `injection_molding_masters` where remark = 'RC' and status = 'PASANG' order by COALESCE(SUBSTR(status_mesin,LENGTH(SUBSTR(status_mesin,1,7)),8),0)");
 
-        $query_ready = DB::SELECT("SELECT * FROM `injection_molding_masters` where remark = 'RC' and status = 'LEPAS' order by COALESCE(SUBSTR(status_mesin,LENGTH(SUBSTR(status_mesin,1,7)),8),0)");
+        $query_ready = DB::SELECT("SELECT
+                * 
+            FROM
+                `injection_molding_masters` 
+            WHERE
+                ( remark = 'RC' AND STATUS = 'LEPAS' ) 
+                OR ( remark = 'RC' AND STATUS = 'HARUS MAINTENANCE' ) 
+            ORDER BY
+                COALESCE (
+                SUBSTR( status_mesin, LENGTH( SUBSTR( status_mesin, 1, 7 )), 8 ),
+                0)");
+        
         $query_not_ready = DB::SELECT("SELECT
             * 
         FROM
@@ -4821,8 +4832,8 @@ class InjectionsController extends Controller
             LEFT JOIN injection_machine_cycle_times ON injection_molding_masters.product = injection_machine_cycle_times.part
             AND injection_molding_logs.color = injection_machine_cycle_times.color 
         WHERE
-            remark = 'RC'
-        AND injection_molding_masters.status != 'PASANG' ");
+            -- remark = 'RC'
+        injection_molding_masters.status != 'PASANG' ");
 
         $response = array(
             'status' => true,            
