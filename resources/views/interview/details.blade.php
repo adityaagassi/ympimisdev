@@ -1,11 +1,7 @@
 @extends('layouts.master')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
-<link rel="stylesheet" href="{{ asset('/bower_components/qrcode/css/font-awesome.css') }}">
-<link rel="stylesheet" href="{{ asset('/bower_components/qrcode/css/bootstrap.min.css') }}">
-{{-- <script src="{{ asset('/bower_components/qrcode/js/jquery.min.js') }}"></script> --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
 <style type="text/css">
 thead input {
   width: 100%;
@@ -117,7 +113,7 @@ table.table-bordered > tfoot > tr > th{
 			                <th>Filosofi YAMAHA</th>
 			                <th>Aturan K3 YAHAMA</th>
 			                <th>10 Komitmen Berkendara</th>
-			                <th>Kebijakan Mutu</th>
+			                <th>Slogan Mutu</th>
 			                <th>Action</th>
 			              </tr>
 			            </thead>
@@ -129,39 +125,59 @@ table.table-bordered > tfoot > tr > th{
 			                		<label class="label label-success">{{ $interview_detail->filosofi_yamaha }}</label>
 			                	@elseif($interview_detail->filosofi_yamaha == 'OK (Kurang Lancar)')
 			                		<label class="label label-warning">{{ $interview_detail->filosofi_yamaha }}</label>
-			                	@else
+			                	@elseif($interview_detail->filosofi_yamaha == 'Not OK')
 			                		<label class="label label-danger">{{ $interview_detail->filosofi_yamaha }}</label>
+			                	@else
+			                		<?php $detail = explode("_",$interview_detail->filosofi_yamaha);
+			                		echo "Nilai = ".$detail[1]."%<br>";
+			                		echo "Point = ".$detail[0];
+			                		 ?>
 			                	@endif
 			            	</td>
 			            	<td>@if($interview_detail->aturan_k3 == 'OK')
 			                		<label class="label label-success">{{ $interview_detail->aturan_k3 }}</label>
 			                	@elseif($interview_detail->aturan_k3 == 'OK (Kurang Lancar)')
 			                		<label class="label label-warning">{{ $interview_detail->aturan_k3 }}</label>
-			                	@else
+			                	@elseif($interview_detail->aturan_k3 == 'Not OK')
 			                		<label class="label label-danger">{{ $interview_detail->aturan_k3 }}</label>
+			                	@else
+			                		<?php $detail = explode("_",$interview_detail->aturan_k3);
+			                		echo "Nilai = ".$detail[1]."%<br>";
+			                		echo "Point = ".$detail[0];
+			                		 ?>
 			                	@endif
 			                </td>
 			                <td>@if($interview_detail->komitmen_berkendara == 'OK')
 			                		<label class="label label-success">{{ $interview_detail->komitmen_berkendara }}</label>
 			                	@elseif($interview_detail->komitmen_berkendara == 'OK (Kurang Lancar)')
 			                		<label class="label label-warning">{{ $interview_detail->komitmen_berkendara }}</label>
-			                	@else
+			                	@elseif($interview_detail->komitmen_berkendara == 'Not OK')
 			                		<label class="label label-danger">{{ $interview_detail->komitmen_berkendara }}</label>
+			                	@else
+			                		<?php $detail = explode("_",$interview_detail->komitmen_berkendara);
+			                		echo "Nilai = ".$detail[1]."%<br>";
+			                		echo "Point = ".$detail[0];
+			                		 ?>
 			                	@endif
 			                </td>
 			                <td>@if($interview_detail->kebijakan_mutu == 'OK')
 			                		<label class="label label-success">{{ $interview_detail->kebijakan_mutu }}</label>
 			                	@elseif($interview_detail->kebijakan_mutu == 'OK (Kurang Lancar)')
 			                		<label class="label label-warning">{{ $interview_detail->kebijakan_mutu }}</label>
-			                	@else
+			                	@elseif($interview_detail->kebijakan_mutu == 'Not OK')
 			                		<label class="label label-danger">{{ $interview_detail->kebijakan_mutu }}</label>
+			                	@else
+			                		<?php $detail = explode("_",$interview_detail->kebijakan_mutu);
+			                		echo "Nilai = ".$detail[1]."%<br>";
+			                		echo "Point = ".$detail[0];
+			                		 ?>
 			                	@endif
 			                </td>
 			                <td>
 			                  <center>
-			                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="editinterview('{{ url("index/interview/edit_participant") }}','{{ $interview_detail->id }}','{{ $interview_id }}');">
+			                    <!-- <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="editinterview('{{ url("index/interview/edit_participant") }}','{{ $interview_detail->id }}','{{ $interview_id }}');">
 					               <i class="fa fa-edit"></i>
-					            </button>
+					            </button> -->
 			                    <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/interview/destroy_participant") }}','{{ $interview_detail->participants->name }}','{{ $interview_detail->id }}','{{ $interview_id }}');">
 			                      <i class="fa fa-trash"></i>
 			                    </a>
@@ -188,44 +204,69 @@ table.table-bordered > tfoot > tr > th{
 			              @foreach($interview_detail2 as $interview_detail2)
 			              <tr>
 			                <td>{{ $interview_detail2->participants->name }}</td>
-			                <td>@if($interview_detail->enam_pasal_keselamatan == 'OK')
-			                		<label class="label label-success">{{ $interview_detail->enam_pasal_keselamatan }}</label>
-			                	@elseif($interview_detail->enam_pasal_keselamatan == 'OK (Kurang Lancar)')
-			                		<label class="label label-warning">{{ $interview_detail->enam_pasal_keselamatan }}</label>
+			                <td>@if($interview_detail2->enam_pasal_keselamatan == 'OK')
+			                		<label class="label label-success">{{ $interview_detail2->enam_pasal_keselamatan }}</label>
+			                	@elseif($interview_detail2->enam_pasal_keselamatan == 'OK (Kurang Lancar)')
+			                		<label class="label label-warning">{{ $interview_detail2->enam_pasal_keselamatan }}</label>
+			                	@elseif($interview_detail2->enam_pasal_keselamatan == 'Not OK')
+			                		<label class="label label-danger">{{ $interview_detail2->enam_pasal_keselamatan }}</label>
 			                	@else
-			                		<label class="label label-danger">{{ $interview_detail->enam_pasal_keselamatan }}</label>
+			                		<?php $detail = explode("_",$interview_detail2->enam_pasal_keselamatan);
+			                		echo "Nilai = ".$detail[1]."%<br>";
+			                		echo "Point = ".$detail[0];
+			                		 ?>
 			                	@endif
 			                </td>
-			                <td>@if($interview_detail->budaya_kerja == 'OK')
-			                		<label class="label label-success">{{ $interview_detail->budaya_kerja }}</label>
-			                	@elseif($interview_detail->budaya_kerja == 'OK (Kurang Lancar)')
-			                		<label class="label label-warning">{{ $interview_detail->budaya_kerja }}</label>
+			                <td>@if($interview_detail2->budaya_kerja == 'OK')
+			                		<label class="label label-success">{{ $interview_detail2->budaya_kerja }}</label>
+			                	@elseif($interview_detail2->budaya_kerja == 'OK (Kurang Lancar)')
+			                		<label class="label label-warning">{{ $interview_detail2->budaya_kerja }}</label>
+			                	@elseif($interview_detail2->budaya_kerja == 'Not OK')
+			                		<label class="label label-danger">{{ $interview_detail2->budaya_kerja }}</label>
 			                	@else
-			                		<label class="label label-danger">{{ $interview_detail->budaya_kerja }}</label>
+			                		<?php $detail = explode("_",$interview_detail2->budaya_kerja);
+			                		echo "Nilai = ".$detail[1]."%<br>";
+			                		echo "Point = ".$detail[0];
+			                		 ?>
 			                	@endif
 			                </td>
-			                <td>@if($interview_detail->budaya_5s == 'OK')
-			                		<label class="label label-success">{{ $interview_detail->budaya_5s }}</label>
-			                	@elseif($interview_detail->budaya_5s == 'OK (Kurang Lancar)')
-			                		<label class="label label-warning">{{ $interview_detail->budaya_5s }}</label>
+			                <td>@if($interview_detail2->budaya_5s == 'OK')
+			                		<label class="label label-success">{{ $interview_detail2->budaya_5s }}</label>
+			                	@elseif($interview_detail2->budaya_5s == 'OK (Kurang Lancar)')
+			                		<label class="label label-warning">{{ $interview_detail2->budaya_5s }}</label>
+			                	@elseif($interview_detail2->budaya_5s == 'Not OK')
+			                		<label class="label label-danger">{{ $interview_detail2->budaya_5s }}</label>
 			                	@else
-			                		<label class="label label-danger">{{ $interview_detail->budaya_5s }}</label>
+			                		<?php $detail = explode("_",$interview_detail2->budaya_5s);
+			                		echo "Nilai = ".$detail[1]."%<br>";
+			                		echo "Point = ".$detail[0];
+			                		 ?>
 			                	@endif
 			                </td>
-			                <td>@if($interview_detail->komitmen_hotel_konsep == 'OK')
-			                		<label class="label label-success">{{ $interview_detail->komitmen_hotel_konsep }}</label>
-			                	@elseif($interview_detail->komitmen_hotel_konsep == 'OK (Kurang Lancar)')
-			                		<label class="label label-warning">{{ $interview_detail->komitmen_hotel_konsep }}</label>
+			                <td>@if($interview_detail2->komitmen_hotel_konsep == 'OK')
+			                		<label class="label label-success">{{ $interview_detail2->komitmen_hotel_konsep }}</label>
+			                	@elseif($interview_detail2->komitmen_hotel_konsep == 'OK (Kurang Lancar)')
+			                		<label class="label label-warning">{{ $interview_detail2->komitmen_hotel_konsep }}</label>
+			                	@elseif($interview_detail2->komitmen_hotel_konsep == 'Not OK')
+			                		<label class="label label-danger">{{ $interview_detail2->komitmen_hotel_konsep }}</label>
 			                	@else
-			                		<label class="label label-danger">{{ $interview_detail->komitmen_hotel_konsep }}</label>
+			                		<?php $detail = explode("_",$interview_detail2->komitmen_hotel_konsep);
+			                		echo "Nilai = ".$detail[1]."%<br>";
+			                		echo "Point = ".$detail[0];
+			                		 ?>
 			                	@endif
 			                </td>
-			                <td>@if($interview_detail->janji_tindakan_dasar == 'OK')
-			                		<label class="label label-success">{{ $interview_detail->janji_tindakan_dasar }}</label>
-			                	@elseif($interview_detail->janji_tindakan_dasar == 'OK (Kurang Lancar)')
-			                		<label class="label label-warning">{{ $interview_detail->janji_tindakan_dasar }}</label>
+			                <td>@if($interview_detail2->janji_tindakan_dasar == 'OK')
+			                		<label class="label label-success">{{ $interview_detail2->janji_tindakan_dasar }}</label>
+			                	@elseif($interview_detail2->janji_tindakan_dasar == 'OK (Kurang Lancar)')
+			                		<label class="label label-warning">{{ $interview_detail2->janji_tindakan_dasar }}</label>
+			                	@elseif($interview_detail2->janji_tindakan_dasar == 'Not OK')
+			                		<label class="label label-danger">{{ $interview_detail2->janji_tindakan_dasar }}</label>
 			                	@else
-			                		<label class="label label-danger">{{ $interview_detail->janji_tindakan_dasar }}</label>
+			                		<?php $detail = explode("_",$interview_detail2->janji_tindakan_dasar);
+			                		echo "Nilai = ".$detail[1]."%<br>";
+			                		echo "Point = ".$detail[0];
+			                		 ?>
 			                	@endif
 			                </td>
 			                <td>
@@ -316,28 +357,17 @@ table.table-bordered > tfoot > tr > th{
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h4 class="modal-title" align="center"><b>Create Interview</b></h4>
+        <h4 class="modal-title" align="center"><b>Tambah Peserta</b></h4>
       </div>
       <div class="modal-body">
       	<div class="box-body">
         <div>
-        	{{-- <form role="form" method="post" action="{{url('index/interview/create_participant/'.$interview_id)}}" enctype="multipart/form-data"> --}}
-          <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>"> 
-          <!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-          		<center>
-          			<a id="scan" class="btn btn-primary" onclick="scanQrCode()">Scan QR Code</a>
-          			<video width="200px" id="preview"></video><br>
-          			<div class="form-group" id="inputPeserta">
-		              <input type="text" style="width:200px" name="peserta" id="createpeserta" class="form-control" placeholder="NIK">
-		            </div>
-          			<a id="cancel" class="btn btn-primary" onclick="cancelScan()">Cancel</a>
-          		</center>
-          	</div> -->        
+          <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
           	<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
           	</div>
           	<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
           		<div class="form-group" id="nik_operator">
-	              <label for="exampleInputEmail1">Nama Karyawan</label> 
+	              <center style="background-color: #a142f5;color:white;padding: 1px;font-size: 20px"><label>Nama Karyawan</label></center>
 	              <select class="form-control select3" name="nik" id="nik" style="width: 100%;" data-placeholder="Pilih Karyawan..." required>
 					<option value=""></option>
 					@foreach($operator as $operator)
@@ -350,124 +380,124 @@ table.table-bordered > tfoot > tr > th{
           	</div>
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 	            <div class="form-group">
-	              <label for="">Filosofi Yamaha</label>
-				  <div class="radio">
-				    <label><input type="radio" name="filosofi_yamaha" id="filosofi_yamaha_create" value="OK">OK</label>
-				  </div>
-				  <div class="radio">
-				    <label><input type="radio" name="filosofi_yamaha" id="filosofi_yamaha_create" value="OK (Kurang Lancar)">OK (Kurang Lancar)</label>
-				  </div>
-				  <div class="radio">
-				    <label><input type="radio" name="filosofi_yamaha" id="filosofi_yamaha_create" value="Not OK">Not OK</label>
-				  </div>
+	              <center style="background-color: #a142f5;color:white;padding: 1px;font-size: 20px"><label>Filosofi Yamaha</label></center>
+	              
+	              @foreach($pointing_call as $point)
+	              <?php if ($point->point_title == 'diamond'): ?>
+	              	<label class="checkbox-inline" style="padding-bottom: 4px">
+		              <input type="checkbox" class="filosofi_yamahaCheckbox" name="filosofi_yamaha_create" value="{{$point->point_no}}" id="filosofi_yamaha_create"><?php echo $point->point_description ?>
+		            </label><br>
+	              <?php endif ?>
+	              @endforeach
+	            </div>
+	        </div>
+	        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+	            <div class="form-group">
+	              <center style="background-color: #a142f5;color:white;padding: 1px;font-size: 20px"><label>Slogan Mutu YMPI</label></center>
+				  
+	              @foreach($pointing_call as $point)
+	              <?php if ($point->point_title == 'slogan_mutu'): ?>
+	              	<label class="checkbox-inline" style="padding-bottom: 4px">
+		              <input type="checkbox" class="kebijakan_mutuCheckbox" name="kebijakan_mutu_create" value="{{$point->point_no}}" id="kebijakan_mutu_create"><?php echo $point->point_description ?>
+		            </label><br>
+	              <?php endif ?>
+	              @endforeach
+	              <label class="checkbox-inline" style="padding-bottom: 4px">
+		              <input type="checkbox" class="keijakan_mutuCheckbox" name="keijakan_mutu_create" value="2" id="keijakan_mutu_create">Hafal Sebagian
+		            </label><br>
 	            </div>
 	            <div class="form-group">
-	              <label for="">Aturan K3 YAMAHA</label>
-				  <div class="radio">
-				    <label><input type="radio" name="aturan_k3" id="aturan_k3_create" value="OK">OK</label>
-				  </div>
-				  <div class="radio">
-				    <label><input type="radio" name="aturan_k3" id="aturan_k3_create" value="OK (Kurang Lancar)">OK (Kurang Lancar)</label>
-				  </div>
-				  <div class="radio">
-				    <label><input type="radio" name="aturan_k3" id="aturan_k3_create" value="Not OK">Not OK</label>
-				  </div>
+	              <center style="background-color: #a142f5;color:white;padding: 1px;font-size: 20px"><label>5S</label></center>
+				  
+	              @foreach($pointing_call as $point)
+	              <?php if ($point->point_title == '5s'): ?>
+	              	<label class="checkbox-inline" style="padding-bottom: 4px">
+		              <input type="checkbox" class="budaya_5sCheckbox" name="budaya_5s_create" value="{{$point->point_no}}" id="budaya_5s_create"><?php echo $point->point_no ?>. <?php echo $point->point_description ?>
+		            </label><br>
+	              <?php endif ?>
+	              @endforeach
 	            </div>
 	            <div class="form-group">
-	              <label for="">10 Komitmen Berkendara</label>
-				  <div class="radio">
-				    <label><input type="radio" name="komitmen_berkendara" id="komitmen_berkendara_create" value="OK">OK</label>
-				  </div>
-				  <div class="radio">
-				    <label><input type="radio" name="komitmen_berkendara" id="komitmen_berkendara_create" value="OK (Kurang Lancar)">OK (Kurang Lancar)</label>
-				  </div>
-				  <div class="radio">
-				    <label><input type="radio" name="komitmen_berkendara" id="komitmen_berkendara_create" value="Not OK">Not OK</label>
-				  </div>
+	              <center style="background-color: #a142f5;color:white;padding: 1px;font-size: 20px"><label>Aturan K3 YAMAHA</label></center>
+				  
+	              @foreach($pointing_call as $point)
+	              <?php if ($point->point_title == 'k3'): ?>
+	              	<label class="checkbox-inline" style="padding-bottom: 4px">
+		              <input type="checkbox" class="aturan_k3Checkbox" name="aturan_k3_create" value="{{$point->point_no}}" id="aturan_k3_create"><?php echo $point->point_no ?>. <?php echo $point->point_description ?>
+		            </label><br>
+	              <?php endif ?>
+	              @endforeach
 	            </div>
+	        </div>
+	        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+	            
 	            <div class="form-group">
-	              <label for="">Kebijakan Mutu</label>
-				  <div class="radio">
-				    <label><input type="radio" name="kebijakan_mutu" id="kebijakan_mutu_create" value="OK">OK</label>
-				  </div>
-				  <div class="radio">
-				    <label><input type="radio" name="kebijakan_mutu" id="kebijakan_mutu_create" value="OK (Kurang Lancar)">OK (Kurang Lancar)</label>
-				  </div>
-				  <div class="radio">
-				    <label><input type="radio" name="kebijakan_mutu" id="kebijakan_mutu_create" value="Not OK">Not OK</label>
-				  </div>
+	              <center style="background-color: #a142f5;color:white;padding: 1px;font-size: 20px"><label>10 Komitmen Berkendara</label></center>
+				  
+	              @foreach($pointing_call as $point)
+	              <?php if ($point->point_title == '10_komitmen'): ?>
+	              	<label class="checkbox-inline" style="padding-bottom: 4px">
+		              <input type="checkbox" class="komitmen_berkendaraCheckbox" name="komitmen_berkendara_create" value="{{$point->point_no}}" id="komitmen_berkendara_create"><?php echo $point->point_no ?>. <?php echo $point->point_description ?>
+		            </label><br>
+	              <?php endif ?>
+	              @endforeach
 	            </div>
-            </div>
-            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+	            
+            <!-- </div> -->
+            <!-- <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6"> -->
             	<div class="form-group">
-	              <label for="">6 Pasal Keselamatan Lalu Lintas YAMAHA</label>
-				  <div class="radio">
-				    <label><input type="radio" name="enam_pasal_keselamatan" id="enam_pasal_keselamatan_create" value="OK">OK</label>
-				  </div>
-				  <div class="radio">
-				    <label><input type="radio" name="enam_pasal_keselamatan" id="enam_pasal_keselamatan_create" value="OK (Kurang Lancar)">OK (Kurang Lancar)</label>
-				  </div>
-				  <div class="radio">
-				    <label><input type="radio" name="enam_pasal_keselamatan" id="enam_pasal_keselamatan_create" value="Not OK">Not OK</label>
-				  </div>
+	              <center style="background-color: #a142f5;color:white;padding: 1px;font-size: 20px"><label>6 Pasal Keselamatan Lalu Lintas YAMAHA</label></center>
+				  
+	              @foreach($pointing_call as $point)
+	              <?php if ($point->point_title == '6_pasal'): ?>
+	              	<label class="checkbox-inline" style="padding-bottom: 4px">
+		              <input type="checkbox" class="enam_pasal_keselamatanCheckbox" name="enam_pasal_keselamatan_create" value="{{$point->point_no}}" id="enam_pasal_keselamatan_create"><?php echo $point->point_no ?>. <?php echo $point->point_description ?>
+		            </label><br>
+	              <?php endif ?>
+	              @endforeach
 	            </div>
 	            <div class="form-group">
-	              <label for="">Budaya Kerja YMPI</label>
-				  <div class="radio">
-				    <label><input type="radio" name="budaya_kerja" id="budaya_kerja_create" value="OK">OK</label>
-				  </div>
-				  <div class="radio">
-				    <label><input type="radio" name="budaya_kerja" id="budaya_kerja_create" value="OK (Kurang Lancar)">OK (Kurang Lancar)</label>
-				  </div>
-				  <div class="radio">
-				    <label><input type="radio" name="budaya_kerja" id="budaya_kerja_create" value="Not OK">Not OK</label>
-				  </div>
+	              <center style="background-color: #a142f5;color:white;padding: 1px;font-size: 20px"><label>Budaya Kerja YMPI</label></center>
+				  
+	              @foreach($pointing_call as $point)
+	              <?php if ($point->point_title == 'budaya'): ?>
+	              	<label class="checkbox-inline" style="padding-bottom: 4px">
+		              <input type="checkbox" class="budaya_kerjaCheckbox" name="budaya_kerja_create" value="{{$point->point_no}}" id="budaya_kerja_create"><?php echo $point->point_no ?>. <?php echo $point->point_description ?>
+		            </label><br>
+	              <?php endif ?>
+	              @endforeach
+	            </div>
+	            
+	            <div class="form-group">
+	              <center style="background-color: #a142f5;color:white;padding: 1px;font-size: 20px"><label>Komitmen Hotel Concept</label></center>
+				  
+	              @foreach($pointing_call as $point)
+	              <?php if ($point->point_title == 'komitmen'): ?>
+	              	<label class="checkbox-inline" style="padding-bottom: 4px">
+		              <input type="checkbox" class="komitmen_hotel_konsepCheckbox" name="komitmen_hotel_konsep_create" value="{{$point->point_no}}" id="komitmen_hotel_konsep_create"><?php echo $point->point_no ?>. <?php echo $point->point_description ?>
+		            </label><br>
+	              <?php endif ?>
+	              @endforeach
 	            </div>
 	            <div class="form-group">
-	              <label for="">5S</label>
-				  <div class="radio">
-				    <label><input type="radio" name="budaya_5s" id="budaya_5s_create" value="OK">OK</label>
-				  </div>
-				  <div class="radio">
-				    <label><input type="radio" name="budaya_5s" id="budaya_5s_create" value="OK (Kurang Lancar)">OK (Kurang Lancar)</label>
-				  </div>
-				  <div class="radio">
-				    <label><input type="radio" name="budaya_5s" id="budaya_5s_create" value="Not OK">Not OK</label>
-				  </div>
-	            </div>
-	            <div class="form-group">
-	              <label for="">Komitmen Hotel Concept</label>
-				  <div class="radio">
-				    <label><input type="radio" name="komitmen_hotel_konsep" id="komitmen_hotel_konsep_create" value="OK">OK</label>
-				  </div>
-				  <div class="radio">
-				    <label><input type="radio" name="komitmen_hotel_konsep" id="komitmen_hotel_konsep_create" value="OK (Kurang Lancar)">OK (Kurang Lancar)</label>
-				  </div>
-				  <div class="radio">
-				    <label><input type="radio" name="komitmen_hotel_konsep" id="komitmen_hotel_konsep_create" value="Not OK">Not OK</label>
-				  </div>
-	            </div>
-	            <div class="form-group">
-	              <label for="">Janji Tindakan Dasar Hotel Concept</label>
-				  <div class="radio">
-				    <label><input type="radio" name="janji_tindakan_dasar" id="janji_tindakan_dasar_create" value="OK">OK</label>
-				  </div>
-				  <div class="radio">
-				    <label><input type="radio" name="janji_tindakan_dasar" id="janji_tindakan_dasar_create" value="OK (Kurang Lancar)">OK (Kurang Lancar)</label>
-				  </div>
-				  <div class="radio">
-				    <label><input type="radio" name="janji_tindakan_dasar" id="janji_tindakan_dasar_create" value="Not OK">Not OK</label>
-				  </div>
+	              <center style="background-color: #a142f5;color:white;padding: 1px;font-size: 20px"><label>Filosofi Yamaha</label></center>
+				  
+	              @foreach($pointing_call as $point)
+	              <?php if ($point->point_title == 'janji'): ?>
+	              	<label class="checkbox-inline" style="padding-bottom: 4px">
+		              <input type="checkbox" class="janji_tindakan_dasarCheckbox" name="janji_tindakan_dasar_create" value="{{$point->point_no}}" id="janji_tindakan_dasar_create"><?php echo $point->point_no ?>. <?php echo $point->point_description ?>
+		            </label><br>
+	              <?php endif ?>
+	              @endforeach
 	            </div>
             </div>
           </div>
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
           	<div class="modal-footer">
             <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>
-            <input type="submit" value="Submit" onclick="create({{ $interview_id }})" class="btn btn-primary">
+            <input type="submit" value="Tambah" onclick="create({{ $interview_id }})" class="btn btn-primary">
           </div>
           </div>
-        {{-- </form> --}}
         </div>
       </div>
     </div>
@@ -480,7 +510,7 @@ table.table-bordered > tfoot > tr > th{
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h4 class="modal-title" align="center"><b>Edit Interview</b></h4>
+        <h4 class="modal-title" align="center"><b>Edit Peserta</b></h4>
       </div>
       <div class="modal-body">
         <form role="form" id="formedit2" method="post" action="" enctype="multipart/form-data">
@@ -541,7 +571,7 @@ table.table-bordered > tfoot > tr > th{
 				  </div>
 	            </div>
 	            <div class="form-group">
-	              <label for="">Kebijakan Mutu</label>
+	              <label for="">Slogan Mutu</label>
 				  <div class="radio">
 				    <label><input type="radio" name="kebijakan_mutu" id="kebijakan_mutu" value="OK">OK</label>
 				  </div>
@@ -900,34 +930,135 @@ table.table-bordered > tfoot > tr > th{
   </script>
   <script type="text/javascript">
   	function create(interview_id){
-		var pesertascan = $('#createpeserta').val();
-		var nik = $('#nik').val();
-		var filosofi_yamaha = $('input[id="filosofi_yamaha_create"]:checked').val();
-		var aturan_k3 = $('input[id="aturan_k3_create"]:checked').val();
-		var filosofi_yamaha = $('input[id="komitmen_berkendara_create"]:checked').val();
-		var komitmen_berkendara = $('input[id="kebijakan_mutu_create"]:checked').val();
-		var kebijakan_mutu = $('input[id="kebijakan_mutu_create"]:checked').val();
-		var enam_pasal_keselamatan = $('input[id="enam_pasal_keselamatan_create"]:checked').val();
-		var budaya_kerja = $('input[id="budaya_kerja_create"]:checked').val();
-		var budaya_5s = $('input[id="budaya_5s_create"]:checked').val();
-		var komitmen_hotel_konsep = $('input[id="komitmen_hotel_konsep_create"]:checked').val();
-		var janji_tindakan_dasar = $('input[id="janji_tindakan_dasar_create"]:checked').val();
+  		var index_filosofi_yamaha = 0;
+  		var index_aturan_k3 = 0;
+  		var index_komitmen_berkendara = 0;
+  		var index_kebijakan_mutu = 0;
+  		var index_enam_pasal_keselamatan = 0;
+  		var index_budaya_kerja = 0;
+  		var index_budaya_5s = 0;
+  		var index_komitmen_hotel_konsep = 0;
+  		var index_janji_tindakan_dasar = 0;
 
-		if (pesertascan == '' && nik == '') {
+  		var checked_filosofi_yamaha = 0;
+  		var checked_aturan_k3 = 0;
+  		var checked_komitmen_berkendara = 0;
+  		var checked_kebijakan_mutu = 0;
+  		var checked_enam_pasal_keselamatan = 0;
+  		var checked_budaya_kerja = 0;
+  		var checked_budaya_5s = 0;
+  		var checked_komitmen_hotel_konsep = 0;
+  		var checked_janji_tindakan_dasar = 0;
+
+		// var pesertascan = $('#createpeserta').val();
+		var nik = $('#nik').val();
+		var type_filosofi_yamaha = [];
+		var type_aturan_k3 = [];
+		var type_komitmen_berkendara = [];
+		var type_kebijakan_mutu = [];
+		var type_enam_pasal_keselamatan = [];
+		var type_budaya_kerja = [];
+		var type_budaya_5s = [];
+		var type_komitmen_hotel_konsep = [];
+		var type_janji_tindakan_dasar = [];
+		$("input[name='filosofi_yamaha_create']:checked").each(function (i) {
+            type_filosofi_yamaha[i] = $(this).val();
+            checked_filosofi_yamaha++;
+        });
+        $("input[name='aturan_k3_create']:checked").each(function (i) {
+            type_aturan_k3[i] = $(this).val();
+            checked_aturan_k3++;
+        });
+        $("input[name='komitmen_berkendara_create']:checked").each(function (i) {
+            type_komitmen_berkendara[i] = $(this).val();
+            checked_komitmen_berkendara++;
+        });
+        $("input[name='kebijakan_mutu_create']:checked").each(function (i) {
+            type_kebijakan_mutu[i] = $(this).val();
+            checked_kebijakan_mutu++;
+        });
+        $("input[name='enam_pasal_keselamatan_create']:checked").each(function (i) {
+            type_enam_pasal_keselamatan[i] = $(this).val();
+            checked_enam_pasal_keselamatan++;
+        });
+        $("input[name='budaya_kerja_create']:checked").each(function (i) {
+            type_budaya_kerja[i] = $(this).val();
+            checked_budaya_kerja++;
+        });
+        $("input[name='budaya_5s_create']:checked").each(function (i) {
+            type_budaya_5s[i] = $(this).val();
+            checked_budaya_5s++;
+        });
+        $("input[name='komitmen_hotel_konsep_create']:checked").each(function (i) {
+            type_komitmen_hotel_konsep[i] = $(this).val();
+            checked_komitmen_hotel_konsep++;
+        });
+        $("input[name='janji_tindakan_dasar_create']:checked").each(function (i) {
+            type_janji_tindakan_dasar[i] = $(this).val();
+            checked_janji_tindakan_dasar++;
+        });
+
+        $("input[name='filosofi_yamaha_create']").each(function (i) {
+            index_filosofi_yamaha++;
+        });
+        $("input[name='aturan_k3_create']").each(function (i) {
+            index_aturan_k3++;
+        });
+        $("input[name='komitmen_berkendara_create']").each(function (i) {
+            index_komitmen_berkendara++;
+        });
+        $("input[name='kebijakan_mutu_create']").each(function (i) {
+            index_kebijakan_mutu++;
+        });
+        $("input[name='enam_pasal_keselamatan_create']").each(function (i) {
+            index_enam_pasal_keselamatan++;
+        });
+        $("input[name='budaya_kerja_create']").each(function (i) {
+            index_budaya_kerja++;
+        });
+        $("input[name='budaya_5s_create']").each(function (i) {
+            index_budaya_5s++;
+        });
+        $("input[name='komitmen_hotel_konsep_create']").each(function (i) {
+            index_komitmen_hotel_konsep++;
+        });
+        $("input[name='janji_tindakan_dasar_create']").each(function (i) {
+            index_janji_tindakan_dasar++;
+        });
+
+		if (nik == '') {
 			alert('Isi Semua Data');
 		}else{
 			var data = {
-				pesertascan:pesertascan,
+				// pesertascan:pesertascan,
 				nik:nik,
-				filosofi_yamaha:filosofi_yamaha,
-				aturan_k3:aturan_k3,
-				komitmen_berkendara:komitmen_berkendara,
-				kebijakan_mutu:kebijakan_mutu,
-				enam_pasal_keselamatan:enam_pasal_keselamatan,
-				budaya_kerja:budaya_kerja,
-				budaya_5s:budaya_5s,
-				komitmen_hotel_konsep:komitmen_hotel_konsep,
-				janji_tindakan_dasar:janji_tindakan_dasar,
+				filosofi_yamaha:type_filosofi_yamaha.join(),
+				aturan_k3:type_aturan_k3.join(),
+				komitmen_berkendara:type_komitmen_berkendara.join(),
+				kebijakan_mutu:type_kebijakan_mutu.join(),
+				enam_pasal_keselamatan:type_enam_pasal_keselamatan.join(),
+				budaya_kerja:type_budaya_kerja.join(),
+				budaya_5s:type_budaya_5s.join(),
+				komitmen_hotel_konsep:type_komitmen_hotel_konsep.join(),
+				janji_tindakan_dasar:type_janji_tindakan_dasar.join(),
+				index_filosofi_yamaha:index_filosofi_yamaha,
+				index_aturan_k3:index_aturan_k3,
+				index_komitmen_berkendara:index_komitmen_berkendara,
+				index_kebijakan_mutu:index_kebijakan_mutu,
+				index_enam_pasal_keselamatan:index_enam_pasal_keselamatan,
+				index_budaya_kerja:index_budaya_kerja,
+				index_budaya_5s:index_budaya_5s,
+				index_komitmen_hotel_konsep:index_komitmen_hotel_konsep,
+				index_janji_tindakan_dasar:index_janji_tindakan_dasar,
+				checked_filosofi_yamaha:checked_filosofi_yamaha,
+				checked_aturan_k3:checked_aturan_k3,
+				checked_komitmen_berkendara:checked_komitmen_berkendara,
+				checked_kebijakan_mutu:checked_kebijakan_mutu,
+				checked_enam_pasal_keselamatan:checked_enam_pasal_keselamatan,
+				checked_budaya_kerja:checked_budaya_kerja,
+				checked_budaya_5s:checked_budaya_5s,
+				checked_komitmen_hotel_konsep:checked_komitmen_hotel_konsep,
+				checked_janji_tindakan_dasar:checked_janji_tindakan_dasar,
 				interview_id:interview_id
 			}
 			// console.table(data);
@@ -950,80 +1081,7 @@ table.table-bordered > tfoot > tr > th{
       $('#inputPeserta').hide();
       $('#cancel').hide();
     });
-    function cancelScan(){
-    	$('#nik_operator').show();
-    	$('#preview').hide();
-	      $('#inputPeserta').hide();
-	      $('#cancel').hide();
-	      $('#scan').show();
-    };
-    function scanQrCode(){
-    	$('#preview').show();
-      	$('#inputPeserta').show();
-      	$('#scan').hide();
-      	$('#cancel').show();
-      	$('#nik_operator').hide();
-    	let opts = {
-		  // Whether to scan continuously for QR codes. If false, use scanner.scan() to manually scan.
-		  // If true, the scanner emits the "scan" event when a QR code is scanned. Default true.
-		  continuous: true,
-		  
-		  // The HTML element to use for the camera's video preview. Must be a <video> element.
-		  // When the camera is active, this element will have the "active" CSS class, otherwise,
-		  // it will have the "inactive" class. By default, an invisible element will be created to
-		  // host the video.
-		  video: document.getElementById('preview'),
-		  
-		  // Whether to horizontally mirror the video preview. This is helpful when trying to
-		  // scan a QR code with a user-facing camera. Default true.
-		  mirror: false,
-		  
-		  // Whether to include the scanned image data as part of the scan result. See the "scan" event
-		  // for image format details. Default false.
-		  captureImage: false,
-		  
-		  // Only applies to continuous mode. Whether to actively scan when the tab is not active.
-		  // When false, this reduces CPU usage when the tab is not active. Default true.
-		  backgroundScan: true,
-		  
-		  // Only applies to continuous mode. The period, in milliseconds, before the same QR code
-		  // will be recognized in succession. Default 5000 (5 seconds).
-		  refractoryPeriod: 5000,
-		  
-		  // Only applies to continuous mode. The period, in rendered frames, between scans. A lower scan period
-		  // increases CPU usage but makes scan response faster. Default 1 (i.e. analyze every frame).
-		  scanPeriod: 1
-		};
-      let scanner = new Instascan.Scanner(opts);
-
-      scanner.addListener('scan', function (content) {
-
-        
-        var res = content.substring(0, 9);
-        // alert(res);
-        $("#createpeserta").val(res)
-        
-
-      });
-
-      Instascan.Camera.getCameras().then(function (cameras) {
-
-        if (cameras.length > 0) {
-
-          scanner.start(cameras[1]);
-
-        } else {
-
-          console.error('No cameras found.');
-
-        }
-
-      }).catch(function (e) {
-
-        console.error(e);
-
-      });
-    }
+    
 
     function readURL(input) {
 	  if (input.files && input.files[0]) {

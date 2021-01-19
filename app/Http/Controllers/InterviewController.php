@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use App\Interview;
 use App\InterviewDetail;
 use App\InterviewPicture;
+use App\PointingCallItem;
 use Response;
 use DataTables;
 use Excel;
@@ -370,6 +371,9 @@ class InterviewController extends Controller
         $activity_id = $interview->activity_lists->id;
         $leader = $interview->activity_lists->leader_dept;
 
+        $pointing_call = PointingCallItem::where('point_title','!=','pic')->where('point_title','!=','janji_safety')->get();
+        
+
         $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department like '%".$departments."%' and employee_syncs.end_date is null";
         $operator = DB::select($queryOperator);
         $operator2 = DB::select($queryOperator);
@@ -382,6 +386,7 @@ class InterviewController extends Controller
                       'operator' => $operator,
                       'operator2' => $operator2,
                       'activity_name' => $activity_name,
+                    'pointing_call' => $pointing_call,
                       'leader' => $leader,
                       'activity_alias' => $activity_alias,
                       'interview_id' => $interview_id,
@@ -396,43 +401,125 @@ class InterviewController extends Controller
             try{    
               $id_user = Auth::id();
               $interview_id = $request->get('interview_id');
-              if($request->input('pesertascan') == Null){
-                InterviewDetail::create([
-                    'interview_id' => $interview_id,
-                    'nik' => $request->get('nik'),
-                    'filosofi_yamaha' => $request->get('filosofi_yamaha'),
-                    'aturan_k3' => $request->get('aturan_k3'),
-                    'komitmen_berkendara' => $request->get('komitmen_berkendara'),
-                    'kebijakan_mutu' => $request->get('kebijakan_mutu'),
-                    'enam_pasal_keselamatan' => $request->get('enam_pasal_keselamatan'),
-                    'budaya_kerja' => $request->get('budaya_kerja'),
-                    'budaya_5s' => $request->get('budaya_5s'),
-                    'komitmen_hotel_konsep' => $request->get('komitmen_hotel_konsep'),
-                    'janji_tindakan_dasar' => $request->get('janji_tindakan_dasar'),
-                    'created_by' => $id_user
-                ]);
+              // if($request->input('pesertascan') == Null){
+
+              $index_filosofi_yamaha = $request->get('index_filosofi_yamaha');
+              $index_aturan_k3 = $request->get('index_aturan_k3');
+              $index_komitmen_berkendara = $request->get('index_komitmen_berkendara');
+              $index_kebijakan_mutu = $request->get('index_kebijakan_mutu');
+              $index_enam_pasal_keselamatan = $request->get('index_enam_pasal_keselamatan');
+              $index_budaya_kerja = $request->get('index_budaya_kerja');
+              $index_budaya_5s = $request->get('index_budaya_5s');
+              $index_komitmen_hotel_konsep = $request->get('index_komitmen_hotel_konsep');
+              $index_janji_tindakan_dasar = $request->get('index_janji_tindakan_dasar');
+              $checked_filosofi_yamaha = $request->get('checked_filosofi_yamaha');
+              $checked_aturan_k3 = $request->get('checked_aturan_k3');
+              $checked_komitmen_berkendara = $request->get('checked_komitmen_berkendara');
+              $checked_kebijakan_mutu = $request->get('checked_kebijakan_mutu');
+              $checked_enam_pasal_keselamatan = $request->get('checked_enam_pasal_keselamatan');
+              $checked_budaya_kerja = $request->get('checked_budaya_kerja');
+              $checked_budaya_5s = $request->get('checked_budaya_5s');
+              $checked_komitmen_hotel_konsep = $request->get('checked_komitmen_hotel_konsep');
+              $checked_janji_tindakan_dasar = $request->get('checked_janji_tindakan_dasar');
+
+              $nilai_filosofi_yamaha = 0;
+              if ($checked_filosofi_yamaha == 0) {
+                $nilai_filosofi_yamaha = 0;
+              }else if($checked_filosofi_yamaha < $index_filosofi_yamaha){
+                $nilai_filosofi_yamaha = round(($checked_filosofi_yamaha / $index_filosofi_yamaha)*100,0);
               }else{
-                InterviewDetail::create([
-                    'interview_id' => $interview_id,
-                    'nik' => $request->get('pesertascan'),
-                    'filosofi_yamaha' => $request->get('filosofi_yamaha'),
-                    'aturan_k3' => $request->get('aturan_k3'),
-                    'komitmen_berkendara' => $request->get('komitmen_berkendara'),
-                    'kebijakan_mutu' => $request->get('kebijakan_mutu'),
-                    'enam_pasal_keselamatan' => $request->get('enam_pasal_keselamatan'),
-                    'budaya_kerja' => $request->get('budaya_kerja'),
-                    'budaya_5s' => $request->get('budaya_5s'),
-                    'komitmen_hotel_konsep' => $request->get('komitmen_hotel_konsep'),
-                    'janji_tindakan_dasar' => $request->get('janji_tindakan_dasar'),
-                    'created_by' => $id_user
-                ]);
+                $nilai_filosofi_yamaha = 100;
               }
+
+              $nilai_aturan_k3 = 0;
+              if ($checked_aturan_k3 == 0) {
+                $nilai_aturan_k3 = 0;
+              }else if($checked_aturan_k3 < $index_aturan_k3){
+                $nilai_aturan_k3 = round(($checked_aturan_k3 / $index_aturan_k3)*100,0);
+              }else{
+                $nilai_aturan_k3 = 100;
+              }
+
+              $nilai_komitmen_berkendara = 0;
+              if ($checked_komitmen_berkendara == 0) {
+                $nilai_komitmen_berkendara = 0;
+              }else if($checked_komitmen_berkendara < $index_komitmen_berkendara){
+                $nilai_komitmen_berkendara = round(($checked_komitmen_berkendara / $index_komitmen_berkendara)*100,0);
+              }else{
+                $nilai_komitmen_berkendara = 100;
+              }
+
+              $nilai_kebijakan_mutu = 0;
+              if ($request->get('kebijakan_mutu') == 2) {
+                $nilai_kebijakan_mutu = 0;
+              }else{
+                $nilai_kebijakan_mutu = 100;
+              }
+
+              $nilai_enam_pasal_keselamatan = 0;
+              if ($checked_enam_pasal_keselamatan == 0) {
+                $nilai_enam_pasal_keselamatan = 0;
+              }else if($checked_enam_pasal_keselamatan < $index_enam_pasal_keselamatan){
+                $nilai_enam_pasal_keselamatan = round(($checked_enam_pasal_keselamatan / $index_enam_pasal_keselamatan)*100,0);
+              }else{
+                $nilai_enam_pasal_keselamatan = 100;
+              }
+
+              $nilai_budaya_kerja = 0;
+              if ($checked_budaya_kerja == 0) {
+                $nilai_budaya_kerja = 0;
+              }else if($checked_budaya_kerja < $index_budaya_kerja){
+                $nilai_budaya_kerja = round(($checked_budaya_kerja / $index_budaya_kerja)*100,0);
+              }else{
+                $nilai_budaya_kerja = 100;
+              }
+
+              $nilai_budaya_5s = 0;
+              if ($checked_budaya_5s == 0) {
+                $nilai_budaya_5s = 0;
+              }else if($checked_budaya_5s < $index_budaya_5s){
+                $nilai_budaya_5s = round(($checked_budaya_5s / $index_budaya_5s)*100,0);
+              }else{
+                $nilai_budaya_5s = 100;
+              }
+
+              $nilai_komitmen_hotel_konsep = 0;
+              if ($checked_komitmen_hotel_konsep == 0) {
+                $nilai_komitmen_hotel_konsep = 0;
+              }else if($checked_komitmen_hotel_konsep < $index_komitmen_hotel_konsep){
+                $nilai_komitmen_hotel_konsep = round(($checked_komitmen_hotel_konsep / $index_komitmen_hotel_konsep)*100,0);
+              }else{
+                $nilai_komitmen_hotel_konsep = 100;
+              }
+
+              $nilai_janji_tindakan_dasar = 0;
+              if ($checked_janji_tindakan_dasar == 0) {
+                $nilai_janji_tindakan_dasar = 0;
+              }else if($checked_janji_tindakan_dasar < $index_janji_tindakan_dasar){
+                $nilai_janji_tindakan_dasar = round(($checked_janji_tindakan_dasar / $index_janji_tindakan_dasar)*100,0);
+              }else{
+                $nilai_janji_tindakan_dasar = 100;
+              }
+
+
+              InterviewDetail::create([
+                  'interview_id' => $interview_id,
+                  'nik' => $request->get('nik'),
+                  'filosofi_yamaha' => $request->get('filosofi_yamaha').'_'.$nilai_filosofi_yamaha,
+                  'aturan_k3' => $request->get('aturan_k3').'_'.$nilai_aturan_k3,
+                  'komitmen_berkendara' => $request->get('komitmen_berkendara').'_'.$nilai_komitmen_berkendara,
+                  'kebijakan_mutu' => $request->get('kebijakan_mutu').'_'.$nilai_kebijakan_mutu,
+                  'enam_pasal_keselamatan' => $request->get('enam_pasal_keselamatan').'_'.$nilai_enam_pasal_keselamatan,
+                  'budaya_kerja' => $request->get('budaya_kerja').'_'.$nilai_budaya_kerja,
+                  'budaya_5s' => $request->get('budaya_5s').'_'.$nilai_budaya_5s,
+                  'komitmen_hotel_konsep' => $request->get('komitmen_hotel_konsep').'_'.$nilai_komitmen_hotel_konsep,
+                  'janji_tindakan_dasar' => $request->get('janji_tindakan_dasar').'_'.$nilai_janji_tindakan_dasar,
+                  'created_by' => $id_user
+              ]);
 
               $response = array(
                 'status' => true,
               );
-              // return redirect('index/interview/details/'.$interview_id)
-              // ->with('page', 'Interview Details')->with('status', 'New Participant has been created.');
               return Response::json($response);
             }catch(\Exception $e){
               $response = array(

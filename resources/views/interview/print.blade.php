@@ -41,6 +41,7 @@ table {
 </head>
 <body>
   <header>
+  	<?php $file = url("/data_file/segitiga.png"); ?>
     <table style="width: 100%; border-collapse: collapse;" >
 			<tbody>
 				<tr>
@@ -105,8 +106,19 @@ table {
 							<center><label class="label label-success">O</label></center>
 						@elseif($detail->filosofi_yamaha == 'OK (Kurang Lancar)')
 							<center><label class="label label-warning"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
-						@else
+						@elseif($detail->filosofi_yamaha == 'Not OK')
 							<center><label class="label label-danger">X</label></center>
+						@else
+							<center><?php $nilai = explode("_",$detail->filosofi_yamaha);
+			                		if ($nilai[1] == 100) {
+			                			echo '<center><label class="label label-success">O</label></center>';
+			                		}else if ($nilai[1] < 100 && $nilai[1] > 0) {
+			                			echo '<center><label class="label label-warning"><img width="20px" src="'.$file.'"></label></center>';
+			                			echo "Point = ".$nilai[0];
+			                		}else{
+			                			echo '<center><label class="label label-danger">X</label></center>';
+			                		}
+			                		 ?></center>
 						@endif
 					</td>
 					<td style="border: 1px solid black;font-size: 10px;">
@@ -114,8 +126,19 @@ table {
 							<center><label class="label label-success">O</label></center>
 						@elseif($detail->aturan_k3 == 'OK (Kurang Lancar)')
 							<center><label class="label label-warning"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
-						@else
+						@elseif($detail->aturan_k3 == 'Not OK')
 							<center><label class="label label-danger">X</label></center>
+						@else
+							<center><?php $nilai = explode("_",$detail->aturan_k3);
+			                		if ($nilai[1] == 100) {
+			                			echo '<center><label class="label label-success">O</label></center>';
+			                		}else if ($nilai[1] < 100 && $nilai[1] > 0) {
+			                			echo '<center><label class="label label-warning"><img width="20px" src="'.$file.'"></label></center>';
+			                			echo "Point = ".$nilai[0];
+			                		}else{
+			                			echo '<center><label class="label label-danger">X</label></center>';
+			                		}
+			                		 ?></center>
 						@endif
 					</td>
 					<td style="border: 1px solid black;font-size: 10px;">
@@ -123,8 +146,19 @@ table {
 							<center><label class="label label-success">O</label></center>
 						@elseif($detail->komitmen_berkendara == 'OK (Kurang Lancar)')
 							<center><label class="label label-warning"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
-						@else
+						@elseif($detail->komitmen_berkendara == 'Not OK')
 							<center><label class="label label-danger">X</label></center>
+						@else
+							<center><?php $nilai = explode("_",$detail->budaya_5s);
+			                		if ($nilai[1] == 100) {
+			                			echo '<center><label class="label label-success">O</label></center>';
+			                		}else if ($nilai[1] < 100 && $nilai[1] > 0) {
+			                			echo '<center><label class="label label-warning"><img width="20px" src="'.$file.'"></label></center>';
+			                			echo "Point = ".$nilai[0];
+			                		}else{
+			                			echo '<center><label class="label label-danger">X</label></center>';
+			                		}
+			                		 ?></center>
 						@endif
 					</td>
 					<td style="border: 1px solid black;font-size: 10px;">
@@ -132,8 +166,19 @@ table {
 							<center><label class="label label-success">O</label></center>
 						@elseif($detail->kebijakan_mutu == 'OK (Kurang Lancar)')
 							<center><label class="label label-warning"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
-						@else
+						@elseif($detail->kebijakan_mutu == 'Not OK')
 							<center><label class="label label-danger">X</label></center>
+						@else
+							<center><?php $nilai = explode("_",$detail->kebijakan_mutu);
+			                		if ($nilai[1] == 100) {
+			                			echo '<center><label class="label label-success">O</label></center>';
+			                		}else if ($nilai[1] < 100 && $nilai[1] > 0) {
+			                			echo '<center><label class="label label-warning"><img width="20px" src="'.$file.'"></label></center>';
+			                			echo "Point = ".$nilai[0];
+			                		}else{
+			                			echo '<center><label class="label label-danger">X</label></center>';
+			                		}
+			                		 ?></center>
 						@endif
 					</td>
 					<td style="border: 1px solid black;font-size: 10px;">
@@ -141,8 +186,19 @@ table {
 							<center><label class="label label-success">O</label></center>
 						@elseif($detail->enam_pasal_keselamatan == 'OK (Kurang Lancar)')
 							<center><label class="label label-warning"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
-						@else
+						@elseif($detail->enam_pasal_keselamatan == 'Not OK')
 							<center><label class="label label-danger">X</label></center>
+						@else
+							<center><?php $nilai = explode("_",$detail->enam_pasal_keselamatan);
+			                		if ($nilai[1] == 100) {
+			                			echo '<center><label class="label label-success">O</label></center>';
+			                		}else if ($nilai[1] < 100 && $nilai[1] > 0) {
+			                			echo '<center><label class="label label-warning"><img width="20px" src="'.$file.'"></label></center>';
+			                			echo "Point = ".$nilai[0];
+			                		}else{
+			                			echo '<center><label class="label label-danger">X</label></center>';
+			                		}
+			                		 ?></center>
 						@endif
 					</td>
 					<td style="border: 1px solid black;font-size: 10px;">
@@ -150,8 +206,19 @@ table {
 							<center><label class="label label-success">O</label></center>
 						@elseif($detail->budaya_kerja == 'OK (Kurang Lancar)')
 							<center><label class="label label-warning"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
-						@else
+						@elseif($detail->budaya_kerja == 'Not OK')
 							<center><label class="label label-danger">X</label></center>
+						@else
+							<center><?php $nilai = explode("_",$detail->budaya_kerja);
+			                		if ($nilai[1] == 100) {
+			                			echo '<center><label class="label label-success">O</label></center>';
+			                		}else if ($nilai[1] < 100 && $nilai[1] > 0) {
+			                			echo '<center><label class="label label-warning"><img width="20px" src="'.$file.'"></label></center>';
+			                			echo "Point = ".$nilai[0];
+			                		}else{
+			                			echo '<center><label class="label label-danger">X</label></center>';
+			                		}
+			                		 ?></center>
 						@endif
 					</td>
 					<td style="border: 1px solid black;font-size: 10px;">
@@ -159,8 +226,19 @@ table {
 							<center><label class="label label-success">O</label></center>
 						@elseif($detail->budaya_5s == 'OK (Kurang Lancar)')
 							<center><label class="label label-warning"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
-						@else
+						@elseif($detail->budaya_5s == 'Not OK')
 							<center><label class="label label-danger">X</label></center>
+						@else
+							<center><?php $nilai = explode("_",$detail->budaya_5s);
+			                		if ($nilai[1] == 100) {
+			                			echo '<center><label class="label label-success">O</label></center>';
+			                		}else if ($nilai[1] < 100 && $nilai[1] > 0) {
+			                			echo '<center><label class="label label-warning"><img width="20px" src="'.$file.'"></label></center>';
+			                			echo "Point = ".$nilai[0];
+			                		}else{
+			                			echo '<center><label class="label label-danger">X</label></center>';
+			                		}
+			                		 ?></center>
 						@endif
 					</td>
 					<td style="border: 1px solid black;font-size: 10px;">
@@ -168,8 +246,19 @@ table {
 							<center><label class="label label-success">O</label></center>
 						@elseif($detail->komitmen_hotel_konsep == 'OK (Kurang Lancar)')
 							<center><label class="label label-warning"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
-						@else
+						@elseif($detail->komitmen_hotel_konsep == 'Not OK')
 							<center><label class="label label-danger">X</label></center>
+						@else
+							<center><?php $nilai = explode("_",$detail->komitmen_hotel_konsep);
+			                		if ($nilai[1] == 100) {
+			                			echo '<center><label class="label label-success">O</label></center>';
+			                		}else if ($nilai[1] < 100 && $nilai[1] > 0) {
+			                			echo '<center><label class="label label-warning"><img width="20px" src="'.$file.'"></label></center>';
+			                			echo "Point = ".$nilai[0];
+			                		}else{
+			                			echo '<center><label class="label label-danger">X</label></center>';
+			                		}
+			                		 ?></center>
 						@endif
 					</td>
 					<td style="border: 1px solid black;font-size: 10px;">
@@ -177,8 +266,19 @@ table {
 							<center><label class="label label-success">O</label></center>
 						@elseif($detail->janji_tindakan_dasar == 'OK (Kurang Lancar)')
 							<center><label class="label label-warning"><img width="20px" src="{{ url('/data_file/segitiga.png') }}"></label></center>
-						@else
+						@elseif($detail->janji_tindakan_dasar == 'Not OK')
 							<center><label class="label label-danger">X</label></center>
+						@else
+							<center><?php $nilai = explode("_",$detail->janji_tindakan_dasar);
+			                		if ($nilai[1] == 100) {
+			                			echo '<center><label class="label label-success">O</label></center>';
+			                		}else if ($nilai[1] < 100 && $nilai[1] > 0) {
+			                			echo '<center><label class="label label-warning"><img width="20px" src="'.$file.'"></label></center>';
+			                			echo "Point = ".$nilai[0];
+			                		}else{
+			                			echo '<center><label class="label label-danger">X</label></center>';
+			                		}
+			                		 ?></center>
 						@endif
 					</td>
 				</tr>
