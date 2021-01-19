@@ -49,7 +49,14 @@ class UploadCompletionKitto extends Command
 
         $title = "";
         $body = "";
-        $mail_to = ['aditya.agassi@music.yamaha.com', 'muhammad.ikhlas@music.yamaha.com'];
+        $mail_to = [
+            'aditya.agassi@music.yamaha.com', 
+            'muhammad.ikhlas@music.yamaha.com',
+            'mei.rahayu@music.yamaha.com',
+            'istiqomah@music.yamaha.com',
+            'silvy.firliani@music.yamaha.com',
+            'fathor.rahman@music.yamaha.com'
+        ];
 
         $not_uploads = db::connection('mysql2')->table('histories')
         ->leftJoin('materials', 'materials.id', '=', 'histories.completion_material_id')
@@ -151,15 +158,15 @@ class UploadCompletionKitto extends Command
     }
 
     function mailReport($title, $body, $mail_to){
-       Mail::raw([], function($message) use($title, $body, $mail_to){
-          $message->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia');
-          $message->to($mail_to);
-          $message->subject($title);
-          $message->setBody($body, 'text/plain');}
-      ); 
-   }
+     Mail::raw([], function($message) use($title, $body, $mail_to){
+      $message->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia');
+      $message->to($mail_to);
+      $message->subject($title);
+      $message->setBody($body, 'text/plain');}
+  ); 
+ }
 
-   function uploadFTP($from, $to) {
+ function uploadFTP($from, $to) {
     $upload = FTP::connection()->uploadFile($from, $to);
     return $upload;
 }

@@ -49,7 +49,14 @@ class UploadTransferKitto extends Command
 
         $title = "";
         $body = "";
-        $mail_to = ['aditya.agassi@music.yamaha.com', 'muhammad.ikhlas@music.yamaha.com'];
+        $mail_to = [
+            'aditya.agassi@music.yamaha.com', 
+            'muhammad.ikhlas@music.yamaha.com',
+            'mei.rahayu@music.yamaha.com',
+            'istiqomah@music.yamaha.com',
+            'silvy.firliani@music.yamaha.com',
+            'fathor.rahman@music.yamaha.com'
+        ];
 
         $transfers = db::connection('mysql2')->table('histories')
         ->whereIn('histories.category', array('transfer', 'transfer_adjustment', 'transfer_adjustment_excel', 'transfer_adjustment_manual', 'transfer_cancel', 'transfer_error', 'transfer_return', 'transfer_repair', 'transfer_after_repair'))
