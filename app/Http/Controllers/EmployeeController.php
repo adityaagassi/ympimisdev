@@ -662,6 +662,144 @@ class EmployeeController extends Controller
           }
      }
 
+     public function indexResumePajak()
+     {
+          $title = 'Resume Pengisian Data NPWP';
+          $title_jp = '??';
+
+          return view('employees.report.resume_pajak', array(
+               'title' => $title,
+               'title_jp' => $title_jp,
+          ))->with('page', 'Resume Pengisian Data NPWP')->with('head','Resume Pengisian Data NPWP');
+     }
+
+     public function fetchResumePajak(Request $request)
+     {
+          try {
+               $pajak = DB::SELECT("
+
+               SELECT
+                    SUM(a.count_sudah ) AS sudah,
+                    SUM(a.count_belum ) AS belum,
+                    a.department,
+                    COALESCE(departments.department_shortname,'') as department_shortname
+               FROM
+                    (
+               SELECT
+                    count( employee_taxes.employee_id ) AS count_sudah,
+                    0 AS count_belum,
+                    COALESCE ( department, '' ) AS department 
+               FROM
+                    employee_taxes
+                    JOIN employee_syncs ON employee_syncs.employee_id = employee_taxes.employee_id 
+               GROUP BY
+                    department UNION ALL
+               SELECT
+                    0 AS count_sudah,
+                    count( employee_syncs.employee_id ) AS count_belum,
+                    COALESCE ( department, '' ) AS department 
+               FROM
+                    employee_taxes
+                    RIGHT JOIN employee_syncs ON employee_syncs.employee_id = employee_taxes.employee_id 
+               WHERE
+                    employee_taxes.employee_id IS NULL 
+                    AND employee_syncs.end_date IS NULL 
+               GROUP BY
+                    department 
+                    ) a 
+                    left join departments on a.department = departments.department_name
+               GROUP BY
+                    a.department,departments.department_shortname"
+               );
+
+               $response = array(
+                    'status' => true,
+                    'pajak' => $pajak,
+               );
+               return Response::json($response);
+          } catch (\Exception $e) {
+               $response = array(
+                    'status' => false,
+                    'message' => $e->getMessage()
+               );
+               return Response::json($response);
+          }
+     }
+
+     public function fetchResumePajakDetail(Request $request)
+     {
+          try {
+               $status = $request->get('status');
+               $dept = $request->get('dept');
+
+               if ($dept == "") {
+                    if ($status == "Belum") {
+                         $pajak = DB::SELECT("SELECT
+                              employee_syncs.employee_id,
+                              employee_syncs.name,
+                              '' as department
+                         FROM
+                              employee_taxes
+                              RIGHT JOIN employee_syncs ON employee_syncs.employee_id = employee_taxes.employee_id
+                         WHERE
+                              department IS NULL
+                              and employee_taxes.employee_id is null
+                              and employee_syncs.end_date is null");
+                    }else{
+                         $pajak = DB::SELECT("SELECT
+                              employee_syncs.employee_id,
+                              employee_syncs.name,
+                              '' as department
+                         FROM
+                              employee_taxes
+                              LEFT JOIN employee_syncs ON employee_syncs.employee_id = employee_taxes.employee_id
+                         WHERE
+                              department IS NULL
+                              and employee_syncs.end_date is null");
+                    }
+               }else{
+                    if ($status == "Belum") {
+                         $pajak = DB::SELECT("SELECT
+                              employee_syncs.employee_id,
+                              employee_syncs.name,
+                              COALESCE(department_shortname,'') as department
+                         FROM
+                              employee_taxes
+                              RIGHT JOIN employee_syncs ON employee_syncs.employee_id = employee_taxes.employee_id
+                              join departments on department_name = employee_syncs.department
+                         WHERE
+                              department_shortname = '".$dept."'
+                              and employee_taxes.employee_id is null
+                              and employee_syncs.end_date is null");
+                    }else{
+                         $pajak = DB::SELECT("SELECT
+                              employee_syncs.employee_id,
+                              employee_syncs.name,
+                              COALESCE(department_shortname,'') as department
+                         FROM
+                              employee_taxes
+                              LEFT JOIN employee_syncs ON employee_syncs.employee_id = employee_taxes.employee_id
+                              join departments on department_name = employee_syncs.department
+                         WHERE
+                              department_shortname = '".$dept."'
+                              and employee_syncs.end_date is null");
+                    }
+               }
+
+               $response = array(
+                    'status' => true,
+                    'pajak' => $pajak,
+               );
+               return Response::json($response);
+          } catch (\Exception $e) {
+               $response = array(
+                    'status' => false,
+                    'message' => $e->getMessage()
+               );
+               return Response::json($response);
+          }
+     }
+
      public function fetchEmployeeResume(Request $request){
 
           $tanggal = "";
