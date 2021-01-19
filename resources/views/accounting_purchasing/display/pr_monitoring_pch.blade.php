@@ -196,6 +196,24 @@ hr { background-color: red; height: 1px; border: 0; }
             <tfoot>
             </tfoot>
           </table>
+
+          <div class="col-md-12" style="margin-top: 5px;background-color: #000;text-align: center;">
+              <span style="font-size: 24px;font-weight: bold;color: white">Outstanding Investment Belum Received</span>
+          </div>
+          <table id="tabelmonitor3" class="table table-bordered" style="margin-top: 5px; width: 100%">
+            <thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 12px;font-weight: bold">
+              <tr>
+                <th style="width: 15%; padding: 0;vertical-align: middle;font-size: 16px;" rowspan="2">No Investment</th>
+                <th style="width: 15%; padding: 0;vertical-align: middle;font-size: 16px;" rowspan="2">Submission Date</th>
+                <th style="width: 15%; padding: 0;vertical-align: middle;font-size: 16px;" rowspan="2">Department</th>
+                <th style="width: 15%; padding: 0;vertical-align: middle;font-size: 16px;" rowspan="2">Received By Purchasing</th>
+              </tr>
+            </thead>
+            <tbody id="tabelisi3">
+            </tbody>
+            <tfoot>
+            </tfoot>
+          </table>
           
           <div class="col-md-4" style="margin-top: 5px; padding:0 ">
               <div id="chart_dept" style="width: 99%"></div>
@@ -856,9 +874,30 @@ hr { background-color: red; height: 1px; border: 0; }
             table += '<td>'+capitalizeFirstLetter(value.department)+'</td>';
             table += '<td '+colorpch+'>'+pch+'</td>';
             table += '</tr>';
+
+
           })
 
           $('#tabelisi').append(table);
+
+
+          var table_inv = "";
+
+          $.each(result.data_investment, function(key, value) {
+
+              var urlcheckinv = '{{ url("investment/check_pch/") }}';
+
+              table_inv += '<tr>';
+              table_inv += '<td>'+value.reff_number+'</td>';
+              table_inv += '<td>'+value.submission_date+'</td>';
+              table_inv += '<td>'+capitalizeFirstLetter(value.applicant_department)+'</td>';
+              table_inv += '<td style="background-color:#dd4b39"><a href="'+urlcheckinv+'/'+value.id+'"><span class="label label-danger">Purchasing</span></a></td>';
+              table_inv += '</tr>';
+
+          });
+
+
+          $('#tabelisi3').append(table_inv);
 
           $("#tabelisipo_undone").find("td").remove();  
           $('#tabelisipo_undone').html("");

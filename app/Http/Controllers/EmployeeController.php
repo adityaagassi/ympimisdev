@@ -665,7 +665,7 @@ class EmployeeController extends Controller
      public function indexResumePajak()
      {
           $title = 'Resume Pengisian Data NPWP';
-          $title_jp = '??';
+          $title_jp = '納税義務者番号データのまとめ';
 
           return view('employees.report.resume_pajak', array(
                'title' => $title,
