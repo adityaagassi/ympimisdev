@@ -103,8 +103,10 @@ class UploadCompletionKitto extends Command
             exit;
         }
 
+        $row_count = 0;
         foreach ($upload_completions as $upload_completion){
             if($upload_completion->lot > 0){
+                $row_count++;
                 $upload_text .= self::writeString('8190', 4, " ");
                 $upload_text .= self::writeString($upload_completion->completion_location, 4, " ");
                 $upload_text .= self::writeString($upload_completion->material_number, 18, " ");
@@ -120,7 +122,7 @@ class UploadCompletionKitto extends Command
             $success = self::uploadFTP($kittofilepath, $kittofiledestination);
 
             $title = "Kitto Upload Completion Berhasil";
-            $body = "Count Upload = ".count($upload_completions)."\n\nKeterangan: Upload Berhasil";
+            $body = "Count Upload = ".count($row_count)."\n\nKeterangan: Upload Berhasil";
             self::mailReport($title, $body, $mail_to);
             exit;
         }
@@ -149,15 +151,15 @@ class UploadCompletionKitto extends Command
     }
 
     function mailReport($title, $body, $mail_to){
-     Mail::raw([], function($message) use($title, $body, $mail_to){
-      $message->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia');
-      $message->to($mail_to);
-      $message->subject($title);
-      $message->setBody($body, 'text/plain');}
-  ); 
- }
+       Mail::raw([], function($message) use($title, $body, $mail_to){
+          $message->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia');
+          $message->to($mail_to);
+          $message->subject($title);
+          $message->setBody($body, 'text/plain');}
+      ); 
+   }
 
- function uploadFTP($from, $to) {
+   function uploadFTP($from, $to) {
     $upload = FTP::connection()->uploadFile($from, $to);
     return $upload;
 }
