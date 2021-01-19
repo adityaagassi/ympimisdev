@@ -55,6 +55,7 @@ class UploadCompletionKitto extends Command
         ->leftJoin('materials', 'materials.id', '=', 'histories.completion_material_id')
         ->whereIn('histories.category', array('completion', 'completion_adjustment', 'completion_adjustment_excel', 'completion_adjustment_manual', 'completion_cancel', 'completion_error', 'completion_return', 'completion_repair', 'completion_after_repair', 'completion_temporary_delete'))
         ->where('histories.synced', '=', 0)
+        ->whereNull('histories.deleted_at')
         ->select('materials.material_number', db::raw('sum(lot) as lot_minus'))
         ->groupBy('materials.material_number')
         ->having('lot_minus', '<', 0)
@@ -70,6 +71,7 @@ class UploadCompletionKitto extends Command
         ->leftJoin('materials', 'materials.id', '=', 'histories.completion_material_id')        
         ->whereIn('histories.category', array('completion', 'completion_adjustment', 'completion_adjustment_excel', 'completion_adjustment_manual', 'completion_cancel', 'completion_error', 'completion_return', 'completion_repair', 'completion_after_repair', 'completion_temporary_delete'))
         ->where('histories.synced', '=', 0)
+        ->whereNull('histories.deleted_at')
         ->whereNotIn('materials.material_number', $not_upload_materials)
         ->update([
             'histories.reference_file' => $kittofilename,
@@ -79,6 +81,7 @@ class UploadCompletionKitto extends Command
         $upload_completions = db::connection('mysql2')->table('histories')
         ->leftJoin('materials', 'materials.id', '=', 'histories.completion_material_id')
         ->whereIn('histories.category', array('completion', 'completion_adjustment', 'completion_adjustment_excel', 'completion_adjustment_manual', 'completion_cancel', 'completion_error', 'completion_return', 'completion_repair', 'completion_after_repair', 'completion_temporary_delete'))
+        ->whereNull('histories.deleted_at')
         ->where('histories.reference_file', '=', $kittofilename)->select(
             'histories.completion_location',
             'materials.material_number',
@@ -124,6 +127,7 @@ class UploadCompletionKitto extends Command
         catch(\Exception $e){
             $transfers = db::connection('mysql2')->table('histories')
             ->whereIn('histories.category', array('completion', 'completion_adjustment', 'completion_adjustment_excel', 'completion_adjustment_manual', 'completion_cancel', 'completion_error', 'completion_return', 'completion_repair', 'completion_after_repair', 'completion_temporary_delete'))
+            ->whereNull('histories.deleted_at')
             ->where('histories.reference_file', '=', $kittofilename)
             ->update([
                 'histories.synced' => 0
@@ -145,78 +149,78 @@ class UploadCompletionKitto extends Command
     }
 
     function mailReport($title, $body, $mail_to){
-       Mail::raw([], function($message) use($title, $body, $mail_to){
-          $message->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia');
-          $message->to($mail_to);
-          $message->subject($title);
-          $message->setBody($body, 'text/plain');}
-      ); 
-    }
+     Mail::raw([], function($message) use($title, $body, $mail_to){
+      $message->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia');
+      $message->to($mail_to);
+      $message->subject($title);
+      $message->setBody($body, 'text/plain');}
+  ); 
+ }
 
-    function uploadFTP($from, $to) {
-        $upload = FTP::connection()->uploadFile($from, $to);
-        return $upload;
-    }
+ function uploadFTP($from, $to) {
+    $upload = FTP::connection()->uploadFile($from, $to);
+    return $upload;
+}
 
-    function writeString($text, $maxLength, $char) {
-        if ($maxLength > 0) {
-            $textLength = 0;
-            if ($text != null) {
-                $textLength = strlen($text);
-            }
-            else {
-                $text = "";
-            }
-            for ($i = 0; $i < ($maxLength - $textLength); $i++) {
-                $text .= $char;
-            }
-        }
-        return strtoupper($text);
-    }
-
-    function writeDecimal($text, $maxLength, $char) {
-        if ($maxLength > 0) {
-            $textLength = 0;
-            if ($text != null) {
-                if(fmod($text,1) > 0){
-                    $decimal = self::decimal(fmod($text,1));
-                    $decimalLength = strlen($decimal);
-
-                    for ($j = 0; $j < (3- $decimalLength); $j++) {
-                        $decimal = $decimal . $char;
-                    }
-                }
-                else{
-                    $decimal = $char . $char . $char;
-                }
-                $textLength = strlen(floor($text));
-                $text = floor($text);
-            }
-            else {
-                $text = "";
-            }
-            for ($i = 0; $i < (($maxLength - 4) - $textLength); $i++) {
-                $text = $char . $text;
-            }
-        }
-        $text .= "." . $decimal;
-        return $text;
-    }
-
-    function writeDate($created_at, $type) {
-        $datetime = strtotime($created_at);
-        if ($type == "completion") {
-            $text = date("dmY", $datetime);
-            return $text;
+function writeString($text, $maxLength, $char) {
+    if ($maxLength > 0) {
+        $textLength = 0;
+        if ($text != null) {
+            $textLength = strlen($text);
         }
         else {
-            $text = date("Ymd", $datetime);
-            return $text;
+            $text = "";
+        }
+        for ($i = 0; $i < ($maxLength - $textLength); $i++) {
+            $text .= $char;
         }
     }
+    return strtoupper($text);
+}
 
-    function decimal($number){
-        $num = explode('.', $number);
-        return $num[1];
+function writeDecimal($text, $maxLength, $char) {
+    if ($maxLength > 0) {
+        $textLength = 0;
+        if ($text != null) {
+            if(fmod($text,1) > 0){
+                $decimal = self::decimal(fmod($text,1));
+                $decimalLength = strlen($decimal);
+
+                for ($j = 0; $j < (3- $decimalLength); $j++) {
+                    $decimal = $decimal . $char;
+                }
+            }
+            else{
+                $decimal = $char . $char . $char;
+            }
+            $textLength = strlen(floor($text));
+            $text = floor($text);
+        }
+        else {
+            $text = "";
+        }
+        for ($i = 0; $i < (($maxLength - 4) - $textLength); $i++) {
+            $text = $char . $text;
+        }
     }
+    $text .= "." . $decimal;
+    return $text;
+}
+
+function writeDate($created_at, $type) {
+    $datetime = strtotime($created_at);
+    if ($type == "completion") {
+        $text = date("dmY", $datetime);
+        return $text;
+    }
+    else {
+        $text = date("Ymd", $datetime);
+        return $text;
+    }
+}
+
+function decimal($number){
+    $num = explode('.', $number);
+    return $num[1];
+}
 }

@@ -54,6 +54,7 @@ class UploadTransferKitto extends Command
         $transfers = db::connection('mysql2')->table('histories')
         ->whereIn('histories.category', array('transfer', 'transfer_adjustment', 'transfer_adjustment_excel', 'transfer_adjustment_manual', 'transfer_cancel', 'transfer_error', 'transfer_return', 'transfer_repair', 'transfer_after_repair'))
         ->where('histories.synced', '=', 0)
+        ->whereNull('histories.deleted_at')
         ->update([
             'histories.reference_file' => $kittofilename,
             'histories.synced' => 1
@@ -63,6 +64,7 @@ class UploadTransferKitto extends Command
         ->leftJoin('materials', 'materials.id', '=', 'histories.transfer_material_id')
         ->whereIn('histories.category', array('transfer', 'transfer_adjustment', 'transfer_adjustment_excel', 'transfer_adjustment_manual', 'transfer_cancel', 'transfer_error', 'transfer_return', 'transfer_repair', 'transfer_after_repair'))
         ->where('histories.reference_file', '=', $kittofilename)
+        ->whereNull('histories.deleted_at')
         ->select(
             'histories.transfer_barcode_number', 
             'histories.transfer_document_number', 
@@ -126,6 +128,7 @@ class UploadTransferKitto extends Command
             $transfers = db::connection('mysql2')->table('histories')
             ->whereIn('histories.category', array('transfer', 'transfer_adjustment', 'transfer_adjustment_excel', 'transfer_adjustment_manual', 'transfer_cancel', 'transfer_error', 'transfer_return', 'transfer_repair', 'transfer_after_repair'))
             ->where('histories.reference_file', '=', $kittofilename)
+            ->whereNull('histories.deleted_at')
             ->update([
                 'histories.synced' => 0
             ]);
@@ -145,15 +148,15 @@ class UploadTransferKitto extends Command
     }
 
     function mailReport($title, $body, $mail_to){
-     Mail::raw([], function($message) use($title, $body, $mail_to){
-      $message->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia');
-      $message->to($mail_to);
-      $message->subject($title);
-      $message->setBody($body, 'text/plain');}
-  ); 
- }
+       Mail::raw([], function($message) use($title, $body, $mail_to){
+          $message->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia');
+          $message->to($mail_to);
+          $message->subject($title);
+          $message->setBody($body, 'text/plain');}
+      ); 
+   }
 
- function uploadFTP($from, $to) {
+   function uploadFTP($from, $to) {
     $upload = FTP::connection()->uploadFile($from, $to);
     return $upload;
 }
