@@ -20,7 +20,6 @@ class Kernel extends ConsoleKernel
         Commands\Leaves::class,
         Commands\SendEmailShipments::class,
         Commands\SendEmailOvertimes::class,
-        Commands\RecordDailyStocks::class,
         Commands\EmailMiddleKanban::class,
         Commands\EmailConfirmationOvertimes::class,
         Commands\EmailUserDocument::class,        
@@ -50,6 +49,14 @@ class Kernel extends ConsoleKernel
         Commands\SendEmailSPKNotification::class,
         Commands\EmailAgreement::class,
         Commands\SyncShiftSunfish::class,
+
+        Commands\ResumeNgBuffing::class,
+
+
+        //KITTO
+        Commands\UploadTransferKitto::class,
+        Commands\UploadCompletionKitto::class,
+        Commands\RecordDailyStocks::class,
         
     ];
 
@@ -70,6 +77,8 @@ class Kernel extends ConsoleKernel
                 $schedule->command('upload:transfers')->dailyAt(date('H:i', strtotime($batch_flo->batch_time)));
                 $schedule->command('upload:completionKD')->dailyAt(date('H:i', strtotime($batch_flo->batch_time)));
                 $schedule->command('upload:transferKD')->dailyAt(date('H:i', strtotime($batch_flo->batch_time)));
+                // $schedule->command('upload:completionkitto')->dailyAt(date('H:i', strtotime($batch_flo->batch_time)));
+                // $schedule->command('upload:transferkitto')->dailyAt(date('H:i', strtotime($batch_flo->batch_time)));
             }
         }
 

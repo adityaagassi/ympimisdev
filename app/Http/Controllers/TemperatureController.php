@@ -1901,10 +1901,14 @@ public function fetchMinMoeMonitoring(Request $request)
                                    FROM
                                         ivms.ivms_attendance_triggers 
                                    WHERE
-                                        ivms.ivms_attendance_triggers.employee_id = employee_syncs.employee_id 
+                                        (ivms.ivms_attendance_triggers.employee_id = employee_syncs.employee_id 
                                         AND auth_date = '".$now."' 
                                         AND auth_datetime BETWEEN '".$now." 14:30:00' 
-                                        AND '".$now." 17:00:00' 
+                                        AND '".$now." 17:00:00' )
+                                        OR(
+                                        ivms.ivms_attendance_triggers.employee_id = employee_syncs.employee_id 
+                                        AND auth_date = '".$now."' 
+                                        AND auth_datetime >= '".$now." 00:00:01' )
                                         ),(
                                    SELECT
                                         min( auth_datetime ) 
