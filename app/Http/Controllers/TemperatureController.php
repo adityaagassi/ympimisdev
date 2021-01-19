@@ -1768,20 +1768,24 @@ public function fetchMinMoeMonitoring(Request $request)
                     COALESCE ( department_shortname, '' ) AS department_shortname,
                     COALESCE ( employee_syncs.section, '' ) AS section,
                     COALESCE ( employee_syncs.`group`, '' ) AS groups,
-                    employees.remark 
+                    employees.remark,
+                    ivms_temperatures.temperature 
                FROM
                     employees
                     LEFT JOIN employee_syncs ON employee_syncs.employee_id = employees.employee_id
                     LEFT JOIN sunfish_shift_syncs ON sunfish_shift_syncs.employee_id = employee_syncs.employee_id
                     LEFT JOIN departments ON departments.department_name = employee_syncs.department 
+                    LEFT JOIN ivms_temperatures ON ivms_temperatures.employee_id = employee_syncs.employee_id 
                WHERE
                     (employees.remark = 'OFC' and
                     employee_syncs.end_date IS NULL 
-                    AND sunfish_shift_syncs.shift_date = '".$now."')
+                    AND sunfish_shift_syncs.shift_date = '".$now."'
+                    AND ivms_temperatures.date = '".$now."')
                     OR
                     (employees.remark = 'Jps' and
                     employee_syncs.end_date IS NULL 
-                    AND sunfish_shift_syncs.shift_date = '".$now."')");
+                    AND sunfish_shift_syncs.shift_date = '".$now."'
+               AND ivms_temperatures.date = '".$now."')");
           }else if ($request->get('location') == 'ALL') {
                $datacheck = DB::SELECT("SELECT
                     employee_syncs.employee_id,
@@ -1791,15 +1795,18 @@ public function fetchMinMoeMonitoring(Request $request)
                     COALESCE ( employee_syncs.section, '' ) AS section,
                     COALESCE ( employee_syncs.`group`, '' ) AS groups,
                     employees.remark,
-                    employee_syncs.name
+                    employee_syncs.name,
+                    ivms_temperatures.temperature 
                FROM
                     employees
                     JOIN employee_syncs ON employee_syncs.employee_id = employees.employee_id
                     LEFT JOIN sunfish_shift_syncs ON sunfish_shift_syncs.employee_id = employee_syncs.employee_id 
                     LEFT JOIN departments ON departments.department_name = employee_syncs.department 
+                    LEFT JOIN ivms_temperatures ON ivms_temperatures.employee_id = employee_syncs.employee_id 
                WHERE
                     employee_syncs.end_date IS NULL 
-                    AND sunfish_shift_syncs.shift_date = '".$now."'");
+                    AND sunfish_shift_syncs.shift_date = '".$now."'
+                    AND ivms_temperatures.date = '".$now."'");
           }else{
                $datacheck = DB::SELECT("SELECT
                     employees.employee_id,
@@ -1809,12 +1816,14 @@ public function fetchMinMoeMonitoring(Request $request)
                     COALESCE ( department_shortname, '' ) AS department_shortname,
                     COALESCE ( employee_syncs.section, '' ) AS section,
                     COALESCE ( employee_syncs.`group`, '' ) AS groups,
-                    employees.remark 
+                    employees.remark,
+                    ivms_temperatures.temperature 
                FROM
                     employees
                     LEFT JOIN employee_syncs ON employee_syncs.employee_id = employees.employee_id
                     LEFT JOIN sunfish_shift_syncs ON sunfish_shift_syncs.employee_id = employee_syncs.employee_id
-                    LEFT JOIN departments ON departments.department_name = employee_syncs.department 
+                    LEFT JOIN departments ON departments.department_name = employee_syncs.department
+                    LEFT JOIN ivms_temperatures ON ivms_temperatures.employee_id = employee_syncs.employee_id  
                WHERE
                     (
                          employees.remark != 'OFC' 
@@ -1822,12 +1831,14 @@ public function fetchMinMoeMonitoring(Request $request)
                          AND employee_syncs.end_date IS NULL 
                          AND employee_syncs.department = '".$request->get('location')."' 
                          AND sunfish_shift_syncs.shift_date = '".$now."' 
+                         AND ivms_temperatures.date = '".$now."'
                     ) 
                     OR (
                          employees.remark IS NULL 
                          AND employee_syncs.end_date IS NULL 
                     AND employee_syncs.department = '".$request->get('location')."' 
-                    AND sunfish_shift_syncs.shift_date = '".$now."')");
+                    AND sunfish_shift_syncs.shift_date = '".$now."'
+                    AND ivms_temperatures.date = '".$now."')");
           }
 
           foreach ($datacheck as $key) {
