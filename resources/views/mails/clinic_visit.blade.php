@@ -52,7 +52,7 @@
 			<br>
 
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
-			<a href="{{ url("index/clinic_visit_log") }}">Data Kunjungan Klinik</a><br>
+			<a href="{{ url("index/clinic_visit_log") }}">Clinic Visit Data</a><br>
 
 		</center>
 	</div>

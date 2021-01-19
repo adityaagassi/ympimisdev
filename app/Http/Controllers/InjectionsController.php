@@ -3075,7 +3075,7 @@ class InjectionsController extends Controller
                 COALESCE (
                 SUBSTR( status_mesin, LENGTH( SUBSTR( status_mesin, 1, 7 )), 8 ),
                 0)");
-        
+
         $query_not_ready = DB::SELECT("SELECT
             * 
         FROM
@@ -4822,6 +4822,8 @@ class InjectionsController extends Controller
             injection_molding_masters.id AS id_molding,
             injection_molding_masters.product,
             injection_molding_masters.part,
+            injection_molding_masters.last_counter,
+            injection_molding_masters.qty_shot,
             COALESCE ( status_mesin, '-' ) AS mesin,
             COALESCE ( injection_molding_logs.color, '-' ) AS color,
             injection_molding_masters.status,

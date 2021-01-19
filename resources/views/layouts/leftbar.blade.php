@@ -879,6 +879,24 @@
   </li>
   @endif
 
+  @if(in_array('S53', $navs))
+  @if(isset($page) && $page == "KD CASE")<li class="active">@else<li>@endif
+    <a href="{{ url("index/kd_case/"."case") }}"><i class="fa fa-pencil-square-o"></i> <span>KD  <i class="fa fa-angle-right"></i> Case</span></a>
+  </li>
+  @endif
+
+  @if(in_array('S52', $navs))
+  @if(isset($page) && $page == "KD TANPO")<li class="active">@else<li>@endif
+    <a href="{{ url("index/kd_tanpo/"."tanpo") }}"><i class="fa fa-pencil-square-o"></i> <span>KD  <i class="fa fa-angle-right"></i> Tanpo</span></a>
+  </li>
+  @endif
+
+  @if(in_array('S58', $navs))
+  @if(isset($page) && $page == "KD CL Body")<li class="active">@else<li>@endif
+    <a href="{{ url("index/kd_cl_body/"."cl_body") }}"><i class="fa fa-pencil-square-o"></i> <span>KD  <i class="fa fa-angle-right"></i> CL Body</span></a>
+  </li>
+  @endif
+
   @if(in_array(Auth::user()->role_code, ['S','MIS','PROD','F','PC']) || Auth::user()->username == 'op subassy sx')
   @if(isset($page) && $page == "KD Assy - SubAssy SX")<li class="active">@else<li>@endif
     <a href="{{ url("index/kd_subassy/"."sub-assy-sx") }}"><i class="fa fa-pencil-square-o"></i> <span>KD  <i class="fa fa-angle-right"></i> Assy - SubAssy SX</span></a>
@@ -891,7 +909,7 @@
   </li>
   @endif
 
-  @if(in_array(Auth::user()->role_code, ['S','MIS','PROD','F','PC']) || Auth::user()->username == 'op-subassy-cl' || Auth::user()->username == 'pi0103003')
+  @if(in_array(Auth::user()->role_code, ['S','MIS','PROD','F','PC']) || Auth::user()->username == 'op-subassy-cl' || Auth::user()->username == 'PI0103003' || Auth::user()->username == 'PI9809011')
   @if(isset($page) && $page == "KD Sub Assy CL")<li class="active">@else<li>@endif
     <a href="{{ url("index/kd_subassy/"."sub-assy-cl") }}"><i class="fa fa-pencil-square-o"></i> <span>KD  <i class="fa fa-angle-right"></i> Sub Assy CL</span></a>
   </li>
