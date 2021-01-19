@@ -1937,7 +1937,8 @@ public function fetchMinMoeMonitoring(Request $request)
                               'groups' => $key->groups,
                               'remark' => $key->remark,
                               'checks' => $checks,
-                              'time_in' => $time_in,);
+                              'time_in' => $time_in,
+                              'temperature' => $key->temperature,);
                $attendance[] = $attendances2;
           }
 
