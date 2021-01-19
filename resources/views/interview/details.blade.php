@@ -403,7 +403,7 @@ table.table-bordered > tfoot > tr > th{
 	              <?php endif ?>
 	              @endforeach
 	              <label class="checkbox-inline" style="padding-bottom: 4px">
-		              <input type="checkbox" class="keijakan_mutuCheckbox" name="keijakan_mutu_create" value="2" id="keijakan_mutu_create">Hafal Sebagian
+		              <input type="checkbox" class="kebijakan_mutuCheckbox" name="kebijakan_mutu_create" value="2" id="kebijakan_mutu_create">Hafal Sebagian
 		            </label><br>
 	            </div>
 	            <div class="form-group">

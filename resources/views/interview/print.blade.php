@@ -149,7 +149,7 @@ table {
 						@elseif($detail->komitmen_berkendara == 'Not OK')
 							<center><label class="label label-danger">X</label></center>
 						@else
-							<center><?php $nilai = explode("_",$detail->budaya_5s);
+							<center><?php $nilai = explode("_",$detail->komitmen_berkendara);
 			                		if ($nilai[1] == 100) {
 			                			echo '<center><label class="label label-success">O</label></center>';
 			                		}else if ($nilai[1] < 100 && $nilai[1] > 0) {

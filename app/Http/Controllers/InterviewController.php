@@ -452,8 +452,10 @@ class InterviewController extends Controller
               $nilai_kebijakan_mutu = 0;
               if ($request->get('kebijakan_mutu') == 2) {
                 $nilai_kebijakan_mutu = 0;
-              }else{
+              }else if($request->get('kebijakan_mutu') == 1){
                 $nilai_kebijakan_mutu = 100;
+              }else{
+                $nilai_kebijakan_mutu = 0;
               }
 
               $nilai_enam_pasal_keselamatan = 0;
