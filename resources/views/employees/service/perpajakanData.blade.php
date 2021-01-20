@@ -363,7 +363,6 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 							</div>
 						</div>
 
-
 						<div class="form-group row data_npwp" align="left">
 							<label class="col-xs-3 label-pad">Nama sesuai NPWP <span class="keterangan_npwp"></span><span class="text-red">*</span></label>
 							<div class="col-xs-5" align="left">
@@ -374,7 +373,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 						<div class="form-group row data_npwp" align="left">
 							<label class="col-xs-3 label-pad">Nomor NPWP <span class="keterangan_npwp"></span><span class="text-red">*</span></label>
 							<div class="col-xs-5" align="left">
-								<input type="number" class="form-control" id="npwp_nomor" name="npwp_nomor" placeholder="Contoh Penulisan : 948507199624000 (Tuliskan 15 Digit Angka)">
+								<input type="text" pattern="\d*" maxlength="15" class="form-control" id="npwp_nomor" name="npwp_nomor" placeholder="Contoh Penulisan : 948507199624000 (Tuliskan 15 Digit Angka)">
 							</div>
 						</div>
 
@@ -385,17 +384,13 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 							</div>
 						</div>
 
-
 						<div class="form-group row data_npwp">
 							<label class="col-xs-3 label-pad">Foto Kartu NPWP (Upload Foto kartu jika ada, format .jpg)</label>
 							<div class="col-xs-5" align="left">
 									<input type="file" id="attach" name="attach[]" multiple="">
 									<label><i class="fa fa-paperclip"></i> </label>
 							</div>
-
 						</div>
-
-
 
 						<div class="form-group row" align="center" style="margin-top: 5%; margin-bottom: 5%;">
 							<div class="col-xs-2">
@@ -766,8 +761,6 @@ function openSuccessGritter(title, message){
 		time: '3000'
 	});
 }
-
-
 
 </script>
 @endsection

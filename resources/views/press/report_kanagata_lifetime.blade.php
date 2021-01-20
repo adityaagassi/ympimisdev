@@ -101,7 +101,7 @@ table.table-bordered > tfoot > tr > th{
 							</div>
 						</div>
 					</div>
-					@if($role_code == 'PROD' || $role_code == 'MIS' || $role_code == 'L-Press')
+					@if($role_code == 'PROD' || $role_code == 'MIS' || $role_code == 'Leader&Sub')
 					<div class="col-xs-3">
 						<div class="box-header">
 							<h3 class="box-title">Edit Kanagata Lifetime</h3>
