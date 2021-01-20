@@ -140,16 +140,20 @@
 		<div class="col-xs-12">
 			<div class="row">
 				<div class="col-xs-12 col-md-3 col-lg-3" style="text-align: center;">
-					@if(in_array('S36', $navs))
 					<span style="font-size: 20px; color: black;"><i class="fa fa-angle-double-down"></i> Master <i class="fa fa-angle-double-down"></i></span>
+
+					@if(in_array('S36', $navs))
 					<a href="javascript:void(0)" data-toggle="modal" data-target="#importBomModal" class="btn btn-default btn-block" style="border-color: black; font-size: 15px;">Upload Bom Output</a>
 					<a href="javascript:void(0)" data-toggle="modal" data-target="#importMPDLModal" class="btn btn-default btn-block" style="border-color: black; font-size: 15px;">Upload Material Plant Data List</a>
 					<a href="javascript:void(0)" data-toggle="modal" data-target="#importModal" class="btn btn-default btn-block" style="border-color: black; font-size: 15px;">Upload Storage Loc Stock</a>
 					{{-- <a href="" class="btn btn-default btn-block" style="border-color: black; font-size: 15px;">Master Storage Location</a> --}}
-					{{-- <a href="" class="btn btn-default btn-block" style="border-color: black; font-size: 15px;">Master Item Silver</a> --}}
-					{{-- <a href="" class="btn btn-default btn-block" style="border-color: black; font-size: 15px;">Master Stocktaking Calendar</a> --}}
+					{{-- <a href="{{ url("index/stocktaking/calendar") }}" class="btn btn-default btn-block" style="border-color: black; font-size: 15px;">Stocktaking Calendar</a> --}}
+
 					<a href="{{ url("index/stocktaking/stocktaking_list") }}" class="btn btn-default btn-block" style="border-color: black; font-size: 15px; color:white; background-color: #616161;">Master Stocktaking List</a>
+					{{-- <a href="" class="btn btn-default btn-block" style="border-color: black; font-size: 15px; color:white; background-color: #616161;">Master Item Silver</a> --}}
 					@endif
+					<a href="{{ url("index/stocktaking/material_forecast") }}" class="btn btn-default btn-block" style="border-color: black; font-size: 15px; color:white; background-color: #616161;">Master Material Forecast</a>
+
 
 				</div>
 				<div class="col-xs-12 col-md-3 col-lg-3" style="text-align: center;">
@@ -527,9 +531,11 @@
 		});
 
 		if($('#month').val() == ''){
+
+			var monthArr = ['01','02','03','04','05','06','07','08','09','10','11','12',] 
 			
 			var now = new Date();
-			var month = now.getMonth() + 1;
+			var month = monthArr[now.getMonth()];
 			var year = now.getFullYear();
 
 			$('#month').val(year +'-'+ month);

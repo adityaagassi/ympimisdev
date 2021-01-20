@@ -13,9 +13,12 @@ use App\RawMaterialStock;
 use App\MaterialUsage;
 use App\StocktakingCalendar;
 use App\StocktakingLocationStock;
+use App\StocktakingMaterialForecast;
+use Carbon\Carbon;
 use DataTables;
 use Response;
 use File;
+
 
 class RawMaterialController extends Controller{
 
@@ -226,6 +229,8 @@ class RawMaterialController extends Controller{
 				$stock_date = date('Y-m-d', strtotime($request->get('date_stock')));
 				$delete_storage = StorageLocationStock::where('storage_location_stocks.stock_date', '=', $stock_date)->forceDelete();
 				$raw_material = RawMaterialStock::where('raw_material_stocks.stock_date', '=', $stock_date)->forceDelete();
+				$forecast = StocktakingMaterialForecast::where('stocktaking_material_forecasts.created_by', '=', 1)->forceDelete();
+				
 				$id = Auth::id();
 
 				$file = $request->file('storage_location_stock');
@@ -237,6 +242,18 @@ class RawMaterialController extends Controller{
 					if($calendar->status != 'finished'){
 						StocktakingLocationStock::truncate();
 						$insert_st_location_stock = true;
+					}
+				}
+
+				$month = date('Y-m', strtotime($request->get('date_stock')));
+				$calendar = StocktakingCalendar::where(db::raw('date_format(date, "%Y-%m")'), $month)->first();
+				
+				$insert_st_forecast = false;
+				if($calendar){
+					$yesterday_st = date('Y-m-d', strtotime('yesterday', strtotime($calendar->date)));
+
+					if($stock_date == $yesterday_st){
+						$insert_st_forecast = true;
 					}
 				}
 
@@ -280,6 +297,16 @@ class RawMaterialController extends Controller{
 									'created_by' => $id,
 								]);
 								$st_location_stock->save(); 
+							}
+
+							if($insert_st_forecast){
+
+								$ins_or_upd = StocktakingMaterialForecast::updateOrCreate(
+									['material_number' => $material_number],
+									['created_by' => 1, 'updated_at' => Carbon::now()]
+								);
+								$ins_or_upd->save();
+
 							}
 						}
 					}

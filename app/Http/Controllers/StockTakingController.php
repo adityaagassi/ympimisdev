@@ -23,6 +23,7 @@ use App\StocktakingOutput;
 use App\StocktakingLocationStock;
 use App\StocktakingInquiryLog;
 use App\StocktakingOutputLog;
+use App\StocktakingMaterialForecast;
 use App\StocktakingDailyList;
 use App\StocktakingDailyLog;
 use App\StocktakingSilverList;
@@ -180,6 +181,32 @@ class StockTakingController extends Controller{
 		))->with('page', 'Monthly Stock Taking')->with('head', 'Stocktaking');
 	}
 
+	public function indexStocktakingMaterialForecast(){
+		$title = "Stocktaking Material Forecast";
+		$title_jp = "";
+
+		$material = db::select("SELECT * FROM material_plant_data_lists
+			WHERE material_number NOT IN (
+			SELECT material_number FROM stocktaking_material_forecasts)");
+
+		return view('stocktakings.monthly.material_forecast', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'materials' => $material
+		))->with('page', 'Monthly Stock Taking')->with('head', 'Stocktaking');
+		
+	}
+
+	public function indexStocktakingCalendar(){
+		$title = "Stocktaking Calendar";
+		$title_jp = "";
+
+		return view('stocktakings.monthly.stocktaking_calendar', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'Monthly Stock Taking')->with('head', 'Stocktaking');
+	}
+
 	public function indexStocktakingMonitoring(){
 		$title = "Stocktaking Monitoring";
 		$title_jp = "";
@@ -222,6 +249,20 @@ class StockTakingController extends Controller{
 			'stocktaking_lists' => $stocktaking_lists
 		);
 		return Response::json($response);
+	}
+
+	public function fetchStocktakingCalendar(){
+		# code...
+	}
+
+	public function fetchStocktakingMaterialForecast(){
+
+		$material = StocktakingMaterialForecast::leftJoin('material_plant_data_lists', 'material_plant_data_lists.material_number', '=', 'stocktaking_material_forecasts.material_number')
+		->leftJoin('users', 'users.id', '=', 'stocktaking_material_forecasts.created_by')
+		->select('stocktaking_material_forecasts.material_number', 'material_plant_data_lists.material_description', 'users.name')
+		->get();
+
+		return DataTables::of($material)->make(true);
 	}
 
 	public function deleteMonthlyStocktakingList(Request $request){
@@ -4106,11 +4147,25 @@ class StockTakingController extends Controller{
 					WHERE
 					s.id = ".$idnew[1]);
 
-				$response = array(
-					'status' => true,
-					'material' => $material,
-				);
-				return Response::json($response);
+				$cek = StocktakingMaterialForecast::where('material_number', $material[0]->material_number)
+				->first();
+
+				if($cek){
+					$response = array(
+						'status' => true,
+						'cek' => true,
+						'material' => $material,
+					);
+					return Response::json($response);
+				}else{
+					$response = array(
+						'status' => true,
+						'cek' => false
+					);
+					return Response::json($response);
+				}
+
+				
 			}else{
 				$location = StocktakingNewList::join('storage_locations','storage_locations.storage_location','stocktaking_new_lists.location')->where('stocktaking_new_lists.id',$id)->first();
 
@@ -4147,11 +4202,25 @@ class StockTakingController extends Controller{
 						WHERE
 						s.id = ".$id);
 
-					$response = array(
-						'status' => true,
-						'material' => $material,
-					);
-					return Response::json($response);
+					$cek = StocktakingMaterialForecast::where('material_number', $material[0]->material_number)
+					->first();
+
+					if($cek){
+						$response = array(
+							'status' => true,
+							'cek' => true,
+							'material' => $material,
+						);
+						return Response::json($response);
+					}else{
+						$response = array(
+							'status' => true,
+							'cek' => false
+						);
+						return Response::json($response);
+					}
+
+
 				}else{
 					$response = array(
 						'status' => false,
@@ -4638,6 +4707,33 @@ s.id ASC");
 		->get();
 
 		return DataTables::of($bom_outputs)->make(true);
+	}
+
+	public function addMaterialForecast(Request $request){
+		$material = $request->get('material');
+
+		try {
+			$add = new StocktakingMaterialForecast([
+				'material_number' => strtoupper($material),
+				'created_by' => Auth::id()
+			]);
+			$add->save();
+
+
+			$response = array(
+				'status' => true,
+				'message' => 'Add New Material Forecast Successful'
+			);
+			return Response::json($response);
+		} catch (Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+
+
 	}
 
 	public function addMaterial(Request $request){

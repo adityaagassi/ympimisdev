@@ -2467,8 +2467,11 @@ Route::get('fetch/stocktaking/material_forecast', 'StockTakingController@fetchSt
 
 Route::group(['nav' => 'S36', 'middleware' => 'permission'], function(){
 
-	Route::get('update/stocktaking/material_forecast', 'StockTakingController@indexMonthlyStocktakingList');
-
+	Route::post('add/stocktaking/material_forecast', 'StockTakingController@addMaterialForecast');
+	
+	Route::get('index/stocktaking/calendar', 'StockTakingController@indexStocktakingCalendar');
+	Route::get('fetch/stocktaking/calendar', 'StockTakingController@fetchStocktakingCalendar');
+	Route::get('add/stocktaking/calendar', 'StockTakingController@addStocktakingCalendar');
 
 	Route::get('index/stocktaking/stocktaking_list', 'StockTakingController@indexMonthlyStocktakingList');
 	Route::get('fetch/stocktaking/stocktaking_list', 'StockTakingController@fetchMonthlyStocktakingList');
