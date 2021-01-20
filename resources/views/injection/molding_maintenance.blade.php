@@ -85,6 +85,7 @@
 		</p>
 	</div>
 	<input type="hidden" id="loc" value="{{ $title }} {{$title_jp}} }">
+	<input type="hidden" id="maintenance_code" value="{{ $title }} {{$title_jp}} }">
 	
 	<div class="row" style="margin-left: 1%; margin-right: 1%;">
 		<div class="col-xs-6" style="padding-right: 10px; padding-left: 0">
@@ -109,31 +110,6 @@
 					</tbody>
 				</table>
 			</div>
-			<!-- <div id="molding">
-				<table class="table table-bordered" style="width: 100%; margin-bottom: 2px;" border="1">
-					<thead>
-						<tr>
-							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">
-								Product
-							</th>
-							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">
-								Part
-							</th>
-							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">
-								Status
-							</th>
-							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">
-								Total Shot
-							</th>
-							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">
-								Mesin
-							</th>
-						</tr>
-					</thead>
-					<tbody id="moldingMaster">
-					</tbody>
-				</table>
-			</div> -->
 			<table style="width: 100%;border: '1'">
 				<tbody>
 						<tr>
@@ -165,8 +141,8 @@
 				</tbody>
 			</table>
 			<button id="start_perbaikan" style="width: 100%; margin-top: 5px; font-size: 30px; padding-top:5px;padding-bottom: 5px; font-weight: bold; border-color: black; color: white; width: 100%" onclick="startPerbaikan()" class="btn btn-success">MULAI PERBAIKAN</button>
+				<button id="pause" style="width: 100%; margin-top: 10px; font-size: 30px; padding-top: 5px;padding-bottom: 5px; font-weight: bold; border-color: black; color: white; width: 100%" onclick="pause()" class="btn btn-warning">PAUSE</button>
 				<button id="change_operator" style="width: 100%; margin-top: 10px; font-size: 30px; padding-top: 5px;padding-bottom: 5px; font-weight: bold; border-color: black; color: white; width: 100%" onclick="location.reload()" class="btn btn-info">GANTI OPERATOR</button>
-				<!-- <button id="change_molding" style="width: 100%; margin-top: 10px; font-size: 30px; padding-top: 5px;padding-bottom: 5px; font-weight: bold; border-color: black; color: white; width: 100%" onclick="change_molding()" class="btn btn-primary">GANTI MOLDING LAIN</button> -->
 		</div>
 
 		<div class="col-xs-6" style="padding-right: 0; padding-left: 10px">
@@ -254,11 +230,33 @@
 					</div>
 					<input type="hidden" id="id_molding">
 					<div class="col-xs-12" style="padding-top: 20px">
-						<div class="modal-footer">
+						<div class="modal-footer row">
 							<button onclick="saveMolding()" class="btn btn-success btn-block pull-right" style="font-size: 30px;font-weight: bold;">
 								CONFIRM
 							</button>
 						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalStatus">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<center> <b style="font-size: 2vw">PAUSE</b> </center>
+				<div class="modal-body table-responsive no-padding">
+					<div class="form-group">
+						<center><label for="">Reason</label></center>
+						<input class="form-control" style="width: 100%; text-align: center;" type="text" id="reasonPause" placeholder="Reason" required><br>
+					</div>
+					<div class="col-xs-6" style="padding-left: 0px">
+						<button class="btn btn-danger btn-block" style="font-weight: bold;font-size: 20px" data-dismiss="modal">Cancel</button>
+					</div>
+					<div class="col-xs-6" style="padding-right: 0px">
+						<button class="btn btn-success btn-block" style="font-weight: bold;font-size: 20px" onclick="saveStatus()">Confirm</button>
 					</div>
 				</div>
 			</div>
@@ -341,18 +339,11 @@
 				$.get('{{ url("scan/injeksi/operator") }}', data, function(result, status, xhr){
 					if(result.status){
 						openSuccessGritter('Success!', result.message);
-						// $('#modalOperator').modal('hide');
-						// $('#op').html(result.employee.employee_id);
-						// $('#op2').html(result.employee.name);
-						// $('#employee_id').val(result.employee.employee_id);
-						// $('#modalMesin').modal('show');
 						$('#operator_0').val(result.employee.name);
 						$('#op_0').html(result.employee.name.split(' ').slice(0,2).join(' '));
 						$('#employee_id_0').val(result.employee.employee_id);
 						$('#operator_0').prop('disabled',true);
 						$('#operator_1').focus();
-						// getMoldingLog();
-						// get_history_temp(result.employee.name);
 					}
 					else{
 						audio_error.play();
@@ -379,18 +370,11 @@
 				$.get('{{ url("scan/injeksi/operator") }}', data, function(result, status, xhr){
 					if(result.status){
 						openSuccessGritter('Success!', result.message);
-						// $('#modalOperator').modal('hide');
-						// $('#op').html(result.employee.employee_id);
-						// $('#op2').html(result.employee.name);
-						// $('#employee_id').val(result.employee.employee_id);
-						// $('#modalMesin').modal('show');
 						$('#operator_1').val(result.employee.name);
 						$('#op_1').html(result.employee.name.split(' ').slice(0,2).join(' '));
 						$('#employee_id_1').val(result.employee.employee_id);
 						$('#operator_1').prop('disabled',true);
 						$('#operator_2').focus();
-						// getMoldingLog();
-						// get_history_temp(result.employee.name);
 					}
 					else{
 						audio_error.play();
@@ -417,17 +401,10 @@
 				$.get('{{ url("scan/injeksi/operator") }}', data, function(result, status, xhr){
 					if(result.status){
 						openSuccessGritter('Success!', result.message);
-						// $('#modalOperator').modal('hide');
-						// $('#op').html(result.employee.employee_id);
-						// $('#op2').html(result.employee.name);
-						// $('#employee_id').val(result.employee.employee_id);
-						// $('#modalMesin').modal('show');
 						$('#operator_2').val(result.employee.name);
 						$('#op_2').html(result.employee.name.split(' ').slice(0,2).join(' '));
 						$('#employee_id_2').val(result.employee.employee_id);
 						$('#operator_2').prop('disabled',true);
-						// getMoldingLog();
-						// get_history_temp(result.employee.name);
 					}
 					else{
 						audio_error.play();
@@ -443,42 +420,6 @@
 			}			
 		}
 	});
-
-	// $('#operator').keydown(function(event) {
-	// 	if (event.keyCode == 13 || event.keyCode == 9) {
-	// 		if($("#operator").val().length >= 8){
-	// 			var data = {
-	// 				employee_id : $("#operator").val()
-	// 			}
-				
-	// 			$.get('{{ url("scan/injeksi/operator") }}', data, function(result, status, xhr){
-	// 				if(result.status){
-	// 					openSuccessGritter('Success!', result.message);
-	// 					$('#modalOperator').modal('hide');
-	// 					$('#op').html(result.employee.employee_id);
-	// 					$('#op2').html(result.employee.name);
-	// 					$('#employee_id').val(result.employee.employee_id);
-	// 					// fillResult(result.employee.employee_id);
-	// 					// $('#tag').focus();
-	// 					// getMoldingLogPasang();
-	// 					get_maintenance_temp(result.employee.name);
-	// 					getMoldingMaster();
-	// 					$('#change_operator').show();
-	// 				}
-	// 				else{
-	// 					audio_error.play();
-	// 					openErrorGritter('Error', result.message);
-	// 					$('#operator').val('');
-	// 				}
-	// 			});
-	// 		}
-	// 		else{
-	// 			openErrorGritter('Error!', 'Employee ID Invalid.');
-	// 			audio_error.play();
-	// 			$("#operator").val("");
-	// 		}			
-	// 	}
-	// });
 
 	function getMoldingMaster() {
 		$.get('{{ url("get/injeksi/get_molding_master") }}',  function(result, status, xhr){
@@ -499,19 +440,19 @@
 					if (value.status == 'HARUS MAINTENANCE') {
 						moldingMaster += '<div class="col-xs-3" style="padding-top: 5px">';
 						moldingMaster += '<center>';
-						moldingMaster += '<button class="btn btn-danger" id="'+value.part+'" style="width: 200px;font-size: 15px;font-weight: bold;" onclick="getMolding(this.id,\''+value.status+'\',\''+value.id_molding+'\')">'+value.product+' - '+value.part+'<br>'+(value.last_counter/value.qty_shot).toFixed(0)+' Shot<br>Status: '+value.status+'</button>';
+						moldingMaster += '<button class="btn btn-danger" id="'+value.part+'" style="width: 200px;font-size: 15px;font-weight: bold;" onclick="getMolding(this.id,\''+value.status+'\',\''+value.id_molding+'\')">'+value.product+' - '+value.part+'<br>'+(value.last_counter/value.qty_shot).toFixed(0)+' Shot<br>'+value.status+'</button>';
 						moldingMaster += '</center>';
 						moldingMaster += '</div>';
 					}else if(value.status == 'DIPERBAIKI'){
 						moldingMaster += '<div class="col-xs-3" style="padding-top: 5px">';
 						moldingMaster += '<center>';
-						moldingMaster += '<button class="btn btn-warning" id="'+value.part+'" style="width: 200px;font-size: 15px;font-weight: bold;" onclick="getMolding(this.id,\''+value.status+'\',\''+value.id_molding+'\')">'+value.product+' - '+value.part+'<br>'+(value.last_counter/value.qty_shot).toFixed(0)+' Shot<br>Status: '+value.status+'</button>';
+						moldingMaster += '<button class="btn btn-warning" id="'+value.part+'" style="width: 200px;font-size: 15px;font-weight: bold;" onclick="getMolding(this.id,\''+value.status+'\',\''+value.id_molding+'\')">'+value.product+' - '+value.part+'<br>'+(value.last_counter/value.qty_shot).toFixed(0)+' Shot<br>PERIODIK</button>';
 						moldingMaster += '</center>';
 						moldingMaster += '</div>';
 					}else{
 						moldingMaster += '<div class="col-xs-3" style="padding-top: 5px">';
 						moldingMaster += '<center>';
-						moldingMaster += '<button class="btn btn-primary" id="'+value.part+'" style="width: 200px;font-size: 15px;font-weight: bold;" onclick="getMolding(this.id,\''+value.status+'\',\''+value.id_molding+'\')">'+value.product+' - '+value.part+'<br>'+(value.last_counter/value.qty_shot).toFixed(0)+' Shot<br>Status: '+value.status+'</button>';
+						moldingMaster += '<button class="btn btn-primary" id="'+value.part+'" style="width: 200px;font-size: 15px;font-weight: bold;" onclick="getMolding(this.id,\''+value.status+'\',\''+value.id_molding+'\')">'+value.product+' - '+value.part+'<br>'+(value.last_counter/value.qty_shot).toFixed(0)+' Shot<br>READY</button>';
 						moldingMaster += '</center>';
 						moldingMaster += '</div>';
 					}
@@ -631,6 +572,7 @@
 		var mesin = $('#mesin').text();
 		var part = $('#part').text();
 		var product = $('#product').text();
+		var maintenance_code = $('#maintenance_code').val();
 		var status = $('#status').text();
 		var last_counter = $('#last_counter').text();
 		var start_time = $('#start_time_perbaikan').val();
@@ -643,6 +585,7 @@
 			mesin : mesin,
 			pic : pic.join(', '),
 			product : product,
+			maintenance_code : maintenance_code,
 			part : part,
 			status : status,
 			last_counter : last_counter,
@@ -696,9 +639,12 @@
 		var status = $('#status').text();
 		var note = CKEDITOR.instances.noteperbaikan.getData();
 
+		var maintenance_code = pic.join(', ')+'_'+product+'_'+part+'_'+last_counter+'_'+status+'_'+getActualFullDate();
+
 		var data = {
 			pic : pic.join(', '),
 			mesin : mesin,
+			maintenance_code : maintenance_code,
 			product : product,
 			part : part,
 			last_counter : last_counter,
@@ -710,11 +656,84 @@
 		$.post('{{ url("index/injeksi/store_maintenance_temp") }}', data, function(result, status, xhr){
 			if(result.status){
 				openSuccessGritter('Success','Mulai Perbaikan');
-				// reset();
-				// getMoldingMaster();
+				$('#maintenance_code').val(maintenance_code);
 			} else {
 				audio_error.play();
 				openErrorGritter('Error','Gagal Memulai Perbaikan');
+			}
+		});
+	}
+
+	function pause() {
+		$('#modalStatus').modal('show');
+		$('#reasonPause').val('');
+	}
+
+	function saveStatus() {
+		var reason = $('#reasonPause').val();
+
+		var pic_1 = $('#op_0').text();
+		var pic_2 = $('#op_1').text();
+		var pic_3 = $('#op_2').text();
+
+		var pic = [];
+
+		if (pic_1 != "-") {
+			pic.push(pic_1);
+		}
+
+		if (pic_2 != "-") {
+			pic.push(pic_2);
+		}
+
+		if (pic_3 != "-") {
+			pic.push(pic_3);
+		}
+
+
+		var mesin = $('#mesin').text();
+		var part = $('#part').text();
+		var product = $('#product').text();
+		var maintenance_code = $('#maintenance_code').val();
+		var status = $('#status').text();
+		var last_counter = $('#last_counter').text();
+		var start_time = getActualFullDate();
+		var end_time = getActualFullDate();
+		var running_time = $('#perbaikan').val();
+		var noteperbaikan =  CKEDITOR.instances.noteperbaikan.getData();
+
+		
+		var data = {
+			pic : pic.join(', '),
+			product : product,
+			maintenance_code : maintenance_code,
+			part : part,
+			status : 'PAUSE',
+			last_counter : last_counter,
+			start_time : start_time,
+			reason:reason,
+		}
+
+		$.post('{{ url("input/injeksi/input_pause") }}', data, function(result, status, xhr){
+			if(result.status){
+				alert('Periodik Molding Dihentikan Sementara.');
+				location.reload();
+				$('#reasonPause').val('');
+			}else{
+				openErrorGritter('Error!',result.message);
+			}
+		});
+	}
+
+	function changeStatus(maintenance_code) {
+		var data = {
+			maintenance_code:maintenance_code
+		}
+		$.post('{{ url("change/injeksi/change_pause") }}', data, function(result, status, xhr){
+			if(result.status){
+				alert('Periodik Molding Dilanjutkan.');
+			}else{
+				openErrorGritter('Error!',result.message);
 			}
 		});
 	}
@@ -727,22 +746,48 @@
 			if(result.status){
 				if(result.datas.length != 0){
 					$.each(result.datas, function(key, value) {
-						$('#mesin').html(value.mesin);
-						$('#part').html(value.part);
-						$('#status').html(value.status);
-						$('#last_counter').html(value.last_counter);
-						$('#product').html(value.product);
-						$("#noteperbaikan").html(CKEDITOR.instances.noteperbaikan.setData(value.note));
-						// $('#noteperbaikan').val(value.note);
-						$('#start_time_perbaikan').val(value.start_time);
-						duration = 0;
-						count = true;
-						started_at = new Date(value.start_time);
-						$('#start_perbaikan').hide();
-						$('#finish_perbaikan').show();
-						$('#perbaikannote').show();
-						$('#perbaikannote2').show();
-						setInterval(update_maintenance_temp,60000);
+						if (value.remark == 'PAUSE') {
+							if (confirm('Periodik dalam kondisi PAUSE. Apakah Anda ingin melanjutkan?')) {
+								$('#mesin').html(value.mesin);
+								$('#part').html(value.part);
+								$('#status').html(value.status);
+								$('#last_counter').html(value.last_counter);
+								$('#product').html(value.product);
+								$('#maintenance_code').val(value.maintenance_code);
+								$("#noteperbaikan").html(CKEDITOR.instances.noteperbaikan.setData(value.note));
+								// $('#noteperbaikan').val(value.note);
+								$('#start_time_perbaikan').val(value.start_time);
+								duration = 0;
+								count = true;
+								started_at = new Date(value.start_time);
+								$('#start_perbaikan').hide();
+								$('#finish_perbaikan').show();
+								$('#perbaikannote').show();
+								$('#perbaikannote2').show();
+								setInterval(update_maintenance_temp,60000);
+								changeStatus(value.maintenance_code);
+							}else{
+								change_molding();
+							}
+						}else{
+							$('#mesin').html(value.mesin);
+							$('#part').html(value.part);
+							$('#status').html(value.status);
+							$('#last_counter').html(value.last_counter);
+							$('#product').html(value.product);
+							$('#maintenance_code').val(value.maintenance_code);
+							$("#noteperbaikan").html(CKEDITOR.instances.noteperbaikan.setData(value.note));
+							// $('#noteperbaikan').val(value.note);
+							$('#start_time_perbaikan').val(value.start_time);
+							duration = 0;
+							count = true;
+							started_at = new Date(value.start_time);
+							$('#start_perbaikan').hide();
+							$('#finish_perbaikan').show();
+							$('#perbaikannote').show();
+							$('#perbaikannote2').show();
+							setInterval(update_maintenance_temp,60000);
+						}
 					});
 				}
 				openSuccessGritter('Success!', result.message);
@@ -758,10 +803,12 @@
 
 	function update_maintenance_temp() {
 		var part = $('#part').text();
+		var maintenance_code = $('#maintenance_code').val();
 		var noteperbaikan = CKEDITOR.instances.noteperbaikan.getData();
 
 		var data = {
 			part : part,
+			maintenance_code : maintenance_code,
 			note : noteperbaikan
 		}
 

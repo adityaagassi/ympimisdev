@@ -41,6 +41,7 @@ use App\InjectionMaintenanceMoldingTemp;
 use App\InjectionMachineMaster;
 use App\InjectionMachineWork;
 use App\InjectionMachineWorkingLog;
+use App\InjectionMaintenanceMoldingWork;
 use App\InjectionMachineLog;
 use App\InjectionDryerLog;
 use App\InjectionDryer;
@@ -4867,6 +4868,7 @@ class InjectionsController extends Controller
           $id_user = Auth::id();
 
           InjectionMaintenanceMoldingTemp::create([
+            'maintenance_code' => $request->get('maintenance_code'),
             'pic' => $request->get('pic'),
             'mesin' => $request->get('mesin'),
             'part' => $request->get('part'),
@@ -4918,9 +4920,9 @@ class InjectionsController extends Controller
 
     public function update_maintenance_temp(Request $request){
             // $tgl = $request->get('tgl');
-        $part = $request->get('part');
+        $maintenance_code = $request->get('maintenance_code');
 
-        $maintenance_temp = InjectionMaintenanceMoldingTemp::where('part',$part)->get();
+        $maintenance_temp = InjectionMaintenanceMoldingTemp::where('maintenance_code',$maintenance_code)->get();
         foreach ($maintenance_temp as $key) {
             $id_maintenance_temp = $key->id;
         }
@@ -5007,6 +5009,7 @@ class InjectionsController extends Controller
             $running_time = str_pad($hours,$length,"0", STR_PAD_LEFT).':'.str_pad($minutes,$length,"0", STR_PAD_LEFT).':'.str_pad($seconds,$length,"0", STR_PAD_LEFT);
 
           InjectionMaintenanceMoldingLog::create([
+            'maintenance_code' => $request->get('maintenance_code'),
             'pic' => $request->get('pic'),
             'mesin' => $request->get('mesin'),
             'part' => $request->get('part'),
@@ -6602,6 +6605,67 @@ class InjectionsController extends Controller
             $work->save();
 
             $temp = InjectionHistoryMoldingTemp::where('molding_code',$request->get('molding_code'))->where('remark','PAUSE')->first();
+            $temp->remark = null;
+            $temp->reason = null;
+            $temp->save();
+
+            $response = array(
+                'status' => true,
+                'message' => '',
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function inputReasonPauseMaintenance(Request $request)
+    {
+        try {
+            $reason = InjectionMaintenanceMoldingWork::create([
+                'maintenance_code' => $request->get('maintenance_code'),
+                'type' => $request->get('type'),
+                'pic' => $request->get('pic'),
+                'product' => $request->get('product'),
+                'part' => $request->get('part'),
+                'start_time' => $request->get('start_time'),
+                'reason' => $request->get('reason'),
+                'status' => $request->get('status'),
+                'last_counter' => $request->get('last_counter'),
+                'created_by' => Auth::id()
+            ]);
+
+            $temp = InjectionMaintenanceMoldingTemp::where('maintenance_code',$request->get('maintenance_code'))->first();
+            $temp->remark = 'PAUSE';
+            $temp->reason = $request->get('reason');
+            $temp->save();
+
+            $response = array(
+                'status' => true,
+                'message' => '',
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function changeReasonPauseMaintenance(Request $request)
+    {
+        try {
+            $work = InjectionMaintenanceMoldingWork::where('maintenance_code',$request->get('maintenance_code'))->where('end_time',null)->first();
+            $work->end_time = date('Y-m-d H:i:s');
+            $work->save();
+
+            $temp = InjectionMaintenanceMoldingTemp::where('maintenance_code',$request->get('maintenance_code'))->where('remark','PAUSE')->first();
             $temp->remark = null;
             $temp->reason = null;
             $temp->save();

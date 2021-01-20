@@ -4,10 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class InjectionMaintenanceMoldingTemp extends Model
+class InjectionMaintenanceMoldingWork extends Model
 {
     protected $fillable = [
-		'maintenance_code','pic','product','part', 'mesin', 'last_counter','status','start_time','end_time','note','created_by'
+		'maintenance_code','pic','product','part', 'last_counter','status','start_time','end_time','reason','created_by'
 	];
 
 	public function user()

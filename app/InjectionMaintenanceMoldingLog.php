@@ -10,7 +10,7 @@ class InjectionMaintenanceMoldingLog extends Model
     use SoftDeletes;
 
     protected $fillable = [
-		'pic','product','part', 'mesin', 'last_counter','status','start_time','end_time','running_time','note','created_by'
+		'maintenance_code','pic','product','part', 'mesin', 'last_counter','status','start_time','end_time','running_time','note','created_by'
 	];
 
 	public function user()
