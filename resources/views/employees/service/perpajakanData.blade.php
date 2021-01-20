@@ -374,7 +374,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 						<div class="form-group row data_npwp" align="left">
 							<label class="col-xs-3 label-pad">Nomor NPWP <span class="keterangan_npwp"></span><span class="text-red">*</span></label>
 							<div class="col-xs-5" align="left">
-								<input type="number" class="form-control" id="npwp_nomor" name="npwp_nomor" placeholder="Nomor NPWP (Tuliskan 15 Digit Angka)">
+								<input type="number" class="form-control" id="npwp_nomor" name="npwp_nomor" placeholder="Contoh Penulisan : 948507199624000 (Tuliskan 15 Digit Angka)">
 							</div>
 						</div>
 
@@ -680,7 +680,7 @@ function validateForm() {
 		return false;
 	}
 
-	if($("#npwp_nomor").val() == '' && $("#npwp_kepemilikan").val() == 'Iya' || ($("#npwp_nomor").val().length > 15 || $("#npwp_nomor").val().length < 15)) {
+	if($("#npwp_nomor").val() == '' && $("#npwp_kepemilikan").val() == 'Iya') {
 		openErrorGritter('Error!', 'Kolom NPWP Harus Diisi Dengan 15 Digit Angka');
 		$("#npwp_nomor").focus();
 		return false;
