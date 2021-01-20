@@ -523,7 +523,7 @@
                             </a>
                             <br>
                             <a href="{{ url("/index/resume_pajak") }}">
-                                <i class="fa fa-caret-right"></i> Resume Pengisian Data NPWP ()
+                                <i class="fa fa-caret-right"></i> Resume Pengisian NPWP (納税義務者番号データのまとめ)
                             </a>
                             <br>
 

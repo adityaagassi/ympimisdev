@@ -8588,6 +8588,23 @@ $data_dept = db::select("
 $data_pr_belum_po = db::select("
     select acc_purchase_requisitions.no_pr, sum(case when sudah_po is null then 1 else 0 end) as belum_po, sum(case when sudah_po is not null then 1 else 0 end) as sudah_po from acc_purchase_requisitions left join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr where acc_purchase_requisitions.deleted_at is null and receive_date is not null ".$dep."  GROUP BY no_pr order by submission_date asc");
 
+$data_investment_belum_po = db::select("
+    SELECT
+    acc_investments.reff_number,
+    sum( CASE WHEN sudah_po IS NULL THEN 1 ELSE 0 END ) AS belum_po,
+    sum( CASE WHEN sudah_po IS NOT NULL THEN 1 ELSE 0 END ) AS sudah_po 
+    FROM
+    acc_investments
+    LEFT JOIN acc_investment_details ON acc_investments.reff_number = acc_investment_details.reff_number 
+    WHERE
+    acc_investments.deleted_at IS NULL
+    AND posisi = 'finished' 
+    GROUP BY
+    reff_number 
+    ORDER BY
+    submission_date ASC
+    ");
+
 $year = date('Y');
 
 $response = array(
@@ -8595,6 +8612,7 @@ $response = array(
     'datas' => $data,
     'data_dept' => $data_dept,
     'data_pr_belum_po' => $data_pr_belum_po,
+    'data_investment_belum_po' => $data_investment_belum_po,
     'year' => $year
 );
 

@@ -124,6 +124,28 @@ table > thead > tr > th{
 				</div>
 				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
 			</div> -->
+
+				<?php if(Auth::user()->role_code == "MIS" || $employee->department == "Accounting Department") { ?>
+
+				<div class="col-xs-8" style="margin-top: 5px;padding-right: 5px">
+					<div class="row">
+						<input type="hidden" value="{{csrf_token()}}" name="_token" />
+						<form method="GET" action="{{ url("export/resume_pajak") }}">
+							<div class="col-xs-12">
+								<div class="col-md-8">
+									<div class="form-group">
+										<div class="col-md-5" style="padding-right: 0;">
+											<button type="submit" class="btn btn-success form-control"><i class="fa fa-download"></i> Export List Data NPWP</button>
+										</div>
+									</div>
+								</div>
+								
+							</div>
+						</form>
+					</div>
+				</div>
+				<?php } ?>
+
 			<div class="col-xs-8" style="margin-top: 5px;padding-right: 5px">
 				<div id="container1" style="width: 100%;height: 500px;"></div>
 				<!-- <div id="container2" style="width: 100%;"></div> -->

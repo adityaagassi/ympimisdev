@@ -398,6 +398,8 @@ Route::post('index/injeksi/store_maintenance_temp', 'InjectionsController@store_
 Route::get('index/injeksi/get_maintenance_temp', 'InjectionsController@get_maintenance_temp');
 Route::post('index/injeksi/update_maintenance_temp', 'InjectionsController@update_maintenance_temp');
 Route::post('index/injeksi/store_maintenance_molding', 'InjectionsController@store_maintenance_molding');
+Route::post('input/injeksi/input_pause', 'InjectionsController@inputReasonPauseMaintenance');
+Route::post('change/injeksi/change_pause', 'InjectionsController@changeReasonPauseMaintenance');
 
 
 //end maintenance molding injection
@@ -543,6 +545,7 @@ Route::post('fetch/update_perpajakan_data', 'EmployeeController@fetchUpdatePerpa
 Route::get('index/resume_pajak', 'EmployeeController@indexResumePajak');
 Route::get('fetch/resume_pajak', 'EmployeeController@fetchResumePajak');
 Route::get('fetch/resume_pajak/detail', 'EmployeeController@fetchResumePajakDetail');
+Route::get('export/resume_pajak', 'EmployeeController@exportDataPajak');
 
 Route::get('index/report/manpower', 'EmployeeController@indexReportManpower');
 Route::get('fetch/report/manpower', 'EmployeeController@fetchReportManpower');
@@ -1358,9 +1361,13 @@ Route::get('generate/sakurentsu/3m/pdf/{id_three_m}', 'SakurentsuController@gene
 Route::get('get/sakurentsu/3m', 'SakurentsuController@get_employee_sign');
 Route::post('post/sakurentsu/3m/sign', 'SakurentsuController@signing_tiga_em');
 
+// 3M Implementasi
 Route::post('post/sakurentsu/3m/receive_std', 'SakurentsuController@receive_tiga_em');
 Route::get('index/sakurentsu/3m/implement/{id_three_m}', 'SakurentsuController@index_tiga_em_implement');
 Route::post('post/sakurentsu/3m/implement', 'SakurentsuController@post_tiga_em_implement');
+
+Route::get('index/sakurentsu/3m/implement/{id_three_m}/{category}', 'SakurentsuController@index_tiga_em_implement2');
+Route::get('post/sakurentsu/3m/implementation/sign', 'SakurentsuController@signing_implement_tiga_em');
 
 //Supplier
 Route::get('index/supplier', 'AccountingController@master_supplier');
@@ -1946,12 +1953,14 @@ Route::get('fetch/middle/report_hourly_lcq', 'MiddleProcessController@fetchRepor
 // Report Middle Buffing
 Route::get('index/middle/report_buffing_ng', 'MiddleProcessController@indexReportBuffingNg');
 Route::get('fetch/middle/bff_ng_rate_monthly', 'MiddleProcessController@fetchBuffingNgRateMonthly');
+Route::get('fetch/middle/bff_ng_rate_weekly', 'MiddleProcessController@fetchBuffingNgRateWeekly');
 Route::get('fetch/middle/bff_op_eff_monthly', 'MiddleProcessController@fetchBuffingOpEffMonthly');
 Route::get('fetch/middle/bff_op_ng_monthly/{id}', 'MiddleProcessController@fetchBuffingOpNgMonthly');
 Route::get('fetch/middle/bff_op_ng_monthly_detail', 'MiddleProcessController@fetchBuffingOpNgMonthlyDetail');
 Route::get('fetch/middle/bff_op_work_monthly/{id}', 'MiddleProcessController@fetchBuffingOpWorkMonthly');
 Route::get('fetch/middle/bff_op_work_monthly_detail', 'MiddleProcessController@fetchBuffingOpWorkMonthlyDetail');
 Route::get('fetch/middle/bff_ng_monthly', 'MiddleProcessController@fetchBuffingNgMonthly');
+Route::get('fetch/middle/bff_ng_key_monthly', 'MiddleProcessController@fetchBuffingNgKeyMonthly');
 Route::get('fetch/middle/bff_ng_rate_daily', 'MiddleProcessController@fetchBuffingNgDaily');
 Route::get('index/middle/report_buffing_operator_time', 'MiddleProcessController@indexReportOpTime');
 Route::get('fetch/middle/report_buffing_operator_time', 'MiddleProcessController@fetchReportOpTime');
@@ -2451,7 +2460,15 @@ Route::get('index/stocktaking/check_input_new', 'StockTakingController@indexChec
 Route::get('fetch/stocktaking/check_input_store_list_new', 'StockTakingController@fetchCheckInputStoreListNew');
 Route::get('fetch/stocktaking/pi_vs_book', 'StockTakingController@fetchPiVsBook');
 
+
+Route::get('index/stocktaking/material_forecast', 'StockTakingController@indexStocktakingMaterialForecast');
+Route::get('fetch/stocktaking/material_forecast', 'StockTakingController@fetchStocktakingMaterialForecast');
+
+
 Route::group(['nav' => 'S36', 'middleware' => 'permission'], function(){
+
+	Route::get('update/stocktaking/material_forecast', 'StockTakingController@indexMonthlyStocktakingList');
+
 
 	Route::get('index/stocktaking/stocktaking_list', 'StockTakingController@indexMonthlyStocktakingList');
 	Route::get('fetch/stocktaking/stocktaking_list', 'StockTakingController@fetchMonthlyStocktakingList');

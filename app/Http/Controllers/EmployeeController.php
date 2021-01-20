@@ -667,9 +667,14 @@ class EmployeeController extends Controller
           $title = 'Resume Pengisian Data NPWP';
           $title_jp = '納税義務者番号データのまとめ';
 
+          $emp = EmployeeSync::where('employee_id', Auth::user()->username)
+             ->select('employee_id', 'name', 'position', 'department', 'section', 'group')
+             ->first();
+
           return view('employees.report.resume_pajak', array(
                'title' => $title,
                'title_jp' => $title_jp,
+               'employee' => $emp
           ))->with('page', 'Resume Pengisian Data NPWP')->with('head','Resume Pengisian Data NPWP');
      }
 
@@ -799,6 +804,27 @@ class EmployeeController extends Controller
                return Response::json($response);
           }
      }
+
+     public function exportDataPajak(Request $request){
+
+        $time = date('d-m-Y H;i;s');
+
+
+        $npwp_detail = db::select(
+            "SELECT * from employee_taxes order by id asc");
+
+        $data = array(
+            'npwp_detail' => $npwp_detail
+        );
+
+        ob_clean();
+
+        Excel::create('Data NPWP '.$time, function($excel) use ($data){
+            $excel->sheet('Data', function($sheet) use ($data) {
+              return $sheet->loadView('employees.report.resume_pajak_excel', $data);
+          });
+        })->export('xlsx');
+    }
 
      public function fetchEmployeeResume(Request $request){
 
