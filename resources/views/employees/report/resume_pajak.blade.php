@@ -125,7 +125,7 @@ table > thead > tr > th{
 				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
 			</div> -->
 
-				<?php if(Auth::user()->role_code == "MIS" || $employee->department == "Accounting Department") { ?>
+				<?php if(Auth::user()->role_code == "MIS" || $employee->department == "Accounting Department" || $employee->department == "Human Resources Department") { ?>
 
 				<div class="col-xs-8" style="margin-top: 5px;padding-right: 5px">
 					<div class="row">

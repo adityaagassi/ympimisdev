@@ -69,7 +69,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 
 					<div class="form-group row" align="left">
 						<label class="col-xs-12 label-pad">
-							Untuk memudahkan dalam pengisian form, Siapkan data data verikut: 
+							Untuk memudahkan dalam pengisian form, Siapkan data data berikut: 
 						<br>
 						<ol>
 							<li><span class="text-red">Kartu Tanda Penduduk</span></li>
@@ -114,7 +114,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 						<div class="form-group row" align="left">
 							<label class="col-xs-3 label-pad">Nomor Induk Kependudukan<span class="text-red">*</span></label>
 							<div class="col-xs-5" align="left">
-								<input type="text" class="form-control" id="nik" name="nik" placeholder="NIK" required>
+								<input type="text" class="form-control" id="nik" name="nik" placeholder="Nomor Induk Kependudukan. Contoh : 35730112323..." required>
 							</div>
 						</div>
 
@@ -392,6 +392,8 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 							</div>
 						</div>
 
+						<div id="file_upload" style="margin-left: 50px"></div>
+
 						<div class="form-group row" align="center" style="margin-top: 5%; margin-bottom: 5%;">
 							<div class="col-xs-2">
 								<a style="margin-right: 3%;" class="btn btn-lg btn-danger" href="{{ route('emp_service', ['id' =>'1']) }}"><i class="fa fa-arrow-left"></i> BACK</a>
@@ -515,6 +517,14 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					$('#npwp_nama').val(result.data.npwp_nama);
 					$('#npwp_nomor').val(result.data.npwp_nomor);
 					$('#npwp_alamat').val(result.data.npwp_alamat);
+
+					if (result.data.npwp_file != null) {  
+						var obj = JSON.parse(result.data.npwp_file);
+						$.each(obj, function(key, value) {
+							$('#file_upload').html('<img Src="'+'{{ url("/tax_files/") }}/'+value+'" width="200">');
+				        });
+
+					}				
 				}	
 			}
 		});

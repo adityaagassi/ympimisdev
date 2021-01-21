@@ -3120,7 +3120,16 @@ class AccountingController extends Controller
 
             if ($po_data->posisi == "pch") {
                 $data5 = AccPurchaseOrder::where('no_po', $request->get('no_po_edit'))
-                ->update(['revised' => 'true', 'revised_date' => date('Y-m-d')]);
+                ->update([
+                    'revised' => 'true', 
+                    'revised_date' => date('Y-m-d'),
+                    'posisi' => 'staff_pch',
+                    'status' => 'pch',
+                    'approval_authorized2' => null,
+                    'date_approval_authorized2' => null,
+                    'approval_authorized3' => null,
+                    'date_approval_authorized3' => null
+                ]);
             }
 
 
