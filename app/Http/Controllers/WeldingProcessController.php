@@ -2013,8 +2013,42 @@ class WeldingProcessController extends Controller
 			// $ngs = $ngs->whereRaw('date(welding_ng_logs.created_at) = "'.$now.'"');
 			// $checks = $checks->whereRaw('date(welding_check_logs.created_at) = "'.$now.'"');
 		}
+		if(strlen($request->get('tanggal')) > 0){
+			$tgl = date('Y-m-d',strtotime($request->get("tanggal")));
+			$jam = date('Y-m-d H:i:s');
+			if ($jam > date('Y-m-d').' 00:00:01' && $jam < date('Y-m-d').' 02:00:00' && $tgl == date('Y-m-d')) {
+				$nextday =  date('Y-m-d', strtotime($tgl));
+				$yesterday = date('Y-m-d',strtotime("-1 days"));
+			}else{
+				$nextday =  date('Y-m-d', strtotime($tgl . " +1 days"));
+				$yesterday = date('Y-m-d');
+			}
+		}else{
+			$tgl = date("Y-m-d");
+			$jam = date('Y-m-d H:i:s');
+			if ($jam > date('Y-m-d').' 00:00:01' && $jam < date('Y-m-d').' 02:00:00') {
+				$nextday = date('Y-m-d');
+				$yesterday = date('Y-m-d',strtotime("-1 days"));
+			}else{
+				$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(1)));
+				$yesterday = date('Y-m-d');
+			}
+		}
 
-		$ng = db::select("select SUM(quantity) as jumlah,ng_name,SUM(quantity) / (select SUM(welding_check_logs.quantity) as total_check from welding_check_logs where deleted_at is null ".$addlocation." and DATE(welding_check_logs.created_at)='".$now."') * 100 as rate from welding_ng_logs where date(created_at) = '".$now."' ".$addlocation." group by ng_name order by jumlah desc");
+		$ng = db::select("SELECT
+			SUM( quantity ) AS jumlah,
+			ng_name,
+			SUM( quantity ) / ( SELECT SUM( welding_check_logs.quantity ) AS total_check FROM welding_check_logs WHERE deleted_at IS NULL ".$addlocation." AND welding_check_logs.created_at BETWEEN '".$yesterday." 06:00:00' AND '".$nextday." 02:00:00' ) * 100 AS rate 
+		FROM
+			welding_ng_logs 
+		WHERE
+			created_at BETWEEN '".$yesterday." 06:00:00' 
+			AND '".$nextday." 02:00:00' 
+			".$addlocation."
+		GROUP BY
+			ng_name 
+		ORDER BY
+			jumlah DESC");
 
 		$ngkey = db::select("
 			select rate.`key`, rate.`check`, rate.ng, rate.rate from (
@@ -2024,7 +2058,7 @@ class WeldingProcessController extends Controller
 			left join materials mt on mt.material_number = w.material_number
 			where w.deleted_at is null
 			".$addlocation."
-			and DATE(w.created_at)='".$now."'
+			and w.created_at BETWEEN '".$yesterday." 06:00:00' AND '".$nextday." 02:00:00'
 			GROUP BY mt.`key`) c
 
 			left join
@@ -2033,7 +2067,8 @@ class WeldingProcessController extends Controller
 			left join materials mt on mt.material_number = w.material_number
 			where w.deleted_at is null
 			".$addlocation."
-			and DATE(w.created_at)='".$now."'
+			and w.created_at BETWEEN '".$yesterday." 06:00:00' 
+			AND '".$nextday." 02:00:00' 
 			GROUP BY mt.`key`) ng
 
 			on c.`key` = ng.`key`) rate
@@ -2042,7 +2077,7 @@ class WeldingProcessController extends Controller
 		);
 
 
-		$dateTitle = date("d M Y", strtotime($now));
+		$dateTitle = date("d M Y", strtotime($yesterday));
 
 		// $ngs = $ngs->get();
 		// $checks = $checks->get();
@@ -2050,16 +2085,16 @@ class WeldingProcessController extends Controller
 
 		$datastat = db::select("select 
 			COALESCE(SUM(welding_check_logs.quantity),0) as total_check,
-			COALESCE((SELECT sum(quantity) from welding_logs where deleted_at is null ".$addlocation." and DATE(welding_logs.created_at)='".$now."'),0) as total_ok,
+			COALESCE((SELECT sum(quantity) from welding_logs where deleted_at is null ".$addlocation." and welding_logs.created_at BETWEEN '".$yesterday." 06:00:00' AND '".$nextday." 02:00:00'),0) as total_ok,
 
-			COALESCE((select sum(quantity) from welding_ng_logs where deleted_at is null ".$addlocation." and DATE(welding_ng_logs.created_at)='".$now."'),0) as total_ng,
+			COALESCE((select sum(quantity) from welding_ng_logs where deleted_at is null ".$addlocation." and welding_ng_logs.created_at BETWEEN '".$yesterday." 06:00:00' AND '".$nextday." 02:00:00'),0) as total_ng,
 
-			COALESCE((select sum(quantity) from welding_ng_logs where deleted_at is null ".$addlocation." and DATE(welding_ng_logs.created_at)='".$now."')
+			COALESCE((select sum(quantity) from welding_ng_logs where deleted_at is null ".$addlocation." and welding_ng_logs.created_at BETWEEN '".$yesterday." 06:00:00' AND '".$nextday." 02:00:00')
 			/ 
-			(Select SUM(quantity) from welding_check_logs where deleted_at is null ".$addlocation." and DATE(welding_check_logs.created_at)='".$now."') * 100,0) as ng_rate 
+			(Select SUM(quantity) from welding_check_logs where deleted_at is null ".$addlocation." and welding_check_logs.created_at BETWEEN '".$yesterday." 06:00:00' AND '".$nextday." 02:00:00') * 100,0) as ng_rate 
 
 			from welding_check_logs 
-			where DATE(welding_check_logs.created_at)='".$now."' ".$addlocation." and deleted_at is null ");
+			where welding_check_logs.created_at BETWEEN '".$yesterday." 06:00:00' AND '".$nextday." 02:00:00' ".$addlocation." and deleted_at is null ");
 
 		$location = "";
 		if($request->get('location') != null) {
