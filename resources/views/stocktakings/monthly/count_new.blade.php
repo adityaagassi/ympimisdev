@@ -730,13 +730,29 @@
 				// 	}
 				// }
 				
-				if(!result.cek){
-					openErrorGritter('Error', 'Material tidak ada dalam forecast');
-					alert('Material tidak ada dalam forecast, Hubungi Staff atau PC');
-					$('#scanModal').modal('hide');
-					canc();
-					resetCount();
-					return false;
+				
+				if(result.material[0].area != 'WAREHOUSE' || result.material[0].area != 'FINISHED GOODS' || result.material[0].area != 'SUBCONT'){
+
+
+					if(result.now < result.material[0].stocktaking_time){
+						openErrorGritter('Error', 'Belum waktunya input');
+						alert('Belum waktunya input\nInput untuk area ' + result.material[0].area + ' dimulai pada ' + result.material[0].stocktaking_time);
+						$('#scanModal').modal('hide');
+						canc();
+						resetCount();
+						return false;
+					}
+
+
+					if(!result.cek){
+						openErrorGritter('Error', 'Material tidak ada dalam forecast');
+						alert('Material tidak ada dalam forecast, Hubungi Staff atau PC');
+						$('#scanModal').modal('hide');
+						canc();
+						resetCount();
+						return false;
+					}
+
 				}
 				
 				if(result.material[0].process <= 1){

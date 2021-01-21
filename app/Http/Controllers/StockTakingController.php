@@ -4109,8 +4109,8 @@ class StockTakingController extends Controller{
 
 	public function fetchMaterialDetailNew(Request $request){
 
+		$now = date('Y-m-d H:i:s');
 		$id = $request->get('id');
-
 		$idnew = explode('_', $id);
 
 		try {
@@ -4129,6 +4129,7 @@ class StockTakingController extends Controller{
 					mpdl.bun,
 					s.location,
 					sl.area,
+					sl.stocktaking_time,
 					mpdl.storage_location,
 					v.lot_completion,
 					v.lot_transfer,
@@ -4154,13 +4155,16 @@ class StockTakingController extends Controller{
 					$response = array(
 						'status' => true,
 						'cek' => true,
+						'now' => $now,
 						'material' => $material,
 					);
 					return Response::json($response);
 				}else{
 					$response = array(
 						'status' => true,
-						'cek' => false
+						'cek' => false,
+						'now' => $now,
+						'material' => $material,
 					);
 					return Response::json($response);
 				}
@@ -4210,12 +4214,16 @@ class StockTakingController extends Controller{
 							'status' => true,
 							'cek' => true,
 							'material' => $material,
+							'now' => $now
+
 						);
 						return Response::json($response);
 					}else{
 						$response = array(
 							'status' => true,
-							'cek' => false
+							'cek' => false,
+							'material' => $material,
+							'now' => $now
 						);
 						return Response::json($response);
 					}
