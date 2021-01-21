@@ -1779,11 +1779,11 @@ public function fetchMinMoeMonitoring(Request $request)
                WHERE
                     (employees.remark = 'OFC' and
                     employee_syncs.end_date IS NULL 
-                    AND sunfish_shift_syncs.shift_date = '".$now."')
+                    AND sunfish_shift_syncs.shift_date = '".$now."' ".$groupin.")
                     OR
                     (employees.remark = 'Jps' and
                     employee_syncs.end_date IS NULL 
-                    AND sunfish_shift_syncs.shift_date = '".$now."')");
+                    AND sunfish_shift_syncs.shift_date = '".$now."' ".$groupin.")");
           }else if ($request->get('location') == 'ALL') {
                $datacheck = DB::SELECT("SELECT
                     employee_syncs.employee_id,
@@ -1804,7 +1804,8 @@ public function fetchMinMoeMonitoring(Request $request)
                       and ivms_temperatures.date = '".$now."'
                WHERE
                     employee_syncs.end_date IS NULL 
-                    AND sunfish_shift_syncs.shift_date = '".$now."'");
+                    AND sunfish_shift_syncs.shift_date = '".$now."'
+                    ".$groupin."");
           }else{
                $datacheck = DB::SELECT("SELECT
                     employees.employee_id,
@@ -1829,13 +1830,13 @@ public function fetchMinMoeMonitoring(Request $request)
                          AND employees.remark != 'Jps' 
                          AND employee_syncs.end_date IS NULL 
                          AND employee_syncs.department = '".$request->get('location')."' 
-                         AND sunfish_shift_syncs.shift_date = '".$now."' 
+                         AND sunfish_shift_syncs.shift_date = '".$now."' ".$groupin."
                     ) 
                     OR (
                          employees.remark IS NULL 
                          AND employee_syncs.end_date IS NULL 
                     AND employee_syncs.department = '".$request->get('location')."' 
-                    AND sunfish_shift_syncs.shift_date = '".$now."')");
+                    AND sunfish_shift_syncs.shift_date = '".$now."' ".$groupin.")");
           }
 
           foreach ($datacheck as $key) {
