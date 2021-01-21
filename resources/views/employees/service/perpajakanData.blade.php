@@ -562,7 +562,7 @@ $('#form_pajak').on('submit', function(event){
 			},
 			error: function(result, status, xhr){
 				$("#loading").hide();				
-				openErrorGritter('Error!', 'Update data Perpajakan gagal');
+				openErrorGritter('Error!', result.message);
 			}
 		});
 	}
