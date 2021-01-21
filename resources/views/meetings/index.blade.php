@@ -464,6 +464,44 @@
 	</div>
 </div>
 
+<div class="modal fade" id="modalChart">
+	<div class="modal-dialog modal-lg" style="width: 1200px">
+		<div class="modal-content">
+			<div class="modal-header">
+				<center><h4 style="padding-bottom: 15px;color: black;font-weight: bold;font-size: 25px" class="modal-title" id="modalChartTitle"></h4></center>
+				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
+					<center>
+						<i class="fa fa-spinner fa-spin" id="loadingChart" style="font-size: 80px;"></i>
+					</center>
+					<div class="col-xs-8" style="margin-top: 5px;padding-right: 5px">
+						<div id="container1" style="width: 100%;"></div>
+						<!-- <div id="container2" style="width: 100%;"></div> -->
+					</div>
+					<div class="col-xs-4" style="margin-top: 5px;padding-left: 0px;padding-bottom: 10px">
+						<div id="container2" style="width: 100%;"></div>
+						<!-- <div id="container2" style="width: 100%;"></div> -->
+					</div>
+					<h4 class="modal-title" id="modalDetailTitleChart"></h4>
+					<table class="table table-hover table-bordered table-striped" id="tableDetailChart">
+						<thead style="background-color: rgba(126,86,134,.7);">
+							<tr style="color: white">
+								<th style="width: 1%;">#</th>
+								<th style="width: 3%;">Employee ID</th>
+								<th style="width: 9%;">Name</th>
+								<th style="width: 9%;">Dept</th>
+								<th style="width: 3%;">Sect</th>
+								<th style="width: 3%;">Status</th>
+								<th style="width: 3%;">At</th>
+							</tr>
+						</thead>
+						<tbody id="tableDetailChartBody">
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 @endsection
 @section('scripts')
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
@@ -476,6 +514,10 @@
 <script src="{{ url("js/vfs_fonts.js")}}"></script>
 <script src="{{ url("js/buttons.html5.min.js")}}"></script>
 <script src="{{ url("js/buttons.print.min.js")}}"></script>
+<script src="{{ url("js/highstock.js")}}"></script>
+<script src="{{ url("js/highcharts-3d.js")}}"></script>
+<script src="{{ url("js/exporting.js")}}"></script>
+<script src="{{ url("js/export-data.js")}}"></script>
 <script>
 	$.ajaxSetup({
 		headers: {
@@ -604,7 +646,6 @@
 
 				tableData = "";
 				$.each(result.participants, function(key, value) {
-					tableData += "<tr>";
 					tableData += "<tr id='rowParticipant"+value.employee_id+"'>";
 					tableData += "<td>"+value.employee_id+"</td>";
 					tableData += "<td>"+value.name+"</td>";
@@ -913,6 +954,7 @@
 					tableData += "<button onclick='downloadPDF(id)' id='"+value.id+"' class='btn btn-danger btn-sm' style='margin-right:5px;' data-toggle='tooltip' title='Download PDF'><i class='fa fa-file-pdf-o'></i></buton>";
 					tableData += "<button onclick='downloadExcel(id)' id='"+value.id+"' class='btn btn-success btn-sm' style='margin-right:5px;' data-toggle='tooltip' title='Download Excel'><i class='fa fa-file-excel-o'></i></buton>";
 					tableData += "<button onclick='listAttendance(id)' id='"+value.id+"' class='btn btn-info btn-sm' style='margin-right:5px;'><i class='fa fa-users'></i></buton>";
+					tableData += "<button onclick='chartAttencance(id)' id='"+value.id+"' class='btn btn-primary btn-sm' style='margin-right:5px;'><i class='fa fa-bar-chart'></i></buton>";
 					tableData += "</td>";
 					tableData += "</tr>";
 				});
@@ -992,5 +1034,509 @@
 
 		});
 	}
+
+	function chartAttencance(id) {
+		$('#modalChartTitle').html('');
+		$('#container1').html('');
+		$('#container2').html('');
+		$('#loadingChart').show();
+		$('#modalDetailTitleChart').html('');
+		$('#tableDetailChart').hide();
+		$('#tableDetailChart').DataTable().clear();
+		$('#tableDetailChart').DataTable().destroy();
+		$('#tableDetailChartBody').html('');
+		var data = {
+			id:id
+		}
+
+		$.get('{{ url("fetch/meeting/chart") }}', data,function(result, status, xhr) {
+			if(xhr.status == 200){
+				if(result.status){
+
+					var dept = [];
+					var jml_hadir = [];
+					var jml_tidak = [];
+					var jml_tanpa_undangan = [];
+					var hadir = 0;
+					var tidak = 0;
+					var tanpa_undangan = 0;
+					var series = []
+					var series2 = [];
+					var series3 = [];
+
+					for (var i = 0; i < result.chart.length; i++) {
+						dept.push(result.chart[i].department_shortname);
+						jml_hadir.push(parseInt(result.chart[i].hadir));
+						hadir = hadir+parseInt(result.chart[i].hadir);
+						tidak = tidak+parseInt(result.chart[i].tidak);
+						tanpa_undangan = tanpa_undangan+parseInt(result.chart[i].tanpa_undangan);
+						jml_tidak.push(parseInt(result.chart[i].tidak));
+						jml_tanpa_undangan.push(parseInt(result.chart[i].tanpa_undangan));
+						series.push([dept[i], jml_hadir[i]]);
+						series2.push([dept[i], jml_tidak[i]]);
+						series3.push([dept[i], jml_tanpa_undangan[i]]);
+					}
+
+					$('#modalChartTitle').html('Meeting Resume<br>'+result.meeting.subject+' || '+result.meeting.date+' ('+result.meeting.start+'-'+result.meeting.end+')');
+
+
+					Highcharts.chart('container1', {
+						chart: {
+							type: 'column'
+						},
+						title: {
+							text: 'TOTAL AUDIENCE BY DEPT',
+							style: {
+								fontSize: '20px',
+								fontWeight: 'bold'
+							}
+						},
+						xAxis: {
+							categories: dept,
+							type: 'category',
+							gridLineWidth: 1,
+							gridLineColor: 'RGB(204,255,255)',
+							lineWidth:2,
+							lineColor:'#9e9e9e',
+							labels: {
+								style: {
+									fontSize: '13px'
+								}
+							},
+						},
+						yAxis: [{
+							title: {
+								text: 'Total Audience',
+								style: {
+			                        color: '#eee',
+			                        fontSize: '15px',
+			                        fontWeight: 'bold',
+			                        fill: '#6d869f'
+			                    }
+							},
+							labels:{
+					        	style:{
+									fontSize:"15px"
+								}
+					        },
+							type: 'linear',
+						},
+					    ],
+						tooltip: {
+							headerFormat: '<span>{series.name}</span><br/>',
+							pointFormat: '<span style="color:{point.color};font-weight: bold;">{point.name} </span>: <b>{point.y}</b><br/>',
+						},
+						legend: {
+							layout: 'horizontal',
+							backgroundColor:
+							Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
+							itemStyle: {
+				                fontSize:'12px',
+				            },
+						},	
+						plotOptions: {
+							series:{
+								cursor: 'pointer',
+				                point: {
+				                  events: {
+				                    click: function () {
+				                      ShowModalDetailChart(this.category,this.series.name,id);
+				                    }
+				                  }
+				                },
+				                animation: false,
+								dataLabels: {
+									enabled: true,
+									format: '{point.y}',
+									style:{
+										fontSize: '1vw'
+									}
+								},
+								animation: false,
+								pointPadding: 0.93,
+								groupPadding: 0.93,
+								borderWidth: 0.93,
+								cursor: 'pointer'
+							},
+						},credits: {
+							enabled: false
+						},
+						series: [{
+							type: 'column',
+							data: series,
+							name: 'Hadir',
+							colorByPoint: false,
+							color: "#78c718"
+						},{
+							type: 'column',
+							data: series2,
+							name: 'Tidak Hadir',
+							colorByPoint: false,
+							color:'#c71818'
+						}
+						,{
+							type: 'column',
+							data: series3,
+							name: 'Tanpa Undangan',
+							colorByPoint: false,
+							color:'#fff954'
+						},
+						]
+					});
+
+					Highcharts.chart('container2', {
+					    chart: {
+					        plotBackgroundColor: null,
+					        plotBorderWidth: null,
+					        plotShadow: false,
+					        type: 'pie'
+					    },
+					    title: {
+					        text: 'Total Audience',
+					        style: {
+								fontSize: '20px',
+								fontWeight: 'bold'
+							}
+					    },
+					    tooltip: {
+					        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+					    },
+					    accessibility: {
+					        point: {
+					            valueSuffix: '%'
+					        }
+					    },
+					    plotOptions: {
+					        pie: {
+					            allowPointSelect: true,
+					            cursor: 'pointer',
+					            dataLabels: {
+					                enabled: true,
+					                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+					            },
+					            animation: false,
+					        }
+					    },credits: {
+							enabled: false
+						},
+					    series: [{
+					        name: 'Audience',
+					        colorByPoint: true,
+					        data: [{
+					            name: 'Hadir',
+					            y: hadir,
+					            sliced: true,
+					            selected: true,
+					            colorByPoint: false,
+								color: "#78c718"
+					        }, {
+					            name: 'Tidak Hadir',
+					            y: tidak,
+					            colorByPoint: false,
+								color:'#c71818'
+					        }, {
+					            name: 'Tanpa Undangan',
+					            y: tanpa_undangan,
+					            colorByPoint: false,
+								color:'#fff954'
+					        }, ]
+					    }]
+					});
+					$('#loadingChart').hide();
+				}
+			}
+		});
+		$('#modalChart').modal('show');
+	}
+
+	function ShowModalDetailChart(dept,attendance,id) {
+		$('#tableDetailChart').hide();
+		var data = {
+			dept:dept,
+			attendance:attendance,
+			id:id,
+		}
+
+		$.get('{{ url("fetch/meeting/chart_detail") }}', data, function(result, status, xhr) {
+			if(result.status){
+				$('#tableDetailChartBody').html('');
+
+				$('#tableDetailChart').DataTable().clear();
+				$('#tableDetailChart').DataTable().destroy();
+
+				var index = 1;
+				var resultData = "";
+				var total = 0;
+
+				$.each(result.details, function(key, value) {
+					resultData += '<tr>';
+					resultData += '<td>'+ index +'</td>';
+					resultData += '<td>'+ value.employee_id +'</td>';
+					resultData += '<td>'+ value.name +'</td>';
+					resultData += '<td>'+ value.department +'</td>';
+					resultData += '<td>'+ value.section +'</td>';
+					resultData += '<td>'+ attendance +'</td>';
+					resultData += '<td>'+ value.attend_time +'</td>';
+					resultData += '</tr>';
+					index += 1;
+				});
+				$('#tableDetailChartBody').append(resultData);
+				$('#modalDetailTitleChart').html("<center><span style='font-size: 20px; font-weight: bold;'>Detail Employees With Attendance '"+attendance+"'</span></center>");
+
+				$('#tableDetailChart').show();
+				var table = $('#tableDetailChart').DataTable({
+						'dom': 'Bfrtip',
+						'responsive':true,
+						'lengthMenu': [
+						[ 10, 25, 50, -1 ],
+						[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+						],
+						'buttons': {
+							buttons:[
+							{
+								extend: 'pageLength',
+								className: 'btn btn-default',
+							},
+							{
+								extend: 'excel',
+								className: 'btn btn-info',
+								text: '<i class="fa fa-file-excel-o"></i> Excel',
+								exportOptions: {
+									columns: ':not(.notexport)'
+								}
+							},
+							{
+								extend: 'print',
+								className: 'btn btn-warning',
+								text: '<i class="fa fa-print"></i> Print',
+								exportOptions: {
+									columns: ':not(.notexport)'
+								}
+							}
+							]
+						},
+						'paging': true,
+						'lengthChange': true,
+						'pageLength': 10,
+						'searching': true	,
+						'ordering': true,
+						'order': [],
+						'info': true,
+						'autoWidth': true,
+						"sPaginationType": "full_numbers",
+						"bJQueryUI": true,
+						"bAutoWidth": false,
+						"processing": true
+					});
+			}
+			else{
+				alert('Attempt to retrieve data failed');
+			}
+		});
+  	}
+
+	Highcharts.createElement('link', {
+		href: '{{ url("fonts/UnicaOne.css")}}',
+		rel: 'stylesheet',
+		type: 'text/css'
+	}, null, document.getElementsByTagName('head')[0]);
+
+	Highcharts.theme = {
+		colors: ['#90ee7e', '#2b908f', '#eeaaee', '#ec407a', '#7798BF', '#f45b5b',
+		'#ff9800', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+		chart: {
+			backgroundColor: {
+				linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
+				stops: [
+				[0, '#2a2a2b'],
+				[1, '#2a2a2b']
+				]
+			},
+			style: {
+				fontFamily: 'sans-serif'
+			},
+			plotBorderColor: '#606063'
+		},
+		title: {
+			style: {
+				color: '#E0E0E3',
+				textTransform: 'uppercase',
+				fontSize: '20px'
+			}
+		},
+		subtitle: {
+			style: {
+				color: '#E0E0E3',
+				textTransform: 'uppercase'
+			}
+		},
+		xAxis: {
+			gridLineColor: '#707073',
+			labels: {
+				style: {
+					color: '#E0E0E3'
+				}
+			},
+			lineColor: '#707073',
+			minorGridLineColor: '#505053',
+			tickColor: '#707073',
+			title: {
+				style: {
+					color: '#A0A0A3'
+
+				}
+			}
+		},
+		yAxis: {
+			gridLineColor: '#707073',
+			labels: {
+				style: {
+					color: '#E0E0E3'
+				}
+			},
+			lineColor: '#707073',
+			minorGridLineColor: '#505053',
+			tickColor: '#707073',
+			tickWidth: 1,
+			title: {
+				style: {
+					color: '#A0A0A3'
+				}
+			}
+		},
+		tooltip: {
+			backgroundColor: 'rgba(0, 0, 0, 0.85)',
+			style: {
+				color: '#F0F0F0'
+			}
+		},
+		plotOptions: {
+			series: {
+				dataLabels: {
+					color: 'white'
+				},
+				marker: {
+					lineColor: '#333'
+				}
+			},
+			boxplot: {
+				fillColor: '#505053'
+			},
+			candlestick: {
+				lineColor: 'white'
+			},
+			errorbar: {
+				color: 'white'
+			}
+		},
+		legend: {
+			itemStyle: {
+				color: '#E0E0E3'
+			},
+			itemHoverStyle: {
+				color: '#FFF'
+			},
+			itemHiddenStyle: {
+				color: '#606063'
+			}
+		},
+		credits: {
+			style: {
+				color: '#666'
+			}
+		},
+		labels: {
+			style: {
+				color: '#707073'
+			}
+		},
+
+		drilldown: {
+			activeAxisLabelStyle: {
+				color: '#F0F0F3'
+			},
+			activeDataLabelStyle: {
+				color: '#F0F0F3'
+			}
+		},
+
+		navigation: {
+			buttonOptions: {
+				symbolStroke: '#DDDDDD',
+				theme: {
+					fill: '#505053'
+				}
+			}
+		},
+
+		rangeSelector: {
+			buttonTheme: {
+				fill: '#505053',
+				stroke: '#000000',
+				style: {
+					color: '#CCC'
+				},
+				states: {
+					hover: {
+						fill: '#707073',
+						stroke: '#000000',
+						style: {
+							color: 'white'
+						}
+					},
+					select: {
+						fill: '#000003',
+						stroke: '#000000',
+						style: {
+							color: 'white'
+						}
+					}
+				}
+			},
+			inputBoxBorderColor: '#505053',
+			inputStyle: {
+				backgroundColor: '#333',
+				color: 'silver'
+			},
+			labelStyle: {
+				color: 'silver'
+			}
+		},
+
+		navigator: {
+			handles: {
+				backgroundColor: '#666',
+				borderColor: '#AAA'
+			},
+			outlineColor: '#CCC',
+			maskFill: 'rgba(255,255,255,0.1)',
+			series: {
+				color: '#7798BF',
+				lineColor: '#A6C7ED'
+			},
+			xAxis: {
+				gridLineColor: '#505053'
+			}
+		},
+
+		scrollbar: {
+			barBackgroundColor: '#808083',
+			barBorderColor: '#808083',
+			buttonArrowColor: '#CCC',
+			buttonBackgroundColor: '#606063',
+			buttonBorderColor: '#606063',
+			rifleColor: '#FFF',
+			trackBackgroundColor: '#404043',
+			trackBorderColor: '#404043'
+		},
+
+		legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
+		background2: '#505053',
+		dataLabelsColor: '#B0B0B3',
+		textColor: '#C0C0C0',
+		contrastTextColor: '#F0F0F3',
+		maskColor: 'rgba(255,255,255,0.3)'
+	};
+	Highcharts.setOptions(Highcharts.theme);
 </script>
 @endsection

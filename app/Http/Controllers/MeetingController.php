@@ -547,4 +547,133 @@ class MeetingController extends Controller
 		);
 		return Response::json($response);
 	}
+
+	public function fetchMeetingChart(Request $request)
+	{
+		try {
+
+			$chart = DB::SELECT("SELECT
+				a.department_shortname,
+				SUM( a.hadir ) AS hadir,
+				SUM( a.tidak ) AS tidak,
+				sum( a.tanpa_undangan ) AS tanpa_undangan 
+			FROM
+				(
+				SELECT COALESCE
+					( department_shortname, '' ) AS department_shortname,
+					count(
+					DISTINCT ( employee_syncs.employee_id )) AS hadir,
+					0 AS tidak,
+					0 AS tanpa_undangan 
+				FROM
+					meeting_details
+					LEFT JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
+					LEFT JOIN departments ON departments.department_name = employee_syncs.department 
+				WHERE
+					meeting_id = '".$request->get('id')."' 
+					AND `status` = 1 
+				GROUP BY
+					department_shortname UNION ALL
+				SELECT COALESCE
+					( department_shortname, '' ) AS department_shortname,
+					0 AS hadir,
+					count(
+					DISTINCT ( employee_syncs.employee_id )) AS tidak,
+					0 AS tanpa_undangan 
+				FROM
+					meeting_details
+					LEFT JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
+					LEFT JOIN departments ON departments.department_name = employee_syncs.department 
+				WHERE
+					meeting_id = '".$request->get('id')."' 
+					AND `status` = 0 
+				GROUP BY
+					department_shortname UNION ALL
+				SELECT COALESCE
+					( department_shortname, '' ) AS department_shortname,
+					0 AS hadir,
+					0 AS tidak,
+					count(
+					DISTINCT ( employee_syncs.employee_id )) AS tanpa_undangan 
+				FROM
+					meeting_details
+					LEFT JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
+					LEFT JOIN departments ON departments.department_name = employee_syncs.department 
+				WHERE
+					meeting_id = '".$request->get('id')."' 
+					AND `status` = 2 
+				GROUP BY
+					department_shortname 
+				) a 
+			GROUP BY
+				a.department_shortname");
+
+			$meeting = Meeting::select('*',DB::RAW('DATE_FORMAT(meetings.start_time,"%d-%b-%Y") as date'),DB::RAW('DATE_FORMAT(meetings.start_time,"%H:%i") as start'),DB::RAW('DATE_FORMAT(meetings.end_time,"%H:%i") as end'))->where('id',$request->get('id'))->first();
+			$response = array(
+				'status' => true,
+				'chart' => $chart,
+				'meeting' => $meeting
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function fetchMeetingChartDetail(Request $request)
+	{
+		try {
+
+			if ($request->get('attendance') == 'Hadir') {
+				$status = 1;
+			}else if($request->get('attendance') == 'Tidak Hadir'){
+				$status = 0;
+			}else if($request->get('attendance') == 'Tanpa Undangan'){
+				$status = 2;
+			}
+
+			if ($request->get('dept') == '') {
+				$details = DB::SELECT("SELECT
+				*,
+				COALESCE(department,'') as department,
+				COALESCE(section,'') as section
+			FROM
+				`meeting_details`
+				LEFT JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
+				LEFT JOIN departments ON departments.department_name = employee_syncs.department 
+			WHERE
+				meeting_id = ".$request->get('id')."
+				AND department_shortname is null
+				AND status = ".$status);
+			}else{
+				$details = DB::SELECT("SELECT
+					*,
+					COALESCE(section,'') as section
+				FROM
+					`meeting_details`
+					LEFT JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
+					LEFT JOIN departments ON departments.department_name = employee_syncs.department 
+				WHERE
+					meeting_id = ".$request->get('id')."
+					AND department_shortname = '".$request->get('dept')."' 
+					AND status = ".$status);
+			}
+
+			$response = array(
+				'status' => true,
+				'details' => $details,
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+	}
 }

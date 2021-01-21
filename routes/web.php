@@ -1176,6 +1176,8 @@ Route::get('index/meeting/attendance', 'MeetingController@indexMeetingAttendance
 Route::get('fetch/meeting', 'MeetingController@fetchMeeting');
 Route::get('fetch/meeting/group', 'MeetingController@fetchMeetingGroup');
 Route::get('fetch/meeting/detail', 'MeetingController@fetchMeetingDetail');
+Route::get('fetch/meeting/chart', 'MeetingController@fetchMeetingChart');
+Route::get('fetch/meeting/chart_detail', 'MeetingController@fetchMeetingChartDetail');
 Route::get('fetch/meeting/attendance', 'MeetingController@fetchMeetingAttendance');
 
 //welding process
@@ -1367,7 +1369,12 @@ Route::get('index/sakurentsu/3m/implement/{id_three_m}', 'SakurentsuController@i
 Route::post('post/sakurentsu/3m/implement', 'SakurentsuController@post_tiga_em_implement');
 
 Route::get('index/sakurentsu/3m/implement/{id_three_m}/{category}', 'SakurentsuController@index_tiga_em_implement2');
-Route::get('post/sakurentsu/3m/implementation/sign', 'SakurentsuController@signing_implement_tiga_em');
+Route::post('post/sakurentsu/3m/implementation/sign', 'SakurentsuController@signing_implement_tiga_em');
+
+
+//Trial Request
+Route::get('index/trial_request', 'TrialRequestController@index_trial_request');
+
 
 //Supplier
 Route::get('index/supplier', 'AccountingController@master_supplier');
@@ -2664,6 +2671,11 @@ Route::get('index/process_assy_fl_3', 'ProcessController@indexProcessAssyFL3');
 Route::get('index/process_assy_fl_4', 'ProcessController@indexProcessAssyFL4');
 Route::get('index/displayWipFl', 'ProcessController@indexDisplayWipFl');
 Route::get('index/repairFl', 'ProcessController@indexRepairFl');
+
+Route::get('index/process_assembly_kensa/{id}', 'ProcessController@indexProcessKensa');
+Route::get('scan/process_assembly_kensa/kensa', 'ProcessController@scanAssemblyKensa');
+
+
 
 // return sax
 Route::get('index/repairSx', 'ProcessController@indexRepairSx');
