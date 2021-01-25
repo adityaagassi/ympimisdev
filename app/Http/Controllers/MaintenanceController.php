@@ -880,7 +880,7 @@ class MaintenanceController extends Controller
 	{
 		$detail = 'SELECT maintenance_job_orders.order_no, department_shortname as bagian, priority, type, category, machine_name, description, DATE_FORMAT(maintenance_job_orders.created_at,"%d %b %Y") target_date, process_code, employee_syncs.name, date(maintenance_job_orders.created_at) as dt';
 
-		if ($request->get('process_name') != 'Listed' && $request->get('process_name') != 'inProgress') {
+		if ($request->get('process_name') != 'Listed' && $request->get('process_name') != 'InProgress') {
 			$detail .= ', cause, handling';
 		}
 
@@ -889,7 +889,7 @@ class MaintenanceController extends Controller
 		left join employee_syncs on employee_syncs.employee_id = maintenance_job_orders.created_by
 		left join departments on departments.department_name = SUBSTRING_INDEX(maintenance_job_orders.section,"_",1)';
 
-		if ($request->get('process_name') != 'Listed' && $request->get('process_name') != 'inProgress') {
+		if ($request->get('process_name') != 'Listed' && $request->get('process_name') != 'InProgress') {
 			$detail .= ' left join (SELECT order_no, operator_id, cause, handling FROM maintenance_job_reports where id in (SELECT max(id) FROM maintenance_job_reports GROUP BY order_no)) as rpt on maintenance_job_orders.order_no = rpt.order_no';
 		}
 
