@@ -95,6 +95,9 @@
 	<div class="modal-dialog" style="width: 80%">
 		<div class="modal-content">
 			<div class="modal-header" style="padding-top: 0;">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: 10px">
+					<span aria-hidden="true">&times;</span>
+				</button>
 				<center><h3 style="font-weight: bold; padding: 3px;" id="modalNewTitle"></h3></center>
 				<div class="row">
 					<input type="hidden" id="id_edit">
