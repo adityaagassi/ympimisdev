@@ -708,10 +708,10 @@
                         <a href="{{ url("/index/production_report/index/10") }}">
                             <i class="fa fa-caret-right"></i> Maintenance Report (メンテナンスリポート)
                         </a>
-                        <br>
-                        <a href="{{ url("/index/production_report/index/13") }}">
+                        <!-- <br>
+                        <a href="{{ url('/index/production_report/index/13') }}">
                             <i class="fa fa-caret-right"></i> PE Field Report (??)
-                        </a>
+                        </a> -->
                     </td>
                 </tr>
                        <!--  <tr>
