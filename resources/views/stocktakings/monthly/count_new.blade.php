@@ -737,7 +737,7 @@
 
 					if(result.now < result.material[0].stocktaking_time){
 						openErrorGritter('Error', 'Belum waktunya input');
-						alert('Belum waktunya input\nInput untuk area ' + result.material[0].area + ' dimulai pada ' + result.material[0].stocktaking_time);
+						alert('Belum waktunya input\nInput untuk location ' + result.material[0].location + ' dimulai pada ' + result.material[0].stocktaking_time);
 						$('#scanModal').modal('hide');
 						canc();
 						resetCount();
