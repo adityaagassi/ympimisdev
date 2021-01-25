@@ -1167,60 +1167,121 @@ class GeneralController extends Controller{
 					WHERE
 						employee_id = '".$request->input('employee_id')."' 
 						AND auth_date = '".date('Y-m-d', strtotime($request->input('newDate')))."'");
-			if (count($ivms) > 0) {
+			// if (count($ivms) > 0) {
 				$general = GeneralTransportation::where('employee_id',$request->input('employee_id'))->where('attend_code',$request->input('newAttend'))->where('check_date',date('Y-m-d', strtotime($request->input('newDate'))))->get();
 
 				if (count($general) == 0) {
-					if ($filename == "") {
-						GeneralTransportation::create([
-							'employee_id' => $request->input('employee_id'),
-							'grade' => $request->input('grade'),
-							'zona' => $request->input('zona'),
-							'check_date' => date('Y-m-d', strtotime($request->input('newDate'))),
-							'attend_code' => $request->input('newAttend'),
-							'vehicle' => $request->input('newVehicle'),
-							'origin' => $request->input('newOrigin'),
-							'destination' => $request->input('newDestination'),
-							'highway_amount' => $request->input('newHighwayAmount'),
-							'distance' => $request->input('newDistance'),
-							// 'highway_attachment' => $filename,
-							'remark' => 0,
-							'created_by' => Auth::id()
-						]);
+					if ($request->get('newAttend') == 'cuti' || $request->get('newAttend') == 'izin' || $request->get('newAttend') == 'sakit') {
+						if ($filename == "") {
+							GeneralTransportation::create([
+								'employee_id' => $request->input('employee_id'),
+								'grade' => $request->input('grade'),
+								'zona' => $request->input('zona'),
+								'check_date' => date('Y-m-d', strtotime($request->input('newDate'))),
+								'attend_code' => $request->input('newAttend'),
+								'vehicle' => $request->input('newVehicle'),
+								'origin' => $request->input('newOrigin'),
+								'destination' => $request->input('newDestination'),
+								'highway_amount' => $request->input('newHighwayAmount'),
+								'distance' => $request->input('newDistance'),
+								// 'highway_attachment' => $filename,
+								'remark' => 0,
+								'created_by' => Auth::id()
+							]);
+						}else{
+							GeneralTransportation::create([
+								'employee_id' => $request->input('employee_id'),
+								'grade' => $request->input('grade'),
+								'zona' => $request->input('zona'),
+								'check_date' => date('Y-m-d', strtotime($request->input('newDate'))),
+								'attend_code' => $request->input('newAttend'),
+								'vehicle' => $request->input('newVehicle'),
+								'origin' => $request->input('newOrigin'),
+								'destination' => $request->input('newDestination'),
+								'highway_amount' => $request->input('newHighwayAmount'),
+								'distance' => $request->input('newDistance'),
+								'highway_attachment' => $filename,
+								'remark' => 0,
+								'created_by' => Auth::id()
+							]);
+						}
+
+						$general_data = GeneralTransportationData::firstOrNew(['employee_id' => $request->input('employee_id'), 'attend_code' => $request->input('newAttend')]);
+						$general_data->employee_id = $request->input('employee_id');
+						$general_data->attend_code = $request->input('newAttend');
+						$general_data->vehicle = $request->input('newVehicle');
+						$general_data->origin = $request->input('newOrigin');
+						$general_data->distance = $request->input('newDistance');
+						$general_data->destination = $request->input('newDestination');
+						$general_data->highway_amount = $request->input('newHighwayAmount');
+						$general_data->created_by = Auth::id();
+						$general_data->save();
+
+						$response = array(
+							'status' => true,
+							'message' => 'Data baru berhasil ditambahkan'
+						);
+						return Response::json($response);
 					}else{
-						GeneralTransportation::create([
-							'employee_id' => $request->input('employee_id'),
-							'grade' => $request->input('grade'),
-							'zona' => $request->input('zona'),
-							'check_date' => date('Y-m-d', strtotime($request->input('newDate'))),
-							'attend_code' => $request->input('newAttend'),
-							'vehicle' => $request->input('newVehicle'),
-							'origin' => $request->input('newOrigin'),
-							'destination' => $request->input('newDestination'),
-							'highway_amount' => $request->input('newHighwayAmount'),
-							'distance' => $request->input('newDistance'),
-							'highway_attachment' => $filename,
-							'remark' => 0,
-							'created_by' => Auth::id()
-						]);
+						if (count($ivms) > 0) {
+							if ($filename == "") {
+								GeneralTransportation::create([
+									'employee_id' => $request->input('employee_id'),
+									'grade' => $request->input('grade'),
+									'zona' => $request->input('zona'),
+									'check_date' => date('Y-m-d', strtotime($request->input('newDate'))),
+									'attend_code' => $request->input('newAttend'),
+									'vehicle' => $request->input('newVehicle'),
+									'origin' => $request->input('newOrigin'),
+									'destination' => $request->input('newDestination'),
+									'highway_amount' => $request->input('newHighwayAmount'),
+									'distance' => $request->input('newDistance'),
+									// 'highway_attachment' => $filename,
+									'remark' => 0,
+									'created_by' => Auth::id()
+								]);
+							}else{
+								GeneralTransportation::create([
+									'employee_id' => $request->input('employee_id'),
+									'grade' => $request->input('grade'),
+									'zona' => $request->input('zona'),
+									'check_date' => date('Y-m-d', strtotime($request->input('newDate'))),
+									'attend_code' => $request->input('newAttend'),
+									'vehicle' => $request->input('newVehicle'),
+									'origin' => $request->input('newOrigin'),
+									'destination' => $request->input('newDestination'),
+									'highway_amount' => $request->input('newHighwayAmount'),
+									'distance' => $request->input('newDistance'),
+									'highway_attachment' => $filename,
+									'remark' => 0,
+									'created_by' => Auth::id()
+								]);
+							}
+
+							$general_data = GeneralTransportationData::firstOrNew(['employee_id' => $request->input('employee_id'), 'attend_code' => $request->input('newAttend')]);
+							$general_data->employee_id = $request->input('employee_id');
+							$general_data->attend_code = $request->input('newAttend');
+							$general_data->vehicle = $request->input('newVehicle');
+							$general_data->origin = $request->input('newOrigin');
+							$general_data->distance = $request->input('newDistance');
+							$general_data->destination = $request->input('newDestination');
+							$general_data->highway_amount = $request->input('newHighwayAmount');
+							$general_data->created_by = Auth::id();
+							$general_data->save();
+
+							$response = array(
+								'status' => true,
+								'message' => 'Data baru berhasil ditambahkan'
+							);
+							return Response::json($response);
+						}else{
+							$response = array(
+								'status' => false,
+								'message' => 'Checklog Anda tidak tersedia pada tanggal '.date('Y-m-d', strtotime($request->input('newDate')))
+							);
+							return Response::json($response);
+						}
 					}
-
-					$general_data = GeneralTransportationData::firstOrNew(['employee_id' => $request->input('employee_id'), 'attend_code' => $request->input('newAttend')]);
-					$general_data->employee_id = $request->input('employee_id');
-					$general_data->attend_code = $request->input('newAttend');
-					$general_data->vehicle = $request->input('newVehicle');
-					$general_data->origin = $request->input('newOrigin');
-					$general_data->distance = $request->input('newDistance');
-					$general_data->destination = $request->input('newDestination');
-					$general_data->highway_amount = $request->input('newHighwayAmount');
-					$general_data->created_by = Auth::id();
-					$general_data->save();
-
-					$response = array(
-						'status' => true,
-						'message' => 'Data baru berhasil ditambahkan'
-					);
-					return Response::json($response);
 				}else{
 					$response = array(
 						'status' => false,
@@ -1228,13 +1289,13 @@ class GeneralController extends Controller{
 					);
 					return Response::json($response);
 				}
-			}else{
-				$response = array(
-					'status' => false,
-					'message' => 'Checklog Anda tidak tersedia pada tanggal '.date('Y-m-d', strtotime($request->input('newDate')))
-				);
-				return Response::json($response);
-			}
+			// }else{
+			// 	$response = array(
+			// 		'status' => false,
+			// 		'message' => 'Checklog Anda tidak tersedia pada tanggal '.date('Y-m-d', strtotime($request->input('newDate')))
+			// 	);
+			// 	return Response::json($response);
+			// }
 		}
 		catch (\Exception $e) {
 			$response = array(
