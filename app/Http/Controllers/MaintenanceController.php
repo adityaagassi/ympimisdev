@@ -796,7 +796,7 @@ class MaintenanceController extends Controller
 	{
 		MaintenanceJobOrder::where('order_no', '=', $request->get("order_no"))
 		->update([
-			'remark' => 8
+			'remark' => 7
 		]);
 
 		$response = array(
