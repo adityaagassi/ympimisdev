@@ -301,11 +301,11 @@ class RawMaterialController extends Controller{
 
 							if($insert_st_forecast){
 
-								$ins_or_upd = StocktakingMaterialForecast::updateOrCreate(
+								$upt = StocktakingMaterialForecast::updateOrCreate(
 									['material_number' => $material_number],
-									['created_by' => 1, 'updated_at' => Carbon::now()]
+									['updated_at' => Carbon::now()]
 								);
-								$ins_or_upd->save();
+								$upt->save();
 
 							}
 						}

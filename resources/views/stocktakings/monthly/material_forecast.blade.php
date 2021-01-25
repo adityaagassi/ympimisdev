@@ -39,9 +39,17 @@
 
 @section('header')
 <section class="content-header">
+	@foreach(Auth::user()->role->permissions as $perm)
+	@php
+	$navs[] = $perm->navigation_code;
+	@endphp
+	@endforeach
+
+	@if(in_array('S36', $navs))	
 	<button class="btn btn-success btn-sm pull-right" data-toggle="modal"  data-target="#add_material" style="margin-right: 5px">
 		<i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;Tambah List Baru
 	</button>
+	@endif
 
 	<h1>
 		{{ $title }}
@@ -53,6 +61,7 @@
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
+
 	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8; display: none">
 		<p style="position: absolute; color: White; top: 45%; left: 45%;">
 			<span style="font-size: 5vw;"><i class="fa fa-spin fa-circle-o-notch"></i></span>
@@ -151,11 +160,8 @@
 			minimumInputLength: 3
 
 		});
-
-		$('#alert').hide();
-
+		
 		fetchTable();
-
 	});
 
 
