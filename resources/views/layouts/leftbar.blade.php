@@ -1119,6 +1119,10 @@
   @if(isset($page) && $page == "WJO Receipt")<li class="active">@else<li>@endif
     <a href="{{ url("/index/workshop/receipt") }}"><i class="fa fa-envelope-o"></i> <span>WJO Receipt</span></a>
   </li>
+
+  @if(isset($page) && $page == "Leader Task Monitoring")<li class="active">@else<li>@endif
+    <a href="{{ url('/index/production_report/index/13') }}"><i class="fa fa-book"></i> <span>PE Field Report</span></a>
+  </li>
 </ul>
 </li>
 @endif
