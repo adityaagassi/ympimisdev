@@ -3807,7 +3807,6 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::post('post/maintenance/member/change', 'MaintenanceController@postNewMemberSPK');
 
 	Route::post('post/maintenance/spk/open', 'MaintenanceController@openSPKPending');
-	Route::post('post/maintenance/spk/cancel', 'MaintenanceController@cancelSPK');
 	
 	Route::get('index/maintenance/aparTool', 'MaintenanceController@indexAparTool');
 	Route::post('post/maintenance/apar/insert', 'MaintenanceController@createTool');
@@ -3817,6 +3816,8 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::post('post/maintenance/apar/order', 'MaintenanceController@apar_order');
 	// Route::get('fetch/maintenance/spk/inv', 'MaintenanceController@fetchSPKPart');
 });
+
+Route::post('post/maintenance/spk/cancel', 'MaintenanceController@cancelSPK');
 
 Route::group(['nav' => 'S47', 'middleware' => 'permission'], function(){
 	Route::get('index/maintenance/spk', 'MaintenanceController@indexSPK');
