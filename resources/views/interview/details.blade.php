@@ -35,6 +35,9 @@ table.table-bordered > tfoot > tr > th{
   border:1px solid rgb(211,211,211);
 }
 #loading, #error { display: none; }
+label {
+		cursor: pointer;
+	}
 </style>
 @stop
 @section('header')
@@ -129,9 +132,16 @@ table.table-bordered > tfoot > tr > th{
 			                		<label class="label label-danger">{{ $interview_detail->filosofi_yamaha }}</label>
 			                	@else
 			                		<?php $detail = explode("_",$interview_detail->filosofi_yamaha);
-			                		echo "Nilai = ".$detail[1]."%<br>";
-			                		echo "Point = ".$detail[0];
+			                		// echo "Nilai = ".$detail[1]."%<br>";
+			                		// echo "Point = ".$detail[0];
 			                		 ?>
+			                		 @if($detail[1] == 0)
+				                		<label class="label label-danger" onclick="detailNilai('{{$detail[1]}}','0','filosofi_yamaha')">Not OK</label>
+				                	@elseif($detail[1] > 0 && $detail[1] < 100)
+				                		<label class="label label-warning" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','filosofi_yamaha')">OK Kurang Lancar</label>
+				                	@elseif($detail[1] == 100)
+				                		<label class="label label-success" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','filosofi_yamaha')">OK</label>
+				                	@endif
 			                	@endif
 			            	</td>
 			            	<td>@if($interview_detail->aturan_k3 == 'OK')
@@ -142,9 +152,16 @@ table.table-bordered > tfoot > tr > th{
 			                		<label class="label label-danger">{{ $interview_detail->aturan_k3 }}</label>
 			                	@else
 			                		<?php $detail = explode("_",$interview_detail->aturan_k3);
-			                		echo "Nilai = ".$detail[1]."%<br>";
-			                		echo "Point = ".$detail[0];
+			                		// echo "Nilai = ".$detail[1]."%<br>";
+			                		// echo "Point = ".$detail[0];
 			                		 ?>
+			                		 @if($detail[1] == 0)
+				                		<label class="label label-danger" onclick="detailNilai('{{$detail[1]}}','0','aturan_k3')">Not OK</label>
+				                	@elseif($detail[1] > 0 && $detail[1] < 100)
+				                		<label class="label label-warning" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','aturan_k3')">OK Kurang Lancar</label>
+				                	@elseif($detail[1] == 100)
+				                		<label class="label label-success" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','aturan_k3')">OK</label>
+				                	@endif
 			                	@endif
 			                </td>
 			                <td>@if($interview_detail->komitmen_berkendara == 'OK')
@@ -155,9 +172,16 @@ table.table-bordered > tfoot > tr > th{
 			                		<label class="label label-danger">{{ $interview_detail->komitmen_berkendara }}</label>
 			                	@else
 			                		<?php $detail = explode("_",$interview_detail->komitmen_berkendara);
-			                		echo "Nilai = ".$detail[1]."%<br>";
-			                		echo "Point = ".$detail[0];
+			                		// echo "Nilai = ".$detail[1]."%<br>";
+			                		// echo "Point = ".$detail[0];
 			                		 ?>
+			                		 @if($detail[1] == 0)
+				                		<label class="label label-danger" onclick="detailNilai('{{$detail[1]}}','0','komitmen_berkendara')">Not OK</label>
+				                	@elseif($detail[1] > 0 && $detail[1] < 100)
+				                		<label class="label label-warning" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','komitmen_berkendara')">OK Kurang Lancar</label>
+				                	@elseif($detail[1] == 100)
+				                		<label class="label label-success" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','komitmen_berkendara')">OK</label>
+				                	@endif
 			                	@endif
 			                </td>
 			                <td>@if($interview_detail->kebijakan_mutu == 'OK')
@@ -168,9 +192,16 @@ table.table-bordered > tfoot > tr > th{
 			                		<label class="label label-danger">{{ $interview_detail->kebijakan_mutu }}</label>
 			                	@else
 			                		<?php $detail = explode("_",$interview_detail->kebijakan_mutu);
-			                		echo "Nilai = ".$detail[1]."%<br>";
-			                		echo "Point = ".$detail[0];
+			                		// echo "Nilai = ".$detail[1]."%<br>";
+			                		// echo "Point = ".$detail[0];
 			                		 ?>
+			                		 @if($detail[1] == 0)
+				                		<label class="label label-danger" onclick="detailNilai('{{$detail[1]}}','0','kebijakan_mutu')">Not OK</label>
+				                	@elseif($detail[1] > 0 && $detail[1] < 100)
+				                		<label class="label label-warning" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','kebijakan_mutu')">OK Kurang Lancar</label>
+				                	@elseif($detail[1] == 100)
+				                		<label class="label label-success" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','kebijakan_mutu')">OK</label>
+				                	@endif
 			                	@endif
 			                </td>
 			                <td>
@@ -204,17 +235,24 @@ table.table-bordered > tfoot > tr > th{
 			              @foreach($interview_detail2 as $interview_detail2)
 			              <tr>
 			                <td>{{ $interview_detail2->participants->name }}</td>
-			                <td>@if($interview_detail2->enam_pasal_keselamatan == 'OK')
+			                <td><?php $detail = explode("_",$interview_detail2->enam_pasal_keselamatan);
+			                		// echo "Nilai = ".$detail[1]."%<br>";
+			                		// echo "Point = ".$detail[0];
+			                		 ?>
+			                	@if($interview_detail2->enam_pasal_keselamatan == 'OK')
 			                		<label class="label label-success">{{ $interview_detail2->enam_pasal_keselamatan }}</label>
 			                	@elseif($interview_detail2->enam_pasal_keselamatan == 'OK (Kurang Lancar)')
 			                		<label class="label label-warning">{{ $interview_detail2->enam_pasal_keselamatan }}</label>
 			                	@elseif($interview_detail2->enam_pasal_keselamatan == 'Not OK')
 			                		<label class="label label-danger">{{ $interview_detail2->enam_pasal_keselamatan }}</label>
 			                	@else
-			                		<?php $detail = explode("_",$interview_detail2->enam_pasal_keselamatan);
-			                		echo "Nilai = ".$detail[1]."%<br>";
-			                		echo "Point = ".$detail[0];
-			                		 ?>
+				                	@if($detail[1] == 0)
+				                		<label class="label label-danger" onclick="detailNilai('{{$detail[1]}}','0','enam_pasal_keselamatan')">Not OK</label>
+				                	@elseif($detail[1] > 0 && $detail[1] < 100)
+				                		<label class="label label-warning" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','enam_pasal_keselamatan')">OK Kurang Lancar</label>
+				                	@elseif($detail[1] == 100)
+				                		<label class="label label-success" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','enam_pasal_keselamatan')">OK</label>
+				                	@endif
 			                	@endif
 			                </td>
 			                <td>@if($interview_detail2->budaya_kerja == 'OK')
@@ -225,9 +263,16 @@ table.table-bordered > tfoot > tr > th{
 			                		<label class="label label-danger">{{ $interview_detail2->budaya_kerja }}</label>
 			                	@else
 			                		<?php $detail = explode("_",$interview_detail2->budaya_kerja);
-			                		echo "Nilai = ".$detail[1]."%<br>";
-			                		echo "Point = ".$detail[0];
+			                		// echo "Nilai = ".$detail[1]."%<br>";
+			                		// echo "Point = ".$detail[0];
 			                		 ?>
+			                		@if($detail[1] == 0)
+				                		<label class="label label-danger" onclick="detailNilai('{{$detail[1]}}','0','budaya_kerja')">Not OK</label>
+				                	@elseif($detail[1] > 0 && $detail[1] < 100)
+				                		<label class="label label-warning" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','budaya_kerja')">OK Kurang Lancar</label>
+				                	@elseif($detail[1] == 100)
+				                		<label class="label label-success" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','budaya_kerja')">OK</label>
+				                	@endif
 			                	@endif
 			                </td>
 			                <td>@if($interview_detail2->budaya_5s == 'OK')
@@ -238,9 +283,16 @@ table.table-bordered > tfoot > tr > th{
 			                		<label class="label label-danger">{{ $interview_detail2->budaya_5s }}</label>
 			                	@else
 			                		<?php $detail = explode("_",$interview_detail2->budaya_5s);
-			                		echo "Nilai = ".$detail[1]."%<br>";
-			                		echo "Point = ".$detail[0];
+			                		// echo "Nilai = ".$detail[1]."%<br>";
+			                		// echo "Point = ".$detail[0];
 			                		 ?>
+			                		  @if($detail[1] == 0)
+				                		<label class="label label-danger" onclick="detailNilai('{{$detail[1]}}','0','budaya_5s')">Not OK</label>
+				                	@elseif($detail[1] > 0 && $detail[1] < 100)
+				                		<label class="label label-warning" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','budaya_5s')">OK Kurang Lancar</label>
+				                	@elseif($detail[1] == 100)
+				                		<label class="label label-success" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','budaya_5s')">OK</label>
+				                	@endif
 			                	@endif
 			                </td>
 			                <td>@if($interview_detail2->komitmen_hotel_konsep == 'OK')
@@ -251,9 +303,16 @@ table.table-bordered > tfoot > tr > th{
 			                		<label class="label label-danger">{{ $interview_detail2->komitmen_hotel_konsep }}</label>
 			                	@else
 			                		<?php $detail = explode("_",$interview_detail2->komitmen_hotel_konsep);
-			                		echo "Nilai = ".$detail[1]."%<br>";
-			                		echo "Point = ".$detail[0];
+			                		// echo "Nilai = ".$detail[1]."%<br>";
+			                		// echo "Point = ".$detail[0];
 			                		 ?>
+			                		 @if($detail[1] == 0)
+				                		<label class="label label-danger" onclick="detailNilai('{{$detail[1]}}','0','komitmen_hotel_konsep')">Not OK</label>
+				                	@elseif($detail[1] > 0 && $detail[1] < 100)
+				                		<label class="label label-warning" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','komitmen_hotel_konsep')">OK Kurang Lancar</label>
+				                	@elseif($detail[1] == 100)
+				                		<label class="label label-success" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','komitmen_hotel_konsep')">OK</label>
+				                	@endif
 			                	@endif
 			                </td>
 			                <td>@if($interview_detail2->janji_tindakan_dasar == 'OK')
@@ -264,9 +323,16 @@ table.table-bordered > tfoot > tr > th{
 			                		<label class="label label-danger">{{ $interview_detail2->janji_tindakan_dasar }}</label>
 			                	@else
 			                		<?php $detail = explode("_",$interview_detail2->janji_tindakan_dasar);
-			                		echo "Nilai = ".$detail[1]."%<br>";
-			                		echo "Point = ".$detail[0];
+			                		// echo "Nilai = ".$detail[1]."%<br>";
+			                		// echo "Point = ".$detail[0];
 			                		 ?>
+			                		 @if($detail[1] == 0)
+				                		<label class="label label-danger" onclick="detailNilai('{{$detail[1]}}','0','janji_tindakan_dasar')">Not OK</label>
+				                	@elseif($detail[1] > 0 && $detail[1] < 100)
+				                		<label class="label label-warning" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','janji_tindakan_dasar')">OK Kurang Lancar</label>
+				                	@elseif($detail[1] == 100)
+				                		<label class="label label-success" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','janji_tindakan_dasar')">OK</label>
+				                	@endif
 			                	@endif
 			                </td>
 			                <td>
@@ -480,7 +546,7 @@ table.table-bordered > tfoot > tr > th{
 	              @endforeach
 	            </div>
 	            <div class="form-group">
-	              <center style="background-color: #a142f5;color:white;padding: 1px;font-size: 20px"><label>Filosofi Yamaha</label></center>
+	              <center style="background-color: #a142f5;color:white;padding: 1px;font-size: 20px"><label>Janji Tindakan Dasar Hotel Concept</label></center>
 				  
 	              @foreach($pointing_call as $point)
 	              <?php if ($point->point_title == 'janji'): ?>
@@ -681,6 +747,41 @@ table.table-bordered > tfoot > tr > th{
           <div class="modal-footer">
             <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-primary">Update</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="detail-nilai-modal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="modal-title-nilai" style="font-weight: bold;" align="center"></h4>
+      </div>
+      <div class="modal-body">
+          <div class="box-body">
+            <div class="col-xs-12">
+            	<div class="row">
+            		<table class="table table-hover table-bordered table-striped" id="table-detail-nilai">
+            			<thead  style="background-color: rgba(126,86,134,.7);color: white">
+            				<th style="width: 1%">No.</th>
+            				<th style="width: 3%">Point</th>
+            				<th style="width: 2%">Check</th>
+            			</thead>
+            			<tbody id="table-detail-nilai-body">
+            				
+            			</tbody>
+            		</table>
+            	</div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger pull-right" data-dismiss="modal">Close</button>
           </div>
         </form>
       </div>
@@ -1113,6 +1214,44 @@ table.table-bordered > tfoot > tr > th{
       $("#picture").attr("src",urlimage+'/'+name);
       jQuery('#formedit').attr("action", url+'/'+id+'/'+picture_id);
       // console.log($('#formedit').attr("action"));
+    }
+
+    function detailNilai(nilai,point,type) {
+    	if (parseInt(nilai) !== 0) {
+    		var data = {
+    			point:point,
+    			type:type
+    		}
+
+    		$.get('{{ url("index/interview/detail_nilai") }}', data, function(result, status, xhr){
+				if(result.status){
+					$('#detail-nilai-modal').modal('show');
+					$('#modal-title-nilai').html('Detail Nilai '+result.judul);
+					$('#table-detail-nilai-body').html('');
+					var table = "";
+					$.each(result.pointtitle, function(key, value){
+						$.each(result.pointtitlecheck, function(key2, value2){
+							if (value2.point_description == value.point_description) {
+								checks = 'OK';
+								color = '#b1ff75';
+							}else{
+								checks = 'Not OK';
+								color = '#ffa89e';
+							}
+						});
+						table += '<tr style="background-color:'+color+'">';
+						table += '<td>'+value.point_no+'</td>';
+						table += '<td>'+value.point_description+'</td>';
+						table += '<td>'+checks+'</td>';
+						table += '</tr>';
+					});
+					$('#table-detail-nilai-body').append(table);
+				} else {
+					audio_error.play();
+					openErrorGritter('Error','Gagal');
+				}
+			});
+    	}
     }
     </script>
 @endsection

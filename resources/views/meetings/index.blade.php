@@ -158,6 +158,9 @@
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
 				<h4 class="modal-title" id="modalDetailTitle"></h4>
 				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
 					<center>
@@ -468,6 +471,9 @@
 	<div class="modal-dialog modal-lg" style="width: 1200px">
 		<div class="modal-content">
 			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
 				<center><h4 style="padding-bottom: 15px;color: black;font-weight: bold;font-size: 25px" class="modal-title" id="modalChartTitle"></h4></center>
 				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
 					<center>

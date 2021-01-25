@@ -25,14 +25,14 @@ Route::get('testprint', 'TrialController@testPrint');
 Route::get('tesurgent', 'MaintenanceController@indexSPKUrgent');
 
 Route::get('fetch_trial2', 'StockTakingController@printSummary');
-Route::get('test_print', 'TrialController@test_print');
+Route::get('test', 'TrialController@testTgl');
 
 Route::get('trial_load', 'TrialController@trialload');
 Route::get('trial_loc', 'TrialController@trialLoc');
 Route::get('trial_loc2/{lat}/{long}', 'TrialController@getLocation');
 
 Route::get('index/whatsapp_api', 'ChatBotController@index');
-Route::get('whatsapp_api', 'TrialController@whatsapp_api');
+Route::get('whatsapp_api', 'TrialController@indexWhatsappApi');
 Route::get('kirimTelegram/{pesan}', 'TrialController@kirimTelegram');
 
 Route::get('index_push_pull_trial', 'TrialController@index_push_pull_trial');
@@ -1372,8 +1372,15 @@ Route::get('index/sakurentsu/3m/implement/{id_three_m}/{category}', 'SakurentsuC
 Route::post('post/sakurentsu/3m/implementation/sign', 'SakurentsuController@signing_implement_tiga_em');
 
 
+//3M Monitoring
+Route::get('index/sakurentsu/monitoring/3m', 'SakurentsuController@tiga_3m_monitoring');
+Route::get('fetch/sakurentsu/monitoring/3m', 'SakurentsuController@fetch_tiga_3m_monitoring');
+
+
 //Trial Request
 Route::get('index/trial_request', 'TrialRequestController@index_trial_request');
+Route::get('fetch/trial_request', 'TrialRequestController@fetch_trial_request');
+
 
 
 //Supplier
@@ -1597,6 +1604,9 @@ Route::post('import/budget', 'AccountingController@import_budget');
 
 Route::get('budget/log', 'AccountingController@budget_log');
 Route::get('fetch/budget/log', 'AccountingController@fetch_budget_log');
+
+//Budget Monthly User
+Route::get('budget/monthly', 'AccountingController@budget_monthly');
 
 //Transfer Budget
 Route::get('transfer/budget', 'AccountingController@transfer_budget');
@@ -2013,6 +2023,10 @@ Route::get('fetch/middle/buffing_ic_atokotei', 'MiddleProcessController@fetchBuf
 Route::get('index/middle/buffing_work_order/{id}', 'MiddleProcessController@indexBuffingWorkOrder');
 Route::get('fetch/middle/buffing_target', 'MiddleProcessController@fetchTarget');
 Route::get('index/middle/buffing_operator_assesment', 'MiddleProcessController@indexOpAssesment');
+Route::get('index/middle/buffing_ic_atokotei_subassy', 'MiddleProcessController@indexBuffingIcAtokoteiSubassy');
+Route::get('fetch/middle/buffing_ic_atokotei_subassy', 'MiddleProcessController@fetchBuffingIcAtokoteiSubassy');
+
+
 
 
 
@@ -2532,6 +2546,7 @@ Route::get('print/indirect_material_label/{qr_code}', 'IndirectMaterialControlle
 //END INDIRECT REQUEST
 
 //START CHEMICAL
+
 //Control Chart
 Route::get('index/chm_solution_control', 'IndirectMaterialController@indexSolutionControl');
 Route::get('fetch/chm_solution_control', 'IndirectMaterialController@fetchSolutionControl');
@@ -2674,6 +2689,7 @@ Route::get('index/repairFl', 'ProcessController@indexRepairFl');
 
 Route::get('index/process_assembly_kensa/{id}', 'ProcessController@indexProcessKensa');
 Route::get('scan/process_assembly_kensa/kensa', 'ProcessController@scanAssemblyKensa');
+Route::post('input/process_assembly_kensa/kensa', 'ProcessController@inputAssemblyKensa');
 
 
 
@@ -3090,6 +3106,7 @@ Route::get('index/interview/sendemail/{interview_id}', 'InterviewController@send
 Route::post('index/interview/insertpicture/{id}', 'InterviewController@insertpicture');
 Route::get('index/interview/destroypicture/{id}/{picture_id}', 'InterviewController@destroypicture');
 Route::post('index/interview/editpicture/{id}/{picture_id}', 'InterviewController@editpicture');
+Route::get('index/interview/detail_nilai', 'InterviewController@detailNilai');
 
 //DAILY CHECK FG
 Route::get('index/daily_check_fg/product/{id}', 'DailyCheckController@product');
@@ -4099,3 +4116,16 @@ View::composer('*', function ($view) {
 	$notif_visitor = $controller_visitor->getNotifVisitor();
 	$view->with('notif', $notif)->with('notif_visitor', $notif_visitor);
 });
+
+//Mutasi
+Route::get('index/mutasi', 'MutasiController@index');
+
+Route::get('/pindah/satu', 'MutasiController@satu');
+Route::get('/pindah/antar', 'MutasiController@antar');
+Route::post('/pindah/tambah', 'MutasiController@tambah');
+Route::get('/pindah/view_satu', 'MutasiController@view_satu');
+
+
+
+
+Route::get('index/warehouse', 'WarehouseController@index');

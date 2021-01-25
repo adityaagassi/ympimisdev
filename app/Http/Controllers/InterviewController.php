@@ -893,4 +893,65 @@ class InterviewController extends Controller
             }
           }
     }
+
+    public function detailNilai(Request $request)
+    {
+      try {
+        $points = explode(',', $request->get('point'));
+        $addpoint = "";
+        $point = "";
+        for($x = 0; $x < count($points); $x++) {
+          $point = $point."'".$points[$x]."'";
+          if($x != count($points)-1){
+            $point = $point.",";
+          }
+        }
+        $addpoint = "and point_no in (".$point.") ";
+        if ($request->get('type') == 'filosofi_yamaha') {
+          $type = 'diamond';
+          $judul = 'Filosofi Yamaha';
+        }else if($request->get('type') == 'aturan_k3') {
+          $type = 'k3';
+          $judul = 'Aturan K3 YAMAHA';
+        }else if($request->get('type') == 'komitmen_berkendara') {
+          $type = '10_komitmen';
+          $judul = '10 Komitmen Berkendara';
+        }else if($request->get('type') == 'kebijakan_mutu') {
+          $type = 'slogan_mutu';
+          $judul = 'Slogan Mutu YMPI';
+        }else if($request->get('type') == 'enam_pasal_keselamatan') {
+          $type = '6_pasal';
+          $judul = '6 Pasal Keselamatan Lalu Lintas YAMAHA';
+        }else if($request->get('type') == 'budaya_kerja') {
+          $type = 'budaya';
+          $judul = 'Budaya Kerja YMPI';
+        }else if($request->get('type') == 'budaya_5s') {
+          $type = '5s';
+          $judul = '5S';
+        }else if($request->get('type') == 'komitmen_hotel_konsep') {
+          $type = 'komitmen';
+          $judul = 'Komitmen Hotel Concept';
+        }else if($request->get('type') == 'janji_tindakan_dasar') {
+          $type = 'janji';
+          $judul = 'Janji Tindakan Dasar Hotel Concept';
+        }
+
+        $pointtitlecheck = DB::SELECT("SELECT * FROM `pointing_call_items` where point_title = '".$type."' ".$addpoint);
+          $pointtitle = DB::SELECT("SELECT * FROM `pointing_call_items` where point_title = '".$type."'");
+
+        $response = array(
+            'status' => true,
+            'pointtitle' => $pointtitle,
+            'pointtitlecheck' => $pointtitlecheck,
+            'judul' => $judul,
+        );
+        return Response::json($response);
+      } catch (\Exception $e) {
+        $response = array(
+            'status' => false,
+            'message' => $e->getMessage()
+        );
+        return Response::json($response);
+      }
+    }
 }
