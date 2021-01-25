@@ -733,8 +733,8 @@
 
 				var except = ['WAREHOUSE', 'FINISHED GOODS', 'SUBCONT'];
 				
-				if(except.includes(result.material[0].area)){
-					
+				if(!except.includes(result.material[0].area)){
+
 					if(result.now < result.material[0].stocktaking_time){
 						openErrorGritter('Error', 'Belum waktunya input');
 						alert('Belum waktunya input\nInput untuk area ' + result.material[0].area + ' dimulai pada ' + result.material[0].stocktaking_time);
