@@ -164,7 +164,7 @@
 				</tbody>
 			</table>
 			<br>
-			<button class="btn btn-success" style="width: 100%; display: none" id="btn_check" onclick="check2()"><i class="fa fa-check"></i> CHECKED</button>
+			<button class="btn btn-success" style="width: 100%; display: none; font-weight: bold;" id="btn_check" onclick="check2()"><i class="fa fa-check"></i> CEK</button>
 		</div>
 	</div>
 </div>
@@ -201,8 +201,8 @@
 						<label>Deskripsi :<span class="text-red">*</span></label>
 						<textarea class="form-control" placeholder="Isikan deskripsi Temuan dan Penanganan" id="deskripsi"></textarea>
 						<label>Keterangan :<span class="text-red">*</span></label><br>
-						<div class='radio'><label><input type='radio' name="Keterangan" id='Keterangan1' value='Diperbaiki'>Diperbaiki</label></div>
-						<div class='radio'><label><input type='radio' name="Keterangan" id='Keterangan2' value='Perlu Penanganan Lebih Lanjut'>Perlu Penanganan Lebih Lanjut</label></div>
+						<div class='radio'><label><input type='radio' name="keterangan" id='Keterangan1' value='Diperbaiki'>Diperbaiki</label></div>
+						<div class='radio'><label><input type='radio' name="keterangan" id='Keterangan2' value='Perlu Penanganan Lebih Lanjut'>Perlu Penanganan Lebih Lanjut</label></div>
 						<b>Note : Tanda Bintang (<span class="text-red">*</span>) wajib diisi</b>
 					</div>
 					<div class="form-group">
@@ -225,7 +225,7 @@
 					</div>
 					<input type="hidden" id="tmp_id">
 					<button class="btn btn-success" onclick="save_tmp()"><i class="fa fa-check"></i>&nbsp; Save</button>
-					<button class="btn btn-danger pull-right"><i class="fa fa-close"></i>&nbsp; Close</button>
+					<button class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i>&nbsp; Close</button>
 				</div>
 			</div>
 		</div>
@@ -261,8 +261,10 @@
 	var arr_item = [];
 	var item_ctg = [];
 	var machine_check_list = [];
+	var arr_ids = [];
 
 	jQuery(document).ready(function() {
+		arr_ids = [];
 		$('body').toggleClass("sidebar-collapse");
 		$('#modalOperator').modal({
 			backdrop: 'static',
@@ -366,9 +368,12 @@
 		var period = $(elem).val();
 		$("#body_check_list").empty();
 		var body = "";
+		arr_ids = [];
 
 		$.each(machine_check_list, function(index, value){
 			if (value.remark == period) {
+				arr_ids.push(value.id);
+
 				body += "<tr>";
 				body += "<td id='item_"+value.id+"'>"+value.item_check+"</td>";				
 				body += "<td id='substance_"+value.id+"'>"+value.substance+"</td>";
@@ -377,10 +382,10 @@
 				if (value.essay_category == "1") {
 					body += '<input id="qty_'+value.id+'" style="text-align: center;" type="number" class="form-control numpad" placeholder="value" onchange="fill_value(this)"><span style="display:none" id="min_'+value.id+'">'+value.lower_limit+'</span><span style="display:none" id="max_'+value.id+'">'+value.upper_limit+'</span><input type="checkbox" style="display:none" class="check" id="check_'+value.id+'">';
 				} else {
-					body += "<div class='radio'><label><input type='radio' class='check' name='nm_"+value.id+"' id='check_"+value.id+"' value='OK'>OK</label></div></td>";
+					body += "<div class='radio'><label><input type='radio' class='check rdo' name='nm_"+value.id+"' id='check_"+value.id+"' value='OK'>OK</label></div></td>";
 				}
 
-				body += "<td style='padding: 0px; background-color: #ffccff; text-align: center; color: #000000; font-size: 20px;'><div class='radio'><label><input type='radio' class='check' name='nm_"+value.id+"' id='ng_"+value.id+"' onclick='openModalNG("+value.id+")' value='NG'>NG</label></div></td>";
+				body += "<td style='padding: 0px; background-color: #ffccff; text-align: center; color: #000000; font-size: 20px;'><div class='radio'><label><input type='radio' class='check rdo' name='nm_"+value.id+"' id='ng_"+value.id+"' onclick='openModalNG("+value.id+")' value='NG'>NG</label></div></td>";
 
 				body += "</tr>";
 			}
@@ -495,7 +500,7 @@
 	}
 
 	function check2() {
-		if ($(':radio:checked').length !== ($(':radio').length) / 2) {
+		if ($('.rdo:checked').length !== ($('.rdo').length) / 2) {
 			alert("not all checked");
 			return false;
 		}
@@ -513,11 +518,25 @@
 			operator : $("#op").text(),
 			item_check : $("#item_check").val(),
 			period : $("#cek_period").val(),
-			ng : radio_val
+			ng : radio_val,
+			ids : arr_ids
 		}
 
-		$.post('{{ url("post/maintenance/pm/check") }}', data, function(result, status, xhr) {
+		$("#loading").show();
 
+		$.post('{{ url("post/maintenance/pm/check") }}', data, function(result, status, xhr) {
+			if (result.status) {
+				$("#loading").hide();
+				openSuccessGritter('Sukses', 'Pengecekan berhasil ditambahkan');
+
+				$("#item_cat").val("").trigger('change.select2');
+				$("#item_check").val("").trigger('change.select2');
+				$("#cek_period").val("").trigger('change.select2');
+				$("#body_check_list").empty();
+				$("#btn_check").hide();
+			} else {
+				openErrorGritter('Gagal', result.message);
+			}
 		})
 
 		// console.log(radio_val);
@@ -526,6 +545,10 @@
 
 	function save_tmp() {
 		var ido = $("#tmp_id").val();
+
+		console.log($("#deskripsi").val());
+		console.log($('#pic_before').get(0).files.length);
+		console.log($("input[name='keterangan']").is(':checked'));
 
 		if ($("#deskripsi").val() == '' || $('#pic_before').get(0).files.length === 0 || !$("input[name='keterangan']").is(':checked')) {
 			openErrorGritter('Error', 'Harap Melengkapi Kolom');
@@ -541,9 +564,9 @@
 
 		$.post('{{ url("post/maintenance/pm/session") }}', data, function(result, status, xhr) {
 			if (result.status) {
-				
+				$("#modalNotGood").modal('hide');
 			} else {
-
+				openErrorGritter('Error', 'Simpan NotGood Error!');
 			}
 		})
 	}

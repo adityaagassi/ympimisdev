@@ -104,6 +104,12 @@
 @endsection
 @section('content')
 <section class="content" style="padding-top: 0;">
+	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+		<p style="position: absolute; color: White; top: 45%; left: 35%;">
+			<span style="font-size: 40px">Mohon tunggu sebentar...<i class="fa fa-spin fa-refresh"></i></span>
+		</p>
+	</div>
+
 	<input type="hidden" id="order_no">
 	<input type="hidden" id="operator_id" value="{{ $employee_id }}">
 	<div class="row" style="margin-left: 1%; margin-right: 1%;">
@@ -906,9 +912,12 @@ function startWork() {
 				other_part : part_lain
 			}
 
+			$("#loading").show();
+
 			if ($("#profile-img1").attr("src") != "" || $("#profile-img2").attr("src") != "") {
 				$.post('{{ url("report/maintenance/spk") }}', data, function(result, status, xhr){
 					if (result.status) {
+						$("#loading").hide();
 						openSuccessGritter('Success', 'SPK Terselesaikan');
 						$("#div_master").show();
 						$("#div_after").hide();
