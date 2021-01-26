@@ -238,6 +238,36 @@ class KnockDownController extends Controller{
 				'location' => $id,
 			))->with('page', $title)->with('head', $title);
 		}
+		else if($id == 'case'){
+			$title = 'KD CASE';
+			$title_jp = '';
+
+			return view('kd.index_kd', array(
+				'title' => $title,
+				'title_jp' => $title_jp,
+				'location' => $id,
+			))->with('page', $title)->with('head', $title);
+		}
+		else if($id == 'tanpo'){
+			$title = 'KD TANPO';
+			$title_jp = '';
+
+			return view('kd.index_kd_tanpo', array(
+				'title' => $title,
+				'title_jp' => $title_jp,
+				'location' => $id,
+			))->with('page', $title)->with('head', $title);
+		}
+		else if($id == 'cl_body'){
+			$title = 'KD CL Body';
+			$title_jp = '';
+
+			return view('kd.index_kd', array(
+				'title' => $title,
+				'title_jp' => $title_jp,
+				'location' => $id,
+			))->with('page', $title)->with('head', $title);
+		}
 		else{
 			if($id == 'sub-assy-sx'){
 				$title = 'KD Assy - SubAssy SX';
@@ -337,6 +367,34 @@ class KnockDownController extends Controller{
 		return view('kd.label.print_label_zpro', array(
 			'knock_down_detail' => $knock_down_detail,
 		));
+	}
+
+	public function indexPrintLabelClBody($id){
+
+		$data = db::select("SELECT knock_down_details.kd_number,
+			knock_down_details.material_number,
+			materials.material_description,
+			knock_down_details.quantity,
+			date(knock_down_details.created_at) AS date,
+			weekly_calendars.date_code,
+			COALESCE(materials.mj, '-') AS mj,
+			COALESCE(materials.xy, '-') AS xy
+			FROM knock_down_details
+			LEFT JOIN materials ON materials.material_number = knock_down_details.material_number
+			LEFT JOIN weekly_calendars ON weekly_calendars.week_date = date(knock_down_details.created_at)
+			WHERE knock_down_details.id = ". $id);
+
+
+		$pdf = \App::make('dompdf.wrapper');
+		$pdf->getDomPDF()->set_option("enable_php", true);
+		$pdf->setPaper('A6', 'landscape');
+		$pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
+
+		$pdf->loadView('kd.label.print_label_cl_body', array(
+			'data' => $data
+		));
+		return $pdf->stream("label_".$data[0]->kd_number.".pdf");
+		
 	}
 
 	public function indexPrintLabelMpro($shipment_schedule_id, $kd_number){
@@ -1744,7 +1802,7 @@ class KnockDownController extends Controller{
 	public function fetchKD($id){
 		// $datefrom = date('Y-m-01');
 		
-		$date = date('Y-m-d', strtotime('+7 day'));
+		$date = date('Y-m-d', strtotime('+14 day'));
 		$now = WeeklyCalendar::where('week_date', $date)->first();
 		$dateto = WeeklyCalendar::where('week_name', $now->week_name)->orderBy('week_date', 'desc')->first();
 		$first = date('Y-m-01');
@@ -1840,6 +1898,18 @@ class KnockDownController extends Controller{
 
 		}else if($id == 'mouthpiece-packed'){
 			$storage = "('MP') AND m.kd_name = 'MP'";
+			$order = 'sh.st_date ASC, box DESC';
+
+		}else if($id == 'case'){
+			$storage = "('CASE')";
+			$order = 'sh.st_date ASC, box DESC';
+
+		}else if($id == 'tanpo'){
+			$storage = "('TANPO')";
+			$order = 'sh.st_date ASC, box DESC';
+
+		}else if($id == 'cl_body'){
+			$storage = "('CL-BODY')";
 			$order = 'sh.st_date ASC, box DESC';
 
 		}
@@ -1970,7 +2040,7 @@ class KnockDownController extends Controller{
 	public function fetchKdDetail(Request $request){
 		$location = $request->get('location');
 
-		$detail = db::select("SELECT sh.id, sh.st_date, sh.material_number, m.material_description, v.lot_completion, d.destination_shortname FROM shipment_schedules sh
+		$detail = db::select("SELECT sh.id, sh.st_date, sh.material_number, m.material_description, sh.quantity, v.lot_completion, d.destination_shortname FROM shipment_schedules sh
 			LEFT JOIN materials m ON m.material_number = sh.material_number
 			LEFT JOIN destinations d ON d.destination_code = sh.destination_code
 			LEFT JOIN material_volumes v ON v.material_number = m.material_number
@@ -2019,9 +2089,14 @@ class KnockDownController extends Controller{
 			->first();
 
 
-			$storage_location = StorageLocation::where('storage_location', '=', $storage_location)->first();
 
-			$this->printKDO($kd_number, $st_date->st_date, $knock_down_details, $storage_location->location, 'REPRINT', $st_date->destination_shortname);
+			$storage_location;
+			if($knock_down->remark == 'z-pro'){
+				$storage_location = StorageLocation::where('storage_location', '=', $storage_location)->first();
+
+				$this->printKDO($kd_number, $st_date->st_date, $knock_down_details, $storage_location->location, 'REPRINT', $st_date->destination_shortname);
+			}
+
 
 			$response = array(
 				'status' => true,
@@ -2081,13 +2156,17 @@ class KnockDownController extends Controller{
 			->orderBy('shipment_schedules.st_date','asc')
 			->first();
 
-			$storage_location = StorageLocation::where('storage_location', '=', $storage_location)->first();
 
-			$this->printKDO($kd_number, $st_date->st_date, $knock_down_details, $storage_location->location, 'PRINT', $st_date->destination_shortname);
+			if($location == 'z-pro'){
+				$storage_location = StorageLocation::where('storage_location', '=', $storage_location)->first();
+				$this->printKDO($kd_number, $st_date->st_date, $knock_down_details, $storage_location->location, 'PRINT', $st_date->destination_shortname);
+
+			}
 
 			$response = array(
 				'status' => true,
 				'message' => 'Print Label Sukses',
+				'kd_number' => $kd_number,
 				'actual_count' => 0,
 			);
 			return Response::json($response);
@@ -2289,7 +2368,10 @@ class KnockDownController extends Controller{
 		
 		$max_count = 1;
 		$status = 1;
-		if($location == 'z-pro'){
+		if ($location == 'z-pro'){
+			$max_count = 100;
+			$status = 0;
+		}elseif ($location == 'tanpo'){
 			$max_count = 100;
 			$status = 0;
 		}
@@ -2956,6 +3038,9 @@ class KnockDownController extends Controller{
 			else if($receive == 'SX21' || $receive == 'CL21' || $receive == 'FL21' || $receive == 'VN21'){
 				$printer_name = 'Welding-Printer';			
 			}
+			else if($receive == 'CS91'){
+				$printer_name = 'KDO-CASE';
+			}
 			else{
 				$printer_name = 'MIS2';
 			}
@@ -2983,6 +3068,29 @@ class KnockDownController extends Controller{
 		$printer->setJustification(Printer::JUSTIFY_CENTER);
 		$printer->qrCode($knock_down_details->kd_number, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
 		$printer->text($knock_down_details->kd_number."\n");
+
+		if($knock_down_details->destination_shortname != null){
+			$printer->initialize();
+			$printer->setJustification(Printer::JUSTIFY_LEFT);
+			$printer->setUnderline(true);
+			$printer->text('Destination:');
+			$printer->setUnderline(false);
+			$printer->feed(1);
+			$printer->setJustification(Printer::JUSTIFY_CENTER);
+			$printer->setTextSize(4, 3);
+			$printer->text(strtoupper($knock_down_details->destination_shortname."\n\n"));
+		}
+
+		if($knock_down_details->st_date != null){
+			$printer->initialize();
+			$printer->setUnderline(true);
+			$printer->text('Shipment Date:');
+			$printer->setUnderline(false);
+			$printer->feed(1);
+			$printer->setJustification(Printer::JUSTIFY_CENTER);
+			$printer->setTextSize(4, 2);
+			$printer->text(date('d-M-Y', strtotime($knock_down_details->st_date))."\n\n");
+		}
 
 		$printer->feed(2);
 		$printer->initialize();

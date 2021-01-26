@@ -1725,9 +1725,13 @@ Route::group(['nav' => 'S53', 'middleware' => 'permission'], function(){
 	Route::get('index/print_label_case/{id}', 'KnockDownController@indexPrintLabelSubassy');
 });
 
-//CASE
-Route::group(['nav' => 'S53', 'middleware' => 'permission'], function(){
+//CLBODY
+Route::group(['nav' => 'S58', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_cl_body/{id}', 'KnockDownController@indexKD');
+	Route::post('fetch/kd_print_cl_body', 'KnockDownController@printLabelNew');
+
+	Route::get('index/print_label_cl_body/{id}', 'KnockDownController@indexPrintLabelClBody');	
+
 
 });
 

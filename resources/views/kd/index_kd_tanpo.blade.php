@@ -80,7 +80,7 @@
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="row">
-				<div class="col-xs-7">
+				<div class="col-xs-6">
 					<div class="box box-danger">
 						<div class="box-body">
 							<table class="table table-hover table-bordered table-striped" id="tableList">
@@ -105,41 +105,74 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-xs-5" style="margin-top: 3%;">
+				<div class="col-xs-6">
 					<div class="row">
 						<input type="hidden" id="shipment_id">
+						
 						<div class="col-xs-6">
-							<span style="font-weight: bold; font-size: 16px;">Stuffing Date:</span>
+							<span style="font-weight: bold; font-size: 16px;">Material Number:</span>
+						</div>
+						<div class="col-xs-6">
+							<span style="font-weight: bold; font-size: 16px;">Quantity:</span>
+						</div>
+						<div class="col-xs-6">
+							<input type="text" id="material_number" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
+						</div>
+						<div class="col-xs-6">
+							<input type="text" id="quantity"  style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
+						</div>
+						<div class="col-xs-12">
+							<span style="font-weight: bold; font-size: 16px;">Material Description:</span>
+							<input type="text" id="material_description" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
 						</div>
 						<div class="col-xs-6">
 							<span style="font-weight: bold; font-size: 16px;">Destination:</span>
 						</div>
 						<div class="col-xs-6">
-							<input type="text" id="st_date" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
+							<span style="font-weight: bold; font-size: 16px;">Stuffing Date:</span>
 						</div>
 						<div class="col-xs-6">
 							<input type="text" id="destination"  style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
-						</div>						
-						<div class="col-xs-12">
-							<span style="font-weight: bold; font-size: 16px;">Material Number:</span>
-						</div>
-						<div class="col-xs-12">
-							<input type="text" id="material_number" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
-						</div>
-						<div class="col-xs-12">
-							<span style="font-weight: bold; font-size: 16px;">Material Description:</span>
-							<input type="text" id="material_description" style="width: 100%; height: 50px; font-size: 25px; text-align: center;" disabled>
 						</div>
 						<div class="col-xs-6">
-							<span style="font-weight: bold; font-size: 16px;">Qty Packing:</span>
-							<input type="text" id="qty_packing" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
+							<input type="text" id="shipment_date"  style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
 						</div>
-						<div class="col-xs-6" style="padding-top: 3.9%;">
-							<button class="btn btn-primary" onclick="print()" style="font-size: 2.5vw; width: 100%; font-weight: bold; padding: 0;">
-								CONFIRM
+						<div class="col-xs-12">
+							<div class="row">
+								<div class="col-xs-6">
+									<span style="font-weight: bold; font-size: 16px;">Actual Count:</span>
+									<input type="text" id="actual_count" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
+								</div>
+								<div class="col-xs-6" style="padding-bottom: 10px;">	
+									<br>
+									<button class="btn btn-primary" onclick="print()" style="font-size: 40px; width: 100%; font-weight: bold; padding: 0;">
+										CONFIRM
+									</button>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-12">
+							<span style="font-size: 20px; font-weight: bold;">PACKED LIST:</span>
+							<table class="table table-hover" id="tablePack">
+								<thead style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th style="width: 5%;">No</th>
+										<th style="width: 15%;">Stuffing Date</th>
+										<th style="width: 15%;">Material Number</th>
+										<th style="width: 35%;">Description</th>
+										<th style="width: 15%;">Destination</th>
+										<th style="width: 10%;">Quantity</th>
+									</tr>					
+								</thead>
+								<tbody id="tableBodyPack">
+								</tbody>
+								<tfoot id="tableFootPack" style="background-color: rgb(252, 248, 227);">
+								</tfoot>
+							</table>
+							<button class="btn btn-success" onclick="showPrint()" style="font-size: 40px; width: 100%; font-weight: bold; padding: 0;">
+								<i class="fa fa-print"></i> PRINT KDO NUMBER 
 							</button>
 						</div>
-
 					</div>
 				</div>
 			</div>
@@ -148,6 +181,7 @@
 			<div class="nav-tabs-custom">
 				<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
 					<li class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">KDO Detail</a></li>
+					<li class="vendor-tab"><a href="#tab_2" data-toggle="tab" id="tab_header_2">KDO</a></li>
 				</ul>
 
 				<div class="tab-content">
@@ -163,7 +197,7 @@
 									<th style="width: 2%">Stuffing Date</th>
 									<th style="width: 2%">Destination</th>
 									<th style="width: 3%">Created At</th>
-									<th style="width: 1%">Reprint</th>
+									<!-- <th style="width: 1%">Reprint</th> -->
 									<th style="width: 1%">Delete</th>
 								</tr>
 							</thead>
@@ -179,12 +213,64 @@
 									<th></th>
 									<th></th>
 									<th></th>
+									<!-- <th></th> -->
+									<th></th>
+								</tr>
+							</tfoot>
+						</table>
+					</div>
+					<div class="tab-pane" id="tab_2">
+						<table id="kdo_table" class="table table-bordered table-striped table-hover" style="width: 100%;">
+							<thead style="background-color: rgba(126,86,134,.7);">
+								<tr>
+									<th style="width: 1%">KDO</th>
+									<th style="width: 1%">Count Item</th>
+									<th style="width: 1%">Location</th>
+									<th style="width: 1%">Created At</th>
+									<th style="width: 1%">Reprint KDO</th>
+									<th style="width: 1%">Cancel</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+							<tfoot>
+								<tr>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
 									<th></th>
 									<th></th>
 								</tr>
 							</tfoot>
 						</table>
 					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal modal-default fade" id="print_kdo_modal">
+		<div class="modal-dialog modal-xs">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">
+							&times;
+						</span>
+					</button>
+					<h4 class="modal-title">
+						Print KDO Number
+					</h4>
+				</div>
+				<div class="modal-body">
+					<div class="modal-body">
+						<h5>Are you sure print KDO Number ?</h5>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					<button class="btn btn-success" onclick="forcePrint()"><span><i class="fa fa-print"></i> Print</span></button>
 				</div>
 			</div>
 		</div>
@@ -213,9 +299,14 @@
 		$('body').toggleClass("sidebar-collapse");
 		
 		fillTableList();
+		fillTablePack();
+		fillTable();
 		fillTableDetail();
 	});
 
+	function showPrint() {
+		$("#print_kdo_modal").modal('show');
+	}
 
 	function deleteKDODetail(id){
 		if(confirm("Apa anda yakin akan menghapus data?")){
@@ -345,7 +436,7 @@
 			{ "data": "st_date" },
 			{ "data": "destination_shortname" },
 			{ "data": "updated_at" },
-			{ "data": "reprintKDO" },
+			// { "data": "reprintKDO" },
 			{ "data": "deleteKDO" }
 			]
 		});
@@ -365,34 +456,102 @@
 		$('#kdo_detail tfoot tr').appendTo('#kdo_detail thead');
 	}
 
-
-	function reprintKDODetail(id){
-
-		var data = id.split('+');
-
-		var kd_detail = data[0];
-		var location = data[1];
-
-		// window.open('{{ url("index/print_label_zpro") }}'+'/'+kd_detail, '_blank');
-
-		printLabelSubassy(kd_detail, ('reprint'+kd_detail));
-		openSuccessGritter('Success!', "Reprint Success");
-
-	}
-
-	function printLabelSubassy(kd_detail,windowName) {
+	function fillTable(){
 		var location = "{{ $location }}";
 
-		var url = '';
-		if(location == 'case'){
-			url = '{{ url("index/print_label_case") }}'+'/'+kd_detail;
-		}else if(location == 'mouthpiece-packed'){
-			url = '{{ url("index/print_label_mouthpiece") }}'+'/'+kd_detail;
-		}else if(location == 'cl_body'){
-			url = '{{ url("index/print_label_cl_body") }}'+'/'+kd_detail;
+		var data = {
+			status : 1,
+			remark : location
 		}
+		
+		$('#kdo_table tfoot th').each( function () {
+			var title = $(this).text();
+			$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
+		});
+		var table = $('#kdo_table').DataTable( {
+			'paging'        : true,
+			'dom': 'Bfrtip',
+			'responsive': true,
+			'responsive': true,
+			'lengthMenu': [
+			[ 10, 25, 50, -1 ],
+			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+			],
+			'buttons': {
+				buttons:[
+				{
+					extend: 'pageLength',
+					className: 'btn btn-default',
+				},
+				{
+					extend: 'copy',
+					className: 'btn btn-success',
+					text: '<i class="fa fa-copy"></i> Copy',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'excel',
+					className: 'btn btn-info',
+					text: '<i class="fa fa-file-excel-o"></i> Excel',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'print',
+					className: 'btn btn-warning',
+					text: '<i class="fa fa-print"></i> Print',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				]
+			},
+			'lengthChange'  : true,
+			'searching'     : true,
+			'ordering'      : true,
+			'info'        : true,
+			'order'       : [],
+			'autoWidth'   : true,
+			"sPaginationType": "full_numbers",
+			"bJQueryUI": true,
+			"bAutoWidth": false,
+			"processing": true,
+			"serverSide": true,
+			"ajax": {
+				"type" : "get",
+				"url" : "{{ url("fetch/kdo") }}",
+				"data" : data,
+			},
+			"columns": [
+			{ "data": "kd_number" },
+			{ "data": "actual_count" },
+			{ "data": "remark" },
+			{ "data": "updated_at" },
+			{ "data": "reprintKDO" },
+			{ "data": "deleteKDO" }
+			]
+		});
 
-		newwindow = window.open(url, windowName, 'height=250,width=450');
+		table.columns().every( function () {
+			var that = this;
+
+			$( 'input', this.footer() ).on( 'keyup change', function () {
+				if ( that.search() !== this.value ) {
+					that
+					.search( this.value )
+					.draw();
+				}
+			});
+		});
+
+		$('#kdo_table tfoot tr').appendTo('#kdo_table thead');
+	}
+
+	function printLabel(kd_number, windowName) {
+		newwindow = window.open('{{ url("index/print_label_tanpo/")}}'+'/'+kd_number, windowName, 'height=550,width=650');
 
 		if (window.focus) {
 			newwindow.focus();
@@ -401,21 +560,47 @@
 		return false;
 	}
 
+	function reprintKDO(id) {
+		if(confirm("Apakah anda ingin mencetak ulang KDO Number dari "+ id +" ?")){
+			printLabel(id, id);
+		}		
+	}
+
+
+	function forcePrint() {
+		var location = "{{ $location }}";
+
+		var data = {
+			location : location,
+		}
+
+		$("#print_kdo_modal").modal('hide');
+		$("#loading").show();
+		$.post('{{ url("fetch/kd_force_print_tanpo") }}', data,  function(result, status, xhr){
+			if(result.status){
+				$("#loading").hide();
+				$('#actual_count').val(result.actual_count);
+				fillTableList();
+				fillTablePack();
+				$('#kdo_table').DataTable().ajax.reload();
+				$('#kdo_detail').DataTable().ajax.reload();
+				openSuccessGritter('Success', result.message);
+
+				printLabel(result.kd_number, result.kd_number);
+
+			}else{
+				$("#loading").hide();
+				openErrorGritter('Error!', result.message);
+			}
+
+		});
+	}
 
 	function print() {
 		var shipment_id = $("#shipment_id").val();
 		var material_number = $("#material_number").val();
-		var quantity = $("#qty_packing").val();
+		var quantity = $("#quantity").val();
 		var location = "{{ $location }}";
-
-		var url = '';
-		if(location == 'case'){
-			url = '{{ url("fetch/kd_print_case") }}';
-		}else if(location == 'mouthpiece-packed'){
-			url = '{{ url("fetch/kd_print_mp") }}';
-		}else if(location == 'cl_body'){
-			url = '{{ url("fetch/kd_print_cl_body") }}';
-		}
 
 		var data = {
 			shipment_id : shipment_id,
@@ -431,23 +616,21 @@
 
 
 		$("#loading").show();
-		$.post(url, data,  function(result, status, xhr){
+		$.post('{{ url("fetch/kd_print_zpro_new") }}', data,  function(result, status, xhr){
 			if(result.status){
-				var id = result.knock_down_detail_id;
-				printLabelSubassy(id, ('print'+id));
 
-
+				$('#actual_count').val('');
 				$('#shipment_id').val('');
-				$('#st_date').val('');
-				$('#destination').val('');
 				$('#material_number').val('');
+				$('#quantity').val('');
 				$('#material_description').val('');
-				$('#qty_packing').val('');
+				$('#destination').val('');
+				$('#shipment_date').val('');
 
 				$("#loading").hide();
-
+				$('#actual_count').val(result.actual_count);
 				fillTableList();
-				$('#kdo_detail').DataTable().ajax.reload();
+				fillTablePack();
 				openSuccessGritter('Success', result.message);
 			}else{
 				$("#loading").hide();
@@ -455,30 +638,63 @@
 			}
 
 		});
+
+
 	}
 
 	function fillField(param) {
-		var data = param.split('_');
-		var id = data[0];
-		var lot_completion = data[1];
+		var location = "{{ $location }}";
 
-		var st_date = $('#'+param).find('td').eq(0).text();
-		var material_number = $('#'+param).find('td').eq(1).text();
-		var material_description = $('#'+param).find('td').eq(2).text();
-		var destination = $('#'+param).find('td').eq(3).text();
-		var target = $('#'+param).find('td').eq(4).text();
-
-		$('#shipment_id').val(id);
-		$('#st_date').val(st_date);
-		$('#destination').val(destination);
-		$('#material_number').val(material_number);
-		$('#material_description').val(material_description);
-
-		if((target/lot_completion) >= 1){
-			$('#qty_packing').val(lot_completion);
-		}else{
-			$('#qty_packing').val(target);
+		data = {
+			id: param,
+			location : location,
 		}
+
+		$.get('{{ url("fetch/kd_detail") }}', data,  function(result, status, xhr){
+			if(result.status){
+				$('#shipment_id').val(result.detail[0].id);
+				$('#destination').val(result.detail[0].destination_shortname);
+				$('#shipment_date').val(result.detail[0].st_date);
+				$('#material_number').val(result.detail[0].material_number);
+				$('#quantity').val(result.detail[0].quantity);
+				$('#material_description').val(result.detail[0].material_description);
+				$('#actual_count').val(result.actual_count);
+			}
+		});
+	}
+
+	function fillTablePack(){
+		$.get('{{ url("fetch/kd_pack/".$location) }}',  function(result, status, xhr){
+			if(result.status){
+				$('#tableBodyPack').append().empty();
+				$('#tableFootPack').append().empty();
+
+				var tableData = "";
+				var tableFoot = "";
+
+				var total_qty = 0;
+				var count = 0;
+				$.each(result.pack, function(key, value) {
+					tableData += '<tr>';
+					tableData += '<td>'+ ++count +'</td>';
+					tableData += '<td>'+ value.st_date +'</td>';
+					tableData += '<td>'+ value.material_number +'</td>';
+					tableData += '<td>'+ value.material_description +'</td>';
+					tableData += '<td>'+ value.destination_shortname +'</td>';
+					tableData += '<td>'+ value.quantity +'</td>';
+					tableData += '</tr>';
+					total_qty += value.quantity;
+				});
+				$('#tableBodyPack').append(tableData);
+
+				tableFoot += '<tr>';
+				tableFoot += '<th colspan="5" style="text-align:center;">Total:</th>';
+				tableFoot += '<th>'+ total_qty +'</th>';
+				tableFoot += '</tr>';
+				$('#tableFootPack').append(tableFoot);
+			}
+
+		});
 	}
 
 
@@ -492,7 +708,7 @@
 			var tableData = "";
 			var total_target = 0;
 			$.each(result.target, function(key, value) {
-				tableData += '<tr id="'+value.id+'_'+value.lot_completion+'" onclick="fillField(id)">';
+				tableData += '<tr onclick="fillField(\''+value.id+'\')">';
 				tableData += '<td>'+ value.st_date +'</td>';
 				tableData += '<td>'+ value.material_number +'</td>';
 				tableData += '<td>'+ value.material_description +'</td>';
