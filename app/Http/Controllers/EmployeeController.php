@@ -4384,7 +4384,7 @@ public function fetchDataKaizenAll(Request $request)
      }
 
      if ($request->get('nik') != "") {
-          $kzn = $kzn->where("kaizen_forms.created_by", '=', $request->get('nik'));
+          $kzn = $kzn->where("kaizen_forms.employee_id", '=', $request->get('nik'));
      }
 
      $kzn = $kzn->whereNotNull('kaizen_scores.manager_point_1')
