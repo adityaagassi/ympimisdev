@@ -1865,7 +1865,7 @@ public function fetchMinMoeMonitoring(Request $request)
                               WHERE
                                    ivms.ivms_attendance_triggers.employee_id = employee_syncs.employee_id 
                                    AND auth_date = '".$now."' 
-                                   AND auth_datetime BETWEEN '".$now." 14:30:00' 
+                                   AND auth_datetime BETWEEN '".$now." 14:00:00' 
                                    AND '".$now." 17:00:00' 
                                    ),(
                               SELECT DISTINCT
@@ -1901,7 +1901,7 @@ public function fetchMinMoeMonitoring(Request $request)
                                    WHERE
                                         (ivms.ivms_attendance_triggers.employee_id = employee_syncs.employee_id 
                                         AND auth_date = '".$now."' 
-                                        AND auth_datetime BETWEEN '".$now." 14:30:00' 
+                                        AND auth_datetime BETWEEN '".$now." 14:00:00' 
                                         AND '".$now." 17:00:00' )
                                         OR(
                                         ivms.ivms_attendance_triggers.employee_id = employee_syncs.employee_id 
