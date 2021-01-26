@@ -4383,6 +4383,10 @@ public function fetchDataKaizenAll(Request $request)
           $kzn = $kzn->where("kaizen_forms.propose_date", '<=', $request->get('sampai'));
      }
 
+     if ($request->get('nik') != "") {
+          $kzn = $kzn->where("kaizen_forms.created_by", '=', $request->get('nik'));
+     }
+
      $kzn = $kzn->whereNotNull('kaizen_scores.manager_point_1')
      ->select('kaizen_forms.id', 'kaizen_forms.propose_date', 'kaizen_forms.employee_id', 'kaizen_forms.employee_name', 'kaizen_forms.section', 'title', 'area', 'status', db::raw('(foreman_point_1 * 40) as FP1'), db::raw('(foreman_point_2 * 30) as FP2'), db::raw('(foreman_point_3 * 30) as FP3'), db::raw('(manager_point_1 * 40) as MP1'), db::raw('(manager_point_2 * 30) as MP2'), db::raw('(manager_point_3 * 30) as MP3'))
      ->orderBy('kaizen_forms.id', 'desc')

@@ -386,12 +386,12 @@
 			todayHighlight: true
 		});
 
-		fill_table("","");
+		fill_table("","","");
 
 		var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 	});
 
-	function fill_table(dari, sampai) {
+	function fill_table(dari, sampai, nik) {
 		$('#tableKaizen').DataTable().destroy();
 
 		var table2 = $('#tableKaizen').DataTable({
@@ -447,7 +447,7 @@
 			"serverSide": true,
 			"ajax": {
 				"type" : "get",
-				"data": { dari: dari, sampai: sampai},
+				"data": { dari: dari, sampai: sampai, nik: nik},
 				"url" : "{{ url('fetch/kaizen/data') }}"
 			},
 			"columns": [
@@ -480,8 +480,9 @@
 	function searching() {
 		var dari = $("#search_dari").val();
 		var sampai = $("#search_sampai").val();
+		var nik = $("#search_employee_id").val();
 
-		fill_table(dari, sampai);
+		fill_table(dari, sampai, nik);
 	}
 
 	function cekDetail(id) {
