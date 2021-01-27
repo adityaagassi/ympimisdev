@@ -325,7 +325,7 @@
 		});
 		$('.select2').select2();
 		fetchTemperature();
-		intervaltemp = setInterval(fetchTemperature,180000);
+		intervaltemp = setInterval(fetchTemperature,300000);
 	});
 
 	var detail_all = [];
@@ -823,7 +823,7 @@ function fetchTemperatureDetail(temperature){
 					"bAutoWidth": false,
 					"processing": true
 				});
-			intervaltemp = setInterval(fetchTemperature,180000);
+			intervaltemp = setInterval(fetchTemperature,300000);
 		}
 		else{
 			alert('Attempt to retrieve data failed');
@@ -910,7 +910,7 @@ function checkDetails(checkParam) {
 			"bAutoWidth": false,
 			"processing": true
 		});
-	intervaltemp = setInterval(fetchTemperature,180000);
+	intervaltemp = setInterval(fetchTemperature,300000);
 }
 
 Highcharts.createElement('link', {
