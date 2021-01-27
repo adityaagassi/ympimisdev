@@ -315,7 +315,7 @@ class TemperatureController extends Controller
 
                if ($date_from == '') {
                     if ($date_to == '') {
-                         $whereDate = 'AND DATE(date_in) BETWEEN CONCAT(DATE_FORMAT(NOW() - INTERVAL 7 DAY,"%Y-%m-%d")) AND DATE(NOW())';
+                         $whereDate = '';
                     }else{
                          $whereDate = 'AND DATE(date_in) BETWEEN CONCAT(DATE_FORMAT("'.$date_to.'" - INTERVAL 7 DAY,"%Y-%m-%d")) AND "'.$date_to.'"';
                     }
@@ -354,7 +354,10 @@ class TemperatureController extends Controller
                          ivms_temperatures.date_in,
                          ivms_temperatures.point,
                          ivms_temperatures.temperature,
-                         ivms_temperatures.abnormal_status 
+                         ivms_temperatures.date_out,
+                         ivms_temperatures.temperature_out,
+                         ivms_temperatures.abnormal_status,
+                         ivms_temperatures.shiftdaily_code 
                     FROM
                          ivms_temperatures
                          LEFT JOIN employees ON ivms_temperatures.employee_id = employees.employee_id
@@ -383,261 +386,718 @@ class TemperatureController extends Controller
           }
      }
 
+//      public function importMinMoe(Request $request)
+//      {
+//           try{
+
+//              $now = date('Y-m-d');
+//              $yesterday = date('Y-m-d', strtotime('-1 days', strtotime($now)));
+//              $tomorrow = date('Y-m-d', strtotime('+1 days', strtotime($now)));
+
+//              $id_user = Auth::id();
+
+//              $file = $request->file('file');
+//              $file_name = 'temp_'. MD5(date("YmdHisa")) .'.'.$file->getClientOriginalExtension();
+//              $file->move('data_file/temperature/minmoe/', $file_name);
+
+//              $excel = 'data_file/temperature/minmoe/' . $file_name;
+//              $rows = Excel::load($excel, function($reader) {
+//                 $reader->noHeading();
+//                 $reader->skipRows(1);
+
+//                 $reader->each(function($row) {
+//                 });
+//            })->toObject();
+
+//              $person = [];
+
+//              $persondata = [];
+
+//              $index1 = 0;
+
+//              $suhu = [];
+
+//              for ($i=0; $i < count($rows); $i++) {
+//                if ($rows[$i][1] == 'Face Authentication Passed') {
+//                     if ($rows[$i][4] != '-') {
+//                          $temps = explode('°', $rows[$i][4]);
+
+//                          if (str_contains($rows[$i][2], "''")) {
+//                               $empname = str_replace("''","'",$rows[$i][2]);
+//                          }else{
+//                               $empname = $rows[$i][2];
+//                          }
+
+
+//                          $empys = DB::SELECT('SELECT
+//                                    * 
+//                               FROM
+//                                    employees
+//                                    JOIN employee_syncs ON employee_syncs.employee_id = employees.employee_id 
+//                                    JOIN sunfish_shift_syncs ON sunfish_shift_syncs.employee_id = employees.employee_id 
+//                               WHERE
+//                                    employees.name = "'.$empname.'"
+//                                    AND sunfish_shift_syncs.shift_date = "'.date('Y-m-d', strtotime($rows[$i][6])).'"');
+
+//                          if (count($empys) > 0) {
+//                               foreach ($empys as $key) {
+//                                    $employee_id = $key->employee_id;
+//                                    $shiftdaily_code = $key->shiftdaily_code;
+//                                    $name = $key->name;
+//                                    if ($key->department == null) {
+//                                         $department = '';
+//                                    }else{
+//                                         $department = $key->department;
+//                                    }
+//                                    if ($key->section == null) {
+//                                         $section = '';
+//                                    }else{
+//                                         $section = $key->section;
+//                                    }
+//                                    if ($key->group == null) {
+//                                         $group = '';
+//                                    }else{
+//                                         $group = $key->group;
+//                                    }
+//                               }
+
+//                               $ivms = IvmsTemperatureTemp::create([
+//                                    'employee_id' => $employee_id,
+//                                    'name' => $name,
+//                                    'department' => $department,
+//                                    'section' => $section,
+//                                    'group' => $group,
+//                                    'date' => date('Y-m-d', strtotime($rows[$i][6])),
+//                                    'date_in' => $rows[$i][6],
+//                                    'point' => $rows[$i][9],
+//                                    'temperature' => $temps[0],
+//                                    'abnormal_status' => $rows[$i][5],
+//                                    'shiftdaily_code' => $shiftdaily_code,
+//                                    'created_by' => $id_user,
+//                               ]);
+//                          }else{
+//                               $empys = DB::SELECT('SELECT
+//                                    * 
+//                               FROM
+//                                    employees
+//                                    JOIN employee_syncs ON employee_syncs.employee_id = employees.employee_id 
+//                                    JOIN sunfish_shift_syncs ON sunfish_shift_syncs.employee_id = employees.employee_id 
+//                               WHERE
+//                                    employees.name LIKE "%'.$empname.'%"
+//                                    AND sunfish_shift_syncs.shift_date = "'.date('Y-m-d', strtotime($rows[$i][6])).'"');
+
+//                               if (count($empys) > 0) {
+//                                    foreach ($empys as $key) {
+//                                         $shiftdaily_code = $key->shiftdaily_code;
+//                                         $employee_id = $key->employee_id;
+//                                         $name = $key->name;
+//                                         $department = $key->department;
+//                                         $section = $key->section;
+//                                         $group = $key->group;
+//                                    }
+
+//                                    $ivms = IvmsTemperatureTemp::create([
+//                                         'employee_id' => $employee_id,
+//                                         'name' => $name,
+//                                         'department' => $department,
+//                                         'section' => $section,
+//                                         'group' => $group,
+//                                         'date' => date('Y-m-d', strtotime($rows[$i][6])),
+//                                         'date_in' => $rows[$i][6],
+//                                         'point' => $rows[$i][9],
+//                                         'temperature' => $temps[0],
+//                                         'abnormal_status' => $rows[$i][5],
+//                                         'shiftdaily_code' => $shiftdaily_code,
+//                                         'created_by' => $id_user,
+//                                    ]);
+//                               }
+//                          }
+//                     }
+//                }
+//           }
+
+//           $IvmsTemperature = DB::SELECT("SELECT DISTINCT
+//                ( a.employee_id ),
+//                name,
+//                point,
+//                shiftdaily_code,
+//                abnormal_status,
+//                department,
+//                section,
+//                `group`,
+//                date 
+//           FROM
+//                `ivms_temperature_temps` AS a");
+
+//           foreach ($IvmsTemperature as $key) {
+//                $gettime = DB::SELECT("SELECT 
+//                     '".$key->employee_id."' as employee_id,
+//                     IF
+//                          (
+//                               '".$key->shiftdaily_code."' LIKE '%Shift_3%',
+//                               (
+//                               SELECT
+//                                    MAX( date_in ) 
+//                               FROM
+//                                    ivms_temperature_temps
+//                               WHERE
+//                                    date = DATE( '".$key->date."' ) - INTERVAL 1 DAY 
+//                                    AND ivms_temperature_temps.employee_id = '".$key->employee_id."'
+//                               ),
+//                          IF
+//                               (
+//                                    '".$key->shiftdaily_code."' LIKE '%Shift_2%',(
+//                                    SELECT
+//                                         min( date_in ) 
+//                                    FROM
+//                                         ivms_temperature_temps 
+//                                    WHERE
+//                                          date = '".$key->date."' 
+//                                         AND ivms_temperature_temps.employee_id = '".$key->employee_id."'
+//                                         AND date_in BETWEEN '".$key->date." 14:00:00' 
+//                                         AND '".$key->date." 17:00:00' 
+//                                         ),(
+//                                    SELECT
+//                                         min( date_in ) 
+//                                    FROM
+//                                         ivms_temperature_temps 
+//                                    WHERE
+//                                          date = '".$key->date."' 
+//                                         AND ivms_temperature_temps.employee_id = '".$key->employee_id."'
+//                                    ) 
+//                               ) 
+//                          ) AS time_in,
+//                     IF
+//                          (
+//                               '".$key->shiftdaily_code."' LIKE '%Shift_3%',
+//                               (
+//                               SELECT
+//                                    MIN( date_in ) 
+//                               FROM
+//                                    ivms_temperature_temps
+//                               WHERE date = '".$key->date."'
+//                                    AND ivms_temperature_temps.employee_id = '".$key->employee_id."'
+//                               ),
+//                          IF
+//                               (
+//                                    '".$key->shiftdaily_code."' LIKE '%Shift_2%',(
+//                                    SELECT
+//                                         min( date_in ) 
+//                                    FROM
+//                                         ivms_temperature_temps 
+//                                    WHERE
+//                                          date = '".$key->date."' + INTERVAL 1 DAY
+//                                         AND ivms_temperature_temps.employee_id = '".$key->employee_id."'
+//                                         ),IF('".$key->shiftdaily_code."' LIKE '%Shift_1%',
+//                                         (SELECT
+//                                         MAX( date_in ) 
+//                                    FROM
+//                                         ivms_temperature_temps 
+//                                    WHERE
+//                                          date = '".$key->date."'
+//                                         AND ivms_temperature_temps.employee_id = '".$key->employee_id."'
+//                                         AND date_in >='".$key->date." 15:00:00'  ),
+//                                         (SELECT
+//                                         MAX( date_in ) 
+//                                    FROM
+//                                         ivms_temperature_temps 
+//                                    WHERE
+//                                          date = '".$key->date."'
+//                                         AND ivms_temperature_temps.employee_id = '".$key->employee_id."'   )) 
+//                               ) 
+//                          ) AS time_out");
+
+//                $time_in = null;
+//                $time_out = null;
+//                $tempin = null;
+//                $tempout = null;
+
+//                foreach ($gettime as $vel) {
+//                     $time_in = $vel->time_in;
+//                     $time_out = $vel->time_out;
+//                     if ($time_in != null) {
+//                          $gettempin = DB::SELECT("SELECT
+//                                    MAX( temperature ) AS temp 
+//                               FROM
+//                                    ivms_temperature_temps 
+//                               WHERE
+//                                    employee_id = '".$key->employee_id."' 
+//                                    AND date_in BETWEEN '".$time_in."' - INTERVAL 30 MINUTE 
+//                                    AND '".$time_in."' + INTERVAL 30 MINUTE");
+
+//                          foreach ($gettempin as $temps) {
+//                               $tempin = $temps->temp;
+//                          }
+//                     }
+//                     if ($time_out != null) {
+//                          $gettempout = DB::SELECT("SELECT
+//                                    MAX( temperature ) AS temp 
+//                               FROM
+//                                    ivms_temperature_temps 
+//                               WHERE
+//                                    employee_id = '".$key->employee_id."' 
+//                                    AND date_in BETWEEN '".$time_out."' - INTERVAL 30 MINUTE 
+//                                    AND '".$time_out."' + INTERVAL 30 MINUTE");
+//                          foreach ($gettempout as $temps) {
+//                               $tempout = $temps->temp;
+//                          }
+//                     }
+//                }
+//                $ivmscheck = IvmsTemperature::where('employee_id',$key->employee_id)->where('date',$key->date)->first();
+//                // $ivms = IvmsTemperature::firstOrNew(['employee_id' => $key->employee_id, 'date' => $key->date]);
+//                // $ivms->employee_id = $key->employee_id;
+//                // $ivms->name = $key->name;
+//                // $ivms->date = $key->date;
+//                // $ivms->date_in = $key->date_in;
+//                // $ivms->point = $key->point;
+//                // $ivms->temperature = $key->temperature;
+//                // $ivms->abnormal_status = $key->abnormal_status;
+//                // $ivms->created_by = $id_user;
+//                // $ivms->save();
+
+//                if (count($ivmscheck) == 0) {
+//                     $ivms = IvmsTemperature::create([
+//                          'employee_id' => $key->employee_id,
+//                          'name' => $key->name,
+//                          'date' => $key->date,
+//                          'date_in' => $time_in,
+//                          'temperature' => $tempin,
+//                          'date_out' => $time_out,
+//                          'temperature_out' => $tempout,
+//                          'point' => $key->point,
+//                          'abnormal_status' => $key->abnormal_status,
+//                          'shiftdaily_code' => $key->shiftdaily_code,
+//                          'created_by' => $id_user,
+//                     ]);
+//                     if ($tempin >= '37.5') {
+//                          $suhutinggi = array(
+//                               'employee_id' => $key->employee_id,
+//                               'name' => $key->name,
+//                               'date' => $key->date,
+//                               'date_in' => $time_in,
+//                               'point' => $key->point,
+//                               'department' => $key->department,
+//                               'section' => $key->section,
+//                               'group' => $key->group,
+//                               'shiftdaily_code' => $key->shiftdaily_code,
+//                               'temperature' => $tempin,
+//                          );
+//                          array_push($suhu,$suhutinggi);
+//                     }
+//                     if ($tempout >= '37.5') {
+//                          $suhutinggi = array(
+//                               'employee_id' => $key->employee_id,
+//                               'name' => $key->name,
+//                               'date' => $key->date,
+//                               'date_in' => $time_out,
+//                               'point' => $key->point,
+//                               'department' => $key->department,
+//                               'section' => $key->section,
+//                               'group' => $key->group,
+//                               'shiftdaily_code' => $key->shiftdaily_code,
+//                               'temperature' => $tempout,
+//                          );
+//                          array_push($suhu,$suhutinggi);
+//                     }
+//                }else{
+//                     if ($ivmscheck->date_in == null) {
+//                          $ivmscheck->date_in = $time_in;
+//                          $ivmscheck->temperature = $tempin;
+//                     }
+//                     if ($ivmscheck->date_out == null) {
+//                          $ivmscheck->date_out = $time_out;
+//                          $ivmscheck->temperature_out = $tempout;
+//                     }
+//                     if ($tempin >= '37.5') {
+//                          $suhutinggi = array(
+//                               'employee_id' => $ivmscheck->employee_id,
+//                               'name' => $ivmscheck->name,
+//                               'date' => $ivmscheck->date,
+//                               'date_in' => $time_in,
+//                               'point' => $ivmscheck->point,
+//                               'department' => $ivmscheck->department,
+//                               'section' => $ivmscheck->section,
+//                               'group' => $ivmscheck->group,
+//                               'shiftdaily_code' => $ivmscheck->shiftdaily_code,
+//                               'temperature' => $tempin,
+//                          );
+//                          array_push($suhu,$suhutinggi);
+//                     }
+//                     if ($tempout >= '37.5') {
+//                          $suhutinggi = array(
+//                               'employee_id' => $ivmscheck->employee_id,
+//                               'name' => $ivmscheck->name,
+//                               'date' => $ivmscheck->date,
+//                               'date_in' => $time_out,
+//                               'point' => $ivmscheck->point,
+//                               'department' => $ivmscheck->department,
+//                               'section' => $ivmscheck->section,
+//                               'group' => $ivmscheck->group,
+//                               'shiftdaily_code' => $ivmscheck->shiftdaily_code,
+//                               'temperature' => $tempout,
+//                          );
+//                          array_push($suhu,$suhutinggi);
+//                     }
+//                     $ivmscheck->save();
+//                }
+//           }
+
+//           // IvmsTemperatureTemp::truncate();
+//           $miraimobile =DB::SELECT("SELECT
+//                *,
+//                miraimobile.quiz_logs.created_at AS date_in 
+//           FROM
+//                employees
+//                JOIN miraimobile.quiz_logs ON employees.employee_id = miraimobile.quiz_logs.employee_id
+//                JOIN employee_syncs ON employee_syncs.employee_id = employees.employee_id 
+//           WHERE
+//                employees.end_date IS NULL 
+//                AND miraimobile.quiz_logs.answer_date = '".date('Y-m-d')."' 
+//                AND miraimobile.quiz_logs.question = 'Suhu Tubuh'");
+//           foreach ($miraimobile as $val) {
+//                $ivmscheck = IvmsTemperature::where('employee_id',$val->employee_id)->where('date',$val->answer_date)->first();
+
+//                // $ivms = IvmsTemperature::firstOrNew(['employee_id' => $val->employee_id, 'date' => $val->answer_date]);
+//                // $ivms->employee_id = $val->employee_id;
+//                // $ivms->name = $val->name;
+//                // $ivms->date = $val->answer_date;
+//                // $ivms->date_in = $val->date_in;
+//                // $ivms->point = "Mirai Mobile";
+//                // $tempmobile = floatval($val->answer);
+//                // $ivms->temperature = $tempmobile;
+//                // if ($tempmobile >= '37.5') {
+//                //      $ivms->abnormal_status = "Yes";
+//                // }else{
+//                //      $ivms->abnormal_status = "No";
+//                // }
+//                // $ivms->created_by = $id_user;
+//                // $ivms->save();
+
+//                // if (count($ivmscheck) == 0) {
+//                //      if ($tempmobile >= '37.5') {
+//                //           $suhutinggi = array(
+//                //                'employee_id' => $val->employee_id,
+//                //                'name' => $val->name,
+//                //                'date' => $val->answer_date,
+//                //                'date_in' => $val->date_in,
+//                //                'point' => "Mirai Mobile",
+//                //                'department' => $val->department,
+//                //                'section' => $val->section,
+//                //                'group' => $val->group,
+//                //                'temperature' => $tempmobile,
+//                //           );
+//                //           array_push($suhu,$suhutinggi);
+//                //      }
+//                // }
+//           }
+
+//           $contactList = [];
+//           $contactList[0] = 'mokhamad.khamdan.khabibi@music.yamaha.com';
+
+//           $contactList2 = [];
+//           $contactList2[0] = 'prawoto@music.yamaha.com';
+//           $contactList2[1] = 'putri.sukma.riyanti@music.yamaha.com';
+//           $contactList2[2] = 'mahendra.putra@music.yamaha.com';
+
+//           $mail_to = [];
+
+//           for ($i = 0;$i < count($suhu); $i++) {
+//                $fc = DB::SELECT("SELECT
+//                     employee_id,
+//                     employee_syncs.name,
+//                     email 
+//                FROM
+//                     employee_syncs
+//                     JOIN users ON users.username = employee_syncs.employee_id 
+//                WHERE
+//                     ( position LIKE '%Foreman%' AND department = '".$suhu[$i]['department']."' and email like '%music.yamaha.com%' and employee_syncs.end_date is null) 
+//                     OR (
+//                     position LIKE '%Chief%' 
+//                     AND department = '".$suhu[$i]['department']."' and email like '%music.yamaha.com%' and employee_syncs.end_date is null)");
+
+
+//                if (count($fc) > 0) {
+//                     foreach ($fc as $val) {
+//                          array_push($mail_to, $val->email);
+//                     }
+//                }
+//           }
+
+//           if (count($suhu) > 0) {
+//                Mail::to($mail_to)->cc($contactList2,'CC')->bcc($contactList,'BCC')->send(new SendEmail($suhu, 'temperature'));
+//           }
+
+//           $response = array(
+//            'status' => true,
+//            'message' => 'Upload file success',
+//       );
+//           return Response::json($response);
+
+//      }catch(\Exception $e){
+//         $response = array(
+//            'status' => false,
+//            'message' => $e->getMessage(),
+//       );
+//         return Response::json($response);
+//    }
+// }
+
      public function importMinMoe(Request $request)
      {
           try{
+               $id_user = Auth::id();
 
-             $id_user = Auth::id();
+                  $file = $request->file('file');
+                  $file_name = 'temp_'. MD5(date("YmdHisa")) .'.'.$file->getClientOriginalExtension();
+                  $file->move('data_file/temperature/minmoe/', $file_name);
 
-             $file = $request->file('file');
-             $file_name = 'temp_'. MD5(date("YmdHisa")) .'.'.$file->getClientOriginalExtension();
-             $file->move('data_file/temperature/minmoe/', $file_name);
+                  $excel = 'data_file/temperature/minmoe/' . $file_name;
+                  $rows = Excel::load($excel, function($reader) {
+                     $reader->noHeading();
+                     $reader->skipRows(1);
 
-             $excel = 'data_file/temperature/minmoe/' . $file_name;
-             $rows = Excel::load($excel, function($reader) {
-                $reader->noHeading();
-                $reader->skipRows(1);
+                     $reader->each(function($row) {
+                     });
+                })->toObject();
 
-                $reader->each(function($row) {
-                });
-           })->toObject();
+                  $person = [];
 
-             $person = [];
+                  $persondata = [];
 
-             $persondata = [];
+                  $index1 = 0;
 
-             $index1 = 0;
+                  $suhu = [];
 
-             $suhu = [];
+                  for ($i=0; $i < count($rows); $i++) {
+                    if ($rows[$i][1] == 'Face Authentication Passed') {
+                         if ($rows[$i][4] != '-') {
+                              $temps = explode('°', $rows[$i][4]);
 
-             for ($i=0; $i < count($rows); $i++) {
-               if ($rows[$i][1] == 'Face Authentication Passed') {
-                    if ($rows[$i][4] != '-') {
-                         $temps = explode('°', $rows[$i][4]);
-
-                         if (str_contains($rows[$i][2], "''")) {
-                              $empname = str_replace("''","'",$rows[$i][2]);
-                         }else{
-                              $empname = $rows[$i][2];
-                         }
+                              if (str_contains($rows[$i][2], "''")) {
+                                   $empname = str_replace("''","'",$rows[$i][2]);
+                              }else{
+                                   $empname = $rows[$i][2];
+                              }
 
 
-                         $empys = DB::SELECT('select * from employees join employee_syncs on employee_syncs.employee_id = employees.employee_id where employees.name = "'.$empname.'"');
+                              $empys = DB::SELECT('select * from employees join employee_syncs on employee_syncs.employee_id = employees.employee_id where employees.name = "'.$empname.'"');
 
-                         if (count($empys) > 0) {
-                              foreach ($empys as $key) {
-                                   $employee_id = $key->employee_id;
-                                   $name = $key->name;
-                                   if ($key->department == null) {
-                                        $department = '';
-                                   }else{
+                              if (count($empys) > 0) {
+                                   foreach ($empys as $key) {
+                                        $employee_id = $key->employee_id;
+                                        $name = $key->name;
+                                        if ($key->department == null) {
+                                             $department = '';
+                                        }else{
+                                             $department = $key->department;
+                                        }
+                                        if ($key->section == null) {
+                                             $section = '';
+                                        }else{
+                                             $section = $key->section;
+                                        }
+                                        if ($key->group == null) {
+                                             $group = '';
+                                        }else{
+                                             $group = $key->group;
+                                        }
+                                   }
+
+                                   $ivms = IvmsTemperatureTemp::create([
+                                        'employee_id' => $employee_id,
+                                        'name' => $name,
+                                        'department' => $department,
+                                        'section' => $section,
+                                        'group' => $group,
+                                        'date' => date('Y-m-d', strtotime($rows[$i][6])),
+                                        'date_in' => $rows[$i][6],
+                                        'point' => $rows[$i][9],
+                                        'temperature' => $temps[0],
+                                        'abnormal_status' => $rows[$i][5],
+                                        'created_by' => $id_user,
+                                   ]);
+                              }else{
+                                   $empys = DB::SELECT('select * from employees join employee_syncs on employee_syncs.employee_id = employees.employee_id where employees.name like "'.$empname.'%"');
+
+                                   foreach ($empys as $key) {
+                                        $employee_id = $key->employee_id;
+                                        $name = $key->name;
                                         $department = $key->department;
-                                   }
-                                   if ($key->section == null) {
-                                        $section = '';
-                                   }else{
                                         $section = $key->section;
-                                   }
-                                   if ($key->group == null) {
-                                        $group = '';
-                                   }else{
                                         $group = $key->group;
                                    }
+
+                                   $ivms = IvmsTemperatureTemp::create([
+                                        'employee_id' => $employee_id,
+                                        'name' => $name,
+                                        'department' => $department,
+                                        'section' => $section,
+                                        'group' => $group,
+                                        'date' => date('Y-m-d', strtotime($rows[$i][6])),
+                                        'date_in' => $rows[$i][6],
+                                        'point' => $rows[$i][9],
+                                        'temperature' => $temps[0],
+                                        'abnormal_status' => $rows[$i][5],
+                                        'created_by' => $id_user,
+                                   ]);
                               }
-
-                              $ivms = IvmsTemperatureTemp::create([
-                                   'employee_id' => $employee_id,
-                                   'name' => $name,
-                                   'department' => $department,
-                                   'section' => $section,
-                                   'group' => $group,
-                                   'date' => date('Y-m-d', strtotime($rows[$i][6])),
-                                   'date_in' => $rows[$i][6],
-                                   'point' => $rows[$i][9],
-                                   'temperature' => $temps[0],
-                                   'abnormal_status' => $rows[$i][5],
-                                   'created_by' => $id_user,
-                              ]);
-                         }else{
-                              $empys = DB::SELECT('select * from employees join employee_syncs on employee_syncs.employee_id = employees.employee_id where employees.name like "'.$empname.'%"');
-
-                              foreach ($empys as $key) {
-                                   $employee_id = $key->employee_id;
-                                   $name = $key->name;
-                                   $department = $key->department;
-                                   $section = $key->section;
-                                   $group = $key->group;
-                              }
-
-                              $ivms = IvmsTemperatureTemp::create([
-                                   'employee_id' => $employee_id,
-                                   'name' => $name,
-                                   'department' => $department,
-                                   'section' => $section,
-                                   'group' => $group,
-                                   'date' => date('Y-m-d', strtotime($rows[$i][6])),
-                                   'date_in' => $rows[$i][6],
-                                   'point' => $rows[$i][9],
-                                   'temperature' => $temps[0],
-                                   'abnormal_status' => $rows[$i][5],
-                                   'created_by' => $id_user,
-                              ]);
                          }
                     }
                }
-          }
 
-          $IvmsTemperature = DB::SELECT("SELECT DISTINCT ( a.employee_id ), name, ( SELECT MAX( temperature ) FROM ivms_temperature_temps WHERE employee_id = a.employee_id ) AS temperature,
-               ( SELECT MIN( date_in ) FROM ivms_temperature_temps WHERE employee_id = a.employee_id ) AS date_in,
-               point,
-               abnormal_status ,
-               department ,
-               section ,
-               `group` ,
-               date
-               FROM
-               `ivms_temperature_temps` AS a");
+               $IvmsTemperature = DB::SELECT("SELECT a.employee_id, name, 
+                    -- ( SELECT MAX( temperature ) FROM ivms_temperature_temps WHERE employee_id = a.employee_id ) AS temperature,
+                    -- ( SELECT MIN( date_in ) FROM ivms_temperature_temps WHERE employee_id = a.employee_id ) AS date_in,
+                    temperature,
+                    date_in,
+                    point,
+                    abnormal_status ,
+                    department ,
+                    section ,
+                    `group` ,
+                    date
+                    FROM
+                    `ivms_temperature_temps` AS a");
 
-          foreach ($IvmsTemperature as $key) {
-               $ivmscheck = IvmsTemperature::where('employee_id',$key->employee_id)->where('date',$key->date)->first();
-               // $ivms = IvmsTemperature::firstOrNew(['employee_id' => $key->employee_id, 'date' => $key->date]);
-               // $ivms->employee_id = $key->employee_id;
-               // $ivms->name = $key->name;
-               // $ivms->date = $key->date;
-               // $ivms->date_in = $key->date_in;
-               // $ivms->point = $key->point;
-               // $ivms->temperature = $key->temperature;
-               // $ivms->abnormal_status = $key->abnormal_status;
-               // $ivms->created_by = $id_user;
-               // $ivms->save();
+               foreach ($IvmsTemperature as $key) {
+                    // $ivmscheck = IvmsTemperature::where('employee_id',$key->employee_id)->where('date',$key->date)->first();
+                    // $ivms = IvmsTemperature::firstOrNew(['employee_id' => $key->employee_id, 'date' => $key->date]);
+                    // $ivms->employee_id = $key->employee_id;
+                    // $ivms->name = $key->name;
+                    // $ivms->date = $key->date;
+                    // $ivms->date_in = $key->date_in;
+                    // $ivms->point = $key->point;
+                    // $ivms->temperature = $key->temperature;
+                    // $ivms->abnormal_status = $key->abnormal_status;
+                    // $ivms->created_by = $id_user;
+                    // $ivms->save();
 
-               if (count($ivmscheck) == 0) {
-                    $ivms = IvmsTemperature::create([
-                         'employee_id' => $key->employee_id,
-                         'name' => $key->name,
-                         'date' => $key->date,
-                         'date_in' => $key->date_in,
-                         'point' => $key->point,
-                         'temperature' => $key->temperature,
-                         'abnormal_status' => $key->abnormal_status,
-                         'created_by' => $id_user,
-                    ]);
-                    if ($key->temperature >= '37.5') {
-                         $suhutinggi = array(
+                    // if (count($ivmscheck) == 0) {
+                         $ivms = IvmsTemperature::create([
                               'employee_id' => $key->employee_id,
                               'name' => $key->name,
                               'date' => $key->date,
                               'date_in' => $key->date_in,
                               'point' => $key->point,
-                              'department' => $key->department,
-                              'section' => $key->section,
-                              'group' => $key->group,
                               'temperature' => $key->temperature,
-                         );
-                         array_push($suhu,$suhutinggi);
-                    }
+                              'abnormal_status' => $key->abnormal_status,
+                              'created_by' => $id_user,
+                         ]);
+                         if ($key->temperature >= '37.5') {
+                              $suhutinggi = array(
+                                   'employee_id' => $key->employee_id,
+                                   'name' => $key->name,
+                                   'date' => $key->date,
+                                   'date_in' => $key->date_in,
+                                   'point' => $key->point,
+                                   'department' => $key->department,
+                                   'section' => $key->section,
+                                   'group' => $key->group,
+                                   'temperature' => $key->temperature,
+                              );
+                              array_push($suhu,$suhutinggi);
+                         }
+                    // }
                }
-          }
 
-          IvmsTemperatureTemp::truncate();
-          $miraimobile =DB::SELECT("SELECT
-               *,
-               miraimobile.quiz_logs.created_at AS date_in 
-          FROM
-               employees
-               JOIN miraimobile.quiz_logs ON employees.employee_id = miraimobile.quiz_logs.employee_id
-               JOIN employee_syncs ON employee_syncs.employee_id = employees.employee_id 
-          WHERE
-               employees.end_date IS NULL 
-               AND miraimobile.quiz_logs.answer_date = '".date('Y-m-d')."' 
-               AND miraimobile.quiz_logs.question = 'Suhu Tubuh'");
-          foreach ($miraimobile as $val) {
-               $ivmscheck = IvmsTemperature::where('employee_id',$val->employee_id)->where('date',$val->answer_date)->first();
-
-               $ivms = IvmsTemperature::firstOrNew(['employee_id' => $val->employee_id, 'date' => $val->answer_date]);
-               $ivms->employee_id = $val->employee_id;
-               $ivms->name = $val->name;
-               $ivms->date = $val->answer_date;
-               $ivms->date_in = $val->date_in;
-               $ivms->point = "Mirai Mobile";
-               $tempmobile = floatval($val->answer);
-               $ivms->temperature = $tempmobile;
-               if ($tempmobile >= '37.5') {
-                    $ivms->abnormal_status = "Yes";
-               }else{
-                    $ivms->abnormal_status = "No";
-               }
-               $ivms->created_by = $id_user;
-               $ivms->save();
-
-               // if (count($ivmscheck) == 0) {
-               //      if ($tempmobile >= '37.5') {
-               //           $suhutinggi = array(
-               //                'employee_id' => $val->employee_id,
-               //                'name' => $val->name,
-               //                'date' => $val->answer_date,
-               //                'date_in' => $val->date_in,
-               //                'point' => "Mirai Mobile",
-               //                'department' => $val->department,
-               //                'section' => $val->section,
-               //                'group' => $val->group,
-               //                'temperature' => $tempmobile,
-               //           );
-               //           array_push($suhu,$suhutinggi);
-               //      }
-               // }
-          }
-
-          $contactList = [];
-          $contactList[0] = 'mokhamad.khamdan.khabibi@music.yamaha.com';
-
-          $contactList2 = [];
-          $contactList2[0] = 'prawoto@music.yamaha.com';
-          $contactList2[1] = 'putri.sukma.riyanti@music.yamaha.com';
-          $contactList2[2] = 'mahendra.putra@music.yamaha.com';
-
-          $mail_to = [];
-
-          for ($i = 0;$i < count($suhu); $i++) {
-               $fc = DB::SELECT("SELECT
-                    employee_id,
-                    employee_syncs.name,
-                    email 
+               IvmsTemperatureTemp::truncate();
+               $miraimobile =DB::SELECT("SELECT
+                    *,
+                    miraimobile.quiz_logs.created_at AS date_in 
                FROM
-                    employee_syncs
-                    JOIN users ON users.username = employee_syncs.employee_id 
+                    employees
+                    JOIN miraimobile.quiz_logs ON employees.employee_id = miraimobile.quiz_logs.employee_id
+                    JOIN employee_syncs ON employee_syncs.employee_id = employees.employee_id 
                WHERE
-                    ( position LIKE '%Foreman%' AND department = '".$suhu[$i]['department']."' and email like '%music.yamaha.com%' and employee_syncs.end_date is null) 
-                    OR (
-                    position LIKE '%Chief%' 
-                    AND department = '".$suhu[$i]['department']."' and email like '%music.yamaha.com%' and employee_syncs.end_date is null)");
+                    employees.end_date IS NULL 
+                    AND miraimobile.quiz_logs.answer_date = '".date('Y-m-d')."' 
+                    AND miraimobile.quiz_logs.question = 'Suhu Tubuh'");
+               foreach ($miraimobile as $val) {
+                    $ivmscheck = IvmsTemperature::where('employee_id',$val->employee_id)->where('date',$val->answer_date)->first();
+
+                    $ivms = IvmsTemperature::firstOrNew(['employee_id' => $val->employee_id, 'date' => $val->answer_date]);
+                    $ivms->employee_id = $val->employee_id;
+                    $ivms->name = $val->name;
+                    $ivms->date = $val->answer_date;
+                    $ivms->date_in = $val->date_in;
+                    $ivms->point = "Mirai Mobile";
+                    $tempmobile = floatval($val->answer);
+                    $ivms->temperature = $tempmobile;
+                    if ($tempmobile >= '37.5') {
+                         $ivms->abnormal_status = "Yes";
+                    }else{
+                         $ivms->abnormal_status = "No";
+                    }
+                    $ivms->created_by = $id_user;
+                    $ivms->save();
+
+                    // if (count($ivmscheck) == 0) {
+                    //      if ($tempmobile >= '37.5') {
+                    //           $suhutinggi = array(
+                    //                'employee_id' => $val->employee_id,
+                    //                'name' => $val->name,
+                    //                'date' => $val->answer_date,
+                    //                'date_in' => $val->date_in,
+                    //                'point' => "Mirai Mobile",
+                    //                'department' => $val->department,
+                    //                'section' => $val->section,
+                    //                'group' => $val->group,
+                    //                'temperature' => $tempmobile,
+                    //           );
+                    //           array_push($suhu,$suhutinggi);
+                    //      }
+                    // }
+               }
+
+               $contactList = [];
+               $contactList[0] = 'mokhamad.khamdan.khabibi@music.yamaha.com';
+
+               $contactList2 = [];
+               $contactList2[0] = 'prawoto@music.yamaha.com';
+               $contactList2[1] = 'putri.sukma.riyanti@music.yamaha.com';
+               $contactList2[2] = 'mahendra.putra@music.yamaha.com';
+
+               $mail_to = [];
+
+               for ($i = 0;$i < count($suhu); $i++) {
+                    $fc = DB::SELECT("SELECT
+                         employee_id,
+                         employee_syncs.name,
+                         email 
+                    FROM
+                         employee_syncs
+                         JOIN users ON users.username = employee_syncs.employee_id 
+                    WHERE
+                         ( position LIKE '%Foreman%' AND department = '".$suhu[$i]['department']."' and email like '%music.yamaha.com%' and employee_syncs.end_date is null) 
+                         OR (
+                         position LIKE '%Chief%' 
+                         AND department = '".$suhu[$i]['department']."' and email like '%music.yamaha.com%' and employee_syncs.end_date is null)");
 
 
-               if (count($fc) > 0) {
-                    foreach ($fc as $val) {
-                         array_push($mail_to, $val->email);
+                    if (count($fc) > 0) {
+                         foreach ($fc as $val) {
+                              array_push($mail_to, $val->email);
+                         }
                     }
                }
-          }
 
-          if (count($suhu) > 0) {
-               Mail::to($mail_to)->cc($contactList2,'CC')->bcc($contactList,'BCC')->send(new SendEmail($suhu, 'temperature'));
-          }
+               if (count($suhu) > 0) {
+                    Mail::to($mail_to)->cc($contactList2,'CC')->bcc($contactList,'BCC')->send(new SendEmail($suhu, 'temperature'));
+               }
 
-          $response = array(
-           'status' => true,
-           'message' => 'Upload file success',
-      );
-          return Response::json($response);
-
-     }catch(\Exception $e){
-        $response = array(
-           'status' => false,
-           'message' => $e->getMessage(),
-      );
-        return Response::json($response);
-   }
-}
+               $response = array(
+                'status' => true,
+                'message' => 'Upload file success',
+           );
+               return Response::json($response);
+          }catch(\Exception $e){
+             $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+           );
+             return Response::json($response);
+        }
+     }
 
 public function indexMinMoeMonitoring($dept)
 {
@@ -1709,7 +2169,7 @@ public function fetchMinMoeMonitoring(Request $request)
      if ($request->get('location') == 'OFC') {
           $datatoday = DB::SELECT("
           SELECT
-               count( temperature ) AS count,
+               count( DISTINCT(ivms_temperatures.employee_id) ) AS count,
                temperature 
           FROM
                `ivms_temperatures`
@@ -1723,7 +2183,7 @@ public function fetchMinMoeMonitoring(Request $request)
      }else if($request->get('location') == 'ALL'){
           $datatoday = DB::SELECT("
           SELECT
-               count( temperature ) AS count,
+               count( DISTINCT(ivms_temperatures.employee_id) ) AS count,
                temperature 
           FROM
                `ivms_temperatures`
@@ -1736,7 +2196,7 @@ public function fetchMinMoeMonitoring(Request $request)
      }else{
           $datatoday = DB::SELECT("
           SELECT
-               count( temperature ) AS count,
+               count( DISTINCT(ivms_temperatures.employee_id) ) AS count,
                temperature 
           FROM
                `ivms_temperatures`
@@ -1768,14 +2228,12 @@ public function fetchMinMoeMonitoring(Request $request)
                     COALESCE ( department_shortname, '' ) AS department_shortname,
                     COALESCE ( employee_syncs.section, '' ) AS section,
                     COALESCE ( employee_syncs.`group`, '' ) AS groups,
-                    employees.remark,
-                    ivms_temperatures.temperature 
+                    employees.remark
                FROM
                     employees
                     LEFT JOIN employee_syncs ON employee_syncs.employee_id = employees.employee_id
                     LEFT JOIN sunfish_shift_syncs ON sunfish_shift_syncs.employee_id = employee_syncs.employee_id
                     LEFT JOIN departments ON departments.department_name = employee_syncs.department 
-                    LEFT JOIN ivms_temperatures ON ivms_temperatures.employee_id = employee_syncs.employee_id  and ivms_temperatures.date = '".$now."'
                WHERE
                     (employees.remark = 'OFC' and
                     employee_syncs.end_date IS NULL 
@@ -1793,15 +2251,12 @@ public function fetchMinMoeMonitoring(Request $request)
                     COALESCE ( employee_syncs.section, '' ) AS section,
                     COALESCE ( employee_syncs.`group`, '' ) AS groups,
                     employees.remark,
-                    employee_syncs.name,
-                    ivms_temperatures.temperature 
+                    employee_syncs.name
                FROM
                     employees
                     JOIN employee_syncs ON employee_syncs.employee_id = employees.employee_id
                     LEFT JOIN sunfish_shift_syncs ON sunfish_shift_syncs.employee_id = employee_syncs.employee_id 
                     LEFT JOIN departments ON departments.department_name = employee_syncs.department 
-                    LEFT JOIN ivms_temperatures ON ivms_temperatures.employee_id = employee_syncs.employee_id 
-                      and ivms_temperatures.date = '".$now."'
                WHERE
                     employee_syncs.end_date IS NULL 
                     AND sunfish_shift_syncs.shift_date = '".$now."'
@@ -1815,15 +2270,12 @@ public function fetchMinMoeMonitoring(Request $request)
                     COALESCE ( department_shortname, '' ) AS department_shortname,
                     COALESCE ( employee_syncs.section, '' ) AS section,
                     COALESCE ( employee_syncs.`group`, '' ) AS groups,
-                    employees.remark,
-                    ivms_temperatures.temperature 
+                    employees.remark
                FROM
                     employees
                     LEFT JOIN employee_syncs ON employee_syncs.employee_id = employees.employee_id
                     LEFT JOIN sunfish_shift_syncs ON sunfish_shift_syncs.employee_id = employee_syncs.employee_id
                     LEFT JOIN departments ON departments.department_name = employee_syncs.department
-                    LEFT JOIN ivms_temperatures ON ivms_temperatures.employee_id = employee_syncs.employee_id 
-                      and ivms_temperatures.date = '".$now."'
                WHERE
                     (
                          employees.remark != 'OFC' 
@@ -1853,7 +2305,9 @@ public function fetchMinMoeMonitoring(Request $request)
                               ivms.ivms_attendance_triggers 
                          WHERE
                               ivms.ivms_attendance_triggers.employee_id = employee_syncs.employee_id 
-                              AND auth_date = DATE( '".$now."' ) - INTERVAL 1 DAY 
+                              AND auth_date = DATE( '".$now."' )
+                              AND auth_datetime BETWEEN '".$now." 22:00:00' 
+                                   AND '".$now." 23:59:59'
                          ),
                     IF
                          (
@@ -1889,7 +2343,9 @@ public function fetchMinMoeMonitoring(Request $request)
                                    ivms.ivms_attendance_triggers 
                               WHERE
                                    ivms.ivms_attendance_triggers.employee_id = employee_syncs.employee_id 
-                                   AND auth_date = DATE( '".$now."' ) - INTERVAL 1 DAY 
+                                   AND auth_date = DATE( '".$now."' )
+                                   AND auth_datetime BETWEEN '".$now." 22:00:00' 
+                                   AND '".$now." 23:59:59'
                               ),
                          IF
                               (
@@ -1903,10 +2359,7 @@ public function fetchMinMoeMonitoring(Request $request)
                                         AND auth_date = '".$now."' 
                                         AND auth_datetime BETWEEN '".$now." 14:00:00' 
                                         AND '".$now." 17:00:00' )
-                                        OR(
-                                        ivms.ivms_attendance_triggers.employee_id = employee_syncs.employee_id 
-                                        AND auth_date = '".$now."' 
-                                        AND auth_datetime >= '".$now." 00:00:01' )
+                                        
                                         ),(
                                    SELECT
                                         min( auth_datetime ) 
@@ -1917,16 +2370,60 @@ public function fetchMinMoeMonitoring(Request $request)
                                         AND auth_date = '".$now."' 
                                    ) 
                               ) 
-                         ),'-') AS time_in
+                         ),'-') AS time_in,
+                         IF(COALESCE (
+                    IF
+                         (
+                              '".$key->shiftdaily_code."' LIKE '%Shift_3%',
+                              (
+                              SELECT
+                                   MAX( auth_datetime ) 
+                              FROM
+                                   ivms.ivms_attendance_triggers 
+                              WHERE
+                                   ivms.ivms_attendance_triggers.employee_id = employee_syncs.employee_id 
+                                   AND auth_date = DATE( '".$now."' )
+                                   AND auth_datetime BETWEEN '".$now." 22:00:00' 
+                                   AND '".$now." 23:59:59'
+                              ),
+                         IF
+                              (
+                                   '".$key->shiftdaily_code."' LIKE '%Shift_2%',(
+                                   SELECT
+                                        min( auth_datetime ) 
+                                   FROM
+                                        ivms.ivms_attendance_triggers 
+                                   WHERE
+                                        (ivms.ivms_attendance_triggers.employee_id = employee_syncs.employee_id 
+                                        AND auth_date = '".$now."' 
+                                        AND auth_datetime BETWEEN '".$now." 14:00:00' 
+                                        AND '".$now." 17:00:00' )
+                                        
+                                        ),(
+                                   SELECT
+                                        min( auth_datetime ) 
+                                   FROM
+                                        ivms.ivms_attendance_triggers 
+                                   WHERE
+                                        ivms.ivms_attendance_triggers.employee_id = employee_syncs.employee_id 
+                                        AND auth_date = '".$now."' 
+                                   ) 
+                              ) 
+                         ),'-') = '-','-',(select temperature from ivms_temperatures where ivms_temperatures.employee_id = employee_syncs.employee_id and date_in = time_in)) as temperature
                FROM
                     employee_syncs 
                WHERE
                     employee_syncs.end_date IS NULL 
                     AND employee_syncs.employee_id = '".$key->employee_id."'");
+// OR(
+//                                         ivms.ivms_attendance_triggers.employee_id = employee_syncs.employee_id 
+//                                         AND auth_date = '".$now."' 
+//                                         AND auth_datetime >= '".$now." 00:00:01' )
 
                foreach ($attendances as $val) {
                     $checks = $val->checks;
                     $time_in = $val->time_in;
+                    $temperature = $val->temperature;
                }
 
                $attendances2 = array(
@@ -1940,7 +2437,7 @@ public function fetchMinMoeMonitoring(Request $request)
                               'remark' => $key->remark,
                               'checks' => $checks,
                               'time_in' => $time_in,
-                              'temperature' => $key->temperature,);
+                              'temperature' => $temperature,);
                $attendance[] = $attendances2;
           }
 

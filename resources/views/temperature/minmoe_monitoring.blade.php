@@ -244,9 +244,7 @@
 								<th style="width: 9%;">Sect</th>
 								<th style="width: 9%;">Group</th>
 								<th style="width: 3%;">Time</th>
-								<th style="width: 3%;">Point</th>
 								<th style="width: 2%;">Temp</th>
-								<th style="width: 2%;">Abnormal</th>
 							</tr>
 						</thead>
 						<tbody id="tableDetailBody">
@@ -330,6 +328,8 @@
 		intervaltemp = setInterval(fetchTemperature,180000);
 	});
 
+	var detail_all = [];
+
 
 	function fetchTemperature(){
 		var tanggal_from = $('#tanggal_from').val();
@@ -385,6 +385,7 @@
 					var detail_total_prd_3 = [];
 
 					var detail_abnormal = [];
+					// var detail_all = [];
 
 					var resultData = "";
 
@@ -393,9 +394,10 @@
 
 					$.each(result.attendance, function(key, value) {
 						var emp_no = value.employee_id;
-						if (value.temperature != null && value.temperature >= 37.5) {
+						if (value.temperature != '-' && value.temperature >= 37.5) {
 							detail_abnormal.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups,temp:value.temperature});
 						}
+						detail_all.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups,temp:value.temperature});
 						if (value.remark == 'OFC' || value.remark == 'Jps') {
 							if (value.checks == null) {
 
@@ -624,8 +626,26 @@
 					var categories1 = [];
 					var series1 = [];
 					var temp = [];
+					var counts = result.attendance.reduce((p, c) => {
+					  var name = c.temperature;
+					  if (!p.hasOwnProperty(name)) {
+					    p[name] = 0;
+					  }
+					  p[name]++;
+					  return p;
+					}, {});
+
+					// console.log(counts['36.5']);
+					// $.each(counts, function(key, value) {
+					// 	if (key != "-" && key != "null") {
+					// 		categories1.push(key+' °C');
+					// 		temp.push(parseFloat(value));
+					// 		series1.push({y:parseFloat(value),key:key});
+					// 	}
+					// });
 
 					$.each(result.datatoday, function(key, value) {
+						// console.log(value);
 						categories1.push(value.temperature+' °C');
 						temp.push(parseFloat(value.temperature));
 						series1.push({y:parseFloat(value.count),key:value.temperature});
@@ -729,6 +749,7 @@ function fetchTemperatureDetail(temperature){
 
 	$.get('{{ url("fetch/temperature/detail_minmoe_monitoring") }}', data, function(result, status, xhr) {
 		if(result.status){
+
 			$('#tableDetailBody').html('');
 
 			$('#tableDetail').DataTable().clear();
@@ -739,19 +760,19 @@ function fetchTemperatureDetail(temperature){
 			var total = 0;
 
 			$.each(result.details, function(key, value) {
-				resultData += '<tr>';
-				resultData += '<td>'+ index +'</td>';
-				resultData += '<td>'+ value.employee_id +'</td>';
-				resultData += '<td>'+ value.name +'</td>';
-				resultData += '<td>'+ value.department_shortname +'</td>';
-				resultData += '<td>'+ value.section +'</td>';
-				resultData += '<td>'+ value.groups +'</td>';
-				resultData += '<td>'+ value.date_in +'</td>';
-				resultData += '<td>'+ value.point +'</td>';
-				resultData += '<td>'+ value.temperature +' °C</td>';
-				resultData += '<td>'+ value.abnormal_status +'</td>';
-				resultData += '</tr>';
-				index += 1;
+				// if (value.temp === temperature) {
+					resultData += '<tr>';
+					resultData += '<td>'+ index +'</td>';
+					resultData += '<td>'+ value.employee_id +'</td>';
+					resultData += '<td>'+ value.name +'</td>';
+					resultData += '<td>'+ value.department_shortname +'</td>';
+					resultData += '<td>'+ value.section +'</td>';
+					resultData += '<td>'+ value.groups +'</td>';
+					resultData += '<td>'+ value.date_in +'</td>';
+					resultData += '<td>'+ value.temperature +' °C</td>';
+					resultData += '</tr>';
+					index += 1;
+				// }
 			});
 			$('#tableDetailBody').append(resultData);
 			$('#modalDetailTitle').html("<center><span style='font-size: 20px; font-weight: bold;'>Detail Employees on "+temperature+" °C</span></center>");
