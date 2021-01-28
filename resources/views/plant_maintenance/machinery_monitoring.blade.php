@@ -235,7 +235,7 @@
 	var audio_error = new Audio('{{ url("sounds/alarm_error.mp3") }}');
 
 	function mesin1(){
-		$.get("{{ 'http://172.17.129.10/zed/dashboard/getDataSystem/' }}", function(result, status, xhr){
+		$.get("{{ 'http://10.109.52.7/zed/dashboard/getDataSystem/' }}", function(result, status, xhr){
 			console.log(result);
 
 			var mesin = result.split('(ime)');
@@ -321,7 +321,7 @@
 	}
 
 	function mesin2(){
-		$.get("{{ 'http://172.17.129.10/zed/dashboard/getData' }}", function(result, status, xhr){
+		$.get("{{ 'http://10.109.52.7/zed/dashboard/getData' }}", function(result, status, xhr){
 
 			var mesin = result.split('(ime)');
 
