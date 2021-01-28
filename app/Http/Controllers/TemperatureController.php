@@ -2406,7 +2406,7 @@ public function fetchMinMoeMonitoring(Request $request)
                                         AND auth_date = '".$now."' 
                                    ) 
                               ) 
-                         ),'-') = '-','-',(select temperature from ivms_temperatures where ivms_temperatures.employee_id = employee_syncs.employee_id and date_in = time_in)) as temperature
+                         ),'-') = '-','-',(select max(temperature) from ivms_temperatures where ivms_temperatures.employee_id = employee_syncs.employee_id and date_in = time_in)) as temperature
                FROM
                     employee_syncs 
                WHERE
