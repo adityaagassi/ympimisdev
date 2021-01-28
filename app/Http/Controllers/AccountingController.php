@@ -5825,6 +5825,7 @@ class AccountingController extends Controller
 
                 //Kirim Ke Bu Yeny
             $invest->posisi = 'acc_pajak';
+            $invest->approval_acc_budget = date('Y-m-d H:i:s');
             $invest->ycj_approval = $request->get('ycj_approval');
             if ($request->file('attachment') != NULL){
                 $invest->file = $file->filename;
@@ -5868,7 +5869,7 @@ class AccountingController extends Controller
         else if($invest->posisi == "acc_pajak"){
             // $invest->posisi = 'adagio';
             // $invest->status = 'adagio';
-
+            $invest->approval_acc_pajak = date('Y-m-d H:i:s');
             if ($invest->approval_manager != null) {        
                 $invest->posisi = 'manager';
 
