@@ -238,11 +238,12 @@
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr style="color: white">
 								<th style="width: 1%;">#</th>
-								<th style="width: 3%;">Employee ID</th>
+								<th style="width: 3%;">ID</th>
 								<th style="width: 9%;">Name</th>
 								<th style="width: 9%;">Dept</th>
 								<th style="width: 9%;">Sect</th>
 								<th style="width: 9%;">Group</th>
+								<th style="width: 9%;">Point</th>
 								<th style="width: 3%;">Time</th>
 								<th style="width: 2%;">Temp</th>
 							</tr>
@@ -768,6 +769,7 @@ function fetchTemperatureDetail(temperature){
 					resultData += '<td>'+ value.department_shortname +'</td>';
 					resultData += '<td>'+ value.section +'</td>';
 					resultData += '<td>'+ value.groups +'</td>';
+					resultData += '<td>'+ value.point +'</td>';
 					resultData += '<td>'+ value.date_in +'</td>';
 					resultData += '<td>'+ value.temperature +' °C</td>';
 					resultData += '</tr>';
