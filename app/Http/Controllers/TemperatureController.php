@@ -312,10 +312,11 @@ class TemperatureController extends Controller
           try {
                $date_from = $request->get('tanggal_from');
                $date_to = $request->get('tanggal_to');
+               $now = date('Y-m-d');
 
                if ($date_from == '') {
                     if ($date_to == '') {
-                         $whereDate = '';
+                         $whereDate = 'AND DATE(date_in)  = "'.$now.'"';
                     }else{
                          $whereDate = 'AND DATE(date_in) BETWEEN CONCAT(DATE_FORMAT("'.$date_to.'" - INTERVAL 4 DAY,"%Y-%m-%d")) AND "'.$date_to.'"';
                     }
@@ -900,12 +901,23 @@ class TemperatureController extends Controller
                                         }
                                    }
 
-                                   $ivms = IvmsTemperatureTemp::create([
+                                   // $ivms = IvmsTemperatureTemp::create([
+                                   //      'employee_id' => $employee_id,
+                                   //      'name' => $name,
+                                   //      'department' => $department,
+                                   //      'section' => $section,
+                                   //      'group' => $group,
+                                   //      'date' => date('Y-m-d', strtotime($rows[$i][6])),
+                                   //      'date_in' => $rows[$i][6],
+                                   //      'point' => $rows[$i][9],
+                                   //      'temperature' => $temps[0],
+                                   //      'abnormal_status' => $rows[$i][5],
+                                   //      'created_by' => $id_user,
+                                   // ]);
+
+                                   $ivms = IvmsTemperature::create([
                                         'employee_id' => $employee_id,
                                         'name' => $name,
-                                        'department' => $department,
-                                        'section' => $section,
-                                        'group' => $group,
                                         'date' => date('Y-m-d', strtotime($rows[$i][6])),
                                         'date_in' => $rows[$i][6],
                                         'point' => $rows[$i][9],
@@ -913,6 +925,20 @@ class TemperatureController extends Controller
                                         'abnormal_status' => $rows[$i][5],
                                         'created_by' => $id_user,
                                    ]);
+                                   if ($temps[0] >= '37.5') {
+                                        $suhutinggi = array(
+                                             'employee_id' => $employee_id,
+                                             'name' => $name,
+                                             'date' => date('Y-m-d', strtotime($rows[$i][6])),
+                                             'date_in' => $rows[$i][6],
+                                             'point' => $rows[$i][9],
+                                             'temperature' => $temps[0],
+                                             'department' => $department,
+                                             'section' => $section,
+                                             'group' => $group,
+                                        );
+                                        array_push($suhu,$suhutinggi);
+                                   }
                               }else{
                                    $empys = DB::SELECT('select * from employees join employee_syncs on employee_syncs.employee_id = employees.employee_id where employees.name like "'.$empname.'%"');
 
@@ -924,12 +950,22 @@ class TemperatureController extends Controller
                                         $group = $key->group;
                                    }
 
-                                   $ivms = IvmsTemperatureTemp::create([
+                                   // $ivms = IvmsTemperatureTemp::create([
+                                   //      'employee_id' => $employee_id,
+                                   //      'name' => $name,
+                                   //      'department' => $department,
+                                   //      'section' => $section,
+                                   //      'group' => $group,
+                                   //      'date' => date('Y-m-d', strtotime($rows[$i][6])),
+                                   //      'date_in' => $rows[$i][6],
+                                   //      'point' => $rows[$i][9],
+                                   //      'temperature' => $temps[0],
+                                   //      'abnormal_status' => $rows[$i][5],
+                                   //      'created_by' => $id_user,
+                                   // ]);
+                                   $ivms = IvmsTemperature::create([
                                         'employee_id' => $employee_id,
                                         'name' => $name,
-                                        'department' => $department,
-                                        'section' => $section,
-                                        'group' => $group,
                                         'date' => date('Y-m-d', strtotime($rows[$i][6])),
                                         'date_in' => $rows[$i][6],
                                         'point' => $rows[$i][9],
@@ -937,26 +973,40 @@ class TemperatureController extends Controller
                                         'abnormal_status' => $rows[$i][5],
                                         'created_by' => $id_user,
                                    ]);
+                                   if ($temps[0] >= '37.5') {
+                                        $suhutinggi = array(
+                                             'employee_id' => $employee_id,
+                                             'name' => $name,
+                                             'date' => date('Y-m-d', strtotime($rows[$i][6])),
+                                             'date_in' => $rows[$i][6],
+                                             'point' => $rows[$i][9],
+                                             'temperature' => $temps[0],
+                                             'department' => $department,
+                                             'section' => $section,
+                                             'group' => $group,
+                                        );
+                                        array_push($suhu,$suhutinggi);
+                                   }
                               }
                          }
                     }
                }
 
-               $IvmsTemperature = DB::SELECT("SELECT a.employee_id, name, 
-                    -- ( SELECT MAX( temperature ) FROM ivms_temperature_temps WHERE employee_id = a.employee_id ) AS temperature,
-                    -- ( SELECT MIN( date_in ) FROM ivms_temperature_temps WHERE employee_id = a.employee_id ) AS date_in,
-                    temperature,
-                    date_in,
-                    point,
-                    abnormal_status ,
-                    department ,
-                    section ,
-                    `group` ,
-                    date
-                    FROM
-                    `ivms_temperature_temps` AS a");
+               // $IvmsTemperature = DB::SELECT("SELECT a.employee_id, name, 
+               //      -- ( SELECT MAX( temperature ) FROM ivms_temperature_temps WHERE employee_id = a.employee_id ) AS temperature,
+               //      -- ( SELECT MIN( date_in ) FROM ivms_temperature_temps WHERE employee_id = a.employee_id ) AS date_in,
+               //      temperature,
+               //      date_in,
+               //      point,
+               //      abnormal_status ,
+               //      department ,
+               //      section ,
+               //      `group` ,
+               //      date
+               //      FROM
+               //      `ivms_temperature_temps` AS a");
 
-               foreach ($IvmsTemperature as $key) {
+               // foreach ($IvmsTemperature as $key) {
                     // $ivmscheck = IvmsTemperature::where('employee_id',$key->employee_id)->where('date',$key->date)->first();
                     // $ivms = IvmsTemperature::firstOrNew(['employee_id' => $key->employee_id, 'date' => $key->date]);
                     // $ivms->employee_id = $key->employee_id;
@@ -970,34 +1020,11 @@ class TemperatureController extends Controller
                     // $ivms->save();
 
                     // if (count($ivmscheck) == 0) {
-                         $ivms = IvmsTemperature::create([
-                              'employee_id' => $key->employee_id,
-                              'name' => $key->name,
-                              'date' => $key->date,
-                              'date_in' => $key->date_in,
-                              'point' => $key->point,
-                              'temperature' => $key->temperature,
-                              'abnormal_status' => $key->abnormal_status,
-                              'created_by' => $id_user,
-                         ]);
-                         if ($key->temperature >= '37.5') {
-                              $suhutinggi = array(
-                                   'employee_id' => $key->employee_id,
-                                   'name' => $key->name,
-                                   'date' => $key->date,
-                                   'date_in' => $key->date_in,
-                                   'point' => $key->point,
-                                   'department' => $key->department,
-                                   'section' => $key->section,
-                                   'group' => $key->group,
-                                   'temperature' => $key->temperature,
-                              );
-                              array_push($suhu,$suhutinggi);
-                         }
+                         
                     // }
-               }
+               // }
 
-               IvmsTemperatureTemp::truncate();
+               // IvmsTemperatureTemp::truncate();
                $miraimobile =DB::SELECT("SELECT
                     *,
                     miraimobile.quiz_logs.created_at AS date_in 
