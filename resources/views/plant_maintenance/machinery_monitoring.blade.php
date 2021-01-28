@@ -24,6 +24,10 @@
 	.progress {
 		background-color: rgba(0,0,0,0);
 	}
+
+	div span {
+		display: block;
+	}
 </style>
 @stop
 @section('header')
@@ -177,9 +181,9 @@
 			</div>
 		</div>
 
-		<div id="error_list" class="col-xs-12" style="border: 2px solid red">
+		<div id="error_list" class="col-xs-12">
 			<b style="font-size: 20pt; color: #f24b4b">Error List : </b>
-			<div id="master_error">
+			<div id="master_error" style="width: 100%">
 
 			</div>
 		</div>
@@ -304,6 +308,10 @@
 						var hitam_time = (parseInt(hitam[0])*3600) + (parseInt(hitam[1])*60) + parseInt(hitam[2]);
 						var total_time = merah_time + hijau_time + kuning_time + biru_time + putih_time + hitam_time;
 
+						// if (merah_time > 0) {
+							arr_error.push({'mesin' : zpro[i][1].replace("MC ","") ,'merah' : merah_time});
+						// }
+
 						body += '<div style="height: 100px;">';
 						body += '<div style="background-color: #f24b4b; height: '+ (merah_time/total_time)*100 +'%;"></div>';
 						body += '<div style="background-color: #00a65a; height: '+ (hijau_time/total_time)*100 +'%;"></div>';
@@ -407,6 +415,10 @@
 						var hitam_time = (parseInt(hitam[0])*3600) + (parseInt(hitam[1])*60) + parseInt(hitam[2]);
 						var total_time = merah_time + hijau_time + kuning_time + biru_time + putih_time + hitam_time;
 
+						// if (merah_time > 0) {
+							arr_error.push({'mesin' : machining[i][1].replace("MC ","") ,'merah' : merah_time});
+						// }
+
 						body += '<div style="height: 100px;">';
 						body += '<div style="background-color: #f24b4b; height: '+ (merah_time/total_time)*100 +'%;"></div>';
 						body += '<div style="background-color: #00a65a; height: '+ (hijau_time/total_time)*100 +'%;"></div>';
@@ -489,6 +501,10 @@
 						var putih_time = (parseInt(putih[0])*3600) + (parseInt(putih[1])*60) + parseInt(putih[2]);
 						var hitam_time = (parseInt(hitam[0])*3600) + (parseInt(hitam[1])*60) + parseInt(hitam[2]);
 						var total_time = merah_time + hijau_time + kuning_time + biru_time + putih_time + hitam_time;
+
+						// if (merah_time > 0) {
+							arr_error.push({'mesin' : press_data[i][1] ,'merah' : merah_time});
+						// }
 
 						body += '<div style="height: 100px;">';
 						body += '<div style="background-color: #f24b4b; height: '+ (merah_time/total_time)*100 +'%;"></div>';
@@ -576,6 +592,10 @@
 						var putih_time = (parseInt(putih[0])*3600) + (parseInt(putih[1])*60) + parseInt(putih[2]);
 						var hitam_time = (parseInt(hitam[0])*3600) + (parseInt(hitam[1])*60) + parseInt(hitam[2]);
 						var total_time = merah_time + hijau_time + kuning_time + biru_time + putih_time + hitam_time;
+
+						// if (merah_time > 0) {
+							arr_error.push({'mesin' : injeksi_data[i][1] ,'merah' : merah_time});
+						// }
 
 						body += '<div style="height: 100px;">';
 						body += '<div style="background-color: #f24b4b; height: '+ (merah_time/total_time)*100 +'%;"></div>';
@@ -676,6 +696,10 @@
 						var hitam_time = (parseInt(hitam[0])*3600) + (parseInt(hitam[1])*60) + parseInt(hitam[2]);
 						var total_time = merah_time + hijau_time + kuning_time + biru_time + putih_time + hitam_time;
 
+						// if (merah_time > 0) {
+							arr_error.push({'mesin' : senban_data[i][1] ,'merah' : merah_time});
+						// }
+
 						body += '<div style="height: 100px;">';
 						body += '<div style="background-color: #f24b4b; height: '+ (merah_time/total_time)*100 +'%;"></div>';
 						body += '<div style="background-color: #00a65a; height: '+ (hijau_time/total_time)*100 +'%;"></div>';
@@ -697,11 +721,44 @@
 			$('#body_senban').append(body);
 
 
+			draw_error();
+			arr_error = [];
 		});
-
 
 }
 
+
+function draw_error() {
+	console.log(arr_error);
+	$("#master_error").empty();
+	var err = "";
+	$(arr_error).each(function(index, value) {
+		dur = secondsToDhms(value.merah);
+		// err += "<span class='label label-danger'>Machine : "+value.mesin+" ; Duration : "+dur+"</span>&nbsp;";
+		if (value.merah >= 300) {
+			err += '<div class="card" style="width: 18rem; display: inline-block; border: 1px solid red; color: white">';
+			err += '<div class="card-body">';
+			err += '<p class="card-text"><center>Machine : '+value.mesin+'</center></p>';
+			err += '<p class="card-text">Duration : '+dur+'</p>';
+			err += '</div></div>';
+		}
+	})
+	$("#master_error").append(err);
+}
+
+function secondsToDhms(seconds) {
+	seconds = Number(seconds);
+	var d = Math.floor(seconds / (3600*24));
+	var h = Math.floor(seconds % (3600*24) / 3600);
+	var m = Math.floor(seconds % 3600 / 60);
+	var s = Math.floor(seconds % 60);
+
+	var dDisplay = d > 0 ? d + (d == 1 ? " day, " : " days, ") : "";
+	var hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
+	var mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
+	var sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
+	return dDisplay + hDisplay + mDisplay + sDisplay;
+}
 
 </script>
 @endsection
