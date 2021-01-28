@@ -178,6 +178,22 @@
 			</table>
 			<br>
 
+			<table style="border-collapse: collapse;" width="80%">
+				<tbody>
+					@if($category_budget != "Out Of Budget")
+					<tr>
+						<td style="width: 5%; text-align: left;color: blue">Amount Equivalent To Rupiah : Rp <?= number_format($total_pengeluaran * 14500,2,",",".") ?></td>
+					</tr>
+					<tr>
+						<td style="width: 5%; text-align: left;color: blue">This Investment Contain Purchase goods / service more than Rp 10.000.000 or equivalent</td>
+					</tr>
+					@endif
+
+				</tbody>
+			</table>
+
+			<br>
+
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> &#8650;</span><br>
 			<a href="{{url('investment/check/'.$id)}}">Check Investment</a><br>
 
@@ -275,6 +291,22 @@
 			</table>
 			<br>
 
+			<table style="border-collapse: collapse;" width="80%">
+				<tbody>
+					@if($category_budget != "Out Of Budget")
+					<tr>
+						<td style="width: 5%; text-align: left;color: blue">Amount Equivalent To Rupiah : Rp <?= number_format($total_pengeluaran * 14500,2,",",".") ?></td>
+					</tr>
+					<tr>
+						<td style="width: 5%; text-align: left;color: blue">This Investment Contain Purchase goods / service more than Rp 10.000.000 or equivalent</td>
+					</tr>
+					@endif
+
+				</tbody>
+			</table>
+
+			<br>
+
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> &#8650;</span><br>
 			<a href="{{ url('investment/check/'.$id) }}">Check Investment Tax</a><br>
 
@@ -369,6 +401,22 @@
 
 				</tbody>
 			</table>
+			<br>
+
+			<table style="border-collapse: collapse;" width="80%">
+				<tbody>
+					@if($category_budget != "Out Of Budget")
+					<tr>
+						<td style="width: 5%; text-align: left;color: blue">Amount Equivalent To Rupiah : Rp <?= number_format($total_pengeluaran * 14500,2,",",".") ?></td>
+					</tr>
+					<tr>
+						<td style="width: 5%; text-align: left;color: blue">This Investment Contain Purchase goods / service more than Rp 10.000.000 or equivalent</td>
+					</tr>
+					@endif
+
+				</tbody>
+			</table>
+
 			<br>
 			
 			<br>
@@ -480,6 +528,22 @@
 			</table>
 			<br>
 			
+			<table style="border-collapse: collapse;" width="80%">
+				<tbody>
+					@if($category_budget != "Out Of Budget")
+					<tr>
+						<td style="width: 5%; text-align: left;color: blue">Amount Equivalent To Rupiah : Rp <?= number_format($total_pengeluaran * 14500,2,",",".") ?></td>
+					</tr>
+					<tr>
+						<td style="width: 5%; text-align: left;color: blue">This Investment Contain Purchase goods / service more than Rp 10.000.000 or equivalent</td>
+					</tr>
+					@endif
+
+				</tbody>
+			</table>
+
+			<br>
+
 			<br>
 
 			<span style="font-weight: bold;"><i>Do you want to Approve this Investment Request?</i></span><br>
@@ -589,6 +653,22 @@
 				</tbody>
 			</table>
 			<br>
+
+			<table style="border-collapse: collapse;" width="80%">
+				<tbody>
+					@if($category_budget != "Out Of Budget")
+					<tr>
+						<td style="width: 5%; text-align: left;color: blue">Amount Equivalent To Rupiah : Rp <?= number_format($total_pengeluaran * 14500,2,",",".") ?></td>
+					</tr>
+					<tr>
+						<td style="width: 5%; text-align: left;color: blue">This Investment Contain Purchase goods / service more than Rp 10.000.000 or equivalent</td>
+					</tr>
+					@endif
+
+				</tbody>
+			</table>
+
+			<br>
 			
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> &#8650;</span><br>(下をクリックしてください)<br>
@@ -694,6 +774,22 @@
 
 				</tbody>
 			</table>
+			<br>
+
+			<table style="border-collapse: collapse;" width="80%">
+				<tbody>
+					@if($category_budget != "Out Of Budget")
+					<tr>
+						<td style="width: 5%; text-align: left;color: blue">Amount Equivalent To Rupiah : Rp <?= number_format($total_pengeluaran * 14500,2,",",".") ?></td>
+					</tr>
+					<tr>
+						<td style="width: 5%; text-align: left;color: blue">This Investment Contain Purchase goods / service more than Rp 10.000.000 or equivalent</td>
+					</tr>
+					@endif
+
+				</tbody>
+			</table>
+
 			<br>
 			
 			<br>
@@ -804,6 +900,22 @@
 				</tbody>
 			</table>
 			<br>
+
+			<table style="border-collapse: collapse;" width="80%">
+				<tbody>
+					@if($category_budget != "Out Of Budget")
+					<tr>
+						<td style="width: 5%; text-align: left;color: blue">Amount Equivalent To Rupiah : Rp <?= number_format($total_pengeluaran * 14500,2,",",".") ?></td>
+					</tr>
+					<tr>
+						<td style="width: 5%; text-align: left;color: blue">This Investment Contain Purchase goods / service more than Rp 10.000.000 or equivalent</td>
+					</tr>
+					@endif
+
+				</tbody>
+			</table>
+
+			<br>
 			
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> &#8650;</span><br><br>
@@ -911,6 +1023,22 @@
 
 				</tbody>
 			</table>
+			<br>
+
+			<table style="border-collapse: collapse;" width="80%">
+				<tbody>
+					@if($category_budget != "Out Of Budget")
+					<tr>
+						<td style="width: 5%; text-align: left;color: blue">Amount Equivalent To Rupiah : Rp <?= number_format($total_pengeluaran * 14500,2,",",".") ?></td>
+					</tr>
+					<tr>
+						<td style="width: 5%; text-align: left;color: blue">This Investment Contain Purchase goods / service more than Rp 10.000.000 or equivalent</td>
+					</tr>
+					@endif
+
+				</tbody>
+			</table>
+
 			<br>
 			
 			<br>

@@ -177,6 +177,13 @@
 			</div>
 		</div>
 
+		<div id="error_list" class="col-xs-12" style="border: 2px solid red">
+			<b style="font-size: 20pt; color: #f24b4b">Error List : </b>
+			<div id="master_error">
+
+			</div>
+		</div>
+
 	</div>
 
 
@@ -189,7 +196,7 @@
 <script src="{{ url("js/export-data.js")}}"></script>
 <script>
 
-	
+	var arr_error = [];
 	jQuery(document).ready(function(){
 		mesin1();
 		mesin2();
@@ -236,7 +243,7 @@
 
 	function mesin1(){
 		$.get("{{ 'http://10.109.52.7/zed/dashboard/getDataSystem/' }}", function(result, status, xhr){
-			console.log(result);
+			// console.log(result);
 
 			var mesin = result.split('(ime)');
 			
