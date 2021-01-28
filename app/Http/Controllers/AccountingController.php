@@ -9498,7 +9498,8 @@ $data = db::select("
  week_date ASC 
  ) date2 
  GROUP BY
- date2.week_name          
+ date2.week_name       
+ ORDER BY week_date ASC   
  ");
 
 $data_investment_belum_po = db::select("
@@ -9631,7 +9632,7 @@ $data = db::select("
     AND DATE_FORMAT( submission_date, '%Y-%m-%d' ) BETWEEN '".$datefrom."' 
     AND '".$dateto."' ".$dep."
     ORDER BY
-    submission_date ASC
+    reff_number ASC
     ");
 
 $data_investment_belum_po = db::select("

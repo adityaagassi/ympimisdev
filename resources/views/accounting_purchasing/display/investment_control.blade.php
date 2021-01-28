@@ -101,6 +101,10 @@ table > thead > tr > th{
   100% {transform: scale(0);}
 }/*End of Zoom out Keyframes */
 
+.label{
+  padding:0 ;
+}
+
 hr { background-color: red; height: 1px; border: 0; }
 #loading, #error { display: none; }
 
@@ -167,7 +171,7 @@ hr { background-color: red; height: 1px; border: 0; }
                   <tr>
                     <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px" rowspan="2">No Investment</th>
                     <th style="width: 9%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px" rowspan="2">Subject</th>
-                    <th style="width: 4%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px" rowspan="2">Date</th>
+                    <!-- <th style="width: 4%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px" rowspan="2">Date</th> -->
                     <th style="width: 3%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px" rowspan="2">Dept</th>
                     <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px">User</th>
                     <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px">Cek Budget</th>
@@ -794,6 +798,7 @@ hr { background-color: red; height: 1px; border: 0; }
               var manager_approval = value.approval_manager;
               var manager_name = manager_approval.split("/");
               var managername = manager_name[1].split(' ').slice(0,2).join(' ');
+              var managerdate = manager_name[3];
             }
             var colormanager = "";
 
@@ -801,6 +806,7 @@ hr { background-color: red; height: 1px; border: 0; }
               var dgm_approval = value.approval_dgm;
               var dgm_name = dgm_approval.split("/");
               var dgmname = dgm_name[1].split(' ').slice(0,2).join(' ');
+              var dgmdate = dgm_name[3];
             }
             var colordgm = "";
 
@@ -808,22 +814,26 @@ hr { background-color: red; height: 1px; border: 0; }
               var gm_approval = value.approval_gm;
               var gm_name = gm_approval.split("/");
               var gmname = gm_name[1].split(' ').slice(0,2).join(' ');
+              var gmdate = gm_name[3];
             }
             var colorgm = "";
 
             var manager_acc_approval = value.approval_manager_acc;
             var manager_acc_name = manager_acc_approval.split("/");
             var manageraccname = manager_acc_name[1].split(' ').slice(0,2).join(' ');
+            var manageraccdate = manager_acc_name[3];
             var colormanageracc = "";
 
             var direktur_acc_approval = value.approval_dir_acc;
             var direktur_acc_name = direktur_acc_approval.split("/");
             var direkturaccname = direktur_acc_name[1].split(' ').slice(0,2).join(' ');
+            var direkturaccdate = direktur_acc_name[3];
             var colordirekturacc = "";
 
             var presdir_approval = value.approval_presdir;
             var presdir_name = presdir_approval.split("/");
             var presdirname = presdir_name[1].split(' ').slice(0,2).join(' ');
+            var presdirdate = presdir_name[3];
             var colorpresdir = "";
 
             var d = 0;
@@ -836,12 +846,12 @@ hr { background-color: red; height: 1px; border: 0; }
             //User / Applicant
 
               if (value.posisi != "user") {
-                user = '<a href="'+urlreport+'/'+value.id+'"><span class="label label-success">'+applicantname+'</span></a>';
+                user = '<a href="'+urlreport+'/'+value.id+'"><span class="label label-success">'+applicantname+'<br>'+value.submission_date+'</span></a>';
                 colorapplicant = 'style="background-color:#00a65a"';
               }
               else {
                 if (d == 0) {  
-                    user = '<a href="'+urldetail+'/'+value.id+'"><span class="label label-danger zoom">'+applicantname+'</span></a>';
+                    user = '<a href="'+urldetail+'/'+value.id+'"><span class="label label-danger zoom">'+applicantname+'<br>'+value.submission_date+'</span></a>';
                     colorapplicant = 'style="background-color:#dd4b39"';                    
                     d = 1;
                   } else {
@@ -853,7 +863,7 @@ hr { background-color: red; height: 1px; border: 0; }
 
               if (value.posisi != "acc_budget") {
                 if (d == 0) {  
-                    acc_budget = '<a href="'+urlreport+'/'+value.id+'"><span class="label label-success">Lailatul Chusnah</span></a>';
+                    acc_budget = '<a href="'+urlreport+'/'+value.id+'"><span class="label label-success">Lailatul Chusnah<br>'+value.approval_acc_budget+'</span></a>';
                     coloraccbudget = 'style="background-color:#00a65a"';
                 } 
                 else {
@@ -862,7 +872,7 @@ hr { background-color: red; height: 1px; border: 0; }
               }
               else {
                 if (d == 0) {  
-                    acc_budget = '<a href="'+urlcheck+'/'+value.id+'"><span class="label label-danger zoom">Lailatul Chusnah</span></a>';
+                    acc_budget = '<a href="'+urlcheck+'/'+value.id+'"><span class="label label-danger">Lailatul Chusnah<br>Waiting</span></a>';
                     coloraccbudget = 'style="background-color:#dd4b39"';                    
                     d = 1;
                   } else {
@@ -874,7 +884,7 @@ hr { background-color: red; height: 1px; border: 0; }
 
               if (value.posisi != "acc_pajak") {
                 if (d == 0) {  
-                    acc_pajak = '<a href="'+urlreport+'/'+value.id+'"><span class="label label-success">Yeny Arisanty</span></a>';
+                    acc_pajak = '<a href="'+urlreport+'/'+value.id+'"><span class="label label-success">Yeny Arisanty<br>'+value.approval_acc_pajak+'</span></a>';
                     coloraccpajak = 'style="background-color:#00a65a"';
                 } 
                 else {
@@ -883,7 +893,7 @@ hr { background-color: red; height: 1px; border: 0; }
               }
               else {
                 if (d == 0) {  
-                    acc_pajak = '<a href="'+urlcheck+'/'+value.id+'"><span class="label label-danger zoom">Yeny Arisanty</span></a>';
+                    acc_pajak = '<a href="'+urlcheck+'/'+value.id+'"><span class="label label-danger">Yeny Arisanty<br>Waiting</span></a>';
                     coloraccpajak = 'style="background-color:#dd4b39"';                    
                     d = 1;
                   } else {
@@ -896,7 +906,7 @@ hr { background-color: red; height: 1px; border: 0; }
                 if (manager_name.length == 4) {
                     if (value.posisi == "manager") {
                         if (d == 0) {  
-                            manager = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+managername+'</span></a>';   
+                            manager = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+managername+'<br>Waiting</span></span></a>';   
                             colormanager = 'style="background-color:#dd4b39"';                  
                             d = 1;
                           } else {
@@ -904,13 +914,13 @@ hr { background-color: red; height: 1px; border: 0; }
                           }
                     }
                     else{
-                        manager = '<a href="'+urlreport+'/'+value.id+'"><span class="label label-success">'+managername+'</span></a>';
+                        manager = '<a href="'+urlreport+'/'+value.id+'"><span class="label label-success">'+managername+'<br>'+managerdate+'</span></a>';
                         colormanager = 'style="background-color:#00a65a"'; 
                     }
                 }
                 else{
                   if (d == 0) {  
-                    manager = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+managername+'</span></a>'; 
+                    manager = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+managername+'<br>Waiting</span></a>'; 
                     colormanager = 'style="background-color:#dd4b39"';                  
                     d = 1;
                   } else {
@@ -928,7 +938,7 @@ hr { background-color: red; height: 1px; border: 0; }
                 if (dgm_name.length == 4) {
                     if (value.posisi == "dgm") {
                       if (d == 0) {  
-                          dgm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+dgmname+'</span></a>';
+                          dgm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+dgmname+'<br>Waiting</a>';
                           colordgm = 'style="background-color:#dd4b39"';              
                           d = 1;
                         } else {
@@ -936,13 +946,13 @@ hr { background-color: red; height: 1px; border: 0; }
                         }
                     }
                     else {
-                      dgm = '<a href="'+urlreport+'/'+value.id+'"><span class="label label-success">'+dgmname+'</span></a>';
+                      dgm = '<a href="'+urlreport+'/'+value.id+'"><span class="label label-success">'+dgmname+'<br>'+dgmdate+'</span></a>';
                       colordgm = 'style="background-color:#00a65a"'; 
                     } 
                 }
                 else {
                   if (d == 0) {  
-                    dgm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+dgmname+'</span></a>';
+                    dgm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+dgmname+'<br>Waiting</a>';
                     colordgm = 'style="background-color:#dd4b39"';                   
                     d = 1;
                   } else {
@@ -960,21 +970,21 @@ hr { background-color: red; height: 1px; border: 0; }
                 if (gm_name.length == 4) {
                     if (value.posisi == "gm") {
                         if (d == 0) {  
-                          gm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+gmname+'</span></a>';
+                          gm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+gmname+'<br>Waiting</span></a>';
                           colorgm = 'style="background-color:#dd4b39"'; 
                           d = 1;
                         } else {
                           gm = '';
                         }
                     } else {
-                      gm = '<a href="'+urlreport+'/'+value.id+'"><span class="label label-success">'+gmname+'</span></a>'; 
+                      gm = '<a href="'+urlreport+'/'+value.id+'"><span class="label label-success">'+gmname+'<br>'+gmdate+'</span></a>'; 
                       colorgm = 'style="background-color:#00a65a"'; 
                     }
                 } 
 
                 else {
                   if (d == 0) {  
-                    gm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+gmname+'</span></a>';
+                    gm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+gmname+'<br>Waiting</span></a>';
                     colorgm = 'style="background-color:#dd4b39"'; 
                     d = 1;
                   } else {
@@ -991,21 +1001,21 @@ hr { background-color: red; height: 1px; border: 0; }
               if (manager_acc_name.length == 4) {
                   if (value.posisi == "manager_acc") {
                       if (d == 0) {  
-                        manager_acc = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+manageraccname+'</span></a>';
+                        manager_acc = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+manageraccname+'<br>Waiting</span></a>';
                         colormanageracc = 'style="background-color:#dd4b39"'; 
                         d = 1;
                       } else {
                         manager_acc = '';
                       }
                   } else {
-                    manager_acc = '<a href="'+urlreport+'/'+value.id+'"><span class="label label-success">'+manageraccname+'</span></a>'; 
+                    manager_acc = '<a href="'+urlreport+'/'+value.id+'"><span class="label label-success">'+manageraccname+'<br>'+manageraccdate+'</span></a>'; 
                     colormanageracc = 'style="background-color:#00a65a"'; 
                   }
               } 
 
               else {
                 if (d == 0) {  
-                  manager_acc = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+manageraccname+'</span></a>';
+                  manager_acc = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+manageraccname+'<br>Waiting</span></a>';
                   colormanageracc = 'style="background-color:#dd4b39"'; 
                   d = 1;
                 } else {
@@ -1018,21 +1028,21 @@ hr { background-color: red; height: 1px; border: 0; }
               if (direktur_acc_name.length == 4) {
                   if (value.posisi == "direktur_acc") {
                       if (d == 0) {  
-                        direktur_acc = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+direkturaccname+'</span></a>';
+                        direktur_acc = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+direkturaccname+'<br>Waiting</span></a>';
                         colordirekturacc = 'style="background-color:#dd4b39"'; 
                         d = 1;
                       } else {
                         direktur_acc = '';
                       }
                   } else {
-                    direktur_acc = '<a href="'+urlreport+'/'+value.id+'"><span class="label label-success">'+direkturaccname+'</span></a>'; 
+                    direktur_acc = '<a href="'+urlreport+'/'+value.id+'"><span class="label label-success">'+direkturaccname+'<br>'+direkturaccdate+'</span></a>'; 
                     colordirekturacc = 'style="background-color:#00a65a"'; 
                   }
               } 
 
               else {
                 if (d == 0) {  
-                  direktur_acc = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+direkturaccname+'</span></a>';
+                  direktur_acc = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+direkturaccname+'<br>Waiting</span></a>';
                   colordirekturacc = 'style="background-color:#dd4b39"'; 
                   d = 1;
                 } else {
@@ -1045,21 +1055,21 @@ hr { background-color: red; height: 1px; border: 0; }
               if (presdir_name.length == 4) {
                   if (value.posisi == "presdir") {
                       if (d == 0) {  
-                        presdir = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+presdirname+'</span></a>';
+                        presdir = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+presdirname+'<br>Waiting</span></a>';
                         colorpresdir = 'style="background-color:#dd4b39"'; 
                         d = 1;
                       } else {
                         presdir = '';
                       }
                   } else {
-                    presdir = '<a href="'+urlreport+'/'+value.id+'"><span class="label label-success">'+presdirname+'</span></a>'; 
+                    presdir = '<a href="'+urlreport+'/'+value.id+'"><span class="label label-success">'+presdirname+'<br>'+presdirdate+'</span></a>'; 
                     colorpresdir = 'style="background-color:#00a65a"'; 
                   }
               } 
 
               else {
                 if (d == 0) {  
-                  presdir = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+presdirname+'</span></a>';
+                  presdir = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+presdirname+'<br>Waiting</span></a>';
                   colorpresdir = 'style="background-color:#dd4b39"'; 
                   d = 1;
                 } else {
@@ -1071,7 +1081,7 @@ hr { background-color: red; height: 1px; border: 0; }
               table += '<tr style="font-size:16px">';
               table += '<td>'+value.reff_number+'</td>';
               table += '<td>'+value.subject+'</td>';
-              table += '<td>'+value.submission_date+'</td>';
+              // table += '<td>'+value.submission_date+'</td>';
               table += '<td>'+value.department_shortname+'</td>';
               table += '<td '+colorapplicant+'>'+user+'</td>';
               table += '<td '+coloraccbudget+'>'+acc_budget+'</td>';
