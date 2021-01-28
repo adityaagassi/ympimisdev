@@ -317,7 +317,7 @@ class TemperatureController extends Controller
                     if ($date_to == '') {
                          $whereDate = '';
                     }else{
-                         $whereDate = 'AND DATE(date_in) BETWEEN CONCAT(DATE_FORMAT("'.$date_to.'" - INTERVAL 7 DAY,"%Y-%m-%d")) AND "'.$date_to.'"';
+                         $whereDate = 'AND DATE(date_in) BETWEEN CONCAT(DATE_FORMAT("'.$date_to.'" - INTERVAL 4 DAY,"%Y-%m-%d")) AND "'.$date_to.'"';
                     }
                }else{
                     if ($date_to == '') {
@@ -2489,11 +2489,11 @@ public function fetchDetailMinMoeMonitoring(Request $request)
 
      if ($request->get('location') == 'OFC') {
           $detail = DB::SELECT("SELECT
-               employee_syncs.employee_id,
-               employee_syncs.name,
-               ivms_temperatures.date_in,
+               DISTINCT(ivms_temperatures.employee_id),
+               ivms_temperatures.name,
+               MIN(ivms_temperatures.date_in) as date_in,
                ivms_temperatures.point,
-               ivms_temperatures.temperature,
+               ".$temperature." as temperature,
                ivms_temperatures.abnormal_status,
                COALESCE ( departments.department_shortname, '' ) AS department_shortname,
                COALESCE ( employee_syncs.section, '' ) AS section,
@@ -2515,14 +2515,15 @@ public function fetchDetailMinMoeMonitoring(Request $request)
           AND temperature = ".$temperature."
           and employee_syncs.end_date is null
           ".$groupin.")
+          GROUP BY ivms_temperatures.employee_id, ivms_temperatures.name,ivms_temperatures.point,ivms_temperatures.abnormal_status,department_shortname,section, groups
           ");
      }else if($request->get('location') == 'ALL'){
           $detail = DB::SELECT("SELECT
-               employee_syncs.employee_id,
-               employee_syncs.name,
-               ivms_temperatures.date_in,
+               DISTINCT(ivms_temperatures.employee_id),
+               ivms_temperatures.name,
+               MIN(ivms_temperatures.date_in) as date_in,
                ivms_temperatures.point,
-               ivms_temperatures.temperature,
+               ".$temperature." as temperature,
                ivms_temperatures.abnormal_status,
                COALESCE ( departments.department_shortname, '' ) AS department_shortname,
                COALESCE ( employee_syncs.section, '' ) AS section,
@@ -2537,14 +2538,15 @@ public function fetchDetailMinMoeMonitoring(Request $request)
           AND temperature = ".$temperature."
           and employee_syncs.end_date is null
           ".$groupin."
+          GROUP BY ivms_temperatures.employee_id, ivms_temperatures.name,ivms_temperatures.point,ivms_temperatures.abnormal_status,department_shortname,section, groups
           ");
      }else{
           $detail = DB::SELECT("SELECT
-               employee_syncs.employee_id,
-               employee_syncs.name,
-               ivms_temperatures.date_in,
+               DISTINCT(ivms_temperatures.employee_id),
+               ivms_temperatures.name,
+               MIN(ivms_temperatures.date_in) as date_in,
                ivms_temperatures.point,
-               ivms_temperatures.temperature,
+               ".$temperature." as temperature,
                ivms_temperatures.abnormal_status,
                COALESCE ( departments.department_shortname, '' ) AS department_shortname,
                COALESCE ( employee_syncs.section, '' ) AS section,
@@ -2567,6 +2569,7 @@ public function fetchDetailMinMoeMonitoring(Request $request)
           AND temperature = ".$temperature." 
           AND employee_syncs.department = '".$request->get('location')."'
           and employee_syncs.end_date is null ".$groupin.")
+          GROUP BY ivms_temperatures.employee_id, ivms_temperatures.name,ivms_temperatures.point,ivms_temperatures.abnormal_status,department_shortname,section, groups
           ");
      }
 
