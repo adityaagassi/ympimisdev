@@ -281,6 +281,9 @@
 						var merah = mesin_split[j][4].split(':');
 						var merah_time = (parseInt(merah[0])*3600) + (parseInt(merah[1])*60) + parseInt(merah[2]);
 						var mr_to_h = merah_time / 60 /60;
+						var putih = mesin_split[j][8].split(':');
+						var putih_time = (parseInt(putih[0])*3600) + (parseInt(putih[1])*60) + parseInt(putih[2]);
+						var mr_to_p = putih_time / 60 /60;
 
 						//head
 						if (mesin_split[j][1] == 0){//merah
@@ -293,7 +296,7 @@
 						}else if(mesin_split[j][1] == 3){//biru
 							head += '<th class="hd" style="background-color: #3366cc; width:6%;">'+zpro[i][1].replace("MC ","")+'<br><span>&nbsp;</span></th>';
 						}else if(mesin_split[j][1] == 4){//putih
-							head += '<th class="hd" style="background-color: #fcfdff; width:6%;">'+zpro[i][1].replace("MC ","")+'<br><span>&nbsp;</span></th>';
+							head += '<th class="hd" style="background-color: #fcfdff; width:6%;">'+zpro[i][1].replace("MC ","")+'<br><span>'+mr_to_p.toFixed(1)+' H</span></th>';
 						}else if(mesin_split[j][1] == 5){//hitam	
 							head += '<th class="hd" style="background-color: #000; color: #fff; width:6%;">'+zpro[i][1].replace("MC ","")+'<br><span>&nbsp;</span></th>';
 						}
@@ -303,13 +306,11 @@
 						var hijau = mesin_split[j][5].split(':');
 						var kuning = mesin_split[j][6].split(':');
 						var biru = mesin_split[j][7].split(':');
-						var putih = mesin_split[j][8].split(':');
 						var hitam = mesin_split[j][9].split(':');
 
 						var hijau_time = (parseInt(hijau[0])*3600) + (parseInt(hijau[1])*60) + parseInt(hijau[2]);
 						var kuning_time = (parseInt(kuning[0])*3600) + (parseInt(kuning[1])*60) + parseInt(kuning[2]);
 						var biru_time = (parseInt(biru[0])*3600) + (parseInt(biru[1])*60) + parseInt(biru[2]);
-						var putih_time = (parseInt(putih[0])*3600) + (parseInt(putih[1])*60) + parseInt(putih[2]);
 						var hitam_time = (parseInt(hitam[0])*3600) + (parseInt(hitam[1])*60) + parseInt(hitam[2]);
 						var total_time = merah_time + hijau_time + kuning_time + biru_time + putih_time + hitam_time;
 
@@ -386,6 +387,9 @@
 						var merah = mesin_split[j][4].split(':');
 						var merah_time = (parseInt(merah[0])*3600) + (parseInt(merah[1])*60) + parseInt(merah[2]);
 						var mr_to_h = merah_time / 60 /60;
+						var putih = mesin_split[j][8].split(':');
+						var putih_time = (parseInt(putih[0])*3600) + (parseInt(putih[1])*60) + parseInt(putih[2]);
+						var mr_to_p = putih_time / 60 /60;
 
 
 						//head
@@ -400,7 +404,7 @@
 						}else if(mesin_split[j][1] == 3){//biru
 							head += '<th class="hd" style="background-color: #3366cc; width:5%;">'+machining[i][1].replace("MC ","")+'<br><span>&nbsp;</span></th>';
 						}else if(mesin_split[j][1] == 4){//putih
-							head += '<th class="hd" style="background-color: #fcfdff; width:5%;">'+machining[i][1].replace("MC ","")+'<br><span>&nbsp;</span></th>';
+							head += '<th class="hd" style="background-color: #fcfdff; width:5%;">'+machining[i][1].replace("MC ","")+'<br><span>'+mr_to_p.toFixed(1)+' H</span></th>';
 						}else if(mesin_split[j][1] == 5){//hitam	
 							head += '<th class="hd" style="background-color: #000; color: #fff; width:5%;">'+machining[i][1].replace("MC ","")+'<br><span>&nbsp;</span></th>';
 						}
@@ -410,13 +414,11 @@
 						var hijau = mesin_split[j][5].split(':');
 						var kuning = mesin_split[j][6].split(':');
 						var biru = mesin_split[j][7].split(':');
-						var putih = mesin_split[j][8].split(':');
 						var hitam = mesin_split[j][9].split(':');
 
 						var hijau_time = (parseInt(hijau[0])*3600) + (parseInt(hijau[1])*60) + parseInt(hijau[2]);
 						var kuning_time = (parseInt(kuning[0])*3600) + (parseInt(kuning[1])*60) + parseInt(kuning[2]);
 						var biru_time = (parseInt(biru[0])*3600) + (parseInt(biru[1])*60) + parseInt(biru[2]);
-						var putih_time = (parseInt(putih[0])*3600) + (parseInt(putih[1])*60) + parseInt(putih[2]);
 						var hitam_time = (parseInt(hitam[0])*3600) + (parseInt(hitam[1])*60) + parseInt(hitam[2]);
 						var total_time = merah_time + hijau_time + kuning_time + biru_time + putih_time + hitam_time;
 
@@ -473,6 +475,9 @@
 						var merah = mesin_split[j][4].split(':');
 						var merah_time = (parseInt(merah[0])*3600) + (parseInt(merah[1])*60) + parseInt(merah[2]);
 						var mr_to_h = merah_time / 60 /60;
+						var putih = mesin_split[j][8].split(':');
+						var putih_time = (parseInt(putih[0])*3600) + (parseInt(putih[1])*60) + parseInt(putih[2]);
+						var mr_to_p = putih_time / 60 /60;
 
 						//head
 						if (mesin_split[j][1] == 0){//merah
@@ -486,7 +491,7 @@
 						}else if(mesin_split[j][1] == 3){//biru
 							head += '<th class="hd" style="background-color: #3366cc; width:5%;">'+press_data[i][1]+'<br><span>&nbsp;</span></th>';
 						}else if(mesin_split[j][1] == 4){//putih
-							head += '<th class="hd" style="background-color: #fcfdff; width:5%;">'+press_data[i][1]+'<br><span>&nbsp;</span></th>';
+							head += '<th class="hd" style="background-color: #fcfdff; width:5%;">'+press_data[i][1]+'<br><span>'+mr_to_p.toFixed(1)+' H</span></th>';
 						}else if(mesin_split[j][1] == 5){//hitam	
 							head += '<th class="hd" style="background-color: #000; color: #fff; width:5%;">'+press_data[i][1]+'<br><span>&nbsp;</span></th>';
 						}
@@ -496,13 +501,11 @@
 						var hijau = mesin_split[j][5].split(':');
 						var kuning = mesin_split[j][6].split(':');
 						var biru = mesin_split[j][7].split(':');
-						var putih = mesin_split[j][8].split(':');
 						var hitam = mesin_split[j][9].split(':');
 
 						var hijau_time = (parseInt(hijau[0])*3600) + (parseInt(hijau[1])*60) + parseInt(hijau[2]);
 						var kuning_time = (parseInt(kuning[0])*3600) + (parseInt(kuning[1])*60) + parseInt(kuning[2]);
 						var biru_time = (parseInt(biru[0])*3600) + (parseInt(biru[1])*60) + parseInt(biru[2]);
-						var putih_time = (parseInt(putih[0])*3600) + (parseInt(putih[1])*60) + parseInt(putih[2]);
 						var hitam_time = (parseInt(hitam[0])*3600) + (parseInt(hitam[1])*60) + parseInt(hitam[2]);
 						var total_time = merah_time + hijau_time + kuning_time + biru_time + putih_time + hitam_time;
 
@@ -563,6 +566,9 @@
 						var merah = mesin_split[j][4].split(':');
 						var merah_time = (parseInt(merah[0])*3600) + (parseInt(merah[1])*60) + parseInt(merah[2]);
 						var mr_to_h = merah_time / 60 /60;
+						var putih = mesin_split[j][8].split(':');
+						var putih_time = (parseInt(putih[0])*3600) + (parseInt(putih[1])*60) + parseInt(putih[2]);
+						var mr_to_p = putih_time / 60 /60;
 
 
 						//head
@@ -577,7 +583,7 @@
 						}else if(mesin_split[j][1] == 3){//biru
 							head += '<th class="hd" style="background-color: #3366cc; width:5%;">'+injeksi_data[i][1]+'<br><span>&nbsp;</span></th>';
 						}else if(mesin_split[j][1] == 4){//putih
-							head += '<th class="hd" style="background-color: #fcfdff; width:5%;">'+injeksi_data[i][1]+'<br><span>&nbsp;</span></th>';
+							head += '<th class="hd" style="background-color: #fcfdff; width:5%;">'+injeksi_data[i][1]+'<br><span>'+mr_to_p.toFixed(1)+' H</span></th>';
 						}else if(mesin_split[j][1] == 5){//hitam	
 							head += '<th class="hd" style="background-color: #000; color: #fff; width:5%;">'+injeksi_data[i][1]+'<br><span>&nbsp;</span></th>';
 						}
@@ -587,13 +593,11 @@
 						var hijau = mesin_split[j][5].split(':');
 						var kuning = mesin_split[j][6].split(':');
 						var biru = mesin_split[j][7].split(':');
-						var putih = mesin_split[j][8].split(':');
 						var hitam = mesin_split[j][9].split(':');
 
 						var hijau_time = (parseInt(hijau[0])*3600) + (parseInt(hijau[1])*60) + parseInt(hijau[2]);
 						var kuning_time = (parseInt(kuning[0])*3600) + (parseInt(kuning[1])*60) + parseInt(kuning[2]);
 						var biru_time = (parseInt(biru[0])*3600) + (parseInt(biru[1])*60) + parseInt(biru[2]);
-						var putih_time = (parseInt(putih[0])*3600) + (parseInt(putih[1])*60) + parseInt(putih[2]);
 						var hitam_time = (parseInt(hitam[0])*3600) + (parseInt(hitam[1])*60) + parseInt(hitam[2]);
 						var total_time = merah_time + hijau_time + kuning_time + biru_time + putih_time + hitam_time;
 
@@ -666,6 +670,9 @@
 						var merah = mesin_split[j][4].split(':');
 						var merah_time = (parseInt(merah[0])*3600) + (parseInt(merah[1])*60) + parseInt(merah[2]);
 						var mr_to_h = merah_time / 60 /60;
+						var putih = mesin_split[j][8].split(':');
+						var putih_time = (parseInt(putih[0])*3600) + (parseInt(putih[1])*60) + parseInt(putih[2]);
+						var mr_to_p = putih_time / 60 /60;
 
 						//head
 						if (mesin_split[j][1] == 0){//merah
@@ -679,7 +686,7 @@
 						}else if(mesin_split[j][1] == 3){//biru
 							head += '<th class="hd" style="background-color: #3366cc; width:5%;">'+senban_data[i][1]+'<br><span>&nbsp;</span></th>';
 						}else if(mesin_split[j][1] == 4){//putih
-							head += '<th class="hd" style="background-color: #fcfdff; width:5%;">'+senban_data[i][1]+'<br><span>&nbsp;</span></th>';
+							head += '<th class="hd" style="background-color: #fcfdff; width:5%;">'+senban_data[i][1]+'<br><span>'+mr_to_p.toFixed(1)+' H</span></th>';
 						}else if(mesin_split[j][1] == 5){//hitam	
 							head += '<th class="hd" style="background-color: #000; color: #fff; width:5%;">'+senban_data[i][1]+'<br><span>&nbsp;</span></th>';
 						}
@@ -689,13 +696,11 @@
 						var hijau = mesin_split[j][5].split(':');
 						var kuning = mesin_split[j][6].split(':');
 						var biru = mesin_split[j][7].split(':');
-						var putih = mesin_split[j][8].split(':');
 						var hitam = mesin_split[j][9].split(':');
 
 						var hijau_time = (parseInt(hijau[0])*3600) + (parseInt(hijau[1])*60) + parseInt(hijau[2]);
 						var kuning_time = (parseInt(kuning[0])*3600) + (parseInt(kuning[1])*60) + parseInt(kuning[2]);
 						var biru_time = (parseInt(biru[0])*3600) + (parseInt(biru[1])*60) + parseInt(biru[2]);
-						var putih_time = (parseInt(putih[0])*3600) + (parseInt(putih[1])*60) + parseInt(putih[2]);
 						var hitam_time = (parseInt(hitam[0])*3600) + (parseInt(hitam[1])*60) + parseInt(hitam[2]);
 						var total_time = merah_time + hijau_time + kuning_time + biru_time + putih_time + hitam_time;
 
