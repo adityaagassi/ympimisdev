@@ -25,8 +25,19 @@
 		background-color: rgba(0,0,0,0);
 	}
 
-	div span {
-		display: block;
+	.hd {
+		padding-top: 0px !important;
+		padding-bottom: 0px !important;
+	}
+	th > span {
+		font-size: 0.9vw;
+		animation: blinker 1s linear infinite;
+	}
+
+	@keyframes blinker {
+		50% {
+			opacity: 0;
+		}
 	}
 </style>
 @stop
@@ -96,10 +107,10 @@
 	
 
 	<div class="row">
-		<div id="machining" class="col-xs-12" style="padding: 0px; margin-top: 0;">
+		<div id="machining" class="col-xs-12" style="padding: 0px; margin-top: 5px;">
 			<div class="col-xs-1" style="padding: 0px;">
 				<table class="table table-bordered" style="margin:0">
-					<thead><tr><th style="background-color: #fff;">Machining All</th></tr></thead>
+					<thead><tr><th style="background-color: #fff;" class="hd">Machining All <br><span>&nbsp;</span></th></tr></thead>
 					<tbody><tr><th style="background-color: #fff; text-align: center; vertical-align: middle; height: 105px;">Status</th></tr></tbody>
 				</table>
 			</div>
@@ -113,10 +124,10 @@
 			</div>
 		</div>
 
-		<div id="press" class="col-xs-12" style="padding: 0px; margin-top: 0;">
+		<div id="press" class="col-xs-12" style="padding: 0px; margin-top: 15px;">
 			<div class="col-xs-1" style="padding: 0px;">
 				<table class="table table-bordered" style="margin:0">
-					<thead><tr><th style="background-color: #fff;">Senban All</th></tr></thead>
+					<thead><tr><th style="background-color: #fff;" class="hd">Press All <br><span>&nbsp;</span></th></tr></thead>
 					<tbody><tr><th style="background-color: #fff; text-align: center; vertical-align: middle; height: 105px;">Status</th></tr></tbody>
 				</table>
 			</div>
@@ -130,10 +141,10 @@
 			</div>
 		</div>
 
-		<div id="injeksi" class="col-xs-12" style="padding: 0px; margin-top: 0;">
+		<div id="injeksi" class="col-xs-12" style="padding: 0px; margin-top: 15px;">
 			<div class="col-xs-1" style="padding: 0px;">
 				<table class="table table-bordered" style="margin:0">
-					<thead><tr><th style="background-color: #fff;">Injeksi All</th></tr></thead>
+					<thead><tr><th style="background-color: #fff;" class="hd">Injeksi All <br><span>&nbsp;</span></th></tr></thead>
 					<tbody><tr><th style="background-color: #fff; text-align: center; vertical-align: middle; height: 105px;">Status</th></tr></tbody>
 				</table>
 			</div>
@@ -147,10 +158,10 @@
 			</div>
 		</div>
 
-		<div id="senban" class="col-xs-12" style="padding: 0px; margin-top: 0;">
+		<div id="senban" class="col-xs-12" style="padding: 0px; margin-top: 15px;">
 			<div class="col-xs-1" style="padding: 0px;">
 				<table class="table table-bordered" style="margin:0">
-					<thead><tr><th style="background-color: #fff;">Press All</th></tr></thead>
+					<thead><tr><th style="background-color: #fff;" class="hd">Senban All <br><span>&nbsp;</span></th></tr></thead>
 					<tbody><tr><th style="background-color: #fff; text-align: center; vertical-align: middle; height: 105px;">Status</th></tr></tbody>
 				</table>
 			</div>
@@ -164,10 +175,10 @@
 			</div>
 		</div>
 
-		<div id="zpro" class="col-xs-12" style="padding: 0px; margin-top: 0;">
+		<div id="zpro" class="col-xs-12" style="padding: 0px; margin-top: 15px;">
 			<div class="col-xs-1" style="padding: 0px;">
 				<table class="table table-bordered" style="margin:0">
-					<thead><tr><th style="background-color: #fff;">Zpro All</th></tr></thead>
+					<thead><tr><th style="background-color: #fff;" class="hd">Zpro All <br><span>&nbsp;</span></th></tr></thead>
 					<tbody><tr><th style="background-color: #fff; text-align: center; vertical-align: middle; height: 105px;">Status</th></tr></tbody>
 				</table>
 			</div>
@@ -178,13 +189,6 @@
 					<tbody id="body_zpro">
 					</tbody>
 				</table>	
-			</div>
-		</div>
-
-		<div id="error_list" class="col-xs-12">
-			<b style="font-size: 20pt; color: #f24b4b">Error List : </b>
-			<div id="master_error" style="width: 100%">
-
 			</div>
 		</div>
 
@@ -200,13 +204,12 @@
 <script src="{{ url("js/export-data.js")}}"></script>
 <script>
 
-	var arr_error = [];
 	jQuery(document).ready(function(){
 		mesin1();
 		mesin2();
 
-		setInterval(mesin1, 1000);
-		setInterval(mesin2, 1000);
+		// setInterval(mesin1, 1000);
+		// setInterval(mesin2, 1000);
 		
 		show();
 
@@ -275,32 +278,34 @@
 				for (var j = 0; j < mesin_split.length; j++) {
 					if(zpro[i][0] == mesin_split[j][0]){
 
+						var merah = mesin_split[j][4].split(':');
+						var merah_time = (parseInt(merah[0])*3600) + (parseInt(merah[1])*60) + parseInt(merah[2]);
+						var mr_to_h = merah_time / 60 /60;
+
 						//head
 						if (mesin_split[j][1] == 0){//merah
-							head += '<th style="background-color: #f24b4b; width:6%;">'+zpro[i][1].replace("MC ","")+'</th>';
+							head += '<th class="hd" style="background-color: #f24b4b; width:6%;">'+zpro[i][1].replace("MC ","")+'<br><span>'+mr_to_h.toFixed(1)+' H</span></th>';
 							audio_error.play();
 						}else if(mesin_split[j][1] == 1){//hijau
-							head += '<th style="background-color: #00a65a; width:6%;">'+zpro[i][1].replace("MC ","")+'</th>';
+							head += '<th class="hd" style="background-color: #00a65a; width:6%;">'+zpro[i][1].replace("MC ","")+'<br><span>&nbsp;</span></th>';
 						}else if(mesin_split[j][1] == 2){//kuning
-							head += '<th style="background-color: #FCF33A; width:6%;">'+zpro[i][1].replace("MC ","")+'</th>';
+							head += '<th class="hd" style="background-color: #FCF33A; width:6%;">'+zpro[i][1].replace("MC ","")+'<br><span>&nbsp;</span></th>';
 						}else if(mesin_split[j][1] == 3){//biru
-							head += '<th style="background-color: #3366cc; width:6%;">'+zpro[i][1].replace("MC ","")+'</th>';
+							head += '<th class="hd" style="background-color: #3366cc; width:6%;">'+zpro[i][1].replace("MC ","")+'<br><span>&nbsp;</span></th>';
 						}else if(mesin_split[j][1] == 4){//putih
-							head += '<th style="background-color: #fcfdff; width:6%;">'+zpro[i][1].replace("MC ","")+'</th>';
+							head += '<th class="hd" style="background-color: #fcfdff; width:6%;">'+zpro[i][1].replace("MC ","")+'<br><span>&nbsp;</span></th>';
 						}else if(mesin_split[j][1] == 5){//hitam	
-							head += '<th style="background-color: #000; color: #fff; width:6%;">'+zpro[i][1].replace("MC ","")+'</th>';
+							head += '<th class="hd" style="background-color: #000; color: #fff; width:6%;">'+zpro[i][1].replace("MC ","")+'<br><span>&nbsp;</span></th>';
 						}
 
 						//body
 						body += '<td style="padding: 0px;">';
-						var merah = mesin_split[j][4].split(':');
 						var hijau = mesin_split[j][5].split(':');
 						var kuning = mesin_split[j][6].split(':');
 						var biru = mesin_split[j][7].split(':');
 						var putih = mesin_split[j][8].split(':');
 						var hitam = mesin_split[j][9].split(':');
 
-						var merah_time = (parseInt(merah[0])*3600) + (parseInt(merah[1])*60) + parseInt(merah[2]);
 						var hijau_time = (parseInt(hijau[0])*3600) + (parseInt(hijau[1])*60) + parseInt(hijau[2]);
 						var kuning_time = (parseInt(kuning[0])*3600) + (parseInt(kuning[1])*60) + parseInt(kuning[2]);
 						var biru_time = (parseInt(biru[0])*3600) + (parseInt(biru[1])*60) + parseInt(biru[2]);
@@ -308,9 +313,6 @@
 						var hitam_time = (parseInt(hitam[0])*3600) + (parseInt(hitam[1])*60) + parseInt(hitam[2]);
 						var total_time = merah_time + hijau_time + kuning_time + biru_time + putih_time + hitam_time;
 
-						// if (merah_time > 0) {
-							arr_error.push({'mesin' : zpro[i][1].replace("MC ","") ,'merah' : merah_time});
-						// }
 
 						body += '<div style="height: 100px;">';
 						body += '<div style="background-color: #f24b4b; height: '+ (merah_time/total_time)*100 +'%;"></div>';
@@ -381,33 +383,36 @@
 				for (var j = 0; j < mesin_split.length; j++) {
 					if(machining[i][0] == mesin_split[j][0]){
 
+						var merah = mesin_split[j][4].split(':');
+						var merah_time = (parseInt(merah[0])*3600) + (parseInt(merah[1])*60) + parseInt(merah[2]);
+						var mr_to_h = merah_time / 60 /60;
+
+
 						//head
 						if (mesin_split[j][1] == 0){//merah
-							head += '<th style="background-color: #f24b4b; width:5%;">'+machining[i][1].replace("MC ","")+'</th>';
+							head += '<th class="hd" style="background-color: #f24b4b; width:5%;">'+machining[i][1].replace("MC ","")+'<br><span>'+mr_to_h.toFixed(1)+' H</span></th>';
 							audio_error.play();
 
 						}else if(mesin_split[j][1] == 1){//hijau
-							head += '<th style="background-color: #00a65a; width:5%;">'+machining[i][1].replace("MC ","")+'</th>';
+							head += '<th class="hd" style="background-color: #00a65a; width:5%;">'+machining[i][1].replace("MC ","")+'<br><span>&nbsp;</span></th>';
 						}else if(mesin_split[j][1] == 2){//kuning
-							head += '<th style="background-color: #FCF33A; width:5%;">'+machining[i][1].replace("MC ","")+'</th>';
+							head += '<th class="hd" style="background-color: #FCF33A; width:5%;">'+machining[i][1].replace("MC ","")+'<br><span>&nbsp;</span></th>';
 						}else if(mesin_split[j][1] == 3){//biru
-							head += '<th style="background-color: #3366cc; width:5%;">'+machining[i][1].replace("MC ","")+'</th>';
+							head += '<th class="hd" style="background-color: #3366cc; width:5%;">'+machining[i][1].replace("MC ","")+'<br><span>&nbsp;</span></th>';
 						}else if(mesin_split[j][1] == 4){//putih
-							head += '<th style="background-color: #fcfdff; width:5%;">'+machining[i][1].replace("MC ","")+'</th>';
+							head += '<th class="hd" style="background-color: #fcfdff; width:5%;">'+machining[i][1].replace("MC ","")+'<br><span>&nbsp;</span></th>';
 						}else if(mesin_split[j][1] == 5){//hitam	
-							head += '<th style="background-color: #000; color: #fff; width:5%;">'+machining[i][1].replace("MC ","")+'</th>';
+							head += '<th class="hd" style="background-color: #000; color: #fff; width:5%;">'+machining[i][1].replace("MC ","")+'<br><span>&nbsp;</span></th>';
 						}
 
 						//body
 						body += '<td style="padding: 0px;">';
-						var merah = mesin_split[j][4].split(':');
 						var hijau = mesin_split[j][5].split(':');
 						var kuning = mesin_split[j][6].split(':');
 						var biru = mesin_split[j][7].split(':');
 						var putih = mesin_split[j][8].split(':');
 						var hitam = mesin_split[j][9].split(':');
 
-						var merah_time = (parseInt(merah[0])*3600) + (parseInt(merah[1])*60) + parseInt(merah[2]);
 						var hijau_time = (parseInt(hijau[0])*3600) + (parseInt(hijau[1])*60) + parseInt(hijau[2]);
 						var kuning_time = (parseInt(kuning[0])*3600) + (parseInt(kuning[1])*60) + parseInt(kuning[2]);
 						var biru_time = (parseInt(biru[0])*3600) + (parseInt(biru[1])*60) + parseInt(biru[2]);
@@ -415,9 +420,6 @@
 						var hitam_time = (parseInt(hitam[0])*3600) + (parseInt(hitam[1])*60) + parseInt(hitam[2]);
 						var total_time = merah_time + hijau_time + kuning_time + biru_time + putih_time + hitam_time;
 
-						// if (merah_time > 0) {
-							arr_error.push({'mesin' : machining[i][1].replace("MC ","") ,'merah' : merah_time});
-						// }
 
 						body += '<div style="height: 100px;">';
 						body += '<div style="background-color: #f24b4b; height: '+ (merah_time/total_time)*100 +'%;"></div>';
@@ -442,15 +444,15 @@
 
 			//Press
 			var press_data = [
-			['100', 'K Mkp',1],
-			['99', 'K Nkp',2],
-			['63', 'K Nuki',3],
+			['100', 'K-Mkp',1],
+			['99', 'K-Nkp',2],
+			['63', 'K-Nuki',3],
 			['75', 'Kom#1',4],
 			['76', 'Kom#2',5],
 			['77', 'Kom#3',6],
 			['78', 'Kom#4',7],
 			['79', 'Kom#5',8],
-			['81', 'Amd PC',9],
+			['81', 'Amd-PC',9],
 			['80', 'Amd#1',10],
 			['69', 'Amd#2',11],
 			['70', 'Amd#3',12],
@@ -468,33 +470,35 @@
 				for (var j = 0; j < mesin_split.length; j++) {
 					if(press_data[i][0] == mesin_split[j][0]){
 
+						var merah = mesin_split[j][4].split(':');
+						var merah_time = (parseInt(merah[0])*3600) + (parseInt(merah[1])*60) + parseInt(merah[2]);
+						var mr_to_h = merah_time / 60 /60;
+
 						//head
 						if (mesin_split[j][1] == 0){//merah
-							head += '<th style="background-color: #f24b4b; width:5%;">'+press_data[i][1]+'</th>';
+							head += '<th class="hd" style="background-color: #f24b4b; width:5%;">'+press_data[i][1]+'<br><span>'+mr_to_h.toFixed(1)+' H</span></th>';
 							audio_error.play();
 
 						}else if(mesin_split[j][1] == 1){//hijau
-							head += '<th style="background-color: #00a65a; width:5%;">'+press_data[i][1]+'</th>';
+							head += '<th class="hd" style="background-color: #00a65a; width:5%;">'+press_data[i][1]+'<br><span>&nbsp;</span></th>';
 						}else if(mesin_split[j][1] == 2){//kuning
-							head += '<th style="background-color: #FCF33A; width:5%;">'+press_data[i][1]+'</th>';
+							head += '<th class="hd" style="background-color: #FCF33A; width:5%;">'+press_data[i][1]+'<br><span>&nbsp;</span></th>';
 						}else if(mesin_split[j][1] == 3){//biru
-							head += '<th style="background-color: #3366cc; width:5%;">'+press_data[i][1]+'</th>';
+							head += '<th class="hd" style="background-color: #3366cc; width:5%;">'+press_data[i][1]+'<br><span>&nbsp;</span></th>';
 						}else if(mesin_split[j][1] == 4){//putih
-							head += '<th style="background-color: #fcfdff; width:5%;">'+press_data[i][1]+'</th>';
+							head += '<th class="hd" style="background-color: #fcfdff; width:5%;">'+press_data[i][1]+'<br><span>&nbsp;</span></th>';
 						}else if(mesin_split[j][1] == 5){//hitam	
-							head += '<th style="background-color: #000; color: #fff; width:5%;">'+press_data[i][1]+'</th>';
+							head += '<th class="hd" style="background-color: #000; color: #fff; width:5%;">'+press_data[i][1]+'<br><span>&nbsp;</span></th>';
 						}
 
 						//body
 						body += '<td style="padding: 0px;">';
-						var merah = mesin_split[j][4].split(':');
 						var hijau = mesin_split[j][5].split(':');
 						var kuning = mesin_split[j][6].split(':');
 						var biru = mesin_split[j][7].split(':');
 						var putih = mesin_split[j][8].split(':');
 						var hitam = mesin_split[j][9].split(':');
 
-						var merah_time = (parseInt(merah[0])*3600) + (parseInt(merah[1])*60) + parseInt(merah[2]);
 						var hijau_time = (parseInt(hijau[0])*3600) + (parseInt(hijau[1])*60) + parseInt(hijau[2]);
 						var kuning_time = (parseInt(kuning[0])*3600) + (parseInt(kuning[1])*60) + parseInt(kuning[2]);
 						var biru_time = (parseInt(biru[0])*3600) + (parseInt(biru[1])*60) + parseInt(biru[2]);
@@ -502,9 +506,6 @@
 						var hitam_time = (parseInt(hitam[0])*3600) + (parseInt(hitam[1])*60) + parseInt(hitam[2]);
 						var total_time = merah_time + hijau_time + kuning_time + biru_time + putih_time + hitam_time;
 
-						// if (merah_time > 0) {
-							arr_error.push({'mesin' : press_data[i][1] ,'merah' : merah_time});
-						// }
 
 						body += '<div style="height: 100px;">';
 						body += '<div style="background-color: #f24b4b; height: '+ (merah_time/total_time)*100 +'%;"></div>';
@@ -559,33 +560,36 @@
 				for (var j = 0; j < mesin_split.length; j++) {
 					if(injeksi_data[i][0] == mesin_split[j][0]){
 
+						var merah = mesin_split[j][4].split(':');
+						var merah_time = (parseInt(merah[0])*3600) + (parseInt(merah[1])*60) + parseInt(merah[2]);
+						var mr_to_h = merah_time / 60 /60;
+
+
 						//head
 						if (mesin_split[j][1] == 0){//merah
-							head += '<th style="background-color: #f24b4b; width:5%;">'+injeksi_data[i][1]+'</th>';
+							head += '<th class="hd" style="background-color: #f24b4b; width:5%;">'+injeksi_data[i][1]+'<br><span>'+mr_to_h.toFixed(1)+' H</span></th>';
 							audio_error.play();
 
 						}else if(mesin_split[j][1] == 1){//hijau
-							head += '<th style="background-color: #00a65a; width:5%;">'+injeksi_data[i][1]+'</th>';
+							head += '<th class="hd" style="background-color: #00a65a; width:5%;">'+injeksi_data[i][1]+'<br><span>&nbsp;</span></th>';
 						}else if(mesin_split[j][1] == 2){//kuning
-							head += '<th style="background-color: #FCF33A; width:5%;">'+injeksi_data[i][1]+'</th>';
+							head += '<th class="hd" style="background-color: #FCF33A; width:5%;">'+injeksi_data[i][1]+'<br><span>&nbsp;</span></th>';
 						}else if(mesin_split[j][1] == 3){//biru
-							head += '<th style="background-color: #3366cc; width:5%;">'+injeksi_data[i][1]+'</th>';
+							head += '<th class="hd" style="background-color: #3366cc; width:5%;">'+injeksi_data[i][1]+'<br><span>&nbsp;</span></th>';
 						}else if(mesin_split[j][1] == 4){//putih
-							head += '<th style="background-color: #fcfdff; width:5%;">'+injeksi_data[i][1]+'</th>';
+							head += '<th class="hd" style="background-color: #fcfdff; width:5%;">'+injeksi_data[i][1]+'<br><span>&nbsp;</span></th>';
 						}else if(mesin_split[j][1] == 5){//hitam	
-							head += '<th style="background-color: #000; color: #fff; width:5%;">'+injeksi_data[i][1]+'</th>';
+							head += '<th class="hd" style="background-color: #000; color: #fff; width:5%;">'+injeksi_data[i][1]+'<br><span>&nbsp;</span></th>';
 						}
 
 						//body
 						body += '<td style="padding: 0px;">';
-						var merah = mesin_split[j][4].split(':');
 						var hijau = mesin_split[j][5].split(':');
 						var kuning = mesin_split[j][6].split(':');
 						var biru = mesin_split[j][7].split(':');
 						var putih = mesin_split[j][8].split(':');
 						var hitam = mesin_split[j][9].split(':');
 
-						var merah_time = (parseInt(merah[0])*3600) + (parseInt(merah[1])*60) + parseInt(merah[2]);
 						var hijau_time = (parseInt(hijau[0])*3600) + (parseInt(hijau[1])*60) + parseInt(hijau[2]);
 						var kuning_time = (parseInt(kuning[0])*3600) + (parseInt(kuning[1])*60) + parseInt(kuning[2]);
 						var biru_time = (parseInt(biru[0])*3600) + (parseInt(biru[1])*60) + parseInt(biru[2]);
@@ -593,9 +597,6 @@
 						var hitam_time = (parseInt(hitam[0])*3600) + (parseInt(hitam[1])*60) + parseInt(hitam[2]);
 						var total_time = merah_time + hijau_time + kuning_time + biru_time + putih_time + hitam_time;
 
-						// if (merah_time > 0) {
-							arr_error.push({'mesin' : injeksi_data[i][1] ,'merah' : merah_time});
-						// }
 
 						body += '<div style="height: 100px;">';
 						body += '<div style="background-color: #f24b4b; height: '+ (merah_time/total_time)*100 +'%;"></div>';
@@ -662,33 +663,35 @@
 				for (var j = 0; j < mesin_split.length; j++) {
 					if(senban_data[i][0] == mesin_split[j][0]){
 
+						var merah = mesin_split[j][4].split(':');
+						var merah_time = (parseInt(merah[0])*3600) + (parseInt(merah[1])*60) + parseInt(merah[2]);
+						var mr_to_h = merah_time / 60 /60;
+
 						//head
 						if (mesin_split[j][1] == 0){//merah
-							head += '<th style="background-color: #f24b4b; width:5%;">'+senban_data[i][1]+'</th>';
+							head += '<th class="hd" style="background-color: #f24b4b; width:5%;">'+senban_data[i][1]+'<br><span>'+mr_to_h.toFixed(1)+' H</span></th>';
 							audio_error.play();
 
 						}else if(mesin_split[j][1] == 1){//hijau
-							head += '<th style="background-color: #00a65a; width:5%;">'+senban_data[i][1]+'</th>';
+							head += '<th class="hd" style="background-color: #00a65a; width:5%;">'+senban_data[i][1]+'<br><span>&nbsp;</span></th>';
 						}else if(mesin_split[j][1] == 2){//kuning
-							head += '<th style="background-color: #FCF33A; width:5%;">'+senban_data[i][1]+'</th>';
+							head += '<th class="hd" style="background-color: #FCF33A; width:5%;">'+senban_data[i][1]+'<br><span>&nbsp;</span></th>';
 						}else if(mesin_split[j][1] == 3){//biru
-							head += '<th style="background-color: #3366cc; width:5%;">'+senban_data[i][1]+'</th>';
+							head += '<th class="hd" style="background-color: #3366cc; width:5%;">'+senban_data[i][1]+'<br><span>&nbsp;</span></th>';
 						}else if(mesin_split[j][1] == 4){//putih
-							head += '<th style="background-color: #fcfdff; width:5%;">'+senban_data[i][1]+'</th>';
+							head += '<th class="hd" style="background-color: #fcfdff; width:5%;">'+senban_data[i][1]+'<br><span>&nbsp;</span></th>';
 						}else if(mesin_split[j][1] == 5){//hitam	
-							head += '<th style="background-color: #000; color: #fff; width:5%;">'+senban_data[i][1]+'</th>';
+							head += '<th class="hd" style="background-color: #000; color: #fff; width:5%;">'+senban_data[i][1]+'<br><span>&nbsp;</span></th>';
 						}
 
 						//body
 						body += '<td style="padding: 0px;">';
-						var merah = mesin_split[j][4].split(':');
 						var hijau = mesin_split[j][5].split(':');
 						var kuning = mesin_split[j][6].split(':');
 						var biru = mesin_split[j][7].split(':');
 						var putih = mesin_split[j][8].split(':');
 						var hitam = mesin_split[j][9].split(':');
 
-						var merah_time = (parseInt(merah[0])*3600) + (parseInt(merah[1])*60) + parseInt(merah[2]);
 						var hijau_time = (parseInt(hijau[0])*3600) + (parseInt(hijau[1])*60) + parseInt(hijau[2]);
 						var kuning_time = (parseInt(kuning[0])*3600) + (parseInt(kuning[1])*60) + parseInt(kuning[2]);
 						var biru_time = (parseInt(biru[0])*3600) + (parseInt(biru[1])*60) + parseInt(biru[2]);
@@ -696,9 +699,6 @@
 						var hitam_time = (parseInt(hitam[0])*3600) + (parseInt(hitam[1])*60) + parseInt(hitam[2]);
 						var total_time = merah_time + hijau_time + kuning_time + biru_time + putih_time + hitam_time;
 
-						// if (merah_time > 0) {
-							arr_error.push({'mesin' : senban_data[i][1] ,'merah' : merah_time});
-						// }
 
 						body += '<div style="height: 100px;">';
 						body += '<div style="background-color: #f24b4b; height: '+ (merah_time/total_time)*100 +'%;"></div>';
@@ -720,30 +720,8 @@
 			$('#head_senban').append(head);
 			$('#body_senban').append(body);
 
-
-			draw_error();
-			arr_error = [];
 		});
 
-}
-
-
-function draw_error() {
-	console.log(arr_error);
-	$("#master_error").empty();
-	var err = "";
-	$(arr_error).each(function(index, value) {
-		dur = secondsToDhms(value.merah);
-		// err += "<span class='label label-danger'>Machine : "+value.mesin+" ; Duration : "+dur+"</span>&nbsp;";
-		if (value.merah >= 300) {
-			err += '<div class="card" style="width: 18rem; display: inline-block; border: 1px solid red; color: white">';
-			err += '<div class="card-body">';
-			err += '<p class="card-text"><center>Machine : '+value.mesin+'</center></p>';
-			err += '<p class="card-text">Duration : '+dur+'</p>';
-			err += '</div></div>';
-		}
-	})
-	$("#master_error").append(err);
 }
 
 function secondsToDhms(seconds) {
