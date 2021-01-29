@@ -110,20 +110,22 @@ table > thead > tr > th{
 <section class="content" style="padding-top: 0;">
 	<div class="row">
 		<div class="col-xs-12" style="margin-top: 0px;">
-			<!-- <div class="row" style="margin:0px;">
-				<div class="col-xs-2">
-					<div class="input-group date">
-						<div class="input-group-addon bg-green" style="border: none;">
-							<i class="fa fa-calendar"></i>
-						</div>
-						<input type="text" class="form-control datepicker" id="tanggal" placeholder="Select Date">
-					</div>
+			<div class="row" style="margin:0px;">
+				<div class="col-xs-2" style="padding-right: 0;">
+					<select class="form-control select2" id="keterangan" data-placeholder="Pilih Survey" style="width: 100%;">
+						<option value=""></option>
+						<option value="Emergency 1">Emergency 1</option>
+						<option value="Emergency 2">Emergency 2</option>
+						<option value="Emergency 3">Emergency 3</option>
+						<option value="Emergency 4">Emergency 4</option>
+						<option value="Emergency 5">Emergency 5</option>
+					</select>
 				</div>
 				<div class="col-xs-2">
 					<button class="btn btn-success" onclick="fillChart()">Update Chart</button>
 				</div>
-				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
-			</div> -->
+				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;"></div>
+			</div>
 			<div class="col-xs-8" style="margin-top: 5px;padding-right: 5px">
 				<div id="container1" style="width: 100%;height: 500px;"></div>
 				<!-- <div id="container2" style="width: 100%;"></div> -->
@@ -423,7 +425,11 @@ table > thead > tr > th{
 	function fillChart() {
 		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
 
-		$.get('{{ url("fetch/survey") }}', function(result, status, xhr) {
+		var data = {
+			keterangan:$('#keterangan').val()
+		}
+
+		$.get('{{ url("fetch/survey") }}', data,function(result, status, xhr) {
 			if(xhr.status == 200){
 				if(result.status){
 
@@ -439,6 +445,8 @@ table > thead > tr > th{
 					var series2 = [];
 					var series3 = [];
 
+					var keterangan = 'Emergency 1'
+
 					for (var i = 0; i < result.survey.length; i++) {
 						dept.push(result.survey[i].department_shortname);
 						jml_iya.push(parseInt(result.survey[i].iya));
@@ -450,6 +458,8 @@ table > thead > tr > th{
 						series.push([dept[i], jml_iya[i]]);
 						series2.push([dept[i], jml_tidak[i]]);
 						series3.push([dept[i], jml_belum[i]]);
+
+						keterangan = result.keterangan;
 					}
 
 
@@ -458,7 +468,7 @@ table > thead > tr > th{
 							type: 'column'
 						},
 						title: {
-							text: 'Emergency Survey',
+							text: 'Survey '+keterangan,
 							style: {
 								fontSize: '20px',
 								fontWeight: 'bold'
@@ -629,6 +639,7 @@ table > thead > tr > th{
 		var data = {
 			dept:dept,
 			answer:answer,
+			keterangan:$('#keterangan').val()
 		}
 
 		$.get('{{ url("fetch/survey/detail") }}', data, function(result, status, xhr) {
@@ -642,20 +653,24 @@ table > thead > tr > th{
 				var resultData = "";
 				var total = 0;
 
+				var keterangan = "Emergency 1";
+
 				$.each(result.survey, function(key, value) {
 					resultData += '<tr>';
 					resultData += '<td>'+ index +'</td>';
 					resultData += '<td>'+ value.employee_id +'</td>';
 					resultData += '<td>'+ value.name +'</td>';
 					resultData += '<td>'+ value.department +'</td>';
-					resultData += '<td>'+ value.answer +'</td>';
-					resultData += '<td>'+ value.relationship +'</td>';
-					resultData += '<td>'+ value.family_name +'</td>';
+					resultData += '<td>'+ value.jawaban +'</td>';
+					resultData += '<td>'+ value.hubungan +'</td>';
+					resultData += '<td>'+ value.nama +'</td>';
 					resultData += '</tr>';
 					index += 1;
+
+					keterangan = result.keterangan;
 				});
 				$('#tableDetailBody').append(resultData);
-				$('#modalDetailTitle').html("<center><span style='font-size: 20px; font-weight: bold;'>Detail Employees With Answer '"+answer+"'</span></center>");
+				$('#modalDetailTitle').html("<center><span style='font-size: 20px; font-weight: bold;'>Detail Employees With Answer '"+answer+"'<br>On Survey "+keterangan+"</span></center>");
 
 				$('#loadingDetail').hide();
 				$('#tableDetail').show();

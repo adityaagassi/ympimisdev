@@ -30,61 +30,70 @@ class SurveyController extends Controller
 	public function fetchSurvey(Request $request)
 	{
 		try {
+			if ($request->get('keterangan') == null) {
+				$keterangan = "Emergency 1";
+			}else{
+				$keterangan = $request->get('keterangan');
+			}
+
 			$survey = DB::SELECT("SELECT
 				SUM( a.count_tidak ) AS tidak,
-				sum( a.count_belum ) AS belum,
+				sum( a.count_all ) - (
+				SUM( a.count_tidak )+ SUM( a.count_iya )) AS belum,
 				sum( a.count_iya ) AS iya,
 				a.department,
-				COALESCE(departments.department_shortname,'') as department_shortname
+				COALESCE ( departments.department_shortname, '' ) AS department_shortname 
 			FROM
 				(
-			SELECT
-				count( emergency_surveys.employee_id ) AS count_tidak,
-				0 AS count_belum,
-				0 AS count_iya,
-				COALESCE ( department, '' ) AS department 
-			FROM
-				emergency_surveys
-				JOIN employee_syncs ON employee_syncs.employee_id = emergency_surveys.employee_id 
-			WHERE
-				answer = 'Tidak' 
+				SELECT
+					0 AS count_tidak,
+					count( employee_syncs.employee_id ) AS count_all,
+					0 AS count_iya,
+					COALESCE ( employee_syncs.department, '' ) AS department 
+				FROM
+					employee_syncs 
+				WHERE
+					employee_syncs.end_date IS NULL 
+				GROUP BY
+					department UNION ALL
+				SELECT
+					count( emergency_surveys.employee_id ) AS count_tidak,
+					0 AS count_all,
+					0 AS count_iya,
+					COALESCE ( employee_syncs.department, '' ) AS department 
+				FROM
+					employee_syncs
+					LEFT JOIN emergency_surveys ON emergency_surveys.employee_id = employee_syncs.employee_id 
+				WHERE
+					employee_syncs.end_date IS NULL 
+					AND jawaban = 'Tidak' 
+					AND emergency_surveys.keterangan = '".$keterangan."'  
+				GROUP BY
+					department UNION ALL
+				SELECT
+					0 AS count_tidak,
+					0 AS count_all,
+					count( emergency_surveys.employee_id ) AS count_iya,
+					COALESCE ( employee_syncs.department, '' ) AS department 
+				FROM
+					employee_syncs
+					LEFT JOIN emergency_surveys ON emergency_surveys.employee_id = employee_syncs.employee_id 
+				WHERE
+					employee_syncs.end_date IS NULL 
+					AND jawaban = 'Iya' 
+					AND emergency_surveys.keterangan = '".$keterangan."' 
+				GROUP BY
+					department 
+				) a
+				LEFT JOIN departments ON a.department = departments.department_name 
 			GROUP BY
-				department UNION ALL
-			SELECT
-				0 AS count_tidak,
-				count( employee_syncs.employee_id ) AS count_belum,
-				0 AS count_iya,
-				COALESCE ( department, '' ) AS department 
-			FROM
-				emergency_surveys
-				RIGHT JOIN employee_syncs ON employee_syncs.employee_id = emergency_surveys.employee_id 
-			WHERE
-				emergency_surveys.employee_id IS NULL 
-				AND employee_syncs.end_date IS NULL 
-			GROUP BY
-				department UNION ALL
-			SELECT
-				0 AS count_tidak,
-				0 AS count_belum,
-				count( emergency_surveys.employee_id ) AS count_iya,
-				COALESCE ( department, '' ) AS department 
-			FROM
-				emergency_surveys
-				JOIN employee_syncs ON employee_syncs.employee_id = emergency_surveys.employee_id 
-			WHERE
-				answer = 'Iya' 
-				AND employee_syncs.end_date IS NULL 
-			GROUP BY
-				department 
-				) a 
-
-				left join departments on a.department = departments.department_name
-			GROUP BY
-				a.department,departments.department_shortname");
+				a.department,
+				departments.department_shortname");
 
 			$response = array(
 				'status' => true,
 				'survey' => $survey,
+				'keterangan' => $keterangan,
 			);
 			return Response::json($response);
 		} catch (\Exception $e) {
@@ -109,77 +118,88 @@ class SurveyController extends Controller
 				$answer = null;
 			}
 
+			if ($request->get('keterangan') == null) {
+				$keterangan = "Emergency 1";
+			}else{
+				$keterangan = $request->get('keterangan');
+			}
+
 			if ($dept == "") {
 				if ($answer == null) {
 					$survey = DB::SELECT("SELECT
 						employee_syncs.employee_id,
 						employee_syncs.name,
-						'' as department,
-						COALESCE(answer,'') as answer,
-						COALESCE(relationship,'') as relationship,
-						COALESCE(family_name,'') as family_name
+						'' AS department,
+						COALESCE ( jawaban, '' ) AS jawaban,
+						COALESCE ( hubungan, '' ) AS hubungan,
+						COALESCE ( nama, '' ) AS nama
 					FROM
-						emergency_surveys
-						RIGHT JOIN employee_syncs ON employee_syncs.employee_id = emergency_surveys.employee_id
+						employee_syncs
+						LEFT JOIN emergency_surveys ON employee_syncs.employee_id = emergency_surveys.employee_id 
+						and keterangan = '".$keterangan."'
 					WHERE
-						department IS NULL
-						and emergency_surveys.employee_id is null
-						and employee_syncs.end_date is null");
+						employee_syncs.end_date IS NULL 
+						AND employee_syncs.department IS NULL 
+						AND emergency_surveys.employee_id IS NULL");
 				}else{
 					$survey = DB::SELECT("SELECT
 						employee_syncs.employee_id,
 						employee_syncs.name,
-						'' as department,
-						COALESCE(answer,'') as answer,
-						COALESCE(relationship,'') as relationship,
-						COALESCE(family_name,'') as family_name
+						'' AS department,
+						COALESCE ( jawaban, '' ) AS jawaban,
+						COALESCE ( hubungan, '' ) AS hubungan,
+						COALESCE ( nama, '' ) AS nama
 					FROM
-						emergency_surveys
-						RIGHT JOIN employee_syncs ON employee_syncs.employee_id = emergency_surveys.employee_id
+						employee_syncs
+						LEFT JOIN emergency_surveys ON employee_syncs.employee_id = emergency_surveys.employee_id 
+						AND keterangan = '".$keterangan."' 
 					WHERE
-						department IS NULL
-						and answer = '".$answer."'
-						and employee_syncs.end_date is null");
+						employee_syncs.end_date IS NULL 
+						AND employee_syncs.department IS NULL 
+						AND jawaban = '".$answer."'");
 				}
 			}else{
 				if ($answer == null) {
 					$survey = DB::SELECT("SELECT
 						employee_syncs.employee_id,
 						employee_syncs.name,
-						COALESCE(department_shortname,'') as department,
-						COALESCE(answer,'') as answer,
-						COALESCE(relationship,'') as relationship,
-						COALESCE(family_name,'') as family_name
+						'' AS department,
+						COALESCE ( jawaban, '' ) AS jawaban,
+						COALESCE ( hubungan, '' ) AS hubungan,
+						COALESCE ( nama, '' ) AS nama
 					FROM
-						emergency_surveys
-						RIGHT JOIN employee_syncs ON employee_syncs.employee_id = emergency_surveys.employee_id
-						join departments on department_name = employee_syncs.department
+						employee_syncs
+						LEFT JOIN emergency_surveys ON employee_syncs.employee_id = emergency_surveys.employee_id 
+						AND keterangan = '".$keterangan."'
+						JOIN departments ON department_name = employee_syncs.department 
 					WHERE
-						department_shortname = '".$dept."'
-						and emergency_surveys.employee_id is null
-						and employee_syncs.end_date is null");
+						employee_syncs.end_date IS NULL 
+						AND emergency_surveys.employee_id IS NULL 
+						AND department_shortname = '".$dept."'");
 				}else{
 					$survey = DB::SELECT("SELECT
 						employee_syncs.employee_id,
 						employee_syncs.name,
-						COALESCE(department_shortname,'') as department,
-						COALESCE(answer,'') as answer,
-						COALESCE(relationship,'') as relationship,
-						COALESCE(family_name,'') as family_name
+						'' AS department,
+						COALESCE ( jawaban, '' ) AS jawaban,
+						COALESCE ( hubungan, '' ) AS hubungan,
+						COALESCE ( nama, '' ) AS nama 
 					FROM
-						emergency_surveys
-						RIGHT JOIN employee_syncs ON employee_syncs.employee_id = emergency_surveys.employee_id
-						join departments on department_name = employee_syncs.department
+						employee_syncs
+						LEFT JOIN emergency_surveys ON employee_syncs.employee_id = emergency_surveys.employee_id 
+						AND keterangan = '".$keterangan."'
+						JOIN departments ON department_name = employee_syncs.department 
 					WHERE
-						department_shortname = '".$dept."'
-						and answer = '".$answer."'
-						and employee_syncs.end_date is null");
+						employee_syncs.end_date IS NULL 
+						AND department_shortname = '".$dept."' 
+						AND jawaban = '".$answer."'");
 				}
 			}
 
 			$response = array(
 				'status' => true,
 				'survey' => $survey,
+				'keterangan' => $keterangan,
 			);
 			return Response::json($response);
 		} catch (\Exception $e) {
