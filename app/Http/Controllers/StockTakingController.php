@@ -2279,7 +2279,7 @@ class StockTakingController extends Controller{
 		$calendar = StocktakingCalendar::where(db::raw("DATE_FORMAT(date,'%Y-%m')"), $month)->first();
 
 		// $date = date('Ymd');
-		$date = '20201231';
+		$date = '20210129';
 
 		if($calendar){
 			$filename = 'ympipi_upload_' . $date . '.txt';
@@ -2344,7 +2344,7 @@ class StockTakingController extends Controller{
 				$upload_text .= $this->writeDecimal(round($data->diff_abs,3), 13, "0");
 				$upload_text .= $this->writeStringReserve($data->cost_center, 10, "0");
 				$upload_text .= $this->writeString('', 10, " ");
-				$upload_text .= $this->writeDate('2020-12-31', "transfer");
+				$upload_text .= $this->writeDate('2021-01-29', "transfer");
 				// $upload_text .= $this->writeDate($calendar->date, "transfer");
 				$upload_text .= $this->writeString('MB1C', 20, " ");
 				$upload_text .= $data->type;
