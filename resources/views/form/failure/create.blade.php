@@ -131,7 +131,7 @@
               <option value=""></option>
               @foreach($sections as $section)
               @if($section->group == null)
-              <option value="{{ $section->department }}_{{ $section->section }}">{{ $section->department }} - {{ $section->section }}</option>
+              <option value="{{ $section->section }}_{{ $section->department }}">{{ $section->department }} - {{ $section->section }}</option>
               @else
               <option value="{{ $section->section }}_{{ $section->group }}">{{ $section->section }} - {{ $section->group }}</option>
               @endif

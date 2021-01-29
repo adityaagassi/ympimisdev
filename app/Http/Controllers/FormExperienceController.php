@@ -48,19 +48,54 @@ class FormExperienceController extends Controller
 
     function filter_form(Request $request)
     {
-        $detail_table = DB::table('form_failures')
-        ->leftjoin('employee_syncs','form_failures.employee_id','=','employee_syncs.employee_id')
-        ->leftjoin('form_failure_attendances','form_failures.id','=','form_failure_attendances.form_id')
-        ->select('form_failures.id','form_failures.employee_id','form_failures.employee_name','form_failures.tanggal_kejadian','form_failures.lokasi_kejadian','form_failures.equipment','form_failures.grup_kejadian','form_failures.kategori','form_failures.judul','form_failures.loss','form_failures.kerugian', DB::raw('count(form_failure_attendances.id) as jumlah'))
-        ->whereNull('form_failures.deleted_at')
-        ->groupBy('form_failures.id','form_failures.employee_id','form_failures.employee_name','form_failures.tanggal_kejadian','form_failures.lokasi_kejadian','form_failures.equipment','form_failures.grup_kejadian','form_failures.kategori','form_failures.judul','form_failures.loss','form_failures.kerugian');
+        // $detail_table = DB::table('form_failures')
+        // ->leftjoin('employee_syncs','form_failures.employee_id','=','employee_syncs.employee_id')
+        // ->leftjoin('form_failure_attendances','form_failures.id','=','form_failure_attendances.form_id')
+        // ->select('form_failures.id','form_failures.employee_id','form_failures.employee_name','form_failures.tanggal_kejadian','form_failures.lokasi_kejadian','form_failures.equipment','form_failures.grup_kejadian','form_failures.kategori','form_failures.judul','form_failures.loss','form_failures.kerugian', DB::raw('count(form_failure_attendances.id) as jumlah'))
+        // ->whereNull('form_failures.deleted_at')
+        // ->groupBy('form_failures.id','form_failures.employee_id','form_failures.employee_name','form_failures.tanggal_kejadian','form_failures.lokasi_kejadian','form_failures.equipment','form_failures.grup_kejadian','form_failures.kategori','form_failures.judul','form_failures.loss','form_failures.kerugian');
 
-        if(strlen($request->get('department_id')) > 0){
-          $detail_table = $detail_table->where('form_failures.department', '=', $request->get('department_id'));
-        }
+        // if(strlen($request->get('department_id')) > 0){
+        //   $detail_table = $detail_table->where('form_failures.department', '=', $request->get('department_id'));
+        // }
 
-        $detail_table = $detail_table->orderBy('form_failures.id', 'DESC');
-        $details = $detail_table->get();
+        // $detail_table = $detail_table->orderBy('form_failures.id', 'DESC');
+        // $details = $detail_table->get();
+
+      $details = DB::SELECT('
+        SELECT
+        form_failures.id,
+        form_failures.employee_id,
+        form_failures.employee_name,
+        form_failures.tanggal_kejadian,
+        form_failures.lokasi_kejadian,
+        form_failures.equipment,
+        form_failures.grup_kejadian,
+        form_failures.kategori,
+        form_failures.judul,
+        form_failures.loss,
+        form_failures.kerugian,
+        target_sosialisasi.jml,
+        count( form_failure_attendances.id ) AS jumlah 
+      FROM
+        form_failures
+        LEFT JOIN form_failure_attendances ON form_failures.id = form_failure_attendances.form_id 
+        LEFT JOIN (select `group` ,count(employee_id) as jml from employee_syncs where end_date is null and `group` is not null group by `group`) as target_sosialisasi on target_sosialisasi.group = SPLIT_STRING(lokasi_kejadian, "_", 2)
+      GROUP BY
+        form_failures.id,
+        form_failures.employee_id,
+        form_failures.employee_name,
+        form_failures.tanggal_kejadian,
+        form_failures.lokasi_kejadian,
+        form_failures.equipment,
+        form_failures.grup_kejadian,
+        form_failures.kategori,
+        form_failures.judul,
+        form_failures.loss,
+        form_failures.kerugian,
+        target_sosialisasi.jml
+        '
+        );
 
         return DataTables::of($details)
 
@@ -68,16 +103,41 @@ class FormExperienceController extends Controller
             return date('Y-m', strtotime($details->tanggal_kejadian));
           })
 
-        ->editColumn('lokasi_kejadian',function($details){
-            return str_replace('_', ' - ', $details->lokasi_kejadian);
+        ->editColumn('section',function($details){
+            $detail = explode("_", $details->lokasi_kejadian);
+
+            return $detail[0];
           })
+
+        ->addColumn('grup',function($details){
+            $detail = explode("_", $details->lokasi_kejadian);
+
+            return $detail[1];
+        })
 
         ->editColumn('kerugian',function($details){
             return $details->kerugian;
           })
 
+        ->addColumn('target_sosialisasi',function($details){
+          if ($details->jml != null) {
+            return $details->jml.' Orang';
+          }else{
+            return '-';
+          }
+        })
+
         ->addColumn('jumlah_sosialisasi',function($details){
-          return $details->jumlah;
+          if ($details->jml != null) {
+            if ($details->jumlah < $details->jml) {
+              return '<span style="color:red">'.$details->jumlah.' Orang</span>';
+            }
+            else{
+              return '<span style="color:green">'.$details->jumlah.' Orang</span>';
+            }
+          }else{
+            return $details->jumlah.' Orang';
+          }
         })
 
         ->addColumn('action', function($details){
@@ -87,20 +147,28 @@ class FormExperienceController extends Controller
 
           if (Auth::user()->role_code == "MIS" || $details->employee_id == $user) {
             return '
-              <a href="form_experience/edit/'.$id.'" class="btn btn-primary btn-xs">Edit</a>
-              <a target="_blank" href="form_experience/print/'.$id.'" class="btn btn-warning btn-xs">Detail PDF</a>
-              <a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-success" onClick="sosialisasi('.$id.')"><i class="fa fa-users"></i> Sosialisasi</a>
+              <a href="form_experience/edit/'.$id.'" class="btn btn-primary btn-md"><i class="fa fa-pencil"></i></a>
+              <a target="_blank" href="form_experience/print/'.$id.'" class="btn btn-warning btn-md"><i class="fa fa-file-pdf-o"></i></a>
             ';
           }
           else{
             return '
-              <a href="form_experience/print/'.$id.'" class="btn btn-warning btn-xs">Detail PDF</a>
-              <a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-success" onClick="sosialisasi('.$id.')"><i class="fa fa-users"></i> Sosialisasi</a>
+              <a href="form_experience/print/'.$id.'" class="btn btn-warning btn-md">Detail PDF</a>
             ';
           }
         })
 
-        ->rawColumns(['action' => 'action'])
+        ->addColumn('sosialisasi', function($details){
+          $id = $details->id;
+
+          $user = strtoupper(Auth::user()->username);
+
+            return '
+              <a href="javascript:void(0)" data-toggle="modal" class="btn btn-md btn-success" onClick="sosialisasi('.$id.')"><i class="fa fa-user"></i> <i class="fa fa-exchange"></i> <i class="fa fa-users"></i></a>
+            ';
+        })
+
+        ->rawColumns(['action' => 'action','sosialisasi' => 'sosialisasi','jumlah_sosialisasi' => 'jumlah_sosialisasi'])
         ->make(true);
     }
 

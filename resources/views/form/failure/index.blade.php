@@ -29,8 +29,8 @@ table.table-bordered > thead > tr > th{
 }
 table.table-bordered > tbody > tr > td{
   border:1px solid rgb(211,211,211);
-  padding-top: 0;
-  padding-bottom: 0;
+/*  padding-top: 0;
+  padding-bottom: 0;*/
 }
 table.table-bordered > tfoot > tr > th{
   border:1px solid rgb(211,211,211);
@@ -119,15 +119,14 @@ td{
             <thead style="background-color: rgba(126,86,134,.7);">
               <tr>
                 <!-- <th>Nama</th> -->
-                <th>Tanggal Kejadian</th>
-                <th>Lokasi Kejadian</th>
+                <th>Bulan</th>
+                <th>Section</th>
+                <th>Group</th>
                 <th>Judul</th>
                 <th>Mesin / Equipment</th>
-                <th>Grup</th>
-                <th>Kategori</th>
-                <th>Loss</th>
-                <th>Estimasi Kerugian</th>
+                <th>Target Sosialiasi</th>
                 <th>Jumlah Sosialiasi</th>
+                <th>Sosialisasi</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -136,7 +135,6 @@ td{
             <tfoot>
               <tr>
                 <!-- <th></th> -->
-                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -165,7 +163,7 @@ td{
             <table class="table table-hover table-bordered table-striped" id="tableInput">
               <thead style="background-color: rgba(126,86,134,.7);">
                 <tr>
-                  <th>Tanggal Kejadian</th>
+                  <th>Bulan</th>
                   <th>Lokasi Kejadian</th>
                   <th>Equipment</th>
                   <th>Grup Kejadian</th>
@@ -287,9 +285,11 @@ td{
   jQuery(document).ready(function() {
     $('body').toggleClass("sidebar-collapse");
     $('#tag').val('');
+    
     // setInterval(foc, 20000);
     fillForm();
     fillChart();
+
     $("#navbar-collapse").text('');
       $('.select2').select2({
         language : {
@@ -417,15 +417,14 @@ td{
         "columns": [
           // { "data": "employee_name", "width": "10%"},
           { "data": "tanggal_kejadian", "width": "10%"},
-          { "data": "lokasi_kejadian", "width": "10%"},
-          { "data": "judul", "width": "15%"},
+          { "data": "section", "width": "10%"},
+          { "data": "grup", "width": "10%"},
+          { "data": "judul", "width": "20%"},
           { "data": "equipment", "width": "10%"},
-          { "data": "grup_kejadian", "width": "10%"},
-          { "data": "kategori", "width": "10%"},
-          { "data": "loss", "width": "10%"},
-          { "data": "kerugian", "width": "15%"},
-          { "data": "jumlah_sosialisasi", "width": "15%"},
-          { "data": "action", "width": "10%"}
+          { "data": "target_sosialisasi", "width": "10%"},
+          { "data": "jumlah_sosialisasi", "width": "10%"},
+          { "data": "sosialisasi", "width": "10%"},
+          { "data": "action", "width": "10%"},
         ]
       });
   
