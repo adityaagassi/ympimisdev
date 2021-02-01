@@ -720,10 +720,10 @@
 
 				if (value.start_actual != null) {
 					if (value.remark == '5') {
-						body += "<td><button class='btn btn-warning' onclick='modalWork(\""+value.order_no+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\",\""+value.name+"\",\""+value.target_date+"\",\""+value.safety_note+"\",\""+value.priority+"\", \"rework\", "+index+", \""+value.machine_desc+"\", \""+value.att+"\", \""+value.machine_remark+"\")'><i class='fa fa-rocket'></i>&nbsp; Lanjutkan</button></td>";
+						body += "<td><button class='btn btn-warning' onclick='modalWork(\""+value.order_no+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\",\""+value.name.replace("'","")+"\",\""+value.target_date+"\",\""+value.safety_note+"\",\""+value.priority+"\", \"rework\", "+index+", \""+value.machine_desc+"\", \""+value.att+"\", \""+value.machine_remark+"\")'><i class='fa fa-rocket'></i>&nbsp; Lanjutkan</button></td>";
 						desc_new.push(value.description);
 					} else if (value.remark == '9') {
-						body += "<td><button class='btn btn-warning' onclick='modalWork(\""+value.order_no+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\",\""+value.name+"\",\""+value.target_date+"\",\""+value.safety_note+"\",\""+value.priority+"\", \"rework\", "+index+", \""+value.machine_desc+"\", \""+value.att+"\", \""+value.machine_remark+"\")'><i class='fa fa-play'></i>&nbsp; Resume</button></td>";
+						body += "<td><button class='btn btn-warning' onclick='modalWork(\""+value.order_no+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\",\""+value.name.replace("'","")+"\",\""+value.target_date+"\",\""+value.safety_note+"\",\""+value.priority+"\", \"rework\", "+index+", \""+value.machine_desc+"\", \""+value.att+"\", \""+value.machine_remark+"\")'><i class='fa fa-play'></i>&nbsp; Resume</button></td>";
 						desc_new.push(value.description);
 					} else {
 						body += "<td><button class='btn btn-success' onclick='modalAfterWork(\""+value.order_no+"\",\""+$("#op").text()+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\", "+index+")'><i class='fa fa-file'></i>&nbsp; Buat Laporan</button></td>";
@@ -732,7 +732,7 @@
 					}
 				} else {
 
-					body += "<td><button class='btn btn-primary' onclick='modalWork(\""+value.order_no+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\",\""+value.name+"\",\""+value.target_date+"\",\""+value.safety_note+"\",\""+value.priority+"\", \"work\", "+index+", \""+value.machine_desc+"\", \""+value.att+"\", \""+value.machine_remark+"\")'><i class='fa fa-gears'></i>&nbsp; Kerjakan</button></td>";
+					body += "<td><button class='btn btn-primary' onclick='modalWork(\""+value.order_no+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\",\""+value.name.replace("'","")+"\",\""+value.target_date+"\",\""+value.safety_note+"\",\""+value.priority+"\", \"work\", "+index+", \""+value.machine_desc+"\", \""+value.att+"\", \""+value.machine_remark+"\")'><i class='fa fa-gears'></i>&nbsp; Kerjakan</button></td>";
 					desc_new.push(value.description);
 				}
 
