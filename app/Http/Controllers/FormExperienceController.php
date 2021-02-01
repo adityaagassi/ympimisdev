@@ -153,7 +153,7 @@ class FormExperienceController extends Controller
           }
           else{
             return '
-              <a href="form_experience/print/'.$id.'" class="btn btn-warning btn-md">Detail PDF</a>
+              <a href="form_experience/print/'.$id.'" class="btn btn-warning btn-md"><i class="fa fa-file-pdf-o"></i></a>
             ';
           }
         })

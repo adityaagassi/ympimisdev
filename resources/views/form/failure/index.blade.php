@@ -123,6 +123,7 @@ td{
                 <th>Section</th>
                 <th>Group</th>
                 <th>Judul</th>
+                <th>Grup Kejadian</th>
                 <th>Mesin / Equipment</th>
                 <th>Target Sosialiasi</th>
                 <th>Jumlah Sosialiasi</th>
@@ -135,6 +136,7 @@ td{
             <tfoot>
               <tr>
                 <!-- <th></th> -->
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -420,6 +422,7 @@ td{
           { "data": "section", "width": "10%"},
           { "data": "grup", "width": "10%"},
           { "data": "judul", "width": "20%"},
+          { "data": "grup_kejadian", "width": "10%"},
           { "data": "equipment", "width": "10%"},
           { "data": "target_sosialisasi", "width": "10%"},
           { "data": "jumlah_sosialisasi", "width": "10%"},
@@ -582,7 +585,7 @@ td{
             body += '<td style="width: 1%;"></td>';     
           }
 
-          body += '<td style="width: 1%; font-weight: bold;"><a href="{{url("index/form_experience/print")}}/'+ result.data[i].id +'" type="button" class="btn btn-warning btn-sm" target="_blank">Report PDF</a></td>';
+          body += '<td style="width: 1%; font-weight: bold;"><a href="{{url("index/form_experience/print")}}/'+ result.data[i].id +'" type="button" class="btn btn-warning btn-sm" target="_blank"><i class="fa fa-file-pdf-o"></i></a></td>';
           body += '</tr>';
         }
 

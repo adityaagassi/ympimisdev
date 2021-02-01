@@ -26,12 +26,15 @@
                 <th>Tanggal Lahir Istri</th>
                 <th>Pekerjaan Istri</th>
                 <th>Nama Anak 1</th>
+                <th>Tempat Lahir Anak 1</th>
                 <th>Tanggal Lahir Anak 1</th>
                 <th>Status Anak 1</th>
                 <th>Nama Anak 2</th>
+                <th>Tempat Lahir Anak 2</th>
                 <th>Tanggal Lahir Anak 2</th>
                 <th>Status Anak 2</th>
                 <th>Nama Anak 3</th>
+                <th>Tempat Lahir Anak 3</th>
                 <th>Tanggal Lahir Anak 3</th>
                 <th>Status Anak 3</th>
                 <th>Apakah sudah memiliki NPWP?</th>
@@ -78,6 +81,7 @@
                 <td>{{ $anak1[0] }}</td>
                 <td>{{ $anak1[2] }}</td>
                 <td>{{ $anak1[3] }}</td>
+                <td>{{ $anak1[4] }}</td>
 
                 <?php 
                     $anak2 = explode("_", $npwp->anak2);
@@ -85,6 +89,7 @@
                 <td>{{ $anak2[0] }}</td>
                 <td>{{ $anak2[2] }}</td>
                 <td>{{ $anak2[3] }}</td>
+                <td>{{ $anak2[4] }}</td>
 
                 <?php 
                     $anak3 = explode("_", $npwp->anak3);
@@ -92,6 +97,7 @@
                 <td>{{ $anak3[0] }}</td>
                 <td>{{ $anak3[2] }}</td>
                 <td>{{ $anak3[3] }}</td>
+                <td>{{ $anak3[4] }}</td>
 
                 <td>{{ $npwp->npwp_kepemilikan }}</td>
                 <td>{{ $npwp->npwp_status }}</td>
