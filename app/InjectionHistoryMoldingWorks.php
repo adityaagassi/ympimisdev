@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class InjectionHistoryMoldingWorks extends Model
 {
     protected $fillable = [
-		'molding_code','type','pic','mesin', 'part','start_time','end_time','reason','created_by'
+		'molding_code','type','status','pic','mesin', 'part','start_time','end_time','reason','created_by'
 	];
 
 	public function user()

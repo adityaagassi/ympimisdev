@@ -4483,22 +4483,16 @@ class InjectionsController extends Controller
             // $tgl = $request->get('tgl');
         $mesin = substr($request->get('mesin'),6);
 
-
         $molding = InjectionMoldingMaster::where('status','LEPAS')->
         where('mesin','like','%'.$mesin.'%')
         // ->where('remark','=','RC')
         ->get();
 
-        $molding2 = InjectionMoldingMaster::where('status','PASANG')->where('mesin','like','%'.$mesin.'%')->get();
+        $molding2 = InjectionMoldingMaster::where('status','PASANG')->where('status_mesin','=',$request->get('mesin'))->get();
 
         $pesan = '';
-        foreach ($molding2 as $key) {
-            if ($key->status_mesin == $request->get('mesin')) {
-                $pesan = $request->get('mesin').' Sudah Terpasang Molding!';
-            }
-            else{
-                $pesan = '';
-            }
+        if (count($molding2) > 0) {
+            $pesan = $request->get('mesin').' Sudah Terpasang Molding!';
         }
 
         $response = array(
@@ -6569,6 +6563,7 @@ class InjectionsController extends Controller
         try {
             $reason = InjectionHistoryMoldingWorks::create([
                 'molding_code' => $request->get('molding_code'),
+                'status' => $request->get('status'),
                 'type' => $request->get('type'),
                 'pic' => $request->get('pic'),
                 'mesin' => $request->get('mesin'),
@@ -6579,7 +6574,7 @@ class InjectionsController extends Controller
             ]);
 
             $temp = InjectionHistoryMoldingTemp::where('molding_code',$request->get('molding_code'))->first();
-            $temp->remark = 'PAUSE';
+            $temp->remark = $request->get('status');
             $temp->reason = $request->get('reason');
             $temp->save();
 
@@ -6604,7 +6599,7 @@ class InjectionsController extends Controller
             $work->end_time = date('Y-m-d H:i:s');
             $work->save();
 
-            $temp = InjectionHistoryMoldingTemp::where('molding_code',$request->get('molding_code'))->where('remark','PAUSE')->first();
+            $temp = InjectionHistoryMoldingTemp::where('molding_code',$request->get('molding_code'))->where('remark','!=',null)->first();
             $temp->remark = null;
             $temp->reason = null;
             $temp->save();
