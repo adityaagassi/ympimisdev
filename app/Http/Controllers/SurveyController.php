@@ -19,7 +19,7 @@ class SurveyController extends Controller
 	public function indexSurvey()
 	{
 		$title = 'Emergency Survey';
-		$title_jp = '??';
+		$title_jp = 'エマージェンシーサーベイ';
 
 		return view('survey.index', array(
 			'title' => $title,

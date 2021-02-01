@@ -497,7 +497,7 @@
                             </a>
                             <br>
                             <a href="{{ url("index/survey") }}">
-                                <i class="fa fa-caret-right"></i> Emergency Survey (??)
+                                <i class="fa fa-caret-right"></i> Emergency Survey (エマージェンシーサーベイ)
                             </a>
                             <!-- <br>
                             <a href="{{ url("index/display/office_clock") }}">
