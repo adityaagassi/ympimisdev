@@ -171,8 +171,7 @@ td{
                   <th>Grup Kejadian</th>
                   <th>Kategori</th>
                   <th>Judul</th>
-                  <th>Loss</th>
-                  <th>Kerugian</th>
+                  <th>Sosialisasi</th>
                   <th>Aksi</th>
                 </tr>
               </thead>
@@ -564,28 +563,14 @@ td{
         var body = '';
         for (var i = 0; i < result.data.length; i++) {
           body += '<tr>';
-          body += '<td style="width: 1%">'+ result.data[i].tanggal_kejadian +'</td>';
-          body += '<td style="width: 1%">'+ result.data[i].lokasi_kejadian +'</td>';
-          body += '<td style="width: 1%">'+ result.data[i].equipment +'</td>';
-          body += '<td style="width: 1%">'+ result.data[i].grup_kejadian +'</td>';
-          body += '<td style="width: 1%">'+ result.data[i].kategori +'</td>';
+          body += '<td style="width: 5%">'+ result.data[i].tanggal_kejadian +'</td>';
+          body += '<td style="width: 5%">'+ result.data[i].lokasi_kejadian +'</td>';
+          body += '<td style="width: 5%">'+ result.data[i].equipment +'</td>';
+          body += '<td style="width: 5%">'+ result.data[i].grup_kejadian +'</td>';
+          body += '<td style="width: 5%">'+ result.data[i].kategori +'</td>';
           body += '<td style="width: 10%">'+ result.data[i].judul +'</td>';
-
-          if (result.data[i].loss != null) {
-            body += '<td style="width: 1%;">'+ result.data[i].loss +'</td>';            
-          }
-          else{
-            body += '<td style="width: 1%;"></td>';     
-          }
-
-          if (result.data[i].kerugian != null) {
-            body += '<td style="width: 1%;">'+ result.data[i].kerugian +'</td>';            
-          }
-          else{
-            body += '<td style="width: 1%;"></td>';     
-          }
-
-          body += '<td style="width: 1%; font-weight: bold;"><a href="{{url("index/form_experience/print")}}/'+ result.data[i].id +'" type="button" class="btn btn-warning btn-sm" target="_blank"><i class="fa fa-file-pdf-o"></i></a></td>';
+          body += '<td style="width: 1%"><a href="javascript:void(0)" data-toggle="modal" class="btn btn-md btn-success" onClick="sosialisasi('+ result.data[i].id +')"><i class="fa fa-user"></i> <i class="fa fa-exchange"></i> <i class="fa fa-users"></i></a> </td>';
+          body += '<td style="width: 1%; font-weight: bold;"><a href="{{url("index/form_experience/print")}}/'+ result.data[i].id +'" type="button" class="btn btn-warning btn-md" target="_blank"><i class="fa fa-file-pdf-o"></i></a></td>';
           body += '</tr>';
         }
 
