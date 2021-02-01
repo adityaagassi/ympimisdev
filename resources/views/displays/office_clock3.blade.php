@@ -121,8 +121,8 @@ table > thead > tr > th{
 		}
 	});
 
-	var audio_clock = new Audio('{{ url("sounds/airport_new2.mp3") }}');
-	var audio_clock_lobby = new Audio('{{ url("sounds/airport_cring.mp3") }}');
+	var audio_clock = new Audio('{{ url("sounds/railway_security.mp3") }}');
+	var audio_clock_lobby = new Audio('{{ url("sounds/railway_lobby.mp3") }}');
 	var myvar = setInterval(waktu,1000);
 
 	jQuery(document).ready(function(){

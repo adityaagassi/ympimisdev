@@ -285,6 +285,15 @@
 						var putih_time = (parseInt(putih[0])*3600) + (parseInt(putih[1])*60) + parseInt(putih[2]);
 						var mr_to_p = putih_time / 60 /60;
 
+						mrh = "";
+						mrp = "";
+
+						if (mr_to_h.toFixed(1) >= 0.5) 
+							mrh = mr_to_h.toFixed(1)+" H";
+
+						if (mr_to_p.toFixed(1) >= 0.5) 
+							mrp = mr_to_p.toFixed(1)+" H";
+
 						//head
 						if (mesin_split[j][1] == 0){//merah
 							head += '<th class="hd" style="background-color: #f24b4b; width:6%;">'+zpro[i][1].replace("MC ","")+'<br><span>'+mr_to_h.toFixed(1)+' H</span></th>';
@@ -314,13 +323,12 @@
 						var hitam_time = (parseInt(hitam[0])*3600) + (parseInt(hitam[1])*60) + parseInt(hitam[2]);
 						var total_time = merah_time + hijau_time + kuning_time + biru_time + putih_time + hitam_time;
 
-
 						body += '<div style="height: 100px;">';
-						body += '<div style="background-color: #f24b4b; height: '+ (merah_time/total_time)*100 +'%;"></div>';
+						body += '<div style="background-color: #f24b4b; height: '+ (merah_time/total_time)*100 +'%;"; line-height: 100%; font-size: 12px;>'+mrh+'</div>';
 						body += '<div style="background-color: #00a65a; height: '+ (hijau_time/total_time)*100 +'%;"></div>';
 						body += '<div style="background-color: #FCF33A; height: '+ (kuning_time/total_time)*100 +'%;"></div>';
 						body += '<div style="background-color: #3366cc; height: '+ (biru_time/total_time)*100 +'%;"></div>';
-						body += '<div style="background-color: #fcfdff; height: '+ (putih_time/total_time)*100 +'%;"></div>';
+						body += '<div style="background-color: #fcfdff; height: '+ (putih_time/total_time)*100 +'%; line-height: 100%; font-size: 12px;">'+mrp+'</div>';
 						body += '<div style="background-color: #000; height: '+ (hitam_time/total_time)*100 +'%;"></div>';
 						body += '</div>';
 
@@ -336,12 +344,12 @@
 			$('#body_zpro').append(body);
 
 		});
-	}
+}
 
-	function mesin2(){
-		$.get("{{ 'http://10.109.52.7/zed/dashboard/getData' }}", function(result, status, xhr){
+function mesin2(){
+	$.get("{{ 'http://10.109.52.7/zed/dashboard/getData' }}", function(result, status, xhr){
 
-			var mesin = result.split('(ime)');
+		var mesin = result.split('(ime)');
 
 			//Machining
 			var machining_data = [
@@ -386,10 +394,20 @@
 
 						var merah = mesin_split[j][4].split(':');
 						var merah_time = (parseInt(merah[0])*3600) + (parseInt(merah[1])*60) + parseInt(merah[2]);
-						var mr_to_h = merah_time / 60 /60;
+						var mr_to_h = merah_time / 60 / 60;
 						var putih = mesin_split[j][8].split(':');
 						var putih_time = (parseInt(putih[0])*3600) + (parseInt(putih[1])*60) + parseInt(putih[2]);
-						var mr_to_p = putih_time / 60 /60;
+						var mr_to_p = putih_time / 60 / 60;
+
+						mrh = "";
+						mrp = "";
+
+						if (mr_to_h.toFixed(1) >= 0.5) 
+							mrh = mr_to_h.toFixed(1)+" H";
+
+						if (mr_to_p.toFixed(1) >= 0.5) 
+							mrp = mr_to_p.toFixed(1)+" H";
+
 
 
 						//head
@@ -422,13 +440,12 @@
 						var hitam_time = (parseInt(hitam[0])*3600) + (parseInt(hitam[1])*60) + parseInt(hitam[2]);
 						var total_time = merah_time + hijau_time + kuning_time + biru_time + putih_time + hitam_time;
 
-
 						body += '<div style="height: 100px;">';
-						body += '<div style="background-color: #f24b4b; height: '+ (merah_time/total_time)*100 +'%;"></div>';
+						body += '<div style="background-color: #f24b4b; height: '+ (merah_time/total_time)*100 +'%; line-height: 100%; font-size: 12px;">'+mrh+'</div>';
 						body += '<div style="background-color: #00a65a; height: '+ (hijau_time/total_time)*100 +'%;"></div>';
 						body += '<div style="background-color: #FCF33A; height: '+ (kuning_time/total_time)*100 +'%;"></div>';
 						body += '<div style="background-color: #3366cc; height: '+ (biru_time/total_time)*100 +'%;"></div>';
-						body += '<div style="background-color: #fcfdff; height: '+ (putih_time/total_time)*100 +'%;"></div>';
+						body += '<div style="background-color: #fcfdff; height: '+ (putih_time/total_time)*100 +'%; line-height: 100%; font-size: 12px;">'+mrp+'</div>';
 						body += '<div style="background-color: #000; height: '+ (hitam_time/total_time)*100 +'%;"></div>';
 						body += '</div>';
 
@@ -479,6 +496,15 @@
 						var putih_time = (parseInt(putih[0])*3600) + (parseInt(putih[1])*60) + parseInt(putih[2]);
 						var mr_to_p = putih_time / 60 /60;
 
+						mrh = "";
+						mrp = "";
+
+						if (mr_to_h.toFixed(1) >= 0.5) 
+							mrh = mr_to_h.toFixed(1)+" H";
+
+						if (mr_to_p.toFixed(1) >= 0.5) 
+							mrp = mr_to_p.toFixed(1)+" H";
+
 						//head
 						if (mesin_split[j][1] == 0){//merah
 							head += '<th class="hd" style="background-color: #f24b4b; width:5%;">'+press_data[i][1]+'<br><span>'+mr_to_h.toFixed(1)+' H</span></th>';
@@ -511,11 +537,11 @@
 
 
 						body += '<div style="height: 100px;">';
-						body += '<div style="background-color: #f24b4b; height: '+ (merah_time/total_time)*100 +'%;"></div>';
+						body += '<div style="background-color: #f24b4b; height: '+ (merah_time/total_time)*100 +'%; line-height: 100%; font-size: 12px;">'+mrh+'</div>';
 						body += '<div style="background-color: #00a65a; height: '+ (hijau_time/total_time)*100 +'%;"></div>';
 						body += '<div style="background-color: #FCF33A; height: '+ (kuning_time/total_time)*100 +'%;"></div>';
 						body += '<div style="background-color: #3366cc; height: '+ (biru_time/total_time)*100 +'%;"></div>';
-						body += '<div style="background-color: #fcfdff; height: '+ (putih_time/total_time)*100 +'%;"></div>';
+						body += '<div style="background-color: #fcfdff; height: '+ (putih_time/total_time)*100 +'%; line-height: 100%; font-size: 12px;">'+mrp+'</div>';
 						body += '<div style="background-color: #000; height: '+ (hitam_time/total_time)*100 +'%;"></div>';
 						body += '</div>';
 
@@ -570,6 +596,15 @@
 						var putih_time = (parseInt(putih[0])*3600) + (parseInt(putih[1])*60) + parseInt(putih[2]);
 						var mr_to_p = putih_time / 60 /60;
 
+						mrh = "";
+						mrp = "";
+
+						if (mr_to_h.toFixed(1) >= 0.5) 
+							mrh = mr_to_h.toFixed(1)+" H";
+
+						if (mr_to_p.toFixed(1) >= 0.5) 
+							mrp = mr_to_p.toFixed(1)+" H";
+
 
 						//head
 						if (mesin_split[j][1] == 0){//merah
@@ -603,11 +638,11 @@
 
 
 						body += '<div style="height: 100px;">';
-						body += '<div style="background-color: #f24b4b; height: '+ (merah_time/total_time)*100 +'%;"></div>';
+						body += '<div style="background-color: #f24b4b; height: '+ (merah_time/total_time)*100 +'%; line-height: 100%; font-size: 12px;">'+mrh+'</div>';
 						body += '<div style="background-color: #00a65a; height: '+ (hijau_time/total_time)*100 +'%;"></div>';
 						body += '<div style="background-color: #FCF33A; height: '+ (kuning_time/total_time)*100 +'%;"></div>';
 						body += '<div style="background-color: #3366cc; height: '+ (biru_time/total_time)*100 +'%;"></div>';
-						body += '<div style="background-color: #fcfdff; height: '+ (putih_time/total_time)*100 +'%;"></div>';
+						body += '<div style="background-color: #fcfdff; height: '+ (putih_time/total_time)*100 +'%; line-height: 100%; font-size: 12px;">'+mrp+'</div>';
 						body += '<div style="background-color: #000; height: '+ (hitam_time/total_time)*100 +'%;"></div>';
 						body += '</div>';
 
@@ -674,6 +709,15 @@
 						var putih_time = (parseInt(putih[0])*3600) + (parseInt(putih[1])*60) + parseInt(putih[2]);
 						var mr_to_p = putih_time / 60 /60;
 
+						mrh = "";
+						mrp = "";
+
+						if (mr_to_h.toFixed(1) >= 0.5) 
+							mrh = mr_to_h.toFixed(1)+" H";
+
+						if (mr_to_p.toFixed(1) >= 0.5) 
+							mrp = mr_to_p.toFixed(1)+" H";
+
 						//head
 						if (mesin_split[j][1] == 0){//merah
 							head += '<th class="hd" style="background-color: #f24b4b; width:5%;">'+senban_data[i][1]+'<br><span>'+mr_to_h.toFixed(1)+' H</span></th>';
@@ -706,11 +750,11 @@
 
 
 						body += '<div style="height: 100px;">';
-						body += '<div style="background-color: #f24b4b; height: '+ (merah_time/total_time)*100 +'%;"></div>';
+						body += '<div style="background-color: #f24b4b; height: '+ (merah_time/total_time)*100 +'%; line-height: 100%; font-size: 12px;">'+mrh+'</div>';
 						body += '<div style="background-color: #00a65a; height: '+ (hijau_time/total_time)*100 +'%;"></div>';
 						body += '<div style="background-color: #FCF33A; height: '+ (kuning_time/total_time)*100 +'%;"></div>';
 						body += '<div style="background-color: #3366cc; height: '+ (biru_time/total_time)*100 +'%;"></div>';
-						body += '<div style="background-color: #fcfdff; height: '+ (putih_time/total_time)*100 +'%;"></div>';
+						body += '<div style="background-color: #fcfdff; height: '+ (putih_time/total_time)*100 +'%; line-height: 100%; font-size: 12px;">'+mrp+'</div>';
 						body += '<div style="background-color: #000; height: '+ (hitam_time/total_time)*100 +'%;"></div>';
 						body += '</div>';
 
