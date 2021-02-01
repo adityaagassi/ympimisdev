@@ -208,8 +208,8 @@
 		mesin1();
 		mesin2();
 
-		// setInterval(mesin1, 1000);
-		// setInterval(mesin2, 1000);
+		setInterval(mesin1, 1000);
+		setInterval(mesin2, 1000);
 		
 		show();
 
