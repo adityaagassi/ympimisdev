@@ -420,6 +420,42 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 						<div class="col-md-12" style="padding-top: 10px;">
 							<ul class="timeline">
 								<li class="time-label">
+									<span style="background-color: blue; color: white;">
+										01 Februari 2021
+									</span>
+								</li>
+								<li>
+									<i class="fa fa-info-circle" style="background-color: blue; color: white;"></i>
+									<div class="timeline-item">
+										<h3 class="timeline-header" style="color: blue; font-weight: bold;">Informasi Terkait Kebijakan Perusahaan</h3>
+										<div class="timeline-body">
+											<a target="_blank" href="{{ url('files/info/2016 - Aturan Penyimpanan Kunci Kantor dan Ruang Produksi.pdf') }}"><i class="fa fa-angle-double-right"></i><i class="fa fa-angle-double-right"></i> 2016 - Aturan Penyimpanan Kunci Kantor dan Ruang Produksi <i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-left"></i></a>
+											<br>
+											<a target="_blank" href="{{ url('files/info/SKD No.003 - Pengaturan PKWT untuk Karyawan yang Pensiun Normal Usia 55 Tahun.pdf') }}"><i class="fa fa-angle-double-right"></i><i class="fa fa-angle-double-right"></i> SKD No.003 - Pengaturan PKWT untuk Karyawan yang Pensiun Normal Usia 55 Tahun <i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-left"></i></a>
+											<br>
+											<a target="_blank" href="{{ url('files/info/SKD No.007 - Ketentuan Tambahan Manfaat Rawat Inap Jaminan Kesehatan.pdf') }}"><i class="fa fa-angle-double-right"></i><i class="fa fa-angle-double-right"></i> SKD No.007 - Ketentuan Tambahan Manfaat Rawat Inap Jaminan Kesehatan <i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-left"></i></a>
+											<br>
+											<a target="_blank" href="{{ url('files/info/SKD No.009 - Ketentuan Grade, Gol.Pekerjaan, Jenis Pekerjaan dan Jabatan.pdf') }}"><i class="fa fa-angle-double-right"></i><i class="fa fa-angle-double-right"></i> SKD No.009 - Ketentuan Grade, Gol.Pekerjaan, Jenis Pekerjaan dan Jabatan <i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-left"></i></a>
+											<br>
+											<a target="_blank" href="{{ url('files/info/SKD No.010 - Ketentuan Promosi Grade dan Golongan Pekerjaan.pdf') }}"><i class="fa fa-angle-double-right"></i><i class="fa fa-angle-double-right"></i> SKD No.010 - Ketentuan Promosi Grade dan Golongan Pekerjaan <i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-left"></i></a>
+											<br>
+											<a target="_blank" href="{{ url('files/info/SKD No.014 - Ketentuan Tunjangan Jabatan.pdf') }}"><i class="fa fa-angle-double-right"></i><i class="fa fa-angle-double-right"></i> SKD No.014 - Ketentuan Tunjangan Jabatan <i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-left"></i></a>
+											<br>
+											<a target="_blank" href="{{ url('files/info/SKD No.016 - Ketentuan Sistem Pendidikan dan Pelatihan.pdf') }}"><i class="fa fa-angle-double-right"></i><i class="fa fa-angle-double-right"></i> SKD No.016 - Ketentuan Sistem Pendidikan dan Pelatihan <i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-left"></i></a>
+											<br>
+											<a target="_blank" href="{{ url('files/info/SKD No.019 - Ketentuan Hari Kerja dan Waktu Kerja.pdf') }}"><i class="fa fa-angle-double-right"></i><i class="fa fa-angle-double-right"></i> SKD No.019 - Ketentuan Hari Kerja dan Waktu Kerja <i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-left"></i></a>
+											<br>
+											<a target="_blank" href="{{ url('files/info/SKD No.020 - Ijin Meninggalkan Tempat Kerja dan Istirahat Bergilir Bagi Karyawan.pdf') }}"><i class="fa fa-angle-double-right"></i><i class="fa fa-angle-double-right"></i> SKD No.020 - Ijin Meninggalkan Tempat Kerja dan Istirahat Bergilir Bagi Karyawan <i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-left"></i></a>
+											<br>
+											<a target="_blank" href="{{ url('files/info/SKD No.021 - Ketentuan Perjalanan Dinas.pdf') }}"><i class="fa fa-angle-double-right"></i><i class="fa fa-angle-double-right"></i> SKD No.021 - Ketentuan Perjalanan Dinas <i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-left"></i></a>
+											<br>
+											<a target="_blank" href="{{ url('files/info/SKD No.032 - Penggunaan Fasilitas Tempat Parkir (Mobil) R2.pdf') }}"><i class="fa fa-angle-double-right"></i><i class="fa fa-angle-double-right"></i> SKD No.032 - Penggunaan Fasilitas Tempat Parkir (Mobil) R2 <i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-left"></i></a>
+											<br>
+											<a target="_blank" href="{{ url('files/info/SKD No.035 - Ketentuan Fasilitas Kendaraan Antar Jemput Karyawan.pdf') }}"><i class="fa fa-angle-double-right"></i><i class="fa fa-angle-double-right"></i> SKD No.035 - Ketentuan Fasilitas Kendaraan Antar Jemput Karyawan <i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-left"></i></a>
+										</div>
+									</div>
+								</li>
+								<li class="time-label">
 									<span style="background-color: red; color: white;">
 										20 April 2020
 									</span>
