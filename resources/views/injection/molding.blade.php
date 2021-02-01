@@ -206,7 +206,7 @@
 				<button id="start_lepas" style="width: 100%; margin-top: 10px; font-size: 30px;  font-weight: bold; border-color: black; color: white; width: 100%" onclick="startLepas()" class="btn btn-success">MULAI LEPAS</button>
 			</div>
 			<div class="col-xs-12" style="padding-left: 0px;padding-right: 5px">
-				<button id="pause_lepas" style="width: 100%; margin-top: 10px; font-size: 30px;  font-weight: bold; border-color: black; color: white; width: 100%" onclick="pause('LEPAS')" class="btn btn-warning">PAUSE</button>
+				<button id="pause_lepas" style="width: 100%; margin-top: 10px; font-size: 30px;  font-weight: bold; border-color: black; color: white; width: 100%" onclick="pause('LEPAS','PAUSE')" class="btn btn-warning">PAUSE</button>
 			</div>
 			<div class="col-xs-6" style="padding-left: 0px;padding-right: 5px">
 				<button id="batal_lepas" style="width: 100%; margin-top: 10px; font-size: 30px;  font-weight: bold; border-color: black; color: white; width: 100%" onclick="cancelLepas()" class="btn btn-danger">BATAL</button>	
@@ -312,8 +312,17 @@
 				<button id="start_pasang" style="width: 100%; margin-top: 10px; font-size: 30px;  font-weight: bold; border-color: black; color: white; width: 100%" onclick="startPasang()" class="btn btn-success">MULAI PASANG</button>
 				<!-- <input type="hidden" id="start_time_pasang"> -->
 			</div>
-			<div class="col-xs-12" style="padding-left: 0px;padding-right: 5px">
-				<button id="pause_pasang" style="width: 100%; margin-top: 10px; font-size: 30px;  font-weight: bold; border-color: black; color: white; width: 100%" onclick="pause('PASANG')" class="btn btn-warning">PAUSE</button>
+			<div class="col-xs-6" style="padding-left: 0px;padding-right: 5px">
+				<button id="pause_pasang" style="width: 100%; margin-top: 10px; font-size: 30px;  font-weight: bold; border-color: black; color: white; width: 100%" onclick="pause('PASANG','PAUSE')" class="btn btn-warning">PAUSE</button>
+			</div>
+			<div class="col-xs-6" style="padding-left: 0px;padding-right: 5px">
+				<button id="first_inject_pasang" style="width: 100%; margin-top: 10px; font-size: 30px;  font-weight: bold; border-color: black; color: black; width: 100%" onclick="pause('PASANG','FIRST INJECT')" class="btn btn-default">FIRST INJECT</button>
+			</div>
+			<div class="col-xs-6" style="padding-left: 0px;padding-right: 5px">
+				<button id="cek_visual_pasang" style="width: 100%; margin-top: 10px; font-size: 30px;  font-weight: bold; border-color: black; color: black; width: 100%" onclick="pause('PASANG','CEK VISUAL & DIMENSI')" class="btn btn-default">CEK VISUAL & DIMENSI</button>
+			</div>
+			<div class="col-xs-6" style="padding-left: 0px;padding-right: 5px">
+				<button id="approval_pasang" style="width: 100%; margin-top: 10px; font-size: 30px;  font-weight: bold; border-color: black; color: black; width: 100%" onclick="pause('PASANG','APPROVAL QA')" class="btn btn-default">APPROVAL QA</button>
 			</div>
 			<div class="col-xs-6" style="padding-left: 0px;padding-right: 5px">
 				<button id="batal_pasang" style="width: 100%; margin-top: 10px; font-size: 30px;  font-weight: bold; border-color: black; color: white; width: 100%" onclick="cancelPasang()" class="btn btn-danger">BATAL</button>
@@ -425,7 +434,7 @@
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<center> <b style="font-size: 2vw">PAUSE</b> </center>
+				<center> <b style="font-size: 2vw" id="statusReason">PAUSE</b> </center>
 				<input type="hidden" id="typePause">
 				<div class="modal-body table-responsive no-padding">
 					<div class="form-group">
@@ -1231,8 +1240,8 @@
 			if(result.status){
 				if(result.datas.length != 0){
 					$.each(result.datas, function(key, value) {
-						if (value.remark == 'PAUSE') {
-							if (confirm('Pekerjaan dalam kondisi Pause. Apakah Anda ingin melanjutkan?')) {
+						if (value.remark != null) {
+							if (confirm('Pekerjaan dalam kondisi '+value.remark+'. Apakah Anda ingin melanjutkan?')) {
 								$('#molding_code').val(value.molding_code);
 								changeStatus(value.molding_code);
 								if (value.type == "LEPAS") {
@@ -1386,9 +1395,10 @@
 		});
 	}
 
-	function pause(type) {
+	function pause(type,status) {
 		$('#modalStatus').modal('show');
 		$('#typePause').val(type);
+		$('#statusReason').html(status);
 		$('#reasonPause').val('');
 	}
 
@@ -1426,7 +1436,7 @@
 		var data = {
 			type:$('#typePause').val(),
 			molding_code:$('#molding_code').val(),
-			status:'PAUSE',
+			status:$('#statusReason').text(),
 			pic:pic.join(),
 			mesin:mesin,
 			part:part,
@@ -1436,7 +1446,7 @@
 
 		$.get('{{ url("input/reason_pause") }}', data, function(result, status, xhr){
 			if(result.status){
-				alert('Pemasangan / Pelepasan Molding Dihentikan Sementara.');
+				alert('Pemasangan / Pelepasan Molding Dalam Proses '+$('#statusReason').text());
 				location.reload();
 				$('#reasonPause').val('');
 			}else{
