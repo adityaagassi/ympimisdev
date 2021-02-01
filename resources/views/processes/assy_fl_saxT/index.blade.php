@@ -32,6 +32,7 @@
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: red;">
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> NG <i class="fa fa-angle-double-down"></i></span>
+			<a href="{{ url("index/process_assembly_kensa", "subassy-incoming-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Incoming Check Key</a>
 			<a href="{{ url("/index/repairSx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Return/Repair</a>
 			<a href="{{ url("index/ngSx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Ng</a>
 		</div>

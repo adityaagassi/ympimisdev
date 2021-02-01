@@ -21,9 +21,14 @@ use App\StampSchedule;
 use App\Material;
 use App\Process;
 use App\ErrorLog;
-
+use App\MiddleInventory;
+use App\MiddleLacqueringLog;
+use App\MiddleLacqueringCheckLog;
+use App\MiddleLacqueringNgLog;
+use App\MiddlePlatingLog;
+use App\MiddlePlatingCheckLog;
+use App\MiddlePlatingNgLog;
 use App\ImageSax;
-
 use App\Mail\SendEmail;
 use Illuminate\Support\Facades\Mail;
 
@@ -984,12 +989,191 @@ class ProcessController extends Controller
 	}
 
 	public function indexResumesCL(){
-
-
 		return view('processes.assy_fl_cla.resumes')
 		->with('page', 'Process Assy CL')->with('head', 'Assembly Process');
 	}
 
+
+	public function indexProcessKensa($id){
+		$ng_lists = DB::table('ng_lists')->where('location', '=', $id)->get();
+
+		if($id == 'subassy-incoming-sx'){
+			$title = 'I.C. Saxophone Key';
+			$title_jp= '';
+		}
+		
+
+		return view('processes.assy_fl_saxT.kensa', array(
+			'ng_lists' => $ng_lists,
+			'loc' => $id,
+			'title' => $title,
+			'title_jp' => $title_jp,
+		))->with('page', 'Process Middle SX')->with('head', 'Middle Process');
+	}
+
+	public function scanAssemblyKensa(Request $request){
+		$id = Auth::id();
+		$started_at = date('Y-m-d H:i:s');
+
+		$middle_inventory = MiddleInventory::where('tag', '=', $request->get('tag'))
+		->leftJoin('materials', 'materials.material_number', '=', 'middle_inventories.material_number')
+		->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'middle_inventories.last_check')
+		->select(
+			'materials.model',
+			'materials.key',
+			'materials.surface',
+			'middle_inventories.material_number',
+			'middle_inventories.quantity',
+			'middle_inventories.tag',
+			'employee_syncs.employee_id',
+			'employee_syncs.name'
+		)
+		->first();
+
+		if(count($middle_inventory) > 0){
+			$response = array(
+				'status' => true,
+				'message' => 'ID slip found.',
+				'middle_inventory' => $middle_inventory,
+				'started_at' => $started_at,
+			);
+			return Response::json($response);
+		}
+		else{
+			$response = array(
+				'status' => false,
+				'message' => 'ID slip not found.',
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function inputAssemblyKensa(Request $request){
+
+		$loc = $request->get('loc');
+		$code_generator = CodeGenerator::where('note','=','middle-kensa')->first();
+		$code = $code_generator->index+1;
+		$code_generator->index = $code;
+		$code_generator->save();
+
+		$material = Material::where('material_number', $request->get('material_number'))->first();
+
+		if($request->get('ng')){
+			foreach ($request->get('ng') as $ng) {
+
+				$middle_ng_log;
+				if(str_contains($material->surface, 'PLT')){
+					$middle_ng_log = new MiddlePlatingNgLog([
+						'employee_id' => $request->get('employee_id'),
+						'tag' => $request->get('tag'),
+						'material_number' => $request->get('material_number'),
+						'ng_name' => $ng[0],
+						'quantity' => $ng[1],
+						'location' => $request->get('loc'),
+						'started_at' => $request->get('started_at'),
+						'operator_id' => $request->get('operator_id'),
+						'remark' => $code
+					]);
+				}else{
+					$middle_ng_log = new MiddleLacqueringNgLog([
+						'employee_id' => $request->get('employee_id'),
+						'tag' => $request->get('tag'),
+						'material_number' => $request->get('material_number'),
+						'ng_name' => $ng[0],
+						'quantity' => $ng[1],
+						'location' => $request->get('loc'),
+						'started_at' => $request->get('started_at'),
+						'operator_id' => $request->get('operator_id'),
+						'remark' => $code
+					]);
+				}
+
+
+				try{
+					$middle_ng_log->save();
+				}
+				catch(\Exception $e){
+					$response = array(
+						'status' => false,
+						'message' => $e->getMessage(),
+					);
+					return Response::json($response);
+				}
+			}
+		}
+
+
+		$middle_inventory = MiddleInventory::where('tag', '=', $request->get('tag'))->first();
+		$middle_inventory->location = $request->get('loc');
+		$middle_inventory->last_check = $request->get('employee_id');
+
+
+		$middle_log;
+		if(str_contains($material->surface, 'PLT')){
+			$middle_log = new MiddlePlatingLog([
+				'employee_id' => $request->get('employee_id'),
+				'tag' => $request->get('tag'),
+				'material_number' => $request->get('material_number'),
+				'quantity' => $request->get('quantity'),
+				'location' => $request->get('loc'),
+				'started_at' => $request->get('started_at'),
+				'operator_id' => $request->get('operator_id')
+			]);			
+		}else{
+			$middle_log = new MiddleLacqueringLog([
+				'employee_id' => $request->get('employee_id'),
+				'tag' => $request->get('tag'),
+				'material_number' => $request->get('material_number'),
+				'quantity' => $request->get('quantity'),
+				'location' => $request->get('loc'),
+				'started_at' => $request->get('started_at'),
+				'operator_id' => $request->get('operator_id')
+			]);
+		}
+
+		$middle_check_log;
+		if(str_contains($material->surface, 'PLT')){
+			$middle_check_log = new MiddlePlatingCheckLog([
+				'employee_id' => $request->get('employee_id'),
+				'tag' => $request->get('tag'),
+				'material_number' => $request->get('material_number'),
+				'quantity' => $request->get('quantity'),
+				'location' => $request->get('loc'),
+				'operator_id' => $request->get('operator_id')
+			]);
+		}else{
+			$middle_check_log = new MiddleLacqueringCheckLog([
+				'employee_id' => $request->get('employee_id'),
+				'tag' => $request->get('tag'),
+				'material_number' => $request->get('material_number'),
+				'quantity' => $request->get('quantity'),
+				'location' => $request->get('loc'),
+				'operator_id' => $request->get('operator_id')
+			]);
+		}
+
+		try{
+			DB::transaction(function() use ($middle_check_log, $middle_log, $middle_inventory){
+				$middle_check_log->save();
+				$middle_log->save();
+				$middle_inventory->save();
+			});
+
+
+			$response = array(
+				'status' => true,
+				'message' => 'Input material successfull.',
+			);
+			return Response::json($response);
+		}
+		catch(\Exception $e){
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}		
+	}
 
 
 	public function fetchStampPlan($id){
