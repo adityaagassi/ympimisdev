@@ -1533,7 +1533,7 @@ class InjectionsController extends Controller
     public function update_tag(Request $request)
     {
         try {
-            $id_user = Auth::id();
+            $id = Auth::id();
 
             $tag = InjectionTag::where('tag',$request->get('tag'))->first();
             $tag->part_name = $request->get('part_name');
@@ -6532,7 +6532,7 @@ class InjectionsController extends Controller
     public function indexInjectionInventories()
     {
         $title = 'Injection Inventories';
-        $title_jp = '???';
+        $title_jp = '成形在庫';
         return view('injection.inventory',array(
             'title' => $title,
             'title_jp' => $title_jp,
@@ -6674,6 +6674,89 @@ class InjectionsController extends Controller
             $response = array(
                 'status' => false,
                 'message' => $e->getMessage(),
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function indexReportSetupMolding()
+    {
+        $title = 'Setup Molding History';
+        $title_jp = '金型セットアップ履歴';
+        return view('injection.report_setup_molding',array(
+            'title' => $title,
+            'title_jp' => $title_jp,
+        ))->with('page', 'Setup Molding History')->with('jpn', '成形在庫');
+    }
+
+    public function fetchReportSetupMolding(Request $request)
+    {
+        try {
+
+            $data = DB::SELECT("SELECT
+                injection_history_molding_logs.molding_code,
+                injection_history_molding_logs.pic,
+                injection_history_molding_logs.type,
+                injection_history_molding_logs.mesin,
+                injection_history_molding_logs.part,
+                injection_history_molding_logs.created_at AS created,
+                ROUND( total_shot / qty_shot, 0 ) AS last_shot,
+                injection_history_molding_logs.start_time,
+                injection_history_molding_logs.end_time,
+                TIMEDIFF( end_time, start_time ) as duration,
+                injection_history_molding_logs.note,
+                injection_history_molding_logs.decision 
+            FROM
+                `injection_history_molding_logs`
+                LEFT JOIN injection_molding_masters ON injection_molding_masters.part = injection_history_molding_logs.part
+                order by injection_history_molding_logs.id desc");
+
+            $dataall = [];
+            $dataworkall = [];
+
+            foreach ($data as $key) {
+                $work = DB::SELECT("SELECT *,TIMEDIFF( end_time, start_time ) as duration FROM `injection_history_molding_works` where molding_code = '".$key->molding_code."'");
+
+                if (count($work) > 0) {
+                    foreach ($work as $val) {
+                        $datawork = array(
+                            'molding_code' => $val->molding_code,
+                            'status' => $val->status,
+                            'start_time' => $val->start_time,
+                            'end_time' => $val->end_time,
+                            'duration' => $val->duration,
+                            'reason' => $val->reason, );
+                        $dataworkall[] = join("+",$datawork);
+                    }
+                }
+
+                // $datas = array(
+                //     'molding_code' => $key->molding_code,
+                //     'pic' => $key->pic,
+                //     'type' => $key->type,
+                //     'mesin' => $key->mesin,
+                //     'part' => $key->part,
+                //     'created' => $key->created,
+                //     'last_shot' => $key->last_shot,
+                //     'start_time' => $key->start_time,
+                //     'end_time' => $key->end_time,
+                //     'duration' => $key->duration,
+                //     'note' => $key->note,
+                //     'decision' => $key->decision, );
+
+                // $dataall[] = $datas;
+            }
+
+            $response = array(
+                'status' => true,
+                'datas' => $data,
+                'dataworkall' => $dataworkall
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage()
             );
             return Response::json($response);
         }
