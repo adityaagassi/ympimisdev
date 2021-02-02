@@ -136,7 +136,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('injection:schedule')->dailyAt('04:00');
 
 
-        // $schedule->command('kd:shipment')->everyThirtyMinutes();
+        $schedule->command('kd:shipment')->everyThirtyMinutes();
     }
 
     /**
