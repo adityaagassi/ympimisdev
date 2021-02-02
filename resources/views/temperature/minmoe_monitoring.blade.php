@@ -398,7 +398,7 @@
 						if (value.temperature != '-' && value.temperature >= 37.5) {
 							detail_abnormal.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups,temp:value.temperature});
 						}
-						detail_all.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups,temp:value.temperature});
+						detail_all.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups,temp:value.temperature,point:value.point});
 						if (value.remark == 'OFC' || value.remark == 'Jps') {
 							if (value.checks == null) {
 
@@ -609,17 +609,19 @@
 					var index = 1;
 					var resultDataAbnormal = "";
 
-					$.each(detail_abnormal, function(key, value) {
-						resultDataAbnormal += '<tr>';
-						resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+index+'</td>';
-						resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+value.employee_id+'</td>';
-						resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.name +'</td>';
-						resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.dept +'</td>';
-						resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.shift +'</td>';
-						resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.time_in +'</td>';
-						resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.temp +'</td>';
-						resultDataAbnormal += '</tr>';
-						index++;
+					$.each(result.dataabnormal, function(key, value) {
+						if (value.temperature >= 37.5) {
+							resultDataAbnormal += '<tr>';
+							resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+index+'</td>';
+							resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+value.employee_id+'</td>';
+							resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.name +'</td>';
+							resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.department_shortname +'</td>';
+							resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.shift +'</td>';
+							resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.date_in +'</td>';
+							resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.temperature +'</td>';
+							resultDataAbnormal += '</tr>';
+							index++;
+						}
 					});
 
 					$('#tableAbnormalBody').append(resultDataAbnormal);
@@ -627,8 +629,14 @@
 					var categories1 = [];
 					var series1 = [];
 					var temp = [];
+
+					var categories2 = [];
+					var series2 = [];
+					var temp2 = [];
+
+					var ind = 0;
 					var counts = result.attendance.reduce((p, c) => {
-					  var name = c.temperature;
+					  var name = String(c.temperature);
 					  if (!p.hasOwnProperty(name)) {
 					    p[name] = 0;
 					  }
@@ -636,14 +644,13 @@
 					  return p;
 					}, {});
 
-					// console.log(counts['36.5']);
-					// $.each(counts, function(key, value) {
-					// 	if (key != "-" && key != "null") {
-					// 		categories1.push(key+' °C');
-					// 		temp.push(parseFloat(value));
-					// 		series1.push({y:parseFloat(value),key:key});
-					// 	}
-					// });
+					$.each(counts, function(key, value) {
+						if (key != "-" && key != "null") {
+							categories2.push(key+' °C');
+							temp2.push(parseFloat(value));
+							series2.push({y:parseFloat(value),key:key});
+						}
+					});
 
 					$.each(result.datatoday, function(key, value) {
 						// console.log(value);
@@ -761,7 +768,7 @@ function fetchTemperatureDetail(temperature){
 			var total = 0;
 
 			$.each(result.details, function(key, value) {
-				// if (value.temp === temperature) {
+				if (value.temperature === temperature) {
 					resultData += '<tr>';
 					resultData += '<td>'+ index +'</td>';
 					resultData += '<td>'+ value.employee_id +'</td>';
@@ -774,8 +781,25 @@ function fetchTemperatureDetail(temperature){
 					resultData += '<td>'+ value.temperature +' °C</td>';
 					resultData += '</tr>';
 					index += 1;
-				// }
+				}
 			});
+
+			// $.each(detail_all, function(key, value) {
+			// 	if (value.temp === temperature) {
+			// 		resultData += '<tr>';
+			// 		resultData += '<td>'+ index +'</td>';
+			// 		resultData += '<td>'+ value.employee_id +'</td>';
+			// 		resultData += '<td>'+ value.name +'</td>';
+			// 		resultData += '<td>'+ value.dept +'</td>';
+			// 		resultData += '<td>'+ value.section +'</td>';
+			// 		resultData += '<td>'+ value.group +'</td>';
+			// 		resultData += '<td>'+ value.point +'</td>';
+			// 		resultData += '<td>'+ value.time_in +'</td>';
+			// 		resultData += '<td>'+ value.temp +' °C</td>';
+			// 		resultData += '</tr>';
+			// 		index += 1;
+			// 	}
+			// });
 			$('#tableDetailBody').append(resultData);
 			$('#modalDetailTitle').html("<center><span style='font-size: 20px; font-weight: bold;'>Detail Employees on "+temperature+" °C</span></center>");
 
