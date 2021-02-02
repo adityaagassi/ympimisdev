@@ -217,6 +217,7 @@ class ContainerScheduleController extends Controller{
     }
 
     public function excelShipReservation(Request $request){
+
         $period = '';
         $excel = ShipmentReservation::whereNull('deleted_at');
 
@@ -264,25 +265,25 @@ class ContainerScheduleController extends Controller{
 
 
         if($request->get('search_help') != null ){
-            $excel = $excel->whereIn('help', $request->get('search_help'));
+            $excel = $excel->where('help', $request->get('search_help'));
         }
         if($request->get('search_status') != null ){
-            $excel = $excel->whereIn('status', $request->get('search_status'));
+            $excel = $excel->where('status', $request->get('search_status'));
         }
         if($request->get('serach_application_rate') != null ){
-            $excel = $excel->whereIn('application_rate', $request->get('serach_application_rate'));
+            $excel = $excel->where('application_rate', $request->get('serach_application_rate'));
         }
         if($request->get('serach_pod') != null ){
-            $excel = $excel->whereIn('port_of_delivery', $request->get('serach_pod'));
+            $excel = $excel->where('port_of_delivery', $request->get('serach_pod'));
         }
 
 
 
         if($request->get('serach_carier') != null ){
-            $excel = $excel->whereIn('carier', $request->get('serach_carier'));
+            $excel = $excel->where('carier', $request->get('serach_carier'));
         }
         if($request->get('search_nomination') != null ){
-            $excel = $excel->whereIn('nomination', $request->get('search_nomination'));
+            $excel = $excel->where('nomination', $request->get('search_nomination'));
         }
 
         $excel = $excel->orderBy('period', 'ASC')
@@ -307,6 +308,7 @@ class ContainerScheduleController extends Controller{
             'excel' => $excel,
             'resumes' => $resumes
         );
+
 
         // return view('container_schedules.shipping_order.excel_shipping_order', $data);
 

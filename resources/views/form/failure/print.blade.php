@@ -31,7 +31,7 @@
 				<td colspan="6" style="vertical-align: middle;font-size: 16px;font-weight: bold">Form Kegagalan & Permasalahan </td>
 			</tr>
 			<tr>
-				<td colspan="6" rowspan="2" style="vertical-align: middle;text-align: center;font-size: 12px"><b><?= strtoupper($form_failures->judul)?></b><br>Tanggal Kejadian : <b><?php echo date('d F Y', strtotime($form_failures->tanggal_kejadian)) ?></b></td>
+				<td colspan="6" rowspan="2" style="vertical-align: middle;text-align: center;font-size: 12px"><b><?= strtoupper($form_failures->judul)?></b><br>Waktu Kejadian : <b><?php echo date('F Y', strtotime($form_failures->tanggal_kejadian)) ?></b></td>
 			</tr>
 			<tr></tr>
 <!-- 			<tr>
