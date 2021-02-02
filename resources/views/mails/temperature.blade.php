@@ -30,6 +30,7 @@
 						<th style="width: 2%; border:1px solid black;">Dept</th>
 						<th style="width: 2%; border:1px solid black;">Section</th>
 						<th style="width: 2%; border:1px solid black;">Group</th>
+						<th style="width: 2%; border:1px solid black;">Time</th>
 						<th style="width: 2%; border:1px solid black;">Temperature</th>
 					</tr>
 				</thead>
@@ -42,6 +43,7 @@
 							<td style="border:1px solid black; text-align: center;">{{ $data[$i]['department'] }}</td>
 							<td style="border:1px solid black; text-align: center;">{{ $data[$i]['section'] }}</td>
 							<td style="border:1px solid black; text-align: center;">{{ $data[$i]['group'] }}</td>
+							<td style="border:1px solid black; text-align: center;">{{ $data[$i]['date_in'] }}</td>
 							<td style="border:1px solid black; text-align: center;">{{ $data[$i]['temperature'] }}</td>
 						</tr>
 					<?php } ?>
