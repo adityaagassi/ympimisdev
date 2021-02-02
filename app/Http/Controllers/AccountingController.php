@@ -9547,6 +9547,7 @@ $response = array(
     'status' => true,
     'datas' => $data,
     'year' => $year,
+    'department' => $dep,
     'data_investment_belum_po' => $data_investment_belum_po
     // 'data_investment_belum_receive' => $data_investment_belum_receive
 );
@@ -9705,8 +9706,6 @@ public function detailMonitoringInv(Request $request){
   else if ($status == "Investment Completed") {
       $status_sign = "and posisi = 'finished'";
   }
-
-
 
   $qry = "SELECT acc_investments.*, weekly_calendars.week_name FROM acc_investments JOIN weekly_calendars on acc_investments.submission_date = weekly_calendars.week_date WHERE acc_investments.deleted_at is null and week_name = '".$week."' ".$department." ".$status_sign." ORDER BY acc_investments.id DESC";
 
