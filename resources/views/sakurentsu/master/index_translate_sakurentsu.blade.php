@@ -81,7 +81,7 @@
     <div class="col-xs-12">
       <div class="box box-solid">
         <div class="box-header">
-          <h3 class="box-title">Sakurentsu</h3>
+          <center><h3 class="box-title">Sakurentsu</h3></center>
         </div>
         <div class="box-body">
           <div class="row">
@@ -109,7 +109,7 @@
     <div class="col-xs-12">
       <div class="box box-solid">
         <div class="box-header">
-          <h3 class="box-title">3M</h3>
+          <center><h3 class="box-title">3M</h3></center>
         </div>
         <div class="box-body">
           <div class="row">

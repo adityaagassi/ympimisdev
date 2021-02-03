@@ -114,21 +114,21 @@
           <div class="row">
             <div class="col-xs-4">
               <div class="form-group">
-                <label for="sk_number">Sakurentsu Number</label>
+                <label for="sk_number">Sakurentsu Number <span class="text-purple">作連通番号</span></label>
                 <input type="text" class="form-control" id="sk_number" readonly="" value="{{ $judul->sakurentsu_number }}">
               </div>
             </div>
 
             <div class="col-xs-5">
               <div class="form-group">
-                <label for="title">Sakurentsu Title</label>
+                <label for="title">Sakurentsu Title <span class="text-purple">作連通の表題</span></label>
                 <input type="text" class="form-control" id="title" readonly="" value="{{ $judul->title }}">
               </div>
             </div>
 
             <div class="col-xs-3">
               <div class="form-group">
-                <label for="target">Target Date</label>
+                <label for="target">Target Date <span class="text-purple">締切</span></label>
                 <input type="text" class="form-control" id="target" readonly="" value="{{ $judul->tgl_target }}">
               </div>
             </div>
@@ -155,6 +155,7 @@
                   <input type="hidden" value="{{csrf_token()}}" name="_token" />
                   <input type="hidden" name="stat" value="4">
                   <input type="text" class="form-control input-lg" id="title_name" placeholder="Title" name="title_name">
+                  <input type="text" class="form-control input-lg" id="title_jp" placeholder="Title" name="title_jp">
                   <input type="hidden" class="form-control" id="id" name="id">
                 </div>
               </div>
@@ -207,7 +208,7 @@
             <div class="row">
               <div class="col-xs-4">
                 <div class="form-group">
-                  <label for="related_department">Related Department</label>
+                  <label for="related_department">Related Department <span class="text-purple">関係部門</span></label>
                   <select class="form-control select2" id="related_department" name="related_department[]" data-placeholder="Select Related Department" multiple="">
                     <option value=""></option>
                     @foreach($departemen as $dpr)
@@ -257,7 +258,7 @@
             <div class="row">
               <div class="col-xs-12">
                 <div class="form-group">
-                  <label>Item khusus <span class="text-purple">特記事項</span></label>
+                  <label>Item Khusus <span class="text-purple">特記事項</span></label>
                   <textarea id="item_khusus" name="item_khusus"></textarea>
                 </div>
               </div>
@@ -268,10 +269,10 @@
                 <div class="form-group">
                   <p><b>Perubahan Bom <span class="text-purple">BOM変更</span></b></p>
                   <label class="radio-inline">
-                    <input type="radio" name="bom_change" value="Ada">Ada
+                    <input type="radio" name="bom_change" value="Ada">Ada 有り
                   </label>
                   <label class="radio-inline">
-                    <input type="radio" name="bom_change" value="Tidak Ada">Tidak Ada
+                    <input type="radio" name="bom_change" value="Tidak Ada">Tidak Ada 無し
                   </label>
                 </div>
               </div>
@@ -280,7 +281,7 @@
             <div class="row">
               <div class="col-xs-12">
                 <div class="form-group">
-                  <label>Lampiran <span class="text-purple"></span></label>
+                  <label>Lampiran <span class="text-purple">添付</span></label>
                   <table id="table_lampiran">
                   </table>
                   <input name="file[]" type="file" id="lampiran" multiple >
@@ -737,7 +738,7 @@
           <div class="col-xs-12">
             <button type="submit" class="btn btn-success pull-right" style="margin-top: 5px" id="save_3m"><i class="fa fa-check"></i>&nbsp; SAVE 3M</button>
             <!-- <button type="button" class="btn btn-primary pull-right" style="margin-top: 5px; margin-right: 5px" id="email_doc" onclick="modal_email()"><i class="fa fa-envelope"></i>&nbsp; Email PIC Document</button> -->
-            <button type="button" class="btn btn-danger pull-right" style="margin-top: 5px; margin-right: 5px" onclick="generate_pdf()"><i class="fa fa-file-pdf-o"></i>&nbsp; View</button>
+            <button type="button" class="btn btn-danger pull-right" style="margin-top: 5px; margin-right: 5px" onclick="generate_pdf()"><i class="fa fa-file-pdf-o"></i>&nbsp; View & Sign</button>
           </div>
         </div>
       </form>
@@ -915,6 +916,7 @@
     this.on('sendingmultiple', function (data, xhr, formData) {
       formData.append("id", $("#id").val());
       formData.append("title_name", $("#title_name").val());
+      formData.append("title_jp", $("#title_jp").val());
       formData.append("product_name", $("#product_name").val());
       formData.append("proccess_name", $("#proccess_name").val());
       formData.append("unit_name", $("#unit_name").val());
@@ -947,6 +949,7 @@ function fillData() {
   var datas = <?php echo json_encode($tiga_m); ?>;
 
   $("#title_name").val(datas.title);
+  $("#title_jp").val(datas.title_jp);
   $("#id").val(datas.id);
   $("#product_name").val(datas.product_name);
   $("#proccess_name").val(datas.proccess_name);
@@ -998,7 +1001,8 @@ $('#main_form').on('submit', function (e) {
   formData.append('special_item', CKEDITOR.instances.item_khusus.getData());
   formData.append('sakurentsu_number', $("#sk_number").val());
   formData.append('related_department', $("#related_department").val());
-  formData.append('stat', 4);
+  formData.append('bom_change', $("input[name='bom_change']:checked").val());
+  formData.append('stat', 5);
 
   // formData.append('file', $("#lampiran").prop('files')[0]);
   $.each($('input[name="file[]"]'),function(i, obj) {
@@ -1008,7 +1012,7 @@ $('#main_form').on('submit', function (e) {
   });
 
 
-  var url = "{{ url('post/sakurentsu/3m/premeeting')}}";
+  var url = "{{ url('post/sakurentsu/3m/finalmeeting')}}";
   // var formData = new FormData(this); 
     // build the ajax call
     $.ajax({
@@ -1017,7 +1021,7 @@ $('#main_form').on('submit', function (e) {
       data: formData,
       success: function (response) {
             // handle success response
-            console.log(response.message);
+            openSuccessGritter('Success', 'Successfully saving 3M Form');
           },
           error: function (response) {
             // handle error response
@@ -1048,14 +1052,11 @@ $(".btn-upload").click(function() {
     if (result.status) {
       body_file = "";
       $.each(result.docs, function(key, value) {  
-       var obj = JSON.parse(value.file_name); 
-       $.each(obj, function(index, val) {  
         body_file += "<tr>";
         body_file += "<td>";
-        body_file += "<a href='"+"{{ url('uploads/sakurentsu/three_m/doc/') }}/"+val+"' target='_blank'><i class='fa fa-file-pdf-o'></i> "+val+"</a>";
+        body_file += "<a href='"+"{{ url('uploads/sakurentsu/three_m/doc/') }}/"+value.file_name+"' target='_blank'><i class='fa fa-file-pdf-o'></i> "+value.file_name+"</a>";
         body_file += "</td>";
         body_file += "</tr>";
-      })
      });
 
       $("#bodyFile").append(body_file);
@@ -1115,7 +1116,8 @@ function save_3m() {
       // date: $("#date").val(),
       product : $("#product_name").val(),
       proccess : $("#proccess_name").val(),
-      title : $("#title").val(),
+      title : $("#title_name").val(),
+      title_jp : $("#title_jp").val(),
       unit_name : $("#unit_name").val(),
       category : $("input[name='category']:checked").val(),
       content : CKEDITOR.instances.isi.getData(),
@@ -1214,7 +1216,7 @@ function fillDocument() {
             $("input[name='doc_note_"+i+"']").val(value.document_description);
             $("input[name='doc_target_"+i+"']").val(value.target_date);
             $("input[name='doc_finish_"+i+"']").val(value.finish_date);
-            $("input[name='doc_pic_"+i+"']").val(value.pic).trigger('change');
+            $("#doc_pic_"+i).val(value.pic).trigger('change');
             $("#doc_"+i).css('display','block');
 
             arr_docs.push(i);

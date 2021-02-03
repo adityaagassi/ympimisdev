@@ -318,6 +318,9 @@ Route::get('fetch/injection/machine_monitoring', 'InjectionsController@fetchMach
 Route::get('index/injection/stock_monitoring', 'InjectionsController@indexStockMonitoring');
 Route::get('fetch/injection/stock_monitoring', 'InjectionsController@fetchStockMonitoring');
 
+Route::get('index/injection/report_setup_molding', 'InjectionsController@indexReportSetupMolding');
+Route::get('fetch/injection/report_setup_molding', 'InjectionsController@fetchReportSetupMolding');
+
 //end report
 
 
@@ -1020,6 +1023,7 @@ Route::group(['nav' => 'S37', 'middleware' => 'permission'], function(){
 	Route::post('delete/return', 'TransactionController@deleteReturn');
 	Route::post('input/display/efficiency_monitoring_monthly', 'DisplayController@inputEfficiencyMonitoringMonthly');
 });
+
 Route::get('index/return', 'TransactionController@indexReturn');
 Route::get('index/return/data', 'TransactionController@indexReturnData');
 Route::get('fetch/return/data', 'TransactionController@fetchReturnData');
@@ -1341,6 +1345,7 @@ Route::get('index/sakurentsu/list_3m', 'SakurentsuController@index_tiga_em');
 Route::get('fetch/sakurentsu/list_3m', 'SakurentsuController@fetch_tiga_em');
 Route::get('index/sakurentsu/3m/translate/{id}', 'SakurentsuController@index_translate_tiga_em');
 
+Route::get('index/sakurentsu/3m', 'SakurentsuController@index_form_tiga_em_new');
 Route::get('index/sakurentsu/3m/{sakurentsu_number}', 'SakurentsuController@index_form_tiga_em');
 Route::post('post/sakurentsu/3m_form', 'SakurentsuController@save_tiga_em_form');
 Route::post('post/sakurentsu/3m/translate', 'SakurentsuController@save_tiga_em_translate');
@@ -1362,6 +1367,7 @@ Route::get('detail/sakurentsu/3m/{id_three_m}/{position}', 'SakurentsuController
 Route::get('generate/sakurentsu/3m/pdf/{id_three_m}', 'SakurentsuController@generate_tiga_em_pdf');
 Route::get('get/sakurentsu/3m', 'SakurentsuController@get_employee_sign');
 Route::post('post/sakurentsu/3m/sign', 'SakurentsuController@signing_tiga_em');
+Route::get('email/sakurentsu/3m/unsigned', 'SakurentsuController@mail_unsigned_tiga_em');
 
 // 3M Implementasi
 Route::post('post/sakurentsu/3m/receive_std', 'SakurentsuController@receive_tiga_em');
@@ -1607,6 +1613,8 @@ Route::get('fetch/budget/log', 'AccountingController@fetch_budget_log');
 
 //Budget Monthly User
 Route::get('budget/monthly', 'AccountingController@budget_monthly');
+Route::get('fetch/budget/monthly', 'AccountingController@fetch_budget_monthly');
+Route::get('fetch/budget_monthly/table', 'AccountingController@fetch_budget_monthly_table');
 
 //Transfer Budget
 Route::get('transfer/budget', 'AccountingController@transfer_budget');
@@ -2029,6 +2037,9 @@ Route::get('fetch/middle/buffing_target', 'MiddleProcessController@fetchTarget')
 Route::get('index/middle/buffing_operator_assesment', 'MiddleProcessController@indexOpAssesment');
 Route::get('index/middle/buffing_ic_atokotei_subassy', 'MiddleProcessController@indexBuffingIcAtokoteiSubassy');
 Route::get('fetch/middle/buffing_ic_atokotei_subassy', 'MiddleProcessController@fetchBuffingIcAtokoteiSubassy');
+Route::get('index/middle/buffing_resume_konseling', 'MiddleProcessController@indexResumeKonseling');
+Route::get('fetch/middle/buffing_resume_konseling', 'MiddleProcessController@fetchResumeKonseling');
+
 
 
 
@@ -4120,16 +4131,57 @@ View::composer('*', function ($view) {
 	$notif_visitor = $controller_visitor->getNotifVisitor();
 	$view->with('notif', $notif)->with('notif_visitor', $notif_visitor);
 });
+// ====================================
+
+//Scrap
+Route::get('index/scrap', 'ScrapController@indexScrap');
+Route::get('index/scrap/data', 'ScrapController@indexScrapData');
+Route::get('fetch/scrap/data', 'ScrapController@fetchScrapData');
+Route::get('fetch/scrap/list', 'ScrapController@fetchScrapList');
+Route::get('fetch/scrap', 'ScrapController@fetchScrap');
+Route::get('fetch/scrap/resume', 'ScrapController@fetchScrapResume');
+Route::post('print/scrap', 'ScrapController@printScrap');
+Route::get('reprint/scrap', 'ScrapController@reprintScrap');
+Route::post('confirm/scrap', 'ScrapController@confirmScrap');
+Route::post('delete/scrap', 'ScrapController@deleteScrap');
+Route::get('index/scrap_logs', 'ScrapController@indexScrapLogs');
+Route::get('fetch/scrap_logs', 'ScrapController@fetchScrapLogs');
+Route::get('index/scrap/view', 'ScrapController@indexScrapView');
+
 
 //Mutasi
-Route::get('index/mutasi', 'MutasiController@index');
+Route::get('dashboard/mutasi', 'MutasiController@dashboard');
+Route::get('dashboard/mutasi/get_employee', 'MutasiController@get_employee');
+Route::get('dashboard/mutasi/getPosition', 'MutasiController@getPosition');
+Route::get('create/mutasi', 'MutasiController@create');
+Route::post('create/mutasi', 'MutasiController@store');
+Route::get('destroy/mutasi/{id}', 'MutasiController@destroy');
+Route::get('show/mutasi/{id}', 'MutasiController@show');
 
-Route::get('/pindah/satu', 'MutasiController@satu');
-Route::get('/pindah/antar', 'MutasiController@antar');
-Route::post('/pindah/tambah', 'MutasiController@tambah');
-Route::get('/pindah/view_satu', 'MutasiController@view_satu');
+//Approval
+Route::get('edit/mutasi/approval/{id}', 'MutasiController@edit_atasan');
+Route::post('edit/mutasi/approval/{id}', 'MutasiController@update_atasan');
+Route::get('edit/mutasi/approval/manager/{id}', 'MutasiController@edit_manager');
+Route::post('edit/mutasi/approval/manager/{id}', 'MutasiController@update_manager');
 
 
+// 	Route::get('edit/navigation/{id}', 'NavigationController@edit');
+// 	Route::post('edit/navigation/{id}', 'NavigationController@update');
 
-
+//Warehouse
 Route::get('index/warehouse', 'WarehouseController@index');
+Route::get('scan/data/warehouse', 'WarehouseController@scanInjectionOperator');
+Route::post('tambah/penerimaan', 'WarehouseController@createPek');
+Route::post('warehouse/update_penerimaan', 'WarehouseController@update_Pen');
+Route::get('fetch/display_warehouse', 'WarehouseController@fetchWarehouse');
+
+
+//Otomatisasi Item Order
+Route::get('index/tools', 'ToolsController@index_tools');
+Route::get('tools/master', 'ToolsController@master_tools');
+Route::get('fetch/tools', 'ToolsController@fetch_tools');
+Route::get('tools/target', 'ToolsController@target_tools');
+Route::get('fetch/tools_target', 'ToolsController@fetch_target_tools');
+
+// QA Incoming Check
+Route::get('index/qa_incoming_check', 'ToolsController@index_tools');

@@ -281,7 +281,16 @@
                             </a>
                         </td>
                     </tr>
-
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">Sakurentsu (作連通)</span>
+                            <br>
+                            <a href="{{ url("index/sakurentsu/monitoring/3m") }}">
+                                <i class="fa fa-caret-right"></i> 3M Monitoring (3M変更監視)
+                            </a>
+                            <br>
+                        </td>
+                    </tr>
                     <tr>
                         <td>
                             <span style="font-weight: bold;">Others (他の情報)</span>

@@ -312,6 +312,9 @@ table.table-bordered > tfoot > tr > th{
               formData.append("translator", $("#translator").val());
               formData.append("title", $("#title").val());
             });
+          }, success: function(file, response) {
+            $("#loading").hide();
+            openSuccessGritter('Success', 'Translated Sakurentsu has been uploaded & send to PC');
           }
 
         };

@@ -78,7 +78,7 @@ table.table-bordered > tfoot > tr > th{
       <div class="col-xs-12">
        <div class="form-group">
 
-        <form action="/" enctype="multipart/form-data" method="POST">
+        <form action="/" enctype="multipart/form-data" method="POST" id="upload_form">
           <div class="col-xs-12" style="padding: 0">
 
             <input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -87,7 +87,7 @@ table.table-bordered > tfoot > tr > th{
             <div class="col-xs-12" style="padding: 1px">
               <div class="form-group">
                 <label for="input">Sakuretsu Number <span class="text-purple">作連通番号</span></label>              
-                <input type="text" name="sakurentsu_number1" id="sakurentsu_number1" placeholder="Input Sakurentsu Number or Reff Number" class="form-control">
+                <input type="text" name="sakurentsu_number" id="sakurentsu_number" placeholder="Input Sakurentsu Number or Reff Number" class="form-control">
               </div>
             </div>
             <div class="col-xs-12" style="padding: 1px">
@@ -151,11 +151,11 @@ table.table-bordered > tfoot > tr > th{
       <table id="sakurentsuTable" class="table table-bordered" style="width: 100%">
         <thead style="background-color: rgba(126,86,134,.7);">
          <tr>
-          <th width="1%">Applicant</th>
-          <th width="1%">Number</th>
-          <th width="1%">Target Date</th>
-          <th width="1%">File</th>
-          <th width="1%">Status</th>
+          <th width="1%">Applicant <br> 申請者</th>
+          <th width="1%">Number <br> 作連通の番号</th>
+          <th width="1%">Target Date <br> 締切</th>
+          <th width="1%">File <br> ファイル</th>
+          <th width="1%">Status <br> ステイタス</th>
         </tr>
       </thead>
       <tbody id="tableSakurentsu">
@@ -219,7 +219,7 @@ table.table-bordered > tfoot > tr > th{
   var wrapperThis = this;
 
   submitButton.addEventListener("click", function () {
-    if (!confirm("Are you sure want to create this sakurentsu and send to interpreter?")) {
+    if (!confirm("Are you sure want to create this sakurentsu and send to interpreter?\n 作連通を作成し、通訳チームに転送しますか？")) {
      return false;
    } else {
      wrapperThis.processQueue();
@@ -250,15 +250,26 @@ table.table-bordered > tfoot > tr > th{
   });
 
   this.on('sendingmultiple', function (data, xhr, formData) {
-    formData.append("sakurentsu_number1", $("#sakurentsu_number1").val());
+    formData.append("sakurentsu_number", $("#sakurentsu_number").val());
     formData.append("title_jp", $("#title_jp").val());
     formData.append("sakurentsu_category", $("#sakurentsu_category").val());
     formData.append("applicant", $("#applicant").val());
     formData.append("target_date", $("#target_date").val());
   });
+
+  this.on("complete", function(file) { 
+    this.removeAllFiles(true);
+  })
 }, success: function(file, response) {
   $("#loading").hide();
   openSuccessGritter('Success', 'Sakurentsu has been uploaded & send to Interpreter');
+
+  $( '#upload_form' ).each(function(){
+    this.reset();
+  });
+
+  $("#sakurentsu_category").select2("val", "");
+
   fetchTable();
 }
 

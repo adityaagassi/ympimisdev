@@ -442,7 +442,7 @@
       var app2 = "";
 
       $.each(obj2, function(key, value) {          
-        app2 += "<a href='"+'{{ url("uploads/sakurentsu/") }}'+"/"+value+"' target='_blank'><i class='fa fa-file-pdf-o'></i> "+value+"</a><br>";
+        app2 += "<a href='"+'{{ url("uploads/sakurentsu/original/") }}'+"/"+value+"' target='_blank'><i class='fa fa-file-pdf-o'></i> "+value+"</a><br>";
       })
 
       $("#sk_number").val(result.datas.sakurentsu_number);
@@ -480,7 +480,7 @@
     $.post('{{ url("post/sakurentsu/type") }}', data, function(result, status, xhr){
       if (result.status) {
         $("#loading").hide();
-        openSuccessGritter('Success', '');
+        openSuccessGritter('Success', 'Sakurentsu Successfully Determined');
         $("#select_form").val("").trigger("change");
         $("#select_dept_form").val("").trigger("change");
         window.setTimeout( window.location.replace('{{ url("index/sakurentsu/list_sakurentsu") }}'), 3000 );

@@ -158,6 +158,16 @@ table.table-bordered > tfoot > tr > th{
         </select> 
         <input type="text" id="doc_note" class="form-control" disabled>
       </div>
+
+      <div class="form-group">
+        <label for="input">Target Date</label>
+        <input type="text" class="form-control" id="doc_target" disabled>
+      </div>
+      
+      <div class="form-group">
+        <label for="input">PIC Document</label>
+        <input type="text" class="form-control" id="doc_pic" disabled>
+      </div>
     </div>
 
     <div class="col-xs-12" style="padding: 0">
@@ -202,6 +212,7 @@ table.table-bordered > tfoot > tr > th{
   $('body').toggleClass("sidebar-collapse");
 
   $(".select2").select2();
+  $("#submit-all").show();
 });
 
  Dropzone.options.myDropzone = {
@@ -253,8 +264,16 @@ table.table-bordered > tfoot > tr > th{
 
   this.on('sendingmultiple', function (data, xhr, formData) {
     formData.append("id", $("#id").val());
+    formData.append("sk_num", $("#sakurentsu_number").val());
     formData.append("doc_name", $("#doc_name").val());
+    formData.append("doc_desc", $("#doc_note").val());
+    formData.append("doc_target", $("#doc_target").val());
+    formData.append("doc_pic", $("#doc_pic").val());
   });
+}, success: function(file, response) {
+  $("#loading").hide();
+  openSuccessGritter('Success', 'Document has been uploaded');
+  $("#submit-all").hide();
 }
 
 };
@@ -266,6 +285,8 @@ $('#doc_name').on('select2:select', function (e) {
   $.each(arr_docs, function(index,value){
     if (value.document_name == data) {
       $("#doc_note").val(value.document_description);
+      $("#doc_target").val(value.target_date);
+      $("#doc_pic").val(value.pic);
     }
   })
 });

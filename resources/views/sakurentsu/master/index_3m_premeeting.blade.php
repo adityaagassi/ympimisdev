@@ -114,22 +114,34 @@
           <div class="row">
             <div class="col-xs-4">
               <div class="form-group">
-                <label for="sk_number">Sakurentsu Number</label>
-                <input type="text" class="form-control" id="sk_number" readonly="" value="{{ $judul->sakurentsu_number }}">
+                <label for="sk_number">Sakurentsu Number <span class="text-purple">作連通の番号</span></label>
+                <?php if(isset($judul)) { ?>
+                  <input type="text" class="form-control" id="sk_number" readonly="" value="{{ $judul->sakurentsu_number }}">
+                <?php } else { ?>
+                  <input type="text" class="form-control" id="sk_number" readonly="" value="">
+                <?php } ?>
               </div>
             </div>
 
             <div class="col-xs-5">
               <div class="form-group">
                 <label for="title">Sakurentsu Title <span class="text-purple">作連通の表題</span></label>
-                <input type="text" class="form-control" id="title" readonly="" value="{{ $judul->title }}">
+                <?php if(isset($judul)) { ?>
+                  <input type="text" class="form-control" id="title" readonly="" value="{{ $judul->title }}">
+                <?php } else { ?>
+                  <input type="text" class="form-control" id="title" readonly="" value="">
+                <?php } ?>
               </div>
             </div>
 
             <div class="col-xs-3">
               <div class="form-group">
                 <label for="target">Target Date <span class="text-purple">締切</span></label>
-                <input type="text" class="form-control" id="target" readonly="" value="{{ $judul->tgl_target }}">
+                <?php if(isset($judul)) { ?>
+                  <input type="text" class="form-control" id="target" readonly="" value="{{ $judul->tgl_target }}">
+                <?php } else { ?>
+                  <input type="text" class="form-control" id="target" readonly="" value="">
+                <?php } ?>
               </div>
             </div>
           </div>
@@ -149,12 +161,13 @@
             </div>
 
             <div class="row">
-              <div class="col-xs-6">
+              <div class="col-xs-7">
                 <div class="form-group">
                   <label for="date">Judul <span class="text-purple">件名</span></label>
                   <input type="hidden" value="{{csrf_token()}}" name="_token" />
                   <input type="hidden" name="stat" value="3">
                   <input type="text" class="form-control input-lg" id="title_name" placeholder="Title" name="title_name">
+                  <input type="text" class="form-control input-lg" id="title_name_trans" placeholder="Translate Title" name="title_name_trans">
                   <input type="hidden" class="form-control" id="id" name="id">
                 </div>
               </div>
@@ -268,10 +281,10 @@
                 <div class="form-group">
                   <p><b>Perubahan Bom <span class="text-purple">BOM変更</span></b></p>
                   <label class="radio-inline">
-                    <input type="radio" name="bom_change" value="Ada">Ada
+                    <input type="radio" name="bom_change" value="Ada">Ada 有り
                   </label>
                   <label class="radio-inline">
-                    <input type="radio" name="bom_change" value="Tidak Ada">Tidak Ada
+                    <input type="radio" name="bom_change" value="Tidak Ada">Tidak Ada 無し
                   </label>
                 </div>
               </div>
@@ -280,7 +293,7 @@
             <div class="row">
               <div class="col-xs-12">
                 <div class="form-group">
-                  <label>Lampiran <span class="text-purple"></span></label>
+                  <label>Lampiran <span class="text-purple">添付</span></label>
                   <table id="table_lampiran">
                   </table>
                   <input name="file[]" type="file" id="lampiran" multiple >
@@ -944,6 +957,7 @@ function fillData() {
   var datas = <?php echo json_encode($data); ?>;
 
   $("#title_name").val(datas.title);
+  $("#title_name_trans").val(datas.title_jp);
   $("#id").val(datas.id);
   $("#product_name").val(datas.product_name);
   $("#proccess_name").val(datas.proccess_name);
@@ -960,6 +974,8 @@ function fillData() {
   $("#keuntungan").val(datas.benefit);
   $("#kualitas_before").val(datas.check_before);
   $("#tgl_rencana").val(datas.started_date);
+  $("#item_khusus").val(datas.special_items);
+  $("input[name='bom_change'][value='"+datas.bom_change+"']").prop('checked', true);
 
   if (datas.att !== null) {
     tb_lamp = "";
@@ -1237,6 +1253,9 @@ function modal_email() {
       body += "<td>"+$("input[name='doc_target_"+num+"']").val()+"</td>";
       body += "<td>"+$("#doc_pic_"+num+" option:selected").val()+"</td>";
       body += "</tr>";
+
+      console.log($("#doc_pic_"+num+" option:selected"));
+      console.log(num);
     }
   });
 

@@ -239,6 +239,10 @@
                     開発責任者 <br>
                     Pihak yang Bertanggung Jawab
                   </td>
+                  <td style="width: 20%">
+                    開発責任者 <br>
+                    Pihak yang Bertanggung Jawab
+                  </td>
                   <td>
                     受付印 <br>
                     Reception Sign
@@ -268,14 +272,17 @@
                  <td style="vertical-align: bottom; width: 20%" id="sign_presdir">
                    <br><br><br><br> Date: <br> 承認 Approval
                  </td>
-                 <td style="vertical-align: bottom; width: 20%" id="sign_gm_prod">
+                 <td style="vertical-align: bottom; width: 20%" id="sign_gm_prod_supp">
+                  <br><br><br><br> Date: <br> 生産支援部長 GM Prod.Support 
+                </td>
+                <td style="vertical-align: bottom; width: 20%" id="sign_gm_prod">
                   <br><br><br><br> Date: <br> 生産部長 GM Produksi 
                 </td>
                 <td style="vertical-align: bottom; width: 20%" id="sign_dgm_prod">
                   <br><br><br><br> Date: <br> 生産副部長 DGM Produksi
                 </td>
                 <td>
-                  <div style="border: 2px solid red; height: 100%">&nbsp;</div>
+                  <div style="border: 2px solid red; height: 100%; color: red; display: none" id="sign_std"></div>
                 </td>
               </tr>
             </table>
@@ -431,7 +438,8 @@
                 Perubahan BOM <br>
               </b>
             </p>
-            <?= $data->bom_change ?>
+            <?php $bom_jp = ["Ada" => "有り", "Tidak Ada" => "無し"] ?>
+            <?= $data->bom_change ?> <?php echo " ".$bom_jp[$data->bom_change] ?>
           </td>
         </tr>
       </table>
@@ -938,21 +946,22 @@
       </tr>
       <tr>
         <td colspan="3">
-          Diterjemahkan oleh :
+          Diterjemahkan oleh : <span id="translator">{{ $data->translator }}</span>
         </td>
       </tr>
     </table>
     <br>
-    <?php if(Request::segment(5) && (Request::segment(5) == "view" || Request::segment(5) == "implement")) { ?>
-
+    <?php if(Request::segment(5) && (Request::segment(5) == "view" || Request::segment(5) == "implement") && isset($implement)) { ?>
       <table border="1" style="width: 100%">
         <tr>
           <td width="20%">
             <img src="{{ url("waves.jpg") }}" style="width: 100%">
           </td>
           <th style="font-size: 20px">
-            3M IMPLEMENTATION REPORT <br>
-            (Machine, Material, Methode/Mechanism)
+            <center>
+              3M IMPLEMENTATION REPORT <br>
+              (Machine, Material, Methode/Mechanism)
+            </center>
           </th>
           <td width="15%">
             <table style="font-weight: bold;">
@@ -970,12 +979,12 @@
           <td colspan="2">{{ $implement->form_number }}</td>
         </tr>
         <tr>
-          <td style="font-weight: bold;">Section</td>
-          <td colspan="2">{{ $proposer[0]->department }}</td>
+          <td style="font-weight: bold;">Department</td>
+          <td colspan="2">{{ $implement->section }}</td>
         </tr>
         <tr>
           <td style="font-weight: bold;">Name</td>
-          <td colspan="2">{{ $proposer[0]->name }}</td>
+          <td colspan="2">{{ $implement->name }}</td>
         </tr>
         <tr>
           <td style="font-weight: bold;">Date issued 3M</td>
@@ -998,67 +1007,69 @@
         </tr>
         <tr>
           <td style="font-weight: bold;">Tanggal Aktual Perubahan<span class="text-red">*</span></td>
-          <td colspan="2"><input type="text" name="tgl_aktual" id="tgl_aktual" class="form-control datepicker" placeholder="Pilih Tanggal Aktual Implementasi"></td>
-        </tr>
-        <tr>
-          <td colspan="3" style="font-weight: bold;">Data - data Pengecekan Implementasi</td>
-        </tr>
-        <tr>
-          <td style="font-weight: bold;">Tanggal Pengecekan<span class="text-red">*</span></td>
-          <td colspan="2"><input type="text" name="tgl_cek" id="tgl_cek" class="form-control datepicker" placeholder="Pilih Tanggal Pengecekan"></td>
-        </tr>
-        <tr>
-          <td style="font-weight: bold;">Yang Melakukan Pengecekan<span class="text-red">*</span></td>
           <td colspan="2">
-            <select name="pic_cek" id="pic_cek" class="form-control select2" data-placeholder="Pilih PIC Pengecekan" style="width: 100%">
-              <option value=""></option>
-              @foreach($employee as $emps)
-              <option value="{{ $emps->name }}">{{ $emps->name }} ( {{ $emps->position }} )</option>
-              @endforeach
-            </select>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="3" style="font-weight: bold;">Dokumen / Alat yang berhubungan dengan implementasi</td>
-        </tr>
-        <tr>
-          <td colspan="3">
-            <div class="form-group">
-              <label>Lampiran <span class="text-purple"></span></label> <br>
-              <div id="lampiran_box">
-              </div>
-              <br>
-              <p><button type="button" class="btn btn-success btn-xs" onclick="add_att()"><i class="fa fa-plus"></i> &nbsp; Tambah</button></p>
-              <table>
-                <tr id="lampiran_div">
+            <input type="text" name="tgl_aktual" id="tgl_aktual" class="form-control" value="{{ $implement->actual_date }}" readonly></td>
+          </tr>
+          <tr>
+            <td colspan="3" style="font-weight: bold;">Data - data Pengecekan Implementasi</td>
+          </tr>
+          <tr>
+            <td style="font-weight: bold;">Tanggal Pengecekan<span class="text-red">*</span></td>
+            <td colspan="2">
+              <input type="text" name="tgl_cek" id="tgl_cek" class="form-control" value="{{ $implement->check_date }}" readonly>
+            </td>
+          </tr>
+          <tr>
+            <td style="font-weight: bold;">Yang Melakukan Pengecekan<span class="text-red">*</span></td>
+            <td colspan="2">
+              <input type="text" name="pic_cek" id="pic_cek" class="form-control" value="{{ $implement->checker }}" readonly>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="3" style="font-weight: bold;">Dokumen / Alat yang berhubungan dengan implementasi</td>
+          </tr>
+          <tr>
+            <td colspan="3">
+              <div class="form-group">
+                <label>Lampiran <span class="text-purple"></span></label> <br>
+                <?php 
+                $atts = str_replace('"', '', $implement->att);
+                $atts = str_replace('[', '', $atts);
+                $atts = str_replace(']', '', $atts);
+                $atts_arr = explode(',', $atts);
 
-                </tr>
-              </table>
-            </div>
-          </td>
-        </tr>
-      </table>
-      
-    <?php } ?>
-    <br>
-    <?php if( !Request::segment(5)) { ?>
-      <button class="btn btn-primary" style="width: 100%; font-size: 15pt" onclick="openSignModal()"><i class="fa fa-eyedropper"></i>&nbsp; Sign</button><br><br>
-      <button class="btn btn-success" onclick="unsigned()"><i class="fa fa-envelope-o"></i>&nbsp; Send Email to Unsigning User</button>
-    <?php } else if(Request::segment(5) && Request::segment(5) == "presdir") {?>
-      <button class="btn btn-success" style="width: 100%; font-size: 15pt" onclick="approve('presdir', 'PI1301001')"><i class="fa fa-check"></i>&nbsp; Approve</button>
-    <?php } else if(Request::segment(5) && Request::segment(5) == "dgm") {?>
-      <button class="btn btn-success" style="width: 100%; font-size: 15pt" onclick="approve('dgm', 'PI0109004')"><i class="fa fa-check"></i>&nbsp; Approve</button>
-    <?php } else if(Request::segment(5) && Request::segment(5) == "gm") {?>
-      <button class="btn btn-success" style="width: 100%; font-size: 15pt" onclick="approve('gm', 'PI1206001')"><i class="fa fa-check"></i>&nbsp; Approve</button>
-    <?php } else if(Request::segment(5) && Request::segment(5) == "finish") {?>
-      <button class="btn btn-success" style="width: 100%; font-size: 15pt" onclick="receive('std')"><i class="fa fa-check"></i>&nbsp; Receive Standardization</button>
-    <?php } else if(Request::segment(5) && Request::segment(5) == "implement") {?>
-      <button class="btn btn-success" style="width: 100%; font-size: 15pt" onclick="implement()"><i class="fa fa-check"></i>&nbsp; Verify </button>
-    <?php } else if(Request::segment(5) && Request::segment(5) == "view") { ?>
-      <!-- <button class="btn btn-success" style="width: 100%; font-size: 15pt" onclick="approve('gm', 'PI1206001')"><i class="fa fa-check"></i>&nbsp; Approve</button> -->
-    <?php } ?>
+                foreach ($atts_arr as $att) {
+                  echo "<a href='".url('/uploads/sakurentsu/three_m/att/')."/".$att."' target='_blank'>".$att."</a><br>";
+                }
+                ?>
+              </div>
+            </td>
+          </tr>
+        </table>
+
+      <?php } ?>
+      <br>
+      <?php if( !Request::segment(5)) { ?>
+        <button class="btn btn-primary" style="width: 100%; font-size: 15pt" onclick="openSignModal()"><i class="fa fa-eyedropper"></i>&nbsp; Sign</button><br><br>
+        <button class="btn btn-success" onclick="unsigned()"><i class="fa fa-envelope-o"></i>&nbsp; Send Email to Unsigning User</button>
+      <?php } else if(Request::segment(5) && Request::segment(5) == "presdir") {?>
+        <button class="btn btn-success" style="width: 100%; font-size: 15pt" onclick="approve('presdir', 'PI1301001')"><i class="fa fa-check"></i>&nbsp; Approve</button>
+      <?php } else if(Request::segment(5) && Request::segment(5) == "dgm") {?>
+        <button class="btn btn-success" style="width: 100%; font-size: 15pt" onclick="approve('dgm', 'PI0109004')"><i class="fa fa-check"></i>&nbsp; Approve</button>
+      <?php } else if(Request::segment(5) && Request::segment(5) == "gm") {?>
+        <button class="btn btn-success" style="width: 100%; font-size: 15pt" onclick="approve('gm', 'PI1206001')"><i class="fa fa-check"></i>&nbsp; Approve</button>
+      <?php } else if(Request::segment(5) && Request::segment(5) == "finish") {?>
+        <button class="btn btn-success" style="width: 100%; font-size: 15pt" onclick="receive('std')"><i class="fa fa-check"></i>&nbsp; Receive Standardization</button>
+      <?php } else if(Request::segment(5) && Request::segment(5) == "implement") {?>
+        <button class="btn btn-success" style="width: 100%; font-size: 15pt" onclick="implement()"><i class="fa fa-check"></i>&nbsp; Verify </button>
+      <?php } else if(Request::segment(5) && Request::segment(5) == "sign") { ?>
+        <button class="btn btn-success" style="width: 100%; font-size: 15pt" onclick="approve('department', '')"><i class="fa fa-check"></i>&nbsp; Approve</button>
+
+      <?php } else if(Request::segment(5) && Request::segment(5) == "view") { ?>
+        <!-- <button class="btn btn-success" style="width: 100%; font-size: 15pt" onclick="approve('gm', 'PI1206001')"><i class="fa fa-check"></i>&nbsp; Approve</button> -->
+      <?php } ?>
+    </div>
   </div>
-</div>
 </div>
 
 <div class="modal fade" id="modalFile">
@@ -1175,43 +1186,42 @@
     var sign_user = <?php echo json_encode($sign_user); ?>;
     var signed = <?php echo json_encode($signed_user); ?>;
     var sign_gm = <?php echo json_encode($sign_gm); ?>;
+    var datas = <?php echo json_encode($data); ?>;
 
-    console.log(signed);
 
-    // $("#table_master_sign").empty();
-    // $("#table_master_name").empty();
-    // var body_master = "";
-    // var body_name = "";
-
-    // $.each(sign_gm, function(key, value) {
-    //   body_master += "<td>Pihak yang Bertanggung Jawab</td>";
-    //   body_name += "<td style='vertical-align: bottom;'><br><br><br><br> Date: <br> GM Produksi</td>";
-    // })
+    if (datas.remark == "7" || datas.remark == "8") {
+      $("#sign_std").show();
+      $("#sign_std").html('<center><span style="font-size: 13pt; vertical-align: top">Received Standardization</span> <br> 18  Jan 2021</center>');
+    }
+    
 
     var s = [];
     var emp_id = [];
+    var app_date = [];
 
     $.each(signed, function(key, value) {
       s.push(value.department);
       emp_id.push(value.approver_id);
+      app_date.push(value.approve_date);
+      date = value.approve_date;
+
       if (value.department == null) {
         if (value.position == "Deputy General Manager" && value.division == "Production Division") {
-          $("#sign_dgm_prod").html("<center><img width='70' src='{{ url('files/ttd') }}/"+value.approver_id+".png' style='padding: 0'></center><br> Date: 20/12/20 <br> 生産副部長 DGM Produksi");
+          $("#sign_dgm_prod").html("<center><img width='70' src='{{ url('files/ttd') }}/"+value.approver_id+".png' style='padding: 0'></center><br> Date: "+date+" <br> 生産副部長 DGM Produksi");
         } else if (value.position == "General Manager" && value.division == "Production Division") {
-          $("#sign_gm_prod").html("<center><img width='70' src='{{ url('files/ttd') }}/"+value.approver_id+".png' style='padding: 0'></center><br> Date: 20/12/20 <br> 生産部長 GM Produksi");
-        } else if (value.position == "President Director") {
-          date = value.approve_date;
-          $("#sign_presdir").html("<center><img width='70' src='{{ url('files/ttd') }}/"+value.approver_id+".png' style='padding: 0'></center><br> Date: <br> 承認 Approval");
-        }
+          $("#sign_gm_prod").html("<center><img width='70' src='{{ url('files/ttd') }}/"+value.approver_id+".png' style='padding: 0'></center><br> Date: "+date+" <br> 生産部長 GM Produksi");
+        } else if (value.position == "General Manager" && value.division == "Production Support") {
+         $("#sign_dgm_prod").html("<center><img width='70' src='{{ url('files/ttd') }}/"+value.approver_id+".png' style='padding: 0'></center><br> Date: "+date+" <br> 生産副部長 DGM Produksi");
+         $("#sign_gm_prod_supp").html("<center><img width='70' src='{{ url('files/ttd') }}/"+value.approver_id+".png' style='padding: 0'></center><br> Date: "+date+" <br> 生産支援部長 GM Prod.Support");
+       } else if (value.position == "President Director") {
+        $("#sign_presdir").html("<center><img width='70' src='{{ url('files/ttd') }}/"+value.approver_id+".png' style='padding: 0'></center><br> Date: "+date+" <br> 承認 Approval");
       }
-    })
-
-    // console.log(signed);
+    }
+  })
 
     $("#table_sign_list").empty();
 
     body_sign = "";
-
     // $.each(signed, function(key2, value2) {
       $.each(sign_user, function(key, value) {
         if (value.department != null) {
@@ -1220,7 +1230,7 @@
               if(jQuery.inArray(value.department, s) !== -1) {
                 var index = s.indexOf(value.department);
 
-                body_sign += "<td>Confirm <br><img width='70' src='{{ url('files/ttd') }}/"+emp_id[index]+".png' style='padding: 0'><br> Date 20/12/20 <br> Manager.Chief</td>";
+                body_sign += "<td>Confirm <br><img width='70' src='{{ url('files/ttd') }}/"+emp_id[index]+".png' style='padding: 0'><br> Date "+app_date[index]+" <br> Manager.Chief</td>";
                 
               } else {
                 body_sign += "<td>Confirm <br><br><br><br><br><br> Date <br> Manager.Chief</td>";
@@ -1234,7 +1244,21 @@
         }
       })
     // })
-    body_sign += "<td>Initiative PIC <br><br><br><br><br><br> Date <br> Manager.Chief</td>";
+    console.log(signed);
+    stat_pic = 0;
+    arr_pic = [];
+    $.each(signed, function(key, value) {
+      if (value.status == 'pic') {
+        stat_pic = 1;
+        arr_pic.push({'emp_id' : value.approver_id, 'date' : value.approve_date});
+      }
+    })
+
+    if (stat_pic == 0) {
+      body_sign += "<td>Initiative PIC <br><br><br><br><br><br> Date <br> Manager.Chief</td>";
+    } else {
+      body_sign += "<td>Initiative PIC <br><img width='70' src='{{ url('files/ttd') }}/"+arr_pic[0].emp_id+".png' style='padding: 0'><br> Date "+arr_pic[0].date+" <br> Manager.Chief</td>";
+    }
 
     $("#table_sign_list").append(body_sign);
   }
@@ -1261,7 +1285,7 @@
               $("#note_"+num).text(value1.document_description);
               $("#target_"+num).text(value1.target);
               $("#selesai_"+num).text(value1.finish);
-              $("#pic_"+num).text(value1.pic);
+              $("#pic_"+num).text(value1.department_shortname);
             }
           }
         })
@@ -1473,6 +1497,11 @@ function save_sign() {
     sign.push($(this).val());
   })
 
+  if (sign.length <= 0) {
+    openErrorGritter('Error', 'Please Scan First');
+    return false;
+  }
+
   var data = {
     sign : sign,
     form_id : "{{ Request::segment(4) }}"
@@ -1493,22 +1522,42 @@ function unsigned() {
     form_id : "{{ Request::segment(4) }}"
   }
 
+  if(confirm('Are you sure want to email to unsigned User?')) {
+    $.get('{{ url("email/sakurentsu/3m/unsigned") }}', data, function(result, status, xhr){
+
+    })
+  }
 
 }
 
 function approve(position, sign) {
+  var sign_user = sign;
+  if (position == 'department') {
+    var AuthUser = "{{{ (Auth::user()) ? Auth::user()->username : null }}}";
+    if (!AuthUser) {
+      window.open('{{ url("/") }}', '_blank');
+      return false;
+    } else {
+      sign_user = AuthUser;
+    }
+  }
+
   var data = {
     form_id : "{{ Request::segment(4) }}",
     position : position,
-    sign : [sign]
+    sign : [sign_user]
   }
 
   $.post('{{ url("post/sakurentsu/3m/sign") }}', data, function(result, status, xhr){
     if (result.status) {
       openSuccessGritter('Success','Sign has been Saved');
-      setTimeout( function() {window.location.replace("{{ url('detail/sakurentsu/3m/'.Request::segment(4).'/view') }}")}, 3000);
+      if ("{{Request::segment(5)}}" == "sign" || "{{Request::segment(5)}}" == "dgm" || "{{Request::segment(5)}}" == "gm") {
+        setTimeout( function() {window.location.replace("{{ url('detail/sakurentsu/3m/'.Request::segment(4).'/sign') }}")}, 2000);
+      } else if("{{Request::segment(5)}}" == "presdir"){
+        setTimeout( function() {window.location.replace("{{ url('detail/sakurentsu/3m/'.Request::segment(4).'/view') }}")}, 2000);
+      }
     } else {
-      openSuccessGritter('Error', result.message);
+      openErrorGritter('Error', result.message);
     }
   })
 }
@@ -1522,7 +1571,7 @@ function receive(position) {
   $.post('{{ url("post/sakurentsu/3m/receive_std") }}', data, function(result, status, xhr){
     if (result.status) {
       openSuccessGritter('Success','3M has been Received');
-      setTimeout( function() {window.location.replace("{{ url('detail/sakurentsu/3m/'.Request::segment(4).'/view') }}")}, 3000);
+      setTimeout( function() {window.location.replace("{{ url('detail/sakurentsu/3m/'.Request::segment(4).'/view') }}")}, 2000);
     } else {
       openErrorGritter('Error','');
     }
@@ -1530,7 +1579,7 @@ function receive(position) {
 }
 
 function implement() {
-  // body...
+
 }
 
 var audio_error = new Audio('{{ url("sounds/error.mp3") }}');

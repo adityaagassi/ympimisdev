@@ -47,8 +47,12 @@
 <section class="content-header">
   <h1>
     {{ $title }}
+    <span class="text-purple">
+      {{ $title_jp }}
+    </span>
   </h1>
   <ol class="breadcrumb">
+    <a class="btn btn-sm btn-primary" href="{{ url('index/sakurentsu/3m/') }}"><i class="fa fa-plus"></i>&nbsp; Create 3M Form</a>
   </ol>
 </section>
 @endsection
@@ -82,7 +86,7 @@
         <div class="box-body">
           <div class="row">
             <div class="col-xs-12">
-              <center><h3>Sakurentsu - Request 3M</h3></center>
+              <center><h3>Sakurentsu - Request 3M <span class="text-purple">作連通 - 3M変更依頼</span></h3></center>
               <table class="table table-bordered" style="width: 100%" id="master">
                 <thead style="background-color: rgba(126,86,134,.7);">
                   <tr>
@@ -112,7 +116,7 @@
         <div class="box-body">
           <div class="row">
             <div class="col-xs-12">
-              <center><h3>3M List</h3></center>
+              <center><h3>3M List <span class="text-purple">3Mリスト</span></h3></center>
               <table class="table table-bordered" style="width: 100%" id="list">
                 <thead style="background-color: rgba(126,86,134,.7);">
                   <tr>
@@ -175,13 +179,12 @@
   });
 
   function get_data() {
-    $("#body_master").empty();
-    $("#body_list").empty();
-
-    body = "";
-    body_list = "";
-
     $.get('{{ url("fetch/sakurentsu/list_3m") }}', function(result, status, xhr){
+      $('#master').DataTable().clear();
+      $('#master').DataTable().destroy();
+      $("#body_master").empty();
+      body = "";
+
       $.each(result.requested, function(key, value) {
         if (value.pic == result.dept.department) {
           body += "<tr>";
@@ -200,84 +203,145 @@
       })
       $("#body_master").append(body);
 
+      var table = $('#master').DataTable({
+        'dom': 'Bfrtip',
+        'responsive':true,
+        'lengthMenu': [
+        [ 10, 25, 50, -1 ],
+        [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+        ],
+        'buttons': {
+          buttons:[
+          {
+            extend: 'pageLength',
+            className: 'btn btn-default',
+          },
+          ]
+        },
+        'paging': true,
+        'lengthChange': true,
+        'searching': true,
+        'ordering': true,
+        'info': true,
+        'autoWidth': true,
+        "sPaginationType": "full_numbers",
+        "bJQueryUI": true,
+        "bAutoWidth": false,
+        "processing": true
+      });
+
+      // ------------------------------------------------------------------------
+
+      $('#list').DataTable().clear();
+      $('#list').DataTable().destroy();
+      $("#body_list").empty();
+      body_list = "";
       $.each(result.three_m_list, function(key, value) {
         if (value.department == result.dept.department) {
 
          body_list += "<tr>";
-         body_list += "<td>"+value.sakurentsu_number+"</td>";
+         body_list += "<td>"+(value.sakurentsu_number || '')+"</td>";
          body_list += "<td>"+value.title+"</td>";
          body_list += "<td>"+value.product_name+"</td>";
          body_list += "<td>"+value.proccess_name+"</td>";
          body_list += "<td>"+value.category+"</td>";
-         body_list += "<td>"+value.process_name+"</td>";
+         body_list += "<td><label class='label label-primary'>"+value.process_name+"</label></td>";
          body_list += "<td>";
          if (value.remark == 2) {
            body_list += "<a href='#'><button class='btn btn-xs btn-primary'>Edit</button></a><br>";
-           body_list += "<a href='"+"{{ url('index/sakurentsu/3m/premeeting/') }}/"+value.id+"'><button class='btn btn-xs btn-warning' style='margin-top: 2px'>Pre-Meeting</button></a>";
+           body_list += "<a href='"+"{{ url('index/sakurentsu/3m/premeeting/') }}/"+value.id+"'><button class='btn btn-xs btn-warning' style='margin-top: 2px'>Pre-Meeting</button></a><br>";
          } else if (value.remark == 4) {
-           body_list += "<a href='"+"{{ url('index/sakurentsu/3m/finalmeeting/') }}/"+value.id+"'><button class='btn btn-xs btn-success' style='margin-top: 2px'>Final-Meeting</button></a>";
+           body_list += "<a href='"+"{{ url('index/sakurentsu/3m/finalmeeting/') }}/"+value.id+"'><button class='btn btn-xs btn-success' style='margin-top: 2px'>Final-Meeting</button></a><br>";
          } else if (value.remark == 7) {
-           body_list += "<a href='"+"{{ url('index/sakurentsu/3m/implement/') }}/"+value.id+"'><button class='btn btn-xs btn-danger' style='margin-top: 2px'>Make Implement Form</button></a>";
-         }
-         body_list += "</td>";
-         body_list += "</tr>";
-       }
-     })
-      $("#body_list").append(body_list);
+          body_list += "<a href='"+"{{ url('index/sakurentsu/3m/implement/') }}/"+value.id+"'><button class='btn btn-xs btn-danger' style='margin-top: 2px'>Make Implement Form</button></a><br>";
+        }
+        body_list += "<a href='#'><button class='btn btn-xs btn-default'>Detail</button></a>";
+        body_list += "</td>";
+        body_list += "</tr>";
+      }
     })
-  }
+      $("#body_list").append(body_list);
 
-  function getFileInfo(num, sk_num) {
-    $("#sk_num").text(sk_num+" File(s)");
-    
-    $("#bodyFile").empty();
+      var table = $('#list').DataTable({
+        'dom': 'Bfrtip',
+        'responsive':true,
+        'lengthMenu': [
+        [ 10, 25, 50, -1 ],
+        [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+        ],
+        'buttons': {
+          buttons:[
+          {
+            extend: 'pageLength',
+            className: 'btn btn-default',
+          },
+          ]
+        },
+        'paging': true,
+        'lengthChange': true,
+        'searching': true,
+        'ordering': true,
+        'info': true,
+        'autoWidth': true,
+        "sPaginationType": "full_numbers",
+        "bJQueryUI": true,
+        "bAutoWidth": false,
+        "processing": true
+      });
+    })
+}
 
-    body_file = "";
-    $.each(file, function(key, value) {  
-      if (sk_num == value.sk_number) {
-        var obj = JSON.parse(value.file);
-        var app = "";
+function getFileInfo(num, sk_num) {
+  $("#sk_num").text(sk_num+" File(s)");
 
-        if (obj) {
-          for (var i = 0; i < obj.length; i++) {
-           body_file += "<tr>";
-           body_file += "<td>";
-           body_file += "<a href='../../uploads/sakurentsu/translated/"+obj[i]+"' target='_blank'><i class='fa fa-file-pdf-o'></i> "+obj[i]+"</a>";
-           body_file += "</td>";
-           body_file += "</tr>";
-         }
+  $("#bodyFile").empty();
+
+  body_file = "";
+  $.each(file, function(key, value) {  
+    if (sk_num == value.sk_number) {
+      var obj = JSON.parse(value.file);
+      var app = "";
+
+      if (obj) {
+        for (var i = 0; i < obj.length; i++) {
+         body_file += "<tr>";
+         body_file += "<td>";
+         body_file += "<a href='../../uploads/sakurentsu/translated/"+obj[i]+"' target='_blank'><i class='fa fa-file-pdf-o'></i> "+obj[i]+"</a>";
+         body_file += "</td>";
+         body_file += "</tr>";
        }
      }
-   });
+   }
+ });
 
-    $("#bodyFile").append(body_file);
+  $("#bodyFile").append(body_file);
 
-    $("#modalFile").modal('show');
-  }
+  $("#modalFile").modal('show');
+}
 
-  var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
-  function openErrorGritter(title, message) {
-    jQuery.gritter.add({
-      title: title,
-      text: message,
-      class_name: 'growl-danger',
-      image: '{{ url("images/image-stop.png") }}',
-      sticky: false,
-      time: '2000'
-    });
-  }
+function openErrorGritter(title, message) {
+  jQuery.gritter.add({
+    title: title,
+    text: message,
+    class_name: 'growl-danger',
+    image: '{{ url("images/image-stop.png") }}',
+    sticky: false,
+    time: '2000'
+  });
+}
 
-  function openSuccessGritter(title, message){
-    jQuery.gritter.add({
-      title: title,
-      text: message,
-      class_name: 'growl-success',
-      image: '{{ url("images/image-screen.png") }}',
-      sticky: false,
-      time: '2000'
-    });
-  }
+function openSuccessGritter(title, message){
+  jQuery.gritter.add({
+    title: title,
+    text: message,
+    class_name: 'growl-success',
+    image: '{{ url("images/image-screen.png") }}',
+    sticky: false,
+    time: '2000'
+  });
+}
 
 </script>
 

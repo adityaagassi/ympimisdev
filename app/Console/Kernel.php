@@ -51,6 +51,8 @@ class Kernel extends ConsoleKernel
         Commands\SyncShiftSunfish::class,
 
         Commands\ResumeNgBuffing::class,
+        Commands\ResumeNgLacquering::class,
+        Commands\ResumeNgPlating::class,
 
 
         //KITTO

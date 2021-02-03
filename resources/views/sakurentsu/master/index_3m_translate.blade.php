@@ -118,22 +118,34 @@
           <div class="row">
             <div class="col-xs-4">
               <div class="form-group">
-                <label for="sk_number">Sakurentsu Number</label>
-                <input type="text" class="form-control" id="sk_number" readonly="" value="{{ $judul->sakurentsu_number }}">
+                <label for="sk_number">Sakurentsu Number <span class="text-purple">作連通の番号</span></label>
+                <?php if(isset($judul)) { ?>
+                  <input type="text" class="form-control" id="sk_number" readonly="" value="{{ $judul->sakurentsu_number }}">
+                <?php } else { ?>
+                  <input type="text" class="form-control" id="sk_number" readonly="" value="">
+                <?php } ?>
               </div>
             </div>
 
             <div class="col-xs-5">
               <div class="form-group">
-                <label for="title">Sakurentsu Title</label>
-                <input type="text" class="form-control" id="title" readonly="" value="{{ $judul->title }}">
+                <label for="title">Sakurentsu Title <span class="text-purple">作連通の表題</span></label>
+                <?php if(isset($judul)) { ?>
+                  <input type="text" class="form-control" id="title" readonly="" value="{{ $judul->title }}">
+                <?php } else { ?>
+                  <input type="text" class="form-control" id="title" readonly="" value="">
+                <?php } ?>
               </div>
             </div>
 
             <div class="col-xs-3">
               <div class="form-group">
-                <label for="target">Target Date</label>
-                <input type="text" class="form-control" id="target" readonly="" value="{{ $judul->tgl_target }}">
+                <label for="target">Target Date <span class="text-purple">締切</span></label>
+                <?php if(isset($judul)) { ?>
+                  <input type="text" class="form-control" id="target" readonly="" value="{{ $judul->tgl_target }}">
+                <?php } else { ?>
+                  <input type="text" class="form-control" id="target" readonly="" value="">
+                <?php } ?>
               </div>
             </div>
           </div>
@@ -152,11 +164,12 @@
           </div>
 
           <div class="row">
-            <div class="col-xs-6">
+            <div class="col-xs-9">
               <div class="form-group">
                 <label for="date"><span class="text-red">*</span>Judul <span class="text-purple">件名</span></label>
                 <input type="hidden" value="{{csrf_token()}}" name="_token" />
-                <input type="text" class="form-control input-lg" id="title_name" placeholder="Title" name="title_name">
+                <input type="text" class="form-control input-lg" id="title_name" readonly="">
+                <input type="text" class="form-control input-lg" id="title_name_trans" placeholder="Translate Title" name="title_name_trans">
                 <input type="hidden" class="form-control" id="id" name="id">
               </div>
             </div>
@@ -190,7 +203,7 @@
           </div>
 
           <div class="row">
-            <div class="col-xs-4">
+            <div class="col-xs-5">
               <div class="form-group">
                 <p><b>Klasifikasi Perubahan 3M <span class="text-purple">3M変更区分</span></b></p>
                 <label class="radio-inline">
@@ -209,7 +222,7 @@
           <div class="row">
             <div class="col-xs-4">
               <div class="form-group">
-                <label for="related_department">Related Department</label>
+                <label for="related_department">Related Department <span class="text-purple">関係部門</span></label>
                 <select class="form-control select2" id="related_department" name="related_department[]" data-placeholder="Select Related Department" multiple="">
                   @foreach($departemen as $dpr)
                   <option value="{{ $dpr->department }}" disabled>{{ $dpr->department }}</option>
@@ -382,7 +395,7 @@
 
     function save_3m() {
       var data = {
-        title_name : $("#title_name").val(),
+        title_name : $("#title_name_trans").val(),
         product_name : $("#product_name").val(),
         proccess_name : $("#proccess_name").val(),
         unit_name : $("#unit_name").val(),
@@ -398,7 +411,7 @@
       $.post('{{ url("post/sakurentsu/3m/translate") }}', data, function(result, status, xhr){
         if (result.status) {
           openSuccessGritter('Success', '3M Has Been Translated');
-          setTimeout( function() {window.location.replace("{{ url('index/sakurentsu/list_sakurentsu_translate') }}")}, 3000);
+          setTimeout( function() {window.location.replace("{{ url('index/sakurentsu/list_sakurentsu_translate') }}")}, 2000);
         } else {
           openErrorGritter('Error', result.message);
         }
