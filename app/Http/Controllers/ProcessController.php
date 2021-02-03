@@ -1104,9 +1104,6 @@ class ProcessController extends Controller
 
 
 		$middle_inventory = MiddleInventory::where('tag', '=', $request->get('tag'))->first();
-		$middle_inventory->location = $request->get('loc');
-		$middle_inventory->last_check = $request->get('employee_id');
-
 
 		$middle_log;
 		if(str_contains($material->surface, 'PLT')){
@@ -1156,7 +1153,7 @@ class ProcessController extends Controller
 			DB::transaction(function() use ($middle_check_log, $middle_log, $middle_inventory){
 				$middle_check_log->save();
 				$middle_log->save();
-				$middle_inventory->save();
+				$middle_inventory->forceDelete();
 			});
 
 
