@@ -1677,9 +1677,9 @@ Route::post('create/invoice/tanda_terima', 'AccountingController@create_invoice'
 Route::post('edit/invoice/tanda_terima', 'AccountingController@edit_invoice');
 Route::get('invoice/report/{id}', 'AccountingController@report_invoice');
 
+Route::get('scan/middle/operator', 'MiddleProcessController@scanMiddleOperator');
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 	Route::get('scan/middle/kensa', 'MiddleProcessController@ScanMiddleKensa');
-	Route::get('scan/middle/operator', 'MiddleProcessController@scanMiddleOperator');
 	Route::post('input/middle/kensa', 'MiddleProcessController@inputMiddleKensa');
 	Route::post('input/middle/rework', 'MiddleProcessController@inputMiddleRework');
 	// Route::post('input/result_middle_kensa', 'MiddleProcessController@inputResultMiddleKensa');
