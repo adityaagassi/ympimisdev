@@ -1927,8 +1927,44 @@ function checkNg() {
 	}
 
 	$('#check-modal').on('shown.bs.modal', function () {
+		$('#input_tag').removeAttr('disabled');
 		$('#input_tag').focus();
 		clearInterval(refreshIntervalId);
+	});
+
+	$('#input_tag').keydown(function(event) {
+		if (event.keyCode == 13 || event.keyCode == 9) {
+			if($("#input_tag").val().length == 10){
+				var data = {
+					employee_id : $("#input_tag").val()
+				}
+
+				$.get('{{ url("scan/welding/operator/rfid") }}', data, function(result, status, xhr){
+					if(result.status){
+						var employee_id = $("#employee_id").val();
+						if(employee_id == result.employee.operator_nik){
+							// showData();
+							$('#input_tag').prop('disabled',true);
+							openSuccessGritter('Success','Scan Tag Berhasil');
+						}else{
+							audio_error.play();
+							openErrorGritter('Error', 'Tag OP Wrong');
+							$('#input_tag').val('');
+						}
+					}
+					else{
+						audio_error.play();
+						openErrorGritter('Error', result.message);
+						$('#input_tag').val('');
+					}
+				});
+			}
+			else{
+				openErrorGritter('Error!', 'Tag Invalid.');
+				audio_error.play();
+				$("#operator").val("");
+			}			
+		}
 	});
 
 	$('#check-modal').on('hidden.bs.modal', function () {
