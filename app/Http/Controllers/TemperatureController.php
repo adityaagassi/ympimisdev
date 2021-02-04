@@ -355,7 +355,8 @@ class TemperatureController extends Controller
                          ivms_temperatures.date_in,
                          ivms_temperatures.point,
                          ivms_temperatures.temperature,
-                         ivms_temperatures.abnormal_status
+                         ivms_temperatures.abnormal_status,
+                         ivms_temperatures.shift
                     FROM
                          ivms_temperatures
                          LEFT JOIN employees ON ivms_temperatures.employee_id = employees.employee_id

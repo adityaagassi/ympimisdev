@@ -355,8 +355,6 @@
 		tableData += '<th>Group</th>';
 		tableData += '<th>Date In</th>';
 		tableData += '<th>Temperature In</th>';
-		tableData += '<th>Date Out</th>';
-		tableData += '<th>Temperature Out</th>';
 		tableData += '<th>Shift</th>';
 		tableData += '<th>Point</th>';
 		tableData += '<th>Abnormal</th>';
@@ -366,8 +364,6 @@
 		tableData += "</tbody>";
 		tableData += "<tfoot>";
 		tableData += "<tr>";
-		tableData += "<th></th>";
-		tableData += "<th></th>";
 		tableData += "<th></th>";
 		tableData += "<th></th>";
 		tableData += "<th></th>";
@@ -405,12 +401,7 @@
 				var tableData = "";
 				
 				$.each(result.datas, function(key, value) {
-					if (value.temprature_in >= 37.5) {
-						color = 'style="background-color:red;color:white"';
-					}else{
-						color = '';
-					}
-					if (value.temprature_out >= 37.5) {
+					if (parseFloat(value.temprature_in) >= 37.5) {
 						color = 'style="background-color:red;color:white"';
 					}else{
 						color = '';
@@ -424,9 +415,7 @@
 					tableData += '<td>'+ value.group +'</td>';
 					tableData += '<td>'+ value.date_in +'</td>';
 					tableData += '<td '+color+'>'+ value.temperature +'</td>';
-					tableData += '<td '+color+'>'+ value.date_out +'</td>';
-					tableData += '<td>'+ value.temperature_out +'</td>';
-					tableData += '<td>'+ value.shiftdaily_code +'</td>';
+					tableData += '<td>'+ value.shift +'</td>';
 					tableData += '<td>'+ value.point +'</td>';
 					tableData += '<td>'+ value.abnormal_status +'</td>';
 					tableData += '</tr>';
