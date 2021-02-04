@@ -127,10 +127,11 @@ class AssemblyProcessController extends Controller
 		->first();
 		$auth_id = Auth::id();
 
-		$plc = new ActMLEasyIf(0);
-		$datas = $plc->read_data('D0', 5);
+		 $plc = new ActMLEasyIf(0);
+		 $datas = $plc->read_data('D50', 5);
 
-		if($counter->plc_counter == $datas[0]){
+		 if($counter->plc_counter == $datas[0]){
+		//if($counter->plc_counter == 28){
 			$response = array(
 				'status' => true,
 				'status_code' => 'no_stamp',
@@ -200,8 +201,8 @@ class AssemblyProcessController extends Controller
 		$tag->model = $request->get('model');
 		$serial = CodeGenerator::where('note', '=', $request->get('origin_group_code'))->first();
 		$serial->index = $serial->index+1;
-		$counter->plc_counter = $datas[0];
-		// $counter->plc_counter = 20;
+		 $counter->plc_counter = $datas[0];
+		//$counter->plc_counter = 28;
 
 		try{
 			if($request->get('location') != 'stampkd-process'){
