@@ -2678,6 +2678,7 @@ Route::get('fetch/resume_shipping_order_detail', 'ContainerScheduleController@fe
 
 Route::get('index/shipping_agency', 'ContainerScheduleController@indexShippingAgency');
 Route::get('fetch/shipping_agency', 'ContainerScheduleController@fetchShippingAgency');
+Route::get('fetch/shipping_agency_detail', 'ContainerScheduleController@fetchShippingAgencyDetail');
 
 Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 
@@ -2685,7 +2686,12 @@ Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::post('fetch/shipping_order/edit_ship_reservation', 'ContainerScheduleController@editShipReservation');
 	Route::post('fetch/shipping_order/upload_ship_reservation', 'ContainerScheduleController@uploadShipReservation');
 	
-	Route::post('fetch/add_shipping_agency', 'ContainerScheduleController@addShippingAgency');	
+	Route::post('fetch/add_shipping_agency', 'ContainerScheduleController@addShippingAgency');
+
+
+	Route::post('delete/shipping_agency', 'ContainerScheduleController@deleteShippingAgency');
+	Route::post('edit/shipping_agency', 'ContainerScheduleController@editShippingAgency');
+
 
 });
 
@@ -3053,6 +3059,7 @@ Route::get('index/training_participant/edit','TrainingReportController@getpartic
 Route::get('index/training_report/sendemail/{id}', 'TrainingReportController@sendemail');
 Route::post('index/training_report/approval/{id}', 'TrainingReportController@approval');
 Route::post('index/training_report/importparticipant/{id}', 'TrainingReportController@importparticipant');
+Route::get('index/training_report/fetch_participant', 'TrainingReportController@fetchParticipant');
 
 //sampling check
 Route::get('index/sampling_check/index/{id}', 'SamplingCheckController@index');
@@ -3612,6 +3619,8 @@ Route::get('index/audit_patrol/detail_penanganan', 'AuditController@detailPenang
 Route::post('post/audit_patrol/penanganan', 'AuditController@postPenanganan');
 Route::post('post/audit_patrol/edit', 'AuditController@editAudit');
 
+Route::get('export/patrol/list', 'AuditController@exportPatrol');
+
 
 //Audit Internal ISO
 Route::get('index/audit_iso', 'CparController@audit');
@@ -4147,6 +4156,11 @@ Route::post('delete/scrap', 'ScrapController@deleteScrap');
 Route::get('index/scrap_logs', 'ScrapController@indexScrapLogs');
 Route::get('fetch/scrap_logs', 'ScrapController@fetchScrapLogs');
 Route::get('index/scrap/view', 'ScrapController@indexScrapView');
+Route::post('update/scrap', 'ScrapController@updateScrap');
+Route::get('index/scrap/resume', 'ScrapController@indexScrapResume');
+Route::get('index/scrap/warehouse', 'ScrapController@indexScrapWarehouse');
+Route::get('fetch/kd_scrap_closure', 'ScrapController@fetchKdScrapClosure');
+
 
 
 //Mutasi
@@ -4174,6 +4188,8 @@ Route::get('scan/data/warehouse', 'WarehouseController@scanInjectionOperator');
 Route::post('tambah/penerimaan', 'WarehouseController@createPek');
 Route::post('warehouse/update_penerimaan', 'WarehouseController@update_Pen');
 Route::get('fetch/display_warehouse', 'WarehouseController@fetchWarehouse');
+Route::post('create/penempatan', 'WarehouseController@createpenem');
+Route::post('create/pelayanan', 'WarehouseController@createPel');
 
 
 //Otomatisasi Item Order
@@ -4184,4 +4200,6 @@ Route::get('tools/target', 'ToolsController@target_tools');
 Route::get('fetch/tools_target', 'ToolsController@fetch_target_tools');
 
 // QA Incoming Check
-Route::get('index/qa_incoming_check', 'ToolsController@index_tools');
+Route::get('index/qa', 'QualityAssuranceController@index');
+Route::get('index/qa/incoming_check/{location}', 'QualityAssuranceController@indexIncomingCheck');
+Route::get('fetch/qa/check_material', 'QualityAssuranceController@fetchCheckMaterial');

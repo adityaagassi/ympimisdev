@@ -255,49 +255,53 @@ table.table-bordered > tfoot > tr > th{
 								</div>
 							</form>
 				        <div class="col-xs-12" style="padding-top: 10px">
-				          <table id="example1" class="table table-bordered table-striped table-hover">
-				            <thead style="background-color: rgba(126,86,134,.7);">
-				              <tr>
-				                <th>Pictures</th>
-				                <th>Action</th>
-				              </tr>
-				            </thead>
-				            <tbody>
-				              @foreach($training_picture as $training_picture)
-				              <tr>
-				                <td>
-				                	@if($training_picture->extension == 'jpg' || $training_picture->extension == 'png')
-				                	<a target="_blank" href="{{ url('/data_file/training/'.$training_picture->picture) }}" class="btn"><img width="100px" src="{{ url('/data_file/training/'.$training_picture->picture) }}"></a>
-				                	@else
-				                	<a target="_blank" href="{{ url('/data_file/training/'.$training_picture->picture) }}" class="btn"><img width="100px" src="{{ url('/images/file.png') }}"></a>
-				                	@endif
-				                </td>
-				                <td>
-				                  <center>
-				                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="editpicture('{{ url("index/training_report/editpicture") }}','{{ url('/data_file/training/') }}', '{{ $training_picture->picture }}','{{ $id }}', '{{ $training_picture->id }}');">
-						               <i class="fa fa-edit"></i>
-						            </button>
-				                    <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/training_report/destroypicture") }}', '{{ $training_picture->picture }}','{{ $id }}', '{{ $training_picture->id }}');">
-				                      <i class="fa fa-trash"></i>
-				                    </a>
-				                  </center>
-				                </td>
-				              </tr>
-				              @endforeach
-				            </tbody>
-				          </table>
+				          <div class="row">
+				          	<table id="example1" class="table table-bordered table-striped table-hover">
+					            <thead style="background-color: rgba(126,86,134,.7);">
+					              <tr>
+					                <th>Pictures</th>
+					                <th>Action</th>
+					              </tr>
+					            </thead>
+					            <tbody>
+					              @foreach($training_picture as $training_picture)
+					              <tr>
+					                <td>
+					                	@if($training_picture->extension == 'jpg' || $training_picture->extension == 'png')
+					                	<a target="_blank" href="{{ url('/data_file/training/'.$training_picture->picture) }}" class="btn"><img width="100px" src="{{ url('/data_file/training/'.$training_picture->picture) }}"></a>
+					                	@else
+					                	<a target="_blank" href="{{ url('/data_file/training/'.$training_picture->picture) }}" class="btn"><img width="100px" src="{{ url('/images/file.png') }}"></a>
+					                	@endif
+					                </td>
+					                <td>
+					                  <center>
+					                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="editpicture('{{ url("index/training_report/editpicture") }}','{{ url('/data_file/training/') }}', '{{ $training_picture->picture }}','{{ $id }}', '{{ $training_picture->id }}');">
+							               <i class="fa fa-edit"></i>
+							            </button>
+					                    <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/training_report/destroypicture") }}', '{{ $training_picture->picture }}','{{ $id }}', '{{ $training_picture->id }}');">
+					                      <i class="fa fa-trash"></i>
+					                    </a>
+					                  </center>
+					                </td>
+					              </tr>
+					              @endforeach
+					            </tbody>
+					          </table>
+				          </div>
 				        </div>
 				    </div>
 				    <div class="col-xs-6">
 						<h3 class="box-title">Peserta Training <span class="text-purple"></span>
-							<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#participant-modal" onclick="importparticipant('{{ url("index/training_report/importparticipant") }}','{{ $id }}');">
+							<!-- <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#participant-modal" onclick="importparticipant('{{ url("index/training_report/importparticipant") }}','{{ $id }}');">
 			               Tambah Banyak Peserta
-			            </button></h3>
+			            	</button> -->
+			            	<span class="pull-right" style="color: red;font-weight: bold;font-size: 15px;">Scan ID Card Peserta dengan RFID Reader</span>
+			        	</h3>
 						<!-- <a class="btn btn-primary pull-right" href="{{ secure_url('index/training_report/scan_employee/'.$id) }}">Scan Barcode</a> -->
 						<!-- <div class="panel-body text-center" >
 			              <video width="200px" id="preview"></video>
 			            </div> -->
-						<form role="form" method="post" action="{{url('index/training_report/insertparticipant/'.$id)}}" enctype="multipart/form-data">
+						<!-- <form role="form" method="post" action="{{url('index/training_report/insertparticipant/'.$id)}}" enctype="multipart/form-data">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 
 							<div class="col-xs-8">
@@ -314,43 +318,30 @@ table.table-bordered > tfoot > tr > th{
 							<div class="col-xs-4">
 								<button type="submit" class="btn btn-primary pull-right">Tambah</button>
 							</div>
-						</form>
-				        <div class="col-xs-12">
-				          <table id="example2" class="table table-bordered table-striped table-hover" style="margin-top: 20px">
-				            <thead style="background-color: rgba(126,86,134,.7);">
-				              <tr>
-				                <th>Nama</th>
-				                <th>Kehadiran</th>
-				                <th>Action</th>
-				              </tr>
-				            </thead>
-				            <tbody>
-				              @foreach($training_participant as $training_participant)
-				              <tr>
-				                <td>
-				                	{{ $training_participant->participant_name->name }}
-				                </td>
-				                <td>
-				                	@if($training_participant->participant_absence == Null)
-				                		Belum Hadir
-				                	@else
-				                		{{ $training_participant->participant_absence }}
-				                	@endif
-				                </td>
-				                <td>
-				                  <center>
-				                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal2" onclick="editparticipant('{{ url("index/training_report/editparticipant") }}','{{ $training_participant->participant_id }}','{{ $id }}', '{{ $training_participant->id }}');">
-						               <i class="fa fa-edit"></i>
-						            </button>
-				                    <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal2" onclick="deleteConfirmation2('{{ url("index/training_report/destroyparticipant") }}', '{{ $training_participant->participant_id }}','{{ $id }}', '{{ $training_participant->id }}');">
-				                      <i class="fa fa-trash"></i>
-				                    </a>
-				                  </center>
-				                </td>
-				              </tr>
-				              @endforeach
-				            </tbody>
-				          </table>
+						</form> -->
+						<div class="input-group" style="padding-top: 10px;">
+							<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: black;">
+								<i class="glyphicon glyphicon-qrcode"></i>
+							</div>
+							<input type="text" style="text-align: center; border-color: black;font-size: 20px" class="form-control" id="tag" name="tag" placeholder="Scan Tag Here . . ." required>
+							<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: black;">
+								<i class="glyphicon glyphicon-qrcode"></i>
+							</div>
+						</div>
+				        <div class="col-xs-12" style="padding-top: 10px">
+				          <div class="row">
+				          	<table id="example2" class="table table-bordered table-striped table-hover" style="margin-top: 20px">
+					            <thead style="background-color: rgba(126,86,134,.7);">
+					              <tr>
+					                <th>Nama</th>
+					                <th>Kehadiran</th>
+					                <th>Action</th>
+					              </tr>
+					            </thead>
+					            <tbody id="bodyTrainingParticipant">
+					            </tbody>
+					          </table>
+				          </div>
 				        </div>
 				    </div>
 					</div>
@@ -596,6 +587,8 @@ table.table-bordered > tfoot > tr > th{
 			}
 		});
 		$('body').toggleClass("sidebar-collapse");
+		$('#tag').val('');
+		$('#tag').focus();
 
 		$('#signArea').signaturePad({drawOnly:true, drawBezierCurves:true, lineTop:190});		
 	});
@@ -725,52 +718,107 @@ table.table-bordered > tfoot > tr > th{
         }
       });
 
-    });
-
-    jQuery(document).ready(function() {
-      var table = $('#example2').DataTable({
-        "order": [],
-        'dom': 'Bfrtip',
-        'responsive': true,
-        'lengthMenu': [
-        [ 10, 25, 50, -1 ],
-        [ '10 rows', '25 rows', '50 rows', 'Show all' ]
-        ],
-        'buttons': {
-          buttons:[
-          {
-            extend: 'pageLength',
-            className: 'btn btn-default',
-          },
-          {
-            extend: 'copy',
-            className: 'btn btn-success',
-            text: '<i class="fa fa-copy"></i> Copy',
-            exportOptions: {
-              columns: ':not(.notexport)'
-            }
-          },
-          {
-            extend: 'excel',
-            className: 'btn btn-info',
-            text: '<i class="fa fa-file-excel-o"></i> Excel',
-            exportOptions: {
-              columns: ':not(.notexport)'
-            }
-          },
-          {
-            extend: 'print',
-            className: 'btn btn-warning',
-            text: '<i class="fa fa-print"></i> Print',
-            exportOptions: {
-              columns: ':not(.notexport)'
-            }
-          },
-          ]
-        }
-      });
+      fetchParticipant();
 
     });
+
+    function fetchParticipant() {
+    	var data = {
+    		id:'{{$id}}'
+    	}
+    	$.get('{{ url("index/training_report/fetch_participant") }}', data, function(result, status, xhr){
+			if(result.status){
+				$('#example2').DataTable().clear();
+				$('#example2').DataTable().destroy();
+				$('#bodyTrainingParticipant').val('');
+				var bodyTraining = "";
+				$.each(result.participant, function(key, value) {
+					bodyTraining += "<tr>";
+					bodyTraining += "<td>"+value.name+"</td>";
+					bodyTraining += "<td>"+value.participant_absence+"</td>";
+					var url = "{{ url('index/training_report/destroyparticipant') }}";
+					var id = '{{ $id }}';
+					bodyTraining += '<td><a href="javascript:void(0)"" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal2" onclick="deleteConfirmation2(\''+url+'\', \''+value.participant_id+'\',\''+id+'\', \''+value.id+'\');"><i class="fa fa-trash"></i></a></td>';
+					bodyTraining += "</tr>";
+				});
+				$('#bodyTrainingParticipant').append(bodyTraining);
+				var table = $('#example2').DataTable({
+			        "order": [],
+			        'dom': 'Bfrtip',
+			        'responsive': true,
+			        'lengthMenu': [
+			        [ 10, 25, 50, -1 ],
+			        [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+			        ],
+			        'buttons': {
+			          buttons:[
+			          {
+			            extend: 'pageLength',
+			            className: 'btn btn-default',
+			          },
+			          {
+			            extend: 'copy',
+			            className: 'btn btn-success',
+			            text: '<i class="fa fa-copy"></i> Copy',
+			            exportOptions: {
+			              columns: ':not(.notexport)'
+			            }
+			          },
+			          {
+			            extend: 'excel',
+			            className: 'btn btn-info',
+			            text: '<i class="fa fa-file-excel-o"></i> Excel',
+			            exportOptions: {
+			              columns: ':not(.notexport)'
+			            }
+			          },
+			          {
+			            extend: 'print',
+			            className: 'btn btn-warning',
+			            text: '<i class="fa fa-print"></i> Print',
+			            exportOptions: {
+			              columns: ':not(.notexport)'
+			            }
+			          },
+			          ]
+			        }
+			      });
+			}
+			else{
+				openErrorGritter('Error!','Failed To Get Data');
+				alert('Failed To Get Data');
+			}
+		});
+    }
+
+    $('#tag').keydown(function(event) {
+		if (event.keyCode == 13 || event.keyCode == 9) {
+			if($("#tag").val().length >= 8){
+				var data = {
+					employee_id : $("#tag").val(),
+					id : '{{$id}}',
+				}
+				
+				$.get('{{ url("scan/training_report/participant") }}', data, function(result, status, xhr){
+					if(result.status){
+						openSuccessGritter('Success!', result.message);
+						$('#tag').val('');
+						fetchParticipant();
+					}
+					else{
+						audio_error.play();
+						openErrorGritter('Error', result.message);
+						$('#tag').val('');
+					}
+				});
+			}
+			else{
+				openErrorGritter('Error!', 'Employee ID Invalid.');
+				audio_error.play();
+				$("#tag").val("");
+			}			
+		}
+	});
 
 	$('#tableImport').DataTable({
 		'dom': 'Bfrtip',
@@ -942,12 +990,6 @@ table.table-bordered > tfoot > tr > th{
 	  var input = $(this);
 	  var val = input.val();
 
-	  // if (input.data("lastval") != val) {
-	  //   input.data("lastval", val);
-
-	  //   //your change action goes here 
-	  //   console.log(val);
-	  // }
 	  alert(val);
 
 	});

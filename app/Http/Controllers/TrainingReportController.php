@@ -881,4 +881,66 @@ class TrainingReportController extends Controller
             return redirect('/index/training_report/details/'.$id.'/view')->with('status', 'Participant berhasil dibuat.')->with('page', 'Training Report');
           }
       }
+
+      public function fetchParticipant(Request $request)
+      {
+          try {
+            $trainingParticipant = TrainingParticipant::where('training_id',$request->get('id'))->join('employee_syncs','employee_syncs.employee_id','training_participants.participant_id')->get();
+
+            $response = array(
+                'status' => true,
+                'participant' => $trainingParticipant
+            );
+            return Response::json($response);
+          } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+            return Response::json($response);
+          }
+      }
+
+      public function scanParticipant(Request $request)
+      {
+        $nik = $request->get('employee_id');
+
+        if(strlen($nik) > 9){
+            $nik = substr($nik,0,9);
+        }
+
+        $employee = db::table('employees')->where('tag', 'like', '%'.$nik.'%')->first();
+        $part = TrainingParticipant::where('training_id',$request->get('id'))->where('participant_id',$employee->employee_id)->first();
+        $id_user = Auth::id();
+
+        if(count($employee) > 0){
+            if (count($part) > 0) {
+              $response = array(
+                  'status' => false,
+                  'message' => 'Peserta Sudah Pernah Ditambahkan'
+              );
+              return Response::json($response);
+            }else{
+              TrainingParticipant::create([
+                  'training_id' => $request->get('id'),
+                  'participant_id' => $employee->employee_id,
+                  'participant_absence' => 'Hadir',
+                  'created_by' => $id_user
+              ]);
+              $response = array(
+                  'status' => true,
+                  'message' => 'Scan Peserta Berhasil',
+                  'employee' => $employee
+              );
+              return Response::json($response);
+            }
+        }
+        else{
+            $response = array(
+                'status' => false,
+                'message' => 'Employee ID Invalid'
+            );
+            return Response::json($response);
+        }
+      }
 }
