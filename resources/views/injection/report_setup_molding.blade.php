@@ -81,44 +81,91 @@
 	</div>   
 	@endif						
 	<div class="row">
-		<div class="col-xs-12 pull-left">
-			<!-- <h2 style="margin-top: 0px;">Master Operator Welding</h2> -->
-			<table id="tableSetupMolding" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
-				<thead style="background-color: rgb(126,86,134); color: #FFD700;">
-					<tr>
-						<th width="1%">Type</th>
-						<th width="3%">PIC</th>
-						<th width="1%">Mesin</th>
-						<th width="2%">Part</th>
-						<th width="2%">Last Shot</th>
-						<th width="2%">Start</th>
-						<th width="2%">End</th>
-						<th width="2%">Duration</th>
-						<th width="2%">Note</th>
-						<th width="2%">Decision</th>
-						<th width="2%">Pause</th>
-						<th width="2%">At</th>
-					</tr>
-				</thead>
-				<tbody id="bodyTableSetupMolding">
-				</tbody>
-				<tfoot>
-					<tr style="color: black">
-						<th></th>
-						<th></th>
-						<th></th>
-						<th></th>
-						<th></th>
-						<th></th>
-						<th></th>
-						<th></th>
-						<th></th>
-						<th></th>
-						<th></th>
-						<th></th>
-					</tr>
-				</tfoot>
-			</table>
+		<div class="col-xs-12">
+			<div class="box box-solid">
+				<div class="box-body" style="overflow-x: scroll;">
+					<h4>Filter</h4>
+					<div class="row">
+						<div class="col-md-4 col-md-offset-2">
+							<span style="font-weight: bold;">Date From</span>
+							<div class="form-group">
+								<div class="input-group date">
+									<div class="input-group-addon bg-white">
+										<i class="fa fa-calendar"></i>
+									</div>
+									<input type="text" class="form-control datepicker" id="tanggal_from" name="tanggal_from" placeholder="Select Date From" autocomplete="off">
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<span style="font-weight: bold;">Date To</span>
+							<div class="form-group">
+								<div class="input-group date">
+									<div class="input-group-addon bg-white">
+										<i class="fa fa-calendar"></i>
+									</div>
+									<input type="text" class="form-control datepicker" id="tanggal_to"name="tanggal_to" placeholder="Select Date To" autocomplete="off">
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6 col-md-offset-2">
+							<div class="col-md-10">
+								<div class="form-group pull-right">
+									<a href="{{ url('index/injeksi') }}" class="btn btn-warning">Back</a>
+									<a href="{{ url('index/injection/report_setup_molding') }}" class="btn btn-danger">Clear</a>
+									<button class="btn btn-primary col-sm-14" onclick="fillList()">Search</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12">
+						<div class="row">
+							<table id="tableSetupMolding" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
+								<thead style="background-color: rgb(126,86,134); color: #FFD700;">
+									<tr>
+										<th width="1%">Type</th>
+										<th width="3%">PIC</th>
+										<th width="1%">Mesin</th>
+										<th width="2%">Part</th>
+										<th width="2%">Last Shot</th>
+										<th width="2%">Start</th>
+										<th width="2%">End</th>
+										<th width="2%">Dandori Duration</th>
+										<th width="2%">First Inject & Approval QA Duration</th>
+										<th width="2%">Dimension Check Duration</th>
+										<th width="2%">Pause</th>
+										<th width="2%">Total Duration</th>
+										<th width="2%">Reason Pause</th>
+										<th width="2%">Note</th>
+										<th width="2%">Decision</th>
+									</tr>
+								</thead>
+								<tbody id="bodyTableSetupMolding">
+								</tbody>
+								<tfoot>
+									<tr style="color: black">
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+									</tr>
+								</tfoot>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 
@@ -154,8 +201,12 @@
 
 		fillList();
 
-		$('.datetime').datetimepicker({
-			format: 'YYYY-MM-DD HH:mm:ss'
+		$('.datepicker').datepicker({
+			<?php $tgl_max = date('Y-m-d') ?>
+			autoclose: true,
+			format: "yyyy-mm-dd",
+			todayHighlight: true,	
+			endDate: '<?php echo $tgl_max ?>'
 		});
 	});
 
@@ -191,7 +242,12 @@
 		});
 	}
 	function fillList(){
-		$.get('{{ url("fetch/injection/report_setup_molding") }}', function(result, status, xhr){
+
+		var data = {
+			tanggal_from:$('#tanggal_from').val(),
+			tanggal_to:$('#tanggal_to').val(),
+		}
+		$.get('{{ url("fetch/injection/report_setup_molding") }}',data, function(result, status, xhr){
 			if(result.status){
 				$('#tableSetupMolding').DataTable().clear();
 				$('#tableSetupMolding').DataTable().destroy();
@@ -199,10 +255,26 @@
 				var tableData = "";
 				$.each(result.datas, function(key, value) {
 					var tablePause = "";
+					var duration_dandori = parseFloat(value.duration);
+					var duration_approval = 0;
+					var duration_pause = 0;
+					var duration_check = 0;
+					var reason_pause = [];
+					var duration_total = parseFloat(value.duration);
 					for(var i = 0; i < result.dataworkall.length;i++){
 						var dataone = result.dataworkall[i].split("+");
 						if (dataone[0] == value.molding_code) {
-							tablePause += "<span class='label label-warning'>"+dataone[1]+"</span> From <span class='label label-warning'>"+dataone[2]+"</span> To <span class='label label-warning'>"+dataone[3]+"</span> (<span class='label label-warning'>"+dataone[4]+"</span>) Because Of "+dataone[5]+"<br>";
+							if (dataone[1] == 'PAUSE') {
+								duration_dandori = duration_dandori - parseFloat(dataone[4]);
+								duration_pause = duration_pause + parseFloat(dataone[4]);
+								reason_pause.push(dataone[5]+" "+dataone[4]+" Menit");
+							}else if(dataone[1] == "APPROVAL QA"){
+								duration_dandori = duration_dandori + parseFloat(dataone[4]);
+								duration_approval = duration_approval + parseFloat(dataone[4]);
+							}else if(dataone[1] == "CEK VISUAL & DIMENSI"){
+								duration_dandori = duration_dandori - parseFloat(dataone[4]);
+								duration_check = duration_check + parseFloat(dataone[4]);
+							}
 						}
 					}
 					tableData += '<tr>';
@@ -213,11 +285,14 @@
 					tableData += '<td>'+ value.last_shot +'</td>';
 					tableData += '<td>'+ value.start_time +'</td>';
 					tableData += '<td>'+ value.end_time +'</td>';
-					tableData += '<td>'+ value.duration +'</td>';
+					tableData += '<td>'+ duration_dandori +'</td>';
+					tableData += '<td>'+ duration_approval +'</td>';
+					tableData += '<td>'+ duration_check +'</td>';
+					tableData += '<td>'+ duration_pause +'</td>';
+					tableData += '<td>'+ duration_total +'</td>';
+					tableData += '<td>'+ reason_pause.join(', ') +'</td>';
 					tableData += '<td>'+ (value.note || "") +'</td>';
 					tableData += '<td>'+ (value.decision || "") +'</td>';
-					tableData += '<td>'+ (tablePause || "") +'</td>';
-					tableData += '<td>';
 					
 					tableData += '</tr>';
 				});

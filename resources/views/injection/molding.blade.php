@@ -312,17 +312,14 @@
 				<button id="start_pasang" style="width: 100%; margin-top: 10px; font-size: 30px;  font-weight: bold; border-color: black; color: white; width: 100%" onclick="startPasang()" class="btn btn-success">MULAI PASANG</button>
 				<!-- <input type="hidden" id="start_time_pasang"> -->
 			</div>
-			<div class="col-xs-6" style="padding-left: 0px;padding-right: 5px">
+			<div class="col-xs-12" style="padding-left: 0px;padding-right: 5px">
 				<button id="pause_pasang" style="width: 100%; margin-top: 10px; font-size: 30px;  font-weight: bold; border-color: black; color: white; width: 100%" onclick="pause('PASANG','PAUSE')" class="btn btn-warning">PAUSE</button>
-			</div>
-			<div class="col-xs-6" style="padding-left: 0px;padding-right: 5px">
-				<button id="first_inject_pasang" style="width: 100%; margin-top: 10px; font-size: 30px;  font-weight: bold; border-color: black; color: black; width: 100%" onclick="pause('PASANG','FIRST INJECT')" class="btn btn-default">FIRST INJECT</button>
 			</div>
 			<div class="col-xs-6" style="padding-left: 0px;padding-right: 5px">
 				<button id="cek_visual_pasang" style="width: 100%; margin-top: 10px; font-size: 30px;  font-weight: bold; border-color: black; color: black; width: 100%" onclick="pause('PASANG','CEK VISUAL & DIMENSI')" class="btn btn-default">CEK VISUAL & DIMENSI</button>
 			</div>
 			<div class="col-xs-6" style="padding-left: 0px;padding-right: 5px">
-				<button id="approval_pasang" style="width: 100%; margin-top: 10px; font-size: 30px;  font-weight: bold; border-color: black; color: black; width: 100%" onclick="pause('PASANG','APPROVAL QA')" class="btn btn-default">APPROVAL QA</button>
+				<button id="approval_pasang" style="width: 100%; padding-top: 10px;padding-bottom: 12px; margin-top: 10px; font-size: 23px;  font-weight: bold; border-color: black; color: black; width: 100%" onclick="pause('PASANG','APPROVAL QA')" class="btn btn-default">FIRST INJECT + APPROVAL QA</button>
 			</div>
 			<div class="col-xs-6" style="padding-left: 0px;padding-right: 5px">
 				<button id="batal_pasang" style="width: 100%; margin-top: 10px; font-size: 30px;  font-weight: bold; border-color: black; color: white; width: 100%" onclick="cancelPasang()" class="btn btn-danger">BATAL</button>
@@ -439,7 +436,17 @@
 				<div class="modal-body table-responsive no-padding">
 					<div class="form-group">
 						<center><label for="">Reason</label></center>
-						<input class="form-control" style="width: 100%; text-align: center;" type="text" id="reasonPause" placeholder="Reason" required><br>
+						<!-- <input class="form-control" style="width: 100%; text-align: center;" type="text" id="reasonPause" placeholder="Reason" required><br> -->
+						<select class="form-control select2" id="reasonPause" data-placeholder="Pilih Reason" style="width: 100%;text-align: center;">
+							<option value="-">Pilih Reason</option>
+							<option value="Istirahat">Istirahat</option>
+							<option value="Ganti Shift">Ganti Shift</option>
+							<option value="Approval Tunggu QA">Approval Tunggu QA</option>
+							<option value="Trouble">Trouble</option>
+							<option value="No Production">No Production</option>
+							<option value="Cek Visual & Dimensi">Cek Visual & Dimensi</option>
+							<option value="Approval QA">Approval QA</option>
+						</select>
 					</div>
 					<div class="col-xs-6" style="padding-left: 0px">
 						<button class="btn btn-danger btn-block" style="font-weight: bold;font-size: 20px" data-dismiss="modal">Cancel</button>
@@ -1240,8 +1247,22 @@
 			if(result.status){
 				if(result.datas.length != 0){
 					$.each(result.datas, function(key, value) {
+						var pic = value.pic.split(', ');
+
+						console.log(pic.length);
+
+						if (pic.length == 1) {
+							$('#op_0').html(pic[0]);
+						}else if(pic.length == 2){
+							$('#op_0').html(pic[0]);
+							$('#op_1').html(pic[1]);
+						}else{
+							$('#op_0').html(pic[0]);
+							$('#op_1').html(pic[1]);
+							$('#op_2').html(pic[2]);
+						}
 						if (value.remark != null) {
-							if (confirm('Pekerjaan dalam kondisi '+value.remark+'. Apakah Anda ingin melanjutkan?')) {
+							if (confirm('Pekerjaan dalam proses '+value.remark+'. Apakah Anda ingin melanjutkan?')) {
 								$('#molding_code').val(value.molding_code);
 								changeStatus(value.molding_code);
 								if (value.type == "LEPAS") {
@@ -1399,60 +1420,70 @@
 		$('#modalStatus').modal('show');
 		$('#typePause').val(type);
 		$('#statusReason').html(status);
-		$('#reasonPause').val('');
+		if (status === 'CEK VISUAL & DIMENSI') {
+			$('#reasonPause').val('Cek Visual & Dimensi').trigger('change');
+		}else if(status === 'APPROVAL QA') {
+			$('#reasonPause').val('Approval QA').trigger('change');
+		}else{
+			$('#reasonPause').val('-').trigger('change');
+		}
 	}
 
 	function saveStatus() {
 		var reason = $('#reasonPause').val();
 
-		var pic_1 = $('#op_0').text();
-		var pic_2 = $('#op_1').text();
-		var pic_3 = $('#op_2').text();
-
-		var pic = [];
-
-		if (pic_1 != "-") {
-			pic.push(pic_1);
-		}
-
-		if (pic_2 != "-") {
-			pic.push(pic_2);
-		}
-
-		if (pic_3 != "-") {
-			pic.push(pic_3);
-		}
-
-		var type=$('#typePause').val();
-
-		if (type == 'PASANG') {
-			var mesin = $('#mesin_pasang').text();
-			var part = $('#part_pasang').text();
+		if (reason == '-') {
+			alert('Pilih Reason');
 		}else{
-			var mesin = $('#mesin_lepas').text();
-			var part = $('#part_lepas').text();
-		}
+			var pic_1 = $('#op_0').text();
+			var pic_2 = $('#op_1').text();
+			var pic_3 = $('#op_2').text();
 
-		var data = {
-			type:$('#typePause').val(),
-			molding_code:$('#molding_code').val(),
-			status:$('#statusReason').text(),
-			pic:pic.join(),
-			mesin:mesin,
-			part:part,
-			reason:reason,
-			start_time:getActualFullDate(),
-		}
+			var pic = [];
 
-		$.get('{{ url("input/reason_pause") }}', data, function(result, status, xhr){
-			if(result.status){
-				alert('Pemasangan / Pelepasan Molding Dalam Proses '+$('#statusReason').text());
-				location.reload();
-				$('#reasonPause').val('');
-			}else{
-				openErrorGritter('Error!',result.message);
+			if (pic_1 != "-") {
+				pic.push(pic_1);
 			}
-		});
+
+			if (pic_2 != "-") {
+				pic.push(pic_2);
+			}
+
+			if (pic_3 != "-") {
+				pic.push(pic_3);
+			}
+
+			var type=$('#typePause').val();
+
+			if (type == 'PASANG') {
+				var mesin = $('#mesin_pasang').text();
+				var part = $('#part_pasang').text();
+			}else{
+				var mesin = $('#mesin_lepas').text();
+				var part = $('#part_lepas').text();
+			}
+
+			var data = {
+				type:$('#typePause').val(),
+				molding_code:$('#molding_code').val(),
+				status:$('#statusReason').text(),
+				pic:pic.join(),
+				mesin:mesin,
+				part:part,
+				reason:reason,
+				start_time:getActualFullDate(),
+			}
+
+			$.get('{{ url("input/reason_pause") }}', data, function(result, status, xhr){
+				if(result.status){
+					alert('Pemasangan / Pelepasan Molding Dalam Proses '+$('#statusReason').text());
+					location.reload();
+					$('#reasonPause').val('-').trigger('change');
+				}else{
+					openErrorGritter('Error!',result.message);
+				}
+			});
+		}
 	}
 
 	function changeStatus(molding_code) {

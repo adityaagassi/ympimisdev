@@ -6692,6 +6692,21 @@ class InjectionsController extends Controller
     public function fetchReportSetupMolding(Request $request)
     {
         try {
+              $date_from = $request->get('tanggal_from');
+              $date_to = $request->get('tanggal_to');
+              if ($date_from == '') {
+                   if ($date_to == '') {
+                        $where = "WHERE DATE(injection_history_molding_logs.created_at) BETWEEN CONCAT(DATE_FORMAT(NOW(),'%Y-%m-01')) AND DATE(NOW())";
+                   }else{
+                        $where = "WHERE DATE(injection_history_molding_logs.created_at) BETWEEN CONCAT(DATE_FORMAT(NOW(),'%Y-%m-01')) AND '".$date_to."'";
+                   }
+              }else{
+                   if ($date_to == '') {
+                        $where = "WHERE DATE(injection_history_molding_logs.created_at) BETWEEN '".$date_from."' AND DATE(NOW())";
+                   }else{
+                        $where = "WHERE DATE(injection_history_molding_logs.created_at) BETWEEN '".$date_from."' AND '".$date_to."'";
+                   }
+              }
 
             $data = DB::SELECT("SELECT
                 injection_history_molding_logs.molding_code,
@@ -6703,19 +6718,20 @@ class InjectionsController extends Controller
                 ROUND( total_shot / qty_shot, 0 ) AS last_shot,
                 injection_history_molding_logs.start_time,
                 injection_history_molding_logs.end_time,
-                TIMEDIFF( end_time, start_time ) as duration,
+                TIMESTAMPDIFF(second,start_time,end_time)/60 AS duration,
                 injection_history_molding_logs.note,
                 injection_history_molding_logs.decision 
             FROM
                 `injection_history_molding_logs`
                 LEFT JOIN injection_molding_masters ON injection_molding_masters.part = injection_history_molding_logs.part
+                ".$where."
                 order by injection_history_molding_logs.id desc");
 
             $dataall = [];
             $dataworkall = [];
 
             foreach ($data as $key) {
-                $work = DB::SELECT("SELECT *,TIMEDIFF( end_time, start_time ) as duration FROM `injection_history_molding_works` where molding_code = '".$key->molding_code."'");
+                $work = DB::SELECT("SELECT *,TIMESTAMPDIFF(second,start_time,end_time)/60 as duration FROM `injection_history_molding_works` where molding_code = '".$key->molding_code."'");
 
                 if (count($work) > 0) {
                     foreach ($work as $val) {
@@ -6730,21 +6746,6 @@ class InjectionsController extends Controller
                     }
                 }
 
-                // $datas = array(
-                //     'molding_code' => $key->molding_code,
-                //     'pic' => $key->pic,
-                //     'type' => $key->type,
-                //     'mesin' => $key->mesin,
-                //     'part' => $key->part,
-                //     'created' => $key->created,
-                //     'last_shot' => $key->last_shot,
-                //     'start_time' => $key->start_time,
-                //     'end_time' => $key->end_time,
-                //     'duration' => $key->duration,
-                //     'note' => $key->note,
-                //     'decision' => $key->decision, );
-
-                // $dataall[] = $datas;
             }
 
             $response = array(
