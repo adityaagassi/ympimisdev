@@ -237,6 +237,10 @@
                                         <a href="{{ url("index/qa_ymmj/grafik_ymmj") }}">
                                             <i class="fa fa-caret-right"></i> Report YMMJ (YMMJへの報告)
                                         </a>
+                                        <br>
+                                        <a href="{{ url("index/qa") }}">
+                                            <i class="fa fa-caret-right"></i> Incoming Check (??)
+                                        </a>
                                     </td>
                                 </tr>
                                 {{-- <tr>
@@ -436,7 +440,7 @@
             </thead>
             <tbody>
                 <tr>
-                 <td>
+                   <td>
                     {{--     <a href="{{ url("index/report/overtime_outsource") }}">
                         <i class="fa fa-caret-right"></i> Outsource OT (派遣社員の残業管理)
                     </a> --}}
@@ -602,19 +606,19 @@
                                 <i class="fa fa-caret-right"></i> Sharepoint;
                             </a>
                             <a href="https://a01.yamaha.co.jp/fw/dfw/SAP2/Citrix/XenApp/site/default.aspx" target="_blank">
-                               SAP;
-                           </a>
-                           <a href="https://adagio.yamaha.co.jp/imart/default.portal" target="_blank">
-                               Adagio;
-                           </a>
-                           <a href="https://a01.yamaha.co.jp/fw/dfw/MA5/ma5/EntranceServlet" target="_blank">
-                               MA5;
-                           </a>
-                       </td>     
-                   </tr>                                                                             
-               </tbody>
-           </table>
-           <table class="table table-bordered">
+                             SAP;
+                         </a>
+                         <a href="https://adagio.yamaha.co.jp/imart/default.portal" target="_blank">
+                             Adagio;
+                         </a>
+                         <a href="https://a01.yamaha.co.jp/fw/dfw/MA5/ma5/EntranceServlet" target="_blank">
+                             MA5;
+                         </a>
+                     </td>     
+                 </tr>                                                                             
+             </tbody>
+         </table>
+         <table class="table table-bordered">
             <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
                 <tr>
                     <th>Workshop<br>ワークショップ</th>
@@ -801,6 +805,10 @@
                                 <br>
                                 <a href="http://10.109.52.7/tpro/" target="_blank">
                                     <i class="fa fa-caret-right"></i> M-Pro Kanban Monitoring (Mプロかんばんの監視)
+                                </a>
+                                <br>
+                                <a href="{{ url("/index/tools") }}">
+                                    <i class="fa fa-caret-right"></i> Digital Tools Order ()
                                 </a>
                             </td>
                         </tr>
