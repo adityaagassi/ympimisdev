@@ -1513,11 +1513,11 @@ class WorkshopController extends Controller{
 		}
 		if(strlen($request->get('finFrom')) > 0 ){
 			$finFrom = date('Y-m-d', strtotime($request->get('finFrom')));
-			$workshop_job_orders = $workshop_job_orders->where(db::raw('date(workshop_job_orders.created_at)'), '>=', $finFrom);
+			$workshop_job_orders = $workshop_job_orders->where(db::raw('workshop_job_orders.finish_date'), '>=', $finFrom);
 		}
 		if(strlen($request->get('finTo')) > 0 ){
 			$finTo = date('Y-m-d', strtotime($request->get('finTo')));
-			$workshop_job_orders = $workshop_job_orders->where(db::raw('date(workshop_job_orders.created_at)'), '<=', $finTo);
+			$workshop_job_orders = $workshop_job_orders->where(db::raw('workshop_job_orders.finish_date'), '<=', $finTo);
 		}
 		if(strlen($request->get('orderNo')) > 0 ){
 			$workshop_job_orders = $workshop_job_orders->where('workshop_job_orders.order_no', '=', $request->get('orderNo'));
