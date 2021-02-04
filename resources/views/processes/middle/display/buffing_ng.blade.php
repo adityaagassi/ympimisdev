@@ -316,15 +316,39 @@
 			if(xhr.status == 200){
 				if(result.status){
 
-					var ng_name = [];
+					var ng = [];
 					var jml = [];
+					var color = [];
+					var series = [];
 
 					for (var i = 0; i < result.ng.length; i++) {
-						ng_name.push(result.ng[i].ng_name);
-						jml.push(parseInt(result.ng[i].jml));
+						if(result.ng[i].ng_name == 'Buff Tarinai'){
+							ng.push(result.ng[i].ng_name);
+							jml.push(result.ng[i].jml);
+							color.push('#2b908f');
+							series.push({name : ng[i], data : [jml[i]], color: color[i]});
+						}else if(result.ng[i].ng_name == 'NG Soldering'){
+							ng.push(result.ng[i].ng_name);
+							jml.push(result.ng[i].jml);
+							color.push('#90ee7e');
+							series.push({name : ng[i], data : [jml[i]], color: color[i]});
+						}else if(result.ng[i].ng_name == 'Kizu'){
+							ng.push(result.ng[i].ng_name);
+							jml.push(result.ng[i].jml);
+							color.push('#f45b5b');
+							series.push({name : ng[i], data : [jml[i]], color: color[i]});
+						}else if(result.ng[i].ng_name == 'Buff Others (Aus, Nami, dll)'){
+							ng.push(result.ng[i].ng_name);
+							jml.push(result.ng[i].jml);
+							color.push('#7798BF');
+							series.push({name : ng[i], data : [jml[i]], color: color[i]});
+						}else if(result.ng[i].ng_name == 'Buff Nagare'){
+							ng.push(result.ng[i].ng_name);
+							jml.push(result.ng[i].jml);
+							color.push('#BCAAA4');
+							series.push({name : ng[i], data : [jml[i]], color: color[i]});
+						}
 					}
-
-					var date = result.date; 
 
 					Highcharts.chart('container1', {
 						chart: {
@@ -338,21 +362,20 @@
 							}
 						},
 						subtitle: {
-							text: 'on '+date,
+							text: 'on '+result.date,
 							style: {
 								fontSize: '18px',
 								fontWeight: 'bold'
 							}
 						},
 						xAxis: {
-							categories: ng_name,
+							categories: ng,
 							type: 'category',
 							gridLineWidth: 1,
 							gridLineColor: 'RGB(204,255,255)',
+							reversed: true,
 							labels: {
-								style: {
-									fontSize: '26px'
-								}
+								enabled: false
 							},
 						},
 						yAxis: {
@@ -361,12 +384,21 @@
 							},
 							type: 'logarithmic'
 						},
-						legend : {
-							enabled: false
+						legend: {
+							layout: 'vertical',
+							align: 'right',
+							verticalAlign: 'top',
+							x: -40,
+							y: 80,
+							floating: true,
+							borderWidth: 1,
+							backgroundColor:
+							Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
+							shadow: true
 						},
 						tooltip: {
-							headerFormat: '<span>{point.category}</span><br/>',
-							pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
+							headerFormat: '<span>NG Name</span><br/>',
+							pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y}</b> <br/>',
 						},
 						plotOptions: {
 							series:{
@@ -375,7 +407,7 @@
 									format: '{point.y}',
 									style:{
 										textOutline: false,
-										fontSize: '26px'
+										fontSize: '1vw'
 									}
 								},
 								animation: false,
@@ -387,13 +419,7 @@
 						},credits: {
 							enabled: false
 						},
-						series: [
-						{
-							"colorByPoint": true,
-							name: 'Total NG',
-							data: jml,
-						}
-						]
+						series: series
 					});
 
 				}
@@ -406,11 +432,29 @@
 				if(result.status){
 
 					var key = [];
-					var jml = [];
+					var nagare = [];
+					var other = [];
+					var tarinai = [];
+					var kizu = [];
+					var soldering = [];
 
-					for (var i = 0; i < result.key.length; i++) {
-						key.push(result.key[i].key);
-						jml.push(result.key[i].jml);
+					for (var i = 0; i < result.ngKey.length; i++) {
+						key.push(result.ngKey[i].key);
+						for (var j = 0; j < result.ngKey_detail.length; j++) {
+							if(result.ngKey[i].key == result.ngKey_detail[j].key){
+								if(result.ngKey_detail[j].ng_name == 'Buff Nagare'){
+									nagare.push(result.ngKey_detail[j].ng);
+								}else if(result.ngKey_detail[j].ng_name == 'Buff Others (Aus, Nami, dll)'){
+									other.push(result.ngKey_detail[j].ng);
+								}else if(result.ngKey_detail[j].ng_name == 'Buff Tarinai'){
+									tarinai.push(result.ngKey_detail[j].ng);
+								}else if(result.ngKey_detail[j].ng_name == 'Kizu'){
+									kizu.push(result.ngKey_detail[j].ng);
+								}else if(result.ngKey_detail[j].ng_name == 'NG Soldering'){
+									soldering.push(result.ngKey_detail[j].ng);
+								}
+							}
+						}
 					}
 
 					Highcharts.chart('container2', {
@@ -418,7 +462,7 @@
 							type: 'column'
 						},
 						title: {
-							text: 'NG I.C. Atokotei',
+							text: '10 Highest Keys NG Buffing Sax',
 							style: {
 								fontSize: '30px',
 								fontWeight: 'bold'
@@ -437,7 +481,7 @@
 							gridLineWidth: 1,
 							gridLineColor: 'RGB(204,255,255)',
 							labels: {
-								rotation: -65,
+								// rotation: -65,
 								style: {
 									fontSize: '26px'
 								}
@@ -447,25 +491,47 @@
 							title: {
 								text: 'Total Not Good'
 							},
-							type: 'logarithmic'
+							stackLabels: {
+								enabled: true,
+								style: {
+									fontWeight: 'bold',
+									color: 'white',
+									fontSize: '1vw'
+								}
+							},
 						},
-						legend : {
-							enabled: false
+						legend: {
+							layout: 'vertical',
+							align: 'right',
+							verticalAlign: 'top',
+							x: -40,
+							y: 80,
+							floating: true,
+							borderWidth: 1,
+							backgroundColor:
+							Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
+							shadow: true
 						},
 						tooltip: {
 							headerFormat: '<span>{point.category}</span><br/>',
 							pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
 						},
 						plotOptions: {
+							column: {
+								stacking: 'normal',
+								// dataLabels: {
+								// 	enabled: true,
+								// }
+							},
 							series:{
-								dataLabels: {
-									enabled: true,
-									format: '{point.y}',
-									style:{
-										textOutline: false,
-										fontSize: '26px'
-									}
-								},
+								// dataLabels: {
+								// 	enabled: true,
+								// 	format: '{point.y}',
+								// 	style:{
+								// 		textOutline: false,
+								// 		fontSize: '1vw'
+								// 	}
+								// },
 								animation: false,
 								pointPadding: 0.93,
 								groupPadding: 0.93,
@@ -477,9 +543,29 @@
 						},
 						series: [
 						{
-							"colorByPoint": true,
-							name: 'Total NG',
-							data: jml,
+							name: 'Buff Nagare',
+							data: nagare,
+							color: '#BCAAA4'
+						},
+						{
+							name: 'Buff Others (Aus, Nami, dll)',
+							data: other,
+							color: '#7798BF'
+						},
+						{
+							name: 'Buff Tarinai',
+							data: tarinai,
+							color: '#2b908f'
+						},
+						{
+							name: 'Kizu',
+							data: kizu,
+							color: '#f45b5b'
+						},
+						{
+							name: 'NG Soldering',
+							data: soldering,
+							color: '#90ee7e'
 						}
 						]
 					});

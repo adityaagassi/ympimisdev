@@ -7,13 +7,10 @@ use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Mike42\Escpos\Printer;
 use Mike42\Escpos\EscposImage;
 use Yajra\DataTables\Exception;
-use Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
-use DataTables;
-use DateTime;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 use App\TagMaterial;
 use App\MiddleInventory;
 use App\BarrelQueue;
@@ -23,38 +20,65 @@ use App\BarrelLog;
 use App\BarrelMachine;
 use App\BarrelMachineLog;
 use App\CodeGenerator;
+use App\ErrorLog;
+use App\Employee;
+use App\EmployeeSync;
 use App\MiddleNgLog;
 use App\MiddleLog;
 use App\MiddleCheckLog;
 use App\MiddleTempLog;
 use App\MiddleTarget;
-use App\ErrorLog;
 use App\Material;
 use App\MiddleRequestHelper;
 use App\MiddleRequestLog;
 use App\MiddleMaterialRequest;
-use App\Employee;
-use App\EmployeeSync;
-use App\Mail\SendEmail;
+
+use App\MiddleLacqueringCheckLog;
+use App\MiddleLacqueringNgLog;
+use App\MiddleLacqueringLog;
+
+use App\MiddlePlatingCheckLog;
+use App\MiddlePlatingNgLog;
+use App\MiddlePlatingLog;
+
+use App\MiddleBuffingCheckLog;
+use App\MiddleBuffingNgLog;
+use App\MiddleBuffingLog;
+
 use App\RfidBuffingDataLog;
 use App\RfidBuffingInventory;
 use App\RfidLogEfficiency;
-use Illuminate\Support\Facades\Mail;
 use App\MiddleReturnLog;
 use App\MiddleReworkLog;
+use App\Mail\SendEmail;
+use Carbon\Carbon;
+use DataTables;
+use DateTime;
+use Response;
+
 
 class MiddleProcessController extends Controller
 {
 	public function __construct(){
 		$this->middleware('auth');
 		$this->location = [
-			'bff',
-			'bff-kensa',
+			'bff-kensa-sx',
+			'bff-kensa-sx-body',
 			'lcq-incoming',
 			'lcq-kensa',
 			'plt-incoming-sx',
 			'plt-kensa-sx',
 		];
+	}
+
+	public function indexResumeKonseling(){
+		$title = 'Middle Resume Operator Counseling';
+		$title_jp = '??';
+
+		return view('processes.middle.display.resume_konseling', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+		))->with('page', 'Middle Resume Operator Counseling')->with('head','Resume Operator Counseling');
 	}
 
 	public function indexResumeKanban(){
@@ -229,6 +253,19 @@ class MiddleProcessController extends Controller
 		$origin_groups = DB::table('origin_groups')->orderBy('origin_group_code', 'ASC')->get();
 
 		return view('processes.middle.display.ic_atokotei', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'origin_groups' => $origin_groups
+		))->with('page', 'Incoming Check Atokotei')->with('head', 'Middle Process');
+	}
+
+	public function indexBuffingIcAtokoteiSubassy(){
+		$title = 'Incoming Check Atokotei';
+		$title_jp = '後工程受入検査';
+
+		$origin_groups = DB::table('origin_groups')->orderBy('origin_group_code', 'ASC')->get();
+
+		return view('processes.middle.display.ic_atokotei_subassy', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
 			'origin_groups' => $origin_groups
@@ -653,13 +690,13 @@ class MiddleProcessController extends Controller
 			->where('mrpc', '=', 's41')
 			->first();
 
-			$ng_log = MiddleNgLog::where('operator_id', '=', $request->get('employee_id'))
+			$ng_log = MiddleBuffingNgLog::where('operator_id', '=', $request->get('employee_id'))
 			->where('material_number', '=', $material->material_number)
 			->where(db::raw('date(buffing_time)'), '=', $request->get('date'))
 			->orderBy('buffing_time', 'desc')
 			->first();
 
-			$update = db::table('middle_ng_logs')
+			$update = db::table('middle_buffing_ng_logs')
 			->where('remark', '=', $ng_log->remark)
 			->update([
 				'check' => Auth::id(),
@@ -985,6 +1022,56 @@ class MiddleProcessController extends Controller
 			);
 			return Response::json($response);
 		}
+	}
+
+	public function fetchResumeKonseling(Request $request){
+
+		$dateFrom = date('Y-m-d', strtotime('-1 Months'));
+		$dateTo = date('Y-m-d');
+
+		if(strlen($request->get('datefrom'))>0){
+			$dateFrom = date('Y-m-d', strtotime($request->get('datefrom')));
+		}
+		if(strlen($request->get('dateto'))>0){
+			$dateTo = date('Y-m-d', strtotime($request->get('dateto')));
+		}
+
+		$ng_target = MiddleTarget::where('target_name', 'NG Rate')
+		->where('location', 'bff')
+		->first();
+
+		$ng = db::select("SELECT date.week_date, report.target, report.cek FROM
+			(SELECT week_date FROM weekly_calendars
+			WHERE week_date BETWEEN '".$dateFrom."' AND '".$dateTo."') AS date
+			LEFT JOIN
+			(SELECT date, COUNT(ng_rate) target, SUM(cek) AS cek FROM
+			(SELECT resume.*, IF(cek.remark IS NOT NULL, 1, 0) AS cek FROM
+			(SELECT resume.*, resume.ng/resume.quantity AS ng_rate FROM
+			(SELECT ng.*, IF(m.model = 'A82Z', 10, IF(m.hpl = 'ASKEY', 15, 8)) AS quantity FROM
+			(SELECT DATE(ng.created_at) AS date, ng.material_number, ng.remark, SUM(ng.quantity) AS ng FROM middle_buffing_ng_logs ng
+			WHERE DATE(ng.created_at) BETWEEN '".$dateFrom."' AND '".$dateTo."'
+			GROUP BY date, ng.material_number, ng.remark) AS ng
+			LEFT JOIN materials m ON m.material_number = ng.material_number) resume
+			HAVING ng_rate > ". ($ng_target->target / 100) .") AS resume
+			LEFT JOIN
+			(SELECT DISTINCT ng.remark FROM middle_buffing_ng_logs ng
+			WHERE DATE(ng.created_at) BETWEEN '".$dateFrom."' AND '".$dateTo."'
+			AND ng.`check` IS NOT NULL) AS cek
+			ON cek.remark = resume.remark) AS report
+			GROUP BY date) AS report
+			ON report.date = date.week_date 
+			ORDER BY date.week_date ASC");
+
+		$eff = '';
+
+		$response = array(
+			'status' => true,
+			'datefrom' => date('d M Y', strtotime($dateFrom)),
+			'dateto' => date('d M Y', strtotime($dateTo)),
+			'ng' => $ng,
+			'eff' => $eff
+		);
+		return Response::json($response);
 	}
 
 	public function fetchResumeKanban(){
@@ -1338,7 +1425,7 @@ class MiddleProcessController extends Controller
 			where operator_id = '".$nik[0]."'
 			and date(selesai_start_time) = '".$tgl."' order by selesai_start_time asc");
 
-		$good = db::select("select l.buffing_time, l.material_number, m.model, m.`key`, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as op_kensa, quantity from middle_logs l
+		$good = db::select("select l.buffing_time, l.material_number, m.model, m.`key`, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as op_kensa, quantity from middle_buffing_logs l
 			left join materials m on m.material_number = l.material_number
 			left join employees e on e.employee_id = l.employee_id
 			where l.operator_id = '".$nik[0]."'
@@ -1346,26 +1433,26 @@ class MiddleProcessController extends Controller
 			order by buffing_time asc");
 
 		$ng = db::select("SELECT a.buffing_time, a.material_number, a.model, a.`key`, a.remark, concat(SPLIT_STRING(a.op_kensa, ' ', 1), ' ', SPLIT_STRING(a.op_kensa, ' ', 2)) as op_kensa, SUM(quantity) as quantity from (
-			select l.buffing_time, l.material_number, m.model, m.`key`, l.remark, e.`name` as op_kensa, l.quantity as quantity from middle_ng_logs l
+			select l.buffing_time, l.material_number, m.model, m.`key`, l.remark, e.`name` as op_kensa, l.quantity as quantity from middle_buffing_ng_logs l
 			left join materials m on m.material_number = l.material_number
 			left join employees e on e.employee_id = l.employee_id
 			where l.operator_id = '".$nik[0]."'
 			and date(l.buffing_time) = '".$tgl."') a   GROUP BY remark order by buffing_time asc");
 
-		$cek = db::select("SELECT l.buffing_time, l.material_number, m.model, m.`key`, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as op_kensa, quantity FROM middle_check_logs l
+		$cek = db::select("SELECT l.buffing_time, l.material_number, m.model, m.`key`, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as op_kensa, quantity FROM middle_buffing_check_logs l
 			left join materials m on l.material_number = m.material_number
 			left join employees e on e.employee_id = l.employee_id
 			where operator_id = '".$nik[0]."'
 			and date(l.buffing_time) = '".$tgl."'
 			order by buffing_time asc");
 
-		$ng_ng = db::select("select l.buffing_time, l.material_number, m.model, m.`key`, l.ng_name, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as op_kensa, l.quantity as quantity from middle_ng_logs l
+		$ng_ng = db::select("select l.buffing_time, l.material_number, m.model, m.`key`, l.ng_name, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as op_kensa, l.quantity as quantity from middle_buffing_ng_logs l
 			left join materials m on m.material_number = l.material_number
 			left join employees e on e.employee_id = l.employee_id
 			where l.operator_id = '".$nik[0]."'
 			and date(l.buffing_time) = '".$tgl."'");
 
-		$ng_qty = db::Select("select ng_name, sum(quantity) as qty from middle_ng_logs
+		$ng_qty = db::Select("select ng_name, sum(quantity) as qty from middle_buffing_ng_logs
 			where operator_id = '".$nik[0]."'
 			and date(buffing_time) = '".$tgl."'
 			GROUP BY ng_name
@@ -1432,21 +1519,16 @@ class MiddleProcessController extends Controller
 		}
 
 
-		$daily = db::select("SELECT tgl.week_date, tgl.hpl, ng.ng, g.g, (ng.ng/g.g*100) as ng_rate from
+		$daily = db::select("SELECT tgl.week_date, tgl.hpl, resume.ng, resume.`check` AS g, (resume.ng/resume.`check`*100) as ng_rate from
 			(select week_date, hpl from
 			(select week_date from weekly_calendars where DATE_FORMAT(week_date,'%m-%Y') = '".$bulan."') date
 			cross join
 			(select DISTINCT hpl from materials where hpl in ('ASKEY','TSKEY')) hpl ) tgl
 			left join
-			(SELECT DATE_FORMAT(n.buffing_time,'%Y-%m-%d') as tgl, m.hpl, sum(n.quantity) ng from middle_ng_logs n
-			left join materials m on m.material_number = n.material_number
-			where n.location = 'bff-kensa' and DATE_FORMAT(n.buffing_time,'%m-%Y') = '".$bulan."'
-			GROUP BY tgl, m.hpl) ng on tgl.week_date = ng.tgl and tgl.hpl = ng.hpl
-			left join
-			(SELECT DATE_FORMAT(g.buffing_time,'%Y-%m-%d') as tgl, m.hpl, sum(g.quantity) g from middle_check_logs g
-			left join materials m on m.material_number = g.material_number
-			where g.location = 'bff-kensa' and DATE_FORMAT(g.buffing_time,'%m-%Y') = '".$bulan."'
-			GROUP BY tgl, m.hpl) g on tgl.week_date = g.tgl and tgl.hpl = g.hpl");
+			(select date, remark as hpl, ng, `check` from middle_buffing_daily_resumes
+			where DATE_FORMAT(date,'%m-%Y') = '".$bulan."') resume
+			on resume.date = tgl.week_date AND tgl.hpl = resume.hpl
+			ORDER BY tgl.week_date;");
 
 		$response = array(
 			'status' => true,
@@ -1457,55 +1539,103 @@ class MiddleProcessController extends Controller
 
 	}
 
+	public function fetchBuffingNgKeyMonthly(Request $request){
 
-	public function fetchBuffingNgMonthly(Request $request){
-		$bulan="";
+		$bulan = "";
+		$bulanText = "";
 		if(strlen($request->get('bulan')) > 0){
-			$bulan = $request->get('bulan');
+			$bulan = date('Y-m', strtotime('01-'.$request->get('bulan')));
+			$bulanText = date('M Y', strtotime('01-'.$request->get('bulan')));				
 		}else{
-			$bulan = date('m-Y');
+			$bulan = date('Y-m');
+			$bulanText = date('M Y');				
 		}
 
-		$addHpl = "";
-		$hpl = '';	
-		if($request->get('hpl') != null) {
-			$hpls =  explode(",", $request->get('hpl'));
-			for ($i=0; $i < count($hpls); $i++) {
-				$hpl = $hpl."'".$hpls[$i]."'";
-				if($i != (count($hpls)-1)){
-					$hpl = $hpl.',';
-				}
-			}
-			$addHpl = "and m.hpl in (".$hpl.") ";
-		}
+		$ngKey_alto = db::select("SELECT hpl, `key`, sum(ng) AS ng FROM middle_buffing_monthly_ng_resumes
+			WHERE hpl = 'ASKEY'
+			AND location = 'bff-kensa-sx'
+			AND `month` = '".$bulan."'
+			GROUP BY hpl, `key`
+			ORDER BY ng DESC
+			LIMIT 10");
 
-		$ng = db::select("select ng.ng_name, ng.ng, g.g, (ng.ng/g.g) as ng_rate from
-			(SELECT l.ng_name, sum(l.quantity) ng from middle_ng_logs l
-			left join materials m on l.material_number = m.material_number
-			where l.location = 'bff-kensa' and DATE_FORMAT(l.created_at,'%m-%Y') = '".$bulan."' ".$addHpl."
-			GROUP BY l.ng_name) ng
-			cross join
-			(SELECT sum(l.quantity) g from middle_check_logs l
-			left join materials m on l.material_number = m.material_number
-			where l.location = 'bff-kensa' and DATE_FORMAT(l.created_at,'%m-%Y') = '".$bulan."' ".$addHpl.") g
-			order by ng_rate desc");
+		$ngKey_tenor = db::select("SELECT hpl, `key`, sum(ng) AS ng FROM middle_buffing_monthly_ng_resumes
+			WHERE hpl = 'TSKEY'
+			AND location = 'bff-kensa-sx'
+			AND `month` = '".$bulan."'
+			GROUP BY hpl, `key`
+			ORDER BY ng DESC
+			LIMIT 10");
 
-		$hpl = '';	
-		if($request->get('hpl') != null) {
-			$hpls =  explode(",", $request->get('hpl'));
-			for ($i=0; $i < count($hpls); $i++) {
-				$hpl = $hpl.$hpls[$i];
-				if($i != (count($hpls)-1)){
-					$hpl = $hpl.' & ';
-				}
-			}
-		}
+		$ngKey_alto_detail = db::select(" SELECT hpl, `key`, ng_name, ng FROM middle_buffing_monthly_ng_resumes
+			WHERE hpl = 'ASKEY'
+			AND location = 'bff-kensa-sx'
+			AND `month` = '".$bulan."'");
+
+		$ngKey_tenor_detail = db::select(" SELECT hpl, `key`, ng_name, ng FROM middle_buffing_monthly_ng_resumes
+			WHERE hpl = 'TSKEY'
+			AND location = 'bff-kensa-sx'
+			AND `month` = '".$bulan."'");
 
 		$response = array(
 			'status' => true,
-			'ng' => $ng,
-			'hpl' => $hpl,
-			'bulan' => $bulan
+			'ngKey_alto' => $ngKey_alto,
+			'ngKey_tenor' => $ngKey_tenor,
+			'ngKey_alto_detail' => $ngKey_alto_detail,
+			'ngKey_tenor_detail' => $ngKey_tenor_detail,
+			'bulanText' => $bulanText
+		);
+		return Response::json($response);
+	}
+
+
+	public function fetchBuffingNgMonthly(Request $request){
+		$bulan = "";
+		$bulanText = "";
+		if(strlen($request->get('bulan')) > 0){
+			$bulan = date('Y-m', strtotime('01-'.$request->get('bulan')));
+			$bulanText = date('M Y', strtotime('01-'.$request->get('bulan')));				
+		}else{
+			$bulan = date('Y-m');
+			$bulanText = date('M Y');				
+		}
+
+		$ng_alto = db::select("SELECT ng.hpl, ng.ng_name, ng.ng, cek.`check` FROM
+			(SELECT hpl, ng_name, SUM(ng) as ng FROM middle_buffing_monthly_ng_resumes
+			WHERE hpl = 'ASKEY'
+			AND `month` = '".$bulan."'
+			AND location = 'bff-kensa-sx'
+			GROUP BY hpl, ng_name) AS ng
+			LEFT JOIN
+			(SELECT remark, SUM(`check`) as `check` FROM middle_buffing_daily_resumes
+			WHERE remark = 'ASKEY'
+			AND DATE_FORMAT(date,'%Y-%m') = '".$bulan."'
+			AND location = 'bff-kensa-sx'
+			GROUP BY remark) AS cek
+			ON cek.remark = ng.hpl
+			ORDER BY ng.ng DESC");
+
+		$ng_tenor = db::select("SELECT ng.hpl, ng.ng_name, ng.ng, cek.`check` FROM
+			(SELECT hpl, ng_name, SUM(ng) as ng FROM middle_buffing_monthly_ng_resumes
+			WHERE hpl = 'TSKEY'
+			AND `month` = '".$bulan."'
+			AND location = 'bff-kensa-sx'
+			GROUP BY hpl, ng_name) AS ng
+			LEFT JOIN
+			(SELECT remark, SUM(`check`) as `check` FROM middle_buffing_daily_resumes
+			WHERE remark = 'TSKEY'
+			AND DATE_FORMAT(date,'%Y-%m') = '".$bulan."'
+			AND location = 'bff-kensa-sx'
+			GROUP BY remark) AS cek
+			ON cek.remark = ng.hpl
+			ORDER BY ng.ng DESC");
+
+
+		$response = array(
+			'status' => true,
+			'ng_alto' => $ng_alto,
+			'ng_tenor' => $ng_tenor,
+			'bulanText' => $bulanText
 		);
 		return Response::json($response);
 
@@ -1519,7 +1649,7 @@ class MiddleProcessController extends Controller
 			GROUP BY d.operator_id, tgl
 			HAVING act > 60");
 
-		$emp = EmployeeSync::where('employee_id', '=', $request->get('nik'))->select('employee_id', db::raw('concat(SPLIT_STRING(employees.name, " ", 1), " ", SPLIT_STRING(employees.name, " ", 2)) as name'))->get();
+		$emp = Employee::where('employee_id', '=', $request->get('nik'))->select('employee_id', db::raw('concat(SPLIT_STRING(employees.name, " ", 1), " ", SPLIT_STRING(employees.name, " ", 2)) as name'))->get();
 
 		$response = array(
 			'status' => true,
@@ -1639,22 +1769,24 @@ class MiddleProcessController extends Controller
 		);
 		return Response::json($response);
 	}
-	
+
 	public function fetchBuffingOpNgMonthlyDetail(Request $request){
 		$ng = db::select("SELECT g.date, g.operator_id, concat(SPLIT_STRING(g.`name`, ' ', 1), ' ', SPLIT_STRING(g.`name`, ' ', 2)) as `name`, COALESCE(ng.ng,0) as ng, COALESCE(g.g,0) as g, (ng.ng / g.g) as ng_rate FROM
-			(SELECT date(l.buffing_time) as date, l.operator_id, e.`name`, sum(l.quantity) ng from middle_ng_logs l
+			(SELECT date(l.buffing_time) as date, l.operator_id, e.`name`, sum(l.quantity) ng from middle_buffing_ng_logs l
 			left join employees e on e.employee_id = l.operator_id
 			left join materials m on l.material_number = m.material_number
-			where l.location = 'bff-kensa' and DATE_FORMAT(l.buffing_time,'%m-%Y') = '".$request->get('bulan')."'
+			where l.location = 'bff-kensa-sx'
+			and DATE_FORMAT(l.buffing_time,'%m-%Y') = '".$request->get('bulan')."'
 			and l.operator_id = '".$request->get('nik')."'
 			and DATE_FORMAT(l.buffing_time,'%a') != 'Sun'
 			and DATE_FORMAT(l.buffing_time,'%a') != 'Sat'
 			GROUP BY date, l.operator_id, e.`name`) ng
 			left join
-			(SELECT date(l.buffing_time) as date, l.operator_id, e.`name`, sum(l.quantity) g from middle_check_logs l
+			(SELECT date(l.buffing_time) as date, l.operator_id, e.`name`, sum(l.quantity) g from middle_buffing_check_logs l
 			left join employees e on e.employee_id = l.operator_id
 			left join materials m on l.material_number = m.material_number
-			where l.location = 'bff-kensa' and DATE_FORMAT(l.buffing_time,'%m-%Y') = '".$request->get('bulan')."'
+			where l.location = 'bff-kensa-sx'
+			and DATE_FORMAT(l.buffing_time,'%m-%Y') = '".$request->get('bulan')."'
 			and l.operator_id = '".$request->get('nik')."'
 			and DATE_FORMAT(l.buffing_time,'%a') != 'Sun'
 			and DATE_FORMAT(l.buffing_time,'%a') != 'Sat'
@@ -1688,23 +1820,23 @@ class MiddleProcessController extends Controller
 
 			$op_ng = db::select("SELECT rate.operator_id, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as `name`, rate.ng as ng, rate.g as g, rate.ng_rate as ng_rate FROM
 				(SELECT g.operator_id, COALESCE(ng.ng,0) as ng, COALESCE(g.g,0) as g, (ng.ng / g.g) as ng_rate FROM
-				(SELECT l.operator_id, sum(l.quantity) ng from middle_ng_logs l
-				where l.location = 'bff-kensa'
+				(SELECT l.operator_id, sum(l.quantity) ng from middle_buffing_ng_logs l
+				where l.location = 'bff-kensa-sx'
 				and DATE_FORMAT(l.buffing_time,'%Y-%m-%d') between '".$datefrom."' and '".$dateto."' 
 				and DATE_FORMAT(l.buffing_time,'%a') != 'Sun'
 				and DATE_FORMAT(l.buffing_time,'%a') != 'Sat'
 				GROUP BY l.operator_id) ng
 				left join
-				(SELECT l.operator_id, sum(l.quantity) g from middle_check_logs l
-				where l.location = 'bff-kensa'
+				(SELECT l.operator_id, sum(l.quantity) g from middle_buffing_check_logs l
+				where l.location = 'bff-kensa-sx'
 				and DATE_FORMAT(l.buffing_time,'%Y-%m-%d') between '".$datefrom."' and '".$dateto."' 
 				and DATE_FORMAT(l.buffing_time,'%a') != 'Sun'
 				and DATE_FORMAT(l.buffing_time,'%a') != 'Sat'
 				GROUP BY l.operator_id) g
 				on ng.operator_id = g.operator_id) rate
 				left join employees e on e.employee_id = rate.operator_id
-				order by rate.ng_rate asc");
-			
+				order by rate.ng_rate DESC");
+
 		}else{
 			if(strlen($request->get('bulan')) > 0){
 				$bulan = $request->get('bulan');
@@ -1714,16 +1846,16 @@ class MiddleProcessController extends Controller
 
 			$op_ng = db::select("SELECT rate.operator_id, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as `name`, rate.ng as ng, rate.g as g, rate.ng_rate as ng_rate FROM
 				(SELECT g.operator_id, COALESCE(ng.ng,0) as ng, COALESCE(g.g,0) as g, (ng.ng / g.g) as ng_rate FROM
-				(SELECT l.operator_id, sum(l.quantity) ng from middle_ng_logs l
-				where l.location = 'bff-kensa'
+				(SELECT l.operator_id, sum(l.quantity) ng from middle_buffing_ng_logs l
+				where l.location = 'bff-kensa-sx'
 				and DATE_FORMAT(l.buffing_time,'%m-%Y') = '".$bulan."'
 				and DATE_FORMAT(l.buffing_time,'%a') != 'Sun'
 				and DATE_FORMAT(l.buffing_time,'%a') != 'Sat'
 				and l.operator_id not like 'PG%'
 				GROUP BY l.operator_id) ng
 				left join
-				(SELECT l.operator_id, sum(l.quantity) g from middle_check_logs l
-				where l.location = 'bff-kensa'
+				(SELECT l.operator_id, sum(l.quantity) g from middle_buffing_check_logs l
+				where l.location = 'bff-kensa-sx'
 				and DATE_FORMAT(l.buffing_time,'%m-%Y') = '".$bulan."'
 				and DATE_FORMAT(l.buffing_time,'%a') != 'Sun'
 				and DATE_FORMAT(l.buffing_time,'%a') != 'Sat'
@@ -1731,7 +1863,7 @@ class MiddleProcessController extends Controller
 				GROUP BY l.operator_id) g
 				on ng.operator_id = g.operator_id) rate
 				left join employees e on e.employee_id = rate.operator_id
-				order by rate.ng_rate asc");
+				order by rate.ng_rate DESC");
 		}
 
 		$response = array(
@@ -1743,6 +1875,38 @@ class MiddleProcessController extends Controller
 		);
 		return Response::json($response);
 
+	}
+
+	public function fetchBuffingNgRateWeekly(Request $request){
+		$bulan = "";
+		$bulanText = "";
+		if(strlen($request->get('bulan')) > 0){
+			$bulan = date('Y-m', strtotime('01-'.$request->get('bulan')));
+			$bulanText = date('M Y', strtotime('01-'.$request->get('bulan')));				
+		}else{
+			$bulan = date('Y-m');
+			$bulanText = date('M Y');				
+		}
+
+		$weekly = db::select("SELECT tgl.week_name, tgl.min, COALESCE (resume.ng, 0) AS ng, COALESCE (resume.g, 0) AS g, (resume.ng / resume.g) AS ng_rate FROM
+			(SELECT week_name AS week_name, MIN(week_date) AS min FROM weekly_calendars
+			WHERE DATE_FORMAT(week_date, '%Y-%m') = '".$bulan."'
+			GROUP BY week_name
+			ORDER BY min ASC) tgl
+			LEFT JOIN
+			(SELECT `month`, `week`, ng, `check` as g FROM middle_buffing_weekly_resumes
+			WHERE `month` = '".$bulan."'
+			AND location = 'bff-kensa-sx') resume
+			ON tgl.week_name = resume.`week`
+			ORDER BY tgl.min ASC");
+
+
+		$response = array(
+			'status' => true,
+			'weekly' => $weekly,
+			'bulanText' => $bulanText
+		);
+		return Response::json($response);
 	}
 
 	public function fetchBuffingNgRateMonthly(Request $request){
@@ -1762,49 +1926,41 @@ class MiddleProcessController extends Controller
 			}
 		}
 
-		$addHpl = "";
-		$hpl = '';	
-		if($request->get('hpl') != null) {
-			$hpls =  explode(",", $request->get('hpl'));
-			for ($i=0; $i < count($hpls); $i++) {
-				$hpl = $hpl."'".$hpls[$i]."'";
-				if($i != (count($hpls)-1)){
-					$hpl = $hpl.',';
+		$monthly = db::select("SELECT tgl.tgl, COALESCE (resume.ng, 0) AS ng, COALESCE (resume.g, 0) AS g, (resume.ng / resume.g) AS ng_rate FROM
+			(SELECT DATE_FORMAT( week_date, '%Y-%m' ) AS tgl FROM weekly_calendars
+			WHERE fiscal_year IN (".$fy.")
+			GROUP BY tgl) tgl
+			LEFT JOIN
+			(SELECT `month` AS tgl, ng AS ng, `check` AS g FROM middle_buffing_monthly_resumes
+			WHERE fiscal_year IN (".$fy.")) resume
+			ON tgl.tgl = resume.tgl 
+			ORDER BY tgl.tgl ASC");
+
+		$target = MiddleTarget::where('location', 'bff')
+		->where('target_name', 'NG Rate')
+		->first();
+
+		$fy = "";
+		if($request->get('fy') != null) {
+			$fys = explode(",", $request->get('fy'));
+			for($x = 0; $x < count($fys); $x++) {
+				$fy = $fy." ".$fys[$x]." ";
+				if($x != count($fys)-1){
+					$fy = $fy."&";
 				}
 			}
-			$addHpl = "and m.hpl in (".$hpl.") ";
-		}
-
-		$monthly = db::select("SELECT tgl.tgl, COALESCE(ng.ng,0) as ng, COALESCE(g.g,0) as g, (ng.ng / g.g) as ng_rate FROM
-			(SELECT DATE_FORMAT(week_date,'%m-%Y') as tgl from weekly_calendars where fiscal_year in (".$fy.") GROUP BY tgl ORDER BY week_date asc) tgl
-			left join
-			(SELECT DATE_FORMAT(l.created_at,'%m-%Y') as tgl, sum(l.quantity) ng from middle_ng_logs l
-			left join materials m on l.material_number = m.material_number
-			where l.location = 'bff-kensa' ".$addHpl."
-			GROUP BY tgl) ng on tgl.tgl = ng.tgl
-			left join
-			(SELECT DATE_FORMAT(l.created_at,'%m-%Y') as tgl, sum(l.quantity) g from middle_check_logs l
-			left join materials m on l.material_number = m.material_number
-			where l.location = 'bff-kensa' ".$addHpl."
-			GROUP BY tgl) g on tgl.tgl = g.tgl");
-
-
-		$hpl = '';	
-		if($request->get('hpl') != null) {
-			$hpls =  explode(",", $request->get('hpl'));
-			for ($i=0; $i < count($hpls); $i++) {
-				$hpl = $hpl.$hpls[$i];
-				if($i != (count($hpls)-1)){
-					$hpl = $hpl.' & ';
-				}
+		}else{
+			$get_fy = db::select("select fiscal_year from weekly_calendars where week_date = DATE_FORMAT(now(),'%Y-%m-%d')");
+			foreach ($get_fy as $key) {
+				$fy = $key->fiscal_year;
 			}
 		}
-
 
 		$response = array(
 			'status' => true,
 			'monthly' => $monthly,
-			'hpl' => $hpl
+			'target' => $target,
+			'fy' => $fy
 		);
 		return Response::json($response);
 	}
@@ -1831,13 +1987,13 @@ class MiddleProcessController extends Controller
 			$where = "and m.origin_group_code in (".$code.") ";
 		}
 
-		$ng_name = db::select("select l.ng_name, sum(l.quantity) as jml from middle_ng_logs l
+		$ng_name = db::select("select l.ng_name, sum(l.quantity) as jml from middle_lacquering_ng_logs l
 			left join materials m on l.material_number = m.material_number
 			where DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$date."' ".$where."
 			and location = 'lcq-incoming'
 			group by l.ng_name order by jml desc");
 
-		$key = db::select("select m.`key`, sum(l.quantity) as jml from middle_ng_logs l
+		$key = db::select("select m.`key`, sum(l.quantity) as jml from middle_lacquering_ng_logs l
 			left join materials m on l.material_number = m.material_number
 			where DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$date."' ".$where."
 			and location = 'lcq-incoming'
@@ -1845,13 +2001,13 @@ class MiddleProcessController extends Controller
 
 		$detail_key = db::select("select ng_name.`key`, ng_name.ng_name, COALESCE(ng.jml,0) as jml from  
 			(select b.`key`, a.ng_name from
-			(select DISTINCT l.ng_name from middle_ng_logs l
+			(select ng_name from ng_lists
 			where location = 'lcq-incoming') a
 			cross join
-			(select distinct `key` from materials where `key` != '' order by `key` asc) b
+			(select distinct `key` from materials where hpl like '%KEY%' and issue_storage_location = 'SX51' order by `key` asc) b
 			order by `key` asc) ng_name
 			left join
-			(select m.`key`, l.ng_name, sum(l.quantity) as jml from middle_ng_logs l
+			(select m.`key`, l.ng_name, sum(l.quantity) as jml from middle_lacquering_ng_logs l
 			left join materials m on l.material_number = m.material_number
 			where DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$date."' ".$where."
 			and location = 'lcq-incoming'
@@ -1861,6 +2017,81 @@ class MiddleProcessController extends Controller
 
 		$response = array(
 			'status' => true,
+			'date' => $date,
+			'ng_name' => $ng_name,
+			'key' => $key,
+			'detail_key' => $detail_key
+		);
+		return Response::json($response);
+	}
+
+	public function fetchBuffingIcAtokoteiSubassy(Request $request){
+		$date = '';
+		if(strlen($request->get("tanggal")) > 0){
+			$date = date('Y-m-d', strtotime($request->get("tanggal")));
+		}else{
+			$date = date('Y-m-d');
+		}
+
+		$where = "";
+		if($request->get('code') != null) {
+			$codes = $request->get('code');
+			$code = "";
+
+			for($x = 0; $x < count($codes); $x++) {
+				$code = $code."'".substr($codes[$x],0,3)."'";
+				if($x != count($codes)-1){
+					$code = $code.",";
+				}
+			}
+			$where = "and m.origin_group_code in (".$code.") ";
+		}
+
+		$resume = db::select("SELECT `check`.date, `check`.`check`, ng.ng FROM
+			(select date(l.created_at) AS date, sum(l.quantity) as `check` from middle_lacquering_check_logs l
+			left join materials m on l.material_number = m.material_number
+			where date(l.created_at) = '".$date."' ".$where."
+			and location = 'subassy-incoming-sx'
+			group by date) `check`
+			LEFT JOIN
+			(select date(l.created_at) AS date, sum(l.quantity) as ng from middle_lacquering_ng_logs l
+			left join materials m on l.material_number = m.material_number
+			where date(l.created_at) = '".$date."' ".$where."
+			and location = 'subassy-incoming-sx'
+			group by date) ng
+			ON `check`.date = ng.date");
+
+		$ng_name = db::select("select l.ng_name, sum(l.quantity) as jml from middle_lacquering_ng_logs l
+			left join materials m on l.material_number = m.material_number
+			where DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$date."' ".$where."
+			and location = 'subassy-incoming-sx'
+			group by l.ng_name order by jml desc");
+
+		$key = db::select("select m.`key`, sum(l.quantity) as jml from middle_lacquering_ng_logs l
+			left join materials m on l.material_number = m.material_number
+			where DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$date."' ".$where."
+			and location = 'subassy-incoming-sx'
+			group by m.`key` order by jml desc limit 10");
+
+		$detail_key = db::select("select ng_name.`key`, ng_name.ng_name, COALESCE(ng.jml,0) as jml from  
+			(select b.`key`, a.ng_name from
+			(select ng_name from ng_lists
+			where location = 'subassy-incoming-sx') a
+			cross join
+			(select distinct `key` from materials where hpl like '%KEY%' and issue_storage_location = 'SX51' order by `key` asc) b
+			order by `key` asc) ng_name
+			left join
+			(select m.`key`, l.ng_name, sum(l.quantity) as jml from middle_lacquering_ng_logs l
+			left join materials m on l.material_number = m.material_number
+			where DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$date."' ".$where."
+			and location = 'subassy-incoming-sx'
+			group by m.`key`, l.ng_name) ng
+			on ng_name.ng_name = ng.ng_name and ng_name.`key` = ng.`key`
+			order by `key` asc");
+
+		$response = array(
+			'status' => true,
+			'resume' => $resume,
 			'date' => $date,
 			'ng_name' => $ng_name,
 			'key' => $key,
@@ -2078,10 +2309,10 @@ class MiddleProcessController extends Controller
 			left join materials m on plan.material_child = m.material_number
 			group by LEFT(m.`key`,1)) plan
 			left join
-			(select left(m.`key`,1) as `key`, ROUND(sum(l.quantity * s.time / 60),2) as result from middle_logs l
+			(select left(m.`key`,1) as `key`, ROUND(sum(l.quantity * s.time / 60),2) as result from middle_buffing_logs l
 			left join materials m on m.material_number = l.material_number
 			left join standard_times s on s.material_number = l.material_number
-			where l.location = 'bff-kensa'
+			where l.location = 'bff-kensa-sx'
 			and DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$tanggal."'
 			GROUP BY left(m.`key`,1)) result
 			on plan.`key` = result.`key`");
@@ -2155,9 +2386,9 @@ class MiddleProcessController extends Controller
 			and DATE_FORMAT(week_date,'%Y') = '".$tahun."')
 			group by tgl) barrel
 			left join
-			(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, sum(l.quantity) as jml from middle_logs l
+			(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, sum(l.quantity) as jml from middle_buffing_logs l
 			left join materials m on m.material_number = l.material_number
-			where l.location = 'bff-kensa'
+			where l.location = 'bff-kensa-sx'
 			and DATE_FORMAT(l.created_at,'%Y-%m-%d') in (select week_date from weekly_calendars
 			where week_name = (select week_name from weekly_calendars where week_date = '".$tanggal."')
 			and DATE_FORMAT(week_date,'%Y') = '".$tahun."')
@@ -2188,9 +2419,9 @@ class MiddleProcessController extends Controller
 			and DATE_FORMAT(b.created_at,'%Y-%m-%d') = '".$tanggal."'
 			group by kunci) barrel
 			left join
-			(select LEFT(m.`key`,1) as kunci, sum(l.quantity) as jml from middle_logs l
+			(select LEFT(m.`key`,1) as kunci, sum(l.quantity) as jml from middle_buffing_logs l
 			left join materials m on m.material_number = l.material_number
-			where l.location = 'bff-kensa'
+			where l.location = 'bff-kensa-sx'
 			and DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$tanggal."'
 			group by kunci) bff
 			on barrel.kunci = bff.kunci");
@@ -2260,16 +2491,26 @@ class MiddleProcessController extends Controller
 			$date = date('Y-m-d');
 		}
 
-		$key = db::select("select m.`key`, sum(l.quantity) as jml from middle_ng_logs l
-			left join materials m on l.material_number = m.material_number
-			where DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$date."'
-			and location = 'lcq-incoming'
-			group by m.`key` order by jml desc");
+		$ngKey = db::select("SELECT m.`key`, sum(ng.quantity) AS ng FROM middle_buffing_ng_logs ng
+			LEFT JOIN materials m ON m.material_number = ng.material_number
+			WHERE ng.location = 'bff-kensa-sx'
+			AND date(ng.created_at) = '".$date."'
+			GROUP BY m.`key`
+			ORDER BY ng DESC
+			LIMIT 10");
+
+		$ngKey_detail = db::select("SELECT m.`key`, ng.ng_name, sum(ng.quantity) AS ng FROM middle_buffing_ng_logs ng
+			LEFT JOIN materials m ON m.material_number = ng.material_number
+			WHERE ng.location = 'bff-kensa-sx'
+			AND date(ng.created_at) = '".$date."'
+			GROUP BY m.`key`, ng.ng_name");
+
 
 		$response = array(
 			'status' => true,
 			'date' => $date,
-			'key' => $key,
+			'ngKey' => $ngKey,
+			'ngKey_detail' => $ngKey_detail,
 		);
 		return Response::json($response);
 	}
@@ -2500,19 +2741,19 @@ class MiddleProcessController extends Controller
 
 		$rate = db::select("select rate.shift, rate.operator_id, concat(SPLIT_STRING(e.name, ' ', 1), ' ', SPLIT_STRING(e.name, ' ', 2)) as `name`, rate.tot, rate.ng, rate.rate from
 			(select c.shift, c.operator_id, c.jml as tot, COALESCE(ng.jml,0) as ng, ((c.jml-COALESCE(ng.jml,0))/c.jml) as rate from
-			(select eg.`group` as shift, m.operator_id, sum(m.quantity) as jml from middle_check_logs m
+			(select eg.`group` as shift, m.operator_id, sum(m.quantity) as jml from middle_buffing_check_logs m
 			left join materials mt on mt.material_number = m.material_number
 			left join employee_groups eg on eg.employee_id = m.operator_id
-			where m.location = 'bff-kensa'
+			where m.location = 'bff-kensa-sx'
 			and m.operator_id is not null
 			and mt.origin_group_code = '043'
 			and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') = '".$date."'
 			GROUP BY shift, m.operator_id) c
 			left join
-			(select eg.`group` as shift, m.operator_id, sum(m.quantity) as jml from middle_ng_logs m
+			(select eg.`group` as shift, m.operator_id, sum(m.quantity) as jml from middle_buffing_ng_logs m
 			left join materials mt on mt.material_number = m.material_number
 			left join employee_groups eg on eg.employee_id = m.operator_id
-			where m.location = 'bff-kensa'
+			where m.location = 'bff-kensa-sx'
 			and m.operator_id is not null
 			and mt.origin_group_code = '043'
 			and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') = '".$date."'
@@ -2553,8 +2794,8 @@ class MiddleProcessController extends Controller
 		}
 
 		$ng = db::select("select ng_name, sum(quantity) as jml
-			from middle_ng_logs
-			where location = 'bff-kensa'
+			from middle_buffing_ng_logs
+			where location = 'bff-kensa-sx'
 			and DATE_FORMAT(created_at,'%Y-%m-%d') = '".$date."'
 			GROUP BY ng_name order by jml desc");
 
@@ -2571,47 +2812,33 @@ class MiddleProcessController extends Controller
 		$datefrom = date("Y-m-d", strtotime("-3 Months"));
 		$dateto = date("Y-m-d");
 
-		$alto = db::select("select date.week_date, rate.rate from
-			(select week_date from weekly_calendars WHERE
-			week_date BETWEEN '".$datefrom."' and '".$dateto."') date
-			left join
-			(select g.tgl, g.jml as tot, ng.jml as ng, (ng.jml/g.jml*100) as rate from
-			(select DATE_FORMAT(m.created_at,'%Y-%m-%d') as tgl, sum(m.quantity) as jml from middle_logs m
-			left join materials mt on mt.material_number = m.material_number
-			where m.location = 'bff-kensa' and mt.hpl = 'ASKEY'
-			GROUP BY tgl) g
-			left join
-			(select DATE_FORMAT(m.created_at,'%Y-%m-%d') as tgl, sum(m.quantity) as jml from middle_ng_logs m
-			left join materials mt on mt.material_number = m.material_number
-			where m.location = 'bff-kensa' and mt.hpl = 'ASKEY'
-			GROUP BY tgl) ng
-			on g.tgl = ng.tgl) rate
-			on date.week_date = rate.tgl");
+		$alto = db::select("SELECT date.week_date, rate.rate FROM
+			(SELECT week_date FROM weekly_calendars
+			WHERE week_date BETWEEN '".$datefrom."' and '".$dateto."') date
+			LEFT JOIN
+			(SELECT date, ( ng / `check` * 100 ) AS rate FROM middle_buffing_daily_resumes 
+			WHERE date BETWEEN '".$datefrom."' and '".$dateto."' 
+			AND remark = 'ASKEY' 
+			AND location = 'bff-kensa-sx') rate
+			ON rate.date = date.week_date");
 
-		$tenor = db::select("select date.week_date, rate.rate from
-			(select week_date from weekly_calendars WHERE
-			week_date BETWEEN '".$datefrom."' and '".$dateto."') date
-			left join
-			(select g.tgl, g.jml as tot, ng.jml as ng, (ng.jml/g.jml*100) as rate from
-			(select DATE_FORMAT(m.created_at,'%Y-%m-%d') as tgl, sum(m.quantity) as jml from middle_logs m
-			left join materials mt on mt.material_number = m.material_number
-			where m.location = 'bff-kensa' and mt.hpl = 'TSKEY'
-			GROUP BY tgl) g
-			left join
-			(select DATE_FORMAT(m.created_at,'%Y-%m-%d') as tgl, sum(m.quantity) as jml from middle_ng_logs m
-			left join materials mt on mt.material_number = m.material_number
-			where m.location = 'bff-kensa' and mt.hpl = 'TSKEY'
-			GROUP BY tgl) ng
-			on g.tgl = ng.tgl) rate
-			on date.week_date = rate.tgl");
+		$tenor = db::select("SELECT date.week_date, rate.rate FROM
+			(SELECT week_date FROM weekly_calendars
+			WHERE week_date BETWEEN '".$datefrom."' and '".$dateto."') date
+			LEFT JOIN
+			(SELECT date, ( ng / `check` * 100 ) AS rate FROM middle_buffing_daily_resumes 
+			WHERE date BETWEEN '".$datefrom."' and '".$dateto."' 
+			AND remark = 'TSKEY' 
+			AND location = 'bff-kensa-sx') rate
+			ON rate.date = date.week_date");
 
 		$daily_by_ng = db::select("select ng.created_at, ng.ng_name, sum(ng) as ng, sum(result) as result, round((sum(ng)/sum(result))*100,2) as percentage from
 			(
-			select date(created_at) as created_at, material_number, ng_name, sum(quantity) as ng from middle_ng_logs where location = 'bff-kensa' and date(created_at) >= '".$datefrom."' and date(created_at) <= '".$dateto."' group by date(created_at), material_number, ng_name
+			select date(created_at) as created_at, material_number, ng_name, sum(quantity) as ng from middle_buffing_ng_logs where location = 'bff-kensa-sx' and date(created_at) >= '".$datefrom."' and date(created_at) <= '".$dateto."' group by date(created_at), material_number, ng_name
 			) as ng
 			left join
 			(
-			select date(created_at) as created_at, material_number, sum(quantity) as result from middle_logs where location = 'bff-kensa' and date(created_at) >= '".$datefrom."' and date(created_at) <= '".$dateto."' group by date(created_at), material_number
+			select date(created_at) as created_at, material_number, sum(quantity) as result from middle_buffing_logs where location = 'bff-kensa-sx' and date(created_at) >= '".$datefrom."' and date(created_at) <= '".$dateto."' group by date(created_at), material_number
 			) as result
 			on result.created_at = ng.created_at and result.material_number = ng.material_number where result is not null group by ng.created_at, ng.ng_name");
 
@@ -2635,12 +2862,12 @@ class MiddleProcessController extends Controller
 		$ng_target = db::table("middle_targets")->where('location', '=', 'bff')->where('target_name', '=', 'NG Rate')->select('target')->first();
 
 		$target = db::select("select eg.`group`, eg.employee_id, concat(SPLIT_STRING(e.name, ' ', 1), ' ', SPLIT_STRING(e.name, ' ', 2)) as `name`, ng.material_number, CONCAT(m.model,' ',m.`key`) as `key`, ng.ng_name, ng.quantity, ng.buffing_time, ng.`check` from employee_groups eg left join
-			(select * from middle_ng_logs
-			where location = 'bff-kensa'
+			(select * from middle_buffing_ng_logs
+			where location = 'bff-kensa-sx'
 			and remark in
 			(select remark.remark from
-			(select operator_id, max(remark) as remark from middle_ng_logs
-			where location = 'bff-kensa'
+			(select operator_id, max(remark) as remark from middle_buffing_ng_logs
+			where location = 'bff-kensa-sx'
 			and date(buffing_time) = '".$tanggal."'
 			group by operator_id) remark)) ng
 			on eg.employee_id = ng.operator_id
@@ -2675,16 +2902,16 @@ class MiddleProcessController extends Controller
 		$ng_rate = db::select("select eg.`group` as shift, eg.employee_id as operator_id, concat(SPLIT_STRING(e.name, ' ', 1), ' ', SPLIT_STRING(e.name, ' ', 2)) as `name`, rate.tot, rate.ng, rate.rate from employee_groups eg
 			left join
 			(select c.operator_id, c.jml as tot, COALESCE(ng.jml,0) as ng, (COALESCE(ng.jml,0)/c.jml*100) as rate from
-			(select m.operator_id, sum(m.quantity) as jml from middle_check_logs m
+			(select m.operator_id, sum(m.quantity) as jml from middle_buffing_check_logs m
 			left join materials mt on mt.material_number = m.material_number
-			where m.location = 'bff-kensa'
+			where m.location = 'bff-kensa-sx'
 			and m.operator_id is not null
 			and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') = '".$tanggal."'
 			GROUP BY m.operator_id) c
 			left join
-			(select m.operator_id, sum(m.quantity) as jml from middle_ng_logs m
+			(select m.operator_id, sum(m.quantity) as jml from middle_buffing_ng_logs m
 			left join materials mt on mt.material_number = m.material_number
-			where m.location = 'bff-kensa'
+			where m.location = 'bff-kensa-sx'
 			and m.operator_id is not null
 			and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') = '".$tanggal."'
 			GROUP BY m.operator_id) ng
@@ -2818,7 +3045,7 @@ class MiddleProcessController extends Controller
 		$until="";
 		$hour = (int)date('H');
 
-		
+
 		// if(strlen($request->get('tgl')) > 0){
 		// 	if($tgl == date('Y-m-d')){
 		// 		if($hour > 5){
@@ -2854,7 +3081,7 @@ class MiddleProcessController extends Controller
 
 		$tanggal1 = "l.created_at >= '".$tgl." 07:00:01' and l.created_at <= '".$tgl." 16:00:00'";
 		$tanggal2 = "l.created_at >= '".$tgl." 16:00:01' and l.created_at <= '".$tgl." 23:59:59'";
-		$tanggal = "l.created_at >= '".$tgl." 00:00:01' and l.created_at <= '".$tgl." 06:00:00'";
+		$tanggal = "l.created_at >= '".$tgl." 00:00:01' and l.created_at <= '".$tgl." 07:00:00'";
 
 		$addlocation = "";
 		if($request->get('location') != null) {
@@ -3143,48 +3370,46 @@ class MiddleProcessController extends Controller
 	}
 
 	public function fetchLcqNgRateWeekly(Request $request){
-		$bulan="";
+		$bulan = "";
+		$bulanText = "";
 		if(strlen($request->get('bulan')) > 0){
-			$bulan = $request->get('bulan');
+			$bulan = date('Y-m', strtotime('01-'.$request->get('bulan')));
+			$bulanText = date('M Y', strtotime('01-'.$request->get('bulan')));				
 		}else{
-			$bulan = date('m-Y');
+			$bulan = date('Y-m');
+			$bulanText = date('M Y');				
 		}
 
-		$query = "SELECT a.week_name, sum(b.ng) as ng, sum(c.g) as g from
-		(SELECT week_name, week_date from weekly_calendars where DATE_FORMAT(week_date,'%m-%Y') = '".$bulan."') a
-		left join
-		(SELECT DATE_FORMAT(n.created_at,'%Y-%m-%d') as tgl, sum(n.quantity) ng from middle_ng_logs n
-		left join materials m on m.material_number = n.material_number
-		where location = 'lcq-incoming' and m.surface not like '%PLT%' and DATE_FORMAT(n.created_at,'%m-%Y') = '".$bulan."'
-		GROUP BY tgl) b on a.week_date = b.tgl
-		left join
-		(SELECT DATE_FORMAT(g.created_at,'%Y-%m-%d') as tgl, sum(g.quantity) g from middle_check_logs g
-		left join materials m on m.material_number = g.material_number
-		where location = 'lcq-incoming' and m.surface not like '%PLT%' and DATE_FORMAT(g.created_at,'%m-%Y') = '".$bulan."'
-		GROUP BY tgl) c on a.week_date = c.tgl
-		GROUP BY a.week_name";
-		$weekly_ic = db::select($query);
+		$weekly_ic = db::select("SELECT tgl.week_name, tgl.min, COALESCE (resume.ng, 0) AS ng, COALESCE (resume.g, 0) AS g, (resume.ng / resume.g) AS ng_rate FROM
+			(SELECT week_name AS week_name, MIN(week_date) AS min FROM weekly_calendars
+			WHERE DATE_FORMAT(week_date, '%Y-%m') = '".$bulan."'
+			GROUP BY week_name
+			ORDER BY min ASC) tgl
+			LEFT JOIN
+			(SELECT `month`, `week`, ng, `check` as g FROM middle_lacquering_weekly_resumes
+			WHERE `month` = '".$bulan."'
+			AND location = 'lcq-incoming') resume
+			ON tgl.week_name = resume.`week`
+			ORDER BY tgl.min ASC");
 
-		$query2 = "SELECT a.week_name, sum(b.ng) as ng, sum(c.g) as g from
-		(SELECT week_name, week_date from weekly_calendars where DATE_FORMAT(week_date,'%m-%Y') = '".$bulan."') a
-		left join
-		(SELECT DATE_FORMAT(n.created_at,'%Y-%m-%d') as tgl, sum(n.quantity) ng from middle_ng_logs n
-		left join materials m on m.material_number = n.material_number
-		where location = 'lcq-kensa' and m.surface not like '%PLT%' and DATE_FORMAT(n.created_at,'%m-%Y') = '".$bulan."'
-		GROUP BY tgl) b on a.week_date = b.tgl
-		left join
-		(SELECT DATE_FORMAT(g.created_at,'%Y-%m-%d') as tgl, sum(g.quantity) g from middle_check_logs g
-		left join materials m on m.material_number = g.material_number
-		where location = 'lcq-kensa' and m.surface not like '%PLT%' and DATE_FORMAT(g.created_at,'%m-%Y') = '".$bulan."'
-		GROUP BY tgl) c on a.week_date = c.tgl
-		GROUP BY a.week_name";
-		$weekly_kensa = db::select($query2);
+		
+		$weekly_kensa = db::select("SELECT tgl.week_name, tgl.min, COALESCE (resume.ng, 0) AS ng, COALESCE (resume.g, 0) AS g, (resume.ng / resume.g) AS ng_rate FROM
+			(SELECT week_name AS week_name, MIN(week_date) AS min FROM weekly_calendars
+			WHERE DATE_FORMAT(week_date, '%Y-%m') = '".$bulan."'
+			GROUP BY week_name
+			ORDER BY min ASC) tgl
+			LEFT JOIN
+			(SELECT `month`, `week`, ng, `check` as g FROM middle_lacquering_weekly_resumes
+			WHERE `month` = '".$bulan."'
+			AND location = 'lcq-kensa') resume
+			ON tgl.week_name = resume.`week`
+			ORDER BY tgl.min ASC");
 
 		$response = array(
 			'status' => true,
 			'weekly_ic' => $weekly_ic,
 			'weekly_kensa' => $weekly_kensa,
-			'bulan' => $bulan
+			'bulanText' => $bulanText
 		);
 		return Response::json($response);
 	}
@@ -3268,33 +3493,27 @@ class MiddleProcessController extends Controller
 			}
 		}
 
-		$query1 = "SELECT a.tgl, COALESCE(b.ng,b.ng,0) as ng, COALESCE(c.g,c.g,0) as g, c.g as total FROM
-		(SELECT DATE_FORMAT(week_date,'%m-%Y') as tgl from weekly_calendars where fiscal_year in (".$fy.") GROUP BY tgl ORDER BY week_date asc) a
-		left join
-		(SELECT DATE_FORMAT(n.created_at,'%m-%Y') as tgl, sum(n.quantity) ng from middle_ng_logs n
-		left join materials m on m.material_number = n.material_number
-		where location = 'lcq-incoming' and m.surface not like '%PLT%'
-		GROUP BY tgl) b on a.tgl = b.tgl
-		left join
-		(SELECT DATE_FORMAT(g.created_at,'%m-%Y') as tgl, sum(g.quantity) g from middle_check_logs g
-		left join materials m on m.material_number = g.material_number
-		where location = 'lcq-incoming' and m.surface not like '%PLT%'
-		GROUP BY tgl) c on a.tgl = c.tgl";
-		$monthly_ic = db::select($query1);
+		$monthly_ic = db::select("SELECT tgl.tgl, COALESCE (resume.ng, 0) AS ng, COALESCE (resume.g, 0) AS g, (resume.ng / resume.g) AS ng_rate FROM
+			(SELECT DATE_FORMAT( week_date, '%Y-%m' ) AS tgl FROM weekly_calendars
+			WHERE fiscal_year IN (".$fy.")
+			GROUP BY tgl) tgl
+			LEFT JOIN
+			(SELECT `month` AS tgl, ng AS ng, `check` AS g FROM middle_lacquering_monthly_resumes
+			WHERE fiscal_year IN (".$fy.")
+			AND location = 'lcq-incoming') resume
+			ON tgl.tgl = resume.tgl 
+			ORDER BY tgl.tgl ASC");
 
-		$query2 = "SELECT a.tgl, COALESCE(b.ng,b.ng,0) as ng, COALESCE(c.g,c.g,0) as g, c.g as total FROM
-		(SELECT DATE_FORMAT(week_date,'%m-%Y') as tgl from weekly_calendars where fiscal_year in (".$fy.") GROUP BY tgl ORDER BY week_date asc) a
-		left join
-		(SELECT DATE_FORMAT(n.created_at,'%m-%Y') as tgl, sum(n.quantity) ng from middle_ng_logs n
-		left join materials m on m.material_number = n.material_number
-		where location = 'lcq-kensa' and m.surface not like '%PLT%'
-		GROUP BY tgl) b on a.tgl = b.tgl
-		left join
-		(SELECT DATE_FORMAT(g.created_at,'%m-%Y') as tgl, sum(g.quantity) g from middle_check_logs g
-		left join materials m on m.material_number = g.material_number
-		where location = 'lcq-kensa' and m.surface not like '%PLT%'
-		GROUP BY tgl) c on a.tgl = c.tgl";
-		$monthly_kensa = db::select($query2);
+		$monthly_kensa = db::select("SELECT tgl.tgl, COALESCE (resume.ng, 0) AS ng, COALESCE (resume.g, 0) AS g, (resume.ng / resume.g) AS ng_rate FROM
+			(SELECT DATE_FORMAT( week_date, '%Y-%m' ) AS tgl FROM weekly_calendars
+			WHERE fiscal_year IN (".$fy.")
+			GROUP BY tgl) tgl
+			LEFT JOIN
+			(SELECT `month` AS tgl, ng AS ng, `check` AS g FROM middle_lacquering_monthly_resumes
+			WHERE fiscal_year IN (".$fy.")
+			AND location = 'lcq-kensa') resume
+			ON tgl.tgl = resume.tgl 
+			ORDER BY tgl.tgl ASC");
 
 		$fy = "";
 		if($request->get('fy') != null) {
@@ -3408,169 +3627,157 @@ class MiddleProcessController extends Controller
 
 	public function fetchLcqNg(Request $request){
 
-		$bulan="";
+		$bulan = "";
+		$bulanText = "";
 		if(strlen($request->get('bulan')) > 0){
-			$bulan = "DATE_FORMAT(l.created_at,'%m-%Y') = '".$request->get('bulan')."' and ";
+			$bulan = date('Y-m', strtotime('01-'.$request->get('bulan')));
+			$bulanText = date('M Y', strtotime('01-'.$request->get('bulan')));				
 		}else{
-			$bulan = "DATE_FORMAT(l.created_at,'%m-%Y') = '".date('m-Y')."' and ";
+			$bulan = date('Y-m');
+			$bulanText = date('M Y');				
 		}
 
 
-		// IC
-		$totalCekIC_alto = db::select("select a.g as total from
-			(select sum(quantity) as g from middle_check_logs l left join materials m on m.material_number = l.material_number
-			where ".$bulan." m.surface not like '%PLT%' and location = 'lcq-incoming' and m.hpl = 'ASKEY') a
-			cross join
-			(select sum(quantity) as ng from middle_ng_logs l left join materials m on m.material_number = l.material_number
-			where ".$bulan." m.surface not like '%PLT%' and location = 'lcq-incoming' and m.hpl = 'ASKEY') b");
+		//Highest NG		
+		$ic_ng_alto = db::select("SELECT ng.hpl, ng.ng_name, ng.ng, cek.`check` FROM
+			(SELECT hpl, ng_name, SUM(ng) as ng FROM middle_lacquering_monthly_ng_resumes
+			WHERE hpl = 'ASKEY'
+			AND `month` = '".$bulan."'
+			AND location = 'lcq-incoming'
+			GROUP BY hpl, ng_name) AS ng
+			LEFT JOIN
+			(SELECT remark, SUM(`check`) as `check` FROM middle_lacquering_daily_resumes
+			WHERE remark = 'ASKEY'
+			AND DATE_FORMAT(date,'%Y-%m') = '".$bulan."'
+			AND location = 'lcq-incoming'
+			GROUP BY remark) AS cek
+			ON cek.remark = ng.hpl
+			ORDER BY ng.ng DESC");
 
-		$totalCekIC_tenor = db::select("select a.g as total from
-			(select sum(quantity) as g from middle_check_logs l left join materials m on m.material_number = l.material_number
-			where ".$bulan." m.surface not like '%PLT%' and location = 'lcq-incoming' and m.hpl = 'TSKEY') a
-			cross join
-			(select sum(quantity) as ng from middle_ng_logs l left join materials m on m.material_number = l.material_number
-			where ".$bulan." m.surface not like '%PLT%' and location = 'lcq-incoming' and m.hpl = 'TSKEY') b");
-
-		$ngIC_alto = db::select("select l.ng_name, m.hpl, sum(l.quantity) as jml from middle_ng_logs l
-			left join materials m on l.material_number = m.material_number
-			where ".$bulan." location = 'lcq-incoming' and m.surface not like '%PLT%' and m.hpl = 'ASKEY' group by l.ng_name, m.hpl order by jml desc");
-
-		$ngIC_tenor = db::select("select l.ng_name, m.hpl, sum(l.quantity) as jml from middle_ng_logs l
-			left join materials m on l.material_number = m.material_number
-			where ".$bulan." location = 'lcq-incoming' and m.surface not like '%PLT%' and m.hpl = 'TSKEY' group by l.ng_name, m.hpl order by jml desc");
-
-		$ngICKey_alto = db::select("select m.`key`, sum(l.quantity) as jml from middle_ng_logs l
-			left join materials m on l.material_number = m.material_number
-			where ".$bulan." location = 'lcq-incoming' and m.surface not like '%PLT%' and m.hpl = 'ASKEY' group by m.`key` order by jml desc LIMIT 10;");
-
-		$ngICKey_alto_detail = db::select("select ng_name.`key`, ng_name.ng_name, COALESCE(ng.jml,0) as jml from  
-			(select b.`key`, a.ng_name from
-			(select DISTINCT l.ng_name from middle_ng_logs l
-			where location = 'lcq-incoming') a
-			cross join
-			(select distinct `key` from materials where `key` != '' order by `key` asc) b
-			order by `key` asc) ng_name
-			left join
-			(select m.`key`, l.ng_name, sum(l.quantity) as jml from middle_ng_logs l
-			left join materials m on l.material_number = m.material_number
-			where ".$bulan." location = 'lcq-incoming'
-			and m.hpl = 'ASKEY'
-			group by m.`key`, l.ng_name) ng
-			on ng_name.ng_name = ng.ng_name and ng_name.`key` = ng.`key`
-			order by `key` asc");
-
-		$ngICKey_tenor = db::select("select m.`key`, sum(l.quantity) as jml from middle_ng_logs l
-			left join materials m on l.material_number = m.material_number
-			where ".$bulan." location = 'lcq-incoming' and m.surface not like '%PLT%' and m.hpl = 'TSKEY' group by m.`key` order by jml desc LIMIT 10;");
-
-		$ngICKey_tenor_detail = db::select("select ng_name.`key`, ng_name.ng_name, COALESCE(ng.jml,0) as jml from  
-			(select b.`key`, a.ng_name from
-			(select DISTINCT l.ng_name from middle_ng_logs l
-			where location = 'lcq-incoming') a
-			cross join
-			(select distinct `key` from materials where `key` != '' order by `key` asc) b
-			order by `key` asc) ng_name
-			left join
-			(select m.`key`, l.ng_name, sum(l.quantity) as jml from middle_ng_logs l
-			left join materials m on l.material_number = m.material_number
-			where ".$bulan." location = 'lcq-incoming'
-			and m.hpl = 'TSKEY'
-			group by m.`key`, l.ng_name) ng
-			on ng_name.ng_name = ng.ng_name and ng_name.`key` = ng.`key`
-			order by `key` asc");
+		$ic_ng_tenor = db::select("SELECT ng.hpl, ng.ng_name, ng.ng, cek.`check` FROM
+			(SELECT hpl, ng_name, SUM(ng) as ng FROM middle_lacquering_monthly_ng_resumes
+			WHERE hpl = 'TSKEY'
+			AND `month` = '".$bulan."'
+			AND location = 'lcq-incoming'
+			GROUP BY hpl, ng_name) AS ng
+			LEFT JOIN
+			(SELECT remark, SUM(`check`) as `check` FROM middle_lacquering_daily_resumes
+			WHERE remark = 'TSKEY'
+			AND DATE_FORMAT(date,'%Y-%m') = '".$bulan."'
+			AND location = 'lcq-incoming'
+			GROUP BY remark) AS cek
+			ON cek.remark = ng.hpl
+			ORDER BY ng.ng DESC");
 
 
-		// Kensa
-		$totalCekKensa_alto = db::select("select a.g as total from
-			(select sum(quantity) as g from middle_check_logs l left join materials m on m.material_number = l.material_number
-			where ".$bulan." m.surface not like '%PLT%' and location = 'lcq-kensa' and m.hpl = 'ASKEY') a
-			cross join
-			(select sum(quantity) as ng from middle_ng_logs l left join materials m on m.material_number = l.material_number
-			where ".$bulan." m.surface not like '%PLT%' and location = 'lcq-kensa' and m.hpl = 'ASKEY') b");
+		$kensa_ng_alto = db::select("SELECT ng.hpl, ng.ng_name, ng.ng, cek.`check` FROM
+			(SELECT hpl, ng_name, SUM(ng) as ng FROM middle_lacquering_monthly_ng_resumes
+			WHERE hpl = 'ASKEY'
+			AND `month` = '".$bulan."'
+			AND location = 'lcq-kensa'
+			GROUP BY hpl, ng_name) AS ng
+			LEFT JOIN
+			(SELECT remark, SUM(`check`) as `check` FROM middle_lacquering_daily_resumes
+			WHERE remark = 'ASKEY'
+			AND DATE_FORMAT(date,'%Y-%m') = '".$bulan."'
+			AND location = 'lcq-kensa'
+			GROUP BY remark) AS cek
+			ON cek.remark = ng.hpl
+			ORDER BY ng.ng DESC");
 
-		$totalCekKensa_tenor = db::select("select a.g as total from
-			(select sum(quantity) as g from middle_check_logs l left join materials m on m.material_number = l.material_number
-			where ".$bulan." m.surface not like '%PLT%' and location = 'lcq-kensa' and m.hpl = 'TSKEY') a
-			cross join
-			(select sum(quantity) as ng from middle_ng_logs l left join materials m on m.material_number = l.material_number
-			where ".$bulan." m.surface not like '%PLT%' and location = 'lcq-kensa' and m.hpl = 'TSKEY') b");
+		$kensa_ng_tenor = db::select("SELECT ng.hpl, ng.ng_name, ng.ng, cek.`check` FROM
+			(SELECT hpl, ng_name, SUM(ng) as ng FROM middle_lacquering_monthly_ng_resumes
+			WHERE hpl = 'TSKEY'
+			AND `month` = '".$bulan."'
+			AND location = 'lcq-kensa'
+			GROUP BY hpl, ng_name) AS ng
+			LEFT JOIN
+			(SELECT remark, SUM(`check`) as `check` FROM middle_lacquering_daily_resumes
+			WHERE remark = 'TSKEY'
+			AND DATE_FORMAT(date,'%Y-%m') = '".$bulan."'
+			AND location = 'lcq-kensa'
+			GROUP BY remark) AS cek
+			ON cek.remark = ng.hpl
+			ORDER BY ng.ng DESC");
+		
 
-		$ngKensa_alto = db::select("select l.ng_name, m.hpl, sum(l.quantity) as jml from middle_ng_logs l
-			left join materials m on l.material_number = m.material_number
-			where ".$bulan." location = 'lcq-kensa' and m.surface not like '%PLT%' and m.hpl = 'ASKEY' group by l.ng_name, m.hpl order by jml desc limit 10");
+		//Highest Key
+		$ic_ng_key_alto = db::select("SELECT hpl, `key`, sum(ng) AS ng FROM middle_lacquering_monthly_ng_resumes
+			WHERE hpl = 'ASKEY'
+			AND location = 'lcq-incoming'
+			AND `month` = '".$bulan."'
+			GROUP BY hpl, `key`
+			ORDER BY ng DESC
+			LIMIT 10");
 
-		$ngKensa_tenor = db::select("select l.ng_name, m.hpl, sum(l.quantity) as jml from middle_ng_logs l
-			left join materials m on l.material_number = m.material_number
-			where ".$bulan." location = 'lcq-kensa' and m.surface not like '%PLT%' and m.hpl = 'TSKEY' group by l.ng_name, m.hpl order by jml desc limit 10");
+		$ic_ng_key_tenor = db::select("SELECT hpl, `key`, sum(ng) AS ng FROM middle_lacquering_monthly_ng_resumes
+			WHERE hpl = 'TSKEY'
+			AND location = 'lcq-incoming'
+			AND `month` = '".$bulan."'
+			GROUP BY hpl, `key`
+			ORDER BY ng DESC
+			LIMIT 10");
 
-		$ngKensaKey = db::select("select m.`key`, sum(l.quantity) as jml from middle_ng_logs l
-			left join materials m on l.material_number = m.material_number
-			where ".$bulan." location = 'lcq-kensa' and m.surface not like '%PLT%' group by m.`key` order by jml desc;");
+		$ic_ng_key_alto_detail = db::select("SELECT hpl, `key`, ng_name, ng FROM middle_lacquering_monthly_ng_resumes
+			WHERE hpl = 'ASKEY'
+			AND location = 'lcq-incoming'
+			AND `month` = '".$bulan."'");
 
-		$ngKensaKey_alto = db::select("select m.`key`, sum(l.quantity) as jml from middle_ng_logs l
-			left join materials m on l.material_number = m.material_number
-			where ".$bulan." location = 'lcq-kensa' and m.surface not like '%PLT%' and m.hpl = 'ASKEY' group by m.`key` order by jml desc LIMIT 10;");
+		$ic_ng_key_tenor_detail = db::select("SELECT hpl, `key`, ng_name, ng FROM middle_lacquering_monthly_ng_resumes
+			WHERE hpl = 'TSKEY'
+			AND location = 'lcq-incoming'
+			AND `month` = '".$bulan."'");
 
-		$ngKensaKey_alto_detail = db::select("select ng_name.`key`, ng_name.ng_name, COALESCE(ng.jml,0) as jml from  
-			(select b.`key`, a.ng_name from
-			(select DISTINCT l.ng_name from middle_ng_logs l
-			where location = 'lcq-kensa') a
-			cross join
-			(select distinct `key` from materials where `key` != '' order by `key` asc) b
-			order by `key` asc) ng_name
-			left join
-			(select m.`key`, l.ng_name, sum(l.quantity) as jml from middle_ng_logs l
-			left join materials m on l.material_number = m.material_number
-			where ".$bulan." location = 'lcq-kensa'
-			and m.hpl = 'ASKEY'
-			group by m.`key`, l.ng_name) ng
-			on ng_name.ng_name = ng.ng_name and ng_name.`key` = ng.`key`
-			order by `key` asc");
 
-		$ngKensaKey_tenor = db::select("select m.`key`, sum(l.quantity) as jml from middle_ng_logs l
-			left join materials m on l.material_number = m.material_number
-			where ".$bulan." location = 'lcq-kensa' and m.surface not like '%PLT%' and m.hpl = 'TSKEY' group by m.`key` order by jml desc LIMIT 10;");
 
-		$ngKensaKey_tenor_detail = db::select("select ng_name.`key`, ng_name.ng_name, COALESCE(ng.jml,0) as jml from  
-			(select b.`key`, a.ng_name from
-			(select DISTINCT l.ng_name from middle_ng_logs l
-			where location = 'lcq-kensa') a
-			cross join
-			(select distinct `key` from materials where `key` != '' order by `key` asc) b
-			order by `key` asc) ng_name
-			left join
-			(select m.`key`, l.ng_name, sum(l.quantity) as jml from middle_ng_logs l
-			left join materials m on l.material_number = m.material_number
-			where ".$bulan." location = 'lcq-kensa'
-			and m.hpl = 'TSKEY'
-			group by m.`key`, l.ng_name) ng
-			on ng_name.ng_name = ng.ng_name and ng_name.`key` = ng.`key`
-			order by `key` asc");
 
-		$bulan = substr($bulan,37,7);
+		$kensa_ng_key_alto = db::select("SELECT hpl, `key`, sum(ng) AS ng FROM middle_lacquering_monthly_ng_resumes
+			WHERE hpl = 'ASKEY'
+			AND location = 'lcq-kensa'
+			AND `month` = '".$bulan."'
+			GROUP BY hpl, `key`
+			ORDER BY ng DESC
+			LIMIT 10");
+
+		$kensa_ng_key_tenor = db::select("SELECT hpl, `key`, sum(ng) AS ng FROM middle_lacquering_monthly_ng_resumes
+			WHERE hpl = 'TSKEY'
+			AND location = 'lcq-kensa'
+			AND `month` = '".$bulan."'
+			GROUP BY hpl, `key`
+			ORDER BY ng DESC
+			LIMIT 10");
+
+		$kensa_ng_key_alto_detail = db::select("SELECT hpl, `key`, ng_name, ng FROM middle_lacquering_monthly_ng_resumes
+			WHERE hpl = 'ASKEY'
+			AND location = 'lcq-kensa'
+			AND `month` = '".$bulan."'");
+
+		$kensa_ng_key_tenor_detail = db::select("SELECT hpl, `key`, ng_name, ng FROM middle_lacquering_monthly_ng_resumes
+			WHERE hpl = 'TSKEY'
+			AND location = 'lcq-kensa'
+			AND `month` = '".$bulan."'");
+
+		
 
 		$response = array(
 			'status' => true,
 
-			'ngIC_alto' => $ngIC_alto,
-			'ngIC_tenor' => $ngIC_tenor,
-			'totalCekIC_alto' => $totalCekIC_alto,
-			'totalCekIC_tenor' => $totalCekIC_tenor,
-			'ngICKey_alto' => $ngICKey_alto,	
-			'ngICKey_alto_detail' => $ngICKey_alto_detail,	
-			'ngICKey_tenor' => $ngICKey_tenor,
-			'ngICKey_tenor_detail' => $ngICKey_tenor_detail,
+			'ic_ng_alto' => $ic_ng_alto,
+			'ic_ng_tenor' => $ic_ng_tenor,
+			'kensa_ng_alto' => $kensa_ng_alto,
+			'kensa_ng_tenor' => $kensa_ng_tenor,
 
-			'ngKensa_alto' => $ngKensa_alto,
-			'ngKensa_tenor' => $ngKensa_tenor,
-			'totalCekKensa_alto' => $totalCekKensa_alto,
-			'totalCekKensa_tenor' => $totalCekKensa_tenor,
-			'ngKensaKey_alto' => $ngKensaKey_alto,
-			'ngKensaKey_alto_detail' => $ngKensaKey_alto_detail,
-			'ngKensaKey_tenor' => $ngKensaKey_tenor,
-			'ngKensaKey_tenor_detail' => $ngKensaKey_tenor_detail,
+			'ic_ng_key_alto' => $ic_ng_key_alto,
+			'ic_ng_key_alto_detail' => $ic_ng_key_alto_detail,
+			'ic_ng_key_tenor' => $ic_ng_key_tenor,
+			'ic_ng_key_tenor_detail' => $ic_ng_key_tenor_detail,
 
-			'bulan' => $bulan
+			'kensa_ng_key_alto' => $kensa_ng_key_alto,
+			'kensa_ng_key_alto_detail' => $kensa_ng_key_alto_detail,
+			'kensa_ng_key_tenor' => $kensa_ng_key_tenor,
+			'kensa_ng_key_tenor_detail' => $kensa_ng_key_tenor_detail,
+
+			'bulanText' => $bulanText
 		);
 		return Response::json($response);
 	}
@@ -3860,126 +4067,187 @@ class MiddleProcessController extends Controller
 
 	public function fetchLcqNgRate(Request $request){
 
-		$bulan = "";
-		$bulan1 = "";
-		$bulan2 = "";
-
+		$bulan="";
 		if(strlen($request->get('bulan')) > 0){
-			$bulan = "where DATE_FORMAT(week_date,'%m-%Y') ='".$request->get('bulan')."' ";
-			$bulan1 = "where DATE_FORMAT(n.created_at,'%m-%Y') ='".$request->get('bulan')."' ";
-			$bulan2 = "where DATE_FORMAT(g.created_at,'%m-%Y') ='".$request->get('bulan')."' ";
+			$bulan = $request->get('bulan');
 		}else{
-			$bulan = "where DATE_FORMAT(week_date,'%m-%Y') ='".date('m-Y')."' ";
-			$bulan1 = "where DATE_FORMAT(n.created_at,'%m-%Y') ='".date('m-Y')."' ";
-			$bulan2 = "where DATE_FORMAT(g.created_at,'%m-%Y') ='".date('m-Y')."' ";
+			$bulan = date('m-Y');
 		}
 
-		// IC
-		$dailyICAlto = db::select("SELECT a.tgl, b.hpl, b.ng, COALESCE(c.g,0) as total FROM
-			(SELECT DATE_FORMAT(week_date,'%d-%m-%Y') as tgl from weekly_calendars ".$bulan.") a
+
+		$ic = db::select("SELECT tgl.week_date, tgl.hpl, resume.ng, resume.`check` AS g, (resume.ng/resume.`check`*100) as ng_rate from
+			(select week_date, hpl from
+			(select week_date from weekly_calendars where DATE_FORMAT(week_date,'%m-%Y') = '".$bulan."') date
+			cross join
+			(select DISTINCT hpl from materials where hpl in ('ASKEY','TSKEY')) hpl ) tgl
 			left join
-			(SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(n.quantity) as ng from middle_ng_logs n
-			left join materials m on m.material_number = n.material_number ".$bulan1." and m.surface not like '%PLT%' and location = 'lcq-incoming' and m.hpl = 'ASKEY'
-			GROUP BY tgl, hpl) b on a.tgl = b.tgl
-			left join		
-			(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(g.quantity) as g from middle_check_logs g
-			left join materials m on m.material_number = g.material_number ".$bulan2." and m.surface not like '%PLT%' and location = 'lcq-incoming' and m.hpl = 'ASKEY'
-			GROUP BY tgl, hpl) c on a.tgl = c.tgl;");
+			(select date, remark as hpl, ng, `check` from middle_lacquering_daily_resumes
+			where DATE_FORMAT(date,'%m-%Y') = '".$bulan."'
+			AND location = 'lcq-incoming') resume
+			on resume.date = tgl.week_date AND tgl.hpl = resume.hpl
+			ORDER BY tgl.week_date;");
 
-		$dailyICTenor = db::select("SELECT a.tgl, b.hpl, b.ng, COALESCE(c.g,0) as total FROM
-			(SELECT DATE_FORMAT(week_date,'%d-%m-%Y') as tgl from weekly_calendars ".$bulan.") a
+		$kensa = db::select("SELECT tgl.week_date, tgl.hpl, resume.ng, resume.`check` AS g, (resume.ng/resume.`check`*100) as ng_rate from
+			(select week_date, hpl from
+			(select week_date from weekly_calendars where DATE_FORMAT(week_date,'%m-%Y') = '".$bulan."') date
+			cross join
+			(select DISTINCT hpl from materials where hpl in ('ASKEY','TSKEY')) hpl ) tgl
 			left join
-			(SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(n.quantity) as ng from middle_ng_logs n
-			left join materials m on m.material_number = n.material_number ".$bulan1." and m.surface not like '%PLT%' and location = 'lcq-incoming' and m.hpl = 'TSKEY'
-			GROUP BY tgl, hpl) b on a.tgl = b.tgl
-			left join		
-			(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(g.quantity) as g from middle_check_logs g
-			left join materials m on m.material_number = g.material_number ".$bulan2." and m.surface not like '%PLT%' and location = 'lcq-incoming' and m.hpl = 'TSKEY'
-			GROUP BY tgl, hpl) c on a.tgl = c.tgl;");
-
-
-		// Kensa
-		$dailyKensaAlto = db::select("SELECT a.tgl, b.hpl, b.ng, COALESCE(c.g,0) as total FROM
-			(SELECT DATE_FORMAT(week_date,'%d-%m-%Y') as tgl from weekly_calendars ".$bulan.") a
-			left join
-			(SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(n.quantity) as ng from middle_ng_logs n
-			left join materials m on m.material_number = n.material_number ".$bulan1." and m.surface not like '%PLT%' and location = 'lcq-kensa' and m.hpl = 'ASKEY'
-			GROUP BY tgl, hpl) b on a.tgl = b.tgl
-			left join		
-			(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(g.quantity) as g from middle_check_logs g
-			left join materials m on m.material_number = g.material_number ".$bulan2." and m.surface not like '%PLT%' and location = 'lcq-kensa' and m.hpl = 'ASKEY'
-			GROUP BY tgl, hpl) c on a.tgl = c.tgl;");
-
-		$dailyKensaTenor = db::select("SELECT a.tgl, b.hpl, b.ng, COALESCE(c.g,0) as total FROM
-			(SELECT DATE_FORMAT(week_date,'%d-%m-%Y') as tgl from weekly_calendars ".$bulan.") a
-			left join
-			(SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(n.quantity) as ng from middle_ng_logs n
-			left join materials m on m.material_number = n.material_number ".$bulan1." and m.surface not like '%PLT%' and location = 'lcq-kensa' and m.hpl = 'TSKEY'
-			GROUP BY tgl, hpl) b on a.tgl = b.tgl
-			left join		
-			(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(g.quantity) as g from middle_check_logs g
-			left join materials m on m.material_number = g.material_number ".$bulan2." and m.surface not like '%PLT%' and location = 'lcq-kensa' and m.hpl = 'TSKEY'
-			GROUP BY tgl, hpl) c on a.tgl = c.tgl;");
-
-		$bulan = substr($bulan,39,7);
+			(select date, remark as hpl, ng, `check` from middle_lacquering_daily_resumes
+			where DATE_FORMAT(date,'%m-%Y') = '".$bulan."'
+			AND location = 'lcq-kensa') resume
+			on resume.date = tgl.week_date AND tgl.hpl = resume.hpl
+			ORDER BY tgl.week_date;");
 
 		$response = array(
 			'status' => true,
-
-			'dailyICAlto' => $dailyICAlto,
-			'dailyICTenor' => $dailyICTenor,
-
-			'dailyKensaAlto' => $dailyKensaAlto,
-			'dailyKensaTenor' => $dailyKensaTenor,
-
+			'ic' => $ic,
+			'kensa' => $kensa,
 			'bulan' => $bulan
 		);
 		return Response::json($response);
-
 	}
 
 	public function fetchReportNG(Request $request){
-		$report = MiddleNgLog::leftJoin('employees', 'employees.employee_id', '=', 'middle_ng_logs.employee_id')
-		->leftJoin('materials', 'materials.material_number', '=', 'middle_ng_logs.material_number');
 
-		if(strlen($request->get('datefrom')) > 0){
-			$date_from = date('Y-m-d', strtotime($request->get('datefrom')));
-			$report = $report->where(db::raw('date_format(middle_ng_logs.created_at, "%Y-%m-%d")'), '>=', $date_from);
+		$loc = $request->get('location');
+		$report;
+
+		if(str_contains($loc, 'bff')){
+			$report = MiddleBuffingNgLog::leftJoin('employees', 'employees.employee_id', '=', 'middle_buffing_ng_logs.employee_id')
+			->leftJoin('materials', 'materials.material_number', '=', 'middle_buffing_ng_logs.material_number');
+
+			if(strlen($request->get('datefrom')) > 0){
+				$date_from = date('Y-m-d', strtotime($request->get('datefrom')));
+				$report = $report->where(db::raw('date_format(middle_buffing_ng_logs.created_at, "%Y-%m-%d")'), '>=', $date_from);
+			}
+
+			if(strlen($request->get('dateto')) > 0){
+				$date_to = date('Y-m-d', strtotime($request->get('dateto')));
+				$report = $report->where(db::raw('date_format(middle_buffing_ng_logs.created_at, "%Y-%m-%d")'), '<=', $date_to);
+			}
+
+			if($request->get('location') != null){
+				$report = $report->where('middle_buffing_ng_logs.location', $request->get('location'));
+			}
+
+			$report = $report->select('middle_buffing_ng_logs.employee_id', 'employees.name', 'middle_buffing_ng_logs.tag', 'middle_buffing_ng_logs.material_number', 'materials.material_description', 'materials.key', 'materials.model', 'materials.surface', 'middle_buffing_ng_logs.ng_name', 'middle_buffing_ng_logs.quantity', 'middle_buffing_ng_logs.location', 'middle_buffing_ng_logs.created_at')->get();
+
+		}else if(str_contains($loc, 'lcq')){
+			$report = MiddleLacqueringNgLog::leftJoin('employees', 'employees.employee_id', '=', 'middle_lacquering_ng_logs.employee_id')
+			->leftJoin('materials', 'materials.material_number', '=', 'middle_lacquering_ng_logs.material_number');
+
+			if(strlen($request->get('datefrom')) > 0){
+				$date_from = date('Y-m-d', strtotime($request->get('datefrom')));
+				$report = $report->where(db::raw('date_format(middle_lacquering_ng_logs.created_at, "%Y-%m-%d")'), '>=', $date_from);
+			}
+
+			if(strlen($request->get('dateto')) > 0){
+				$date_to = date('Y-m-d', strtotime($request->get('dateto')));
+				$report = $report->where(db::raw('date_format(middle_lacquering_ng_logs.created_at, "%Y-%m-%d")'), '<=', $date_to);
+			}
+
+			if($request->get('location') != null){
+				$report = $report->where('middle_lacquering_ng_logs.location', $request->get('location'));
+			}
+
+			$report = $report->select('middle_lacquering_ng_logs.employee_id', 'employees.name', 'middle_lacquering_ng_logs.tag', 'middle_lacquering_ng_logs.material_number', 'materials.material_description', 'materials.key', 'materials.model', 'materials.surface', 'middle_lacquering_ng_logs.ng_name', 'middle_lacquering_ng_logs.quantity', 'middle_lacquering_ng_logs.location', 'middle_lacquering_ng_logs.created_at')->get();
+
+		}else if(str_contains($loc, 'plt')){
+			$report = MiddlePlatingNgLog::leftJoin('employees', 'employees.employee_id', '=', 'middle_plating_ng_logs.employee_id')
+			->leftJoin('materials', 'materials.material_number', '=', 'middle_plating_ng_logs.material_number');
+
+			if(strlen($request->get('datefrom')) > 0){
+				$date_from = date('Y-m-d', strtotime($request->get('datefrom')));
+				$report = $report->where(db::raw('date_format(middle_plating_ng_logs.created_at, "%Y-%m-%d")'), '>=', $date_from);
+			}
+
+			if(strlen($request->get('dateto')) > 0){
+				$date_to = date('Y-m-d', strtotime($request->get('dateto')));
+				$report = $report->where(db::raw('date_format(middle_plating_ng_logs.created_at, "%Y-%m-%d")'), '<=', $date_to);
+			}
+
+			if($request->get('location') != null){
+				$report = $report->where('middle_plating_ng_logs.location', $request->get('location'));
+			}
+
+			$report = $report->select('middle_plating_ng_logs.employee_id', 'employees.name', 'middle_plating_ng_logs.tag', 'middle_plating_ng_logs.material_number', 'materials.material_description', 'materials.key', 'materials.model', 'materials.surface', 'middle_plating_ng_logs.ng_name', 'middle_plating_ng_logs.quantity', 'middle_plating_ng_logs.location', 'middle_plating_ng_logs.created_at')->get();
+
 		}
-
-		if(strlen($request->get('dateto')) > 0){
-			$date_to = date('Y-m-d', strtotime($request->get('dateto')));
-			$report = $report->where(db::raw('date_format(middle_ng_logs.created_at, "%Y-%m-%d")'), '<=', $date_to);
-		}
-
-		if($request->get('location') != null){
-			$report = $report->whereIn('middle_ng_logs.location', $request->get('location'));
-		}
-
-		$report = $report->select('middle_ng_logs.employee_id', 'employees.name', 'middle_ng_logs.tag', 'middle_ng_logs.material_number', 'materials.material_description', 'materials.key', 'materials.model', 'materials.surface', 'middle_ng_logs.ng_name', 'middle_ng_logs.quantity', 'middle_ng_logs.location', 'middle_ng_logs.created_at')->get();
 
 		return DataTables::of($report)->make(true);
 	}
 
 	public function fetchReportProductionResult(Request $request){
-		$report = MiddleLog::leftJoin('employees', 'employees.employee_id', '=', 'middle_logs.employee_id')
-		->leftJoin('materials', 'materials.material_number', '=', 'middle_logs.material_number');
 
-		if(strlen($request->get('datefrom')) > 0){
-			$date_from = date('Y-m-d', strtotime($request->get('datefrom')));
-			$report = $report->where(db::raw('date_format(middle_logs.created_at, "%Y-%m-%d")'), '>=', $date_from);
+
+		$loc = $request->get('location');
+		$report;
+
+
+		if(str_contains($loc, 'bff')){			
+			$report = MiddleBuffingLog::leftJoin('employees', 'employees.employee_id', '=', 'middle_buffing_logs.employee_id')
+			->leftJoin('materials', 'materials.material_number', '=', 'middle_buffing_logs.material_number');
+
+			if(strlen($request->get('datefrom')) > 0){
+				$date_from = date('Y-m-d', strtotime($request->get('datefrom')));
+				$report = $report->where(db::raw('date_format(middle_buffing_logs.created_at, "%Y-%m-%d")'), '>=', $date_from);
+			}
+
+			if(strlen($request->get('dateto')) > 0){
+				$date_to = date('Y-m-d', strtotime($request->get('dateto')));
+				$report = $report->where(db::raw('date_format(middle_buffing_logs.created_at, "%Y-%m-%d")'), '<=', $date_to);
+			}
+
+			if($request->get('location') != null){
+				$report = $report->where('middle_buffing_logs.location', $request->get('location'));
+			}
+
+			$report = $report->select('middle_buffing_logs.employee_id', 'employees.name', 'middle_buffing_logs.tag', 'middle_buffing_logs.material_number', 'materials.material_description', 'materials.key', 'materials.model', 'materials.surface', 'middle_buffing_logs.quantity', 'middle_buffing_logs.location', 'middle_buffing_logs.created_at')->get();
+
+		}else if(str_contains($loc, 'lcq')){
+			$report = MiddleLacqueringLog::leftJoin('employees', 'employees.employee_id', '=', 'middle_lacquering_logs.employee_id')
+			->leftJoin('materials', 'materials.material_number', '=', 'middle_lacquering_logs.material_number');
+
+			if(strlen($request->get('datefrom')) > 0){
+				$date_from = date('Y-m-d', strtotime($request->get('datefrom')));
+				$report = $report->where(db::raw('date_format(middle_lacquering_logs.created_at, "%Y-%m-%d")'), '>=', $date_from);
+			}
+
+			if(strlen($request->get('dateto')) > 0){
+				$date_to = date('Y-m-d', strtotime($request->get('dateto')));
+				$report = $report->where(db::raw('date_format(middle_lacquering_logs.created_at, "%Y-%m-%d")'), '<=', $date_to);
+			}
+
+			if($request->get('location') != null){
+				$report = $report->where('middle_lacquering_logs.location', $request->get('location'));
+			}
+
+			$report = $report->select('middle_lacquering_logs.employee_id', 'employees.name', 'middle_lacquering_logs.tag', 'middle_lacquering_logs.material_number', 'materials.material_description', 'materials.key', 'materials.model', 'materials.surface', 'middle_lacquering_logs.quantity', 'middle_lacquering_logs.location', 'middle_lacquering_logs.created_at')->get();
+
+
+		}else if(str_contains($loc, 'plt')){
+			$report = MiddlePlatingLog::leftJoin('employees', 'employees.employee_id', '=', 'middle_plating_logs.employee_id')
+			->leftJoin('materials', 'materials.material_number', '=', 'middle_plating_logs.material_number');
+
+			if(strlen($request->get('datefrom')) > 0){
+				$date_from = date('Y-m-d', strtotime($request->get('datefrom')));
+				$report = $report->where(db::raw('date_format(middle_plating_logs.created_at, "%Y-%m-%d")'), '>=', $date_from);
+			}
+
+			if(strlen($request->get('dateto')) > 0){
+				$date_to = date('Y-m-d', strtotime($request->get('dateto')));
+				$report = $report->where(db::raw('date_format(middle_plating_logs.created_at, "%Y-%m-%d")'), '<=', $date_to);
+			}
+
+			if($request->get('location') != null){
+				$report = $report->where('middle_plating_logs.location', $request->get('location'));
+			}
+
+			$report = $report->select('middle_plating_logs.employee_id', 'employees.name', 'middle_plating_logs.tag', 'middle_plating_logs.material_number', 'materials.material_description', 'materials.key', 'materials.model', 'materials.surface', 'middle_plating_logs.quantity', 'middle_plating_logs.location', 'middle_plating_logs.created_at')->get();
+
+
 		}
-
-		if(strlen($request->get('dateto')) > 0){
-			$date_to = date('Y-m-d', strtotime($request->get('dateto')));
-			$report = $report->where(db::raw('date_format(middle_logs.created_at, "%Y-%m-%d")'), '<=', $date_to);
-		}
-
-		if($request->get('location') != null){
-			$report = $report->whereIn('middle_logs.location', $request->get('location'));
-		}
-
-		$report = $report->select('middle_logs.employee_id', 'employees.name', 'middle_logs.tag', 'middle_logs.material_number', 'materials.material_description', 'materials.key', 'materials.model', 'materials.surface', 'middle_logs.quantity', 'middle_logs.location', 'middle_logs.created_at')->get();
 
 		return DataTables::of($report)->make(true);
 	}
@@ -5186,16 +5454,59 @@ class MiddleProcessController extends Controller
 	public function fetchMiddleKensa(Request $request){
 
 		$emp = $request->get('employee_id');
+		$loc = $request->get('location');
 
-		$result = DB::select("select SUM(quantity) as qty, hpl from
-			(select material_number, sum(quantity) as quantity from middle_logs where employee_id = '".$emp."' and DATE_FORMAT(created_at,'%Y-%m-%d') = '".date('Y-m-d')."' and location = '".$request->get('location')."' group by material_number) as base
-			left join materials on materials.material_number = base.material_number
-			group by hpl");
+		$result;
+		$ng;
 
-		$ng = DB::select("select SUM(quantity) as qty, hpl from
-			(select material_number, sum(quantity) as quantity from middle_ng_logs where employee_id = '".$emp."' and DATE_FORMAT(created_at,'%Y-%m-%d') = '".date('Y-m-d')."' and location = '".$request->get('location')."' group by material_number) as base
-			left join materials on materials.material_number = base.material_number
-			group by hpl");
+
+		if(str_contains($loc, 'bff')){
+			$result = DB::select("select SUM(quantity) as qty, hpl from
+				(select material_number, sum(quantity) as quantity from middle_buffing_logs where employee_id = '".$emp."' and DATE_FORMAT(created_at,'%Y-%m-%d') = '".date('Y-m-d')."' and location = '".$request->get('location')."' group by material_number) as base
+				left join materials on materials.material_number = base.material_number
+				group by hpl");
+
+			$ng = DB::select("select SUM(quantity) as qty, hpl from
+				(select material_number, sum(quantity) as quantity from middle_buffing_ng_logs where employee_id = '".$emp."' and DATE_FORMAT(created_at,'%Y-%m-%d') = '".date('Y-m-d')."' and location = '".$request->get('location')."' group by material_number) as base
+				left join materials on materials.material_number = base.material_number
+				group by hpl");
+
+		}elseif (str_contains($loc, 'lcq')){
+			$result = DB::select("select SUM(quantity) as qty, hpl from
+				(select material_number, sum(quantity) as quantity from middle_lacquering_logs where employee_id = '".$emp."' and DATE_FORMAT(created_at,'%Y-%m-%d') = '".date('Y-m-d')."' and location = '".$request->get('location')."' group by material_number) as base
+				left join materials on materials.material_number = base.material_number
+				group by hpl");
+
+			$ng = DB::select("select SUM(quantity) as qty, hpl from
+				(select material_number, sum(quantity) as quantity from middle_lacquering_ng_logs where employee_id = '".$emp."' and DATE_FORMAT(created_at,'%Y-%m-%d') = '".date('Y-m-d')."' and location = '".$request->get('location')."' group by material_number) as base
+				left join materials on materials.material_number = base.material_number
+				group by hpl");
+
+		}elseif (str_contains($loc, 'plt')) {
+			$result = DB::select("select SUM(quantity) as qty, hpl from
+				(select material_number, sum(quantity) as quantity from middle_plating_logs where employee_id = '".$emp."' and DATE_FORMAT(created_at,'%Y-%m-%d') = '".date('Y-m-d')."' and location = '".$request->get('location')."' group by material_number) as base
+				left join materials on materials.material_number = base.material_number
+				group by hpl");
+
+			$ng = DB::select("select SUM(quantity) as qty, hpl from
+				(select material_number, sum(quantity) as quantity from middle_plating_ng_logs where employee_id = '".$emp."' and DATE_FORMAT(created_at,'%Y-%m-%d') = '".date('Y-m-d')."' and location = '".$request->get('location')."' group by material_number) as base
+				left join materials on materials.material_number = base.material_number
+				group by hpl");
+		}else{
+			$result = DB::select("select SUM(quantity) as qty, hpl from
+				(select material_number, sum(quantity) as quantity from middle_lacquering_check_logs where employee_id = '".$emp."' and DATE_FORMAT(created_at,'%Y-%m-%d') = '".date('Y-m-d')."' and location = '".$request->get('location')."' group by material_number
+				union all
+				select material_number, sum(quantity) as quantity from middle_plating_check_logs where employee_id = '".$emp."' and DATE_FORMAT(created_at,'%Y-%m-%d') = '".date('Y-m-d')."' and location = '".$request->get('location')."' group by material_number) as base
+				left join materials on materials.material_number = base.material_number
+				group by hpl");
+
+			$ng = DB::select("select SUM(quantity) as qty, hpl from
+				(select material_number, sum(quantity) as quantity from middle_lacquering_ng_logs where employee_id = '".$emp."' and DATE_FORMAT(created_at,'%Y-%m-%d') = '".date('Y-m-d')."' and location = '".$request->get('location')."' group by material_number
+				union all
+				select material_number, sum(quantity) as quantity from middle_plating_ng_logs where employee_id = '".$emp."' and DATE_FORMAT(created_at,'%Y-%m-%d') = '".date('Y-m-d')."' and location = '".$request->get('location')."' group by material_number) as base
+				left join materials on materials.material_number = base.material_number
+				group by hpl");
+		}
 
 		$response = array(
 			'status' => true,
@@ -5299,6 +5610,7 @@ class MiddleProcessController extends Controller
 
 	public function inputMiddleKensa(Request $request){
 
+		$loc = $request->get('loc');
 		$code_generator = CodeGenerator::where('note','=','middle-kensa')->first();
 		$code = $code_generator->index+1;
 		$code_generator->index = $code;
@@ -5306,16 +5618,32 @@ class MiddleProcessController extends Controller
 
 		if($request->get('ng')){
 			foreach ($request->get('ng') as $ng) {
-				$middle_ng_log = new MiddleNgLog([
-					'employee_id' => $request->get('employee_id'),
-					'tag' => $request->get('tag'),
-					'material_number' => $request->get('material_number'),
-					'ng_name' => $ng[0],
-					'quantity' => $ng[1],
-					'location' => $request->get('loc'),
-					'started_at' => $request->get('started_at'),
-					'remark' => $code
-				]);
+
+				$middle_ng_log;
+				if(str_contains($loc, 'lcq')){
+					$middle_ng_log = new MiddleLacqueringNgLog([
+						'employee_id' => $request->get('employee_id'),
+						'tag' => $request->get('tag'),
+						'material_number' => $request->get('material_number'),
+						'ng_name' => $ng[0],
+						'quantity' => $ng[1],
+						'location' => $request->get('loc'),
+						'started_at' => $request->get('started_at'),
+						'remark' => $code
+					]);
+				}else if(str_contains($loc, 'plt')){
+					$middle_ng_log = new MiddlePlatingNgLog([
+						'employee_id' => $request->get('employee_id'),
+						'tag' => $request->get('tag'),
+						'material_number' => $request->get('material_number'),
+						'ng_name' => $ng[0],
+						'quantity' => $ng[1],
+						'location' => $request->get('loc'),
+						'started_at' => $request->get('started_at'),
+						'remark' => $code
+					]);
+				}
+
 
 				try{
 					$middle_ng_log->save();
@@ -5329,24 +5657,36 @@ class MiddleProcessController extends Controller
 				}
 			}
 
-			try{
-
-				$middle_check_log = new MiddleCheckLog([
+			$middle_check_log;
+			if(str_contains($loc, 'lcq')){
+				$middle_check_log = new MiddleLacqueringCheckLog([
 					'employee_id' => $request->get('employee_id'),
 					'tag' => $request->get('tag'),
 					'material_number' => $request->get('material_number'),
 					'quantity' => $request->get('quantity'),
 					'location' => $request->get('loc'),
 				]);
-				$middle_check_log->save();
-
-				$middle_temp_log = new MiddleTempLog([
+			}else if(str_contains($loc, 'plt')){
+				$middle_check_log = new MiddlePlatingCheckLog([
+					'employee_id' => $request->get('employee_id'),
+					'tag' => $request->get('tag'),
 					'material_number' => $request->get('material_number'),
 					'quantity' => $request->get('quantity'),
 					'location' => $request->get('loc'),
 				]);
-				$middle_temp_log->save();
+			}	
 
+			$middle_temp_log = new MiddleTempLog([
+				'material_number' => $request->get('material_number'),
+				'quantity' => $request->get('quantity'),
+				'location' => $request->get('loc'),
+			]);
+
+			try{
+				DB::transaction(function() use ($middle_check_log, $middle_temp_log){
+					$middle_check_log->save();				
+					$middle_temp_log->save();
+				});
 
 				$response = array(
 					'status' => true,
@@ -5367,14 +5707,28 @@ class MiddleProcessController extends Controller
 			$middle_inventory = MiddleInventory::where('tag', '=', $request->get('tag'))->first();
 			$middle_inventory->location = $request->get('loc');
 			$middle_inventory->last_check = $request->get('employee_id');
-			$middle_log = new MiddleLog([
-				'employee_id' => $request->get('employee_id'),
-				'tag' => $request->get('tag'),
-				'material_number' => $request->get('material_number'),
-				'quantity' => $request->get('quantity'),
-				'location' => $request->get('loc'),
-				'started_at' => $request->get('started_at'),
-			]);
+
+
+			$middle_log;
+			if(str_contains($loc, 'lcq')){
+				$middle_log = new MiddleLacqueringLog([
+					'employee_id' => $request->get('employee_id'),
+					'tag' => $request->get('tag'),
+					'material_number' => $request->get('material_number'),
+					'quantity' => $request->get('quantity'),
+					'location' => $request->get('loc'),
+					'started_at' => $request->get('started_at'),
+				]);
+			}else if(str_contains($loc, 'plt')){
+				$middle_log = new MiddlePlatingLog([
+					'employee_id' => $request->get('employee_id'),
+					'tag' => $request->get('tag'),
+					'material_number' => $request->get('material_number'),
+					'quantity' => $request->get('quantity'),
+					'location' => $request->get('loc'),
+					'started_at' => $request->get('started_at'),
+				]);
+			}
 
 			try{
 				DB::transaction(function() use ($middle_log, $middle_inventory){
@@ -5393,14 +5747,24 @@ class MiddleProcessController extends Controller
 
 					$delete->delete();
 				}else{
-					$middle_check_log = new MiddleCheckLog([
-						'employee_id' => $request->get('employee_id'),
-						'tag' => $request->get('tag'),
-						'material_number' => $request->get('material_number'),
-						'quantity' => $request->get('quantity'),
-						'location' => $request->get('loc'),
-					]);
-					$middle_check_log->save();
+					$middle_check_log;
+					if(str_contains($loc, 'lcq')){
+						$middle_check_log = new MiddleLacqueringCheckLog([
+							'employee_id' => $request->get('employee_id'),
+							'tag' => $request->get('tag'),
+							'material_number' => $request->get('material_number'),
+							'quantity' => $request->get('quantity'),
+							'location' => $request->get('loc'),
+						]);
+					}else if(str_contains($loc, 'plt')){
+						$middle_check_log = new MiddlePlatingCheckLog([
+							'employee_id' => $request->get('employee_id'),
+							'tag' => $request->get('tag'),
+							'material_number' => $request->get('material_number'),
+							'quantity' => $request->get('quantity'),
+							'location' => $request->get('loc'),
+						]);
+					}
 				}
 
 
@@ -5908,7 +6272,7 @@ class MiddleProcessController extends Controller
 
 		if($request->get('ng')){
 			foreach ($request->get('ng') as $ng) {
-				$middle_ng_log = new MiddleNgLog([
+				$middle_ng_log = new MiddleBuffingNgLog([
 					'employee_id' => $request->get('employee_id'),
 					'tag' => $request->get('tag'),
 					'material_number' => $request->get('material_number'),
@@ -5933,27 +6297,28 @@ class MiddleProcessController extends Controller
 				}
 			}
 
+			$middle_check_log = new MiddleBuffingCheckLog([
+				'employee_id' => $request->get('employee_id'),
+				'tag' => $request->get('tag'),
+				'material_number' => $request->get('material_number'),
+				'quantity' => $request->get('cek'),
+				'location' => $request->get('loc'),
+				'operator_id' => $request->get('operator_id'),
+				'buffing_time' => $request->get('buffing_time'),
+			]);
+
+			$middle_temp_log = new MiddleTempLog([
+				'material_number' => $request->get('material_number'),
+				'operator_id' => $request->get('operator_id'),
+				'quantity' => $request->get('cek'),
+				'location' => $request->get('loc'),
+			]);
+
 			try{
-
-				$middle_check_log = new MiddleCheckLog([
-					'employee_id' => $request->get('employee_id'),
-					'tag' => $request->get('tag'),
-					'material_number' => $request->get('material_number'),
-					'quantity' => $request->get('cek'),
-					'location' => $request->get('loc'),
-					'operator_id' => $request->get('operator_id'),
-					'buffing_time' => $request->get('buffing_time'),
-				]);
-				$middle_check_log->save();
-
-				$middle_temp_log = new MiddleTempLog([
-					'material_number' => $request->get('material_number'),
-					'operator_id' => $request->get('operator_id'),
-					'quantity' => $request->get('cek'),
-					'location' => $request->get('loc'),
-				]);
-				$middle_temp_log->save();
-
+				DB::transaction(function() use ($middle_check_log, $middle_temp_log){
+					$middle_check_log->save();				
+					$middle_temp_log->save();
+				});
 
 				$response = array(
 					'status' => true,
@@ -5969,16 +6334,13 @@ class MiddleProcessController extends Controller
 			}
 		} else {
 			try{
-				// $buffing_inventory = RfidBuffingInventory::where('material_tag_id', '=', $request->get('tag'))->update([
-				// 	'lokasi' => 'BUFFING-AFTER',
-				// ]);
-
 				$buffing_inventory = db::connection('digital_kanban')->table('buffing_inventories')
 				->where('material_tag_id', '=', $request->get('tag'))
 				->update([
 					'lokasi' => 'BUFFING-AFTER',
 				]);
-				$middle_log = new MiddleLog([
+
+				$middle_log = new MiddleBuffingLog([
 					'employee_id' => $request->get('employee_id'),
 					'tag' => $request->get('tag'),
 					'material_number' => $request->get('material_number'),
@@ -6003,7 +6365,7 @@ class MiddleProcessController extends Controller
 
 					$delete->delete();
 				}else{
-					$middle_check_log = new MiddleCheckLog([
+					$middle_check_log = new MiddleBuffingCheckLog([
 						'employee_id' => $request->get('employee_id'),
 						'tag' => $request->get('tag'),
 						'material_number' => $request->get('material_number'),
@@ -6200,7 +6562,7 @@ class MiddleProcessController extends Controller
 
 		$log_request = array();
 		foreach ($requests as $request) {
-			
+
 			$qty_solder = 0;
 			foreach ($solders as $solder) {
 				if($request->material_number == $solder->material_number){

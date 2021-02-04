@@ -44,8 +44,13 @@
 				</div>
 				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
 			</div>
-			<div class="col-xs-12" style="margin-top: 5px;">
+			<div class="col-xs-4" style="margin-top: 5px; padding-right: 0px;">
+				<div id="container1_pie" style="width: 100%;"></div>
+			</div>
+			<div class="col-xs-8" style="margin-top: 5px; padding-left: 0px;">
 				<div id="container1" style="width: 100%;"></div>
+			</div>
+			<div class="col-xs-12" style="margin-top: 0px;">
 				<div id="container2" style="width: 100%;"></div>
 			</div>
 		</div>
@@ -67,7 +72,7 @@
 	jQuery(document).ready(function(){
 		$('.select2').select2();
 		fillChart();
-		// setInterval(fillChart, 10000);
+		setInterval(fillChart, 10000);
 		
 	});
 
@@ -93,7 +98,6 @@
 				linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
 				stops: [
 				[0, '#2a2a2b'],
-				[1, '#3e3e40']
 				]
 			},
 			style: {
@@ -329,6 +333,86 @@
 			if(xhr.status == 200){
 				if(result.status){
 
+					//Pie
+					var check = 0;
+					var ng = 0;
+					var good = 0;
+
+					if(result.resume.length > 0){	
+						check = result.resume[0].check;
+						ng = result.resume[0].ng;
+						good = check - ng;	
+					}
+					
+					
+					Highcharts.chart('container1_pie', {
+						chart: {
+							type: 'pie',
+							options3d: {
+								enabled: true,
+								alpha: 45,
+								beta: 0
+							}
+						},
+						title: {
+							text: 'NG I.C. SubAssy Sax',
+							style: {
+								fontSize: '30px',
+								fontWeight: 'bold'
+							}
+						},
+						subtitle: {
+							text: 'Total CHECK : '+check+' PC(s)' ,
+							style: {
+								fontSize: '1vw',
+								fontWeight: 'bold'
+							}
+						},
+						accessibility: {
+							point: {
+								valueSuffix: '%'
+							}
+						},
+						tooltip: {
+							pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+						},
+						plotOptions: {
+							pie: {
+								animation: false,
+								allowPointSelect: true,
+								cursor: 'pointer',
+								depth: 35,
+								dataLabels: {
+									enabled: true,
+									format: '{point.name}'
+								}
+							}
+						},
+						credits: {
+							enabled: false
+						},
+						series: [{
+							type: 'pie',
+							name: 'Percentage',
+							data: [
+							{
+								name: 'Good',
+								y: good,
+								color : '#90ee7e',
+							},
+							{
+								name: 'Not Good',
+								y: ng,
+								color : '#f45b5b',
+								sliced: true,
+								selected: true
+							}
+							]
+						}]
+					});
+
+
+
 					//CHart By NG Name
 					var ng;
 					var jml;
@@ -424,7 +508,7 @@
 							type: 'column'
 						},
 						title: {
-							text: 'NG I.C. SubAssy by NG Name',
+							text: 'NG I.C. SubAssy Sax',
 							style: {
 								fontSize: '30px',
 								fontWeight: 'bold'
@@ -495,19 +579,19 @@
 					
 					var key = [];
 					
-					var kizu_before = [];
-					var hokori_debu = [];
-					var hokori_benang = [];
-					var kizu_after = [];
-					var scrath = [];
-					var buff_tarinai = [];
-					var toso_usui = [];
-					var tare = [];
-					var yogore = [];
-					var enthol = [];
-					var black_shimi = [];
-					var buff_tidak_rata = [];
-					var other = [];
+					var kizu_before = [0,0,0,0,0,0,0,0,0,0];
+					var hokori_debu = [0,0,0,0,0,0,0,0,0,0];
+					var hokori_benang = [0,0,0,0,0,0,0,0,0,0];
+					var kizu_after = [0,0,0,0,0,0,0,0,0,0];
+					var scrath = [0,0,0,0,0,0,0,0,0,0];
+					var buff_tarinai = [0,0,0,0,0,0,0,0,0,0];
+					var toso_usui = [0,0,0,0,0,0,0,0,0,0];
+					var tare = [0,0,0,0,0,0,0,0,0,0];
+					var yogore = [0,0,0,0,0,0,0,0,0,0];
+					var enthol = [0,0,0,0,0,0,0,0,0,0];
+					var black_shimi = [0,0,0,0,0,0,0,0,0,0];
+					var buff_tidak_rata = [0,0,0,0,0,0,0,0,0,0];
+					var other = [0,0,0,0,0,0,0,0,0,0];
 
 					for (var i = 0; i < result.key.length; i++) {
 						key.push(result.key[i].key);
@@ -515,29 +599,29 @@
 						for (var j = 0; j < result.detail_key.length; j++) {
 							if(result.key[i].key == result.detail_key[j].key){
 								if(result.detail_key[j].ng_name == 'Kizu before'){
-									kizu_before.push(result.detail_key[j].jml);									
+									kizu_before[i] = result.detail_key[j].jml;									
 								}else if(result.detail_key[j].ng_name == 'Hokori debu'){
-									hokori_debu.push(result.detail_key[j].jml);									
+									hokori_debu[i] = result.detail_key[j].jml;									
 								}else if(result.detail_key[j].ng_name == 'Hokori benang'){
-									hokori_benang.push(result.detail_key[j].jml);									
+									hokori_benang[i] = result.detail_key[j].jml;									
 								}else if(result.detail_key[j].ng_name == 'Kizu after'){
-									kizu_after.push(result.detail_key[j].jml);									
+									kizu_after[i] = result.detail_key[j].jml;									
 								}else if(result.detail_key[j].ng_name == 'Scrath'){
-									scrath.push(result.detail_key[j].jml);									
+									scrath[i] = result.detail_key[j].jml;									
 								}else if(result.detail_key[j].ng_name == 'Buff tarinai'){
-									buff_tarinai.push(result.detail_key[j].jml);									
+									buff_tarinai[i] = result.detail_key[j].jml;									
 								}else if(result.detail_key[j].ng_name == 'Toso usui'){
-									toso_usui.push(result.detail_key[j].jml);									
+									toso_usui[i] = result.detail_key[j].jml;									
 								}else if(result.detail_key[j].ng_name == 'Tare'){
-									tare.push(result.detail_key[j].jml);									
+									tare[i] = result.detail_key[j].jml;									
 								}else if(result.detail_key[j].ng_name == 'Yogore'){
-									yogore.push(result.detail_key[j].jml);									
+									yogore[i] = result.detail_key[j].jml;									
 								}else if(result.detail_key[j].ng_name == 'Enthol'){
-									enthol.push(result.detail_key[j].jml);									
+									enthol[i] = result.detail_key[j].jml;									
 								}else if(result.detail_key[j].ng_name == 'Black shimi'){
-									black_shimi.push(result.detail_key[j].jml);									
+									black_shimi[i] = result.detail_key[j].jml;									
 								}else if(result.detail_key[j].ng_name == 'Buff tidak rata'){
-									buff_tidak_rata.push(result.detail_key[j].jml);
+									buff_tidak_rata[i] = result.detail_key[j].jml;
 								}else{
 									if(typeof other[i] == 'undefined'){
 										other.push(result.detail_key[j].jml);
@@ -554,7 +638,7 @@
 							type: 'column'
 						},
 						title: {
-							text: '10 Highest NG I.C. SubAssy by Key',
+							text: '10 Highest NG I.C. SubAssy Sax by Key',
 							style: {
 								fontSize: '30px',
 								fontWeight: 'bold'

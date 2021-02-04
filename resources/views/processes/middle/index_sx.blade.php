@@ -33,7 +33,7 @@
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process Buffing <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/middle/request/043?filter=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Request Saxophone</a>
 			<a href="{{ url("index/middle/buffing_work_order", "bff-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Saxophone Work Order</a>
-			<a href="{{ url("index/process_buffing_kensa", "bff-kensa") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Kensa</a>
+			<a href="{{ url("index/process_buffing_kensa", "bff-kensa-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Kensa</a>
 			@if(in_array('A9', $navs))
 			<a href="{{ url("/index/middle/buffing_canceled") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Buffing Cancel</a>
 			@endif
@@ -54,6 +54,8 @@
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Repair <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/process_middle_return", "buffing") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Repair/Return to Buffing</a>
 		</div>
+
+		
 		<div class="col-xs-4" style="text-align: center; color: red;">
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Display <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/middle/op_analysis?dateFrom=&dateTo=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">OP Analysis</a>
@@ -63,29 +65,32 @@
 			<a href="{{ url("index/middle/request/display/043?filter=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Material Request Soldering</a>
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Display Buffing <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/middle/buffing_board/buffing-sx?page=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Buffing Board</a>
-			<a href="{{ url("index/middle/buffing_daily_ng_rate") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Daily NG Rate</a>
+			{{-- <a href="{{ url("index/middle/buffing_daily_ng_rate") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Daily NG Rate</a> --}}
 			<a href="{{ url("index/middle/buffing_ng") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">NG Rate</a>
 			<a href="{{ url("index/middle/buffing_op_ranking?bulan=&target=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Resume NG Rate & Productivity</a>
-			<a href="{{ url("index/middle/buffing_trend_op_eff") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Daily Operator Trends</a>
+			{{-- <a href="{{ url("index/middle/buffing_trend_op_eff") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Daily Operator Trends</a> --}}
 			<a href="{{ url("index/middle/buffing_op_ng?tanggal=&group=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">NG Rate by Operator</a>
 			<a href="{{ url("index/middle/buffing_op_eff?tanggal=&group=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Operator Overall Efficiency</a>
+			<a href="{{ url("index/middle/buffing_resume_konseling") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Resume Operator Counseling</a>
 			<a href="{{ url("index/middle/buffing_group_achievement") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Group Achievement</a>
 			<a href="{{ url("index/middle/buffing_group_balance") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Group Work Balance</a>
 			<a href="{{ url("index/middle/buffing_operator_assesment") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Operator Evaluation</a>
 			{{-- <a href="{{ url("index/middle/buffing_daily_op_ng_rate") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Daily NG Rate by Operator</a> --}}
-			<a href="{{ url("index/middle/muzusumashi") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Mizusumashi Monitoring</a>
-			<a href="{{ url("index/middle/buffing_ic_atokotei") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Incoming Check Atokotei</a>
+			{{-- <a href="{{ url("index/middle/muzusumashi") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Mizusumashi Monitoring</a> --}}
+			<a href="{{ url("index/middle/buffing_ic_atokotei") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Incoming Check Lacquering</a>
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Display Barrel <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/middle/barrel_board/barrel-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Barrel Board</a>
 			<a href="{{ url("index/middle/barrel_machine") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Machine Activity</a>
-			{{-- <span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Display Lacquering <i class="fa fa-angle-double-down"></i></span> --}}
+			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Display Lacquering <i class="fa fa-angle-double-down"></i></span>
+			<a href="{{ url("index/middle/buffing_ic_atokotei_subassy") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Incoming Check Subassy</a>
+
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/middle/report_ng") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Not Good</a>
 			<a href="{{ url("index/middle/report_production_result") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Production Result</a>
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Report Buffing <i class="fa fa-angle-double-down"></i></span>
-			<a href="{{ url("index/middle/report_buffing_ng?bulan=&fy=&hpl=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Resume</a>
+			<a href="{{ url("index/middle/report_buffing_ng?bulan=&fy=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Resume</a>
 			<a href="{{ url("index/middle/report_buffing_operator_time") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Operator Time</a>
 			<a href="{{ url("index/middle/report_buffing_traing_ng_operator") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Training NG Operator</a>
 			<a href="{{ url("index/middle/report_buffing_traing_eff_operator") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Training Efficiency Operator</a>

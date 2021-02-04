@@ -340,33 +340,45 @@
 							ng.push(result.ng_name[i].ng_name);
 							jml.push([result.ng_name[i].jml]);
 							color.push('#2b908f');
+							series.push({name : ng[i], data: jml[i], color: color[i]});
+							
 						}else if(result.ng_name[i].ng_name == 'Aus, Nami, Buff Torinai, Buff tdk rata'){
 							ng.push(result.ng_name[i].ng_name);
 							jml.push([result.ng_name[i].jml]);
 							color.push('#90ee7e');
+							series.push({name : ng[i], data: jml[i], color: color[i]});
+							
 						}else if(result.ng_name[i].ng_name == 'Kizu'){
 							ng.push(result.ng_name[i].ng_name);
 							jml.push([result.ng_name[i].jml]);
 							color.push('#f45b5b');
+							series.push({name : ng[i], data: jml[i], color: color[i]});
+							
 						}else if(result.ng_name[i].ng_name == 'Sisa Lusterlime'){
 							ng.push(result.ng_name[i].ng_name);
 							jml.push([result.ng_name[i].jml]);
 							color.push('#7798BF');
+							series.push({name : ng[i], data: jml[i], color: color[i]});
+							
 						}else if(result.ng_name[i].ng_name == 'Toke, Rohtare, gosong, Handatsuki'){
 							ng.push(result.ng_name[i].ng_name);
 							jml.push([result.ng_name[i].jml]);
 							color.push('#aaeeee');
+							series.push({name : ng[i], data: jml[i], color: color[i]});
+							
 						}else if(result.ng_name[i].ng_name == 'Pesok,Kake,Bengkok'){
 							ng.push(result.ng_name[i].ng_name);
 							jml.push([result.ng_name[i].jml]);
 							color.push('#ff0066');
+							series.push({name : ng[i], data: jml[i], color: color[i]});
+							
 						}else if(result.ng_name[i].ng_name == 'Lain-lain (Hakuri nokoru,material salah,bekas)'){
 							ng.push(result.ng_name[i].ng_name);
 							jml.push([result.ng_name[i].jml]);
 							color.push('#eeaaee');
+							series.push({name : ng[i], data: jml[i], color: color[i]});
+							
 						}
-
-						series.push({name : ng[i], data: jml[i], color: color[i]});
 					}
 
 					Highcharts.chart('container1', {
@@ -374,7 +386,7 @@
 							type: 'column'
 						},
 						title: {
-							text: 'NG I.C. Atokotei by NG Name',
+							text: 'NG I.C. Lacquering by NG Name',
 							style: {
 								fontSize: '30px',
 								fontWeight: 'bold'
@@ -445,32 +457,33 @@
 					
 					var key = [];
 					
-					var kizu_beret = [];
-					var aus = [];
-					var kizu = [];
-					var sisa = [];
-					var toke = [];
-					var pesok = [];
-					var lain = [];
+					var kizu_beret = [0,0,0,0,0,0,0,0,0,0];
+					var aus = [0,0,0,0,0,0,0,0,0,0];
+					var kizu = [0,0,0,0,0,0,0,0,0,0];
+					var sisa = [0,0,0,0,0,0,0,0,0,0];
+					var toke = [0,0,0,0,0,0,0,0,0,0];
+					var pesok = [0,0,0,0,0,0,0,0,0,0];
+					var lain = [0,0,0,0,0,0,0,0,0,0];
 
 					for (var i = 0; i < result.key.length; i++) {
 						key.push(result.key[i].key);
+
 						for (var j = 0; j < result.detail_key.length; j++) {
 							if(result.key[i].key == result.detail_key[j].key){
 								if(result.detail_key[j].ng_name == 'Kizu Beret, Scrath, Butsu'){
-									kizu_beret.push(result.detail_key[j].jml);
+									kizu_beret[i] = result.detail_key[j].jml;
 								}else if(result.detail_key[j].ng_name == 'Aus, Nami, Buff Torinai, Buff tdk rata'){
-									aus.push(result.detail_key[j].jml);
+									aus[i] = result.detail_key[j].jml;
 								}else if(result.detail_key[j].ng_name == 'Kizu'){
-									kizu.push(result.detail_key[j].jml);
+									kizu[i] = result.detail_key[j].jml;
 								}else if(result.detail_key[j].ng_name == 'Sisa Lusterlime'){
-									sisa.push(result.detail_key[j].jml);
+									sisa[i] = result.detail_key[j].jml;
 								}else if(result.detail_key[j].ng_name == 'Toke, Rohtare, gosong, Handatsuki'){
-									toke.push(result.detail_key[j].jml);
+									toke[i] = result.detail_key[j].jml;
 								}else if(result.detail_key[j].ng_name == 'Pesok,Kake,Bengkok'){
-									pesok.push(result.detail_key[j].jml);
+									pesok[i] = result.detail_key[j].jml;
 								}else if(result.detail_key[j].ng_name == 'Lain-lain (Hakuri nokoru,material salah,bekas)'){
-									lain.push(result.detail_key[j].jml);
+									lain[i] = result.detail_key[j].jml;
 								}
 							}
 						}
@@ -481,7 +494,7 @@
 							type: 'column'
 						},
 						title: {
-							text: '10 Highest NG I.C. Atokotei by Key',
+							text: '10 Highest NG I.C. Lacquering by Key',
 							style: {
 								fontSize: '30px',
 								fontWeight: 'bold'

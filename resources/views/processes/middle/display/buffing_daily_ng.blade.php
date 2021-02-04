@@ -282,15 +282,35 @@
 		$.get('{{ url("fetch/middle/buffing_daily_ng_rate") }}', function(result, status, xhr) {
 			if(xhr.status == 200){
 				if(result.status){
+					var dataCount = [];
 					var tgl = [];
 					var ng_rate_alto = [];
 					var ng_rate_tenor = [];
 
 					for(var i = 0; i < result.alto.length; i++){
-						tgl.push(result.alto[i].week_date);
-						ng_rate_alto.push([Date.parse(tgl[i]), result.alto[i].rate]);
-						ng_rate_tenor.push([Date.parse(tgl[i]), result.tenor[i].rate]);
+						ng_rate_alto.push([Date.parse(result.alto[i].week_date), parseFloat(result.alto[i].rate)]);
 					}
+
+					dataCount.push({
+						name :'Alto Key',
+						color : '#f5ff0d',
+						data : ng_rate_alto,
+						lineWidth : 2
+					});
+
+					for(var i = 0; i < result.tenor.length; i++){
+						ng_rate_tenor.push([Date.parse(result.tenor[i].week_date), parseFloat(result.tenor[i].rate)]);
+					}
+
+					dataCount.push({
+						name :'Tenor Key',
+						color : '#00FF00',
+						data : ng_rate_tenor,
+						lineWidth : 2
+					});
+
+					console.log(dataCount);
+
 
 					var chart = Highcharts.stockChart('container1', {
 						chart:{
@@ -315,13 +335,7 @@
 						yAxis: {
 							title: {
 								text: 'NG Rate (%)'
-							},
-							plotLines: [{
-								color: '#FFFFFF',
-								width: 2,
-								value: 0,
-								dashStyles: 'longdashdot'
-							}]
+							}
 						},
 						xAxis: {
 							categories: 'datetime',
@@ -354,20 +368,7 @@
 								cursor: 'pointer',
 							}
 						},
-						series: [
-						{
-							name:'Alto Key',
-							color: '#f5ff0d',
-							data: ng_rate_alto,
-							lineWidth: 3
-						},
-						{
-							name:'Tenor Key',
-							color: '#00FF00',
-							data: ng_rate_tenor,
-							lineWidth: 3
-						}
-						],
+						series: dataCount,
 						responsive: {
 							rules: [{
 								condition: {
@@ -487,9 +488,9 @@
 							}]
 						}
 					});
-				
-				$(document).scrollTop(position);
-				
+
+					$(document).scrollTop(position);
+
 				}
 			}
 		});

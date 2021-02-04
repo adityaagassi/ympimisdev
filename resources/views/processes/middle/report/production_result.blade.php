@@ -80,8 +80,9 @@
 					<div class="col-md-12 col-md-offset-3">
 						<div class="col-md-6">
 							<div class="form-group">
-								<select class="form-control select2" multiple="multiple" data-placeholder="Select Location" name="location" id="location" style="width: 100%;">
-									@foreach($locations as $location) 
+								<select class="form-control select2" data-placeholder="Select Location" name="location" id="location" style="width: 100%;">
+									@foreach($locations as $location)
+									<option value="">Select Location</option>
 									<option value="{{ $location }}">{{ $location }}</option>
 									@endforeach
 								</select>
@@ -175,6 +176,11 @@
 		var datefrom = $('#datefrom').val();
 		var dateto = $('#dateto').val();
 		var location = $('#location').val();
+
+		if(location == ''){
+			alert('Fill Location');
+			return false;
+		}
 
 		var data = {
 			datefrom:datefrom,
