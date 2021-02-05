@@ -234,13 +234,20 @@ class AssyProcessController extends Controller
 			$minsatu2 = date('Y-m-02', strtotime($tanggal));
 		}
 
+		// if(histories.transfer_movement_type = '9I4', -(histories.lot),0))) as picking
+		// if(histories.transfer_movement_type = '9I4', IF(day(histories.created_at) < 3, 0, -(histories.lot)),0))) as picking
+		// if(histories.transfer_movement_type = '9I4', -(histories.lot),0)))) as plan
+		// if(histories.transfer_movement_type = '9I4', IF(day(histories.created_at) < 3, 0, -(histories.lot)),0)))) as plan
+		// (histories.lot),0)) as minus
+		// IF(day(histories.created_at) < 3, 0, histories.lot),0)) as minus
+
 		$table = "select materials.model, materials.`key`, materials.surface , sum(plan) as plan, sum(picking) as picking, sum(plus) as plus, sum(minus) as minus, sum(stock) as stock, sum(plan_ori) as plan_ori, (sum(plan)-sum(picking)) as diff, sum(stock) - (sum(plan)-sum(picking)) as diff2, round(sum(stock) / sum(plan), 1) as ava from
 		(
 		select material_number, sum(plan) as plan, sum(picking) as picking, sum(plus) as plus, sum(minus) as minus, sum(stock) as stock, sum(plan_ori) as plan_ori from
 		(
 		select material_number, plan, picking, plus, minus, stock, plan_ori from
 		(
-		select materials.material_number, 0 as plan, sum(if(histories.transfer_movement_type = '9I3', histories.lot, if(histories.transfer_movement_type = '9I4', IF(day(histories.created_at) < 3, 0, -(histories.lot)),0))) as picking, 0 as plus, 0 as minus, 0 as stock, 0 as plan_ori from
+		select materials.material_number, 0 as plan, sum(if(histories.transfer_movement_type = '9I3', histories.lot, if(histories.transfer_movement_type = '9I4', -(histories.lot),0))) as picking, 0 as plus, 0 as minus, 0 as stock, 0 as plan_ori from
 		(
 		select materials.id, materials.material_number from kitto.materials where materials.location = '".$location."' and category = 'key'
 		) as materials left join kitto.histories on materials.id = histories.transfer_material_id where date(histories.created_at) = '".$tanggal."' and histories.category in ('transfer', 'transfer_cancel', 'transfer_return', 'transfer_adjustment') group by materials.material_number ) as pick
@@ -253,7 +260,7 @@ class AssyProcessController extends Controller
 
 		select material_number, sum(plan) as plan, 0 as picking ,0 as plus, 0 as minus, 0 as stock, sum(plan_ori) as plan_ori from
 		(
-		select materials.material_number, -(sum(if(histories.transfer_movement_type = '9I3', histories.lot, if(histories.transfer_movement_type = '9I4', IF(day(histories.created_at) < 3, 0, -(histories.lot)),0)))) as plan, 0 as plan_ori from
+		select materials.material_number, -(sum(if(histories.transfer_movement_type = '9I3', histories.lot, if(histories.transfer_movement_type = '9I4', -(histories.lot),0)))) as plan, 0 as plan_ori from
 		(
 		select materials.id, materials.material_number from kitto.materials where materials.location = '".$location."' and category = 'key'
 		) as materials left join kitto.histories on materials.id = histories.transfer_material_id where date(histories.created_at) >= '".$first2."' and date(histories.created_at) <= '".$minsatu2."' and histories.category in ('transfer', 'transfer_cancel', 'transfer_return', 'transfer_adjustment') group by materials.material_number
@@ -269,7 +276,7 @@ class AssyProcessController extends Controller
 
 		union all
 		
-		select materials.material_number, 0 as plan, 0 as picking, sum(if(histories.transfer_movement_type = '9I3', histories.lot,0)) as plus, sum( if(histories.transfer_movement_type = '9I4', IF(day(histories.created_at) < 3, 0, histories.lot),0)) as minus, 0 as stock, 0 as plan_ori from
+		select materials.material_number, 0 as plan, 0 as picking, sum(if(histories.transfer_movement_type = '9I3', histories.lot,0)) as plus, sum( if(histories.transfer_movement_type = '9I4', (histories.lot),0)) as minus, 0 as stock, 0 as plan_ori from
 		(
 		select materials.id, materials.material_number from kitto.materials where materials.location = '".$location."' and category = 'key'
 		) as materials left join kitto.histories on materials.id = histories.transfer_material_id where date(histories.created_at) >= '".$first."' and date(histories.created_at) <= '".$tanggal."' and histories.category in ('transfer', 'transfer_cancel', 'transfer_return', 'transfer_adjustment') group by materials.material_number
