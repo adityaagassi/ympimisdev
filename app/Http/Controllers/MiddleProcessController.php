@@ -3083,18 +3083,15 @@ class MiddleProcessController extends Controller
 		$tanggal2 = "l.created_at >= '".$tgl." 16:00:01' and l.created_at <= '".$tgl." 23:59:59'";
 		$tanggal = "l.created_at >= '".$tgl." 00:00:01' and l.created_at <= '".$tgl." 07:00:00'";
 
-		$addlocation = "";
-		if($request->get('location') != null) {
-			$locations = explode(",", $request->get('location'));
-			$location = "";
 
-			for($x = 0; $x < count($locations); $x++) {
-				$location = $location."'".$locations[$x]."'";
-				if($x != count($locations)-1){
-					$location = $location.",";
-				}
-			}
-			$addlocation = "and l.location in (".$location.") ";
+		
+		$addlocation = "and l.location in ('".$request->get('location')."') ";
+
+		$tabel;
+		if(str_contains($addlocation, 'lcq')){
+			$tabel = 'middle_lacquering_logs';
+		}else if (str_contains($addlocation, 'plt')){
+			$tabel = 'middle_plating_logs';
 		}
 
 		if($request->get('location') == 'bff'){
@@ -3150,19 +3147,19 @@ class MiddleProcessController extends Controller
 			$query1 = "SELECT a.`key`, a.model, COALESCE(s3.total,0) as shift3, COALESCE(s1.total,0) as shift1, COALESCE(s2.total,0) as shift2 from
 			(select distinct `key`, model, CONCAT(`key`,model) as keymodel from materials where issue_storage_location = 'SX51' and hpl = 'ASKEY' and surface not like '%PLT%' order by `key`) a
 			left join
-			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l
+			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from ".$tabel." l
 			left join materials m on l.material_number = m.material_number
 			WHERE ".$tanggal." and m.hpl = 'ASKEY' and m.issue_storage_location = 'SX51' ".$addlocation."
 			GROUP BY m.`key`, m.model) s3
 			on a.keymodel = s3.keymodel
 			left join
-			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l
+			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from ".$tabel." l
 			left join materials m on l.material_number = m.material_number
 			WHERE ".$tanggal1." and m.hpl = 'ASKEY' and m.issue_storage_location = 'SX51' ".$addlocation."
 			GROUP BY m.`key`, m.model) s1
 			on a.keymodel = s1.keymodel
 			left join
-			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l
+			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from ".$tabel." l
 			left join materials m on l.material_number = m.material_number
 			WHERE ".$tanggal2." and m.hpl = 'ASKEY' and m.issue_storage_location = 'SX51' ".$addlocation."
 			GROUP BY m.`key`, m.model) s2
@@ -3173,19 +3170,19 @@ class MiddleProcessController extends Controller
 			$query2 = "SELECT a.`key`, a.model, COALESCE(s3.total,0) as shift3, COALESCE(s1.total,0) as shift1, COALESCE(s2.total,0) as shift2 from
 			(select distinct `key`, model, CONCAT(`key`,model) as keymodel from materials where issue_storage_location = 'SX51' and hpl = 'TSKEY' and surface not like '%PLT%' order by `key`) a
 			left join
-			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l
+			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from ".$tabel." l
 			left join materials m on l.material_number = m.material_number
 			WHERE ".$tanggal." and m.hpl = 'TSKEY' and m.issue_storage_location = 'SX51' ".$addlocation."
 			GROUP BY m.`key`, m.model) s3
 			on a.keymodel = s3.keymodel
 			left join
-			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l
+			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from ".$tabel." l
 			left join materials m on l.material_number = m.material_number
 			WHERE ".$tanggal1." and m.hpl = 'TSKEY' and m.issue_storage_location = 'SX51' ".$addlocation."
 			GROUP BY m.`key`, m.model) s1
 			on a.keymodel = s1.keymodel
 			left join
-			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l
+			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from ".$tabel." l
 			left join materials m on l.material_number = m.material_number
 			WHERE ".$tanggal2." and m.hpl = 'TSKEY' and m.issue_storage_location = 'SX51' ".$addlocation."
 			GROUP BY m.`key`, m.model) s2
@@ -3204,20 +3201,6 @@ class MiddleProcessController extends Controller
 		$query5 = "select distinct model from materials where hpl = 'TSKEY' and issue_storage_location = 'SX51' and surface not like '%PLT%' order by model";
 		$model_tenor =  db::select($query5);
 
-		$location = "";
-		if($request->get('location') != null) {
-			$locations = explode(",", $request->get('location'));
-			for($x = 0; $x < count($locations); $x++) {
-				$location = $location." ".$locations[$x]." ";
-				if($x != count($locations)-1){
-					$location = $location."&";
-				}
-			}
-		}else{
-			$location = "lcq-incoming & lcq-kensa";
-		}
-		$location = strtoupper($location);
-
 		$response = array(
 			'status' => true,
 			'alto' => $alto,
@@ -3225,7 +3208,7 @@ class MiddleProcessController extends Controller
 			'key' => $key,
 			'model_tenor' => $model_tenor,
 			'model_alto' => $model_alto,
-			'title' => $location
+			'title' => $request->get('location')
 		);
 		return Response::json($response);
 

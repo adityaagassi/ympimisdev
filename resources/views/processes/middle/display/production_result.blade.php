@@ -54,7 +54,8 @@
 					</div>
 					<div class="col-xs-3">
 						<div class="form-group">
-							<select class="form-control select2" multiple="multiple" id="locationSelect" data-placeholder="Select Location" onchange="change()">
+							<select class="form-control select2" id="locationSelect" data-placeholder="Select Location" onchange="change()">
+								<option value=""></option>
 								@foreach($locations as $location)
 								<option value="{{ $location }}">{{ $location }}</option>
 								@endforeach
@@ -146,9 +147,16 @@
 	});
 
 	function fillTable() {
+		var tgl = "{{$_GET['tanggal']}}";
+		var location = "{{$_GET['location']}}";
+
+		if(location == ''){
+			return false;
+		}
+
 		var data = {
-			tgl:"{{$_GET['tanggal']}}",
-			location:"{{$_GET['location']}}"
+			tgl: tgl,
+			location: location
 		}
 
 		$.get('{{ url("fetch/middle/display_production_result") }}', data, function(result, status, xhr) {

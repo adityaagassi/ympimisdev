@@ -62,7 +62,7 @@
 									</div>
 									<input type="text" class="form-control pull-right" id="datefrom" name="datefrom">
 								</div>
-							</div>ic
+							</div>
 						</div>
 						<div class="col-md-3">
 							<div class="form-group">
