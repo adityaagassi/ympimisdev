@@ -1080,9 +1080,11 @@ class MiddleProcessController extends Controller
 			(SELECT material_number, quantity, 1 AS queue, 0 AS wip, 0 AS wip_tiga, 0 AS stockroom, 0 AS inactive FROM barrel_queues
 			UNION ALL
 			SELECT material_number, quantity, 0 AS queue, 1 AS wip, 0 AS wip_tiga, 0 AS stockroom, 0 AS inactive FROM middle_inventories
+			WHERE location <> 'stockroom'
 			UNION ALL
 			SELECT material_number, quantity, 0 AS queue, 0 AS wip, 1 AS wip_tiga, 0 AS stockroom, 0 AS inactive FROM middle_inventories
 			WHERE TIMESTAMPDIFF(DAY,created_at,NOW()) > 3
+			AND location <> 'stockroom'
 			UNION ALL
 			SELECT inventories.material_number, inventories.lot, 0 AS queue, 0 AS wip, 0 AS wip_tiga, 1 AS stockroom, 0 AS inactive FROM kitto.inventories
 			LEFT JOIN kitto.materials ON materials.material_number = inventories.material_number 
@@ -3208,7 +3210,7 @@ class MiddleProcessController extends Controller
 			'key' => $key,
 			'model_tenor' => $model_tenor,
 			'model_alto' => $model_alto,
-			'title' => $request->get('location')
+			'title' => strtoupper($request->get('location'))
 		);
 		return Response::json($response);
 
