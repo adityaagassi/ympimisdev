@@ -141,8 +141,9 @@
 						<thead>
 							<tr>
 								<th style="width: 40%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Nama NG</th>
-								<th style="width: 40%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Value / Jumlah</th>
+								<th style="width: 20%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Value / Jumlah</th>
 								<th style="width: 20%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Onko</th>
+								<th style="width: 20%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Oleh</th>
 							</tr>
 						</thead>
 						<tbody id="ngTempBody">
@@ -161,7 +162,8 @@
 								<th style="width: 3%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Nama NG</th>
 								<th style="width: 1%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Value / Jumlah</th>
 								<th style="width: 1%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Onko</th>
-								<th style="width: 3%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Loc</th>
+								<th style="width: 1%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Loc</th>
+								<th style="width: 3%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Oleh</th>
 							</tr>
 						</thead>
 						<tbody id="ngHistoryBody">
@@ -397,6 +399,7 @@
 				});
 			}else{
 				openErrorGritter('Error', 'Tag Tidak Ditemukan');
+				$('#operator').val('');
 			}
 		}
 	});
@@ -854,6 +857,7 @@
 				}
 				bodyNgTemp += '<td style="font-size: 15px;">'+value.ongko+'</td>';
 				bodyNgTemp += '<td style="font-size: 15px;">'+value.location+'</td>';
+				bodyNgTemp += '<td style="font-size: 15px;">'+value.name+'</td>';
 				bodyNgTemp += "</tr>";
 			});
 
@@ -894,6 +898,7 @@
 					bodyNgTemp += '<td style="font-size: 20px;">'+value.value_atas+' - '+value.value_bawah+'</td>';
 				}
 				bodyNgTemp += '<td style="font-size: 20px;">'+value.ongko+'</td>';
+				bodyNgTemp += '<td style="font-size: 20px;">'+value.name+'</td>';
 				bodyNgTemp += "</tr>";
 			});
 
@@ -1167,6 +1172,9 @@
 		timerkensa.reset();
 		$('div.timerkensa').show();
 		$('div.timeout').hide();
+		var btn = document.getElementById('conf1');
+		btn.disabled = false;
+		btn.innerText = 'CONFIRM';
 	}
 
 	function deleteAssemblies() {

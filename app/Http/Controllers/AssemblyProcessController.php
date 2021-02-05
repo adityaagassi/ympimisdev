@@ -1217,7 +1217,10 @@ class AssemblyProcessController extends Controller
 		$tag = dechex($request->get('tag'));
 
 		$ng_temp = db::select("SELECT
-			* 
+			*,
+			IF ( assembly_ng_temps.operator_id LIKE '%PI%',( SELECT NAME FROM employee_syncs WHERE employee_syncs.employee_id = assembly_ng_temps.operator_id ),
+				assembly_ng_temps.operator_id 
+			) AS name 
 			FROM
 			`assembly_ng_temps` 
 			WHERE
@@ -1251,7 +1254,10 @@ class AssemblyProcessController extends Controller
 		$tag = dechex($request->get('tag'));
 
 		$ng_logs = db::select("SELECT
-			* 
+			*,
+			IF ( assembly_ng_logs.operator_id LIKE '%PI%',( SELECT NAME FROM employee_syncs WHERE employee_syncs.employee_id = assembly_ng_logs.operator_id ),
+				assembly_ng_logs.operator_id 
+			) AS name 
 			FROM
 			`assembly_ng_logs` 
 			WHERE
