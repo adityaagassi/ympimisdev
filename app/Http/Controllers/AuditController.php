@@ -211,7 +211,7 @@ class AuditController extends Controller
 
   $first = date("Y-m-d", strtotime('-30 days'));
 
-  $check = AuditAllResult::whereNull('status_ditangani')
+  $check = AuditAllResult::where('status_ditangani', '=', 'close')
   ->orderBy('tanggal', 'asc')
   ->select(db::raw('date(tanggal) as audit_date'))
   ->first();
