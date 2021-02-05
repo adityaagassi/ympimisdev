@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Response;
 use DataTables;
 use PDF;
+use Excel;
 use App\Mail\SendEmail;
 use Illuminate\Support\Facades\Mail;
 use App\AuditAllResult;
@@ -451,5 +452,49 @@ public function detailPenanganan(Request $request){
    }
  }
 }
+
+  public function exportPatrol(Request $request){
+      $time = date('d-m-Y H;i;s');
+
+      $tanggal = "";
+      $status = "";
+
+      if (strlen($request->get('date')) > 0)
+      {
+          $date = date('Y-m-d', strtotime($request->get('date')));
+          $tanggal = "and tanggal = '" . $date . "'";
+      }
+
+      if (strlen($request->get('status')) > 0)
+      {
+          if($request->get('status') == 'Temuan GM Close') {
+            $status = "and kategori = '5S Patrol GM' and status_ditangani is not null";
+          }
+          else if ($request->get('status') == 'Temuan GM Open') {
+            $status = "and kategori = '5S Patrol GM' and status_ditangani is null";
+          }
+          else if ($request->get('status') == 'Temuan Presdir Close') {
+            $status = "and kategori = 'S-Up And EHS Patrol Presdir' and status_ditangani is not null";
+          }
+          else if ($request->get('status') == 'Temuan Presdir Open') {
+            $status = "and kategori = 'S-Up And EHS Patrol Presdir' and status_ditangani is null";
+          }
+      }
+
+      $detail = db::select(
+          "SELECT DISTINCT audit_all_results.* from audit_all_results WHERE audit_all_results.deleted_at IS NULL ".$tanggal." ".$status." order by id ASC");
+
+      $data = array(
+          'detail' => $detail
+      );
+
+      ob_clean();
+
+      Excel::create('Audit List '.$time, function($excel) use ($data){
+          $excel->sheet('Data', function($sheet) use ($data) {
+            return $sheet->loadView('audit.audit_excel', $data);
+        });
+      })->export('xlsx');
+    }
 
 }

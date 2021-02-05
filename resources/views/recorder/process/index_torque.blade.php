@@ -296,6 +296,7 @@
 										<button class="btn btn-primary" id="product_fix2" style="width: 100%;font-size: 20px;font-weight: bold;" onclick="changeProduct()">
 											YRS
 										</button>
+										<input type="hidden" value="YRS" id="product_fix3">
 									</div>
 								</div>
 							</div>
@@ -409,6 +410,7 @@
 											<button class="btn btn-success" id="mesin_middle_fix2" style="width: 100%;font-size: 20px;font-weight: bold;" onclick="changeMesinMiddle()">
 												#0
 											</button>
+											<input type="hidden" value="#0" id="mesin_middle_fix3">
 									</div>
 								</div>
 							</div>
@@ -445,6 +447,7 @@
 											<button class="btn btn-warning" id="mesin_head_foot_fix2" style="width: 100%;font-size: 20px;font-weight: bold;" onclick="changeMesinHeadFoot()">
 												#0
 											</button>
+											<input type="hidden" value="#0" id="mesin_head_foot_fix3">
 									</div>
 								</div>
 							</div>
@@ -804,36 +807,42 @@
 		$('#product_choice').hide();
 		$('#product_fix').show();
 		$('#product_fix2').html(product);
+		$('#product_fix3').val(product);
 	}
 
 	function changeProduct() {
 		$('#product_choice').show();
 		$('#product_fix').hide();
 		$('#product_fix2').html('YRS');
+		$('#product_fix3').val('YRS');
 	}
 
 	function getMesinMiddle(mesin) {
 		$('#mesin_middle_choice').hide();
 		$('#mesin_middle_fix').show();
 		$('#mesin_middle_fix2').html(mesin);
+		$('#mesin_middle_fix3').val(mesin);
 	}
 
 	function changeMesinMiddle() {
 		$('#mesin_middle_choice').show();
 		$('#mesin_middle_fix').hide();
 		$('#mesin_middle_fix2').html('#0');
+		$('#mesin_middle_fix3').val('#0');
 	}
 
 	function getMesinHeadFoot(mesin) {
 		$('#mesin_head_foot_choice').hide();
 		$('#mesin_head_foot_fix').show();
 		$('#mesin_head_foot_fix2').html(mesin);
+		$('#mesin_head_foot_fix3').val(mesin);
 	}
 
 	function changeMesinHeadFoot() {
 		$('#mesin_head_foot_choice').show();
 		$('#mesin_head_foot_fix').hide();
 		$('#mesin_head_foot_fix2').html('#0');
+		$('#mesin_head_foot_fix3').val('#0');
 	}
 
 	function getData(no_cavity){
@@ -916,7 +925,7 @@
 	}
 
 	function confirm() {
-		if($('#injection_date_middle').val() == '' || $('#injection_date_head_foot').val() == '' || $('#middle_id').val() == '' || $('#head_foot_id').val() == '' || $('#mesin_middle_fix2').text() == '#0' || $('#mesin_head_foot_fix2').text() == '#0' || $('#product_fix2').text() == 'YRS'){
+		if($('#injection_date_middle').val() == '' || $('#injection_date_head_foot').val() == '' || $('#middle_id').val() == '' || $('#head_foot_id').val() == '' || $('#mesin_middle_fix3').val() == '#0' || $('#mesin_head_foot_fix3').val() == '#0' || $('#product_fix3').val() == 'YRS'){
 			alert('Semua Data Harus Diisi.');
 		}else{
 			$('#prod_type').html($('#product_fix2').text());
