@@ -94,6 +94,7 @@
 						<th style="width: 0.66%; padding: 0;">WS</th>
 						<th style="width: 0.66%; padding: 0;">Operator</th>
 						<th style="width: 0.66%; padding: 0; background-color:#4ff05a;">Sedang</th>
+						<th style="width: 0.66%; padding: 0; background-color:#ffbdbd;">NG List</th>
 					</tr>
 				</thead>
 				<tbody id="assemblyTableBody">
@@ -360,15 +361,15 @@
 							assemblyTableBody += '<tr '+color+'>';
 							assemblyTableBody += '<td height="5%" style="font-size:20px">'+value.ws+'</td>';
 							assemblyTableBody += '<td style="font-size:20px">'+value.employee_id+'<br>'+value.employee_name.split(' ').slice(0,2).join(' ')+'</td>';
-							if (percent >= 100) {
-								assemblyTableBody += '<td '+color4+'>'+sedang2+'<br>'+timeada+timekosong;
-								assemblyTableBody += '<div class="progress-group">';
-								assemblyTableBody += '<div class="progress" style="background-color: #212121; height: 20px; border: 1px solid; padding: 0px; margin: 0px;">';
-								assemblyTableBody += '<div class="progress-bar progress-bar-danger progress-bar-striped" id="progress_bar_'+index+'" style="font-size: 12px; padding-top: 1%;width:'+parseFloat(percent)+'%;"></div>';
-								assemblyTableBody += '</div>';
-								assemblyTableBody += '</div>';
-								assemblyTableBody += '</td>';
-							}else{
+							// if (percent >= 100) {
+							// 	assemblyTableBody += '<td '+color4+'>'+sedang2+'<br>'+timeada+timekosong;
+							// 	assemblyTableBody += '<div class="progress-group">';
+							// 	assemblyTableBody += '<div class="progress" style="background-color: #212121; height: 20px; border: 1px solid; padding: 0px; margin: 0px;">';
+							// 	assemblyTableBody += '<div class="progress-bar progress-bar-danger progress-bar-striped" id="progress_bar_'+index+'" style="font-size: 12px; padding-top: 1%;width:'+parseFloat(percent)+'%;"></div>';
+							// 	assemblyTableBody += '</div>';
+							// 	assemblyTableBody += '</div>';
+							// 	assemblyTableBody += '</td>';
+							// }else{
 								assemblyTableBody += '<td '+color3+'>'+sedang2+'<br>'+timeada+timekosong;
 								assemblyTableBody += '<div class="progress-group">';
 								assemblyTableBody += '<div class="progress" style="background-color: #212121; height: 20px; border: 1px solid; padding: 0px; margin: 0px;">';
@@ -376,7 +377,18 @@
 								assemblyTableBody += '</div>';
 								assemblyTableBody += '</div>';
 								assemblyTableBody += '</td>';
-							}
+								if (value.ng_name_detail != null) {
+									assemblyTableBody += '<td style="color:#ffbdbd">';
+									var ng_name_detail = value.ng_name_detail.split(',');
+									var qty_ng_detail = value.qty_ng_detail.split(',');
+									for(var i = 0; i< ng_name_detail.length;i++){
+										assemblyTableBody += ng_name_detail[i]+' = '+qty_ng_detail[i]+', ';
+									}
+									assemblyTableBody += '</td>';
+								}else{
+									assemblyTableBody += '<td></td>';
+								}
+							// }
 						}
 						assemblyTableBody += '</tr>';
 

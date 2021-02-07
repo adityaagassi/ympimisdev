@@ -850,7 +850,25 @@ class AssemblyProcessController extends Controller
 				( SELECT COUNT( ng_name ) AS qty_ng, operator_id FROM assembly_ng_logs WHERE DATE( created_at ) = '".$now."' GROUP BY ng_name,operator_id ) ss 
 				WHERE
 				operator_id = assemblies.operator_id 
-				) AS qty_ng 
+				) AS qty_ng,
+				(
+				SELECT
+					GROUP_CONCAT(  SUBSTRING_INDEX( ng_name, ' -', 1 )  ) AS ng_name 
+				FROM
+					assembly_ng_logs 
+				WHERE
+					operator_id = assemblies.operator_id 
+					AND DATE( created_at ) = '2021-02-05' 
+					) as ng_name_detail,
+					(
+				SELECT
+					GROUP_CONCAT(  IF(assembly_ng_logs.value_bawah is null,value_atas,CONCAT(value_atas,'-',value_bawah))  ) AS ng_name 
+				FROM
+					assembly_ng_logs 
+				WHERE
+					operator_id = assemblies.operator_id 
+					AND DATE( created_at ) = '2021-02-05' 
+					) as qty_ng_details
 				FROM
 				assemblies
 				LEFT JOIN employee_syncs ON employee_syncs.employee_id = assemblies.operator_id 
@@ -890,7 +908,25 @@ class AssemblyProcessController extends Controller
 				( SELECT COUNT( ng_name ) AS qty_ng, operator_id FROM assembly_ng_logs WHERE DATE( created_at ) = '".$now."' GROUP BY ng_name,operator_id ) ss 
 				WHERE
 				operator_id = assemblies.operator_id 
-				) AS qty_ng 
+				) AS qty_ng,
+				(
+				SELECT
+					GROUP_CONCAT(  SUBSTRING_INDEX( ng_name, ' -', 1 )  ) AS ng_name 
+				FROM
+					assembly_ng_logs 
+				WHERE
+					operator_id = assemblies.operator_id 
+					AND DATE( created_at ) = '2021-02-05' 
+					) as ng_name_detail,
+					(
+				SELECT
+					GROUP_CONCAT(  IF(assembly_ng_logs.value_bawah is null,value_atas,CONCAT(value_atas,'-',value_bawah))  ) AS ng_name 
+				FROM
+					assembly_ng_logs 
+				WHERE
+					operator_id = assemblies.operator_id 
+					AND DATE( created_at ) = '2021-02-05' 
+					) as qty_ng_detail
 				FROM
 				assemblies
 				LEFT JOIN employee_syncs ON employee_syncs.employee_id = assemblies.operator_id 
@@ -930,7 +966,25 @@ class AssemblyProcessController extends Controller
 				( SELECT COUNT( ng_name ) AS qty_ng, operator_id FROM assembly_ng_logs WHERE DATE( created_at ) = '".$now."' GROUP BY ng_name,operator_id ) ss 
 				WHERE
 				operator_id = assemblies.operator_id 
-				) AS qty_ng 
+				) AS qty_ng,
+				(
+				SELECT
+					GROUP_CONCAT(  SUBSTRING_INDEX( ng_name, ' -', 1 )  ) AS ng_name 
+				FROM
+					assembly_ng_logs 
+				WHERE
+					operator_id = assemblies.operator_id 
+					AND DATE( created_at ) = '2021-02-05' 
+					) as ng_name_detail,
+					(
+				SELECT
+					GROUP_CONCAT(  IF(assembly_ng_logs.value_bawah is null,value_atas,CONCAT(value_atas,'-',value_bawah))  ) AS ng_name 
+				FROM
+					assembly_ng_logs 
+				WHERE
+					operator_id = assemblies.operator_id 
+					AND DATE( created_at ) = '2021-02-05' 
+					) as qty_ng_detail
 				FROM
 				assemblies
 				LEFT JOIN employee_syncs ON employee_syncs.employee_id = assemblies.operator_id 
@@ -962,7 +1016,9 @@ class AssemblyProcessController extends Controller
 				'std_time' => $ws->std_time,
 				'perolehan' => $ws->perolehan,
 				'ng_name' => $ws->ng_name,
-				'qty_ng' => $ws->qty_ng
+				'qty_ng' => $ws->qty_ng,
+				'ng_name_detail' => $ws->ng_name_detail,
+				'qty_ng_detail' => $ws->qty_ng_detail
 			]);
 		}
 
@@ -1120,7 +1176,7 @@ class AssemblyProcessController extends Controller
 
 		$details = db::table('assembly_details')->join('employee_syncs','assembly_details.operator_id','=','employee_syncs.employee_id')->where('tag', '=', dechex($request->get('tag')))->where('origin_group_code', '=', '041')->where('assembly_details.deleted_at', '=', null)->first();
 
-		$details2 = db::table('assembly_details')->join('employee_syncs','assembly_details.operator_id','=','employee_syncs.employee_id')->where('tag', '=', dechex($request->get('tag')))->where('origin_group_code', '=', '041')->where('assembly_details.deleted_at', '=', null)->orderBy('assembly_details.id', 'asc')->get();
+		$details2 = db::table('assembly_details')->join('employee_syncs','assembly_details.operator_id','=','employee_syncs.employee_id')->where('tag', '=', dechex($request->get('tag')))->where('origin_group_code', '=', '041')->where('assembly_details.deleted_at', '=', null)->orderBy('assembly_details.id', 'desc')->get();
 
 		$employee = db::table('assembly_operators')->join('employee_syncs','assembly_operators.employee_id','=','employee_syncs.employee_id')->where('tag', '=', dechex($request->get('employee_id')))->first();
 
@@ -1263,7 +1319,6 @@ class AssemblyProcessController extends Controller
 			WHERE
 			model = '".$model."'
 			AND serial_number = '".$serial_number."'
-			AND employee_id = '".$employee_id."'
 			AND tag = '".$tag."'
 			AND deleted_at is null");
 

@@ -414,8 +414,6 @@
 
 		var tableData = "";
 
-		fetchNgHistory();
-
 		$.get('{{ url("scan/assembly/kensa") }}', data, function(result, status, xhr){
 			if(result.status){
 				if ($('#loc').val() == 'qa-fungsi' || $('#loc').val() == 'qa-visual1' || $('#loc').val() == 'qa-visual2') {
@@ -451,6 +449,7 @@
 
 				$("#tag").prop('disabled', true);
 				fetchNgTemp();
+				fetchNgHistory();
 				openSuccessGritter('Success', result.message);
 			}
 			else{
