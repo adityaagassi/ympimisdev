@@ -858,7 +858,7 @@ class AssemblyProcessController extends Controller
 					assembly_ng_logs 
 				WHERE
 					operator_id = assemblies.operator_id 
-					AND DATE( created_at ) = '2021-02-05' 
+					AND DATE( created_at ) = '".$now."' 
 					) as ng_name_detail,
 					(
 				SELECT
@@ -867,7 +867,7 @@ class AssemblyProcessController extends Controller
 					assembly_ng_logs 
 				WHERE
 					operator_id = assemblies.operator_id 
-					AND DATE( created_at ) = '2021-02-05' 
+					AND DATE( created_at ) = '".$now."' 
 					) as qty_ng_details
 				FROM
 				assemblies
@@ -916,7 +916,7 @@ class AssemblyProcessController extends Controller
 					assembly_ng_logs 
 				WHERE
 					operator_id = assemblies.operator_id 
-					AND DATE( created_at ) = '2021-02-05' 
+					AND DATE( created_at ) = '".$now."' 
 					) as ng_name_detail,
 					(
 				SELECT
@@ -925,7 +925,7 @@ class AssemblyProcessController extends Controller
 					assembly_ng_logs 
 				WHERE
 					operator_id = assemblies.operator_id 
-					AND DATE( created_at ) = '2021-02-05' 
+					AND DATE( created_at ) = '".$now."' 
 					) as qty_ng_detail
 				FROM
 				assemblies
@@ -974,7 +974,7 @@ class AssemblyProcessController extends Controller
 					assembly_ng_logs 
 				WHERE
 					operator_id = assemblies.operator_id 
-					AND DATE( created_at ) = '2021-02-05' 
+					AND DATE( created_at ) = '".$now."' 
 					) as ng_name_detail,
 					(
 				SELECT
@@ -983,7 +983,7 @@ class AssemblyProcessController extends Controller
 					assembly_ng_logs 
 				WHERE
 					operator_id = assemblies.operator_id 
-					AND DATE( created_at ) = '2021-02-05' 
+					AND DATE( created_at ) = '".$now."' 
 					) as qty_ng_detail
 				FROM
 				assemblies
