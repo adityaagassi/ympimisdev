@@ -175,46 +175,48 @@
 									</tr>
 								</thead>
 								<tbody>
-									@foreach($ng_finding as $ng_finding)
-									<tr>
-										<td>{{$ng_finding->date}}</td>
-										<td><?php echo $ng_finding->material_number ?></td>
-										<td><?php echo $ng_finding->material_description ?>
-										</td>
-										<td><?php echo $ng_finding->quantity ?></td>
-										<td><?php echo $ng_finding->finder ?>
-										</td>
-										<?php if(strpos($ng_finding->picture, '<p>') !== false){ ?>
-											<td><?php echo $ng_finding->picture ?></td>
-										<?php }else{ ?>
-											<td><img width="200px" src="{{ url('/data_file/ng_finding/'.$ng_finding->picture) }}"></td>
-										<?php } ?>
-										<td><?php echo $ng_finding->defect ?></td>
-										<td><?php echo $ng_finding->checked_qa ?></td>
-										<td>
-											@if($ng_finding->send_status == "")
-						                		<label class="label label-danger">Belum Terkirim</label>
-						                	@else
-						                		<label class="label label-success">Terkirim</label>
-						                	@endif
-										</td>
-										<td>@if($ng_finding->approval == "")
-						                		<label class="label label-danger">Not Approved</label>
-						                	@else
-						                		<label class="label label-success">Approved</label>
-						                	@endif</td>
-										<td>
-											<center>
-												<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_ng_finding('{{ url("index/ng_finding/update") }}','{{$id}}','{{ $ng_finding->ng_finding_id }}');">
-									               Edit
-									            </button>
-												<a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/ng_finding/destroy") }}','{{ $ng_finding->material_number }} - {{ $ng_finding->date }}','{{ $id }}', '{{ $ng_finding->ng_finding_id }}');">
-													Delete
-												</a>
-											</center>
-										</td>
-									</tr>
-									@endforeach
+									<?php if (ISSET($ng_finding)): ?>
+										@foreach($ng_finding as $ng_finding)
+											<tr>
+												<td>{{$ng_finding->date}}</td>
+												<td><?php echo $ng_finding->material_number ?></td>
+												<td><?php echo $ng_finding->material_description ?>
+												</td>
+												<td><?php echo $ng_finding->quantity ?></td>
+												<td><?php echo $ng_finding->finder ?>
+												</td>
+												<?php if(strpos($ng_finding->picture, '<p>') !== false){ ?>
+													<td><?php echo $ng_finding->picture ?></td>
+												<?php }else{ ?>
+													<td><img width="200px" src="{{ url('/data_file/ng_finding/'.$ng_finding->picture) }}"></td>
+												<?php } ?>
+												<td><?php echo $ng_finding->defect ?></td>
+												<td><?php echo $ng_finding->checked_qa ?></td>
+												<td>
+													@if($ng_finding->send_status == "")
+								                		<label class="label label-danger">Belum Terkirim</label>
+								                	@else
+								                		<label class="label label-success">Terkirim</label>
+								                	@endif
+												</td>
+												<td>@if($ng_finding->approval == "")
+								                		<label class="label label-danger">Not Approved</label>
+								                	@else
+								                		<label class="label label-success">Approved</label>
+								                	@endif</td>
+												<td>
+													<center>
+														<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_ng_finding('{{ url("index/ng_finding/update") }}','{{$id}}','{{ $ng_finding->ng_finding_id }}');">
+											               Edit
+											            </button>
+														<a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/ng_finding/destroy") }}','{{ $ng_finding->material_number }} - {{ $ng_finding->date }}','{{ $id }}', '{{ $ng_finding->ng_finding_id }}');">
+															Delete
+														</a>
+													</center>
+												</td>
+											</tr>
+											@endforeach
+									<?php endif ?>
 								</tbody>
 								<tfoot>
 									<tr>

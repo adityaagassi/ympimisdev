@@ -30,8 +30,8 @@ class NgFindingController extends Controller
     function index($id)
     {
         $activityList = ActivityList::find($id);
-    	$ng_finding = NgFinding::select('*','ng_findings.id as ng_finding_id')->join('material_plant_data_lists', 'ng_findings.material_number', '=', 'material_plant_data_lists.material_number')->where('activity_list_id',$id)->orderBy('ng_findings.id','desc')
-            ->get();
+    	// $ng_finding = NgFinding::select('*','ng_findings.id as ng_finding_id')->join('material_plant_data_lists', 'ng_findings.material_number', '=', 'material_plant_data_lists.material_number')->where('activity_list_id',$id)->orderBy('ng_findings.id','desc')
+     //        ->get();
 
         $emp_id = Auth::user()->username;
         $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
@@ -52,7 +52,8 @@ class NgFindingController extends Controller
         $mpdl = MaterialPlantDataList::get();
         $mpdl2 = MaterialPlantDataList::get();
 
-    	$data = array('ng_finding' => $ng_finding,
+    	$data = array(
+        // 'ng_finding' => $ng_finding,
     				  'departments' => $departments,
     				  'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
@@ -119,6 +120,9 @@ class NgFindingController extends Controller
         $operator = DB::select($queryOperator);
         $operator2 = DB::select($queryOperator);
 
+        $mpdl = MaterialPlantDataList::get();
+        $mpdl2 = MaterialPlantDataList::get();
+
         $data = array(
                       'ng_finding' => $ng_finding,
                       'departments' => $departments,
@@ -131,6 +135,8 @@ class NgFindingController extends Controller
                       'foreman' => $foreman,
                       'operator' => $operator,
                       'operator2' => $operator2,
+                      'mpdl' => $mpdl,
+                      'mpdl2' => $mpdl2,
                       'id_departments' => $id_departments);
         return view('ng_finding.index', $data
             )->with('page', 'Temuan NG');
