@@ -3060,6 +3060,7 @@ Route::get('index/training_report/sendemail/{id}', 'TrainingReportController@sen
 Route::post('index/training_report/approval/{id}', 'TrainingReportController@approval');
 Route::post('index/training_report/importparticipant/{id}', 'TrainingReportController@importparticipant');
 Route::get('index/training_report/fetch_participant', 'TrainingReportController@fetchParticipant');
+Route::get('scan/training_report/participant', 'TrainingReportController@scanParticipant');
 
 //sampling check
 Route::get('index/sampling_check/index/{id}', 'SamplingCheckController@index');
