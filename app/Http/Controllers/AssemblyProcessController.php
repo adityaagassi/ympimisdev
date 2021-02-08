@@ -1873,14 +1873,14 @@ class AssemblyProcessController extends Controller
 			((
 			SELECT
 			COUNT(
-			DISTINCT ( model )) AS total_check 
+			DISTINCT ( serial_number )) AS total_check 
 			FROM
 			assembly_logs 
 			WHERE
 			DATE( assembly_logs.sedang_start_date )= '".$now."' ".$addlocation." UNION ALL
 			SELECT
 			COUNT(
-			DISTINCT ( model )) AS total_check 
+			DISTINCT ( serial_number )) AS total_check 
 			FROM
 			assembly_details 
 			WHERE
@@ -1894,20 +1894,20 @@ class AssemblyProcessController extends Controller
 			((
 			SELECT
 			COUNT(
-			DISTINCT ( model )) AS total_check 
+			DISTINCT ( serial_number )) AS total_check 
 			FROM
 			assembly_logs 
 			WHERE
 			DATE( assembly_logs.sedang_start_date )= '".$now."' ".$addlocation." UNION ALL
 			SELECT
 			COUNT(
-			DISTINCT ( model )) AS total_check 
+			DISTINCT ( serial_number )) AS total_check 
 			FROM
 			assembly_details 
 			WHERE
 			DATE( assembly_details.created_at )= '".$now."' ".$addlocation." 
 			)) check_total 
-			) - count( DISTINCT ( model ) ) AS total_ok,
+			) - count( DISTINCT ( serial_number ) ) AS total_ok,
 			((
 			SELECT
 			SUM( check_total.total_check ) AS total_check 
@@ -1915,21 +1915,21 @@ class AssemblyProcessController extends Controller
 			((
 			SELECT
 			COUNT(
-			DISTINCT ( model )) AS total_check 
+			DISTINCT ( serial_number )) AS total_check 
 			FROM
 			assembly_logs 
 			WHERE
 			DATE( assembly_logs.sedang_start_date )= '".$now."' ".$addlocation." UNION ALL
 			SELECT
 			COUNT(
-			DISTINCT ( model )) AS total_check 
+			DISTINCT ( serial_number )) AS total_check 
 			FROM
 			assembly_details 
 			WHERE
 			DATE( assembly_details.created_at )= '".$now."' ".$addlocation." 
 			)) check_total 
-			) / count( DISTINCT ( model ) )) * 100 AS ng_rate,
-			count( DISTINCT ( model ) ) AS total_ng 
+			) / count( DISTINCT ( serial_number ) )) * 100 AS ng_rate,
+			count( DISTINCT ( serial_number ) ) AS total_ng 
 			FROM
 			assembly_ng_logs 
 			WHERE
