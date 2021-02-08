@@ -1633,7 +1633,9 @@ class AssemblyProcessController extends Controller
 					$id_flow_next = $id_flow_now + 1;
 					$assembly_flow_next = AssemblyFlow::where('id',$id_flow_next)->where('origin_group_code','041')->first();
 					$next_process = $assembly_flow_next->process;
-					$assembly_inventories->location_next = $next_process;
+					if (count($next_process) > 0 && $next_process != "") {
+						$assembly_inventories->location_next = $next_process;
+					}
 					$assembly_inventories->save();
 				}
 
