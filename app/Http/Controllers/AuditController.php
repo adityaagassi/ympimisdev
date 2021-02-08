@@ -234,11 +234,25 @@ class AuditController extends Controller
     and kategori in ('S-Up And EHS Patrol Presdir','5S Patrol GM')
     GROUP BY
     tanggal");
+
+  $data_kategori = db::select("
+  SELECT
+    kategori,
+    sum( CASE WHEN status_ditangani IS NULL THEN 1 ELSE 0 END ) AS jumlah_belum,
+    sum( CASE WHEN status_ditangani IS NOT NULL THEN 1 ELSE 0 END ) AS jumlah_sudah
+  FROM
+    audit_all_results 
+  WHERE
+    kategori IN ( 'S-Up And EHS Patrol Presdir', '5S Patrol GM' ) 
+  GROUP BY
+    kategori");
+
   $year = date('Y');
 
   $response = array(
     'status' => true,
     'datas' => $data,
+    'data_kategori' => $data_kategori,
     'year' => $year
   );
 
@@ -320,6 +334,61 @@ return DataTables::of($detail)
 
 ->rawColumns(['tanggal' => 'tanggal', 'foto' => 'foto','penanganan' => 'penanganan'])
 ->make(true);
+}
+
+
+public function detailMonitoringCategory(Request $request){
+
+    $kategori = $request->get('kategori');
+
+
+    $status = $request->get('status');
+
+    if ($status != null) {
+
+      if ($status == "Temuan Belum Ditangani") {
+        $stat = 'and audit_all_results.status_ditangani is null';
+      }
+      else if ($status == "Temuan Sudah Ditangani"){
+        $stat = 'and audit_all_results.status_ditangani is not null';
+      }
+
+    } else{
+      $stat = '';
+    }
+
+    $query = "select audit_all_results.* FROM audit_all_results where audit_all_results.deleted_at is null and kategori = '".$kategori."' ".$stat."";
+
+    $detail = db::select($query);
+
+    return DataTables::of($detail)
+
+    ->editColumn('kategori', function($detail){
+      $kategori = '';
+
+      if($detail->kategori == "S-Up And EHS Patrol Presdir"){
+       $kategori = "Presdir";
+     }else if ($detail->kategori == "5S Patrol GM"){
+       $kategori = "GM";
+     }
+
+     return $kategori;
+    })
+
+    ->editColumn('tanggal', function($detail){
+      return date('d-M-Y', strtotime($detail->tanggal));
+    })
+
+    ->editColumn('foto', function($detail){
+      return '<img src="'.url('files/patrol').'/'.$detail->foto.'" width="250">';
+    })
+
+    ->editColumn('penanganan', function($detail){
+      return $detail->penanganan;
+    })
+
+    ->rawColumns(['tanggal' => 'tanggal', 'foto' => 'foto','penanganan' => 'penanganan'])
+    ->make(true);
 }
 
 public function fetchtable_audit(Request $request)

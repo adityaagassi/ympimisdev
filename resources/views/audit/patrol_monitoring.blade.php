@@ -27,11 +27,19 @@
     padding:0;
   }
 
-  #example2{
+  #example2 {
     border:1px solid black;    
   }
 
   #example2 > tbody > tr > td {
+    color: black;
+  }
+
+  #example3 {
+    border:1px solid black;    
+  }
+
+  #example3 > tbody > tr > td {
     color: black;
   }
 
@@ -42,7 +50,6 @@
   .dataTables_filter {
     color: white;
   }
-
   thead input {
     width: 100%;
     padding: 3px;
@@ -114,42 +121,42 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <section class="content" style="padding-top: 0; padding-bottom: 0">
     <div class="row">
-      <!-- <div class="col-md-12" style="padding: 1px !important">
-        <div class="col-xs-2">
-          <div class="input-group date">
-            <div class="input-group-addon bg-green" style="border: none;">
-              <i class="fa fa-calendar"></i>
-            </div>
-            <input type="text" class="form-control datepicker" id="datefrom" placeholder="Select Date From">
-          </div>
-        </div>
-        <div class="col-xs-2">
-          <div class="input-group date">
-            <div class="input-group-addon bg-green" style="border: none;">
-              <i class="fa fa-calendar"></i>
-            </div>
-            <input type="text" class="form-control datepicker" id="dateto" placeholder="Select Date To">
-          </div>
-        </div>
-        <div class="col-xs-2">
-          <div class="input-group">
-            <div class="input-group-addon bg-blue">
-              <i class="fa fa-search"></i>
-            </div>
-            <select class="form-control select2" multiple="multiple" id="status" data-placeholder="Pilih Status" style="border-color: #605ca8" >
-                <option value="Belum Ditangani">Belum Ditangani</option>
-                <option value="Sudah Ditangani">Sudah Ditangani</option>
-            </select>
-          </div>
-        </div>
+      <input type="hidden" value="{{csrf_token()}}" name="_token" />
 
-        <div class="col-xs-1">
-          <button class="btn btn-success" onclick="drawChart()">Update Chart</button>
-        </div>
+          <?php if(Auth::user()->role_code == "MIS" || Auth::user()->role_code == "GA" || Auth::user()->role_code == "GA-SPL") { ?>
 
-      </div> -->
+          <form method="GET" action="{{ url("export/patrol/list") }}">
+          <div class="col-md-12" style="padding: 1px !important">
+            <div class="col-xs-2">
+              <div class="input-group date">
+                <div class="input-group-addon bg-green" style="border: none;">
+                  <i class="fa fa-calendar"></i>
+                </div>
+                <input type="text" class="form-control datepicker" id="date" name="date" placeholder="Select Date">
+              </div>
+            </div>
+            <div class="col-xs-2">
+              <div class="input-group">
+                <div class="input-group-addon bg-blue">
+                  <i class="fa fa-search"></i>
+                </div>
+                <select class="form-control select2" id="status" name="status" data-placeholder="Pilih Status" style="border-color: #605ca8">
+                    <option value=""></option>
+                    <option value="Temuan GM Close">Temuan GM Close</option>
+                    <option value="Temuan Presdir Close">Temuan Presdir Close</option>
+                    <option value="Temuan GM Open">Temuan GM Open</option>
+                    <option value="Temuan Presdir Open">Temuan Presdir Open</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-xs-2">
+              <button type="submit" class="btn btn-success form-control" style="width: 100%"><i class="fa fa-download"></i> Download Data</button>
+            </div>
 
-      
+          </div>
+          </form>
+
+        <?php } ?>
       
       <div class="col-md-12" style="padding-top: 10px;">
         <div id="chart" style="width: 99%; height: 300px;"></div>
@@ -159,14 +166,14 @@
         <table id="tabelmonitor" class="table table-bordered" style="margin-top: 5px; width: 99%">
           <thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 12px;font-weight: bold">
             <tr>
-              <th style="width: 1%; vertical-align: middle;;font-size: 16px;">Kategori Audit</th>
-              <th style="width: 1%; vertical-align: middle;border-left:1px solid yellow !important;font-size: 16px;">Tanggal</th>
-              <th style="width: 1%; vertical-align: middle;border-left:1px solid yellow !important;font-size: 16px;">Lokasi</th>
-              <th style="width: 1%; vertical-align: middle;border-left:1px solid yellow !important;font-size: 16px;">Auditor</th>
-              <th style="width: 1%; vertical-align: middle;border-left:1px solid yellow !important;font-size: 16px;">Auditee</th>
-              <th style="width: 5%; vertical-align: middle;border-left:1px solid yellow !important;font-size: 16px;">Note</th>
+              <th style="width: 3%; vertical-align: middle;;font-size: 16px;">Kategori Audit</th>
+              <th style="width: 2%; vertical-align: middle;border-left:1px solid yellow !important;font-size: 16px;">Tanggal</th>
+              <th style="width: 2%; vertical-align: middle;border-left:1px solid yellow !important;font-size: 16px;">Lokasi</th>
+              <th style="width: 3%; vertical-align: middle;border-left:1px solid yellow !important;font-size: 16px;">Auditor</th>
+              <th style="width: 3%; vertical-align: middle;border-left:1px solid yellow !important;font-size: 16px;">Auditee</th>
+              <th style="width: 10%; vertical-align: middle;border-left:1px solid yellow !important;font-size: 16px;">Note</th>
               <!-- <th style="width: 25%; vertical-align: middle;border-left:1px solid yellow !important;font-size: 16px;">Foto</th> -->
-              <th style="width: 2%; vertical-align: middle;border-left:1px solid yellow !important;font-size: 16px;">Penanganan</th>
+              <th style="width: 4%; vertical-align: middle;border-left:1px solid yellow !important;font-size: 16px;">Penanganan</th>
             </tr>
           </thead>
           <tbody id="tabelisi">
@@ -184,6 +191,15 @@
           </tfoot>
         </table>
       </div>
+
+      <?php if(Auth::user()->role_code == "MIS" || Auth::user()->role_code == "GA" || Auth::user()->role_code == "GA-SPL") { ?>
+
+        <div class="col-md-12" style="padding-top: 30px;">
+          <div id="chart_kategori" style="width: 99%; height: 300px;"></div>
+        </div>
+
+      <?php } ?>
+
     </div>
   </div>
 
@@ -199,6 +215,43 @@
           <div class="row">
             <div class="col-md-12">
               <table id="example2" class="table table-striped table-bordered table-hover" style="width: 100%;"> 
+                <thead style="background-color: rgba(126,86,134,.7);">
+                  <tr>
+                    <th>Kategori</th>
+                    <th>Tanggal</th>
+                    <th>Lokasi</th>
+                    <th>Auditee</th>
+                    <th>Poin Judul</th>
+                    <th>Note</th>
+                    <th>Foto</th>
+                    <th>Penanganan</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="myModalCategory">
+    <div class="modal-dialog modal-lg" style="width:1250px;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 style="float: right;" id="modal-title"></h4>
+          <h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
+          <br><h4 class="modal-title" id="judul_table_category"></h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12">
+              <table id="example3" class="table table-striped table-bordered table-hover" style="width: 100%;color: black"> 
                 <thead style="background-color: rgba(126,86,134,.7);">
                   <tr>
                     <th>Kategori</th>
@@ -384,12 +437,22 @@
         var belum_ditangani_presdir = [];
         var sudah_ditangani_presdir = [];
 
+        var kategori = [];
+        var belum_ditangani_all = [];
+        var sudah_ditangani_all = [];
+
         $.each(result.datas, function(key, value) {
           tgl.push(value.tanggal);
           belum_ditangani_gm.push(parseInt(value.jumlah_belum_gm));
           sudah_ditangani_gm.push(parseInt(value.jumlah_sudah_gm));
           belum_ditangani_presdir.push(parseInt(value.jumlah_belum_presdir));
           sudah_ditangani_presdir.push(parseInt(value.jumlah_sudah_presdir));
+        });
+
+        $.each(result.data_kategori, function(key, value) {
+          kategori.push(value.kategori);
+          belum_ditangani_all.push(parseInt(value.jumlah_belum));
+          sudah_ditangani_all.push(parseInt(value.jumlah_sudah));
         });
 
         $('#chart').highcharts({
@@ -515,30 +578,131 @@
           }
           ]
         })
+
+
+        $('#chart_kategori').highcharts({
+          chart: {
+            type: 'column',
+            backgroundColor: null
+          },
+          title: {
+            text: null,
+          },
+          xAxis: {
+            type: 'category',
+            categories: kategori,
+            lineWidth:2,
+            lineColor:'#9e9e9e',
+            gridLineWidth: 1,
+            labels: {
+              style: {
+                fontWeight:'Bold'
+              }
+            }
+          },
+          yAxis: {
+            lineWidth:2,
+            lineColor:'#fff',
+            type: 'linear',
+            title: {
+              text: 'Total Temuan'
+            },
+            stackLabels: {
+              enabled: true,
+              style: {
+                fontWeight: 'bold',
+                color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+              }
+            }
+          },
+          legend: {
+            align: 'right',
+            x: -30,
+            verticalAlign: 'top',
+            y: 10,
+            floating: true,
+            borderWidth: 1,
+            shadow: false,
+            reversed: true,
+            itemStyle:{
+              color: "white",
+              fontSize: "12px",
+              fontWeight: "bold",
+
+            }
+          },
+          plotOptions: {
+            series: {
+              cursor: 'pointer',
+              point: {
+                events: {
+                  click: function () {
+                    ShowModalCategory(this.category,this.series.name);
+                  }
+                }
+              },
+              dataLabels: {
+                enabled: false,
+                format: '{point.y}'
+              }
+            },
+            column: {
+              color:  Highcharts.ColorString,
+              stacking: 'normal',
+              pointPadding: 0.93,
+              groupPadding: 0.93,
+              borderWidth: 1,
+              dataLabels: {
+                enabled: true
+              }
+            }
+          },
+          credits: {
+            enabled: false
+          },
+
+          tooltip: {
+            formatter:function(){
+              return this.series.name+' : ' + this.y;
+            }
+          },
+          series: [
+          {
+            name: 'Temuan Belum Ditangani',
+            data: belum_ditangani_all,
+            color: "#dd4b39"
+          },
+          {
+            name: 'Temuan Sudah Ditangani',
+            data: sudah_ditangani_all,
+            color: "#00a65a"
+          }
+          ]
+        })
       } else{
         alert('Attempt to retrieve data failed');
       }
     })
-}
+  }
 
-function ShowModal(tgl, status, datefrom, dateto) {
-  tabel = $('#example2').DataTable();
-  tabel.destroy();
+  function ShowModal(tgl, status, datefrom, dateto) {
+    tabel = $('#example2').DataTable();
+    tabel.destroy();
 
-  $("#myModal").modal("show");
+    $("#myModal").modal("show");
 
-  var table = $('#example2').DataTable({
-    'dom': 'Bfrtip',
-    'responsive': true,
-    'lengthMenu': [
-    [ 10, 25, 50, -1 ],
-    [ '10 rows', '25 rows', '50 rows', 'Show all' ]
-    ],
-    'buttons': {
-      buttons:[
-      {
-        extend: 'pageLength',
-        className: 'btn btn-default',
+    var table = $('#example2').DataTable({
+      'dom': 'Bfrtip',
+      'responsive': true,
+      'lengthMenu': [
+      [ 10, 25, 50, -1 ],
+      [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+      ],
+      'buttons': {
+        buttons:[
+        {
+          extend: 'pageLength',
+          className: 'btn btn-default',
           // text: '<i class="fa fa-print"></i> Show',
         },
         {
@@ -606,264 +770,350 @@ function ShowModal(tgl, status, datefrom, dateto) {
   }
 
 
+  function ShowModalCategory(kategori, status) {
+    tabel = $('#example3').DataTable();
+    tabel.destroy();
 
-function fetchTable(){
+    $("#myModalCategory").modal("show");
 
-  var datefrom = $('#datefrom').val();
-  var dateto = $('#dateto').val();
-  var status = $('#status').val();
+    var table = $('#example3').DataTable({
+      'dom': 'Bfrtip',
+      'responsive': true,
+      'lengthMenu': [
+      [ 10, 25, 50, -1 ],
+      [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+      ],
+      'buttons': {
+        buttons:[
+        {
+          extend: 'pageLength',
+          className: 'btn btn-default',
+          // text: '<i class="fa fa-print"></i> Show',
+        },
+        {
+          extend: 'copy',
+          className: 'btn btn-success',
+          text: '<i class="fa fa-copy"></i> Copy',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        {
+          extend: 'excel',
+          className: 'btn btn-info',
+          text: '<i class="fa fa-file-excel-o"></i> Excel',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        {
+          extend: 'print',
+          className: 'btn btn-warning',
+          text: '<i class="fa fa-print"></i> Print',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        ]
+      },
+      'paging': true,
+      'lengthChange': true,
+      'searching': true,
+      'ordering': true,
+      'order': [],
+      'info': true,
+      'autoWidth': true,
+      "sPaginationType": "full_numbers",
+      "bJQueryUI": true,
+      "bAutoWidth": false,
+      "processing": true,
+      "serverSide": true,
+      "ajax": {
+        "type" : "get",
+        "url" : "{{ url("index/audit_patrol/detail_category") }}",
+        "data" : {
+          kategori : kategori,
+          status : status
+        }
+      },
+      "columns": [
+      {"data": "kategori", "width": "5%"},
+      {"data": "tanggal" , "width": "5%"},
+      {"data": "lokasi" , "width": "5%"},
+      {"data": "auditee_name" , "width": "5%"},
+      {"data": "point_judul", "width": "5%"},
+      {"data": "note", "width": "15%"},
+      {"data": "foto", "width": "20%"},
+      {"data": "penanganan", "width": "25%"}
+      ]    
+    });
 
-  var data = {
-    datefrom: datefrom,
-    dateto: dateto,
-    status: status
-  };
-
-  $.get('{{ url("index/audit_patrol/table") }}', data, function(result, status, xhr){
-    if(result.status){
-
-      $('#tabelmonitor').DataTable().clear();
-      $('#tabelmonitor').DataTable().destroy();
+    $('#judul_table_category').append().empty();
+    $('#judul_table_category').append('<center><b>Temuan Patrol '+kategori+'</b></center>'); 
+  }
 
 
-      $("#tabelisi").find("td").remove();  
-      $('#tabelisi').html("");
-      var table = "";
 
-      $.each(result.datas, function(key, value) {
+  function fetchTable(){
 
-        table += '<tr>';
-        table += '<td>'+value.kategori+'</td>';
-        table += '<td style="border-left:1px solid yellow; text-align: center;">'+value.tanggal+'</span></td>';
-        table += '<td style="border-left:1px solid yellow">'+value.lokasi+'</td>';
-        table += '<td style="border-left:1px solid yellow">'+value.auditor_name+'</td>';
-        table += '<td style="border-left:1px solid yellow">'+value.auditee_name+'</span></td>';
-        table += '<td style="border-left:1px solid yellow">'+value.note+'</td>';
+    var datefrom = $('#datefrom').val();
+    var dateto = $('#dateto').val();
+    var status = $('#status').val();
+
+    var data = {
+      datefrom: datefrom,
+      dateto: dateto,
+      status: status
+    };
+
+    $.get('{{ url("index/audit_patrol/table") }}', data, function(result, status, xhr){
+      if(result.status){
+
+        $('#tabelmonitor').DataTable().clear();
+        $('#tabelmonitor').DataTable().destroy();
+
+
+        $("#tabelisi").find("td").remove();  
+        $('#tabelisi').html("");
+        var table = "";
+
+        $.each(result.datas, function(key, value) {
+
+          table += '<tr>';
+          table += '<td>'+value.kategori+'</td>';
+          table += '<td style="border-left:1px solid yellow; text-align: center;">'+value.tanggal+'</span></td>';
+          table += '<td style="border-left:1px solid yellow">'+value.lokasi+'</td>';
+          table += '<td style="border-left:1px solid yellow">'+value.auditor_name+'</td>';
+          table += '<td style="border-left:1px solid yellow">'+value.auditee_name+'</span></td>';
+          table += '<td style="border-left:1px solid yellow">'+value.note+'</td>';
             // table += "<td style='border-left:1px solid yellow'><img src='"+"{{ url('files/patrol') }}/"+value.foto+"' width='150'></td>";  
-            table += '<td style="border-left:1px solid yellow; text-align: center;"><button style="width: 25%; height: 100%;" onclick="edit(\''+value.id+'\')" class="btn btn-xs btn-primary form-control"><span>Edit </span></button>&nbsp;&nbsp;&nbsp;<button style="width: 50%; height: 100%;" onclick="penanganan(\''+value.id+'\')" class="btn btn-xs btn-warning form-control"><span>Penanganan</span></button></td>';            
+            table += '<td style="border-left:1px solid yellow; text-align: center;">';
+            table += '<button style="height: 100%; margin-right: 5px;" onclick="edit(\''+value.id+'\')" class="btn btn-md btn-primary form-control"><i class="fa fa-pencil-square-o"></i> Edit</button>';
+            table += '<button style="height: 100%;" onclick="penanganan(\''+value.id+'\')" class="btn btn-md btn-warning form-control"><i class="fa fa-thumbs-o-up"></i> Penanganan</button>';
+            table += '</td>';
             table += '</tr>';
           })
 
-      $('#tabelisi').append(table);
+        $('#tabelisi').append(table);
 
-      $('#tabelmonitor').DataTable({
-        'responsive':true,
-        'paging': true,
-        'lengthChange': false,
-        'pageLength': 25,
-        'searching': true,
-        'ordering': true,
-        'order': [],
-        'info': false,
-        'autoWidth': true,
-        "sPaginationType": "full_numbers",
-        "bJQueryUI": true,
-        "bAutoWidth": false,
-        "processing": true
-      });
-    }
-  })
-}
-
-function penanganan(id) {
-
-  $('#modalPenanganan').modal("show");
-
-  var data = {
-    id : id
+        $('#tabelmonitor').DataTable({
+          'responsive':true,
+          'paging': true,
+          'lengthChange': false,
+          'pageLength': 25,
+          'searching': true,
+          'ordering': true,
+          'order': [],
+          'info': false,
+          'autoWidth': true,
+          "sPaginationType": "full_numbers",
+          "bJQueryUI": true,
+          "bAutoWidth": false,
+          "processing": true
+        });
+      }
+    })
   }
 
-  $.get('{{ url("index/audit_patrol/detail_penanganan") }}', data, function(result, status, xhr){
+  function penanganan(id) {
 
-    var images = "";
-    $("#image").html("");
+    $('#modalPenanganan').modal("show");
 
-    if (result.status) {
-      $("#id_penanganan").val(id);
-      $("#lokasi").text(result.audit[0].lokasi);
-      $("#tanggal").text(result.audit[0].tanggal);
-      $("#note").text(result.audit[0].note);
-      images += '<img src="{{ url("files/patrol") }}/'+result.audit[0].foto+'" width="300">';
-      $("#image").append(images);
-
-    } else {
-      openErrorGritter('Error');
+    var data = {
+      id : id
     }
 
-  }); 
-}
+    $.get('{{ url("index/audit_patrol/detail_penanganan") }}', data, function(result, status, xhr){
 
-function update_penanganan() {
+      var images = "";
+      $("#image").html("");
 
-  var data = {
-    id: $("#id_penanganan").val(),
-    penanganan : CKEDITOR.instances.penanganan.getData()
-  };
+      if (result.status) {
+        $("#id_penanganan").val(id);
+        $("#lokasi").text(result.audit[0].lokasi);
+        $("#tanggal").text(result.audit[0].tanggal);
+        $("#note").text(result.audit[0].note);
+        images += '<img src="{{ url("files/patrol") }}/'+result.audit[0].foto+'" width="300">';
+        $("#image").append(images);
 
-  if (CKEDITOR.instances.penanganan.getData() == null || CKEDITOR.instances.penanganan.getData() == "") {
-    openErrorGritter("Error","Penanganan Harus Diisi");
-    return false;
+      } else {
+        openErrorGritter('Error');
+      }
+
+    }); 
   }
 
-  $.post('{{ url("post/audit_patrol/penanganan") }}', data, function(result, status, xhr){
-    if (result.status == true) {
-      openSuccessGritter("Success","Audit Berhasil Ditangani");
-      fetchTable();
-      drawChart();
-    } else {
-      openErrorGritter("Error",result.datas);
+  function update_penanganan() {
+
+    var data = {
+      id: $("#id_penanganan").val(),
+      penanganan : CKEDITOR.instances.penanganan.getData()
+    };
+
+    if (CKEDITOR.instances.penanganan.getData() == null || CKEDITOR.instances.penanganan.getData() == "") {
+      openErrorGritter("Error","Penanganan Harus Diisi");
+      return false;
     }
-  })
-}
 
-function edit(id) {
-
-  $('#modalEdit').modal("show");
-
-  var data = {
-    id : id
+    $.post('{{ url("post/audit_patrol/penanganan") }}', data, function(result, status, xhr){
+      if (result.status == true) {
+        openSuccessGritter("Success","Audit Berhasil Ditangani");
+        fetchTable();
+        drawChart();
+      } else {
+        openErrorGritter("Error",result.datas);
+      }
+    })
   }
 
-  $.get('{{ url("index/audit_patrol/detail_penanganan") }}', data, function(result, status, xhr){
+  function edit(id) {
 
-    var images_edit = "";
-    $("#image_edit").html("");
+    $('#modalEdit').modal("show");
 
-    if (result.status) {
-      $("#id_penanganan_edit").val(id);
-      $("#tanggal_edit").text(result.audit[0].tanggal);
-      $("#lokasi_edit").text(result.audit[0].lokasi);
-      $("#poin_edit").text(result.audit[0].point_judul);
-      $("#pic_edit").text(result.audit[0].auditee_name);
-      $("#note_edit").val(result.audit[0].note);
-
-      images_edit += '<img src="{{ url("files/patrol") }}/'+result.audit[0].foto+'" width="300">';
-      $("#image_edit").append(images_edit);
-
-    } else {
-      openErrorGritter('Error');
+    var data = {
+      id : id
     }
 
-  }); 
-}
+    $.get('{{ url("index/audit_patrol/detail_penanganan") }}', data, function(result, status, xhr){
 
+      var images_edit = "";
+      $("#image_edit").html("");
 
-function post_edit() {
+      if (result.status) {
+        $("#id_penanganan_edit").val(id);
+        $("#tanggal_edit").text(result.audit[0].tanggal);
+        $("#lokasi_edit").text(result.audit[0].lokasi);
+        $("#poin_edit").text(result.audit[0].point_judul);
+        $("#pic_edit").text(result.audit[0].auditee_name);
+        $("#note_edit").val(result.audit[0].note);
 
-  var data = {
-    id: $("#id_penanganan_edit").val(),
-    note : $("#note_edit").val(),
-  };
+        images_edit += '<img src="{{ url("files/patrol") }}/'+result.audit[0].foto+'" width="300">';
+        $("#image_edit").append(images_edit);
 
-  $.post('{{ url("post/audit_patrol/edit") }}', data, function(result, status, xhr){
-    if (result.status == true) {
-      openSuccessGritter("Success","Audit Berhasil Diedit");
-      fetchTable();
-    } else {
-      openErrorGritter("Error",result.datas);
-    }
-  })
-}
-
-
-function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-Highcharts.createElement('link', {
-  href: '{{ url("fonts/UnicaOne.css")}}',
-  rel: 'stylesheet',
-  type: 'text/css'
-}, null, document.getElementsByTagName('head')[0]);
-
-Highcharts.theme = {
-  colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
-  '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
-  chart: {
-    backgroundColor: {
-      linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
-      stops: [
-      [0, '#2a2a2b']
-      ]
-    },
-    style: {
-      fontFamily: 'sans-serif'
-    },
-    plotBorderColor: '#606063'
-  },
-  title: {
-    style: {
-      color: '#E0E0E3',
-      textTransform: 'uppercase',
-      fontSize: '20px'
-    }
-  },
-  subtitle: {
-    style: {
-      color: '#E0E0E3',
-      textTransform: 'uppercase'
-    }
-  },
-  xAxis: {
-    gridLineColor: '#707073',
-    labels: {
-      style: {
-        color: '#E0E0E3'
+      } else {
+        openErrorGritter('Error');
       }
-    },
-    lineColor: '#707073',
-    minorGridLineColor: '#505053',
-    tickColor: '#707073',
-    title: {
-      style: {
-        color: '#A0A0A3'
 
+    }); 
+  }
+
+
+  function post_edit() {
+
+    var data = {
+      id: $("#id_penanganan_edit").val(),
+      note : $("#note_edit").val(),
+    };
+
+    $.post('{{ url("post/audit_patrol/edit") }}', data, function(result, status, xhr){
+      if (result.status == true) {
+        openSuccessGritter("Success","Audit Berhasil Diedit");
+        fetchTable();
+      } else {
+        openErrorGritter("Error",result.datas);
       }
-    }
-  },
-  yAxis: {
-    gridLineColor: '#707073',
-    labels: {
-      style: {
-        color: '#E0E0E3'
-      }
-    },
-    lineColor: '#707073',
-    minorGridLineColor: '#505053',
-    tickColor: '#707073',
-    tickWidth: 1,
-    title: {
-      style: {
-        color: '#A0A0A3'
-      }
-    }
-  },
-  tooltip: {
-    backgroundColor: 'rgba(0, 0, 0, 0.85)',
-    style: {
-      color: '#F0F0F0'
-    }
-  },
-  plotOptions: {
-    series: {
-      dataLabels: {
-        color: 'white'
+    })
+  }
+
+
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  Highcharts.createElement('link', {
+    href: '{{ url("fonts/UnicaOne.css")}}',
+    rel: 'stylesheet',
+    type: 'text/css'
+  }, null, document.getElementsByTagName('head')[0]);
+
+  Highcharts.theme = {
+    colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
+    '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+    chart: {
+      backgroundColor: {
+        linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
+        stops: [
+        [0, '#2a2a2b']
+        ]
       },
-      marker: {
-        lineColor: '#333'
+      style: {
+        fontFamily: 'sans-serif'
+      },
+      plotBorderColor: '#606063'
+    },
+    title: {
+      style: {
+        color: '#E0E0E3',
+        textTransform: 'uppercase',
+        fontSize: '20px'
       }
     },
-    boxplot: {
-      fillColor: '#505053'
+    subtitle: {
+      style: {
+        color: '#E0E0E3',
+        textTransform: 'uppercase'
+      }
     },
-    candlestick: {
-      lineColor: 'white'
+    xAxis: {
+      gridLineColor: '#707073',
+      labels: {
+        style: {
+          color: '#E0E0E3'
+        }
+      },
+      lineColor: '#707073',
+      minorGridLineColor: '#505053',
+      tickColor: '#707073',
+      title: {
+        style: {
+          color: '#A0A0A3'
+
+        }
+      }
     },
-    errorbar: {
-      color: 'white'
-    }
-  },
-  legend: {
+    yAxis: {
+      gridLineColor: '#707073',
+      labels: {
+        style: {
+          color: '#E0E0E3'
+        }
+      },
+      lineColor: '#707073',
+      minorGridLineColor: '#505053',
+      tickColor: '#707073',
+      tickWidth: 1,
+      title: {
+        style: {
+          color: '#A0A0A3'
+        }
+      }
+    },
+    tooltip: {
+      backgroundColor: 'rgba(0, 0, 0, 0.85)',
+      style: {
+        color: '#F0F0F0'
+      }
+    },
+    plotOptions: {
+      series: {
+        dataLabels: {
+          color: 'white'
+        },
+        marker: {
+          lineColor: '#333'
+        }
+      },
+      boxplot: {
+        fillColor: '#505053'
+      },
+      candlestick: {
+        lineColor: 'white'
+      },
+      errorbar: {
+        color: 'white'
+      }
+    },
+    legend: {
         // itemStyle: {
         //   color: '#E0E0E3'
         // },

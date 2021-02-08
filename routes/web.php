@@ -3614,6 +3614,7 @@ Route::post('post/audit_patrol_file', 'AuditController@post_audit_file');
 Route::get('index/audit_patrol/monitoring', 'AuditController@indexMonitoring');
 Route::get('fetch/audit_patrol/monitoring', 'AuditController@fetchMonitoring');
 Route::get('index/audit_patrol/detail', 'AuditController@detailMonitoring');
+Route::get('index/audit_patrol/detail_category', 'AuditController@detailMonitoringCategory');
 Route::get('index/audit_patrol/table', 'AuditController@fetchTable_audit');
 Route::get('index/audit_patrol/detail_penanganan', 'AuditController@detailPenanganan');
 Route::post('post/audit_patrol/penanganan', 'AuditController@postPenanganan');
