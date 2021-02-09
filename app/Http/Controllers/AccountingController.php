@@ -906,7 +906,7 @@ class AccountingController extends Controller
         {
             $dept = "IT";
         }
-        else if ($dept == "Accounting Department Department")
+        else if ($dept == "Accounting Department")
         {
             $dept = "AC";
         }

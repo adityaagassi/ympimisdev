@@ -244,7 +244,19 @@
             </div>
           </span>
 
+
+          <span id="penemu_ng">
+            <label class="col-sm-1">Penemu Masalah<span class="text-red">*</span></label>
+            <div class="col-sm-5" align="left">
+              <select class="form-control select2" id="penemu" name="penemu" style="width: 100%;" data-placeholder="Pilih Penemu" required="">
+              </select>
+            </div>
+          </span>
+
           <div id="kategori_komplain_internal"></div>
+
+
+          
       </div>
       <div class="clone hide">
         <div class="form-group row control-group" style="margin-top:10px">
@@ -673,6 +685,7 @@
     if (document.getElementById("kategori").value == "Eksternal") {
       $("#customer").show();
       $("#supplier").hide();
+      $("#penemu_ng").hide();
 
       $k = '{{ $cpars->kategori_komplain }}';
 
@@ -683,6 +696,7 @@
     } else if (document.getElementById("kategori").value == "Supplier"){
       $("#supplier").show();
       $("#customer").hide();
+      $("#penemu_ng").hide();
 
       $addsupplier = '<div class="form-group row" align="left"><div class="col-sm-6"></div><label class="col-sm-1">Kategori Komplain<span class="text-red">*</span></label><div class="col-sm-5" align="left"><select class="form-control select2" name="kategori_komplain" style="width: 100%;" data-placeholder="Pilih Kategori Komplain"><?php if($cpars->kategori_komplain == "Non YMMJ") { ?><option value="Non YMMJ" selected>Non YMMJ</option><?php } else { ?><option></option><option value="Non YMMJ">Non YMMJ</option><?php } ?></select></div></div>';
 
@@ -692,11 +706,47 @@
     } else if (document.getElementById("kategori").value == "Internal"){
       $("#customer").hide();
       $("#supplier").hide();
+      $("#penemu_ng").show();
 
 
       $addinternal = '<div class="form-group row" align="left"><div class="col-sm-6"></div><label class="col-sm-1">Kategori Komplain<span class="text-red">*</span></label><div class="col-sm-5" align="left"><select class="form-control select2" name="kategori_komplain" style="width: 100%;" data-placeholder="Pilih Kategori Komplain"><?php if($cpars->kategori_komplain == "Ketidaksesuaian Kualitas") { ?><option value="Ketidaksesuaian Kualitas" selected>Ketidaksesuaian Kualitas</option><?php } else { ?><option></option><option value="Ketidaksesuaian Kualitas">Ketidaksesuaian Kualitas</option><?php } ?></select></div></div>';
 
       $('#kategori_komplain_internal').append($addinternal);
+
+      $('#penemu').html("");
+
+        list = "";
+        list += "<option value='<?= $cpars->penemu_ng ?>'><?= $cpars->penemu_ng ?></option> ";
+        list += "<option value='QA M Pro'>QA M Pro</option>";
+        list += "<option value='QA Sax FG'>QA Sax FG</option>";
+        list += "<option value='QA Sax KD'>QA Sax KD</option>";          
+        list += "<option value='QA CL FG'>QA CL FG</option>";
+        list += "<option value='QA CL KD'>QA CL KD</option>";
+        list += "<option value='QA FL FG Fungsi'>QA FL FG Fungsi</option>";
+        list += "<option value='QA FL FG Visual 1'>QA FL FG Visual 1</option>";
+        list += "<option value='QA FL FG Visual 2'>QA FL FG Visual 2</option>";
+        list += "<option value='QA FL KD'>QA FL KD</option>";
+        list += "<option value='Assy Sax'>Assy Sax</option>";
+        list += "<option value='Sub Assy Sax'>Sub Assy Sax</option>";
+        list += "<option value='Assy CL'>Assy CL</option>";
+        list += "<option value='Sub Assy CL'>Sub Assy CL</option>";
+        list += "<option value='Assy FL'>Assy FL</option>";
+        list += "<option value='Sub Assy FL'>Sub Assy FL</option>";
+        list += "<option value='Plating'>Plating</option>";
+        list += "<option value='Painting'>Painting</option>";
+        list += "<option value='Buffing'>Buffing</option>";
+        list += "<option value='Welding'>Welding</option>";
+        list += "<option value='HTS'>HTS</option>";
+        list += "<option value='B Pro'>B Pro</option>";
+        list += "<option value='M Pro'>M Pro</option>";
+        list += "<option value='Mouthpiece'>Mouthpiece</option>";
+        list += "<option value='Pianica'>Pianica</option>";
+        list += "<option value='Reedplate'>Reedplate</option>";
+        list += "<option value='Assy Recorder'>Assy Recorder</option>";
+        list += "<option value='Injeksi'>Injeksi</option>";
+        list += "<option value='Venova'>Venova</option>";
+        list += "<option value='Case Pro'>Case Pro</option>";
+        $('#penemu').html(list);
     }
   });
 

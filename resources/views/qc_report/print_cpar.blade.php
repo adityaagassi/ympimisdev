@@ -96,6 +96,8 @@
 						Customer : <b>{{$cpar->destination_name}}</b>
 					@elseif($cpar->vendor != null)
 						Vendor : <b>{{$cpar->vendorname}}</b>
+					@elseif($cpar->penemu_ng != null)
+						Penemu NG : <b>{{$cpar->penemu_ng}}</b>
 					@endif
 				</td>
 			</tr>

@@ -349,14 +349,14 @@
                   @elseif($cpars->kategori == "Eksternal")
                   <td colspan="2">Customer</td>
                   @elseif($cpars->kategori == "Internal")
-                  <td colspan="2">Jenis Komplain</td>
+                  <td colspan="2">Penemu NG</td>
                   @endif
                   <?php 
-                    if($cpars->kategori_komplain == "FG"){
-                      $kategori = "Finished Goods";
+                    if($cpars->kategori == "Internal"){
+                      $kategori = $cpars->penemu_ng;
                     }
                     else{
-                      $kategori = $cpars->kategori_komplain;
+                      $kategori = $cpars->penemu_ng;
                     }
 
                     if($cpars->kategori == "Eksternal"){

@@ -332,10 +332,13 @@ class QcReportController extends Controller
               $chief = $this->chief;
           }
 
+
+          $manager_id = explode("_", $request->get('employee_id'));
+
           $cpars = new QcCpar([
             'cpar_no' => $request->get('cpar_no'),
             'kategori' => $request->get('kategori'),
-            'employee_id' => $request->get('employee_id'),
+            'employee_id' => $manager_id[0],
             'lokasi' => $request->get('lokasi'),
             'department_id' => $request->get('department_id'),
             'tgl_permintaan' => date("Y-m-d", strtotime($date_permintaan)),
@@ -347,6 +350,7 @@ class QcReportController extends Controller
             'sumber_komplain' => $request->get('sumber_komplain'),
             'destination_code' => $request->get('customer'),
             'vendor' => $request->get('supplier'),
+            'penemu_ng' => $request->get('penemu'),
             'staff' => $staff,
             'leader' => $leader,
             'chief' => $chief,
@@ -468,6 +472,7 @@ class QcReportController extends Controller
             $cpars->sumber_komplain = $request->get('sumber_komplain');
             $cpars->destination_code = $request->get('customer');
             $cpars->vendor = $request->get('supplier');
+            $cpars->penemu_ng = $request->get('penemu');
 
             $cpars->save();
             return redirect('/index/qc_report/update/'.$cpars->id)->with('status', 'CPAR data has been updated.')->with('page', 'CPAR');
@@ -680,7 +685,11 @@ class QcReportController extends Controller
     public function getDepartemen(Request $request)
     {
         $html = array();
-        $manager = EmployeeSync::join('departments','employee_syncs.department','=','departments.department_name')->select('departments.id'   , 'departments.department_name')->where('employee_id',$request->manager)->get();
+
+        $manag = explode("_", $request->manager);
+
+        $manager = Department::select('departments.id','departments.department_name')->where('department_name',$manag[1])->get();
+        
         foreach ($manager as $mn)
         {
             $html = array(

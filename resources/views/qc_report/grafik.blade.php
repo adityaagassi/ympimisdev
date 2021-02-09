@@ -923,7 +923,7 @@ table > thead > tr > th{
                         }
                   }
                   else{
-                    if (value.department_name == "welding-surface treatment (wi-wst)") {
+                    if (value.department_name == "Woodwind Instrument - Welding Process (WI-WP) Department") {
                       if (value.kategori == "Internal") {
                         statuscfcar = '<a href="'+urlprintcar+'/'+value.id_car+'"><span class="label label-success">'+namapiccar2+'</span></a>';
                         color = 'style="background-color:green"'; 
@@ -950,7 +950,7 @@ table > thead > tr > th{
                     // statuscfcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
                   }
                   else{
-                    if (value.department_name == "welding-surface treatment (wi-wst)") {
+                    if (value.department_name == "Woodwind Instrument - Welding Process (WI-WP) Department") {
                       if (value.kategori == "Internal") {
                         statuscfcar = '<a href="'+urlverifikasicar+'/'+value.id_car+'"><span class="label label-danger">'+namapiccar2+'</span></a>';
                         color = 'style="background-color:red"';
