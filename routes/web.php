@@ -895,6 +895,16 @@ Route::group(['nav' => 'M7', 'middleware' => 'permission'], function(){
 	Route::get('fetch/view_production_schedule_step_one', 'ProductionScheduleController@fetchViewScheduleStepOne');
 });
 
+
+
+Route::get('fetch/view_production_schedule_kd', 'ProductionScheduleController@fetchViewProductionScheduleKd');
+Route::get('fetch/view_generate_production_schedule_kd', 'ProductionScheduleController@fetchViewGenerateProductionScheduleKd');
+Route::get('fetch/generate_production_schedule_kd', 'ProductionScheduleController@fetchGenerateProductionScheduleKd');
+
+
+
+
+
 Route::group(['nav' => 'M10', 'middleware' => 'permission'], function(){
 	Route::get('index/weekly_calendar', 'WeeklyCalendarController@index');
 	Route::get('create/weekly_calendar', 'WeeklyCalendarController@create');
@@ -1344,6 +1354,14 @@ Route::post('post/sakurentsu/type', 'SakurentsuController@post_sakurentsu_type')
 Route::get('index/sakurentsu/list_3m', 'SakurentsuController@index_tiga_em');
 Route::get('fetch/sakurentsu/list_3m', 'SakurentsuController@fetch_tiga_em');
 Route::get('index/sakurentsu/3m/translate/{id}', 'SakurentsuController@index_translate_tiga_em');
+
+//TRIAL (TEMP)
+Route::get('post/sakurentsu/trial_req/{sakurentsu_number}', 'SakurentsuController@post_trial_request');
+Route::get('index/sakurentsu/list_trial_temp', 'SakurentsuController@index_trial_request_temp');
+Route::get('fetch/sakurentsu/list_trial', 'SakurentsuController@fetch_trial_request2');
+
+//TRIAL
+Route::get('index/sakurentsu/list_trial', 'SakurentsuController@index_trial_request');
 
 Route::get('index/sakurentsu/3m', 'SakurentsuController@index_form_tiga_em_new');
 Route::get('index/sakurentsu/3m/{sakurentsu_number}', 'SakurentsuController@index_form_tiga_em');
@@ -3997,6 +4015,13 @@ Route::get('fetch/assembly/stamp_record', 'AssemblyProcessController@fetchStampR
 Route::get('index/assembly/ng_report/{process}', 'AssemblyProcessController@indexNgReport');
 Route::get('fetch/assembly/ng_report/{process}', 'AssemblyProcessController@fetchNgReport');
 
+Route::get('edit/assembly/stamp', 'AssemblyProcessController@editStamp');
+Route::post('destroy/assembly/stamp', 'AssemblyProcessController@destroyStamp');
+Route::post('update/assembly/stamp', 'AssemblyProcessController@updateStamp');
+Route::get('adjust/assembly/stamp', 'AssemblyProcessController@adjustStamp');
+Route::post('adjust/assembly/stamp_update', 'AssemblyProcessController@adjustStampUpdate');
+Route::get('reprint/assembly/stamp', 'AssemblyProcessController@reprintStamp');
+
 
 Route::group(['nav' => 'M29', 'middleware' => 'permission'], function(){
 	Route::get('index/sap_data', 'TransactionController@indexUploadSapData');
@@ -4160,17 +4185,23 @@ Route::get('fetch/scrap_logs', 'ScrapController@fetchScrapLogs');
 Route::get('index/scrap/view', 'ScrapController@indexScrapView');
 Route::post('update/scrap', 'ScrapController@updateScrap');
 Route::get('index/scrap/resume', 'ScrapController@indexScrapResume');
-Route::get('index/scrap/warehouse', 'ScrapController@indexScrapWarehouse');
+Route::get('index/scrap/warehouse', 'ScrapController@indexWarehouse');
+Route::get('fetch/scrap_detail', 'ScrapController@fetchScrapDetail');
 Route::get('fetch/kd_scrap_closure', 'ScrapController@fetchKdScrapClosure');
+Route::post('scan/scrap_warehouse', 'ScrapController@scanScrapWarehouse');
 
 
 
 //Mutasi
+Route::get('home/mutasi', 'MutasiController@homeMutasi');
+// ========================================
 Route::get('dashboard/mutasi', 'MutasiController@dashboard');
 Route::get('dashboard/mutasi/get_employee', 'MutasiController@get_employee');
 Route::get('dashboard/mutasi/getPosition', 'MutasiController@getPosition');
 Route::get('create/mutasi', 'MutasiController@create');
 Route::post('create/mutasi', 'MutasiController@store');
+Route::get('create_ant/mutasi', 'MutasiController@createAnt');
+Route::post('create_ant/mutasi', 'MutasiController@storeAnt');
 Route::get('destroy/mutasi/{id}', 'MutasiController@destroy');
 Route::get('show/mutasi/{id}', 'MutasiController@show');
 
@@ -4187,19 +4218,27 @@ Route::post('edit/mutasi/approval/manager/{id}', 'MutasiController@update_manage
 //Warehouse
 Route::get('index/warehouse', 'WarehouseController@index');
 Route::get('scan/data/warehouse', 'WarehouseController@scanInjectionOperator');
-Route::post('tambah/penerimaan', 'WarehouseController@createPek');
+Route::get('scan/data/update', 'WarehouseController@scanOperatorUpdate');
+Route::post('tambah/pekerjaan', 'WarehouseController@create');
 Route::post('warehouse/update_penerimaan', 'WarehouseController@update_Pen');
 Route::get('fetch/display_warehouse', 'WarehouseController@fetchWarehouse');
-Route::post('create/penempatan', 'WarehouseController@createpenem');
-Route::post('create/pelayanan', 'WarehouseController@createPel');
+Route::get('index/warehouse/productivity', 'WarehouseController@indexWarehouseProductivity');
+Route::get('fetch/warehouse/productivity', 'WarehouseController@warehouseProductivity');
+Route::get('fetch/warehouse/detail', 'WarehouseController@fetchDetail');
+
+
 
 
 //Otomatisasi Item Order
 Route::get('index/tools', 'ToolsController@index_tools');
 Route::get('tools/master', 'ToolsController@master_tools');
 Route::get('fetch/tools', 'ToolsController@fetch_tools');
+
 Route::get('tools/target', 'ToolsController@target_tools');
 Route::get('fetch/tools_target', 'ToolsController@fetch_target_tools');
+
+//Process Pengurangan Stock
+Route::get('tools/process', 'ToolsController@process_tools');
 
 // QA Incoming Check
 Route::get('index/qa', 'QualityAssuranceController@index');

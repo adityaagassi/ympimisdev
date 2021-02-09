@@ -118,7 +118,8 @@ class AssemblyProcessController extends Controller
 		return view('processes.assembly.flute.stamp', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
-			'models' => $models
+			'models' => $models,
+			'models2' => $models
 		))->with('page', 'Assembly FL')->with('head', 'Assembly Process');
 	}
 
@@ -127,11 +128,11 @@ class AssemblyProcessController extends Controller
 		->first();
 		$auth_id = Auth::id();
 
-		 $plc = new ActMLEasyIf(0);
-		 $datas = $plc->read_data('D50', 5);
+		 // $plc = new ActMLEasyIf(0);
+		 // $datas = $plc->read_data('D50', 5);
 
 		 if($counter->plc_counter == $datas[0]){
-		//if($counter->plc_counter == 28){
+		// if($counter->plc_counter == 31){
 			$response = array(
 				'status' => true,
 				'status_code' => 'no_stamp',
@@ -202,7 +203,7 @@ class AssemblyProcessController extends Controller
 		$serial = CodeGenerator::where('note', '=', $request->get('origin_group_code'))->first();
 		$serial->index = $serial->index+1;
 		 $counter->plc_counter = $datas[0];
-		//$counter->plc_counter = 28;
+		// $counter->plc_counter = 31;
 
 		try{
 			if($request->get('location') != 'stampkd-process'){
@@ -295,13 +296,16 @@ class AssemblyProcessController extends Controller
 		->where(db::raw('date(assembly_details.created_at)'), '>=', $first)
 		->where('assembly_details.location', '=', 'stamp-process')
 		->whereOr('assembly_details.location', '=', 'stampkd-process')
-		->select('assembly_details.serial_number', 'assembly_details.model', db::raw('if(location = "stamp-process", "FG", "KD") as category'), 'employee_syncs.name', 'assembly_details.created_at')
+		->select('assembly_details.serial_number', 'assembly_details.model', db::raw('if(location = "stamp-process", "FG", "KD") as category'), 'employee_syncs.name', 'assembly_details.created_at', 'assembly_details.id as id_details')
 		->orderBy('assembly_details.created_at', 'desc')
 		->get();
 
+		$logsall = AssemblyInventory::Join('assembly_tags','assembly_tags.serial_number','assembly_inventories.serial_number')->get();
+
 		$response = array(
 			'status' => true,
-			'logs' => $logs
+			'logs' => $logs,
+			'logsall' => $logsall,
 		);
 		return Response::json($response);
 
@@ -332,6 +336,145 @@ class AssemblyProcessController extends Controller
 			$printer->text(date("d-M-Y H:i:s")."(Reprint)"."\n");
 			$printer->cut();
 			$printer->close();	
+		}
+	}
+
+	public function editStamp(Request $request)
+	{
+		try {
+			$details = AssemblyDetail::find($request->get('id'));
+
+			$response = array(
+				'status' => true,
+				'details' => $details
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => 'Failed Get Data'
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function destroyStamp(Request $request)
+	{
+		$details = AssemblyDetail::find($request->get('id'));
+
+		$inventories = AssemblyInventory::where('serial_number',$request->get('serial_number'))->where('model',$request->get('model'))->where('location',$details->location)->where('origin_group_code',$request->get('origin_group_code'))->first();
+
+		$serials = AssemblySerial::where('serial_number',$request->get('serial_number'))->where('origin_group_code',$request->get('origin_group_code'))->first();
+
+		$tag = AssemblyTag::where('serial_number',$request->get('serial_number'))->where('model',$request->get('model'))->where('origin_group_code',$request->get('origin_group_code'))->first();
+		$tag->serial_number = null;
+		$tag->model = null;
+
+		try {
+			$inventories->forceDelete();
+			$serials->forceDelete();
+			$tag->save();
+			$details->forceDelete();
+
+			$response = array(
+				'status' => true,
+				'message' => 'Delete Serial Number Berhasil'
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => 'Failed Delete Data'
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function updateStamp(Request $request)
+	{
+		$details = AssemblyDetail::find($request->get('id'));
+		$details->model = $request->get('model');
+
+		$inventories = AssemblyInventory::where('serial_number',$request->get('serial_number'))->where('model',$request->get('model_asli'))->where('location',$details->location)->where('origin_group_code',$request->get('origin_group_code'))->first();
+		$inventories->model = $request->get('model');
+
+		$tag = AssemblyTag::where('serial_number',$request->get('serial_number'))->where('model',$request->get('model_asli'))->where('origin_group_code',$request->get('origin_group_code'))->first();
+		$tag->model = $request->get('model');
+
+		try {
+			$inventories->save();
+			$tag->save();
+			$details->save();
+
+			$response = array(
+				'status' => true,
+				'message' => 'Update Model Berhasil'
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => 'Failed Delete Data'
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function adjustStamp(Request $request)
+	{
+		try {
+			$code_generator = CodeGenerator::where('note', '=', $request->get('originGroupCode'))->first();
+
+			$prefix = $code_generator->prefix;
+			$lastIndex = $code_generator->index;
+
+			$response = array(
+				'status' => true,
+				'prefix' => $prefix,
+				'lastIndex' => $lastIndex,
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function adjustStampUpdate(Request $request){
+		$code_generator = CodeGenerator::where('note', '=', $request->get('originGroupCode'))->first();
+
+		$code_generator->index = $request->get('lastIndex');
+		$code_generator->prefix = $request->get('prefix');
+		$code_generator->save();
+
+		$response = array(
+			'status' => true,
+			'message' => 'Serial number adjustment success',
+		);
+		return Response::json($response);
+	}
+
+	public function reprintStamp(Request $request)
+	{
+		try {
+			$inventories = AssemblyInventory::join('assembly_tags','assembly_tags.serial_number','assembly_inventories.serial_number')->where('assembly_inventories.serial_number',$request->get('serial_number'))->where('assembly_inventories.origin_group_code',$request->get('origin_group_code'))->first();
+
+			$this->printStamp($inventories->remark, $request->get('serial_number'), $inventories->model, 'reprint', 'SUPERMAN');
+
+			$response = array(
+				'status' => true,
+				'message' => 'Reprint Success',
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
 		}
 	}
 
