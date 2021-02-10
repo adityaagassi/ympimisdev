@@ -1355,14 +1355,6 @@ Route::get('index/sakurentsu/list_3m', 'SakurentsuController@index_tiga_em');
 Route::get('fetch/sakurentsu/list_3m', 'SakurentsuController@fetch_tiga_em');
 Route::get('index/sakurentsu/3m/translate/{id}', 'SakurentsuController@index_translate_tiga_em');
 
-//TRIAL (TEMP)
-Route::get('post/sakurentsu/trial_req/{sakurentsu_number}', 'SakurentsuController@post_trial_request');
-Route::get('index/sakurentsu/list_trial_temp', 'SakurentsuController@index_trial_request_temp');
-Route::get('fetch/sakurentsu/list_trial', 'SakurentsuController@fetch_trial_request2');
-
-//TRIAL
-Route::get('index/sakurentsu/list_trial', 'SakurentsuController@index_trial_request');
-
 Route::get('index/sakurentsu/3m', 'SakurentsuController@index_form_tiga_em_new');
 Route::get('index/sakurentsu/3m/{sakurentsu_number}', 'SakurentsuController@index_form_tiga_em');
 Route::post('post/sakurentsu/3m_form', 'SakurentsuController@save_tiga_em_form');
@@ -1398,14 +1390,23 @@ Route::post('post/sakurentsu/3m/implementation/sign', 'SakurentsuController@sign
 
 //3M Monitoring
 Route::get('index/sakurentsu/monitoring/3m', 'SakurentsuController@tiga_3m_monitoring');
-Route::get('fetch/sakurentsu/monitoring/3m', 'SakurentsuController@fetch_tiga_3m_monitoring');
+Route::get('fetch/sakurentsu/monitoring/3m', 'SakurentsuController@fetch_tiga_em_monitoring');
+Route::get('fetch/sakurentsu/3m/dept_sign/{id_three_m}/{stat}', 'SakurentsuController@fetch_department_sign');
 
 
 //Trial Request
 Route::get('index/trial_request', 'TrialRequestController@index_trial_request');
 Route::get('fetch/trial_request', 'TrialRequestController@fetch_trial_request');
+Route::post('create/trial_request', 'TrialRequestController@create_trial_request');
 
+//TRIAL (TEMP)
+Route::get('post/sakurentsu/trial_req/{sakurentsu_number}', 'SakurentsuController@post_trial_request');
+Route::get('index/sakurentsu/list_trial_temp', 'SakurentsuController@index_trial_request_temp');
+Route::get('fetch/sakurentsu/list_trial', 'SakurentsuController@fetch_trial_request2');
+Route::post('upload/sakurentsu/trial', 'SakurentsuController@upload_trial_request');
 
+//TRIAL
+Route::get('index/sakurentsu/list_trial', 'SakurentsuController@index_trial_request');
 
 //Supplier
 Route::get('index/supplier', 'AccountingController@master_supplier');
@@ -4186,6 +4187,8 @@ Route::get('index/scrap/view', 'ScrapController@indexScrapView');
 Route::post('update/scrap', 'ScrapController@updateScrap');
 Route::get('index/scrap/resume', 'ScrapController@indexScrapResume');
 Route::get('index/scrap/warehouse', 'ScrapController@indexWarehouse');
+Route::get('index/scrap/logs', 'ScrapController@indexLogs');
+Route::get('fetch/scrap/logs', 'ScrapController@fetchLogs');
 Route::get('fetch/scrap_detail', 'ScrapController@fetchScrapDetail');
 Route::get('fetch/kd_scrap_closure', 'ScrapController@fetchKdScrapClosure');
 Route::post('scan/scrap_warehouse', 'ScrapController@scanScrapWarehouse');
@@ -4238,7 +4241,7 @@ Route::get('tools/target', 'ToolsController@target_tools');
 Route::get('fetch/tools_target', 'ToolsController@fetch_target_tools');
 
 //Process Pengurangan Stock
-Route::get('tools/process', 'ToolsController@process_tools');
+Route::get('tools/stock_out', 'ToolsController@stock_out');
 
 // QA Incoming Check
 Route::get('index/qa', 'QualityAssuranceController@index');

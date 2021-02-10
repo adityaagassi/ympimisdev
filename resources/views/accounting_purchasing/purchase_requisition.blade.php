@@ -175,12 +175,13 @@
 								<table id="prTable" class="table table-bordered table-striped table-hover">
 									<thead style="background-color: rgba(126,86,134,.7);">
 										<tr>
-											<th style="width: 2%">Nomor PR</th>
+											<th style="width: 1%">Nomor PR</th>
 											<th style="width: 2%">Departemen</th>
 											<th style="width: 2%">Tanggal Pengajuan</th>
 											<th style="width: 2%">User</th>
 											<th style="width: 2%">Budget</th>
 											<th style="width: 1%">Att</th>
+											<th style="width: 2%">Note</th>
 											<th style="width: 1%">Status</th>
 											<th style="width: 3%">Action</th>
 										</tr>
@@ -189,6 +190,7 @@
 									</tbody>
 									<tfoot>
 										<tr>
+											<th></th>
 											<th></th>
 											<th></th>
 											<th></th>
@@ -1103,6 +1105,7 @@
 			{ "data": "emp_name" },
 			{ "data": "no_budget" },
 			{ "data": "file" },
+			{ "data": "note" },
 			{ "data": "status" },
 			{ "data": "action" },
 			],
