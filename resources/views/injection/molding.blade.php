@@ -1,6 +1,7 @@
 @extends('layouts.display')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
+<link rel="stylesheet" href="{{ url("css/jqbtk.css")}}">
 <style type="text/css">
 	thead>tr>th{
 		text-align:center;
@@ -190,7 +191,7 @@
 						</tr>
 						<tr id="lepasnote">
 							<td colspan="4" style="width: 100%; margin-top: 10px; font-size: 1.5vw; padding:0; font-weight: bold; border-color: black; color: white; width: 23%;color: black;background-color: rgb(220,220,220);">
-								<span class="hourlepas" id="hourlepas">Note</span>
+								<span class="" id="">Note</span>
 					    	</td>
 						</tr>
 						<tr id="lepasnote2">
@@ -467,6 +468,7 @@
 <script src="{{ url("js/highcharts-more.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
+<script src="{{ url("js/jqbtk.js") }}"></script>
 
 <script>
 	$.ajaxSetup({
@@ -508,6 +510,8 @@
 
 		$('#molding_code').val('');
 		setInterval(setTime, 1000);
+		$('#notelepas').keyboard();
+		$('#notepasang').keyboard();
 	});
 
 	$('#modalOperator').on('shown.bs.modal', function () {

@@ -448,7 +448,7 @@
 											<!-- input type="text" class="form-control" id="item_price1" name="item_price1" placeholder="Price" required="" onkeyup='getTotal(this.id)'> -->
 										</div>
 										<div class="col-xs-1" style="padding:5px;">
-											<input type="number" class="form-control" id="qty1" name="qty1" placeholder="Qty" required="" onkeyup='getTotal(this.id)'>
+											<input type="text" class="form-control" id="qty1" name="qty1" placeholder="Qty" required="" onkeyup='getTotal(this.id)'>
 											<input type="hidden" class="form-control" id="moq1" name="moq1" placeholder="Moq">
 										</div>
 										<div class="col-xs-1" style="padding:5px;">

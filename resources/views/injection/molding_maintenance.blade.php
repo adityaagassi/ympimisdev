@@ -2,6 +2,7 @@
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
+<link rel="stylesheet" href="{{ url("css/jqbtk.css")}}">
 <style type="text/css">
 	thead>tr>th{
 		text-align:center;
@@ -271,6 +272,7 @@
 <script src="{{ url("js/highcharts-more.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
+<script src="{{ url("js/jqbtk.js") }}"></script>
 
 <script>
 	$.ajaxSetup({
@@ -298,9 +300,10 @@
 
 		setInterval(setTime, 1000);
 
-		CKEDITOR.replace('noteperbaikan' ,{
-      		filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
-	    });
+		// CKEDITOR.replace('noteperbaikan' ,{
+  //     		filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
+	 //    });
+	    $('#noteperbaikan').keyboard();
 	});
 
 	$('#modalOperator').on('shown.bs.modal', function () {
@@ -578,7 +581,8 @@
 		var start_time = $('#start_time_perbaikan').val();
 		var end_time = getActualFullDate();
 		var running_time = $('#perbaikan').val();
-		var noteperbaikan =  CKEDITOR.instances.noteperbaikan.getData();
+		// var noteperbaikan =  CKEDITOR.instances.noteperbaikan.getData();
+		var noteperbaikan = $('#noteperbaikan').val();
 
 		
 		var data = {
@@ -637,7 +641,8 @@
 		var product = $('#product').text();
 		var last_counter = $('#last_counter').text();
 		var status = $('#status').text();
-		var note = CKEDITOR.instances.noteperbaikan.getData();
+		// var note = CKEDITOR.instances.noteperbaikan.getData();
+		var note = $('#noteperbaikan').text();
 
 		var maintenance_code = pic.join(', ')+'_'+product+'_'+part+'_'+last_counter+'_'+status+'_'+getActualFullDate();
 
@@ -700,7 +705,8 @@
 		var start_time = getActualFullDate();
 		var end_time = getActualFullDate();
 		var running_time = $('#perbaikan').val();
-		var noteperbaikan =  CKEDITOR.instances.noteperbaikan.getData();
+		// var noteperbaikan =  CKEDITOR.instances.noteperbaikan.getData();
+		var noteperbaikan = $('#noteperbaikan').text();
 
 		
 		var data = {
@@ -754,8 +760,8 @@
 								$('#last_counter').html(value.last_counter);
 								$('#product').html(value.product);
 								$('#maintenance_code').val(value.maintenance_code);
-								$("#noteperbaikan").html(CKEDITOR.instances.noteperbaikan.setData(value.note));
-								// $('#noteperbaikan').val(value.note);
+								// $("#noteperbaikan").html(CKEDITOR.instances.noteperbaikan.setData(value.note));
+								$('#noteperbaikan').val(value.note);
 								$('#start_time_perbaikan').val(value.start_time);
 								duration = 0;
 								count = true;
@@ -776,8 +782,8 @@
 							$('#last_counter').html(value.last_counter);
 							$('#product').html(value.product);
 							$('#maintenance_code').val(value.maintenance_code);
-							$("#noteperbaikan").html(CKEDITOR.instances.noteperbaikan.setData(value.note));
-							// $('#noteperbaikan').val(value.note);
+							// $("#noteperbaikan").html(CKEDITOR.instances.noteperbaikan.setData(value.note));
+							$('#noteperbaikan').val(value.note);
 							$('#start_time_perbaikan').val(value.start_time);
 							duration = 0;
 							count = true;
@@ -804,7 +810,8 @@
 	function update_maintenance_temp() {
 		var part = $('#part').text();
 		var maintenance_code = $('#maintenance_code').val();
-		var noteperbaikan = CKEDITOR.instances.noteperbaikan.getData();
+		// var noteperbaikan = CKEDITOR.instances.noteperbaikan.getData();
+		var noteperbaikan = $('#noteperbaikan').val();
 
 		var data = {
 			part : part,
