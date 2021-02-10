@@ -1387,9 +1387,11 @@ class AssemblyProcessController extends Controller
 		$ng_detail = db::select("select * from assembly_ng_lists where ng_name = '".$request->get('ng_name')."' and location = '".$request->get('location')."' and process = '".$request->get('process')."' and origin_group_code = '041'");
 
 		if ($request->get('ng_name') == 'Renraku') {
-			$onko = DB::select("SELECT * FROM assembly_onkos where origin_group_code = '041' and location = 'renraku'");
+			$onko = DB::select("SELECT DISTINCT(assembly_onkos.key),nomor FROM assembly_onkos where origin_group_code = '041' and location = 'renraku'");
+			$onko_detail = DB::select("SELECT assembly_onkos.key,nomor,keynomor FROM assembly_onkos where origin_group_code = '041' and location = 'renraku'");
 		}else{
 			$onko = DB::select("SELECT * FROM assembly_onkos where origin_group_code = '041' and location = 'all'");
+			$onko_detail = DB::select("SELECT assembly_onkos.key,nomor,keynomor FROM assembly_onkos where origin_group_code = '041' and location = 'all'");
 		}
 
 		if($ng_detail == null){
@@ -1404,6 +1406,7 @@ class AssemblyProcessController extends Controller
 			'status' => true,
 			'ng_detail' => $ng_detail,
 			'onko' => $onko,
+			'onko_detail' => $onko_detail,
 		);
 		return Response::json($response);
 	}
@@ -1463,7 +1466,8 @@ class AssemblyProcessController extends Controller
 			model = '".$model."'
 			AND serial_number = '".$serial_number."'
 			AND tag = '".$tag."'
-			AND deleted_at is null");
+			AND deleted_at is null
+			order by id desc");
 
 		if($ng_logs == null){
 			$response = array(
@@ -1543,6 +1547,7 @@ class AssemblyProcessController extends Controller
 				$value_atas = $request->get('value_atas');
 				$value_bawah = $request->get('value_bawah');
 				$ongko = $request->get('onko');
+				$lokasi = $request->get('lokasi');
 
 				for ($i=0; $i < count($ongko); $i++) { 
 					$assembly_ng_temp = new AssemblyNgTemp([
@@ -1555,6 +1560,7 @@ class AssemblyProcessController extends Controller
 						'ongko' => $ongko[$i],
 						'value_atas' => $value_atas[$i],
 						'value_bawah' => $value_bawah[$i],
+						'value_lokasi' => $lokasi[$i],
 						'operator_id' => $request->get('operator_id'),
 						'started_at' => $request->get('started_at'),
 						'origin_group_code' => $request->get('origin_group_code'),
@@ -1653,6 +1659,7 @@ class AssemblyProcessController extends Controller
 					'ng_name' => $ng->ng_name,
 					'value_atas' => $ng->value_atas,
 					'value_bawah' => $ng->value_bawah,
+					'value_lokasi' => $ng->value_lokasi,
 					'operator_id' => $ng->operator_id,
 					'sedang_start_date' => $ng->started_at,
 					'sedang_finish_date' => $finished_at,

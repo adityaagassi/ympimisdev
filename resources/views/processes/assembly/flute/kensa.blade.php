@@ -239,7 +239,7 @@
 			<div class="modal-header">
 				<div class="modal-body table-responsive no-padding">
 					<h4 id="judul_ng">NG List</h4>
-					<div>
+					<div class="row">
 						<div class="col-xs-12" id="ngDetail">
 						</div>
 						<div class="col-xs-12" id="ngDetailFix" style="display: none;padding-top: 5px">
@@ -250,7 +250,7 @@
 					</div>
 
 					<h4 id="judul_onko" style="padding-top: 10px">Pilih Onko</h4>
-					<div>
+					<div class="row">
 						<div class="col-xs-12" id="onkoBody">
 						</div>
 						<div class="col-xs-12" id="onkoBodyFix" style="display: none;padding-top: 5px">
@@ -474,7 +474,6 @@
 			$('#operator_id_before').val("OPID");
 			$('#operator_id_before_tanpoawase').val("OPID");
 			if (ng_name === "Tanpo Awase") {
-				$('#modalNgTanpoAwase').modal('show');
 				var btn = document.getElementById('confNgOnkoTanpoAwase');
 				btn.disabled = false;
 				btn.innerText = 'CONFIRM';
@@ -531,7 +530,9 @@
 						bodyNgOnko += '<div class="col-xs-3">'
 						bodyNgOnko += '<div style="text-align:center;font-weight:bold;font-size:20px">'+value.keynomor+'</div>';
 						bodyNgOnko += '<div id="slider'+index+'"></div>';
-						bodyNgOnko += '</div>'
+						bodyNgOnko += '<div style="text-align:middle" id="lokasi_choice'+index+'"><button class="btn btn-warning" style="width:24%" onclick="changeLokasi(\''+index+'\',\'A\')">A</button><button onclick="changeLokasi(\''+index+'\',\'B\')" style="margin-left:2px;width:24%" class="btn btn-warning">B</button><button onclick="changeLokasi(\''+index+'\',\'C\')" style="margin-left:2px;width:24%" class="btn btn-warning">C</button><button onclick="changeLokasi(\''+index+'\',\'D\')" style="margin-left:2px;width:24%" class="btn btn-warning">D</button></div>';
+						bodyNgOnko += '<div style="display:none" id="lokasi_fix'+index+'"><button style="width:100%;font-weight:bold" onclick="changeLokasi2(\''+index+'\',\'E\')" class="btn btn-warning" id="lokasi_fix2'+index+'">E</button></div>';
+						bodyNgOnko += '</div>';
 						index++;
 					});
 
@@ -776,10 +777,9 @@
 					        $("#value16").val(value.value);
 					    }
 					});
+					$('#modalNgTanpoAwase').modal('show');
 				});
-
 			}else{
-				$('#modalNg').modal('show');
 				var btn = document.getElementById('confNg');
 				btn.disabled = false;
 				btn.innerText = 'Confirm'
@@ -801,25 +801,42 @@
 				$('#onkoBody').html("");
 
 				$.get('{{ url("fetch/assembly/ng_detail") }}', data, function(result, status, xhr){
+					bodyDetail += '<div class="row">';
 					$.each(result.ng_detail, function(key, value) {
 						bodyDetail += '<div class="col-xs-4" style="padding-top: 10px">';
 						bodyDetail += '<center><button class="btn btn-primary" id="'+value.ng_name+' - '+value.ng_detail+'" style="width: 250px;font-size: 25px;" onclick="getNg(this.id,\''+value.process_before+'\')">'+value.ng_name+' - '+value.ng_detail;
 						bodyDetail += '</button></center></div>';
 						$('#judul_ng').html(value.ng_name);
 					});
+					bodyDetail += '</div>';
 
 					$('#ngDetail').append(bodyDetail);
 
+					bodyNgOnko += '<div class="row">';
 					$.each(result.onko, function(key, value) {
 						bodyNgOnko += '<div class="col-xs-3" style="padding-top: 5px">';
 						bodyNgOnko += '<center><button class="btn btn-warning" id="'+value.key+' ('+value.nomor+')" style="width: 180px;font-size: 20px" onclick="getOnko(this.id)">'+value.key+' ('+value.nomor+')';
 						bodyNgOnko += '</button></center></div>';
 					});
+					bodyNgOnko += '</div>';
 
 					$('#onkoBody').append(bodyNgOnko);
+					$('#modalNg').modal('show');
 				});
 			}
 		}
+	}
+
+	function changeLokasi(index,lokasi) {
+		$('#lokasi_fix2'+index).html(lokasi);
+		$('#lokasi_fix'+index).show();
+		$('#lokasi_choice'+index).hide();
+	}
+
+	function changeLokasi2(index,lokasi) {
+		$('#lokasi_fix2'+index).html(lokasi);
+		$('#lokasi_fix'+index).hide();
+		$('#lokasi_choice'+index).show();
 	}
 
 	function fetchNgHistory() {
@@ -854,7 +871,11 @@
 				}else{
 					bodyNgTemp += '<td style="font-size: 15px;">'+value.value_atas+' - '+value.value_bawah+'</td>';
 				}
-				bodyNgTemp += '<td style="font-size: 15px;">'+value.ongko+'</td>';
+				if (value.ng_name == 'Tanpo Awase') {
+					bodyNgTemp += '<td style="font-size: 15px;">'+value.ongko+' - '+value.value_lokasi+'</td>';
+				}else{
+					bodyNgTemp += '<td style="font-size: 15px;">'+value.ongko+'</td>';
+				}
 				bodyNgTemp += '<td style="font-size: 15px;">'+value.location+'</td>';
 				bodyNgTemp += '<td style="font-size: 15px;">'+value.name+'</td>';
 				bodyNgTemp += "</tr>";
@@ -896,7 +917,11 @@
 				}else{
 					bodyNgTemp += '<td style="font-size: 20px;">'+value.value_atas+' - '+value.value_bawah+'</td>';
 				}
-				bodyNgTemp += '<td style="font-size: 20px;">'+value.ongko+'</td>';
+				if (value.ng_name == 'Tanpo Awase') {
+					bodyNgTemp += '<td style="font-size: 20px;">'+value.ongko+' - '+value.value_lokasi+'</td>';
+				}else{
+					bodyNgTemp += '<td style="font-size: 20px;">'+value.ongko+'</td>';
+				}
 				bodyNgTemp += '<td style="font-size: 20px;">'+value.name+'</td>';
 				bodyNgTemp += "</tr>";
 			});
@@ -949,6 +974,20 @@
 		$('#onkoFix2').val("ONKO");
 	}
 
+	function getOnkoDetail(value) {
+		$('#onkoBodyDetail').hide();
+		$('#onkoBodyDetailFix').show();
+		$('#onkoDetailFix').html(value);
+		$('#onkoDetailFix2').val(value);
+	}
+
+	function getOnkoDetailChange() {
+		$('#onkoBodyDetail').show();
+		$('#onkoBodyDetailFix').hide();
+		$('#onkoDetailFix').html("ONKO");
+		$('#onkoDetailFix2').val("ONKO");
+	}
+
 	function getOnkoTanpoAwase(value,id) {
 		$('#onkoBodyTanpoAwase').hide();
 		$('#onkoBodyFixTanpoAwase').show();
@@ -969,6 +1008,7 @@
 		var onko = [];
 		var value_atas = [];
 		var value_bawah = [];
+		var lokasi = [];
 		var onko_ng = [];
 		var index = 0;
 
@@ -989,13 +1029,18 @@
 			for (var i = 0; i < index; i++) {
 				var a = i+1;
 				var idvalue = '#value'+a;
-				if ($(idvalue).val() == "0" || $(idvalue).val() == '0,0') {
+				var idlokasi = '#lokasi_fix2'+a;
+				if ($(idvalue).val() == "0" || $(idvalue).val() == '0,0' || $(idlokasi).text() == 'E') {
 					
 				}else{
 					onko_ng.push(onko[i]);
 					var valuesplit = $(idvalue).val().split(",");
 					value_atas.push(valuesplit[0]);
 					value_bawah.push(valuesplit[1]);
+					lokasi.push($(idlokasi).text());
+					// if ($(idvalue).text() != 'E') {
+
+					// }
 				}
 			}
 
@@ -1010,6 +1055,7 @@
 				onko: onko_ng,
 				value_atas: value_atas,
 				value_bawah:value_bawah,
+				lokasi:lokasi,
 				origin_group_code : '041',
 				operator_id : $('#operator_id_before_tanpoawase').val(),
 			}
