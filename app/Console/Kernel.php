@@ -139,6 +139,11 @@ class Kernel extends ConsoleKernel
 
 
         $schedule->command('kd:shipment')->everyThirtyMinutes();
+
+
+        $schedule->command('resume:buffing')->everySixHours();
+        $schedule->command('resume:lacquering')->everySixHours();
+        $schedule->command('resume:plating')->everySixHours();
     }
 
     /**

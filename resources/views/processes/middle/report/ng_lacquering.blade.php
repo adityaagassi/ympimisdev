@@ -100,451 +100,452 @@
 														<th style="padding: 0px;">Total NG</th>
 														<th style="padding: 0px;">Total Check</th>
 														<th style="padding: 0px;">Target</th>
-														<th style="padding: 0px;">NG Rate</th>													</tr>
-													</thead>
-													<tbody id="body_monthly_ic">
-													</tbody>
-												</table>
-											</div>
-											<div class="col-xs-9">
-												<div id="chart_ic_1" style="width: 99%;"></div>			
-											</div>
+														<th style="padding: 0px;">NG Rate</th>
+													</tr>
+												</thead>
+												<tbody id="body_monthly_ic">
+												</tbody>
+											</table>
+										</div>
+										<div class="col-xs-9">
+											<div id="chart_ic_1" style="width: 99%;"></div>			
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div class="nav-tabs-custom">
-							<div class="tab-content">
-								<div class="tab-pane active">
-									<div class="row">
-										<div class="col-xs-12">
-											<div class="col-xs-3">
-												<table id="table_ic_weekly" class="table table-bordered" style="margin:0">
-													<thead id="head_ic_weekly">
-														<tr style="background-color: rgba(126,86,134,.7);">
-															<th style="padding: 0px;">Week</th>
-															<th style="padding: 0px;">Total Check</th>
-															<th style="padding: 0px;">Total NG</th>
-															<th style="padding: 0px;">%NG Rate</th>
-														</tr>
-													</thead>
-													<tbody id="body_ic_weekly">
-													</tbody>
-												</table>
-											</div>
-											<div class="col-xs-9">
-												<div id="chart_ic_2" style="width: 99%;"></div>			
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-xs-12" style="padding:0px;">
-								<div class="col-xs-6" style="padding-right: 0.5%;">
-									<div class="nav-tabs-custom">
-										<div class="tab-content">
-											<div class="tab-pane active">
-												<div id="chart_ic_3_alto" style="width: 99%;"></div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="col-xs-6" style="padding-left: 0.5%;">
-									<div class="nav-tabs-custom">
-										<div class="tab-content">
-											<div class="tab-pane active">
-												<div id="chart_ic_3_tenor" style="width: 99%;"></div>
-											</div>
-										</div>
-									</div>	
-								</div>
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-xs-12" style="padding:0px;">
-								<div class="col-xs-6" style="padding-right: 0.5%;">
-									<div class="nav-tabs-custom">
-										<div class="tab-content">
-											<div class="tab-pane active">
-												<div id="chart_ic_4_alto" style="width: 99%;"></div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="col-xs-6" style="padding-left: 0.5%;">
-									<div class="nav-tabs-custom">
-										<div class="tab-content">
-											<div class="tab-pane active">
-												<div id="chart_ic_4_tenor" style="width: 99%;"></div>
-											</div>
-										</div>
-									</div>	
-								</div>
-							</div>
-						</div>
-
-						<div class="nav-tabs-custom">
-							<div class="tab-content">
-								<div class="tab-pane active">
-									<div id="chart_ic_5" style="width: 99%;"></div>
-								</div>
-							</div>
-						</div>
-
-						<div class="nav-tabs-custom">
-							<div class="tab-content">
-								<div class="tab-pane active">
-									<div class="row">
-										<div class="col-xs-12">
-											<div class="col-xs-3">
-												<table id="table_monthly_kensa" class="table table-bordered" style="margin:0">
-													<thead id="head_monthly_kensa">
-														<tr>
-															<th style="padding: 0px;">Month</th>
-															<th style="padding: 0px;">Total NG</th>
-															<th style="padding: 0px;">Total Check</th>
-															<th style="padding: 0px;">Target</th>
-															<th style="padding: 0px;">NG Rate</th>
-														</tr>
-													</thead>
-													<tbody id="body_monthly_kensa">
-													</tbody>
-												</table>
-											</div>
-											<div class="col-xs-9">
-												<div id="chart_kensa_1" style="width: 99%;"></div>			
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<div class="nav-tabs-custom">
-							<div class="tab-content">
-								<div class="tab-pane active">
-									<div class="row">
-										<div class="col-xs-12">
-											<div class="col-xs-3">
-												<table id="table_kensa_weekly" class="table table-bordered" style="margin:0">
-													<thead id="head_kensa_weekly">
-														<tr style="background-color: rgba(126,86,134,.7);">
-															<th style="padding: 0px;">Week</th>
-															<th style="padding: 0px;">Total Check</th>
-															<th style="padding: 0px;">Total NG</th>
-															<th style="padding: 0px;">%NG Rate</th>
-														</tr>
-													</thead>
-													<tbody id="body_kensa_weekly">
-													</tbody>
-												</table>
-											</div>
-											<div class="col-xs-9">
-												<div id="chart_kensa_2" style="width: 99%;"></div>			
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-xs-12" style="padding:0px;">
-								<div class="col-xs-6" style="padding-right: 0.5%;">
-									<div class="nav-tabs-custom">
-										<div class="tab-content">
-											<div class="tab-pane active">
-												<div id="chart_kensa_2_alto" style="width: 99%;"></div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="col-xs-6" style="padding-left: 0.5%;">
-									<div class="nav-tabs-custom">
-										<div class="tab-content">
-											<div class="tab-pane active">
-												<div id="chart_kensa_2_tenor" style="width: 99%;"></div>
-											</div>
-										</div>
-									</div>	
-								</div>
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-xs-12" style="padding:0px;">
-								<div class="col-xs-6" style="padding-right: 0.5%;">
-									<div class="nav-tabs-custom">
-										<div class="tab-content">
-											<div class="tab-pane active">
-												<div id="chart_kensa_3_alto" style="width: 99%;"></div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="col-xs-6" style="padding-left: 0.5%;">
-									<div class="nav-tabs-custom">
-										<div class="tab-content">
-											<div class="tab-pane active">
-												<div id="chart_kensa_3_tenor" style="width: 99%;"></div>
-											</div>
-										</div>
-									</div>	
-								</div>
-							</div>
-						</div>
-
-						<div class="nav-tabs-custom">
-							<div class="tab-content">
-								<div class="tab-pane active">
-									<div id="chart_kensa_4" style="width: 99%;"></div>
-								</div>
-							</div>
-						</div>
-
-
 					</div>
-				</div>		
-			</div>
+					<div class="nav-tabs-custom">
+						<div class="tab-content">
+							<div class="tab-pane active">
+								<div class="row">
+									<div class="col-xs-12">
+										<div class="col-xs-3">
+											<table id="table_ic_weekly" class="table table-bordered" style="margin:0">
+												<thead id="head_ic_weekly">
+													<tr style="background-color: rgba(126,86,134,.7);">
+														<th style="padding: 0px;">Week</th>
+														<th style="padding: 0px;">Total Check</th>
+														<th style="padding: 0px;">Total NG</th>
+														<th style="padding: 0px;">%NG Rate</th>
+													</tr>
+												</thead>
+												<tbody id="body_ic_weekly">
+												</tbody>
+											</table>
+										</div>
+										<div class="col-xs-9">
+											<div id="chart_ic_2" style="width: 99%;"></div>			
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-xs-12" style="padding:0px;">
+							<div class="col-xs-6" style="padding-right: 0.5%;">
+								<div class="nav-tabs-custom">
+									<div class="tab-content">
+										<div class="tab-pane active">
+											<div id="chart_ic_3_alto" style="width: 99%;"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-6" style="padding-left: 0.5%;">
+								<div class="nav-tabs-custom">
+									<div class="tab-content">
+										<div class="tab-pane active">
+											<div id="chart_ic_3_tenor" style="width: 99%;"></div>
+										</div>
+									</div>
+								</div>	
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-xs-12" style="padding:0px;">
+							<div class="col-xs-6" style="padding-right: 0.5%;">
+								<div class="nav-tabs-custom">
+									<div class="tab-content">
+										<div class="tab-pane active">
+											<div id="chart_ic_4_alto" style="width: 99%;"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-6" style="padding-left: 0.5%;">
+								<div class="nav-tabs-custom">
+									<div class="tab-content">
+										<div class="tab-pane active">
+											<div id="chart_ic_4_tenor" style="width: 99%;"></div>
+										</div>
+									</div>
+								</div>	
+							</div>
+						</div>
+					</div>
+
+					<div class="nav-tabs-custom">
+						<div class="tab-content">
+							<div class="tab-pane active">
+								<div id="chart_ic_5" style="width: 99%;"></div>
+							</div>
+						</div>
+					</div>
+
+					<div class="nav-tabs-custom">
+						<div class="tab-content">
+							<div class="tab-pane active">
+								<div class="row">
+									<div class="col-xs-12">
+										<div class="col-xs-3">
+											<table id="table_monthly_kensa" class="table table-bordered" style="margin:0">
+												<thead id="head_monthly_kensa">
+													<tr>
+														<th style="padding: 0px;">Month</th>
+														<th style="padding: 0px;">Total NG</th>
+														<th style="padding: 0px;">Total Check</th>
+														<th style="padding: 0px;">Target</th>
+														<th style="padding: 0px;">NG Rate</th>
+													</tr>
+												</thead>
+												<tbody id="body_monthly_kensa">
+												</tbody>
+											</table>
+										</div>
+										<div class="col-xs-9">
+											<div id="chart_kensa_1" style="width: 99%;"></div>			
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="nav-tabs-custom">
+						<div class="tab-content">
+							<div class="tab-pane active">
+								<div class="row">
+									<div class="col-xs-12">
+										<div class="col-xs-3">
+											<table id="table_kensa_weekly" class="table table-bordered" style="margin:0">
+												<thead id="head_kensa_weekly">
+													<tr style="background-color: rgba(126,86,134,.7);">
+														<th style="padding: 0px;">Week</th>
+														<th style="padding: 0px;">Total Check</th>
+														<th style="padding: 0px;">Total NG</th>
+														<th style="padding: 0px;">%NG Rate</th>
+													</tr>
+												</thead>
+												<tbody id="body_kensa_weekly">
+												</tbody>
+											</table>
+										</div>
+										<div class="col-xs-9">
+											<div id="chart_kensa_2" style="width: 99%;"></div>			
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-xs-12" style="padding:0px;">
+							<div class="col-xs-6" style="padding-right: 0.5%;">
+								<div class="nav-tabs-custom">
+									<div class="tab-content">
+										<div class="tab-pane active">
+											<div id="chart_kensa_2_alto" style="width: 99%;"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-6" style="padding-left: 0.5%;">
+								<div class="nav-tabs-custom">
+									<div class="tab-content">
+										<div class="tab-pane active">
+											<div id="chart_kensa_2_tenor" style="width: 99%;"></div>
+										</div>
+									</div>
+								</div>	
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-xs-12" style="padding:0px;">
+							<div class="col-xs-6" style="padding-right: 0.5%;">
+								<div class="nav-tabs-custom">
+									<div class="tab-content">
+										<div class="tab-pane active">
+											<div id="chart_kensa_3_alto" style="width: 99%;"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-6" style="padding-left: 0.5%;">
+								<div class="nav-tabs-custom">
+									<div class="tab-content">
+										<div class="tab-pane active">
+											<div id="chart_kensa_3_tenor" style="width: 99%;"></div>
+										</div>
+									</div>
+								</div>	
+							</div>
+						</div>
+					</div>
+
+					<div class="nav-tabs-custom">
+						<div class="tab-content">
+							<div class="tab-pane active">
+								<div id="chart_kensa_4" style="width: 99%;"></div>
+							</div>
+						</div>
+					</div>
+
+
+				</div>
+			</div>		
 		</div>
+	</div>
 
-	</section>
+</section>
 
 
-	@stop
+@stop
 
-	@section('scripts')
-	<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
-	<script src="{{ url("js/highcharts.js")}}"></script>
-	<script src="{{ url("js/exporting.js")}}"></script>
-	<script src="{{ url("js/export-data.js")}}"></script>
-	<script>
-		$.ajaxSetup({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			}
-		});
-
-		jQuery(document).ready(function() {
-			$('body').toggleClass("sidebar-collapse");
-			$('.select2').select2();
-
-			drawChart();
-			setInterval(drawChart, 60*60*1000);
-		});
-
-		function change() {
-			$("#fy").val($("#fySelect").val());
+@section('scripts')
+<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
+<script src="{{ url("js/highcharts.js")}}"></script>
+<script src="{{ url("js/exporting.js")}}"></script>
+<script src="{{ url("js/export-data.js")}}"></script>
+<script>
+	$.ajaxSetup({
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		}
+	});
 
-		$('.datepicker').datepicker({
-			<?php $tgl_max = date('m-Y') ?>
-			format: "mm-yyyy",
-			startView: "months", 
-			minViewMode: "months",
-			autoclose: true,
-			endDate: '<?php echo $tgl_max ?>'
+	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
+		$('.select2').select2();
 
-		});
+		drawChart();
+		setInterval(drawChart, 60*60*1000);
+	});
 
-		function bulanText(param){
-			var bulan = parseInt(param.slice(0, 2));
-			var tahun = param.slice(3, 8);
-			var bulanText = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+	function change() {
+		$("#fy").val($("#fySelect").val());
+	}
 
-			return bulanText[bulan-1]+" "+tahun;
+	$('.datepicker').datepicker({
+		<?php $tgl_max = date('m-Y') ?>
+		format: "mm-yyyy",
+		startView: "months", 
+		minViewMode: "months",
+		autoclose: true,
+		endDate: '<?php echo $tgl_max ?>'
+
+	});
+
+	function bulanText(param){
+		var bulan = parseInt(param.slice(0, 2));
+		var tahun = param.slice(3, 8);
+		var bulanText = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+		return bulanText[bulan-1]+" "+tahun;
+	}
+
+
+	function drawChart(){
+		var data = {
+			bulan:"{{$_GET['bulan']}}",
+			fy:"{{$_GET['fy']}}"
 		}
+		$.get('{{ url("fetch/middle/lcq_ng_rate_monthly") }}', data, function(result, status, xhr) {
+			if(xhr.status == 200){
+				if(result.status){
+					$('#body_monthly_ic').append().empty();
+					var fy = result.fy;
 
+					var month =  [];
+					var target = [];
+					var ng = [];
+					var ng_rate_monthly = [];
 
-		function drawChart(){
-			var data = {
-				bulan:"{{$_GET['bulan']}}",
-				fy:"{{$_GET['fy']}}"
-			}
-			$.get('{{ url("fetch/middle/lcq_ng_rate_monthly") }}', data, function(result, status, xhr) {
-				if(xhr.status == 200){
-					if(result.status){
-						$('#body_monthly_ic').append().empty();
-						var fy = result.fy;
-
-						var month =  [];
-						var target = [];
-						var ng = [];
-						var ng_rate_monthly = [];
-
-						for (var i = 0; i < result.monthly_ic.length; i++) {
-							target.push(8.37);						
-							month.push(result.monthly_ic[i].tgl);
-							ng.push(result.monthly_ic[i].ng_rate);
-							ng[i] = ng[i] || 0;
-							ng_rate_monthly.push(ng[i] * 100);
-						}
-
-						var body = "";
-						for (var i = 0; i < result.monthly_ic.length; i++) {
-							body += "<tr>";
-							body += "<td>"+month[i]+"</td>";
-							body += "<td>"+result.monthly_ic[i].ng+"</td>";
-							body += "<td>"+result.monthly_ic[i].g+"</td>";
-							body += "<td>"+target[i]+"%</td>";
-							body += "<td>"+ng_rate_monthly[i].toFixed(2)+"%</td>";
-							body += "</tr>";
-						}
-						$('#body_monthly_ic').append(body);
-
-						Highcharts.chart('chart_ic_1', {
-							chart: {
-								type: 'column'
-							},
-							title: {
-								text: '<span style="font-size: 18pt;">NG Rate I.C. Lacquering Sax Key on '+fy+'</span>',
-								useHTML: true
-							},
-							xAxis: {
-								categories: month
-							},
-							yAxis: {
-								title: {
-									text: 'NG Rate (%)'
-								},
-								min: 0
-							},
-							legend : {
-								enabled: false
-							},
-							tooltip: {
-								headerFormat: '<span>{point.category}</span><br/>',
-								pointFormat: '<span>{point.category}</span><br/><span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
-
-							},
-							plotOptions: {
-								column: {
-									cursor: 'pointer',
-									borderWidth: 0,
-									dataLabels: {
-										enabled: true,
-										formatter: function () {
-											return Highcharts.numberFormat(this.y,2)+'%';
-										}
-									}
-								},
-								line: {
-									marker: {
-										enabled: false
-									},
-									dashStyle: 'ShortDash'
-								}
-							},credits: {
-								enabled: false
-							},
-							series: [
-							{
-								name: 'NG Rate',
-								data: ng_rate_monthly
-							},
-							{
-								name: 'Target',
-								type: 'line',
-								data: target,
-								color: '#FF0000',
-							}
-							]
-						});
-
-
-						$('#body_monthly_kensa').append().empty();
-						var month =  [];
-						var target = [];
-						var ng = [];
-						var ng_rate_monthly = [];
-
-						for (var i = 0; i < result.monthly_kensa.length; i++) {
-							target.push(4.45);
-							month.push(result.monthly_kensa[i].tgl);
-							ng.push(result.monthly_kensa[i].ng_rate);
-							ng[i] = ng[i] || 0;
-							ng_rate_monthly.push(ng[i] * 100);
-						}
-
-						var body = "";
-						for (var i = 0; i < result.monthly_kensa.length; i++) {
-							body += "<tr>";
-							body += "<td>"+month[i]+"</td>";
-							body += "<td>"+result.monthly_kensa[i].ng+"</td>";
-							body += "<td>"+result.monthly_kensa[i].g+"</td>";
-							body += "<td>"+target[i]+"%</td>";
-							body += "<td>"+ng_rate_monthly[i].toFixed(2)+"%</td>";
-							body += "</tr>";
-						}
-						$('#body_monthly_kensa').append(body);
-
-						Highcharts.chart('chart_kensa_1', {
-							chart: {
-								type: 'column'
-							},
-							title: {
-								text: '<span style="font-size: 18pt;">NG Rate Kensa Lacquering Sax Key on '+fy+'</span>',
-								useHTML: true
-							},
-							xAxis: {
-								categories: month
-							},
-							yAxis: {
-								title: {
-									text: 'NG Rate (%)'
-								},
-								min: 0
-							},
-							legend : {
-								enabled: false
-							},
-							tooltip: {
-								headerFormat: '<span>{point.category}</span><br/>',
-								pointFormat: '<span>{point.category}</span><br/><span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
-
-							},
-							plotOptions: {
-								column: {
-									cursor: 'pointer',
-									borderWidth: 0,
-									dataLabels: {
-										enabled: true,
-										formatter: function () {
-											return Highcharts.numberFormat(this.y,2)+'%';
-										}
-									}
-								},
-								line: {
-									marker: {
-										enabled: false
-									},
-									dashStyle: 'ShortDash'
-								}
-							},credits: {
-								enabled: false
-							},
-							series: [
-							{
-								name: 'NG Rate',
-								data: ng_rate_monthly
-							},
-							{
-								name: 'Target',
-								type: 'line',
-								data: target,
-								color: '#FF0000',
-							}
-							]
-						});
-
+					for (var i = 0; i < result.monthly_ic.length; i++) {
+						target.push(8.37);						
+						month.push(result.monthly_ic[i].tgl);
+						ng.push(result.monthly_ic[i].ng_rate);
+						ng[i] = ng[i] || 0;
+						ng_rate_monthly.push(ng[i] * 100);
 					}
+
+					var body = "";
+					for (var i = 0; i < result.monthly_ic.length; i++) {
+						body += "<tr>";
+						body += "<td>"+month[i]+"</td>";
+						body += "<td>"+result.monthly_ic[i].ng+"</td>";
+						body += "<td>"+result.monthly_ic[i].g+"</td>";
+						body += "<td>"+target[i]+"%</td>";
+						body += "<td>"+ng_rate_monthly[i].toFixed(2)+"%</td>";
+						body += "</tr>";
+					}
+					$('#body_monthly_ic').append(body);
+
+					Highcharts.chart('chart_ic_1', {
+						chart: {
+							type: 'column'
+						},
+						title: {
+							text: '<span style="font-size: 18pt;">NG Rate I.C. Lacquering Sax Key on '+fy+'</span>',
+							useHTML: true
+						},
+						xAxis: {
+							categories: month
+						},
+						yAxis: {
+							title: {
+								text: 'NG Rate (%)'
+							},
+							min: 0
+						},
+						legend : {
+							enabled: false
+						},
+						tooltip: {
+							headerFormat: '<span>{point.category}</span><br/>',
+							pointFormat: '<span>{point.category}</span><br/><span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
+
+						},
+						plotOptions: {
+							column: {
+								cursor: 'pointer',
+								borderWidth: 0,
+								dataLabels: {
+									enabled: true,
+									formatter: function () {
+										return Highcharts.numberFormat(this.y,2)+'%';
+									}
+								}
+							},
+							line: {
+								marker: {
+									enabled: false
+								},
+								dashStyle: 'ShortDash'
+							}
+						},credits: {
+							enabled: false
+						},
+						series: [
+						{
+							name: 'NG Rate',
+							data: ng_rate_monthly
+						},
+						{
+							name: 'Target',
+							type: 'line',
+							data: target,
+							color: '#FF0000',
+						}
+						]
+					});
+
+
+					$('#body_monthly_kensa').append().empty();
+					var month =  [];
+					var target = [];
+					var ng = [];
+					var ng_rate_monthly = [];
+
+					for (var i = 0; i < result.monthly_kensa.length; i++) {
+						target.push(4.45);
+						month.push(result.monthly_kensa[i].tgl);
+						ng.push(result.monthly_kensa[i].ng_rate);
+						ng[i] = ng[i] || 0;
+						ng_rate_monthly.push(ng[i] * 100);
+					}
+
+					var body = "";
+					for (var i = 0; i < result.monthly_kensa.length; i++) {
+						body += "<tr>";
+						body += "<td>"+month[i]+"</td>";
+						body += "<td>"+result.monthly_kensa[i].ng+"</td>";
+						body += "<td>"+result.monthly_kensa[i].g+"</td>";
+						body += "<td>"+target[i]+"%</td>";
+						body += "<td>"+ng_rate_monthly[i].toFixed(2)+"%</td>";
+						body += "</tr>";
+					}
+					$('#body_monthly_kensa').append(body);
+
+					Highcharts.chart('chart_kensa_1', {
+						chart: {
+							type: 'column'
+						},
+						title: {
+							text: '<span style="font-size: 18pt;">NG Rate Kensa Lacquering Sax Key on '+fy+'</span>',
+							useHTML: true
+						},
+						xAxis: {
+							categories: month
+						},
+						yAxis: {
+							title: {
+								text: 'NG Rate (%)'
+							},
+							min: 0
+						},
+						legend : {
+							enabled: false
+						},
+						tooltip: {
+							headerFormat: '<span>{point.category}</span><br/>',
+							pointFormat: '<span>{point.category}</span><br/><span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
+
+						},
+						plotOptions: {
+							column: {
+								cursor: 'pointer',
+								borderWidth: 0,
+								dataLabels: {
+									enabled: true,
+									formatter: function () {
+										return Highcharts.numberFormat(this.y,2)+'%';
+									}
+								}
+							},
+							line: {
+								marker: {
+									enabled: false
+								},
+								dashStyle: 'ShortDash'
+							}
+						},credits: {
+							enabled: false
+						},
+						series: [
+						{
+							name: 'NG Rate',
+							data: ng_rate_monthly
+						},
+						{
+							name: 'Target',
+							type: 'line',
+							data: target,
+							color: '#FF0000',
+						}
+						]
+					});
+
 				}
-			});
+			}
+		});
 
 $.get('{{ url("fetch/middle/lcq_ng_rate_weekly") }}', data, function(result, status, xhr) {
 	if(xhr.status == 200){
@@ -800,7 +801,7 @@ $.get('{{ url("fetch/middle/lcq_ng") }}', data, function(result, status, xhr) {
 
 
 
-			var ng_rate_alto = [];			
+			var ng_rate_tenor = [];			
 			var ng = [];
 			var jml = [];
 			var color = [];
@@ -809,35 +810,35 @@ $.get('{{ url("fetch/middle/lcq_ng") }}', data, function(result, status, xhr) {
 			for (var i = 0; i < result.ic_ng_tenor.length; i++) {
 				if(result.ic_ng_tenor[i].ng_name == 'Kizu Beret, Scrath, Butsu'){
 					ng.push(result.ic_ng_tenor[i].ng_name);
-					ng_rate_alto.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
+					ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
 					color.push('#2b908f');
 				}else if(result.ic_ng_tenor[i].ng_name == 'Aus, Nami, Buff Torinai, Buff tdk rata'){
 					ng.push(result.ic_ng_tenor[i].ng_name);
-					ng_rate_alto.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
+					ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
 					color.push('#90ee7e');
 				}else if(result.ic_ng_tenor[i].ng_name == 'Kizu'){
 					ng.push(result.ic_ng_tenor[i].ng_name);
-					ng_rate_alto.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
+					ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
 					color.push('#f45b5b');
 				}else if(result.ic_ng_tenor[i].ng_name == 'Sisa Lusterlime'){
 					ng.push(result.ic_ng_tenor[i].ng_name);
-					ng_rate_alto.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
+					ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
 					color.push('#7798BF');
 				}else if(result.ic_ng_tenor[i].ng_name == 'Toke, Rohtare, gosong, Handatsuki'){
 					ng.push(result.ic_ng_tenor[i].ng_name);
-					ng_rate_alto.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
+					ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
 					color.push('#aaeeee');
 				}else if(result.ic_ng_tenor[i].ng_name == 'Pesok,Kake,Bengkok'){
 					ng.push(result.ic_ng_tenor[i].ng_name);
-					ng_rate_alto.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
+					ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
 					color.push('#ff0066');
 				}else if(result.ic_ng_tenor[i].ng_name == 'Lain-lain (Hakuri nokoru,material salah,bekas)'){
 					ng.push(result.ic_ng_tenor[i].ng_name);
-					ng_rate_alto.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
+					ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
 					color.push('#eeaaee');
 				}
 
-				series.push({name : ng[i], data: [ng_rate_alto[i]], color: color[i]});
+				series.push({name : ng[i], data: [ng_rate_tenor[i]], color: color[i]});
 			}
 
 			Highcharts.chart('chart_ic_3_tenor', {
@@ -1278,7 +1279,7 @@ $.get('{{ url("fetch/middle/lcq_ng") }}', data, function(result, status, xhr) {
 				yAxis: {
 					type: 'logarithmic',
 					title: {
-						text: 'NG Rate (%)'
+						text: 'Total Not Good'
 					}
 				},
 				legend : {
@@ -1438,7 +1439,7 @@ $.get('{{ url("fetch/middle/lcq_ng") }}', data, function(result, status, xhr) {
 				yAxis: {
 					type: 'logarithmic',
 					title: {
-						text: 'NG Rate (%)'
+						text: 'Total Not Good'
 					}
 				},
 				legend : {

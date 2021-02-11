@@ -432,26 +432,26 @@
 				if(result.status){
 
 					var key = [];
-					var nagare = [];
-					var other = [];
-					var tarinai = [];
-					var kizu = [];
-					var soldering = [];
+					var nagare = [0,0,0,0,0,0,0,0,0,0];
+					var other = [0,0,0,0,0,0,0,0,0,0];
+					var tarinai = [0,0,0,0,0,0,0,0,0,0];
+					var kizu = [0,0,0,0,0,0,0,0,0,0];
+					var soldering = [0,0,0,0,0,0,0,0,0,0];
 
 					for (var i = 0; i < result.ngKey.length; i++) {
 						key.push(result.ngKey[i].key);
 						for (var j = 0; j < result.ngKey_detail.length; j++) {
 							if(result.ngKey[i].key == result.ngKey_detail[j].key){
 								if(result.ngKey_detail[j].ng_name == 'Buff Nagare'){
-									nagare.push(result.ngKey_detail[j].ng);
+									nagare[i] = result.ngKey_detail[j].ng;
 								}else if(result.ngKey_detail[j].ng_name == 'Buff Others (Aus, Nami, dll)'){
-									other.push(result.ngKey_detail[j].ng);
+									other[i] = result.ngKey_detail[j].ng;
 								}else if(result.ngKey_detail[j].ng_name == 'Buff Tarinai'){
-									tarinai.push(result.ngKey_detail[j].ng);
+									tarinai[i] = result.ngKey_detail[j].ng;
 								}else if(result.ngKey_detail[j].ng_name == 'Kizu'){
-									kizu.push(result.ngKey_detail[j].ng);
+									kizu[i] = result.ngKey_detail[j].ng;
 								}else if(result.ngKey_detail[j].ng_name == 'NG Soldering'){
-									soldering.push(result.ngKey_detail[j].ng);
+									soldering[i] = result.ngKey_detail[j].ng;
 								}
 							}
 						}

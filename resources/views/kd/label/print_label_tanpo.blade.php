@@ -7,7 +7,7 @@
 	<style type="text/css">
 		.table tr td,
 		.table tr th{
-			border: 2px solid black !important;
+			border: 1.5px solid black !important;
 			border-collapse: collapse;
 			vertical-align: middle;
 			text-align: center;

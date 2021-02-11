@@ -97,10 +97,10 @@
 												<thead id="head_monthly_ic">
 													<tr>
 														<th style="padding: 0px;">Month</th>
-														<th style="padding: 0px;">NG Rate</th>
-														<th style="padding: 0px;">Target</th>
 														<th style="padding: 0px;">Total NG</th>
 														<th style="padding: 0px;">Total Check</th>
+														<th style="padding: 0px;">Target</th>
+														<th style="padding: 0px;">NG Rate</th>
 													</tr>
 												</thead>
 												<tbody id="body_monthly_ic">
@@ -208,10 +208,10 @@
 												<thead id="head_monthly_kensa">
 													<tr>
 														<th style="padding: 0px;">Month</th>
-														<th style="padding: 0px;">NG Rate</th>
-														<th style="padding: 0px;">Target</th>
 														<th style="padding: 0px;">Total NG</th>
 														<th style="padding: 0px;">Total Check</th>
+														<th style="padding: 0px;">Target</th>
+														<th style="padding: 0px;">NG Rate</th>
 													</tr>
 												</thead>
 												<tbody id="body_monthly_kensa">
@@ -334,7 +334,7 @@
 		$('.select2').select2();
 
 		drawChart();
-		setInterval(drawChart, 300000);
+		setInterval(drawChart, 60*60*1000);
 
 	});
 
@@ -373,33 +373,28 @@
 				if(result.status){
 					$('#body_monthly_ic').append().empty();
 					var fy = result.fy;
-					var tgl = [];
+					
+					var month =  [];
 					var target = [];
 					var ng = [];
-					var total = [];		
-					var ng_rate = [];
 					var ng_rate_monthly = [];
 
 					for (var i = 0; i < result.monthly_ic.length; i++) {
-						tgl.push(result.monthly_ic[i].tgl);
-						target.push(3.48);
-						ng.push(result.monthly_ic[i].ng);
-						total.push(result.monthly_ic[i].total);
-						total[i] = total[i] || 0;
-
-						ng_rate[i] = (ng[i] / total[i]) * 100;
-						ng_rate[i] = ng_rate[i] || 0;
-						ng_rate_monthly.push(ng_rate[i]);
+						target.push(8.37);						
+						month.push(result.monthly_ic[i].tgl);
+						ng.push(result.monthly_ic[i].ng_rate);
+						ng[i] = ng[i] || 0;
+						ng_rate_monthly.push(ng[i] * 100);
 					}
 
 					var body = "";
 					for (var i = 0; i < result.monthly_ic.length; i++) {
 						body += "<tr>";
-						body += "<td>"+tgl[i]+"</td>";
-						body += "<td>"+ng_rate_monthly[i].toFixed(2)+"%</td>";
+						body += "<td>"+month[i]+"</td>";
+						body += "<td>"+result.monthly_ic[i].ng+"</td>";
+						body += "<td>"+result.monthly_ic[i].g+"</td>";
 						body += "<td>"+target[i]+"%</td>";
-						body += "<td>"+ng[i]+"</td>";
-						body += "<td>"+total[i]+"</td>";
+						body += "<td>"+ng_rate_monthly[i].toFixed(2)+"%</td>";
 						body += "</tr>";
 					}
 					$('#body_monthly_ic').append(body);
@@ -409,11 +404,11 @@
 							type: 'column'
 						},
 						title: {
-							text: '<span style="font-size: 18pt;">NG Rate IC Sax Key on '+fy+'</span>',
+							text: '<span style="font-size: 18pt;">NG Rate I.C. Plating Sax Key on '+fy+'</span>',
 							useHTML: true
 						},
 						xAxis: {
-							categories: tgl
+							categories: month
 						},
 						yAxis: {
 							title: {
@@ -464,33 +459,27 @@
 					});
 
 					$('#body_monthly_kensa').append().empty();
-					var tgl = [];
+					var month =  [];
 					var target = [];
 					var ng = [];
-					var total = [];		
-					var ng_rate = [];
 					var ng_rate_monthly = [];
 
 					for (var i = 0; i < result.monthly_kensa.length; i++) {
-						tgl.push(result.monthly_kensa[i].tgl);
-						target.push(1.79);
-						ng.push(result.monthly_kensa[i].ng);
-						total.push(result.monthly_kensa[i].total);
-						total[i] = total[i] || 0;
-
-						ng_rate[i] = (ng[i] / total[i]) * 100;
-						ng_rate[i] = ng_rate[i] || 0;
-						ng_rate_monthly.push(ng_rate[i]);
+						target.push(4.45);
+						month.push(result.monthly_kensa[i].tgl);
+						ng.push(result.monthly_kensa[i].ng_rate);
+						ng[i] = ng[i] || 0;
+						ng_rate_monthly.push(ng[i] * 100);
 					}
 
 					var body = "";
 					for (var i = 0; i < result.monthly_kensa.length; i++) {
 						body += "<tr>";
-						body += "<td>"+tgl[i]+"</td>";
-						body += "<td>"+ng_rate_monthly[i].toFixed(2)+"%</td>";
+						body += "<td>"+month[i]+"</td>";
+						body += "<td>"+result.monthly_kensa[i].ng+"</td>";
+						body += "<td>"+result.monthly_kensa[i].g+"</td>";
 						body += "<td>"+target[i]+"%</td>";
-						body += "<td>"+ng[i]+"</td>";
-						body += "<td>"+total[i]+"</td>";
+						body += "<td>"+ng_rate_monthly[i].toFixed(2)+"%</td>";
 						body += "</tr>";
 					}
 					$('#body_monthly_kensa').append(body);
@@ -500,11 +489,11 @@
 							type: 'column'
 						},
 						title: {
-							text: '<span style="font-size: 18pt;">NG Rate Kensa Sax Key on '+fy+'</span>',
+							text: '<span style="font-size: 18pt;">NG Rate Kensa Plating Sax Key on '+fy+'</span>',
 							useHTML: true
 						},
 						xAxis: {
-							categories: tgl
+							categories: month
 						},
 						yAxis: {
 							title: {
@@ -563,34 +552,21 @@ $.get('{{ url("fetch/middle/plt_ng_rate_weekly/".$id) }}', data, function(result
 	if(xhr.status == 200){
 		if(result.status){
 			$('#body_ic_weekly').append().empty();
-			var bulan = result.bulan;
 			var week_name = [];
 			var ng = [];
-			var g = [];
-			var perolehan = []
-			var ng_rate = [];
+			var g= [];					
 			var ng_rate_weekly = [];
+			var body = "";
 
 			for (var i = 0; i < result.weekly_ic.length; i++) {
 				week_name.push(result.weekly_ic[i].week_name);
+				ng_rate_weekly.push((result.weekly_ic[i].ng / result.weekly_ic[i].g) * 100);
 
-				ng.push(parseInt(result.weekly_ic[i].ng));
-				g.push(parseInt(result.weekly_ic[i].g));
-				ng[i] = ng[i] || 0;
-				g[i] = g[i] || 0;
-				perolehan[i] = g[i];
-				ng_rate[i] = (ng[i] / perolehan[i]) * 100;
-				// ng_rate[i] = ng_rate[i] || 0;
-				ng_rate_weekly.push(ng_rate[i]);
-			}
-
-			var body = "";
-			for (var i = 0; i < result.weekly_ic.length; i++) {
 				body += "<tr>";
-				body += "<td>"+week_name[i]+"</td>";
-				body += "<td>"+perolehan[i]+"</td>";
-				body += "<td>"+ng[i]+"</td>";
-				body += "<td>"+ng_rate_weekly[i].toFixed(2)+"%</td>";
+				body += "<td>"+result.weekly_ic[i].week_name+"</td>";
+				body += "<td>"+result.weekly_ic[i].g+"</td>";
+				body += "<td>"+result.weekly_ic[i].ng+"</td>";
+				body += "<td>"+(((result.weekly_ic[i].ng / result.weekly_ic[i].g) * 100) || 0).toFixed(2)+"%</td>";
 				body += "</tr>";
 			}
 			$('#body_ic_weekly').append(body);	
@@ -600,7 +576,7 @@ $.get('{{ url("fetch/middle/plt_ng_rate_weekly/".$id) }}', data, function(result
 					type: 'line'
 				},
 				title: {
-					text: '<span style="font-size: 18pt;">Weekly NG Rate IC Sax Key on '+bulanText(bulan)+'</span>',
+					text: '<span style="font-size: 18pt;">Weekly NG Rate I.C. Plating Sax Key on '+result.bulanText+'</span>',
 					useHTML: true
 				},
 				xAxis: {
@@ -648,34 +624,21 @@ $.get('{{ url("fetch/middle/plt_ng_rate_weekly/".$id) }}', data, function(result
 
 
 			$('#body_kensa_weekly').append().empty();
-			var bulan = result.bulan;
 			var week_name = [];
 			var ng = [];
-			var g = [];
-			var perolehan = []
-			var ng_rate = [];
+			var g= [];					
 			var ng_rate_weekly = [];
+			var body = "";
 
 			for (var i = 0; i < result.weekly_kensa.length; i++) {
 				week_name.push(result.weekly_kensa[i].week_name);
+				ng_rate_weekly.push((result.weekly_kensa[i].ng / result.weekly_kensa[i].g) * 100);
 
-				ng.push(parseInt(result.weekly_kensa[i].ng));
-				g.push(parseInt(result.weekly_kensa[i].g));
-				ng[i] = ng[i] || 0;
-				g[i] = g[i] || 0;
-				perolehan[i] = g[i];
-				ng_rate[i] = (ng[i] / perolehan[i]) * 100;
-				// ng_rate[i] = ng_rate[i] || 0;
-				ng_rate_weekly.push(ng_rate[i]);
-			}
-
-			var body = "";
-			for (var i = 0; i < result.weekly_kensa.length; i++) {
 				body += "<tr>";
-				body += "<td>"+week_name[i]+"</td>";
-				body += "<td>"+perolehan[i]+"</td>";
-				body += "<td>"+ng[i]+"</td>";
-				body += "<td>"+ng_rate_weekly[i].toFixed(2)+"%</td>";
+				body += "<td>"+result.weekly_kensa[i].week_name+"</td>";
+				body += "<td>"+result.weekly_kensa[i].g+"</td>";
+				body += "<td>"+result.weekly_kensa[i].ng+"</td>";
+				body += "<td>"+(((result.weekly_kensa[i].ng / result.weekly_kensa[i].g) * 100) || 0).toFixed(2)+"%</td>";
 				body += "</tr>";
 			}
 			$('#body_kensa_weekly').append(body);	
@@ -685,7 +648,7 @@ $.get('{{ url("fetch/middle/plt_ng_rate_weekly/".$id) }}', data, function(result
 					type: 'line'
 				},
 				title: {
-					text: '<span style="font-size: 18pt;">Weekly NG Rate Kensa Sax Key on '+bulanText(bulan)+'</span>',
+					text: '<span style="font-size: 18pt;">Weekly NG Rate Kensa Plating Sax Key on '+result.bulanText+'</span>',
 					useHTML: true
 				},
 				xAxis: {
@@ -739,58 +702,48 @@ $.get('{{ url("fetch/middle/plt_ng/".$id) }}', data, function(result, status, xh
 		if(result.status){
 
 			//IC Alto
-			var bulan = result.bulan;
 			var ng_rate_alto = [];			
 			var ng = [];
 			var jml = [];
 			var color = [];
 			var series = [];
 
-			for (var i = 0; i < result.ngIC_alto.length; i++) {
-				if(result.ngIC_alto[i].ng_name == 'Kizu'){
-					ng.push(result.ngIC_alto[i].ng_name);
-					jml.push([result.ngIC_alto[i].jml]);
-					ng_rate_alto.push((jml[i]/result.totalCekIC_alto[0].total)*100);
+			for (var i = 0; i < result.ic_ng_alto.length; i++) {
+				if(result.ic_ng_alto[i].ng_name == 'Kizu'){
+					ng.push(result.ic_ng_alto[i].ng_name);
+					ng_rate_alto.push(result.ic_ng_alto[i].ng/result.ic_ng_alto[i].check*100);
 					color.push('#2b908f');
-				}else if(result.ngIC_alto[i].ng_name == 'Nami'){
-					ng.push(result.ngIC_alto[i].ng_name);
-					jml.push([result.ngIC_alto[i].jml]);
-					ng_rate_alto.push((jml[i]/result.totalCekIC_alto[0].total)*100);
+				}else if(result.ic_ng_alto[i].ng_name == 'Nami'){
+					ng.push(result.ic_ng_alto[i].ng_name);
+					ng_rate_alto.push(result.ic_ng_alto[i].ng/result.ic_ng_alto[i].check*100);
 					color.push('#90ee7e');
-				}else if(result.ngIC_alto[i].ng_name == 'Deko'){
-					ng.push(result.ngIC_alto[i].ng_name);
-					jml.push([result.ngIC_alto[i].jml]);
-					ng_rate_alto.push((jml[i]/result.totalCekIC_alto[0].total)*100);
+				}else if(result.ic_ng_alto[i].ng_name == 'Deko'){
+					ng.push(result.ic_ng_alto[i].ng_name);
+					ng_rate_alto.push(result.ic_ng_alto[i].ng/result.ic_ng_alto[i].check*100);
 					color.push('#f45b5b');
-				}else if(result.ngIC_alto[i].ng_name == 'Aus'){
-					ng.push(result.ngIC_alto[i].ng_name);
-					jml.push([result.ngIC_alto[i].jml]);
-					ng_rate_alto.push((jml[i]/result.totalCekIC_alto[0].total)*100);
+				}else if(result.ic_ng_alto[i].ng_name == 'Aus'){
+					ng.push(result.ic_ng_alto[i].ng_name);
+					ng_rate_alto.push(result.ic_ng_alto[i].ng/result.ic_ng_alto[i].check*100);
 					color.push('#7798BF');
-				}else if(result.ngIC_alto[i].ng_name == 'Buff kurang'){
-					ng.push(result.ngIC_alto[i].ng_name);
-					jml.push([result.ngIC_alto[i].jml]);
-					ng_rate_alto.push((jml[i]/result.totalCekIC_alto[0].total)*100);
+				}else if(result.ic_ng_alto[i].ng_name == 'Buff kurang'){
+					ng.push(result.ic_ng_alto[i].ng_name);
+					ng_rate_alto.push(result.ic_ng_alto[i].ng/result.ic_ng_alto[i].check*100);
 					color.push('#aaeeee');
-				}else if(result.ngIC_alto[i].ng_name == 'Buff nagare'){
-					ng.push(result.ngIC_alto[i].ng_name);
-					jml.push([result.ngIC_alto[i].jml]);
-					ng_rate_alto.push((jml[i]/result.totalCekIC_alto[0].total)*100);
+				}else if(result.ic_ng_alto[i].ng_name == 'Buff nagare'){
+					ng.push(result.ic_ng_alto[i].ng_name);
+					ng_rate_alto.push(result.ic_ng_alto[i].ng/result.ic_ng_alto[i].check*100);
 					color.push('#ff0066');
-				}else if(result.ngIC_alto[i].ng_name == 'Rho tsuki'){
-					ng.push(result.ngIC_alto[i].ng_name);
-					jml.push([result.ngIC_alto[i].jml]);
-					ng_rate_alto.push((jml[i]/result.totalCekIC_alto[0].total)*100);
+				}else if(result.ic_ng_alto[i].ng_name == 'Rho tsuki'){
+					ng.push(result.ic_ng_alto[i].ng_name);
+					ng_rate_alto.push(result.ic_ng_alto[i].ng/result.ic_ng_alto[i].check*100);
 					color.push('#eeaaee');
-				}else if(result.ngIC_alto[i].ng_name == 'Rho tare'){
-					ng.push(result.ngIC_alto[i].ng_name);
-					jml.push([result.ngIC_alto[i].jml]);
-					ng_rate_alto.push((jml[i]/result.totalCekIC_alto[0].total)*100);
+				}else if(result.ic_ng_alto[i].ng_name == 'Rho tare'){
+					ng.push(result.ic_ng_alto[i].ng_name);
+					ng_rate_alto.push(result.ic_ng_alto[i].ng/result.ic_ng_alto[i].check*100);
 					color.push('#FFEB3B');
-				}else if(result.ngIC_alto[i].ng_name == 'Lain-lain'){
-					ng.push(result.ngIC_alto[i].ng_name);
-					jml.push([result.ngIC_alto[i].jml]);
-					ng_rate_alto.push((jml[i]/result.totalCekIC_alto[0].total)*100);
+				}else if(result.ic_ng_alto[i].ng_name == 'Lain-lain'){
+					ng.push(result.ic_ng_alto[i].ng_name);
+					ng_rate_alto.push(result.ic_ng_alto[i].ng/result.ic_ng_alto[i].check*100);
 					color.push('#9C27B0');
 				}
 
@@ -802,7 +755,11 @@ $.get('{{ url("fetch/middle/plt_ng/".$id) }}', data, function(result, status, xh
 					type: 'column'
 				},
 				title: {
-					text: '<span style="font-size: 18pt;">Highest NG IC Alto Sax Key on '+bulanText(bulan)+'</span><br><center><span style="color: rgba(96, 92, 168);"></center></span>',
+					text: '<span style="font-size: 18pt;">Highest NG I.C. Plating Alto Sax Key<br><center><span style="color: rgba(96, 92, 168);"></center></span>',
+					useHTML: true
+				},
+				subtitle: {
+					text: '<span style="font-size: 15pt; color: rgb(60, 60, 60);">on '+result.bulanText+'</span><br><center><span style="color: rgba(96, 92, 168);"></center></span>',
 					useHTML: true
 				},
 				xAxis: {
@@ -833,7 +790,7 @@ $.get('{{ url("fetch/middle/plt_ng/".$id) }}', data, function(result, status, xh
 						dataLabels: {
 							enabled: true,
 							formatter: function () {
-								return Highcharts.numberFormat(this.y,2)+'%';
+								return Highcharts.numberFormat(this.y,3)+'%';
 							},
 							style:{
 								textOutline: false,
@@ -854,58 +811,48 @@ $.get('{{ url("fetch/middle/plt_ng/".$id) }}', data, function(result, status, xh
 
 
 			//IC Tenor
-			var bulan = result.bulan;
 			var ng_rate_tenor = [];			
 			var ng = [];
 			var jml = [];
 			var color = [];
 			var series = [];
 
-			for (var i = 0; i < result.ngIC_tenor.length; i++) {
-				if(result.ngIC_tenor[i].ng_name == 'Kizu'){
-					ng.push(result.ngIC_tenor[i].ng_name);
-					jml.push([result.ngIC_tenor[i].jml]);
-					ng_rate_tenor.push((jml[i]/result.totalCekIC_tenor[0].total)*100);
+			for (var i = 0; i < result.ic_ng_tenor.length; i++) {
+				if(result.ic_ng_tenor[i].ng_name == 'Kizu'){
+					ng.push(result.ic_ng_tenor[i].ng_name);
+					ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
 					color.push('#2b908f');
-				}else if(result.ngIC_tenor[i].ng_name == 'Nami'){
-					ng.push(result.ngIC_tenor[i].ng_name);
-					jml.push([result.ngIC_tenor[i].jml]);
-					ng_rate_tenor.push((jml[i]/result.totalCekIC_tenor[0].total)*100);
+				}else if(result.ic_ng_tenor[i].ng_name == 'Nami'){
+					ng.push(result.ic_ng_tenor[i].ng_name);
+					ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
 					color.push('#90ee7e');
-				}else if(result.ngIC_tenor[i].ng_name == 'Deko'){
-					ng.push(result.ngIC_tenor[i].ng_name);
-					jml.push([result.ngIC_tenor[i].jml]);
-					ng_rate_tenor.push((jml[i]/result.totalCekIC_tenor[0].total)*100);
+				}else if(result.ic_ng_tenor[i].ng_name == 'Deko'){
+					ng.push(result.ic_ng_tenor[i].ng_name);
+					ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
 					color.push('#f45b5b');
-				}else if(result.ngIC_tenor[i].ng_name == 'Aus'){
-					ng.push(result.ngIC_tenor[i].ng_name);
-					jml.push([result.ngIC_tenor[i].jml]);
-					ng_rate_tenor.push((jml[i]/result.totalCekIC_tenor[0].total)*100);
+				}else if(result.ic_ng_tenor[i].ng_name == 'Aus'){
+					ng.push(result.ic_ng_tenor[i].ng_name);
+					ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
 					color.push('#7798BF');
-				}else if(result.ngIC_tenor[i].ng_name == 'Buff kurang'){
-					ng.push(result.ngIC_tenor[i].ng_name);
-					jml.push([result.ngIC_tenor[i].jml]);
-					ng_rate_tenor.push((jml[i]/result.totalCekIC_tenor[0].total)*100);
+				}else if(result.ic_ng_tenor[i].ng_name == 'Buff kurang'){
+					ng.push(result.ic_ng_tenor[i].ng_name);
+					ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
 					color.push('#aaeeee');
-				}else if(result.ngIC_tenor[i].ng_name == 'Buff nagare'){
-					ng.push(result.ngIC_tenor[i].ng_name);
-					jml.push([result.ngIC_tenor[i].jml]);
-					ng_rate_tenor.push((jml[i]/result.totalCekIC_tenor[0].total)*100);
+				}else if(result.ic_ng_tenor[i].ng_name == 'Buff nagare'){
+					ng.push(result.ic_ng_tenor[i].ng_name);
+					ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
 					color.push('#ff0066');
-				}else if(result.ngIC_tenor[i].ng_name == 'Rho tsuki'){
-					ng.push(result.ngIC_tenor[i].ng_name);
-					jml.push([result.ngIC_tenor[i].jml]);
-					ng_rate_tenor.push((jml[i]/result.totalCekIC_tenor[0].total)*100);
+				}else if(result.ic_ng_tenor[i].ng_name == 'Rho tsuki'){
+					ng.push(result.ic_ng_tenor[i].ng_name);
+					ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
 					color.push('#eeaaee');
-				}else if(result.ngIC_tenor[i].ng_name == 'Rho tare'){
-					ng.push(result.ngIC_tenor[i].ng_name);
-					jml.push([result.ngIC_tenor[i].jml]);
-					ng_rate_tenor.push((jml[i]/result.totalCekIC_tenor[0].total)*100);
+				}else if(result.ic_ng_tenor[i].ng_name == 'Rho tare'){
+					ng.push(result.ic_ng_tenor[i].ng_name);
+					ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
 					color.push('#FFEB3B');
-				}else if(result.ngIC_tenor[i].ng_name == 'Lain-lain'){
-					ng.push(result.ngIC_tenor[i].ng_name);
-					jml.push([result.ngIC_tenor[i].jml]);
-					ng_rate_tenor.push((jml[i]/result.totalCekIC_tenor[0].total)*100);
+				}else if(result.ic_ng_tenor[i].ng_name == 'Lain-lain'){
+					ng.push(result.ic_ng_tenor[i].ng_name);
+					ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
 					color.push('#9C27B0');
 				}
 
@@ -919,7 +866,11 @@ $.get('{{ url("fetch/middle/plt_ng/".$id) }}', data, function(result, status, xh
 					type: 'column'
 				},
 				title: {
-					text: '<span style="font-size: 18pt;">Highest NG IC Tenor Sax Key on '+bulanText(bulan)+'</span><br><center><span style="color: rgba(96, 92, 168);"></center></span>',
+					text: '<span style="font-size: 18pt;">Highest NG I.C. Plating Tenor Sax Key<br><center><span style="color: rgba(96, 92, 168);"></center></span>',
+					useHTML: true
+				},
+				subtitle: {
+					text: '<span style="font-size: 15pt; color: rgb(60, 60, 60);">on '+result.bulanText+'</span><br><center><span style="color: rgba(96, 92, 168);"></center></span>',
 					useHTML: true
 				},
 				xAxis: {
@@ -950,7 +901,7 @@ $.get('{{ url("fetch/middle/plt_ng/".$id) }}', data, function(result, status, xh
 						dataLabels: {
 							enabled: true,
 							formatter: function () {
-								return Highcharts.numberFormat(this.y,2)+'%';
+								return Highcharts.numberFormat(this.y,3)+'%';
 							},
 							style:{
 								textOutline: false,
@@ -970,458 +921,648 @@ $.get('{{ url("fetch/middle/plt_ng/".$id) }}', data, function(result, status, xh
 
 
 			//Kensa Alto
-			var ng_name_alto = [];
-			var jml_alto = [];			
-			var ng_rate_alto = [];			
-			for (var i = 0; i < result.ngKensa_alto.length; i++) {
-				ng_name_alto.push(result.ngKensa_alto[i].ng_name);
-				jml_alto.push(parseInt(result.ngKensa_alto[i].jml));
-				ng_rate_alto.push((jml_alto[i]/result.totalCekKensa_alto[0].total)*100);
+			var ng_name;
+			var ng_rate;
+			var color;
+			var series = [];
+
+			var other_ng = 0;
+			var other_check = 0;
+
+			for (var i = 0; i < result.kensa_ng_alto.length; i++) {
+				if(result.kensa_ng_alto[i].ng_name == 'Kizu before'){
+					ng_name = result.kensa_ng_alto[i].ng_name;
+					ng_rate = [result.kensa_ng_alto[i].ng];
+					color = '#2b908f';
+					series.push({name : ng_name, data: ng_rate, color: color});
+
+				}else if(result.kensa_ng_alto[i].ng_name == 'Kizu after'){
+					ng_name = result.kensa_ng_alto[i].ng_name;
+					ng_rate = [result.kensa_ng_alto[i].ng];
+					color = '#9c4dcc';
+					series.push({name : ng_name, data: ng_rate, color: color});
+
+				}else if(result.kensa_ng_alto[i].ng_name == 'Yogore'){
+					ng_name = result.kensa_ng_alto[i].ng_name;
+					ng_rate = [result.kensa_ng_alto[i].ng];
+					color = '#90ee7e';
+					series.push({name : ng_name, data: ng_rate, color: color});
+
+				}else if(result.kensa_ng_alto[i].ng_name == 'Buff tarinai'){
+					ng_name = result.kensa_ng_alto[i].ng_name;
+					ng_rate = [result.kensa_ng_alto[i].ng];
+					color = '#f45b5b';
+					series.push({name : ng_name, data: ng_rate, color: color});
+
+				}else if(result.kensa_ng_alto[i].ng_name == 'Nami'){
+					ng_name = result.kensa_ng_alto[i].ng_name;
+					ng_rate = [result.kensa_ng_alto[i].ng];
+					color = '#7798BF';
+					series.push({name : ng_name, data: ng_rate, color: color});
+
+				}else if(result.kensa_ng_alto[i].ng_name == 'Mekki nai'){
+					ng_name = result.kensa_ng_alto[i].ng_name;
+					ng_rate = [result.kensa_ng_alto[i].ng];
+					color = '#aaeeee';
+					series.push({name : ng_name, data: ng_rate, color: color});
+
+				}else if(result.kensa_ng_alto[i].ng_name == 'Kumori'){
+					ng_name = result.kensa_ng_alto[i].ng_name;
+					ng_rate = [result.kensa_ng_alto[i].ng];
+					color = '#ff0066';
+					series.push({name : ng_name, data: ng_rate, color: color});
+
+				}else if(result.kensa_ng_alto[i].ng_name == 'Hakuri nokoru'){
+					ng_name = result.kensa_ng_alto[i].ng_name;
+					ng_rate = [result.kensa_ng_alto[i].ng];
+					color = '#FF8F00';
+					series.push({name : ng_name, data: ng_rate, color: color});
+
+				}else if(result.kensa_ng_alto[i].ng_name == 'Mekki warui'){
+					ng_name = result.kensa_ng_alto[i].ng_name;
+					ng_rate = [result.kensa_ng_alto[i].ng];
+					color = '#cfd8dc';
+					series.push({name : ng_name, data: ng_rate, color: color});
+
+				}else if(result.kensa_ng_alto[i].ng_name == 'Kake'){
+					ng_name = result.kensa_ng_alto[i].ng_name;
+					ng_rate = [result.kensa_ng_alto[i].ng];
+					color = '#a1887f';
+					series.push({name : ng_name, data: ng_rate, color: color});
+
+				}else if(result.kensa_ng_alto[i].ng_name == 'Handa oi'){
+					ng_name = result.kensa_ng_alto[i].ng_name;
+					ng_rate = [result.kensa_ng_alto[i].ng];
+					color = '#212121';
+					series.push({name : ng_name, data: ng_rate, color: color});
+
+				}else if(result.kensa_ng_alto[i].ng_name == 'Yogore plt'){
+					ng_name = result.kensa_ng_alto[i].ng_name;
+					ng_rate = [result.kensa_ng_alto[i].ng];
+					color = '#FFEB3B';
+					series.push({name : ng_name, data: ng_rate, color: color});
+
+				}else{
+					other_ng += result.kensa_ng_alto[i].ng;
+					other_check = result.kensa_ng_alto[i].check;
+
+				}
 			}
-			var bulan = result.bulan;
+
+			// series.push({name : 'Others', data: [other_ng/other_check], color: '#455dff'});
+			series.push({name : 'Others', data: [other_ng], color: '#455dff'});
+			series.sort(function(a, b){return b.data[0] - a.data[0]});
 
 			Highcharts.chart('chart_kensa_3_alto', {
 				chart: {
 					type: 'column'
 				},
 				title: {
-					text: '<center><span style="font-size: 16pt;">10 Highest NG Kensa Alto Sax Key on '+bulanText(bulan)+'</center></span>',
+					text: '<center><span style="font-size: 16pt;">Highest NG Kensa Plating Alto Sax Key</center></span>',
+					useHTML: true
+				},
+				subtitle: {
+					text: '<span style="font-size: 15pt; color: rgb(60, 60, 60);">on '+result.bulanText+'</span><br><center><span style="color: rgba(96, 92, 168);"></center></span>',
 					useHTML: true
 				},
 				xAxis: {
-					categories: ng_name_alto,
+					categories: ng_name,
+					type: 'category',
+					gridLineWidth: 1,
+					gridLineColor: 'RGB(204,255,255)',
+					reversed: true,
 					labels: {
-						useHTML: true,
-						style: {
-							maxWidth: '90px',
-							textOverflow: 'ellipsis',
-						},
-					}
+						enabled: false
+					},
 				},
 				yAxis: {
 					type: 'logarithmic',
 					title: {
-						text: 'NG Rate (%)'
+						text: 'Total Not Good'
 					}
 				},
 				legend : {
-					enabled: false
+					enabled: true,
+					borderWidth: 1,
+					backgroundColor:
+					Highcharts.defaultOptions.legend.backgroundColor || '#ffffff',
+					shadow: true
 				},
 				tooltip: {
 					headerFormat: '<span>Alto Key Not Good</span><br/>',
-					pointFormat: '<span style="color:{point.color}">{point.category}</span>: <b>{point.y:.2f}%</b> <br/>'
+					pointFormat: '<span style="color:{point.color}">{series.name}</span>: <b>{point.y}</b> <br/>'
 				},
 				plotOptions: {
 					series: {
+						pointPadding: 0.93,
+						groupPadding: 0.93,
+						borderWidth: 0.93,
 						cursor: 'pointer',
 						borderWidth: 0,
 						dataLabels: {
-							enabled: true,
-							formatter: function () {
-								return Highcharts.numberFormat(this.y,2)+'%';
-							}
+							enabled: true
 						}
 					}
 				},credits: {
 					enabled: false
 				},
-				series: [
-				{
-					"colorByPoint": true,
-					name: 'NG',
-					data: ng_rate_alto,
-				}
-				]
+				series: series
 			});
 
 
 
 			//Kensa Tenor
-			var ng_name_tenor = [];
-			var jml_tenor = [];			
-			var ng_rate_tenor = [];			
-			for (var i = 0; i < result.ngKensa_tenor.length; i++) {
-				ng_name_tenor.push(result.ngKensa_tenor[i].ng_name);
-				jml_tenor.push(parseInt(result.ngKensa_tenor[i].jml));
-				ng_rate_tenor.push((jml_tenor[i]/result.totalCekKensa_tenor[0].total)*100);
+
+			var ng_name;
+			var ng_rate;
+			var color;
+			var series = [];
+
+			var other_ng = 0;
+			var other_check = 0;
+
+			for (var i = 0; i < result.kensa_ng_tenor.length; i++) {
+				if(result.kensa_ng_tenor[i].ng_name == 'Kizu before'){
+					ng_name = result.kensa_ng_tenor[i].ng_name;
+					ng_rate = [result.kensa_ng_tenor[i].ng];
+					color = '#2b908f';
+					series.push({name : ng_name, data: ng_rate, color: color});
+
+				}else if(result.kensa_ng_tenor[i].ng_name == 'Kizu after'){
+					ng_name = result.kensa_ng_tenor[i].ng_name;
+					ng_rate = [result.kensa_ng_tenor[i].ng];
+					color = '#9c4dcc';
+					series.push({name : ng_name, data: ng_rate, color: color});
+
+				}else if(result.kensa_ng_tenor[i].ng_name == 'Yogore'){
+					ng_name = result.kensa_ng_tenor[i].ng_name;
+					ng_rate = [result.kensa_ng_tenor[i].ng];
+					color = '#90ee7e';
+					series.push({name : ng_name, data: ng_rate, color: color});
+
+				}else if(result.kensa_ng_tenor[i].ng_name == 'Buff tarinai'){
+					ng_name = result.kensa_ng_tenor[i].ng_name;
+					ng_rate = [result.kensa_ng_tenor[i].ng];
+					color = '#f45b5b';
+					series.push({name : ng_name, data: ng_rate, color: color});
+
+				}else if(result.kensa_ng_tenor[i].ng_name == 'Nami'){
+					ng_name = result.kensa_ng_tenor[i].ng_name;
+					ng_rate = [result.kensa_ng_tenor[i].ng];
+					color = '#7798BF';
+					series.push({name : ng_name, data: ng_rate, color: color});
+
+				}else if(result.kensa_ng_tenor[i].ng_name == 'Mekki nai'){
+					ng_name = result.kensa_ng_tenor[i].ng_name;
+					ng_rate = [result.kensa_ng_tenor[i].ng];
+					color = '#aaeeee';
+					series.push({name : ng_name, data: ng_rate, color: color});
+
+				}else if(result.kensa_ng_tenor[i].ng_name == 'Kumori'){
+					ng_name = result.kensa_ng_tenor[i].ng_name;
+					ng_rate = [result.kensa_ng_tenor[i].ng];
+					color = '#ff0066';
+					series.push({name : ng_name, data: ng_rate, color: color});
+
+				}else if(result.kensa_ng_tenor[i].ng_name == 'Hakuri nokoru'){
+					ng_name = result.kensa_ng_tenor[i].ng_name;
+					ng_rate = [result.kensa_ng_tenor[i].ng];
+					color = '#FF8F00';
+					series.push({name : ng_name, data: ng_rate, color: color});
+
+				}else if(result.kensa_ng_tenor[i].ng_name == 'Mekki warui'){
+					ng_name = result.kensa_ng_tenor[i].ng_name;
+					ng_rate = [result.kensa_ng_tenor[i].ng];
+					color = '#cfd8dc';
+					series.push({name : ng_name, data: ng_rate, color: color});
+
+				}else if(result.kensa_ng_tenor[i].ng_name == 'Kake'){
+					ng_name = result.kensa_ng_tenor[i].ng_name;
+					ng_rate = [result.kensa_ng_tenor[i].ng];
+					color = '#a1887f';
+					series.push({name : ng_name, data: ng_rate, color: color});
+
+				}else if(result.kensa_ng_tenor[i].ng_name == 'Handa oi'){
+					ng_name = result.kensa_ng_tenor[i].ng_name;
+					ng_rate = [result.kensa_ng_tenor[i].ng];
+					color = '#212121';
+					series.push({name : ng_name, data: ng_rate, color: color});
+
+				}else if(result.kensa_ng_tenor[i].ng_name == 'Yogore plt'){
+					ng_name = result.kensa_ng_tenor[i].ng_name;
+					ng_rate = [result.kensa_ng_tenor[i].ng];
+					color = '#FFEB3B';
+					series.push({name : ng_name, data: ng_rate, color: color});
+
+				}else{
+					other_ng += result.kensa_ng_tenor[i].ng;
+					other_check = result.kensa_ng_tenor[i].check;
+
+				}
 			}
-			var bulan = result.bulan;
+
+			series.push({name : 'Others', data: [other_ng], color: '#455dff'});
+			series.sort(function(a, b){return b.data[0] - a.data[0]});
+
+
 
 			Highcharts.chart('chart_kensa_3_tenor', {
 				chart: {
 					type: 'column'
 				},
 				title: {
-					text: '<center><span style="font-size: 16pt;">10 Highest NG Kensa Tenor Sax Key on '+bulanText(bulan)+'</center></span>',
+					text: '<center><span style="font-size: 16pt;">Highest NG Kensa Plating Tenor Sax Key</center></span>',
+					useHTML: true
+				},
+				subtitle: {
+					text: '<span style="font-size: 15pt; color: rgb(60, 60, 60);">on '+result.bulanText+'</span><br><center><span style="color: rgba(96, 92, 168);"></center></span>',
 					useHTML: true
 				},
 				xAxis: {
-					categories: ng_name_tenor,
+					categories: ng_name,
+					type: 'category',
+					gridLineWidth: 1,
+					gridLineColor: 'RGB(204,255,255)',
+					reversed: true,
 					labels: {
-						// padding: 30,
-						useHTML: true,
-						style: {
-							maxWidth: '90px',
-							textOverflow: 'ellipsis',
-						},
-					}
+						enabled: false
+					},
 				},
 				yAxis: {
 					type: 'logarithmic',
 					title: {
-						text: 'NG Rate (%)'
+						text: 'Total Not Good'
 					}
 				},
 				legend : {
-					enabled: false
+					enabled: true,
+					borderWidth: 1,
+					backgroundColor:
+					Highcharts.defaultOptions.legend.backgroundColor || '#ffffff',
+					shadow: true
 				},
 				tooltip: {
 					headerFormat: '<span>Tenor Key Not Good</span><br/>',
-					pointFormat: '<span style="color:{point.color}">{point.category}</span>: <b>{point.y:.2f}%</b> <br/>'
+					pointFormat: '<span style="color:{point.color}">{series.name}</span>: <b>{point.y}</b> <br/>'
 				},
 				plotOptions: {
 					series: {
+						pointPadding: 0.93,
+						groupPadding: 0.93,
+						borderWidth: 0.93,
 						cursor: 'pointer',
 						borderWidth: 0,
 						dataLabels: {
-							enabled: true,
-							formatter: function () {
-								return Highcharts.numberFormat(this.y,2)+'%';
-							}
+							enabled: true
 						}
 					}
 				},credits: {
 					enabled: false
 				},
-				series: [
-				{
-					"colorByPoint": true,
-					name: 'NG',
-					data: ng_rate_tenor,
-				}
-				]
+				series: series
 			});
 
 
 
-			//IC Alto Key
-			var key = [];
-			var kizu = [];
-			var nami = [];
-			var deko = [];
-			var aus = [];
-			var buff_kurang = [];
-			var buff_nagare = [];
-			var rho_tsuki = [];
-			var rho_tare = [];
-			var lain = [];
+		//IC Alto Key
+		var key = [];
 
-			for (var i = 0; i < result.ngICKey_alto.length; i++) {
-				key.push(result.ngICKey_alto[i].key);
-				for (var j = 0; j < result.ngICKey_alto_detail.length; j++) {
-					if(result.ngICKey_alto[i].key == result.ngICKey_alto_detail[j].key){
-						if(result.ngICKey_alto_detail[j].ng_name == 'Kizu'){
-							kizu.push(result.ngICKey_alto_detail[j].jml);
-						}else if(result.ngICKey_alto_detail[j].ng_name == 'Nami'){
-							nami.push(result.ngICKey_alto_detail[j].jml);
-						}else if(result.ngICKey_alto_detail[j].ng_name == 'Deko'){
-							deko.push(result.ngICKey_alto_detail[j].jml);
-						}else if(result.ngICKey_alto_detail[j].ng_name == 'Aus'){
-							aus.push(result.ngICKey_alto_detail[j].jml);
-						}else if(result.ngICKey_alto_detail[j].ng_name == 'Buff kurang'){
-							buff_kurang.push(result.ngICKey_alto_detail[j].jml);
-						}else if(result.ngICKey_alto_detail[j].ng_name == 'Buff Nagare'){
-							buff_nagare.push(result.ngICKey_alto_detail[j].jml);
-						}else if(result.ngICKey_alto_detail[j].ng_name == 'Rho tsuki'){
-							rho_tsuki.push(result.ngICKey_alto_detail[j].jml);
-						}else if(result.ngICKey_alto_detail[j].ng_name == 'Rho tare'){
-							rho_tare.push(result.ngICKey_alto_detail[j].jml);
-						}else if(result.ngICKey_alto_detail[j].ng_name == 'Lain-lain'){
-							lain.push(result.ngICKey_alto_detail[j].jml);
-						}
+		var kizu = [0,0,0,0,0,0,0,0,0,0];
+		var nami = [0,0,0,0,0,0,0,0,0,0];
+		var deko = [0,0,0,0,0,0,0,0,0,0];
+		var aus = [0,0,0,0,0,0,0,0,0,0];
+		var buff_kurang = [0,0,0,0,0,0,0,0,0,0];
+		var buff_nagare = [0,0,0,0,0,0,0,0,0,0];
+		var rho_tsuki = [0,0,0,0,0,0,0,0,0,0];
+		var rho_tare = [0,0,0,0,0,0,0,0,0,0];
+		var lain = [0,0,0,0,0,0,0,0,0,0];
+		
+
+		for (var i = 0; i < result.ic_ng_key_alto.length; i++) {
+			key.push(result.ic_ng_key_alto[i].key);
+
+			for (var j = 0; j < result.ic_ng_key_alto_detail.length; j++) {
+				if(result.ic_ng_key_alto[i].key == result.ic_ng_key_alto_detail[j].key){
+
+					if(result.ic_ng_key_alto_detail[j].ng_name == 'Kizu'){
+						kizu[i] = result.ic_ng_key_alto_detail[j].ng;									
+					}else if(result.ic_ng_key_alto_detail[j].ng_name == 'Nami'){
+						nami[i] = result.ic_ng_key_alto_detail[j].ng;									
+					}else if(result.ic_ng_key_alto_detail[j].ng_name == 'Deko'){
+						deko[i] = result.ic_ng_key_alto_detail[j].ng;									
+					}else if(result.ic_ng_key_alto_detail[j].ng_name == 'Aus'){
+						aus[i] = result.ic_ng_key_alto_detail[j].ng;									
+					}else if(result.ic_ng_key_alto_detail[j].ng_name == 'Buff kurang'){
+						buff_kurang[i] = result.ic_ng_key_alto_detail[j].ng;									
+					}else if(result.ic_ng_key_alto_detail[j].ng_name == 'Buff nagare'){
+						buff_nagare[i] = result.ic_ng_key_alto_detail[j].ng;									
+					}else if(result.ic_ng_key_alto_detail[j].ng_name == 'Rho tsuki'){
+						rho_tsuki[i] = result.ic_ng_key_alto_detail[j].ng;									
+					}else if(result.ic_ng_key_alto_detail[j].ng_name == 'Rho tare'){
+						rho_tare[i] = result.ic_ng_key_alto_detail[j].ng;									
+					}else if(result.ic_ng_key_alto_detail[j].ng_name == 'Lain-lain'){
+						lain[i] = result.ic_ng_key_alto_detail[j].ng;									
 					}
 				}
 			}
+		}
 
-			Highcharts.chart('chart_ic_4_alto', {
-				chart: {
-					type: 'column'
-				},
+		Highcharts.chart('chart_ic_4_alto', {
+			chart: {
+				type: 'column'
+			},
+			title: {
+				text: '<span style="font-size: 16pt;">10 Highest Keys NG I.C. Plating Alto Sax</span><br><center><span style="color: rgba(96, 92, 168);"></center></span>',
+				useHTML: true
+			},
+			subtitle: {
+				text: '<span style="font-size: 15pt; color: rgb(60, 60, 60);">on '+result.bulanText+'</span><br><center><span style="color: rgba(96, 92, 168);"></center></span>',
+				useHTML: true
+			},
+			xAxis: {
+				categories: key
+			},
+			yAxis: {
 				title: {
-					text: '<span style="font-size: 18pt;">10 Highest Keys NG IC Alto Sax on '+bulanText(bulan)+'</span><br><center><span style="color: rgba(96, 92, 168);"></center></span>',
-					useHTML: true
+					text: 'Total Not Good'
 				},
-				xAxis: {
-					categories: key
-				},
-				yAxis: {
-					title: {
-						text: 'Total Not Good'
-					},
-					stackLabels: {
-						enabled: true,
-						style: {
-							color: 'black',
-						}
-					},
-				},
-				legend: {
+				stackLabels: {
 					enabled: true,
-					borderWidth: 1,
-					backgroundColor:
-					Highcharts.defaultOptions.legend.backgroundColor || '#ffffff',
-					shadow: true
-				},
-				tooltip: {
-					pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name}</span> : <b>{point.y}</b> <br/>',
-				},
-				plotOptions: {
-					column: {
-						stacking: 'normal',
-					},
-					series: {
-						animation: false,
-						pointPadding: 0.93,
-						groupPadding: 0.93,
-						borderWidth: 0.93,
-						cursor: 'pointer'
+					style: {
+						color: 'black',
 					}
-				},credits: {
-					enabled: false
 				},
-				series: [
-				{
-					name: 'Kizu',
-					data: kizu,
-					color: '#2b908f'
+			},
+			legend: {
+				enabled: true,
+				borderWidth: 1,
+				backgroundColor:
+				Highcharts.defaultOptions.legend.backgroundColor || '#ffffff',
+				shadow: true
+			},
+			tooltip: {
+				pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name}</span> : <b>{point.y}</b> <br/>',
+			},
+			plotOptions: {
+				column: {
+					stacking: 'normal',
 				},
-				{
-					name: 'Nami',
-					data: nami,
-					color: '#90ee7e'
-				},
-				{
-					name: 'Deko',
-					data: deko,
-					color: '#f45b5b'
-				},
-				{
-					name: 'Aus',
-					data: aus,
-					color: '#7798BF'
-				},
-				{
-					name: 'Buff Kurang',
-					data: buff_kurang,
-					color: '#aaeeee'
-				},
-				{
-					name: 'Buff Nagare',
-					data: buff_nagare,
-					color: '#ff0066'
-				},
-				{
-					name: 'Rho Tsuki',
-					data: rho_tsuki,
-					color: '#eeaaee'
-				},
-				{
-					name: 'Rho Tare',
-					data: rho_tare,
-					color: '#FFEB3B'
-				},
-				{
-					name: 'Lain-lain',
-					data: lain,
-					color: '#9C27B0'
+				series: {
+					animation: false,
+					pointPadding: 0.93,
+					groupPadding: 0.93,
+					borderWidth: 0.93,
+					cursor: 'pointer'
 				}
-				]
-			});
+			},credits: {
+				enabled: false
+			},
+			series: [
+			{
+				name: 'Kizu',
+				data: kizu,
+				color: '#2b908f'
+			},
+			{
+				name: 'Nami',
+				data: nami,
+				color: '#90ee7e'
+			},
+			{
+				name: 'Deko',
+				data: deko,
+				color: '#f45b5b'
+			},
+			{
+				name: 'Aus',
+				data: aus,
+				color: '#7798BF'
+			},
+			{
+				name: 'Buff Kurang',
+				data: buff_kurang,
+				color: '#aaeeee'
+			},
+			{
+				name: 'Buff Nagare',
+				data: buff_nagare,
+				color: '#ff0066'
+			},
+			{
+				name: 'Rho Tsuki',
+				data: rho_tsuki,
+				color: '#eeaaee'
+			},
+			{
+				name: 'Rho Tare',
+				data: rho_tare,
+				color: '#FFEB3B'
+			},
+			{
+				name: 'Lain-lain',
+				data: lain,
+				color: '#9C27B0'
+			}
+			]
+		});
 
 
 
-			//IC Tenor Key
-			var key = [];
-			var kizu = [];
-			var nami = [];
-			var deko = [];
-			var aus = [];
-			var buff_kurang = [];
-			var buff_nagare = [];
-			var rho_tsuki = [];
-			var rho_tare = [];
-			var lain = [];
+		//IC Tenor Key
+		var kizu = [0,0,0,0,0,0,0,0,0,0];
+		var nami = [0,0,0,0,0,0,0,0,0,0];
+		var deko = [0,0,0,0,0,0,0,0,0,0];
+		var aus = [0,0,0,0,0,0,0,0,0,0];
+		var buff_kurang = [0,0,0,0,0,0,0,0,0,0];
+		var buff_nagare = [0,0,0,0,0,0,0,0,0,0];
+		var rho_tsuki = [0,0,0,0,0,0,0,0,0,0];
+		var rho_tare = [0,0,0,0,0,0,0,0,0,0];
+		var lain = [0,0,0,0,0,0,0,0,0,0];
+		
 
-			for (var i = 0; i < result.ngICKey_tenor.length; i++) {
-				key.push(result.ngICKey_tenor[i].key);
-				for (var j = 0; j < result.ngICKey_tenor_detail.length; j++) {
-					if(result.ngICKey_tenor[i].key == result.ngICKey_tenor_detail[j].key){
-						if(result.ngICKey_tenor_detail[j].ng_name == 'Kizu'){
-							kizu.push(result.ngICKey_tenor_detail[j].jml);
-						}else if(result.ngICKey_tenor_detail[j].ng_name == 'Nami'){
-							nami.push(result.ngICKey_tenor_detail[j].jml);
-						}else if(result.ngICKey_tenor_detail[j].ng_name == 'Deko'){
-							deko.push(result.ngICKey_tenor_detail[j].jml);
-						}else if(result.ngICKey_tenor_detail[j].ng_name == 'Aus'){
-							aus.push(result.ngICKey_tenor_detail[j].jml);
-						}else if(result.ngICKey_tenor_detail[j].ng_name == 'Buff kurang'){
-							buff_kurang.push(result.ngICKey_tenor_detail[j].jml);
-						}else if(result.ngICKey_tenor_detail[j].ng_name == 'Buff Nagare'){
-							buff_nagare.push(result.ngICKey_tenor_detail[j].jml);
-						}else if(result.ngICKey_tenor_detail[j].ng_name == 'Rho tsuki'){
-							rho_tsuki.push(result.ngICKey_tenor_detail[j].jml);
-						}else if(result.ngICKey_tenor_detail[j].ng_name == 'Rho tare'){
-							rho_tare.push(result.ngICKey_tenor_detail[j].jml);
-						}else if(result.ngICKey_tenor_detail[j].ng_name == 'Lain-lain'){
-							lain.push(result.ngICKey_tenor_detail[j].jml);
-						}
+		for (var i = 0; i < result.ic_ng_key_tenor.length; i++) {
+			key.push(result.ic_ng_key_tenor[i].key);
+
+			for (var j = 0; j < result.ic_ng_key_tenor_detail.length; j++) {
+				if(result.ic_ng_key_tenor[i].key == result.ic_ng_key_tenor_detail[j].key){
+
+					if(result.ic_ng_key_tenor_detail[j].ng_name == 'Kizu'){
+						kizu[i] = result.ic_ng_key_tenor_detail[j].ng;									
+					}else if(result.ic_ng_key_tenor_detail[j].ng_name == 'Nami'){
+						nami[i] = result.ic_ng_key_tenor_detail[j].ng;									
+					}else if(result.ic_ng_key_tenor_detail[j].ng_name == 'Deko'){
+						deko[i] = result.ic_ng_key_tenor_detail[j].ng;									
+					}else if(result.ic_ng_key_tenor_detail[j].ng_name == 'Aus'){
+						aus[i] = result.ic_ng_key_tenor_detail[j].ng;									
+					}else if(result.ic_ng_key_tenor_detail[j].ng_name == 'Buff kurang'){
+						buff_kurang[i] = result.ic_ng_key_tenor_detail[j].ng;									
+					}else if(result.ic_ng_key_tenor_detail[j].ng_name == 'Buff nagare'){
+						buff_nagare[i] = result.ic_ng_key_tenor_detail[j].ng;									
+					}else if(result.ic_ng_key_tenor_detail[j].ng_name == 'Rho tsuki'){
+						rho_tsuki[i] = result.ic_ng_key_tenor_detail[j].ng;									
+					}else if(result.ic_ng_key_tenor_detail[j].ng_name == 'Rho tare'){
+						rho_tare[i] = result.ic_ng_key_tenor_detail[j].ng;									
+					}else if(result.ic_ng_key_tenor_detail[j].ng_name == 'Lain-lain'){
+						lain[i] = result.ic_ng_key_tenor_detail[j].ng;									
 					}
 				}
 			}
+		}
 
-			Highcharts.chart('chart_ic_4_tenor', {
-				chart: {
-					type: 'column'
-				},
+		Highcharts.chart('chart_ic_4_tenor', {
+			chart: {
+				type: 'column'
+			},
+			title: {
+				text: '<span style="font-size: 16pt;">10 Highest Keys NG I.C. Plating Tenor Sax</span><br><center><span style="color: rgba(96, 92, 168);"></center></span>',
+				useHTML: true
+			},
+			subtitle: {
+				text: '<span style="font-size: 15pt; color: rgb(60, 60, 60);">on '+result.bulanText+'</span><br><center><span style="color: rgba(96, 92, 168);"></center></span>',
+				useHTML: true
+			},
+			xAxis: {
+				categories: key
+			},
+			yAxis: {
 				title: {
-					text: '<span style="font-size: 18pt;">10 Highest Keys NG IC Tenor Sax on '+bulanText(bulan)+'</span><br><center><span style="color: rgba(96, 92, 168);"></center></span>',
-					useHTML: true,
+					text: 'Total Not Good'
 				},
-				xAxis: {
-					categories: key
-				},
-				yAxis: {
-					title: {
-						text: 'Total Not Good'
-					},
-					stackLabels: {
-						enabled: true,
-						style: {
-							color: 'black',
-						}
-					},
-				},
-				legend: {
+				stackLabels: {
 					enabled: true,
-					borderWidth: 1,
-					backgroundColor:
-					Highcharts.defaultOptions.legend.backgroundColor || '#ffffff',
-					shadow: true
-				},
-				tooltip: {
-					pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name}</span> : <b>{point.y}</b> <br/>',
-				},
-				plotOptions: {
-					column: {
-						stacking: 'normal',
-					},
-					series: {
-						animation: false,
-						pointPadding: 0.93,
-						groupPadding: 0.93,
-						borderWidth: 0.93,
-						cursor: 'pointer'
+					style: {
+						color: 'black',
 					}
-				},credits: {
-					enabled: false
 				},
-				series: [
-				{
-					name: 'Kizu',
-					data: kizu,
-					color: '#2b908f'
+			},
+			legend: {
+				enabled: true,
+				borderWidth: 1,
+				backgroundColor:
+				Highcharts.defaultOptions.legend.backgroundColor || '#ffffff',
+				shadow: true
+			},
+			tooltip: {
+				pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name}</span> : <b>{point.y}</b> <br/>',
+			},
+			plotOptions: {
+				column: {
+					stacking: 'normal',
 				},
-				{
-					name: 'Nami',
-					data: nami,
-					color: '#90ee7e'
-				},
-				{
-					name: 'Deko',
-					data: deko,
-					color: '#f45b5b'
-				},
-				{
-					name: 'Aus',
-					data: aus,
-					color: '#7798BF'
-				},
-				{
-					name: 'Buff Kurang',
-					data: buff_kurang,
-					color: '#aaeeee'
-				},
-				{
-					name: 'Buff Nagare',
-					data: buff_nagare,
-					color: '#ff0066'
-				},
-				{
-					name: 'Rho Tsuki',
-					data: rho_tsuki,
-					color: '#eeaaee'
-				},
-				{
-					name: 'Rho Tare',
-					data: rho_tare,
-					color: '#FFEB3B'
-				},
-				{
-					name: 'Lain-lain',
-					data: lain,
-					color: '#9C27B0'
+				series: {
+					animation: false,
+					pointPadding: 0.93,
+					groupPadding: 0.93,
+					borderWidth: 0.93,
+					cursor: 'pointer'
 				}
-				]
-			});
+			},credits: {
+				enabled: false
+			},
+			series: [
+			{
+				name: 'Kizu',
+				data: kizu,
+				color: '#2b908f'
+			},
+			{
+				name: 'Nami',
+				data: nami,
+				color: '#90ee7e'
+			},
+			{
+				name: 'Deko',
+				data: deko,
+				color: '#f45b5b'
+			},
+			{
+				name: 'Aus',
+				data: aus,
+				color: '#7798BF'
+			},
+			{
+				name: 'Buff Kurang',
+				data: buff_kurang,
+				color: '#aaeeee'
+			},
+			{
+				name: 'Buff Nagare',
+				data: buff_nagare,
+				color: '#ff0066'
+			},
+			{
+				name: 'Rho Tsuki',
+				data: rho_tsuki,
+				color: '#eeaaee'
+			},
+			{
+				name: 'Rho Tare',
+				data: rho_tare,
+				color: '#FFEB3B'
+			},
+			{
+				name: 'Lain-lain',
+				data: lain,
+				color: '#9C27B0'
+			}
+			]
+		});
 
-			
-			
+
+
 			//Kensa Alto Key
 			var key = [];
 
-			var	kizu_after = [];
-			var	kizu_before = [];
-			var	buff_tarinai = [];
-			var	nami = [];
-			var	kumori = [];
-			var	mekki_nai = [];
-			var	hakuri_lcq = [];
-			var	hakuri_nokoru = [];
-			var	kake = [];
-			var mekki_warui = [];	
-			var lain = [];
+			var kizu_before = [0,0,0,0,0,0,0,0,0,0];
+			var kizu_after = [0,0,0,0,0,0,0,0,0,0];
+			var yogore = [0,0,0,0,0,0,0,0,0,0];
+			var buff_tarinai = [0,0,0,0,0,0,0,0,0,0];
+			var nami = [0,0,0,0,0,0,0,0,0,0];
+			var mekki_nai = [0,0,0,0,0,0,0,0,0,0];
+			var kumori = [0,0,0,0,0,0,0,0,0,0];			
+			var hakuri_nokoru = [0,0,0,0,0,0,0,0,0,0];
+			var mekki_warui = [0,0,0,0,0,0,0,0,0,0];
+			var kake = [0,0,0,0,0,0,0,0,0,0];
+			var handa_oi = [0,0,0,0,0,0,0,0,0,0];
+			var yogore_plt = [0,0,0,0,0,0,0,0,0,0];
+			var other = [0,0,0,0,0,0,0,0,0,0];
 
-			for (var i = 0; i < result.ngKensaKey_alto.length; i++) {
-				key.push(result.ngKensaKey_alto[i].key);
-				for (var j = 0; j < result.ngKensaKey_alto_detail.length; j++) {
-					if(result.ngKensaKey_alto[i].key == result.ngKensaKey_alto_detail[j].key){
-						if(result.ngKensaKey_alto_detail[j].ng_name == 'Kizu after'){
-							kizu_after.push(result.ngKensaKey_alto_detail[j].jml);
-						}else if(result.ngKensaKey_alto_detail[j].ng_name == 'Kizu before'){
-							kizu_before.push(result.ngKensaKey_alto_detail[j].jml);
-						}else if(result.ngKensaKey_alto_detail[j].ng_name == 'Buff tarinai'){
-							buff_tarinai.push(result.ngKensaKey_alto_detail[j].jml);
-						}else if(result.ngKensaKey_alto_detail[j].ng_name == 'Nami'){
-							nami.push(result.ngKensaKey_alto_detail[j].jml);
-						}else if(result.ngKensaKey_alto_detail[j].ng_name == 'Kumori'){
-							kumori.push(result.ngKensaKey_alto_detail[j].jml);
-						}else if(result.ngKensaKey_alto_detail[j].ng_name == 'Mekki nai'){
-							mekki_nai.push(result.ngKensaKey_alto_detail[j].jml);
-						}else if(result.ngKensaKey_alto_detail[j].ng_name == 'Hakuri lcq'){
-							hakuri_lcq.push(result.ngKensaKey_alto_detail[j].jml);
-						}else if(result.ngKensaKey_alto_detail[j].ng_name == 'Hakuri nokoru'){
-							hakuri_nokoru.push(result.ngKensaKey_alto_detail[j].jml);
-						}else if(result.ngKensaKey_alto_detail[j].ng_name == 'Kake'){
-							kake.push(result.ngKensaKey_alto_detail[j].jml);
-						}else if(result.ngKensaKey_alto_detail[j].ng_name == 'Mekki warui'){
-							mekki_warui.push(result.ngKensaKey_alto_detail[j].jml);
+			for (var i = 0; i < result.kensa_ng_key_alto.length; i++) {
+				key.push(result.kensa_ng_key_alto[i].key);
+
+				for (var j = 0; j < result.kensa_ng_key_alto_detail.length; j++) {
+					if(result.kensa_ng_key_alto[i].key == result.kensa_ng_key_alto_detail[j].key){
+
+						if(result.kensa_ng_key_alto_detail[j].ng_name == 'Kizu before'){
+							kizu_before[i] = result.kensa_ng_key_alto_detail[j].ng;
+						}else if(result.kensa_ng_key_alto_detail[j].ng_name == 'Kizu after'){
+							kizu_after[i] = result.kensa_ng_key_alto_detail[j].ng;
+						}else if(result.kensa_ng_key_alto_detail[j].ng_name == 'Yogore'){
+							yogore[i] = result.kensa_ng_key_alto_detail[j].ng;									
+						}else if(result.kensa_ng_key_alto_detail[j].ng_name == 'Buff tarinai'){
+							buff_tarinai[i] = result.kensa_ng_key_alto_detail[j].ng;
+						}else if(result.kensa_ng_key_alto_detail[j].ng_name == 'Nami'){
+							nami[i] = result.kensa_ng_key_alto_detail[j].ng;									
+						}else if(result.kensa_ng_key_alto_detail[j].ng_name == 'Mekki nai'){
+							mekki_nai[i] = result.kensa_ng_key_alto_detail[j].ng;
+						}else if(result.kensa_ng_key_alto_detail[j].ng_name == 'Kumori'){
+							kumori[i] = result.kensa_ng_key_alto_detail[j].ng;
+						}else if(result.kensa_ng_key_alto_detail[j].ng_name == 'Hakuri nokoru'){
+							hakuri_nokoru[i] = result.kensa_ng_key_alto_detail[j].ng;
+						}else if(result.kensa_ng_key_alto_detail[j].ng_name == 'Mekki warui'){
+							mekki_warui[i] = result.kensa_ng_key_alto_detail[j].ng;
+						}else if(result.kensa_ng_key_alto_detail[j].ng_name == 'Kake'){
+							kake[i] = result.kensa_ng_key_alto_detail[j].ng;									
+						}else if(result.kensa_ng_key_alto_detail[j].ng_name == 'Handa oi'){
+							handa_oi[i] = result.kensa_ng_key_alto_detail[j].ng;									
+						}else if(result.kensa_ng_key_alto_detail[j].ng_name == 'Yogore plt'){
+							yogore_plt[i] = result.kensa_ng_key_alto_detail[j].ng;
 						}else{
-							if(typeof lain[i] == 'undefined'){
-								lain.push(result.ngKensaKey_alto_detail[j].jml);
+							if(typeof other[i] == 'undefined'){
+								other.push(result.kensa_ng_key_alto_detail[j].ng);
 							}else{
-								lain[i] += result.ngKensaKey_alto_detail[j].jml;
+								other[i] += result.kensa_ng_key_alto_detail[j].ng;
 							}
-
 						}
 					}
 				}
@@ -1432,7 +1573,11 @@ $.get('{{ url("fetch/middle/plt_ng/".$id) }}', data, function(result, status, xh
 					type: 'column'
 				},
 				title: {
-					text: '</center><span style="font-size: 16pt;">10 Highest Keys NG Kensa Alto Sax on '+bulanText(bulan)+'</center></span>',
+					text: '<span style="font-size: 16pt;">10 Highest Keys NG Kensa Plating Alto Sax</span><br><center><span style="color: rgba(96, 92, 168);"></center></span>',
+					useHTML: true
+				},
+				subtitle: {
+					text: '<span style="font-size: 15pt; color: rgb(60, 60, 60);">on '+result.bulanText+'</span><br><center><span style="color: rgba(96, 92, 168);"></center></span>',
 					useHTML: true
 				},
 				xAxis: {
@@ -1475,15 +1620,20 @@ $.get('{{ url("fetch/middle/plt_ng/".$id) }}', data, function(result, status, xh
 				},
 				series: [
 				{
-					name: 'Kizu After',
-					data: kizu_after,
+					name: 'Kizu Before',
+					data: kizu_before,
 					color: '#2b908f'
 				},
 				{
-					name: 'Kizu Before',
-					data: kizu_before,
-					color: '#90ee7e'
+					name: 'Kizu After',
+					data: kizu_after,
+					color: '#9c4dcc'
 				},
+				{
+					name: 'Yogore',
+					data: yogore,
+					color: '#90ee7e'
+				},				
 				{
 					name: 'Buff Taranai',
 					data: buff_tarinai,
@@ -1495,89 +1645,102 @@ $.get('{{ url("fetch/middle/plt_ng/".$id) }}', data, function(result, status, xh
 					color: '#7798BF'
 				},
 				{
-					name: 'Kumori',
-					data: kumori,
+					name: 'Mekki Nai',
+					data: mekki_nai,
 					color: '#aaeeee'
 				},
 				{
-					name: 'Mekki Nai',
-					data: mekki_nai,
+					name: 'Kumori',
+					data: kumori,
 					color: '#ff0066'
-				},
-				{
-					name: 'Hakuri LCQ',
-					data: hakuri_lcq,
-					color: '#FF8F00'
 				},
 				{
 					name: 'Hakuri Nokoru',
 					data: hakuri_nokoru,
-					color: '#9C27B0'
-				},
-				{
-					name: 'Kake',
-					data: kake,
-					color: '#212121'
+					color: '#FF8F00'
 				},
 				{
 					name: 'Mekki Warui',
 					data: mekki_warui,
+					color: '#cfd8dc'
+				},
+				{
+					name: 'Kake',
+					data: kake,
+					color: '#a1887f'
+				},
+				{
+					name: 'Handa oi',
+					data: handa_oi,
+					color: '#212121'
+				},
+				{
+					name: 'Yogore Plt',
+					data: yogore_plt,
 					color: '#FFEB3B'
 				},
 				{
-					name: 'Lain-lain',
-					data: lain,
-					color: '#BCAAA4'
+					name: 'Others',
+					data: other,
+					color: '#455dff'
 				}
 				]
 			});
 
-			//Kensa Alto Key
+
+			//Kensa Tenor Key
 			var key = [];
 
-			var	kizu_after = [];
-			var	kizu_before = [];
-			var	buff_tarinai = [];
-			var	nami = [];
-			var	kumori = [];
-			var	mekki_nai = [];
-			var	hakuri_lcq = [];
-			var	hakuri_nokoru = [];
-			var	kake = [];
-			var mekki_warui = [];	
-			var lain = [];
+			var kizu_before = [0,0,0,0,0,0,0,0,0,0];
+			var kizu_after = [0,0,0,0,0,0,0,0,0,0];
+			var yogore = [0,0,0,0,0,0,0,0,0,0];
+			var buff_tarinai = [0,0,0,0,0,0,0,0,0,0];
+			var nami = [0,0,0,0,0,0,0,0,0,0];
+			var mekki_nai = [0,0,0,0,0,0,0,0,0,0];
+			var kumori = [0,0,0,0,0,0,0,0,0,0];			
+			var hakuri_nokoru = [0,0,0,0,0,0,0,0,0,0];
+			var mekki_warui = [0,0,0,0,0,0,0,0,0,0];
+			var kake = [0,0,0,0,0,0,0,0,0,0];
+			var handa_oi = [0,0,0,0,0,0,0,0,0,0];
+			var yogore_plt = [0,0,0,0,0,0,0,0,0,0];
+			var other = [0,0,0,0,0,0,0,0,0,0];
 
-			for (var i = 0; i < result.ngKensaKey_tenor.length; i++) {
-				key.push(result.ngKensaKey_tenor[i].key);
-				for (var j = 0; j < result.ngKensaKey_tenor_detail.length; j++) {
-					if(result.ngKensaKey_tenor[i].key == result.ngKensaKey_tenor_detail[j].key){
-						if(result.ngKensaKey_tenor_detail[j].ng_name == 'Kizu after'){
-							kizu_after.push(result.ngKensaKey_tenor_detail[j].jml);
-						}else if(result.ngKensaKey_tenor_detail[j].ng_name == 'Kizu before'){
-							kizu_before.push(result.ngKensaKey_tenor_detail[j].jml);
-						}else if(result.ngKensaKey_tenor_detail[j].ng_name == 'Buff tarinai'){
-							buff_tarinai.push(result.ngKensaKey_tenor_detail[j].jml);
-						}else if(result.ngKensaKey_tenor_detail[j].ng_name == 'Nami'){
-							nami.push(result.ngKensaKey_tenor_detail[j].jml);
-						}else if(result.ngKensaKey_tenor_detail[j].ng_name == 'Kumori'){
-							kumori.push(result.ngKensaKey_tenor_detail[j].jml);
-						}else if(result.ngKensaKey_tenor_detail[j].ng_name == 'Mekki nai'){
-							mekki_nai.push(result.ngKensaKey_tenor_detail[j].jml);
-						}else if(result.ngKensaKey_tenor_detail[j].ng_name == 'Hakuri lcq'){
-							hakuri_lcq.push(result.ngKensaKey_tenor_detail[j].jml);
-						}else if(result.ngKensaKey_tenor_detail[j].ng_name == 'Hakuri nokoru'){
-							hakuri_nokoru.push(result.ngKensaKey_tenor_detail[j].jml);
-						}else if(result.ngKensaKey_tenor_detail[j].ng_name == 'Kake'){
-							kake.push(result.ngKensaKey_tenor_detail[j].jml);
-						}else if(result.ngKensaKey_tenor_detail[j].ng_name == 'Mekki warui'){
-							mekki_warui.push(result.ngKensaKey_tenor_detail[j].jml);
+			for (var i = 0; i < result.kensa_ng_key_tenor.length; i++) {
+				key.push(result.kensa_ng_key_tenor[i].key);
+
+				for (var j = 0; j < result.kensa_ng_key_tenor_detail.length; j++) {
+					if(result.kensa_ng_key_tenor[i].key == result.kensa_ng_key_tenor_detail[j].key){
+
+						if(result.kensa_ng_key_tenor_detail[j].ng_name == 'Kizu before'){
+							kizu_before[i] = result.kensa_ng_key_tenor_detail[j].ng;
+						}else if(result.kensa_ng_key_tenor_detail[j].ng_name == 'Kizu after'){
+							kizu_after[i] = result.kensa_ng_key_tenor_detail[j].ng;
+						}else if(result.kensa_ng_key_tenor_detail[j].ng_name == 'Yogore'){
+							yogore[i] = result.kensa_ng_key_tenor_detail[j].ng;									
+						}else if(result.kensa_ng_key_tenor_detail[j].ng_name == 'Buff tarinai'){
+							buff_tarinai[i] = result.kensa_ng_key_tenor_detail[j].ng;
+						}else if(result.kensa_ng_key_tenor_detail[j].ng_name == 'Nami'){
+							nami[i] = result.kensa_ng_key_tenor_detail[j].ng;									
+						}else if(result.kensa_ng_key_tenor_detail[j].ng_name == 'Mekki nai'){
+							mekki_nai[i] = result.kensa_ng_key_tenor_detail[j].ng;
+						}else if(result.kensa_ng_key_tenor_detail[j].ng_name == 'Kumori'){
+							kumori[i] = result.kensa_ng_key_tenor_detail[j].ng;
+						}else if(result.kensa_ng_key_tenor_detail[j].ng_name == 'Hakuri nokoru'){
+							hakuri_nokoru[i] = result.kensa_ng_key_tenor_detail[j].ng;
+						}else if(result.kensa_ng_key_tenor_detail[j].ng_name == 'Mekki warui'){
+							mekki_warui[i] = result.kensa_ng_key_tenor_detail[j].ng;
+						}else if(result.kensa_ng_key_tenor_detail[j].ng_name == 'Kake'){
+							kake[i] = result.kensa_ng_key_tenor_detail[j].ng;									
+						}else if(result.kensa_ng_key_tenor_detail[j].ng_name == 'Handa oi'){
+							handa_oi[i] = result.kensa_ng_key_tenor_detail[j].ng;									
+						}else if(result.kensa_ng_key_tenor_detail[j].ng_name == 'Yogore plt'){
+							yogore_plt[i] = result.kensa_ng_key_tenor_detail[j].ng;
 						}else{
-							if(typeof lain[i] == 'undefined'){
-								lain.push(result.ngKensaKey_tenor_detail[j].jml);
+							if(typeof other[i] == 'undefined'){
+								other.push(result.kensa_ng_key_tenor_detail[j].ng);
 							}else{
-								lain[i] += result.ngKensaKey_tenor_detail[j].jml;
+								other[i] += result.kensa_ng_key_tenor_detail[j].ng;
 							}
-
 						}
 					}
 				}
@@ -1588,7 +1751,11 @@ $.get('{{ url("fetch/middle/plt_ng/".$id) }}', data, function(result, status, xh
 					type: 'column'
 				},
 				title: {
-					text: '</center><span style="font-size: 16pt;">10 Highest Keys NG Kensa Tenor Sax on '+bulanText(bulan)+'</center></span>',
+					text: '<span style="font-size: 16pt;">10 Highest Keys NG Kensa Plating Tenor Sax</span><br><center><span style="color: rgba(96, 92, 168);"></center></span>',
+					useHTML: true
+				},
+				subtitle: {
+					text: '<span style="font-size: 15pt; color: rgb(60, 60, 60);">on '+result.bulanText+'</span><br><center><span style="color: rgba(96, 92, 168);"></center></span>',
 					useHTML: true
 				},
 				xAxis: {
@@ -1631,15 +1798,20 @@ $.get('{{ url("fetch/middle/plt_ng/".$id) }}', data, function(result, status, xh
 				},
 				series: [
 				{
-					name: 'Kizu After',
-					data: kizu_after,
+					name: 'Kizu Before',
+					data: kizu_before,
 					color: '#2b908f'
 				},
 				{
-					name: 'Kizu Before',
-					data: kizu_before,
-					color: '#90ee7e'
+					name: 'Kizu After',
+					data: kizu_after,
+					color: '#9c4dcc'
 				},
+				{
+					name: 'Yogore',
+					data: yogore,
+					color: '#90ee7e'
+				},				
 				{
 					name: 'Buff Taranai',
 					data: buff_tarinai,
@@ -1651,39 +1823,44 @@ $.get('{{ url("fetch/middle/plt_ng/".$id) }}', data, function(result, status, xh
 					color: '#7798BF'
 				},
 				{
-					name: 'Kumori',
-					data: kumori,
+					name: 'Mekki Nai',
+					data: mekki_nai,
 					color: '#aaeeee'
 				},
 				{
-					name: 'Mekki Nai',
-					data: mekki_nai,
+					name: 'Kumori',
+					data: kumori,
 					color: '#ff0066'
-				},
-				{
-					name: 'Hakuri LCQ',
-					data: hakuri_lcq,
-					color: '#FF8F00'
 				},
 				{
 					name: 'Hakuri Nokoru',
 					data: hakuri_nokoru,
-					color: '#9C27B0'
-				},
-				{
-					name: 'Kake',
-					data: kake,
-					color: '#212121'
+					color: '#FF8F00'
 				},
 				{
 					name: 'Mekki Warui',
 					data: mekki_warui,
+					color: '#cfd8dc'
+				},
+				{
+					name: 'Kake',
+					data: kake,
+					color: '#a1887f'
+				},
+				{
+					name: 'Handa oi',
+					data: handa_oi,
+					color: '#212121'
+				},
+				{
+					name: 'Yogore Plt',
+					data: yogore_plt,
 					color: '#FFEB3B'
 				},
 				{
-					name: 'Lain-lain',
-					data: lain,
-					color: '#BCAAA4'
+					name: 'Others',
+					data: other,
+					color: '#455dff'
 				}
 				]
 			});
@@ -1699,37 +1876,17 @@ $.get('{{ url("fetch/middle/plt_ng_rate/".$id) }}', data, function(result, statu
 	if(xhr.status == 200){
 		if(result.status){
 			var tgl = [];
-			var ng_alto = [];
-			var total_alto = [];
-			var ng_rate_alto = [];
-			var push = 0;
-			for (var i = 0; i < result.dailyICAlto.length; i++) {
-				tgl.push(result.dailyICAlto[i].tgl);
+			var alto = [];
+			var tenor = [];
 
-				ng_alto.push(result.dailyICAlto[i].ng);
-				total_alto.push(result.dailyICAlto[i].total);
-				push = (ng_alto[i] / total_alto[i]) * 100;
-				if(push == 0){
-					push = NaN;
+			for (var i = 0; i < result.ic.length; i++) {
+				if(result.ic[i].hpl == 'ASKEY'){
+					tgl.push(result.ic[i].week_date);
+					alto.push(result.ic[i].ng_rate);
 				}
-				ng_rate_alto.push(push);
-			}
-
-			var tgl = [];
-			var ng_tenor = [];
-			var total_tenor = [];
-			var ng_rate_tenor = [];
-			var push = [];
-			for (var i = 0; i < result.dailyICTenor.length; i++) {
-				tgl.push(result.dailyICTenor[i].tgl);
-
-				ng_tenor.push(result.dailyICTenor[i].ng);
-				total_tenor.push(result.dailyICTenor[i].total);
-				push = (ng_tenor[i] / total_tenor[i]) * 100;
-				if(push == 0){
-					push = NaN;
+				if(result.ic[i].hpl == 'TSKEY'){
+					tenor.push(result.ic[i].ng_rate);
 				}
-				ng_rate_tenor.push(push);
 			}
 			var bulan = result.bulan;
 
@@ -1738,7 +1895,7 @@ $.get('{{ url("fetch/middle/plt_ng_rate/".$id) }}', data, function(result, statu
 					type: 'line'
 				},
 				title: {
-					text: '<span style="font-size: 18pt;">Daily NG Rate IC Sax Key on '+bulanText(bulan)+'</span>',
+					text: '<span style="font-size: 18pt;">Daily NG Rate I.C. Plating Sax Key on '+bulanText(bulan)+'</span>',
 					useHTML: true
 				},
 				xAxis: {
@@ -1778,13 +1935,13 @@ $.get('{{ url("fetch/middle/plt_ng_rate/".$id) }}', data, function(result, statu
 				series: [
 				{
 					name: 'Alto',
-					data: ng_rate_alto,
+					data: alto,
 					color: '#f5ff0d',
 					lineWidth: 3,
 				},
 				{
 					name: 'Tenor',
-					data: ng_rate_tenor,
+					data: tenor,
 					color: '#00FF00',
 					lineWidth: 3,
 				}
@@ -1792,40 +1949,18 @@ $.get('{{ url("fetch/middle/plt_ng_rate/".$id) }}', data, function(result, statu
 			});
 
 			var tgl = [];
-			var ng_alto = [];
-			var total_alto = [];
-			var ng_rate_alto = [];
-			var push = 0;
-			for (var i = 0; i < result.dailyKensaAlto.length; i++) {
-				tgl.push(result.dailyKensaAlto[i].tgl);
+			var alto = [];
+			var tenor = [];
 
-				ng_alto.push(result.dailyKensaAlto[i].ng);
-				total_alto.push(result.dailyKensaAlto[i].total);
-				push = (ng_alto[i] / total_alto[i]) * 100;
-				if(push == 0){
-					push = NaN;
+			for (var i = 0; i < result.kensa.length; i++) {
+				if(result.kensa[i].hpl == 'ASKEY'){
+					tgl.push(result.kensa[i].week_date);
+					alto.push(result.kensa[i].ng_rate);
 				}
-
-				ng_rate_alto.push(push);
-			}
-
-			var tgl = [];
-			var ng_tenor = [];
-			var total_tenor = [];
-			var ng_rate_tenor = [];
-
-			for (var i = 0; i < result.dailyKensaTenor.length; i++) {
-				tgl.push(result.dailyKensaTenor[i].tgl);
-
-				ng_tenor.push(result.dailyKensaTenor[i].ng);
-				total_tenor.push(result.dailyKensaTenor[i].total);
-				push = (ng_tenor[i] / total_tenor[i]) * 100;
-				if(push == 0){
-					push = NaN;
+				if(result.kensa[i].hpl == 'TSKEY'){
+					tenor.push(result.kensa[i].ng_rate);
 				}
-				ng_rate_tenor.push(push);
 			}
-			var bulan = result.bulan;
 
 
 			Highcharts.chart('chart_kensa_5', {
@@ -1833,7 +1968,7 @@ $.get('{{ url("fetch/middle/plt_ng_rate/".$id) }}', data, function(result, statu
 					type: 'line'
 				},
 				title: {
-					text: '<span style="font-size: 18pt;">Daily NG Rate Kensa Sax Key on '+bulanText(bulan)+'</span>',
+					text: '<span style="font-size: 18pt;">Daily NG Rate Kensa Plating Sax Key on '+bulanText(bulan)+'</span>',
 					useHTML: true
 				},
 				xAxis: {
@@ -1873,7 +2008,7 @@ $.get('{{ url("fetch/middle/plt_ng_rate/".$id) }}', data, function(result, statu
 				series: [
 				{
 					name: 'Alto',
-					data: ng_rate_alto,
+					data: alto,
 					color: '#f5ff0d',
 					lineWidth: 3,
 
@@ -1881,7 +2016,7 @@ $.get('{{ url("fetch/middle/plt_ng_rate/".$id) }}', data, function(result, statu
 				},
 				{
 					name: 'Tenor',
-					data: ng_rate_tenor,
+					data: tenor,
 					color: '#00FF00',
 					lineWidth: 3,
 

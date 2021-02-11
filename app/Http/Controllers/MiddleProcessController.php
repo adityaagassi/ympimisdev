@@ -3414,48 +3414,46 @@ class MiddleProcessController extends Controller
 			$kensa = 'plt-kensa-cl';
 		}
 
-		$bulan="";
+		$bulan = "";
+		$bulanText = "";
 		if(strlen($request->get('bulan')) > 0){
-			$bulan = $request->get('bulan');
+			$bulan = date('Y-m', strtotime('01-'.$request->get('bulan')));
+			$bulanText = date('M Y', strtotime('01-'.$request->get('bulan')));				
 		}else{
-			$bulan = date('m-Y');
+			$bulan = date('Y-m');
+			$bulanText = date('M Y');				
 		}
 
-		$query = "SELECT a.week_name, sum(b.ng) as ng, sum(c.g) as g from
-		(SELECT week_name, week_date from weekly_calendars where DATE_FORMAT(week_date,'%m-%Y') = '".$bulan."') a
-		left join
-		(SELECT DATE_FORMAT(n.created_at,'%Y-%m-%d') as tgl, sum(n.quantity) ng from middle_ng_logs n
-		left join materials m on m.material_number = n.material_number
-		where location = '".$incoming."' and m.surface not like '%LCQ%' and DATE_FORMAT(n.created_at,'%m-%Y') = '".$bulan."'
-		GROUP BY tgl) b on a.week_date = b.tgl
-		left join
-		(SELECT DATE_FORMAT(g.created_at,'%Y-%m-%d') as tgl, sum(g.quantity) g from middle_check_logs g
-		left join materials m on m.material_number = g.material_number
-		where location = '".$incoming."' and m.surface not like '%LCQ%' and DATE_FORMAT(g.created_at,'%m-%Y') = '".$bulan."'
-		GROUP BY tgl) c on a.week_date = c.tgl
-		GROUP BY a.week_name";
-		$weekly_ic = db::select($query);
+		$weekly_ic = db::select("SELECT tgl.week_name, tgl.min, COALESCE (resume.ng, 0) AS ng, COALESCE (resume.g, 0) AS g, (resume.ng / resume.g) AS ng_rate FROM
+			(SELECT week_name AS week_name, MIN(week_date) AS min FROM weekly_calendars
+			WHERE DATE_FORMAT(week_date, '%Y-%m') = '".$bulan."'
+			GROUP BY week_name
+			ORDER BY min ASC) tgl
+			LEFT JOIN
+			(SELECT `month`, `week`, ng, `check` as g FROM middle_plating_weekly_resumes
+			WHERE `month` = '".$bulan."'
+			AND location = '".$incoming."') resume
+			ON tgl.week_name = resume.`week`
+			ORDER BY tgl.min ASC");
 
-		$query2 = "SELECT a.week_name, sum(b.ng) as ng, sum(c.g) as g from
-		(SELECT week_name, week_date from weekly_calendars where DATE_FORMAT(week_date,'%m-%Y') = '".$bulan."') a
-		left join
-		(SELECT DATE_FORMAT(n.created_at,'%Y-%m-%d') as tgl, sum(n.quantity) ng from middle_ng_logs n
-		left join materials m on m.material_number = n.material_number
-		where location = '".$kensa."' and m.surface not like '%LCQ%' and DATE_FORMAT(n.created_at,'%m-%Y') = '".$bulan."'
-		GROUP BY tgl) b on a.week_date = b.tgl
-		left join
-		(SELECT DATE_FORMAT(g.created_at,'%Y-%m-%d') as tgl, sum(g.quantity) g from middle_check_logs g
-		left join materials m on m.material_number = g.material_number
-		where location = '".$kensa."' and m.surface not like '%LCQ%' and DATE_FORMAT(g.created_at,'%m-%Y') = '".$bulan."'
-		GROUP BY tgl) c on a.week_date = c.tgl
-		GROUP BY a.week_name";
-		$weekly_kensa = db::select($query2);
+		
+		$weekly_kensa = db::select("SELECT tgl.week_name, tgl.min, COALESCE (resume.ng, 0) AS ng, COALESCE (resume.g, 0) AS g, (resume.ng / resume.g) AS ng_rate FROM
+			(SELECT week_name AS week_name, MIN(week_date) AS min FROM weekly_calendars
+			WHERE DATE_FORMAT(week_date, '%Y-%m') = '".$bulan."'
+			GROUP BY week_name
+			ORDER BY min ASC) tgl
+			LEFT JOIN
+			(SELECT `month`, `week`, ng, `check` as g FROM middle_plating_weekly_resumes
+			WHERE `month` = '".$bulan."'
+			AND location = '".$kensa."') resume
+			ON tgl.week_name = resume.`week`
+			ORDER BY tgl.min ASC");
 
 		$response = array(
 			'status' => true,
 			'weekly_ic' => $weekly_ic,
 			'weekly_kensa' => $weekly_kensa,
-			'bulan' => $bulan
+			'bulanText' => $bulanText
 		);
 		return Response::json($response);
 	}
@@ -3533,11 +3531,11 @@ class MiddleProcessController extends Controller
 			$incoming = 'plt-incoming-sx';
 			$kensa = 'plt-kensa-sx';
 		}elseif($id == 'fl'){
-			$incoming = '';
-			$kensa = '';
+			$incoming = 'plt-incoming-fl';
+			$kensa = 'plt-kensa-fl';
 		}elseif($id == 'cl'){
-			$incoming = '';
-			$kensa = '';
+			$incoming = 'plt-incoming-cl';
+			$kensa = 'plt-kensa-cl';
 		}
 
 
@@ -3557,33 +3555,27 @@ class MiddleProcessController extends Controller
 			}
 		}
 
-		$query1 = "SELECT a.tgl, COALESCE(b.ng,b.ng,0) as ng, COALESCE(c.g,c.g,0) as g, c.g as total FROM
-		(SELECT DATE_FORMAT(week_date,'%m-%Y') as tgl from weekly_calendars where fiscal_year in (".$fy.") GROUP BY tgl ORDER BY week_date asc) a
-		left join
-		(SELECT DATE_FORMAT(n.created_at,'%m-%Y') as tgl, sum(n.quantity) ng from middle_ng_logs n
-		left join materials m on m.material_number = n.material_number
-		where location = '".$incoming."' and m.surface not like '%LCQ%'
-		GROUP BY tgl) b on a.tgl = b.tgl
-		left join
-		(SELECT DATE_FORMAT(g.created_at,'%m-%Y') as tgl, sum(g.quantity) g from middle_check_logs g
-		left join materials m on m.material_number = g.material_number
-		where location = '".$incoming."' and m.surface not like '%LCQ%'
-		GROUP BY tgl) c on a.tgl = c.tgl";
-		$monthly_ic = db::select($query1);
+		$monthly_ic = db::select("SELECT tgl.tgl, COALESCE (resume.ng, 0) AS ng, COALESCE (resume.g, 0) AS g, (resume.ng / resume.g) AS ng_rate FROM
+			(SELECT DATE_FORMAT( week_date, '%Y-%m' ) AS tgl FROM weekly_calendars
+			WHERE fiscal_year IN (".$fy.")
+			GROUP BY tgl) tgl
+			LEFT JOIN
+			(SELECT `month` AS tgl, ng AS ng, `check` AS g FROM middle_plating_monthly_resumes
+			WHERE fiscal_year IN (".$fy.")
+			AND location = '".$incoming."') resume
+			ON tgl.tgl = resume.tgl 
+			ORDER BY tgl.tgl ASC");
 
-		$query2 = "SELECT a.tgl, COALESCE(b.ng,b.ng,0) as ng, COALESCE(c.g,c.g,0) as g, c.g as total FROM
-		(SELECT DATE_FORMAT(week_date,'%m-%Y') as tgl from weekly_calendars where fiscal_year in (".$fy.") GROUP BY tgl ORDER BY week_date asc) a
-		left join
-		(SELECT DATE_FORMAT(n.created_at,'%m-%Y') as tgl, sum(n.quantity) ng from middle_ng_logs n
-		left join materials m on m.material_number = n.material_number
-		where location = '".$kensa."' and m.surface not like '%LCQ%'
-		GROUP BY tgl) b on a.tgl = b.tgl
-		left join
-		(SELECT DATE_FORMAT(g.created_at,'%m-%Y') as tgl, sum(g.quantity) g from middle_check_logs g
-		left join materials m on m.material_number = g.material_number
-		where location = '".$kensa."' and m.surface not like '%LCQ%'
-		GROUP BY tgl) c on a.tgl = c.tgl";
-		$monthly_kensa = db::select($query2);
+		$monthly_kensa = db::select("SELECT tgl.tgl, COALESCE (resume.ng, 0) AS ng, COALESCE (resume.g, 0) AS g, (resume.ng / resume.g) AS ng_rate FROM
+			(SELECT DATE_FORMAT( week_date, '%Y-%m' ) AS tgl FROM weekly_calendars
+			WHERE fiscal_year IN (".$fy.")
+			GROUP BY tgl) tgl
+			LEFT JOIN
+			(SELECT `month` AS tgl, ng AS ng, `check` AS g FROM middle_plating_monthly_resumes
+			WHERE fiscal_year IN (".$fy.")
+			AND location = '".$kensa."') resume
+			ON tgl.tgl = resume.tgl 
+			ORDER BY tgl.tgl ASC");
 
 		$fy = "";
 		if($request->get('fy') != null) {
@@ -3782,169 +3774,155 @@ class MiddleProcessController extends Controller
 			$kensa = '';
 		}
 
-		$bulan="";
+		$bulan = "";
+		$bulanText = "";
 		if(strlen($request->get('bulan')) > 0){
-			$bulan = "DATE_FORMAT(l.created_at,'%m-%Y') = '".$request->get('bulan')."' and ";
+			$bulan = date('Y-m', strtotime('01-'.$request->get('bulan')));
+			$bulanText = date('M Y', strtotime('01-'.$request->get('bulan')));				
 		}else{
-			$bulan = "DATE_FORMAT(l.created_at,'%m-%Y') = '".date('m-Y')."' and ";
+			$bulan = date('Y-m');
+			$bulanText = date('M Y');				
 		}
 
+		//Highest NG		
+		$ic_ng_alto = db::select("SELECT ng.hpl, ng.ng_name, ng.ng, cek.`check` FROM
+			(SELECT hpl, ng_name, SUM(ng) as ng FROM middle_plating_monthly_ng_resumes
+			WHERE hpl = 'ASKEY'
+			AND `month` = '".$bulan."'
+			AND location = '".$incoming."'
+			GROUP BY hpl, ng_name) AS ng
+			LEFT JOIN
+			(SELECT remark, SUM(`check`) as `check` FROM middle_plating_daily_resumes
+			WHERE remark = 'ASKEY'
+			AND DATE_FORMAT(date,'%Y-%m') = '".$bulan."'
+			AND location = '".$incoming."'
+			GROUP BY remark) AS cek
+			ON cek.remark = ng.hpl
+			ORDER BY ng.ng DESC");
 
-		// IC
-		$totalCekIC_alto = db::select("select a.g as total from
-			(select sum(quantity) as g from middle_check_logs l left join materials m on m.material_number = l.material_number
-			where ".$bulan." m.surface not like '%LCQ%' and location = '".$incoming."' and m.hpl = 'ASKEY') a
-			cross join
-			(select sum(quantity) as ng from middle_ng_logs l left join materials m on m.material_number = l.material_number
-			where ".$bulan." m.surface not like '%LCQ%' and location = '".$incoming."' and m.hpl = 'ASKEY') b");
+		$ic_ng_tenor = db::select("SELECT ng.hpl, ng.ng_name, ng.ng, cek.`check` FROM
+			(SELECT hpl, ng_name, SUM(ng) as ng FROM middle_plating_monthly_ng_resumes
+			WHERE hpl = 'TSKEY'
+			AND `month` = '".$bulan."'
+			AND location = '".$incoming."'
+			GROUP BY hpl, ng_name) AS ng
+			LEFT JOIN
+			(SELECT remark, SUM(`check`) as `check` FROM middle_plating_daily_resumes
+			WHERE remark = 'TSKEY'
+			AND DATE_FORMAT(date,'%Y-%m') = '".$bulan."'
+			AND location = '".$incoming."'
+			GROUP BY remark) AS cek
+			ON cek.remark = ng.hpl
+			ORDER BY ng.ng DESC");
 
-		$totalCekIC_tenor = db::select("select a.g as total from
-			(select sum(quantity) as g from middle_check_logs l left join materials m on m.material_number = l.material_number
-			where ".$bulan." m.surface not like '%LCQ%' and location = '".$incoming."' and m.hpl = 'TSKEY') a
-			cross join
-			(select sum(quantity) as ng from middle_ng_logs l left join materials m on m.material_number = l.material_number
-			where ".$bulan." m.surface not like '%LCQ%' and location = '".$incoming."' and m.hpl = 'TSKEY') b");
+		$kensa_ng_alto = db::select("SELECT ng.hpl, ng.ng_name, ng.ng, cek.`check` FROM
+			(SELECT hpl, ng_name, SUM(ng) as ng FROM middle_plating_monthly_ng_resumes
+			WHERE hpl = 'ASKEY'
+			AND `month` = '".$bulan."'
+			AND location = '".$kensa."'
+			GROUP BY hpl, ng_name) AS ng
+			LEFT JOIN
+			(SELECT remark, SUM(`check`) as `check` FROM middle_plating_daily_resumes
+			WHERE remark = 'ASKEY'
+			AND DATE_FORMAT(date,'%Y-%m') = '".$bulan."'
+			AND location = '".$kensa."'
+			GROUP BY remark) AS cek
+			ON cek.remark = ng.hpl
+			ORDER BY ng.ng DESC");
 
-		$ngIC_alto = db::select("select l.ng_name, m.hpl, sum(l.quantity) as jml from middle_ng_logs l
-			left join materials m on l.material_number = m.material_number
-			where ".$bulan." location = '".$incoming."' and m.surface not like '%LCQ%' and m.hpl = 'ASKEY' group by l.ng_name, m.hpl order by jml desc");
-
-		$ngIC_tenor = db::select("select l.ng_name, m.hpl, sum(l.quantity) as jml from middle_ng_logs l
-			left join materials m on l.material_number = m.material_number
-			where ".$bulan." location = '".$incoming."' and m.surface not like '%LCQ%' and m.hpl = 'TSKEY' group by l.ng_name, m.hpl order by jml desc");
-
-		$ngICKey_alto = db::select("select m.`key`, sum(l.quantity) as jml from middle_ng_logs l
-			left join materials m on l.material_number = m.material_number
-			where ".$bulan." location = '".$incoming."' and m.surface not like '%LCQ%' and m.hpl = 'ASKEY' group by m.`key` order by jml desc LIMIT 10;");
-
-		$ngICKey_alto_detail = db::select("select ng_name.`key`, ng_name.ng_name, COALESCE(ng.jml,0) as jml from  
-			(select b.`key`, a.ng_name from
-			(select DISTINCT l.ng_name from middle_ng_logs l
-			where location = '".$incoming."') a
-			cross join
-			(select distinct `key` from materials where `key` != '' order by `key` asc) b
-			order by `key` asc) ng_name
-			left join
-			(select m.`key`, l.ng_name, sum(l.quantity) as jml from middle_ng_logs l
-			left join materials m on l.material_number = m.material_number
-			where ".$bulan." location = '".$incoming."'
-			and m.hpl = 'ASKEY'
-			group by m.`key`, l.ng_name) ng
-			on ng_name.ng_name = ng.ng_name and ng_name.`key` = ng.`key`
-			order by `key` asc");
-
-		$ngICKey_tenor = db::select("select m.`key`, sum(l.quantity) as jml from middle_ng_logs l
-			left join materials m on l.material_number = m.material_number
-			where ".$bulan." location = '".$incoming."' and m.surface not like '%LCQ%' and m.hpl = 'TSKEY' group by m.`key` order by jml desc LIMIT 10;");
-
-		$ngICKey_tenor_detail = db::select("select ng_name.`key`, ng_name.ng_name, COALESCE(ng.jml,0) as jml from  
-			(select b.`key`, a.ng_name from
-			(select DISTINCT l.ng_name from middle_ng_logs l
-			where location = '".$incoming."') a
-			cross join
-			(select distinct `key` from materials where `key` != '' order by `key` asc) b
-			order by `key` asc) ng_name
-			left join
-			(select m.`key`, l.ng_name, sum(l.quantity) as jml from middle_ng_logs l
-			left join materials m on l.material_number = m.material_number
-			where ".$bulan." location = '".$incoming."'
-			and m.hpl = 'TSKEY'
-			group by m.`key`, l.ng_name) ng
-			on ng_name.ng_name = ng.ng_name and ng_name.`key` = ng.`key`
-			order by `key` asc");
+		$kensa_ng_tenor = db::select("SELECT ng.hpl, ng.ng_name, ng.ng, cek.`check` FROM
+			(SELECT hpl, ng_name, SUM(ng) as ng FROM middle_plating_monthly_ng_resumes
+			WHERE hpl = 'TSKEY'
+			AND `month` = '".$bulan."'
+			AND location = '".$kensa."'
+			GROUP BY hpl, ng_name) AS ng
+			LEFT JOIN
+			(SELECT remark, SUM(`check`) as `check` FROM middle_plating_daily_resumes
+			WHERE remark = 'TSKEY'
+			AND DATE_FORMAT(date,'%Y-%m') = '".$bulan."'
+			AND location = '".$kensa."'
+			GROUP BY remark) AS cek
+			ON cek.remark = ng.hpl
+			ORDER BY ng.ng DESC");
 
 
-		// Kensa
-		$totalCekKensa_alto = db::select("select a.g as total from
-			(select sum(quantity) as g from middle_check_logs l left join materials m on m.material_number = l.material_number
-			where ".$bulan." m.surface not like '%LCQ%' and location = '".$kensa."' and m.hpl = 'ASKEY') a
-			cross join
-			(select sum(quantity) as ng from middle_ng_logs l left join materials m on m.material_number = l.material_number
-			where ".$bulan." m.surface not like '%LCQ%' and location = '".$kensa."' and m.hpl = 'ASKEY') b");
+		//Highest Key
+		$ic_ng_key_alto = db::select("SELECT hpl, `key`, sum(ng) AS ng FROM middle_plating_monthly_ng_resumes
+			WHERE hpl = 'ASKEY'
+			AND location = '".$incoming."'
+			AND `month` = '".$bulan."'
+			GROUP BY hpl, `key`
+			ORDER BY ng DESC
+			LIMIT 10");
 
-		$totalCekKensa_tenor = db::select("select a.g as total from
-			(select sum(quantity) as g from middle_check_logs l left join materials m on m.material_number = l.material_number
-			where ".$bulan." m.surface not like '%LCQ%' and location = '".$kensa."' and m.hpl = 'TSKEY') a
-			cross join
-			(select sum(quantity) as ng from middle_ng_logs l left join materials m on m.material_number = l.material_number
-			where ".$bulan." m.surface not like '%LCQ%' and location = '".$kensa."' and m.hpl = 'TSKEY') b");
+		$ic_ng_key_tenor = db::select("SELECT hpl, `key`, sum(ng) AS ng FROM middle_plating_monthly_ng_resumes
+			WHERE hpl = 'TSKEY'
+			AND location = '".$incoming."'
+			AND `month` = '".$bulan."'
+			GROUP BY hpl, `key`
+			ORDER BY ng DESC
+			LIMIT 10");
 
-		$ngKensa_alto = db::select("select l.ng_name, m.hpl, sum(l.quantity) as jml from middle_ng_logs l
-			left join materials m on l.material_number = m.material_number
-			where ".$bulan." location = '".$kensa."' and m.surface not like '%LCQ%' and m.hpl = 'ASKEY' group by l.ng_name, m.hpl order by jml desc limit 10");
+		$ic_ng_key_alto_detail = db::select("SELECT hpl, `key`, ng_name, ng FROM middle_plating_monthly_ng_resumes
+			WHERE hpl = 'ASKEY'
+			AND location = '".$incoming."'
+			AND `month` = '".$bulan."'");
 
-		$ngKensa_tenor = db::select("select l.ng_name, m.hpl, sum(l.quantity) as jml from middle_ng_logs l
-			left join materials m on l.material_number = m.material_number
-			where ".$bulan." location = '".$kensa."' and m.surface not like '%LCQ%' and m.hpl = 'TSKEY' group by l.ng_name, m.hpl order by jml desc limit 10");
+		$ic_ng_key_tenor_detail = db::select("SELECT hpl, `key`, ng_name, ng FROM middle_plating_monthly_ng_resumes
+			WHERE hpl = 'TSKEY'
+			AND location = '".$incoming."'
+			AND `month` = '".$bulan."'");
 
-		$ngKensaKey = db::select("select m.`key`, sum(l.quantity) as jml from middle_ng_logs l
-			left join materials m on l.material_number = m.material_number
-			where ".$bulan." location = '".$kensa."' and m.surface not like '%LCQ%' group by m.`key` order by jml desc;");
 
-		$ngKensaKey_alto = db::select("select m.`key`, sum(l.quantity) as jml from middle_ng_logs l
-			left join materials m on l.material_number = m.material_number
-			where ".$bulan." location = '".$kensa."' and m.surface not like '%LCQ%' and m.hpl = 'ASKEY' group by m.`key` order by jml desc LIMIT 10;");
 
-		$ngKensaKey_alto_detail = db::select("select ng_name.`key`, ng_name.ng_name, COALESCE(ng.jml,0) as jml from  
-			(select b.`key`, a.ng_name from
-			(select DISTINCT l.ng_name from middle_ng_logs l
-			where location = '".$kensa."') a
-			cross join
-			(select distinct `key` from materials where `key` != '' order by `key` asc) b
-			order by `key` asc) ng_name
-			left join
-			(select m.`key`, l.ng_name, sum(l.quantity) as jml from middle_ng_logs l
-			left join materials m on l.material_number = m.material_number
-			where ".$bulan." location = '".$kensa."'
-			and m.hpl = 'ASKEY'
-			group by m.`key`, l.ng_name) ng
-			on ng_name.ng_name = ng.ng_name and ng_name.`key` = ng.`key`
-			order by `key` asc");
 
-		$ngKensaKey_tenor = db::select("select m.`key`, sum(l.quantity) as jml from middle_ng_logs l
-			left join materials m on l.material_number = m.material_number
-			where ".$bulan." location = '".$kensa."' and m.surface not like '%LCQ%' and m.hpl = 'TSKEY' group by m.`key` order by jml desc LIMIT 10;");
+		$kensa_ng_key_alto = db::select("SELECT hpl, `key`, sum(ng) AS ng FROM middle_plating_monthly_ng_resumes
+			WHERE hpl = 'ASKEY'
+			AND location = '".$kensa."'
+			AND `month` = '".$bulan."'
+			GROUP BY hpl, `key`
+			ORDER BY ng DESC
+			LIMIT 10");
 
-		$ngKensaKey_tenor_detail = db::select("select ng_name.`key`, ng_name.ng_name, COALESCE(ng.jml,0) as jml from  
-			(select b.`key`, a.ng_name from
-			(select DISTINCT l.ng_name from middle_ng_logs l
-			where location = '".$kensa."') a
-			cross join
-			(select distinct `key` from materials where `key` != '' order by `key` asc) b
-			order by `key` asc) ng_name
-			left join
-			(select m.`key`, l.ng_name, sum(l.quantity) as jml from middle_ng_logs l
-			left join materials m on l.material_number = m.material_number
-			where ".$bulan." location = '".$kensa."'
-			and m.hpl = 'TSKEY'
-			group by m.`key`, l.ng_name) ng
-			on ng_name.ng_name = ng.ng_name and ng_name.`key` = ng.`key`
-			order by `key` asc");
+		$kensa_ng_key_tenor = db::select("SELECT hpl, `key`, sum(ng) AS ng FROM middle_plating_monthly_ng_resumes
+			WHERE hpl = 'TSKEY'
+			AND location = '".$kensa."'
+			AND `month` = '".$bulan."'
+			GROUP BY hpl, `key`
+			ORDER BY ng DESC
+			LIMIT 10");
 
-		$bulan = substr($bulan,37,7);
+		$kensa_ng_key_alto_detail = db::select("SELECT hpl, `key`, ng_name, ng FROM middle_plating_monthly_ng_resumes
+			WHERE hpl = 'ASKEY'
+			AND location = '".$kensa."'
+			AND `month` = '".$bulan."'");
+
+		$kensa_ng_key_tenor_detail = db::select("SELECT hpl, `key`, ng_name, ng FROM middle_plating_monthly_ng_resumes
+			WHERE hpl = 'TSKEY'
+			AND location = '".$kensa."'
+			AND `month` = '".$bulan."'");
+
+		
 
 		$response = array(
 			'status' => true,
 
-			'ngIC_alto' => $ngIC_alto,
-			'ngIC_tenor' => $ngIC_tenor,
-			'totalCekIC_alto' => $totalCekIC_alto,
-			'totalCekIC_tenor' => $totalCekIC_tenor,
-			'ngICKey_alto' => $ngICKey_alto,	
-			'ngICKey_alto_detail' => $ngICKey_alto_detail,	
-			'ngICKey_tenor' => $ngICKey_tenor,
-			'ngICKey_tenor_detail' => $ngICKey_tenor_detail,
+			'ic_ng_alto' => $ic_ng_alto,
+			'ic_ng_tenor' => $ic_ng_tenor,
+			'kensa_ng_alto' => $kensa_ng_alto,
+			'kensa_ng_tenor' => $kensa_ng_tenor,
 
-			'ngKensa_alto' => $ngKensa_alto,
-			'ngKensa_tenor' => $ngKensa_tenor,
-			'totalCekKensa_alto' => $totalCekKensa_alto,
-			'totalCekKensa_tenor' => $totalCekKensa_tenor,
-			'ngKensaKey_alto' => $ngKensaKey_alto,
-			'ngKensaKey_alto_detail' => $ngKensaKey_alto_detail,
-			'ngKensaKey_tenor' => $ngKensaKey_tenor,
-			'ngKensaKey_tenor_detail' => $ngKensaKey_tenor_detail,
+			'ic_ng_key_alto' => $ic_ng_key_alto,
+			'ic_ng_key_alto_detail' => $ic_ng_key_alto_detail,
+			'ic_ng_key_tenor' => $ic_ng_key_tenor,
+			'ic_ng_key_tenor_detail' => $ic_ng_key_tenor_detail,
 
-			'bulan' => $bulan
+			'kensa_ng_key_alto' => $kensa_ng_key_alto,
+			'kensa_ng_key_alto_detail' => $kensa_ng_key_alto_detail,
+			'kensa_ng_key_tenor' => $kensa_ng_key_tenor,
+			'kensa_ng_key_tenor_detail' => $kensa_ng_key_tenor_detail,
+
+			'bulanText' => $bulanText
 		);
 		return Response::json($response);
 	}
@@ -3964,86 +3942,41 @@ class MiddleProcessController extends Controller
 			$kensa = '';
 		}
 
-		$bulan = "";
-		$bulan1 = "";
-		$bulan2 = "";
-
+		$bulan="";
 		if(strlen($request->get('bulan')) > 0){
-			$bulan = "where DATE_FORMAT(week_date,'%m-%Y') ='".$request->get('bulan')."' ";
-			$bulan1 = "where DATE_FORMAT(n.created_at,'%m-%Y') ='".$request->get('bulan')."' ";
-			$bulan2 = "where DATE_FORMAT(g.created_at,'%m-%Y') ='".$request->get('bulan')."' ";
+			$bulan = $request->get('bulan');
 		}else{
-			$bulan = "where DATE_FORMAT(week_date,'%m-%Y') ='".date('m-Y')."' ";
-			$bulan1 = "where DATE_FORMAT(n.created_at,'%m-%Y') ='".date('m-Y')."' ";
-			$bulan2 = "where DATE_FORMAT(g.created_at,'%m-%Y') ='".date('m-Y')."' ";
+			$bulan = date('m-Y');
 		}
 
-		// IC
-		$dailyICAlto = db::select("SELECT a.tgl, b.hpl, b.ng, COALESCE(c.g,0) as total FROM
-			(SELECT DATE_FORMAT(week_date,'%d-%m-%Y') as tgl from weekly_calendars ".$bulan.") a
+		$ic = db::select("SELECT tgl.week_date, tgl.hpl, resume.ng, resume.`check` AS g, (resume.ng/resume.`check`*100) as ng_rate from
+			(select week_date, hpl from
+			(select week_date from weekly_calendars where DATE_FORMAT(week_date,'%m-%Y') = '".$bulan."') date
+			cross join
+			(select DISTINCT hpl from materials where hpl in ('ASKEY','TSKEY')) hpl ) tgl
 			left join
-			(SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(n.quantity) as ng from middle_ng_logs n
-			left join materials m on m.material_number = n.material_number ".$bulan1." and m.surface not like '%LCQ%'
-			and location = '".$incoming."' and m.hpl = 'ASKEY'
-			GROUP BY tgl, hpl) b on a.tgl = b.tgl
-			left join		
-			(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(g.quantity) as g from middle_check_logs g
-			left join materials m on m.material_number = g.material_number ".$bulan2." and m.surface not like '%LCQ%'
-			and location = '".$incoming."' and m.hpl = 'ASKEY'
-			GROUP BY tgl, hpl) c on a.tgl = c.tgl;");
+			(select date, remark as hpl, ng, `check` from middle_plating_daily_resumes
+			where DATE_FORMAT(date,'%m-%Y') = '".$bulan."'
+			AND location = '".$incoming."') resume
+			on resume.date = tgl.week_date AND tgl.hpl = resume.hpl
+			ORDER BY tgl.week_date;");
 
-		$dailyICTenor = db::select("SELECT a.tgl, b.hpl, b.ng, COALESCE(c.g,0) as total FROM
-			(SELECT DATE_FORMAT(week_date,'%d-%m-%Y') as tgl from weekly_calendars ".$bulan.") a
+		$kensa = db::select("SELECT tgl.week_date, tgl.hpl, resume.ng, resume.`check` AS g, (resume.ng/resume.`check`*100) as ng_rate from
+			(select week_date, hpl from
+			(select week_date from weekly_calendars where DATE_FORMAT(week_date,'%m-%Y') = '".$bulan."') date
+			cross join
+			(select DISTINCT hpl from materials where hpl in ('ASKEY','TSKEY')) hpl ) tgl
 			left join
-			(SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(n.quantity) as ng from middle_ng_logs n
-			left join materials m on m.material_number = n.material_number ".$bulan1." and m.surface not like '%LCQ%'
-			and location = '".$incoming."' and m.hpl = 'TSKEY'
-			GROUP BY tgl, hpl) b on a.tgl = b.tgl
-			left join		
-			(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(g.quantity) as g from middle_check_logs g
-			left join materials m on m.material_number = g.material_number ".$bulan2." and m.surface not like '%LCQ%'
-			and location = '".$incoming."' and m.hpl = 'TSKEY'
-			GROUP BY tgl, hpl) c on a.tgl = c.tgl;");
-
-
-		// Kensa
-		$dailyKensaAlto = db::select("SELECT a.tgl, b.hpl, b.ng, COALESCE(c.g,0) as total FROM
-			(SELECT DATE_FORMAT(week_date,'%d-%m-%Y') as tgl from weekly_calendars ".$bulan.") a
-			left join
-			(SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(n.quantity) as ng from middle_ng_logs n
-			left join materials m on m.material_number = n.material_number ".$bulan1." and m.surface not like '%LCQ%'
-			and location = '".$kensa."' and m.hpl = 'ASKEY'
-			GROUP BY tgl, hpl) b on a.tgl = b.tgl
-			left join		
-			(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(g.quantity) as g from middle_check_logs g
-			left join materials m on m.material_number = g.material_number ".$bulan2." and m.surface not like '%LCQ%'
-			and location = '".$kensa."' and m.hpl = 'ASKEY'
-			GROUP BY tgl, hpl) c on a.tgl = c.tgl;");
-
-		$dailyKensaTenor = db::select("SELECT a.tgl, b.hpl, b.ng, COALESCE(c.g,0) as total FROM
-			(SELECT DATE_FORMAT(week_date,'%d-%m-%Y') as tgl from weekly_calendars ".$bulan.") a
-			left join
-			(SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(n.quantity) as ng from middle_ng_logs n
-			left join materials m on m.material_number = n.material_number ".$bulan1." and m.surface not like '%LCQ%'
-			and location = '".$kensa."' and m.hpl = 'TSKEY'
-			GROUP BY tgl, hpl) b on a.tgl = b.tgl
-			left join		
-			(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(g.quantity) as g from middle_check_logs g
-			left join materials m on m.material_number = g.material_number ".$bulan2." and m.surface not like '%LCQ%'
-			and location = '".$kensa."' and m.hpl = 'TSKEY'
-			GROUP BY tgl, hpl) c on a.tgl = c.tgl;");
-
-		$bulan = substr($bulan,39,7);
+			(select date, remark as hpl, ng, `check` from middle_plating_daily_resumes
+			where DATE_FORMAT(date,'%m-%Y') = '".$bulan."'
+			AND location = '".$kensa."') resume
+			on resume.date = tgl.week_date AND tgl.hpl = resume.hpl
+			ORDER BY tgl.week_date;");
 
 		$response = array(
 			'status' => true,
-
-			'dailyICAlto' => $dailyICAlto,
-			'dailyICTenor' => $dailyICTenor,
-
-			'dailyKensaAlto' => $dailyKensaAlto,
-			'dailyKensaTenor' => $dailyKensaTenor,
-
+			'ic' => $ic,
+			'kensa' => $kensa,
 			'bulan' => $bulan
 		);
 		return Response::json($response);
