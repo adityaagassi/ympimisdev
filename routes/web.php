@@ -49,6 +49,9 @@ Route::get('happybirthday', function ()
 });
 Route::get('tesseract', 'TrialController@testTesseract');
 
+Route::get('xml_parser', 'TrialController@xmlParser');
+Route::post('xml_parser_upload', 'TrialController@xmlParserUpload');
+
 Route::get('trialmail', 'TrialController@trialmail');
 
 Route::get('/trial', function () {
@@ -1378,6 +1381,12 @@ Route::get('generate/sakurentsu/3m/pdf/{id_three_m}', 'SakurentsuController@gene
 Route::get('get/sakurentsu/3m', 'SakurentsuController@get_employee_sign');
 Route::post('post/sakurentsu/3m/sign', 'SakurentsuController@signing_tiga_em');
 Route::get('email/sakurentsu/3m/unsigned', 'SakurentsuController@mail_unsigned_tiga_em');
+
+
+//Tugaskan ke PIC
+Route::get('index/sakurentsu/assign/{sk_num}', 'SakurentsuController@index_assign_to_staff');
+Route::get('assign/sakurentsu', 'SakurentsuController@assign_to_staff');
+
 
 // 3M Implementasi
 Route::post('post/sakurentsu/3m/receive_std', 'SakurentsuController@receive_tiga_em');
@@ -4197,6 +4206,7 @@ Route::post('scan/scrap_warehouse', 'ScrapController@scanScrapWarehouse');
 
 //Mutasi
 Route::get('home/mutasi', 'MutasiController@homeMutasi');
+// Route::get('fetch/trial_request', 'TrialRequestController@fetch_trial_request');
 // ========================================
 Route::get('dashboard/mutasi', 'MutasiController@dashboard');
 Route::get('dashboard/mutasi/get_employee', 'MutasiController@get_employee');
@@ -4232,7 +4242,7 @@ Route::get('fetch/warehouse/detail', 'WarehouseController@fetchDetail');
 
 
 
-//Otomatisasi Item Order
+//Master Kanban Tools
 Route::get('index/tools', 'ToolsController@index_tools');
 Route::get('tools/master', 'ToolsController@master_tools');
 Route::get('fetch/tools', 'ToolsController@fetch_tools');
@@ -4240,10 +4250,22 @@ Route::get('fetch/tools', 'ToolsController@fetch_tools');
 Route::get('tools/target', 'ToolsController@target_tools');
 Route::get('fetch/tools_target', 'ToolsController@fetch_target_tools');
 
-//Process Pengurangan Stock
+//Process Pengurangan Stock Kanban Tools
 Route::get('tools/stock_out', 'ToolsController@stock_out');
+Route::get('fetch/tools/data', 'ToolsController@fetch_tools_data');
+Route::get('fetch/tools/order', 'ToolsController@fetch_tools_order');
+Route::get('tools/scan/operator', 'ToolsController@scan_operator');
+Route::post('post/tools/stock_out', 'ToolsController@post_tools');
 
 // QA Incoming Check
 Route::get('index/qa', 'QualityAssuranceController@index');
 Route::get('index/qa/incoming_check/{location}', 'QualityAssuranceController@indexIncomingCheck');
 Route::get('fetch/qa/check_material', 'QualityAssuranceController@fetchCheckMaterial');
+Route::post('input/qa/ng_temp', 'QualityAssuranceController@inputNgTemp');
+Route::get('fetch/qa/ng_temp','QualityAssuranceController@fetchNgTemp');
+Route::get('delete/qa/ng_temp','QualityAssuranceController@deleteNgTemp');
+
+//Health Indicator
+Route::get('index/health/{loc}', 'HealthController@index');
+Route::post('upload/health', 'HealthController@uploadHealth');
+Route::get('fetch/health', 'HealthController@fetchHealth');
