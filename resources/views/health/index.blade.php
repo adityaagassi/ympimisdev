@@ -199,8 +199,8 @@
 							<div class="col-md-6 col-md-offset-2">
 								<div class="col-md-10">
 									<div class="form-group pull-right">
-										<a href="{{ url('index/temperature') }}" class="btn btn-warning">Back</a>
-										<a href="{{ url('index/temperature/minmoe') }}" class="btn btn-danger">Clear</a>
+										<a href="{{ url('home') }}" class="btn btn-warning">Back</a>
+										<a href="{{ url('index/health/'.$loc) }}" class="btn btn-danger">Clear</a>
 										<button class="btn btn-primary col-sm-14" onclick="fillList()">Search</button>
 									</div>
 								</div>
