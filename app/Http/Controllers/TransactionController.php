@@ -44,7 +44,8 @@ class TransactionController extends Controller
 			'FL21',
 			'SX21',
 			'VN21',
-			'VNA0'
+			'VNA0',
+			'VN11',
 		];
 	}
 
@@ -217,7 +218,7 @@ class TransactionController extends Controller
 		$response = array(
 			'status' => true,
 			'receive' => $receive,
-			'message' => 'Slip return berhasil didelete',
+			'message' => 'Slip return berhasil di delete',
 		);
 		return Response::json($response);
 	}
@@ -644,7 +645,7 @@ class TransactionController extends Controller
 			else if($receive == 'SX21' || $receive == 'CL21' || $receive == 'FL21' || $receive == 'VN21'){
 				$printer_name = 'Welding-Printer';			
 			}
-			else if($receive == 'VN91' || $receive == 'VNA0'){
+			else if($receive == 'VN91' || $receive == 'VNA0' || $receive == 'VN11'){
 				$printer_name = 'FLO Printer VN';
 			}
 			else if($receive == 'RC91'){
@@ -716,7 +717,7 @@ class TransactionController extends Controller
 			else if($receive == 'SX21' || $receive == 'CL21' || $receive == 'FL21' || $receive == 'VN21'){
 				$printer_name = 'Welding-Printer';			
 			}
-			else if($receive == 'VN91' || $receive == 'VNA0'){
+			else if($receive == 'VN91' || $receive == 'VNA0' || $receive == 'VN11'){
 				$printer_name = 'FLO Printer VN';
 			}
 			else if($receive == 'RC91'){
