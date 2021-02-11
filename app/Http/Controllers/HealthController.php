@@ -33,7 +33,7 @@ class HealthController extends Controller
   	{
   		if ($loc == 'gme') {
   			$title = 'GM - Ekspatriat';
-  			$title_jp = '??';
+  			$title_jp = '部長 - 駐在員 健康状況指標';
   		}
   		return view('health.index')
   		->with('page', 'Health Indicator')
@@ -47,7 +47,41 @@ class HealthController extends Controller
   		try {
   			$id_user = Auth::id();
 
-  			$health = HealthIndicator::join('users','users.id','health_indicators.created_by')->where('health_indicators.created_by',$id_user)->get();
+  			   $date_from = $request->get('date_from');
+	           $date_to = $request->get('date_to');
+	           $now = date('Y-m-d');
+
+	           if ($date_from == '') {
+	                if ($date_to == '') {
+	                     $whereDate = 'AND DATE(time_at) BETWEEN CONCAT(DATE_FORMAT("'.$now.'" - INTERVAL 7 DAY,"%Y-%m-%d")) AND "'.$now.'"';
+	                }else{
+	                     $whereDate = 'AND DATE(time_at) BETWEEN CONCAT(DATE_FORMAT("'.$date_to.'" - INTERVAL 7 DAY,"%Y-%m-%d")) AND "'.$date_to.'"';
+	                }
+	           }else{
+	                if ($date_to == '') {
+	                     $whereDate = 'AND DATE(time_at) BETWEEN "'.$date_from.'" AND DATE(NOW())';
+	                }else{
+	                     $whereDate = 'AND DATE(time_at) BETWEEN "'.$date_from.'" AND "'.$date_to.'"';
+	                }
+	           }
+
+	           $whereType = "";
+	           if ($request->get('type') == "") {
+	           	$whereType = "";
+	           }else{
+	           	$whereType = "AND type = '".$request->get('type')."'";
+	           }
+
+  			$health = DB::SELECT("SELECT
+					* 
+				FROM
+					`health_indicators`
+					JOIN users ON users.id = health_indicators.created_by 
+				WHERE
+					health_indicators.created_by = ".$id_user."
+					".$whereDate." ".$whereType."
+				ORDER BY
+					time_at DESC");
 
   			$response = array(
 	            'status' => true,
@@ -80,7 +114,7 @@ class HealthController extends Controller
 	              			$source_name = $xmlparse->entry[$i]->organizer->component[$j]->observation->text->sourceName;
 	              			$unit = $xmlparse->entry[$i]->organizer->component[$j]->observation->text->unit;
 	              			$value = $xmlparse->entry[$i]->organizer->component[$j]->observation->text->value;
-	              			$type = 'Health Rate';
+	              			$type = 'Heart Rate';
 	              			$type_id = $xmlparse->entry[$i]->organizer->component[$j]->observation->text->type;
 	              			$remark = $request->get('loc');
 	              			// var_dump($xmlparse->entry[$i]->organizer->component[$j]->observation->effectiveTime->low->attributes());

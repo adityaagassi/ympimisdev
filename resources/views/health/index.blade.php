@@ -118,14 +118,11 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		{{$title}} Health Indicator <span class="text-purple">??</span>
+		{{$title}} Health Indicator <span class="text-purple text-sm">{{$title_jp}}</span>
 		<button class="btn btn-primary pull-right" data-toggle="modal" data-target="#importExcel">
 			<i class="fa fa-file-excel-o"></i>&nbsp;&nbsp;
 			Upload File XML
 		</button>
-		<!-- <a class="buttonclass">
-			button
-		</a> -->
 	</h1>
 	<ol class="breadcrumb">
 	</ol>
@@ -158,6 +155,57 @@
 			<div class="box box-solid">
 				<div class="box-body" style="overflow-x: scroll;">
 					<div class="col-xs-12">
+						<h4>Filter</h4>
+						<div class="row">
+							<div class="col-md-2 col-md-offset-4">
+								<span style="font-weight: bold;">Date From</span>
+								<div class="form-group">
+									<div class="input-group date">
+										<div class="input-group-addon bg-white">
+											<i class="fa fa-calendar"></i>
+										</div>
+										<input type="text" class="form-control datepicker" id="tanggal_from" name="tanggal_from" placeholder="Select Date From" autocomplete="off">
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2">
+								<span style="font-weight: bold;">Date To</span>
+								<div class="form-group">
+									<div class="input-group date">
+										<div class="input-group-addon bg-white">
+											<i class="fa fa-calendar"></i>
+										</div>
+										<input type="text" class="form-control datepicker" id="tanggal_to"name="tanggal_to" placeholder="Select Date To" autocomplete="off">
+									</div>
+								</div>
+							</div>
+							<div class="col-md-4 col-md-offset-4">
+								<span style="font-weight: bold;">Type</span>
+								<div class="form-group">
+									<div class="input-group date">
+										<div class="input-group-addon bg-white">
+											<i class="fa fa-thermometer-empty"></i>
+										</div>
+										<select class="form-control select2" name="type" id="type" style="width: 100%" data-placeholder="Choose Type . . .">
+											<option value=""></option>
+											<option value="Body Mass">Body Mass</option>
+											<option value="Body Height">Body Height</option>
+											<option value="Heart Rate">Heart Rate</option>
+											<option value="Oxygen Rate">Oxygen Rate</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6 col-md-offset-2">
+								<div class="col-md-10">
+									<div class="form-group pull-right">
+										<a href="{{ url('index/temperature') }}" class="btn btn-warning">Back</a>
+										<a href="{{ url('index/temperature/minmoe') }}" class="btn btn-danger">Clear</a>
+										<button class="btn btn-primary col-sm-14" onclick="fillList()">Search</button>
+									</div>
+								</div>
+							</div>
+						</div>
 						<div class="row" id="divTable">
 							<table id="tableHealth" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
 								<thead style="background-color: rgb(126,86,134); color: #FFD700;">
@@ -236,6 +284,10 @@
 
 		fillList();
 
+		$('#tanggal_from').val('');
+		$('#tanggal_to').val('');
+		$('#type').val('').trigger('change');
+
 		$('body').toggleClass("sidebar-collapse");
 	});
 	$('.datepicker').datepicker({
@@ -286,7 +338,12 @@
 	});
 
 	function fillList(){
-		$.get('{{ url("fetch/health") }}', function(result, status, xhr){
+		var data = {
+			date_from:$('#tanggal_from').val(),
+			date_to:$('#tanggal_to').val(),
+			type:$('#type').val(),
+		}
+		$.get('{{ url("fetch/health") }}',data, function(result, status, xhr){
 			if(result.status){
 				$('#tableHealth').DataTable().clear();
 				$('#tableHealth').DataTable().destroy();
