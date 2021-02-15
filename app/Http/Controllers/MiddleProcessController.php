@@ -6015,6 +6015,7 @@ class MiddleProcessController extends Controller
 	public function fetchWIP()
 	{
 		$adjust = MiddleInventory::leftJoin('materials', 'materials.material_number', '=', 'middle_inventories.material_number')
+		->where('middle_inventories.location', '<>', 'stockroom')
 		->select('middle_inventories.tag', 'middle_inventories.material_number', 'materials.material_description', 'middle_inventories.quantity', 'middle_inventories.location', 'middle_inventories.created_at')
 		->orderBy('middle_inventories.created_at', 'desc')
 		->get();
