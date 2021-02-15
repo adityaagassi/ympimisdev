@@ -13,6 +13,7 @@ use App\DetailChecksheet;
 use App\Inspection;
 use App\ShipmentCondition;
 use App\AreaInspection;
+use App\ShipmentReservation;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use File;
@@ -393,6 +394,8 @@ public function import(Request $request)
                'invoice_date' => $request->get('invoice_date'),            
                'toward' => $toward,            
                'ct_size' => $request->get('ct_size'),  
+               'period' => $request->get('period'),  
+               'ycj_ref_number' => $request->get('ycj_ref_number'),  
                'created_by' => $id
           ]);
 
@@ -511,7 +514,7 @@ public function update(Request $request){
      $DetailChecksheet->diff = $request->get('diff');
      $DetailChecksheet->save();
 
-     $start = MasterChecksheet::where('id_checkSheet','=',$DetailChecksheet->id_checkSheet)->select('id','start_stuffing')
+     $start = MasterChecksheet::where('id_checkSheet','=',$DetailChecksheet->id_checkSheet)->select('id','start_stuffing', 'period', 'ycj_ref_number')
      ->first();
 
      if ($start->start_stuffing == null) {
@@ -523,6 +526,15 @@ public function update(Request $request){
      $start2 = MasterChecksheet::find($start->id);
      $start2->finish_stuffing = date('Y-m-d H:i:s');
      $start2->save();
+
+     if(($start->period != null) && ($start->ycj_ref_number != null)){
+          $booking = ShipmentReservation::where('period', $start->period)
+          ->where('ycj_ref_number', $start->ycj_ref_number)
+          ->where('status', 'BOOKING CONFIRMED')
+          ->update([
+               'actual_stuffing' => date('Y-m-d')
+          ]);
+     }
 
      $response = array(
           'status' => true,
@@ -603,7 +615,7 @@ public function bara(Request $request){
      $Inspection->created_by = $id_user;
      $Inspection->save();
 
-     $start = MasterChecksheet::where('id_checkSheet','=',$Inspection->id_checkSheet)->select('id','start_stuffing')
+     $start = MasterChecksheet::where('id_checkSheet','=',$Inspection->id_checkSheet)->select('id','start_stuffing', 'period', 'ycj_ref_number')
      ->first();
 
      if ($start->start_stuffing == null) {
@@ -615,6 +627,15 @@ public function bara(Request $request){
      $start2 = MasterChecksheet::find($start->id);
      $start2->finish_stuffing = date('Y-m-d H:i:s');
      $start2->save();
+
+     if(($start->period != null) && ($start->ycj_ref_number != null)){
+          $booking = ShipmentReservation::where('period', $start->period)
+          ->where('ycj_ref_number', $start->ycj_ref_number)
+          ->where('status', 'BOOKING CONFIRMED')
+          ->update([
+               'actual_stuffing' => date('Y-m-d')
+          ]);
+     }
 
      $response = array(
           'status' => true,
@@ -688,6 +709,15 @@ public function save(Request $request){
      $master->status = date('Y-m-d H:i:s');
      $master->check_by = $id_user;
      $master->save();
+
+     if(($master->period != null) && ($master->ycj_ref_number != null)){
+          $booking = ShipmentReservation::where('period', $master->period)
+          ->where('ycj_ref_number', $master->ycj_ref_number)
+          ->where('status', 'BOOKING CONFIRMED')
+          ->update([
+               'actual_on_board' => date('Y-m-d')
+          ]);
+     }
 
      if($check == null){
           self::mailStuffing($master->Stuffing_date);

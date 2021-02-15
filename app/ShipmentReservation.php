@@ -25,10 +25,14 @@ class ShipmentReservation extends Model{
 		'stuffing_date',
 		'etd_date',
 		'application_rate',
+		'plan',
 		'remark',
 		'due_date',
 		'invoice_number',
 		'ref',
+		'actual_stuffing',
+		'actual_on_board',
+		'actual_departed',
 		'created_by'
 	];
 

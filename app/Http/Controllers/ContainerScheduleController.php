@@ -38,12 +38,12 @@ class ContainerScheduleController extends Controller{
             'SPOT/EXTRA RATE'
         ];
         $this->nomination = [
-           'MAIN',
-           'SUB',
-           'BACK UP',
-           'OTHER'
-       ];
-   }
+         'MAIN',
+         'SUB',
+         'BACK UP',
+         'OTHER'
+     ];
+ }
     /**
      * Display a listing of the resource.
      *
@@ -99,6 +99,42 @@ class ContainerScheduleController extends Controller{
         ))->with('page', $title)->with('head', 'Shipping Booking Management List');    
     }
 
+    public function fetchGetRefNumber(Request $request){
+        $period = $request->get('period');
+
+        $getRefNumber = ShipmentReservation::where('period', $period)
+        ->select('period', 'ycj_ref_number', 'port_of_delivery', 'country', 'stuffing_date')
+        ->orderBy('ycj_ref_number', 'ASC')
+        ->get();
+
+        echo '<option value=""></option>';
+
+        $ref = array();
+
+        for($i=0; $i < count($getRefNumber); $i++) {
+
+            if(!in_array($getRefNumber[$i]['ycj_ref_number'], $ref)){
+
+                echo '<option value="'.$getRefNumber[$i]['ycj_ref_number'].'">'.$getRefNumber[$i]['ycj_ref_number'].' - '.$getRefNumber[$i]['port_of_delivery'].' ('.$getRefNumber[$i]['country'].') - '.$getRefNumber[$i]['stuffing_date'].'</option>';
+
+                array_push($ref, $getRefNumber[$i]['ycj_ref_number']);
+
+            }
+        }
+    }
+
+    public function fetchShippingAgencyDetail(Request $request){
+
+        $agency = ShipmentNomination::where('id', $request->get('id'))->first();
+
+        $response = array(
+            'status' => true,
+            'agency' => $agency
+        );
+        return Response::json($response);  
+
+    }
+
     public function fetchShippingAgency(Request $request){
 
         $agency = ShipmentNomination::whereNull('deleted_at');
@@ -116,7 +152,14 @@ class ContainerScheduleController extends Controller{
         $agency = $agency->orderBy('port_of_delivery', 'ASC')->get();
 
 
-        return DataTables::of($agency)->make(true);
+        return DataTables::of($agency)
+        ->addColumn('action', function($agency){
+            return '<button style="width: 50%; height: 100%;" onclick="deleteLines(\''.$agency->id.'\')" class="btn btn-xs btn-danger form-control"><span><i class="fa fa-trash"></i></span></button><button style="width: 50%; height: 100%;" onclick="editLines(\''.$agency->id.'\')" class="btn btn-xs btn-warning form-control"><span><i class="fa fa-pencil"></i></span></button>';
+        })
+        ->rawColumns([ 
+            'action' => 'action'
+        ])
+        ->make(true);
 
     }
 
@@ -332,29 +375,13 @@ class ContainerScheduleController extends Controller{
         $date = $request->get('date');
         $st_date = date('m-d', strtotime($date));
 
-        $resume = db::select("SELECT DISTINCT plan.*, confirm.`status`, cek.ycj_ref_number FROM
-            (SELECT period, ycj_ref_number, shipper, port_loading, port_of_delivery, country, fortyhc, forty, twenty, stuffing_date, ( COALESCE ( fortyhc, 0 ) + COALESCE ( forty, 0 ) + COALESCE ( twenty, 0 ) ) AS qty FROM shipment_reservations
+        $resume = db::select("SELECT DISTINCT period, ycj_ref_number, shipper, port_loading, port_of_delivery, country, stuffing_date, plan FROM shipment_reservations
             WHERE DATE_FORMAT(stuffing_date,'%m-%d') = '".$st_date."'
-            AND period = '".$period."'
-            AND `status` <> 'NO NEED ANYMORE') AS plan
-            LEFT JOIN
-            (SELECT ycj_ref_number, max( COALESCE ( fortyhc, 0 ) + COALESCE ( forty, 0 ) + COALESCE ( twenty, 0 ) ) AS qty FROM shipment_reservations
-            WHERE DATE_FORMAT(stuffing_date,'%m-%d') = '".$st_date."'
-            AND period = '".$period."'
-            AND `status` <> 'NO NEED ANYMORE'
-            GROUP BY ycj_ref_number) AS cek
-            ON cek.ycj_ref_number = plan.ycj_ref_number AND cek.qty = plan.qty
-            LEFT JOIN
-            (SELECT DISTINCT ycj_ref_number, `status` FROM shipment_reservations
-            WHERE DATE_FORMAT(stuffing_date,'%m-%d') = '".$st_date."'
-            AND period = '".$period."'
-            AND `status` = 'BOOKING CONFIRMED ') AS confirm
-            ON plan.ycj_ref_number = confirm.ycj_ref_number
-            WHERE cek.ycj_ref_number IS NOT NULL");
+            AND period = '".$period."'");
 
         $detail = ShipmentReservation::where(db::raw("DATE_FORMAT(stuffing_date,'%m-%d')"), $st_date)
         ->where('period', $period)
-        ->where('status', '<>', 'NO NEED ANYMORE')
+        // ->where('status', '<>', 'NO NEED ANYMORE')
         ->select(
             'period',
             'ycj_ref_number',
@@ -362,6 +389,7 @@ class ContainerScheduleController extends Controller{
             'port_loading',
             'port_of_delivery',
             'country',
+            'plan',
             'fortyhc',
             'forty',
             'twenty',
@@ -429,32 +457,51 @@ class ContainerScheduleController extends Controller{
         AND `status` <> 'NO NEED ANYMORE'
         GROUP BY ycj_ref_number, port_of_delivery ) AS resume
         GROUP BY port_of_delivery
-        order by not_confirmed DESC";
+        order by not_confirmed DESC
 
-        $data = db::select("SELECT resume.port_of_delivery, SUM(resume.plan) AS plan, SUM(resume.confirm) AS confirmed, SUM(resume.reject) AS rejected, SUM(resume.not_confirm) AS not_confirmed FROM
-            (SELECT plan.*, reject.reject, (plan.plan - plan.confirm - reject.reject) AS not_confirm FROM
-            (SELECT plan.port_of_delivery, plan.ycj_ref_number, IF(confirm.quantity IS NOT NULL, confirm.quantity, plan.quantity) AS plan, COALESCE(confirm.quantity,0) AS confirm FROM
-            (SELECT port_of_delivery, ycj_ref_number,
-            MAX((COALESCE(fortyhc,0) + COALESCE(forty,0) + COALESCE(twenty,0))) AS quantity FROM shipment_reservations
-            WHERE period = '".$period."'
-            AND `status` <> 'NO NEED ANYMORE'
-            GROUP BY port_of_delivery, ycj_ref_number) plan
+        SELECT resume.port_of_delivery, SUM(resume.plan) AS plan, SUM(resume.confirm) AS confirmed, SUM(resume.reject) AS rejected, SUM(resume.not_confirm) AS not_confirmed FROM
+        (SELECT plan.*, reject.reject, (plan.plan - plan.confirm - reject.reject) AS not_confirm FROM
+        (SELECT plan.port_of_delivery, plan.ycj_ref_number, IF(confirm.quantity IS NOT NULL, confirm.quantity, plan.quantity) AS plan, COALESCE(confirm.quantity,0) AS confirm FROM
+        (SELECT port_of_delivery, ycj_ref_number,
+        MAX((COALESCE(fortyhc,0) + COALESCE(forty,0) + COALESCE(twenty,0))) AS quantity FROM shipment_reservations
+        WHERE period = '".$period."'
+        AND `status` <> 'NO NEED ANYMORE'
+        GROUP BY port_of_delivery, ycj_ref_number) plan
+        LEFT JOIN
+        (SELECT port_of_delivery, ycj_ref_number,
+        MAX((COALESCE(fortyhc,0) + COALESCE(forty,0) + COALESCE(twenty,0))) AS quantity FROM shipment_reservations
+        WHERE period = '".$period."'
+        AND `status` = 'BOOKING CONFIRMED'
+        GROUP BY port_of_delivery, ycj_ref_number) confirm
+        ON plan.ycj_ref_number = confirm.ycj_ref_number) plan
+        LEFT JOIN
+        (SELECT ycj_ref_number, IF(SUM(count) = SUM(reject), 1, 0) AS reject FROM
+        (SELECT stuffing_date, ycj_ref_number, `status`, 1 AS count, IF(`status` = 'BOOKING UNACCEPTED', 1, 0) AS reject, IF(`status` = 'BOOKING CONFIRMED', 1, 0) AS confirm FROM shipment_reservations
+        WHERE period = '".$period."'
+        AND `status` <> 'NO NEED ANYMORE') AS shipment
+        GROUP BY ycj_ref_number) AS reject
+        ON plan.ycj_ref_number = reject.ycj_ref_number) resume
+        GROUP BY port_of_delivery
+        ORDER BY not_confirm DESC, plan DESC";
+
+        $data = db::select("SELECT plan.port_of_delivery, plan.plan, COALESCE(resume.departed,0) AS departed, COALESCE(resume.on_board,0) AS on_board, COALESCE(resume.confirmed,0) AS confirmed FROM
+            (SELECT port_of_delivery, SUM(plan) AS plan FROM
+            (SELECT DISTINCT ycj_ref_number, port_of_delivery, plan FROM `shipment_reservations`
+            WHERE period = '".$period."') AS shipment
+            GROUP BY port_of_delivery) AS plan
             LEFT JOIN
-            (SELECT port_of_delivery, ycj_ref_number,
-            MAX((COALESCE(fortyhc,0) + COALESCE(forty,0) + COALESCE(twenty,0))) AS quantity FROM shipment_reservations
+            (SELECT port_of_delivery, SUM(departed) as departed, SUM(on_board) AS on_board, SUM(stuffing) + SUM(confirmed) AS confirmed FROM
+            (SELECT ycj_ref_number, port_of_delivery,
+            IF(actual_departed IS NOT NULL, plan, 0) AS departed,
+            IF(actual_on_board IS NOT NULL, (IF(actual_departed IS NOT NULL, 0, plan)), 0) AS on_board,
+            IF(actual_stuffing IS NOT NULL, (IF(actual_on_board IS NOT NULL, 0, plan)), 0) AS stuffing,
+            IF(actual_stuffing IS NULL, plan, 0) AS confirmed
+            FROM `shipment_reservations`
             WHERE period = '".$period."'
-            AND `status` = 'BOOKING CONFIRMED'
-            GROUP BY port_of_delivery, ycj_ref_number) confirm
-            ON plan.ycj_ref_number = confirm.ycj_ref_number) plan
-            LEFT JOIN
-            (SELECT ycj_ref_number, IF(SUM(count) = SUM(reject), 1, 0) AS reject FROM
-            (SELECT stuffing_date, ycj_ref_number, `status`, 1 AS count, IF(`status` = 'BOOKING UNACCEPTED', 1, 0) AS reject, IF(`status` = 'BOOKING CONFIRMED', 1, 0) AS confirm FROM shipment_reservations
-            WHERE period = '".$period."'
-            AND `status` <> 'NO NEED ANYMORE') AS shipment
-            GROUP BY ycj_ref_number) AS reject
-            ON plan.ycj_ref_number = reject.ycj_ref_number) resume
-            GROUP BY port_of_delivery
-            ORDER BY not_confirm DESC, plan DESC");
+            AND `status` = 'BOOKING CONFIRMED') AS shipmemt
+            GROUP BY port_of_delivery) AS resume
+            ON plan.port_of_delivery = resume.port_of_delivery
+            ORDER BY plan.plan DESC");
 
         $datefrom = ShipmentReservation::where('period', $period)->orderBy('stuffing_date', 'ASC')->first();
         $dateto = WeeklyCalendar::where(db::raw('DATE_FORMAT(week_date,"%Y-%m")'), $period)->orderBy('week_date', 'DESC')->first();
@@ -476,41 +523,132 @@ class ContainerScheduleController extends Controller{
         WHERE period = '".$period."'
         AND `status` = 'BOOKING CONFIRMED') shipment
         GROUP BY stuffing_date) confirmed
-        ON plan.week_date = confirmed.stuffing_date";
+        ON plan.week_date = confirmed.stuffing_date
 
-        $ship_by_dates = db::select("SELECT date.week_date, COALESCE(plan.reject,0) AS reject, COALESCE(plan.confirm,0) AS confirm, COALESCE(plan.not_confirm,0) AS not_confirm FROM
+        SELECT date.week_date, COALESCE(plan.reject,0) AS reject, COALESCE(plan.confirm,0) AS confirm, COALESCE(plan.not_confirm,0) AS not_confirm FROM
+        (SELECT week_date, remark FROM weekly_calendars
+        WHERE DATE_FORMAT(week_date,'%Y-%m-%d') >= '".$datefrom->stuffing_date."'
+        AND DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$dateto->week_date."') AS date
+        LEFT JOIN
+        (SELECT stuffing_date, SUM(reject) AS reject, SUM(confirm) AS confirm, SUM(not_confirm) AS not_confirm FROM
+        (SELECT shipment.stuffing_date, shipment.ycj_ref_number, IF(resume.reject = 1, shipment.quantity, 0) AS reject, IF(resume.confirm = 1, shipment.quantity, 0) AS confirm, IF(resume.reject = 0 AND resume.confirm = 0, shipment.quantity, 0) AS not_confirm FROM
+        (SELECT ycj_ref_number, MAX(quantity) AS quantity, MIN(stuffing_date) AS stuffing_date FROM
+        (SELECT DISTINCT stuffing_date, ycj_ref_number, (COALESCE(fortyhc,0) + COALESCE(forty,0) + COALESCE(twenty,0)) AS quantity FROM shipment_reservations
+        WHERE period = '".$period."'
+        AND `status` <> 'NO NEED ANYMORE') AS shipment
+        GROUP BY ycj_ref_number) AS shipment
+        LEFT JOIN
+        (SELECT stuffing_date, ycj_ref_number, IF(SUM(count) = SUM(reject), 1, 0) AS reject, IF(SUM(confirm) > 0, 1, 0) AS confirm FROM
+        (SELECT stuffing_date, ycj_ref_number, `status`, 1 AS count, IF(`status` = 'BOOKING UNACCEPTED', 1, 0) AS reject, IF(`status` = 'BOOKING CONFIRMED', 1, 0) AS confirm FROM shipment_reservations
+        WHERE period = '".$period."'
+        AND `status` <> 'NO NEED ANYMORE') AS shipment
+        GROUP BY stuffing_date, ycj_ref_number) AS resume
+        ON shipment.ycj_ref_number = resume.ycj_ref_number AND shipment.stuffing_date = resume.stuffing_date) AS shipment
+        GROUP BY stuffing_date) AS plan
+        ON plan.stuffing_date = date.week_date
+        ORDER BY date.week_date ASC";
+
+        $ship_by_dates = db::select("SELECT date.week_date, COALESCE(plan.plan, 0) AS plan, COALESCE(resume.departed, 0) AS departed, COALESCE(resume.on_board, 0) AS on_board, COALESCE(resume.stuffing, 0) AS stuffing, COALESCE(resume.confirmed, 0) AS confirmed FROM
             (SELECT week_date, remark FROM weekly_calendars
             WHERE DATE_FORMAT(week_date,'%Y-%m-%d') >= '".$datefrom->stuffing_date."'
             AND DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$dateto->week_date."') AS date
             LEFT JOIN
-            (SELECT stuffing_date, SUM(reject) AS reject, SUM(confirm) AS confirm, SUM(not_confirm) AS not_confirm FROM
-            (SELECT shipment.stuffing_date, shipment.ycj_ref_number, IF(resume.reject = 1, shipment.quantity, 0) AS reject, IF(resume.confirm = 1, shipment.quantity, 0) AS confirm, IF(resume.reject = 0 AND resume.confirm = 0, shipment.quantity, 0) AS not_confirm FROM
-            (SELECT ycj_ref_number, MAX(quantity) AS quantity, MIN(stuffing_date) AS stuffing_date FROM
-            (SELECT DISTINCT stuffing_date, ycj_ref_number, (COALESCE(fortyhc,0) + COALESCE(forty,0) + COALESCE(twenty,0)) AS quantity FROM shipment_reservations
-            WHERE period = '".$period."'
-            AND `status` <> 'NO NEED ANYMORE') AS shipment
-            GROUP BY ycj_ref_number) AS shipment
-            LEFT JOIN
-            (SELECT stuffing_date, ycj_ref_number, IF(SUM(count) = SUM(reject), 1, 0) AS reject, IF(SUM(confirm) > 0, 1, 0) AS confirm FROM
-            (SELECT stuffing_date, ycj_ref_number, `status`, 1 AS count, IF(`status` = 'BOOKING UNACCEPTED', 1, 0) AS reject, IF(`status` = 'BOOKING CONFIRMED', 1, 0) AS confirm FROM shipment_reservations
-            WHERE period = '".$period."'
-            AND `status` <> 'NO NEED ANYMORE') AS shipment
-            GROUP BY stuffing_date, ycj_ref_number) AS resume
-            ON shipment.ycj_ref_number = resume.ycj_ref_number AND shipment.stuffing_date = resume.stuffing_date) AS shipment
+            (SELECT stuffing_date, SUM(plan) AS plan FROM
+            (SELECT DISTINCT ycj_ref_number, stuffing_date, plan FROM `shipment_reservations`
+            WHERE period = '".$period."') AS shipment
             GROUP BY stuffing_date) AS plan
-            ON plan.stuffing_date = date.week_date
+            ON date.week_date = plan.stuffing_date
+            LEFT JOIN
+            (SELECT stuffing_date, SUM(departed) as departed, SUM(on_board) AS on_board, SUM(stuffing) AS stuffing, SUM(confirmed) AS confirmed FROM
+            (SELECT ycj_ref_number, stuffing_date,
+            IF(actual_departed IS NOT NULL, plan, 0) AS departed,
+            IF(actual_on_board IS NOT NULL, (IF(actual_departed IS NOT NULL, 0, plan)), 0) AS on_board,
+            IF(actual_stuffing IS NOT NULL, (IF(actual_on_board IS NOT NULL, 0, plan)), 0) AS stuffing,
+            IF(actual_stuffing IS NULL, plan, 0) AS confirmed
+            FROM `shipment_reservations`
+            WHERE period = '".$period."'
+            AND `status` = 'BOOKING CONFIRMED') AS shipmemt
+            GROUP BY stuffing_date) AS resume
+            ON date.week_date = resume.stuffing_date
             ORDER BY date.week_date ASC");
+
+
 
         $response = array(
             'status' => true,
             'data' => $data,
             'ship_by_dates' => $ship_by_dates,
+
+
             'period' => $period,
             'month' => $month,
             'mon' => date("n", strtotime($month)),
             'year' => date("Y", strtotime($month))
         );
         return Response::json($response);  
+    }
+
+    public function deleteShippingAgency(Request $request){
+        $id = $request->get('id');
+
+        try {
+            $agency = ShipmentNomination::where('id', $id)->delete();
+
+
+            $response = array(
+                'status' => true,
+                'message' => 'Shipment Line Deleted Successfullly'
+            );
+            return Response::json($response);            
+        } catch (Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function editShippingAgency(Request $request){
+        $id = $request->get('id');
+        $ship_id = $request->get('ship_id');
+        $shipper = $request->get('shipper');
+        $port_loading = $request->get('port_loading');
+        $consignee = $request->get('consignee');
+        $transship_port = $request->get('transship_port');
+        $port_of_discharge = $request->get('port_of_discharge');
+        $port_of_delivery = $request->get('port_of_delivery');
+        $country = $request->get('country');
+        $carier = $request->get('carier');
+        $nomination = $request->get('nomination');
+
+        try {
+            $agency = ShipmentNomination::where('id', $id)
+            ->update([
+                'ship_id' => strtoupper($ship_id),
+                'shipper' => strtoupper($shipper),
+                'port_loading' => strtoupper($port_loading),
+                'consignee' => strtoupper($consignee),
+                'transship_port' => strtoupper($transship_port),
+                'port_of_discharge' => strtoupper($port_of_discharge),
+                'port_of_delivery' => strtoupper($port_of_delivery),
+                'country' => strtoupper($country),
+                'carier' => strtoupper($carier),
+                'nomination' => strtoupper($nomination)
+            ]);
+
+            $response = array(
+                'status' => true,
+                'message' => 'Shipment Line Edited Successfullly'
+            );
+            return Response::json($response);            
+        } catch (Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+            );
+            return Response::json($response);
+        }
     }
 
     public function addShippingAgency(Request $request){
@@ -544,7 +682,7 @@ class ContainerScheduleController extends Controller{
 
             $response = array(
                 'status' => true,
-                'message' => 'Shipment Agency Added Successfullly'
+                'message' => 'Shipment Line Added Successfullly'
             );
             return Response::json($response);            
         } catch (Exception $e) {
@@ -572,6 +710,7 @@ class ContainerScheduleController extends Controller{
         $stuffing = $request->get('stuffing');
         $etd = $request->get('etd');
         $application_rate = $request->get('application_rate');
+        $plan = $request->get('plan');
         $remark = $request->get('remark');
         $due_date = $request->get('due_date');
         $invoice = $request->get('invoice');
@@ -604,6 +743,7 @@ class ContainerScheduleController extends Controller{
                 'stuffing_date' => $stuffing,
                 'etd_date' => $etd,
                 'application_rate' => $application_rate,
+                'plan' => $plan,
                 'remark' => $remark,
                 'due_date' => $due_date,
                 'invoice_number' => strtoupper($invoice),
@@ -627,6 +767,27 @@ class ContainerScheduleController extends Controller{
         }
     }
 
+    public function deleteShipReservation(Request $request){
+        $id = $request->get('shipment_reservation_id');
+
+        try {
+            $delete = ShipmentReservation::where('id', $id)->delete();
+
+            $response = array(
+                'status' => true,
+                'message' => 'Shipment Reservation Deleted Successfullly'
+            );
+            return Response::json($response); 
+        } catch (Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+            );
+            return Response::json($response);
+        }
+
+    }
+
     public function editShipReservation(Request $request){
         $id = $request->get('shipment_reservation_id');
         $period = $request->get('period');
@@ -639,6 +800,7 @@ class ContainerScheduleController extends Controller{
         $twenty = $request->get('twenty');
         $stuffing = $request->get('stuffing');
         $etd = $request->get('etd');
+        $plan = $request->get('plan');
         $remark = $request->get('remark');
         $application_rate = $request->get('application_rate');
         $due_date = $request->get('due_date');
@@ -669,6 +831,7 @@ class ContainerScheduleController extends Controller{
             ->update([
                 'stuffing_date' => $stuffing,
                 'etd_date' => $etd,
+                'plan' => $plan,
                 'remark' => $remark,
                 'invoice_number' => strtoupper($invoice),
                 'ref' => $ref,

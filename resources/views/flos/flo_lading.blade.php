@@ -68,21 +68,45 @@
 								</select>
 							</div>
 							<div class="form-group">
-								<label>BL Date</label>
 								<div class="input-group date">
 									<div class="input-group-addon">
 										<i class="fa fa-calendar"></i>
 									</div>
-									<input type="text" class="form-control pull-right" id="bl_date" nama="bl_date" required>
+									<input type="text" class="form-control pull-right" id="bl_date" nama="bl_date" placeholder="Select BL Date" required>
 								</div>
 							</div>
 							<div class="form-group pull-right">
-								<button href="javascript:void(0)" id="confirm" onClick="inputBlDate()" class="btn btn-primary">Confirm</button>
+								<button href="javascript:void(0)" id="confirm" onClick="inputBlDate()" class="btn btn-success">Confirm</button>
 							</div>
 						</div>
 					</div>
-
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-12">
+			<div class="box">
+				<div class="box-body">
 					<div class="row">
+						<div class="row">
+							<div class="col-md-12" style="margin-bottom: 3%;">
+								<div class="col-md-3">
+									<div class="input-group date">
+										<div class="input-group-addon bg-blue">
+											<i class="fa fa-calendar"></i>
+										</div>
+										<input type="text" class="form-control monthpicker" name="month" id="month" placeholder="Select Shipment Period">	
+									</div>
+								</div>
+								<div class="col-md-2" style="padding: 0px;"> 
+									<button id="search" onclick="fillInvoiceTable()" class="btn btn-primary">Search</button>
+								</div>
+							</div>
+						</div>
+
+						
+						
+
+
 						<div class="col-md-12">
 							<table id="flo_invoice_table" class="table table-bordered table-striped">
 								<thead style="background-color: rgba(126,86,134,.7);">
@@ -138,7 +162,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-				<button type="submit" class="btn btn-primary">Confirm</button>
+				<button type="submit" class="btn btn-success">Confirm</button>
 			</div>
 		</div>
 	</div>
@@ -166,6 +190,13 @@
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 	jQuery(document).ready(function() {
+		$('.monthpicker').datepicker({
+			format: "yyyy-mm",
+			startView: "months", 
+			minViewMode: "months",
+			autoclose: true,
+			todayHighlight: true
+		});
 		$('#invoice_number').val('').change();
 		$('#bl_date').val('');
 		$('#bl_date').datepicker({
@@ -193,9 +224,6 @@
 				bl_date : bl_date,
 			}
 			$.post('{{ url("input/flo_lading") }}', data, function(result, status, xhr){
-				console.log(status);
-				console.log(result);
-				console.log(xhr);
 				if(xhr.status == 200){
 					if(result.status){
 						$('#flo_invoice_table').DataTable().ajax.reload();
@@ -239,6 +267,13 @@
 	}
 
 	function fillInvoiceTable(){
+
+		var month = $("#month").val();
+
+		var data = {			
+			month: month
+		}
+
 		$('#flo_invoice_table').DataTable().destroy();
 
 		$('#flo_invoice_table tfoot th').each( function () {
@@ -257,7 +292,7 @@
 				buttons:[
 				{
 					extend: 'copy',
-					className: 'btn btn-success',
+					className: 'btn btn-default',
 					text: '<i class="fa fa-copy"></i> Copy',
 					exportOptions: {
 						columns: ':not(.notexport)'
@@ -265,7 +300,7 @@
 				},
 				{
 					extend: 'excel',
-					className: 'btn btn-info',
+					className: 'btn btn-default',
 					text: '<i class="fa fa-file-excel-o"></i> Excel',
 					exportOptions: {
 						columns: ':not(.notexport)'
@@ -288,6 +323,7 @@
 			"ajax": {
 				"type" : "post",
 				"url" : "{{ url("index/flo_invoice") }}",
+				"data" : data,
 			},
 			"columns": [
 			{ "data": "invoice_number" },

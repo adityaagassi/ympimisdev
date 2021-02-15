@@ -141,6 +141,7 @@
 									<th style="width: 10%;">Country</th>
 									<th style="width: 15%;">Carrier</th>
 									<th style="width: 5%;">Nomination</th>
+									<th style="width: 5%;">Action</th>
 								</tr>
 							</thead>
 							<tbody id="tableBodyList">
@@ -253,6 +254,109 @@
 	</div>
 </div>
 
+<div class="modal fade" id="modalEdit">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 style="background-color: #e08e0b; text-align: center;" class="modal-title">
+					Edit Ship Agency
+				</h1>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-xs-12">
+						<input type="hidden" value="{{csrf_token()}}" name="_token" />
+						<div class="box-body">						
+							<input type="hidden" name="edit_id" id="edit_id">
+
+
+							<div class="form-group row" align="right">
+								<label class="col-xs-4">Ship ID<span class="text-red">*</span></label>
+								<div class="col-xs-6">
+									<input type="text" class="form-control" name="edit_ship_id" id="edit_ship_id" placeholder="Input Ship ID">
+								</div>
+							</div>
+
+							<div class="form-group row" align="right">
+								<label class="col-xs-4">Shipper<span class="text-red">*</span></label>
+								<div class="col-xs-6">
+									<input type="text" class="form-control" name="edit_shipper" id="edit_shipper" placeholder="Input Shipper" value="YMPI" readonly>
+								</div>
+							</div>
+
+							<div class="form-group row" align="right">
+								<label class="col-xs-4">Port Loading<span class="text-red">*</span></label>
+								<div class="col-xs-6">
+									<input type="text" class="form-control" name="edit_port_loading" id="edit_port_loading" placeholder="Input Shipper" value="SURABAYA" readonly>
+								</div>
+							</div>
+
+							<div class="form-group row" align="right">
+								<label class="col-xs-4">Consignee<span class="text-red">*</span></label>
+								<div class="col-xs-6">
+									<input type="text" class="form-control" name="edit_consignee" id="edit_consignee" placeholder="Input Consignee">
+								</div>
+							</div>
+
+							<div class="form-group row" align="right">
+								<label class="col-xs-4">Transship Port<span class="text-red">*</span></label>
+								<div class="col-xs-6">
+									<input type="text" class="form-control" name="edit_transship_port" id="edit_transship_port" placeholder="Input Transship Port">
+								</div>
+							</div>
+
+							<div class="form-group row" align="right">
+								<label class="col-xs-4">Port of Discharge<span class="text-red">*</span></label>
+								<div class="col-xs-6">
+									<input type="text" class="form-control" name="edit_port_of_discharge" id="edit_port_of_discharge" placeholder="Input Port of Discharge">
+								</div>
+							</div>
+
+							<div class="form-group row" align="right">
+								<label class="col-xs-4">Port of Delivery<span class="text-red">*</span></label>
+								<div class="col-xs-6">
+									<input type="text" class="form-control" name="edit_port_of_delivery" id="edit_port_of_delivery" placeholder="Input Port of Delivery">
+								</div>
+							</div>							
+
+							<div class="form-group row" align="right">
+								<label class="col-xs-4">Country<span class="text-red">*</span></label>
+								<div class="col-xs-6">
+									<input type="text" class="form-control" name="edit_country" id="edit_country" placeholder="Input Country">
+								</div>
+							</div>
+
+							<div class="form-group row" align="right">
+								<label class="col-xs-4">Carrier<span class="text-red">*</span></label>
+								<div class="col-xs-6">
+									<input type="text" class="form-control" name="edit_carier" id="edit_carier" placeholder="Input Carrier">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label class="col-xs-4" style="text-align: right;">Nomination<span class="text-red">*</span></label>
+								<div class="col-xs-6">
+									<select class="form-control select2" data-placeholder="Select Nomination" name="edit_nomination" id="edit_nomination" style="width: 100%">
+										<option value=""></option>
+										@foreach($nominations as $nomination) 
+										<option value="{{ $nomination }}">{{ $nomination }}</option>
+										@endforeach
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close"></i> CANCEL</a>
+				<button class="btn btn-success" onclick="editList()"><i class="fa fa-check-square-o"></i> SUBMIT</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
 
 @endsection
 @section('scripts')
@@ -328,7 +432,7 @@
 
 		$.post('{{ url("fetch/add_shipping_agency") }}', data,  function(result, status, xhr){
 			if(result.status){
-				fillTable();
+				$('#tableList').DataTable().ajax.reload();
 
 				$("#ship_id").val('');
 				$("#shipper").val('');
@@ -433,9 +537,129 @@
 			{ "data": "port_of_delivery" },
 			{ "data": "country" },
 			{ "data": "carier" },
-			{ "data": "nomination" }
+			{ "data": "nomination" },
+			{ "data": "action" }
 			]
 		});
+	}
+
+	function deleteLines(id) {
+		$("#loading").show();
+
+
+		if(confirm("Are sure delete this Shipment Lines ?")){
+			var data = {
+				id:id
+			}
+
+			$.post('{{ url("delete/shipping_agency") }}', data, function(result, status, xhr){
+				if(result.status){
+					$("#loading").hide();
+					$('#tableList').DataTable().ajax.reload();
+					openSuccessGritter('Success!', result.message);
+				}
+				else{
+					openErrorGritter('Error!', result.message);
+				}
+
+			});
+		}
+		else{
+			return false;
+		}
+		
+	}
+
+	function editList(){
+		var id = $("#edit_id").val();
+		var ship_id = $("#edit_ship_id").val();
+		var shipper = $("#edit_shipper").val();
+		var port_loading = $("#edit_port_loading").val();
+		var consignee = $("#edit_consignee").val();
+		var transship_port = $("#edit_transship_port").val();
+		var port_of_discharge = $("#edit_port_of_discharge").val();
+		var port_of_delivery = $("#edit_port_of_delivery").val();
+		var country = $("#edit_country").val();
+		var carier = $("#edit_carier").val();
+		var nomination = $("#edit_nomination").val();
+
+		if(ship_id == '' ||shipper == '' || port_loading == '' ||consignee == '' || transship_port == '' || port_of_discharge == '' || port_of_delivery == '' || country == '' || carier == ''|| nomination == ''){
+			openErrorGritter('Error!', '(*) must be filled');
+			return false;
+		}
+
+		var data = {
+			id : id,
+			ship_id : ship_id,
+			shipper : shipper,
+			port_loading : port_loading,
+			consignee : consignee,
+			transship_port : transship_port,
+			port_of_discharge : port_of_discharge,
+			port_of_delivery : port_of_delivery,
+			country : country,
+			carier : carier,
+			nomination : nomination
+		}
+
+		$("#loading").show();
+
+		$.post('{{ url("edit/shipping_agency") }}', data,  function(result, status, xhr){
+			if(result.status){
+				fillTable();
+
+				$("#edit_id").val('');
+				$("#edit_ship_id").val('');
+				$("#edit_shipper").val('');
+				$("#edit_port_loading").val('');
+				$("#edit_consignee").val('');
+				$("#edit_transship_port").val('');
+				$("#edit_port_of_discharge").val('');
+				$("#edit_port_of_delivery").val('');
+				$("#edit_country").val('');
+				$("#edit_carier").val('');
+				$("#edit_nomination").prop('selectedIndex', 0).change();
+
+				$('#tableList').DataTable().ajax.reload();
+
+
+				$("#loading").hide();
+				$("#modalEdit").modal('hide');
+				openSuccessGritter('Success', result.message);
+
+			}else{
+				$("#loading").hide();
+				openErrorGritter('Error!', result.message);
+			}
+		});		
+	}
+
+	function editLines(id) {
+		var data = {
+			id:id
+		}
+
+		$.get('{{ url("fetch/shipping_agency_detail") }}', data, function(result, status, xhr){
+			if(result.status){
+
+				$("#edit_id").val(id);
+				$("#edit_ship_id").val(result.agency.ship_id);
+				$("#edit_shipper").val(result.agency.shipper);
+				$("#edit_port_loading").val(result.agency.port_loading);
+				$("#edit_consignee").val(result.agency.consignee);
+				$("#edit_transship_port").val(result.agency.transship_port);
+				$("#edit_port_of_discharge").val(result.agency.port_of_discharge);
+				$("#edit_port_of_delivery").val(result.agency.port_of_delivery);
+				$("#edit_country").val(result.agency.country);
+				$("#edit_carier").val(result.agency.carier);
+				$("#edit_nomination").val(result.agency.nomination).trigger('change.select2');
+
+				$("#modalEdit").modal('show');
+				
+			}
+		});
+		
+
 	}
 
 	function openSuccessGritter(title, message){

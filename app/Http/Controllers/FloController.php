@@ -33,6 +33,8 @@ use App\KnockDown;
 use App\ShipmentSchedule;
 use App\MasterChecksheet;
 use Illuminate\Support\Facades\Mail;
+use App\ShipmentReservation;
+
 
 class FloController extends Controller
 {
@@ -162,7 +164,15 @@ class FloController extends Controller
 		return Response::json($response);
 	}
 
-	public function index_flo_invoice(){
+	public function index_flo_invoice(Request $request){
+
+
+		$month = '';
+		if(strlen($request->get('month')) > 0){
+			$month = $request->get('month');
+		}else{
+			$month = date('Y-m');
+		}
 
 		$query = "SELECT DISTINCT * 
 		FROM
@@ -179,7 +189,9 @@ class FloController extends Controller
 		LEFT JOIN shipment_schedules ON shipment_schedules.id = flos.shipment_schedule_id
 		LEFT JOIN destinations ON shipment_schedules.destination_code = destinations.destination_code 
 		WHERE
-		flos.bl_date IS NOT NULL UNION ALL
+		flos.bl_date IS NOT NULL
+		AND DATE_FORMAT(shipment_schedules.st_month,'%Y-%m') = '".$month."'
+		UNION ALL
 		SELECT
 		knock_downs.invoice_number,
 		shipment_schedules.st_date,
@@ -193,7 +205,8 @@ class FloController extends Controller
 		LEFT JOIN shipment_schedules ON shipment_schedules.id = knock_down_details.shipment_schedule_id
 		LEFT JOIN destinations ON shipment_schedules.destination_code = destinations.destination_code 
 		WHERE
-		knock_downs.bl_date IS NOT NULL 
+		knock_downs.bl_date IS NOT NULL
+		AND DATE_FORMAT(shipment_schedules.st_month,'%Y-%m') = '".$month."' 
 		ORDER BY
 		bl_date DESC ) AS final";
 
@@ -337,9 +350,21 @@ class FloController extends Controller
 	public function input_flo_lading(Request $request){
 		$bl_date =  date('Y-m-d', strtotime($request->get('bl_date')));
 		$id = Auth::id();
+		$checksheet = MasterChecksheet::where('invoice', 'like', '%'.$request->get('invoice_number').'%')->first();
+
 		try{
 			$flos = Flo::where('invoice_number', '=', $request->get('invoice_number'))->update(['bl_date' => $bl_date, 'status' => 4]);
-			$flos = KnockDown::where('invoice_number', '=', $request->get('invoice_number'))->update(['bl_date' => $bl_date, 'status' => 4]);	
+			$flos = KnockDown::where('invoice_number', '=', $request->get('invoice_number'))->update(['bl_date' => $bl_date, 'status' => 4]);
+
+			if($checksheet){
+				$booking = ShipmentReservation::where('period', $checksheet->period)
+				->where('ycj_ref_number', $checksheet->ycj_ref_number)
+				->where('status', 'BOOKING CONFIRMED')
+				->update([
+					'actual_departed' => $bl_date
+				]);
+			}
+
 		}
 		catch (QueryException $e){
 			$error_log = new ErrorLog([

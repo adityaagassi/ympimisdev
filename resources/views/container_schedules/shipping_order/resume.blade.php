@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.display')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <link rel="stylesheet" href="{{ url("plugins/timepicker/bootstrap-timepicker.min.css")}}">
@@ -36,12 +36,7 @@
 <section class="content-header">
 	<h1>
 		{{ $title }}<span class="text-purple"> {{ $title_jp }}</span>
-		<div class="col-xs-2 input-group date pull-right" style="text-align: center;">
-			<div class="input-group-addon bg-green">
-				<i class="fa fa-calendar"></i>
-			</div>
-			<input type="text" class="form-control monthpicker" name="period" id="period" onchange="fillTable()" placeholder="Select Period">	
-		</div>
+		
 	</h1>
 </section>
 @stop
@@ -50,49 +45,83 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
 	<div class="row">
+		<div class="col-xs-12" style="padding-bottom: 10px; padding-left: 0px;">
+			<div class="col-xs-2">
+				<div class="input-group date pull-right" style="text-align: center;">
+					<div class="input-group-addon bg-green">
+						<i class="fa fa-calendar"></i>
+					</div>
+					<input type="text" class="form-control monthpicker" name="period" id="period" placeholder="Select Period">	
+				</div>
+			</div>
+
+			<div class="col-xs-2" style="padding: 0px;">
+				<button id="search" onclick="fillTable()" class="btn btn-primary">Search</button>
+			</div>
+
+			<div class="col-xs-4 pull-right" style="padding-right: 0px;">
+				<div class="col-xs-4 pull-right" style="padding: 0px;">
+					<a href="{{ url("/index/shipping_agency") }}" class="btn btn-info" style="width: 100%; font-weight: bold; font-size: 1vw;"><i class="fa fa-list"></i> Shipping Line</a>
+				</div>
+				<div class="col-xs-4 pull-right" style="margin-right: 10px; padding: 0px;">
+					<a href="{{ url("/index/shipping_order") }}" class="btn btn-info" style="width: 100%; font-weight: bold; font-size: 1vw;"><i class="fa fa-list"></i> Booking List</a>
+				</div>
+			</div>
+			
+
+
+		</div>
+
 		<div class="col-xs-12" style="padding-bottom: 10px;">
 			<div class="row">
-				<div class="col-xs-3" style="padding-right: 10px;">
-					<div class="info-box" style="min-height: 75px;">
-						<span class="info-box-icon bg-aqua" style="height: 75px;"><i class="fa fa-ship"></i></span>
+				<div class="col-xs-12" style="">
+					<div class="col-xs-3" style="padding-left: 0px;">
+						<div class="info-box" style="min-height: 75px;">
+							<span class="info-box-icon" style="background-color: #605ca8; color: white; height: 75px;"><i class="glyphicon glyphicon-tasks"></i></span>
 
-						<div class="info-box-content">
-							<span class="info-box-text">PLAN <span style="color: rgba(96, 92, 168);">計画</span></span>
-							<span class="info-box-number" style="font-size: 2vw;" id="total_plan"></span>
+							<div class="info-box-content">
+								<span class="info-box-text">PLAN <span style="color: rgba(96, 92, 168);">計画</span></span>
+								<span class="info-box-number" style="font-size: 2vw;" id="total_plan"></span>
+							</div>
 						</div>
 					</div>
-					<div class="info-box" style="min-height: 75px;">
-						<span class="info-box-icon bg-green" style="height: 75px;"><i class="glyphicon glyphicon-ok"></i></span>
 
-						<div class="info-box-content">
-							<span class="info-box-text">CONFIRMED <span style="color: rgba(96, 92, 168);">確保済み</span></span>
-							<span class="info-box-number" style="font-size: 2vw;" id="total_confirmed"></span>
+					<div class="col-xs-3" style="">
+						<div class="info-box" style="min-height: 75px;">
+							<span class="info-box-icon bg-green" style="height: 75px;"><i class="fa fa-ship"></i></span>
+
+							<div class="info-box-content">
+								<span class="info-box-text">ETD SUB <span style="color: rgba(96, 92, 168);"> ?? </span></span>
+								<span class="info-box-number" style="font-size: 2vw;" id="total_etd"></span>
+							</div>
 						</div>
 					</div>
-					<div class="info-box" style="min-height: 75px;">
-						<span class="info-box-icon" style="background-color: #455a64; color: white; height: 75px;"><i class="fa fa-exclamation-triangle"></i></span>
 
-						<div class="info-box-content">
-							<span class="info-box-text">REJECTED <span style="color: rgba(96, 92, 168);">拒否</span></span>
-							<span class="info-box-number" style="font-size: 2vw;" id="total_rejected"></span>
+					<div class="col-xs-3" style="">
+						<div class="info-box" style="min-height: 75px;">
+							<span class="info-box-icon" style="background-color: #455DFF; color: white; height: 75px;"><i class="fa fa-truck"></i></span>
+
+							<div class="info-box-content">
+								<span class="info-box-text">ON BOARD <span style="color: rgba(96, 92, 168);"> ?? </span></span>
+								<span class="info-box-number" style="font-size: 2vw;" id="total_on_board"></span>
+							</div>
 						</div>
 					</div>
-					<div class="info-box" style="min-height: 75px;">
-						<span class="info-box-icon bg-red" style="height: 75px;"><i class="glyphicon glyphicon-remove"></i></span>
 
-						<div class="info-box-content">
-							<span class="info-box-text">NOT CONFIRMED <span style="color: rgba(96, 92, 168);">未定</span></span>
-							<span class="info-box-number" style="font-size: 2vw;" id="total_not_confirmed"></span>
+					<div class="col-xs-3" style="padding-right: 0px;">
+						<div class="info-box" style="min-height: 75px;">
+							<span class="info-box-icon" style="background-color: #CCFFFF; color: #212121; height: 75px;"><i class="glyphicon glyphicon-ok"></i></span>
+
+							<div class="info-box-content">
+								<span class="info-box-text">CONFIRMED <span style="color: rgba(96, 92, 168);">確保済み</span></span>
+								<span class="info-box-number" style="font-size: 2vw;" id="total_confirmed"></span>
+							</div>
 						</div>
 					</div>
-					<div class="col-xs-6" style="padding-left: 0px; padding-right: 5px;">
-						<a href="{{ url("/index/shipping_agency") }}" class="btn btn-primary" style="width: 100%; font-weight: bold; font-size: 1vw;"><i class="fa fa-list"></i> Shipping Line</a>
-					</div>
-					<div class="col-xs-6" style="padding-left: 5px; padding-right: 0px;">
-						<a href="{{ url("/index/shipping_order") }}" class="btn btn-success" style="width: 100%; font-weight: bold; font-size: 1vw;"><i class="fa fa-list"></i> Booking List</a>
-					</div>
+					
+					
 				</div>
-				<div class="col-xs-9" style="padding-left: 0;">
+				<div class="col-xs-12" style="">
 					<div id="container1" style="height: 400px;"></div>				
 				</div>
 			</div>
@@ -105,9 +134,9 @@
 							<tr>
 								<th style="width: 3%">DESTINATION<br><span style="color: purple;">仕向け地</span></th>
 								<th style="width: 1%">PLAN<br><span style="color: purple;">計画</span></th>
+								<th style="width: 1%">ETD SUB<br><span style="color: purple;">??</span></th>
+								<th style="width: 1%">ON BOARD<br><span style="color: purple;">??</span></th>
 								<th style="width: 1%">CONFIRMED<br><span style="color: purple;">確保済み</span></th>
-								<th style="width: 1%">REJECTED<br><span style="color: purple;">拒否</span></th>
-								<th style="width: 1%">NOT CONFIRMED<br><span style="color: purple;">未定</span></th>
 							</tr>
 						</thead>
 						<tbody id="tableBodyList">
@@ -132,20 +161,15 @@
 						<table class="table table-hover table-bordered table-striped" id="tableDetail">
 							<thead style="background-color: rgba(126,86,134,.7);">
 								<tr>
-									<th style="width: 2%; vertical-align: middle;" colspan="8">RESUME</th>
+									<th style="width: 2%; vertical-align: middle;" colspan="6">RESUME</th>
 								</tr>
 								<tr>
-									<th style="width: 2%; vertical-align: middle;" rowspan="2">YCJ Ref No.</th>
-									<th style="width: 1%; vertical-align: middle;" rowspan="2">Shipper</th>
-									<th style="width: 2%; vertical-align: middle;" rowspan="2">Port Loading</th>
-									<th style="width: 4%; vertical-align: middle;" rowspan="2">Port of Delivery</th>
-									<th style="width: 4%; vertical-align: middle;" rowspan="2">Country</th>
-									<th style="width: 2%; vertical-align: middle;" colspan="3">Container Size</th>
-								</tr>
-								<tr>
-									<th style="width: 1%;">40HC</th>
-									<th style="width: 1%;">40'</th>
-									<th style="width: 1%;">20'</th>									
+									<th style="width: 2%; vertical-align: middle;">YCJ Ref No.</th>
+									<th style="width: 1%; vertical-align: middle;">Shipper</th>
+									<th style="width: 2%; vertical-align: middle;">Port Loading</th>
+									<th style="width: 4%; vertical-align: middle;">Port of Delivery</th>
+									<th style="width: 4%; vertical-align: middle;">Country</th>
+									<th style="width: 4%; vertical-align: middle;">Plan (in TEUs)</th>
 								</tr>
 							</thead>
 							<tbody id="tableDetailBody">
@@ -156,7 +180,7 @@
 						<table class="table table-hover table-bordered table-striped" id="tableDetailRef">
 							<thead style="background-color: rgba(126,86,134,.7);">
 								<tr>
-									<th style="width: 2%; vertical-align: middle;" colspan="13">BOOKING DETAILS</th>
+									<th style="width: 2%; vertical-align: middle;" colspan="14">BOOKING DETAILS</th>
 								</tr>
 								<tr>
 									<th style="width: 2%; vertical-align: middle;" rowspan="2">YCJ Ref No.</th>
@@ -164,6 +188,7 @@
 									<th style="width: 2%; vertical-align: middle;" rowspan="2">Port Loading</th>
 									<th style="width: 4%; vertical-align: middle;" rowspan="2">Port of Delivery</th>
 									<th style="width: 4%; vertical-align: middle;" rowspan="2">Country</th>
+									<th style="width: 4%; vertical-align: middle;" rowspan="2">Plan<br>(in TEUs)</th>
 									<th style="width: 2%; vertical-align: middle;" colspan="3">Container Size</th>
 									<th style="width: 4%; vertical-align: middle;" rowspan="2">Booking No. or B/L No.</th>
 									<th style="width: 2%; vertical-align: middle;" rowspan="2">Carier</th>
@@ -248,9 +273,9 @@
 
 				var tableData = "";
 				var total_plan = 0;
+				var total_etd = 0;
+				var total_on_board = 0;
 				var total_confirmed = 0;
-				var total_rejected = 0;
-				var total_not_confirmed = 0;
 
 				for (var i = 0; i < result.data.length; i++) {
 
@@ -259,59 +284,64 @@
 					tableData += '<td>'+ result.data[i].port_of_delivery +'</td>';
 					tableData += '<td>'+ result.data[i].plan +'</td>';
 
-					if(result.data[i].confirmed > 0){
-						tableData += '<td style="background-color: rgb(204, 255, 255);">'+ result.data[i].confirmed +'</td>';
+					if(result.data[i].departed == result.data[i].plan){
+						tableData += '<td style="background-color: rgb(204, 255, 255);">'+ result.data[i].departed +'</td>';
 					}else{
-						tableData += '<td>'+ result.data[i].confirmed +'</td>';
+						tableData += '<td style="background-color: rgb(255, 204, 255);">'+ result.data[i].departed +'</td>';
 					}
 
-					if(result.data[i].rejected > 0){
-						tableData += '<td style="background-color: #455a64; color: white;">'+ result.data[i].rejected +'</td>';
-					}else{
-						tableData += '<td>'+ result.data[i].rejected +'</td>';
-					}
-
-					if(result.data[i].not_confirmed > 0){
-						tableData += '<td style="background-color: rgb(255, 204, 255);">'+ result.data[i].not_confirmed +'</td>';
-					}else{
-						tableData += '<td>'+ result.data[i].not_confirmed +'</td>';
-					}
-
-					total_plan += parseInt(result.data[i].plan);
-					total_confirmed += parseInt(result.data[i].confirmed);
-					total_rejected += parseInt(result.data[i].rejected);
-					total_not_confirmed += parseInt(result.data[i].not_confirmed);
-
+					
+					tableData += '<td>'+ result.data[i].on_board +'</td>';
+					
+					tableData += '<td>'+ result.data[i].confirmed +'</td>';
+					
 					tableData += '</tr>';
 				}
 
-				var percen_confirmed = (total_confirmed/total_plan * 100).toFixed(2) + '%';
-				var percen_not_confirmed = (total_not_confirmed/total_plan * 100).toFixed(2) + '%';
-				var percen_rejected = (total_rejected/total_plan * 100).toFixed(2) + '%';
+				
 
-				$('#total_plan').text(total_plan);
-				$('#total_confirmed').html(total_confirmed + ' <small style="font-size: 20px; text-style: italic;">('+ percen_confirmed +')</small>');
-				$('#total_not_confirmed').html(total_not_confirmed + ' <small style="font-size: 20px; text-style: italic;">('+ percen_not_confirmed +')</small>');
-				$('#total_rejected').html(total_rejected + ' <small style="font-size: 20px; text-style: italic;">('+ percen_rejected +')</small>');
-
+				
 				$('#tableBodyList').append(tableData);
 
 
 				var date = [];
-				var not_confirm = [];
-				var confirm = [];
-				var rejected = [];
+				var plan = [];
+				var departed = [];
+				var on_board = [];
+				var stuffing = [];
+				var confirmed = [];
+
 
 				var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
+
 				for (var i = 0; i < result.ship_by_dates.length; i++) {
 					var d = new Date(result.ship_by_dates[i].week_date)
-
 					date.push(d.getDate()+'-'+monthNames[d.getMonth()]);
-					not_confirm.push(parseInt(result.ship_by_dates[i].not_confirm));
-					confirm.push(parseInt(result.ship_by_dates[i].confirm));
-					rejected.push(parseInt(result.ship_by_dates[i].reject));
+
+					plan.push(parseInt(result.ship_by_dates[i].plan));
+					departed.push(parseInt(result.ship_by_dates[i].departed));
+					on_board.push(parseInt(result.ship_by_dates[i].on_board));
+					stuffing.push(parseInt(result.ship_by_dates[i].stuffing));
+					confirmed.push(parseInt(result.ship_by_dates[i].confirmed));
+
+					total_plan += parseInt(result.ship_by_dates[i].plan);
+					total_etd += parseInt(result.ship_by_dates[i].departed);
+					total_on_board += (parseInt(result.ship_by_dates[i].on_board) + parseInt(result.ship_by_dates[i].stuffing));
+					total_confirmed += parseInt(result.ship_by_dates[i].confirmed);
+
 				}
+				
+				var percen_etd = (total_etd/total_plan * 100).toFixed(2) + '%';
+				var percen_on_board = (total_on_board/total_plan * 100).toFixed(2) + '%';
+				var percen_confirmed = (total_confirmed/total_plan * 100).toFixed(2) + '%';
+
+
+				$('#total_plan').html(total_plan + ' <small style="font-size: 20px; text-style: italic;">TEUs</small>');
+				$('#total_etd').html(total_etd + ' <small style="font-size: 20px; text-style: italic;">TEUs ('+ percen_etd +')</small>');
+				$('#total_on_board').html(total_on_board + ' <small style="font-size: 20px; text-style: italic;">TEUs ('+ percen_on_board +')</small>');
+				$('#total_confirmed').html(total_confirmed + ' <small style="font-size: 20px; text-style: italic;">TEUs ('+ percen_confirmed +')</small>');
+
 
 				Highcharts.chart('container1', {
 					chart: {
@@ -327,7 +357,7 @@
 						enabled: true,
 						title: {
 							enabled: true,
-							text: "Quantity Container<br>(コンテナ台数)"
+							text: "Quantity Container in TEUs<br>(コンテナ台数)"
 						},
 						tickInterval: 1
 					},
@@ -339,7 +369,7 @@
 					},
 					tooltip: {
 						headerFormat: '<b>{point.x}</b><br/>',
-						pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+						pointFormat: '{series.name}: {point.y} TEUs<br/>Total: {point.stackTotal} TEUs'
 					},
 					credits: {
 						enabled: false
@@ -349,7 +379,7 @@
 							stacking: 'normal',
 							pointPadding: 0.93,
 							groupPadding: 0.93,
-							borderWidth: 1,
+							borderWidth: 0.93,
 							borderColor: '#212121',
 							dataLabels: {
 								enabled: true,
@@ -377,19 +407,34 @@
 							},
 						},
 					},
-					series: [{
-						name: 'Not Confirmed (未定)',
-						data: not_confirm,
-						color: '#dd4b39'
-					}, {
-						name: 'Rejected (拒否)',
-						data: rejected,
-						color: '#455a64'
-					},{
+					series: [
+					{
 						name: 'Confirmed (確保済み)',
-						data: confirm,
+						data: confirmed,
+						stack: 'actual',
+						color: '#CCFFFF'
+					},{
+						name: 'Stuffing ()',
+						data: stuffing,
+						stack: 'actual',
+						color: '#FFFF54'
+					},{
+						name: 'On Board ()',
+						data: on_board,
+						stack: 'actual',
+						color: '#455DFF'
+					},{
+						name: 'ETD SUB ()',
+						data: departed,
+						stack: 'actual',
 						color: '#00a65a'
-					}]
+					},{
+						name: 'Plan (計画)',
+						data: plan,
+						stack: 'plan',
+						color: '#605ca8'
+					}
+					]
 				});
 			}
 		});
@@ -412,9 +457,41 @@ function showDetail(category) {
 			$('#title_modal').text('Shipping Booking Management Booking Details on ' + result.st_date);
 
 			var detail = '';
+			var concat = '';
+			$.each(result.detail, function(key, value){
+				var color = '';
+				var check = 'BOOKING CONFIRMED';
+				var status = value.status;
+
+				if(status.includes(check)){
+					concat += value.ycj_ref_number;
+					color = 'style="background-color: rgb(204, 255, 255);"';
+				}
+
+				detail += '<tr>';
+				detail += '<td '+color+'>'+value.ycj_ref_number+'</td>';
+				detail += '<td '+color+'>'+value.shipper+'</td>';
+				detail += '<td '+color+'>'+value.port_loading+'</td>';
+				detail += '<td '+color+'>'+value.port_of_delivery+'</td>';
+				detail += '<td '+color+'>'+value.country+'</td>';
+				detail += '<td '+color+'>'+value.plan+'</td>';
+				detail += '<td '+color+'>'+(value.fortyhc || '' )+'</td>';
+				detail += '<td '+color+'>'+(value.fourty || '' )+'</td>';
+				detail += '<td '+color+'>'+(value.twenty || '' )+'</td>';
+				detail += '<td '+color+'>'+(value.booking_number || '')+'</td>';
+				detail += '<td '+color+'>'+value.carier+'</td>';
+				detail += '<td '+color+'>'+value.nomination+'</td>';
+				detail += '<td '+color+'>'+value.application_rate+'</td>';
+				detail += '<td '+color+'>'+value.status+'</td>';
+				detail += '</tr>';
+			});
+			$('#tableDetailRefBody').append(detail);
+
+
+			var detail = '';
 			$.each(result.resume, function(key, value){
 				var color = '';
-				if(value.status){
+				if(concat.includes(value.ycj_ref_number)){
 					color = 'style="background-color: rgb(204, 255, 255);"';
 				}else{
 					color = 'style="background-color: rgb(255, 204, 255);"';
@@ -426,40 +503,10 @@ function showDetail(category) {
 				detail += '<td '+color+'>'+value.port_loading+'</td>';
 				detail += '<td '+color+'>'+value.port_of_delivery+'</td>';
 				detail += '<td '+color+'>'+value.country+'</td>';
-				detail += '<td '+color+'>'+(value.fortyhc || '' )+'</td>';
-				detail += '<td '+color+'>'+(value.fourty || '' )+'</td>';
-				detail += '<td '+color+'>'+(value.twenty || '' )+'</td>';
+				detail += '<td '+color+'>'+value.plan+'</td>';
 				detail += '</tr>';
 			});
 			$('#tableDetailBody').append(detail);
-
-
-			var detail = '';
-			$.each(result.detail, function(key, value){
-				var color = '';
-				console.log(value.status);
-				if(value.status == 'BOOKING CONFIRMED'){
-					color = 'style="background-color: rgb(204, 255, 255);"';
-				}
-
-
-				detail += '<tr>';
-				detail += '<td '+color+'>'+value.ycj_ref_number+'</td>';
-				detail += '<td '+color+'>'+value.shipper+'</td>';
-				detail += '<td '+color+'>'+value.port_loading+'</td>';
-				detail += '<td '+color+'>'+value.port_of_delivery+'</td>';
-				detail += '<td '+color+'>'+value.country+'</td>';
-				detail += '<td '+color+'>'+(value.fortyhc || '' )+'</td>';
-				detail += '<td '+color+'>'+(value.fourty || '' )+'</td>';
-				detail += '<td '+color+'>'+(value.twenty || '' )+'</td>';
-				detail += '<td '+color+'>'+value.booking_number+'</td>';
-				detail += '<td '+color+'>'+value.carier+'</td>';
-				detail += '<td '+color+'>'+value.nomination+'</td>';
-				detail += '<td '+color+'>'+value.application_rate+'</td>';
-				detail += '<td '+color+'>'+value.status+'</td>';
-				detail += '</tr>';
-			});
-			$('#tableDetailRefBody').append(detail);
 
 
 			$('#modalDetail').modal('show');

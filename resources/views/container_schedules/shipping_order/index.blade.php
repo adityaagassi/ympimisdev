@@ -289,6 +289,7 @@
 									<th style="width: 1%;">Stuffing</th>
 									<th style="width: 1%;">ETD</th>
 									<th style="width: 10%;">Application Rate</th>
+									<th style="width: 1%;">Plan (TEUs)</th>
 									<th style="width: 10%;">Remark</th>
 									<th style="width: 1%;">Due Date</th>
 									<th style="width: 1%;">I/V#</th>
@@ -458,6 +459,13 @@
 										<option value="{{ $application_rate }}">{{ $application_rate }}</option>
 										@endforeach
 									</select>
+								</div>
+							</div>
+
+							<div class="form-group row" align="right">
+								<label class="col-xs-3">Plan (TEUs)</label>
+								<div class="col-xs-5">
+									<input type="text" style="width: 100%" class="form-control" name="plan" id="plan" placeholder="Enter Qty Plan">
 								</div>
 							</div>
 
@@ -658,6 +666,13 @@
 							</div>
 
 							<div class="form-group row" align="right">
+								<label class="col-xs-3">Plan (TEUs)</label>
+								<div class="col-xs-5">
+									<input type="text" style="width: 100%" class="form-control" name="edit_plan" id="edit_plan" placeholder="Enter Qty Plan">
+								</div>
+							</div>
+
+							<div class="form-group row" align="right">
 								<label class="col-xs-3">Remark</label>
 								<div class="col-xs-7" align="left">
 									<textarea name="remark" id="edit_remark" name="edit_remark" class="form-control" rows="2" placecholder="Enter your remark for this shippment.."></textarea>
@@ -694,7 +709,8 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-				<a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close"></i> CANCEL</a>
+				<button class="btn btn-danger pull-left" onclick="deleteList()"><i class="fa fa-trash"></i> DELETE</button>
+				<a class="btn btn-default" data-dismiss="modal"><i class="fa fa-close"></i> CANCEL</a>
 				<button class="btn btn-success" onclick="editList()"><i class="fa fa-check-square-o"></i> SUBMIT</button>
 			</div>
 		</div>
@@ -930,6 +946,7 @@
 		$("#stuffing").val('');
 		$("#etd").val('');
 		$("#application_rate").prop('selectedIndex', 0).change();
+		$("#plan").val('');
 		$("#remark").val('');
 		$("#due_date").val('');
 		$("#invoice").val('');
@@ -956,6 +973,7 @@
 		$("#stuffing").val('');
 		$("#etd").val('');
 		$("#application_rate").prop('selectedIndex', 0).change();
+		$("#plan").val('');
 		$("#remark").val('');
 		$("#due_date").val('');
 		$("#invoice").val('');
@@ -973,6 +991,7 @@
 		$("#edit_stuffing").val('');
 		$("#edit_etd").val('');
 		$("#edit_application_rate").prop('selectedIndex', 0).change();
+		$("#edit_plan").val('');
 		$("#edit_remark").val('');
 		$("#edit_due_date").val('');
 		$("#edit_invoice").val('');
@@ -1024,6 +1043,8 @@
 			search_nomination : search_nomination,
 		}
 
+		console.log(data);
+
 		$.get('{{ url("fetch/shipping_order/ship_reservation") }}', data, function(result, status, xhr){
 			if(result.status){
 
@@ -1057,6 +1078,7 @@
 					tableData += '<td>'+ result.data[i].stuffing_date +'</td>';
 					tableData += '<td>'+ (result.data[i].etd_date || '') +'</td>';
 					tableData += '<td>'+ (result.data[i].application_rate || '') +'</td>';
+					tableData += '<td>'+ (result.data[i].plan || '') +'</td>';
 					tableData += '<td>'+ (result.data[i].remark || '') +'</td>';
 					tableData += '<td>'+ (result.data[i].due_date || '') +'</td>';
 					tableData += '<td>'+ (result.data[i].invoice_number || '') +'</td>';
@@ -1081,9 +1103,6 @@
 					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
 					];
 				}
-
-				console.log(menu);
-				console.log(lengthMenu);
 
 
 				var table = $('#tableList').DataTable({
@@ -1174,10 +1193,11 @@
 		$("#edit_stuffing").val($('#'+id).find('td').eq(13).text());
 		$("#edit_etd").val($('#'+id).find('td').eq(14).text());
 		$("#edit_application_rate").val($('#'+id).find('td').eq(15).text()).trigger('change.select2');
-		$("#edit_remark").val($('#'+id).find('td').eq(16).text());
-		$("#edit_due_date").val($('#'+id).find('td').eq(17).text());
-		$("#edit_invoice").val($('#'+id).find('td').eq(18).text());
-		$("#edit_ref").val($('#'+id).find('td').eq(19).text());
+		$("#edit_plan").val($('#'+id).find('td').eq(16).text());
+		$("#edit_remark").val($('#'+id).find('td').eq(17).text());
+		$("#edit_due_date").val($('#'+id).find('td').eq(18).text());
+		$("#edit_invoice").val($('#'+id).find('td').eq(19).text());
+		$("#edit_ref").val($('#'+id).find('td').eq(20).text());
 
 		$("#modalEdit").modal('show');
 	}
@@ -1195,6 +1215,7 @@
 		var stuffing = $("#edit_stuffing").val();
 		var etd = $("#edit_etd").val();
 		var application_rate = $("#edit_application_rate").val();
+		var plan = $("#edit_plan").val();
 		var remark = $("#edit_remark").val();
 		var due_date = $("#edit_due_date").val();
 		var invoice = $("#edit_invoice").val();
@@ -1223,6 +1244,7 @@
 			twenty : twenty,
 			stuffing : stuffing,
 			etd : etd,
+			plan : plan,
 			remark : remark,
 			application_rate : application_rate,
 			due_date : due_date,
@@ -1249,6 +1271,33 @@
 		});	
 	}
 
+	function deleteList(){
+		var shipment_reservation_id = $("#shipment_reservation_id").val();
+
+		var data = {
+			shipment_reservation_id : shipment_reservation_id
+		}
+
+		if(confirm("Are your delete this booking data ?")){
+			$("#loading").show();
+
+			$.post('{{ url("fetch/shipping_order/delete_ship_reservation") }}', data,  function(result, status, xhr){
+				if(result.status){
+					fillTable('showAll');
+
+					clearAll();
+					$("#loading").hide();
+					$("#modalEdit").modal('hide');
+					openSuccessGritter('Success', result.message);
+
+				}else{
+					$("#loading").hide();
+					openErrorGritter('Error!', result.message);
+				}
+			});	
+		}
+	}
+
 	function saveList(){
 		var period = $("#period").val();
 		var ycj_ref_no = $("#ycj_ref_no").val();
@@ -1265,6 +1314,7 @@
 		var stuffing = $("#stuffing").val();
 		var etd = $("#etd").val();
 		var application_rate = $("#application_rate").val();
+		var plan = $("#plan").val();
 		var remark = $("#remark").val();
 		var due_date = $("#due_date").val();
 		var invoice = $("#invoice").val();
@@ -1296,6 +1346,7 @@
 			stuffing : stuffing,
 			etd : etd,
 			application_rate : application_rate,
+			plan : plan,
 			remark : remark,
 			due_date : due_date,
 			invoice : invoice,

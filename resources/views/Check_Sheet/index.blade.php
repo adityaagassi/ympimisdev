@@ -199,7 +199,7 @@
 
 
 <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <form id ="importForm" method="post" action="{{ url('import/CheckSheet') }}" enctype="multipart/form-data">
         <input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -209,101 +209,118 @@
           Format: [Destination][Invoice][GMC][Goods][Marking No][Package Qty][Package Set][Qty Qty][Qty Set]<br>
           Sample: <a href="{{ url('download/manual/import_check_sheet_detail.txt') }}">import_check_sheet_detail.txt</a> Code: #Add
         </div>
+
+
         
         <div class="modal-body col-xs-12">
-         <div class="col-xs-4">
-          <label>CONSIGNEE & ADDRESS</label>
-          <input type="text" name="destination" class="form-control" id="destination" required>
-          <label>NO POL</label>
-          <input type="text" name="nopol" class="form-control" id="nopol" required>
-          <label>CONTAINER NO.</label>
-          <input type="text" name="countainer_number" class="form-control" id="countainer_number" required>
-          <label>SEAL NO</label>
-          <input type="text" name="seal_number" class="form-control" id="seal_number">
-          <BR>
-          <center><input type="file" name="check_sheet_import" id="InputFile" accept="text/plain" required></center>
+          <div class="col-xs-12">
+            <div class="col-xs-4" style="padding-left: 0px;padding-right: 20px;">
+              <label>SHIPMENT PERIOD</label>
+              <input type="text" name="period" class="form-control monthpicker" id="period" required>
+            </div>
+            <div class="col-xs-8" style="padding-left: 10px;padding-right: 0px;">
+              <label>YCJ REF. NO.</label>
+              <select class="form-control select2" data-placeholder="Select YCJ Ref Number" name="ycj_ref_number" id="ycj_ref_number" style="width: 100%">
+                <option value=""></option>
+              </select>
+            </div>
+            <div class="col-xs-4">
+            </div>
+          </div>
+
+          <div class="col-xs-4">
+            <label>CONSIGNEE & ADDRESS</label>
+            <input type="text" name="destination" class="form-control" id="destination" required>
+            <label>NO POL</label>
+            <input type="text" name="nopol" class="form-control" id="nopol" required>
+            <label>CONTAINER NO.</label>
+            <input type="text" name="countainer_number" class="form-control" id="countainer_number" required>
+            <label>SEAL NO</label>
+            <input type="text" name="seal_number" class="form-control" id="seal_number">
+            <BR>
+            <center><input type="file" name="check_sheet_import" id="InputFile" accept="text/plain" required></center>
+          </div>
+
+          <div class="col-xs-4">
+            <label>SHIPPED FROM</label>
+            <input type="text" name="shipped_from" class="form-control" id="shipped_from" value="SURABAYA" readonly>
+            <label>SHIPPED TO</label>
+            <input type="text" name="shipped_to" class="form-control" id="shipped_to" required>
+            <label>CARRIER</label>
+
+            <select class="form-control select2" name="carier" id="carier"  data-placeholder="a" style="width: 100%;" >
+
+              @foreach($carier as $nomor => $carier)
+              <option value="{{ $carier->shipment_condition_code }}" > {{$carier->shipment_condition_name}}</option>
+              @endforeach
+            </select>
+            <label>ON OR ABOUT</label>
+            <input type="text" name="etd_sub" class="form-control" ID= "etd_sub" autocomplete="off" required>
+
+
+
+          </div>
+
+          <div class="col-xs-4">
+            <label>INVOICE NO.</label>
+            <input type="text" name="invoice" class="form-control" id="invoice" required>
+
+            <label>INVOICE DATE</label>
+            <input type="text" name="invoice_date" class="form-control" id="invoice_date" autocomplete="off" required>
+
+            <label>STUFFING DATE</label>
+            <input type="text" name="Stuffing_date" class="form-control" id="Stuffing_date" autocomplete="off" required>
+
+
+            <label>PAYMENT</label>
+            <select class="form-control select2" name="payment" id="payment"  data-placeholder="Choose a Payment ..." style="width: 100%;" >
+
+              <option value="T/T REMITTANCE">T/T REMITTANCE</option>
+              <option value="D/P AT SIGHT">D/P AT SIGHT</option>
+              <option value="D/A 60 DAYS AFTER BL DATE">D/A 60 DAYS AFTER BL DATE</option>
+            </select>
+
+            <label>SHIPPER</label>
+            <input type="text" name="" class="form-control" value="PT. YMPI" readonly>
+          </div>
+
+          <div class="col-xs-8">
+            <label>Towards: </label>
+            <select class="form-control select2" multiple="multiple" name="toward[]" id="toward"  data-placeholder="Choose a Toward ..." style="width: 100%;" >
+              <option value="YAMAHA MUSIC MANUFACTURING JAPAN CORPORATION BO & GD SECTION">YMMJ</option>
+              <option value="XIAOSHAN YAMAHA MUSICAL INSTRUMENT CO.,LTD">XY</option>
+              <option value="YAMAHA CORPORATION">YCJ/YMJ</option>
+              <option value="YAMAHA MUSIC EUROPE">YME</option>
+              <option value="YAMAHA MUSIC KOREA LTD.">YMK</option>
+              <option value="YAMAHA CORPORATION C/O MOL LOGISTIC S PASIR GUDANG WAREHOUSE">TASCO</option>
+              <option value="YCA,BAND&ORCHESTRAL DIV.">YCA</option>
+              <option value="SIAM MUSIC YAMAHA CO., LTD">SMY</option>
+              <option value="PT. YAMAHA MUSIK INDONESIA DISTRIBUTOR">YMID</option>
+              <option value="YAMAHA ELECTRONICS MFG INDONESIA">YEMI</option>
+              <option value="YAMAHA DE MEXICO S.A. DE C.V.">YDM</option>
+            </select>
+          </div>
+          <div class="col-xs-4">
+            <label>Container Size: </label>
+            <select class="form-control select2" name="ct_size" id="ct_size"  data-placeholder="Choose a Size ..." style="width: 100%;" >
+              <option value=""></option>
+              <option value="20FT">20FT</option>
+              <option value="40FT">40FT</option>
+              <option value="40FT HC">40FT HC</option>
+              <option value="TRUCK">TRUCK</option>
+            </select>
+          </div>        
         </div>
 
-        <div class="col-xs-4">
-          <label>SHIPPED FROM</label>
-          <input type="text" name="shipped_from" class="form-control" id="shipped_from" value="SURABAYA" readonly>
-          <label>SHIPPED TO</label>
-          <input type="text" name="shipped_to" class="form-control" id="shipped_to" required>
-          <label>CARRIER</label>
-
-          <select class="form-control select2" name="carier" id="carier"  data-placeholder="a" style="width: 100%;" >
-
-            @foreach($carier as $nomor => $carier)
-            <option value="{{ $carier->shipment_condition_code }}" > {{$carier->shipment_condition_name}}</option>
-            @endforeach
-          </select>
-          <label>ON OR ABOUT</label>
-          <input type="text" name="etd_sub" class="form-control" ID= "etd_sub" autocomplete="off" required>
 
 
-          
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button id="modalImportButton" type="button" class="btn btn-success" onclick="cektgl()">Import</button>
         </div>
-
-        <div class="col-xs-4">
-          <label>INVOICE NO.</label>
-          <input type="text" name="invoice" class="form-control" id="invoice" required>
-
-          <label>INVOICE DATE</label>
-          <input type="text" name="invoice_date" class="form-control" id="invoice_date" autocomplete="off" required>
-
-          <label>STUFFING DATE</label>
-          <input type="text" name="Stuffing_date" class="form-control" id="Stuffing_date" autocomplete="off" required>
-
-          
-          <label>PAYMENT</label>
-          <select class="form-control select2" name="payment" id="payment"  data-placeholder="Choose a Payment ..." style="width: 100%;" >
-
-            <option value="T/T REMITTANCE">T/T REMITTANCE</option>
-            <option value="D/P AT SIGHT">D/P AT SIGHT</option>
-            <option value="D/A 60 DAYS AFTER BL DATE">D/A 60 DAYS AFTER BL DATE</option>
-          </select>
-
-          <label>SHIPPER</label>
-          <input type="text" name="" class="form-control" value="PT. YMPI" readonly>
-        </div>
-
-        <div class="col-xs-8">
-          <label>Towards: </label>
-          <select class="form-control select2" multiple="multiple" name="toward[]" id="toward"  data-placeholder="Choose a Toward ..." style="width: 100%;" >
-            <option value="YAMAHA MUSIC MANUFACTURING JAPAN CORPORATION BO & GD SECTION">YMMJ</option>
-            <option value="XIAOSHAN YAMAHA MUSICAL INSTRUMENT CO.,LTD">XY</option>
-            <option value="YAMAHA CORPORATION">YCJ/YMJ</option>
-            <option value="YAMAHA MUSIC EUROPE">YME</option>
-            <option value="YAMAHA MUSIC KOREA LTD.">YMK</option>
-            <option value="YAMAHA CORPORATION C/O MOL LOGISTIC S PASIR GUDANG WAREHOUSE">TASCO</option>
-            <option value="YCA,BAND&ORCHESTRAL DIV.">YCA</option>
-            <option value="SIAM MUSIC YAMAHA CO., LTD">SMY</option>
-            <option value="PT. YAMAHA MUSIK INDONESIA DISTRIBUTOR">YMID</option>
-            <option value="YAMAHA ELECTRONICS MFG INDONESIA">YEMI</option>
-            <option value="YAMAHA DE MEXICO S.A. DE C.V.">YDM</option>
-          </select>
-        </div>
-        <div class="col-xs-4">
-          <label>Container Size: </label>
-          <select class="form-control select2" name="ct_size" id="ct_size"  data-placeholder="Choose a Size ..." style="width: 100%;" >
-            <option value=""></option>
-            <option value="20FT">20FT</option>
-            <option value="40FT">40FT</option>
-            <option value="40FT HC">40FT HC</option>
-            <option value="TRUCK">TRUCK</option>
-          </select>
-        </div>        
-      </div>
-
-
-
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        <button id="modalImportButton" type="button" class="btn btn-success" onclick="cektgl()">Import</button>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
-</div>
 </div>
 
 <div class="modal  fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -483,10 +500,18 @@
     todayHighlight: true
   })
   jQuery(document).ready(function() {
+    $('.monthpicker').datepicker({
+      format: "yyyy-mm",
+      startView: "months", 
+      minViewMode: "months",
+      autoclose: true,
+      todayHighlight: true
+    });
 
     $(function () {
       $('.select2').select2({
-        dropdownParent: $('#importModal')
+        dropdownParent: $('#importModal'),
+        allowClear: true
       });
     })
 
@@ -676,28 +701,36 @@ function addInspection(id){
     }
 
     function cektgl() {
-     var date =  $('#Stuffing_date').val();
-     var on_or = $('#etd_sub').val();
+      var date =  $('#Stuffing_date').val();
+      var on_or = $('#etd_sub').val();
 
-     var start = new Date(date),
-     end   = new Date(on_or),
-     diff  = new Date(end - start),
-     days  = diff/1000/60/60/24;
-     if (days >= 0) {
+      var start = new Date(date),
+      end   = new Date(on_or),
+      diff  = new Date(end - start),
+      days  = diff/1000/60/60/24;
 
-      document.getElementById("importForm").submit();
-    }else{
-      alert('Please Check Stuffing Date And Date ON OR ABOUT');
+      var ycj_ref_number =  $('#ycj_ref_number').val();
+      var period =  $('#period').val();
 
+      if(ycj_ref_number == '' || period == ''){
+        alert('Please fill shipment period and YCJ Ref. No.');
+        return false;
+      }
+
+      if (days >= 0) {
+        document.getElementById("importForm").submit();
+      }else{
+        alert('Please Check Stuffing Date And Date ON OR ABOUT');
+
+      }
     }
-  }
 
-  function getid(id) {
-    var id_chek;
-    id_chek = $("#"+id+" td:nth-child(1)").text();
-    $('#idcs').val(id_chek);
-    $('#idcs2').val(id_chek);
-    $('#loading').hide();
+    function getid(id) {
+      var id_chek;
+      id_chek = $("#"+id+" td:nth-child(1)").text();
+      $('#idcs').val(id_chek);
+      $('#idcs2').val(id_chek);
+      $('#loading').hide();
    // alert(id_chek);
  }
 
@@ -732,6 +765,25 @@ function addInspection(id){
   });
   
 }
+
+$("#period").change(function(){
+  $("#loading").show();
+
+  var period = $(this).val(); 
+  var data = {
+    period : period
+  }
+  $.ajax({
+    type: "GET",
+    dataType: "html",
+    url: "{{ url("fetch/get_ref_number") }}",
+    data: data,
+    success: function(message){
+      $("#ycj_ref_number").html(message);                                                   
+      $("#loading").hide();                                                        
+    }
+  });                    
+});
 </script>
 
 @stop
