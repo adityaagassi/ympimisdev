@@ -91,7 +91,7 @@
 							<span class="info-box-icon bg-green" style="height: 75px;"><i class="fa fa-ship"></i></span>
 
 							<div class="info-box-content">
-								<span class="info-box-text">ETD SUB <span style="color: rgba(96, 92, 168);"> ?? </span></span>
+								<span class="info-box-text">ETD SUB <span style="color: rgba(96, 92, 168);"> 出荷 </span></span>
 								<span class="info-box-number" style="font-size: 2vw;" id="total_etd"></span>
 							</div>
 						</div>
@@ -102,7 +102,7 @@
 							<span class="info-box-icon" style="background-color: #455DFF; color: white; height: 75px;"><i class="fa fa-truck"></i></span>
 
 							<div class="info-box-content">
-								<span class="info-box-text">ON BOARD <span style="color: rgba(96, 92, 168);"> ?? </span></span>
+								<span class="info-box-text">ON BOARD <span style="color: rgba(96, 92, 168);"> 発送 </span></span>
 								<span class="info-box-number" style="font-size: 2vw;" id="total_on_board"></span>
 							</div>
 						</div>
@@ -134,8 +134,8 @@
 							<tr>
 								<th style="width: 3%">DESTINATION<br><span style="color: purple;">仕向け地</span></th>
 								<th style="width: 1%">PLAN<br><span style="color: purple;">計画</span></th>
-								<th style="width: 1%">ETD SUB<br><span style="color: purple;">??</span></th>
-								<th style="width: 1%">ON BOARD<br><span style="color: purple;">??</span></th>
+								<th style="width: 1%">ETD SUB<br><span style="color: purple;">出荷</span></th>
+								<th style="width: 1%">ON BOARD<br><span style="color: purple;">発送</span></th>
 								<th style="width: 1%">CONFIRMED<br><span style="color: purple;">確保済み</span></th>
 							</tr>
 						</thead>
@@ -414,17 +414,17 @@
 						stack: 'actual',
 						color: '#CCFFFF'
 					},{
-						name: 'Stuffing ()',
+						name: 'Stuffing (荷積み)',
 						data: stuffing,
 						stack: 'actual',
 						color: '#FFFF54'
 					},{
-						name: 'On Board ()',
+						name: 'On Board (発送)',
 						data: on_board,
 						stack: 'actual',
 						color: '#455DFF'
 					},{
-						name: 'ETD SUB ()',
+						name: 'ETD SUB (出荷)',
 						data: departed,
 						stack: 'actual',
 						color: '#00a65a'
