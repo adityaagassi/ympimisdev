@@ -76,6 +76,8 @@ class HealthController extends Controller
 					* 
 				FROM
 					`health_indicators`
+					join users on users.id = health_indicators.created_by
+					join employee_syncs on employee_syncs.employee_id = users.username
 				WHERE
 					".$whereDate." ".$whereType."
 				ORDER BY
