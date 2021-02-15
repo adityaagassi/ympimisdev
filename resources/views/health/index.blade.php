@@ -152,65 +152,58 @@
 	@endif
 	<div class="row">
 		<div class="col-xs-12">
-			<!-- <div class="box box-solid">
-				<div class="box-body">
-					<div class="col-xs-12">
-						<div id="container"></div>
+			<div class="box box-solid" style="margin-bottom: 10px">
+				<div class="box-body" style="padding-bottom: 0px">
+					<div class="col-md-3" style="padding-bottom: 0px">
+						<!-- <span style="font-weight: bold;">Date From</span> -->
+						<div class="form-group">
+							<div class="input-group date">
+								<div class="input-group-addon bg-white">
+									<i class="fa fa-calendar"></i>
+								</div>
+								<input type="text" class="form-control datepicker" id="tanggal_from" name="tanggal_from" placeholder="Select Date From" autocomplete="off">
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3" style="padding-bottom: 0px">
+						<!-- <span style="font-weight: bold;">Date To</span> -->
+						<div class="form-group">
+							<div class="input-group date">
+								<div class="input-group-addon bg-white">
+									<i class="fa fa-calendar"></i>
+								</div>
+								<input type="text" class="form-control datepicker" id="tanggal_to"name="tanggal_to" placeholder="Select Date To" autocomplete="off">
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3" style="padding-bottom: 0px">
+						<!-- <span style="font-weight: bold;">Type</span> -->
+						<div class="form-group">
+							<div class="input-group date">
+								<div class="input-group-addon bg-white">
+									<i class="fa fa-thermometer-empty"></i>
+								</div>
+								<select class="form-control select2" name="type" id="type" style="width: 100%" data-placeholder="Choose Type . . .">
+									<option value=""></option>
+									<option value="Heart Rate">Heart Rate</option>
+									<option value="Oxygen Rate">Oxygen Rate</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3" style="padding-bottom: 0px">
+						<div class="form-group">
+							<a href="{{ url('home') }}" class="btn btn-warning">Back</a>
+							<a href="{{ url('index/health/'.$loc) }}" class="btn btn-danger">Clear</a>
+							<button class="btn btn-primary col-sm-14" onclick="fillList()">Search</button>
+						</div>
 					</div>
 				</div>
-			</div> -->
+			</div>
+			<div style="height: 300px;padding-bottom: 10px" id="container"></div>
 			<div class="box box-solid">
 				<div class="box-body" style="overflow-x: scroll;">
 					<div class="col-xs-12">
-						<h4>Filter</h4>
-						<div class="row">
-							<div class="col-md-2 col-md-offset-4">
-								<span style="font-weight: bold;">Date From</span>
-								<div class="form-group">
-									<div class="input-group date">
-										<div class="input-group-addon bg-white">
-											<i class="fa fa-calendar"></i>
-										</div>
-										<input type="text" class="form-control datepicker" id="tanggal_from" name="tanggal_from" placeholder="Select Date From" autocomplete="off">
-									</div>
-								</div>
-							</div>
-							<div class="col-md-2">
-								<span style="font-weight: bold;">Date To</span>
-								<div class="form-group">
-									<div class="input-group date">
-										<div class="input-group-addon bg-white">
-											<i class="fa fa-calendar"></i>
-										</div>
-										<input type="text" class="form-control datepicker" id="tanggal_to"name="tanggal_to" placeholder="Select Date To" autocomplete="off">
-									</div>
-								</div>
-							</div>
-							<div class="col-md-4 col-md-offset-4">
-								<span style="font-weight: bold;">Type</span>
-								<div class="form-group">
-									<div class="input-group date">
-										<div class="input-group-addon bg-white">
-											<i class="fa fa-thermometer-empty"></i>
-										</div>
-										<select class="form-control select2" name="type" id="type" style="width: 100%" data-placeholder="Choose Type . . .">
-											<option value=""></option>
-											<option value="Heart Rate">Heart Rate</option>
-											<option value="Oxygen Rate">Oxygen Rate</option>
-										</select>
-									</div>
-								</div>
-							</div>
-							<div class="col-md-6 col-md-offset-2">
-								<div class="col-md-10">
-									<div class="form-group pull-right">
-										<a href="{{ url('home') }}" class="btn btn-warning">Back</a>
-										<a href="{{ url('index/health/'.$loc) }}" class="btn btn-danger">Clear</a>
-										<button class="btn btn-primary col-sm-14" onclick="fillList()">Search</button>
-									</div>
-								</div>
-							</div>
-						</div>
 						<div class="row" id="divTable">
 							<table id="tableHealth" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
 								<thead style="background-color: rgb(126,86,134); color: #FFD700;">
@@ -257,6 +250,23 @@
 		</form>
 	</div>
 </div>
+
+<div class="modal fade" id="modalDetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<center><h4 class="modal-title" id="myModalLabelDetail" style="font-weight: bold;"></h4></center>
+			</div>
+			<div class="modal-body">
+				<div id="container2"></div>
+			</div>
+			<div class="modal-footer">
+				
+			</div>
+		</div>
+	</div>
+</div>
 @endsection
 
 
@@ -283,12 +293,9 @@
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 	jQuery(document).ready(function() {
+
 		$('.select2').select2({
-			language : {
-				noResults : function(params) {
-					return "There is no date";
-				}
-			}
+			allowClear:true,
 		});
 
 		fillList();
@@ -429,79 +436,177 @@
 					"processing": true
 				});
 
-				// var date = [], max_heart = [], min_heart = [], max_oxy = [],min_oxy = [], series = [], series2 = [], series3 = [], series4 = [], series5 = [];
+				var date = [], max_heart = [], min_heart = [], max_oxy = [],min_oxy = [];
 
-				// $.each(result.chart, function(key, value){
-				// 	date.push(value.date);
-				// 	if (value.employee_id == 'PI1910002') {
-				// 		max_oxy.push(value.max_oxy_rate);
-				// 		min_oxy.push(value.min_oxy_rate);
-				// 		max_heart.push(value.max_heart_rate);
-				// 		min_heart.push(value.min_heart_rate);
-				// 		series.push([date[key],max_oxy[key]]);
-				// 		series2.push([date[key],min_oxy[key]]);
-				// 		series3.push([date[key],max_heart[key]]);
-				// 		series4.push([date[key],min_heart[key]]);
-				// 	};
-				// 	// date.push(value.date);
-				// 	// avg.push(parseFloat(value.avg));
-				// 	// series.push([week_date[key],avg[key]]);
+				$.each(result.chart, function(key, value){
+					date.push(value.date);
+					max_oxy.push(parseFloat(value.max_oxy_rate));
+					min_oxy.push(parseFloat(value.min_oxy_rate));
+					max_heart.push(parseFloat(value.max_heart_rate));
+					min_heart.push(parseFloat(value.min_heart_rate));
+				});
 
-				// 	// week_date2.push(value.week_date);
-				// 	// highest.push(parseFloat(value.highest));
-				// 	// series2.push([week_date2[key],highest[key]]);
-				// });
-
-				// Highcharts.chart('container', {
-				// 	chart: {
-				// 		type: 'spline'
-				// 	},
-				// 	title: {
-				// 		text: 'Health Indicator Chart'
-				// 	},						
-				// 	xAxis: {
-				// 		categories: date,
-				// 	},
-				// 	yAxis: {
-				// 		title: {
-				// 			text: 'Visitors'
-				// 		}
-				// 	},
-				// 	tooltip: {
-				// 		shared: true,
-				// 		valueSuffix: ' Visitors'
-				// 	},
-				// 	credits: {
-				// 		enabled: false
-				// 	},
-				// 	plotOptions: {
-				// 		areaspline: {
-				// 			fillOpacity: 0.5,
-				// 			dataLabels: {
-				// 				enabled: true
-				// 			},
-				// 			enableMouseTracking: true
-				// 		}
-				// 	},
-				// 	series: 
-				// 	[{
-				// 		name: 'Max Oxy Rate',
-				// 		data: series
-				// 	}, {
-				// 		name: 'Min Oxy Rate',
-				// 		data: series2
-				// 	}, {
-				// 		name: 'Max Heart Rate',
-				// 		data: series3
-				// 	}, {
-				// 		name: 'Min Heart Rate',
-				// 		data: series4
-				// 	}]
-				// });	
+				Highcharts.chart('container', {
+					chart: {
+						type: 'spline'
+					},
+					title: {
+						text: 'Health Indicator Chart'
+					},						
+					xAxis: {
+						categories: date,
+					},
+					yAxis: {
+						title: {
+							text: 'Visitors'
+						}
+					},
+					tooltip: {
+						shared: true,
+						// valueSuffix: ''
+					},
+					credits: {
+						enabled: false
+					},
+					plotOptions: {
+						areaspline: {
+							fillOpacity: 0.5,
+							dataLabels: {
+								enabled: true
+							},
+							enableMouseTracking: true
+						},
+						series:{
+							cursor: 'pointer',
+			                point: {
+			                  events: {
+			                    click: function () {
+			                      ShowModal(this.category);
+			                    }
+			                  }
+			                },
+							dataLabels: {
+								enabled: true,
+								format: '{point.y}',
+								style:{
+									fontSize: '10px'
+								}
+							},
+							animation: false,
+							// pointPadding: 0.93,
+							// groupPadding: 0.93,
+							// borderWidth: 0.93,
+							// cursor: 'pointer'
+						},
+					},
+					series: 
+					[{
+						name: 'Max Oxy Rate',
+						data: max_oxy
+					}, {
+						name: 'Min Oxy Rate',
+						data: min_oxy
+					}, {
+						name: 'Max Heart Rate',
+						data: max_heart
+					}, {
+						name: 'Min Heart Rate',
+						data: min_heart
+					}]
+				});	
 
 			}
 			else{
 				alert('Attempt to retrieve data failed');
+			}
+		});
+	}
+
+	function ShowModal(date) {
+		var data = {
+			date:date
+		}
+		$.get('{{ url("fetch/health/detail") }}',data, function(result, status, xhr){
+			if(result.status){
+				var name = [], max_heart = [], min_heart = [], max_oxy = [],min_oxy = [];
+
+				$.each(result.detail, function(key, value){
+					name.push(value.name);
+					max_oxy.push(parseFloat(value.max_oxy_rate));
+					min_oxy.push(parseFloat(value.min_oxy_rate));
+					max_heart.push(parseFloat(value.max_heart_rate));
+					min_heart.push(parseFloat(value.min_heart_rate));
+				});
+
+				Highcharts.chart('container2', {
+					chart: {
+						type: 'spline'
+					},
+					title: {
+						text: ''
+					},						
+					xAxis: {
+						categories: name,
+					},
+					yAxis: {
+						title: {
+							text: ''
+						}
+					},
+					tooltip: {
+						shared: true,
+						// valueSuffix: ''
+					},
+					credits: {
+						enabled: false
+					},
+					plotOptions: {
+						areaspline: {
+							fillOpacity: 0.5,
+							dataLabels: {
+								enabled: true
+							},
+							enableMouseTracking: true
+						},
+						series:{
+							cursor: 'pointer',
+			                point: {
+			                  events: {
+			                    click: function () {
+			                      ShowModal(this.category);
+			                    }
+			                  }
+			                },
+							dataLabels: {
+								enabled: true,
+								format: '{point.y}',
+								style:{
+									fontSize: '10px'
+								}
+							},
+							animation: false,
+						},
+					},
+					series: 
+					[{
+						name: 'Max Oxy Rate',
+						data: max_oxy
+					}, {
+						name: 'Min Oxy Rate',
+						data: min_oxy
+					}, {
+						name: 'Max Heart Rate',
+						data: max_heart
+					}, {
+						name: 'Min Heart Rate',
+						data: min_heart
+					}]
+				});	
+				$("#myModalLabelDetail").html("");
+				$("#myModalLabelDetail").html("Detail Health Indicator On "+result.dateTitle);
+				$('#modalDetail').modal('show');
+			}else{
+				alert('Retrieve Data Failed');
 			}
 		});
 	}

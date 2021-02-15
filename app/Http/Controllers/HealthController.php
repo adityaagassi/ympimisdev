@@ -81,84 +81,158 @@ class HealthController extends Controller
 				ORDER BY
 					time_at DESC");
 
-  	// 		$chart = DB::SELECT("SELECT
-			// 	SUM( a.max_heart_rate ) AS max_heart_rate,
-			// 	SUM( a.min_heart_rate ) AS min_heart_rate,
-			// 	SUM( a.max_oxy_rate )* 100 AS max_oxy_rate,
-			// 	SUM( a.min_oxy_rate )* 100 AS min_oxy_rate,
-			// 	a.date,a.name
-			// FROM
-			// 	(
-			// 	SELECT
-			// 		MAX( VALUE ) AS max_heart_rate,
-			// 		0 AS min_heart_rate,
-			// 		0 AS max_oxy_rate,
-			// 		0 AS min_oxy_rate,
-			// 		date( time_at ) AS date,
-			// 	NAME 
-			// 	FROM
-			// 		health_indicators 
-			// 	WHERE
-			// 		type = 'Heart Rate' 
-			// 		AND DATE( time_at ) AND ".$whereDate." 
-			// 		".$whereType."
-			// 	GROUP BY
-			// 		date( time_at ),
-			// 	NAME UNION ALL
-			// 	SELECT
-			// 		0 AS max_heart_rate,
-			// 		MIN( VALUE ) AS min_heart_rate,
-			// 		0 AS max_oxy_rate,
-			// 		0 AS min_oxy_rate,
-			// 		date( time_at ) AS date,
-			// 	NAME 
-			// 	FROM
-			// 		health_indicators 
-			// 	WHERE
-			// 		type = 'Heart Rate' 
-			// 		AND DATE( time_at ) AND ".$whereDate." ".$whereType." 
-			// 	GROUP BY
-			// 		date( time_at ),
-			// 	NAME UNION ALL
-			// 	SELECT
-			// 		0 AS max_heart_rate,
-			// 		0 AS min_heart_rate,
-			// 		MAX( VALUE ) AS max_oxy_rate,
-			// 		0 AS min_oxy_rate,
-			// 		date( time_at ) AS date,
-			// 	NAME 
-			// 	FROM
-			// 		health_indicators 
-			// 	WHERE
-			// 		type = 'Oxygen Rate' 
-			// 		AND DATE( time_at ) AND ".$whereDate." ".$whereType." 
-			// 	GROUP BY
-			// 		date( time_at ),
-			// 	NAME UNION ALL
-			// 	SELECT
-			// 		0 AS max_heart_rate,
-			// 		0 AS min_heart_rate,
-			// 		0 AS max_oxy_rate,
-			// 		MIN( VALUE ) AS min_oxy_rate,
-			// 		date( time_at ) AS date,
-			// 	NAME 
-			// 	FROM
-			// 		health_indicators 
-			// 	WHERE
-			// 		type = 'Oxygen Rate' 
-			// 		AND DATE( time_at ) AND ".$whereDate." ".$whereType." 
-			// 	GROUP BY
-			// 		date( time_at ),
-			// 	NAME 
-			// 	) a 
-			// GROUP BY
-			// 	a.date,
-			// 	a.NAME");
+	  			$chart = DB::SELECT("SELECT
+					SUM( a.max_heart_rate ) AS max_heart_rate,
+					SUM( a.min_heart_rate ) AS min_heart_rate,
+					SUM( a.max_oxy_rate )* 100 AS max_oxy_rate,
+					SUM( a.min_oxy_rate )* 100 AS min_oxy_rate,
+					a.date
+				FROM
+					(
+					SELECT
+						MAX( VALUE ) AS max_heart_rate,
+						0 AS min_heart_rate,
+						0 AS max_oxy_rate,
+						0 AS min_oxy_rate,
+						date( time_at ) AS date
+					FROM
+						health_indicators 
+					WHERE
+						type = 'Heart Rate' 
+						AND ".$whereDate." ".$whereType."
+					GROUP BY
+						date( time_at ) UNION ALL
+					SELECT
+						0 AS max_heart_rate,
+						MIN( VALUE ) AS min_heart_rate,
+						0 AS max_oxy_rate,
+						0 AS min_oxy_rate,
+						date( time_at ) AS date
+					FROM
+						health_indicators 
+					WHERE
+						type = 'Heart Rate' 
+						AND ".$whereDate." ".$whereType." 
+					GROUP BY
+						date( time_at ) UNION ALL
+					SELECT
+						0 AS max_heart_rate,
+						0 AS min_heart_rate,
+						MAX( VALUE ) AS max_oxy_rate,
+						0 AS min_oxy_rate,
+						date( time_at ) AS date
+					FROM
+						health_indicators 
+					WHERE
+						type = 'Oxygen Rate' 
+						AND ".$whereDate." ".$whereType." 
+					GROUP BY
+						date( time_at ),
+					NAME,employee_id UNION ALL
+					SELECT
+						0 AS max_heart_rate,
+						0 AS min_heart_rate,
+						0 AS max_oxy_rate,
+						MIN( VALUE ) AS min_oxy_rate,
+						date( time_at ) AS date
+					FROM
+						health_indicators 
+					WHERE
+						type = 'Oxygen Rate' 
+						AND ".$whereDate." ".$whereType." 
+					GROUP BY
+						date( time_at )
+					) a 
+				GROUP BY
+					a.date");
 
   			$response = array(
 	            'status' => true,
 	            'health' => $health,
-	            // 'chart' => $chart,
+	            'chart' => $chart,
+	       	);
+	        return Response::json($response);
+  		} catch (\Exception $e) {
+  			$response = array(
+	            'status' => false,
+	            'message' => $e->getMessage(),
+	       	);
+	        return Response::json($response);
+  		}
+  	}
+
+  	public function fetchDetailHealth(Request $request)
+  	{
+  		try {
+  			$detail = DB::SELECT("SELECT
+				employee_syncs.employee_id,
+				employee_syncs.`name`,
+				COALESCE ((
+					SELECT
+						MAX( VALUE ) AS max_heart_rate 
+					FROM
+						health_indicators 
+					WHERE
+						type = 'Heart Rate' 
+						AND DATE( time_at ) = '".$request->get('date')."' 
+						AND health_indicators.employee_id = employee_syncs.employee_id 
+						),
+					0 
+				) AS max_heart_rate,
+				COALESCE ((
+					SELECT
+						MIN( VALUE ) AS max_heart_rate 
+					FROM
+						health_indicators 
+					WHERE
+						type = 'Heart Rate' 
+						AND DATE( time_at ) = '".$request->get('date')."' 
+						AND health_indicators.employee_id = employee_syncs.employee_id 
+						),
+					0 
+				) AS min_heart_rate,
+				COALESCE ((
+					SELECT
+						MAX( VALUE ) AS max_oxy_rate 
+					FROM
+						health_indicators 
+					WHERE
+						type = 'Oxygen Rate' 
+						AND DATE( time_at ) = '".$request->get('date')."' 
+						AND health_indicators.employee_id = employee_syncs.employee_id 
+						),
+					0 
+				) AS max_oxy_rate,
+				COALESCE ((
+					SELECT
+						MIN( VALUE ) AS min_oxy_rate 
+					FROM
+						health_indicators 
+					WHERE
+						type = 'Oxygen Rate' 
+						AND DATE( time_at ) = '".$request->get('date')."' 
+						AND health_indicators.employee_id = employee_syncs.employee_id 
+						),
+					0 
+				) AS min_oxy_rate 
+			FROM
+				employee_syncs
+				JOIN users ON users.username = employee_syncs.employee_id
+				LEFT JOIN health_indicators ON health_indicators.employee_id = employee_syncs.employee_id 
+			WHERE
+				( role_code = 'JPN-EKS' OR employee_syncs.employee_id = 'PI0109004' ) 
+				AND employee_syncs.end_date IS NULL
+				and  employee_syncs.employee_id != 'PI1612005'
+			GROUP BY
+				employee_syncs.employee_id,
+				employee_syncs.name");
+  			
+  			$dateTitle = date("d F Y", strtotime($request->get('date')));
+
+  			$response = array(
+	            'status' => true,
+	            'detail' => $detail,
+	            'dateTitle' => $dateTitle,
 	       	);
 	        return Response::json($response);
   		} catch (\Exception $e) {

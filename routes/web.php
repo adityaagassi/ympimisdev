@@ -1384,7 +1384,7 @@ Route::get('email/sakurentsu/3m/unsigned', 'SakurentsuController@mail_unsigned_t
 
 
 //Tugaskan ke PIC
-Route::get('index/sakurentsu/assign/{sk_num}', 'SakurentsuController@index_assign_to_staff');
+Route::get('index/sakurentsu/assign/{sk_num}/{cat}', 'SakurentsuController@index_assign_to_staff');
 Route::get('assign/sakurentsu', 'SakurentsuController@assign_to_staff');
 
 
@@ -2708,10 +2708,14 @@ Route::get('index/shipping_agency', 'ContainerScheduleController@indexShippingAg
 Route::get('fetch/shipping_agency', 'ContainerScheduleController@fetchShippingAgency');
 Route::get('fetch/shipping_agency_detail', 'ContainerScheduleController@fetchShippingAgencyDetail');
 
+Route::get('fetch/get_ref_number', 'ContainerScheduleController@fetchGetRefNumber');
+
+
 Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 
 	Route::post('fetch/shipping_order/add_ship_reservation', 'ContainerScheduleController@addShipReservation');
 	Route::post('fetch/shipping_order/edit_ship_reservation', 'ContainerScheduleController@editShipReservation');
+	Route::post('fetch/shipping_order/delete_ship_reservation', 'ContainerScheduleController@deleteShipReservation');
 	Route::post('fetch/shipping_order/upload_ship_reservation', 'ContainerScheduleController@uploadShipReservation');
 	
 	Route::post('fetch/add_shipping_agency', 'ContainerScheduleController@addShippingAgency');
@@ -4206,6 +4210,7 @@ Route::post('scan/scrap_warehouse', 'ScrapController@scanScrapWarehouse');
 
 //Mutasi
 Route::get('home/mutasi', 'MutasiController@homeMutasi');
+Route::get('fetch/mutasi/resume', 'MutasiController@fetchResumeMutasi');
 // Route::get('fetch/trial_request', 'TrialRequestController@fetch_trial_request');
 // ========================================
 Route::get('dashboard/mutasi', 'MutasiController@dashboard');
@@ -4247,6 +4252,9 @@ Route::get('index/tools', 'ToolsController@index_tools');
 Route::get('tools/master', 'ToolsController@master_tools');
 Route::get('fetch/tools', 'ToolsController@fetch_tools');
 
+Route::get('dies/master', 'ToolsController@master_dies');
+Route::get('fetch/dies', 'ToolsController@fetch_dies');
+
 Route::get('tools/target', 'ToolsController@target_tools');
 Route::get('fetch/tools_target', 'ToolsController@fetch_target_tools');
 
@@ -4269,3 +4277,4 @@ Route::get('delete/qa/ng_temp','QualityAssuranceController@deleteNgTemp');
 Route::get('index/health/{loc}', 'HealthController@index');
 Route::post('upload/health', 'HealthController@uploadHealth');
 Route::get('fetch/health', 'HealthController@fetchHealth');
+Route::get('fetch/health/detail', 'HealthController@fetchDetailHealth');
