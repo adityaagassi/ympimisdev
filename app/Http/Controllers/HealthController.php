@@ -81,84 +81,84 @@ class HealthController extends Controller
 				ORDER BY
 					time_at DESC");
 
-  			$chart = DB::SELECT("SELECT
-				SUM( a.max_heart_rate ) AS max_heart_rate,
-				SUM( a.min_heart_rate ) AS min_heart_rate,
-				SUM( a.max_oxy_rate )* 100 AS max_oxy_rate,
-				SUM( a.min_oxy_rate )* 100 AS min_oxy_rate,
-				a.date,a.name
-			FROM
-				(
-				SELECT
-					MAX( VALUE ) AS max_heart_rate,
-					0 AS min_heart_rate,
-					0 AS max_oxy_rate,
-					0 AS min_oxy_rate,
-					date( time_at ) AS date,
-				NAME 
-				FROM
-					health_indicators 
-				WHERE
-					type = 'Heart Rate' 
-					AND DATE( time_at ) AND ".$whereDate." 
-					".$whereType."
-				GROUP BY
-					date( time_at ),
-				NAME UNION ALL
-				SELECT
-					0 AS max_heart_rate,
-					MIN( VALUE ) AS min_heart_rate,
-					0 AS max_oxy_rate,
-					0 AS min_oxy_rate,
-					date( time_at ) AS date,
-				NAME 
-				FROM
-					health_indicators 
-				WHERE
-					type = 'Heart Rate' 
-					AND DATE( time_at ) AND ".$whereDate." ".$whereType." 
-				GROUP BY
-					date( time_at ),
-				NAME UNION ALL
-				SELECT
-					0 AS max_heart_rate,
-					0 AS min_heart_rate,
-					MAX( VALUE ) AS max_oxy_rate,
-					0 AS min_oxy_rate,
-					date( time_at ) AS date,
-				NAME 
-				FROM
-					health_indicators 
-				WHERE
-					type = 'Oxygen Rate' 
-					AND DATE( time_at ) AND ".$whereDate." ".$whereType." 
-				GROUP BY
-					date( time_at ),
-				NAME UNION ALL
-				SELECT
-					0 AS max_heart_rate,
-					0 AS min_heart_rate,
-					0 AS max_oxy_rate,
-					MIN( VALUE ) AS min_oxy_rate,
-					date( time_at ) AS date,
-				NAME 
-				FROM
-					health_indicators 
-				WHERE
-					type = 'Oxygen Rate' 
-					AND DATE( time_at ) AND ".$whereDate." ".$whereType." 
-				GROUP BY
-					date( time_at ),
-				NAME 
-				) a 
-			GROUP BY
-				a.date,
-				a.NAME");
+  	// 		$chart = DB::SELECT("SELECT
+			// 	SUM( a.max_heart_rate ) AS max_heart_rate,
+			// 	SUM( a.min_heart_rate ) AS min_heart_rate,
+			// 	SUM( a.max_oxy_rate )* 100 AS max_oxy_rate,
+			// 	SUM( a.min_oxy_rate )* 100 AS min_oxy_rate,
+			// 	a.date,a.name
+			// FROM
+			// 	(
+			// 	SELECT
+			// 		MAX( VALUE ) AS max_heart_rate,
+			// 		0 AS min_heart_rate,
+			// 		0 AS max_oxy_rate,
+			// 		0 AS min_oxy_rate,
+			// 		date( time_at ) AS date,
+			// 	NAME 
+			// 	FROM
+			// 		health_indicators 
+			// 	WHERE
+			// 		type = 'Heart Rate' 
+			// 		AND DATE( time_at ) AND ".$whereDate." 
+			// 		".$whereType."
+			// 	GROUP BY
+			// 		date( time_at ),
+			// 	NAME UNION ALL
+			// 	SELECT
+			// 		0 AS max_heart_rate,
+			// 		MIN( VALUE ) AS min_heart_rate,
+			// 		0 AS max_oxy_rate,
+			// 		0 AS min_oxy_rate,
+			// 		date( time_at ) AS date,
+			// 	NAME 
+			// 	FROM
+			// 		health_indicators 
+			// 	WHERE
+			// 		type = 'Heart Rate' 
+			// 		AND DATE( time_at ) AND ".$whereDate." ".$whereType." 
+			// 	GROUP BY
+			// 		date( time_at ),
+			// 	NAME UNION ALL
+			// 	SELECT
+			// 		0 AS max_heart_rate,
+			// 		0 AS min_heart_rate,
+			// 		MAX( VALUE ) AS max_oxy_rate,
+			// 		0 AS min_oxy_rate,
+			// 		date( time_at ) AS date,
+			// 	NAME 
+			// 	FROM
+			// 		health_indicators 
+			// 	WHERE
+			// 		type = 'Oxygen Rate' 
+			// 		AND DATE( time_at ) AND ".$whereDate." ".$whereType." 
+			// 	GROUP BY
+			// 		date( time_at ),
+			// 	NAME UNION ALL
+			// 	SELECT
+			// 		0 AS max_heart_rate,
+			// 		0 AS min_heart_rate,
+			// 		0 AS max_oxy_rate,
+			// 		MIN( VALUE ) AS min_oxy_rate,
+			// 		date( time_at ) AS date,
+			// 	NAME 
+			// 	FROM
+			// 		health_indicators 
+			// 	WHERE
+			// 		type = 'Oxygen Rate' 
+			// 		AND DATE( time_at ) AND ".$whereDate." ".$whereType." 
+			// 	GROUP BY
+			// 		date( time_at ),
+			// 	NAME 
+			// 	) a 
+			// GROUP BY
+			// 	a.date,
+			// 	a.NAME");
 
   			$response = array(
 	            'status' => true,
 	            'health' => $health,
-	            'chart' => $chart,
+	            // 'chart' => $chart,
 	       	);
 	        return Response::json($response);
   		} catch (\Exception $e) {
