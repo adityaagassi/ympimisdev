@@ -43,7 +43,7 @@
 @section('content')
 <input type="hidden" id="green">
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<section class="content">
+<section class="content" style="padding-top: 0px;">
 	<div class="row">
 		<div class="col-xs-12" style="padding-bottom: 10px; padding-left: 0px;">
 			<div class="col-xs-2">
