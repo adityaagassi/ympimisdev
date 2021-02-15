@@ -429,75 +429,75 @@
 					"processing": true
 				});
 
-				var date = [], max_heart = [], min_heart = [], max_oxy = [],min_oxy = [], series = [], series2 = [], series3 = [], series4 = [], series5 = [];
+				// var date = [], max_heart = [], min_heart = [], max_oxy = [],min_oxy = [], series = [], series2 = [], series3 = [], series4 = [], series5 = [];
 
-				$.each(result.chart, function(key, value){
-					date.push(value.date);
-					if (value.employee_id == 'PI1910002') {
-						max_oxy.push(value.max_oxy_rate);
-						min_oxy.push(value.min_oxy_rate);
-						max_heart.push(value.max_heart_rate);
-						min_heart.push(value.min_heart_rate);
-						series.push([date[key],max_oxy[key]]);
-						series2.push([date[key],min_oxy[key]]);
-						series3.push([date[key],max_heart[key]]);
-						series4.push([date[key],min_heart[key]]);
-					};
-					// date.push(value.date);
-					// avg.push(parseFloat(value.avg));
-					// series.push([week_date[key],avg[key]]);
+				// $.each(result.chart, function(key, value){
+				// 	date.push(value.date);
+				// 	if (value.employee_id == 'PI1910002') {
+				// 		max_oxy.push(value.max_oxy_rate);
+				// 		min_oxy.push(value.min_oxy_rate);
+				// 		max_heart.push(value.max_heart_rate);
+				// 		min_heart.push(value.min_heart_rate);
+				// 		series.push([date[key],max_oxy[key]]);
+				// 		series2.push([date[key],min_oxy[key]]);
+				// 		series3.push([date[key],max_heart[key]]);
+				// 		series4.push([date[key],min_heart[key]]);
+				// 	};
+				// 	// date.push(value.date);
+				// 	// avg.push(parseFloat(value.avg));
+				// 	// series.push([week_date[key],avg[key]]);
 
-					// week_date2.push(value.week_date);
-					// highest.push(parseFloat(value.highest));
-					// series2.push([week_date2[key],highest[key]]);
-				});
+				// 	// week_date2.push(value.week_date);
+				// 	// highest.push(parseFloat(value.highest));
+				// 	// series2.push([week_date2[key],highest[key]]);
+				// });
 
-				Highcharts.chart('container', {
-					chart: {
-						type: 'spline'
-					},
-					title: {
-						text: 'Health Indicator Chart'
-					},						
-					xAxis: {
-						categories: date,
-					},
-					yAxis: {
-						title: {
-							text: 'Visitors'
-						}
-					},
-					tooltip: {
-						shared: true,
-						valueSuffix: ' Visitors'
-					},
-					credits: {
-						enabled: false
-					},
-					plotOptions: {
-						areaspline: {
-							fillOpacity: 0.5,
-							dataLabels: {
-								enabled: true
-							},
-							enableMouseTracking: true
-						}
-					},
-					series: 
-					[{
-						name: 'Max Oxy Rate',
-						data: series
-					}, {
-						name: 'Min Oxy Rate',
-						data: series2
-					}, {
-						name: 'Max Heart Rate',
-						data: series3
-					}, {
-						name: 'Min Heart Rate',
-						data: series4
-					}]
-				});	
+				// Highcharts.chart('container', {
+				// 	chart: {
+				// 		type: 'spline'
+				// 	},
+				// 	title: {
+				// 		text: 'Health Indicator Chart'
+				// 	},						
+				// 	xAxis: {
+				// 		categories: date,
+				// 	},
+				// 	yAxis: {
+				// 		title: {
+				// 			text: 'Visitors'
+				// 		}
+				// 	},
+				// 	tooltip: {
+				// 		shared: true,
+				// 		valueSuffix: ' Visitors'
+				// 	},
+				// 	credits: {
+				// 		enabled: false
+				// 	},
+				// 	plotOptions: {
+				// 		areaspline: {
+				// 			fillOpacity: 0.5,
+				// 			dataLabels: {
+				// 				enabled: true
+				// 			},
+				// 			enableMouseTracking: true
+				// 		}
+				// 	},
+				// 	series: 
+				// 	[{
+				// 		name: 'Max Oxy Rate',
+				// 		data: series
+				// 	}, {
+				// 		name: 'Min Oxy Rate',
+				// 		data: series2
+				// 	}, {
+				// 		name: 'Max Heart Rate',
+				// 		data: series3
+				// 	}, {
+				// 		name: 'Min Heart Rate',
+				// 		data: series4
+				// 	}]
+				// });	
 
 			}
 			else{
