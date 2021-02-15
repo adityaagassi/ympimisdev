@@ -228,6 +228,7 @@ Route::post('index/injeksi/delete_ng_temp', 'InjectionsController@delete_ng_temp
 Route::get('input/reason_idle_trouble', 'InjectionsController@inputReasonIdleTrouble');
 Route::get('change/reason_idle_trouble', 'InjectionsController@changeReasonIdleTrouble');
 Route::get('input/reason_pause', 'InjectionsController@inputReasonPause');
+Route::get('input/approval_cek', 'InjectionsController@inputApprovalCek');
 Route::get('change/reason_pause', 'InjectionsController@changeReasonPause');
 
 //in
@@ -4259,11 +4260,16 @@ Route::get('tools/target', 'ToolsController@target_tools');
 Route::get('fetch/tools_target', 'ToolsController@fetch_target_tools');
 
 //Process Pengurangan Stock Kanban Tools
-Route::get('tools/stock_out', 'ToolsController@stock_out');
+Route::get('tools/stock_out', 'ToolsController@tools_stock_out');
 Route::get('fetch/tools/data', 'ToolsController@fetch_tools_data');
 Route::get('fetch/tools/order', 'ToolsController@fetch_tools_order');
-Route::get('tools/scan/operator', 'ToolsController@scan_operator');
 Route::post('post/tools/stock_out', 'ToolsController@post_tools');
+
+//Process Pengurangan Stock dies
+Route::get('dies/stock_out', 'ToolsController@dies_stock_out');
+Route::get('fetch/dies/data', 'ToolsController@fetch_dies_data');
+
+Route::get('tools/scan/operator', 'ToolsController@scan_operator');
 
 // QA Incoming Check
 Route::get('index/qa', 'QualityAssuranceController@index');

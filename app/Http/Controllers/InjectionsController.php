@@ -6592,6 +6592,58 @@ class InjectionsController extends Controller
         }
     }
 
+    public function inputApprovalCek(Request $request)
+    {
+        try {
+            $datawork = InjectionHistoryMoldingTemp::where('molding_code',$request->get('molding_code'))->first();
+            if ($datawork->remark != null) {
+                $work = InjectionHistoryMoldingWorks::where('molding_code',$request->get('molding_code'))->where('end_time',null)->first();
+                $work->end_time = date('Y-m-d H:i:s');
+                $work->save();
+
+                $temp = InjectionHistoryMoldingTemp::where('molding_code',$request->get('molding_code'))->where('remark','!=',null)->first();
+                $temp->remark = null;
+                $temp->reason = null;
+                $temp->save();
+
+                $response = array(
+                    'status' => true,
+                    'statusApprovalCek' => 'Selesai',
+                );
+                return Response::json($response);
+            }else{
+                $reason = InjectionHistoryMoldingWorks::create([
+                    'molding_code' => $request->get('molding_code'),
+                    'status' => $request->get('status'),
+                    'type' => $request->get('type'),
+                    'pic' => $request->get('pic'),
+                    'mesin' => $request->get('mesin'),
+                    'part' => $request->get('part'),
+                    'start_time' => $request->get('start_time'),
+                    'reason' => $request->get('reason'),
+                    'created_by' => Auth::id()
+                ]);
+
+                $temp = InjectionHistoryMoldingTemp::where('molding_code',$request->get('molding_code'))->first();
+                $temp->remark = $request->get('status');
+                $temp->reason = $request->get('reason');
+                $temp->save();
+
+                $response = array(
+                    'status' => true,
+                    'statusApprovalCek' => 'Mulai',
+                );
+                return Response::json($response);
+            }
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+            );
+            return Response::json($response);
+        }
+    }
+
     public function changeReasonPause(Request $request)
     {
         try {

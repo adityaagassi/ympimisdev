@@ -317,10 +317,10 @@
 				<button id="pause_pasang" style="width: 100%; margin-top: 10px; font-size: 30px;  font-weight: bold; border-color: black; color: white; width: 100%" onclick="pause('PASANG','PAUSE')" class="btn btn-warning">PAUSE</button>
 			</div>
 			<div class="col-xs-6" style="padding-left: 0px;padding-right: 5px">
-				<button id="cek_visual_pasang" style="width: 100%; margin-top: 10px; font-size: 30px;  font-weight: bold; border-color: black; color: black; width: 100%" onclick="pause('PASANG','CEK VISUAL & DIMENSI')" class="btn btn-default">CEK VISUAL & DIMENSI</button>
+				<button id="cek_visual_pasang" style="width: 100%; margin-top: 10px; font-size: 30px;  font-weight: bold; border-color: black; color: black; width: 100%" onclick="approvalcek('Cek Visual & Dimensi','CEK VISUAL & DIMENSI')" class="btn btn-default">CEK VISUAL & DIMENSI</button>
 			</div>
 			<div class="col-xs-6" style="padding-left: 0px;padding-right: 5px">
-				<button id="approval_pasang" style="width: 100%; padding-top: 10px;padding-bottom: 12px; margin-top: 10px; font-size: 23px;  font-weight: bold; border-color: black; color: black; width: 100%" onclick="pause('PASANG','APPROVAL QA')" class="btn btn-default">FIRST INJECT + APPROVAL QA</button>
+				<button id="approval_pasang" style="width: 100%; padding-top: 10px;padding-bottom: 12px; margin-top: 10px; font-size: 23px;  font-weight: bold; border-color: black; color: black; width: 100%" onclick="approvalcek('Approval QA','APPROVAL QA')" class="btn btn-default">FIRST INJECT + APPROVAL QA</button>
 			</div>
 			<div class="col-xs-6" style="padding-left: 0px;padding-right: 5px">
 				<button id="batal_pasang" style="width: 100%; margin-top: 10px; font-size: 30px;  font-weight: bold; border-color: black; color: white; width: 100%" onclick="cancelPasang()" class="btn btn-danger">BATAL</button>
@@ -508,6 +508,8 @@
 		$('#operator_1').val('');
 		$('#operator_2').val('');
 
+		$('#approval_pasang').prop('class','btn btn-default');
+
 		$('#molding_code').val('');
 		setInterval(setTime, 1000);
 		$('#notelepas').keyboard();
@@ -528,18 +530,11 @@
 				$.get('{{ url("scan/injeksi/operator") }}', data, function(result, status, xhr){
 					if(result.status){
 						openSuccessGritter('Success!', result.message);
-						// $('#modalOperator').modal('hide');
-						// $('#op').html(result.employee.employee_id);
-						// $('#op2').html(result.employee.name);
-						// $('#employee_id').val(result.employee.employee_id);
-						// $('#modalMesin').modal('show');
 						$('#operator_0').val(result.employee.name);
 						$('#op_0').html(result.employee.name.split(' ').slice(0,2).join(' '));
 						$('#employee_id_0').val(result.employee.employee_id);
 						$('#operator_0').prop('disabled',true);
 						$('#operator_1').focus();
-						// getMoldingLog();
-						// get_history_temp(result.employee.name);
 					}
 					else{
 						audio_error.play();
@@ -566,18 +561,11 @@
 				$.get('{{ url("scan/injeksi/operator") }}', data, function(result, status, xhr){
 					if(result.status){
 						openSuccessGritter('Success!', result.message);
-						// $('#modalOperator').modal('hide');
-						// $('#op').html(result.employee.employee_id);
-						// $('#op2').html(result.employee.name);
-						// $('#employee_id').val(result.employee.employee_id);
-						// $('#modalMesin').modal('show');
 						$('#operator_1').val(result.employee.name);
 						$('#op_1').html(result.employee.name.split(' ').slice(0,2).join(' '));
 						$('#employee_id_1').val(result.employee.employee_id);
 						$('#operator_1').prop('disabled',true);
 						$('#operator_2').focus();
-						// getMoldingLog();
-						// get_history_temp(result.employee.name);
 					}
 					else{
 						audio_error.play();
@@ -604,17 +592,10 @@
 				$.get('{{ url("scan/injeksi/operator") }}', data, function(result, status, xhr){
 					if(result.status){
 						openSuccessGritter('Success!', result.message);
-						// $('#modalOperator').modal('hide');
-						// $('#op').html(result.employee.employee_id);
-						// $('#op2').html(result.employee.name);
-						// $('#employee_id').val(result.employee.employee_id);
-						// $('#modalMesin').modal('show');
 						$('#operator_2').val(result.employee.name);
 						$('#op_2').html(result.employee.name.split(' ').slice(0,2).join(' '));
 						$('#employee_id_2').val(result.employee.employee_id);
 						$('#operator_2').prop('disabled',true);
-						// getMoldingLog();
-						// get_history_temp(result.employee.name);
 					}
 					else{
 						audio_error.play();
@@ -631,44 +612,8 @@
 		}
 	});
 
-	// $('#operator_3').keydown(function(event) {
-	// 	if (event.keyCode == 13 || event.keyCode == 9) {
-	// 		if($("#operator").val().length >= 8){
-	// 			var data = {
-	// 				employee_id : $("#operator").val()
-	// 			}
-				
-	// 			$.get('{{ url("scan/injeksi/operator") }}', data, function(result, status, xhr){
-	// 				if(result.status){
-	// 					openSuccessGritter('Success!', result.message);
-	// 					$('#modalOperator').modal('hide');
-	// 					$('#op').html(result.employee.employee_id);
-	// 					$('#op2').html(result.employee.name);
-	// 					$('#employee_id').val(result.employee.employee_id);
-	// 					$('#modalMesin').modal('show');
-	// 					// getMoldingLog();
-	// 					// get_history_temp(result.employee.name);
-	// 				}
-	// 				else{
-	// 					audio_error.play();
-	// 					openErrorGritter('Error', result.message);
-	// 					$('#operator').val('');
-	// 				}
-	// 			});
-	// 		}
-	// 		else{
-	// 			openErrorGritter('Error!', 'Employee ID Invalid.');
-	// 			audio_error.play();
-	// 			$("#operator").val("");
-	// 		}			
-	// 	}
-	// });
-
 	function saveOperator() {
 		$('#modalOperator').modal('hide');
-		// $('#op').html(result.employee.employee_id);
-		// $('#op2').html(result.employee.name);
-		// $('#employee_id').val(result.employee.employee_id);
 		$('#modalMesin').modal('show');
 	}
 
@@ -1268,7 +1213,7 @@
 						if (value.remark != null) {
 							if (confirm('Pekerjaan dalam proses '+value.remark+'. Apakah Anda ingin melanjutkan?')) {
 								$('#molding_code').val(value.molding_code);
-								changeStatus(value.molding_code);
+								// changeStatus(value.molding_code);
 								if (value.type == "LEPAS") {
 									$('#mesin_lepas').html(value.mesin);
 									$('#part_lepas').html(value.part);
@@ -1316,6 +1261,13 @@
 									$('#batal_pasang').show();
 								}								
 								intervalUpdate = setInterval(update_history_temp,60000);
+								if (value.remark == 'APPROVAL QA') {
+									$('#approval_pasang').prop('class','btn btn-info');
+								}else if(value.remark == 'CEK VISUAL & DIMENSI'){
+									$('#cek_visual_pasang').prop('class','btn btn-info');
+								}else{
+									changeStatus(value.molding_code);
+								}
 							}else{
 								changeMesin();
 							}
@@ -1497,6 +1449,70 @@
 		$.get('{{ url("change/reason_pause") }}', data, function(result, status, xhr){
 			if(result.status){
 				alert('Pemasangan / Pelepasan Molding Dilanjutkan.');
+			}else{
+				openErrorGritter('Error!',result.message);
+			}
+		});
+	}
+
+	function approvalcek(reason,remark) {
+		var reason = reason;
+		var pic_1 = $('#op_0').text();
+		var pic_2 = $('#op_1').text();
+		var pic_3 = $('#op_2').text();
+
+		var pic = [];
+
+		if (pic_1 != "-") {
+			pic.push(pic_1);
+		}
+
+		if (pic_2 != "-") {
+			pic.push(pic_2);
+		}
+
+		if (pic_3 != "-") {
+			pic.push(pic_3);
+		}
+
+		var type="PASANG";
+
+		if (type == 'PASANG') {
+			var mesin = $('#mesin_pasang').text();
+			var part = $('#part_pasang').text();
+		}
+
+		var data = {
+			type:"PASANG",
+			molding_code:$('#molding_code').val(),
+			status:remark,
+			pic:pic.join(),
+			mesin:mesin,
+			part:part,
+			reason:reason,
+			start_time:getActualFullDate(),
+		}
+
+		$.get('{{ url("input/approval_cek") }}', data, function(result, status, xhr){
+			if(result.status){
+				if (result.statusApprovalCek == 'Mulai') {
+					if (remark == 'APPROVAL QA') {
+						$('#approval_pasang').prop('class','btn btn-info');
+						openSuccessGritter('Success','Approval QA Dimulai');
+					}else{
+						$('#cek_visual_pasang').prop('class','btn btn-info');
+						openSuccessGritter('Success','Cek Visual & Dimensi Dimulai');
+					}
+				}else if(result.statusApprovalCek == 'Selesai'){
+					if (remark == 'APPROVAL QA') {
+						$('#approval_pasang').prop('class','btn btn-default');
+						openSuccessGritter('Success','Approval QA Selesai');
+					}else{
+						$('#cek_visual_pasang').prop('class','btn btn-default');
+						openSuccessGritter('Success','Cek Visual & Dimensi Selesai');
+					}
+				}
+				$('#reasonPause').val('-').trigger('change');
 			}else{
 				openErrorGritter('Error!',result.message);
 			}
