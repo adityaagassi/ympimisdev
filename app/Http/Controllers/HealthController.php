@@ -53,15 +53,15 @@ class HealthController extends Controller
 
 	           if ($date_from == '') {
 	                if ($date_to == '') {
-	                     $whereDate = 'AND DATE(time_at) BETWEEN CONCAT(DATE_FORMAT("'.$now.'" - INTERVAL 7 DAY,"%Y-%m-%d")) AND "'.$now.'"';
+	                     $whereDate = 'DATE(time_at) BETWEEN CONCAT(DATE_FORMAT("'.$now.'" - INTERVAL 30 DAY,"%Y-%m-%d")) AND "'.$now.'"';
 	                }else{
-	                     $whereDate = 'AND DATE(time_at) BETWEEN CONCAT(DATE_FORMAT("'.$date_to.'" - INTERVAL 7 DAY,"%Y-%m-%d")) AND "'.$date_to.'"';
+	                     $whereDate = 'DATE(time_at) BETWEEN CONCAT(DATE_FORMAT("'.$date_to.'" - INTERVAL 30 DAY,"%Y-%m-%d")) AND "'.$date_to.'"';
 	                }
 	           }else{
 	                if ($date_to == '') {
-	                     $whereDate = 'AND DATE(time_at) BETWEEN "'.$date_from.'" AND DATE(NOW())';
+	                     $whereDate = 'DATE(time_at) BETWEEN "'.$date_from.'" AND DATE(NOW())';
 	                }else{
-	                     $whereDate = 'AND DATE(time_at) BETWEEN "'.$date_from.'" AND "'.$date_to.'"';
+	                     $whereDate = 'DATE(time_at) BETWEEN "'.$date_from.'" AND "'.$date_to.'"';
 	                }
 	           }
 
@@ -76,16 +76,89 @@ class HealthController extends Controller
 					* 
 				FROM
 					`health_indicators`
-					JOIN users ON users.id = health_indicators.created_by 
 				WHERE
-					health_indicators.created_by = ".$id_user."
 					".$whereDate." ".$whereType."
 				ORDER BY
 					time_at DESC");
 
+  			$chart = DB::SELECT("SELECT
+				SUM( a.max_heart_rate ) AS max_heart_rate,
+				SUM( a.min_heart_rate ) AS min_heart_rate,
+				SUM( a.max_oxy_rate )* 100 AS max_oxy_rate,
+				SUM( a.min_oxy_rate )* 100 AS min_oxy_rate,
+				a.date,a.name
+			FROM
+				(
+				SELECT
+					MAX( VALUE ) AS max_heart_rate,
+					0 AS min_heart_rate,
+					0 AS max_oxy_rate,
+					0 AS min_oxy_rate,
+					date( time_at ) AS date,
+				NAME 
+				FROM
+					health_indicators 
+				WHERE
+					type = 'Heart Rate' 
+					AND DATE( time_at ) AND ".$whereDate." 
+					".$whereType."
+				GROUP BY
+					date( time_at ),
+				NAME UNION ALL
+				SELECT
+					0 AS max_heart_rate,
+					MIN( VALUE ) AS min_heart_rate,
+					0 AS max_oxy_rate,
+					0 AS min_oxy_rate,
+					date( time_at ) AS date,
+				NAME 
+				FROM
+					health_indicators 
+				WHERE
+					type = 'Heart Rate' 
+					AND DATE( time_at ) AND ".$whereDate." ".$whereType." 
+				GROUP BY
+					date( time_at ),
+				NAME UNION ALL
+				SELECT
+					0 AS max_heart_rate,
+					0 AS min_heart_rate,
+					MAX( VALUE ) AS max_oxy_rate,
+					0 AS min_oxy_rate,
+					date( time_at ) AS date,
+				NAME 
+				FROM
+					health_indicators 
+				WHERE
+					type = 'Oxygen Rate' 
+					AND DATE( time_at ) AND ".$whereDate." ".$whereType." 
+				GROUP BY
+					date( time_at ),
+				NAME UNION ALL
+				SELECT
+					0 AS max_heart_rate,
+					0 AS min_heart_rate,
+					0 AS max_oxy_rate,
+					MIN( VALUE ) AS min_oxy_rate,
+					date( time_at ) AS date,
+				NAME 
+				FROM
+					health_indicators 
+				WHERE
+					type = 'Oxygen Rate' 
+					AND DATE( time_at ) AND ".$whereDate." ".$whereType." 
+				GROUP BY
+					date( time_at ),
+				NAME 
+				) a 
+			GROUP BY
+				a.date,
+				a.NAME");
+
   			$response = array(
 	            'status' => true,
 	            'health' => $health,
+	            'chart' => $chart,
 	       	);
 	        return Response::json($response);
   		} catch (\Exception $e) {
@@ -117,7 +190,6 @@ class HealthController extends Controller
 	              			$type = 'Heart Rate';
 	              			$type_id = $xmlparse->entry[$i]->organizer->component[$j]->observation->text->type;
 	              			$remark = $request->get('loc');
-	              			// var_dump($xmlparse->entry[$i]->organizer->component[$j]->observation->effectiveTime->low->attributes());
 	              			$attr = $xmlparse->entry[$i]->organizer->component[$j]->observation->effectiveTime->low->attributes();
 
 	              			for ($l=0; $l < count($attr); $l++) { 
@@ -133,8 +205,11 @@ class HealthController extends Controller
 	              			$minute = substr($attrs2[0], 10, 2);
 	              			$second = substr($attrs2[0], 12, 2);
 	              			$at = date('Y-m-d H:i:s',strtotime($year."-".$month."-".$day." ".$hour.":".$minute.":".$second. ' + 7 hours'));
+	              			$user = User::where('id',Auth::id())->first();
 
 	              			$healthcreate = HealthIndicator::create([
+	              				'employee_id' => $user->username,
+	              				'name' => $user->name,
 	              				'type' => $type,
 	              				'type_id' => $type_id,
 	              				'source_name' => $source_name,
@@ -168,75 +243,11 @@ class HealthController extends Controller
 	              			$second = substr($attrs2[0], 12, 2);
 	              			$at = date('Y-m-d H:i:s',strtotime($year."-".$month."-".$day." ".$hour.":".$minute.":".$second. ' + 7 hours'));
 
-	              			$healthcreate = HealthIndicator::create([
-	              				'type' => $type,
-	              				'type_id' => $type_id,
-	              				'source_name' => $source_name,
-	              				'value' => $value,
-	              				'unit' => $unit,
-	              				'remark' => $remark,
-	              				'time_at' => $at,
-	              				'created_by' => Auth::id()
-	              			]);
-	              		}else if ($xmlparse->entry[$i]->organizer->component[$j]->observation->text->type == 'HKQuantityTypeIdentifierBodyMass') {
-	              			$source_name = $xmlparse->entry[$i]->organizer->component[$j]->observation->text->sourceName;
-	              			$unit = $xmlparse->entry[$i]->organizer->component[$j]->observation->text->unit;
-	              			$value = $xmlparse->entry[$i]->organizer->component[$j]->observation->text->value;
-	              			$type = 'Body Mass';
-	              			$type_id = $xmlparse->entry[$i]->organizer->component[$j]->observation->text->type;
-	              			$remark = $request->get('loc');
-
-	              			$attr = $xmlparse->entry[$i]->organizer->component[$j]->observation->effectiveTime->low->attributes();
-
-	              			for ($l=0; $l < count($attr); $l++) { 
-	              				$attrs = $attr[$l][0];
-	              			}
-
-	              			$attrs2 = explode('+', $attrs);
-	              			$year = substr($attrs2[0], 0, 4);
-	              			$month = substr($attrs2[0], 4, 2);
-	              			$day = substr($attrs2[0], 6, 2);
-
-	              			$hour = substr($attrs2[0], 8, 2);
-	              			$minute = substr($attrs2[0], 10, 2);
-	              			$second = substr($attrs2[0], 12, 2);
-	              			$at = date('Y-m-d H:i:s',strtotime($year."-".$month."-".$day." ".$hour.":".$minute.":".$second. ' + 7 hours'));
+	              			$user = User::where('id',Auth::id())->first();
 
 	              			$healthcreate = HealthIndicator::create([
-	              				'type' => $type,
-	              				'type_id' => $type_id,
-	              				'source_name' => $source_name,
-	              				'value' => $value,
-	              				'unit' => $unit,
-	              				'remark' => $remark,
-	              				'time_at' => $at,
-	              				'created_by' => Auth::id()
-	              			]);
-	              		}else if ($xmlparse->entry[$i]->organizer->component[$j]->observation->text->type == 'HKQuantityTypeIdentifierHeight') {
-	              			$source_name = $xmlparse->entry[$i]->organizer->component[$j]->observation->text->sourceName;
-	              			$unit = $xmlparse->entry[$i]->organizer->component[$j]->observation->text->unit;
-	              			$value = $xmlparse->entry[$i]->organizer->component[$j]->observation->text->value;
-	              			$type = 'Body Height';
-	              			$type_id = $xmlparse->entry[$i]->organizer->component[$j]->observation->text->type;
-	              			$remark = $request->get('loc');
-
-	              			$attr = $xmlparse->entry[$i]->organizer->component[$j]->observation->effectiveTime->low->attributes();
-
-	              			for ($l=0; $l < count($attr); $l++) { 
-	              				$attrs = $attr[$l][0];
-	              			}
-
-	              			$attrs2 = explode('+', $attrs);
-	              			$year = substr($attrs2[0], 0, 4);
-	              			$month = substr($attrs2[0], 4, 2);
-	              			$day = substr($attrs2[0], 6, 2);
-
-	              			$hour = substr($attrs2[0], 8, 2);
-	              			$minute = substr($attrs2[0], 10, 2);
-	              			$second = substr($attrs2[0], 12, 2);
-	              			$at = date('Y-m-d H:i:s',strtotime($year."-".$month."-".$day." ".$hour.":".$minute.":".$second. ' + 7 hours'));
-
-	              			$healthcreate = HealthIndicator::create([
+	              				'employee_id' => $user->username,
+	              				'name' => $user->name,
 	              				'type' => $type,
 	              				'type_id' => $type_id,
 	              				'source_name' => $source_name,

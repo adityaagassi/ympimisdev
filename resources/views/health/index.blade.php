@@ -153,6 +153,13 @@
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="box box-solid">
+				<div class="box-body">
+					<div class="col-xs-12">
+						<div id="container"></div>
+					</div>
+				</div>
+			</div>
+			<div class="box box-solid">
 				<div class="box-body" style="overflow-x: scroll;">
 					<div class="col-xs-12">
 						<h4>Filter</h4>
@@ -188,8 +195,6 @@
 										</div>
 										<select class="form-control select2" name="type" id="type" style="width: 100%" data-placeholder="Choose Type . . .">
 											<option value=""></option>
-											<option value="Body Mass">Body Mass</option>
-											<option value="Body Height">Body Height</option>
 											<option value="Heart Rate">Heart Rate</option>
 											<option value="Oxygen Rate">Oxygen Rate</option>
 										</select>
@@ -263,6 +268,10 @@
 <script src="{{ url("js/vfs_fonts.js")}}"></script>
 <script src="{{ url("js/buttons.html5.min.js")}}"></script>
 <script src="{{ url("js/buttons.print.min.js")}}"></script>
+<script src="{{ url("js/highstock.js")}}"></script>
+<script src="{{ url("js/highcharts-3d.js")}}"></script>
+<script src="{{ url("js/exporting.js")}}"></script>
+<script src="{{ url("js/export-data.js")}}"></script>
 <script>
 
 	$.ajaxSetup({
@@ -351,12 +360,16 @@
 				var tableData = "";
 				$.each(result.health, function(key, value) {
 					tableData += '<tr>';
-					tableData += '<td>'+ value.username +'</td>';
+					tableData += '<td>'+ value.employee_id +'</td>';
 					tableData += '<td>'+ value.name +'</td>';
 					tableData += '<td>'+ value.type +'</td>';
 					tableData += '<td>'+ value.type_id +'</td>';
 					tableData += '<td>'+ value.source_name +'</td>';
-					tableData += '<td>'+ value.value +'</td>';
+					if (value.type == 'Oxygen Rate') {
+						tableData += '<td>'+ parseFloat(value.value)*100 +'</td>';
+					}else{
+						tableData += '<td>'+ value.value+'</td>';
+					}
 					tableData += '<td>'+ value.unit +'</td>';
 					tableData += '<td>'+ value.time_at +'</td>';
 					tableData += '</tr>';
@@ -416,12 +429,287 @@
 					"processing": true
 				});
 
+				var date = [], max_heart = [], min_heart = [], max_oxy = [],min_oxy = [], series = [], series2 = [], series3 = [], series4 = [], series5 = [];
+
+				$.each(result.chart, function(key, value){
+					date.push(value.date);
+					if (value.employee_id == 'PI1910002') {
+						max_oxy.push(value.max_oxy_rate);
+						min_oxy.push(value.min_oxy_rate);
+						max_heart.push(value.max_heart_rate);
+						min_heart.push(value.min_heart_rate);
+						series.push([date[key],max_oxy[key]]);
+						series2.push([date[key],min_oxy[key]]);
+						series3.push([date[key],max_heart[key]]);
+						series4.push([date[key],min_heart[key]]);
+					};
+					// date.push(value.date);
+					// avg.push(parseFloat(value.avg));
+					// series.push([week_date[key],avg[key]]);
+
+					// week_date2.push(value.week_date);
+					// highest.push(parseFloat(value.highest));
+					// series2.push([week_date2[key],highest[key]]);
+				});
+
+				Highcharts.chart('container', {
+					chart: {
+						type: 'spline'
+					},
+					title: {
+						text: 'Health Indicator Chart'
+					},						
+					xAxis: {
+						categories: date,
+					},
+					yAxis: {
+						title: {
+							text: 'Visitors'
+						}
+					},
+					tooltip: {
+						shared: true,
+						valueSuffix: ' Visitors'
+					},
+					credits: {
+						enabled: false
+					},
+					plotOptions: {
+						areaspline: {
+							fillOpacity: 0.5,
+							dataLabels: {
+								enabled: true
+							},
+							enableMouseTracking: true
+						}
+					},
+					series: 
+					[{
+						name: 'Max Oxy Rate',
+						data: series
+					}, {
+						name: 'Min Oxy Rate',
+						data: series2
+					}, {
+						name: 'Max Heart Rate',
+						data: series3
+					}, {
+						name: 'Min Heart Rate',
+						data: series4
+					}]
+				});	
+
 			}
 			else{
 				alert('Attempt to retrieve data failed');
 			}
 		});
 	}
+
+
+	Highcharts.createElement('link', {
+		href: '{{ url("fonts/UnicaOne.css")}}',
+		rel: 'stylesheet',
+		type: 'text/css'
+	}, null, document.getElementsByTagName('head')[0]);
+
+	Highcharts.theme = {
+		colors: ['#90ee7e', '#2b908f', '#eeaaee', '#ec407a', '#7798BF', '#f45b5b',
+		'#ff9800', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+		chart: {
+			backgroundColor: {
+				linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
+				stops: [
+				[0, '#2a2a2b'],
+				[1, '#2a2a2b']
+				]
+			},
+			style: {
+				fontFamily: 'sans-serif'
+			},
+			plotBorderColor: '#606063'
+		},
+		title: {
+			style: {
+				color: '#E0E0E3',
+				textTransform: 'uppercase',
+				fontSize: '20px'
+			}
+		},
+		subtitle: {
+			style: {
+				color: '#E0E0E3',
+				textTransform: 'uppercase'
+			}
+		},
+		xAxis: {
+			gridLineColor: '#707073',
+			labels: {
+				style: {
+					color: '#E0E0E3'
+				}
+			},
+			lineColor: '#707073',
+			minorGridLineColor: '#505053',
+			tickColor: '#707073',
+			title: {
+				style: {
+					color: '#A0A0A3'
+
+				}
+			}
+		},
+		yAxis: {
+			gridLineColor: '#707073',
+			labels: {
+				style: {
+					color: '#E0E0E3'
+				}
+			},
+			lineColor: '#707073',
+			minorGridLineColor: '#505053',
+			tickColor: '#707073',
+			tickWidth: 1,
+			title: {
+				style: {
+					color: '#A0A0A3'
+				}
+			}
+		},
+		tooltip: {
+			backgroundColor: 'rgba(0, 0, 0, 0.85)',
+			style: {
+				color: '#F0F0F0'
+			}
+		},
+		plotOptions: {
+			series: {
+				dataLabels: {
+					color: 'white'
+				},
+				marker: {
+					lineColor: '#333'
+				}
+			},
+			boxplot: {
+				fillColor: '#505053'
+			},
+			candlestick: {
+				lineColor: 'white'
+			},
+			errorbar: {
+				color: 'white'
+			}
+		},
+		legend: {
+			itemStyle: {
+				color: '#E0E0E3'
+			},
+			itemHoverStyle: {
+				color: '#FFF'
+			},
+			itemHiddenStyle: {
+				color: '#606063'
+			}
+		},
+		credits: {
+			style: {
+				color: '#666'
+			}
+		},
+		labels: {
+			style: {
+				color: '#707073'
+			}
+		},
+
+		drilldown: {
+			activeAxisLabelStyle: {
+				color: '#F0F0F3'
+			},
+			activeDataLabelStyle: {
+				color: '#F0F0F3'
+			}
+		},
+
+		navigation: {
+			buttonOptions: {
+				symbolStroke: '#DDDDDD',
+				theme: {
+					fill: '#505053'
+				}
+			}
+		},
+
+		rangeSelector: {
+			buttonTheme: {
+				fill: '#505053',
+				stroke: '#000000',
+				style: {
+					color: '#CCC'
+				},
+				states: {
+					hover: {
+						fill: '#707073',
+						stroke: '#000000',
+						style: {
+							color: 'white'
+						}
+					},
+					select: {
+						fill: '#000003',
+						stroke: '#000000',
+						style: {
+							color: 'white'
+						}
+					}
+				}
+			},
+			inputBoxBorderColor: '#505053',
+			inputStyle: {
+				backgroundColor: '#333',
+				color: 'silver'
+			},
+			labelStyle: {
+				color: 'silver'
+			}
+		},
+
+		navigator: {
+			handles: {
+				backgroundColor: '#666',
+				borderColor: '#AAA'
+			},
+			outlineColor: '#CCC',
+			maskFill: 'rgba(255,255,255,0.1)',
+			series: {
+				color: '#7798BF',
+				lineColor: '#A6C7ED'
+			},
+			xAxis: {
+				gridLineColor: '#505053'
+			}
+		},
+
+		scrollbar: {
+			barBackgroundColor: '#808083',
+			barBorderColor: '#808083',
+			buttonArrowColor: '#CCC',
+			buttonBackgroundColor: '#606063',
+			buttonBorderColor: '#606063',
+			rifleColor: '#FFF',
+			trackBackgroundColor: '#404043',
+			trackBorderColor: '#404043'
+		},
+
+		legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
+		background2: '#505053',
+		dataLabelsColor: '#B0B0B3',
+		textColor: '#C0C0C0',
+		contrastTextColor: '#F0F0F3',
+		maskColor: 'rgba(255,255,255,0.3)'
+	};
+	Highcharts.setOptions(Highcharts.theme);
 
 	function openSuccessGritter(title, message){
 		jQuery.gritter.add({
