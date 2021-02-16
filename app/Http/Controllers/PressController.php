@@ -371,9 +371,9 @@ class PressController extends Controller
                     'created_by' => $id_user
                 ]);
 
-               $kanagata_log_dies = DB::SELECT("SELECT * FROM `mp_kanagata_logs` where process = 'Forging' and material_number = '".$request->get('material_number')."' and die_number = '".$request->get('die_number')."' and die_status = 'Running'");
+               $kanagata_log_dies = DB::SELECT("SELECT * FROM `mp_kanagata_logs` where process like '%Forging%' and material_number = '".$request->get('material_number')."' and die_number = '".$request->get('die_number')."' and die_status = 'Running'");
 
-				$kanagata_log_punch = DB::SELECT("SELECT * FROM `mp_kanagata_logs` where process = 'Forging' and material_number = '".$request->get('material_number')."' and punch_number = '".$request->get('punch_number')."' and punch_status = 'Running'");
+				$kanagata_log_punch = DB::SELECT("SELECT * FROM `mp_kanagata_logs` where process = '%Forging%' and material_number = '".$request->get('material_number')."' and punch_number = '".$request->get('punch_number')."' and punch_status = 'Running'");
 
 			  $total_punch = 0;
 		      if(count($kanagata_log_punch) == 0){
@@ -403,7 +403,7 @@ class PressController extends Controller
 	                'machine' => $request->get('machine'),
 	                'shift' => $request->get('shift'),
 	                'material_number' => $request->get('material_number'),
-	                'process' => 'Forging',
+	                'process' => $request->get('process'),
 	                'punch_number' => $request->get('punch_number'),
 	                'die_number' => $request->get('die_number'),
 	                'start_time' => $request->get('start_time'),
@@ -783,7 +783,7 @@ class PressController extends Controller
 
 		$username = Auth::user()->username;
 
-		$kanagata = MpKanagata::where('process', '=', 'Forging')
+		$kanagata = MpKanagata::where('process', 'like', '%Forging%')
 		->select('mp_kanagatas.material_number', 'mp_kanagatas.material_name', 'mp_kanagatas.material_description','mp_kanagatas.punch_die_number', 'mp_kanagatas.id', 'mp_kanagatas.part')
 		->distinct()
 		->get();
@@ -837,7 +837,7 @@ class PressController extends Controller
 
 	    $username = Auth::user()->username;
 
-	    $kanagata = MpKanagata::where('process', '=', 'Forging')
+	    $kanagata = MpKanagata::where('process', 'like', '%Forging%')
 		->select('mp_kanagatas.material_number', 'mp_kanagatas.material_name', 'mp_kanagatas.material_description','mp_kanagatas.punch_die_number', 'mp_kanagatas.id', 'mp_kanagatas.part')
 		->distinct()
 		->get();
