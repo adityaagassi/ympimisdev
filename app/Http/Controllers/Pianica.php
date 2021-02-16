@@ -281,9 +281,10 @@ class Pianica extends Controller{
         try {  
             $op = PnOperator::where('id','=', $request->get('id'))       
             ->first(); 
-            // $op->tag = $request->get('tag');
+
             // $op->nama = $request->get('nama');
             // $op->nik = $request->get('nik');
+            $op->tag = $request->get('tag');
             $op->line = $request->get('line');
             $op->bagian = $request->get('bagian');
             $op->created_by = $id_user;
