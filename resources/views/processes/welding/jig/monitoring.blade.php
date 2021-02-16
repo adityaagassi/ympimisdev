@@ -247,7 +247,6 @@
 				    plotOptions: {
 				        column: {
 			                  color:  Highcharts.ColorString,
-			                  stacking: 'normal',
 			                  borderRadius: 1,
 			                  dataLabels: {
 			                      enabled: true
@@ -280,29 +279,33 @@
 				    	enabled:false
 				    },
 				    series: [{
-				        name: 'Belum Kensa',
+				        name: 'Schedule Kensa',
 				        data: before_kensa,
 				        animation: false,
 				        colorByPoint:false,
 					    color:'#ff6666',
+					    // stacking: 'normal',
 				    }, {
 				        name: 'Sudah Kensa',
 				        data: after_kensa,
 				        animation: false,
 				        colorByPoint:false,
 					    color:'#5cb85c',
+					    stacking: 'normal',
 				    }, {
 				        name: 'Belum Repair',
 				        data: before_repair,
 				        animation: false,
 				        colorByPoint:false,
 					    color:'#f0ad4e',
+					    stacking: 'normal',
 				    }, {
 				        name: 'Menunggu Part',
 				        data: waiting_part,
 				        animation: false,
 				        colorByPoint:false,
 					    color:'#448aff',
+					    stacking: 'normal',
 				    }]
 				});
 
@@ -377,6 +380,10 @@
 				        detail += '<thead>';
 				        detail += '<tr style="border-bottom:3px solid black;border-top:3px solid black;background-color:#7e5686;color:white;font-size:20px">';
 				        detail += '<th colspan="11">'+value.jig_id+' - '+value.jig_name+'</th>';
+				        detail += '</tr>';
+				        detail += '<tr style="border-bottom:3px solid black;border-top:3px solid black;background-color:#cc8fc1;color:black;font-size:15px">';
+				        detail += '<th colspan="5">Schedule : '+value.schedule_date+'</th>';
+				        detail += '<th colspan="6" style="border-left:3px solid black">Kensa : '+value.kensa_time+'</th>';
 				        detail += '</tr>';
 				        detail += '<tr style="border-bottom:3px solid black;border-top:3px solid black;background-color:#cddc39">';
 				        detail += '<th>No.</th>';

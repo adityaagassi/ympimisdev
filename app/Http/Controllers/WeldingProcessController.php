@@ -3397,7 +3397,7 @@ class WeldingProcessController extends Controller
 			$jig_schedule = JigSchedule::where('jig_id',$jig_id)->where('jig_index',$jig_index)->where('schedule_status','Open')->first();
 			if (count($jig_schedule) > 0) {
 				if ($status == 'OK') {
-					$jig_schedule->schedule_date = date('Y-m-d');
+					// $jig_schedule->schedule_date = date('Y-m-d');
 					$jig_schedule->kensa_time = $finished_at;
 					$jig_schedule->kensa_status = 'Finish Kensa';
 					$jig_schedule->kensa_pic = $operator_id;
@@ -3414,7 +3414,7 @@ class WeldingProcessController extends Controller
 					]);
 					$schedule->save();
 				}else{
-					$jig_schedule->schedule_date = date('Y-m-d');
+					// $jig_schedule->schedule_date = date('Y-m-d');
 					$jig_schedule->kensa_time = $finished_at;
 					$jig_schedule->kensa_pic = $operator_id;
 					$jig_schedule->save();
@@ -3759,11 +3759,11 @@ class WeldingProcessController extends Controller
 				jig_schedules 
 				WHERE
 				jig_schedules.schedule_date = week_date 
-				AND schedule_status = 'Open' 
-				AND kensa_time IS NULL 
-				AND repair_time IS NULL 
+				-- AND schedule_status = 'Open' 
+				-- AND kensa_time IS NULL 
+				-- AND repair_time IS NULL 
 				) AS before_kensa,
-				( SELECT COUNT( DISTINCT ( id )) FROM jig_schedules WHERE jig_schedules.schedule_date = week_date AND schedule_status = 'Close' AND kensa_time IS NOT NULL ) AS after_kensa,
+				( SELECT COUNT( DISTINCT ( id )) FROM jig_schedules WHERE DATE(jig_schedules.kensa_time) = week_date AND schedule_status = 'Close' AND kensa_time IS NOT NULL ) AS after_kensa,
 				(
 				SELECT
 				COUNT(
@@ -3771,7 +3771,7 @@ class WeldingProcessController extends Controller
 				FROM
 				jig_schedules 
 				WHERE
-				jig_schedules.schedule_date = week_date 
+				DATE(jig_schedules.kensa_time) = week_date 
 				AND schedule_status = 'Open' 
 				AND kensa_time IS NOT NULL 
 				AND repair_time IS NULL 
@@ -3783,7 +3783,7 @@ class WeldingProcessController extends Controller
 				FROM
 				jig_schedules 
 				WHERE
-				jig_schedules.schedule_date = week_date 
+				DATE(jig_schedules.repair_time) = week_date 
 				AND schedule_status = 'Open' 
 				AND kensa_time IS NOT NULL 
 				AND repair_time IS NOT NULL 
@@ -3924,19 +3924,20 @@ class WeldingProcessController extends Controller
 		try {
 			$date = $request->get('date');
 			$status = $request->get('status');
+			$dateTitle = strtoupper(date("d F Y", strtotime($request->get('date'))));
 
 			$detail = [];
 
-			if ($status == 'Belum Kensa') {
-				$schedule = DB::SELECT("select * from jig_schedules join jigs on jigs.jig_id = jig_schedules.jig_id where schedule_date = '".$date."' and schedule_status = 'Open' and kensa_time is null");
+			if ($status == 'Schedule Kensa') {
+				$schedule = DB::SELECT("select * from jig_schedules join jigs on jigs.jig_id = jig_schedules.jig_id where schedule_date = '".$date."'");
 
 				foreach ($schedule as $key) {
-					$detail[$key->jig_id] = DB::SELECT("select * from jig_schedules join jig_kensa_logs on jig_kensa_logs.jig_id = jig_schedules.jig_id and DATE(finished_at) = schedule_date join jigs on jigs.jig_id = jig_schedules.jig_id where schedule_date = '".$date."' and schedule_status = 'Open' and jig_schedules.jig_id = '".$key->jig_id."' and jig_schedules.kensa_time is null");
+					$detail[$key->jig_id] = DB::SELECT("select * from jig_schedules join jig_kensa_logs on jig_kensa_logs.jig_id = jig_schedules.jig_id and DATE(finished_at) = schedule_date join jigs on jigs.jig_id = jig_schedules.jig_id where schedule_date = '".$date."' and jig_schedules.jig_id = '".$key->jig_id."'");
 				}
 
-				$judul = 'DETAIL WELDING KENSA JIG YANG BELUM KENSA';
+				$judul = 'DETAIL SCHEDULE WELDING KENSA JIG TANGGAL '.$dateTitle;
 			}elseif ($status == 'Sudah Kensa') {
-				$schedule = DB::SELECT("select * from jig_schedules join jigs on jigs.jig_id = jig_schedules.jig_id where schedule_date = '".$date."' and schedule_status = 'Close'");
+				$schedule = DB::SELECT("select * from jig_schedules join jigs on jigs.jig_id = jig_schedules.jig_id where DATE(kensa_time) = '".$date."' and schedule_status = 'Close'");
 
 				foreach ($schedule as $key) {
 					$detail[$key->jig_id] = DB::SELECT("SELECT
@@ -3948,18 +3949,18 @@ class WeldingProcessController extends Controller
 						FROM
 						jig_schedules
 						JOIN jig_kensa_logs ON jig_kensa_logs.jig_id = jig_schedules.jig_id 
-						AND DATE( finished_at ) = schedule_date
+						AND DATE( finished_at ) = DATE(kensa_time)
 						JOIN jigs ON jigs.jig_id = jig_schedules.jig_id
 						LEFT JOIN employee_syncs empkensa ON empkensa.employee_id = jig_schedules.kensa_pic 
 						WHERE
-						schedule_date = '".$date."' 
+						DATE(kensa_time) = '".$date."' 
 						AND schedule_status = 'Close' 
 						AND jig_schedules.jig_id = '".$key->jig_id."'");
 				}
 
-				$judul = 'DETAIL WELDING KENSA JIG YANG SUDAH KENSA';
+				$judul = 'DETAIL WELDING KENSA JIG YANG SUDAH KENSA TANGGAL '.$dateTitle;
 			}elseif ($status == 'Belum Repair') {
-				$schedule = DB::SELECT("select * from jig_schedules join jigs on jigs.jig_id = jig_schedules.jig_id where schedule_date = '".$date."' and schedule_status = 'Open' and kensa_time is not null and repair_time is null");
+				$schedule = DB::SELECT("select * from jig_schedules join jigs on jigs.jig_id = jig_schedules.jig_id where DATE(kensa_time) = '".$date."' and schedule_status = 'Open' and kensa_time is not null and repair_time is null");
 
 				foreach ($schedule as $key) {
 					$detail[$key->jig_id] = DB::SELECT("SELECT
@@ -3971,20 +3972,20 @@ class WeldingProcessController extends Controller
 						FROM
 						jig_schedules
 						JOIN jig_kensas ON jig_kensas.jig_id = jig_schedules.jig_id 
-						AND DATE( finished_at ) = schedule_date
+						AND DATE( finished_at ) = DATE(kensa_time)
 						JOIN jigs ON jigs.jig_id = jig_schedules.jig_id 
 						LEFT JOIN employee_syncs empkensa ON empkensa.employee_id = jig_schedules.kensa_pic 
 						WHERE
-						schedule_date = '".$date."' 
+						DATE(kensa_time) = '".$date."' 
 						AND schedule_status = 'Open' 
 						AND jig_schedules.jig_id = '".$key->jig_id."' 
 						AND kensa_time IS NOT NULL 
 						AND repair_time IS NULL");
 				}
 
-				$judul = 'DETAIL WELDING KENSA JIG YANG BELUM REPAIR';
+				$judul = 'DETAIL WELDING KENSA JIG YANG BELUM REPAIR TANGGAL '.$dateTitle;
 			}elseif ($status == 'Menunggu Part') {
-				$schedule = DB::SELECT("select * from jig_schedules join jigs on jigs.jig_id = jig_schedules.jig_id where schedule_date = '".$date."' and schedule_status = 'Open' and kensa_time is not null and repair_time is not null");
+				$schedule = DB::SELECT("select * from jig_schedules join jigs on jigs.jig_id = jig_schedules.jig_id where DATE(repair_time) = '".$date."' and schedule_status = 'Open' and kensa_time is not null and repair_time is not null");
 
 				foreach ($schedule as $key) {
 					$detail[$key->jig_id] = DB::SELECT("SELECT
@@ -3996,18 +3997,18 @@ class WeldingProcessController extends Controller
 						FROM
 						jig_schedules
 						JOIN jig_kensas ON jig_kensas.jig_id = jig_schedules.jig_id 
-						AND DATE( finished_at ) = schedule_date
+						AND DATE( finished_at ) = DATE(repair_time)
 						JOIN jigs ON jigs.jig_id = jig_schedules.jig_id 
 						LEFT JOIN employee_syncs empkensa ON empkensa.employee_id = jig_schedules.kensa_pic 
 						WHERE
-						schedule_date = '".$date."' 
+						DATE(repair_time) = '".$date."' 
 						AND schedule_status = 'Open' 
 						AND jig_schedules.jig_id = '".$key->jig_id."' 
 						AND kensa_time IS NOT NULL 
 						AND repair_time IS NOT NULL");
 				}
 
-				$judul = 'DETAIL WELDING KENSA JIG YANG MENUNGGU PART';
+				$judul = 'DETAIL WELDING KENSA JIG YANG MENUNGGU PART TANGGAL '.$dateTitle;
 			}
 
 			$response = array(
