@@ -176,6 +176,8 @@ class IndirectMaterialController extends Controller{
 
 				$notChm = array();
 
+				$in_date = $request->get('upload_date');
+
 				for ($i=0; $i < count($rows); $i++) {
 					$material_number = $rows[$i][0];
 					$quantity = $rows[$i][1];
@@ -216,6 +218,7 @@ class IndirectMaterialController extends Controller{
 							$code_generator->save();
 
 							$log = new IndirectMaterialLog([
+								'in_date' => $in_date,
 								'qr_code' => $qr_code,
 								'material_number' => $material_number,
 								'remark' => 'in',
@@ -595,6 +598,8 @@ class IndirectMaterialController extends Controller{
 	}
 
 	public function inputStock(Request $request){
+		$in_date = $request->get('in_date');
+		$exp_date = $request->get('exp_date');
 		$material_number = $request->get('material_number');
 		$quantity = $request->get('quantity');
 
@@ -632,6 +637,8 @@ class IndirectMaterialController extends Controller{
 				$code_generator->save();
 
 				$log = new IndirectMaterialLog([
+					'in_date' => $in_date,
+					'exp_date' => $exp_date,
 					'qr_code' => $qr_code,
 					'material_number' => $material_number,
 					'remark' => 'in',
@@ -641,6 +648,8 @@ class IndirectMaterialController extends Controller{
 				$log->save();
 
 				$stock = new IndirectMaterialStock([
+					'in_date' => $in_date,
+					'exp_date' => $exp_date,
 					'qr_code' => $qr_code,
 					'material_number' => $material_number,
 					'print_status' => 0,
@@ -1386,6 +1395,8 @@ class IndirectMaterialController extends Controller{
 			'material_plant_data_lists.material_description',
 			'material_plant_data_lists.bun',
 			'chm.storage_location',
+			'indirect_material_stocks.in_date',
+			'indirect_material_stocks.exp_date',
 			'indirect_material_stocks.print_status',
 			'indirect_material_stocks.created_at'
 		)
@@ -1542,19 +1553,18 @@ class IndirectMaterialController extends Controller{
 			'print_status' => 1
 		]);
 
-		$data = IndirectMaterialLog::leftJoin('indirect_materials', 'indirect_material_logs.material_number', '=', 'indirect_materials.material_number')
+		$data = IndirectMaterialStock::leftJoin('indirect_materials', 'indirect_material_stocks.material_number', '=', 'indirect_materials.material_number')
 		->whereIn('qr_code', $qr_code)
-		->where('remark', 'in')
 		->select(
-			'indirect_material_logs.qr_code',
-			'indirect_material_logs.material_number',
+			'indirect_material_stocks.qr_code',
+			'indirect_material_stocks.material_number',
 			'indirect_materials.material_description',
 			'indirect_materials.label',
-			db::raw('date_format(indirect_material_logs.created_at, "%d-%m-%Y") AS masuk'),
-			db::raw('date_format(indirect_material_logs.created_at + INTERVAL indirect_materials.expired DAY, "%d-%m-%Y") AS exp'),
-			db::raw('date_format(indirect_material_logs.created_at, "%M") AS month')
+			db::raw('indirect_material_stocks.in_date AS masuk'),
+			db::raw('indirect_material_stocks.exp_date AS exp'),
+			db::raw('date_format(indirect_material_stocks.exp_date, "%M") AS month')
 		)
-		->orderBy('indirect_material_logs.qr_code', 'desc')
+		->orderBy('indirect_material_stocks.qr_code', 'desc')
 		->get();
 
 		// dd($data);

@@ -19,7 +19,7 @@
 		}
 
 		table tr td{
-			border: 3px solid black !important;
+			border: 3px solid black;
 			border-collapse: collapse;
 			vertical-align: middle;
 		}
@@ -88,7 +88,7 @@
 			}
 		}else{	
 			@endphp
-			<table style="border: 2px solid black;">
+			<table style="border: 2px solid black; border-top: 0px; border-bottom: 0px;">
 				<tbody style="font-weight: bold;">
 					<tr>
 						<td style="padding: 0px 5px 0px 5px; vertical-align: middle; font-size: 12px; width: 20%">GMC</td>

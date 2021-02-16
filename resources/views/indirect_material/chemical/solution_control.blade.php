@@ -273,11 +273,9 @@
 		});
 
 		$('.dateinput').datepicker({
-			<?php $tgl_max = date('Y-m-d') ?>
 			autoclose: true,
 			todayHighlight: true,
-			format: 'yyyy-mm-dd',
-			startDate: '<?php echo $tgl_max ?>'
+			format: 'yyyy-mm-dd'
 		});
 
 		$('#chart').hide();

@@ -172,19 +172,23 @@
 							<thead style="background-color: rgba(126,86,134,.7);">
 								<tr>
 									<th style="width: 10%;">QR Code</th>
-									<th style="width: 10%;">Material</th>
+									<th style="width: 5%;">Material</th>
 									<th style="width: 30%;">Material Description</th>
 									<th style="width: 5%;">Bun</th>
 									<th style="width: 20%;">Storage Location</th>
+									<th style="width: 10%;">In Date</th>
+									<th style="width: 10%;">Exp date</th>
 									<th style="width: 10%;">Print</th>
-									<th style="width: 10%;">Created At</th>
-									<th style="width: 5%;">Check</th>
+									<th style="width: 5%;">Created At</th>
+									<th style="width: 1%;">Check</th>
 								</tr>
 							</thead>
 							<tbody id="body-new">
 							</tbody>
 							<tfoot>
 								<tr>
+									<th></th>
+									<th></th>
 									<th></th>
 									<th></th>
 									<th></th>
@@ -257,10 +261,30 @@
 						<div class="col-xs-12">
 							<div class="box-body">
 								<input type="hidden" value="{{csrf_token()}}" name="_token" />
+
 								<div class="form-group row" align="right">
-									<label class="col-sm-3">Date<span class="text-red">*</span></label>	
+									<label class="col-sm-3">In Date<span class="text-red">*</span></label>	
 									<div class="col-sm-4" align="left">
-										<input type="text" class="form-control datepicker" name="add_date" id="add_date" placeholder="Select Date">
+										<div class="input-group date">
+											<div class="input-group-addon bg-blue">
+												<i class="fa fa-calendar"></i>
+											</div>
+											<input type="text" class="form-control datepicker" name="in_date" id="in_date" placeholder="Select In Date">											
+										</div>
+									</div>
+
+
+								</div>
+
+								<div class="form-group row" align="right">
+									<label class="col-sm-3">Expired Date<span class="text-red">*</span></label>	
+									<div class="col-sm-4" align="left">
+										<div class="input-group date">
+											<div class="input-group-addon bg-blue">
+												<i class="fa fa-calendar"></i>
+											</div>
+											<input type="text" class="form-control datepicker" name="exp_date" id="exp_date" placeholder="Select Exp Date">
+										</div>
 									</div>
 								</div>
 
@@ -439,17 +463,25 @@
 	});
 
 	$("#add_material").on("hidden.bs.modal", function () {
+		$('#in_date').val('');
+		$('#exp_date').val('');
 		$("#material_number").prop('selectedIndex', 0).change();
-		$('#quantity').val('');
+		$('#quantity').val('');		
 	});
 
 	function addMaterial() {
-		var add_date = $('#add_date').val();
+		var in_date = $('#in_date').val();
+		var exp_date = $('#exp_date').val();
 		var material_number = $('#material_number').val();
 		var quantity = $('#quantity').val();
 
-		if (add_date == '') {
-			openErrorGritter('Error!', 'You need to select date');
+		if (in_date == '') {
+			openErrorGritter('Error!', 'You need to select in date');
+			return false;
+		}
+
+		if (exp_date == '') {
+			openErrorGritter('Error!', 'You need to select exp date');
 			return false;
 		}
 
@@ -464,7 +496,8 @@
 		}
 
 		var data = {
-			add_date : add_date,
+			in_date : in_date,
+			exp_date : exp_date,
 			material_number : material_number,
 			quantity : quantity
 		}
@@ -479,7 +512,8 @@
 
 				$("#material_number").prop('selectedIndex', 0).change();
 				$('#quantity').val('');
-				$('#add_date').val('');
+				$('#in_date').val('');
+				$('#exp_date').val('');
 				
 				$('#table-material').DataTable().ajax.reload();
 				$('#table-new').DataTable().ajax.reload();
@@ -659,6 +693,8 @@
 			{ "data": "material_description"},
 			{ "data": "bun"},
 			{ "data": "storage_location"},
+			{ "data": "in_date"},
+			{ "data": "exp_date"},
 			{ "data": "print"},
 			{ "data": "created_at"},
 			{ "data": "check"}
