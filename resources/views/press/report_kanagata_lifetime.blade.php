@@ -104,7 +104,7 @@ table.table-bordered > tfoot > tr > th{
 					@if($role_code == 'PROD' || $role_code == 'MIS' || $role_code == 'Leader&Sub')
 					<div class="col-xs-3">
 						<div class="box-header">
-							<h3 class="box-title">Edit Kanagata Lifetime</h3>
+							<h3 class="box-title">Edit Kanagata Last Lifetime</h3>
 						</div>
 						<input type="hidden" value="{{csrf_token()}}" name="_token" />
 						<div class="col-md-12" style="padding-bottom: 14px">
@@ -178,8 +178,8 @@ table.table-bordered > tfoot > tr > th{
 				                <th>Process</th>
 				                <th>Machine</th>
 				                <th>Punch Number</th>
-				                <th>Dies Number</th>
 				                <th>Punch Value</th>
+				                <th>Dies Number</th>
 				                <th>Dies Value</th>
 				                <th>Running Punch</th>
 				                <th>Running Dies</th>
@@ -334,7 +334,7 @@ table.table-bordered > tfoot > tr > th{
 		          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 		            <span aria-hidden="true">&times;</span>
 		          </button>
-		          <h4 class="modal-title" align="center"><b>Edit Kanagata Lifetime</b></h4>
+		          <h4 class="modal-title" align="center"><b>Edit Kanagata Last Lifetime</b></h4>
 		        </div>
 				<div class="modal-body">
 			      	<div class="box-body">
@@ -412,7 +412,7 @@ table.table-bordered > tfoot > tr > th{
 		          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 		            <span aria-hidden="true">&times;</span>
 		          </button>
-		          <h4 class="modal-title" align="center"><b>Edit Kanagata Lifetime</b></h4>
+		          <h4 class="modal-title" align="center"><b>Reset Kanagata Last Lifetime</b></h4>
 		        </div>
 				<div class="modal-body">
 			      	<div class="box-body">
@@ -538,7 +538,7 @@ table.table-bordered > tfoot > tr > th{
 					tableData += '<td>'+ value.product +'</td>';
 					tableData += '<td>'+ value.material_number +'</td>';
 					tableData += '<td>'+ value.material_name +'</td>';
-					tableData += '<td>'+ value.process +'</td>';
+					tableData += '<td>'+ value.process_detail +'</td>';
 					tableData += '<td>'+ value.machine +'</td>';
 					tableData += '<td>'+ value.punch_number +'</td>';
 					tableData += '<td>'+ value.punch_value +'</td>';

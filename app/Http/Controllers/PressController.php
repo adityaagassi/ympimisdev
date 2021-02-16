@@ -1242,7 +1242,8 @@ class PressController extends Controller
 		        }
 		      }
 
-		     $kanagata_lifetime = db::select("select *,mp_kanagata_logs.id as kanagata_lifetime_id
+		     $kanagata_lifetime = db::select("select *,mp_kanagata_logs.id as kanagata_lifetime_id,
+		     	mp_kanagata_logs.process AS process_detail
 			from mp_kanagata_logs
 			join employee_syncs on mp_kanagata_logs.pic = employee_syncs.employee_id
 			join mp_materials on mp_kanagata_logs.material_number= mp_materials.material_number
