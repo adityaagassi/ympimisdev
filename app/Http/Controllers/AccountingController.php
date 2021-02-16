@@ -58,6 +58,7 @@ class AccountingController extends Controller
 
         $this->dgm = 'PI0109004';
         $this->gm = 'PI1206001';
+        $this->gm_acc = 'PI1712018';
 
         $this->manager_acc = 'PI9902017/Romy Agung Kurniawan'; //Pak Romy
         $this->dir_acc = 'PI1712018/Kyohei Iida'; //Pak Ida
@@ -1108,9 +1109,13 @@ class AccountingController extends Controller
             }
             //if Production Support Division Maka GM Pak Budhi
             else if($request->get('department') == "Logistic Department" || $request->get('department') == "Production Control Department" || $request->get('department') == "Purchasing Control Department" || $request->get('department') == "Procurement Department" ){
-
                 $dgm = null;
                 $gm = $this->dgm;
+            }
+
+            else if($request->get('department') == "Accounting Department"){
+                $dgm = null;
+                $gm = $this->gm_acc;
 
             }
             else{
