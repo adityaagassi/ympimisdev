@@ -1666,9 +1666,10 @@
 
 	}
 
-	function editSAP(id){
+	function editSAP(id,nomor){
     	$('#modalSAP').modal("show");
     	$("#id_edit_sap").val(id);
+    	$("#no_po_sap").val(nomor);
     }
 
     function edit_sap() {

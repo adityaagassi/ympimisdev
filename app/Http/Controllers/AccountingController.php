@@ -2590,10 +2590,11 @@ class AccountingController extends Controller
             $po_sap = "";
             if ($po->no_po_sap == null && $po->status == "not_sap")
             {
-                $po_sap = '<a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-warning" class="btn btn-primary btn-md" onClick="editSAP(' . $id . ')"><i class="fa fa-edit"></i> NO PO SAP</a>';
+                $po_sap = '<a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-warning" class="btn btn-primary btn-md" onClick="editSAP('.$id.','.$po->no_po_sap.')"><i class="fa fa-edit"></i> NO PO SAP</a>';
             }
             else if ($po->no_po_sap != null){
-                $po_sap = $po->no_po_sap;   
+                $po_sap = $po->no_po_sap;
+                $po_sap .= '&nbsp;<a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-warning" class="btn btn-primary btn-md" onClick="editSAP('.$id.','.$po->no_po_sap.')"><i class="fa fa-edit"></i></a>';
             }
             else
             {
