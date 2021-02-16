@@ -55,7 +55,7 @@
 			<thead>
 				<tr>
 					<td colspan="2" rowspan="5" class="centera" style="padding : 0" width="30%">
-						<img width="200" src="{{ public_path() . '/waves2.png' }}" alt="" style="padding: 0">
+						<img width="200" src="{{ public_path() . '/waves2.jpg' }}" alt="" style="padding: 0">
 					</td>
 					<td colspan="8" style="font-weight: bold;font-size: 13px">PT. YAMAHA MUSICAL PRODUCTS INDONESIA (PT. YMPI)</td>
 				</tr>
@@ -330,7 +330,7 @@
 	<footer>
 
 		@if($po[0]->approval_authorized3 == "Approved")
-		<img width="100" src="{{ public_path() . '/files/ttd_pr_po/stempel_ympi.png' }}" alt="" style="padding: 0;position: absolute;top: 840px;left: 570px;z-index: 200">
+		<img width="100" src="{{ public_path() . '/files/ttd_pr_po/stempel_ympi.jpg' }}" alt="" style="padding: 0;position: absolute;top: 840px;left: 570px;z-index: 200">
 		@endif
 		<div class="footer">
 			<table style="width: 100%; font-family: TimesNewRoman; border-collapse: collapse;">
@@ -346,10 +346,10 @@
 					<tr>
 						<td colspan="3" style="width: 40%">
 							@if($po[0]->buyer_id == "PI1908032")
-								<img width="100" src="{{ public_path() . '/files/ttd_pr_po/ttd_erlangga.png' }}" alt="" style="padding: 0">
+								<img width="100" src="{{ public_path() . '/files/ttd_pr_po/ttd_erlangga.jpg' }}" alt="" style="padding: 0">
 								<span style="position: absolute;left: 11px;width: 75px;font-size: 10px;font-weight: bold;top: 97px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->tgl_po)) ?></span>
 							@elseif($po[0]->buyer_id == "PI1810020")
-								<img width="75" src="{{ public_path() . '/files/ttd_pr_po/ttd_shega.png' }}" alt="" style="padding: 0">
+								<img width="75" src="{{ public_path() . '/files/ttd_pr_po/ttd_shega.jpg' }}" alt="" style="padding: 0">
 								<span style="position: absolute;left: 25px;width: 75px;font-size: 10px;font-weight: bold;top: 100px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->tgl_po)) ?></span>
 							@else
 								<?= $po[0]->buyer_name ?>
@@ -370,7 +370,7 @@
 
 						<!-- <td colspan="3" style="width: 30%">
 							@if($po[0]->approval_authorized4 == "Approved")
-								<img width="90" src="{{ public_path() . '/files/ttd_pr_po/ttd_pak_hayakawa.png' }}" alt="" style="padding: 0">
+								<img width="90" src="{{ public_path() . '/files/ttd_pr_po/ttd_pak_hayakawa.jpg' }}" alt="" style="padding: 0">
 								<span style="position: absolute;left: 540px;width: 75px;font-size: 10px;font-weight: bold;top: 101px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->date_approval_authorized4)) ?></span>
 							@endif
 						</td> -->
@@ -410,7 +410,7 @@
 			<thead>
 				<tr>
 					<td colspan="2" rowspan="5" class="centera" style="padding : 0" width="30%">
-						<img width="200" src="{{ public_path() . '/waves2.png' }}" alt="" style="padding: 0">
+						<img width="200" src="{{ public_path() . '/waves2.jpg' }}" alt="" style="padding: 0">
 					</td>
 					<td colspan="8" style="font-weight: bold;font-size: 13px">PT. YAMAHA MUSICAL PRODUCTS INDONESIA (PT. YMPI)</td>
 				</tr>
@@ -859,7 +859,7 @@
 	<footer>
 
 		@if($po[0]->approval_authorized3 == "Approved")
-		<img width="100" src="{{ public_path() . '/files/ttd_pr_po/stempel_ympi.png' }}" alt="" style="padding: 0;position: absolute;top: 840px;left: 570px;z-index: 200">
+		<img width="100" src="{{ public_path() . '/files/ttd_pr_po/stempel_ympi.jpg' }}" alt="" style="padding: 0;position: absolute;top: 840px;left: 570px;z-index: 200">
 		@endif
 		<div class="footer">
 			<table style="width: 100%; font-family: TimesNewRoman; border-collapse: collapse;">
@@ -875,10 +875,10 @@
 					<tr>
 						<td colspan="3" style="width: 40%">
 							@if($po[0]->buyer_id == "PI1908032")
-								<img width="100" src="{{ public_path() . '/files/ttd_pr_po/ttd_erlangga.png' }}" alt="" style="padding: 0">
+								<img width="100" src="{{ public_path() . '/files/ttd_pr_po/ttd_erlangga.jpg' }}" alt="" style="padding: 0">
 								<span style="position: absolute;left: 11px;width: 75px;font-size: 10px;font-weight: bold;top: 97px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->tgl_po)) ?></span>
 							@elseif($po[0]->buyer_id == "PI1810020")
-								<img width="75" src="{{ public_path() . '/files/ttd_pr_po/ttd_shega.png' }}" alt="" style="padding: 0">
+								<img width="75" src="{{ public_path() . '/files/ttd_pr_po/ttd_shega.jpg' }}" alt="" style="padding: 0">
 								<span style="position: absolute;left: 25px;width: 75px;font-size: 10px;font-weight: bold;top: 100px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->tgl_po)) ?></span>
 							@else
 								<?= $po[0]->buyer_name ?>
@@ -899,7 +899,7 @@
 
 						<!-- <td colspan="3" style="width: 30%">
 							@if($po[0]->approval_authorized4 == "Approved")
-								<img width="90" src="{{ public_path() . '/files/ttd_pr_po/ttd_pak_hayakawa.png' }}" alt="" style="padding: 0">
+								<img width="90" src="{{ public_path() . '/files/ttd_pr_po/ttd_pak_hayakawa.jpg' }}" alt="" style="padding: 0">
 								<span style="position: absolute;left: 540px;width: 75px;font-size: 10px;font-weight: bold;top: 101px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->date_approval_authorized4)) ?></span>
 							@endif
 						</td> -->
