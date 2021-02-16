@@ -5137,7 +5137,7 @@ class AccountingController extends Controller
             $tahun = '21';
         }
 
-        $query = "SELECT reff_number FROM `acc_investments` order by id DESC LIMIT 1";
+        $query = "SELECT reff_number FROM `acc_investments` order by reff_number DESC LIMIT 1";
         $nomorurut = DB::select($query);
 
         if ($nomorurut != null)
