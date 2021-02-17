@@ -140,6 +140,10 @@ Route::post('edit/general/pointing_call_pic', 'GeneralController@editGeneralPoin
 Route::get('index/general/omi_visitor', 'GeneralController@indexOmiVisitor');
 Route::get('fetch/general/omi_visitor', 'GeneralController@fetchOmiVisitor');
 
+//MCU
+Route::get('index/general/queue/{remark}', 'GeneralController@indexQueue');
+Route::get('fetch/general/queue/{remark}', 'GeneralController@fetchQueue');
+
 Route::get('index/general/attendance_check', 'GeneralController@indexGeneralAttendanceCheck');
 Route::get('fetch/general/attendance_check', 'GeneralController@fetchGeneralAttendanceCheck');
 Route::post('scan/general/attendance_check', 'GeneralController@scanGeneralAttendanceCheck');
@@ -1414,6 +1418,8 @@ Route::get('post/sakurentsu/trial_req/{sakurentsu_number}', 'SakurentsuControlle
 Route::get('index/sakurentsu/list_trial_temp', 'SakurentsuController@index_trial_request_temp');
 Route::get('fetch/sakurentsu/list_trial', 'SakurentsuController@fetch_trial_request2');
 Route::post('upload/sakurentsu/trial', 'SakurentsuController@upload_trial_request');
+Route::get('index/sakurentsu/trial/pss/{sk_num}', 'SakurentsuController@index_trial_pss');
+Route::get('post/sakurentsu/pss', 'SakurentsuController@save_pss_desc');
 
 //TRIAL
 Route::get('index/sakurentsu/list_trial', 'SakurentsuController@index_trial_request');
@@ -4224,11 +4230,12 @@ Route::post('create_ant/mutasi', 'MutasiController@storeAnt');
 Route::get('destroy/mutasi/{id}', 'MutasiController@destroy');
 Route::get('show/mutasi/{id}', 'MutasiController@show');
 
+//Rejected
+Route::get('rejected/{id}', 'MutasiController@rejected');
 //Approval
-Route::get('edit/mutasi/approval/{id}', 'MutasiController@edit_atasan');
-Route::post('edit/mutasi/approval/{id}', 'MutasiController@update_atasan');
-Route::get('edit/mutasi/approval/manager/{id}', 'MutasiController@edit_manager');
-Route::post('edit/mutasi/approval/manager/{id}', 'MutasiController@update_manager');
+Route::get('approvechief_or_foreman/{id}', 'MutasiController@mutasi_approvalchief_or_foreman');
+Route::get('approvemanager/{id}', 'MutasiController@mutasi_approvalmanager');
+Route::get('approvegm/{id}', 'MutasiController@mutasi_approvalgm');
 
 
 // 	Route::get('edit/navigation/{id}', 'NavigationController@edit');
@@ -4244,8 +4251,16 @@ Route::get('fetch/display_warehouse', 'WarehouseController@fetchWarehouse');
 Route::get('index/warehouse/productivity', 'WarehouseController@indexWarehouseProductivity');
 Route::get('fetch/warehouse/productivity', 'WarehouseController@warehouseProductivity');
 Route::get('fetch/warehouse/detail', 'WarehouseController@fetchDetail');
+Route::get('index/warehouse/record', 'WarehouseController@indexWarehouseRecord');
+Route::get('fetch/warehouse/record', 'WarehouseController@fetchRecord');
 
+//Sanding
 
+Route::get('index/repair/sanding', 'SandingController@index');
+Route::get('scan/repair/operator', 'SandingController@scanInjectionOperator');
+Route::get('index/repair/fetch_sanding', 'SandingController@fetchListSanding');
+Route::post('input/repair/sanding', 'SandingController@inputSanding');
+Route::get('index/repair/fetch_resume_sanding', 'SandingController@fetchResumeSanding');
 
 
 //Master Kanban Tools
@@ -4268,8 +4283,13 @@ Route::post('post/tools/stock_out', 'ToolsController@post_tools');
 //Process Pengurangan Stock dies
 Route::get('dies/stock_out', 'ToolsController@dies_stock_out');
 Route::get('fetch/dies/data', 'ToolsController@fetch_dies_data');
+Route::post('post/dies/stock_out', 'ToolsController@post_dies');
 
 Route::get('tools/scan/operator', 'ToolsController@scan_operator');
+
+//Monitoring Stock Dies
+Route::get('dies/stock_control', 'ToolsController@dies_control_stock');
+Route::get('fetch/dies/stock_control', 'ToolsController@fetch_dies_control_stock');
 
 // QA Incoming Check
 Route::get('index/qa', 'QualityAssuranceController@index');
