@@ -713,12 +713,12 @@
   	var ycj_ref_number =  $('#ycj_ref_number').val();
   	var period =  $('#period').val();
 
-  	if(carier == 'C1'){
-  		if(ycj_ref_number == '' || period == ''){
-  			alert('Please fill shipment period and YCJ Ref. No.');
-  			return false;
-  		}
-  	}
+  	// if(carier == 'C1'){
+  	// 	if(ycj_ref_number == '' || period == ''){
+  	// 		alert('Please fill shipment period and YCJ Ref. No.');
+  	// 		return false;
+  	// 	}
+  	// }
 
   	if (days >= 0) {
   		document.getElementById("importForm").submit();
