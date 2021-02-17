@@ -1562,7 +1562,7 @@ class IndirectMaterialController extends Controller{
 			'indirect_materials.label',
 			db::raw('date_format(indirect_material_stocks.in_date, "%d-%m-%Y") AS masuk'),
 			db::raw('date_format(indirect_material_stocks.exp_date, "%d-%m-%Y") AS exp'),
-			db::raw('date_format(indirect_material_stocks.exp_date, "%M") AS month')
+			db::raw('date_format(indirect_material_stocks.in_date, "%M") AS month')
 		)
 		->orderBy('indirect_material_stocks.qr_code', 'desc')
 		->get();
