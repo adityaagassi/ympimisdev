@@ -63,7 +63,8 @@ class EmailMiddleKanban extends Command
         middle_inventories
         LEFT JOIN materials ON middle_inventories.material_number = materials.material_number 
         WHERE
-        DATEDIFF( CURRENT_TIMESTAMP, middle_inventories.created_at ) > 4";
+        DATEDIFF( CURRENT_TIMESTAMP, middle_inventories.created_at ) > 4
+        AND location <> 'stockroom'";
 
         $queryJml = "SELECT
         count( middle_inventories.material_number ) AS jml 
@@ -71,7 +72,8 @@ class EmailMiddleKanban extends Command
         middle_inventories
         LEFT JOIN materials ON middle_inventories.material_number = materials.material_number 
         WHERE
-        DATEDIFF( CURRENT_TIMESTAMP, middle_inventories.created_at ) > 4";
+        DATEDIFF( CURRENT_TIMESTAMP, middle_inventories.created_at ) > 4
+        AND location <> 'stockroom'";
 
         $dataKanban = db::select($queryKanban);
         $dataJml = db::select($queryJml);
