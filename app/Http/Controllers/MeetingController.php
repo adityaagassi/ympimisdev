@@ -452,15 +452,30 @@ class MeetingController extends Controller
 
 	public function fetchMeetingAttendance(Request $request){
 
-		$attendances = Meeting::leftJoin('meeting_details', 'meetings.id', '=', 'meeting_details.meeting_id')
-		->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'meeting_details.employee_id')
-		->leftJoin('employee_syncs as org', 'org.employee_id', '=', 'meetings.organizer_id')
-		// ->leftJoin('employee_syncs as org', 'employee_syncs.employee_id', '=', 'meetings.organizer_id')
-		->where('meetings.id', '=', $request->get('id'))
-		->select('org.name as organizer_name', db::raw('date_format(meetings.start_time, "%a, %d %b %Y %H:%i") as start_time'), db::raw('date_format(meetings.end_time, "%a, %d %b %Y %H:%i") as end_time'), db::raw('timestampdiff(minute, meetings.start_time, meetings.end_time) as diff'), 'meetings.organizer_id', 'meetings.subject','meetings.description','meetings.location', 'meeting_details.employee_id', 'employee_syncs.name', 'employee_syncs.department', 'meeting_details.attend_time', 'meeting_details.status', 'meetings.status as meeting_status')
-		->orderBy('meeting_details.attend_time', 'desc')
-		->orderBy('meeting_details.created_at', 'asc')
-		->get();
+		$meeting = Meeting::where('id',$request->get('id'))->first();
+
+		if ($meeting->subject == 'Medical Check Up') {
+			$attendances = Meeting::leftJoin('meeting_details', 'meetings.id', '=', 'meeting_details.meeting_id')
+			->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'meeting_details.employee_id')
+			->leftJoin('employee_syncs as org', 'org.employee_id', '=', 'meetings.organizer_id')
+			// ->leftJoin('employee_syncs as org', 'employee_syncs.employee_id', '=', 'meetings.organizer_id')
+			->where('meetings.id', '=', $request->get('id'))
+			->wheredate('meeting_details.created_at', '=', date('Y-m-d'))
+			->select('org.name as organizer_name', db::raw('date_format(meetings.start_time, "%a, %d %b %Y %H:%i") as start_time'), db::raw('date_format(meetings.end_time, "%a, %d %b %Y %H:%i") as end_time'), db::raw('timestampdiff(minute, meetings.start_time, meetings.end_time) as diff'), 'meetings.organizer_id', 'meetings.subject','meetings.description','meetings.location', 'meeting_details.employee_id', 'employee_syncs.name', 'employee_syncs.department', 'meeting_details.attend_time', 'meeting_details.status', 'meetings.status as meeting_status')
+			->orderBy('meeting_details.attend_time', 'desc')
+			->orderBy('meeting_details.created_at', 'asc')
+			->get();
+		}else{
+			$attendances = Meeting::leftJoin('meeting_details', 'meetings.id', '=', 'meeting_details.meeting_id')
+			->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'meeting_details.employee_id')
+			->leftJoin('employee_syncs as org', 'org.employee_id', '=', 'meetings.organizer_id')
+			// ->leftJoin('employee_syncs as org', 'employee_syncs.employee_id', '=', 'meetings.organizer_id')
+			->where('meetings.id', '=', $request->get('id'))
+			->select('org.name as organizer_name', db::raw('date_format(meetings.start_time, "%a, %d %b %Y %H:%i") as start_time'), db::raw('date_format(meetings.end_time, "%a, %d %b %Y %H:%i") as end_time'), db::raw('timestampdiff(minute, meetings.start_time, meetings.end_time) as diff'), 'meetings.organizer_id', 'meetings.subject','meetings.description','meetings.location', 'meeting_details.employee_id', 'employee_syncs.name', 'employee_syncs.department', 'meeting_details.attend_time', 'meeting_details.status', 'meetings.status as meeting_status')
+			->orderBy('meeting_details.attend_time', 'desc')
+			->orderBy('meeting_details.created_at', 'asc')
+			->get();
+		}
 
 		if($attendances[0]->meeting_status == 'close'){
 			$response = array(

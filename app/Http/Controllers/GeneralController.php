@@ -2352,18 +2352,20 @@ public function fetchGeneralAttendanceCheck(Request $request){
 	public function fetchQueue($remark,Request $request)
 	{
 		try {
-			$auth = DB::SELECT('SELECT section from employee_syncs where employee_id = "'.Auth::user()->username.'"');
+			$auth = EmployeeSync::where('employee_syncs.employee_id',Auth::user()->username)->first();
+			$now = date('Y-m-d');
 			if ($remark == 'mcu') {
 				$data_registrasi = DB::SELECT("SELECT
 					meetings.id,
 					SPLIT_STRING ( description, ' - ', 2 ) AS loc,
 					meeting_details.*,
 					employee_syncs.`name`,
-					departments.department_shortname 
+					departments.department_shortname ,
+					employee_syncs.section
 				FROM
 					meetings
 					JOIN meeting_details ON meeting_details.meeting_id = meetings.id 
-					AND meeting_details.STATUS = 0
+					AND meeting_details.STATUS = 0 and DATE(meeting_details.created_at) = '".$now."'
 					JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
 					JOIN departments ON departments.department_name = employee_syncs.department 
 				WHERE
@@ -2377,11 +2379,12 @@ public function fetchGeneralAttendanceCheck(Request $request){
 					SPLIT_STRING ( description, ' - ', 2 ) AS loc,
 					meeting_details.*,
 					employee_syncs.`name`,
-					departments.department_shortname 
+					departments.department_shortname ,
+					employee_syncs.section
 				FROM
 					meetings
 					JOIN meeting_details ON meeting_details.meeting_id = meetings.id 
-					AND meeting_details.STATUS = 0
+					AND meeting_details.STATUS = 0 and DATE(meeting_details.created_at) = '".$now."'
 					JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
 					JOIN departments ON departments.department_name = employee_syncs.department 
 				WHERE
@@ -2395,11 +2398,12 @@ public function fetchGeneralAttendanceCheck(Request $request){
 					SPLIT_STRING ( description, ' - ', 2 ) AS loc,
 					meeting_details.*,
 					employee_syncs.`name`,
-					departments.department_shortname 
+					departments.department_shortname ,
+					employee_syncs.section
 				FROM
 					meetings
 					JOIN meeting_details ON meeting_details.meeting_id = meetings.id 
-					AND meeting_details.STATUS = 0
+					AND meeting_details.STATUS = 0 and DATE(meeting_details.created_at) = '".$now."'
 					JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
 					JOIN departments ON departments.department_name = employee_syncs.department 
 				WHERE
@@ -2413,11 +2417,12 @@ public function fetchGeneralAttendanceCheck(Request $request){
 					SPLIT_STRING ( description, ' - ', 2 ) AS loc,
 					meeting_details.*,
 					employee_syncs.`name`,
-					departments.department_shortname 
+					departments.department_shortname ,
+					employee_syncs.section
 				FROM
 					meetings
 					JOIN meeting_details ON meeting_details.meeting_id = meetings.id 
-					AND meeting_details.STATUS = 0
+					AND meeting_details.STATUS = 0 and DATE(meeting_details.created_at) = '".$now."'
 					JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
 					JOIN departments ON departments.department_name = employee_syncs.department 
 				WHERE
@@ -2433,7 +2438,7 @@ public function fetchGeneralAttendanceCheck(Request $request){
 				'data_audiometri' => $data_audiometri,
 				'data_clinic' => $data_clinic,
 				'data_registrasi' => $data_registrasi,
-				'auth' => $auth,
+				'section' => $auth->section,
 			);
 			return Response::json($response);
 		} catch (\Exception $e) {

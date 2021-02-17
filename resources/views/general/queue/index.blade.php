@@ -79,6 +79,17 @@ table > thead > tr > th{
 		-ms-transform: translateY(-50%);
 		transform: translateY(-50%);
 	}
+
+	.dataTables_info,
+	.dataTables_length {
+		color: white;
+		align-content: left
+	}
+
+	div.dataTables_filter label, 
+     div.dataTables_wrapper div.dataTables_info {
+	     color: white;
+	}
 	
 
 </style>
@@ -196,7 +207,7 @@ table > thead > tr > th{
 	jQuery(document).ready(function(){
 		$('.select2').select2();
 		fetchQueue();
-		setInterval(fetchQueue, 5000);
+		// setInterval(fetchQueue, 5000);
 	});
 
 	$('.datepicker').datepicker({
@@ -229,41 +240,70 @@ table > thead > tr > th{
 					var table_thorax = "";
 					var table_audiometri = "";
 
+					$('#tableRegistrasi').DataTable().clear();
+					$('#tableRegistrasi').DataTable().destroy();
+					$('#tableClinic').DataTable().clear();
+					$('#tableClinic').DataTable().destroy();
+					$('#tableThorax').DataTable().clear();
+					$('#tableThorax').DataTable().destroy();
+					$('#tableAudiometri').DataTable().clear();
+					$('#tableAudiometri').DataTable().destroy();
+
 					$.each(result.data_registrasi, function(key,value){
-						table_registrasi += "<tr>";
-						table_registrasi += "<td>"+value.employee_id+"</td>";
-						table_registrasi += "<td>"+value.name+"</td>";
-						table_registrasi += "<td>"+value.department_shortname+"</td>";
+						if (value.section == result.section) {
+							var color = "style='background-color:#d4f05b'";
+						}else{
+							var color = "style='background-color:#e6e6e6'";
+						}
+						table_registrasi += "<tr "+color+">";
+						table_registrasi += "<td "+color+">"+value.employee_id+"</td>";
+						table_registrasi += "<td "+color+">"+value.name+"</td>";
+						table_registrasi += "<td "+color+">"+value.department_shortname+"</td>";
 						table_registrasi += "</tr>";
 						total_registrasi++;
 					});
 					$('#bodyTableRegistrasi').append(table_registrasi);
 
 					$.each(result.data_clinic, function(key,value){
-						table_clinic += "<tr>";
-						table_clinic += "<td>"+value.employee_id+"</td>";
-						table_clinic += "<td>"+value.name+"</td>";
-						table_clinic += "<td>"+value.department_shortname+"</td>";
+						if (value.section == result.section) {
+							var color = "style='background-color:#d4f05b'";
+						}else{
+							var color = "style='background-color:#e6e6e6'";
+						}
+						table_clinic += "<tr "+color+">";
+						table_clinic += "<td "+color+">"+value.employee_id+"</td>";
+						table_clinic += "<td "+color+">"+value.name+"</td>";
+						table_clinic += "<td "+color+">"+value.department_shortname+"</td>";
 						table_clinic += "</tr>";
 						total_clinic++;
 					});
 					$('#bodyTableClinic').append(table_clinic);
 
 					$.each(result.data_thorax, function(key,value){
-						table_thorax += "<tr>";
-						table_thorax += "<td>"+value.employee_id+"</td>";
-						table_thorax += "<td>"+value.name+"</td>";
-						table_thorax += "<td>"+value.department_shortname+"</td>";
+						if (value.section == result.section) {
+							var color = "style='background-color:#d4f05b'";
+						}else{
+							var color = "style='background-color:#e6e6e6'";
+						}
+						table_thorax += "<tr "+color+">";
+						table_thorax += "<td "+color+">"+value.employee_id+"</td>";
+						table_thorax += "<td "+color+">"+value.name+"</td>";
+						table_thorax += "<td "+color+">"+value.department_shortname+"</td>";
 						table_thorax += "</tr>";
 						total_thorax++;
 					});
 					$('#bodyTableThorax').append(table_thorax);
 
 					$.each(result.data_audiometri, function(key,value){
-						table_audiometri += "<tr>";
-						table_audiometri += "<td>"+value.employee_id+"</td>";
-						table_audiometri += "<td>"+value.name+"</td>";
-						table_audiometri += "<td>"+value.department_shortname+"</td>";
+						if (value.section == result.section) {
+							var color = "style='background-color:#d4f05b'";
+						}else{
+							var color = "style='background-color:#e6e6e6'";
+						}
+						table_audiometri += "<tr "+color+">";
+						table_audiometri += "<td "+color+">"+value.employee_id+"</td>";
+						table_audiometri += "<td "+color+">"+value.name+"</td>";
+						table_audiometri += "<td "+color+">"+value.department_shortname+"</td>";
 						table_audiometri += "</tr>";
 						total_audiometri++;
 					});
@@ -273,6 +313,74 @@ table > thead > tr > th{
 					$('#total_clinic').html(total_clinic);
 					$('#total_thorax').html(total_thorax);
 					$('#total_audiometri').html(total_audiometri);
+
+					var table = $('#tableRegistrasi').DataTable({
+						'dom': 'Bfrtip',
+						'responsive':true,
+						'paging': true,
+						'lengthChange': false,
+						'pageLength': 10,
+						'searching': true	,
+						'ordering': true,
+						'order': [],
+						'info': false,
+						'autoWidth': true,
+						"sPaginationType": "full_numbers",
+						"bJQueryUI": true,
+						"bAutoWidth": false,
+						"processing": true
+					});
+
+					var table = $('#tableClinic').DataTable({
+						'dom': 'Bfrtip',
+						'responsive':true,
+						'paging': true,
+						'lengthChange': false,
+						'pageLength': 10,
+						'searching': true	,
+						'ordering': true,
+						'order': [],
+						'info': false,
+						'autoWidth': true,
+						"sPaginationType": "full_numbers",
+						"bJQueryUI": true,
+						"bAutoWidth": false,
+						"processing": true
+					});
+
+					var table = $('#tableThorax').DataTable({
+						'dom': 'Bfrtip',
+						'responsive':true,
+						'paging': true,
+						'lengthChange': false,
+						'pageLength': 10,
+						'searching': true	,
+						'ordering': true,
+						'order': [],
+						'info': false,
+						'autoWidth': true,
+						"sPaginationType": "full_numbers",
+						"bJQueryUI": true,
+						"bAutoWidth": false,
+						"processing": true
+					});
+
+					var table = $('#tableAudiometri').DataTable({
+						'dom': 'Bfrtip',
+						'responsive':true,
+						'paging': true,
+						'lengthChange': false,
+						'pageLength': 10,
+						'searching': true	,
+						'ordering': true,
+						'order': [],
+						'info': false,
+						'autoWidth': true,
+						"sPaginationType": "full_numbers",
+						"bJQueryUI": true,
+						"bAutoWidth": false,
+						"processing": true
+					});
 				}
 			}
 		});
