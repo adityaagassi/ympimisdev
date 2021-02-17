@@ -38,12 +38,12 @@ class ContainerScheduleController extends Controller{
             'SPOT/EXTRA RATE'
         ];
         $this->nomination = [
-         'MAIN',
-         'SUB',
-         'BACK UP',
-         'OTHER'
-     ];
- }
+           'MAIN',
+           'SUB',
+           'BACK UP',
+           'OTHER'
+       ];
+   }
     /**
      * Display a listing of the resource.
      *
@@ -573,13 +573,37 @@ class ContainerScheduleController extends Controller{
             ORDER BY date.week_date ASC");
 
 
+        $teus = db::select("SELECT date.week_date, COALESCE(plan_teus.plan_teus, 0) AS plan_teus, COALESCE(resume.departed, 0) AS departed, COALESCE(resume.on_board, 0) AS on_board, COALESCE(resume.stuffing, 0) AS stuffing, COALESCE(resume.confirmed, 0) AS confirmed FROM
+            (SELECT week_date, remark FROM weekly_calendars
+            WHERE DATE_FORMAT(week_date,'%Y-%m-%d') >= '".$datefrom->stuffing_date."'
+            AND DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$dateto->week_date."') AS date
+            LEFT JOIN
+            (SELECT stuffing_date, SUM(plan_teus) AS plan_teus FROM
+            (SELECT DISTINCT ycj_ref_number, stuffing_date, plan_teus FROM `shipment_reservations`
+            WHERE period = '".$period."') AS shipment
+            GROUP BY stuffing_date) AS plan_teus
+            ON date.week_date = plan_teus.stuffing_date
+            LEFT JOIN
+            (SELECT stuffing_date, SUM(departed) as departed, SUM(on_board) AS on_board, SUM(stuffing) AS stuffing, SUM(confirmed) AS confirmed FROM
+            (SELECT ycj_ref_number, stuffing_date,
+            IF(actual_departed IS NOT NULL, plan_teus, 0) AS departed,
+            IF(actual_on_board IS NOT NULL, (IF(actual_departed IS NOT NULL, 0, plan_teus)), 0) AS on_board,
+            IF(actual_stuffing IS NOT NULL, (IF(actual_on_board IS NOT NULL, 0, plan_teus)), 0) AS stuffing,
+            IF(actual_stuffing IS NULL, plan_teus, 0) AS confirmed
+            FROM `shipment_reservations`
+            WHERE period = '".$period."'
+            AND `status` = 'BOOKING CONFIRMED') AS shipmemt
+            GROUP BY stuffing_date) AS resume
+            ON date.week_date = resume.stuffing_date
+            ORDER BY date.week_date ASC");
+
+
 
         $response = array(
             'status' => true,
             'data' => $data,
             'ship_by_dates' => $ship_by_dates,
-
-
+            'teus' => $teus,
             'period' => $period,
             'month' => $month,
             'mon' => date("n", strtotime($month)),
@@ -800,6 +824,7 @@ class ContainerScheduleController extends Controller{
         $twenty = $request->get('twenty');
         $stuffing = $request->get('stuffing');
         $etd = $request->get('etd');
+        $plan_teus = $request->get('plan_teus');
         $plan = $request->get('plan');
         $remark = $request->get('remark');
         $application_rate = $request->get('application_rate');
@@ -831,6 +856,7 @@ class ContainerScheduleController extends Controller{
             ->update([
                 'stuffing_date' => $stuffing,
                 'etd_date' => $etd,
+                'plan_teus' => $plan_teus,
                 'plan' => $plan,
                 'remark' => $remark,
                 'invoice_number' => strtoupper($invoice),

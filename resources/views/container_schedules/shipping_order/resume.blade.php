@@ -67,65 +67,128 @@
 					<a href="{{ url("/index/shipping_order") }}" class="btn btn-info" style="width: 100%; font-weight: bold; font-size: 1vw;"><i class="fa fa-list"></i> Booking List</a>
 				</div>
 			</div>
-			
-
-
 		</div>
 
-		<div class="col-xs-12" style="padding-bottom: 10px;">
-			<div class="row">
-				<div class="col-xs-12" style="">
-					<div class="col-xs-3" style="padding-left: 0px;">
+
+		<div class="col-xs-12" style="padding-bottom: 0px;">
+			<div class="box box-solid" style="margin-bottom: 0px;">
+				<div class="box-body">
+					<table id="tableResume" class="table table-bordered" style="width: 100%; font-size: 16px;">
+						<thead style="background-color: rgba(126,86,134,.7);">
+							<tr>
+								<th style="width: 10%">SUBJECT<br><span style="color: purple;">件名</span></th>
+								<th style="width: 7%">PLAN<br><span style="color: purple;">計画</span></th>
+								<th style="width: 7%">ETD SUB<br><span style="color: purple;">出荷</span></th>
+								<th style="width: 7%">AT PORT<br><span style="color: purple;">港</span></th>
+								<th style="width: 7%">NOT YET STUFFING<br><span style="color: purple;">未スタッフィング</span></th>
+								<th style="width: 7%">CONFIRMED<br><span style="color: purple;">確保済み</span></th>
+								<th style="width: 7%">NOT CONFIRMED<br><span style="color: purple;">未確保</span></th>
+
+							</tr>
+						</thead>
+						<tbody id="tableBodyResume" style="font-weight: bold;">
+							<tr>
+								<td id="teus_subject">TEUs<br>&nbsp;</td>
+								<td id="teus_plan"></td>
+								<td id="teus_etd"></td>
+								<td id="teus_port"></td>
+								<td id="teus_not_yet_stuffing"></td>
+								<td id="teus_confirmed"></td>
+								<td id="teus_not_confirmed"></td>
+							</tr>
+
+							<tr>
+								<td id="or_subject">ORDINARY CONTAINER<br><span style="color: purple;">通常のコンテナ</span></td>
+								<td id="or_plan"></td>
+								<td id="or_etd"></td>
+								<td id="or_port"></td>
+								<td id="or_not_yet_stuffing"></td>
+								<td id="or_confirmed"></td>
+								<td id="or_not_confirmed"></td>
+							</tr>
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-xs-12" style="padding-top: 0px; padding: 15px;">
+			{{-- <center>
+				<div class="col-xs-12">
+					<div style="width: 16%; display: inline-block; vertical-align: bottom;">
 						<div class="info-box" style="min-height: 75px;">
 							<span class="info-box-icon" style="background-color: #605ca8; color: white; height: 75px;"><i class="glyphicon glyphicon-tasks"></i></span>
 
 							<div class="info-box-content">
 								<span class="info-box-text">PLAN <span style="color: rgba(96, 92, 168);">計画</span></span>
-								<span class="info-box-number" style="font-size: 2vw;" id="total_plan"></span>
+								<span class="info-box-number" style="font-size: 1vw;" id="total_plan"></span>
 							</div>
 						</div>
 					</div>
 
-					<div class="col-xs-3" style="">
+					<div style="width: 16%; display: inline-block; vertical-align: bottom;">
 						<div class="info-box" style="min-height: 75px;">
 							<span class="info-box-icon bg-green" style="height: 75px;"><i class="fa fa-ship"></i></span>
 
 							<div class="info-box-content">
 								<span class="info-box-text">ETD SUB <span style="color: rgba(96, 92, 168);"> 出荷 </span></span>
-								<span class="info-box-number" style="font-size: 2vw;" id="total_etd"></span>
+								<span class="info-box-number" style="font-size: 1vw;" id="total_etd"></span>
 							</div>
 						</div>
 					</div>
 
-					<div class="col-xs-3" style="">
+					<div style="width: 16%; display: inline-block; vertical-align: bottom;">
 						<div class="info-box" style="min-height: 75px;">
 							<span class="info-box-icon" style="background-color: #455DFF; color: white; height: 75px;"><i class="fa fa-truck"></i></span>
 
 							<div class="info-box-content">
-								<span class="info-box-text">ON BOARD <span style="color: rgba(96, 92, 168);"> 発送 </span></span>
-								<span class="info-box-number" style="font-size: 2vw;" id="total_on_board"></span>
+								<span class="info-box-text">AT PORT <span style="color: rgba(96, 92, 168);"> 発送 </span></span>
+								<span class="info-box-number" style="font-size: 1vw;" id="total_on_board"></span>
 							</div>
 						</div>
 					</div>
 
-					<div class="col-xs-3" style="padding-right: 0px;">
+					<div style="width: 16%; display: inline-block; vertical-align: bottom;">
 						<div class="info-box" style="min-height: 75px;">
 							<span class="info-box-icon" style="background-color: #CCFFFF; color: #212121; height: 75px;"><i class="glyphicon glyphicon-ok"></i></span>
 
 							<div class="info-box-content">
-								<span class="info-box-text">CONFIRMED <span style="color: rgba(96, 92, 168);">確保済み</span></span>
-								<span class="info-box-number" style="font-size: 2vw;" id="total_confirmed"></span>
+								<span class="info-box-text">NOT YET STUFFING <span style="color: rgba(96, 92, 168);">確保済み</span></span>
+								<span class="info-box-number" style="font-size: 1vw;" id="total_confirmed"></span>
 							</div>
 						</div>
 					</div>
-					
-					
+
+					<div style="width: 16%; display: inline-block; vertical-align: bottom;">
+						<div class="info-box" style="min-height: 75px;">
+							<span class="info-box-icon bg-red" style="height: 75px;"><i class="glyphicon glyphicon-remove"></i></span>
+
+							<div class="info-box-content">
+								<span class="info-box-text">NOT CONFIRMED <span style="color: rgba(96, 92, 168);">??</span></span>
+								<span class="info-box-number" style="font-size: 1vw;" id="total_not_confirmed"></span>
+							</div>
+						</div>
+					</div>
+
+					<div style="width: 16%; display: inline-block; vertical-align: bottom;">
+						<div class="info-box" style="min-height: 75px;">
+							<span class="info-box-icon bg-red" style="height: 75px;"><i class="glyphicon glyphicon-remove"></i></span>
+
+							<div class="info-box-content">
+								<span class="info-box-text">NOT CONFIRMED <span style="color: rgba(96, 92, 168);">??</span></span>
+								<span class="info-box-number" style="font-size: 1vw;" id="total_not_confirmed"></span>
+							</div>
+						</div>
+					</div>
 				</div>
-				<div class="col-xs-12" style="">
-					<div id="container1" style="height: 400px;"></div>				
-				</div>
+			</center> --}}
+
+			<div class="col-xs-12" style="padding: 0px;">
+				<div id="container1" style="height: 400px;"></div>				
 			</div>
 		</div>
+
 		<div class="col-xs-12">
 			<div class="box box-solid">
 				<div class="box-body">
@@ -145,7 +208,10 @@
 				</div>
 			</div>
 		</div>
+
 	</div>
+	
+</div>
 </section>
 
 <div class="modal fade" id="modalDetail">
@@ -266,16 +332,13 @@
 			period : period,
 		}
 
-
 		$.get('{{ url("fetch/resume_shipping_order") }}', data, function(result, status, xhr){
 			if(result.status){
 				$('#tableBodyList').html("");
 
 				var tableData = "";
-				var total_plan = 0;
-				var total_etd = 0;
-				var total_on_board = 0;
-				var total_confirmed = 0;
+				
+
 
 				for (var i = 0; i < result.data.length; i++) {
 
@@ -290,27 +353,40 @@
 						tableData += '<td style="background-color: rgb(255, 204, 255);">'+ result.data[i].departed +'</td>';
 					}
 
-					
+
 					tableData += '<td>'+ result.data[i].on_board +'</td>';
-					
+
 					tableData += '<td>'+ result.data[i].confirmed +'</td>';
-					
+
 					tableData += '</tr>';
 				}
-
-				
-
 				
 				$('#tableBodyList').append(tableData);
+				
+
+				var total_or_plan = 0;
+				var total_or_etd_sub = 0;
+				var total_or_at_port = 0;
+				var total_or_not_yet_stuffing = 0;
+				var total_or_confirmed = 0;
+				var total_or_not_confirmed = 0;
+
+				var total_teus_plan = 0;
+				var total_teus_etd_sub = 0;
+				var total_teus_at_port = 0;
+				var total_teus_not_yet_stuffing = 0;
+				var total_teus_confirmed = 0;
+				var total_teus_not_confirmed = 0;
 
 
 				var date = [];
 				var plan = [];
-				var departed = [];
 				var on_board = [];
 				var stuffing = [];
 				var confirmed = [];
+				var not_confirmed = [];
 
+				var departed = [];
 
 				var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -320,27 +396,52 @@
 					date.push(d.getDate()+'-'+monthNames[d.getMonth()]);
 
 					plan.push(parseInt(result.ship_by_dates[i].plan));
-					departed.push(parseInt(result.ship_by_dates[i].departed));
-					on_board.push(parseInt(result.ship_by_dates[i].on_board));
-					stuffing.push(parseInt(result.ship_by_dates[i].stuffing));
-					confirmed.push(parseInt(result.ship_by_dates[i].confirmed));
 
-					total_plan += parseInt(result.ship_by_dates[i].plan);
-					total_etd += parseInt(result.ship_by_dates[i].departed);
-					total_on_board += (parseInt(result.ship_by_dates[i].on_board) + parseInt(result.ship_by_dates[i].stuffing));
-					total_confirmed += parseInt(result.ship_by_dates[i].confirmed);
+					confirmed.push(parseInt(result.ship_by_dates[i].confirmed));
+					on_board.push(parseInt(result.ship_by_dates[i].on_board) + parseInt(result.ship_by_dates[i].departed))
+					stuffing.push(parseInt(result.ship_by_dates[i].stuffing));
+
+					var not_conf = parseInt(result.ship_by_dates[i].plan) - parseInt(result.ship_by_dates[i].confirmed) - parseInt(result.ship_by_dates[i].stuffing) - parseInt(result.ship_by_dates[i].on_board) - parseInt(result.ship_by_dates[i].departed);
+					not_confirmed.push(parseInt(not_conf));
+
+
+					departed.push(parseInt(result.ship_by_dates[i].departed));
+
+
+					total_or_plan += parseInt(result.ship_by_dates[i].plan);
+					total_or_etd_sub += parseInt(result.ship_by_dates[i].departed);
+					total_or_at_port += parseInt(result.ship_by_dates[i].on_board);
+					total_or_confirmed += parseInt(result.ship_by_dates[i].confirmed) + parseInt(result.ship_by_dates[i].stuffing) + parseInt(result.ship_by_dates[i].on_board) + parseInt(result.ship_by_dates[i].departed);
+					total_or_not_confirmed += parseInt(not_conf);
+					total_or_not_yet_stuffing += parseInt(result.ship_by_dates[i].confirmed);
+
+
+
+					var teus_not_conf = parseInt(result.teus[i].plan_teus) - parseInt(result.teus[i].confirmed) - parseInt(result.teus[i].stuffing) - parseInt(result.teus[i].on_board) - parseInt(result.teus[i].departed);
+
+
+					total_teus_plan += parseInt(result.teus[i].plan_teus);
+					total_teus_etd_sub += parseInt(result.teus[i].departed);
+					total_teus_at_port += parseInt(result.teus[i].on_board);
+					total_teus_confirmed += parseInt(result.teus[i].confirmed) + parseInt(result.teus[i].stuffing) + parseInt(result.ship_by_dates[i].on_board) + parseInt(result.teus[i].departed);
+					total_teus_not_confirmed += parseInt(teus_not_conf);
+					total_teus_not_yet_stuffing += parseInt(result.teus[i].confirmed);				
 
 				}
 				
-				var percen_etd = (total_etd/total_plan * 100).toFixed(2) + '%';
-				var percen_on_board = (total_on_board/total_plan * 100).toFixed(2) + '%';
-				var percen_confirmed = (total_confirmed/total_plan * 100).toFixed(2) + '%';
+				$('#or_plan').html(total_or_plan);
+				$('#or_etd').html(total_or_etd_sub);
+				$('#or_port').html(total_or_at_port);
+				$('#or_not_yet_stuffing').html(total_or_not_yet_stuffing);
+				$('#or_confirmed').html(total_or_confirmed);
+				$('#or_not_confirmed').html(total_or_not_confirmed);
 
-
-				$('#total_plan').html(total_plan + ' <small style="font-size: 20px; text-style: italic;">TEUs</small>');
-				$('#total_etd').html(total_etd + ' <small style="font-size: 20px; text-style: italic;">TEUs ('+ percen_etd +')</small>');
-				$('#total_on_board').html(total_on_board + ' <small style="font-size: 20px; text-style: italic;">TEUs ('+ percen_on_board +')</small>');
-				$('#total_confirmed').html(total_confirmed + ' <small style="font-size: 20px; text-style: italic;">TEUs ('+ percen_confirmed +')</small>');
+				$('#teus_plan').html(total_teus_plan);
+				$('#teus_etd').html(total_teus_etd_sub);
+				$('#teus_port').html(total_teus_at_port);
+				$('#teus_not_yet_stuffing').html(total_teus_not_yet_stuffing);
+				$('#teus_confirmed').html(total_teus_confirmed);
+				$('#teus_not_confirmed').html(total_teus_not_confirmed);
 
 
 				Highcharts.chart('container1', {
@@ -357,7 +458,7 @@
 						enabled: true,
 						title: {
 							enabled: true,
-							text: "Quantity Container in TEUs<br>(コンテナ台数)"
+							text: "Quantity Container<br>(コンテナ台数)"
 						},
 						tickInterval: 1
 					},
@@ -369,7 +470,7 @@
 					},
 					tooltip: {
 						headerFormat: '<b>{point.x}</b><br/>',
-						pointFormat: '{series.name}: {point.y} TEUs<br/>Total: {point.stackTotal} TEUs'
+						pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
 					},
 					credits: {
 						enabled: false
@@ -409,30 +510,30 @@
 					},
 					series: [
 					{
-						name: 'Confirmed (確保済み)',
-						data: confirmed,
-						stack: 'actual',
-						color: '#CCFFFF'
+						name: 'ETD SUB (出荷)',
+						data: departed,
+						stack: 'shipment',
+						color: '#00a65a'
+					},{
+						name: 'ETD YMPI ()',
+						data: on_board,
+						stack: 'container',
+						color: '#455DFF'
 					},{
 						name: 'Stuffing (荷積み)',
 						data: stuffing,
-						stack: 'actual',
+						stack: 'container',
 						color: '#FFFF54'
 					},{
-						name: 'On Board (発送)',
-						data: on_board,
-						stack: 'actual',
-						color: '#455DFF'
+						name: 'Confirmed (確保済み)',
+						data: confirmed,
+						stack: 'container',
+						color: '#CCFFFF'
 					},{
-						name: 'ETD SUB (出荷)',
-						data: departed,
-						stack: 'actual',
-						color: '#00a65a'
-					},{
-						name: 'Plan (計画)',
-						data: plan,
-						stack: 'plan',
-						color: '#605ca8'
+						name: 'Not Confirmed (未確保)',
+						data: not_confirmed,
+						stack: 'container',
+						color: '#d50000'
 					}
 					]
 				});

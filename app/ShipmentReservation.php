@@ -25,6 +25,7 @@ class ShipmentReservation extends Model{
 		'stuffing_date',
 		'etd_date',
 		'application_rate',
+		'plan_teus',
 		'plan',
 		'remark',
 		'due_date',
