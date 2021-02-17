@@ -82,7 +82,7 @@
 						</thead>
 						<tbody id="tableBodyResume">
 							<tr style="height: 60px">
-								<td id="teus_subject">TEUs<br>&nbsp;</td>
+								<td id="teus_subject">TEU<br>&nbsp;</td>
 								<td id="teus_plan" style="font-weight: bold; font-size: 20px;"></td>
 							</tr>
 							<tr style="height: 60px">
