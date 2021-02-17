@@ -73,38 +73,38 @@
 		<div class="col-xs-12" style="padding-bottom: 0px;">
 			<div class="box box-solid" style="margin-bottom: 0px;">
 				<div class="box-body">
-					<table id="tableResume" class="table table-bordered" style="width: 100%; font-size: 16px;">
+					<table id="tableResume" class="table table-bordered" style="width: 100%; font-size: 14px;">
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
 								<th style="width: 10%">SUBJECT<br><span style="color: purple;">件名</span></th>
 								<th style="width: 7%">PLAN<br><span style="color: purple;">計画</span></th>
-								<th style="width: 7%">ETD SUB<br><span style="color: purple;">出荷</span></th>
-								<th style="width: 7%">AT PORT<br><span style="color: purple;">港</span></th>
-								<th style="width: 7%">NOT YET STUFFING<br><span style="color: purple;">未スタッフィング</span></th>
 								<th style="width: 7%">CONFIRMED<br><span style="color: purple;">確保済み</span></th>
+								<th style="width: 7%">AT PORT<br><span style="color: purple;">港</span></th>
+								<th style="width: 7%">ETD SUB<br><span style="color: purple;">出荷</span></th>
+								<th style="width: 7%">NOT YET STUFFING<br><span style="color: purple;">未スタッフィング</span></th>
 								<th style="width: 7%">NOT CONFIRMED<br><span style="color: purple;">未確保</span></th>
 
 							</tr>
 						</thead>
-						<tbody id="tableBodyResume" style="font-weight: bold;">
+						<tbody id="tableBodyResume">
 							<tr>
 								<td id="teus_subject">TEUs<br>&nbsp;</td>
-								<td id="teus_plan"></td>
-								<td id="teus_etd"></td>
-								<td id="teus_port"></td>
-								<td id="teus_not_yet_stuffing"></td>
-								<td id="teus_confirmed"></td>
-								<td id="teus_not_confirmed"></td>
+								<td id="teus_plan" style="font-weight: bold; font-size: 20px;"></td>
+								<td id="teus_confirmed" style="font-weight: bold; font-size: 20px;"></td>
+								<td id="teus_port" style="font-weight: bold; font-size: 20px;"></td>
+								<td id="teus_etd" style="font-weight: bold; font-size: 20px;"></td>
+								<td id="teus_not_yet_stuffing" style="font-weight: bold; font-size: 20px;"></td>
+								<td id="teus_not_confirmed" style="font-weight: bold; font-size: 20px;"></td>
 							</tr>
 
 							<tr>
 								<td id="or_subject">ORDINARY CONTAINER<br><span style="color: purple;">通常のコンテナ</span></td>
-								<td id="or_plan"></td>
-								<td id="or_etd"></td>
-								<td id="or_port"></td>
-								<td id="or_not_yet_stuffing"></td>
-								<td id="or_confirmed"></td>
-								<td id="or_not_confirmed"></td>
+								<td id="or_plan" style="font-weight: bold; font-size: 20px;"></td>
+								<td id="or_confirmed" style="font-weight: bold; font-size: 20px;"></td>
+								<td id="or_port" style="font-weight: bold; font-size: 20px;"></td>
+								<td id="or_etd" style="font-weight: bold; font-size: 20px;"></td>
+								<td id="or_not_yet_stuffing" style="font-weight: bold; font-size: 20px;"></td>
+								<td id="or_not_confirmed" style="font-weight: bold; font-size: 20px;"></td>
 							</tr>
 
 						</tbody>
@@ -185,7 +185,7 @@
 			</center> --}}
 
 			<div class="col-xs-12" style="padding: 0px;">
-				<div id="container1" style="height: 400px;"></div>				
+				<div id="container1" style="height: 450px;"></div>				
 			</div>
 		</div>
 
