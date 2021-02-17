@@ -14,6 +14,7 @@ use App\MeetingDetail;
 use App\MeetingLog;
 use App\EmployeeSync;
 use App\MeetingGroup;
+use App\GeneralFlow;
 use Illuminate\Support\Facades\DB;
 
 class MeetingController extends Controller
@@ -180,8 +181,6 @@ class MeetingController extends Controller
 		$id = Auth::id();
 		$employee = db::table('employees')->where('tag', '=', $request->get('tag'))->first();
 
-
-
 		if($employee == null){
 			$response = array(
 				'status' => false,
@@ -190,39 +189,210 @@ class MeetingController extends Controller
 			return Response::json($response);
 		}
 
+		$meeting_detail = MeetingDetail::where('meeting_id', '=', $request->get('meeting_id'))
+				->where('employee_id', '=', $employee->employee_id)
+				->first();
+
+		$batas_clinic = 20;
+		$batas_thorax = 10;
+		$batas_audiometri = 10;
+
 		try{
-			$meeting_detail = MeetingDetail::where('meeting_id', '=', $request->get('meeting_id'))
-			->where('employee_id', '=', $employee->employee_id)
-			->first();
+			$meeting = Meeting::where('id',$request->get('meeting_id'))->first();
+			if ($meeting->subject == 'Medical Check Up') {
+				if($meeting_detail != null){
 
-			
-			if($meeting_detail != null){
+					$loc = explode(" - ", $meeting->description);
+					$flow = GeneralFlow::where('remark','mcu')->where('employee_id',$employee->employee_id)->where('flow_name',$loc[1])->first();
+					$flow_next = $flow->flow_index + 1;
+					$flow_new = GeneralFlow::where('remark','mcu')->where('employee_id',$employee->employee_id)->where('flow_index',$flow_next)->first();
+					
+					if (count($flow_new) > 0) {
+						$meeting_new = DB::SELECT("SELECT * FROM meetings where `subject` = 'Medical Check Up' and SPLIT_STRING(description, ' - ', 2) = '".$flow_new->flow_name."'");
 
-				if($meeting_detail->status != 0){
-					$response = array(
-						'status' => false,
-						'message' => 'Already attended',
-					);
-					return Response::json($response);
+						foreach ($meeting_new as $key) {
+							$meeting_new_id = $key->id;
+						}
+						// if ($flow_new->flow_name == 'Registrasi') {
+						// 	$meeting_new = DB::SELECT("SELECT * FROM meetings where `subject` = 'Medical Check Up' and SPLIT_STRING(description, ' - ', 2) = '".$flow_new->flow_name."'");
+
+						// 	foreach ($meeting_new as $key) {
+						// 		$meeting_new_id = $key->id;
+						// 	}
+
+						// 	$count_det = DB::SELECT("Select * from meeting_details where meeting_id = '".$meeting_new_id."' and status = 0");
+
+						// 	if (count($count_det) >= $batas_clinic) {
+						// 		$flow_next = $flow_next + 1;
+						// 		$flow_new = GeneralFlow::where('remark','mcu')->where('category',$meeting_detail->remark)->where('flow_index',$flow_next)->first();
+						// 		$meeting_new = DB::SELECT("SELECT * FROM meetings where `subject` = 'Medical Check Up' and SPLIT_STRING(description, ' - ', 2) = '".$flow_new->flow_name."'");
+
+						// 		foreach ($meeting_new as $key) {
+						// 			$meeting_new_id = $key->id;
+						// 		}
+						// 	}else{
+						// 		$flow_new = GeneralFlow::where('remark','mcu')->where('category',$meeting_detail->remark)->where('flow_index',$flow_next)->first();
+						// 		$meeting_new = DB::SELECT("SELECT * FROM meetings where `subject` = 'Medical Check Up' and SPLIT_STRING(description, ' - ', 2) = '".$flow_new->flow_name."'");
+
+						// 		foreach ($meeting_new as $key) {
+						// 			$meeting_new_id = $key->id;
+						// 		}
+						// 	}
+						// }else if ($flow_new->flow_name == 'Darah') {
+						// 	$meeting_new = DB::SELECT("SELECT * FROM meetings where `subject` = 'Medical Check Up' and SPLIT_STRING(description, ' - ', 2) = '".$flow_new->flow_name."'");
+
+						// 	foreach ($meeting_new as $key) {
+						// 		$meeting_new_id = $key->id;
+						// 	}
+
+						// 	$count_det = DB::SELECT("Select * from meeting_details where meeting_id = '".$meeting_new_id."' and status = 0");
+
+						// 	if (count($count_det) >= $batas_thorax) {
+						// 		$flow_next = $flow_next + 1;
+						// 		$flow_new = GeneralFlow::where('remark','mcu')->where('category',$meeting_detail->remark)->where('flow_index',$flow_next)->first();
+						// 		$meeting_new = DB::SELECT("SELECT * FROM meetings where `subject` = 'Medical Check Up' and SPLIT_STRING(description, ' - ', 2) = '".$flow_new->flow_name."'");
+
+						// 		foreach ($meeting_new as $key) {
+						// 			$meeting_new_id = $key->id;
+						// 		}
+						// 	}else{
+						// 		$flow_new = GeneralFlow::where('remark','mcu')->where('category',$meeting_detail->remark)->where('flow_index',$flow_next)->first();
+						// 		$meeting_new = DB::SELECT("SELECT * FROM meetings where `subject` = 'Medical Check Up' and SPLIT_STRING(description, ' - ', 2) = '".$flow_new->flow_name."'");
+
+						// 		foreach ($meeting_new as $key) {
+						// 			$meeting_new_id = $key->id;
+						// 		}
+						// 	}
+						// }else if($flow_new->flow_name == 'Thorax'){
+						// 	$meeting_new = DB::SELECT("SELECT * FROM meetings where `subject` = 'Medical Check Up' and SPLIT_STRING(description, ' - ', 2) = '".$flow_new->flow_name."'");
+
+						// 	foreach ($meeting_new as $key) {
+						// 		$meeting_new_id = $key->id;
+						// 	}
+
+						// 	$count_det = DB::SELECT("Select * from meeting_details where meeting_id = '".$meeting_new_id."' and status = 0");
+
+						// 	if (count($count_det) >= $batas_audiometri) {
+						// 		$flow_next = $flow_next + 1;
+						// 		$flow_new = GeneralFlow::where('remark','mcu')->where('category',$meeting_detail->remark)->where('flow_index',$flow_next)->first();
+						// 		$meeting_new = DB::SELECT("SELECT * FROM meetings where `subject` = 'Medical Check Up' and SPLIT_STRING(description, ' - ', 2) = '".$flow_new->flow_name."'");
+
+						// 		foreach ($meeting_new as $key) {
+						// 			$meeting_new_id = $key->id;
+						// 		}
+						// 	}else{
+						// 		$flow_new = GeneralFlow::where('remark','mcu')->where('category',$meeting_detail->remark)->where('flow_index',$flow_next)->first();
+						// 		$meeting_new = DB::SELECT("SELECT * FROM meetings where `subject` = 'Medical Check Up' and SPLIT_STRING(description, ' - ', 2) = '".$flow_new->flow_name."'");
+
+						// 		foreach ($meeting_new as $key) {
+						// 			$meeting_new_id = $key->id;
+						// 		}
+						// 	}
+						// }else if($flow_new->flow_name == 'Audiometri'){
+						// 	$meeting_new = DB::SELECT("SELECT * FROM meetings where `subject` = 'Medical Check Up' and SPLIT_STRING(description, ' - ', 2) = '".$flow_new->flow_name."'");
+
+						// 	foreach ($meeting_new as $key) {
+						// 		$meeting_new_id = $key->id;
+						// 	}
+
+						// 	$count_det = DB::SELECT("Select * from meeting_details where meeting_id = '".$meeting_new_id."' and status = 0");
+
+						// 	if (count($count_det) >= $batas_audiometri) {
+						// 		$flow_next = $flow_next + 1;
+						// 		$flow_new = GeneralFlow::where('remark','mcu')->where('category',$meeting_detail->remark)->where('flow_index',$flow_next)->first();
+						// 		$meeting_new = DB::SELECT("SELECT * FROM meetings where `subject` = 'Medical Check Up' and SPLIT_STRING(description, ' - ', 2) = '".$flow_new->flow_name."'");
+
+						// 		foreach ($meeting_new as $key) {
+						// 			$meeting_new_id = $key->id;
+						// 		}
+						// 	}else{
+						// 		$flow_new = GeneralFlow::where('remark','mcu')->where('category',$meeting_detail->remark)->where('flow_index',$flow_next)->first();
+						// 		$meeting_new = DB::SELECT("SELECT * FROM meetings where `subject` = 'Medical Check Up' and SPLIT_STRING(description, ' - ', 2) = '".$flow_new->flow_name."'");
+
+						// 		foreach ($meeting_new as $key) {
+						// 			$meeting_new_id = $key->id;
+						// 		}
+						// 	}
+						// }else{
+						// 	$meeting_new = DB::SELECT("SELECT * FROM meetings where `subject` = 'Medical Check Up' and SPLIT_STRING(description, ' - ', 2) = '".$flow_new->flow_name."'");
+
+						// 	foreach ($meeting_new as $key) {
+						// 		$meeting_new_id = $key->id;
+						// 	}
+
+						// 	$count_det = DB::SELECT("Select * from meeting_details where meeting_id = '".$meeting_new_id."' and status = 0");
+							
+						// 	$flow_new = GeneralFlow::where('remark','mcu')->where('category',$meeting_detail->remark)->where('flow_index',$flow_next)->first();
+						// 	$meeting_new = DB::SELECT("SELECT * FROM meetings where `subject` = 'Medical Check Up' and SPLIT_STRING(description, ' - ', 2) = '".$flow_new->flow_name."'");
+
+						// 	foreach ($meeting_new as $key) {
+						// 		$meeting_new_id = $key->id;
+						// 	}
+						// }
+
+						$meeting_detail_new = new MeetingDetail([
+							'meeting_id' => $meeting_new_id,
+							'employee_tag' => null,
+							'employee_id' => $employee->employee_id,
+							'status' => 0,
+							// 'remark' => $meeting_detail->remark,
+							'attend_time' => null,
+							'created_by' => $id
+						]);
+						$meeting_detail_new->save();
+					}
+
+					if($meeting_detail->status != 0){
+						$response = array(
+							'status' => false,
+							'message' => 'Already attended',
+						);
+						return Response::json($response);
+					}
+
+					$meeting_detail->employee_tag = $employee->tag;
+					$meeting_detail->status = '1';
+					$meeting_detail->attend_time = date('Y-m-d H:i:s');
 				}
+				else{
 
-				$meeting_detail->employee_tag = $employee->tag;
-				$meeting_detail->status = '1';
-				$meeting_detail->attend_time = date('Y-m-d H:i:s');
+					$meeting_detail = new MeetingDetail([
+						'meeting_id' => $request->get('meeting_id'),
+						'employee_tag' => $employee->tag,
+						'employee_id' => $employee->employee_id,
+						'status' => 2,
+						'attend_time' => date('Y-m-d H:i:s'),
+						'created_by' => $id
+					]);
+				}
+				$meeting_detail->save();
+			}else{
+				if($meeting_detail != null){
+					if($meeting_detail->status != 0){
+						$response = array(
+							'status' => false,
+							'message' => 'Already attended',
+						);
+						return Response::json($response);
+					}
+
+					$meeting_detail->employee_tag = $employee->tag;
+					$meeting_detail->status = '1';
+					$meeting_detail->attend_time = date('Y-m-d H:i:s');
+				}
+				else{
+
+					$meeting_detail = new MeetingDetail([
+						'meeting_id' => $request->get('meeting_id'),
+						'employee_tag' => $employee->tag,
+						'employee_id' => $employee->employee_id,
+						'status' => 2,
+						'attend_time' => date('Y-m-d H:i:s'),
+						'created_by' => $id
+					]);
+				}
+				$meeting_detail->save();
 			}
-			else{
-
-				$meeting_detail = new MeetingDetail([
-					'meeting_id' => $request->get('meeting_id'),
-					'employee_tag' => $employee->tag,
-					'employee_id' => $employee->employee_id,
-					'status' => 2,
-					'attend_time' => date('Y-m-d H:i:s'),
-					'created_by' => $id
-				]);
-			}
-			$meeting_detail->save();
-
 		}
 		catch(\Exception $e){
 			$response = array(
@@ -287,8 +457,9 @@ class MeetingController extends Controller
 		->leftJoin('employee_syncs as org', 'org.employee_id', '=', 'meetings.organizer_id')
 		// ->leftJoin('employee_syncs as org', 'employee_syncs.employee_id', '=', 'meetings.organizer_id')
 		->where('meetings.id', '=', $request->get('id'))
-		->select('org.name as organizer_name', db::raw('date_format(meetings.start_time, "%a, %d %b %Y %H:%i") as start_time'), db::raw('date_format(meetings.end_time, "%a, %d %b %Y %H:%i") as end_time'), db::raw('timestampdiff(minute, meetings.start_time, meetings.end_time) as diff'), 'meetings.organizer_id', 'meetings.subject', 'meeting_details.employee_id', 'employee_syncs.name', 'employee_syncs.department', 'meeting_details.attend_time', 'meeting_details.status', 'meetings.status as meeting_status')
+		->select('org.name as organizer_name', db::raw('date_format(meetings.start_time, "%a, %d %b %Y %H:%i") as start_time'), db::raw('date_format(meetings.end_time, "%a, %d %b %Y %H:%i") as end_time'), db::raw('timestampdiff(minute, meetings.start_time, meetings.end_time) as diff'), 'meetings.organizer_id', 'meetings.subject','meetings.description','meetings.location', 'meeting_details.employee_id', 'employee_syncs.name', 'employee_syncs.department', 'meeting_details.attend_time', 'meeting_details.status', 'meetings.status as meeting_status')
 		->orderBy('meeting_details.attend_time', 'desc')
+		->orderBy('meeting_details.created_at', 'asc')
 		->get();
 
 		if($attendances[0]->meeting_status == 'close'){
@@ -340,7 +511,7 @@ class MeetingController extends Controller
 			$meetings = $meetings->where('meetings.status', '=', 'open');			
 		}
 
-		$meetings = $meetings->select('meetings.id', db::raw('date_format(start_time, "%d-%b-%Y") as date'), 'meetings.subject', 'meetings.location', 'employee_syncs.name', db::raw('concat(date_format(start_time, "%k:%i"), " - ", date_format(end_time, "%k:%i")) as duration'), 'meetings.status')
+		$meetings = $meetings->select('meetings.id', db::raw('date_format(start_time, "%d-%b-%Y") as date'), 'meetings.subject', 'meetings.location','meetings.description', 'employee_syncs.name', db::raw('concat(date_format(start_time, "%k:%i"), " - ", date_format(end_time, "%k:%i")) as duration'), 'meetings.status')
 		->orderByRaw('meetings.status desc, meetings.start_time desc')
 		->get();
 

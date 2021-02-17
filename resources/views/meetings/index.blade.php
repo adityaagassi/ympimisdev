@@ -123,6 +123,7 @@
 								<th style="width: 1%">ID</th>
 								<th style="width: 2%">Date</th>
 								<th style="width: 7%">Title</th>
+								<th style="width: 7%">Sub Title</th>
 								<th style="width: 3%">Location</th>
 								<th style="width: 3%">Organizer</th>
 								<th style="width: 2%">Duration</th>
@@ -946,6 +947,7 @@
 					tableData += "<td>"+value.id+"</td>";
 					tableData += "<td>"+value.date+"</td>";
 					tableData += "<td>"+value.subject+"</td>";
+					tableData += "<td>"+value.description+"</td>";
 					tableData += "<td>"+value.location+"</td>";
 					tableData += "<td>"+value.name+"</td>";
 					tableData += "<td>"+value.duration+"</td>";

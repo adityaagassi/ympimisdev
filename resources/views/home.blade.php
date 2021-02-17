@@ -239,7 +239,7 @@
                                         </a>
                                         <br>
                                         <a href="{{ url("index/qa") }}">
-                                            <i class="fa fa-caret-right"></i> Incoming Check (??)
+                                            <i class="fa fa-caret-right"></i> Incoming Check (受入検査)
                                         </a>
                                     </td>
                                 </tr>
@@ -511,6 +511,10 @@
                             <br>
                             <a href="{{ url("index/survey") }}">
                                 <i class="fa fa-caret-right"></i> Emergency Survey (エマージェンシーサーベイ)
+                            </a>
+                            <br>
+                            <a href="{{ url('index/general/queue','mcu') }}">
+                                <i class="fa fa-caret-right"></i> Medical Check Up Queue (??)
                             </a>
                             <!-- <br>
                             <a href="{{ url("index/display/office_clock") }}">
@@ -808,7 +812,7 @@
                                 </a>
                                 <br>
                                 <a href="{{ url("/index/tools") }}">
-                                    <i class="fa fa-caret-right"></i> Digital Tools Order ()
+                                    <i class="fa fa-caret-right"></i> Digital Order & Control Stock Tools ()
                                 </a>
                             </td>
                         </tr>

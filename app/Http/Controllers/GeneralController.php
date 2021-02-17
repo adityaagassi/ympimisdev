@@ -2070,6 +2070,17 @@ public function indexGeneralPointingCall($id){
 			'location' => $id
 		))->with('head', 'Pointing Calls');
 	}
+	if($id == 'ind'){
+		$title = 'Indonesian Pointing Calls';
+		$title_jp = '駐在員指差し呼称';
+
+		return view('general.pointing_call.ind', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'default_language' => 'id',
+			'location' => $id
+		))->with('head', 'Pointing Calls');
+	}
 }
 
 public function editGeneralPointingCallPic(Request $request){
@@ -2096,26 +2107,50 @@ public function editGeneralPointingCallPic(Request $request){
 }
 
 public function fetchGeneralPointingCall(Request $request){
-	$pics = db::table('pointing_calls')
-	->where('location', '=', $request->get('location'))
-	->where('point_title', '=', 'pic')
-	->whereNull('deleted_at')
-	->get();
+	if ($request->get('location') == 'japanese') {
+		$pics = db::table('pointing_calls')
+		->where('location', '=', $request->get('location'))
+		->where('point_title', '=', 'pic')
+		->whereNull('deleted_at')
+		->get();
 
-	$pointing_calls = db::table('pointing_calls')
-	->where('location', '=', $request->get('location'))
-	->where('point_title', '<>', 'pic')
-	->where('point_title', '<>', 'safety_riding')
-	->where('remark', '1')
-	->whereNull('deleted_at')
-	->get();
+		$pointing_calls = db::table('pointing_calls')
+		->where('location', '=', $request->get('location'))
+		->where('point_title', '<>', 'pic')
+		->where('point_title', '<>', 'safety_riding')
+		->where('remark', '1')
+		->whereNull('deleted_at')
+		->get();
 
-	$response = array(
-		'status' => true,
-		'pointing_calls' => $pointing_calls,
-		'pics' => $pics
-	);
-	return Response::json($response);
+		$response = array(
+			'status' => true,
+			'pointing_calls' => $pointing_calls,
+			'pics' => $pics
+		);
+		return Response::json($response);
+	}else{
+
+		$pics = db::table('pointing_calls')
+		->where('location', '=', $request->get('location'))
+		->where('point_title', '=', 'pic')
+		->whereNull('deleted_at')
+		->get();
+
+		$pointing_calls = db::table('pointing_calls')
+		->where('location', '=', $request->get('location'))
+		->where('point_title', '<>', 'pic')
+		->where('point_title', '<>', 'safety_riding')
+		->where('remark', '1')
+		->whereNull('deleted_at')
+		->get();
+
+		$response = array(
+			'status' => true,
+			'pointing_calls' => $pointing_calls,
+			'pics' => $pics
+		);
+		return Response::json($response);
+	}
 }
 
 public function indexGeneralAttendanceCheck(){
@@ -2299,4 +2334,114 @@ public function fetchGeneralAttendanceCheck(Request $request){
 		return Response::json($response);
 	}		
 }
+
+	public function indexQueue($remark)
+	{
+		if ($remark == 'mcu') {
+			$title = "Medical Check Up Queue";
+			$title_jp = "??";
+		}
+
+		return view('general.queue.index', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'remark' => $remark,
+		));
+	}
+
+	public function fetchQueue($remark,Request $request)
+	{
+		try {
+			$auth = DB::SELECT('SELECT section from employee_syncs where employee_id = "'.Auth::user()->username.'"');
+			if ($remark == 'mcu') {
+				$data_registrasi = DB::SELECT("SELECT
+					meetings.id,
+					SPLIT_STRING ( description, ' - ', 2 ) AS loc,
+					meeting_details.*,
+					employee_syncs.`name`,
+					departments.department_shortname 
+				FROM
+					meetings
+					JOIN meeting_details ON meeting_details.meeting_id = meetings.id 
+					AND meeting_details.STATUS = 0
+					JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
+					JOIN departments ON departments.department_name = employee_syncs.department 
+				WHERE
+					`subject` = 'Medical Check Up'
+					and SPLIT_STRING ( description, ' - ', 2 ) = 'Registrasi'
+					order By meeting_details.created_at asc
+									");
+
+				$data_clinic = DB::SELECT("SELECT
+					meetings.id,
+					SPLIT_STRING ( description, ' - ', 2 ) AS loc,
+					meeting_details.*,
+					employee_syncs.`name`,
+					departments.department_shortname 
+				FROM
+					meetings
+					JOIN meeting_details ON meeting_details.meeting_id = meetings.id 
+					AND meeting_details.STATUS = 0
+					JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
+					JOIN departments ON departments.department_name = employee_syncs.department 
+				WHERE
+					`subject` = 'Medical Check Up'
+					and SPLIT_STRING ( description, ' - ', 2 ) = 'Darah'
+					order By meeting_details.created_at asc
+									");
+
+				$data_thorax = DB::SELECT("SELECT
+					meetings.id,
+					SPLIT_STRING ( description, ' - ', 2 ) AS loc,
+					meeting_details.*,
+					employee_syncs.`name`,
+					departments.department_shortname 
+				FROM
+					meetings
+					JOIN meeting_details ON meeting_details.meeting_id = meetings.id 
+					AND meeting_details.STATUS = 0
+					JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
+					JOIN departments ON departments.department_name = employee_syncs.department 
+				WHERE
+					`subject` = 'Medical Check Up'
+					and SPLIT_STRING ( description, ' - ', 2 ) = 'Thorax'
+					order By meeting_details.created_at asc
+									");
+
+				$data_audiometri = DB::SELECT("SELECT
+					meetings.id,
+					SPLIT_STRING ( description, ' - ', 2 ) AS loc,
+					meeting_details.*,
+					employee_syncs.`name`,
+					departments.department_shortname 
+				FROM
+					meetings
+					JOIN meeting_details ON meeting_details.meeting_id = meetings.id 
+					AND meeting_details.STATUS = 0
+					JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
+					JOIN departments ON departments.department_name = employee_syncs.department 
+				WHERE
+					`subject` = 'Medical Check Up'
+					and SPLIT_STRING ( description, ' - ', 2 ) = 'Audiometri'
+					order By meeting_details.created_at asc
+									");
+			}
+
+			$response = array(
+				'status' => true,
+				'data_thorax' => $data_thorax,
+				'data_audiometri' => $data_audiometri,
+				'data_clinic' => $data_clinic,
+				'data_registrasi' => $data_registrasi,
+				'auth' => $auth,
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
 }

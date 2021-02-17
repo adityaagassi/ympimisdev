@@ -98,6 +98,16 @@
 				</div>
 				<ul class="nav nav-pills nav-stacked">
 					<li>
+						<a href="#" style="font-size: 18px; font-weight: bold; padding-top: 5px; padding-bottom: 5px;">Desc
+							<span class="pull-right text-green" id="desc">0</span>
+						</a>
+					</li>
+					<li>
+						<a href="#" style="font-size: 18px; font-weight: bold; padding-top: 5px; padding-bottom: 5px;">Location
+							<span class="pull-right text-green" id="loc">0</span>
+						</a>
+					</li>
+					<li>
 						<a href="#" style="font-size: 18px; font-weight: bold; padding-top: 5px; padding-bottom: 5px;">Organizer
 							<span class="pull-right text-green" id="meet1">0</span>
 						</a>
@@ -194,12 +204,12 @@
 				backdrop: 'static',
 				keyboard: false
 			});
+			setInterval(foc, 20000);
 		}
 		else{
 			fetchAttendance(id);
+			setInterval(focFetch, 20000);
 		}
-
-		setInterval(foc, 20000);
 
 		$('.select2').select2();
 	});
@@ -209,6 +219,12 @@
 
 	function foc(){
 		$('#tag').focus();
+	}
+
+	function focFetch(){
+		$('#tag').focus();
+		var id = "{{$_GET['id']}}";
+		fetchAttendance(id);
 	}
 
 	$('#tag').keydown(function(event) {
@@ -260,6 +276,8 @@
 				$('#meet2').text(result.attendances[0].start_time);
 				$('#meet3').text(result.attendances[0].end_time);
 				$('#meet4').text(result.attendances[0].diff+ " Minute(s)");
+				$('#desc').text(result.attendances[0].description);
+				$('#loc').text(result.attendances[0].location);
 
 				$('#tableAttendance').DataTable().clear();
 				$('#tableAttendance').DataTable().destroy();
@@ -343,7 +361,7 @@
 					"processing": true
 				});
 				$('#tag').focus();
-				openSuccessGritter('Success!', result.message);
+				// openSuccessGritter('Success!', result.message);
 			}
 			else{
 				openErrorGritter('Error!', result.message);
