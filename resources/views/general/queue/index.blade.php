@@ -250,8 +250,12 @@ table > thead > tr > th{
 					$('#tableAudiometri').DataTable().destroy();
 
 					$.each(result.data_registrasi, function(key,value){
-						if (value.section == result.section) {
-							var color = "style='background-color:#d4f05b'";
+						if (result.section.length > 0) {
+							if (value.section == result.section) {
+								var color = "style='background-color:#d4f05b'";
+							}else{
+								var color = "style='background-color:#e6e6e6'";
+							}
 						}else{
 							var color = "style='background-color:#e6e6e6'";
 						}
@@ -265,8 +269,12 @@ table > thead > tr > th{
 					$('#bodyTableRegistrasi').append(table_registrasi);
 
 					$.each(result.data_clinic, function(key,value){
-						if (value.section == result.section) {
-							var color = "style='background-color:#d4f05b'";
+						if (result.section.length > 0) {
+							if (value.section == result.section) {
+								var color = "style='background-color:#d4f05b'";
+							}else{
+								var color = "style='background-color:#e6e6e6'";
+							}
 						}else{
 							var color = "style='background-color:#e6e6e6'";
 						}
@@ -280,8 +288,12 @@ table > thead > tr > th{
 					$('#bodyTableClinic').append(table_clinic);
 
 					$.each(result.data_thorax, function(key,value){
-						if (value.section == result.section) {
-							var color = "style='background-color:#d4f05b'";
+						if (result.section.length > 0) {
+							if (value.section == result.section) {
+								var color = "style='background-color:#d4f05b'";
+							}else{
+								var color = "style='background-color:#e6e6e6'";
+							}
 						}else{
 							var color = "style='background-color:#e6e6e6'";
 						}
@@ -295,8 +307,12 @@ table > thead > tr > th{
 					$('#bodyTableThorax').append(table_thorax);
 
 					$.each(result.data_audiometri, function(key,value){
-						if (value.section == result.section) {
-							var color = "style='background-color:#d4f05b'";
+						if (result.section.length > 0) {
+							if (value.section == result.section) {
+								var color = "style='background-color:#d4f05b'";
+							}else{
+								var color = "style='background-color:#e6e6e6'";
+							}
 						}else{
 							var color = "style='background-color:#e6e6e6'";
 						}

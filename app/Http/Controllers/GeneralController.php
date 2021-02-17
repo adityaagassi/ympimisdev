@@ -2432,14 +2432,25 @@ public function fetchGeneralAttendanceCheck(Request $request){
 									");
 			}
 
-			$response = array(
-				'status' => true,
-				'data_thorax' => $data_thorax,
-				'data_audiometri' => $data_audiometri,
-				'data_clinic' => $data_clinic,
-				'data_registrasi' => $data_registrasi,
-				'section' => $auth->section,
-			);
+			if (count($auth) > 0) {
+				$response = array(
+					'status' => true,
+					'data_thorax' => $data_thorax,
+					'data_audiometri' => $data_audiometri,
+					'data_clinic' => $data_clinic,
+					'data_registrasi' => $data_registrasi,
+					'section' => $auth->section,
+				);
+			}else{
+				$response = array(
+					'status' => true,
+					'data_thorax' => $data_thorax,
+					'data_audiometri' => $data_audiometri,
+					'data_clinic' => $data_clinic,
+					'data_registrasi' => $data_registrasi,
+					'section' => "",
+				);
+			}
 			return Response::json($response);
 		} catch (\Exception $e) {
 			$response = array(
