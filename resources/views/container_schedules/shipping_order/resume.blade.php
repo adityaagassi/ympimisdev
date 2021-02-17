@@ -515,7 +515,7 @@
 						stack: 'shipment',
 						color: '#00a65a'
 					},{
-						name: 'ETD YMPI ()',
+						name: 'ETD YMPI (YMPI出荷日)',
 						data: on_board,
 						stack: 'container',
 						color: '#455DFF'
