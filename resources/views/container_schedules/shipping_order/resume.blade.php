@@ -70,40 +70,74 @@
 		</div>
 
 
-		<div class="col-xs-12" style="padding-bottom: 0px;">
+		<div class="col-xs-3" style="padding-bottom: 0px;">
+			<div class="box box-solid" style="margin-bottom: 0px;">
+				<div class="box-body">
+					<table id="tableResume" class="table table-bordered" style="width: 100%; font-size: 14px; border: 3px solid black;">
+						<thead style="background-color: rgba(126,86,134,.7);">
+							<tr>
+								<th style="width: 10%; font-size: 18px; font-weight: bold;">SUBJECT<br><span style="color: purple;">件名</span></th>
+								<th style="width: 7%; font-size: 18px; font-weight: bold;">PLAN<br><span style="color: purple;">計画</span></th>
+							</tr>
+						</thead>
+						<tbody id="tableBodyResume">
+							<tr style="height: 60px">
+								<td id="teus_subject">TEUs<br>&nbsp;</td>
+								<td id="teus_plan" style="font-weight: bold; font-size: 20px;"></td>
+							</tr>
+							<tr style="height: 60px">
+								<td id="or_subject">ORDINARY CONTAINER<br><span style="color: purple;">通常のコンテナ</span></td>
+								<td id="or_plan" style="font-weight: bold; font-size: 20px;"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-7" style="padding-bottom: 0px; padding-left: 0px;">
 			<div class="box box-solid" style="margin-bottom: 0px;">
 				<div class="box-body">
 					<table id="tableResume" class="table table-bordered" style="width: 100%; font-size: 14px;">
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
-								<th style="width: 10%">SUBJECT<br><span style="color: purple;">件名</span></th>
-								<th style="width: 7%">PLAN<br><span style="color: purple;">計画</span></th>
-								<th style="width: 7%">CONFIRMED<br><span style="color: purple;">確保済み</span></th>
-								<th style="width: 7%">AT PORT<br><span style="color: purple;">港</span></th>
-								<th style="width: 7%">ETD SUB<br><span style="color: purple;">出荷</span></th>
-								<th style="width: 7%">NOT YET STUFFING<br><span style="color: purple;">未スタッフィング</span></th>
-								<th style="width: 7%">NOT CONFIRMED<br><span style="color: purple;">未確保</span></th>
-
+								<th style="width: 7%; font-size: 18px; font-weight: bold; border-left: 3px solid black;  border-right: 3px solid black; border-top: 3px solid black;">CONFIRMED<br><span style="color: purple;">確保済み</span></th>
+								<th style="width: 7%; background-color: rgba(216, 151, 230, .7);">AT PORT<br><span style="color: purple;">港</span></th>
+								<th style="width: 7%; background-color: rgba(216, 151, 230, .7);">ETD SUB<br><span style="color: purple;">出荷</span></th>
+								<th style="width: 7%; background-color: rgba(216, 151, 230, .7);">NOT YET STUFFING<br><span style="color: purple;">未スタッフィング</span></th>
 							</tr>
 						</thead>
 						<tbody id="tableBodyResume">
-							<tr>
-								<td id="teus_subject">TEUs<br>&nbsp;</td>
-								<td id="teus_plan" style="font-weight: bold; font-size: 20px;"></td>
-								<td id="teus_confirmed" style="font-weight: bold; font-size: 20px;"></td>
+							<tr style="height: 60px">
+								<td id="teus_confirmed" style="font-weight: bold; font-size: 20px; border-left: 3px solid black; border-right: 3px solid black;"></td>
 								<td id="teus_port" style="font-weight: bold; font-size: 20px;"></td>
 								<td id="teus_etd" style="font-weight: bold; font-size: 20px;"></td>
 								<td id="teus_not_yet_stuffing" style="font-weight: bold; font-size: 20px;"></td>
-								<td id="teus_not_confirmed" style="font-weight: bold; font-size: 20px;"></td>
 							</tr>
-
-							<tr>
-								<td id="or_subject">ORDINARY CONTAINER<br><span style="color: purple;">通常のコンテナ</span></td>
-								<td id="or_plan" style="font-weight: bold; font-size: 20px;"></td>
-								<td id="or_confirmed" style="font-weight: bold; font-size: 20px;"></td>
+							<tr style="height: 60px">
+								<td id="or_confirmed" style="font-weight: bold; font-size: 20px; border-left: 3px solid black;  border-right: 3px solid black; border-bottom: 3px solid black;"></td>
 								<td id="or_port" style="font-weight: bold; font-size: 20px;"></td>
 								<td id="or_etd" style="font-weight: bold; font-size: 20px;"></td>
 								<td id="or_not_yet_stuffing" style="font-weight: bold; font-size: 20px;"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-2" style="padding-bottom: 0px; padding-left: 0px;">
+			<div class="box box-solid" style="margin-bottom: 0px;">
+				<div class="box-body">
+					<table id="tableResume" class="table table-bordered" style="width: 100%; font-size: 14px; border: 3px solid black;">
+						<thead style="background-color: rgba(126,86,134,.7);">
+							<tr>
+								<th style="width: 7%; font-size: 18px; font-weight: bold;">NOT CONFIRMED<br><span style="color: purple;">未確保</span></th>
+							</tr>
+						</thead>
+						<tbody id="tableBodyResume">
+							<tr style="height: 60px">
+								<td id="teus_not_confirmed" style="font-weight: bold; font-size: 20px;"></td>
+							</tr>
+							<tr style="height: 60px">
 								<td id="or_not_confirmed" style="font-weight: bold; font-size: 20px;"></td>
 							</tr>
 
@@ -423,25 +457,47 @@
 					total_teus_plan += parseInt(result.teus[i].plan_teus);
 					total_teus_etd_sub += parseInt(result.teus[i].departed);
 					total_teus_at_port += parseInt(result.teus[i].on_board);
-					total_teus_confirmed += parseInt(result.teus[i].confirmed) + parseInt(result.teus[i].stuffing) + parseInt(result.ship_by_dates[i].on_board) + parseInt(result.teus[i].departed);
+					total_teus_confirmed += parseInt(result.teus[i].confirmed) + parseInt(result.teus[i].stuffing) + parseInt(result.teus[i].on_board) + parseInt(result.teus[i].departed);
 					total_teus_not_confirmed += parseInt(teus_not_conf);
 					total_teus_not_yet_stuffing += parseInt(result.teus[i].confirmed);				
 
 				}
-				
+
+				var css = 'style="font-weight: normal; font-style: italic;"';
+
+
+				var persen_or_confirm = Math.ceil(total_or_confirmed/total_or_plan*100);
+				var persen_or_not_confirm = 100-persen_or_confirm;
+
+				var persen_or_port = Math.round(total_or_at_port/total_or_confirmed*100);
+				var persen_or_etd = Math.round(total_or_etd_sub/total_or_confirmed*100);
+				var persen_or_not_yet = 100-persen_or_port-persen_or_etd;
+
+
+
+				var persen_teus_confirm = Math.ceil(total_teus_confirmed/total_teus_plan*100);
+				var persen_teus_not_confirm = 100-persen_teus_confirm;
+
+				var persen_teus_port = Math.round(total_teus_at_port/total_teus_confirmed*100);
+				var persen_teus_etd = Math.round(total_teus_etd_sub/total_teus_confirmed*100);
+				var persen_teus_not_yet = 100-persen_teus_port-persen_teus_etd;
+
+
+
 				$('#or_plan').html(total_or_plan);
-				$('#or_etd').html(total_or_etd_sub);
-				$('#or_port').html(total_or_at_port);
-				$('#or_not_yet_stuffing').html(total_or_not_yet_stuffing);
-				$('#or_confirmed').html(total_or_confirmed);
-				$('#or_not_confirmed').html(total_or_not_confirmed);
+				$('#or_etd').html(total_or_etd_sub + ' <small '+ css +'>('+ persen_teus_etd +'%)</small>');
+				$('#or_port').html(total_or_at_port + ' <small '+ css +'>('+ persen_teus_port +'%)</small>');
+				$('#or_not_yet_stuffing').html(total_or_not_yet_stuffing + ' <small '+ css +'>('+ persen_teus_not_yet +'%)</small>');
+				$('#or_confirmed').html(total_or_confirmed + ' <small '+ css +'>('+ persen_teus_confirm +'%)</small>');
+				$('#or_not_confirmed').html(total_or_not_confirmed + ' <small '+ css +'>('+ persen_teus_not_confirm +'%)</small>');
+
 
 				$('#teus_plan').html(total_teus_plan);
-				$('#teus_etd').html(total_teus_etd_sub);
-				$('#teus_port').html(total_teus_at_port);
-				$('#teus_not_yet_stuffing').html(total_teus_not_yet_stuffing);
-				$('#teus_confirmed').html(total_teus_confirmed);
-				$('#teus_not_confirmed').html(total_teus_not_confirmed);
+				$('#teus_etd').html(total_teus_etd_sub + ' <small '+ css +'>('+ persen_teus_etd +'%)</small>');
+				$('#teus_port').html(total_teus_at_port + ' <small '+ css +'>('+ persen_teus_port +'%)</small>');
+				$('#teus_not_yet_stuffing').html(total_teus_not_yet_stuffing + ' <small '+ css +'>('+ persen_teus_not_yet +'%)</small>');
+				$('#teus_confirmed').html(total_teus_confirmed + ' <small '+ css +'>('+ persen_teus_confirm +'%)</small>');
+				$('#teus_not_confirmed').html(total_teus_not_confirmed + ' <small '+ css +'>('+ persen_teus_not_confirm +'%)</small>');
 
 
 				Highcharts.chart('container1', {

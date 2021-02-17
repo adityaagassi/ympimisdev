@@ -251,9 +251,6 @@
 
 					var garis = ""
 
-
-					
-
 					if(value.stats == "DEPARTED" ){
 						size=20;
 						if (value.deleted_at != "-") {
