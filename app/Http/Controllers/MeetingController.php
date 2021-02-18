@@ -335,7 +335,6 @@ class MeetingController extends Controller
 							'employee_tag' => null,
 							'employee_id' => $employee->employee_id,
 							'status' => 0,
-							// 'remark' => $meeting_detail->remark,
 							'attend_time' => null,
 							'created_by' => $id
 						]);
@@ -353,6 +352,7 @@ class MeetingController extends Controller
 					$meeting_detail->employee_tag = $employee->tag;
 					$meeting_detail->status = '1';
 					$meeting_detail->attend_time = date('Y-m-d H:i:s');
+					$meeting_detail->created_at = date('Y-m-d H:i:s');
 				}
 				else{
 
@@ -362,7 +362,8 @@ class MeetingController extends Controller
 						'employee_id' => $employee->employee_id,
 						'status' => 2,
 						'attend_time' => date('Y-m-d H:i:s'),
-						'created_by' => $id
+						'created_by' => $id,
+						'created_at' => date('Y-m-d H:i:s')
 					]);
 				}
 				$meeting_detail->save();
@@ -388,7 +389,8 @@ class MeetingController extends Controller
 						'employee_id' => $employee->employee_id,
 						'status' => 2,
 						'attend_time' => date('Y-m-d H:i:s'),
-						'created_by' => $id
+						'created_by' => $id,
+						'created_at' => date('Y-m-d H:i:s')
 					]);
 				}
 				$meeting_detail->save();

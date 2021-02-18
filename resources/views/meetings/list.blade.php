@@ -204,11 +204,11 @@
 				backdrop: 'static',
 				keyboard: false
 			});
-			setInterval(foc, 20000);
+			setInterval(foc, 10000);
 		}
 		else{
 			fetchAttendance(id);
-			setInterval(focFetch, 20000);
+			setInterval(focFetch, 10000);
 		}
 
 		$('.select2').select2();
