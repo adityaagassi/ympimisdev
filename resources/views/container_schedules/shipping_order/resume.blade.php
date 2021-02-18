@@ -120,7 +120,7 @@
 							</tbody>
 						</table>
 					</div>
-					<div class="col-xs-4" style="padding: 0px; margin-top: 1.6%;">
+					<div class="col-xs-4" style="padding: 0px; margin-top: 13px;">
 						<table id="tableResume" class="table table-bordered" style="width: 100%; font-size: 14px; margin-bottom: 0px;">
 							<thead style="background-color: rgba(224, 146, 240, .7);">
 								<tr>
