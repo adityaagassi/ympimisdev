@@ -509,10 +509,14 @@
 				var persen_teus_not_yet = 100-persen_teus_port-persen_teus_etd;
 
 
+				var fix_port = Math.round((total_teus_at_port/(total_teus_at_port + total_teus_etd_sub)) * 100);
+				var fix_etd_sub = 100 - fix_port;
+
+
 
 				$('#or_plan').html(total_or_plan);
-				$('#or_etd').html(total_or_etd_sub + ' <small '+ css +'>('+ persen_teus_etd +'%)</small>');
-				$('#or_port').html(total_or_at_port + ' <small '+ css +'>('+ persen_teus_port +'%)</small>');
+				$('#or_etd').html(total_or_etd_sub + ' <small '+ css +'>('+ fix_etd_sub +'%)</small>');
+				$('#or_port').html(total_or_at_port + ' <small '+ css +'>('+ fix_port +'%)</small>');
 				$('#or_not_yet_stuffing').html(total_or_not_yet_stuffing + ' <small '+ css +'>('+ persen_teus_not_yet +'%)</small>');
 				$('#or_confirmed').html(total_or_confirmed + ' <small '+ css +'>('+ persen_teus_confirm +'%)</small>');
 				$('#or_not_confirmed').html(total_or_not_confirmed + ' <small '+ css +'>('+ persen_teus_not_confirm +'%)</small>');
@@ -520,8 +524,8 @@
 
 
 				$('#teus_plan').html(total_teus_plan);
-				$('#teus_etd').html(total_teus_etd_sub + ' <small '+ css +'>('+ persen_teus_etd +'%)</small>');
-				$('#teus_port').html(total_teus_at_port + ' <small '+ css +'>('+ persen_teus_port +'%)</small>');
+				$('#teus_etd').html(total_teus_etd_sub + ' <small '+ css +'>('+ fix_etd_sub +'%)</small>');
+				$('#teus_port').html(total_teus_at_port + ' <small '+ css +'>('+ fix_port +'%)</small>');
 				$('#teus_not_yet_stuffing').html(total_teus_not_yet_stuffing + ' <small '+ css +'>('+ persen_teus_not_yet +'%)</small>');
 				$('#teus_confirmed').html(total_teus_confirmed + ' <small '+ css +'>('+ persen_teus_confirm +'%)</small>');
 				$('#teus_not_confirmed').html(total_teus_not_confirmed + ' <small '+ css +'>('+ persen_teus_not_confirm +'%)</small>');
@@ -595,7 +599,7 @@
 					},
 					series: [
 					{
-						name: 'Ship Confirmed ()',
+						name: 'Ship Confirmed (船確保済み)',
 						data: ship_confirmed,
 						stack: 'shipment',
 						color: '#d897e6'
@@ -615,12 +619,12 @@
 						stack: 'container',
 						color: '#FFFF54'
 					},{
-						name: 'Container Confirmed ()',
+						name: 'Container Confirmed (コンテナ確保済み)',
 						data: confirmed,
 						stack: 'container',
 						color: '#a8daf7'
 					},{
-						name: 'Container Not Confirmed ()',
+						name: 'Container Not Confirmed (コンテナ未確保)',
 						data: not_confirmed,
 						stack: 'container',
 						color: '#d50000'
