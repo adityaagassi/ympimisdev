@@ -97,33 +97,49 @@
 		<div class="col-xs-7" style="padding-bottom: 0px; padding-left: 0px;">
 			<div class="box box-solid" style="margin-bottom: 0px;">
 				<div class="box-body">
-					<table id="tableResume" class="table table-bordered" style="width: 100%; font-size: 14px;">
-						<thead style="background-color: rgba(126,86,134,.7);">
-							<tr>
-								<th style="width: 7%; font-size: 18px; font-weight: bold; border-left: 3px solid black;  border-right: 3px solid black; border-top: 3px solid black;">CONFIRMED<br><span style="color: purple;">確保済み</span></th>
-								<th style="width: 7%; background-color: rgba(216, 151, 230, .7);">NOT YET STUFFING<br><span style="color: purple;">未スタッフィング</span></th>
-								<th style="width: 7%; background-color: rgba(216, 151, 230, .7);">ETD YMPI<br><span style="color: purple;"> YMPI出発済 </span></th>
-								<th style="width: 7%; background-color: rgba(216, 151, 230, .7);">HOLD AT PORT<br><span style="color: purple;">港留置</span></th>
-								<th style="width: 7%; background-color: rgba(216, 151, 230, .7);">ETD SUB<br><span style="color: purple;">出港済み</span></th>
-							</tr>
-						</thead>
-						<tbody id="tableBodyResume">
-							<tr style="height: 60px">
-								<td id="teus_confirmed" style="font-weight: bold; font-size: 20px; border-left: 3px solid black; border-right: 3px solid black;"></td>
-								<td id="teus_not_yet_stuffing" style="font-weight: bold; font-size: 20px;"></td>
-								<td id="teus_ympi" style="font-weight: bold; font-size: 20px;"></td>
-								<td id="teus_port" style="font-weight: bold; font-size: 20px;"></td>
-								<td id="teus_etd" style="font-weight: bold; font-size: 20px;"></td>
-							</tr>
-							<tr style="height: 60px">
-								<td id="or_confirmed" style="font-weight: bold; font-size: 20px; border-left: 3px solid black;  border-right: 3px solid black; border-bottom: 3px solid black;"></td>
-								<td id="or_not_yet_stuffing" style="font-weight: bold; font-size: 20px;"></td>
-								<td id="or_ympi" style="font-weight: bold; font-size: 20px;"></td>
-								<td id="or_port" style="font-weight: bold; font-size: 20px;"></td>
-								<td id="or_etd" style="font-weight: bold; font-size: 20px;"></td>
-							</tr>
-						</tbody>
-					</table>
+					<div class="col-xs-8" style="padding: 0px;">
+						<table id="tableResume" class="table table-bordered" style="width: 100%; font-size: 14px; margin-bottom: 0px;">
+							<thead style="background-color: rgba(126,86,134,.7);">
+								<tr>
+									<th style="width: 7%; font-size: 18px; font-weight: bold; border-left: 3px solid black;  border-right: 3px solid black; border-top: 3px solid black;">CONFIRMED<br><span style="color: purple;">確保済み</span></th>
+									<th style="width: 7%; background-color: rgba(216, 151, 230, .7);">NOT YET STUFFING<br><span style="color: purple;">未スタッフィング</span></th>
+									<th style="width: 7%; background-color: rgba(216, 151, 230, .7);">ETD YMPI<br><span style="color: purple;"> YMPI出発済 </span></th>
+								</tr>
+							</thead>
+							<tbody id="tableBodyResume">
+								<tr style="height: 60px">
+									<td id="teus_confirmed" style="font-weight: bold; font-size: 20px; border-left: 3px solid black; border-right: 3px solid black;"></td>
+									<td id="teus_not_yet_stuffing" style="font-weight: bold; font-size: 20px;"></td>
+									<td id="teus_ympi" style="font-weight: bold; font-size: 20px;"></td>
+								</tr>
+								<tr style="height: 60px">
+									<td id="or_confirmed" style="font-weight: bold; font-size: 20px; border-left: 3px solid black;  border-right: 3px solid black; border-bottom: 3px solid black;"></td>
+									<td id="or_not_yet_stuffing" style="font-weight: bold; font-size: 20px;"></td>
+									<td id="or_ympi" style="font-weight: bold; font-size: 20px;"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="col-xs-4" style="padding: 0px; margin-top: 1.6%;">
+						<table id="tableResume" class="table table-bordered" style="width: 100%; font-size: 14px; margin-bottom: 0px;">
+							<thead style="background-color: rgba(224, 146, 240, .7);">
+								<tr>
+									<th style="width: 7%;">HOLD AT PORT<br><span style="color: purple;">港留置</span></th>
+									<th style="width: 7%;">ETD SUB<br><span style="color: purple;">出港済み</span></th>
+								</tr>
+							</thead>
+							<tbody id="tableBodyResume">
+								<tr style="height: 60px">
+									<td id="teus_port" style="font-weight: bold; font-size: 20px;"></td>
+									<td id="teus_etd" style="font-weight: bold; font-size: 20px;"></td>
+								</tr>
+								<tr style="height: 60px; padding-bottom: 10px;">
+									<td id="or_port" style="font-weight: bold; font-size: 20px;"></td>
+									<td id="or_etd" style="font-weight: bold; font-size: 20px;"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -426,6 +442,8 @@
 				var not_confirmed = [];
 
 				var departed = [];
+				var ship_confirmed = [];
+
 
 				var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -444,7 +462,10 @@
 					not_confirmed.push(parseInt(not_conf));
 
 
-					departed.push(parseInt(result.ship_by_dates[i].departed));
+					var ship_conf = parseInt(result.ship_by_dates[i].confirmed) + parseInt(result.ship_by_dates[i].stuffing) + on_board[i] - parseInt(result.ship_by_dates[i].departed);
+
+					ship_confirmed.push(parseInt(ship_conf));
+					departed.push(parseInt(result.ship_by_dates[i].departed));					
 
 
 					total_or_plan += parseInt(result.ship_by_dates[i].plan);
@@ -574,6 +595,11 @@
 					},
 					series: [
 					{
+						name: 'Ship Confirmed ()',
+						data: ship_confirmed,
+						stack: 'shipment',
+						color: '#d897e6'
+					},{
 						name: 'ETD SUB (出港済み)',
 						data: departed,
 						stack: 'shipment',
@@ -589,12 +615,12 @@
 						stack: 'container',
 						color: '#FFFF54'
 					},{
-						name: 'Confirmed (確保済み)',
+						name: 'Container Confirmed ()',
 						data: confirmed,
 						stack: 'container',
-						color: '#CCFFFF'
+						color: '#a8daf7'
 					},{
-						name: 'Not Confirmed (未確保)',
+						name: 'Container Not Confirmed ()',
 						data: not_confirmed,
 						stack: 'container',
 						color: '#d50000'
