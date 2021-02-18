@@ -264,7 +264,7 @@
 						<table class="table table-hover table-bordered table-striped" id="tableDetail">
 							<thead style="background-color: rgba(126,86,134,.7);">
 								<tr>
-									<th style="width: 2%; vertical-align: middle;" colspan="6">RESUME</th>
+									<th style="width: 2%; vertical-align: middle;" colspan="7">RESUME</th>
 								</tr>
 								<tr>
 									<th style="width: 2%; vertical-align: middle;">YCJ Ref No.</th>
@@ -272,7 +272,8 @@
 									<th style="width: 2%; vertical-align: middle;">Port Loading</th>
 									<th style="width: 4%; vertical-align: middle;">Port of Delivery</th>
 									<th style="width: 4%; vertical-align: middle;">Country</th>
-									<th style="width: 4%; vertical-align: middle;">Plan (in TEUs)</th>
+									<th style="width: 4%; vertical-align: middle;">Plan (TEU)</th>
+									<th style="width: 4%; vertical-align: middle;">Plan (Ordinary)</th>
 								</tr>
 							</thead>
 							<tbody id="tableDetailBody">
@@ -283,7 +284,7 @@
 						<table class="table table-hover table-bordered table-striped" id="tableDetailRef">
 							<thead style="background-color: rgba(126,86,134,.7);">
 								<tr>
-									<th style="width: 2%; vertical-align: middle;" colspan="14">BOOKING DETAILS</th>
+									<th style="width: 2%; vertical-align: middle;" colspan="15">BOOKING DETAILS</th>
 								</tr>
 								<tr>
 									<th style="width: 2%; vertical-align: middle;" rowspan="2">YCJ Ref No.</th>
@@ -291,7 +292,8 @@
 									<th style="width: 2%; vertical-align: middle;" rowspan="2">Port Loading</th>
 									<th style="width: 4%; vertical-align: middle;" rowspan="2">Port of Delivery</th>
 									<th style="width: 4%; vertical-align: middle;" rowspan="2">Country</th>
-									<th style="width: 4%; vertical-align: middle;" rowspan="2">Plan<br>(in TEUs)</th>
+									<th style="width: 4%; vertical-align: middle;" rowspan="2">Plan<br>(TEU)</th>
+									<th style="width: 4%; vertical-align: middle;" rowspan="2">Plan<br>(Ordinary)</th>
 									<th style="width: 2%; vertical-align: middle;" colspan="3">Container Size</th>
 									<th style="width: 4%; vertical-align: middle;" rowspan="2">Booking No. or B/L No.</th>
 									<th style="width: 2%; vertical-align: middle;" rowspan="2">Carier</th>
@@ -637,6 +639,7 @@ function showDetail(category) {
 				detail += '<td '+color+'>'+value.port_loading+'</td>';
 				detail += '<td '+color+'>'+value.port_of_delivery+'</td>';
 				detail += '<td '+color+'>'+value.country+'</td>';
+				detail += '<td '+color+'>'+value.plan_teus+'</td>';
 				detail += '<td '+color+'>'+value.plan+'</td>';
 				detail += '<td '+color+'>'+(value.fortyhc || '' )+'</td>';
 				detail += '<td '+color+'>'+(value.fourty || '' )+'</td>';
@@ -666,6 +669,7 @@ function showDetail(category) {
 				detail += '<td '+color+'>'+value.port_loading+'</td>';
 				detail += '<td '+color+'>'+value.port_of_delivery+'</td>';
 				detail += '<td '+color+'>'+value.country+'</td>';
+				detail += '<td '+color+'>'+value.plan_teus+'</td>';
 				detail += '<td '+color+'>'+value.plan+'</td>';
 				detail += '</tr>';
 			});

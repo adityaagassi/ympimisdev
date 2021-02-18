@@ -375,7 +375,7 @@ class ContainerScheduleController extends Controller{
         $date = $request->get('date');
         $st_date = date('m-d', strtotime($date));
 
-        $resume = db::select("SELECT DISTINCT period, ycj_ref_number, shipper, port_loading, port_of_delivery, country, stuffing_date, plan FROM shipment_reservations
+        $resume = db::select("SELECT DISTINCT period, ycj_ref_number, shipper, port_loading, port_of_delivery, country, stuffing_date, plan, plan_teus FROM shipment_reservations
             WHERE DATE_FORMAT(stuffing_date,'%m-%d') = '".$st_date."'
             AND period = '".$period."'");
 
@@ -390,6 +390,7 @@ class ContainerScheduleController extends Controller{
             'port_of_delivery',
             'country',
             'plan',
+            'plan_teus',
             'fortyhc',
             'forty',
             'twenty',
