@@ -103,8 +103,8 @@
 								<th style="width: 7%; font-size: 18px; font-weight: bold; border-left: 3px solid black;  border-right: 3px solid black; border-top: 3px solid black;">CONFIRMED<br><span style="color: purple;">確保済み</span></th>
 								<th style="width: 7%; background-color: rgba(216, 151, 230, .7);">NOT YET STUFFING<br><span style="color: purple;">未スタッフィング</span></th>
 								<th style="width: 7%; background-color: rgba(216, 151, 230, .7);">ETD YMPI<br><span style="color: purple;"> YMPI出発済 </span></th>
-								<th style="width: 7%; background-color: rgba(216, 151, 230, .7);">AT PORT<br><span style="color: purple;">港</span></th>
-								<th style="width: 7%; background-color: rgba(216, 151, 230, .7);">ETD SUB<br><span style="color: purple;">出荷</span></th>
+								<th style="width: 7%; background-color: rgba(216, 151, 230, .7);">HOLD AT PORT<br><span style="color: purple;">港留置</span></th>
+								<th style="width: 7%; background-color: rgba(216, 151, 230, .7);">ETD SUB<br><span style="color: purple;">出港済み</span></th>
 							</tr>
 						</thead>
 						<tbody id="tableBodyResume">
@@ -572,7 +572,7 @@
 					},
 					series: [
 					{
-						name: 'ETD SUB (出荷)',
+						name: 'ETD SUB (出港済み)',
 						data: departed,
 						stack: 'shipment',
 						color: '#00a65a'
