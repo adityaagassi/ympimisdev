@@ -2361,13 +2361,16 @@ public function fetchGeneralAttendanceCheck(Request $request){
 					meeting_details.*,
 					employee_syncs.`name`,
 					departments.department_shortname ,
-					employee_syncs.section
+					employee_syncs.section,
+					shiftdaily_code
 				FROM
 					meetings
 					JOIN meeting_details ON meeting_details.meeting_id = meetings.id 
 					AND meeting_details.STATUS = 0 and DATE(meeting_details.created_at) = '".$now."'
 					JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
 					left JOIN departments ON departments.department_name = employee_syncs.department 
+					left join sunfish_shift_syncs on sunfish_shift_syncs.employee_id = employee_syncs.employee_id
+					and shift_date = '".$now."'
 				WHERE
 					`subject` = 'Medical Check Up'
 					and SPLIT_STRING ( description, ' - ', 2 ) = 'Registrasi'
@@ -2440,6 +2443,7 @@ public function fetchGeneralAttendanceCheck(Request $request){
 					'data_clinic' => $data_clinic,
 					'data_registrasi' => $data_registrasi,
 					'section' => $auth->section,
+					'now' => $now,
 				);
 			}else{
 				$response = array(
@@ -2449,6 +2453,7 @@ public function fetchGeneralAttendanceCheck(Request $request){
 					'data_clinic' => $data_clinic,
 					'data_registrasi' => $data_registrasi,
 					'section' => "",
+					'now' => $now,
 				);
 			}
 			return Response::json($response);

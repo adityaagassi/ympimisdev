@@ -250,21 +250,55 @@ table > thead > tr > th{
 					$('#tableAudiometri').DataTable().destroy();
 
 					$.each(result.data_registrasi, function(key,value){
-						if (result.section.length > 0) {
-							if (value.section == result.section) {
-								var color = "style='background-color:#d4f05b'";
+						if (value.shiftdaily_code.match(/Shift_1/gi) && getActualFullDate() > result.now+" 05:00:00" && getActualFullDate() < result.now+" 16:00:00") {
+							if (result.section.length > 0) {
+								if (value.section == result.section) {
+									var color = "style='background-color:#d4f05b'";
+								}else{
+									var color = "style='background-color:#e6e6e6'";
+								}
 							}else{
 								var color = "style='background-color:#e6e6e6'";
 							}
-						}else{
-							var color = "style='background-color:#e6e6e6'";
+							table_registrasi += "<tr "+color+">";
+							table_registrasi += "<td "+color+">"+value.employee_id+"</td>";
+							table_registrasi += "<td "+color+">"+value.name+"</td>";
+							table_registrasi += "<td "+color+">"+value.department_shortname+"</td>";
+							table_registrasi += "</tr>";
+							total_registrasi++;
+						}else if (value.shiftdaily_code.match(/Shift_2/gi) && getActualFullDate() > result.now+" 15:00:00" && getActualFullDate() < result.now+" 11:59:59") {
+							if (result.section.length > 0) {
+								if (value.section == result.section) {
+									var color = "style='background-color:#d4f05b'";
+								}else{
+									var color = "style='background-color:#e6e6e6'";
+								}
+							}else{
+								var color = "style='background-color:#e6e6e6'";
+							}
+							table_registrasi += "<tr "+color+">";
+							table_registrasi += "<td "+color+">"+value.employee_id+"</td>";
+							table_registrasi += "<td "+color+">"+value.name+"</td>";
+							table_registrasi += "<td "+color+">"+value.department_shortname+"</td>";
+							table_registrasi += "</tr>";
+							total_registrasi++;
+						}else if (value.shiftdaily_code.match(/Shift_3/gi) && getActualFullDate() > result.now+" 06:00:00" && getActualFullDate() < result.now+" 16:00:00") {
+							if (result.section.length > 0) {
+								if (value.section == result.section) {
+									var color = "style='background-color:#d4f05b'";
+								}else{
+									var color = "style='background-color:#e6e6e6'";
+								}
+							}else{
+								var color = "style='background-color:#e6e6e6'";
+							}
+							table_registrasi += "<tr "+color+">";
+							table_registrasi += "<td "+color+">"+value.employee_id+"</td>";
+							table_registrasi += "<td "+color+">"+value.name+"</td>";
+							table_registrasi += "<td "+color+">"+value.department_shortname+"</td>";
+							table_registrasi += "</tr>";
+							total_registrasi++;
 						}
-						table_registrasi += "<tr "+color+">";
-						table_registrasi += "<td "+color+">"+value.employee_id+"</td>";
-						table_registrasi += "<td "+color+">"+value.name+"</td>";
-						table_registrasi += "<td "+color+">"+value.department_shortname+"</td>";
-						table_registrasi += "</tr>";
-						total_registrasi++;
 					});
 					$('#bodyTableRegistrasi').append(table_registrasi);
 
@@ -621,7 +655,7 @@ table > thead > tr > th{
 		var h = addZero(d.getHours());
 		var m = addZero(d.getMinutes());
 		var s = addZero(d.getSeconds());
-		return day + "-" + month + "-" + year + " (" + h + ":" + m + ":" + s +")";
+		return year + "-" + month + "-" + day + " " + h + ":" + m + ":" + s;
 	}
 
 	function getActualDate() {
