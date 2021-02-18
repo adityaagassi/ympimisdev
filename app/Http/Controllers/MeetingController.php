@@ -214,15 +214,19 @@ class MeetingController extends Controller
 							$meeting_new_id = $key->id;
 						}
 
-						$meeting_detail_new = new MeetingDetail([
-							'meeting_id' => $meeting_new_id,
-							'employee_tag' => null,
-							'employee_id' => $employee->employee_id,
-							'status' => 0,
-							'attend_time' => null,
-							'created_by' => $id
-						]);
-						$meeting_detail_new->save();
+						$meeting_detail_check = DB::SELECT("SELECT * FROM meeting_details where meeting_id = ".$meeting_new_id." and employee_id = '".$employee->employee_id."'");
+
+						if (count($meeting_detail_check) == 0) {
+							$meeting_detail_new = new MeetingDetail([
+								'meeting_id' => $meeting_new_id,
+								'employee_tag' => null,
+								'employee_id' => $employee->employee_id,
+								'status' => 0,
+								'attend_time' => null,
+								'created_by' => $id
+							]);
+							$meeting_detail_new->save();
+						}
 					}
 
 					if($meeting_detail->status != 0){
@@ -239,20 +243,16 @@ class MeetingController extends Controller
 					$meeting_detail->created_at = date('Y-m-d H:i:s');
 				}
 				else{
-					$response = array(
-						'status' => false,
-						'message' => "Proses Sebelumnya Belum Selesai",
-					);
-					return Response::json($response);
-					// $meeting_detail = new MeetingDetail([
-					// 	'meeting_id' => $request->get('meeting_id'),
-					// 	'employee_tag' => $employee->tag,
-					// 	'employee_id' => $employee->employee_id,
-					// 	'status' => 2,
-					// 	'attend_time' => date('Y-m-d H:i:s'),
-					// 	'created_by' => $id,
-					// 	'created_at' => date('Y-m-d H:i:s')
-					// ]);
+
+					$meeting_detail = new MeetingDetail([
+						'meeting_id' => $request->get('meeting_id'),
+						'employee_tag' => $employee->tag,
+						'employee_id' => $employee->employee_id,
+						'status' => 1,
+						'attend_time' => date('Y-m-d H:i:s'),
+						'created_by' => $id,
+						'created_at' => date('Y-m-d H:i:s')
+					]);
 				}
 				$meeting_detail->save();
 			}else{
