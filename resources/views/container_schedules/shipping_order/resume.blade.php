@@ -101,23 +101,26 @@
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
 								<th style="width: 7%; font-size: 18px; font-weight: bold; border-left: 3px solid black;  border-right: 3px solid black; border-top: 3px solid black;">CONFIRMED<br><span style="color: purple;">確保済み</span></th>
+								<th style="width: 7%; background-color: rgba(216, 151, 230, .7);">NOT YET STUFFING<br><span style="color: purple;">未スタッフィング</span></th>
+								<th style="width: 7%; background-color: rgba(216, 151, 230, .7);">ETD YMPI<br><span style="color: purple;"> YMPI出発済 </span></th>
 								<th style="width: 7%; background-color: rgba(216, 151, 230, .7);">AT PORT<br><span style="color: purple;">港</span></th>
 								<th style="width: 7%; background-color: rgba(216, 151, 230, .7);">ETD SUB<br><span style="color: purple;">出荷</span></th>
-								<th style="width: 7%; background-color: rgba(216, 151, 230, .7);">NOT YET STUFFING<br><span style="color: purple;">未スタッフィング</span></th>
 							</tr>
 						</thead>
 						<tbody id="tableBodyResume">
 							<tr style="height: 60px">
 								<td id="teus_confirmed" style="font-weight: bold; font-size: 20px; border-left: 3px solid black; border-right: 3px solid black;"></td>
+								<td id="teus_not_yet_stuffing" style="font-weight: bold; font-size: 20px;"></td>
+								<td id="teus_ympi" style="font-weight: bold; font-size: 20px;"></td>
 								<td id="teus_port" style="font-weight: bold; font-size: 20px;"></td>
 								<td id="teus_etd" style="font-weight: bold; font-size: 20px;"></td>
-								<td id="teus_not_yet_stuffing" style="font-weight: bold; font-size: 20px;"></td>
 							</tr>
 							<tr style="height: 60px">
 								<td id="or_confirmed" style="font-weight: bold; font-size: 20px; border-left: 3px solid black;  border-right: 3px solid black; border-bottom: 3px solid black;"></td>
+								<td id="or_not_yet_stuffing" style="font-weight: bold; font-size: 20px;"></td>
+								<td id="or_ympi" style="font-weight: bold; font-size: 20px;"></td>
 								<td id="or_port" style="font-weight: bold; font-size: 20px;"></td>
 								<td id="or_etd" style="font-weight: bold; font-size: 20px;"></td>
-								<td id="or_not_yet_stuffing" style="font-weight: bold; font-size: 20px;"></td>
 							</tr>
 						</tbody>
 					</table>
@@ -349,7 +352,7 @@
 			todayHighlight: true
 		});
 		fillTable();
-		setInterval(fillTable, 60*60*1000);
+		setInterval(fillTable, 10*60*1000);
 
 
 	});
@@ -490,6 +493,7 @@
 				$('#or_not_yet_stuffing').html(total_or_not_yet_stuffing + ' <small '+ css +'>('+ persen_teus_not_yet +'%)</small>');
 				$('#or_confirmed').html(total_or_confirmed + ' <small '+ css +'>('+ persen_teus_confirm +'%)</small>');
 				$('#or_not_confirmed').html(total_or_not_confirmed + ' <small '+ css +'>('+ persen_teus_not_confirm +'%)</small>');
+				$('#or_ympi').html(parseInt(total_or_at_port + total_or_etd_sub) + ' <small '+ css +'>('+ parseInt(persen_teus_port + persen_teus_etd) +'%)</small>');
 
 
 				$('#teus_plan').html(total_teus_plan);
@@ -498,6 +502,8 @@
 				$('#teus_not_yet_stuffing').html(total_teus_not_yet_stuffing + ' <small '+ css +'>('+ persen_teus_not_yet +'%)</small>');
 				$('#teus_confirmed').html(total_teus_confirmed + ' <small '+ css +'>('+ persen_teus_confirm +'%)</small>');
 				$('#teus_not_confirmed').html(total_teus_not_confirmed + ' <small '+ css +'>('+ persen_teus_not_confirm +'%)</small>');
+				$('#teus_ympi').html(parseInt(total_teus_at_port + total_teus_etd_sub) + ' <small '+ css +'>('+ parseInt(persen_teus_port + persen_teus_etd) +'%)</small>');
+
 
 
 				Highcharts.chart('container1', {
@@ -571,7 +577,7 @@
 						stack: 'shipment',
 						color: '#00a65a'
 					},{
-						name: 'ETD YMPI (YMPI出荷日)',
+						name: 'ETD YMPI (YMPI出発済)',
 						data: on_board,
 						stack: 'container',
 						color: '#455DFF'
