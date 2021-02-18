@@ -271,7 +271,7 @@ table > thead > tr > th{
 							table_registrasi += "<td "+color+">"+value.department_shortname+"</td>";
 							table_registrasi += "</tr>";
 							total_registrasi++;
-						}else if (value.shiftdaily_code.match(/Shift_2/gi) && getActualFullDate() > result.now+" 15:00:00" && getActualFullDate() < result.now+" 11:59:59") {
+						}else if (value.shiftdaily_code.match(/Shift_2/gi) && getActualFullDate() > result.now+" 15:00:00" && getActualFullDate() < result.now+" 23:00:00") {
 							if (result.section.length > 0) {
 								if (value.section == result.section) {
 									var color = "style='background-color:#d4f05b'";
