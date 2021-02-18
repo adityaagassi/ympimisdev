@@ -112,6 +112,7 @@ table > thead > tr > th{
 				<table id="tableRegistrasi" class="table table-bordered table-striped table-responsive">
 					<thead>
 						<tr>
+							<th>#</th>
 							<th>ID</th>
 							<th>Name</th>
 							<th>Dept</th>
@@ -134,6 +135,7 @@ table > thead > tr > th{
 				<table id="tableClinic" class="table table-bordered table-striped">
 					<thead>
 						<tr>
+							<th>#</th>
 							<th>ID</th>
 							<th>Name</th>
 							<th>Dept</th>
@@ -156,6 +158,7 @@ table > thead > tr > th{
 				<table id="tableThorax" class="table table-bordered table-striped">
 					<thead>
 						<tr>
+							<th>#</th>
 							<th>ID</th>
 							<th>Name</th>
 							<th>Dept</th>
@@ -178,6 +181,7 @@ table > thead > tr > th{
 				<table id="tableAudiometri" class="table table-bordered table-striped">
 					<thead>
 						<tr>
+							<th>#</th>
 							<th>ID</th>
 							<th>Name</th>
 							<th>Dept</th>
@@ -261,6 +265,7 @@ table > thead > tr > th{
 								var color = "style='background-color:#e6e6e6'";
 							}
 							table_registrasi += "<tr "+color+">";
+							table_registrasi += "<td "+color+">"+(total_registrasi+1)+"</td>";
 							table_registrasi += "<td "+color+">"+value.employee_id+"</td>";
 							table_registrasi += "<td "+color+">"+value.name+"</td>";
 							table_registrasi += "<td "+color+">"+value.department_shortname+"</td>";
@@ -277,6 +282,7 @@ table > thead > tr > th{
 								var color = "style='background-color:#e6e6e6'";
 							}
 							table_registrasi += "<tr "+color+">";
+							table_registrasi += "<td "+color+">"+(total_registrasi+1)+"</td>";
 							table_registrasi += "<td "+color+">"+value.employee_id+"</td>";
 							table_registrasi += "<td "+color+">"+value.name+"</td>";
 							table_registrasi += "<td "+color+">"+value.department_shortname+"</td>";
@@ -293,6 +299,7 @@ table > thead > tr > th{
 								var color = "style='background-color:#e6e6e6'";
 							}
 							table_registrasi += "<tr "+color+">";
+							table_registrasi += "<td "+color+">"+(total_registrasi+1)+"</td>";
 							table_registrasi += "<td "+color+">"+value.employee_id+"</td>";
 							table_registrasi += "<td "+color+">"+value.name+"</td>";
 							table_registrasi += "<td "+color+">"+value.department_shortname+"</td>";
@@ -313,6 +320,7 @@ table > thead > tr > th{
 							var color = "style='background-color:#e6e6e6'";
 						}
 						table_clinic += "<tr "+color+">";
+						table_clinic += "<td "+color+">"+(total_clinic+1)+"</td>";
 						table_clinic += "<td "+color+">"+value.employee_id+"</td>";
 						table_clinic += "<td "+color+">"+value.name+"</td>";
 						table_clinic += "<td "+color+">"+value.department_shortname+"</td>";
@@ -332,6 +340,7 @@ table > thead > tr > th{
 							var color = "style='background-color:#e6e6e6'";
 						}
 						table_thorax += "<tr "+color+">";
+						table_thorax += "<td "+color+">"+(total_thorax+1)+"</td>";
 						table_thorax += "<td "+color+">"+value.employee_id+"</td>";
 						table_thorax += "<td "+color+">"+value.name+"</td>";
 						table_thorax += "<td "+color+">"+value.department_shortname+"</td>";
@@ -351,6 +360,7 @@ table > thead > tr > th{
 							var color = "style='background-color:#e6e6e6'";
 						}
 						table_audiometri += "<tr "+color+">";
+						table_audiometri += "<td "+color+">"+(total_audiometri+1)+"</td>";
 						table_audiometri += "<td "+color+">"+value.employee_id+"</td>";
 						table_audiometri += "<td "+color+">"+value.name+"</td>";
 						table_audiometri += "<td "+color+">"+value.department_shortname+"</td>";
