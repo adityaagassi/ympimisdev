@@ -2367,7 +2367,7 @@ public function fetchGeneralAttendanceCheck(Request $request){
 					JOIN meeting_details ON meeting_details.meeting_id = meetings.id 
 					AND meeting_details.STATUS = 0 and DATE(meeting_details.created_at) = '".$now."'
 					JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
-					JOIN departments ON departments.department_name = employee_syncs.department 
+					left JOIN departments ON departments.department_name = employee_syncs.department 
 				WHERE
 					`subject` = 'Medical Check Up'
 					and SPLIT_STRING ( description, ' - ', 2 ) = 'Registrasi'
@@ -2386,7 +2386,7 @@ public function fetchGeneralAttendanceCheck(Request $request){
 					JOIN meeting_details ON meeting_details.meeting_id = meetings.id 
 					AND meeting_details.STATUS = 0 and DATE(meeting_details.created_at) = '".$now."'
 					JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
-					JOIN departments ON departments.department_name = employee_syncs.department 
+					left JOIN departments ON departments.department_name = employee_syncs.department  
 				WHERE
 					`subject` = 'Medical Check Up'
 					and SPLIT_STRING ( description, ' - ', 2 ) = 'Darah'
@@ -2405,7 +2405,7 @@ public function fetchGeneralAttendanceCheck(Request $request){
 					JOIN meeting_details ON meeting_details.meeting_id = meetings.id 
 					AND meeting_details.STATUS = 0 and DATE(meeting_details.created_at) = '".$now."'
 					JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
-					JOIN departments ON departments.department_name = employee_syncs.department 
+					left JOIN departments ON departments.department_name = employee_syncs.department  
 				WHERE
 					`subject` = 'Medical Check Up'
 					and SPLIT_STRING ( description, ' - ', 2 ) = 'Thorax'
@@ -2424,7 +2424,7 @@ public function fetchGeneralAttendanceCheck(Request $request){
 					JOIN meeting_details ON meeting_details.meeting_id = meetings.id 
 					AND meeting_details.STATUS = 0 and DATE(meeting_details.created_at) = '".$now."'
 					JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
-					JOIN departments ON departments.department_name = employee_syncs.department 
+					left JOIN departments ON departments.department_name = employee_syncs.department  
 				WHERE
 					`subject` = 'Medical Check Up'
 					and SPLIT_STRING ( description, ' - ', 2 ) = 'Audiometri'

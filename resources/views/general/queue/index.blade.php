@@ -207,7 +207,7 @@ table > thead > tr > th{
 	jQuery(document).ready(function(){
 		$('.select2').select2();
 		fetchQueue();
-		// setInterval(fetchQueue, 5000);
+		setInterval(fetchQueue, 5000);
 	});
 
 	$('.datepicker').datepicker({
