@@ -202,7 +202,7 @@ class HealthController extends Controller
 						AND health_indicators.employee_id = employee_syncs.employee_id 
 						),
 					0 
-				) AS max_oxy_rate,
+				)*100 AS max_oxy_rate,
 				COALESCE ((
 					SELECT
 						MIN( VALUE ) AS min_oxy_rate 
@@ -214,7 +214,7 @@ class HealthController extends Controller
 						AND health_indicators.employee_id = employee_syncs.employee_id 
 						),
 					0 
-				) AS min_oxy_rate 
+				)*100 AS min_oxy_rate 
 			FROM
 				employee_syncs
 				JOIN users ON users.username = employee_syncs.employee_id
@@ -278,7 +278,7 @@ class HealthController extends Controller
 	              			$hour = substr($attrs2[0], 8, 2);
 	              			$minute = substr($attrs2[0], 10, 2);
 	              			$second = substr($attrs2[0], 12, 2);
-	              			$at = date('Y-m-d H:i:s',strtotime($year."-".$month."-".$day." ".$hour.":".$minute.":".$second. ' + 7 hours'));
+	              			$at = date('Y-m-d H:i:s',strtotime($year."-".$month."-".$day." ".$hour.":".$minute.":".$second));
 	              			$user = User::where('id',Auth::id())->first();
 
 	              			$healthcreate = HealthIndicator::create([
@@ -315,7 +315,7 @@ class HealthController extends Controller
 	              			$hour = substr($attrs2[0], 8, 2);
 	              			$minute = substr($attrs2[0], 10, 2);
 	              			$second = substr($attrs2[0], 12, 2);
-	              			$at = date('Y-m-d H:i:s',strtotime($year."-".$month."-".$day." ".$hour.":".$minute.":".$second. ' + 7 hours'));
+	              			$at = date('Y-m-d H:i:s',strtotime($year."-".$month."-".$day." ".$hour.":".$minute.":".$second));
 
 	              			$user = User::where('id',Auth::id())->first();
 
