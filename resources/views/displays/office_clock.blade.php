@@ -135,7 +135,7 @@ table > thead > tr > th{
 		});
 		$('#tanggal').html('{{$dateTitle}}');
 		$('#visitor_info').hide();
-		setInterval(fillVisitor,10000);
+		setInterval(fillVisitor,30000);
 		$(".content-wrapper").css("background-color",'rgb(75, 30, 120)','important');
 	});
 
