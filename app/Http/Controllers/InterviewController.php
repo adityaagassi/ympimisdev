@@ -897,6 +897,7 @@ class InterviewController extends Controller
     public function detailNilai(Request $request)
     {
       try {
+        // var_dump($request->get('point'));
         $points = explode(',', $request->get('point'));
         $addpoint = "";
         $point = "";
@@ -936,13 +937,29 @@ class InterviewController extends Controller
           $judul = 'Janji Tindakan Dasar Hotel Concept';
         }
 
-        $pointtitlecheck = DB::SELECT("SELECT * FROM `pointing_call_items` where point_title = '".$type."' ".$addpoint);
+        $pointsall = [];
+        $pointbypoint = [];
+
+        for($y = 0; $y < count($points); $y++) {
+          $pointtitlecheck = DB::SELECT("SELECT
+            * 
+          FROM
+            `pointing_call_items` 
+          WHERE
+            point_title = '".$type."' 
+            AND point_no = '".$points[$y]."'
+            limit 1");
+          foreach ($pointtitlecheck as $key) {
+            array_push($pointbypoint, array('point_no' => $key->point_no,
+            'point_description' => $key->point_description, ));
+          }
+        }
           $pointtitle = DB::SELECT("SELECT * FROM `pointing_call_items` where point_title = '".$type."'");
 
         $response = array(
             'status' => true,
             'pointtitle' => $pointtitle,
-            'pointtitlecheck' => $pointtitlecheck,
+            'pointbypoint' => $pointbypoint,
             'judul' => $judul,
         );
         return Response::json($response);

@@ -123,7 +123,7 @@ label {
 			            <tbody>
 			              @foreach($interview_detail as $interview_detail)
 			              <tr>
-			                <td>{{ $interview_detail->participants->name }}</td>
+			                <td>{{ $interview_detail->participants->employee_id }} - {{ $interview_detail->participants->name }}</td>
 			                <td>@if($interview_detail->filosofi_yamaha == 'OK')
 			                		<label class="label label-success">{{ $interview_detail->filosofi_yamaha }}</label>
 			                	@elseif($interview_detail->filosofi_yamaha == 'OK (Kurang Lancar)')
@@ -234,7 +234,7 @@ label {
 			            <tbody>
 			              @foreach($interview_detail2 as $interview_detail2)
 			              <tr>
-			                <td>{{ $interview_detail2->participants->name }}</td>
+			                <td>{{ $interview_detail->participants->employee_id }} - {{ $interview_detail2->participants->name }}</td>
 			                <td><?php $detail = explode("_",$interview_detail2->enam_pasal_keselamatan);
 			                		// echo "Nilai = ".$detail[1]."%<br>";
 			                		// echo "Point = ".$detail[0];
@@ -1229,16 +1229,19 @@ label {
 					$('#modal-title-nilai').html('Detail Nilai '+result.judul);
 					$('#table-detail-nilai-body').html('');
 					var table = "";
+					var point_no = [];
+					$.each(result.pointbypoint, function(key2, value2){
+						point_no.push(value2.point_no);
+					});
 					$.each(result.pointtitle, function(key, value){
-						$.each(result.pointtitlecheck, function(key2, value2){
-							if (value2.point_description == value.point_description) {
-								checks = 'OK';
-								color = '#b1ff75';
-							}else{
-								checks = 'Not OK';
-								color = '#ffa89e';
-							}
-						});
+						if (point_no.includes(value.point_no)) {
+							checks = 'OK';
+							color = '#b1ff75';
+						}else{
+							checks = 'Not OK';
+							color = '#ffa89e';
+						}
+						
 						table += '<tr style="background-color:'+color+'">';
 						table += '<td>'+value.point_no+'</td>';
 						table += '<td>'+value.point_description+'</td>';

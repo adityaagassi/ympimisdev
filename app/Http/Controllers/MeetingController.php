@@ -232,7 +232,7 @@ class MeetingController extends Controller
 					if($meeting_detail->status != 0){
 						$response = array(
 							'status' => false,
-							'message' => 'Already attended',
+							'message' => '<b>Already attended / Sudah Pernah Scan</b>',
 						);
 						return Response::json($response);
 					}
@@ -260,7 +260,7 @@ class MeetingController extends Controller
 					if($meeting_detail->status != 0){
 						$response = array(
 							'status' => false,
-							'message' => 'Already attended',
+							'message' => 'Already attended / Sudah Pernah Scan',
 						);
 						return Response::json($response);
 					}

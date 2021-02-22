@@ -201,6 +201,12 @@ table > thead > tr > th{
 <script src="{{ url("js/highcharts-3d.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
+<script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
+<script src="{{ url("js/buttons.flash.min.js")}}"></script>
+<script src="{{ url("js/jszip.min.js")}}"></script>
+<script src="{{ url("js/vfs_fonts.js")}}"></script>
+<script src="{{ url("js/buttons.html5.min.js")}}"></script>
+<script src="{{ url("js/buttons.print.min.js")}}"></script>
 <script>
 	$.ajaxSetup({
 		headers: {
@@ -377,6 +383,42 @@ table > thead > tr > th{
 					var table = $('#tableRegistrasi').DataTable({
 						'dom': 'Bfrtip',
 						'responsive':true,
+						// 'lengthMenu': [
+						// [ 10, 25, 50, -1 ],
+						// [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+						// ],
+						'buttons': {
+							buttons:[
+							// {
+							// 	extend: 'pageLength',
+							// 	className: 'btn btn-default',
+							// },
+							{
+								extend: 'copy',
+								className: 'btn btn-success',
+								text: '<i class="fa fa-copy"></i> Copy',
+									exportOptions: {
+										columns: ':not(.notexport)'
+								}
+							},
+							{
+								extend: 'excel',
+								className: 'btn btn-info',
+								text: '<i class="fa fa-file-excel-o"></i> Excel',
+								exportOptions: {
+									columns: ':not(.notexport)'
+								}
+							},
+							// {
+							// 	extend: 'print',
+							// 	className: 'btn btn-warning',
+							// 	text: '<i class="fa fa-print"></i> Print',
+							// 	exportOptions: {
+							// 		columns: ':not(.notexport)'
+							// 	}
+							// }
+							]
+						},
 						'paging': true,
 						'lengthChange': false,
 						'pageLength': 10,
@@ -394,6 +436,42 @@ table > thead > tr > th{
 					var table = $('#tableClinic').DataTable({
 						'dom': 'Bfrtip',
 						'responsive':true,
+						// 'lengthMenu': [
+						// [ 10, 25, 50, -1 ],
+						// [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+						// ],
+						'buttons': {
+							buttons:[
+							// {
+							// 	extend: 'pageLength',
+							// 	className: 'btn btn-default',
+							// },
+							{
+								extend: 'copy',
+								className: 'btn btn-success',
+								text: '<i class="fa fa-copy"></i> Copy',
+									exportOptions: {
+										columns: ':not(.notexport)'
+								}
+							},
+							{
+								extend: 'excel',
+								className: 'btn btn-info',
+								text: '<i class="fa fa-file-excel-o"></i> Excel',
+								exportOptions: {
+									columns: ':not(.notexport)'
+								}
+							},
+							// {
+							// 	extend: 'print',
+							// 	className: 'btn btn-warning',
+							// 	text: '<i class="fa fa-print"></i> Print',
+							// 	exportOptions: {
+							// 		columns: ':not(.notexport)'
+							// 	}
+							// }
+							]
+						},
 						'paging': true,
 						'lengthChange': false,
 						'pageLength': 10,
@@ -411,6 +489,42 @@ table > thead > tr > th{
 					var table = $('#tableThorax').DataTable({
 						'dom': 'Bfrtip',
 						'responsive':true,
+						// 'lengthMenu': [
+						// [ 10, 25, 50, -1 ],
+						// [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+						// ],
+						'buttons': {
+							buttons:[
+							// {
+							// 	extend: 'pageLength',
+							// 	className: 'btn btn-default',
+							// },
+							{
+								extend: 'copy',
+								className: 'btn btn-success',
+								text: '<i class="fa fa-copy"></i> Copy',
+									exportOptions: {
+										columns: ':not(.notexport)'
+								}
+							},
+							{
+								extend: 'excel',
+								className: 'btn btn-info',
+								text: '<i class="fa fa-file-excel-o"></i> Excel',
+								exportOptions: {
+									columns: ':not(.notexport)'
+								}
+							},
+							// {
+							// 	extend: 'print',
+							// 	className: 'btn btn-warning',
+							// 	text: '<i class="fa fa-print"></i> Print',
+							// 	exportOptions: {
+							// 		columns: ':not(.notexport)'
+							// 	}
+							// }
+							]
+						},
 						'paging': true,
 						'lengthChange': false,
 						'pageLength': 10,
@@ -428,6 +542,42 @@ table > thead > tr > th{
 					var table = $('#tableAudiometri').DataTable({
 						'dom': 'Bfrtip',
 						'responsive':true,
+						// 'lengthMenu': [
+						// [ 10, 25, 50, -1 ],
+						// [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+						// ],
+						'buttons': {
+							buttons:[
+							// {
+							// 	extend: 'pageLength',
+							// 	className: 'btn btn-default',
+							// },
+							{
+								extend: 'copy',
+								className: 'btn btn-success',
+								text: '<i class="fa fa-copy"></i> Copy',
+									exportOptions: {
+										columns: ':not(.notexport)'
+								}
+							},
+							{
+								extend: 'excel',
+								className: 'btn btn-info',
+								text: '<i class="fa fa-file-excel-o"></i> Excel',
+								exportOptions: {
+									columns: ':not(.notexport)'
+								}
+							},
+							// {
+							// 	extend: 'print',
+							// 	className: 'btn btn-warning',
+							// 	text: '<i class="fa fa-print"></i> Print',
+							// 	exportOptions: {
+							// 		columns: ':not(.notexport)'
+							// 	}
+							// }
+							]
+						},
 						'paging': true,
 						'lengthChange': false,
 						'pageLength': 10,
