@@ -636,19 +636,40 @@ class InterviewController extends Controller
 
         $interviewPicture = InterviewPicture::where('interview_id',$interview_id)->get();
 
+        $poinalldiamond = DB::SELECT("SELECT point_no FROM `pointing_call_items` where point_title = 'diamond'");
+        $poinallk3 = DB::SELECT("SELECT point_no FROM `pointing_call_items` where point_title = 'k3'");
+        $poinall10_komitmen = DB::SELECT("SELECT point_no FROM `pointing_call_items` where point_title = '10_komitmen'");
+        $poinallslogan_mutu = DB::SELECT("SELECT point_no FROM `pointing_call_items` where point_title = 'slogan_mutu'");
+        $poinall6_pasal = DB::SELECT("SELECT point_no FROM `pointing_call_items` where point_title = '6_pasal'");
+        $poinallbudaya = DB::SELECT("SELECT point_no FROM `pointing_call_items` where point_title = 'budaya'");
+        $poinall5s = DB::SELECT("SELECT point_no FROM `pointing_call_items` where point_title = '5s'");
+        $poinallkomitmen = DB::SELECT("SELECT point_no FROM `pointing_call_items` where point_title = 'komitmen'");
+        $poinalljanji = DB::SELECT("SELECT point_no FROM `pointing_call_items` where point_title = 'janji'");
+
         if($interview == null){
             return redirect('/index/interview/index/'.$activity_list_id)->with('error', 'Data Tidak Tersedia.')->with('page', 'Interview');
         }else{
             // $data = array(
-            //               'interview' => $interview,
-            //               'interviewDetail' => $interviewDetail,
-            //               'activityList' => $activityList,
-            //               'departments' => $departments,
-            //               'activity_name' => $activity_name,
-            //               'activity_alias' => $activity_alias,
-            //               'interview_id' => $interview_id,
-            //               'interviewPicture' => $interviewPicture,
-            //               'id_departments' => $id_departments);
+            // 'interview' => $interview,
+            //         'interviewDetail' => $interviewDetail,
+            //         'activityList' => $activityList,
+            //         'departments' => $departments,
+            //         'leader' => $leader,
+            //         'activity_name' => $activity_name,
+            //         'activity_alias' => $activity_alias,
+            //         'interview_id' => $interview_id,
+            //         'interviewPicture' => $interviewPicture,
+            //         'id_departments' => $id_departments,
+            //         'poinalldiamond' => $poinalldiamond,
+            //         'poinallk3' => $poinallk3,
+            //         'poinall10_komitmen' => $poinall10_komitmen,
+            //         'poinallslogan_mutu' => $poinallslogan_mutu,
+            //         'poinall6_pasal' => $poinall6_pasal,
+            //         'poinallbudaya' => $poinallbudaya,
+            //         'poinall5s' => $poinall5s,
+            //         'poinallkomitmen' => $poinallkomitmen,
+            //         'poinalljanji' => $poinalljanji,
+            //   );
             // return view('interview.print', $data
             //     )->with('page', 'Interview');
              $pdf = \App::make('dompdf.wrapper');
@@ -665,7 +686,16 @@ class InterviewController extends Controller
                     'activity_alias' => $activity_alias,
                     'interview_id' => $interview_id,
                     'interviewPicture' => $interviewPicture,
-                    'id_departments' => $id_departments
+                    'id_departments' => $id_departments,
+                    'poinalldiamond' => $poinalldiamond,
+                    'poinallk3' => $poinallk3,
+                    'poinall10_komitmen' => $poinall10_komitmen,
+                    'poinallslogan_mutu' => $poinallslogan_mutu,
+                    'poinall6_pasal' => $poinall6_pasal,
+                    'poinallbudaya' => $poinallbudaya,
+                    'poinall5s' => $poinall5s,
+                    'poinallkomitmen' => $poinallkomitmen,
+                    'poinalljanji' => $poinalljanji,
              ));
 
              return $pdf->stream($activity_name." - ".$leader.".pdf");
@@ -689,6 +719,16 @@ class InterviewController extends Controller
 
         $interviewPicture = InterviewPicture::where('interview_id',$interview_id)->get();
 
+        $poinalldiamond = DB::SELECT("SELECT point_no FROM `pointing_call_items` where point_title = 'diamond'");
+        $poinallk3 = DB::SELECT("SELECT point_no FROM `pointing_call_items` where point_title = 'k3'");
+        $poinall10_komitmen = DB::SELECT("SELECT point_no FROM `pointing_call_items` where point_title = '10_komitmen'");
+        $poinallslogan_mutu = DB::SELECT("SELECT point_no FROM `pointing_call_items` where point_title = 'slogan_mutu'");
+        $poinall6_pasal = DB::SELECT("SELECT point_no FROM `pointing_call_items` where point_title = '6_pasal'");
+        $poinallbudaya = DB::SELECT("SELECT point_no FROM `pointing_call_items` where point_title = 'budaya'");
+        $poinall5s = DB::SELECT("SELECT point_no FROM `pointing_call_items` where point_title = '5s'");
+        $poinallkomitmen = DB::SELECT("SELECT point_no FROM `pointing_call_items` where point_title = 'komitmen'");
+        $poinalljanji = DB::SELECT("SELECT point_no FROM `pointing_call_items` where point_title = 'janji'");
+
         if($interview == null){
             return redirect('/index/interview/index/'.$activity_list_id)->with('error', 'Data Tidak Tersedia.')->with('page', 'Interview');
         }else{
@@ -703,7 +743,16 @@ class InterviewController extends Controller
                           'activity_alias' => $activity_alias,
                           'interview_id' => $interview_id,
                           'interviewPicture' => $interviewPicture,
-                          'id_departments' => $id_departments);
+                          'id_departments' => $id_departments,
+                          'poinalldiamond' => $poinalldiamond,
+                          'poinallk3' => $poinallk3,
+                          'poinall10_komitmen' => $poinall10_komitmen,
+                          'poinallslogan_mutu' => $poinallslogan_mutu,
+                          'poinall6_pasal' => $poinall6_pasal,
+                          'poinallbudaya' => $poinallbudaya,
+                          'poinall5s' => $poinall5s,
+                          'poinallkomitmen' => $poinallkomitmen,
+                          'poinalljanji' => $poinalljanji,);
             return view('interview.print_email', $data
                 )->with('page', 'Interview');
         }

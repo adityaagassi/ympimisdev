@@ -114,7 +114,19 @@ table {
 			                			echo '<center><label class="label label-success">O</label></center>';
 			                		}else if ($nilai[1] < 100 && $nilai[1] > 0) {
 			                			echo '<center><label class="label label-warning"><img width="20px" src="'.$file.'"></label></center>';
-			                			echo "Point = ".$nilai[0];
+			                			$nilaipoint = explode(",", $nilai[0]);
+			                			// echo "Point = ".$nilai[0];
+			                			$hapal = [];
+			                			$tidak_hapal = [];
+			                			for($i = 0; $i < count($poinalldiamond) ; $i++) {
+			                				if (in_array($poinalldiamond[$i]->point_no,$nilaipoint)) {
+			                					array_push($hapal, $poinalldiamond[$i]->point_no);
+			                				}else{
+			                					array_push($tidak_hapal, $poinalldiamond[$i]->point_no);
+			                				}
+			                			}
+			                			echo "Hapal = ".join(",",$hapal)."<br>";
+			                			echo "Tidak Hapal = ".join(",",$tidak_hapal);
 			                		}else{
 			                			echo '<center><label class="label label-danger">X</label></center>';
 			                		}
@@ -134,7 +146,19 @@ table {
 			                			echo '<center><label class="label label-success">O</label></center>';
 			                		}else if ($nilai[1] < 100 && $nilai[1] > 0) {
 			                			echo '<center><label class="label label-warning"><img width="20px" src="'.$file.'"></label></center>';
-			                			echo "Point = ".$nilai[0];
+			                			$nilaipoint = explode(",", $nilai[0]);
+			                			// echo "Point = ".$nilai[0];
+			                			$hapal = [];
+			                			$tidak_hapal = [];
+			                			for($i = 0; $i < count($poinallk3) ; $i++) {
+			                				if (in_array($poinallk3[$i]->point_no,$nilaipoint )) {
+			                					array_push($hapal, $poinallk3[$i]->point_no);
+			                				}else{
+			                					array_push($tidak_hapal, $poinallk3[$i]->point_no);
+			                				}
+			                			}
+			                			echo "Point = ".join(",",$hapal)."<br>";
+			                			echo "Point = ".join(",",$tidak_hapal);
 			                		}else{
 			                			echo '<center><label class="label label-danger">X</label></center>';
 			                		}
@@ -154,7 +178,20 @@ table {
 			                			echo '<center><label class="label label-success">O</label></center>';
 			                		}else if ($nilai[1] < 100 && $nilai[1] > 0) {
 			                			echo '<center><label class="label label-warning"><img width="20px" src="'.$file.'"></label></center>';
-			                			echo "Point = ".$nilai[0];
+			                			// echo "Point = ".$nilai[0];
+			                			$nilaipoint = explode(",", $nilai[0]);
+			                			// echo "Point = ".$nilai[0];
+			                			$hapal = [];
+			                			$tidak_hapal = [];
+			                			for($i = 0; $i < count($poinall10_komitmen) ; $i++) {
+			                				if (in_array($poinall10_komitmen[$i]->point_no,$nilaipoint)) {
+			                					array_push($hapal, $poinall10_komitmen[$i]->point_no);
+			                				}else{
+			                					array_push($tidak_hapal, $poinall10_komitmen[$i]->point_no);
+			                				}
+			                			}
+			                			echo "Hapal = ".join(",",$hapal)."<br>";
+			                			echo "Tidak Hapal = ".join(",",$tidak_hapal);
 			                		}else{
 			                			echo '<center><label class="label label-danger">X</label></center>';
 			                		}
@@ -174,7 +211,19 @@ table {
 			                			echo '<center><label class="label label-success">O</label></center>';
 			                		}else if ($nilai[1] < 100 && $nilai[1] > 0) {
 			                			echo '<center><label class="label label-warning"><img width="20px" src="'.$file.'"></label></center>';
-			                			echo "Point = ".$nilai[0];
+			                			$nilaipoint = explode(",", $nilai[0]);
+			                			// echo "Point = ".$nilai[0];
+			                			$hapal = [];
+			                			$tidak_hapal = [];
+			                			for($i = 0; $i < count($poinallslogan_mutu) ; $i++) {
+			                				if (in_array($poinallslogan_mutu[$i]->point_no,$nilaipoint)) {
+			                					array_push($hapal, $poinallslogan_mutu[$i]->point_no);
+			                				}else{
+			                					array_push($tidak_hapal, $poinallslogan_mutu[$i]->point_no);
+			                				}
+			                			}
+			                			echo "Hapal = ".join(",",$hapal)."<br>";
+			                			echo "Tidak Hapal = ".join(",",$tidak_hapal);
 			                		}else{
 			                			echo '<center><label class="label label-danger">X</label></center>';
 			                		}
@@ -194,7 +243,20 @@ table {
 			                			echo '<center><label class="label label-success">O</label></center>';
 			                		}else if ($nilai[1] < 100 && $nilai[1] > 0) {
 			                			echo '<center><label class="label label-warning"><img width="20px" src="'.$file.'"></label></center>';
-			                			echo "Point = ".$nilai[0];
+			                			// echo "Point = ".$nilai[0];
+			                			$nilaipoint = explode(",", $nilai[0]);
+			                			// echo "Point = ".$nilai[0];
+			                			$hapal = [];
+			                			$tidak_hapal = [];
+			                			for($i = 0; $i < count($poinall6_pasal) ; $i++) {
+			                				if (in_array($poinall6_pasal[$i]->point_no,$nilaipoint)) {
+			                					array_push($hapal, $poinall6_pasal[$i]->point_no);
+			                				}else{
+			                					array_push($tidak_hapal, $poinall6_pasal[$i]->point_no);
+			                				}
+			                			}
+			                			echo "Hapal = ".join(",",$hapal)."<br>";
+			                			echo "Tidak Hapal = ".join(",",$tidak_hapal);
 			                		}else{
 			                			echo '<center><label class="label label-danger">X</label></center>';
 			                		}
@@ -214,7 +276,20 @@ table {
 			                			echo '<center><label class="label label-success">O</label></center>';
 			                		}else if ($nilai[1] < 100 && $nilai[1] > 0) {
 			                			echo '<center><label class="label label-warning"><img width="20px" src="'.$file.'"></label></center>';
-			                			echo "Point = ".$nilai[0];
+			                			// echo "Point = ".$nilai[0];
+			                			$nilaipoint = explode(",", $nilai[0]);
+			                			// echo "Point = ".$nilai[0];
+			                			$hapal = [];
+			                			$tidak_hapal = [];
+			                			for($i = 0; $i < count($poinallbudaya) ; $i++) {
+			                				if (in_array($poinallbudaya[$i]->point_no,$nilaipoint)) {
+			                					array_push($hapal, $poinallbudaya[$i]->point_no);
+			                				}else{
+			                					array_push($tidak_hapal, $poinallbudaya[$i]->point_no);
+			                				}
+			                			}
+			                			echo "Hapal = ".join(",",$hapal)."<br>";
+			                			echo "Tidak Hapal = ".join(",",$tidak_hapal);
 			                		}else{
 			                			echo '<center><label class="label label-danger">X</label></center>';
 			                		}
@@ -234,7 +309,20 @@ table {
 			                			echo '<center><label class="label label-success">O</label></center>';
 			                		}else if ($nilai[1] < 100 && $nilai[1] > 0) {
 			                			echo '<center><label class="label label-warning"><img width="20px" src="'.$file.'"></label></center>';
-			                			echo "Point = ".$nilai[0];
+			                			// echo "Point = ".$nilai[0];
+			                			$nilaipoint = explode(",", $nilai[0]);
+			                			// echo "Point = ".$nilai[0];
+			                			$hapal = [];
+			                			$tidak_hapal = [];
+			                			for($i = 0; $i < count($poinall5s) ; $i++) {
+			                				if (in_array($poinall5s[$i]->point_no,$nilaipoint)) {
+			                					array_push($hapal, $poinall5s[$i]->point_no);
+			                				}else{
+			                					array_push($tidak_hapal, $poinall5s[$i]->point_no);
+			                				}
+			                			}
+			                			echo "Hapal = ".join(",",$hapal)."<br>";
+			                			echo "Tidak Hapal = ".join(",",$tidak_hapal);
 			                		}else{
 			                			echo '<center><label class="label label-danger">X</label></center>';
 			                		}
@@ -254,7 +342,20 @@ table {
 			                			echo '<center><label class="label label-success">O</label></center>';
 			                		}else if ($nilai[1] < 100 && $nilai[1] > 0) {
 			                			echo '<center><label class="label label-warning"><img width="20px" src="'.$file.'"></label></center>';
-			                			echo "Point = ".$nilai[0];
+			                			// echo "Point = ".$nilai[0];
+			                			$nilaipoint = explode(",", $nilai[0]);
+			                			// echo "Point = ".$nilai[0];
+			                			$hapal = [];
+			                			$tidak_hapal = [];
+			                			for($i = 0; $i < count($poinallkomitmen) ; $i++) {
+			                				if (in_array($poinallkomitmen[$i]->point_no,$nilaipoint)) {
+			                					array_push($hapal, $poinallkomitmen[$i]->point_no);
+			                				}else{
+			                					array_push($tidak_hapal, $poinallkomitmen[$i]->point_no);
+			                				}
+			                			}
+			                			echo "Hapal = ".join(",",$hapal)."<br>";
+			                			echo "Tidak Hapal = ".join(",",$tidak_hapal);
 			                		}else{
 			                			echo '<center><label class="label label-danger">X</label></center>';
 			                		}
@@ -274,7 +375,18 @@ table {
 			                			echo '<center><label class="label label-success">O</label></center>';
 			                		}else if ($nilai[1] < 100 && $nilai[1] > 0) {
 			                			echo '<center><label class="label label-warning"><img width="20px" src="'.$file.'"></label></center>';
-			                			echo "Point = ".$nilai[0];
+			                			// echo "Point = ".$nilai[0];
+			                			$hapal = [];
+			                			$tidak_hapal = [];
+			                			for($i = 0; $i < count($poinalljanji) ; $i++) {
+			                				if (in_array($poinalljanji[$i]->point_no,$nilaipoint)) {
+			                					array_push($hapal, $poinalljanji[$i]->point_no);
+			                				}else{
+			                					array_push($tidak_hapal, $poinalljanji[$i]->point_no);
+			                				}
+			                			}
+			                			echo "Hapal = ".join(",",$hapal)."<br>";
+			                			echo "Tidak Hapal = ".join(",",$tidak_hapal);
 			                		}else{
 			                			echo '<center><label class="label label-danger">X</label></center>';
 			                		}

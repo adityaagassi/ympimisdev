@@ -136,11 +136,11 @@ label {
 			                		// echo "Point = ".$detail[0];
 			                		 ?>
 			                		 @if($detail[1] == 0)
-				                		<label class="label label-danger" onclick="detailNilai('{{$detail[1]}}','0','filosofi_yamaha')">Not OK</label>
+				                		<label class="label label-danger" onclick="detailNilai('{{ $interview_detail->participants->employee_id }} - {{ $interview_detail->participants->name }}','{{$detail[1]}}','0','filosofi_yamaha')">Not OK</label>
 				                	@elseif($detail[1] > 0 && $detail[1] < 100)
-				                		<label class="label label-warning" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','filosofi_yamaha')">OK Kurang Lancar</label>
+				                		<label class="label label-warning" onclick="detailNilai('{{ $interview_detail->participants->employee_id }} - {{ $interview_detail->participants->name }}','{{$detail[1]}}','{{$detail[0]}}','filosofi_yamaha')">OK Kurang Lancar</label>
 				                	@elseif($detail[1] == 100)
-				                		<label class="label label-success" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','filosofi_yamaha')">OK</label>
+				                		<label class="label label-success" onclick="detailNilai('{{ $interview_detail->participants->employee_id }} - {{ $interview_detail->participants->name }}','{{$detail[1]}}','{{$detail[0]}}','filosofi_yamaha')">OK</label>
 				                	@endif
 			                	@endif
 			            	</td>
@@ -156,11 +156,11 @@ label {
 			                		// echo "Point = ".$detail[0];
 			                		 ?>
 			                		 @if($detail[1] == 0)
-				                		<label class="label label-danger" onclick="detailNilai('{{$detail[1]}}','0','aturan_k3')">Not OK</label>
+				                		<label class="label label-danger" onclick="detailNilai('{{ $interview_detail->participants->employee_id }} - {{ $interview_detail->participants->name }}','{{$detail[1]}}','0','aturan_k3')">Not OK</label>
 				                	@elseif($detail[1] > 0 && $detail[1] < 100)
-				                		<label class="label label-warning" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','aturan_k3')">OK Kurang Lancar</label>
+				                		<label class="label label-warning" onclick="detailNilai('{{ $interview_detail->participants->employee_id }} - {{ $interview_detail->participants->name }}','{{$detail[1]}}','{{$detail[0]}}','aturan_k3')">OK Kurang Lancar</label>
 				                	@elseif($detail[1] == 100)
-				                		<label class="label label-success" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','aturan_k3')">OK</label>
+				                		<label class="label label-success" onclick="detailNilai('{{ $interview_detail->participants->employee_id }} - {{ $interview_detail->participants->name }}','{{$detail[1]}}','{{$detail[0]}}','aturan_k3')">OK</label>
 				                	@endif
 			                	@endif
 			                </td>
@@ -176,11 +176,11 @@ label {
 			                		// echo "Point = ".$detail[0];
 			                		 ?>
 			                		 @if($detail[1] == 0)
-				                		<label class="label label-danger" onclick="detailNilai('{{$detail[1]}}','0','komitmen_berkendara')">Not OK</label>
+				                		<label class="label label-danger" onclick="detailNilai('{{ $interview_detail->participants->employee_id }} - {{ $interview_detail->participants->name }}','{{$detail[1]}}','0','komitmen_berkendara')">Not OK</label>
 				                	@elseif($detail[1] > 0 && $detail[1] < 100)
-				                		<label class="label label-warning" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','komitmen_berkendara')">OK Kurang Lancar</label>
+				                		<label class="label label-warning" onclick="detailNilai('{{ $interview_detail->participants->employee_id }} - {{ $interview_detail->participants->name }}','{{$detail[1]}}','{{$detail[0]}}','komitmen_berkendara')">OK Kurang Lancar</label>
 				                	@elseif($detail[1] == 100)
-				                		<label class="label label-success" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','komitmen_berkendara')">OK</label>
+				                		<label class="label label-success" onclick="detailNilai('{{ $interview_detail->participants->employee_id }} - {{ $interview_detail->participants->name }}','{{$detail[1]}}','{{$detail[0]}}','komitmen_berkendara')">OK</label>
 				                	@endif
 			                	@endif
 			                </td>
@@ -196,11 +196,11 @@ label {
 			                		// echo "Point = ".$detail[0];
 			                		 ?>
 			                		 @if($detail[1] == 0)
-				                		<label class="label label-danger" onclick="detailNilai('{{$detail[1]}}','0','kebijakan_mutu')">Not OK</label>
+				                		<label class="label label-danger" onclick="detailNilai('{{ $interview_detail->participants->employee_id }} - {{ $interview_detail->participants->name }}','{{$detail[1]}}','0','kebijakan_mutu')">Not OK</label>
 				                	@elseif($detail[1] > 0 && $detail[1] < 100)
-				                		<label class="label label-warning" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','kebijakan_mutu')">OK Kurang Lancar</label>
+				                		<label class="label label-warning" onclick="detailNilai('{{ $interview_detail->participants->employee_id }} - {{ $interview_detail->participants->name }}','{{$detail[1]}}','{{$detail[0]}}','kebijakan_mutu')">OK Kurang Lancar</label>
 				                	@elseif($detail[1] == 100)
-				                		<label class="label label-success" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','kebijakan_mutu')">OK</label>
+				                		<label class="label label-success" onclick="detailNilai('{{ $interview_detail->participants->employee_id }} - {{ $interview_detail->participants->name }}','{{$detail[1]}}','{{$detail[0]}}','kebijakan_mutu')">OK</label>
 				                	@endif
 			                	@endif
 			                </td>
@@ -234,7 +234,7 @@ label {
 			            <tbody>
 			              @foreach($interview_detail2 as $interview_detail2)
 			              <tr>
-			                <td>{{ $interview_detail->participants->employee_id }} - {{ $interview_detail2->participants->name }}</td>
+			                <td>{{ $interview_detail2->participants->employee_id }} - {{ $interview_detail2->participants->name }}</td>
 			                <td><?php $detail = explode("_",$interview_detail2->enam_pasal_keselamatan);
 			                		// echo "Nilai = ".$detail[1]."%<br>";
 			                		// echo "Point = ".$detail[0];
@@ -247,11 +247,11 @@ label {
 			                		<label class="label label-danger">{{ $interview_detail2->enam_pasal_keselamatan }}</label>
 			                	@else
 				                	@if($detail[1] == 0)
-				                		<label class="label label-danger" onclick="detailNilai('{{$detail[1]}}','0','enam_pasal_keselamatan')">Not OK</label>
+				                		<label class="label label-danger" onclick="detailNilai('{{ $interview_detail2->participants->employee_id }} - {{ $interview_detail2->participants->name }}','{{$detail[1]}}','0','enam_pasal_keselamatan')">Not OK</label>
 				                	@elseif($detail[1] > 0 && $detail[1] < 100)
-				                		<label class="label label-warning" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','enam_pasal_keselamatan')">OK Kurang Lancar</label>
+				                		<label class="label label-warning" onclick="detailNilai('{{ $interview_detail2->participants->employee_id }} - {{ $interview_detail2->participants->name }}','{{$detail[1]}}','{{$detail[0]}}','enam_pasal_keselamatan')">OK Kurang Lancar</label>
 				                	@elseif($detail[1] == 100)
-				                		<label class="label label-success" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','enam_pasal_keselamatan')">OK</label>
+				                		<label class="label label-success" onclick="detailNilai('{{ $interview_detail2->participants->employee_id }} - {{ $interview_detail2->participants->name }}','{{$detail[1]}}','{{$detail[0]}}','enam_pasal_keselamatan')">OK</label>
 				                	@endif
 			                	@endif
 			                </td>
@@ -267,11 +267,11 @@ label {
 			                		// echo "Point = ".$detail[0];
 			                		 ?>
 			                		@if($detail[1] == 0)
-				                		<label class="label label-danger" onclick="detailNilai('{{$detail[1]}}','0','budaya_kerja')">Not OK</label>
+				                		<label class="label label-danger" onclick="detailNilai('{{ $interview_detail2->participants->employee_id }} - {{ $interview_detail2->participants->name }}','{{$detail[1]}}','0','budaya_kerja')">Not OK</label>
 				                	@elseif($detail[1] > 0 && $detail[1] < 100)
-				                		<label class="label label-warning" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','budaya_kerja')">OK Kurang Lancar</label>
+				                		<label class="label label-warning" onclick="detailNilai('{{ $interview_detail2->participants->employee_id }} - {{ $interview_detail2->participants->name }}','{{$detail[1]}}','{{$detail[0]}}','budaya_kerja')">OK Kurang Lancar</label>
 				                	@elseif($detail[1] == 100)
-				                		<label class="label label-success" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','budaya_kerja')">OK</label>
+				                		<label class="label label-success" onclick="detailNilai('{{ $interview_detail2->participants->employee_id }} - {{ $interview_detail2->participants->name }}','{{$detail[1]}}','{{$detail[0]}}','budaya_kerja')">OK</label>
 				                	@endif
 			                	@endif
 			                </td>
@@ -287,11 +287,11 @@ label {
 			                		// echo "Point = ".$detail[0];
 			                		 ?>
 			                		  @if($detail[1] == 0)
-				                		<label class="label label-danger" onclick="detailNilai('{{$detail[1]}}','0','budaya_5s')">Not OK</label>
+				                		<label class="label label-danger" onclick="detailNilai('{{ $interview_detail2->participants->employee_id }} - {{ $interview_detail2->participants->name }}','{{$detail[1]}}','0','budaya_5s')">Not OK</label>
 				                	@elseif($detail[1] > 0 && $detail[1] < 100)
-				                		<label class="label label-warning" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','budaya_5s')">OK Kurang Lancar</label>
+				                		<label class="label label-warning" onclick="detailNilai('{{ $interview_detail2->participants->employee_id }} - {{ $interview_detail2->participants->name }}','{{$detail[1]}}','{{$detail[0]}}','budaya_5s')">OK Kurang Lancar</label>
 				                	@elseif($detail[1] == 100)
-				                		<label class="label label-success" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','budaya_5s')">OK</label>
+				                		<label class="label label-success" onclick="detailNilai('{{ $interview_detail2->participants->employee_id }} - {{ $interview_detail2->participants->name }}','{{$detail[1]}}','{{$detail[0]}}','budaya_5s')">OK</label>
 				                	@endif
 			                	@endif
 			                </td>
@@ -307,11 +307,11 @@ label {
 			                		// echo "Point = ".$detail[0];
 			                		 ?>
 			                		 @if($detail[1] == 0)
-				                		<label class="label label-danger" onclick="detailNilai('{{$detail[1]}}','0','komitmen_hotel_konsep')">Not OK</label>
+				                		<label class="label label-danger" onclick="detailNilai('{{ $interview_detail2->participants->employee_id }} - {{ $interview_detail2->participants->name }}','{{$detail[1]}}','0','komitmen_hotel_konsep')">Not OK</label>
 				                	@elseif($detail[1] > 0 && $detail[1] < 100)
-				                		<label class="label label-warning" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','komitmen_hotel_konsep')">OK Kurang Lancar</label>
+				                		<label class="label label-warning" onclick="detailNilai('{{ $interview_detail2->participants->employee_id }} - {{ $interview_detail2->participants->name }}','{{$detail[1]}}','{{$detail[0]}}','komitmen_hotel_konsep')">OK Kurang Lancar</label>
 				                	@elseif($detail[1] == 100)
-				                		<label class="label label-success" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','komitmen_hotel_konsep')">OK</label>
+				                		<label class="label label-success" onclick="detailNilai('{{ $interview_detail2->participants->employee_id }} - {{ $interview_detail2->participants->name }}','{{$detail[1]}}','{{$detail[0]}}','komitmen_hotel_konsep')">OK</label>
 				                	@endif
 			                	@endif
 			                </td>
@@ -327,11 +327,11 @@ label {
 			                		// echo "Point = ".$detail[0];
 			                		 ?>
 			                		 @if($detail[1] == 0)
-				                		<label class="label label-danger" onclick="detailNilai('{{$detail[1]}}','0','janji_tindakan_dasar')">Not OK</label>
+				                		<label class="label label-danger" onclick="detailNilai('{{ $interview_detail2->participants->employee_id }} - {{ $interview_detail2->participants->name }}','{{$detail[1]}}','0','janji_tindakan_dasar')">Not OK</label>
 				                	@elseif($detail[1] > 0 && $detail[1] < 100)
-				                		<label class="label label-warning" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','janji_tindakan_dasar')">OK Kurang Lancar</label>
+				                		<label class="label label-warning" onclick="detailNilai('{{ $interview_detail2->participants->employee_id }} - {{ $interview_detail2->participants->name }}','{{$detail[1]}}','{{$detail[0]}}','janji_tindakan_dasar')">OK Kurang Lancar</label>
 				                	@elseif($detail[1] == 100)
-				                		<label class="label label-success" onclick="detailNilai('{{$detail[1]}}','{{$detail[0]}}','janji_tindakan_dasar')">OK</label>
+				                		<label class="label label-success" onclick="detailNilai('{{ $interview_detail2->participants->employee_id }} - {{ $interview_detail2->participants->name }}','{{$detail[1]}}','{{$detail[0]}}','janji_tindakan_dasar')">OK</label>
 				                	@endif
 			                	@endif
 			                </td>
@@ -1216,7 +1216,7 @@ label {
       // console.log($('#formedit').attr("action"));
     }
 
-    function detailNilai(nilai,point,type) {
+    function detailNilai(employee,nilai,point,type) {
     	if (parseInt(nilai) !== 0) {
     		var data = {
     			point:point,
