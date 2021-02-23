@@ -1346,6 +1346,10 @@
     <a href="{{ url("index/indirect_material_log") }}"><i class="fa fa-list"></i> <span>Logs</span></a>
   </li>
 
+  @if(isset($page) && $page == "Monitoring")<li class="active">@else<li>@endif
+    <a href="{{ url("index/indirect_material_monitoring") }}"><i class="fa fa-bar-chart "></i> <span>Expired Monitoring</span></a>
+  </li>
+
 </ul>
 </li>
 
