@@ -330,7 +330,9 @@
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
 
-		$('.select2').select2();
+		$('.select2').select2({
+			allowClear: true,
+		});
 
 		$('#modalLocation').modal({
 			backdrop: 'static',
@@ -850,7 +852,7 @@
 			class_name: 'growl-danger',
 			image: '{{ url("images/image-stop.png") }}',
 			sticky: false,
-			time: '2000'
+			time: '7000'
 		});
 	}
 

@@ -2592,6 +2592,11 @@ Route::get('index/indirect_material_log', 'IndirectMaterialController@indexIndir
 Route::get('fetch/indirect_material_log', 'IndirectMaterialController@fetchIndirectMaterialLog');
 Route::get('print/indirect_material_label/{qr_code}', 'IndirectMaterialController@printLabel');
 
+//Monitoring
+Route::get('index/indirect_material_monitoring', 'IndirectMaterialController@indexIndirectMaterialMonitoring');
+Route::get('fetch/indirect_material_monitoring', 'IndirectMaterialController@fetchIndirectMaterialMonitoring');
+Route::get('fetch/indirect_material_monitoring_detail', 'IndirectMaterialController@fetchIndirectMaterialMonitoringDetail');
+
 
 //END INDIRECT REQUEST
 

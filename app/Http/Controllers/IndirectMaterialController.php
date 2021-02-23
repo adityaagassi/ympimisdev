@@ -46,6 +46,15 @@ class IndirectMaterialController extends Controller{
 		$this->subtitle_jp = '??';
 	}
 
+	public function indexIndirectMaterialMonitoring(){
+		$title = 'Chemical Monitoring';
+
+		return view('indirect_material.monitoring', array(
+			'title' => $title,
+			'title_jp' => ''
+		))->with('head', 'Indirect Material')->with('page', 'Monitoring');
+	}
+
 	public function indexLarutan(){
 		$title = 'Larutan';
 
@@ -310,6 +319,8 @@ class IndirectMaterialController extends Controller{
 					'qr_code' => $pick->qr_code,
 					'material_number' => $pick->material_number,
 					'print_status' => 1,
+					'in_date' => $pick->in_date,
+					'exp_date' => $pick->exp_date,
 					'created_by' => Auth::id()
 				]);
 				$new->save();
@@ -602,6 +613,14 @@ class IndirectMaterialController extends Controller{
 		$exp_date = $request->get('exp_date');
 		$material_number = $request->get('material_number');
 		$quantity = $request->get('quantity');
+
+		if($in_date >= $exp_date){
+			$response = array(
+				'status' => false,
+				'message' => 'In Date lebih lama dari Exp Date',
+			);
+			return Response::json($response);
+		}
 
 		try{
 			$inventory = Inventory::where('plant','=','8190')
@@ -962,6 +981,74 @@ class IndirectMaterialController extends Controller{
 		}
 	}
 
+	public function fetchIndirectMaterialMonitoring(){
+		$data = db::select("SELECT sum,
+			SUM(exp) AS exp,
+			SUM(one_month) AS one_month,
+			SUM(three_month) AS three_month,
+			SUM(six_month) AS six_month,
+			SUM(nine_month) AS nine_month,
+			SUM(twelve_month) AS twelve_month,
+			SUM(more_year) AS more_year
+			FROM
+			(SELECT 'SUM' AS sum,
+			IF(DATEDIFF(exp_date, NOW()) < 0, 1, 0) AS exp,
+			IF(DATEDIFF(exp_date, NOW()) >= 0 AND DATEDIFF(exp_date, NOW()) <= 30, 1, 0) AS one_month,
+			IF(DATEDIFF(exp_date, NOW()) > 30 AND DATEDIFF(exp_date, NOW()) <= 90, 1, 0) AS three_month,
+			IF(DATEDIFF(exp_date, NOW()) > 90 AND DATEDIFF(exp_date, NOW()) <= 180, 1, 0) AS six_month,
+			IF(DATEDIFF(exp_date, NOW()) > 180 AND DATEDIFF(exp_date, NOW()) <= 270, 1, 0) AS nine_month,
+			IF(DATEDIFF(exp_date, NOW()) > 270 AND DATEDIFF(exp_date, NOW()) <= 365, 1, 0) AS twelve_month,
+			IF(DATEDIFF(exp_date, NOW()) > 365, 1, 0) AS more_year,
+			DATEDIFF(exp_date, NOW()) AS diff FROM indirect_material_stocks) AS resume
+			GROUP BY sum");
+
+		$response = array(
+			'status' => true,
+			'data' => $data
+		);
+		return Response::json($response);
+	}
+
+	public function fetchIndirectMaterialMonitoringDetail(Request $request){
+		$category = $request->get('category');
+		$condition = '';
+
+		if($category == 'Expired'){
+			$condition = 'DATEDIFF(s.exp_date, NOW()) < 0';
+		}elseif ($category == '< 30 Days') {
+			$condition = 'DATEDIFF(s.exp_date, NOW()) >= 0 AND DATEDIFF(s.exp_date, NOW()) <= 30';
+		}elseif ($category == '< 90 Days') {
+			$condition = 'DATEDIFF(s.exp_date, NOW()) > 30 AND DATEDIFF(s.exp_date, NOW()) <= 90';
+		}elseif ($category == '< 180 Days') {
+			$condition = 'DATEDIFF(s.exp_date, NOW()) > 90 AND DATEDIFF(s.exp_date, NOW()) <= 180';
+		}elseif ($category == '< 270 Days') {
+			$condition = 'DATEDIFF(s.exp_date, NOW()) > 180 AND DATEDIFF(s.exp_date, NOW()) <= 270';
+		}elseif ($category == '< 1 Year') {
+			$condition = 'DATEDIFF(s.exp_date, NOW()) > 270 AND DATEDIFF(s.exp_date, NOW()) <= 356';
+		}elseif ($category == '> 1 Year') {
+			$condition = 'DATEDIFF(s.exp_date, NOW()) > 365';
+		}else{
+			$response = array(
+				'status' => false
+			);
+			return Response::json($response);
+		}		
+
+		$data = db::select("SELECT s.material_number, chm.material_description, chm.storage_location, s.in_date, s.exp_date, COUNT(s.material_number) AS qty FROM indirect_material_stocks s
+			LEFT JOIN (SELECT DISTINCT material_number, material_description, storage_location FROM chemical_solution_composers) AS chm
+			ON chm.material_number = s.material_number
+			WHERE ".$condition."
+			GROUP BY s.material_number, chm.material_description, chm.storage_location, s.in_date, s.exp_date
+			ORDER BY s.exp_date ASC");
+
+		$response = array(
+			'status' => true,
+			'data' => $data
+		);
+		return Response::json($response);
+
+	}
+
 	public function fetchcheckResult(Request $request){
 		$id = $request->get('id');
 		$data = ChemicalSolution::where('chemical_solutions.id', $id)->first();
@@ -1058,6 +1145,8 @@ class IndirectMaterialController extends Controller{
 	}
 
 	public function fetchCheckQr(Request $request){
+		$now = date('Y-m-d');
+
 		$qr = $request->get('qr');
 		$material_number = $request->get('material_number');
 		$location = $request->get('location');
@@ -1068,6 +1157,7 @@ class IndirectMaterialController extends Controller{
 		->first();
 
 		if($out){
+			// CEK OUT
 			if($out->qr_code != $qr){
 				$response = array(
 					'status' => false,
@@ -1076,10 +1166,20 @@ class IndirectMaterialController extends Controller{
 				return Response::json($response);
 			}
 
+			// CEK EXPIRED
+			if($now >= $stock->exp_date){
+				$response = array(
+					'status' => false,
+					'message' => 'Chemical Expired'
+				);
+				return Response::json($response);
+			}
+
 			$pick_out = IndirectMaterialOut::where('qr_code', $qr)
 			->where('cost_center_id', $location)
 			->first();
 
+			// CEK QR CODE SAMA
 			$picked = IndirectMaterialPick::where('qr_code', $qr)->first();
 			if($picked){
 				$response = array(
@@ -1089,6 +1189,7 @@ class IndirectMaterialController extends Controller{
 				return Response::json($response);
 			}
 
+			// CEK KESESUAIN MATERIAL
 			if($pick_out->material_number != $material_number){
 				$response = array(
 					'status' => false,
@@ -1103,6 +1204,8 @@ class IndirectMaterialController extends Controller{
 					'schedule_id' => $schedule_id,
 					'material_number' => $pick_out->material_number,
 					'cost_center_id' => $pick_out->cost_center_id,
+					'in_date' => $pick_out->in_date,
+					'exp_date' => $pick_out->exp_date,
 					'remark' => 'out',
 					'created_by' => Auth::id()
 				]);
@@ -1124,12 +1227,44 @@ class IndirectMaterialController extends Controller{
 			}	
 		}
 
+
+
+
+
+
 		$stock = IndirectMaterialStock::where('qr_code', $qr)->first();
+		
+
+		// CHEMICAL TIDAK KADALUARSA
+		$first_chemical = IndirectMaterialStock::where('material_number', $material_number)
+		->where('exp_date', '>=', $now)
+		->orderBy('in_date', 'ASC')
+		->first();
+
+
 		if($stock){
 			if($stock->material_number != $material_number){
 				$response = array(
 					'status' => false,
 					'message' => 'Material chemical salah'
+				);
+				return Response::json($response);
+			}
+
+			// CEK EXPIRED
+			if($now >= $stock->exp_date){
+				$response = array(
+					'status' => false,
+					'message' => 'Chemical Expired'
+				);
+				return Response::json($response);
+			}
+
+			// CEK FIFO
+			if($stock->in_date > $first_chemical->in_date){
+				$response = array(
+					'status' => false,
+					'message' => 'Pengambilan harus FIFO, Ambil chemical '.$stock->material_number.' dengan tanggal masuk ' . date('d-m-Y', strtotime($first_chemical->in_date)) . ' terlebih dahulu'
 				);
 				return Response::json($response);
 			}
@@ -1160,6 +1295,8 @@ class IndirectMaterialController extends Controller{
 				return Response::json($response);
 			}	
 		}else{
+
+			// CEK KESESUAIN MATERIAL
 			$response = array(
 				'status' => false,
 				'message' => 'Material chemical salah'
@@ -1371,7 +1508,8 @@ class IndirectMaterialController extends Controller{
 		$data = $data->select(
 			'inventories.material_number',
 			'material_plant_data_lists.material_description',
-			'material_plant_data_lists.bun', 'chm.storage_location',
+			'material_plant_data_lists.bun',
+			'chm.storage_location',
 			'inventories.quantity',
 			'inventories.updated_at'
 		)
