@@ -5683,6 +5683,17 @@ class MiddleProcessController extends Controller
 							'location' => $request->get('loc'),
 						]);
 					}
+
+					try{
+						$middle_check_log->save();
+					}
+					catch(\Exception $e){
+						$response = array(
+							'status' => false,
+							'message' => $e->getMessage(),
+						);
+						return Response::json($response);
+					}
 				}
 
 
