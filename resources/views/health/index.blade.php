@@ -451,7 +451,7 @@
 						type: 'spline'
 					},
 					title: {
-						text: 'Health Indicator Chart'
+						text: '<b>Health Indicator Chart</b>'
 					},						
 					xAxis: {
 						categories: date,

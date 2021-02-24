@@ -1827,6 +1827,82 @@ class AssemblyProcessController extends Controller
 		}
 	}
 
+	public function inputAssemblySeasoning(Request $request)
+	{
+		try {
+			$inventories = AssemblyInventory::where('tag',strtoupper(dechex($request->get('tag'))))->where('origin_group_code','041')->first();
+			$inventories->location = $request->get('location');
+			$inventories->created_by = $request->get('employee_id');
+
+			$flow = AssemblyFlow::where('process',$request->get('location'))->where('origin_group_code','041')->first();
+			$next = $flow->flow+1;
+			$flownew = AssemblyFlow::where('flow',$next)->where('origin_group_code','041')->first();
+
+			if (count($flownew) > 0) {
+				$inventories->location_next = $flownew->process;
+			}
+
+			$log = new AssemblyDetail([
+				'tag' => $inventories->tag,
+				'serial_number' => $inventories->serial_number,
+				'model' => $inventories->model,
+				'location' => $request->get('location'),
+				'operator_id' => $request->get('employee_id'),
+				'sedang_start_date' => date('Y-m-d H:i:s'),
+				'sedang_finish_date' => date('Y-m-d H:i:s'),
+				'origin_group_code' => '041',
+				'created_by' => $request->get('employee_id'),
+				'is_send_log' => 0
+			]);
+
+			$inventories->save();
+			$log->save();
+
+
+			$response = array(
+				'status' => true,
+				'message' => 'Sukses Input Seasoning',
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => 'Gagal Input NG',
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function fetchAssembly(Request $request)
+	{
+		try {
+			$assembly = DB::SELECT("SELECT DISTINCT
+				assembly_details.serial_number,
+				assembly_details.model,
+				assembly_details.sedang_start_date AS start_at,
+				employee_syncs.employee_id,
+				employee_syncs.name 
+			FROM
+				assembly_details
+				JOIN employee_syncs ON employee_syncs.employee_id = assembly_details.operator_id 
+			WHERE
+				location = '".$request->get('location')."'
+				and DATE(assembly_details.created_at) = DATE(NOW())");
+
+			$response = array(
+				'status' => true,
+				'assembly' => $assembly
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => 'Failed',
+			);
+			return Response::json($response);
+		}
+	}
+
 	public function indexRequestDisplay($origin_group_code)
 	{
 		return view('processes.assembly.flute.display.assembly_request', array( 

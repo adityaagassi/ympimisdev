@@ -34,6 +34,7 @@
 			<a href="{{ url('/index/kensa','perakitanawal-kensa') }}" class="btn btn-default btn-block" style="font-size: 17px; border-color: green;">Perakitan Ulang</a>
 			<a href='{{ url("index/kensa","tanpoawase-kensa") }}' class="btn btn-default btn-block" style="font-size: 17px; border-color: green;">Tanpo Awase Kensa</b></a>
 			<a href='{{ url("index/kensa","tanpoawase-fungsi") }}' class="btn btn-default btn-block" style="font-size: 17px; border-color: green;">Tanpo Awase Kensa Fungsi</b></a>
+			<a href='{{ url("index/kensa","seasoning-process") }}' class="btn btn-default btn-block" style="font-size: 17px; border-color: green;">Seasoning Process</b></a>
 			<a href='{{ url("index/kensa","kango-fungsi") }}' class="btn btn-default btn-block" style="font-size: 17px; border-color: green;">Kango Kensa Fungsi</b></a>
 			<a href='{{ url("index/kensa","kango-kensa") }}' class="btn btn-default btn-block" style="font-size: 17px; border-color: green;">Kango Kensa</b></a>
 			<a href='{{ url("index/kensa","renraku-fungsi") }}' class="btn btn-default btn-block" style="font-size: 17px; border-color: green;">Renraku Kensa Fungsi</b></a>
