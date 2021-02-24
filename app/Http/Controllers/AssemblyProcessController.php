@@ -1242,18 +1242,33 @@ class AssemblyProcessController extends Controller
 			$title = 'QA Kensa SP';
 			$title_jp= '特注品QA検査';
 		}
+		if($location == 'seasoning-process'){
+			$title = 'Seasoning Process';
+			$title_jp= '??';
+		}
 
-		$ng_lists = DB::select("SELECT DISTINCT(ng_name) FROM assembly_ng_lists where origin_group_code = '041' and location = '".$loc_spec."' and process = '".$process."' and deleted_at is null");
+		if ($location == 'seasoning-process') {
+			return view('processes.assembly.flute.seasoning', array(
+				'loc' => $location,
+				'loc2' => $location,
+				'process' => $process,
+				'loc_spec' => $loc_spec,
+				'title' => $title,
+				'title_jp' => $title_jp,
+			))->with('page', 'Assembly FL')->with('head', 'Assembly Process')->with('location',$location);
+		}else{
+			$ng_lists = DB::select("SELECT DISTINCT(ng_name) FROM assembly_ng_lists where origin_group_code = '041' and location = '".$loc_spec."' and process = '".$process."' and deleted_at is null");
 
-		return view('processes.assembly.flute.kensa', array(
-			'ng_lists' => $ng_lists,
-			'loc' => $location,
-			'loc2' => $location,
-			'process' => $process,
-			'loc_spec' => $loc_spec,
-			'title' => $title,
-			'title_jp' => $title_jp,
-		))->with('page', 'Assembly FL')->with('head', 'Assembly Process')->with('location',$location);
+			return view('processes.assembly.flute.kensa', array(
+				'ng_lists' => $ng_lists,
+				'loc' => $location,
+				'loc2' => $location,
+				'process' => $process,
+				'loc_spec' => $loc_spec,
+				'title' => $title,
+				'title_jp' => $title_jp,
+			))->with('page', 'Assembly FL')->with('head', 'Assembly Process')->with('location',$location);
+		}
 	}
 
 	public function scanAssemblyOperator(Request $request){
@@ -1278,7 +1293,7 @@ class AssemblyProcessController extends Controller
 
 	public function scanAssemblyOperatorKensa(Request $request){
 
-		$employee = db::table('assembly_operators')->join('employee_syncs','assembly_operators.employee_id','=','employee_syncs.employee_id')->where('tag', '=', dechex($request->get('employee_id')))->first();
+		$employee = db::table('assembly_operators')->join('employee_syncs','assembly_operators.employee_id','=','employee_syncs.employee_id')->where('tag', '=', strtoupper(dechex($request->get('employee_id'))))->first();
 
 		if($employee == null){
 			$response = array(
@@ -2058,7 +2073,7 @@ class AssemblyProcessController extends Controller
 			DATE( assembly_details.created_at )= '".$now."' ".$addlocation." 
 			)) check_total 
 			) - count( DISTINCT ( serial_number ) ) AS total_ok,
-			((
+			(count( DISTINCT ( serial_number ) ) / (
 			SELECT
 			SUM( check_total.total_check ) AS total_check 
 			FROM
@@ -2078,7 +2093,7 @@ class AssemblyProcessController extends Controller
 			WHERE
 			DATE( assembly_details.created_at )= '".$now."' ".$addlocation." 
 			)) check_total 
-			) / count( DISTINCT ( serial_number ) )) * 100 AS ng_rate,
+			)) * 100 AS ng_rate,
 			count( DISTINCT ( serial_number ) ) AS total_ng 
 			FROM
 			assembly_ng_logs 
