@@ -102,8 +102,8 @@
 							<thead style="background-color: rgba(126,86,134,.7);">
 								<tr>
 									<th style="width: 7%; font-size: 18px; font-weight: bold; border-left: 3px solid black;  border-right: 3px solid black; border-top: 3px solid black;">CONFIRMED<br><span style="color: purple;">確保済み</span></th>
-									<th style="width: 7%; background-color: rgba(216, 151, 230, .7);">NOT YET STUFFING<br><span style="color: purple;">未スタッフィング</span></th>
-									<th style="width: 7%; background-color: rgba(216, 151, 230, .7);">ETD YMPI<br><span style="color: purple;"> YMPI出発済 </span></th>
+									<th style="width: 7%; background-color: rgba(216, 151, 230, .7);">NOT STUFFING YET<br><span style="color: purple;">未スタッフィング</span></th>
+									<th style="width: 7%; background-color: rgba(216, 151, 230, .7);">FACTORY DEPARTED<br><span style="color: purple;"> 工場出発済み </span></th>
 								</tr>
 							</thead>
 							<tbody id="tableBodyResume">
@@ -124,8 +124,8 @@
 						<table id="tableResume" class="table table-bordered" style="width: 100%; font-size: 14px; margin-bottom: 0px;">
 							<thead style="background-color: rgba(224, 146, 240, .7);">
 								<tr>
-									<th style="width: 7%;">HOLD AT PORT<br><span style="color: purple;">港留置</span></th>
-									<th style="width: 7%;">ETD SUB<br><span style="color: purple;">出港済み</span></th>
+									<th style="width: 7%;">HOLD AT PORT<br><span style="color: purple;">港留め置き中</span></th>
+									<th style="width: 7%;">PORT DEPARTED<br><span style="color: purple;">出港済み</span></th>
 								</tr>
 							</thead>
 							<tbody id="tableBodyResume">
@@ -563,6 +563,18 @@
 					},
 					credits: {
 						enabled: false
+					},
+					legend: {
+						layout: 'vertical',
+						align: 'right',
+						verticalAlign: 'top',
+						x: 1,
+						y: 0,
+						floating: true,
+						borderWidth: 1,
+						backgroundColor:
+						Highcharts.defaultOptions.legend.backgroundColor || '#ffffff',
+						shadow: true
 					},
 					plotOptions: {
 						column: {
