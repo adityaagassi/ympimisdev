@@ -306,6 +306,12 @@
 					<tr>
 						<td style="width: 5%; text-align: left;color: blue">This Investment Contain Purchase goods / service more than Rp 10.000.000 or equivalent</td>
 					</tr>
+					<tr>
+						<td style="width: 5%; text-align: left;color: blue">All entertainment expense & donation</td>
+					</tr>
+					<tr>
+						<td style="width: 5%; text-align: left;color: blue">All advance payment</td>
+					</tr>
 					@endif
 
 				</tbody>
@@ -417,6 +423,12 @@
 					</tr>
 					<tr>
 						<td style="width: 5%; text-align: left;color: blue">This Investment Contain Purchase goods / service more than Rp 10.000.000 or equivalent</td>
+					</tr>
+					<tr>
+						<td style="width: 5%; text-align: left;color: blue">All entertainment expense & donation</td>
+					</tr>
+					<tr>
+						<td style="width: 5%; text-align: left;color: blue">All advance payment</td>
 					</tr>
 					@endif
 
@@ -542,6 +554,12 @@
 					</tr>
 					<tr>
 						<td style="width: 5%; text-align: left;color: blue">This Investment Contain Purchase goods / service more than Rp 10.000.000 or equivalent</td>
+					</tr>
+					<tr>
+						<td style="width: 5%; text-align: left;color: blue">All entertainment expense & donation</td>
+					</tr>
+					<tr>
+						<td style="width: 5%; text-align: left;color: blue">All advance payment</td>
 					</tr>
 					@endif
 
@@ -669,6 +687,12 @@
 					<tr>
 						<td style="width: 5%; text-align: left;color: blue">This Investment Contain Purchase goods / service more than Rp 10.000.000 or equivalent</td>
 					</tr>
+					<tr>
+						<td style="width: 5%; text-align: left;color: blue">All entertainment expense & donation</td>
+					</tr>
+					<tr>
+						<td style="width: 5%; text-align: left;color: blue">All advance payment</td>
+					</tr>
 					@endif
 
 				</tbody>
@@ -790,6 +814,12 @@
 					</tr>
 					<tr>
 						<td style="width: 5%; text-align: left;color: blue">This Investment Contain Purchase goods / service more than Rp 10.000.000 or equivalent</td>
+					</tr>
+					<tr>
+						<td style="width: 5%; text-align: left;color: blue">All entertainment expense & donation</td>
+					</tr>
+					<tr>
+						<td style="width: 5%; text-align: left;color: blue">All advance payment</td>
 					</tr>
 					@endif
 
@@ -916,6 +946,12 @@
 					<tr>
 						<td style="width: 5%; text-align: left;color: blue">This Investment Contain Purchase goods / service more than Rp 10.000.000 or equivalent</td>
 					</tr>
+					<tr>
+						<td style="width: 5%; text-align: left;color: blue">All entertainment expense & donation</td>
+					</tr>
+					<tr>
+						<td style="width: 5%; text-align: left;color: blue">All advance payment</td>
+					</tr>
 					@endif
 
 				</tbody>
@@ -1040,7 +1076,12 @@
 					<tr>
 						<td style="width: 5%; text-align: left;color: blue">This Investment Contain Purchase goods / service more than Rp 10.000.000 or equivalent</td>
 					</tr>
-					@endif
+					<tr>
+						<td style="width: 5%; text-align: left;color: blue">All entertainment expense & donation</td>
+					</tr>
+					<tr>
+						<td style="width: 5%; text-align: left;color: blue">All advance payment</td>
+					</tr>					@endif
 
 				</tbody>
 			</table>
