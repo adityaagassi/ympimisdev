@@ -26,6 +26,7 @@
                 <th>Penyebab</th>
                 <th>Penanganan</th>
                 <th>Pencegahan</th>
+                <th>Foto</th>
             </tr>
         </thead>
         <tbody>
@@ -51,6 +52,23 @@
                 <td>{{ $mjo->cause }}</td>
                 <td>{{ $mjo->handling }}</td>
                 <td>{{ $mjo->prevention }}</td>
+
+                <?php 
+                echo "<td>";
+
+                $poto = explode(',', $mjo->photo);
+
+                if ($mjo->photo) {
+                    foreach ($poto as $ph) {
+                        echo "<img src='".public_path("maintenance/spk_report").'/'.$ph."' width='200px'>";
+                    }
+                } else {
+                    echo "tidak ada foto";
+                }
+
+                echo "</td>";
+
+                ?>
             </tr>
             @endforeach
         </tbody>

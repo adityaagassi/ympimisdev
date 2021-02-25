@@ -75,7 +75,7 @@
 								<div class="box-body">
 									<div class="col-md-6">
 										<div class="form-group">
-											<label>Request Mulai</label>
+											<label>SPK Masuk Mulai</label>
 											<div class="input-group date" style="width: 100%;">
 												<input type="text" placeholder="Pilih Tanggal" class="form-control pull-right" name="reqFrom" id="reqFrom">
 											</div>
@@ -83,7 +83,7 @@
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
-											<label>Request Sampai</label>
+											<label>SPK Masuk Sampai</label>
 											<div class="input-group date" style="width: 100%;">
 												<input type="text" placeholder="Pilih Tanggal" class="form-control pull-right" name="reqTo" id="reqTo">
 											</div>
@@ -226,7 +226,7 @@
 													<select class="form-control select2" data-placeholder="Pilih Status Pending" name="status" id="status" style="width: 100% height: 35px; font-size: 15px;">
 														<option value=""></option>
 														<option value="-">-</option>
-														<option value="No Part">Part Tidak Ada</option>
+														<option value="Part Tidak Ada">Part Tidak Ada</option>
 														<option value="Vendor">Proyek Vendor</option>
 														<option value="WJO">Menunggu WJO</option>
 														<option value="Call Friend">Call Friend</option>
@@ -636,6 +636,18 @@
 		});
 		
 		$('#vendor_finish').datepicker({
+			autoclose: true,
+			format: "yyyy-mm-dd",
+			todayHighlight: true
+		});
+
+		$('#reqFrom').datepicker({
+			autoclose: true,
+			format: "yyyy-mm-dd",
+			todayHighlight: true
+		});
+
+		$('#reqTo').datepicker({
 			autoclose: true,
 			format: "yyyy-mm-dd",
 			todayHighlight: true
