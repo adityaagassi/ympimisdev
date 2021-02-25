@@ -25,6 +25,7 @@
                 <th>Actual Selesai</th>
                 <th>Penyebab</th>
                 <th>Penanganan</th>
+                <th>Pencegahan</th>
             </tr>
         </thead>
         <tbody>
@@ -49,6 +50,7 @@
                 <td>{{ $mjo->finish_actual }}</td>
                 <td>{{ $mjo->cause }}</td>
                 <td>{{ $mjo->handling }}</td>
+                <td>{{ $mjo->prevention }}</td>
             </tr>
             @endforeach
         </tbody>
