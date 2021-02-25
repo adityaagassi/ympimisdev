@@ -232,13 +232,13 @@
 						<div class="col-xs-3">
 							<div class="input-group">
 								<center style="background-color: #ffd6a5;height: 100px"><span style="font-weight: bold; font-size: 16px;">A<br>(Panjang Head = 124 - 124.5 mm (Nogisu))</span></center>
-								<input id="awal_head_a" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control numpad" value="0" placeholder="A" onchange="headvalue('a',this.value,'awal')">
+								<input id="awal_head_a" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="A" onkeyup="headvalue('a',this.value,'awal')">
 							</div>
 						</div>
 						<div class="col-xs-3">
 							<div class="input-group">
 								<center style="background-color: #ffd6a5;height: 100px"><span style="font-weight: bold; font-size: 16px;">B<br>(Kedalaman Middle Joint Shaft = 22.5 - 22.8 mm (Depht Gauge))</span></center>
-								<input id="awal_head_b" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control numpad" value="0" placeholder="B" onchange="headvalue('b',this.value,'awal')">
+								<input id="awal_head_b" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="B" onkeyup="headvalue('b',this.value,'awal')">
 							</div>
 						</div>
 						<div class="col-xs-3">
@@ -272,13 +272,13 @@
 						<div class="col-xs-4">
 							<div class="input-group">
 								<center style="background-color: #ffd6a5;height: 100px"><span style="font-weight: bold; font-size: 16px;">A<br>(173.5 mm - 173.7 mm)</span></center>
-								<input id="awal_middle_a" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control numpad" value="0" placeholder="A" onchange="middlevalue('a',this.value,'awal')">
+								<input id="awal_middle_a" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="A" onkeyup="middlevalue('a',this.value,'awal')">
 							</div>
 						</div>
 						<div class="col-xs-4">
 							<div class="input-group">
 								<center style="background-color: #ffd6a5;height: 100px"><span style="font-weight: bold; font-size: 16px;">B<br>(11.8 mm - 11.9 mm)</span></center>
-								<input id="awal_middle_b" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control numpad" value="0" placeholder="B" onchange="middlevalue('a',this.value,'awal')">
+								<input id="awal_middle_b" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="B" onkeyup="middlevalue('a',this.value,'awal')">
 							</div>
 						</div>
 						<div class="col-xs-4">
@@ -297,13 +297,13 @@
 						<div class="col-xs-3">
 							<div class="input-group">
 								<center style="background-color: #ffd6a5;height: 100px"><span style="font-weight: bold; font-size: 16px;">A<br>(13.3 - 14.7 mm)</span></center>
-								<input id="awal_foot_a" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control numpad" value="0" placeholder="A" onchange="footvalue('a',this.value,'awal')">
+								<input id="awal_foot_a" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="A" onkeyup="footvalue('a',this.value,'awal')">
 							</div>
 						</div>
 						<div class="col-xs-3">
 							<div class="input-group">
 								<center style="background-color: #ffd6a5;height: 100px"><span style="font-weight: bold; font-size: 16px;">B<br>(62.8 - 63.1 mm)</span></center>
-								<input id="awal_foot_b" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control numpad" value="0" placeholder="B" onchange="footvalue('a',this.value,'awal')">
+								<input id="awal_foot_b" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="B" onkeyup="footvalue('a',this.value,'awal')">
 							</div>
 						</div>
 						<div class="col-xs-3">
@@ -340,13 +340,13 @@
 						<div class="col-xs-3">
 							<div class="input-group">
 								<center style="background-color: #9bf6ff;height: 100px"><span style="font-weight: bold; font-size: 16px;">A<br>(Panjang Head = 124 - 124.5 mm (Nogisu))</span></center>
-								<input id="ist1_head_a" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control numpad" value="0" placeholder="A" onchange="headvalue('a',this.value,'ist1')">
+								<input id="ist1_head_a" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="A" onkeyup="headvalue('a',this.value,'ist1')">
 							</div>
 						</div>
 						<div class="col-xs-3">
 							<div class="input-group">
 								<center style="background-color: #9bf6ff;height: 100px"><span style="font-weight: bold; font-size: 16px;">B<br>(Kedalaman Middle Joint Shaft = 22.5 - 22.8 mm (Depht Gauge))</span></center>
-								<input id="ist1_head_b" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control numpad" value="0" placeholder="B" onchange="headvalue('b',this.value,'ist1')">
+								<input id="ist1_head_b" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="B" onkeyup="headvalue('b',this.value,'ist1')">
 							</div>
 						</div>
 						<div class="col-xs-3">
@@ -380,13 +380,13 @@
 						<div class="col-xs-4">
 							<div class="input-group">
 								<center style="background-color: #9bf6ff;height: 100px"><span style="font-weight: bold; font-size: 16px;">A<br>(173.5 mm - 173.7 mm)</span></center>
-								<input id="ist1_middle_a" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control numpad" value="0" placeholder="A" onchange="middlevalue('a',this.value,'ist1')">
+								<input id="ist1_middle_a" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="A" onkeyup="middlevalue('a',this.value,'ist1')">
 							</div>
 						</div>
 						<div class="col-xs-4">
 							<div class="input-group">
 								<center style="background-color: #9bf6ff;height: 100px"><span style="font-weight: bold; font-size: 16px;">B<br>(11.8 mm - 11.9 mm)</span></center>
-								<input id="ist1_middle_b" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control numpad" value="0" placeholder="B" onchange="middlevalue('a',this.value,'ist1')">
+								<input id="ist1_middle_b" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="B" onkeyup="middlevalue('a',this.value,'ist1')">
 							</div>
 						</div>
 						<div class="col-xs-4">
@@ -405,13 +405,13 @@
 						<div class="col-xs-3">
 							<div class="input-group">
 								<center style="background-color: #9bf6ff;height: 100px"><span style="font-weight: bold; font-size: 16px;">A<br>(13.3 - 14.7 mm)</span></center>
-								<input id="ist1_foot_a" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control numpad" value="0" placeholder="A" onchange="footvalue('a',this.value,'ist1')">
+								<input id="ist1_foot_a" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="A" onkeyup="footvalue('a',this.value,'ist1')">
 							</div>
 						</div>
 						<div class="col-xs-3">
 							<div class="input-group">
 								<center style="background-color: #9bf6ff;height: 100px"><span style="font-weight: bold; font-size: 16px;">B<br>(62.8 - 63.1 mm)</span></center>
-								<input id="ist1_foot_b" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control numpad" value="0" placeholder="B" onchange="footvalue('a',this.value,'ist1')">
+								<input id="ist1_foot_b" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="B" onkeyup="footvalue('a',this.value,'ist1')">
 							</div>
 						</div>
 						<div class="col-xs-3">
@@ -447,13 +447,13 @@
 						<div class="col-xs-3">
 							<div class="input-group">
 								<center style="background-color: #ffc6ff;height: 100px"><span style="font-weight: bold; font-size: 16px;">A<br>(Panjang Head = 124 - 124.5 mm (Nogisu))</span></center>
-								<input id="ist2_head_a" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control numpad" value="0" placeholder="A" onchange="headvalue('a',this.value,'ist2')">
+								<input id="ist2_head_a" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="A" onkeyup="headvalue('a',this.value,'ist2')">
 							</div>
 						</div>
 						<div class="col-xs-3">
 							<div class="input-group">
 								<center style="background-color: #ffc6ff;height: 100px"><span style="font-weight: bold; font-size: 16px;">B<br>(Kedalaman Middle Joint Shaft = 22.5 - 22.8 mm (Depht Gauge))</span></center>
-								<input id="ist2_head_b" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control numpad" value="0" placeholder="B" onchange="headvalue('b',this.value,'ist2')">
+								<input id="ist2_head_b" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="B" onkeyup="headvalue('b',this.value,'ist2')">
 							</div>
 						</div>
 						<div class="col-xs-3">
@@ -487,13 +487,13 @@
 						<div class="col-xs-4">
 							<div class="input-group">
 								<center style="background-color: #ffc6ff;height: 100px"><span style="font-weight: bold; font-size: 16px;">A<br>(173.5 mm - 173.7 mm)</span></center>
-								<input id="ist2_middle_a" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control numpad" value="0" placeholder="A" onchange="middlevalue('a',this.value,'ist2')">
+								<input id="ist2_middle_a" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="A" onkeyup="middlevalue('a',this.value,'ist2')">
 							</div>
 						</div>
 						<div class="col-xs-4">
 							<div class="input-group">
 								<center style="background-color: #ffc6ff;height: 100px"><span style="font-weight: bold; font-size: 16px;">B<br>(11.8 mm - 11.9 mm)</span></center>
-								<input id="ist2_middle_b" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control numpad" value="0" placeholder="B" onchange="middlevalue('a',this.value,'ist2')">
+								<input id="ist2_middle_b" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="B" onkeyup="middlevalue('a',this.value,'ist2')">
 							</div>
 						</div>
 						<div class="col-xs-4">
@@ -512,13 +512,13 @@
 						<div class="col-xs-3">
 							<div class="input-group">
 								<center style="background-color: #ffc6ff;height: 100px"><span style="font-weight: bold; font-size: 16px;">A<br>(13.3 - 14.7 mm)</span></center>
-								<input id="ist2_foot_a" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control numpad" value="0" placeholder="A" onchange="footvalue('a',this.value,'ist2')">
+								<input id="ist2_foot_a" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="A" onkeyup="footvalue('a',this.value,'ist2')">
 							</div>
 						</div>
 						<div class="col-xs-3">
 							<div class="input-group">
 								<center style="background-color: #ffc6ff;height: 100px"><span style="font-weight: bold; font-size: 16px;">B<br>(62.8 - 63.1 mm)</span></center>
-								<input id="ist2_foot_b" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control numpad" value="0" placeholder="B" onchange="footvalue('a',this.value,'ist2')">
+								<input id="ist2_foot_b" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="B" onkeyup="footvalue('a',this.value,'ist2')">
 							</div>
 						</div>
 						<div class="col-xs-3">
@@ -554,13 +554,13 @@
 						<div class="col-xs-3">
 							<div class="input-group">
 								<center style="background-color: #caffbf;height: 100px"><span style="font-weight: bold; font-size: 16px;">A<br>(Panjang Head = 124 - 124.5 mm (Nogisu))</span></center>
-								<input id="ist3_head_a" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control numpad" value="0" placeholder="A" onchange="headvalue('a',this.value,'ist3')">
+								<input id="ist3_head_a" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="A" onkeyup="headvalue('a',this.value,'ist3')">
 							</div>
 						</div>
 						<div class="col-xs-3">
 							<div class="input-group">
 								<center style="background-color: #caffbf;height: 100px"><span style="font-weight: bold; font-size: 16px;">B<br>(Kedalaman Middle Joint Shaft = 22.5 - 22.8 mm (Depht Gauge))</span></center>
-								<input id="ist3_head_b" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control numpad" value="0" placeholder="B" onchange="headvalue('b',this.value,'ist3')">
+								<input id="ist3_head_b" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="B" onkeyup="headvalue('b',this.value,'ist3')">
 							</div>
 						</div>
 						<div class="col-xs-3">
@@ -594,13 +594,13 @@
 						<div class="col-xs-4">
 							<div class="input-group">
 								<center style="background-color: #caffbf;height: 100px"><span style="font-weight: bold; font-size: 16px;">A<br>(173.5 mm - 173.7 mm)</span></center>
-								<input id="ist3_middle_a" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control numpad" value="0" placeholder="A" onchange="middlevalue('a',this.value,'ist3')">
+								<input id="ist3_middle_a" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="A" onkeyup="middlevalue('a',this.value,'ist3')">
 							</div>
 						</div>
 						<div class="col-xs-4">
 							<div class="input-group">
 								<center style="background-color: #caffbf;height: 100px"><span style="font-weight: bold; font-size: 16px;">B<br>(11.8 mm - 11.9 mm)</span></center>
-								<input id="ist3_middle_b" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control numpad" value="0" placeholder="B" onchange="middlevalue('a',this.value,'ist3')">
+								<input id="ist3_middle_b" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="B" onkeyup="middlevalue('a',this.value,'ist3')">
 							</div>
 						</div>
 						<div class="col-xs-4">
@@ -619,13 +619,13 @@
 						<div class="col-xs-3">
 							<div class="input-group">
 								<center style="background-color: #caffbf;height: 100px"><span style="font-weight: bold; font-size: 16px;">A<br>(13.3 - 14.7 mm)</span></center>
-								<input id="ist3_foot_a" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control numpad" value="0" placeholder="A" onchange="footvalue('a',this.value,'ist3')">
+								<input id="ist3_foot_a" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="A" onkeyup="footvalue('a',this.value,'ist3')">
 							</div>
 						</div>
 						<div class="col-xs-3">
 							<div class="input-group">
 								<center style="background-color: #caffbf;height: 100px"><span style="font-weight: bold; font-size: 16px;">B<br>(62.8 - 63.1 mm)</span></center>
-								<input id="ist3_foot_b" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control numpad" value="0" placeholder="B" onchange="footvalue('a',this.value,'ist3')">
+								<input id="ist3_foot_b" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="B" onkeyup="footvalue('a',this.value,'ist3')">
 							</div>
 						</div>
 						<div class="col-xs-3">
@@ -1358,9 +1358,8 @@
 
 			$.get('{{ url("fetch/recorder/cdm") }}',data, function(result, status, xhr){
 				if(result.status){
+					$('#save_type').val('UPDATE');
 					if (result.datas.type === 'HEAD') {
-
-						$('#save_type').val('UPDATE');
 
 						$('#awal_head').show();
 						$('#awal_middle').hide();
