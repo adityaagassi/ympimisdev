@@ -4148,27 +4148,12 @@ class StockTakingController extends Controller{
 					WHERE
 					s.id = ".$idnew[1]);
 
-				// $cek = StocktakingMaterialForecast::where('material_number', $material[0]->material_number)
-				// ->first();
-
-				if($cek){
-					$response = array(
-						'status' => true,
-						// 'cek' => true,
-						// 'now' => $now,
-						'material' => $material,
-					);
-					return Response::json($response);
-				}else{
-					$response = array(
-						'status' => true,
-						// 'cek' => false,
-						// 'now' => $now,
-						'material' => $material,
-					);
-					return Response::json($response);
-				}
-
+				$response = array(
+					'status' => true,
+					'material' => $material
+				);
+				return Response::json($response);
+				
 				
 			}else{
 				$location = StocktakingNewList::join('storage_locations','storage_locations.storage_location','stocktaking_new_lists.location')->where('stocktaking_new_lists.id',$id)->first();
@@ -4206,27 +4191,11 @@ class StockTakingController extends Controller{
 						WHERE
 						s.id = ".$id);
 
-					// $cek = StocktakingMaterialForecast::where('material_number', $material[0]->material_number)
-					// ->first();
-
-					if($cek){
-						$response = array(
-							'status' => true,
-							// 'cek' => true,
-							'material' => $material,
-							// 'now' => $now
-
-						);
-						return Response::json($response);
-					}else{
-						$response = array(
-							'status' => true,
-							// 'cek' => false,
-							'material' => $material,
-							// 'now' => $now
-						);
-						return Response::json($response);
-					}
+					$response = array(
+						'status' => true,
+						'material' => $material,
+					);
+					return Response::json($response);
 
 
 				}else{
