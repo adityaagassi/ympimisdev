@@ -503,7 +503,8 @@
 	}
 
 	function selectVehicle(id){
-		if(id !== "" || id !== "car"){
+		console.log(id);
+		if (id !== '' && id === 'car') {
 			$('#newOrigin').prop("disabled", true);
 			$('#newDestination').prop("disabled", true);
 			$('#newHighwayAmount').prop("disabled", true);
@@ -514,15 +515,47 @@
 			$('#newDestination').val("");
 			$('#newHighwayAmount').val("");
 			$('#newDistance').val("");
-		}
 
-		if(id !== "" && (id === 'car' || id === 'lainnya')){
-			$('#newVehicle').prop("disabled", false);
-			$('#newOrigin').prop("disabled", false);
-			$('#newDestination').prop("disabled", false);
-			$('#newHighwayAmount').prop("disabled", false);
-			$('#newDistance').prop("disabled", false);
+			var data = {
+				employee_id:$('#employee_id').val(),
+				attend_code:$('#newAttend').val()
+			}
+
+			$.get('{{ url("fetch/general/online_transportation_data") }}', data, function(result, status, xhr){
+				if (result.status) {
+					// $('#newVehicle').val(result.datas.vehicle).trigger('change');
+					$('#newOrigin').val(result.datas.origin);
+					$('#newDestination').val(result.datas.destination);
+					$('#newDistance').val(result.datas.distance);
+					$('#newHighwayAmount').val(result.datas.highway_amount);
+				}else{
+					openErrorGritter('Error!','Data Tidak Tersedia');
+				}
+			});
+		}
+		else if(id !== "" || id === "shuttle"){
+			$('#newOrigin').prop("disabled", true);
+			$('#newDestination').prop("disabled", true);
+			$('#newHighwayAmount').prop("disabled", true);
+			$('#newDistance').prop("disabled", true);
 			// $('#newAttachment').prop("disabled", false);
+
+			$('#newOrigin').val("");
+			$('#newDestination').val("");
+			$('#newHighwayAmount').val("");
+			$('#newDistance').val("");
+		}else if(id !== "" && id === 'lainnya'){
+			$('#newVehicle').removeAttr("disabled");
+			$('#newOrigin').removeAttr("disabled");
+			$('#newDestination').removeAttr("disabled");
+			$('#newHighwayAmount').removeAttr("disabled");
+			$('#newDistance').removeAttr("disabled");
+			// $('#newAttachment').prop("disabled", false);
+			$('#newOrigin').val("");
+			$('#newDestination').val("");
+			$('#newHighwayAmount').val("");
+			$('#newDistance').val("");
+
 		}
 	}
 
