@@ -616,12 +616,12 @@
 						stack: 'shipment',
 						color: '#d897e6'
 					},{
-						name: 'ETD SUB (出港済み)',
+						name: 'Port Departed (出港済み)',
 						data: departed,
 						stack: 'shipment',
 						color: '#00a65a'
 					},{
-						name: 'ETD YMPI (YMPI出発済)',
+						name: 'Factory Departed (工場出発済み)',
 						data: on_board,
 						stack: 'container',
 						color: '#455DFF'
