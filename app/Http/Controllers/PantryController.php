@@ -16,6 +16,7 @@ use App\User;
 
 class PantryController extends Controller
 {
+    var $bot_token = '1605038829:AAHNqENTLWIESB_Q5tI_JFMoI4TPD_BaoEM';
     public function __construct()
     {
         $this->middleware('auth');
@@ -494,18 +495,42 @@ class PantryController extends Controller
             $emp = User::where('username','=',$request->get("pemesan"))->first();
             $name = $emp->name;
 
-            PantryOrder::where('pemesan', '=', $request->get("pemesan"))->update([
+            $order = PantryOrder::where('pemesan', '=', $request->get("pemesan"))->where('status', 'unconfirmed')->get();
+
+            PantryOrder::where('pemesan', '=', $request->get("pemesan"))->where('status', 'unconfirmed')->update([
                 'status' => 'confirmed'
             ]);
-// PantryOrder::find($request->get("pemesan"));
-// $pantry->status = 'confirmed';
-// $pantry->save();
 
-            $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
-            $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode("62811372398");
-            $query_string .= "&message=".rawurlencode(stripslashes("Ada Pesanan Pantry Dari ".$name.", Mohon untuk segera dibuatkan. Terimakasih")) . "&languagetype=1";        
-            $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
-            $fd = @implode('', file($url));
+            $item = [];
+            $index = 1;
+            foreach ($order as $key) {
+                array_push($item, '('.$index.'. '.$key->minuman.' - '.$key->minuman.' - '.$key->keterangan.' - '.$key->gula.')');
+                $index++;
+            }
+
+            // $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+            // $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode("62811372398");
+            // $query_string .= "&message=".rawurlencode(stripslashes("Ada Pesanan Pantry Dari ".$name.", Mohon untuk segera dibuatkan. Terimakasih")) . "&languagetype=1";        
+            // $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+            // $fd = @implode('', file($url));
+
+            $chat_id = [];
+            array_push($chat_id, '895527318');
+            array_push($chat_id, '1582057350');
+            array_push($chat_id, '703902954');
+            $pesan = "Ada Pesanan Pantry : ".join(', ',$item)." Dari ".$name.". Mohon untuk segera dibuatkan. Terimakasih.";
+
+            for ($i = 0; $i < count($chat_id);$i++) {
+                // $pesan = json_encode($pesan);
+                $API = "https://api.telegram.org/bot".$this->bot_token."/sendmessage?chat_id=".$chat_id[$i]."&text=$pesan";
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+                curl_setopt($ch, CURLOPT_URL, $API);
+                $result = curl_exec($ch);
+                curl_close($ch);
+                // return $result;
+            }
 
 // $sms = gw_send_sms('API3Y9RTZ5R6Y','API3Y9RTZ5R6Y3Y9RT','YMPI','6285645896741','Terdapat Order Pantry');
 

@@ -447,6 +447,7 @@
 				$('#addCount').val("1");
 			}
 			else{
+				$("#loading").hide();
 				alert('Attempt to retrieve data failed');
 			}
 		});
@@ -473,6 +474,7 @@
 						$("#loading").hide();
 					}
 					else{
+						$("#loading").hide();
 						openErrorGritter('Error!', result.message);
 					}
 				});
@@ -510,6 +512,7 @@
 	          // }
 	          $('#tableBodyList').append(tableData);
 	      } else {
+	      	$("#loading").hide();
 	        // $("#orderlist").modal('show');
 	    }
 	})
@@ -535,7 +538,7 @@
 							tableData += '<td>'+ value.gula +'</td>';
 							tableData += '<td style="text-align:right">'+ value.jumlah +'</td>';
 							tableData += '<td>'+ value.tempat +'</td>';
-							tableData += '<td><a href="javascript:void(0)" onclick="hapus(\''+value.id+'\')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a></td>';
+							tableData += '<td><a href="javascript:void(0)" onclick="hapus(\''+value.id+'\')" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a></td>';
 							tableData += '</tr>';
 							count += 1;		
 
@@ -563,6 +566,7 @@
 						daftarmenu();
 					}
 					else{
+						$("#loading").hide();
 						openErrorGritter('Error!', result.message);
 					}
 				});
@@ -584,6 +588,7 @@
 				$("#loading").hide();
 			}
 			else{
+				$("#loading").hide();
 				openErrorGritter('Error!', result.message);
 			}
 		});
