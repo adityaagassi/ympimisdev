@@ -56,7 +56,7 @@
                 <?php 
                 echo "<td>";
 
-                $poto = explode(',', $mjo->photo);
+                $poto = explode(', ', $mjo->photo);
 
                 if ($mjo->photo) {
                     foreach ($poto as $ph) {
