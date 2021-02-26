@@ -54,19 +54,20 @@
                 <td>{{ $mjo->prevention }}</td>
 
                 <?php 
-                echo "<td>";
 
                 $poto = explode(', ', $mjo->photo);
 
                 if ($mjo->photo) {
                     foreach ($poto as $ph) {
+                        echo "<td>";
                         echo "<img src='".public_path("maintenance/spk_report").'/'.$ph."' width='200px'>";
+                        echo "</td>";
                     }
                 } else {
+                    echo "<td>";
                     echo "tidak ada foto";
+                    echo "</td>";
                 }
-
-                echo "</td>";
 
                 ?>
             </tr>
