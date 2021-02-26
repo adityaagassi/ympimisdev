@@ -3994,6 +3994,7 @@ Route::get('scan/assembly/operator_kensa', 'AssemblyProcessController@scanAssemb
 Route::get('scan/assembly/kensa', 'AssemblyProcessController@scanAssemblyKensa');
 Route::get('destroy/assembly/kensa', 'AssemblyProcessController@deleteAssemblyKensa');
 Route::post('input/assembly/kensa', 'AssemblyProcessController@inputAssemblyKensa');
+Route::post('input/assembly/seasoning', 'AssemblyProcessController@inputAssemblySeasoning');
 Route::get('fetch/assembly/ng_detail', 'AssemblyProcessController@showNgDetail');
 Route::get('fetch/assembly/onko', 'AssemblyProcessController@fetchOnko');
 Route::get('fetch/assembly/ng_temp', 'AssemblyProcessController@fetchNgTemp');
@@ -4004,6 +4005,7 @@ Route::get('delete/assembly/delete_ng_temp', 'AssemblyProcessController@deleteNg
 Route::post('input/assembly/ng_onko', 'AssemblyProcessController@inputNgOnko');
 Route::get('fetch/assembly/get_process_before', 'AssemblyProcessController@getProcessBefore');
 
+Route::get('fetch/assembly', 'AssemblyProcessController@fetchAssembly');
 
 Route::get('index/assembly/flute/print_label', 'AssemblyProcessController@indexFlutePrintLabel');
 Route::get('fetch/assembly/flute/fillModelResult', 'AssemblyProcessController@fillModelResult');
@@ -4309,3 +4311,8 @@ Route::get('index/health/{loc}', 'HealthController@index');
 Route::post('upload/health', 'HealthController@uploadHealth');
 Route::get('fetch/health', 'HealthController@fetchHealth');
 Route::get('fetch/health/detail', 'HealthController@fetchDetailHealth');
+
+//Oculus
+Route::get('index/oculus/auth/{employee_id}', 'OculusController@indexAuth');
+Route::get('index/oculus/result/{employee_id}/{answer}/{sub_answer}/{result}', 'OculusController@indexResult');
+Route::get('index/oculus/fetch_score/{employee_id}', 'OculusController@fetchResult');

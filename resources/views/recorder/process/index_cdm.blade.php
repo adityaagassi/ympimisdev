@@ -264,6 +264,56 @@
 						</div>
 					</div>
 				</div>
+				<div class="col-xs-12" id="awal_head_yrf" style="padding-bottom: 10px">
+					<div class="row">
+						<div class="col-xs-12">
+							<span style="font-weight: bold; font-size: 16px;">Awal Proses</span>
+						</div>
+						<div class="col-xs-4">
+							<div class="input-group">
+								<center style="background-color: #ffd6a5;height: 70px"><span style="font-weight: bold; font-size: 16px;vertical-align: middle;">A<br>(139.8 - 140.2 mm (Nogisu))</span></center>
+								<input id="awal_head_yrf_a" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="A" onkeyup="headyrfvalue('a',this.value,'awal')">
+							</div>
+						</div>
+						<div class="col-xs-4">
+							<div class="input-group">
+								<center style="background-color: #ffd6a5;height: 70px"><span style="font-weight: bold; font-size: 16px;">B<br>(16.5 - 17.5 mm (Go no go))</span></center>
+								<input id="awal_head_yrf_b" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="B" onkeyup="headyrfvalue('b',this.value,'awal')">
+							</div>
+						</div>
+						<div class="col-xs-4">
+							<div class="input-group">
+								<center style="background-color: #ffd6a5;height: 70px"><span style="font-weight: bold; font-size: 16px;">Status</span></center>
+								<input id="awal_head_yrf_status" style="font-size: 20px; height: 40px; text-align: center;" type="text" class="form-control" value="" readonly placeholder="Status">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12" id="awal_body_yrf" style="padding-bottom: 10px">
+					<div class="row">
+						<div class="col-xs-12">
+							<span style="font-weight: bold; font-size: 16px;">Awal Proses</span>
+						</div>
+						<div class="col-xs-4">
+							<div class="input-group">
+								<center style="background-color: #ffd6a5;height: 70px"><span style="font-weight: bold; font-size: 16px;vertical-align: middle;">A<br>(216.3 - 216.7 mm (Nogisu))</span></center>
+								<input id="awal_body_yrf_a" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="A" onkeyup="bodyyrfvalue('a',this.value,'awal')">
+							</div>
+						</div>
+						<div class="col-xs-4">
+							<div class="input-group">
+								<center style="background-color: #ffd6a5;height: 70px"><span style="font-weight: bold; font-size: 16px;">B<br>(10.5 - 11.5 mm (Go no go))</span></center>
+								<input id="awal_body_yrf_b" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="B" onkeyup="bodyyrfvalue('b',this.value,'awal')">
+							</div>
+						</div>
+						<div class="col-xs-4">
+							<div class="input-group">
+								<center style="background-color: #ffd6a5;height: 70px"><span style="font-weight: bold; font-size: 16px;">Status</span></center>
+								<input id="awal_body_yrf_status" style="font-size: 20px; height: 40px; text-align: center;" type="text" class="form-control" value="" readonly placeholder="Status">
+							</div>
+						</div>
+					</div>
+				</div>
 				<div class="col-xs-12" id="awal_middle" style="padding-bottom: 10px">
 					<div class="row">
 						<div class="col-xs-12">
@@ -368,6 +418,56 @@
 							<div class="input-group">
 								<center style="background-color: #9bf6ff;height: 100px"><span style="font-weight: bold; font-size: 16px;">Status</span></center>
 								<input id="ist1_head_status" style="font-size: 20px; height: 40px; text-align: center;" type="text" class="form-control" value="" readonly placeholder="Status">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12" id="ist1_head_yrf" style="padding-bottom: 10px">
+					<div class="row">
+						<div class="col-xs-12">
+							<span style="font-weight: bold; font-size: 16px;">Setelah Istirahat 1</span>
+						</div>
+						<div class="col-xs-4">
+							<div class="input-group">
+								<center style="background-color: #9bf6ff;height: 70px"><span style="font-weight: bold; font-size: 16px;">A<br>(139.8 - 140.2 mm (Nogisu))</span></center>
+								<input id="ist1_head_yrf_a" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="A" onkeyup="headyrfvalue('a',this.value,'ist1')">
+							</div>
+						</div>
+						<div class="col-xs-4">
+							<div class="input-group">
+								<center style="background-color: #9bf6ff;height: 70px"><span style="font-weight: bold; font-size: 16px;">B<br>(16.5 - 17.5 mm (Go no go))</span></center>
+								<input id="ist1_head_yrf_b" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="B" onkeyup="headyrfvalue('b',this.value,'ist1')">
+							</div>
+						</div>
+						<div class="col-xs-4">
+							<div class="input-group">
+								<center style="background-color: #9bf6ff;height: 70px"><span style="font-weight: bold; font-size: 16px;">Status</span></center>
+								<input id="ist1_head_yrf_status" style="font-size: 20px; height: 40px; text-align: center;" type="text" class="form-control" value="" readonly placeholder="Status">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12" id="ist1_body_yrf" style="padding-bottom: 10px">
+					<div class="row">
+						<div class="col-xs-12">
+							<span style="font-weight: bold; font-size: 16px;">Setelah Istirahat 1</span>
+						</div>
+						<div class="col-xs-4">
+							<div class="input-group">
+								<center style="background-color: #9bf6ff;height: 70px"><span style="font-weight: bold; font-size: 16px;vertical-align: middle;">A<br>(216.3 - 216.7 mm (Nogisu))</span></center>
+								<input id="ist1_body_yrf_a" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="A" onkeyup="bodyyrfvalue('a',this.value,'ist1')">
+							</div>
+						</div>
+						<div class="col-xs-4">
+							<div class="input-group">
+								<center style="background-color: #9bf6ff;height: 70px"><span style="font-weight: bold; font-size: 16px;">B<br>(10.5 - 11.5 mm (Go no go))</span></center>
+								<input id="ist1_body_yrf_b" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="B" onkeyup="bodyyrfvalue('b',this.value,'ist1')">
+							</div>
+						</div>
+						<div class="col-xs-4">
+							<div class="input-group">
+								<center style="background-color: #9bf6ff;height: 70px"><span style="font-weight: bold; font-size: 16px;">Status</span></center>
+								<input id="ist1_body_yrf_status" style="font-size: 20px; height: 40px; text-align: center;" type="text" class="form-control" value="" readonly placeholder="Status">
 							</div>
 						</div>
 					</div>
@@ -479,6 +579,56 @@
 						</div>
 					</div>
 				</div>
+				<div class="col-xs-12" id="ist2_head_yrf" style="padding-bottom: 10px">
+					<div class="row">
+						<div class="col-xs-12">
+							<span style="font-weight: bold; font-size: 16px;">Setelah Istirahat 2</span>
+						</div>
+						<div class="col-xs-4">
+							<div class="input-group">
+								<center style="background-color: #ffc6ff;height: 70px"><span style="font-weight: bold; font-size: 16px;">A<br>(139.8 - 140.2 mm (Nogisu))</span></center>
+								<input id="ist2_head_yrf_a" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="A" onkeyup="headyrfvalue('a',this.value,'ist2')">
+							</div>
+						</div>
+						<div class="col-xs-4">
+							<div class="input-group">
+								<center style="background-color: #ffc6ff;height: 70px"><span style="font-weight: bold; font-size: 16px;">B<br>(16.5 - 17.5 mm (Go no go))</span></center>
+								<input id="ist2_head_yrf_b" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="B" onkeyup="headyrfvalue('b',this.value,'ist2')">
+							</div>
+						</div>
+						<div class="col-xs-4">
+							<div class="input-group">
+								<center style="background-color: #ffc6ff;height: 70px"><span style="font-weight: bold; font-size: 16px;">Status</span></center>
+								<input id="ist2_head_yrf_status" style="font-size: 20px; height: 40px; text-align: center;" type="text" class="form-control" value="" readonly placeholder="Status">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12" id="ist2_body_yrf" style="padding-bottom: 10px">
+					<div class="row">
+						<div class="col-xs-12">
+							<span style="font-weight: bold; font-size: 16px;">Setelah Istirahat 2</span>
+						</div>
+						<div class="col-xs-4">
+							<div class="input-group">
+								<center style="background-color: #ffc6ff;height: 70px"><span style="font-weight: bold; font-size: 16px;vertical-align: middle;">A<br>(216.3 - 216.7 mm (Nogisu))</span></center>
+								<input id="ist2_body_yrf_a" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="A" onkeyup="bodyyrfvalue('a',this.value,'ist2')">
+							</div>
+						</div>
+						<div class="col-xs-4">
+							<div class="input-group">
+								<center style="background-color: #ffc6ff;height: 70px"><span style="font-weight: bold; font-size: 16px;">B<br>(10.5 - 11.5 mm (Go no go))</span></center>
+								<input id="ist2_body_yrf_b" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="B" onkeyup="bodyyrfvalue('b',this.value,'ist2')">
+							</div>
+						</div>
+						<div class="col-xs-4">
+							<div class="input-group">
+								<center style="background-color: #ffc6ff;height: 70px"><span style="font-weight: bold; font-size: 16px;">Status</span></center>
+								<input id="ist2_body_yrf_status" style="font-size: 20px; height: 40px; text-align: center;" type="text" class="form-control" value="" readonly placeholder="Status">
+							</div>
+						</div>
+					</div>
+				</div>
 				<div class="col-xs-12" id="ist2_middle" style="padding-bottom: 10px">
 					<div class="row">
 						<div class="col-xs-12">
@@ -582,6 +732,56 @@
 							<div class="input-group">
 								<center style="background-color: #caffbf;height: 100px"><span style="font-weight: bold; font-size: 16px;">Status</span></center>
 								<input id="ist3_head_status" style="font-size: 20px; height: 40px; text-align: center;" type="text" class="form-control" value="" readonly placeholder="Status">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12" id="ist3_head_yrf" style="padding-bottom: 10px">
+					<div class="row">
+						<div class="col-xs-12">
+							<span style="font-weight: bold; font-size: 16px;">Setelah Istirahat 3</span>
+						</div>
+						<div class="col-xs-4">
+							<div class="input-group">
+								<center style="background-color: #caffbf;height: 70px"><span style="font-weight: bold; font-size: 16px;">A<br>(139.8 - 140.2 mm (Nogisu))</span></center>
+								<input id="ist3_head_yrf_a" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="A" onkeyup="headyrfvalue('a',this.value,'ist3')">
+							</div>
+						</div>
+						<div class="col-xs-4">
+							<div class="input-group">
+								<center style="background-color: #caffbf;height: 70px"><span style="font-weight: bold; font-size: 16px;">B<br>(16.5 - 17.5 mm (Go no go))</span></center>
+								<input id="ist3_head_yrf_b" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="B" onkeyup="headyrfvalue('b',this.value,'ist3')">
+							</div>
+						</div>
+						<div class="col-xs-4">
+							<div class="input-group">
+								<center style="background-color: #caffbf;height: 70px"><span style="font-weight: bold; font-size: 16px;">Status</span></center>
+								<input id="ist3_head_yrf_status" style="font-size: 20px; height: 40px; text-align: center;" type="text" class="form-control" value="" readonly placeholder="Status">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12" id="ist3_body_yrf" style="padding-bottom: 10px">
+					<div class="row">
+						<div class="col-xs-12">
+							<span style="font-weight: bold; font-size: 16px;">Setelah Istirahat 3</span>
+						</div>
+						<div class="col-xs-4">
+							<div class="input-group">
+								<center style="background-color: #caffbf;height: 70px"><span style="font-weight: bold; font-size: 16px;vertical-align: middle;">A<br>(216.3 - 216.7 mm (Nogisu))</span></center>
+								<input id="ist3_body_yrf_a" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="A" onkeyup="bodyyrfvalue('a',this.value,'ist3')">
+							</div>
+						</div>
+						<div class="col-xs-4">
+							<div class="input-group">
+								<center style="background-color: #caffbf;height: 70px"><span style="font-weight: bold; font-size: 16px;">B<br>(10.5 - 11.5 mm (Go no go))</span></center>
+								<input id="ist3_body_yrf_b" style="font-size: 20px; height: 40px; text-align: center;" type="number" class="form-control" value="0" placeholder="B" onkeyup="bodyyrfvalue('b',this.value,'ist3')">
+							</div>
+						</div>
+						<div class="col-xs-4">
+							<div class="input-group">
+								<center style="background-color: #caffbf;height: 70px"><span style="font-weight: bold; font-size: 16px;">Status</span></center>
+								<input id="ist3_body_yrf_status" style="font-size: 20px; height: 40px; text-align: center;" type="text" class="form-control" value="" readonly placeholder="Status">
 							</div>
 						</div>
 					</div>
@@ -708,7 +908,7 @@
 		</div>
 	</div>
 <div class="modal fade" id="modalGuidance">
-	<div class="modal-dialog modal-lg">
+	<div class="modal-dialog modal-lg" style="width: 1200px">
 		<div class="modal-content">
 			<div class="modal-header">
 				<center style="background-color: #ffac26;color: white">
@@ -776,6 +976,44 @@
 						<div class="row">
 							<img width="250px" src="{{ url('/data_file/recorder/cdm/foot_a_b.png') }}">
 							<img width="250px" src="{{ url('/data_file/recorder/cdm/foot_c.png') }}">
+						</div>
+					</div>
+
+					<div class="col-xs-12">
+						<div class="row">
+							<center style="background-color: #00cf45"><span style="font-size: 1.5vw;font-weight: bold;">HEAD PIECE YRF</span></center>
+						</div>
+					</div>
+					<div class="col-xs-6" style="padding-top: 10px;padding-bottom: 20px">
+						<div class="row">
+							<span style="font-size: 1.7vw">Standard:</span><br>
+							<span style="font-size: 1.4vw">A. 139.8 - 140.2 mm</span><br>
+							<span style="font-size: 1.4vw">B. 16.5 - 17.5 mm</span><br>
+							<br>
+						</div>
+					</div>
+					<div class="col-xs-6" style="padding-top: 10px;padding-bottom: 20px">
+						<div class="row">
+							<img width="400px" src="{{ url('/data_file/recorder/cdm/head_yrf.png') }}">
+						</div>
+					</div>
+
+					<div class="col-xs-12">
+						<div class="row">
+							<center style="background-color: #00cf45"><span style="font-size: 1.5vw;font-weight: bold;">BODY PIECE YRF</span></center>
+						</div>
+					</div>
+					<div class="col-xs-6" style="padding-top: 10px;padding-bottom: 20px">
+						<div class="row">
+							<span style="font-size: 1.7vw">Standard:</span><br>
+							<span style="font-size: 1.4vw">A. 216.3 - 216.7 mm</span><br>
+							<span style="font-size: 1.4vw">B. 10.5 - 11.5 mm</span><br>
+							<br>
+						</div>
+					</div>
+					<div class="col-xs-6" style="padding-top: 10px;padding-bottom: 20px">
+						<div class="row">
+							<img width="400px" src="{{ url('/data_file/recorder/cdm/body_yrf.png') }}">
 						</div>
 					</div>
 				</div>
@@ -859,18 +1097,26 @@
 		$('#cavity').prop('disabled',true);
 
 		$('#awal_head').hide();
+		$('#awal_head_yrf').hide();
+		$('#awal_body_yrf').hide();
 		$('#awal_middle').hide();
 		$('#awal_foot').hide();
 
 		$('#ist1_head').hide();
+		$('#ist1_head_yrf').hide();
+		$('#ist1_body_yrf').hide();
 		$('#ist1_middle').hide();
 		$('#ist1_foot').hide();
 
 		$('#ist2_head').hide();
+		$('#ist2_head_yrf').hide();
+		$('#ist2_body_yrf').hide();
 		$('#ist2_middle').hide();
 		$('#ist2_foot').hide();
 
 		$('#ist3_head').hide();
+		$('#ist3_head_yrf').hide();
+		$('#ist3_body_yrf').hide();
 		$('#ist3_middle').hide();
 		$('#ist3_foot').hide();
 
@@ -879,6 +1125,16 @@
 		$("input[name=awal_head_c]").prop('checked', false);
 		$('#awal_head_status').val("");
 		document.getElementById('awal_head_status').style.backgroundColor = "#fff";
+
+		$('#awal_head_yrf_a').val("");
+		$('#awal_head_yrf_b').val("");
+		$('#awal_head_yrf_status').val("");
+		document.getElementById('awal_head_yrf_status').style.backgroundColor = "#fff";
+
+		$('#awal_body_yrf_a').val("");
+		$('#awal_body_yrf_b').val("");
+		$('#awal_body_yrf_status').val("");
+		document.getElementById('awal_body_yrf_status').style.backgroundColor = "#fff";
 
 		$('#awal_middle_a').val("");
 		$('#awal_middle_b').val("");
@@ -897,11 +1153,20 @@
 		$('#ist1_head_status').val("");
 		document.getElementById('ist1_head_status').style.backgroundColor = "#fff";
 
+		$('#ist1_head_yrf_a').val("");
+		$('#ist1_head_yrf_b').val("");
+		$('#ist1_head_yrf_status').val("");
+		document.getElementById('ist1_head_yrf_status').style.backgroundColor = "#fff";
+
+		$('#ist1_body_yrf_a').val("");
+		$('#ist1_body_yrf_b').val("");
+		$('#ist1_body_yrf_status').val("");
+		document.getElementById('ist1_body_yrf_status').style.backgroundColor = "#fff";
+
 		$('#ist1_middle_a').val("");
 		$('#ist1_middle_b').val("");
 		$('#ist1_middle_status').val("");
 		document.getElementById('ist1_middle_status').style.backgroundColor = "#fff";
-
 
 		$('#ist1_foot_a').val("");
 		$('#ist1_foot_b').val("");
@@ -914,6 +1179,16 @@
 		$("input[name=ist2_head_c]").prop('checked', false);
 		$('#ist2_head_status').val("");
 		document.getElementById('ist2_head_status').style.backgroundColor = "#fff";
+
+		$('#ist2_head_yrf_a').val("");
+		$('#ist2_head_yrf_b').val("");
+		$('#ist2_head_yrf_status').val("");
+		document.getElementById('ist2_head_yrf_status').style.backgroundColor = "#fff";
+
+		$('#ist2_body_yrf_a').val("");
+		$('#ist2_body_yrf_b').val("");
+		$('#ist2_body_yrf_status').val("");
+		document.getElementById('ist2_body_yrf_status').style.backgroundColor = "#fff";
 
 		$('#ist2_middle_a').val("");
 		$('#ist2_middle_b').val("");
@@ -931,6 +1206,16 @@
 		$("input[name=ist3_head_c]").prop('checked', false);
 		$('#ist3_head_status').val("");
 		document.getElementById('ist3_head_status').style.backgroundColor = "#fff";
+
+		$('#ist3_head_yrf_a').val("");
+		$('#ist3_head_yrf_b').val("");
+		$('#ist3_head_yrf_status').val("");
+		document.getElementById('ist3_head_yrf_status').style.backgroundColor = "#fff";
+
+		$('#ist3_body_yrf_a').val("");
+		$('#ist3_body_yrf_b').val("");
+		$('#ist3_body_yrf_status').val("");
+		document.getElementById('ist3_body_yrf_status').style.backgroundColor = "#fff";
 
 		$('#ist3_middle_a').val("");
 		$('#ist3_middle_b').val("");
@@ -985,6 +1270,83 @@
 				$('#'+check+'_head_status').val('OK');
 				document.getElementById(''+check+'_head_status').style.backgroundColor = "#7fff6e";
 			}
+		}else{
+			$('#'+check+'_head_status').val('');
+			document.getElementById(''+check+'_head_status').style.backgroundColor = "#fff";
+		}
+	}
+
+	function headyrfvalue(type,value,check) {
+		var bawah_a = '{{$head_yrf_a_bawah}}';
+		var atas_a = '{{$head_yrf_a_atas}}';
+
+		var bawah_b = '{{$head_yrf_b_bawah}}';
+		var atas_b = '{{$head_yrf_b_atas}}';
+		var status = 0;
+
+
+		if ($('#'+check+'_head_yrf_a').val() != "" && $('#'+check+'_head_yrf_b').val() != "") {
+			if (parseFloat($('#'+check+'_head_yrf_a').val()) < parseFloat(bawah_a) || parseFloat($('#'+check+'_head_yrf_a').val()) > parseFloat(atas_a)) {
+				status++;
+			}
+
+			if (parseFloat($('#'+check+'_head_yrf_b').val()) < parseFloat(bawah_b) || parseFloat($('#'+check+'_head_yrf_b').val()) > parseFloat(atas_b)) {
+				status++;
+			}
+
+			if (type === 'c') {
+				if (value === 'NG') {
+					status++;
+				}
+			}
+
+			if (status > 0) {
+				$('#'+check+'_head_yrf_status').val('NG');
+				document.getElementById(''+check+'_head_yrf_status').style.backgroundColor = "#ff4f4f";
+			}else{
+				$('#'+check+'_head_yrf_status').val('OK');
+				document.getElementById(''+check+'_head_yrf_status').style.backgroundColor = "#7fff6e";
+			}
+		}else{
+			$('#'+check+'_head_yrf_status').val('');
+			document.getElementById(''+check+'_head_yrf_status').style.backgroundColor = "#fff";
+		}
+	}
+
+	function bodyyrfvalue(type,value,check) {
+		var bawah_a = '{{$body_yrf_a_bawah}}';
+		var atas_a = '{{$body_yrf_a_atas}}';
+
+		var bawah_b = '{{$body_yrf_b_bawah}}';
+		var atas_b = '{{$body_yrf_b_atas}}';
+		var status = 0;
+
+
+		if ($('#'+check+'_body_yrf_a').val() != "" && $('#'+check+'_body_yrf_b').val() != "") {
+			if (parseFloat($('#'+check+'_body_yrf_a').val()) < parseFloat(bawah_a) || parseFloat($('#'+check+'_body_yrf_a').val()) > parseFloat(atas_a)) {
+				status++;
+			}
+
+			if (parseFloat($('#'+check+'_body_yrf_b').val()) < parseFloat(bawah_b) || parseFloat($('#'+check+'_body_yrf_b').val()) > parseFloat(atas_b)) {
+				status++;
+			}
+
+			if (type === 'c') {
+				if (value === 'NG') {
+					status++;
+				}
+			}
+
+			if (status > 0) {
+				$('#'+check+'_body_yrf_status').val('NG');
+				document.getElementById(''+check+'_body_yrf_status').style.backgroundColor = "#ff4f4f";
+			}else{
+				$('#'+check+'_body_yrf_status').val('OK');
+				document.getElementById(''+check+'_body_yrf_status').style.backgroundColor = "#7fff6e";
+			}
+		}else{
+			$('#'+check+'_body_yrf_status').val('');
+			document.getElementById(''+check+'_body_yrf_status').style.backgroundColor = "#fff";
 		}
 	}
 
@@ -1013,6 +1375,9 @@
 				$('#'+check+'_middle_status').val('OK');
 				document.getElementById(''+check+'_middle_status').style.backgroundColor = "#7fff6e";
 			}
+		}else{
+			$('#'+check+'_middle_status').val('');
+			document.getElementById(''+check+'_middle_status').style.backgroundColor = "#fff";
 		}
 	}
 
@@ -1047,6 +1412,9 @@
 				$('#'+check+'_foot_status').val('OK');
 				document.getElementById(''+check+'_foot_status').style.backgroundColor = "#7fff6e";
 			}
+		}else{
+			$('#'+check+'_foot_status').val('');
+			document.getElementById(''+check+'_foot_status').style.backgroundColor = "#fff";
 		}
 	}
 
@@ -1107,56 +1475,134 @@
 					});
 				}
 				$('#cavity').append(cavity);
-			})
+			});
 
-			if (type === 'HEAD') {
-				$('#awal_head').show();
-				$('#awal_middle').hide();
-				$('#awal_foot').hide();
+			
 
-				$('#ist1_head').show();
-				$('#ist1_middle').hide();
-				$('#ist1_foot').hide();
+			if (product.match(/YRS/gi)) {
+				if (type === 'HEAD') {
+					$('#awal_head').show();
+					$('#awal_head_yrf').hide();
+					$('#awal_body_yrf').hide();
+					$('#awal_middle').hide();
+					$('#awal_foot').hide();
 
-				$('#ist2_head').show();
-				$('#ist2_middle').hide();
-				$('#ist2_foot').hide();
+					$('#ist1_head').show();
+					$('#ist1_head_yrf').hide();
+					$('#ist1_body_yrf').hide();
+					$('#ist1_middle').hide();
+					$('#ist1_foot').hide();
 
-				$('#ist3_head').show();
-				$('#ist3_middle').hide();
-				$('#ist3_foot').hide();
-			}else if(type === 'MIDDLE'){
-				$('#awal_middle').show();
-				$('#awal_head').hide();
-				$('#awal_foot').hide();
+					$('#ist2_head').show();
+					$('#ist2_head_yrf').hide();
+					$('#ist2_body_yrf').hide();
+					$('#ist2_middle').hide();
+					$('#ist2_foot').hide();
 
-				$('#ist1_middle').show();
-				$('#ist1_head').hide();
-				$('#ist1_foot').hide();
+					$('#ist3_head').show();
+					$('#ist3_head_yrf').hide();
+					$('#ist3_body_yrf').hide();
+					$('#ist3_middle').hide();
+					$('#ist3_foot').hide();
+				}else if(type === 'MIDDLE'){
+					$('#awal_middle').show();
+					$('#awal_head_yrf').hide();
+					$('#awal_body_yrf').hide();
+					$('#awal_head').hide();
+					$('#awal_foot').hide();
 
-				$('#ist2_middle').show();
-				$('#ist2_head').hide();
-				$('#ist2_foot').hide();
+					$('#ist1_middle').show();
+					$('#ist1_head_yrf').hide();
+					$('#ist1_body_yrf').hide();
+					$('#ist1_head').hide();
+					$('#ist1_foot').hide();
 
-				$('#ist3_middle').show();
-				$('#ist3_head').hide();
-				$('#ist3_foot').hide();
-			}else if(type === 'FOOT'){
-				$('#awal_middle').hide();
-				$('#awal_head').hide();
-				$('#awal_foot').show();
+					$('#ist2_middle').show();
+					$('#ist2_head_yrf').hide();
+					$('#ist2_body_yrf').hide();
+					$('#ist2_head').hide();
+					$('#ist2_foot').hide();
 
-				$('#ist1_middle').hide();
-				$('#ist1_head').hide();
-				$('#ist1_foot').show();
+					$('#ist3_middle').show();
+					$('#ist3_head_yrf').hide();
+					$('#ist3_body_yrf').hide();
+					$('#ist3_head').hide();
+					$('#ist3_foot').hide();
+				}else if(type === 'FOOT'){
+					$('#awal_middle').hide();
+					$('#awal_head_yrf').hide();
+					$('#awal_body_yrf').hide();
+					$('#awal_head').hide();
+					$('#awal_foot').show();
 
-				$('#ist2_middle').hide();
-				$('#ist2_head').hide();
-				$('#ist2_foot').show();
+					$('#ist1_middle').hide();
+					$('#ist1_head_yrf').hide();
+					$('#ist1_body_yrf').hide();
+					$('#ist1_head').hide();
+					$('#ist1_foot').show();
 
-				$('#ist3_middle').hide();
-				$('#ist3_head').hide();
-				$('#ist3_foot').show();
+					$('#ist2_middle').hide();
+					$('#ist2_head_yrf').hide();
+					$('#ist2_body_yrf').hide();
+					$('#ist2_head').hide();
+					$('#ist2_foot').show();
+
+					$('#ist3_middle').hide();
+					$('#ist3_head_yrf').hide();
+					$('#ist3_body_yrf').hide();
+					$('#ist3_head').hide();
+					$('#ist3_foot').show();
+				}
+			}else{
+				if (type === 'HEAD') {
+					$('#awal_head').hide();
+					$('#awal_head_yrf').show();
+					$('#awal_body_yrf').hide();
+					$('#awal_middle').hide();
+					$('#awal_foot').hide();
+
+					$('#ist1_head').hide();
+					$('#ist1_head_yrf').show();
+					$('#ist1_body_yrf').hide();
+					$('#ist1_middle').hide();
+					$('#ist1_foot').hide();
+
+					$('#ist2_head').hide();
+					$('#ist2_head_yrf').show();
+					$('#ist2_body_yrf').hide();
+					$('#ist2_middle').hide();
+					$('#ist2_foot').hide();
+
+					$('#ist3_head').hide();
+					$('#ist3_head_yrf').show();
+					$('#ist3_body_yrf').hide();
+					$('#ist3_middle').hide();
+					$('#ist3_foot').hide();
+				}else if(type === 'BODY'){
+					$('#awal_middle').hide();
+					$('#awal_head_yrf').hide();
+					$('#awal_body_yrf').show();
+					$('#awal_head').hide();
+					$('#awal_foot').hide();
+
+					$('#ist1_middle').hide();
+					$('#ist1_head_yrf').hide();
+					$('#ist1_body_yrf').show();
+					$('#ist1_head').hide();
+					$('#ist1_foot').hide();
+
+					$('#ist2_middle').hide();
+					$('#ist2_head_yrf').hide();
+					$('#ist2_body_yrf').show();
+					$('#ist2_head').hide();
+					$('#ist2_foot').hide();
+
+					$('#ist3_middle').hide();
+					$('#ist3_head_yrf').hide();
+					$('#ist3_body_yrf').show();
+					$('#ist3_head').hide();
+					$('#ist3_foot').hide();
+				}
 			}
 
 			$('#injection_date').removeAttr('disabled');
@@ -1359,184 +1805,343 @@
 			$.get('{{ url("fetch/recorder/cdm") }}',data, function(result, status, xhr){
 				if(result.status){
 					$('#save_type').val('UPDATE');
-					if (result.datas.type === 'HEAD') {
+					if (result.datas.product.match(/YRS/gi)) {
+						if (result.datas.type === 'HEAD') {
 
-						$('#awal_head').show();
-						$('#awal_middle').hide();
-						$('#awal_foot').hide();
+							$('#awal_head').show();
+							$('#awal_head_yrf').hide();
+							$('#awal_body_yrf').hide();
+							$('#awal_middle').hide();
+							$('#awal_foot').hide();
 
-						$('#ist1_head').show();
-						$('#ist1_middle').hide();
-						$('#ist1_foot').hide();
+							$('#ist1_head').show();
+							$('#ist1_head_yrf').hide();
+							$('#ist1_body_yrf').hide();
+							$('#ist1_middle').hide();
+							$('#ist1_foot').hide();
 
-						$('#ist2_head').show();
-						$('#ist2_middle').hide();
-						$('#ist2_foot').hide();
+							$('#ist2_head').show();
+							$('#ist2_head_yrf').hide();
+							$('#ist2_body_yrf').hide();
+							$('#ist2_middle').hide();
+							$('#ist2_foot').hide();
 
-						$('#ist3_head').show();
-						$('#ist3_middle').hide();
-						$('#ist3_foot').hide();
+							$('#ist3_head').show();
+							$('#ist3_head_yrf').hide();
+							$('#ist3_body_yrf').hide();
+							$('#ist3_middle').hide();
+							$('#ist3_foot').hide();
 
-						$('#awal_head_a').val(result.datas.awal_a);
-						$('#awal_head_b').val(result.datas.awal_b);
-						$("input[name=awal_head_c][value=" + result.datas.awal_c + "]").prop('checked', true);
-						$('#awal_head_status').val(result.datas.awal_status);
+							$('#awal_head_a').val(result.datas.awal_a);
+							$('#awal_head_b').val(result.datas.awal_b);
+							$("input[name=awal_head_c][value=" + result.datas.awal_c + "]").prop('checked', true);
+							$('#awal_head_status').val(result.datas.awal_status);
 
-						if (result.datas.awal_status == 'NG') {
-							document.getElementById('awal_head_status').style.backgroundColor = "#ff4f4f";
-						}else if(result.datas.awal_status == 'OK'){
-							document.getElementById('awal_head_status').style.backgroundColor = "#7fff6e";
+							if (result.datas.awal_status == 'NG') {
+								document.getElementById('awal_head_status').style.backgroundColor = "#ff4f4f";
+							}else if(result.datas.awal_status == 'OK'){
+								document.getElementById('awal_head_status').style.backgroundColor = "#7fff6e";
+							}
+
+							$('#ist1_head_a').val(result.datas.ist_1_a);
+							$('#ist1_head_b').val(result.datas.ist_1_b);
+							$("input[name=ist1_head_c][value=" + result.datas.ist_1_c + "]").prop('checked', true);
+							$('#ist1_head_status').val(result.datas.ist_1_status);
+
+							if (result.datas.ist_1_status == 'NG') {
+								document.getElementById('ist1_head_status').style.backgroundColor = "#ff4f4f";
+							}else if(result.datas.ist_1_status == 'OK'){
+								document.getElementById('ist1_head_status').style.backgroundColor = "#7fff6e";
+							}
+
+							$('#ist2_head_a').val(result.datas.ist_2_a);
+							$('#ist2_head_b').val(result.datas.ist_2_b);
+							$("input[name=ist2_head_c][value=" + result.datas.ist_2_c + "]").prop('checked', true);
+							$('#ist2_head_status').val(result.datas.ist_2_status);
+
+							if (result.datas.ist_2_status == 'NG') {
+								document.getElementById('ist2_head_status').style.backgroundColor = "#ff4f4f";
+							}else if(result.datas.ist_2_status == 'OK'){
+								document.getElementById('ist2_head_status').style.backgroundColor = "#7fff6e";
+							}
+
+							$('#ist3_head_a').val(result.datas.ist_3_a);
+							$('#ist3_head_b').val(result.datas.ist_3_b);
+							$("input[name=ist3_head_c][value=" + result.datas.ist_3_c + "]").prop('checked', true);
+							$('#ist3_head_status').val(result.datas.ist_3_status);
+
+							if (result.datas.ist_3_status == 'NG') {
+								document.getElementById('ist3_head_status').style.backgroundColor = "#ff4f4f";
+							}else if(result.datas.ist_3_status == 'OK'){
+								document.getElementById('ist3_head_status').style.backgroundColor = "#7fff6e";
+							}
+
+						}else if(result.datas.type === 'MIDDLE'){
+							$('#awal_middle').show();
+							$('#awal_head').hide();
+							$('#awal_head_yrf').hide();
+							$('#awal_body_yrf').hide();
+							$('#awal_foot').hide();
+
+							$('#ist1_middle').show();
+							$('#ist1_head').hide();
+							$('#ist1_head_yrf').hide();
+							$('#ist1_body_yrf').hide();
+							$('#ist1_foot').hide();
+
+							$('#ist2_middle').show();
+							$('#ist2_head').hide();
+							$('#ist2_head_yrf').hide();
+							$('#ist2_body_yrf').hide();
+							$('#ist2_foot').hide();
+
+							$('#ist3_middle').show();
+							$('#ist3_head').hide();
+							$('#ist3_head_yrf').hide();
+							$('#ist3_body_yrf').hide();
+							$('#ist3_foot').hide();
+
+							$('#awal_middle_a').val(result.datas.awal_a);
+							$('#awal_middle_b').val(result.datas.awal_b);
+							$('#awal_middle_status').val(result.datas.awal_status);
+
+							if (result.datas.awal_status == 'NG') {
+								document.getElementById('awal_middle_status').style.backgroundColor = "#ff4f4f";
+							}else if(result.datas.awal_status == 'OK'){
+								document.getElementById('awal_middle_status').style.backgroundColor = "#7fff6e";
+							}
+
+							$('#ist1_middle_a').val(result.datas.ist_1_a);
+							$('#ist1_middle_b').val(result.datas.ist_1_b);
+							$('#ist1_middle_status').val(result.datas.ist_1_status);
+
+							if (result.datas.ist_1_status == 'NG') {
+								document.getElementById('ist1_middle_status').style.backgroundColor = "#ff4f4f";
+							}else if(result.datas.ist_1_status == 'OK'){
+								document.getElementById('ist1_middle_status').style.backgroundColor = "#7fff6e";
+							}
+
+							$('#ist2_middle_a').val(result.datas.ist_2_a);
+							$('#ist2_middle_b').val(result.datas.ist_2_b);
+							$('#ist2_middle_status').val(result.datas.ist_2_status);
+
+							if (result.datas.ist_2_status == 'NG') {
+								document.getElementById('ist2_middle_status').style.backgroundColor = "#ff4f4f";
+							}else if(result.datas.ist_2_status == 'OK'){
+								document.getElementById('ist2_middle_status').style.backgroundColor = "#7fff6e";
+							}
+
+							$('#ist3_middle_a').val(result.datas.ist_3_a);
+							$('#ist3_middle_b').val(result.datas.ist_3_b);
+							$('#ist3_middle_status').val(result.datas.ist_3_status);
+
+							if (result.datas.ist_3_status == 'NG') {
+								document.getElementById('ist3_middle_status').style.backgroundColor = "#ff4f4f";
+							}else if(result.datas.ist_3_status == 'OK'){
+								document.getElementById('ist3_middle_status').style.backgroundColor = "#7fff6e";
+							}
+
+						}else if(result.datas.type === 'FOOT'){
+							$('#awal_middle').hide();
+							$('#awal_head_yrf').hide();
+							$('#awal_body_yrf').hide();
+							$('#awal_head').hide();
+							$('#awal_foot').show();
+
+							$('#ist1_middle').hide();
+							$('#ist1_head_yrf').hide();
+							$('#ist1_body_yrf').hide();
+							$('#ist1_head').hide();
+							$('#ist1_foot').show();
+
+							$('#ist2_middle').hide();
+							$('#ist2_head_yrf').hide();
+							$('#ist2_body_yrf').hide();
+							$('#ist2_head').hide();
+							$('#ist2_foot').show();
+
+							$('#ist3_middle').hide();
+							$('#ist3_head_yrf').hide();
+							$('#ist3_body_yrf').hide();
+							$('#ist3_head').hide();
+							$('#ist3_foot').show();
+
+							$('#awal_foot_a').val(result.datas.awal_a);
+							$('#awal_foot_b').val(result.datas.awal_b);
+							$("input[name=awal_foot_c][value=" + result.datas.awal_c + "]").prop('checked', true);
+							$('#awal_foot_status').val(result.datas.awal_status);
+
+							if (result.datas.awal_status == 'NG') {
+								document.getElementById('awal_foot_status').style.backgroundColor = "#ff4f4f";
+							}else if(result.datas.awal_status == 'OK'){
+								document.getElementById('awal_foot_status').style.backgroundColor = "#7fff6e";
+							}
+
+							$('#ist1_foot_a').val(result.datas.ist_1_a);
+							$('#ist1_foot_b').val(result.datas.ist_1_b);
+							$("input[name=ist1_foot_c][value=" + result.datas.ist_1_c + "]").prop('checked', true);
+							$('#ist1_foot_status').val(result.datas.ist_1_status);
+
+							if (result.datas.ist_1_status == 'NG') {
+								document.getElementById('ist1_foot_status').style.backgroundColor = "#ff4f4f";
+							}else if(result.datas.ist_1_status == 'OK'){
+								document.getElementById('ist1_foot_status').style.backgroundColor = "#7fff6e";
+							}
+
+							$('#ist2_foot_a').val(result.datas.ist_2_a);
+							$('#ist2_foot_b').val(result.datas.ist_2_b);
+							$("input[name=ist2_foot_c][value=" + result.datas.ist_2_c + "]").prop('checked', true);
+							$('#ist2_foot_status').val(result.datas.ist_2_status);
+
+							if (result.datas.ist_2_status == 'NG') {
+								document.getElementById('ist2_foot_status').style.backgroundColor = "#ff4f4f";
+							}else if(result.datas.ist_2_status == 'OK'){
+								document.getElementById('ist2_foot_status').style.backgroundColor = "#7fff6e";
+							}
+
+							$('#ist3_foot_a').val(result.datas.ist_3_a);
+							$('#ist3_foot_b').val(result.datas.ist_3_b);
+							$("input[name=ist3_foot_c][value=" + result.datas.ist_3_c + "]").prop('checked', true);
+							$('#ist3_foot_status').val(result.datas.ist_3_status);
+
+							if (result.datas.ist_3_status == 'NG') {
+								document.getElementById('ist3_foot_status').style.backgroundColor = "#ff4f4f";
+							}else if(result.datas.ist_3_status == 'OK'){
+								document.getElementById('ist3_foot_status').style.backgroundColor = "#7fff6e";
+							}
 						}
+					}else{
+						if (result.datas.type === 'HEAD') {
 
-						$('#ist1_head_a').val(result.datas.ist_1_a);
-						$('#ist1_head_b').val(result.datas.ist_1_b);
-						$("input[name=ist1_head_c][value=" + result.datas.ist_1_c + "]").prop('checked', true);
-						$('#ist1_head_status').val(result.datas.ist_1_status);
+							$('#awal_head').hide();
+							$('#awal_head_yrf').show();
+							$('#awal_body_yrf').hide();
+							$('#awal_middle').hide();
+							$('#awal_foot').hide();
 
-						if (result.datas.ist_1_status == 'NG') {
-							document.getElementById('ist1_head_status').style.backgroundColor = "#ff4f4f";
-						}else if(result.datas.ist_1_status == 'OK'){
-							document.getElementById('ist1_head_status').style.backgroundColor = "#7fff6e";
-						}
+							$('#ist1_head').hide();
+							$('#ist1_head_yrf').show();
+							$('#ist1_body_yrf').hide();
+							$('#ist1_middle').hide();
+							$('#ist1_foot').hide();
 
-						$('#ist2_head_a').val(result.datas.ist_2_a);
-						$('#ist2_head_b').val(result.datas.ist_2_b);
-						$("input[name=ist2_head_c][value=" + result.datas.ist_2_c + "]").prop('checked', true);
-						$('#ist2_head_status').val(result.datas.ist_2_status);
+							$('#ist2_head').hide();
+							$('#ist2_head_yrf').show();
+							$('#ist2_body_yrf').hide();
+							$('#ist2_middle').hide();
+							$('#ist2_foot').hide();
 
-						if (result.datas.ist_2_status == 'NG') {
-							document.getElementById('ist2_head_status').style.backgroundColor = "#ff4f4f";
-						}else if(result.datas.ist_2_status == 'OK'){
-							document.getElementById('ist2_head_status').style.backgroundColor = "#7fff6e";
-						}
+							$('#ist3_head').hide();
+							$('#ist3_head_yrf').show();
+							$('#ist3_body_yrf').hide();
+							$('#ist3_middle').hide();
+							$('#ist3_foot').hide();
 
-						$('#ist3_head_a').val(result.datas.ist_3_a);
-						$('#ist3_head_b').val(result.datas.ist_3_b);
-						$("input[name=ist3_head_c][value=" + result.datas.ist_3_c + "]").prop('checked', true);
-						$('#ist3_head_status').val(result.datas.ist_3_status);
+							$('#awal_head_yrf_a').val(result.datas.awal_a);
+							$('#awal_head_yrf_b').val(result.datas.awal_b);
+							$('#awal_head_yrf_status').val(result.datas.awal_status);
 
-						if (result.datas.ist_3_status == 'NG') {
-							document.getElementById('ist3_head_status').style.backgroundColor = "#ff4f4f";
-						}else if(result.datas.ist_3_status == 'OK'){
-							document.getElementById('ist3_head_status').style.backgroundColor = "#7fff6e";
-						}
+							if (result.datas.awal_status == 'NG') {
+								document.getElementById('awal_head_yrf_status').style.backgroundColor = "#ff4f4f";
+							}else if(result.datas.awal_status == 'OK'){
+								document.getElementById('awal_head_yrf_status').style.backgroundColor = "#7fff6e";
+							}
 
-					}else if(result.datas.type === 'MIDDLE'){
-						$('#awal_middle').show();
-						$('#awal_head').hide();
-						$('#awal_foot').hide();
+							$('#ist1_head_yrf_a').val(result.datas.ist_1_a);
+							$('#ist1_head_yrf_b').val(result.datas.ist_1_b);
+							$('#ist1_head_yrf_status').val(result.datas.ist_1_status);
 
-						$('#ist1_middle').show();
-						$('#ist1_head').hide();
-						$('#ist1_foot').hide();
+							if (result.datas.ist_1_status == 'NG') {
+								document.getElementById('ist1_head_yrf_status').style.backgroundColor = "#ff4f4f";
+							}else if(result.datas.ist_1_status == 'OK'){
+								document.getElementById('ist1_head_yrf_status').style.backgroundColor = "#7fff6e";
+							}
 
-						$('#ist2_middle').show();
-						$('#ist2_head').hide();
-						$('#ist2_foot').hide();
+							$('#ist2_head_yrf_a').val(result.datas.ist_2_a);
+							$('#ist2_head_yrf_b').val(result.datas.ist_2_b);
+							$('#ist2_head_yrf_status').val(result.datas.ist_2_status);
 
-						$('#ist3_middle').show();
-						$('#ist3_head').hide();
-						$('#ist3_foot').hide();
+							if (result.datas.ist_2_status == 'NG') {
+								document.getElementById('ist2_head_yrf_status').style.backgroundColor = "#ff4f4f";
+							}else if(result.datas.ist_2_status == 'OK'){
+								document.getElementById('ist2_head_yrf_status').style.backgroundColor = "#7fff6e";
+							}
 
-						$('#awal_middle_a').val(result.datas.awal_a);
-						$('#awal_middle_b').val(result.datas.awal_b);
-						$('#awal_middle_status').val(result.datas.awal_status);
+							$('#ist3_head_yrf_a').val(result.datas.ist_3_a);
+							$('#ist3_head_yrf_b').val(result.datas.ist_3_b);
+							$('#ist3_head_yrf_status').val(result.datas.ist_3_status);
 
-						if (result.datas.awal_status == 'NG') {
-							document.getElementById('awal_middle_status').style.backgroundColor = "#ff4f4f";
-						}else if(result.datas.awal_status == 'OK'){
-							document.getElementById('awal_middle_status').style.backgroundColor = "#7fff6e";
-						}
+							if (result.datas.ist_3_status == 'NG') {
+								document.getElementById('ist3_head_yrf_status').style.backgroundColor = "#ff4f4f";
+							}else if(result.datas.ist_3_status == 'OK'){
+								document.getElementById('ist3_head_yrf_status').style.backgroundColor = "#7fff6e";
+							}
 
-						$('#ist1_middle_a').val(result.datas.ist_1_a);
-						$('#ist1_middle_b').val(result.datas.ist_1_b);
-						$('#ist1_middle_status').val(result.datas.ist_1_status);
+						}else if(result.datas.type === 'BODY'){
+							$('#awal_middle').hide();
+							$('#awal_head_yrf').hide();
+							$('#awal_body_yrf').show();
+							$('#awal_head').hide();
+							$('#awal_foot').hide();
 
-						if (result.datas.ist_1_status == 'NG') {
-							document.getElementById('ist1_middle_status').style.backgroundColor = "#ff4f4f";
-						}else if(result.datas.ist_1_status == 'OK'){
-							document.getElementById('ist1_middle_status').style.backgroundColor = "#7fff6e";
-						}
+							$('#ist1_middle').hide();
+							$('#ist1_head_yrf').hide();
+							$('#ist1_body_yrf').show();
+							$('#ist1_head').hide();
+							$('#ist1_foot').hide();
 
-						$('#ist2_middle_a').val(result.datas.ist_2_a);
-						$('#ist2_middle_b').val(result.datas.ist_2_b);
-						$('#ist2_middle_status').val(result.datas.ist_2_status);
+							$('#ist2_middle').hide();
+							$('#ist2_head_yrf').hide();
+							$('#ist2_body_yrf').show();
+							$('#ist2_head').hide();
+							$('#ist2_foot').hide();
 
-						if (result.datas.ist_2_status == 'NG') {
-							document.getElementById('ist2_middle_status').style.backgroundColor = "#ff4f4f";
-						}else if(result.datas.ist_2_status == 'OK'){
-							document.getElementById('ist2_middle_status').style.backgroundColor = "#7fff6e";
-						}
+							$('#ist3_middle').hide();
+							$('#ist3_head_yrf').hide();
+							$('#ist3_body_yrf').show();
+							$('#ist3_head').hide();
+							$('#ist3_foot').hide();
 
-						$('#ist3_middle_a').val(result.datas.ist_3_a);
-						$('#ist3_middle_b').val(result.datas.ist_3_b);
-						$('#ist3_middle_status').val(result.datas.ist_3_status);
+							$('#awal_body_yrf_a').val(result.datas.awal_a);
+							$('#awal_body_yrf_b').val(result.datas.awal_b);
+							$('#awal_body_yrf_status').val(result.datas.awal_status);
 
-						if (result.datas.ist_3_status == 'NG') {
-							document.getElementById('ist3_middle_status').style.backgroundColor = "#ff4f4f";
-						}else if(result.datas.ist_3_status == 'OK'){
-							document.getElementById('ist3_middle_status').style.backgroundColor = "#7fff6e";
-						}
+							if (result.datas.awal_status == 'NG') {
+								document.getElementById('awal_body_yrf_status').style.backgroundColor = "#ff4f4f";
+							}else if(result.datas.awal_status == 'OK'){
+								document.getElementById('awal_body_yrf_status').style.backgroundColor = "#7fff6e";
+							}
 
-					}else if(result.datas.type === 'FOOT'){
-						$('#awal_middle').hide();
-						$('#awal_head').hide();
-						$('#awal_foot').show();
+							$('#ist1_body_yrf_a').val(result.datas.ist_1_a);
+							$('#ist1_body_yrf_b').val(result.datas.ist_1_b);
+							$('#ist1_body_yrf_status').val(result.datas.ist_1_status);
 
-						$('#ist1_middle').hide();
-						$('#ist1_head').hide();
-						$('#ist1_foot').show();
+							if (result.datas.ist_1_status == 'NG') {
+								document.getElementById('ist1_body_yrf_status').style.backgroundColor = "#ff4f4f";
+							}else if(result.datas.ist_1_status == 'OK'){
+								document.getElementById('ist1_body_yrf_status').style.backgroundColor = "#7fff6e";
+							}
 
-						$('#ist2_middle').hide();
-						$('#ist2_head').hide();
-						$('#ist2_foot').show();
+							$('#ist2_body_yrf_a').val(result.datas.ist_2_a);
+							$('#ist2_body_yrf_b').val(result.datas.ist_2_b);
+							$('#ist2_body_yrf_status').val(result.datas.ist_2_status);
 
-						$('#ist3_middle').hide();
-						$('#ist3_head').hide();
-						$('#ist3_foot').show();
+							if (result.datas.ist_2_status == 'NG') {
+								document.getElementById('ist2_body_yrf_status').style.backgroundColor = "#ff4f4f";
+							}else if(result.datas.ist_2_status == 'OK'){
+								document.getElementById('ist2_body_yrf_status').style.backgroundColor = "#7fff6e";
+							}
 
-						$('#awal_foot_a').val(result.datas.awal_a);
-						$('#awal_foot_b').val(result.datas.awal_b);
-						$("input[name=awal_foot_c][value=" + result.datas.awal_c + "]").prop('checked', true);
-						$('#awal_foot_status').val(result.datas.awal_status);
+							$('#ist3_body_yrf_a').val(result.datas.ist_3_a);
+							$('#ist3_body_yrf_b').val(result.datas.ist_3_b);
+							$('#ist3_body_yrf_status').val(result.datas.ist_3_status);
 
-						if (result.datas.awal_status == 'NG') {
-							document.getElementById('awal_foot_status').style.backgroundColor = "#ff4f4f";
-						}else if(result.datas.awal_status == 'OK'){
-							document.getElementById('awal_foot_status').style.backgroundColor = "#7fff6e";
-						}
+							if (result.datas.ist_3_status == 'NG') {
+								document.getElementById('ist3_body_yrf_status').style.backgroundColor = "#ff4f4f";
+							}else if(result.datas.ist_3_status == 'OK'){
+								document.getElementById('ist3_body_yrf_status').style.backgroundColor = "#7fff6e";
+							}
 
-						$('#ist1_foot_a').val(result.datas.ist_1_a);
-						$('#ist1_foot_b').val(result.datas.ist_1_b);
-						$("input[name=ist1_foot_c][value=" + result.datas.ist_1_c + "]").prop('checked', true);
-						$('#ist1_foot_status').val(result.datas.ist_1_status);
-
-						if (result.datas.ist_1_status == 'NG') {
-							document.getElementById('ist1_foot_status').style.backgroundColor = "#ff4f4f";
-						}else if(result.datas.ist_1_status == 'OK'){
-							document.getElementById('ist1_foot_status').style.backgroundColor = "#7fff6e";
-						}
-
-						$('#ist2_foot_a').val(result.datas.ist_2_a);
-						$('#ist2_foot_b').val(result.datas.ist_2_b);
-						$("input[name=ist2_foot_c][value=" + result.datas.ist_2_c + "]").prop('checked', true);
-						$('#ist2_foot_status').val(result.datas.ist_2_status);
-
-						if (result.datas.ist_2_status == 'NG') {
-							document.getElementById('ist2_foot_status').style.backgroundColor = "#ff4f4f";
-						}else if(result.datas.ist_2_status == 'OK'){
-							document.getElementById('ist2_foot_status').style.backgroundColor = "#7fff6e";
-						}
-
-						$('#ist3_foot_a').val(result.datas.ist_3_a);
-						$('#ist3_foot_b').val(result.datas.ist_3_b);
-						$("input[name=ist3_foot_c][value=" + result.datas.ist_3_c + "]").prop('checked', true);
-						$('#ist3_foot_status').val(result.datas.ist_3_status);
-
-						if (result.datas.ist_3_status == 'NG') {
-							document.getElementById('ist3_foot_status').style.backgroundColor = "#ff4f4f";
-						}else if(result.datas.ist_3_status == 'OK'){
-							document.getElementById('ist3_foot_status').style.backgroundColor = "#7fff6e";
 						}
 					}
 
@@ -1550,14 +2155,15 @@
 
 					$('#cavity').empty();
 
-					$.get('{{ url("fetch/cavity") }}',data2, function(result, status, xhr){
-						if(result.status){
+					$.get('{{ url("fetch/cavity") }}',data2, function(result2, status, xhr){
+						if(result2.status){
 							var cavity = "";
-							$.each(result.datas, function(key, value) {
+							$.each(result2.datas, function(key, value) {
 								cavity += '<option value="'+value.no_cavity+'">'+value.no_cavity+'</option>';
 							});
 						}
 						$('#cavity').append(cavity);
+						$('#cavity').val(result.datas.cavity).trigger('change');
 					})
 
 					$('#id_cdm').val(result.datas.id_cdm);
@@ -1567,7 +2173,6 @@
 					$('#color').val(result.datas.color);
 					$('#injection_date').val(result.datas.injection_date);
 					$('#machine').val(result.datas.machine).trigger('change');
-					$('#cavity').val(result.datas.cavity).trigger('change');
 
 					$('#product').focus();
 					openSuccessGritter('Success','Success Get Data');
@@ -1587,175 +2192,251 @@
 			var head = [];
 			var middle = [];
 			var foot = [];
-			if ($('#type').val() == 'HEAD') {
-				if ($('input[id="awal_head_c"]:checked').val() == 'OK') {
-					$awal_head_c = 'OK';
-				}else if($('input[id="awal_head_c"]:checked').val() == 'NG'){
-					$awal_head_c = 'NG';
-				}else{
-					$awal_head_c = null;
+			var head_yrf = [];
+			var body_yrf = [];
+			if ($('#product').val().match(/YRS/gi)) {
+				if ($('#type').val() == 'HEAD') {
+					if ($('input[id="awal_head_c"]:checked').val() == 'OK') {
+						$awal_head_c = 'OK';
+					}else if($('input[id="awal_head_c"]:checked').val() == 'NG'){
+						$awal_head_c = 'NG';
+					}else{
+						$awal_head_c = null;
+					}
+
+					if ($('input[id="ist1_head_c"]:checked').val() == 'OK') {
+						$ist1_head_c = 'OK';
+					}else if($('input[id="ist1_head_c"]:checked').val() == 'NG'){
+						$ist1_head_c = 'NG';
+					}else{
+						$ist1_head_c = null;
+					}
+
+					if ($('input[id="ist2_head_c"]:checked').val() == 'OK') {
+						$ist2_head_c = 'OK';
+					}else if($('input[id="ist2_head_c"]:checked').val() == 'NG'){
+						$ist2_head_c = 'NG';
+					}else{
+						$ist2_head_c = null;
+					}
+
+					if ($('input[id="ist3_head_c"]:checked').val() == 'OK') {
+						$ist3_head_c = 'OK';
+					}else if($('input[id="ist3_head_c"]:checked').val() == 'NG'){
+						$ist3_head_c = 'NG';
+					}else{
+						$ist3_head_c = null;
+					}
+
+					head.push(
+					{
+						'awal_a': $('#awal_head_a').val(),
+						'awal_b': $('#awal_head_b').val(),
+						'awal_c': $awal_head_c,
+						'awal_status': $('#awal_head_status').val(),
+						'ist1_a': $('#ist1_head_a').val(),
+						'ist1_b': $('#ist1_head_b').val(),
+						'ist1_c': $ist1_head_c,
+						'ist1_status': $('#ist1_head_status').val(),
+						'ist2_a': $('#ist2_head_a').val(),
+						'ist2_b': $('#ist2_head_b').val(),
+						'ist2_c': $ist2_head_c,
+						'ist2_status': $('#ist2_head_status').val(),
+						'ist3_a': $('#ist3_head_a').val(),
+						'ist3_b': $('#ist3_head_b').val(),
+						'ist3_c': $ist3_head_c,
+						'ist3_status': $('#ist3_head_status').val(),
+					});
+
+					var data = {
+						product:$('#product').val(),
+						type:$('#type').val(),
+						part:$('#part').val(),
+						color:$('#color').val(),
+						injection_date:$('#injection_date').val(),
+						machine:$('#machine').val(),
+						cavity:$('#cavity').val(),
+						employee_id:$('#op').val(),
+						head:head,
+						save_type:$('#save_type').val(),
+						id_cdm:$('#id_cdm').val()
+					}
 				}
 
-				if ($('input[id="ist1_head_c"]:checked').val() == 'OK') {
-					$ist1_head_c = 'OK';
-				}else if($('input[id="ist1_head_c"]:checked').val() == 'NG'){
-					$ist1_head_c = 'NG';
-				}else{
-					$ist1_head_c = null;
+				if ($('#type').val() == 'MIDDLE') {
+					middle.push(
+					{
+						'awal_a': $('#awal_middle_a').val(),
+						'awal_b': $('#awal_middle_b').val(),
+						'awal_c': '-',
+						'awal_status': $('#awal_middle_status').val(),
+						'ist1_a': $('#ist1_middle_a').val(),
+						'ist1_b': $('#ist1_middle_b').val(),
+						'ist1_c': '-',
+						'ist1_status': $('#ist1_middle_status').val(),
+						'ist2_a': $('#ist2_middle_a').val(),
+						'ist2_b': $('#ist2_middle_b').val(),
+						'ist2_c': '-',
+						'ist2_status': $('#ist2_middle_status').val(),
+						'ist3_a': $('#ist3_middle_a').val(),
+						'ist3_b': $('#ist3_middle_b').val(),
+						'ist3_c': '-',
+						'ist3_status': $('#ist3_middle_status').val(),
+					});
+
+					var data = {
+						product:$('#product').val(),
+						type:$('#type').val(),
+						part:$('#part').val(),
+						color:$('#color').val(),
+						injection_date:$('#injection_date').val(),
+						machine:$('#machine').val(),
+						cavity:$('#cavity').val(),
+						employee_id:$('#op').val(),
+						middle:middle,
+						save_type:$('#save_type').val(),
+						id_cdm:$('#id_cdm').val()
+					}
 				}
 
-				if ($('input[id="ist2_head_c"]:checked').val() == 'OK') {
-					$ist2_head_c = 'OK';
-				}else if($('input[id="ist2_head_c"]:checked').val() == 'NG'){
-					$ist2_head_c = 'NG';
-				}else{
-					$ist2_head_c = null;
+				if ($('#type').val() == 'FOOT') {
+					if ($('input[id="awal_foot_c"]:checked').val() == 'OK') {
+						$awal_foot_c = 'OK';
+					}else if($('input[id="awal_foot_c"]:checked').val() == 'NG'){
+						$awal_foot_c = 'NG';
+					}else{
+						$awal_foot_c = null;
+					}
+
+					if ($('input[id="ist1_foot_c"]:checked').val() == 'OK') {
+						$ist1_foot_c = 'OK';
+					}else if($('input[id="ist1_foot_c"]:checked').val() == 'NG'){
+						$ist1_foot_c = 'NG';
+					}else{
+						$ist1_foot_c = null;
+					}
+
+					if ($('input[id="ist2_foot_c"]:checked').val() == 'OK') {
+						$ist2_foot_c = 'OK';
+					}else if($('input[id="ist2_foot_c"]:checked').val() == 'NG'){
+						$ist2_foot_c = 'NG';
+					}else{
+						$ist2_foot_c = null;
+					}
+
+					if ($('input[id="ist3_foot_c"]:checked').val() == 'OK') {
+						$ist3_foot_c = 'OK';
+					}else if($('input[id="ist3_foot_c"]:checked').val() == 'NG'){
+						$ist3_foot_c = 'NG';
+					}else{
+						$ist3_foot_c = null;
+					}
+
+					foot.push(
+					{
+						'awal_a': $('#awal_foot_a').val(),
+						'awal_b': $('#awal_foot_b').val(),
+						'awal_c': $awal_foot_c,
+						'awal_status': $('#awal_foot_status').val(),
+						'ist1_a': $('#ist1_foot_a').val(),
+						'ist1_b': $('#ist1_foot_b').val(),
+						'ist1_c': $ist1_foot_c,
+						'ist1_status': $('#ist1_foot_status').val(),
+						'ist2_a': $('#ist2_foot_a').val(),
+						'ist2_b': $('#ist2_foot_b').val(),
+						'ist2_c': $ist2_foot_c,
+						'ist2_status': $('#ist2_foot_status').val(),
+						'ist3_a': $('#ist3_foot_a').val(),
+						'ist3_b': $('#ist3_foot_b').val(),
+						'ist3_c': $ist3_foot_c,
+						'ist3_status': $('#ist3_foot_status').val(),
+					});
+
+					var data = {
+						product:$('#product').val(),
+						type:$('#type').val(),
+						part:$('#part').val(),
+						color:$('#color').val(),
+						injection_date:$('#injection_date').val(),
+						machine:$('#machine').val(),
+						cavity:$('#cavity').val(),
+						employee_id:$('#op').val(),
+						foot:foot,
+						save_type:$('#save_type').val(),
+						id_cdm:$('#id_cdm').val()
+					}
+				}
+			}else{
+				if ($('#type').val() == 'HEAD') {					
+					head_yrf.push(
+					{
+						'awal_a': $('#awal_head_yrf_a').val(),
+						'awal_b': $('#awal_head_yrf_b').val(),
+						'awal_c': '-',
+						'awal_status': $('#awal_head_yrf_status').val(),
+						'ist1_a': $('#ist1_head_yrf_a').val(),
+						'ist1_b': $('#ist1_head_yrf_b').val(),
+						'ist1_c': '-',
+						'ist1_status': $('#ist1_head_yrf_status').val(),
+						'ist2_a': $('#ist2_head_yrf_a').val(),
+						'ist2_b': $('#ist2_head_yrf_b').val(),
+						'ist2_c': '-',
+						'ist2_status': $('#ist2_head_yrf_status').val(),
+						'ist3_a': $('#ist3_head_yrf_a').val(),
+						'ist3_b': $('#ist3_head_yrf_b').val(),
+						'ist3_c': '-',
+						'ist3_status': $('#ist3_head_yrf_status').val(),
+					});
+
+					var data = {
+						product:$('#product').val(),
+						type:$('#type').val(),
+						part:$('#part').val(),
+						color:$('#color').val(),
+						injection_date:$('#injection_date').val(),
+						machine:$('#machine').val(),
+						cavity:$('#cavity').val(),
+						employee_id:$('#op').val(),
+						head_yrf:head_yrf,
+						save_type:$('#save_type').val(),
+						id_cdm:$('#id_cdm').val()
+					}
 				}
 
-				if ($('input[id="ist3_head_c"]:checked').val() == 'OK') {
-					$ist3_head_c = 'OK';
-				}else if($('input[id="ist3_head_c"]:checked').val() == 'NG'){
-					$ist3_head_c = 'NG';
-				}else{
-					$ist3_head_c = null;
-				}
+				if ($('#type').val() == 'BODY') {
+					body_yrf.push(
+					{
+						'awal_a': $('#awal_body_yrf_a').val(),
+						'awal_b': $('#awal_body_yrf_b').val(),
+						'awal_c': '-',
+						'awal_status': $('#awal_body_yrf_status').val(),
+						'ist1_a': $('#ist1_body_yrf_a').val(),
+						'ist1_b': $('#ist1_body_yrf_b').val(),
+						'ist1_c': '-',
+						'ist1_status': $('#ist1_body_yrf_status').val(),
+						'ist2_a': $('#ist2_body_yrf_a').val(),
+						'ist2_b': $('#ist2_body_yrf_b').val(),
+						'ist2_c': '-',
+						'ist2_status': $('#ist2_body_yrf_status').val(),
+						'ist3_a': $('#ist3_body_yrf_a').val(),
+						'ist3_b': $('#ist3_body_yrf_b').val(),
+						'ist3_c': '-',
+						'ist3_status': $('#ist3_body_yrf_status').val(),
+					});
 
-				head.push(
-				{
-					'awal_a': $('#awal_head_a').val(),
-					'awal_b': $('#awal_head_b').val(),
-					'awal_c': $awal_head_c,
-					'awal_status': $('#awal_head_status').val(),
-					'ist1_a': $('#ist1_head_a').val(),
-					'ist1_b': $('#ist1_head_b').val(),
-					'ist1_c': $ist1_head_c,
-					'ist1_status': $('#ist1_head_status').val(),
-					'ist2_a': $('#ist2_head_a').val(),
-					'ist2_b': $('#ist2_head_b').val(),
-					'ist2_c': $ist2_head_c,
-					'ist2_status': $('#ist2_head_status').val(),
-					'ist3_a': $('#ist3_head_a').val(),
-					'ist3_b': $('#ist3_head_b').val(),
-					'ist3_c': $ist3_head_c,
-					'ist3_status': $('#ist3_head_status').val(),
-				});
-
-				var data = {
-					product:$('#product').val(),
-					type:$('#type').val(),
-					part:$('#part').val(),
-					color:$('#color').val(),
-					injection_date:$('#injection_date').val(),
-					machine:$('#machine').val(),
-					cavity:$('#cavity').val(),
-					employee_id:$('#op').val(),
-					head:head,
-					save_type:$('#save_type').val(),
-					id_cdm:$('#id_cdm').val()
-				}
-			}
-
-			if ($('#type').val() == 'MIDDLE') {
-				middle.push(
-				{
-					'awal_a': $('#awal_middle_a').val(),
-					'awal_b': $('#awal_middle_b').val(),
-					'awal_c': '-',
-					'awal_status': $('#awal_middle_status').val(),
-					'ist1_a': $('#ist1_middle_a').val(),
-					'ist1_b': $('#ist1_middle_b').val(),
-					'ist1_c': '-',
-					'ist1_status': $('#ist1_middle_status').val(),
-					'ist2_a': $('#ist2_middle_a').val(),
-					'ist2_b': $('#ist2_middle_b').val(),
-					'ist2_c': '-',
-					'ist2_status': $('#ist2_middle_status').val(),
-					'ist3_a': $('#ist3_middle_a').val(),
-					'ist3_b': $('#ist3_middle_b').val(),
-					'ist3_c': '-',
-					'ist3_status': $('#ist3_middle_status').val(),
-				});
-
-				var data = {
-					product:$('#product').val(),
-					type:$('#type').val(),
-					part:$('#part').val(),
-					color:$('#color').val(),
-					injection_date:$('#injection_date').val(),
-					machine:$('#machine').val(),
-					cavity:$('#cavity').val(),
-					employee_id:$('#op').val(),
-					middle:middle,
-					save_type:$('#save_type').val(),
-					id_cdm:$('#id_cdm').val()
-				}
-			}
-
-			if ($('#type').val() == 'FOOT') {
-				if ($('input[id="awal_foot_c"]:checked').val() == 'OK') {
-					$awal_foot_c = 'OK';
-				}else if($('input[id="awal_foot_c"]:checked').val() == 'NG'){
-					$awal_foot_c = 'NG';
-				}else{
-					$awal_foot_c = null;
-				}
-
-				if ($('input[id="ist1_foot_c"]:checked').val() == 'OK') {
-					$ist1_foot_c = 'OK';
-				}else if($('input[id="ist1_foot_c"]:checked').val() == 'NG'){
-					$ist1_foot_c = 'NG';
-				}else{
-					$ist1_foot_c = null;
-				}
-
-				if ($('input[id="ist2_foot_c"]:checked').val() == 'OK') {
-					$ist2_foot_c = 'OK';
-				}else if($('input[id="ist2_foot_c"]:checked').val() == 'NG'){
-					$ist2_foot_c = 'NG';
-				}else{
-					$ist2_foot_c = null;
-				}
-
-				if ($('input[id="ist3_foot_c"]:checked').val() == 'OK') {
-					$ist3_foot_c = 'OK';
-				}else if($('input[id="ist3_foot_c"]:checked').val() == 'NG'){
-					$ist3_foot_c = 'NG';
-				}else{
-					$ist3_foot_c = null;
-				}
-
-				foot.push(
-				{
-					'awal_a': $('#awal_foot_a').val(),
-					'awal_b': $('#awal_foot_b').val(),
-					'awal_c': $awal_foot_c,
-					'awal_status': $('#awal_foot_status').val(),
-					'ist1_a': $('#ist1_foot_a').val(),
-					'ist1_b': $('#ist1_foot_b').val(),
-					'ist1_c': $ist1_foot_c,
-					'ist1_status': $('#ist1_foot_status').val(),
-					'ist2_a': $('#ist2_foot_a').val(),
-					'ist2_b': $('#ist2_foot_b').val(),
-					'ist2_c': $ist2_foot_c,
-					'ist2_status': $('#ist2_foot_status').val(),
-					'ist3_a': $('#ist3_foot_a').val(),
-					'ist3_b': $('#ist3_foot_b').val(),
-					'ist3_c': $ist3_foot_c,
-					'ist3_status': $('#ist3_foot_status').val(),
-				});
-
-				var data = {
-					product:$('#product').val(),
-					type:$('#type').val(),
-					part:$('#part').val(),
-					color:$('#color').val(),
-					injection_date:$('#injection_date').val(),
-					machine:$('#machine').val(),
-					cavity:$('#cavity').val(),
-					employee_id:$('#op').val(),
-					foot:foot,
-					save_type:$('#save_type').val(),
-					id_cdm:$('#id_cdm').val()
+					var data = {
+						product:$('#product').val(),
+						type:$('#type').val(),
+						part:$('#part').val(),
+						color:$('#color').val(),
+						injection_date:$('#injection_date').val(),
+						machine:$('#machine').val(),
+						cavity:$('#cavity').val(),
+						employee_id:$('#op').val(),
+						body_yrf:body_yrf,
+						save_type:$('#save_type').val(),
+						id_cdm:$('#id_cdm').val()
+					}
 				}
 			}
 

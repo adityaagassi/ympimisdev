@@ -2973,6 +2973,16 @@ class RecorderProcessController extends Controller
       $foot_b_bawah = 62.8;
       $foot_b_atas = 63.1;
 
+      $head_yrf_a_bawah = 139.8;
+      $head_yrf_a_atas = 140.2;
+      $head_yrf_b_bawah = 16.5;
+      $head_yrf_b_atas = 17.5;
+
+      $body_yrf_a_bawah = 216.3;
+      $body_yrf_a_atas = 216.7;
+      $body_yrf_b_bawah = 10.5;
+      $body_yrf_b_atas = 11.5;
+
       return view('recorder.process.index_cdm')
       ->with('machine', $this->mesin)
       ->with('head_a_bawah', $head_a_bawah)
@@ -2987,6 +2997,14 @@ class RecorderProcessController extends Controller
       ->with('foot_a_atas', $foot_a_atas)
       ->with('foot_b_bawah', $foot_b_bawah)
       ->with('foot_b_atas', $foot_b_atas)
+      ->with('head_yrf_a_bawah', $head_yrf_a_bawah)
+      ->with('head_yrf_a_atas', $head_yrf_a_atas)
+      ->with('head_yrf_b_bawah', $head_yrf_b_bawah)
+      ->with('head_yrf_b_atas', $head_yrf_b_atas)
+      ->with('body_yrf_a_bawah', $body_yrf_a_bawah)
+      ->with('body_yrf_a_atas', $body_yrf_a_atas)
+      ->with('body_yrf_b_bawah', $body_yrf_b_bawah)
+      ->with('body_yrf_b_atas', $body_yrf_b_atas)
       ->with('title', 'CDM (Check Dimension Material) Recorder')
       ->with('title_jp', 'リコーダーのCDM');
     }
@@ -3048,74 +3066,125 @@ class RecorderProcessController extends Controller
       try {
           $id_user = Auth::id();
 
+          $str = $request->get('product');
+          $yrs = "/YRS/i";
+
           if ($request->get('save_type') == 'INPUT') {
-            if (count($request->get('head')) > 0) {
-              $head = $request->get('head');
-              $awal_a = $head[0]['awal_a'];
-              $awal_b = $head[0]['awal_b'];
-              $awal_c = $head[0]['awal_c'];
-              $awal_status = $head[0]['awal_status'];
+            if (preg_match($yrs, $str) == 1) {
+              if (count($request->get('head')) > 0) {
+                $head = $request->get('head');
+                $awal_a = $head[0]['awal_a'];
+                $awal_b = $head[0]['awal_b'];
+                $awal_c = $head[0]['awal_c'];
+                $awal_status = $head[0]['awal_status'];
 
-              $ist1_a = $head[0]['ist1_a'];
-              $ist1_b = $head[0]['ist1_b'];
-              $ist1_c = $head[0]['ist1_c'];
-              $ist1_status = $head[0]['ist1_status'];
+                $ist1_a = $head[0]['ist1_a'];
+                $ist1_b = $head[0]['ist1_b'];
+                $ist1_c = $head[0]['ist1_c'];
+                $ist1_status = $head[0]['ist1_status'];
 
-              $ist2_a = $head[0]['ist2_a'];
-              $ist2_b = $head[0]['ist2_b'];
-              $ist2_c = $head[0]['ist2_c'];
-              $ist2_status = $head[0]['ist2_status'];
+                $ist2_a = $head[0]['ist2_a'];
+                $ist2_b = $head[0]['ist2_b'];
+                $ist2_c = $head[0]['ist2_c'];
+                $ist2_status = $head[0]['ist2_status'];
 
-              $ist3_a = $head[0]['ist3_a'];
-              $ist3_b = $head[0]['ist3_b'];
-              $ist3_c = $head[0]['ist3_c'];
-              $ist3_status = $head[0]['ist3_status'];
-            }
+                $ist3_a = $head[0]['ist3_a'];
+                $ist3_b = $head[0]['ist3_b'];
+                $ist3_c = $head[0]['ist3_c'];
+                $ist3_status = $head[0]['ist3_status'];
+              }
 
-            if (count($request->get('middle')) > 0) {
-              $middle = $request->get('middle');
-              $awal_a = $middle[0]['awal_a'];
-              $awal_b = $middle[0]['awal_b'];
-              $awal_c = $middle[0]['awal_c'];
-              $awal_status = $middle[0]['awal_status'];
+              if (count($request->get('middle')) > 0) {
+                $middle = $request->get('middle');
+                $awal_a = $middle[0]['awal_a'];
+                $awal_b = $middle[0]['awal_b'];
+                $awal_c = $middle[0]['awal_c'];
+                $awal_status = $middle[0]['awal_status'];
 
-              $ist1_a = $middle[0]['ist1_a'];
-              $ist1_b = $middle[0]['ist1_b'];
-              $ist1_c = $middle[0]['awal_c'];
-              $ist1_status = $middle[0]['ist1_status'];
+                $ist1_a = $middle[0]['ist1_a'];
+                $ist1_b = $middle[0]['ist1_b'];
+                $ist1_c = $middle[0]['awal_c'];
+                $ist1_status = $middle[0]['ist1_status'];
 
-              $ist2_a = $middle[0]['ist2_a'];
-              $ist2_b = $middle[0]['ist2_b'];
-              $ist2_c = $middle[0]['ist2_c'];
-              $ist2_status = $middle[0]['ist2_status'];
+                $ist2_a = $middle[0]['ist2_a'];
+                $ist2_b = $middle[0]['ist2_b'];
+                $ist2_c = $middle[0]['ist2_c'];
+                $ist2_status = $middle[0]['ist2_status'];
 
-              $ist3_a = $middle[0]['ist3_a'];
-              $ist3_b = $middle[0]['ist3_b'];
-              $ist3_c = $middle[0]['ist3_c'];
-              $ist3_status = $middle[0]['ist3_status'];
-            }
+                $ist3_a = $middle[0]['ist3_a'];
+                $ist3_b = $middle[0]['ist3_b'];
+                $ist3_c = $middle[0]['ist3_c'];
+                $ist3_status = $middle[0]['ist3_status'];
+              }
 
-            if (count($request->get('foot')) > 0) {
-              $foot = $request->get('foot');
-              $awal_a = $foot[0]['awal_a'];
-              $awal_b = $foot[0]['awal_b'];
-              $awal_c = $foot[0]['awal_c'];
-              $awal_status = $foot[0]['awal_status'];
+              if (count($request->get('foot')) > 0) {
+                $foot = $request->get('foot');
+                $awal_a = $foot[0]['awal_a'];
+                $awal_b = $foot[0]['awal_b'];
+                $awal_c = $foot[0]['awal_c'];
+                $awal_status = $foot[0]['awal_status'];
 
-              $ist1_a = $foot[0]['ist1_a'];
-              $ist1_b = $foot[0]['ist1_b'];
-              $ist1_c = $foot[0]['ist1_c'];
-              $ist1_status = $foot[0]['ist1_status'];
+                $ist1_a = $foot[0]['ist1_a'];
+                $ist1_b = $foot[0]['ist1_b'];
+                $ist1_c = $foot[0]['ist1_c'];
+                $ist1_status = $foot[0]['ist1_status'];
 
-              $ist2_a = $foot[0]['ist2_a'];
-              $ist2_b = $foot[0]['ist2_b'];
-              $ist2_c = $foot[0]['ist2_c'];
-              $ist2_status = $foot[0]['ist2_status'];
+                $ist2_a = $foot[0]['ist2_a'];
+                $ist2_b = $foot[0]['ist2_b'];
+                $ist2_c = $foot[0]['ist2_c'];
+                $ist2_status = $foot[0]['ist2_status'];
 
-              $ist3_a = $foot[0]['ist3_a'];
-              $ist3_b = $foot[0]['ist3_b'];
-              $ist3_c = $foot[0]['ist3_c'];
-              $ist3_status = $foot[0]['ist3_status'];
+                $ist3_a = $foot[0]['ist3_a'];
+                $ist3_b = $foot[0]['ist3_b'];
+                $ist3_c = $foot[0]['ist3_c'];
+                $ist3_status = $foot[0]['ist3_status'];
+              }
+            }else{
+              if (count($request->get('head_yrf')) > 0) {
+                $head = $request->get('head_yrf');
+                $awal_a = $head[0]['awal_a'];
+                $awal_b = $head[0]['awal_b'];
+                $awal_c = $head[0]['awal_c'];
+                $awal_status = $head[0]['awal_status'];
+
+                $ist1_a = $head[0]['ist1_a'];
+                $ist1_b = $head[0]['ist1_b'];
+                $ist1_c = $head[0]['ist1_c'];
+                $ist1_status = $head[0]['ist1_status'];
+
+                $ist2_a = $head[0]['ist2_a'];
+                $ist2_b = $head[0]['ist2_b'];
+                $ist2_c = $head[0]['ist2_c'];
+                $ist2_status = $head[0]['ist2_status'];
+
+                $ist3_a = $head[0]['ist3_a'];
+                $ist3_b = $head[0]['ist3_b'];
+                $ist3_c = $head[0]['ist3_c'];
+                $ist3_status = $head[0]['ist3_status'];
+              }
+
+              if (count($request->get('body_yrf')) > 0) {
+                $body_yrf = $request->get('body_yrf');
+                $awal_a = $body_yrf[0]['awal_a'];
+                $awal_b = $body_yrf[0]['awal_b'];
+                $awal_c = $body_yrf[0]['awal_c'];
+                $awal_status = $body_yrf[0]['awal_status'];
+
+                $ist1_a = $body_yrf[0]['ist1_a'];
+                $ist1_b = $body_yrf[0]['ist1_b'];
+                $ist1_c = $body_yrf[0]['awal_c'];
+                $ist1_status = $body_yrf[0]['ist1_status'];
+
+                $ist2_a = $body_yrf[0]['ist2_a'];
+                $ist2_b = $body_yrf[0]['ist2_b'];
+                $ist2_c = $body_yrf[0]['ist2_c'];
+                $ist2_status = $body_yrf[0]['ist2_status'];
+
+                $ist3_a = $body_yrf[0]['ist3_a'];
+                $ist3_b = $body_yrf[0]['ist3_b'];
+                $ist3_c = $body_yrf[0]['ist3_c'];
+                $ist3_status = $body_yrf[0]['ist3_status'];
+              }
             }
 
             $cdm = InjectionCdmCheck::create([
@@ -3148,73 +3217,121 @@ class RecorderProcessController extends Controller
 
             $message = 'Input Data Success';
           }else{
-            if (count($request->get('head')) > 0) {
-              $head = $request->get('head');
-              $awal_a = $head[0]['awal_a'];
-              $awal_b = $head[0]['awal_b'];
-              $awal_c = $head[0]['awal_c'];
-              $awal_status = $head[0]['awal_status'];
+            if (preg_match($yrs, $str) == 1) {
+              if (count($request->get('head')) > 0) {
+                $head = $request->get('head');
+                $awal_a = $head[0]['awal_a'];
+                $awal_b = $head[0]['awal_b'];
+                $awal_c = $head[0]['awal_c'];
+                $awal_status = $head[0]['awal_status'];
 
-              $ist1_a = $head[0]['ist1_a'];
-              $ist1_b = $head[0]['ist1_b'];
-              $ist1_c = $head[0]['ist1_c'];
-              $ist1_status = $head[0]['ist1_status'];
+                $ist1_a = $head[0]['ist1_a'];
+                $ist1_b = $head[0]['ist1_b'];
+                $ist1_c = $head[0]['ist1_c'];
+                $ist1_status = $head[0]['ist1_status'];
 
-              $ist2_a = $head[0]['ist2_a'];
-              $ist2_b = $head[0]['ist2_b'];
-              $ist2_c = $head[0]['ist2_c'];
-              $ist2_status = $head[0]['ist2_status'];
+                $ist2_a = $head[0]['ist2_a'];
+                $ist2_b = $head[0]['ist2_b'];
+                $ist2_c = $head[0]['ist2_c'];
+                $ist2_status = $head[0]['ist2_status'];
 
-              $ist3_a = $head[0]['ist3_a'];
-              $ist3_b = $head[0]['ist3_b'];
-              $ist3_c = $head[0]['ist3_c'];
-              $ist3_status = $head[0]['ist3_status'];
-            }
+                $ist3_a = $head[0]['ist3_a'];
+                $ist3_b = $head[0]['ist3_b'];
+                $ist3_c = $head[0]['ist3_c'];
+                $ist3_status = $head[0]['ist3_status'];
+              }
 
-            if (count($request->get('middle')) > 0) {
-              $middle = $request->get('middle');
-              $awal_a = $middle[0]['awal_a'];
-              $awal_b = $middle[0]['awal_b'];
-              $awal_c = $middle[0]['awal_c'];
-              $awal_status = $middle[0]['awal_status'];
+              if (count($request->get('middle')) > 0) {
+                $middle = $request->get('middle');
+                $awal_a = $middle[0]['awal_a'];
+                $awal_b = $middle[0]['awal_b'];
+                $awal_c = $middle[0]['awal_c'];
+                $awal_status = $middle[0]['awal_status'];
 
-              $ist1_a = $middle[0]['ist1_a'];
-              $ist1_b = $middle[0]['ist1_b'];
-              $ist1_c = $middle[0]['awal_c'];
-              $ist1_status = $middle[0]['ist1_status'];
+                $ist1_a = $middle[0]['ist1_a'];
+                $ist1_b = $middle[0]['ist1_b'];
+                $ist1_c = $middle[0]['awal_c'];
+                $ist1_status = $middle[0]['ist1_status'];
 
-              $ist2_a = $middle[0]['ist2_a'];
-              $ist2_b = $middle[0]['ist2_b'];
-              $ist2_c = $middle[0]['ist2_c'];
-              $ist2_status = $middle[0]['ist2_status'];
+                $ist2_a = $middle[0]['ist2_a'];
+                $ist2_b = $middle[0]['ist2_b'];
+                $ist2_c = $middle[0]['ist2_c'];
+                $ist2_status = $middle[0]['ist2_status'];
 
-              $ist3_a = $middle[0]['ist3_a'];
-              $ist3_b = $middle[0]['ist3_b'];
-              $ist3_c = $middle[0]['ist3_c'];
-              $ist3_status = $middle[0]['ist3_status'];
-            }
+                $ist3_a = $middle[0]['ist3_a'];
+                $ist3_b = $middle[0]['ist3_b'];
+                $ist3_c = $middle[0]['ist3_c'];
+                $ist3_status = $middle[0]['ist3_status'];
+              }
 
-            if (count($request->get('foot')) > 0) {
-              $foot = $request->get('foot');
-              $awal_a = $foot[0]['awal_a'];
-              $awal_b = $foot[0]['awal_b'];
-              $awal_c = $foot[0]['awal_c'];
-              $awal_status = $foot[0]['awal_status'];
+              if (count($request->get('foot')) > 0) {
+                $foot = $request->get('foot');
+                $awal_a = $foot[0]['awal_a'];
+                $awal_b = $foot[0]['awal_b'];
+                $awal_c = $foot[0]['awal_c'];
+                $awal_status = $foot[0]['awal_status'];
 
-              $ist1_a = $foot[0]['ist1_a'];
-              $ist1_b = $foot[0]['ist1_b'];
-              $ist1_c = $foot[0]['ist1_c'];
-              $ist1_status = $foot[0]['ist1_status'];
+                $ist1_a = $foot[0]['ist1_a'];
+                $ist1_b = $foot[0]['ist1_b'];
+                $ist1_c = $foot[0]['ist1_c'];
+                $ist1_status = $foot[0]['ist1_status'];
 
-              $ist2_a = $foot[0]['ist2_a'];
-              $ist2_b = $foot[0]['ist2_b'];
-              $ist2_c = $foot[0]['ist2_c'];
-              $ist2_status = $foot[0]['ist2_status'];
+                $ist2_a = $foot[0]['ist2_a'];
+                $ist2_b = $foot[0]['ist2_b'];
+                $ist2_c = $foot[0]['ist2_c'];
+                $ist2_status = $foot[0]['ist2_status'];
 
-              $ist3_a = $foot[0]['ist3_a'];
-              $ist3_b = $foot[0]['ist3_b'];
-              $ist3_c = $foot[0]['ist3_c'];
-              $ist3_status = $foot[0]['ist3_status'];
+                $ist3_a = $foot[0]['ist3_a'];
+                $ist3_b = $foot[0]['ist3_b'];
+                $ist3_c = $foot[0]['ist3_c'];
+                $ist3_status = $foot[0]['ist3_status'];
+              }
+            }else{
+              if (count($request->get('head_yrf')) > 0) {
+                $head = $request->get('head_yrf');
+                $awal_a = $head[0]['awal_a'];
+                $awal_b = $head[0]['awal_b'];
+                $awal_c = $head[0]['awal_c'];
+                $awal_status = $head[0]['awal_status'];
+
+                $ist1_a = $head[0]['ist1_a'];
+                $ist1_b = $head[0]['ist1_b'];
+                $ist1_c = $head[0]['ist1_c'];
+                $ist1_status = $head[0]['ist1_status'];
+
+                $ist2_a = $head[0]['ist2_a'];
+                $ist2_b = $head[0]['ist2_b'];
+                $ist2_c = $head[0]['ist2_c'];
+                $ist2_status = $head[0]['ist2_status'];
+
+                $ist3_a = $head[0]['ist3_a'];
+                $ist3_b = $head[0]['ist3_b'];
+                $ist3_c = $head[0]['ist3_c'];
+                $ist3_status = $head[0]['ist3_status'];
+              }
+
+              if (count($request->get('body_yrf')) > 0) {
+                $body_yrf = $request->get('body_yrf');
+                $awal_a = $body_yrf[0]['awal_a'];
+                $awal_b = $body_yrf[0]['awal_b'];
+                $awal_c = $body_yrf[0]['awal_c'];
+                $awal_status = $body_yrf[0]['awal_status'];
+
+                $ist1_a = $body_yrf[0]['ist1_a'];
+                $ist1_b = $body_yrf[0]['ist1_b'];
+                $ist1_c = $body_yrf[0]['awal_c'];
+                $ist1_status = $body_yrf[0]['ist1_status'];
+
+                $ist2_a = $body_yrf[0]['ist2_a'];
+                $ist2_b = $body_yrf[0]['ist2_b'];
+                $ist2_c = $body_yrf[0]['ist2_c'];
+                $ist2_status = $body_yrf[0]['ist2_status'];
+
+                $ist3_a = $body_yrf[0]['ist3_a'];
+                $ist3_b = $body_yrf[0]['ist3_b'];
+                $ist3_c = $body_yrf[0]['ist3_c'];
+                $ist3_status = $body_yrf[0]['ist3_status'];
+              }
             }
 
             $cdm = InjectionCdmCheck::find($request->get('id_cdm'));
