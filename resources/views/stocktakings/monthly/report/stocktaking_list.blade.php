@@ -488,8 +488,8 @@
 					dataTable += '<tr id="'+value.id+'">';
 					dataTable += '<td>ST_'+value.id+'</td>';
 					dataTable += '<td>'+value.area+'</td>';
-					dataTable += '<td>'+value.sub_store+'</td>';
 					dataTable += '<td>'+value.store+'</td>';
+					dataTable += '<td>'+value.sub_store+'</td>';
 					dataTable += '<td>'+value.material_number+'</td>';
 					dataTable += '<td>'+value.material_description+'</td>';
 					dataTable += '<td>'+value.bun+'</td>';

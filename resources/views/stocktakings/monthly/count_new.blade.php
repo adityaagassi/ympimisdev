@@ -760,7 +760,14 @@
 
 				// }
 
+				if(result.material.length == 0){
+					openErrorGritter('Error', 'QR Code Tidak Terdaftar');
+					$('#scanModal').modal('hide');
+					canc();
+					resetCount();
+					return false;
 
+				}
 
 
 
