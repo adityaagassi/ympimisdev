@@ -886,7 +886,7 @@ class CparController extends Controller
 
           //getQA
 
-          $getqa = "SELECT employee_id, email FROM `employee_syncs` join users on employee_syncs.employee_id = users.username where employee_id='PI1108002' or employee_id = 'PI9707001'";
+          $getqa = "SELECT employee_id, email FROM `employee_syncs` join users on employee_syncs.employee_id = users.username where employee_id='PI1108002' or employee_id = 'PI9707001' or employee_id = 'PI0811001'";
 
           $chief = DB::select($getqa);
 
