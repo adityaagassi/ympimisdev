@@ -503,13 +503,18 @@
 	}
 
 	function selectVehicle(id){
-		console.log(id);
 		if (id !== '' && id === 'car') {
-			$('#newOrigin').prop("disabled", true);
-			$('#newDestination').prop("disabled", true);
-			$('#newHighwayAmount').prop("disabled", true);
-			$('#newDistance').prop("disabled", true);
+			// $('#newOrigin').prop("disabled", true);
+			// $('#newDestination').prop("disabled", true);
+			// $('#newHighwayAmount').prop("disabled", true);
+			// $('#newDistance').prop("disabled", true);
 			// $('#newAttachment').prop("disabled", false);
+
+			$('#newVehicle').removeAttr("disabled");
+			$('#newOrigin').removeAttr("disabled");
+			$('#newDestination').removeAttr("disabled");
+			$('#newHighwayAmount').removeAttr("disabled");
+			$('#newDistance').removeAttr("disabled");
 
 			$('#newOrigin').val("");
 			$('#newDestination').val("");
