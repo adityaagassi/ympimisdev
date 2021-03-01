@@ -21,7 +21,7 @@ use App\StampSchedule;
 use App\Material;
 use App\Process;
 use App\ErrorLog;
-use App\MiddleInventory;
+use App\AssemblyKeyInventory;
 use App\MiddleLacqueringLog;
 use App\MiddleLacqueringCheckLog;
 use App\MiddleLacqueringNgLog;
@@ -1015,26 +1015,26 @@ class ProcessController extends Controller
 		$id = Auth::id();
 		$started_at = date('Y-m-d H:i:s');
 
-		$middle_inventory = MiddleInventory::where('tag', '=', $request->get('tag'))
-		->leftJoin('materials', 'materials.material_number', '=', 'middle_inventories.material_number')
-		->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'middle_inventories.last_check')
+		$inventory = AssemblyKeyInventory::where('tag', '=', $request->get('tag'))
+		->leftJoin('materials', 'materials.material_number', '=', 'assembly_key_inventories.material_number')
+		->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'assembly_key_inventories.last_check')
 		->select(
 			'materials.model',
 			'materials.key',
 			'materials.surface',
-			'middle_inventories.material_number',
-			'middle_inventories.quantity',
-			'middle_inventories.tag',
+			'assembly_key_inventories.material_number',
+			'assembly_key_inventories.quantity',
+			'assembly_key_inventories.tag',
 			'employee_syncs.employee_id',
 			'employee_syncs.name'
 		)
 		->first();
 
-		if(count($middle_inventory) > 0){
+		if(count($inventory) > 0){
 			$response = array(
 				'status' => true,
 				'message' => 'ID slip found.',
-				'middle_inventory' => $middle_inventory,
+				'middle_inventory' => $inventory,
 				'started_at' => $started_at,
 			);
 			return Response::json($response);
@@ -1103,7 +1103,7 @@ class ProcessController extends Controller
 		}
 
 
-		$middle_inventory = MiddleInventory::where('tag', '=', $request->get('tag'))->first();
+		$inventory = AssemblyKeyInventory::where('tag', '=', $request->get('tag'))->first();
 
 		$middle_log;
 		if(str_contains($material->surface, 'PLT')){
@@ -1150,10 +1150,10 @@ class ProcessController extends Controller
 		}
 
 		try{
-			DB::transaction(function() use ($middle_check_log, $middle_log, $middle_inventory){
+			DB::transaction(function() use ($middle_check_log, $middle_log, $inventory){
 				$middle_check_log->save();
 				$middle_log->save();
-				$middle_inventory->forceDelete();
+				$inventory->forceDelete();
 			});
 
 
