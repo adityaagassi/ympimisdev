@@ -538,7 +538,7 @@
 				}
 			});
 		}
-		else if(id !== "" || id === "shuttle"){
+		else if(id !== "" && id === "shuttle"){
 			$('#newOrigin').prop("disabled", true);
 			$('#newDestination').prop("disabled", true);
 			$('#newHighwayAmount').prop("disabled", true);
@@ -562,6 +562,7 @@
 			$('#newDistance').val("");
 
 		}
+		console.log(id);
 	}
 
 	function clearModal(){
