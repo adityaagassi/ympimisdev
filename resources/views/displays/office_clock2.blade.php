@@ -96,13 +96,14 @@ table > thead > tr > th{
 </style>
 @endsection
 @section('header')
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
 @endsection
 @section('content')
 <section class="content" style="padding-top: 0px;padding-bottom: 0px;background-color: rgb(75,30,120)">
 	<div class="row" style="padding-bottom: 0px;">
 		<h1 id="jam" style="margin-top: 0px;padding-top: 30px;font-size: 30em;font-weight: bold;text-align: center;margin-bottom: -70px"></h1>
 		<h1 id="visitor_info" style="margin-top: 0px;padding-top: 30px;font-size: 30em;font-weight: bold;text-align: center;margin-bottom: -70px"></h1>
+		<h1 id="istirahat_info" style="margin-top: 0px;padding-top: 30px;font-size: 30em;font-weight: bold;text-align: center;margin-bottom: -70px"></h1>
 		<center id="tanggal_all"><span id="tanggal" style="font-size: 80px;background-color: rgb(75,30,120);color: #fff"></span></center>
 	</div>
 </section>
@@ -124,6 +125,9 @@ table > thead > tr > th{
 	var audio_clock = new Audio('{{ url("sounds/railway_security.mp3") }}');
 	var audio_clock_lobby = new Audio('{{ url("sounds/railway_lobby.mp3") }}');
 	var myvar = setInterval(waktu,1000);
+	var timeref;
+	var istirahat = null;
+	var visitor = null;
 
 	jQuery(document).ready(function(){
 
@@ -135,6 +139,7 @@ table > thead > tr > th{
 		});
 		$('#tanggal').html('{{$dateTitle}}');
 		$('#visitor_info').hide();
+		$('#istirahat_info').hide();
 		setInterval(fillVisitor,30000);
 		$(".content-wrapper").css("background-color",'rgb(75, 30, 120)','important');
 	});
@@ -166,7 +171,7 @@ table > thead > tr > th{
 		document.getElementById("jam").style.fontSize = '30em';
 		document.getElementById("jam").style.marginBottom = '-70px';
 		document.getElementById("jam").innerHTML = addZero(time.getHours())+':'+addZero(time.getMinutes());
-		var timeref = addZero(time.getHours())+':'+addZero(time.getMinutes())+':'+addZero(time.getSeconds());
+		timeref = addZero(time.getHours())+':'+addZero(time.getMinutes())+':'+addZero(time.getSeconds());
 		if (timeref == '06:00:00') {
 			location.reload();
 		}
@@ -203,16 +208,138 @@ table > thead > tr > th{
 		if (timeref == '16:00:00') {
 			location.reload();
 		}
+
+		if (visitor == null) {
+			if ('{{$dayTitle}}' == 'Friday') {
+				if(timeref >= '09:30:00' && timeref <= '09:40:00'){
+					$('#istirahat_info').show();
+					$('#visitor_info').hide();
+					$('#jam').hide();
+					document.getElementById("istirahat_info").innerHTML = "ISTIRAHAT KE-1<br><span style='font-size:3em'>"+addZero(time.getHours())+':'+addZero(time.getMinutes())+"</span>";
+					document.getElementById("istirahat_info").style.fontSize = '6em';
+					document.getElementById("istirahat_info").style.marginBottom = '10px';
+					$(".content-wrapper").css("background-color",'#a6ffa6','important');
+					$(".content").css("background-color",'#a6ffa6','important');
+						$("#tanggal_all").css("background-color",'#a6ffa6');
+					$("#tanggal").css("background-color",'#a6ffa6');
+					$("#tanggal").css("color",'#5147ff');
+					$("#istirahat_info").css("color",'#5147ff');
+					$("#istirahat_info").css("background-color",'#a6ffa6');
+					istirahat = "Istirahat";
+				}else if(timeref >= '12:00:00' && timeref <= '13:10:00'){
+					$('#istirahat_info').show();
+					$('#visitor_info').hide();
+					$('#jam').hide();
+					document.getElementById("istirahat_info").innerHTML = "ISTIRAHAT MAKAN SIANG<br><span style='font-size:3em'>"+addZero(time.getHours())+':'+addZero(time.getMinutes())+"</span>";
+					document.getElementById("istirahat_info").style.fontSize = '6em';
+					document.getElementById("istirahat_info").style.marginBottom = '10px';
+					$(".content-wrapper").css("background-color",'#a6ffa6','important');
+					$(".content").css("background-color",'#a6ffa6','important');
+						$("#tanggal_all").css("background-color",'#a6ffa6');
+					$("#tanggal").css("background-color",'#a6ffa6');
+					$("#tanggal").css("color",'#5147ff');
+					$("#istirahat_info").css("color",'#5147ff');
+					$("#istirahat_info").css("background-color",'#a6ffa6');
+					istirahat = "Istirahat";
+				}else if(timeref >= '15:00:00' && timeref <= '15:10:00'){
+					$('#istirahat_info').show();
+					$('#visitor_info').hide();
+					$('#jam').hide();
+					document.getElementById("istirahat_info").innerHTML = "ISTIRAHAT KE-3<br><span style='font-size:3em'>"+addZero(time.getHours())+':'+addZero(time.getMinutes())+"</span>";
+					document.getElementById("istirahat_info").style.fontSize = '6em';
+					document.getElementById("istirahat_info").style.marginBottom = '10px';
+					$(".content-wrapper").css("background-color",'#a6ffa6','important');
+					$(".content").css("background-color",'#a6ffa6','important');
+						$("#tanggal_all").css("background-color",'#a6ffa6');
+					$("#tanggal").css("background-color",'#a6ffa6');
+					$("#tanggal").css("color",'#5147ff');
+					$("#istirahat_info").css("color",'#5147ff');
+					$("#istirahat_info").css("background-color",'#a6ffa6');
+					istirahat = "Istirahat";
+				}else{
+					if (visitor == null) {
+						$('#istirahat_info').hide();
+						$('#jam').show();
+						$(".content-wrapper").css("background-color",'rgb(75, 30, 120)','important');
+						$(".content").css("background-color",'rgb(75, 30, 120)','important');
+						$("#tanggal_all").css("background-color",'rgb(75, 30, 120)');
+						$("#tanggal").css("background-color",'rgb(75, 30, 120)');
+						$("#tanggal").css("color",'#fff');
+						istirahat = null;
+					}
+				}
+			}else{
+				if(timeref >= '09:30:00' && timeref <= '09:40:00'){
+					$('#istirahat_info').show();
+					$('#visitor_info').hide();
+					$('#jam').hide();
+					document.getElementById("istirahat_info").innerHTML = "ISTIRAHAT KE-1<br><span style='font-size:3em'>"+addZero(time.getHours())+':'+addZero(time.getMinutes())+"</span>";
+					document.getElementById("istirahat_info").style.fontSize = '6em';
+					document.getElementById("istirahat_info").style.marginBottom = '10px';
+					$(".content-wrapper").css("background-color",'#a6ffa6','important');
+					$(".content").css("background-color",'#a6ffa6','important');
+						$("#tanggal_all").css("background-color",'#a6ffa6');
+					$("#tanggal").css("background-color",'#a6ffa6');
+					$("#tanggal").css("color",'#5147ff');
+					$("#istirahat_info").css("color",'#5147ff');
+					$("#istirahat_info").css("background-color",'#a6ffa6');
+					istirahat = "Istirahat";
+				}else if(timeref >= '12:15:00' && timeref <= '12:55:00'){
+					$('#istirahat_info').show();
+					$('#visitor_info').hide();
+					$('#jam').hide();
+					document.getElementById("istirahat_info").innerHTML = "ISTIRAHAT MAKAN SIANG<br><span style='font-size:3em'>"+addZero(time.getHours())+':'+addZero(time.getMinutes())+"</span>";
+					document.getElementById("istirahat_info").style.fontSize = '6em';
+					document.getElementById("istirahat_info").style.marginBottom = '10px';
+					$(".content-wrapper").css("background-color",'#a6ffa6','important');
+					$(".content").css("background-color",'#a6ffa6','important');
+						$("#tanggal_all").css("background-color",'#a6ffa6');
+					$("#tanggal").css("background-color",'#a6ffa6');
+					$("#tanggal").css("color",'#5147ff');
+					$("#istirahat_info").css("color",'#5147ff');
+					$("#istirahat_info").css("background-color",'#a6ffa6');
+					istirahat = "Istirahat";
+				}else if(timeref >= '14:20:00' && timeref <= '14:30:00'){
+					$('#istirahat_info').show();
+					$('#visitor_info').hide();
+					$('#jam').hide();
+					document.getElementById("istirahat_info").innerHTML = "ISTIRAHAT KE-3<br><span style='font-size:3em'>"+addZero(time.getHours())+':'+addZero(time.getMinutes())+"</span>";
+					document.getElementById("istirahat_info").style.fontSize = '6em';
+					document.getElementById("istirahat_info").style.marginBottom = '10px';
+					$(".content-wrapper").css("background-color",'#a6ffa6','important');
+					$(".content").css("background-color",'#a6ffa6','important');
+						$("#tanggal_all").css("background-color",'#a6ffa6');
+					$("#tanggal").css("background-color",'#a6ffa6');
+					$("#tanggal").css("color",'#5147ff');
+					$("#istirahat_info").css("color",'#5147ff');
+					$("#istirahat_info").css("background-color",'#a6ffa6');
+					istirahat = "Istirahat";
+				}else{
+					if (visitor == null) {
+						$('#istirahat_info').hide();
+						$('#jam').show();
+						$(".content-wrapper").css("background-color",'rgb(75, 30, 120)','important');
+						$(".content").css("background-color",'rgb(75, 30, 120)','important');
+						$("#tanggal_all").css("background-color",'rgb(75, 30, 120)');
+						$("#tanggal").css("background-color",'rgb(75, 30, 120)');
+						$("#tanggal").css("color",'#fff');
+						istirahat = null;
+					}
+				}
+			}
+		}
 	}
 
 	function fillVisitor() {
-		$.get('{{ url("fetch/office_clock/visitor2") }}', function(result, status, xhr) {
+		$.get('{{ url("fetch/office_clock/visitor") }}', function(result, status, xhr) {
 			if(xhr.status == 200){
 				if(result.status){
+					$('#istirahat_info').hide();
 					if (result.visitors.length > 0) {
 						for (var i = 0; i < result.visitors.length; i++) {
 							$('#visitor_info').show();
 							$('#jam').hide();
+							$('#istirahat_info').hide();
 							
 							if (result.visitors[i].department == null && result.visitors[i].name == 'Budhi Apriyanto') {
 								document.getElementById("visitor_info").innerHTML = result.visitors[i].company+'<br>('+result.visitors[i].name.split(' ').slice(0,2).join(' ')+' - Production Engineering)<br>AT SECURITY<br>';
@@ -223,7 +350,13 @@ table > thead > tr > th{
 							}
 							document.getElementById("visitor_info").style.fontSize = '7em';
 							document.getElementById("visitor_info").style.marginBottom = '10px';
+							$(".content-wrapper").css("background-color",'rgb(75, 30, 120)','important');
+							$(".content").css("background-color",'rgb(75, 30, 120)','important');
+							$("#tanggal_all").css("background-color",'rgb(75, 30, 120)');
+							$("#tanggal").css("background-color",'rgb(75, 30, 120)');
+							$("#tanggal").css("color",'#fff');
 							$("#visitor_info").css("color",'#fff');
+							$("#visitor_info").css("background-color",'rgb(75, 30, 120)');
 							audio_clock.play();
 						}
 					}
@@ -231,6 +364,7 @@ table > thead > tr > th{
 						for (var i = 0; i < result.visitors_lobby.length; i++) {
 							$('#visitor_info').show();
 							$('#jam').hide();
+							$('#istirahat_info').hide();
 
 							if (result.visitors_lobby[i].department == null && result.visitors_lobby[i].name == 'Budhi Apriyanto') {
 								document.getElementById("visitor_info").innerHTML = result.visitors_lobby[i].company+'<br>('+result.visitors_lobby[i].name.split(' ').slice(0,2).join(' ')+' - Production Engineering)<br>AT LOBBY<br>';
@@ -239,13 +373,11 @@ table > thead > tr > th{
 							}else{
 								document.getElementById("visitor_info").innerHTML = result.visitors_lobby[i].company+'<br>('+result.visitors_lobby[i].name.split(' ').slice(0,2).join(' ')+' - '+result.visitors_lobby[i].department+')<br>AT LOBBY<br>';
 							}
+
 							document.getElementById("visitor_info").style.fontSize = '7em';
 							document.getElementById("visitor_info").style.marginBottom = '10px';
-							// document.getElementsByClassName("content").style.backgroundColor = '#f07400';
 							$(".content-wrapper").css("background-color",'rgb(255, 247, 0)','important');
 							$(".content").css("background-color",'rgb(255, 247, 0)','important');
-							// var x = document.querySelectorAll(".content-wrapper");
-  					// 		x[0].setAttribute('style', 'background-color: #fff700 !important');
   							$("#tanggal_all").css("background-color",'rgb(255, 247, 0)');
 							$("#tanggal").css("background-color",'rgb(255, 247, 0)');
 							$("#tanggal").css("color",'#1100ff');
@@ -254,15 +386,18 @@ table > thead > tr > th{
 							audio_clock_lobby.play();
 						}
 					}
+					visitor = 'Visitor';
 				}else{
-					$('#visitor_info').hide();
-					$('#jam').show();
-					$(".content-wrapper").css("background-color",'rgb(75, 30, 120)','important');
-					$(".content").css("background-color",'rgb(75, 30, 120)','important');
-					// $(".content-wrapper").css("background-color",'rgb(75, 30, 120)');
-					$("#tanggal_all").css("background-color",'rgb(75, 30, 120)');
-					$("#tanggal").css("background-color",'rgb(75, 30, 120)');
-					$("#tanggal").css("color",'#fff');
+					if (istirahat == null) {
+						$('#visitor_info').hide();
+						$('#jam').show();
+						$(".content-wrapper").css("background-color",'rgb(75, 30, 120)','important');
+						$(".content").css("background-color",'rgb(75, 30, 120)','important');
+						$("#tanggal_all").css("background-color",'rgb(75, 30, 120)');
+						$("#tanggal").css("background-color",'rgb(75, 30, 120)');
+						$("#tanggal").css("color",'#fff');
+					}
+					visitor = null;
 				}
 			}
 		});

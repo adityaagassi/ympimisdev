@@ -14,8 +14,6 @@ use App\PushBlockRecorderTemp;
 use App\PushBlockRecorderResume;
 use App\CodeGenerator;
 use App\User;
-use App\RcPushPullLog;
-use App\RcCameraKangoLog;
 use App\PlcCounter;
 use App\Libraries\ActMLEasyIf;
 use Response;
@@ -40,7 +38,8 @@ class OfficeClockController extends Controller
     	date_default_timezone_set('Asia/Jakarta');
 		$date = date('m/d/Y H:i:s a', time());
     	$dateTitle = date("l, d F Y", strtotime(date('Y-m-d')));
-    	return view('displays.office_clock')->with('page', 'Clock')->with('head', 'Clock')->with('dateTitle',$dateTitle)->with('date',$date);
+    	$dayTitle = date("l", strtotime(date('Y-m-d')));
+    	return view('displays.office_clock')->with('page', 'Clock')->with('head', 'Clock')->with('dateTitle',$dateTitle)->with('date',$date)->with('dayTitle',$dayTitle);
     }
 
     public function fetchVisitor()
@@ -133,7 +132,8 @@ class OfficeClockController extends Controller
     	date_default_timezone_set('Asia/Jakarta');
 		$date = date('m/d/Y H:i:s a', time());
     	$dateTitle = date("l, d F Y", strtotime(date('Y-m-d')));
-    	return view('displays.office_clock2')->with('page', 'Clock')->with('head', 'Clock')->with('dateTitle',$dateTitle)->with('date',$date);
+    	$dayTitle = date("l", strtotime(date('Y-m-d')));
+    	return view('displays.office_clock2')->with('page', 'Clock')->with('head', 'Clock')->with('dateTitle',$dateTitle)->with('date',$date)->with('dayTitle',$dayTitle);
     }
 
     public function fetchVisitor2()
@@ -226,7 +226,8 @@ class OfficeClockController extends Controller
     	date_default_timezone_set('Asia/Jakarta');
 		$date = date('m/d/Y H:i:s a', time());
     	$dateTitle = date("l, d F Y", strtotime(date('Y-m-d')));
-    	return view('displays.office_clock3')->with('page', 'Clock')->with('head', 'Clock')->with('dateTitle',$dateTitle)->with('date',$date);
+    	$dayTitle = date("l", strtotime(date('Y-m-d')));
+    	return view('displays.office_clock3')->with('page', 'Clock')->with('head', 'Clock')->with('dateTitle',$dateTitle)->with('date',$date)->with('dayTitle',$dayTitle);
     }
 
     public function fetchVisitor3()
