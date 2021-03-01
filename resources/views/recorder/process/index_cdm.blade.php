@@ -220,6 +220,28 @@
 						<div class="col-xs-4">
 							<span style="font-weight: bold; font-size: 16px;">Cavity:</span>
 							<select name="cavity" id="cavity" class="form-group" style="width: 100%; height: 40px; font-size: 20px; text-align: center;" data-placeholder="Select Cavity">
+								<option value='1'>1</option>
+								<option value='2'>2</option>
+								<option value='3'>3</option>
+								<option value='4'>4</option>
+								<option value='5'>5</option>
+								<option value='6'>6</option>
+								<option value='7'>7</option>
+								<option value='8'>8</option>
+								<option value='9'>9</option>
+								<option value='10'>10</option>
+								<option value='11'>11</option>
+								<option value='12'>12</option>
+								<option value='13'>13</option>
+								<option value='14'>14</option>
+								<option value='15'>15</option>
+								<option value='16'>16</option>
+								<option value='17'>17</option>
+								<option value='18'>18</option>
+								<option value='19'>19</option>
+								<option value='20'>20</option>
+								<option value='21'>21</option>
+								<option value='22'>22</option>
 							</select>
 						</div>
 					</div>
@@ -1465,17 +1487,17 @@
 				type:type.toLowerCase()
 			}
 
-			$('#cavity').empty();
+			// $('#cavity').empty();
 
-			$.get('{{ url("fetch/cavity") }}',data, function(result, status, xhr){
-				if(result.status){
-					var cavity = "";
-					$.each(result.datas, function(key, value) {
-						cavity += '<option value="'+value.no_cavity+'">'+value.no_cavity+'</option>';
-					});
-				}
-				$('#cavity').append(cavity);
-			});
+			// $.get('{{ url("fetch/cavity") }}',data, function(result, status, xhr){
+			// 	if(result.status){
+			// 		var cavity = "";
+			// 		$.each(result.datas, function(key, value) {
+			// 			cavity += '<option value="'+value.no_cavity+'">'+value.no_cavity+'</option>';
+			// 		});
+			// 	}
+			// 	$('#cavity').append(cavity);
+			// });
 
 			
 
@@ -2153,18 +2175,20 @@
 						type:result.datas.type.toLowerCase()
 					}
 
-					$('#cavity').empty();
+					// $('#cavity').empty();
 
-					$.get('{{ url("fetch/cavity") }}',data2, function(result2, status, xhr){
-						if(result2.status){
-							var cavity = "";
-							$.each(result2.datas, function(key, value) {
-								cavity += '<option value="'+value.no_cavity+'">'+value.no_cavity+'</option>';
-							});
-						}
-						$('#cavity').append(cavity);
-						$('#cavity').val(result.datas.cavity).trigger('change');
-					})
+					// $.get('{{ url("fetch/cavity") }}',data2, function(result2, status, xhr){
+					// 	if(result2.status){
+					// 		var cavity = "";
+					// 		$.each(result2.datas, function(key, value) {
+					// 			cavity += '<option value="'+value.no_cavity+'">'+value.no_cavity+'</option>';
+					// 		});
+					// 	}
+					// 	$('#cavity').append(cavity);
+					// 	$('#cavity').val(result.datas.cavity).trigger('change');
+					// })
+
+					$('#cavity').val(result.datas.cavity).trigger('change');
 
 					$('#id_cdm').val(result.datas.id_cdm);
 					$('#product').val(result.datas.product);
