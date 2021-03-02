@@ -128,6 +128,8 @@ table > thead > tr > th{
 	var timeref;
 	var istirahat = null;
 	var visitor = null;
+	var x;
+	var countDownDate;
 
 	jQuery(document).ready(function(){
 
@@ -215,8 +217,8 @@ table > thead > tr > th{
 					$('#istirahat_info').show();
 					$('#visitor_info').hide();
 					$('#jam').hide();
-					document.getElementById("istirahat_info").innerHTML = "ISTIRAHAT KE-1<br><span style='font-size:3em'>"+addZero(time.getHours())+':'+addZero(time.getMinutes())+"</span>";
-					document.getElementById("istirahat_info").style.fontSize = '6em';
+					document.getElementById("istirahat_info").innerHTML = "WAKTU ISTIRAHAT 休憩時間<br>(09:30 - 09:40)<br><span id='timeristirahat' style='font-size:2em'></span><br><span style='font-size:0.75em'>("+addZero(time.getHours())+':'+addZero(time.getMinutes())+")</span>";
+					document.getElementById("istirahat_info").style.fontSize = '7em';
 					document.getElementById("istirahat_info").style.marginBottom = '10px';
 					$(".content-wrapper").css("background-color",'#a6ffa6','important');
 					$(".content").css("background-color",'#a6ffa6','important');
@@ -226,12 +228,17 @@ table > thead > tr > th{
 					$("#istirahat_info").css("color",'#5147ff');
 					$("#istirahat_info").css("background-color",'#a6ffa6');
 					istirahat = "Istirahat";
+
+					var currentdate = new Date(); 
+					var dateend = addZero(time.getFullYear())+'-'+addZero((time.getMonth()+1))+'-'+addZero(time.getDate())+' 09:40:00';
+					countDownDate = new Date(dateend).getTime();
+					x = setInterval(countdown,1000);
 				}else if(timeref >= '12:00:00' && timeref <= '13:10:00'){
 					$('#istirahat_info').show();
 					$('#visitor_info').hide();
 					$('#jam').hide();
-					document.getElementById("istirahat_info").innerHTML = "ISTIRAHAT MAKAN SIANG<br><span style='font-size:3em'>"+addZero(time.getHours())+':'+addZero(time.getMinutes())+"</span>";
-					document.getElementById("istirahat_info").style.fontSize = '6em';
+					document.getElementById("istirahat_info").innerHTML = "WAKTU ISTIRAHAT 休憩時間<br>(12:00 - 13:10)<br><span id='timeristirahat' style='font-size:2em'></span><br><span style='font-size:0.75em'>("+addZero(time.getHours())+':'+addZero(time.getMinutes())+")</span>";
+					document.getElementById("istirahat_info").style.fontSize = '7em';
 					document.getElementById("istirahat_info").style.marginBottom = '10px';
 					$(".content-wrapper").css("background-color",'#a6ffa6','important');
 					$(".content").css("background-color",'#a6ffa6','important');
@@ -241,12 +248,17 @@ table > thead > tr > th{
 					$("#istirahat_info").css("color",'#5147ff');
 					$("#istirahat_info").css("background-color",'#a6ffa6');
 					istirahat = "Istirahat";
+
+					var currentdate = new Date(); 
+					var dateend = addZero(time.getFullYear())+'-'+addZero((time.getMonth()+1))+'-'+addZero(time.getDate())+' 13:10:00';
+					countDownDate = new Date(dateend).getTime();
+					x = setInterval(countdown,1000);
 				}else if(timeref >= '15:00:00' && timeref <= '15:10:00'){
 					$('#istirahat_info').show();
 					$('#visitor_info').hide();
 					$('#jam').hide();
-					document.getElementById("istirahat_info").innerHTML = "ISTIRAHAT KE-3<br><span style='font-size:3em'>"+addZero(time.getHours())+':'+addZero(time.getMinutes())+"</span>";
-					document.getElementById("istirahat_info").style.fontSize = '6em';
+					document.getElementById("istirahat_info").innerHTML = "WAKTU ISTIRAHAT 休憩時間<br>(15:00 - 15:10)<br><span id='timeristirahat' style='font-size:2em'></span><br><span style='font-size:0.75em'>("+addZero(time.getHours())+':'+addZero(time.getMinutes())+")</span>";
+					document.getElementById("istirahat_info").style.fontSize = '7em';
 					document.getElementById("istirahat_info").style.marginBottom = '10px';
 					$(".content-wrapper").css("background-color",'#a6ffa6','important');
 					$(".content").css("background-color",'#a6ffa6','important');
@@ -256,6 +268,11 @@ table > thead > tr > th{
 					$("#istirahat_info").css("color",'#5147ff');
 					$("#istirahat_info").css("background-color",'#a6ffa6');
 					istirahat = "Istirahat";
+
+					var currentdate = new Date(); 
+					var dateend = addZero(time.getFullYear())+'-'+addZero((time.getMonth()+1))+'-'+addZero(time.getDate())+' 15:10:00';
+					countDownDate = new Date(dateend).getTime();
+					x = setInterval(countdown,1000);
 				}else{
 					if (visitor == null) {
 						$('#istirahat_info').hide();
@@ -266,6 +283,7 @@ table > thead > tr > th{
 						$("#tanggal").css("background-color",'rgb(75, 30, 120)');
 						$("#tanggal").css("color",'#fff');
 						istirahat = null;
+						countDownDate = null;
 					}
 				}
 			}else{
@@ -273,8 +291,8 @@ table > thead > tr > th{
 					$('#istirahat_info').show();
 					$('#visitor_info').hide();
 					$('#jam').hide();
-					document.getElementById("istirahat_info").innerHTML = "ISTIRAHAT KE-1<br><span style='font-size:3em'>"+addZero(time.getHours())+':'+addZero(time.getMinutes())+"</span>";
-					document.getElementById("istirahat_info").style.fontSize = '6em';
+					document.getElementById("istirahat_info").innerHTML = "WAKTU ISTIRAHAT 休憩時間<br>(09:30 - 09:40)<br><span id='timeristirahat' style='font-size:2em'></span><br><span style='font-size:0.75em'>("+addZero(time.getHours())+':'+addZero(time.getMinutes())+")</span>";
+					document.getElementById("istirahat_info").style.fontSize = '7em';
 					document.getElementById("istirahat_info").style.marginBottom = '10px';
 					$(".content-wrapper").css("background-color",'#a6ffa6','important');
 					$(".content").css("background-color",'#a6ffa6','important');
@@ -284,12 +302,17 @@ table > thead > tr > th{
 					$("#istirahat_info").css("color",'#5147ff');
 					$("#istirahat_info").css("background-color",'#a6ffa6');
 					istirahat = "Istirahat";
+
+					var currentdate = new Date(); 
+					var dateend = addZero(time.getFullYear())+'-'+addZero((time.getMonth()+1))+'-'+addZero(time.getDate())+' 09:40:00';
+					countDownDate = new Date(dateend).getTime();
+					x = setInterval(countdown,1000);
 				}else if(timeref >= '12:15:00' && timeref <= '12:55:00'){
 					$('#istirahat_info').show();
 					$('#visitor_info').hide();
 					$('#jam').hide();
-					document.getElementById("istirahat_info").innerHTML = "ISTIRAHAT MAKAN SIANG<br><span style='font-size:3em'>"+addZero(time.getHours())+':'+addZero(time.getMinutes())+"</span>";
-					document.getElementById("istirahat_info").style.fontSize = '6em';
+					document.getElementById("istirahat_info").innerHTML = "WAKTU ISTIRAHAT 休憩時間<br>(12:15 - 12:55)<br><span id='timeristirahat' style='font-size:2em'></span><br><span style='font-size:0.75em'>("+addZero(time.getHours())+':'+addZero(time.getMinutes())+")</span>";
+					document.getElementById("istirahat_info").style.fontSize = '7em';
 					document.getElementById("istirahat_info").style.marginBottom = '10px';
 					$(".content-wrapper").css("background-color",'#a6ffa6','important');
 					$(".content").css("background-color",'#a6ffa6','important');
@@ -299,12 +322,17 @@ table > thead > tr > th{
 					$("#istirahat_info").css("color",'#5147ff');
 					$("#istirahat_info").css("background-color",'#a6ffa6');
 					istirahat = "Istirahat";
+
+					var currentdate = new Date(); 
+					var dateend = addZero(time.getFullYear())+'-'+addZero((time.getMonth()+1))+'-'+addZero(time.getDate())+' 12:55:00';
+					countDownDate = new Date(dateend).getTime();
+					x = setInterval(countdown,1000);
 				}else if(timeref >= '14:20:00' && timeref <= '14:30:00'){
 					$('#istirahat_info').show();
 					$('#visitor_info').hide();
 					$('#jam').hide();
-					document.getElementById("istirahat_info").innerHTML = "ISTIRAHAT KE-3<br><span style='font-size:3em'>"+addZero(time.getHours())+':'+addZero(time.getMinutes())+"</span>";
-					document.getElementById("istirahat_info").style.fontSize = '6em';
+					document.getElementById("istirahat_info").innerHTML = "WAKTU ISTIRAHAT 休憩時間<br>(14:20 - 14:30)<br><span id='timeristirahat' style='font-size:2em'></span><br><span style='font-size:0.75em'>("+addZero(time.getHours())+':'+addZero(time.getMinutes())+")</span>";
+					document.getElementById("istirahat_info").style.fontSize = '7em';
 					document.getElementById("istirahat_info").style.marginBottom = '10px';
 					$(".content-wrapper").css("background-color",'#a6ffa6','important');
 					$(".content").css("background-color",'#a6ffa6','important');
@@ -314,6 +342,11 @@ table > thead > tr > th{
 					$("#istirahat_info").css("color",'#5147ff');
 					$("#istirahat_info").css("background-color",'#a6ffa6');
 					istirahat = "Istirahat";
+
+					var currentdate = new Date(); 
+					var dateend = addZero(time.getFullYear())+'-'+addZero((time.getMonth()+1))+'-'+addZero(time.getDate())+' 14:30:00';
+					countDownDate = new Date(dateend).getTime();
+					x = setInterval(countdown,1000);
 				}else{
 					if (visitor == null) {
 						$('#istirahat_info').hide();
@@ -324,6 +357,7 @@ table > thead > tr > th{
 						$("#tanggal").css("background-color",'rgb(75, 30, 120)');
 						$("#tanggal").css("color",'#fff');
 						istirahat = null;
+						countDownDate = null;
 					}
 				}
 			}
@@ -401,6 +435,28 @@ table > thead > tr > th{
 				}
 			}
 		});
+	}
+
+	function countdown() {
+	  var now = new Date().getTime();
+
+	  // Find the distance between now and the count down date
+	  var distance = countDownDate - now;
+
+	  // Time calculations for days, hours, minutes and seconds
+	  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+	  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+	  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+	  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+	  // Display the result in the element with id="demo"
+	  document.getElementById("timeristirahat").innerHTML = addZero(minutes) + ":" + addZero(seconds);
+
+	  // If the count down is finished, write some text
+	  if (distance <= 0) {
+	    clearInterval(x);
+	    document.getElementById("timeristirahat").innerHTML = "";
+	  }
 	}
 </script>
 @endsection
