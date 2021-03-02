@@ -217,7 +217,7 @@ table > thead > tr > th{
 					$('#istirahat_info').show();
 					$('#visitor_info').hide();
 					$('#jam').hide();
-					document.getElementById("istirahat_info").innerHTML = "WAKTU ISTIRAHAT 休憩時間<br>(09:30 - 09:40)<br><span id='timeristirahat' style='font-size:2em'></span><br><span style='font-size:0.75em'>("+addZero(time.getHours())+':'+addZero(time.getMinutes())+")</span>";
+					document.getElementById("istirahat_info").innerHTML = "<span style='background-color:yellow;padding-left:70px;padding-right:70px'>WAKTU ISTIRAHAT 休憩時間</span><br>(09:30 - 09:40)<br><span id='timeristirahat' style='font-size:2em'></span><br><span style='font-size:0.75em'>("+addZero(time.getHours())+':'+addZero(time.getMinutes())+")</span>";
 					document.getElementById("istirahat_info").style.fontSize = '7em';
 					document.getElementById("istirahat_info").style.marginBottom = '10px';
 					$(".content-wrapper").css("background-color",'#a6ffa6','important');
@@ -237,7 +237,7 @@ table > thead > tr > th{
 					$('#istirahat_info').show();
 					$('#visitor_info').hide();
 					$('#jam').hide();
-					document.getElementById("istirahat_info").innerHTML = "WAKTU ISTIRAHAT 休憩時間<br>(12:00 - 13:10)<br><span id='timeristirahat' style='font-size:2em'></span><br><span style='font-size:0.75em'>("+addZero(time.getHours())+':'+addZero(time.getMinutes())+")</span>";
+					document.getElementById("istirahat_info").innerHTML = "<span style='background-color:yellow;padding-left:70px;padding-right:70px'>WAKTU ISTIRAHAT 休憩時間</span><br>(12:00 - 13:10)<br><span id='timeristirahat' style='font-size:2em'></span><br><span style='font-size:0.75em'>("+addZero(time.getHours())+':'+addZero(time.getMinutes())+")</span>";
 					document.getElementById("istirahat_info").style.fontSize = '7em';
 					document.getElementById("istirahat_info").style.marginBottom = '10px';
 					$(".content-wrapper").css("background-color",'#a6ffa6','important');
@@ -257,7 +257,7 @@ table > thead > tr > th{
 					$('#istirahat_info').show();
 					$('#visitor_info').hide();
 					$('#jam').hide();
-					document.getElementById("istirahat_info").innerHTML = "WAKTU ISTIRAHAT 休憩時間<br>(15:00 - 15:10)<br><span id='timeristirahat' style='font-size:2em'></span><br><span style='font-size:0.75em'>("+addZero(time.getHours())+':'+addZero(time.getMinutes())+")</span>";
+					document.getElementById("istirahat_info").innerHTML = "<span style='background-color:yellow;padding-left:70px;padding-right:70px'>WAKTU ISTIRAHAT 休憩時間</span><br>(15:00 - 15:10)<br><span id='timeristirahat' style='font-size:2em'></span><br><span style='font-size:0.75em'>("+addZero(time.getHours())+':'+addZero(time.getMinutes())+")</span>";
 					document.getElementById("istirahat_info").style.fontSize = '7em';
 					document.getElementById("istirahat_info").style.marginBottom = '10px';
 					$(".content-wrapper").css("background-color",'#a6ffa6','important');
@@ -291,7 +291,7 @@ table > thead > tr > th{
 					$('#istirahat_info').show();
 					$('#visitor_info').hide();
 					$('#jam').hide();
-					document.getElementById("istirahat_info").innerHTML = "WAKTU ISTIRAHAT 休憩時間<br>(09:30 - 09:40)<br><span id='timeristirahat' style='font-size:2em'></span><br><span style='font-size:0.75em'>("+addZero(time.getHours())+':'+addZero(time.getMinutes())+")</span>";
+					document.getElementById("istirahat_info").innerHTML = "<span style='background-color:yellow;padding-left:70px;padding-right:70px'>WAKTU ISTIRAHAT 休憩時間</span><br>(09:30 - 09:40)<br><span id='timeristirahat' style='font-size:2em'></span><br><span style='font-size:0.75em'>("+addZero(time.getHours())+':'+addZero(time.getMinutes())+")</span>";
 					document.getElementById("istirahat_info").style.fontSize = '7em';
 					document.getElementById("istirahat_info").style.marginBottom = '10px';
 					$(".content-wrapper").css("background-color",'#a6ffa6','important');
@@ -311,7 +311,7 @@ table > thead > tr > th{
 					$('#istirahat_info').show();
 					$('#visitor_info').hide();
 					$('#jam').hide();
-					document.getElementById("istirahat_info").innerHTML = "WAKTU ISTIRAHAT 休憩時間<br>(12:15 - 12:55)<br><span id='timeristirahat' style='font-size:2em'></span><br><span style='font-size:0.75em'>("+addZero(time.getHours())+':'+addZero(time.getMinutes())+")</span>";
+					document.getElementById("istirahat_info").innerHTML = "<span style='background-color:yellow;padding-left:70px;padding-right:70px'>WAKTU ISTIRAHAT 休憩時間</span><br>(12:15 - 12:55)<br><span id='timeristirahat' style='font-size:2em'></span><br><span style='font-size:0.75em'>("+addZero(time.getHours())+':'+addZero(time.getMinutes())+")</span>";
 					document.getElementById("istirahat_info").style.fontSize = '7em';
 					document.getElementById("istirahat_info").style.marginBottom = '10px';
 					$(".content-wrapper").css("background-color",'#a6ffa6','important');
@@ -331,7 +331,7 @@ table > thead > tr > th{
 					$('#istirahat_info').show();
 					$('#visitor_info').hide();
 					$('#jam').hide();
-					document.getElementById("istirahat_info").innerHTML = "WAKTU ISTIRAHAT 休憩時間<br>(14:20 - 14:30)<br><span id='timeristirahat' style='font-size:2em'></span><br><span style='font-size:0.75em'>("+addZero(time.getHours())+':'+addZero(time.getMinutes())+")</span>";
+					document.getElementById("istirahat_info").innerHTML = "<span style='background-color:yellow;padding-left:70px;padding-right:70px'>WAKTU ISTIRAHAT 休憩時間</span><br>(14:20 - 14:30)<br><span id='timeristirahat' style='font-size:2em'></span><br><span style='font-size:0.75em'>("+addZero(time.getHours())+':'+addZero(time.getMinutes())+")</span>";
 					document.getElementById("istirahat_info").style.fontSize = '7em';
 					document.getElementById("istirahat_info").style.marginBottom = '10px';
 					$(".content-wrapper").css("background-color",'#a6ffa6','important');
