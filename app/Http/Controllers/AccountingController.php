@@ -5552,7 +5552,8 @@ class AccountingController extends Controller
             else if($investment_item->currency == "JPY"){
                 $cur = "¥";
             }
-            return $cur." ".$investment_item->price;
+
+            return $cur." ".number_format($investment_item->price,2,",",".");
         })
         ->editColumn('amount', function ($investment_item)
         {
@@ -5565,7 +5566,7 @@ class AccountingController extends Controller
             else if($investment_item->currency == "JPY"){
                 $cur = "¥";
             }
-            return $cur." ".$investment_item->amount;
+            return $cur." ".number_format($investment_item->amount,2,",",".");
         })
         ->addColumn('action', function ($investment_item)
         {

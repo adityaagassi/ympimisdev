@@ -20,6 +20,7 @@
     padding: 3px;
     box-sizing: border-box;
   }
+
   thead>tr>th{
     text-align:center;
   }
@@ -49,6 +50,10 @@
   input.currency {
     text-align: left;
     padding-right: 15px;
+  }
+  
+  .right{
+    text-align: right;
   }
 </style>
 @endsection
@@ -862,8 +867,8 @@
       { "data": "detail" },
       { "data": "qty" },
       { "data": "uom" },
-      { "data": "price" },
-      { "data": "amount" },
+      { "data": "price", "className": "right"},
+      { "data": "amount", "className": "right" },
       { "data": "action", "width": "10%" }
       ],
       'buttons': {
@@ -975,7 +980,7 @@
           method: 'GET',
           success: function(data) {
             // $('#total_amount_beli').text(formatRupiah(data,""));
-            $('#total_amount_beli').text(data,"");
+            $('#total_amount_beli').text(formatMoney(data));
             total_beli += parseInt(data);
 
 
@@ -1485,6 +1490,23 @@
       rupiah = split[1] != undefined ? rupiah + "," + split[1] : rupiah;
       return prefix == undefined ? rupiah : rupiah ? "" + rupiah : "";
     }
+
+    function formatMoney(amount, decimalCount = 2, decimal = ",", thousands = ".") {
+      try {
+        decimalCount = Math.abs(decimalCount);
+        decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
+
+        const negativeSign = amount < 0 ? "-" : "";
+
+        let i = parseInt(amount = Math.abs(Number(amount) || 0).toFixed(decimalCount)).toString();
+        let j = (i.length > 3) ? i.length % 3 : 0;
+
+        return negativeSign + (j ? i.substr(0, j) + thousands : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands) + (decimalCount ? decimal + Math.abs(amount - i).toFixed(decimalCount).slice(2) : "");
+      } catch (e) {
+        console.log(e)
+      }
+    };
+
 
     //menjadikan angka ke romawi
     function romanize (num) {
