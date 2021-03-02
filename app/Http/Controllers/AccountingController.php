@@ -220,7 +220,6 @@ class AccountingController extends Controller
     {
         $supplier = AccSupplier::find($id);
         $supplier->delete();
-
         return redirect('/index/supplier')
         ->with('success', 'Supplier has been deleted.')
         ->with('page', 'Supplier');
@@ -1112,12 +1111,13 @@ class AccountingController extends Controller
                 $dgm = null;
                 $gm = $this->dgm;
             }
-
+            //if accounting maka GM Pak IDA
             else if($request->get('department') == "Accounting Department"){
                 $dgm = null;
                 $gm = $this->gm_acc;
 
             }
+            //Selain Itu GM Pak Hayakawa
             else{
                 $dgm = $this->dgm;
                 $gm = $this->gm;
@@ -2340,7 +2340,7 @@ class AccountingController extends Controller
                 $sisa_bulan = $bulan.'_sisa_budget';
 
                  //get Data Budget Based On Periode Dan Nomor
-                $budgetdata = AccBudget::where('budget_no','=',$request->get('no_budget_edit'))->where('periode','=', $fiscal)->first();
+                $budgetdata = AccBudget::where('budget_no','=',$request->get('no_budget_edit'))->first();
 
                 //Get Amount Di PO
                 $total_dollar = $request->get($dollar);
@@ -2348,7 +2348,7 @@ class AccountingController extends Controller
                 $totalminusPO = $budgetdata->$sisa_bulan - $total_dollar;
 
                 // Setelah itu update data budgetnya dengan yang actual
-                $dataupdate = AccBudget::where('budget_no',$request->get('no_budget_edit'))->where('periode','=', $fiscal)
+                $dataupdate = AccBudget::where('budget_no',$request->get('no_budget_edit'))
                 ->update([
                     $sisa_bulan => $totalminusPO
                 ]);
@@ -2528,11 +2528,11 @@ class AccountingController extends Controller
 
             $sisa_bulan = $budget_log->budget_month.'_sisa_budget';
 
-            $budget = AccBudget::where('budget_no', $budget_log->budget)->where('periode', $fiscal)->first();
+            $budget = AccBudget::where('budget_no', $budget_log->budget)->first();
 
             $total = $budget->$sisa_bulan + $budget_log->amount; //add total
 
-            $dataupdate = AccBudget::where('budget_no', $budget_log->budget)->where('periode', $fiscal)->update([
+            $dataupdate = AccBudget::where('budget_no', $budget_log->budget)->update([
                 $sisa_bulan => $total
             ]);
 
@@ -3000,18 +3000,18 @@ class AccountingController extends Controller
                 $sisa_bulan = $bulan.'_sisa_budget';
 
                 //get Data Budget Based On Periode Dan Nomor
-                $budgetdata = AccBudget::where('budget_no','=',$request->get($item_budget))->where('periode','=', $fiscal)->first();
+                $budgetdata = AccBudget::where('budget_no','=',$request->get($item_budget))->first();
 
                 //Tambahkan Budget Dengan Yang Ada Di Log
                 $totalPlusPR = $budgetdata->$sisa_bulan + $amount;
 
-                $updatebudget = AccBudget::where('budget_no',$request->get($item_budget))->where('periode', $fiscal)
+                $updatebudget = AccBudget::where('budget_no',$request->get($item_budget))
                 ->update([
                     $sisa_bulan => $totalPlusPR
                 ]);
 
                 //get Data Budget Based On Periode Dan Nomor
-                $budgetdata = AccBudget::where('budget_no','=',$request->get($item_budget))->where('periode','=', $fiscal)->first();
+                $budgetdata = AccBudget::where('budget_no','=',$request->get($item_budget))->first();
 
                 //Get Amount Di PO
                 $total_dollar = $request->get($konversi_dollar);
@@ -7512,9 +7512,9 @@ public function import_budget(Request $request){
                     // $data2->oct_sisa_budget = $oct_sisa;
                     // $data2->nov_sisa_budget = $nov_sisa;
                     $data2->dec_sisa_budget = $dec_sisa;
-                    // $data2->jan_sisa_budget = $jan_sisa;
+                    $data2->jan_sisa_budget = $jan_sisa;
                     $data2->feb_sisa_budget = $feb_sisa;
-                    $data2->mar_sisa_budget = $mar_sisa;
+                    // $data2->mar_sisa_budget = $mar_sisa;
                     $data2->created_by = Auth::id();
                     $data2->save();
                 }
