@@ -3039,7 +3039,7 @@ class KnockDownController extends Controller{
 				$printer_name = 'Welding-Printer';			
 			}
 			else if($receive == 'CS91'){
-				$printer_name = 'KDO-CASE';
+				$printer_name = 'KDO CASE';
 			}
 			else{
 				$printer_name = 'MIS2';
