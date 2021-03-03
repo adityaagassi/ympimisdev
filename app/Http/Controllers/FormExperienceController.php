@@ -94,6 +94,7 @@ class FormExperienceController extends Controller
         form_failures.judul,
         form_failures.loss,
         form_failures.kerugian,
+        form_failures.file,
         target_sosialisasi.jml
       ORDER by id desc
         '
