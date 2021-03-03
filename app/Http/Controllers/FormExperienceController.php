@@ -75,6 +75,7 @@ class FormExperienceController extends Controller
         form_failures.judul,
         form_failures.loss,
         form_failures.kerugian,
+        form_failures.file,
         target_sosialisasi.jml,
         count( form_failure_attendances.id ) AS jumlah 
       FROM
@@ -94,6 +95,7 @@ class FormExperienceController extends Controller
         form_failures.loss,
         form_failures.kerugian,
         target_sosialisasi.jml
+      ORDER by id desc
         '
         );
 
@@ -168,7 +170,22 @@ class FormExperienceController extends Controller
             ';
         })
 
-        ->rawColumns(['action' => 'action','sosialisasi' => 'sosialisasi','jumlah_sosialisasi' => 'jumlah_sosialisasi'])
+        ->editColumn('file', function ($details)
+        {
+            $fl = "";
+
+            if ($details->file != null)
+            {
+                $fl .= '<a href="../files/kegagalan/' . $details->file . '" target="_blank" class="fa fa-paperclip"></a>';
+            }
+            else
+            {
+                $fl = '-';
+            }
+            return $fl;
+        })
+
+        ->rawColumns(['action' => 'action','sosialisasi' => 'sosialisasi','jumlah_sosialisasi' => 'jumlah_sosialisasi','file' => 'file'])
         ->make(true);
     }
 
@@ -205,6 +222,24 @@ class FormExperienceController extends Controller
     {
          try {
               $id_user = Auth::id();
+              $file_name = "";
+
+              // var_dump($request->file('file_datas'));die();
+
+              if (count($request->file('file_datas')) > 0) {
+                
+                  $file = $request->file('file_datas');
+
+                  $nama = $file->getClientOriginalName();
+                  $filename = pathinfo($nama, PATHINFO_FILENAME);
+                  $extension = pathinfo($nama, PATHINFO_EXTENSION);
+
+                  $file_name = $filename.'_'.date('YmdHis').'.'.$extension;
+                  $file->move('files/kegagalan/', $file_name);
+              } 
+              else {
+                  $file_name = null;
+              }
 
               $date_request = date('Y-m-01', strtotime($request->get('tanggal_kejadian')));
 
@@ -222,6 +257,7 @@ class FormExperienceController extends Controller
                    'deskripsi' => $request->get('deskripsi'),
                    'penanganan' => $request->get('penanganan'),
                    'tindakan' => $request->get('tindakan'),
+                   'file' => $file_name,
                    'created_by' => $id_user
               ]);
 
@@ -270,6 +306,25 @@ class FormExperienceController extends Controller
          try {
               $id_user = Auth::id();
 
+              $data_form = FormFailure::where('id',$request->get('id'))->first();
+
+              $file_name = "";
+
+              if (count($request->file('file_datas')) > 0) {
+                
+                  $file = $request->file('file_datas');
+
+                  $nama = $file->getClientOriginalName();
+                  $filename = pathinfo($nama, PATHINFO_FILENAME);
+                  $extension = pathinfo($nama, PATHINFO_EXTENSION);
+
+                  $file_name = $filename.'_'.date('YmdHis').'.'.$extension;
+                  $file->move('files/kegagalan/', $file_name);
+              } 
+              else {
+                  $file_name = $data_form->file;
+              }
+
               $date_request = date('Y-m-01', strtotime($request->get('tanggal_kejadian')));
 
               $forms = FormFailure::where('id',$request->get('id'))
@@ -285,6 +340,7 @@ class FormExperienceController extends Controller
                    'deskripsi' => $request->get('deskripsi'),
                    'penanganan' => $request->get('penanganan'),
                    'tindakan' => $request->get('tindakan'),
+                   'file' => $file_name,
                    'created_by' => $id_user
               ]);
 
@@ -334,7 +390,7 @@ class FormExperienceController extends Controller
         FROM
           `form_failures`
           LEFT JOIN employee_syncs ON form_failures.employee_id = employee_syncs.employee_id
-          where employee_syncs.division in ('Production Division','Production Support Division') 
+          -- where employee_syncs.division in ('Production Division','Production Support Division') 
         GROUP BY
           department
       ");

@@ -128,6 +128,7 @@ td{
                 <th>Target Sosialiasi</th>
                 <th>Jumlah Sosialiasi</th>
                 <th>Sosialisasi</th>
+                <th>File</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -136,6 +137,7 @@ td{
             <tfoot>
               <tr>
                 <!-- <th></th> -->
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -426,6 +428,7 @@ td{
           { "data": "target_sosialisasi", "width": "10%"},
           { "data": "jumlah_sosialisasi", "width": "10%"},
           { "data": "sosialisasi", "width": "10%"},
+          { "data": "file", "width": "10%"},
           { "data": "action", "width": "10%"},
         ]
       });

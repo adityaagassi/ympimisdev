@@ -186,6 +186,13 @@
           <textarea class="form-control" id="form_tindakan"></textarea>
         </div>
       </div>
+
+      <div class="row">
+        <div class="col-xs-3 pull-right">
+          <label for="attach">Upload File(s)</label>
+          <input type="file" class="form-control" id="attach" class="attach" multiple="">
+        </div>
+      </div>
       <div class="row">
         <div class="col-xs-12" style="margin-top: 10px;">
           <button type="button" class="btn btn-primary pull-right" id="form_submit"><i class="fa fa-edit"></i>&nbsp; Submit </button>
@@ -302,35 +309,89 @@
       return false;
     }
 
-    var data = {
-      employee_id: $("#form_nik").val(),
-      employee_name: $("#form_nama").val(),
-      kategori: $("#form_kategori").val(),
-      tanggal_kejadian: $("#form_tgl").val(),
-      lokasi_kejadian: $("#form_loc").val(),
-      equipment: $("#form_ket").val(),
-      grup_kejadian: $("#form_grup").val(),
-      judul: $("#form_judul").val(),
-      loss: $("#form_loss").val().toString(),
-      kerugian: $("#form_rugi").val(),
-      deskripsi: CKEDITOR.instances.form_deskripsi.getData(),
-      penanganan: CKEDITOR.instances.form_perbaikan.getData(),
-      tindakan: CKEDITOR.instances.form_tindakan.getData(),
-    };
+    // var data = {
+    //   employee_id: $("#form_nik").val(),
+    //   employee_name: $("#form_nama").val(),
+    //   kategori: $("#form_kategori").val(),
+    //   tanggal_kejadian: $("#form_tgl").val(),
+    //   lokasi_kejadian: $("#form_loc").val(),
+    //   equipment: $("#form_ket").val(),
+    //   grup_kejadian: $("#form_grup").val(),
+    //   judul: $("#form_judul").val(),
+    //   loss: $("#form_loss").val().toString(),
+    //   kerugian: $("#form_rugi").val(),
+    //   file: $("#attach").val(),
+    //   deskripsi: CKEDITOR.instances.form_deskripsi.getData(),
+    //   penanganan: CKEDITOR.instances.form_perbaikan.getData(),
+    //   tindakan: CKEDITOR.instances.form_tindakan.getData(),
+    // };
 
-    $.post('{{ url("index/post/form_experience") }}', data, function(result, status, xhr){
-      if(result.status == true){    
-        $("#loading").hide();
-        openSuccessGritter("Success","Berhasil Dibuat");
-        // location.reload();
-        window.location.href = '{{url("index/form_experience")}}';
-      }
-      else {
-        $("#loading").hide();
-        openErrorGritter('Error!', result.datas);
-      }
+    employee_id = $("#form_nik").val();
+    employee_name = $("#form_nama").val();
+    kategori = $("#form_kategori").val();
+    tanggal_kejadian = $("#form_tgl").val();
+    lokasi_kejadian = $("#form_loc").val();
+    equipment = $("#form_ket").val();
+    grup_kejadian = $("#form_grup").val();
+    judul = $("#form_judul").val();
+    loss = $("#form_loss").val().toString();
+    kerugian = $("#form_rugi").val();
+    deskripsi = CKEDITOR.instances.form_deskripsi.getData();
+    penanganan = CKEDITOR.instances.form_perbaikan.getData();
+    tindakan = CKEDITOR.instances.form_tindakan.getData();
 
-    });
+    var formData = new FormData();
+    formData.append('employee_id', employee_id);
+    formData.append('employee_name', employee_name);
+    formData.append('kategori', kategori);
+    formData.append('tanggal_kejadian', tanggal_kejadian);
+    formData.append('lokasi_kejadian', lokasi_kejadian);
+    formData.append('equipment', equipment);
+    formData.append('grup_kejadian', grup_kejadian);
+    formData.append('judul', judul);
+    formData.append('loss', loss);
+    formData.append('kerugian', kerugian);
+    formData.append('deskripsi', deskripsi);
+    formData.append('penanganan', penanganan);
+    formData.append('tindakan', tindakan);
+    formData.append('file_datas', $("#attach").prop('files')[0]);
+
+    // $.post('{{ url("index/post/form_experience") }}', data, function(result, status, xhr){
+    //   if(result.status == true){    
+    //     $("#loading").hide();
+    //     openSuccessGritter("Success","Berhasil Dibuat");
+    //     // location.reload();
+    //     window.location.href = '{{url("index/form_experience")}}';
+    //   }
+    //   else {
+    //     $("#loading").hide();
+    //     openErrorGritter('Error!', result.datas);
+    //   }
+
+    // });
+
+    var url = "{{ url('index/post/form_experience')}}";
+      $("#loading").show();
+
+      $.ajax({
+        url: url,
+        type: 'POST',
+        data: formData,
+        success: function (response) {
+          console.log(response.status);
+          $("#loading").hide();
+          openSuccessGritter('Success', 'Form Kegagalan / Permasalahan Berhasil Dibuat');
+          setTimeout( function() {window.location.replace("{{ url('index/form_experience') }}")}, 2000);
+
+        },
+        error: function (response) {
+          console.log(response.message);
+          $("#loading").hide();
+          openErrorGritter('Error', '');
+        },
+        contentType: false,
+        processData: false
+      });
 
   });
 

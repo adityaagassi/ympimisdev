@@ -109,10 +109,10 @@
                 ?>
                 @foreach($sections as $section)
                   @if($section->group == null)
-                    @if($section->department == $lokasi[0] && $section->section == $lokasi[1])
-                    <option value="{{ $section->department }}_{{ $section->section }}" selected>{{ $section->department }} - {{ $section->section }}</option>
+                    @if($section->section == $lokasi[0] && $section->department == $lokasi[1])
+                    <option value="{{ $section->section }}_{{ $section->department }}" selected>{{ $section->section }} - {{ $section->department }}</option>
                     @else
-                    <option value="{{ $section->department }}_{{ $section->section }}">{{ $section->department }} - {{ $section->section }}</option>
+                    <option value="{{ $section->section }}_{{ $section->department }}">{{ $section->section }} - {{ $section->department }}</option>
                     @endif
                   @else
                     @if($section->section == $lokasi[0] && $section->group == $lokasi[1])
@@ -143,11 +143,10 @@
             <select class="form-control select2" data-placeholder="Pilih Loss" name="form_loss" id="form_loss" style="width: 100% height: 35px; font-size: 15px;" required multiple="">
                 <?php 
                 $los = explode(",",$form_failures->loss);
-                
                 ?>
-                <option value="Waktu" selected="">Waktu</option>
-                <option value="Uang" selected="">Uang</option>
-                <option value="Orang" selected="">Orang</option>
+                <option value="Waktu" <?php if(in_array('Waktu', $los)) echo 'selected'; ?>>Waktu</option>
+                <option value="Uang" <?php if(in_array('Uang', $los)) echo 'selected'; ?>>Uang</option>
+                <option value="Orang" <?php if(in_array('Orang', $los)) echo 'selected'; ?>>Orang</option>
             </select>
           </div>
 
@@ -180,6 +179,18 @@
             <textarea class="form-control" id="form_tindakan">{{$form_failures->tindakan}}</textarea>
           </div>
         </div>
+
+        <div class="row">
+          <div class="col-xs-3 pull-right">
+            <label for="attach">Upload File(s)</label>
+            <input type="file" class="form-control" id="attach" class="attach" multiple="">
+          
+            <?php if ($form_failures->file != null) { ?>
+              <a href="{{ url('/files/kegagalan/'.$form_failures->file ) }}"><i class="fa fa-paperclip"></i> <?= $form_failures->file ?></a>
+            <?php } ?>
+          </div>
+        </div>
+
         <div class="row">
           <div class="col-xs-12" style="margin-top: 10px;">
           <button type="button" class="btn btn-primary pull-right" id="form_submit"><i class="fa fa-edit"></i>&nbsp; Submit </button>
@@ -281,34 +292,89 @@
         return false;
       }
 
-      var data = {
-        id: "{{ $form_failures->id }}",
-        employee_id: $("#form_nik").val(),
-        employee_name: $("#form_nama").val(),
-        kategori: $("#form_kategori").val(),
-        tanggal_kejadian: $("#form_tgl").val(),
-        lokasi_kejadian: $("#form_loc").val(),
-        equipment: $("#form_ket").val(),
-        grup_kejadian: $("#form_grup").val(),
-        judul: $("#form_judul").val(),
-        loss: $("#form_loss").val().toString(),
-        kerugian: $("#form_rugi").val(),
-        deskripsi: CKEDITOR.instances.form_deskripsi.getData(),
-        penanganan: CKEDITOR.instances.form_perbaikan.getData(),
-        tindakan: CKEDITOR.instances.form_tindakan.getData(),
-      };
+      // var data = {
+      //   id: "{{ $form_failures->id }}",
+      //   employee_id: $("#form_nik").val(),
+      //   employee_name: $("#form_nama").val(),
+      //   kategori: $("#form_kategori").val(),
+      //   tanggal_kejadian: $("#form_tgl").val(),
+      //   lokasi_kejadian: $("#form_loc").val(),
+      //   equipment: $("#form_ket").val(),
+      //   grup_kejadian: $("#form_grup").val(),
+      //   judul: $("#form_judul").val(),
+      //   loss: $("#form_loss").val().toString(),
+      //   kerugian: $("#form_rugi").val(),
+      //   deskripsi: CKEDITOR.instances.form_deskripsi.getData(),
+      //   penanganan: CKEDITOR.instances.form_perbaikan.getData(),
+      //   tindakan: CKEDITOR.instances.form_tindakan.getData(),
+      // };
 
-      $.post('{{ url("index/update/form_experience") }}', data, function(result, status, xhr){
-        if(result.status == true){    
-          $("#loading").hide();
-          openSuccessGritter("Success","Berhasil Diedit");
-          setTimeout(function(){ window.history.back(); }, 2000);
-        }
-         else {
-        $("#loading").hide();
-          openErrorGritter('Error!', result.datas);
-        }
-      });
+      id = "{{ $form_failures->id }}";
+      employee_id = $("#form_nik").val();
+      employee_name = $("#form_nama").val();
+      kategori = $("#form_kategori").val();
+      tanggal_kejadian = $("#form_tgl").val();
+      lokasi_kejadian = $("#form_loc").val();
+      equipment = $("#form_ket").val();
+      grup_kejadian = $("#form_grup").val();
+      judul = $("#form_judul").val();
+      loss = $("#form_loss").val().toString();
+      kerugian = $("#form_rugi").val();
+      deskripsi = CKEDITOR.instances.form_deskripsi.getData();
+      penanganan = CKEDITOR.instances.form_perbaikan.getData();
+      tindakan = CKEDITOR.instances.form_tindakan.getData();
+
+      var formData = new FormData();
+      formData.append('id', id);
+      formData.append('employee_id', employee_id);
+      formData.append('employee_name', employee_name);
+      formData.append('kategori', kategori);
+      formData.append('tanggal_kejadian', tanggal_kejadian);
+      formData.append('lokasi_kejadian', lokasi_kejadian);
+      formData.append('equipment', equipment);
+      formData.append('grup_kejadian', grup_kejadian);
+      formData.append('judul', judul);
+      formData.append('loss', loss);
+      formData.append('kerugian', kerugian);
+      formData.append('deskripsi', deskripsi);
+      formData.append('penanganan', penanganan);
+      formData.append('tindakan', tindakan);
+      formData.append('file_datas', $("#attach").prop('files')[0]);      
+
+      // $.post('{{ url("index/update/form_experience") }}', data, function(result, status, xhr){
+      //   if(result.status == true){    
+      //     $("#loading").hide();
+      //     openSuccessGritter("Success","Berhasil Diedit");
+      //     setTimeout(function(){ window.history.back(); }, 2000);
+      //   }
+      //    else {
+      //   $("#loading").hide();
+      //     openErrorGritter('Error!', result.datas);
+      //   }
+      // });
+
+      var url = "{{ url('index/update/form_experience')}}";
+        $("#loading").show();
+
+        $.ajax({
+          url: url,
+          type: 'POST',
+          data: formData,
+          success: function (response) {
+            console.log(response.status);
+            $("#loading").hide();
+            openSuccessGritter('Success', 'Form Kegagalan / Permasalahan Berhasil Diedit');
+            setTimeout( function() {window.location.replace("{{ url('index/form_experience') }}")}, 2000);
+
+          },
+          error: function (response) {
+            console.log(response.message);
+            $("#loading").hide();
+            openErrorGritter('Error', '');
+          },
+          contentType: false,
+          processData: false
+        });
 
     });
 
