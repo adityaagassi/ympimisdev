@@ -452,6 +452,8 @@
 	}
 
 	function selectAttend(id){
+		$("#loading").show();
+
 		if(id != "" || id != 'in' || id != 'out'){
 			$('#newDate').prop("disabled", false);
 			$('#newTime').prop("disabled", true);
@@ -491,12 +493,14 @@
 
 		$.get('{{ url("fetch/general/online_transportation_data") }}', data, function(result, status, xhr){
 			if (result.status) {
+				$("#loading").hide();
 				$('#newVehicle').val(result.datas.vehicle).trigger('change');
 				$('#newOrigin').val(result.datas.origin);
 				$('#newDestination').val(result.datas.destination);
 				$('#newDistance').val(result.datas.distance);
 				$('#newHighwayAmount').val(result.datas.highway_amount);
 			}else{
+				$("#loading").hide();
 				openErrorGritter('Error!','Data Tidak Tersedia');
 			}
 		});
