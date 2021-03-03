@@ -140,7 +140,7 @@ class AuditController extends Controller
 
 				$file->move($tujuan_upload,$filename);
 
-				AuditAllResult::create([
+				$audit_all = AuditAllResult::create([
 					'tanggal' => date('Y-m-d'),
 					'kategori' => $request->input('category'),
 					'lokasi' => $request->input('location'),
@@ -152,14 +152,26 @@ class AuditController extends Controller
 					'foto' => $filename,
 					'created_by' => $id_user
 				]);
-			}
 
+        $id = $audit_all->id;
+
+        $mails = "select distinct email from users where name = '".$request->input('patrol_pic_'.$i)."'";
+        $mailtoo = DB::select($mails);
+
+        $isimail = "select * from audit_all_results where id = ".$id;
+
+        $auditdata = db::select($isimail);
+
+        Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com'])->send(new SendEmail($auditdata, 'patrol'));
+			}
 
 			$response = array(
 				'status' => true,
 			);
 			return Response::json($response);
-		} catch (\Exception $e) {
+		} 
+
+    catch (\Exception $e) {
 			$response = array(
 				'status' => false,
 				'message' => $e->getMessage()

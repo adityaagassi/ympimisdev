@@ -169,6 +169,10 @@ class SendEmail extends Mailable
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('Audit MIRAI')->view('mails.audit_all');
         }
 
+        if($this->remark == 'patrol'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('Patrol Presdir & General Manager')->view('mails.patrol');
+        }
+
         if($this->remark == 'reject_std_audit'){
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Audit ISO Standarisasi')->view('mails.std_audit');
         }
