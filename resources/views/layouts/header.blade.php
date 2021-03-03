@@ -19,7 +19,7 @@
               @php
               $avatar = 'images/avatar/'.Auth::user()->avatar;
               @endphp
-              <img src="{{ url($avatar) }}" class="user-image" alt="User Image">
+              <img src="{{ url($avatar) }}" class="user-image" alt="{{ url($avatar) }}">
               <span class="hidden-xs">{{Auth::user()->name}}</span>
             </a>
             <ul class="dropdown-menu">
