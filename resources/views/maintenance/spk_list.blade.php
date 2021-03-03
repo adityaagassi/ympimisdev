@@ -536,6 +536,8 @@
 										<div class="col-xs-8" align="left">
 											<textarea class="form-control" id="penyebab_detail" rows="1" readonly></textarea>
 										</div>
+										<div class="col-xs-1"><img src="#" width="100%" alt="photo" id="penyebab_photo_1"></div>
+										<div class="col-xs-1"><img src="#" width="100%" alt="photo" id="penyebab_photo_2"></div>
 									</div>
 
 									<div class="form-group row" align="right">
@@ -543,6 +545,17 @@
 										<div class="col-xs-8" align="left">
 											<textarea class="form-control" id="penanganan_detail" rows="1" readonly></textarea>
 										</div>
+										<div class="col-xs-1"><img src="#" width="100%" alt="photo" id="penanganan_photo_1"></div>
+										<div class="col-xs-1"><img src="#" width="100%" alt="photo" id="penanganan_photo_2"></div>
+									</div>
+
+									<div class="form-group row" align="right">
+										<label class="col-xs-2" style="margin-top: 1%;">Pencegahan</label>
+										<div class="col-xs-8" align="left">
+											<textarea class="form-control" id="pencegahan_detail" rows="1" readonly></textarea>
+										</div>
+										<div class="col-xs-1"><img src="#" width="100%" alt="photo" id="pencegahan_photo_1"></div>
+										<div class="col-xs-1"><img src="#" width="100%" alt="photo" id="pencegahan_photo_2"></div>
 									</div>
 
 									<div class="form-group row" align="right">
@@ -899,9 +912,34 @@
 			$("#lampiran_detail").empty();
 			$("#lampiran_detail").append("<a href='{{ url('maintenance/spk_att/') }}/"+result.detail[0].att+"' target='_blank'>"+result.detail[0].att+"</a>");
 
-			$("#penyebab_detail").val(result.detail[0].cause);
-			$("#penanganan_detail").val(result.detail[0].handling);
+			$("#penyebab_detail").val((result.detail[0].cause || ""));
+			$("#penanganan_detail").val((result.detail[0].handling || ""));
+			$("#pencegahan_detail").val((result.detail[0].prevention || ""));
 
+
+			if (result.detail[0].cause_photo) {
+				penyebab_foto = result.detail[0].cause_photo.split(', ');
+				$("#penyebab_photo_1").attr("src", "{{url('maintenance/spk_report')}}/"+penyebab_foto[0]);
+				if (penyebab_foto[1]) {
+					$("#penyebab_photo_2").attr("src", "{{url('maintenance/spk_report')}}/"+penyebab_foto[0]);
+				}
+			}
+
+			if (result.detail[0].handling_photo) {
+				penanganan_foto = result.detail[0].handling_photo.split(', ');
+				$("#penanganan_photo_1").attr("src", "{{url('maintenance/spk_report')}}/"+penanganan_foto[0]);
+				if (penanganan_foto[1]) {
+					$("#penyebab_photo_2").attr("src", "{{url('maintenance/spk_report')}}/"+penanganan_foto[1]);
+				}
+			}
+
+			if (result.detail[0].prevention_photo) {
+				pencegahan_foto = result.detail[0].prevention_photo.split(', ');
+				$("#pencegahan_photo_1").attr("src", "{{url('maintenance/spk_report')}}/"+pencegahan_foto[0]);
+				if (pencegahan_foto[1]) {
+					$("#penyebab_photo_2").attr("src", "{{url('maintenance/spk_report')}}/"+pencegahan_foto[1]);
+				}
+			}
 
 			$("#prog").empty();
 			$("#pending").empty();

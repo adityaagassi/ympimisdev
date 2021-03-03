@@ -32,6 +32,7 @@ use App\MaintenancePlanItem;
 use App\MaintenancePlanItemCheck;
 use App\MaintenancePlanCheck;
 use App\MaintenancePic;
+use App\MaintenanceMachineProblemLog;
 use App\Process;
 
 use App\Http\Controllers\Controller;
@@ -530,6 +531,17 @@ class MaintenanceController extends Controller
 		))->with('page','Maintenance SPK Weekly Report')->with('head', 'Maintenance');
 	}
 
+	public function indexMachineHistory()
+	{
+		$title = 'Maintenance Machine Log';
+		$title_jp = '??';
+
+		return view('maintenance.machine_history_list', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page','Machine Logs')->with('head', 'Maintenance');
+	}
+
 	// -----------------------  END INDEX --------------------
 
 	public function fetchMaintenance(Request $request)
@@ -1022,7 +1034,7 @@ class MaintenanceController extends Controller
 		->leftJoin(db::raw("employee_syncs as  es"), "es.employee_id", "=", "maintenance_job_processes.operator_id")
 		->leftJoin(db::raw("(select process_code, process_name from processes where remark = 'maintenance') AS process"), "maintenance_job_orders.remark", "=", "process.process_code")
 		->leftJoin("maintenance_plan_items", "maintenance_plan_items.machine_id", "=", "maintenance_job_orders.machine_name")
-		->select("maintenance_job_orders.order_no", "employee_syncs.name", db::raw('DATE_FORMAT(maintenance_job_orders.created_at, "%Y-%m-%d %H-%i") as date'), "priority", "maintenance_job_orders.section", "type", "maintenance_job_orders.category", "machine_condition", "danger", "maintenance_job_orders.description", "safety_note", "target_date", "process_name", db::raw("es.name as name_op"), db::raw("es.employee_id as id_op"), db::raw("DATE_FORMAT(maintenance_job_processes.start_actual, '%Y-%m-%d %H:%i') start_actual"), db::raw("DATE_FORMAT(maintenance_job_processes.finish_actual, '%Y-%m-%d %H:%i') finish_actual"), "maintenance_job_pendings.status", db::raw("maintenance_job_pendings.description as pending_desc"), "maintenance_job_orders.machine_name", "cause", "handling", "photo", "note", "machine_remark", db::raw("maintenance_plan_items.description as machine_desc"), "maintenance_plan_items.area", "att", db::raw("maintenance_job_pendings.remark as pending_remark"))
+		->select("maintenance_job_orders.order_no", "employee_syncs.name", db::raw('DATE_FORMAT(maintenance_job_orders.created_at, "%Y-%m-%d %H-%i") as date'), "priority", "maintenance_job_orders.section", "type", "maintenance_job_orders.category", "machine_condition", "danger", "maintenance_job_orders.description", "safety_note", "target_date", "process_name", db::raw("es.name as name_op"), db::raw("es.employee_id as id_op"), db::raw("DATE_FORMAT(maintenance_job_processes.start_actual, '%Y-%m-%d %H:%i') start_actual"), db::raw("DATE_FORMAT(maintenance_job_processes.finish_actual, '%Y-%m-%d %H:%i') finish_actual"), "maintenance_job_pendings.status", db::raw("maintenance_job_pendings.description as pending_desc"), "maintenance_job_orders.machine_name", "cause", "handling", "photo", "note", "machine_remark", db::raw("maintenance_plan_items.description as machine_desc"), "maintenance_plan_items.area", "att", db::raw("maintenance_job_pendings.remark as pending_remark"), 'prevention', 'cause_photo', 'handling_photo', 'prevention_photo')
 		->get();
 
 		$parts = MaintenanceJobOrder::where('maintenance_job_orders.order_no', '=', $request->get('order_no'))
@@ -1278,12 +1290,20 @@ class MaintenanceController extends Controller
 	public function reportingSPK(Request $request)
 	{
 		$data = $request->get('foto');
+		$foto_cause = $request->get('foto_penyebab');
+		$foto_handling = $request->get('foto_penanganan');
+		$foto_prev = $request->get('foto_pencegahan');
+
 		define('UPLOAD_DIR', 'images/');
 		$upload = [];
+		$upload_cause = [];
+		$upload_handling = [];
+		$upload_prev = [];
 
 		$operator_id = Auth::user()->username;
 
 		try {
+			// -------- FOTO RESULT ----------
 			$no = 1;
 			foreach ($data as $key) {
 				if ($key != "") {
@@ -1302,6 +1322,64 @@ class MaintenanceController extends Controller
 				}
 			}
 
+			// ---------- FOTO PENYEBAB --------------
+			$no = 1;
+			foreach ($foto_cause as $key2) {
+				if ($key2 != "") {
+					$image_parts = explode(";base64,", $key2);
+					$image_type_aux = explode("image/", $image_parts[0]);
+					$image_type = $image_type_aux[1];
+					$image_base64 = base64_decode($image_parts[1]);
+
+					$file = public_path().'\maintenance\\spk_report\\cause_'.$request->get('order_no').$operator_id.$no.'.png';
+					$file3 = 'cause_'.$request->get('order_no').$operator_id.$no.'.png';
+
+					file_put_contents($file, $image_base64);
+
+					array_push($upload_cause, $file3);
+					$no++;
+				}
+			}
+
+			// ---------- FOTO PENANGANAN ------------
+			$no = 1;
+			foreach ($foto_handling as $key3) {
+				if ($key3 != "") {
+					$image_parts = explode(";base64,", $key3);
+					$image_type_aux = explode("image/", $image_parts[0]);
+					$image_type = $image_type_aux[1];
+					$image_base64 = base64_decode($image_parts[1]);
+
+					$file = public_path().'\maintenance\\spk_report\\handling_'.$request->get('order_no').$operator_id.$no.'.png';
+					$file4 = 'handling_'.$request->get('order_no').$operator_id.$no.'.png';
+
+					file_put_contents($file, $image_base64);
+
+					array_push($upload_handling, $file4);
+					$no++;
+				}
+			}
+
+			// ---------- FOTO PENCEGAHAN ------------
+			$no = 1;
+			foreach ($foto_prev as $key3) {
+				if ($key3 != "") {
+					$image_parts = explode(";base64,", $key3);
+					$image_type_aux = explode("image/", $image_parts[0]);
+					$image_type = $image_type_aux[1];
+					$image_base64 = base64_decode($image_parts[1]);
+
+					$file = public_path().'\maintenance\\spk_report\\prev_'.$request->get('order_no').$operator_id.$no.'.png';
+					$file5 = 'prev_'.$request->get('order_no').$operator_id.$no.'.png';
+
+					file_put_contents($file, $image_base64);
+
+					array_push($upload_prev, $file5);
+					$no++;
+				}
+			}
+
+
 			MaintenanceJobProcess::where('order_no', '=', $request->get('order_no'))
 			->where('operator_id', '=', strtoupper(Auth::user()->username))
 			->update(['finish_actual' => date('Y-m-d H:i:s')]);
@@ -1318,6 +1396,9 @@ class MaintenanceController extends Controller
 			$rpt->prevention = $request->get('pencegahan');
 			
 			$rpt->photo = implode(", ",$upload);
+			$rpt->cause_photo = implode(", ",$upload_cause);
+			$rpt->handling_photo = implode(", ",$upload_handling);
+			$rpt->prevention_photo = implode(", ",$upload_prev);
 			$rpt->remark = $request->get('other_part');
 			$rpt->started_at = $proc->start_actual;
 			$rpt->finished_at = date('Y-m-d H:i:s');
@@ -1332,8 +1413,10 @@ class MaintenanceController extends Controller
 
 			$spk_log->save();
 
-			MaintenanceJobOrder::where('order_no', '=', $request->get('order_no'))
-			->update(['remark' => 6]);
+			$mjo = MaintenanceJobOrder::where('order_no', '=', $request->get('order_no'))
+			->first();
+
+			$mjo->update(['remark' => 6]);
 
 			$parts = $request->get('spare_part');
 
@@ -1345,6 +1428,24 @@ class MaintenanceController extends Controller
 
 					$spk_part->save();
 				}
+			}
+
+			if ($mjo->machine_name != "Lain - lain") {
+				$mch = MaintenancePlanItem::where('machine_id', '=', $mjo->machine_name)->select('description', 'area')->first();
+
+				$machine_log = new MaintenanceMachineProblemLog();
+				$machine_log->machine_id = $mjo->machine_name;
+				$machine_log->machine_name = $mch->description;
+				$machine_log->location = $mch->area;
+				$machine_log->defect = $request->get('penyebab');
+				$machine_log->handling = $request->get('penanganan');
+				$machine_log->prevention = $request->get('pencegahan');
+				$machine_log->part = '';
+				$machine_log->started_time = $proc->start_actual;
+				$machine_log->finished_time = date('Y-m-d H:i:s');
+				$machine_log->created_by = Auth::user()->username;
+
+				$machine_log->save();
 			}
 
 			$response = array(
@@ -3008,4 +3109,16 @@ class MaintenanceController extends Controller
 			});
 		})->export('xlsx');
 	}
+
+	public function fetchMachineHistory(Request $request)
+	{
+		$machine_logs = MaintenanceMachineProblemLog::orderBy('started_time', 'asc')->get();
+
+		$response = array(
+			'status' => true,
+			'logs' => $machine_logs
+		);
+		return Response::json($response);
+	}
+
 }

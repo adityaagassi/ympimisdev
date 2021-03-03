@@ -197,22 +197,56 @@
 								<div class="col-xs-12">
 									<div class="form-group row" align="right">
 										<label class="col-xs-2" style="margin-top: 1%;">Penyebab<span class="text-red">*</span></label>
-										<div class="col-xs-10" align="left">
+										<div class="col-xs-8" align="left">
 											<textarea class="form-control" id="penyebab_detail" placeholder="Isikan Penyebab Kerusakan"></textarea>
+										</div>
+										<div class="col-xs-1">
+											<img src="" id="img_penyebab_1" style="width: 60%">
+											<input type="file" id="foto_penyebab_1" style="display: none">
+											<label class="btn btn-success btn-xs" id="btn_penyebab_1" for="foto_penyebab_1"><i class="fa fa-plus"></i></label>
+										</div>
+
+										<div class="col-xs-1">
+											<img src="" id="img_penyebab_2" style="width: 60%">
+											<input type="file" id="foto_penyebab_2" style="display: none">
+											<label class="btn btn-success btn-xs" id="btn_penyebab_2" for="foto_penyebab_2"><i class="fa fa-plus"></i></label>
 										</div>
 									</div>
 
 									<div class="form-group row" align="right">
 										<label class="col-xs-2" style="margin-top: 1%;">Penanganan<span class="text-red">*</span></label>
-										<div class="col-xs-10" align="left">
+										<div class="col-xs-8" align="left">
 											<textarea class="form-control" id="penanganan_detail" placeholder="Isikan Penanganan yang dilakukan"></textarea>
+										</div>
+										<div class="col-xs-1">
+											<img src="" id="img_penanganan_1" style="width: 60%">
+											<input type="file" id="foto_penanganan_1" style="display: none">
+											<label class="btn btn-success btn-xs" id="btn_penanganan_1" for="foto_penanganan_1"><i class="fa fa-plus"></i></label>
+										</div>
+
+										<div class="col-xs-1">
+											<img src="" id="img_penanganan_2" style="width: 60%">
+											<input type="file" id="foto_penanganan_2" style="display: none">
+											<label class="btn btn-success btn-xs" id="btn_penanganan_2" for="foto_penanganan_2"><i class="fa fa-plus"></i></label>
 										</div>
 									</div>
 
 									<div class="form-group row" align="right">
 										<label class="col-xs-2" style="margin-top: 1%;">Pencegahan<span class="text-red">*</span></label>
-										<div class="col-xs-10" align="left">
+										<div class="col-xs-8" align="left">
 											<textarea class="form-control" id="pencegahan_detail" placeholder="Isikan Pencegahan Agar tidak terjadi lagi"></textarea>
+										</div>
+
+										<div class="col-xs-1">
+											<img src="" id="img_pencegahan_1" style="width: 60%">
+											<input type="file" id="foto_pencegahan_1" style="display: none">
+											<label class="btn btn-success btn-xs" id="btn_pencegahan_1" for="foto_pencegahan_1"><i class="fa fa-plus"></i></label>
+										</div>
+
+										<div class="col-xs-1">
+											<img src="" id="img_pencegahan_2" style="width: 60%">
+											<input type="file" id="foto_pencegahan_2" style="display: none">
+											<label class="btn btn-success btn-xs" id="btn_pencegahan_2" for="foto_pencegahan_2"><i class="fa fa-plus"></i></label>
 										</div>
 									</div>
 
@@ -878,10 +912,26 @@ function startWork() {
 			var penanganan = $("#penanganan_detail").val();
 			var pencegahan = $("#pencegahan_detail").val();
 			var spk_detail = $("#spk_detail").val();
+			var pekerjaan_detail = $("#pekerjaan_detail").val();
 
 			if (penyebab == "" || penanganan == "" || pencegahan == "") {
-				openErrorGritter('Error', 'Ada Kolom yang Kosong');
-				return false;
+				if (pencegahan == "" && (pekerjaan_detail.split(' - ')[0] == 'Perbaikan' || pekerjaan_detail.split(' - ')[0] == 'Penggantian')) {
+					openErrorGritter('Error', 'Ada Kolom yang Kosong');
+					return false;
+				} else if(pekerjaan_detail.split(' - ')[0] != 'Perbaikan' || pekerjaan_detail.split(' - ')[0] != 'Penggantian') {
+					openErrorGritter('Error', 'Ada Kolom yang Kosong');
+					return false;
+				}
+			}
+
+			if ($("#img_penyebab_1").attr("src") == "" || $("#img_penanganan_1").attr("src") == "" || $("#img_pencegahan_1").attr("src")  == "") {
+				if ($("#img_pencegahan_1").attr("src")  == "" && (pekerjaan_detail.split(' - ')[0] == 'Perbaikan' || pekerjaan_detail.split(' - ')[0] == 'Penggantian')) {
+					openErrorGritter('Error', 'Foto Harap diisi');
+					return false;
+				} else if(pekerjaan_detail.split(' - ')[0] != 'Perbaikan' || pekerjaan_detail.split(' - ')[0] != 'Penggantian') {
+					openErrorGritter('Error', 'Foto Harap diisi');
+					return false;	
+				}
 			}
 
 			var foto = [];
@@ -909,12 +959,18 @@ function startWork() {
 				pencegahan : pencegahan,
 				spare_part : part,
 				foto : foto,
-				other_part : part_lain
+				other_part : part_lain,
+				foto_penyebab : [$("#img_penyebab_1").attr("src"), $("#img_penyebab_2").attr("src")],
+				foto_penanganan : [$("#img_penanganan_1").attr("src"), $("#img_penanganan_2").attr("src")],
+				foto_pencegahan : [$("#img_pencegahan_1").attr("src"), $("#img_pencegahan_2").attr("src")]
 			}
 
-			$("#loading").show();
+
+			console.log(data);
+			// return false;
 
 			if ($("#profile-img1").attr("src") != "" || $("#profile-img2").attr("src") != "") {
+				$("#loading").show();
 				$.post('{{ url("report/maintenance/spk") }}', data, function(result, status, xhr){
 					if (result.status) {
 						$("#loading").hide();
@@ -1129,6 +1185,58 @@ function startWork() {
 			$(".txt_foto").hide();
 			$("#txt_foto1").show();
 		}
+
+		$("#foto_penyebab_1, #foto_penyebab_2").change(function(){
+			if (this.files && this.files[0]) {
+
+				var reader = new FileReader();
+
+				num = this.id.replace(/[^\d]+/, '');
+
+				reader.onload = function (e) {
+
+					$('#img_penyebab_'+num).attr('src', e.target.result);
+
+				}
+
+				reader.readAsDataURL(this.files[0]);
+			}
+		});
+
+		$("#foto_penanganan_1, #foto_penanganan_2").change(function(){
+			if (this.files && this.files[0]) {
+
+				var reader = new FileReader();
+
+				num = this.id.replace(/[^\d]+/, '');
+
+				reader.onload = function (e) {
+
+					$('#img_penanganan_'+num).attr('src', e.target.result);
+
+				}
+
+				reader.readAsDataURL(this.files[0]);
+			}
+		});
+
+
+		$("#foto_pencegahan_1, #foto_pencegahan_2").change(function(){
+			if (this.files && this.files[0]) {
+
+				var reader = new FileReader();
+
+				num = this.id.replace(/[^\d]+/, '');
+
+				reader.onload = function (e) {
+
+					$('#img_pencegahan_'+num).attr('src', e.target.result);
+
+				}
+
+				reader.readAsDataURL(this.files[0]);
+			}
+		});
 
 		function get_stock(elem) {
 			var num = $(elem).attr('id').split("_")[2];
