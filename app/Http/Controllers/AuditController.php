@@ -272,7 +272,7 @@ class AuditController extends Controller
     WHERE
     kategori in ('S-Up And EHS Patrol Presdir','5S Patrol GM')
     GROUP BY
-    bulan
+    tahun,monthname(tanggal)
     order by tahun, month(tanggal) ASC"
   );
 
