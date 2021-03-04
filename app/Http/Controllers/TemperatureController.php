@@ -1092,17 +1092,11 @@ class TemperatureController extends Controller
 
                for ($i = 0;$i < count($suhu); $i++) {
                     $fc = DB::SELECT("SELECT
-                         employee_id,
-                         employee_syncs.name,
-                         email 
+                         * 
                     FROM
-                         employee_syncs
-                         JOIN users ON users.username = employee_syncs.employee_id 
+                         send_emails 
                     WHERE
-                         ( position LIKE '%Foreman%' AND department = '".$suhu[$i]['department']."' and email like '%music.yamaha.com%' and employee_syncs.end_date is null) 
-                         OR (
-                         position LIKE '%Chief%' 
-                         AND department = '".$suhu[$i]['department']."' and email like '%music.yamaha.com%' and employee_syncs.end_date is null)");
+                         remark = '".$suhu[$i]['section']."'");
 
 
                     if (count($fc) > 0) {
