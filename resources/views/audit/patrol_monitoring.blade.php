@@ -43,6 +43,14 @@
     color: black;
   }
 
+  #example4 {
+    border:1px solid black;    
+  }
+
+  #example4 > tbody > tr > td {
+    color: black;
+  }
+
   .dataTables_length {
     color: white;
   }
@@ -200,7 +208,7 @@
           </div>
         </div>
 
-        <div class="col-md-12" style="padding: 1px !important">
+        <!-- <div class="col-md-12" style="padding: 1px !important">
             <div class="col-xs-2">
               <div class="input-group date">
                 <div class="input-group-addon bg-green" style="border: none;">
@@ -209,10 +217,14 @@
                 <input type="text" class="form-control datepicker2" id="month" name="month" placeholder="Select Month" onchange="drawChart()">
               </div>
             </div>
+        </div> -->
+
+        <div class="col-md-5" style="padding-top: 30px;">
+          <div id="chart_kategori" style="width: 99%; height: 300px;"></div>
         </div>
 
-        <div class="col-md-12" style="padding-top: 30px;">
-          <div id="chart_kategori" style="width: 99%; height: 300px;"></div>
+        <div class="col-md-7" style="padding-top: 30px;">
+          <div id="chart_bulan" style="width: 99%; height: 300px;"></div>
         </div>
 
       <?php } ?>
@@ -269,6 +281,43 @@
           <div class="row">
             <div class="col-md-12">
               <table id="example3" class="table table-striped table-bordered table-hover" style="width: 100%;color: black"> 
+                <thead style="background-color: rgba(126,86,134,.7);">
+                  <tr>
+                    <th>Kategori</th>
+                    <th>Tanggal</th>
+                    <th>Lokasi</th>
+                    <th>Auditee</th>
+                    <th>Poin Judul</th>
+                    <th>Note</th>
+                    <th>Foto</th>
+                    <th>Penanganan</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="myModalBulan">
+    <div class="modal-dialog modal-lg" style="width:1250px;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 style="float: right;" id="modal-title"></h4>
+          <h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
+          <br><h4 class="modal-title" id="judul_table_bulan"></h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12">
+              <table id="example4" class="table table-striped table-bordered table-hover" style="width: 100%;color: black"> 
                 <thead style="background-color: rgba(126,86,134,.7);">
                   <tr>
                     <th>Kategori</th>
@@ -458,6 +507,12 @@
         var belum_ditangani_all = [];
         var sudah_ditangani_all = [];
 
+        var bulan = [];
+        var belum_ditangani_gm_bulan = [];
+        var sudah_ditangani_gm_bulan = [];
+        var belum_ditangani_presdir_bulan = [];
+        var sudah_ditangani_presdir_bulan = [];
+
         $.each(result.datas, function(key, value) {
           tgl.push(value.tanggal);
           belum_ditangani_gm.push(parseInt(value.jumlah_belum_gm));
@@ -470,6 +525,14 @@
           kategori.push(value.kategori);
           belum_ditangani_all.push(parseInt(value.jumlah_belum));
           sudah_ditangani_all.push(parseInt(value.jumlah_sudah));
+        });
+
+        $.each(result.data_bulan, function(key, value) {
+          bulan.push(value.bulan);
+          belum_ditangani_gm_bulan.push(parseInt(value.jumlah_belum_gm));
+          sudah_ditangani_gm_bulan.push(parseInt(value.jumlah_sudah_gm));
+          belum_ditangani_presdir_bulan.push(parseInt(value.jumlah_belum_presdir));
+          sudah_ditangani_presdir_bulan.push(parseInt(value.jumlah_sudah_presdir));
         });
 
         $('#chart').highcharts({
@@ -562,7 +625,14 @@
           {
             name: 'Temuan GM Open',
             data: belum_ditangani_gm,
-            color: "#dd4b39"
+            color: { 
+              pattern: {
+                path: 'M 0 1.5 L 2.5 1.5 L 2.5 0 M 2.5 5 L 2.5 3.5 L 5 3.5',
+                color: "#ffea00 ",
+                width: 5,
+                height: 5
+              }
+            }
           },
           {
             name: 'Temuan Presdir Open',
@@ -610,7 +680,7 @@
             backgroundColor: null
           },
           title: {
-            text: null,
+            text: "Temuan Berdasarkan Jenis Patrol",
           },
           xAxis: {
             type: 'category',
@@ -640,14 +710,6 @@
             }
           },
           legend: {
-            align: 'right',
-            x: -30,
-            verticalAlign: 'top',
-            y: 10,
-            floating: true,
-            borderWidth: 1,
-            shadow: false,
-            reversed: true,
             itemStyle:{
               color: "white",
               fontSize: "12px",
@@ -694,12 +756,156 @@
           {
             name: 'Temuan Belum Ditangani',
             data: belum_ditangani_all,
-            color: "#dd4b39"
+            color: { 
+              pattern: {
+                path: 'M 0 1.5 L 2.5 1.5 L 2.5 0 M 2.5 5 L 2.5 3.5 L 5 3.5',
+                color: "#dd4b39",
+                width: 5,
+                height: 5
+              }
+            }
           },
           {
             name: 'Temuan Sudah Ditangani',
             data: sudah_ditangani_all,
-            color: "#00a65a"
+            color: { 
+              pattern: {
+                path: 'M 0 1.5 L 2.5 1.5 L 2.5 0 M 2.5 5 L 2.5 3.5 L 5 3.5',
+                color: "#357a38",
+                width: 5,
+                height: 5
+              }
+            }
+          }
+          ]
+        })
+
+        $('#chart_bulan').highcharts({
+          chart: {
+            type: 'column',
+            backgroundColor: null
+          },
+          title: {
+            text: "Temuan Patrol Bulanan",
+          },
+          xAxis: {
+            type: 'category',
+            categories: bulan,
+            lineWidth:2,
+            lineColor:'#9e9e9e',
+            gridLineWidth: 1,
+            labels: {
+              style: {
+                fontWeight:'Bold'
+              }
+            }
+          },
+          yAxis: {
+            lineWidth:2,
+            lineColor:'#fff',
+            type: 'linear',
+            title: {
+              text: 'Total Temuan'
+            },
+            stackLabels: {
+              enabled: true,
+              style: {
+                fontWeight: 'bold',
+                color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+              }
+            }
+          },
+          legend: {
+            itemStyle:{
+              color: "white",
+              fontSize: "12px",
+              fontWeight: "bold",
+
+            }
+          },
+          plotOptions: {
+            series: {
+              cursor: 'pointer',
+              point: {
+                events: {
+                  click: function () {
+                    ShowModalBulan(this.category,this.series.name);
+                  }
+                }
+              },
+              dataLabels: {
+                enabled: false,
+                format: '{point.y}'
+              }
+            },
+            column: {
+              color:  Highcharts.ColorString,
+              stacking: 'normal',
+              pointPadding: 0.93,
+              groupPadding: 0.93,
+              borderWidth: 1,
+              dataLabels: {
+                enabled: true
+              }
+            }
+          },
+          credits: {
+            enabled: false
+          },
+
+          tooltip: {
+            formatter:function(){
+              return this.series.name+' : ' + this.y;
+            }
+          },
+          series: [
+          {
+            name: 'Temuan GM Open',
+            data: belum_ditangani_gm_bulan,
+            color: { 
+              pattern: {
+                path: 'M 0 1.5 L 2.5 1.5 L 2.5 0 M 2.5 5 L 2.5 3.5 L 5 3.5',
+                color: "#ffea00 ",
+                width: 5,
+                height: 5
+              }
+            }
+          },
+          {
+            name: 'Temuan Presdir Open',
+            data: belum_ditangani_presdir_bulan,
+            color: { 
+              pattern: {
+                path: 'M 0 1.5 L 2.5 1.5 L 2.5 0 M 2.5 5 L 2.5 3.5 L 5 3.5',
+                color: "#b22a00",
+                width: 5,
+                height: 5
+              }
+            }
+          },
+          {
+            name: 'Temuan GM Close',
+            data: sudah_ditangani_gm_bulan,
+            color: { 
+              pattern: {
+                path: 'M 0 1.5 L 2.5 1.5 L 2.5 0 M 2.5 5 L 2.5 3.5 L 5 3.5',
+                color: "#2c387e",
+                width: 5,
+                height: 5
+              }
+            }
+          },
+          {
+            name: 'Temuan Presdir Close',
+            data: sudah_ditangani_presdir_bulan,
+            color: { 
+              pattern: {
+                path: 'M 0 1.5 L 2.5 1.5 L 2.5 0 M 2.5 5 L 2.5 3.5 L 5 3.5',
+                color: "#357a38",
+                width: 5,
+                height: 5
+              }
+            }
           }
           ]
         })
@@ -874,6 +1080,89 @@
 
     $('#judul_table_category').append().empty();
     $('#judul_table_category').append('<center><b>Temuan Patrol '+kategori+'</b></center>'); 
+  }
+
+
+  function ShowModalBulan(bulan, status) {
+    tabel = $('#example4').DataTable();
+    tabel.destroy();
+
+    $("#myModalBulan").modal("show");
+
+    var table = $('#example4').DataTable({
+      'dom': 'Bfrtip',
+      'responsive': true,
+      'lengthMenu': [
+      [ 10, 25, 50, -1 ],
+      [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+      ],
+      'buttons': {
+        buttons:[
+        {
+          extend: 'pageLength',
+          className: 'btn btn-default',
+          // text: '<i class="fa fa-print"></i> Show',
+        },
+        {
+          extend: 'copy',
+          className: 'btn btn-success',
+          text: '<i class="fa fa-copy"></i> Copy',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        {
+          extend: 'excel',
+          className: 'btn btn-info',
+          text: '<i class="fa fa-file-excel-o"></i> Excel',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        {
+          extend: 'print',
+          className: 'btn btn-warning',
+          text: '<i class="fa fa-print"></i> Print',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        ]
+      },
+      'paging': true,
+      'lengthChange': true,
+      'searching': true,
+      'ordering': true,
+      'order': [],
+      'info': true,
+      'autoWidth': true,
+      "sPaginationType": "full_numbers",
+      "bJQueryUI": true,
+      "bAutoWidth": false,
+      "processing": true,
+      "serverSide": true,
+      "ajax": {
+        "type" : "get",
+        "url" : "{{ url("index/audit_patrol/detail_bulan") }}",
+        "data" : {
+          bulan : bulan,
+          status : status
+        }
+      },
+      "columns": [
+      {"data": "kategori", "width": "5%"},
+      {"data": "tanggal" , "width": "5%"},
+      {"data": "lokasi" , "width": "5%"},
+      {"data": "auditee_name" , "width": "5%"},
+      {"data": "point_judul", "width": "5%"},
+      {"data": "note", "width": "15%"},
+      {"data": "foto", "width": "20%"},
+      {"data": "penanganan", "width": "25%"}
+      ]    
+    });
+
+    $('#judul_table_bulan').append().empty();
+    $('#judul_table_bulan').append('<center><b>Patrol Bulan '+bulan+' '+status+'</b></center>'); 
   }
 
 

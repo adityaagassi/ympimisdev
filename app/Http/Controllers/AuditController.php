@@ -259,12 +259,28 @@ class AuditController extends Controller
   GROUP BY
     kategori");
 
+  $data_bulan = db::select("
+    SELECT
+    MONTHNAME(tanggal) as bulan,
+    sum( CASE WHEN status_ditangani IS NULL AND kategori = '5S Patrol GM' THEN 1 ELSE 0 END ) AS jumlah_belum_gm,
+    sum( CASE WHEN status_ditangani IS NOT NULL AND kategori = '5S Patrol GM' THEN 1 ELSE 0 END ) AS jumlah_sudah_gm,
+    sum( CASE WHEN status_ditangani IS NULL AND kategori = 'S-Up And EHS Patrol Presdir' THEN 1 ELSE 0 END ) AS jumlah_belum_presdir,
+    sum( CASE WHEN status_ditangani IS NOT NULL AND kategori = 'S-Up And EHS Patrol Presdir' THEN 1 ELSE 0 END ) AS jumlah_sudah_presdir 
+    FROM
+    audit_all_results 
+    WHERE
+    kategori in ('S-Up And EHS Patrol Presdir','5S Patrol GM')
+    GROUP BY
+    bulan"
+  );
+
   $year = date('Y');
 
   $response = array(
     'status' => true,
     'datas' => $data,
     'data_kategori' => $data_kategori,
+    'data_bulan' => $data_bulan,
     'year' => $year
   );
 
@@ -287,7 +303,7 @@ public function detailMonitoring(Request $request){
 
   if ($status != null) {
 
-   if ($status == "Temuan GM Open") {
+  if ($status == "Temuan GM Open") {
     $stat = 'and audit_all_results.status_ditangani is null and kategori = "5S Patrol GM"';
   }
   else if ($status == "Temuan Presdir Open"){
@@ -370,6 +386,64 @@ public function detailMonitoringCategory(Request $request){
     }
 
     $query = "select audit_all_results.* FROM audit_all_results where audit_all_results.deleted_at is null and kategori = '".$kategori."' ".$stat."";
+
+    $detail = db::select($query);
+
+    return DataTables::of($detail)
+
+    ->editColumn('kategori', function($detail){
+      $kategori = '';
+
+      if($detail->kategori == "S-Up And EHS Patrol Presdir"){
+       $kategori = "Presdir";
+     }else if ($detail->kategori == "5S Patrol GM"){
+       $kategori = "GM";
+     }
+
+     return $kategori;
+    })
+
+    ->editColumn('tanggal', function($detail){
+      return date('d-M-Y', strtotime($detail->tanggal));
+    })
+
+    ->editColumn('foto', function($detail){
+      return '<img src="'.url('files/patrol').'/'.$detail->foto.'" width="250">';
+    })
+
+    ->editColumn('penanganan', function($detail){
+      return $detail->penanganan;
+    })
+
+    ->rawColumns(['tanggal' => 'tanggal', 'foto' => 'foto','penanganan' => 'penanganan'])
+    ->make(true);
+}
+
+public function detailMonitoringBulan(Request $request){
+
+    $bulan = $request->get('bulan');
+    $status = $request->get('status');
+
+    if ($status != null) {
+
+      if ($status == "Temuan GM Open") {
+        $stat = 'and audit_all_results.status_ditangani is null and kategori = "5S Patrol GM"';
+      }
+      else if ($status == "Temuan Presdir Open"){
+        $stat = 'and audit_all_results.status_ditangani is null and kategori = "S-Up And EHS Patrol Presdir"';
+      }
+      else if ($status == "Temuan GM Close") {
+        $stat = 'and audit_all_results.status_ditangani = "close" and kategori = "5S Patrol GM"';
+      }
+      else if ($status == "Temuan Presdir Close") {
+        $stat = 'and audit_all_results.status_ditangani = "close" and kategori = "S-Up And EHS Patrol Presdir"';
+      }
+
+    } else{
+      $stat = '';
+    }
+
+    $query = "select audit_all_results.* FROM audit_all_results where audit_all_results.deleted_at is null and monthname(tanggal) = '".$bulan."' ".$stat."";
 
     $detail = db::select($query);
 

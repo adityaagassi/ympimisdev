@@ -897,6 +897,11 @@ Route::group(['nav' => 'M7', 'middleware' => 'permission'], function(){
 	Route::post('import/production_schedule', 'ProductionScheduleController@import');
 
 
+
+
+	Route::post('import/production_schedule_kd', 'ProductionScheduleController@importKd');
+
+
 	Route::get('index/generate_production_schedule', 'ProductionScheduleController@indexGenerateSchedule');
 	Route::get('fetch/generate_production_schedule', 'ProductionScheduleController@generateScheduleStepOne');
 
@@ -1387,6 +1392,9 @@ Route::get('get/sakurentsu/3m', 'SakurentsuController@get_employee_sign');
 Route::post('post/sakurentsu/3m/sign', 'SakurentsuController@signing_tiga_em');
 Route::get('email/sakurentsu/3m/unsigned', 'SakurentsuController@mail_unsigned_tiga_em');
 
+//Approve dari email
+Route::get('post/sakurentsu/3m/sign/{id_three_m}/{position}', 'SakurentsuController@approve_tiga_em');
+
 
 //Tugaskan ke PIC
 Route::get('index/sakurentsu/assign/{sk_num}/{cat}', 'SakurentsuController@index_assign_to_staff');
@@ -1406,7 +1414,12 @@ Route::post('post/sakurentsu/3m/implementation/sign', 'SakurentsuController@sign
 Route::get('index/sakurentsu/monitoring/3m', 'SakurentsuController@tiga_3m_monitoring');
 Route::get('fetch/sakurentsu/monitoring/3m', 'SakurentsuController@fetch_tiga_em_monitoring');
 Route::get('fetch/sakurentsu/3m/dept_sign/{id_three_m}/{stat}', 'SakurentsuController@fetch_department_sign');
+Route::get('fetch/sakurentsu/monitoring/chart_detail', 'SakurentsuController@fetch_monitoring_detail');
 
+//Information
+Route::get('index/sakurentsu/information/receive/{sk_num}', 'SakurentsuController@index_receive_information');
+Route::post('post/sakurentsu/information/receive', 'SakurentsuController@post_receive_information');
+Route::get('fetch/sakurentsu/information/detail/{sk_num}', 'SakurentsuController@detail_receive_information');
 
 //Trial Request
 Route::get('index/trial_request', 'TrialRequestController@index_trial_request');
@@ -1414,12 +1427,19 @@ Route::get('fetch/trial_request', 'TrialRequestController@fetch_trial_request');
 Route::post('create/trial_request', 'TrialRequestController@create_trial_request');
 
 //TRIAL (TEMP)
+Route::post('upload/sakurentsu/trial_req/notulen', 'SakurentsuController@upload_trial_notulen');
+
 Route::get('post/sakurentsu/trial_req/{sakurentsu_number}', 'SakurentsuController@post_trial_request');
 Route::get('index/sakurentsu/list_trial_temp', 'SakurentsuController@index_trial_request_temp');
 Route::get('fetch/sakurentsu/list_trial', 'SakurentsuController@fetch_trial_request2');
 Route::post('upload/sakurentsu/trial', 'SakurentsuController@upload_trial_request');
 Route::get('index/sakurentsu/trial/pss/{sk_num}', 'SakurentsuController@index_trial_pss');
 Route::get('post/sakurentsu/pss', 'SakurentsuController@save_pss_desc');
+Route::get('index/sakurentsu/pss/upload/{sk_num}', 'SakurentsuController@index_upload_pss');
+Route::get('upload/sakurentsu/trial_req/pss', 'SakurentsuController@upload_pss');
+Route::post('upload/sakurentsu/trial_req/pss/doc', 'SakurentsuController@upload_pss_doc');
+Route::get('receive/sakurentsu/trial/meeting/{sk_id}', 'SakurentsuController@receive_trial_pc');
+
 
 //TRIAL
 Route::get('index/sakurentsu/list_trial', 'SakurentsuController@index_trial_request');
@@ -3361,6 +3381,7 @@ Route::get('index/recorder_process', 'RecorderProcessController@index');
 Route::get('index/recorder_process_push_block/{remark}', 'RecorderProcessController@index_push_block');
 Route::get('index/fetch_push_block', 'RecorderProcessController@fetch_push_block');
 Route::get('fetch/fetch_cavity', 'RecorderProcessController@fetch_cavity');
+Route::get('fetch/cavity_detail', 'RecorderProcessController@fetch_cavity_detail');
 Route::get('scan/recorder', 'RecorderProcessController@scan_tag');
 Route::post('index/push_block_recorder/create', 'RecorderProcessController@create');
 Route::post('index/push_block_recorder/create_temp', 'RecorderProcessController@create_temp');
@@ -3660,6 +3681,7 @@ Route::get('index/audit_patrol/monitoring', 'AuditController@indexMonitoring');
 Route::get('fetch/audit_patrol/monitoring', 'AuditController@fetchMonitoring');
 Route::get('index/audit_patrol/detail', 'AuditController@detailMonitoring');
 Route::get('index/audit_patrol/detail_category', 'AuditController@detailMonitoringCategory');
+Route::get('index/audit_patrol/detail_bulan', 'AuditController@detailMonitoringBulan');
 Route::get('index/audit_patrol/table', 'AuditController@fetchTable_audit');
 Route::get('index/audit_patrol/detail_penanganan', 'AuditController@detailPenanganan');
 Route::post('post/audit_patrol/penanganan', 'AuditController@postPenanganan');
@@ -3850,6 +3872,7 @@ Route::get('fetch/office_clock/visitor3', 'OfficeClockController@fetchVisitor3')
 Route::get('index/display/guest_room', 'OfficeClockController@guest_room');
 Route::get('index/display/guest_room2', 'OfficeClockController@guest_room2');
 Route::get('fetch/office_clock/weather', 'OfficeClockController@fetchWeather');
+Route::get('fetch/office_clock/batch', 'OfficeClockController@fetchBatch');
 
 //MAINTENANCE
 
@@ -3880,6 +3903,8 @@ Route::get('fetch/maintenance/spk/monitoring', 'MaintenanceController@fetchSPKPr
 Route::get('fetch/maintenance/spk/monitoring/detail', 'MaintenanceController@fetchSPKProgressDetail');
 
 Route::get('index/maintenance/spk/weekly', 'MaintenanceController@indexSPKWeekly');
+Route::get('index/maintenance/machine/log', 'MaintenanceController@indexMachineHistory');
+Route::get('fetch/maintenance/machine/history', 'MaintenanceController@fetchMachineHistory');
 
 Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::get('index/maintenance/spk/operator', 'MaintenanceController@indexOperatorMonitoring');
@@ -3986,6 +4011,9 @@ Route::get('index/maintenance/pm/monitoring', 'MaintenanceController@indexPlanne
 Route::get('index/maintenance/pm/schedule', 'MaintenanceController@indexPlannedSchedule');
 Route::get('fetch/maintenance/pm/schedule', 'MaintenanceController@getPlannedSchedule');
 // Route::get('fetch/maintenance/planned', 'MaintenanceController@fetchPlanned');
+
+// ------------------------  OPERATOR POSITION  ----------------------
+Route::get('index/maintenance/operator/position', 'MaintenanceController@indexOperatorPosition');
 
 //Assemblies
 Route::get('index/kensa/{location}', 'AssemblyProcessController@kensa');
@@ -4220,33 +4248,54 @@ Route::get('fetch/scrap_detail', 'ScrapController@fetchScrapDetail');
 Route::get('fetch/kd_scrap_closure', 'ScrapController@fetchKdScrapClosure');
 Route::post('scan/scrap_warehouse', 'ScrapController@scanScrapWarehouse');
 
-
-
 //Mutasi
-Route::get('home/mutasi', 'MutasiController@homeMutasi');
-Route::get('fetch/mutasi/resume', 'MutasiController@fetchResumeMutasi');
-// Route::get('fetch/trial_request', 'TrialRequestController@fetch_trial_request');
-// ========================================
 Route::get('dashboard/mutasi', 'MutasiController@dashboard');
+Route::get('dashboard_ant/mutasi', 'MutasiController@dashboardAnt');
+Route::get('fetch/mutasi/resume', 'MutasiController@fetchResumeMutasi');
+Route::get('fetch/mutasi/resume_ant', 'MutasiController@fetchResumeMutasiAnt');
 Route::get('dashboard/mutasi/get_employee', 'MutasiController@get_employee');
 Route::get('dashboard/mutasi/getPosition', 'MutasiController@getPosition');
+//Create
 Route::get('create/mutasi', 'MutasiController@create');
 Route::post('create/mutasi', 'MutasiController@store');
 Route::get('create_ant/mutasi', 'MutasiController@createAnt');
 Route::post('create_ant/mutasi', 'MutasiController@storeAnt');
-Route::get('destroy/mutasi/{id}', 'MutasiController@destroy');
-Route::get('show/mutasi/{id}', 'MutasiController@show');
-
 //Rejected
 Route::get('rejected/{id}', 'MutasiController@rejected');
-//Approval
+Route::get('rejectedantar_departemen/{id}', 'MutasiController@rejectedAnt');
+//Approval Satu Departemen
 Route::get('approvechief_or_foreman/{id}', 'MutasiController@mutasi_approvalchief_or_foreman');
 Route::get('approvemanager/{id}', 'MutasiController@mutasi_approvalmanager');
 Route::get('approvegm/{id}', 'MutasiController@mutasi_approvalgm');
+//Aproval Antar Departemen
+Route::get('approvechief_or_foremanasal/{id}', 'MutasiController@mutasi_approvalchief_or_foremanAsal');
+Route::get('approve_manager_asal/{id}', 'MutasiController@mutasi_approval_managerAsal');
+Route::get('approve_dgm_asal/{id}', 'MutasiController@mutasi_approval_dgmAsal');
+Route::get('approve_gm_asal/{id}', 'MutasiController@mutasi_approval_gmAsal');
+Route::get('approvechief_or_foremantujuan/{id}', 'MutasiController@mutasi_approvalchief_or_foremanTujuan');
+Route::get('approve_manager_tujuan/{id}', 'MutasiController@mutasi_approval_managerTujuan');
+Route::get('approve_dgm_tujuan/{id}', 'MutasiController@mutasi_approval_dgmTujuan');
+Route::get('approve_gm_tujuan/{id}', 'MutasiController@mutasi_approval_gmTujuan');
+Route::get('approvegm_division/{id}', 'MutasiController@mutasi_approvalGM_Division');
+Route::get('approvemanager_hrga/{id}', 'MutasiController@mutasi_approvalManager_Hrga');
+Route::get('approvepres_dir/{id}', 'MutasiController@mutasi_approvalPres_Dir');
+Route::get('approvedirektur_hr/{id}', 'MutasiController@mutasi_approvalDirektur_Hr');
+// ============================================================================
+Route::get('mutasi_ant/verifikasi/{id}', 'MutasiController@verifikasi_mutasi_ant');
+Route::post('mutasi_ant/approval/{id}', 'MutasiController@approval_mutasi_ant');
+Route::get('mutasi_ant/report/{id}', 'MutasiController@report_mutasi_ant');
+//Show
+Route::get('mutasi/show/{id}', 'MutasiController@showApproval');
+Route::get('mutasi_ant/show/{id}', 'MutasiController@showAntApproval');
+//Fetch Detail
+Route::get('fetch/mutasi_ant', 'MutasiController@fetchMutasiDetail');
+Route::get('view/mutasi_ant', 'MutasiController@viewMutasiDetail');
+Route::get('fetch/mutasi_ant/monitoringant', 'MutasiController@fetchMonitoringMutasiAnt');
 
 
-// 	Route::get('edit/navigation/{id}', 'NavigationController@edit');
-// 	Route::post('edit/navigation/{id}', 'NavigationController@update');
+Route::get('mutasi/cek_email', 'MutasiController@viewCekEmail');
+
+
 
 //Warehouse
 Route::get('index/warehouse', 'WarehouseController@index');
@@ -4268,6 +4317,8 @@ Route::get('scan/repair/operator', 'SandingController@scanInjectionOperator');
 Route::get('index/repair/fetch_sanding', 'SandingController@fetchListSanding');
 Route::post('input/repair/sanding', 'SandingController@inputSanding');
 Route::get('index/repair/fetch_resume_sanding', 'SandingController@fetchResumeSanding');
+Route::get('index/sanding/comparison', 'SandingController@indexSandingComparison');
+Route::get('fetch/sanding/comparison', 'SandingController@fetchComparison');
 
 
 //Master Kanban Tools
@@ -4316,3 +4367,10 @@ Route::get('fetch/health/detail', 'HealthController@fetchDetailHealth');
 Route::get('index/oculus/auth/{employee_id}', 'OculusController@indexAuth');
 Route::get('index/oculus/result/{employee_id}/{answer}/{sub_answer}/{result}', 'OculusController@indexResult');
 Route::get('index/oculus/fetch_score/{employee_id}', 'OculusController@fetchResult');
+
+
+//Reed Project
+Route::get('index/reed', 'ReedSyntheticController@indexReed');
+Route::get('index/reed/reed_verification', 'ReedSyntheticController@indexReedVerification');
+
+
