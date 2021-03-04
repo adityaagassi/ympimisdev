@@ -508,6 +508,7 @@
         var sudah_ditangani_all = [];
 
         var bulan = [];
+        var tahun = [];
         var belum_ditangani_gm_bulan = [];
         var sudah_ditangani_gm_bulan = [];
         var belum_ditangani_presdir_bulan = [];
@@ -529,10 +530,11 @@
 
         $.each(result.data_bulan, function(key, value) {
           bulan.push(value.bulan);
-          belum_ditangani_gm_bulan.push(parseInt(value.jumlah_belum_gm));
-          sudah_ditangani_gm_bulan.push(parseInt(value.jumlah_sudah_gm));
-          belum_ditangani_presdir_bulan.push(parseInt(value.jumlah_belum_presdir));
-          sudah_ditangani_presdir_bulan.push(parseInt(value.jumlah_sudah_presdir));
+          tahun.push(value.tahun);
+          belum_ditangani_gm_bulan.push({y: parseInt(value.jumlah_belum_gm),key:value.tahun});
+          sudah_ditangani_gm_bulan.push({y: parseInt(value.jumlah_sudah_gm),key:value.tahun});
+          belum_ditangani_presdir_bulan.push({y: parseInt(value.jumlah_belum_presdir),key:value.tahun});
+          sudah_ditangani_presdir_bulan.push({y: parseInt(value.jumlah_sudah_presdir),key:value.tahun});
         });
 
         $('#chart').highcharts({
@@ -795,8 +797,8 @@
             lineColor:'#9e9e9e',
             gridLineWidth: 1,
             labels: {
-              style: {
-                fontWeight:'Bold'
+              formatter: function (e) {
+                return ''+ this.value +' '+tahun[(this.pos)];
               }
             }
           },

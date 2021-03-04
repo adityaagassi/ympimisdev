@@ -262,6 +262,7 @@ class AuditController extends Controller
   $data_bulan = db::select("
     SELECT
     MONTHNAME(tanggal) as bulan,
+    year(tanggal) as tahun,
     sum( CASE WHEN status_ditangani IS NULL AND kategori = '5S Patrol GM' THEN 1 ELSE 0 END ) AS jumlah_belum_gm,
     sum( CASE WHEN status_ditangani IS NOT NULL AND kategori = '5S Patrol GM' THEN 1 ELSE 0 END ) AS jumlah_sudah_gm,
     sum( CASE WHEN status_ditangani IS NULL AND kategori = 'S-Up And EHS Patrol Presdir' THEN 1 ELSE 0 END ) AS jumlah_belum_presdir,
@@ -271,7 +272,8 @@ class AuditController extends Controller
     WHERE
     kategori in ('S-Up And EHS Patrol Presdir','5S Patrol GM')
     GROUP BY
-    bulan"
+    bulan
+    order by tahun, month(tanggal) ASC"
   );
 
   $year = date('Y');
