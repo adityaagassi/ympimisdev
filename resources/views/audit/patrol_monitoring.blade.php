@@ -194,6 +194,23 @@
 
       <?php if(Auth::user()->role_code == "MIS" || Auth::user()->role_code == "GA" || Auth::user()->role_code == "GA-SPL") { ?>
 
+        <div class="col-xs-12">
+          <div class="row">
+            <hr style="border: 1px solid red;background-color: red">
+          </div>
+        </div>
+
+        <div class="col-md-12" style="padding: 1px !important">
+            <div class="col-xs-2">
+              <div class="input-group date">
+                <div class="input-group-addon bg-green" style="border: none;">
+                  <i class="fa fa-calendar"></i>
+                </div>
+                <input type="text" class="form-control datepicker2" id="month" name="month" placeholder="Select Month" onchange="drawChart()">
+              </div>
+            </div>
+        </div>
+
         <div class="col-md-12" style="padding-top: 30px;">
           <div id="chart_kategori" style="width: 99%; height: 300px;"></div>
         </div>
@@ -543,29 +560,17 @@
           },
           series: [
           {
-            name: 'Temuan Presdir Open',
-            data: belum_ditangani_presdir,
-            color: { 
-              pattern: {
-                path: 'M 0 1.5 L 2.5 1.5 L 2.5 0 M 2.5 5 L 2.5 3.5 L 5 3.5',
-                color: "#dd4b39",
-                width: 5,
-                height: 5
-              }
-            }
-          },
-          {
             name: 'Temuan GM Open',
             data: belum_ditangani_gm,
             color: "#dd4b39"
           },
           {
-            name: 'Temuan Presdir Close',
-            data: sudah_ditangani_presdir,
+            name: 'Temuan Presdir Open',
+            data: belum_ditangani_presdir,
             color: { 
               pattern: {
                 path: 'M 0 1.5 L 2.5 1.5 L 2.5 0 M 2.5 5 L 2.5 3.5 L 5 3.5',
-                color: "#00a65a",
+                color: "#b22a00",
                 width: 5,
                 height: 5
               }
@@ -574,7 +579,26 @@
           {
             name: 'Temuan GM Close',
             data: sudah_ditangani_gm,
-            color: "#00a65a"
+            color: { 
+              pattern: {
+                path: 'M 0 1.5 L 2.5 1.5 L 2.5 0 M 2.5 5 L 2.5 3.5 L 5 3.5',
+                color: "#2c387e",
+                width: 5,
+                height: 5
+              }
+            }
+          },
+          {
+            name: 'Temuan Presdir Close',
+            data: sudah_ditangani_presdir,
+            color: { 
+              pattern: {
+                path: 'M 0 1.5 L 2.5 1.5 L 2.5 0 M 2.5 5 L 2.5 3.5 L 5 3.5',
+                color: "#357a38",
+                width: 5,
+                height: 5
+              }
+            }
           }
           ]
         })
