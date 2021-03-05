@@ -234,68 +234,73 @@
 						$('#diamond').append(point_data);
 
 						if(value.point_no == 1){
-							var x = 750;
-							var y = 1910;
+							var x = 190;
+							var y = 777;
 						}
 
 						if(value.point_no == 2){
-							var x = 750;
-							var y = 760;
+							var x =218;
+							var y = 802;
 						}
 
 						if(value.point_no == 3){
-							var x = 750;
-							var y = 860;
+							var x = 245;
+							var y = 395;
 						}
 
 						if(value.point_no == 4){
-							var x = 750;
-							var y = 960;
+							var x = 250;
+							var y = 428;
 						}
 
 						if(value.point_no == 5){
-							var x = 750;
-							var y = 1060;
+							var x = 250;
+							var y = 461;
 						}
 
 						if(value.point_no == 6){
-							var x = 160;
-							var y = 1380;
+							var x = 250;
+							var y = 493;
 						}
 
 						if(value.point_no == 7){
-							var x = 220;
-							var y = 1490;
+							var x = 65;
+							var y = 585;
 						}
 
 						if(value.point_no == 8){
-							var x = 260;
-							var y = 1620;
+							var x = 80;
+							var y = 625;
 						}
 
 						if(value.point_no == 9){
-							var x = 1340;
-							var y = 1280;
+							var x = 90;
+							var y = 665;
 						}
 
 						if(value.point_no == 10){
-							var x = 1340;
-							var y = 1400;
+							var x = 430;
+							var y = 570;
 						}
 
 						if(value.point_no == 11){
-							var x = 1340;
-							var y = 1510;
+							var x = 420;
+							var y = 605;
 						}
 
 						if(value.point_no == 12){
-							var x = 1340;
-							var y = 1620;
+							var x = 430;
+							var y = 643;
 						}
 
 						if(value.point_no == 13){
-							var x = 1340;
-							var y = 1740;
+							var x = 425;
+							var y = 678;
+						}
+
+						if(value.point_no == 14){
+							var x = 422;
+							var y = 713;
 						}
 
 						var div = document.getElementById('dot_diamond');
@@ -371,63 +376,63 @@
 						$('#k3').append(point_data);
 
 						if(value.point_no == 1){
-							var x = 100;
-							var y = 490;
+							var x = 45;
+							var y = 325;
 						}
 
 						if(value.point_no == 2){
-							var x = 100;
-							var y = 670;
+							var x = 45;
+							var y = 385;
 						}
 
 						if(value.point_no == 3){
-							var x = 100;
-							var y = 920;
+							var x = 45;
+							var y = 460;
 						}
 
 						if(value.point_no == 4){
-							var x = 100;
-							var y = 1100;
+							var x = 45;
+							var y = 515;
 						}
 
 						if(value.point_no == 5){
-							var x = 100;
-							var y = 1280;
+							var x = 45;
+							var y = 575;
 						}
 
 						if(value.point_no == 6){
-							var x = 100;
-							var y = 1530;
+							var x = 45;
+							var y = 650;
 						}
 
 						if(value.point_no == 7){
-							var x = 100;
-							var y = 1710;
+							var x = 45;
+							var y = 705;
 						}
 
 						if(value.point_no == 8){
-							var x = 100;
-							var y = 1890;
+							var x = 45;
+							var y = 765;
 						}
 
 						if(value.point_no == 9){
-							var x = 100;
-							var y = 2080;
+							var x = 45;
+							var y = 820;
 						}
 
 						if(value.point_no == 10){
-							var x = 100;
-							var y = 2260;
+							var x = 45;
+							var y = 875;
 						}
 
 						if(value.point_no == 11){
-							var x = 100;
-							var y = 2440;
+							var x = 45;
+							var y = 935;
 						}
 
 						if(value.point_no == 12){
-							var x = 100;
-							var y = 2620;
+							var x = 45;
+							var y = 990;
 						}
 
 						var div = document.getElementById('dot_k3');
