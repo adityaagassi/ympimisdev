@@ -542,6 +542,17 @@ class MaintenanceController extends Controller
 		))->with('page','Machine Logs')->with('head', 'Maintenance');
 	}
 
+	public function indexOperatorPosition()
+	{
+		$title = 'Position Operator Maintenance';
+		$title_jp = '??';
+
+		return view('maintenance.operator_position', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page','Operator Position')->with('head', 'Maintenance');
+	}
+
 	// -----------------------  END INDEX --------------------
 
 	public function fetchMaintenance(Request $request)
