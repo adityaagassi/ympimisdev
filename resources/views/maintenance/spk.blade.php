@@ -915,22 +915,16 @@ function startWork() {
 			var pekerjaan_detail = $("#pekerjaan_detail").val();
 
 			if (penyebab == "" || penanganan == "" || pencegahan == "") {
-				if (pencegahan == "" && (pekerjaan_detail.split(' - ')[0] == 'Perbaikan' || pekerjaan_detail.split(' - ')[0] == 'Penggantian')) {
-					openErrorGritter('Error', 'Ada Kolom yang Kosong');
-					return false;
-				} else if(pekerjaan_detail.split(' - ')[0] != 'Perbaikan' || pekerjaan_detail.split(' - ')[0] != 'Penggantian') {
+				if (pekerjaan_detail.split(' - ')[0] == 'Perbaikan') {
 					openErrorGritter('Error', 'Ada Kolom yang Kosong');
 					return false;
 				}
 			}
 
 			if ($("#img_penyebab_1").attr("src") == "" || $("#img_penanganan_1").attr("src") == "" || $("#img_pencegahan_1").attr("src")  == "") {
-				if ($("#img_pencegahan_1").attr("src")  == "" && (pekerjaan_detail.split(' - ')[0] == 'Perbaikan' || pekerjaan_detail.split(' - ')[0] == 'Penggantian')) {
+				if (pekerjaan_detail.split(' - ')[0] == 'Perbaikan') {
 					openErrorGritter('Error', 'Foto Harap diisi');
 					return false;
-				} else if(pekerjaan_detail.split(' - ')[0] != 'Perbaikan' || pekerjaan_detail.split(' - ')[0] != 'Penggantian') {
-					openErrorGritter('Error', 'Foto Harap diisi');
-					return false;	
 				}
 			}
 
