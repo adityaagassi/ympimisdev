@@ -5556,7 +5556,6 @@ class AccountingController extends Controller
                                 $bulan = "apr";
                             }
 
-                            $bulan = strtolower(date("M",strtotime($datePembelian))); //aug,sep,oct
                             $sisa_bulan = $bulan.'_sisa_budget';                    
                             //get Data Budget Based On Periode Dan Nomor
 
