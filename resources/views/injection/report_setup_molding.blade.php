@@ -143,7 +143,7 @@
 								<tbody id="bodyTableSetupMolding">
 								</tbody>
 								<tfoot>
-									<tr style="color: black">
+									<!-- <tr style="color: black">
 										<th></th>
 										<th></th>
 										<th></th>
@@ -159,7 +159,7 @@
 										<th></th>
 										<th></th>
 										<th></th>
-									</tr>
+									</tr> -->
 								</tfoot>
 							</table>
 						</div>
@@ -298,10 +298,10 @@
 				});
 				$('#bodyTableSetupMolding').append(tableData);
 
-				$('#tableSetupMolding tfoot th').each(function(){
-					var title = $(this).text();
-					$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="8"/>' );
-				});
+				// $('#tableSetupMolding tfoot th').each(function(){
+				// 	var title = $(this).text();
+				// 	$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="8"/>' );
+				// });
 				
 				var table = $('#tableSetupMolding').DataTable({
 					'dom': 'Bfrtip',
@@ -356,19 +356,19 @@
 					"processing": true
 				});
 
-				table.columns().every( function () {
-					var that = this;
+				// table.columns().every( function () {
+				// 	var that = this;
 
-					$( 'input', this.footer() ).on( 'keyup change', function () {
-						if ( that.search() !== this.value ) {
-							that
-							.search( this.value )
-							.draw();
-						}
-					} );
-				} );
+				// 	$( 'input', this.footer() ).on( 'keyup change', function () {
+				// 		if ( that.search() !== this.value ) {
+				// 			that
+				// 			.search( this.value )
+				// 			.draw();
+				// 		}
+				// 	} );
+				// } );
 
-				$('#tableSetupMolding tfoot tr').appendTo('#tableSetupMolding thead');
+				// $('#tableSetupMolding tfoot tr').appendTo('#tableSetupMolding thead');
 
 			}
 			else{
