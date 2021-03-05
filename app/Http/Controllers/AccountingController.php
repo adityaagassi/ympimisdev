@@ -772,7 +772,7 @@ class AccountingController extends Controller
     {
         $budgets = AccBudget::select('acc_budgets.budget_no', 'acc_budgets.description')
         ->where('category', '=', 'Expenses')
-        ->where('periode', '=', $request->get('fy'))
+        // ->where('periode', '=', $request->get('fy'))
         ->distinct();
 
         if ($request->get('department') == "General Affairs Department") {
