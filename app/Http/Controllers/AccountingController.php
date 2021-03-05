@@ -770,9 +770,9 @@ class AccountingController extends Controller
 
     public function fetchBudgetList(Request $request)
     {
-
         $budgets = AccBudget::select('acc_budgets.budget_no', 'acc_budgets.description')
         ->where('category', '=', 'Expenses')
+        ->where('periode', '=', $request->get('fy'))
         ->distinct();
 
         if ($request->get('department') == "General Affairs Department") {
@@ -838,18 +838,29 @@ class AccountingController extends Controller
         $namabulan = date('F');
         $bulan = strtolower(date('M'));
 
-        $tglnow = date('Y-m-d');
-        $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$tglnow'");
+        // $tglnow = date('Y-m-d');
+        // $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$tglnow'");
 
-        foreach ($fy as $fys) {
-            $fiscal = $fys->fiscal_year;
+        // foreach ($fy as $fys) {
+        //     $fiscal = $fys->fiscal_year;
+        // }
+
+        $getbulan = AccBudget::select('budget_no', 'periode')
+                ->where('budget_no', $request->budget_no)
+                ->first();
+
+        if ($getbulan->periode == "FY197") {
+            $bulan = strtolower(date('M'));
+        }
+        else{
+            $bulan = "apr";
         }
 
         // $date = date('Y-m-d', strtotime(date('Y-m-d') . ' + 21 days'));
         // $bulan = date("m", strtotime($date));
 
-        $budget_no = AccBudget::SELECT('*',$bulan.'_sisa_budget as budget_now')->where('budget_no', $request->budget_no)
-        ->where('periode', $fiscal)->get();
+        $budget_no = AccBudget::SELECT('*',$bulan.'_sisa_budget as budget_now')
+        ->where('budget_no', $request->budget_no)->get();
 
         foreach ($budget_no as $budget)
         {
@@ -871,7 +882,8 @@ class AccountingController extends Controller
                 'feb' => $budget->feb_sisa_budget,
                 'mar' => $budget->mar_sisa_budget,
                 'budget_now' => $budget->budget_now,
-                'namabulan' => $namabulan
+                'namabulan' => $namabulan,
+                'periode' => $budget->periode
             );
 
         }
@@ -1218,7 +1230,19 @@ class AccountingController extends Controller
                 $data2->save();
 
                 $dollar = "konversi_dollar" . $i;
-                $month = strtolower(date("M",strtotime($request->get('submission_date'))));
+
+                $getbulan = AccBudget::select('budget_no', 'periode')
+                ->where('budget_no', $request->get('budget_no'))
+                ->first();
+
+                if ($getbulan->periode == "FY197") {
+                    $month = strtolower(date('M'));
+                }
+                else{
+                    $month = "apr";
+                }
+
+                // $month = strtolower(date("M",strtotime($request->get('submission_date'))));
 
                 $data3 = new AccBudgetHistory([
                     'budget' => $request->get('budget_no'),
@@ -1244,18 +1268,37 @@ class AccountingController extends Controller
 
             $totalPembelian = $request->get('TotalPembelian');
             if ($totalPembelian != null) {
-                $datePembelian = date('Y-m-d');
-                $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$datePembelian'");
-                foreach ($fy as $fys) {
-                    $fiscal = $fys->fiscal_year;
+                // $datePembelian = date('Y-m-d');
+                // $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$datePembelian'");
+                // foreach ($fy as $fys) {
+                //     $fiscal = $fys->fiscal_year;
+                // }
+                // $bulan = strtolower(date("M",strtotime($datePembelian))); //aug,sep,oct
+
+                $getbulan = AccBudget::select('budget_no', 'periode')
+                ->where('budget_no', $request->get('budget_no'))
+                ->first();
+
+                if ($getbulan->periode == "FY197") {
+                    $bulan = strtolower(date('M'));
+                    $fiscal = "FY197";
                 }
-                $bulan = strtolower(date("M",strtotime($datePembelian))); //aug,sep,oct
+                else{
+                    $bulan = "apr";
+                    $fiscal = "FY198";
+                }
+
                 $sisa_bulan = $bulan.'_sisa_budget';                    
                 //get Data Budget Based On Periode Dan Nomor
-                $budget = AccBudget::where('budget_no','=',$request->get('budget_no'))->where('periode','=', $fiscal)->first();
+                $budget = AccBudget::where('budget_no','=',$request->get('budget_no'))->first();
                 //perhitungan 
                 $total = $budget->$sisa_bulan - $totalPembelian;
-                $dataupdate = AccBudget::where('budget_no',$request->get('budget_no'))->where('periode', $fiscal)->update([
+
+                if ($total < 0 ) {
+                    return false;
+                }
+
+                $dataupdate = AccBudget::where('budget_no',$request->get('budget_no'))->update([
                     $sisa_bulan => $total
                 ]);
             }
@@ -2327,15 +2370,27 @@ class AccountingController extends Controller
 
                 $data2->save();
 
-                $datenow = date('Y-m-d');
+                // $datenow = date('Y-m-d');
 
-                $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$datenow'");
+                // $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$datenow'");
 
-                foreach ($fy as $fys) {
-                    $fiscal = $fys->fiscal_year;
+                // foreach ($fy as $fys) {
+                //     $fiscal = $fys->fiscal_year;
+                // }
+
+                // $bulan = strtolower(date("M",strtotime($datenow)));
+
+
+                $getbulan = AccBudget::select('budget_no', 'periode')
+                ->where('budget_no', $request->get('no_budget_edit'))
+                ->first();
+
+                if ($getbulan->periode == "FY197") {
+                    $bulan = strtolower(date('M'));
                 }
-
-                $bulan = strtolower(date("M",strtotime($datenow)));
+                else{
+                    $bulan = "apr";
+                }
 
                 $sisa_bulan = $bulan.'_sisa_budget';
 
@@ -2353,8 +2408,19 @@ class AccountingController extends Controller
                     $sisa_bulan => $totalminusPO
                 ]);
 
-                $month = strtolower(date("M",strtotime($request->get('tgl_pengajuan_edit'))));
+                // $month = strtolower(date("M",strtotime($request->get('tgl_pengajuan_edit'))));
                 $begbal = $request->get('SisaBudgetEdit') + $request->get('TotalPembelianEdit');
+
+                $getbulan = AccBudget::select('budget_no', 'periode')
+                ->where('budget_no', $request->get('no_budget_edit'))
+                ->first();
+
+                if ($getbulan->periode == "FY197") {
+                    $month = strtolower(date('M'));
+                }
+                else{
+                    $month = "apr";
+                }
 
                 $data3 = new AccBudgetHistory([
                     'budget' => $request->get('no_budget_edit'),
@@ -2475,19 +2541,19 @@ class AccountingController extends Controller
             $budget_log = AccBudgetHistory::where('category_number', '=', $pr->no_pr)
             ->get();
 
-            $date = date('Y-m-d');
-            //FY
-            $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$date'");
-            foreach ($fy as $fys) {
-                $fiscal = $fys->fiscal_year;
-            }
+            // $date = date('Y-m-d');
+            // //FY
+            // $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$date'");
+            // foreach ($fy as $fys) {
+            //     $fiscal = $fys->fiscal_year;
+            // }
 
             foreach ($budget_log as $log) {
                 $sisa_bulan = $log->budget_month.'_sisa_budget';
-                $budget = AccBudget::where('budget_no', $log->budget)->where('periode', $fiscal)->first();
+                $budget = AccBudget::where('budget_no', $log->budget)->first();
 
                 $total = $budget->$sisa_bulan + $log->amount; //add total
-                $dataupdate = AccBudget::where('budget_no', $log->budget)->where('periode', $fiscal)->update([
+                $dataupdate = AccBudget::where('budget_no', $log->budget)->update([
                     $sisa_bulan => $total
                 ]);
             }
@@ -2519,12 +2585,12 @@ class AccountingController extends Controller
             ->where('category_number', '=', $master_item->no_pr)
             ->first();
 
-            $date = date('Y-m-d');
-            //FY
-            $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$date'");
-            foreach ($fy as $fys) {
-                $fiscal = $fys->fiscal_year;
-            }
+            // $date = date('Y-m-d');
+            // //FY
+            // $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$date'");
+            // foreach ($fy as $fys) {
+            //     $fiscal = $fys->fiscal_year;
+            // }
 
             $sisa_bulan = $budget_log->budget_month.'_sisa_budget';
 
@@ -2750,15 +2816,16 @@ class AccountingController extends Controller
         $namabulan = date('F');
         $bulan = strtolower(date('M'));
 
-        $tglnow = date('Y-m-d');
-        $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$tglnow'");
+        // $tglnow = date('Y-m-d');
+        // $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$tglnow'");
 
-        foreach ($fy as $fys) {
-            $fiscal = $fys->fiscal_year;
-        }
+        // foreach ($fy as $fys) {
+        //     $fiscal = $fys->fiscal_year;
+        // }
 
-        $budget_no = AccBudget::SELECT('*',$bulan.'_sisa_budget as budget_now')->where('budget_no', $request->budget)
-        ->where('periode', $fiscal)->get();
+
+
+        $budget_no = AccBudget::SELECT('*',$bulan.'_sisa_budget as budget_now')->where('budget_no', $request->budget)->get();
 
         foreach ($budget_no as $budget)
         {
@@ -2985,17 +3052,30 @@ class AccountingController extends Controller
                 ->first();
 
                 $amount = $data5->amount;
-                $datenow = date('Y-m-d');
 
-                //Get Data From Budget Master
 
-                $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$datenow'");
+                // $datenow = date('Y-m-d');
 
-                foreach ($fy as $fys) {
-                    $fiscal = $fys->fiscal_year;
+                // //Get Data From Budget Master
+
+                // $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$datenow'");
+
+                // foreach ($fy as $fys) {
+                //     $fiscal = $fys->fiscal_year;
+                // }
+
+                $getbulan = AccBudget::select('budget_no', 'periode')
+                ->where('budget_no', $request->get($item_budget))
+                ->first();
+
+                if ($getbulan->periode == "FY197") {
+                    $bulan = strtolower(date('M'));
+                }
+                else{
+                    $bulan = "apr";
                 }
                 
-                $bulan = strtolower(date("M",strtotime($datenow)));
+                // $bulan = strtolower(date("M",strtotime($datenow)));
 
                 $sisa_bulan = $bulan.'_sisa_budget';
 
@@ -3018,8 +3098,22 @@ class AccountingController extends Controller
 
                 $totalminusPO = $budgetdata->$sisa_bulan - $total_dollar;
 
+                if ($totalminusPO < 0) {
+
+                    //Tambahkan Budget Dengan Yang Ada Di Log
+                    $totalMinPR = $budgetdata->$sisa_bulan - $amount;
+
+                    $updatebudget = AccBudget::where('budget_no',$request->get($item_budget))
+                    ->update([
+                        $sisa_bulan => $totalMinPR
+                    ]);
+
+                    return redirect('/purchase_order')->with('error', 'Total Melebihi Budget')
+                    ->with('page', 'Purchase Order');
+                } 
+
                 // Setelah itu update data budgetnya dengan yang actual
-                $dataupdate = AccBudget::where('budget_no',$request->get($item_budget))->where('periode', $fiscal)
+                $dataupdate = AccBudget::where('budget_no',$request->get($item_budget))
                 ->update([
                     $sisa_bulan => $totalminusPO
                 ]);
@@ -3028,7 +3122,7 @@ class AccountingController extends Controller
                 ->where('category_number',$request->get($no_pr))
                 ->where('no_item',$request->get($nama_item))
                 ->update([
-                    'budget_month_po' => strtolower(date('M')),
+                    'budget_month_po' => $bulan,
                     'po_number' => $nopo,
                     'amount_po' => $total_dollar,
                     'status' => 'PO'
@@ -3196,36 +3290,36 @@ class AccountingController extends Controller
                     $counter = $getbudgetlog->amount_po;
                     $date = $getbudgetlog->budget_month_po;
 
-                    $datenow = date('Y-m-d');
+                    // $datenow = date('Y-m-d');
 
-                    //Get Data From Budget Master
+                    // //Get Data From Budget Master
 
-                    $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$datenow'");
+                    // $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$datenow'");
 
-                    foreach ($fy as $fys) {
-                        $fiscal = $fys->fiscal_year;
-                    }
+                    // foreach ($fy as $fys) {
+                    //     $fiscal = $fys->fiscal_year;
+                    // }
 
                     $sisa_bulan = $date.'_sisa_budget';
 
                     //get Data Budget Based On Periode Dan Nomor
-                    $budgetdata = AccBudget::where('budget_no','=',$request->get($item_budget))->where('periode','=', $fiscal)->first();
+                    $budgetdata = AccBudget::where('budget_no','=',$request->get($item_budget))->first();
 
                     $totalOld = $budgetdata->$sisa_bulan + $counter;
 
-                    $updatebudget = AccBudget::where('budget_no',$request->get($item_budget))->where('periode','=', $fiscal)
+                    $updatebudget = AccBudget::where('budget_no',$request->get($item_budget))
                     ->update([
                         $sisa_bulan => $totalOld
                     ]);
 
                     //get Data Budget Based On Periode Dan Nomor
-                    $budgetdata = AccBudget::where('budget_no','=',$request->get($item_budget))->where('periode','=', $fiscal)->first();
+                    $budgetdata = AccBudget::where('budget_no','=',$request->get($item_budget))->first();
 
                     $total_dollar = $request->get($konversi_dollar);
 
                     $totalNew = $budgetdata->$sisa_bulan - $total_dollar;
 
-                    $dataupdate = AccBudget::where('budget_no',$request->get($item_budget))->where('periode','=', $fiscal)
+                    $dataupdate = AccBudget::where('budget_no',$request->get($item_budget))
                     ->update([
                         $sisa_bulan => $totalNew
                     ]);
@@ -3306,33 +3400,44 @@ class AccountingController extends Controller
                 ->first();
 
                 $amount = $data5->amount;
-                $datenow = date('Y-m-d');
+                // $datenow = date('Y-m-d');
 
-                //Get Data From Budget Master
+                // //Get Data From Budget Master
 
-                $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$datenow'");
+                // $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$datenow'");
 
-                foreach ($fy as $fys) {
-                    $fiscal = $fys->fiscal_year;
-                }
+                // foreach ($fy as $fys) {
+                //     $fiscal = $fys->fiscal_year;
+                // }
                 
-                $bulan = strtolower(date("M",strtotime($datenow)));
+                // $bulan = strtolower(date("M",strtotime($datenow)));
+
+                $getbulan = AccBudget::select('budget_no', 'periode')
+                ->where('budget_no', $request->get($item_budget2))
+                ->first();
+
+                if ($getbulan->periode == "FY197") {
+                    $bulan = strtolower(date('M'));
+                }
+                else{
+                    $bulan = "apr";
+                }
 
                 $sisa_bulan = $bulan.'_sisa_budget';
 
                 //get Data Budget Based On Periode Dan Nomor
-                $budgetdata = AccBudget::where('budget_no','=',$request->get($item_budget2))->where('periode','=', $fiscal)->first();
+                $budgetdata = AccBudget::where('budget_no','=',$request->get($item_budget2))->first();
 
                 //Tambahkan Budget Dengan Yang Ada Di Log
                 $totalPlusPR = $budgetdata->$sisa_bulan + $amount;
 
-                $updatebudget = AccBudget::where('budget_no',$request->get($item_budget2))->where('periode', $fiscal)
+                $updatebudget = AccBudget::where('budget_no',$request->get($item_budget2))
                 ->update([
                     $sisa_bulan => $totalPlusPR
                 ]);
 
                 //get Data Budget Based On Periode Dan Nomor
-                $budgetdata = AccBudget::where('budget_no','=',$request->get($item_budget2))->where('periode','=', $fiscal)->first();
+                $budgetdata = AccBudget::where('budget_no','=',$request->get($item_budget2))->first();
 
                 //Get Amount Di PO
                 $total_dollar = $request->get($konversi_dollar2);
@@ -3340,7 +3445,7 @@ class AccountingController extends Controller
                 $totalminusPO = $budgetdata->$sisa_bulan - $total_dollar;
 
                 // Setelah itu update data budgetnya dengan yang actual
-                $dataupdate = AccBudget::where('budget_no',$request->get($item_budget2))->where('periode', $fiscal)
+                $dataupdate = AccBudget::where('budget_no',$request->get($item_budget2))
                 ->update([
                     $sisa_bulan => $totalminusPO
                 ]);
@@ -3439,20 +3544,21 @@ class AccountingController extends Controller
         ->where('po_number', '=', $item->no_po)
         ->first();
 
-        $date = date('Y-m-d');
+        // $date = date('Y-m-d');
 
-            //FY
-        $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$date'");
-        foreach ($fy as $fys) {
-            $fiscal = $fys->fiscal_year;
-        }
+        //     //FY
+        // $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$date'");
+        // foreach ($fy as $fys) {
+        //     $fiscal = $fys->fiscal_year;
+        // }
+
 
         $sisa_bulan = $budget_log->budget_month_po.'_sisa_budget';        
-        $budget = AccBudget::where('budget_no', $budget_log->budget)->where('periode', $fiscal)->first();
+        $budget = AccBudget::where('budget_no', $budget_log->budget)->first();
 
             $total = $budget->$sisa_bulan + $budget_log->amount_po; //add total
 
-            $dataupdate = AccBudget::where('budget_no', $budget_log->budget)->where('periode', $fiscal)
+            $dataupdate = AccBudget::where('budget_no', $budget_log->budget)
             ->update([
                 $sisa_bulan => $total
             ]);
@@ -3466,11 +3572,11 @@ class AccountingController extends Controller
                 'status' => 'PR'
             ]);
 
-            $budget = AccBudget::where('budget_no', $budget_log->budget)->where('periode', $fiscal)->first();
+            $budget = AccBudget::where('budget_no', $budget_log->budget)->first();
 
             $totalAfterMinusPR = $budget->$sisa_bulan - $budget_log->amount;
 
-            $dataupdate = AccBudget::where('budget_no', $budget_log->budget)->where('periode', $fiscal)
+            $dataupdate = AccBudget::where('budget_no', $budget_log->budget)
             ->update([
                 $sisa_bulan => $totalAfterMinusPR
             ]);
@@ -3575,28 +3681,22 @@ class AccountingController extends Controller
         ->get();
 
         if ($budget_log != null) {
-                //FY
-            $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$date'");
-
-            foreach ($fy as $fys) {
-                $fiscal = $fys->fiscal_year;
-            }
-
+            
             foreach ($budget_log as $log) {
                 $sisa_bulan = $log->budget_month_po.'_sisa_budget';
-                $budget = AccBudget::where('budget_no', $log->budget)->where('periode', $fiscal)->first();
+                $budget = AccBudget::where('budget_no', $log->budget)->first();
 
                     $total = $budget->$sisa_bulan + $log->amount_po; //add total PO
-                    $dataupdate = AccBudget::where('budget_no', $log->budget)->where('periode', $fiscal)->update([
+                    $dataupdate = AccBudget::where('budget_no', $log->budget)->update([
                         $sisa_bulan => $total
                     ]);
 
                     //get Data Budget Based On Periode Dan Nomor
-                    $budgetdata = AccBudget::where('budget_no', $log->budget)->where('periode', $fiscal)->first();
+                    $budgetdata = AccBudget::where('budget_no', $log->budget)->first();
 
                     $totalNew = $budgetdata->$sisa_bulan - $log->amount; //minus amount PR
 
-                    $dataupdate = AccBudget::where('budget_no', $log->budget)->where('periode','=', $fiscal)
+                    $dataupdate = AccBudget::where('budget_no', $log->budget)
                     ->update([
                         $sisa_bulan => $totalNew
                     ]);
@@ -4396,7 +4496,7 @@ class AccountingController extends Controller
 
         $po_detail = db::select(
             "
-            Select acc_purchase_orders.no_po, acc_purchase_orders.no_po_sap, acc_purchase_orders.remark, acc_purchase_orders.note, acc_purchase_order_details.no_pr, acc_purchase_orders.tgl_po, acc_purchase_orders.supplier_code , acc_purchase_orders.supplier_name, acc_purchase_orders.currency, acc_purchase_orders.material, acc_purchase_order_details.no_item, acc_purchase_order_details.nama_item, acc_purchase_order_details.delivery_date, acc_purchase_order_details.qty, acc_purchase_order_details.uom, acc_purchase_order_details.goods_price, acc_purchase_order_details.service_price, acc_purchase_order_details.budget_item, acc_purchase_orders.cost_center, acc_purchase_order_details.gl_number, acc_purchase_requisitions.emp_name, acc_investments.applicant_name from acc_purchase_orders left join acc_purchase_order_details on acc_purchase_orders.no_po = acc_purchase_order_details.no_po left join acc_purchase_requisitions on acc_purchase_order_details.no_pr = acc_purchase_requisitions.no_pr left join acc_investments on acc_purchase_order_details.no_pr = acc_investments.reff_number WHERE acc_purchase_orders.deleted_at IS NULL " . $tanggal . " order by acc_purchase_orders.no_po ASC
+            Select acc_purchase_orders.no_po, acc_purchase_orders.no_po_sap, acc_purchase_orders.remark, acc_purchase_orders.note, acc_purchase_order_details.no_pr, acc_purchase_orders.tgl_po, acc_purchase_orders.supplier_code , acc_purchase_orders.supplier_name, acc_purchase_orders.currency, acc_purchase_orders.material, acc_purchase_orders.buyer_name, acc_purchase_order_details.no_item, acc_purchase_order_details.nama_item, acc_purchase_order_details.delivery_date, acc_purchase_order_details.qty, acc_purchase_order_details.uom, acc_purchase_order_details.goods_price, acc_purchase_order_details.service_price, acc_purchase_order_details.budget_item, acc_purchase_orders.cost_center, acc_purchase_order_details.gl_number, acc_purchase_requisitions.emp_name, acc_investments.applicant_name from acc_purchase_orders left join acc_purchase_order_details on acc_purchase_orders.no_po = acc_purchase_order_details.no_po left join acc_purchase_requisitions on acc_purchase_order_details.no_pr = acc_purchase_requisitions.no_pr left join acc_investments on acc_purchase_order_details.no_pr = acc_investments.reff_number WHERE acc_purchase_orders.deleted_at IS NULL " . $tanggal . " order by acc_purchase_orders.no_po ASC
             ");
 
         // and acc_purchase_orders.posisi = 'pch' and acc_purchase_orders.`status` = 'not_sap' and no_po_sap is null 
@@ -4567,18 +4667,29 @@ class AccountingController extends Controller
                 $total_nambah += $request->get($dollar);
             }
 
-            $datePembelian = $request->get('tgl_pengajuan_edit');
+            // $datePembelian = $request->get('tgl_pengajuan_edit');
 
-            $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$datePembelian'");
-            foreach ($fy as $fys) {
-                $fiscal = $fys->fiscal_year;
+            // $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$datePembelian'");
+            // foreach ($fy as $fys) {
+            //     $fiscal = $fys->fiscal_year;
+            // }
+
+            $getbulan = AccBudget::select('budget_no', 'periode')
+            ->where('budget_no', $request->get('no_budget_edit'))
+            ->first();
+
+            if ($getbulan->periode == "FY197") {
+                $bulan = strtolower(date('M'));
+            }
+            else{
+                $bulan = "apr";
             }
 
-            $bulan = strtolower(date("M",strtotime($datePembelian))); //aug,sep,oct
+            // $bulan = strtolower(date("M",strtotime($datePembelian))); //aug,sep,oct
 
             $sisa_bulan = $bulan.'_sisa_budget';                    
             //get Data Budget Based On Periode Dan Nomor
-            $budget = AccBudget::where('budget_no','=',$request->get('no_budget_edit'))->where('periode','=', $fiscal)->first();
+            $budget = AccBudget::where('budget_no','=',$request->get('no_budget_edit'))->first();
             
             $total = $budget->$sisa_bulan + $counter - $total_update - $total_nambah;
 
@@ -4586,7 +4697,7 @@ class AccountingController extends Controller
                 return redirect('/purchase_order')->with('error', 'Total Melebihi Budget')
                 ->with('page', 'Purchase Order');
             } else{
-                $dataupdate = AccBudget::where('budget_no',$request->get('no_budget_edit'))->where('periode', $fiscal)->update([
+                $dataupdate = AccBudget::where('budget_no',$request->get('no_budget_edit'))->update([
                     $sisa_bulan => $total
                 ]);
             }
@@ -5169,25 +5280,25 @@ class AccountingController extends Controller
         try
         {
             $invest = AccInvestment::find($request->get('id'));
-            $date = date('Y-m-d');
+            // $date = date('Y-m-d');
 
             $budget_log = AccBudgetHistory::where('category_number', '=', $invest->reff_number)
             ->get();
 
             if ($budget_log != null) {
                 //FY
-                $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$date'");
+                // $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$date'");
                 
-                foreach ($fy as $fys) {
-                    $fiscal = $fys->fiscal_year;
-                }
+                // foreach ($fy as $fys) {
+                //     $fiscal = $fys->fiscal_year;
+                // }
 
                 foreach ($budget_log as $log) {
                     $sisa_bulan = $log->budget_month.'_sisa_budget';
-                    $budget = AccBudget::where('budget_no', $log->budget)->where('periode', $fiscal)->first();
+                    $budget = AccBudget::where('budget_no', $log->budget)->first();
 
                     $total = $budget->$sisa_bulan + $log->amount; //add total
-                    $dataupdate = AccBudget::where('budget_no', $log->budget)->where('periode', $fiscal)->update([
+                    $dataupdate = AccBudget::where('budget_no', $log->budget)->update([
                         $sisa_bulan => $total
                     ]);
                 }
@@ -5427,22 +5538,33 @@ class AccountingController extends Controller
                         ->where('acc_investments.id', '=', $request->get('id'))->get();
 
                         if (count($inv_budget) == 0) {
-                            $datePembelian = date('Y-m-d');
-                            $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$datePembelian'");
+                            // $datePembelian = date('Y-m-d');
+                            // $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$datePembelian'");
 
-                            foreach ($fy as $fys) {
-                                $fiscal = $fys->fiscal_year;
+                            // foreach ($fy as $fys) {
+                            //     $fiscal = $fys->fiscal_year;
+                            // }
+
+                            $getbulan = AccBudget::select('budget_no', 'periode')
+                            ->where('budget_no',$budget_no[$i])
+                            ->first();
+
+                            if ($getbulan->periode == "FY197") {
+                                $bulan = strtolower(date('M'));
+                            }
+                            else{
+                                $bulan = "apr";
                             }
 
                             $bulan = strtolower(date("M",strtotime($datePembelian))); //aug,sep,oct
                             $sisa_bulan = $bulan.'_sisa_budget';                    
                             //get Data Budget Based On Periode Dan Nomor
 
-                            $budget = AccBudget::where('budget_no','=',$budget_no[$i])->where('periode','=', $fiscal)->first();
+                            $budget = AccBudget::where('budget_no','=',$budget_no[$i])->first();
                             
                             //perhitungan 
                             $total = $budget->$sisa_bulan - $totalPembelian;
-                            $dataupdate = AccBudget::where('budget_no','=',$budget_no[$i])->where('periode','=', $fiscal)
+                            $dataupdate = AccBudget::where('budget_no','=',$budget_no[$i])
                             ->update([
                                 $sisa_bulan => $total
                             ]);
@@ -5970,20 +6092,20 @@ class AccountingController extends Controller
                 ->where('category_number', '=', $get_budget_item->reff_number)
                 ->get();
 
-                $date = date('Y-m-d');
-                //FY
-                $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$date'");
-                foreach ($fy as $fys) {
-                    $fiscal = $fys->fiscal_year;
-                }
+                // $date = date('Y-m-d');
+                // //FY
+                // $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$date'");
+                // foreach ($fy as $fys) {
+                //     $fiscal = $fys->fiscal_year;
+                // }
 
                 $sisa_bulan = $budget_log[0]->budget_month.'_sisa_budget';
 
-                $budget = AccBudget::where('budget_no', $get_budget_item->budget_no)->where('periode', $fiscal)->first();
+                $budget = AccBudget::where('budget_no', $get_budget_item->budget_no)->first();
 
                 $total = $budget->$sisa_bulan + $get_budget_item->total; //add total
 
-                $dataupdate = AccBudget::where('budget_no', $get_budget_item->budget_no)->where('periode', $fiscal)->update([
+                $dataupdate = AccBudget::where('budget_no', $get_budget_item->budget_no)->update([
                     $sisa_bulan => $total
                 ]);
 
@@ -7518,7 +7640,7 @@ public function import_budget(Request $request){
                     $data2->created_by = Auth::id();
                     $data2->save();
                 }
-
+                
             }       
 
             $response = array(
@@ -7630,14 +7752,29 @@ public function fetch_budget_summary(Request $request)
 
     $category = $request->get('category');
 
-      if ($category != null) {
-          $cattt = json_encode($category);
-          $catt = str_replace(array("[","]"),array("(",")"),$cattt);
+    if ($category != null) {
+        $cattt = json_encode($category);
+        $catt = str_replace(array("[","]"),array("(",")"),$cattt);
 
-          $cat = 'and acc_budgets.category in '.$catt;
-      } else {
-          $cat = '';
-      }
+        $cat = 'and acc_budgets.category in '.$catt;
+    } else {
+        $cat = '';
+    }
+
+    $tglnow = date('Y-m-d');
+    $tahun = db::select("select fiscal_year from weekly_calendars where week_date = '$tglnow'");
+
+
+    $fy = $request->get('fy');
+
+    if ($fy != null) {
+        $fiscal_year = json_encode($fy);
+        $fiscal_y = str_replace(array("[","]"),array("(",")"),$fiscal_year);
+
+        $fiscal = 'and acc_budgets.periode in '.$fiscal_y;
+    } else {
+        $fiscal = 'and acc_budgets.periode = "'.$tahun[0]->fiscal_year.'"';
+    }
 
     $resume = db::select('
         SELECT
@@ -7657,7 +7794,376 @@ public function fetch_budget_summary(Request $request)
         FROM
             acc_budgets
             where acc_budgets.deleted_at is null
+            '.$fiscal.'
             '.$cat.'
+        GROUP BY periode
+        ');
+
+    
+// SELECT
+//     DATE_FORMAT( receive_date, '%b' ) AS bulan,
+//     ROUND( sum( acc_actuals.amount_dollar ), 2 ) AS Actual,
+//     0 AS PR,
+//     0 AS Investment,
+//     0 AS PO 
+// FROM
+//     acc_actuals
+//     JOIN acc_purchase_order_details ON RIGHT ( CONCAT( SPLIT_STRING ( acc_purchase_order_details.no_po, '-', 1 ), SPLIT_STRING(acc_purchase_order_details.no_po, '-', 2 )), 10 ) = acc_actuals.no_po 
+//     AND acc_purchase_order_details.no_item = acc_actuals.item_no 
+// WHERE
+//     DATE_FORMAT( receive_date, '%b' ) IS NOT NULL 
+//     AND budget_item IN ( SELECT budget_no FROM acc_budgets WHERE category = "Expenses" ) 
+// GROUP BY
+//     DATE_FORMAT(receive_date,'%b')
+
+    $act = db::select('
+        SELECT
+    CASE    
+    WHEN
+        a.bulan = "Jan" THEN
+            13 
+            WHEN a.bulan = "Feb" THEN
+            14 
+            WHEN a.bulan = "Mar" THEN
+            15 
+            WHEN a.bulan = "Apr" THEN
+            4 
+            WHEN a.bulan = "May" THEN
+            5 
+            WHEN a.bulan = "Jun" THEN
+            6 
+            WHEN a.bulan = "Jul" THEN
+            7 
+            WHEN a.bulan = "Aug" THEN
+            8 
+            WHEN a.bulan = "Sep" THEN
+            9 
+            WHEN a.bulan = "Oct" THEN
+            10 
+            WHEN a.bulan = "Nov" THEN
+            11 
+            WHEN a.bulan = "Dec" THEN
+            12 
+            END AS month_number,
+            a.bulan,
+            ROUND( SUM( a.actual ), 2 ) AS Actual,
+            ROUND( SUM( a.PR ), 2 ) AS PR,
+            ROUND( SUM( a.Investment ), 2 ) AS Investment,
+            ROUND( SUM( a.PO ), 2 ) AS PO
+        FROM
+            (
+            SELECT
+                budget_month_receive AS bulan,
+                ROUND( sum( CASE WHEN `status` = "Actual" THEN acc_budget_histories.amount_receive ELSE 0 END ), 2 ) AS Actual,         
+                0 AS PR,
+                0 AS Investment,
+                0 AS PO
+            FROM
+                acc_budget_histories
+                LEFT JOIN acc_budgets ON acc_budget_histories.budget = acc_budgets.budget_no 
+            WHERE
+                budget_month_receive IS NOT NULL 
+                '.$fiscal.'
+                '.$cat.' 
+            GROUP BY
+                budget_month_receive 
+                
+                UNION ALL
+            
+            SELECT
+                month_date AS bulan,
+                ROUND( SUM( local_amount ), 2 ) AS Actual,
+                0 AS PR,
+                0 AS Investment,
+                0 AS PO
+            FROM
+                acc_actual_logs
+                LEFT JOIN acc_budgets ON acc_actual_logs.budget_no = acc_budgets.budget_no 
+            WHERE
+                acc_actual_logs.deleted_at IS NULL 
+                '.$fiscal.'
+                '.$cat.'   
+            GROUP BY
+                month_date 
+                
+                UNION ALL
+                
+            SELECT 
+                budget_month AS bulan,
+                0 AS Actual,            
+                ROUND( sum( CASE WHEN `status` = "PR" THEN acc_budget_histories.amount ELSE 0 END ), 2 ) AS PR,
+                0 AS Investment,
+                0 AS PO
+            FROM
+                acc_budget_histories
+                LEFT JOIN acc_budgets ON acc_budget_histories.budget = acc_budgets.budget_no 
+            WHERE
+                budget_month IS NOT NULL 
+                '.$fiscal.'
+                '.$cat.'  
+            GROUP BY
+                budget_month
+            
+                UNION ALL
+                
+            SELECT 
+                budget_month AS bulan,
+                0 AS Actual,            
+                0 AS PR,
+                ROUND( sum( CASE WHEN `status` = "Investment" THEN acc_budget_histories.amount ELSE 0 END ), 2 ) AS Investment,
+                0 AS PO
+            FROM
+                acc_budget_histories
+                LEFT JOIN acc_budgets ON acc_budget_histories.budget = acc_budgets.budget_no 
+            WHERE
+                budget_month IS NOT NULL 
+                '.$fiscal.'
+                '.$cat.'  
+            GROUP BY
+                budget_month
+                
+                UNION ALL
+                
+            SELECT 
+                budget_month_po AS bulan,
+                0 AS Actual,            
+                0 AS PR,
+                0 AS Investment,
+                ROUND( sum( CASE WHEN `status` = "PO" THEN acc_budget_histories.amount_po ELSE 0 END ), 2 ) AS PO
+            FROM
+                acc_budget_histories
+                LEFT JOIN acc_budgets ON acc_budget_histories.budget = acc_budgets.budget_no 
+            WHERE
+                budget_month_po IS NOT NULL 
+                '.$fiscal.'
+                '.$cat.'  
+            GROUP BY
+                budget_month_po
+                
+            ) a 
+        GROUP BY
+            a.bulan 
+        HAVING
+            a.bulan IS NOT NULL 
+    ORDER BY
+        month_number
+        ');
+
+    $category = db::select('
+        SELECT
+        category,
+        sum(amount) AS amount
+        FROM
+        acc_budgets
+        WHERE
+        acc_budgets.deleted_at IS NULL
+        '.$fiscal.'
+        GROUP BY
+        category
+        ');
+
+    $act_category = db::select('
+        SELECT
+            category,
+            ROUND( SUM( a.actual ), 2 ) AS Actual,
+            ROUND( SUM( a.PR ), 2 ) AS PR,
+            ROUND( SUM( a.Investment ), 2 ) AS Investment,
+            ROUND( SUM( a.PO ), 2 ) AS PO
+        FROM
+            (
+            SELECT
+                category,
+                ROUND( sum( CASE WHEN `status` = "Actual" THEN acc_budget_histories.amount_receive ELSE 0 END ), 2 ) AS Actual,   
+                0 AS PR,
+                0 AS Investment,
+                0 AS PO
+            FROM
+                acc_budget_histories
+                LEFT JOIN   acc_budgets ON acc_budgets.budget_no = acc_budget_histories.budget
+            WHERE
+                category is not null
+                '.$fiscal.'
+            GROUP BY
+                category 
+                
+                UNION ALL
+            
+             SELECT
+                category,
+                ROUND( SUM( local_amount ), 2 ) AS Actual,
+                0 AS PR,
+                0 AS Investment,
+                0 AS PO
+            FROM
+                acc_actual_logs
+                LEFT JOIN acc_budgets ON acc_actual_logs.budget_no = acc_budgets.budget_no 
+            WHERE
+                acc_actual_logs.deleted_at IS NULL 
+                '.$fiscal.'
+            GROUP BY
+                category
+                
+                UNION ALL
+                
+            SELECT 
+                category,
+                0 AS Actual,            
+                ROUND( sum( CASE WHEN `status` = "PR" THEN acc_budget_histories.amount ELSE 0 END ), 2 ) AS PR,
+                0 AS Investment,
+                0 AS PO
+            FROM
+                acc_budget_histories
+                LEFT JOIN   acc_budgets ON acc_budgets.budget_no = acc_budget_histories.budget
+            WHERE
+                category is not null
+               '.$fiscal.'
+            GROUP BY
+                category
+            
+                UNION ALL
+                
+            SELECT 
+                category,
+                0 AS Actual,            
+                0 AS PR,
+                ROUND( sum( CASE WHEN `status` = "Investment" THEN acc_budget_histories.amount ELSE 0 END ), 2 ) AS Investment,
+                0 AS PO
+            FROM
+                acc_budget_histories
+                LEFT JOIN   acc_budgets ON acc_budgets.budget_no = acc_budget_histories.budget
+            WHERE
+                category is not null
+                '.$fiscal.'
+            GROUP BY
+                category
+                
+                UNION ALL
+                
+            SELECT 
+                category,
+                0 AS Actual,            
+                0 AS PR,
+                0 AS Investment,
+                ROUND( sum( CASE WHEN `status` = "PO" THEN acc_budget_histories.amount_po ELSE 0 END ), 2 ) AS PO
+            FROM
+                acc_budget_histories
+                LEFT JOIN   acc_budgets ON acc_budgets.budget_no = acc_budget_histories.budget
+            WHERE
+                category is not null
+                '.$fiscal.' 
+            GROUP BY
+                category
+                
+            ) a 
+        GROUP BY
+            a.category 
+        HAVING
+            a.category IS NOT NULL 
+
+    ');
+
+    // $type = db::select('
+    //     SELECT
+    //     account_name,
+    //     sum(amount) AS amount
+    //     FROM
+    //     acc_budgets
+    //     WHERE
+    //     acc_budgets.deleted_at IS NULL
+    //     GROUP BY
+    //     account_name
+    //     ');
+
+    $response = array(
+        'status' => true,
+        'cat_budget' => $category,
+        'resume' => $resume,
+        'act' => $act,
+        'act_category' => $act_category
+    );
+
+    return Response::json($response); 
+}
+
+public function budget_monthly()
+{
+    $title = 'Budget Monthly';
+    $title_jp = '';
+
+    $dept = db::select("select DISTINCT department from employee_syncs");
+
+    $emp_dept = EmployeeSync::where('employee_id', Auth::user()->username)
+    ->select('department')
+    ->first();
+
+    return view('accounting_purchasing.display.budget_monthly', array(
+        'title' => $title,
+        'title_jp' => $title_jp,
+        'emp_dept' => $emp_dept,
+        'department' => $dept
+    ))->with('page', 'Budget Monthly')
+    ->with('head', 'Budget Monthly');
+}
+
+
+public function fetch_budget_monthly(Request $request)
+{
+
+    $category = $request->get('category');
+
+    if ($category != null) {
+        $cattt = json_encode($category);
+        $catt = str_replace(array("[","]"),array("(",")"),$cattt);
+
+        $cat = 'and acc_budgets.category in '.$catt;
+    } else {
+        $cat = '';
+    }
+
+    $tglnow = date('Y-m-d');
+    $tahun = db::select("select fiscal_year from weekly_calendars where week_date = '$tglnow'");
+
+
+    $fy = $request->get('fy');
+
+    if ($fy != null) {
+        $fiscal_year = json_encode($fy);
+        $fiscal_y = str_replace(array("[","]"),array("(",")"),$fiscal_year);
+
+        $fiscal = 'and acc_budgets.periode in '.$fiscal_y;
+    } else {
+        $fiscal = 'and acc_budgets.periode = "'.$tahun[0]->fiscal_year.'"';
+    }
+
+    $department = $request->get('department');
+
+    if ($department != null) {
+        $dept = 'and acc_budgets.department = "'.$department.'"';
+    } else {
+        $dept = '';
+    }
+
+    $resume = db::select('
+        SELECT
+            periode,
+            SUM( apr_after_adj ) AS apr_simulasi,
+            SUM( may_after_adj ) AS may_simulasi,
+            SUM( jun_after_adj ) AS jun_simulasi,
+            SUM( jul_after_adj ) AS jul_simulasi,
+            SUM( aug_after_adj ) AS aug_simulasi,
+            SUM( sep_after_adj ) AS sep_simulasi,
+            SUM( oct_after_adj ) AS oct_simulasi,
+            SUM( nov_after_adj ) AS nov_simulasi,
+            SUM( dec_after_adj ) AS dec_simulasi,
+            SUM( jan_after_adj ) AS jan_simulasi,
+            SUM( feb_after_adj ) AS feb_simulasi,
+            SUM( mar_after_adj ) AS mar_simulasi
+        FROM
+            acc_budgets
+            where acc_budgets.deleted_at is null
+            '.$fiscal.'
+            '.$cat.'
+            '.$dept.'
         GROUP BY periode
         ');
 
@@ -7708,8 +8214,9 @@ public function fetch_budget_summary(Request $request)
                 LEFT JOIN acc_budgets ON acc_budget_histories.budget = acc_budgets.budget_no 
             WHERE
                 budget_month_receive IS NOT NULL 
-                AND acc_budgets.periode = "FY197"
+                '.$fiscal.'
                 '.$cat.' 
+                '.$dept.'
             GROUP BY
                 budget_month_receive 
                 
@@ -7726,8 +8233,9 @@ public function fetch_budget_summary(Request $request)
                 LEFT JOIN acc_budgets ON acc_actual_logs.budget_no = acc_budgets.budget_no 
             WHERE
                 acc_actual_logs.deleted_at IS NULL 
-                AND acc_budgets.periode = "FY197"
+                '.$fiscal.'
                 '.$cat.'   
+                '.$dept.'
             GROUP BY
                 month_date 
                 
@@ -7744,8 +8252,9 @@ public function fetch_budget_summary(Request $request)
                 LEFT JOIN acc_budgets ON acc_budget_histories.budget = acc_budgets.budget_no 
             WHERE
                 budget_month IS NOT NULL 
-                AND acc_budgets.periode = "FY197"
+                '.$fiscal.'
                 '.$cat.'  
+                '.$dept.'
             GROUP BY
                 budget_month
             
@@ -7762,8 +8271,9 @@ public function fetch_budget_summary(Request $request)
                 LEFT JOIN acc_budgets ON acc_budget_histories.budget = acc_budgets.budget_no 
             WHERE
                 budget_month IS NOT NULL 
-                AND acc_budgets.periode = "FY197"
+                '.$fiscal.'
                 '.$cat.'  
+                '.$dept.'
             GROUP BY
                 budget_month
                 
@@ -7780,8 +8290,9 @@ public function fetch_budget_summary(Request $request)
                 LEFT JOIN acc_budgets ON acc_budget_histories.budget = acc_budgets.budget_no 
             WHERE
                 budget_month_po IS NOT NULL 
-                AND acc_budgets.periode = "FY197"
+                '.$fiscal.'
                 '.$cat.'  
+                '.$dept.'
             GROUP BY
                 budget_month_po
                 
@@ -7794,140 +8305,136 @@ public function fetch_budget_summary(Request $request)
         month_number
         ');
 
-    $category = db::select('
-        SELECT
-        category,
-        sum(amount) AS amount
-        FROM
-        acc_budgets
-        WHERE
-        acc_budgets.deleted_at IS NULL
-        GROUP BY
-        category
-        ');
-
-    $act_category = db::select('
-        SELECT
-            category,
-            ROUND( SUM( a.actual ), 2 ) AS Actual,
-            ROUND( SUM( a.PR ), 2 ) AS PR,
-            ROUND( SUM( a.Investment ), 2 ) AS Investment,
-            ROUND( SUM( a.PO ), 2 ) AS PO
-        FROM
-            (
-            SELECT
-                category,
-                ROUND( sum( CASE WHEN `status` = "Actual" THEN acc_budget_histories.amount_receive ELSE 0 END ), 2 ) AS Actual,   
-                0 AS PR,
-                0 AS Investment,
-                0 AS PO
-            FROM
-                acc_budget_histories
-                LEFT JOIN   acc_budgets ON acc_budgets.budget_no = acc_budget_histories.budget
-            WHERE
-                category is not null
-                AND periode = "FY197" 
-            GROUP BY
-                category 
-                
-                UNION ALL
-            
-             SELECT
-                category,
-                ROUND( SUM( local_amount ), 2 ) AS Actual,
-                0 AS PR,
-                0 AS Investment,
-                0 AS PO
-            FROM
-                acc_actual_logs
-                LEFT JOIN acc_budgets ON acc_actual_logs.budget_no = acc_budgets.budget_no 
-            WHERE
-                acc_actual_logs.deleted_at IS NULL 
-                AND acc_budgets.periode = "FY197" 
-            GROUP BY
-                category
-                
-                UNION ALL
-                
-            SELECT 
-                category,
-                0 AS Actual,            
-                ROUND( sum( CASE WHEN `status` = "PR" THEN acc_budget_histories.amount ELSE 0 END ), 2 ) AS PR,
-                0 AS Investment,
-                0 AS PO
-            FROM
-                acc_budget_histories
-                LEFT JOIN   acc_budgets ON acc_budgets.budget_no = acc_budget_histories.budget
-            WHERE
-                category is not null
-                AND periode = "FY197" 
-            GROUP BY
-                category
-            
-                UNION ALL
-                
-            SELECT 
-                category,
-                0 AS Actual,            
-                0 AS PR,
-                ROUND( sum( CASE WHEN `status` = "Investment" THEN acc_budget_histories.amount ELSE 0 END ), 2 ) AS Investment,
-                0 AS PO
-            FROM
-                acc_budget_histories
-                LEFT JOIN   acc_budgets ON acc_budgets.budget_no = acc_budget_histories.budget
-            WHERE
-                category is not null
-                AND periode = "FY197" 
-            GROUP BY
-                category
-                
-                UNION ALL
-                
-            SELECT 
-                category,
-                0 AS Actual,            
-                0 AS PR,
-                0 AS Investment,
-                ROUND( sum( CASE WHEN `status` = "PO" THEN acc_budget_histories.amount_po ELSE 0 END ), 2 ) AS PO
-            FROM
-                acc_budget_histories
-                LEFT JOIN   acc_budgets ON acc_budgets.budget_no = acc_budget_histories.budget
-            WHERE
-                category is not null
-                AND periode = "FY197" 
-            GROUP BY
-                category
-                
-            ) a 
-        GROUP BY
-            a.category 
-        HAVING
-            a.category IS NOT NULL 
-
-    ');
-
-    // $type = db::select('
-    //     SELECT
-    //     account_name,
-    //     sum(amount) AS amount
-    //     FROM
-    //     acc_budgets
-    //     WHERE
-    //     acc_budgets.deleted_at IS NULL
-    //     GROUP BY
-    //     account_name
-    //     ');
-
     $response = array(
         'status' => true,
-        'cat_budget' => $category,
         'resume' => $resume,
-        'act' => $act,
-        'act_category' => $act_category
+        'act' => $act
     );
 
     return Response::json($response); 
 }
+
+
+    public function fetch_budget_monthly_table(Request $request)
+    {
+
+        $category = $request->get('category');
+
+        if ($category != null) {
+            $cattt = json_encode($category);
+            $catt = str_replace(array("[","]"),array("(",")"),$cattt);
+
+            $cat = 'and acc_budgets.category in '.$catt;
+        } else {
+            $cat = '';
+        }
+
+        $tglnow = date('Y-m-d');
+        $tahun = db::select("select fiscal_year from weekly_calendars where week_date = '$tglnow'");
+
+
+        $fy = $request->get('fy');
+
+        if ($fy != null) {
+            $fiscal_year = json_encode($fy);
+            $fiscal_y = str_replace(array("[","]"),array("(",")"),$fiscal_year);
+
+            $fiscal = 'and acc_budgets.periode in '.$fiscal_y;
+        } else {
+            $fiscal = 'and acc_budgets.periode = "'.$tahun[0]->fiscal_year.'"';
+        }
+
+        $department = $request->get('department');
+
+        if ($department != null) {
+            $dept = 'and acc_budgets.department = "'.$department.'"';
+        } else {
+            $dept = '';
+        }
+
+        $data = db::select('select * from acc_budgets where acc_budgets.deleted_at is null '.$fiscal.' '.$cat.' '.$dept);
+
+        $act = db::select('
+            SELECT
+        CASE    
+        WHEN
+            a.bulan = "Jan" THEN
+                13 
+                WHEN a.bulan = "Feb" THEN
+                14 
+                WHEN a.bulan = "Mar" THEN
+                15 
+                WHEN a.bulan = "Apr" THEN
+                4 
+                WHEN a.bulan = "May" THEN
+                5 
+                WHEN a.bulan = "Jun" THEN
+                6 
+                WHEN a.bulan = "Jul" THEN
+                7 
+                WHEN a.bulan = "Aug" THEN
+                8 
+                WHEN a.bulan = "Sep" THEN
+                9 
+                WHEN a.bulan = "Oct" THEN
+                10 
+                WHEN a.bulan = "Nov" THEN
+                11 
+                WHEN a.bulan = "Dec" THEN
+                12 
+                END AS month_number,
+                a.bulan,
+                ROUND( SUM( a.actual ), 2 ) AS Actual
+            FROM
+                (
+                SELECT
+                    budget_month_receive AS bulan,
+                    ROUND( sum( CASE WHEN `status` = "Actual" THEN acc_budget_histories.amount_receive ELSE 0 END ), 2 ) AS Actual,         
+                    0 AS PR,
+                    0 AS Investment,
+                    0 AS PO
+                FROM
+                    acc_budget_histories
+                    LEFT JOIN acc_budgets ON acc_budget_histories.budget = acc_budgets.budget_no 
+                WHERE
+                    budget_month_receive IS NOT NULL
+                    '.$fiscal.' '.$cat.' '.$dept.'
+                GROUP BY
+                    budget_month_receive 
+                    
+                    UNION ALL
+                
+                SELECT
+                    month_date AS bulan,
+                    ROUND( SUM( local_amount ), 2 ) AS Actual,
+                    0 AS PR,
+                    0 AS Investment,
+                    0 AS PO
+                FROM
+                    acc_actual_logs
+                    LEFT JOIN acc_budgets ON acc_actual_logs.budget_no = acc_budgets.budget_no 
+                WHERE
+                    acc_actual_logs.deleted_at IS NULL
+                    '.$fiscal.' '.$cat.' '.$dept.'
+                GROUP BY
+                    month_date
+                ) a 
+            GROUP BY
+                a.bulan 
+            HAVING
+                a.bulan IS NOT NULL 
+        ORDER BY
+            month_number
+            ');
+
+        $response = array(
+            'status' => true,
+            'datas' => $data,
+            'actual' => $act
+        );
+
+        return Response::json($response); 
+    }
 
 public function fetch_budget_detail(Request $request){
     $budget = $request->get("budget");
@@ -10880,6 +11387,7 @@ public function transfer_approvalto($id){
             join acc_purchase_order_details on
             acc_purchase_orders.no_po = acc_purchase_order_details.no_po
             WHERE
+            acc_purchase_orders.deleted_at is null and
             acc_purchase_orders.no_po = '". $request->get('no_po')."'" );
 
         $response = array(
@@ -11239,14 +11747,25 @@ public function transfer_approvalto($id){
         }
 
         $kedatangan = DB::select("
-            SELECT DISTINCT
-                acc_receives.*, acc_purchase_order_details.no_pr, IF(goods_price != 0,goods_price,service_price) as price, acc_purchase_orders.no_po_sap, acc_purchase_orders.supplier_code, acc_purchase_orders.supplier_name
-            FROM
+           SELECT DISTINCT
+            acc_receives.*,
+            acc_purchase_order_details.no_pr,
+        IF
+            ( goods_price != 0, goods_price, service_price ) AS price,
+            acc_purchase_orders.no_po_sap,
+            acc_purchase_orders.supplier_code,
+            acc_purchase_orders.supplier_name 
+        FROM
             `acc_receives`
-            LEFT JOIN acc_purchase_order_details ON acc_receives.no_po = acc_purchase_order_details.no_po 
-            JOIN acc_purchase_orders on acc_purchase_orders.no_po = acc_receives.no_po
-            AND acc_receives.no_item = acc_purchase_order_details.no_item
-            WHERE acc_receives.deleted_at IS NULL " . $tanggal . " order by acc_receives.id DESC");
+            LEFT JOIN acc_purchase_order_details ON acc_receives.no_po = acc_purchase_order_details.no_po
+            JOIN acc_purchase_orders ON acc_purchase_orders.no_po = acc_receives.no_po 
+            AND acc_receives.no_item = acc_purchase_order_details.no_item 
+        WHERE
+            acc_receives.deleted_at IS NULL 
+            and acc_purchase_orders.deleted_at IS NULL 
+            ".$tanggal."
+        ORDER BY
+            acc_receives.id desc");
 
         return DataTables::of($kedatangan)
         ->addColumn('amount_po', function ($kedatangan)

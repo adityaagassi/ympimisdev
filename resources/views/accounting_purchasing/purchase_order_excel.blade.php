@@ -57,6 +57,7 @@
                 <th style="background-color: #ffeb3b;color: #f44336">Reqmnt No</th>
                 <th style="background-color: #ffeb3b;color: #f44336">Requisitioner</th>
                 <th>Material</th>
+                <th>Buyer</th>
             </tr>
         </thead>
         <tbody>
@@ -157,6 +158,7 @@
                 </td>
                 <td>{{$po->no_po}}</td>
                 <td>{{$po->material}}</td>
+                <td>{{$po->buyer_name}}</td>
             </tr>
 
             @endforeach
