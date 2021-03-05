@@ -124,12 +124,12 @@
 				pic_data += '<div class="col-xs-12" style="padding-bottom: 10px;" id="pic_cok">';
 				pic_data += '<center>';
 				$.each(result.pics, function(key, value){
-					// if(value.remark == 1){
-					// 	pic_data += '<button onClick="editPIC(\''+value.id+'\''+','+'\''+value.point_title+'\''+','+'\''+value.location+'\')" class="btn btn-lg" style="border-color: black; width: 18%; font-weight: bold; background-color: orange; padding: 2px 5px 2px 5px; margin-left: 5px;">'+value.point_description+'<br>'+value.point_description_jp+'</button>';
-					// }
-					// else{
+					if(value.remark == 1){
+						pic_data += '<button onClick="editPIC(\''+value.id+'\''+','+'\''+value.point_title+'\''+','+'\''+value.location+'\')" class="btn btn-lg" style="border-color: black; width: 18%; font-weight: bold; background-color: orange; padding: 2px 5px 2px 5px; margin-left: 5px;">'+value.point_description+'<br>'+value.point_description_jp+'</button>';
+					}
+					else{
 						pic_data += '<button onCLick="editPIC(\''+value.id+'\''+','+'\''+value.point_title+'\''+','+'\''+value.location+'\')" class="btn btn-lg" style="border-color: black; width: 18%; font-weight: bold; background-color: white; padding: 2px 5px 2px 5px; margin-left: 5px;">'+value.point_description+'<br>'+value.point_description_jp+'</button>';
-					// }
+					}
 				});
 				pic_data += '</center>';
 				pic_data += '</div>';
@@ -161,12 +161,12 @@
 						image_data += '</thead>';
 						image_data += '<tbody>';
 						$.each(result.pics, function(key, value){
-							// if(value.remark == 1){
-							// 	image_data += '<tr style="background-color: orange; font-weight: bold; font-size: 1.7vw;">';
-							// }
-							// else{
+							if(value.remark == 1){
+								image_data += '<tr style="background-color: orange; font-weight: bold; font-size: 1.7vw;">';
+							}
+							else{
 								image_data += '<tr>';								
-							// }
+							}
 							image_data += '<td>'+value.point_description_jp+'</td>';
 							image_data += '<td>'+value.safety_riding+'</td>';
 							image_data += '</tr>';							
