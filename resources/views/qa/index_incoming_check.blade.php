@@ -2,6 +2,7 @@
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <link href="<?php echo e(url("css/jquery.numpad.css")); ?>" rel="stylesheet">
+<link rel="stylesheet" href="{{ url("css/jqbtk.css")}}">
 <style type="text/css">
 	thead>tr>th{
 		text-align:center;
@@ -47,13 +48,13 @@
 		overflow:hidden;
 		text-overflow: ellipsis;
 	}
-	#ngList {
-		height:120px;
+	#ngTemp {
+		height:200px;
 		overflow-y: scroll;
 	}
 
 	#ngList2 {
-		height:420px;
+		height:385px;
 		overflow-y: scroll;
 	}
 	#loading, #error { display: none; }
@@ -81,69 +82,109 @@
 	</div>
 	<input type="hidden" id="location" value="{{ $location }}">
 	<input type="hidden" id="employee_id" value="">
+	<input type="hidden" id="start_time" value="">
+	<input type="hidden" id="incoming_check_code" value="">
 	
 	<div class="row" style="padding-left: 10px; padding-right: 10px;">
 		<div class="col-xs-6" style="padding-right: 0; padding-left: 0">
 			<table class="table table-bordered" style="width: 100%; margin-bottom: 2px;" border="1">
 				<tbody>
 					<tr>
-						<th style=" background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">Date</th>
-						<th style=" background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">Loc</th>
+						<th style=" background-color: #d1d1d1; text-align: center; color: #14213d; padding:0;font-size: 15px;">Date</th>
+						<th style=" background-color: #d1d1d1; text-align: center; color: #14213d; padding:0;font-size: 15px;">Loc</th>
 					</tr>
 					<tr>
-						<td style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:15px;" id="date">{{date("Y-m-d")}}</td>
-						<td style="background-color: rgb(204,255,255); text-align: center;  font-size:15px;" id="loc">{{$loc}}</td>
+						<td style="background-color: #fca311; color: #14213d; text-align: center; font-size:15px;" id="date">{{date("Y-m-d")}}</td>
+						<td style="background-color: #14213d; text-align: center;color: white; font-size:15px;" id="loc">{{$loc}}</td>
 					</tr>
 					<tr>
-						<th colspan="2" style="background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">Inspector QA</th>
+						<th colspan="2" style="background-color: #d1d1d1; text-align: center; color: #14213d; padding:0;font-size: 15px;">Inspector QA</th>
 					</tr>
 					<tr>
-						<td style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:15px; width: 30%;" id="op">-</td>
-						<td style="background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 15px;" id="op2">-</td>
+						<td style="background-color: #fca311; color: #14213d; text-align: center; font-size:15px; width: 30%;" id="op">-</td>
+						<td style="background-color: #14213d; text-align: center; color: white; font-size: 15px;" id="op2">-</td>
 					</tr>
 					
 				</tbody>
 			</table>
-			<div class="col-xs-12" style="padding: 0px;padding-bottom: 15.6px">
-				<div class="input-group" style="padding-top: 10px;">
-					<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: black;">
-						<!-- <i class="glyphicon glyphicon-qrcode"></i> -->
-					</div>
-					<input type="text" style="text-align: center; border-color: black;font-size: 20px" class="form-control" id="material_number" name="material_number" placeholder="Material Number" required onkeyup="checkMaterial(this.value)">
-					<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: black;">
-						<!-- <i class="glyphicon glyphicon-qrcode"></i> -->
-					</div>
-				</div>
-			</div>
-			<table class="table table-bordered" style="padding-top: 20px;padding-bottom: 0px">
-				<tr>
-					<td style="background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">
-						Material Description
-					</td>
-					<td style="background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">
-						Vendor
-					</td>
-				</tr>
-				<tr>
-					<td id="material_description" style="background-color: #6e81ff; text-align: center; color: #fff; font-size: 20px;">-
-					</td>
-					<td id="vendor" style="background-color: #6e81ff; text-align: center; color: #fff; font-size: 20px;">-
-					</td>
-				</tr>
+			<table class="table table-bordered" style="width: 100%; margin-bottom: 5px;border: 0">
+				<tbody>
+					<tr>
+						<td colspan="2" style="background-color: #d1d1d1; text-align: center; color: #14213d; padding:0;font-size: 20px;font-weight: bold;">
+							MATERIAL
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<input type="text" class="pull-right" name="material_number" style="height: 50px;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;color: #14213d" id="material_number" placeholder="Material Number" onkeyup="checkMaterial(this.value)">
+						</td>
+					</tr>
+					<tr>
+						<td style="background-color: #d1d1d1; text-align: center; color: #14213d; padding:0;font-size: 15px;">
+							Material Description
+						</td>
+						<td style="background-color: #d1d1d1; text-align: center; color: #14213d; padding:0;font-size: 15px;">
+							Vendor
+						</td>
+					</tr>
+					<tr>
+						<td id="material_description" style="background-color: #fca311; text-align: center; color: #14213d; font-size: 20px;">-
+						</td>
+						<td id="vendor" style="background-color: #14213d; text-align: center; color: #fff; font-size: 20px;">-
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<table class="table table-bordered" style="width: 100%; margin-bottom: 5px;border: 0">
+				<tbody>
+					<tr>
+						<td colspan="2" style="background-color: #d1d1d1; text-align: center; color: #14213d; padding:0;font-size: 20px;font-weight: bold;">
+							QTY
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input type="number" class="pull-right numpad2" name="qty_rec" style="height: 50px;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;color: #14213d" id="qty_rec" placeholder="Qty Rec">
+						</td>
+						<td>
+							<input type="number" class="pull-right numpad" name="qty_check" style="height: 50px;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;color: #14213d" id="qty_check" placeholder="Qty Check">
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<table class="table table-bordered" style="width: 100%; margin-bottom: 5px;border: 0">
+				<tbody>
+					<tr>
+						<td style="background-color: #d1d1d1; text-align: center; color: #14213d; padding:0;font-size: 20px;font-weight: bold;width: 50%">
+							INVOICE NUMBER
+						</td>
+						<td style="background-color: #d1d1d1; text-align: center; color: #14213d; padding:0;font-size: 20px;font-weight: bold;width: 50%">
+							INSPECTION LEVEL
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input type="text" class="pull-right" name="invoice" style="height: 50px;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;color: #14213d" id="invoice" placeholder="Invoice">
+						</td>
+						<td>
+							<select name="inspection_level" style="height: 50px;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;color: #14213d" id="inspection_level" data-placeholder="Inspection Level">
+								<option value="-">Pilih Inspection Level</option>
+								@foreach($inspection_level as $inspection)
+									<option value="{{$inspection->inspection_level}}">{{$inspection->inspection_level}}</option>
+								@endforeach
+							</select>
+						</td>
+					</tr>
+				</tbody>
 			</table>
 		</div>
 
 		<div class="col-xs-6" style="padding-right: 0;">
-			
-
 			<div id="ngList2">
 				<table class="table table-bordered" style="width: 100%; margin-bottom: 2px;" border="1">
 					<thead>
 						<tr>
-							<th style="width: 10%; background-color: rgb(220,220,220); padding:0;font-size: 20px;" >#</th>
-							<th style="width: 65%; background-color: rgb(220,220,220); padding:0;font-size: 20px;" >NG Name</th>
-							<th style="width: 10%; background-color: rgb(220,220,220); padding:0;font-size: 20px;" >#</th>
-							<th style="width: 15%; background-color: rgb(220,220,220); padding:0;font-size: 20px;" >Count</th>
+							<th style="width: 65%; background-color: #d1d1d1; padding:0;font-size: 20px;" >Nama NG</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -157,19 +198,31 @@
 						?>
 						<input type="hidden" id="loop" value="{{$loop->count}}">
 						<tr <?php echo $color ?>>
-							<td id="minus" onclick="minus({{$nomor+1}})" style="background-color: rgb(255,204,255); font-weight: bold; font-size: 45px; cursor: pointer;" class="unselectable">-</td>
-							<td id="ng{{$nomor+1}}" style="font-size: 20px;">{{ $ng_list->ng_name }}</td>
-							<td id="plus" onclick="plus({{$nomor+1}})" style="background-color: rgb(204,255,255); font-weight: bold; font-size: 45px; cursor: pointer;" class="unselectable">+</td>
-							<td style="font-weight: bold; font-size: 45px; background-color: rgb(100,100,100); color: yellow;"><span id="count{{$nomor+1}}">0</span></td>
+							<td id="{{ $ng_list->ng_name }}" onclick="showModalNg('{{ $ng_list->ng_name }}')" style="font-size: 35px;">{{ $ng_list->ng_name }}</td>
 						</tr>
 						<?php $no+=1; ?>
 						@endforeach
 					</tbody>
 				</table>
 			</div>
+			<div id="ngTemp">
+				<table class="table table-bordered" style="width: 100%; margin-bottom: 2px;" border="1">
+					<thead>
+						<tr>
+							<th style="width: 30%; background-color: #d1d1d1; padding:0;font-size: 20px;" >Nama NG</th>
+							<th style="width: 10%; background-color: #d1d1d1; padding:0;font-size: 20px;" >Qty</th>
+							<th style="width: 10%; background-color: #d1d1d1; padding:0;font-size: 20px;" >Status</th>
+							<th style="width: 30%; background-color: #d1d1d1; padding:0;font-size: 20px;" >Note</th>
+							<th style="width: 20%; background-color: #d1d1d1; padding:0;font-size: 20px;" >Action</th>
+						</tr>
+					</thead>
+					<tbody id="bodyNgTemp">
+					</tbody>
+				</table>
+			</div>
 
 			<div class="col-xs-6" style="padding: 0px;padding-top: 10px;padding-right: 5px">
-				<button class="btn btn-danger" id="btn_cancel" onclick="cancel()" style="font-size: 25px;font-weight: bold;width: 100%">
+				<button class="btn btn-danger" id="btn_cancel" onclick="cancelAll()" style="font-size: 25px;font-weight: bold;width: 100%">
 					CANCEL
 				</button>
 			</div>
@@ -197,6 +250,57 @@
 	</div>
 </div>
 
+<div class="modal fade" id="modalNg">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-body table-responsive no-padding">
+					<h4 id="ng_name" style="width: 100%;background-color: #fca311;font-size: 25px;font-weight: bold;padding: 5px;text-align: center;color: #14213d"></h4>
+					<table class="table table-bordered" style="width: 100%; margin-bottom: 5px;border: 0">
+						<tbody>
+							<tr>
+								<td style="background-color: #14213d; text-align: center; color: #fff; padding:0;font-size: 20px;font-weight: bold;">
+									QTY
+								</td>
+								<td style="background-color: #14213d; text-align: center; color: #fff; padding:0;font-size: 20px;font-weight: bold;">
+									Status
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<input type="number" class="pull-right numpad" name="qty_ng" style="height: 50px;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;color: #14213d" id="qty_ng" placeholder="Qty NG">
+								</td>
+								<td>
+									<select name="status_ng" style="height: 50px;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;color: #14213d" id="status_ng" data-placeholder="Status NG">
+										<option value="-">Pilih Status NG</option>
+										<option value="Repair">Repair</option>
+										<option value="Scrap">Scrap</option>
+										<option value="Return">Return</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2" style="background-color: #14213d; text-align: center; color: #fff; padding:0;font-size: 20px;font-weight: bold;">
+									Note
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<textarea type="text" class="pull-right" name="note_ng" style="height: 50px;font-size: 20px;width: 100%;text-align: center;vertical-align: middle;color: #14213d" id="note_ng" placeholder="Note"></textarea>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<div style="padding-top: 10px">
+						<button id="confNg" style="width: 100%; margin-top: 10px; font-size: 3vw; padding:0; font-weight: bold; border-color: black; color: white;" onclick="confNgTemp()" class="btn btn-success">CONFIRM</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 
 @endsection
 @section('scripts')
@@ -206,6 +310,8 @@
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
 <script src="<?php echo e(url("js/jquery.numpad.js")); ?>"></script>
+<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
+<script src="{{ url("js/jqbtk.js") }}"></script>
 
 <script>
 	$.ajaxSetup({
@@ -242,10 +348,23 @@
 			decimalSeparator : '.'
 		});
 		cancelAll();
+		$('#invoice').keyboard();
+		$('#material_number').keyboard();
+		$('#note_ng').keyboard();
 	});
 
 	function cancelAll() {
 		$('#material_number').val('');
+		$('#invoice').val('');
+		$('#qty_check').val('');
+		$('#qty_rec').val('');
+		$('#material_description').html('-');
+		$('#vendor').html('-');
+		$('#inspection_level').val('-').trigger('change');
+		$('#note_ng').val('');
+		$('#qty_ng').val('');
+		$('#status_ng').val('-').trigger('change');
+		$('#start_time').val('');
 	}
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
@@ -296,6 +415,7 @@
 					$('#material_description').html(result.material.material_description);
 					$('#vendor').html(result.material.vendor);
 					$('#material_number').focus();
+					$('#start_time').val(getActualFullDate());
 				}
 				else{
 					$('#material_description').html("-");
@@ -308,26 +428,119 @@
 		}
 	}
 
-	function plus(id){
-		var count = $('#count'+id).text();
-		if($('#material_number').val() == ""){
-			audio_error.play();
-			openErrorGritter('Error!', 'Masukkan Material Number.');
+	function showModalNg(ng_name) {
+		if ($('#material_number').val() == "" || $('#qty_rec').val() == "" || $('#qty_check').val() == "" || $('#invoice').val() == "" || $('#inspection_level').val() == "-") {
+			openErrorGritter('Error!','Masukkan Semua Data');
 		}else{
-			$('#count'+id).text(parseInt(count)+1);
+			$('#note_ng').val('');
+			$('#qty_ng').val('');
+			$('#status_ng').val('-').trigger('change');
+			$('#ng_name').html(ng_name);
+			$('#modalNg').modal('show');
 		}
 	}
 
-	function minus(id){
-		var count = $('#count'+id).text();
-		if($('#material_number').val() == ""){
-			audio_error.play();
-			openErrorGritter('Error!', 'Masukkan Material Number.');
+	function confNgTemp() {
+		if ($('#qty_ng').val() == "" || $('#status_ng').val() == "") {
+			alert('Isi Semua Data');
 		}else{
-			if(count > 0)
-			{
-				$('#count'+id).text(parseInt(count)-1);
+			var material_number = $('#material_number').val();
+			var material_description = $('#material_description').text();
+			var vendor = $('#vendor').text();
+			var qty_rec = $('#qty_rec').val();
+			var qty_check = $('#qty_check').val();
+			var invoice = $('#invoice').val();
+			var inspection_level = $('#inspection_level').val();
+			var ng_name = $('#ng_name').text();
+			var qty_ng = $('#qty_ng').val();
+			var status_ng = $('#status_ng').val();
+			var note_ng = $('#note_ng').val();
+			var inspector = $('#employee_id').val();
+			var location = $('#location').val();
+
+			var data = {
+				material_number:material_number,
+				material_description:material_description,
+				vendor:vendor,
+				qty_rec:qty_rec,
+				qty_check:qty_check,
+				invoice:invoice,
+				inspection_level:inspection_level,
+				ng_name:ng_name,
+				qty_ng:qty_ng,
+				status_ng:status_ng,
+				note_ng:note_ng,
+				location:location,
+				inspector:inspector,
 			}
+
+			$.post('{{ url("input/qa/ng_temp") }}', data, function(result, status, xhr){
+				if(result.status){
+					openSuccessGritter('Success!', result.message);
+					$('#note_ng').val('');
+					$('#qty_ng').val('');
+					$('#status_ng').val('-').trigger('change');
+					$('#modalNg').modal('hide');
+					$('#incoming_check_code').val(result.incoming_check_code);
+					fetchNgTemp();
+				}
+				else{
+					audio_error.play();
+					openErrorGritter('Error', result.message);
+				}
+			});
+		}
+	}
+
+	function fetchNgTemp() {
+		data = {
+			incoming_check_code:$('#incoming_check_code').val()
+		}
+		$.get('{{ url("fetch/qa/ng_temp") }}', data, function(result, status, xhr){
+			if(result.status){
+				openSuccessGritter('Success!', result.message);
+				var ngTemp = "";
+				$('#bodyNgTemp').html("");
+				var index = 1;
+				$.each(result.ng_temp, function(key,value){
+					if (index % 2 === 0) {
+						var color = 'style="background-color: #e1e5f2"';
+					}else{
+						var color = 'style="background-color: #bfdbf7"';
+					}
+					ngTemp += '<tr '+color+'>';
+					ngTemp += '<td>'+value.ng_name+'</td>';
+					ngTemp += '<td>'+value.qty_ng+'</td>';
+					ngTemp += '<td>'+value.status_ng+'</td>';
+					ngTemp += '<td>'+(value.note_ng || "")+'</td>';
+					ngTemp += '<td><button onclick="deleteNgTemp(\''+value.id+'\')" class="btn btn-danger btn-sm">Delete</button></td>';
+					ngTemp += '</tr>';
+					index++;
+				});
+				$('#bodyNgTemp').append(ngTemp);
+			}
+			else{
+				audio_error.play();
+				openErrorGritter('Error', result.message);
+			}
+		});
+	}
+
+	function deleteNgTemp(id) {
+		if (confirm('Are you sure want to delete this data?')) {
+			var data = {
+				id:id
+			}
+			$.get('{{ url("delete/qa/ng_temp") }}', data, function(result, status, xhr){
+				if(result.status){
+					openSuccessGritter('Success!', result.message);
+					fetchNgTemp();
+				}
+				else{
+					audio_error.play();
+					openErrorGritter('Error', result.message);
+				}
+			});
 		}
 	}
 
