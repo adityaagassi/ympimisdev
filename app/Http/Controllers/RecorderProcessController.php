@@ -223,6 +223,43 @@ class RecorderProcessController extends Controller
         }
     }
 
+    public function fetch_cavity_detail(Request $request)
+    {
+      try {
+        $type = $request->get("type");
+        $no_cavity = $request->get("no_cavity");
+
+        $detail = PushBlockMaster::where('type',$type)->where('no_cavity',$no_cavity)->first();
+        $data = array('type' => $detail->type,
+                    'no_cavity' => $detail->no_cavity,
+                    'cavity_1' => $detail->cavity_1,
+                    'cavity_2' => $detail->cavity_2,
+                    'cavity_3' => $detail->cavity_3,
+                    'cavity_4' => $detail->cavity_4);
+
+        $response = array(
+          'status' => true,
+          'datas' => $data,
+          'id' => $detail->id,
+          'cavity_1' => $detail->cavity_1,
+          'cavity_2' => $detail->cavity_2,
+          'cavity_3' => $detail->cavity_3,
+          'cavity_4' => $detail->cavity_4,
+          'cavity_5' => $detail->cavity_5,
+          'cavity_6' => $detail->cavity_6,
+          'cavity_7' => $detail->cavity_7,
+          'cavity_8' => $detail->cavity_8,
+        );
+        return Response::json($response);
+      } catch (\Exception $e) {
+        $response = array(
+          'status' => false,
+          'datas' => $e->getMessage(),
+        );
+        return Response::json($response);
+      }
+    }
+
     function fetch_mesin_parameter(Request $request)
     {
           try{
@@ -3065,301 +3102,652 @@ class RecorderProcessController extends Controller
     {
       try {
           $id_user = Auth::id();
+          $datas = $request->get('data');
 
-          $str = $request->get('product');
+          $str = $datas['product'];
           $yrs = "/YRS/i";
 
-          if ($request->get('save_type') == 'INPUT') {
+          $cdm_code = $datas['product'].'_'.$datas['type'].'_'.$datas['color'].'_'.$datas['injection_date'].'_'.date('Y-m-d H:i:s');
+
+          if ($datas['save_type'] == 'INPUT') {
             if (preg_match($yrs, $str) == 1) {
-              if (count($request->get('head')) > 0) {
-                $head = $request->get('head');
-                $awal_a = $head[0]['awal_a'];
-                $awal_b = $head[0]['awal_b'];
-                $awal_c = $head[0]['awal_c'];
-                $awal_status = $head[0]['awal_status'];
+              if ($datas['type'] == 'HEAD') {
+                  for ($i=0; $i < 4; $i++) { 
+                    $awal_a = $datas['head'][$i]['awal_a'];
+                    $awal_b = $datas['head'][$i]['awal_b'];
+                    $awal_c = $datas['head'][$i]['awal_c'];
+                    $awal_status = $datas['head'][$i]['awal_status'];
 
-                $ist1_a = $head[0]['ist1_a'];
-                $ist1_b = $head[0]['ist1_b'];
-                $ist1_c = $head[0]['ist1_c'];
-                $ist1_status = $head[0]['ist1_status'];
+                    $ist1_a = $datas['head'][$i]['ist1_a'];
+                    $ist1_b = $datas['head'][$i]['ist1_b'];
+                    $ist1_c = $datas['head'][$i]['ist1_c'];
+                    $ist1_status = $datas['head'][$i]['ist1_status'];
 
-                $ist2_a = $head[0]['ist2_a'];
-                $ist2_b = $head[0]['ist2_b'];
-                $ist2_c = $head[0]['ist2_c'];
-                $ist2_status = $head[0]['ist2_status'];
+                    $ist2_a = $datas['head'][$i]['ist2_a'];
+                    $ist2_b = $datas['head'][$i]['ist2_b'];
+                    $ist2_c = $datas['head'][$i]['ist2_c'];
+                    $ist2_status = $datas['head'][$i]['ist2_status'];
 
-                $ist3_a = $head[0]['ist3_a'];
-                $ist3_b = $head[0]['ist3_b'];
-                $ist3_c = $head[0]['ist3_c'];
-                $ist3_status = $head[0]['ist3_status'];
+                    $ist3_a = $datas['head'][$i]['ist3_a'];
+                    $ist3_b = $datas['head'][$i]['ist3_b'];
+                    $ist3_c = $datas['head'][$i]['ist3_c'];
+                    $ist3_status = $datas['head'][$i]['ist3_status'];
+                    
+                    $cdm = InjectionCdmCheck::create([
+                      'cdm_code' => $cdm_code,
+                      'product' => $datas['product'],
+                      'type' => $datas['type'],
+                      'part' => $datas['part'],
+                      'color' => $datas['color'],
+                      'injection_date' => $datas['injection_date'],
+                      'machine' => $datas['machine'],
+                      'cavity' => $datas['cavity'],
+                      'cav' => $datas['head'][$i]['cav'],
+                      'employee_id' => $datas['employee_id'],
+                      'awal_a' => $awal_a,
+                      'awal_b' => $awal_b,
+                      'awal_c' => $awal_c,
+                      'awal_status' => $awal_status,
+                      'ist_1_a' => $ist1_a,
+                      'ist_1_b' => $ist1_b,
+                      'ist_1_c' => $ist1_c,
+                      'ist_1_status' => $ist1_status,
+                      'ist_2_a' => $ist2_a,
+                      'ist_2_b' => $ist2_b,
+                      'ist_2_c' => $ist2_c,
+                      'ist_2_status' => $ist2_status,
+                      'ist_3_a' => $ist3_a,
+                      'ist_3_b' => $ist3_b,
+                      'ist_3_c' => $ist3_c,
+                      'ist_3_status' => $ist3_status,
+                      'created_by' => $id_user,
+                    ]);
+                  }
               }
 
-              if (count($request->get('middle')) > 0) {
-                $middle = $request->get('middle');
-                $awal_a = $middle[0]['awal_a'];
-                $awal_b = $middle[0]['awal_b'];
-                $awal_c = $middle[0]['awal_c'];
-                $awal_status = $middle[0]['awal_status'];
+              if ($datas['type'] == 'MIDDLE') {
+                  for ($i=0; $i < 4; $i++) { 
+                    $awal_a = $datas['middle'][$i]['awal_a'];
+                    $awal_b = $datas['middle'][$i]['awal_b'];
+                    $awal_c = $datas['middle'][$i]['awal_c'];
+                    $awal_status = $datas['middle'][$i]['awal_status'];
 
-                $ist1_a = $middle[0]['ist1_a'];
-                $ist1_b = $middle[0]['ist1_b'];
-                $ist1_c = $middle[0]['awal_c'];
-                $ist1_status = $middle[0]['ist1_status'];
+                    $ist1_a = $datas['middle'][$i]['ist1_a'];
+                    $ist1_b = $datas['middle'][$i]['ist1_b'];
+                    $ist1_c = $datas['middle'][$i]['ist1_c'];
+                    $ist1_status = $datas['middle'][$i]['ist1_status'];
 
-                $ist2_a = $middle[0]['ist2_a'];
-                $ist2_b = $middle[0]['ist2_b'];
-                $ist2_c = $middle[0]['ist2_c'];
-                $ist2_status = $middle[0]['ist2_status'];
+                    $ist2_a = $datas['middle'][$i]['ist2_a'];
+                    $ist2_b = $datas['middle'][$i]['ist2_b'];
+                    $ist2_c = $datas['middle'][$i]['ist2_c'];
+                    $ist2_status = $datas['middle'][$i]['ist2_status'];
 
-                $ist3_a = $middle[0]['ist3_a'];
-                $ist3_b = $middle[0]['ist3_b'];
-                $ist3_c = $middle[0]['ist3_c'];
-                $ist3_status = $middle[0]['ist3_status'];
+                    $ist3_a = $datas['middle'][$i]['ist3_a'];
+                    $ist3_b = $datas['middle'][$i]['ist3_b'];
+                    $ist3_c = $datas['middle'][$i]['ist3_c'];
+                    $ist3_status = $datas['middle'][$i]['ist3_status'];
+                    
+                    $cdm = InjectionCdmCheck::create([
+                      'cdm_code' => $cdm_code,
+                      'product' => $datas['product'],
+                      'type' => $datas['type'],
+                      'part' => $datas['part'],
+                      'color' => $datas['color'],
+                      'injection_date' => $datas['injection_date'],
+                      'machine' => $datas['machine'],
+                      'cavity' => $datas['cavity'],
+                      'cav' => $datas['middle'][$i]['cav'],
+                      'employee_id' => $datas['employee_id'],
+                      'awal_a' => $awal_a,
+                      'awal_b' => $awal_b,
+                      'awal_c' => $awal_c,
+                      'awal_status' => $awal_status,
+                      'ist_1_a' => $ist1_a,
+                      'ist_1_b' => $ist1_b,
+                      'ist_1_c' => $ist1_c,
+                      'ist_1_status' => $ist1_status,
+                      'ist_2_a' => $ist2_a,
+                      'ist_2_b' => $ist2_b,
+                      'ist_2_c' => $ist2_c,
+                      'ist_2_status' => $ist2_status,
+                      'ist_3_a' => $ist3_a,
+                      'ist_3_b' => $ist3_b,
+                      'ist_3_c' => $ist3_c,
+                      'ist_3_status' => $ist3_status,
+                      'created_by' => $id_user,
+                    ]);
+                  }
               }
 
-              if (count($request->get('foot')) > 0) {
-                $foot = $request->get('foot');
-                $awal_a = $foot[0]['awal_a'];
-                $awal_b = $foot[0]['awal_b'];
-                $awal_c = $foot[0]['awal_c'];
-                $awal_status = $foot[0]['awal_status'];
+              if ($datas['type'] == 'FOOT') {
+                  if (count($datas['foot']) == 6) {
+                    for ($i=0; $i < 6; $i++) { 
+                      $awal_a = $datas['foot'][$i]['awal_a'];
+                      $awal_b = $datas['foot'][$i]['awal_b'];
+                      $awal_c = $datas['foot'][$i]['awal_c'];
+                      $awal_status = $datas['foot'][$i]['awal_status'];
 
-                $ist1_a = $foot[0]['ist1_a'];
-                $ist1_b = $foot[0]['ist1_b'];
-                $ist1_c = $foot[0]['ist1_c'];
-                $ist1_status = $foot[0]['ist1_status'];
+                      $ist1_a = $datas['foot'][$i]['ist1_a'];
+                      $ist1_b = $datas['foot'][$i]['ist1_b'];
+                      $ist1_c = $datas['foot'][$i]['ist1_c'];
+                      $ist1_status = $datas['foot'][$i]['ist1_status'];
 
-                $ist2_a = $foot[0]['ist2_a'];
-                $ist2_b = $foot[0]['ist2_b'];
-                $ist2_c = $foot[0]['ist2_c'];
-                $ist2_status = $foot[0]['ist2_status'];
+                      $ist2_a = $datas['foot'][$i]['ist2_a'];
+                      $ist2_b = $datas['foot'][$i]['ist2_b'];
+                      $ist2_c = $datas['foot'][$i]['ist2_c'];
+                      $ist2_status = $datas['foot'][$i]['ist2_status'];
 
-                $ist3_a = $foot[0]['ist3_a'];
-                $ist3_b = $foot[0]['ist3_b'];
-                $ist3_c = $foot[0]['ist3_c'];
-                $ist3_status = $foot[0]['ist3_status'];
+                      $ist3_a = $datas['foot'][$i]['ist3_a'];
+                      $ist3_b = $datas['foot'][$i]['ist3_b'];
+                      $ist3_c = $datas['foot'][$i]['ist3_c'];
+                      $ist3_status = $datas['foot'][$i]['ist3_status'];
+                      
+                      $cdm = InjectionCdmCheck::create([
+                        'cdm_code' => $cdm_code,
+                        'product' => $datas['product'],
+                        'type' => $datas['type'],
+                        'part' => $datas['part'],
+                        'color' => $datas['color'],
+                        'injection_date' => $datas['injection_date'],
+                        'machine' => $datas['machine'],
+                        'cavity' => $datas['cavity'],
+                        'cav' => $datas['foot'][$i]['cav'],
+                        'employee_id' => $datas['employee_id'],
+                        'awal_a' => $awal_a,
+                        'awal_b' => $awal_b,
+                        'awal_c' => $awal_c,
+                        'awal_status' => $awal_status,
+                        'ist_1_a' => $ist1_a,
+                        'ist_1_b' => $ist1_b,
+                        'ist_1_c' => $ist1_c,
+                        'ist_1_status' => $ist1_status,
+                        'ist_2_a' => $ist2_a,
+                        'ist_2_b' => $ist2_b,
+                        'ist_2_c' => $ist2_c,
+                        'ist_2_status' => $ist2_status,
+                        'ist_3_a' => $ist3_a,
+                        'ist_3_b' => $ist3_b,
+                        'ist_3_c' => $ist3_c,
+                        'ist_3_status' => $ist3_status,
+                        'created_by' => $id_user,
+                      ]);
+                    }
+                  }else{
+                    for ($i=0; $i < 4; $i++) { 
+                      $awal_a = $datas['foot'][$i]['awal_a'];
+                      $awal_b = $datas['foot'][$i]['awal_b'];
+                      $awal_c = $datas['foot'][$i]['awal_c'];
+                      $awal_status = $datas['foot'][$i]['awal_status'];
+
+                      $ist1_a = $datas['foot'][$i]['ist1_a'];
+                      $ist1_b = $datas['foot'][$i]['ist1_b'];
+                      $ist1_c = $datas['foot'][$i]['ist1_c'];
+                      $ist1_status = $datas['foot'][$i]['ist1_status'];
+
+                      $ist2_a = $datas['foot'][$i]['ist2_a'];
+                      $ist2_b = $datas['foot'][$i]['ist2_b'];
+                      $ist2_c = $datas['foot'][$i]['ist2_c'];
+                      $ist2_status = $datas['foot'][$i]['ist2_status'];
+
+                      $ist3_a = $datas['foot'][$i]['ist3_a'];
+                      $ist3_b = $datas['foot'][$i]['ist3_b'];
+                      $ist3_c = $datas['foot'][$i]['ist3_c'];
+                      $ist3_status = $datas['foot'][$i]['ist3_status'];
+                      
+                      $cdm = InjectionCdmCheck::create([
+                        'cdm_code' => $cdm_code,
+                        'product' => $datas['product'],
+                        'type' => $datas['type'],
+                        'part' => $datas['part'],
+                        'color' => $datas['color'],
+                        'injection_date' => $datas['injection_date'],
+                        'machine' => $datas['machine'],
+                        'cavity' => $datas['cavity'],
+                        'cav' => $datas['foot'][$i]['cav'],
+                        'employee_id' => $datas['employee_id'],
+                        'awal_a' => $awal_a,
+                        'awal_b' => $awal_b,
+                        'awal_c' => $awal_c,
+                        'awal_status' => $awal_status,
+                        'ist_1_a' => $ist1_a,
+                        'ist_1_b' => $ist1_b,
+                        'ist_1_c' => $ist1_c,
+                        'ist_1_status' => $ist1_status,
+                        'ist_2_a' => $ist2_a,
+                        'ist_2_b' => $ist2_b,
+                        'ist_2_c' => $ist2_c,
+                        'ist_2_status' => $ist2_status,
+                        'ist_3_a' => $ist3_a,
+                        'ist_3_b' => $ist3_b,
+                        'ist_3_c' => $ist3_c,
+                        'ist_3_status' => $ist3_status,
+                        'created_by' => $id_user,
+                      ]);
+                    }
+                  }
               }
             }else{
-              if (count($request->get('head_yrf')) > 0) {
-                $head = $request->get('head_yrf');
-                $awal_a = $head[0]['awal_a'];
-                $awal_b = $head[0]['awal_b'];
-                $awal_c = $head[0]['awal_c'];
-                $awal_status = $head[0]['awal_status'];
+              if ($datas['type'] == 'HEAD') {
+                  for ($i=0; $i < 2; $i++) { 
+                    $awal_a = $datas['head_yrf'][$i]['awal_a'];
+                    $awal_b = $datas['head_yrf'][$i]['awal_b'];
+                    $awal_c = $datas['head_yrf'][$i]['awal_c'];
+                    $awal_status = $datas['head_yrf'][$i]['awal_status'];
 
-                $ist1_a = $head[0]['ist1_a'];
-                $ist1_b = $head[0]['ist1_b'];
-                $ist1_c = $head[0]['ist1_c'];
-                $ist1_status = $head[0]['ist1_status'];
+                    $ist1_a = $datas['head_yrf'][$i]['ist1_a'];
+                    $ist1_b = $datas['head_yrf'][$i]['ist1_b'];
+                    $ist1_c = $datas['head_yrf'][$i]['ist1_c'];
+                    $ist1_status = $datas['head_yrf'][$i]['ist1_status'];
 
-                $ist2_a = $head[0]['ist2_a'];
-                $ist2_b = $head[0]['ist2_b'];
-                $ist2_c = $head[0]['ist2_c'];
-                $ist2_status = $head[0]['ist2_status'];
+                    $ist2_a = $datas['head_yrf'][$i]['ist2_a'];
+                    $ist2_b = $datas['head_yrf'][$i]['ist2_b'];
+                    $ist2_c = $datas['head_yrf'][$i]['ist2_c'];
+                    $ist2_status = $datas['head_yrf'][$i]['ist2_status'];
 
-                $ist3_a = $head[0]['ist3_a'];
-                $ist3_b = $head[0]['ist3_b'];
-                $ist3_c = $head[0]['ist3_c'];
-                $ist3_status = $head[0]['ist3_status'];
+                    $ist3_a = $datas['head_yrf'][$i]['ist3_a'];
+                    $ist3_b = $datas['head_yrf'][$i]['ist3_b'];
+                    $ist3_c = $datas['head_yrf'][$i]['ist3_c'];
+                    $ist3_status = $datas['head_yrf'][$i]['ist3_status'];
+                    
+                    $cdm = InjectionCdmCheck::create([
+                      'cdm_code' => $cdm_code,
+                      'product' => $datas['product'],
+                      'type' => $datas['type'],
+                      'part' => $datas['part'],
+                      'color' => $datas['color'],
+                      'injection_date' => $datas['injection_date'],
+                      'machine' => $datas['machine'],
+                      'cavity' => $datas['cavity'],
+                      'cav' => $datas['head_yrf'][$i]['cav'],
+                      'employee_id' => $datas['employee_id'],
+                      'awal_a' => $awal_a,
+                      'awal_b' => $awal_b,
+                      'awal_c' => $awal_c,
+                      'awal_status' => $awal_status,
+                      'ist_1_a' => $ist1_a,
+                      'ist_1_b' => $ist1_b,
+                      'ist_1_c' => $ist1_c,
+                      'ist_1_status' => $ist1_status,
+                      'ist_2_a' => $ist2_a,
+                      'ist_2_b' => $ist2_b,
+                      'ist_2_c' => $ist2_c,
+                      'ist_2_status' => $ist2_status,
+                      'ist_3_a' => $ist3_a,
+                      'ist_3_b' => $ist3_b,
+                      'ist_3_c' => $ist3_c,
+                      'ist_3_status' => $ist3_status,
+                      'created_by' => $id_user,
+                    ]);
+                  }
               }
 
-              if (count($request->get('body_yrf')) > 0) {
-                $body_yrf = $request->get('body_yrf');
-                $awal_a = $body_yrf[0]['awal_a'];
-                $awal_b = $body_yrf[0]['awal_b'];
-                $awal_c = $body_yrf[0]['awal_c'];
-                $awal_status = $body_yrf[0]['awal_status'];
+              if ($datas['type'] == 'BODY') {
+                  for ($i=0; $i < 2; $i++) { 
+                    $awal_a = $datas['body_yrf'][$i]['awal_a'];
+                    $awal_b = $datas['body_yrf'][$i]['awal_b'];
+                    $awal_c = $datas['body_yrf'][$i]['awal_c'];
+                    $awal_status = $datas['body_yrf'][$i]['awal_status'];
 
-                $ist1_a = $body_yrf[0]['ist1_a'];
-                $ist1_b = $body_yrf[0]['ist1_b'];
-                $ist1_c = $body_yrf[0]['awal_c'];
-                $ist1_status = $body_yrf[0]['ist1_status'];
+                    $ist1_a = $datas['body_yrf'][$i]['ist1_a'];
+                    $ist1_b = $datas['body_yrf'][$i]['ist1_b'];
+                    $ist1_c = $datas['body_yrf'][$i]['ist1_c'];
+                    $ist1_status = $datas['body_yrf'][$i]['ist1_status'];
 
-                $ist2_a = $body_yrf[0]['ist2_a'];
-                $ist2_b = $body_yrf[0]['ist2_b'];
-                $ist2_c = $body_yrf[0]['ist2_c'];
-                $ist2_status = $body_yrf[0]['ist2_status'];
+                    $ist2_a = $datas['body_yrf'][$i]['ist2_a'];
+                    $ist2_b = $datas['body_yrf'][$i]['ist2_b'];
+                    $ist2_c = $datas['body_yrf'][$i]['ist2_c'];
+                    $ist2_status = $datas['body_yrf'][$i]['ist2_status'];
 
-                $ist3_a = $body_yrf[0]['ist3_a'];
-                $ist3_b = $body_yrf[0]['ist3_b'];
-                $ist3_c = $body_yrf[0]['ist3_c'];
-                $ist3_status = $body_yrf[0]['ist3_status'];
+                    $ist3_a = $datas['body_yrf'][$i]['ist3_a'];
+                    $ist3_b = $datas['body_yrf'][$i]['ist3_b'];
+                    $ist3_c = $datas['body_yrf'][$i]['ist3_c'];
+                    $ist3_status = $datas['body_yrf'][$i]['ist3_status'];
+                    
+                    $cdm = InjectionCdmCheck::create([
+                      'cdm_code' => $cdm_code,
+                      'product' => $datas['product'],
+                      'type' => $datas['type'],
+                      'part' => $datas['part'],
+                      'color' => $datas['color'],
+                      'injection_date' => $datas['injection_date'],
+                      'machine' => $datas['machine'],
+                      'cavity' => $datas['cavity'],
+                      'cav' => $datas['body_yrf'][$i]['cav'],
+                      'employee_id' => $datas['employee_id'],
+                      'awal_a' => $awal_a,
+                      'awal_b' => $awal_b,
+                      'awal_c' => $awal_c,
+                      'awal_status' => $awal_status,
+                      'ist_1_a' => $ist1_a,
+                      'ist_1_b' => $ist1_b,
+                      'ist_1_c' => $ist1_c,
+                      'ist_1_status' => $ist1_status,
+                      'ist_2_a' => $ist2_a,
+                      'ist_2_b' => $ist2_b,
+                      'ist_2_c' => $ist2_c,
+                      'ist_2_status' => $ist2_status,
+                      'ist_3_a' => $ist3_a,
+                      'ist_3_b' => $ist3_b,
+                      'ist_3_c' => $ist3_c,
+                      'ist_3_status' => $ist3_status,
+                      'created_by' => $id_user,
+                    ]);
+                  }
               }
             }
-
-            $cdm = InjectionCdmCheck::create([
-                'product' => $request->get('product'),
-                'type' => $request->get('type'),
-                'part' => $request->get('part'),
-                'color' => $request->get('color'),
-                'injection_date' => $request->get('injection_date'),
-                'machine' => $request->get('machine'),
-                'cavity' => $request->get('cavity'),
-                'employee_id' => $request->get('employee_id'),
-                'awal_a' => $awal_a,
-                'awal_b' => $awal_b,
-                'awal_c' => $awal_c,
-                'awal_status' => $awal_status,
-                'ist_1_a' => $ist1_a,
-                'ist_1_b' => $ist1_b,
-                'ist_1_c' => $ist1_c,
-                'ist_1_status' => $ist1_status,
-                'ist_2_a' => $ist2_a,
-                'ist_2_b' => $ist2_b,
-                'ist_2_c' => $ist2_c,
-                'ist_2_status' => $ist2_status,
-                'ist_3_a' => $ist3_a,
-                'ist_3_b' => $ist3_b,
-                'ist_3_c' => $ist3_c,
-                'ist_3_status' => $ist3_status,
-                'created_by' => $id_user,
-            ]);
 
             $message = 'Input Data Success';
-          }else{
+          }
+
+
+          if ($datas['save_type'] == "UPDATE") {
             if (preg_match($yrs, $str) == 1) {
-              if (count($request->get('head')) > 0) {
-                $head = $request->get('head');
-                $awal_a = $head[0]['awal_a'];
-                $awal_b = $head[0]['awal_b'];
-                $awal_c = $head[0]['awal_c'];
-                $awal_status = $head[0]['awal_status'];
+              if ($datas['type'] == 'HEAD') {
+                for ($i=0; $i < 4; $i++) { 
+                  $awal_a = $datas['head'][$i]['awal_a'];
+                  $awal_b = $datas['head'][$i]['awal_b'];
+                  $awal_c = $datas['head'][$i]['awal_c'];
+                  $awal_status = $datas['head'][$i]['awal_status'];
 
-                $ist1_a = $head[0]['ist1_a'];
-                $ist1_b = $head[0]['ist1_b'];
-                $ist1_c = $head[0]['ist1_c'];
-                $ist1_status = $head[0]['ist1_status'];
+                  $ist1_a = $datas['head'][$i]['ist1_a'];
+                  $ist1_b = $datas['head'][$i]['ist1_b'];
+                  $ist1_c = $datas['head'][$i]['ist1_c'];
+                  $ist1_status = $datas['head'][$i]['ist1_status'];
 
-                $ist2_a = $head[0]['ist2_a'];
-                $ist2_b = $head[0]['ist2_b'];
-                $ist2_c = $head[0]['ist2_c'];
-                $ist2_status = $head[0]['ist2_status'];
+                  $ist2_a = $datas['head'][$i]['ist2_a'];
+                  $ist2_b = $datas['head'][$i]['ist2_b'];
+                  $ist2_c = $datas['head'][$i]['ist2_c'];
+                  $ist2_status = $datas['head'][$i]['ist2_status'];
 
-                $ist3_a = $head[0]['ist3_a'];
-                $ist3_b = $head[0]['ist3_b'];
-                $ist3_c = $head[0]['ist3_c'];
-                $ist3_status = $head[0]['ist3_status'];
+                  $ist3_a = $datas['head'][$i]['ist3_a'];
+                  $ist3_b = $datas['head'][$i]['ist3_b'];
+                  $ist3_c = $datas['head'][$i]['ist3_c'];
+                  $ist3_status = $datas['head'][$i]['ist3_status'];
+                  
+                  $cdm = InjectionCdmCheck::find($datas['head'][$i]['id_cdm']);
+                  $cdm->product = $datas['product'];
+                  $cdm->type = $datas['type'];
+                  $cdm->part = $datas['part'];
+                  $cdm->color = $datas['color'];
+                  $cdm->injection_date = $datas['injection_date'];
+                  $cdm->machine = $datas['machine'];
+                  $cdm->cavity = $datas['cavity'];
+                  $cdm->cav = $datas['head'][$i]['cav'];
+                  $cdm->awal_a = $awal_a;
+                  $cdm->awal_b = $awal_b;
+                  $cdm->awal_c = $awal_c;
+                  $cdm->awal_status = $awal_status;
+                  $cdm->ist_1_a = $ist1_a;
+                  $cdm->ist_1_b = $ist1_b;
+                  $cdm->ist_1_c = $ist1_c;
+                  $cdm->ist_1_status = $ist1_status;
+                  $cdm->ist_2_a = $ist2_a;
+                  $cdm->ist_2_b = $ist2_b;
+                  $cdm->ist_2_c = $ist2_c;
+                  $cdm->ist_2_status = $ist2_status;
+                  $cdm->ist_3_a = $ist3_a;
+                  $cdm->ist_3_b = $ist3_b;
+                  $cdm->ist_3_c = $ist3_c;
+                  $cdm->ist_3_status = $ist3_status;
+                  $cdm->save();
+                }
               }
 
-              if (count($request->get('middle')) > 0) {
-                $middle = $request->get('middle');
-                $awal_a = $middle[0]['awal_a'];
-                $awal_b = $middle[0]['awal_b'];
-                $awal_c = $middle[0]['awal_c'];
-                $awal_status = $middle[0]['awal_status'];
+              if ($datas['type'] == 'MIDDLE') {
+                for ($i=0; $i < 4; $i++) { 
+                  $awal_a = $datas['middle'][$i]['awal_a'];
+                  $awal_b = $datas['middle'][$i]['awal_b'];
+                  $awal_c = $datas['middle'][$i]['awal_c'];
+                  $awal_status = $datas['middle'][$i]['awal_status'];
 
-                $ist1_a = $middle[0]['ist1_a'];
-                $ist1_b = $middle[0]['ist1_b'];
-                $ist1_c = $middle[0]['awal_c'];
-                $ist1_status = $middle[0]['ist1_status'];
+                  $ist1_a = $datas['middle'][$i]['ist1_a'];
+                  $ist1_b = $datas['middle'][$i]['ist1_b'];
+                  $ist1_c = $datas['middle'][$i]['ist1_c'];
+                  $ist1_status = $datas['middle'][$i]['ist1_status'];
 
-                $ist2_a = $middle[0]['ist2_a'];
-                $ist2_b = $middle[0]['ist2_b'];
-                $ist2_c = $middle[0]['ist2_c'];
-                $ist2_status = $middle[0]['ist2_status'];
+                  $ist2_a = $datas['middle'][$i]['ist2_a'];
+                  $ist2_b = $datas['middle'][$i]['ist2_b'];
+                  $ist2_c = $datas['middle'][$i]['ist2_c'];
+                  $ist2_status = $datas['middle'][$i]['ist2_status'];
 
-                $ist3_a = $middle[0]['ist3_a'];
-                $ist3_b = $middle[0]['ist3_b'];
-                $ist3_c = $middle[0]['ist3_c'];
-                $ist3_status = $middle[0]['ist3_status'];
+                  $ist3_a = $datas['middle'][$i]['ist3_a'];
+                  $ist3_b = $datas['middle'][$i]['ist3_b'];
+                  $ist3_c = $datas['middle'][$i]['ist3_c'];
+                  $ist3_status = $datas['middle'][$i]['ist3_status'];
+                  
+                  $cdm = InjectionCdmCheck::find($datas['middle'][$i]['id_cdm']);
+                  $cdm->product = $datas['product'];
+                  $cdm->type = $datas['type'];
+                  $cdm->part = $datas['part'];
+                  $cdm->color = $datas['color'];
+                  $cdm->injection_date = $datas['injection_date'];
+                  $cdm->machine = $datas['machine'];
+                  $cdm->cavity = $datas['cavity'];
+                  $cdm->cav = $datas['middle'][$i]['cav'];
+                  $cdm->awal_a = $awal_a;
+                  $cdm->awal_b = $awal_b;
+                  $cdm->awal_c = $awal_c;
+                  $cdm->awal_status = $awal_status;
+                  $cdm->ist_1_a = $ist1_a;
+                  $cdm->ist_1_b = $ist1_b;
+                  $cdm->ist_1_c = $ist1_c;
+                  $cdm->ist_1_status = $ist1_status;
+                  $cdm->ist_2_a = $ist2_a;
+                  $cdm->ist_2_b = $ist2_b;
+                  $cdm->ist_2_c = $ist2_c;
+                  $cdm->ist_2_status = $ist2_status;
+                  $cdm->ist_3_a = $ist3_a;
+                  $cdm->ist_3_b = $ist3_b;
+                  $cdm->ist_3_c = $ist3_c;
+                  $cdm->ist_3_status = $ist3_status;
+                  $cdm->save();
+                }
               }
 
-              if (count($request->get('foot')) > 0) {
-                $foot = $request->get('foot');
-                $awal_a = $foot[0]['awal_a'];
-                $awal_b = $foot[0]['awal_b'];
-                $awal_c = $foot[0]['awal_c'];
-                $awal_status = $foot[0]['awal_status'];
+              if ($datas['type'] == 'FOOT') {
+                if (count($datas['foot']) == 6) {
+                  for ($i=0; $i < 6; $i++) { 
+                    $awal_a = $datas['foot'][$i]['awal_a'];
+                    $awal_b = $datas['foot'][$i]['awal_b'];
+                    $awal_c = $datas['foot'][$i]['awal_c'];
+                    $awal_status = $datas['foot'][$i]['awal_status'];
 
-                $ist1_a = $foot[0]['ist1_a'];
-                $ist1_b = $foot[0]['ist1_b'];
-                $ist1_c = $foot[0]['ist1_c'];
-                $ist1_status = $foot[0]['ist1_status'];
+                    $ist1_a = $datas['foot'][$i]['ist1_a'];
+                    $ist1_b = $datas['foot'][$i]['ist1_b'];
+                    $ist1_c = $datas['foot'][$i]['ist1_c'];
+                    $ist1_status = $datas['foot'][$i]['ist1_status'];
 
-                $ist2_a = $foot[0]['ist2_a'];
-                $ist2_b = $foot[0]['ist2_b'];
-                $ist2_c = $foot[0]['ist2_c'];
-                $ist2_status = $foot[0]['ist2_status'];
+                    $ist2_a = $datas['foot'][$i]['ist2_a'];
+                    $ist2_b = $datas['foot'][$i]['ist2_b'];
+                    $ist2_c = $datas['foot'][$i]['ist2_c'];
+                    $ist2_status = $datas['foot'][$i]['ist2_status'];
 
-                $ist3_a = $foot[0]['ist3_a'];
-                $ist3_b = $foot[0]['ist3_b'];
-                $ist3_c = $foot[0]['ist3_c'];
-                $ist3_status = $foot[0]['ist3_status'];
+                    $ist3_a = $datas['foot'][$i]['ist3_a'];
+                    $ist3_b = $datas['foot'][$i]['ist3_b'];
+                    $ist3_c = $datas['foot'][$i]['ist3_c'];
+                    $ist3_status = $datas['foot'][$i]['ist3_status'];
+                    
+                    $cdm = InjectionCdmCheck::find($datas['foot'][$i]['id_cdm']);
+                    $cdm->product = $datas['product'];
+                    $cdm->type = $datas['type'];
+                    $cdm->part = $datas['part'];
+                    $cdm->color = $datas['color'];
+                    $cdm->injection_date = $datas['injection_date'];
+                    $cdm->machine = $datas['machine'];
+                    $cdm->cavity = $datas['cavity'];
+                    $cdm->cav = $datas['foot'][$i]['cav'];
+                    $cdm->awal_a = $awal_a;
+                    $cdm->awal_b = $awal_b;
+                    $cdm->awal_c = $awal_c;
+                    $cdm->awal_status = $awal_status;
+                    $cdm->ist_1_a = $ist1_a;
+                    $cdm->ist_1_b = $ist1_b;
+                    $cdm->ist_1_c = $ist1_c;
+                    $cdm->ist_1_status = $ist1_status;
+                    $cdm->ist_2_a = $ist2_a;
+                    $cdm->ist_2_b = $ist2_b;
+                    $cdm->ist_2_c = $ist2_c;
+                    $cdm->ist_2_status = $ist2_status;
+                    $cdm->ist_3_a = $ist3_a;
+                    $cdm->ist_3_b = $ist3_b;
+                    $cdm->ist_3_c = $ist3_c;
+                    $cdm->ist_3_status = $ist3_status;
+                    $cdm->save();
+                  }
+                }else{
+                  for ($i=0; $i < 4; $i++) { 
+                    $awal_a = $datas['foot'][$i]['awal_a'];
+                    $awal_b = $datas['foot'][$i]['awal_b'];
+                    $awal_c = $datas['foot'][$i]['awal_c'];
+                    $awal_status = $datas['foot'][$i]['awal_status'];
+
+                    $ist1_a = $datas['foot'][$i]['ist1_a'];
+                    $ist1_b = $datas['foot'][$i]['ist1_b'];
+                    $ist1_c = $datas['foot'][$i]['ist1_c'];
+                    $ist1_status = $datas['foot'][$i]['ist1_status'];
+
+                    $ist2_a = $datas['foot'][$i]['ist2_a'];
+                    $ist2_b = $datas['foot'][$i]['ist2_b'];
+                    $ist2_c = $datas['foot'][$i]['ist2_c'];
+                    $ist2_status = $datas['foot'][$i]['ist2_status'];
+
+                    $ist3_a = $datas['foot'][$i]['ist3_a'];
+                    $ist3_b = $datas['foot'][$i]['ist3_b'];
+                    $ist3_c = $datas['foot'][$i]['ist3_c'];
+                    $ist3_status = $datas['foot'][$i]['ist3_status'];
+                    
+                    $cdm = InjectionCdmCheck::find($datas['foot'][$i]['id_cdm']);
+                    $cdm->product = $datas['product'];
+                    $cdm->type = $datas['type'];
+                    $cdm->part = $datas['part'];
+                    $cdm->color = $datas['color'];
+                    $cdm->injection_date = $datas['injection_date'];
+                    $cdm->machine = $datas['machine'];
+                    $cdm->cavity = $datas['cavity'];
+                    $cdm->cav = $datas['foot'][$i]['cav'];
+                    $cdm->awal_a = $awal_a;
+                    $cdm->awal_b = $awal_b;
+                    $cdm->awal_c = $awal_c;
+                    $cdm->awal_status = $awal_status;
+                    $cdm->ist_1_a = $ist1_a;
+                    $cdm->ist_1_b = $ist1_b;
+                    $cdm->ist_1_c = $ist1_c;
+                    $cdm->ist_1_status = $ist1_status;
+                    $cdm->ist_2_a = $ist2_a;
+                    $cdm->ist_2_b = $ist2_b;
+                    $cdm->ist_2_c = $ist2_c;
+                    $cdm->ist_2_status = $ist2_status;
+                    $cdm->ist_3_a = $ist3_a;
+                    $cdm->ist_3_b = $ist3_b;
+                    $cdm->ist_3_c = $ist3_c;
+                    $cdm->ist_3_status = $ist3_status;
+                    $cdm->save();
+                  }
+                }
               }
             }else{
-              if (count($request->get('head_yrf')) > 0) {
-                $head = $request->get('head_yrf');
-                $awal_a = $head[0]['awal_a'];
-                $awal_b = $head[0]['awal_b'];
-                $awal_c = $head[0]['awal_c'];
-                $awal_status = $head[0]['awal_status'];
+              if ($datas['type'] == 'HEAD') {
+                for ($i=0; $i < 2; $i++) { 
+                  $awal_a = $datas['head_yrf'][$i]['awal_a'];
+                  $awal_b = $datas['head_yrf'][$i]['awal_b'];
+                  $awal_c = $datas['head_yrf'][$i]['awal_c'];
+                  $awal_status = $datas['head_yrf'][$i]['awal_status'];
 
-                $ist1_a = $head[0]['ist1_a'];
-                $ist1_b = $head[0]['ist1_b'];
-                $ist1_c = $head[0]['ist1_c'];
-                $ist1_status = $head[0]['ist1_status'];
+                  $ist1_a = $datas['head_yrf'][$i]['ist1_a'];
+                  $ist1_b = $datas['head_yrf'][$i]['ist1_b'];
+                  $ist1_c = $datas['head_yrf'][$i]['ist1_c'];
+                  $ist1_status = $datas['head_yrf'][$i]['ist1_status'];
 
-                $ist2_a = $head[0]['ist2_a'];
-                $ist2_b = $head[0]['ist2_b'];
-                $ist2_c = $head[0]['ist2_c'];
-                $ist2_status = $head[0]['ist2_status'];
+                  $ist2_a = $datas['head_yrf'][$i]['ist2_a'];
+                  $ist2_b = $datas['head_yrf'][$i]['ist2_b'];
+                  $ist2_c = $datas['head_yrf'][$i]['ist2_c'];
+                  $ist2_status = $datas['head_yrf'][$i]['ist2_status'];
 
-                $ist3_a = $head[0]['ist3_a'];
-                $ist3_b = $head[0]['ist3_b'];
-                $ist3_c = $head[0]['ist3_c'];
-                $ist3_status = $head[0]['ist3_status'];
+                  $ist3_a = $datas['head_yrf'][$i]['ist3_a'];
+                  $ist3_b = $datas['head_yrf'][$i]['ist3_b'];
+                  $ist3_c = $datas['head_yrf'][$i]['ist3_c'];
+                  $ist3_status = $datas['head_yrf'][$i]['ist3_status'];
+                  
+                  $cdm = InjectionCdmCheck::find($datas['head_yrf'][$i]['id_cdm']);
+                  $cdm->product = $datas['product'];
+                  $cdm->type = $datas['type'];
+                  $cdm->part = $datas['part'];
+                  $cdm->color = $datas['color'];
+                  $cdm->injection_date = $datas['injection_date'];
+                  $cdm->machine = $datas['machine'];
+                  $cdm->cavity = $datas['cavity'];
+                  $cdm->cav = $datas['head_yrf'][$i]['cav'];
+                  $cdm->awal_a = $awal_a;
+                  $cdm->awal_b = $awal_b;
+                  $cdm->awal_c = $awal_c;
+                  $cdm->awal_status = $awal_status;
+                  $cdm->ist_1_a = $ist1_a;
+                  $cdm->ist_1_b = $ist1_b;
+                  $cdm->ist_1_c = $ist1_c;
+                  $cdm->ist_1_status = $ist1_status;
+                  $cdm->ist_2_a = $ist2_a;
+                  $cdm->ist_2_b = $ist2_b;
+                  $cdm->ist_2_c = $ist2_c;
+                  $cdm->ist_2_status = $ist2_status;
+                  $cdm->ist_3_a = $ist3_a;
+                  $cdm->ist_3_b = $ist3_b;
+                  $cdm->ist_3_c = $ist3_c;
+                  $cdm->ist_3_status = $ist3_status;
+                  $cdm->save();
+                }
               }
 
-              if (count($request->get('body_yrf')) > 0) {
-                $body_yrf = $request->get('body_yrf');
-                $awal_a = $body_yrf[0]['awal_a'];
-                $awal_b = $body_yrf[0]['awal_b'];
-                $awal_c = $body_yrf[0]['awal_c'];
-                $awal_status = $body_yrf[0]['awal_status'];
+              if ($datas['type'] == 'BODY') {
+                for ($i=0; $i < 2; $i++) { 
+                  $awal_a = $datas['body_yrf'][$i]['awal_a'];
+                  $awal_b = $datas['body_yrf'][$i]['awal_b'];
+                  $awal_c = $datas['body_yrf'][$i]['awal_c'];
+                  $awal_status = $datas['body_yrf'][$i]['awal_status'];
 
-                $ist1_a = $body_yrf[0]['ist1_a'];
-                $ist1_b = $body_yrf[0]['ist1_b'];
-                $ist1_c = $body_yrf[0]['awal_c'];
-                $ist1_status = $body_yrf[0]['ist1_status'];
+                  $ist1_a = $datas['body_yrf'][$i]['ist1_a'];
+                  $ist1_b = $datas['body_yrf'][$i]['ist1_b'];
+                  $ist1_c = $datas['body_yrf'][$i]['ist1_c'];
+                  $ist1_status = $datas['body_yrf'][$i]['ist1_status'];
 
-                $ist2_a = $body_yrf[0]['ist2_a'];
-                $ist2_b = $body_yrf[0]['ist2_b'];
-                $ist2_c = $body_yrf[0]['ist2_c'];
-                $ist2_status = $body_yrf[0]['ist2_status'];
+                  $ist2_a = $datas['body_yrf'][$i]['ist2_a'];
+                  $ist2_b = $datas['body_yrf'][$i]['ist2_b'];
+                  $ist2_c = $datas['body_yrf'][$i]['ist2_c'];
+                  $ist2_status = $datas['body_yrf'][$i]['ist2_status'];
 
-                $ist3_a = $body_yrf[0]['ist3_a'];
-                $ist3_b = $body_yrf[0]['ist3_b'];
-                $ist3_c = $body_yrf[0]['ist3_c'];
-                $ist3_status = $body_yrf[0]['ist3_status'];
+                  $ist3_a = $datas['body_yrf'][$i]['ist3_a'];
+                  $ist3_b = $datas['body_yrf'][$i]['ist3_b'];
+                  $ist3_c = $datas['body_yrf'][$i]['ist3_c'];
+                  $ist3_status = $datas['body_yrf'][$i]['ist3_status'];
+                  
+                  $cdm = InjectionCdmCheck::find($datas['body_yrf'][$i]['id_cdm']);
+                  $cdm->product = $datas['product'];
+                  $cdm->type = $datas['type'];
+                  $cdm->part = $datas['part'];
+                  $cdm->color = $datas['color'];
+                  $cdm->injection_date = $datas['injection_date'];
+                  $cdm->machine = $datas['machine'];
+                  $cdm->cavity = $datas['cavity'];
+                  $cdm->cav = $datas['body_yrf'][$i]['cav'];
+                  $cdm->awal_a = $awal_a;
+                  $cdm->awal_b = $awal_b;
+                  $cdm->awal_c = $awal_c;
+                  $cdm->awal_status = $awal_status;
+                  $cdm->ist_1_a = $ist1_a;
+                  $cdm->ist_1_b = $ist1_b;
+                  $cdm->ist_1_c = $ist1_c;
+                  $cdm->ist_1_status = $ist1_status;
+                  $cdm->ist_2_a = $ist2_a;
+                  $cdm->ist_2_b = $ist2_b;
+                  $cdm->ist_2_c = $ist2_c;
+                  $cdm->ist_2_status = $ist2_status;
+                  $cdm->ist_3_a = $ist3_a;
+                  $cdm->ist_3_b = $ist3_b;
+                  $cdm->ist_3_c = $ist3_c;
+                  $cdm->ist_3_status = $ist3_status;
+                  $cdm->save();
+                }
               }
             }
-
-            $cdm = InjectionCdmCheck::find($request->get('id_cdm'));
-            $cdm->product = $request->get('product');
-            $cdm->type = $request->get('type');
-            $cdm->part = $request->get('part');
-            $cdm->color = $request->get('color');
-            $cdm->injection_date = $request->get('injection_date');
-            $cdm->machine = $request->get('machine');
-            $cdm->cavity = $request->get('cavity');
-            $cdm->awal_a = $awal_a;
-            $cdm->awal_b = $awal_b;
-            $cdm->awal_c = $awal_c;
-            $cdm->awal_status = $awal_status;
-            $cdm->ist_1_a = $ist1_a;
-            $cdm->ist_1_b = $ist1_b;
-            $cdm->ist_1_c = $ist1_c;
-            $cdm->ist_1_status = $ist1_status;
-            $cdm->ist_2_a = $ist2_a;
-            $cdm->ist_2_b = $ist2_b;
-            $cdm->ist_2_c = $ist2_c;
-            $cdm->ist_2_status = $ist2_status;
-            $cdm->ist_3_a = $ist3_a;
-            $cdm->ist_3_b = $ist3_b;
-            $cdm->ist_3_c = $ist3_c;
-            $cdm->ist_3_status = $ist3_status;
-            $cdm->save();
-
             $message = 'Update Data Success';
           }
 
@@ -3382,40 +3770,27 @@ class RecorderProcessController extends Controller
       try {
           $id_user = Auth::id();
 
-          $data = DB::SELECT("SELECT
-              product,
-              type,
-              part,
-              color,
-              injection_date,
-              machine,
-              cavity,
-              name,
-              COALESCE(awal_a,'') as awal_a,
-              COALESCE(awal_b,'') as awal_b,
-              COALESCE(awal_c,'') as awal_c,
-              COALESCE(awal_status,'') as awal_status,
-              COALESCE(ist_1_a,'') as ist_1_a,
-              COALESCE(ist_1_b,'') as ist_1_b,
-              COALESCE(ist_1_c,'') as ist_1_c,
-              COALESCE(ist_1_status,'') as ist_1_status,
-              COALESCE(ist_2_a,'') as ist_2_a,
-              COALESCE(ist_2_b,'') as ist_2_b,
-              COALESCE(ist_2_c,'') as ist_2_c,
-              COALESCE(ist_2_status,'') as ist_2_status,
-              COALESCE(ist_3_a,'') as ist_3_a,
-              COALESCE(ist_3_b,'') as ist_3_b,
-              COALESCE(ist_3_c,'') as ist_3_c,
-              COALESCE(ist_3_status,'') as ist_3_status,
-              injection_cdm_checks.created_at AS created,
-              injection_cdm_checks.id as id_cdm
+          $data = DB::SELECT("SELECT DISTINCT
+            ( cdm_code ),
+            product,
+            type,
+            part,
+            color,
+            injection_date,
+            machine,
+            cavity,
+            name,
+            employee_syncs.employee_id
           FROM
-              `injection_cdm_checks`
-              LEFT JOIN employee_syncs ON employee_syncs.employee_id = injection_cdm_checks.employee_id
-          WHERE 
-              DATE(injection_cdm_checks.created_at) BETWEEN DATE(NOW()) - INTERVAL 7 DAY and DATE(NOW())
+            `injection_cdm_checks`
+            LEFT JOIN employee_syncs ON employee_syncs.employee_id = injection_cdm_checks.employee_id 
+          WHERE
+            DATE( injection_cdm_checks.created_at ) BETWEEN DATE(
+            NOW()) - INTERVAL 7 DAY 
+            AND DATE(
+            NOW()) 
           ORDER BY
-              injection_cdm_checks.created_at DESC");
+            injection_cdm_checks.created_at DESC");
 
           $response = array(
               'status' => true,
@@ -3434,7 +3809,9 @@ class RecorderProcessController extends Controller
     public function fetchCdm(Request $request)
     {
       try {
-          $data = InjectionCdmCheck::select('*','injection_cdm_checks.id as id_cdm')->where('id',$request->get('id'))->whereDate('created_at',date('Y-m-d'))->first();
+          // $datass = InjectionCdmCheck::select('injection_cdm_checks.cdm_code')->where('id',$request->get('id'))->whereDate('created_at',date('Y-m-d'))->first();
+
+          $data = InjectionCdmCheck::select('*','injection_cdm_checks.id as id_cdm')->where('cdm_code',$request->get('cdm_code'))->whereDate('created_at',date('Y-m-d'))->get();
 
           if (count($data) > 0) {
             $response = array(
