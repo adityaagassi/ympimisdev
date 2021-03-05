@@ -1441,6 +1441,7 @@ class MaintenanceController extends Controller
 				$machine_log->handling = $request->get('penanganan');
 				$machine_log->prevention = $request->get('pencegahan');
 				$machine_log->part = '';
+				$machine_log->remark = $request->get('order_no');
 				$machine_log->started_time = $proc->start_actual;
 				$machine_log->finished_time = date('Y-m-d H:i:s');
 				$machine_log->created_by = Auth::user()->username;
