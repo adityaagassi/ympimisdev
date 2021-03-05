@@ -61,6 +61,7 @@ public function handle()
         $row['hire_date'] = $data['start_date'];
         $row['end_date'] = $data['end_date'];
         $row['position'] = $data['pos_name_en'];
+        $row['position_code'] = $data['pos_code'];
         $row['grade_code'] = $data['grade_code'];
         $row['grade_name'] = $data['gradecategory_name'];
         $row['division'] = $data['Division'];
