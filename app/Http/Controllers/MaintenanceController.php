@@ -764,7 +764,7 @@ class MaintenanceController extends Controller
 				// ->send(new SendEmail($data, 'chemical_spk'));
 
 					Mail::to(['rizal.yohandhi@music.yamaha.com', 'whica.parama@music.yamaha.com'])
-					->cc(['aditya.agassi@music.yamaha.com', 'nasiqul.ibat@music.yamaha.com'])
+					->cc(['nasiqul.ibat@music.yamaha.com'])
 					->send(new SendEmail($data, 'chemical_spk'));
 				}
 			}
