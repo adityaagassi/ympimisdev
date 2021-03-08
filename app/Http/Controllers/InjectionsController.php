@@ -6138,7 +6138,7 @@ class InjectionsController extends Controller
         $material = DB::SELECT("SELECT *,gmc as material_number, part_name as material_description FROM `injection_parts` where remark = 'injection' and deleted_at is null");
 
         $title = 'Injection Tag';
-        $title_jp = '???';
+        $title_jp = '成形タグ';
         return view('injection.tag',array(
             'title' => $title,
             'title_jp' => $title_jp,
@@ -6344,7 +6344,7 @@ class InjectionsController extends Controller
     public function indexInjectionTraceability()
     {
         $title = 'Injection Traceability';
-        $title_jp = '???';
+        $title_jp = '成形トレーサビリティ';
         return view('injection.traceability',array(
             'title' => $title,
             'title_jp' => $title_jp,

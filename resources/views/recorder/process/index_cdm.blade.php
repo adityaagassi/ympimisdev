@@ -181,7 +181,7 @@
 <section class="content">
 	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
 		<p style="position: absolute; color: White; top: 45%; left: 35%;">
-			<span style="font-size: 40px">Uploading, Please Wait . . . <i class="fa fa-spin fa-refresh"></i></span>
+			<span style="font-size: 40px">Please Wait . . . <i class="fa fa-spin fa-refresh"></i></span>
 		</p>
 	</div>
 	<input type="hidden" id="location">
@@ -2780,11 +2780,12 @@
 	}
 
 	function fetchCdm(id) {
+		$('#loading').show();
 		if ($('#op').val() == '') {
+			$('#loading').hide();
 			openErrorGritter('Error!', "Scan ID Card First!");
 			$('#tag').focus();
 		}else{
-
 			emptyAll();
 
 			var data = {
@@ -3139,18 +3140,22 @@
 					$('#machine').val(result.datas[0].machine).trigger('change');
 
 					$('#product').focus();
+					$('#loading').hide();
 					openSuccessGritter('Success','Success Get Data');
 				}else{
 					audio_error.play();
 					openErrorGritter('Error!','Get Data Failed');
+					$('#loading').hide();
 				}
 			})
 		}
 	}
 
 	function inputCdm() {
+		$('#loading').show();
 		if ($('#product').val() == "" || $('#type').val() == ""|| $('#part').val() == "" || $('#color').val() == "" || $('#injection_date').val() == "" || $('#machine').val() == ""|| $('#cavity').val() == "") {
 			openErrorGritter('Error!', 'Semua Data Harus Diisi.');
+			$('#loading').hide();
 		}else{
 			// $('#loading').show();
 			var head = [];
