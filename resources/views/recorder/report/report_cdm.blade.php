@@ -155,30 +155,36 @@
 										<th rowspan="2">Machine</th>
 										<th rowspan="2">Cavity</th>
 										<th rowspan="2">Cavity Detail</th>
-										<th colspan="4">Awal</th>
-										<th colspan="4">Istirahat 1</th>
-										<th colspan="4">Istirahat 2</th>
-										<th colspan="4">Istirahat 3</th>
-										<th rowspan="2">Creator</th>
-										<th rowspan="2">Created At</th>
+										<th colspan="6">Awal</th>
+										<th colspan="6">Istirahat 1</th>
+										<th colspan="6">Istirahat 2</th>
+										<th colspan="6">Istirahat 3</th>
 									</tr>
 									<tr>
 										<th>A</th>
 										<th>B</th>
 										<th>C</th>
 										<th>Status</th>
+										<th>By</th>
+										<th>At</th>
 										<th>A</th>
 										<th>B</th>
 										<th>C</th>
 										<th>Status</th>
+										<th>By</th>
+										<th>At</th>
 										<th>A</th>
 										<th>B</th>
 										<th>C</th>
 										<th>Status</th>
+										<th>By</th>
+										<th>At</th>
 										<th>A</th>
 										<th>B</th>
 										<th>C</th>
 										<th>Status</th>
+										<th>By</th>
+										<th>At</th>
 									</tr>
 								</thead>
 								<tbody id="bodyReportCdm">
@@ -285,20 +291,47 @@
 					tableData += '<td style="background-color: #ffd6a5">'+ value.awal_b +'</td>';
 					tableData += '<td style="background-color: #ffd6a5">'+ value.awal_c +'</td>';
 					tableData += '<td style="background-color: #ffd6a5">'+ value.awal_status +'</td>';
+					if (value.awal_a != "") {
+						tableData += '<td style="background-color: #ffd6a5">'+ value.awal_employee_id +'<br>'+ value.awal_name +'</td>';
+						tableData += '<td style="background-color: #ffd6a5">'+ value.awal_created_at +'</td>';
+					}else{
+						tableData += '<td style="background-color: #ffd6a5"></td>';
+						tableData += '<td style="background-color: #ffd6a5"></td>';
+					}
 					tableData += '<td style="background-color: #9bf6ff">'+ value.ist_1_a +'</td>';
 					tableData += '<td style="background-color: #9bf6ff">'+ value.ist_1_b +'</td>';
 					tableData += '<td style="background-color: #9bf6ff">'+ value.ist_1_c +'</td>';
 					tableData += '<td style="background-color: #9bf6ff">'+ value.ist_1_status +'</td>';
+					if (value.ist_1_a != "") {
+						tableData += '<td style="background-color: #9bf6ff">'+ value.ist_1_employee_id +'<br>'+ value.ist_1_name +'</td>';
+						tableData += '<td style="background-color: #9bf6ff">'+ value.ist_1_created_at +'</td>';
+					}else{
+						tableData += '<td style="background-color: #9bf6ff"></td>';
+						tableData += '<td style="background-color: #9bf6ff"></td>';
+					}
 					tableData += '<td style="background-color: #ffc6ff">'+ value.ist_2_a +'</td>';
 					tableData += '<td style="background-color: #ffc6ff">'+ value.ist_2_b +'</td>';
 					tableData += '<td style="background-color: #ffc6ff">'+ value.ist_2_c +'</td>';
 					tableData += '<td style="background-color: #ffc6ff">'+ value.ist_2_status +'</td>';
+					if (value.ist_2_a != "") {
+						tableData += '<td style="background-color: #ffc6ff">'+ value.ist_2_employee_id +'<br>'+ value.ist_2_name +'</td>';
+						tableData += '<td style="background-color: #ffc6ff">'+ value.ist_2_created_at +'</td>';
+					}else{
+						tableData += '<td style="background-color: #ffc6ff"></td>';
+						tableData += '<td style="background-color: #ffc6ff"></td>';
+					}
 					tableData += '<td style="background-color: #caffbf">'+ value.ist_3_a +'</td>';
 					tableData += '<td style="background-color: #caffbf">'+ value.ist_3_b +'</td>';
 					tableData += '<td style="background-color: #caffbf">'+ value.ist_3_c +'</td>';
 					tableData += '<td style="background-color: #caffbf">'+ value.ist_3_status +'</td>';
-					tableData += '<td>'+ value.name +'</td>';
-					tableData += '<td>'+ value.created +'</td>';
+					console.log(value.ist_3_a);
+					if (value.ist_3_a != "") {
+						tableData += '<td style="background-color: #caffbf">'+ value.ist_3_employee_id +'<br>'+ value.ist_3_name +'</td>';
+						tableData += '<td style="background-color: #caffbf">'+ value.ist_3_created_at +'</td>';
+					}else{
+						tableData += '<td style="background-color: #caffbf"></td>';
+						tableData += '<td style="background-color: #caffbf"></td>';
+					}
 					tableData += '</tr>';
 
 					count++;
