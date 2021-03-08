@@ -1853,9 +1853,9 @@
 					<div class="col-xs-6" style="padding-top: 10px;padding-bottom: 20px">
 						<div class="row">
 							<span style="font-size: 1.7vw">Standard:</span><br>
-							<span style="font-size: 1.4vw">A. Panjang Head = 124 - 124,5 mm (Nogisu)</span><br>
-							<span style="font-size: 1.4vw">B. Kedalaman middle joint shaft = 22,5 - 22,8 mm (Depht gauge)</span><br>
-							<span style="font-size: 1.4vw">C. Cek celah <= 0,20 mm (Thickness gauge)</span><br>
+							<span style="font-size: 1.4vw">A. Panjang Head = 124.3 - 124.7 mm (Nogisu)</span><br>
+							<span style="font-size: 1.4vw">B. Kedalaman middle joint shaft = 22.5 - 22.8 mm (Depht gauge)</span><br>
+							<span style="font-size: 1.4vw">C. Cek celah <= 0.20 mm (Thickness gauge)</span><br>
 							<span style="font-size: 1.4vw">D. Cek Visual hasil hasil potong standart tidak bari</span><br>
 						</div>
 					</div>
@@ -1875,7 +1875,7 @@
 					<div class="col-xs-6" style="padding-top: 10px;padding-bottom: 20px">
 						<div class="row">
 							<span style="font-size: 1.7vw">Standard:</span><br>
-							<span style="font-size: 1.4vw">A. 173.5 mm - 173.7 mm</span><br>
+							<span style="font-size: 1.4vw">A. 173.1 mm - 174.1 mm</span><br>
 							<span style="font-size: 1.4vw">B. 11.8 mm - 11.9 mm</span><br>
 							<span style="font-size: 1.4vw">C. Hasil pot. / injeksi tidak bari dan aus</span><br>
 						</div>
