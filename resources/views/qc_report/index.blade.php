@@ -148,6 +148,7 @@ td{
               <tr>
                 <th>No CPAR</th>
                 <th>Judul Komplain</th>
+                <th>Penemu</th>    
                 <th>Manager</th>    
                 <th>Departemen</th>
                 <th>Lokasi</th>
@@ -184,6 +185,7 @@ td{
             </tbody>
             <tfoot>
               <tr>
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -348,6 +350,7 @@ td{
         "columns": [
           { "data": "cpar_no" },
           { "data": "judul_komplain" },
+          { "data": "penemu" },
           { "data": "name" },
           { "data": "department_name" , "width": "15%"},
           { "data": "lokasi" },

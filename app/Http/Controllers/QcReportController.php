@@ -83,9 +83,11 @@ class QcReportController extends Controller
         $cpar_detailsTable = DB::table('qc_cpars')
         ->leftjoin('departments','qc_cpars.department_id','=','departments.id')
         ->leftjoin('employees','qc_cpars.employee_id','=','employees.employee_id')
+        ->leftjoin('employees as staff','qc_cpars.staff','=','staff.employee_id')
+        ->leftjoin('employees as leader','qc_cpars.leader','=','leader.employee_id')
         ->leftjoin('statuses','qc_cpars.status_code','=','statuses.status_code')
         ->leftjoin('qc_cars','qc_cpars.cpar_no','=','qc_cars.cpar_no')
-        ->select('qc_cpars.id','qc_cpars.cpar_no','qc_cpars.kategori', 'employees.name', 'qc_cpars.lokasi', 'qc_cpars.tgl_permintaan', 'qc_cpars.tgl_balas', 'qc_cpars.via_komplain', 'qc_cpars.judul_komplain', 'qc_cpars.judul_komplain', 'qc_cpars.email_status', 'departments.department_name', 'qc_cpars.sumber_komplain', 'qc_cpars.status_code', 'statuses.status_name', 'qc_cpars.created_at', 'qc_cars.id as id_car')
+        ->select('qc_cpars.id','qc_cpars.cpar_no','qc_cpars.kategori', 'staff.name as staffname', 'leader.name as leadername', 'employees.name', 'qc_cpars.lokasi', 'qc_cpars.tgl_permintaan', 'qc_cpars.tgl_balas', 'qc_cpars.via_komplain', 'qc_cpars.judul_komplain', 'qc_cpars.judul_komplain', 'qc_cpars.email_status', 'departments.department_name', 'qc_cpars.sumber_komplain', 'qc_cpars.status_code', 'statuses.status_name', 'qc_cpars.created_at', 'qc_cars.id as id_car')
         ->whereNull('qc_cpars.deleted_at');
 
         if(strlen($request->get('bulandari')) > 0){
@@ -124,12 +126,23 @@ class QcReportController extends Controller
 
         return DataTables::of($cpar_details)
 
+        ->addColumn('penemu',function($cpar_details){
+          if ($cpar_details->staffname != null) {
+            $fl = $cpar_details->staffname;
+          }
+          else{
+            $fl = $cpar_details->leadername;
+          }
+
+          return $fl;
+        })
+
         ->editColumn('tgl_permintaan',function($cpar_details){
-            return date('d F Y', strtotime($cpar_details->tgl_permintaan));
+            return date('d-m-Y', strtotime($cpar_details->tgl_permintaan));
           })
 
         ->editColumn('tgl_balas',function($cpar_details){
-            return date('d F Y', strtotime($cpar_details->tgl_balas));
+            return date('d-m-Y', strtotime($cpar_details->tgl_balas));
           })
 
 
@@ -180,7 +193,7 @@ class QcReportController extends Controller
 
         })
 
-        ->rawColumns(['status_name' => 'status_name','action' => 'action','verif' => 'verif'])
+        ->rawColumns(['penemu' => 'penemu','status_name' => 'status_name','action' => 'action','verif' => 'verif'])
         ->make(true);
     }
 
