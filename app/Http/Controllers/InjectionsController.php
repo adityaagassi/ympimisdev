@@ -5141,7 +5141,7 @@ class InjectionsController extends Controller
                     injection_transactions.status = '".$request->get('status')."' 
                     AND injection_transactions.location = 'RC11' 
                     AND DATE( injection_transactions.created_at ) BETWEEN DATE(
-                    NOW()) - INTERVAL 3 DAY 
+                    NOW()) - INTERVAL 14 DAY 
                     AND DATE(
                     NOW()) 
                     AND injection_parts.deleted_at IS NULL 
@@ -5178,7 +5178,7 @@ class InjectionsController extends Controller
                     injection_transactions.status = 'IN' 
                     AND injection_transactions.location = 'RC91' 
                     AND DATE( injection_transactions.created_at ) BETWEEN DATE(
-                    NOW()) - INTERVAL 3 DAY 
+                    NOW()) - INTERVAL 14 DAY 
                     AND DATE(
                     NOW()) 
                     AND injection_parts.deleted_at IS NULL 
