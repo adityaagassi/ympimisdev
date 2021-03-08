@@ -154,6 +154,7 @@
 										<th rowspan="2">Injection Date</th>
 										<th rowspan="2">Machine</th>
 										<th rowspan="2">Cavity</th>
+										<th rowspan="2">Cavity Detail</th>
 										<th colspan="4">Awal</th>
 										<th colspan="4">Istirahat 1</th>
 										<th colspan="4">Istirahat 2</th>
@@ -182,7 +183,7 @@
 								</thead>
 								<tbody id="bodyReportCdm">
 								</tbody>
-								<tfoot>
+								<!-- <tfoot>
 									<th></th>
 									<th></th>
 									<th></th>
@@ -209,7 +210,8 @@
 									<th></th>
 									<th></th>
 									<th></th>
-								</tfoot>
+									<th></th>
+								</tfoot> -->
 							</table>
 						</div>
 					</div>
@@ -278,6 +280,7 @@
 					tableData += '<td>'+ value.injection_date +'</td>';
 					tableData += '<td>'+ value.machine +'</td>';
 					tableData += '<td>'+ value.cavity +'</td>';
+					tableData += '<td>'+ value.cav +'</td>';
 					tableData += '<td style="background-color: #ffd6a5">'+ value.awal_a +'</td>';
 					tableData += '<td style="background-color: #ffd6a5">'+ value.awal_b +'</td>';
 					tableData += '<td style="background-color: #ffd6a5">'+ value.awal_c +'</td>';
@@ -302,10 +305,10 @@
 				})
 				$('#bodyReportCdm').append(tableData);
 
-				$('#tableReportCdm tfoot th').each( function () {
-					var title = $(this).text();
-					$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
-				});
+				// $('#tableReportCdm tfoot th').each( function () {
+				// 	var title = $(this).text();
+				// 	$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
+				// });
 				var table = $('#tableReportCdm').DataTable({
 					'dom': 'Bfrtip',
 					'responsive':true,
@@ -359,19 +362,19 @@
 					"processing": true
 				});
 
-				table.columns().every( function () {
-					var that = this;
+				// table.columns().every( function () {
+				// 	var that = this;
 
-					$( 'input', this.footer() ).on( 'keyup change', function () {
-						if ( that.search() !== this.value ) {
-							that
-							.search( this.value )
-							.draw();
-						}
-					} );
-				});
+				// 	$( 'input', this.footer() ).on( 'keyup change', function () {
+				// 		if ( that.search() !== this.value ) {
+				// 			that
+				// 			.search( this.value )
+				// 			.draw();
+				// 		}
+				// 	} );
+				// });
 
-				$('#tableReportCdm tfoot tr').appendTo('#tableReportCdm thead');
+				// $('#tableReportCdm tfoot tr').appendTo('#tableReportCdm thead');
 			}
 			else{
 				audio_error.play();

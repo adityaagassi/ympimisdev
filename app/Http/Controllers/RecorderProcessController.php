@@ -3898,6 +3898,7 @@ class RecorderProcessController extends Controller
               injection_date,
               machine,
               cavity,
+              cav,
               name,
               COALESCE(awal_a,'') as awal_a,
               COALESCE(awal_b,'') as awal_b,
