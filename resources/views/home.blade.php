@@ -777,6 +777,10 @@
                                 <a href="{{ url("/index/injeksi") }}">
                                     <i class="fa fa-caret-right"></i> Injection Recorder (RC成形)
                                 </a>
+                                <br>
+                                <a href="{{ url("/index/reed") }}">
+                                    <i class="fa fa-caret-right"></i> Injection Reed (??)
+                                </a>
                             </td>
                         </tr>
                         <tr>

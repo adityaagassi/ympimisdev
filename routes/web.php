@@ -4371,6 +4371,28 @@ Route::get('index/oculus/fetch_score/{employee_id}', 'OculusController@fetchResu
 
 //Reed Project
 Route::get('index/reed', 'ReedSyntheticController@indexReed');
-Route::get('index/reed/reed_verification', 'ReedSyntheticController@indexReedVerification');
+Route::get('scan/reed/operator', 'ReedSyntheticController@scanReedOperator');
 
+
+
+//Injeksi
+Route::get('index/reed/injection_verification', 'ReedSyntheticController@indexInjectionVerification');
+Route::get('fetch/reed/injection_picking_list', 'ReedSyntheticController@fetchInjectionPickingList');
+Route::post('fetch/reed/start_injection', 'ReedSyntheticController@fetchStartInjection');
+Route::post('fetch/reed/finish_injection', 'ReedSyntheticController@fetchFinishInjection');
+Route::post('scan/reed/injection_picking', 'ReedSyntheticController@scanInjectionPicking');
+
+Route::get('index/reed/injection_delivery', 'ReedSyntheticController@indexInjectionDelivery');
+Route::get('fetch/reed/injection_delivery', 'ReedSyntheticController@fetchInjectionDelivery');
+Route::post('scan/reed/injection_delivery', 'ReedSyntheticController@scanInjectionDelivery');
+Route::get('fetch/reed/update_injection_delivery', 'ReedSyntheticController@fetchUpdateInjectionDelivery');
+
+
+
+
+//Molding
+Route::get('index/reed/molding_verification', 'ReedSyntheticController@indexMoldingVerification');
+Route::post('fetch/reed/finish_setup_molding', 'ReedSyntheticController@fetchFinishMolding');
+
+//End Reed Project
 
