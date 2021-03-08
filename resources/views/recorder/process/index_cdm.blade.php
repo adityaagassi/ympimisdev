@@ -377,7 +377,7 @@
 											<input type="number" style="font-size: 15px; height: 100%;width: 100%; text-align: center;"onkeyup="headvalue('a_1',this.value,'ist2')" placeholder="A" class="form-control" id="ist2_head_a_1">
 										</td>
 										<td>
-											<input type="number" style="font-size: 15px; height: 100%;width: 100%; text-align: center;"onkeyup="headvalue('b',this.value,'ist2')" placeholder="B" class="form-control" id="ist2_head_b_1">
+											<input type="number" style="font-size: 15px; height: 100%;width: 100%; text-align: center;"onkeyup="headvalue('b_1',this.value,'ist2')" placeholder="B" class="form-control" id="ist2_head_b_1">
 										</td>
 										<td>
 											<div class="radio">
@@ -778,7 +778,7 @@
 											<input type="number" style="font-size: 15px; height: 100%;width: 100%; text-align: center;"onkeyup="middlevalue('a_1',this.value,'ist2')" placeholder="A" class="form-control" id="ist2_middle_a_1">
 										</td>
 										<td>
-											<input type="number" style="font-size: 15px; height: 100%;width: 100%; text-align: center;"onkeyup="middlevalue('b',this.value,'ist2')" placeholder="B" class="form-control" id="ist2_middle_b_1">
+											<input type="number" style="font-size: 15px; height: 100%;width: 100%; text-align: center;"onkeyup="middlevalue('b_1',this.value,'ist2')" placeholder="B" class="form-control" id="ist2_middle_b_1">
 										</td>
 										<td>
 											<input type="text" style="font-size: 15px; height: 100%;width: 100%; text-align: center;" placeholder="Status" class="form-control" id="ist2_middle_status_1" readonly>
@@ -1015,7 +1015,7 @@
 											<input type="number" style="font-size: 15px; height: 100%;width: 100%; text-align: center;"onkeyup="footvalue('a_1',this.value,'ist2')" placeholder="A" class="form-control" id="ist2_foot_a_1">
 										</td>
 										<td>
-											<input type="number" style="font-size: 15px; height: 100%;width: 100%; text-align: center;"onkeyup="footvalue('b',this.value,'ist2')" placeholder="B" class="form-control" id="ist2_foot_b_1">
+											<input type="number" style="font-size: 15px; height: 100%;width: 100%; text-align: center;"onkeyup="footvalue('b_1',this.value,'ist2')" placeholder="B" class="form-control" id="ist2_foot_b_1">
 										</td>
 										<td>
 											<div class="radio">
@@ -1618,7 +1618,7 @@
 											<input type="number" style="font-size: 15px; height: 100%;width: 100%; text-align: center;"onkeyup="head_yrfvalue('a_1',this.value,'ist2')" placeholder="A" class="form-control" id="ist2_head_yrf_a_1">
 										</td>
 										<td>
-											<input type="number" style="font-size: 15px; height: 100%;width: 100%; text-align: center;"onkeyup="head_yrfvalue('b',this.value,'ist2')" placeholder="B" class="form-control" id="ist2_head_yrf_b_1">
+											<input type="number" style="font-size: 15px; height: 100%;width: 100%; text-align: center;"onkeyup="head_yrfvalue('b_1',this.value,'ist2')" placeholder="B" class="form-control" id="ist2_head_yrf_b_1">
 										</td>
 										<td>
 											<input type="text" style="font-size: 15px; height: 100%;width: 100%; text-align: center;" placeholder="Status" class="form-control" id="ist2_head_yrf_status_1" readonly>
