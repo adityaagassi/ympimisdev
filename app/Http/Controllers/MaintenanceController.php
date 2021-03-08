@@ -536,9 +536,14 @@ class MaintenanceController extends Controller
 		$title = 'Maintenance Machine Log';
 		$title_jp = '??';
 
+		$location = MaintenancePlanItem::select('location')->distinct()->get();
+		$machine = MaintenancePlanItem::select('location', 'machine_id', 'description')->get();
+
 		return view('maintenance.machine_history_list', array(
 			'title' => $title,
-			'title_jp' => $title_jp
+			'title_jp' => $title_jp,
+			'location' => $location,
+			'machine' => $machine
 		))->with('page','Machine Logs')->with('head', 'Maintenance');
 	}
 
@@ -3124,11 +3129,49 @@ class MaintenanceController extends Controller
 
 	public function fetchMachineHistory(Request $request)
 	{
-		$machine_logs = MaintenanceMachineProblemLog::orderBy('started_time', 'asc')->get();
+		$machine_logs = MaintenanceMachineProblemLog::select('machine_name', 'location', 'started_time', 'finished_time', 'defect', 'handling', 'prevention');
+		if(strlen($request->get('reqFrom')) > 0 ){
+			$machine_logs = $machine_logs->where('maintenance_machine_problem_logs.started_time', '>=', $request->get('reqFrom'));
+		}
+
+		if(strlen($request->get('reqTo')) > 0 ){
+			$machine_logs = $machine_logs->where('maintenance_machine_problem_logs.started_time', '<=', $request->get('reqTo'));
+		}
+
+		if(strlen($request->get('machineName')) > 0 ){
+			$machine_logs = $machine_logs->where('maintenance_machine_problem_logs.machine_id', '=', $request->get('machineName'));
+		}
+
+		if(strlen($request->get('location_filter')) > 0 ){
+			$machine_logs = $machine_logs->where('maintenance_machine_problem_logs.location', '=', $request->get('location_filter'));
+		}
+		
+		$machine_logs = $machine_logs->orderBy('started_time', 'asc')->get();
 
 		$response = array(
 			'status' => true,
 			'logs' => $machine_logs
+		);
+		return Response::json($response);
+	}
+
+	public function postMachineHistory(Request $request)
+	{
+		$mct_log = new MaintenanceMachineProblemLog;
+		$mct_log->machine_id = $request->get('id_mesin');
+		$mct_log->machine_name = $request->get('nama_mesin');
+		$mct_log->location = $request->get('lokasi');
+		$mct_log->defect = $request->get('kerusakan');
+		$mct_log->handling = $request->get('penanganan');
+		$mct_log->prevention = $request->get('pencegahan');
+		$mct_log->part = $request->get('part');
+		$mct_log->started_time = $request->get('mulai');
+		$mct_log->finished_time = $request->get('selesai');
+		$mct_log->created_by = Auth::user()->username;
+		$mct_log->save();
+
+		$response = array(
+			'status' => true
 		);
 		return Response::json($response);
 	}
