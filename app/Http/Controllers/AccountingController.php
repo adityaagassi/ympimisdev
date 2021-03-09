@@ -8383,11 +8383,13 @@ public function fetch_budget_monthly(Request $request)
                 12 
                 END AS month_number,
                 a.bulan,
+                a.budget_no,
                 ROUND( SUM( a.actual ), 2 ) AS Actual
             FROM
                 (
                 SELECT
                     budget_month_receive AS bulan,
+                                        budget_no,
                     ROUND( sum( CASE WHEN `status` = "Actual" THEN acc_budget_histories.amount_receive ELSE 0 END ), 2 ) AS Actual,         
                     0 AS PR,
                     0 AS Investment,
@@ -8399,12 +8401,13 @@ public function fetch_budget_monthly(Request $request)
                     budget_month_receive IS NOT NULL
                     '.$fiscal.' '.$cat.' '.$dept.'
                 GROUP BY
-                    budget_month_receive 
+                    budget_month_receive, budget_no
                     
                     UNION ALL
                 
                 SELECT
                     month_date AS bulan,
+                                        acc_actual_logs.budget_no,
                     ROUND( SUM( local_amount ), 2 ) AS Actual,
                     0 AS PR,
                     0 AS Investment,
@@ -8416,14 +8419,159 @@ public function fetch_budget_monthly(Request $request)
                     acc_actual_logs.deleted_at IS NULL
                     '.$fiscal.' '.$cat.' '.$dept.'
                 GROUP BY
-                    month_date
+                    month_date, budget_no
+
+                    UNION ALL
+                                        
+                SELECT
+                    "Apr" as bulan,
+                                        acc_budgets.budget_no,
+                    0 as Actual,
+                    0 AS PR,
+                    0 AS Investment,
+                    0 AS PO
+                FROM
+                    acc_budgets
+
+                    UNION ALL
+                                        
+                SELECT
+                    "May" as bulan,
+                                        acc_budgets.budget_no,
+                    0 as Actual,
+                    0 AS PR,
+                    0 AS Investment,
+                    0 AS PO
+                FROM
+                    acc_budgets
+                                        
+                    UNION ALL
+                                        
+                SELECT
+                    "Jun" as bulan,
+                                        acc_budgets.budget_no,
+                    0 as Actual,
+                    0 AS PR,
+                    0 AS Investment,
+                    0 AS PO
+                FROM
+                    acc_budgets
+                                        
+                    UNION ALL
+                                        
+                SELECT
+                    "Jul" as bulan,
+                                        acc_budgets.budget_no,
+                    0 as Actual,
+                    0 AS PR,
+                    0 AS Investment,
+                    0 AS PO
+                FROM
+                    acc_budgets
+                                        
+                    UNION ALL
+                                        
+                SELECT
+                    "Aug" as bulan,
+                                        acc_budgets.budget_no,
+                    0 as Actual,
+                    0 AS PR,
+                    0 AS Investment,
+                    0 AS PO
+                FROM
+                    acc_budgets
+                                        
+                    UNION ALL
+                                        
+                SELECT
+                    "Sep" as bulan,
+                                        acc_budgets.budget_no,
+                    0 as Actual,
+                    0 AS PR,
+                    0 AS Investment,
+                    0 AS PO
+                FROM
+                    acc_budgets
+                                        
+                    UNION ALL
+                                        
+                SELECT
+                    "Oct" as bulan,
+                                        acc_budgets.budget_no,
+                    0 as Actual,
+                    0 AS PR,
+                    0 AS Investment,
+                    0 AS PO
+                FROM
+                    acc_budgets
+                                        
+                    UNION ALL
+                                        
+                SELECT
+                    "Nov" as bulan,
+                                        acc_budgets.budget_no,
+                    0 as Actual,
+                    0 AS PR,
+                    0 AS Investment,
+                    0 AS PO
+                FROM
+                    acc_budgets
+                                        
+                    UNION ALL
+                                        
+                SELECT
+                    "Dec" as bulan,
+                                        acc_budgets.budget_no,
+                    0 as Actual,
+                    0 AS PR,
+                    0 AS Investment,
+                    0 AS PO
+                FROM
+                    acc_budgets
+                                        
+                    UNION ALL
+                                        
+                SELECT
+                    "Jan" as bulan,
+                                        acc_budgets.budget_no,
+                    0 as Actual,
+                    0 AS PR,
+                    0 AS Investment,
+                    0 AS PO
+                FROM
+                    acc_budgets
+                                        
+                    UNION ALL
+                                        
+                SELECT
+                    "Feb" as bulan,
+                                        acc_budgets.budget_no,
+                    0 as Actual,
+                    0 AS PR,
+                    0 AS Investment,
+                    0 AS PO
+                FROM
+                    acc_budgets
+                                        
+                    UNION ALL
+                                        
+                SELECT
+                    "Mar" as bulan,
+                                        acc_budgets.budget_no,
+                    0 as Actual,
+                    0 AS PR,
+                    0 AS Investment,
+                    0 AS PO
+                FROM
+                    acc_budgets
+
                 ) a 
             GROUP BY
-                a.bulan 
+                a.bulan, a.budget_no
             HAVING
-                a.bulan IS NOT NULL 
+                a.bulan IS NOT NULL and a.budget_no IS NOT NULL
         ORDER BY
-            month_number
+            budget_no, month_number
             ');
 
         $response = array(

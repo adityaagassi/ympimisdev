@@ -29,20 +29,6 @@
 <section class="content" style="padding-top: 0; padding-bottom: 0">
   <div class="row">
     <div class="col-md-12" style="padding: 1px !important">
-        @if(Auth::user()->role_code == "MIS" || Auth::user()->role_code == "ACC-SPL")
-        <!-- <div class="col-md-2">
-            <div class="input-group">
-              <div class="input-group-addon bg-blue">
-                <i class="fa fa-search"></i>
-              </div>
-              <select class="form-control select2" multiple="multiple" onchange="drawChart()" id="department" data-placeholder="Select Department" style="border-color: #605ca8" >
-                  @foreach($department as $dept)
-                    <option value="{{ $dept->department }}">{{ $dept->department }}</option>
-                  @endforeach
-                </select>
-            </div>
-        </div> -->
-
         <div class="col-md-2">
             <div class="input-group">
               <div class="input-group-addon bg-blue">
@@ -55,11 +41,18 @@
                 </select>
             </div>
         </div>
-        @else
-           <select class="form-control select2 hideselect" multiple="multiple" onchange="drawChart()" id="department" data-placeholder="Select Department" style="border-color: #605ca8">
-             <option value="{{$emp_dept->department}}" selected="">{{$emp_dept->department}}</option>
-           </select>
-        @endif
+        <div class="col-md-2">
+            <div class="input-group">
+              <div class="input-group-addon bg-blue">
+                <i class="fa fa-search"></i>
+              </div>
+              <select class="form-control select2" multiple="multiple" onchange="drawChart()" id="fiscal_year" data-placeholder="Select Fiscal" style="border-color: #605ca8" >
+                  <option value=""></option>
+                  <option value="FY197">FY197</option>
+                  <option value="FY198">FY198</option>
+                </select>
+            </div>
+        </div>
       </div>
 
       <div class="col-md-12">
@@ -135,9 +128,11 @@
 
     $("#loading").show();
     var category = $('#category').val();
+    var fy = $('#fiscal_year').val();
 
     var data = {
       category: category,
+      fy:fy
     };
 
     $.get('{{ url("fetch/budget/summary") }}', data, function(result, status, xhr) {
