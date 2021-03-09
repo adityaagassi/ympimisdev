@@ -67,10 +67,23 @@ class IndirectMaterialController extends Controller{
 		$title = 'Chemical Solution Control';
 		$title_jp = '??';
 
-		$solutions = db::select("SELECT cs.id, cc.section, UPPER(cc.location) AS location, cs.solution_name FROM chemical_solutions cs
-			LEFT JOIN indirect_material_cost_centers cc
-			ON cc.id = cs.cost_center_id
-			ORDER BY cc.section, cc.location, cs.solution_name ASC");
+		$username = Auth::user()->username;
+		$solutions;
+
+		if((!str_contains(strtoupper($username), 'PI')) || (Auth::user()->role_code == 'MIS' || Auth::user()->role_code == 'CHM')){
+			$solutions = db::select("SELECT cs.id, cc.section, UPPER(cc.location) AS location, cs.solution_name FROM chemical_solutions cs
+				LEFT JOIN indirect_material_cost_centers cc
+				ON cc.id = cs.cost_center_id
+				ORDER BY cc.section, cc.location, cs.solution_name ASC");
+		}else{
+			$emp = EmployeeSync::where('employee_id', strtoupper($username))->first();
+
+			$solutions = db::select("SELECT cs.id, cc.section, UPPER(cc.location) AS location, cs.solution_name FROM chemical_solutions cs
+				LEFT JOIN indirect_material_cost_centers cc
+				ON cc.id = cs.cost_center_id
+				WHERE cc.department = '".$emp->department."'
+				ORDER BY cc.section, cc.location, cs.solution_name ASC");
+		}
 
 		$convertions = db::select("SELECT * FROM chemical_convertions ORDER BY material ASC");
 
@@ -286,6 +299,8 @@ class IndirectMaterialController extends Controller{
 				'qr_code' => $out->qr_code,
 				'material_number' => $out->material_number,
 				'cost_center_id' => $out->cost_center_id,
+				'in_date' => $out->in_date,
+				'exp_date' => $out->exp_date,
 				'remark' => 'empty',
 				'quantity' => 1,
 				'created_by' => Auth::id()
@@ -415,6 +430,8 @@ class IndirectMaterialController extends Controller{
 					'remark' => $pick[$i]->remark,
 					'quantity' => $schedule->quantity,
 					'bun' => $schedule->bun,
+					'in_date' => $pick[$i]->in_date,
+					'exp_date' => $pick[$i]->exp_date,
 					'created_by' => Auth::id()
 				]);
 				$log->save();
@@ -424,6 +441,8 @@ class IndirectMaterialController extends Controller{
 						'qr_code' => $pick[$i]->qr_code,
 						'material_number' => $pick[$i]->material_number,
 						'cost_center_id' => $pick[$i]->cost_center_id,
+						'in_date' => $pick[$i]->in_date,
+						'exp_date' => $pick[$i]->exp_date,
 						'created_by' => Auth::id()
 					]);
 					$out->save();
@@ -433,6 +452,8 @@ class IndirectMaterialController extends Controller{
 						'material_number' => $pick[$i]->material_number,
 						'cost_center_id' => $pick[$i]->cost_center_id,
 						'remark' => 'out',
+						'in_date' => $pick[$i]->in_date,
+						'exp_date' => $pick[$i]->exp_date,
 						'quantity' => 1,
 						'created_by' => Auth::id()
 					]);
@@ -1275,6 +1296,8 @@ class IndirectMaterialController extends Controller{
 					'schedule_id' => $schedule_id,
 					'material_number' => $stock->material_number,
 					'cost_center_id' => $location,
+					'in_date' => $stock->in_date,
+					'exp_date' => $stock->exp_date,
 					'remark' => 'new',
 					'created_by' => Auth::id()
 				]);
@@ -1704,6 +1727,22 @@ class IndirectMaterialController extends Controller{
 		)
 		->orderBy('indirect_material_stocks.qr_code', 'desc')
 		->get();
+
+		if(count($data) == 0){
+			$data = IndirectMaterialOut::leftJoin('indirect_materials', 'indirect_material_outs.material_number', '=', 'indirect_materials.material_number')
+			->whereIn('qr_code', $qr_code)
+			->select(
+				'indirect_material_outs.qr_code',
+				'indirect_material_outs.material_number',
+				'indirect_materials.material_description',
+				'indirect_materials.label',
+				db::raw('date_format(indirect_material_outs.in_date, "%d-%m-%Y") AS masuk'),
+				db::raw('date_format(indirect_material_outs.exp_date, "%d-%m-%Y") AS exp'),
+				db::raw('date_format(indirect_material_outs.in_date, "%M") AS month')
+			)
+			->orderBy('indirect_material_outs.qr_code', 'desc')
+			->get();
+		}
 
 		// dd($data);
 
