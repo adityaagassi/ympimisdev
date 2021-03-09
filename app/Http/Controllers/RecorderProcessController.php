@@ -2995,7 +2995,7 @@ class RecorderProcessController extends Controller
 
     public function indexCdm()
     {
-      $head_a_bawah = 124.3;
+      $head_a_bawah = 124;
       $head_a_atas = 124.7;
       $head_b_bawah = 22.5;
       $head_b_atas = 22.8;
