@@ -68,6 +68,7 @@ class MiddleProcessController extends Controller
 			'lcq-kensa',
 			'plt-incoming-sx',
 			'plt-kensa-sx',
+			'subassy-incoming-sx'
 		];
 	}
 
@@ -4051,7 +4052,7 @@ class MiddleProcessController extends Controller
 
 			$report = $report->select('middle_buffing_ng_logs.employee_id', 'employees.name', 'middle_buffing_ng_logs.tag', 'middle_buffing_ng_logs.material_number', 'materials.material_description', 'materials.key', 'materials.model', 'materials.surface', 'middle_buffing_ng_logs.ng_name', 'middle_buffing_ng_logs.quantity', 'middle_buffing_ng_logs.location', 'middle_buffing_ng_logs.created_at')->get();
 
-		}else if(str_contains($loc, 'lcq')){
+		}else if(str_contains($loc, 'lcq') || str_contains($loc, 'subassy')){
 			$report = MiddleLacqueringNgLog::leftJoin('employees', 'employees.employee_id', '=', 'middle_lacquering_ng_logs.employee_id')
 			->leftJoin('materials', 'materials.material_number', '=', 'middle_lacquering_ng_logs.material_number');
 
@@ -4123,7 +4124,7 @@ class MiddleProcessController extends Controller
 
 			$report = $report->select('middle_buffing_logs.employee_id', 'employees.name', 'middle_buffing_logs.tag', 'middle_buffing_logs.material_number', 'materials.material_description', 'materials.key', 'materials.model', 'materials.surface', 'middle_buffing_logs.quantity', 'middle_buffing_logs.location', 'middle_buffing_logs.created_at')->get();
 
-		}else if(str_contains($loc, 'lcq')){
+		}else if(str_contains($loc, 'lcq') || str_contains($loc, 'subassy')){
 			$report = MiddleLacqueringLog::leftJoin('employees', 'employees.employee_id', '=', 'middle_lacquering_logs.employee_id')
 			->leftJoin('materials', 'materials.material_number', '=', 'middle_lacquering_logs.material_number');
 
