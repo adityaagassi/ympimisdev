@@ -1353,7 +1353,7 @@
 
       	var moq = document.getElementById("moq"+num).value;
 
-      	if (moq != null && qty < moq && qty > 0) {
+      	if (parseFloat(qty) < parseFloat(moq) && parseFloat(qty) > 0) {
       		openErrorGritter("Error","Jumlah Kurang Dari Minimum Order. Minimum order = "+moq);
       		return false;
       	}
