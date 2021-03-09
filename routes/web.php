@@ -4311,6 +4311,7 @@ Route::get('fetch/mutasi_ant', 'MutasiController@fetchMutasiDetail');
 Route::get('fetch/mutasi', 'MutasiController@fetchMutasiSatuDetail');
 Route::get('view/mutasi_ant', 'MutasiController@viewMutasiDetail');
 Route::get('view/mutasi', 'MutasiController@viewMutasiSatuDetail');
+
 Route::get('fetch/mutasi_ant/monitoringant', 'MutasiController@fetchMonitoringMutasiAnt');
 Route::get('fetch/mutasi/monitoring', 'MutasiController@fetchMonitoringMutasi');
 

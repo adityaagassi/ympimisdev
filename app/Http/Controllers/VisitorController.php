@@ -19,6 +19,9 @@ use Storage;
 use App\BodyTemperature;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendEmail;
+use Swift_Mailer;
+use Swift_SmtpTransport;
+
 
 class VisitorController extends Controller
 {
@@ -45,6 +48,7 @@ class VisitorController extends Controller
 
 	public function registration()
 	{
+
 		$employees = "SELECT
 			*,employee_syncs.employee_id as empid
 		FROM
@@ -1308,4 +1312,65 @@ public function getchart(Request $request)
 	);
 	return Response::json($response);
 }
+
+	public function indexEmpConfirmation()
+	{
+		return view('visitors.emp_confirmation')
+		->with('title', 'Employee Visitor Confirmation')
+		->with('title_jp', '??')
+		->with('page', 'Employee Visitor Confirmation');
+	}
+
+	public function fetchEmpConfirmation(Request $request)
+	{
+		try {
+			$emp = Employee::join('employee_syncs','employees.employee_id','employee_syncs.employee_id')->where('tag',$request->get('tag'))->first();
+
+			if (count($emp) > 0) {
+				$visitor = DB::SELECT("SELECT
+					visitors.id,
+					name,
+					department,
+					company,
+					DATE_FORMAT( visitors.created_at, '%Y-%m-%d' ) created_at2,
+					visitors.created_at,
+					visitor_details.full_name,
+					visitors.jumlah AS total1,
+					purpose,
+					visitors.status,
+					visitor_details.in_time,
+					visitor_details.out_time,
+					visitors.remark 
+				FROM
+					visitors
+					LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
+					LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
+				WHERE
+					visitors.remark IS NULL 
+					AND employee_syncs.employee_id = '".$emp->employee_id."' 
+				ORDER BY
+					id DESC");
+
+				$response = array(
+					'status' => true,
+					'visitor' => $visitor,
+					'emp' => $emp,
+					'message' => 'Employee Found'
+				);
+				return Response::json($response);
+			}else{
+				$response = array(
+					'status' => false,
+					'message' => 'Tag Invalid'
+				);
+				return Response::json($response);
+			}
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+	}
 }
