@@ -287,7 +287,7 @@
 		})
 
 
-		$('#category').html("EHS & 5S Bulanan");
+		$('#category').html("EHS & 5S Patrol");
 		$('#employee_name').html("{{$employee->name}}");
 		$('#employee_id').val("{{$employee->employee_id}}");
 

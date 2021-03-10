@@ -290,7 +290,7 @@
                             <span style="font-weight: bold;">Sakurentsu (作連通)</span>
                             <br>
                             <a href="{{ url("index/sakurentsu/monitoring/3m") }}">
-                                <i class="fa fa-caret-right"></i> 3M Monitoring (3M変更監視)
+                                <i class="fa fa-caret-right"></i> Sakurentsu Monitoring (作連通監視)
                             </a>
                             <br>
                         </td>
@@ -317,7 +317,7 @@
                 <tbody>
                     <tr>
                         <td>
-                            <span style="font-weight: bold;">Patrol (パトロール)</span>
+                            <!-- <span style="font-weight: bold;">Patrol (パトロール)</span>
                             <br>
                             <a href="{{ url("/index/audit_patrol") }}">
                                 <i class="fa fa-caret-right"></i> 5S Patrol GM / Presdir (社長パトロール)
@@ -326,22 +326,24 @@
                             <a href="{{ url("/index/audit_patrol/monitoring") }}">
                                 <i class="fa fa-caret-right"></i> Patrol Monitoring (パトロール監視)
                             </a>
-
-                            
+                            <br> -->
+                            <a href="{{ url("/index/patrol") }}">
+                                <i class="fa fa-caret-right"></i> Audit & Patrol Internal (内部監査・パトロール)
+                            </a>                            
                         </td>                     
                     </tr>
-                    <tr>
+                    <!-- <tr>
                         <td>
                             <span style="font-weight: bold;">Audit (内部監査)</span>
                             <br>
                             <a href="{{ url("/index/audit_iso/create_audit") }}">
                                 <i class="fa fa-caret-right"></i> Audit ISO (ISO内部監査のCPARを作成)
-                            </a>
+                            </a> -->
                             <!-- <br>
                             <a href="{{ url("/index/audit_iso") }}">
                                 <i class="fa fa-caret-right"></i> Create Audit ISO (ISO内部監査のCPARを作成)
                             </a> -->
-                            <br>
+                            <!-- <br>
                             <a href="{{ url("/index/audit_iso/monitoring2") }}">
                                 <i class="fa fa-caret-right"></i> Audit ISO 14001 (ISO内部監査のCPARを報告)
                             </a>
@@ -361,12 +363,12 @@
                             <a href="{{ url("/index/audit_patrol_mis") }}">
                                 <i class="fa fa-caret-right"></i> Audit MIS (MIS課内部監査)
                             </a>
-                            <!-- <br>
+                            <br>
                             <a href="{{ url("/index/audit_internal_monitoring") }}">
                                 <i class="fa fa-caret-right"></i> All Audit Monitoring (全監査の監視)
-                            </a> -->
+                            </a> 
                         </td>
-                    </tr>
+                    </tr> -->
                     
                 </tbody>
             </table>
@@ -814,10 +816,10 @@
                                 <a href="http://10.109.52.7/tpro/" target="_blank">
                                     <i class="fa fa-caret-right"></i> M-Pro Kanban Monitoring (Mプロかんばんの監視)
                                 </a>
-                                <br>
+                                <!-- <br>
                                 <a href="{{ url("/index/tools") }}">
                                     <i class="fa fa-caret-right"></i> Digital Order & Control Stock Tools ()
-                                </a>
+                                </a> -->
                             </td>
                         </tr>
                         <tr>

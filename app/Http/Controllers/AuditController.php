@@ -34,7 +34,11 @@ class AuditController extends Controller
 		$this->location = ['Assembly','Accounting','Body Process','Exim','Material Process','Surface Treatment','Educational Instrument','Standardization','QA Process','Chemical Process Control','Human Resources','General Affairs','Workshop and Maintenance Molding','Production Engineering','Maintenance','Procurement','Production Control','Warehouse','Welding Process'];
 	}
 
-	public function index()
+  public function index(){
+    return view('audit.index_patrol')->with('page', 'Tools');       
+  }
+
+	public function index_patrol()
 	{
 		$title = "Audit Patrol";
 		$title_jp = "";
