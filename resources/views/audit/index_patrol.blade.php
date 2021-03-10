@@ -26,8 +26,8 @@
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url('index/audit_patrol') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">5S Patrol GM & Presdir (社長パトロール)</a>
 			<a href="{{ url('index/audit_patrol_std') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">EHS & 5S Monthly Patrol</a>
-			<a href="{{ url('') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Patrol Daily Shift 1 dan Shift 2</a>
-			<a href="{{ url('') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Patrol Daily Covid</a>
+			<!-- <a href="{{ url('') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Patrol Daily Shift 1 dan Shift 2</a>
+			<a href="{{ url('') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Patrol Daily Covid</a> -->
 			<!-- <hr style="border: 1px solid red"> -->
 			
 		</div>
