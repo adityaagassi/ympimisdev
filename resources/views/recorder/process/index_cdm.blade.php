@@ -172,7 +172,7 @@
 		<button class="btn btn-primary pull-right" data-toggle="modal" data-target="#modalGuidance">
 			<i class="fa fa-book"></i> &nbsp;<b>Petunjuk</b>
 		</button>
-		<a class="btn btn-danger pull-right" href="{{ url('index/recorder/cdm_report') }}" style="margin-right: 10px"><i class="fa fa-file-pdf-o"></i> &nbsp;Report</a>
+		<a class="btn btn-danger pull-right" target="_blank" href="{{ url('index/recorder/cdm_report') }}" style="margin-right: 10px"><i class="fa fa-file-pdf-o"></i> &nbsp;Report</a>
 	</h1>
 </section>
 <?php $__env->stopSection(); ?>
@@ -270,17 +270,26 @@
 						</div>
 						<div class="col-xs-12" style="padding-left: 0px;padding-right: 0px">
 							<div class="row">
-								<div class="col-xs-4">
+								<div class="col-xs-3">
 									<span style="font-weight: bold; font-size: 16px;">Injection Date:</span>
 									<input type="text" id="injection_date" style="width: 100%; height: 40px; font-size: 20px; text-align: center;" placeholder="Injection Date" readonly>
 								</div>
-								<div class="col-xs-4">
+								<div class="col-xs-3">
 									<span style="font-weight: bold; font-size: 16px;">Machine:</span>
 									<select name="machine" id="machine" class="form-group" style="width: 100%; height: 40px; font-size: 20px; text-align: center;" data-placeholder="Select Machine">
 											
 									</select>
 								</div>
-								<div class="col-xs-4">
+								<div class="col-xs-3">
+									<span style="font-weight: bold; font-size: 16px;">Machine Injection:</span>
+									<select name="machine_injection" id="machine_injection" class="form-group" style="width: 100%; height: 40px; font-size: 20px; text-align: center;" data-placeholder="Select Machine Injection">
+										<option value=""></option>
+										@foreach($machine as $machines)
+											<option value="{{$machines}}">{{$machines}}</option>
+										@endforeach
+									</select>
+								</div>
+								<div class="col-xs-3">
 									<span style="font-weight: bold; font-size: 16px;">Cavity:</span>
 									<select name="cavity" id="cavity" class="form-group" style="width: 100%; height: 40px; font-size: 20px; text-align: center;" data-placeholder="Select Cavity" onchange="fetchCavity(this.value)">
 									</select>
@@ -1819,12 +1828,15 @@
 							<table class="table table-hover table-striped table-bordered" id="tableResume">
 								<thead>
 									<tr style="text-align:center">
-										<th style="width: 1%;">No.</th>
-										<th style="width: 2%;">Product</th>
-										<th style="width: 1%;">Cavity</th>
-										<th style="width: 2%;">Injection</th>
-										<th style="width: 2%;">By</th>
-										<th style="width: 2%;">At</th>
+										<th style="width: 1%;text-align:center;">No.</th>
+										<th style="width: 2%;text-align:center;">Product</th>
+										<th style="width: 1%;text-align:center;">Cavity</th>
+										<th style="width: 2%;text-align:center;">Mesin</th>
+										<th style="width: 2%;text-align:center;">Injection</th>
+										<th style="width: 2%;text-align:center;background-color: #ffd6a5">Awal</th>
+										<th style="width: 2%;text-align:center;background-color: #9bf6ff">Istirahat 1</th>
+										<th style="width: 2%;text-align:center;background-color: #ffc6ff">Istirahat 2</th>
+										<th style="width: 2%;text-align:center;background-color: #caffbf">Istirahat 3</th>
 									</tr>
 								</thead>
 								<tbody id="tableBodyResume">
@@ -2019,10 +2031,12 @@
 		$('#type').val("");
 		$('#injection_date').val("");
 		$('#machine').val("").trigger('change');
+		$('#machine_injection').val("").trigger('change');
 		$('#cavity').val("").trigger('change');
 
 		$('#injection_date').prop('disabled',true);
 		$('#machine').prop('disabled',true);
+		$('#machine_injection').prop('disabled',true);
 		$('#cavity').prop('disabled',true);
 
 		$('#head').hide();
@@ -2599,6 +2613,7 @@
 
 			$('#injection_date').removeAttr('disabled');
 			$('#machine').removeAttr('disabled');
+			$('#machine_injection').removeAttr('disabled');
 			$('#cavity').removeAttr('disabled');
 
 			$('#machine').append(machine);
@@ -2692,8 +2707,12 @@
 					tableData += '<td>'+ count +'</td>';
 					tableData += '<td style="text-align:center">'+ value.product +'<br>'+value.part+' - '+value.color+'</td>';
 					tableData += '<td style="text-align:center">'+ value.cavity +'</td>';
-					tableData += '<td style="text-align:center">'+ value.injection_date +'<br>Mesin '+value.machine+'</td>';
-					var exp = value.cdm_code.split('_');
+					tableData += '<td style="text-align:center">'+ value.machine +'</td>';
+					tableData += '<td style="text-align:center">'+ value.injection_date +'<br>Mesin '+(value.machine_injection || "??")+'</td>';
+					tableData += '<td style="text-align:center;background-color: #ffd6a5">'+ value.awal_name+'</td>';
+					tableData += '<td style="text-align:center;background-color: #9bf6ff">'+ value.ist_1_name+'</td>';
+					tableData += '<td style="text-align:center;background-color: #ffc6ff">'+ value.ist_2_name+'</td>';
+					tableData += '<td style="text-align:center;background-color: #caffbf">'+ value.ist_3_name+'</td>';
 					// tableData += '<td style="background-color: #ffd6a5">'+ value.awal_a +'</td>';
 					// tableData += '<td style="background-color: #ffd6a5">'+ value.awal_b +'</td>';
 					// tableData += '<td style="background-color: #ffd6a5">'+ value.awal_c +'</td>';
@@ -2710,8 +2729,8 @@
 					// tableData += '<td style="background-color: #caffbf">'+ value.ist_3_b +'</td>';
 					// tableData += '<td style="background-color: #caffbf">'+ value.ist_3_c +'</td>';
 					// tableData += '<td style="background-color: #caffbf">'+ value.ist_3_status +'</td>';
-					tableData += '<td style="text-align:center">'+ value.employee_id +'<br>'+ value.name +'</td>';
-					tableData += '<td style="text-align:center">'+ exp[4] +'</td>';
+					// tableData += '<td style="text-align:center">'+ value.employee_id +'<br>'+ value.name +'</td>';
+					// tableData += '<td style="text-align:center">'+ exp[4] +'</td>';
 					tableData += '</tr>';
 
 					count += 1;
@@ -3108,6 +3127,7 @@
 
 					$('#injection_date').removeAttr('disabled');
 					$('#machine').removeAttr('disabled');
+					$('#machine_injection').removeAttr('disabled');
 					$('#cavity').removeAttr('disabled');
 
 					$('#machine').append(machine);
@@ -3138,6 +3158,7 @@
 					$('#color').val(result.datas[0].color);
 					$('#injection_date').val(result.datas[0].injection_date);
 					$('#machine').val(result.datas[0].machine).trigger('change');
+					$('#machine_injection').val(result.datas[0].machine_injection).trigger('change');
 
 					$('#product').focus();
 					$('#loading').hide();
@@ -3153,7 +3174,7 @@
 
 	function inputCdm() {
 		$('#loading').show();
-		if ($('#product').val() == "" || $('#type').val() == ""|| $('#part').val() == "" || $('#color').val() == "" || $('#injection_date').val() == "" || $('#machine').val() == ""|| $('#cavity').val() == "") {
+		if ($('#product').val() == "" || $('#type').val() == ""|| $('#part').val() == "" || $('#color').val() == "" || $('#injection_date').val() == "" || $('#machine').val() == ""|| $('#machine_injection').val() == "" || $('#cavity').val() == "") {
 			openErrorGritter('Error!', 'Semua Data Harus Diisi.');
 			$('#loading').hide();
 		}else{
@@ -3230,6 +3251,7 @@
 							color:$('#color').val(),
 							injection_date:$('#injection_date').val(),
 							machine:$('#machine').val(),
+							machine_injection:$('#machine_injection').val(),
 							cavity:$('#cavity').val(),
 							employee_id:$('#op').val(),
 							head:head,
@@ -3271,6 +3293,7 @@
 							color:$('#color').val(),
 							injection_date:$('#injection_date').val(),
 							machine:$('#machine').val(),
+							machine_injection:$('#machine_injection').val(),
 							cavity:$('#cavity').val(),
 							employee_id:$('#op').val(),
 							middle:middle,
@@ -3345,6 +3368,7 @@
 								color:$('#color').val(),
 								injection_date:$('#injection_date').val(),
 								machine:$('#machine').val(),
+								machine_injection:$('#machine_injection').val(),
 								cavity:$('#cavity').val(),
 								employee_id:$('#op').val(),
 								foot:foot,
@@ -3416,6 +3440,7 @@
 								color:$('#color').val(),
 								injection_date:$('#injection_date').val(),
 								machine:$('#machine').val(),
+								machine_injection:$('#machine_injection').val(),
 								cavity:$('#cavity').val(),
 								employee_id:$('#op').val(),
 								foot:foot,
@@ -3458,6 +3483,7 @@
 							color:$('#color').val(),
 							injection_date:$('#injection_date').val(),
 							machine:$('#machine').val(),
+							machine_injection:$('#machine_injection').val(),
 							cavity:$('#cavity').val(),
 							employee_id:$('#op').val(),
 							head_yrf:head_yrf,
@@ -3499,6 +3525,7 @@
 							color:$('#color').val(),
 							injection_date:$('#injection_date').val(),
 							machine:$('#machine').val(),
+							machine_injection:$('#machine_injection').val(),
 							cavity:$('#cavity').val(),
 							employee_id:$('#op').val(),
 							body_yrf:body_yrf,

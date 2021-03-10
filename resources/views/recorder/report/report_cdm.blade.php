@@ -152,6 +152,7 @@
 										<th rowspan="2">Part</th>
 										<th rowspan="2">Color</th>
 										<th rowspan="2">Injection Date</th>
+										<th rowspan="2">Machine Injection</th>
 										<th rowspan="2">Machine</th>
 										<th rowspan="2">Cavity</th>
 										<th rowspan="2">Cavity Detail</th>
@@ -284,6 +285,7 @@
 					tableData += '<td>'+ value.part +'</td>';
 					tableData += '<td>'+ value.color +'</td>';
 					tableData += '<td>'+ value.injection_date +'</td>';
+					tableData += '<td>'+ (value.machine_injection || "") +'</td>';
 					tableData += '<td>'+ value.machine +'</td>';
 					tableData += '<td>'+ value.cavity +'</td>';
 					tableData += '<td>'+ value.cav +'</td>';

@@ -3141,6 +3141,7 @@ class RecorderProcessController extends Controller
                       'color' => $datas['color'],
                       'injection_date' => $datas['injection_date'],
                       'machine' => $datas['machine'],
+                      'machine_injection' => $datas['machine_injection'],
                       'cavity' => $datas['cavity'],
                       'cav' => $datas['head'][$i]['cav'],
                       'awal_a' => $awal_a,
@@ -3202,6 +3203,7 @@ class RecorderProcessController extends Controller
                       'color' => $datas['color'],
                       'injection_date' => $datas['injection_date'],
                       'machine' => $datas['machine'],
+                      'machine_injection' => $datas['machine_injection'],
                       'cavity' => $datas['cavity'],
                       'cav' => $datas['middle'][$i]['cav'],
                       'awal_a' => $awal_a,
@@ -3264,6 +3266,7 @@ class RecorderProcessController extends Controller
                         'color' => $datas['color'],
                         'injection_date' => $datas['injection_date'],
                         'machine' => $datas['machine'],
+                        'machine_injection' => $datas['machine_injection'],
                         'cavity' => $datas['cavity'],
                         'cav' => $datas['foot'][$i]['cav'],
                         'awal_a' => $awal_a,
@@ -3323,6 +3326,7 @@ class RecorderProcessController extends Controller
                         'color' => $datas['color'],
                         'injection_date' => $datas['injection_date'],
                         'machine' => $datas['machine'],
+                        'machine_injection' => $datas['machine_injection'],
                         'cavity' => $datas['cavity'],
                         'cav' => $datas['foot'][$i]['cav'],
                         'awal_a' => $awal_a,
@@ -3385,6 +3389,7 @@ class RecorderProcessController extends Controller
                       'color' => $datas['color'],
                       'injection_date' => $datas['injection_date'],
                       'machine' => $datas['machine'],
+                      'machine_injection' => $datas['machine_injection'],
                       'cavity' => $datas['cavity'],
                       'cav' => $datas['head_yrf'][$i]['cav'],
                       'awal_a' => $awal_a,
@@ -3446,6 +3451,7 @@ class RecorderProcessController extends Controller
                       'color' => $datas['color'],
                       'injection_date' => $datas['injection_date'],
                       'machine' => $datas['machine'],
+                      'machine_injection' => $datas['machine_injection'],
                       'cavity' => $datas['cavity'],
                       'cav' => $datas['body_yrf'][$i]['cav'],
                       'awal_a' => $awal_a,
@@ -3513,6 +3519,7 @@ class RecorderProcessController extends Controller
                   $cdm->color = $datas['color'];
                   $cdm->injection_date = $datas['injection_date'];
                   $cdm->machine = $datas['machine'];
+                  $cdm->machine_injection = $datas['machine_injection'];
                   $cdm->cavity = $datas['cavity'];
                   $cdm->cav = $datas['head'][$i]['cav'];
                   if ($cdm->awal_a == null) {
@@ -3581,6 +3588,7 @@ class RecorderProcessController extends Controller
                   $cdm->color = $datas['color'];
                   $cdm->injection_date = $datas['injection_date'];
                   $cdm->machine = $datas['machine'];
+                  $cdm->machine_injection = $datas['machine_injection'];
                   $cdm->cavity = $datas['cavity'];
                   $cdm->cav = $datas['middle'][$i]['cav'];
                   if ($cdm->awal_a == null) {
@@ -3650,6 +3658,7 @@ class RecorderProcessController extends Controller
                     $cdm->color = $datas['color'];
                     $cdm->injection_date = $datas['injection_date'];
                     $cdm->machine = $datas['machine'];
+                    $cdm->machine_injection = $datas['machine_injection'];
                     $cdm->cavity = $datas['cavity'];
                     $cdm->cav = $datas['foot'][$i]['cav'];
                     if ($cdm->awal_a == null) {
@@ -3716,6 +3725,7 @@ class RecorderProcessController extends Controller
                     $cdm->color = $datas['color'];
                     $cdm->injection_date = $datas['injection_date'];
                     $cdm->machine = $datas['machine'];
+                    $cdm->machine_injection = $datas['machine_injection'];
                     $cdm->cavity = $datas['cavity'];
                     $cdm->cav = $datas['foot'][$i]['cav'];
                     if ($cdm->awal_a == null) {
@@ -3785,6 +3795,7 @@ class RecorderProcessController extends Controller
                   $cdm->color = $datas['color'];
                   $cdm->injection_date = $datas['injection_date'];
                   $cdm->machine = $datas['machine'];
+                  $cdm->machine_injection = $datas['machine_injection'];
                   $cdm->cavity = $datas['cavity'];
                   $cdm->cav = $datas['head_yrf'][$i]['cav'];
                   if ($cdm->awal_a == null) {
@@ -3853,6 +3864,7 @@ class RecorderProcessController extends Controller
                   $cdm->color = $datas['color'];
                   $cdm->injection_date = $datas['injection_date'];
                   $cdm->machine = $datas['machine'];
+                  $cdm->machine_injection = $datas['machine_injection'];
                   $cdm->cavity = $datas['cavity'];
                   $cdm->cav = $datas['body_yrf'][$i]['cav'];
                   if ($cdm->awal_a == null) {
@@ -3914,7 +3926,7 @@ class RecorderProcessController extends Controller
       try {
           $id_user = Auth::id();
 
-          $data = DB::SELECT("SELECT DISTINCT
+          $data = DB::SELECT('SELECT DISTINCT
             ( cdm_code ),
             product,
             type,
@@ -3922,19 +3934,45 @@ class RecorderProcessController extends Controller
             color,
             injection_date,
             machine,
+            machine_injection,
             cavity,
-            name,
-            employee_syncs.employee_id
+          IF
+            (
+              awal_a IS NULL,
+              "",
+              CONCAT(
+              CONCAT( awal_employee_id, "<br>", awal.name, "<br>At ", awal_created_at ))) AS awal_name,
+          IF
+            (
+              ist_1_a IS NULL,
+              "",
+              CONCAT(
+              CONCAT( ist_1_employee_id, "<br>", ist_1.name, "<br>At ", ist_1_created_at ))) AS ist_1_name,
+          IF
+            (
+              ist_2_a IS NULL,
+              "",
+              CONCAT(
+              CONCAT( ist_2_employee_id, "<br>", ist_2.name, "<br>At ", ist_2_created_at ))) AS ist_2_name,
+          IF
+            (
+              ist_3_a IS NULL,
+              "",
+              CONCAT(
+              CONCAT( ist_3_employee_id, "<br>", ist_3.name, "<br>At ", ist_3_created_at ))) AS ist_3_name 
           FROM
             `injection_cdm_checks`
-            LEFT JOIN employee_syncs ON employee_syncs.employee_id = injection_cdm_checks.awal_employee_id 
+            LEFT JOIN employee_syncs awal ON awal.employee_id = injection_cdm_checks.awal_employee_id
+            LEFT JOIN employee_syncs ist_1 ON ist_1.employee_id = injection_cdm_checks.ist_1_employee_id
+            LEFT JOIN employee_syncs ist_2 ON ist_2.employee_id = injection_cdm_checks.ist_2_employee_id
+            LEFT JOIN employee_syncs ist_3 ON ist_3.employee_id = injection_cdm_checks.ist_3_employee_id 
           WHERE
             DATE( injection_cdm_checks.created_at ) BETWEEN DATE(
             NOW()) - INTERVAL 7 DAY 
             AND DATE(
             NOW()) 
           ORDER BY
-            injection_cdm_checks.created_at DESC");
+            injection_cdm_checks.created_at DESC');
 
           $response = array(
               'status' => true,
@@ -4022,7 +4060,7 @@ class RecorderProcessController extends Controller
                 $machine = $machine.',';
               }
             }
-            $machinein = " and injection_cdm_checks.machine in (".$machine.") ";
+            $machinein = " and injection_cdm_checks.machine_injection in (".$machine.") ";
           }
           else{
             $machinein = "";
@@ -4041,6 +4079,7 @@ class RecorderProcessController extends Controller
               color,
               injection_date,
               machine,
+              machine_injection,
               cavity,
               cav,
               COALESCE(awal_a,'') as awal_a,
