@@ -148,7 +148,8 @@
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
 										<th style="width:5%;">Request Date</th>
-										<th style="width:5%;">Budget From - To</th>
+										<th style="width:5%;">Budget From</th>
+										<th style="width:5%;">Budget To</th>
 										<th style="width:5%;">Amount ($)</th>
 										<th style="width:5%;">Note</th>
 									</tr>
@@ -157,6 +158,7 @@
 								</tbody>
 								<tfoot>
 					              <tr>
+					                <th></th>
 					                <th></th>
 					                <th></th>
 					                <th></th>
@@ -299,7 +301,8 @@
 
 	              table += '<tr>';
 	              table += '<td>'+value.request_date+'</td>';
-	              table += '<td>'+value.budget_from+' -> '+value.budget_to+'</td>';
+	              table += '<td>'+value.budget_from+'</td>';
+	              table += '<td>'+value.budget_to+'</td>';
 	              
 	    //           if (value.date_approval_from == null) {
 		   //          table += '<td><label class="label label-danger"><i class="fa fa-close"> Unverified</label></td>';	              	
