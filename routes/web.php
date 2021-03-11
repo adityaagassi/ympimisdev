@@ -4415,8 +4415,23 @@ Route::get('fetch/reed/injection_delivery', 'ReedSyntheticController@fetchInject
 Route::post('scan/reed/injection_delivery', 'ReedSyntheticController@scanInjectionDelivery');
 Route::get('fetch/reed/update_injection_delivery', 'ReedSyntheticController@fetchUpdateInjectionDelivery');
 
-//Molding
+//Laser
 Route::get('index/reed/laser_verification', 'ReedSyntheticController@indexLaserVerification');
+Route::get('fetch/reed/laser_picking_list', 'ReedSyntheticController@fetchLaserPickingList');
+Route::post('scan/reed/laser_picking', 'ReedSyntheticController@scanLaserPicking');
+Route::post('fetch/reed/start_laser', 'ReedSyntheticController@fetchStartLaser');
+Route::post('fetch/reed/finish_laser', 'ReedSyntheticController@fetchFinishLaser');
+
+
+//Laser
+Route::get('index/reed/trimming_verification', 'ReedSyntheticController@indexTrimmingVerification');
+
+//Laser
+Route::get('index/reed/annealing_verification', 'ReedSyntheticController@indexAnnealingVerification');
+
+
+
+
 
 //End Reed Project
 

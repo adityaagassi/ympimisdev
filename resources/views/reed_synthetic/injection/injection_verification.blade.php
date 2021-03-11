@@ -44,12 +44,13 @@
 @section('content')
 <section class="content" style="padding-top: 0;">
 	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8; display: none">
-		<p style="position: absolute; color: White; top: 45%; left: 45%;">
+		<p style="position: absolute; color: white; top: 45%; left: 45%;">
 			<span style="font-size: 5vw;"><i class="fa fa-spin fa-circle-o-notch"></i></span>
 		</p>
 	</div>
 	<div class="row">
 		<input type="hidden" id="location" value="injection">
+		<input type="hidden" id="proses" value="injection">
 		<input type="hidden" id="employee_id">
 		<input type="hidden" id="order_id">
 
@@ -238,6 +239,7 @@
 	function selectChecksheet(){
 		var kanban = $('#kanban').val();
 		var location = $('#location').val();
+		var proses = $('#proses').val();
 
 		if(kanban == ''){
 			return false;
@@ -245,7 +247,8 @@
 
 		var data = {
 			kanban : kanban, 
-			location : location 
+			location : location,
+			proses : proses 
 		}
 
 		$.get('{{ url("fetch/reed/injection_picking_list") }}', data, function(result, status, xhr){

@@ -44,19 +44,19 @@
 @section('content')
 <section class="content" style="padding-top: 0;">
 	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8; display: none">
-		<p style="position: absolute; color: White; top: 45%; left: 45%;">
+		<p style="position: absolute; color: white; top: 45%; left: 45%;">
 			<span style="font-size: 5vw;"><i class="fa fa-spin fa-circle-o-notch"></i></span>
 		</p>
 	</div>
 	<div class="row">
-		<input type="hidden" id="location" value="molding">
-		<input type="hidden" id="proses" value="injection">
+		<input type="hidden" id="location" value="trimming">
+		<input type="hidden" id="proses" value="trimming">
 		<input type="hidden" id="employee_id">
 		<input type="hidden" id="order_id">
 
 		<div class="col-xs-6 col-md-offset-3" id="field_kanban">
 			<div class="input-group-addon" id="icon-serial" style="font-weight: bold">
-				<span style="font-size: 3vw; background-color: #FFD54F; padding-top: 6px;">
+				<span style="font-size: 3vw; background-color: #E57373; padding-top: 6px;">
 					&nbsp;
 					<i class="glyphicon glyphicon-qrcode"></i>
 					&nbsp;
@@ -77,7 +77,7 @@
 						<th colspan="6" style="font-size: 2.5vw;">OPERATOR <span id="data_op"></span></th>
 					</tr>
 					<tr>
-						<th colspan="6" style="font-size: 2.5vw;">SETUP MOLDING<span id="material"></span></th>
+						<th colspan="6" style="font-size: 2.5vw;">PICKING LIST<span id="material"></span></th>
 					</tr>
 					<tr>
 						<th style="width: 1%; font-size: 2vw;">#</th>
@@ -92,8 +92,21 @@
 				</tbody>
 			</table>
 
-			<button id="finishSetup" onclick="finishSetup()" class="btn btn-danger" style="font-weight: bold; font-size: 3vw; width: 100%;">SELESAI SETUP MOLDING</button>
-			
+			<table class="table table-bordered table-stripped">
+				<thead style="background-color: orange;">
+					<tr>
+						<th width="50%" style="font-size: 2.5vw; vertical-align: middle;">
+							<span id="hours">00</span>:
+							<span id="minutes">00</span>:
+							<span id="seconds">00</span>
+						</th>
+						<th width="50%" style="font-size: 2.5vw;">
+							<button id="start" onclick="startInj()" class="btn btn-success" style="font-weight: bold; font-size: 3vw; width: 100%;">START</button>
+							<button id="finish" onclick="finishInj()" class="btn btn-danger" style="font-weight: bold; font-size: 3vw; width: 100%;">FINISH</button></span>
+						</th>
+					</tr>
+				</thead>
+			</table>
 
 
 		</div>
@@ -106,9 +119,9 @@
 			<div class="modal-header">
 				<div class="modal-body table-responsive no-padding">
 					<div class="form-group">
-						<div style="background-color: #FFD54F;">
+						<div style="background-color: #E57373;">
 							<center>
-								<h3>SETUP MOLDING VERIFICATION</h3>
+								<h3>TRIMMING VERIFICATION</h3>
 							</center>
 						</div>
 						<label for="exampleInputEmail1">Employee ID</label>
@@ -141,7 +154,7 @@
 
 	jQuery(document).ready(function() {
 		clearAll();
-		$('#finishSetup').prop('disabled', true);
+		$('#startInj').prop('disabled', true);
 
 		$('#modalOperator').modal({
 			backdrop: 'static',
@@ -152,8 +165,10 @@
 			$('#operator').focus();
 		});
 
-	});
+		setTime();
+		setInterval(setTime, 1000);
 
+	});
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 	var audio_ok = new Audio('{{ url("sounds/sukses.mp3") }}');
@@ -166,6 +181,7 @@
 		$('#operator').val('');
 		$('#qr_item').val('');
 		$('#kanban').val('');
+
 	}
 
 
@@ -196,7 +212,7 @@
 						$('#operator').val('');
 					}
 				});
-
+				
 			}else{
 				openErrorGritter('Error!', 'Employee ID Invalid.');
 				audio_error.play();
@@ -209,7 +225,7 @@
 	$('#kanban').keydown(function(event) {
 		if (event.keyCode == 13 || event.keyCode == 9) {
 			if($("#kanban").val().length >= 11){
-				selectChecksheet($("#kanban").val());
+				selectChecksheet();
 			}
 			else{
 				openErrorGritter('Error!', 'Kanban tidak valid.');
@@ -220,19 +236,22 @@
 	});
 
 
-	function selectChecksheet(id){
-		$('#loading').show();
-
+	function selectChecksheet(){
+		var kanban = $('#kanban').val();
 		var location = $('#location').val();
 		var proses = $('#proses').val();
 
+		if(kanban == ''){
+			return false;
+		}
+
 		var data = {
-			kanban : id, 
-			location : location,
+			kanban : kanban, 
+			location : location, 
 			proses : proses 
 		}
 
-		$.get('{{ url("fetch/reed/injection_picking_list") }}', data, function(result, status, xhr){
+		$.get('{{ url("fetch/reed/laser_picking_list") }}', data, function(result, status, xhr){
 			if(result.status){
 				$('#field_kanban').hide();
 
@@ -270,20 +289,43 @@
 					total_actual += value.actual_quantity;
 				});
 
+
 				if(total_quantity == total_actual){
-					$('#finishSetup').prop('disabled', false);
+					if(result.order.start_laser != null){
+						time = new Date(result.order.start_laser);
+						document.getElementById("hours").innerHTML = pad(parseInt(diff_seconds(new Date(), time) / 3600));
+						document.getElementById("minutes").innerHTML = pad(parseInt((diff_seconds(new Date(), time) % 3600) / 60));
+						document.getElementById("seconds").innerHTML = pad(diff_seconds(new Date(), time) % 60);
+
+						$('#start').hide();
+
+						$('#finish').show();
+						$('#finish').prop('disabled', false);
+
+					}else{
+						$('#start').prop('disabled', false);
+						$('#start').show();
+
+						$('#finish').hide();
+						$('#finish').prop('disabled', true);
+					}
+				}else{
+					$('#start').prop('disabled', true);
+					$('#start').show();
+
+					$('#finish').hide();
+					$('#finish').prop('disabled', true);
+
 				}
 
 				$('#pickingTableBody').append(pickingData);
 				setInterval(focusTag, 1000);
-				$('#loading').hide();
-			}
-			else{
+
+
+			}else{
 				$('#kanban').val("");
 				$('#kanban').focus();
 
-
-				$('#loading').hide();
 				openErrorGritter('Error!', result.message);
 				audio_error.play();
 			}
@@ -300,8 +342,6 @@
 		if (event.keyCode == 13 || event.keyCode == 9) {
 			$('#loading').show();
 
-			var kanban = $('#kanban').val();
-
 			var qr_item = $('#qr_item').val();
 			var order_id = $('#order_id').val();
 			var location = $('#location').val();
@@ -314,12 +354,12 @@
 				employee_id:employee_id
 			}
 
-			$.post('{{ url("scan/reed/injection_picking") }}', data, function(result, status, xhr){
+			$.post('{{ url("scan/reed/laser_picking") }}', data, function(result, status, xhr){
 				if(result.status){
 					$('#qr_item').val("");
 					$('#qr_item').focus();
 
-					selectChecksheet(kanban);
+					selectChecksheet();
 
 					$('#loading').hide();
 					audio_ok.play();
@@ -336,7 +376,7 @@
 	});
 
 
-	function finishSetup(){
+	function startInj(){
 		$('#loading').show();
 		var order_id = $('#order_id').val();
 		var employee_id = $('#employee_id').val();
@@ -346,22 +386,94 @@
 			employee_id:employee_id,
 		}
 
-		if(confirm("Apakah anda yakin mengakhiri proses setup molding?")){
-			$.post('{{ url("fetch/reed/finish_setup_molding") }}', data, function(result, status, xhr){
+		if(confirm("Apakah anda yakin memulai proses trimming?")){
+			$.post('{{ url("fetch/reed/start_laser") }}', data, function(result, status, xhr){
 				if(result.status){
-					location.reload(true);
+
+					time = new Date(result.start);
+
+					document.getElementById("hours").innerHTML = pad(parseInt(diff_seconds(new Date(), time) / 3600));
+					document.getElementById("minutes").innerHTML = pad(parseInt((diff_seconds(new Date(), time) % 3600) / 60));
+					document.getElementById("seconds").innerHTML = pad(diff_seconds(new Date(), time) % 60);
+
+					$('#start').prop('disabled', true);
+					$('#start').hide();
+
+					$('#finish').show();
+					$('#finish').prop('disabled', false);
+
+					$('#loading').hide();
+
 				}else{
 					$('#loading').hide();
 					openErrorGritter('Error!', result.message);
 					audio_error.play();				
 				}
 			});
-		}
-		else{
+		}else{
 			$('#loading').hide();
 			return false;
 		}
 	}
+
+
+	function finishInj(){
+		$('#loading').show();
+		var order_id = $('#order_id').val();
+		var employee_id = $('#employee_id').val();
+		$('#kanban').val('');
+
+
+		var data = {
+			order_id:order_id,
+			employee_id:employee_id,
+		}
+
+		if(confirm("Apakah anda yakin mengakhiri proses trimming?")){
+			$.post('{{ url("fetch/reed/finish_laser") }}', data, function(result, status, xhr){
+				if(result.status){
+					time = undefined;
+					$('#finish').prop('disabled', true);
+
+					$('#loading').hide();
+				}else{
+					$('#loading').hide();
+					openErrorGritter('Error!', result.message);
+					audio_error.play();				
+				}
+			});
+		}else{
+			$('#loading').hide();
+			return false;
+		}
+	}
+
+
+	var time;
+	function setTime() {
+		if(time !== undefined){
+			var duration = diff_seconds(new Date(), time);
+
+			document.getElementById("hours").innerHTML = pad(parseInt(duration / 3600));
+			document.getElementById("minutes").innerHTML = pad(parseInt((duration % 3600) / 60));
+			document.getElementById("seconds").innerHTML = pad(duration % 60);				
+		}
+	}
+
+	function pad(val) {
+		var valString = val + "";
+		if (valString.length < 2) {
+			return "0" + valString;
+		} else {
+			return valString;
+		}
+	}
+
+	function diff_seconds(dt2, dt1){
+		var diff = (dt2.getTime() - dt1.getTime()) / 1000;
+		return Math.abs(Math.round(diff));
+	}
+
 
 
 
