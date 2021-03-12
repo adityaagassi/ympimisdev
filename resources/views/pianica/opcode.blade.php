@@ -149,10 +149,6 @@ table.table-bordered > tfoot > tr > th{
   
  
 function fillexample1(){
-  $('#example1 tfoot th').each( function () {
-    var title = $(this).text();
-    $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
-  });
   var table = $('#example1').DataTable({
     'dom': 'Bfrtip',
     'responsive': true,
@@ -216,19 +212,6 @@ function fillexample1(){
     { "data": "action"}      ]
     });
 
-  table.columns().every( function () {
-    var that = this;
-
-    $( 'input', this.footer() ).on( 'keyup change', function () {
-      if ( that.search() !== this.value ) {
-        that
-        .search( this.value )
-        .draw();
-      }
-    } );
-  });
-
-  $('#example1 tfoot tr').appendTo('#example1 thead');
 }
 
 

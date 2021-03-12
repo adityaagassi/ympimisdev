@@ -706,7 +706,7 @@ class ReedSyntheticController extends Controller{
 		$employee_id = $request->get('employee_id');
 
 
-		if(str_contains(strtoupper($qr_item), 'HAKO') || str_contains(strtoupper($qr_item), 'LASER') || str_contains(strtoupper($qr_item), 'MOLDING') ){
+		if(str_contains(strtoupper($qr_item), 'HAKO') || str_contains(strtoupper($qr_item), 'LASER') || str_contains(strtoupper($qr_item), 'MOLDING')){
 			$data = explode('-', $qr_item);
 
 			$picking_list = $data[0];
