@@ -3692,6 +3692,12 @@ Route::get('index/audit_patrol/detail_penanganan', 'AuditController@detailPenang
 Route::post('post/audit_patrol/penanganan', 'AuditController@postPenanganan');
 Route::post('post/audit_patrol/edit', 'AuditController@editAudit');
 
+Route::get('index/audit_patrol_monitoring/{id}', 'AuditController@indexMonitoringAll');
+Route::get('fetch/audit_patrol_monitoring/all', 'AuditController@fetchMonitoringAll');
+Route::get('index/audit_patrol_monitoring_detail', 'AuditController@detailMonitoringAll');
+Route::get('index/audit_patrol_monitoring_detail_bulan', 'AuditController@detailMonitoringBulanAll');
+Route::get('index/audit_patrol_monitoring_table', 'AuditController@fetchTableAuditAll');
+
 Route::get('export/patrol/list', 'AuditController@exportPatrol');
 
 
@@ -4022,6 +4028,18 @@ Route::get('fetch/maintenance/pm/schedule', 'MaintenanceController@getPlannedSch
 
 // ------------------------  OPERATOR POSITION  ----------------------
 Route::get('index/maintenance/operator/position', 'MaintenanceController@indexOperatorPosition');
+Route::get('fetch/maintenance/operator/position', 'MaintenanceController@fetchOperatorPosition');
+Route::post('post/maintenance/operator/position', 'MaintenanceController@postOperatorPosition');
+
+
+// -------------------------      MTTBF         -------------------
+Route::get('index/maintenance/mttbf/list', 'MaintenanceController@indexMttbf');
+Route::get('fetch/maintenance/mttbf/list', 'MaintenanceController@fetchMttbf');
+
+// -------------------------      MTTR           -------------------
+Route::get('index/maintenance/mttr/list', 'MaintenanceController@indexMttr');
+Route::get('fetch/maintenance/mttr/list', 'MaintenanceController@fetchMttr');
+
 
 //Assemblies
 Route::get('index/kensa/{location}', 'AssemblyProcessController@kensa');
@@ -4301,8 +4319,8 @@ Route::get('mutasi/verifikasi/{id}', 'MutasiController@verifikasi_mutasi');
 Route::post('mutasi_ant/approval/{id}', 'MutasiController@approval_mutasi_ant');
 Route::get('mutasi_ant/report/{id}', 'MutasiController@report_mutasi_ant');
 Route::get('mutasi/report/{id}', 'MutasiController@report_mutasi');
-Route::get('mutasi_ant/finish/{id}', 'MutasiController@excel_report');
-Route::post('mutasi_ant/finish/{id}', 'MutasiController@excel_report');
+Route::get('mutasi_ant/finish/{id}', 'MutasiController@finish_ant');
+Route::get('mutasi/finish/{id}', 'MutasiController@finish');
 //Show
 Route::get('mutasi/show/{id}', 'MutasiController@showApproval');
 Route::get('mutasi_ant/show/{id}', 'MutasiController@showAntApproval');
@@ -4380,6 +4398,7 @@ Route::post('input/qa/ng_temp', 'QualityAssuranceController@inputNgTemp');
 Route::get('fetch/qa/ng_temp','QualityAssuranceController@fetchNgTemp');
 Route::get('delete/qa/ng_temp','QualityAssuranceController@deleteNgTemp');
 Route::get('fetch/qa/ng_list','QualityAssuranceController@fetchNgList');
+Route::post('input/qa/ng_log', 'QualityAssuranceController@inputNgLog');
 
 //Health Indicator
 Route::get('index/health/{loc}', 'HealthController@index');

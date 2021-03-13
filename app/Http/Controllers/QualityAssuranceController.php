@@ -13,6 +13,8 @@ use App\QaMaterial;
 use App\QaInspectionLevel;
 use App\QaIncomingNgTemp;
 use App\QaIncomingNgLog;
+use App\QaIncomingLog;
+use App\EmployeeSync;
 use Response;
 use DataTables;
 use Carbon\Carbon;
@@ -57,11 +59,14 @@ class QualityAssuranceController extends Controller
   			$loc = 'Pipe Silver';
   		}
 
+  		$emp = EmployeeSync::where('employee_id',Auth::user()->username)->first();
+
   		return view('qa.index_incoming_check')
   		->with('ng_lists', $nglists)
   		->with('inspection_level', $inspection_level)
   		->with('loc', $loc)
   		->with('location', $location)
+  		->with('emp', $emp)
   		->with('title', 'Incoming Check QA')
   		->with('title_jp', '受入検査品保')
   		->with('page', 'Quality Assurance')
@@ -172,6 +177,25 @@ class QualityAssuranceController extends Controller
   		}
   	}
 
+  	public function fetchNgList(Request $request)
+  	{
+  		try {
+  			$ng_list = NgList::where('location','qa-incoming')->where('remark',$request->get('location'))->get();
+
+  			$response = array(
+                'status' => true,
+                'ng_list' => $ng_list
+            );
+            return Response::json($response);
+  		} catch (\Exception $e) {
+  			$response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+            return Response::json($response);
+  		}
+  	}
+
   	public function deleteNgTemp(Request $request)
   	{
   		try {
@@ -181,6 +205,85 @@ class QualityAssuranceController extends Controller
                 'message' => 'Success Delete NG'
             );
             return Response::json($response);
+  		} catch (\Exception $e) {
+  			$response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+            return Response::json($response);
+  		}
+  	}
+
+  	public function inputNgLog(Request $request)
+  	{
+  		try {
+  			$material_number = $request->get('material_number');
+  			$material_description = $request->get('material_description');
+  			$vendor = $request->get('vendor');
+  			$qty_rec = $request->get('qty_rec');
+  			$qty_check = $request->get('qty_check');
+  			$invoice = $request->get('invoice');
+  			$inspection_level = $request->get('inspection_level');
+  			$inspector = $request->get('inspector');
+  			$location = $request->get('location');
+  			$incoming_check_code = $request->get('incoming_check_code')."_".date('Y-m-d H:i:s');
+  			$repair = $request->get('repair');
+  			$scrap = $request->get('scrap');
+  			$return = $request->get('returns');
+  			$total_ok = $request->get('total_ok');
+  			$total_ng = $request->get('total_ng');
+  			$ng_ratio = $request->get('ng_ratio');
+  			$status_lot = $request->get('status_lot');
+
+			 QaIncomingLog::create([
+  	        'incoming_check_code' => $incoming_check_code,
+            'inspector_id' => $inspector,
+            'location' => $location,
+            'material_number' => $material_number,
+            'material_description' => $material_description,
+            'vendor' => $vendor,
+            'qty_rec' => $qty_rec,
+    				'qty_check' => $qty_check,
+    				'invoice' => $invoice,
+    				'inspection_level' => $inspection_level,
+    				'repair' => $repair,
+    				'scrap' => $scrap,
+    				'return' => $return,
+    				'total_ok' => $total_ok,
+    				'total_ng' => $total_ng,
+    				'ng_ratio' => $ng_ratio,
+    				'status_lot' => $status_lot,
+            'created_by' => Auth::id()
+        ]);
+
+        $ng_temp = QaIncomingNgTemp::where('incoming_check_code',$request->get('incoming_check_code'))->get();
+
+        foreach ($ng_temp as $key) {
+        	QaIncomingNgLog::create([
+			         'incoming_check_code' => $incoming_check_code,
+              'inspector_id' => $inspector,
+              'location' => $key->location,
+              'material_number' => $key->material_number,
+              'material_description' => $key->material_description,
+              'vendor' => $key->vendor,
+              'qty_rec' => $key->qty_rec,
+    					'qty_check' => $key->qty_check,
+    					'invoice' => $key->invoice,
+    					'inspection_level' => $key->inspection_level,
+    					'ng_name' => $key->ng_name,
+    					'qty_ng' => $key->qty_ng,
+    					'status_ng' => $key->status_ng,
+    					'note_ng' => $key->note_ng,
+              'created_by' => Auth::id()
+          ]);
+          QaIncomingNgTemp::where('id',$key->id)->forceDelete();
+        }
+
+        $response = array(
+            'status' => true,
+            'message' => 'Success Input Incoming Check'
+        );
+        return Response::json($response);
   		} catch (\Exception $e) {
   			$response = array(
                 'status' => false,

@@ -2,7 +2,6 @@
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <link href="<?php echo e(url("css/jquery.numpad.css")); ?>" rel="stylesheet">
-<link rel="stylesheet" href="{{ url("css/jqbtk.css")}}">
 <style type="text/css">
 	thead>tr>th{
 		text-align:center;
@@ -68,6 +67,16 @@
 	input[type=number] {
 		-moz-appearance:textfield; /* Firefox */
 	}
+
+	.dataTables_info,
+	.dataTables_length {
+		color: white;
+	}
+
+	div.dataTables_filter label, 
+     div.dataTables_wrapper div.dataTables_info {
+	     color: white;
+	}
 </style>
 @stop
 @section('header')
@@ -81,7 +90,7 @@
 		</p>
 	</div>
 	<input type="hidden" id="location" value="{{ $location }}">
-	<input type="hidden" id="employee_id" value="">
+	<input type="hidden" id="employee_id" value="{{$emp->employee_id}}">
 	<input type="hidden" id="start_time" value="">
 	<input type="hidden" id="incoming_check_code" value="">
 	
@@ -101,8 +110,8 @@
 						<th colspan="2" style="background-color: #d1d1d1; text-align: center; color: #14213d; padding:0;font-size: 15px;">Inspector QA</th>
 					</tr>
 					<tr>
-						<td style="background-color: #fca311; color: #14213d; text-align: center; font-size:15px; width: 30%;" id="op">-</td>
-						<td style="background-color: #14213d; text-align: center; color: white; font-size: 15px;" id="op2">-</td>
+						<td style="background-color: #fca311; color: #14213d; text-align: center; font-size:15px; width: 30%;" id="op">{{$emp->employee_id}}</td>
+						<td style="background-color: #14213d; text-align: center; color: white; font-size: 15px;" id="op2">{{$emp->name}}</td>
 					</tr>
 					
 				</tbody>
@@ -175,33 +184,72 @@
 							</select>
 						</td>
 					</tr>
+					<tr>
+						<td style="background-color: #80e5ff; text-align: center; color: #14213d; padding:0;font-size: 20px;font-weight: bold;width: 50%">
+							REPAIR
+						</td>
+						<td style="background-color: #da96ff; text-align: center; color: #14213d; padding:0;font-size: 20px;font-weight: bold;width: 50%">
+							QTY OK
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input type="text" class="pull-right" name="repair" style="height: 50px;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;color: #14213d" id="repair" placeholder="Qty Repair" readonly value="0">
+						</td>
+						<td>
+							<input type="text" class="pull-right" name="total_ok" style="height: 50px;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;color: #14213d" id="total_ok" placeholder="Qty OK" readonly value="0">
+						</td>
+					</tr>
+					<tr>
+						<td style="background-color: #69ffaf; text-align: center; color: #14213d; padding:0;font-size: 20px;font-weight: bold;width: 50%">
+							SCRAP
+						</td>
+						<td style="background-color: #ff8c8c; text-align: center; color: #14213d; padding:0;font-size: 20px;font-weight: bold;width: 50%">
+							NG RATIO (%)
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input type="text" class="pull-right" name="scrap" style="height: 50px;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;color: #14213d" id="scrap" placeholder="Qty Scrap" readonly value="0">
+						</td>
+						<td>
+							<input type="text" class="pull-right" name="ng_ratio" style="height: 50px;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;color: #14213d" id="ng_ratio" placeholder="NG Ratio (%)" readonly value="0">
+						</td>
+					</tr>
+					<tr>
+						<td style="background-color: #ffe06e; text-align: center; color: #14213d; padding:0;font-size: 20px;font-weight: bold;width: 50%">
+							RETURN
+						</td>
+						<td style="background-color: #ffcd9c; text-align: center; color: #14213d; padding:0;font-size: 20px;font-weight: bold;width: 50%">
+							STATUS LOT
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input type="text" class="pull-right" name="return" style="height: 50px;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;color: #14213d" id="return" placeholder="Qty Return" readonly value="0">
+						</td>
+						<td>
+							<select name="status_lot" style="height: 50px;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;color: #14213d" id="status_lot" data-placeholder="Status Lot">
+								<option value="-">Pilih Status Lot</option>
+								<option value="Lot OK">Lot OK</option>
+								<option value="Lot Out">Lot Out</option>
+							</select>
+						</td>
+					</tr>
 				</tbody>
 			</table>
 		</div>
 
 		<div class="col-xs-6" style="padding-right: 0;">
 			<div id="ngList2">
-				<table class="table table-bordered" style="width: 100%; margin-bottom: 2px;" border="1">
+				<table class="table table-bordered" style="width: 100%; margin-bottom: 2px;" border="1" id="tableNgList">
 					<thead>
 						<tr>
 							<th style="width: 65%; background-color: #d1d1d1; padding:0;font-size: 20px;" >Nama NG</th>
 						</tr>
 					</thead>
-					<tbody>
-						<?php $no = 1; ?>
-						@foreach($ng_lists as $nomor => $ng_list)
-						<?php if ($no % 2 === 0 ) {
-							$color = 'style="background-color: #fffcb7"';
-						} else {
-							$color = 'style="background-color: #ffd8b7"';
-						}
-						?>
-						<input type="hidden" id="loop" value="{{$loop->count}}">
-						<tr <?php echo $color ?>>
-							<td id="{{ $ng_list->ng_name }}" onclick="showModalNg('{{ $ng_list->ng_name }}')" style="font-size: 35px;">{{ $ng_list->ng_name }}</td>
-						</tr>
-						<?php $no+=1; ?>
-						@endforeach
+					<tbody id="bodyTableNgList">
+						
 					</tbody>
 				</table>
 			</div>
@@ -227,7 +275,7 @@
 				</button>
 			</div>
 			<div class="col-xs-6" style="padding: 0px;padding-top: 10px;padding-left: 5px">
-				<button class="btn btn-success" id="btn_confirm" onclick="confirm()" style="font-size: 25px;font-weight: bold;width: 100%">
+				<button class="btn btn-success" id="btn_confirm" onclick="confirmNgLog()" style="font-size: 25px;font-weight: bold;width: 100%">
 					CONFIRM
 				</button>
 			</div>
@@ -235,7 +283,7 @@
 	</div>
 </section>
 
-<div class="modal fade" id="modalOperator">
+<!-- <div class="modal fade" id="modalOperator">
 	<div class="modal-dialog modal-sm">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -248,7 +296,7 @@
 			</div>
 		</div>
 	</div>
-</div>
+</div> -->
 
 <div class="modal fade" id="modalNg">
 	<div class="modal-dialog modal-lg">
@@ -311,7 +359,7 @@
 <script src="{{ url("js/export-data.js")}}"></script>
 <script src="<?php echo e(url("js/jquery.numpad.js")); ?>"></script>
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
-<script src="{{ url("js/jqbtk.js") }}"></script>
+<!-- <script src="{{ url("js/jqbtk.js") }}"></script> -->
 
 <script>
 	$.ajaxSetup({
@@ -333,11 +381,11 @@
 	$.fn.numpad.defaults.onKeypadCreate = function(){$(this).find('.done').addClass('btn-primary');};
 
 	jQuery(document).ready(function() {
-		$('#modalOperator').modal({
-			backdrop: 'static',
-			keyboard: false
-		});
-		$("#operator").val('');
+		// $('#modalOperator').modal({
+		// 	backdrop: 'static',
+		// 	keyboard: false
+		// });
+		// $("#operator").val('');
 		$('.numpad').numpad({
 			hidePlusMinusButton : true,
 			decimalSeparator : '.'
@@ -348,9 +396,26 @@
 			decimalSeparator : '.'
 		});
 		cancelAll();
-		$('#invoice').keyboard();
-		$('#material_number').keyboard();
-		$('#note_ng').keyboard();
+		// $('#invoice').keyboard({
+	 //        usePreview: false,
+	 //        change: function(e, kb) {
+	 //          table.search(kb.el.value).draw();
+	 //        }
+	 //      });
+		// $('#material_number').keyboard({
+	 //        usePreview: false,
+	 //        change: function(e, kb) {
+	 //          table.search(kb.el.value).draw();
+	 //        }
+	 //      });
+		// $('#note_ng').keyboard({
+	 //        usePreview: false,
+	 //        change: function(e, kb) {
+	 //          table.search(kb.el.value).draw();
+	 //        }
+	 //      });
+		// $('#ng_search').keyboard();
+		ng_list();
 	});
 
 	function cancelAll() {
@@ -365,45 +430,69 @@
 		$('#qty_ng').val('');
 		$('#status_ng').val('-').trigger('change');
 		$('#start_time').val('');
+		$('#repair').val('0');
+		$('#scrap').val('0');
+		$('#return').val('0');
+		$('#total_ok').val('0');
+		$('#ng_ratio').val('0');
+		$('#status_lot').val('-').trigger('change');
+
+		if ($('#incoming_check_code').val() != "") {
+			var data = {
+				incoming_check_code:$('#incoming_check_code').val()
+			}
+			$.get('{{ url("delete/qa/ng_temp") }}', data, function(result, status, xhr){
+				if(result.status){
+					openSuccessGritter('Success!', result.message);
+					fetchNgTemp();
+				}
+				else{
+					audio_error.play();
+					openErrorGritter('Error', result.message);
+				}
+			});
+		}
+
+		$('#incoming_check_code').val("");
 	}
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
-	$('#modalOperator').on('shown.bs.modal', function () {
-		$('#operator').focus();
-	});
+	// $('#modalOperator').on('shown.bs.modal', function () {
+	// 	$('#operator').focus();
+	// });
 
-	$('#operator').keydown(function(event) {
-		if (event.keyCode == 13 || event.keyCode == 9) {
-			if($("#operator").val().length >= 8){
-				var data = {
-					employee_id : $("#operator").val(),
-				}
+	// $('#operator').keydown(function(event) {
+	// 	if (event.keyCode == 13 || event.keyCode == 9) {
+	// 		if($("#operator").val().length >= 8){
+	// 			var data = {
+	// 				employee_id : $("#operator").val(),
+	// 			}
 				
-				$.get('{{ url("scan/injeksi/operator") }}', data, function(result, status, xhr){
-					if(result.status){
-						openSuccessGritter('Success!', result.message);
-						$('#modalOperator').modal('hide');
-						$('#modalMesin').modal('show');
-						$('#op').html(result.employee.employee_id);
-						$('#op2').html(result.employee.name);
-						$('#employee_id').val(result.employee.employee_id);
-						$('#material_number').focus();
-					}
-					else{
-						audio_error.play();
-						openErrorGritter('Error', result.message);
-						$('#operator').val('');
-					}
-				});
-			}
-			else{
-				openErrorGritter('Error!', 'Employee ID Invalid.');
-				audio_error.play();
-				$("#operator").val("");
-			}			
-		}
-	});
+	// 			$.get('{{ url("scan/injeksi/operator") }}', data, function(result, status, xhr){
+	// 				if(result.status){
+	// 					openSuccessGritter('Success!', result.message);
+	// 					$('#modalOperator').modal('hide');
+	// 					$('#modalMesin').modal('show');
+	// 					$('#op').html(result.employee.employee_id);
+	// 					$('#op2').html(result.employee.name);
+	// 					$('#employee_id').val(result.employee.employee_id);
+	// 					$('#material_number').focus();
+	// 				}
+	// 				else{
+	// 					audio_error.play();
+	// 					openErrorGritter('Error', result.message);
+	// 					$('#operator').val('');
+	// 				}
+	// 			});
+	// 		}
+	// 		else{
+	// 			openErrorGritter('Error!', 'Employee ID Invalid.');
+	// 			audio_error.play();
+	// 			$("#operator").val("");
+	// 		}			
+	// 	}
+	// });
 
 	function checkMaterial(material_number) {
 		if (material_number.length === 7) {
@@ -502,6 +591,14 @@
 				var ngTemp = "";
 				$('#bodyNgTemp').html("");
 				var index = 1;
+
+				var repair = 0;
+				var scrap = 0;
+				var returns = 0;
+				var total_ok = 0;
+				var total_ng = 0;
+				var ng_ratio = 0;
+
 				$.each(result.ng_temp, function(key,value){
 					if (index % 2 === 0) {
 						var color = 'style="background-color: #e1e5f2"';
@@ -516,7 +613,34 @@
 					ngTemp += '<td><button onclick="deleteNgTemp(\''+value.id+'\')" class="btn btn-danger btn-sm">Delete</button></td>';
 					ngTemp += '</tr>';
 					index++;
+
+					if (value.status_ng == 'Return') {
+						returns = returns + parseInt(value.qty_ng);
+					}
+					if (value.status_ng == 'Scrap') {
+						scrap = scrap + parseInt(value.qty_ng);
+					}
+					if (value.status_ng == 'Repair') {
+						repair = repair + parseInt(value.qty_ng);
+					}
+
+					total_ng = total_ng + parseInt(value.qty_ng);
 				});
+
+				$('#repair').val(repair);
+				$('#return').val(returns);
+				$('#scrap').val(scrap);
+
+				var check = $('#qty_check').val();
+
+				total_ok = check - total_ng;
+				if (total_ok != 0) {
+					ng_ratio = (total_ng / check) * 100;
+				}
+
+				$('#total_ok').val(total_ok);
+				$('#ng_ratio').val(ng_ratio);
+
 				$('#bodyNgTemp').append(ngTemp);
 			}
 			else{
@@ -598,6 +722,114 @@
 		var m = addZero(d.getMinutes());
 		var s = addZero(d.getSeconds());
 		return year + "-" + month + "-" + day + " " + h + ":" + m + ":" + s;
+	}
+
+	function ng_list() {
+		var data = {
+			location:'{{$location}}'
+		}
+
+		$.get('{{ url("fetch/qa/ng_list") }}', data, function(result, status, xhr){
+			if(result.status){
+				$('#tableNgList').DataTable().clear();
+				$('#tableNgList').DataTable().destroy();
+				var tableng = "";
+				$('#bodyTableNgList').html('');
+				var index = 1;
+				for(var i = 0; i < result.ng_list.length; i++){
+					if (index % 2 === 0 ) {
+						var color = 'style="background-color: #fffcb7"';
+					} else {
+						var color = 'style="background-color: #ffd8b7"';
+					}
+					tableng += '<tr '+color+'>';
+					tableng += '<td id="'+result.ng_list[i].ng_name+'" onclick="showModalNg(\''+result.ng_list[i].ng_name+'\')" style="font-size: 35px;">'+result.ng_list[i].ng_name+'</td>';
+					tableng += '</tr>';
+					index++;
+				}
+				$('#bodyTableNgList').append(tableng);
+				var table = $('#tableNgList')
+					.on('search.dt', function() {
+				      // $('input[type="search"]').keyboard({
+				      //   usePreview: false,
+				      //   change: function(e, kb) {
+				      //     table.search(kb.el.value).draw();
+				      //   }
+				      // });
+				      $('.dataTables_filter').addClass('pull-left');
+				    })
+				    .DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'searching': true,
+					'ordering': false,
+					'info': true,
+					'autoWidth': true,
+					"sPaginationType": "simple",
+					"bJQueryUI": true,
+					"bAutoWidth": false,
+					"processing": true
+				});
+			}
+			else{
+				audio_error.play();
+				openErrorGritter('Error', result.message);
+			}
+		});
+	}
+
+	function confirmNgLog() {
+		if ($('#status_lot').val() == '-') {
+			alert('Isi Semua Data');
+		}else{
+			var incoming_check_code = $('#incoming_check_code').val();
+			var material_number = $('#material_number').val();
+			var material_description = $('#material_description').text();
+			var vendor = $('#vendor').text();
+			var qty_rec = $('#qty_rec').val();
+			var qty_check = $('#qty_check').val();
+			var invoice = $('#invoice').val();
+			var inspection_level = $('#inspection_level').val();
+			var inspector = $('#employee_id').val();
+			var location = $('#location').val();
+			var repair = $('#repair').val();
+			var scrap = $('#scrap').val();
+			var returns = $('#return').val();
+			var total_ok = $('#total_ok').val();
+			var total_ng = parseInt(qty_check) - parseInt($('#total_ok').val());
+			var ng_ratio = $('#ng_ratio').val();
+			var status_lot = $('#status_lot').val();
+
+			var data = {
+				incoming_check_code:incoming_check_code,
+				material_number:material_number,
+				material_description:material_description,
+				vendor:vendor,
+				qty_rec:qty_rec,
+				qty_check:qty_check,
+				invoice:invoice,
+				inspection_level:inspection_level,
+				location:location,
+				inspector:inspector,
+				repair:repair,
+				scrap:scrap,
+				returns:returns,
+				total_ok:total_ok,
+				total_ng:total_ng,
+				ng_ratio:ng_ratio,
+				status_lot:status_lot,
+			}
+			$.post('{{ url("input/qa/ng_log") }}', data, function(result, status, xhr){
+				if(result.status){
+					openSuccessGritter('Success!', result.message);
+					cancelAll();
+				}
+				else{
+					audio_error.play();
+					openErrorGritter('Error', result.message);
+				}
+			});
+		}
 	}
 
 </script>
