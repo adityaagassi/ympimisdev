@@ -275,7 +275,7 @@ class PressController extends Controller
 
 	public function fetchPunch(Request $request){
 
-		$kanagata_log_punch = DB::SELECT("SELECT * FROM `mp_kanagata_logs` where process = '".$request->get('process')."' and material_number = '".$request->get('material_number')."' and punch_number = '".$request->get('punch_number')."' and punch_status = 'Running'");
+		$kanagata_log_punch = DB::SELECT("SELECT * FROM `mp_kanagata_logs` where material_number = '".$request->get('material_number')."' and punch_number = '".$request->get('punch_number')."' and punch_status = 'Running'");
 		
 		$total_punch = 0;
 	      if(count($kanagata_log_punch) == 0){
@@ -295,7 +295,7 @@ class PressController extends Controller
 
 	public function fetchDie(Request $request){
 
-		$kanagata_log_dies = DB::SELECT("SELECT * FROM `mp_kanagata_logs` where process = '".$request->get('process')."' and material_number = '".$request->get('material_number')."' and die_number = '".$request->get('die_number')."' and die_status = 'Running'");
+		$kanagata_log_dies = DB::SELECT("SELECT * FROM `mp_kanagata_logs` where material_number = '".$request->get('material_number')."' and die_number = '".$request->get('die_number')."' and die_status = 'Running'");
 		$total_die = 0;
 	      if(count($kanagata_log_dies) == 0){
 	      	$total_die = 0;
