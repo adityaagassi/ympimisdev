@@ -84,7 +84,7 @@ class ReedSyntheticController extends Controller{
 	}
 
 	public function indexTrimmingVerification(){
-		$title = "Annealing Verification";
+		$title = "Trimming Verification";
 		$title_jp = "??";
 
 		return view('reed_synthetic.laser.trimming_verification', array(
@@ -733,7 +733,7 @@ class ReedSyntheticController extends Controller{
 					);
 					return Response::json($response);
 				}else{
-					$order_list->actual_quantity = $order_list->actual_quantity + 1;
+					$order_list->actual_quantity = (int) $order_list->actual_quantity + 1;
 					$order_list->picked_by = strtoupper($employee_id);
 					$order_list->picked_at = date('Y-m-d H:i:s');
 
