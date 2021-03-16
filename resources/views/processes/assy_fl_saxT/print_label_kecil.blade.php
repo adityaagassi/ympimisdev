@@ -144,7 +144,7 @@ var printSettings = {
 	"footerStrLeft": "",
 	"footerStrCenter": "",
 	"footerStrRight": "",
-	"printerName" : "SATO CX400" 
+	"printerName" : "SATO CG408" 
 };
 
 function printWindow(win, what) {
