@@ -1279,8 +1279,8 @@
     @if(isset($page) && $page == "Machine Logs")<li class="active">@else<li>@endif
       <a href="{{ url("/index/maintenance/machine/log") }}"><i class="fa fa-gavel"></i> <span>Machine History</span></a>
     </li>
-    @if(isset($page) && $page == "Operator Position")<li class="active">@else<li>@endif
-      <a href="{{ url("/index/maintenance/operator/position") }}"><i class="fa fa-gavel"></i> <span>Operator Position</span></a>
+    @if(isset($page) && $page == "MP Position")<li class="active">@else<li>@endif
+      <a href="{{ url("/index/maintenance/operator") }}"><i class="fa fa-gavel"></i> <span>Sign to Area</span></a>
     </li>
   </li>
 </ul>

@@ -677,9 +677,24 @@
                         </a>
                         <br>
                         <a href="http://10.109.52.7/mtnc/login/log" target="_blank">
-                            <i class="fa fa-caret-right"></i> Planned Maintenance Activity Finding
+                            <i class="fa fa-caret-right"></i> Planned Maintenance Activity Finding (??)
                         </a>
-
+                        <br>
+                        <a href="{{ url("index/maintenance/mttbf/list") }}">
+                            <i class="fa fa-caret-right"></i> MTTBF (??)
+                        </a>
+                        <br>
+                        <a href="{{ url("index/maintenance/mttbf/report") }}">
+                            <i class="fa fa-caret-right"></i> MTTBF Report (??)
+                        </a>
+                        <br>
+                        <a href="{{ url("index/maintenance/mttr/list") }}">
+                            <i class="fa fa-caret-right"></i> MTTR (??)
+                        </a>
+                        <br>
+                        <a href="{{ url("index/maintenance/operator/position") }}">
+                            <i class="fa fa-caret-right"></i> Operator Position (??)
+                        </a>
                     </td>                     
                 </tr>
                 <tr>
