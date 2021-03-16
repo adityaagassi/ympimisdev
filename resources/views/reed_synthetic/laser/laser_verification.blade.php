@@ -340,7 +340,7 @@
 
 	$('#qr_item').keydown(function(event) {
 		if (event.keyCode == 13 || event.keyCode == 9) {
-			$('#loading').show();
+			// $('#loading').show();
 
 			var qr_item = $('#qr_item').val();
 			var order_id = $('#order_id').val();
