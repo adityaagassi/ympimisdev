@@ -1119,7 +1119,7 @@
       budget_list += "<option></option> ";
       $.get('{{ url("fetch/investment/invbudgetlist") }}', data, function(result, status, xhr) {  
         $.each(result.budget, function(index, value){
-          budget_list += "<option value="+value.budget_no+">"+value.budget_no+" - "+value.description+"</option> ";
+          budget_list += "<option value="+value.budget_no+">"+value.periode+" - "+value.budget_no+" - "+value.description+"</option> ";
         });
         $('#budget_no'+no).append(budget_list);
       })

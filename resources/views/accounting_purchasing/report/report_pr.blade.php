@@ -148,19 +148,19 @@
 								@endif
 							</td>
 							<!-- <td clolspan="1" style="border: 1px solid black;">{{ $purchase_r->item_stock }}</td> -->
-							<td colspan="1" style="border: 1px solid black;"><?= date('d-M-y', strtotime($purchase_r->item_request_date)) ?></td>
+							<td colspan="1" style="border: 1px solid black;text-align: right;padding-right: 5px"><?= date('d-M-y', strtotime($purchase_r->item_request_date)) ?></td>
 							<td colspan="1" style="border: 1px solid black;">{{ $purchase_r->item_qty }} {{ $purchase_r->item_uom }}</td>
 							<td colspan="1" style="border: 1px solid black;">{{ $purchase_r->item_currency }}</td>
 							@if($purchase_r->item_currency == "IDR")
-							<td colspan="1" style="border: 1px solid black;"><?= number_format($purchase_r->item_price,0,"",".") ?></td>
+							<td colspan="1" style="border: 1px solid black;text-align: right;padding-right: 5px"><?= number_format($purchase_r->item_price,0,"",".") ?></td>
 							@else
-							<td colspan="1" style="border: 1px solid black;"><?= $purchase_r->item_price ?></td>
+							<td colspan="1" style="border: 1px solid black;text-align: right;padding-right: 5px"><?= $purchase_r->item_price ?></td>
 							@endif
 
 							@if($purchase_r->item_currency == "IDR")
-							<td colspan="1" style="border: 1px solid black;"><?= number_format($purchase_r->item_amount,0,"",".") ?></td>
+							<td colspan="1" style="border: 1px solid black;text-align: right;padding-right: 5px"><?= number_format($purchase_r->item_amount,0,"",".") ?></td>
 							@else
-							<td colspan="1" style="border: 1px solid black;"><?= $purchase_r->item_amount ?></td>
+							<td colspan="1" style="border: 1px solid black;text-align: right;padding-right: 5px"><?= $purchase_r->item_amount ?></td>
 							@endif
 
 							<td colspan="1" style="border: 1px solid black;">{{ $purchase_r->item_stock }}</td>
@@ -435,19 +435,19 @@
 						@endif
 					</td>
 					<!-- <td clolspan="1" style="border: 1px solid black;">{{ $purchase_r->item_stock }}</td> -->
-					<td colspan="1" style="border: 1px solid black;"><?= date('d-M-y', strtotime($purchase_r->item_request_date)) ?></td>
+					<td colspan="1" style="border: 1px solid black;text-align: right;padding-right: 5px"><?= date('d-M-y', strtotime($purchase_r->item_request_date)) ?></td>
 					<td colspan="1" style="border: 1px solid black;">{{ $purchase_r->item_qty }} {{ $purchase_r->item_uom }}</td>
 					<td colspan="1" style="border: 1px solid black;">{{ $purchase_r->item_currency }}</td>
 					@if($purchase_r->item_currency == "IDR")
-					<td colspan="1" style="border: 1px solid black;"><?= number_format($purchase_r->item_price,0,"",".") ?></td>
+					<td colspan="1" style="border: 1px solid black;text-align: right;padding-right: 5px"><?= number_format($purchase_r->item_price,0,"",".") ?></td>
 					@else
-					<td colspan="1" style="border: 1px solid black;"><?= $purchase_r->item_price ?></td>
+					<td colspan="1" style="border: 1px solid black;text-align: right;padding-right: 5px"><?= $purchase_r->item_price ?></td>
 					@endif
 
 					@if($purchase_r->item_currency == "IDR")
-					<td colspan="1" style="border: 1px solid black;"><?= number_format($purchase_r->item_amount,0,"",".") ?></td>
+					<td colspan="1" style="border: 1px solid black;text-align: right;padding-right: 5px"><?= number_format($purchase_r->item_amount,0,"",".") ?></td>
 					@else
-					<td colspan="1" style="border: 1px solid black;"><?= $purchase_r->item_amount ?></td>
+					<td colspan="1" style="border: 1px solid black;text-align: right;padding-right: 5px"><?= $purchase_r->item_amount ?></td>
 					@endif
 
 					<td colspan="1" style="border: 1px solid black;">{{ $purchase_r->item_stock }}</td>

@@ -312,6 +312,13 @@
 									<div class="col-md-12">
 										<div class="col-md-12">
 											<div class="form-group" id="budget_data">
+												<label>Fiscal Year<span class="text-red">*</span></label>
+												<select class="form-control select10" data-placeholder="Pilih Fiscal Year" name="fiscal_year" id="fiscal_year" style="width: 100% height: 35px;" required" onchange="getBudget()"> 
+													<option></option>
+													<option value="FY197">FY197</option>
+													<option value="FY198">FY198</option>
+												</select>
+
 												<label>Budget<span class="text-red">*</span></label>
 												<!-- <input type="text" class="form-control" id="budget_no" name="budget_no"> -->
 												<select class="form-control select10" data-placeholder="Pilih Nomor Budget" name="budget_no" id="budget_no" style="width: 100% height: 35px;" required onchange="pilihBudget(this)"> 
@@ -350,12 +357,12 @@
 														<td style="border:none;text-align: left;padding-left: 0;width: 80%"><label id="budget_amount" name="budget_amount"></label></td>
 													</tr>
 													<tr>
-														<td style="border:none;text-align: left;padding-left: 0;width: 18%">Sisa Budget Tahun Ini</td>
+														<td style="border:none;text-align: left;padding-left: 0;width: 18%">Sisa Budget Tahunan <span class="periode"></td>
 														<td style="border:none;text-align: left;padding-left: 0;width: 2%">:</td>
 														<td style="border:none;text-align: left;padding-left: 0;width: 80%"><label id="budget_sisa_tahun" name="budget_sisa_tahun"></label></td>
 													</tr>
 													<tr>
-														<td style="border:none;text-align: left;padding-left: 0;width: 18%">Sisa Budget Bulan Ini</td>
+														<td style="border:none;text-align: left;padding-left: 0;width: 18%">Sisa Budget Bulanan <span class="periode"></td>
 														<td style="border:none;text-align: left;padding-left: 0;width: 2%">:</td>
 														<td style="border:none;text-align: left;padding-left: 0;width: 80%"><label id="budget_sisa" name="budget_sisa"></label></td>
 													</tr>
@@ -471,7 +478,20 @@
 
 									<div id="tambah"></div>
 
-									<div class="col-md-2 col-md-offset-5">
+									<div class="col-md-5">
+										<div class="col-md-12" style="border: 1px solid red;margin-left: 5px">
+											<p><b>Note :</b></p>
+											<p>1. Untuk kasus Pembelian dengan <b>Harga Comma</b>, dimohon untuk menuliskan harga dengan tanda titik (.) 
+												<br><span style="color:green">Contoh yang benar : 60.24</span> 
+												<br><span style="color:red">Contoh yang salah : 60,24</span>
+											<br>
+											2. Tidak boleh mengisi <b>item yang sama dalam satu PR.</b> Jika memang ada item yang sama dengan tanggal kedatangan berbeda, dimohon untuk mengisi di <b>kolom deskripsi dengan membedakan nama itemnya</b>.
+											<br>
+											3. Harap tidak menekan <b>tombol enter</b> saat pengisian item. Gunakan <b>tombol tab</b> jika ingin berganti ke kolom selanjutnya.</p>
+										</div>
+									</div>
+
+									<div class="col-md-2">
 										<p><b>Total Dollar</b></p>
 										<div class="input-group">
 											<span class="input-group-addon">$ </span><input type="text" id="total_usd" class="form-control" readonly>
@@ -492,7 +512,7 @@
 										</div>
 									</div>
 
-									<div class="col-md-3 col-md-offset-8" style="margin-top: 20px">
+									<div class="col-md-3 col-md-offset-3" style="margin-top: 20px">
 										<p><b>Total Keseluruhan</b></p>
 										<div class="input-group">
 											<span class="input-group-addon">$ </span><input type="text" id="total_keseluruhan" class="form-control" readonly>
@@ -1153,7 +1173,7 @@
 			}
 		});
 
-		getBudget();
+		// getBudget();
 	}
 
 	function clearConfirmation(){
@@ -1286,11 +1306,14 @@
 	}
 
 	//get Budget + Pilih budget
-
+	
 	function getBudget() {
 
+		var fy = $('#fiscal_year').val();
+
 		data = {
-			department:"{{ $employee->department }}",
+			department : "{{ $employee->department }}",
+			fy : fy
 		}
 		$.get('{{ url("fetch/purchase_requisition/budgetlist") }}', data, function(result, status, xhr) {
 	  		budget_list = "";
@@ -1299,16 +1322,25 @@
 				budget_list += "<option value="+value.budget_no+">"+value.budget_no+" - "+value.description+"</option> ";
 			});
 			// console.log($('#budget_no').val());
-			if ($('#budget_no').val() == "" || $('#budget_no').val() == null) {
+
+
+			// if ($('#budget_no').val() == "" || $('#budget_no').val() == null) {
 	  			$('#budget_no').html('');
 				$('#budget_no').append(budget_list);				
-			}
+			// }
 
 		})
 	}
 
 	function pilihBudget(elem)
 	{
+
+		if($('#fiscal_year').val() == ""){
+			$('#budget_no').val("");
+      		openErrorGritter("Error","Fiscal Year Harus Diisi");
+			return false;
+		}
+
 		$('#budgetket').show();
 
 		$.ajax({
@@ -1321,6 +1353,7 @@
 				$('#budget_description').text(obj.description);
 				$('#budget_account').text(obj.account);
 				$('#budget_category').text(obj.category);
+				$('.periode').text(obj.periode);
 				
 				var total_tahun = obj.apr + obj.may + obj.jun + obj.jul + obj.aug + obj.sep + obj.oct + obj.nov + obj.dec + obj.jan + obj.feb + obj.mar;
 				// console.log(total_tahun);

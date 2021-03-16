@@ -2039,7 +2039,7 @@
 	          
 	          isi += "<div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='item_desc_edit"+value.id+"' name='item_desc_edit"+value.id+"' placeholder='Description' required='' value='"+value.item_desc+"'></div>";
 
-	          if (value.item_spec != "null") {
+	          if (value.item_spec != null) {
 	          		isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_spec_edit"+value.id+"' name='item_spec_edit"+value.id+"' placeholder='Specification' value='"+value.item_spec+"'></div>";
 		  		}
 		  		else{

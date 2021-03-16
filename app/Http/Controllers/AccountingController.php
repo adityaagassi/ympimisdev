@@ -772,7 +772,7 @@ class AccountingController extends Controller
     {
         $budgets = AccBudget::select('acc_budgets.budget_no', 'acc_budgets.description')
         ->where('category', '=', 'Expenses')
-        // ->where('periode', '=', $request->get('fy'))
+        ->where('periode', '=', $request->get('fy'))
         ->distinct();
 
         if ($request->get('department') == "General Affairs Department") {
@@ -2814,7 +2814,17 @@ class AccountingController extends Controller
         
         $tahun = date('Y');
         $namabulan = date('F');
-        $bulan = strtolower(date('M'));
+
+        $getbulan = AccBudget::select('budget_no', 'periode')
+        ->where('budget_no',$request->budget)
+        ->first();
+
+        if ($getbulan->periode == "FY197") {
+            $bulan = strtolower(date('M'));
+        }
+        else{
+            $bulan = "apr";
+        }
 
         // $tglnow = date('Y-m-d');
         // $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$tglnow'");
@@ -3164,9 +3174,18 @@ class AccountingController extends Controller
 
             $pdf->save(public_path() . "/po_list/".$detail_po[0]->no_po.".pdf");
 
-            return redirect('/purchase_order')
-            ->with('status', 'Purchase Order Berhasil Dibuat')
-            ->with('page', 'Purchase Order');
+
+            if($request->get('remark') == "Investment"){
+                return redirect('/purchase_order_investment')
+                ->with('status', 'Purchase Order Investment Berhasil Dibuat')
+                ->with('page', 'Purchase Order Investment');
+            }
+
+            else if($request->get('remark') == "PR"){
+                return redirect('/purchase_order')
+                ->with('status', 'Purchase Order PR Berhasil Dibuat')
+                ->with('page', 'Purchase Order');
+            }
         }
         catch(QueryException $e)
         {
@@ -3486,9 +3505,17 @@ class AccountingController extends Controller
 
             $pdf->save(public_path() . "/po_list/".$detail_po[0]->no_po.".pdf");
 
-            return redirect('/purchase_order')
-            ->with('status', 'Purchase Order Berhasil Dirubah')
-            ->with('page', 'Purchase Order');
+
+            if ($po_data->remark == "PR"){
+                return redirect('/purchase_order')
+                ->with('status', 'Purchase Order Berhasil Dirubah')
+                ->with('page', 'Purchase Order');
+            
+            } else if ($po_data->remark == "Investment"){
+                return redirect('/purchase_order_investment')
+                ->with('status', 'Purchase Order Investment Berhasil Dirubah')
+                ->with('page', 'Purchase Order Investment');
+            }
         }
         catch(QueryException $e)
         {
@@ -3535,10 +3562,19 @@ class AccountingController extends Controller
     try
     {
         $item = AccPurchaseOrderDetail::find($request->get('id'));
+        
+        if (strlen($item->no_pr) == 9) {
+            $data3 = AccPurchaseRequisitionItem::where('item_code', $item->no_item)
+            ->where('no_pr', $item->no_pr)
+            ->update(['sudah_po' => null ]);
+        }
+        else{
+            $data3 = AccInvestmentDetail::where('no_item', $item->no_item)
+            ->where('reff_number', $item->no_pr)
+            ->update(['sudah_po' => null]);
+        }
 
-        $data3 = AccPurchaseRequisitionItem::where('item_code', $item->no_item)
-        ->where('no_pr', $item->no_pr)
-        ->update(['sudah_po' => null, ]);
+        
 
         $budget_log = AccBudgetHistory::where('no_item', '=', $item->nama_item)
         ->where('po_number', '=', $item->no_po)
@@ -3786,28 +3822,32 @@ class AccountingController extends Controller
     {
         $approve = $request->get('approve');
 
-        // $_IP_ADDRESS = $_SERVER['REMOTE_ADDR'];
+        $_IP_ADDRESS = $_SERVER['REMOTE_ADDR'];
 
-        // $_PERINTAH = "arp -a $_IP_ADDRESS";
-        // ob_start();
-        // system($_PERINTAH);
-        // $_HASIL = ob_get_contents();
-        // ob_clean();
-        // $_PECAH = strstr($_HASIL, $_IP_ADDRESS);
-        // $_PECAH_STRING = explode($_IP_ADDRESS, str_replace(" ", "", $_PECAH));
-        // $_HASIL = substr($_PECAH_STRING[1], 0, 17);   
+        $_PERINTAH = "arp -a $_IP_ADDRESS";
+        ob_start();
+        system($_PERINTAH);
+        $_HASIL = ob_get_contents();
+        ob_clean();
+        $_PECAH = strstr($_HASIL, $_IP_ADDRESS);
+        
+        if ($_PECAH == FALSE) {
+            $_HASIL = $_IP_ADDRESS;
+        }else{
+            $_PECAH_STRING = explode($_IP_ADDRESS, str_replace(" ", "", $_PECAH));
+            $_HASIL = substr($_PECAH_STRING[1], 0, 17);               
+        }
 
         if ($approve == "1") {
 
             $po = AccPurchaseOrder::find($id);
-            
 
             if ($po->posisi == "manager_pch")
             {
                 $po->posisi = "dgm_pch";
                 $po->approval_authorized2 = "Approved";
                 $po->date_approval_authorized2 = date('Y-m-d H:i:s');
-                // $po->autentikasi_2 = $_HASIL;
+                $po->autentikasi_2 = $_HASIL;
 
                 $mailto = "select distinct email from acc_purchase_orders join users on acc_purchase_orders.authorized3 = users.username where acc_purchase_orders.id = '" . $id . "'";
                 $mails = DB::select($mailto);
@@ -3822,6 +3862,7 @@ class AccountingController extends Controller
                 $po->posisi = 'pch';
                 $po->approval_authorized3 = "Approved";
                 $po->date_approval_authorized3 = date('Y-m-d H:i:s');
+                $po->autentikasi_3 = $_HASIL;
                 $po->status = "not_sap";
 
                     //kirim email Staff PCH sebagai pemberitahuan
@@ -3836,7 +3877,7 @@ class AccountingController extends Controller
                 // $po->posisi = "gm_pch";
                 // $po->approval_authorized3 = "Approved";
                 // $po->date_approval_authorized3 = date('Y-m-d H:i:s');
-                // // $po->autentikasi_3 = $_HASIL;
+
 
                 // $mailto = "select distinct email from acc_purchase_orders join users on acc_purchase_orders.authorized4 = users.username where acc_purchase_orders.id = '" . $id . "'";
                 // $mails = DB::select($mailto);
@@ -5354,7 +5395,7 @@ class AccountingController extends Controller
 
                 $type = "";
 
-                $budgets = AccBudget::select('acc_budgets.budget_no', 'acc_budgets.description')
+                $budgets = AccBudget::select('acc_budgets.budget_no', 'acc_budgets.description', 'acc_budgets.periode')
                 ->where('department', '=', $dept)
                 ->where('category', '=', $cat)
                 ->distinct()
@@ -5380,7 +5421,7 @@ class AccountingController extends Controller
                         $type = $request->get('type');
                     }
                     
-                    $budgets = AccBudget::select('acc_budgets.budget_no', 'acc_budgets.description')
+                    $budgets = AccBudget::select('acc_budgets.budget_no', 'acc_budgets.description', 'acc_budgets.periode')
                     ->where('department', '=', $dept)
                     ->where('category', '=', $cat)
                     ->where('account_name', '=', $type)
@@ -5388,7 +5429,7 @@ class AccountingController extends Controller
                     ->get();
                 }
                 else{
-                    $budgets = AccBudget::select('acc_budgets.budget_no', 'acc_budgets.description')
+                    $budgets = AccBudget::select('acc_budgets.budget_no', 'acc_budgets.description', 'acc_budgets.periode')
                     ->where('department', '=', $dept)
                     ->where('category', '=', $cat)
                     ->distinct()
@@ -5401,7 +5442,7 @@ class AccountingController extends Controller
         else if ($request->get('budget') == "Shifting") {
             $type = "";
 
-            $budgets = AccBudget::select('acc_budgets.budget_no', 'acc_budgets.description')
+            $budgets = AccBudget::select('acc_budgets.budget_no', 'acc_budgets.description', 'acc_budgets.periode')
             ->where('department', '=', $dept)
             ->where('category', '=', $cat)
             ->distinct()
@@ -5510,7 +5551,17 @@ class AccountingController extends Controller
                     $investment_item = AccInvestment::join('acc_investment_details', 'acc_investments.reff_number', '=', 'acc_investment_details.reff_number')->where('acc_investments.id', '=', $request->get('id'))->get();
 
                     for ($z=0; $z < count($investment_item); $z++) { 
-                        $month = strtolower(date("M",strtotime($request->get('submission_date'))));
+
+                        $getbulan = AccBudget::select('budget_no', 'periode')
+                        ->where('budget_no',$budget_no[$i])
+                        ->first();
+
+                        if ($getbulan->periode == "FY197") {
+                            $month = strtolower(date('M'));
+                        }
+                        else{
+                            $month = "apr";
+                        }
 
                         $data3 = AccBudgetHistory::firstOrNew([
                             'category_number' => $request->get('reff_number'),
@@ -7815,6 +7866,22 @@ public function fetch_budget_summary(Request $request)
 // GROUP BY
 //     DATE_FORMAT(receive_date,'%b')
 
+// SELECT
+//     budget_month_receive AS bulan,
+//     ROUND( sum( CASE WHEN `status` = "Actual" THEN acc_budget_histories.amount_receive ELSE 0 END ), 2 ) AS Actual,         
+//     0 AS PR,
+//     0 AS Investment,
+//     0 AS PO
+// FROM
+//     acc_budget_histories
+//     LEFT JOIN acc_budgets ON acc_budget_histories.budget = acc_budgets.budget_no 
+// WHERE
+//     budget_month_receive IS NOT NULL 
+//     '.$fiscal.'
+//     '.$cat.' 
+// GROUP BY
+//     budget_month_receive 
+
     $act = db::select('
         SELECT
     CASE    
@@ -7852,20 +7919,20 @@ public function fetch_budget_summary(Request $request)
         FROM
             (
             SELECT
-                budget_month_receive AS bulan,
-                ROUND( sum( CASE WHEN `status` = "Actual" THEN acc_budget_histories.amount_receive ELSE 0 END ), 2 ) AS Actual,         
+                DATE_FORMAT( receive_date, "%b" ) AS bulan,
+                ROUND( sum( acc_actuals.amount_dollar ), 2 ) AS Actual,
                 0 AS PR,
                 0 AS Investment,
-                0 AS PO
+                0 AS PO 
             FROM
-                acc_budget_histories
-                LEFT JOIN acc_budgets ON acc_budget_histories.budget = acc_budgets.budget_no 
+                acc_actuals
+                LEFT JOIN acc_budgets ON acc_actuals.budget_no = acc_budgets.budget_no 
             WHERE
-                budget_month_receive IS NOT NULL 
+                DATE_FORMAT( receive_date, "%b" ) IS NOT NULL 
                 '.$fiscal.'
-                '.$cat.' 
+                '.$cat.'   
             GROUP BY
-                budget_month_receive 
+                DATE_FORMAT( receive_date, "%b" )
                 
                 UNION ALL
             
@@ -8202,22 +8269,23 @@ public function fetch_budget_monthly(Request $request)
             ROUND( SUM( a.PO ), 2 ) AS PO
         FROM
             (
+
             SELECT
-                budget_month_receive AS bulan,
-                ROUND( sum( CASE WHEN `status` = "Actual" THEN acc_budget_histories.amount_receive ELSE 0 END ), 2 ) AS Actual,         
+                DATE_FORMAT( receive_date, "%b" ) AS bulan,
+                ROUND( sum( acc_actuals.amount_dollar ), 2 ) AS Actual,
                 0 AS PR,
                 0 AS Investment,
-                0 AS PO
+                0 AS PO 
             FROM
-                acc_budget_histories
-                LEFT JOIN acc_budgets ON acc_budget_histories.budget = acc_budgets.budget_no 
+                acc_actuals
+                LEFT JOIN acc_budgets ON acc_actuals.budget_no = acc_budgets.budget_no 
             WHERE
-                budget_month_receive IS NOT NULL 
+                DATE_FORMAT( receive_date, "%b" ) IS NOT NULL 
                 '.$fiscal.'
                 '.$cat.' 
                 '.$dept.'
             GROUP BY
-                budget_month_receive 
+                DATE_FORMAT( receive_date, "%b" )
                 
                 UNION ALL
             
@@ -8604,35 +8672,35 @@ public function fetch_budget_detail(Request $request){
             //     left join acc_actual_logs on acc_actual_logs.budget_no = acc_budgets.budget_no
             //     where acc_budget_histories.budget = '".$budget."' and status = '".$status."'  or acc_actual_logs.budget_no = '".$budget."' ";
         $qry = "
-    SELECT
-    a.budget_no,
-    a.month_date,
-    a.description,
-    a.amount,
-    a.`status`
-    FROM (
-    select 
-    budget as budget_no, 
-    budget_month_receive as month_date,
-    no_item as description,
-    amount_receive as amount,
-    'Actual' as `status`
-    from acc_budget_histories
-    where acc_budget_histories.budget = '".$budget."' 
-    and `status` = 'Actual'
+            SELECT
+            a.budget_no,
+            a.month_date,
+            a.description,
+            a.amount,
+            a.`status`
+            FROM (
+            select 
+            budget as budget_no, 
+            budget_month_receive as month_date,
+            no_item as description,
+            amount_receive as amount,
+            'Actual' as `status`
+            from acc_budget_histories
+            where acc_budget_histories.budget = '".$budget."' 
+            and `status` = 'Actual'
 
-    UNION ALL
+            UNION ALL
 
-    select
-    acc_actual_logs.budget_no, 
-    acc_actual_logs.month_date,
-    acc_actual_logs.description, 
-    acc_actual_logs.local_amount as amount,
-    'Actual' as `status`
-    from acc_actual_logs
-    where acc_actual_logs.budget_no = '".$budget."' 
-    ) a        
-    ";
+            select
+            acc_actual_logs.budget_no, 
+            acc_actual_logs.month_date,
+            acc_actual_logs.description, 
+            acc_actual_logs.local_amount as amount,
+            'Actual' as `status`
+            from acc_actual_logs
+            where acc_actual_logs.budget_no = '".$budget."' 
+            ) a        
+            ";
     else{
         $qry = "
         select * from acc_budget_histories

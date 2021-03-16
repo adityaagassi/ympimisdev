@@ -4031,9 +4031,12 @@ Route::get('index/maintenance/operator/position', 'MaintenanceController@indexOp
 Route::get('fetch/maintenance/operator/position', 'MaintenanceController@fetchOperatorPosition');
 Route::post('post/maintenance/operator/position', 'MaintenanceController@postOperatorPosition');
 
+Route::get('index/maintenance/operator', 'MaintenanceController@indexOperator');
+
 
 // -------------------------      MTTBF         -------------------
 Route::get('index/maintenance/mttbf/list', 'MaintenanceController@indexMttbf');
+Route::get('index/maintenance/mttbf/report', 'MaintenanceController@indexMttbfReport');
 Route::get('fetch/maintenance/mttbf/list', 'MaintenanceController@fetchMttbf');
 
 // -------------------------      MTTR           -------------------
@@ -4442,12 +4445,14 @@ Route::post('fetch/reed/start_laser', 'ReedSyntheticController@fetchStartLaser')
 Route::post('fetch/reed/finish_laser', 'ReedSyntheticController@fetchFinishLaser');
 
 
-//Laser
+//Trimming
 Route::get('index/reed/trimming_verification', 'ReedSyntheticController@indexTrimmingVerification');
 
-//Laser
+//Annealing
 Route::get('index/reed/annealing_verification', 'ReedSyntheticController@indexAnnealingVerification');
 
+
+// Route::get('fetch/fibration/data', 'TrialController@fetchFIbrationSensor');
 
 
 
