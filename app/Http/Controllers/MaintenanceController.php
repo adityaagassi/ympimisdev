@@ -33,6 +33,8 @@ use App\MaintenancePlanItemCheck;
 use App\MaintenancePlanCheck;
 use App\MaintenancePic;
 use App\MaintenanceMachineProblemLog;
+use App\MaintenanceOperatorLocation;
+use App\MaintenanceOperatorLocationLog;
 use App\Process;
 
 use App\Http\Controllers\Controller;
@@ -81,6 +83,38 @@ class MaintenanceController extends Controller
 			['category' => 'Mesin Produksi', 'value' => 'Mekanis Mesin'],
 			['category' => 'Mesin Produksi', 'value' => 'Otomatisasi Mesin'],
 			['category' => 'Informasi', 'value' => 'Informasi']
+		];
+
+		$this->location = [
+			['location' => '3D Room', 'alias' => 'tri_d', 'area' => ['3D Room']],
+			['location' => 'Analyzing Room', 'alias' => 'anz', 'area' => ['Analyzing Room']],
+			['location' => 'Assembly', 'alias' => 'assy', 'area' => ['Assembly', 'FL Assy']],
+			['location' => 'Bea Cukai', 'alias' => 'bea', 'area' => ['Bea Cukai']],
+			['location' => 'Buffing & Tumbling', 'alias' => 'tumb', 'area' => ['Barrel']],
+			['location' => 'Buffing', 'alias' => 'buff', 'area' => ['Buffing']],
+			['location' => 'Boiler Room', 'alias' => 'boi', 'area' => ['Boiler Room']],
+			['location' => 'B-Pro', 'alias' => 'bpro', 'area' => ['B-Pro', 'Buffing (B-Pro)', 'NC Kira - B-Pro']],
+			['location' => 'Case', 'alias' => 'case', 'area' => ['Case']],
+			['location' => 'Clarinet Body', 'alias' => 'cl', 'area' => ['Clarinet Body', 'NC Kira - CL-Body']],
+			['location' => 'Klinik', 'alias' => 'clc', 'area' => ['Klinik']],
+			['location' => 'Kantin', 'alias' => 'ctn', 'area' => ['Kantin']],
+			['location' => 'Engraving', 'alias' => 'eng', 'area' => ['Engraving']],
+			['location' => 'Magang', 'alias' => 'gtc', 'area' => ['GTC']],
+			['location' => 'Mouth Piece', 'alias' => 'mpc', 'area' => ['Mouth Piece']],
+			['location' => 'M-Pro', 'alias' => 'mpr', 'area' => ['M-Pro']],
+			['location' => 'Office', 'alias' => 'ofc', 'area' => ['Office']],
+			['location' => 'Plating', 'alias' => 'plt', 'area' => ['Plating']],
+			['location' => 'Pianica', 'alias' => 'pnc', 'area' => ['Pianica']],
+			['location' => 'Painting', 'alias' => 'lcq', 'area' => ['Lacquering']],
+			['location' => 'Quality Assurance', 'alias' => 'qa', 'area' => ['Quality Assurance']],
+			['location' => 'Recorder', 'alias' => 'rcd', 'area' => ['Recorder']],
+			['location' => 'Reed Plate', 'alias' => 'rpl', 'area' => ['Reed Plate']],
+			['location' => 'Soldering', 'alias' => 'wld', 'area' => ['Soldering']],
+			['location' => 'Tanpo', 'alias' => 'tnp', 'area' => ['Tanpo']],
+			['location' => 'Venova', 'alias' => 'vnv', 'area' => ['Venova']],
+			['location' => 'Warehouse', 'alias' => 'wrh', 'area' => ['Warehouse']],
+			['location' => 'Workshop', 'alias' => 'wrk', 'area' => ['Workshop']],
+			['location' => 'WWT', 'alias' => 'wwt', 'area' => ['WWT']]
 		];
 	}
 
@@ -390,7 +424,7 @@ class MaintenanceController extends Controller
 			$permission = 0;
 		}
 
-		
+
 
 		$op_mtc = EmployeeSync::leftJoin('employees', 'employees.employee_id', '=', 'employee_syncs.employee_id')
 		->whereRaw('(department = "Maintenance Department" OR department = "Management Information System Department")')
@@ -552,10 +586,70 @@ class MaintenanceController extends Controller
 		$title = 'Position Operator Maintenance';
 		$title_jp = '??';
 
+		$machine = MaintenancePlanItem::select('machine_id', 'description', 'area', 'location')->get();
+
 		return view('maintenance.operator_position', array(
 			'title' => $title,
-			'title_jp' => $title_jp
+			'title_jp' => $title_jp,
+			'machine' => $machine,
+			'loc_arr' => $this->location
 		))->with('page','Operator Position')->with('head', 'Maintenance');
+	}
+
+	public function indexOperator()
+	{
+		$title = 'Sign Area - Operator Maintenance';
+		$title_jp = '??';
+
+		$machine = MaintenancePlanItem::select('machine_id', 'description', 'area', 'location')->get();
+
+		return view('maintenance.operator_area', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'machine' => $machine,
+			'loc_arr' => $this->location
+		))->with('page','MP Position')->with('head', 'Maintenance');
+	}
+
+	public function indexMttbf()
+	{
+		$title = 'MTTBF';
+		$title_jp = '??';
+
+		$machine = MaintenancePlanItem::select('machine_id', 'description', 'area', 'location')->get();
+
+		return view('maintenance.machine_status', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'machine' => $machine
+		))->with('page','MTTBF')->with('head', 'Maintenance');
+	}
+
+	public function indexMttr()
+	{
+		$title = 'MTTR';
+		$title_jp = '??';
+
+		$machine = MaintenancePlanItem::select('machine_id', 'description', 'area', 'location')->get();
+
+		return view('maintenance.machine_status', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'machine' => $machine
+		))->with('page','MTTR')->with('head', 'Maintenance');
+	}
+
+	public function indexMttbfReport()
+	{
+		$title = 'MTTBF Report';
+		$title_jp = '??';
+
+		// $machine = MaintenancePlanItem::select('machine_id', 'description', 'area', 'location')->get();
+
+		return view('maintenance.report.mttbf_report', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page','MTTBF Report')->with('head', 'Maintenance');
 	}
 
 	// -----------------------  END INDEX --------------------
@@ -654,7 +748,7 @@ class MaintenanceController extends Controller
 		$machine_name = $request->get('nama_mesin');
 		$machine_detail = $request->get('nama_mesin_detail');
 		$reason_urgent = $request->get('reason_urgent');
-		
+
 		if (count($request->file('lampiran')) > 0) {
 			$num = 1;
 			$file = $request->file('lampiran');
@@ -763,7 +857,7 @@ class MaintenanceController extends Controller
 					$url = "http://gateway.onewaysms.co.id:10002/".$query_string; 
 					$fd = @implode('', file($url));
 				}
-				
+
 				// ----------- EMAIL ----------
 				// Mail::to('susilo.basri@music.yamaha.com')
 				// ->bcc(['aditya.agassi@music.yamaha.com', 'nasiqul.ibat@music.yamaha.com'])
@@ -873,7 +967,7 @@ class MaintenanceController extends Controller
 			order by target asc
 			) as awal
 			union all
-			
+
 			SELECT maintenance_job_reports.order_no, null priority, null bagian, null	description,null	request_date,null	requester,null 	inprogress,null	pic,null	target_date,null	target,null	process_code,null	process_name,null	`status`, cause, handling FROM maintenance_job_reports left join maintenance_job_orders on maintenance_job_orders.order_no = maintenance_job_reports.order_no where maintenance_job_reports.id in (SELECT max(id) FROM maintenance_job_reports GROUP BY order_no) and date(maintenance_job_orders.created_at) >= "'.$from.'" and date(maintenance_job_orders.created_at) <= "'.$to.'") alls
 			group by order_no
 			order by target asc		
@@ -1138,7 +1232,7 @@ class MaintenanceController extends Controller
 	{
 		$stat = $request->get('stat');
 		$order_no = $request->get('order_no');
-		
+
 		$get_spk = MaintenanceJobOrder::where('order_no', '=', $order_no)->select('remark', 'target_date', 'danger', db::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as tanggal'), 'priority')->first();
 
 		if ($get_spk->remark != "2") {
@@ -1410,7 +1504,7 @@ class MaintenanceController extends Controller
 			$rpt->cause = $request->get('penyebab');
 			$rpt->handling = $request->get('penanganan');
 			$rpt->prevention = $request->get('pencegahan');
-			
+
 			$rpt->photo = implode(", ",$upload);
 			$rpt->cause_photo = implode(", ",$upload_cause);
 			$rpt->handling_photo = implode(", ",$upload_handling);
@@ -1522,7 +1616,7 @@ class MaintenanceController extends Controller
 			$rpt->handling = $request->get('penanganan');
 			$rpt->started_at = $proc->start_actual;
 			$rpt->finished_at = date('Y-m-d H:i:s');
-			
+
 			$rpt->photo = implode(", ",$upload);
 			$rpt->created_by = $operator_id;
 
@@ -1619,7 +1713,7 @@ class MaintenanceController extends Controller
 			$rpt->handling = $request->get('penanganan');
 			$rpt->started_at = $proc->start_actual;
 			$rpt->finished_at = date('Y-m-d H:i:s');
-			
+
 			$rpt->photo = implode(", ",$upload);
 			$rpt->created_by = $operator_id;
 
@@ -2736,7 +2830,7 @@ class MaintenanceController extends Controller
 		// 	);
 		// 	return Response::json($response);
 		// }
-		
+
 		$verif = true;
 		if ($request->get('ng')) {
 			$arr_ng = $request->get('ng');
@@ -2805,7 +2899,7 @@ class MaintenanceController extends Controller
 			);
 			return Response::json($response);
 		}
-		
+
 	}
 
 	// public function getHistoryPlanned(Request $request)
@@ -2838,7 +2932,7 @@ class MaintenanceController extends Controller
 	public function postInventoryStock(Request $request)
 	{
 		try {
-			
+
 			$inventory = MaintenanceInventory::where('part_number', '=', $request->get('material_number'))->first();
 
 			if ($request->get('status') == 'out') {
@@ -2855,7 +2949,7 @@ class MaintenanceController extends Controller
 			} else {
 
 			}
-			
+
 
 			$response = array(
 				'status' => true,
@@ -3145,7 +3239,7 @@ class MaintenanceController extends Controller
 		if(strlen($request->get('location_filter')) > 0 ){
 			$machine_logs = $machine_logs->where('maintenance_machine_problem_logs.location', '=', $request->get('location_filter'));
 		}
-		
+
 		$machine_logs = $machine_logs->orderBy('started_time', 'asc')->get();
 
 		$response = array(
@@ -3174,6 +3268,102 @@ class MaintenanceController extends Controller
 			'status' => true
 		);
 		return Response::json($response);
+	}
+
+	public function fetchOperatorPosition(Request $request)
+	{
+		$emp_loc = MaintenanceOperatorLocation::get();
+
+		$response = array(
+			'status' => true,
+			'emp_loc' => $emp_loc
+		);
+		return Response::json($response);
+	}
+
+	public function postOperatorPosition(Request $request)
+	{
+		$emp = EmployeeSync::where('employee_id', '=', Auth::user()->username)->first();
+
+		$op_qty = MaintenanceOperatorLocation::where('employee_id', '=', Auth::user()->username)->first();
+
+		if (count($op_qty) > 0) {
+			if ($op_qty->qr_code == $request->get('code')) {
+				$mtc_op = $op_qty;
+
+				$mtc_op_log = new MaintenanceOperatorLocationLog;
+				$mtc_op_log->employee_id = $op_qty->employee_id;
+				$mtc_op_log->employee_name = $op_qty->employee_name;
+				$mtc_op_log->qr_code = $op_qty->qr_code;
+				$mtc_op_log->machine_id = $op_qty->machine_id;
+				$mtc_op_log->description = $op_qty->description;
+				$mtc_op_log->location = $op_qty->location;
+				$mtc_op_log->remark = $op_qty->remark;
+				$mtc_op_log->logged_in_at = $op_qty->created_at;
+				$mtc_op_log->logged_out_at = date('Y-m-d H:i:s');
+				$mtc_op_log->created_by = Auth::user()->username;
+				$mtc_op_log->save();
+
+				$op_qty->forceDelete();
+
+				$response = array(
+					'status' => true,
+					'op_time' => $mtc_op,
+					'remark' => 'logged_out'
+				);
+				return Response::json($response);
+			} else {
+				$response = array(
+					'status' => false
+				);
+				return Response::json($response);
+			}
+		} else{
+			$mtc_op = new MaintenanceOperatorLocation;
+			$mtc_op->employee_id = Auth::user()->username;
+			$mtc_op->employee_name = $emp->name;
+			$mtc_op->qr_code = $request->get('code');
+			$mtc_op->machine_id = $request->get('code');
+			$mtc_op->description = $request->get('desc');
+			$mtc_op->location = $request->get('location');
+			$mtc_op->remark = $request->get('remark');
+			$mtc_op->created_by = Auth::user()->username;
+			$mtc_op->save();
+
+			$response = array(
+				'status' => true,
+				'remark' => 'logged_in',
+				'op_time' => $mtc_op
+			);
+			return Response::json($response);
+		}	
+	}
+
+	public function fetchMttbf(Request $request)
+	{
+		$l_hours = db::table('maintenance_machine_load_hours')
+		->leftJoin('maintenance_plan_items', 'maintenance_machine_load_hours.machine_id', '=', 'maintenance_plan_items.machine_id')
+		->where('maintenance_plan_items.location', '=', $request->get('location'))
+		->select('maintenance_machine_load_hours.machine_id', 'location', 'description', 'area', 'load_hour', db::raw('DATE_FORMAT(mon,"%b %Y") as mon'))
+		->get();
+
+		$chart_data = db::select('SELECT machine_group,DATE_FORMAT(mon, "%b %Y") mon2, ROUND(AVG(mttbf),2) as avg_mttbf from
+			(SELECT maintenance_machine_load_hours.machine_id ,machine_group, mon, IFNULL(load_hour / trouble, 0 ) as mttbf FROM `maintenance_machine_load_hours`
+			left join maintenance_plan_items on maintenance_machine_load_hours.machine_id = maintenance_plan_items.machine_id) mstr
+			group by machine_group, mon
+			order by machine_group asc, mon asc');
+
+		$response = array(
+			'status' => true,
+			'l_hours' => $l_hours,
+			'chart_data' => $chart_data
+		);
+		return Response::json($response);
+	}
+
+	public function fetchMttr(Request $request)
+	{
+		$mttr = MaintenanceJobOrder::where('');
 	}
 
 }

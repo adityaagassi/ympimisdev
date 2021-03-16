@@ -33,7 +33,8 @@
 		</div>
 		<div class="col-xs-5" style="text-align: center;">
 			<span style="font-size: 30px; color: red;"><i class="fa fa-angle-double-down"></i> Monitoring <i class="fa fa-angle-double-down"></i></span>
-			<a href="{{ url('index/audit_patrol/monitoring') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Patrol Monitoring GM & Presdir(パトロール監視)</a>
+			<a href="{{ url('index/audit_patrol/monitoring') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">GM & Presdir Patrol Monitoring (パトロール監視)</a>
+			<a href="{{ url('index/audit_patrol_monitoring/monthly_patrol') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Monthly Patrol Monitoring (パトロール監視)</a>
 		</div>
 
 		<div class="col-xs-12" style="text-align: center;margin-bottom: 10px;margin-top: 30px">

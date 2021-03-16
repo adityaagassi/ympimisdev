@@ -95,7 +95,7 @@
 <section class="content-header">
 	<input type="hidden" id="green">
 	<h1>
-		EHS & 5S Patrol Standarisasi
+		EHS & 5S Monthly Patrol
 	</h1>
 	<ol class="breadcrumb">
 		<?php $user = STRTOUPPER(Auth::user()->username) ?>
@@ -361,7 +361,7 @@
 		}
 
 		function cek() {
-			if (confirm('Apakah Anda yakin?')) {
+			// if (confirm('Apakah Anda yakin?')) {
 				$('#loading').show();
 
 				var audit_data = [];
@@ -424,7 +424,7 @@
 					},
 				})
 			}
-		}
+		// }
 
 	// function selectemployee(){
 	//          var pic = document.getElementById("patrol_pic").value;
