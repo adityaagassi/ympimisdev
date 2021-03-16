@@ -295,7 +295,9 @@ class ReedSyntheticController extends Controller{
 		$location = $request->get('location');
 		$process = $request->get('proses');
 
-		$order = ReedLaserOrder::where('kanban', $kanban)->first();
+		$order = ReedLaserOrder::where('kanban', $kanban)
+		->orderBy('created_at', 'DESC')
+		->first();
 
 		if($order){
 

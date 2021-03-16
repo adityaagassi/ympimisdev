@@ -340,8 +340,6 @@
 
 	$('#qr_item').keydown(function(event) {
 		if (event.keyCode == 13 || event.keyCode == 9) {
-			$('#loading').show();
-
 			var qr_item = $('#qr_item').val();
 			var order_id = $('#order_id').val();
 			var location = $('#location').val();
@@ -353,6 +351,7 @@
 
 
 	function scanLaser(qr_item, order_id, location, employee_id){
+		$('#loading').show();
 
 		var data = {
 			qr_item:qr_item,
@@ -365,27 +364,27 @@
 
 		$.post('{{ url("scan/reed/laser_picking") }}', data, function(result, status, xhr){
 
-				if(result.status){
-					$('#qr_item').val("");
-					$('#qr_item').focus();
+			if(result.status){
+				$('#qr_item').val("");
+				$('#qr_item').focus();
 
-					selectChecksheet();
+				selectChecksheet();
 
-					$('#loading').hide();
-					audio_ok.play();
-					openSuccessGritter('Success', result.message);
+				$('#loading').hide();
+				audio_ok.play();
+				openSuccessGritter('Success', result.message);
 
-				}else{
-					$('#qr_item').val("");
-					$('#qr_item').focus();
+			}else{
+				$('#qr_item').val("");
+				$('#qr_item').focus();
 
-					$('#loading').hide();
-					audio_error.play();
-					openErrorGritter('Error', result.message);
-				}
-			});	
+				$('#loading').hide();
+				audio_error.play();
+				openErrorGritter('Error', result.message);
+			}
+		});	
 	}
-	
+
 
 	function startInj(){
 		$('#loading').show();
