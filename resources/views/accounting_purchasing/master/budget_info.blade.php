@@ -96,8 +96,9 @@
 							<div class="form-group">
 								<label>Periode</label>
 								<select class="form-control select2" multiple="multiple" id='periode' data-placeholder="Select Periode" onchange="fetchTable()" style="width: 100%;">
-									<option>FY196</option>
-									<option>FY197</option>
+									@foreach($fy as $fy)
+										<option>{{ $fy->periode }}</option>
+									@endforeach
 								</select>
 							</div>
 						</div>

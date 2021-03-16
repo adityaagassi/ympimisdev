@@ -7043,11 +7043,14 @@ public function budget_info()
     ->select('department')
     ->first();
 
+    $fy = db::select("select distinct periode from acc_budgets");
+
     return view('accounting_purchasing.master.budget_info', array(
         'title' => $title,
         'title_jp' => $title_jp,
         'emp_dept' => $emp_dept,
-        'department' => $dept
+        'department' => $dept,
+        'fy' => $fy
     ))->with('page', 'Budget Information')
     ->with('head', 'Budget Information');
 }
