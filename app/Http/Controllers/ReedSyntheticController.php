@@ -722,7 +722,7 @@ class ReedSyntheticController extends Controller{
 			->where('location', strtoupper($location))
 			->first();
 
-			var_dump($order_list->actual_quantity);
+			// var_dump($order_list->actual_quantity);
 
 			// dd($order_id.'#'.$picking_list.'#'.$material_number.'#'.$location);
 
