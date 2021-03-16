@@ -1280,7 +1280,7 @@
       <a href="{{ url("/index/maintenance/machine/log") }}"><i class="fa fa-gavel"></i> <span>Machine History</span></a>
     </li>
     @if(isset($page) && $page == "MP Position")<li class="active">@else<li>@endif
-      <a href="{{ url("/index/maintenance/operator") }}"><i class="fa fa-gavel"></i> <span>Sign to Area</span></a>
+      <a href="{{ secure_url("/index/maintenance/operator") }}"><i class="fa fa-gavel"></i> <span>Sign to Area</span></a>
     </li>
   </li>
 </ul>
