@@ -364,12 +364,14 @@
 					$('#loading').hide();
 					audio_ok.play();
 					openSuccessGritter('Success', result.message);
-				}
-				else{
+
+				}else{
+					$('#qr_item').val("");
+					$('#qr_item').focus();
+
 					$('#loading').hide();
 					audio_error.play();
 					openErrorGritter('Error', result.message);
-					$('#qr_item').val('');							
 				}
 			});			
 		}
