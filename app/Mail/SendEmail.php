@@ -170,7 +170,7 @@ class SendEmail extends Mailable
         }
 
         if($this->remark == 'patrol'){
-            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('Patrol Presdir & General Manager')->view('mails.patrol');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('Audit & Patrol MIRAI')->view('mails.patrol');
         }
 
         if($this->remark == 'reject_std_audit'){
