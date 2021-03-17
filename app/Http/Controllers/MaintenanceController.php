@@ -583,7 +583,7 @@ class MaintenanceController extends Controller
 
 	public function indexOperatorPosition()
 	{
-		$title = 'Position Operator Maintenance';
+		$title = 'Location Maintenance Operator';
 		$title_jp = '??';
 
 		$machine = MaintenancePlanItem::select('machine_id', 'description', 'area', 'location')->get();
@@ -598,7 +598,7 @@ class MaintenanceController extends Controller
 
 	public function indexOperator()
 	{
-		$title = 'Sign Area - Operator Maintenance';
+		$title = 'Sign Area - Maintenance Operator';
 		$title_jp = '??';
 
 		$machine = MaintenancePlanItem::select('machine_id', 'description', 'area', 'location')->get();
@@ -641,7 +641,7 @@ class MaintenanceController extends Controller
 
 	public function indexMttbfReport()
 	{
-		$title = 'MTTBF Report';
+		$title = 'MTBF Report';
 		$title_jp = '??';
 
 		// $machine = MaintenancePlanItem::select('machine_id', 'description', 'area', 'location')->get();
@@ -1144,7 +1144,7 @@ class MaintenanceController extends Controller
 		->leftJoin(db::raw("employee_syncs as  es"), "es.employee_id", "=", "maintenance_job_processes.operator_id")
 		->leftJoin(db::raw("(select process_code, process_name from processes where remark = 'maintenance') AS process"), "maintenance_job_orders.remark", "=", "process.process_code")
 		->leftJoin("maintenance_plan_items", "maintenance_plan_items.machine_id", "=", "maintenance_job_orders.machine_name")
-		->select("maintenance_job_orders.order_no", "employee_syncs.name", db::raw('DATE_FORMAT(maintenance_job_orders.created_at, "%Y-%m-%d %H-%i") as date'), "priority", "maintenance_job_orders.section", "type", "maintenance_job_orders.category", "machine_condition", "danger", "maintenance_job_orders.description", "safety_note", "target_date", "process_name", db::raw("es.name as name_op"), db::raw("es.employee_id as id_op"), db::raw("DATE_FORMAT(maintenance_job_processes.start_actual, '%Y-%m-%d %H:%i') start_actual"), db::raw("DATE_FORMAT(maintenance_job_processes.finish_actual, '%Y-%m-%d %H:%i') finish_actual"), "maintenance_job_pendings.status", db::raw("maintenance_job_pendings.description as pending_desc"), "maintenance_job_orders.machine_name", "cause", "handling", "photo", "note", "machine_remark", db::raw("maintenance_plan_items.description as machine_desc"), "maintenance_plan_items.area", "att", db::raw("maintenance_job_pendings.remark as pending_remark"), 'prevention', 'cause_photo', 'handling_photo', 'prevention_photo')
+		->select("maintenance_job_orders.order_no", "employee_syncs.name", db::raw('DATE_FORMAT(maintenance_job_orders.created_at, "%Y-%m-%d %H-%i") as date'), "priority", "maintenance_job_orders.section", "type", "maintenance_job_orders.category", "machine_condition", "danger", "maintenance_job_orders.description", "safety_note", "target_date", "process_name", db::raw("es.name as name_op"), db::raw("es.employee_id as id_op"), db::raw("DATE_FORMAT(maintenance_job_processes.start_actual, '%Y-%m-%d %H:%i') start_actual"), db::raw("DATE_FORMAT(maintenance_job_processes.finish_actual, '%Y-%m-%d %H:%i') finish_actual"), "maintenance_job_pendings.status", db::raw("maintenance_job_pendings.description as pending_desc"), "maintenance_job_orders.machine_name", "cause", "handling", "photo", "note", "machine_remark", db::raw("maintenance_plan_items.description as machine_desc"), "maintenance_plan_items.area", "att", db::raw("maintenance_job_pendings.remark as pending_remark"), 'prevention', 'cause_photo', 'handling_photo', 'prevention_photo', 'note')
 		->get();
 
 		$parts = MaintenanceJobOrder::where('maintenance_job_orders.order_no', '=', $request->get('order_no'))
