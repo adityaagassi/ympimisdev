@@ -322,7 +322,7 @@ class FinishedGoodsController extends Controller
 		$flo_details = $flo_details->leftJoin('container_attachments', 'container_attachments.container_id', '=', 'flos.container_id')
 		->leftJoin('destinations', 'destinations.destination_code', '=', 'shipment_schedules.destination_code')
 		->leftJoin('origin_groups', 'origin_groups.origin_group_code', '=', 'materials.origin_group_code')
-		->leftJoin(db::raw('(select flo_number, date(created_at) as actual_st_date from flo_logs where flo_logs.status_code = 2) AS act_st'), 'act_st.flo_number', '=', 'flos.flo_number');
+		->leftJoin(db::raw('(select flo_number, date(created_at) as actual_st_date from flo_logs where flo_logs.status_code = 3) AS act_st'), 'act_st.flo_number', '=', 'flos.flo_number');
 
 		if(strlen($request->get('actualFrom')) > 0){
 			$actualFrom = date('Y-m-d', strtotime($request->get('actualFrom')));

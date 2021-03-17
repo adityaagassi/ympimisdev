@@ -602,11 +602,13 @@ class MaintenanceController extends Controller
 		$title_jp = '??';
 
 		$machine = MaintenancePlanItem::select('machine_id', 'description', 'area', 'location')->get();
+		// $area = AreaCode::select('machine_id', 'description', 'area', 'location')->get();
 
 		return view('maintenance.operator_area', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
 			'machine' => $machine,
+			// 'area' => $area,
 			'loc_arr' => $this->location
 		))->with('page','MP Position')->with('head', 'Maintenance');
 	}

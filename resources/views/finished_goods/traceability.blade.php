@@ -196,7 +196,7 @@
 									<th style="width: 1%;">Serial No.</th>
 									<th style="width: 1%;">Qty</th>
 									<th style="width: 1%;">I/V</th>
-									<th style="width: 1%;">ST Date</th>
+									<th style="width: 1%;">Plan ST Date</th>
 									<th style="width: 1%;">Act ST Date</th>
 									<th style="width: 1%;">BL Date</th>
 									<th style="width: 1%;">Dest.</th>
