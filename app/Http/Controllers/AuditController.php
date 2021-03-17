@@ -80,7 +80,7 @@ class AuditController extends Controller
 
   public function index_std()
   {
-    $title = "EHS & 5S Bulanan";
+    $title = "EHS & 5S Monthly Patrol";
     $title_jp = "";
 
     $emp = EmployeeSync::where('employee_id', Auth::user()->username)
@@ -295,79 +295,79 @@ class AuditController extends Controller
 
 public function detailMonitoring(Request $request){
 
-  $tgl = date('Y-m-d', strtotime($request->get("tgl")));
+    $tgl = date('Y-m-d', strtotime($request->get("tgl")));
 
-  if(strlen($request->get('datefrom')) > 0){
-    $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
-  }
+      if(strlen($request->get('datefrom')) > 0){
+        $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+      }
 
-  if(strlen($request->get('dateto')) > 0){
-    $dateto = date('Y-m-d', strtotime($request->get('dateto')));
-  }
+      if(strlen($request->get('dateto')) > 0){
+        $dateto = date('Y-m-d', strtotime($request->get('dateto')));
+      }
 
-  $status = $request->get('status');
+      $status = $request->get('status');
 
-  if ($status != null) {
+      if ($status != null) {
 
-  if ($status == "Temuan GM Open") {
-    $stat = 'and audit_all_results.status_ditangani is null and kategori = "5S Patrol GM"';
-  }
-  else if ($status == "Temuan Presdir Open"){
-    $stat = 'and audit_all_results.status_ditangani is null and kategori = "S-Up And EHS Patrol Presdir"';
-  }
-  else if ($status == "Temuan GM Close") {
-    $stat = 'and audit_all_results.status_ditangani = "close" and kategori = "5S Patrol GM"';
-  }
-  else if ($status == "Temuan Presdir Close") {
-    $stat = 'and audit_all_results.status_ditangani = "close" and kategori = "S-Up And EHS Patrol Presdir"';
-  }
+      if ($status == "Temuan GM Open") {
+        $stat = 'and audit_all_results.status_ditangani is null and kategori = "5S Patrol GM"';
+      }
+      else if ($status == "Temuan Presdir Open"){
+        $stat = 'and audit_all_results.status_ditangani is null and kategori = "S-Up And EHS Patrol Presdir"';
+      }
+      else if ($status == "Temuan GM Close") {
+        $stat = 'and audit_all_results.status_ditangani = "close" and kategori = "5S Patrol GM"';
+      }
+      else if ($status == "Temuan Presdir Close") {
+        $stat = 'and audit_all_results.status_ditangani = "close" and kategori = "S-Up And EHS Patrol Presdir"';
+      }
 
 
-} else{
-  $stat = '';
-}
+    } else{
+      $stat = '';
+    }
 
-$datefrom = $request->get('datefrom');
-$dateto = $request->get('dateto');
+    $datefrom = $request->get('datefrom');
+    $dateto = $request->get('dateto');
 
-if ($datefrom != null && $dateto != null) {
-  $df = 'and audit_all_results.tanggal between "'.$datefrom.'" and "'.$dateto.'"';
-}else{
-  $df = '';
-}
+    if ($datefrom != null && $dateto != null) {
+      $df = 'and audit_all_results.tanggal between "'.$datefrom.'" and "'.$dateto.'"';
+    }else{
+      $df = '';
+    }
 
-$query = "select audit_all_results.* FROM audit_all_results where audit_all_results.deleted_at is null and tanggal = '".$tgl."' ".$stat."";
+    $query = "select audit_all_results.* FROM audit_all_results where audit_all_results.deleted_at is null and tanggal = '".$tgl."' ".$stat."";
 
-$detail = db::select($query);
+    $detail = db::select($query);
 
-return DataTables::of($detail)
+    return DataTables::of($detail)
 
-->editColumn('kategori', function($detail){
-  $kategori = '';
+    ->editColumn('kategori', function($detail){
+      $kategori = '';
 
-  if($detail->kategori == "S-Up And EHS Patrol Presdir"){
-   $kategori = "Presdir";
- }else if ($detail->kategori == "5S Patrol GM"){
-   $kategori = "GM";
- }
+      if($detail->kategori == "S-Up And EHS Patrol Presdir"){
+       $kategori = "Presdir";
+     }else if ($detail->kategori == "5S Patrol GM"){
+       $kategori = "GM";
+     }
 
- return $kategori;
-})
+     return $kategori;
+    })
 
-->editColumn('tanggal', function($detail){
-  return date('d-M-Y', strtotime($detail->tanggal));
-})
+    ->editColumn('tanggal', function($detail){
+      return date('d-M-Y', strtotime($detail->tanggal));
+    })
 
-->editColumn('foto', function($detail){
-  return '<img src="'.url('files/patrol').'/'.$detail->foto.'" width="250">';
-})
+    ->editColumn('foto', function($detail){
+      return '<img src="'.url('files/patrol').'/'.$detail->foto.'" width="250">';
+    })
 
-->editColumn('penanganan', function($detail){
-  return $detail->penanganan;
-})
+    ->editColumn('penanganan', function($detail){
+      return $detail->penanganan;
+    })
 
-->rawColumns(['tanggal' => 'tanggal', 'foto' => 'foto','penanganan' => 'penanganan'])
-->make(true);
+    ->rawColumns(['tanggal' => 'tanggal', 'foto' => 'foto','penanganan' => 'penanganan'])
+    ->make(true);
 }
 
 
@@ -657,5 +657,193 @@ public function detailPenanganan(Request $request){
         });
       })->export('xlsx');
     }
+
+
+
+
+    // Audit & Patrol Monitoring All
+
+    public function indexMonitoringAll($id){
+
+      return view('audit.patrol_monitoring_all',  
+         array(
+           'title' => 'Audit & Patrol Monitoring', 
+           'title_jp' => '',
+           'category' => $id
+         )
+       )->with('page', 'Audit Patrol Monitoring');
+     }
+
+    public function fetchMonitoringAll(Request $request){
+
+      $first = date("Y-m-d", strtotime('-30 days'));
+
+      $check = AuditAllResult::where('status_ditangani', '=', 'close')
+      ->orderBy('tanggal', 'asc')
+      ->select(db::raw('date(tanggal) as audit_date'))
+      ->first();
+
+      if($first > date("Y-m-d", strtotime($check->tanggal))){
+        $first = date("Y-m-d", strtotime($check->tanggal));
+      }
+
+      if ($request->get('category') == "monthly_patrol") {
+        $category = "EHS & 5S Patrol";
+      }
+
+      $data = db::select("SELECT
+        date_format(tanggal, '%a, %d %b %Y') AS tanggal,
+        sum( CASE WHEN status_ditangani IS NULL AND kategori = '".$category."' THEN 1 ELSE 0 END ) AS jumlah_belum,
+        sum( CASE WHEN status_ditangani IS NOT NULL AND kategori = '".$category."' THEN 1 ELSE 0 END ) AS jumlah_sudah
+        FROM
+        audit_all_results 
+        WHERE
+        tanggal >= '".$first."'
+        and kategori in ('".$category."')
+        GROUP BY
+        tanggal");
+
+      $data_bulan = db::select("
+        SELECT
+        MONTHNAME(tanggal) as bulan,
+        year(tanggal) as tahun,
+        sum( CASE WHEN status_ditangani IS NULL AND kategori = '".$category."' THEN 1 ELSE 0 END ) AS jumlah_belum,
+        sum( CASE WHEN status_ditangani IS NOT NULL AND kategori = '".$category."' THEN 1 ELSE 0 END ) AS jumlah_sudah
+        FROM
+        audit_all_results 
+        WHERE
+        kategori in ('".$category."')
+        GROUP BY
+        tahun,monthname(tanggal)
+        order by tahun, month(tanggal) ASC"
+      );
+
+      $response = array(
+        'status' => true,
+        'datas' => $data,
+        'data_bulan' => $data_bulan,
+        'category' => $category
+      );
+
+      return Response::json($response);
+    }
+
+    public function fetchTableAuditAll(Request $request)
+    {
+      $datefrom = date("Y-m-d",  strtotime('-30 days'));
+      $dateto = date("Y-m-d");
+
+      $last = AuditAllResult::whereNull('status_ditangani')
+      ->orderBy('tanggal', 'asc')
+      ->select(db::raw('date(tanggal) as audit_date'))
+      ->first();
+
+      $status = $request->get('status');
+
+      if ($status != null) {
+        $cat = json_encode($status);
+        $kat = str_replace(array("[","]"),array("(",")"),$cat);
+
+        $kate = 'and audit_all_results.status_ditangani in'.$kat;
+      }else{
+        $kate = 'and audit_all_results.status_ditangani is null';
+      }
+
+
+      if ($request->get('category') == "monthly_patrol") {
+        $category = "EHS & 5S Patrol";
+      }
+
+
+      $data = db::select("select * from audit_all_results where audit_all_results.deleted_at is null and kategori in ('".$category."') ".$kate." ");
+
+      $response = array(
+        'status' => true,
+        'datas' => $data
+      );
+
+      return Response::json($response); 
+    }
+
+    public function detailMonitoringAll(Request $request){
+
+      $tgl = date('Y-m-d', strtotime($request->get("tgl")));
+
+      $status = $request->get('status');
+
+      if ($status != null) {
+
+      if ($status == "Temuan Open") {
+        $stat = 'and audit_all_results.status_ditangani is null and kategori = "'.$request->get('category').'"';
+      }
+      else if ($status == "Temuan Close") {
+        $stat = 'and audit_all_results.status_ditangani = "close" and kategori = "'.$request->get('category').'"';
+      }
+
+    } else{
+      $stat = '';
+    }
+
+    $query = "select audit_all_results.* FROM audit_all_results where audit_all_results.deleted_at is null and tanggal = '".$tgl."' ".$stat."";
+
+    $detail = db::select($query);
+
+    return DataTables::of($detail)
+
+    ->editColumn('tanggal', function($detail){
+      return date('d-M-Y', strtotime($detail->tanggal));
+    })
+
+    ->editColumn('foto', function($detail){
+      return '<img src="'.url('files/patrol').'/'.$detail->foto.'" width="250">';
+    })
+
+    ->editColumn('penanganan', function($detail){
+      return $detail->penanganan;
+    })
+
+    ->rawColumns(['tanggal' => 'tanggal', 'foto' => 'foto','penanganan' => 'penanganan'])
+    ->make(true);
+  }
+
+  public function detailMonitoringBulanAll(Request $request){
+
+    $bulan = $request->get('bulan');
+    $status = $request->get('status');
+
+    if ($status != null) {
+
+      if ($status == "Temuan Open") {
+        $stat = 'and audit_all_results.status_ditangani is null and kategori = "'.$request->get('category').'"';
+      }
+      else if ($status == "Temuan Close") {
+        $stat = 'and audit_all_results.status_ditangani = "close" and kategori = "'.$request->get('category').'"';
+      }
+
+    } else{
+      $stat = '';
+    }
+
+      $query = "select audit_all_results.* FROM audit_all_results where audit_all_results.deleted_at is null and monthname(tanggal) = '".$bulan."' ".$stat."";
+
+      $detail = db::select($query);
+
+      return DataTables::of($detail)
+
+      ->editColumn('tanggal', function($detail){
+        return date('d-M-Y', strtotime($detail->tanggal));
+      })
+
+      ->editColumn('foto', function($detail){
+        return '<img src="'.url('files/patrol').'/'.$detail->foto.'" width="250">';
+      })
+
+      ->editColumn('penanganan', function($detail){
+        return $detail->penanganan;
+      })
+
+      ->rawColumns(['tanggal' => 'tanggal', 'foto' => 'foto','penanganan' => 'penanganan'])
+      ->make(true);
+  }
 
 }
