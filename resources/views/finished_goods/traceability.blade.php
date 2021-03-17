@@ -92,9 +92,9 @@
 										</div>
 									</div>
 								</div>
-								<div class="col-md-6">
+							{{-- 	<div class="col-md-6">
 									<div class="form-group">
-										<label>BL Date From</label>
+										<label>Actual Date From</label>
 										<div class="input-group date">
 											<input type="text" placeholder="mm/dd/yyyy" class="form-control pull-right" id="blFrom" name="blFrom">
 										</div>
@@ -105,6 +105,22 @@
 										<label>BL Date To</label>
 										<div class="input-group date">
 											<input type="text" placeholder="mm/dd/yyyy" class="form-control pull-right" id="blTo" name="blTo">
+										</div>
+									</div>
+								</div> --}}
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>Actual Ship. Date From</label>
+										<div class="input-group date">
+											<input type="text" placeholder="mm/dd/yyyy" class="form-control pull-right" id="blFrom" name="actualFrom">
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>Actual Ship. Date To</label>
+										<div class="input-group date">
+											<input type="text" placeholder="mm/dd/yyyy" class="form-control pull-right" id="blTo" name="actualTo">
 										</div>
 									</div>
 								</div>
@@ -180,7 +196,8 @@
 									<th style="width: 1%;">Serial No.</th>
 									<th style="width: 1%;">Qty</th>
 									<th style="width: 1%;">I/V</th>
-									<th style="width: 1%;">Ship. Date</th>
+									<th style="width: 1%;">ST Date</th>
+									<th style="width: 1%;">Act ST Date</th>
 									<th style="width: 1%;">BL Date</th>
 									<th style="width: 1%;">Dest.</th>
 									<th style="width: 1%;">SO</th>
@@ -265,6 +282,8 @@
 		$('#loading').modal('show');
 		var prodFrom = $('#prodFrom').val();
 		var prodTo = $('#prodTo').val();
+		var actualFrom = $('#actualFrom').val();
+		var actualTo = $('#actualTo').val();
 		var shipFrom = $('#shipFrom').val();
 		var shipTo = $('#shipTo').val();
 		var blFrom = $('#blFrom').val();
@@ -278,6 +297,8 @@
 		var data = {
 			prodFrom:prodFrom,
 			prodTo:prodTo,
+			actualFrom:actualFrom,
+			actualTo:actualTo,
 			shipFrom:shipFrom,
 			shipTo:shipTo,
 			blFrom:blFrom,
@@ -308,6 +329,7 @@
 						tableData += '<td>'+ value.quantity +'</td>';
 						tableData += '<td>'+ value.invoice_number +'</td>';
 						tableData += '<td>'+ value.st_date +'</td>';
+						tableData += '<td>'+ value.actual_st_date +'</td>';
 						tableData += '<td>'+ value.bl_date +'</td>';
 						tableData += '<td>'+ value.destination_shortname +'</td>';
 						tableData += '<td>'+ value.sales_order +'</td>';

@@ -51,7 +51,7 @@ class FinishedGoodsController extends Controller
 
 	public function index_fg_traceability(){
 		$origin_groups = DB::table('origin_groups')->orderBy('origin_group_code', 'asc')->get();
-		$materials = DB::table('materials')->orderBy('material_number', 'asc')->get();
+		$materials = DB::table('materials')->where('category', '=', 'FG')->orderBy('material_number', 'asc')->get();
 		$destinations = DB::table('destinations')->orderBy('destination_code', 'asc')->get();
 
 		return view('finished_goods.traceability', array(
@@ -322,7 +322,19 @@ class FinishedGoodsController extends Controller
 		$flo_details = $flo_details->leftJoin('container_attachments', 'container_attachments.container_id', '=', 'flos.container_id')
 		->leftJoin('destinations', 'destinations.destination_code', '=', 'shipment_schedules.destination_code')
 		->leftJoin('origin_groups', 'origin_groups.origin_group_code', '=', 'materials.origin_group_code')
-		->select(
+		->leftJoin(db::raw('(select flo_number, date(created_at) as actual_st_date from flo_logs where flo_logs.status_code = 2) AS act_st'), 'act_st.flo_number', '=', 'flos.flo_number');
+
+		if(strlen($request->get('actualFrom')) > 0){
+			$actualFrom = date('Y-m-d', strtotime($request->get('actualFrom')));
+			$flo_details = $flo_details->where('act_st.actual_st_date', '>=', $actualFrom);
+		}
+		if(strlen($request->get('actualTo')) > 0){
+			$actualTo = date('Y-m-d', strtotime($request->get('actualTo')));
+			$flo_details = $flo_details->where('act_st.actual_st_date', '<=', $actualTo);
+		}
+
+
+		$flo_details = $flo_details->select(
 			db::raw('date_format(flo_details.created_at, "%d-%b-%Y") as pd_date'), 
 			'flo_details.flo_number', 
 			'origin_groups.origin_group_name', 
@@ -337,6 +349,7 @@ class FinishedGoodsController extends Controller
 			'flos.container_id', 
 			'flos.status',
 			'flos.invoice_number',
+			'act_st.actual_st_date',
 			db::raw('count(container_attachments.container_id) as att'),
 			'flo_details.image')
 		->groupBy(
@@ -352,6 +365,7 @@ class FinishedGoodsController extends Controller
 			'destinations.destination_shortname', 
 			'shipment_schedules.sales_order', 
 			'flos.container_id',
+			'act_st.actual_st_date',
 			'flos.status',
 			'flos.invoice_number',
 			'flo_details.image')
