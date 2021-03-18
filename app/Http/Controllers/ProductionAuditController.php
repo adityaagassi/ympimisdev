@@ -316,6 +316,12 @@ class ProductionAuditController extends Controller
             $nama_file = $file->getClientOriginalName();
             $filename = md5(date("dmYhisA")).'.'.$file->getClientOriginalExtension();
 
+            // $filepath = public_path('data_file/'.$filename);
+                
+            //     \Tinify\setKey(env("5QqG65fmrdmZJjZVtCD25KDpcqvV31H9"));
+            //     $source = \Tinify\fromFile($filepath);
+            //     $source->toFile($filepath);
+
             $file->move($tujuan_upload,$filename);
 
             ProductionAudit::create([
@@ -457,7 +463,8 @@ class ProductionAuditController extends Controller
                     join employee_syncs as employees2 on employees2.employee_id = production_audits.auditor
                     where DATE_FORMAT(production_audits.date,'%Y-%m')='".$date."' 
                     and point_check_audits.product = '".$origin_group."' 
-                    and point_check_audits.proses = '".$proses."' and production_audits.deleted_at is null";
+                    and point_check_audits.proses = '".$proses."' and production_audits.deleted_at is null
+                    ORDER BY date";
             $productionAudit = DB::select($queryProductionAudit);
         }
         $activity_name = $activityList->activity_name;
