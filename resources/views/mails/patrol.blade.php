@@ -104,7 +104,7 @@
 			</table>
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Klik disini untuk Melihat Monitoring</i> &#8650;</span><br>
-			<a href="{{ url('index/audit_patrol_monthly/monitoring') }}">Response atau Penanganan Patrol Bulanan</a><br>
+			<a href="{{ url('index/audit_patrol_monitoring/monthly_patrol') }}">Response atau Penanganan Patrol Bulanan</a><br>
 
 			@endif
 

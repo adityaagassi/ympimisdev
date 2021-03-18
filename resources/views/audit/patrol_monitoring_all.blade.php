@@ -200,8 +200,6 @@
         </table>
       </div>
 
-      <?php if(Auth::user()->role_code == "MIS" || Auth::user()->role_code == "GA" || Auth::user()->role_code == "GA-SPL") { ?>
-
         <div class="col-xs-12">
           <div class="row">
             <hr style="border: 1px solid red;background-color: red">
@@ -226,8 +224,6 @@
         <div class="col-md-12" style="padding-top: 30px;">
           <div id="chart_bulan" style="width: 99%; height: 300px;"></div>
         </div>
-
-      <?php } ?>
 
     </div>
   </div>
