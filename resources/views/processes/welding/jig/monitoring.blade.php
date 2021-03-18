@@ -77,6 +77,29 @@
 		</p>
 	</div>		
 	<div class="row">
+		<div class="col-xs-12" style="padding-bottom: 10px">
+			<div class="col-xs-2" style="padding-left: 0;">
+				<div class="input-group date">
+					<div class="input-group-addon bg-green" style="border: none; background-color: #605ca8; color: white;">
+						<i class="fa fa-calendar"></i>
+					</div>
+					<input type="text" class="form-control datepicker" id="date_from" name="date_from" placeholder="Select Date">
+				</div>
+			</div>
+			<div class="col-xs-2" style="padding-left: 0;">
+				<div class="input-group date">
+					<div class="input-group-addon bg-green" style="border: none; background-color: #605ca8; color: white;">
+						<i class="fa fa-calendar"></i>
+					</div>
+					<input type="text" class="form-control datepicker" id="date_to" name="date_to" placeholder="Select Date">
+				</div>
+			</div>
+			<div class="col-xs-2" style="padding-left: 0;">
+				<button class="btn btn-success" onclick="fillList()" style="font-weight: bold;">
+					Search
+				</button>
+			</div>
+		</div>
 		<div class="col-xs-9">
 			<div id="container" style="width: 100%;"></div>
 		</div>
@@ -84,7 +107,7 @@
 			<div class="row" style="padding-right: 15px">
 				<div class="box box-solid">
 					<div class="box-header" style="background-color: #2d2d2e;">
-						<center><span style="font-size: 25px; font-weight: bold; color: white;">RESUME HARI INI</span></center>
+						<center><span style="font-size: 24px; font-weight: bold; color: white;">AKUMULASI HINGGA HARI INI</span></center>
 					</div>
 					<table class="table table-responsive" style="height: 343px">
 						<tr style="background-color: #545454;color:white">
@@ -169,12 +192,23 @@
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 	jQuery(document).ready(function() {
+		$('.datepicker').datepicker({
+			<?php $tgl_max = date('Y-m-d') ?>
+			autoclose: true,
+			format: "yyyy-mm-dd",
+			todayHighlight: true,	
+			endDate: '<?php echo $tgl_max ?>'
+		});
 		fillList();
 		setInterval(fillList,60000);
 	});
 
 	function fillList(){
-		$.get('{{ url("fetch/welding/monitoring_jig") }}', function(result, status, xhr){
+		var data = {
+			date_from:$('#date_from').val(),
+			date_to:$('#date_to').val(),
+		}
+		$.get('{{ url("fetch/welding/monitoring_jig") }}',data, function(result, status, xhr){
 			if(result.status){
 				var date = [];
 				var series = [];
@@ -309,16 +343,46 @@
 				    }]
 				});
 
+				var before_kensa = 0;
+				var waiting_part = 0;
+				var before_repair = 0;
+				var tgl_before_kensa = [];
+
+				$.each(result.resume, function(key, value) {
+					before_kensa = before_kensa + parseInt(value.before_kensa);
+					before_repair = before_repair + parseInt(value.before_repair);
+					waiting_part = waiting_part + parseInt(value.waiting_part);
+					if (parseInt(value.before_kensa) > 0) {
+						tgl_before_kensa.push(value.week_date);
+					}
+				});
+
+				$('#blm_repair').html(before_repair);
+				$('#mng_part').html(waiting_part);
+				$('#blm_kensa').html(before_kensa);
+
 				$('#bodyTableOutstanding').empty();
 				var outstanding = "";
 				var index = 1;
 				$.each(result.outstanding, function(key, value) {
 					if (index % 2 == 0) {
-						var color = '#383838';
+						if (tgl_before_kensa.includes(value.schedule_date)) {
+							var background_color = '#d94e4e';
+							var color = '#fff';
+						}else{
+							var background_color = '#383838';
+							var color = '#fff';
+						}
 					}else{
-						var color = '#292929';
+						if (tgl_before_kensa.includes(value.schedule_date)) {
+							var background_color = '#d94e4e';
+							var color = '#fff';
+						}else{
+							var background_color = '#292929';
+							var color = '#fff';
+						}
 					}
-					outstanding += '<tr style="background-color: '+color+';font-size:15px">';
+					outstanding += '<tr style="background-color: '+background_color+';color: '+color+';font-size:15px">';
 					outstanding += '<td>'+index+'</td>';
 					outstanding += '<td>'+value.jig_id+'</td>';
 					outstanding += '<td>'+value.jig_name+'</td>';
@@ -345,9 +409,7 @@
 
 				$('#bodyTableOutstanding').append(outstanding);
 
-				$('#blm_repair').html(result.resume[0].before_repair);
-				$('#mng_part').html(result.resume[0].waiting_part);
-				$('#blm_kensa').html(result.resume[0].before_kensa);
+
 			}
 			else{
 				alert('Attempt to retrieve data failed');

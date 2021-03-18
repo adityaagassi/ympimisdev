@@ -3737,9 +3737,29 @@ class WeldingProcessController extends Controller
 		}
 	}
 
-	public function fetchWldJigMonitoring()
+	public function fetchWldJigMonitoring(Request $request)
 	{
 		try {
+
+			$date_from = $request->get('date_from');
+	          $date_to = $request->get('date_to');
+	          if ($date_from == '') {
+	               if ($date_to == '') {
+	                    $first = "DATE_FORMAT( NOW(), '%Y-%m-01' )";
+	                    $last = "DATE_FORMAT( LAST_DAY( NOW()), '%Y-%m-%d' )";
+	               }else{
+	                    $first = "DATE_FORMAT( NOW(), '%Y-%m-01' )";
+	                    $last = "'".$date_to."'";
+	               }
+	          }else{
+	               if ($date_to == '') {
+	                    $first = "'".$date_from."'";
+	                    $last = "DATE_FORMAT( LAST_DAY( NOW()), '%Y-%m-%d' )";
+	               }else{
+	                    $first = "'".$date_from."'";
+	                    $last = "'".$date_to."'";
+	               }
+	          }
 
 			$monitoring = DB::SELECT("SELECT
 				b.week_date,
@@ -3791,8 +3811,8 @@ class WeldingProcessController extends Controller
 				FROM
 				weekly_calendars 
 				WHERE
-				week_date BETWEEN DATE_FORMAT( NOW(), '%Y-%m-01' ) 
-				AND DATE_FORMAT( LAST_DAY( NOW()), '%Y-%m-%d' ) UNION ALL
+				week_date BETWEEN ".$first." 
+				AND ".$last." UNION ALL
 				SELECT
 				jig_schedules.schedule_date,
 				COUNT(
@@ -3803,7 +3823,7 @@ class WeldingProcessController extends Controller
 				FROM
 				jig_schedules 
 				WHERE
-				schedule_date < DATE_FORMAT( NOW(), '%Y-%m-01' ) 
+				schedule_date < ".$first."
 				AND schedule_status = 'Open' 
 				AND kensa_time IS NULL 
 				GROUP BY
@@ -3816,92 +3836,123 @@ class WeldingProcessController extends Controller
 
 			$resume = DB::SELECT("SELECT
 				a.week_date,
+				a.before_kensa,
+				a.after_kensa,
+				a.before_repair,
+				a.waiting_part 
+			FROM
 				(
 				SELECT
-				COUNT(
-				DISTINCT ( id )) 
+					a.week_date,
+					(
+					SELECT
+						COUNT(
+						DISTINCT ( id )) 
+					FROM
+						jig_schedules 
+					WHERE
+						jig_schedules.schedule_date = a.week_date 
+						AND schedule_status = 'Open' 
+						AND kensa_time IS NULL 
+						AND repair_time IS NULL 
+					) AS before_kensa,
+					( SELECT COUNT( DISTINCT ( id )) FROM jig_schedules WHERE jig_schedules.schedule_date = a.week_date AND schedule_status = 'Close' AND kensa_time IS NOT NULL ) AS after_kensa,
+					(
+					SELECT
+						COUNT(
+						DISTINCT ( id )) 
+					FROM
+						jig_schedules 
+					WHERE
+						jig_schedules.schedule_date = a.week_date 
+						AND schedule_status = 'Open' 
+						AND kensa_time IS NOT NULL 
+						AND repair_time IS NULL 
+					) AS before_repair,
+					(
+					SELECT
+						COUNT(
+						DISTINCT ( id )) 
+					FROM
+						jig_schedules 
+					WHERE
+						jig_schedules.schedule_date = a.week_date 
+						AND schedule_status = 'Open' 
+						AND kensa_time IS NOT NULL 
+						AND repair_time IS NOT NULL 
+					) AS waiting_part 
 				FROM
-				jig_schedules 
+					weekly_calendars a 
 				WHERE
-				jig_schedules.schedule_date = a.week_date 
-				AND schedule_status = 'Open' 
-				AND kensa_time IS NULL 
-				AND repair_time IS NULL 
-				) AS before_kensa,
-				( SELECT COUNT( DISTINCT ( id )) FROM jig_schedules WHERE jig_schedules.schedule_date = a.week_date AND schedule_status = 'Close' AND kensa_time IS NOT NULL ) AS after_kensa,
-				(
+					a.week_date BETWEEN ".$first." 
+					AND DATE(
+					NOW()) UNION ALL
 				SELECT
-				COUNT(
-				DISTINCT ( id )) 
+					jig_schedules.schedule_date AS week_date,
+					COUNT(
+					DISTINCT ( id )) AS before_kensa,
+					0 AS after_kensa,
+					0 AS before_repair,
+					0 AS waiting_part 
 				FROM
-				jig_schedules 
+					jig_schedules 
 				WHERE
-				jig_schedules.schedule_date = a.week_date 
-				AND schedule_status = 'Open' 
-				AND kensa_time IS NOT NULL 
-				AND repair_time IS NULL 
-				) AS before_repair,
-				(
-				SELECT
-				COUNT(
-				DISTINCT ( id )) 
-				FROM
-				jig_schedules 
-				WHERE
-				jig_schedules.schedule_date = a.week_date 
-				AND schedule_status = 'Open' 
-				AND kensa_time IS NOT NULL 
-				AND repair_time IS NOT NULL 
-				) AS waiting_part 
-				FROM
-				weekly_calendars a 
-				WHERE
-				a.week_date = DATE(
-				NOW())");
+					schedule_date < ".$first."
+					AND schedule_status = 'Open' 
+					AND kensa_time IS NULL 
+				GROUP BY
+					jig_schedules.schedule_date 
+				) a 
+			ORDER BY
+				a.week_date");
 
-			$outstanding = DB::SELECT("SELECT b.*
-				FROM
-				(SELECT
-				jig_schedules.jig_id,
-				jigs.jig_name,
-				COALESCE ( kensa_time, '' ) AS kensa_time,
-				COALESCE ( empkensa.name, '' ) AS kensa_pic,
-				COALESCE ( kensa_status, '' ) AS kensa_status,
-				COALESCE ( repair_time, '' ) AS repair_time,
-				COALESCE ( emprepair.name, '' ) AS repair_pic,
-				COALESCE ( repair_status, '' ) AS repair_status,
-				schedule_status,
-				schedule_date 
-				FROM
-				`jig_schedules`
-				LEFT JOIN employee_syncs empkensa ON empkensa.employee_id = jig_schedules.kensa_pic
-				LEFT JOIN employee_syncs emprepair ON emprepair.employee_id = jig_schedules.repair_pic
-				JOIN jigs ON jigs.jig_id = jig_schedules.jig_id 
-				WHERE
-				schedule_status = 'Open' 
-				AND schedule_date BETWEEN DATE(
-				DATE_ADD( NOW(), INTERVAL - 6 MONTH )) 
-				AND DATE(
-				DATE_ADD( NOW(), INTERVAL + 1 MONTH )) UNION
+			$outstanding = DB::SELECT("SELECT
+				b.* 
+			FROM
+				(
 				SELECT
-				jig_schedules.jig_id,
-				jigs.jig_name,
-				COALESCE ( kensa_time, '' ) AS kensa_time,
-				COALESCE ( empkensa.name, '' ) AS kensa_pic,
-				COALESCE ( kensa_status, '' ) AS kensa_status,
-				COALESCE ( repair_time, '' ) AS repair_time,
-				COALESCE ( emprepair.name, '' ) AS repair_pic,
-				COALESCE ( repair_status, '' ) AS repair_status,
-				schedule_status,
-				schedule_date 
+					jig_schedules.jig_id,
+					jigs.jig_name,
+					COALESCE ( kensa_time, '' ) AS kensa_time,
+					COALESCE ( empkensa.NAME, '' ) AS kensa_pic,
+					COALESCE ( kensa_status, '' ) AS kensa_status,
+					COALESCE ( repair_time, '' ) AS repair_time,
+					COALESCE ( emprepair.NAME, '' ) AS repair_pic,
+					COALESCE ( repair_status, '' ) AS repair_status,
+					schedule_status,
+					schedule_date 
 				FROM
-				`jig_schedules`
-				LEFT JOIN employee_syncs empkensa ON empkensa.employee_id = jig_schedules.kensa_pic
-				LEFT JOIN employee_syncs emprepair ON emprepair.employee_id = jig_schedules.repair_pic
-				JOIN jigs ON jigs.jig_id = jig_schedules.jig_id 
+					`jig_schedules`
+					LEFT JOIN employee_syncs empkensa ON empkensa.employee_id = jig_schedules.kensa_pic
+					LEFT JOIN employee_syncs emprepair ON emprepair.employee_id = jig_schedules.repair_pic
+					JOIN jigs ON jigs.jig_id = jig_schedules.jig_id 
 				WHERE
-				schedule_status = 'Open' 
-				AND schedule_date < DATE(NOW())) b ORDER BY b.schedule_date,b.repair_status,b.kensa_status");
+					schedule_status = 'Open' 
+					AND schedule_date BETWEEN ".$first." 
+					AND ".$last." UNION
+				SELECT
+					jig_schedules.jig_id,
+					jigs.jig_name,
+					COALESCE ( kensa_time, '' ) AS kensa_time,
+					COALESCE ( empkensa.NAME, '' ) AS kensa_pic,
+					COALESCE ( kensa_status, '' ) AS kensa_status,
+					COALESCE ( repair_time, '' ) AS repair_time,
+					COALESCE ( emprepair.NAME, '' ) AS repair_pic,
+					COALESCE ( repair_status, '' ) AS repair_status,
+					schedule_status,
+					schedule_date 
+				FROM
+					`jig_schedules`
+					LEFT JOIN employee_syncs empkensa ON empkensa.employee_id = jig_schedules.kensa_pic
+					LEFT JOIN employee_syncs emprepair ON emprepair.employee_id = jig_schedules.repair_pic
+					JOIN jigs ON jigs.jig_id = jig_schedules.jig_id 
+				WHERE
+					schedule_status = 'Open' 
+					AND schedule_date < ".$first.") b 
+			ORDER BY
+				b.schedule_date,
+				b.repair_status,
+				b.kensa_status");
 
 			$response = array(
 				'status' => true,
