@@ -108,8 +108,7 @@ class IndirectMaterialController extends Controller{
 		->get();
 
 		$new_materials = db::select("SELECT chemical_solutions.id, chemical_solutions.solution_name, indirect_material_cost_centers.section, indirect_material_cost_centers.location from chemical_solutions
-			LEFT JOIN indirect_material_cost_centers ON indirect_material_cost_centers.id = chemical_solutions.cost_center_id
-			WHERE chemical_solutions.category <> 'CONTROLLING CHART'");
+			LEFT JOIN indirect_material_cost_centers ON indirect_material_cost_centers.id = chemical_solutions.cost_center_id");
 
 		$sections = IndirectMaterialCostCenter::select('id', 'section', 'location')
 		->orderBy('section', 'ASC')
