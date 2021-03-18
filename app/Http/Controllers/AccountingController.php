@@ -5626,14 +5626,53 @@ class AccountingController extends Controller
                     $category_budget = $request->get('budget_cat');
                     $budget_amount = $request->get('amount');
 
+                    if ($request->get('category') == "Investment") {
+                        $budget_no = "NoBdgFA198";
+                    }else if ($request->get('category') == "Expense"){
+                        $budget_no = "NoBdgExp198";
+                    }
+
                     $data2 = AccInvestmentBudget::firstOrNew([
                         'reff_number' => $request->get('reff_number'),
-                        'category_budget' => $category_budget[$i]
+                        'category_budget' => $category_budget[$i],
+                        'budget_no' => $budget_no
                     ]);
 
                     $data2->total = $budget_amount[$i];
                     $data2->created_by = $id_user;
 
+                    $investment_item = AccInvestment::join('acc_investment_details', 'acc_investments.reff_number', '=', 'acc_investment_details.reff_number')->where('acc_investments.id', '=', $request->get('id'))->get();
+
+                    for ($z=0; $z < count($investment_item); $z++) { 
+
+                        $getbulan = AccBudget::select('budget_no', 'periode')
+                        ->where('budget_no',$budget_no)
+                        ->first();
+
+                        if ($getbulan->periode == "FY197") {
+                            $month = strtolower(date('M'));
+                        }
+                        else{
+                            $month = "apr";
+                        }
+
+                        $data3 = AccBudgetHistory::firstOrNew([
+                            'category_number' => $request->get('reff_number'),
+                            'budget' => $budget_no,
+                            'no_item' => $investment_item[$z]->detail,
+                        ]);
+
+                        $data3->budget = $budget_no;
+                        $data3->budget_month = $month;
+                        $data3->budget_date = date('Y-m-d');
+                        $data3->category_number = $request->get('reff_number');
+                        $data3->no_item = $investment_item[$z]->detail;
+                        $data3->beg_bal = 0;
+                        $data3->amount = $investment_item[$z]->dollar;
+                        $data3->status = 'Investment';
+                        $data3->created_by = $id_user;
+                        $data3->save();
+                    }
                 }
                 $data2->save();
             }
@@ -6166,6 +6205,11 @@ class AccountingController extends Controller
                 $master = AccInvestmentBudget::where('id', '=', $request->get('id'))->delete();
 
             }else{
+                
+                $delete_budget_log = AccBudgetHistory::where('budget', '=', $get_budget_item->budget_no)
+                ->where('category_number', '=', $get_budget_item->reff_number)
+                ->delete();
+
                 $master = AccInvestmentBudget::where('id', '=', $request->get('id'))->delete();
             }
 

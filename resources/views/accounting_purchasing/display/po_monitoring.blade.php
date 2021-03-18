@@ -562,11 +562,19 @@ hr { background-color: red; height: 1px; border: 0; }
                 }
               }
 
+              var reject = "";
+
+              if (value.reject != null) {
+                  reject = ";background-color:red";
+              }else{
+                  reject = "";
+              }
+
               table += '<tr>';
-              table += '<td style="text-align:left !important">'+value.no_po+'</td>';
-              table += '<td style="text-align:left !important">'+value.po_date+'</td>';
-              table += '<td style="text-align:left !important">'+value.supplier_name+'</td>';
-              table += '<td style="text-align:left !important">'+value.budget_item+'</td>';
+              table += '<td style="text-align:left !important '+reject+'">'+value.no_po+'</td>';
+              table += '<td style="text-align:left !important '+reject+'">'+value.po_date+'</td>';
+              table += '<td style="text-align:left !important '+reject+'">'+value.supplier_name+'</td>';
+              table += '<td style="text-align:left !important '+reject+'">'+value.budget_item+'</td>';
 
               var curr = "";
 
@@ -580,8 +588,8 @@ hr { background-color: red; height: 1px; border: 0; }
 
                // '+value.amount+'
 
-              table += '<td style="text-align:left !important;border-right:none">'+curr+'</td>';
-              table += '<td style="text-align:right !important;border-left:none">'+formatUang(value.amount,"")+'</td>';
+              table += '<td style="text-align:left !important;border-right:none '+reject+'">'+curr+'</td>';
+              table += '<td style="text-align:right !important;border-left:none '+reject+'">'+formatUang(value.amount,"")+'</td>';
               table += '<td '+colorbuyer+'>'+buyer+'</td>';  
               table += '<td '+colormanager+'>'+manager+'</td>';
               table += '<td '+colordgm+'>'+dgm+'</td>';
