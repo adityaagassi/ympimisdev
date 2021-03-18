@@ -1281,13 +1281,13 @@ class IndirectMaterialController extends Controller{
 			}
 
 			// CEK FIFO
-			if($stock->in_date > $first_chemical->in_date){
-				$response = array(
-					'status' => false,
-					'message' => 'Pengambilan harus FIFO, Ambil chemical '.$stock->material_number.' dengan tanggal masuk ' . date('d-m-Y', strtotime($first_chemical->in_date)) . ' terlebih dahulu'
-				);
-				return Response::json($response);
-			}
+			// if($stock->in_date > $first_chemical->in_date){
+			// 	$response = array(
+			// 		'status' => false,
+			// 		'message' => 'Pengambilan harus FIFO, Ambil chemical '.$stock->material_number.' dengan tanggal masuk ' . date('d-m-Y', strtotime($first_chemical->in_date)) . ' terlebih dahulu'
+			// 	);
+			// 	return Response::json($response);
+			// }
 
 			try {				
 				$pick = new IndirectMaterialPick([
