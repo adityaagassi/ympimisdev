@@ -259,11 +259,12 @@
 		});
 
 		$('#qr_apar').keydown(function(event) {
-		if (event.keyCode == 13 || event.keyCode == 9) {
-			var id = $("#qr_apar").val();
-			checkCode('', id);
-		}
-	});
+			if (event.keyCode == 13 || event.keyCode == 9) {
+				var id = $("#qr_apar").val();
+				vdo = '';
+				checkCode('', id);
+			}
+		});
 
 		function showCheck(kode) {
 			var video = document.createElement("video");
@@ -366,45 +367,45 @@
 				if (result.check.length > 0) {
 					$.each(result.check, function(index, value){
 						
-					style = 'style="background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 15px;"';
+						style = 'style="background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 15px;"';
 
-					bd += "<tr>";
-					bd += "<td "+style+">"+value.check_date2+"</td>";
-					bd += "<td "+style+">"+value.name+"</td>";
+						bd += "<tr>";
+						bd += "<td "+style+">"+value.check_date2+"</td>";
+						bd += "<td "+style+">"+value.name+"</td>";
 
-					var cek = "BAIK";
-					if (~value.check.indexOf("0")) {
-						cek = "KURANG";
-					}
-
-					if (index == 0) {
-						hasil_check = cek;
-					}
-
-					bd += "<td "+style+">"+cek+"</td>";
-
-					arrCek = value.check.split(',');
-					remark = "";
-
-					var  i = 0;
-					$.each(apar_checks, function(index2, value2){
-						if (value.remark2 == value2.remark) {
-							if (arrCek[i] == '0') {
-								remark += value2.check_point+",";
-							}
-							i++;
+						var cek = "BAIK";
+						if (~value.check.indexOf("0")) {
+							cek = "KURANG";
 						}
+
+						if (index == 0) {
+							hasil_check = cek;
+						}
+
+						bd += "<td "+style+">"+cek+"</td>";
+
+						arrCek = value.check.split(',');
+						remark = "";
+
+						var  i = 0;
+						$.each(apar_checks, function(index2, value2){
+							if (value.remark2 == value2.remark) {
+								if (arrCek[i] == '0') {
+									remark += value2.check_point+",";
+								}
+								i++;
+							}
+						})
+
+						bd += "<td "+style+">"+remark.slice(0,-1)+"</td>";
+						if (value.action == 1) {
+							bd += "<td "+style+"><button class='btn btn-danger' onclick='delete_history("+value.id_check+","+value.utility_id+")'><i class='fa fa-close'></i> hapus</button></td>";
+						} else {
+							bd += "<td "+style+"> - </td>"
+						}
+
+						bd += "</tr>";
 					})
-
-					bd += "<td "+style+">"+remark.slice(0,-1)+"</td>";
-					if (value.action == 1) {
-						bd += "<td "+style+"><button class='btn btn-danger' onclick='delete_history("+value.id_check+","+value.utility_id+")'><i class='fa fa-close'></i> hapus</button></td>";
-					} else {
-						bd += "<td "+style+"> - </td>"
-					}
-
-					bd += "</tr>";
-				})
 				}
 				$("#history_body").append(bd);
 			})
@@ -481,7 +482,10 @@
 				// $("#check").show();
 				$('#check').children().show();
 
-				videoOff();
+				if (video != '') {
+					videoOff();
+				}
+				
 				openSuccessGritter('Success', 'QR Code Successfully');
 				// console.log(arr_selected);
 				$("#apar_id").val(arr_selected.apar_id);
