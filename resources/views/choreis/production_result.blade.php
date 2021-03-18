@@ -588,7 +588,7 @@
 						// Progres bar jam kerja/hari
 						for (var i = 1; i < 4; i++) {
 							if(now_tgl == req_tgl){
-								if(now.getHours() < 6){
+								if(now.getHours() < 7){
 									$('#progress_bar_production'+i).append().empty();
 									$('#progress_text_production'+i).html("Today's Working Time : 0%");
 									$('#progress_bar_production'+i).css('width', '0%');
@@ -606,9 +606,9 @@
 								else if(now.getDay() == 5){
 									$('#progress_text_production'+i).append().empty();
 									var total = 570;
-									var now_menit = ((now.getHours()-6)*60) + now.getMinutes();
+									var now_menit = ((now.getHours()-7)*60) + now.getMinutes();
 									var persen = (now_menit/total) * 100;
-									if(now.getHours() >= 6 && now_menit < total){
+									if(now.getHours() >= 7 && now_menit < total){
 										if(persen > 24){
 											if(persen > 32){
 												$('#progress_bar_production'+i).html("Today's Working Time : "+persen.toFixed(2)+"%");
@@ -636,9 +636,9 @@
 								else{
 									$('#progress_text_production'+i).append().empty();
 									var total = 540;
-									var now_menit = ((now.getHours()-6)*60) + now.getMinutes();
+									var now_menit = ((now.getHours()-7)*60) + now.getMinutes();
 									var persen = (now_menit/total) * 100;
-									if(now.getHours() >= 6 && now_menit < total){
+									if(now.getHours() >= 7 && now_menit < total){
 										if(persen > 24){
 											if(persen > 32){
 												$('#progress_bar_production'+i).html("Today's Working Time : "+persen.toFixed(2)+"%");
