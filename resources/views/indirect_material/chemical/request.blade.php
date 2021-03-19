@@ -132,12 +132,12 @@
 							<span style="font-weight: bold; font-size: 16px;">Storage Location:</span>
 							<input type="text" id="storage_location" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" readonly>
 						</div>
-						<div class="col-xs-3">
+						<div class="col-xs-3" style="padding-right: 0px;">
 							<span style="font-weight: bold; font-size: 16px;">Request Qty:</span>
 							<input type="text" id="quantity" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" readonly>
 						</div>
-						<div class="col-xs-2">
-							<span style="font-weight: bold; font-size: 16px;">Uom:</span>
+						<div class="col-xs-2" style="padding-left: 0px;">
+							<span style="font-weight: bold; font-size: 16px;">&nbsp;</span>
 							<input type="text" id="bun" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" readonly>
 						</div>
 						
@@ -149,13 +149,21 @@
 						<div class="col-xs-12">
 							<span style="font-weight: bold; font-size: 20px;">Stock</span>
 						</div>
-						<div class="col-xs-6">
+						<div class="col-xs-4" style="padding-right: 0px;">
 							<span style="font-weight: bold; font-size: 16px;">Stock Qty:</span>
 							<input type="text" id="stock" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" readonly>
 						</div>
-						<div class="col-xs-6">
+						<div class="col-xs-2" style="padding-left: 0px;">
+							<span style="font-weight: bold; font-size: 16px;">&nbsp;</span>
+							<input type="text" id="stock_uom" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" readonly>
+						</div>
+						<div class="col-xs-4" style="padding-right: 0px;">
 							<span style="font-weight: bold; font-size: 16px;">Out:</span>
 							<input type="text" id="out" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" readonly>
+						</div>
+						<div class="col-xs-2" style="padding-left: 0px;">
+							<span style="font-weight: bold; font-size: 16px;">&nbsp;</span>
+							<input type="text" id="out_uom" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" readonly>
 						</div>
 					</div>
 				</div>
@@ -689,7 +697,9 @@
 					$('#material_description').val('');
 					$('#storage_location').val('');
 					$('#stock').val('');
+					$('#stock_uom').val('');
 					$('#out').val('');
+					$('#out_uom').val('');
 
 					$("#loading").hide();
 					openSuccessGritter('Success', result.message);
@@ -728,6 +738,8 @@
 				$('#bun').val(result.data.bun);
 				$('#material_description').val(result.data.material_description);
 				$('#storage_location').val(result.data.storage_location);
+				$('#stock_uom').val(result.data.material_bun);
+				$('#out_uom').val(result.data.material_bun);
 
 				if(result.inventory == null){
 					$('#stock').val('0');
@@ -736,6 +748,8 @@
 				}
 				
 				$('#out').val(result.out.length);
+				
+
 
 				fillPicked();
 

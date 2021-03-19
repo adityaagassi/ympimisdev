@@ -7,16 +7,6 @@
 		padding: 3px;
 		box-sizing: border-box;
 	}
-	table {
-		table-layout:fixed;
-	}
-	td{
-		overflow:hidden;
-		text-overflow: ellipsis;
-	}
-	td:hover {
-		overflow: visible;
-	}
 	thead>tr>th{
 		text-align:center;
 	}
@@ -25,9 +15,6 @@
 	}
 	tfoot>tr>th{
 		text-align:center;
-	}
-	td:hover {
-		overflow: visible;
 	}
 	table.table-bordered{
 		border:1px solid black;
@@ -89,15 +76,11 @@
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="box box-primary">
-				<div class="box-header">
-					<h3 class="box-title">Filters</h3>
-					<h3 id="printer_name" class="box-title pull-right"></h3>
-				</div>
 				<input type="hidden" value="{{csrf_token()}}" name="_token" />
 				<div class="box-body">
 					
 					<div class="row">
-						<div class="col-md-3 col-md-offset-3">
+						<div class="col-xs-2 col-xs-offset-1">
 							<div class="form-group">
 								<label>Date From</label>
 								<div class="input-group date">
@@ -108,21 +91,8 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-3">
-							<div class="form-group">
-								<label>Date To</label>
-								<div class="input-group date">
-									<div class="input-group-addon">
-										<i class="fa fa-calendar"></i>
-									</div>
-									<input type="text" class="form-control pull-right datepicker" id="dateto" placeholder="Select Date">
-								</div>
-							</div>
-						</div>
-					</div>
 
-					<div class="row">
-						<div class="col-md-3 col-md-offset-3">
+						<div class="col-xs-4">
 							<div class="form-group">
 								<label>Section</label>
 								<select class="form-control select2" multiple="multiple" name="section" id='section' data-placeholder="Select Section" style="width: 100%;">
@@ -133,20 +103,8 @@
 								</select>
 							</div>
 						</div>
-						<div class="col-md-3">
-							<div class="form-group">
-								<label>Status</label>
-								<select class="form-control select2" name="status" id='status' data-placeholder="Select Status" style="width: 100%;">
-									<option style="color:grey;" value="">Select Status</option>
-									<option value="Picked">Picked</option>
-									<option value="Scheduled">Scheduled</option>
-								</select>
-							</div>
-						</div>
-					</div>	
 
-					<div class="row">
-						<div class="col-md-6 col-md-offset-3">
+						<div class="col-xs-4">
 							<div class="form-group">
 								<label>Larutan</label>
 								<select class="form-control select2" multiple="multiple" name="larutan" id='larutan' data-placeholder="Select Larutan" style="width: 100%;">
@@ -157,9 +115,35 @@
 								</select>
 							</div>
 						</div>
+
 					</div>
+
 					<div class="row">
-						<div class="col-md-6 col-md-offset-3">
+
+						<div class="col-xs-2 col-xs-offset-1">
+							<div class="form-group">
+								<label>Date To</label>
+								<div class="input-group date">
+									<div class="input-group-addon">
+										<i class="fa fa-calendar"></i>
+									</div>
+									<input type="text" class="form-control pull-right datepicker" id="dateto" placeholder="Select Date">
+								</div>
+							</div>
+						</div>
+
+						<div class="col-xs-4">
+							<div class="form-group">
+								<label>Status</label>
+								<select class="form-control select2" name="status" id='status' data-placeholder="Select Status" style="width: 100%;">
+									<option style="color:grey;" value="">Select Status</option>
+									<option value="Picked">Picked</option>
+									<option value="Scheduled">Scheduled</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="col-xs-4">
 							<div class="form-group">
 								<label>Material</label>
 								<select class="form-control select2" multiple="multiple" name="material" id='material' data-placeholder="Select Material" style="width: 100%;">
@@ -170,11 +154,11 @@
 								</select>
 							</div>
 						</div>
-					</div>
 
+					</div>
 					
 
-					<div class="col-md-3 col-md-offset-6">
+					<div class="col-xs-3 col-xs-offset-8">
 						<div class="form-group pull-right">
 							<a href="javascript:void(0)" onClick="clearConfirmation()" class="btn btn-danger">Clear</a>
 							<button id="search" onClick="fetchTable()" class="btn btn-primary">Search</button>
@@ -192,45 +176,30 @@
 				</ul>
 
 				<div class="tab-content">
-					<div class="tab-pane active" id="tab_1">
+					<div class="tab-pane active" id="tab_1" style="overflow-x: auto;">
 						<table id="table-material" class="table table-bordered table-striped table-hover" style="width: 100%;">
 							<thead style="background-color: rgba(126,86,134,.7);">
 								<tr>
-									<th style="width: 10%">Due Date</th>
-									<th style="width: 1%">Shift</th>
-									<th style="width: 20%">Category</th>
-									<th style="width: 20%">Larutan</th>
-									<th style="width: 20%">Location</th>
-									<th style="width: 10%">Material</th>
-									<th style="width: 30%">Material Description</th>
-									<th style="width: 10%">Storage Location</th>
-									<th style="width: 5%">Qty</th>
-									<th style="width: 5%">Bun</th>
-									<th style="width: 10%">Picked By</th>
-									<th style="width: 10%">Picked Time</th>
-									<th style="width: 10%">Delete</th>
-									
+									<th width="5%">Due Date</th>
+									<th>Shift</th>
+									<th>Category</th>
+									<th>Larutan</th>
+									<th>Location</th>
+									<th width="5%">Material</th>
+									<th style="width: 50%;">Material Description</th>
+									<th>Storage Location</th>
+									<th>Qty</th>
+									<th>Bun</th>
+									<th>Picked By</th>
+									<th>Picked Time</th>
+									<th>Changed By</th>
+									<th>Changed Time</th>
+									<th>Change</th>
+									<th>Delete</th>
 								</tr>
 							</thead>
 							<tbody id="body-material">
 							</tbody>
-							<tfoot>
-								<tr>
-									<th></th>
-									<th></th>
-									<th></th>
-									<th></th>
-									<th></th>
-									<th></th>
-									<th></th>
-									<th></th>
-									<th></th>
-									<th></th>
-									<th></th>
-									<th></th>
-									<th></th>
-								</tr>
-							</tfoot>
 						</table>
 					</div>
 					
@@ -285,10 +254,17 @@
 										<select class="form-control select2" data-placeholder="Select Larutan" id="new_solution_id" style="width: 100%">
 											<option style="color:grey;" value="">Select Larutan</option>
 											@foreach($new_materials as $material)
-											<option value="{{ $material->id }}">{{ $material->solution_name }} - {{ $material->section }} - {{ $material->location }}</option>
+											<option value="{{ $material->id }}"><strong>{{ $material->solution_name }}</strong> - {{ $material->section }} - {{ $material->location }}</option>
 											@endforeach
 											
 										</select>
+									</div>	
+								</div>
+								<div class="form-group row" align="right">
+									<label class="col-sm-3">Note</label>
+									<div class="col-sm-7" align="left">
+										
+										<textarea class="form-control" placeholder="Type your note ..." id="new_note"></textarea>
 									</div>	
 								</div>
 							</div>
@@ -612,6 +588,7 @@
 		var date = $('#new_date').val();
 		var shift = $('#new_shift').val();
 		var solution_id = $('#new_solution_id').val();
+		var note = $('#new_note').val();
 
 		if(date == '' || shift == '' || solution_id == ''){
 			openErrorGritter('Error', 'Semua field harus di isi');
@@ -621,7 +598,8 @@
 		var data = {
 			date : date,
 			shift : shift,
-			solution_id : solution_id
+			solution_id : solution_id,
+			note : note
 		}
 
 		$("#loading").show();
@@ -665,10 +643,7 @@
 		}
 
 		$('#table-material').DataTable().destroy();
-		$('#table-material tfoot th').each( function () {
-			var title = $(this).text();
-			$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
-		});
+		
 		var table_material = $('#table-material').DataTable({
 			'dom': 'Bfrtip',
 			'responsive': true,
@@ -733,27 +708,19 @@
 			{ "data": "solution_name"},
 			{ "data": "location"},
 			{ "data": "material_number"},
-			{ "data": "material_description"},
+			{ "width": "50%", "data": "material_description"},
 			{ "data": "storage_location"},
 			{ "data": "quantity"},
 			{ "data": "bun"},
-			{ "data": "name"},
+			{ "data": "picked_name"},
 			{ "data": "picked_time"},
+			{ "data": "changed_name"},
+			{ "data": "changed_time"},
+			{ "data": "change"},
 			{ "data": "delete"}
 			]
 		});
-		table_material.columns().every( function () {
-			var that = this;
-
-			$( 'input', this.footer() ).on( 'keyup change', function () {
-				if ( that.search() !== this.value ) {
-					that
-					.search( this.value )
-					.draw();
-				}
-			});
-		});
-		$('#table-material tfoot tr').appendTo('#table-material thead');
+		
 		
 	}
 
@@ -780,6 +747,31 @@
 			$("#loading").hide();
 		}
 		
+	}
+
+	function change(id) {
+		$("#loading").show();
+
+		var data = {
+			id : id
+		}
+
+		if(confirm("Apakah anda yakin schedule ini sudah dilakukan penggantian chemical ?\nData yang sudah disimpan tidak dapat dikembalikan.")){
+			$.post('{{ url("change/chm_schedule") }}', data, function(result, status, xhr){
+				if(result.status){
+					$('#table-material').DataTable().ajax.reload();
+					$("#loading").hide();
+					openSuccessGritter('Success', result.message);
+
+				}else{
+					$("#loading").hide();
+					openErrorGritter('Error', result.message);
+				}
+			});
+		}else{
+			$("#loading").hide();
+		}
+
 	}
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');

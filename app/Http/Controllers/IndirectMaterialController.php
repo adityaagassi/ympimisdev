@@ -475,7 +475,7 @@ class IndirectMaterialController extends Controller{
 			$chemical_solution = ChemicalSolution::where('id', $schedule->solution_id)
 			->update([
 				'is_add_schedule' => 1,
-				'actual_quantity' => 0
+				// 'actual_quantity' => 0
 			]);
 
 
@@ -503,6 +503,7 @@ class IndirectMaterialController extends Controller{
 		$date = $request->get('date');
 		$shift = $request->get('shift');
 		$solution_id = $request->get('solution_id');
+		$note = $request->get('note');
 
 		$shift1 = '07:00:01';
 		$shift2 = '16:00:01';
@@ -543,6 +544,7 @@ class IndirectMaterialController extends Controller{
 					'storage_location' => $chm_composer[$i]->storage_location,
 					'quantity' => $chm_composer[$i]->quantity,
 					'bun' => $chm_composer[$i]->bun,
+					'note' => $note,
 					'created_by' => Auth::id()
 				]);
 				$schedule->save();
@@ -1001,6 +1003,40 @@ class IndirectMaterialController extends Controller{
 		}
 	}
 
+	public function changeSchedule(Request $request) {
+		$id = $request->get('id');
+
+		try {
+			$schedule = IndirectMaterialSchedule::where('id', $id)->first();
+
+			$larutan = ChemicalSolution::where('id', $schedule->solution_id)
+			->update([
+				'actual_quantity' => 0 
+			]);
+
+			$change = IndirectMaterialSchedule::where('schedule_date', $schedule->schedule_date)
+			->where('solution_id', $schedule->solution_id)
+			->where('cost_center_id', $schedule->cost_center_id)
+			->update([
+				'changed_by' => Auth::id(),
+				'changed_time' => date('Y-m-d H:i:s')
+			]);
+
+
+			$response = array(
+				'status' => true,
+				'message' => 'Penggantian larutan success'
+			);
+			return Response::json($response);
+		} catch (Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+	}
+
 	public function fetchIndirectMaterialMonitoring(){
 		$data = db::select("SELECT sum,
 			SUM(exp) AS exp,
@@ -1387,6 +1423,7 @@ class IndirectMaterialController extends Controller{
 			db::raw('CONCAT(indirect_material_cost_centers.section," - ",indirect_material_cost_centers.location) AS location'),
 			'chemical_solution_composers.material_number',
 			'chemical_solution_composers.material_description',
+			'chemical_solution_composers.material_bun',
 			'chemical_solution_composers.storage_location',
 			'chemical_solution_composers.quantity',
 			'chemical_solution_composers.bun',
@@ -1395,10 +1432,9 @@ class IndirectMaterialController extends Controller{
 		)
 		->first();
 
-		$inventory = Inventory::leftJoin('material_plant_data_lists', 'material_plant_data_lists.material_number', '=', 'inventories.material_number')
-		->where('inventories.material_number', $data->material_number)
+		$inventory = Inventory::where('inventories.material_number', $data->material_number)
 		->where('inventories.storage_location', 'MSTK')
-		->select('inventories.material_number', 'inventories.quantity', 'material_plant_data_lists.bun')
+		->select('inventories.material_number', 'inventories.quantity')
 		->first();
 
 		$out = IndirectMaterialOut::where('material_number', $data->material_number)
@@ -1422,7 +1458,17 @@ class IndirectMaterialController extends Controller{
 			$join->on('indirect_material_schedules.material_number', '=', 'chemical_solution_composers.material_number');	
 		})
 		->leftJoin('indirect_material_cost_centers', 'indirect_material_schedules.cost_center_id', '=', 'indirect_material_cost_centers.id')
-		->leftJoin('users', 'indirect_material_schedules.picked_by', '=', 'users.id');
+		->leftJoin('users AS pick', 'indirect_material_schedules.picked_by', '=', 'pick.id')
+		->leftJoin('users AS change', 'indirect_material_schedules.changed_by', '=', 'change.id');
+
+		$username = Auth::user()->username;
+		if((!str_contains(strtoupper($username), 'PI')) || (Auth::user()->role_code == 'MIS' || Auth::user()->role_code == 'CHM')){
+
+		}else{
+			$emp = EmployeeSync::where('employee_id', strtoupper($username))->first();
+			$data = $data->where('indirect_material_cost_centers.department', $emp->department);
+
+		}
 
 		if(strlen($request->get('datefrom')) > 0 ){
 			$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
@@ -1469,10 +1515,12 @@ class IndirectMaterialController extends Controller{
 			'chemical_solution_composers.material_number',
 			'chemical_solution_composers.material_description',
 			'chemical_solution_composers.storage_location',
-			'chemical_solution_composers.quantity',
-			'chemical_solution_composers.bun',
-			db::raw('IF(users.name is null, "-", users.name) AS name'),
-			db::raw('IF(indirect_material_schedules.picked_time is null, "-", indirect_material_schedules.picked_time) AS picked_time')
+			'indirect_material_schedules.quantity',
+			'indirect_material_schedules.bun',
+			db::raw('IF(pick.name is null, "-", pick.name) AS picked_name'),
+			db::raw('IF(indirect_material_schedules.picked_time is null, "-", indirect_material_schedules.picked_time) AS picked_time'),
+			db::raw('IF(change.name is null, "-", change.name) AS changed_name'),
+			db::raw('IF(indirect_material_schedules.changed_time is null, "-", indirect_material_schedules.changed_time) AS changed_time')
 		);
 
 
@@ -1509,8 +1557,20 @@ class IndirectMaterialController extends Controller{
 
 			}
 		})
+		->addColumn('change', function($data){
+
+			$emp = EmployeeSync::where('employee_id', Auth::user()->username)->first();
+
+			if(($data->picked_time != '-') && ($data->changed_time == '-')){
+				return '<button style="width: 50%; height: 100%;" onclick="change(\''.$data->id.'\')" class="btn btn-xs btn-primary form-control"><span><i class="fa fa-refresh"></i></span></button>';
+			}else{
+				return '-';
+
+			}
+		})
 		->rawColumns([ 
-			'delete' => 'delete'
+			'delete' => 'delete',
+			'change' => 'change'
 		])
 		->make(true);
 
