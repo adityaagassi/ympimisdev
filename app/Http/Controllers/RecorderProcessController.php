@@ -3049,7 +3049,17 @@ class RecorderProcessController extends Controller
     public function fetchProduct(Request $request)
     {
       try {
-          $product = DB::SELECT("select * from injection_parts where remark = 'injection' and part_code != 'BJ' and deleted_at is null order by part_name desc");
+          $product = DB::SELECT("SELECT
+            * 
+          FROM
+            injection_parts 
+          WHERE
+            remark = 'injection' 
+            AND part_code != 'BJ' 
+            AND part_code != 'A YRF S' 
+            AND deleted_at IS NULL 
+          ORDER BY
+            index_cdm ASC");
 
           if (count($product) > 0) {
               $response = array(
