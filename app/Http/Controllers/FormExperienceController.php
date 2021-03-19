@@ -406,7 +406,8 @@ class FormExperienceController extends Controller
     public function fetchDetailChart(Request $request){
       $group = $request->get('group');
 
-      $data = db::select("SELECT
+      $data = db::select("
+        SELECT
         form_failures.id,
         form_failures.employee_id,
         form_failures.employee_name,
@@ -417,12 +418,26 @@ class FormExperienceController extends Controller
         form_failures.kategori,
         form_failures.judul,
         form_failures.loss,
-        form_failures.kerugian
+        form_failures.kerugian,
+        count( form_failure_attendances.id ) AS jumlah 
       FROM
         form_failures
+        LEFT JOIN form_failure_attendances ON form_failures.id = form_failure_attendances.form_id
         JOIN employee_syncs ON form_failures.employee_id = employee_syncs.employee_id
       WHERE
-        employee_syncs.department = '".$group."'");
+        employee_syncs.department = '".$group."'
+      GROUP BY
+        form_failures.id,
+        form_failures.employee_id,
+        form_failures.employee_name,
+        form_failures.tanggal_kejadian,
+        form_failures.lokasi_kejadian,
+        form_failures.equipment,
+        form_failures.grup_kejadian,
+        form_failures.kategori,
+        form_failures.judul,
+        form_failures.loss,
+        form_failures.kerugian");
 
     $response = array(
       'status' => true,
