@@ -918,6 +918,11 @@ Route::get('fetch/view_production_schedule_kd', 'ProductionScheduleController@fe
 Route::get('fetch/view_generate_production_schedule_kd', 'ProductionScheduleController@fetchViewGenerateProductionScheduleKd');
 Route::get('fetch/generate_production_schedule_kd', 'ProductionScheduleController@fetchGenerateProductionScheduleKd');
 
+Route::get('fetch/view_generate_shipment_schedule_kd', 'ProductionScheduleController@fetchViewGenerateShipmentScheduleKd');
+Route::get('fetch/generate_shipment_schedule_kd', 'ProductionScheduleController@fetchGenerateShipmentScheduleKd');
+
+
+
 
 
 
@@ -4336,10 +4341,7 @@ Route::get('view/mutasi', 'MutasiController@viewMutasiSatuDetail');
 Route::get('fetch/mutasi_ant/monitoringant', 'MutasiController@fetchMonitoringMutasiAnt');
 Route::get('fetch/mutasi/monitoring', 'MutasiController@fetchMonitoringMutasi');
 
-
 Route::get('mutasi/cek_email', 'MutasiController@viewCekEmail');
-
-
 
 //Warehouse
 Route::get('index/warehouse', 'WarehouseController@index');
@@ -4353,6 +4355,14 @@ Route::get('fetch/warehouse/productivity', 'WarehouseController@warehouseProduct
 Route::get('fetch/warehouse/detail', 'WarehouseController@fetchDetail');
 Route::get('index/warehouse/record', 'WarehouseController@indexWarehouseRecord');
 Route::get('fetch/warehouse/record', 'WarehouseController@fetchRecord');
+
+//warehouse new
+Route::get('index/warehouse/jobs', 'WarehouseController@index_jobs');
+Route::get('index/warehouse/create', 'WarehouseController@index_create');
+Route::get('fetch/warehouse/location', 'WarehouseController@fetchLocation');
+Route::post('post/warehouse/operator/position', 'WarehouseController@postOpWarehousePosition');
+
+
 
 //Sanding
 
@@ -4452,10 +4462,13 @@ Route::get('index/reed/trimming_verification', 'ReedSyntheticController@indexTri
 Route::get('index/reed/annealing_verification', 'ReedSyntheticController@indexAnnealingVerification');
 
 
-// Route::get('fetch/fibration/data', 'TrialController@fetchFIbrationSensor');
-
-
-
-
 //End Reed Project
 
+Route::get('index/fibration/data', 'TrialController@indexFIbrationSensor');
+Route::get('fetch/fibration/data', 'TrialController@fetchFIbrationSensor');
+
+//Dokumentasi Packing
+
+Route::get('index/packing_dokumentation', 'TrialController@fetchFIbrationSensor');
+
+//End Dokumentasi Packing

@@ -86,7 +86,10 @@
               </tr>
               <tr>
                 <th>Waktu Logged-In</th>
-                <td><input type="text" id="login_time" class="form-control" readonly></td>
+                <td>
+                  <input type="text" id="login_time" class="form-control" readonly>
+                  <span id="login_time_2" style="font-size: 25px; font-weight: bold"></span>
+                </td>
               </tr>
             </table>
 
@@ -176,7 +179,9 @@
   });
 
   var machine;
+  var area;
   var loc;
+  var time;
 
   jQuery(document).ready(function() {
     $('body').toggleClass("sidebar-collapse");
@@ -186,9 +191,11 @@
     $("#desc").val("");
     $("#loc").val("");
     $("#login_time").val("");
+    $("#login_time_2").text("");
     $("#op_name").val("{{ Auth::user()->name }}");
 
     machine = <?php echo json_encode($machine); ?>;
+    area = <?php echo json_encode($area); ?>;
     loc = <?php echo json_encode($loc_arr); ?>;
 
     console.log(loc);
@@ -214,14 +221,6 @@
 
   $('#modalScan').on('hidden.bs.modal', function () {
     videoOff();
-  });
-
-  $('#qr_apar').keydown(function(event) {
-    if (event.keyCode == 13 || event.keyCode == 9) {
-      var id = $("#qr_apar").val();
-      vdo = '';
-      checkCode('', id);
-    }
   });
 
   function showCheck() {
@@ -298,6 +297,14 @@
       }
     })
 
+    $.each(area, function(index, value){
+      if (value.area_code == code) {
+        stat = true;
+        machine_detail = value.area;
+        loc = value.area;
+      }
+    })
+
     if (stat) {
       $('#scanner').hide();
       videoOff();
@@ -319,8 +326,10 @@
           })
 
           if (emp_stat == 1) {
+            $("#ket").hide();
             $("#logout").show();
           } else {
+            $("#logout").hide();
             $("#ket").show();
           }
         }
@@ -342,10 +351,30 @@
             $("#desc").val(value.description);
             $("#loc").val(value.location);
             $("#login_time").val(value.created_at);
+            time = value.created_at;
+            var utc = new Date(time).toUTCString();
+            var dateNow = new Date();
+
+            console.log(utc);
+
+            var seconds = Math.floor((utc - (dateNow))/1000);
+            var minutes = Math.floor(seconds/60);
+            var hours = Math.floor(minutes/60);
+            var days = Math.floor(hours/24);
+
+            hours = hours-(days*24);
+            minutes = minutes-(days*24*60)-(hours*60);
+            seconds = seconds-(days*24*60*60)-(hours*60*60)-(minutes*60);
+
+            console.log(hours+" - "+minutes+" - "+seconds);
           }
         })
       }
     })
+  }
+
+  function cek_time() {
+
   }
 
   function logged(param) {

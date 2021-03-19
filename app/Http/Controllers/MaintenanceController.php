@@ -36,6 +36,7 @@ use App\MaintenanceMachineProblemLog;
 use App\MaintenanceOperatorLocation;
 use App\MaintenanceOperatorLocationLog;
 use App\Process;
+use App\AreaCode;
 
 use App\Http\Controllers\Controller;
 
@@ -90,7 +91,7 @@ class MaintenanceController extends Controller
 			['location' => 'Analyzing Room', 'alias' => 'anz', 'area' => ['Analyzing Room']],
 			['location' => 'Assembly', 'alias' => 'assy', 'area' => ['Assembly', 'FL Assy']],
 			['location' => 'Bea Cukai', 'alias' => 'bea', 'area' => ['Bea Cukai']],
-			['location' => 'Buffing & Tumbling', 'alias' => 'tumb', 'area' => ['Barrel']],
+			['location' => 'Barrel', 'alias' => 'tumb', 'area' => ['Buffing & Tumbling']],
 			['location' => 'Buffing', 'alias' => 'buff', 'area' => ['Buffing']],
 			['location' => 'Boiler Room', 'alias' => 'boi', 'area' => ['Boiler Room']],
 			['location' => 'B-Pro', 'alias' => 'bpro', 'area' => ['B-Pro', 'Buffing (B-Pro)', 'NC Kira - B-Pro']],
@@ -587,11 +588,13 @@ class MaintenanceController extends Controller
 		$title_jp = '??';
 
 		$machine = MaintenancePlanItem::select('machine_id', 'description', 'area', 'location')->get();
+		$area = AreaCode::select('area_code', 'area', 'remark')->get();
 
 		return view('maintenance.operator_position', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
 			'machine' => $machine,
+			'area' => $area,
 			'loc_arr' => $this->location
 		))->with('page','Operator Position')->with('head', 'Maintenance');
 	}
@@ -602,13 +605,13 @@ class MaintenanceController extends Controller
 		$title_jp = '??';
 
 		$machine = MaintenancePlanItem::select('machine_id', 'description', 'area', 'location')->get();
-		// $area = AreaCode::select('machine_id', 'description', 'area', 'location')->get();
+		$area = AreaCode::select('area_code', 'area', 'remark')->get();
 
 		return view('maintenance.operator_area', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
 			'machine' => $machine,
-			// 'area' => $area,
+			'area' => $area,
 			'loc_arr' => $this->location
 		))->with('page','MP Position')->with('head', 'Maintenance');
 	}
@@ -3274,7 +3277,7 @@ class MaintenanceController extends Controller
 
 	public function fetchOperatorPosition(Request $request)
 	{
-		$emp_loc = MaintenanceOperatorLocation::get();
+		$emp_loc = MaintenanceOperatorLocation::select('employee_id', 'employee_name', 'location', 'remark', 'created_at', db::raw('RIGHT(acronym(employee_name), 2) AS short_name'))->get();
 
 		$response = array(
 			'status' => true,
