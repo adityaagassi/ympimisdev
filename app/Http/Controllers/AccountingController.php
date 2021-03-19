@@ -1711,7 +1711,7 @@ class AccountingController extends Controller
                 $pr->status = "approval_acc";
 
                 //kirim email ke Mas Shega & Mas Erlangga
-                $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.department = 'Purchasing Control Department' and (employee_id = 'PI1908032' or employee_id = 'PI1810020')";
+                $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.department = 'Purchasing Control Department' and (employee_id = 'PI1908032' or employee_id = 'PI1810020'  or employee_id = 'PI0904006')";
                 $mailtoo = DB::select($mails);
             }
 
@@ -2033,7 +2033,7 @@ class AccountingController extends Controller
                 $pr->status = "approval_acc";
 
                 //kirim email ke Mas Shega & Mas Erlangga
-                $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.department = 'Purchasing Control Department' and (employee_id = 'PI1908032' or employee_id = 'PI1810020')";
+                $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.department = 'Purchasing Control Department' and (employee_id = 'PI1908032' or employee_id = 'PI1810020' or employee_id = 'PI0904006')";
                 $mailtoo = DB::select($mails);
 
                 $pr->save();
@@ -5378,12 +5378,12 @@ class AccountingController extends Controller
         else if($request->get('department') == "Purchasing Control Department") {
             $dept = "Procurement Department";
         }
-        else if($request->get('department') == "Woodwind Instrument - Body Parts Process (WI-BPP) Department") {
-            $dept = "Woodwind Instrument - Key Parts Process (WI-KPP) Department";
-        }
-        else if($request->get('department') == "Woodwind Instrument - Surface Treatment (WI-ST) Department") {
-            $dept = "Woodwind Instrument - Welding Process (WI-WP) Department";
-        }
+        // else if($request->get('department') == "Woodwind Instrument - Body Parts Process (WI-BPP) Department") {
+        //     $dept = "Woodwind Instrument - Key Parts Process (WI-KPP) Department";
+        // }
+        // else if($request->get('department') == "Woodwind Instrument - Surface Treatment (WI-ST) Department") {
+        //     $dept = "Woodwind Instrument - Welding Process (WI-WP) Department";
+        // }
         else{
             $dept = $request->get('department');
         }
