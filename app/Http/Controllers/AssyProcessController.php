@@ -367,6 +367,7 @@ class AssyProcessController extends Controller
 
 		$response = array(
 			'status' => true,
+			'update_at' => date('Y-m-d H:i:s'),
 			'plan' => $picking_assy,
 			'stok' => $dd,
 			'gmc' => $gmc
@@ -587,6 +588,7 @@ class AssyProcessController extends Controller
 		$response = array(
 			'status' => true,
 			'plan' => $picking_assy,
+			'update_at' => date('Y-m-d H:i:s'),
 			// 'stok' => $stok,
 			// 'buffing' => $buffing,
 			'stok' => $dd,

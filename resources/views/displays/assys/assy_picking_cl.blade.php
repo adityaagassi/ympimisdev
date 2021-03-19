@@ -83,6 +83,7 @@
 <section class="content" style="padding-top: 0; overflow-y:hidden; overflow-x:scroll;">
 	<div class="row">
 		<div class="col-xs-12" style="height:100%">
+			<p style="color: white; font-weight: bold">Last Update at <span id="update_at"></span></p>
 			<table id="assyTable" class="table table-bordered" style="padding: 0px; margin-bottom: 0px; height:100%;">
 				<tr id="model">
 				</tr>
@@ -242,6 +243,12 @@
 
 			$.get(url, data, function(result, status, xhr){
 				if(result.status){
+					var dt = new Date();
+					var dates = dt.getDate() + "-" + dt.getMonth() + "-" + dt.getFullYear()+" ";
+					var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+
+					$("#update_at").text("("+result.update_at+")");
+
 					$("#model").empty();
 					$("#plan").empty();
 					$("#picking").empty();

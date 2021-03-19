@@ -322,7 +322,7 @@
 					var dates = dt.getDate() + "-" + dt.getMonth() + "-" + dt.getFullYear()+" ";
 					var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
 
-					$("#update_at").text("("+dates+time+")");
+					$("#update_at").text("("+result.update_at+")");
 					$("#model").empty();
 					$("#plan").empty();
 					$("#picking").empty();
