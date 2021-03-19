@@ -27,22 +27,29 @@
 						<th colspan="6" style="background-color: #9f84a7">Production Overtime</th>
 					</tr> -->
 					<tr style="color: white; background-color: #7e5686">
-						<th style="width: 2%;border:1px solid black;">Manager</th>
-						<th style="width: 1%;border:1px solid black;">Unconfirmed Visitor</th>
+						<th style="width: 500px;border:1px solid black;">Department</th>
+						<th style="width: 100px;border:1px solid black;">Unconfirmed Visitor</th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php
+					$total = 0;
 					for ($i=0; $i < count($data); $i++) { 
 						print_r ('<tr>
-							<td>'.$data[$i]['manager_name'].'</td>
-							<td>'.$data[$i]['jumlah_visitor'].'</td>
+							<td style="text-align:center">'.$data[$i]['department'].'</td>
+							<td style="text-align:center">'.$data[$i]['jumlah_visitor'].'</td>
 							</tr>');
+						$total = $total + $data[$i]['jumlah_visitor'];
 					}
+					print_r ('<tr style="color: white; background-color: #7e5686">
+							<td style="text-align:center"><b>TOTAL</b></td>
+							<td style="text-align:center"><b>'.$total.'</b></td>
+							</tr>');
 					?>
 				</tbody>
 			</table>
 			<br>
+			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For Confirm Your Visitor</i> &#8650;</span><br>
 			<a href="http://10.109.52.4/mirai/public/visitor_confirmation_manager">Visitor Confirmation</a><br>
 		</center>
 	</div>
