@@ -149,6 +149,16 @@ Route::get('index/general/attendance_check', 'GeneralController@indexGeneralAtte
 Route::get('fetch/general/attendance_check', 'GeneralController@fetchGeneralAttendanceCheck');
 Route::post('scan/general/attendance_check', 'GeneralController@scanGeneralAttendanceCheck');
 
+//OXYMETER
+Route::get('index/general/oxymeter', 'GeneralController@indexOxymeterCheck');
+Route::get('fetch/general/oxymeter/employee', 'EmployeeController@fetchEmployeeByTag');
+Route::post('post/general/oxymeter', 'GeneralController@postOxymeterCheck');
+Route::get('fetch/general/oxymeter/history', 'GeneralController@fetchOxymeterHistory');
+
+//AIR VISUAL
+Route::get('index/general/airvisual', 'GeneralController@indexAirVisual');
+Route::get('post/general/airvisual/data', 'GeneralController@postAirVisual');
+
 Route::get('/home', ['middleware' => 'permission', 'nav' => 'Dashboard', 'uses' => 'HomeController@index'])->name('home');
 
 Route::get('/about_mis', 'HomeController@indexAboutMIS');
@@ -2652,6 +2662,9 @@ Route::get('fetch/chm_picking_schedule', 'IndirectMaterialController@fetchPickin
 Route::get('fetch/chm_picking_schedule_detail', 'IndirectMaterialController@fetchPickingScheduleDetail');
 Route::get('fetch/get_addition_chm', 'IndirectMaterialController@fetchAdditionChm');
 
+Route::post('change/chm_schedule', 'IndirectMaterialController@changeSchedule');
+
+
 Route::group(['nav' => 'S41', 'middleware' => 'permission'], function(){
 	Route::post('index/chm_input_addition', 'IndirectMaterialController@inputChmAddition');
 	Route::post('index/chm_input_new', 'IndirectMaterialController@inputChmNew');
@@ -4361,6 +4374,8 @@ Route::get('index/warehouse/jobs', 'WarehouseController@index_jobs');
 Route::get('index/warehouse/create', 'WarehouseController@index_create');
 Route::get('fetch/warehouse/location', 'WarehouseController@fetchLocation');
 Route::post('post/warehouse/operator/position', 'WarehouseController@postOpWarehousePosition');
+Route::get('fetch/display/rincian', 'WarehouseController@fetchWarehouseRincian');
+
 
 
 
@@ -4454,12 +4469,20 @@ Route::post('scan/reed/laser_picking', 'ReedSyntheticController@scanLaserPicking
 Route::post('fetch/reed/start_laser', 'ReedSyntheticController@fetchStartLaser');
 Route::post('fetch/reed/finish_laser', 'ReedSyntheticController@fetchFinishLaser');
 
-
 //Trimming
 Route::get('index/reed/trimming_verification', 'ReedSyntheticController@indexTrimmingVerification');
 
 //Annealing
 Route::get('index/reed/annealing_verification', 'ReedSyntheticController@indexAnnealingVerification');
+
+//Annealing
+Route::get('index/reed/packing_verification', 'ReedSyntheticController@indexPackingVerification');
+Route::get('fetch/reed/packing_picking_list', 'ReedSyntheticController@fetchPackingPickingList');
+Route::post('scan/reed/packing_picking', 'ReedSyntheticController@scanPackingPicking');
+Route::post('fetch/reed/start_packing', 'ReedSyntheticController@fetchStartPacking');
+Route::post('fetch/reed/finish_packing', 'ReedSyntheticController@fetchFinishPacking');
+
+
 
 
 //End Reed Project
