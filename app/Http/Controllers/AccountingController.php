@@ -7395,7 +7395,7 @@ $data = db::select('
   GROUP BY
   a.budget_no
   HAVING
-  a.budget_no IS NOT NULL and deleted IS NULL
+  a.budget_no IS NOT NULL and a.budget_no <> "" and deleted IS NULL
   '.$dep.' '.$cat.' '.$per.'
   ');
 

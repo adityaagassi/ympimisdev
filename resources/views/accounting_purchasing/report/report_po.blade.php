@@ -351,6 +351,9 @@
 							@elseif($po[0]->buyer_id == "PI1810020")
 								<img width="75" src="{{ public_path() . '/files/ttd_pr_po/ttd_shega.jpg' }}" alt="" style="padding: 0">
 								<span style="position: absolute;left: 25px;width: 75px;font-size: 10px;font-weight: bold;top: 100px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->tgl_po)) ?></span>
+							@elseif($po[0]->buyer_id == "PI0904006")
+								<img width="75" src="{{ public_path() . '/files/ttd_pr_po/ttd_hamzah.jpg' }}" alt="" style="padding: 0">
+								<span style="position: absolute;left: 15px;width: 75px;font-size: 10px;font-weight: bold;top: 90px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->tgl_po)) ?></span>
 							@else
 								<?= $po[0]->buyer_name ?>
 							@endif
@@ -880,6 +883,9 @@
 							@elseif($po[0]->buyer_id == "PI1810020")
 								<img width="75" src="{{ public_path() . '/files/ttd_pr_po/ttd_shega.jpg' }}" alt="" style="padding: 0">
 								<span style="position: absolute;left: 25px;width: 75px;font-size: 10px;font-weight: bold;top: 100px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->tgl_po)) ?></span>
+							@elseif($po[0]->buyer_id == "PI0904006")
+								<img width="75" src="{{ public_path() . '/files/ttd_pr_po/ttd_hamzah.jpg' }}" alt="" style="padding: 0">
+								<span style="position: absolute;left: 15px;width: 75px;font-size: 10px;font-weight: bold;top: 90px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->tgl_po)) ?></span>	
 							@else
 								<?= $po[0]->buyer_name ?>
 							@endif
