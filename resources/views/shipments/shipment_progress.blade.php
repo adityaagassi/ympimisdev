@@ -804,11 +804,29 @@ $.get('{{ url("fetch/kd_shipment_progress") }}', data, function(result, status, 
 		var data = result.shipment_results;
 		var xCategories = [];
 
+		var planMP = [];
+		var actualMP = [];
+
+		var planPnPart = [];
+		var actualPnPart = [];
+
+		var planVnAssy = [];
+		var actualVnAssy = [];
+
+		var planVnInjection = [];
+		var actualVnInjection = [];
+
 		var planZPRO = [];
 		var actualZPRO = [];
 
 		var planMPRO = [];
 		var actualMPRO = [];
+
+		var planBPRO = [];
+		var actualBPRO = [];
+
+		var planWelding = [];
+		var actualWelding = [];
 
 		var planSubAssySX = [];
 		var actualSubAssySX = [];
@@ -822,8 +840,15 @@ $.get('{{ url("fetch/kd_shipment_progress") }}', data, function(result, status, 
 		var planSubAssyFL = [];
 		var actualSubAssyFL = [];
 
-		var planMP = [];
-		var actualMP = [];
+		var planCase = [];
+		var actualCase = [];
+
+		var planClBody = [];
+		var actualClBody = [];
+
+		var planTanpo = [];
+		var actualTanpo = [];
+
 
 		var i, cat;
 		var intVal = function ( i ) {
@@ -837,6 +862,22 @@ $.get('{{ url("fetch/kd_shipment_progress") }}', data, function(result, status, 
 			if(xCategories.indexOf(cat) === -1){
 				xCategories[xCategories.length] = cat;
 			}
+			if(data[i].hpl == 'MP'){
+				planMP.push(data[i].plan-data[i].act);
+				actualMP.push(data[i].act);
+			}
+			if(data[i].hpl == 'PN-PART'){
+				planPnPart.push(data[i].plan-data[i].act);
+				actualPnPart.push(data[i].act);
+			}
+			if(data[i].hpl == 'VN-ASSY'){
+				planVnAssy.push(data[i].plan-data[i].act);
+				actualVnAssy.push(data[i].act);
+			}
+			if(data[i].hpl == 'VN-INJECTION'){
+				planVnInjection.push(data[i].plan-data[i].act);
+				actualVnInjection.push(data[i].act);
+			}
 			if(data[i].hpl == 'ZPRO'){
 				planZPRO.push(data[i].plan-data[i].act);
 				actualZPRO.push(data[i].act);
@@ -844,6 +885,14 @@ $.get('{{ url("fetch/kd_shipment_progress") }}', data, function(result, status, 
 			if(data[i].hpl == 'MPRO'){
 				planMPRO.push(data[i].plan-data[i].act);
 				actualMPRO.push(data[i].act);
+			}
+			if(data[i].hpl == 'BPRO'){
+				planBPRO.push(data[i].plan-data[i].act);
+				actualBPRO.push(data[i].act);
+			}
+			if(data[i].hpl == 'WELDING'){
+				planWelding.push(data[i].plan-data[i].act);
+				actualWelding.push(data[i].act);
 			}
 			if(data[i].hpl == 'SUBASSY-SX'){
 				planSubAssySX.push(data[i].plan-data[i].act);
@@ -861,18 +910,26 @@ $.get('{{ url("fetch/kd_shipment_progress") }}', data, function(result, status, 
 				planSubAssyFL.push(data[i].plan-data[i].act);
 				actualSubAssyFL.push(data[i].act);
 			}
-			if(data[i].hpl == 'MP'){
-				planMP.push(data[i].plan-data[i].act);
-				actualMP.push(data[i].act);
+			if(data[i].hpl == 'CASE'){
+				planCase.push(data[i].plan-data[i].act);
+				actualCase.push(data[i].act);
 			}
+			if(data[i].hpl == 'CL-BODY'){
+				planClBody.push(data[i].plan-data[i].act);
+				actualClBody.push(data[i].act);
+			}
+			if(data[i].hpl == 'TANPO'){
+				planTanpo.push(data[i].plan-data[i].act);
+				actualTanpo.push(data[i].act);
+			}
+
 		}
 
-		if(xCategories.length <= 4){
-			var scrollMax = xCategories.length-1;
-		}
-		else{
-			var scrollMax = 3;
-		}
+		console.log(xCategories.length);
+
+		
+		var scrollMax = 1;
+		
 
 		var yAxisLabels = [0,25,50,75,100,110];
 		var chart = Highcharts.chart('container2', {
@@ -965,7 +1022,7 @@ $.get('{{ url("fetch/kd_shipment_progress") }}', data, function(result, status, 
 						},
 						y:-5,
 						style: {
-							fontSize:'18px',
+							fontSize:'14px',
 							fontWeight: 'bold',
 						}
 					},
@@ -978,7 +1035,26 @@ $.get('{{ url("fetch/kd_shipment_progress") }}', data, function(result, status, 
 					}
 				}
 			},
-			series: [{
+			series: [
+			{
+				name: 'Plan',
+				data: planTanpo,
+				stack: 'TANPO',
+				color: 'rgba(255, 0, 0, 0.25)',
+				showInLegend: false
+			}, {
+				name: 'Plan',
+				data: planClBody,
+				stack: 'CLBODY',
+				color: 'rgba(255, 0, 0, 0.25)',
+				showInLegend: false
+			}, {
+				name: 'Plan',
+				data: planCase,
+				stack: 'CASE',
+				color: 'rgba(255, 0, 0, 0.25)',
+				showInLegend: false
+			}, {
 				name: 'Plan',
 				data: planSubAssySX,
 				stack: 'SXKEY',
@@ -1004,6 +1080,18 @@ $.get('{{ url("fetch/kd_shipment_progress") }}', data, function(result, status, 
 				showInLegend: false
 			}, {
 				name: 'Plan',
+				data: planWelding,
+				stack: 'WELDING',
+				color: 'rgba(255, 0, 0, 0.25)',
+				showInLegend: false
+			}, {
+				name: 'Plan',
+				data: planBPRO,
+				stack: 'BPRO',
+				color: 'rgba(255, 0, 0, 0.25)',
+				showInLegend: false
+			},{
+				name: 'Plan',
 				data: planZPRO,
 				stack: 'ZPRO',
 				color: 'rgba(255, 0, 0, 0.25)'
@@ -1015,9 +1103,48 @@ $.get('{{ url("fetch/kd_shipment_progress") }}', data, function(result, status, 
 				showInLegend: false
 			}, {
 				name: 'Plan',
+				data: planVnInjection,
+				stack: 'VN INJ',
+				color: 'rgba(255, 0, 0, 0.25)',
+				showInLegend: false
+			}, {
+				name: 'Plan',
+				data: planVnAssy,
+				stack: 'VN ASSY',
+				color: 'rgba(255, 0, 0, 0.25)',
+				showInLegend: false
+			}, {
+				name: 'Plan',
+				data: planPnPart,
+				stack: 'PN PART',
+				color: 'rgba(255, 0, 0, 0.25)',
+				showInLegend: false
+			}, {
+				name: 'Plan',
 				data: planMP,
 				stack: 'MP',
 				color: 'rgba(255, 0, 0, 0.25)',
+				showInLegend: false
+			},
+
+
+			{
+				name: 'Actual',
+				data: actualTanpo,
+				stack: 'TANPO',
+				color: 'rgba(0, 255, 0, 0.90)',
+				showInLegend: false
+			}, {
+				name: 'Actual',
+				data: actualClBody,
+				stack: 'CLBODY',
+				color: 'rgba(0, 255, 0, 0.90)',
+				showInLegend: false
+			},  {
+				name: 'Actual',
+				data: actualCase,
+				stack: 'CASE',
+				color: 'rgba(0, 255, 0, 0.90)',
 				showInLegend: false
 			}, {
 				name: 'Actual',
@@ -1045,6 +1172,18 @@ $.get('{{ url("fetch/kd_shipment_progress") }}', data, function(result, status, 
 				showInLegend: false
 			}, {
 				name: 'Actual',
+				data: actualWelding,
+				stack: 'WELDING',
+				color: 'rgba(0, 255, 0, 0.90)',
+				showInLegend: false
+			}, {
+				name: 'Actual',
+				data: actualBPRO,
+				stack: 'BPRO',
+				color: 'rgba(0, 255, 0, 0.90)',
+				showInLegend: false
+			}, {
+				name: 'Actual',
 				data: actualZPRO,
 				stack: 'ZPRO',
 				color: 'rgba(0, 255, 0, 0.90)'
@@ -1056,11 +1195,30 @@ $.get('{{ url("fetch/kd_shipment_progress") }}', data, function(result, status, 
 				showInLegend: false
 			}, {
 				name: 'Actual',
+				data: actualVnInjection,
+				stack: 'VN INJ',
+				color: 'rgba(0, 255, 0, 0.90)',
+				showInLegend: false
+			}, {
+				name: 'Actual',
+				data: actualVnAssy,
+				stack: 'VN ASSY',
+				color: 'rgba(0, 255, 0, 0.90)',
+				showInLegend: false
+			}, {
+				name: 'Actual',
+				data: actualPnPart,
+				stack: 'PN PART',
+				color: 'rgba(0, 255, 0, 0.90)',
+				showInLegend: false
+			}, {
+				name: 'Actual',
 				data: actualMP,
 				stack: 'MP',
 				color: 'rgba(0, 255, 0, 0.90)',
 				showInLegend: false
-			}]
+			}
+			]
 		});
 
 		// $('.highcharts-xaxis-labels text').on('click', function () {
