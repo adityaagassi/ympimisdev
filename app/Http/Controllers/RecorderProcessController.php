@@ -3533,38 +3533,38 @@ class RecorderProcessController extends Controller
                   $cdm->cavity = $datas['cavity'];
                   $cdm->cav = $datas['head'][$i]['cav'];
                   if ($cdm->awal_a == null) {
-                    $cdm->awal_a = $awal_a;
-                    $cdm->awal_b = $awal_b;
-                    $cdm->awal_c = $awal_c;
-                    $cdm->awal_status = $awal_status;
                     $cdm->awal_employee_id = $datas['employee_id'];
                     $cdm->awal_created_at = date('Y-m-d H:i:s');
                   }
+                  $cdm->awal_a = $awal_a;
+                  $cdm->awal_b = $awal_b;
+                  $cdm->awal_c = $awal_c;
+                  $cdm->awal_status = $awal_status;
                   if ($cdm->ist_1_a == null) {
-                    $cdm->ist_1_a = $ist1_a;
-                    $cdm->ist_1_b = $ist1_b;
-                    $cdm->ist_1_c = $ist1_c;
-                    $cdm->ist_1_status = $ist1_status;
                     $cdm->ist_1_employee_id = $datas['employee_id'];
                     $cdm->ist_1_created_at = date('Y-m-d H:i:s');
                   }
+                  $cdm->ist_1_a = $ist1_a;
+                  $cdm->ist_1_b = $ist1_b;
+                  $cdm->ist_1_c = $ist1_c;
+                  $cdm->ist_1_status = $ist1_status;
 
                   if ($cdm->ist_2_a == null) {
-                    $cdm->ist_2_a = $ist2_a;
-                    $cdm->ist_2_b = $ist2_b;
-                    $cdm->ist_2_c = $ist2_c;
-                    $cdm->ist_2_status = $ist2_status;
                     $cdm->ist_2_employee_id = $datas['employee_id'];
                     $cdm->ist_2_created_at = date('Y-m-d H:i:s');
                   }
+                  $cdm->ist_2_a = $ist2_a;
+                  $cdm->ist_2_b = $ist2_b;
+                  $cdm->ist_2_c = $ist2_c;
+                  $cdm->ist_2_status = $ist2_status;
                   if ($cdm->ist_3_a == null) {
-                    $cdm->ist_3_a = $ist3_a;
-                    $cdm->ist_3_b = $ist3_b;
-                    $cdm->ist_3_c = $ist3_c;
-                    $cdm->ist_3_status = $ist3_status;
                     $cdm->ist_3_employee_id = $datas['employee_id'];
                     $cdm->ist_3_created_at = date('Y-m-d H:i:s');
                   }
+                  $cdm->ist_3_a = $ist3_a;
+                  $cdm->ist_3_b = $ist3_b;
+                  $cdm->ist_3_c = $ist3_c;
+                  $cdm->ist_3_status = $ist3_status;
                   $cdm->save();
                 }
               }
@@ -3601,39 +3601,38 @@ class RecorderProcessController extends Controller
                   $cdm->machine_injection = $datas['machine_injection'];
                   $cdm->cavity = $datas['cavity'];
                   $cdm->cav = $datas['middle'][$i]['cav'];
-                  if ($cdm->awal_a == null) {
-                    $cdm->awal_a = $awal_a;
-                    $cdm->awal_b = $awal_b;
-                    $cdm->awal_c = $awal_c;
-                    $cdm->awal_status = $awal_status;
+                  if ($cdm->awal_a == null) {                    
                     $cdm->awal_employee_id = $datas['employee_id'];
                     $cdm->awal_created_at = date('Y-m-d H:i:s');
                   }
+                  $cdm->awal_a = $awal_a;
+                  $cdm->awal_b = $awal_b;
+                  $cdm->awal_c = $awal_c;
+                  $cdm->awal_status = $awal_status;
                   if ($cdm->ist_1_a == null) {
-                    $cdm->ist_1_a = $ist1_a;
-                    $cdm->ist_1_b = $ist1_b;
-                    $cdm->ist_1_c = $ist1_c;
-                    $cdm->ist_1_status = $ist1_status;
                     $cdm->ist_1_employee_id = $datas['employee_id'];
                     $cdm->ist_1_created_at = date('Y-m-d H:i:s');
                   }
-
+                  $cdm->ist_1_a = $ist1_a;
+                  $cdm->ist_1_b = $ist1_b;
+                  $cdm->ist_1_c = $ist1_c;
+                  $cdm->ist_1_status = $ist1_status;
                   if ($cdm->ist_2_a == null) {
-                    $cdm->ist_2_a = $ist2_a;
-                    $cdm->ist_2_b = $ist2_b;
-                    $cdm->ist_2_c = $ist2_c;
-                    $cdm->ist_2_status = $ist2_status;
                     $cdm->ist_2_employee_id = $datas['employee_id'];
                     $cdm->ist_2_created_at = date('Y-m-d H:i:s');
                   }
+                  $cdm->ist_2_a = $ist2_a;
+                  $cdm->ist_2_b = $ist2_b;
+                  $cdm->ist_2_c = $ist2_c;
+                  $cdm->ist_2_status = $ist2_status;
                   if ($cdm->ist_3_a == null) {
-                    $cdm->ist_3_a = $ist3_a;
-                    $cdm->ist_3_b = $ist3_b;
-                    $cdm->ist_3_c = $ist3_c;
-                    $cdm->ist_3_status = $ist3_status;
                     $cdm->ist_3_employee_id = $datas['employee_id'];
                     $cdm->ist_3_created_at = date('Y-m-d H:i:s');
                   }
+                  $cdm->ist_3_a = $ist3_a;
+                  $cdm->ist_3_b = $ist3_b;
+                  $cdm->ist_3_c = $ist3_c;
+                  $cdm->ist_3_status = $ist3_status;
                   $cdm->save();
                 }
               }
@@ -3671,39 +3670,38 @@ class RecorderProcessController extends Controller
                     $cdm->machine_injection = $datas['machine_injection'];
                     $cdm->cavity = $datas['cavity'];
                     $cdm->cav = $datas['foot'][$i]['cav'];
-                    if ($cdm->awal_a == null) {
-                      $cdm->awal_a = $awal_a;
-                      $cdm->awal_b = $awal_b;
-                      $cdm->awal_c = $awal_c;
-                      $cdm->awal_status = $awal_status;
+                    if ($cdm->awal_a == null) {                    
                       $cdm->awal_employee_id = $datas['employee_id'];
                       $cdm->awal_created_at = date('Y-m-d H:i:s');
                     }
+                    $cdm->awal_a = $awal_a;
+                    $cdm->awal_b = $awal_b;
+                    $cdm->awal_c = $awal_c;
+                    $cdm->awal_status = $awal_status;
                     if ($cdm->ist_1_a == null) {
-                      $cdm->ist_1_a = $ist1_a;
-                      $cdm->ist_1_b = $ist1_b;
-                      $cdm->ist_1_c = $ist1_c;
-                      $cdm->ist_1_status = $ist1_status;
                       $cdm->ist_1_employee_id = $datas['employee_id'];
                       $cdm->ist_1_created_at = date('Y-m-d H:i:s');
                     }
-
+                    $cdm->ist_1_a = $ist1_a;
+                    $cdm->ist_1_b = $ist1_b;
+                    $cdm->ist_1_c = $ist1_c;
+                    $cdm->ist_1_status = $ist1_status;
                     if ($cdm->ist_2_a == null) {
-                      $cdm->ist_2_a = $ist2_a;
-                      $cdm->ist_2_b = $ist2_b;
-                      $cdm->ist_2_c = $ist2_c;
-                      $cdm->ist_2_status = $ist2_status;
                       $cdm->ist_2_employee_id = $datas['employee_id'];
                       $cdm->ist_2_created_at = date('Y-m-d H:i:s');
                     }
+                    $cdm->ist_2_a = $ist2_a;
+                    $cdm->ist_2_b = $ist2_b;
+                    $cdm->ist_2_c = $ist2_c;
+                    $cdm->ist_2_status = $ist2_status;
                     if ($cdm->ist_3_a == null) {
-                      $cdm->ist_3_a = $ist3_a;
-                      $cdm->ist_3_b = $ist3_b;
-                      $cdm->ist_3_c = $ist3_c;
-                      $cdm->ist_3_status = $ist3_status;
                       $cdm->ist_3_employee_id = $datas['employee_id'];
                       $cdm->ist_3_created_at = date('Y-m-d H:i:s');
                     }
+                    $cdm->ist_3_a = $ist3_a;
+                    $cdm->ist_3_b = $ist3_b;
+                    $cdm->ist_3_c = $ist3_c;
+                    $cdm->ist_3_status = $ist3_status;
                     $cdm->save();
                   }
                 }else{
@@ -3738,39 +3736,38 @@ class RecorderProcessController extends Controller
                     $cdm->machine_injection = $datas['machine_injection'];
                     $cdm->cavity = $datas['cavity'];
                     $cdm->cav = $datas['foot'][$i]['cav'];
-                    if ($cdm->awal_a == null) {
-                      $cdm->awal_a = $awal_a;
-                      $cdm->awal_b = $awal_b;
-                      $cdm->awal_c = $awal_c;
-                      $cdm->awal_status = $awal_status;
+                    if ($cdm->awal_a == null) {                    
                       $cdm->awal_employee_id = $datas['employee_id'];
                       $cdm->awal_created_at = date('Y-m-d H:i:s');
                     }
+                    $cdm->awal_a = $awal_a;
+                    $cdm->awal_b = $awal_b;
+                    $cdm->awal_c = $awal_c;
+                    $cdm->awal_status = $awal_status;
                     if ($cdm->ist_1_a == null) {
-                      $cdm->ist_1_a = $ist1_a;
-                      $cdm->ist_1_b = $ist1_b;
-                      $cdm->ist_1_c = $ist1_c;
-                      $cdm->ist_1_status = $ist1_status;
                       $cdm->ist_1_employee_id = $datas['employee_id'];
                       $cdm->ist_1_created_at = date('Y-m-d H:i:s');
                     }
-
+                    $cdm->ist_1_a = $ist1_a;
+                    $cdm->ist_1_b = $ist1_b;
+                    $cdm->ist_1_c = $ist1_c;
+                    $cdm->ist_1_status = $ist1_status;
                     if ($cdm->ist_2_a == null) {
-                      $cdm->ist_2_a = $ist2_a;
-                      $cdm->ist_2_b = $ist2_b;
-                      $cdm->ist_2_c = $ist2_c;
-                      $cdm->ist_2_status = $ist2_status;
                       $cdm->ist_2_employee_id = $datas['employee_id'];
                       $cdm->ist_2_created_at = date('Y-m-d H:i:s');
                     }
+                    $cdm->ist_2_a = $ist2_a;
+                    $cdm->ist_2_b = $ist2_b;
+                    $cdm->ist_2_c = $ist2_c;
+                    $cdm->ist_2_status = $ist2_status;
                     if ($cdm->ist_3_a == null) {
-                      $cdm->ist_3_a = $ist3_a;
-                      $cdm->ist_3_b = $ist3_b;
-                      $cdm->ist_3_c = $ist3_c;
-                      $cdm->ist_3_status = $ist3_status;
                       $cdm->ist_3_employee_id = $datas['employee_id'];
                       $cdm->ist_3_created_at = date('Y-m-d H:i:s');
                     }
+                    $cdm->ist_3_a = $ist3_a;
+                    $cdm->ist_3_b = $ist3_b;
+                    $cdm->ist_3_c = $ist3_c;
+                    $cdm->ist_3_status = $ist3_status;
                     $cdm->save();
                   }
                 }
@@ -3809,38 +3806,37 @@ class RecorderProcessController extends Controller
                   $cdm->cavity = $datas['cavity'];
                   $cdm->cav = $datas['head_yrf'][$i]['cav'];
                   if ($cdm->awal_a == null) {
-                    $cdm->awal_a = $awal_a;
-                    $cdm->awal_b = $awal_b;
-                    $cdm->awal_c = $awal_c;
-                    $cdm->awal_status = $awal_status;
                     $cdm->awal_employee_id = $datas['employee_id'];
                     $cdm->awal_created_at = date('Y-m-d H:i:s');
                   }
+                  $cdm->awal_a = $awal_a;
+                  $cdm->awal_b = $awal_b;
+                  $cdm->awal_c = $awal_c;
+                  $cdm->awal_status = $awal_status;
                   if ($cdm->ist_1_a == null) {
-                    $cdm->ist_1_a = $ist1_a;
-                    $cdm->ist_1_b = $ist1_b;
-                    $cdm->ist_1_c = $ist1_c;
-                    $cdm->ist_1_status = $ist1_status;
                     $cdm->ist_1_employee_id = $datas['employee_id'];
                     $cdm->ist_1_created_at = date('Y-m-d H:i:s');
                   }
-
+                  $cdm->ist_1_a = $ist1_a;
+                  $cdm->ist_1_b = $ist1_b;
+                  $cdm->ist_1_c = $ist1_c;
+                  $cdm->ist_1_status = $ist1_status;
                   if ($cdm->ist_2_a == null) {
-                    $cdm->ist_2_a = $ist2_a;
-                    $cdm->ist_2_b = $ist2_b;
-                    $cdm->ist_2_c = $ist2_c;
-                    $cdm->ist_2_status = $ist2_status;
                     $cdm->ist_2_employee_id = $datas['employee_id'];
                     $cdm->ist_2_created_at = date('Y-m-d H:i:s');
                   }
+                  $cdm->ist_2_a = $ist2_a;
+                  $cdm->ist_2_b = $ist2_b;
+                  $cdm->ist_2_c = $ist2_c;
+                  $cdm->ist_2_status = $ist2_status;
                   if ($cdm->ist_3_a == null) {
-                    $cdm->ist_3_a = $ist3_a;
-                    $cdm->ist_3_b = $ist3_b;
-                    $cdm->ist_3_c = $ist3_c;
-                    $cdm->ist_3_status = $ist3_status;
                     $cdm->ist_3_employee_id = $datas['employee_id'];
                     $cdm->ist_3_created_at = date('Y-m-d H:i:s');
                   }
+                  $cdm->ist_3_a = $ist3_a;
+                  $cdm->ist_3_b = $ist3_b;
+                  $cdm->ist_3_c = $ist3_c;
+                  $cdm->ist_3_status = $ist3_status;
                   $cdm->save();
                 }
               }
@@ -3878,38 +3874,37 @@ class RecorderProcessController extends Controller
                   $cdm->cavity = $datas['cavity'];
                   $cdm->cav = $datas['body_yrf'][$i]['cav'];
                   if ($cdm->awal_a == null) {
-                    $cdm->awal_a = $awal_a;
-                    $cdm->awal_b = $awal_b;
-                    $cdm->awal_c = $awal_c;
-                    $cdm->awal_status = $awal_status;
                     $cdm->awal_employee_id = $datas['employee_id'];
                     $cdm->awal_created_at = date('Y-m-d H:i:s');
                   }
+                  $cdm->awal_a = $awal_a;
+                  $cdm->awal_b = $awal_b;
+                  $cdm->awal_c = $awal_c;
+                  $cdm->awal_status = $awal_status;
                   if ($cdm->ist_1_a == null) {
-                    $cdm->ist_1_a = $ist1_a;
-                    $cdm->ist_1_b = $ist1_b;
-                    $cdm->ist_1_c = $ist1_c;
-                    $cdm->ist_1_status = $ist1_status;
                     $cdm->ist_1_employee_id = $datas['employee_id'];
                     $cdm->ist_1_created_at = date('Y-m-d H:i:s');
                   }
-
+                  $cdm->ist_1_a = $ist1_a;
+                  $cdm->ist_1_b = $ist1_b;
+                  $cdm->ist_1_c = $ist1_c;
+                  $cdm->ist_1_status = $ist1_status;
                   if ($cdm->ist_2_a == null) {
-                    $cdm->ist_2_a = $ist2_a;
-                    $cdm->ist_2_b = $ist2_b;
-                    $cdm->ist_2_c = $ist2_c;
-                    $cdm->ist_2_status = $ist2_status;
                     $cdm->ist_2_employee_id = $datas['employee_id'];
                     $cdm->ist_2_created_at = date('Y-m-d H:i:s');
                   }
+                  $cdm->ist_2_a = $ist2_a;
+                  $cdm->ist_2_b = $ist2_b;
+                  $cdm->ist_2_c = $ist2_c;
+                  $cdm->ist_2_status = $ist2_status;
                   if ($cdm->ist_3_a == null) {
-                    $cdm->ist_3_a = $ist3_a;
-                    $cdm->ist_3_b = $ist3_b;
-                    $cdm->ist_3_c = $ist3_c;
-                    $cdm->ist_3_status = $ist3_status;
                     $cdm->ist_3_employee_id = $datas['employee_id'];
                     $cdm->ist_3_created_at = date('Y-m-d H:i:s');
                   }
+                  $cdm->ist_3_a = $ist3_a;
+                  $cdm->ist_3_b = $ist3_b;
+                  $cdm->ist_3_c = $ist3_c;
+                  $cdm->ist_3_status = $ist3_status;
                   $cdm->save();
                 }
               }
