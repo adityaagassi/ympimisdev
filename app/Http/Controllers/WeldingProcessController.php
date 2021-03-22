@@ -5843,8 +5843,8 @@ class WeldingProcessController extends Controller
 				LEFT JOIN m_ws AS ws_phs ON m_phs.ws_id = ws_phs.ws_id
 				LEFT JOIN m_ws AS ws_hsa ON m_hsa.ws_id = ws_hsa.ws_id 
 				WHERE
-				( t_proses.proses_status = 0 AND t_proses.part_type = 1 and t_proses.proses_isdelete = 0 ) 
-				OR ( t_proses.proses_status = 0 AND t_proses.part_type = 2 and t_proses.proses_isdelete = 0 ) 
+				( t_proses.proses_status = 0 AND t_proses.part_type = 1 and t_proses.proses_isdelete = 0 and t_proses.pesanan_id != 0 ) 
+				OR ( t_proses.proses_status = 0 AND t_proses.part_type = 2 and t_proses.proses_isdelete = 0 and t_proses.pesanan_id != 0) 
 				GROUP BY
 				material_number 
 				) a
