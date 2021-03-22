@@ -44,6 +44,9 @@
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="row">
+				<div class="col-xs-12" style="color: white; font-size: 20px; font-weight: bold">TOTAL MANPOWER : <span id="tot_mp">0 Person</span></div>
+			</div>
+			<div class="row">
 				<div class="col-xs-4">
 					<div id="chartStatus" style="width: 100%;"></div>
 				</div>
@@ -470,7 +473,6 @@
 					seriesDepartment.push(parseInt(value.total));
 				});
 
-
 				var xPosition = [];
 				var seriesPosition = [];
 
@@ -482,6 +484,7 @@
 				});
 
 
+				var tot_person = 0;
 				$.each(result.manpowers, function(key, value) {
 					var catStatus = value.employ_code;
 					var catGrade = value.grade_code;
@@ -520,7 +523,10 @@
 					if(xUnion.indexOf(catUnion) === -1){
 						xUnion[xUnion.length] = catUnion;
 					}
+					tot_person++;
 				});
+
+				$("#tot_mp").text(tot_person+" Person");
 
 				for(var prop in countStatus){
 					seriesStatus.push(countStatus[prop]);
