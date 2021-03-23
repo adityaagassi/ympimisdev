@@ -2576,7 +2576,7 @@ public function fetchOxymeterMonitoring(Request $request)
 public function indexAirVisual()
 {
 	$title = "AIR VISUAL MONITOR";
-	$title_jp = "??";
+	$title_jp = "空気モニター";
 
 	return view('general.air_visual', array(
 		'title' => $title,
@@ -2619,8 +2619,8 @@ public function postAirVisual()
 		$air_log->save();
 	}
 
-	$datas = GeneralAirVisualLog::whereRaw('created_at >= now() - INTERVAL 1 DAY')
-	->select('data_time', 'co', 'temperature', 'humidity', db::raw('DATE_FORMAT(data_time, "%d %b %H:%i") as data_time2'))
+	$datas = GeneralAirVisualLog::whereRaw('DATE_FORMAT(created_at,"%Y-%m-%d") = "'.date('Y-m-d').'"')
+	->select('location', 'data_time', 'co', 'temperature', 'humidity', db::raw('DATE_FORMAT(data_time, "%d %b %H:%i") as data_time2'))
 	->orderBy('id', 'asc')
 	->get();
 

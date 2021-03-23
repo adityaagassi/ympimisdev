@@ -43,7 +43,7 @@
 	}
 
 	.alert {
-		
+
 	}
 
 </style>
@@ -63,9 +63,19 @@
 		<div class="col-xs-8">
 			<div class="box box-solid" style="background-color:#3c3c3c !important; color: white; box-shadow: 0 0 0 0 !important;">
 				<div class="box-body" style="padding: 0px">
-					<div class="div_co" style="border: 1px solid white; padding: 10px; border-radius: 5px;">
-						<div style="font-weight: bold; font-size: 30px; display: inline-block; padding: 5px; border-radius: 5px; background-color: #d6d6d6" id='body_co'>CO2 : <span id="co_now"> - </span> ppm</div>
+					<div class="div_name" style="border: 1px solid white; padding: 10px; border-radius: 5px;">
+						<div style="font-weight: bold; font-size: 30px; display: inline-block; padding: 5px; border-radius: 5px;" id='body_name'></div>
 						<div id="chart_co" style="margin-top: 5px"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-4">
+			<div class="box box-solid" style="background-color:#3c3c3c !important; color: white; box-shadow: 0 0 0 0 !important;">
+				<div class="box-body" style="padding: 0px">
+					<div class="div_co" style="border: 1px solid white; padding: 10px; border-radius: 5px;">
+						<div style="font-weight: bold; color: white; font-size: 20px">CO2</div>
+						<div style="text-align: right; font-weight: bold; font-size: 30px" id="co_isi"> - ppm</div>
 					</div>
 				</div>
 			</div>
@@ -118,7 +128,7 @@
 		postData();
 
 		// setInterval(postData, 600000);
-		setInterval(postData, 120000);
+		// setInterval(postData, 120000);
 
 	});
 
@@ -130,28 +140,24 @@
 				categories = [];
 				co = [];
 				max = [];
+				bottom = [];
+				mid = [];
+				upper = [];
 
 				$.each(result.datas, function(index, value){
 					categories.push(value.data_time2);
 					co.push(value.co);
 					max.push(1000);
+					bottom.push(800);
+					mid.push(999);
+					upper.push(1500);
 
 					if ((index + 1) == result.datas.length) {
-						$("#co_now").text(value.co);
+						
+						$("#body_name").html(value.location);
+						$("#co_isi").html(value.co+" ppm");
 						$("#temp_isi").html(value.temperature+" &#x2103;");
 						$("#hum_isi").html(value.humidity+" %");
-
-						if (value.co >= 1000) {
-							$("#body_co").css('background-color', '#e02914');
-							$("#alert").show();
-						} else if (value.co >= 800) {
-							$("#alert").hide();
-							$("#body_co").css('background-color', '#f0ae16');
-						} else {
-							$("#alert").hide();
-							$("#body_co").css('background-color', '#46d10a');
-						}
-
 					}
 				})
 
@@ -170,6 +176,19 @@
 						},
 						gridLineWidth: 0,
 						minorGridLineWidth: 0,
+						plotBands: [{
+							from: 0,
+							to: 799,
+							color: '#57ff5c'
+						}, {
+							from: 800,
+							to: 999,
+							color: '#fa9b3c'
+						}, {
+							from: 1000,
+							to: 5000,
+							color: '#ed4545'
+						}]
 					},
 
 					xAxis: {
@@ -197,15 +216,53 @@
 						}
 					},
 
-					series: [{
-						name: 'CO2',
-						data: co
-					},
+					series: [
+					// {
+					// 	type: 'area',
+					// 	name: 'safe',
+					// 	data: bottom,
+					// 	fillColor: {
+					// 		linearGradient: [0, 0, 0, 300],
+					// 		stops: [
+					// 		[0, Highcharts.getOptions().colors[0]],
+					// 		[1, Highcharts.color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+					// 		]
+					// 	}
+					// },
+					// {
+					// 	type: 'area',
+					// 	name: 'warning',
+					// 	data: mid,
+					// 	fillColor: {
+					// 		linearGradient: [0, 0, 0, 300],
+					// 		stops: [
+					// 		[0, Highcharts.getOptions().colors[1]],
+					// 		[1, Highcharts.color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+					// 		]
+					// 	}
+					// },
+					// {
+					// 	type: 'area',
+					// 	name: 'danger',
+					// 	data: upper,
+					// 	fillColor: {
+					// 		linearGradient: [0, 0, 0, 300],
+					// 		stops: [
+					// 		[0, Highcharts.getOptions().colors[2]],
+					// 		[1, Highcharts.color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+					// 		]
+					// 	}
+					// },
 					{
 						type: 'line',
 						name: 'Max',
 						color: 'red',
 						data: max
+					},
+					{
+						name: 'CO2',
+						data: co,
+						color: '#901aeb'
 					}],
 
 					responsive: {
@@ -230,7 +287,7 @@
 	}, null, document.getElementsByTagName('head')[0]);
 
 	Highcharts.theme = {
-		colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
+		colors: ['#90ee7e', '#f45b5b', '#7798BF', '#e3311e', '#aaeeee', '#ff0066',
 		'#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
 		chart: {
 			backgroundColor: {
