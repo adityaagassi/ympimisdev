@@ -23,6 +23,7 @@ use App\GeneralShoesStock;
 use App\User;
 use App\Agreement;
 use App\AgreementAttachment;
+use App\GeneralAirVisualLog;
 use Auth;
 use DataTables;
 use Response;
@@ -1161,17 +1162,69 @@ class GeneralController extends Controller{
 
 		try{
 			$ivms = DB::SELECT("SELECT
-						* 
-					FROM
-						ivms.ivms_attendance_triggers 
-					WHERE
-						employee_id = '".$request->input('employee_id')."' 
-						AND auth_date = '".date('Y-m-d', strtotime($request->input('newDate')))."'");
+				* 
+				FROM
+				ivms.ivms_attendance_triggers 
+				WHERE
+				employee_id = '".$request->input('employee_id')."' 
+				AND auth_date = '".date('Y-m-d', strtotime($request->input('newDate')))."'");
 			// if (count($ivms) > 0) {
-				$general = GeneralTransportation::where('employee_id',$request->input('employee_id'))->where('attend_code',$request->input('newAttend'))->where('check_date',date('Y-m-d', strtotime($request->input('newDate'))))->get();
+			$general = GeneralTransportation::where('employee_id',$request->input('employee_id'))->where('attend_code',$request->input('newAttend'))->where('check_date',date('Y-m-d', strtotime($request->input('newDate'))))->get();
 
-				if (count($general) == 0) {
-					if ($request->get('newAttend') == 'cuti' || $request->get('newAttend') == 'izin' || $request->get('newAttend') == 'sakit') {
+			if (count($general) == 0) {
+				if ($request->get('newAttend') == 'cuti' || $request->get('newAttend') == 'izin' || $request->get('newAttend') == 'sakit') {
+					if ($filename == "") {
+						GeneralTransportation::create([
+							'employee_id' => $request->input('employee_id'),
+							'grade' => $request->input('grade'),
+							'zona' => $request->input('zona'),
+							'check_date' => date('Y-m-d', strtotime($request->input('newDate'))),
+							'attend_code' => $request->input('newAttend'),
+							'vehicle' => $request->input('newVehicle'),
+							'origin' => $request->input('newOrigin'),
+							'destination' => $request->input('newDestination'),
+							'highway_amount' => $request->input('newHighwayAmount'),
+							'distance' => $request->input('newDistance'),
+								// 'highway_attachment' => $filename,
+							'remark' => 0,
+							'created_by' => Auth::id()
+						]);
+					}else{
+						GeneralTransportation::create([
+							'employee_id' => $request->input('employee_id'),
+							'grade' => $request->input('grade'),
+							'zona' => $request->input('zona'),
+							'check_date' => date('Y-m-d', strtotime($request->input('newDate'))),
+							'attend_code' => $request->input('newAttend'),
+							'vehicle' => $request->input('newVehicle'),
+							'origin' => $request->input('newOrigin'),
+							'destination' => $request->input('newDestination'),
+							'highway_amount' => $request->input('newHighwayAmount'),
+							'distance' => $request->input('newDistance'),
+							'highway_attachment' => $filename,
+							'remark' => 0,
+							'created_by' => Auth::id()
+						]);
+					}
+
+					$general_data = GeneralTransportationData::firstOrNew(['employee_id' => $request->input('employee_id'), 'attend_code' => $request->input('newAttend')]);
+					$general_data->employee_id = $request->input('employee_id');
+					$general_data->attend_code = $request->input('newAttend');
+					$general_data->vehicle = $request->input('newVehicle');
+					$general_data->origin = $request->input('newOrigin');
+					$general_data->distance = $request->input('newDistance');
+					$general_data->destination = $request->input('newDestination');
+					$general_data->highway_amount = $request->input('newHighwayAmount');
+					$general_data->created_by = Auth::id();
+					$general_data->save();
+
+					$response = array(
+						'status' => true,
+						'message' => 'Data baru berhasil ditambahkan'
+					);
+					return Response::json($response);
+				}else{
+					if (count($ivms) > 0) {
 						if ($filename == "") {
 							GeneralTransportation::create([
 								'employee_id' => $request->input('employee_id'),
@@ -1184,7 +1237,7 @@ class GeneralController extends Controller{
 								'destination' => $request->input('newDestination'),
 								'highway_amount' => $request->input('newHighwayAmount'),
 								'distance' => $request->input('newDistance'),
-								// 'highway_attachment' => $filename,
+									// 'highway_attachment' => $filename,
 								'remark' => 0,
 								'created_by' => Auth::id()
 							]);
@@ -1223,72 +1276,20 @@ class GeneralController extends Controller{
 						);
 						return Response::json($response);
 					}else{
-						if (count($ivms) > 0) {
-							if ($filename == "") {
-								GeneralTransportation::create([
-									'employee_id' => $request->input('employee_id'),
-									'grade' => $request->input('grade'),
-									'zona' => $request->input('zona'),
-									'check_date' => date('Y-m-d', strtotime($request->input('newDate'))),
-									'attend_code' => $request->input('newAttend'),
-									'vehicle' => $request->input('newVehicle'),
-									'origin' => $request->input('newOrigin'),
-									'destination' => $request->input('newDestination'),
-									'highway_amount' => $request->input('newHighwayAmount'),
-									'distance' => $request->input('newDistance'),
-									// 'highway_attachment' => $filename,
-									'remark' => 0,
-									'created_by' => Auth::id()
-								]);
-							}else{
-								GeneralTransportation::create([
-									'employee_id' => $request->input('employee_id'),
-									'grade' => $request->input('grade'),
-									'zona' => $request->input('zona'),
-									'check_date' => date('Y-m-d', strtotime($request->input('newDate'))),
-									'attend_code' => $request->input('newAttend'),
-									'vehicle' => $request->input('newVehicle'),
-									'origin' => $request->input('newOrigin'),
-									'destination' => $request->input('newDestination'),
-									'highway_amount' => $request->input('newHighwayAmount'),
-									'distance' => $request->input('newDistance'),
-									'highway_attachment' => $filename,
-									'remark' => 0,
-									'created_by' => Auth::id()
-								]);
-							}
-
-							$general_data = GeneralTransportationData::firstOrNew(['employee_id' => $request->input('employee_id'), 'attend_code' => $request->input('newAttend')]);
-							$general_data->employee_id = $request->input('employee_id');
-							$general_data->attend_code = $request->input('newAttend');
-							$general_data->vehicle = $request->input('newVehicle');
-							$general_data->origin = $request->input('newOrigin');
-							$general_data->distance = $request->input('newDistance');
-							$general_data->destination = $request->input('newDestination');
-							$general_data->highway_amount = $request->input('newHighwayAmount');
-							$general_data->created_by = Auth::id();
-							$general_data->save();
-
-							$response = array(
-								'status' => true,
-								'message' => 'Data baru berhasil ditambahkan'
-							);
-							return Response::json($response);
-						}else{
-							$response = array(
-								'status' => false,
-								'message' => 'Checklog Anda tidak tersedia pada tanggal '.date('Y-m-d', strtotime($request->input('newDate')))
-							);
-							return Response::json($response);
-						}
+						$response = array(
+							'status' => false,
+							'message' => 'Checklog Anda tidak tersedia pada tanggal '.date('Y-m-d', strtotime($request->input('newDate')))
+						);
+						return Response::json($response);
 					}
-				}else{
-					$response = array(
-						'status' => false,
-						'message' => 'Data Pernah Ditambahkan'
-					);
-					return Response::json($response);
 				}
+			}else{
+				$response = array(
+					'status' => false,
+					'message' => 'Data Pernah Ditambahkan'
+				);
+				return Response::json($response);
+			}
 			// }else{
 			// 	$response = array(
 			// 		'status' => false,
@@ -2335,134 +2336,300 @@ public function fetchGeneralAttendanceCheck(Request $request){
 	}		
 }
 
-	public function indexQueue($remark)
-	{
+public function indexQueue($remark)
+{
+	if ($remark == 'mcu') {
+		$title = "Medical Check Up Queue";
+		$title_jp = "??";
+	}
+
+	return view('general.queue.index', array(
+		'title' => $title,
+		'title_jp' => $title_jp,
+		'remark' => $remark,
+	));
+}
+
+public function fetchQueue($remark,Request $request)
+{
+	try {
+		$auth = EmployeeSync::where('employee_syncs.employee_id',Auth::user()->username)->first();
+		$now = date('Y-m-d');
 		if ($remark == 'mcu') {
-			$title = "Medical Check Up Queue";
-			$title_jp = "??";
+			$data_registrasi = DB::SELECT("SELECT
+				meetings.id,
+				SPLIT_STRING ( description, ' - ', 2 ) AS loc,
+				meeting_details.*,
+				employee_syncs.`name`,
+				departments.department_shortname ,
+				employee_syncs.section,
+				shiftdaily_code
+				FROM
+				meetings
+				JOIN meeting_details ON meeting_details.meeting_id = meetings.id 
+				AND meeting_details.STATUS = 0 and DATE(meeting_details.created_at) = '".$now."'
+				JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
+				left JOIN departments ON departments.department_name = employee_syncs.department 
+				left join sunfish_shift_syncs on sunfish_shift_syncs.employee_id = employee_syncs.employee_id
+				and shift_date = '".$now."'
+				WHERE
+				`subject` = 'Medical Check Up'
+				and SPLIT_STRING ( description, ' - ', 2 ) = 'Registrasi'
+				order By meeting_details.created_at asc
+				");
+
+			$data_clinic = DB::SELECT("SELECT
+				meetings.id,
+				SPLIT_STRING ( description, ' - ', 2 ) AS loc,
+				meeting_details.*,
+				employee_syncs.`name`,
+				departments.department_shortname ,
+				employee_syncs.section
+				FROM
+				meetings
+				JOIN meeting_details ON meeting_details.meeting_id = meetings.id 
+				AND meeting_details.STATUS = 0 and DATE(meeting_details.created_at) = '".$now."'
+				JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
+				left JOIN departments ON departments.department_name = employee_syncs.department  
+				WHERE
+				`subject` = 'Medical Check Up'
+				and SPLIT_STRING ( description, ' - ', 2 ) = 'Darah'
+				order By meeting_details.created_at asc
+				");
+
+			$data_thorax = DB::SELECT("SELECT
+				meetings.id,
+				SPLIT_STRING ( description, ' - ', 2 ) AS loc,
+				meeting_details.*,
+				employee_syncs.`name`,
+				departments.department_shortname ,
+				employee_syncs.section
+				FROM
+				meetings
+				JOIN meeting_details ON meeting_details.meeting_id = meetings.id 
+				AND meeting_details.STATUS = 0 and DATE(meeting_details.created_at) = '".$now."'
+				JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
+				left JOIN departments ON departments.department_name = employee_syncs.department  
+				WHERE
+				`subject` = 'Medical Check Up'
+				and SPLIT_STRING ( description, ' - ', 2 ) = 'Thorax'
+				order By meeting_details.created_at asc
+				");
+
+			$data_audiometri = DB::SELECT("SELECT
+				meetings.id,
+				SPLIT_STRING ( description, ' - ', 2 ) AS loc,
+				meeting_details.*,
+				employee_syncs.`name`,
+				departments.department_shortname ,
+				employee_syncs.section
+				FROM
+				meetings
+				JOIN meeting_details ON meeting_details.meeting_id = meetings.id 
+				AND meeting_details.STATUS = 0 and DATE(meeting_details.created_at) = '".$now."'
+				JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
+				left JOIN departments ON departments.department_name = employee_syncs.department  
+				WHERE
+				`subject` = 'Medical Check Up'
+				and SPLIT_STRING ( description, ' - ', 2 ) = 'Audiometri'
+				order By meeting_details.created_at asc
+				");
 		}
 
-		return view('general.queue.index', array(
-			'title' => $title,
-			'title_jp' => $title_jp,
-			'remark' => $remark,
-		));
-	}
-
-	public function fetchQueue($remark,Request $request)
-	{
-		try {
-			$auth = EmployeeSync::where('employee_syncs.employee_id',Auth::user()->username)->first();
-			$now = date('Y-m-d');
-			if ($remark == 'mcu') {
-				$data_registrasi = DB::SELECT("SELECT
-					meetings.id,
-					SPLIT_STRING ( description, ' - ', 2 ) AS loc,
-					meeting_details.*,
-					employee_syncs.`name`,
-					departments.department_shortname ,
-					employee_syncs.section,
-					shiftdaily_code
-				FROM
-					meetings
-					JOIN meeting_details ON meeting_details.meeting_id = meetings.id 
-					AND meeting_details.STATUS = 0 and DATE(meeting_details.created_at) = '".$now."'
-					JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
-					left JOIN departments ON departments.department_name = employee_syncs.department 
-					left join sunfish_shift_syncs on sunfish_shift_syncs.employee_id = employee_syncs.employee_id
-					and shift_date = '".$now."'
-				WHERE
-					`subject` = 'Medical Check Up'
-					and SPLIT_STRING ( description, ' - ', 2 ) = 'Registrasi'
-					order By meeting_details.created_at asc
-									");
-
-				$data_clinic = DB::SELECT("SELECT
-					meetings.id,
-					SPLIT_STRING ( description, ' - ', 2 ) AS loc,
-					meeting_details.*,
-					employee_syncs.`name`,
-					departments.department_shortname ,
-					employee_syncs.section
-				FROM
-					meetings
-					JOIN meeting_details ON meeting_details.meeting_id = meetings.id 
-					AND meeting_details.STATUS = 0 and DATE(meeting_details.created_at) = '".$now."'
-					JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
-					left JOIN departments ON departments.department_name = employee_syncs.department  
-				WHERE
-					`subject` = 'Medical Check Up'
-					and SPLIT_STRING ( description, ' - ', 2 ) = 'Darah'
-					order By meeting_details.created_at asc
-									");
-
-				$data_thorax = DB::SELECT("SELECT
-					meetings.id,
-					SPLIT_STRING ( description, ' - ', 2 ) AS loc,
-					meeting_details.*,
-					employee_syncs.`name`,
-					departments.department_shortname ,
-					employee_syncs.section
-				FROM
-					meetings
-					JOIN meeting_details ON meeting_details.meeting_id = meetings.id 
-					AND meeting_details.STATUS = 0 and DATE(meeting_details.created_at) = '".$now."'
-					JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
-					left JOIN departments ON departments.department_name = employee_syncs.department  
-				WHERE
-					`subject` = 'Medical Check Up'
-					and SPLIT_STRING ( description, ' - ', 2 ) = 'Thorax'
-					order By meeting_details.created_at asc
-									");
-
-				$data_audiometri = DB::SELECT("SELECT
-					meetings.id,
-					SPLIT_STRING ( description, ' - ', 2 ) AS loc,
-					meeting_details.*,
-					employee_syncs.`name`,
-					departments.department_shortname ,
-					employee_syncs.section
-				FROM
-					meetings
-					JOIN meeting_details ON meeting_details.meeting_id = meetings.id 
-					AND meeting_details.STATUS = 0 and DATE(meeting_details.created_at) = '".$now."'
-					JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
-					left JOIN departments ON departments.department_name = employee_syncs.department  
-				WHERE
-					`subject` = 'Medical Check Up'
-					and SPLIT_STRING ( description, ' - ', 2 ) = 'Audiometri'
-					order By meeting_details.created_at asc
-									");
-			}
-
-			if (count($auth) > 0) {
-				$response = array(
-					'status' => true,
-					'data_thorax' => $data_thorax,
-					'data_audiometri' => $data_audiometri,
-					'data_clinic' => $data_clinic,
-					'data_registrasi' => $data_registrasi,
-					'section' => $auth->section,
-					'now' => $now,
-				);
-			}else{
-				$response = array(
-					'status' => true,
-					'data_thorax' => $data_thorax,
-					'data_audiometri' => $data_audiometri,
-					'data_clinic' => $data_clinic,
-					'data_registrasi' => $data_registrasi,
-					'section' => "",
-					'now' => $now,
-				);
-			}
-			return Response::json($response);
-		} catch (\Exception $e) {
+		if (count($auth) > 0) {
 			$response = array(
-				'status' => false,
-				'message' => $e->getMessage(),
+				'status' => true,
+				'data_thorax' => $data_thorax,
+				'data_audiometri' => $data_audiometri,
+				'data_clinic' => $data_clinic,
+				'data_registrasi' => $data_registrasi,
+				'section' => $auth->section,
+				'now' => $now,
 			);
-			return Response::json($response);
+		}else{
+			$response = array(
+				'status' => true,
+				'data_thorax' => $data_thorax,
+				'data_audiometri' => $data_audiometri,
+				'data_clinic' => $data_clinic,
+				'data_registrasi' => $data_registrasi,
+				'section' => "",
+				'now' => $now,
+			);
 		}
+		return Response::json($response);
+	} catch (\Exception $e) {
+		$response = array(
+			'status' => false,
+			'message' => $e->getMessage(),
+		);
+		return Response::json($response);
 	}
+}
+
+	//  -------------------------   OXYMETER ------------
+public function indexOxymeterCheck()
+{
+	$title = "Oxymeter Check";
+	$title_jp = "??";
+
+		// $employees = EmployeeSync::orderBy('department', 'asc')->get();
+
+	return view('general.oxymeter.index_check', array(
+		'title' => $title,
+		'title_jp' => $title_jp
+	));
+}
+
+public function postOxymeterCheck(Request $request)
+{
+	try {
+		$att_log = GeneralAttendanceLog::firstOrNew(array('employee_id' => $request->get('employee_id'), 'due_date' => date('Y-m-d'), 'purpose_code' => 'Oxymeter'));
+
+		$att_log->attend_date = date('Y-m-d H:i:s');
+		$att_log->remark = $request->get('oxy_value');
+		$att_log->created_by = Auth::user()->id;
+
+		$att_log->save();
+
+		$response = array(
+			'status' => true,
+			'message' => 'Success',
+		);
+		return Response::json($response);
+
+	} catch (QueryException $e) {
+		$response = array(
+			'status' => false,
+			'message' => $e->getMessage(),
+		);
+		return Response::json($response);
+	}
+}
+
+public function fetchOxymeterHistory(Request $request)
+{
+	// DB::connection()->enableQueryLog();
+	$oxy_log = GeneralAttendanceLog::leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'general_attendance_logs.employee_id')
+	// ->leftJoin('sunfish_shift_syncs', 'sunfish_shift_syncs.employee_id', '=', 'general_attendance_logs.employee_id')
+	->leftJoin('sunfish_shift_syncs', function ($join) {
+		$join->on('sunfish_shift_syncs.employee_id', '=', 'general_attendance_logs.employee_id')
+		->on('sunfish_shift_syncs.shift_date', '=', 'general_attendance_logs.due_date');
+	})
+	->where('purpose_code', '=', 'Oxymeter');
+
+	if(strlen($request->get('username')) > 0 ){
+		$oxy_log = $oxy_log->where('general_attendance_logs.created_by', '=', $request->get('username'));
+	}
+
+	if(strlen($request->get('dt')) > 0 ){
+		$oxy_log = $oxy_log->where('general_attendance_logs.due_date', '=', $request->get('dt'));
+	}
+
+	$oxy_log = $oxy_log->orderBy('updated_at', 'desc');
+
+	if(strlen($request->get('limit')) > 0 ){
+		$oxy_log = $oxy_log->limit($request->get('limit'));
+	}
+
+	$oxy_log = $oxy_log->select('general_attendance_logs.updated_at', 'general_attendance_logs.employee_id', 'employee_syncs.name', 'general_attendance_logs.remark')->get();
+
+	$response = array(
+		'status' => true,
+		'datas' => $oxy_log,
+		// 'query' => DB::getQueryLog()
+	);
+	return Response::json($response);
+}
+
+public function indexOxymeterMonitoring()
+{
+	$title = "Oxymeter Monitoring";
+	$title_jp = "??";
+
+	return view('general.oxymeter.index_monitoring', array(
+		'title' => $title,
+		'title_jp' => $title_jp
+	));
+}
+
+public function fetchOxymeterMonitoring(Request $request)
+{
+	$oxy_log = GeneralAttendanceLog::leftJoin('employees', 'employees.employee_id', '=', 'general_attendance_logs.employee_id')
+	->leftJoin('sunfish_shift_syncs', 'sunfish_shift_syncs.employee_id', '=', 'general_attendance_logs.employee_id')
+	->where('purpose_code', '=', 'Oxymeter')
+	->where('general_attendance_logs.due_date', '=', $request->get('dt'))
+	->where('employees.remark', '=', 'OFC')
+	->where('shift_date', '=', $request->get('dt'))
+	->select('general_attendance_logs.remark', db::raw('COUNT(general_attendance_logs.remark) as qty'))
+	->groupBy('general_attendance_logs.remark')
+	->get();
+	
+	$response = array(
+		'status' => true,
+		'datas' => $oxy_log,
+	);
+	return Response::json($response);
+}
+
+//  -----------  AIR VISUAL -----------
+public function indexAirVisual()
+{
+	$title = "AIR VISUAL MONITOR";
+	$title_jp = "??";
+
+	return view('general.air_visual', array(
+		'title' => $title,
+		'title_jp' => $title_jp
+	));
+}
+
+public function postAirVisual()
+{
+	$result = "";
+
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);	
+	curl_setopt($ch, CURLOPT_URL,'https://www.airvisual.com/api/v2/node/6051b1f079e60a367adc1a45');
+	$result=curl_exec($ch);
+	curl_close($ch);
+
+	$arr = json_decode($result, true);
+	$s = "";
+	$ts2 = "";
+	
+	for ($i=count($arr['historical']['instant'])-1; $i > 0; $i--) { 
+		$s = str_replace('T', ' ', $arr['historical']['instant'][$i]['ts']);
+		$times = substr(explode(' ', $s)[1], 0, -5);
+		$dates = explode(' ', $s)[0];
+
+		$ts = $dates." ".$times;
+
+		$ts2 = date('Y-m-d H:i:s', strtotime($times) + 60*420);
+
+		$air_log = GeneralAirVisualLog::firstOrNew(array('data_time' => $ts2));
+		$air_log->get_at = date('Y-m-d H:i:00');
+		$air_log->co = $arr['historical']['instant'][$i]['co'];
+		$air_log->temperature = $arr['historical']['instant'][$i]['tp'];
+		$air_log->humidity = $arr['historical']['instant'][$i]['hm'];
+		$air_log->location = $arr['settings']['node_name'];
+		$air_log->created_at = date('Y-m-d H:i:s');
+		$air_log->updated_at = date('Y-m-d H:i:s');
+
+		$air_log->save();
+	}
+
+	$datas = GeneralAirVisualLog::whereRaw('created_at >= now() - INTERVAL 1 DAY')
+	->select('data_time', 'co', 'temperature', 'humidity', db::raw('DATE_FORMAT(data_time, "%d %b %H:%i") as data_time2'))
+	->orderBy('id', 'asc')
+	->get();
+
+	$response = array(
+		'status' => true,
+		'message' => json_decode($result, true),
+		'datas' => $datas,
+		'time' => $ts2
+	);
+	return Response::json($response);
+}
 }
