@@ -5,7 +5,13 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta content="width=device-width, user-scalable=yes, initial-scale=1.0" name="viewport">
-  <title>YMPI 情報システム</title>
+  <title>
+    @if(isset($title) && isset($title_jp))
+    {{$title}} {{$title_jp}}
+    @else 
+    YMPI 情報システム
+    @endif
+  </title>
   <link rel="stylesheet" href="{{ url("bower_components/bootstrap/dist/css/bootstrap.min.css")}}">
   <link rel="stylesheet" href="{{ url("bower_components/font-awesome/css/font-awesome.min.css")}}">
   <link rel="stylesheet" href="{{ url("bower_components/Ionicons/css/ionicons.min.css")}}">
@@ -23,12 +29,12 @@
     aside{
       font-size: 12px;
     }
-  .crop {
-    overflow: hidden;
-  }
-  .crop img {
-    margin: -10% 0 -10% 0;
-  }
+    .crop {
+      overflow: hidden;
+    }
+    .crop img {
+      margin: -10% 0 -10% 0;
+    }
     .sidebar-menu > li > a {
       padding: 7px 5px 7px 15px;
       display: block;
@@ -62,7 +68,7 @@
   {{-- <script src="{{ url("bower_components/PACE/pace.min.js")}}"></script> --}}
   <script src="{{ url("dist/js/adminlte.min.js")}}"></script>
   <script src="{{ url("dist/js/demo.js")}}"></script>
-    {{-- <script>$(document).ajaxStart(function() { Pace.restart(); });</script> --}}
+  {{-- <script>$(document).ajaxStart(function() { Pace.restart(); });</script> --}}
   @yield('scripts')
 </body>
 </html>
