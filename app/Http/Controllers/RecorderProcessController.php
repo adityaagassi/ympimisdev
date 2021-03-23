@@ -4170,6 +4170,45 @@ class RecorderProcessController extends Controller
       ->with('page', 'Kensa Kakuning Recorder');
     }
 
+    public function scanKensaRecorderOperator(Request $request){
+
+        $nik = $request->get('employee_id');
+
+        if(strlen($nik) > 9){
+            $nik = substr($nik,0,9);
+        }
+
+        $employee = db::table('employees')->where('tag', 'like', '%'.$nik.'%')->first();
+
+        if(count($employee) > 0 ){
+          $kensas = RcKensaInitial::where('operator_kensa',$employee->employee_id)->where('status','Open')->get();
+          if (count($kensas) > 0) {
+            $response = array(
+                'status' => true,
+                'message' => 'Logged In',
+                'employee' => $employee,
+                'kensas' => $kensas
+            );
+            return Response::json($response);
+          }else{
+            $response = array(
+                'status' => true,
+                'message' => 'Logged In',
+                'employee' => $employee,
+                'kensas' => $kensas,
+            );
+            return Response::json($response);
+          }
+        }
+        else{
+            $response = array(
+                'status' => false,
+                'message' => 'Employee ID Invalid'
+            );
+            return Response::json($response);
+        }
+    }
+
     public function scanKensa(Request $request)
     {
       try {
@@ -5640,6 +5679,10 @@ class RecorderProcessController extends Controller
           $material_number_head = $initial_head->material_number;
           $cavity_head = $initial_head->cavity;
 
+          $initial_head->ng_name_kensa = null;
+          $initial_head->ng_count_kensa = null;
+          $initial_head->save();
+
           RcKensa::create([
             'serial_number' => $serial_number,
             'operator_kensa' => $operator_kensa,
@@ -5657,6 +5700,10 @@ class RecorderProcessController extends Controller
           $tag_middle = $initial_middle->tag;
           $material_number_middle = $initial_middle->material_number;
           $cavity_middle = $initial_middle->cavity;
+
+          $initial_middle->ng_name_kensa = null;
+          $initial_middle->ng_count_kensa = null;
+          $initial_middle->save();
 
           RcKensa::create([
             'serial_number' => $serial_number,
@@ -5676,6 +5723,10 @@ class RecorderProcessController extends Controller
           $material_number_foot = $initial_foot->material_number;
           $cavity_foot = $initial_foot->cavity;
 
+          $initial_foot->ng_name_kensa = null;
+          $initial_foot->ng_count_kensa = null;
+          $initial_foot->save();
+
           RcKensa::create([
             'serial_number' => $serial_number,
             'operator_kensa' => $operator_kensa,
@@ -5693,6 +5744,10 @@ class RecorderProcessController extends Controller
           $tag_block = $initial_block->tag;
           $material_number_block = $initial_block->material_number;
           $cavity_block = $initial_block->cavity;
+
+          $initial_block->ng_name_kensa = null;
+          $initial_block->ng_count_kensa = null;
+          $initial_block->save();
 
           RcKensa::create([
             'serial_number' => $serial_number,
@@ -5726,6 +5781,10 @@ class RecorderProcessController extends Controller
           $material_number_head_yrf = $initial_head_yrf->material_number;
           $cavity_head_yrf = $initial_head_yrf->cavity;
 
+          $initial_head_yrf->ng_name_kensa = null;
+          $initial_head_yrf->ng_count_kensa = null;
+          $initial_head_yrf->save();
+
           RcKensa::create([
             'serial_number' => $serial_number,
             'operator_kensa' => $operator_kensa,
@@ -5743,6 +5802,10 @@ class RecorderProcessController extends Controller
           $tag_body_yrf = $initial_body_yrf->tag;
           $material_number_body_yrf = $initial_body_yrf->material_number;
           $cavity_body_yrf = $initial_body_yrf->cavity;
+
+          $initial_body_yrf->ng_name_kensa = null;
+          $initial_body_yrf->ng_count_kensa = null;
+          $initial_body_yrf->save();
 
           RcKensa::create([
             'serial_number' => $serial_number,
@@ -5762,6 +5825,10 @@ class RecorderProcessController extends Controller
           $material_number_stopper_yrf = $initial_stopper_yrf->material_number;
           $cavity_stopper_yrf = $initial_stopper_yrf->cavity;
 
+          $initial_stopper_yrf->ng_name_kensa = null;
+          $initial_stopper_yrf->ng_count_kensa = null;
+          $initial_stopper_yrf->save();
+
           RcKensa::create([
             'serial_number' => $serial_number,
             'operator_kensa' => $operator_kensa,
@@ -5774,6 +5841,89 @@ class RecorderProcessController extends Controller
             'ng_name' => $ng_name_stopper_yrf,
             'ng_count' => $ng_count_stopper_yrf,
           ]);
+        }
+        $response = array(
+              'status' => true,
+          );
+        return Response::json($response);
+      } catch (\Exception $e) {
+        $response = array(
+            'status' => false,
+            'message' => $e->getMessage(),
+        );
+        return Response::json($response);
+      }
+    }
+
+    public function updateKensa(Request $request)
+    {
+      try {
+        if (str_contains($request->get('product'), 'YRS')) {
+          $serial_number = $request->get('serial_number');
+          $operator_kensa = $request->get('employee_id');
+          $product = $request->get('product');
+          $start_time = $request->get('start_time');
+
+          $ng_name_head = $request->get('ng_name_head');
+          $ng_name_middle = $request->get('ng_name_middle');
+          $ng_name_foot = $request->get('ng_name_foot');
+          $ng_name_block = $request->get('ng_name_block');
+
+          $ng_count_head = $request->get('ng_count_head');
+          $ng_count_middle = $request->get('ng_count_middle');
+          $ng_count_foot = $request->get('ng_count_foot');
+          $ng_count_block = $request->get('ng_count_block');
+
+          $initial_head = RcKensaInitial::where('serial_number',$serial_number)->where('part_type','HJ')->first();
+          $initial_head->ng_name_kensa = $ng_name_head;
+          $initial_head->ng_count_kensa = $ng_count_head;
+
+          $initial_middle = RcKensaInitial::where('serial_number',$serial_number)->where('part_type','like','%MJ%')->first();
+          $initial_middle->ng_name_kensa = $ng_name_middle;
+          $initial_middle->ng_count_kensa = $ng_count_middle;
+
+          $initial_foot = RcKensaInitial::where('serial_number',$serial_number)->where('part_type','like','%FJ%')->first();
+          $initial_foot->ng_name_kensa = $ng_name_foot;
+          $initial_foot->ng_count_kensa = $ng_count_foot;
+
+          $initial_block = RcKensaInitial::where('serial_number',$serial_number)->where('part_type','like','%BJ%')->first();
+          $initial_block->ng_name_kensa = $ng_name_block;
+          $initial_block->ng_count_kensa = $ng_count_block;
+
+          $initial_head->save();
+          $initial_middle->save();
+          $initial_foot->save();
+          $initial_block->save();
+
+        }else{
+          $serial_number = $request->get('serial_number');
+          $operator_kensa = $request->get('employee_id');
+          $product = $request->get('product');
+          $start_time = $request->get('start_time');
+
+          $ng_name_head_yrf = $request->get('ng_name_head_yrf');
+          $ng_name_body_yrf = $request->get('ng_name_body_yrf');
+          $ng_name_stopper_yrf = $request->get('ng_name_stopper_yrf');
+
+          $ng_count_head_yrf = $request->get('ng_count_head_yrf');
+          $ng_count_body_yrf = $request->get('ng_count_body_yrf');
+          $ng_count_stopper_yrf = $request->get('ng_count_stopper_yrf');
+
+          $initial_head_yrf = RcKensaInitial::where('serial_number',$serial_number)->where('part_type','A YRF H')->first();
+          $initial_head_yrf->ng_name_kensa = $ng_name_head_yrf;
+          $initial_head_yrf->ng_count_kensa = $ng_count_head_yrf;
+
+          $initial_body_yrf = RcKensaInitial::where('serial_number',$serial_number)->where('part_type','like','%A YRF B%')->first();
+          $initial_body_yrf->ng_name_kensa = $ng_name_body_yrf;
+          $initial_body_yrf->ng_count_kensa = $ng_count_body_yrf;
+
+          $initial_stopper_yrf = RcKensaInitial::where('serial_number',$serial_number)->where('part_type','like','%A YRF S%')->first();
+          $initial_stopper_yrf->ng_name_kensa = $ng_name_stopper_yrf;
+          $initial_stopper_yrf->ng_count_kensa = $ng_count_stopper_yrf;
+
+          $initial_head_yrf->save();
+          $initial_body_yrf->save();
+          $initial_stopper_yrf->save();
         }
         $response = array(
               'status' => true,

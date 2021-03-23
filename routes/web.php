@@ -154,6 +154,8 @@ Route::get('index/general/oxymeter', 'GeneralController@indexOxymeterCheck');
 Route::get('fetch/general/oxymeter/employee', 'EmployeeController@fetchEmployeeByTag');
 Route::post('post/general/oxymeter', 'GeneralController@postOxymeterCheck');
 Route::get('fetch/general/oxymeter/history', 'GeneralController@fetchOxymeterHistory');
+Route::get('index/general/oxymeter/monitoring', 'GeneralController@indexOxymeterMonitoring');
+Route::get('fetch/general/oxymeter/data', 'GeneralController@fetchOxymeterMonitoring');
 
 //AIR VISUAL
 Route::get('index/general/airvisual', 'GeneralController@indexAirVisual');
@@ -569,7 +571,7 @@ Route::post('fetch/update_perpajakan_data', 'EmployeeController@fetchUpdatePerpa
 
 Route::get('index/resume_pajak', 'EmployeeController@indexResumePajak');
 Route::get('fetch/resume_pajak', 'EmployeeController@fetchResumePajak');
-Route::get('fetch/resume_pajak/detail', 'EmployeeController@fetchResumePajakDetail');
+Route::get('fetch/resume_pajak/detail', 'EmployeeController@fetchResumePaja_etail');
 Route::get('export/resume_pajak', 'EmployeeController@exportDataPajak');
 
 Route::get('index/report/manpower', 'EmployeeController@indexReportManpower');
@@ -1016,6 +1018,9 @@ Route::group(['nav' => 'M19', 'middleware' => 'permission'], function(){
 	Route::post('import/material/storage', 'RawMaterialController@importStorage');
 	Route::post('import/material/smbmr', 'RawMaterialController@importSmbmr');
 	Route::post('calculate/material/usage', 'RawMaterialController@calculateUsage');
+
+//DISPLAY RAW MATERIAL
+	Route::post('upload/material/material_monitoring', 'MaterialController@uploadMaterialMonitoring');
 });
 Route::get('index/material/usage', 'RawMaterialController@indexUsage');
 Route::get('fetch/material/usage', 'RawMaterialController@fetchUsage');
@@ -1798,6 +1803,22 @@ Route::group(['nav' => 'S26', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_mouthpiece/{id}', 'KnockDownController@indexKD');
 	Route::post('fetch/kd_print_mp', 'KnockDownController@printLabelNew');
 	Route::get('index/print_label_mouthpiece/{id}', 'KnockDownController@indexPrintLabelSubassy');
+});
+
+//PIANICA
+Route::group(['nav' => 'S53', 'middleware' => 'permission'], function(){
+	Route::get('index/kd_pn_part/{id}', 'KnockDownController@indexKD');
+	Route::post('fetch/kd_print_pn_part', 'KnockDownController@printLabelNew');
+
+	// Route::get('index/print_label_case/{id}', 'KnockDownController@indexPrintLabelSubassy');
+});
+
+//VENOVA
+Route::group(['nav' => 'S53', 'middleware' => 'permission'], function(){
+	Route::get('index/kd_venova/{id}', 'KnockDownController@indexKD');
+	Route::post('fetch/kd_print_venova', 'KnockDownController@printLabelNew');
+
+	// Route::get('index/print_label_case/{id}', 'KnockDownController@indexPrintLabelSubassy');
 });
 
 //CASE
@@ -3005,10 +3026,6 @@ Route::get('fetch/display/efficiency_monitoring_monthly', 'DisplayController@fet
 Route::get('index/material/material_monitoring/{id}', 'MaterialController@indexMaterialMonitoring');
 Route::get('fetch/material/material_monitoring', 'MaterialController@fetchMaterialMonitoring');
 
-
-
-
-
 //DISPLAY STUFFING TIME
 Route::get('index/display/stuffing_time', 'DisplayController@indexStuffingTime');
 
@@ -3487,9 +3504,11 @@ Route::get('fetch/recorder/cdm_report', 'RecorderProcessController@fetchCdmRepor
 //NG RATE ASSY RC
 Route::get('index/recorder/kensa', 'RecorderProcessController@indexKensa');
 Route::get('fetch/recorder/kensa', 'RecorderProcessController@fetchKensa');
+Route::get('scan/recorder/kensa/operator', 'RecorderProcessController@scanKensaRecorderOperator');
 Route::get('scan/recorder/kensa', 'RecorderProcessController@scanKensa');
 Route::post('input/recorder/kensa_product', 'RecorderProcessController@inputKensaProduct');
 Route::post('input/recorder/kensa', 'RecorderProcessController@inputKensa');
+Route::post('update/recorder/kensa', 'RecorderProcessController@updateKensa');
 Route::get('index/recorder/kensa_report', 'RecorderProcessController@indexKensaReport');
 Route::get('fetch/recorder/kensa_report', 'RecorderProcessController@fetchKensaReport');
 
@@ -4294,6 +4313,8 @@ Route::get('fetch/scrap/logs', 'ScrapController@fetchLogs');
 Route::get('fetch/scrap_detail', 'ScrapController@fetchScrapDetail');
 Route::get('fetch/kd_scrap_closure', 'ScrapController@fetchKdScrapClosure');
 Route::post('scan/scrap_warehouse', 'ScrapController@scanScrapWarehouse');
+Route::get('display/scrap_warehouse', 'ScrapController@displayScrapWarehouse');
+Route::get('fetch/scrap/monitoring', 'ScrapController@fetchMonitoringScrap');
 
 //Mutasi
 Route::get('dashboard/mutasi', 'MutasiController@dashboard');
@@ -4375,6 +4396,8 @@ Route::get('index/warehouse/create', 'WarehouseController@index_create');
 Route::get('fetch/warehouse/location', 'WarehouseController@fetchLocation');
 Route::post('post/warehouse/operator/position', 'WarehouseController@postOpWarehousePosition');
 Route::get('fetch/display/rincian', 'WarehouseController@fetchWarehouseRincian');
+Route::get('index/create_job', 'WarehouseController@indexCreateJob');
+
 
 
 
@@ -4492,6 +4515,5 @@ Route::get('fetch/fibration/data', 'TrialController@fetchFIbrationSensor');
 
 //Dokumentasi Packing
 
-Route::get('index/packing_dokumentation', 'TrialController@fetchFIbrationSensor');
-
+Route::get('index/packing_documentation', 'AuditController@fetchFIbrationSensor');
 //End Dokumentasi Packing

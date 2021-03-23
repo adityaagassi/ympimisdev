@@ -116,7 +116,10 @@
 			<table class="table table-bordered" style="width: 100%; margin-bottom: 1px;" border="1">
 				<tbody>
 					<tr>
-						<td style="background-color: #4f4f4f; text-align: center; color: yellow; font-size: 1.5vw;font-weight: bold;" id="product_fix3">-</td>
+						<td style="background-color: #4f4f4f; text-align: center; color: yellow; font-size: 1.5vw;font-weight: bold;width: 2%" id="product_fix3">-</td>
+						<td style="background-color: #4f4f4f; text-align: center; color: yellow; font-size: 1.5vw;font-weight: bold;width: 1%"><button class="btn btn-default" style="font-weight: bold;width: 100%;font-size: 20px;padding: 0px" onclick="showDetail()">
+							DETAIL
+						</button></td>
 					</tr>
 				</tbody>
 			</table>
@@ -317,6 +320,282 @@
 	</div>
 </div>
 
+<div class="modal fade" id="modalDetailProduct">
+	<div class="modal-dialog modal-lg" style="width: 800px">
+		<div class="modal-content">
+			<div class="modal-header"><center> <b id="statusa" style="font-size: 2vw"></b> </center>
+				<div class="modal-body table-responsive no-padding">
+					<div class="col-xs-12" id="product_fix_detail" style="padding-top: 20px">
+						<div class="row">
+							<div class="col-xs-12">
+								<center><span style="font-weight: bold; font-size: 18px;">Produk</span></center>
+							</div>
+							<div class="col-xs-12" style="padding-top: 10px">
+								<button class="btn btn-primary" id="product_fix2_detail" style="width: 100%;font-size: 20px;font-weight: bold;">
+									RC
+								</button>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12" id="divtag" style="padding-top: 10px">
+						<div id="divyrs_detail" class="row">
+							<div class="col-xs-3">
+								<center><span style="font-weight: bold;font-size: 15px;">Tag Head</span></center>
+								<input type="text" disabled id="tag_head_detail" onclick="" placeholder="Tag Head_detail" style="width: 100%;font-size: 20px;text-align: center;">
+								<div class="col-xs-12" style="padding-top: 10px">
+									<div class="row">
+										<table class="table table-bordered table-striped" style="margin-bottom: 0px" style="margin-bottom: 0px">
+											<tr>
+												<td style="font-weight: bold;">Material</td>
+												<td id="material_number_head_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Part Name</td>
+												<td id="part_name_head_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Part Type</td>
+												<td id="part_type_head_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Color</td>
+												<td id="color_head_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Cavity</td>
+												<td id="cavity_head_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Location</td>
+												<td id="location_head_detail"></td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-3">
+								<center><span style="font-weight: bold;font-size: 15px;">Tag Middle</span></center>
+								<input type="text" disabled id="tag_middle_detail" placeholder="Tag Middle_detail" style="width: 100%;font-size: 20px;text-align: center;">
+								<div class="col-xs-12" style="padding-top: 10px">
+									<div class="row">
+										<table class="table table-bordered table-striped" style="margin-bottom: 0px">
+											<tr>
+												<td style="font-weight: bold;">Material</td>
+												<td id="material_number_middle_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Part Name</td>
+												<td id="part_name_middle_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Part Type</td>
+												<td id="part_type_middle_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Color</td>
+												<td id="color_middle_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Cavity</td>
+												<td id="cavity_middle_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Location</td>
+												<td id="location_middle_detail"></td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-3">
+								<center><span style="font-weight: bold;font-size: 15px;">Tag Foot</span></center>
+								<input type="text" disabled id="tag_foot_detail" placeholder="Tag Foot_detail" style="width: 100%;font-size: 20px;text-align: center;">
+								<div class="col-xs-12" style="padding-top: 10px">
+									<div class="row">
+										<table class="table table-bordered table-striped" style="margin-bottom: 0px">
+											<tr>
+												<td style="font-weight: bold;">Material</td>
+												<td id="material_number_foot_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Part Name</td>
+												<td id="part_name_foot_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Part Type</td>
+												<td id="part_type_foot_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Color</td>
+												<td id="color_foot_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Cavity</td>
+												<td id="cavity_foot_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Location</td>
+												<td id="location_foot_detail"></td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-3">
+								<center><span style="font-weight: bold;font-size: 15px;">Tag Block</span></center>
+								<input type="text" disabled id="tag_block_detail" placeholder="Tag Block_detail" style="width: 100%;font-size: 20px;text-align: center;">
+								<div class="col-xs-12" style="padding-top: 10px">
+									<div class="row">
+										<table class="table table-bordered table-striped" style="margin-bottom: 0px">
+											<tr>
+												<td style="font-weight: bold;">Material</td>
+												<td id="material_number_block_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Part Name</td>
+												<td id="part_name_block_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Part Type</td>
+												<td id="part_type_block_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Color</td>
+												<td id="color_block_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Cavity</td>
+												<td id="cavity_block_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Location</td>
+												<td id="location_block_detail"></td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div id="divyrf_detail" class="row">
+							<div class="col-xs-4">
+								<center><span style="font-weight: bold;font-size: 15px;">Tag Head</span></center>
+								<input type="text" disabled id="tag_head_yrf_detail" placeholder="Tag Head YRF" style="width: 100%;font-size: 20px;text-align: center;">
+								<div class="col-xs-12" style="padding-top: 10px">
+									<div class="row">
+										<table class="table table-bordered table-striped" style="margin-bottom: 0px">
+											<tr>
+												<td style="font-weight: bold;">Material</td>
+												<td id="material_number_head_yrf_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Part Name</td>
+												<td id="part_name_head_yrf_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Part Type</td>
+												<td id="part_type_head_yrf_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Color</td>
+												<td id="color_head_yrf_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Cavity</td>
+												<td id="cavity_head_yrf_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Location</td>
+												<td id="location_head_yrf_detail"></td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-4">
+								<center><span style="font-weight: bold;font-size: 15px;">Tag Body</span></center>
+								<input type="text" disabled id="tag_body_yrf_detail" placeholder="Tag Body YRF" style="width: 100%;font-size: 20px;text-align: center;">
+								<div class="col-xs-12" style="padding-top: 10px">
+									<div class="row">
+										<table class="table table-bordered table-striped" style="margin-bottom: 0px">
+											<tr>
+												<td style="font-weight: bold;">Material</td>
+												<td id="material_number_body_yrf_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Part Name</td>
+												<td id="part_name_body_yrf_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Part Type</td>
+												<td id="part_type_body_yrf_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Color</td>
+												<td id="color_body_yrf_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Cavity</td>
+												<td id="cavity_body_yrf_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Location</td>
+												<td id="location_body_yrf_detail"></td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-4">
+								<center><span style="font-weight: bold;font-size: 15px;">Tag Stopper</span></center>
+								<input type="text" disabled id="tag_stopper_yrf_detail" placeholder="Tag Stopper YRF" style="width: 100%;font-size: 20px;text-align: center;">
+								<div class="col-xs-12" style="padding-top: 10px">
+									<div class="row">
+										<table class="table table-bordered table-striped" style="margin-bottom: 0px">
+											<tr>
+												<td style="font-weight: bold;">Material</td>
+												<td id="material_number_stopper_yrf_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Part Name</td>
+												<td id="part_name_stopper_yrf_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Part Type</td>
+												<td id="part_type_stopper_yrf_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Color</td>
+												<td id="color_stopper_yrf_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Cavity</td>
+												<td id="cavity_stopper_yrf_detail"></td>
+											</tr>
+											<tr>
+												<td style="font-weight: bold;">Location</td>
+												<td id="location_stopper_yrf_detail"></td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12" style="padding-top: 20px">
+						<div class="row">
+							<div class="modal-footer">
+								<button class="btn btn-danger btn-block pull-right" style="font-size: 30px;font-weight: bold;" id="btn_close" onclick="$('#modalDetailProduct').modal('hide')">
+									CLOSE
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div class="modal fade" id="modalProduct">
 	<div class="modal-dialog modal-lg" style="width: 800px">
 		<div class="modal-content">
@@ -332,7 +611,7 @@
 									@foreach($product_type as $product_type)
 									<div class="col-xs-2 col-sm-2 col-md-3" style="padding-top: 5px">
 										<center>
-											<button class="btn btn-primary" id="{{$product_type}}" style="width: 120px;font-size: 10px;font-weight: bold;" onclick="getProduct(this.id)">{{$product_type}}</button>
+											<button class="btn btn-primary" id="{{$product_type}}" style="width: 120px;font-size: 14px;font-weight: bold;" onclick="getProduct(this.id)">{{$product_type}}</button>
 										</center>
 									</div>
 									@endforeach
@@ -355,7 +634,7 @@
 					<div class="col-xs-12" id="divtag" style="padding-top: 10px">
 						<div id="divyrs" class="row">
 							<div class="col-xs-3">
-								<center><span style="font-weight: bold;font-size: 15px;color:white">Tag Head</span></center>
+								<center><span style="font-weight: bold;font-size: 15px;">Tag Head</span></center>
 								<input type="text" disabled id="tag_head" onclick="" placeholder="Tag Head" style="width: 100%;font-size: 20px;text-align: center;">
 								<div class="col-xs-12" style="padding-top: 10px">
 									<div class="row">
@@ -385,14 +664,14 @@
 												<td id="location_head"></td>
 											</tr>
 										</table>
-										<button class="btn btn-danger" onclick="cancelTag('head')" style="width: 100%;font-weight: bold;margin-left: 0px;font-size: 15px">
+										<button class="btn btn-danger" id="btn_tag_head" onclick="cancelTag('head')" style="width: 100%;font-weight: bold;margin-left: 0px;font-size: 15px">
 											CANCEL
 										</button>
 									</div>
 								</div>
 							</div>
 							<div class="col-xs-3">
-								<center><span style="font-weight: bold;font-size: 15px;color:white">Tag Middle</span></center>
+								<center><span style="font-weight: bold;font-size: 15px;">Tag Middle</span></center>
 								<input type="text" disabled id="tag_middle" placeholder="Tag Middle" style="width: 100%;font-size: 20px;text-align: center;">
 								<div class="col-xs-12" style="padding-top: 10px">
 									<div class="row">
@@ -422,14 +701,14 @@
 												<td id="location_middle"></td>
 											</tr>
 										</table>
-										<button class="btn btn-danger" onclick="cancelTag('middle')" style="width: 100%;font-weight: bold;margin-left: 0px;font-size: 15px">
+										<button class="btn btn-danger" id="btn_tag_middle" onclick="cancelTag('middle')" style="width: 100%;font-weight: bold;margin-left: 0px;font-size: 15px">
 											CANCEL
 										</button>
 									</div>
 								</div>
 							</div>
 							<div class="col-xs-3">
-								<center><span style="font-weight: bold;font-size: 15px;color:white">Tag Foot</span></center>
+								<center><span style="font-weight: bold;font-size: 15px;">Tag Foot</span></center>
 								<input type="text" disabled id="tag_foot" placeholder="Tag Foot" style="width: 100%;font-size: 20px;text-align: center;">
 								<div class="col-xs-12" style="padding-top: 10px">
 									<div class="row">
@@ -459,14 +738,14 @@
 												<td id="location_foot"></td>
 											</tr>
 										</table>
-										<button class="btn btn-danger" onclick="cancelTag('foot')" style="width: 100%;font-weight: bold;margin-left: 0px;font-size: 15px">
+										<button class="btn btn-danger" id="btn_tag_foot" onclick="cancelTag('foot')" style="width: 100%;font-weight: bold;margin-left: 0px;font-size: 15px">
 											CANCEL
 										</button>
 									</div>
 								</div>
 							</div>
 							<div class="col-xs-3">
-								<center><span style="font-weight: bold;font-size: 15px;color:white">Tag Block</span></center>
+								<center><span style="font-weight: bold;font-size: 15px;">Tag Block</span></center>
 								<input type="text" disabled id="tag_block" placeholder="Tag Block" style="width: 100%;font-size: 20px;text-align: center;">
 								<div class="col-xs-12" style="padding-top: 10px">
 									<div class="row">
@@ -496,7 +775,7 @@
 												<td id="location_block"></td>
 											</tr>
 										</table>
-										<button class="btn btn-danger" onclick="cancelTag('block')" style="width: 100%;font-weight: bold;margin-left: 0px;font-size: 15px">
+										<button class="btn btn-danger" id="btn_tag_block" onclick="cancelTag('block')" style="width: 100%;font-weight: bold;margin-left: 0px;font-size: 15px">
 											CANCEL
 										</button>
 									</div>
@@ -505,7 +784,7 @@
 						</div>
 						<div id="divyrf" class="row">
 							<div class="col-xs-4">
-								<center><span style="font-weight: bold;font-size: 15px;color:white">Tag Head</span></center>
+								<center><span style="font-weight: bold;font-size: 15px;">Tag Head</span></center>
 								<input type="text" disabled id="tag_head_yrf" placeholder="Tag Head YRF" style="width: 100%;font-size: 20px;text-align: center;">
 								<div class="col-xs-12" style="padding-top: 10px">
 									<div class="row">
@@ -535,14 +814,14 @@
 												<td id="location_head_yrf"></td>
 											</tr>
 										</table>
-										<button class="btn btn-danger" onclick="cancelTag('head_yrf')" style="width: 100%;font-weight: bold;margin-left: 0px;font-size: 15px">
+										<button class="btn btn-danger" id="btn_tag_head_yrf" onclick="cancelTag('head_yrf')" style="width: 100%;font-weight: bold;margin-left: 0px;font-size: 15px">
 											CANCEL
 										</button>
 									</div>
 								</div>
 							</div>
 							<div class="col-xs-4">
-								<center><span style="font-weight: bold;font-size: 15px;color:white">Tag Body</span></center>
+								<center><span style="font-weight: bold;font-size: 15px;">Tag Body</span></center>
 								<input type="text" disabled id="tag_body_yrf" placeholder="Tag Body YRF" style="width: 100%;font-size: 20px;text-align: center;">
 								<div class="col-xs-12" style="padding-top: 10px">
 									<div class="row">
@@ -572,14 +851,14 @@
 												<td id="location_body_yrf"></td>
 											</tr>
 										</table>
-										<button class="btn btn-danger" onclick="cancelTag('body_yrf')" style="width: 100%;font-weight: bold;margin-left: 0px;font-size: 15px">
+										<button class="btn btn-danger" id="btn_tag_body_yrf" onclick="cancelTag('body_yrf')" style="width: 100%;font-weight: bold;margin-left: 0px;font-size: 15px">
 											CANCEL
 										</button>
 									</div>
 								</div>
 							</div>
 							<div class="col-xs-4">
-								<center><span style="font-weight: bold;font-size: 15px;color:white">Tag Stopper</span></center>
+								<center><span style="font-weight: bold;font-size: 15px;">Tag Stopper</span></center>
 								<input type="text" disabled id="tag_stopper_yrf" placeholder="Tag Stopper YRF" style="width: 100%;font-size: 20px;text-align: center;">
 								<div class="col-xs-12" style="padding-top: 10px">
 									<div class="row">
@@ -609,7 +888,7 @@
 												<td id="location_stopper_yrf"></td>
 											</tr>
 										</table>
-										<button class="btn btn-danger" onclick="cancelTag('stopper_yrf')" style="width: 100%;font-weight: bold;margin-left: 0px;font-size: 15px">
+										<button class="btn btn-danger" id="btn_tag_stopper_yrf" onclick="cancelTag('stopper_yrf')" style="width: 100%;font-weight: bold;margin-left: 0px;font-size: 15px">
 											CANCEL
 										</button>
 									</div>
@@ -620,8 +899,11 @@
 					<div class="col-xs-12" style="padding-top: 20px">
 						<div class="row">
 							<div class="modal-footer">
-								<button onclick="saveProduct()" class="btn btn-success btn-block pull-right" style="font-size: 30px;font-weight: bold;">
+								<button onclick="saveProduct()" class="btn btn-success btn-block pull-right" style="font-size: 30px;font-weight: bold;" id="btn_save_product">
 									CONFIRM
+								</button>
+								<button onclick="location.reload()" class="btn btn-danger btn-block pull-right" style="font-size: 30px;font-weight: bold;" id="btn_cancel">
+									CANCEL
 								</button>
 							</div>
 						</div>
@@ -644,6 +926,8 @@
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		}
 	});
+
+	var intervalUpdate;
 	
 	jQuery(document).ready(function() {
 		$('#modalOperator').modal({
@@ -672,14 +956,211 @@
 					employee_id : $("#operator").val()
 				}
 				
-				$.get('{{ url("scan/injeksi/operator") }}', data, function(result, status, xhr){
+				$.get('{{ url("scan/recorder/kensa/operator") }}', data, function(result, status, xhr){
 					if(result.status){
 						openSuccessGritter('Success!', result.message);
 						$('#modalOperator').modal('hide');
-						$('#modalProduct').modal('show');
 						$('#op').html(result.employee.employee_id);
 						$('#op2').html(result.employee.name);
 						$('#employee_id').val(result.employee.employee_id);
+
+						if (result.kensas.length != 0) {
+							$('#start_time').val(getActualFullDate());
+							$('#kensa_code').html(result.kensas[0].serial_number);
+							$('#product_fix3').html(result.kensas[0].product);
+							$('#product_fix2_detail').html(result.kensas[0].product);
+							$('#modalProduct').modal('hide');
+
+							if (result.kensas[0].product.match(/YRS/gi)) {
+								$('#divBlock').show();
+								$('#divHead').prop('class','col-xs-3');
+								$('#divMiddleBody').prop('class','col-xs-3');
+								$('#divFootStopper').prop('class','col-xs-3');
+								$('#divBlock').prop('class','col-xs-3');
+
+								$('#divyrs_detail').show();
+								$('#divyrf_detail').hide();
+
+								$('#tag_head_detail').prop('disabled',true);
+								$('#tag_middle_detail').prop('disabled',true);
+								$('#tag_foot_detail').prop('disabled',true);
+								$('#tag_block_detail').prop('disabled',true);
+							}
+							if(result.kensas[0].product.match(/YRF/gi)){
+								$('#divBlock').hide();
+								$('#divHead').prop('class','col-xs-4');
+								$('#divMiddleBody').prop('class','col-xs-4');
+								$('#divFootStopper').prop('class','col-xs-4');
+								
+								$('#divyrs_detail').hide();
+								$('#divyrf_detail').show();
+
+								$('#tag_head_yrf_detail').prop('disabled',true);
+								$('#tag_body_yrf_detail').prop('disabled',true);
+								$('#tag_stopper_yrf_detail').prop('disabled',true);
+							}
+
+							if (result.kensas[0].product.match(/YRS/gi)) {
+								$.each(result.kensas, function(key, value) {
+									if (value.part_type.match(/HJ/gi)) {
+										$('#tag_head_detail').val(value.tag);
+										$('#material_number_head_detail').html(value.material_number);
+										$('#part_name_head_detail').html(value.part_name);
+										$('#part_type_head_detail').html(value.part_type);
+										$('#color_head_detail').html(value.color);
+										$('#cavity_head_detail').html(value.cavity);
+										$('#location_head_detail').html(value.location);
+
+										if (value.ng_name_kensa != null) {
+											var jumlah_ng_head = '{{$nomor+1}}';
+											var ng_name_head = value.ng_name_kensa.split(',');
+											var ng_count_head = value.ng_count_kensa.split(',');
+											for (var i = 1; i <= jumlah_ng_head; i++ ) {
+												if (ng_name_head.includes($('#ngHead'+i).text())) {
+													var indx = ng_name_head.indexOf($('#ngHead'+i).text());
+													$('#countHead'+i).html(ng_count_head[indx]);
+												}
+											}
+										}
+									}
+									if (value.part_type.match(/MJ/gi)) {
+										$('#tag_middle_detail').val(value.tag);
+										$('#material_number_middle_detail').html(value.material_number);
+										$('#part_name_middle_detail').html(value.part_name);
+										$('#part_type_middle_detail').html(value.part_type);
+										$('#color_middle_detail').html(value.color);
+										$('#cavity_middle_detail').html(value.cavity);
+										$('#location_middle_detail').html(value.location);
+
+										if (value.ng_name_kensa != null) {
+											var jumlah_ng_middle = '{{$nomor+1}}';
+											var ng_name_middle = value.ng_name_kensa.split(',');
+											var ng_count_middle = value.ng_count_kensa.split(',');
+											for (var i = 1; i <= jumlah_ng_middle; i++ ) {
+												if (ng_name_middle.includes($('#ngMiddleBody'+i).text())) {
+													var indx = ng_name_middle.indexOf($('#ngMiddleBody'+i).text());
+													$('#countMiddleBody'+i).html(ng_count_middle[indx]);
+												}
+											}
+										}
+									}
+									if (value.part_type.match(/FJ/gi)) {
+										$('#tag_foot_detail').val(value.tag);
+										$('#material_number_foot_detail').html(value.material_number);
+										$('#part_name_foot_detail').html(value.part_name);
+										$('#part_type_foot_detail').html(value.part_type);
+										$('#color_foot_detail').html(value.color);
+										$('#cavity_foot_detail').html(value.cavity);
+										$('#location_foot_detail').html(value.location);
+
+										if (value.ng_name_kensa != null) {
+											var jumlah_ng_foot = '{{$nomor+1}}';
+											var ng_name_foot = value.ng_name_kensa.split(',');
+											var ng_count_foot = value.ng_count_kensa.split(',');
+											for (var i = 1; i <= jumlah_ng_foot; i++ ) {
+												if (ng_name_foot.includes($('#ngFootStopper'+i).text())) {
+													var indx = ng_name_foot.indexOf($('#ngFootStopper'+i).text());
+													$('#countFootStopper'+i).html(ng_count_foot[indx]);
+												}
+											}
+										}
+									}
+									if (value.part_type.match(/BJ/gi)) {
+										$('#tag_block_detail').val(value.tag);
+										$('#material_number_block_detail').html(value.material_number);
+										$('#part_name_block_detail').html(value.part_name);
+										$('#part_type_block_detail').html(value.part_type);
+										$('#color_block_detail').html(value.color);
+										$('#cavity_block_detail').html(value.cavity);
+										$('#location_block_detail').html(value.location);
+
+										if (value.ng_name_kensa != null) {
+											var jumlah_ng_block = '{{$nomor+1}}';
+											var ng_name_block = value.ng_name_kensa.split(',');
+											var ng_count_block = value.ng_count_kensa.split(',');
+											for (var i = 1; i <= jumlah_ng_block; i++ ) {
+												if (ng_name_block.includes($('#ngBlock'+i).text())) {
+													var indx = ng_name_block.indexOf($('#ngBlock'+i).text());
+													$('#countBlock'+i).html(ng_count_block[indx]);
+												}
+											}
+										}
+									}
+								});
+							}else{
+								$.each(result.kensas, function(key, value) {
+									if (value.part_type.match(/A YRF H/gi)) {
+										$('#tag_head_yrf_detail').val(value.tag);
+										$('#material_number_head_yrf_detail').html(value.material_number);
+										$('#part_name_head_yrf_detail').html(value.part_name);
+										$('#part_type_head_yrf_detail').html(value.part_type);
+										$('#color_head_yrf_detail').html(value.color);
+										$('#cavity_head_yrf_detail').html(value.cavity);
+										$('#location_head_yrf_detail').html(value.location);
+
+										if (value.ng_name_kensa != null) {
+											var jumlah_ng_head_yrf = '{{$nomor+1}}';
+											var ng_name_head_yrf = value.ng_name_kensa.split(',');
+											var ng_count_head_yrf = value.ng_count_kensa.split(',');
+											for (var i = 1; i <= jumlah_ng_head_yrf; i++ ) {
+												if (ng_name_head_yrf.includes($('#ngHead'+i).text())) {
+													var indx = ng_name_head_yrf.indexOf($('#ngHead'+i).text());
+													$('#countHead'+i).html(ng_count_head_yrf[indx]);
+												}
+											}
+										}
+									}
+									if (value.part_type.match(/A YRF B/gi)) {
+										$('#tag_body_yrf_detail').val(value.tag);
+										$('#material_number_body_yrf_detail').html(value.material_number);
+										$('#part_name_body_yrf_detail').html(value.part_name);
+										$('#part_type_body_yrf_detail').html(value.part_type);
+										$('#color_body_yrf_detail').html(value.color);
+										$('#cavity_body_yrf_detail').html(value.cavity);
+										$('#location_body_yrf_detail').html(value.location);
+
+										if (value.ng_name_kensa != null) {
+											var jumlah_ng_body_yrf = '{{$nomor+1}}';
+											var ng_name_body_yrf = value.ng_name_kensa.split(',');
+											var ng_count_body_yrf = value.ng_count_kensa.split(',');
+											for (var i = 1; i <= jumlah_ng_body_yrf; i++ ) {
+												if (ng_name_body_yrf.includes($('#ngMiddleBody'+i).text())) {
+													var indx = ng_name_body_yrf.indexOf($('#ngMiddleBody'+i).text());
+													$('#countMiddleBody'+i).html(ng_count_body_yrf[indx]);
+												}
+											}
+										}
+									}
+									if (value.part_type.match(/A YRF S/gi)) {
+										$('#tag_stopper_yrf_detail').val(value.tag);
+										$('#material_number_stopper_yrf_detail').html(value.material_number);
+										$('#part_name_stopper_yrf_detail').html(value.part_name);
+										$('#part_type_stopper_yrf_detail').html(value.part_type);
+										$('#color_stopper_yrf_detail').html(value.color);
+										$('#cavity_stopper_yrf_detail').html(value.cavity);
+										$('#location_stopper_yrf_detail').html(value.location);
+
+										if (value.ng_name_kensa != null) {
+											var jumlah_ng_stopper_yrf = '{{$nomor+1}}';
+											var ng_name_stopper_yrf = value.ng_name_kensa.split(',');
+											var ng_count_stopper_yrf = value.ng_count_kensa.split(',');
+											for (var i = 1; i <= jumlah_ng_stopper_yrf; i++ ) {
+												if (ng_name_stopper_yrf.includes($('#ngFootStopper'+i).text())) {
+													var indx = ng_name_stopper_yrf.indexOf($('#ngFootStopper'+i).text());
+													$('#countFootStopper'+i).html(ng_count_stopper_yrf[indx]);
+												}
+											}
+										}
+									}
+								});
+							}
+							intervalUpdate = setInterval(updateTemp,10000);
+						}else{
+							$('#start_time').val("");
+							$('#kensa_code').html("-");
+							$('#product_fix3').html("-");
+							$('#modalProduct').modal('show');
+						}
 					}
 					else{
 						audio_error.play();
@@ -699,6 +1180,11 @@
 	function clearAll() {
 		$('#product_choice').show();
 		$('#product_fix').hide();
+	}
+
+	function showDetail() {
+		$('#modalProduct').modal('hide');
+		$('#modalDetailProduct').modal('show');
 	}
 
 	function getProduct(value) {
@@ -833,6 +1319,17 @@
 				$('#countBlock'+i).html('0');
 			}
 		}
+
+		$('#btn_tag_head').show();
+		$('#btn_tag_middle').show();
+		$('#btn_tag_foot').show();
+		$('#btn_tag_head_yrf').show();
+		$('#btn_tag_body_yrf').show();
+		$('#btn_tag_stopper_yrf').show();
+		$('#btn_save_product').show();
+
+		$('#product_choice').show();
+		$('#product_fix').hide();
 	}
 
 	function resetProduct() {
@@ -1303,21 +1800,87 @@
 					$('#product_fix3').html($('#product_fix2').text());
 					$('#modalProduct').modal('hide');
 					$('#kensa_code').html(result.kensa_code);
+					$('#product_fix2_detail').html(result.product);
 					if (result.product.match(/YRS/gi)) {
 						$('#divBlock').show();
 						$('#divHead').prop('class','col-xs-3');
 						$('#divMiddleBody').prop('class','col-xs-3');
 						$('#divFootStopper').prop('class','col-xs-3');
 						$('#divBlock').prop('class','col-xs-3');
+
+						$('#divyrs_detail').show();
+						$('#divyrf_detail').hide();
+
+						$('#tag_head_detail').val(tag_head);
+						$('#tag_middle_detail').val(tag_middle);
+						$('#tag_foot_detail').val(tag_foot);
+						$('#tag_block_detail').val(tag_block);
+
+						$('#material_number_head_detail').html(material_number_head);
+						$('#part_name_head_detail').html(part_name_head);
+						$('#part_type_head_detail').html(part_type_head);
+						$('#color_head_detail').html(color_head);
+						$('#cavity_head_detail').html(cavity_head);
+						$('#location_head_detail').html(location_head);
+
+						$('#material_number_middle_detail').html(material_number_middle);
+						$('#part_name_middle_detail').html(part_name_middle);
+						$('#part_type_middle_detail').html(part_type_middle);
+						$('#color_middle_detail').html(color_middle);
+						$('#cavity_middle_detail').html(cavity_middle);
+						$('#location_middle_detail').html(location_middle);
+
+						$('#material_number_foot_detail').html(material_number_foot);
+						$('#part_name_foot_detail').html(part_name_foot);
+						$('#part_type_foot_detail').html(part_type_foot);
+						$('#color_foot_detail').html(color_foot);
+						$('#cavity_foot_detail').html(cavity_foot);
+						$('#location_foot_detail').html(location_foot);
+
+						$('#material_number_block_detail').html(material_number_block);
+						$('#part_name_block_detail').html(part_name_block);
+						$('#part_type_block_detail').html(part_type_block);
+						$('#color_block_detail').html(color_block);
+						$('#cavity_block_detail').html(cavity_block);
+						$('#location_block_detail').html(location_block);
 					}else if(result.product.match(/YRF/gi)){
 						$('#divBlock').hide();
 						$('#divHead').prop('class','col-xs-4');
 						$('#divMiddleBody').prop('class','col-xs-4');
 						$('#divFootStopper').prop('class','col-xs-4');
+
+						$('#divyrs_detail').hide();
+						$('#divyrf_detail').show();
+
+						$('#tag_head_yrf_detail').val(tag_head_yrf);
+						$('#tag_body_yrf_detail').val(tag_body_yrf);
+						$('#tag_stopper_yrf_detail').val(tag_stopper_yrf);
+
+						$('#material_number_head_yrf_detail').html(material_number_head_yrf);
+						$('#part_name_head_yrf_detail').html(part_name_head_yrf);
+						$('#part_type_head_yrf_detail').html(part_type_head_yrf);
+						$('#color_head_yrf_detail').html(color_head_yrf);
+						$('#cavity_head_yrf_detail').html(cavity_head_yrf);
+						$('#location_head_yrf_detail').html(location_head_yrf);
+
+						$('#material_number_body_yrf_detail').html(material_number_body_yrf);
+						$('#part_name_body_yrf_detail').html(part_name_body_yrf);
+						$('#part_type_body_yrf_detail').html(part_type_body_yrf);
+						$('#color_body_yrf_detail').html(color_body_yrf);
+						$('#cavity_body_yrf_detail').html(cavity_body_yrf);
+						$('#location_body_yrf_detail').html(location_body_yrf);
+
+						$('#material_number_stopper_yrf_detail').html(material_number_stopper_yrf);
+						$('#part_name_stopper_yrf_detail').html(part_name_stopper_yrf);
+						$('#part_type_stopper_yrf_detail').html(part_type_stopper_yrf);
+						$('#color_stopper_yrf_detail').html(color_stopper_yrf);
+						$('#cavity_stopper_yrf_detail').html(cavity_stopper_yrf);
+						$('#location_stopper_yrf_detail').html(location_stopper_yrf);
 					}
 					// reset();
-					clearAll();
+					// clearAll();
 					$('#start_time').val(getActualFullDate());
+					intervalUpdate = setInterval(updateTemp,10000);
 					openSuccessGritter('Success','Memulai Kensa');
 				}
 				else{
@@ -1430,6 +1993,119 @@
 			$("#modalProduct").modal('show');
 			reset();
 		}
+	}
+
+	function updateTemp() {
+		var employee_id = $('#employee_id').val();
+		var serial_number = $('#kensa_code').text();
+		var product = $('#product_fix3').text();
+
+		if (product.match(/YRS/gi)) {
+			var ng_name_head = [];
+			var ng_count_head = [];
+			var jumlah_ng_head = '{{$nomor+1}}';
+			for (var i = 1; i <= jumlah_ng_head; i++ ) {
+				if($('#countHead'+i).text() != 0){
+					ng_name_head.push($('#ngHead'+i).text());
+					ng_count_head.push($('#countHead'+i).text());
+				}
+			}
+
+			var ng_name_middle = [];
+			var ng_count_middle = [];
+			var jumlah_ng_middle = '{{$nomor+1}}';
+			for (var i = 1; i <= jumlah_ng_middle; i++ ) {
+				if($('#countMiddleBody'+i).text() != 0){
+					ng_name_middle.push($('#ngMiddleBody'+i).text());
+					ng_count_middle.push($('#countMiddleBody'+i).text());
+				}
+			}
+
+			var ng_name_foot = [];
+			var ng_count_foot = [];
+			var jumlah_ng_foot = '{{$nomor+1}}';
+			for (var i = 1; i <= jumlah_ng_foot; i++ ) {
+				if($('#countFootStopper'+i).text() != 0){
+					ng_name_foot.push($('#ngFootStopper'+i).text());
+					ng_count_foot.push($('#countFootStopper'+i).text());
+				}
+			}
+
+			var ng_name_block = [];
+			var ng_count_block = [];
+			var jumlah_ng_block = '{{$nomor+1}}';
+			for (var i = 1; i <= jumlah_ng_block; i++ ) {
+				if($('#countBlock'+i).text() != 0){
+					ng_name_block.push($('#ngBlock'+i).text());
+					ng_count_block.push($('#countBlock'+i).text());
+				}
+			}
+
+			var data = {
+				employee_id:employee_id,
+				serial_number:serial_number,
+				product:product,
+				ng_name_head:ng_name_head.join(),
+				ng_name_middle:ng_name_middle.join(),
+				ng_name_foot:ng_name_foot.join(),
+				ng_name_block:ng_name_block.join(),
+				ng_count_head:ng_count_head.join(),
+				ng_count_middle:ng_count_middle.join(),
+				ng_count_foot:ng_count_foot.join(),
+				ng_count_block:ng_count_block.join(),
+			}
+		}else if(product.match(/YRF/gi)){
+			var ng_name_head_yrf = [];
+			var ng_count_head_yrf = [];
+			var jumlah_ng_head_yrf = '{{$nomor+1}}';
+			for (var i = 1; i <= jumlah_ng_head_yrf; i++ ) {
+				if($('#countHead'+i).text() != 0){
+					ng_name_head_yrf.push($('#ngHead'+i).text());
+					ng_count_head_yrf.push($('#countHead'+i).text());
+				}
+			}
+
+			var ng_name_body_yrf = [];
+			var ng_count_body_yrf = [];
+			var jumlah_ng_body_yrf = '{{$nomor+1}}';
+			for (var i = 1; i <= jumlah_ng_body_yrf; i++ ) {
+				if($('#countMiddleBody'+i).text() != 0){
+					ng_name_body_yrf.push($('#ngMiddleBody'+i).text());
+					ng_count_body_yrf.push($('#countMiddleBody'+i).text());
+				}
+			}
+
+			var ng_name_stopper_yrf = [];
+			var ng_count_stopper_yrf = [];
+			var jumlah_ng_stopper_yrf = '{{$nomor+1}}';
+			for (var i = 1; i <= jumlah_ng_stopper_yrf; i++ ) {
+				if($('#countFootStopper'+i).text() != 0){
+					ng_name_stopper_yrf.push($('#ngFootStopper'+i).text());
+					ng_count_stopper_yrf.push($('#countFootStopper'+i).text());
+				}
+			}
+
+			var data = {
+				employee_id:employee_id,
+				serial_number:serial_number,
+				product:product,
+				ng_name_head_yrf:ng_name_head_yrf.join(),
+				ng_name_body_yrf:ng_name_body_yrf.join(),
+				ng_name_stopper_yrf:ng_name_stopper_yrf.join(),
+				ng_count_head_yrf:ng_count_head_yrf.join(),
+				ng_count_body_yrf:ng_count_body_yrf.join(),
+				ng_count_stopper_yrf:ng_count_stopper_yrf.join(),
+			}
+		}
+
+		$.post('{{ url("update/recorder/kensa") }}', data, function(result, status, xhr){
+			if(result.status){
+
+			}
+			else{
+				openErrorGritter('Error', result.message);
+			}
+		});
 	}
 
 	function selesaiProses() {
@@ -1546,6 +2222,7 @@
 					alert('Kensa Selesai');
 					openSuccessGritter('Success','Kensa Selesai');
 					location.reload();
+					clearInterval(intervalUpdate);
 				}
 				else{
 					$('#loading').hide();

@@ -47,6 +47,8 @@ class RcKensaInitial extends Model
 		'operator_transaction',
 		'status',
 		'remark',
+		'ng_name_kensa',
+		'ng_count_kensa',
 		'created_by',
 
 	];
