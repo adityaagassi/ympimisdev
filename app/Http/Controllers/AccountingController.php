@@ -11624,14 +11624,13 @@ public function transfer_approvalto($id){
                 acc_purchase_order_details.no_po 
             FROM
                 acc_purchase_orders
-                JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po 
-                LEFT JOIN acc_purchase_requisitions ON acc_purchase_order_details.no_pr = acc_purchase_requisitions.no_pr
+                JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po
             WHERE
                 acc_purchase_orders.posisi = 'pch' 
                 AND acc_purchase_order_details.`status` IS NULL 
-                AND acc_purchase_requisitions.department = 'General Affairs Department'
+                AND acc_purchase_orders.no_po like '%GA%'
             ORDER BY
-                acc_purchase_order_details.id
+                acc_purchase_order_details.id 
         ");
 
         return view('accounting_purchasing.master.receive_ga', array(
