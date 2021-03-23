@@ -328,8 +328,12 @@
                             </a>
                             <br> -->
                             <a href="{{ url("/index/patrol") }}">
-                                <i class="fa fa-caret-right"></i> Audit & Patrol Internal (内部監査・パトロール)
-                            </a>                            
+                                <i class="fa fa-caret-right"></i> YMPI Internal Patrol (内部パトロール)
+                            </a>  
+                            <br> 
+                            <a href="{{ url("/index/audit") }}">
+                                <i class="fa fa-caret-right"></i> YMPI Internal Audit (内部監査)
+                            </a>                        
                         </td>                     
                     </tr>
                     <!-- <tr>
@@ -419,16 +423,16 @@
                 <tr>
                     <td>
                         <a href="{{ url("/index/material/material_monitoring/direct") }}">
-                            <i class="fa fa-caret-right"></i> Raw Material Monitoring (Direct) (素材監視「」)
+                            <i class="fa fa-caret-right"></i> Raw Material Monitoring (素材監視)
                         </a>
-                        <br>
+                        {{-- <br>
                         <a href="{{ url("/index/material/material_monitoring/indirect") }}">
                             <i class="fa fa-caret-right"></i> Raw Material Monitoring (Indirect) (素材監視「」)
                         </a>
                         <br>
                         <a href="{{ url("/index/material/material_monitoring/subcon") }}">
                             <i class="fa fa-caret-right"></i> Raw Material Monitoring (Subcon) (素材監視「」)
-                        </a>
+                        </a> --}}
                     </td>
                 </tr>
             </tbody>
@@ -516,8 +520,19 @@
                             </a>
                             <br>
                             <a href="{{ url('index/general/queue','mcu') }}">
-                                <i class="fa fa-caret-right"></i> Medical Check Up Queue (??)
+                                <i class="fa fa-caret-right"></i> Medical Check Up Queue (健康診断待ち行列)
                             </a>
+                            <br>
+                            <a href="{{ url('index/general/oxymeter') }}">
+                                <i class="fa fa-caret-right"></i> Oxymeter Check(??)
+                            </a>
+                            <br>
+                            <a href="{{ url('index/general/oxymeter/monitoring') }}">
+                                <i class="fa fa-caret-right"></i> Oxymeter Monitoring(??)
+                            </a>
+                            <!-- <a href="{{ url("index/server_room") }}">
+                                <i class="fa fa-caret-right"></i> Server Room Monitoring (サーバールームモニタリング)
+                            </a> -->
                             <!-- <br>
                             <a href="{{ url("index/display/office_clock") }}">
                                 <i class="fa fa-caret-right"></i> Office Clock (??)
@@ -664,6 +679,15 @@
                 </tr>
             </thead>
             <tbody>
+               <!--  <tr>
+                    <td>
+                        <span style="font-weight: bold;">Smart TPM (??)</span>
+                        <br>
+                        <a href="{{ url("/machinery_monitoring?mesin=") }}">
+                            <i class="fa fa-caret-right"></i> Smart TPM (??)
+                        </a>
+                    </td>                     
+                </tr> -->
                 <tr>
                     <td>
                         <span style="font-weight: bold;">Machine Monitoring (マシン監視)</span>
@@ -680,20 +704,20 @@
                             <i class="fa fa-caret-right"></i> Planned Maintenance Activity Finding (??)
                         </a>
                         <br>
-                        <a href="{{ url("index/maintenance/mttbf/list") }}">
-                            <i class="fa fa-caret-right"></i> MTTBF (??)
+                       <!--  <a href="{{ url("index/maintenance/mttbf/list") }}">
+                            <i class="fa fa-caret-right"></i> MTBF (??)
                         </a>
                         <br>
                         <a href="{{ url("index/maintenance/mttbf/report") }}">
-                            <i class="fa fa-caret-right"></i> MTTBF Report (??)
+                            <i class="fa fa-caret-right"></i> MTBF Report (??)
                         </a>
                         <br>
                         <a href="{{ url("index/maintenance/mttr/list") }}">
                             <i class="fa fa-caret-right"></i> MTTR (??)
                         </a>
-                        <br>
+                        <br> -->
                         <a href="{{ url("index/maintenance/operator/position") }}">
-                            <i class="fa fa-caret-right"></i> Operator Position (??)
+                            <i class="fa fa-caret-right"></i> Operator Location (??)
                         </a>
                     </td>                     
                 </tr>

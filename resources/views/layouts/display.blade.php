@@ -6,7 +6,13 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-  <title>YMPI 情報システム</title>
+  <title>
+    @if(isset($title) && isset($title_jp))
+    {{$title}} {{$title_jp}}
+    @else 
+    YMPI 情報システム
+    @endif
+  </title>
   <link rel="stylesheet" href="{{ url("bower_components/bootstrap/dist/css/bootstrap.min.css")}}">
   <link rel="stylesheet" href="{{ url("bower_components/font-awesome/css/font-awesome.min.css")}}">
   <link rel="stylesheet" href="{{ url("bower_components/Ionicons/css/ionicons.min.css")}}">

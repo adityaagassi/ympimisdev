@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\DB;
 use File;
 use App\StorageLocation;
 use App\ReturnAdditional;
+use App\MaterialControl;
+use App\MaterialStockPolicy;
+use App\MaterialRequirementPlan;
+use App\MaterialPlanDelivery;
+use App\MaterialInOut;
 
 class MaterialController extends Controller
 {
@@ -118,9 +123,264 @@ public function indexMaterialMonitoring($id){
      ))->with('page', 'Raw Material Monitoring')->with('Head', 'Raw Material Monitoring'); 
 }
 
+public function uploadMaterialMonitoring(Request $request){
+     $id = $request->get('id');
+     $upload = $request->get('upload');
+     $error_count = array();
+     $ok_count = array();
+
+     $uploadRows = preg_split("/\r?\n/", $upload);
+
+     if($id == 'policy'){
+          $period = date('Y-m-01', strtotime($request->get('period')));
+          $delete = MaterialStockPolicy::where('period', '=', $period)->forceDelete();
+     }
+
+     if($id == 'usage'){
+          $period = date('Y-m-01', strtotime($request->get('period')));
+          $delete = MaterialStockPolicy::where('period', '=', $period)->forceDelete();
+     }
+
+     if($id == 'delivery'){
+          $period_from = date('Y-m-01', strtotime($request->get('period')));
+          $period_to = date('Y-m-t', strtotime($request->get('period')));
+          $delete = MaterialPlanDelivery::where('due_date', '>=', $period_from)
+          ->where('due_date', '<=', $period_to)
+          ->forceDelete();
+     }
+
+     if($id == 'inout'){
+          $period_from = date('Y-m-d', strtotime($request->get('inoutFrom')));
+          $period_to = date('Y-m-d', strtotime($request->get('inoutTo')));
+          $delete = MaterialPlanDelivery::where('entry_date', '>=', $period_from)
+          ->where('entry_date', '<=', $period_to)
+          ->forceDelete();
+     }
+
+     foreach($uploadRows as $uploadRow){
+
+          $uploadColumn = preg_split("/\t/", $uploadRow);
+
+          if($id == 'material'){
+               $material = $uploadColumn[0];
+               $description = $uploadColumn[1];
+               $vendor_code = $uploadColumn[2];
+               $vendor_name = $uploadColumn[3];
+               $category = $uploadColumn[4];
+               $pic = $uploadColumn[5];
+               $remark = $uploadColumn[6];
+
+               if(strlen($material) < 7){
+                    array_push($error_count, 'GMC Unmatch '.$material.' ('.strlen($material).')');
+               }
+               else if(strlen($vendor_code) < 4){
+                    array_push($error_count, 'Vendor Code Unmatch '.$vendor_code.' ('.strlen($vendor_code).')');             
+               }
+               else if($category != 'LOKAL' && $category != 'IMPORT'){
+                    array_push($error_count, 'Category Code Unmatch '.$category.' ('.strlen($vendor_code).')'); 
+               }
+               else if($material == "" || $description == "" || $vendor_code == "" || $vendor_name == "" || $category == "" || $pic == "" || $remark == ""){
+                    array_push($error_count, 'Data Blank '.$material); 
+               }
+               else{
+                    try{
+                         $material_control = MaterialControl::updateOrCreate(
+                              ['material_number' => $material],
+                              ['material_description' => $description, 'vendor_code' => $vendor_code, 'vendor_name' => $vendor_name, 'category' => $category, 'pic' => $pic, 'remark' => $remark, 'created_by' => Auth::id(), 'updated_at' => date('Y-m-d H:i:s')]
+                         );
+                         $material_control->save();
+
+                         array_push($ok_count, 'ok');
+                    }
+                    catch (Exception $e) {
+                         array_push($error_count, $e->getMessage());
+                    }    
+               }
+          }
+
+          if($id == 'policy'){
+               $material = $uploadColumn[0];
+               $description = $uploadColumn[1];
+               $policy = $uploadColumn[2];
+
+               if(strlen($material) < 7 || strlen($material) > 8){
+                    array_push($error_count, 'GMC Unmatch '.$material.' ('.strlen($material).')');
+               }
+               else if($period == "" || $material == "" || $description == "" || $policy == ""){
+                    array_push($error_count, 'Data Blank '.$material); 
+               }
+               else if(preg_match("/[a-z]/i", $policy)){
+                    array_push($error_count, 'Data not number '.$material);                    
+               }
+               else{
+                    try{
+                         $material_stock_policy = new MaterialStockPolicy([
+                              'period' => $period,
+                              'material_number' => $material,
+                              'material_description' => $description,
+                              'policy' => $policy,
+                              'created_by' => Auth::id()
+                         ]);
+                         $material_stock_policy->save();
+
+                         array_push($ok_count, 'ok');
+                    }
+                    catch (Exception $e) {
+                         array_push($error_count, $e->getMessage());
+                    }
+               }
+          }
+
+          if($id == 'usage'){
+               $material = $uploadColumn[0];
+               $due_date = $uploadColumn[1];
+               $usage = $uploadColumn[2];
+               $remark = $uploadColumn[3];
+
+               if(strlen($material) < 7 || strlen($material) > 8){
+                    array_push($error_count, 'GMC Unmatch '.$material.' ('.strlen($material).')');
+               }
+               else if($due_date == "" || $material == "" || $usage == ""){
+                    array_push($error_count, 'Data Blank '.$material); 
+               }
+               else if(date('Y-m', strtotime($due_date)) != $request->get('period')){
+                    array_push($error_count, 'Period Unmatch '.$material.' '.$due_date);                     
+               }
+               else if(preg_match("/[a-z]/i", $usage)){
+                    array_push($error_count, 'Data not number '.$material.' '.$due_date.' '.$usage);                    
+               }
+               else{
+                    try{
+                         $material_requirement_plan = new MaterialRequirementPlan([
+                              'material_number' => $material,
+                              'due_date' => $due_date,
+                              'usage' => $usage,
+                              'remark' => $remark,
+                              'created_by' => Auth::id()
+                         ]);
+                         $material_requirement_plan->save();
+
+                         array_push($ok_count, 'ok');
+                    }
+                    catch (Exception $e) {
+                         array_push($error_count, $e->getMessage());
+                    }
+               }
+          }
+
+          if($id == 'delivery'){
+               $material = $uploadColumn[0];
+               $due_date = $uploadColumn[1];
+               $quantity = $uploadColumn[2];
+               $remark = $uploadColumn[3];
+
+               if(strlen($material) < 7 || strlen($material) > 8){
+                    array_push($error_count, 'GMC Unmatch '.$material.' ('.strlen($material).')');
+               }
+               else if($due_date == "" || $material == "" || $usage == ""){
+                    array_push($error_count, 'Data Blank '.$material); 
+               }
+               else if(date('Y-m', strtotime($due_date)) != $request->get('period')){
+                    array_push($error_count, 'Period Unmatch '.$material.' '.$due_date);                     
+               }
+               else if(preg_match("/[a-z]/i", $quantity)){
+                    array_push($error_count, 'Data not number '.$material.' '.$due_date.' '.$quantity);                    
+               }
+               else{
+                    try{
+                         $material_plan_delivery = new MaterialPlanDelivery([
+                              'material_number' => $material,
+                              'due_date' => $due_date,
+                              'quantity' => $quantity,
+                              'remark' => $remark,
+                              'created_by' => Auth::id()
+                         ]);
+                         $material_plan_delivery->save();
+
+                         array_push($ok_count, 'ok');
+                    }
+                    catch (Exception $e) {
+                         array_push($error_count, $e->getMessage());
+                    }
+               }
+          }
+
+          if($id == 'inout'){
+               $material = $uploadColumn[0];
+               $movement_type = $uploadColumn[1];
+               $issue_location = $uploadColumn[2];
+               $receive_location = $uploadColumn[3];
+               $quantity = $uploadColumn[4];
+               $entry_date = $uploadColumn[5];
+               $posting_date = $uploadColumn[6];
+
+               if(strlen($material) < 7 || strlen($material) > 8){
+                    array_push($error_count, 'GMC Unmatch '.$material.' ('.strlen($material).')');
+               }
+               else if(strlen($movement_type) != 3){
+                    array_push($error_count, 'MvT Unmatch '.$material.' ('.strlen($material).')');
+               }
+               else if(strlen($issue_location) < 3 || strlen($issue_location) > 4){
+                    array_push($error_count, 'Location Unmatch '.$material.' '.$issue_location.' '.$receive_location.' ('.strlen($material).')');
+               }
+               else if($array_push == "" || $material == "" || $issue_location == "" || $receive_location == "" || $quantity == "" || $entry_date == "" || $posting_date == ""){
+                    array_push($error_count, 'Data Blank '.$material); 
+               }
+               // else if(date('Y-m', strtotime($posting_date)) != $request->get('period')){
+               //      array_push($error_count, 'Period Unmatch '.$material.' '.$posting_date);                     
+               // }
+               else if(preg_match("/[a-z]/i", $quantity)){
+                    array_push($error_count, 'Data not number '.$material.' '.$posting_date.' '.$quantity);                    
+               }
+               else{
+                    try{
+                         $material_in_out = new MaterialInOut([
+                              'material_number' => $material,
+                              'movement_type' => $movement_type,
+                              'issue_location' => $issue_location,
+                              'receive_location' => $receive_location,
+                              'quantity' => $quantity,
+                              'entry_date' => $entry_date,
+                              'posting_date' => $posting_date,
+                              'created_by' => Auth::id()
+                         ]);
+                         $material_in_out->save();
+
+                         array_push($ok_count, 'ok');
+                    }
+                    catch (Exception $e) {
+                         array_push($error_count, $e->getMessage());
+                    }
+               }
+          }
+
+     }
+
+     $response = array(
+          'status' => true,
+          'id' => $id,
+          'error_count' => $error_count,
+          'ok_count' => $ok_count,
+          'message' => 'ERROR: '.count($error_count). ' OK: '.count($ok_count)
+     );
+     return Response::json($response);
+
+}
+
+public function fetchMaterialControl(Request $request){
+     $material_control = MaterialControl::orderBy('material_number', 'asc')->get();
+
+     $response = array(
+          'status' => true,
+          'material_control' => $material_control,
+     );
+     return Response::json($response);
+}
+
+
 public function fetchMaterialMonitoring(Request $request){
      $period = date('Y-m-d');
-     $period = '2020-12-18';
+     // $period = '2020-12-18';
 
      if(strlen($request->get('period'))>0){
           $period = $request->get('period');
@@ -270,6 +530,8 @@ public function fetchMaterialMonitoring(Request $request){
 
 function generateMaterialMonitoring($due_date){
 
+     // $due_date = '2021-03-05';
+
      $period = date('Y-m', strtotime($due_date));
 
      $first = date('Y-m-01', strtotime($due_date));
@@ -336,6 +598,10 @@ function generateMaterialMonitoring($due_date){
           }
      }
      $where_materials = $material_number;
+
+     if($where_materials == ""){
+          $where_materials = "''";
+     }
 
      $materials = db::select("SELECT
           mc.material_number,

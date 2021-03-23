@@ -3025,6 +3025,7 @@ Route::get('fetch/display/efficiency_monitoring_monthly', 'DisplayController@fet
 //DISPLAY RAW MATERIAL
 Route::get('index/material/material_monitoring/{id}', 'MaterialController@indexMaterialMonitoring');
 Route::get('fetch/material/material_monitoring', 'MaterialController@fetchMaterialMonitoring');
+Route::get('fetch/material/material_control', 'MaterialController@fetchMaterialControl');
 
 //DISPLAY STUFFING TIME
 Route::get('index/display/stuffing_time', 'DisplayController@indexStuffingTime');
@@ -3712,6 +3713,7 @@ Route::get('index/audit_kanban/table', 'CparController@fetch_table_audit_kanban'
 
 //5S Patrol
 Route::get('index/patrol', 'AuditController@index');
+Route::get('index/audit', 'AuditController@index_audit');
 Route::get('index/audit_patrol', 'AuditController@index_patrol');
 Route::get('index/audit_patrol_mis', 'AuditController@index_mis');
 Route::get('index/audit_patrol_std', 'AuditController@index_std');
