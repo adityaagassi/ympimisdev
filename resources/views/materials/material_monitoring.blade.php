@@ -536,7 +536,7 @@
 	}
 
 	function fetchChart(id){
-		// $('#loading').show();
+		$('#loading').show();
 		var period = $('#period').val();
 		var data = {
 			period:period
@@ -555,6 +555,7 @@
 
 				if(result.material_percentages.length == 0){
 					alert('Data pada periode tersebut belum di update atau ditambahkan');
+					$('#loading').hide();
 					return false;
 				}
 
@@ -726,7 +727,13 @@
 							color: '#f57f17'
 						}]
 					});
+
+					$('#loading').hide();
 				});
+}
+else{
+	$('#loading').hide();
+	alert(result.message);
 }
 });
 }
