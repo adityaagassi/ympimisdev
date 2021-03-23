@@ -563,6 +563,8 @@ public function confirmation()
 
 	return view('visitors.confirmation')
 	->with('page', 'Visitor Confirmation')
+	->with('title', 'Telephone List')
+	->with('title_jp', '')
 	->with('japan',$japan)
 	->with('hrga',$hrga)
 	->with('production',$production)
