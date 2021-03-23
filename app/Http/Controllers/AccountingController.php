@@ -783,14 +783,14 @@ class AccountingController extends Controller
             $dept = "Procurement Department";
             $budgets->where('department', '=', $dept);
         }
-        else if($request->get('department') == "Woodwind Instrument - Body Parts Process (WI-BPP) Department") {
-            $dept = "Woodwind Instrument - Key Parts Process (WI-KPP) Department";
-            $budgets->where('department', '=', $dept);
-        }
-        else if($request->get('department') == "Woodwind Instrument - Surface Treatment (WI-ST) Department") {
-            $dept = "Woodwind Instrument - Welding Process (WI-WP) Department";
-            $budgets->where('department', '=', $dept);
-        }
+        // else if($request->get('department') == "Woodwind Instrument - Body Parts Process (WI-BPP) Department") {
+        //     $dept = "Woodwind Instrument - Key Parts Process (WI-KPP) Department";
+        //     $budgets->where('department', '=', $dept);
+        // }
+        // else if($request->get('department') == "Woodwind Instrument - Surface Treatment (WI-ST) Department") {
+        //     $dept = "Woodwind Instrument - Welding Process (WI-WP) Department";
+        //     $budgets->where('department', '=', $dept);
+        // }
         else if ($request->get('department') == "Management Information System Department") {
         }
         else{

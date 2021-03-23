@@ -294,12 +294,12 @@
 						if (value.employee_id == null) {
 							weldingTableBody += '<tr '+color+'>';
 							weldingTableBody += '<td height="5%">'+value.ws+'</td>';
-							weldingTableBody += '<td '+colorShift+'>Not Found</td>';
+							weldingTableBody += '<td>Not Found</td>';
 							weldingTableBody += '<td '+color3+'>'+sedang2+'<p></p>'+setTimeSedang(index)+setTimeSedangKosong(index)+'</td>';
 						}else{
 							weldingTableBody += '<tr '+color+'>';
 							weldingTableBody += '<td height="5%">'+value.ws+'</td>';
-							weldingTableBody += '<td '+colorShift+'>'+value.employee_id+'<br>'+value.employee_name.split(' ').slice(0,2).join(' ')+'</td>';
+							weldingTableBody += '<td>'+value.employee_id+'<br>'+value.employee_name.split(' ').slice(0,2).join(' ')+'</td>';
 							weldingTableBody += '<td '+color3+'>'+sedang2+'<p></p>'+setTimeSedang(index)+setTimeSedangKosong(index)+'</td>';
 						}
 						weldingTableBody += '<td style="color:#fcff38">'+value.queue_1+'</td>';

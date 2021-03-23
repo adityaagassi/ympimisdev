@@ -5430,20 +5430,21 @@ class InjectionsController extends Controller
 
             }else{
                 $transaction = InjectionTag::where('tag',$request->get('tag'))->first();
-                // $transaction->operator_id = $request->get('operator_id');
-                $transaction->operator_id = null;
-                $transaction->part_name = null;
-                $transaction->part_type = null;
-                $transaction->color = null;
-                $transaction->cavity = null;
-                $transaction->location = null;
-                $transaction->shot = null;
-                $transaction->availability = null;
-                // $transaction->availability = 3;
-                $transaction->height_check = null;
-                $transaction->push_pull_check = null;
-                $transaction->torque_check = null;
-                $transaction->remark = null;
+                $transaction->operator_id = $request->get('operator_id');
+                // $transaction->operator_id = null;
+                // $transaction->part_name = null;
+                // $transaction->part_type = null;
+                // $transaction->color = null;
+                // $transaction->cavity = null;
+                // $transaction->location = null;
+                $transaction->location = 'RC91';
+                // $transaction->shot = null;
+                // $transaction->availability = null;
+                $transaction->availability = 3;
+                // $transaction->height_check = null;
+                // $transaction->push_pull_check = null;
+                // $transaction->torque_check = null;
+                // $transaction->remark = null;
                 $concat_kanban = $transaction->concat_kanban;
                 $transaction->save();
 
@@ -5502,7 +5503,7 @@ class InjectionsController extends Controller
                 $process->remark = 'Close';
                 $process->save();
 
-                $deleteInjList = DB::SELECT("DELETE FROM ympirfid.injection_lists where tag = '".$concat_kanban."'");
+                // $deleteInjList = DB::SELECT("DELETE FROM ympirfid.injection_lists where tag = '".$concat_kanban."'");
 
                 // $material = db::connection('mysql2')->table('materials')
                 // ->where('material_number', '=', $request->get('material_number'))
