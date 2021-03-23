@@ -1154,7 +1154,7 @@
 									}
 								});
 							}
-							intervalUpdate = setInterval(updateTemp,10000);
+							intervalUpdate = setInterval(updateTemp,60000);
 						}else{
 							$('#start_time').val("");
 							$('#kensa_code').html("-");
@@ -1880,7 +1880,7 @@
 					// reset();
 					// clearAll();
 					$('#start_time').val(getActualFullDate());
-					intervalUpdate = setInterval(updateTemp,10000);
+					intervalUpdate = setInterval(updateTemp,60000);
 					openSuccessGritter('Success','Memulai Kensa');
 				}
 				else{
