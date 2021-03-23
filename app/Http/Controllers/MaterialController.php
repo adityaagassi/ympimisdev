@@ -573,6 +573,7 @@ function generateMaterialMonitoring($due_date){
           ) AS s ON s.material_number = msp.material_number 
           WHERE
           msp.policy > 0 
+          AND msp.material_number in (SELECT material_number FROM material_controls)
           AND date_format( msp.period, '%Y-%m' ) = '".$period."'
           ORDER BY
           percentage ASC");
