@@ -544,7 +544,7 @@ class WeldingProcessController extends Controller
 	public function indexResumeKanban()
 	{
 		$title = 'Welding Resume Kanban';
-		$title_jp = '??';
+		$title_jp = '半田付けかんばんのまとめ';
 
 		return view('processes.welding.report.resume_kanban', array(
 			'title' => $title,
@@ -3751,6 +3751,7 @@ class WeldingProcessController extends Controller
 	                    $first = "DATE_FORMAT( NOW(), '%Y-%m-01' )";
 	                    $last = "'".$date_to."'";
 	               }
+	               $date_now = "NOW()";
 	          }else{
 	               if ($date_to == '') {
 	                    $first = "'".$date_from."'";
@@ -3759,6 +3760,7 @@ class WeldingProcessController extends Controller
 	                    $first = "'".$date_from."'";
 	                    $last = "'".$date_to."'";
 	               }
+	               $date_now = "'".$date_from."'";
 	          }
 
 			$monitoring = DB::SELECT("SELECT
@@ -3954,11 +3956,237 @@ class WeldingProcessController extends Controller
 				b.repair_status,
 				b.kensa_status");
 
+			$monitoring_quartal = DB::SELECT("SELECT
+				CONCAT(
+					CONCAT( YEAR ( ".$date_now."), '-01' ),
+					' - ',
+					CONCAT( YEAR ( ".$date_now."), '-03' )) AS dates,
+				(
+				SELECT
+					COUNT(
+					DISTINCT ( id )) AS before_kensa 
+				FROM
+					jig_schedules 
+				WHERE
+					jig_schedules.schedule_date BETWEEN CONCAT( YEAR ( ".$date_now."), '-01-01' ) 
+					AND LAST_DAY(
+					CONCAT( YEAR ( ".$date_now."), '-03-01' ))) AS before_kensa,
+				(
+				SELECT
+					COUNT(
+					DISTINCT ( id )) 
+				FROM
+					jig_schedules 
+				WHERE
+					DATE( jig_schedules.kensa_time ) BETWEEN CONCAT( YEAR ( ".$date_now."), '-01-01' ) 
+					AND LAST_DAY(
+					CONCAT( YEAR ( ".$date_now."), '-03-01' )) 
+					AND schedule_status = 'Close' 
+					AND kensa_time IS NOT NULL 
+				) AS after_kensa,
+				(
+				SELECT
+					COUNT(
+					DISTINCT ( id )) 
+				FROM
+					jig_schedules 
+				WHERE
+					DATE( jig_schedules.kensa_time ) BETWEEN CONCAT( YEAR ( ".$date_now."), '-01-01' ) 
+					AND LAST_DAY(
+					CONCAT( YEAR ( ".$date_now."), '-03-01' )) 
+					AND schedule_status = 'Open' 
+					AND kensa_time IS NOT NULL 
+					AND repair_time IS NULL 
+				) AS before_repair,
+				(
+				SELECT
+					COUNT(
+					DISTINCT ( id )) 
+				FROM
+					jig_schedules 
+				WHERE
+					DATE( jig_schedules.repair_time ) BETWEEN CONCAT( YEAR ( ".$date_now."), '-01-01' ) 
+					AND LAST_DAY(
+					CONCAT( YEAR ( ".$date_now."), '-03-01' )) 
+					AND schedule_status = 'Open' 
+					AND kensa_time IS NOT NULL 
+					AND repair_time IS NOT NULL 
+				) AS waiting_part UNION ALL
+			SELECT
+				CONCAT(
+					CONCAT( YEAR ( ".$date_now."), '-04' ),
+					' - ',
+					CONCAT( YEAR ( ".$date_now."), '-06' )) AS dates,
+				(
+				SELECT
+					COUNT(
+					DISTINCT ( id )) AS before_kensa 
+				FROM
+					jig_schedules 
+				WHERE
+					jig_schedules.schedule_date BETWEEN CONCAT( YEAR ( ".$date_now."), '-04-01' ) 
+					AND LAST_DAY(
+					CONCAT( YEAR ( ".$date_now."), '-06-01' ))) AS before_kensa,
+				(
+				SELECT
+					COUNT(
+					DISTINCT ( id )) 
+				FROM
+					jig_schedules 
+				WHERE
+					DATE( jig_schedules.kensa_time ) BETWEEN CONCAT( YEAR ( ".$date_now."), '-04-01' ) 
+					AND LAST_DAY(
+					CONCAT( YEAR ( ".$date_now."), '-06-01' )) 
+					AND schedule_status = 'Close' 
+					AND kensa_time IS NOT NULL 
+				) AS after_kensa,
+				(
+				SELECT
+					COUNT(
+					DISTINCT ( id )) 
+				FROM
+					jig_schedules 
+				WHERE
+					DATE( jig_schedules.kensa_time ) BETWEEN CONCAT( YEAR ( ".$date_now."), '-04-01' ) 
+					AND LAST_DAY(
+					CONCAT( YEAR ( ".$date_now."), '-06-01' )) 
+					AND schedule_status = 'Open' 
+					AND kensa_time IS NOT NULL 
+					AND repair_time IS NULL 
+				) AS before_repair,
+				(
+				SELECT
+					COUNT(
+					DISTINCT ( id )) 
+				FROM
+					jig_schedules 
+				WHERE
+					DATE( jig_schedules.repair_time ) BETWEEN CONCAT( YEAR ( ".$date_now."), '-04-01' ) 
+					AND LAST_DAY(
+					CONCAT( YEAR ( ".$date_now."), '-06-01' )) 
+					AND schedule_status = 'Open' 
+					AND kensa_time IS NOT NULL 
+					AND repair_time IS NOT NULL 
+				) AS waiting_part UNION ALL
+			SELECT
+				CONCAT(
+					CONCAT( YEAR ( ".$date_now."), '-07' ),
+					' - ',
+					CONCAT( YEAR ( ".$date_now."), '-09' )) AS dates,
+				(
+				SELECT
+					COUNT(
+					DISTINCT ( id )) AS before_kensa 
+				FROM
+					jig_schedules 
+				WHERE
+					jig_schedules.schedule_date BETWEEN CONCAT( YEAR ( ".$date_now."), '-07-01' ) 
+					AND LAST_DAY(
+					CONCAT( YEAR ( ".$date_now."), '-09-01' ))) AS before_kensa,
+				(
+				SELECT
+					COUNT(
+					DISTINCT ( id )) 
+				FROM
+					jig_schedules 
+				WHERE
+					DATE( jig_schedules.kensa_time ) BETWEEN CONCAT( YEAR ( ".$date_now."), '-07-01' ) 
+					AND LAST_DAY(
+					CONCAT( YEAR ( ".$date_now."), '-09-01' )) 
+					AND schedule_status = 'Close' 
+					AND kensa_time IS NOT NULL 
+				) AS after_kensa,
+				(
+				SELECT
+					COUNT(
+					DISTINCT ( id )) 
+				FROM
+					jig_schedules 
+				WHERE
+					DATE( jig_schedules.kensa_time ) BETWEEN CONCAT( YEAR ( ".$date_now."), '-07-01' ) 
+					AND LAST_DAY(
+					CONCAT( YEAR ( ".$date_now."), '-09-01' )) 
+					AND schedule_status = 'Open' 
+					AND kensa_time IS NOT NULL 
+					AND repair_time IS NULL 
+				) AS before_repair,
+				(
+				SELECT
+					COUNT(
+					DISTINCT ( id )) 
+				FROM
+					jig_schedules 
+				WHERE
+					DATE( jig_schedules.repair_time ) BETWEEN CONCAT( YEAR ( ".$date_now."), '-07-01' ) 
+					AND LAST_DAY(
+					CONCAT( YEAR ( ".$date_now."), '-09-01' )) 
+					AND schedule_status = 'Open' 
+					AND kensa_time IS NOT NULL 
+					AND repair_time IS NOT NULL 
+				) AS waiting_part UNION ALL
+			SELECT
+				CONCAT(
+					CONCAT( YEAR ( ".$date_now."), '-10' ),
+					' - ',
+					CONCAT( YEAR ( ".$date_now."), '-12' )) AS dates,
+				(
+				SELECT
+					COUNT(
+					DISTINCT ( id )) AS before_kensa 
+				FROM
+					jig_schedules 
+				WHERE
+					jig_schedules.schedule_date BETWEEN CONCAT( YEAR ( ".$date_now."), '-10-01' ) 
+					AND LAST_DAY(
+					CONCAT( YEAR ( ".$date_now."), '-12-01' ))) AS before_kensa,
+				(
+				SELECT
+					COUNT(
+					DISTINCT ( id )) 
+				FROM
+					jig_schedules 
+				WHERE
+					DATE( jig_schedules.kensa_time ) BETWEEN CONCAT( YEAR ( ".$date_now."), '-10-01' ) 
+					AND LAST_DAY(
+					CONCAT( YEAR ( ".$date_now."), '-12-01' )) 
+					AND schedule_status = 'Close' 
+					AND kensa_time IS NOT NULL 
+				) AS after_kensa,
+				(
+				SELECT
+					COUNT(
+					DISTINCT ( id )) 
+				FROM
+					jig_schedules 
+				WHERE
+					DATE( jig_schedules.kensa_time ) BETWEEN CONCAT( YEAR ( ".$date_now."), '-10-01' ) 
+					AND LAST_DAY(
+					CONCAT( YEAR ( ".$date_now."), '-12-01' )) 
+					AND schedule_status = 'Open' 
+					AND kensa_time IS NOT NULL 
+					AND repair_time IS NULL 
+				) AS before_repair,
+				(
+				SELECT
+					COUNT(
+					DISTINCT ( id )) 
+				FROM
+					jig_schedules 
+				WHERE
+					DATE( jig_schedules.repair_time ) BETWEEN CONCAT( YEAR ( ".$date_now."), '-10-01' ) 
+					AND LAST_DAY(
+					CONCAT( YEAR ( ".$date_now."), '-12-01' )) 
+					AND schedule_status = 'Open' 
+					AND kensa_time IS NOT NULL 
+				AND repair_time IS NOT NULL 
+				) AS waiting_part");
+
 			$response = array(
 				'status' => true,
 				'monitoring' => $monitoring,
 				'outstanding' => $outstanding,
 				'resume' => $resume,
+				'monitoring_quartal' => $monitoring_quartal,
 			);
 			return Response::json($response);
 		} catch (\Exception $e) {
@@ -4060,6 +4288,121 @@ class WeldingProcessController extends Controller
 				}
 
 				$judul = 'DETAIL WELDING KENSA JIG YANG MENUNGGU PART TANGGAL '.$dateTitle;
+			}
+
+			$response = array(
+				'status' => true,
+				'message' => 'Success Get Data',
+				'detail' => $detail,
+				'schedule' => $schedule,
+				'judul' => $judul,
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function fetchWldDetailJigMonitoringPeriode(Request $request)
+	{
+		try {
+			$date = $request->get('date');
+			$dates = explode(' - ', $date);
+
+			$first = $dates[0].'-01';
+			$last = date("Y-m-t", strtotime($dates[1]));
+
+			$status = $request->get('status');
+			$dateTitle1 = strtoupper(date("d F Y", strtotime($first)));
+			$dateTitle2 = strtoupper(date("d F Y", strtotime($last)));
+
+			$detail = [];
+
+			if ($status == 'Schedule Kensa') {
+				$schedule = DB::SELECT("select * from jig_schedules join jigs on jigs.jig_id = jig_schedules.jig_id where schedule_date BETWEEN '".$first."' and '".$last."'");
+
+				foreach ($schedule as $key) {
+					$detail[$key->jig_id] = DB::SELECT("select * from jig_schedules join jig_kensa_logs on jig_kensa_logs.jig_id = jig_schedules.jig_id and DATE(finished_at) = schedule_date join jigs on jigs.jig_id = jig_schedules.jig_id where schedule_date BETWEEN '".$first."' and '".$last."' and jig_schedules.jig_id = '".$key->jig_id."'");
+				}
+
+				$judul = 'DETAIL SCHEDULE WELDING KENSA JIG<br>PERIODE '.$dateTitle1.' - '.$dateTitle2;
+			}elseif ($status == 'Sudah Kensa') {
+				$schedule = DB::SELECT("select * from jig_schedules join jigs on jigs.jig_id = jig_schedules.jig_id where DATE(kensa_time) BETWEEN '".$first."' and '".$last."' and schedule_status = 'Close'");
+
+				foreach ($schedule as $key) {
+					$detail[$key->jig_id] = DB::SELECT("SELECT
+						*,
+						CONCAT(
+						SPLIT_STRING ( empkensa.NAME, ' ', 1 ),
+						' ',
+						SPLIT_STRING ( empkensa.NAME, ' ', 2 )) AS kensaemp 
+						FROM
+						jig_schedules
+						JOIN jig_kensa_logs ON jig_kensa_logs.jig_id = jig_schedules.jig_id 
+						AND DATE( finished_at ) = DATE(kensa_time)
+						JOIN jigs ON jigs.jig_id = jig_schedules.jig_id
+						LEFT JOIN employee_syncs empkensa ON empkensa.employee_id = jig_schedules.kensa_pic 
+						WHERE
+						DATE(kensa_time) BETWEEN '".$first."' and '".$last."' 
+						AND schedule_status = 'Close' 
+						AND jig_schedules.jig_id = '".$key->jig_id."'");
+				}
+
+				$judul = 'DETAIL WELDING KENSA JIG YANG SUDAH KENSA<br>PERIODE '.$dateTitle1.' - '.$dateTitle2;
+			}elseif ($status == 'Belum Repair') {
+				$schedule = DB::SELECT("select * from jig_schedules join jigs on jigs.jig_id = jig_schedules.jig_id where DATE(kensa_time) BETWEEN '".$first."' and '".$last."' and schedule_status = 'Open' and kensa_time is not null and repair_time is null");
+
+				foreach ($schedule as $key) {
+					$detail[$key->jig_id] = DB::SELECT("SELECT
+						*,
+						CONCAT(
+						SPLIT_STRING ( empkensa.NAME, ' ', 1 ),
+						' ',
+						SPLIT_STRING ( empkensa.NAME, ' ', 2 )) AS kensaemp 
+						FROM
+						jig_schedules
+						JOIN jig_kensas ON jig_kensas.jig_id = jig_schedules.jig_id 
+						AND DATE( finished_at ) = DATE(kensa_time)
+						JOIN jigs ON jigs.jig_id = jig_schedules.jig_id 
+						LEFT JOIN employee_syncs empkensa ON empkensa.employee_id = jig_schedules.kensa_pic 
+						WHERE
+						DATE(kensa_time) BETWEEN '".$first."' and '".$last."' 
+						AND schedule_status = 'Open' 
+						AND jig_schedules.jig_id = '".$key->jig_id."' 
+						AND kensa_time IS NOT NULL 
+						AND repair_time IS NULL");
+				}
+
+				$judul = 'DETAIL WELDING KENSA JIG YANG BELUM REPAIR<br>PERIODE '.$dateTitle1.' - '.$dateTitle2;
+			}elseif ($status == 'Menunggu Part') {
+				$schedule = DB::SELECT("select * from jig_schedules join jigs on jigs.jig_id = jig_schedules.jig_id where DATE(repair_time) BETWEEN '".$first."' and '".$last."' and schedule_status = 'Open' and kensa_time is not null and repair_time is not null");
+
+				foreach ($schedule as $key) {
+					$detail[$key->jig_id] = DB::SELECT("SELECT
+						* ,
+						CONCAT(
+						SPLIT_STRING ( empkensa.NAME, ' ', 1 ),
+						' ',
+						SPLIT_STRING ( empkensa.NAME, ' ', 2 )) AS kensaemp 
+						FROM
+						jig_schedules
+						JOIN jig_kensas ON jig_kensas.jig_id = jig_schedules.jig_id 
+						AND DATE( finished_at ) = DATE(repair_time)
+						JOIN jigs ON jigs.jig_id = jig_schedules.jig_id 
+						LEFT JOIN employee_syncs empkensa ON empkensa.employee_id = jig_schedules.kensa_pic 
+						WHERE
+						DATE(repair_time) BETWEEN '".$first."' and '".$last."' 
+						AND schedule_status = 'Open' 
+						AND jig_schedules.jig_id = '".$key->jig_id."' 
+						AND kensa_time IS NOT NULL 
+						AND repair_time IS NOT NULL");
+				}
+
+				$judul = 'DETAIL WELDING KENSA JIG YANG MENUNGGU PART<br>PERIODE '.$dateTitle1.' - '.$dateTitle2;
 			}
 
 			$response = array(

@@ -4166,7 +4166,7 @@ class RecorderProcessController extends Controller
       ->with('ng_lists2',$ng_lists)
       ->with('ng_lists3',$ng_lists)
       ->with('ng_lists4',$ng_lists)
-      ->with('title_jp', '??')
+      ->with('title_jp', 'リコーダー検査確認')
       ->with('page', 'Kensa Kakuning Recorder');
     }
 
@@ -5942,7 +5942,7 @@ class RecorderProcessController extends Controller
     {
       return view('recorder.report.report_kensa')
       ->with('title', 'Report Kensa Kakuning Recorder')
-      ->with('title_jp', '??')
+      ->with('title_jp', 'リコーダー検査報告')
       ->with('page', 'Report Kensa Kakuning Recorder');
     }
 

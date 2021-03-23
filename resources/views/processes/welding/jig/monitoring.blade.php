@@ -100,26 +100,29 @@
 				</button>
 			</div>
 		</div>
-		<div class="col-xs-9">
+		<div class="col-xs-12" style="padding-bottom: 10px">
 			<div id="container" style="width: 100%;"></div>
+		</div>
+		<div class="col-xs-9">
+			<div id="container2" style="width: 100%;"></div>
 		</div>
 		<div class="col-xs-3">
 			<div class="row" style="padding-right: 15px">
 				<div class="box box-solid">
 					<div class="box-header" style="background-color: #2d2d2e;">
-						<center><span style="font-size: 24px; font-weight: bold; color: white;">AKUMULASI HINGGA HARI INI</span></center>
+						<center><span style="font-size: 20px; font-weight: bold; color: white;">AKUMULASI HINGGA HARI INI</span></center>
 					</div>
-					<table class="table table-responsive" style="height: 343px">
+					<table class="table table-responsive" style="height: 300px">
 						<tr style="background-color: #545454;color:white">
-							<th style="vertical-align: middle;font-weight: bold;font-size: 2vw;padding-top: 0px;padding-bottom: 0px">Belum Repair</th>
-							<th style="vertical-align: middle;font-weight: bold;font-size: 2vw;padding-top: 0px;padding-bottom: 0px"><span class="pull-right" style="color:#7cff73" id="blm_repair">0</span></th>
+							<th style="vertical-align: middle;font-weight: bold;font-size: 1.5vw;padding-top: 0px;padding-bottom: 0px">Belum Repair</th>
+							<th style="vertical-align: middle;font-weight: bold;font-size: 1.5vw;padding-top: 0px;padding-bottom: 0px"><span class="pull-right" style="color:#7cff73" id="blm_repair">0</span></th>
 						</tr>
 						<tr style="background-color: #545454;color:white">
-							<th style="vertical-align: middle;font-weight: bold;font-size: 2vw;padding-top: 0px;padding-bottom: 0px">Menunggu Parts</th>
-							<th style="vertical-align: middle;font-weight: bold;font-size: 2vw;padding-top: 0px;padding-bottom: 0px"><span class="pull-right" style="color:#7cff73" id="mng_part">0</span></th>
+							<th style="vertical-align: middle;font-weight: bold;font-size: 1.5vw;padding-top: 0px;padding-bottom: 0px">Menunggu Parts</th>
+							<th style="vertical-align: middle;font-weight: bold;font-size: 1.5vw;padding-top: 0px;padding-bottom: 0px"><span class="pull-right" style="color:#7cff73" id="mng_part">0</span></th>
 						</tr>
 						<tr style="background-color: #545454;color:white">
-							<th style="vertical-align: middle;font-weight: bold;font-size: 2vw;padding-top: 0px;padding-bottom: 0px">Belum Kensa</th>
+							<th style="vertical-align: middle;font-weight: bold;font-size: 1.5vw;padding-top: 0px;padding-bottom: 0px">Belum Kensa</th>
 							<th style="vertical-align: middle;font-weight: bold;font-size: 3vw;padding-top: 0px;padding-bottom: 0px"><span class="pull-right" style="color:#ff7373" id="blm_kensa">0</span></th>
 						</tr>
 					</table>
@@ -228,7 +231,7 @@
 				Highcharts.chart('container', {
 				    chart: {
 				        type: 'column',
-				        height: '400px'
+				        height: '350px'
 				    },
 				    title: {
 				        text: 'KENSA JIG MONITORING',
@@ -343,6 +346,139 @@
 				    }]
 				});
 
+				var date_periode = [];
+				var series_periode = [];
+				var before_kensa_periode = [];
+				var after_kensa_periode = [];
+				var before_repair_periode = [];
+				var waiting_part_periode = [];
+
+				for (var i = 0; i < result.monitoring_quartal.length; i++) {
+					date_periode.push(result.monitoring_quartal[i].dates);
+					before_kensa_periode.push(parseInt(result.monitoring_quartal[i].before_kensa));
+					after_kensa_periode.push(parseInt(result.monitoring_quartal[i].after_kensa));
+					before_repair_periode.push(parseInt(result.monitoring_quartal[i].before_repair));
+					waiting_part_periode.push(parseInt(result.monitoring_quartal[i].waiting_part));
+				}
+
+				Highcharts.chart('container2', {
+				    chart: {
+				        type: 'column',
+				        height: '350px'
+				    },
+				    title: {
+				        text: 'RESUME BY PERIODE',
+				        style: {
+			                fontSize: '30px',
+			                fontWeight: 'bold'
+			              }
+				    },
+				    xAxis: {
+				        categories: date_periode,
+				        type: 'category',
+						gridLineWidth: 1,
+						gridLineColor: 'RGB(204,255,255)',
+						lineWidth:2,
+						lineColor:'#9e9e9e',
+						labels: {
+							style: {
+								fontSize: '15px'
+							}
+						},
+				    },
+				    yAxis: {
+							title: {
+								text: 'Total Kensa Jig',
+								style: {
+			                        color: '#eee',
+			                        fontSize: '13px',
+			                        fill: '#6d869f'
+			                    }
+							},
+							labels:{
+					        	style:{
+									fontSize:"15px"
+								}
+					        },
+							type: 'linear'
+						},
+				    legend: {
+			              itemStyle:{
+			                color: "white",
+			                fontSize: "12px",
+			                fontWeight: "bold",
+
+			              },
+					},	
+				    tooltip: {
+				        headerFormat: '<b>{point.x}</b><br/>',
+				        pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+				    },
+				    plotOptions: {
+				        column: {
+			                  color:  Highcharts.ColorString,
+			                  borderRadius: 1,
+			                  dataLabels: {
+			                      enabled: true
+			                  }
+			              },
+				        series:{
+							cursor: 'pointer',
+			                point: {
+			                  events: {
+			                    click: function () {
+			                      ShowModalPeriode(this.category,this.series.name);
+			                    }
+			                  }
+			                },
+							dataLabels: {
+								enabled: true,
+								format: '{point.y}',
+								style:{
+									fontSize: '1vw'
+								}
+							},
+							animation: false,
+							pointPadding: 0.9,
+							groupPadding: 0.93,
+							borderWidth: 0,
+							cursor: 'pointer'
+						},
+				    },
+				    credits:{
+				    	enabled:false
+				    },
+				    series: [{
+				        name: 'Schedule Kensa',
+				        data: before_kensa_periode,
+				        animation: false,
+				        colorByPoint:false,
+					    color:'#ff6666',
+					    // stacking: 'normal',
+				    }, {
+				        name: 'Sudah Kensa',
+				        data: after_kensa_periode,
+				        animation: false,
+				        colorByPoint:false,
+					    color:'#5cb85c',
+					    stacking: 'normal',
+				    }, {
+				        name: 'Belum Repair',
+				        data: before_repair_periode,
+				        animation: false,
+				        colorByPoint:false,
+					    color:'#f0ad4e',
+					    stacking: 'normal',
+				    }, {
+				        name: 'Menunggu Part',
+				        data: waiting_part_periode,
+				        animation: false,
+				        colorByPoint:false,
+					    color:'#448aff',
+					    stacking: 'normal',
+				    }]
+				});
+
 				var before_kensa = 0;
 				var waiting_part = 0;
 				var before_repair = 0;
@@ -425,6 +561,120 @@
 		}
 
 		$.get('{{ url("fetch/welding/detail_monitoring_jig") }}',data, function(result, status, xhr){
+			if(result.status){
+				$('#modalDetail').modal('show');
+
+				var detail = "";
+				$('#bodyDetail').empty();
+				var index = 1;
+
+				$('#judul_detail').html(result.judul);
+
+				$.each(result.schedule, function(key, value) {
+			        // detail += '<center><h3 class="box-title"></h3></center>';
+			        if (kondisi === 'Sudah Kensa' || kondisi === 'Belum Repair' || kondisi === 'Menunggu Part') {
+			        	detail += '<div class="box-body">';
+				        detail += '<table class="table table-bordered" style="font-size:15px" id="tableDetail_'+index+'">';
+				        detail += '<thead>';
+				        detail += '<tr style="border-bottom:3px solid black;border-top:3px solid black;background-color:#7e5686;color:white;font-size:20px">';
+				        detail += '<th colspan="11">'+value.jig_id+' - '+value.jig_name+'</th>';
+				        detail += '</tr>';
+				        detail += '<tr style="border-bottom:3px solid black;border-top:3px solid black;background-color:#cc8fc1;color:black;font-size:15px">';
+				        detail += '<th colspan="5">Schedule : '+value.schedule_date+'</th>';
+				        detail += '<th colspan="6" style="border-left:3px solid black">Kensa : '+value.kensa_time+'</th>';
+				        detail += '</tr>';
+				        detail += '<tr style="border-bottom:3px solid black;border-top:3px solid black;background-color:#cddc39">';
+				        detail += '<th>No.</th>';
+				        detail += '<th>Jig ID</th>';
+				        detail += '<th>Jig Name</th>';
+				        detail += '<th>Jig Point Check</th>';
+				        detail += '<th>Jig Part</th>';
+				        detail += '<th>Lower</th>';
+				        detail += '<th>Upper</th>';
+				        detail += '<th>Value</th>';
+				        detail += '<th>Result</th>';
+				        detail += '<th>Status</th>';
+				        detail += '<th>Operator</th>';
+				        detail += '</tr>';
+				        detail += '</thead>';
+				        var index2 = 1;
+						$.each(result.detail[value.jig_id], function(key2, value2) {
+							if (value2.result == 'NG') {
+								var color = '#ffbaba';
+							}else{
+								var color = '#f2f2f2';
+							}
+							detail += '<tbody style="border:1px solid black">';
+							detail += '<tr style="border:1px solid black;padding:2px;background-color:'+color+'">';
+							detail += '<td style="border:1px solid black;padding:2px">'+index2+'</td>';
+							detail += '<td style="border:1px solid black;padding:2px">'+value2.jig_id+'</td>';
+							detail += '<td style="border:1px solid black;padding:2px">'+value2.jig_name+'</td>';
+							detail += '<td style="border:1px solid black;padding:2px">'+value2.check_name+'</td>';
+							detail += '<td style="border:1px solid black;padding:2px">'+value2.jig_child+'</td>';
+							detail += '<td style="border:1px solid black;padding:2px">'+value2.lower_limit+'</td>';
+							detail += '<td style="border:1px solid black;padding:2px">'+value2.upper_limit+'</td>';
+							detail += '<td style="border:1px solid black;padding:2px">'+value2.value+'</td>';
+							detail += '<td style="border:1px solid black;padding:2px">'+value2.result+'</td>';
+							if (value2.status ==  null) {
+								detail += '<td style="border:1px solid black;padding:2px">OK</td>';
+							}else{
+								detail += '<td style="border:1px solid black;padding:2px">'+value2.status+'</td>';
+							}
+							detail += '<td style="border:1px solid black;padding:2px">'+value2.kensaemp+'</td>';
+							detail += '</tr>';
+							detail += '</tbody>';
+							index2++;
+						});
+						detail += '</table>';
+						detail += '</div>';
+			        }else{
+			        	detail += '<div class="box-body">';
+				        detail += '<table class="table table-bordered" style="font-size:20px" id="tableDetail_'+index+'">';
+				        detail += '<thead>';
+				        detail += '<tr style="border-bottom:3px solid black;border-top:3px solid black;background-color:#7e5686;color:white;font-size:20px">';
+				        detail += '<th colspan="2">JIG SCHEDULE</th>';
+				        detail += '</tr>';
+				        detail += '<tr style="border-bottom:1px solid black;border-top:1px solid black;background-color:#f2f2f2;font-size:15px">';
+				        detail += '<th>Jig ID</th>';
+				        detail += '<th>'+value.jig_id+'</th>';
+				        detail += '</tr>';
+				        detail += '<tr style="border-bottom:1px solid black;border-top:1px solid black;background-color:#f2f2f2;font-size:15px">';
+				        detail += '<th>Jig Name</th>';
+				        detail += '<th>'+value.jig_name+'</th>';
+				        detail += '</tr>';
+				        detail += '</tr>';
+				        detail += '<tr style="border-bottom:1px solid black;border-top:1px solid black;background-color:#f2f2f2;font-size:15px">';
+				        detail += '<th>Due Date</th>';
+				        detail += '<th>'+value.schedule_date+'</th>';
+				        detail += '</tr>';
+				        detail += '</thead>';
+						detail += '</table>';
+						detail += '</div>';
+			        }
+
+					detail += '<hr style="border:2px solid blue">';					
+
+					index++;
+				});
+				$('#bodyDetail').append(detail);
+
+				$('#loading').hide();
+			}
+			else{
+				alert('Attempt to retrieve data failed');
+				$('#loading').hide();
+			}
+		});
+	}
+
+	function ShowModalPeriode(date,kondisi) {
+		$('#loading').show();
+		var data = {
+			date:date,
+			status:kondisi
+		}
+
+		$.get('{{ url("fetch/welding/detail_monitoring_jig_periode") }}',data, function(result, status, xhr){
 			if(result.status){
 				$('#modalDetail').modal('show');
 

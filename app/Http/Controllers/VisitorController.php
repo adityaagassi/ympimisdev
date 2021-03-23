@@ -1305,7 +1305,7 @@ public function getchart(Request $request)
 	{
 		return view('visitors.emp_confirmation')
 		->with('title', 'Employee Visitor Confirmation')
-		->with('title_jp', '??')
+		->with('title_jp', '従業員ビジター確認')
 		->with('page', 'Employee Visitor Confirmation');
 	}
 

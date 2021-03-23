@@ -1363,6 +1363,7 @@ Route::post('input/welding/repair_jig', 'WeldingProcessController@inputRepairJig
 Route::get('index/welding/monitoring_jig', 'WeldingProcessController@indexWldJigMonitoring');
 Route::get('fetch/welding/monitoring_jig', 'WeldingProcessController@fetchWldJigMonitoring');
 Route::get('fetch/welding/detail_monitoring_jig', 'WeldingProcessController@fetchWldDetailJigMonitoring');
+Route::get('fetch/welding/detail_monitoring_jig_periode', 'WeldingProcessController@fetchWldDetailJigMonitoringPeriode');
 
 Route::get('index/welding/kensa_jig_report', 'WeldingProcessController@indexKensaJigReport');
 Route::get('fetch/welding/kensa_jig_report', 'WeldingProcessController@fetchKensaJigReport');
@@ -3713,6 +3714,7 @@ Route::get('index/audit_kanban/table', 'CparController@fetch_table_audit_kanban'
 
 //5S Patrol
 Route::get('index/patrol', 'AuditController@index');
+Route::get('fetch/patrol', 'AuditController@fetch_patrol');
 Route::get('index/audit', 'AuditController@index_audit');
 Route::get('index/audit_patrol', 'AuditController@index_patrol');
 Route::get('index/audit_patrol_mis', 'AuditController@index_mis');
