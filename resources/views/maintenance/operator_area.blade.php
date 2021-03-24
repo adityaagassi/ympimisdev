@@ -319,11 +319,13 @@
       $.get('{{ url("fetch/maintenance/operator/position") }}', function(result, status, xhr) {
         if (result.status) {
           var emp_stat = 0;
-          $.each(result.emp_loc, function(index, value){
-            if (value.employee_id == "{{ Auth::user()->username }}" && value.qr_code == code) {
+          $.each(result.loc_temp, function(index, value){
+            var uname = "{{ Auth::user()->username }}";
+            if (value.employee_id.toUpperCase() == uname.toUpperCase() && value.qr_code == code) {
               emp_stat = 1;
             }
           })
+
 
           if (emp_stat == 1) {
             $("#ket").hide();
@@ -345,7 +347,7 @@
   function getOpLoc() {
     $.get('{{ url("fetch/maintenance/operator/position") }}', function(result, status, xhr) {
       if (result.status) {
-        $.each(result.emp_loc, function(index, value){
+        $.each(result.loc_temp, function(index, value){
           if (value.employee_id == "{{ Auth::user()->username }}") {
             $("#this_area").css('background-color', '#2ed573');
             $("#desc").val(value.description);
@@ -356,17 +358,6 @@
             var dateNow = new Date();
 
             console.log(utc);
-
-            var seconds = Math.floor((utc - (dateNow))/1000);
-            var minutes = Math.floor(seconds/60);
-            var hours = Math.floor(minutes/60);
-            var days = Math.floor(hours/24);
-
-            hours = hours-(days*24);
-            minutes = minutes-(days*24*60)-(hours*60);
-            seconds = seconds-(days*24*60*60)-(hours*60*60)-(minutes*60);
-
-            console.log(hours+" - "+minutes+" - "+seconds);
           }
         })
       }

@@ -2561,9 +2561,16 @@ public function indexOxymeterMonitoring()
 
 public function fetchOxymeterMonitoring(Request $request)
 {
+
+	if ($request->get('dt')) {
+		$dt = $request->get('dt');
+	} else {
+		$dt = date('Y-m-d');
+	}
+
 	$oxy_log = GeneralAttendanceLog::leftJoin('employees', 'employees.employee_id', '=', 'general_attendance_logs.employee_id')
 	->where('purpose_code', '=', 'Oxymeter')
-	->where('general_attendance_logs.due_date', '=', $request->get('dt'))
+	->where('general_attendance_logs.due_date', '=', $dt)
 	->where('employees.remark', '=', 'OFC')
 	->select('general_attendance_logs.remark', db::raw('COUNT(general_attendance_logs.remark) as qty'))
 	->groupBy('general_attendance_logs.remark')

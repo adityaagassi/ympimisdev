@@ -3754,6 +3754,7 @@ Route::get('fetch/audit_patrol/monitoring', 'AuditController@fetchMonitoring');
 Route::get('index/audit_patrol/detail', 'AuditController@detailMonitoring');
 Route::get('index/audit_patrol/detail_category', 'AuditController@detailMonitoringCategory');
 Route::get('index/audit_patrol/detail_bulan', 'AuditController@detailMonitoringBulan');
+Route::get('index/audit_patrol/detail_type', 'AuditController@detailMonitoringType');
 Route::get('index/audit_patrol/table', 'AuditController@fetchTable_audit');
 Route::get('index/audit_patrol/detail_penanganan', 'AuditController@detailPenanganan');
 Route::post('post/audit_patrol/penanganan', 'AuditController@postPenanganan');
@@ -4097,6 +4098,7 @@ Route::get('fetch/maintenance/pm/schedule', 'MaintenanceController@getPlannedSch
 Route::get('index/maintenance/operator/position', 'MaintenanceController@indexOperatorPosition');
 Route::get('fetch/maintenance/operator/position', 'MaintenanceController@fetchOperatorPosition');
 Route::post('post/maintenance/operator/position', 'MaintenanceController@postOperatorPosition');
+Route::get('index/maintenance/operator/workload', 'MaintenanceController@indexOperatorWorkload');
 
 Route::get('index/maintenance/operator', 'MaintenanceController@indexOperator');
 
@@ -4547,5 +4549,6 @@ Route::get('fetch/fibration/data', 'TrialController@fetchFIbrationSensor');
 
 //Dokumentasi Packing
 
-Route::get('index/packing_documentation', 'AuditController@fetchFIbrationSensor');
+Route::get('index/packing_documentation', 'AuditController@packing_documentation');
+Route::get('fetch/packing_documentation', 'AuditController@documentation');
 //End Dokumentasi Packing

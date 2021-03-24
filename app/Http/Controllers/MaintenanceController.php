@@ -584,17 +584,24 @@ class MaintenanceController extends Controller
 
 	public function indexOperatorPosition()
 	{
-		$title = 'Location Maintenance Operator';
-		$title_jp = '??';
+		$title = 'Maintenance Operator Location';
+		$title_jp = '保全班作業者の位置';
 
 		$machine = MaintenancePlanItem::select('machine_id', 'description', 'area', 'location')->get();
 		$area = AreaCode::select('area_code', 'area', 'remark')->get();
+
+		$op = db::select("SELECT sunfish_shift_syncs.employee_id, `name`, shiftdaily_code, attend_code FROM `sunfish_shift_syncs` 
+			left join employee_syncs on sunfish_shift_syncs.employee_id = employee_syncs.employee_id
+			where shift_date = '".date('Y-m-d')."'
+			and `group` = 'Maintenance Group'
+			and end_date is null");
 
 		return view('maintenance.operator_position', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
 			'machine' => $machine,
 			'area' => $area,
+			'op_shift' => $op,
 			'loc_arr' => $this->location
 		))->with('page','Operator Position')->with('head', 'Maintenance');
 	}
@@ -602,7 +609,7 @@ class MaintenanceController extends Controller
 	public function indexOperator()
 	{
 		$title = 'Sign Area - Maintenance Operator';
-		$title_jp = '??';
+		$title_jp = '保全対象エリア';
 
 		$machine = MaintenancePlanItem::select('machine_id', 'description', 'area', 'location')->get();
 		$area = AreaCode::select('area_code', 'area', 'remark')->get();
@@ -618,7 +625,7 @@ class MaintenanceController extends Controller
 
 	public function indexMttbf()
 	{
-		$title = 'MTTBF';
+		$title = 'Machine Down Time Data';
 		$title_jp = '??';
 
 		$machine = MaintenancePlanItem::select('machine_id', 'description', 'area', 'location')->get();
@@ -627,7 +634,7 @@ class MaintenanceController extends Controller
 			'title' => $title,
 			'title_jp' => $title_jp,
 			'machine' => $machine
-		))->with('page','MTTBF')->with('head', 'Maintenance');
+		))->with('page','MTBF')->with('head', 'Maintenance');
 	}
 
 	public function indexMttr()
@@ -655,6 +662,17 @@ class MaintenanceController extends Controller
 			'title' => $title,
 			'title_jp' => $title_jp
 		))->with('page','MTTBF Report')->with('head', 'Maintenance');
+	}
+
+	public function indexOperatorWorkload()
+	{
+		$title = 'Maintenance Operator Workload';
+		$title_jp = '??';
+
+		return view('maintenance.report.operator_workload', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page','Maintenance Workload')->with('head', 'Maintenance');
 	}
 
 	// -----------------------  END INDEX --------------------
@@ -3277,11 +3295,22 @@ class MaintenanceController extends Controller
 
 	public function fetchOperatorPosition(Request $request)
 	{
-		$emp_loc = MaintenanceOperatorLocation::select('employee_id', 'employee_name', 'location', 'remark', 'created_at', db::raw('RIGHT(acronym(employee_name), 2) AS short_name'))->get();
+		$dt = '2021-03-24';
+		// $emp_loc = MaintenanceOperatorLocation::select('employee_id', 'employee_name', 'location', 'remark', 'created_at', db::raw('RIGHT(acronym(employee_name), 2) AS short_name'))->get();
+
+		$emp_loc = db::select("SELECT employee_syncs.employee_id, `name`, RIGHT(acronym(`name`), 2) as short_name, shiftdaily_code, location, maintenance_operator_locations.remark as job from employee_syncs
+			left join sunfish_shift_syncs on sunfish_shift_syncs.employee_id = employee_syncs.employee_id
+			left join maintenance_operator_locations on maintenance_operator_locations.employee_id = employee_syncs.employee_id
+			where shift_date = '".$dt."' and  `group` = 'Maintenance Group' and end_date is null
+			order by shiftdaily_code asc");
+
+		$loc_data_temp = MaintenanceOperatorLocation::select('employee_id', 'employee_name', 'location', 'remark', 
+			'created_at', 'qr_code')->get();
 
 		$response = array(
 			'status' => true,
-			'emp_loc' => $emp_loc
+			'emp_loc' => $emp_loc,
+			'loc_temp' => $loc_data_temp
 		);
 		return Response::json($response);
 	}

@@ -185,7 +185,7 @@
 						}, {
 							from: 800,
 							to: 999,
-							color: '#fa9b3c'
+							color: '#fcba03'
 						}, {
 							from: 1000,
 							to: 5000,

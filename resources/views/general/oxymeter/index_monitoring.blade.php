@@ -113,7 +113,7 @@
 			background-color: #8cd790;
 		}
 		50%, 100% {
-			background-color: #e50000;
+			background-color: #ed5c64;
 		}
 	}
 
@@ -132,10 +132,10 @@
 							<div class="input-group-addon bg-green" style="border: none; background-color: #605ca8; color: white;">
 								<i class="fa fa-calendar"></i>
 							</div>
-							<input type="text" class="form-control datepicker" id="tanggal_from" name="tanggal_from" placeholder="Select Date" onchange="fetchTemperature()">
+							<input type="text" class="form-control datepicker" id="tanggal_from" name="tanggal_from" placeholder="Select Date" onchange="draw_data()">
 						</div>
 					</div>
-					<div class="col-md-3" style="padding-left: 3px;padding-right: 0px">
+					<!-- <div class="col-md-3" style="padding-left: 3px;padding-right: 0px">
 						<div class="input-group">
 							<div class="input-group-addon bg-blue">
 								<i class="fa fa-search"></i>
@@ -144,7 +144,7 @@
 								
 							</select>
 						</div>
-					</div>
+					</div> -->
 					<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 1vw	;font-size: 1vw;color: white"></div>
 				</form>
 			</div>
@@ -329,7 +329,7 @@
 
 	function draw_data() {
 		var data = {
-			dt : '{{ date("Y-m-d") }}'
+			dt : $("#tanggal_from").val()
 		}
 
 		$.get('{{ url("fetch/general/oxymeter/data") }}', data, function(result, status, xhr){
@@ -472,12 +472,10 @@
 					headerFormat: '<span style="font-size:10px">Oxygen Rate <b>{point.key}</b></span><table>',
 					pointFormat: '<tr><td style="padding:0"><b>{point.y} Person</b></td></tr>',
 					footerFormat: '</table>',
-					shared: true,
 					useHTML: true
 				},
 				plotOptions: {
 					column: {
-						pointPadding: 0.2,
 						borderWidth: 0,
 						dataLabels: {
 							enabled: true

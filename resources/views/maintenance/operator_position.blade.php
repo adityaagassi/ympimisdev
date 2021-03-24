@@ -24,9 +24,9 @@
   table.table-bordered{
     border:1px solid black;
   }
-  table.table-bordered > thead > tr > th{
-    border:1px solid black;
+  table > thead > tr > th{
     text-align: center;
+    padding: 0px 5px 0px 5px !important;
   }
   table.table-bordered > tbody > tr > td{
     border:1px solid black;
@@ -221,15 +221,17 @@
               <div class="isi"></div>
             </div>
 
-            <div id="legend" class="kotak2" style="left: 780px; top: 130px; width: 450px; height: 200px">
+            <div id="legend" class="kotak2" style="left: 740px; top: 103px; width: 520px; height: 290px; overflow: auto;">
               <table class="table">
                 <thead>
                   <tr>
-                    <th colspan="2" style="background-color: #bffa8e">Legends : </th>
+                    <th colspan="4" style="background-color: #bffa8e; padding: 0 5px 0px 5px">Legends : </th>
                   </tr>
                   <tr>
+                    <th>Shift</th>
                     <th>Alias</th>
                     <th>Name</th>
+                    <th>job</th>
                   </tr>
                 </thead>
                 <tbody id="legend_body">
@@ -293,16 +295,18 @@
         $.each(loc, function(index2, value2){
           $.each(value2.area, function(index3, value3){
             if (value3 == value.location) {
-              loc_op.push({emp_id: value.employee_id, name: value.employee_name, loc: value2.alias});
-              $("#"+value2.alias).find(".isi").append('<div class="op" >'+value.short_name+'<span class="tooltiptext">'+value.employee_name+'</span></div>');
-
-              body += '<tr>';
-              body += '<td>'+value.short_name+'</td>';
-              body += '<td>'+value.employee_name+'</td>';
-              body += '</tr>';
+              loc_op.push({emp_id: value.employee_id, name: value.name, loc: value2.alias});
+              $("#"+value2.alias).find(".isi").append('<div class="op" >'+value.short_name+'<span class="tooltiptext">'+value.name+'</span></div>');
             }
           })
         })
+
+        body += '<tr style="font-size: 11px;">';
+        body += '<td>'+value.shiftdaily_code.match(/\d+/)+'</td>';
+        body += '<td>'+value.short_name+'</td>';
+        body += '<td>'+value.name+'</td>';
+        body += '<td>'+(value.job || '')+'</td>';
+        body += '</tr>';
       })
 
       $("#legend_body").append(body);
