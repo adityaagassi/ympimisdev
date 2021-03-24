@@ -195,7 +195,7 @@
 
 					xAxis: {
 						categories: categories,
-						tickInterval: 60
+						tickInterval: 30
 					},
 
 					legend: {
@@ -265,7 +265,7 @@
 						name: 'CO2',
 						data: co,
 						color: '#901aeb',
-						lineWidth: 5
+						lineWidth: 3
 					}],
 
 					responsive: {
