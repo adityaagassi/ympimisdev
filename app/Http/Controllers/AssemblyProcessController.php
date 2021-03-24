@@ -516,43 +516,43 @@ class AssemblyProcessController extends Controller
 		}
 		if($location == 'perakitanawal-kensa,tanpoawase-process'){
 			$title = 'Perakitan Ulang & Tanpo Awase Process Flute';
-			$title_jp= '??';
+			$title_jp= 'フルートの再組立・タンポ合わせ';
 		}
 		if($location == 'kariawase-fungsi,kariawase-visual,kariawase-repair,tanpoire-process'){
 			$title = 'Kariawase & Tanpoire Process Flute';
-			$title_jp= '??';
+			$title_jp= 'フルートの仮合わせ・タンポ入れ';
 		}
 		if($location == 'tanpoawase-kensa,tanpoawase-fungsi,repair-berat'){
 			$title = 'Tanpoawase Kensa & Fungsi Flute';
-			$title_jp= '??';
+			$title_jp= 'フルートのタンポ合わせ・機能の検査';
 		}
 		if($location == 'seasoning-process'){
 			$title = 'Seasoning Process Flute';
-			$title_jp= '??';
+			$title_jp= 'フルートのシーズニング';
 		}
 		if($location == 'kango-process'){
 			$title = 'Kango Process Flute';
-			$title_jp= '??';
+			$title_jp= 'フルートの嵌合';
 		}
 		if($location == 'kango-fungsi,renraku-process'){
 			$title = 'Renraku Process Flute';
-			$title_jp= '??';
+			$title_jp= 'フルートの連絡';
 		}
 		if($location == 'kango-kensa,renraku-fungsi'){
 			$title = 'Cek Fungsi Akhir Flute';
-			$title_jp= '??';
+			$title_jp= 'フルートの最終機能検査';
 		}
 		if($location == 'renraku-repair,qa-fungsi'){
 			$title = 'Cek Fungsi QA Flute';
-			$title_jp= '??';
+			$title_jp= 'フルートののQA機能検査';
 		}
 		if($location == 'fukiage1-process,repair-ringan'){
 			$title = 'Fukiage 1 Flute';
-			$title_jp= '??';
+			$title_jp= 'フルートの拭き上げ ①';
 		}
 		if($location == 'fukiage1-visual,qa-visual1,fukiage2-process,qa-visual2,pakcing'){
 			$title = 'QA Visual, Fukiage 2, & Packing Flute';
-			$title_jp= '??';
+			$title_jp= 'フルートのQA外観検査、拭き上げ②、梱包';
 		}
 
 		return view('processes.assembly.flute.display.board', array(
@@ -1244,11 +1244,11 @@ class AssemblyProcessController extends Controller
 		}
 		if($location == 'seasoning-process'){
 			$title = 'Seasoning Process';
-			$title_jp= '??';
+			$title_jp= 'シーズニング';
 		}
 		if($location == 'repair-process'){
 			$title = 'Repair Process';
-			$title_jp= '??';
+			$title_jp= '修正';
 		}
 
 		if ($location == 'seasoning-process') {
