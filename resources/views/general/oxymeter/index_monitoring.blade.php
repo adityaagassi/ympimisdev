@@ -387,14 +387,14 @@
 			$.each(result.shift, function(index, value){
 				if (~value.shiftdaily_code.indexOf("1")) {
 					ofc_total_1++;
-					if (value.oxy != "") {
+					if (value.oxy != null) {
 						ofc_cek_1++;
 					} else {
 						ofc_uncek_1++;
 					}
 				} else if (~value.shiftdaily_code.indexOf("2")) {
 					ofc_total_2++;
-					if (value.oxy != "") {
+					if (value.oxy != null) {
 						ofc_cek_2++;
 					} else {
 						ofc_uncek_2++;
