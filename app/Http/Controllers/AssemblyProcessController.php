@@ -128,8 +128,8 @@ class AssemblyProcessController extends Controller
 		->first();
 		$auth_id = Auth::id();
 
-		 // $plc = new ActMLEasyIf(0);
-		 // $datas = $plc->read_data('D50', 5);
+		  $plc = new ActMLEasyIf(0);
+		  $datas = $plc->read_data('D50', 5);
 
 		 if($counter->plc_counter == $datas[0]){
 		// if($counter->plc_counter == 31){
