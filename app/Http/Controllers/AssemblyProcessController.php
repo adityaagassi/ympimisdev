@@ -963,7 +963,7 @@ class AssemblyProcessController extends Controller
 
 		if ($loc == 'perakitanawal-kensa,tanpoawase-process') {
 			$work_stations = DB::select("SELECT
-				-- IF(assemblies.location = 'perakitanawal-kensa','Perakitan Ulang',assemblies.location) as location,
+				IF(assemblies.location = 'perakitanawal-kensa','Perakitan Ulang',assemblies.location) as location,
 				assemblies.location,
 				location_number,
 				online_time,
@@ -1011,7 +1011,7 @@ class AssemblyProcessController extends Controller
 				WHERE
 					operator_id = assemblies.operator_id 
 					AND DATE( created_at ) = '".$now."' 
-					) as qty_ng_details
+					) as qty_ng_detail
 				FROM
 				assemblies
 				LEFT JOIN employee_syncs ON employee_syncs.employee_id = assemblies.operator_id 
