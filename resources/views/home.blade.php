@@ -995,7 +995,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <span style="font-weight: bold;">LEADER Control (??)</span>
+                                <span style="font-weight: bold;">LEADER Control (職長管理)</span>
                                 <br>
                                 <a href="{{ url("/index/production_report/index/8") }}">
                                     <i class="fa fa-caret-right"></i> Assembly (WI-A) Report (アセンブリ（WI-A）レポート)

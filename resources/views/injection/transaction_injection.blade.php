@@ -61,12 +61,12 @@ table.table-bordered > tfoot > tr > th{
 						<input type="text" id="tag_product" placeholder="Scan Kanban Here . . ." style="width: 100%;font-size: 20px;text-align:center;padding: 10px">
 					</div>
 					<div class="col-xs-1" style="padding-right: 0px;padding-left: 0px">
-						<button class="btn btn-danger" onclick="cancel()" style="width:100%;font-size: 20px;font-weight: bold;">
+						<button class="btn btn-danger" onclick="cancel()" style="width:100%;font-size: 20px;height:50px;font-weight: bold;">
 							CANCEL
 						</button>
 					</div>
 					<div class="col-xs-1" style="padding-right: 0px;padding-left: 0px">
-						<button class="btn btn-warning" onclick="location.reload()" style="width:100%;font-size: 20px;font-weight: bold;">
+						<button class="btn btn-warning" onclick="location.reload()" style="width:100%;font-size: 20px;height:50px;font-weight: bold;">
 							REFRESH
 						</button>
 					</div>
@@ -535,7 +535,7 @@ table.table-bordered > tfoot > tr > th{
 					$('#tag_product').removeAttr("disabled");
 					$("#tag_product").val("");
 					$("#tag_product").focus();
-					$('#operator_id').val("");
+					// $('#operator_id').val("");
 					$('#tag_product').val('');
 					$('#tag_product').removeAttr('disabled');
 					$('#resultScanBody').html("");
@@ -558,7 +558,7 @@ table.table-bordered > tfoot > tr > th{
 		$('#tag_product').removeAttr("disabled");
 		$('#tag_product').val("");
 		$('#tag_product').focus();
-		$('#operator_id').val("");
+		// $('#operator_id').val("");
 	}
 
 	function cancelTag(){
