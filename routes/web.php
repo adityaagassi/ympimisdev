@@ -3260,6 +3260,8 @@ Route::get('index/interview/destroypicture/{id}/{picture_id}', 'InterviewControl
 Route::post('index/interview/editpicture/{id}/{picture_id}', 'InterviewController@editpicture');
 Route::get('index/interview/detail_nilai', 'InterviewController@detailNilai');
 
+Route::get('index/interview/pointing_call', 'InterviewController@indexPointingCall');
+
 //DAILY CHECK FG
 Route::get('index/daily_check_fg/product/{id}', 'DailyCheckController@product');
 Route::get('index/daily_check_fg/index/{id}/{product}', 'DailyCheckController@index');
@@ -3739,7 +3741,7 @@ Route::get('index/audit_kanban/table', 'CparController@fetch_table_audit_kanban'
 //5S Patrol
 Route::get('index/patrol', 'AuditController@index');
 Route::get('fetch/patrol', 'AuditController@fetch_patrol');
-Route::get('index/audit', 'AuditController@index_audit');
+Route::get('index/audit_internal', 'AuditController@index_audit');
 Route::get('index/audit_patrol', 'AuditController@index_patrol');
 Route::get('index/audit_patrol_mis', 'AuditController@index_mis');
 Route::get('index/audit_patrol_std', 'AuditController@index_std');
