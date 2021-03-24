@@ -163,7 +163,11 @@
 						<td style="width: 1%; border:1px solid black;">Ending Balance</td>
 						<td style="width: 4%; border:1px solid black; text-align: right;">$ <?= number_format($total_budget - $total_pengeluaran,2,",",".") ?></td>
 					</tr>
-					@else					
+					@else
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Budget Number</td>
+						<td style="width: 3%; border:1px solid black; text-align: left !important;"><?= $budget_no ?></td></td>
+					</tr>					
 					<tr>
 						<td style="width: 1%; border:1px solid black;">Category Budget</td>
 						<td style="width: 4%; border:1px solid black; text-align: left !important;"><?= $category_budget ?></td>
@@ -282,7 +286,11 @@
 						<td style="width: 1%; border:1px solid black;">Ending Balance</td>
 						<td style="width: 4%; border:1px solid black; text-align: right;">$ <?= number_format($total_budget - $total_pengeluaran,2,",",".") ?></td></td>
 					</tr>
-					@else					
+					@else	
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Budget Number</td>
+						<td style="width: 3%; border:1px solid black; text-align: left !important;"><?= $budget_no ?></td></td>
+					</tr>				
 					<tr>
 						<td style="width: 1%; border:1px solid black;">Category Budget</td>
 						<td style="width: 4%; border:1px solid black; text-align: left !important;"><?= $category_budget ?></td></td>
@@ -400,7 +408,11 @@
 						<td style="width: 1%; border:1px solid black;">Ending Balance</td>
 						<td style="width: 4%; border:1px solid black; text-align: right">$ <?= number_format($total_budget - $total_pengeluaran,2,",",".") ?></td></td>
 					</tr>
-					@else					
+					@else		
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Budget Number</td>
+						<td style="width: 3%; border:1px solid black; text-align: left !important;"><?= $budget_no ?></td></td>
+					</tr>			
 					<tr>
 						<td style="width: 1%; border:1px solid black;">Category Budget</td>
 						<td style="width: 4%; border:1px solid black; text-align: left !important;"><?= $category_budget ?></td></td>
@@ -531,7 +543,11 @@
 						<td style="width: 1%; border:1px solid black;">Ending Balance</td>
 						<td style="width: 4%; border:1px solid black; text-align: right">$ <?= number_format($total_budget - $total_pengeluaran,2,",",".") ?></td></td>
 					</tr>
-					@else					
+					@else			
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Budget Number</td>
+						<td style="width: 3%; border:1px solid black; text-align: left !important;"><?= $budget_no ?></td></td>
+					</tr>		
 					<tr>
 						<td style="width: 1%; border:1px solid black;">Category Budget</td>
 						<td style="width: 4%; border:1px solid black; text-align: left !important;"><?= $category_budget ?></td></td>
@@ -663,7 +679,11 @@
 						<td style="width: 2%; border:1px solid black;">Ending Balance (最終残高)</td>
 						<td style="width: 3%; border:1px solid black; text-align: right;">$ <?= number_format($total_budget - $total_pengeluaran,2,",",".") ?></td></td>
 					</tr>
-					@else					
+					@else			
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Budget Number (予算番号)</td>
+						<td style="width: 3%; border:1px solid black; text-align: left !important;"><?= $budget_no ?></td></td>
+					</tr>		
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Category Budget (予算種類)</td>
 						<td style="width: 3%; border:1px solid black; text-align: left !important;"><?= $category_budget ?></td></td>
@@ -791,7 +811,11 @@
 						<td style="width: 1%; border:1px solid black;">Ending Balance</td>
 						<td style="width: 4%; border:1px solid black; text-align: right;">$ <?= number_format($total_budget - $total_pengeluaran,2,",",".") ?></td></td>
 					</tr>
-					@else					
+					@else
+					<tr>
+						<td style="width: 1%; border:1px solid black;">Budget Number</td>
+						<td style="width: 4%; border:1px solid black; text-align: left !important;"><?= $budget_no ?></td></td>
+					</tr>					
 					<tr>
 						<td style="width: 1%; border:1px solid black;">Category Budget</td>
 						<td style="width: 4%; border:1px solid black; text-align: left !important;"><?= $category_budget ?></td></td>
@@ -922,7 +946,11 @@
 						<td style="width: 2%; border:1px solid black;">Ending Balance (最終残高)</td>
 						<td style="width: 3%; border:1px solid black; text-align: right">$ <?= number_format($total_budget - $total_pengeluaran,2,",",".") ?></td></td>
 					</tr>
-					@else					
+					@else
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Budget Number (予算番号)</td>
+						<td style="width: 3%; border:1px solid black; text-align: left !important;"><?= $budget_no ?></td></td>
+					</tr>	
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Category Budget (予算種類)</td>
 						<td style="width: 3%; border:1px solid black; text-align: left !important;"><?= $category_budget ?></td></td>
@@ -1052,7 +1080,11 @@
 						<td style="width: 2%; border:1px solid black;">Ending Balance (最終残高)</td>
 						<td style="width: 3%; border:1px solid black; text-align: right;">$ <?= number_format($total_budget - $total_pengeluaran,2,",",".") ?></td></td>
 					</tr>
-					@else					
+					@else
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Budget Number (予算番号)</td>
+						<td style="width: 3%; border:1px solid black; text-align: left !important;"><?= $budget_no ?></td></td>
+					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Category Budget (予算種類)</td>
 						<td style="width: 3%; border:1px solid black; text-align: left !important;"><?= $category_budget ?></td></td>
