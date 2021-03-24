@@ -1314,7 +1314,11 @@ public function getchart(Request $request)
 	public function fetchEmpConfirmation(Request $request)
 	{
 		try {
-			$emp = Employee::join('employee_syncs','employees.employee_id','employee_syncs.employee_id')->where('tag',$request->get('tag'))->first();
+			$emp = Employee::
+					join('employee_syncs','employees.employee_id','employee_syncs.employee_id')
+					->join('visitor_confirmers','employee_syncs.employee_id','visitor_confirmers.employee_id')
+					->where('tag',$request->get('tag'))
+					->first();
 
 			if (count($emp) > 0) {
 				$visitor = DB::SELECT("SELECT
@@ -1337,7 +1341,7 @@ public function getchart(Request $request)
 					LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
 				WHERE
 					visitors.remark IS NULL 
-					AND employee_syncs.employee_id = '".$emp->employee_id."' 
+					AND employee_syncs.department = '".$emp->department."' 
 				ORDER BY
 					id DESC");
 
@@ -1351,7 +1355,7 @@ public function getchart(Request $request)
 			}else{
 				$response = array(
 					'status' => false,
-					'message' => 'Tag Invalid'
+					'message' => 'Anda Tidak Memiliki Otoritas'
 				);
 				return Response::json($response);
 			}
