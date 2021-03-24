@@ -2471,7 +2471,7 @@ public function fetchQueue($remark,Request $request)
 public function indexOxymeterCheck()
 {
 	$title = "Oxymeter Check";
-	$title_jp = "??";
+	$title_jp = "オキシメーター検査";
 
 		// $employees = EmployeeSync::orderBy('department', 'asc')->get();
 
@@ -2487,7 +2487,13 @@ public function postOxymeterCheck(Request $request)
 		$att_log = GeneralAttendanceLog::firstOrNew(array('employee_id' => $request->get('employee_id'), 'due_date' => date('Y-m-d'), 'purpose_code' => 'Oxymeter'));
 
 		$att_log->attend_date = date('Y-m-d H:i:s');
-		$att_log->remark = $request->get('oxy_value');
+
+		if ($request->get('ctg') == 'oxygen') {
+			$att_log->remark = $request->get('value');
+		} else {
+			$att_log->remark2 = $request->get('value');
+		}
+
 		$att_log->created_by = Auth::user()->id;
 
 		$att_log->save();
@@ -2532,7 +2538,7 @@ public function fetchOxymeterHistory(Request $request)
 		$oxy_log = $oxy_log->limit($request->get('limit'));
 	}
 
-	$oxy_log = $oxy_log->select('general_attendance_logs.updated_at', 'general_attendance_logs.employee_id', 'employee_syncs.name', 'general_attendance_logs.remark')->get();
+	$oxy_log = $oxy_log->select('general_attendance_logs.updated_at', 'general_attendance_logs.employee_id', 'employee_syncs.name', 'general_attendance_logs.remark', 'general_attendance_logs.remark2')->get();
 
 	$response = array(
 		'status' => true,
@@ -2545,7 +2551,7 @@ public function fetchOxymeterHistory(Request $request)
 public function indexOxymeterMonitoring()
 {
 	$title = "Oxymeter Monitoring";
-	$title_jp = "??";
+	$title_jp = "オキシメーターモニター";
 
 	return view('general.oxymeter.index_monitoring', array(
 		'title' => $title,
@@ -2556,18 +2562,22 @@ public function indexOxymeterMonitoring()
 public function fetchOxymeterMonitoring(Request $request)
 {
 	$oxy_log = GeneralAttendanceLog::leftJoin('employees', 'employees.employee_id', '=', 'general_attendance_logs.employee_id')
-	->leftJoin('sunfish_shift_syncs', 'sunfish_shift_syncs.employee_id', '=', 'general_attendance_logs.employee_id')
 	->where('purpose_code', '=', 'Oxymeter')
 	->where('general_attendance_logs.due_date', '=', $request->get('dt'))
 	->where('employees.remark', '=', 'OFC')
-	->where('shift_date', '=', $request->get('dt'))
 	->select('general_attendance_logs.remark', db::raw('COUNT(general_attendance_logs.remark) as qty'))
 	->groupBy('general_attendance_logs.remark')
 	->get();
+
+	$shift_log = db::select("SELECT sunfish_shift_syncs.employee_id, employees.name, employees.remark, shiftdaily_code, oxymeter.remark as oxy from sunfish_shift_syncs
+		left join employees on employees.employee_id = sunfish_shift_syncs.employee_id
+		left join (select * from general_attendance_logs where purpose_code = 'Oxymeter' and due_date = '".$request->get('dt')."') as oxymeter on oxymeter.employee_id = sunfish_shift_syncs.employee_id
+		where shift_date = '".$request->get('dt')."' and employees.remark = 'OFC'");
 	
 	$response = array(
 		'status' => true,
 		'datas' => $oxy_log,
+		'shift' => $shift_log
 	);
 	return Response::json($response);
 }
@@ -2619,7 +2629,7 @@ public function postAirVisual()
 		$air_log->save();
 	}
 
-	$datas = GeneralAirVisualLog::whereRaw('DATE_FORMAT(created_at,"%Y-%m-%d") = "'.date('Y-m-d').'"')
+	$datas = GeneralAirVisualLog::whereRaw('DATE_FORMAT(created_at,"%Y-%m-%d %H:%i:%s") >= "'.date('Y-m-d 06:00:00').'"')
 	->select('location', 'data_time', 'co', 'temperature', 'humidity', db::raw('DATE_FORMAT(data_time, "%d %b %H:%i") as data_time2'))
 	->orderBy('id', 'asc')
 	->get();

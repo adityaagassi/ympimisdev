@@ -331,9 +331,13 @@
                                 <i class="fa fa-caret-right"></i> YMPI Internal Patrol (内部パトロール)
                             </a>  
                             <br> 
-                            <a href="{{ url("/index/audit") }}">
+                            <a href="{{ url("/index/audit_internal") }}">
                                 <i class="fa fa-caret-right"></i> YMPI Internal Audit (内部監査)
-                            </a>                        
+                            </a>
+                            <br> 
+                            <a href="{{ url('/index/interview/pointing_call') }}">
+                                <i class="fa fa-caret-right"></i> YMPI Interview Pointing Call (??)
+                            </a>
                         </td>                     
                     </tr>
                     <!-- <tr>
@@ -524,11 +528,11 @@
                             </a>
                             <br>
                             <a href="{{ url('index/general/oxymeter') }}">
-                                <i class="fa fa-caret-right"></i> Oxymeter Check(??)
+                                <i class="fa fa-caret-right"></i> Oxymeter Check(オキシメーター検査)
                             </a>
                             <br>
                             <a href="{{ url('index/general/oxymeter/monitoring') }}">
-                                <i class="fa fa-caret-right"></i> Oxymeter Monitoring(??)
+                                <i class="fa fa-caret-right"></i> Oxymeter Monitoring(オキシメーターモニター)
                             </a>
                             <!-- <a href="{{ url("index/server_room") }}">
                                 <i class="fa fa-caret-right"></i> Server Room Monitoring (サーバールームモニタリング)

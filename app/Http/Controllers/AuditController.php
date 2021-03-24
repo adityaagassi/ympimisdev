@@ -18,6 +18,7 @@ use App\EmployeeSync;
 
 class AuditController extends Controller
 {
+  
 
 	public function __construct()
 	{
@@ -32,15 +33,39 @@ class AuditController extends Controller
 		$this->middleware('auth');
 
 		$this->location = ['Assembly','Accounting','Body Process','Exim','Material Process','Surface Treatment','Educational Instrument','Standardization','QA Process','Chemical Process Control','Human Resources','General Affairs','Workshop and Maintenance Molding','Production Engineering','Maintenance','Procurement','Production Control','Warehouse','Welding Process'];
+
+    $this->point_sup = ['Jalan - Lantai - Tempat Kerja - Tembok - Atap', 'Kontrol Lemari Dokumen, Jig, Penyimpanan, Alat Kebersihan', 'Meja Kerja - Meja Office', 'Oa Perkakas Mesin - Telepon', 'Mesin - Equipment','Pencegahan Kebakaran - Pencegahan Bencana - Barang Berbahaya - Barang Beracun','Tempat Istirahat, Meeting Room, Lobby, Di Dalam Ruangan, Kantin','Kedisiplinan'];
+
+    $this->point_1 = ['Jalan', 'Kebersihan', 'Barang tidak diperlukan', 'Informasi Papan'];
+    
+    $this->point_2 = ['Jalan 2', 'Kebersihan 3', 'Barang tidak diperlukan 2', 'Informasi Papan 2'];
 	}
 
-  public function index(){
-    return view('audit.index_patrol')->with('page', 'Tools');       
+  public function index()
+  {
+    $title = "YMPI Internal Patrol";
+    $title_jp = "内部パトロール";
+
+    return view('audit.index_patrol', array(
+      'title' => $title,
+      'title_jp' => $title_jp
+    ))->with('page', 'YMPI Patrol'); 
+  }
+
+  public function index_audit()
+  {
+    $title = "YMPI Internal Audit";
+    $title_jp = "内部監査";
+
+    return view('audit.index_audit', array(
+      'title' => $title,
+      'title_jp' => $title_jp
+    ))->with('page', 'YMPI Patrol'); 
   }
 
 	public function index_patrol()
 	{
-		$title = "Audit Patrol";
+		$title = "5S Patrol GM & Presdir";
 		$title_jp = "";
 
 		$emp = EmployeeSync::where('employee_id', Auth::user()->username)
@@ -54,9 +79,49 @@ class AuditController extends Controller
 			'title_jp' => $title_jp,
 			'employee' => $emp,
 			'auditee' => $auditee,
-			'location' => $this->location
+			'location' => $this->location,
+      'poin' => $this->point_sup,
+      'point_1' => $this->point_1,
+      'point_2' => $this->point_2
 		))->with('page', 'Audit Patrol');
 	}
+
+  public function fetch_patrol(Request $request){
+
+
+    $data_all = db::select("
+      SELECT
+        kategori,
+        sum( CASE WHEN status_ditangani IS NULL THEN 1 ELSE 0 END ) AS jumlah_belum,
+        sum( CASE WHEN status_ditangani IS NOT NULL THEN 1 ELSE 0 END ) AS jumlah_sudah
+      FROM
+        audit_all_results 
+      GROUP BY
+        kategori
+      ORDER BY jumlah_belum ASC
+    ");
+
+    $data_type_all = db::select("
+      SELECT
+        point_judul,
+        sum( CASE WHEN status_ditangani IS NULL THEN 1 ELSE 0 END ) AS jumlah_belum,
+        sum( CASE WHEN status_ditangani IS NOT NULL THEN 1 ELSE 0 END ) AS jumlah_sudah
+      FROM
+        audit_all_results 
+      WHERE point_judul is not null
+      GROUP BY
+        point_judul
+      ORDER BY jumlah_belum ASC
+    ");
+
+    $response = array(
+      'status' => true,
+      'data_all' => $data_all,
+      'data_type_all' => $data_type_all
+    );
+
+    return Response::json($response);
+  }
 
   public function index_mis()
   {
@@ -183,8 +248,6 @@ class AuditController extends Controller
 			return Response::json($response);
 		}
 	}
-
-
 
 
 	public function fetch_audit(Request $request)
