@@ -534,6 +534,10 @@
                             <a href="{{ url('index/general/oxymeter/monitoring') }}">
                                 <i class="fa fa-caret-right"></i> Oxymeter Monitoring(オキシメーターモニター)
                             </a>
+                            <br>
+                            <a href="{{ url('index/general/airvisual') }}">
+                                <i class="fa fa-caret-right"></i> Air Visual Monitor(空気モニター)
+                            </a>
                             <!-- <a href="{{ url("index/server_room") }}">
                                 <i class="fa fa-caret-right"></i> Server Room Monitoring (サーバールームモニタリング)
                             </a> -->
@@ -707,21 +711,21 @@
                         <a href="http://10.109.52.7/mtnc/login/log" target="_blank">
                             <i class="fa fa-caret-right"></i> Planned Maintenance Activity Finding (??)
                         </a>
-                        <br>
-                       <!--  <a href="{{ url("index/maintenance/mttbf/list") }}">
+                    <!--     <br>
+                        <a href="{{ url("index/maintenance/mttbf/list") }}">
                             <i class="fa fa-caret-right"></i> MTBF (??)
                         </a>
-                        <br>
+                        <br> 
                         <a href="{{ url("index/maintenance/mttbf/report") }}">
                             <i class="fa fa-caret-right"></i> MTBF Report (??)
                         </a>
                         <br>
                         <a href="{{ url("index/maintenance/mttr/list") }}">
                             <i class="fa fa-caret-right"></i> MTTR (??)
-                        </a>
-                        <br> -->
+                        </a> -->
+                        <br>
                         <a href="{{ url("index/maintenance/operator/position") }}">
-                            <i class="fa fa-caret-right"></i> Operator Location (??)
+                            <i class="fa fa-caret-right"></i> Maintenance Operator Location (保全班作業者の位置)
                         </a>
                     </td>                     
                 </tr>
@@ -733,18 +737,23 @@
                             <i class="fa fa-caret-right"></i> Create SPK (作業依頼書を作成)
                         </a>
                         <br>
-                        <a href="{{ url("index/maintenance/spk/weekly") }}">
-                            <i class="fa fa-caret-right"></i> SPK Weekly Report (??)
-                        </a>
-                        <br>
                         <a href="{{ url("index/maintenance/spk/grafik") }}">
                             <i class="fa fa-caret-right"></i> SPK Monitoring (作業依頼書の管理)
                         </a>
                         <br>
-                        <a href="{{ url("index/report/urgent_monitoring") }}">
-                            <i class="fa fa-caret-right"></i> Urgent SPK Monitoring (??)
+                        <a href="{{ url("index/maintenance/spk/grafik") }}">
+                            <i class="fa fa-caret-right"></i> Operator Workload (??)
+                        </a>
+                        <!--<br>
+                        <a href="{{ url("index/maintenance/spk/weekly") }}">
+                            <i class="fa fa-caret-right"></i> SPK Weekly Report (??)
                         </a>
                         <br>
+                         <a href="{{ url("index/report/urgent_monitoring") }}">
+                            <i class="fa fa-caret-right"></i> Urgent SPK Monitoring (??)
+                        </a>
+                        <br> -->
+
                     </td>
                 </tr>
                 <tr>
@@ -766,14 +775,10 @@
                         <a href="{{ url("index/maintenance/pic/Utility") }}">
                             <i class="fa fa-caret-right"></i> PIC List (担当者リスト)
                         </a>
-                        <br>
-                        <a href="{{ url("/index/production_report/index/10") }}">
-                            <i class="fa fa-caret-right"></i> Maintenance Report (メンテナンスリポート)
-                        </a>
                         <!-- <br>
                         <a href="{{ url('/index/production_report/index/13') }}">
                             <i class="fa fa-caret-right"></i> PE Field Report (??)
-                        </a> -->
+                        </a>
                     </td>
                 </tr>
                        <!--  <tr>
@@ -840,10 +845,6 @@
                                     <i class="fa fa-caret-right"></i> Lotting (ロッティング)
                                 </a>
                                 <br>
-                                <a href="{{ url("/index/production_report/index/12") }}">
-                                    <i class="fa fa-caret-right"></i> Parts Process (WI-PP) Report (部品加工)
-                                </a>
-                                <br>
                                 <a href="{{ url("/index/press/monitoring") }}">
                                     <i class="fa fa-caret-right"></i> Press Machine Monitoring (プレス機管理)
                                 </a>
@@ -880,10 +881,6 @@
                                 <a href="{{ url("/index/initial", "bpro_sx") }}">
                                     <i class="fa fa-caret-right"></i> Saxophone (サックス)
                                 </a>
-                                <br>
-                                <a href="{{ url("/index/production_report/index/12") }}">
-                                    <i class="fa fa-caret-right"></i> Parts Process (WI-PP) Report (部品加工)
-                                </a>
                             </td>
                         </tr>
                         <tr>
@@ -908,10 +905,6 @@
                                 <br>
                                 <a href="{{ url("/index/display/sub_assy/welding_cl?date=&order2=") }}">
                                     <i class="fa fa-caret-right"></i> Clarinet Picking Monitor (クラリネットピッキング監視)
-                                </a>
-                                <br>
-                                <a href="{{ url("/index/production_report/index/15") }}">
-                                    <i class="fa fa-caret-right"></i> Welding Process Report (溶接プロセスリポート)
                                 </a>
                             </td>
                         </tr>
@@ -966,10 +959,7 @@
                                 <a href="{{ url("/index/display/sub_assy/assy_cl?date=&order2=") }}">
                                     <i class="fa fa-caret-right"></i> Clarinet Picking Monitor (クラリネットピッキング監視)
                                 </a>
-                                <br>
-                                <a href="{{ url("/index/production_report/index/8") }}">
-                                    <i class="fa fa-caret-right"></i> Assembly (WI-A) Report (アセンブリ（WI-A）レポート)
-                                </a>
+                                
                             </td>
                         </tr>
                         <tr>
@@ -987,10 +977,40 @@
                         </tr>
                         <tr>
                             <td>
+                                <span style="font-weight: bold;">Information & Evidence ()</span>
+                                <br>
+                                 <a href="{{ url("/index/packing_documentation") }}">
+                                    <i class="fa fa-caret-right"></i> Packing Documentation ()
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
                                 <span style="font-weight: bold;">NG Jelas (明らか不良)</span>
                                 <br>
                                 <a href="{{ url("/index/audit_ng_jelas_monitoring") }}">
                                     <i class="fa fa-caret-right"></i> Audit NG Jelas Monitoring (明らか不良監査の監視)
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="font-weight: bold;">LEADER Control (??)</span>
+                                <br>
+                                <a href="{{ url("/index/production_report/index/8") }}">
+                                    <i class="fa fa-caret-right"></i> Assembly (WI-A) Report (アセンブリ（WI-A）レポート)
+                                </a>
+                                <br>
+                                <a href="{{ url("/index/production_report/index/12") }}">
+                                    <i class="fa fa-caret-right"></i> Parts Process (WI-PP) Report (部品加工)
+                                </a>
+                                <br>
+                                <a href="{{ url("/index/production_report/index/15") }}">
+                                    <i class="fa fa-caret-right"></i> Welding Process Report (溶接プロセスリポート)
+                                </a>
+                                <br>
+                                <a href="{{ url("/index/production_report/index/10") }}">
+                                    <i class="fa fa-caret-right"></i> Maintenance Report (メンテナンスリポート)
                                 </a>
                             </td>
                         </tr>
