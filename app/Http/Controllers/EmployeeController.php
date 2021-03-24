@@ -668,8 +668,8 @@ class EmployeeController extends Controller
           $title_jp = '納税義務者番号データのまとめ';
 
           $emp = EmployeeSync::where('employee_id', Auth::user()->username)
-             ->select('employee_id', 'name', 'position', 'department', 'section', 'group')
-             ->first();
+          ->select('employee_id', 'name', 'position', 'department', 'section', 'group')
+          ->first();
 
           return view('employees.report.resume_pajak', array(
                'title' => $title,
@@ -683,37 +683,37 @@ class EmployeeController extends Controller
           try {
                $pajak = DB::SELECT("
 
-               SELECT
+                    SELECT
                     SUM(a.count_sudah ) AS sudah,
                     SUM(a.count_belum ) AS belum,
                     a.department,
                     COALESCE(departments.department_shortname,'') as department_shortname
-               FROM
+                    FROM
                     (
-               SELECT
+                    SELECT
                     count( employee_taxes.employee_id ) AS count_sudah,
                     0 AS count_belum,
                     COALESCE ( department, '' ) AS department 
-               FROM
+                    FROM
                     employee_taxes
                     JOIN employee_syncs ON employee_syncs.employee_id = employee_taxes.employee_id 
-               GROUP BY
+                    GROUP BY
                     department UNION ALL
-               SELECT
+                    SELECT
                     0 AS count_sudah,
                     count( employee_syncs.employee_id ) AS count_belum,
                     COALESCE ( department, '' ) AS department 
-               FROM
+                    FROM
                     employee_taxes
                     RIGHT JOIN employee_syncs ON employee_syncs.employee_id = employee_taxes.employee_id 
-               WHERE
+                    WHERE
                     employee_taxes.employee_id IS NULL 
                     AND employee_syncs.end_date IS NULL 
-               GROUP BY
+                    GROUP BY
                     department 
                     ) a 
                     left join departments on a.department = departments.department_name
-               GROUP BY
+                    GROUP BY
                     a.department,departments.department_shortname"
                );
 
@@ -743,10 +743,10 @@ class EmployeeController extends Controller
                               employee_syncs.employee_id,
                               employee_syncs.name,
                               '' as department
-                         FROM
+                              FROM
                               employee_taxes
                               RIGHT JOIN employee_syncs ON employee_syncs.employee_id = employee_taxes.employee_id
-                         WHERE
+                              WHERE
                               department IS NULL
                               and employee_taxes.employee_id is null
                               and employee_syncs.end_date is null");
@@ -755,10 +755,10 @@ class EmployeeController extends Controller
                               employee_syncs.employee_id,
                               employee_syncs.name,
                               '' as department
-                         FROM
+                              FROM
                               employee_taxes
                               LEFT JOIN employee_syncs ON employee_syncs.employee_id = employee_taxes.employee_id
-                         WHERE
+                              WHERE
                               department IS NULL
                               and employee_syncs.end_date is null");
                     }
@@ -768,11 +768,11 @@ class EmployeeController extends Controller
                               employee_syncs.employee_id,
                               employee_syncs.name,
                               COALESCE(department_shortname,'') as department
-                         FROM
+                              FROM
                               employee_taxes
                               RIGHT JOIN employee_syncs ON employee_syncs.employee_id = employee_taxes.employee_id
                               join departments on department_name = employee_syncs.department
-                         WHERE
+                              WHERE
                               department_shortname = '".$dept."'
                               and employee_taxes.employee_id is null
                               and employee_syncs.end_date is null");
@@ -781,11 +781,11 @@ class EmployeeController extends Controller
                               employee_syncs.employee_id,
                               employee_syncs.name,
                               COALESCE(department_shortname,'') as department
-                         FROM
+                              FROM
                               employee_taxes
                               LEFT JOIN employee_syncs ON employee_syncs.employee_id = employee_taxes.employee_id
                               join departments on department_name = employee_syncs.department
-                         WHERE
+                              WHERE
                               department_shortname = '".$dept."'
                               and employee_syncs.end_date is null");
                     }
@@ -807,837 +807,837 @@ class EmployeeController extends Controller
 
      public function exportDataPajak(Request $request){
 
-        $time = date('d-m-Y H;i;s');
+       $time = date('d-m-Y H;i;s');
 
 
-        $npwp_detail = db::select(
-            "SELECT * from employee_taxes order by id asc");
+       $npwp_detail = db::select(
+        "SELECT * from employee_taxes order by id asc");
 
-        $data = array(
-            'npwp_detail' => $npwp_detail
-        );
+       $data = array(
+        'npwp_detail' => $npwp_detail
+   );
 
-        ob_clean();
+       ob_clean();
 
-        Excel::create('Data NPWP '.$time, function($excel) use ($data){
-            $excel->sheet('Data', function($sheet) use ($data) {
-              return $sheet->loadView('employees.report.resume_pajak_excel', $data);
-          });
-        })->export('xlsx');
-    }
+       Excel::create('Data NPWP '.$time, function($excel) use ($data){
+        $excel->sheet('Data', function($sheet) use ($data) {
+           return $sheet->loadView('employees.report.resume_pajak_excel', $data);
+      });
+   })->export('xlsx');
+  }
 
-     public function fetchEmployeeResume(Request $request){
+  public function fetchEmployeeResume(Request $request){
 
-          $tanggal = "";
-          $addcostcenter = "";
-          $adddepartment = "";
-          $addsection = "";
-          $addgrup = "";
-          $addnik = "";
+     $tanggal = "";
+     $addcostcenter = "";
+     $adddepartment = "";
+     $addsection = "";
+     $addgrup = "";
+     $addnik = "";
 
-          if(strlen($request->get('datefrom')) > 0){
-               $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
-               $tanggal = "and tanggal >= '".$datefrom."' ";
-               if(strlen($request->get('dateto')) > 0){
-                    $dateto = date('Y-m-d', strtotime($request->get('dateto')));
-                    $tanggal = $tanggal."and tanggal <= '".$dateto."' ";
+     if(strlen($request->get('datefrom')) > 0){
+          $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+          $tanggal = "and tanggal >= '".$datefrom."' ";
+          if(strlen($request->get('dateto')) > 0){
+               $dateto = date('Y-m-d', strtotime($request->get('dateto')));
+               $tanggal = $tanggal."and tanggal <= '".$dateto."' ";
+          }
+     }
+
+     if($request->get('cost_center_code') != null) {
+          $costcenter = implode(",", $request->get('cost_center_code'));
+          $addcostcenter = "and bagian.cost_center in (".$costcenter.") ";
+     }
+
+     if($request->get('department') != null) {
+          $departments = $request->get('department');
+          $deptlength = count($departments);
+          $department = "";
+
+          for($x = 0; $x < $deptlength; $x++) {
+               $department = $department."'".$departments[$x]."'";
+               if($x != $deptlength-1){
+                    $department = $department.",";
                }
           }
+          $adddepartment = "and bagian.department in (".$department.") ";
+     }
 
-          if($request->get('cost_center_code') != null) {
-               $costcenter = implode(",", $request->get('cost_center_code'));
-               $addcostcenter = "and bagian.cost_center in (".$costcenter.") ";
-          }
+     if($request->get('section') != null) {
+          $sections = $request->get('section');
+          $sectlength = count($sections);
+          $section = "";
 
-          if($request->get('department') != null) {
-               $departments = $request->get('department');
-               $deptlength = count($departments);
-               $department = "";
-
-               for($x = 0; $x < $deptlength; $x++) {
-                    $department = $department."'".$departments[$x]."'";
-                    if($x != $deptlength-1){
-                         $department = $department.",";
-                    }
+          for($x = 0; $x < $sectlength; $x++) {
+               $section = $section."'".$sections[$x]."'";
+               if($x != $sectlength-1){
+                    $section = $section.",";
                }
-               $adddepartment = "and bagian.department in (".$department.") ";
           }
+          $addsection = "and bagian.section in (".$section.") ";
+     }
 
-          if($request->get('section') != null) {
-               $sections = $request->get('section');
-               $sectlength = count($sections);
-               $section = "";
+     if($request->get('group') != null) {
+          $groups = $request->get('group');
+          $grplen = count($groups);
+          $group = "";
 
-               for($x = 0; $x < $sectlength; $x++) {
-                    $section = $section."'".$sections[$x]."'";
-                    if($x != $sectlength-1){
-                         $section = $section.",";
-                    }
+          for($x = 0; $x < $grplen; $x++) {
+               $group = $group."'".$groups[$x]."'";
+               if($x != $grplen-1){
+                    $group = $group.",";
                }
-               $addsection = "and bagian.section in (".$section.") ";
           }
+          $addgrup = "and bagian.group in (".$group.") ";
+     }
 
-          if($request->get('group') != null) {
-               $groups = $request->get('group');
-               $grplen = count($groups);
-               $group = "";
+     if($request->get('employee_id') != null) {
+          $niks = $request->get('employee_id');
+          $niklen = count($niks);
+          $nik = "";
 
-               for($x = 0; $x < $grplen; $x++) {
-                    $group = $group."'".$groups[$x]."'";
-                    if($x != $grplen-1){
-                         $group = $group.",";
-                    }
+          for($x = 0; $x < $niklen; $x++) {
+               $nik = $nik."'".$niks[$x]."'";
+               if($x != $niklen-1){
+                    $nik = $nik.",";
                }
-               $addgrup = "and bagian.group in (".$group.") ";
           }
-
-          if($request->get('employee_id') != null) {
-               $niks = $request->get('employee_id');
-               $niklen = count($niks);
-               $nik = "";
-
-               for($x = 0; $x < $niklen; $x++) {
-                    $nik = $nik."'".$niks[$x]."'";
-                    if($x != $niklen-1){
-                         $nik = $nik.",";
-                    }
-               }
-               $addnik = "and ovr.nik in (".$nik.") ";
-          }
-
-          $presences = db::connection('sunfish')->select("SELECT
-               A.Emp_no,
-               B.Full_name,
-               B.Department,
-               format ( A.shiftstarttime, 'yyyy-MM' ) AS orderer,
-               format ( A.shiftstarttime, 'MMMM yyyy' ) AS periode,
-               COUNT (
-               IIF ( A.Attend_Code LIKE '%Mangkir%', 1, NULL )) AS mangkir,
-               COUNT (
-               IIF ( A.Attend_Code LIKE '%CK%' OR A.Attend_Code LIKE '%CUTI%' OR A.Attend_Code LIKE '%UPL%', 1, NULL )) AS cuti,
-               COUNT (
-               IIF ( A.Attend_Code LIKE '%Izin%', 1, NULL )) AS izin,
-               COUNT (
-               IIF ( A.Attend_Code LIKE '%SAKIT%', 1, NULL )) AS sakit,
-               COUNT (
-               IIF ( A.Attend_Code LIKE '%LTI%' OR A.Attend_Code LIKE '%TELAT%', 1, NULL )) AS terlambat,
-               COUNT (
-               IIF ( A.Attend_Code LIKE '%PC%', 1, NULL )) AS pulang_cepat,
-               COUNT (
-               IIF (
-               A.Attend_Code LIKE '%ABS%' 
-               OR A.Attend_Code LIKE '%CK10%' 
-               OR A.Attend_Code LIKE '%CK11%' 
-               OR A.Attend_Code LIKE '%CK12%' 
-               OR A.Attend_Code LIKE '%CK8%' 
-               OR A.Attend_Code LIKE '%Izin%' 
-               OR A.Attend_Code LIKE '%Mangkir%' 
-               OR A.Attend_Code LIKE '%PC%' 
-               OR A.Attend_Code LIKE '%SAKIT%' 
-               OR A.Attend_Code LIKE '%UPL%' 
-               OR A.Attend_Code LIKE '%LTI%' 
-               OR A.Attend_Code LIKE '%TELAT%',
-               1,
-               NULL 
-               )) AS tunjangan,
-               ISNULL(SUM (  A.total_ot / 60.0 ),0) AS overtime 
-               FROM
-               VIEW_YMPI_Emp_Attendance AS A
-               left join VIEW_YMPI_Emp_OrgUnit as B on B.Emp_no = A.Emp_no
-               WHERE
-               YEAR(A.shiftstarttime) >= '2020'
-               AND A.shiftstarttime <= '2020-04-30 23:59:59'
-               GROUP BY
-               format ( A.shiftstarttime, 'MMMM yyyy' ),
-               format ( A.shiftstarttime, 'yyyy-MM' ),
-               A.Emp_no,
-               B.Full_name,
-               B.Department
-               ORDER BY
-               A.Emp_no asc,
-               orderer ASC");
-
-          $response = array(
-               'status' => true,
-               'presences' => $presences,
-          );
-          return Response::json($response);
+          $addnik = "and ovr.nik in (".$nik.") ";
      }
 
-     public function indexTotalMeeting()
-     {
-          $title_jp = "トータルミーティング";
-          $title = "Total Meeting";
-          return view('employees.report.total_meeting', array(
-               'title' => $title,
-               'title_jp' => $title_jp
-          ))->with('page', 'Total Meeting');
-     }
-
-     public function indexTermination()
-     {
-          return view('employees.master.termination',array(
-               'status' => $this->status))->with('page', 'Termination')->with('head', 'Employees Data');
-     }
-
-     public function indexEmployeeInformation()
-     {
-          return view('employees.index_employee_information');
-     }
-
-     public function indexKaizenAssessment($id)
-     {
-          return view('employees.service.kaizenDetail', array(
-               'title' => 'e-Kaizen Verification',
-               'title_jp' => '??'))->with('page', 'Kaizen');
-     }
-
-     public function indexKaizenData()
-     {
-          return view('employees.service.kaizenData', array(
-               'title' => 'e-Kaizen Datas',
-               'title_jp' => '??'))->with('page', 'Kaizen');
-     }
-
-     public function attendanceData()
-     {
-          $title = 'Attendance Data';
-          $title_jp = '出席データ';
-          $attend_codes = $this->attend;
-
-          $q = "select employee_syncs.employee_id, employee_syncs.name, employee_syncs.department, employee_syncs.`section`, employee_syncs.`group`, employee_syncs.cost_center, cost_centers2.cost_center_name from employee_syncs left join cost_centers2 on cost_centers2.cost_center = employee_syncs.cost_center";
-
-          $datas = db::select($q);
-
-          return view('employees.report.attendance_data', array(
-               'title' => $title,
-               'title_jp' => $title_jp,
-               'datas' => $datas,
-               'attend_codes' => $attend_codes
-          ));
-     }
-
-     public function checklogData()
-     {
-          $title = 'Checklog Data';
-          $title_jp = 'チェックログのデータ';
-
-          $q = "select employee_syncs.employee_id, employee_syncs.name, employee_syncs.department, employee_syncs.`section`, employee_syncs.`group`, employee_syncs.cost_center, cost_centers2.cost_center_name from employee_syncs left join cost_centers2 on cost_centers2.cost_center = employee_syncs.cost_center";
-
-          $datas = db::select($q);
-
-          return view('employees.report.checklog_data', array(
-               'title' => $title,
-               'title_jp' => $title_jp,
-               'datas' => $datas
-          ));
-     }
-
-
-     public function getNotif()
-     {
-          $ntf = HrQuestionLog::select(db::raw("SUM(remark) as ntf"))->first();
-          return $ntf->ntf;
-     }
-
-     public function indexHRQA()
-     {
-          $q_question = "SELECT
-          category,
-          SUM(
-          IF
-          ( remark = 1, 1, 0 )) AS unanswer 
+     $presences = db::connection('sunfish')->select("SELECT
+          A.Emp_no,
+          B.Full_name,
+          B.Department,
+          format ( A.shiftstarttime, 'yyyy-MM' ) AS orderer,
+          format ( A.shiftstarttime, 'MMMM yyyy' ) AS periode,
+          COUNT (
+          IIF ( A.Attend_Code LIKE '%Mangkir%', 1, NULL )) AS mangkir,
+          COUNT (
+          IIF ( A.Attend_Code LIKE '%CK%' OR A.Attend_Code LIKE '%CUTI%' OR A.Attend_Code LIKE '%UPL%', 1, NULL )) AS cuti,
+          COUNT (
+          IIF ( A.Attend_Code LIKE '%Izin%', 1, NULL )) AS izin,
+          COUNT (
+          IIF ( A.Attend_Code LIKE '%SAKIT%', 1, NULL )) AS sakit,
+          COUNT (
+          IIF ( A.Attend_Code LIKE '%LTI%' OR A.Attend_Code LIKE '%TELAT%', 1, NULL )) AS terlambat,
+          COUNT (
+          IIF ( A.Attend_Code LIKE '%PC%', 1, NULL )) AS pulang_cepat,
+          COUNT (
+          IIF (
+          A.Attend_Code LIKE '%ABS%' 
+          OR A.Attend_Code LIKE '%CK10%' 
+          OR A.Attend_Code LIKE '%CK11%' 
+          OR A.Attend_Code LIKE '%CK12%' 
+          OR A.Attend_Code LIKE '%CK8%' 
+          OR A.Attend_Code LIKE '%Izin%' 
+          OR A.Attend_Code LIKE '%Mangkir%' 
+          OR A.Attend_Code LIKE '%PC%' 
+          OR A.Attend_Code LIKE '%SAKIT%' 
+          OR A.Attend_Code LIKE '%UPL%' 
+          OR A.Attend_Code LIKE '%LTI%' 
+          OR A.Attend_Code LIKE '%TELAT%',
+          1,
+          NULL 
+          )) AS tunjangan,
+          ISNULL(SUM (  A.total_ot / 60.0 ),0) AS overtime 
           FROM
-          hr_question_logs 
+          VIEW_YMPI_Emp_Attendance AS A
+          left join VIEW_YMPI_Emp_OrgUnit as B on B.Emp_no = A.Emp_no
+          WHERE
+          YEAR(A.shiftstarttime) >= '2020'
+          AND A.shiftstarttime <= '2020-04-30 23:59:59'
           GROUP BY
-          category 
+          format ( A.shiftstarttime, 'MMMM yyyy' ),
+          format ( A.shiftstarttime, 'yyyy-MM' ),
+          A.Emp_no,
+          B.Full_name,
+          B.Department
           ORDER BY
-          category ASC";
+          A.Emp_no asc,
+          orderer ASC");
 
-          $question = DB::select($q_question);
+     $response = array(
+          'status' => true,
+          'presences' => $presences,
+     );
+     return Response::json($response);
+}
 
-          return view('employees.master.hrquestion', array(
-               'title' => 'HR Question & Answer',
-               'title_jp' => '??',
-               'all_question' => $question
-          ))->with('page', 'qna');
+public function indexTotalMeeting()
+{
+     $title_jp = "トータルミーティング";
+     $title = "Total Meeting";
+     return view('employees.report.total_meeting', array(
+          'title' => $title,
+          'title_jp' => $title_jp
+     ))->with('page', 'Total Meeting');
+}
+
+public function indexTermination()
+{
+     return view('employees.master.termination',array(
+          'status' => $this->status))->with('page', 'Termination')->with('head', 'Employees Data');
+}
+
+public function indexEmployeeInformation()
+{
+     return view('employees.index_employee_information');
+}
+
+public function indexKaizenAssessment($id)
+{
+     return view('employees.service.kaizenDetail', array(
+          'title' => 'e-Kaizen Verification',
+          'title_jp' => '??'))->with('page', 'Kaizen');
+}
+
+public function indexKaizenData()
+{
+     return view('employees.service.kaizenData', array(
+          'title' => 'e-Kaizen Datas',
+          'title_jp' => '??'))->with('page', 'Kaizen');
+}
+
+public function attendanceData()
+{
+     $title = 'Attendance Data';
+     $title_jp = '出席データ';
+     $attend_codes = $this->attend;
+
+     $q = "select employee_syncs.employee_id, employee_syncs.name, employee_syncs.department, employee_syncs.`section`, employee_syncs.`group`, employee_syncs.cost_center, cost_centers2.cost_center_name from employee_syncs left join cost_centers2 on cost_centers2.cost_center = employee_syncs.cost_center";
+
+     $datas = db::select($q);
+
+     return view('employees.report.attendance_data', array(
+          'title' => $title,
+          'title_jp' => $title_jp,
+          'datas' => $datas,
+          'attend_codes' => $attend_codes
+     ));
+}
+
+public function checklogData()
+{
+     $title = 'Checklog Data';
+     $title_jp = 'チェックログのデータ';
+
+     $q = "select employee_syncs.employee_id, employee_syncs.name, employee_syncs.department, employee_syncs.`section`, employee_syncs.`group`, employee_syncs.cost_center, cost_centers2.cost_center_name from employee_syncs left join cost_centers2 on cost_centers2.cost_center = employee_syncs.cost_center";
+
+     $datas = db::select($q);
+
+     return view('employees.report.checklog_data', array(
+          'title' => $title,
+          'title_jp' => $title_jp,
+          'datas' => $datas
+     ));
+}
+
+
+public function getNotif()
+{
+     $ntf = HrQuestionLog::select(db::raw("SUM(remark) as ntf"))->first();
+     return $ntf->ntf;
+}
+
+public function indexHRQA()
+{
+     $q_question = "SELECT
+     category,
+     SUM(
+     IF
+     ( remark = 1, 1, 0 )) AS unanswer 
+     FROM
+     hr_question_logs 
+     GROUP BY
+     category 
+     ORDER BY
+     category ASC";
+
+     $question = DB::select($q_question);
+
+     return view('employees.master.hrquestion', array(
+          'title' => 'HR Question & Answer',
+          'title_jp' => '??',
+          'all_question' => $question
+     ))->with('page', 'qna');
+}
+
+public function indexKaizen()
+{
+     $username = Auth::user()->username;
+
+     $emp = User::join('employee_syncs','employee_syncs.employee_id','=','users.username')
+     ->where('employee_syncs.employee_id','=', $username)
+     ->whereRaw('(employee_syncs.position in ("Foreman","Manager","Chief", "Deputy Foreman") or role_code = "MIS" or username in ('.$this->usr.'))')
+     ->select('position')
+     ->first();
+
+     $dd = [];
+
+     $emp_usr = User::where('role_code','=','MIS')->select('username')->get();
+
+     for($x = 0; $x < count($emp_usr); $x++) {
+          array_push($dd, $emp_usr[$x]->username);
      }
 
-     public function indexKaizen()
-     {
-          $username = Auth::user()->username;
+     array_push($dd, 'PI0904007');
 
-          $emp = User::join('employee_syncs','employee_syncs.employee_id','=','users.username')
-          ->where('employee_syncs.employee_id','=', $username)
-          ->whereRaw('(employee_syncs.position in ("Foreman","Manager","Chief", "Deputy Foreman") or role_code = "MIS" or username in ('.$this->usr.'))')
-          ->select('position')
-          ->first();
+     $sections = "select section from employee_syncs where section is not null and position in ('Leader', 'Chief') group by section";
 
-          $dd = [];
+     $sc = db::select($sections);
 
-          $emp_usr = User::where('role_code','=','MIS')->select('username')->get();
+     if ($emp) {
+          return view('employees.service.indexKaizen', array(
+               'title' => 'e-Kaizen (Assessment List)',
+               'position' => $emp,
+               'section' => $sc,
+               'user' => $dd,
+               'title_jp' => 'e-改善（採点対象改善提案リスト）'))->with('page', 'Assess')->with('head','Kaizen');
+     } else {
+          return redirect()->back();
+     }
+}
 
-          for($x = 0; $x < count($emp_usr); $x++) {
-               array_push($dd, $emp_usr[$x]->username);
-          }
+public function indexKaizen2($section)
+{
+     $username = Auth::user()->username;
 
-          array_push($dd, 'PI0904007');
+     $emp = User::join('employee_syncs','employee_syncs.employee_id','=','users.username')
+     ->where('employee_syncs.employee_id','=', $username)
+     ->whereRaw('(employee_syncs.position in ("Foreman","Manager","Chief","Deputy Foreman") or role_code = "MIS")')
+     ->select('position')
+     ->first();
 
-          $sections = "select section from employee_syncs where section is not null and position in ('Leader', 'Chief') group by section";
+     $dd = str_replace("'","", $this->usr);
+     $dd = explode(',', $dd);
 
-          $sc = db::select($sections);
+     $sections = "select section from employee_syncs where section is not null and position in ('Leader', 'Chief') group by section";
 
-          if ($emp) {
-               return view('employees.service.indexKaizen', array(
-                    'title' => 'e-Kaizen (Assessment List)',
-                    'position' => $emp,
-                    'section' => $sc,
-                    'user' => $dd,
-                    'title_jp' => 'e-改善（採点対象改善提案リスト）'))->with('page', 'Assess')->with('head','Kaizen');
-          } else {
-               return redirect()->back();
-          }
+
+     $sc = db::select($sections);
+
+     if ($emp) {
+          return view('employees.service.indexKaizen', array(
+               'title' => 'e-Kaizen (Assessment List)',
+               'position' => $emp,
+               'section' => $sc,
+               'filter' => $section,
+               'user' => $dd,
+               'title_jp' => 'e-改善（採点対象改善提案リスト）'))->with('page', 'Assess')->with('head','Kaizen');
+     } else {
+          return redirect()->back();
+     }
+}
+
+public function indexKaizenApplied()
+{
+     $username = Auth::user()->username;
+
+     $emp = User::leftJoin('employee_syncs','employee_syncs.employee_id','=','users.username')
+     ->where('employee_syncs.employee_id','=', $username)
+     ->whereRaw('(employee_syncs.position in ("Foreman","Manager","Chief","Deputy Foreman") or username in ("'.$this->usr.'"))')
+     ->select('position')
+     ->first();
+
+     $dd = str_replace("'","", $this->usr);
+     $dd = explode(',', $dd);
+
+     $sections = "select section from employee_syncs where section is not null and position in ('Leader', 'Chief') group by section";
+
+     $sc = db::select($sections);
+
+
+     if ($emp) {
+          return view('employees.service.indexKaizenApplied', array(
+               'title' => 'e-Kaizen (Applied list)',
+               'position' => $emp,
+               'section' => $sc,
+               'user' => $dd,
+               'title_jp' => '??'))->with('page', 'Applied')->with('head','Kaizen');
+     } else {
+          return redirect()->back();
      }
 
-     public function indexKaizen2($section)
-     {
-          $username = Auth::user()->username;
+}
 
-          $emp = User::join('employee_syncs','employee_syncs.employee_id','=','users.username')
-          ->where('employee_syncs.employee_id','=', $username)
-          ->whereRaw('(employee_syncs.position in ("Foreman","Manager","Chief","Deputy Foreman") or role_code = "MIS")')
-          ->select('position')
-          ->first();
+public function indexKaizenReport()
+{
+     return view('employees.report.kaizen_rank', array(
+          'title' => '',
+          'title_jp' => ''))->with('page', 'Kaizen Report');
+}
 
-          $dd = str_replace("'","", $this->usr);
-          $dd = explode(',', $dd);
+public function indexKaizenResume()
+{
+     return view('employees.report.kaizen_resume', array(
+          'title' => 'Report Kaizen Teian',
+          'title_jp' => '改善提案の報告'))->with('page', 'Kaizen Resume');
+}
 
-          $sections = "select section from employee_syncs where section is not null and position in ('Leader', 'Chief') group by section";
+public function indexKaizenApprovalResume()
+{
+     $username = Auth::user()->username;
 
-
-          $sc = db::select($sections);
-
-          if ($emp) {
-               return view('employees.service.indexKaizen', array(
-                    'title' => 'e-Kaizen (Assessment List)',
-                    'position' => $emp,
-                    'section' => $sc,
-                    'filter' => $section,
-                    'user' => $dd,
-                    'title_jp' => 'e-改善（採点対象改善提案リスト）'))->with('page', 'Assess')->with('head','Kaizen');
-          } else {
-               return redirect()->back();
-          }
-     }
-
-     public function indexKaizenApplied()
-     {
-          $username = Auth::user()->username;
-
-          $emp = User::leftJoin('employee_syncs','employee_syncs.employee_id','=','users.username')
-          ->where('employee_syncs.employee_id','=', $username)
-          ->whereRaw('(employee_syncs.position in ("Foreman","Manager","Chief","Deputy Foreman") or username in ("'.$this->usr.'"))')
-          ->select('position')
-          ->first();
-
-          $dd = str_replace("'","", $this->usr);
-          $dd = explode(',', $dd);
-
-          $sections = "select section from employee_syncs where section is not null and position in ('Leader', 'Chief') group by section";
-
-          $sc = db::select($sections);
-
-
-          if ($emp) {
-               return view('employees.service.indexKaizenApplied', array(
-                    'title' => 'e-Kaizen (Applied list)',
-                    'position' => $emp,
-                    'section' => $sc,
-                    'user' => $dd,
-                    'title_jp' => '??'))->with('page', 'Applied')->with('head','Kaizen');
-          } else {
-               return redirect()->back();
-          }
-
-     }
-
-     public function indexKaizenReport()
-     {
-          return view('employees.report.kaizen_rank', array(
-               'title' => '',
-               'title_jp' => ''))->with('page', 'Kaizen Report');
-     }
-
-     public function indexKaizenResume()
-     {
-          return view('employees.report.kaizen_resume', array(
-               'title' => 'Report Kaizen Teian',
-               'title_jp' => '改善提案の報告'))->with('page', 'Kaizen Resume');
-     }
-
-     public function indexKaizenApprovalResume()
-     {
-          $username = Auth::user()->username;
-
-          $dd = str_replace("'","", $this->usr);
-          $dd = explode(',', $dd);
+     $dd = str_replace("'","", $this->usr);
+     $dd = explode(',', $dd);
 
 // $get_department = Mutationlog::select('department')->whereNull('valid_to')->where("employee_id","=",Auth::user()->username)->first();
 
-          $get_department = EmployeeSync::select('department')->where("employee_id","=",Auth::user()->username)->first();
+     $get_department = EmployeeSync::select('department')->where("employee_id","=",Auth::user()->username)->first();
 
-          for ($i=0; $i < count($dd); $i++) {
-               if ($username == $dd[$i] || Auth::user()->role_code == 'S' || Auth::user()->role_code == 'MIS') {
-                    $d = "";
-                    break;
-               } else {
-                    $d = "where department = '".$get_department->department."'";
-
-                    if ($get_department->department == 'Maintenance') {
-                         $d .= " or department = 'Production Engineering Department'";
-                    }
-               }
-          }
-
-          $q_data = "select bagian.*, IFNULL(kz.count,0) as count  from 
-          (select fr.employee_id, `name`, position, fr.department, struktur.section from
-          (select employee_id, `name`, position, department, section from employee_syncs where end_date is null and position in ('foreman', 'chief', 'Deputy Foreman')) as fr
-          left join 
-          (select department, section from employee_syncs where department is not null and section is not null group by department, section) as struktur on fr.department = struktur.department) as bagian
-          left join
-          (select count(id) as count, area from kaizen_forms where `status` = -1 and deleted_at is null group by area) as kz
-          on bagian.section = kz.area
-          ".$d."
-          order by `name` desc";
-
-          $datas = db::select($q_data);
-
-          return view('employees.service.kaizenAprovalResume', array(
-               'title' => 'e-Kaizen Unverified Resume',
-               'title_jp' => '',
-               'datas' => $datas
-          ))->with('page', 'Kaizen Aproval Resume');
-     }
-
-     public function indexUpdateKaizenDetail($id)
-     {
-          $data = KaizenForm::where('kaizen_forms.id','=', $id)
-          ->leftJoin('kaizen_calculations','kaizen_forms.id','=','kaizen_calculations.id_kaizen')
-          ->leftJoin('kaizen_notes','kaizen_forms.id','=','kaizen_notes.id_kaizen')
-          ->select('kaizen_forms.id','kaizen_forms.employee_name','kaizen_forms.propose_date','kaizen_forms.section','kaizen_forms.leader','kaizen_forms.title','kaizen_forms.purpose', 'kaizen_forms.condition', 'kaizen_forms.improvement','kaizen_forms.area','kaizen_forms.employee_id','kaizen_calculations.id_cost', 'kaizen_calculations.cost','kaizen_notes.foreman_note','kaizen_notes.manager_note')
-          ->get();
-
-          $section = explode(" ~",$data[0]->section)[0];
-
-          $ldr = "position = 'Leader'";
-          if ($section == 'Assembly Process Control Section') {
-               $ldr = "grade_name = 'Staff'";
-          }
-
-// $q_subleader = "select employees.name, position, employees.employee_id from employees 
-// left join promotion_logs on employees.employee_id = promotion_logs.employee_id 
-// left join mutation_logs on mutation_logs.employee_id = employees.employee_id
-// where promotion_logs.valid_to is null and mutation_logs.valid_to is null and ".$ldr."
-// and end_date is null and section = '".$section."'
-// order by name asc";
-
-          $q_subleader = "select name, position, employee_id from employee_syncs where end_date is null and ".$ldr." and section = '".$section."' order by name asc";
-
-          $subleader = db::select($q_subleader);
-
-
-          $sections = "select section from employee_syncs where section is not null and position in ('Leader', 'Chief') group by section";
-
-          $sc = db::select($sections);
-
-          return view('employees.service.ekaizenUpdate', array(
-               'title' => 'e-Kaizen Update',
-               'title_jp' => '',
-               'subleaders' => $subleader,
-               'sc' => $sc,
-               'data' => $data
-          ))->with('page', 'Kaizen Update');
-     }
-
-     public function indexUploadKaizenImage()
-     {
-          $username = Auth::user()->username;
-
-          $mstr = EmployeeSync::where('employee_id','=', $username)->select('sub_section')->first();
-
-          $datas = EmployeeSync::where('section','=', $mstr->sub_section)->select('employee_id','name')->get();
-
-          return view('employees.service.ekaizenUpload', array(
-               'title' => 'e-Kaizen Upload Images',
-               'title_jp' => '',
-               'employees' => $datas
-          ))->with('page', 'Kaizen Upload Images');
-     }
-
-     public function indexKaizenReward()
-     {
-          $username = Auth::user()->username;
-
-          $user = db::select("select username from users 
-               left join employee_syncs on employee_syncs.employee_id = users.username
-               where username = '".$username."' AND (role_code = 'MIS' OR username = 'PI0904007' OR position in ('Manager','foreman','Deputy Foreman'))");
-
-          if ($user) {
-               return view('employees.report.report_kaizen_reward', array(
-                    'title' => 'e-Kaizen Reward',
-                    'title_jp' => '',
-               ))->with('page', 'Kaizen Reward');  
+     for ($i=0; $i < count($dd); $i++) {
+          if ($username == $dd[$i] || Auth::user()->role_code == 'S' || Auth::user()->role_code == 'MIS') {
+               $d = "";
+               break;
           } else {
-               return redirect()->back();
-          }
-     }
+               $d = "where department = '".$get_department->department."'";
 
-     public function makeKaizen($id, $name, $section, $group){
-          $ldr = "position = 'Leader'";
-          if ($section == 'Assembly Process Control Section') {
-               $ldr = "grade_name = 'Staff'";
-          }
-
-// $q_subleader = "select employees.name, position, employees.employee_id from employees 
-// left join promotion_logs on employees.employee_id = promotion_logs.employee_id 
-// left join mutation_logs on mutation_logs.employee_id = employees.employee_id
-// where promotion_logs.valid_to is null and mutation_logs.valid_to is null and ".$ldr."
-// and end_date is null and section = '".$section."'
-// order by name asc";
-
-          $q_subleader = "select name, position, employee_id from employee_syncs where end_date is null and ".$ldr." and section = '".$section."' order by name asc";
-
-
-          $subleader = db::select($q_subleader);
-
-          if (in_array($id , $this->wst)) {
-
-          }
-
-          $sections = "select section from employee_syncs where position in ('Leader', 'chief') group by section";
-
-          $sc = db::select($sections);
-
-          return view('employees.service.ekaizenForm', array(
-               'title' => 'e-Kaizen',
-               'emp_id' => $id,
-               'name' => $name,
-               'section' => $section,
-               'group' => $group,
-               'subleaders' => $subleader,
-               'sc' => $sc,
-               'title_jp' => ''));
-     }
-
-     public function makeKaizen2($id, $name, $section){
-          $group = "";
-
-          $ldr = "position = 'Leader'";
-          if ($section == 'Assembly Process Control Section') {
-               $ldr = "grade_name = 'Staff'";
-          }
-
-// $q_subleader = "select employees.name, position, employees.employee_id from employees 
-// left join promotion_logs on employees.employee_id = promotion_logs.employee_id 
-// left join mutation_logs on mutation_logs.employee_id = employees.employee_id
-// where promotion_logs.valid_to is null and mutation_logs.valid_to is null and ".$ldr."
-// and end_date is null and section = '".$section."'
-// order by name asc";
-
-          $q_subleader = "select name, position, employee_id from employee_syncs where end_date is null and ".$ldr." and section = '".$section."' order by name asc";
-
-
-          $subleader = db::select($q_subleader);
-
-          if (in_array($id , $this->wst)) {
-
-          }
-
-          $sections = "select section from employee_syncs where position in ('Leader', 'chief') group by section";
-
-          $sc = db::select($sections);
-
-          return view('employees.service.ekaizenForm', array(
-               'title' => 'e-Kaizen',
-               'emp_id' => $id,
-               'name' => $name,
-               'section' => $section,
-               'group' => $group,
-               'subleaders' => $subleader,
-               'sc' => $sc,
-               'title_jp' => ''));
-     }
-
-     public function updateEmp($id){
-          $keluarga = $this->keluarga;
-          $emp = Employee::where('employee_id','=',$id)
-          ->get();
-          return view('employees.master.updateEmp', array(
-               'emp' => $emp,
-               'keluarga' => $keluarga))->with('page', 'Update Employee');
-     }
-
-     public function fetchTotalMeeting(Request $request){
-
-          $now = date('Y-m-01', strtotime($request->get('period').'-01'));
-          $period = date('Y-m', strtotime($request->get('period')));
-
-          $first = date('Y-m-d', strtotime('-3 months', strtotime($now)));
-          $last = date('Y-m-t', strtotime($now));
-          $first_sunfish = date('Y-m-d', strtotime('-3 months', strtotime($now)));
-          $last_mirai = date('Y-m-t', strtotime($now));
-
-          $employees = db::select("select date_format(period, '%M %Y') as period, date_format(period, '%Y-%m') as period2, count(full_name) as total, sum(if(employ_code = 'OUTSOURCE', 1, 0)) as outsource, sum(if(employ_code = 'CONTRACT1', 1, 0)) as contract1, sum(if(employ_code = 'CONTRACT2', 1, 0)) as contract2, sum(if(employ_code = 'PERMANENT', 1, 0)) as permanent, sum(if(employ_code = 'PROBATION', 1, 0)) as probation, sum(if(gender = 'L', 1, 0)) as male, sum(if(gender = 'P', 1, 0)) as female, sum(if(`Labour_Union` = 'NONE' or `Labour_Union` is null AND `employ_code` <> 'OUTSOURCE', 1, 0)) as no_union, sum(if(`Labour_Union` = 'SPSI' AND `employ_code` <> 'OUTSOURCE', 1, 0)) as spsi, sum(if(`Labour_Union` = 'SBM' AND `employ_code` <> 'OUTSOURCE', 1, 0)) as sbm, sum(if(`Labour_Union` = 'SPMI' AND `employ_code` <> 'OUTSOURCE', 1, 0)) as spmi from employee_histories where end_date is null and date_format(period, '%Y-%m-%d') >= '".$first."' and date_format(period, '%Y-%m') <= '".$last."' group by date_format(period, '%Y-%m'), date_format(period, '%M %Y') order by period2 asc");
-
-          $mirai_overtimes1 = array();
-          $sunfish_overtimes1 = array();
-          if($last >= '2020-01-01'){
-               if($first <= '2020-01-01'){
-                    $first_sunfish = '2020-01-01';
+               if ($get_department->department == 'Maintenance') {
+                    $d .= " or department = 'Production Engineering Department'";
                }
-               $sunfish_overtimes1 = db::connection('sunfish')->select("SELECT DISTINCT
-                    X.orderer,
-                    X.period,
-                    VIEW_YMPI_Emp_OrgUnit.Department,
-                    COALESCE ( Q.ot_person, 0 ) AS ot_person 
-                    FROM
-                    VIEW_YMPI_Emp_OrgUnit
-                    CROSS JOIN (
-                    SELECT DISTINCT
-                    format ( ovtplanfrom, 'yyyy-MM' ) AS orderer,
-                    format ( ovtplanfrom, 'MMMM yyyy' ) AS period 
-                    FROM
-                    VIEW_YMPI_Emp_OvertimePlan 
-                    WHERE
-                    ovtplanfrom >= '".$first_sunfish." 00:00:00' 
-                    AND ovtplanfrom <= '".$last." 00:00:00' 
-                    ) X
-                    LEFT JOIN (
-                    SELECT
-                    orderer,
-                    period,
-                    B.Department,
-                    SUM ( ot ) / COUNT ( final.Emp_no ) AS ot_person 
-                    FROM
-                    (
-                    SELECT
-                    A.Emp_no,
-                    FORMAT ( A.ovtplanfrom, 'yyyy-MM' ) AS orderer,
-                    FORMAT ( A.ovtplanfrom, 'MMMM yyyy' ) AS period,
-                    SUM ( ROUND( A.total_ot / 60.0, 2 ) ) AS ot 
-                    FROM
-                    VIEW_YMPI_Emp_OvertimePlan A 
-                    WHERE
-                    A.ovtplanfrom >= '".$first_sunfish." 00:00:00' 
-                    AND A.ovtplanfrom <= '".$last." 23:59:59' 
-                    GROUP BY
-                    A.Emp_no,
-                    FORMAT ( A.ovtplanfrom, 'yyyy-MM' ),
-                    FORMAT ( A.ovtplanfrom, 'MMMM yyyy' ) 
-                    ) AS final
-                    LEFT JOIN VIEW_YMPI_Emp_OrgUnit B ON B.Emp_no = final.Emp_no 
-                    GROUP BY
-                    orderer,
-                    period,
-                    B.Department 
-                    ) AS Q ON Q.orderer = X.orderer 
-                    AND Q.Department = VIEW_YMPI_Emp_OrgUnit.Department 
-                    WHERE
-                    VIEW_YMPI_Emp_OrgUnit.Department IS NOT NULL");
           }
+     }
+
+     $q_data = "select bagian.*, IFNULL(kz.count,0) as count  from 
+     (select fr.employee_id, `name`, position, fr.department, struktur.section from
+     (select employee_id, `name`, position, department, section from employee_syncs where end_date is null and position in ('foreman', 'chief', 'Deputy Foreman')) as fr
+     left join 
+     (select department, section from employee_syncs where department is not null and section is not null group by department, section) as struktur on fr.department = struktur.department) as bagian
+     left join
+     (select count(id) as count, area from kaizen_forms where `status` = -1 and deleted_at is null group by area) as kz
+     on bagian.section = kz.area
+     ".$d."
+     order by `name` desc";
+
+     $datas = db::select($q_data);
+
+     return view('employees.service.kaizenAprovalResume', array(
+          'title' => 'e-Kaizen Unverified Resume',
+          'title_jp' => '',
+          'datas' => $datas
+     ))->with('page', 'Kaizen Aproval Resume');
+}
+
+public function indexUpdateKaizenDetail($id)
+{
+     $data = KaizenForm::where('kaizen_forms.id','=', $id)
+     ->leftJoin('kaizen_calculations','kaizen_forms.id','=','kaizen_calculations.id_kaizen')
+     ->leftJoin('kaizen_notes','kaizen_forms.id','=','kaizen_notes.id_kaizen')
+     ->select('kaizen_forms.id','kaizen_forms.employee_name','kaizen_forms.propose_date','kaizen_forms.section','kaizen_forms.leader','kaizen_forms.title','kaizen_forms.purpose', 'kaizen_forms.condition', 'kaizen_forms.improvement','kaizen_forms.area','kaizen_forms.employee_id','kaizen_calculations.id_cost', 'kaizen_calculations.cost','kaizen_notes.foreman_note','kaizen_notes.manager_note')
+     ->get();
+
+     $section = explode(" ~",$data[0]->section)[0];
+
+     $ldr = "position = 'Leader'";
+     if ($section == 'Assembly Process Control Section') {
+          $ldr = "grade_name = 'Staff'";
+     }
+
+// $q_subleader = "select employees.name, position, employees.employee_id from employees 
+// left join promotion_logs on employees.employee_id = promotion_logs.employee_id 
+// left join mutation_logs on mutation_logs.employee_id = employees.employee_id
+// where promotion_logs.valid_to is null and mutation_logs.valid_to is null and ".$ldr."
+// and end_date is null and section = '".$section."'
+// order by name asc";
+
+     $q_subleader = "select name, position, employee_id from employee_syncs where end_date is null and ".$ldr." and section = '".$section."' order by name asc";
+
+     $subleader = db::select($q_subleader);
+
+
+     $sections = "select section from employee_syncs where section is not null and position in ('Leader', 'Chief') group by section";
+
+     $sc = db::select($sections);
+
+     return view('employees.service.ekaizenUpdate', array(
+          'title' => 'e-Kaizen Update',
+          'title_jp' => '',
+          'subleaders' => $subleader,
+          'sc' => $sc,
+          'data' => $data
+     ))->with('page', 'Kaizen Update');
+}
+
+public function indexUploadKaizenImage()
+{
+     $username = Auth::user()->username;
+
+     $mstr = EmployeeSync::where('employee_id','=', $username)->select('sub_section')->first();
+
+     $datas = EmployeeSync::where('section','=', $mstr->sub_section)->select('employee_id','name')->get();
+
+     return view('employees.service.ekaizenUpload', array(
+          'title' => 'e-Kaizen Upload Images',
+          'title_jp' => '',
+          'employees' => $datas
+     ))->with('page', 'Kaizen Upload Images');
+}
+
+public function indexKaizenReward()
+{
+     $username = Auth::user()->username;
+
+     $user = db::select("select username from users 
+          left join employee_syncs on employee_syncs.employee_id = users.username
+          where username = '".$username."' AND (role_code = 'MIS' OR username = 'PI0904007' OR position in ('Manager','foreman','Deputy Foreman'))");
+
+     if ($user) {
+          return view('employees.report.report_kaizen_reward', array(
+               'title' => 'e-Kaizen Reward',
+               'title_jp' => '',
+          ))->with('page', 'Kaizen Reward');  
+     } else {
+          return redirect()->back();
+     }
+}
+
+public function makeKaizen($id, $name, $section, $group){
+     $ldr = "position = 'Leader'";
+     if ($section == 'Assembly Process Control Section') {
+          $ldr = "grade_name = 'Staff'";
+     }
+
+// $q_subleader = "select employees.name, position, employees.employee_id from employees 
+// left join promotion_logs on employees.employee_id = promotion_logs.employee_id 
+// left join mutation_logs on mutation_logs.employee_id = employees.employee_id
+// where promotion_logs.valid_to is null and mutation_logs.valid_to is null and ".$ldr."
+// and end_date is null and section = '".$section."'
+// order by name asc";
+
+     $q_subleader = "select name, position, employee_id from employee_syncs where end_date is null and ".$ldr." and section = '".$section."' order by name asc";
+
+
+     $subleader = db::select($q_subleader);
+
+     if (in_array($id , $this->wst)) {
+
+     }
+
+     $sections = "select section from employee_syncs where position in ('Leader', 'chief') group by section";
+
+     $sc = db::select($sections);
+
+     return view('employees.service.ekaizenForm', array(
+          'title' => 'e-Kaizen',
+          'emp_id' => $id,
+          'name' => $name,
+          'section' => $section,
+          'group' => $group,
+          'subleaders' => $subleader,
+          'sc' => $sc,
+          'title_jp' => ''));
+}
+
+public function makeKaizen2($id, $name, $section){
+     $group = "";
+
+     $ldr = "position = 'Leader'";
+     if ($section == 'Assembly Process Control Section') {
+          $ldr = "grade_name = 'Staff'";
+     }
+
+// $q_subleader = "select employees.name, position, employees.employee_id from employees 
+// left join promotion_logs on employees.employee_id = promotion_logs.employee_id 
+// left join mutation_logs on mutation_logs.employee_id = employees.employee_id
+// where promotion_logs.valid_to is null and mutation_logs.valid_to is null and ".$ldr."
+// and end_date is null and section = '".$section."'
+// order by name asc";
+
+     $q_subleader = "select name, position, employee_id from employee_syncs where end_date is null and ".$ldr." and section = '".$section."' order by name asc";
+
+
+     $subleader = db::select($q_subleader);
+
+     if (in_array($id , $this->wst)) {
+
+     }
+
+     $sections = "select section from employee_syncs where position in ('Leader', 'chief') group by section";
+
+     $sc = db::select($sections);
+
+     return view('employees.service.ekaizenForm', array(
+          'title' => 'e-Kaizen',
+          'emp_id' => $id,
+          'name' => $name,
+          'section' => $section,
+          'group' => $group,
+          'subleaders' => $subleader,
+          'sc' => $sc,
+          'title_jp' => ''));
+}
+
+public function updateEmp($id){
+     $keluarga = $this->keluarga;
+     $emp = Employee::where('employee_id','=',$id)
+     ->get();
+     return view('employees.master.updateEmp', array(
+          'emp' => $emp,
+          'keluarga' => $keluarga))->with('page', 'Update Employee');
+}
+
+public function fetchTotalMeeting(Request $request){
+
+     $now = date('Y-m-01', strtotime($request->get('period').'-01'));
+     $period = date('Y-m', strtotime($request->get('period')));
+
+     $first = date('Y-m-d', strtotime('-3 months', strtotime($now)));
+     $last = date('Y-m-t', strtotime($now));
+     $first_sunfish = date('Y-m-d', strtotime('-3 months', strtotime($now)));
+     $last_mirai = date('Y-m-t', strtotime($now));
+
+     $employees = db::select("select date_format(period, '%M %Y') as period, date_format(period, '%Y-%m') as period2, count(full_name) as total, sum(if(employ_code = 'OUTSOURCE', 1, 0)) as outsource, sum(if(employ_code = 'CONTRACT1', 1, 0)) as contract1, sum(if(employ_code = 'CONTRACT2', 1, 0)) as contract2, sum(if(employ_code = 'PERMANENT', 1, 0)) as permanent, sum(if(employ_code = 'PROBATION', 1, 0)) as probation, sum(if(gender = 'L', 1, 0)) as male, sum(if(gender = 'P', 1, 0)) as female, sum(if(`Labour_Union` = 'NONE' or `Labour_Union` is null AND `employ_code` <> 'OUTSOURCE', 1, 0)) as no_union, sum(if(`Labour_Union` = 'SPSI' AND `employ_code` <> 'OUTSOURCE', 1, 0)) as spsi, sum(if(`Labour_Union` = 'SBM' AND `employ_code` <> 'OUTSOURCE', 1, 0)) as sbm, sum(if(`Labour_Union` = 'SPMI' AND `employ_code` <> 'OUTSOURCE', 1, 0)) as spmi from employee_histories where end_date is null and date_format(period, '%Y-%m-%d') >= '".$first."' and date_format(period, '%Y-%m') <= '".$last."' group by date_format(period, '%Y-%m'), date_format(period, '%M %Y') order by period2 asc");
+
+     $mirai_overtimes1 = array();
+     $sunfish_overtimes1 = array();
+     if($last >= '2020-01-01'){
           if($first <= '2020-01-01'){
-               if($last_mirai >= '2020-01-01'){
-                    $last_mirai = '2019-12-31';
-               }
-               $mirai_overtimes1 = db::select("select mon as period, department as Department, round(ot_hour / kar,2) as ot_person from 
-                    (
-                    select em.mon ,em.department, IFNULL(sum(ovr.final),0) ot_hour, sum(jml) as kar from
-                    (
-                    select emp.*, bagian.department, 1 as jml from 
-                    (select employee_id, mon from 
-                    (
-                    select employee_id, date_format(hire_date, '%Y-%m') as hire_month, date_format(end_date, '%Y-%m') as end_month, mon from employees
-                    cross join (
-                    select date_format(weekly_calendars.week_date, '%Y-%m') as mon from weekly_calendars where week_date BETWEEN  '".$first."' and  '".$last_mirai."' group by date_format(week_date, '%Y-%m')) s
-                    ) m
-                    where hire_month <= mon and (mon < end_month OR end_month is null)
-                    ) emp
-                    left join (
-                    SELECT id, employee_id, department, date_format(valid_from, '%Y-%m') as mon_from, coalesce(date_format(valid_to, '%Y-%m'), date_format(DATE_ADD(now(), INTERVAL 1 MONTH),'%Y-%m')) as mon_to FROM mutation_logs
-                    WHERE id IN (SELECT MAX(id) FROM mutation_logs GROUP BY employee_id, DATE_FORMAT(valid_from,'%Y-%m'))
-                    ) bagian on emp.employee_id = bagian.employee_id and emp.mon >= bagian.mon_from and emp.mon < mon_to
-                    where department is not null
-                    ) as em
-                    left join (
-                    select nik, date_format(tanggal,'%Y-%m') as mon, sum(if(status = 0,om.jam,om.final)) as final from ftm.over_time as o left join ftm.over_time_member as om on o.id = om.id_ot
-                    where deleted_at is null and jam_aktual = 0 and DATE_FORMAT(tanggal,'%Y-%m') in (
-                    select date_format(weekly_calendars.week_date, '%Y-%m') as mon from weekly_calendars where week_date BETWEEN  '".$first."' and '".$last_mirai."' group by date_format(week_date, '%Y-%m')
-                    )
-                    group by date_format(tanggal,'%Y-%m'), nik
-                    ) ovr on em.employee_id = ovr.nik and em.mon = ovr.mon
-                    group by department, em.mon
-               ) as semua");
+               $first_sunfish = '2020-01-01';
           }
-
-          $overtimes1 = array();
-          if($mirai_overtimes1 != null){
-               foreach ($mirai_overtimes1 as $key) {
-                    array_push($overtimes1, 
-                         [
-                              "period" => $key->period,
-                              "Department" => $key->Department,
-                              "ot_person" => $key->ot_person
-                         ]);
-               }
+          $sunfish_overtimes1 = db::connection('sunfish')->select("SELECT DISTINCT
+               X.orderer,
+               X.period,
+               VIEW_YMPI_Emp_OrgUnit.Department,
+               COALESCE ( Q.ot_person, 0 ) AS ot_person 
+               FROM
+               VIEW_YMPI_Emp_OrgUnit
+               CROSS JOIN (
+               SELECT DISTINCT
+               format ( ovtplanfrom, 'yyyy-MM' ) AS orderer,
+               format ( ovtplanfrom, 'MMMM yyyy' ) AS period 
+               FROM
+               VIEW_YMPI_Emp_OvertimePlan 
+               WHERE
+               ovtplanfrom >= '".$first_sunfish." 00:00:00' 
+               AND ovtplanfrom <= '".$last." 00:00:00' 
+               ) X
+               LEFT JOIN (
+               SELECT
+               orderer,
+               period,
+               B.Department,
+               SUM ( ot ) / COUNT ( final.Emp_no ) AS ot_person 
+               FROM
+               (
+               SELECT
+               A.Emp_no,
+               FORMAT ( A.ovtplanfrom, 'yyyy-MM' ) AS orderer,
+               FORMAT ( A.ovtplanfrom, 'MMMM yyyy' ) AS period,
+               SUM ( ROUND( A.total_ot / 60.0, 2 ) ) AS ot 
+               FROM
+               VIEW_YMPI_Emp_OvertimePlan A 
+               WHERE
+               A.ovtplanfrom >= '".$first_sunfish." 00:00:00' 
+               AND A.ovtplanfrom <= '".$last." 23:59:59' 
+               GROUP BY
+               A.Emp_no,
+               FORMAT ( A.ovtplanfrom, 'yyyy-MM' ),
+               FORMAT ( A.ovtplanfrom, 'MMMM yyyy' ) 
+               ) AS final
+               LEFT JOIN VIEW_YMPI_Emp_OrgUnit B ON B.Emp_no = final.Emp_no 
+               GROUP BY
+               orderer,
+               period,
+               B.Department 
+               ) AS Q ON Q.orderer = X.orderer 
+               AND Q.Department = VIEW_YMPI_Emp_OrgUnit.Department 
+               WHERE
+               VIEW_YMPI_Emp_OrgUnit.Department IS NOT NULL");
+     }
+     if($first <= '2020-01-01'){
+          if($last_mirai >= '2020-01-01'){
+               $last_mirai = '2019-12-31';
           }
-          if($sunfish_overtimes1 != null){
-               foreach ($sunfish_overtimes1 as $key) {
-                    array_push($overtimes1, 
-                         [
-                              "period" => $key->orderer,
-                              "Department" => $key->Department,
-                              "ot_person" => $key->ot_person
-                         ]);
-               }
+          $mirai_overtimes1 = db::select("select mon as period, department as Department, round(ot_hour / kar,2) as ot_person from 
+               (
+               select em.mon ,em.department, IFNULL(sum(ovr.final),0) ot_hour, sum(jml) as kar from
+               (
+               select emp.*, bagian.department, 1 as jml from 
+               (select employee_id, mon from 
+               (
+               select employee_id, date_format(hire_date, '%Y-%m') as hire_month, date_format(end_date, '%Y-%m') as end_month, mon from employees
+               cross join (
+               select date_format(weekly_calendars.week_date, '%Y-%m') as mon from weekly_calendars where week_date BETWEEN  '".$first."' and  '".$last_mirai."' group by date_format(week_date, '%Y-%m')) s
+               ) m
+               where hire_month <= mon and (mon < end_month OR end_month is null)
+               ) emp
+               left join (
+               SELECT id, employee_id, department, date_format(valid_from, '%Y-%m') as mon_from, coalesce(date_format(valid_to, '%Y-%m'), date_format(DATE_ADD(now(), INTERVAL 1 MONTH),'%Y-%m')) as mon_to FROM mutation_logs
+               WHERE id IN (SELECT MAX(id) FROM mutation_logs GROUP BY employee_id, DATE_FORMAT(valid_from,'%Y-%m'))
+               ) bagian on emp.employee_id = bagian.employee_id and emp.mon >= bagian.mon_from and emp.mon < mon_to
+               where department is not null
+               ) as em
+               left join (
+               select nik, date_format(tanggal,'%Y-%m') as mon, sum(if(status = 0,om.jam,om.final)) as final from ftm.over_time as o left join ftm.over_time_member as om on o.id = om.id_ot
+               where deleted_at is null and jam_aktual = 0 and DATE_FORMAT(tanggal,'%Y-%m') in (
+               select date_format(weekly_calendars.week_date, '%Y-%m') as mon from weekly_calendars where week_date BETWEEN  '".$first."' and '".$last_mirai."' group by date_format(week_date, '%Y-%m')
+               )
+               group by date_format(tanggal,'%Y-%m'), nik
+               ) ovr on em.employee_id = ovr.nik and em.mon = ovr.mon
+               group by department, em.mon
+          ) as semua");
+     }
+
+     $overtimes1 = array();
+     if($mirai_overtimes1 != null){
+          foreach ($mirai_overtimes1 as $key) {
+               array_push($overtimes1, 
+                    [
+                         "period" => $key->period,
+                         "Department" => $key->Department,
+                         "ot_person" => $key->ot_person
+                    ]);
           }
+     }
+     if($sunfish_overtimes1 != null){
+          foreach ($sunfish_overtimes1 as $key) {
+               array_push($overtimes1, 
+                    [
+                         "period" => $key->orderer,
+                         "Department" => $key->Department,
+                         "ot_person" => $key->ot_person
+                    ]);
+          }
+     }
 
-          if($now >= '2020-01-01'){
-               $overtimes2 = db::connection('sunfish')->select(" SELECT
-                    orderer,
-                    period,
-                    Department,
-                    SUM ( ot_3 ) AS ot_3,
-                    SUM ( ot_14 ) AS ot_14,
-                    IIF ( SUM ( ot_14 ) > 0 AND SUM ( ot_3 ) > 0, IIF(SUM ( ot_3 )>SUM ( ot_14 ), SUM ( ot_14 ), SUM ( ot_3 )), 0 ) AS ot_3_14,
-                    SUM ( ot_56 ) AS ot_56 
-                    FROM
-                    (
-                    SELECT
-                    orderer,
-                    period,
-                    Department,
-                    COUNT ( ot_3 ) AS ot_3,
-                    0 AS ot_14,
-                    0 AS ot_56 
-                    FROM
-                    (
-                    SELECT
-                    A.Emp_no,
-                    FORMAT ( A.ovtplanfrom, 'yyyy-MM' ) AS orderer,
-                    FORMAT ( A.ovtplanfrom, 'MMMM yyyy' ) AS period,
-                    B.Department,
-                    SUM (
-                    IIF(ROUND( A.total_ot / 60.0, 2 ) > 3, 1 , null)
-                    ) AS ot_3 
-                    FROM
-                    VIEW_YMPI_Emp_OvertimePlan A
-                    LEFT JOIN VIEW_YMPI_Emp_OrgUnit B ON B.Emp_no = A.Emp_no 
-                    WHERE
-                    A.daytype = 'WD' and FORMAT ( A.ovtplanfrom, 'yyyy-MM' ) = '".$period."'
-                    GROUP BY
-                    A.Emp_no,
-                    FORMAT ( A.ovtplanfrom, 'yyyy-MM' ),
-                    FORMAT ( A.ovtplanfrom, 'MMMM yyyy' ),
-                    B.Department 
-                    ) AS final 
-                    GROUP BY
-                    orderer,
-                    period,
-                    Department UNION ALL
-                    SELECT
-                    orderer,
-                    period,
-                    Department,
-                    0 AS ot_3,
-                    COUNT ( ot_14 ) AS ot_14,
-                    0 AS ot_56 
-                    FROM
-                    (
-                    SELECT
-                    orderer,
-                    period,
-                    Emp_no,
-                    Department,
-                    SUM ( ot_14 ) AS ot_14 
-                    FROM
-                    (
-                    SELECT
-                    FORMAT ( A.ovtplanfrom, 'yyyy-MM' ) AS orderer,
-                    FORMAT ( A.ovtplanfrom, 'MMMM yyyy' ) AS period,
-                    A.Emp_no,
-                    DATEPART( week, A.ovtplanfrom ) AS wk,
-                    B.Department,
-                    CASE
+     if($now >= '2020-01-01'){
+          $overtimes2 = db::connection('sunfish')->select(" SELECT
+               orderer,
+               period,
+               Department,
+               SUM ( ot_3 ) AS ot_3,
+               SUM ( ot_14 ) AS ot_14,
+               IIF ( SUM ( ot_14 ) > 0 AND SUM ( ot_3 ) > 0, IIF(SUM ( ot_3 )>SUM ( ot_14 ), SUM ( ot_14 ), SUM ( ot_3 )), 0 ) AS ot_3_14,
+               SUM ( ot_56 ) AS ot_56 
+               FROM
+               (
+               SELECT
+               orderer,
+               period,
+               Department,
+               COUNT ( ot_3 ) AS ot_3,
+               0 AS ot_14,
+               0 AS ot_56 
+               FROM
+               (
+               SELECT
+               A.Emp_no,
+               FORMAT ( A.ovtplanfrom, 'yyyy-MM' ) AS orderer,
+               FORMAT ( A.ovtplanfrom, 'MMMM yyyy' ) AS period,
+               B.Department,
+               SUM (
+               IIF(ROUND( A.total_ot / 60.0, 2 ) > 3, 1 , null)
+               ) AS ot_3 
+               FROM
+               VIEW_YMPI_Emp_OvertimePlan A
+               LEFT JOIN VIEW_YMPI_Emp_OrgUnit B ON B.Emp_no = A.Emp_no 
+               WHERE
+               A.daytype = 'WD' and FORMAT ( A.ovtplanfrom, 'yyyy-MM' ) = '".$period."'
+               GROUP BY
+               A.Emp_no,
+               FORMAT ( A.ovtplanfrom, 'yyyy-MM' ),
+               FORMAT ( A.ovtplanfrom, 'MMMM yyyy' ),
+               B.Department 
+               ) AS final 
+               GROUP BY
+               orderer,
+               period,
+               Department UNION ALL
+               SELECT
+               orderer,
+               period,
+               Department,
+               0 AS ot_3,
+               COUNT ( ot_14 ) AS ot_14,
+               0 AS ot_56 
+               FROM
+               (
+               SELECT
+               orderer,
+               period,
+               Emp_no,
+               Department,
+               SUM ( ot_14 ) AS ot_14 
+               FROM
+               (
+               SELECT
+               FORMAT ( A.ovtplanfrom, 'yyyy-MM' ) AS orderer,
+               FORMAT ( A.ovtplanfrom, 'MMMM yyyy' ) AS period,
+               A.Emp_no,
+               DATEPART( week, A.ovtplanfrom ) AS wk,
+               B.Department,
+               CASE
 
-                    WHEN SUM (
-                    ROUND( A.total_ot / 60.0, 2 ) 
-                    ) > 14 THEN
-                    1 ELSE NULL 
-                    END AS ot_14 
-                    FROM
-                    VIEW_YMPI_Emp_OvertimePlan A
-                    LEFT JOIN VIEW_YMPI_Emp_OrgUnit B ON B.Emp_no = A.Emp_no 
-                    WHERE
-                    A.daytype = 'WD' and FORMAT ( A.ovtplanfrom, 'yyyy-MM' ) = '".$period."'
-                    GROUP BY
-                    FORMAT ( A.ovtplanfrom, 'yyyy-MM' ),
-                    FORMAT ( A.ovtplanfrom, 'MMMM yyyy' ),
-                    A.Emp_no,
-                    DATEPART( week, A.ovtplanfrom ),
-                    B.Department 
-                    ) AS final 
-                    GROUP BY
-                    orderer,
-                    period,
-                    Emp_no,
-                    Department 
-                    ) AS final2 
-                    GROUP BY
-                    orderer,
-                    period,
-                    Department UNION ALL
-                    SELECT
-                    orderer,
-                    period,
-                    Department,
-                    0 AS ot_3,
-                    0 AS ot_14,
-                    COUNT ( ot_56 ) AS ot_56 
-                    FROM
-                    (
-                    SELECT
-                    FORMAT ( A.ovtplanfrom, 'yyyy-MM' ) AS orderer,
-                    FORMAT ( A.ovtplanfrom, 'MMMM yyyy' ) AS period,
-                    A.Emp_no,
-                    B.Department,
-                    CASE
+               WHEN SUM (
+               ROUND( A.total_ot / 60.0, 2 ) 
+               ) > 14 THEN
+               1 ELSE NULL 
+               END AS ot_14 
+               FROM
+               VIEW_YMPI_Emp_OvertimePlan A
+               LEFT JOIN VIEW_YMPI_Emp_OrgUnit B ON B.Emp_no = A.Emp_no 
+               WHERE
+               A.daytype = 'WD' and FORMAT ( A.ovtplanfrom, 'yyyy-MM' ) = '".$period."'
+               GROUP BY
+               FORMAT ( A.ovtplanfrom, 'yyyy-MM' ),
+               FORMAT ( A.ovtplanfrom, 'MMMM yyyy' ),
+               A.Emp_no,
+               DATEPART( week, A.ovtplanfrom ),
+               B.Department 
+               ) AS final 
+               GROUP BY
+               orderer,
+               period,
+               Emp_no,
+               Department 
+               ) AS final2 
+               GROUP BY
+               orderer,
+               period,
+               Department UNION ALL
+               SELECT
+               orderer,
+               period,
+               Department,
+               0 AS ot_3,
+               0 AS ot_14,
+               COUNT ( ot_56 ) AS ot_56 
+               FROM
+               (
+               SELECT
+               FORMAT ( A.ovtplanfrom, 'yyyy-MM' ) AS orderer,
+               FORMAT ( A.ovtplanfrom, 'MMMM yyyy' ) AS period,
+               A.Emp_no,
+               B.Department,
+               CASE
 
-                    WHEN SUM (
-                    ROUND( A.total_ot / 60.0, 2 )
-                    ) > 56 THEN
-                    1 ELSE NULL 
-                    END AS ot_56 
-                    FROM
-                    VIEW_YMPI_Emp_OvertimePlan A
-                    LEFT JOIN VIEW_YMPI_Emp_OrgUnit B ON B.Emp_no = A.Emp_no 
-                    WHERE
-                    A.daytype = 'WD' and FORMAT ( A.ovtplanfrom, 'yyyy-MM' ) = '".$period."'
-                    GROUP BY
-                    FORMAT ( A.ovtplanfrom, 'yyyy-MM' ),
-                    FORMAT ( A.ovtplanfrom, 'MMMM yyyy' ),
-                    A.Emp_no,
-                    B.Department 
-                    ) AS final 
-                    GROUP BY
-                    orderer,
-                    period,
-                    Department 
-                    ) AS ot_violation 
-                    where Department is not null
-                    GROUP BY
-                    orderer,
-                    period,
-                    Department");
+               WHEN SUM (
+               ROUND( A.total_ot / 60.0, 2 )
+               ) > 56 THEN
+               1 ELSE NULL 
+               END AS ot_56 
+               FROM
+               VIEW_YMPI_Emp_OvertimePlan A
+               LEFT JOIN VIEW_YMPI_Emp_OrgUnit B ON B.Emp_no = A.Emp_no 
+               WHERE
+               A.daytype = 'WD' and FORMAT ( A.ovtplanfrom, 'yyyy-MM' ) = '".$period."'
+               GROUP BY
+               FORMAT ( A.ovtplanfrom, 'yyyy-MM' ),
+               FORMAT ( A.ovtplanfrom, 'MMMM yyyy' ),
+               A.Emp_no,
+               B.Department 
+               ) AS final 
+               GROUP BY
+               orderer,
+               period,
+               Department 
+               ) AS ot_violation 
+               where Department is not null
+               GROUP BY
+               orderer,
+               period,
+               Department");
 }
 else{
      $overtimes2 = db::select("select kd.department as Department, '".$period."' as orderer, COALESCE(tiga.tiga_jam,0) as ot_3, COALESCE(patblas.emptblas_jam,0) as ot_14, COALESCE(tiga_patblas.tiga_patblas_jam,0) as ot_3_14, COALESCE(lima_nam.limanam_jam,0) as ot_56 from
@@ -4028,14 +4028,14 @@ public function fetchKaizenReport(Request $request)
      $chart1 = "select count(kaizen_forms.employee_id) as kaizen , employee_syncs.department, employee_syncs.section from kaizen_forms 
      left join employee_syncs on kaizen_forms.employee_id = employee_syncs.employee_id
      left join kaizen_scores on kaizen_forms.id = kaizen_scores.id_kaizen
-     where DATE_FORMAT(kaizen_scores.created_at,'%Y-%m') = '".$date."' and kaizen_forms.`status` = 1
+     where DATE_FORMAT(kaizen_scores.updated_at,'%Y-%m') = '".$date."' and kaizen_forms.`status` = 1
      group by employee_syncs.department, employee_syncs.section";
 
      $kz_total = db::select($chart1);
 
      $q_rank1 = "select kz.employee_id, employee_name, CONCAT(department,' - ', section,' - ', `group`) as bagian, mp1+mp2+mp3 as nilai from 
      (select employee_id, employee_name, SUM(manager_point_1 * 40) mp1, SUM(manager_point_2 * 30) mp2, SUM(manager_point_3 * 30) mp3 from kaizen_forms LEFT JOIN kaizen_scores on kaizen_forms.id = kaizen_scores.id_kaizen
-     where DATE_FORMAT(kaizen_scores.created_at,'%Y-%m') = '".$date."' and status = 1
+     where DATE_FORMAT(kaizen_scores.updated_at,'%Y-%m') = '".$date."' and status = 1
      group by employee_id, employee_name
      ) as kz
      left join employee_syncs on kz.employee_id = employee_syncs.employee_id
@@ -4047,7 +4047,7 @@ public function fetchKaizenReport(Request $request)
      $q_rank2 = "select kaizen_forms.employee_id, employee_name, CONCAT(department,' - ', employee_syncs.section,' - ', `group`) as bagian , COUNT(kaizen_forms.employee_id) as count from kaizen_forms 
      left join employee_syncs on kaizen_forms.employee_id = employee_syncs.employee_id
      left join kaizen_scores on kaizen_scores.id_kaizen = kaizen_forms.id
-     where `status` = 1 and DATE_FORMAT(kaizen_scores.created_at,'%Y-%m') = '".$date."'
+     where `status` = 1 and DATE_FORMAT(kaizen_scores.updated_at,'%Y-%m') = '".$date."'
      group by kaizen_forms.employee_id, employee_name, department, employee_syncs.section, `group`
      order by count desc
      limit 10";
@@ -4057,7 +4057,7 @@ public function fetchKaizenReport(Request $request)
      $q_excellent = "select kaizen_forms.employee_id, employee_name, CONCAT(department,' - ',employee_syncs.section,' - ',`group`) as bagian, title, (manager_point_1 * 40 + manager_point_2 * 30 + manager_point_3 * 30) as score, kaizen_forms.id from kaizen_forms 
      join kaizen_scores on kaizen_forms.id = kaizen_scores.id_kaizen
      left join employee_syncs on kaizen_forms.employee_id = employee_syncs.employee_id
-     where DATE_FORMAT(kaizen_scores.created_at,'%Y-%m') = '".$date."' and (manager_point_1 * 40 + manager_point_2 * 30 + manager_point_3 * 30) > 450
+     where DATE_FORMAT(kaizen_scores.updated_at,'%Y-%m') = '".$date."' and (manager_point_1 * 40 + manager_point_2 * 30 + manager_point_3 * 30) > 450
      order by (manager_point_1 * 40 + manager_point_2 * 30 + manager_point_3 * 30) desc";
 
      $kz_excellent = db::select($q_excellent);
@@ -4065,7 +4065,7 @@ public function fetchKaizenReport(Request $request)
      $q_a_excellent = "select kaizen_forms.employee_id, employee_name, CONCAT(department,' - ',employee_syncs.section,' - ',`group`) as bagian, title, (manager_point_1 * 40 + manager_point_2 * 30 + manager_point_3 * 30) as score, kaizen_forms.id from kaizen_forms 
      join kaizen_scores on kaizen_forms.id = kaizen_scores.id_kaizen
      left join employee_syncs on kaizen_forms.employee_id = employee_syncs.employee_id
-     where DATE_FORMAT(kaizen_scores.created_at,'%Y-%m') = '".$date."' and remark = 'excellent'
+     where DATE_FORMAT(kaizen_scores.updated_at,'%Y-%m') = '".$date."' and remark = 'excellent'
      order by (manager_point_1 * 40 + manager_point_2 * 30 + manager_point_3 * 30) desc";
 
      $kz_after_excellent = db::select($q_a_excellent);
@@ -4412,6 +4412,27 @@ public function setSession(Request $request)
           $data[] = $key;
      }
      return Session::all();
+}
+
+public function fetchEmployeeByTag(Request $request)
+{
+     try {
+          $emp = Employee::whereNull('end_date');
+          $emp = $emp->where('tag', '=', $request->get('tag'));
+          $emp = $emp->first();       
+
+          $response = array(
+               'status' => true,
+               'datas' => $emp
+          );
+          return Response::json($response);      
+     } catch (QueryException $e) {
+          $response = array(
+               'status' => false,
+               'message' => $e->getMessage()
+          );
+          return Response::json($response);
+     }
 }
 
 }
