@@ -248,7 +248,7 @@
           <span id="penemu_ng">
             <label class="col-sm-1">Penemu Masalah<span class="text-red">*</span></label>
             <div class="col-sm-5" align="left">
-              <select class="form-control select2" id="penemu" name="penemu" style="width: 100%;" data-placeholder="Pilih Penemu" required="">
+              <select class="form-control select2" id="penemu" name="penemu" style="width: 100%;" data-placeholder="Pilih Penemu">
               </select>
             </div>
           </span>
