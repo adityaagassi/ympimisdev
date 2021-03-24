@@ -74,14 +74,15 @@
 			<table id="pickingTable" class="table table-bordered table-stripped">
 				<thead style="background-color: orange;">
 					<tr>
-						<th colspan="6" style="font-size: 2.5vw;">OPERATOR <span id="data_op"></span></th>
+						<th colspan="7" style="font-size: 2.5vw;">OPERATOR <span id="data_op"></span></th>
 					</tr>
 					<tr>
-						<th colspan="6" style="font-size: 2.5vw;">PICKING LIST<span id="material"></span></th>
+						<th colspan="7" style="font-size: 2.5vw;">PICKING LIST<span id="material"></span></th>
 					</tr>
 					<tr>
 						<th style="width: 1%; font-size: 2vw;">#</th>
 						<th style="width: 1%; font-size: 2vw;">Jenis</th>
+						<th style="width: 1%; font-size: 2vw;">GMC</th>
 						<th style="width: 5%; font-size: 2vw;">Deskripsi</th>
 						<th style="width: 1%; font-size: 2vw;">Quantity</th>
 						<th style="width: 1%; font-size: 2vw;">Actual</th>
@@ -272,6 +273,7 @@
 					pickingData += '<tr>';
 					pickingData += '<td style="font-size: 1.8vw; height:2%; vertical-align:middle; height:40px;">'+(key+1)+'</td>';
 					pickingData += '<td style="font-size: 1.8vw; height:2%; vertical-align:middle; height:40px;">'+value.picking_list+'</td>';
+					pickingData += '<td style="font-size: 1.8vw; height:2%; vertical-align:middle; height:40px;">'+value.material_number+'</td>';
 					pickingData += '<td style="font-size: 1.8vw; height:2%; vertical-align:middle; height:40px;">'+value.picking_description+'</td>';
 					pickingData += '<td style="font-size: 1.8vw; height:2%; vertical-align:middle; height:40px;">'+value.quantity+'</td>';
 					pickingData += '<td style="font-size: 1.8vw; height:2%; vertical-align:middle; height:40px;">'+value.actual_quantity+'</td>';
