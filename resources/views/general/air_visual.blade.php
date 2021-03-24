@@ -75,7 +75,7 @@
 				<div class="box-body" style="padding: 0px">
 					<div class="div_co" style="border: 1px solid white; padding: 10px; border-radius: 5px;">
 						<div style="font-weight: bold; color: white; font-size: 20px">CO2</div>
-						<div style="text-align: right; font-weight: bold; font-size: 30px" id="co_isi"> - ppm</div>
+						<div style="text-align: right; font-weight: bold; font-size: 50px" id="co_isi"> - ppm</div>
 					</div>
 				</div>
 			</div>
@@ -85,7 +85,7 @@
 				<div class="box-body" style="padding: 0px">
 					<div class="div_tmp" style="border: 1px solid white; padding: 10px; border-radius: 5px;">
 						<div style="font-weight: bold; color: white; font-size: 20px">Temperature</div>
-						<div style="text-align: right; font-weight: bold; font-size: 30px" id="temp_isi"> &#x2103;</div>
+						<div style="text-align: right; font-weight: bold; font-size: 50px" id="temp_isi"> &#x2103;</div>
 					</div>
 				</div>
 			</div>
@@ -95,7 +95,7 @@
 				<div class="box-body" style="padding: 0px">
 					<div class="div_hum" style="border: 1px solid white; padding: 10px; border-radius: 5px;">
 						<div style="font-weight: bold; color: white; font-size: 20px">Humidity</div>
-						<div style="text-align: right; font-weight: bold; font-size: 30px" id="hum_isi">- %</div>
+						<div style="text-align: right; font-weight: bold; font-size: 50px" id="hum_isi">- %</div>
 					</div>
 				</div>
 			</div>
@@ -128,7 +128,7 @@
 		postData();
 
 		// setInterval(postData, 600000);
-		// setInterval(postData, 120000);
+		setInterval(postData, 120000);
 
 	});
 
@@ -158,6 +158,8 @@
 						$("#co_isi").html(value.co+" ppm");
 						$("#temp_isi").html(value.temperature+" &#x2103;");
 						$("#hum_isi").html(value.humidity+" %");
+
+						// div_co
 					}
 				})
 
