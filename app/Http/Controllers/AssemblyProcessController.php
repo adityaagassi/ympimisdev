@@ -1246,6 +1246,10 @@ class AssemblyProcessController extends Controller
 			$title = 'Seasoning Process';
 			$title_jp= '??';
 		}
+		if($location == 'repair-process'){
+			$title = 'Repair Process';
+			$title_jp= '??';
+		}
 
 		if ($location == 'seasoning-process') {
 			return view('processes.assembly.flute.seasoning', array(
@@ -1303,26 +1307,36 @@ class AssemblyProcessController extends Controller
 			return Response::json($response);			
 		}
 		else{
-			$location = $employee->location;
-			$loc = explode("-", $location);
-			$number = $loc[2];
-			$locfix = $loc[0]."-".$loc[1];
-			$assemblies = Assembly::where('location','=',$locfix)->where('location_number','=',$number)->where('remark','=','OTHER')->first();
-			if (count($assemblies) > 0) {
-				$assemblies->online_time = date('Y-m-d H:i:s');
-				$assemblies->operator_id = $employee->employee_id;
-				$assemblies->save();
+			if (count($employee->location) > 0) {
+				$location = $employee->location;
+				$loc = explode("-", $location);
+				$number = $loc[2];
+				$locfix = $loc[0]."-".$loc[1];
+				$assemblies = Assembly::where('location','=',$locfix)->where('location_number','=',$number)->where('remark','=','OTHER')->first();
+				if (count($assemblies) > 0) {
+					$assemblies->online_time = date('Y-m-d H:i:s');
+					$assemblies->operator_id = $employee->employee_id;
+					$assemblies->save();
+					$response = array(
+						'status' => true,
+						'message' => 'Tag karyawan ditemukan',
+						'employee' => $employee,
+						// 'location' => $location
+					);
+					return Response::json($response);
+				}else{
+					$response = array(
+						'status' => false,
+						'message' => 'Tag karyawan tidak ditemukan',
+					);
+					return Response::json($response);	
+				}
+			}else{
 				$response = array(
 					'status' => true,
 					'message' => 'Tag karyawan ditemukan',
 					'employee' => $employee,
-					'location' => $location
-				);
-				return Response::json($response);
-			}else{
-				$response = array(
-					'status' => false,
-					'message' => 'Tag karyawan tidak ditemukan',
+					// 'location' => $location
 				);
 				return Response::json($response);	
 			}
@@ -1345,16 +1359,18 @@ class AssemblyProcessController extends Controller
 			);
 			return Response::json($response);			
 		}else{
-			$location = $employee->location;
-			$loc = explode("-", $location);
-			$number = $loc[2];
-			$locfix = $loc[0]."-".$loc[1];
-			$assemblies = Assembly::where('location','=',$locfix)->where('location_number','=',$number)->where('remark','=','OTHER')->first();
-			$assemblies->sedang_tag = strtoupper(dechex($request->get('tag')));
-			$assemblies->sedang_serial_number = $details->serial_number;
-			$assemblies->sedang_model = $details->model;
-			$assemblies->sedang_time = date('Y-m-d H:i:s');
-			$assemblies->save();
+			if (count($employee->location) > 0) {
+				$location = $employee->location;
+				$loc = explode("-", $location);
+				$number = $loc[2];
+				$locfix = $loc[0]."-".$loc[1];
+				$assemblies = Assembly::where('location','=',$locfix)->where('location_number','=',$number)->where('remark','=','OTHER')->first();
+				$assemblies->sedang_tag = strtoupper(dechex($request->get('tag')));
+				$assemblies->sedang_serial_number = $details->serial_number;
+				$assemblies->sedang_model = $details->model;
+				$assemblies->sedang_time = date('Y-m-d H:i:s');
+				$assemblies->save();
+			}
 			
 			$response = array(
 				'status' => true,
@@ -1498,6 +1514,29 @@ class AssemblyProcessController extends Controller
 			'ng_logs' => $ng_logs,
 		);
 		return Response::json($response);
+	}
+
+	public function inputRepairProcess(Request $request)
+	{
+		try {
+			$repair = AssemblyNgLog::where('id',$request->get('id'))->first();
+			$repair->repair_status = 'Repaired';
+			$repair->repaired_by = $request->get('employee_id');
+			$repair->repaired_at = date('Y-m-d H:i:s');
+			$repair->save();
+
+			$response = array(
+				'status' => true,
+				'message' => 'NG Repaired',
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'details' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
 	}
 
 	public function getProcessBefore(Request $request)

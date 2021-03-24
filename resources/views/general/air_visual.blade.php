@@ -128,7 +128,7 @@
 		postData();
 
 		// setInterval(postData, 600000);
-		setInterval(postData, 120000);
+		// setInterval(postData, 120000);
 
 	});
 
@@ -264,7 +264,8 @@
 					{
 						name: 'CO2',
 						data: co,
-						color: '#901aeb'
+						color: '#901aeb',
+						lineWidth: 5
 					}],
 
 					responsive: {

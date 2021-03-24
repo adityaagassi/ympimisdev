@@ -163,7 +163,11 @@
 								<th style="width: 1%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Value / Jumlah</th>
 								<th style="width: 1%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Onko</th>
 								<th style="width: 1%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Loc</th>
-								<th style="width: 3%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Oleh</th>
+								<th style="width: 2%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Oleh</th>
+								<th style="width: 2%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Repair</th>
+								<?php if ($loc2 == 'repair-process'): ?>
+									<th style="width: 2%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Action</th>
+								<?php endif ?>
 							</tr>
 						</thead>
 						<tbody id="ngHistoryBody">
@@ -878,11 +882,45 @@
 				}
 				bodyNgTemp += '<td style="font-size: 15px;">'+value.location+'</td>';
 				bodyNgTemp += '<td style="font-size: 15px;">'+value.name+'</td>';
+				if ($('#location_now2').val() == 'repair-process') {
+					if (value.repair_status == null) {
+						bodyNgTemp += '<td style="font-size: 15px;"></td>';
+						bodyNgTemp += '<td style="font-size: 15px;"><button class="btn btn-warning btn-sm" onclick="repairProcess(\''+value.id+'\')">Repairing</button></td>';
+					}else{
+						bodyNgTemp += '<td style="font-size: 15px;">'+value.repair_status+'</td>';
+						bodyNgTemp += '<td style="font-size: 15px;"></td>';
+					}
+				}else{
+					if (value.repair_status == null) {
+						bodyNgTemp += '<td style="font-size: 15px;"></td>';
+					}else{
+						bodyNgTemp += '<td style="font-size: 15px;">'+value.repair_status+'</td>';
+					}
+				}
 				bodyNgTemp += "</tr>";
 			});
 
 			$('#ngHistoryBody').append(bodyNgTemp);
 		});
+	}
+
+	function repairProcess(id) {
+		if (confirm("Apakah Anda selesai melakukan Repair?")) {
+			var employee_id = $('#employee_id').val();
+			var data = {
+				id:id,
+				employee_id:employee_id,
+			}
+
+			$.post('{{ url("input/assembly/repair_process") }}', data, function(result, status, xhr){
+				if (result.status) {
+					fetchNgHistory();
+					openSuccessGritter('Success',result.message);
+				}else{
+					openErrorGritter('Error!',result.message);
+				}
+			});
+		}
 	}
 
 	function fetchNgTemp() {

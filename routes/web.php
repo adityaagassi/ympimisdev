@@ -1811,15 +1811,23 @@ Route::group(['nav' => 'S53', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_pn_part/{id}', 'KnockDownController@indexKD');
 	Route::post('fetch/kd_print_pn_part', 'KnockDownController@printLabelNew');
 
-	// Route::get('index/print_label_case/{id}', 'KnockDownController@indexPrintLabelSubassy');
+	// Route::get('index/print_label_pn_part/{id}', 'KnockDownController@indexPrintLabelSubassy');
 });
 
-//VENOVA
+//VN ASSY
 Route::group(['nav' => 'S53', 'middleware' => 'permission'], function(){
-	Route::get('index/kd_venova/{id}', 'KnockDownController@indexKD');
-	Route::post('fetch/kd_print_venova', 'KnockDownController@printLabelNew');
+	Route::get('index/kd_vn_assy/{id}', 'KnockDownController@indexKD');
+	Route::post('fetch/kd_print_vn_assy', 'KnockDownController@printLabelNew');
 
-	// Route::get('index/print_label_case/{id}', 'KnockDownController@indexPrintLabelSubassy');
+	// Route::get('index/print_label_vn_assy/{id}', 'KnockDownController@indexPrintLabelSubassy');
+});
+
+//VN ASSY
+Route::group(['nav' => 'S53', 'middleware' => 'permission'], function(){
+	Route::get('index/kd_vn_injection/{id}', 'KnockDownController@indexKD');
+	Route::post('fetch/kd_print_vn_injection', 'KnockDownController@printLabelNew');
+
+	// Route::get('index/print_label_vn_injection/{id}', 'KnockDownController@indexPrintLabelSubassy');
 });
 
 //CASE
@@ -1866,6 +1874,22 @@ Route::group(['nav' => 'S51', 'middleware' => 'permission'], function(){
 	//Based on shipment sch parsial
 	Route::post('fetch/kd_print_mpro', 'KnockDownController@printLabelNewParsial');
 	Route::get('index/print_label_mpro/{shipment_schedule_id}/{kd_number}', 'KnockDownController@indexPrintLabelMpro');
+});
+
+//BPRO
+Route::group(['nav' => 'S53', 'middleware' => 'permission'], function(){
+	Route::get('index/kd_bpro/{id}', 'KnockDownController@indexKD');
+	// Route::post('fetch/kd_print_vn_injection', 'KnockDownController@printLabelNew');
+
+	// Route::get('index/print_label_vn_injection/{id}', 'KnockDownController@indexPrintLabelSubassy');
+});
+
+//VN ASSY
+Route::group(['nav' => 'S53', 'middleware' => 'permission'], function(){
+	Route::get('index/kd_welding/{id}', 'KnockDownController@indexKD');
+	// Route::post('fetch/kd_print_vn_injection', 'KnockDownController@printLabelNew');
+
+	// Route::get('index/print_label_vn_injection/{id}', 'KnockDownController@indexPrintLabelSubassy');
 });
 
 
@@ -4099,6 +4123,7 @@ Route::get('fetch/assembly/ng_temp', 'AssemblyProcessController@fetchNgTemp');
 Route::get('fetch/assembly/ng_temp_by_id', 'AssemblyProcessController@fetchNgTempById');
 Route::get('fetch/assembly/ng_logs', 'AssemblyProcessController@fetchNgLogs');
 Route::post('input/assembly/ng_temp', 'AssemblyProcessController@inputNgTemp');
+Route::post('input/assembly/repair_process', 'AssemblyProcessController@inputRepairProcess');
 Route::get('delete/assembly/delete_ng_temp', 'AssemblyProcessController@deleteNgTemp');
 Route::post('input/assembly/ng_onko', 'AssemblyProcessController@inputNgOnko');
 Route::get('fetch/assembly/get_process_before', 'AssemblyProcessController@getProcessBefore');
@@ -4315,6 +4340,7 @@ Route::get('index/scrap/warehouse', 'ScrapController@indexWarehouse');
 Route::get('index/scrap/logs', 'ScrapController@indexLogs');
 Route::get('fetch/scrap/logs', 'ScrapController@fetchLogs');
 Route::get('fetch/scrap_detail', 'ScrapController@fetchScrapDetail');
+Route::get('fetch/scrap_warehouse', 'ScrapController@fetchScrapWarehouse');
 Route::get('fetch/kd_scrap_closure', 'ScrapController@fetchKdScrapClosure');
 Route::post('scan/scrap_warehouse', 'ScrapController@scanScrapWarehouse');
 Route::get('display/scrap_warehouse', 'ScrapController@displayScrapWarehouse');
