@@ -680,9 +680,9 @@ table > thead > tr > th{
           body += '<tr>';
           body += '<td>'+ value.nik +'</td>';
           body += '<td>'+ value.nama +'</td>';
-          body += '<td>'+ value.sub_group || 'None' +'</td>';
-          body += '<td>'+ value.group || 'None'+'</td>';
-          body += '<td>'+ value.seksi || 'None'+'</td>';
+          body += '<td>'+ (value.sub_group || 'None') +'</td>';
+          body += '<td>'+ (value.group || 'None')+'</td>';
+          body += '<td>'+ (value.seksi || 'None')+'</td>';
           body += '<td>'+ (value.ke_sub_group || 'None') +'</td>';
           body += '<td>'+ (value.ke_group || 'None') +'</td>';
           body += '<td>'+ (value.ke_seksi || 'None') +'</td>';
