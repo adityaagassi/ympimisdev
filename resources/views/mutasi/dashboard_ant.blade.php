@@ -142,7 +142,7 @@ table > thead > tr > th{
         </div>
       </div>
       <div class="col-md-12">
-        <div class="col-md-12" style="margin-top: 5px; padding:0 !important">
+        <div class="col-md-12" style="margin-top: 5px; padding:0 !important; overflow-y:hidden; overflow-x:scroll;">
           <table id="tableResume" class="table table-bordered" style="width: 100%;margin-top: 0px">
             <thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 12px;font-weight: bold">
               <tr>
@@ -188,7 +188,7 @@ table > thead > tr > th{
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
-          <h4 class="modal-title">Antar Departemen</h4>
+          <h4 class="modal-title">Between Department</h4>
           <br>
           <div class="nav-tabs-custom tab-danger">
             <ul class="nav nav-tabs">
@@ -1265,7 +1265,7 @@ Highcharts.createElement('link', {
 
             bodyResume  += '<tr>';
             bodyResume  += '<td style="border-right: 5px solid red !important;"><a href="javascript:void(0)" id="'+value.id+'" onclick="openModalDetail('+value.id+')" style="color:black">'+value.nik+' - '+nama2+'</a></td>';
-            bodyResume  += '<td style="border-right: 5px solid red !important; background-color:black"><span class="label label-success">'+name2+'</span></td>';
+            bodyResume  += '<td style="border-right: 5px solid red !important; background-color:black"><span class="label label-warning">'+name2+'</span></td>';
             // jika chief asal
             if (value.nama_chief_asal != null) {
               //chief asal
@@ -1461,24 +1461,28 @@ Highcharts.createElement('link', {
             // jika all approved hr akan
             if ("{{ Auth::user()->role_code }}" == "HR" || "{{ Auth::user()->role_code }}" == "MIS") {
               if (value.status == "All Approved") {
-                if (value.remark != null) {
-                  bodyResume  += '<td style="background-color:black"><span class="label label-warning">Finish</span></td>'; 
-                }
-                else{
-                  bodyResume  += '<td style="background-color:black"><span class="label label-danger"><a href="'+finish+'/'+value.id+'" style="color:white">Click To Finish</a></span></td>';
-                }
+                    if (value.remark != null) {
+                    bodyResume  += '<td style="background-color:black"><span class="label label-warning">Finish</span></td>'; 
+                    }
+                    else{
+                    bodyResume  += '<td style="background-color:black"><span class="label label-danger"><a href="'+finish+'/'+value.id+'" style="color:white">Click To Finish</a></span></td>';
+                    }
+                  }
+              else {
+                bodyResume  += '<td style="background-color:black">'+("")+'</td>';
+              } 
+            }
+            else{
+              if (value.status == 'Rejected') {
+              bodyResume  += '<td style="background-color:black"><span class="label label-danger"><a href="'+urlreport+'/'+value.id+'" style="color:white">Rejected</a></span></td>';
               }
-              else if(value.status == "Rejected"){
-                bodyResume  += '<td style="background-color:black"><span class="label label-danger"><a href="'+urlreport+'/'+value.id+'" style="color:white">Rejected</a></span></td>';
+              else if(value.status == 'All Approved'){
+              bodyResume  += '<td style="background-color:black"><span class="label label-success"><a href="'+urlreport+'/'+value.id+'" style="color:white">Approved</a></span></td>';
               }
               else{
-                bodyResume  += '<td style="background-color:black">'+("")+'</td>';
+              bodyResume  += '<td style="background-color:black">'+("")+'</td>';
               }
-
             }
-            else {
-                bodyResume  += '<td style="background-color:black">'+("")+'</td>';
-            } 
             bodyResume  += '</tr>';
           })
 

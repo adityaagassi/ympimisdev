@@ -337,6 +337,13 @@
     <li class="header">Service Menu</li>
     @endif
 
+    @if(in_array('Dashboard', $navs))
+    @if(isset($page) && $page == "Operator Loss Time")<li class="active">@else<li>@endif
+      <a href="{{ url("index/efficiency/operator_loss_time") }}"><i class="fa fa-clock-o"></i> <span>OP Loss Time Record</span></a>
+    </li>
+    @endif
+
+
     @if(in_array('S45', $navs))
     @if(isset($head) && $head == "Purchasing")<li class="treeview active">@else<li class="treeview">@endif
       <a href="#">
@@ -1514,25 +1521,18 @@
 @if(in_array('R10', $navs))
 @if(isset($head) && $head == "Mutasi Form")<li class="treeview active">@else<li class="treeview">@endif
  <a href="#">
-  <i class="fa fa-pencil-square-o"></i> <span>Mutasi Form</span>
+  <i class="fa fa-pencil-square-o"></i> <span>Mutation Form</span>
   <span class="pull-right-container">
    <i class="fa fa-angle-left pull-right"></i>
  </span>
 </a>
 <ul class="treeview-menu">
-  @if(isset($page) && $page == "Satu Departemen")<li class="active">@else<li>@endif
-    <a href="{{ url("dashboard/mutasi") }}"><i class="fa fa-newspaper-o"></i> <span>Satu Departemen</span></a>
+  @if(isset($page) && $page == "One Department")<li class="active">@else<li>@endif
+    <a href="{{ url("dashboard/mutasi") }}"><i class="fa fa-retweet"></i> <span>One Department</span></a>
   </li>
-  @if(isset($page) && $page == "Antar Departemen")<li class="active">@else<li>@endif
-    <a href="{{ url("dashboard_ant/mutasi") }}"><i class="fa fa-newspaper-o"></i> <span>Antar Departemen</span></a>
+  @if(isset($page) && $page == "Between Department")<li class="active">@else<li>@endif
+    <a href="{{ url("dashboard_ant/mutasi") }}"><i class="fa fa-retweet"></i> <span>Between Department</span></a>
   </li>
-  <!-- @if(isset($page) && $page == "Mutasi Satu Departemen")<li class="active">@else<li>@endif
-    <a href="{{ url("dashboard/mutasi") }}"><i class="fa fa-newspaper-o"></i> <span>Mutasi Satu Departemen</span></a>
-  </li>
-
-  @if(isset($page) && $page == "Mutasi Antar Departemen")<li class="active">@else<li>@endif
-    <a href="{{ url("index/mutasi") }}"><i class="fa fa-newspaper-o"></i> <span>Mutasi</span></a>
-  </li> -->
 </ul>
 </li>
 @endif 

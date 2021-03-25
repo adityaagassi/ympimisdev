@@ -63,8 +63,8 @@ class MutasiController extends Controller
 
       return view('mutasi.dashboard',  
         array(
-          'title' => 'Mutasi Satu Departemen Monitoring & Control', 
-          'title_jp' => '監視・管理',
+          'title' => 'Mutation One Department Monitoring & Control', 
+          'title_jp' => 'ミューテーション1部門の監視と制御',
 
           'emp_dept' => $emp_dept,
           'dept' => $dept,
@@ -102,8 +102,8 @@ class MutasiController extends Controller
 
       return view('mutasi.dashboard_ant',  
         array(
-          'title' => 'Mutasi Antar Departemen Monitoring & Control', 
-          'title_jp' => '監視・管理',
+          'title' => 'Mutation Between Department Monitoring & Control', 
+          'title_jp' => '部門の監視と管理の間の変化',
           'emp_dept' => $emp_dept,
           'dept' => $dept,
           'post' => $post,
@@ -301,20 +301,29 @@ class MutasiController extends Controller
     //tampilan dashboard
     public function fetchResumeMutasi(Request $request)
     {   
+        $tanggal = date('Y-m-d');
+        $dateto = $request->get('dateto');
 
-          if ($request->get('dateto') == "") {
-              $dateto = date('Y-m', strtotime(carbon::now()));
-          } else {
-              $dateto = $request->get('dateto');
-          }
+        if ($dateto == "") {
+            $resumes = Mutasi::select('mutasi_depts.id', 'status', 'nik', 'nama', 'nama_chief_asal', 'nama_chief_tujuan', 'nama_manager_tujuan', 'nama_dgm_tujuan', 'nama_gm_tujuan', 'nama_manager', 'app_ca', 'app_ct', 'app_mt', 'app_dt', 'app_gt', 'app_m', 'posisi', 
+                'users.name', 'mutasi_depts.created_by', 'remark')
+                ->WHERE('mutasi_depts.deleted_at',null )
+                ->where(DB::raw("DATE_FORMAT(tanggal, '%Y-%m')"),$tanggal)
+                ->leftJoin('users', 'users.id', '=', 'mutasi_depts.created_by')
+                ->orderBy('mutasi_depts.created_at', 'desc')
+                ->get();
+        }
+        else{
+            $resumes = Mutasi::select('mutasi_depts.id', 'status', 'nik', 'nama', 'nama_chief_asal', 'nama_chief_tujuan', 'nama_manager_tujuan', 'nama_dgm_tujuan', 'nama_gm_tujuan', 'nama_manager', 'app_ca', 'app_ct', 'app_mt', 'app_dt', 'app_gt', 'app_m', 'posisi', 
+                'users.name', 'mutasi_depts.created_by', 'remark')
+                ->WHERE('mutasi_depts.deleted_at',null )
+                ->where(DB::raw("DATE_FORMAT(tanggal, '%Y-%m')"),$dateto)
+                ->leftJoin('users', 'users.id', '=', 'mutasi_depts.created_by')
+                ->orderBy('mutasi_depts.created_at', 'desc')
+                ->get();
+        }
 
-        $resumes = Mutasi::select('mutasi_depts.id', 'status', 'nik', 'nama', 'nama_chief_asal', 'nama_chief_tujuan', 'nama_manager_tujuan', 'nama_dgm_tujuan', 'nama_gm_tujuan', 'nama_manager', 'app_ca', 'app_ct', 'app_mt', 'app_dt', 'app_gt', 'app_m', 'posisi', 
-        'users.name', 'mutasi_depts.created_by', 'remark')
-        ->WHERE('mutasi_depts.deleted_at',null )
-        ->where(DB::raw("DATE_FORMAT(tanggal, '%Y-%m')"),$dateto)
-        ->leftJoin('users', 'users.id', '=', 'mutasi_depts.created_by')
-        ->orderBy('mutasi_depts.created_at', 'desc')
-        ->get();
+        
         $response = array(
             'status' => true,
             'resumes' => $resumes,
@@ -926,19 +935,27 @@ class MutasiController extends Controller
     // ====================================================================================================================== ANTAR DEPARTEMEN
     //tampilan dashboard
     public function fetchResumeMutasiAnt(Request $request)
-    {   if ($request->get('dateto') == "") {
-              $dateto = date('Y-m', strtotime(carbon::now()));
-          } else {
-              $dateto = $request->get('dateto');
-          }
+    {   $tanggal = date('Y-m-d');
+        $dateto = $request->get('dateto');
 
-        $resumes = MutasiAnt::select('mutasi_ant_depts.id', 'status', 'nik', 'nama', 'nama_chief_asal', 'nama_manager_asal', 'nama_dgm_asal', 'nama_gm_asal', 'nama_chief_tujuan', 'nama_manager_tujuan', 'nama_dgm_tujuan', 'nama_gm_tujuan', 'nama_manager', 'nama_direktur_hr', 'app_ca', 'app_ma', 'app_da', 'app_ga', 'app_ct', 'app_mt', 'app_dt', 'app_gt', 'app_m', 'app_dir', 'posisi', 
-        'users.name', 'mutasi_ant_depts.created_by', 'remark')
-        ->WHERE('mutasi_ant_depts.deleted_at',null )
-        ->where(DB::raw("DATE_FORMAT(tanggal, '%Y-%m')"),$dateto)
-        ->leftJoin('users', 'users.id', '=', 'mutasi_ant_depts.created_by')
-        ->orderBy('mutasi_ant_depts.created_at', 'desc')
-        ->get();
+        if ($dateto == "") {
+            $resumes = MutasiAnt::select('mutasi_ant_depts.id', 'status', 'nik', 'nama', 'nama_chief_asal', 'nama_manager_asal', 'nama_dgm_asal', 'nama_gm_asal', 'nama_chief_tujuan', 'nama_manager_tujuan', 'nama_dgm_tujuan', 'nama_gm_tujuan', 'nama_manager', 'nama_direktur_hr', 'app_ca', 'app_ma', 'app_da', 'app_ga', 'app_ct', 'app_mt', 'app_dt', 'app_gt', 'app_m', 'app_dir', 'posisi', 
+                'users.name', 'mutasi_ant_depts.created_by', 'remark')
+                 ->WHERE('mutasi_ant_depts.deleted_at',null )
+                 ->where(DB::raw("DATE_FORMAT(tanggal, '%Y-%m-%d')"),$tanggal)
+                 ->leftJoin('users', 'users.id', '=', 'mutasi_ant_depts.created_by')
+                 ->orderBy('mutasi_ant_depts.created_at', 'desc')
+                 ->get();
+                  }
+        else{
+            $resumes = MutasiAnt::select('mutasi_ant_depts.id', 'status', 'nik', 'nama', 'nama_chief_asal', 'nama_manager_asal', 'nama_dgm_asal', 'nama_gm_asal', 'nama_chief_tujuan', 'nama_manager_tujuan', 'nama_dgm_tujuan', 'nama_gm_tujuan', 'nama_manager', 'nama_direktur_hr', 'app_ca', 'app_ma', 'app_da', 'app_ga', 'app_ct', 'app_mt', 'app_dt', 'app_gt', 'app_m', 'app_dir', 'posisi', 
+                 'users.name', 'mutasi_ant_depts.created_by', 'remark')
+                 ->WHERE('mutasi_ant_depts.deleted_at',null )
+                 ->where(DB::raw("DATE_FORMAT(tanggal, '%Y-%m')"),$dateto)
+                 ->leftJoin('users', 'users.id', '=', 'mutasi_ant_depts.created_by')
+                 ->orderBy('mutasi_ant_depts.created_at', 'desc')
+                 ->get();
+        }
         $response = array(
             'status' => true,
             'resumes' => $resumes

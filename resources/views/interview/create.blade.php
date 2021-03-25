@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="{{ url("plugins/timepicker/bootstrap-timepicker.min.css")}}">
 <section class="content-header">
   <h1>
-    Buat {{ $activity_name }}
+    Create {{ $activity_name }}
   </h1>
   <ol class="breadcrumb">
  </ol>
@@ -72,17 +72,19 @@
           </div>
         </div>
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-          <div class="form-group row" align="right">
+          <!-- <div class="form-group row" align="right">
             <label class="col-sm-4">Periode<span class="text-red">*</span></label>
-            <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="periode" style="width: 100%;" data-placeholder="Pilih Periode..." required>
+            <div class="col-sm-8" align="left"> -->
+              <!-- <select class="form-control select2" name="periode" style="width: 100%;" data-placeholder="Pilih Periode..." required>
                 <option value=""></option>
                 @foreach($fy as $fy)
                 <option value="{{ $fy->fiscal_year }}">{{ $fy->fiscal_year }}</option>
                 @endforeach
-              </select>
-            </div>
-          </div>
+              </select> -->
+              <input type="hidden" class="form-control" name="periode" placeholder="Enter Date" required value="{{ $fy->fiscal_year }}" readonly>
+              <input type="hidden" class="form-control" name="status" id="status" placeholder="Enter Date" required value="leader" readonly>
+            <!-- </div>
+          </div> -->
           <div class="form-group row" align="right">
             <label class="col-sm-4">Leader<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">

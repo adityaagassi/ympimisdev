@@ -44,7 +44,10 @@
 		<?php }else{?>
 			{{ $activity_name }} - {{ $departments }}
 		<?php } ?>
-		<a href="{{ url('index/interview/create/'.$id) }}" class="btn btn-primary pull-right">Buat Interview</a>
+		<!-- <button href="{{ url('index/interview/create/'.$id.'/'.$status) }}" class="btn btn-primary pull-right">Buat Interview</button> -->
+		<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal">
+	        Buat Interview
+	    </button>
 	</h1>
 	<ol class="breadcrumb">
 	</ol>
@@ -125,7 +128,7 @@
 											<th>Leader</th>
 											<th>Foreman</th>
 										<?php }else{ ?>
-											<th>Chief</th>
+											<th>Chief / Staff</th>
 											<th>Manager</th>
 										<?php }?>
 										<th>Send Status</th>
@@ -137,7 +140,7 @@
 								<tbody>
 									@foreach($interview as $interview)
 									<tr>
-										<td>{{$interview->subsection}}</td>
+										<td>{{$interview->section}}</td>
 										<td>{{$interview->date}}</td>
 										<td>{{$interview->leader}}</td>
 										<td>{{$interview->foreman}}</td>
@@ -155,17 +158,17 @@
 						                	@endif</td>
 										<td>
 											<center>
-												<a class="btn btn-primary btn-sm" href="{{url('index/interview/details/'.$interview->id)}}"><b>Peserta Interview</b></a>
+												<a class="btn btn-primary btn-sm" href="{{url('index/interview/pointing_call/details/'.$interview->id)}}"><b>Peserta Interview</b></a>
 												<a target="_blank" class="btn btn-success btn-sm" href="{{url('index/interview/print_interview/'.$interview->id)}}"><b>Cetak</b></a>
 												@if($interview->send_status == "")
-							                		<a class="btn btn-info btn-sm" href="{{url('index/interview/sendemail/'.$interview->id.'/leader')}}"><b>Kirim Email</b></a>
+							                		<a class="btn btn-info btn-sm" href="{{url('index/interview/sendemail/'.$interview->id.'/chief')}}"><b>Kirim Email</b></a>
 							                	@endif
 											</center>
 										</td>
 										<td>
 											<center>
-												<a href="{{url('index/interview/edit/'.$id.'/'.$interview->id)}}" class="btn btn-warning"><b>Edit</b></a>
-												<a href="javascript:void(0)" class="btn btn-danger" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/interview/destroy") }}', '{{ $interview->activity_lists->activity_name }} - {{ $interview->date }} - {{ $interview->periode }}','{{ $id }}', '{{ $interview->id }}');">
+												<a href="{{url('index/interview/pointing_call/edit/'.$id.'/'.$interview->id)}}" class="btn btn-warning"><b>Edit</b></a>
+												<a href="javascript:void(0)" class="btn btn-danger" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/interview/destroy") }}', '{{ $interview->activity_lists->activity_name }} - {{ $interview->date }}','{{ $id }}', '{{ $interview->id }}','{{ $status }}');">
 													<b>Delete</b>
 												</a>
 											</center>
@@ -180,6 +183,56 @@
 			</div>
 		</div>
 	</div>
+
+<div class="modal fade" id="create-modal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" align="center"><b>Buat Interview</b></h4>
+      </div>
+      <div class="modal-body">
+      	<div class="row">
+          <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>"> 
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+			  	<input type="hidden" name="department" id="department" class="form-control" value="{{ $departments }}" readonly required="required" title="">
+	            <div class="form-group">
+	             <label>Section<span class="text-red">*</span></label>
+	                <select class="form-control" name="section" id="section" style="width: 100%;" data-placeholder="Pilih Section..." required>
+	                  @foreach($section as $section)
+	                  <option value="{{ $section->section_name }}">{{ $section->section_name }}</option>
+	                  @endforeach
+	                </select>
+	            </div>
+	            <input type="hidden" name="subsection" id="subsection" value="-">
+	            <div class="form-group">
+	              <label for="">Date</label>
+				  <input type="text" name="date" id="date" class="form-control" value="{{ date('Y-m-d') }}" readonly required="required" title="">
+				  <input type="hidden" name="periode" id="periode" class="form-control" value="{{ $fy }}" readonly required="required" title="">
+	            </div>
+	        </div>
+	        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+	            <div class="form-group">
+	              <label for="">Chief / Staff</label>
+				  <input type="text" name="leader" id="leader" class="form-control" value="{{ $leader }}" readonly required="required" title="">
+	            </div>
+	            <div class="form-group">
+	              <label for="">Manager</label>
+				  <input type="text" name="foreman" id="foreman" class="form-control" value="{{ $foreman }}" readonly required="required" title="">
+	            </div>
+            </div>
+          	
+        </div>
+      </div>
+      <div class="modal-footer">
+	            <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>
+	            <input type="submit" value="Submit" onclick="create()" class="btn btn-primary">
+	        </div>
+    </div>
+  </div>
+</div>
 </section>
 
 <div class="modal modal-danger fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -199,10 +252,19 @@
 		</div>
 	</div>
 </div>
+
+
 @endsection
 
 
 @section('scripts')
+<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
+<script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
+<script src="{{ url("js/buttons.flash.min.js")}}"></script>
+<script src="{{ url("js/jszip.min.js")}}"></script>
+<script src="{{ url("js/vfs_fonts.js")}}"></script>
+<script src="{{ url("js/buttons.html5.min.js")}}"></script>
+<script src="{{ url("js/buttons.print.min.js")}}"></script>
 <script>
 	$.ajaxSetup({
 		headers: {
@@ -228,8 +290,6 @@
 		startView: "months", 
 		minViewMode: "months",
 		autoclose: true,
-		
-
 	});
 
 	$('.datepicker2').datepicker({
@@ -238,18 +298,8 @@
 		startView: "months", 
 		minViewMode: "months",
 		autoclose: true,
-		
-
 	});
-
-	
 </script>
-<script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
-<script src="{{ url("js/buttons.flash.min.js")}}"></script>
-<script src="{{ url("js/jszip.min.js")}}"></script>
-<script src="{{ url("js/vfs_fonts.js")}}"></script>
-<script src="{{ url("js/buttons.html5.min.js")}}"></script>
-<script src="{{ url("js/buttons.print.min.js")}}"></script>
 <script>
 	jQuery(document).ready(function() {
 		$('#example1 tfoot th').each( function () {
@@ -313,20 +363,51 @@
 		$('#example1 tfoot tr').appendTo('#example1 thead');
 
 	});
-	$(function () {
-
-		$('#example2').DataTable({
-			'paging'      : true,
-			'lengthChange': false,
-			'searching'   : false,
-			'ordering'    : true,
-			'info'        : true,
-			'autoWidth'   : false
-		})
-	})
-	function deleteConfirmation(url, name, training_id,id) {
+	function deleteConfirmation(url, name, training_id,id,status) {
 		jQuery('.modal-body').text("Are you sure want to delete '" + name + "'?");
-		jQuery('#modalDeleteButton').attr("href", url+'/'+training_id+'/'+id+'/leader');
+		jQuery('#modalDeleteButton').attr("href", url+'/'+training_id+'/'+id+'/'+status);
+	}
+
+	function create() {
+		var data = {
+			department:$('#department').val(),
+			subsection:$('#subsection').val(),
+			section:$('#section').val(),
+			date:$('#date').val(),
+			periode:$('#periode').val(),
+			leader:$('#leader').val(),
+			foreman:$('#foreman').val(),
+			status:'chief',
+		}
+
+		$.post("{{url('index/interview/store/'.$id)}}", data, function(result, status, xhr){
+			if (result.status) {
+				openSuccessGritter('Success');
+				location.reload();
+			}
+		});
+	}
+
+	function openSuccessGritter(title, message){
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-success',
+			image: '{{ url("images/image-screen.png") }}',
+			sticky: false,
+			time: '3000'
+		});
+	}
+
+	function openErrorGritter(title, message) {
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-danger',
+			image: '{{ url("images/image-stop.png") }}',
+			sticky: false,
+			time: '3000'
+		});
 	}
 </script>
 @endsection
