@@ -2509,6 +2509,8 @@ Route::get('index/stocktaking/daily_report', 'StockTakingController@indexDailyRe
 Route::get('fetch/stocktaking/daily_report', 'StockTakingController@fetchDailyReport');
 Route::get('fetch/stocktaking/daily_report_modal', 'StockTakingController@fetchDailyReportModal');
 
+//Video Stocktaking
+Route::get('index/stocktaking/video_tutorial', 'StockTakingController@indexVideoStocktaking');
 
 //Index Monthly
 Route::get('index/stocktaking/menu', 'StockTakingController@indexMonthlyStocktaking');
@@ -3535,6 +3537,11 @@ Route::get('fetch/recorder/cdm', 'RecorderProcessController@fetchCdm');
 Route::get('index/recorder/cdm_report', 'RecorderProcessController@indexCdmReport');
 Route::get('fetch/recorder/cdm_report', 'RecorderProcessController@fetchCdmReport');
 
+//INISIALISAS NG RATE ASSY RC
+Route::get('index/recorder/kensa/initial', 'RecorderProcessController@indexKensaInitial');
+Route::get('fetch/recorder/kensa/initial', 'RecorderProcessController@fetchKensaInitial');
+Route::post('input/recorder/kensa/initial', 'RecorderProcessController@inputKensaInitial');
+
 //NG RATE ASSY RC
 Route::get('index/recorder/kensa', 'RecorderProcessController@indexKensa');
 Route::get('fetch/recorder/kensa', 'RecorderProcessController@fetchKensa');
@@ -4553,7 +4560,7 @@ Route::post('fetch/reed/finish_packing', 'ReedSyntheticController@fetchFinishPac
 //End Reed Project
 
 Route::get('index/fibration/data', 'TrialController@indexFIbrationSensor');
-Route::get('fetch/fibration/data', 'TrialController@fetchFIbrationSensor');
+Route::get('fetch/fibration/data2', 'TrialController@fetchFIbrationSensor');
 
 //Dokumentasi Packing
 

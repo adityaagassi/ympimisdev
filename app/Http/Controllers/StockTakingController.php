@@ -5676,6 +5676,16 @@ s.id ASC");
 		))->with('page', 'Stock Taking')->with('head', 'Daily');
 	}
 
+	public function indexVideoStocktaking(){
+		$title = 'Video Tutorial Stocktaking';
+		$title_jp = '棚卸チュートリアル動画';
+
+		return view('stocktakings.video', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+		))->with('page', 'Stock Taking Video')->with('head', 'Stock Taking');
+	}
+
 	public function fetchDailyReport(Request $request){
 		Carbon::setWeekStartsAt(Carbon::SUNDAY);
 		Carbon::setWeekEndsAt(Carbon::SATURDAY);

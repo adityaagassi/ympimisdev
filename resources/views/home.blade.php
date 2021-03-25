@@ -412,6 +412,16 @@
                             <br>
                         </td>
                     </tr>
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">Video Tutorial (棚卸チュートリアル動画)</span>
+                            <br>
+                            <a href="{{ url("/index/stocktaking/video_tutorial") }}">
+                                <i class="fa fa-caret-right"></i> Video Tutorial Stocktaking 6 Bulanan (6ヶ月毎棚卸チュートリアル動画)
+                            </a>
+                            <br>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
 
