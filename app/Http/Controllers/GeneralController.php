@@ -2578,8 +2578,8 @@ public function fetchOxymeterMonitoring(Request $request)
 
 	$shift_log = db::select("SELECT sunfish_shift_syncs.employee_id, employees.name, employees.remark, shiftdaily_code, oxymeter.remark as oxy from sunfish_shift_syncs
 		left join employees on employees.employee_id = sunfish_shift_syncs.employee_id
-		left join (select * from general_attendance_logs where purpose_code = 'Oxymeter' and due_date = '".$request->get('dt')."') as oxymeter on oxymeter.employee_id = sunfish_shift_syncs.employee_id
-		where shift_date = '".$request->get('dt')."' and employees.remark = 'OFC'");
+		left join (select * from general_attendance_logs where purpose_code = 'Oxymeter' and due_date = '".$dt."') as oxymeter on oxymeter.employee_id = sunfish_shift_syncs.employee_id
+		where shift_date = '".$dt."' and employees.remark = 'OFC'");
 	
 	$response = array(
 		'status' => true,
