@@ -208,13 +208,13 @@
 							<table id="poTable" class="table table-bordered table-striped table-hover">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th style="width: 3%">No PO</th>
-										<th style="width: 1%">Remark</th>
-										<th style="width: 2%">Tanggal PO</th>
-										<th style="width: 3%">Supplier</th>
-										<th style="width: 2%">No PO SAP</th>
-										<th style="width: 2%">Status</th>
-										<th style="width: 4%">Action</th>
+										<th style="width: 2%">No PO</th>
+										<th style="width: 5%">Buyer</th>
+										<th style="width: 1%">Tanggal PO</th>
+										<th style="width: 4%">Supplier</th>
+										<th style="width: 1%">No PO SAP</th>
+										<th style="width: 1%">Status</th>
+										<th style="width: 6%">Action</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -1205,7 +1205,7 @@
 			},
 			"columns": [
 			{ "data": "no_po" },
-			{ "data": "remark" },
+			{ "data": "buyer_name" },
 			{ "data": "tgl_po" },
 			{ "data": "supplier_name" },
 			{ "data": "no_po_sap" },

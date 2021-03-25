@@ -111,7 +111,7 @@ class AuditController extends Controller
       WHERE point_judul is not null
       GROUP BY
         point_judul
-      ORDER BY jumlah_belum ASC
+      ORDER BY point_judul ASC
     ");
 
     $response = array(
@@ -289,15 +289,33 @@ class AuditController extends Controller
 
  public function fetchMonitoring(Request $request){
 
+  $datefrom = date("Y-m-d",  strtotime('-30 days'));
+  $dateto = date("Y-m-d");
+
   $first = date("Y-m-d", strtotime('-30 days'));
 
-  $check = AuditAllResult::where('status_ditangani', '=', 'close')
+  $last = AuditAllResult::whereNull('status_ditangani')
   ->orderBy('tanggal', 'asc')
-  ->select(db::raw('date(tanggal) as audit_date'))
+  ->select(db::raw('date(tanggal) as tanggal'))
   ->first();
 
-  if($first > date("Y-m-d", strtotime($check->tanggal))){
-    $first = date("Y-m-d", strtotime($check->tanggal));
+  if(strlen($request->get('datefrom')) > 0){
+    $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+  }else{
+    if($last){
+      $tanggal = date_create($last->tanggal);
+      $now = date_create(date('Y-m-d'));
+      $interval = $now->diff($tanggal);
+      $diff = $interval->format('%a%');
+
+      if($diff > 30){
+        $datefrom = date('Y-m-d', strtotime($last->tanggal));
+      }
+    }
+  }
+
+  if(strlen($request->get('dateto')) > 0){
+    $dateto = date('Y-m-d', strtotime($request->get('dateto')));
   }
 
   $data = db::select("SELECT
@@ -309,7 +327,7 @@ class AuditController extends Controller
     FROM
     audit_all_results 
     WHERE
-    tanggal >= '".$first."'
+    tanggal >= '".$datefrom."' and tanggal <= '".$dateto."'
     and kategori in ('S-Up And EHS Patrol Presdir','5S Patrol GM')
     GROUP BY
     tanggal");
@@ -513,6 +531,58 @@ public function detailMonitoringBulan(Request $request){
     }
 
     $query = "select audit_all_results.* FROM audit_all_results where audit_all_results.deleted_at is null and monthname(tanggal) = '".$bulan."' ".$stat."";
+
+    $detail = db::select($query);
+
+    return DataTables::of($detail)
+
+    ->editColumn('kategori', function($detail){
+      $kategori = '';
+
+      if($detail->kategori == "S-Up And EHS Patrol Presdir"){
+       $kategori = "Presdir";
+     }else if ($detail->kategori == "5S Patrol GM"){
+       $kategori = "GM";
+     }
+
+     return $kategori;
+    })
+
+    ->editColumn('tanggal', function($detail){
+      return date('d-M-Y', strtotime($detail->tanggal));
+    })
+
+    ->editColumn('foto', function($detail){
+      return '<img src="'.url('files/patrol').'/'.$detail->foto.'" width="250">';
+    })
+
+    ->editColumn('penanganan', function($detail){
+      return $detail->penanganan;
+    })
+
+    ->rawColumns(['tanggal' => 'tanggal', 'foto' => 'foto','penanganan' => 'penanganan'])
+    ->make(true);
+}
+
+public function detailMonitoringType(Request $request){
+
+    $type = $request->get('type');
+    $status = $request->get('status');
+
+    if ($status != null) {
+
+     if ($status == "Temuan Belum Ditangani") {
+        $stat = 'and audit_all_results.status_ditangani is null';
+      }
+      else if ($status == "Temuan Sudah Ditangani"){
+        $stat = 'and audit_all_results.status_ditangani is not null';
+      }
+
+    } else{
+      $stat = '';
+    }
+
+    $query = "select audit_all_results.* FROM audit_all_results where audit_all_results.deleted_at is null and point_judul = '".$type."' ".$stat."";
 
     $detail = db::select($query);
 
@@ -909,4 +979,15 @@ public function detailPenanganan(Request $request){
       ->make(true);
   }
 
+
+  public function packing_documentation()
+  {
+    $title = "Packing Documentation";
+    $title_jp = "";
+
+    return view('documentation.index_packing_documentation', array(
+      'title' => $title,
+      'title_jp' => $title_jp
+    ))->with('page', 'Packing Documentation'); 
+  }
 }
