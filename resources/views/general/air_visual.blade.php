@@ -215,6 +215,17 @@
 								enabled: false
 							},
 							animation: false,
+						},
+						spline: {
+							dataLabels: {
+								enabled: true,
+								formatter: function(){
+									var isLast = false;
+									if(this.point.x === this.series.data[this.series.data.length -1].x && this.point.y === this.series.data[this.series.data.length -1].y) isLast = true;
+
+									return isLast ? this.x : '';
+								}
+							}
 						}
 					},
 
