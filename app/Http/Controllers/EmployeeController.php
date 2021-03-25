@@ -1164,8 +1164,8 @@ public function indexKaizenApplied()
 public function indexKaizenReport()
 {
      return view('employees.report.kaizen_rank', array(
-          'title' => '',
-          'title_jp' => ''))->with('page', 'Kaizen Report');
+          'title' => 'Kaizen Teian Rank',
+          'title_jp' => '??'))->with('page', 'Kaizen Report');
 }
 
 public function indexKaizenResume()
@@ -4268,7 +4268,7 @@ public function UploadKaizenImage(Request $request)
 
 public function executeKaizenExcellent(Request $request)
 {
-     if ($request->get('status')) {
+     if ($request->get('status') == true) {
           $stat = 'excellent';
      } else {
           $stat = 'not excellent';
