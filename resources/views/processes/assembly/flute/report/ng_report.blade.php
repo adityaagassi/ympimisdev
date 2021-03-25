@@ -113,6 +113,7 @@ thead input {
 										<th>NG Name</th>
 										<th>Onko</th>
 										<th>Value</th>
+										<th>Location</th>
 										<th>Checked By</th>
 										<th>Caused By</th>
 										<th>Created At</th>
@@ -122,6 +123,7 @@ thead input {
 								</tbody>
 								<tfoot>
 									<tr>
+										<th></th>
 										<th></th>
 										<th></th>
 										<th></th>
@@ -226,6 +228,7 @@ thead input {
 					}else{
 						tableData += '<td>'+value.value_atas+' - '+value.value_bawah+'</td>';
 					}
+					tableData += '<td>'+ (value.value_lokasi || "") +'</td>';
 					tableData += '<td>'+ value.checked_by +'</td>';
 					tableData += '<td>'+ value.caused_by +'</td>';
 					tableData += '<td>'+ value.created +'</td>';
