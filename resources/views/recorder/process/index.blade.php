@@ -25,6 +25,7 @@
 			<a href="{{ url('index/recorder_process_torque_ai','After Injection') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Recorder Torque Check</a>
 			<!-- <a href="{{ url('index/recorder/return') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Return Material</a> -->
 			<a href="{{ url('index/recorder/cdm') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">CDM Recorder</a>
+			<a href="{{ url('index/recorder/kensa/initial') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Inisialisasi Kensa Kakuning</a>
 			<a href="{{ url('index/recorder/kensa') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Kensa Kakuning</a>
 			<!-- <a href="{{ url("index/recorder_push_pull_check") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Recorder Assy Check</a> -->
 		</div>

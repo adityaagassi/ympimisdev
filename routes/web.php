@@ -3541,6 +3541,7 @@ Route::get('fetch/recorder/cdm_report', 'RecorderProcessController@fetchCdmRepor
 Route::get('index/recorder/kensa/initial', 'RecorderProcessController@indexKensaInitial');
 Route::get('fetch/recorder/kensa/initial', 'RecorderProcessController@fetchKensaInitial');
 Route::post('input/recorder/kensa/initial', 'RecorderProcessController@inputKensaInitial');
+Route::post('input/recorder/kensa/initial/product', 'RecorderProcessController@inputKensaInitialProduct');
 
 //NG RATE ASSY RC
 Route::get('index/recorder/kensa', 'RecorderProcessController@indexKensa');

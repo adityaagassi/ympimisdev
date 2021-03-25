@@ -21,6 +21,7 @@ use App\PlcCounter;
 use App\PushBlockTorqueTemp;
 use App\PushBlockTorque;
 use App\InjectionTag;
+use App\RcAssyInitial;
 use App\RcKensaInitial;
 use App\RcKensa;
 use App\Libraries\ActMLEasyIf;
@@ -110,7 +111,11 @@ class RecorderProcessController extends Controller
     }
 
   public function index(){
-		return view('recorder.process.index')->with('page', 'Recorder')->with('head', 'Assembly Process');
+		return view('recorder.process.index')
+    ->with('title', 'Recorder - Assembly Process')
+    ->with('title_jp', 'リコーダー組立工程')
+    ->with('page', 'Recorder - Assembly Process')
+    ->with('head', 'Assembly Process');
 	}
 
 	public function index_push_block($remark){
@@ -5622,39 +5627,6 @@ class RecorderProcessController extends Controller
       }
     }
 
-    public function fetchKensaInitial()
-    {
-      try {
-        $datas = DB::SELECT("SELECT
-          *,
-          injection_parts.part_name as mat_desc,
-          rc_kensa_initials.created_at as kensa_created,
-          rc_kensa_initials.part_type as typepart,
-          rc_kensa_initials.part_name as part_kensa
-        FROM
-          rc_kensa_initials
-          JOIN injection_parts ON injection_parts.gmc = rc_kensa_initials.material_number 
-        WHERE
-          injection_parts.deleted_at IS NULL 
-          AND DATE( rc_kensa_initials.created_at ) BETWEEN DATE(
-          NOW()) - INTERVAL 3 DAY 
-          AND DATE(
-          NOW())");
-
-        $response = array(
-              'status' => true,
-              'datas' => $datas
-          );
-        return Response::json($response);
-      } catch (\Exception $e) {
-        $response = array(
-            'status' => false,
-            'message' => $e->getMessage(),
-        );
-        return Response::json($response);
-      }
-    }
-
     public function inputKensa(Request $request)
     {
       try {
@@ -5977,6 +5949,1488 @@ class RecorderProcessController extends Controller
               'status' => true,
               'datas' => $data
           );
+        return Response::json($response);
+      } catch (\Exception $e) {
+        $response = array(
+            'status' => false,
+            'message' => $e->getMessage(),
+        );
+        return Response::json($response);
+      }
+    }
+
+    public function indexKensaInitial()
+    {
+      return view('recorder.process.kensa_initial')
+      ->with('title', 'Inisialisasi Kensa Kakuning Recorder')
+      ->with('title_jp', '??')
+      ->with('product_type',$this->product_type)
+      ->with('page', 'Inisialisasi Kensa Kakuning Recorder');
+    }
+
+    public function fetchKensaInitial()
+    {
+      try {
+        $datas = DB::SELECT("SELECT
+          *,
+          injection_parts.part_name AS mat_desc,
+          rc_assy_initials.created_at AS kensa_created,
+          rc_assy_initials.part_type AS typepart,
+          rc_assy_initials.part_name AS part_kensa 
+        FROM
+          rc_assy_initials
+          JOIN injection_parts ON injection_parts.gmc = rc_assy_initials.material_number 
+        WHERE
+          injection_parts.deleted_at IS NULL 
+          AND DATE( rc_assy_initials.created_at ) BETWEEN DATE(
+          NOW()) - INTERVAL 3 DAY 
+          AND DATE(
+          NOW())
+        ORDER BY
+          rc_assy_initials.created_at DESC");
+
+        $response = array(
+              'status' => true,
+              'datas' => $datas
+          );
+        return Response::json($response);
+      } catch (\Exception $e) {
+        $response = array(
+            'status' => false,
+            'message' => $e->getMessage(),
+        );
+        return Response::json($response);
+      }
+    }
+
+    public function inputKensaInitial(Request $request)
+    {
+      try {
+        // $emp_code = DB::SELECT('SELECT * FROM employee_groups where employee_id = "'.$request->get('employee_id').'" and location = "rc-assy"');
+
+        // foreach ($emp_code as $key) {
+        //   $group = $key->group;
+        // }
+
+        // $code_generator = CodeGenerator::where('note', '=', 'kakuning-rc')->first();
+        // $serial_number = $group.sprintf("%'.0" . $code_generator->length . "d", $code_generator->index+1);
+        // $code_generator->index = $code_generator->index+1;
+        // $code_generator->save();
+
+        $rckensa = RcAssyInitial::where('status','Open')->get();
+
+        if (count($rckensa) > 0) {
+          foreach ($rckensa as $key) {
+            $kensaold = RcAssyInitial::find($key->id);
+            $kensaold->status = 'Close';
+            $kensaold->save();
+          }
+        }
+
+        if (str_contains($request->get('product'), 'YRS')) {
+          $product = $request->get('product');
+          $tag_head = $request->get('tag_head');
+          $tag_middle = $request->get('tag_middle');
+          $tag_foot = $request->get('tag_foot');
+          $tag_block = $request->get('tag_block');
+
+          $material_number_head = $request->get('material_number_head');
+          $part_name_head = $request->get('part_name_head');
+          $part_type_head = $request->get('part_type_head');
+          $color_head = $request->get('color_head');
+          $cavity_head = $request->get('cavity_head');
+          $location_head = $request->get('location_head');
+
+          $material_number_middle = $request->get('material_number_middle');
+          $part_name_middle = $request->get('part_name_middle');
+          $part_type_middle = $request->get('part_type_middle');
+          $color_middle = $request->get('color_middle');
+          $cavity_middle = $request->get('cavity_middle');
+          $location_middle = $request->get('location_middle');
+
+          $material_number_foot = $request->get('material_number_foot');
+          $part_name_foot = $request->get('part_name_foot');
+          $part_type_foot = $request->get('part_type_foot');
+          $color_foot = $request->get('color_foot');
+          $cavity_foot = $request->get('cavity_foot');
+          $location_foot = $request->get('location_foot');
+
+          $material_number_block = $request->get('material_number_block');
+          $part_name_block = $request->get('part_name_block');
+          $part_type_block = $request->get('part_type_block');
+          $color_block = $request->get('color_block');
+          $cavity_block = $request->get('cavity_block');
+          $location_block = $request->get('location_block');
+
+          //INJECTION
+
+          $injection_process_head = DB::SELECT("SELECT
+                injection_tags.no_kanban,
+                injection_process_logs.start_time,
+                injection_process_logs.end_time,
+                injection_process_logs.mesin,
+                injection_process_logs.shot as qty,
+                opmesin.employee_id,
+                injection_process_logs.ng_name,
+                injection_process_logs.ng_count
+            FROM
+                injection_tags
+                LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_tags.tag
+                LEFT JOIN employee_syncs opmesin ON opmesin.employee_id = injection_process_logs.operator_id
+            WHERE
+                injection_process_logs.tag_product = '".$request->get('tag_head')."'  
+            ORDER BY
+                injection_process_logs.created_at DESC
+                LIMIT 1
+                ");
+
+          foreach ($injection_process_head as $key_head) {
+            $no_kanban_head = $key_head->no_kanban;
+            $start_time_head = $key_head->start_time;
+            $end_time_head = $key_head->end_time;
+            $mesin_head = $key_head->mesin;
+            $qty_head = $key_head->qty;
+            $employee_id_head = $key_head->employee_id;
+            $ng_name_head = $key_head->ng_name;
+            $ng_count_head = $key_head->ng_count;
+          }
+
+          $injection_process_middle = DB::SELECT("SELECT
+                injection_tags.no_kanban,
+                injection_process_logs.start_time,
+                injection_process_logs.end_time,
+                injection_process_logs.mesin,
+                injection_process_logs.shot as qty,
+                opmesin.employee_id,
+                injection_process_logs.ng_name,
+                injection_process_logs.ng_count
+            FROM
+                injection_tags
+                LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_tags.tag
+                LEFT JOIN employee_syncs opmesin ON opmesin.employee_id = injection_process_logs.operator_id
+            WHERE
+                injection_process_logs.tag_product = '".$request->get('tag_middle')."'  
+            ORDER BY
+                injection_process_logs.created_at DESC
+                LIMIT 1
+                ");
+
+          foreach ($injection_process_middle as $key_middle) {
+            $no_kanban_middle = $key_middle->no_kanban;
+            $start_time_middle = $key_middle->start_time;
+            $end_time_middle = $key_middle->end_time;
+            $mesin_middle = $key_middle->mesin;
+            $qty_middle = $key_middle->qty;
+            $employee_id_middle = $key_middle->employee_id;
+            $ng_name_middle = $key_middle->ng_name;
+            $ng_count_middle = $key_middle->ng_count;
+          }
+
+          $injection_process_foot = DB::SELECT("SELECT
+                injection_tags.no_kanban,
+                injection_process_logs.start_time,
+                injection_process_logs.end_time,
+                injection_process_logs.mesin,
+                injection_process_logs.shot as qty,
+                opmesin.employee_id,
+                injection_process_logs.ng_name,
+                injection_process_logs.ng_count
+            FROM
+                injection_tags
+                LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_tags.tag
+                LEFT JOIN employee_syncs opmesin ON opmesin.employee_id = injection_process_logs.operator_id
+            WHERE
+                injection_process_logs.tag_product = '".$request->get('tag_foot')."'  
+            ORDER BY
+                injection_process_logs.created_at DESC
+                LIMIT 1
+                ");
+
+          foreach ($injection_process_foot as $key_foot) {
+            $no_kanban_foot = $key_foot->no_kanban;
+            $start_time_foot = $key_foot->start_time;
+            $end_time_foot = $key_foot->end_time;
+            $mesin_foot = $key_foot->mesin;
+            $qty_foot = $key_foot->qty;
+            $employee_id_foot = $key_foot->employee_id;
+            $ng_name_foot = $key_foot->ng_name;
+            $ng_count_foot = $key_foot->ng_count;
+          }
+
+          $injection_process_block = DB::SELECT("SELECT
+                injection_tags.no_kanban,
+                injection_process_logs.start_time,
+                injection_process_logs.end_time,
+                injection_process_logs.mesin,
+                injection_process_logs.shot as qty,
+                opmesin.employee_id,
+                injection_process_logs.ng_name,
+                injection_process_logs.ng_count
+            FROM
+                injection_tags
+                LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_tags.tag
+                LEFT JOIN employee_syncs opmesin ON opmesin.employee_id = injection_process_logs.operator_id
+            WHERE
+                injection_process_logs.tag_product = '".$request->get('tag_block')."'  
+            ORDER BY
+                injection_process_logs.created_at DESC
+                LIMIT 1
+                ");
+
+          foreach ($injection_process_block as $key_block) {
+            $no_kanban_block = $key_block->no_kanban;
+            $start_time_block = $key_block->start_time;
+            $end_time_block = $key_block->end_time;
+            $mesin_block = $key_block->mesin;
+            $qty_block = $key_block->qty;
+            $employee_id_block = $key_block->employee_id;
+            $ng_name_block = $key_block->ng_name;
+            $ng_count_block = $key_block->ng_count;
+          }
+
+          //MOLDING
+
+          $molding_head = DB::SELECT("SELECT
+                injection_history_molding_logs.pic,
+                injection_history_molding_logs.part,
+                injection_history_molding_logs.total_shot/injection_molding_masters.qty_shot AS last_shot_pasang,
+                injection_molding_logs.total_running_shot/injection_molding_masters.qty_shot AS last_shot_running,
+                injection_history_molding_logs.start_time,
+                injection_history_molding_logs.end_time,
+                injection_history_molding_logs.note
+            FROM
+                injection_tags
+                LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_tags.tag
+                LEFT JOIN injection_history_molding_logs ON injection_process_logs.molding = injection_history_molding_logs.part
+                LEFT JOIN employee_syncs opmesin ON opmesin.employee_id = injection_process_logs.operator_id 
+                LEFT JOIN injection_molding_masters ON injection_molding_masters.part = injection_history_molding_logs.part 
+                left join injection_molding_logs on injection_molding_logs.part = injection_process_logs.molding and injection_process_logs.created_at = injection_molding_logs.created_at
+            WHERE
+                injection_process_logs.tag_product = '".$request->get('tag_head')."'  
+                AND injection_history_molding_logs.created_at <= injection_process_logs.start_time 
+                AND injection_history_molding_logs.type = 'PASANG' 
+            ORDER BY
+                injection_process_logs.created_at DESC,
+                injection_history_molding_logs.created_at DESC,
+                injection_molding_logs.created_at DESC 
+                LIMIT 1");
+
+          foreach ($molding_head as $key_head) {
+            $molding_head = $key_head->part;
+            $last_shot_before_head = $key_head->last_shot_pasang;
+            $last_shot_injection_head = $key_head->last_shot_running;
+            $start_molding_head = $key_head->start_time;
+            $finish_molding_head = $key_head->end_time;
+            $note_molding_head = $key_head->note;
+            $pic_molding_head = $key_head->pic;
+          }
+
+          $molding_middle = DB::SELECT("SELECT
+                injection_history_molding_logs.pic,
+                injection_history_molding_logs.part,
+                injection_history_molding_logs.total_shot/injection_molding_masters.qty_shot AS last_shot_pasang,
+                injection_molding_logs.total_running_shot/injection_molding_masters.qty_shot AS last_shot_running,
+                injection_history_molding_logs.start_time,
+                injection_history_molding_logs.end_time,
+                injection_history_molding_logs.note
+            FROM
+                injection_tags
+                LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_tags.tag
+                LEFT JOIN injection_history_molding_logs ON injection_process_logs.molding = injection_history_molding_logs.part
+                LEFT JOIN employee_syncs opmesin ON opmesin.employee_id = injection_process_logs.operator_id 
+                LEFT JOIN injection_molding_masters ON injection_molding_masters.part = injection_history_molding_logs.part 
+                left join injection_molding_logs on injection_molding_logs.part = injection_process_logs.molding and injection_process_logs.created_at = injection_molding_logs.created_at
+            WHERE
+                injection_process_logs.tag_product = '".$request->get('tag_middle')."'  
+                AND injection_history_molding_logs.created_at <= injection_process_logs.start_time 
+                AND injection_history_molding_logs.type = 'PASANG' 
+            ORDER BY
+                injection_process_logs.created_at DESC,
+                injection_history_molding_logs.created_at DESC,
+                injection_molding_logs.created_at DESC 
+                LIMIT 1");
+
+          foreach ($molding_middle as $key_middle) {
+            $molding_middle = $key_middle->part;
+            $last_shot_before_middle = $key_middle->last_shot_pasang;
+            $last_shot_injection_middle = $key_middle->last_shot_running;
+            $start_molding_middle = $key_middle->start_time;
+            $finish_molding_middle = $key_middle->end_time;
+            $note_molding_middle = $key_middle->note;
+            $pic_molding_middle = $key_middle->pic;
+          }
+
+          $molding_foot = DB::SELECT("SELECT
+                injection_history_molding_logs.pic,
+                injection_history_molding_logs.part,
+                injection_history_molding_logs.total_shot/injection_molding_masters.qty_shot AS last_shot_pasang,
+                injection_molding_logs.total_running_shot/injection_molding_masters.qty_shot AS last_shot_running,
+                injection_history_molding_logs.start_time,
+                injection_history_molding_logs.end_time,
+                injection_history_molding_logs.note
+            FROM
+                injection_tags
+                LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_tags.tag
+                LEFT JOIN injection_history_molding_logs ON injection_process_logs.molding = injection_history_molding_logs.part
+                LEFT JOIN employee_syncs opmesin ON opmesin.employee_id = injection_process_logs.operator_id 
+                LEFT JOIN injection_molding_masters ON injection_molding_masters.part = injection_history_molding_logs.part 
+                left join injection_molding_logs on injection_molding_logs.part = injection_process_logs.molding and injection_process_logs.created_at = injection_molding_logs.created_at
+            WHERE
+                injection_process_logs.tag_product = '".$request->get('tag_foot')."'  
+                AND injection_history_molding_logs.created_at <= injection_process_logs.start_time 
+                AND injection_history_molding_logs.type = 'PASANG' 
+            ORDER BY
+                injection_process_logs.created_at DESC,
+                injection_history_molding_logs.created_at DESC,
+                injection_molding_logs.created_at DESC 
+                LIMIT 1");
+
+          foreach ($molding_foot as $key_foot) {
+            $molding_foot = $key_foot->part;
+            $last_shot_before_foot = $key_foot->last_shot_pasang;
+            $last_shot_injection_foot = $key_foot->last_shot_running;
+            $start_molding_foot = $key_foot->start_time;
+            $finish_molding_foot = $key_foot->end_time;
+            $note_molding_foot = $key_foot->note;
+            $pic_molding_foot = $key_foot->pic;
+          }
+
+          $molding_block = DB::SELECT("SELECT
+                injection_history_molding_logs.pic,
+                injection_history_molding_logs.part,
+                injection_history_molding_logs.total_shot/injection_molding_masters.qty_shot AS last_shot_pasang,
+                injection_molding_logs.total_running_shot/injection_molding_masters.qty_shot AS last_shot_running,
+                injection_history_molding_logs.start_time,
+                injection_history_molding_logs.end_time,
+                injection_history_molding_logs.note
+            FROM
+                injection_tags
+                LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_tags.tag
+                LEFT JOIN injection_history_molding_logs ON injection_process_logs.molding = injection_history_molding_logs.part
+                LEFT JOIN employee_syncs opmesin ON opmesin.employee_id = injection_process_logs.operator_id 
+                LEFT JOIN injection_molding_masters ON injection_molding_masters.part = injection_history_molding_logs.part 
+                left join injection_molding_logs on injection_molding_logs.part = injection_process_logs.molding and injection_process_logs.created_at = injection_molding_logs.created_at
+            WHERE
+                injection_process_logs.tag_product = '".$request->get('tag_block')."'  
+                AND injection_history_molding_logs.created_at <= injection_process_logs.start_time 
+                AND injection_history_molding_logs.type = 'PASANG' 
+            ORDER BY
+                injection_process_logs.created_at DESC,
+                injection_history_molding_logs.created_at DESC,
+                injection_molding_logs.created_at DESC 
+                LIMIT 1");
+
+          foreach ($molding_block as $key_block) {
+            $molding_block = $key_block->part;
+            $last_shot_before_block = $key_block->last_shot_pasang;
+            $last_shot_injection_block = $key_block->last_shot_running;
+            $start_molding_block = $key_block->start_time;
+            $finish_molding_block = $key_block->end_time;
+            $note_molding_block = $key_block->note;
+            $pic_molding_block = $key_block->pic;
+          }
+
+          //DRYER
+
+          $dryer_head = DB::SELECT("SELECT
+                injection_dryer_logs.material_number,
+                injection_dryer_logs.dryer,
+                injection_dryer_logs.qty,
+                injection_dryer_logs.lot_number,
+                injection_dryer_logs.created_at,
+                opresin.employee_id
+            FROM
+                injection_tags
+                LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_tags.tag
+                LEFT JOIN injection_dryer_logs ON injection_dryer_logs.lot_number = injection_process_logs.dryer_lot_number 
+                AND injection_dryer_logs.dryer = injection_process_logs.dryer
+                LEFT JOIN employee_syncs opresin ON opresin.employee_id = injection_dryer_logs.employee_id 
+            WHERE
+                injection_process_logs.tag_product = '".$request->get('tag_head')."' 
+                AND injection_dryer_logs.created_at <= injection_process_logs.start_time 
+            ORDER BY
+                injection_process_logs.created_at DESC,
+                injection_dryer_logs.created_at DESC
+                LIMIT 1");
+
+          foreach ($dryer_head as $key_head) {
+            $material_resin_head = $key_head->material_number;
+            $dryer_resin_head = $key_head->dryer;
+            $lot_number_resin_head = $key_head->lot_number;
+            $qty_resin_head = $key_head->qty;
+            $create_resin_head = $key_head->created_at;
+            $operator_resin_head = $key_head->employee_id;
+          }
+
+          $dryer_middle = DB::SELECT("SELECT
+                injection_dryer_logs.material_number,
+                injection_dryer_logs.dryer,
+                injection_dryer_logs.qty,
+                injection_dryer_logs.lot_number,
+                injection_dryer_logs.created_at,
+                opresin.employee_id
+            FROM
+                injection_tags
+                LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_tags.tag
+                LEFT JOIN injection_dryer_logs ON injection_dryer_logs.lot_number = injection_process_logs.dryer_lot_number 
+                AND injection_dryer_logs.dryer = injection_process_logs.dryer
+                LEFT JOIN employee_syncs opresin ON opresin.employee_id = injection_dryer_logs.employee_id 
+            WHERE
+                injection_process_logs.tag_product = '".$request->get('tag_middle')."' 
+                AND injection_dryer_logs.created_at <= injection_process_logs.start_time 
+            ORDER BY
+                injection_process_logs.created_at DESC,
+                injection_dryer_logs.created_at DESC
+                LIMIT 1");
+
+          foreach ($dryer_middle as $key_middle) {
+            $material_resin_middle = $key_middle->material_number;
+            $dryer_resin_middle = $key_middle->dryer;
+            $lot_number_resin_middle = $key_middle->lot_number;
+            $qty_resin_middle = $key_middle->qty;
+            $create_resin_middle = $key_middle->created_at;
+            $operator_resin_middle = $key_middle->employee_id;
+          }
+
+          $dryer_foot = DB::SELECT("SELECT
+                injection_dryer_logs.material_number,
+                injection_dryer_logs.dryer,
+                injection_dryer_logs.qty,
+                injection_dryer_logs.lot_number,
+                injection_dryer_logs.created_at,
+                opresin.employee_id
+            FROM
+                injection_tags
+                LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_tags.tag
+                LEFT JOIN injection_dryer_logs ON injection_dryer_logs.lot_number = injection_process_logs.dryer_lot_number 
+                AND injection_dryer_logs.dryer = injection_process_logs.dryer
+                LEFT JOIN employee_syncs opresin ON opresin.employee_id = injection_dryer_logs.employee_id 
+            WHERE
+                injection_process_logs.tag_product = '".$request->get('tag_foot')."' 
+                AND injection_dryer_logs.created_at <= injection_process_logs.start_time 
+            ORDER BY
+                injection_process_logs.created_at DESC,
+                injection_dryer_logs.created_at DESC
+                LIMIT 1");
+
+          foreach ($dryer_foot as $key_foot) {
+            $material_resin_foot = $key_foot->material_number;
+            $dryer_resin_foot = $key_foot->dryer;
+            $lot_number_resin_foot = $key_foot->lot_number;
+            $qty_resin_foot = $key_foot->qty;
+            $create_resin_foot = $key_foot->created_at;
+            $operator_resin_foot = $key_head->employee_id;
+          }
+
+          $dryer_block = DB::SELECT("SELECT
+                injection_dryer_logs.material_number,
+                injection_dryer_logs.dryer,
+                injection_dryer_logs.qty,
+                injection_dryer_logs.lot_number,
+                injection_dryer_logs.created_at,
+                opresin.employee_id
+            FROM
+                injection_tags
+                LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_tags.tag
+                LEFT JOIN injection_dryer_logs ON injection_dryer_logs.lot_number = injection_process_logs.dryer_lot_number 
+                AND injection_dryer_logs.dryer = injection_process_logs.dryer
+                LEFT JOIN employee_syncs opresin ON opresin.employee_id = injection_dryer_logs.employee_id 
+            WHERE
+                injection_process_logs.tag_product = '".$request->get('tag_block')."' 
+                AND injection_dryer_logs.created_at <= injection_process_logs.start_time 
+            ORDER BY
+                injection_process_logs.created_at DESC,
+                injection_dryer_logs.created_at DESC
+                LIMIT 1");
+
+          foreach ($dryer_block as $key_block) {
+            $material_resin_block = $key_block->material_number;
+            $dryer_resin_block = $key_block->dryer;
+            $lot_number_resin_block = $key_block->lot_number;
+            $qty_resin_block = $key_block->qty;
+            $create_resin_block = $key_block->created_at;
+            $operator_resin_block = $key_block->employee_id;
+          }
+
+          $transaction_head = DB::SELECT("
+            SELECT
+              injection_transactions.location,
+              injection_transactions.status,
+              opinjeksi.employee_id,
+              injection_transactions.created_at 
+            FROM
+              injection_tags
+              LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_tags.tag
+              LEFT JOIN injection_transactions ON injection_transactions.tag = injection_process_logs.tag_product
+              LEFT JOIN employee_syncs opinjeksi ON opinjeksi.employee_id = injection_transactions.operator_id 
+            WHERE
+              injection_process_logs.tag_product = '".$request->get('tag_head')."' 
+              AND injection_transactions.created_at >= injection_process_logs.end_time 
+            ORDER BY
+              injection_process_logs.created_at DESC,
+              injection_transactions.created_at ASC 
+              LIMIT 3");
+
+          $create_transaction_head = [];
+          $location_transaction_head = [];
+          $operator_transaction_head = [];
+          $status_transaction_head = [];
+
+          foreach ($transaction_head as $key_head) {
+            $create_transaction_head[] = $key_head->created_at;
+            $location_transaction_head[] = $key_head->location;
+            $status_transaction_head[] = $key_head->status;
+            $operator_transaction_head[] = $key_head->employee_id;
+          }
+
+          $create_transaction_heads = join('_',$create_transaction_head);
+          $location_transaction_heads = join('_',$location_transaction_head);
+          $operator_transaction_heads = join('_',$operator_transaction_head);
+          $status_transaction_heads = join('_',$status_transaction_head);
+
+          $transaction_middle = DB::SELECT("
+            SELECT
+              injection_transactions.location,
+              injection_transactions.status,
+              opinjeksi.employee_id,
+              injection_transactions.created_at 
+            FROM
+              injection_tags
+              LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_tags.tag
+              LEFT JOIN injection_transactions ON injection_transactions.tag = injection_process_logs.tag_product
+              LEFT JOIN employee_syncs opinjeksi ON opinjeksi.employee_id = injection_transactions.operator_id 
+            WHERE
+              injection_process_logs.tag_product = '".$request->get('tag_middle')."' 
+              AND injection_transactions.created_at >= injection_process_logs.end_time 
+            ORDER BY
+              injection_process_logs.created_at DESC,
+              injection_transactions.created_at ASC 
+              LIMIT 3");
+
+          $create_transaction_middle = [];
+          $location_transaction_middle = [];
+          $operator_transaction_middle = [];
+          $status_transaction_middle = [];
+
+          foreach ($transaction_middle as $key_middle) {
+            $create_transaction_middle[] = $key_middle->created_at;
+            $location_transaction_middle[] = $key_middle->location;
+            $status_transaction_middle[] = $key_middle->status;
+            $operator_transaction_middle[] = $key_middle->employee_id;
+          }
+
+          $create_transaction_middles = join('_',$create_transaction_middle);
+          $location_transaction_middles = join('_',$location_transaction_middle);
+          $operator_transaction_middles = join('_',$operator_transaction_middle);
+          $status_transaction_middles = join('_',$status_transaction_middle);
+
+          $transaction_foot = DB::SELECT("
+            SELECT
+              injection_transactions.location,
+              injection_transactions.status,
+              opinjeksi.employee_id,
+              injection_transactions.created_at 
+            FROM
+              injection_tags
+              LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_tags.tag
+              LEFT JOIN injection_transactions ON injection_transactions.tag = injection_process_logs.tag_product
+              LEFT JOIN employee_syncs opinjeksi ON opinjeksi.employee_id = injection_transactions.operator_id 
+            WHERE
+              injection_process_logs.tag_product = '".$request->get('tag_foot')."' 
+              AND injection_transactions.created_at >= injection_process_logs.end_time 
+            ORDER BY
+              injection_process_logs.created_at DESC,
+              injection_transactions.created_at ASC 
+              LIMIT 3");
+
+          $create_transaction_foot = [];
+          $location_transaction_foot = [];
+          $operator_transaction_foot = [];
+          $status_transaction_foot = [];
+
+          foreach ($transaction_foot as $key_foot) {
+            $create_transaction_foot[] = $key_foot->created_at;
+            $location_transaction_foot[] = $key_foot->location;
+            $status_transaction_foot[] = $key_foot->status;
+            $operator_transaction_foot[] = $key_foot->employee_id;
+          }
+
+          $create_transaction_foots = join('_',$create_transaction_foot);
+          $location_transaction_foots = join('_',$location_transaction_foot);
+          $operator_transaction_foots = join('_',$operator_transaction_foot);
+          $status_transaction_foots = join('_',$status_transaction_foot);
+
+          $transaction_block = DB::SELECT("
+            SELECT
+              injection_transactions.location,
+              injection_transactions.status,
+              opinjeksi.employee_id,
+              injection_transactions.created_at 
+            FROM
+              injection_tags
+              LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_tags.tag
+              LEFT JOIN injection_transactions ON injection_transactions.tag = injection_process_logs.tag_product
+              LEFT JOIN employee_syncs opinjeksi ON opinjeksi.employee_id = injection_transactions.operator_id 
+            WHERE
+              injection_process_logs.tag_product = '".$request->get('tag_block')."' 
+              AND injection_transactions.created_at >= injection_process_logs.end_time 
+            ORDER BY
+              injection_process_logs.created_at DESC,
+              injection_transactions.created_at ASC 
+              LIMIT 3");
+
+          $create_transaction_block = [];
+          $location_transaction_block = [];
+          $operator_transaction_block = [];
+          $status_transaction_block = [];
+
+          foreach ($transaction_block as $key_block) {
+            $create_transaction_block[] = $key_block->created_at;
+            $location_transaction_block[] = $key_block->location;
+            $status_transaction_block[] = $key_block->status;
+            $operator_transaction_block[] = $key_block->employee_id;
+          }
+
+          $create_transaction_blocks = join('_',$create_transaction_block);
+          $location_transaction_blocks = join('_',$location_transaction_block);
+          $operator_transaction_blocks = join('_',$operator_transaction_block);
+          $status_transaction_blocks = join('_',$status_transaction_block);
+
+          RcAssyInitial::create([
+            'product' => $product,
+            'material_number' => $material_number_head,
+            'part_name' => $part_name_head,
+            'part_type' => $part_type_head,
+            'color' => $color_head,
+            'cavity' => $cavity_head,
+            'location' => $location_head,
+            'tag' => $tag_head,
+            'no_kanban_injection' => $no_kanban_head,
+            'start_injection' => $start_time_head,
+            'finish_injection' => $end_time_head,
+            'mesin_injection' => $mesin_head,
+            'qty_injection' => $qty_head,
+            'operator_injection' => $employee_id_head,
+            'molding' => $molding_head,
+            'last_shot_before' => $last_shot_before_head,
+            'last_shot_injection' => $last_shot_injection_head,
+            'start_molding' => $start_molding_head,
+            'finish_molding' => $finish_molding_head,
+            'note_molding' => $note_molding_head,
+            'operator_molding' => $pic_molding_head,
+            'material_resin' => $material_resin_head,
+            'dryer_resin' => $dryer_resin_head,
+            'lot_number_resin' => $lot_number_resin_head,
+            'qty_resin' => $qty_resin_head,
+            'create_resin' => $create_resin_head,
+            'operator_resin' => $operator_resin_head,
+            'ng_name' => $ng_name_head,
+            'ng_count' => $ng_count_head,
+            'create_transaction' => $create_transaction_heads,
+            'location_transaction' => $location_transaction_heads,
+            'operator_transaction' => $operator_transaction_heads,
+            'status_transaction' => $status_transaction_heads,
+            'status' => 'Open',
+            'created_by' => Auth::id()
+          ]);
+
+          RcAssyInitial::create([
+             'product' => $product,
+             'material_number' => $material_number_middle,
+             'part_name' => $part_name_middle,
+             'part_type' => $part_type_middle,
+             'color' => $color_middle,
+             'cavity' => $cavity_middle,
+             'location' => $location_middle,
+             'tag' => $tag_middle,
+             'no_kanban_injection' => $no_kanban_middle,
+              'start_injection' => $start_time_middle,
+              'finish_injection' => $end_time_middle,
+              'mesin_injection' => $mesin_middle,
+              'qty_injection' => $qty_middle,
+              'operator_injection' => $employee_id_middle,
+              'molding' => $molding_middle,
+              'last_shot_before' => $last_shot_before_middle,
+              'last_shot_injection' => $last_shot_injection_middle,
+              'start_molding' => $start_molding_middle,
+              'finish_molding' => $finish_molding_middle,
+              'note_molding' => $note_molding_middle,
+              'operator_molding' => $pic_molding_middle,
+              'material_resin' => $material_resin_middle,
+            'dryer_resin' => $dryer_resin_middle,
+            'lot_number_resin' => $lot_number_resin_middle,
+            'qty_resin' => $qty_resin_middle,
+            'create_resin' => $create_resin_middle,
+            'operator_resin' => $operator_resin_middle,
+            'ng_name' => $ng_name_middle,
+            'ng_count' => $ng_count_middle,
+            'create_transaction' => $create_transaction_middles,
+            'location_transaction' => $location_transaction_middles,
+            'operator_transaction' => $operator_transaction_middles,
+            'status_transaction' => $status_transaction_middles,
+             'status' => 'Open',
+            'created_by' => Auth::id()
+          ]);
+
+          RcAssyInitial::create([
+            'product' => $product,
+            'material_number' => $material_number_foot,
+            'part_name' => $part_name_foot,
+            'part_type' => $part_type_foot,
+            'color' => $color_foot,
+            'cavity' => $cavity_foot,
+            'location' => $location_foot,
+            'tag' => $tag_foot,
+            'no_kanban_injection' => $no_kanban_foot,
+            'start_injection' => $start_time_foot,
+            'finish_injection' => $end_time_foot,
+            'mesin_injection' => $mesin_foot,
+            'qty_injection' => $qty_foot,
+            'operator_injection' => $employee_id_foot,
+            'molding' => $molding_foot,
+            'last_shot_before' => $last_shot_before_foot,
+            'last_shot_injection' => $last_shot_injection_foot,
+            'start_molding' => $start_molding_foot,
+            'finish_molding' => $finish_molding_foot,
+            'note_molding' => $note_molding_foot,
+            'operator_molding' => $pic_molding_foot,
+            'material_resin' => $material_resin_foot,
+            'dryer_resin' => $dryer_resin_foot,
+            'lot_number_resin' => $lot_number_resin_foot,
+            'qty_resin' => $qty_resin_foot,
+            'create_resin' => $create_resin_foot,
+            'operator_resin' => $operator_resin_foot,
+            'ng_name' => $ng_name_foot,
+            'ng_count' => $ng_count_foot,
+            'create_transaction' => $create_transaction_foots,
+            'location_transaction' => $location_transaction_foots,
+            'operator_transaction' => $operator_transaction_foots,
+            'status_transaction' => $status_transaction_foots,
+            'status' => 'Open',
+            'created_by' => Auth::id()
+          ]);
+
+          RcAssyInitial::create([
+            'product' => $product,
+            'material_number' => $material_number_block,
+            'part_name' => $part_name_block,
+            'part_type' => $part_type_block,
+            'color' => $color_block,
+            'cavity' => $cavity_block,
+            'location' => $location_block,
+            'tag' => $tag_block,
+            'no_kanban_injection' => $no_kanban_block,
+            'start_injection' => $start_time_block,
+            'finish_injection' => $end_time_block,
+            'mesin_injection' => $mesin_block,
+            'qty_injection' => $qty_block,
+            'operator_injection' => $employee_id_block,
+            'molding' => $molding_block,
+            'last_shot_before' => $last_shot_before_block,
+            'last_shot_injection' => $last_shot_injection_block,
+            'start_molding' => $start_molding_block,
+            'finish_molding' => $finish_molding_block,
+            'note_molding' => $note_molding_block,
+            'operator_molding' => $pic_molding_block,
+            'material_resin' => $material_resin_block,
+            'dryer_resin' => $dryer_resin_block,
+            'lot_number_resin' => $lot_number_resin_block,
+            'qty_resin' => $qty_resin_block,
+            'create_resin' => $create_resin_block,
+            'operator_resin' => $operator_resin_block,
+            'ng_name' => $ng_name_block,
+            'ng_count' => $ng_count_block,
+            'create_transaction' => $create_transaction_blocks,
+            'location_transaction' => $location_transaction_blocks,
+            'operator_transaction' => $operator_transaction_blocks,
+            'status_transaction' => $status_transaction_blocks,
+            'status' => 'Open',
+            'created_by' => Auth::id()
+          ]);
+        }else{
+          $product = $request->get('product');
+          $tag_head_yrf = $request->get('tag_head_yrf');
+          $tag_body_yrf = $request->get('tag_body_yrf');
+          $tag_stopper_yrf = $request->get('tag_stopper_yrf');
+
+          $material_number_head_yrf = $request->get('material_number_head_yrf');
+          $part_name_head_yrf = $request->get('part_name_head_yrf');
+          $part_type_head_yrf = $request->get('part_type_head_yrf');
+          $color_head_yrf = $request->get('color_head_yrf');
+          $cavity_head_yrf = $request->get('cavity_head_yrf');
+          $location_head_yrf = $request->get('location_head_yrf');
+
+          $material_number_body_yrf = $request->get('material_number_body_yrf');
+          $part_name_body_yrf = $request->get('part_name_body_yrf');
+          $part_type_body_yrf = $request->get('part_type_body_yrf');
+          $color_body_yrf = $request->get('color_body_yrf');
+          $cavity_body_yrf = $request->get('cavity_body_yrf');
+          $location_body_yrf = $request->get('location_body_yrf');
+
+          $material_number_stopper_yrf = $request->get('material_number_stopper_yrf');
+          $part_name_stopper_yrf = $request->get('part_name_stopper_yrf');
+          $part_type_stopper_yrf = $request->get('part_type_stopper_yrf');
+          $color_stopper_yrf = $request->get('color_stopper_yrf');
+          $cavity_stopper_yrf = $request->get('cavity_stopper_yrf');
+          $location_stopper_yrf = $request->get('location_stopper_yrf');
+
+          $injection_process_head_yrf = DB::SELECT("SELECT
+                injection_tags.no_kanban,
+                injection_process_logs.start_time,
+                injection_process_logs.end_time,
+                injection_process_logs.mesin,
+                injection_process_logs.shot as qty,
+                opmesin.employee_id,
+                injection_process_logs.ng_name,
+                injection_process_logs.ng_count
+            FROM
+                injection_tags
+                LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_tags.tag
+                LEFT JOIN employee_syncs opmesin ON opmesin.employee_id = injection_process_logs.operator_id
+            WHERE
+                injection_process_logs.tag_product = '".$request->get('tag_head_yrf')."'  
+            ORDER BY
+                injection_process_logs.created_at DESC
+                LIMIT 1
+                ");
+
+          foreach ($injection_process_head_yrf as $key_head_yrf) {
+            $no_kanban_head_yrf = $key_head_yrf->no_kanban;
+            $start_time_head_yrf = $key_head_yrf->start_time;
+            $end_time_head_yrf = $key_head_yrf->end_time;
+            $mesin_head_yrf = $key_head_yrf->mesin;
+            $qty_head_yrf = $key_head_yrf->qty;
+            $employee_id_head_yrf = $key_head_yrf->employee_id;
+            $ng_name_head_yrf = $key_head_yrf->ng_name;
+            $ng_count_head_yrf = $key_head_yrf->ng_count;
+          }
+
+          $injection_process_body_yrf = DB::SELECT("SELECT
+                injection_tags.no_kanban,
+                injection_process_logs.start_time,
+                injection_process_logs.end_time,
+                injection_process_logs.mesin,
+                injection_process_logs.shot as qty,
+                opmesin.employee_id,
+                injection_process_logs.ng_name,
+                injection_process_logs.ng_count
+            FROM
+                injection_tags
+                LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_tags.tag
+                LEFT JOIN employee_syncs opmesin ON opmesin.employee_id = injection_process_logs.operator_id
+            WHERE
+                injection_process_logs.tag_product = '".$request->get('tag_body_yrf')."'  
+            ORDER BY
+                injection_process_logs.created_at DESC
+                LIMIT 1
+                ");
+
+          foreach ($injection_process_body_yrf as $key_body_yrf) {
+            $no_kanban_body_yrf = $key_body_yrf->no_kanban;
+            $start_time_body_yrf = $key_body_yrf->start_time;
+            $end_time_body_yrf = $key_body_yrf->end_time;
+            $mesin_body_yrf = $key_body_yrf->mesin;
+            $qty_body_yrf = $key_body_yrf->qty;
+            $employee_id_body_yrf = $key_body_yrf->employee_id;
+            $ng_name_body_yrf = $key_body_yrf->ng_name;
+            $ng_count_body_yrf = $key_body_yrf->ng_count;
+          }
+
+          $injection_process_stopper_yrf = DB::SELECT("SELECT
+                injection_tags.no_kanban,
+                injection_process_logs.start_time,
+                injection_process_logs.end_time,
+                injection_process_logs.mesin,
+                injection_process_logs.shot as qty,
+                opmesin.employee_id,
+                injection_process_logs.ng_name,
+                injection_process_logs.ng_count
+            FROM
+                injection_tags
+                LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_tags.tag
+                LEFT JOIN employee_syncs opmesin ON opmesin.employee_id = injection_process_logs.operator_id
+            WHERE
+                injection_process_logs.tag_product = '".$request->get('tag_stopper_yrf')."'  
+            ORDER BY
+                injection_process_logs.created_at DESC
+                LIMIT 1
+                ");
+
+          foreach ($injection_process_stopper_yrf as $key_stopper_yrf) {
+            $no_kanban_stopper_yrf = $key_stopper_yrf->no_kanban;
+            $start_time_stopper_yrf = $key_stopper_yrf->start_time;
+            $end_time_stopper_yrf = $key_stopper_yrf->end_time;
+            $mesin_stopper_yrf = $key_stopper_yrf->mesin;
+            $qty_stopper_yrf = $key_stopper_yrf->qty;
+            $employee_id_stopper_yrf = $key_stopper_yrf->employee_id;
+            $ng_name_stopper_yrf = $key_stopper_yrf->ng_name;
+            $ng_count_stopper_yrf = $key_stopper_yrf->ng_count;
+          }
+
+          $molding_head_yrf = DB::SELECT("SELECT
+                injection_history_molding_logs.pic,
+                injection_history_molding_logs.part,
+                injection_history_molding_logs.total_shot/injection_molding_masters.qty_shot AS last_shot_pasang,
+                injection_molding_logs.total_running_shot/injection_molding_masters.qty_shot AS last_shot_running,
+                injection_history_molding_logs.start_time,
+                injection_history_molding_logs.end_time,
+                injection_history_molding_logs.note
+            FROM
+                injection_tags
+                LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_tags.tag
+                LEFT JOIN injection_history_molding_logs ON injection_process_logs.molding = injection_history_molding_logs.part
+                LEFT JOIN employee_syncs opmesin ON opmesin.employee_id = injection_process_logs.operator_id 
+                LEFT JOIN injection_molding_masters ON injection_molding_masters.part = injection_history_molding_logs.part 
+                left join injection_molding_logs on injection_molding_logs.part = injection_process_logs.molding and injection_process_logs.created_at = injection_molding_logs.created_at
+            WHERE
+                injection_process_logs.tag_product = '".$request->get('tag_head_yrf')."'  
+                AND injection_history_molding_logs.created_at <= injection_process_logs.start_time 
+                AND injection_history_molding_logs.type = 'PASANG' 
+            ORDER BY
+                injection_process_logs.created_at DESC,
+                injection_history_molding_logs.created_at DESC,
+                injection_molding_logs.created_at DESC 
+                LIMIT 1");
+
+          if (count($molding_head_yrf) > 0) {
+            foreach ($molding_head_yrf as $key_head_yrf) {
+              $molding_head_yrf = $key_head_yrf->part;
+              $last_shot_before_head_yrf = $key_head_yrf->last_shot_pasang;
+              $last_shot_injection_head_yrf = $key_head_yrf->last_shot_running;
+              $start_molding_head_yrf = $key_head_yrf->start_time;
+              $finish_molding_head_yrf = $key_head_yrf->end_time;
+              $note_molding_head_yrf = $key_head_yrf->note;
+              $pic_molding_head_yrf = $key_head_yrf->pic;
+            }
+          }else{
+            $molding_head_yrf = null;
+            $last_shot_before_head_yrf = null;
+            $last_shot_injection_head_yrf = null;
+            $start_molding_head_yrf = null;
+            $finish_molding_head_yrf = null;
+            $note_molding_head_yrf = null;
+            $pic_molding_head_yrf = null;
+          }
+
+          $molding_body_yrf = DB::SELECT("SELECT
+                injection_history_molding_logs.pic,
+                injection_history_molding_logs.part,
+                injection_history_molding_logs.total_shot/injection_molding_masters.qty_shot AS last_shot_pasang,
+                injection_molding_logs.total_running_shot/injection_molding_masters.qty_shot AS last_shot_running,
+                injection_history_molding_logs.start_time,
+                injection_history_molding_logs.end_time,
+                injection_history_molding_logs.note
+            FROM
+                injection_tags
+                LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_tags.tag
+                LEFT JOIN injection_history_molding_logs ON injection_process_logs.molding = injection_history_molding_logs.part
+                LEFT JOIN employee_syncs opmesin ON opmesin.employee_id = injection_process_logs.operator_id 
+                LEFT JOIN injection_molding_masters ON injection_molding_masters.part = injection_history_molding_logs.part 
+                left join injection_molding_logs on injection_molding_logs.part = injection_process_logs.molding and injection_process_logs.created_at = injection_molding_logs.created_at
+            WHERE
+                injection_process_logs.tag_product = '".$request->get('tag_body_yrf')."'  
+                AND injection_history_molding_logs.created_at <= injection_process_logs.start_time 
+                AND injection_history_molding_logs.type = 'PASANG' 
+            ORDER BY
+                injection_process_logs.created_at DESC,
+                injection_history_molding_logs.created_at DESC,
+                injection_molding_logs.created_at DESC 
+                LIMIT 1");
+
+          if (count($molding_body_yrf) > 0) {
+            foreach ($molding_body_yrf as $key_body_yrf) {
+              $molding_body_yrf = $key_body_yrf->part;
+              $last_shot_before_body_yrf = $key_body_yrf->last_shot_pasang;
+              $last_shot_injection_body_yrf = $key_body_yrf->last_shot_running;
+              $start_molding_body_yrf = $key_body_yrf->start_time;
+              $finish_molding_body_yrf = $key_body_yrf->end_time;
+              $note_molding_body_yrf = $key_body_yrf->note;
+              $pic_molding_body_yrf = $key_body_yrf->pic;
+            }
+          }else{
+            $molding_body_yrf = null;
+            $last_shot_before_body_yrf = null;
+            $last_shot_injection_body_yrf = null;
+            $start_molding_body_yrf = null;
+            $finish_molding_body_yrf = null;
+            $note_molding_body_yrf = null;
+            $pic_molding_body_yrf = null;
+          }
+
+          $molding_stopper_yrf = DB::SELECT("SELECT
+                injection_history_molding_logs.pic,
+                injection_history_molding_logs.part,
+                injection_history_molding_logs.total_shot/injection_molding_masters.qty_shot AS last_shot_pasang,
+                injection_molding_logs.total_running_shot/injection_molding_masters.qty_shot AS last_shot_running,
+                injection_history_molding_logs.start_time,
+                injection_history_molding_logs.end_time,
+                injection_history_molding_logs.note
+            FROM
+                injection_tags
+                LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_tags.tag
+                LEFT JOIN injection_history_molding_logs ON injection_process_logs.molding = injection_history_molding_logs.part
+                LEFT JOIN employee_syncs opmesin ON opmesin.employee_id = injection_process_logs.operator_id 
+                LEFT JOIN injection_molding_masters ON injection_molding_masters.part = injection_history_molding_logs.part 
+                left join injection_molding_logs on injection_molding_logs.part = injection_process_logs.molding and injection_process_logs.created_at = injection_molding_logs.created_at
+            WHERE
+                injection_process_logs.tag_product = '".$request->get('tag_stopper_yrf')."'  
+                AND injection_history_molding_logs.created_at <= injection_process_logs.start_time 
+                AND injection_history_molding_logs.type = 'PASANG' 
+            ORDER BY
+                injection_process_logs.created_at DESC,
+                injection_history_molding_logs.created_at DESC,
+                injection_molding_logs.created_at DESC 
+                LIMIT 1");
+
+          if (count($molding_stopper_yrf) > 0) {
+            foreach ($molding_stopper_yrf as $key_stopper_yrf) {
+              $molding_stopper_yrf = $key_stopper_yrf->part;
+              $last_shot_before_stopper_yrf = $key_stopper_yrf->last_shot_pasang;
+              $last_shot_injection_stopper_yrf = $key_stopper_yrf->last_shot_running;
+              $start_molding_stopper_yrf = $key_stopper_yrf->start_time;
+              $finish_molding_stopper_yrf = $key_stopper_yrf->end_time;
+              $note_molding_stopper_yrf = $key_stopper_yrf->note;
+              $pic_molding_stopper_yrf = $key_stopper_yrf->pic;
+            }
+          }else{
+            $molding_stopper_yrf = null;
+            $last_shot_before_stopper_yrf = null;
+            $last_shot_injection_stopper_yrf = null;
+            $start_molding_stopper_yrf = null;
+            $finish_molding_stopper_yrf = null;
+            $note_molding_stopper_yrf = null;
+            $pic_molding_stopper_yrf = null;
+          }
+
+          $dryer_head_yrf = DB::SELECT("SELECT
+                injection_dryer_logs.material_number,
+                injection_dryer_logs.dryer,
+                injection_dryer_logs.qty,
+                injection_dryer_logs.lot_number,
+                injection_dryer_logs.created_at,
+                opresin.employee_id
+            FROM
+                injection_tags
+                LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_tags.tag
+                LEFT JOIN injection_dryer_logs ON injection_dryer_logs.lot_number = injection_process_logs.dryer_lot_number 
+                AND injection_dryer_logs.dryer = injection_process_logs.dryer
+                LEFT JOIN employee_syncs opresin ON opresin.employee_id = injection_dryer_logs.employee_id 
+            WHERE
+                injection_process_logs.tag_product = '".$request->get('tag_head_yrf')."' 
+                AND injection_dryer_logs.created_at <= injection_process_logs.start_time 
+            ORDER BY
+                injection_process_logs.created_at DESC,
+                injection_dryer_logs.created_at DESC
+                LIMIT 1");
+
+          if (count($dryer_head_yrf) > 0) {
+            foreach ($dryer_head_yrf as $key_head_yrf) {
+              $material_resin_head_yrf = $key_head_yrf->material_number;
+              $dryer_resin_head_yrf = $key_head_yrf->dryer;
+              $lot_number_resin_head_yrf = $key_head_yrf->lot_number;
+              $qty_resin_head_yrf = $key_head_yrf->qty;
+              $create_resin_head_yrf = $key_head_yrf->created_at;
+              $operator_resin_head_yrf = $key_head_yrf->employee_id;
+            }
+          }else{
+            $material_resin_head_yrf = null;
+            $dryer_resin_head_yrf = null;
+            $lot_number_resin_head_yrf = null;
+            $qty_resin_head_yrf = null;
+            $create_resin_head_yrf = null;
+            $operator_resin_head_yrf = null;
+          }
+
+          $dryer_body_yrf = DB::SELECT("SELECT
+                injection_dryer_logs.material_number,
+                injection_dryer_logs.dryer,
+                injection_dryer_logs.qty,
+                injection_dryer_logs.lot_number,
+                injection_dryer_logs.created_at,
+                opresin.employee_id
+            FROM
+                injection_tags
+                LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_tags.tag
+                LEFT JOIN injection_dryer_logs ON injection_dryer_logs.lot_number = injection_process_logs.dryer_lot_number 
+                AND injection_dryer_logs.dryer = injection_process_logs.dryer
+                LEFT JOIN employee_syncs opresin ON opresin.employee_id = injection_dryer_logs.employee_id 
+            WHERE
+                injection_process_logs.tag_product = '".$request->get('tag_body_yrf')."' 
+                AND injection_dryer_logs.created_at <= injection_process_logs.start_time 
+            ORDER BY
+                injection_process_logs.created_at DESC,
+                injection_dryer_logs.created_at DESC
+                LIMIT 1");
+
+          if (count($dryer_body_yrf) > 0) {
+            foreach ($dryer_body_yrf as $key_body_yrf) {
+              $material_resin_body_yrf = $key_body_yrf->material_number;
+              $dryer_resin_body_yrf = $key_body_yrf->dryer;
+              $lot_number_resin_body_yrf = $key_body_yrf->lot_number;
+              $qty_resin_body_yrf = $key_body_yrf->qty;
+              $create_resin_body_yrf = $key_body_yrf->created_at;
+              $operator_resin_body_yrf = $key_body_yrf->employee_id;
+            }
+          }else{
+            $material_resin_body_yrf = null;
+            $dryer_resin_body_yrf = null;
+            $lot_number_resin_body_yrf = null;
+            $qty_resin_body_yrf = null;
+            $create_resin_body_yrf = null;
+            $operator_resin_body_yrf = null;
+          }
+
+          $dryer_stopper_yrf = DB::SELECT("SELECT
+                injection_dryer_logs.material_number,
+                injection_dryer_logs.dryer,
+                injection_dryer_logs.qty,
+                injection_dryer_logs.lot_number,
+                injection_dryer_logs.created_at,
+                opresin.employee_id
+            FROM
+                injection_tags
+                LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_tags.tag
+                LEFT JOIN injection_dryer_logs ON injection_dryer_logs.lot_number = injection_process_logs.dryer_lot_number 
+                AND injection_dryer_logs.dryer = injection_process_logs.dryer
+                LEFT JOIN employee_syncs opresin ON opresin.employee_id = injection_dryer_logs.employee_id 
+            WHERE
+                injection_process_logs.tag_product = '".$request->get('tag_stopper_yrf')."' 
+                AND injection_dryer_logs.created_at <= injection_process_logs.start_time 
+            ORDER BY
+                injection_process_logs.created_at DESC,
+                injection_dryer_logs.created_at DESC
+                LIMIT 1");
+
+          if (count($dryer_stopper_yrf) > 0) {
+            foreach ($dryer_stopper_yrf as $key_stopper_yrf) {
+              $material_resin_stopper_yrf = $key_stopper_yrf->material_number;
+              $dryer_resin_stopper_yrf = $key_stopper_yrf->dryer;
+              $lot_number_resin_stopper_yrf = $key_stopper_yrf->lot_number;
+              $qty_resin_stopper_yrf = $key_stopper_yrf->qty;
+              $create_resin_stopper_yrf = $key_stopper_yrf->created_at;
+              $operator_resin_stopper_yrf = $key_stopper_yrf->employee_id;
+            }
+          }else{
+            $material_resin_stopper_yrf = null;
+            $dryer_resin_stopper_yrf = null;
+            $lot_number_resin_stopper_yrf = null;
+            $qty_resin_stopper_yrf = null;
+            $create_resin_stopper_yrf = null;
+            $operator_resin_stopper_yrf = null;
+          }
+
+          $transaction_head_yrf = DB::SELECT("
+            SELECT
+              injection_transactions.location,
+              injection_transactions.status,
+              opinjeksi.employee_id,
+              injection_transactions.created_at 
+            FROM
+              injection_tags
+              LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_tags.tag
+              LEFT JOIN injection_transactions ON injection_transactions.tag = injection_process_logs.tag_product
+              LEFT JOIN employee_syncs opinjeksi ON opinjeksi.employee_id = injection_transactions.operator_id 
+            WHERE
+              injection_process_logs.tag_product = '".$request->get('tag_head_yrf')."' 
+              AND injection_transactions.created_at >= injection_process_logs.end_time 
+            ORDER BY
+              injection_process_logs.created_at DESC,
+              injection_transactions.created_at ASC 
+              LIMIT 3");
+
+          $create_transaction_head_yrf = [];
+          $location_transaction_head_yrf = [];
+          $operator_transaction_head_yrf = [];
+          $status_transaction_head_yrf = [];
+
+          foreach ($transaction_head_yrf as $key_head_yrf) {
+            $create_transaction_head_yrf[] = $key_head_yrf->created_at;
+            $location_transaction_head_yrf[] = $key_head_yrf->location;
+            $status_transaction_head_yrf[] = $key_head_yrf->status;
+            $operator_transaction_head_yrf[] = $key_head_yrf->employee_id;
+          }
+
+          $create_transaction_head_yrfs = join('_',$create_transaction_head_yrf);
+          $location_transaction_head_yrfs = join('_',$location_transaction_head_yrf);
+          $operator_transaction_head_yrfs = join('_',$operator_transaction_head_yrf);
+          $status_transaction_head_yrfs = join('_',$status_transaction_head_yrf);
+
+          $transaction_body_yrf = DB::SELECT("
+            SELECT
+              injection_transactions.location,
+              injection_transactions.status,
+              opinjeksi.employee_id,
+              injection_transactions.created_at 
+            FROM
+              injection_tags
+              LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_tags.tag
+              LEFT JOIN injection_transactions ON injection_transactions.tag = injection_process_logs.tag_product
+              LEFT JOIN employee_syncs opinjeksi ON opinjeksi.employee_id = injection_transactions.operator_id 
+            WHERE
+              injection_process_logs.tag_product = '".$request->get('tag_body_yrf')."' 
+              AND injection_transactions.created_at >= injection_process_logs.end_time 
+            ORDER BY
+              injection_process_logs.created_at DESC,
+              injection_transactions.created_at ASC 
+              LIMIT 3");
+
+          $create_transaction_body_yrf = [];
+          $location_transaction_body_yrf = [];
+          $operator_transaction_body_yrf = [];
+          $status_transaction_body_yrf = [];
+
+          foreach ($transaction_body_yrf as $key_body_yrf) {
+            $create_transaction_body_yrf[] = $key_body_yrf->created_at;
+            $location_transaction_body_yrf[] = $key_body_yrf->location;
+            $status_transaction_body_yrf[] = $key_body_yrf->status;
+            $operator_transaction_body_yrf[] = $key_body_yrf->employee_id;
+          }
+
+          $create_transaction_body_yrfs = join('_',$create_transaction_body_yrf);
+          $location_transaction_body_yrfs = join('_',$location_transaction_body_yrf);
+          $operator_transaction_body_yrfs = join('_',$operator_transaction_body_yrf);
+          $status_transaction_body_yrfs = join('_',$status_transaction_body_yrf);
+
+          $transaction_stopper_yrf = DB::SELECT("
+            SELECT
+              injection_transactions.location,
+              injection_transactions.status,
+              opinjeksi.employee_id,
+              injection_transactions.created_at 
+            FROM
+              injection_tags
+              LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_tags.tag
+              LEFT JOIN injection_transactions ON injection_transactions.tag = injection_process_logs.tag_product
+              LEFT JOIN employee_syncs opinjeksi ON opinjeksi.employee_id = injection_transactions.operator_id 
+            WHERE
+              injection_process_logs.tag_product = '".$request->get('tag_stopper_yrf')."' 
+              AND injection_transactions.created_at >= injection_process_logs.end_time 
+            ORDER BY
+              injection_process_logs.created_at DESC,
+              injection_transactions.created_at ASC 
+              LIMIT 3");
+
+          $create_transaction_stopper_yrf = [];
+          $location_transaction_stopper_yrf = [];
+          $operator_transaction_stopper_yrf = [];
+          $status_transaction_stopper_yrf = [];
+
+          foreach ($transaction_stopper_yrf as $key_stopper_yrf) {
+            $create_transaction_stopper_yrf[] = $key_stopper_yrf->created_at;
+            $location_transaction_stopper_yrf[] = $key_stopper_yrf->location;
+            $status_transaction_stopper_yrf[] = $key_stopper_yrf->status;
+            $operator_transaction_stopper_yrf[] = $key_stopper_yrf->employee_id;
+          }
+
+          $create_transaction_stopper_yrfs = join('_',$create_transaction_stopper_yrf);
+          $location_transaction_stopper_yrfs = join('_',$location_transaction_stopper_yrf);
+          $operator_transaction_stopper_yrfs = join('_',$operator_transaction_stopper_yrf);
+          $status_transaction_stopper_yrfs = join('_',$status_transaction_stopper_yrf);
+
+          RcAssyInitial::create([
+            'product' => $product,
+            'material_number' => $material_number_head_yrf,
+            'part_name' => $part_name_head_yrf,
+            'part_type' => $part_type_head_yrf,
+            'color' => $color_head_yrf,
+            'cavity' => $cavity_head_yrf,
+            'location' => $location_head_yrf,
+            'tag' => $tag_head_yrf,
+            'no_kanban_injection' => $no_kanban_head_yrf,
+            'start_injection' => $start_time_head_yrf,
+            'finish_injection' => $end_time_head_yrf,
+            'mesin_injection' => $mesin_head_yrf,
+            'qty_injection' => $qty_head_yrf,
+            'operator_injection' => $employee_id_head_yrf,
+            'molding' => $molding_head_yrf,
+            'last_shot_before' => $last_shot_before_head_yrf,
+            'last_shot_injection' => $last_shot_injection_head_yrf,
+            'start_molding' => $start_molding_head_yrf,
+            'finish_molding' => $finish_molding_head_yrf,
+            'note_molding' => $note_molding_head_yrf,
+            'operator_molding' => $pic_molding_head_yrf,
+            'material_resin' => $material_resin_head_yrf,
+            'dryer_resin' => $dryer_resin_head_yrf,
+            'lot_number_resin' => $lot_number_resin_head_yrf,
+            'qty_resin' => $qty_resin_head_yrf,
+            'create_resin' => $create_resin_head_yrf,
+            'operator_resin' => $operator_resin_head_yrf,
+            'ng_name' => $ng_name_head_yrf,
+            'ng_count' => $ng_count_head_yrf,
+            'create_transaction' => $create_transaction_head_yrfs,
+            'location_transaction' => $location_transaction_head_yrfs,
+            'operator_transaction' => $operator_transaction_head_yrfs,
+            'status_transaction' => $status_transaction_head_yrfs,
+            'status' => 'Open',
+            'created_by' => Auth::id()
+          ]);
+
+          RcAssyInitial::create([
+            'product' => $product,
+            'material_number' => $material_number_body_yrf,
+            'part_name' => $part_name_body_yrf,
+            'part_type' => $part_type_body_yrf,
+            'color' => $color_body_yrf,
+            'cavity' => $cavity_body_yrf,
+            'location' => $location_body_yrf,
+            'tag' => $tag_body_yrf,
+            'no_kanban_injection' => $no_kanban_body_yrf,
+            'start_injection' => $start_time_body_yrf,
+            'finish_injection' => $end_time_body_yrf,
+            'mesin_injection' => $mesin_body_yrf,
+            'qty_injection' => $qty_body_yrf,
+            'operator_injection' => $employee_id_body_yrf,
+            'molding' => $molding_body_yrf,
+            'last_shot_before' => $last_shot_before_body_yrf,
+            'last_shot_injection' => $last_shot_injection_body_yrf,
+            'start_molding' => $start_molding_body_yrf,
+            'finish_molding' => $finish_molding_body_yrf,
+            'note_molding' => $note_molding_body_yrf,
+            'operator_molding' => $pic_molding_body_yrf,
+            'material_resin' => $material_resin_body_yrf,
+            'dryer_resin' => $dryer_resin_body_yrf,
+            'lot_number_resin' => $lot_number_resin_body_yrf,
+            'qty_resin' => $qty_resin_body_yrf,
+            'create_resin' => $create_resin_body_yrf,
+            'operator_resin' => $operator_resin_body_yrf,
+            'ng_name' => $ng_name_body_yrf,
+            'ng_count' => $ng_count_body_yrf,
+            'create_transaction' => $create_transaction_body_yrfs,
+            'location_transaction' => $location_transaction_body_yrfs,
+            'operator_transaction' => $operator_transaction_body_yrfs,
+            'status_transaction' => $status_transaction_body_yrfs,
+            'status' => 'Open',
+            'created_by' => Auth::id()
+          ]);
+
+          RcAssyInitial::create([
+            'product' => $product,
+            'material_number' => $material_number_stopper_yrf,
+            'part_name' => $part_name_stopper_yrf,
+            'part_type' => $part_type_stopper_yrf,
+            'color' => $color_stopper_yrf,
+            'cavity' => $cavity_stopper_yrf,
+            'location' => $location_stopper_yrf,
+            'tag' => $tag_stopper_yrf,
+            'no_kanban_injection' => $no_kanban_stopper_yrf,
+            'start_injection' => $start_time_stopper_yrf,
+            'finish_injection' => $end_time_stopper_yrf,
+            'mesin_injection' => $mesin_stopper_yrf,
+            'qty_injection' => $qty_stopper_yrf,
+            'operator_injection' => $employee_id_stopper_yrf,
+            'molding' => $molding_stopper_yrf,
+            'last_shot_before' => $last_shot_before_stopper_yrf,
+            'last_shot_injection' => $last_shot_injection_stopper_yrf,
+            'start_molding' => $start_molding_stopper_yrf,
+            'finish_molding' => $finish_molding_stopper_yrf,
+            'note_molding' => $note_molding_stopper_yrf,
+            'operator_molding' => $pic_molding_stopper_yrf,
+            'material_resin' => $material_resin_stopper_yrf,
+            'dryer_resin' => $dryer_resin_stopper_yrf,
+            'lot_number_resin' => $lot_number_resin_stopper_yrf,
+            'qty_resin' => $qty_resin_stopper_yrf,
+            'create_resin' => $create_resin_stopper_yrf,
+            'operator_resin' => $operator_resin_stopper_yrf,
+            'ng_name' => $ng_name_stopper_yrf,
+            'ng_count' => $ng_count_stopper_yrf,
+            'create_transaction' => $create_transaction_stopper_yrfs,
+            'location_transaction' => $location_transaction_stopper_yrfs,
+            'operator_transaction' => $operator_transaction_stopper_yrfs,
+            'status_transaction' => $status_transaction_stopper_yrfs,
+            'status' => 'Open',
+            'created_by' => Auth::id()
+          ]);
+        }
+        $response = array(
+              'status' => true,
+              'product' => $request->get('product')
+          );
+        return Response::json($response);
+      } catch (\Exception $e) {
+        $response = array(
+            'status' => false,
+            'message' => $e->getMessage(),
+        );
+        return Response::json($response);
+      }
+    }
+
+    public function inputKensaInitialProduct(Request $request)
+    {
+      try {
+        $emp_code = DB::SELECT('SELECT * FROM employee_groups where employee_id = "'.$request->get('employee_id').'" and location = "rc-assy"');
+
+        foreach ($emp_code as $key) {
+          $group = $key->group;
+        }
+
+        $code_generator = CodeGenerator::where('note', '=', 'kakuning-rc')->first();
+        $serial_number = $group.sprintf("%'.0" . $code_generator->length . "d", $code_generator->index+1);
+        $code_generator->index = $code_generator->index+1;
+        $code_generator->save();
+
+        $rckensa = RcKensaInitial::where('status','Open')->where('operator_kensa',$request->get('employee_id'))->get();
+
+        if (count($rckensa) > 0) {
+          foreach ($rckensa as $key) {
+            $kensaold = RcKensaInitial::find($key->id);
+            $kensaold->status = 'Close';
+            $kensaold->save();
+          }
+        }
+
+        $operator_kensa = $request->get('employee_id');
+
+        $kensainitial = RcAssyInitial::where('status','Open')->get();
+        foreach ($kensainitial as $key) {
+          RcKensaInitial::create([
+            'serial_number' => $serial_number,
+            'operator_kensa' => $operator_kensa,
+            'product' => $key->product,
+            'material_number' => $key->material_number,
+            'part_name' => $key->part_name,
+            'part_type' => $key->part_type,
+            'color' => $key->color,
+            'cavity' => $key->cavity,
+            'location' => $key->location,
+            'tag' => $key->tag,
+            'no_kanban_injection' => $key->no_kanban_injection,
+            'start_injection' => $key->start_injection,
+            'finish_injection' => $key->finish_injection,
+            'mesin_injection' => $key->mesin_injection,
+            'qty_injection' => $key->qty_injection,
+            'operator_injection' => $key->operator_injection,
+            'molding' => $key->molding,
+            'last_shot_before' => $key->last_shot_before,
+            'last_shot_injection' => $key->last_shot_injection,
+            'start_molding' => $key->start_molding,
+            'finish_molding' => $key->finish_molding,
+            'note_molding' => $key->note_molding,
+            'operator_molding' => $key->operator_molding,
+            'material_resin' => $key->material_resin,
+            'dryer_resin' => $key->dryer_resin,
+            'lot_number_resin' => $key->lot_number_resin,
+            'qty_resin' => $key->qty_resin,
+            'create_resin' => $key->create_resin,
+            'operator_resin' => $key->operator_resin,
+            'ng_name' => $key->ng_name,
+            'ng_count' => $key->ng_count,
+            'create_transaction' => $key->create_transaction,
+            'location_transaction' => $key->location_transaction,
+            'operator_transaction' => $key->operator_transaction,
+            'status_transaction' => $key->status_transaction,
+            'status' => 'Open',
+            'created_by' => Auth::id()
+          ]);
+
+          $product = $key->product;
+        }
+        $response = array(
+          'status' => true,
+          'kensa_code' => $serial_number,
+          'kensainitial' => $kensainitial,
+          'product' => $product
+        );
         return Response::json($response);
       } catch (\Exception $e) {
         $response = array(

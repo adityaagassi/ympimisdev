@@ -570,7 +570,7 @@ table.table-bordered > tfoot > tr > th{
 					tag : $("#tag_head").val(),
 					type : 'head'
 				}
-				$.get('{{ url("scan/recorder/kensa_initial") }}', data, function(result, status, xhr){
+				$.get('{{ url("scan/recorder/kensa") }}', data, function(result, status, xhr){
 					if(result.status){
 						$('#material_number_head').text(result.tag.material_number);
 						$('#part_name_head').text(result.tag.part_name);
@@ -605,7 +605,7 @@ table.table-bordered > tfoot > tr > th{
 					tag : $("#tag_middle").val(),
 					type : 'middle'
 				}
-				$.get('{{ url("scan/recorder/kensa_initial") }}', data, function(result, status, xhr){
+				$.get('{{ url("scan/recorder/kensa") }}', data, function(result, status, xhr){
 					if(result.status){
 						$('#material_number_middle').text(result.tag.material_number);
 						$('#part_name_middle').text(result.tag.part_name);
@@ -640,7 +640,7 @@ table.table-bordered > tfoot > tr > th{
 					tag : $("#tag_foot").val(),
 					type : 'foot'
 				}
-				$.get('{{ url("scan/recorder/kensa_initial") }}', data, function(result, status, xhr){
+				$.get('{{ url("scan/recorder/kensa") }}', data, function(result, status, xhr){
 					if(result.status){
 						$('#material_number_foot').text(result.tag.material_number);
 						$('#part_name_foot').text(result.tag.part_name);
@@ -675,7 +675,7 @@ table.table-bordered > tfoot > tr > th{
 					tag : $("#tag_block").val(),
 					type : 'block'
 				}
-				$.get('{{ url("scan/recorder/kensa_initial") }}', data, function(result, status, xhr){
+				$.get('{{ url("scan/recorder/kensa") }}', data, function(result, status, xhr){
 					if(result.status){
 						$('#material_number_block').text(result.tag.material_number);
 						$('#part_name_block').text(result.tag.part_name);
@@ -709,7 +709,7 @@ table.table-bordered > tfoot > tr > th{
 					tag : $("#tag_head_yrf").val(),
 					type : 'head_yrf'
 				}
-				$.get('{{ url("scan/recorder/kensa_initial") }}', data, function(result, status, xhr){
+				$.get('{{ url("scan/recorder/kensa") }}', data, function(result, status, xhr){
 					if(result.status){
 						$('#material_number_head_yrf').text(result.tag.material_number);
 						$('#part_name_head_yrf').text(result.tag.part_name);
@@ -718,6 +718,7 @@ table.table-bordered > tfoot > tr > th{
 						$('#cavity_head_yrf').text(result.tag.cavity);
 						$('#location_head_yrf').text(result.tag.location);
 						$('#tag_head_yrf').prop('disabled',true);
+						$('#tag_body_yrf').focus();
 					}
 					else{
 						audio_error.play();
@@ -743,7 +744,7 @@ table.table-bordered > tfoot > tr > th{
 					tag : $("#tag_body_yrf").val(),
 					type : 'body_yrf'
 				}
-				$.get('{{ url("scan/recorder/kensa_initial") }}', data, function(result, status, xhr){
+				$.get('{{ url("scan/recorder/kensa") }}', data, function(result, status, xhr){
 					if(result.status){
 						$('#material_number_body_yrf').text(result.tag.material_number);
 						$('#part_name_body_yrf').text(result.tag.part_name);
@@ -752,6 +753,7 @@ table.table-bordered > tfoot > tr > th{
 						$('#cavity_body_yrf').text(result.tag.cavity);
 						$('#location_body_yrf').text(result.tag.location);
 						$('#tag_body_yrf').prop('disabled',true);
+						$('#tag_stopper_yrf').focus();
 					}
 					else{
 						audio_error.play();
@@ -777,7 +779,7 @@ table.table-bordered > tfoot > tr > th{
 					tag : $("#tag_stopper_yrf").val(),
 					type : 'stopper_yrf'
 				}
-				$.get('{{ url("scan/recorder/kensa_initial") }}', data, function(result, status, xhr){
+				$.get('{{ url("scan/recorder/kensa") }}', data, function(result, status, xhr){
 					if(result.status){
 						$('#material_number_stopper_yrf').text(result.tag.material_number);
 						$('#part_name_stopper_yrf').text(result.tag.part_name);
@@ -807,9 +809,14 @@ table.table-bordered > tfoot > tr > th{
 	function initialize() {
 		$('#loading').show();
 		var product = $('#product').val();
+		if (product == 'RC') {
+			alert('Pilih Produk');
+			$('#loading').hide();
+		}
 		if (product.match(/YRS/gi)) {
 			if ($('#tag_head').val() == '' || $('#tag_middle').val() == '' || $('#tag_foot').val() == '' || $('#tag_block').val() == '') {
 				alert('Semua Data Harus Diisi.');
+				$('#loading').hide();
 			}else{
 				var tag_head = $('#tag_head').val();
 				var tag_middle = $('#tag_middle').val();
@@ -876,35 +883,50 @@ table.table-bordered > tfoot > tr > th{
 					location_block:location_block,
 				}
 			}
+
+			$.post('{{ url("input/recorder/kensa/initial") }}', data, function(result, status, xhr){
+				if(result.status){
+					$('#loading').hide();
+					reset();
+					fetchHistory();
+					openSuccessGritter('Success','Inisialisasi Kensa Berhasil');
+				}
+				else{
+					$('#loading').hide();
+					audio_error.play();
+					openErrorGritter('Error', result.message);
+				}
+			});
 		}
-		if(product.match(/YRF/gi)){
+		else {
 			if ($('#tag_head_yrf').val() == "" || $('#tag_body_yrf').val() == "" || $('#tag_stopper_yrf').val() == "") {
 				alert('Semua Data Harus Diisi');
+				$('#loading').hide();
 			}else{
 				var tag_head_yrf = $('#tag_head_yrf').val();
 				var tag_body_yrf = $('#tag_body_yrf').val();
 				var tag_stopper_yrf = $('#tag_stopper_yrf').val();
 
-				var material_number_head_yrf = $('#material_number_head_yrf').text("");
-				var part_name_head_yrf = $('#part_name_head_yrf').text("");
-				var part_type_head_yrf = $('#part_type_head_yrf').text("");
-				var color_head_yrf = $('#color_head_yrf').text("");
-				var cavity_head_yrf = $('#cavity_head_yrf').text("");
-				var location_head_yrf = $('#location_head_yrf').text("");
+				var material_number_head_yrf = $('#material_number_head_yrf').text();
+				var part_name_head_yrf = $('#part_name_head_yrf').text();
+				var part_type_head_yrf = $('#part_type_head_yrf').text();
+				var color_head_yrf = $('#color_head_yrf').text();
+				var cavity_head_yrf = $('#cavity_head_yrf').text();
+				var location_head_yrf = $('#location_head_yrf').text();
 
-				var material_number_body_yrf = $('#material_number_body_yrf').text("");
-				var part_name_body_yrf = $('#part_name_body_yrf').text("");
-				var part_type_body_yrf = $('#part_type_body_yrf').text("");
-				var color_body_yrf = $('#color_body_yrf').text("");
-				var cavity_body_yrf = $('#cavity_body_yrf').text("");
-				var location_body_yrf = $('#location_body_yrf').text("");
+				var material_number_body_yrf = $('#material_number_body_yrf').text();
+				var part_name_body_yrf = $('#part_name_body_yrf').text();
+				var part_type_body_yrf = $('#part_type_body_yrf').text();
+				var color_body_yrf = $('#color_body_yrf').text();
+				var cavity_body_yrf = $('#cavity_body_yrf').text();
+				var location_body_yrf = $('#location_body_yrf').text();
 
-				var material_number_stopper_yrf = $('#material_number_stopper_yrf').text("");
-				var part_name_stopper_yrf = $('#part_name_stopper_yrf').text("");
-				var part_type_stopper_yrf = $('#part_type_stopper_yrf').text("");
-				var color_stopper_yrf = $('#color_stopper_yrf').text("");
-				var cavity_stopper_yrf = $('#cavity_stopper_yrf').text("");
-				var location_stopper_yrf = $('#location_stopper_yrf').text("");
+				var material_number_stopper_yrf = $('#material_number_stopper_yrf').text();
+				var part_name_stopper_yrf = $('#part_name_stopper_yrf').text();
+				var part_type_stopper_yrf = $('#part_type_stopper_yrf').text();
+				var color_stopper_yrf = $('#color_stopper_yrf').text();
+				var cavity_stopper_yrf = $('#cavity_stopper_yrf').text();
+				var location_stopper_yrf = $('#location_stopper_yrf').text();
 
 				var data = {
 					product:product,
@@ -930,26 +952,26 @@ table.table-bordered > tfoot > tr > th{
 					cavity_stopper_yrf:cavity_stopper_yrf,
 					location_stopper_yrf:location_stopper_yrf,
 				}
+
+				$.post('{{ url("input/recorder/kensa/initial") }}', data, function(result, status, xhr){
+					if(result.status){
+						$('#loading').hide();
+						reset();
+						fetchHistory();
+						openSuccessGritter('Success','Inisialisasi Kensa Berhasil');
+					}
+					else{
+						$('#loading').hide();
+						audio_error.play();
+						openErrorGritter('Error', result.message);
+					}
+				});
 			}
 		}
-
-		$.post('{{ url("input/recorder/kensa_initial") }}', data, function(result, status, xhr){
-			if(result.status){
-				$('#loading').hide();
-				reset();
-				fetchHistory();
-				openSuccessGritter('Success','Inisialisasi Kensa Berhasil');
-			}
-			else{
-				$('#loading').hide();
-				audio_error.play();
-				openErrorGritter('Error', result.message);
-			}
-		});
 	}
 
 	function fetchHistory() {
-		$.get('{{ url("fetch/recorder/kensa_initial") }}', function(result, status, xhr){
+		$.get('{{ url("fetch/recorder/kensa/initial") }}', function(result, status, xhr){
 			if(result.status){
 				$('#tableHistory').DataTable().clear();
 				$('#tableHistory').DataTable().destroy();
@@ -957,7 +979,12 @@ table.table-bordered > tfoot > tr > th{
 				var tableData = "";
 				if (result.datas.length > 0) {
 					$.each(result.datas, function(key, value) {
-						tableData += '<tr>';
+						if (value.status == 'Open') {
+							var backgroundcolor = '#ccffff';
+						}else{
+							var backgroundcolor = '#ffccff';
+						}
+						tableData += '<tr style="background-color:'+backgroundcolor+'">';
 						tableData += '<td>'+ value.product +'</td>';
 						tableData += '<td>'+ value.material_number +'<br>'+value.mat_desc+'</td>';
 						tableData += '<td>'+ value.part_kensa +'<br>'+ value.typepart +' - '+ value.color +'<br>'+ value.cavity +'</td>';

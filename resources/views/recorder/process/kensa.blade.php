@@ -1154,13 +1154,14 @@
 									}
 								});
 							}
-							intervalUpdate = setInterval(updateTemp,60000);
-						}else{
-							$('#start_time').val("");
-							$('#kensa_code').html("-");
-							$('#product_fix3').html("-");
-							$('#modalProduct').modal('show');
+							intervalUpdate = setInterval(updateTemp,10000);
 						}
+						// else{
+						// 	$('#start_time').val("");
+						// 	$('#kensa_code').html("-");
+						// 	$('#product_fix3').html("-");
+						// 	$('#modalProduct').modal('show');
+						// }
 					}
 					else{
 						audio_error.play();
@@ -1880,7 +1881,7 @@
 					// reset();
 					// clearAll();
 					$('#start_time').val(getActualFullDate());
-					intervalUpdate = setInterval(updateTemp,60000);
+					intervalUpdate = setInterval(updateTemp,10000);
 					openSuccessGritter('Success','Memulai Kensa');
 				}
 				else{
@@ -1990,8 +1991,124 @@
 
 	function gantiProduk() {
 		if (confirm('Apakah Anda yakin akan ganti produk?')) {
-			$("#modalProduct").modal('show');
-			reset();
+			// $("#modalProduct").modal('show');
+			// reset();
+			var data = {
+				employee_id:$('#employee_id').val(),
+			}
+			$.post('{{ url("input/recorder/kensa/initial/product") }}', data, function(result, status, xhr){
+				if(result.status){
+					$('#loading').hide();
+					$('#product_fix3').html(result.product);
+					$('#modalProduct').modal('hide');
+					$('#kensa_code').html(result.kensa_code);
+					if (result.kensainitial.length > 0) {
+						$.each(result.kensainitial, function(key, value) {
+							if (result.product.match(/YRS/gi)) {
+								$('#product_fix2_detail').html(value.product);
+								$('#divBlock').show();
+								$('#divHead').prop('class','col-xs-3');
+								$('#divMiddleBody').prop('class','col-xs-3');
+								$('#divFootStopper').prop('class','col-xs-3');
+								$('#divBlock').prop('class','col-xs-3');
+
+								$('#divyrs_detail').show();
+								$('#divyrf_detail').hide();
+
+								if (value.part_type == 'HJ') {
+									$('#tag_head_detail').val(value.tag_head);
+									$('#material_number_head_detail').html(value.material_number_head);
+									$('#part_name_head_detail').html(value.part_name_head);
+									$('#part_type_head_detail').html(value.part_type_head);
+									$('#color_head_detail').html(value.color_head);
+									$('#cavity_head_detail').html(value.cavity_head);
+									$('#location_head_detail').html(value.location_head);
+								}
+
+								if (value.part_type.match(/MJ/gi)) {
+									$('#tag_middle_detail').val(value.tag_middle);
+									$('#material_number_middle_detail').html(value.material_number_middle);
+									$('#part_name_middle_detail').html(value.part_name_middle);
+									$('#part_type_middle_detail').html(value.part_type_middle);
+									$('#color_middle_detail').html(value.color_middle);
+									$('#cavity_middle_detail').html(value.cavity_middle);
+									$('#location_middle_detail').html(value.location_middle);
+								}
+
+								if (value.part_type == 'FJ') {
+									$('#tag_foot_detail').val(value.tag_foot);
+									$('#material_number_foot_detail').html(value.material_number_foot);
+									$('#part_name_foot_detail').html(value.part_name_foot);
+									$('#part_type_foot_detail').html(value.part_type_foot);
+									$('#color_foot_detail').html(value.color_foot);
+									$('#cavity_foot_detail').html(value.cavity_foot);
+									$('#location_foot_detail').html(value.location_foot);
+								}
+
+								if (value.part_type == 'BJ') {
+									$('#tag_block_detail').val(value.tag_block);
+									$('#material_number_block_detail').html(value.material_number_block);
+									$('#part_name_block_detail').html(value.part_name_block);
+									$('#part_type_block_detail').html(value.part_type_block);
+									$('#color_block_detail').html(value.color_block);
+									$('#cavity_block_detail').html(value.cavity_block);
+									$('#location_block_detail').html(value.location_block);
+								}
+							}else if(result.product.match(/YRF/gi)){
+								$('#product_fix2_detail').html(value.product);
+								$('#divBlock').hide();
+								$('#divHead').prop('class','col-xs-4');
+								$('#divMiddleBody').prop('class','col-xs-4');
+								$('#divFootStopper').prop('class','col-xs-4');
+
+								$('#divyrs_detail').hide();
+								$('#divyrf_detail').show();
+
+								if (value.part_type == 'A YRF H') {
+									$('#tag_head_yrf_detail').val(tag_head_yrf);
+									$('#material_number_head_yrf_detail').html(material_number_head_yrf);
+									$('#part_name_head_yrf_detail').html(part_name_head_yrf);
+									$('#part_type_head_yrf_detail').html(part_type_head_yrf);
+									$('#color_head_yrf_detail').html(color_head_yrf);
+									$('#cavity_head_yrf_detail').html(cavity_head_yrf);
+									$('#location_head_yrf_detail').html(location_head_yrf);
+								}
+
+								if (value.part_type == 'A YRF B') {
+									$('#tag_body_yrf_detail').val(tag_body_yrf);
+									$('#material_number_body_yrf_detail').html(material_number_body_yrf);
+									$('#part_name_body_yrf_detail').html(part_name_body_yrf);
+									$('#part_type_body_yrf_detail').html(part_type_body_yrf);
+									$('#color_body_yrf_detail').html(color_body_yrf);
+									$('#cavity_body_yrf_detail').html(cavity_body_yrf);
+									$('#location_body_yrf_detail').html(location_body_yrf);
+								}
+
+								if (value.part_type == 'A YRF S') {
+									$('#tag_stopper_yrf_detail').val(tag_stopper_yrf);
+									$('#material_number_stopper_yrf_detail').html(material_number_stopper_yrf);
+									$('#part_name_stopper_yrf_detail').html(part_name_stopper_yrf);
+									$('#part_type_stopper_yrf_detail').html(part_type_stopper_yrf);
+									$('#color_stopper_yrf_detail').html(color_stopper_yrf);
+									$('#cavity_stopper_yrf_detail').html(cavity_stopper_yrf);
+									$('#location_stopper_yrf_detail').html(location_stopper_yrf);
+								}
+							}
+						});
+					}
+					
+					// reset();
+					// clearAll();
+					$('#start_time').val(getActualFullDate());
+					intervalUpdate = setInterval(updateTemp,10000);
+					openSuccessGritter('Success','Sukses Ganti Produk');
+				}
+				else{
+					$('#loading').hide();
+					audio_error.play();
+					openErrorGritter('Error', result.message);
+				}
+			});
 		}
 	}
 
