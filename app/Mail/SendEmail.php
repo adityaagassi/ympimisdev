@@ -278,7 +278,7 @@ class SendEmail extends Mailable
         }
 
         if($this->remark == 'sakurentsu'){
-            if ($this->data[0]->position == 'interpreter') {
+            if ($this->data[0]->position == 'interpreter' || $this->data[0]->position == 'interpreter2') {
                 if($this->data[0]->file != null){
                     $all_file = json_decode($this->data[0]->file);
 
@@ -310,7 +310,7 @@ class SendEmail extends Mailable
                     return $email;
                 }
             }
-            else if ($this->data[0]->position == 'PIC'){
+            else if ($this->data[0]->position == 'PIC' || $this->data[0]->position == 'PIC2'){
                 $all_file = json_decode($this->data[0]->file_translate);
 
                 $email = $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
@@ -320,6 +320,13 @@ class SendEmail extends Mailable
 
                 for ($i=0; $i < count($all_file); $i++) { 
                     $email->attach(public_path('uploads/sakurentsu/translated/'.$all_file[$i]));
+                }
+
+                if (isset($this->data[0]->trial_file)) {
+                    $trial_file = json_decode($this->data[0]->trial_file);
+                    for ($a=0; $a < count($trial_file); $a++) { 
+                        $email->attach(public_path('uploads/sakurentsu/trial_req/'.$trial_file[$a]));
+                    }
                 }
 
                 return $email;
@@ -372,6 +379,56 @@ class SendEmail extends Mailable
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
             ->subject('Abnormal Employee Temperature')
             ->view('mails.temperature');
+        }
+
+        if($this->remark == 'mutasi_satu'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+            ->subject('Aproval Mutasi Satu Departemen')
+            ->view('mails.mutasi_satu');
+        }  
+
+        if($this->remark == 'done_mutasi_satu'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+            ->priority(1)
+            ->subject('Aproval Mutasi Satu Departemen')
+            ->view('mails.done_mutasi_satu')
+            ->attach(public_path('mutasi/satu_departemen/Mutasi Satu Departemen - '.$this->data[0]->id).'.xls');
+        }
+
+        // if($this->remark == 'absen_done_mutasi_satu'){
+        //     return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+        //     ->priority(1)
+        //     ->subject('Aproval Mutasi Satu Departemen')
+        //     ->view('mails.done_mutasi_satu')
+        //     ->attach(public_path('mutasi/satu_departemen/Mutasi Satu Departemen - '.$this->data[0]->id).'.xls');
+        // }
+
+        if($this->remark == 'rejected_mutasi'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+            ->priority(1)
+            ->subject('Aproval Mutasi Satu Departemen')
+            ->view('mails.rejected_mutasi');
+        }   
+
+        if($this->remark == 'mutasi_ant'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+            ->subject('Aproval Mutasi Antar Departemen')
+            ->view('mails.mutasi_antar');
         }    
+
+        if($this->remark == 'done_mutasi_ant'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+            ->priority(1)
+            ->subject('Aproval Mutasi Antar Departemen')
+            ->view('mails.done_mutasi_antar')
+            ->attach(public_path('mutasi/antar_departemen/Mutasi Antar Departemen - '.$this->data[0]->id).'.xls');
+        }   
+
+        if($this->remark == 'rejected_mutasi_ant'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+            ->priority(1)
+            ->subject('Aproval Mutasi Antar Departemen')
+            ->view('mails.rejected_mutasi_antar');
+        }   
     }
 }
