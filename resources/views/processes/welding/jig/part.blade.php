@@ -60,7 +60,7 @@
 <section class="content">
 	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8; display: none">
 		<p style="position: absolute; color: White; top: 45%; left: 35%;">
-			<span style="font-size: 40px">Uploading, Please Wait . . . <i class="fa fa-spin fa-refresh"></i></span>
+			<span style="font-size: 40px">Pelase Wait . . . <i class="fa fa-spin fa-refresh"></i></span>
 		</p>
 	</div>
 	<div class="row">
@@ -80,6 +80,7 @@
 								<th style="width: 3%">Material</th>
 								<th style="width: 3%">Qty Order</th>
 								<th style="width: 3%">WJO</th>
+								<th style="width: 3%">Target Date</th>
 								<th style="width: 3%">Action</th>
 							</tr>
 						</thead>
@@ -313,6 +314,7 @@
 	}
 
 	function getData() {
+		$('#loading').show();
 		$.get('{{ url("fetch/welding/jig_part") }}', function(result, status, xhr){
 			if(result.status){
 				$('#jigTable').DataTable().clear();
@@ -333,7 +335,9 @@
 					if (value.quantity_order != null) {
 						jigtable += '<td>'+value.quantity_order+'</td>';
 						jigtable += '<td>'+value.remark+'</td>';
+						jigtable += '<td>'+value.target_date+'</td>';
 					}else{
+						jigtable += '<td></td>';
 						jigtable += '<td></td>';
 						jigtable += '<td></td>';
 					}
@@ -398,8 +402,10 @@
 					"bAutoWidth": false,
 					"processing": true
 				});
+				$('#loading').hide();
 			}else{
-				alert('Retireve Data Failed');
+				$('#loading').hide();
+				openErrorGritter('Error!','Retireve Data Failed');
 			}
 		});
 	}
