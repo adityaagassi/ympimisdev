@@ -221,6 +221,7 @@ table.table-bordered > tfoot > tr > th{
 						$('#operator_name').prop('disabled',true);
 						$('#employee_id').val(result.employee.employee_id);
 						$('#tag_product').focus();
+						fillResult();
 					}
 					else{
 						audio_error.play();
@@ -250,6 +251,7 @@ table.table-bordered > tfoot > tr > th{
 					if(result.status){
 						$('#tag_product').val('');
 						$('#tag_product').focus();
+						fillResult();
 						openSuccessGritter('Success!', result.message);
 					}
 					else{
@@ -257,6 +259,7 @@ table.table-bordered > tfoot > tr > th{
 						openErrorGritter('Error', result.message);
 						$('#tag_product').val('');
 						$('#tag_product').focus();
+						fillResult();
 					}
 				});
 			}
