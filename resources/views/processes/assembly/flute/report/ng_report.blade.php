@@ -40,7 +40,7 @@ thead input {
 @section('header')
 <section class="content-header">
 	<h1>
-		NG Report <span class="text-purple">??</span>
+		{{$title}} <span class="text-purple"><small>{{$title_jp}}</small></span>
 	</h1>
 	<ol class="breadcrumb">
 	</ol>

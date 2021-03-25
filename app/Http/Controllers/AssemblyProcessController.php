@@ -2622,16 +2622,22 @@ public function fetchStampRecord(Request $request){
 public function indexNgReport($process)
 {
 	if ($process == 'qa') {
+		$title = 'NG Report - QA';
+		$title_jp = '??';
 		$flow = AssemblyFlow::where('process','like','%qa%')->get();
 	}else{
+		$title = 'NG Report - Production';
+		$title_jp = '??';
 		$flow = AssemblyFlow::where('process','not like','%qa%')->get();
 	}
 
 	return view('processes.assembly.flute.report.ng_report',array(
 		'flow' => $flow,
 		'process' => $process,
-	))
-	->with('page', 'NG Report Assy Fl')->with('head', 'Assembly Process');
+	))->with('page', 'NG Report Assy Fl')
+	->with('head', 'Assembly Process')
+	->with('title', $title)
+	->with('title_jp', $title_jp);
 }
 
 public function fetchNgReport($process,Request $request)

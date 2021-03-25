@@ -9,7 +9,6 @@
 <section class="content-header">
 	<h1>
 		Flute Subassy-Assembly WIP<span class="text-purple"> FL仮組・組立の仕掛品</span>
-		{{-- <small>Flute <span class="text-purple"> ??? </span></small> --}}
 	</h1>
 </section>
 @stop
@@ -96,8 +95,8 @@
 			<a href="{{ url('/index/displayWipFl') }}" class="btn btn-default btn-block" style="font-size: 17px; border-color: purple;">Chart Inventory</a>
 			<a href="{{ url('/index/assembly/production_result') }}" class="btn btn-default btn-block" style="font-size: 17px; border-color: purple;">Production Result New</a>
 			<a href="{{ url('/index/assembly/stamp_record') }}" class="btn btn-default btn-block" style="font-size: 17px; border-color: purple;">Stamp Record New</a>
-			<a href="{{ url('/index/assembly/ng_report','production') }}" class="btn btn-default btn-block" style="font-size: 17px; border-color: purple;">NG Report Produksi</a>
-			<a href="{{ url('/index/assembly/ng_report','qa') }}" class="btn btn-default btn-block" style="font-size: 17px; border-color: purple;">NG Report QA</a>
+			<a href="{{ url('/index/assembly/ng_report','production') }}" class="btn btn-default btn-block" style="font-size: 17px; border-color: purple;">Production NG Report</a>
+			<a href="{{ url('/index/assembly/ng_report','qa') }}" class="btn btn-default btn-block" style="font-size: 17px; border-color: purple;">QA NG Report</a>
 		</div>
 	</div>
 </section>
