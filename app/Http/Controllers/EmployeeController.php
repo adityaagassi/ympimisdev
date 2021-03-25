@@ -4286,13 +4286,19 @@ public function executeKaizenExcellent(Request $request)
      return Response::json($response);
 }
 
-public function getKaizenReward()
+public function getKaizenReward(Request $request)
 {
-     $db = db::select("select DATE_FORMAT(CONCAT(mon,'-01'),'%M %Y') as  mons, doit, count(doit) as tot from 
+     if ($request->get("tanggal") == "") {
+          $dt = date('Y-m-01');
+     } else {
+          $dt = $request->get("tanggal")."-01";
+     }
+
+     $db = db::select("SELECT DATE_FORMAT(CONCAT(mon,'-01'),'%M %Y') as  mons, doit, count(doit) as tot from 
           (select DATE_FORMAT(propose_date,'%Y-%m') as mon, IF(total < 300,2000,IF(total >= 300 AND total <= 350,5000,IF(total > 350 AND total <= 400,10000,IF(total > 400 AND total <= 450,25000,50000)))) as doit from
           (select propose_date, manager_point_1 * 40 m1, manager_point_2 * 30 m2, manager_point_3 * 30 m3, id_kaizen, (manager_point_1 * 40+ manager_point_2 * 30+ manager_point_3 * 30) as total from kaizen_scores 
           join kaizen_forms on kaizen_scores.id_kaizen = kaizen_forms.id
-          where propose_date >= '2019-12-01'
+          where propose_date >= '".$dt."'
           order by id_kaizen asc) as total
           ) as total2
           group by doit, mon

@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
-<link href="{{ url("css//bootstrap-toggle.min.css") }}" rel="stylesheet">
+<link href="{{ url("css/bootstrap-toggle.min.css") }}" rel="stylesheet">
 <style type="text/css">
 	thead>tr>th{
 		text-align:center;

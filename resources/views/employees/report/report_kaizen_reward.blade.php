@@ -6,12 +6,11 @@
 		font-family: JTM;
 		src: url("{{ url("fonts/JTM.otf") }}") format("opentype");
 	}
-	
+/*	
 	td, th {
-		color: white;
 		text-align: center;
 	}
-
+	*/
 	thead > tr > th {
 		text-align: center;
 	}
@@ -47,6 +46,14 @@
 				<div class="col-xs-4 pull-left">
 					<p class="judul"><i style="color: #c290d1">e </i> - Kaizen Reward</p>
 				</div>
+				<div class="col-xs-4 pull-right">
+					<div class="input-group date">
+						<div class="input-group-addon bg-green" style="border-color: #00a65a">
+							<i class="fa fa-calendar"></i>
+						</div>
+						<input type="text" class="form-control datepicker" id="tgl" onchange="getData()" placeholder="Select Date From" style="border-color: #00a65a">
+					</div>
+				</div>
 			</div>
 			<div class="col-xs-12">
 				<table class="table table-bordered">
@@ -70,7 +77,7 @@
 <script src="{{ url("js/highcharts.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
-<script src="{{ url("js/drilldown.js")}}"></script>
+<!-- <script src="{{ url("js/drilldown.js")}}"></script> -->
 <script>
 	$.ajaxSetup({
 		headers: {
@@ -85,8 +92,24 @@
 		getData();
 	});
 
+	$('.datepicker').datepicker({
+		autoclose: true,
+		format: "yyyy-mm",
+		todayHighlight: true,
+		startView: "months", 
+		minViewMode: "months",
+		autoclose: true,
+	});
+
 	function getData() {
-		$.get('{{ url("fetch/kaizen/value") }}', function(result) {
+		var tanggal = $('#tgl').val();
+
+		var data = {
+			tanggal:tanggal
+		}
+		$.get('{{ url("fetch/kaizen/value") }}', data, function(result) {
+			$("#mon").empty();
+			$("#body").empty();
 
 			var xCategories = [];
 			var xValue = [];
@@ -111,15 +134,15 @@
 			xCategories = unique(xCategories);
 
 			var ctg1 = "<tr>";
-			ctg_isi = '<th rowspan="2" style="vertical-align: middle;">Reward (IDR)</th>';
+			ctg_isi = '<th rowspan="2" style="vertical-align: middle; color: white;">Reward (IDR)</th>';
 
 			var total_tmp = [{ qty: 0, doit: 0}];
 
 
 			$.each(xCategories, function(index, value){
-				ctg_isi += "<th colspan=2 style='border-right: 2px solid red'>"+value+"</th>";
-				ctg1 += "<th>Quantity</th>";
-				ctg1 += "<th style='border-right: 2px solid red'>Sub Total Reward (IDR)</th>";
+				ctg_isi += "<th colspan=2 style='border-right: 2px solid red; color: white;'>"+value+"</th>";
+				ctg1 += "<th style='color: white;'>Quantity</th>";
+				ctg1 += "<th style='border-right: 2px solid red; color: white;'>Sub Total Reward (IDR)</th>";
 				total_tmp.push({ qty: 0, doit: 0});
 			})
 
@@ -141,16 +164,16 @@
 
 				val_isi += "<tr>";
 				doit = new Intl.NumberFormat().format(value);
-				val_isi += "<th>"+doit+"</th>";
+				val_isi += "<th style='color: white;'>"+doit+"</th>";
 				var tmp = [];
 
 				$.each(xCategories, function(index2, value2){
 					var stat = 0;
 					$.each(result.datas, function(index3, value3){
 						if (value3.doit == value && value3.mons == value2) {
-							val_isi += "<td>"+new Intl.NumberFormat().format(value3.tot)+"</td>";
+							val_isi += "<td style='color: white;'>"+new Intl.NumberFormat().format(value3.tot)+"</td>";
 							sub_doit = new Intl.NumberFormat().format(value3.tot * value3.doit);
-							val_isi += "<td style='border-right: 2px solid red'>"+sub_doit+"</td>";
+							val_isi += "<td style='border-right: 2px solid red; color: white;'>"+sub_doit+"</td>";
 
 							curr_tot += value3.tot * value3.doit;
 							qty_tot += value3.tot;
@@ -164,8 +187,8 @@
 					})
 
 					if (stat == 0) {
-						val_isi += "<td>0</td>";
-						val_isi += "<td style='border-right: 2px solid red'>0</td>";
+						val_isi += "<td style='color: white;'>0</td>";
+						val_isi += "<td style='border-right: 2px solid red; color: white;'>0</td>";
 						curr_tot += 0;
 						qty_tot += 0;
 						tmp.push(0);
