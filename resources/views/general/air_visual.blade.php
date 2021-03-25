@@ -128,7 +128,7 @@
 		postData();
 
 		// setInterval(postData, 600000);
-		// setInterval(postData, 120000);
+		setInterval(postData, 120000);
 
 	});
 
