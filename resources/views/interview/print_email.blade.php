@@ -77,7 +77,7 @@
 					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;" colspan="3">{{ strtoupper($interview->section) }}</td>
 				</tr>
 				<tr>
-					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;" colspan="2">Sub Section</td>
+					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;" colspan="2">Group</td>
 					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;" colspan="3">{{ strtoupper($interview->subsection) }}</td>
 				</tr>
 				<tr>
@@ -102,6 +102,7 @@
 					<td style="border: 1px solid black; font-size: 15px;"><center>Janji Tindakan Dasar</center></td>
 				</tr>
 				<form role="form" method="post" action="{{url('index/interview/approval/'.$interview_id)}}">
+					<input type="hidden" value="{{csrf_token()}}" name="_token" />
 				<?php $no = 1; ?>
 				@foreach($interviewDetail as $detail)
 				<tr>
@@ -419,7 +420,10 @@
 				</tr>
 				<tr>
 					@if($interview->approval == Null && $role_code != 'M')
-					<td align="right" colspan="12" style="border-top: 1px solid black"><button class="btn btn-success" type="submit">Approve</button></td>
+					<td align="right" colspan="12" style="border-top: 1px solid black">
+						<input type="hidden" value="{{$no-1}}" name="approve">
+						<button class="btn btn-success" type="submit">Approve</button>
+					</td>
 					@endif
 				</tr>
 				</form>

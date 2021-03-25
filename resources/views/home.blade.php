@@ -430,67 +430,67 @@
                             <i class="fa fa-caret-right"></i> Raw Material Monitoring (素材監視)
                         </a>
                         {{-- <br>
-                        <a href="{{ url("/index/material/material_monitoring/indirect") }}">
-                            <i class="fa fa-caret-right"></i> Raw Material Monitoring (Indirect) (素材監視「」)
-                        </a>
-                        <br>
-                        <a href="{{ url("/index/material/material_monitoring/subcon") }}">
-                            <i class="fa fa-caret-right"></i> Raw Material Monitoring (Subcon) (素材監視「」)
-                        </a> --}}
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <table class="table table-bordered">
-            <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
-                <tr>
-                    <th>Other Information<br/>他の情報</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                   <td>
-                    {{--     <a href="{{ url("index/report/overtime_outsource") }}">
-                        <i class="fa fa-caret-right"></i> Outsource OT (派遣社員の残業管理)
-                    </a> --}}
-                    {{-- <br>
-                        <a href="http://172.17.128.114/clinic-new/chart.php">
-                            <i class="fa fa-caret-right"></i> Clinic Visit ()
-                        </a> 
-                        <br>--}}
-                        {{--  <a href="{{ url("index/general/mosaic") }}">
-                            <i class="fa fa-caret-right"></i> Yamaha Day Mosaic Art Project
-                        </a>
-                        <br> --}}
-                        <a href="{{ url("index/mirai_mobile/index") }}">
-                            <i class="fa fa-caret-right"></i> MIRAI Mobile Report(モバイルMIRAIの記録)
-                        </a>
-                        <br>
-                        <a href="{{ url("index/display/clinic_monitoring") }}">
-                            <i class="fa fa-caret-right"></i> Clinic Monitoring (クリニック監視)
-                        </a>
-                        <br>
-                        <a href="{{ url("index/display/clinic_visit?datefrom=&dateto=") }}">
-                            <i class="fa fa-caret-right"></i> Clinic Visit (クリニック訪問)
-                        </a>
-                        <br>
-                        <a href="{{ url("index/display/clinic_disease?month=") }}">
-                            <i class="fa fa-caret-right"></i> Clinic Diagnostic Data (クリニック見立てデータ)
-                        </a>
-                        {{--  <br>
-                            <a href="{{ url("index/emergency_response") }}">
-                                <i class="fa fa-caret-right"></i> Emergency Condition (緊急事態)
+                            <a href="{{ url("/index/material/material_monitoring/indirect") }}">
+                                <i class="fa fa-caret-right"></i> Raw Material Monitoring (Indirect) (素材監視「」)
+                            </a>
+                            <br>
+                            <a href="{{ url("/index/material/material_monitoring/subcon") }}">
+                                <i class="fa fa-caret-right"></i> Raw Material Monitoring (Subcon) (素材監視「」)
                             </a> --}}
-                            <br>
-                            <a href="{{ url("index/toilet") }}">
-                                <i class="fa fa-caret-right"></i> Toilet Availability (トイレステイタス(空席・使用中))
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table class="table table-bordered">
+                <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
+                    <tr>
+                        <th>Other Information<br/>他の情報</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                     <td>
+                        {{--     <a href="{{ url("index/report/overtime_outsource") }}">
+                            <i class="fa fa-caret-right"></i> Outsource OT (派遣社員の残業管理)
+                        </a> --}}
+                        {{-- <br>
+                            <a href="http://172.17.128.114/clinic-new/chart.php">
+                                <i class="fa fa-caret-right"></i> Clinic Visit ()
+                            </a> 
+                            <br>--}}
+                            {{--  <a href="{{ url("index/general/mosaic") }}">
+                                <i class="fa fa-caret-right"></i> Yamaha Day Mosaic Art Project
+                            </a>
+                            <br> --}}
+                            <a href="{{ url("index/mirai_mobile/index") }}">
+                                <i class="fa fa-caret-right"></i> MIRAI Mobile Report(モバイルMIRAIの記録)
                             </a>
                             <br>
-                            <a href="{{ url("index/display/ip?location=server") }}">
-                                <i class="fa fa-caret-right"></i> Internet Protocol Monitoring (IP管理)
+                            <a href="{{ url("index/display/clinic_monitoring") }}">
+                                <i class="fa fa-caret-right"></i> Clinic Monitoring (クリニック監視)
                             </a>
                             <br>
+                            <a href="{{ url("index/display/clinic_visit?datefrom=&dateto=") }}">
+                                <i class="fa fa-caret-right"></i> Clinic Visit (クリニック訪問)
+                            </a>
+                            <br>
+                            <a href="{{ url("index/display/clinic_disease?month=") }}">
+                                <i class="fa fa-caret-right"></i> Clinic Diagnostic Data (クリニック見立てデータ)
+                            </a>
+                            {{--  <br>
+                                <a href="{{ url("index/emergency_response") }}">
+                                    <i class="fa fa-caret-right"></i> Emergency Condition (緊急事態)
+                                </a> --}}
+                                <br>
+                                <a href="{{ url("index/toilet") }}">
+                                    <i class="fa fa-caret-right"></i> Toilet Availability (トイレステイタス(空席・使用中))
+                                </a>
+                                <br>
+                                <a href="{{ url("index/display/ip?location=server") }}">
+                                    <i class="fa fa-caret-right"></i> Internet Protocol Monitoring (IP管理)
+                                </a>
+                                <br>
                             <!-- <a href="{{ url("visitor_confirmation_manager") }}">
                                 <i class="fa fa-caret-right"></i> Visitor Confirmation (来客の確認)
                             </a>
@@ -635,19 +635,19 @@
                                 <i class="fa fa-caret-right"></i> Sharepoint;
                             </a>
                             <a href="https://a01.yamaha.co.jp/fw/dfw/SAP2/Citrix/XenApp/site/default.aspx" target="_blank">
-                             SAP;
-                         </a>
-                         <a href="https://adagio.yamaha.co.jp/imart/default.portal" target="_blank">
-                             Adagio;
-                         </a>
-                         <a href="https://a01.yamaha.co.jp/fw/dfw/MA5/ma5/EntranceServlet" target="_blank">
-                             MA5;
-                         </a>
-                     </td>     
-                 </tr>                                                                             
-             </tbody>
-         </table>
-         <table class="table table-bordered">
+                               SAP;
+                           </a>
+                           <a href="https://adagio.yamaha.co.jp/imart/default.portal" target="_blank">
+                               Adagio;
+                           </a>
+                           <a href="https://a01.yamaha.co.jp/fw/dfw/MA5/ma5/EntranceServlet" target="_blank">
+                               MA5;
+                           </a>
+                       </td>     
+                   </tr>                                                                             
+               </tbody>
+           </table>
+           <table class="table table-bordered">
             <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
                 <tr>
                     <th>Workshop<br>ワークショップ</th>
@@ -727,6 +727,10 @@
                         <a href="{{ url("index/maintenance/operator/position") }}">
                             <i class="fa fa-caret-right"></i> Maintenance Operator Location (保全班作業者の位置)
                         </a>
+                        <br>
+                        <a href="{{ url("index/maintenance/operator/workload") }}">
+                            <i class="fa fa-caret-right"></i> Maintenance Operator Workload (??)
+                        </a>
                     </td>                     
                 </tr>
                 <tr>
@@ -742,7 +746,7 @@
                         </a>
                         <br>
                         <a href="{{ url("index/maintenance/spk/grafik") }}">
-                            <i class="fa fa-caret-right"></i> Operator Workload (??)
+                            <i class="fa fa-caret-right"></i> SPK Workload (??)
                         </a>
                         <!--<br>
                         <a href="{{ url("index/maintenance/spk/weekly") }}">
@@ -979,7 +983,7 @@
                             <td>
                                 <span style="font-weight: bold;">Information & Evidence ()</span>
                                 <br>
-                                 <a href="{{ url("/index/packing_documentation") }}">
+                                <a href="{{ url("/index/packing_documentation") }}">
                                     <i class="fa fa-caret-right"></i> Packing Documentation ()
                                 </a>
                             </td>

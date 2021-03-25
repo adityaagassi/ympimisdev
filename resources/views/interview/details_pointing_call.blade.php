@@ -43,8 +43,8 @@ label {
 @section('header')
 <section class="content-header">
 	<h1>
-		{{ $activity_name }} - {{ $leader }}
-		<a class="btn btn-warning pull-right" href="{{ url('index/interview/index/'.$activity_id) }}">Kembali</a>
+		{{ $activity_name }} - {{ $departments }}
+		<a class="btn btn-warning pull-right" href="{{ url('index/interview/pointing_call') }}">Kembali</a>
 		<a target="_blank" class="btn btn-success pull-right" href="{{url('index/interview/print_interview/'.$interview->id)}}" style="margin-right: 5px"><b>Cetak</b></a>
 		<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal" style="margin-right: 5px">
 	        Tambah Peserta
@@ -64,6 +64,11 @@ label {
 			{{ session('status') }}
 		</div>   
 	@endif
+	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+		<p style="position: absolute; color: White; top: 45%; left: 35%;">
+			<span style="font-size: 40px">Please wait <i class="fa fa-spin fa-refresh"></i></span>
+		</p>
+	</div>
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="box box-solid">
@@ -72,7 +77,7 @@ label {
 				</div>
 				<div class="box-body">
 				  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-				  	<table class="table table-bordered">
+				  	<table class="table table-bordered table-striped table-responsive">
 				  		<tr>
 							<td><b>Dept</b></td>
 							<td>{{strtoupper($interview->department)}}</td>
@@ -85,25 +90,21 @@ label {
 							<td><b>Group</b></td>
 							<td>{{$interview->subsection}}</td>
 						</tr>
-						<tr>
-							<td><b>Periode</b></td>
-							<td>{{$interview->periode}}</td>
-						</tr>
 				  	</table>
 				  </div>
 				  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-				  	<table class="table table-bordered">
+				  	<table class="table table-bordered table-striped table-responsive">
 				  		<tr>
 							<td><b>Tanggal</b></td>
 							<td>{{$interview->date}}</td>
 						</tr>
 				  		<tr>
-							<td><b>Leader</b></td>
+							<td><b>Chief / Staff</b></td>
 							<td>{{$interview->leader}}</td>
 						</tr>
 						<tr>
-							<td><b>Foreman</b></td>
-							<td>{{strtoupper($interview->foreman)}}</td>
+							<td><b>Manager</b></td>
+							<td>{{$interview->foreman}}</td>
 						</tr>
 				  	</table>
 				  </div>
@@ -350,7 +351,7 @@ label {
 			<div class="box box-solid">
 		      	<div class="box-header">
 					<h3 class="box-title">Foto Interview<span class="text-purple"></span></h3>
-					<form role="form" method="post" action="{{url('index/interview/insertpicture/'.$interview_id.'/leader')}}" enctype="multipart/form-data">
+					<form role="form" method="post" action="{{url('index/interview/insertpicture/'.$interview_id.'/chief')}}" enctype="multipart/form-data">
 						<input type="hidden" value="{{csrf_token()}}" name="_token" />
 
 						<div class="form-group">
@@ -746,7 +747,7 @@ label {
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-primary">Update</button>
           </div>
         </form>
@@ -794,8 +795,7 @@ label {
 
 
 @section('scripts')
-
-  <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
+<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
   <script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
   <script src="{{ url("js/buttons.flash.min.js")}}"></script>
   <script src="{{ url("js/jszip.min.js")}}"></script>
@@ -859,7 +859,6 @@ label {
             $('.janji_tindakan_dasarCheckbox')[i].checked = false;
         });
 	}
-
   	function openSuccessGritter(title, message){
 		jQuery.gritter.add({
 			title: title,
@@ -1249,7 +1248,8 @@ label {
     }
 
     function detailNilai(employee,nilai,point,type) {
-    	if (parseInt(nilai) !== 0) {
+    	// if (parseInt(nilai) !== 0) {
+    		$('#loading').show();
     		var data = {
     			point:point,
     			type:type
@@ -1281,12 +1281,14 @@ label {
 						table += '</tr>';
 					});
 					$('#table-detail-nilai-body').append(table);
+					$('#loading').hide();
 				} else {
 					audio_error.play();
 					openErrorGritter('Error','Gagal');
+					$('#loading').hide();
 				}
 			});
-    	}
+    	// }
     }
     </script>
 @endsection

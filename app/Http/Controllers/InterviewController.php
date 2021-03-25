@@ -13,6 +13,7 @@ use App\Interview;
 use App\InterviewDetail;
 use App\InterviewPicture;
 use App\PointingCallItem;
+use App\EmployeeSync;
 use Response;
 use DataTables;
 use Excel;
@@ -72,6 +73,8 @@ class InterviewController extends Controller
             department LIKE '%".$departments."%'";
         $section = DB::select($querySection);
 
+        $status = 'leader';
+
         // var_dump($productionAudit);
     	$data = array('interview' => $interview,
                       'subsection' => $subsection,
@@ -80,15 +83,91 @@ class InterviewController extends Controller
                       'subsection4' => $subsection4,
             				  'departments' => $departments,
             				  'leader' => $leader,
+                      'status' => $status,
                       'foreman' => $foreman,
                       'section' => $section,
                       'frequency' => $frequency,
             				  'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
             				  'id' => $id,
+                      'title' => 'Interview Pointing Call',
                       'id_departments' => $id_departments);
     	return view('interview.index', $data
-    		)->with('page', 'Interview');
+    		)->with('page', 'Interview')->with('title', 'Interview Pointing Call')->with('title_jp', '');
+    }
+
+    function indexPointingCall()
+    {
+        $employee_id = Auth::user()->username;
+        $emp = EmployeeSync::select('activity_lists.id')->where('employee_id',$employee_id)->join('activity_lists','activity_lists.leader_dept','employee_syncs.name')->first();
+        if (count($emp) > 0) {
+          $activityList = ActivityList::find($emp->id);
+          $interview = Interview::where('activity_list_id',$emp->id)
+                ->orderBy('interviews.id','desc')->get();
+
+          $activity_name = $activityList->activity_name;
+          $departments = $activityList->departments->department_name;
+          $id_departments = $activityList->departments->id;
+          $activity_alias = $activityList->activity_alias;
+          $leader = $activityList->leader_dept;
+          $foreman = $activityList->foreman_dept;
+          $frequency = $activityList->frequency;
+
+          $querySubSection = "SELECT
+              DISTINCT(employee_syncs.group) AS sub_section_name 
+            FROM
+              employee_syncs 
+            WHERE
+            employee_syncs.group is not null
+            AND
+              department LIKE '%".$departments."%'";
+          $subsection = DB::select($querySubSection);
+          $subsection2 = DB::select($querySubSection);
+          $subsection3 = DB::select($querySubSection);
+          $subsection4 = DB::select($querySubSection);
+
+          $querySection = "SELECT
+              DISTINCT(employee_syncs.section) AS section_name
+            FROM
+              employee_syncs 
+            WHERE
+            employee_syncs.section is not null
+            AND
+              department LIKE '%".$departments."%'";
+          $section = DB::select($querySection);
+
+          $status = 'chief';
+
+          $queryFY = "select DISTINCT(fiscal_year) from weekly_calendars where week_date = DATE(NOW())";
+          $fy = DB::select($queryFY);
+
+          foreach ($fy as $key) {
+            $fiscal = $key->fiscal_year;
+          }
+
+          // var_dump($productionAudit);
+          $data = array('interview' => $interview,
+                          'subsection' => $subsection,
+                          'subsection2' => $subsection2,
+                          'subsection3' => $subsection3,
+                          'subsection4' => $subsection4,
+                          'departments' => $departments,
+                          'leader' => $leader,
+                          'fy' => $fiscal,
+                          'title' => 'Interview Pointing Call',
+                          'foreman' => $foreman,
+                          'section' => $section,
+                          'status' => $status,
+                          'frequency' => $frequency,
+                          'activity_name' => $activity_name,
+                          'activity_alias' => $activity_alias,
+                          'id' => $emp->id,
+                          'id_departments' => $id_departments);
+          return view('interview.index_pointing_call', $data
+            )->with('title', 'Interview Pointing Call')->with('title_jp', '');
+        }else{
+          return view('404');
+        }
     }
 
     function filter_interview(Request $request,$id)
@@ -124,6 +203,8 @@ class InterviewController extends Controller
           AND
             department LIKE '%".$departments."%'";
         $section = DB::select($querySection);
+
+        $status = 'leader';
 
         if($request->get('subsection') != null && strlen($request->get('month')) != null){
             $subsection = $request->get('subsection');
@@ -169,7 +250,7 @@ class InterviewController extends Controller
                       'subsection3' => $subsection3,
                       'subsection4' => $subsection4,
                       'departments' => $departments,
-                      'leader' => $leader,
+                      'status' => $status,
                       'foreman' => $foreman,
                       'section' => $section,
                       'frequency' => $frequency,
@@ -198,14 +279,20 @@ class InterviewController extends Controller
             )->with('page', 'Interview');
     }
 
-    public function destroy($id,$interview_id)
+    public function destroy($id,$interview_id,$status)
     {
       $interview = Interview::find($interview_id);
       $interview->delete();
 
-      return redirect('/index/interview/index/'.$id)
+      if ($status == 'leader') {
+        return redirect('/index/interview/index/'.$id)
         ->with('status', 'Interview has been deleted.')
-        ->with('page', 'Interview');        
+        ->with('page', 'Interview');
+      }else{
+        return redirect('/index/interview/pointing_call')
+        ->with('status', 'Interview has been deleted.')
+        ->with('page', 'Interview');
+      }
     }
 
     function create($id)
@@ -239,7 +326,7 @@ class InterviewController extends Controller
             department LIKE '%".$departments."%'";
         $subsection = DB::select($querySubSection);
 
-        $queryFY = "select DISTINCT(fiscal_year) from weekly_calendars";
+        $queryFY = "select DISTINCT(fiscal_year) from weekly_calendars where week_date = DATE(NOW())";
         $fy = DB::select($queryFY);
 
         $data = array(
@@ -260,19 +347,26 @@ class InterviewController extends Controller
             $id_user = Auth::id();
             Interview::create([
                 'activity_list_id' => $id,
-                'department' => $request->input('department'),
-                'section' => $request->input('section'),
-                'subsection' => $request->input('subsection'),
-                'date' => $request->input('date'),
-                'periode' => $request->input('periode'),
-                'leader' => $request->input('leader'),
-                'foreman' => $request->input('foreman'),
+                'department' => $request->get('department'),
+                'section' => $request->get('section'),
+                'subsection' => $request->get('subsection'),
+                'date' => $request->get('date'),
+                'periode' => $request->get('periode'),
+                'leader' => $request->get('leader'),
+                'foreman' => $request->get('foreman'),
                 'created_by' => $id_user
             ]);
         
 
-        return redirect('index/interview/index/'.$id)
+        if ($request->get('status') == 'leader') {
+          return redirect('index/interview/index/'.$id)
             ->with('page', 'Interview')->with('status', 'New Interview has been created.');
+        }else{
+          $response = array(
+            'status' => true,
+          );
+          return Response::json($response);
+        }
     }
 
     function edit($id,$interview_id)
@@ -317,6 +411,7 @@ class InterviewController extends Controller
                       'departments' => $departments,
                       'section' => $section,
                       'fy' => $fy,
+                      'status' => 'leader',
                       'subsection' => $subsection,
                       'activity_name' => $activity_name,
                       'interview' => $interview,
@@ -325,7 +420,62 @@ class InterviewController extends Controller
             )->with('page', 'Interview');
     }
 
-    function update(Request $request,$id,$interview_id)
+    function editPointingCall($id,$interview_id)
+    {
+        $activityList = ActivityList::find($id);
+
+        $activity_name = $activityList->activity_name;
+        $departments = $activityList->departments->department_name;
+        $id_departments = $activityList->departments->id;
+        $activity_alias = $activityList->activity_alias;
+        $leader = $activityList->leader_dept;
+        $foreman = $activityList->foreman_dept;
+
+        $querySection = "SELECT
+            DISTINCT(employee_syncs.section) AS section_name
+          FROM
+            employee_syncs 
+          WHERE
+          employee_syncs.section is not null
+          AND
+            department LIKE '%".$departments."%'";
+        $section = DB::select($querySection);
+
+        $querySubSection = "SELECT
+            DISTINCT(employee_syncs.group) AS sub_section_name 
+          FROM
+            employee_syncs 
+          WHERE
+          employee_syncs.group is not null
+          AND
+            department LIKE '%".$departments."%'";
+        $subsection = DB::select($querySubSection);
+
+        $queryFY = "select DISTINCT(fiscal_year) from weekly_calendars where week_date = DATE(NOW())";
+        $fy = DB::select($queryFY);
+
+        foreach ($fy as $key) {
+          $fiscal = $key->fiscal_year;
+        }
+
+        $interview = Interview::find($interview_id);
+
+        $data = array(
+                      'leader' => $leader,
+                      'foreman' => $foreman,
+                      'departments' => $departments,
+                      'section' => $section,
+                      'fy' => $fiscal,
+                      'status' => 'chief',
+                      'subsection' => $subsection,
+                      'activity_name' => $activity_name,
+                      'interview' => $interview,
+                      'id' => $id);
+        return view('interview.edit_pointing_call', $data
+            )->with('page', 'Interview');
+    }
+
+    function update(Request $request,$id,$interview_id,$status)
     {
         try{
                 $month = date("m",strtotime($request->get('date')));
@@ -340,7 +490,11 @@ class InterviewController extends Controller
                 $interview->foreman = $request->get('foreman');
                 $interview->save();
 
-            return redirect('/index/interview/index/'.$id)->with('status', 'Interview data has been updated.')->with('page', 'Interview');
+            if ($status == 'leader') {
+              return redirect('/index/interview/index/'.$id)->with('status', 'Interview data has been updated.')->with('page', 'Interview');
+            }else{
+              return redirect('index/interview/pointing_call')->with('status', 'Interview data has been updated.')->with('page', 'Interview');
+            }
           }
           catch (QueryException $e){
             $error_code = $e->errorInfo[1];
@@ -378,6 +532,8 @@ class InterviewController extends Controller
         $operator = DB::select($queryOperator);
         $operator2 = DB::select($queryOperator);
 
+        $status = 'leader';
+
         $data = array('interview_detail' => $interview_detail,
         			        'interview_detail2' => $interview_detail2,
                       'interview_picture' => $interview_picture,
@@ -386,14 +542,61 @@ class InterviewController extends Controller
                       'operator' => $operator,
                       'operator2' => $operator2,
                       'activity_name' => $activity_name,
-                    'pointing_call' => $pointing_call,
+                      'pointing_call' => $pointing_call,
                       'leader' => $leader,
                       'activity_alias' => $activity_alias,
                       'interview_id' => $interview_id,
                       'activity_id' => $activity_id,
+                      'status' => $status,
                       'id_departments' => $id_departments);
         return view('interview.details', $data
-            )->with('page', 'Interview Details');
+            )->with('page', 'Interview Details')->with('title', 'Peserta Interview Pointing Call')->with('title_jp', '');
+    }
+
+    function detailsPointingCall($interview_id)
+    {
+        $interview_detail = InterviewDetail::where('interview_id',$interview_id)
+            ->get();
+        $interview_detail2 = InterviewDetail::where('interview_id',$interview_id)
+            ->get();
+        $interview_picture = InterviewPicture::where('interview_id',$interview_id)
+            ->get();
+
+        $interview = Interview::find($interview_id);
+
+        $activity_name = $interview->activity_lists->activity_name;
+        $departments = $interview->activity_lists->departments->department_name;
+        $id_departments = $interview->activity_lists->departments->id;
+        $activity_alias = $interview->activity_lists->activity_alias;
+        $activity_id = $interview->activity_lists->id;
+        $leader = $interview->activity_lists->leader_dept;
+
+        $pointing_call = PointingCallItem::where('point_title','!=','pic')->where('point_title','!=','janji_safety')->get();
+        
+
+        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department like '%".$departments."%' and employee_syncs.end_date is null";
+        $operator = DB::select($queryOperator);
+        $operator2 = DB::select($queryOperator);
+
+        $status = 'chief';
+
+        $data = array('interview_detail' => $interview_detail,
+                      'interview_detail2' => $interview_detail2,
+                      'interview_picture' => $interview_picture,
+                      'interview' => $interview,
+                      'departments' => $departments,
+                      'operator' => $operator,
+                      'operator2' => $operator2,
+                      'activity_name' => $activity_name,
+                      'pointing_call' => $pointing_call,
+                      'leader' => $leader,
+                      'activity_alias' => $activity_alias,
+                      'interview_id' => $interview_id,
+                      'activity_id' => $activity_id,
+                      'status' => $status,
+                      'id_departments' => $id_departments);
+        return view('interview.details_pointing_call', $data
+            )->with('page', 'Interview Details')->with('title', 'Peserta Interview Pointing Call')->with('title_jp', '');
     }
 
     function create_participant(Request $request)
@@ -610,13 +813,18 @@ class InterviewController extends Controller
           }
     }
 
-    public function destroy_participant($interview_id,$detail_id)
+    public function destroy_participant($interview_id,$detail_id,$status)
     {
       $interview = InterviewDetail::find($detail_id);
       $interview->delete();
 
-      return redirect('index/interview/details/'.$interview_id)
+      if ($status == 'leader') {
+        return redirect('index/interview/details/'.$interview_id)
               ->with('page', 'Interview Details')->with('status', 'Participant has been deleted.');
+      }else{
+        return redirect('index/interview/pointing_call/details/'.$interview_id)
+              ->with('page', 'Interview Details')->with('status', 'Participant has been deleted.');
+      }
     }
 
     function print_interview($interview_id)
@@ -812,9 +1020,13 @@ class InterviewController extends Controller
         }
     }
 
-    public function sendemail($interview_id)
+    public function sendemail($interview_id,$status)
       {
-          $query_interview = "select *,interviews.id as interview_id from interviews join activity_lists on activity_lists.id = interviews.activity_list_id join departments on activity_lists.department_id = departments.id where interviews.id = '".$interview_id."' and interviews.deleted_at is null";
+          if ($status == 'leader') {
+            $query_interview = "select *,interviews.id as interview_id,'leader' as status from interviews join activity_lists on activity_lists.id = interviews.activity_list_id join departments on activity_lists.department_id = departments.id where interviews.id = '".$interview_id."' and interviews.deleted_at is null";
+          }else{
+            $query_interview = "select *,interviews.id as interview_id,'chief' as status from interviews join activity_lists on activity_lists.id = interviews.activity_list_id join departments on activity_lists.department_id = departments.id where interviews.id = '".$interview_id."' and interviews.deleted_at is null";
+          }
           
           $interview = DB::select($query_interview);
           $interview3 = DB::select($query_interview);
@@ -841,19 +1053,35 @@ class InterviewController extends Controller
             }
           }
           else{
-            return redirect('/index/interview/index/'.$activity_list_id)->with('error', 'Data tidak tersedia.')->with('page', 'Interview');
+            if ($status == 'leader') {
+              return redirect('/index/interview/index/'.$activity_list_id)->with('error', 'Data tidak tersedia.')->with('page', 'Interview');
+            }else{
+              return redirect('index/interview/pointing_call')->with('error', 'Data tidak tersedia.')->with('page', 'Interview');
+            }
           }
 
           if($send_status == "Sent"){
-            return redirect('/index/interview/index/'.$activity_list_id)->with('error', 'Data pernah dikirim.')->with('page', 'Interview');
+            if ($status == 'leader') {
+              return redirect('/index/interview/index/'.$activity_list_id)->with('error', 'Data Pernah Dikirim.')->with('page', 'Interview');
+            }else{
+              return redirect('index/interview/pointing_call')->with('error', 'Data Pernah Dikirim.')->with('page', 'Interview');
+            }
           }
           
           elseif($interview != null){
               Mail::to($mail_to)->bcc('mokhamad.khamdan.khabibi@music.yamaha.com')->send(new SendEmail($interview3, 'interview'));
-              return redirect('/index/interview/index/'.$activity_list_id)->with('status', 'Your E-mail has been sent.')->with('page', 'Interview');
+              if ($status == 'leader') {
+                return redirect('/index/interview/index/'.$activity_list_id)->with('status', 'Email Terkirim')->with('page', 'Interview');
+              }else{
+                return redirect('index/interview/pointing_call')->with('status', 'Email Terkirim')->with('page', 'Interview');
+              }
           }
           else{
-            return redirect('/index/interview/index/'.$activity_list_id)->with('error', 'Data tidak tersedia.')->with('page', 'Interview');
+            if ($status == 'leader') {
+              return redirect('/index/interview/index/'.$activity_list_id)->with('error', 'Data tidak tersedia.')->with('page', 'Interview');
+            }else{
+              return redirect('index/interview/pointing_call')->with('error', 'Data tidak tersedia.')->with('page', 'Interview');
+            }
           }
       }
 
@@ -864,7 +1092,7 @@ class InterviewController extends Controller
         $interviewDetail = DB::select($interviewDetailQuery);
         $jumlahDetail = count($interviewDetail);
         $approvecount = count($approve);
-        if($approvecount < $jumlahDetail){
+        if($approve < $jumlahDetail){
           return redirect('/index/interview/print_email/'.$interview_id)->with('error', 'Data Belum Terverifikasi. Checklist semua poin jika akan verifikasi data.')->with('page', 'Interview');
         }
         else{
@@ -876,7 +1104,7 @@ class InterviewController extends Controller
         }
     }
 
-    function insertpicture(Request $request, $id)
+    function insertpicture(Request $request, $id,$status)
     {
             $id_user = Auth::id();
             $tujuan_upload = 'data_file/interview';
@@ -897,22 +1125,33 @@ class InterviewController extends Controller
             ]);
         
 
-        return redirect('index/interview/details/'.$id)
+        if ($status == 'leader') {
+          return redirect('index/interview/details/'.$id)
             ->with('page', 'Interview Report')->with('status', 'New Pictrue has been created.');
+        }else{
+          return redirect('index/interview/pointing_call/details/'.$id)
+            ->with('page', 'Interview Report')->with('status', 'New Pictrue has been created.');
+        }
     }
 
-    public function destroypicture($id,$picture_id)
+    public function destroypicture($id,$picture_id,$status)
     {
       $interview = InterviewPicture::find($picture_id);
       $interview->delete();
 
-      return redirect('/index/interview/details/'.$id)
+      if ($status == 'leader') {
+        return redirect('/index/interview/details/'.$id)
+        ->with('status', 'Interview Picture has been deleted.')
+        ->with('page', 'Interview');
+      }else{
+        return redirect('/index/interview/pointing_call/details/'.$id)
         ->with('status', 'Interview Picture has been deleted.')
         ->with('page', 'Interview');
         //
+      }
     }
 
-    function editpicture(Request $request, $id,$picture_id)
+    function editpicture(Request $request, $id,$picture_id,$status)
     {
         try{
             $tujuan_upload = 'data_file/interview';
@@ -930,7 +1169,11 @@ class InterviewController extends Controller
             $interview_picture->extension = $extension;
             $interview_picture->save();
 
-            return redirect('/index/interview/details/'.$id)->with('status', 'Interview Picture data has been updated.')->with('page', 'Interview');
+            if ($status == 'leader') {
+              return redirect('/index/interview/details/'.$id)->with('status', 'Interview Picture data has been updated.')->with('page', 'Interview');
+            }else{
+              return redirect('/index/interview/pointing_call/details/'.$id)->with('status', 'Interview Picture data has been updated.')->with('page', 'Interview');
+            }
           }
           catch (QueryException $e){
             $error_code = $e->errorInfo[1];

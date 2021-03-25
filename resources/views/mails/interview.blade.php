@@ -16,6 +16,7 @@
 </head>
 <body>
 					@foreach($data as $col2)
+						<?php $status = $col2->status ?>
 						<?php $activity_name = $col2->activity_name ?>
 						<?php $department_name = $col2->department_name ?>
 						<?php $date_interview = $col2->date ?>
@@ -36,10 +37,14 @@
 					<tr>
 						<th style="width: 1%; border:1px solid black;">#</th>
 						<th style="width: 2%; border:1px solid black;">Section</th>
-						<th style="width: 2%; border:1px solid black;">Sub Section</th>
+						<th style="width: 2%; border:1px solid black;">Group</th>
 						<th style="width: 2%; border:1px solid black;">Periode</th>
 						<th style="width: 2%; border:1px solid black;">Date</th>
-						<th style="width: 2%; border:1px solid black;">Leader</th>
+						<?php if ($status == 'leader'){ ?>
+							<th style="width: 2%; border:1px solid black;">Leader</th>
+						<?php }else{ ?>
+							<th style="width: 2%; border:1px solid black;">Chief / Staff</th>
+						<?php } ?>
 					</tr>
 				</thead>
 				<tbody>

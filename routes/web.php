@@ -3040,12 +3040,16 @@ Route::get('index/display/shipment_progress_all', 'ShipmentController@indexShipm
 Route::get('index/display/eff_scrap', 'DisplayController@indexEffScrap');
 Route::get('fetch/display/eff_scrap', 'DisplayController@fetchEffScrap');
 
-//DISPLAY EFFICIENCT
+//DISPLAY EFFICIENCY
 Route::get('index/display/efficiency_monitoring', 'DisplayController@indexEfficiencyMonitoring');
 Route::get('index/display/efficiency_monitoring_monthly', 'DisplayController@indexEfficiencyMonitoringMonthly');
 
 Route::get('fetch/display/efficiency_monitoring', 'DisplayController@fetchEfficiencyMonitoring');
 Route::get('fetch/display/efficiency_monitoring_monthly', 'DisplayController@fetchEfficiencyMonitoringMonthly');
+
+//EFFICIENCY
+Route::get('index/efficiency/operator_loss_time', 'EfficiencyController@indexOperatorLossTime');
+
 
 //DISPLAY RAW MATERIAL
 Route::get('index/material/material_monitoring/{id}', 'MaterialController@indexMaterialMonitoring');
@@ -3240,27 +3244,29 @@ Route::get('index/getemployee', 'AuditReportActivityController@getemployee');
 Route::get('index/interview/index/{id}', 'InterviewController@index');
 Route::post('index/interview/filter_interview/{id}', 'InterviewController@filter_interview');
 Route::get('index/interview/show/{id}/{interview_id}', 'InterviewController@show');
-Route::get('index/interview/destroy/{id}/{interview_id}', 'InterviewController@destroy');
+Route::get('index/interview/destroy/{id}/{interview_id}/{status}', 'InterviewController@destroy');
 Route::get('index/interview/create/{id}', 'InterviewController@create');
 Route::post('index/interview/store/{id}', 'InterviewController@store');
 Route::get('index/interview/edit/{id}/{interview_id}', 'InterviewController@edit');
-Route::post('index/interview/update/{id}/{interview_id}', 'InterviewController@update');
+Route::post('index/interview/update/{id}/{interview_id}/{status}', 'InterviewController@update');
 Route::get('index/interview/details/{interview_id}', 'InterviewController@details');
 Route::post('index/interview/create_participant', 'InterviewController@create_participant');
 Route::get('index/interview/getdetail','InterviewController@getdetail')->name('interview.getdetail');
 Route::post('index/interview/edit_participant/{interview_id}/{detail_id}', 'InterviewController@edit_participant');
-Route::get('index/interview/destroy_participant/{interview_id}/{detail_id}', 'InterviewController@destroy_participant');
+Route::get('index/interview/destroy_participant/{interview_id}/{detail_id}/{status}', 'InterviewController@destroy_participant');
 Route::get('index/interview/print_interview/{interview_id}', 'InterviewController@print_interview');
 Route::get('index/interview/print_email/{interview_id}', 'InterviewController@print_email');
 Route::get('index/interview/print_approval/{activity_list_id}/{month}', 'InterviewController@print_approval');
 Route::post('index/interview/approval/{interview_id}', 'InterviewController@approval');
-Route::get('index/interview/sendemail/{interview_id}', 'InterviewController@sendemail');
-Route::post('index/interview/insertpicture/{id}', 'InterviewController@insertpicture');
-Route::get('index/interview/destroypicture/{id}/{picture_id}', 'InterviewController@destroypicture');
-Route::post('index/interview/editpicture/{id}/{picture_id}', 'InterviewController@editpicture');
+Route::get('index/interview/sendemail/{interview_id}/{status}', 'InterviewController@sendemail');
+Route::post('index/interview/insertpicture/{id}/{status}', 'InterviewController@insertpicture');
+Route::get('index/interview/destroypicture/{id}/{picture_id}/{status}', 'InterviewController@destroypicture');
+Route::post('index/interview/editpicture/{id}/{picture_id}/{status}', 'InterviewController@editpicture');
 Route::get('index/interview/detail_nilai', 'InterviewController@detailNilai');
 
 Route::get('index/interview/pointing_call', 'InterviewController@indexPointingCall');
+Route::get('index/interview/pointing_call/details/{interview_id}', 'InterviewController@detailsPointingCall');
+Route::get('index/interview/pointing_call/edit/{id}/{interview_id}', 'InterviewController@editPointingCall');
 
 //DAILY CHECK FG
 Route::get('index/daily_check_fg/product/{id}', 'DailyCheckController@product');
@@ -4431,6 +4437,8 @@ Route::get('fetch/warehouse/location', 'WarehouseController@fetchLocation');
 Route::post('post/warehouse/operator/position', 'WarehouseController@postOpWarehousePosition');
 Route::get('fetch/display/rincian', 'WarehouseController@fetchWarehouseRincian');
 Route::get('index/create_job', 'WarehouseController@indexCreateJob');
+Route::post('create/employee/warehouse', 'WarehouseController@createEmployee');
+
 
 
 
