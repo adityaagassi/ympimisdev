@@ -223,9 +223,16 @@
 									var isLast = false;
 									if(this.point.x === this.series.data[this.series.data.length -1].x && this.point.y === this.series.data[this.series.data.length -1].y) isLast = true;
 
-									return isLast ? this.x : '';
-								}
-							}
+
+									console.log(this.x+" "+isLast);
+									if (isLast) {
+										return this.x;
+									} else {
+										return '';
+									}
+								},
+								allowOverlap: true
+							},
 						}
 					},
 
