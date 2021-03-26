@@ -83,7 +83,7 @@
               </tr>
               <tr>
                 <td colspan="4">
-                  <table width="100%" id="tombol" style="display: none">                    
+                  <table id="tombol" style="display: none; width: 100%">                    
                   </table>
                 </td>
               </tr>
@@ -91,8 +91,17 @@
                 <th colspan="4" style="background-color: #7e5686; color: white"><center>Heart Rate :</center></th>
               </tr>
               <tr>
+                <td colspan="4" id="tombol_group" style="display: none">
+                  <button class='btn btn-apps btn-primary' style='width: 19%; font-size: 20pt; font-weight: bold' onclick="tampilbutton(71,80)">71 - 80</button>
+                  <button class='btn btn-apps btn-primary' style='width: 19%; font-size: 20pt; font-weight: bold' onclick="tampilbutton(81,90)">81 - 90</button>
+                  <button class='btn btn-apps btn-primary' style='width: 19%; font-size: 20pt; font-weight: bold' onclick="tampilbutton(91,100)">91 - 100</button>
+                  <button class='btn btn-apps btn-primary' style='width: 19%; font-size: 20pt; font-weight: bold' onclick="tampilbutton(101,110)">101 - 110</button>
+                  <button class='btn btn-apps btn-primary' style='width: 19%; font-size: 20pt; font-weight: bold' onclick="tampilbutton(111,120)">111 - 120</button>
+                </td>
+              </tr>
+              <tr>
                 <td colspan="4">
-                  <table width="100%" id="tombol2" style="display: none">                    
+                  <table width="100%" id="tombol2" style="display: none; width: 100%">                    
                   </table>
                 </td>
               </tr>
@@ -161,7 +170,7 @@
       tombol += "<tr>";
     } 
 
-    if (z == 8) {
+    if (z == 12) {
       tombol += "</tr>";
       tombol += "<tr>";
 
@@ -176,26 +185,34 @@
   }
 
   $("#tombol").append(tombol);
+  $("#tombol_group").show();
+}
 
+function tampilbutton(min, max) {
   $("#tombol2").show();
   $("#tombol2").empty();
   tombol2 = "";
 
   var x = 1;
-  for (var i = 81; i <= 120; i++) {
-   if (i == 81) {
+  for (var i = min; i <= max; i++) {
+   if (i == min) {
     tombol2 += "<tr>";
   } 
+  tombol2 += "<td style='padding: 1vw;'><button onclick='save("+i+", \"heart\")' class='btn btn-apps btn-primary' style='width: 100%; font-size: 20pt; font-weight: bold'>"+i+"</button></td>";
 
-  if (x == 11) {
+  if (i == max) {
     tombol2 += "</tr>";
-    tombol2 += "<tr>";
+  } 
 
-    tombol2 += "<td style='padding: 1vw;'><button onclick='save("+i+", \"heart\")' class='btn btn-apps btn-primary' style='width: 100%; font-size: 20pt; font-weight: bold'>"+i+"</button></td>";
-    x = 1;
-  } else {
-    tombol2 += "<td style='padding: 1vw;'><button onclick='save("+i+", \"heart\")' class='btn btn-apps btn-primary' style='width: 100%; font-size: 20pt; font-weight: bold'>"+i+"</button></td>";
-  }
+  // if (x == 11) {
+  //   tombol2 += "</tr>";
+  //   tombol2 += "<tr>";
+
+  //   tombol2 += "<td style='padding: 1vw;'><button onclick='save("+i+", \"heart\")' class='btn btn-apps btn-primary' style='width: 100%; font-size: 20pt; font-weight: bold'>"+i+"</button></td>";
+  //   x = 1;
+  // } else {
+  //   tombol2 += "<td style='padding: 1vw;'><button onclick='save("+i+", \"heart\")' class='btn btn-apps btn-primary' style='width: 100%; font-size: 20pt; font-weight: bold'>"+i+"</button></td>";
+  // }
 
 
   x++;
@@ -257,6 +274,8 @@ function save(val, ctg) {
     if (result.status) {
       audio_ok.play();
       openSuccessGritter('Success', 'Data has been Saved');
+      $("#tombol2").empty();
+      $("#tombol2").hide();
 
       // $("#op_name").val("");
       // $("#op_id").val("");
@@ -264,6 +283,8 @@ function save(val, ctg) {
         $("#oxy_val").val(val);
       } else {
         $("#heart_val").val(val);
+        $("#tombol_group").hide();
+        $("#tombol").hide();
       }
 
       $("#item_scan").focus();
