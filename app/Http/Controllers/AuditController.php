@@ -456,7 +456,6 @@ public function detailMonitoringCategory(Request $request){
 
     $kategori = $request->get('kategori');
 
-
     $status = $request->get('status');
 
     if ($status != null) {
@@ -470,6 +469,10 @@ public function detailMonitoringCategory(Request $request){
 
     } else{
       $stat = '';
+    }
+
+    if ($kategori == "EHS 5S Monthly Patrol") {
+      $kategori = "EHS & 5S Patrol";
     }
 
     $query = "select audit_all_results.* FROM audit_all_results where audit_all_results.deleted_at is null and kategori = '".$kategori."' ".$stat."";
