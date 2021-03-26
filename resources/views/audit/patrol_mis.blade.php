@@ -293,7 +293,6 @@
 			}
 		});
 
-
 		var counter = 2;
 		var add_point = [];
 
@@ -328,11 +327,11 @@
 				$("html").scrollTop(0);
 				return false;
 			}
+			
 			else{
 				$('#employee_name').html("{{$employee->name}}");
 				$('#employee_id').val("{{$employee->employee_id}}");
 			}
-
 
 			if(lokasi == ""){
 				$("#loading").hide();

@@ -2,7 +2,10 @@
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
-
+ p > img{
+  max-width: 300px;
+  height: auto !important;
+}
 </style>
 @stop
 @section('header')
@@ -42,8 +45,82 @@
 			<a href="{{ url('index/audit_patrol/monitoring') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">GM & Presdir Patrol Monitoring (パトロール監視)</a>
 			<a href="{{ url('index/audit_patrol_monitoring/monthly_patrol') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Monthly Patrol Monitoring (パトロール監視)</a>
 		</div>
-
 	</div>
+
+	<div class="modal fade" id="myModalCategory">
+    <div class="modal-dialog modal-lg" style="width:1250px;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 style="float: right;" id="modal-title"></h4>
+          <h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
+          <br><h4 class="modal-title" id="judul_table_category"></h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12">
+              <table id="example3" class="table table-striped table-bordered table-hover" style="width: 100%;color: black"> 
+                <thead style="background-color: rgba(126,86,134,.7);">
+                  <tr>
+                    <th>Kategori</th>
+                    <th>Tanggal</th>
+                    <th>Lokasi</th>
+                    <th>Auditee</th>
+                    <th>Poin Judul</th>
+                    <th>Note</th>
+                    <th>Foto</th>
+                    <th>Penanganan</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="myModalType">
+    <div class="modal-dialog modal-lg" style="width:1250px;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 style="float: right;" id="modal-title"></h4>
+          <h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
+          <br><h4 class="modal-title" id="judul_table_type"></h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12">
+              <table id="example4" class="table table-striped table-bordered table-hover" style="width: 100%;color: black"> 
+                <thead style="background-color: rgba(126,86,134,.7);">
+                  <tr>
+                    <th>Kategori</th>
+                    <th>Tanggal</th>
+                    <th>Lokasi</th>
+                    <th>Auditee</th>
+                    <th>Poin Judul</th>
+                    <th>Note</th>
+                    <th>Foto</th>
+                    <th>Penanganan</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </section>
 @endsection
 @section('scripts')
@@ -317,6 +394,172 @@
 	      }
 	    })
 	  }
+
+
+	  function ShowModalCategory(kategori, status) {
+	    tabel = $('#example3').DataTable();
+	    tabel.destroy();
+
+	    $("#myModalCategory").modal("show");
+
+	    var table = $('#example3').DataTable({
+	      'dom': 'Bfrtip',
+	      'responsive': true,
+	      'lengthMenu': [
+	      [ 10, 25, 50, -1 ],
+	      [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+	      ],
+	      'buttons': {
+	        buttons:[
+	        {
+	          extend: 'pageLength',
+	          className: 'btn btn-default',
+	          // text: '<i class="fa fa-print"></i> Show',
+	        },
+	        {
+	          extend: 'copy',
+	          className: 'btn btn-success',
+	          text: '<i class="fa fa-copy"></i> Copy',
+	          exportOptions: {
+	            columns: ':not(.notexport)'
+	          }
+	        },
+	        {
+	          extend: 'excel',
+	          className: 'btn btn-info',
+	          text: '<i class="fa fa-file-excel-o"></i> Excel',
+	          exportOptions: {
+	            columns: ':not(.notexport)'
+	          }
+	        },
+	        {
+	          extend: 'print',
+	          className: 'btn btn-warning',
+	          text: '<i class="fa fa-print"></i> Print',
+	          exportOptions: {
+	            columns: ':not(.notexport)'
+	          }
+	        },
+	        ]
+	      },
+	      'paging': true,
+	      'lengthChange': true,
+	      'searching': true,
+	      'ordering': true,
+	      'order': [],
+	      'info': true,
+	      'autoWidth': true,
+	      "sPaginationType": "full_numbers",
+	      "bJQueryUI": true,
+	      "bAutoWidth": false,
+	      "processing": true,
+	      "serverSide": true,
+	      "ajax": {
+	        "type" : "get",
+	        "url" : "{{ url("index/audit_patrol/detail_category") }}",
+	        "data" : {
+	          kategori : kategori,
+	          status : status
+	        }
+	      },
+	      "columns": [
+	      {"data": "kategori", "width": "5%"},
+	      {"data": "tanggal" , "width": "5%"},
+	      {"data": "lokasi" , "width": "5%"},
+	      {"data": "auditee_name" , "width": "5%"},
+	      {"data": "point_judul", "width": "5%"},
+	      {"data": "note", "width": "15%"},
+	      {"data": "foto", "width": "20%"},
+	      {"data": "penanganan", "width": "25%"}
+	      ]    
+	    });
+
+	    $('#judul_table_category').append().empty();
+	    $('#judul_table_category').append('<center><b>Temuan Patrol '+kategori+'</b></center>'); 
+	  }
+
+	  function ShowModalType(type, status) {
+	    tabel = $('#example4').DataTable();
+	    tabel.destroy();
+
+	    $("#myModalType").modal("show");
+
+	    var table = $('#example4').DataTable({
+	      'dom': 'Bfrtip',
+	      'responsive': true,
+	      'lengthMenu': [
+	      [ 10, 25, 50, -1 ],
+	      [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+	      ],
+	      'buttons': {
+	        buttons:[
+	        {
+	          extend: 'pageLength',
+	          className: 'btn btn-default',
+	          // text: '<i class="fa fa-print"></i> Show',
+	        },
+	        {
+	          extend: 'copy',
+	          className: 'btn btn-success',
+	          text: '<i class="fa fa-copy"></i> Copy',
+	          exportOptions: {
+	            columns: ':not(.notexport)'
+	          }
+	        },
+	        {
+	          extend: 'excel',
+	          className: 'btn btn-info',
+	          text: '<i class="fa fa-file-excel-o"></i> Excel',
+	          exportOptions: {
+	            columns: ':not(.notexport)'
+	          }
+	        },
+	        {
+	          extend: 'print',
+	          className: 'btn btn-warning',
+	          text: '<i class="fa fa-print"></i> Print',
+	          exportOptions: {
+	            columns: ':not(.notexport)'
+	          }
+	        },
+	        ]
+	      },
+	      'paging': true,
+	      'lengthChange': true,
+	      'searching': true,
+	      'ordering': true,
+	      'order': [],
+	      'info': true,
+	      'autoWidth': true,
+	      "sPaginationType": "full_numbers",
+	      "bJQueryUI": true,
+	      "bAutoWidth": false,
+	      "processing": true,
+	      "serverSide": true,
+	      "ajax": {
+	        "type" : "get",
+	        "url" : "{{ url("index/audit_patrol/detail_type") }}",
+	        "data" : {
+	          type : type,
+	          status : status
+	        }
+	      },
+	      "columns": [
+	      {"data": "kategori", "width": "5%"},
+	      {"data": "tanggal" , "width": "5%"},
+	      {"data": "lokasi" , "width": "5%"},
+	      {"data": "auditee_name" , "width": "5%"},
+	      {"data": "point_judul", "width": "5%"},
+	      {"data": "note", "width": "15%"},
+	      {"data": "foto", "width": "20%"},
+	      {"data": "penanganan", "width": "25%"}
+	      ]    
+	    });
+
+	    $('#judul_table_type').append().empty();
+	    $('#judul_table_type').append('<center><b>Patrol Kategori '+type+' '+status+'</b></center>'); 
+	  }
+
 
 </script>
 @endsection

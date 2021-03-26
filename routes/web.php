@@ -948,6 +948,13 @@ Route::group(['nav' => 'M10', 'middleware' => 'permission'], function(){
 	Route::post('edit/weekly_calendar/{week_name}/{fiscal_year}', 'WeeklyCalendarController@update');
 	Route::get('show/weekly_calendar/{week_name}/{fiscal_year}', 'WeeklyCalendarController@show');
 	Route::post('import/weekly_calendar', 'WeeklyCalendarController@import');
+
+	Route::get('index/psi_calendar', 'WeeklyCalendarController@indexPsi');
+	Route::get('fetch/psi_calendar', 'WeeklyCalendarController@fetchPsi');
+
+
+
+
 });
 
 Route::group(['nav' => 'M9', 'middleware' => 'permission'], function(){
@@ -3763,6 +3770,9 @@ Route::get('fetch/audit_patrol', 'AuditController@fetch_audit');
 Route::post('post/audit_patrol', 'AuditController@post_audit');
 Route::post('post/audit_patrol_file', 'AuditController@post_audit_file');
 
+
+Route::get('index/audit_patrol_stocktaking', 'AuditController@index_audit_stocktaking');
+
 Route::get('index/audit_patrol/monitoring', 'AuditController@indexMonitoring');
 Route::get('fetch/audit_patrol/monitoring', 'AuditController@fetchMonitoring');
 Route::get('index/audit_patrol/detail', 'AuditController@detailMonitoring');
@@ -4503,6 +4513,9 @@ Route::get('fetch/qa/ng_temp','QualityAssuranceController@fetchNgTemp');
 Route::get('delete/qa/ng_temp','QualityAssuranceController@deleteNgTemp');
 Route::get('fetch/qa/ng_list','QualityAssuranceController@fetchNgList');
 Route::post('input/qa/ng_log', 'QualityAssuranceController@inputNgLog');
+
+// QA Display Incoming Check
+Route::get('index/qa/display/incoming_check', 'QualityAssuranceController@indexDisplayIncomingCheck');
 
 //Health Indicator
 Route::get('index/health/{loc}', 'HealthController@index');

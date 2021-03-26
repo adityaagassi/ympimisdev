@@ -135,7 +135,8 @@
 
           <form method="GET" action="{{ url("export/patrol/list") }}">
           <div class="col-md-12" style="padding: 1px !important">
-            <div class="col-xs-2">
+
+            <div class="col-xs-2 col-xs-offset-6">
               <div class="input-group date">
                 <div class="input-group-addon bg-green" style="border: none;">
                   <i class="fa fa-calendar"></i>
@@ -165,6 +166,25 @@
           </form>
 
         <?php } ?>
+
+      <div class="col-md-12" style="padding: 1px !important">
+        <div class="col-xs-2">
+          <div class="input-group date">
+            <div class="input-group-addon bg-green" style="border: none;">
+              <i class="fa fa-calendar"></i>
+            </div>
+            <input type="text" class="form-control datepicker" id="datefrom" placeholder="Select Date From"onchange="drawChart()">
+          </div>
+        </div>
+        <div class="col-xs-2">
+          <div class="input-group date">
+            <div class="input-group-addon bg-green" style="border: none;">
+              <i class="fa fa-calendar"></i>
+            </div>
+            <input type="text" class="form-control datepicker" id="dateto" placeholder="Select Date To" onchange="drawChart()">
+          </div>
+        </div>
+      </div>
       
       <div class="col-md-12" style="padding-top: 10px;">
         <div id="chart" style="width: 99%; height: 300px;"></div>
@@ -584,8 +604,7 @@
             itemStyle:{
               color: "white",
               fontSize: "12px",
-              fontWeight: "bold",
-
+              fontWeight: "bold"
             }
           },
           plotOptions: {

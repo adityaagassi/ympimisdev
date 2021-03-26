@@ -167,7 +167,7 @@
         <?php } ?> -->
       
       <div class="col-md-12" style="padding-top: 10px;">
-        <div id="chart" style="width: 99%; height: 300px;"></div>
+        <div id="chart_bulan" style="width: 99%; height: 300px;"></div>
       </div>
       
       <div class="col-md-12" style="">
@@ -200,11 +200,11 @@
         </table>
       </div>
 
-        <div class="col-xs-12">
+        <!-- <div class="col-xs-12">
           <div class="row">
             <hr style="border: 1px solid red;background-color: red">
           </div>
-        </div>
+        </div> -->
 
         <!-- <div class="col-md-12" style="padding: 1px !important">
             <div class="col-xs-2">
@@ -221,9 +221,9 @@
           <div id="chart_kategori" style="width: 99%; height: 300px;"></div>
         </div> -->
 
-        <div class="col-md-12" style="padding-top: 30px;">
+        <!-- <div class="col-md-12" style="padding-top: 30px;">
           <div id="chart_bulan" style="width: 99%; height: 300px;"></div>
-        </div>
+        </div> -->
 
     </div>
   </div>
