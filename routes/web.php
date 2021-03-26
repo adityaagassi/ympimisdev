@@ -4318,6 +4318,9 @@ Route::post('delete/inventory_mis', 'DailyReportController@deleteInventoryMIS');
 
 Route::get('print/inventory_mis/{id}', 'DailyReportController@printInventory');
 
+Route::get('print2/inventory_mis/{id}', 'DailyReportController@printInventory2');
+
+
 //Emergency Survey
 Route::get('index/survey', 'SurveyController@indexSurvey');
 Route::get('fetch/survey', 'SurveyController@fetchSurvey');
