@@ -368,11 +368,25 @@
 		if(name == 'CL'){
 			var hpl = 'CLFG';
 		}
-		if(name == 'SXKEY'){
-			var hpl = 'SUBASSY-SX';
+
+
+		if(name == 'MP'){
+			var hpl = 'MP';
 		}
-		if(name == 'SXBODY'){
-			var hpl = 'ASSY-SX';
+		if(name == 'PN PART'){
+			var hpl = 'PN-PART';
+		}
+		if(name == 'VN ASSY'){
+			var hpl = 'VN-ASSY';
+		}
+		if(name == 'VN INJ'){
+			var hpl = 'VN-INJECTION';
+		}
+		if(name == 'MP'){
+			var hpl = 'MP';
+		}
+		if(name == 'MP'){
+			var hpl = 'MP';
 		}
 		if(name == 'MPRO'){
 			var hpl = 'MPRO';
@@ -380,15 +394,37 @@
 		if(name == 'ZPRO'){
 			var hpl = 'ZPRO';
 		}
-		if(name == 'CLKEY'){
-			var hpl = 'SUBASSY-CL';
+		if(name == 'BPRO'){
+			var hpl = 'BPRO';
+		}
+		if(name == 'WELDING'){
+			var hpl = 'WELDING';
 		}
 		if(name == 'FLKEY'){
 			var hpl = 'SUBASSY-FL';
 		}
-		if(name == 'MP'){
-			var hpl = 'MP';
+		if(name == 'CLKEY'){
+			var hpl = 'SUBASSY-CL';
 		}
+		if(name == 'SXBODY'){
+			var hpl = 'ASSY-SX';
+		}
+		if(name == 'SXKEY'){
+			var hpl = 'SUBASSY-SX';
+		}
+		if(name == 'CASE'){
+			var hpl = 'CASE';
+		}
+		if(name == 'CLBODY'){
+			var hpl = 'CL-BODY';
+		}
+		if(name == 'TANPO'){
+			var hpl = 'TANPO';
+		}
+
+		
+
+
 
 		var data = {
 			date:cat,
@@ -1044,12 +1080,6 @@ $.get('{{ url("fetch/kd_shipment_progress") }}', data, function(result, status, 
 				showInLegend: false
 			}, {
 				name: 'Plan',
-				data: planClBody,
-				stack: 'CLBODY',
-				color: 'rgba(255, 0, 0, 0.25)',
-				showInLegend: false
-			}, {
-				name: 'Plan',
 				data: planCase,
 				stack: 'CASE',
 				color: 'rgba(255, 0, 0, 0.25)',
@@ -1070,6 +1100,12 @@ $.get('{{ url("fetch/kd_shipment_progress") }}', data, function(result, status, 
 				name: 'Plan',
 				data: planSubAssyCL,
 				stack: 'CLKEY',
+				color: 'rgba(255, 0, 0, 0.25)',
+				showInLegend: false
+			}, {
+				name: 'Plan',
+				data: planClBody,
+				stack: 'CLBODY',
 				color: 'rgba(255, 0, 0, 0.25)',
 				showInLegend: false
 			}, {
@@ -1136,12 +1172,6 @@ $.get('{{ url("fetch/kd_shipment_progress") }}', data, function(result, status, 
 				showInLegend: false
 			}, {
 				name: 'Actual',
-				data: actualClBody,
-				stack: 'CLBODY',
-				color: 'rgba(0, 255, 0, 0.90)',
-				showInLegend: false
-			},  {
-				name: 'Actual',
 				data: actualCase,
 				stack: 'CASE',
 				color: 'rgba(0, 255, 0, 0.90)',
@@ -1164,7 +1194,13 @@ $.get('{{ url("fetch/kd_shipment_progress") }}', data, function(result, status, 
 				stack: 'CLKEY',
 				color: 'rgba(0, 255, 0, 0.90)',
 				showInLegend: false
-			}, {
+			},  {
+				name: 'Actual',
+				data: actualClBody,
+				stack: 'CLBODY',
+				color: 'rgba(0, 255, 0, 0.90)',
+				showInLegend: false
+			},  {
 				name: 'Actual',
 				data: actualSubAssyFL,
 				stack: 'FLKEY',
