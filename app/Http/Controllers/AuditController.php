@@ -175,7 +175,7 @@ class AuditController extends Controller
     ->select('employee_id', 'name', 'position', 'department')->first();
 
     $auditee = db::select("select DISTINCT employee_id, name, section, position from employee_syncs
-      where end_date is null and (position like '%Staff%' or position like '%Chief%' or position like '%Foreman%' or position like '%Manager%' or position like '%Coordinator%')");
+      where end_date is null and (position like '%Staff%' or position like '%Chief%' or position like '%Foreman%' or position like '%Manager%' or position like '%Coordinator%' or position like '%Leader%')");
 
     return view('audit.audit_stocktaking', array(
       'title' => $title,
@@ -306,16 +306,16 @@ class AuditController extends Controller
           'created_by' => $id_user
         ]);
 
-        $id = $audit_all->id;
+        // $id = $audit_all->id;
 
-        $mails = "select distinct email from users where name = '".$request->input('patrol_pic_'.$i)."'";
-        $mailtoo = DB::select($mails);
+        // $mails = "select distinct email from users where name = '".$request->input('patrol_pic_'.$i)."'";
+        // $mailtoo = DB::select($mails);
 
-        $isimail = "select * from audit_all_results where id = ".$id;
+        // $isimail = "select * from audit_all_results where id = ".$id;
 
-        $auditdata = db::select($isimail);
+        // $auditdata = db::select($isimail);
 
-        Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com'])->send(new SendEmail($auditdata, 'patrol'));
+        // Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com'])->send(new SendEmail($auditdata, 'patrol'));
       }
 
       $response = array(
