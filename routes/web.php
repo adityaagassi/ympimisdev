@@ -1137,6 +1137,8 @@ Route::get('index/std_control/safety_shoes_log', 'GeneralController@indexSafetyS
 Route::get('fetch/std_control/safety_shoes_log', 'GeneralController@fetchSafetyShoesLog');
 
 
+Route::get('index/flo_open', 'FloController@index_flo_open');
+Route::get('fetch/flo_open', 'FloController@fetch_flo_open');
 
 
 Route::group(['nav' => 'S1', 'middleware' => 'permission'], function(){

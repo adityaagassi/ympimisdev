@@ -61,6 +61,20 @@ class FloController extends Controller
 
 	}
 
+	public function index_flo_open(){
+		$title = "FLO Open Destination";
+		$title_jp = "";
+
+		$hpl = DB::select("SELECT DISTINCT hpl FROM materials
+			WHERE category = 'FG'");
+
+		return view('flos.flo_open', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'hpls' => $hpl
+		))->with('page', $title)->with('head', $title);
+	}
+
 	public function index_bi(){
 		$flos = Flo::orderBy('flo_number', 'asc')
 		->whereIn('flos.status', ['0', '1'])
@@ -333,6 +347,43 @@ class FloController extends Controller
 		return DataTables::of($invoices)
 		->addColumn('action', function($invoices){return '<center><a href="javascript:void(0)" class="btn btn-success" data-toggle="modal" onClick="updateConfirmation(id)" id="' . $invoices->container_id . '"><i class="fa fa-upload"></i></a></center>';})
 		->make(true);
+	}
+
+	public function fetch_flo_open(Request $request){
+
+		$hpl = '';
+		if($request->get('hpl') != null){
+			$hpls =  $request->get('hpl');
+			for ($i=0; $i < count($hpls); $i++) {
+				$hpl = $hpl."'".$hpls[$i]."'";
+				if($i != (count($hpls)-1)){
+					$hpl = $hpl.',';
+				}
+			}
+			$hpl = "AND m.hpl IN (".$hpl.") ";
+		}
+
+		$data = db::select("SELECT st.st_date, st.destination_shortname, st.hpl, st.material_number, st.material_description, st.quantity, COALESCE(flo.actual,0) AS actual, st.quantity - COALESCE(flo.actual,0) AS diff  FROM
+			(SELECT st.id, st.st_date, d.destination_shortname, m.hpl, st.material_number, m.material_description, st.quantity FROM shipment_schedules st
+			LEFT JOIN materials m ON m.material_number = st.material_number
+			LEFT JOIN destinations d ON d.destination_code = st.destination_code
+			WHERE m.category = 'FG'
+			".$hpl."
+			) AS st
+			LEFT JOIN
+			(SELECT shipment_schedule_id, SUM(actual) AS actual FROM flos
+			GROUP BY shipment_schedule_id
+			) flo
+			ON st.id = flo.shipment_schedule_id
+			HAVING diff > 0
+			ORDER BY st.st_date ASC, diff DESC");
+
+		$response = array(
+			'status' => true,
+			'data' => $data,
+			'date' => date('Y-m-d H:i:s')
+		);
+		return Response::json($response);
 	}
 
 	public function fetch_flo_lading(Request $request){
