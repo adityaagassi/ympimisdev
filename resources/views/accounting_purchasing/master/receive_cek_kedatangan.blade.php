@@ -61,7 +61,7 @@
 		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 		<h4><i class="icon fa fa-thumbs-o-up"></i> Success!</h4>
 		{{ session('success') }}
-	</div>   
+	</div>
 	@endif
 	@if (session('status'))
 	  <div class="alert alert-success alert-dismissible">

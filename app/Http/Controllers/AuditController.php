@@ -14,6 +14,7 @@ use Excel;
 use App\Mail\SendEmail;
 use Illuminate\Support\Facades\Mail;
 use App\AuditAllResult;
+use App\StandarisasiAuditIso;
 use App\EmployeeSync;
 
 class AuditController extends Controller
@@ -72,7 +73,7 @@ class AuditController extends Controller
 		->select('employee_id', 'name', 'position', 'department')->first();
 
 		$auditee = db::select("select DISTINCT employee_id, name, section, position from employee_syncs
-			where end_date is null and (position like '%Staff%' or position like '%Chief%' or position like '%Foreman%' or position like 'Manager%')");
+			where end_date is null and (position like '%Staff%' or position like '%Chief%' or position like '%Foreman%' or position like '%Manager%' or position like '%Coordinator%')");
 
 		return view('audit.patrol', array(
 			'title' => $title,
@@ -96,6 +97,7 @@ class AuditController extends Controller
         sum( CASE WHEN status_ditangani IS NOT NULL THEN 1 ELSE 0 END ) AS jumlah_sudah
       FROM
         audit_all_results 
+      WHERE jenis = 'Patrol'
       GROUP BY
         kategori
       ORDER BY jumlah_belum ASC
@@ -109,6 +111,7 @@ class AuditController extends Controller
       FROM
         audit_all_results 
       WHERE point_judul is not null
+      and jenis = 'Patrol'
       GROUP BY
         point_judul
       ORDER BY point_judul ASC
@@ -132,7 +135,7 @@ class AuditController extends Controller
     ->select('employee_id', 'name', 'position', 'department')->first();
 
     $auditee = db::select("select DISTINCT employee_id, name, section, position from employee_syncs
-      where end_date is null and (position like '%Staff%' or position like '%Chief%' or position like '%Foreman%' or position like 'Manager%')");
+      where end_date is null and (position like '%Staff%' or position like '%Chief%' or position like '%Foreman%' or position like '%Manager%' or position like '%Coordinator%')");
 
     return view('audit.patrol_mis', array(
       'title' => $title,
@@ -152,7 +155,7 @@ class AuditController extends Controller
     ->select('employee_id', 'name', 'position', 'department')->first();
 
     $auditee = db::select("select DISTINCT employee_id, name, section, position from employee_syncs
-      where end_date is null and (position like '%Staff%' or position like '%Chief%' or position like '%Foreman%' or position like 'Manager%')");
+      where end_date is null and (position like '%Staff%' or position like '%Chief%' or position like '%Foreman%' or position like '%Manager%' or position like '%Coordinator%')");
 
     return view('audit.patrol_std', array(
       'title' => $title,
@@ -161,6 +164,26 @@ class AuditController extends Controller
       'auditee' => $auditee,
       'location' => $this->location
     ))->with('page', 'EHS dan 5S Bulanan');
+  }
+
+  public function index_audit_stocktaking()
+  {
+    $title = "Audit Stocktaking";
+    $title_jp = "";
+
+    $emp = EmployeeSync::where('employee_id', Auth::user()->username)
+    ->select('employee_id', 'name', 'position', 'department')->first();
+
+    $auditee = db::select("select DISTINCT employee_id, name, section, position from employee_syncs
+      where end_date is null and (position like '%Staff%' or position like '%Chief%' or position like '%Foreman%' or position like '%Manager%' or position like '%Coordinator%')");
+
+    return view('audit.audit_stocktaking', array(
+      'title' => $title,
+      'title_jp' => $title_jp,
+      'employee' => $emp,
+      'auditee' => $auditee,
+      'location' => $this->location
+    ))->with('page', 'Audit Stocktaking');
   }
 
 
@@ -172,6 +195,7 @@ class AuditController extends Controller
 		for ($i=0; $i < count($request->get('patrol_lokasi')); $i++) { 
 			$patrol = new AuditAllResult;
 			$patrol->tanggal = date('Y-m-d');
+      $patrol->jenis = 'Patrol';
 			$patrol->kategori = $request->get('category');
 			$patrol->auditor_id = $request->get('auditor_id') ;
 			$patrol->auditor_name = $request->get('auditor_name');
@@ -210,6 +234,7 @@ class AuditController extends Controller
 				$file->move($tujuan_upload,$filename);
 
 				$audit_all = AuditAllResult::create([
+          'jenis' => 'Patrol',
 					'tanggal' => date('Y-m-d'),
 					'kategori' => $request->input('category'),
 					'lokasi' => $request->input('location'),
@@ -248,6 +273,65 @@ class AuditController extends Controller
 			return Response::json($response);
 		}
 	}
+
+  public function post_audit_stocktaking(Request $request)
+  {
+    try {
+      $id_user = Auth::id();
+      $tujuan_upload = 'files/patrol';
+
+      for ($i=0; $i < $request->input('jumlah'); $i++) { 
+
+        $file = $request->file('file_datas_'.$i);
+        $nama = $file->getClientOriginalName();
+
+        $filename = pathinfo($nama, PATHINFO_FILENAME);
+        $extension = pathinfo($nama, PATHINFO_EXTENSION);
+
+        $filename = md5($filename.date('YmdHisa')).'.'.$extension;
+
+        $file->move($tujuan_upload,$filename);
+
+        $audit_all = AuditAllResult::create([
+          'jenis' => 'Audit',
+          'tanggal' => date('Y-m-d'),
+          'kategori' => $request->input('category'),
+          'lokasi' => $request->input('location'),
+          'auditor_id' => $request->input('auditor_id'),
+          'auditor_name' => $request->input('auditor_name'),
+          'auditee_name' => $request->input('patrol_pic_'.$i),
+          'point_judul' => $request->input('patrol_detail_'.$i),
+          'note' => $request->input('note_'.$i),
+          'foto' => $filename,
+          'created_by' => $id_user
+        ]);
+
+        $id = $audit_all->id;
+
+        $mails = "select distinct email from users where name = '".$request->input('patrol_pic_'.$i)."'";
+        $mailtoo = DB::select($mails);
+
+        $isimail = "select * from audit_all_results where id = ".$id;
+
+        $auditdata = db::select($isimail);
+
+        Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com'])->send(new SendEmail($auditdata, 'patrol'));
+      }
+
+      $response = array(
+        'status' => true,
+      );
+      return Response::json($response);
+    } 
+
+    catch (\Exception $e) {
+      $response = array(
+        'status' => false,
+        'message' => $e->getMessage()
+      );
+      return Response::json($response);
+    }
+  }
 
 
 	public function fetch_audit(Request $request)
@@ -825,6 +909,8 @@ public function detailPenanganan(Request $request){
 
       if ($request->get('category') == "monthly_patrol") {
         $category = "EHS & 5S Patrol";
+      }else if ($request->get('category') == "stocktaking") {
+        $category = "Audit Stocktaking";
       }
 
       $data = db::select("SELECT
@@ -888,6 +974,8 @@ public function detailPenanganan(Request $request){
 
       if ($request->get('category') == "monthly_patrol") {
         $category = "EHS & 5S Patrol";
+      }else if ($request->get('category') == "stocktaking") {
+        $category = "Audit Stocktaking";
       }
 
 

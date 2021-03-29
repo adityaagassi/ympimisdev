@@ -148,7 +148,7 @@
 						</tr>
 						<tr>
 							<td style="padding: 0px; background-color: #3f51b5; text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Auditor</td>
-							<td colspan="2" style="padding: 0px; background-color: #01579b; text-align: center; color: white; font-size: 20px;border: 1px solid black" id="employee_name"><input type="hidden" id="employee_id"></td>
+							<td colspan="2" style="padding: 0px; background-color: #01579b; text-align: center; color: white; font-size: 20px;border: 1px solid black" id="employee_name"></td>
 						</tr>
 						<tr>
 							<td style="padding: 0px; background-color: #3f51b5; text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Category</td>
@@ -157,6 +157,8 @@
 					</tbody>
 				</table>
 			</div>
+
+			<input type="hidden" id="employee_id">
 
 			<div class="col-xs-12" style="overflow-x: scroll;padding: 0">
 
@@ -377,7 +379,7 @@
 				formData.append('jumlah', len);				
 				formData.append('category', $('#category').text());
 				formData.append('location', $('#location').val());
-				formData.append('auditor_id', $('#employee_id').text());
+				formData.append('auditor_id', $('#employee_id').val());
 				formData.append('auditor_name',  $('#employee_name').text());
 
 				$('.file').each(function(i, obj) {

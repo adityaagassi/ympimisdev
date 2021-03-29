@@ -3770,8 +3770,8 @@ Route::get('fetch/audit_patrol', 'AuditController@fetch_audit');
 Route::post('post/audit_patrol', 'AuditController@post_audit');
 Route::post('post/audit_patrol_file', 'AuditController@post_audit_file');
 
-
 Route::get('index/audit_patrol_stocktaking', 'AuditController@index_audit_stocktaking');
+Route::post('post/audit_patrol_stocktaking', 'AuditController@post_audit_stocktaking');
 
 Route::get('index/audit_patrol/monitoring', 'AuditController@indexMonitoring');
 Route::get('fetch/audit_patrol/monitoring', 'AuditController@fetchMonitoring');

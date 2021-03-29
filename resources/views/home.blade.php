@@ -991,15 +991,6 @@
                         </tr>
                         <tr>
                             <td>
-                                <span style="font-weight: bold;">Information & Evidence ()</span>
-                                <br>
-                                <a href="{{ url("/index/packing_documentation") }}">
-                                    <i class="fa fa-caret-right"></i> Packing Documentation ()
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
                                 <span style="font-weight: bold;">NG Jelas (明らか不良)</span>
                                 <br>
                                 <a href="{{ url("/index/audit_ng_jelas_monitoring") }}">
@@ -1025,6 +1016,15 @@
                                 <br>
                                 <a href="{{ url("/index/production_report/index/10") }}">
                                     <i class="fa fa-caret-right"></i> Maintenance Report (メンテナンスリポート)
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="font-weight: bold;">Information & Evidence ()</span>
+                                <br>
+                                <a href="{{ url("/index/packing_documentation") }}">
+                                    <i class="fa fa-caret-right"></i> Packing Documentation ()
                                 </a>
                             </td>
                         </tr>

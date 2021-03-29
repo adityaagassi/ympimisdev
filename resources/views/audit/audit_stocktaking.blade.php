@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.display')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <link href="{{ url("css//bootstrap-toggle.min.css") }}" rel="stylesheet">
@@ -95,7 +95,7 @@
 <section class="content-header">
 	<input type="hidden" id="green">
 	<h1>
-		EHS & 5S Monthly Patrol
+		Audit Stocktaking
 	</h1>
 	<ol class="breadcrumb">
 		<?php $user = STRTOUPPER(Auth::user()->username) ?>
@@ -143,12 +143,13 @@
 					</thead>
 					<tbody>
 						<tr>
-							<td style="padding: 0px; background-color: #3f51b5; text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Patrol Date</td>
+							<td style="padding: 0px; background-color: #3f51b5; text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Audit Date</td>
 							<td colspan="2" style="padding: 0px; background-color: #01579b; text-align: center; color: white; font-size: 20px;border: 1px solid black"><?= date("d F Y") ?></td>
 						</tr>
 						<tr>
 							<td style="padding: 0px; background-color: #3f51b5; text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Auditor</td>
-							<td colspan="2" style="padding: 0px; background-color: #01579b; text-align: center; color: white; font-size: 20px;border: 1px solid black" id="employee_name"><input type="hidden" id="employee_id"></td>
+							<td colspan="2" style="padding: 0px; background-color: #01579b; text-align: center; color: white; font-size: 20px;border: 1px solid black" id="employee_name">
+							</td>
 						</tr>
 						<tr>
 							<td style="padding: 0px; background-color: #3f51b5; text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Category</td>
@@ -158,20 +159,15 @@
 				</table>
 			</div>
 
+			<input type="hidden" id="employee_id" class="employee_id" >
+
 			<div class="col-xs-12" style="overflow-x: scroll;padding: 0">
-
-				<!-- <div class="pull-right">
-					<a type="button" class="btn btn-success btn-lg" onclick='tambah();'><i class='fa fa-plus' ></i> Tambah Data</a>
-				</div> -->
-
-				<!-- <br><br><br> -->
-				
 
 				<table class="table table-bordered" style="width: 100%; color: white;" id="tableResult">
 					<thead style="font-weight: bold; background-color: rgb(220,220,220);">
 						<tr>
 							<th style="border-right: 1px solid white">Location</th>
-							<th style="border-right: 1px solid white">Patrol Detail / Topic</th>
+							<th style="border-right: 1px solid white">Audit Type</th>
 							<th style="border-right: 1px solid white">Photo</th>
 							<th style="border-right: 1px solid white">Problem</th>
 							<th style="border-right: 1px solid white">PIC</th>
@@ -190,12 +186,10 @@
 							</td>
 							<td width="10%">
 								<!-- <input type="text" class="form-control patrol_detail" id="patrol_detail" name="patrol_detail" placeholder="Patrol Detail" required=""> -->
-								<select class="form-control select3 patrol_detail" id="patrol_detail" data-placeholder="Patrol Topic" style="width: 100%; font-size: 20px;">
+								<select class="form-control select3 patrol_detail" id="patrol_detail" data-placeholder="Jenis Temuan" style="width: 100%; font-size: 20px;">
 									<option></option>
-									<option value="S-Up and 5S">S-Up and 5S</option>
-									<option value="Environment">Environment</option>
-									<option value="Health">Health</option>
-									<option value="Safety">Safety</option>
+									<option value="Positive Finding">Positive Finding</option>
+									<option value="Negative Finding">Negative Finding</option>
 								</select>
 							</td>
 							<td width="10%">
@@ -287,55 +281,9 @@
 		})
 
 
-		$('#category').html("EHS & 5S Patrol");
+		$('#category').html("Audit Stocktaking");
 		$('#employee_name').html("{{$employee->name}}");
 		$('#employee_id').val("{{$employee->employee_id}}");
-
-		function get_check() {
-
-			var category = $('#category').text();
-
-			var data = {
-				category:category
-			}
-
-			$("#loading").show();
-
-			$.get('{{ url("fetch/audit_patrol") }}', data, function(result, status, xhr){
-				$("#loading").hide();
-				openSuccessGritter("Success","Data Has Been Load");
-				var body = "";
-
-				$('#tableResult').DataTable().clear();
-				$('#tableResult').DataTable().destroy();
-			// $('#body_cek').html("");
-
-			count = 1;
-
-			$.each(result.lists, function(index, value){
-				body += "<tr>";
-				body += "<td width='1%'>"+count+"</td>";
-				body += "<td width='5%' id='klausul_"+count+"'>"+value.klausul+"<input type='hidden' id='id_point_"+count+"' value='"+value.id+"'><input type='hidden' id='jumlah_point_"+count+"' value='"+result.lists.length+"'></td>";
-				body += "<td width='15%' id='point_judul_"+count+"'>"+value.point_judul+"</td>";
-				body += "<td width='20%' id='point_question_"+count+"'>"+value.point_question+"</td>";
-				body += "<td width='20%'><label class='radio' style='margin-top: 5px;margin-left: 5px'>Good<input onclick='goodchoice(this.id)' type='radio' id='status_"+count+"' name='status_"+count+"' value='Good'><span class='checkmark'></span></label><label class='radio' style='margin-top: 5px;margin-left: 5px'>Not Good<input type='radio' id='status_"+count+"' name='status_"+count+"' value='Not Good' onclick='notgoodchoice(this.id)'><span class='checkmark'></span></label></td>";
-				body += "<td width='20%'><textarea id='note_"+count+"' height='50%' style='display:none'></textarea></td>";
-				var idid = '#file_'+count;
-				body += '<td width="15%"><input type="file" style="display:none" onchange="readURL(this,\''+count+'\');" id="file_'+count+'"><button class="btn btn-primary btn-lg" id="btnImage_'+count+'" value="Photo" style="display:none" onclick="buttonImage(this)">Photo</button><img width="150px" id="blah_'+count+'" src="" style="display: none" alt="your image" /></td>';
-				body += "</tr>";
-				count++;
-			})
-
-			$("#body_cek").append(body);
-
-			var table = $('#tableResult').DataTable( {
-				responsive: true,
-				paging: false,
-				searching: false,
-				bInfo : false
-			} );
-		})
-		}
 
 		function buttonImage(elem) {
 			$(elem).closest("td").find("input").click();
@@ -377,7 +325,7 @@
 				formData.append('jumlah', len);				
 				formData.append('category', $('#category').text());
 				formData.append('location', $('#location').val());
-				formData.append('auditor_id', $('#employee_id').text());
+				formData.append('auditor_id', $('#employee_id').val());
 				formData.append('auditor_name',  $('#employee_name').text());
 
 				$('.file').each(function(i, obj) {
@@ -402,7 +350,7 @@
 
 
 				$.ajax({
-					url:"{{ url('post/audit_patrol_file') }}",
+					url:"{{ url('post/audit_patrol_stocktaking') }}",
 					method:"POST",
 					data:formData,
 					dataType:'JSON',

@@ -147,7 +147,7 @@
 						</tr>
 						<tr>
 							<td style="padding: 0px; background-color: rgb(32, 145, 121); text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Auditor</td>
-							<td colspan="2" style="padding: 0px; background-color: rgb(0, 217, 255); text-align: center; color: #000000; font-size: 20px;border: 1px solid black" id="employee_name"><input type="hidden" id="employee_id"></td>
+							<td colspan="2" style="padding: 0px; background-color: rgb(0, 217, 255); text-align: center; color: #000000; font-size: 20px;border: 1px solid black" id="employee_name"></td>
 						</tr>
 						<tr>
 							<td style="padding: 0px; background-color: rgb(32, 145, 121); text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Category</td>
@@ -160,6 +160,8 @@
 					</tbody>
 				</table>
 			</div>
+
+			<input type="hidden" id="employee_id">
 
 			<div class="col-xs-12" style="overflow-x: scroll;padding: 0">
 
@@ -232,8 +234,9 @@
 						<label>Pilih Kategori</label>
 						<select class="form-control select3" id="selectCategory" data-placeholder="Pilih Kategori..." style="width: 100%; font-size: 20px;">
 							<option value=""></option>
-							<option value="5S Patrol GM">5S Patrol GM</option>
 							<option value="S-Up And EHS Patrol Presdir">S-Up And EHS Patrol Presdir</option>
+							<option value="5S Patrol GM">5S Patrol GM Production</option>
+							<option value="5S Patrol GM PS">5S Patrol GM Production Support</option>
 						</select>
 					</div>
 
@@ -336,6 +339,10 @@
 			else if(kategori == "5S Patrol GM"){
 				$('#employee_name').html("Yukitaka Hayakawa");
 				$('#employee_id').val("PI1206001");
+			}
+			else if(kategori == "5S Patrol GM PS"){
+				$('#employee_name').html("Budhi Apriyanto");
+				$('#employee_id').val("PI0109004");
 			}
 			else{
 				$('#employee_name').html("{{$employee->name}}");
@@ -521,14 +528,17 @@
 
 				var len = $('.member').length;
 
-
-
 				var formData = new FormData();
 
+				var category_patrol = $('#category').text();
+				if (category_patrol == "5S Patrol GM PS") {
+					category_patrol = "5S Patrol GM";
+				}
+
 				formData.append('jumlah', len);				
-				formData.append('category', $('#category').text());
+				formData.append('category', category_patrol);
 				formData.append('location', $('#location').text());
-				formData.append('auditor_id', $('#employee_id').text());
+				formData.append('auditor_id', $('#employee_id').val());
 				formData.append('auditor_name',  $('#employee_name').text());
 
 				$('.file').each(function(i, obj) {
