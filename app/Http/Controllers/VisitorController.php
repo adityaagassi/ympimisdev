@@ -1348,6 +1348,60 @@ public function getchart(Request $request)
 						AND employee_syncs.employee_id = '".$emp->employee_id."')
 					ORDER BY
 						id DESC");
+				}else if($emp->department == 'Management Information System Department'){
+					$visitor = DB::SELECT("SELECT
+						visitors.id,
+						name,
+						department,
+						company,
+						DATE_FORMAT( visitors.created_at, '%Y-%m-%d' ) created_at2,
+						visitors.created_at,
+						visitor_details.full_name,
+						visitors.jumlah AS total1,
+						purpose,
+						visitors.status,
+						visitor_details.in_time,
+						visitor_details.out_time,
+						visitors.remark 
+					FROM
+						visitors
+						LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
+						LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
+					WHERE
+						(visitors.remark IS NULL 
+						AND employee_syncs.department = '".$emp->department."' )
+						OR
+						(visitors.remark IS NULL 
+						AND employee_syncs.employee_id = 'PI0109004')
+					ORDER BY
+						id DESC");
+				}else if($emp->department == 'Human Resources Department'){
+					$visitor = DB::SELECT("SELECT
+						visitors.id,
+						name,
+						department,
+						company,
+						DATE_FORMAT( visitors.created_at, '%Y-%m-%d' ) created_at2,
+						visitors.created_at,
+						visitor_details.full_name,
+						visitors.jumlah AS total1,
+						purpose,
+						visitors.status,
+						visitor_details.in_time,
+						visitor_details.out_time,
+						visitors.remark 
+					FROM
+						visitors
+						LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
+						LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
+					WHERE
+						(visitors.remark IS NULL 
+						AND employee_syncs.department = '".$emp->department."' )
+						OR
+						(visitors.remark IS NULL 
+						AND employee_syncs.employee_id = 'PI9709001')
+					ORDER BY
+						id DESC");
 				}else{
 					$visitor = DB::SELECT("SELECT
 						visitors.id,

@@ -250,7 +250,7 @@ class EmailVisitorConfirmation extends Command
         }
         // $depts = substr($depts, 0, -1);
 
-        $dept2 = " WHERE department in (".$depts.") ";
+        $dept2 = " WHERE department in (".$depts.") and email is not null ";
 
         $mail_to = DB::SELECT("select email from visitor_confirmers ".$dept2);
         $contactList = [];
