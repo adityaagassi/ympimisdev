@@ -922,6 +922,7 @@ public function detailPenanganan(Request $request){
         WHERE
         tanggal >= '".$first."'
         and kategori in ('".$category."')
+        and point_judul != 'Positive Finding'
         GROUP BY
         tanggal");
 
@@ -935,6 +936,7 @@ public function detailPenanganan(Request $request){
         audit_all_results 
         WHERE
         kategori in ('".$category."')
+        and point_judul != 'Positive Finding'
         GROUP BY
         tahun,monthname(tanggal)
         order by tahun, month(tanggal) ASC"
@@ -979,7 +981,7 @@ public function detailPenanganan(Request $request){
       }
 
 
-      $data = db::select("select * from audit_all_results where audit_all_results.deleted_at is null and kategori in ('".$category."') ".$kate." ");
+      $data = db::select("select * from audit_all_results where audit_all_results.deleted_at is null and kategori in ('".$category."') ".$kate." and point_judul != 'Positive Finding' ");
 
       $response = array(
         'status' => true,

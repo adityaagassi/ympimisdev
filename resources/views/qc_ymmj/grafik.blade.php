@@ -291,9 +291,10 @@ table > thead > tr > th{
       if(xhr.status == 200){
         if(result.status){
           var years = result.tahun;
-          var month = [], jml = [];
+          var month = [], jml = [], tahun = [];
 
           $.each(result.datas, function(key, value) {
+            tahun.push(value.tahun);
             month.push(value.bulan);
             jml.push(value.jumlah);
           })
@@ -321,7 +322,12 @@ table > thead > tr > th{
               categories: month,
               lineWidth:2,
               lineColor:'#9e9e9e',
-              gridLineWidth: 1
+              gridLineWidth: 1,
+              labels: {
+                formatter: function (e) {
+                  return ''+ this.value +' '+tahun[(this.pos)];
+                }
+              }
             },
             yAxis: {
               lineWidth:2,

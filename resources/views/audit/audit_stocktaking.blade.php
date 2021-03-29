@@ -134,29 +134,19 @@
 
 	<div class="row">
 		<div class="col-xs-12">
+			<div class="col-xs-12" style="text-align: center;margin-top:-30px;padding: 0">
+				<h3 class="box-title" style="color: white;margin-top: 10px;font-size: 28px;font-weight: bold;background-color: #009688;padding: 10px">Audit Stocktaking<span class="text-purple"></span></h3>
+
+			</div>
 			<div class="col-xs-12" style="padding-right: 0; padding-left: 0; margin-bottom: 2%;">
-				<table class="table table-bordered" style="width: 100%; margin-bottom: 0px">
-					<thead>
-						<tr>
-							<th style="width:15%; background-color: white; color: black; text-align: center; padding:0;font-size: 18px;border: 1px solid black" colspan="3">General Information</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td style="padding: 0px; background-color: #3f51b5; text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Audit Date</td>
-							<td colspan="2" style="padding: 0px; background-color: #01579b; text-align: center; color: white; font-size: 20px;border: 1px solid black"><?= date("d F Y") ?></td>
-						</tr>
-						<tr>
-							<td style="padding: 0px; background-color: #3f51b5; text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Auditor</td>
-							<td colspan="2" style="padding: 0px; background-color: #01579b; text-align: center; color: white; font-size: 20px;border: 1px solid black" id="employee_name">
-							</td>
-						</tr>
-						<tr>
-							<td style="padding: 0px; background-color: #3f51b5; text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Category</td>
-							<td colspan="2" style="padding: 0px; background-color: #01579b; text-align: center; color: white; font-size: 20px;border: 1px solid black" id="category"></td>
-						</tr>
-					</tbody>
-				</table>
+				<span style="padding: 0px;color: white; font-size: 30px;font-weight: bold;">Audit Date :</span>
+				<span style="padding: 0px;color: white; font-size: 30px;font-weight: bold;"><?= date("d F Y") ?></span>
+				<br>
+				<span style="padding: 0px;color: white; font-size: 30px;font-weight: bold;">Auditor :</span>
+				<span style="padding: 0px;color: white; font-size: 30px;font-weight: bold;" id="employee_name"></span>
+
+
+				<span id="category" style="display: none"></span>
 			</div>
 
 			<input type="hidden" id="employee_id" class="employee_id" >
