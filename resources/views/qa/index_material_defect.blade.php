@@ -331,7 +331,6 @@
 					            point: {
 					                events: {
 					                    click: function () {
-					                        window.location.href = this.website;
 					                    }
 					                }
 					            },
