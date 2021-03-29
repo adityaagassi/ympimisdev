@@ -676,7 +676,6 @@
 			leader:leader,
 			foreman:foreman
 		}
-		console.log(data);
 		
 		if(report_type == ""){
 			alert("Semua Data Harus Diisi.");

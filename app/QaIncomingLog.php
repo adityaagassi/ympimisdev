@@ -23,6 +23,7 @@ class QaIncomingLog extends Model
 		'return',
 		'total_ok',
 		'total_ng',
+		'ng_ratio',
 		'status_lot',
 		'created_by'
 	];

@@ -336,7 +336,7 @@
                             </a>
                             <br> 
                             <a href="{{ url('/index/interview/pointing_call') }}">
-                                <i class="fa fa-caret-right"></i> YMPI Interview Pointing Call (??)
+                                <i class="fa fa-caret-right"></i> YMPI Interview Pointing Call (指差し呼称の面接)
                             </a>
                         </td>                     
                     </tr>
@@ -417,7 +417,7 @@
                             <span style="font-weight: bold;">Video Tutorial (棚卸チュートリアル動画)</span>
                             <br>
                             <a href="{{ url("/index/stocktaking/video_tutorial") }}">
-                                <i class="fa fa-caret-right"></i> Video Tutorial Stocktaking 6 Bulanan (6ヶ月毎棚卸チュートリアル動画)
+                                <i class="fa fa-caret-right"></i> Stocktaking 6 Bulanan (6ヶ月毎棚卸チュートリアル動画)
                             </a>
                             <br>
                         </td>
@@ -721,11 +721,11 @@
                         <a href="http://10.109.52.7/mtnc/login/log" target="_blank">
                             <i class="fa fa-caret-right"></i> Planned Maintenance Activity Finding (??)
                         </a>
-                    <!--     <br>
+                        <br>
                         <a href="{{ url("index/maintenance/mttbf/list") }}">
                             <i class="fa fa-caret-right"></i> MTBF (??)
                         </a>
-                        <br> 
+                       <!--  <br> 
                         <a href="{{ url("index/maintenance/mttbf/report") }}">
                             <i class="fa fa-caret-right"></i> MTBF Report (??)
                         </a>
@@ -755,7 +755,7 @@
                             <i class="fa fa-caret-right"></i> SPK Monitoring (作業依頼書の管理)
                         </a>
                         <br>
-                        <a href="{{ url("index/maintenance/spk/grafik") }}">
+                        <a href="{{ url("index/maintenance/spk/workload") }}">
                             <i class="fa fa-caret-right"></i> SPK Workload (??)
                         </a>
                         <!--<br>

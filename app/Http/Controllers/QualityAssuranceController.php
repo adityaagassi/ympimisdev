@@ -33,11 +33,19 @@ class QualityAssuranceController extends Controller
                 die();
             }
         }
+
+        $this->location = ['wi1_Woodwind Instrument (WI) 1',
+                      'wi2_Woodwind Instrument (WI) 2',
+                      'ei_Educational Instrument (EI)',
+                      'cs_Case',
+                      'ps_Pipe Silver',];
   	}
 
   	public function index()
   	{
   		return view('qa.index')
+      ->with('title', 'Quality Assurance')
+      ->with('title_jp', '品保')
   		->with('page', 'Quality Assurance')
   		->with('jpn', '品保');
   	}
@@ -286,10 +294,363 @@ class QualityAssuranceController extends Controller
         return Response::json($response);
   		} catch (\Exception $e) {
   			$response = array(
-                'status' => false,
-                'message' => $e->getMessage()
-            );
-            return Response::json($response);
+            'status' => false,
+            'message' => $e->getMessage()
+        );
+        return Response::json($response);
   		}
   	}
+
+    public function indexDisplayIncomingLotStatus()
+    {
+      return view('qa.index_lot_monitoring')
+      ->with('title', 'QA Realtime Lot Out Monitoring')
+      ->with('title_jp', 'QAリアルタイムロットアウト表示')
+      ->with('location', $this->location)
+      ->with('page', 'QA Realtime Lot Out Monitoring')
+      ->with('jpn', 'QAリアルタイムロットアウト表示');
+    }
+
+    public function fetchDisplayIncomingLotStatus(Request $request)
+    {
+      try {
+
+        $date_from = $request->get('date_from');
+        $date_to = $request->get('date_to');
+        if ($date_from == "") {
+             if ($date_to == "") {
+                  $first = "DATE(NOW())";
+                  $last = "DATE(NOW())";
+             }else{
+                  $first = "DATE(NOW())";
+                  $last = "'".$date_to."'";
+             }
+        }else{
+             if ($date_to == "") {
+                  $first = "'".$date_from."'";
+                  $last = "DATE(NOW())";
+             }else{
+                  $first = "'".$date_from."'";
+                  $last = "'".$date_to."'";
+             }
+        }
+
+        $lot_count = DB::SELECT("SELECT DISTINCT
+          ( remark ) AS location,
+          (
+          SELECT
+            count( id ) 
+          FROM
+            qa_incoming_logs 
+          WHERE
+            status_lot = 'Lot OK' 
+            AND DATE( created_at ) BETWEEN ".$first." and ".$last."
+            AND qa_incoming_logs.location = ng_lists.remark 
+          ) AS lot_ok,
+          (
+          SELECT
+            count( id ) 
+          FROM
+            qa_incoming_logs 
+          WHERE
+            status_lot = 'Lot OUT' 
+            AND DATE( created_at ) BETWEEN ".$first." and ".$last."
+            AND qa_incoming_logs.location = ng_lists.remark 
+          ) AS lot_out 
+        FROM
+          ng_lists 
+        WHERE
+          location = 'qa-incoming'");
+
+        $lot_detail = DB::SELECT("SELECT
+        *,
+        DATE( created_at ) AS date_lot,
+        ( SELECT GROUP_CONCAT( ng_name ) FROM qa_incoming_ng_logs WHERE qa_incoming_ng_logs.incoming_check_code = qa_incoming_logs.incoming_check_code ) AS ng_name 
+      FROM
+        qa_incoming_logs 
+      WHERE
+        status_lot = 'Lot Out' 
+        AND DATE( created_at ) BETWEEN ".$first." and ".$last."
+      ORDER BY
+        qa_incoming_logs.created_at DESC");
+
+        $response = array(
+            'status' => true,
+            'lot_count' => $lot_count,
+            'lot_detail' => $lot_detail,
+        );
+        return Response::json($response);
+      } catch (\Exception $e) {
+        $response = array(
+            'status' => false,
+            'message' => $e->getMessage()
+        );
+        return Response::json($response);
+      }
+    }
+
+    public function indexDisplayIncomingMaterialDefect()
+    {
+      $vendor = DB::SELECT("SELECT DISTINCT
+        ( vendor ) 
+      FROM
+        qa_materials 
+      ORDER BY
+        LENGTH( vendor ) ASC");
+
+      $material = DB::SELECT("SELECT DISTINCT
+        ( material_number ),
+        material_description 
+      FROM
+        qa_materials 
+      ORDER BY
+        material_description ASC");
+
+      return view('qa.index_material_defect')
+      ->with('title', 'QA Pareto Defect Incoming')
+      ->with('title_jp', 'QA受入パレット不良')
+      ->with('location', $this->location)
+      ->with('materials', $material)
+      ->with('vendors', $vendor)
+      ->with('page', 'QA Pareto Defect Incoming')
+      ->with('jpn', 'QA受入パレット不良');
+    }
+
+    public function fetchDisplayIncomingMaterialDefect(Request $request)
+    {
+      try {
+
+        $month_from = $request->get('month_from');
+        $month_to = $request->get('month_to');
+        if ($month_from == "") {
+             if ($month_to == "") {
+                  $first = "DATE_FORMAT( NOW(), '%Y-%m' )";
+                  $last = "DATE_FORMAT( NOW(), '%Y-%m' )";
+             }else{
+                  $first = "DATE_FORMAT( NOW(), '%Y-%m' )";
+                  $last = "'".$month_to."'";
+             }
+        }else{
+             if ($month_to == "") {
+                  $first = "'".$month_from."'";
+                  $last = "DATE_FORMAT( NOW(), '%Y-%m' )";
+             }else{
+                  $first = "'".$month_from."'";
+                  $last = "'".$month_to."'";
+             }
+        }
+
+        $vendor = '';
+        if($request->get('vendor') != null){
+          $vendors =  explode(",", $request->get('vendor'));
+          for ($i=0; $i < count($vendors); $i++) {
+            $vendor = $vendor."'".$vendors[$i]."'";
+            if($i != (count($vendors)-1)){
+              $vendor = $vendor.',';
+            }
+          }
+          $vendorin = " and `vendor` in (".$vendor.") ";
+        }
+        else{
+          $vendorin = "";
+        }
+
+        $material = '';
+        if($request->get('material') != null){
+          $materials =  explode(",", $request->get('material'));
+          for ($i=0; $i < count($materials); $i++) {
+            $material = $material."'".$materials[$i]."'";
+            if($i != (count($materials)-1)){
+              $material = $material.',';
+            }
+          }
+          $materialin = " and `material_number` in (".$material.") ";
+        }
+        else{
+          $materialin = "";
+        }
+
+        $material_defect = DB::SELECT("SELECT
+            ng_name,
+            SUM( qty_ng ) AS count,
+            ( SELECT SUM( qty_check ) FROM qa_incoming_ng_logs WHERE DATE_FORMAT( created_at, '%Y-%m' ) >=  ".$first." AND DATE_FORMAT( created_at, '%Y-%m' ) <=  ".$last." ".$vendorin." ".$materialin." ) AS total_check 
+          FROM
+            qa_incoming_ng_logs 
+          WHERE
+            DATE_FORMAT( created_at, '%Y-%m' ) >=  ".$first." AND DATE_FORMAT( created_at, '%Y-%m' ) <=  ".$last." 
+            ".$vendorin."
+            ".$materialin."
+          GROUP BY
+            ng_name");
+
+        $material_status = DB::SELECT("SELECT
+            SUM( a.total ) AS total,
+            SUM( a.returnes ) AS `return`,
+            SUM( a.scrapes ) AS `scrap`,
+            SUM( a.repaires ) AS `repair` 
+          FROM
+            (
+            SELECT
+              SUM( qty_check ) AS total,
+              0 AS returnes,
+              0 AS scrapes,
+              0 AS repaires 
+            FROM
+              qa_incoming_logs 
+            WHERE
+              DATE_FORMAT( created_at, '%Y-%m' ) >=  ".$first." AND DATE_FORMAT( created_at, '%Y-%m' ) <=  ".$last." ".$vendorin." ".$materialin." UNION ALL
+            SELECT
+              0 total,
+              SUM( `return` ) AS returnes,
+              0 AS scrapes,
+              0 AS repaires 
+            FROM
+              qa_incoming_logs 
+            WHERE
+              DATE_FORMAT( created_at, '%Y-%m' ) >=  ".$first." AND DATE_FORMAT( created_at, '%Y-%m' ) <=  ".$last." ".$vendorin." ".$materialin." UNION ALL
+            SELECT
+              0 total,
+              0 AS returnes,
+              SUM( scrap ) AS scrapes,
+              0 AS repaires 
+            FROM
+              qa_incoming_logs 
+            WHERE
+              DATE_FORMAT( created_at, '%Y-%m' ) >=  ".$first." AND DATE_FORMAT( created_at, '%Y-%m' ) <=  ".$last." ".$vendorin." ".$materialin." UNION ALL
+            SELECT
+              0 total,
+              0 AS returnes,
+              0 AS scrapes,
+              SUM( `repair` ) AS repaires 
+            FROM
+              qa_incoming_logs 
+          WHERE
+            DATE_FORMAT( created_at, '%Y-%m' ) >=  ".$first." AND DATE_FORMAT( created_at, '%Y-%m' ) <=  ".$last." ".$vendorin." ".$materialin.") a");
+
+        $response = array(
+            'status' => true,
+            'material_defect' => $material_defect,
+            'material_status' => $material_status,
+        );
+        return Response::json($response);
+      } catch (\Exception $e) {
+        $response = array(
+            'status' => false,
+            'message' => $e->getMessage()
+        );
+        return Response::json($response);
+      }
+    }
+
+    public function indexDisplayIncomingNgRate()
+    {
+      $vendor = DB::SELECT("SELECT DISTINCT
+        ( vendor ) 
+      FROM
+        qa_materials 
+      ORDER BY
+        LENGTH( vendor ) ASC");
+
+      $material = DB::SELECT("SELECT DISTINCT
+        ( material_number ),
+        material_description 
+      FROM
+        qa_materials 
+      ORDER BY
+        material_description ASC");
+
+      return view('qa.index_ng_rate')
+      ->with('title', 'NG Rate Incoming Check QA')
+      ->with('title_jp', 'QA受入検査不良率')
+      ->with('location', $this->location)
+      ->with('materials', $material)
+      ->with('vendors', $vendor)
+      ->with('page', 'NG Rate Incoming Check QA')
+      ->with('jpn', 'QA受入検査不良率');
+    }
+
+    public function fetchDisplayIncomingNgRate(Request $request)
+    {
+      try {
+
+        $month_from = $request->get('month_from');
+        $month_to = $request->get('month_to');
+        if ($month_from == "") {
+             if ($month_to == "") {
+                  $first = "DATE_FORMAT( NOW() - INTERVAL 12 MONTH, '%Y-%m' )";
+                  $last = "DATE_FORMAT( NOW(), '%Y-%m' ) ";
+             }else{
+                  $first = "DATE_FORMAT( NOW() - INTERVAL 12 MONTH, '%Y-%m' )";
+                  $last = "'".$month_to."'";
+             }
+        }else{
+             if ($month_to == "") {
+                  $first = "'".$month_from."'";
+                  $last = "DATE_FORMAT( NOW(), '%Y-%m' ) ";
+             }else{
+                  $first = "'".$month_from."'";
+                  $last = "'".$month_to."'";
+             }
+        }
+
+        $vendor = '';
+        if($request->get('vendor') != null){
+          $vendors =  explode(",", $request->get('vendor'));
+          for ($i=0; $i < count($vendors); $i++) {
+            $vendor = $vendor."'".$vendors[$i]."'";
+            if($i != (count($vendors)-1)){
+              $vendor = $vendor.',';
+            }
+          }
+          $vendorin = " and `vendor` in (".$vendor.") ";
+        }
+        else{
+          $vendorin = "";
+        }
+
+        $material = '';
+        if($request->get('material') != null){
+          $materials =  explode(",", $request->get('material'));
+          for ($i=0; $i < count($materials); $i++) {
+            $material = $material."'".$materials[$i]."'";
+            if($i != (count($materials)-1)){
+              $material = $material.',';
+            }
+          }
+          $materialin = " and `material_number` in (".$material.") ";
+        }
+        else{
+          $materialin = "";
+        }
+
+        $ng_rate = DB::SELECT("SELECT
+          DATE_FORMAT( created_at, '%Y-%m' ) AS months,
+          SUM( qty_check ) AS checkes,
+          SUM( `return` ) AS returnes,
+          SUM( `repair` ) AS repaires,
+          ROUND((( SUM( `repair` )+ SUM( `return` ))/ SUM( qty_check )) * 100, 1 ) AS persen 
+        FROM
+          `qa_incoming_logs` 
+        WHERE
+          DATE_FORMAT( created_at, '%Y-%m' ) >= ".$first."
+          AND DATE_FORMAT( created_at, '%Y-%m' ) <= ".$last."
+          ".$vendorin." ".$materialin."
+        GROUP BY
+          DATE_FORMAT(
+          created_at,
+          '%Y-%m')");
+
+        $response = array(
+            'status' => true,
+            'ng_rate' => $ng_rate,
+        );
+        return Response::json($response);
+      } catch (\Exception $e) {
+        $response = array(
+            'status' => false,
+            'message' => $e->getMessage()
+        );
+        return Response::json($response);
+      }
+    }
 }

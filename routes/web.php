@@ -928,10 +928,10 @@ Route::group(['nav' => 'M7', 'middleware' => 'permission'], function(){
 
 Route::get('fetch/view_production_schedule_kd', 'ProductionScheduleController@fetchViewProductionScheduleKd');
 Route::get('fetch/view_generate_production_schedule_kd', 'ProductionScheduleController@fetchViewGenerateProductionScheduleKd');
-Route::get('fetch/generate_production_schedule_kd', 'ProductionScheduleController@fetchGenerateProductionScheduleKd');
+Route::post('fetch/generate_production_schedule_kd', 'ProductionScheduleController@fetchGenerateProductionScheduleKd');
 
 Route::get('fetch/view_generate_shipment_schedule_kd', 'ProductionScheduleController@fetchViewGenerateShipmentScheduleKd');
-Route::get('fetch/generate_shipment_schedule_kd', 'ProductionScheduleController@fetchGenerateShipmentScheduleKd');
+Route::post('fetch/generate_shipment_schedule_kd', 'ProductionScheduleController@fetchGenerateShipmentScheduleKd');
 
 
 
@@ -1816,27 +1816,23 @@ Route::group(['nav' => 'S26', 'middleware' => 'permission'], function(){
 });
 
 //PIANICA
-Route::group(['nav' => 'S53', 'middleware' => 'permission'], function(){
+Route::group(['nav' => 'S55', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_pn_part/{id}', 'KnockDownController@indexKD');
 	Route::post('fetch/kd_print_pn_part', 'KnockDownController@printLabelNew');
 
-	// Route::get('index/print_label_pn_part/{id}', 'KnockDownController@indexPrintLabelSubassy');
+	Route::get('index/print_label_pn_part/{id}', 'KnockDownController@indexPrintLabelSubassy');
 });
 
-//VN ASSY
-Route::group(['nav' => 'S53', 'middleware' => 'permission'], function(){
+//VNENOVA
+Route::group(['nav' => 'S56', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_vn_assy/{id}', 'KnockDownController@indexKD');
 	Route::post('fetch/kd_print_vn_assy', 'KnockDownController@printLabelNew');
+	Route::get('index/print_label_vn_assy/{id}', 'KnockDownController@indexPrintLabelSubassy');
 
-	// Route::get('index/print_label_vn_assy/{id}', 'KnockDownController@indexPrintLabelSubassy');
-});
 
-//VN ASSY
-Route::group(['nav' => 'S53', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_vn_injection/{id}', 'KnockDownController@indexKD');
 	Route::post('fetch/kd_print_vn_injection', 'KnockDownController@printLabelNew');
-
-	// Route::get('index/print_label_vn_injection/{id}', 'KnockDownController@indexPrintLabelSubassy');
+	Route::get('index/print_label_vn_injection/{id}', 'KnockDownController@indexPrintLabelSubassy');
 });
 
 //CASE
@@ -1849,11 +1845,10 @@ Route::group(['nav' => 'S53', 'middleware' => 'permission'], function(){
 //CLBODY
 Route::group(['nav' => 'S58', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_cl_body/{id}', 'KnockDownController@indexKD');
-	Route::post('fetch/kd_print_cl_body', 'KnockDownController@printLabelNew');
+	Route::post('fetch/kd_print_cl_body', 'KnockDownController@printLabelNewSingle');
+
 
 	Route::get('index/print_label_cl_body/{id}', 'KnockDownController@indexPrintLabelClBody');	
-
-
 });
 
 //TANPO
@@ -1888,17 +1883,20 @@ Route::group(['nav' => 'S51', 'middleware' => 'permission'], function(){
 //BPRO
 Route::group(['nav' => 'S53', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_bpro/{id}', 'KnockDownController@indexKD');
-	// Route::post('fetch/kd_print_vn_injection', 'KnockDownController@printLabelNew');
+	Route::post('fetch/kd_print_bpro', 'KnockDownController@printLabelNewSingle');
 
-	// Route::get('index/print_label_vn_injection/{id}', 'KnockDownController@indexPrintLabelSubassy');
+	Route::get('index/print_label_bpro/{id}', 'KnockDownController@indexPrintLabelA6');
 });
 
-//VN ASSY
+//WELDING
 Route::group(['nav' => 'S53', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_welding/{id}', 'KnockDownController@indexKD');
-	// Route::post('fetch/kd_print_vn_injection', 'KnockDownController@printLabelNew');
-
+	Route::post('fetch/kd_print_welding_body', 'KnockDownController@printLabelNewSingle');
+	
 	// Route::get('index/print_label_vn_injection/{id}', 'KnockDownController@indexPrintLabelSubassy');
+	
+
+
 });
 
 
@@ -3060,6 +3058,7 @@ Route::get('fetch/display/efficiency_monitoring_monthly', 'DisplayController@fet
 
 //EFFICIENCY
 Route::get('index/efficiency/operator_loss_time', 'EfficiencyController@indexOperatorLossTime');
+Route::get('scan/efficiency/employee', 'EfficiencyController@scanEmployee');
 
 
 //DISPLAY RAW MATERIAL
@@ -3993,6 +3992,8 @@ Route::post('create/maintenance/spk', 'MaintenanceController@createSPK');
 Route::post('edit/maintenance/spk', 'MaintenanceController@editSPK');
 Route::get('fetch/maintenance/detail', 'MaintenanceController@fetchMaintenanceDetail');
 Route::get('index/maintenance/spk/grafik', 'MaintenanceController@indexSPKGrafik');
+Route::get('index/maintenance/spk/workload', 'MaintenanceController@indexSPKOperator');
+Route::get('fetch/maintenance/spk/workload', 'MaintenanceController@fetchSPKOperatorWorkload');
 Route::get('export/maintenance/list_spk', 'MaintenanceController@exportSPKList');
 
 Route::get('verify/maintenance/spk/approve_urgent', 'MaintenanceController@verifySPK');
@@ -4464,6 +4465,13 @@ Route::post('create/employee/warehouse', 'WarehouseController@createEmployee');
 
 
 
+//Warehouse FIX
+Route::get('index/create_packinglist', 'WarehouseNewController@index');
+Route::post('import/packinglist', 'WarehouseNewController@importPackinglist');
+Route::get('fetch/packinglist/warehouse', 'WarehouseNewController@fetchPackinglist');
+Route::get('warehouse/internal', 'WarehouseNewController@index_internal');
+Route::get('fetch/list/internal', 'WarehouseNewController@fetchInternal');
+Route::get('fetch/detail/list', 'WarehouseNewController@fetch_detail_list');
 
 
 
@@ -4517,7 +4525,12 @@ Route::get('fetch/qa/ng_list','QualityAssuranceController@fetchNgList');
 Route::post('input/qa/ng_log', 'QualityAssuranceController@inputNgLog');
 
 // QA Display Incoming Check
-Route::get('index/qa/display/incoming_check', 'QualityAssuranceController@indexDisplayIncomingCheck');
+Route::get('index/qa/display/incoming/lot_status', 'QualityAssuranceController@indexDisplayIncomingLotStatus');
+Route::get('fetch/qa/display/incoming/lot_status', 'QualityAssuranceController@fetchDisplayIncomingLotStatus');
+Route::get('index/qa/display/incoming/material_defect', 'QualityAssuranceController@indexDisplayIncomingMaterialDefect');
+Route::get('fetch/qa/display/incoming/material_defect', 'QualityAssuranceController@fetchDisplayIncomingMaterialDefect');
+Route::get('index/qa/display/incoming/ng_rate', 'QualityAssuranceController@indexDisplayIncomingNgRate');
+Route::get('fetch/qa/display/incoming/ng_rate', 'QualityAssuranceController@fetchDisplayIncomingNgRate');
 
 //Health Indicator
 Route::get('index/health/{loc}', 'HealthController@index');
@@ -4581,8 +4594,14 @@ Route::post('fetch/reed/finish_packing', 'ReedSyntheticController@fetchFinishPac
 Route::get('index/fibration/data', 'TrialController@indexFIbrationSensor');
 Route::get('fetch/fibration/data2', 'TrialController@fetchFIbrationSensor');
 
+Route::get('index/fibration/data/old', 'TrialController@indexFIbrationSensorOld');
+Route::get('fetch/fibration/data2/old', 'TrialController@fetchFIbrationSensorOld');
+
 //Dokumentasi Packing
 
-Route::get('index/packing_documentation', 'AuditController@packing_documentation');
+Route::get('index/packing_documentation', 'AuditController@index_packing_documentation');
+Route::get('index/packing/documentation/{loc}', 'AuditController@packing_documentation');
 Route::get('fetch/packing_documentation', 'AuditController@documentation');
+Route::get('fetch/dokumentasi/serial_number', 'AuditController@documentation_data');
+
 //End Dokumentasi Packing

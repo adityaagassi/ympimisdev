@@ -5963,7 +5963,7 @@ class RecorderProcessController extends Controller
     {
       return view('recorder.process.kensa_initial')
       ->with('title', 'Inisialisasi Kensa Kakuning Recorder')
-      ->with('title_jp', '??')
+      ->with('title_jp', 'リコーダー検査初期化')
       ->with('product_type',$this->product_type)
       ->with('page', 'Inisialisasi Kensa Kakuning Recorder');
     }

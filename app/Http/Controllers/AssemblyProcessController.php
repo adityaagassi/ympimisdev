@@ -2623,11 +2623,11 @@ public function indexNgReport($process)
 {
 	if ($process == 'qa') {
 		$title = 'NG Report - QA';
-		$title_jp = '??';
+		$title_jp = 'QA不良報告';
 		$flow = AssemblyFlow::where('process','like','%qa%')->get();
 	}else{
 		$title = 'NG Report - Production';
-		$title_jp = '??';
+		$title_jp = '生産不良報告';
 		$flow = AssemblyFlow::where('process','not like','%qa%')->get();
 	}
 
