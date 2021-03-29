@@ -1340,8 +1340,11 @@ public function getchart(Request $request)
 					LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
 					LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
 				WHERE
-					visitors.remark IS NULL 
-					AND employee_syncs.department = '".$emp->department."' 
+					(visitors.remark IS NULL 
+					AND employee_syncs.department = '".$emp->department."' )
+					OR
+					(visitors.remark IS NULL 
+					AND employee_syncs.employee_id = '".$emp->employee_id."')
 				ORDER BY
 					id DESC");
 
