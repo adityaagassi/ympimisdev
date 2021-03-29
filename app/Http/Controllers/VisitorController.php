@@ -1321,32 +1321,62 @@ public function getchart(Request $request)
 					->first();
 
 			if (count($emp) > 0) {
-				$visitor = DB::SELECT("SELECT
-					visitors.id,
-					name,
-					department,
-					company,
-					DATE_FORMAT( visitors.created_at, '%Y-%m-%d' ) created_at2,
-					visitors.created_at,
-					visitor_details.full_name,
-					visitors.jumlah AS total1,
-					purpose,
-					visitors.status,
-					visitor_details.in_time,
-					visitor_details.out_time,
-					visitors.remark 
-				FROM
-					visitors
-					LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
-					LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
-				WHERE
-					(visitors.remark IS NULL 
-					AND employee_syncs.department = '".$emp->department."' )
-					OR
-					(visitors.remark IS NULL 
-					AND employee_syncs.employee_id = '".$emp->employee_id."')
-				ORDER BY
-					id DESC");
+				if ($emp->department == null) {
+					$visitor = DB::SELECT("SELECT
+						visitors.id,
+						name,
+						department,
+						company,
+						DATE_FORMAT( visitors.created_at, '%Y-%m-%d' ) created_at2,
+						visitors.created_at,
+						visitor_details.full_name,
+						visitors.jumlah AS total1,
+						purpose,
+						visitors.status,
+						visitor_details.in_time,
+						visitor_details.out_time,
+						visitors.remark 
+					FROM
+						visitors
+						LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
+						LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
+					WHERE
+						(visitors.remark IS NULL 
+						AND employee_syncs.department is null )
+						OR
+						(visitors.remark IS NULL 
+						AND employee_syncs.employee_id = '".$emp->employee_id."')
+					ORDER BY
+						id DESC");
+				}else{
+					$visitor = DB::SELECT("SELECT
+						visitors.id,
+						name,
+						department,
+						company,
+						DATE_FORMAT( visitors.created_at, '%Y-%m-%d' ) created_at2,
+						visitors.created_at,
+						visitor_details.full_name,
+						visitors.jumlah AS total1,
+						purpose,
+						visitors.status,
+						visitor_details.in_time,
+						visitor_details.out_time,
+						visitors.remark 
+					FROM
+						visitors
+						LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
+						LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
+					WHERE
+						(visitors.remark IS NULL 
+						AND employee_syncs.department = '".$emp->department."' )
+						OR
+						(visitors.remark IS NULL 
+						AND employee_syncs.employee_id = '".$emp->employee_id."')
+					ORDER BY
+						id DESC");
+				}
+				
 
 				$response = array(
 					'status' => true,
