@@ -33,7 +33,7 @@ class AuditController extends Controller
 		}      
 		$this->middleware('auth');
 
-		$this->location = ['Assembly','Accounting','Body Process','Exim','Material Process','Surface Treatment','Educational Instrument','Standardization','QA Process','Chemical Process Control','Human Resources','General Affairs','Workshop and Maintenance Molding','Production Engineering','Maintenance','Procurement','Production Control','Warehouse','Welding Process'];
+		$this->location = ['Assembly','Accounting','Body Process','Exim','Material Process','Surface Treatment','Educational Instrument','Standardization','QA Process','Chemical Process Control','Human Resources','General Affairs','Workshop and Maintenance Molding','Production Engineering','Maintenance','Procurement','Production Control','Warehouse Material','Warehouse Finished Goods','Welding Process','Case Tanpo CL Body 3D Room'];
 
     $this->point_sup = ['Jalan - Lantai - Tempat Kerja - Tembok - Atap', 'Kontrol Lemari Dokumen, Jig, Penyimpanan, Alat Kebersihan', 'Meja Kerja - Meja Office', 'Oa Perkakas Mesin - Telepon', 'Mesin - Equipment','Pencegahan Kebakaran - Pencegahan Bencana - Barang Berbahaya - Barang Beracun','Tempat Istirahat, Meeting Room, Lobby, Di Dalam Ruangan, Kantin','Kedisiplinan'];
 
