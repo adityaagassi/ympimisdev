@@ -407,16 +407,16 @@
 
 					bodyDetail += '<tr style="border-bottom:3px solid black;border-top:3px solid black;background-color:#cddc39;color:black;font-size:15px">';
 					bodyDetail += '<td colspan="10" style="color:black;text-align:right">TOTAL NG</td>';
-					bodyDetail += '<td colspan="2" style="color:black;border-left:3px solid black;text-align:left">'+total_ng+'</td>';
+					bodyDetail += '<td colspan="2" style="color:black;border-left:3px solid black">'+total_ng+'</td>';
 					bodyDetail += '</tr>';
 					bodyDetail += '<tr style="border-bottom:3px solid black;border-top:3px solid black;background-color:#cddc39;color:black;font-size:15px">';
 					bodyDetail += '<td colspan="10" style="color:black;text-align:right">TOTAL CHECK</td>';
-					bodyDetail += '<td colspan="2" style="color:black;border-left:3px solid black;text-align:left">'+total_check+'</td>';
+					bodyDetail += '<td colspan="2" style="color:black;border-left:3px solid black">'+total_check+'</td>';
 					bodyDetail += '</tr>';
 					bodyDetail += '</tr>';
 					bodyDetail += '<tr style="border-bottom:3px solid black;border-top:3px solid black;background-color:#cddc39;color:black;font-size:15px">';
 					bodyDetail += '<td colspan="10" style="color:black;text-align:right">NG RATE</td>';
-					bodyDetail += '<td colspan="2" style="color:black;border-left:3px solid black;text-align:left>'+Math.round((total_ng / total_check) * 100)+' %</td>';
+					bodyDetail += '<td colspan="2" style="color:black;border-left:3px solid black;text-align:left">'+Math.round((total_ng / total_check) * 100)+' %</td>';
 					bodyDetail += '</tr>';
 
 					$('#bodyTableDetail').append(bodyDetail);
