@@ -472,12 +472,12 @@
 						bodyDetail += '<td>'+value.note_ng+'</td>';
 						bodyDetail += '</tr>';
 
-						total_ng = total_ng + parseInt(value.total_ng);
+						total_ng = total_ng + parseInt(value.qty_ng);
 					});
 
-					bodyDetail += '<tr style="border-bottom:3px solid black;border-top:3px solid black;background-color:#7e5686;color:white;font-size:15px">';
-					bodyDetail += '<td colspan="8">TOTAL NG</td>';
-					bodyDetail += '<td colspan="2">'+total_ng+'</td>';
+					bodyDetail += '<tr style="border-bottom:3px solid black;border-top:3px solid black;background-color:#cddc39;color:black;font-size:15px">';
+					bodyDetail += '<td colspan="7" style="color:black;text-align:right">TOTAL NG</td>';
+					bodyDetail += '<td colspan="3" style="color:black;border-left:3px solid black;text-align:left">'+total_ng+'</td>';
 					bodyDetail += '</tr>';
 
 					$('#bodyTableDetail').append(bodyDetail);
