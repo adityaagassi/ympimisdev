@@ -481,7 +481,9 @@ class QualityAssuranceController extends Controller
             ".$vendorin."
             ".$materialin."
           GROUP BY
-            ng_name");
+            ng_name
+          ORDER BY
+            count DESC");
 
         $material_status = DB::SELECT("SELECT
             SUM( a.total ) AS total,
@@ -542,51 +544,23 @@ class QualityAssuranceController extends Controller
       }
     }
 
-    public function indexDisplayIncomingNgRate()
-    {
-      $vendor = DB::SELECT("SELECT DISTINCT
-        ( vendor ) 
-      FROM
-        qa_materials 
-      ORDER BY
-        LENGTH( vendor ) ASC");
-
-      $material = DB::SELECT("SELECT DISTINCT
-        ( material_number ),
-        material_description 
-      FROM
-        qa_materials 
-      ORDER BY
-        material_description ASC");
-
-      return view('qa.index_ng_rate')
-      ->with('title', 'NG Rate Incoming Check QA')
-      ->with('title_jp', 'QA受入検査不良率')
-      ->with('location', $this->location)
-      ->with('materials', $material)
-      ->with('vendors', $vendor)
-      ->with('page', 'NG Rate Incoming Check QA')
-      ->with('jpn', 'QA受入検査不良率');
-    }
-
-    public function fetchDisplayIncomingNgRate(Request $request)
+    public function fetchDisplayIncomingMaterialDefectDetail(Request $request)
     {
       try {
-
         $month_from = $request->get('month_from');
         $month_to = $request->get('month_to');
         if ($month_from == "") {
              if ($month_to == "") {
-                  $first = "DATE_FORMAT( NOW() - INTERVAL 12 MONTH, '%Y-%m' )";
-                  $last = "DATE_FORMAT( NOW(), '%Y-%m' ) ";
+                  $first = "DATE_FORMAT( NOW(), '%Y-%m' )";
+                  $last = "DATE_FORMAT( NOW(), '%Y-%m' )";
              }else{
-                  $first = "DATE_FORMAT( NOW() - INTERVAL 12 MONTH, '%Y-%m' )";
+                  $first = "DATE_FORMAT( NOW(), '%Y-%m' )";
                   $last = "'".$month_to."'";
              }
         }else{
              if ($month_to == "") {
                   $first = "'".$month_from."'";
-                  $last = "DATE_FORMAT( NOW(), '%Y-%m' ) ";
+                  $last = "DATE_FORMAT( NOW(), '%Y-%m' )";
              }else{
                   $first = "'".$month_from."'";
                   $last = "'".$month_to."'";
@@ -623,8 +597,112 @@ class QualityAssuranceController extends Controller
           $materialin = "";
         }
 
+        $detail = DB::SELECT("SELECT
+            * 
+          FROM
+            qa_incoming_ng_logs 
+          WHERE
+            DATE_FORMAT( created_at, '%Y-%m' ) >= ".$first." 
+            AND DATE_FORMAT( created_at, '%Y-%m' ) <= ".$last." ".$vendorin." ".$materialin." 
+            AND ng_name = '".$request->get('categories')."'");
+        
+        $response = array(
+            'status' => true,
+            'detail' => $detail,
+        );
+        return Response::json($response);
+      } catch (\Exception $e) {
+        $response = array(
+            'status' => false,
+            'message' => $e->getMessage()
+        );
+        return Response::json($response);
+      }
+    }
+
+    public function indexDisplayIncomingNgRate()
+    {
+      $vendor = DB::SELECT("SELECT DISTINCT
+        ( vendor ) 
+      FROM
+        qa_materials 
+      ORDER BY
+        LENGTH( vendor ) ASC");
+
+      $material = DB::SELECT("SELECT DISTINCT
+        ( material_number ),
+        material_description 
+      FROM
+        qa_materials 
+      ORDER BY
+        material_description ASC");
+
+      return view('qa.index_ng_rate')
+      ->with('title', 'NG Rate Incoming Check QA')
+      ->with('title_jp', 'QA受入検査不良率')
+      ->with('location', $this->location)
+      ->with('materials', $material)
+      ->with('vendors', $vendor)
+      ->with('page', 'NG Rate Incoming Check QA')
+      ->with('jpn', 'QA受入検査不良率');
+    }
+
+    public function fetchDisplayIncomingNgRate(Request $request)
+    {
+      try {
+
+        $date_from = $request->get('date_from');
+        $date_to = $request->get('date_to');
+        if ($date_from == "") {
+             if ($date_to == "") {
+                  $first = "DATE_FORMAT( NOW(), '%Y-%m-01' ) ";
+                  $last = "LAST_DAY(NOW())";
+             }else{
+                  $first = "DATE_FORMAT( NOW(), '%Y-%m-01' ) ";
+                  $last = "'".$date_to."'";
+             }
+        }else{
+             if ($date_to == "") {
+                  $first = "'".$date_from."'";
+                  $last = "LAST_DAY(NOW())";
+             }else{
+                  $first = "'".$date_from."'";
+                  $last = "'".$date_to."'";
+             }
+        }
+
+        $vendor = '';
+        if($request->get('vendor') != null){
+          $vendors =  explode(",", $request->get('vendor'));
+          for ($i=0; $i < count($vendors); $i++) {
+            $vendor = $vendor."'".$vendors[$i]."'";
+            if($i != (count($vendors)-1)){
+              $vendor = $vendor.',';
+            }
+          }
+          $vendorin = " and `vendor` in (".$vendor.") ";
+        }
+        else{
+          $vendorin = "";
+        }
+
+        $material = '';
+        if($request->get('material') != null){
+          $materials =  explode(",", $request->get('material'));
+          for ($i=0; $i < count($materials); $i++) {
+            $material = $material."'".$materials[$i]."'";
+            if($i != (count($materials)-1)){
+              $material = $material.',';
+            }
+          }
+          $materialin = " and `material_number` in (".$material.") ";
+        }
+        else{
+          $materialin = "";
+        }
+
         $ng_rate = DB::SELECT("SELECT
-          DATE_FORMAT( created_at, '%Y-%m' ) AS months,
+          DATE( created_at ) AS months,
           SUM( qty_check ) AS checkes,
           SUM( `return` ) AS returnes,
           SUM( `repair` ) AS repaires,
@@ -632,13 +710,12 @@ class QualityAssuranceController extends Controller
         FROM
           `qa_incoming_logs` 
         WHERE
-          DATE_FORMAT( created_at, '%Y-%m' ) >= ".$first."
-          AND DATE_FORMAT( created_at, '%Y-%m' ) <= ".$last."
+          DATE( created_at ) >= ".$first."
+          AND DATE( created_at ) <= ".$last."
           ".$vendorin." ".$materialin."
         GROUP BY
-          DATE_FORMAT(
-          created_at,
-          '%Y-%m')");
+          DATE(
+          created_at)");
 
         $response = array(
             'status' => true,

@@ -72,7 +72,7 @@
 					<div class="input-group-addon bg-green" style="border: none; background-color: #605ca8; color: white;">
 						<i class="fa fa-calendar"></i>
 					</div>
-					<input type="text" class="form-control datepicker" id="month_from" name="month_from" placeholder="Select Month From">
+					<input type="text" class="form-control datepicker" id="date_from" name="date_from" placeholder="Select Date From">
 				</div>
 			</div>
 			<div class="col-xs-2" style="padding-left: 0;">
@@ -80,7 +80,7 @@
 					<div class="input-group-addon bg-green" style="border: none; background-color: #605ca8; color: white;">
 						<i class="fa fa-calendar"></i>
 					</div>
-					<input type="text" class="form-control datepicker" id="month_to" name="month_to" placeholder="Select Month To">
+					<input type="text" class="form-control datepicker" id="date_to" name="date_to" placeholder="Select Date To">
 				</div>
 			</div>
 			<div class="col-xs-2" style="padding-left: 0;">
@@ -150,18 +150,17 @@
 	}
 
 	$('.datepicker').datepicker({
+		<?php $tgl_max = date('Y-m-d') ?>
 		autoclose: true,
-	    format: "yyyy-mm",
-	    todayHighlight: true,
-	    startView: "months", 
-	    minViewMode: "months",
-	    autoclose: true,
+		format: "yyyy-mm-dd",
+		todayHighlight: true,	
+		endDate: '<?php echo $tgl_max ?>'
 	});
 
 	function fetchLotStatus() {
 		var data = {
-			month_from:$('#month_from').val(),
-			month_to:$('#month_to').val(),
+			date_from:$('#date_from').val(),
+			date_to:$('#date_to').val(),
 			vendor:$('#vendor').val(),
 			material:$('#material').val(),
 		}

@@ -1893,7 +1893,7 @@ Route::group(['nav' => 'S53', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_welding/{id}', 'KnockDownController@indexKD');
 	Route::post('fetch/kd_print_welding_body', 'KnockDownController@printLabelNewSingle');
 	
-	// Route::get('index/print_label_vn_injection/{id}', 'KnockDownController@indexPrintLabelSubassy');
+	Route::get('index/print_label_welding/{id}', 'KnockDownController@indexPrintLabelA6');
 	
 
 
@@ -4472,7 +4472,7 @@ Route::get('fetch/packinglist/warehouse', 'WarehouseNewController@fetchPackingli
 Route::get('warehouse/internal', 'WarehouseNewController@index_internal');
 Route::get('fetch/list/internal', 'WarehouseNewController@fetchInternal');
 Route::get('fetch/detail/list', 'WarehouseNewController@fetch_detail_list');
-
+Route::post('post/detail/save', 'WarehouseNewController@post_detail');
 
 
 //Sanding
@@ -4529,6 +4529,7 @@ Route::get('index/qa/display/incoming/lot_status', 'QualityAssuranceController@i
 Route::get('fetch/qa/display/incoming/lot_status', 'QualityAssuranceController@fetchDisplayIncomingLotStatus');
 Route::get('index/qa/display/incoming/material_defect', 'QualityAssuranceController@indexDisplayIncomingMaterialDefect');
 Route::get('fetch/qa/display/incoming/material_defect', 'QualityAssuranceController@fetchDisplayIncomingMaterialDefect');
+Route::get('fetch/qa/display/incoming/material_defect/detail', 'QualityAssuranceController@fetchDisplayIncomingMaterialDefectDetail');
 Route::get('index/qa/display/incoming/ng_rate', 'QualityAssuranceController@indexDisplayIncomingNgRate');
 Route::get('fetch/qa/display/incoming/ng_rate', 'QualityAssuranceController@fetchDisplayIncomingNgRate');
 
@@ -4597,11 +4598,22 @@ Route::get('fetch/fibration/data2', 'TrialController@fetchFIbrationSensor');
 Route::get('index/fibration/data/old', 'TrialController@indexFIbrationSensorOld');
 Route::get('fetch/fibration/data2/old', 'TrialController@fetchFIbrationSensorOld');
 
+Route::get('index/phpinfo', 'TrialController@indexPhpInfo');
+Route::get('fetch/phpinfo', 'TrialController@fetchPhpInfo');
+
 //Dokumentasi Packing
 
 Route::get('index/packing_documentation', 'AuditController@index_packing_documentation');
 Route::get('index/packing/documentation/{loc}', 'AuditController@packing_documentation');
 Route::get('fetch/packing_documentation', 'AuditController@documentation');
-Route::get('fetch/dokumentasi/serial_number', 'AuditController@documentation_data');
+Route::get('fetch/packing_documentation/data', 'AuditController@documentation_data');
 
 //End Dokumentasi Packing
+
+
+//Server Room
+
+Route::get('index/server_room', 'RoomController@ServerRoom');
+
+
+//End Server Room
