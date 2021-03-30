@@ -136,6 +136,7 @@
 			          <table class="table table-bordered" style="font-size:15px" id="tableDetail">
 			          	<thead style="border-bottom:3px solid black;border-top:3px solid black;background-color:#7e5686;color:white;font-size:15px">
 			          		<tr>
+			          			<th>Date</th>
 			          			<th>Location</th>
 			          			<th>Material</th>
 			          			<th>Vendor</th>
@@ -445,6 +446,7 @@
 					$('#judul_detail').html("Detail Pareto of "+categories);
 					$('#bodyTableDetail').html("");
 					var bodyDetail = "";
+					var total_ng = 0;
 					$.each(result.detail, function(key,value){
 						if (value.location == 'wi1') {
 				  			var loc = 'Woodwind Instrument (WI) 1';
@@ -458,6 +460,7 @@
 				  			var loc = 'Pipe Silver';
 				  		}
 						bodyDetail += '<tr>';
+						bodyDetail += '<td>'+value.created+'</td>';
 						bodyDetail += '<td>'+loc+'</td>';
 						bodyDetail += '<td>'+value.material_number+' - '+value.material_description+'</td>';
 						bodyDetail += '<td>'+value.vendor+'</td>';
@@ -468,7 +471,14 @@
 						bodyDetail += '<td>'+value.status_ng+'</td>';
 						bodyDetail += '<td>'+value.note_ng+'</td>';
 						bodyDetail += '</tr>';
+
+						total_ng = total_ng + parseInt(value.total_ng);
 					});
+
+					bodyDetail += '<tr style="border-bottom:3px solid black;border-top:3px solid black;background-color:#7e5686;color:white;font-size:15px">';
+					bodyDetail += '<td colspan="8">TOTAL NG</td>';
+					bodyDetail += '<td colspan="2">'+total_ng+'</td>';
+					bodyDetail += '</tr>';
 
 					$('#bodyTableDetail').append(bodyDetail);
 

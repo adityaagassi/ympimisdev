@@ -65,6 +65,11 @@
 @endsection
 @section('content')
 <section class="content" style="padding-top: 0;">
+	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+		<p style="position: absolute; color: White; top: 45%; left: 35%;">
+			<span style="font-size: 40px">Loading. Please Wait. <i class="fa fa-spin fa-refresh"></i></span>
+		</p>
+	</div>
 	<div class="row" style="text-align: center;margin-left: 5px;margin-right: 5px">
 		<div class="col-xs-12" style="margin-left: 0px;margin-right: 0px;padding-bottom: 0px;padding-left: 0px">
 			<div class="col-xs-2" style="padding-left: 0;">
@@ -116,6 +121,45 @@
 			<div id="container" style="width: 100%;height: 500px"></div>
 		</div>
 	</div>
+
+<div class="modal fade" id="modalDetail">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="modalDetailTitle"></h4>
+				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
+					<center><h3 style="font-weight: bold;color:black ;font-size: 20px" id="judul_detail"></h3></center>
+					<div class="col-md-12" id="bodyDetail">
+			          <table class="table table-bordered table-striped" style="font-size:15px" id="tableDetail">
+			          	<thead style="border-bottom:3px solid black;border-top:3px solid black;background-color:#7e5686;color:white;font-size:15px">
+			          		<tr>
+			          			<th>Date</th>
+			          			<th>Location</th>
+			          			<th>Material</th>
+			          			<th>Vendor</th>
+			          			<th>Invoice</th>
+			          			<th>Inspection Level</th>
+			          			<th>Qty Rec</th>
+			          			<th>Qty Check</th>
+			          			<th>Qty Repair</th>
+			          			<th>Qty Return</th>
+			          			<th>Total NG</th>
+			          			<th>Status</th>
+			          		</tr>
+			          	</thead>
+			          	<tbody id="bodyTableDetail">
+			          		
+			          	</tbody>
+			          </table>
+			        </div>
+				</div>
+			</div>
+			<div class="modal-footer">
+	          <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+	        </div>
+		</div>
+	</div>
+</div>
 </section>
 @endsection
 @section('scripts')
@@ -237,6 +281,7 @@
 				                point: {
 				                  events: {
 				                    click: function () {
+				                    	showModalDetail(this.category);
 				                    }
 				                  }
 				                },
@@ -257,6 +302,7 @@
 				                point: {
 				                  events: {
 				                    click: function () {
+				                    	showModalDetail(this.category);
 				                    }
 				                  }
 				                },
@@ -304,6 +350,79 @@
 					        }
 					    }]
 					});
+				}
+			}
+		});
+	}
+
+	function showModalDetail(categories) {
+		$('#loading').show();
+		$('#judul_detail').html("");
+		var data = {
+			date_from:$('#date_from').val(),
+			date_to:$('#date_to').val(),
+			vendor:$('#vendor').val(),
+			material:$('#material').val(),
+			categories:categories
+		}
+
+		$.get('{{ url("fetch/qa/display/incoming/ng_rate/detail") }}',data, function(result, status, xhr) {
+			if(xhr.status == 200){
+				if(result.status){
+					$('#judul_detail').html("Detail NG Rate Incoming Check QA on "+categories);
+					$('#bodyTableDetail').html("");
+					var bodyDetail = "";
+					var total_ng = 0;
+					var total_check= 0;
+					$.each(result.detail, function(key,value){
+						if (value.location == 'wi1') {
+				  			var loc = 'Woodwind Instrument (WI) 1';
+				  		}else if (value.location == 'wi2') {
+				  			var loc = 'Woodwind Instrument (WI) 2';
+				  		}else if(value.location == 'ei'){
+				  			var loc = 'Educational Instrument (EI)';
+				  		}else if (value.location == 'cs'){
+				  			var loc = 'Case';
+				  		}else if(value.location == 'ps'){
+				  			var loc = 'Pipe Silver';
+				  		}
+						bodyDetail += '<tr>';
+						bodyDetail += '<td>'+value.created+'</td>';
+						bodyDetail += '<td>'+loc+'</td>';
+						bodyDetail += '<td>'+value.material_number+' - '+value.material_description+'</td>';
+						bodyDetail += '<td>'+value.vendor+'</td>';
+						bodyDetail += '<td>'+value.invoice+'</td>';
+						bodyDetail += '<td>'+value.inspection_level+'</td>';
+						bodyDetail += '<td>'+value.qty_rec+'</td>';
+						bodyDetail += '<td>'+value.qty_check+'</td>';
+						bodyDetail += '<td>'+value.repair+'</td>';
+						bodyDetail += '<td>'+value.return+'</td>';
+						bodyDetail += '<td>'+value.total_ng+'</td>';
+						bodyDetail += '<td>'+value.status_lot+'</td>';
+						bodyDetail += '</tr>';
+
+						total_ng = total_ng + parseInt(value.total_ng);
+						total_check = total_check + parseInt(value.qty_check);
+					});
+
+					bodyDetail += '<tr style="border-bottom:3px solid black;border-top:3px solid black;background-color:#cddc39;color:black;font-size:15px">';
+					bodyDetail += '<td colspan="10" style="color:black;text-align:right">TOTAL NG</td>';
+					bodyDetail += '<td colspan="2" style="color:black;border-left:3px solid black">'+total_ng+'</td>';
+					bodyDetail += '</tr>';
+					bodyDetail += '<tr style="border-bottom:3px solid black;border-top:3px solid black;background-color:#cddc39;color:black;font-size:15px">';
+					bodyDetail += '<td colspan="10" style="color:black;text-align:right">TOTAL CHECK</td>';
+					bodyDetail += '<td colspan="2" style="color:black;border-left:3px solid black">'+total_check+'</td>';
+					bodyDetail += '</tr>';
+					bodyDetail += '</tr>';
+					bodyDetail += '<tr style="border-bottom:3px solid black;border-top:3px solid black;background-color:#cddc39;color:black;font-size:15px">';
+					bodyDetail += '<td colspan="10" style="color:black;text-align:right">NG RATE</td>';
+					bodyDetail += '<td colspan="2" style="color:black;border-left:3px solid black">'+Math.round((total_ng / total_check) * 100)+' %</td>';
+					bodyDetail += '</tr>';
+
+					$('#bodyTableDetail').append(bodyDetail);
+
+					$('#modalDetail').modal('show');
+					$('#loading').hide();
 				}
 			}
 		});

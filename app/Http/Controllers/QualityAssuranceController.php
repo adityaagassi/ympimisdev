@@ -598,14 +598,15 @@ class QualityAssuranceController extends Controller
         }
 
         $detail = DB::SELECT("SELECT
-            * 
+            *,
+          date(created_at) as created
           FROM
             qa_incoming_ng_logs 
           WHERE
             DATE_FORMAT( created_at, '%Y-%m' ) >= ".$first." 
             AND DATE_FORMAT( created_at, '%Y-%m' ) <= ".$last." ".$vendorin." ".$materialin." 
             AND ng_name = '".$request->get('categories')."'");
-        
+
         $response = array(
             'status' => true,
             'detail' => $detail,
@@ -720,6 +721,82 @@ class QualityAssuranceController extends Controller
         $response = array(
             'status' => true,
             'ng_rate' => $ng_rate,
+        );
+        return Response::json($response);
+      } catch (\Exception $e) {
+        $response = array(
+            'status' => false,
+            'message' => $e->getMessage()
+        );
+        return Response::json($response);
+      }
+    }
+
+    public function fetchDisplayIncomingNgRateDetail(Request $request)
+    {
+      try {
+
+        $date_from = $request->get('date_from');
+        $date_to = $request->get('date_to');
+        if ($date_from == "") {
+             if ($date_to == "") {
+                  $first = "DATE_FORMAT( NOW(), '%Y-%m-01' ) ";
+                  $last = "LAST_DAY(NOW())";
+             }else{
+                  $first = "DATE_FORMAT( NOW(), '%Y-%m-01' ) ";
+                  $last = "'".$date_to."'";
+             }
+        }else{
+             if ($date_to == "") {
+                  $first = "'".$date_from."'";
+                  $last = "LAST_DAY(NOW())";
+             }else{
+                  $first = "'".$date_from."'";
+                  $last = "'".$date_to."'";
+             }
+        }
+
+        $vendor = '';
+        if($request->get('vendor') != null){
+          $vendors =  explode(",", $request->get('vendor'));
+          for ($i=0; $i < count($vendors); $i++) {
+            $vendor = $vendor."'".$vendors[$i]."'";
+            if($i != (count($vendors)-1)){
+              $vendor = $vendor.',';
+            }
+          }
+          $vendorin = " and `vendor` in (".$vendor.") ";
+        }
+        else{
+          $vendorin = "";
+        }
+
+        $material = '';
+        if($request->get('material') != null){
+          $materials =  explode(",", $request->get('material'));
+          for ($i=0; $i < count($materials); $i++) {
+            $material = $material."'".$materials[$i]."'";
+            if($i != (count($materials)-1)){
+              $material = $material.',';
+            }
+          }
+          $materialin = " and `material_number` in (".$material.") ";
+        }
+        else{
+          $materialin = "";
+        }
+
+        $detail = DB::SELECT("SELECT
+          *,DATE(created_at) as created
+        FROM
+          `qa_incoming_logs` 
+        WHERE
+          DATE( created_at ) = '".$request->get('categories')."'
+          ".$vendorin." ".$materialin."");
+
+        $response = array(
+            'status' => true,
+            'detail' => $detail,
         );
         return Response::json($response);
       } catch (\Exception $e) {

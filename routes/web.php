@@ -4532,6 +4532,7 @@ Route::get('fetch/qa/display/incoming/material_defect', 'QualityAssuranceControl
 Route::get('fetch/qa/display/incoming/material_defect/detail', 'QualityAssuranceController@fetchDisplayIncomingMaterialDefectDetail');
 Route::get('index/qa/display/incoming/ng_rate', 'QualityAssuranceController@indexDisplayIncomingNgRate');
 Route::get('fetch/qa/display/incoming/ng_rate', 'QualityAssuranceController@fetchDisplayIncomingNgRate');
+Route::get('fetch/qa/display/incoming/ng_rate/detail', 'QualityAssuranceController@fetchDisplayIncomingNgRateDetail');
 
 //Health Indicator
 Route::get('index/health/{loc}', 'HealthController@index');
@@ -4614,6 +4615,6 @@ Route::get('fetch/packing_documentation/data', 'AuditController@documentation_da
 //Server Room
 
 Route::get('index/server_room', 'RoomController@ServerRoom');
-
+Route::get('index/server_room/{id}', 'RoomController@ServerRoomPing');
 
 //End Server Room
