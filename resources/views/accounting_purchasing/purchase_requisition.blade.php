@@ -312,13 +312,13 @@
 									<div class="col-md-12">
 										<div class="col-md-12">
 											<div class="form-group" id="budget_data">
-												<label>Fiscal Year<span class="text-red">*</span></label>
+												<!-- <label>Fiscal Year<span class="text-red">*</span></label>
 												<select class="form-control select10" data-placeholder="Pilih Fiscal Year" name="fiscal_year" id="fiscal_year" style="width: 100% height: 35px;" required" onchange="getBudget()"> 
 													<option></option>
 													<option value="FY197">FY197</option>
 													<option value="FY198">FY198</option>
 												</select>
-
+ -->
 												<label>Budget<span class="text-red">*</span></label>
 												<!-- <input type="text" class="form-control" id="budget_no" name="budget_no"> -->
 												<select class="form-control select10" data-placeholder="Pilih Nomor Budget" name="budget_no" id="budget_no" style="width: 100% height: 35px;" required onchange="pilihBudget(this)"> 
@@ -1173,7 +1173,7 @@
 			}
 		});
 
-		// getBudget();
+		getBudget();
 	}
 
 	function clearConfirmation(){
@@ -1309,12 +1309,10 @@
 	
 	function getBudget() {
 
-		var fy = $('#fiscal_year').val();
-
 		data = {
 			department : "{{ $employee->department }}",
-			fy : fy
 		}
+		
 		$.get('{{ url("fetch/purchase_requisition/budgetlist") }}', data, function(result, status, xhr) {
 	  		budget_list = "";
 	  		budget_list = "<option value=''></option>";
@@ -1324,10 +1322,10 @@
 			// console.log($('#budget_no').val());
 
 
-			// if ($('#budget_no').val() == "" || $('#budget_no').val() == null) {
+			if ($('#budget_no').val() == "" || $('#budget_no').val() == null) {
 	  			$('#budget_no').html('');
 				$('#budget_no').append(budget_list);				
-			// }
+			}
 
 		})
 	}

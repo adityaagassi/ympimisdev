@@ -772,7 +772,7 @@ class AccountingController extends Controller
     {
         $budgets = AccBudget::select('acc_budgets.budget_no', 'acc_budgets.description')
         ->where('category', '=', 'Expenses')
-        ->where('periode', '=', $request->get('fy'))
+        ->where('periode', '=', 'FY198')
         ->distinct();
 
         if ($request->get('department') == "General Affairs Department") {
@@ -849,7 +849,7 @@ class AccountingController extends Controller
                 ->where('budget_no', $request->budget_no)
                 ->first();
 
-        if ($getbulan->periode == "FY197") {
+        if ($getbulan->periode == "FY198") {
             $bulan = strtolower(date('M'));
         }
         else{
@@ -1235,7 +1235,7 @@ class AccountingController extends Controller
                 ->where('budget_no', $request->get('budget_no'))
                 ->first();
 
-                if ($getbulan->periode == "FY197") {
+                if ($getbulan->periode == "FY198") {
                     $month = strtolower(date('M'));
                 }
                 else{
@@ -1279,13 +1279,13 @@ class AccountingController extends Controller
                 ->where('budget_no', $request->get('budget_no'))
                 ->first();
 
-                if ($getbulan->periode == "FY197") {
+                if ($getbulan->periode == "FY198") {
                     $bulan = strtolower(date('M'));
-                    $fiscal = "FY197";
+                    $fiscal = "FY198";
                 }
                 else{
                     $bulan = "apr";
-                    $fiscal = "FY198";
+                    $fiscal = "FY199";
                 }
 
                 $sisa_bulan = $bulan.'_sisa_budget';                    
@@ -2385,7 +2385,7 @@ class AccountingController extends Controller
                 ->where('budget_no', $request->get('no_budget_edit'))
                 ->first();
 
-                if ($getbulan->periode == "FY197") {
+                if ($getbulan->periode == "FY198") {
                     $bulan = strtolower(date('M'));
                 }
                 else{
@@ -2415,7 +2415,7 @@ class AccountingController extends Controller
                 ->where('budget_no', $request->get('no_budget_edit'))
                 ->first();
 
-                if ($getbulan->periode == "FY197") {
+                if ($getbulan->periode == "FY198") {
                     $month = strtolower(date('M'));
                 }
                 else{
@@ -2819,7 +2819,7 @@ class AccountingController extends Controller
         ->where('budget_no',$request->budget)
         ->first();
 
-        if ($getbulan->periode == "FY197") {
+        if ($getbulan->periode == "FY198") {
             $bulan = strtolower(date('M'));
         }
         else{
@@ -3078,7 +3078,7 @@ class AccountingController extends Controller
                 ->where('budget_no', $request->get($item_budget))
                 ->first();
 
-                if ($getbulan->periode == "FY197") {
+                if ($getbulan->periode == "FY198") {
                     $bulan = strtolower(date('M'));
                 }
                 else{
@@ -3435,7 +3435,7 @@ class AccountingController extends Controller
                 ->where('budget_no', $request->get($item_budget2))
                 ->first();
 
-                if ($getbulan->periode == "FY197") {
+                if ($getbulan->periode == "FY198") {
                     $bulan = strtolower(date('M'));
                 }
                 else{
@@ -4719,7 +4719,7 @@ class AccountingController extends Controller
             ->where('budget_no', $request->get('no_budget_edit'))
             ->first();
 
-            if ($getbulan->periode == "FY197") {
+            if ($getbulan->periode == "FY198") {
                 $bulan = strtolower(date('M'));
             }
             else{
@@ -5293,6 +5293,8 @@ class AccountingController extends Controller
             $tahun = '20';
         }else if ($fy[0]->fiscal_year == "FY198") {
             $tahun = '21';
+        }else if ($fy[0]->fiscal_year == "FY199") {
+            $tahun = '22';
         }
 
         $query = "SELECT reff_number FROM `acc_investments` order by reff_number DESC LIMIT 1";
@@ -5388,7 +5390,6 @@ class AccountingController extends Controller
             $dept = $request->get('department');
         }
 
-
         if($request->get('budget') == "On Budget"){
 
             if ($request->get('category') == "Investment") {
@@ -5398,6 +5399,7 @@ class AccountingController extends Controller
                 $budgets = AccBudget::select('acc_budgets.budget_no', 'acc_budgets.description', 'acc_budgets.periode')
                 ->where('department', '=', $dept)
                 ->where('category', '=', $cat)
+                ->where('periode', '=', 'FY198')
                 ->distinct()
                 ->get();
 
@@ -5425,6 +5427,7 @@ class AccountingController extends Controller
                     ->where('department', '=', $dept)
                     ->where('category', '=', $cat)
                     ->where('account_name', '=', $type)
+                    ->where('periode', '=', 'FY198')
                     ->distinct()
                     ->get();
                 }
@@ -5432,6 +5435,7 @@ class AccountingController extends Controller
                     $budgets = AccBudget::select('acc_budgets.budget_no', 'acc_budgets.description', 'acc_budgets.periode')
                     ->where('department', '=', $dept)
                     ->where('category', '=', $cat)
+                    ->where('periode', '=', 'FY198')
                     ->distinct()
                     ->get();
                 }
@@ -5445,6 +5449,7 @@ class AccountingController extends Controller
             $budgets = AccBudget::select('acc_budgets.budget_no', 'acc_budgets.description', 'acc_budgets.periode')
             ->where('department', '=', $dept)
             ->where('category', '=', $cat)
+            ->where('periode', '=', 'FY198')
             ->distinct()
             ->get();
         }
@@ -5556,7 +5561,7 @@ class AccountingController extends Controller
                         ->where('budget_no',$budget_no[$i])
                         ->first();
 
-                        if ($getbulan->periode == "FY197") {
+                        if ($getbulan->periode == "FY198") {
                             $month = strtolower(date('M'));
                         }
                         else{
@@ -5600,7 +5605,7 @@ class AccountingController extends Controller
                             ->where('budget_no',$budget_no[$i])
                             ->first();
 
-                            if ($getbulan->periode == "FY197") {
+                            if ($getbulan->periode == "FY198") {
                                 $bulan = strtolower(date('M'));
                             }
                             else{
@@ -5649,7 +5654,7 @@ class AccountingController extends Controller
                         ->where('budget_no',$budget_no)
                         ->first();
 
-                        if ($getbulan->periode == "FY197") {
+                        if ($getbulan->periode == "FY198") {
                             $month = strtolower(date('M'));
                         }
                         else{
@@ -7528,7 +7533,7 @@ public function budget_detail(Request $request)
                 LEFT JOIN acc_budgets on acc_budgets.budget_no = acc_budget_histories.budget 
             WHERE
                 budget_month_receive IS NOT NULL 
-                AND periode = "FY197"
+                AND periode = "FY198"
                 AND budget_no = "'.$request->get('id').'"
             GROUP BY
                 budget_month_receive 
@@ -7546,7 +7551,7 @@ public function budget_detail(Request $request)
                LEFT JOIN acc_budgets on acc_budgets.budget_no = acc_actual_logs.budget_no 
             WHERE
                 acc_actual_logs.deleted_at IS NULL 
-                AND acc_budgets.periode = "FY197"
+                AND acc_budgets.periode = "FY198"
                 AND acc_budgets.budget_no = "'.$request->get('id').'" 
             GROUP BY
                 month_date 
@@ -7564,7 +7569,7 @@ public function budget_detail(Request $request)
                 LEFT JOIN acc_budgets on acc_budgets.budget_no = acc_budget_histories.budget 
             WHERE
                 budget_month IS NOT NULL 
-                AND periode = "FY197"  
+                AND periode = "FY198"  
                 AND budget_no = "'.$request->get('id').'"
             GROUP BY
                 budget_month
@@ -7582,7 +7587,7 @@ public function budget_detail(Request $request)
                 LEFT JOIN acc_budgets on acc_budgets.budget_no = acc_budget_histories.budget 
             WHERE
                 budget_month IS NOT NULL 
-                AND periode = "FY197" 
+                AND periode = "FY198" 
                 AND budget_no = "'.$request->get('id').'"
             GROUP BY
                 budget_month
@@ -7600,7 +7605,7 @@ public function budget_detail(Request $request)
                 LEFT JOIN acc_budgets on acc_budgets.budget_no = acc_budget_histories.budget 
             WHERE
                 budget_month IS NOT NULL 
-                AND periode = "FY197"  
+                AND periode = "FY198"  
                 AND budget_no = "'.$request->get('id').'"
             GROUP BY
                 budget_month_po
