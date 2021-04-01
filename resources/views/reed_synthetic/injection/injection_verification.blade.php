@@ -495,10 +495,6 @@
 		return Math.abs(Math.round(diff));
 	}
 
-
-
-
-
 	function openSuccessGritter(title, message){
 		jQuery.gritter.add({
 			title: title,

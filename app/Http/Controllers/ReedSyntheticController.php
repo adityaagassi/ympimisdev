@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
+use Mike42\Escpos\Printer;
+use Mike42\Escpos\EscposImage;
 
 use App\EmployeeSync;
 use App\Inventory;
@@ -24,6 +27,9 @@ use App\ReedPackingOrderLog;
 
 use App\ReedMasterChecksheet;
 
+use App\ReedWarehouseReceive;
+
+use App\MaterialPlantDataList;;
 use Carbon\Carbon;
 use Response;
 use DataTables;
@@ -37,7 +43,7 @@ class ReedSyntheticController extends Controller{
 
 	public function indexReed(){
 		$title = "Injection Reed";
-		$title_jp = "??";
+		$title_jp = " ";
 
 		return view('reed_synthetic.index_reed', array(
 			'title' => $title,
@@ -47,7 +53,7 @@ class ReedSyntheticController extends Controller{
 
 	public function indexInjectionVerification(){
 		$title = "Injection Verification";
-		$title_jp = "??";
+		$title_jp = " ";
 
 		return view('reed_synthetic.injection.injection_verification', array(
 			'title' => $title,
@@ -57,7 +63,7 @@ class ReedSyntheticController extends Controller{
 
 	public function indexMoldingVerification(){
 		$title = "Setup Molding Verification";
-		$title_jp = "??";
+		$title_jp = " ";
 
 		return view('reed_synthetic.molding.molding_verification', array(
 			'title' => $title,
@@ -67,7 +73,7 @@ class ReedSyntheticController extends Controller{
 
 	public function indexInjectionDelivery(){
 		$title = "After Injection Delivery";
-		$title_jp = "??";
+		$title_jp = " ";
 
 		return view('reed_synthetic.injection.after_injection_delivery', array(
 			'title' => $title,
@@ -77,7 +83,7 @@ class ReedSyntheticController extends Controller{
 
 	public function indexLaserVerification(){
 		$title = "Laser Marking Verification";
-		$title_jp = "??";
+		$title_jp = " ";
 
 		return view('reed_synthetic.laser.laser_verification', array(
 			'title' => $title,
@@ -87,7 +93,7 @@ class ReedSyntheticController extends Controller{
 
 	public function indexTrimmingVerification(){
 		$title = "Trimming Verification";
-		$title_jp = "??";
+		$title_jp = " ";
 
 		return view('reed_synthetic.laser.trimming_verification', array(
 			'title' => $title,
@@ -97,7 +103,7 @@ class ReedSyntheticController extends Controller{
 
 	public function indexAnnealingVerification(){
 		$title = "Annealing Verification";
-		$title_jp = "??";
+		$title_jp = " ";
 
 		return view('reed_synthetic.laser.annealing_verification', array(
 			'title' => $title,
@@ -107,12 +113,63 @@ class ReedSyntheticController extends Controller{
 
 	public function indexPackingVerification(){
 		$title = "Packing Verification";
-		$title_jp = "??";
+		$title_jp = " ";
 
 		return view('reed_synthetic.packing.packing_verification', array(
 			'title' => $title,
 			'title_jp' => $title_jp
 		))->with('page', 'Annealing Verification')->with('head', 'Annealing Verification');
+	}
+
+	public function indexStoreVerification(){
+		$title = "Store Verification";
+		$title_jp = " ";
+
+		return view('reed_synthetic.warehouse.store_verification', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'Store Verification')->with('head', 'Store Verification');
+	}
+
+	public function indexLabelVerification(){
+		$title = "Label Verification";
+		$title_jp = " ";
+
+		return view('reed_synthetic.warehouse.label_verification', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'Label Verification')->with('head', 'Label Verification');
+	}
+
+	public function indexResinReceive(){
+		$title = "Resin Receive";
+		$title_jp = " ";
+
+		$material = MaterialPlantDataList::where('material_number', 'VEW1570')->get();
+
+		return view('reed_synthetic.warehouse.receive', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'materials' => $material
+		))->with('page', 'Resin Receive')->with('head', 'Resin Receive');
+	}
+
+	public function fetchResinReceive(Request $request)	{
+		
+		$data = ReedWarehouseReceive::orderBy('receive_date', 'DESC')->limit(100)->get();
+
+		return DataTables::of($data)
+		->addColumn('print', function($data){
+			if($data->print_status == 0){
+				return '<a href="javascript:void(0)" class="btn btn-sm btn-primary" onClick="print(id)" id="' . $data->id . '"><i class="fa fa-print"></i>&nbsp;&nbsp;PRINT</a>';
+			}else{
+				return '<a href="javascript:void(0)" class="btn btn-sm btn-info" onClick="print(id)" id="' . $data->id . '"><i class="fa fa-print"></i>&nbsp;&nbsp;REPRINT</a>';
+			}
+		})
+		->rawColumns([
+			'print' => 'print'
+		])
+		->make(true);
 	}
 
 	public function fetchInjectionPickingList(Request $request){
@@ -724,6 +781,38 @@ class ReedSyntheticController extends Controller{
 
 	}
 
+	public function scanStoreVerification(Request $request){
+		$material_number = $request->get('material_number');
+		$receive_date = $request->get('receive_date');
+		$employee_id = $request->get('employee_id');
+
+		$data = ReedWarehouseReceive::where('receive_date', $receive_date)
+		->where('material_number', $material_number)
+		->first();
+
+		try {
+
+			$data->bag_delivered = $data->bag_delivered + 1;
+			$data->operator_storage = $employee_id;
+			$data->save();
+
+			$response = array(
+				'status' => true,
+				'message' => 'Print Success'
+			);
+			return Response::json($response);
+		} catch (Exception $e) {
+			
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+
+
+	}
+
 	public function scanReedOperator(Request $request){
 
 		$employee_id = $request->get('employee_id');
@@ -1319,7 +1408,7 @@ class ReedSyntheticController extends Controller{
 		}
 	}
 
-		public function fetchFinishPacking(Request $request){
+	public function fetchFinishPacking(Request $request){
 		$id = $request->get('order_id');
 		$employee_id = $request->get('employee_id');
 
@@ -1475,6 +1564,189 @@ class ReedSyntheticController extends Controller{
 				'message' => 'Kanban finish injection tidak ditemukan'
 			);
 			return Response::json($response);
+		}
+	}
+
+	public function fetchLabelVerification(Request $request){
+		
+		$date_receive = $request->get('date_receive');
+
+		$order = ReedWarehouseReceive::where('receive_date','=', $date_receive)
+		->get();
+
+		if($order){
+			if (count($order) > 0) {
+				$response = array(
+					'status' => true,
+					'order' => $order,
+					'message' => 'Data Ditemukan'
+				);
+				return Response::json($response);
+			}
+			else{
+				$response = array(
+					'status' => false,
+					'message' => 'Data tidak ditemukan'
+				);
+				return Response::json($response);	
+			}
+		}else{
+			
+		}
+	}
+
+	public function fetchPrintReceive(Request $request){
+
+		$data = ReedWarehouseReceive::where('id', $request->get('id'))->first();
+
+		try {
+
+			$data->print_status = 1;
+			$data->save();
+
+			$this->printLabel($data);
+
+			$response = array(
+				'status' => true,
+				'message' => 'Print Success'
+			);
+			return Response::json($response);
+		} catch (Exception $e) {
+			
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function postLabelVerification(Request $request)
+	{
+		try {
+			$id_user = Auth::id();
+			$tujuan_upload = 'files/reed';
+
+			for ($i=0; $i < $request->input('jumlah'); $i++) { 
+
+				$file = $request->file('file_datas_'.$i);
+				$nama = $file->getClientOriginalName();
+
+				$filename = pathinfo($nama, PATHINFO_FILENAME);
+				$extension = pathinfo($nama, PATHINFO_EXTENSION);
+
+				$filename = md5($filename.date('YmdHisa')).'.'.$extension;
+
+				$file->move($tujuan_upload,$filename);
+				
+				$data[] = $filename;
+			}
+
+			$file_saved = json_encode($data);
+
+			$audit_all = ReedWarehouseReceive::where('receive_date','=',$request->input('date_receive'))
+			->where('material_number','=',$request->input('material_number'))
+			->update([
+				'photo_date' => date('Y-m-d'),
+				'photo' => $file_saved,
+				'operator_label' => $request->input('employee_id')
+			]);
+
+			$response = array(
+				'status' => true,
+				'message' => "Data Berhasil Disimpan"
+			);
+			return Response::json($response);
+			
+		} 
+
+		catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+	}
+	
+
+	public function inputResinReceive(Request $request){
+
+		$material = ReedMasterChecksheet::where('material_number', $request->get('material_number'))
+		->where('location', 'WAREHOUSE')
+		->where('process', 'RECEIVE')
+		->first();
+
+		try {
+			$receive = new ReedWarehouseReceive([
+				'receive_date' => $request->get('date'),
+				'material_number' => $material->material_number,
+				'material_description' => $material->material_description,
+				'quantity' => $request->get('quantity'),
+				'bag_quantity' => $request->get('quantity') / $material->lot_kanban,
+				'created_by' => Auth::id()
+			]);
+			$receive->save();
+
+			$response = array(
+				'status' => true,
+				'message' => 'Process Receive Success'
+			);
+			return Response::json($response);
+		} catch (Exception $e) {
+			
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function printLabel($data){
+		if (Auth::user()->role_code == 'MIS'){			
+			$printer_name = 'MIS';
+		}else{
+			$printer_name = 'FLO Printer LOG';
+		}
+
+		$connector = new WindowsPrintConnector($printer_name);
+		$printer = new Printer($connector);
+
+		for ($i=0; $i < $data->bag_quantity; $i++) { 
+			$printer->setJustification(Printer::JUSTIFY_CENTER);
+			$printer->setEmphasis(true);
+			$printer->setReverseColors(true);
+			$printer->setTextSize(2, 2);
+			$printer->text("  WAREHOUSE  "."\n");
+			$printer->feed(1);
+			$printer->initialize();
+
+			$printer->setJustification(Printer::JUSTIFY_CENTER);
+			$printer->qrCode($data->material_number, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
+			$printer->initialize();
+
+			$printer->setJustification(Printer::JUSTIFY_CENTER);
+			$printer->setEmphasis(true);
+			$printer->setTextSize(2, 2);
+			$printer->text($data->material_number."\n");
+
+			$printer->initialize();
+			$printer->setEmphasis(true);
+			$printer->setTextSize(1, 1);
+			$printer->setJustification(Printer::JUSTIFY_CENTER);
+			$printer->text($data->material_description."\n");
+
+
+			$printer->initialize();
+			$printer->setEmphasis(true);
+			$printer->setTextSize(1, 1);
+			$printer->setJustification(Printer::JUSTIFY_CENTER);
+			$printer->text("Tanggal Masuk : ".date('d-m-Y', strtotime($data->receive_date))."\n");
+
+			$printer->feed(2);
+			$printer->cut();
+			$printer->close();
 		}
 	}
 
