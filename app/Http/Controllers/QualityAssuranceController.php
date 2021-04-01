@@ -807,4 +807,161 @@ class QualityAssuranceController extends Controller
         return Response::json($response);
       }
     }
+
+    public function indexReportIncomingCheck()
+    {
+      $vendor = DB::SELECT("SELECT DISTINCT
+        ( vendor ) 
+      FROM
+        qa_materials 
+      ORDER BY
+        LENGTH( vendor ) ASC");
+
+      $material = DB::SELECT("SELECT DISTINCT
+        ( material_number ),
+        material_description 
+      FROM
+        qa_materials 
+      ORDER BY
+        material_description ASC");
+
+      $inspection_level = DB::SELECT("SELECT * FROM `ympimis`.`qa_inspection_levels`");
+
+      return view('qa.report_incoming_check')
+      ->with('title', 'Report Incoming Check QA')
+      ->with('title_jp', '??')
+      ->with('location', $this->location)
+      ->with('materials', $material)
+      ->with('inspection_levels', $inspection_level)
+      ->with('vendors', $vendor)
+      ->with('page', 'Report Incoming Check QA')
+      ->with('jpn', '??');
+    }
+
+    public function fetchReportIncomingCheck(Request $request)
+    {
+      try {
+        $date_from = $request->get('date_from');
+        $date_to = $request->get('date_to');
+        if ($date_from == "") {
+             if ($date_to == "") {
+                  $first = "DATE_FORMAT( NOW(), '%Y-%m-01' ) ";
+                  $last = "LAST_DAY(NOW())";
+             }else{
+                  $first = "DATE_FORMAT( NOW(), '%Y-%m-01' ) ";
+                  $last = "'".$date_to."'";
+             }
+        }else{
+             if ($date_to == "") {
+                  $first = "'".$date_from."'";
+                  $last = "LAST_DAY(NOW())";
+             }else{
+                  $first = "'".$date_from."'";
+                  $last = "'".$date_to."'";
+             }
+        }
+
+        $vendor = '';
+        if($request->get('vendor') != null){
+          $vendors =  explode(",", $request->get('vendor'));
+          for ($i=0; $i < count($vendors); $i++) {
+            $vendor = $vendor."'".$vendors[$i]."'";
+            if($i != (count($vendors)-1)){
+              $vendor = $vendor.',';
+            }
+          }
+          $vendorin = " and `vendor` in (".$vendor.") ";
+        }
+        else{
+          $vendorin = "";
+        }
+
+        $material = '';
+        if($request->get('material') != null){
+          $materials =  explode(",", $request->get('material'));
+          for ($i=0; $i < count($materials); $i++) {
+            $material = $material."'".$materials[$i]."'";
+            if($i != (count($materials)-1)){
+              $material = $material.',';
+            }
+          }
+          $materialin = " and `material_number` in (".$material.") ";
+        }
+        else{
+          $materialin = "";
+        }
+
+        $location = '';
+        if($request->get('location') != null){
+          $locations =  explode(",", $request->get('location'));
+          for ($i=0; $i < count($locations); $i++) {
+            $location = $location."'".$locations[$i]."'";
+            if($i != (count($locations)-1)){
+              $location = $location.',';
+            }
+          }
+          $locationin = " and `location` in (".$location.") ";
+        }
+        else{
+          $locationin = "";
+        }
+
+        $inspection_level = '';
+        if($request->get('inspection_level') != null){
+          $inspection_levels =  explode(",", $request->get('inspection_level'));
+          for ($i=0; $i < count($inspection_levels); $i++) {
+            $inspection_level = $inspection_level."'".$inspection_levels[$i]."'";
+            if($i != (count($inspection_levels)-1)){
+              $inspection_level = $inspection_level.',';
+            }
+          }
+          $inspection_levelin = " and `inspection_level` in (".$inspection_level.") ";
+        }
+        else{
+          $inspection_levelin = "";
+        }
+
+        $datas = DB::SELECT("SELECT
+          qa_incoming_logs.location,
+          employee_syncs.employee_id,
+          employee_syncs.name,
+          qa_incoming_logs.material_number,
+          qa_incoming_logs.material_description,
+          qa_incoming_logs.vendor,
+          qa_incoming_logs.invoice,
+          qa_incoming_logs.inspection_level,
+          qa_incoming_logs.`repair`,
+          qa_incoming_logs.`return`,
+          qa_incoming_logs.`qty_rec`,
+          qa_incoming_logs.`qty_check`,
+          qa_incoming_logs.`total_ok`,
+          qa_incoming_logs.`total_ng`,
+          qa_incoming_logs.`ng_ratio`,
+          qa_incoming_logs.`status_lot`,
+          DATE( qa_incoming_logs.created_at ) AS created,
+          ( SELECT GROUP_CONCAT( ng_name SEPARATOR '_' ) FROM qa_incoming_ng_logs WHERE qa_incoming_ng_logs.incoming_check_code = qa_incoming_logs.incoming_check_code ) AS ng_name,
+          ( SELECT GROUP_CONCAT( qty_ng SEPARATOR '_' ) FROM qa_incoming_ng_logs WHERE qa_incoming_ng_logs.incoming_check_code = qa_incoming_logs.incoming_check_code ) AS ng_qty,
+          ( SELECT GROUP_CONCAT( status_ng SEPARATOR '_' ) FROM qa_incoming_ng_logs WHERE qa_incoming_ng_logs.incoming_check_code = qa_incoming_logs.incoming_check_code ) AS status_ng,
+          ( SELECT GROUP_CONCAT( note_ng SEPARATOR '_' ) FROM qa_incoming_ng_logs WHERE qa_incoming_ng_logs.incoming_check_code = qa_incoming_logs.incoming_check_code ) AS note_ng 
+        FROM
+          qa_incoming_logs
+          JOIN employee_syncs ON employee_syncs.employee_id = qa_incoming_logs.inspector_id 
+        WHERE
+          DATE( qa_incoming_logs.created_at ) >= ".$first." 
+          AND DATE( qa_incoming_logs.created_at ) <= ".$last."
+          ".$locationin." ".$inspection_levelin." ".$materialin." ".$vendorin." ");
+
+        $response = array(
+            'status' => true,
+            'datas' => $datas,
+        );
+        return Response::json($response);
+      } catch (\Exception $e) {
+        $response = array(
+            'status' => false,
+            'message' => $e->getMessage()
+        );
+        return Response::json($response);
+      }
+    }
 }

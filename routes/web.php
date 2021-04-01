@@ -4472,7 +4472,12 @@ Route::get('fetch/packinglist/warehouse', 'WarehouseNewController@fetchPackingli
 Route::get('warehouse/internal', 'WarehouseNewController@index_internal');
 Route::get('fetch/list/internal', 'WarehouseNewController@fetchInternal');
 Route::get('fetch/detail/list', 'WarehouseNewController@fetch_detail_list');
-Route::post('post/detail/save', 'WarehouseNewController@post_detail');
+Route::post('post/detail/save', 'WarehouseNewController@createDetail');
+Route::post('post/job/save', 'WarehouseNewController@createJob');
+Route::get('fetch/finish/job', 'WarehouseNewController@finish_job');
+
+
+
 
 
 //Sanding
@@ -4534,6 +4539,10 @@ Route::get('index/qa/display/incoming/ng_rate', 'QualityAssuranceController@inde
 Route::get('fetch/qa/display/incoming/ng_rate', 'QualityAssuranceController@fetchDisplayIncomingNgRate');
 Route::get('fetch/qa/display/incoming/ng_rate/detail', 'QualityAssuranceController@fetchDisplayIncomingNgRateDetail');
 
+//QA Report Incoming Check
+Route::get('index/qa/report/incoming', 'QualityAssuranceController@indexReportIncomingCheck');
+Route::get('fetch/qa/report/incoming', 'QualityAssuranceController@fetchReportIncomingCheck');
+
 //Health Indicator
 Route::get('index/health/{loc}', 'HealthController@index');
 Route::post('upload/health', 'HealthController@uploadHealth');
@@ -4581,13 +4590,26 @@ Route::get('index/reed/trimming_verification', 'ReedSyntheticController@indexTri
 //Annealing
 Route::get('index/reed/annealing_verification', 'ReedSyntheticController@indexAnnealingVerification');
 
-//Annealing
+//Packing
 Route::get('index/reed/packing_verification', 'ReedSyntheticController@indexPackingVerification');
 Route::get('fetch/reed/packing_picking_list', 'ReedSyntheticController@fetchPackingPickingList');
 Route::post('scan/reed/packing_picking', 'ReedSyntheticController@scanPackingPicking');
 Route::post('fetch/reed/start_packing', 'ReedSyntheticController@fetchStartPacking');
 Route::post('fetch/reed/finish_packing', 'ReedSyntheticController@fetchFinishPacking');
 
+//Warehouse
+
+Route::get('index/reed/label_verification', 'ReedSyntheticController@indexLabelVerification');
+Route::get('fetch/reed/label_verification', 'ReedSyntheticController@fetchLabelVerification');
+Route::post('post/reed/label_verification', 'ReedSyntheticController@postLabelVerification');
+
+Route::get('index/reed/resin_receive', 'ReedSyntheticController@indexResinReceive');
+Route::get('fetch/reed/resin_receive', 'ReedSyntheticController@fetchResinReceive');
+Route::post('input/reed/resin_receive', 'ReedSyntheticController@inputResinReceive');
+Route::get('print/reed/resin_receive', 'ReedSyntheticController@fetchPrintReceive');
+
+Route::get('index/reed/store_verification', 'ReedSyntheticController@indexStoreVerification');
+Route::post('scan/reed/store_verification', 'ReedSyntheticController@scanStoreVerification');
 
 
 
