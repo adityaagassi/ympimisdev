@@ -127,7 +127,6 @@
 <script src="{{ url("js/vfs_fonts.js")}}"></script>
 <script src="{{ url("js/buttons.html5.min.js")}}"></script>
 <script src="{{ url("js/buttons.print.min.js")}}"></script>
-<script src="{{ url("js/lodash.min.js")}}"></script>
 <script>
 
   $.ajaxSetup({
