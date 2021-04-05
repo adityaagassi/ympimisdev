@@ -335,12 +335,11 @@ class ProductionScheduleController extends Controller{
 
             $st_plan = $request[$i]->quantity;
 
-            $productions = DB::select("SELECT 'stock' AS type, MIN(inv.stock_date) AS due_date, inv.material_number, (inv.quantity - inv.st_plan) AS quantity, m.hpl FROM first_inventories inv
+            $productions = DB::select("SELECT 'stock' AS type, inv.stock_date AS due_date, inv.material_number, (inv.quantity - inv.st_plan) AS quantity, m.hpl FROM first_inventories inv
                 LEFT JOIN materials m ON m.material_number = inv.material_number
                 WHERE inv.material_number = '".$request[$i]->material_number."'
                 AND DATE_FORMAT(inv.stock_date,'%Y-%m') = '".$month."' 
                 AND m.category = 'KD'
-                GROUP BY inv.material_number
                 HAVING quantity > 0
                 UNION
                 SELECT 'plan' AS type, ps.due_date, ps.material_number, (ps.quantity - ps.st_plan) AS quantity, m.hpl FROM production_schedules_two_steps ps
