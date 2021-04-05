@@ -3293,9 +3293,35 @@ class MaintenanceController extends Controller
 		return Response::json($response);
 	}
 
+	public function fetchSPKOperatorWorkload()
+	{
+		$datas = MaintenanceJobProcess::whereNull('maintenance_job_processes.deleted_at')
+		->whereNull('maintenance_job_orders.deleted_at')
+		->whereIn('maintenance_job_orders.remark', [3,4,5])
+		->leftJoin('maintenance_job_orders', 'maintenance_job_processes.order_no', '=', 'maintenance_job_orders.order_no')
+		->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'maintenance_job_processes.operator_id')
+		->select('maintenance_job_processes.order_no', 'operator_id', 'name', 'maintenance_job_processes.start_actual', 'maintenance_job_processes.finish_actual', 'maintenance_job_orders.remark')
+		->orderBy('operator_id', 'asc')
+		->orderBy('remark', 'desc')
+		->get();
+
+		$op = EmployeeSync::whereNull('end_date')
+		->where('group', '=', 'Maintenance Group')
+		->select('employee_id', 'name')
+		->orderBy('employee_id', 'asc')
+		->get();
+
+		$response = array(
+			'status' => true,
+			'datas' => $datas,
+			'operator' => $op
+		);
+		return Response::json($response);
+	}
+
 	public function fetchOperatorPosition(Request $request)
 	{
-		$dt = '2021-03-24';
+		$dt = date('Y-m-d');
 		// $emp_loc = MaintenanceOperatorLocation::select('employee_id', 'employee_name', 'location', 'remark', 'created_at', db::raw('RIGHT(acronym(employee_name), 2) AS short_name'))->get();
 
 		$emp_loc = db::select("SELECT employee_syncs.employee_id, `name`, RIGHT(acronym(`name`), 2) as short_name, shiftdaily_code, location, maintenance_operator_locations.remark as job from employee_syncs
