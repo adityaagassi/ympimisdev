@@ -625,31 +625,34 @@ class MaintenanceController extends Controller
 
 	public function indexMttbf()
 	{
-		$title = 'Machine Down Time Data';
+		$title = 'Monthly Machine Down Time Data';
 		$title_jp = '??';
 
-		$machine = MaintenancePlanItem::select('machine_id', 'description', 'area', 'location')->get();
+		$machine_group = MaintenancePlanItem::select('machine_group')->whereNotNull('machine_group')->groupBy('machine_group')->get();
+		
+		$machine_location = MaintenancePlanItem::select('location')->groupBy('location')->get();
 
 		return view('maintenance.machine_status', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
-			'machine' => $machine
+			'machine_group' => $machine_group,
+			'machine_location' => $machine_location,
 		))->with('page','MTBF')->with('head', 'Maintenance');
 	}
 
-	public function indexMttr()
-	{
-		$title = 'MTTR';
-		$title_jp = '??';
+	// public function indexMttr()
+	// {
+	// 	$title = 'MTTR';
+	// 	$title_jp = '??';
 
-		$machine = MaintenancePlanItem::select('machine_id', 'description', 'area', 'location')->get();
+	// 	$machine = MaintenancePlanItem::select('machine_id', 'description', 'area', 'location')->get();
 
-		return view('maintenance.machine_status', array(
-			'title' => $title,
-			'title_jp' => $title_jp,
-			'machine' => $machine
-		))->with('page','MTTR')->with('head', 'Maintenance');
-	}
+	// 	return view('maintenance.machine_status', array(
+	// 		'title' => $title,
+	// 		'title_jp' => $title_jp,
+	// 		'machine' => $machine
+	// 	))->with('page','MTTR')->with('head', 'Maintenance');
+	// }
 
 	public function indexMttbfReport()
 	{
@@ -673,6 +676,17 @@ class MaintenanceController extends Controller
 			'title' => $title,
 			'title_jp' => $title_jp
 		))->with('page','Maintenance Workload')->with('head', 'Maintenance');
+	}
+
+	public function indexSPKOperator()
+	{
+		$title = 'SPK Workload Operator';
+		$title_jp = '??';
+
+		return view('maintenance.report.spk_operator_workload', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page','Maintenance SPK Workload')->with('head', 'Maintenance');
 	}
 
 	// -----------------------  END INDEX --------------------
@@ -3399,12 +3413,36 @@ class MaintenanceController extends Controller
 		}	
 	}
 
+	public function fetchOperatorWorkload(Request $request)
+	{
+		$workload = db::select("SELECT employee_id, employee_name, remark, SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(logged_out_at, logged_in_at)))) as dif FROM `maintenance_operator_location_logs`
+			where DATE_FORMAT(logged_in_at, '%Y-%m-%d') = '2021-03-17' and remark <> 'spk'
+			group by employee_id, employee_name, remark");
+	}
+
 	public function fetchMttbf(Request $request)
 	{
+		DB::connection()->enableQueryLog();
 		$l_hours = db::table('maintenance_machine_load_hours')
-		->leftJoin('maintenance_plan_items', 'maintenance_machine_load_hours.machine_id', '=', 'maintenance_plan_items.machine_id')
-		->where('maintenance_plan_items.location', '=', $request->get('location'))
-		->select('maintenance_machine_load_hours.machine_id', 'location', 'description', 'area', 'load_hour', db::raw('DATE_FORMAT(mon,"%b %Y") as mon'))
+		->leftJoin('maintenance_plan_items', 'maintenance_machine_load_hours.machine_id', '=', 'maintenance_plan_items.machine_id');
+
+		if(strlen($request->get('period')) > 0 ){
+			$l_hours = $l_hours->where('maintenance_machine_load_hours.mon', '=', $request->get('period').'-01');
+		}
+
+		if(strlen($request->get('location')) > 0 ){
+			$l_hours = $l_hours->where('location', '=', $request->get('location'));
+		}
+
+		if(strlen($request->get('machine_group')) > 0 ){
+			$l_hours = $l_hours->where('machine_group', '=', $request->get('machine_group'));
+		}
+
+		if(strlen($request->get('machine_code')) > 0 ){
+			$l_hours = $l_hours->where('maintenance_machine_load_hours.machine_id', '=', $request->get('machine_code'));
+		}
+
+		$l_hours = $l_hours->select('maintenance_machine_load_hours.machine_id', 'machine_group', 'description', 'area', 'load_hour', db::raw('DATE_FORMAT(mon,"%b %Y") as mon2'))
 		->get();
 
 		$chart_data = db::select('SELECT machine_group,DATE_FORMAT(mon, "%b %Y") mon2, ROUND(AVG(mttbf),2) as avg_mttbf from
@@ -3416,7 +3454,8 @@ class MaintenanceController extends Controller
 		$response = array(
 			'status' => true,
 			'l_hours' => $l_hours,
-			'chart_data' => $chart_data
+			'chart_data' => $chart_data,
+			'query' => DB::getQueryLog()
 		);
 		return Response::json($response);
 	}
