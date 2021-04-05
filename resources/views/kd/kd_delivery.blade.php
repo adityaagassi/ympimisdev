@@ -34,6 +34,7 @@
   #loading, #error { display: none; }
 </style>
 @stop
+
 @section('header')
 <section class="content-header">
   <h1>

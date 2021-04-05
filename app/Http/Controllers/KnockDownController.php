@@ -238,6 +238,36 @@ class KnockDownController extends Controller{
 				'location' => $id,
 			))->with('page', $title)->with('head', $title);
 		}
+		else if($id == 'pn-part'){
+			$title = 'KD Pianica Part';
+			$title_jp = '';
+
+			return view('kd.index_kd', array(
+				'title' => $title,
+				'title_jp' => $title_jp,
+				'location' => $id,
+			))->with('page', $title)->with('head', $title);
+		}
+		else if($id == 'vn-assy'){
+			$title = 'KD Venova Assy';
+			$title_jp = '';
+
+			return view('kd.index_kd', array(
+				'title' => $title,
+				'title_jp' => $title_jp,
+				'location' => $id,
+			))->with('page', $title)->with('head', $title);
+		}
+		else if($id == 'vn-injection'){
+			$title = 'KD Venova Injection';
+			$title_jp = '';
+
+			return view('kd.index_kd', array(
+				'title' => $title,
+				'title_jp' => $title_jp,
+				'location' => $id,
+			))->with('page', $title)->with('head', $title);
+		}
 		else if($id == 'case'){
 			$title = 'KD CASE';
 			$title_jp = '';
@@ -258,11 +288,41 @@ class KnockDownController extends Controller{
 				'location' => $id,
 			))->with('page', $title)->with('head', $title);
 		}
-		else if($id == 'cl_body'){
+		else if($id == 'cl-body'){
 			$title = 'KD CL Body';
 			$title_jp = '';
 
-			return view('kd.index_kd', array(
+			return view('kd.index_kd_ending_stock', array(
+				'title' => $title,
+				'title_jp' => $title_jp,
+				'location' => $id,
+			))->with('page', $title)->with('head', $title);
+		}
+		else if($id == 'b-pro'){
+			$title = 'KD B-PRO';
+			$title_jp = '';
+
+			return view('kd.index_kd_ending_stock', array(
+				'title' => $title,
+				'title_jp' => $title_jp,
+				'location' => $id,
+			))->with('page', $title)->with('head', $title);
+		}
+		else if($id == 'welding-body'){
+			$title = 'KD Welding Body';
+			$title_jp = '';
+
+			return view('kd.index_kd_ending_stock', array(
+				'title' => $title,
+				'title_jp' => $title_jp,
+				'location' => $id,
+			))->with('page', $title)->with('head', $title);
+		}
+		else if($id == 'welding-keypost'){
+			$title = 'KD Welding Key Post';
+			$title_jp = '';
+
+			return view('kd.', array(
 				'title' => $title,
 				'title_jp' => $title_jp,
 				'location' => $id,
@@ -445,6 +505,40 @@ class KnockDownController extends Controller{
 			'kd_number' => $kd_number
 		));
 		return $pdf->stream("label_".$shipment[0]->material_number.".pdf");
+
+
+		// return view('kd.label.print_label_mpro', array(
+		// 	'shipment' => $shipment,
+		// 	'kd_number' => $kd_number
+		// ));
+
+	}
+
+	public function indexPrintLabelA6($id){
+		
+		$data = KnockDownDetail::leftJoin('materials', 'materials.material_number', '=', 'knock_down_details.material_number')
+		->where('knock_down_details.id', $id)
+		->select(
+			'knock_down_details.kd_number',
+			'knock_down_details.material_number',
+			'materials.material_description',
+			db::raw('date(knock_down_details.created_at) AS date'),
+			db::raw('COALESCE(materials.xy,"-") AS xy'),
+			db::raw('COALESCE(materials.mj,"-") AS mj'),
+			db::raw('SUM(knock_down_details.quantity) AS quantity')
+		)
+		->first();
+
+
+		$pdf = \App::make('dompdf.wrapper');
+		$pdf->getDomPDF()->set_option("enable_php", true);
+		$pdf->setPaper('A6', 'landscape');
+		$pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
+
+		$pdf->loadView('kd.label.print_label_a6', array(
+			'data' => $data
+		));
+		return $pdf->stream("label_".$data->kd_number.".pdf");
 
 
 		// return view('kd.label.print_label_mpro', array(
@@ -1816,6 +1910,12 @@ class KnockDownController extends Controller{
 			$storage = "('SUBASSY-FL')";
 		}else if($id == 'sub-assy-cl'){
 			$storage = "('SUBASSY-CL')";
+		}else if ($id == 'b-pro') {
+			$storage = "('BPRO')";
+		}else if ($id == 'cl-body') {
+			$storage = "('CL-BODY')";
+		}else if ($id == 'welding-body') {
+			$storage = "('WELDING') AND m.kd_name = 'BODY-BELL'";
 		}
 
 		// $target = db::select("select target.material_number, target.material_description, sum(target.quantity ) as target from
@@ -1910,6 +2010,18 @@ class KnockDownController extends Controller{
 
 		}else if($id == 'cl_body'){
 			$storage = "('CL-BODY')";
+			$order = 'sh.st_date ASC, box DESC';
+
+		}else if($id == 'pn_part'){
+			$storage = "('PN-PART')";
+			$order = 'sh.st_date ASC, box DESC';
+
+		}else if($id == 'vn_assy'){
+			$storage = "('VN-ASSY')";
+			$order = 'sh.st_date ASC, box DESC';
+
+		}else if($id == 'vn_injection'){
+			$storage = "('VN-INJECTION')";
 			$order = 'sh.st_date ASC, box DESC';
 
 		}
@@ -3041,8 +3153,14 @@ class KnockDownController extends Controller{
 			else if($receive == 'CS91'){
 				$printer_name = 'KDO CASE';
 			}
+			else if($receive == 'PN91'){
+				$printer_name = 'FLO Printer 104';
+			}
+			else if($receive == 'VN91' || $receive == 'VN11'){
+				$printer_name = 'FLO Printer VN';
+			}
 			else{
-				$printer_name = 'MIS2';
+				$printer_name = 'MIS';
 			}
 		}
 
