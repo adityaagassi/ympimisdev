@@ -525,7 +525,7 @@ class KnockDownController extends Controller{
 			db::raw('date(knock_down_details.created_at) AS date'),
 			db::raw('COALESCE(materials.xy,"-") AS xy'),
 			db::raw('COALESCE(materials.mj,"-") AS mj'),
-			db::raw('SUM(knock_down_details.quantity) AS quantity')
+			db::raw('knock_down_details.quantity AS quantity')
 		)
 		->first();
 
