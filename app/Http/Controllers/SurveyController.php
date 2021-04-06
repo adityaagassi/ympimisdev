@@ -210,4 +210,239 @@ class SurveyController extends Controller
 			return Response::json($response);
 		}
 	}
+
+	public function indexSurveyCovid()
+	{
+		$title = 'Survey Covid-19';
+		$title_jp = '';
+
+		return view('survey.index_covid', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+		))->with('page', 'Survey Covid')->with('head','Survey Covid');
+	}
+
+	public function fetchSurveyCovid(Request $request)
+	{
+		try {
+			if ($request->get('keterangan') == null) {
+				$keterangan = "covid";
+			}else{
+				$keterangan = $request->get('keterangan');
+			}
+
+			$survey = DB::SELECT("
+				SELECT
+					SUM( a.count_sudah ) AS sudah,
+					SUM( a.count_belum ) AS belum,
+					a.department,
+					COALESCE ( departments.department_shortname, '' ) AS department_shortname 
+				FROM
+					(
+				SELECT
+					count( miraimobile.survey_logs.employee_id ) AS count_sudah,
+					0 AS count_belum,
+					COALESCE (employee_syncs.department, '' ) AS department 
+				FROM
+					miraimobile.survey_logs
+					JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_logs.employee_id 
+				WHERE 
+					miraimobile.survey_logs.survey_code = '".$keterangan."' 
+				GROUP BY
+					employee_syncs.department
+					
+					UNION ALL
+				SELECT
+					0 AS count_sudah,
+					count( employee_syncs.employee_id ) AS count_belum,
+					COALESCE ( employee_syncs.department, '' ) AS department 
+				FROM
+					miraimobile.survey_logs
+					RIGHT JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_logs.employee_id 
+				WHERE
+					miraimobile.survey_logs.employee_id IS NULL 
+					AND employee_syncs.end_date IS NULL 
+				GROUP BY
+					employee_syncs.department 
+					) a
+					LEFT JOIN departments ON a.department = departments.department_name 
+				GROUP BY
+					a.department,
+					departments.department_shortname
+					
+					");
+
+			$response = array(
+				'status' => true,
+				'survey' => $survey,
+				'keterangan' => $keterangan,
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function fetchSurveyCovidDetail(Request $request)
+	{
+		try {
+		    $answer = $request->get('answer');
+            $dept = $request->get('dept');
+
+            if ($dept == "") {
+                if ($answer == "Belum") {
+                     $survey = DB::SELECT("SELECT
+                          employee_syncs.employee_id,
+                          employee_syncs.name,
+                          '' as department
+                          FROM
+                          employee_taxes
+                          RIGHT JOIN employee_syncs ON employee_syncs.employee_id = employee_taxes.employee_id
+                          WHERE
+                          department IS NULL
+                          and employee_taxes.employee_id is null
+                          and employee_syncs.end_date is null");
+                }else{
+                     $survey = DB::SELECT("SELECT
+                          employee_syncs.employee_id,
+                          employee_syncs.name,
+                          '' as department
+                          FROM
+                          employee_taxes
+                          LEFT JOIN employee_syncs ON employee_syncs.employee_id = employee_taxes.employee_id
+                          WHERE
+                          department IS NULL
+                          and employee_syncs.end_date is null");
+                }
+            }else{
+                if ($answer == "Belum") {
+                     $survey = DB::SELECT("SELECT
+                          employee_syncs.employee_id,
+                          employee_syncs.name,
+                          COALESCE(department_shortname,'') as department
+                          FROM
+                          employee_taxes
+                          RIGHT JOIN employee_syncs ON employee_syncs.employee_id = employee_taxes.employee_id
+                          join departments on department_name = employee_syncs.department
+                          WHERE
+                          department_shortname = '".$dept."'
+                          and employee_taxes.employee_id is null
+                          and employee_syncs.end_date is null");
+                }else{
+                     $survey = DB::SELECT("SELECT
+                          employee_syncs.employee_id,
+                          employee_syncs.name,
+                          COALESCE(department_shortname,'') as department
+                          FROM
+                          employee_taxes
+                          LEFT JOIN employee_syncs ON employee_syncs.employee_id = employee_taxes.employee_id
+                          join departments on department_name = employee_syncs.department
+                          WHERE
+                          department_shortname = '".$dept."'
+                          and employee_syncs.end_date is null");
+                }
+           }
+
+			$response = array(
+				'status' => true,
+				'survey' => $survey,
+				'keterangan' => $keterangan,
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function indexSurveyCovidReport()
+	{
+		$title = 'Report Survey Covid-19';
+		$title_jp = '';
+
+		return view('survey.report_covid', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+		))->with('page', 'Report Survey Covid')->with('head','Report Survey Covid');
+	}
+
+	public function fetchSurveyCovidReport()
+	{
+		try {
+			$survey = DB::SELECT("SELECT
+				miraimobile.survey_logs.id as id_survey,
+				miraimobile.survey_logs.employee_id,
+				employee_syncs.name,
+				employee_syncs.department,
+				employee_syncs.section,
+				employee_syncs.`group`,
+				employee_syncs.sub_group,
+				miraimobile.survey_logs.tanggal,
+				miraimobile.survey_logs.question,
+				miraimobile.survey_logs.answer,
+				miraimobile.survey_logs.poin,
+				miraimobile.survey_logs.total,
+				miraimobile.survey_logs.keterangan 
+			FROM
+				miraimobile.survey_logs
+				JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_logs.employee_id
+			ORDER BY
+				miraimobile.survey_logs.tanggal desc");
+			$response = array(
+				'status' => true,
+				'survey' => $survey,
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function fetchSurveyCovidReportDetail(Request $request)
+	{
+		try {
+			$survey = DB::SELECT("SELECT
+				miraimobile.survey_logs.id as id_survey,
+				miraimobile.survey_logs.employee_id,
+				employee_syncs.name,
+				employee_syncs.department,
+				employee_syncs.section,
+				employee_syncs.`group`,
+				employee_syncs.sub_group,
+				miraimobile.survey_logs.tanggal,
+				miraimobile.survey_logs.question,
+				miraimobile.survey_logs.answer,
+				miraimobile.survey_logs.poin,
+				miraimobile.survey_logs.total,
+				miraimobile.survey_logs.keterangan 
+			FROM
+				miraimobile.survey_logs
+				JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_logs.employee_id
+				where miraimobile.survey_logs.id = '".$request->get('id')."'
+			ORDER BY
+				miraimobile.survey_logs.tanggal");
+			$response = array(
+				'status' => true,
+				'survey' => $survey,
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+	}
 }

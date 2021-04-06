@@ -3058,6 +3058,8 @@ Route::get('fetch/display/efficiency_monitoring_monthly', 'DisplayController@fet
 
 //EFFICIENCY
 Route::get('index/efficiency/operator_loss_time', 'EfficiencyController@indexOperatorLossTime');
+Route::get('fetch/efficiency/operator_loss_time', 'EfficiencyController@fetchOperatorLossTime');
+Route::post('input/efficiency/operator_loss_time', 'EfficiencyController@inputOperatorLossTime');
 Route::get('scan/efficiency/employee', 'EfficiencyController@scanEmployee');
 
 
@@ -4339,7 +4341,14 @@ Route::get('index/survey', 'SurveyController@indexSurvey');
 Route::get('fetch/survey', 'SurveyController@fetchSurvey');
 Route::get('fetch/survey/detail', 'SurveyController@fetchSurveyDetail');
 
+//Survey Covid
+Route::get('index/survey_covid', 'SurveyController@indexSurveyCovid');
+Route::get('fetch/survey_covid', 'SurveyController@fetchSurveyCovid');
+Route::get('fetch/survey_covid/detail', 'SurveyController@fetchSurveyCovidDetail');
 
+Route::get('index/survey_covid/report', 'SurveyController@indexSurveyCovidReport');
+Route::get('fetch/survey_covid/report', 'SurveyController@fetchSurveyCovidReport');
+Route::get('fetch/survey_covid/report/detail', 'SurveyController@fetchSurveyCovidReportDetail');
 
 Route::get('/radar_covid', function () {
 	return view('mirai_mobile.radar_covid');
@@ -4475,6 +4484,8 @@ Route::get('fetch/detail/list', 'WarehouseNewController@fetch_detail_list');
 Route::post('post/detail/save', 'WarehouseNewController@createDetail');
 Route::post('post/job/save', 'WarehouseNewController@createJob');
 Route::get('fetch/finish/job', 'WarehouseNewController@finish_job');
+Route::get('fetch/detail/job', 'WarehouseNewController@createDetail');
+
 
 
 
@@ -4636,7 +4647,8 @@ Route::get('fetch/packing_documentation/data', 'AuditController@documentation_da
 
 //Server Room
 
-Route::get('index/server_room', 'RoomController@ServerRoom');
-Route::get('index/server_room/{id}', 'RoomController@ServerRoomPing');
+Route::get('index/server_room', 'PingController@ServerRoom');
+Route::get('index/server_room/{id}', 'PingController@ServerRoomPing');
+Route::get('post/server_room/ping/trend', 'PingController@ServerRoomPingTrend');
 
 //End Server Room

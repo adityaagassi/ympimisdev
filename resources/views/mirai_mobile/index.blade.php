@@ -24,7 +24,10 @@
 			<a href="{{ url("/index/mirai_mobile/healthy_report") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Attendance & Health Report</a>
 			<a href="{{ url("/radar_covid") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Radar Covid19</a>
 			<a href="{{ url("index/corona_information") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Daily Corona Data</a>
-
+			<a href="{{ url("index/mirai_mobile/corona_map") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">YMPI Corona Map</a>
+			<hr style="border: 1px solid red">
+			<a href="{{ url("index/survey") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Emergency Survey</a>
+			<a href="{{ url("index/survey_covid") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Survey Covid</a>
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
 			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>
@@ -33,6 +36,8 @@
 			<!-- <a href="#" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Location Data</a>  -->
 			<a href="{{ url("index/mirai_mobile/report_location") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Location Data</a> 
 			<a href="{{ url("index/mirai_mobile/report_indication") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Health Indication Data</a>
+			<hr style="border: 1px solid red">
+			<a href="{{ url('index/survey_covid/report') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Survey Covid Report</a>
 		</div>
 
 	</div>

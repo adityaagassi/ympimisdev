@@ -528,10 +528,10 @@
                             <a href="{{ secure_url("index/std_control/safety_shoes") }}">
                                 <i class="fa fa-caret-right"></i> Safety Shoes Control (安全靴管理システム)
                             </a>
-                            <br>
+                            <!-- <br>
                             <a href="{{ url("index/survey") }}">
                                 <i class="fa fa-caret-right"></i> Emergency Survey (エマージェンシーサーベイ)
-                            </a>
+                            </a> -->
                             <br>
                             <a href="{{ url('index/general/queue','mcu') }}">
                                 <i class="fa fa-caret-right"></i> Medical Check Up Queue (健康診断待ち行列)
@@ -548,9 +548,10 @@
                             <a href="{{ url('index/general/airvisual') }}">
                                 <i class="fa fa-caret-right"></i> Air Visual Monitor(空気モニター)
                             </a>
-                            <!-- <a href="{{ url("index/server_room") }}">
+                            <br>
+                            <a href="{{ url("index/server_room") }}">
                                 <i class="fa fa-caret-right"></i> Server Room Monitoring (サーバールームモニタリング)
-                            </a> -->
+                            </a>
                             <!-- <br>
                             <a href="{{ url("index/display/office_clock") }}">
                                 <i class="fa fa-caret-right"></i> Office Clock (??)
