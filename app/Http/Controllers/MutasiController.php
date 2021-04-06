@@ -49,21 +49,24 @@ class MutasiController extends Controller
 {
     public function dashboard()
     {
+
+        $emp_dept = EmployeeSync::where('employee_id', Auth::user()->username)
+          ->select('department')
+          ->first();
+
         $dept  = db::select('SELECT DISTINCT department FROM employee_syncs ORDER BY department ASC');
-       $post    = db::select('SELECT DISTINCT position FROM employee_syncs ORDER BY position ASC');
-       $section = db::select('SELECT DISTINCT department, section FROM employee_syncs ORDER BY section ASC');
-       $group   = db::select('SELECT DISTINCT section, `group` FROM employee_syncs ORDER BY `group` ASC');
-       $user    = db::select('SELECT employee_id,name FROM employee_syncs');
-       $sub_group   = db::select('SELECT DISTINCT sub_group FROM employee_syncs ORDER BY sub_group ASC');
+        $post    = db::select('SELECT DISTINCT position FROM employee_syncs ORDER BY position ASC');
+        $section = db::select('SELECT DISTINCT department, section FROM employee_syncs ORDER BY section ASC');
+        $group   = db::select('SELECT DISTINCT section, `group` FROM employee_syncs ORDER BY `group` ASC');
+        $user    = db::select('SELECT employee_id,name FROM employee_syncs where department = "'.$emp_dept->department.'"');
+        $sub_group   = db::select('SELECT DISTINCT sub_group FROM employee_syncs ORDER BY sub_group ASC');
 
       // $departement = db::select("select DISTINCT department from employee_syncs");
-      $emp_dept = EmployeeSync::where('employee_id', Auth::user()->username)
-      ->select('department')
-      ->first();
+      
 
       return view('mutasi.dashboard',  
         array(
-          'title' => 'Mutation One Department Monitoring & Control', 
+          'title' => 'Mutasi Satu Department Monitoring & Control', 
           'title_jp' => 'ミューテーション1部門の監視と制御',
 
           'emp_dept' => $emp_dept,
@@ -88,21 +91,24 @@ class MutasiController extends Controller
     {
         // return view('mutasi.dashboard_ant', array(
         // ))->with('page', 'Mutasi');
+
+        $emp_dept = EmployeeSync::where('employee_id', Auth::user()->username)
+      ->select('department')
+      ->first();
+
        $dept  = db::select('SELECT DISTINCT department FROM employee_syncs ORDER BY department ASC');
        $post    = db::select('SELECT DISTINCT position FROM employee_syncs ORDER BY position ASC');
        $section = db::select('SELECT DISTINCT department, section FROM employee_syncs ORDER BY section ASC');
        $group   = db::select('SELECT DISTINCT section, `group` FROM employee_syncs ORDER BY `group` ASC');
-       $user    = db::select('SELECT employee_id,name FROM employee_syncs');
+       $user    = db::select('SELECT employee_id,name FROM employee_syncs where department = "'.$emp_dept->department.'"');
        $sub_group   = db::select('SELECT DISTINCT sub_group FROM employee_syncs ORDER BY sub_group ASC');
 
       // $departement = db::select("select DISTINCT department from employee_syncs");
-      $emp_dept = EmployeeSync::where('employee_id', Auth::user()->username)
-      ->select('department')
-      ->first();
+      
 
       return view('mutasi.dashboard_ant',  
         array(
-          'title' => 'Mutation Between Department Monitoring & Control', 
+          'title' => 'Mutasi Antar Department Monitoring & Control', 
           'title_jp' => '部門の監視と管理の間の変化',
           'emp_dept' => $emp_dept,
           'dept' => $dept,
@@ -266,12 +272,12 @@ class MutasiController extends Controller
             $mutasi->status = 'Rejected';
             $mutasi->save();
             
-            $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where employee_id = 'PI0603019' or employee_id = 'PI0811002'";  
-            $mailtoo = DB::select($mails);
+            // $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where employee_id = 'PI0603019' or employee_id = 'PI0811002'";  
+            // $mailtoo = DB::select($mails);
 
-            $isimail = "select id, nama, tanggal, tanggal_maksimal, departemen, seksi, ke_seksi from mutasi_depts where mutasi_depts.id = ".$mutasi->id;
-            $mutasi = db::select($isimail);
-            Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','mokhamad.khamdan.khabibi@music.yamaha.com'])->send(new SendEmail($mutasi, 'rejected_mutasi'));
+            // $isimail = "select id, nama, tanggal, tanggal_maksimal, departemen, seksi, ke_seksi from mutasi_depts where mutasi_depts.id = ".$mutasi->id;
+            // $mutasi = db::select($isimail);
+            // Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','mokhamad.khamdan.khabibi@music.yamaha.com'])->send(new SendEmail($mutasi, 'rejected_mutasi'));
             return redirect('/dashboard/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
             }
             catch (QueryException $e){
@@ -285,12 +291,12 @@ class MutasiController extends Controller
             $mutasi->status = 'Rejected';
             $mutasi->save();
             
-            $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where employee_id = 'PI0603019' or employee_id = 'PI0811002'";  
-            $mailtoo = DB::select($mails);
+            // $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where employee_id = 'PI0603019' or employee_id = 'PI0811002'";  
+            // $mailtoo = DB::select($mails);
 
-            $isimail = "select id, nama, tanggal, tanggal_maksimal, departemen,ke_departemen from mutasi_ant_depts where mutasi_ant_depts.id = ".$mutasi->id;
-            $mutasi = db::select($isimail);
-            Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','mokhamad.khamdan.khabibi@music.yamaha.com'])->send(new SendEmail($mutasi, 'rejected_mutasi_ant'));
+            // $isimail = "select id, nama, tanggal, tanggal_maksimal, departemen,ke_departemen from mutasi_ant_depts where mutasi_ant_depts.id = ".$mutasi->id;
+            // $mutasi = db::select($isimail);
+            // Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','mokhamad.khamdan.khabibi@music.yamaha.com'])->send(new SendEmail($mutasi, 'rejected_mutasi_ant'));
             return redirect('/dashboard_ant/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
             }
             catch (QueryException $e){
@@ -301,14 +307,15 @@ class MutasiController extends Controller
     //tampilan dashboard
     public function fetchResumeMutasi(Request $request)
     {   
-        $tanggal = date('Y-m-d');
+        $today = date('Y-m-d');
         $dateto = $request->get('dateto');
 
         if ($dateto == "") {
             $resumes = Mutasi::select('mutasi_depts.id', 'status', 'nik', 'nama', 'nama_chief_asal', 'nama_chief_tujuan', 'nama_manager_tujuan', 'nama_dgm_tujuan', 'nama_gm_tujuan', 'nama_manager', 'app_ca', 'app_ct', 'app_mt', 'app_dt', 'app_gt', 'app_m', 'posisi', 
                 'users.name', 'mutasi_depts.created_by', 'remark')
                 ->WHERE('mutasi_depts.deleted_at',null )
-                ->where(DB::raw("DATE_FORMAT(tanggal, '%Y-%m')"),$tanggal)
+                ->where(DB::raw("DATE_FORMAT(tanggal, '%Y-%m-%d')"),$today)
+                ->where('mutasi_depts.status', null)
                 ->leftJoin('users', 'users.id', '=', 'mutasi_depts.created_by')
                 ->orderBy('mutasi_depts.created_at', 'desc')
                 ->get();
@@ -935,7 +942,10 @@ class MutasiController extends Controller
     // ====================================================================================================================== ANTAR DEPARTEMEN
     //tampilan dashboard
     public function fetchResumeMutasiAnt(Request $request)
-    {   $tanggal = date('Y-m-d');
+    {   
+        // $submission_date = $request->get('submission_date');
+        
+        $tanggal = date('Y-m-d');
         $dateto = $request->get('dateto');
 
         if ($dateto == "") {
@@ -947,6 +957,9 @@ class MutasiController extends Controller
                  ->orderBy('mutasi_ant_depts.created_at', 'desc')
                  ->get();
                   }
+
+                  // var_dump($tanggal);
+                  // die();
         else{
             $resumes = MutasiAnt::select('mutasi_ant_depts.id', 'status', 'nik', 'nama', 'nama_chief_asal', 'nama_manager_asal', 'nama_dgm_asal', 'nama_gm_asal', 'nama_chief_tujuan', 'nama_manager_tujuan', 'nama_dgm_tujuan', 'nama_gm_tujuan', 'nama_manager', 'nama_direktur_hr', 'app_ca', 'app_ma', 'app_da', 'app_ga', 'app_ct', 'app_mt', 'app_dt', 'app_gt', 'app_m', 'app_dir', 'posisi', 
                  'users.name', 'mutasi_ant_depts.created_by', 'remark')
@@ -1033,11 +1046,11 @@ class MutasiController extends Controller
         $bulan = $request->get('bulan');
         $status = $request->get('status');
 
-        if ($status == "Rejected") {
+        if ($status == "Tidak Disetujui") {
             $status = "status = 'Rejected'";
-        }else if($status == "Approved"){
+        }else if($status == "Disetujui"){
             $status = "status = 'All Approved'";
-        }else if($status == "Proces"){
+        }else if($status == "Proses"){
             $status = "status is null";
         }
 
@@ -1083,11 +1096,11 @@ class MutasiController extends Controller
         $bulan = $request->get('bulan');
         $status = $request->get('status');
 
-        if ($status == "Rejected") {
+        if ($status == "Tidak Disetujui") {
             $status = "status = 'Rejected'";
-        }else if($status == "Approved"){
+        }else if($status == "Disetujui"){
             $status = "status = 'All Approved'";
-        }else if($status == "Proces"){
+        }else if($status == "Proses"){
             $status = "status is null";
         }
 
@@ -1542,6 +1555,7 @@ class MutasiController extends Controller
             }
             else{
                 $mutasi->posisi = 'mgr_tujuan';
+                $mutasi->save();
                 $mails = "select distinct email from mutasi_ant_depts join users on mutasi_ant_depts.manager_tujuan = users.username where mutasi_ant_depts.id = ".$mutasi->id;
                 $mailtoo = DB::select($mails);   
             }
@@ -1808,7 +1822,7 @@ class MutasiController extends Controller
             $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where employee_id = 'PI0603019' or employee_id = 'PI0811002'";  
             $mailtoo = DB::select($mails);
 
-            $isimail = "select id, nama, nik, sub_group, ke_sub_group, `group`, ke_group, seksi, ke_seksi, departemen, jabatan, rekomendasi, tanggal, alasan from mutasi_depts where mutasi_depts.id = ".$mutasi->id;
+            $isimail = "select id, nama, nik, sub_group, ke_sub_group, `group`, ke_group, seksi, ke_seksi, departemen, jabatan, rekomendasi, tanggal, alasan from mutasi_ant_depts where mutasi_ant_depts.id = ".$mutasi->id;
             
             $mutasi = db::select($isimail);
             Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','mokhamad.khamdan.khabibi@music.yamaha.com'])->send(new SendEmail($mutasi, 'done_mutasi_ant'));

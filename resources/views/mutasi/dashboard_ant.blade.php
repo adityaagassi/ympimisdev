@@ -123,7 +123,7 @@ table > thead > tr > th{
     <div class="col-md-12" style="padding: 1px !important">
         <div class="col-xs-2">
           <div class="input-group">
-            <a href="javascript:void(0)" onclick="openModalCreate()" class="btn btn-success btn-md" style="color:white"><i class="fa fa-plus"></i> Create Mutasi</a>
+            <a href="javascript:void(0)" onclick="openModalCreate()" class="btn btn-success btn-md" style="color:white"><i class="fa fa-plus"></i> Buat Mutasi</a>
           </div>
         </div>
          <div class="col-xs-2">
@@ -131,7 +131,7 @@ table > thead > tr > th{
             <div class="input-group-addon bg-green" style="border: none;">
               <i class="fa fa-calendar"></i>
             </div>
-            <input type="text" class="form-control datepicker" id="dateto" placeholder="Select Date To" onchange="drawChart()">
+            <input type="text" class="form-control datepicker" id="dateto" placeholder="Pilih Bulan" onchange="drawChart()">
           </div>
         </div>  
     </div>
@@ -153,8 +153,8 @@ table > thead > tr > th{
                 <th style="padding: 0;vertical-align: middle;font-size: 16px;background-color: black;color:white; border-right: 5px solid red !important;" rowspan="3">Created By</th>
               </tr>
               <tr>
-                <th style="background-color: black; font-size: 16px; font-weight: bold; padding: 2px; border-right: 5px solid red !important; color:white" colspan="4">Origin</th>
-                <th style="background-color: black; font-size: 16px; font-weight: bold; padding: 2px; border-right: 5px solid red !important; color:white" colspan="4">Destination</th>
+                <th style="background-color: black; font-size: 16px; font-weight: bold; padding: 2px; border-right: 5px solid red !important; color:white" colspan="4">Asal</th>
+                <th style="background-color: black; font-size: 16px; font-weight: bold; padding: 2px; border-right: 5px solid red !important; color:white" colspan="4">Tujuan</th>
                 <th style="background-color: #448aff; font-size: 16px; font-weight: bold; padding: 2px; color:white" colspan="3">HR</th>
               </tr>
               <tr>
@@ -188,12 +188,12 @@ table > thead > tr > th{
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
-          <h4 class="modal-title">Between Department</h4>
+          <h4 class="modal-title">Antar Department</h4>
           <br>
           <div class="nav-tabs-custom tab-danger">
             <ul class="nav nav-tabs">
-              <li class="vendor-tab active disabledTab"><a href="#tab_1" data-toggle="tab" id="tab_header_1">Employee Data</a></li>
-              <li class="vendor-tab disabledTab"><a href="#tab_2" data-toggle="tab" id="tab_header_2">Input The Reason</a></li>
+              <li class="vendor-tab active disabledTab"><a href="#tab_1" data-toggle="tab" id="tab_header_1">Data Karyawan</a></li>
+              <li class="vendor-tab disabledTab"><a href="#tab_2" data-toggle="tab" id="tab_header_2">Masukkan Alasan</a></li>
             </ul>
           </div>
           <div class="tab-content">
@@ -203,7 +203,7 @@ table > thead > tr > th{
                   <div class="col-md-6">
                     <div class="form-group">
                       <label>NIK<span class="text-red">*</span></label>
-                      <select class="form-control select2" id="employee_id" name="employee_id" data-placeholder='Select Employee ID or Name' style="width: 100%" onchange="checkEmp(this.value)">
+                      <select class="form-control select2" id="employee_id" name="employee_id" data-placeholder='Pilih NIK Atau Nama' style="width: 100%" onchange="checkEmp(this.value)">
                           <option value="">&nbsp;</option>
                           @foreach($user as $row)
                           <option value="{{$row->employee_id}}">{{$row->employee_id}} - {{$row->name}}</option>
@@ -219,7 +219,7 @@ table > thead > tr > th{
                       <input type="text" class="form-control" id="group" name="group" readonly>
                     </div>
                     <div class="form-group">
-                      <label id="label_section">Section<span class="text-red">*</span></label>
+                      <label id="label_section">Seksi<span class="text-red">*</span></label>
                       <input type="text" class="form-control" id="section" name="section" readonly>
                     </div>
                     <div class="form-group">
@@ -227,7 +227,7 @@ table > thead > tr > th{
                       <input type="text" class="form-control" id="department" name="department" readonly>
                     </div>
                     <div class="form-group">
-                      <label id="labelposition">Position<span class="text-red">*</span></label>
+                      <label id="labelposition">Jabatan<span class="text-red">*</span></label>
                       <input type="text" class="form-control" id="position" name="position" readonly>
                     </div>
                   </div>
@@ -237,7 +237,7 @@ table > thead > tr > th{
                       <input type="text" class="form-control pull-right" id="name" name="name" readonly>
                     </div>
                     <div class="form-group">
-                      <label>Date Mutasi<span class="text-red">*</span></label>
+                      <label>Tanggal Mutasi<span class="text-red">*</span></label>
                       <div class="input-group date">
                         <div class="input-group-addon">
                           <i class="fa fa-calendar"></i>
@@ -247,8 +247,8 @@ table > thead > tr > th{
                       </div>
                     </div>
                     <div class="form-group">
-                      <label id="label_ke_sub_group">To Sub Group<span class="text-red">*</span></label>
-                       <select class="form-control select2" id="ke_sub_group" name="ke_sub_group" data-placeholder='Select Sub Group' style="width: 100%" onchange="checkSubGroup(this.value)">
+                      <label id="label_ke_sub_group">Ke Sub Group<span class="text-red">*</span></label>
+                       <select class="form-control select2" id="ke_sub_group" name="ke_sub_group" data-placeholder='Pilih Sub Group' style="width: 100%" onchange="checkSubGroup(this.value)">
                           <option value="">&nbsp;</option>
                           <!-- <option value="Kosong">Kosong</option> -->
                           @foreach($sub_group as $row)
@@ -257,9 +257,9 @@ table > thead > tr > th{
                       </select>
                     </div>
                     <div class="form-group">
-                      <label id="label_ke_roup">To Group<span class="text-red">*</span></label>
+                      <label id="label_ke_roup">Ke Group<span class="text-red">*</span></label>
                       <!-- <input type="text" class="form-control" id="ke_group" name="ke_group"> -->
-                      <select class="form-control select2" id="ke_group" name="ke_group" data-placeholder='Select Group' style="width: 100%" onchange="checkGroup(this.value)">
+                      <select class="form-control select2" id="ke_group" name="ke_group" data-placeholder='Pilih Group' style="width: 100%" onchange="checkGroup(this.value)">
                           <option value="">&nbsp;</option>
                           <!-- <option value="Kosong">Kosong</option> -->
                           @foreach($group as $row)
@@ -268,8 +268,8 @@ table > thead > tr > th{
                       </select>
                     </div>
                     <div class="form-group">
-                      <label id="label_ke_section">To Section<span class="text-red">*</span></label>
-                      <select class="form-control select2" id="ke_section" name="ke_section" data-placeholder='Select Section' style="width: 100%" onchange="checkSection(this.value)">
+                      <label id="label_ke_section">Ke Seksi<span class="text-red">*</span></label>
+                      <select class="form-control select2" id="ke_section" name="ke_section" data-placeholder='Pilih Seksi' style="width: 100%" onchange="checkSection(this.value)">
                           <option value="">&nbsp;</option>
                           <!-- <option value="Kosong">Kosong</option> -->
                           @foreach($section as $row)
@@ -278,11 +278,11 @@ table > thead > tr > th{
                       </select>
                     </div>
                     <div class="form-group">
-                      <label id="label_ke_dept">To Department<span class="text-red">*</span></label>
+                      <label id="label_ke_dept">Ke Department<span class="text-red">*</span></label>
                       <input type="text" class="form-control" id="ke_department" name="ke_department" readonly>
                     </div>
                     <div class="form-group">
-                      <label id="labelposition">To Position<span class="text-red">*</span></label>
+                      <label id="labelposition">Ke Position<span class="text-red">*</span></label>
                       <input type="text" class="form-control" id="position1" name="position1" readonly>
                     </div>
 
@@ -315,7 +315,7 @@ table > thead > tr > th{
                   </div>
                 </div>
                 <div class="col-md-11">
-                  <a class="btn btn-primary btnNext pull-right">Next</a>
+                  <a class="btn btn-primary btnNext pull-right">Lanjut</a>
                 </div>
               </div>
             </div>
@@ -323,19 +323,19 @@ table > thead > tr > th{
               <div class="row">
                 <div class="col-md-12" style="margin-bottom : 5px">
                   <div class="form-group">
-                      <label id="labelposition">Recommendation Atasan<span class="text-red">*</span></label>
+                      <label id="labelposition">Rekomendasi Atasan<span class="text-red">*</span></label>
                       <input type="text" class="form-control" id="rekom" name="rekom" value="MUTASI KE DEPARTEMEN LAIN" readonly>
                   </div>
                   <div class="form-group">
-                      <label id="labelposition">Reason<span class="text-red">*</span></label>
+                      <label id="labelposition">Alasan<span class="text-red">*</span></label>
                       <textarea class="form-control" id="alasan" name="alasan" rows="3"></textarea>
                   </div>
                 <div id="tambah"></div>
                 <div class="col-md-12">
                   <br>
-                  <button class="btn btn-success pull-right" onclick="$('[name=importForm]').submit();">Confirm</button>
+                  <button class="btn btn-success pull-right" onclick="$('[name=importForm]').submit();">Konfirmasi</button>
                   <span class="pull-right">&nbsp;</span>
-                  <a class="btn btn-primary btnPrevious pull-right">Previous</a>
+                  <a class="btn btn-primary btnPrevious pull-right">Sebelum</a>
                 </div>
               </div>
             </div>
@@ -819,6 +819,7 @@ table > thead > tr > th{
             sign.push(parseInt(value.Signed));
             proces.push(parseInt(value.Proces));
           })
+          var date = new Date();
 
           $('#chart').highcharts({
           //   chart: {
@@ -920,7 +921,10 @@ table > thead > tr > th{
             type: 'column'
             },
             title: {
-                text: 'Mutasi By Month'
+                text: 'Monitoring Mutasi Antar Department'
+            },
+            subtitle: {
+                text: date.getFullYear()
             },
             xAxis: {
               type: 'category',
@@ -958,13 +962,13 @@ table > thead > tr > th{
               enabled: false
             },
             series: [{
-                name: 'Proces',
+                name: 'Proses',
                 data: proces
             }, {
-                name: 'Approved',
+                name: 'Disetujui',
                 data: sign
             }, {
-                name: 'Rejected',
+                name: 'Tidak Disetujui',
                 data: not_sign
             }]
           })
@@ -1468,21 +1472,26 @@ Highcharts.createElement('link', {
                     bodyResume  += '<td style="background-color:black"><span class="label label-danger"><a href="'+finish+'/'+value.id+'" style="color:white">Click To Finish</a></span></td>';
                     }
                   }
-              else {
-                bodyResume  += '<td style="background-color:black">'+("")+'</td>';
-              } 
-            }
-            else{
-              if (value.status == 'Rejected') {
-              bodyResume  += '<td style="background-color:black"><span class="label label-danger"><a href="'+urlreport+'/'+value.id+'" style="color:white">Rejected</a></span></td>';
-              }
-              else if(value.status == 'All Approved'){
-              bodyResume  += '<td style="background-color:black"><span class="label label-success"><a href="'+urlreport+'/'+value.id+'" style="color:white">Approved</a></span></td>';
+              else if(value.status == "Rejected"){
+                bodyResume  += '<td style="background-color:black"><span class="label label-danger"><a href="'+urlreport+'/'+value.id+'" style="color:white">Rejected</a></span></td>';
               }
               else{
-              bodyResume  += '<td style="background-color:black">'+("")+'</td>';
+                bodyResume  += '<td style="background-color:black">'+("")+'</td>';
+                }  
               }
-            }
+            // else{
+              // bodyResume  += '<td style="background-color:black"><span class="label label-danger"><a href="'+urlreport+'/'+value.id+'" style="color:white">Rejected</a></span></td>';
+              // }
+              // if (value.status == 'Rejected') {
+              // bodyResume  += '<td style="background-color:black"><span class="label label-danger"><a href="'+urlreport+'/'+value.id+'" style="color:white">Rejected</a></span></td>';
+              // }
+              // // else if(value.status == 'All Approved'){
+              // // bodyResume  += '<td style="background-color:black"><span class="label label-success"><a href="'+urlreport+'/'+value.id+'" style="color:white">Approved</a></span></td>';
+              // // }
+              // else{
+              // bodyResume  += '<td style="background-color:black">'+("")+'</td>';
+              // }
+            
             bodyResume  += '</tr>';
           })
 
