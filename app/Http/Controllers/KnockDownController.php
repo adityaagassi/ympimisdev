@@ -2008,19 +2008,19 @@ class KnockDownController extends Controller{
 			$storage = "('TANPO')";
 			$order = 'sh.st_date ASC, box DESC';
 
-		}else if($id == 'cl_body'){
+		}else if($id == 'cl-body'){
 			$storage = "('CL-BODY')";
 			$order = 'sh.st_date ASC, box DESC';
 
-		}else if($id == 'pn_part'){
+		}else if($id == 'pn-part'){
 			$storage = "('PN-PART')";
 			$order = 'sh.st_date ASC, box DESC';
 
-		}else if($id == 'vn_assy'){
+		}else if($id == 'vn-assy'){
 			$storage = "('VN-ASSY')";
 			$order = 'sh.st_date ASC, box DESC';
 
-		}else if($id == 'vn_injection'){
+		}else if($id == 'vn-injection'){
 			$storage = "('VN-INJECTION')";
 			$order = 'sh.st_date ASC, box DESC';
 
