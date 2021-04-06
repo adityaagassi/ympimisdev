@@ -7,7 +7,7 @@ class VisitorDetail extends Model
 {
 	use SoftDeletes;
 	protected $fillable = [
-		'id_visitor','id_number','full_name','in_time','out_time','status','tag','remark','telp'
+		'id_visitor','id_number','full_name','in_time','out_time','status','tag','remark','telp','remark_manager','send_email_manager'
 	];
 }
 

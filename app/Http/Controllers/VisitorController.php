@@ -178,9 +178,11 @@ class VisitorController extends Controller
 						$mail_to = DB::SELECT("SELECT
 							email 
 						FROM
-							send_emails 
+							visitor_confirmers 
 						WHERE
-							remark = '".$department."'");
+							department = '".$department."'
+								AND remark IS NULL 
+								AND email IS NOT NULL");
 
 						$namamanager[] = [ 'employees' => $name,
 		                    'department' => $department,
@@ -195,9 +197,11 @@ class VisitorController extends Controller
 						$mail_to = DB::SELECT("SELECT
 							email 
 						FROM
-							send_emails 
+							visitor_confirmers 
 						WHERE
-							remark = '".$department."'");
+							department = '".$department."'
+								AND remark IS NULL 
+								AND email IS NOT NULL");
 
 						$namamanager[] = [ 'employees' => $name,
 		                    'department' => $department,
@@ -211,9 +215,11 @@ class VisitorController extends Controller
 						$mail_to = DB::SELECT("SELECT
 							email 
 						FROM
-							send_emails 
+							visitor_confirmers 
 						WHERE
-							remark = '".$department."'");
+							department = '".$department."'
+								AND remark IS NULL 
+								AND email IS NOT NULL");
 
 						$namamanager[] = [ 'employees' => $name,
 		                    'department' => $department,
@@ -631,6 +637,74 @@ public function updateremarkall(Request $request){
 			$visitor->remark = $remark;
 			$visitor->save();
 		// $tag = $request->get('idtag');
+
+			$datavisitor = Visitor::join('employee_syncs','employee_syncs.employee_id','=','visitors.employee')->join('visitor_details','visitor_details.id_visitor','=','visitors.id')->where('visitors.id',$id)->first();
+
+			$name = $datavisitor->name;
+			$department = $datavisitor->department;
+			$company = $datavisitor->company;
+			$namavis = $datavisitor->full_name;
+			$send_email_manager = $datavisitor->send_email_manager;
+
+			if ($send_email_manager == null) {
+	            $visitordetail = VisitorDetail::where('id_visitor','=', $id)		
+				->withTrashed()
+				->update(['send_email_manager' => 'Sent']);
+
+				$visitor = Visitor::where('id','=', $id)		     
+				->first();
+				$visitor->send_email_manager = 'Sent';
+				$visitor->save();
+
+				if ($department == null && $name == 'Budhi Apriyanto') {
+					$department = 'Management Information System Department';
+					$mail_to = DB::SELECT("SELECT
+						email 
+					FROM
+						visitor_confirmers 
+					WHERE
+						department = '".$department."'
+						AND remark = 'Manager' 
+						AND email IS NOT NULL 
+						LIMIT 1");
+				}elseif ($department == null && $name == 'Arief Soekamto') {
+					$department = 'Human Resources Department';
+					$mail_to = DB::SELECT("SELECT
+						email 
+					FROM
+						visitor_confirmers 
+					WHERE
+						department = '".$department."'
+						AND remark = 'Manager' 
+						AND email IS NOT NULL 
+						LIMIT 1");
+				}else{
+					$mail_to = DB::SELECT("SELECT
+						email 
+					FROM
+						visitor_confirmers 
+					WHERE
+						department = '".$department."'
+						AND remark = 'Manager' 
+						AND email IS NOT NULL 
+						LIMIT 1");
+				}
+
+				
+
+				$namamanager[] = [ 'employees' => $name,
+	                'department' => $department,
+	                'company' => $company,
+	                'nama' => $namavis,
+	                'confirmed_at' => date('Y-m-d H:i:s'),
+	                'id' => $id
+	            ];
+
+				$contactList = [];
+		        $contactList[0] = 'mokhamad.khamdan.khabibi@music.yamaha.com';
+		        $contactList[1] = 'aditya.agassi@music.yamaha.com';
+				Mail::to($mail_to)->bcc($contactList,'Contact List')->send(new SendEmail($namamanager, 'visitor_to_manager'));
+			}
 			
 		}else{
 			$intime = date('H:i:s');
@@ -676,20 +750,119 @@ public function confirm_manager($id){
 		$visitor->remark = 'Sudah Ditemui';
 		$visitor->save();
 
-		$datavisitor = Visitor::join('employee_syncs','employee_syncs.employee_id','=','visitors.employee')->where('visitors.id',$id)->first();
+		$datavisitor = Visitor::join('employee_syncs','employee_syncs.employee_id','=','visitors.employee')->join('visitor_details','visitor_details.id_visitor','=','visitors.id')->where('visitors.id',$id)->first();
 
 		$name = $datavisitor->name;
 		$department = $datavisitor->department;
 		$company = $datavisitor->company;
+		$namavis = $datavisitor->full_name;
+		$send_email_manager = $datavisitor->send_email_manager;
 
-		$message = $name.'('.$department.') telah terkonfirmasi menemui '.$company;
+		$message = $name.' ('.$department.') telah terkonfirmasi menemui '.$company;
+
+
+		if ($send_email_manager == null) {
+            $visitordetail = VisitorDetail::where('id_visitor','=', $id)		
+			->withTrashed()
+			->update(['send_email_manager' => 'Sent']);
+
+			$visitor = Visitor::where('id','=', $id)		     
+			->first();
+			$visitor->send_email_manager = 'Sent';
+			$visitor->save();
+
+			if ($department == null && $name == 'Budhi Apriyanto') {
+				$department = 'Management Information System Department';
+				$mail_to = DB::SELECT("SELECT
+					email 
+				FROM
+					visitor_confirmers 
+				WHERE
+					department = '".$department."'
+					AND remark = 'Manager' 
+					AND email IS NOT NULL 
+					LIMIT 1");
+			}elseif ($department == null && $name == 'Arief Soekamto') {
+				$department = 'Human Resources Department';
+				$mail_to = DB::SELECT("SELECT
+					email 
+				FROM
+					visitor_confirmers 
+				WHERE
+					department = '".$department."'
+					AND remark = 'Manager' 
+					AND email IS NOT NULL 
+					LIMIT 1");
+			}else{
+				$mail_to = DB::SELECT("SELECT
+					email 
+				FROM
+					visitor_confirmers 
+				WHERE
+					department = '".$department."'
+					AND remark = 'Manager' 
+					AND email IS NOT NULL 
+					LIMIT 1");
+			}
+
+			$namamanager[] = [ 'employees' => $name,
+                'department' => $department,
+                'company' => $company,
+                'nama' => $namavis,
+                'confirmed_at' => date('Y-m-d H:i:s'),
+                'id' => $id
+            ];
+
+			$contactList = [];
+	        $contactList[0] = 'mokhamad.khamdan.khabibi@music.yamaha.com';
+	        $contactList[1] = 'aditya.agassi@music.yamaha.com';
+			Mail::to($mail_to)->bcc($contactList,'Contact List')->send(new SendEmail($namamanager, 'visitor_to_manager'));
+		}
 		return view('visitors.visitor_confirm_manager', array(
 			'head' => $id,
 			'message' => $message,
 		))->with('page', 'Visitor Confirmation');
 	}
 	catch(\Exception $e){
-		$message = $name.'('.$department.') telah terkonfirmasi menemui '.$company;
+		$message = $name.' ('.$department.') telah terkonfirmasi menemui '.$company;
+		return view('visitors.visitor_confirm_manager', array(
+			'head' => $id,
+			'message' => $message,
+		))->with('page', 'Visitor Confirmation');
+	}
+
+}
+
+public function confirm_to_manager($id){
+
+	try {
+	    $intime = date('H:i:s');
+		$visitordetail = VisitorDetail::where('id_visitor','=', $id)		
+		->withTrashed()
+		->update(['remark_manager' => 'Sudah Dikonfirmasi']);
+
+		$visitor = Visitor::where('id','=', $id)		     
+		->first();
+		$visitor->remark_manager = 'Sudah Dikonfirmasi';
+		$visitor->save();
+
+		$datavisitor = Visitor::join('employee_syncs','employee_syncs.employee_id','=','visitors.employee')->join('visitor_details','visitor_details.id_visitor','=','visitors.id')->where('visitors.id',$id)->first();
+
+		$name = $datavisitor->name;
+		$department = $datavisitor->department;
+		$company = $datavisitor->company;
+		$namavis = $datavisitor->full_name;
+		$send_email_manager = $datavisitor->send_email_manager;
+
+		$message = 'Anda telah mengkonfirmasi bahwa '.$name.' ('.$department.') telah menemui '.$company;
+
+		return view('visitors.visitor_confirm_manager', array(
+			'head' => $id,
+			'message' => $message,
+		))->with('page', 'Visitor Confirmation');
+	}
+	catch(\Exception $e){
+		$message = 'Anda telah mengkonfirmasi bahwa '.$name.' ('.$department.') telah menemui '.$company;
 		return view('visitors.visitor_confirm_manager', array(
 			'head' => $id,
 			'message' => $message,

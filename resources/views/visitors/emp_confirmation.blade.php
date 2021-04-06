@@ -135,7 +135,7 @@ table.table-bordered > tfoot > tr > th{
 	$('#tag').keyup(function(event) {
 		if (event.keyCode == 13 || event.keyCode == 9) {
 			fillTable();
-			clearInterval(intervalCancel);
+			// clearInterval(intervalCancel);
 		}
 	});
 
@@ -163,7 +163,7 @@ table.table-bordered > tfoot > tr > th{
 					tableVisitor += "<tr>";
 					tableVisitor += "<td>"+value.created_at+"</td>";
 					tableVisitor += "<td>"+value.name+"</td>";
-					tableVisitor += "<td>"+value.department+"</td>";
+					tableVisitor += "<td>"+(value.department || "")+"</td>";
 					tableVisitor += "<td>"+value.company+"</td>";
 					tableVisitor += "<td>"+value.full_name+"</td>";
 					tableVisitor += "<td>"+value.total1+" Orang</td>";
@@ -215,7 +215,7 @@ table.table-bordered > tfoot > tr > th{
 		$("#name").val("-");
 		$("#tag").focus();
 		$('#tableVisitorBody').html("");
-		intervalCancel = setInterval(cancel,60000);
+		// intervalCancel = setInterval(cancel,60000);
 	}
 
 	function cancelTag(){

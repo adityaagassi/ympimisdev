@@ -233,7 +233,7 @@
 						tableData += '<tr>';
 						tableData += '<td>'+ value.created_at +'</td>';
 						tableData += '<td>'+ value.name +'</td>';
-						tableData += '<td>'+ value.department +'</td>';
+						tableData += '<td>'+ (value.department || "") +'</td>';
 						tableData += '<td>'+ value.company +'</td>';
 						tableData += '<td>'+ value.full_name +'</td>';
 						if (value.total1 == null) {

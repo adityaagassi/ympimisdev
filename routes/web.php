@@ -182,7 +182,7 @@ Route::post('visitor_inputtag', 'VisitorController@inputtag');
 Route::get('visitor_confirmation', 'VisitorController@confirmation');
 Route::post('visitor_updateremark', 'VisitorController@updateremark');
 Route::post('visitor_updateremarkall', 'VisitorController@updateremarkall');
-Route::get('visitor_confirm_manager/{id}', 'VisitorNotificationController@confirm_manager');
+Route::get('visitor_confirm_manager/{id}', 'VisitorController@confirm_manager');
 Route::get('visitor_leave', 'VisitorController@leave');
 Route::get('visitor_getvisit', 'VisitorController@getvisit');
 Route::post('visitor_out', 'VisitorController@out');
@@ -199,6 +199,7 @@ Route::get('scan/visitor/lobby', 'VisitorController@scanVisitorLobby');
 
 Route::get('index/visitor/emp_confirmation', 'VisitorController@indexEmpConfirmation');
 Route::get('fetch/visitor/emp_confirmation', 'VisitorController@fetchEmpConfirmation');
+Route::get('visitor_confirm_to_manager/{id}', 'VisitorController@confirm_to_manager');
 
 //end visitor control 
 
@@ -4377,6 +4378,7 @@ Route::post('delete/scrap', 'ScrapController@deleteScrap');
 // Route::get('index/scrap_logs', 'ScrapController@indexScrapLogs');
 // Route::get('fetch/scrap_logs', 'ScrapController@fetchScrapLogs');
 Route::get('index/scrap_record', 'ScrapController@indexScrapRecord');
+Route::get('fetch/scrap_record', 'ScrapController@fetchRecord');
 Route::get('index/scrap/view', 'ScrapController@indexScrapView');
 Route::post('update/scrap', 'ScrapController@updateScrap');
 Route::get('index/scrap/resume', 'ScrapController@indexScrapResume');
@@ -4486,6 +4488,8 @@ Route::post('post/detail/save', 'WarehouseNewController@createDetail');
 Route::post('post/job/save', 'WarehouseNewController@createJob');
 Route::get('fetch/finish/job', 'WarehouseNewController@finish_job');
 Route::get('fetch/detail/job', 'WarehouseNewController@createDetail');
+Route::get('index/display/job', 'WarehouseNewController@display_job');
+
 
 
 
@@ -4554,6 +4558,10 @@ Route::get('fetch/qa/display/incoming/ng_rate/detail', 'QualityAssuranceControll
 //QA Report Incoming Check
 Route::get('index/qa/report/incoming', 'QualityAssuranceController@indexReportIncomingCheck');
 Route::get('fetch/qa/report/incoming', 'QualityAssuranceController@fetchReportIncomingCheck');
+
+//QA Report Lot Out Incoming Check
+Route::get('index/qa/report/incoming/lot_out', 'QualityAssuranceController@indexReportLotOut');
+Route::get('fetch/qa/report/incoming/lot_out', 'QualityAssuranceController@fetchReportLotOut');
 
 //Health Indicator
 Route::get('index/health/{loc}', 'HealthController@index');
@@ -4651,5 +4659,6 @@ Route::get('fetch/packing_documentation/data', 'AuditController@documentation_da
 Route::get('index/server_room', 'PingController@ServerRoom');
 Route::get('index/server_room/{id}', 'PingController@ServerRoomPing');
 Route::get('post/server_room/ping/trend', 'PingController@ServerRoomPingTrend');
+Route::get('post/server_room/network_usage', 'PingController@PostNetworkUsage');
 
 //End Server Room
