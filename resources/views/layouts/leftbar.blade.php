@@ -966,7 +966,7 @@
 
 
 
-  @if(in_array('S51', $navs))
+  @if(in_array('S60', $navs))
   @if(isset($page) && $page == "KD B-PRO")<li class="active">@else<li>@endif
     <a href="{{ url("index/kd_bpro/"."b-pro") }}"><i class="fa fa-pencil-square-o"></i> <span>KD  <i class="fa fa-angle-right"></i> B-PRO</span></a>
   </li>
@@ -1583,9 +1583,9 @@
   @if(isset($page) && $page == "Display")<li class="active">@else<li>@endif
     <a href="{{ url("display/scrap_warehouse") }}"><i class="fa fa-television"></i> <span>Display</span></a>
   </li>
-<!--   @if(isset($page) && $page == "Scrap Logs")<li class="active">@else<li>@endif
-    <a href="{{ url("index/scrap/logs") }}"><i class="fa fa-list-alt"></i> <span>Scrap Logs</span></a>
-  </li> -->
+  @if(isset($page) && $page == "Scrap Logs")<li class="active">@else<li>@endif
+    <a href="{{ url("index/scrap_record") }}"><i class="fa fa-list-alt"></i> <span>Scrap Logs</span></a>
+  </li>
 </ul>
 </li>
 @endif

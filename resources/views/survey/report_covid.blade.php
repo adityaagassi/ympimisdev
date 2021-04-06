@@ -460,6 +460,8 @@
 
 				var total_point = 0;
 				var tableData = "";
+				$('#tableDetail').DataTable().clear();
+				$('#tableDetail').DataTable().destroy();
 
 				$.each(result.survey, function(key, value) {
 					var question = JSON.parse(value.question);
