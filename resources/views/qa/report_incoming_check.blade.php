@@ -486,21 +486,22 @@
 						var ng_qty = value.ng_qty.split('_');
 						var status_ng = value.status_ng.split('_');
 						var note_ng = value.note_ng.split('_');
+
+						tableData += '<td>';
+						for (var i = 0 ;i < ng_name.length; i++) {
+							tableData += '<span class="label label-danger">'+ ng_name[i] +' = '+ ng_qty[i] +' ('+ status_ng[i] +' - '+ note_ng[i] +');</span><br>';
+						}
+						tableData += '</td>';
 					}else{
 						var note_ng = "";
 						var ng_name = "";
 						var ng_qty = "";
 						var status_ng = "";
+
+						tableData += '<td>';
+						tableData += '<span class="label label-danger">'+ ng_name +' = '+ ng_qty +' ('+ status_ng +' - '+ note_ng +');</span><br>';
+						tableData += '</td>';
 					}
-					tableData += '<td>';
-					for (var i = 0 ;i < ng_name.length; i++) {
-						if (value.note_ng != null) {
-							tableData += '<span class="label label-danger">'+ ng_name[i] +' = '+ ng_qty[i] +' ('+ status_ng[i] +' - '+ note_ng[i] +');</span><br>';
-						}else{
-							tableData += '<span class="label label-danger">'+ ng_name +' = '+ ng_qty +' ('+ status_ng +' - '+ note_ng +');</span><br>';
-						}
-					}
-					tableData += '</td>';
 					tableData += '</tr>';
 				});
 				$('#example1Body').append(tableData);
