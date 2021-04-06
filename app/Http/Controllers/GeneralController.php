@@ -2605,35 +2605,44 @@ public function postAirVisual()
 {
 	$result = "";
 
-	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);	
-	curl_setopt($ch, CURLOPT_URL,'https://www.airvisual.com/api/v2/node/6051b1f079e60a367adc1a45');
-	$result=curl_exec($ch);
-	curl_close($ch);
+	$arr_api = [
+		'https://www.airvisual.com/api/v2/node/6051b1f079e60a367adc1a45',
+		'https://www.airvisual.com/api/v2/node/606bb8c5efbeaf90b42b8e98',
+		'https://www.airvisual.com/api/v2/node/606bbb0c97b9294b00b2b297',
+		'https://www.airvisual.com/api/v2/node/606bbe7797b929136cb2b2a4',
+	];
 
-	$arr = json_decode($result, true);
-	$s = "";
-	$ts2 = "";
-	
-	for ($i=count($arr['historical']['instant'])-1; $i > 0; $i--) { 
-		$s = str_replace('T', ' ', $arr['historical']['instant'][$i]['ts']);
-		$times = substr(explode(' ', $s)[1], 0, -5);
-		$dates = explode(' ', $s)[0];
+	foreach ($arr_api as $api) {
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);	
+		curl_setopt($ch, CURLOPT_URL, $api);
+		$result=curl_exec($ch);
+		curl_close($ch);
 
-		$ts = $dates." ".$times;
+		$arr = json_decode($result, true);
+		$s = "";
+		$ts2 = "";
 
-		$ts2 = date('Y-m-d H:i:s', strtotime($times) + 60*420);
+		for ($i=count($arr['historical']['instant'])-1; $i > 0; $i--) { 
+			$s = str_replace('T', ' ', $arr['historical']['instant'][$i]['ts']);
+			$times = substr(explode(' ', $s)[1], 0, -5);
+			$dates = explode(' ', $s)[0];
 
-		$air_log = GeneralAirVisualLog::firstOrNew(array('data_time' => $ts2));
-		$air_log->get_at = date('Y-m-d H:i:00');
-		$air_log->co = $arr['historical']['instant'][$i]['co'];
-		$air_log->temperature = $arr['historical']['instant'][$i]['tp'];
-		$air_log->humidity = $arr['historical']['instant'][$i]['hm'];
-		$air_log->location = $arr['settings']['node_name'];
-		$air_log->created_at = date('Y-m-d H:i:s');
-		$air_log->updated_at = date('Y-m-d H:i:s');
+			$ts = $dates." ".$times;
 
-		$air_log->save();
+			$ts2 = date('Y-m-d H:i:s', strtotime($times) + 60*420);
+
+			$air_log = GeneralAirVisualLog::firstOrNew(array('data_time' => $ts2));
+			$air_log->get_at = date('Y-m-d H:i:00');
+			$air_log->co = $arr['historical']['instant'][$i]['co'];
+			$air_log->temperature = $arr['historical']['instant'][$i]['tp'];
+			$air_log->humidity = $arr['historical']['instant'][$i]['hm'];
+			$air_log->location = $arr['settings']['node_name'];
+			$air_log->created_at = date('Y-m-d H:i:s');
+			$air_log->updated_at = date('Y-m-d H:i:s');
+
+			$air_log->save();
+		}
 	}
 
 	$datas = GeneralAirVisualLog::whereRaw('DATE_FORMAT(created_at,"%Y-%m-%d %H:%i:%s") >= "'.date('Y-m-d 06:00:00').'"')
@@ -2641,11 +2650,20 @@ public function postAirVisual()
 	->orderBy('id', 'asc')
 	->get();
 
+	$last_data = db::select('SELECT id, location, co, temperature, humidity FROM general_air_visual_logs
+		WHERE id IN (
+		SELECT MAX(id)
+		FROM general_air_visual_logs
+		GROUP BY location
+	) and DATE_FORMAT(created_at,"%Y-%m-%d %H:%i:%s") >= "'.date('Y-m-d 06:00:00').'"
+	order by location asc');
+
 	$response = array(
 		'status' => true,
-		'message' => json_decode($result, true),
+		'message' => '',
 		'datas' => $datas,
-		'time' => $ts2
+		'time' => $ts2,
+		'last_data' => $last_data
 	);
 	return Response::json($response);
 }
