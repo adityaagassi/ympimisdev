@@ -764,7 +764,7 @@ Highcharts.chart('chartOvertimeViolation', {
      },
      series: [{
           type: 'column',
-          name: '3Hours/Day',
+          name: '4Hours/Day',
           data: s3,
           dataLabels: {
                enabled: true,
@@ -776,7 +776,7 @@ Highcharts.chart('chartOvertimeViolation', {
           }
      }, {
           type: 'column',
-          name: '14Hours/Week',
+          name: '18Hours/Week',
           data: s14,
           dataLabels: {
                enabled: true,
@@ -800,7 +800,7 @@ Highcharts.chart('chartOvertimeViolation', {
           }
      }, {
           type: 'column',
-          name: '56Hours/Month',
+          name: '72Hours/Month',
           data: s56,
           dataLabels: {
                enabled: true,

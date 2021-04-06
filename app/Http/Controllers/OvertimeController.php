@@ -1526,7 +1526,7 @@ public function overtimeReportDetail(Request $request)
 	if($period_check >= '2020-01-01'){
 		$period = $request->get('period');
 
-		if($category == '3Hours/Day'){
+		if($category == '4Hours/Day'){
 			$violations = db::connection('sunfish')->select("
 				SELECT
 				format ( A.ovtplanfrom, 'yyyy-MM-dd' ) AS period,
@@ -1541,9 +1541,9 @@ public function overtimeReportDetail(Request $request)
 				A.daytype = 'WD' 
 				AND FORMAT ( A.ovtplanfrom, 'yyyy-MM' ) = '".$period."'
 				AND B.Department = '".$department."'
-				AND ROUND( A.total_ot / 60.0, 2 ) > 3");
+				AND ROUND( A.total_ot / 60.0, 2 ) > 4");
 		}
-		if($category == '14Hours/Week'){
+		if($category == '18Hours/Week'){
 			$violations = db::connection('sunfish')->select("SELECT
 				CONCAT('Week ',	DATEPART( week, A.ovtplanfrom )) AS period,
 				A.Emp_no,
@@ -1564,7 +1564,7 @@ public function overtimeReportDetail(Request $request)
 				CONCAT('Week ',	DATEPART( week, A.ovtplanfrom )),
 				B.Section 
 				HAVING
-				SUM (ROUND( A.total_ot / 60.0, 2 )) > 14");
+				SUM (ROUND( A.total_ot / 60.0, 2 )) > 18");
 		}
 		if($category == 'Both'){
 
@@ -1582,7 +1582,7 @@ public function overtimeReportDetail(Request $request)
 				A.daytype = 'WD' 
 				AND FORMAT ( A.ovtplanfrom, 'yyyy-MM' ) = '".$period."' 
 				AND B.Department = '".$department."'
-				AND ROUND( A.total_ot / 60.0, 2 ) > 3");
+				AND ROUND( A.total_ot / 60.0, 2 ) > 4");
 
 			$ot_14 = db::connection('sunfish')->select("SELECT
 				CONCAT('Week ',	DATEPART( week, A.ovtplanfrom )) AS period,
@@ -1605,7 +1605,7 @@ public function overtimeReportDetail(Request $request)
 				CONCAT('Week ',	DATEPART( week, A.ovtplanfrom )),
 				B.Section 
 				HAVING
-				SUM (ROUND( A.total_ot / 60.0, 2 )) > 14");
+				SUM (ROUND( A.total_ot / 60.0, 2 )) > 18");
 
 			$violations = array();
 
@@ -1631,7 +1631,7 @@ public function overtimeReportDetail(Request $request)
 				};
 			}		
 		}
-		if($category == '56Hours/Month'){
+		if($category == '72Hours/Month'){
 			$violations = db::connection('sunfish')->select("SELECT
 				FORMAT ( A.ovtplanfrom, 'MMMM yyyy' ) AS period,
 				A.Emp_no,
@@ -1653,21 +1653,21 @@ public function overtimeReportDetail(Request $request)
 				B.Full_name,
 				B.Section 
 				HAVING
-				SUM (ROUND( A.total_ot / 60.0, 2 )) > 56");
+				SUM (ROUND( A.total_ot / 60.0, 2 )) > 72");
 		}
 	}
 	else{
 		$tgl = $request->get('period');
 		$query = "";
 
-		if($category == '3Hours/Day'){
+		if($category == '4Hours/Day'){
 			$query = 'SELECT "'.$request->get('period').'" as period, s.avg as ot, employees.employee_id as Emp_no, employees.name as Full_name, department, section as Section, `group` from
 			(select d.nik, round(avg(jam),2) as avg from
 			(select tanggal, nik, sum(IF(status = 1, final, jam)) as jam, ftm.over_time.hari from ftm.over_time
 			left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
 			where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and jam_aktual = 0 and hari = "N"
 			group by nik, tanggal, hari) d 
-			where jam > 3
+			where jam > 4
 			group by d.nik ) s
 			left join employees on employees.employee_id = s.nik
 			left join 
@@ -1677,7 +1677,7 @@ public function overtimeReportDetail(Request $request)
 			) employee on employee.employee_id = s.nik
 			where department = "'.$department.'"';
 		}
-		if($category == '14Hours/Week'){
+		if($category == '18Hours/Week'){
 			$query = 'SELECT "'.$request->get('period').'" as period, s.nik as Emp_no, avg(jam) as ot, name as Full_name, section as Section, department, `group` from
 			(select nik, sum(jam) jam, week_name from
 			(select tanggal, nik, sum(IF(status = 1, final, jam)) as jam, ftm.over_time.hari, week(ftm.over_time.tanggal) as week_name from ftm.over_time
@@ -1691,7 +1691,7 @@ public function overtimeReportDetail(Request $request)
 			select employee_id, `group`, department, section from mutation_logs where DATE_FORMAT(valid_from,"%Y-%m") <= "'.$tgl.' and valid_to is null" 
 			group by employee_id,`group`, department, section
 			) employee on employee.employee_id = s.nik
-			where jam > 14 and department = "'.$department.'"
+			where jam > 18 and department = "'.$department.'"
 			group by s.nik, name, section, department,`group`';			
 		}
 		if($category == 'Both'){
@@ -1701,7 +1701,7 @@ public function overtimeReportDetail(Request $request)
 			left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
 			where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and jam_aktual = 0 and hari = "N"
 			group by nik, tanggal, hari) d 
-			where jam > 3
+			where jam > 4
 			group by d.nik ) z
 
 			INNER JOIN
@@ -1713,7 +1713,7 @@ public function overtimeReportDetail(Request $request)
 			where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and jam_aktual = 0 and hari = "N"
 			group by nik, tanggal, hari) m
 			group by nik, week_name) s
-			where jam > 14
+			where jam > 18
 			group by s.nik) x on z.nik = x.nik
 			) c
 			left join employees on employees.employee_id = c.nik
@@ -1724,7 +1724,7 @@ public function overtimeReportDetail(Request $request)
 			) employee on employee.employee_id = c.nik
 			where department = "'.$department.'"';
 		}
-		if($category == '56Hours/Month'){
+		if($category == '72Hours/Month'){
 			$query = 'select "'.$request->get('period').'" as period, semua.nik as Emp_no, employees.name as Full_name, department, section as Section, `group`, avg as ot from
 			(select c.nik, c.jam as avg from
 			(select d.nik, sum(jam) as jam from
@@ -1733,7 +1733,7 @@ public function overtimeReportDetail(Request $request)
 			where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and jam_aktual = 0 and hari = "N"
 			group by nik, tanggal, hari) d
 			group by d.nik) c
-			where jam > 56) semua
+			where jam > 72) semua
 			left join employees on employees.employee_id = semua.nik
 			left join
 			(

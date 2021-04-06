@@ -682,7 +682,6 @@ class EmployeeController extends Controller
      {
           try {
                $pajak = DB::SELECT("
-
                     SELECT
                     SUM(a.count_sudah ) AS sudah,
                     SUM(a.count_belum ) AS belum,
@@ -1527,7 +1526,7 @@ public function fetchTotalMeeting(Request $request){
                FORMAT ( A.ovtplanfrom, 'MMMM yyyy' ) AS period,
                B.Department,
                SUM (
-               IIF(ROUND( A.total_ot / 60.0, 2 ) > 3, 1 , null)
+               IIF(ROUND( A.total_ot / 60.0, 2 ) > 4, 1 , null)
                ) AS ot_3 
                FROM
                VIEW_YMPI_Emp_OvertimePlan A
@@ -1571,7 +1570,7 @@ public function fetchTotalMeeting(Request $request){
 
                WHEN SUM (
                ROUND( A.total_ot / 60.0, 2 ) 
-               ) > 14 THEN
+               ) > 18 THEN
                1 ELSE NULL 
                END AS ot_14 
                FROM
@@ -1614,7 +1613,7 @@ public function fetchTotalMeeting(Request $request){
 
                WHEN SUM (
                ROUND( A.total_ot / 60.0, 2 )
-               ) > 56 THEN
+               ) > 72 THEN
                1 ELSE NULL 
                END AS ot_56 
                FROM
@@ -4289,7 +4288,7 @@ public function executeKaizenExcellent(Request $request)
 public function getKaizenReward(Request $request)
 {
      if ($request->get("tanggal") == "") {
-          $dt = date('Y-m-01');
+          $dt = '2019-12-01';
      } else {
           $dt = $request->get("tanggal")."-01";
      }
