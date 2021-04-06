@@ -437,7 +437,7 @@ table > thead > tr > th{
 					var series = []
 					var series2 = [];
 
-					var keterangan = 'covid1-19';
+					var keterangan = 'covid-19';
 
 					for (var i = 0; i < result.survey.length; i++) {
 						dept.push(result.survey[i].department_shortname);
@@ -616,8 +616,7 @@ table > thead > tr > th{
 		$('#tableDetail').hide();
 		var data = {
 			dept:dept,
-			answer:answer,
-			keterangan:$('#keterangan').val()
+			answer:answer
 		}
 
 		$.get('{{ url("fetch/survey_covid/detail") }}', data, function(result, status, xhr) {
@@ -641,8 +640,6 @@ table > thead > tr > th{
 					resultData += '<td>'+ value.department +'</td>';
 					resultData += '</tr>';
 					index += 1;
-
-					keterangan = result.keterangan;
 				});
 				$('#tableDetailBody').append(resultData);
 				$('#modalDetailTitle').html("<center><span style='font-size: 20px; font-weight: bold;'>Detail Employees With Answer '"+answer+"'<br>On Survey "+keterangan+"</span></center>");

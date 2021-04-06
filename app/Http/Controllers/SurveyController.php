@@ -300,11 +300,11 @@ class SurveyController extends Controller
                           employee_syncs.name,
                           '' as department
                           FROM
-                          employee_taxes
-                          RIGHT JOIN employee_syncs ON employee_syncs.employee_id = employee_taxes.employee_id
+                          miraimobile.survey_logs
+                          RIGHT JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_logs.employee_id
                           WHERE
                           department IS NULL
-                          and employee_taxes.employee_id is null
+                          and miraimobile.survey_logs.employee_id is null
                           and employee_syncs.end_date is null");
                 }else{
                      $survey = DB::SELECT("SELECT
@@ -312,8 +312,8 @@ class SurveyController extends Controller
                           employee_syncs.name,
                           '' as department
                           FROM
-                          employee_taxes
-                          LEFT JOIN employee_syncs ON employee_syncs.employee_id = employee_taxes.employee_id
+                          miraimobile.survey_logs
+                          LEFT JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_logs.employee_id
                           WHERE
                           department IS NULL
                           and employee_syncs.end_date is null");
@@ -325,12 +325,12 @@ class SurveyController extends Controller
                           employee_syncs.name,
                           COALESCE(department_shortname,'') as department
                           FROM
-                          employee_taxes
-                          RIGHT JOIN employee_syncs ON employee_syncs.employee_id = employee_taxes.employee_id
+                          miraimobile.survey_logs
+                          RIGHT JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_logs.employee_id
                           join departments on department_name = employee_syncs.department
                           WHERE
                           department_shortname = '".$dept."'
-                          and employee_taxes.employee_id is null
+                          and miraimobile.survey_logs.employee_id is null
                           and employee_syncs.end_date is null");
                 }else{
                      $survey = DB::SELECT("SELECT
@@ -338,8 +338,8 @@ class SurveyController extends Controller
                           employee_syncs.name,
                           COALESCE(department_shortname,'') as department
                           FROM
-                          employee_taxes
-                          LEFT JOIN employee_syncs ON employee_syncs.employee_id = employee_taxes.employee_id
+                          miraimobile.survey_logs
+                          LEFT JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_logs.employee_id
                           join departments on department_name = employee_syncs.department
                           WHERE
                           department_shortname = '".$dept."'
@@ -349,8 +349,7 @@ class SurveyController extends Controller
 
 			$response = array(
 				'status' => true,
-				'survey' => $survey,
-				'keterangan' => $keterangan,
+				'survey' => $survey
 			);
 			return Response::json($response);
 		} catch (\Exception $e) {

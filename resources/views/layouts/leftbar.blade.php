@@ -972,13 +972,13 @@
   </li>
   @endif
 
-  @if(in_array('S51', $navs))
+  @if(in_array('S54', $navs))
   @if(isset($page) && $page == "KD Welding Body")<li class="active">@else<li>@endif
     <a href="{{ url("index/kd_welding/"."welding-body") }}"><i class="fa fa-pencil-square-o"></i> <span>KD  <i class="fa fa-angle-right"></i> Welding Body</span></a>
   </li>
   @endif
 
- <!--  @if(in_array('S51', $navs))
+ <!--  @if(in_array('S54', $navs))
   @if(isset($page) && $page == "KD Welding Key Post")<li class="active">@else<li>@endif
     <a href="{{ url("index/kd_welding/"."welding-keypost") }}"><i class="fa fa-pencil-square-o"></i> <span>KD  <i class="fa fa-angle-right"></i> Welding Key Post</span></a>
   </li>

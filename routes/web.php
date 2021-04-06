@@ -1889,7 +1889,7 @@ Route::group(['nav' => 'S60', 'middleware' => 'permission'], function(){
 });
 
 //WELDING
-Route::group(['nav' => 'S53', 'middleware' => 'permission'], function(){
+Route::group(['nav' => 'S54', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_welding/{id}', 'KnockDownController@indexKD');
 	Route::post('fetch/kd_print_welding_body', 'KnockDownController@printLabelNewSingle');
 	
@@ -4374,8 +4374,8 @@ Route::post('print/scrap', 'ScrapController@printScrap');
 Route::get('reprint/scrap', 'ScrapController@reprintScrap');
 Route::post('confirm/scrap', 'ScrapController@confirmScrap');
 Route::post('delete/scrap', 'ScrapController@deleteScrap');
-Route::get('index/scrap_logs', 'ScrapController@indexScrapLogs');
-Route::get('fetch/scrap_logs', 'ScrapController@fetchScrapLogs');
+// Route::get('index/scrap_logs', 'ScrapController@indexScrapLogs');
+// Route::get('fetch/scrap_logs', 'ScrapController@fetchScrapLogs');
 Route::get('index/scrap_record', 'ScrapController@indexScrapRecord');
 Route::get('index/scrap/view', 'ScrapController@indexScrapView');
 Route::post('update/scrap', 'ScrapController@updateScrap');

@@ -227,10 +227,10 @@
 				<table class="table table-bordered" id="tableDetail">
 					<thead>
 						<tr style="border-bottom:3px solid black;border-top:3px solid black;background-color:#cddc39">
-							<th>No.</th>
-							<th>Question</th>
-							<th>Answer</th>
-							<th>Point</th>
+							<th style="width: 1%">No.</th>
+							<th style="width: 5%">Question</th>
+							<th style="width: 1%">Answer</th>
+							<th style="width: 1%">Point</th>
 						</tr>
 					</thead>
 					<tbody id="bodyTableDetail">
@@ -456,12 +456,13 @@
 			if(result.status){
 				$('#myModalLabel').html("Survey Covid-19 Detail<br>"+result.survey[0].employee_id+" - "+result.survey[0].name+"");
 
+				$('#tableDetail').DataTable().clear();
+				$('#tableDetail').DataTable().destroy();
 				$('#bodyTableDetail').html("");
 
 				var total_point = 0;
 				var tableData = "";
-				$('#tableDetail').DataTable().clear();
-				$('#tableDetail').DataTable().destroy();
+				
 
 				$.each(result.survey, function(key, value) {
 					var question = JSON.parse(value.question);
@@ -470,10 +471,10 @@
 					var index = 1;
 					for (var i = 0; i < question.length; i++) {
 						tableData += '<tr>';
-						tableData += '<td style="border:1px solid black;padding:2px">'+ index +'</td>';
-						tableData += '<td style="text-align:left;border:1px solid black;padding:2px">'+ question[i] +'</td>';
-						tableData += '<td style="border:1px solid black;padding:2px">'+ answer[i] +'</td>';
-						tableData += '<td style="border:1px solid black;padding:2px">'+ poin[i] +'</td>';
+						tableData += '<td  style="width: 1%;border:1px solid black;padding:2px">'+ index +'</td>';
+						tableData += '<td  style="width: 5%;text-align:left;border:1px solid black;padding:2px">'+ question[i] +'</td>';
+						tableData += '<td  style="width: 1%;border:1px solid black;padding:2px">'+ answer[i] +'</td>';
+						tableData += '<td  style="width: 1%;border:1px solid black;padding:2px">'+ poin[i] +'</td>';
 						tableData += '</tr>';
 						index++;
 						total_point = total_point + parseInt(poin[i]);
