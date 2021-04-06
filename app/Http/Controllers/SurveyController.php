@@ -214,7 +214,7 @@ class SurveyController extends Controller
 	public function indexSurveyCovid()
 	{
 		$title = 'Survey Covid-19';
-		$title_jp = '';
+		$title_jp = 'コロナ調査';
 
 		return view('survey.index_covid', array(
 			'title' => $title,
@@ -364,7 +364,7 @@ class SurveyController extends Controller
 	public function indexSurveyCovidReport()
 	{
 		$title = 'Report Survey Covid-19';
-		$title_jp = '';
+		$title_jp = 'コロナ調査報告';
 
 		return view('survey.report_covid', array(
 			'title' => $title,
