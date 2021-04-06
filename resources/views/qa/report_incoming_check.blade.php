@@ -481,20 +481,23 @@
 					tableData += '<td>'+ value.total_ng +'</td>';
 					tableData += '<td>'+ value.ng_ratio +'</td>';
 					tableData += '<td>'+ value.status_lot +'</td>';
-					var ng_name = value.ng_name.split('_');
-					var ng_qty = value.ng_qty.split('_');
-					var status_ng = value.status_ng.split('_');
-					if (value.note_ng != null) {
+					if (value.ng_name != null) {
+						var ng_name = value.ng_name.split('_');
+						var ng_qty = value.ng_qty.split('_');
+						var status_ng = value.status_ng.split('_');
 						var note_ng = value.note_ng.split('_');
 					}else{
 						var note_ng = "";
+						var ng_name = "";
+						var ng_qty = "";
+						var status_ng = "";
 					}
 					tableData += '<td>';
 					for (var i = 0 ;i < ng_name.length; i++) {
 						if (value.note_ng != null) {
 							tableData += '<span class="label label-danger">'+ ng_name[i] +' = '+ ng_qty[i] +' ('+ status_ng[i] +' - '+ note_ng[i] +');</span><br>';
 						}else{
-							tableData += '<span class="label label-danger">'+ ng_name[i] +' = '+ ng_qty[i] +' ('+ status_ng[i] +' - '+ note_ng +');</span><br>';
+							tableData += '<span class="label label-danger">'+ ng_name +' = '+ ng_qty +' ('+ status_ng +' - '+ note_ng +');</span><br>';
 						}
 					}
 					tableData += '</td>';
