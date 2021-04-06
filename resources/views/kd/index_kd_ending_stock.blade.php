@@ -415,31 +415,34 @@
 			return false;
 		}
 
+		if(confirm('Apakah anda yakin untuk melakukan CS ?\nData yang sudah disimpan tidak dapat dikembalikan')){
+			$("#loading").show();
+			$.post(url, data,  function(result, status, xhr){
+				if(result.status){
+					var id = result.knock_down_detail.id;
+					printLabel(id, ('print'+id));
 
-		$("#loading").show();
-		$.post(url, data,  function(result, status, xhr){
-			if(result.status){
-				var id = result.knock_down_detail.id;
-				printLabel(id, ('print'+id));
 
+					$('#production_id').val('');
+					$('#due_date').val('');
+					$('#material_number').val('');
+					$('#material_description').val('');
+					$('#qty_packing').val('');
 
-				$('#production_id').val('');
-				$('#due_date').val('');
-				$('#material_number').val('');
-				$('#material_description').val('');
-				$('#qty_packing').val('');
+					$("#loading").hide();
 
-				$("#loading").hide();
+					fillTableList();
+					$('#kdo_detail').DataTable().ajax.reload();
+					openSuccessGritter('Success', result.message);
+				}else{
+					$("#loading").hide();
+					openErrorGritter('Error!', result.message);
+				}
 
-				fillTableList();
-				$('#kdo_detail').DataTable().ajax.reload();
-				openSuccessGritter('Success', result.message);
-			}else{
-				$("#loading").hide();
-				openErrorGritter('Error!', result.message);
-			}
+			});
 
-		});
+		}
+		
 	}
 
 	function fillField(param) {
