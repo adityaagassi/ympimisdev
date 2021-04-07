@@ -2649,7 +2649,7 @@ public function postAirVisual()
 		}
 	}
 
-	$datas = GeneralAirVisualLog::whereRaw('DATE_FORMAT(created_at,"%Y-%m-%d %H:%i:%s") >= "'.date('Y-m-d 06:00:00').'"')
+	$datas = GeneralAirVisualLog::whereRaw('DATE_FORMAT(data_time,"%Y-%m-%d %H:%i:%s") >= "'.date('Y-m-d 06:00:00').'"')
 	->select('location', 'data_time', 'co', 'temperature', 'humidity', db::raw('DATE_FORMAT(data_time, "%H:%i") as data_time2'))
 	->orderBy('id', 'asc')
 	->get();
