@@ -19,7 +19,6 @@
 		<center>
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
 			<p style="font-size: 18px;font-weight: bold;">Your employees have already met visitors.</p>
-			<p style="font-size: 15px;">Please click the confirm button to confirm the information below.</p>
 			This is an automatic notification. Please do not reply to this address.
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<tbody>
