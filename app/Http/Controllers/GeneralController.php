@@ -2621,18 +2621,21 @@ public function postAirVisual()
 
 		$arr = json_decode($result, true);
 		$s = "";
-		$ts2 = "";
+		$true_date = "";
 
 		for ($i=count($arr['historical']['instant'])-1; $i > 0; $i--) { 
 			$s = str_replace('T', ' ', $arr['historical']['instant'][$i]['ts']);
 			$times = substr(explode(' ', $s)[1], 0, -5);
 			$dates = explode(' ', $s)[0];
 
-			$ts = $dates." ".$times;
+			$ts = date_create($dates." ".$times);
 
-			$ts2 = date('Y-m-d H:i:s', strtotime($times) + 60*420);
+			// $ts2 = date('Y-m-d H:i:s', strtotime($times) + 60*420);
 
-			$air_log = GeneralAirVisualLog::firstOrNew(array('data_time' => $ts2));
+			date_add($ts, date_interval_create_from_date_string('7 hours'));
+			$true_date = date_format($ts, 'Y-m-d H:i:s');
+
+			$air_log = GeneralAirVisualLog::firstOrNew(array('data_time' => $true_date));
 			$air_log->get_at = date('Y-m-d H:i:00');
 			$air_log->remark = $arr['historical']['instant'][$i]['ts'];
 			$air_log->co = $arr['historical']['instant'][$i]['co'];
@@ -2656,14 +2659,14 @@ public function postAirVisual()
 		SELECT MAX(id)
 		FROM general_air_visual_logs
 		GROUP BY location
-	) and DATE_FORMAT(created_at,"%Y-%m-%d %H:%i:%s") >= "'.date('Y-m-d 06:00:00').'"
-	order by location asc');
+		) and DATE_FORMAT(created_at,"%Y-%m-%d %H:%i:%s") >= "'.date('Y-m-d 06:00:00').'"
+		order by location asc');
 
 	$response = array(
 		'status' => true,
 		'message' => '',
 		'datas' => $datas,
-		'time' => $ts2,
+		'time' => $true_date,
 		'last_data' => $last_data
 	);
 	return Response::json($response);

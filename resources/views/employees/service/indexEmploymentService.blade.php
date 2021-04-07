@@ -533,6 +533,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 								<div class="col-xs-2">
 									<select class="form-control select2" style="width: 100%" id="category">
 										<option disabled selected value="">Category</option>
+										<option value="YMPI CO ID">YMPI CO ID</option>
 										<option value="Great Day">Great Day</option>
 										<option value="Absensi">Absensi</option>
 										<option value="Lembur">Lembur</option>
