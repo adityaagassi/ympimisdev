@@ -115,7 +115,9 @@ class MaintenanceController extends Controller
 			['location' => 'Venova', 'alias' => 'vnv', 'area' => ['Venova']],
 			['location' => 'Warehouse', 'alias' => 'wrh', 'area' => ['Warehouse']],
 			['location' => 'Workshop', 'alias' => 'wrk', 'area' => ['Workshop']],
-			['location' => 'WWT', 'alias' => 'wwt', 'area' => ['WWT']]
+			['location' => 'WWT', 'alias' => 'wwt', 'area' => ['WWT']],
+			['location' => 'MTC', 'alias' => 'mtc', 'area' => ['Maintenance']]
+			['location' => 'Press', 'alias' => 'prs', 'area' => ['Press']]
 		];
 	}
 
@@ -3338,7 +3340,7 @@ class MaintenanceController extends Controller
 		$dt = date('Y-m-d');
 		// $emp_loc = MaintenanceOperatorLocation::select('employee_id', 'employee_name', 'location', 'remark', 'created_at', db::raw('RIGHT(acronym(employee_name), 2) AS short_name'))->get();
 
-		$emp_loc = db::select("SELECT employee_syncs.employee_id, `name`, RIGHT(acronym(`name`), 2) as short_name, shiftdaily_code, location, maintenance_operator_locations.remark as job from employee_syncs
+		$emp_loc = db::select("SELECT employee_syncs.employee_id, `name`, RIGHT(acronym(`name`), 2) as short_name, shiftdaily_code, location, maintenance_operator_locations.remark as job, attend_code from employee_syncs
 			left join sunfish_shift_syncs on sunfish_shift_syncs.employee_id = employee_syncs.employee_id
 			left join maintenance_operator_locations on maintenance_operator_locations.employee_id = employee_syncs.employee_id
 			where shift_date = '".$dt."' and  `group` = 'Maintenance Group' and end_date is null

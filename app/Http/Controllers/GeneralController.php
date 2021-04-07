@@ -2634,6 +2634,7 @@ public function postAirVisual()
 
 			$air_log = GeneralAirVisualLog::firstOrNew(array('data_time' => $ts2));
 			$air_log->get_at = date('Y-m-d H:i:00');
+			$air_log->remark = $arr['historical']['instant'][$i]['ts'];
 			$air_log->co = $arr['historical']['instant'][$i]['co'];
 			$air_log->temperature = $arr['historical']['instant'][$i]['tp'];
 			$air_log->humidity = $arr['historical']['instant'][$i]['hm'];

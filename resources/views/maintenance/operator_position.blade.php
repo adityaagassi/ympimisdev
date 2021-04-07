@@ -205,6 +205,11 @@
             <div id="wrk" class="kotak" style="left: 750px; top: 565px; width: 40px; height: 70px">WRK <br>
               <div class="isi"></div>
             </div>
+            <div id="mtc" class="kotak" style="left: 1030px; top: 640px; width: 150px; height: 50px">MTC <br>
+              <div class="isi">
+                <!-- <div class="op">HW<span class="tooltiptext">Achmad Hagi Wahyudi</span></div> -->
+              </div>
+            </div>
             <div id="wwt" class="kotak" style="left: 180px; top: 155px; width: 100px; height: 150px">WWT <br>
               <div class="isi"></div>
             </div>
@@ -302,7 +307,11 @@
         })
 
         body += '<tr style="font-size: 11px;">';
-        body += '<td>'+value.shiftdaily_code.match(/\d+/)+'</td>';
+        if (value.attend_code == " ABS") {
+          body += '<td>'+value.shiftdaily_code.match(/\d+/)+'</td>';
+        } else {
+          body += '<td style="background-color: black; color: white">'+value.shiftdaily_code.match(/\d+/)+'('+value.attend_code+') </td>';
+        }
         body += '<td>'+value.short_name+'</td>';
         body += '<td>'+value.name+'</td>';
         body += '<td>'+(value.job || '')+'</td>';
