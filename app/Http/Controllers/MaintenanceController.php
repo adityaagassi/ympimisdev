@@ -116,7 +116,7 @@ class MaintenanceController extends Controller
 			['location' => 'Warehouse', 'alias' => 'wrh', 'area' => ['Warehouse']],
 			['location' => 'Workshop', 'alias' => 'wrk', 'area' => ['Workshop']],
 			['location' => 'WWT', 'alias' => 'wwt', 'area' => ['WWT']],
-			['location' => 'MTC', 'alias' => 'mtc', 'area' => ['Maintenance']]
+			['location' => 'MTC', 'alias' => 'mtc', 'area' => ['Maintenance']],
 			['location' => 'Press', 'alias' => 'prs', 'area' => ['Press']]
 		];
 	}
