@@ -230,13 +230,15 @@
               <table class="table">
                 <thead>
                   <tr>
-                    <th colspan="4" style="background-color: #bffa8e; padding: 0 5px 0px 5px">Legends : </th>
+                    <th colspan="6" style="background-color: #bffa8e; padding: 0 5px 0px 5px">Legends : </th>
                   </tr>
                   <tr>
                     <th>Shift</th>
+                    <th>Absence</th>
                     <th>Alias</th>
                     <th>Name</th>
-                    <th>job</th>
+                    <th>Location</th>
+                    <th>Job</th>
                   </tr>
                 </thead>
                 <tbody id="legend_body">
@@ -307,15 +309,19 @@
         })
 
         body += '<tr style="font-size: 11px;">';
-        if (value.attend_code == " ABS") {
-          body += '<td>'+value.shiftdaily_code.match(/\d+/)+'</td>';
-        } else {
-          body += '<td style="background-color: black; color: white">'+value.shiftdaily_code.match(/\d+/)+'('+value.attend_code+') </td>';
-        }
+        body += '<td>'+value.shiftdaily_code.match(/\d+/)+'</td>';
+        body += '<td>'+value.attend_code+'</td>';
         body += '<td>'+value.short_name+'</td>';
-        body += '<td>'+value.name+'</td>';
+        body += '<td style="text-align: left">'+value.name+'</td>';
+        body += '<td>'+(value.location || '')+'</td>';
         body += '<td>'+(value.job || '')+'</td>';
         body += '</tr>';
+
+        if (typeof result.emp_loc[index+1] !== 'undefined') {
+          if (value.shiftdaily_code != result.emp_loc[index+1].shiftdaily_code) {
+            body += '<tr><td colspan="6" style="border-bottom: 2px solid black"></td></tr>';
+          }
+        }
       })
 
       $("#legend_body").append(body);
