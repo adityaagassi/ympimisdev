@@ -7715,30 +7715,30 @@ public function import_budget(Request $request){
                     // $data2->feb_budget_awal = $feb_awal;
                     // $data2->mar_budget_awal = $mar_awal;
                     // $data2->adj_frc = $adj_frc;
-                    // $data2->apr_after_adj = $apr_adj;
-                    // $data2->may_after_adj = $may_adj;
-                    // $data2->jun_after_adj = $jun_adj;
-                    // $data2->jul_after_adj = $jul_adj;
-                    // $data2->aug_after_adj = $aug_adj;
-                    // $data2->sep_after_adj = $sep_adj;
-                    // $data2->oct_after_adj = $oct_adj;
-                    // $data2->nov_after_adj = $nov_adj;
+                    $data2->apr_after_adj = $apr_adj;
+                    $data2->may_after_adj = $may_adj;
+                    $data2->jun_after_adj = $jun_adj;
+                    $data2->jul_after_adj = $jul_adj;
+                    $data2->aug_after_adj = $aug_adj;
+                    $data2->sep_after_adj = $sep_adj;
+                    $data2->oct_after_adj = $oct_adj;
+                    $data2->nov_after_adj = $nov_adj;
                     $data2->dec_after_adj = $dec_adj;
                     $data2->jan_after_adj = $jan_adj;
                     $data2->feb_after_adj = $feb_adj;
                     $data2->mar_after_adj = $mar_adj;
                     // $data2->apr_sisa_budget = $apr_sisa;
-                    // $data2->may_sisa_budget = $may_sisa;
-                    // $data2->jun_sisa_budget = $jun_sisa;
-                    // $data2->jul_sisa_budget = $jul_sisa;
-                    // $data2->aug_sisa_budget = $aug_sisa;
-                    // $data2->sep_sisa_budget = $sep_sisa;
-                    // $data2->oct_sisa_budget = $oct_sisa;
-                    // $data2->nov_sisa_budget = $nov_sisa;
+                    $data2->may_sisa_budget = $may_sisa;
+                    $data2->jun_sisa_budget = $jun_sisa;
+                    $data2->jul_sisa_budget = $jul_sisa;
+                    $data2->aug_sisa_budget = $aug_sisa;
+                    $data2->sep_sisa_budget = $sep_sisa;
+                    $data2->oct_sisa_budget = $oct_sisa;
+                    $data2->nov_sisa_budget = $nov_sisa;
                     $data2->dec_sisa_budget = $dec_sisa;
                     $data2->jan_sisa_budget = $jan_sisa;
                     $data2->feb_sisa_budget = $feb_sisa;    
-                    // $data2->mar_sisa_budget = $mar_sisa;
+                    $data2->mar_sisa_budget = $mar_sisa;
                     $data2->created_by = Auth::id();
                     $data2->save();
                 }
@@ -10903,8 +10903,8 @@ public function transfer_budget()
     ->distinct()
     ->get();
 
-
     $budgets = AccBudget::select('acc_budgets.budget_no', 'acc_budgets.description')
+    ->where('periode','=','FY198')
     ->distinct()
     ->get();
 
@@ -10919,7 +10919,6 @@ public function transfer_budget()
 public function transfer_budget_post(Request $request)
 {
     try {
-
 
         $budget_from = $request->get('budget_from');
         $budget_to = $request->get('budget_to');

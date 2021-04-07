@@ -167,7 +167,7 @@
               <option value="Meeting and Guest" <?php if($investment->type == "Meeting and Guest") echo "selected"; ?>>Meeting and Guest</option>
               <option value="Book and Periodical" <?php if($investment->type == "Book and Periodical") echo "selected"; ?>>Book and Periodical</option>
               <option value="Tax and Publicdues" <?php if($investment->type == "Tax and Publicdues") echo "selected"; ?>>Tax and Publicdues</option>
-              <option value="Photocopy and Printing" <?php if($investment->type == "Photocopy and Printing") echo "selected"; ?>>Photocopy and Printing</option>
+              <option value="Labour" <?php if($investment->type == "Labour") echo "selected"; ?>>Labour</option>
               <option value="Rent" <?php if($investment->type == "Rent") echo "selected"; ?>>Rent</option>
               <option value="Medical" <?php if($investment->type == "Medical") echo "selected"; ?>>Medical</option>
               <option value="Others" <?php if($investment->type == "Others") echo "selected"; ?>>Others</option>
@@ -1073,6 +1073,9 @@
       else if(jen2 == "Electricity, Water, and Gas"){
         jenis = "Ewg";
       }
+      else if(jen2 == "Labour"){
+        jenis = "L";
+      }
       else if(jen2 == "Others"){
         jenis = "etc";
       }
@@ -1461,11 +1464,11 @@
           list += "<option value='Book and Periodical'>Bookand Periodical</option>";
           list += "<option value='Tax and Publicdues'>Tax and Publicdues</option>";
           list += "<option value='Medical'>Medical</option>";
-          list += "<option value='Photocopy and printing'>Photocopy and printing</option>";
           list += "<option value='Expatriate permittance'>Expatriate permittance</option>";
           list += "<option value='Wellfare'>Wellfare</option>";
           list += "<option value='Training and Development'>Training and Development</option>";
           list += "<option value='Recruitment'>Recruitment</option>";
+          list += "<option value='Labour'>Labour</option>";
           list += "<option value='Others'>Others</option>";
         }
 

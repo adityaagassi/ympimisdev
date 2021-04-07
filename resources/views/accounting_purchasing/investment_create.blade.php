@@ -372,8 +372,8 @@
       else if(jen2 == "Tax and Publicdues"){
         jenis = "Tp";
       }
-      else if(jen2 == "Photocopy and Printing"){
-        jenis = "Pp";
+      else if(jen2 == "Labour"){
+        jenis = "L";
       }
       else if(jen2 == "Others"){
         jenis = "etc";
@@ -588,11 +588,11 @@
           list += "<option value='Book and Periodical'>Bookand Periodical</option>";
           list += "<option value='Tax and Publicdues'>Tax and Publicdues</option>";
           list += "<option value='Medical'>Medical</option>";
-          list += "<option value='Photocopy and Printing'>Photocopy and Printing</option>";
           list += "<option value='Expatriate permittance'>Expatriate permittance</option>";
           list += "<option value='Wellfare'>Wellfare</option>";
           list += "<option value='Training and Development'>Training and Development</option>";
           list += "<option value='Recruitment'>Recruitment</option>";
+          list += "<option value='Labour'>Labour</option>";
           list += "<option value='Others'>Others</option>";
         }
 
