@@ -281,7 +281,7 @@ class MeetingController extends Controller
 					// 	'created_at' => date('Y-m-d H:i:s')
 					// ]);
 				}
-				$meeting_detail->save();
+				// $meeting_detail->save();
 			}
 		}
 		catch(\Exception $e){
