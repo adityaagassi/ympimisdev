@@ -242,7 +242,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<div class="modal-body table-responsive no-padding">
-					<h4 id="judul_ng">NG List</h4>
+					<h4 id="judul_ng" style="font-weight: bold;text-align:center;background-color: #61d2ff;padding: 5px">NG List</h4>
 					<div class="row">
 						<div class="col-xs-12" id="ngDetail">
 						</div>
@@ -253,7 +253,7 @@
 						</div>
 					</div>
 
-					<h4 id="judul_onko" style="padding-top: 10px">Pilih Onko</h4>
+					<h4 id="judul_onko" style="padding-top: 10px;font-weight: bold;text-align:center;background-color: #ffd375;padding: 5px">Pilih Onko</h4>
 					<div class="row">
 						<div class="col-xs-12" id="onkoBody">
 						</div>
@@ -263,7 +263,9 @@
 							<input type="hidden" id="onkoFix2" value="ONKO">
 						</div>
 					</div>
-					<input type="hidden" id="operator_id_before" value="OPID">
+					<h4 id="judul_onko" style="padding-top: 10px;font-weight: bold;text-align:center;background-color: #75ff9f;padding: 5px">Pilih Operator Asal NG</h4>
+						<select class="form-control" style="width: 100%;font-size:20px;padding:5px;text-align:center" id="operator_id_before_select" data-placeholder="Pilih Operator" onchange="changeOperator(this.id)"></select>
+						<input type="hidden" id="operator_id_before" value="OPID">
 
 					<div style="padding-top: 10px">
 						<button id="confNg" style="width: 100%; margin-top: 10px; font-size: 3vw; padding:0; font-weight: bold; border-color: black; color: white;" onclick="confNgTemp()" class="btn btn-success">CONFIRM</button>
@@ -279,36 +281,54 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<div class="modal-body table-responsive no-padding">
-					<h4 id="judul_ng">NG List Tanpo Awase</h4>
-					<div id="ngList">
-						<div class="col-xs-12" id="onkoBodyFixTanpoAwase" style="display: none;padding-top: 5px">
-							<center><button class="btn btn-primary" style="width:100%;font-size: 20px" onclick="getOnkoChangeTanpoAwase()" id="onkoFixTanpoAwase">ONKO
-							</button></center>
-							<input type="hidden" id="onkoFixTanpoAwase2">
-							<input type="hidden" id="idOnkoTanpoAwase">
+					<div class="col-xs-12">
+						<h4 style="font-weight: bold;text-align:center;background-color: #61d2ff;padding: 5px">NG List Tanpo Awase</h4>
+						<div class="row">
+							<div class="col-xs-12" id="onkoBodyFixTanpoAwase" style="display: none;padding-top: 5px">
+								<center><button class="btn btn-primary" style="width:100%;font-size: 20px" onclick="getOnkoChangeTanpoAwase()" id="onkoFixTanpoAwase">ONKO
+								</button></center>
+								<input type="hidden" id="onkoFixTanpoAwase2">
+								<input type="hidden" id="idOnkoTanpoAwase">
+							</div>
+							<div class="col-xs-12" style="padding-top: 5px" id="onkoBodyTanpoAwase">
+							</div>
+							<div>
+								<input type="hidden" id="value1" value="0">
+								<input type="hidden" id="value2" value="0">
+								<input type="hidden" id="value3" value="0">
+								<input type="hidden" id="value4" value="0">
+								<input type="hidden" id="value5" value="0">
+								<input type="hidden" id="value6" value="0">
+								<input type="hidden" id="value7" value="0">
+								<input type="hidden" id="value8" value="0">
+								<input type="hidden" id="value9" value="0">
+								<input type="hidden" id="value10" value="0">
+								<input type="hidden" id="value11" value="0">
+								<input type="hidden" id="value12" value="0">
+								<input type="hidden" id="value13" value="0">
+								<input type="hidden" id="value14" value="0">
+								<input type="hidden" id="value15" value="0">
+								<input type="hidden" id="value16" value="0">
+							</div>
+								
+							<input type="hidden" id="operator_id_before_tanpoawase1" value="OPID">
+							<input type="hidden" id="operator_id_before_tanpoawase2" value="OPID">
+							<input type="hidden" id="operator_id_before_tanpoawase3" value="OPID">
+							<input type="hidden" id="operator_id_before_tanpoawase4" value="OPID">
+							<input type="hidden" id="operator_id_before_tanpoawase5" value="OPID">
+							<input type="hidden" id="operator_id_before_tanpoawase6" value="OPID">
+							<input type="hidden" id="operator_id_before_tanpoawase7" value="OPID">
+							<input type="hidden" id="operator_id_before_tanpoawase8" value="OPID">
+							<input type="hidden" id="operator_id_before_tanpoawase9" value="OPID">
+							<input type="hidden" id="operator_id_before_tanpoawase10" value="OPID">
+							<input type="hidden" id="operator_id_before_tanpoawase11" value="OPID">
+							<input type="hidden" id="operator_id_before_tanpoawase12" value="OPID">
+							<input type="hidden" id="operator_id_before_tanpoawase13" value="OPID">
+							<input type="hidden" id="operator_id_before_tanpoawase14" value="OPID">
+							<input type="hidden" id="operator_id_before_tanpoawase15" value="OPID">
+							<input type="hidden" id="operator_id_before_tanpoawase16" value="OPID">
+							<button id="confNgOnkoTanpoAwase" style="width: 100%; margin-top: 10px; font-size: 3vw; padding:0; font-weight: bold; border-color: black; color: white;" onclick="confNgOnkoTanpoAwase()" class="btn btn-success">CONFIRM</button>
 						</div>
-						<div class="col-xs-12" style="padding-top: 5px" id="onkoBodyTanpoAwase">
-						</div>
-						<div>
-							<input type="hidden" id="value1" value="0">
-							<input type="hidden" id="value2" value="0">
-							<input type="hidden" id="value3" value="0">
-							<input type="hidden" id="value4" value="0">
-							<input type="hidden" id="value5" value="0">
-							<input type="hidden" id="value6" value="0">
-							<input type="hidden" id="value7" value="0">
-							<input type="hidden" id="value8" value="0">
-							<input type="hidden" id="value9" value="0">
-							<input type="hidden" id="value10" value="0">
-							<input type="hidden" id="value11" value="0">
-							<input type="hidden" id="value12" value="0">
-							<input type="hidden" id="value13" value="0">
-							<input type="hidden" id="value14" value="0">
-							<input type="hidden" id="value15" value="0">
-							<input type="hidden" id="value16" value="0">
-						</div>
-						<input type="hidden" id="operator_id_before_tanpoawase" value="OPID">
-						<button id="confNgOnkoTanpoAwase" style="width: 100%; margin-top: 10px; font-size: 3vw; padding:0; font-weight: bold; border-color: black; color: white;" onclick="confNgOnkoTanpoAwase()" class="btn btn-success">CONFIRM</button>
 					</div>
 				</div>
 			</div>
@@ -352,7 +372,7 @@
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		}
 	});
-
+	var timerkensa;
 	jQuery(document).ready(function() {
 		$('#modalOperator').modal({
 			backdrop: 'static',
@@ -365,6 +385,56 @@
 		}else{
 			$('#timer').hide();
 		}
+		$('#value1').val('0');
+		$('#value2').val('0');
+		$('#value3').val('0');
+		$('#value4').val('0');
+		$('#value5').val('0');
+		$('#value6').val('0');
+		$('#value7').val('0');
+		$('#value8').val('0');
+		$('#value9').val('0');
+		$('#value10').val('0');
+		$('#value11').val('0');
+		$('#value12').val('0');
+		$('#value13').val('0');
+		$('#value14').val('0');
+		$('#value15').val('0');
+		$('#value16').val('0');
+
+		$('#pilihan1_1').val('0').trigger('change');
+		$('#pilihan1_2').val('0').trigger('change');
+		$('#pilihan1_3').val('0').trigger('change');
+		$('#pilihan1_4').val('0').trigger('change');
+		$('#pilihan1_5').val('0').trigger('change');
+		$('#pilihan1_6').val('0').trigger('change');
+		$('#pilihan1_7').val('0').trigger('change');
+		$('#pilihan1_8').val('0').trigger('change');
+		$('#pilihan1_9').val('0').trigger('change');
+		$('#pilihan1_10').val('0').trigger('change');
+		$('#pilihan1_11').val('0').trigger('change');
+		$('#pilihan1_12').val('0').trigger('change');
+		$('#pilihan1_13').val('0').trigger('change');
+		$('#pilihan1_14').val('0').trigger('change');
+		$('#pilihan1_15').val('0').trigger('change');
+		$('#pilihan1_16').val('0').trigger('change');
+
+		$('#pilihan2_1').val('0').trigger('change');
+		$('#pilihan2_2').val('0').trigger('change');
+		$('#pilihan2_3').val('0').trigger('change');
+		$('#pilihan2_4').val('0').trigger('change');
+		$('#pilihan2_5').val('0').trigger('change');
+		$('#pilihan2_6').val('0').trigger('change');
+		$('#pilihan2_7').val('0').trigger('change');
+		$('#pilihan2_8').val('0').trigger('change');
+		$('#pilihan2_9').val('0').trigger('change');
+		$('#pilihan2_10').val('0').trigger('change');
+		$('#pilihan2_11').val('0').trigger('change');
+		$('#pilihan2_12').val('0').trigger('change');
+		$('#pilihan2_13').val('0').trigger('change');
+		$('#pilihan2_14').val('0').trigger('change');
+		$('#pilihan2_15').val('0').trigger('change');
+		$('#pilihan2_16').val('0').trigger('change');
 	});
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
@@ -476,7 +546,39 @@
 		}
 		else{
 			$('#operator_id_before').val("OPID");
-			$('#operator_id_before_tanpoawase').val("OPID");
+			$('#operator_id_before_tanpoawase1').val("OPID");
+			$('#operator_id_before_tanpoawase2').val("OPID");
+			$('#operator_id_before_tanpoawase3').val("OPID");
+			$('#operator_id_before_tanpoawase4').val("OPID");
+			$('#operator_id_before_tanpoawase5').val("OPID");
+			$('#operator_id_before_tanpoawase6').val("OPID");
+			$('#operator_id_before_tanpoawase7').val("OPID");
+			$('#operator_id_before_tanpoawase8').val("OPID");
+			$('#operator_id_before_tanpoawase9').val("OPID");
+			$('#operator_id_before_tanpoawase10').val("OPID");
+			$('#operator_id_before_tanpoawase11').val("OPID");
+			$('#operator_id_before_tanpoawase12').val("OPID");
+			$('#operator_id_before_tanpoawase13').val("OPID");
+			$('#operator_id_before_tanpoawase14').val("OPID");
+			$('#operator_id_before_tanpoawase15').val("OPID");
+			$('#operator_id_before_tanpoawase16').val("OPID");
+
+			$('#operator_id_before_tanpoawase_select1').html("");
+			$('#operator_id_before_tanpoawase_select2').html("");
+			$('#operator_id_before_tanpoawase_select3').html("");
+			$('#operator_id_before_tanpoawase_select4').html("");
+			$('#operator_id_before_tanpoawase_select5').html("");
+			$('#operator_id_before_tanpoawase_select6').html("");
+			$('#operator_id_before_tanpoawase_select7').html("");
+			$('#operator_id_before_tanpoawase_select8').html("");
+			$('#operator_id_before_tanpoawase_select9').html("");
+			$('#operator_id_before_tanpoawase_select10').html("");
+			$('#operator_id_before_tanpoawase_select11').html("");
+			$('#operator_id_before_tanpoawase_select12').html("");
+			$('#operator_id_before_tanpoawase_select13').html("");
+			$('#operator_id_before_tanpoawase_select14').html("");
+			$('#operator_id_before_tanpoawase_select15').html("");
+			$('#operator_id_before_tanpoawase_select16').html("");
 			if (ng_name === "Tanpo Awase") {
 				var btn = document.getElementById('confNgOnkoTanpoAwase');
 				btn.disabled = false;
@@ -511,11 +613,46 @@
 						}
 						$.get('{{ url("fetch/assembly/get_process_before") }}',data3, function(result, status, xhr){
 							if (result.status) {
+								var opbeforetanposelect = "";
+								opbeforetanposelect += '<option value="">Pilih Operator</option>';
 								$.each(result.details, function(key, value) {
-									$('#operator_id_before_tanpoawase').val(value.operator_id);
+									opbeforetanposelect += '<option value="'+value.operator_id+'">'+value.operator_id+' - '+value.name+'</option>';
+									// $('#operator_id_before_tanpoawase').val(value.operator_id);
 								});
+								$('#operator_id_before_tanpoawase_select1').append(opbeforetanposelect);
+								$('#operator_id_before_tanpoawase_select2').append(opbeforetanposelect);
+								$('#operator_id_before_tanpoawase_select3').append(opbeforetanposelect);
+								$('#operator_id_before_tanpoawase_select4').append(opbeforetanposelect);
+								$('#operator_id_before_tanpoawase_select5').append(opbeforetanposelect);
+								$('#operator_id_before_tanpoawase_select6').append(opbeforetanposelect);
+								$('#operator_id_before_tanpoawase_select7').append(opbeforetanposelect);
+								$('#operator_id_before_tanpoawase_select8').append(opbeforetanposelect);
+								$('#operator_id_before_tanpoawase_select9').append(opbeforetanposelect);
+								$('#operator_id_before_tanpoawase_select10').append(opbeforetanposelect);
+								$('#operator_id_before_tanpoawase_select11').append(opbeforetanposelect);
+								$('#operator_id_before_tanpoawase_select12').append(opbeforetanposelect);
+								$('#operator_id_before_tanpoawase_select13').append(opbeforetanposelect);
+								$('#operator_id_before_tanpoawase_select14').append(opbeforetanposelect);
+								$('#operator_id_before_tanpoawase_select15').append(opbeforetanposelect);
+								$('#operator_id_before_tanpoawase_select16').append(opbeforetanposelect);
 							}else{
-								$('#operator_id_before_tanpoawase').val(result.details);
+								// $('#divOperatorTanpo').hide();
+								$('#operator_id_before_tanpoawase_select1').append(value.process_before);
+								$('#operator_id_before_tanpoawase_select2').append(value.process_before);
+								$('#operator_id_before_tanpoawase_select3').append(value.process_before);
+								$('#operator_id_before_tanpoawase_select4').append(value.process_before);
+								$('#operator_id_before_tanpoawase_select5').append(value.process_before);
+								$('#operator_id_before_tanpoawase_select6').append(value.process_before);
+								$('#operator_id_before_tanpoawase_select7').append(value.process_before);
+								$('#operator_id_before_tanpoawase_select8').append(value.process_before);
+								$('#operator_id_before_tanpoawase_select9').append(value.process_before);
+								$('#operator_id_before_tanpoawase_select10').append(value.process_before);
+								$('#operator_id_before_tanpoawase_select11').append(value.process_before);
+								$('#operator_id_before_tanpoawase_select12').append(value.process_before);
+								$('#operator_id_before_tanpoawase_select13').append(value.process_before);
+								$('#operator_id_before_tanpoawase_select14').append(value.process_before);
+								$('#operator_id_before_tanpoawase_select15').append(value.process_before);
+								$('#operator_id_before_tanpoawase_select16').append(value.process_before);
 							}
 						});
 					});
@@ -533,254 +670,291 @@
 						// bodyNgOnko += '</button></center></div>';
 						bodyNgOnko += '<div class="col-xs-3">'
 						bodyNgOnko += '<div style="text-align:center;font-weight:bold;font-size:20px">'+value.keynomor+'</div>';
-						bodyNgOnko += '<div id="slider'+index+'"></div>';
-						bodyNgOnko += '<div style="text-align:middle" id="lokasi_choice'+index+'"><button class="btn btn-warning" style="width:24%" onclick="changeLokasi(\''+index+'\',\'A\')">A</button><button onclick="changeLokasi(\''+index+'\',\'B\')" style="margin-left:2px;width:24%" class="btn btn-warning">B</button><button onclick="changeLokasi(\''+index+'\',\'C\')" style="margin-left:2px;width:24%" class="btn btn-warning">C</button><button onclick="changeLokasi(\''+index+'\',\'D\')" style="margin-left:2px;width:24%" class="btn btn-warning">D</button></div>';
-						bodyNgOnko += '<div style="display:none" id="lokasi_fix'+index+'"><button style="width:100%;font-weight:bold" onclick="changeLokasi2(\''+index+'\',\'E\')" class="btn btn-warning" id="lokasi_fix2'+index+'">E</button></div>';
+						// bodyNgOnko += '<div id="slider'+index+'"></div>';
+						bodyNgOnko += '<div>';
+						bodyNgOnko += '<select style="width:47%;font-size:20px;padding:5px;text-align:center" id="pilihan1_'+index+'" onchange="changeTanpoAwase(this.id)">';
+						bodyNgOnko += '<option value="0">0</option>';
+						bodyNgOnko += '<option value="1">1</option>';
+						bodyNgOnko += '<option value="2">2</option>';
+						bodyNgOnko += '<option value="3">3</option>';
+						bodyNgOnko += '<option value="4">4</option>';
+						bodyNgOnko += '<option value="5">5</option>';
+						bodyNgOnko += '<option value="6">6</option>';
+						bodyNgOnko += '<option value="7">7</option>';
+						bodyNgOnko += '<option value="8">8</option>';
+						bodyNgOnko += '<option value="9">9</option>';
+						bodyNgOnko += '<option value="10">10</option>';
+						bodyNgOnko += '<option value="11">11</option>';
+						bodyNgOnko += '<option value="12">12</option>';
+						bodyNgOnko += '</select>';
+						bodyNgOnko += '<span style="width:20%;font-weight:bold"> - </span>';
+						bodyNgOnko += '<select style="width:47%;font-size:20px;padding:5px;text-align:center" id="pilihan2_'+index+'" onchange="changeTanpoAwase(this.id)">';
+						bodyNgOnko += '<option value="0">0</option>';
+						bodyNgOnko += '<option value="1">1</option>';
+						bodyNgOnko += '<option value="2">2</option>';
+						bodyNgOnko += '<option value="3">3</option>';
+						bodyNgOnko += '<option value="4">4</option>';
+						bodyNgOnko += '<option value="5">5</option>';
+						bodyNgOnko += '<option value="6">6</option>';
+						bodyNgOnko += '<option value="7">7</option>';
+						bodyNgOnko += '<option value="8">8</option>';
+						bodyNgOnko += '<option value="9">9</option>';
+						bodyNgOnko += '<option value="10">10</option>';
+						bodyNgOnko += '<option value="11">11</option>';
+						bodyNgOnko += '<option value="12">12</option>';
+						bodyNgOnko += '</select>';
+						bodyNgOnko += '</div>';
+						bodyNgOnko += '<div style="text-align:middle;padding-top:10px" id="lokasi_choice'+index+'"><button class="btn btn-warning" style="width:24%" onclick="changeLokasi(\''+index+'\',\'A\')">A</button><button onclick="changeLokasi(\''+index+'\',\'B\')" style="margin-left:2px;width:24%" class="btn btn-warning">B</button><button onclick="changeLokasi(\''+index+'\',\'C\')" style="margin-left:2px;width:24%" class="btn btn-warning">C</button><button onclick="changeLokasi(\''+index+'\',\'D\')" style="margin-left:2px;width:24%" class="btn btn-warning">D</button></div>';
+						bodyNgOnko += '<div style="display:none;padding-top:10px" id="lokasi_fix'+index+'"><button style="width:100%;font-weight:bold" onclick="changeLokasi2(\''+index+'\',\'E\')" class="btn btn-warning" id="lokasi_fix2'+index+'">E</button></div>';
+						bodyNgOnko += '<div style="padding-top:10px">';
+						bodyNgOnko += '<select class="form-control" style="width: 100%;font-size:20px;padding:5px;text-align:center" id="operator_id_before_tanpoawase_select'+index+'" data-placeholder="Pilih Operator" onchange="changeOperatorTanpo(\''+index+'\')">';
+						bodyNgOnko += '</select>';
+						bodyNgOnko += '</div>';
 						bodyNgOnko += '</div>';
 						index++;
 					});
 
 					$('#onkoBodyTanpoAwase').append(bodyNgOnko);
 
-					$("#slider1").roundSlider({
-					    sliderType: "range",
-					    handleShape: "dot",
-					    width: 35,
-					    radius: 100,
-					    value: 0,
-					    lineCap: "square",
-					    startAngle: 90,
-					    handleSize: "+12",
-					    max: "12",
-					    drag: function (value) {
-					        $("#value1").val(value.value);
-					    }
-					});
+					// $("#slider1").roundSlider({
+					//     sliderType: "range",
+					//     handleShape: "dot",
+					//     width: 35,
+					//     radius: 100,
+					//     value: 0,
+					//     lineCap: "square",
+					//     startAngle: 90,
+					//     handleSize: "+12",
+					//     max: "12",
+					//     drag: function (value) {
+					//         $("#value1").val(value.value);
+					//     }
+					// });
 
-					$("#slider2").roundSlider({
-					    sliderType: "range",
-					    handleShape: "dot",
-					    width: 35,
-					    radius: 100,
-					    value: 0,
-					    lineCap: "square",
-					    startAngle: 90,
-					    handleSize: "+12",
-					    max: "12",
-					    drag: function (value) {
-					        $("#value2").val(value.value);
-					    }
-					});
+					// $("#slider2").roundSlider({
+					//     sliderType: "range",
+					//     handleShape: "dot",
+					//     width: 35,
+					//     radius: 100,
+					//     value: 0,
+					//     lineCap: "square",
+					//     startAngle: 90,
+					//     handleSize: "+12",
+					//     max: "12",
+					//     drag: function (value) {
+					//         $("#value2").val(value.value);
+					//     }
+					// });
 
-					$("#slider3").roundSlider({
-					    sliderType: "range",
-					    handleShape: "dot",
-					    width: 35,
-					    radius: 100,
-					    value: 0,
-					    lineCap: "square",
-					    startAngle: 90,
-					    handleSize: "+12",
-					    max: "12",
-					    drag: function (value) {
-					        $("#value3").val(value.value);
-					    }
-					});
+					// $("#slider3").roundSlider({
+					//     sliderType: "range",
+					//     handleShape: "dot",
+					//     width: 35,
+					//     radius: 100,
+					//     value: 0,
+					//     lineCap: "square",
+					//     startAngle: 90,
+					//     handleSize: "+12",
+					//     max: "12",
+					//     drag: function (value) {
+					//         $("#value3").val(value.value);
+					//     }
+					// });
 
-					$("#slider4").roundSlider({
-					    sliderType: "range",
-					    handleShape: "dot",
-					    width: 35,
-					    radius: 100,
-					    value: 0,
-					    lineCap: "square",
-					    startAngle: 90,
-					    handleSize: "+12",
-					    max: "12",
-					    drag: function (value) {
-					        $("#value4").val(value.value);
-					    }
-					});
+					// $("#slider4").roundSlider({
+					//     sliderType: "range",
+					//     handleShape: "dot",
+					//     width: 35,
+					//     radius: 100,
+					//     value: 0,
+					//     lineCap: "square",
+					//     startAngle: 90,
+					//     handleSize: "+12",
+					//     max: "12",
+					//     drag: function (value) {
+					//         $("#value4").val(value.value);
+					//     }
+					// });
 
-					$("#slider5").roundSlider({
-					    sliderType: "range",
-					    handleShape: "dot",
-					    width: 35,
-					    radius: 100,
-					    value: 0,
-					    lineCap: "square",
-					    startAngle: 90,
-					    handleSize: "+12",
-					    max: "12",
-					    drag: function (value) {
-					        $("#value5").val(value.value);
-					    }
-					});
+					// $("#slider5").roundSlider({
+					//     sliderType: "range",
+					//     handleShape: "dot",
+					//     width: 35,
+					//     radius: 100,
+					//     value: 0,
+					//     lineCap: "square",
+					//     startAngle: 90,
+					//     handleSize: "+12",
+					//     max: "12",
+					//     drag: function (value) {
+					//         $("#value5").val(value.value);
+					//     }
+					// });
 
-					$("#slider6").roundSlider({
-					    sliderType: "range",
-					    handleShape: "dot",
-					    width: 35,
-					    radius: 100,
-					    value: 0,
-					    lineCap: "square",
-					    startAngle: 90,
-					    handleSize: "+12",
-					    max: "12",
-					    drag: function (value) {
-					        $("#value6").val(value.value);
-					    }
-					});
+					// $("#slider6").roundSlider({
+					//     sliderType: "range",
+					//     handleShape: "dot",
+					//     width: 35,
+					//     radius: 100,
+					//     value: 0,
+					//     lineCap: "square",
+					//     startAngle: 90,
+					//     handleSize: "+12",
+					//     max: "12",
+					//     drag: function (value) {
+					//         $("#value6").val(value.value);
+					//     }
+					// });
 
-					$("#slider7").roundSlider({
-					    sliderType: "range",
-					    handleShape: "dot",
-					    width: 35,
-					    radius: 100,
-					    value: 0,
-					    lineCap: "square",
-					    startAngle: 90,
-					    handleSize: "+12",
-					    max: "12",
-					    drag: function (value) {
-					        $("#value7").val(value.value);
-					    }
-					});
+					// $("#slider7").roundSlider({
+					//     sliderType: "range",
+					//     handleShape: "dot",
+					//     width: 35,
+					//     radius: 100,
+					//     value: 0,
+					//     lineCap: "square",
+					//     startAngle: 90,
+					//     handleSize: "+12",
+					//     max: "12",
+					//     drag: function (value) {
+					//         $("#value7").val(value.value);
+					//     }
+					// });
 
-					$("#slider8").roundSlider({
-					    sliderType: "range",
-					    handleShape: "dot",
-					    width: 35,
-					    radius: 100,
-					    value: 0,
-					    lineCap: "square",
-					    startAngle: 90,
-					    handleSize: "+12",
-					    max: "12",
-					    drag: function (value) {
-					        $("#value8").val(value.value);
-					    }
-					});
+					// $("#slider8").roundSlider({
+					//     sliderType: "range",
+					//     handleShape: "dot",
+					//     width: 35,
+					//     radius: 100,
+					//     value: 0,
+					//     lineCap: "square",
+					//     startAngle: 90,
+					//     handleSize: "+12",
+					//     max: "12",
+					//     drag: function (value) {
+					//         $("#value8").val(value.value);
+					//     }
+					// });
 
-					$("#slider9").roundSlider({
-					    sliderType: "range",
-					    handleShape: "dot",
-					    width: 35,
-					    radius: 100,
-					    value: 0,
-					    lineCap: "square",
-					    startAngle: 90,
-					    handleSize: "+12",
-					    max: "12",
-					    drag: function (value) {
-					        $("#value9").val(value.value);
-					    }
-					});
+					// $("#slider9").roundSlider({
+					//     sliderType: "range",
+					//     handleShape: "dot",
+					//     width: 35,
+					//     radius: 100,
+					//     value: 0,
+					//     lineCap: "square",
+					//     startAngle: 90,
+					//     handleSize: "+12",
+					//     max: "12",
+					//     drag: function (value) {
+					//         $("#value9").val(value.value);
+					//     }
+					// });
 
-					$("#slider10").roundSlider({
-					    sliderType: "range",
-					    handleShape: "dot",
-					    width: 35,
-					    radius: 100,
-					    value: 0,
-					    lineCap: "square",
-					    startAngle: 90,
-					    handleSize: "+12",
-					    max: "12",
-					    drag: function (value) {
-					        $("#value10").val(value.value);
-					    }
-					});
+					// $("#slider10").roundSlider({
+					//     sliderType: "range",
+					//     handleShape: "dot",
+					//     width: 35,
+					//     radius: 100,
+					//     value: 0,
+					//     lineCap: "square",
+					//     startAngle: 90,
+					//     handleSize: "+12",
+					//     max: "12",
+					//     drag: function (value) {
+					//         $("#value10").val(value.value);
+					//     }
+					// });
 
-					$("#slider11").roundSlider({
-					    sliderType: "range",
-					    handleShape: "dot",
-					    width: 35,
-					    radius: 100,
-					    value: 0,
-					    lineCap: "square",
-					    startAngle: 90,
-					    handleSize: "+12",
-					    max: "12",
-					    drag: function (value) {
-					        $("#value11").val(value.value);
-					    }
-					});
+					// $("#slider11").roundSlider({
+					//     sliderType: "range",
+					//     handleShape: "dot",
+					//     width: 35,
+					//     radius: 100,
+					//     value: 0,
+					//     lineCap: "square",
+					//     startAngle: 90,
+					//     handleSize: "+12",
+					//     max: "12",
+					//     drag: function (value) {
+					//         $("#value11").val(value.value);
+					//     }
+					// });
 
-					$("#slider12").roundSlider({
-					    sliderType: "range",
-					    handleShape: "dot",
-					    width: 35,
-					    radius: 100,
-					    value: 0,
-					    lineCap: "square",
-					    startAngle: 90,
-					    handleSize: "+12",
-					    max: "12",
-					    drag: function (value) {
-					        $("#value12").val(value.value);
-					    }
-					});
+					// $("#slider12").roundSlider({
+					//     sliderType: "range",
+					//     handleShape: "dot",
+					//     width: 35,
+					//     radius: 100,
+					//     value: 0,
+					//     lineCap: "square",
+					//     startAngle: 90,
+					//     handleSize: "+12",
+					//     max: "12",
+					//     drag: function (value) {
+					//         $("#value12").val(value.value);
+					//     }
+					// });
 
-					$("#slider13").roundSlider({
-					    sliderType: "range",
-					    handleShape: "dot",
-					    width: 35,
-					    radius: 100,
-					    value: 0,
-					    lineCap: "square",
-					    startAngle: 180,
-					    handleSize: "+12",
-					    max: "12",
-					    drag: function (value) {
-					        $("#value13").val(value.value);
-					    }
-					});
+					// $("#slider13").roundSlider({
+					//     sliderType: "range",
+					//     handleShape: "dot",
+					//     width: 35,
+					//     radius: 100,
+					//     value: 0,
+					//     lineCap: "square",
+					//     startAngle: 180,
+					//     handleSize: "+12",
+					//     max: "12",
+					//     drag: function (value) {
+					//         $("#value13").val(value.value);
+					//     }
+					// });
 
-					$("#slider14").roundSlider({
-					    sliderType: "range",
-					    handleShape: "dot",
-					    width: 35,
-					    radius: 100,
-					    value: 0,
-					    lineCap: "square",
-					    startAngle: 90,
-					    handleSize: "+12",
-					    max: "12",
-					    drag: function (value) {
-					        $("#value14").val(value.value);
-					    }
-					});
+					// $("#slider14").roundSlider({
+					//     sliderType: "range",
+					//     handleShape: "dot",
+					//     width: 35,
+					//     radius: 100,
+					//     value: 0,
+					//     lineCap: "square",
+					//     startAngle: 90,
+					//     handleSize: "+12",
+					//     max: "12",
+					//     drag: function (value) {
+					//         $("#value14").val(value.value);
+					//     }
+					// });
 
-					$("#slider15").roundSlider({
-					    sliderType: "range",
-					    handleShape: "dot",
-					    width: 35,
-					    radius: 100,
-					    value: 0,
-					    lineCap: "square",
-					    startAngle: 90,
-					    handleSize: "+12",
-					    max: "12",
-					    drag: function (value) {
-					        $("#value15").val(value.value);
-					    }
-					});
+					// $("#slider15").roundSlider({
+					//     sliderType: "range",
+					//     handleShape: "dot",
+					//     width: 35,
+					//     radius: 100,
+					//     value: 0,
+					//     lineCap: "square",
+					//     startAngle: 90,
+					//     handleSize: "+12",
+					//     max: "12",
+					//     drag: function (value) {
+					//         $("#value15").val(value.value);
+					//     }
+					// });
 
-					$("#slider16").roundSlider({
-					    sliderType: "range",
-					    handleShape: "dot",
-					    width: 35,
-					    radius: 100,
-					    value: 0,
-					    lineCap: "square",
-					    startAngle: 90,
-					    handleSize: "+12",
-					    max: "12",
-					    drag: function (value) {
-					        $("#value16").val(value.value);
-					    }
-					});
+					// $("#slider16").roundSlider({
+					//     sliderType: "range",
+					//     handleShape: "dot",
+					//     width: 35,
+					//     radius: 100,
+					//     value: 0,
+					//     lineCap: "square",
+					//     startAngle: 90,
+					//     handleSize: "+12",
+					//     max: "12",
+					//     drag: function (value) {
+					//         $("#value16").val(value.value);
+					//     }
+					// });
 					$('#modalNgTanpoAwase').modal('show');
 				});
 			}else{
@@ -829,6 +1003,19 @@
 				});
 			}
 		}
+	}
+
+	function changeOperatorTanpo(id) {
+		$('#operator_id_before_tanpoawase'+id).val($('#operator_id_before_tanpoawase_select'+id).val());
+	}
+
+	function changeOperator(id) {
+		$('#operator_id_before').val($('#operator_id_before_select').val());
+	}
+
+	function changeTanpoAwase(id) {
+		var ids = id.split('_');
+		$('#value'+ids[1]).val($('#pilihan1_'+ids[1]).val()+','+$('#pilihan2_'+ids[1]).val());
 	}
 
 	function changeLokasi(index,lokasi) {
@@ -977,11 +1164,15 @@
 		}
 		$.get('{{ url("fetch/assembly/get_process_before") }}',data, function(result, status, xhr){
 			if (result.status) {
+				$('#operator_id_before_select').html("");
+				var opbfsel = "";
+				opbfsel += '<option value="">Pilih Operator</option>';
 				$.each(result.details, function(key, value) {
-					$('#operator_id_before').val(value.operator_id);
+					opbfsel += '<option value="'+value.operator_id+'">'+value.operator_id+' - '+value.name+'</option>';
 				});
+				$('#operator_id_before_select').append(opbfsel);
 			}else{
-				$('#operator_id_before').val(result.details);
+				$('#operator_id_before').val(process_before);
 			}
 		});
 		$('#ngDetail').hide();
@@ -1048,6 +1239,7 @@
 		var value_bawah = [];
 		var lokasi = [];
 		var onko_ng = [];
+		var operator = [];
 		var index = 0;
 
 		var data = {
@@ -1076,6 +1268,7 @@
 					value_atas.push(valuesplit[0]);
 					value_bawah.push(valuesplit[1]);
 					lokasi.push($(idlokasi).text());
+					operator.push($('#operator_id_before_tanpoawase'+a).val());
 					// if ($(idvalue).text() != 'E') {
 
 					// }
@@ -1095,7 +1288,7 @@
 				value_bawah:value_bawah,
 				lokasi:lokasi,
 				origin_group_code : '041',
-				operator_id : $('#operator_id_before_tanpoawase').val(),
+				operator_id : operator,
 			}
 
 			$.post('{{ url("input/assembly/ng_temp") }}', data, function(result, status, xhr){
@@ -1103,22 +1296,7 @@
 					var btn = document.getElementById('confNgOnkoTanpoAwase');
 					btn.disabled = true;
 					btn.innerText = 'Posting...';
-					$('#value1').val('0');
-					$('#value2').val('0');
-					$('#value3').val('0');
-					$('#value4').val('0');
-					$('#value5').val('0');
-					$('#value6').val('0');
-					$('#value7').val('0');
-					$('#value8').val('0');
-					$('#value9').val('0');
-					$('#value10').val('0');
-					$('#value11').val('0');
-					$('#value12').val('0');
-					$('#value13').val('0');
-					$('#value14').val('0');
-					$('#value15').val('0');
-					$('#value16').val('0');
+					
 					$('#modalNgTanpoAwase').modal('hide');
 					fetchNgTemp();
 					openSuccessGritter('Success!', result.message);
@@ -1226,6 +1404,56 @@
 				$('#tag').val("");
 				$('#tag').prop('disabled', false);
 				$('#tag').focus();
+				$('#value1').val('0');
+				$('#value2').val('0');
+				$('#value3').val('0');
+				$('#value4').val('0');
+				$('#value5').val('0');
+				$('#value6').val('0');
+				$('#value7').val('0');
+				$('#value8').val('0');
+				$('#value9').val('0');
+				$('#value10').val('0');
+				$('#value11').val('0');
+				$('#value12').val('0');
+				$('#value13').val('0');
+				$('#value14').val('0');
+				$('#value15').val('0');
+				$('#value16').val('0');
+
+				$('#pilihan1_1').val('0').trigger('change');
+				$('#pilihan1_2').val('0').trigger('change');
+				$('#pilihan1_3').val('0').trigger('change');
+				$('#pilihan1_4').val('0').trigger('change');
+				$('#pilihan1_5').val('0').trigger('change');
+				$('#pilihan1_6').val('0').trigger('change');
+				$('#pilihan1_7').val('0').trigger('change');
+				$('#pilihan1_8').val('0').trigger('change');
+				$('#pilihan1_9').val('0').trigger('change');
+				$('#pilihan1_10').val('0').trigger('change');
+				$('#pilihan1_11').val('0').trigger('change');
+				$('#pilihan1_12').val('0').trigger('change');
+				$('#pilihan1_13').val('0').trigger('change');
+				$('#pilihan1_14').val('0').trigger('change');
+				$('#pilihan1_15').val('0').trigger('change');
+				$('#pilihan1_16').val('0').trigger('change');
+
+				$('#pilihan2_1').val('0').trigger('change');
+				$('#pilihan2_2').val('0').trigger('change');
+				$('#pilihan2_3').val('0').trigger('change');
+				$('#pilihan2_4').val('0').trigger('change');
+				$('#pilihan2_5').val('0').trigger('change');
+				$('#pilihan2_6').val('0').trigger('change');
+				$('#pilihan2_7').val('0').trigger('change');
+				$('#pilihan2_8').val('0').trigger('change');
+				$('#pilihan2_9').val('0').trigger('change');
+				$('#pilihan2_10').val('0').trigger('change');
+				$('#pilihan2_11').val('0').trigger('change');
+				$('#pilihan2_12').val('0').trigger('change');
+				$('#pilihan2_13').val('0').trigger('change');
+				$('#pilihan2_14').val('0').trigger('change');
+				$('#pilihan2_15').val('0').trigger('change');
+				$('#pilihan2_16').val('0').trigger('change');
 				deleteNgTemp();
 				deleteAssemblies();
 				$('#ngHistoryBody').empty();
@@ -1258,6 +1486,56 @@
 		var btn = document.getElementById('conf1');
 		btn.disabled = false;
 		btn.innerText = 'CONFIRM';
+		$('#value1').val('0');
+		$('#value2').val('0');
+		$('#value3').val('0');
+		$('#value4').val('0');
+		$('#value5').val('0');
+		$('#value6').val('0');
+		$('#value7').val('0');
+		$('#value8').val('0');
+		$('#value9').val('0');
+		$('#value10').val('0');
+		$('#value11').val('0');
+		$('#value12').val('0');
+		$('#value13').val('0');
+		$('#value14').val('0');
+		$('#value15').val('0');
+		$('#value16').val('0');
+
+		$('#pilihan1_1').val('0').trigger('change');
+		$('#pilihan1_2').val('0').trigger('change');
+		$('#pilihan1_3').val('0').trigger('change');
+		$('#pilihan1_4').val('0').trigger('change');
+		$('#pilihan1_5').val('0').trigger('change');
+		$('#pilihan1_6').val('0').trigger('change');
+		$('#pilihan1_7').val('0').trigger('change');
+		$('#pilihan1_8').val('0').trigger('change');
+		$('#pilihan1_9').val('0').trigger('change');
+		$('#pilihan1_10').val('0').trigger('change');
+		$('#pilihan1_11').val('0').trigger('change');
+		$('#pilihan1_12').val('0').trigger('change');
+		$('#pilihan1_13').val('0').trigger('change');
+		$('#pilihan1_14').val('0').trigger('change');
+		$('#pilihan1_15').val('0').trigger('change');
+		$('#pilihan1_16').val('0').trigger('change');
+
+		$('#pilihan2_1').val('0').trigger('change');
+		$('#pilihan2_2').val('0').trigger('change');
+		$('#pilihan2_3').val('0').trigger('change');
+		$('#pilihan2_4').val('0').trigger('change');
+		$('#pilihan2_5').val('0').trigger('change');
+		$('#pilihan2_6').val('0').trigger('change');
+		$('#pilihan2_7').val('0').trigger('change');
+		$('#pilihan2_8').val('0').trigger('change');
+		$('#pilihan2_9').val('0').trigger('change');
+		$('#pilihan2_10').val('0').trigger('change');
+		$('#pilihan2_11').val('0').trigger('change');
+		$('#pilihan2_12').val('0').trigger('change');
+		$('#pilihan2_13').val('0').trigger('change');
+		$('#pilihan2_14').val('0').trigger('change');
+		$('#pilihan2_15').val('0').trigger('change');
+		$('#pilihan2_16').val('0').trigger('change');
 	}
 
 	function deleteAssemblies() {
@@ -1493,7 +1771,7 @@
 	    }
 	}
 	 
-	var timerkensa;
+	
 	$(document).ready(function(e) 
 	{
 	    timerkensa = new _timerkensa

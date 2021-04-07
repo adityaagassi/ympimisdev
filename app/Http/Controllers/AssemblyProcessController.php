@@ -522,7 +522,7 @@ class AssemblyProcessController extends Controller
 			$title = 'Kariawase & Tanpoire Process Flute';
 			$title_jp= 'フルートの仮合わせ・タンポ入れ';
 		}
-		if($location == 'tanpoawase-kensa,tanpoawase-fungsi,repair-berat'){
+		if($location == 'tanpoawase-kensa,tanpoawase-fungsi,repair-process-1,repair-process-2'){
 			$title = 'Tanpoawase Kensa & Fungsi Flute';
 			$title_jp= 'フルートのタンポ合わせ・機能の検査';
 		}
@@ -1078,7 +1078,130 @@ class AssemblyProcessController extends Controller
 				and location_number in ('8','9','10','11','12','13','14','15','16','17')
 				AND assemblies.origin_group_code = '041'
 				ORDER BY remark, location_number asc");
-		}else{
+		}else if($loc == 'tanpoawase-kensa,tanpoawase-fungsi,repair-process-1,repair-process-2'){
+			$work_stations = DB::select("SELECT
+				IF(assemblies.location = 'perakitanawal-kensa','Perakitan Ulang',assemblies.location) as location,
+				location_number,
+				online_time,
+				assemblies.operator_id,
+				name,
+				sedang_serial_number,
+				sedang_model,
+				TIME( sedang_time ) AS sedang_time,
+				DATE( sedang_time ) AS sedang_date,
+				( SELECT standard_time FROM assembly_std_times WHERE location = assemblies.location ) AS std_time,
+				( SELECT count( DISTINCT ( serial_number )) FROM assembly_logs WHERE operator_id = assemblies.operator_id AND DATE( created_at ) = '".$now."' ) + ( SELECT count( DISTINCT ( serial_number )) FROM assembly_details WHERE operator_id = assemblies.operator_id AND DATE( created_at ) = '".$now."' ) AS perolehan,
+				(
+				SELECT
+				GROUP_CONCAT(
+				DISTINCT (
+				SUBSTRING_INDEX( ng_name, '-', 1 ))) AS ng_name 
+				FROM
+				assembly_ng_logs 
+				WHERE
+				operator_id = assemblies.operator_id 
+				AND DATE( created_at ) = '".$now."' 
+				) AS ng_name,
+				(
+				SELECT
+				GROUP_CONCAT( qty_ng ) AS qty_ng 
+				FROM
+				( SELECT COUNT( ng_name ) AS qty_ng, operator_id FROM assembly_ng_logs WHERE DATE( created_at ) = '".$now."' GROUP BY ng_name,operator_id ) ss 
+				WHERE
+				operator_id = assemblies.operator_id 
+				) AS qty_ng,
+				(
+				SELECT
+					GROUP_CONCAT(  SUBSTRING_INDEX( ng_name, ' -', 1 )  ) AS ng_name 
+				FROM
+					assembly_ng_logs 
+				WHERE
+					operator_id = assemblies.operator_id 
+					AND DATE( created_at ) = '".$now."' 
+					) as ng_name_detail,
+					(
+				SELECT
+					GROUP_CONCAT(  IF(assembly_ng_logs.value_bawah is null,value_atas,CONCAT(value_atas,'-',value_bawah))  ) AS ng_name 
+				FROM
+					assembly_ng_logs 
+				WHERE
+					operator_id = assemblies.operator_id 
+					AND DATE( created_at ) = '".$now."' 
+					) as qty_ng_detail
+				FROM
+				assemblies
+				LEFT JOIN employee_syncs ON employee_syncs.employee_id = assemblies.operator_id 
+				WHERE
+				(assemblies.location in ('tanpoawase-kensa','tanpoawase-fungsi') 
+				AND assemblies.origin_group_code = '041')
+				OR
+				(assemblies.location in ('repair-process')
+					and assemblies.location_number in ('1','2')
+				AND assemblies.origin_group_code = '041')
+				ORDER BY location desc");
+		}else if($loc == 'fukiage1-process,repair-ringan'){
+			$work_stations = DB::select("SELECT
+				IF(assemblies.location = 'perakitanawal-kensa','Perakitan Ulang',assemblies.location) as location,
+				location_number,
+				online_time,
+				assemblies.operator_id,
+				name,
+				sedang_serial_number,
+				sedang_model,
+				TIME( sedang_time ) AS sedang_time,
+				DATE( sedang_time ) AS sedang_date,
+				( SELECT standard_time FROM assembly_std_times WHERE location = assemblies.location ) AS std_time,
+				( SELECT count( DISTINCT ( serial_number )) FROM assembly_logs WHERE operator_id = assemblies.operator_id AND DATE( created_at ) = '".$now."' ) + ( SELECT count( DISTINCT ( serial_number )) FROM assembly_details WHERE operator_id = assemblies.operator_id AND DATE( created_at ) = '".$now."' ) AS perolehan,
+				(
+				SELECT
+				GROUP_CONCAT(
+				DISTINCT (
+				SUBSTRING_INDEX( ng_name, '-', 1 ))) AS ng_name 
+				FROM
+				assembly_ng_logs 
+				WHERE
+				operator_id = assemblies.operator_id 
+				AND DATE( created_at ) = '".$now."' 
+				) AS ng_name,
+				(
+				SELECT
+				GROUP_CONCAT( qty_ng ) AS qty_ng 
+				FROM
+				( SELECT COUNT( ng_name ) AS qty_ng, operator_id FROM assembly_ng_logs WHERE DATE( created_at ) = '".$now."' GROUP BY ng_name,operator_id ) ss 
+				WHERE
+				operator_id = assemblies.operator_id 
+				) AS qty_ng,
+				(
+				SELECT
+					GROUP_CONCAT(  SUBSTRING_INDEX( ng_name, ' -', 1 )  ) AS ng_name 
+				FROM
+					assembly_ng_logs 
+				WHERE
+					operator_id = assemblies.operator_id 
+					AND DATE( created_at ) = '".$now."' 
+					) as ng_name_detail,
+					(
+				SELECT
+					GROUP_CONCAT(  IF(assembly_ng_logs.value_bawah is null,value_atas,CONCAT(value_atas,'-',value_bawah))  ) AS ng_name 
+				FROM
+					assembly_ng_logs 
+				WHERE
+					operator_id = assemblies.operator_id 
+					AND DATE( created_at ) = '".$now."' 
+					) as qty_ng_detail
+				FROM
+				assemblies
+				LEFT JOIN employee_syncs ON employee_syncs.employee_id = assemblies.operator_id 
+				WHERE
+				(assemblies.location in ('fukiage1-process') 
+				AND assemblies.origin_group_code = '041')
+				OR
+				(assemblies.location in ('repair-process')
+					and assemblies.location_number in ('3','4','5')
+				AND assemblies.origin_group_code = '041')
+				ORDER BY location,location_number asc");
+		}
+		else{
 			$work_stations = DB::select("SELECT
 				assemblies.location,
 				location_number,
@@ -1133,7 +1256,8 @@ class AssemblyProcessController extends Controller
 				LEFT JOIN employee_syncs ON employee_syncs.employee_id = assemblies.operator_id 
 				WHERE
 				".$addlocation."
-				AND assemblies.origin_group_code = '041'");
+				AND assemblies.origin_group_code = '041'
+				ORDER BY location,location_number asc");
 		}
 
 		foreach ($work_stations as $ws) {
@@ -1550,6 +1674,7 @@ class AssemblyProcessController extends Controller
 			* 
 			FROM
 			`assembly_details` 
+			join employee_syncs on employee_syncs.employee_id = assembly_details.operator_id
 			WHERE
 			model = '".$model."' 
 			AND tag = '".$tag."' 
@@ -1560,7 +1685,7 @@ class AssemblyProcessController extends Controller
 			$response = array(
 				'status' => false,
 				'message' => 'Data Tidak Ditemukan',
-				'details' => $location,
+				'details' => $details,
 			);
 			return Response::json($response);			
 		}
@@ -1602,6 +1727,7 @@ class AssemblyProcessController extends Controller
 				$value_bawah = $request->get('value_bawah');
 				$ongko = $request->get('onko');
 				$lokasi = $request->get('lokasi');
+				$operator = $request->get('operator_id');
 
 				for ($i=0; $i < count($ongko); $i++) { 
 					$assembly_ng_temp = new AssemblyNgTemp([
@@ -1615,7 +1741,7 @@ class AssemblyProcessController extends Controller
 						'value_atas' => $value_atas[$i],
 						'value_bawah' => $value_bawah[$i],
 						'value_lokasi' => $lokasi[$i],
-						'operator_id' => $request->get('operator_id'),
+						'operator_id' => $operator[$i],
 						'started_at' => $request->get('started_at'),
 						'origin_group_code' => $request->get('origin_group_code'),
 						'created_by' => Auth::id()

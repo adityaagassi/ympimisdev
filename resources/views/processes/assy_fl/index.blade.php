@@ -64,7 +64,7 @@
 
 			<a href="{{ url('/index/board','tanpoawase-process') }}" class="btn btn-default btn-block" style="font-size: 17px; border-color: red;">Tanpo Awase 2 Board</a>
 			
-			<a href="{{ url('/index/board','tanpoawase-kensa,tanpoawase-fungsi,repair-berat') }}" class="btn btn-default btn-block" style="font-size: 1.5vw; border-color: red;">Tanpoawase Kensa & Fungsi Board</a>
+			<a href="{{ url('/index/board','tanpoawase-kensa,tanpoawase-fungsi,repair-process-1,repair-process-2') }}" class="btn btn-default btn-block" style="font-size: 1.5vw; border-color: red;">Tanpoawase Kensa & Fungsi Board</a>
 			
 			<a href="{{ url('/index/board','seasoning-process') }}" class="btn btn-default btn-block" style="font-size: 17px; border-color: red;">Seasoning Board</a>
 			
