@@ -114,19 +114,36 @@ class DisplayController extends Controller
 		->select("fiscal_year", db::raw("date_format(week_date, '%Y-%m') as month_date"), db::raw("date_format(week_date, '%M') as month_name"))
 		->first();
 
-		$weekly_months = db::select("SELECT
-			wc.week_date,
-			cc.cost_center_name 
-			FROM
-			weekly_calendars AS wc
-			CROSS JOIN ( SELECT DISTINCT cost_center_eff AS cost_center_name FROM cost_centers2 WHERE cost_center_eff IS NOT NULL ) AS cc 
-			WHERE
-			DATE_FORMAT( wc.week_date, '%Y-%m') = '".$weekly_calendar->month_date."'
-			AND cc.cost_center_name IS NOT NULL
-			AND wc.week_date <= '".date('Y-m-d')."'
-			ORDER BY
-			field( cc.cost_center_name, 'FINAL', 'MIDDLE', 'SOLDERING', 'INITIAL', 'PN ASSY', 'RC ASSY', 'INJECTION', 'VENOVA', 'MOUTHPIECE', 'CASE', 'PN REED PLATE' ),
-			wc.week_date ASC");
+		if($weekly_calendar->month_date < '2021-04'){
+			$weekly_months = db::select("SELECT
+				wc.week_date,
+				cc.cost_center_name 
+				FROM
+				weekly_calendars AS wc
+				CROSS JOIN ( SELECT DISTINCT cost_center_eff AS cost_center_name FROM cost_centers2 WHERE cost_center_eff IS NOT NULL ) AS cc 
+				WHERE
+				DATE_FORMAT( wc.week_date, '%Y-%m') = '".$weekly_calendar->month_date."'
+				AND cc.cost_center_name IS NOT NULL
+				AND wc.week_date <= '".date('Y-m-d')."'
+				ORDER BY
+				field( cc.cost_center_name, 'FINAL', 'MIDDLE', 'SOLDERING', 'INITIAL', 'PN ASSY', 'RC ASSY', 'INJECTION', 'VENOVA', 'MOUTHPIECE', 'CASE', 'PN REED PLATE' ),
+				wc.week_date ASC");
+		}
+		else{
+			$weekly_months = db::select("SELECT
+				wc.week_date,
+				cc.cost_center_name 
+				FROM
+				weekly_calendars AS wc
+				CROSS JOIN ( SELECT DISTINCT cost_center_eff_2 AS cost_center_name FROM cost_centers2 WHERE cost_center_eff IS NOT NULL ) AS cc 
+				WHERE
+				DATE_FORMAT( wc.week_date, '%Y-%m') = '".$weekly_calendar->month_date."'
+				AND cc.cost_center_name IS NOT NULL
+				AND wc.week_date <= '".date('Y-m-d')."'
+				ORDER BY
+				field( cc.cost_center_name, 'FINAL', 'MIDDLE', 'SOLDERING', 'BODY PART PROCESS', 'KEY PART PROCESS', 'PN ASSY', 'RC ASSY', 'INJECTION', 'VENOVA', 'MOUTHPIECE', 'CASE', 'PN REED PLATE' ),
+				wc.week_date ASC");
+		}
 
 		$months = db::select("SELECT
 			weekly_calendars.fiscal_year,
@@ -168,20 +185,38 @@ class DisplayController extends Controller
 				]);
 		}
 
-		$weekly_years = db::select("SELECT
-			DISTINCT
-			date_format( wc.week_date, '%Y-%m' ) AS month_date,
-			cc.cost_center_name 
-			FROM
-			weekly_calendars AS wc
-			CROSS JOIN ( SELECT DISTINCT cost_center_eff AS cost_center_name FROM cost_centers2 WHERE cost_center_eff IS NOT NULL ) AS cc 
-			WHERE
-			wc.fiscal_year = '".$weekly_calendar->fiscal_year."'
-			AND wc.week_date <= '".date('Y-m-d')."'
-			AND cc.cost_center_name IS NOT NULL
-			ORDER BY
-			field( cc.cost_center_name, 'FINAL', 'MIDDLE', 'SOLDERING', 'INITIAL', 'PN ASSY', 'RC ASSY', 'INJECTION', 'VENOVA', 'MOUTHPIECE', 'CASE', 'PN REED PLATE' ),
-			wc.week_date ASC");
+		if($weekly_calendar->month_date < '2021-04'){
+			$weekly_years = db::select("SELECT
+				DISTINCT
+				date_format( wc.week_date, '%Y-%m' ) AS month_date,
+				cc.cost_center_name 
+				FROM
+				weekly_calendars AS wc
+				CROSS JOIN ( SELECT DISTINCT cost_center_eff AS cost_center_name FROM cost_centers2 WHERE cost_center_eff IS NOT NULL ) AS cc 
+				WHERE
+				wc.fiscal_year = '".$weekly_calendar->fiscal_year."'
+				AND wc.week_date <= '".date('Y-m-d')."'
+				AND cc.cost_center_name IS NOT NULL
+				ORDER BY
+				field( cc.cost_center_name, 'FINAL', 'MIDDLE', 'SOLDERING', 'INITIAL', 'PN ASSY', 'RC ASSY', 'INJECTION', 'VENOVA', 'MOUTHPIECE', 'CASE', 'PN REED PLATE' ),
+				wc.week_date ASC");
+		}
+		else{
+			$weekly_years = db::select("SELECT
+				DISTINCT
+				date_format( wc.week_date, '%Y-%m' ) AS month_date,
+				cc.cost_center_name 
+				FROM
+				weekly_calendars AS wc
+				CROSS JOIN ( SELECT DISTINCT cost_center_eff_2 AS cost_center_name FROM cost_centers2 WHERE cost_center_eff IS NOT NULL ) AS cc 
+				WHERE
+				wc.fiscal_year = '".$weekly_calendar->fiscal_year."'
+				AND wc.week_date <= '".date('Y-m-d')."'
+				AND cc.cost_center_name IS NOT NULL
+				ORDER BY
+				field( cc.cost_center_name, 'FINAL', 'MIDDLE', 'SOLDERING', 'BODY PART PROCESS', 'KEY PART PROCESS', 'PN ASSY', 'RC ASSY', 'INJECTION', 'VENOVA', 'MOUTHPIECE', 'CASE', 'PN REED PLATE' ),
+				wc.week_date ASC");
+		}
 
 		$years = db::select("SELECT
 			weekly_calendars.fiscal_year,

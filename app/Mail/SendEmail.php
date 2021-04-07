@@ -395,7 +395,7 @@ class SendEmail extends Mailable
             ->priority(1)
             ->subject('Aproval Mutasi Satu Departemen')
             ->view('mails.done_mutasi_satu')
-            ->attach(public_path('mutasi/satu_departemen/Mutasi Satu Departemen - '.$this->data[0]->id).'.xls');
+            ->attach(public_path('mutasi/satu_departemen/Mutasi Satu Departemen - '.$this->data[0]->nama).'.xls');
         }
 
         // if($this->remark == 'absen_done_mutasi_satu'){
@@ -424,7 +424,7 @@ class SendEmail extends Mailable
             ->priority(1)
             ->subject('Aproval Mutasi Antar Departemen')
             ->view('mails.done_mutasi_antar')
-            ->attach(public_path('mutasi/antar_departemen/Mutasi Antar Departemen - '.$this->data[0]->id).'.xls');
+            ->attach(public_path('mutasi/antar_departemen/Mutasi Antar Departemen - '.$this->data[0]->nama).'.xls');
         }   
 
         if($this->remark == 'rejected_mutasi_ant'){
