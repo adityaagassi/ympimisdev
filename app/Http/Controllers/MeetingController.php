@@ -271,17 +271,17 @@ class MeetingController extends Controller
 				}
 				else{
 
-					// $meeting_detail = new MeetingDetail([
-					// 	'meeting_id' => $request->get('meeting_id'),
-					// 	'employee_tag' => $employee->tag,
-					// 	'employee_id' => $employee->employee_id,
-					// 	'status' => 2,
-					// 	'attend_time' => date('Y-m-d H:i:s'),
-					// 	'created_by' => $id,
-					// 	'created_at' => date('Y-m-d H:i:s')
-					// ]);
+					$meeting_detail = new MeetingDetail([
+						'meeting_id' => $request->get('meeting_id'),
+						'employee_tag' => $employee->tag,
+						'employee_id' => $employee->employee_id,
+						'status' => 2,
+						'attend_time' => date('Y-m-d H:i:s'),
+						'created_by' => $id,
+						'created_at' => date('Y-m-d H:i:s')
+					]);
 				}
-				// $meeting_detail->save();
+				$meeting_detail->save();
 			}
 		}
 		catch(\Exception $e){
