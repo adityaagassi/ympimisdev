@@ -1705,6 +1705,7 @@ Route::get('fetch/budget/log', 'AccountingController@fetch_budget_log');
 Route::get('budget/monthly', 'AccountingController@budget_monthly');
 Route::get('fetch/budget/monthly', 'AccountingController@fetch_budget_monthly');
 Route::get('fetch/budget_monthly/table', 'AccountingController@fetch_budget_monthly_table');
+Route::get('export/budget_monthly', 'AccountingController@exportBudgetMonthly');
 
 //Transfer Budget
 Route::get('transfer/budget', 'AccountingController@transfer_budget');
@@ -3057,9 +3058,15 @@ Route::get('index/display/efficiency_monitoring_monthly', 'DisplayController@ind
 Route::get('fetch/display/efficiency_monitoring', 'DisplayController@fetchEfficiencyMonitoring');
 Route::get('fetch/display/efficiency_monitoring_monthly', 'DisplayController@fetchEfficiencyMonitoringMonthly');
 
+//DISPLAY STOCK
+Route::get('index/display/stockroom_monitoring', 'DisplayController@indexStockroomMonitoring');
+Route::get('fetch/display/stockroom_monitoring', 'DisplayController@fetchStockroomMonitoring');
+
+
 //EFFICIENCY
 Route::get('index/efficiency/operator_loss_time', 'EfficiencyController@indexOperatorLossTime');
 Route::get('fetch/efficiency/operator_loss_time', 'EfficiencyController@fetchOperatorLossTime');
+Route::get('fetch/efficiency/operator_loss_time_log', 'EfficiencyController@fetchOperatorLossTimeLog');
 Route::post('input/efficiency/operator_loss_time', 'EfficiencyController@inputOperatorLossTime');
 Route::get('scan/efficiency/employee', 'EfficiencyController@scanEmployee');
 
@@ -4042,6 +4049,7 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 });
 
 Route::post('post/maintenance/spk/cancel', 'MaintenanceController@cancelSPK');
+Route::post('post/maintenance/spk/scan_area', 'MaintenanceController@checkAreaSPK');
 
 Route::group(['nav' => 'S47', 'middleware' => 'permission'], function(){
 	Route::get('index/maintenance/spk', 'MaintenanceController@indexSPK');
@@ -4453,6 +4461,14 @@ Route::get('fetch/mutasi/monitoring', 'MutasiController@fetchMonitoringMutasi');
 
 Route::get('mutasi/cek_email', 'MutasiController@viewCekEmail');
 
+Route::get('mutasi/hr', 'MutasiController@HrExport');
+Route::get('fetch/mutasi/hr', 'MutasiController@FetchHrExport');
+Route::get('excel/mutasi/hr', 'MutasiController@HrExportExcel');
+
+Route::get('mutasi_ant/hr', 'MutasiController@AntHrExport');
+Route::get('fetch/mutasi_ant/hr', 'MutasiController@AntFetchHrExport');
+Route::get('excel/mutasi_ant/hr', 'MutasiController@AntHrExportExcel');
+
 //Warehouse
 Route::get('index/warehouse', 'WarehouseController@index');
 Route::get('scan/data/warehouse', 'WarehouseController@scanInjectionOperator');
@@ -4481,7 +4497,7 @@ Route::post('create/employee/warehouse', 'WarehouseController@createEmployee');
 Route::get('index/create_packinglist', 'WarehouseNewController@index');
 Route::post('import/packinglist', 'WarehouseNewController@importPackinglist');
 Route::get('fetch/packinglist/warehouse', 'WarehouseNewController@fetchPackinglist');
-Route::get('warehouse/internal', 'WarehouseNewController@index_internal');
+Route::get('warehouse/internal/{invoice}', 'WarehouseNewController@index_internal');
 Route::get('fetch/list/internal', 'WarehouseNewController@fetchInternal');
 Route::get('fetch/detail/list', 'WarehouseNewController@fetch_detail_list');
 Route::post('post/detail/save', 'WarehouseNewController@createDetail');
@@ -4489,7 +4505,12 @@ Route::post('post/job/save', 'WarehouseNewController@createJob');
 Route::get('fetch/finish/job', 'WarehouseNewController@finish_job');
 Route::get('fetch/detail/job', 'WarehouseNewController@createDetail');
 Route::get('index/display/job', 'WarehouseNewController@display_job');
-
+Route::get('fetch/import/job', 'WarehouseNewController@fetch_import');
+Route::get('fetch/history/job', 'WarehouseNewController@fetch_history');
+Route::post('post/save/penataan', 'WarehouseNewController@savePenataan');
+Route::get('index/drop/exim', 'WarehouseNewController@indexDropExim');
+Route::get('fetch/list/drop/exim', 'WarehouseNewController@fetchDropExim');
+Route::post('post/drop/exim', 'WarehouseNewController@postDropExim');
 
 
 
@@ -4544,6 +4565,7 @@ Route::get('fetch/qa/ng_temp','QualityAssuranceController@fetchNgTemp');
 Route::get('delete/qa/ng_temp','QualityAssuranceController@deleteNgTemp');
 Route::get('fetch/qa/ng_list','QualityAssuranceController@fetchNgList');
 Route::post('input/qa/ng_log', 'QualityAssuranceController@inputNgLog');
+Route::get('fetch/qa/detail_record','QualityAssuranceController@fetchDetailRecord');
 
 // QA Display Incoming Check
 Route::get('index/qa/display/incoming/lot_status', 'QualityAssuranceController@indexDisplayIncomingLotStatus');
@@ -4556,8 +4578,9 @@ Route::get('fetch/qa/display/incoming/ng_rate', 'QualityAssuranceController@fetc
 Route::get('fetch/qa/display/incoming/ng_rate/detail', 'QualityAssuranceController@fetchDisplayIncomingNgRateDetail');
 
 //QA Report Incoming Check
-Route::get('index/qa/report/incoming', 'QualityAssuranceController@indexReportIncomingCheck');
+Route::get('index/qa/report/incoming', 'QualityAssuranceController@indexReportIncomingCheck')->name('report_incoming_qa');
 Route::get('fetch/qa/report/incoming', 'QualityAssuranceController@fetchReportIncomingCheck');
+Route::get('excel/qa/report/incoming', 'QualityAssuranceController@excelReportIncomingCheck');
 
 //QA Report Lot Out Incoming Check
 Route::get('index/qa/report/incoming/lot_out', 'QualityAssuranceController@indexReportLotOut');
@@ -4648,6 +4671,7 @@ Route::get('fetch/phpinfo', 'TrialController@fetchPhpInfo');
 
 Route::get('index/packing_documentation', 'AuditController@index_packing_documentation');
 Route::get('index/packing/documentation/{loc}', 'AuditController@packing_documentation');
+Route::post('post/packing_documentation', 'AuditController@documentation_post');
 Route::get('fetch/packing_documentation', 'AuditController@documentation');
 Route::get('fetch/packing_documentation/data', 'AuditController@documentation_data');
 
