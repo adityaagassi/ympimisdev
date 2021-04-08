@@ -146,6 +146,7 @@ table.table-bordered{
                 </select>
             </div>
         </div>
+        <?php if(Auth::user()->role_code == "MIS" || Auth::user()->role_code == "ACC" || Auth::user()->role_code == "ACC-SPL") { ?>
         <div class="col-md-3">
             <div class="input-group">
               <div class="input-group-addon bg-blue">
@@ -159,6 +160,10 @@ table.table-bordered{
                 </select>
             </div>
         </div>
+            <?php } else { ?>
+              <input type="hidden" name="department" id='department' data-placeholder="Select Department" style="width: 100%;" value="{{$emp_dept->department}}">
+            <?php } ?>
+       
       </div>
 
       <div class="col-md-12">
@@ -172,6 +177,7 @@ table.table-bordered{
           <thead style="background-color: rgb(0,0,0); color: rgb(255,255,255); font-size: 12px;font-weight: bold">
             <tr>
               <th style="width: 3%; vertical-align: middle;font-size: 16px;">Budget Name</th>
+              <th style="width: 3%; vertical-align: middle;border-left:1px solid yellow !important;font-size: 16px;">Description</th>
               <th style="width: 3%; vertical-align: middle;border-left:1px solid yellow !important;font-size: 16px;">Account Name</th>
               <th style="width: 3%; vertical-align: middle;border-left:1px solid yellow !important;font-size: 16px;">Category</th>
               <th style="width: 3%; vertical-align: middle;border-left:1px solid yellow !important;font-size: 16px;">Keterangan</th>
@@ -428,7 +434,9 @@ table.table-bordered{
         var budget_awal_total = value.apr_budget_awal + value.may_budget_awal + value.jun_budget_awal + value.jul_budget_awal + value.aug_budget_awal + value.sep_budget_awal + value.oct_budget_awal + value.nov_budget_awal + value.dec_budget_awal + value.jan_budget_awal + value.feb_budget_awal + value.mar_budget_awal;
 
             table += '<tr>';
-            table += '<td rowspan="5" style="text-align:left;">'+value.budget_no+'<br>'+value.description+'</td>';
+            table += '<td rowspan="5" style="text-align:left;">'+value.budget_no+'</td>';
+            table += '<td rowspan="5" style="text-align:left;">'+value.description+'</td>';
+
             table += '<td rowspan="5" style="text-align:left;border-left:1px solid yellow">'+value.account_name+'</span></td>';
             table += '<td rowspan="5" style="text-align:left;border-left:1px solid yellow">'+value.category+'</td>';
             table += '<td style="text-align:left;border-left:1px solid yellow">Budget</td>';

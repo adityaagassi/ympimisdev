@@ -209,7 +209,8 @@
 				            cursor: 'pointer',
 				            dataLabels: {
 				                enabled: true,
-				                format: '<b>{point.name}</b>: {point.y} Gib'
+				                format: '<b>{point.name}</b>: {point.y} Gib',
+				                distance: -50,
 				            },
 				            animation: false,
 				        }
@@ -258,7 +259,8 @@
 				            cursor: 'pointer',
 				            dataLabels: {
 				                enabled: true,
-				                format: '<b>{point.name}</b>: {point.y} Gib'
+				                format: '<b>{point.name}</b>: {point.y} Gib',
+				                distance: -50,
 				            },
 				            animation: false,
 				        }

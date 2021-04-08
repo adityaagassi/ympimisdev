@@ -248,7 +248,7 @@
          body_list += "<td><label class='label label-primary'>"+value.process_name+"</label></td>";
          body_list += "<td>";
          if (value.remark == 2) {
-           body_list += "<a href='#'><button class='btn btn-xs btn-primary'>Edit</button></a><br>";
+           // body_list += "<a href='#'><button class='btn btn-xs btn-primary'>Edit</button></a><br>";
            body_list += "<a href='"+"{{ url('index/sakurentsu/3m/premeeting/') }}/"+value.id+"'><button class='btn btn-xs btn-warning' style='margin-top: 2px'>Pre-Meeting</button></a><br>";
          } else if (value.remark == 4) {
            body_list += "<a href='"+"{{ url('index/sakurentsu/3m/finalmeeting/') }}/"+value.id+"'><button class='btn btn-xs btn-success' style='margin-top: 2px'>Final-Meeting</button></a><br>";
@@ -256,6 +256,7 @@
           body_list += "<a href='"+"{{ url('index/sakurentsu/3m/implement/') }}/"+value.id+"'><button class='btn btn-xs btn-danger' style='margin-top: 2px'>Make Implement Form</button></a><br>";
         }
         body_list += "<a href='#'><button class='btn btn-xs btn-default'>Detail</button></a>";
+        body_list += "<a href='"+"{{ url('detail/sakurentsu/3m') }}/"+value.id+"/view' target='_blank'><button class='btn btn-xs btn-danger'><i class='fa fa-file-pdf-o'></i>&nbsp; view</button></a>";
         body_list += "</td>";
         body_list += "</tr>";
       }

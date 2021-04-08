@@ -787,11 +787,12 @@
 
 				var audio = new Audio('{{ url("sounds/alarm_error.mp3") }}');
 				$.each(result.requests, function(key, value){
-
-		            if (result.requests.length > 0) {
-		                audio.play();            
-		            }
-
+					if ("{{Auth::user()->username}}" == "PI0904002") {
+						if (result.requests.length > 0) {
+			                audio.play();            
+			            }
+					}
+		            
 					if (no % 2 === 0 ) {
 						color = 'style="background-color: #ffd8b7"';
 					} else {

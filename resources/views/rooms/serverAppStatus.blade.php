@@ -47,13 +47,19 @@
 	<div class="row" style="padding: 0">
 		<div class="col-xs-12">
 			<div class="row">
-				<div class="col-md-6 content-header">
-	          		<h1>APP STATUS</h1>
-				</div>
-				<div class="col-xs-12" style="padding-top: 0px;margin-top: 10px">
-					<div class="col-xs-6" style="padding: 0;padding-left: 10px">
-					
+				<div class="col-md-6">
+					<div class="col-md-12 content-header">
+	          			<h1>APP STATUS</h1>
 					</div>
+					<div class="col-md-4" style="padding:0">
+						<div id="container_memory" style="width: 100%;height: 250px;"></div>
+					</div>
+					<div class="col-md-8" style="padding:0">
+						<div id="container_hardisk" style="width: 100%;height: 250px;"></div>
+					</div>
+				</div>
+				<div class="col-xs-6" style="padding: 0;padding-left: 10px">
+
 				</div>
 			</div>
 		</div>
@@ -83,39 +89,11 @@
 		$.get('{{ url("post/server_room/network_usage") }}', function(result, status, xhr){
 			if (result.status) {
 
-				$('#hostname').append().empty();
-				$('#hostname').html(result.last_data[0].hostname);
-
-				$('#ip_address').append().empty();
-				$('#ip_address').html(result.last_data[0].ip);
-
-				$('#uptime').append().empty();
-				$('#uptime').html(result.last_data[0].uptime);
-
-				$('#last_boot').append().empty();
-				$('#last_boot').html(result.last_data[0].last_boot);
-
-
-				$('#time_receive').append().empty();
-				$('#time_receive').html(result.last_data[0].received+" Gib");
-
-				$('#time_sent').append().empty();
-				$('#time_sent').html(result.last_data[0].sent+" Gib");
-
-				$('#time_error').append().empty();
-				$('#time_error').html(result.last_data[0].err);
-
 				var memory_used = 0;
-				var memory_free = 0;
-				
-				var hardisk_used = 0;
-				var hardisk_free = 0;
+				var memory_free = 0;			
 
 				memory_used = parseFloat(result.memory_used.toFixed(2));
 				memory_free = parseFloat(result.memory_free.toFixed(2));
-
-				hardisk_used = parseFloat(result.hardisk_used.toFixed(2));
-				hardisk_free = parseFloat(result.hardisk_free.toFixed(2));
 
 				Highcharts.chart('container_memory', {
 				    chart: {
@@ -125,7 +103,10 @@
 				        type: 'pie'
 				    },
 				    title: {
-				        text: null
+				        text: null,
+				        align: 'center',
+				        verticalAlign: 'middle',
+				        y: 60
 				    },
 				    tooltip: {
 				        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -141,8 +122,13 @@
 				            cursor: 'pointer',
 				            dataLabels: {
 				                enabled: true,
-				                format: '<b>{point.name}</b>: {point.y} Gib'
+				                format: '<b>{point.name}</b>: {point.y} Gib',
+				                distance: -50,
 				            },
+				            startAngle: -90,
+				            endAngle: 90,
+				            center: ['50%', '75%'],
+				            size: '110%',
 				            animation: false,
 				        }
 				    },
@@ -153,7 +139,9 @@
 						enabled: false
 					},
 				    series: [{
+        				type: 'pie',
 				        name: 'Memory',
+       					innerSize: '50%',
 				        data: [{
 				            name: 'Usage',
 				            y: memory_used,
@@ -161,55 +149,6 @@
 				        }, {
 				            name: 'Free',
 				            y: memory_free,
-							color:'#32a852'
-				        }]
-				    }]
-				});
-
-				Highcharts.chart('container_hardisk', {
-				    chart: {
-				        plotBackgroundColor: null,
-				        plotBorderWidth: null,
-				        plotShadow: false,
-				        type: 'pie'
-				    },
-				    title: {
-				        text: null
-				    },
-				    tooltip: {
-				        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-				    },
-				    accessibility: {
-				        point: {
-				            valueSuffix: '%'
-				        }
-				    },
-				    plotOptions: {
-				        pie: {
-				            allowPointSelect: true,
-				            cursor: 'pointer',
-				            dataLabels: {
-				                enabled: true,
-				                format: '<b>{point.name}</b>: {point.y} Gib'
-				            },
-				            animation: false,
-				        }
-				    },
-				    credits: {
-						enabled: false
-					},
-					exporting: {
-						enabled: false
-					},
-				    series: [{
-				        name: 'Hardisk',
-				        data: [{
-				            name: 'Usage',
-				            y: hardisk_used,
-							color: "#a83232"
-				        }, {
-				            name: 'Free',
-				            y: hardisk_free,
 							color:'#32a852'
 				        }]
 				    }]
