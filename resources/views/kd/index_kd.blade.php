@@ -421,7 +421,7 @@
 			url = '{{ url("fetch/kd_print_pn_part") }}';
 		}else if(location == 'vn-assy'){
 			url = '{{ url("fetch/kd_print_vn_assy") }}';
-		}else if(location == 'vn-njection'){
+		}else if(location == 'vn-injection'){
 			url = '{{ url("fetch/kd_print_vn_injection") }}';
 		}
 
