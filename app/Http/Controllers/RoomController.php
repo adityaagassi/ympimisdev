@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Libraries\ActMLEasyIf;
+use App\User;
 use Response;
 
 class RoomController extends Controller
 {
+
 	public function fetchToilet(Request $request)
 	{
 		$datas = array();

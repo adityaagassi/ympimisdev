@@ -1037,9 +1037,9 @@ class AccountingController extends Controller
             }
 
             //Jika BP maka WP
-            else if($request->get('department') == "Woodwind Instrument - Body Parts Process (WI-BPP) Department")
+            else if($request->get('department') == "Woodwind Instrument - Welding Process (WI-WP) Department")
             {
-                $manag = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Woodwind Instrument - Welding Process (WI-WP) Department' and position = 'manager'");
+                $manag = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Woodwind Instrument - Body Parts Process (WI-BPP) Department' and position = 'manager'");
             }
 
             else
@@ -5172,11 +5172,11 @@ class AccountingController extends Controller
                 ->where('position','=','Manager')
                 ->first();
             }
-            else if ($request->get('applicant_department') == "Woodwind Instrument - Body Parts Process (WI-BPP) Department")
+            else if ($request->get('applicant_department') == "Woodwind Instrument - Welding Process (WI-WP) Department")
             {
                 $getmanager = EmployeeSync::select('employee_id', 'name', 'position', 'section')
                 ->whereNull('end_date')
-                ->where('department','=','Woodwind Instrument - Welding Process (WI-WP) Department')
+                ->where('department','=','Woodwind Instrument - Body Parts Process (WI-BPP) Department')
                 ->where('position','=','Manager')
                 ->first();
             }
