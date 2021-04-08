@@ -104,7 +104,7 @@
 							type: 'pie'
 						},
 						title: {
-							text: 'STOCK FOR '+new_group[i].hpl+' '
+							text: 'STOCK AVAILABILITY FOR - '+new_group[i].hpl+' '
 						},
 						tooltip: {
 							pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
