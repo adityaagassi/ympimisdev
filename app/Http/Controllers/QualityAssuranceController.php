@@ -16,6 +16,7 @@ use App\QaIncomingNgLog;
 use App\QaIncomingLog;
 use App\EmployeeSync;
 use Response;
+use Excel;
 use DataTables;
 use Carbon\Carbon;
 
@@ -305,10 +306,10 @@ class QualityAssuranceController extends Controller
     {
       return view('qa.index_lot_monitoring')
       ->with('title', 'QA Incoming Check Material Lot Out Monitoring')
-      ->with('title_jp', '')
+      ->with('title_jp', 'QA受入検査ロットアウト品の表示')
       ->with('location', $this->location)
       ->with('page', 'QA Incoming Check Material Lot Out Monitoring')
-      ->with('jpn', '');
+      ->with('jpn', 'QA受入検査ロットアウト品の表示');
     }
 
     public function fetchDisplayIncomingLotStatus(Request $request)
@@ -640,12 +641,12 @@ class QualityAssuranceController extends Controller
 
       return view('qa.index_ng_rate')
       ->with('title', 'Daily NG Rate Incoming Check QA')
-      ->with('title_jp', '')
+      ->with('title_jp', '日次QA受入検査の不良率')
       ->with('location', $this->location)
       ->with('materials', $material)
       ->with('vendors', $vendor)
       ->with('page', 'Daily NG Rate Incoming Check QA')
-      ->with('jpn', '');
+      ->with('jpn', '日次QA受入検査の不良率');
     }
 
     public function fetchDisplayIncomingNgRate(Request $request)
@@ -829,13 +830,13 @@ class QualityAssuranceController extends Controller
 
       return view('qa.report_incoming_check')
       ->with('title', 'Report Incoming Check QA')
-      ->with('title_jp', '??')
+      ->with('title_jp', 'QA受入検査の報告')
       ->with('location', $this->location)
       ->with('materials', $material)
       ->with('inspection_levels', $inspection_level)
       ->with('vendors', $vendor)
       ->with('page', 'Report Incoming Check QA')
-      ->with('jpn', '??');
+      ->with('jpn', 'QA受入検査の報告');
     }
 
     public function fetchReportIncomingCheck(Request $request)
@@ -986,13 +987,13 @@ class QualityAssuranceController extends Controller
 
       return view('qa.report_lot_out')
       ->with('title', 'Report Lot Out Incoming Check QA')
-      ->with('title_jp', '??')
+      ->with('title_jp', 'QA受入検査ロットアウトの報告')
       ->with('location', $this->location)
       ->with('materials', $material)
       ->with('inspection_levels', $inspection_level)
       ->with('vendors', $vendor)
       ->with('page', 'Report Lot Out Incoming Check QA')
-      ->with('jpn', '??');
+      ->with('jpn', 'QA受入検査ロットアウトの報告');
     }
 
     public function fetchReportLotOut(Request $request)
@@ -1120,6 +1121,56 @@ class QualityAssuranceController extends Controller
             'message' => $e->getMessage()
         );
         return Response::json($response);
+      }
+    }
+
+    public function excelReportIncomingCheck(Request $request)
+    {
+      try {
+        $datas = DB::SELECT("SELECT
+          qa_incoming_logs.location,
+          employee_syncs.employee_id,
+          employee_syncs.name,
+          qa_incoming_logs.material_number,
+          qa_incoming_logs.material_description,
+          qa_incoming_logs.vendor,
+          qa_incoming_logs.invoice,
+          qa_incoming_logs.inspection_level,
+          qa_incoming_logs.`repair`,
+          qa_incoming_logs.`return`,
+          qa_incoming_logs.`qty_rec`,
+          qa_incoming_logs.`qty_check`,
+          qa_incoming_logs.`total_ok`,
+          qa_incoming_logs.`total_ng`,
+          qa_incoming_logs.`ng_ratio`,
+          qa_incoming_logs.`status_lot`,
+          DATE( qa_incoming_logs.created_at ) AS created,
+          ( SELECT GROUP_CONCAT( ng_name SEPARATOR '_' ) FROM qa_incoming_ng_logs WHERE qa_incoming_ng_logs.incoming_check_code = qa_incoming_logs.incoming_check_code ) AS ng_name,
+          ( SELECT GROUP_CONCAT( qty_ng SEPARATOR '_' ) FROM qa_incoming_ng_logs WHERE qa_incoming_ng_logs.incoming_check_code = qa_incoming_logs.incoming_check_code ) AS ng_qty,
+          ( SELECT GROUP_CONCAT( status_ng SEPARATOR '_' ) FROM qa_incoming_ng_logs WHERE qa_incoming_ng_logs.incoming_check_code = qa_incoming_logs.incoming_check_code ) AS status_ng,
+          ( SELECT GROUP_CONCAT( note_ng SEPARATOR '_' ) FROM qa_incoming_ng_logs WHERE qa_incoming_ng_logs.incoming_check_code = qa_incoming_logs.incoming_check_code ) AS note_ng 
+        FROM
+          qa_incoming_logs
+          JOIN employee_syncs ON employee_syncs.employee_id = qa_incoming_logs.inspector_id 
+        WHERE
+          DATE( qa_incoming_logs.created_at ) >= DATE_FORMAT( NOW(), '%Y-%m-01' )
+          AND DATE( qa_incoming_logs.created_at ) <= LAST_DAY(NOW())
+          ");
+
+        $data = array(
+        'datas' => $datas
+        );
+
+           ob_clean();
+        Excel::create('Incoming Check QA Report', function($excel) use ($data){
+          $excel->sheet('Incoming Check QA', function($sheet) use ($data) {
+            return $sheet->loadView('qa.excel_incoming_check', $data);
+          });
+        })->export('xlsx');
+
+        return view('qa.excel_incoming_check',$data);
+      } catch (\Exception $e) {
+        return redirect()->route('report_incoming_qa')->with('error','Failed Export Data');
       }
     }
 }

@@ -25,6 +25,8 @@ class QaIncomingLog extends Model
 		'total_ng',
 		'ng_ratio',
 		'status_lot',
+		'report_evidence',
+		'send_email_status',
 		'created_by'
 	];
 }

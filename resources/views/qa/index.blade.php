@@ -28,13 +28,14 @@
 		<div class="col-xs-4" style="text-align: center; color: red;">
 			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> Display <i class="fa fa-angle-double-down"></i></span>
 
-			<a href='{{ url("index/qa/display/incoming/lot_status") }}' class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Realtime Lot Out Monitoring</a>
-			<a href='{{ url("index/qa/display/incoming/material_defect") }}' class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Incoming Check Material Defect</a>
-			<a href='{{ url("index/qa/display/incoming/ng_rate") }}' class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">NG Rate Incoming Check</a>
+			<a href='{{ url("index/qa/display/incoming/lot_status") }}' class="btn btn-default btn-block" style="font-size: 1.5vw; border-color: red;">QA Incoming Check Lot Out Monitoring</a>
+			<a href='{{ url("index/qa/display/incoming/material_defect") }}' class="btn btn-default btn-block" style="font-size: 1.5vw; border-color: red;">QA Incoming Check Material Defect</a>
+			<a href='{{ url("index/qa/display/incoming/ng_rate") }}' class="btn btn-default btn-block" style="font-size: 1.5vw; border-color: red;">Daily NG Rate Incoming Check QA</a>
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
 			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>
-			  <a href="{{ url('index/qa/report/incoming') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Incoming Check QA Report</a>
+			<a href="{{ url('index/qa/report/incoming') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Incoming Check QA Report</a>
+			<a href="{{ url('index/qa/report/incoming/lot_out') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Lot Out Report</a>
 		</div>
 	</div>
 </section>

@@ -414,7 +414,7 @@
 		location:location,
 		inspection_level:inspection_level,
 	}
-	$.get('{{ url("fetch/qa/report/incoming") }}',data, function(result, status, xhr){
+	$.get('{{ url("fetch/qa/report/incoming/lot_out") }}',data, function(result, status, xhr){
 			if(result.status){
 
 				initiateTable();
