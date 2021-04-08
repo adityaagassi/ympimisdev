@@ -118,7 +118,7 @@
 
 	function postData() {
 
-		var ip = '8.8.8.8';
+		var ip = 'www.google.com';
 		var remark = 'Internet';
 
 		var url = '{{ url("fetch/display/fetch_hit") }}'+'/'+ip;

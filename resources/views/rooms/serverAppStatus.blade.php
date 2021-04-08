@@ -123,7 +123,7 @@
 				            dataLabels: {
 				                enabled: true,
 				                format: '<b>{point.name}</b>: {point.y} Gib',
-				                distance: -50,
+				                distance: -30,
 				            },
 				            startAngle: -90,
 				            endAngle: 90,
