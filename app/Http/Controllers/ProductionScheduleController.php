@@ -368,7 +368,7 @@ class ProductionScheduleController extends Controller{
                 }
 
                 $shipment_schedule = ProductionSchedulesThreeStep::where('st_month', $month.'-01')
-                ->where('shipment_condition_code', 'C2')
+                ->where('shipment_condition_code', 'C1')
                 ->where('destination_code', $request[$i]->destination_code)
                 ->where('material_number', $productions[$j]->material_number)
                 ->where('hpl', $productions[$j]->hpl)
@@ -383,7 +383,7 @@ class ProductionScheduleController extends Controller{
                     $insert = new ProductionSchedulesThreeStep([
                         'st_month' => $month.'-01',
                         'sales_order' => $request[$i]->sales_order,
-                        'shipment_condition_code' => 'C2',
+                        'shipment_condition_code' => 'C1',
                         'destination_code' => $request[$i]->destination_code,
                         'material_number' => $productions[$j]->material_number,
                         'hpl' => $productions[$j]->hpl,

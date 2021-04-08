@@ -978,11 +978,11 @@
   </li>
   @endif
 
- <!--  @if(in_array('S54', $navs))
+  @if(in_array('S52', $navs))
   @if(isset($page) && $page == "KD Welding Key Post")<li class="active">@else<li>@endif
     <a href="{{ url("index/kd_welding/"."welding-keypost") }}"><i class="fa fa-pencil-square-o"></i> <span>KD  <i class="fa fa-angle-right"></i> Welding Key Post</span></a>
   </li>
-  @endif -->
+  @endif
 
 
 
@@ -1498,11 +1498,17 @@
  </span>
 </a>
 <ul class="treeview-menu">
+   @if(isset($page) && $page == "Display Job")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/display/job") }}"><i class="fa fa-tv"></i> <span>Display Job</span></a>
+  </li>
   @if(isset($page) && $page == "Create Packing List")<li class="active">@else<li>@endif
     <a href="{{ url("/index/create_packinglist") }}"><i class="fa fa-newspaper-o"></i> <span>Create Packing List</span></a>
   </li>
   @if(isset($page) && $page == "Warehouse Internal Job")<li class="active">@else<li>@endif
     <a href="{{ secure_url("/warehouse/internal") }}"><i class="fa fa-newspaper-o"></i> <span>Warehouse Internal Job</span></a>
+  </li>
+  @if(isset($page) && $page == "Drop Material Exim")<li class="active">@else<li>@endif
+    <a href="{{ secure_url("/index/drop/exim") }}"><i class="fa fa-newspaper-o"></i> <span>Drop Material Exim</span></a>
   </li>
 
   @if(isset($page) && $page == "Index Warehouse")<li class="active">@else<li>@endif
