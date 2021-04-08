@@ -2595,7 +2595,7 @@ public function indexAirVisual()
 	$title = "AIR VISUAL MONITOR";
 	$title_jp = "空気モニター";
 
-	return view('general.air_visual', array(
+	return view('general.air_visual_map', array(
 		'title' => $title,
 		'title_jp' => $title_jp
 	));
