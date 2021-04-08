@@ -60,7 +60,7 @@
 
 		@-webkit-keyframes alarm_ani {
 			0%, 49% {
-				background-color: #482278;
+				background-color: rgba(153, 0, 204, 0.85);
 			}
 			50%, 100% {
 				background-color: #ed2f2f;
@@ -78,7 +78,7 @@
 			color: white; 
 			float: left; 
 			position: absolute; 
-			background-color: #482278; 
+			background-color: rgba(153, 0, 204, 0.85);
 			z-index: 1000;
 		}
 
