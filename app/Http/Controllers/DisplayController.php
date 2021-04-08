@@ -375,7 +375,7 @@ public function fetchEfficiencyMonitoringMonthly(Request $request){
 			AND cc.cost_center_name IS NOT NULL
 			AND wc.week_date <= '".date('Y-m-d')."'
 			ORDER BY
-			field( cc.cost_center_name, 'FINAL', 'MIDDLE', 'SOLDERING', 'BODY PARTS PROCESS', 'KEY PARTS PROCESS', 'PN ASSY', 'RC ASSY', 'INJECTION', 'VENOVA', 'MOUTHPIECE', 'CASE', 'PN REED PLATE' ),
+			field( cc.cost_center_name, 'FINAL', 'MIDDLE', 'SOLDERING', 'BODY PARTS PROCESS', 'KEY PARTS PROCESS', 'CASE', 'EDUCATIONAL INSTRUMENT' ),
 			wc.week_date ASC");
 	}
 
@@ -448,7 +448,7 @@ public function fetchEfficiencyMonitoringMonthly(Request $request){
 			AND wc.week_date <= '".date('Y-m-d')."'
 			AND cc.cost_center_name IS NOT NULL
 			ORDER BY
-			field( cc.cost_center_name, 'FINAL', 'MIDDLE', 'SOLDERING', 'BODY PARTS PROCESS', 'KEY PARTS PROCESS', 'PN ASSY', 'RC ASSY', 'INJECTION', 'VENOVA', 'MOUTHPIECE', 'CASE', 'PN REED PLATE' ),
+			field( cc.cost_center_name, 'FINAL', 'MIDDLE', 'SOLDERING', 'BODY PARTS PROCESS', 'KEY PARTS PROCESS', 'CASE', 'EDUCATIONAL INSTRUMENT' ),
 			wc.week_date ASC");
 	}
 
