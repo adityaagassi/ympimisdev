@@ -36,6 +36,18 @@
                 <th style="font-weight: bold;" rowspan="2">NG Ratio</th>
             </tr>
             <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
                 <th style="font-weight: bold;">Repair</th>
                 <th style="font-weight: bold;">Return</th>
                 <th style="font-weight: bold;">Scrap</th>
@@ -115,25 +127,36 @@
             <?php if ($datas->ng_name != null) { 
                 for($i = 1 ;$i < $jumlah; $i++){ ?>
                     <tr>
-                    <td>{{$ng_name[$i]}}</td>
-                    <?php if ($status_ng[$i] == 'Repair') {?>
-                        <td>{{$ng_qty[$i]}}</td>
                         <td></td>
                         <td></td>
-                    <?php }else if ($status_ng[$i] == 'Return') {?>
-                        <td></td>
-                        <td>{{$ng_qty[$i]}}</td>
-                        <td></td>
-                    <?php }else if ($status_ng[$i] == 'Scrap') {?>
                         <td></td>
                         <td></td>
-                        <td>{{$ng_qty[$i]}}</td>
-                    <?php }
-                    if (count($note_ng) > 0) {?>
-                        <td>{{$note_ng[0]}}</td>
-                    <?php }else{ ?>
                         <td></td>
-                    <?php } ?>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>{{$ng_name[1]}}</td>
+                        <?php if ($status_ng[$i] == 'Repair') {?>
+                            <td>{{$ng_qty[$i]}}</td>
+                            <td></td>
+                            <td></td>
+                        <?php }else if ($status_ng[$i] == 'Return') {?>
+                            <td></td>
+                            <td>{{$ng_qty[$i]}}</td>
+                            <td></td>
+                        <?php }else if ($status_ng[$i] == 'Scrap') {?>
+                            <td></td>
+                            <td></td>
+                            <td>{{$ng_qty[$i]}}</td>
+                        <?php }
+                        if ($datas->note_ng != null) {?>
+                            <td>{{$note_ng[$i]}}</td>
+                        <?php }else{ ?>
+                            <td></td>
+                        <?php } ?>
                     </tr>
                 <?php } } ?>
             @endforeach

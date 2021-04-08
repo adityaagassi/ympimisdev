@@ -149,9 +149,9 @@
 		<div class="col-xs-12">
 			<div class="box box-solid">
 				<div class="box-body" style="overflow-x: scroll;">
-					<!-- <form method="GET" action="{{ url('excel/qa/report/incoming') }}">
+					<form method="GET" action="{{ url('excel/qa/report/incoming') }}">
 				    <button type="submit" class="btn btn-success pull-right"><i class="fa fa-download"></i> Export Data</button>
-					</form> -->
+					</form>
 					<h4>Filter</h4>
 					<div class="row">
 						<div class="col-md-3 col-md-offset-3">
