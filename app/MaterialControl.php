@@ -10,6 +10,6 @@ class MaterialControl extends Model
 	Use SoftDeletes;
 
 	protected $fillable = [
-		'material_number', 'material_description', 'vendor_code', 'vendor_name', 'catgegory', 'pic', 'remark', 'created_by'
+		'material_number', 'material_description', 'vendor_code', 'vendor_name', 'category', 'pic', 'remark', 'created_by'
 	];
 }
