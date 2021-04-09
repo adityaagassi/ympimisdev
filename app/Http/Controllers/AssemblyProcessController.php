@@ -22,6 +22,8 @@ use App\AssemblyTag;
 use App\AssemblyOnko;
 use App\AssemblyFlow;
 use App\AssemblySerial;
+use App\LogProcess;
+use App\StampInventory;
 use App\Process;
 use App\Material;
 use App\Assembly;
@@ -132,7 +134,7 @@ class AssemblyProcessController extends Controller
 		  $datas = $plc->read_data('D50', 5);
 
 		 if($counter->plc_counter == $datas[0]){
-		// if($counter->plc_counter == 31){
+		// if($counter->plc_counter == 33){
 			$response = array(
 				'status' => true,
 				'status_code' => 'no_stamp',
@@ -196,31 +198,62 @@ class AssemblyProcessController extends Controller
 				['tag' => $tag->tag, 'model' => $request->get('model'), 'location' => $request->get('location'), 'location_next' => 'perakitan-process', 'remark' => $sp, 'created_by' => $request->get('op_id')]
 			);
 			$inventory->location = $request->get('location');
+
+			$logProcess = new LogProcess([
+				'process_code' => 1,
+				'serial_number' => $request->get('serial'),
+				'model' => $request->get('model'),
+				'manpower' => 1,
+				'origin_group_code' => $request->get('origin_group_code'),
+				'created_by' => 1,
+				'remark' => 'FG'
+			]);
+		}else{
+			$logProcess = new LogProcess([
+				'process_code' => 1,
+				'serial_number' => $request->get('serial'),
+				'model' => $request->get('model'),
+				'manpower' => 1,
+				'origin_group_code' => $request->get('origin_group_code'),
+				'created_by' => 1,
+			]);
 		}
+
+		$stampInventory = new StampInventory([
+			'process_code' => 1,
+			'serial_number' => $request->get('serial'),
+			'model' => $request->get('model'),
+			'quantity' => 1,
+			'origin_group_code' => $request->get('origin_group_code'),
+		]);
 
 		$tag->serial_number = $request->get('serial');
 		$tag->model = $request->get('model');
 		$serial = CodeGenerator::where('note', '=', $request->get('origin_group_code'))->first();
 		$serial->index = $serial->index+1;
 		 $counter->plc_counter = $datas[0];
-		// $counter->plc_counter = 31;
+		// $counter->plc_counter = 33;
 
 		try{
 			if($request->get('location') != 'stampkd-process'){
-				DB::transaction(function() use ($log, $inventory, $tag, $serial, $counter){
+				DB::transaction(function() use ($log, $inventory, $tag, $serial, $counter,$stampInventory,$logProcess){
 					$inventory->save();
 					$log->save();
 					$tag->save();
 					$serial->save();
 					$counter->save();
+					$stampInventory->save();
+					$logProcess->save();
 				});
 			}
 			else{
-				DB::transaction(function() use ($log, $tag, $serial, $counter){
+				DB::transaction(function() use ($log, $tag, $serial, $counter,$stampInventory,$logProcess){
 					$log->save();
 					$tag->save();
 					$serial->save();
 					$counter->save();
+					$stampInventory->save();
+					$logProcess->save();
 				});
 			}
 			$this->printStamp($request->get('tagName'), $request->get('serial'), $request->get('model'), 'print', 'SUPERMAN');
