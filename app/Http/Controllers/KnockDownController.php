@@ -2024,6 +2024,10 @@ class KnockDownController extends Controller{
 			$storage = "('VN-INJECTION')";
 			$order = 'sh.st_date ASC, box DESC';
 
+		}else if($id == 'welding-keypost'){
+			$storage = "('WELDING') AND m.kd_name = 'KEY POST'";
+			$order = 'sh.st_date ASC, box DESC';
+
 		}
 
 		$target = db::select("SELECT

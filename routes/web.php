@@ -1893,12 +1893,10 @@ Route::group(['nav' => 'S60', 'middleware' => 'permission'], function(){
 //WELDING
 Route::group(['nav' => 'S54', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_welding/{id}', 'KnockDownController@indexKD');
-	Route::post('fetch/kd_print_welding_body', 'KnockDownController@printLabelNewSingle');
-	
+	Route::post('fetch/kd_print_welding_body', 'KnockDownController@printLabelNewSingle');	
 	Route::get('index/print_label_welding/{id}', 'KnockDownController@indexPrintLabelA6');
-	
 
-
+	Route::post('fetch/kd_print_welding_keypost', 'KnockDownController@printLabelNew');
 });
 
 
@@ -4511,9 +4509,8 @@ Route::post('post/save/penataan', 'WarehouseNewController@savePenataan');
 Route::get('index/drop/exim', 'WarehouseNewController@indexDropExim');
 Route::get('fetch/list/drop/exim', 'WarehouseNewController@fetchDropExim');
 Route::post('post/drop/exim', 'WarehouseNewController@postDropExim');
-
-
-
+Route::get('fetch/drop/exim', 'WarehouseNewController@fetchEximFinish');
+Route::post('post/finish_inter', 'WarehouseNewController@postFinishInter');
 
 
 
@@ -4580,7 +4577,7 @@ Route::get('fetch/qa/display/incoming/ng_rate/detail', 'QualityAssuranceControll
 //QA Report Incoming Check
 Route::get('index/qa/report/incoming', 'QualityAssuranceController@indexReportIncomingCheck')->name('report_incoming_qa');
 Route::get('fetch/qa/report/incoming', 'QualityAssuranceController@fetchReportIncomingCheck');
-Route::get('excel/qa/report/incoming', 'QualityAssuranceController@excelReportIncomingCheck');
+Route::get('excel/qa/report/incoming/{date_from}/{date_to}/{vendor}/{material}/{location}/{inspection_level}', 'QualityAssuranceController@excelReportIncomingCheck');
 
 //QA Report Lot Out Incoming Check
 Route::get('index/qa/report/incoming/lot_out', 'QualityAssuranceController@indexReportLotOut');

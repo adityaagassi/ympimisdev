@@ -394,6 +394,8 @@
 			url = '{{ url("index/print_label_vn_assy") }}'+'/'+kd_detail;
 		}else if(location == 'vn-injection'){
 			url = '{{ url("index/print_label_vn_injection") }}'+'/'+kd_detail;
+		}else if(location == 'welding-keypost'){
+			url = '{{ url("index/print_label_welding") }}'+'/'+kd_detail;
 		}
 
 		newwindow = window.open(url, windowName, 'height=250,width=450');
@@ -423,6 +425,8 @@
 			url = '{{ url("fetch/kd_print_vn_assy") }}';
 		}else if(location == 'vn-injection'){
 			url = '{{ url("fetch/kd_print_vn_injection") }}';
+		}else if(location == 'welding-keypost'){
+			url = '{{ url("fetch/kd_print_welding_keypost") }}';
 		}
 
 		var data = {
