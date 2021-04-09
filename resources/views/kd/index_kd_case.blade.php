@@ -1,6 +1,8 @@
 @extends('layouts.master')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
+<link href="{{ url("css/jquery.numpad.css") }}" rel="stylesheet">
+
 <style type="text/css">
 	#tableBodyList > tr:hover {
 		cursor: pointer;
@@ -52,10 +54,13 @@
 		-webkit-appearance: none;
 		margin: 0;
 	}
-
 	input[type=number] {
 		-moz-appearance:textfield;
 	}
+
+
+	.nmpd-grid {border: none; padding: 20px;}
+	.nmpd-grid>tbody>tr>td {border: none;}
 	
 	#loading { display: none; }
 </style>
@@ -131,10 +136,15 @@
 							<input type="text" id="material_description" style="width: 100%; height: 50px; font-size: 25px; text-align: center;" disabled>
 						</div>
 						<div class="col-xs-6">
-							<span style="font-weight: bold; font-size: 16px;">Qty Packing:</span>
-							<input type="text" id="qty_packing" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
+							<span style="font-weight: bold; font-size: 16px;">Target:</span>
+							<input type="text" id="target" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
 						</div>
-						<div class="col-xs-6" style="padding-top: 3.9%;">
+						<div class="col-xs-6">
+							<span style="font-weight: bold; font-size: 16px;">Qty Packing:</span>
+							<input type="number" class="form-control numpad" id="qty_packing" style="width: 100%; height: 50px; font-size: 30px; text-align: center;">
+						</div>
+
+						<div class="col-xs-12" style="padding-top: 3.9%;">
 							<button class="btn btn-primary" onclick="print()" style="font-size: 2.5vw; width: 100%; font-weight: bold; padding: 0;">
 								CONFIRM
 							</button>
@@ -202,6 +212,8 @@
 <script src="{{ url("js/vfs_fonts.js")}}"></script>
 <script src="{{ url("js/buttons.html5.min.js")}}"></script>
 <script src="{{ url("js/buttons.print.min.js")}}"></script>
+<script src="{{ url("js/jquery.numpad.js")}}"></script>
+
 <script>
 	$.ajaxSetup({
 		headers: {
@@ -209,8 +221,21 @@
 		}
 	});
 
+	$.fn.numpad.defaults.gridTpl = '<table class="table modal-content" style="width: 40%;"></table>';
+	$.fn.numpad.defaults.backgroundTpl = '<div class="modal-backdrop in"></div>';
+	$.fn.numpad.defaults.displayTpl = '<input type="text" class="form-control" style="font-size:2vw; height: 50px;"/>';
+	$.fn.numpad.defaults.buttonNumberTpl =  '<button type="button" class="btn btn-default" style="font-size:2vw; width:100%;"></button>';
+	$.fn.numpad.defaults.buttonFunctionTpl = '<button type="button" class="btn" style="font-size:2vw; width: 100%;"></button>';
+	$.fn.numpad.defaults.onKeypadCreate = function(){$(this).find('.done').addClass('btn-primary');};
+
+
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
+
+		$('.numpad').numpad({
+			hidePlusMinusButton : true,
+			decimalSeparator : '.'
+		});
 		
 		fillTableList();
 		fillTableDetail();
@@ -384,16 +409,8 @@
 		var location = "{{ $location }}";
 
 		var url = '';
-		if(location == 'mouthpiece-packed'){
-			url = '{{ url("index/print_label_mouthpiece") }}'+'/'+kd_detail;
-		}else if(location == 'pn-part'){
-			url = '{{ url("index/print_label_pn_part") }}'+'/'+kd_detail;
-		}else if(location == 'vn-assy'){
-			url = '{{ url("index/print_label_vn_assy") }}'+'/'+kd_detail;
-		}else if(location == 'vn-injection'){
-			url = '{{ url("index/print_label_vn_injection") }}'+'/'+kd_detail;
-		}else if(location == 'welding-keypost'){
-			url = '{{ url("index/print_label_welding") }}'+'/'+kd_detail;
+		if(location == 'case'){
+			url = '{{ url("index/print_label_case") }}'+'/'+kd_detail;
 		}
 
 		newwindow = window.open(url, windowName, 'height=250,width=450');
@@ -409,20 +426,13 @@
 	function print() {
 		var shipment_id = $("#shipment_id").val();
 		var material_number = $("#material_number").val();
+		var target = $("#target").val();
 		var quantity = $("#qty_packing").val();
 		var location = "{{ $location }}";
 
 		var url = '';
-		if(location == 'mouthpiece-packed'){
-			url = '{{ url("fetch/kd_print_mp") }}';
-		}else if(location == 'pn-part'){
-			url = '{{ url("fetch/kd_print_pn_part") }}';
-		}else if(location == 'vn-assy'){
-			url = '{{ url("fetch/kd_print_vn_assy") }}';
-		}else if(location == 'vn-injection'){
-			url = '{{ url("fetch/kd_print_vn_injection") }}';
-		}else if(location == 'welding-keypost'){
-			url = '{{ url("fetch/kd_print_welding_keypost") }}';
+		if(location == 'case'){
+			url = '{{ url("fetch/kd_print_case") }}';
 		}
 
 		var data = {
@@ -434,6 +444,16 @@
 
 		if(material_number == ''){
 			alert("Material belum dipilih");
+			return false;
+		}
+
+		if(quantity == ''){
+			alert("Quantity Belum Diisi");
+			return false;
+		}
+
+		if(quantity > target){
+			alert("Quantity Packing Melebihi Target");
 			return false;
 		}
 
@@ -450,6 +470,7 @@
 				$('#destination').val('');
 				$('#material_number').val('');
 				$('#material_description').val('');
+				$('#target').val('');
 				$('#qty_packing').val('');
 
 				$("#loading").hide();
@@ -481,12 +502,9 @@
 		$('#destination').val(destination);
 		$('#material_number').val(material_number);
 		$('#material_description').val(material_description);
-
-		if((target/lot_completion) >= 1){
-			$('#qty_packing').val(lot_completion);
-		}else{
-			$('#qty_packing').val(target);
-		}
+		$('#target').val(target);
+		$('#qty_packing').val('');
+		
 	}
 
 

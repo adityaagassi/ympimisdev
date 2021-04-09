@@ -132,7 +132,7 @@
 						</div>
 						<div class="col-xs-6">
 							<span style="font-weight: bold; font-size: 16px;">Qty Packing:</span>
-							<input type="text" id="qty_packing" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
+							<input type="text" id="qty_packing" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" onclick="showChoice()" readonly>
 						</div>
 						<div class="col-xs-6" style="padding-top: 3.9%;">
 							<button class="btn btn-primary" onclick="print()" style="font-size: 2.5vw; width: 100%; font-weight: bold; padding: 0;">
@@ -188,7 +188,28 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div>'
+
+	<div class="modal modal-default fade" id="choice">
+		<div class="modal-dialog modal-xs">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1 style="background-color: #00a65a; text-align: center;" class="modal-title">
+						Select Packing Quantity
+					</h1>
+				</div>
+				<div class="modal-body">
+					<div class="modal-body">
+						<h5>Are you sure print KDO Number ?</h5>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					<button class="btn btn-success" onclick="forcePrint()"><span><i class="fa fa-print"></i> Print</span></button>
+				</div>
+			</div>
+		</div>
+	</div>'
 
 </section>
 
@@ -384,7 +405,9 @@
 		var location = "{{ $location }}";
 
 		var url = '';
-		if(location == 'mouthpiece-packed'){
+		if(location == 'case'){
+			url = '{{ url("index/print_label_case") }}'+'/'+kd_detail;
+		}else if(location == 'mouthpiece-packed'){
 			url = '{{ url("index/print_label_mouthpiece") }}'+'/'+kd_detail;
 		}else if(location == 'pn-part'){
 			url = '{{ url("index/print_label_pn_part") }}'+'/'+kd_detail;
@@ -392,8 +415,6 @@
 			url = '{{ url("index/print_label_vn_assy") }}'+'/'+kd_detail;
 		}else if(location == 'vn-injection'){
 			url = '{{ url("index/print_label_vn_injection") }}'+'/'+kd_detail;
-		}else if(location == 'welding-keypost'){
-			url = '{{ url("index/print_label_welding") }}'+'/'+kd_detail;
 		}
 
 		newwindow = window.open(url, windowName, 'height=250,width=450');
@@ -413,16 +434,16 @@
 		var location = "{{ $location }}";
 
 		var url = '';
-		if(location == 'mouthpiece-packed'){
+		if(location == 'case'){
+			url = '{{ url("fetch/kd_print_case") }}';
+		}else if(location == 'mouthpiece-packed'){
 			url = '{{ url("fetch/kd_print_mp") }}';
 		}else if(location == 'pn-part'){
 			url = '{{ url("fetch/kd_print_pn_part") }}';
 		}else if(location == 'vn-assy'){
 			url = '{{ url("fetch/kd_print_vn_assy") }}';
-		}else if(location == 'vn-injection'){
+		}else if(location == 'vn-njection'){
 			url = '{{ url("fetch/kd_print_vn_injection") }}';
-		}else if(location == 'welding-keypost'){
-			url = '{{ url("fetch/kd_print_welding_keypost") }}';
 		}
 
 		var data = {
@@ -482,11 +503,24 @@
 		$('#material_number').val(material_number);
 		$('#material_description').val(material_description);
 
-		if((target/lot_completion) >= 1){
-			$('#qty_packing').val(lot_completion);
-		}else{
-			$('#qty_packing').val(target);
+		// if((target/lot_completion) >= 1){
+		// 	$('#qty_packing').val(lot_completion);
+		// }else{
+		// 	$('#qty_packing').val(target);
+		// }
+	}
+
+	function showChoice(){
+		var material_number = $("#material_number").val();
+
+		if(material_number == ''){
+			alert("Material belum dipilih");
+			return false;
 		}
+
+		$('#choice').modal('show');
+
+
 	}
 
 

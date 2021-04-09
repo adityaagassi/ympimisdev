@@ -272,7 +272,7 @@ class KnockDownController extends Controller{
 			$title = 'KD CASE';
 			$title_jp = '';
 
-			return view('kd.index_kd', array(
+			return view('kd.index_kd_case', array(
 				'title' => $title,
 				'title_jp' => $title_jp,
 				'location' => $id,
@@ -2078,16 +2078,27 @@ class KnockDownController extends Controller{
 		if($shipment){
 			if($shipment->lot_carton > 0){
 				$mod = $shipment->actual_quantity % $shipment->lot_carton;
-				$knock_down = KnockDownDetail::where('shipment_schedule_id', $request->get('shipment_schedule_id'))
-				->orderBy('created_at', 'DESC')
+
+				$knock_down = KnockDownDetail::leftJoin('knock_downs', 'knock_downs.kd_number', '=', 'knock_down_details.kd_number')
+				->where('knock_down_details.shipment_schedule_id', $request->get('shipment_schedule_id'))
+				->where('knock_downs.status', '=',  '0')
+				->orderBy('knock_down_details.created_at', 'DESC')
 				->first();
 
+
 				if($mod > 0){
-					$response = array(
-						'status' => true,
-						'kd_number' => $knock_down->kd_number,
-					);
-					return Response::json($response);
+					if($knock_down){
+						$response = array(
+							'status' => true,
+							'kd_number' => $knock_down->kd_number,
+						);
+						return Response::json($response);
+					}else{
+						$response = array(
+							'status' => false
+						);
+						return Response::json($response);
+					}
 				}else{
 					$knock_down = KnockDown::where('kd_number', $knock_down->kd_number)->first();
 					$knock_down->status = 1;
