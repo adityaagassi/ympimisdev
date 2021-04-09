@@ -555,6 +555,7 @@ Route::group(['nav' => 'R10', 'middleware' => 'permission'], function(){
 	Route::post('confirm/general/online_transportation_report', 'GeneralController@confirmOnlineTransportationReport');
 	Route::get('fetch/general/edit_online_transportation', 'GeneralController@editOnlineTransportation');
 	Route::post('update/general/online_transportation', 'GeneralController@updateOnlineTransportation');
+	Route::get('excel/general/online_transportation', 'GeneralController@excelOnlineTransportation');
 
 	Route::get('index/general/report_surat_dokter', 'GeneralController@indexReportSuratDokter');
 	Route::get('fetch/general/report_surat_dokter', 'GeneralController@fetchReportSuratDokter');
@@ -4511,6 +4512,8 @@ Route::get('fetch/list/drop/exim', 'WarehouseNewController@fetchDropExim');
 Route::post('post/drop/exim', 'WarehouseNewController@postDropExim');
 Route::get('fetch/drop/exim', 'WarehouseNewController@fetchEximFinish');
 Route::post('post/finish_inter', 'WarehouseNewController@postFinishInter');
+Route::post('post/vendor', 'WarehouseNewController@postVendor');
+
 
 
 

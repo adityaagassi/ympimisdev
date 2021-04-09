@@ -76,22 +76,25 @@
 				</div>
 				<input type="hidden" value="{{csrf_token()}}" name="_token" />
 				<div class="box-body">
+					<!-- <form method="GET" action="{{ url('excel/general/online_transportation') }}"> -->
 					<div class="row">
 						<div class="col-xs-12">
-							<span style="font-weight: bold;">Month From</span>
+							<span style="font-weight: bold;">Month</span>
 						</div>
 						<div class="col-xs-3">
 							<div class="input-group date">
 								<div class="input-group-addon">
 									<i class="fa fa-calendar"></i>
 								</div>
-								<input type="text" class="form-control pull-right" id="monthfrom">
+								<input type="text" class="form-control pull-right" id="monthfrom" name="monthfrom">
 							</div>
 						</div>
 						<div class="col-xs-4">
-							<button id="search" onClick="fetchTable()" class="btn btn-primary">Search</button>
+							<a onClick="fetchTable()" class="btn btn-primary" href="javascript:void(0)">Search</a>
+							<!-- <button class="btn btn-success" type="submit"><i class="fa fa-download"></i> Export Excel</button> -->
 						</div>
 					</div>
+					<!-- </form> -->
 
 					<div class="row" style="padding-top: 10px;">
 						<div class="col-md-12">
@@ -104,7 +107,7 @@
 						</div>
 						<div class="col-md-12">
 							<div class="col-xs-12" style="background-color: orange; text-align: center; margin-bottom: 5px;">
-								<span style="font-weight: bold; font-size: 1.6vw;">RESUME (<span id="periode2"></span>)</span>
+								<span style="font-weight: bold; font-size: 1.6vw;">RESUME (<span id="periode4"></span>)</span>
 							</div>
 							<table id="resumeTable" class="table table-bordered table-striped table-hover">
 								<thead style="background-color: rgba(126,86,134,.7);">
@@ -174,6 +177,22 @@
 										<!-- <th></th> -->
 									</tr>
 								</tfoot>
+							</table>
+						</div>
+						<div class="col-md-12">
+							<div class="col-xs-12" style="background-color: #78d09a; text-align: center; margin-bottom: 5px;">
+								<span style="font-weight: bold; font-size: 1.6vw;">RESUME EXPORT (<span id="periode2"></span>)</span>
+							</div>
+							<table id="resumeTableExport" class="table table-bordered table-striped table-hover">
+								<thead style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th style="width: 1%">EMPNO</th>
+										<th style="width: 3%">EMPNAME</th>
+										<th style="width: 1%">ALTRANSPORTYMPI</th>
+									</tr>
+								</thead>
+								<tbody id="resumeTableBodyExport">
+								</tbody>
 							</table>
 						</div>
 					</div>
@@ -341,10 +360,14 @@
 				$('#detailTable').DataTable().destroy();
 				$('#resumeTable').DataTable().clear();
 				$('#resumeTable').DataTable().destroy();
+				$('#resumeTableExport').DataTable().clear();
+				$('#resumeTableExport').DataTable().destroy();
 				$('#detailTableBody').html("");
 				$('#resumeTableBody').html("");
+				$('#resumeTableBodyExport').html("");
 				var detailTable = "";
 				var resumeTable = "";
+				var resumeTableExport = "";
 
 				$.each(result.transportations, function (key, value){
 					detailTable += '<tr>';
@@ -418,6 +441,15 @@
 					resumeTable += '</tr>';
 				});
 				$('#resumeTableBody').append(resumeTable);
+
+				$.each(result, function (key, value){
+					resumeTableExport += '<tr>';
+					resumeTableExport += '<td>'+value.employee_id+'</td>';
+					resumeTableExport += '<td>'+value.name+'</td>';
+					resumeTableExport += '<td>'+value.total_amount.toFixed(0)+'</td>';
+					resumeTableExport += '</tr>';
+				});
+				$('#resumeTableBodyExport').append(resumeTableExport);
 
 				$('#detailTable tfoot th').each(function(){
 					var title = $(this).text();
@@ -545,6 +577,51 @@
 
 				$('#resumeTable tfoot tr').appendTo('#resumeTable thead');
 
+				var table3 = $('#resumeTableExport').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'buttons': {
+						buttons:[
+						{
+							extend: 'copy',
+							className: 'btn btn-success',
+							text: '<i class="fa fa-copy"></i> Copy',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'excel',
+							className: 'btn btn-info',
+							title:'',
+							sheetName: 'Payroll Component Upload',
+							text: '<i class="fa fa-file-excel-o"></i> Excel',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'print',
+							className: 'btn btn-warning',
+							text: '<i class="fa fa-print"></i> Print',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						]
+					},
+					'paging': false,
+					'lengthChange': true,
+					'searching': true,
+					'ordering': true,
+					'order': [],
+					'info': true,
+					'autoWidth': true,
+					"sPaginationType": "full_numbers",
+					"bJQueryUI": true,
+					"bAutoWidth": false,
+					"processing": true
+				});
 
 				$('#loading').hide();
 			}
@@ -616,6 +693,7 @@ function fetchConfirmTable(){
 			$('#periode1').text(result.period);
 			$('#periode2').text(result.period);
 			$('#periode3').text(result.period);
+			$('#periode4').text(result.period);
 
 			appendConfirmTable();
 
