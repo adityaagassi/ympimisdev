@@ -387,13 +387,14 @@ class QualityAssuranceController extends Controller
 
         $lot_detail = DB::SELECT("SELECT
         *,
-        DATE( created_at ) AS date_lot,
+        DATE( qa_incoming_logs.created_at ) AS date_lot,
         ( SELECT GROUP_CONCAT( ng_name ) FROM qa_incoming_ng_logs WHERE qa_incoming_ng_logs.incoming_check_code = qa_incoming_logs.incoming_check_code ) AS ng_name 
       FROM
         qa_incoming_logs 
+        left join employee_syncs on employee_syncs.employee_id = qa_incoming_logs.inspector_id
       WHERE
-        status_lot = 'Lot Out' 
-        AND DATE( created_at ) BETWEEN ".$first." and ".$last."
+        qa_incoming_logs.status_lot = 'Lot Out' 
+        AND DATE( qa_incoming_logs.created_at ) BETWEEN ".$first." and ".$last."
       ORDER BY
         qa_incoming_logs.created_at DESC");
 
@@ -948,6 +949,7 @@ class QualityAssuranceController extends Controller
           qa_incoming_logs.location,
           employee_syncs.employee_id,
           employee_syncs.name,
+          qa_incoming_logs.lot_number,
           qa_incoming_logs.material_number,
           qa_incoming_logs.material_description,
           qa_incoming_logs.vendor,
@@ -1107,6 +1109,7 @@ class QualityAssuranceController extends Controller
           employee_syncs.employee_id,
           employee_syncs.name,
           qa_incoming_logs.material_number,
+          qa_incoming_logs.lot_number,
           qa_incoming_logs.material_description,
           qa_incoming_logs.vendor,
           qa_incoming_logs.invoice,
@@ -1233,6 +1236,7 @@ class QualityAssuranceController extends Controller
           qa_incoming_logs.location,
           employee_syncs.employee_id,
           employee_syncs.name,
+          qa_incoming_logs.lot_number,
           qa_incoming_logs.material_number,
           qa_incoming_logs.material_description,
           qa_incoming_logs.vendor,

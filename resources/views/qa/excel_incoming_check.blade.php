@@ -19,13 +19,14 @@
     <table>
         <thead>
             <tr>
-                <th style="font-weight: bold;" rowspan="2">#</th>
+                <th style="font-weight: bold;" rowspan="2">No.</th>
                 <th style="font-weight: bold;" rowspan="2">Loc</th>
                 <th style="font-weight: bold;" rowspan="2">Date</th>
                 <th style="font-weight: bold;" rowspan="2">Inspector</th>
                 <th style="font-weight: bold;" rowspan="2">Vendor</th>
                 <th style="font-weight: bold;" rowspan="2">Invoice</th>
                 <th style="font-weight: bold;" rowspan="2">Inspection Level</th>
+                <th style="font-weight: bold;" rowspan="2">Lot Number</th>
                 <th style="font-weight: bold;" rowspan="2">Material</th>
                 <th style="font-weight: bold;" rowspan="2">Desc</th>
                 <th style="font-weight: bold;" rowspan="2">Qty Rec</th>
@@ -34,8 +35,10 @@
                 <th style="font-weight: bold;" colspan="3">Jumlah NG</th>
                 <th style="font-weight: bold;" rowspan="2">Note</th>
                 <th style="font-weight: bold;" rowspan="2">NG Ratio</th>
+                <th style="font-weight: bold;" rowspan="2">Lot Status</th>
             </tr>
             <tr>
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -91,6 +94,7 @@
                 <td rowspan="{{$jumlah}}"> {{$datas->vendor}} </td>
                 <td rowspan="{{$jumlah}}"> {{$datas->invoice}} </td>
                 <td rowspan="{{$jumlah}}"> {{$datas->inspection_level}} </td>
+                <td rowspan="{{$jumlah}}"> {{$datas->lot_number}} </td>
                 <td rowspan="{{$jumlah}}"> {{$datas->material_number}} </td>
                 <td rowspan="{{$jumlah}}"> {{$datas->material_description}} </td>
                 <td rowspan="{{$jumlah}}"> {{$datas->qty_rec}} </td>
@@ -123,10 +127,12 @@
                     <td></td>
                 <?php } ?>
                 <td style="vertical-align:middle" rowspan="{{$jumlah}}">{{round($datas->ng_ratio,2)}}</td>
+                <td style="vertical-align:middle" rowspan="{{$jumlah}}">{{$datas->status_lot}}</td>
             </tr>
             <?php if ($datas->ng_name != null) { 
                 for($i = 1 ;$i < $jumlah; $i++){ ?>
                     <tr>
+                        <td></td>
                         <td></td>
                         <td></td>
                         <td></td>

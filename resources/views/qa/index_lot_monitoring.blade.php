@@ -120,6 +120,8 @@
 							<tr>
 								<th style="border: 1px solid black;padding: 0px;width: 1%">Date</th>
 								<th style="border: 1px solid black;padding: 0px;width: 2%">Loc</th>
+								<th style="border: 1px solid black;padding: 0px;width: 2%">Employee</th>
+								<th style="border: 1px solid black;padding: 0px;width: 2%">Lot Number</th>
 								<th style="border: 1px solid black;padding: 0px;width: 3%">Material</th>
 								<th style="border: 1px solid black;padding: 0px;width: 3%">Vendor</th>
 								<th style="border: 1px solid black;padding: 0px;width: 1%">Invoice</th>
@@ -220,6 +222,8 @@
 						body_lot += '<tr>';
 						body_lot += '<td>'+value2.date_lot+'</td>';
 						body_lot += '<td>'+loc+'</td>';
+						body_lot += '<td>'+value2.employee_id+'<br>'+value2.name+'</td>';
+						body_lot += '<td>'+value2.lot_number+'</td>';
 						body_lot += '<td>'+value2.material_number+' - '+value2.material_description+'</td>';
 						body_lot += '<td>'+value2.vendor+'</td>';
 						body_lot += '<td>'+value2.invoice+'</td>';

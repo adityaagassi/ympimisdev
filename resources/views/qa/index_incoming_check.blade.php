@@ -397,7 +397,7 @@
 								<option value="{{$vendor->vendor}}">{{$vendor->vendor}}</option>
 								@endforeach
 							</select>
-							<input type="text" name="vendor" id="vendor" style="color: black !important" hidden>
+							<input type="text" name="vendor" id="vendor_choose" style="color: black !important" hidden>
 						</div>
 					</div>
 					<div class="col-md-3">
@@ -408,7 +408,7 @@
 								<option value="{{$material->material_number}}">{{$material->material_number}} - {{$material->material_description}}</option>
 								@endforeach
 							</select>
-							<input type="text" name="material" id="material" style="color: black !important" hidden>
+							<input type="text" name="material" id="material_choose" style="color: black !important" hidden>
 						</div>
 					</div>
 				</div>
@@ -544,11 +544,11 @@
 	});
 
 	function changeVendor() {
-		$("#vendor").val($("#vendorSelect").val());
+		$("#vendor_choose").val($("#vendorSelect").val());
 	}
 
 	function changeMaterial() {
-		$("#material").val($("#materialSelect").val());
+		$("#material_choose").val($("#materialSelect").val());
 	}
 
 	function cancelAll() {
@@ -974,8 +974,8 @@
 		$('#loading').show();
 		var date_from = $('#date_from').val();
 		var date_to = $('#date_to').val();
-		var vendor = $('#vendor').val();
-		var material = $('#material').val();
+		var vendor = $('#vendor_choose').val();
+		var material = $('#material_choose').val();
 
 		var data = {
 			date_from:date_from,

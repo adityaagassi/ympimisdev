@@ -225,7 +225,7 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-10 col-md-offset-4">
+						<div class="col-md-8 col-md-offset-4">
 							<div class="col-md-12">
 								<div class="form-group pull-left">
 									<a href="{{ url('index/qa') }}" class="btn btn-warning">Back</a>
@@ -316,6 +316,7 @@
 		tableData += '<th rowspan="2">Vendor</th>';
 		tableData += '<th rowspan="2">Invoice</th>';
 		tableData += '<th rowspan="2">Inspection Level</th>';
+		tableData += '<th rowspan="2">Lot Number</th>';
 		tableData += '<th rowspan="2">Material</th>';
 		tableData += '<th rowspan="2">Desc</th>';
 		tableData += '<th rowspan="2">Qty Rec</th>';
@@ -324,6 +325,7 @@
 		tableData += '<th colspan="3">Jumlah NG</th>';
 		tableData += '<th rowspan="2">Note</th>';
 		tableData += '<th rowspan="2">NG Ratio</th>';
+		tableData += '<th rowspan="2">Lot Status</th>';
 		tableData += '</tr>';
 		tableData += '<tr>';
 		tableData += '<th>Repair</th>';
@@ -419,6 +421,7 @@
 					tableData += '<td rowspan="'+jumlah+'">'+ value.vendor +'</td>';
 					tableData += '<td rowspan="'+jumlah+'">'+ value.invoice +'</td>';
 					tableData += '<td rowspan="'+jumlah+'">'+ value.inspection_level +'</td>';
+					tableData += '<td rowspan="'+jumlah+'">'+ value.lot_number +'</td>';
 					tableData += '<td rowspan="'+jumlah+'">'+ value.material_number +'</td>';
 					tableData += '<td rowspan="'+jumlah+'">'+ value.material_description +'</td>';
 					tableData += '<td rowspan="'+jumlah+'">'+ value.qty_rec +'</td>';
@@ -473,6 +476,7 @@
 						tableData += '</td>';
 					}
 					tableData += '<td style="vertical-align:middle" rowspan="'+jumlah+'">'+ value.ng_ratio.toFixed(2) +'</td>';
+					tableData += '<td style="vertical-align:middle" rowspan="'+jumlah+'">'+ value.status_lot +'</td>';
 					tableData += '</tr>';
 					if (value.ng_name != null) {
 						for (var i = 1 ;i < ng_name.length; i++) {
