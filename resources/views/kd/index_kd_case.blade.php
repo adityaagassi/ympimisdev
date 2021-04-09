@@ -442,6 +442,9 @@
 			location : location,
 		}
 
+		console.log(target);
+		console.log(quantity);
+
 		if(material_number == ''){
 			alert("Material belum dipilih");
 			return false;
