@@ -34,6 +34,35 @@
 	</div>
 </section>
 
+<div class="modal fade" id="modalDetail">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<center><h4 style="font-weight: bold;" class="modal-title" id="modalDetailTitle"></h4></center>
+				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
+					<table class="table table-hover table-bordered table-striped" id="tableDetail">
+						<thead style="background-color: rgba(126,86,134,.7);">
+							<tr>
+								<th style="width: 1%;">Model</th>
+								<th style="width: 1%;">Key</th>
+								<th style="width: 1%;">Surface</th>
+								<th style="width: 1%;">Plan Original</th>
+								<th style="width: 1%;">Plan Acc</th>
+								<th style="width: 1%;">Stock</th>
+								<th style="width: 1%;">Availability<br>(Stock&divide;Plan Acc)</th>
+							</tr>
+						</thead>
+						<tbody id="tableDetailBody">
+						</tbody>
+						<tfoot id="tableDetailFoot">
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 @endsection
 @section('scripts')
 <script src="{{ url("js/highstock.js")}}"></script>
@@ -49,7 +78,7 @@
 
 	jQuery(document).ready(function() {
 		fetchChart();
-		setInterval(fetchChart, 1000*60*5);
+		// setInterval(fetchChart, 1000*60*5);
 	});
 
 	var key_details = "";
@@ -96,8 +125,6 @@
 					}
 				});
 
-				console.log(new_group);
-
 				for (var i = 0; i < new_group.length; i++) {
 					Highcharts.chart(new_group[i].hpl, {
 						chart: {
@@ -116,11 +143,7 @@
 							}
 						},
 						legend: {
-							align: 'right',
-							verticalAlign: 'top',
-							layout: 'vertical',
-							x: 0,
-							y: 100,
+							enabled: true,
 							symbolRadius: 1,
 							borderWidth: 1
 						},
@@ -139,16 +162,23 @@
 									},
 									color:'black'
 								},
-								showInLegend: true
+								showInLegend: true,
+								point: {
+									events: {
+										click: function () {
+											fetchDetail(this.series.name, this.name);
+										}
+									}
+								}
 							}
 						},
 						credits:{
 							enabled:false
 						},						
 						series: [{
-							name: 'Percentage',
+							name: new_group[i].hpl,
 							data: [{
-								name: 'Stock > 1 Day',
+								name: 'Stock >= 1 Day',
 								y: new_group[i].safe,
 								color: '#90ee7e'
 							}, {
@@ -169,6 +199,113 @@
 				alert('Unidentified ERROR!');
 			}
 		});
+	}
+
+	function fetchDetail(hpl, cat){
+		$('#tableDetail').DataTable().clear();
+		$('#tableDetail').DataTable().destroy();
+		$('#tableDetailBody').html("");
+		$('#modalDetailTitle').text('Stock Condition Of '+hpl+' With '+cat);
+		var tableDetailBody = "";
+		$.each(key_details, function(key, value){
+			if(value.hpl == hpl){
+				if(cat == 'Stock >= 1 Day'){
+					if(value.safe == 1){
+						tableDetailBody += '<tr>';
+						tableDetailBody += '<td>'+value.model+'</td>';
+						tableDetailBody += '<td>'+value.key+'</td>';
+						tableDetailBody += '<td>'+value.surface+'</td>';
+						tableDetailBody += '<td>'+value.plan_ori+'</td>';
+						tableDetailBody += '<td>'+value.plan+'</td>';
+						tableDetailBody += '<td>'+value.stock+'</td>';
+						tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
+						tableDetailBody += '</tr>';
+					}				
+				}
+				if(cat == 'Stock < 1 Day'){
+					if(value.unsafe == 1){
+						tableDetailBody += '<tr>';
+						tableDetailBody += '<td>'+value.model+'</td>';
+						tableDetailBody += '<td>'+value.key+'</td>';
+						tableDetailBody += '<td>'+value.surface+'</td>';
+						tableDetailBody += '<td>'+value.plan_ori+'</td>';
+						tableDetailBody += '<td>'+value.plan+'</td>';
+						tableDetailBody += '<td>'+value.stock+'</td>';
+						tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
+						tableDetailBody += '</tr>';
+					}
+				}
+				if(cat == 'Stock Zero'){
+					if(value.zero == 1){
+						tableDetailBody += '<tr>';
+						tableDetailBody += '<td>'+value.model+'</td>';
+						tableDetailBody += '<td>'+value.key+'</td>';
+						tableDetailBody += '<td>'+value.surface+'</td>';
+						tableDetailBody += '<td>'+value.plan_ori+'</td>';
+						tableDetailBody += '<td>'+value.plan+'</td>';
+						tableDetailBody += '<td>'+value.stock+'</td>';
+						tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
+						tableDetailBody += '</tr>';
+					}
+				}
+			}
+		});
+
+		$('#tableDetailBody').append(tableDetailBody);
+
+		$('#tableDetail').DataTable({
+			'dom': 'Bfrtip',
+			'responsive':true,
+			'lengthMenu': [
+			[ 10, 25, 50, -1 ],
+			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+			],
+			'buttons': {
+				buttons:[
+				{
+					extend: 'pageLength',
+					className: 'btn btn-default',
+				},
+				{
+					extend: 'copy',
+					className: 'btn btn-success',
+					text: '<i class="fa fa-copy"></i> Copy',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'excel',
+					className: 'btn btn-info',
+					text: '<i class="fa fa-file-excel-o"></i> Excel',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'print',
+					className: 'btn btn-warning',
+					text: '<i class="fa fa-print"></i> Print',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				]
+			},
+			'paging': false,
+			'lengthChange': true,
+			'searching': true,
+			'ordering': true,
+			'order': [6, 'asc'],
+			'info': true,
+			'autoWidth': true,
+			"sPaginationType": "full_numbers",
+			"bJQueryUI": true,
+			"bAutoWidth": false,
+			"processing": true
+		});
+
+		$('#modalDetail').modal('show');
 	}
 
 	Highcharts.createElement('link', {
