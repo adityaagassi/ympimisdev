@@ -78,7 +78,7 @@
 
 	jQuery(document).ready(function() {
 		fetchChart();
-		// setInterval(fetchChart, 1000*60*5);
+		setInterval(fetchChart, 1000*60*5);
 	});
 
 	var key_details = "";
