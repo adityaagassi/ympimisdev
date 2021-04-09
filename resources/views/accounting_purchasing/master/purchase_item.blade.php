@@ -167,6 +167,7 @@
 										<th style="width:3%;">Lot</th>
 										<th style="width:3%;">Moq</th>
 										<th style="width:3%;">Lead Time</th>
+										<th style="width:3%;">Gambar</th>
 										<th style="width:8%;">Action</th>
 									</tr>
 								</thead>
@@ -174,6 +175,7 @@
 								</tbody>
 								<tfoot>
 									<tr>
+										<th></th>
 										<th></th>
 										<th></th>
 										<th></th>
@@ -330,6 +332,7 @@
 			{ "data": "lot"},
 			{ "data": "moq"},
 			{ "data": "leadtime"},
+			{ "data": "image"},
 			{ "data": "action"},
 			]
 		});

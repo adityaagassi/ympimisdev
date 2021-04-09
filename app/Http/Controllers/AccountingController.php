@@ -285,9 +285,17 @@ class AccountingController extends Controller
             }else{
                 return '-';                
             }
+        })
+         ->addColumn('image', function ($items)
+        {
+            $item_code = $items->kode_item;
+
+            if (file_exists(public_path() .'/images/purchase_item/'.$item_code.'.jpg')) {
+                return '<img src="'.url('images/purchase_item').'/'.$item_code.'.jpg" width="250">';
+            }
 
         })
-        ->rawColumns(['action' => 'action'])
+        ->rawColumns(['action' => 'action','image' => 'image'])
         ->make(true);
     }
 
