@@ -242,7 +242,7 @@ class KnockDownController extends Controller{
 			$title = 'KD Pianica Part';
 			$title_jp = '';
 
-			return view('kd.index_kd', array(
+			return view('kd.index_kd_pn_part', array(
 				'title' => $title,
 				'title_jp' => $title_jp,
 				'location' => $id,
@@ -322,7 +322,7 @@ class KnockDownController extends Controller{
 			$title = 'KD Welding Key Post';
 			$title_jp = '';
 
-			return view('kd.', array(
+			return view('kd.index_kd', array(
 				'title' => $title,
 				'title_jp' => $title_jp,
 				'location' => $id,
