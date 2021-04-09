@@ -122,7 +122,7 @@ class DisplayController extends Controller
 			0 
 			) AS unsafe,
 			IF
-			( round( sum( stock ) / sum( plan ), 1 )<= 0, 1, 0 ) AS zero 
+			( sum( stock )<= 0, 1, 0 ) AS zero 
 			FROM
 			(
 			SELECT
