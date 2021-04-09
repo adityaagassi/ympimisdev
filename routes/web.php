@@ -4685,4 +4685,7 @@ Route::get('index/server_room/{id}', 'PingController@ServerRoomPing');
 Route::get('post/server_room/ping/trend', 'PingController@ServerRoomPingTrend');
 Route::get('post/server_room/network_usage', 'PingController@PostNetworkUsage');
 
+Route::get('post/server_room/all_app_hardisk', 'PingController@PostNetworkUsage');
+Route::get('post/server_room/all_app_ping', 'PingController@AppStatusPingTrend');
+
 //End Server Room
