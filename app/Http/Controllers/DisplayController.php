@@ -285,8 +285,6 @@ class DisplayController extends Controller
 			plan_ori > 0 
 			) AS final2
 			JOIN materials ON final2.material_number = materials.material_number 
-			HAVING
-			diff > 0 
 			GROUP BY
 			materials.issue_storage_location,
 			materials.hpl,
@@ -294,6 +292,8 @@ class DisplayController extends Controller
 			materials.`key`,
 			materials.surface,
 			materials.issue_storage_location 
+			HAVING 
+			diff > 0
 			ORDER BY
 			diff DESC");
 
