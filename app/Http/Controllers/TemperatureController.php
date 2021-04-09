@@ -1085,8 +1085,8 @@ class TemperatureController extends Controller
 
                $contactList2 = [];
                $contactList2[0] = 'prawoto@music.yamaha.com';
-               $contactList2[1] = 'putri.sukma.riyanti@music.yamaha.com';
-               $contactList2[2] = 'mahendra.putra@music.yamaha.com';
+               $contactList2[1] = 'dicky.kurniawan@music.yamaha.com';
+               $contactList2[2] = 'cindy.lusita@music.yamaha.com';
 
                $mail_to = [];
 
