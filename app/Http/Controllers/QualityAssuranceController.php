@@ -70,9 +70,26 @@ class QualityAssuranceController extends Controller
 
   		$emp = EmployeeSync::where('employee_id',Auth::user()->username)->first();
 
+      $vendor = DB::SELECT("SELECT DISTINCT
+        ( vendor ) 
+      FROM
+        qa_materials 
+      ORDER BY
+        LENGTH( vendor ) ASC");
+
+      $material = DB::SELECT("SELECT DISTINCT
+        ( material_number ),
+        material_description 
+      FROM
+        qa_materials 
+      ORDER BY
+        material_description ASC");
+
   		return view('qa.index_incoming_check')
   		->with('ng_lists', $nglists)
   		->with('inspection_level', $inspection_level)
+      ->with('vendors', $vendor)
+      ->with('materials', $material)
   		->with('loc', $loc)
   		->with('location', $location)
   		->with('emp', $emp)
@@ -115,6 +132,7 @@ class QualityAssuranceController extends Controller
 			$material_description = $request->get('material_description');
 			$vendor = $request->get('vendor');
 			$qty_rec = $request->get('qty_rec');
+      $lot_number = $request->get('lot_number');
 			$qty_check = $request->get('qty_check');
 			$invoice = $request->get('invoice');
 			$inspection_level = $request->get('inspection_level');
@@ -128,12 +146,13 @@ class QualityAssuranceController extends Controller
 
 			QaIncomingNgTemp::create([
 				'incoming_check_code' => $incoming_check_code,
-                'inspector_id' => $inspector,
-                'location' => $location,
-                'material_number' => $material_number,
-                'material_description' => $material_description,
-                'vendor' => $vendor,
-                'qty_rec' => $qty_rec,
+        'inspector_id' => $inspector,
+        'location' => $location,
+        'material_number' => $material_number,
+        'material_description' => $material_description,
+        'vendor' => $vendor,
+        'qty_rec' => $qty_rec,
+        'lot_number' => $lot_number,
 				'qty_check' => $qty_check,
 				'invoice' => $invoice,
 				'inspection_level' => $inspection_level,
@@ -229,6 +248,7 @@ class QualityAssuranceController extends Controller
   			$material_number = strtoupper($request->get('material_number'));
   			$material_description = $request->get('material_description');
   			$vendor = $request->get('vendor');
+        $lot_number = $request->get('lot_number');
   			$qty_rec = $request->get('qty_rec');
   			$qty_check = $request->get('qty_check');
   			$invoice = $request->get('invoice');
@@ -248,6 +268,7 @@ class QualityAssuranceController extends Controller
   	        'incoming_check_code' => $incoming_check_code,
             'inspector_id' => $inspector,
             'location' => $location,
+            'lot_number' => $lot_number,
             'material_number' => $material_number,
             'material_description' => $material_description,
             'vendor' => $vendor,
@@ -272,6 +293,7 @@ class QualityAssuranceController extends Controller
 			         'incoming_check_code' => $incoming_check_code,
               'inspector_id' => $inspector,
               'location' => $key->location,
+              'lot_number' => $lot_number,
               'material_number' => $key->material_number,
               'material_description' => $key->material_description,
               'vendor' => $key->vendor,
@@ -1127,6 +1149,86 @@ class QualityAssuranceController extends Controller
     public function excelReportIncomingCheck(Request $request)
     {
       try {
+        $date_from = $request->get('date_from');
+        $date_to = $request->get('date_to');
+        if ($date_from == "") {
+             if ($date_to == "") {
+                  $first = "DATE_FORMAT( NOW(), '%Y-%m-01' ) ";
+                  $last = "LAST_DAY(NOW())";
+             }else{
+                  $first = "DATE_FORMAT( NOW(), '%Y-%m-01' ) ";
+                  $last = "'".$date_to."'";
+             }
+        }else{
+             if ($date_to == "") {
+                  $first = "'".$date_from."'";
+                  $last = "LAST_DAY(NOW())";
+             }else{
+                  $first = "'".$date_from."'";
+                  $last = "'".$date_to."'";
+             }
+        }
+
+        $vendor = '';
+        if($request->get('vendor') != null){
+          $vendors =  explode(",", $request->get('vendor'));
+          for ($i=0; $i < count($vendors); $i++) {
+            $vendor = $vendor."'".$vendors[$i]."'";
+            if($i != (count($vendors)-1)){
+              $vendor = $vendor.',';
+            }
+          }
+          $vendorin = " and `vendor` in (".$vendor.") ";
+        }
+        else{
+          $vendorin = "";
+        }
+
+        $material = '';
+        if($request->get('material') != null){
+          $materials =  explode(",", $request->get('material'));
+          for ($i=0; $i < count($materials); $i++) {
+            $material = $material."'".$materials[$i]."'";
+            if($i != (count($materials)-1)){
+              $material = $material.',';
+            }
+          }
+          $materialin = " and `material_number` in (".$material.") ";
+        }
+        else{
+          $materialin = "";
+        }
+
+        $location = '';
+        if($request->get('location') != null){
+          $locations =  explode(",", $request->get('location'));
+          for ($i=0; $i < count($locations); $i++) {
+            $location = $location."'".$locations[$i]."'";
+            if($i != (count($locations)-1)){
+              $location = $location.',';
+            }
+          }
+          $locationin = " and `location` in (".$location.") ";
+        }
+        else{
+          $locationin = "";
+        }
+
+        $inspection_level = '';
+        if($request->get('inspection_level') != null){
+          $inspection_levels =  explode(",", $request->get('inspection_level'));
+          for ($i=0; $i < count($inspection_levels); $i++) {
+            $inspection_level = $inspection_level."'".$inspection_levels[$i]."'";
+            if($i != (count($inspection_levels)-1)){
+              $inspection_level = $inspection_level.',';
+            }
+          }
+          $inspection_levelin = " and `inspection_level` in (".$inspection_level.") ";
+        }
+        else{
+          $inspection_levelin = "";
+        }
+        // var_dump($data);
         $datas = DB::SELECT("SELECT
           qa_incoming_logs.location,
           employee_syncs.employee_id,
@@ -1153,8 +1255,9 @@ class QualityAssuranceController extends Controller
           qa_incoming_logs
           JOIN employee_syncs ON employee_syncs.employee_id = qa_incoming_logs.inspector_id 
         WHERE
-          DATE( qa_incoming_logs.created_at ) >= DATE_FORMAT( NOW(), '%Y-%m-01' )
-          AND DATE( qa_incoming_logs.created_at ) <= LAST_DAY(NOW())
+          DATE( qa_incoming_logs.created_at ) >= ".$first." 
+          AND DATE( qa_incoming_logs.created_at ) <= ".$last."
+          ".$locationin." ".$inspection_levelin." ".$materialin." ".$vendorin." 
           ");
 
         $data = array(
@@ -1168,9 +1271,111 @@ class QualityAssuranceController extends Controller
           });
         })->export('xlsx');
 
-        return view('qa.excel_incoming_check',$data);
+        return redirect()->route('report_incoming_qa')->with('status','Success Export Data');
       } catch (\Exception $e) {
         return redirect()->route('report_incoming_qa')->with('error','Failed Export Data');
+      }
+    }
+
+    public function fetchDetailRecord(Request $request)
+    {
+      try {
+        $date_from = $request->get('date_from');
+        $date_to = $request->get('date_to');
+        if ($date_from == "") {
+             if ($date_to == "") {
+                  $first = "DATE_FORMAT( NOW() - INTERVAL 7 DAY, '%Y-%m-%d' ) ";
+                  $last = "DATE(NOW())";
+             }else{
+                  $first = "DATE_FORMAT( NOW() - INTERVAL 7 DAY, '%Y-%m-%d' ) ";
+                  $last = "'".$date_to."'";
+             }
+        }else{
+             if ($date_to == "") {
+                  $first = "'".$date_from."'";
+                  $last = "DATE(NOW())";
+             }else{
+                  $first = "'".$date_from."'";
+                  $last = "'".$date_to."'";
+             }
+        }
+
+        $vendor = '';
+        if($request->get('vendor') != null){
+          $vendors =  explode(",", $request->get('vendor'));
+          for ($i=0; $i < count($vendors); $i++) {
+            $vendor = $vendor."'".$vendors[$i]."'";
+            if($i != (count($vendors)-1)){
+              $vendor = $vendor.',';
+            }
+          }
+          $vendorin = " and `vendor` in (".$vendor.") ";
+        }
+        else{
+          $vendorin = "";
+        }
+
+        $material = '';
+        if($request->get('material') != null){
+          $materials =  explode(",", $request->get('material'));
+          for ($i=0; $i < count($materials); $i++) {
+            $material = $material."'".$materials[$i]."'";
+            if($i != (count($materials)-1)){
+              $material = $material.',';
+            }
+          }
+          $materialin = " and `material_number` in (".$material.") ";
+        }
+        else{
+          $materialin = "";
+        }
+        $detail = DB::SELECT("
+          SELECT
+          qa_incoming_logs.location,
+          qa_incoming_logs.lot_number,
+          employee_syncs.employee_id,
+          employee_syncs.name,
+          qa_incoming_logs.material_number,
+          qa_incoming_logs.material_description,
+          qa_incoming_logs.vendor,
+          qa_incoming_logs.invoice,
+          qa_incoming_logs.inspection_level,
+          qa_incoming_logs.`repair`,
+          qa_incoming_logs.`return`,
+          qa_incoming_logs.`qty_rec`,
+          qa_incoming_logs.`qty_check`,
+          qa_incoming_logs.`total_ok`,
+          qa_incoming_logs.`total_ng`,
+          qa_incoming_logs.`ng_ratio`,
+          qa_incoming_logs.`status_lot`,
+          DATE( qa_incoming_logs.created_at ) AS created,
+          ( SELECT GROUP_CONCAT( ng_name SEPARATOR '_' ) FROM qa_incoming_ng_logs WHERE qa_incoming_ng_logs.incoming_check_code = qa_incoming_logs.incoming_check_code ) AS ng_name,
+          ( SELECT GROUP_CONCAT( qty_ng SEPARATOR '_' ) FROM qa_incoming_ng_logs WHERE qa_incoming_ng_logs.incoming_check_code = qa_incoming_logs.incoming_check_code ) AS ng_qty,
+          ( SELECT GROUP_CONCAT( status_ng SEPARATOR '_' ) FROM qa_incoming_ng_logs WHERE qa_incoming_ng_logs.incoming_check_code = qa_incoming_logs.incoming_check_code ) AS status_ng,
+          ( SELECT GROUP_CONCAT( note_ng SEPARATOR '_' ) FROM qa_incoming_ng_logs WHERE qa_incoming_ng_logs.incoming_check_code = qa_incoming_logs.incoming_check_code ) AS note_ng 
+        FROM
+          qa_incoming_logs
+          JOIN employee_syncs ON employee_syncs.employee_id = qa_incoming_logs.inspector_id 
+        WHERE
+          DATE( qa_incoming_logs.created_at ) >= ".$first."
+          AND DATE( qa_incoming_logs.created_at ) <= ".$last."
+          ".$materialin." ".$vendorin."
+        ORDER BY
+          qa_incoming_logs.material_number,
+          qa_incoming_logs.created_at desc,
+          qa_incoming_logs.lot_number");
+
+        $response = array(
+            'status' => true,
+            'detail' => $detail,
+        );
+        return Response::json($response);
+      } catch (\Exception $e) {
+        $response = array(
+            'status' => false,
+            'message' => $e->getMessage()
+        );
+        return Response::json($response);
       }
     }
 }

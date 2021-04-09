@@ -4577,7 +4577,7 @@ Route::get('fetch/qa/display/incoming/ng_rate/detail', 'QualityAssuranceControll
 //QA Report Incoming Check
 Route::get('index/qa/report/incoming', 'QualityAssuranceController@indexReportIncomingCheck')->name('report_incoming_qa');
 Route::get('fetch/qa/report/incoming', 'QualityAssuranceController@fetchReportIncomingCheck');
-Route::get('excel/qa/report/incoming/{date_from}/{date_to}/{vendor}/{material}/{location}/{inspection_level}', 'QualityAssuranceController@excelReportIncomingCheck');
+Route::get('excel/qa/report/incoming', 'QualityAssuranceController@excelReportIncomingCheck');
 
 //QA Report Lot Out Incoming Check
 Route::get('index/qa/report/incoming/lot_out', 'QualityAssuranceController@indexReportLotOut');

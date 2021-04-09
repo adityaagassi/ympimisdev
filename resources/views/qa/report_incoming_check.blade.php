@@ -150,11 +150,9 @@
 			<div class="box box-solid">
 				<div class="box-body" style="overflow-x: scroll;">
 					<form method="GET" action="{{ url('excel/qa/report/incoming') }}">
-				    <button type="submit" class="btn btn-success pull-right"><i class="fa fa-download"></i> Export Data</button>
-					</form>
 					<h4>Filter</h4>
 					<div class="row">
-						<div class="col-md-3 col-md-offset-3">
+						<div class="col-md-4 col-md-offset-2">
 							<span style="font-weight: bold;">Date From</span>
 							<div class="form-group">
 								<div class="input-group date">
@@ -165,7 +163,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-4">
 							<span style="font-weight: bold;">Date To</span>
 							<div class="form-group">
 								<div class="input-group date">
@@ -178,7 +176,7 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-3 col-md-offset-3">
+						<div class="col-md-4 col-md-offset-2">
 							<span style="font-weight: bold;">Location</span>
 							<div class="form-group">
 								<select class="form-control select2" multiple="multiple" id="locationSelect" data-placeholder="Select Location" onchange="changeLocation()" style="width: 100%;color: black !important"> 
@@ -190,7 +188,7 @@
 								<input type="text" name="location" id="location" style="color: black !important" hidden>
 							</div>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-4">
 							<span style="font-weight: bold;">Inspection Level</span>
 							<div class="form-group">
 								<select class="form-control select2" multiple="multiple" id='inspectionLevelSelect' onchange="changeInspectionLevel()" data-placeholder="Select Inspection Level" style="width: 100%;color: black !important">
@@ -203,7 +201,7 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-3 col-md-offset-3">
+						<div class="col-md-4 col-md-offset-2">
 							<span style="font-weight: bold;">Vendor</span>
 							<div class="form-group">
 								<select class="form-control select2" multiple="multiple" id="vendorSelect" data-placeholder="Select Vendors" onchange="changeVendor()" style="width: 100%;color: black !important"> 
@@ -214,7 +212,7 @@
 								<input type="text" name="vendor" id="vendor" style="color: black !important" hidden>
 							</div>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-4">
 							<span style="font-weight: bold;">Material</span>
 							<div class="form-group">
 								<select class="form-control select2" multiple="multiple" id='materialSelect' onchange="changeMaterial()" data-placeholder="Select Material" style="width: 100%;color: black !important">
@@ -227,16 +225,18 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-6 col-md-offset-2">
-							<div class="col-md-10">
-								<div class="form-group pull-right">
+						<div class="col-md-10 col-md-offset-4">
+							<div class="col-md-12">
+								<div class="form-group pull-left">
 									<a href="{{ url('index/qa') }}" class="btn btn-warning">Back</a>
 									<a href="{{ url('index/qa/report/incoming') }}" class="btn btn-danger">Clear</a>
-									<button class="btn btn-primary col-sm-14" onclick="fillList()">Search</button>
+									<a class="btn btn-primary col-sm-14" href="javascript:void(0)" onclick="fillList()">Search</a>
+									<button class="btn btn-success"><i class="fa fa-download"></i> Export Excel</button>
 								</div>
 							</div>
 						</div>
 					</div>
+					</form>
 					<div class="col-xs-12">
 						<div class="row" id="divTable">
 						</div>
@@ -246,45 +246,6 @@
 		</div>
 	</div>
 </section>
-
-<div class="modal modal-danger fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title" id="myModalLabel">Delete Confirmation</h4>
-			</div>
-			<div class="modal-body">
-				Are you sure delete?
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-				<a id="modalDeleteButton" href="#" type="button" class="btn btn-danger">Delete</a>
-			</div>
-		</div>
-	</div>
-</div>
-
-<div class="modal fade" id="importExcel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog" role="document">
-		<form id="importForm" method="post" enctype="multipart/form-data" autocomplete="off">
-			<input type="hidden" value="{{csrf_token()}}" name="_token" />
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title" id="myModalLabel">Upload Temperature</h4>
-				</div>
-				<div class="modal-body">
-					Upload Excel file here:<span class="text-red">*</span>
-					<input type="file" name="file" id="file" required>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>
-					<button type="submit" class="btn btn-success">Upload</button>
-				</div>
-			</div>
-		</form>
-	</div>
-</div>
 @endsection
 
 
@@ -398,7 +359,7 @@
 	}
 
 	function fillList(){
-	// $('#loading').show();
+	$('#loading').show();
 	var date_from = $('#date_from').val();
 	var date_to = $('#date_to').val();
 	var vendor = $('#vendor').val();
@@ -568,6 +529,140 @@
 			}
 		});
 	}
+
+	// function exportExcel() {
+	// 	var date_from = $('#date_from').val();
+	// 	var date_to = $('#date_to').val();
+	// 	var vendor = $('#vendor').val();
+	// 	var material = $('#material').val();
+	// 	var location = $('#location').val();
+	// 	var inspection_level = $('#inspection_level').val();
+
+	// 	// var data = {
+	// 	// 	date_from:date_from,
+	// 	// 	date_to:date_to,
+	// 	// 	vendor:vendor,
+	// 	// 	material:material,
+	// 	// 	location:location,
+	// 	// 	inspection_level:inspection_level,
+	// 	// }
+	// 	if (date_from != "") {
+	// 		date_from = $('#date_from').val();
+	// 	}else{
+	// 		date_from = "kosong";
+	// 	}
+
+	// 	if (date_to != "") {
+	// 		date_to = $('#date_to').val();
+	// 	}else{
+	// 		date_to = "kosong";
+	// 	}
+
+	// 	if (vendor != "") {
+	// 		vendor = $('#vendor').val();
+	// 	}else{
+	// 		vendor = "kosong";
+	// 	}
+
+	// 	if (material != "") {
+	// 		material = $('#material').val();
+	// 	}else{
+	// 		material = "kosong";
+	// 	}
+
+	// 	if (location != "") {
+	// 		location = $('#location').val();
+	// 	}else{
+	// 		location = "kosong";
+	// 	}
+
+	// 	if (inspection_level !="") {
+	// 		inspection_level = $('#inspection_level').val();
+	// 	}else{
+	// 		inspection_level = "kosong";
+	// 	}
+	// 	var url = '{{url("excel/qa/report/incoming")}}';
+	// 	window.location = url;
+	// 	// console.log('{{url("excel/qa/report/incoming")}}'+'/'+data);
+
+	// 	// $.get('{{ url("excel/qa/report/incoming") }}',data, function(result, status, xhr){
+	// 	// });
+	// }
+
+	// $("form#exportForm").submit(function(e) {
+	// 	// if ($('#file').val() == '') {
+	// 	// 	openErrorGritter('Error!', 'You need to select file');
+	// 	// 	return false;
+	// 	// }
+
+	// 	$("#loading").show();
+
+	// 	e.preventDefault();    
+	// 	var date_from = $('#date_from').val();
+	// 	var date_to = $('#date_to').val();
+	// 	var vendor = $('#vendor').val();
+	// 	var material = $('#material').val();
+	// 	var location = $('#location').val();
+	// 	var inspection_level = $('#inspection_level').val();
+
+	// 	var formData = new FormData();
+	// 	formData.append('date_from', date_from);
+	// 	formData.append('date_to', date_to);
+	// 	formData.append('vendor', vendor);
+	// 	formData.append('material', material);
+	// 	formData.append('location', location);
+	// 	formData.append('inspection_level', inspection_level);
+	// 	if (formData.length == 0) {
+	// 		$.ajax({
+	// 			url: '{{ url("excel/qa/report/incoming") }}',
+	// 			type: 'GET',
+	// 			success: function (result, status, xhr) {
+	// 				if(result.message){
+	// 					$("#loading").hide();
+	// 					openSuccessGritter('Success', result.message);
+
+	// 				}else{
+	// 					$("#loading").hide();
+	// 					openErrorGritter('Error!', result.message);
+	// 				}
+	// 			},
+	// 			error: function(result, status, xhr){
+	// 				$("#loading").hide();
+					
+	// 				openErrorGritter('Error!', result.message);
+	// 			},
+	// 			cache: false,
+	// 			contentType: false,
+	// 			processData: false
+	// 		});
+	// 	}else{
+	// 		$.ajax({
+	// 			url: '{{ url("excel/qa/report/incoming") }}',
+	// 			type: 'GET',
+	// 			data: formData,
+	// 			success: function (result, status, xhr) {
+	// 				if(result.message){
+	// 					$("#loading").hide();
+	// 					openSuccessGritter('Success', result.message);
+
+	// 				}else{
+	// 					$("#loading").hide();
+	// 					openErrorGritter('Error!', result.message);
+	// 				}
+	// 			},
+	// 			error: function(result, status, xhr){
+	// 				$("#loading").hide();
+					
+	// 				openErrorGritter('Error!', result.message);
+	// 			},
+	// 			cache: false,
+	// 			contentType: false,
+	// 			processData: false
+	// 		});
+	// 	}
+
+		
+	// });
 
 	function openSuccessGritter(title, message){
 		jQuery.gritter.add({

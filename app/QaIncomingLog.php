@@ -9,6 +9,7 @@ class QaIncomingLog extends Model
      protected $fillable = [
 		
 		'incoming_check_code',
+		'lot_number',
 		'location',
 		'inspector_id',
 		'material_number', 

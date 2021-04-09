@@ -55,6 +55,7 @@
 	#ngList2 {
 		height:385px;
 		overflow-y: scroll;
+		padding-top: 5px;
 	}
 	#loading, #error { display: none; }
 	input::-webkit-outer-spin-button,
@@ -100,18 +101,22 @@
 				<tbody>
 					<tr>
 						<th style=" background-color: #d1d1d1; text-align: center; color: #14213d; padding:0;font-size: 15px;">Date</th>
-						<th style=" background-color: #d1d1d1; text-align: center; color: #14213d; padding:0;font-size: 15px;">Loc</th>
+						<th colspan="2" style=" background-color: #d1d1d1; text-align: center; color: #14213d; padding:0;font-size: 15px;">Inspector</th>
 					</tr>
 					<tr>
 						<td style="background-color: #fca311; color: #14213d; text-align: center; font-size:15px;" id="date">{{date("Y-m-d")}}</td>
+						<td style="background-color: #14213d; color: white; text-align: center; font-size:15px; width: 30%;" id="op">{{$emp->employee_id}}</td>
+						<td style="background-color: #fca311; text-align: center; color: #14213d; font-size: 15px;" id="op2">{{$emp->name}}</td>
+					</tr>
+					<tr>
+						<th style=" background-color: #d1d1d1; text-align: center; color: #14213d; padding:0;font-size: 15px;">Loc</th>
+						<th colspan="2" style="background-color: #d1d1d1; text-align: center; color: #14213d; padding:0;font-size: 15px;">Lot Number</th>
+					</tr>
+					<tr>
 						<td style="background-color: #14213d; text-align: center;color: white; font-size:15px;" id="loc">{{$loc}}</td>
-					</tr>
-					<tr>
-						<th colspan="2" style="background-color: #d1d1d1; text-align: center; color: #14213d; padding:0;font-size: 15px;">Inspector QA</th>
-					</tr>
-					<tr>
-						<td style="background-color: #fca311; color: #14213d; text-align: center; font-size:15px; width: 30%;" id="op">{{$emp->employee_id}}</td>
-						<td style="background-color: #14213d; text-align: center; color: white; font-size: 15px;" id="op2">{{$emp->name}}</td>
+						<td colspan="2">
+							<input type="text" class="pull-right numpad2" name="lot_number" style="height: 50px;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;color: #14213d" id="lot_number" placeholder="Lot Number">
+						</td>
 					</tr>
 					
 				</tbody>
@@ -241,6 +246,9 @@
 		</div>
 
 		<div class="col-xs-6" style="padding-right: 0;">
+			<div class="row" style="padding-left: 15px;padding-right: 15px">
+				<button class="btn btn-info pull-right" onclick="fetchDetailRecord()" style="width: 100%;font-weight: bold;font-size: 20px">Record</button>
+			</div>
 			<div id="ngList2">
 				<table class="table table-bordered" style="width: 100%; margin-bottom: 2px;" border="1" id="tableNgList">
 					<thead>
@@ -349,7 +357,110 @@
 	</div>
 </div>
 
-
+<div class="modal fade" id="record-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<center style="background-color: #ffc654;padding: 5px"><h4 class="modal-title" id="myModalLabel" style="font-weight: bold;"></h4></center>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-3 col-md-offset-3">
+						<span style="font-weight: bold;">Date From</span>
+						<div class="form-group">
+							<div class="input-group date">
+								<div class="input-group-addon bg-white">
+									<i class="fa fa-calendar"></i>
+								</div>
+								<input type="text" class="form-control datepicker" id="date_from" name="date_from" placeholder="Select Date From" autocomplete="off">
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<span style="font-weight: bold;">Date To</span>
+						<div class="form-group">
+							<div class="input-group date">
+								<div class="input-group-addon bg-white">
+									<i class="fa fa-calendar"></i>
+								</div>
+								<input type="text" class="form-control datepicker" id="date_to"name="date_to" placeholder="Select Date To" autocomplete="off">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-3 col-md-offset-3">
+						<span style="font-weight: bold;">Vendor</span>
+						<div class="form-group">
+							<select class="form-control select2" multiple="multiple" id="vendorSelect" data-placeholder="Select Vendors" onchange="changeVendor()" style="width: 100%;color: black !important"> 
+								@foreach($vendors as $vendor)
+								<option value="{{$vendor->vendor}}">{{$vendor->vendor}}</option>
+								@endforeach
+							</select>
+							<input type="text" name="vendor" id="vendor" style="color: black !important" hidden>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<span style="font-weight: bold;">Material</span>
+						<div class="form-group">
+							<select class="form-control select2" multiple="multiple" id='materialSelect' onchange="changeMaterial()" data-placeholder="Select Material" style="width: 100%;color: black !important">
+								@foreach($materials as $material)
+								<option value="{{$material->material_number}}">{{$material->material_number}} - {{$material->material_description}}</option>
+								@endforeach
+							</select>
+							<input type="text" name="material" id="material" style="color: black !important" hidden>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6 col-md-offset-2">
+						<div class="col-md-10">
+							<div class="form-group pull-right">
+								<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+								<button class="btn btn-primary col-sm-14" onclick="fetchDetailRecord()">Search</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12" style="overflow-x: scroll;">
+					<table class="table table-bordered" id="tableDetail">
+						<thead style="border-bottom:3px solid black;border-top:3px solid black;background-color:#cddc39">
+				            <tr>
+				                <th style="font-weight: bold;" rowspan="2">#</th>
+				                <th style="font-weight: bold;" rowspan="2">Loc</th>
+				                <th style="font-weight: bold;" rowspan="2">Lot Number</th>
+				                <th style="font-weight: bold;" rowspan="2">Date</th>
+				                <th style="font-weight: bold;" rowspan="2">Inspector</th>
+				                <th style="font-weight: bold;" rowspan="2">Vendor</th>
+				                <th style="font-weight: bold;" rowspan="2">Invoice</th>
+				                <th style="font-weight: bold;" rowspan="2">Inspection Level</th>
+				                <th style="font-weight: bold;" rowspan="2">Material</th>
+				                <th style="font-weight: bold;" rowspan="2">Desc</th>
+				                <th style="font-weight: bold;" rowspan="2">Qty Rec</th>
+				                <th style="font-weight: bold;" rowspan="2">Qty Check</th>
+				                <th style="font-weight: bold;" rowspan="2">Defect</th>
+				                <th style="font-weight: bold;" colspan="3">Jumlah NG</th>
+				                <th style="font-weight: bold;" rowspan="2">Note</th>
+				                <th style="font-weight: bold;" rowspan="2">NG Ratio</th>
+				            </tr>
+				            <tr>
+				                <th style="font-weight: bold;">Repair</th>
+				                <th style="font-weight: bold;">Return</th>
+				                <th style="font-weight: bold;">Scrap</th>
+				            </tr>
+				        </thead>
+						<tbody id="bodyTableDetail">
+							
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				
+			</div>
+		</div>
+	</div>
+</div>
 @endsection
 @section('scripts')
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
@@ -386,6 +497,13 @@
 		// 	keyboard: false
 		// });
 		// $("#operator").val('');
+		$('.select2').select2({
+			language : {
+				noResults : function(params) {
+					return "There is no date";
+				}
+			}
+		});
 		$('.numpad').numpad({
 			hidePlusMinusButton : true,
 			decimalSeparator : '.'
@@ -394,6 +512,13 @@
 		$('.numpad2').numpad({
 			hidePlusMinusButton : true,
 			decimalSeparator : '.'
+		});
+		$('.datepicker').datepicker({
+			<?php $tgl_max = date('Y-m-d') ?>
+			autoclose: true,
+			format: "yyyy-mm-dd",
+			todayHighlight: true,	
+			endDate: '<?php echo $tgl_max ?>'
 		});
 		cancelAll();
 		// $('#invoice').keyboard({
@@ -418,11 +543,20 @@
 		ng_list();
 	});
 
+	function changeVendor() {
+		$("#vendor").val($("#vendorSelect").val());
+	}
+
+	function changeMaterial() {
+		$("#material").val($("#materialSelect").val());
+	}
+
 	function cancelAll() {
 		$('#material_number').val('');
 		$('#invoice').val('');
 		$('#qty_check').val('');
 		$('#qty_rec').val('');
+		$('#lot_number').val('');
 		$('#material_description').html('-');
 		$('#vendor').html('-');
 		$('#inspection_level').val('-').trigger('change');
@@ -518,7 +652,7 @@
 	}
 
 	function showModalNg(ng_name) {
-		if ($('#material_number').val() == "" || $('#qty_rec').val() == "" || $('#qty_check').val() == "" || $('#invoice').val() == "" || $('#inspection_level').val() == "-") {
+		if ($('#material_number').val() == "" || $('#qty_rec').val() == "" || $('#lot_number').val() == "" || $('#qty_check').val() == "" || $('#invoice').val() == "" || $('#inspection_level').val() == "-") {
 			openErrorGritter('Error!','Masukkan Semua Data');
 		}else{
 			$('#note_ng').val('');
@@ -537,6 +671,7 @@
 			var material_description = $('#material_description').text();
 			var vendor = $('#vendor').text();
 			var qty_rec = $('#qty_rec').val();
+			var lot_number = $('#lot_number').val();
 			var qty_check = $('#qty_check').val();
 			var invoice = $('#invoice').val();
 			var inspection_level = $('#inspection_level').val();
@@ -552,6 +687,7 @@
 				material_description:material_description,
 				vendor:vendor,
 				qty_rec:qty_rec,
+				lot_number:lot_number,
 				qty_check:qty_check,
 				invoice:invoice,
 				inspection_level:inspection_level,
@@ -787,6 +923,7 @@
 			var material_description = $('#material_description').text();
 			var vendor = $('#vendor').text();
 			var qty_rec = $('#qty_rec').val();
+			var lot_number = $('#lot_number').val();
 			var qty_check = $('#qty_check').val();
 			var invoice = $('#invoice').val();
 			var inspection_level = $('#inspection_level').val();
@@ -806,6 +943,7 @@
 				material_description:material_description,
 				vendor:vendor,
 				qty_rec:qty_rec,
+				lot_number:lot_number,
 				qty_check:qty_check,
 				invoice:invoice,
 				inspection_level:inspection_level,
@@ -830,6 +968,176 @@
 				}
 			});
 		}
+	}
+
+	function fetchDetailRecord() {
+		$('#loading').show();
+		var date_from = $('#date_from').val();
+		var date_to = $('#date_to').val();
+		var vendor = $('#vendor').val();
+		var material = $('#material').val();
+
+		var data = {
+			date_from:date_from,
+			date_to:date_to,
+			vendor:vendor,
+			material:material,
+		}
+		$.get('{{ url("fetch/qa/detail_record") }}', data, function(result, status, xhr){
+			if(result.status){
+				$('#bodyTableDetail').html("");
+				var tableData = "";
+				var index = 1;
+				
+				$.each(result.detail, function(key, value) {
+					if (value.location == 'wi1') {
+			  			var loc = 'Woodwind Instrument (WI) 1';
+			  		}else if (value.location == 'wi2') {
+			  			var loc = 'Woodwind Instrument (WI) 2';
+			  		}else if(value.location == 'ei'){
+			  			var loc = 'Educational Instrument (EI)';
+			  		}else if (value.location == 'cs'){
+			  			var loc = 'Case';
+			  		}else if(value.location == 'ps'){
+			  			var loc = 'Pipe Silver';
+			  		}
+			  		var jumlah = 0;
+
+			  		if (value.ng_name != null) {
+						var ng_name = value.ng_name.split('_');
+						var ng_qty = value.ng_qty.split('_');
+						var status_ng = value.status_ng.split('_');
+						if (value.note_ng != null) {
+							var note_ng = value.note_ng.split('_');
+						}else{
+							var note_ng = "";
+						}
+						jumlah = ng_name.length;
+					}else{
+						jumlah = 1;
+					}
+
+					
+					tableData += '<tr>';
+					tableData += '<td rowspan="'+jumlah+'">'+ index +'</td>';
+					tableData += '<td rowspan="'+jumlah+'">'+ loc +'</td>';
+					tableData += '<td rowspan="'+jumlah+'">'+ value.lot_number +'</td>';
+					tableData += '<td rowspan="'+jumlah+'">'+ value.created +'</td>';
+					tableData += '<td rowspan="'+jumlah+'">'+ value.employee_id +'<br>'+ value.name +'</td>';
+					tableData += '<td rowspan="'+jumlah+'">'+ value.vendor +'</td>';
+					tableData += '<td rowspan="'+jumlah+'">'+ value.invoice +'</td>';
+					tableData += '<td rowspan="'+jumlah+'">'+ value.inspection_level +'</td>';
+					tableData += '<td rowspan="'+jumlah+'">'+ value.material_number +'</td>';
+					tableData += '<td rowspan="'+jumlah+'">'+ value.material_description +'</td>';
+					tableData += '<td rowspan="'+jumlah+'">'+ value.qty_rec +'</td>';
+					tableData += '<td rowspan="'+jumlah+'">'+ value.qty_check +'</td>';
+					if (value.ng_name != null) {
+						tableData += '<td>';
+						tableData += '<span class="label label-danger">'+ng_name[0]+'</span><br>';
+						tableData += '</td>';
+						if (status_ng[0] == 'Repair') {
+							tableData += '<td>';
+							tableData += '<span class="label label-danger">'+ng_qty[0]+'</span><br>';
+							tableData += '</td>';
+							tableData += '<td>';
+							tableData += '</td>';
+							tableData += '<td>';
+							tableData += '</td>';
+						}else if (status_ng[0] == 'Return') {
+							tableData += '<td>';
+							tableData += '</td>';
+							tableData += '<td>';
+							tableData += '<span class="label label-danger">'+ng_qty[0]+'</span><br>';
+							tableData += '</td>';
+							tableData += '<td>';
+							tableData += '</td>';
+						}else if (status_ng[0] == 'Scrap') {
+							tableData += '<td>';
+							tableData += '</td>';
+							tableData += '<td>';
+							tableData += '</td>';
+							tableData += '<td>';
+							tableData += '<span class="label label-danger">'+ng_qty[0]+'</span><br>';
+							tableData += '</td>';
+						}
+						if (note_ng.length > 0) {
+							tableData += '<td>';
+							tableData += '<span class="label label-danger">'+note_ng[0]+'</span><br>';
+							tableData += '</td>';
+						}else{
+							tableData += '<td>';
+							tableData += '</td>';
+						}
+					}else{
+						tableData += '<td>';
+						tableData += '</td>';
+						tableData += '<td>';
+						tableData += '</td>';
+						tableData += '<td>';
+						tableData += '</td>';
+						tableData += '<td>';
+						tableData += '</td>';
+						tableData += '<td>';
+						tableData += '</td>';
+					}
+					tableData += '<td style="vertical-align:middle" rowspan="'+jumlah+'">'+ value.ng_ratio.toFixed(2) +'</td>';
+					tableData += '</tr>';
+					if (value.ng_name != null) {
+						for (var i = 1 ;i < ng_name.length; i++) {
+							tableData += '<tr>';
+							tableData += '<td>';
+							tableData += '<span class="label label-danger">'+ng_name[i]+'</span><br>';
+							tableData += '</td>';
+							if (status_ng[i] == 'Repair') {
+								tableData += '<td>';
+								tableData += '<span class="label label-danger">'+ng_qty[i]+'</span><br>';
+								tableData += '</td>';
+								tableData += '<td>';
+								tableData += '</td>';
+								tableData += '<td>';
+								tableData += '</td>';
+							}else if (status_ng[i] == 'Return') {
+								tableData += '<td>';
+								tableData += '</td>';
+								tableData += '<td>';
+								tableData += '<span class="label label-danger">'+ng_qty[i]+'</span><br>';
+								tableData += '</td>';
+								tableData += '<td>';
+								tableData += '</td>';
+							}else if (status_ng[i] == 'Scrap') {
+								tableData += '<td>';
+								tableData += '</td>';
+								tableData += '<td>';
+								tableData += '</td>';
+								tableData += '<td>';
+								tableData += '<span class="label label-danger">'+ng_qty[i]+'</span><br>';
+								tableData += '</td>';
+							}
+							if (note_ng.length > 0) {
+								tableData += '<td>';
+								tableData += '<span class="label label-danger">'+note_ng[i]+'</span><br>';
+								tableData += '</td>';
+							}else{
+								tableData += '<td>';
+								tableData += '</td>';
+							}
+							tableData += '</tr>';
+						}
+					}
+
+					index++;
+				});
+				$('#bodyTableDetail').append(tableData);
+				$('#myModalLabel').html("Detail Record of "+$('#op2').text());
+				$('#loading').hide();
+				$('#record-modal').modal('show');
+			}
+			else{
+				$('#loading').hide();
+				audio_error.play();
+				openErrorGritter('Error', result.message);
+			}
+		});
 	}
 
 </script>
