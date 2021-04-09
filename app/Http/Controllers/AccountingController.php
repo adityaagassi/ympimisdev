@@ -293,6 +293,12 @@ class AccountingController extends Controller
             if (file_exists(public_path() .'/images/purchase_item/'.$item_code.'.jpg')) {
                 return '<img src="'.url('images/purchase_item').'/'.$item_code.'.jpg" width="250">';
             }
+            else if (file_exists(public_path() .'/images/purchase_item/'.$item_code.'.png')) {
+                return '<img src="'.url('images/purchase_item').'/'.$item_code.'.png" width="250">';
+            }
+            else{
+                return '-';
+            }
 
         })
         ->rawColumns(['action' => 'action','image' => 'image'])
