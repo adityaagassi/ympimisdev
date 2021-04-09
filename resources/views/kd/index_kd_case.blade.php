@@ -442,9 +442,6 @@
 			location : location,
 		}
 
-		console.log(target);
-		console.log(quantity);
-
 		if(material_number == ''){
 			alert("Material belum dipilih");
 			return false;
@@ -455,7 +452,7 @@
 			return false;
 		}
 
-		if(quantity > target){
+		if(parseInt(quantity) > parseInt(target)){
 			alert("Quantity Packing Melebihi Target");
 			return false;
 		}
