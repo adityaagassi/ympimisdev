@@ -57,31 +57,31 @@ class SurveyController extends Controller
 				GROUP BY
 					department UNION ALL
 				SELECT
-					count( emergency_surveys.employee_id ) AS count_tidak,
+					count( miraimobile.emergency_surveys.employee_id ) AS count_tidak,
 					0 AS count_all,
 					0 AS count_iya,
 					COALESCE ( employee_syncs.department, '' ) AS department 
 				FROM
 					employee_syncs
-					LEFT JOIN emergency_surveys ON emergency_surveys.employee_id = employee_syncs.employee_id 
+					LEFT JOIN miraimobile.emergency_surveys ON miraimobile.emergency_surveys.employee_id = employee_syncs.employee_id 
 				WHERE
 					employee_syncs.end_date IS NULL 
 					AND jawaban = 'Tidak' 
-					AND emergency_surveys.keterangan = '".$keterangan."'  
+					AND miraimobile.emergency_surveys.keterangan = '".$keterangan."'  
 				GROUP BY
 					department UNION ALL
 				SELECT
 					0 AS count_tidak,
 					0 AS count_all,
-					count( emergency_surveys.employee_id ) AS count_iya,
+					count( miraimobile.emergency_surveys.employee_id ) AS count_iya,
 					COALESCE ( employee_syncs.department, '' ) AS department 
 				FROM
 					employee_syncs
-					LEFT JOIN emergency_surveys ON emergency_surveys.employee_id = employee_syncs.employee_id 
+					LEFT JOIN miraimobile.emergency_surveys ON miraimobile.emergency_surveys.employee_id = employee_syncs.employee_id 
 				WHERE
 					employee_syncs.end_date IS NULL 
 					AND jawaban = 'Iya' 
-					AND emergency_surveys.keterangan = '".$keterangan."' 
+					AND miraimobile.emergency_surveys.keterangan = '".$keterangan."' 
 				GROUP BY
 					department 
 				) a
@@ -135,12 +135,12 @@ class SurveyController extends Controller
 						COALESCE ( nama, '' ) AS nama
 					FROM
 						employee_syncs
-						LEFT JOIN emergency_surveys ON employee_syncs.employee_id = emergency_surveys.employee_id 
+						LEFT JOIN miraimobile.emergency_surveys ON employee_syncs.employee_id = miraimobile.emergency_surveys.employee_id 
 						and keterangan = '".$keterangan."'
 					WHERE
 						employee_syncs.end_date IS NULL 
 						AND employee_syncs.department IS NULL 
-						AND emergency_surveys.employee_id IS NULL");
+						AND miraimobile.emergency_surveys.employee_id IS NULL");
 				}else{
 					$survey = DB::SELECT("SELECT
 						employee_syncs.employee_id,
@@ -151,7 +151,7 @@ class SurveyController extends Controller
 						COALESCE ( nama, '' ) AS nama
 					FROM
 						employee_syncs
-						LEFT JOIN emergency_surveys ON employee_syncs.employee_id = emergency_surveys.employee_id 
+						LEFT JOIN miraimobile.emergency_surveys ON employee_syncs.employee_id = miraimobile.emergency_surveys.employee_id 
 						AND keterangan = '".$keterangan."' 
 					WHERE
 						employee_syncs.end_date IS NULL 
@@ -169,12 +169,12 @@ class SurveyController extends Controller
 						COALESCE ( nama, '' ) AS nama
 					FROM
 						employee_syncs
-						LEFT JOIN emergency_surveys ON employee_syncs.employee_id = emergency_surveys.employee_id 
+						LEFT JOIN miraimobile.emergency_surveys ON employee_syncs.employee_id = miraimobile.emergency_surveys.employee_id 
 						AND keterangan = '".$keterangan."'
 						JOIN departments ON department_name = employee_syncs.department 
 					WHERE
 						employee_syncs.end_date IS NULL 
-						AND emergency_surveys.employee_id IS NULL 
+						AND miraimobile.emergency_surveys.employee_id IS NULL 
 						AND department_shortname = '".$dept."'");
 				}else{
 					$survey = DB::SELECT("SELECT
@@ -186,7 +186,7 @@ class SurveyController extends Controller
 						COALESCE ( nama, '' ) AS nama 
 					FROM
 						employee_syncs
-						LEFT JOIN emergency_surveys ON employee_syncs.employee_id = emergency_surveys.employee_id 
+						LEFT JOIN miraimobile.emergency_surveys ON employee_syncs.employee_id = miraimobile.emergency_surveys.employee_id 
 						AND keterangan = '".$keterangan."'
 						JOIN departments ON department_name = employee_syncs.department 
 					WHERE
