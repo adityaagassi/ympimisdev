@@ -1914,6 +1914,8 @@ class KnockDownController extends Controller{
 			$storage = "('BPRO')";
 		}else if ($id == 'cl-body') {
 			$storage = "('CL-BODY')";
+		}else if ($id == 'case') {
+			$storage = "('CASE')";
 		}else if ($id == 'welding-body') {
 			$storage = "('WELDING') AND m.kd_name = 'BODY-BELL'";
 		}
@@ -3169,7 +3171,7 @@ class KnockDownController extends Controller{
 				$printer_name = 'KDO CASE';
 			}
 			else if($receive == 'PN91'){
-				$printer_name = 'FLO Printer 104';
+				$printer_name = 'FLO Printer 105';
 			}
 			else if($receive == 'VN91' || $receive == 'VN11'){
 				$printer_name = 'FLO Printer VN';

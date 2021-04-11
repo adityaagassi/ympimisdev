@@ -58,6 +58,18 @@
 	}
 	
 	#loading { display: none; }
+
+	.btn-choice {
+		width: 100%;
+		font-size: 2vw;
+	}
+
+	.div-choice {
+		margin: 1%;
+		width: 18%;
+		display: inline-block;
+	}
+
 </style>
 @stop
 @section('header')
@@ -108,6 +120,8 @@
 				<div class="col-xs-5" style="margin-top: 3%;">
 					<div class="row">
 						<input type="hidden" id="shipment_id">
+						<input type="hidden" id="target">
+
 						<div class="col-xs-6">
 							<span style="font-weight: bold; font-size: 16px;">Stuffing Date:</span>
 						</div>
@@ -191,7 +205,7 @@
 	</div>'
 
 	<div class="modal modal-default fade" id="choice">
-		<div class="modal-dialog modal-xs">
+		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h1 style="background-color: #00a65a; text-align: center;" class="modal-title">
@@ -199,13 +213,10 @@
 					</h1>
 				</div>
 				<div class="modal-body">
-					<div class="modal-body">
-						<h5>Are you sure print KDO Number ?</h5>
-					</div>
+					<div class="row" id="choice_qty"></div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-					<button class="btn btn-success" onclick="forcePrint()"><span><i class="fa fa-print"></i> Print</span></button>
+					<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
 				</div>
 			</div>
 		</div>
@@ -458,6 +469,11 @@
 			return false;
 		}
 
+		if(quantity == ''){
+			alert("Quantity harus diisi");
+			return false;
+		}
+
 
 		$("#loading").show();
 		$.post(url, data,  function(result, status, xhr){
@@ -502,12 +518,8 @@
 		$('#destination').val(destination);
 		$('#material_number').val(material_number);
 		$('#material_description').val(material_description);
-
-		// if((target/lot_completion) >= 1){
-		// 	$('#qty_packing').val(lot_completion);
-		// }else{
-		// 	$('#qty_packing').val(target);
-		// }
+		$('#target').val(target);
+		$('#qty_packing').val('');
 	}
 
 	function showChoice(){
@@ -518,8 +530,33 @@
 			return false;
 		}
 
+		$('#choice_qty').html('');
+
+		var target = $('#target').val();
+		var loop = target/100;
+		var txt = '';
+
+		txt += '<div class="col-xs-12">';
+		txt += '<center>';
+		for (var i = 1; i <= loop; i++) {
+			txt += '<div class="div-choice">';
+			txt += '<button class="button btn-primary btn-choice" id="qty_'+(i*100)+'" onclick="selectChoice(id)">'+(i*100)+'</button>';
+			txt += '</div>';
+		}
+		txt += '</center>';
+		txt += '</div>';
+
+		$('#choice_qty').html(txt);
 		$('#choice').modal('show');
 
+
+	}
+
+	function selectChoice(id) {
+		var data = id.split('_');
+
+		$('#qty_packing').val(parseInt(data[1]));
+		$('#choice').modal('hide');
 
 	}
 

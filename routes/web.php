@@ -1839,11 +1839,11 @@ Route::group(['nav' => 'S56', 'middleware' => 'permission'], function(){
 });
 
 //CASE
-Route::group(['nav' => 'S53', 'middleware' => 'permission'], function(){
-	Route::get('index/kd_case/{id}', 'KnockDownController@indexKD');
-	Route::post('fetch/kd_print_case', 'KnockDownController@printLabelNew');
-	Route::get('index/print_label_case/{id}', 'KnockDownController@indexPrintLabelSubassy');
-});
+// Route::group(['nav' => 'S53', 'middleware' => 'permission'], function(){
+// 	Route::get('index/kd_case/{id}', 'KnockDownController@indexKD');
+// 	Route::post('fetch/kd_print_case', 'KnockDownController@printLabelNewSingle');
+// 	Route::get('index/print_label_case/{id}', 'KnockDownController@indexPrintLabelSubassy');
+// });
 
 //CLBODY
 Route::group(['nav' => 'S58', 'middleware' => 'permission'], function(){
