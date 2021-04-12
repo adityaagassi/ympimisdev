@@ -209,7 +209,7 @@
 									<option value="{{$vendor->vendor}}">{{$vendor->vendor}}</option>
 									@endforeach
 								</select>
-								<input type="text" name="vendor" id="vendor" style="color: black !important" hidden>
+								<input type="text" name="vendor" id="vendor" style="color: black !important">
 							</div>
 						</div>
 						<div class="col-md-4">
@@ -377,6 +377,8 @@
 		location:location,
 		inspection_level:inspection_level,
 	}
+
+	console.log(data);
 	$.get('{{ url("fetch/qa/report/incoming") }}',data, function(result, status, xhr){
 			if(result.status){
 

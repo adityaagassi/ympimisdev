@@ -57,20 +57,22 @@ class DisplayController extends Controller
 			ORDER BY
 			week_date DESC");
 
-		$cost_centers = db::select("SELECT DISTINCT
-			cost_center_eff 
-			FROM
-			cost_centers2 
-			WHERE
-			cost_center_eff IS NOT NULL 
-			ORDER BY
-			cost_center_eff ASC");
+		// $cost_centers = db::select("SELECT DISTINCT
+		// 	cost_center_eff 
+		// 	FROM
+		// 	cost_centers2 
+		// 	WHERE
+		// 	cost_center_eff IS NOT NULL 
+		// 	ORDER BY
+		// 	cost_center_eff ASC");
 
 		$last_datas = db::select("SELECT
 			cost_center_name,
 			max( total_date ) AS last_date 
 			FROM
 			efficiency_uploads 
+			WHERE
+			cost_center_name IN ( SELECT cost_center_eff_2 FROM cost_centers2 WHERE cost_center_eff_2 IS NOT NULL ) 
 			GROUP BY
 			cost_center_name");
 
@@ -78,7 +80,7 @@ class DisplayController extends Controller
 			'title' => $title,
 			'title_jp' => $title_jp,
 			'weeks' => $weeks,
-			'cost_centers' => $cost_centers,
+			// 'cost_centers' => $cost_centers,
 			'last_datas' => $last_datas
 		))->with('page', 'Display Efficiency Monitoring')->with('head', 'Display');
 	}
@@ -94,6 +96,7 @@ class DisplayController extends Controller
 		$first = date('Y-m-01', strtotime($date));
 		$now = date('Y-m-d', strtotime($date));
 		$yesterday = date('Y-m-d', strtotime('-1 day', strtotime($date)));
+		$end = date('Y-m-t', strtotime($date));
 
 		$stockroom_keys = db::select("SELECT
 			materials.issue_storage_location,
