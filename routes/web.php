@@ -136,7 +136,6 @@ Route::get('fetch/general/mosaic_detail', 'GeneralController@fetchMosaicDetail')
 Route::get('index/general/pointing_call/{id}', 'GeneralController@indexGeneralPointingCall');
 Route::get('fetch/general/pointing_call', 'GeneralController@fetchGeneralPointingCall');
 Route::post('edit/general/pointing_call_pic', 'GeneralController@editGeneralPointingCallPic');
-Route::get('fetch/general/pointing_call_general', 'GeneralController@fetchGeneralPointingCallGeneral');
 
 //GENERAL
 Route::get('index/general/omi_visitor', 'GeneralController@indexOmiVisitor');
@@ -614,6 +613,7 @@ Route::get('fetch/report/overtime_by_employee', 'OvertimeController@fetchOvertim
 Route::get('fetch/report/detail_ot_by_employee', 'OvertimeController@detailOvertimeByEmployee');
 Route::get('index/report/overtime_resume', 'OvertimeController@indexMonthlyResume');
 Route::get('fetch/report/overtime_resume', 'OvertimeController@fetchMonthlyResume');
+Route::get('index/report/overtime_yearly', 'OvertimeController@indexYearlyResume');
 
 Route::get('index/report/ga_report', 'OvertimeController@indexGAReport');
 Route::get('fetch/report/ga_report', 'OvertimeController@fetchGAReport');
@@ -4289,43 +4289,59 @@ Route::get('/welcome_trial', function () {
 });
 
 
-// MIRAI MOBILE
-Route::get('index/mirai_mobile/index', 'MiraiMobileController@index');
+Route::group(['nav' => 'M32', 'middleware' => 'permission'], function(){
+	// MIRAI MOBILE
+	Route::get('index/mirai_mobile/index', 'MiraiMobileController@index');
 
-//CORONA MAP
-Route::get('index/mirai_mobile/corona_map', 'MiraiMobileController@indexCoronaMap');
+	//CORONA MAP
+	Route::get('index/mirai_mobile/corona_map', 'MiraiMobileController@indexCoronaMap');
 
-// CORONA
-Route::get('index/corona_information', 'MiraiMobileController@indexCoronaInformation');
-Route::get('fetch/corona_information', 'MiraiMobileController@fetchCoronaInformation');
+	// CORONA
+	Route::get('index/corona_information', 'MiraiMobileController@indexCoronaInformation');
+	Route::get('fetch/corona_information', 'MiraiMobileController@fetchCoronaInformation');
 
-//Display Health
-Route::get('index/mirai_mobile/healthy_report', 'MiraiMobileController@display_health');
-Route::get('fetch/mirai_mobile/healthy_report', 'MiraiMobileController@fetch_health');
-Route::get('index/mirai_mobile/detail', 'MiraiMobileController@fetch_detail');
-Route::get('index/mirai_mobile/detail_sakit', 'MiraiMobileController@fetch_detail_sakit');
+	//Display Health
+	Route::get('index/mirai_mobile/healthy_report', 'MiraiMobileController@display_health');
+	Route::get('fetch/mirai_mobile/healthy_report', 'MiraiMobileController@fetch_health');
+	Route::get('index/mirai_mobile/detail', 'MiraiMobileController@fetch_detail');
+	Route::get('index/mirai_mobile/detail_sakit', 'MiraiMobileController@fetch_detail_sakit');
 
-//report attendance
-Route::get('index/mirai_mobile/report_attendance', 'MiraiMobileController@health');
-Route::get('fetch/mirai_mobile/report_attendance', 'MiraiMobileController@fetchHealthData');
-Route::get('fetch/location_employee', 'MiraiMobileController@fetchLocationEmployee');
-Route::get('index/mirai_mobile/report_attendance_sbh', 'MiraiMobileController@healthSbh');
-Route::get('fetch/mirai_mobile/report_attendance_sbh', 'MiraiMobileController@fetchHealthDataSbh');
+	//report attendance
+	Route::get('index/mirai_mobile/report_attendance', 'MiraiMobileController@health');
+	Route::get('fetch/mirai_mobile/report_attendance', 'MiraiMobileController@fetchHealthData');
+	Route::get('fetch/location_employee', 'MiraiMobileController@fetchLocationEmployee');
+	Route::get('index/mirai_mobile/report_attendance_sbh', 'MiraiMobileController@healthSbh');
+	Route::get('fetch/mirai_mobile/report_attendance_sbh', 'MiraiMobileController@fetchHealthDataSbh');
 
-//report shift
-Route::get('index/mirai_mobile/report_shift', 'MiraiMobileController@shift');
-Route::get('fetch/mirai_mobile/report_shift', 'MiraiMobileController@fetchShiftData');
+	//report shift
+	Route::get('index/mirai_mobile/report_shift', 'MiraiMobileController@shift');
+	Route::get('fetch/mirai_mobile/report_shift', 'MiraiMobileController@fetchShiftData');
 
-//report location
-Route::get('index/mirai_mobile/report_location', 'MiraiMobileController@location');
-Route::get('fetch/mirai_mobile/report_location', 'MiraiMobileController@fetchLocation');
-Route::get('fetch/mirai_mobile/report_location/detail', 'MiraiMobileController@fetchLocationDetail');
-Route::get('fetch/mirai_mobile/report_location/detail_all', 'MiraiMobileController@fetchLocationDetailAll');
-Route::get('export/mirai_mobile/report_location', 'MiraiMobileController@exportList');
+	//report location
+	Route::get('index/mirai_mobile/report_location', 'MiraiMobileController@location');
+	Route::get('fetch/mirai_mobile/report_location', 'MiraiMobileController@fetchLocation');
+	Route::get('fetch/mirai_mobile/report_location/detail', 'MiraiMobileController@fetchLocationDetail');
+	Route::get('fetch/mirai_mobile/report_location/detail_all', 'MiraiMobileController@fetchLocationDetailAll');
+	Route::get('export/mirai_mobile/report_location', 'MiraiMobileController@exportList');
 
-//report shift
-Route::get('index/mirai_mobile/report_indication', 'MiraiMobileController@indication');
-Route::get('fetch/mirai_mobile/report_indication', 'MiraiMobileController@fetchIndicationData');
+	//report shift
+	Route::get('index/mirai_mobile/report_indication', 'MiraiMobileController@indication');
+	Route::get('fetch/mirai_mobile/report_indication', 'MiraiMobileController@fetchIndicationData');
+
+	//Emergency Survey
+	Route::get('index/survey', 'SurveyController@indexSurvey');
+	Route::get('fetch/survey', 'SurveyController@fetchSurvey');
+	Route::get('fetch/survey/detail', 'SurveyController@fetchSurveyDetail');
+
+	//Survey Covid
+	Route::get('index/survey_covid', 'SurveyController@indexSurveyCovid');
+	Route::get('fetch/survey_covid', 'SurveyController@fetchSurveyCovid');
+	Route::get('fetch/survey_covid/detail', 'SurveyController@fetchSurveyCovidDetail');
+
+	Route::get('index/survey_covid/report', 'SurveyController@indexSurveyCovidReport');
+	Route::get('fetch/survey_covid/report', 'SurveyController@fetchSurveyCovidReport');
+	Route::get('fetch/survey_covid/report/detail', 'SurveyController@fetchSurveyCovidReportDetail');
+});
 
 //audit MIS
 Route::get('index/audit_mis', 'DailyReportController@indexAuditMIS');
@@ -4344,20 +4360,6 @@ Route::get('print/inventory_mis/{id}', 'DailyReportController@printInventory');
 
 Route::get('print2/inventory_mis/{id}', 'DailyReportController@printInventory2');
 
-
-//Emergency Survey
-Route::get('index/survey', 'SurveyController@indexSurvey');
-Route::get('fetch/survey', 'SurveyController@fetchSurvey');
-Route::get('fetch/survey/detail', 'SurveyController@fetchSurveyDetail');
-
-//Survey Covid
-Route::get('index/survey_covid', 'SurveyController@indexSurveyCovid');
-Route::get('fetch/survey_covid', 'SurveyController@fetchSurveyCovid');
-Route::get('fetch/survey_covid/detail', 'SurveyController@fetchSurveyCovidDetail');
-
-Route::get('index/survey_covid/report', 'SurveyController@indexSurveyCovidReport');
-Route::get('fetch/survey_covid/report', 'SurveyController@fetchSurveyCovidReport');
-Route::get('fetch/survey_covid/report/detail', 'SurveyController@fetchSurveyCovidReportDetail');
 
 Route::get('/radar_covid', function () {
 	return view('mirai_mobile.radar_covid');
@@ -4523,6 +4525,8 @@ Route::get('index/detail/{kode_request}', 'WarehouseNewController@indexDetailPel
 Route::get('fetch/detail/request', 'WarehouseNewController@fetchDetailPelayanan');
 Route::post('post/pelayanan', 'WarehouseNewController@savepelayanan');
 Route::post('update/permintaan', 'WarehouseNewController@updatePermintaan');
+Route::get('fetch/history/request', 'WarehouseNewController@fetchRequest');
+Route::post('update/pelayanan', 'WarehouseNewController@updatePelayanan');
 
 
 //Sanding
@@ -4699,14 +4703,16 @@ Route::get('fetch/packing_documentation/data', 'AuditController@documentation_da
 //End Dokumentasi Packing
 
 
-//Server Room
 
-Route::get('index/server_room', 'PingController@ServerRoom');
-Route::get('index/server_room/{id}', 'PingController@ServerRoomPing');
-Route::get('post/server_room/ping/trend', 'PingController@ServerRoomPingTrend');
-Route::get('post/server_room/network_usage', 'PingController@PostNetworkUsage');
+Route::group(['nav' => 'M33', 'middleware' => 'permission'], function(){
+	//Server Room
 
-Route::get('post/server_room/all_app_hardisk', 'PingController@HardiskAllNetwork');
-Route::get('post/server_room/all_app_ping', 'PingController@AppStatusPingTrend');
+	Route::get('index/server_room', 'PingController@ServerRoom');
+	Route::get('index/server_room/{id}', 'PingController@ServerRoomPing');
+	Route::get('post/server_room/ping/trend', 'PingController@ServerRoomPingTrend');
+	Route::get('post/server_room/network_usage', 'PingController@PostNetworkUsage');
 
-//End Server Room
+	Route::get('post/server_room/all_app_status', 'PingController@AllHardiskPingStatus');
+
+	//End Server Room
+});

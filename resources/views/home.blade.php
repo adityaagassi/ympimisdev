@@ -105,153 +105,146 @@
                             <a href="{{ url("index/report/overtime_monthly_bdg") }}">
                                 <i class="fa fa-caret-right"></i> OT Monitor By CC - Budget <br> (コストセンターによる残業管理)
                             </a>
-                            {{--  <br>
-                                <a href="http://172.17.128.4/myhris/management/overtime_control">
-                                    <i class="fa fa-caret-right"></i> OT Monitor Daily (日次ざんぎぃう管理)
+                            <br>
+                            <a href="{{ url("index/report/overtime_yearly") }}">
+                                <i class="fa fa-caret-right"></i> OT Monitor by Fiscal <br> (??)
+                            </a>
+                            <br>
+                            <a href="{{ url("index/report/overtime_section")}}">
+                                <i class="fa fa-caret-right"></i> OT By CC (コストセンター別の残業)
+                            </a>
+                            <br>
+                            <a href="{{ url("index/report/overtime_data") }}">
+                                <i class="fa fa-caret-right"></i> OT Data (残業データ)
+                            </a>
+                            <br>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">Manpower Information (人工の情報)</span>
+                            <br>
+                            <a href="{{ url("index/report/manpower") }}">
+                                <i class="fa fa-caret-right"></i> Manpower Information (人工の情報)
+                            </a>
+                            {{-- <br>
+                                <a href="{{ url("index/report/stat") }}">
+                                    <i class="fa fa-caret-right"></i>By Status (雇用形態別)
+                                </a>
+                                <br>
+                                <a href="{{ url("index/report/department") }}">
+                                    <i class="fa fa-caret-right"></i>By Department (部門別)
+                                </a>
+                                <br>
+                                <a href="{{ url("index/report/grade") }}">
+                                    <i class="fa fa-caret-right"></i>By Grade (等級別)
+                                </a>
+                                <br>
+                                <a href="{{ url("index/report/jabatan") }}">
+                                    <i class="fa fa-caret-right"></i>By Position (役職別)
+                                </a>
+                                <br>
+                                <a href="{{ url("index/report/gender") }}">
+                                    <i class="fa fa-caret-right"></i>By Gender (性別)
                                 </a> --}}
                                 <br>
-                                <a href="{{ url("index/report/overtime_section")}}">
-                                    <i class="fa fa-caret-right"></i> OT By CC (コストセンター別の残業)
-                                </a>
-                                <br>
-                                <a href="{{ url("index/report/overtime_data") }}">
-                                    <i class="fa fa-caret-right"></i> OT Data (残業データ)
-                                </a>
-                                <br>
-                                {{--   <a href="{{ url("index/report/overtime_resume") }}">
-                                    <i class="fa fa-caret-right"></i> Monthly OT & MP Resume (月次残業・要員まとめ)
-                                </a>
-                                <br> --}}
-                                <a href="{{ url("information_board") }}">
-                                    <i class="fa fa-caret-right"></i> Create OT Form (残業申請書)
+                                <a href="{{ url("index/report/total_meeting") }}">
+                                    <i class="fa fa-caret-right"></i> Total Meeting (トータルミーティング)
                                 </a>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <span style="font-weight: bold;">Manpower Information (人工の情報)</span>
-                                <br>
-                                <a href="{{ url("index/report/manpower") }}">
-                                    <i class="fa fa-caret-right"></i> Manpower Information (人工の情報)
-                                </a>
+                                <span style="font-weight: bold;">Presence Information (出勤情報)</span>
                                 {{-- <br>
-                                    <a href="{{ url("index/report/stat") }}">
-                                        <i class="fa fa-caret-right"></i>By Status (雇用形態別)
-                                    </a>
-                                    <br>
-                                    <a href="{{ url("index/report/department") }}">
-                                        <i class="fa fa-caret-right"></i>By Department (部門別)
-                                    </a>
-                                    <br>
-                                    <a href="{{ url("index/report/grade") }}">
-                                        <i class="fa fa-caret-right"></i>By Grade (等級別)
-                                    </a>
-                                    <br>
-                                    <a href="{{ url("index/report/jabatan") }}">
-                                        <i class="fa fa-caret-right"></i>By Position (役職別)
-                                    </a>
-                                    <br>
-                                    <a href="{{ url("index/report/gender") }}">
-                                        <i class="fa fa-caret-right"></i>By Gender (性別)
+                                    <a href="{{ url("index/general/online_transportation") }}">
+                                        <i class="fa fa-caret-right"></i> Online Attendance And Transportation Report (出席・移動のオンライン報告)
                                     </a> --}}
                                     <br>
-                                    <a href="{{ url("index/report/total_meeting") }}">
-                                        <i class="fa fa-caret-right"></i> Total Meeting (トータルミーティング)
+                                    <a href="{{ url("index/report/employee_resume") }}">
+                                        <i class="fa fa-caret-right"></i> Employee Resume (従業員のまとめ)
+                                    </a>
+                                    <br>
+                                    {{--  <a href="{{ url("index/report/daily_attendance")}}">
+                                        <i class="fa fa-caret-right"></i>Attendance (出勤)
+                                    </a>
+                                    <br> --}}
+                                    <a href="{{ url("index/report/absence") }}">
+                                        <i class="fa fa-caret-right"></i> Absence (欠勤)
+                                    </a>
+                                    <br>
+                                    <a href="{{ url("index/report/attendance_data")}}">
+                                        <i class="fa fa-caret-right"></i> Attendance Data (出席データ)
+                                    </a>
+                                    <br>
+                                    <a href="{{ url("index/report/checklog_data")}}">
+                                        <i class="fa fa-caret-right"></i> Checklog Data (出退勤登録データ)
                                     </a>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <span style="font-weight: bold;">Presence Information (出勤情報)</span>
-                                    {{-- <br>
-                                        <a href="{{ url("index/general/online_transportation") }}">
-                                            <i class="fa fa-caret-right"></i> Online Attendance And Transportation Report (出席・移動のオンライン報告)
-                                        </a> --}}
-                                        <br>
-                                        <a href="{{ url("index/report/employee_resume") }}">
-                                            <i class="fa fa-caret-right"></i> Employee Resume (従業員のまとめ)
-                                        </a>
-                                        <br>
-                                        {{--  <a href="{{ url("index/report/daily_attendance")}}">
-                                            <i class="fa fa-caret-right"></i>Attendance (出勤)
-                                        </a>
-                                        <br> --}}
-                                        <a href="{{ url("index/report/absence") }}">
-                                            <i class="fa fa-caret-right"></i> Absence (欠勤)
-                                        </a>
-                                        <br>
-                                        <a href="{{ url("index/report/attendance_data")}}">
-                                            <i class="fa fa-caret-right"></i> Attendance Data (出席データ)
-                                        </a>
-                                        <br>
-                                        <a href="{{ url("index/report/checklog_data")}}">
-                                            <i class="fa fa-caret-right"></i> Checklog Data (出退勤登録データ)
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span style="font-weight: bold;">General Affair (総務課)</span>
-                                        <br>
-                                        <a href="{{ url("index/ga_control/driver") }}">
-                                            <i class="fa fa-caret-right"></i> Driver Monitoring System (ドライバー管理システム)
-                                        </a>
-                                        <br>
-                                        <a href="#">
-                                            <i class="fa fa-caret-right"></i> Live Cooking Order (ライブクッキングの予約)
-                                        </a>
-                                        <br>
-                                        <a href="#">
-                                            <i class="fa fa-caret-right"></i> Japanese Food Order (和食弁当の予約)
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span style="font-weight: bold;">Quality Assurance (品保)</span>
-                                        <br>                            
-                                        <a href="{{ url("index/qc_report/grafik_cpar") }}">
-                                            <i class="fa fa-caret-right"></i> CPAR & CAR Monitoring (是正予防策・是正策監視)
-                                        </a>
-                                        <br>
-                                        <a href="{{ url("index/qc_report") }}">
-                                            <i class="fa fa-caret-right"></i> Corrective & Preventive Action Request (是正予防策依頼)
-                                        </a>
-                                        <br>
-                                        <a href="{{ url("index/qc_car") }}">
-                                            <i class="fa fa-caret-right"></i> Corrective Action Report (是正策リポート)
-                                        </a>
-                                        <br>
-                                        <a href="{{ url("index/cpar/resume") }}">
-                                            <i class="fa fa-caret-right"></i> Resume CPAR & CAR (是正予防策・是正策のまとめ)
-                                        </a>
-                                        <br>
-                                        <a href="{{ url("index/qc_report/grafik_kategori") }}">
-                                            <i class="fa fa-caret-right"></i> Report CPAR By Category (種類別の是正処置報告書)
-                                        </a>
-                                        <br>                   
-                                        <a href="{{ url("index/qa_ymmj") }}">
-                                            <i class="fa fa-caret-right"></i> Form Ketidaksesuaian YMMJ (YMMJ不具合リポート)
-                                        </a>
-                                        <br>
-                                        <a href="{{ url("index/qa_ymmj/grafik_ymmj") }}">
-                                            <i class="fa fa-caret-right"></i> Report YMMJ (YMMJへの報告)
-                                        </a>
-                                        <br>
-                                        <a href="{{ url("index/qa") }}">
-                                            <i class="fa fa-caret-right"></i> Incoming Check (受入検査)
-                                        </a>
-                                    </td>
-                                </tr>
-                                {{-- <tr>
-                                    <td>                        
-                                        <a href="{{ url("index/qa_ymmj") }}">
-                                            <i class="fa fa-caret-right"></i> Form Ketidaksesuaian YMMJ (YMMJ不具合リポート)
-                                        </a>
-                                        <br>
-                                        <a href="{{ url("index/qa_ymmj/grafik_ymmj") }}">
-                                            <i class="fa fa-caret-right"></i> Report YMMJ (YMMJへの報告)
-                                        </a>
+                                    <span style="font-weight: bold;">General Affair (総務課)</span>
+                                    <br>
+                                    <a href="{{ url("index/ga_control/driver") }}">
+                                        <i class="fa fa-caret-right"></i> Driver Monitoring System (ドライバー管理システム)
+                                    </a>
+                                    <br>
+                                    <a href="#">
+                                        <i class="fa fa-caret-right"></i> Live Cooking Order (ライブクッキングの予約)
+                                    </a>
+                                    <br>
+                                    <a href="#">
+                                        <i class="fa fa-caret-right"></i> Japanese Food Order (和食弁当の予約)
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span style="font-weight: bold;">Quality Assurance (品保)</span>
+                                    <br>                            
+                                    <a href="{{ url("index/qc_report/grafik_cpar") }}">
+                                        <i class="fa fa-caret-right"></i> CPAR & CAR Monitoring (是正予防策・是正策監視)
+                                    </a>
+                                    <br>
+                                    <a href="{{ url("index/qc_report") }}">
+                                        <i class="fa fa-caret-right"></i> Corrective & Preventive Action Request (是正予防策依頼)
+                                    </a>
+                                    <br>
+                                    <a href="{{ url("index/qc_car") }}">
+                                        <i class="fa fa-caret-right"></i> Corrective Action Report (是正策リポート)
+                                    </a>
+                                    <br>
+                                    <a href="{{ url("index/cpar/resume") }}">
+                                        <i class="fa fa-caret-right"></i> Resume CPAR & CAR (是正予防策・是正策のまとめ)
+                                    </a>
+                                    <br>
+                                    <a href="{{ url("index/qc_report/grafik_kategori") }}">
+                                        <i class="fa fa-caret-right"></i> Report CPAR By Category (種類別の是正処置報告書)
+                                    </a>
+                                    <br>                   
+                                    <a href="{{ url("index/qa_ymmj") }}">
+                                        <i class="fa fa-caret-right"></i> Form Ketidaksesuaian YMMJ (YMMJ不具合リポート)
+                                    </a>
+                                    <br>
+                                    <a href="{{ url("index/qa_ymmj/grafik_ymmj") }}">
+                                        <i class="fa fa-caret-right"></i> Report YMMJ (YMMJへの報告)
+                                    </a>
+                                    <br>
+                                    <a href="{{ url("index/qa") }}">
+                                        <i class="fa fa-caret-right"></i> Incoming Check (受入検査)
+                                    </a>
+                                </td>
+                            </tr>
+                            {{-- <tr>
+                                <td>                        
+                                    <a href="{{ url("index/qa_ymmj") }}">
+                                        <i class="fa fa-caret-right"></i> Form Ketidaksesuaian YMMJ (YMMJ不具合リポート)
+                                    </a>
+                                    <br>
+                                    <a href="{{ url("index/qa_ymmj/grafik_ymmj") }}">
+                                        <i class="fa fa-caret-right"></i> Report YMMJ (YMMJへの報告)
+                                    </a>
                             <!-- <br>
                             <a href="{{ url("index/request_qa") }}">
                                 <i class="fa fa-caret-right"></i> Form Request CPAR QA (品保是正予防策依頼書)
@@ -460,7 +453,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                       <td>
+                     <td>
                         {{--     <a href="{{ url("index/report/overtime_outsource") }}">
                             <i class="fa fa-caret-right"></i> Outsource OT (派遣社員の残業管理)
                         </a> --}}
@@ -646,19 +639,19 @@
                                 <i class="fa fa-caret-right"></i> Sharepoint;
                             </a>
                             <a href="https://a01.yamaha.co.jp/fw/dfw/SAP2/Citrix/XenApp/site/default.aspx" target="_blank">
-                             SAP;
-                         </a>
-                         <a href="https://adagio.yamaha.co.jp/imart/default.portal" target="_blank">
-                             Adagio;
-                         </a>
-                         <a href="https://a01.yamaha.co.jp/fw/dfw/MA5/ma5/EntranceServlet" target="_blank">
-                             MA5;
-                         </a>
-                     </td>     
-                 </tr>                                                                             
-             </tbody>
-         </table>
-         <table class="table table-bordered">
+                               SAP;
+                           </a>
+                           <a href="https://adagio.yamaha.co.jp/imart/default.portal" target="_blank">
+                               Adagio;
+                           </a>
+                           <a href="https://a01.yamaha.co.jp/fw/dfw/MA5/ma5/EntranceServlet" target="_blank">
+                               MA5;
+                           </a>
+                       </td>     
+                   </tr>                                                                             
+               </tbody>
+           </table>
+           <table class="table table-bordered">
             <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
                 <tr>
                     <th>Workshop<br>ワークショップ</th>
@@ -963,7 +956,7 @@
                                     <i class="fa fa-caret-right"></i> Recorder (リコーダー)
                                 </a>
                                 <br>
-                                 <a href="{{ url("index/final/reed_synthetic") }}">
+                                <a href="{{ url("index/final/reed_synthetic") }}">
                                     <i class="fa fa-caret-right"></i> Reed Synthetic ()
                                 </a>
                                 <br>
@@ -1186,6 +1179,10 @@
                                                         <br>
                                                         <a href="{{ url("/index/general/pointing_call/japanese") }}">
                                                             <i class="fa fa-caret-right"></i> Japanese Pointing Call (駐在員指差し呼称)
+                                                        </a>
+                                                        <br>
+                                                        <a href="{{ url("/index/general/pointing_call/national") }}">
+                                                            <i class="fa fa-caret-right"></i> NS Pointing Call (ナショナル・スタッフ用の指差し呼称)
                                                         </a>
                                                         {{-- <br>
                                                             <a href="{{ url("/index/production_achievement") }}">

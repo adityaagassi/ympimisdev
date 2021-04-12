@@ -2072,11 +2072,11 @@ public function indexGeneralPointingCall($id){
 			'location' => $id
 		))->with('head', 'Pointing Calls');
 	}
-	if($id == 'ind'){
-		$title = 'Indonesian Pointing Calls';
-		$title_jp = '駐在員指差し呼称';
+	if($id == 'national'){
+		$title = 'National Staff Pointing Calls';
+		$title_jp = 'ナショナル・スタッフ用の指差し呼称';
 
-		return view('general.pointing_call.ind', array(
+		return view('general.pointing_call.national', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
 			'default_language' => 'id',
@@ -2109,7 +2109,7 @@ public function editGeneralPointingCallPic(Request $request){
 }
 
 public function fetchGeneralPointingCall(Request $request){
-	if ($request->get('location') == 'japanese') {
+	if($request->get('location') == 'japanese') {
 		$pics = db::table('pointing_calls')
 		->where('location', '=', $request->get('location'))
 		->where('point_title', '=', 'pic')
@@ -2130,13 +2130,14 @@ public function fetchGeneralPointingCall(Request $request){
 			'pics' => $pics
 		);
 		return Response::json($response);
-	}else{
+	}
 
-		$pics = db::table('pointing_calls')
-		->where('location', '=', $request->get('location'))
-		->where('point_title', '=', 'pic')
-		->whereNull('deleted_at')
-		->get();
+	if($request->get('location') == 'national'){
+		// $pics = db::table('pointing_calls')
+		// ->where('location', '=', $request->get('location'))
+		// ->where('point_title', '=', 'pic')
+		// ->whereNull('deleted_at')
+		// ->get();
 
 		$pointing_calls = db::table('pointing_calls')
 		->where('location', '=', $request->get('location'))
@@ -2149,7 +2150,7 @@ public function fetchGeneralPointingCall(Request $request){
 		$response = array(
 			'status' => true,
 			'pointing_calls' => $pointing_calls,
-			'pics' => $pics
+			// 'pics' => $pics
 		);
 		return Response::json($response);
 	}
@@ -2606,49 +2607,49 @@ public function postAirVisual()
 {
 	$result = "";
 
-	// $arr_api = [
-	// 	'https://www.airvisual.com/api/v2/node/6051b1f079e60a367adc1a45',
-	// 	'https://www.airvisual.com/api/v2/node/606bb8c5efbeaf90b42b8e98',
-	// 	'https://www.airvisual.com/api/v2/node/606bbb0c97b9294b00b2b297',
-	// 	'https://www.airvisual.com/api/v2/node/606bbe7797b929136cb2b2a4',
-	// ];
+	$arr_api = [
+		'https://www.airvisual.com/api/v2/node/6051b1f079e60a367adc1a45',
+		'https://www.airvisual.com/api/v2/node/606bb8c5efbeaf90b42b8e98',
+		'https://www.airvisual.com/api/v2/node/606bbb0c97b9294b00b2b297',
+		'https://www.airvisual.com/api/v2/node/606bbe7797b929136cb2b2a4',
+	];
 
-	// foreach ($arr_api as $api) {
-	// 	$ch = curl_init();
-	// 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);	
-	// 	curl_setopt($ch, CURLOPT_URL, $api);
-	// 	$result=curl_exec($ch);
-	// 	curl_close($ch);
+	foreach ($arr_api as $api) {
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);	
+		curl_setopt($ch, CURLOPT_URL, $api);
+		$result=curl_exec($ch);
+		curl_close($ch);
 
-	// 	$arr = json_decode($result, true);
-	// 	$s = "";
+		$arr = json_decode($result, true);
+		$s = "";
 		$true_date = "";
 
-	// 	for ($i=count($arr['historical']['instant'])-1; $i > 0; $i--) { 
-	// 		$s = str_replace('T', ' ', $arr['historical']['instant'][$i]['ts']);
-	// 		$times = substr(explode(' ', $s)[1], 0, -5);
-	// 		$dates = explode(' ', $s)[0];
+		for ($i=count($arr['historical']['instant'])-1; $i > 0; $i--) { 
+			$s = str_replace('T', ' ', $arr['historical']['instant'][$i]['ts']);
+			$times = substr(explode(' ', $s)[1], 0, -5);
+			$dates = explode(' ', $s)[0];
 
-	// 		$ts = date_create($dates." ".$times);
+			$ts = date_create($dates." ".$times);
 
-	// 		// $ts2 = date('Y-m-d H:i:s', strtotime($times) + 60*420);
+			// $ts2 = date('Y-m-d H:i:s', strtotime($times) + 60*420);
 
-	// 		date_add($ts, date_interval_create_from_date_string('7 hours'));
-	// 		$true_date = date_format($ts, 'Y-m-d H:i:s');
+			date_add($ts, date_interval_create_from_date_string('7 hours'));
+			$true_date = date_format($ts, 'Y-m-d H:i:s');
 
-	// 		$air_log = GeneralAirVisualLog::firstOrNew(array('data_time' => $true_date));
-	// 		$air_log->get_at = date('Y-m-d H:i:00');
-	// 		$air_log->remark = $arr['historical']['instant'][$i]['ts'];
-	// 		$air_log->co = $arr['historical']['instant'][$i]['co'];
-	// 		$air_log->temperature = $arr['historical']['instant'][$i]['tp'];
-	// 		$air_log->humidity = $arr['historical']['instant'][$i]['hm'];
-	// 		$air_log->location = $arr['settings']['node_name'];
-	// 		$air_log->created_at = date('Y-m-d H:i:s');
-	// 		$air_log->updated_at = date('Y-m-d H:i:s');
+			$air_log = GeneralAirVisualLog::firstOrNew(array('data_time' => $true_date));
+			$air_log->get_at = date('Y-m-d H:i:00');
+			$air_log->remark = $arr['historical']['instant'][$i]['ts'];
+			$air_log->co = $arr['historical']['instant'][$i]['co'];
+			$air_log->temperature = $arr['historical']['instant'][$i]['tp'];
+			$air_log->humidity = $arr['historical']['instant'][$i]['hm'];
+			$air_log->location = $arr['settings']['node_name'];
+			$air_log->created_at = date('Y-m-d H:i:s');
+			$air_log->updated_at = date('Y-m-d H:i:s');
 
-	// 		$air_log->save();
-	// 	}
-	// }
+			$air_log->save();
+		}
+	}
 
 	$datas = GeneralAirVisualLog::whereRaw('DATE_FORMAT(data_time,"%Y-%m-%d %H:%i:%s") >= "'.date('Y-m-d 06:00:00').'"')
 	->select('location', 'data_time', 'co', 'temperature', 'humidity', db::raw('DATE_FORMAT(data_time, "%H:%i") as data_time2'))
@@ -2673,244 +2674,244 @@ public function postAirVisual()
 	return Response::json($response);
 }
 
-	public function excelOnlineTransportation(Request $request)
-	{
-		$month = date('Y-m');
-		if(strlen($request->get('monthfrom')) > 0){
-			$month = date('Y-m', strtotime($request->get('monthfrom')));
+public function excelOnlineTransportation(Request $request)
+{
+	$month = date('Y-m');
+	if(strlen($request->get('monthfrom')) > 0){
+		$month = date('Y-m', strtotime($request->get('monthfrom')));
+	}
+
+	$transportations = db::select("SELECT
+		A.employee_id,
+		employee_syncs.name,
+		A.zona,
+		A.att_in,
+		A.att_out,
+		A.remark_in,
+		A.remark_out,
+		A.id_in,
+		A.id_out,
+		A.grade,
+		A.check_date,
+		A.attend_code,
+		A.attend_count,
+		A.vehicle,
+		A.highway_amount_in,
+		A.highway_amount_out,
+		A.distance_in,
+		A.distance_out,
+		A.origin_in,
+		A.origin_out,
+		A.destination_in,
+		A.destination_out,
+		A.highway_amount_total,
+		A.distance_total,
+		A.remark 
+		FROM
+		(
+		SELECT
+		attendance.zona,
+		max( attendance.att_in ) AS att_in,
+		max( attendance.att_out ) AS att_out,
+		max( attendance.remark_in ) AS remark_in,
+		max( attendance.remark_out ) AS remark_out,
+		max( attendance.id_in ) AS id_in,
+		max( attendance.id_out ) AS id_out,
+		attendance.employee_id,
+		attendance.grade,
+		attendance.check_date,
+		attendance.attend_code,
+		max( attendance.attend_count ) AS attend_count,
+		max( attendance.vehicle ) AS vehicle,
+		max( attendance.highway_in ) AS highway_amount_in,
+		max( attendance.highway_out ) AS highway_amount_out,
+		max( attendance.distance_in ) AS distance_in,
+		max( attendance.distance_out ) AS distance_out,
+		max( attendance.origin_in ) AS origin_in,
+		max( attendance.origin_out ) AS origin_out,
+		max( attendance.destination_in ) AS destination_in,
+		max( attendance.destination_out) AS destination_out,
+		max( attendance.highway_in ) + max( attendance.highway_out ) AS highway_amount_total,
+		max( attendance.distance_in ) + max( attendance.distance_out ) AS distance_total,
+		min( attendance.remark ) AS remark 
+		FROM
+		(
+		SELECT
+		zona,
+		highway_attachment AS att_in,
+		0 AS att_out,
+		remark AS remark_in,
+		0 AS remark_out,
+		id AS id_in,
+		0 AS id_out,
+		employee_id,
+		grade,
+		check_date,
+		'hadir' AS attend_code,
+		1 AS attend_count,
+		vehicle,
+		highway_amount AS highway_in,
+		0 AS highway_out,
+		distance AS distance_in,
+		0 AS distance_out,
+		origin AS origin_in,
+		0 AS origin_out,
+		destination AS destination_in,
+		0 AS destination_out,
+		remark 
+		FROM
+		`general_transportations` 
+		WHERE
+		DATE_FORMAT( check_date, '%Y-%m' ) = '".$month."' 
+		AND remark = 1 
+		AND attend_code = 'in' UNION ALL
+		SELECT
+		zona,
+		0 AS att_in,
+		highway_attachment AS att_out,
+		0 AS remark_in,
+		remark AS remark_out,
+		0 AS id_in,
+		id AS id_out,
+		employee_id,
+		grade,
+		check_date,
+		'hadir' AS attend_code,
+		1 AS attend_count,
+		vehicle,
+		0 AS highway_in,
+		highway_amount AS highway_out,
+		0 AS distance_in,
+		distance AS distance_out,
+		0 AS origin_in,
+		origin AS origin_out,
+		0 AS destination_in,
+		destination AS destination_out,
+		remark 
+		FROM
+		`general_transportations` 
+		WHERE
+		DATE_FORMAT( check_date, '%Y-%m' ) = '".$month."' 
+		AND remark = 1 
+		AND attend_code = 'out' UNION ALL
+		SELECT
+		zona,
+		0 AS att_in,
+		0 AS att_out,
+		remark AS remark_in,
+		0 AS remark_out,
+		id AS id_in,
+		0 AS id_out,
+		employee_id,
+		grade,
+		check_date,
+		attend_code,
+		0 AS attend_count,
+		0 AS vehicle,
+		0 AS highway_in,
+		0 AS highway_out,
+		0 AS distance_in,
+		0 AS distance_out,
+		0 AS origin_in,
+		0 AS origin_out,
+		0 AS destination_in,
+		0 AS destination_out,
+		remark 
+		FROM
+		`general_transportations` 
+		WHERE
+		DATE_FORMAT( check_date, '%Y-%m' ) = '".$month."' 
+		AND remark = 1 
+		AND attend_code <> 'out' 
+		AND attend_code <> 'in' 
+		) AS attendance 
+		GROUP BY
+		zona,
+		employee_id,
+		grade,
+		check_date,
+		attend_code 
+		) AS A
+		LEFT JOIN employee_syncs ON A.employee_id = employee_syncs.employee_id 
+		ORDER BY
+		A.employee_id ASC,
+		A.check_date ASC");
+
+	$datas = array();
+
+	foreach ($transportations as $transportation) {
+		$fuel = 0;
+		$divider = 0;
+		$multiplier = 0;
+		$grade = "";
+
+		if($transportation->grade != null){
+			$grade = $transportation->grade;
 		}
 
-		$transportations = db::select("SELECT
-			A.employee_id,
-			employee_syncs.name,
-			A.zona,
-			A.att_in,
-			A.att_out,
-			A.remark_in,
-			A.remark_out,
-			A.id_in,
-			A.id_out,
-			A.grade,
-			A.check_date,
-			A.attend_code,
-			A.attend_count,
-			A.vehicle,
-			A.highway_amount_in,
-			A.highway_amount_out,
-			A.distance_in,
-			A.distance_out,
-			A.origin_in,
-			A.origin_out,
-			A.destination_in,
-			A.destination_out,
-			A.highway_amount_total,
-			A.distance_total,
-			A.remark 
-			FROM
-			(
-			SELECT
-			attendance.zona,
-			max( attendance.att_in ) AS att_in,
-			max( attendance.att_out ) AS att_out,
-			max( attendance.remark_in ) AS remark_in,
-			max( attendance.remark_out ) AS remark_out,
-			max( attendance.id_in ) AS id_in,
-			max( attendance.id_out ) AS id_out,
-			attendance.employee_id,
-			attendance.grade,
-			attendance.check_date,
-			attendance.attend_code,
-			max( attendance.attend_count ) AS attend_count,
-			max( attendance.vehicle ) AS vehicle,
-			max( attendance.highway_in ) AS highway_amount_in,
-			max( attendance.highway_out ) AS highway_amount_out,
-			max( attendance.distance_in ) AS distance_in,
-			max( attendance.distance_out ) AS distance_out,
-			max( attendance.origin_in ) AS origin_in,
-			max( attendance.origin_out ) AS origin_out,
-			max( attendance.destination_in ) AS destination_in,
-			max( attendance.destination_out) AS destination_out,
-			max( attendance.highway_in ) + max( attendance.highway_out ) AS highway_amount_total,
-			max( attendance.distance_in ) + max( attendance.distance_out ) AS distance_total,
-			min( attendance.remark ) AS remark 
-			FROM
-			(
-			SELECT
-			zona,
-			highway_attachment AS att_in,
-			0 AS att_out,
-			remark AS remark_in,
-			0 AS remark_out,
-			id AS id_in,
-			0 AS id_out,
-			employee_id,
-			grade,
-			check_date,
-			'hadir' AS attend_code,
-			1 AS attend_count,
-			vehicle,
-			highway_amount AS highway_in,
-			0 AS highway_out,
-			distance AS distance_in,
-			0 AS distance_out,
-			origin AS origin_in,
-			0 AS origin_out,
-			destination AS destination_in,
-			0 AS destination_out,
-			remark 
-			FROM
-			`general_transportations` 
-			WHERE
-			DATE_FORMAT( check_date, '%Y-%m' ) = '".$month."' 
-			AND remark = 1 
-			AND attend_code = 'in' UNION ALL
-			SELECT
-			zona,
-			0 AS att_in,
-			highway_attachment AS att_out,
-			0 AS remark_in,
-			remark AS remark_out,
-			0 AS id_in,
-			id AS id_out,
-			employee_id,
-			grade,
-			check_date,
-			'hadir' AS attend_code,
-			1 AS attend_count,
-			vehicle,
-			0 AS highway_in,
-			highway_amount AS highway_out,
-			0 AS distance_in,
-			distance AS distance_out,
-			0 AS origin_in,
-			origin AS origin_out,
-			0 AS destination_in,
-			destination AS destination_out,
-			remark 
-			FROM
-			`general_transportations` 
-			WHERE
-			DATE_FORMAT( check_date, '%Y-%m' ) = '".$month."' 
-			AND remark = 1 
-			AND attend_code = 'out' UNION ALL
-			SELECT
-			zona,
-			0 AS att_in,
-			0 AS att_out,
-			remark AS remark_in,
-			0 AS remark_out,
-			id AS id_in,
-			0 AS id_out,
-			employee_id,
-			grade,
-			check_date,
-			attend_code,
-			0 AS attend_count,
-			0 AS vehicle,
-			0 AS highway_in,
-			0 AS highway_out,
-			0 AS distance_in,
-			0 AS distance_out,
-			0 AS origin_in,
-			0 AS origin_out,
-			0 AS destination_in,
-			0 AS destination_out,
-			remark 
-			FROM
-			`general_transportations` 
-			WHERE
-			DATE_FORMAT( check_date, '%Y-%m' ) = '".$month."' 
-			AND remark = 1 
-			AND attend_code <> 'out' 
-			AND attend_code <> 'in' 
-			) AS attendance 
-			GROUP BY
-			zona,
-			employee_id,
-			grade,
-			check_date,
-			attend_code 
-			) AS A
-			LEFT JOIN employee_syncs ON A.employee_id = employee_syncs.employee_id 
-			ORDER BY
-			A.employee_id ASC,
-			A.check_date ASC");
-
-		$datas = array();
-
-		foreach ($transportations as $transportation) {
-			$fuel = 0;
-			$divider = 0;
+		if(substr($grade, 0, 1) == 'M'){
+			$divider = 5;
+			$multiplier = 7650;
+		}
+		else if(substr($grade, 0, 1) == 'L'){
+			$divider = 7;
+			$multiplier = 7650;
+		}
+		else{
+			$divider = $transportation->distance_total;
 			$multiplier = 0;
-			$grade = "";
+		}
 
-			if($transportation->grade != null){
-				$grade = $transportation->grade;
-			}
-
-			if(substr($grade, 0, 1) == 'M'){
-				$divider = 5;
-				$multiplier = 7650;
-			}
-			else if(substr($grade, 0, 1) == 'L'){
-				$divider = 7;
-				$multiplier = 7650;
+		if($transportation->vehicle == 'car'){
+			if($transportation->distance_total <= 150){
+				$fuel = ($transportation->distance_total/$divider)*$multiplier;
 			}
 			else{
-				$divider = $transportation->distance_total;
-				$multiplier = 0;
+				$fuel = (150/$divider)*$multiplier;						
 			}
+		}
 
-			if($transportation->vehicle == 'car'){
-				if($transportation->distance_total <= 150){
-					$fuel = ($transportation->distance_total/$divider)*$multiplier;
-				}
-				else{
-					$fuel = (150/$divider)*$multiplier;						
-				}
+		if($transportation->vehicle == 'other'){
+			if($transportation->zona == '1'){
+				$fuel = 11000;
 			}
-
-			if($transportation->vehicle == 'other'){
-				if($transportation->zona == '1'){
-					$fuel = 11000;
-				}
-				else if($transportation->zona == '2'){
-					$fuel = 12400;
-				}
-				else{
-					$fuel = 17000;
-				}
+			else if($transportation->zona == '2'){
+				$fuel = 12400;
 			}
-
-			if(substr($grade, 0, 1) == 'M' || substr($grade, 0, 1) == 'L'){
-				$total_amount = $fuel+$transportation->highway_amount_total;
-			}else{
-				$total_amount = 0;
+			else{
+				$fuel = 17000;
 			}
+		}
 
-			if (in_array($transportation->employee_id, $datas)) {
-				
-			}else{
-				array_push($datas, 
+		if(substr($grade, 0, 1) == 'M' || substr($grade, 0, 1) == 'L'){
+			$total_amount = $fuel+$transportation->highway_amount_total;
+		}else{
+			$total_amount = 0;
+		}
+
+		if (in_array($transportation->employee_id, $datas)) {
+
+		}else{
+			array_push($datas, 
 				[
 					"employee_id" => $transportation->employee_id,
 					"name" => $transportation->name,
 					"total_amount" => $total_amount
 				]);
-			}
 		}
+	}
 
-		$data = array(
-        'datas' => $datas
-        );
+	$data = array(
+		'datas' => $datas
+	);
 
-		ob_clean();
-        Excel::create('Report Transportation', function($excel) use ($data){
-          $excel->sheet('Payroll Component Upload', function($sheet) use ($data) {
-            return $sheet->loadView('general.dropbox.excel_online_transportation', $data);
-          });
-        })->export('xlsx');
+	ob_clean();
+	Excel::create('Report Transportation', function($excel) use ($data){
+		$excel->sheet('Payroll Component Upload', function($sheet) use ($data) {
+			return $sheet->loadView('general.dropbox.excel_online_transportation', $data);
+		});
+	})->export('xlsx');
 
         // return view('general.dropbox.excel_online_transportation',$data);
-	}
+}
 }
