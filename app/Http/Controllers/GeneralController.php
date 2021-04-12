@@ -2594,8 +2594,8 @@ public function fetchOxymeterMonitoring(Request $request)
 //  -----------  AIR VISUAL -----------
 public function indexAirVisual()
 {
-	$title = "AIR VISUAL MONITOR";
-	$title_jp = "空気モニター";
+	$title = "CO2 Monitor";
+	$title_jp = "二酸化炭素モニター";
 
 	return view('general.air_visual_map', array(
 		'title' => $title,

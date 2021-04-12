@@ -107,7 +107,7 @@
                             </a>
                             <br>
                             <a href="{{ url("index/report/overtime_yearly") }}">
-                                <i class="fa fa-caret-right"></i> OT Monitor by Fiscal <br> (??)
+                                <i class="fa fa-caret-right"></i> Overtime Fiscal Year Resume <br> (年度残業まとめ)
                             </a>
                             <br>
                             <a href="{{ url("index/report/overtime_section")}}">
@@ -539,7 +539,7 @@
                             </a>
                             <br>
                             <a href="{{ url('index/general/airvisual') }}">
-                                <i class="fa fa-caret-right"></i> Air Visual Monitor(空気モニター)
+                                <i class="fa fa-caret-right"></i> CO2 Monitor(二酸化炭素モニター)
                             </a>
                             <br>
                             <a href="{{ url("index/server_room") }}">
