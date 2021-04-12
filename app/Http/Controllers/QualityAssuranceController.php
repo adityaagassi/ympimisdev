@@ -38,6 +38,7 @@ class QualityAssuranceController extends Controller
         $this->location = ['wi1_Woodwind Instrument (WI) 1',
                       'wi2_Woodwind Instrument (WI) 2',
                       'ei_Educational Instrument (EI)',
+                      'sx_Saxophone Body',
                       'cs_Case',
                       'ps_Pipe Silver',];
   	}
@@ -62,7 +63,9 @@ class QualityAssuranceController extends Controller
   			$loc = 'Woodwind Instrument (WI) 2';
   		}else if($location == 'ei'){
   			$loc = 'Educational Instrument (EI)';
-  		}else if ($location == 'cs'){
+  		}else if($location == 'sx'){
+        $loc = 'Saxophone Body';
+      }else if ($location == 'cs'){
   			$loc = 'Case';
   		}else if($location == 'ps'){
   			$loc = 'Pipe Silver';
