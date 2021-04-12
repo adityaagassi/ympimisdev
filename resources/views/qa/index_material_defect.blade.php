@@ -454,6 +454,8 @@
 				  			var loc = 'Woodwind Instrument (WI) 2';
 				  		}else if(value.location == 'ei'){
 				  			var loc = 'Educational Instrument (EI)';
+				  		}else if(value.location == 'sx'){
+				  			var loc = 'Saxophone Body';
 				  		}else if (value.location == 'cs'){
 				  			var loc = 'Case';
 				  		}else if(value.location == 'ps'){

@@ -81,6 +81,8 @@
                 $loc = 'Woodwind Instrument (WI) 2';
             }else if($datas->location == 'ei'){
                 $loc = 'Educational Instrument (EI)';
+            }else if($datas->location == 'sx'){
+                $loc = 'Saxophone Body';
             }else if ($datas->location == 'cs'){
                 $loc = 'Case';
             }else if($datas->location == 'ps'){
