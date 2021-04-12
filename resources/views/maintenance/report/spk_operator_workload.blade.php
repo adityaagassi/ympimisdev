@@ -137,7 +137,9 @@
 
   jQuery(document).ready(function() {
     $('body').toggleClass("sidebar-collapse");
+
     getData();
+    setInterval(getData, 5000);
   });
 
   function getData() {
@@ -158,7 +160,7 @@
           container += '<tr>';
           
           container += '<td>';
-          container += '<table class="table table-bordered" style="vertical-align: top;">';
+          container += '<table class="table table-bordered">';
           container += '<thead>';
           container += '<tr>';
           container += '<th colspan="2">'+value.employee_id+' <br> '+value.name+'</th>';
