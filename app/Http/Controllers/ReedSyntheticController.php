@@ -29,6 +29,7 @@ use App\ReedMasterChecksheet;
 
 use App\ReedWarehouseReceive;
 
+use App\CodeGenerator;
 use App\MaterialPlantDataList;;
 use Carbon\Carbon;
 use Response;
@@ -42,13 +43,23 @@ class ReedSyntheticController extends Controller{
 	}
 
 	public function indexReed(){
-		$title = "Injection Reed";
+		$title = "Injection Reed Synthetic";
 		$title_jp = " ";
 
-		return view('reed_synthetic.index_reed', array(
+		return view('reed_synthetic.injection.index_reed', array(
 			'title' => $title,
 			'title_jp' => $title_jp
 		))->with('page', 'Injection Reed')->with('head', 'Injection Reed');
+	}
+
+	public function indexFinalReed(){
+		$title = "Reed Synthetic";
+		$title_jp = " ";
+
+		return view('reed_synthetic.final.index_packing', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'Reed Synthetic')->with('head', 'Reed Synthetic');
 	}
 
 	public function indexInjectionVerification(){
@@ -111,14 +122,34 @@ class ReedSyntheticController extends Controller{
 		))->with('page', 'Annealing Verification')->with('head', 'Annealing Verification');
 	}
 
+	public function indexPickingVerification(){
+		$title = "Picking Verification";
+		$title_jp = " ";
+
+		return view('reed_synthetic.final.packing_verification', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'Picking Verification')->with('head', 'Picking Verification');
+	}
+
 	public function indexPackingVerification(){
 		$title = "Packing Verification";
 		$title_jp = " ";
 
-		return view('reed_synthetic.packing.packing_verification', array(
+		return view('reed_synthetic.final.packing_verification', array(
 			'title' => $title,
 			'title_jp' => $title_jp
-		))->with('page', 'Annealing Verification')->with('head', 'Annealing Verification');
+		))->with('page', 'Packing Verification')->with('head', 'Packing Verification');
+	}
+
+	public function indexPackingOrder(){
+		$title = "Create Packing Order";
+		$title_jp = " ";
+
+		return view('reed_synthetic.final.create_packing_order', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'Create Packing Order')->with('head', 'Create Packing Order');
 	}
 
 	public function indexStoreVerification(){
@@ -152,6 +183,19 @@ class ReedSyntheticController extends Controller{
 			'title_jp' => $title_jp,
 			'materials' => $material
 		))->with('page', 'Resin Receive')->with('head', 'Resin Receive');
+	}
+
+	public function fetchPackingMaterial(Request $request){
+		$target = db::select("SELECT DISTINCT material_number, material_description FROM `reed_master_checksheets`
+			WHERE process = 'PACKING'
+			AND location = 'PACKING'
+			ORDER BY material_description ASC");
+
+		$response = array(
+			'status' => true,
+			'target' => $target				
+		);
+		return Response::json($response);	
 	}
 
 	public function fetchResinReceive(Request $request)	{
@@ -535,130 +579,63 @@ class ReedSyntheticController extends Controller{
 		}
 	}
 
-	public function fetchPackingPickingList(Request $request){
-		
-		$kanban = $request->get('kanban');
-		$location = $request->get('location');
-		$process = $request->get('proses');
+	public function createPackingOrder(Request $request){
+		$material_number = $request->get('material_number');
+		$due_date = $request->get('packing_date');
+		$proses = $request->get('proses');
 
-		$order = ReedPackingOrder::where('kanban', $kanban)
-		->orderBy('created_at', 'DESC')
-		->first();
+		$checksheet = ReedMasterChecksheet::where('material_number', $material_number)
+		->where('process', strtoupper($proses))
+		->get();
 
-		if($order){
-
-			if($order->remark == '0'){
-				$data = ReedPackingOrderList::where('order_id', $order->id)
-				->where('location', strtoupper($location))
-				->get();
-
-				$response = array(
-					'status' => true,
-					'order' => $order,
-					'data' => $data
-				);
-				return Response::json($response);
-			}elseif ($order->remark == '1') {
-				$material_number = substr($kanban, 4, 7);
-
-				$checksheet = ReedMasterChecksheet::where('material_number', $material_number)
-				->where('process', $process)
-				->get();
-
-				if(count($checksheet) > 0){
-
-					$last_id;
-					try {
-						$new_order = new ReedPackingOrder([
-							'kanban' => $kanban,
-							'material_number' => $material_number,
-							'material_description' => $checksheet[0]->material_description,
-							'quantity' => $checksheet[0]->lot_kanban,
-							'hako' => ceil($checksheet[0]->lot_kanban / $checksheet[0]->lot_hako),
-							'created_by' => Auth::id()
-						]);
-						$new_order->save();
-						$last_id = $new_order->id;
-
-					} catch (Exception $e) {
-						$response = array(
-							'status' => false,
-							'message' => $e->getMessage(),
-						);
-						return Response::json($response);
-					}
-
-					for ($i=0; $i < count($checksheet); $i++) { 
-						try {
-							$order_list = new ReedPackingOrderList([
-								'order_id' => $last_id,
-								'kanban' => $kanban,
-								'material_number' => $checksheet[$i]->material_picking,
-								'material_description' => $checksheet[$i]->material_description,
-								'picking_list' => $checksheet[$i]->picking_list,
-								'picking_description' => $checksheet[$i]->picking_description,
-								'location' => $checksheet[$i]->location,
-								'quantity' => $checksheet[$i]->quantity,
-								'created_by' => Auth::id()
-							]);
-							$order_list->save();
-
-						} catch (Exception $e) {
-							$response = array(
-								'status' => false,
-								'message' => $e->getMessage(),
-							);
-							return Response::json($response);
-						}
-					}
-
-					$data = ReedPackingOrderList::where('order_id', $last_id)
-					->where('location', strtoupper($location))
-					->get();
-
-					$response = array(
-						'status' => true,
-						'order' => $new_order,
-						'data' => $data
-					);
-					return Response::json($response);	
-				}else{
-					$response = array(
-						'status' => false,
-						'message' => 'Master kanban tidak ditemukan'
-					);
-					return Response::json($response);
-				}	
+		if(count($checksheet) > 0){
+			$prefix_now = 'RS'.date("y").date("m");
+			$code_generator = CodeGenerator::where('note','=','reed-synthetic-packing')->first();
+			if ($prefix_now != $code_generator->prefix){
+				$code_generator->prefix = $prefix_now;
+				$code_generator->index = '0';
+				$code_generator->save();
 			}
 
-			// else{
-			// 	$response = array(
-			// 		'status' => false,
-			// 		'message' => 'Proses laser telah dilakukan'
-			// 	);
-			// 	return Response::json($response);
-			// }
+			$number = sprintf("%'.0" . $code_generator->length . "d", $code_generator->index+1);
+			$order_id = $code_generator->prefix . $number;
+			$code_generator->index = $code_generator->index+1;
+			$code_generator->save();
 
 
+			try {
+				$new_order = new ReedPackingOrder([
+					'order_id' => $order_id,
+					'due_date' => $due_date,
+					'material_number' => $material_number,
+					'material_description' => $checksheet[0]->material_description,
+					'quantity' => $checksheet[0]->lot_kanban,
+					'hako' => ceil($checksheet[0]->lot_kanban / $checksheet[0]->lot_hako),
+					'created_by' => Auth::id()
+				]);
+				$new_order->save();
 
-		}else{
-			$material_number = substr($kanban, 4, 7);
-			$checksheet = ReedMasterChecksheet::where('material_number', $material_number)->get();
+			} catch (Exception $e) {
+				$response = array(
+					'status' => false,
+					'message' => $e->getMessage(),
+				);
+				return Response::json($response);
+			}
 
-			if(count($checksheet) > 0){
-
-				$last_id;
+			for ($i=0; $i < count($checksheet); $i++) { 
 				try {
-					$new_order = new ReedPackingOrder([
-						'kanban' => $kanban,
-						'material_number' => $material_number,
-						'material_description' => $checksheet[0]->material_description,
-						'quantity' => $checksheet[0]->lot_kanban,
-						'hako' => ceil($checksheet[0]->lot_kanban / $checksheet[0]->lot_hako),
+					$order_list = new ReedPackingOrderList([
+						'order_id' => $order_id,
+						'material_number' => $checksheet[$i]->material_picking,
+						'material_description' => $checksheet[$i]->material_description,
+						'picking_list' => $checksheet[$i]->picking_list,
+						'picking_description' => $checksheet[$i]->picking_description,
+						'location' => $checksheet[$i]->location,
+						'quantity' => $checksheet[$i]->quantity,
 						'created_by' => Auth::id()
 					]);
-					$new_order->save();
-					$last_id = $new_order->id;
+					$order_list->save();
 
 				} catch (Exception $e) {
 					$response = array(
@@ -667,50 +644,61 @@ class ReedSyntheticController extends Controller{
 					);
 					return Response::json($response);
 				}
+			}
 
-				for ($i=0; $i < count($checksheet); $i++) { 
-					try {
-						$order_list = new ReedPackingOrderList([
-							'order_id' => $last_id,
-							'kanban' => $kanban,
-							'material_number' => $checksheet[$i]->material_picking,
-							'material_description' => $checksheet[$i]->material_description,
-							'picking_list' => $checksheet[$i]->picking_list,
-							'picking_description' => $checksheet[$i]->picking_description,
-							'location' => $checksheet[$i]->location,
-							'quantity' => $checksheet[$i]->quantity,
-							'created_by' => Auth::id()
-						]);
-						$order_list->save();
-						
-					} catch (Exception $e) {
-						$response = array(
-							'status' => false,
-							'message' => $e->getMessage(),
-						);
-						return Response::json($response);
-					}
-				}
+			$response = array(
+				'status' => true,
+				'message' => 'Master kanban tidak ditemukan'
 
-				$data = ReedPackingOrderList::where('order_id', $last_id)
-				->where('location', strtoupper($location))
-				->get();
-
-				$response = array(
-					'status' => true,
-					'order' => $new_order,
-					'data' => $data
-				);
-				return Response::json($response);	
-			}else{
-				$response = array(
-					'status' => false,
-					'message' => 'Master kanban tidak ditemukan'
-				);
-				return Response::json($response);
-			}	
-		}
+			);
+			return Response::json($response);	
+		}else{
+			$response = array(
+				'status' => false,
+				'message' => 'Master kanban tidak ditemukan'
+			);
+			return Response::json($response);
+		}	
 	}
+
+	public function fetchPackingOrder(Request $request){
+
+		$checksheets = ReedPackingOrder::where('remark', '0')->orderBy('order_id', 'DESC')->get();
+
+		$response = array(
+			'status' => true,
+			'checksheets' => $checksheets
+		);
+		return Response::json($response);
+	}
+
+
+	public function fetchPackingPickingList(Request $request){
+		
+		$order_id = $request->get('kanban');
+
+		$data = ReedPackingOrderList::where('order_id', $order_id)->get();
+
+		$order = ReedPackingOrder::where('order_id', $order_id)->first();
+
+		if(count($data) > 0){
+
+			$response = array(
+				'status' => true,
+				'data' => $data,
+				'order' => $order
+			);
+			return Response::json($response);	
+		}else{
+			$response = array(
+				'status' => false,
+				'message' => 'Packing order tidak ditemukan'
+			);
+			return Response::json($response);
+		}	
+	}
+
+
 
 	public function fetchInjectionDelivery(Request $request){
 
@@ -802,7 +790,7 @@ class ReedSyntheticController extends Controller{
 			);
 			return Response::json($response);
 		} catch (Exception $e) {
-			
+
 			$response = array(
 				'status' => false,
 				'message' => $e->getMessage(),
@@ -884,7 +872,7 @@ class ReedSyntheticController extends Controller{
 							$order_list->save();
 							$log->save();
 						});	
-						
+
 						$response = array(
 							'status' => true,
 							'message' => 'Verifikasi Berhasil'
@@ -1034,7 +1022,7 @@ class ReedSyntheticController extends Controller{
 							$order_list->save();
 							$log->save();
 						});	
-						
+
 						$response = array(
 							'status' => true,
 							'message' => 'Verifikasi Berhasil'
@@ -1180,7 +1168,7 @@ class ReedSyntheticController extends Controller{
 							$order_list->save();
 							$log->save();
 						});	
-						
+
 						$response = array(
 							'status' => true,
 							'message' => 'Verifikasi Berhasil'
@@ -1568,7 +1556,7 @@ class ReedSyntheticController extends Controller{
 	}
 
 	public function fetchLabelVerification(Request $request){
-		
+
 		$date_receive = $request->get('date_receive');
 
 		$order = ReedWarehouseReceive::where('receive_date','=', $date_receive)
@@ -1591,7 +1579,7 @@ class ReedSyntheticController extends Controller{
 				return Response::json($response);	
 			}
 		}else{
-			
+
 		}
 	}
 
@@ -1612,7 +1600,7 @@ class ReedSyntheticController extends Controller{
 			);
 			return Response::json($response);
 		} catch (Exception $e) {
-			
+
 			$response = array(
 				'status' => false,
 				'message' => $e->getMessage(),
@@ -1638,7 +1626,7 @@ class ReedSyntheticController extends Controller{
 				$filename = md5($filename.date('YmdHisa')).'.'.$extension;
 
 				$file->move($tujuan_upload,$filename);
-				
+
 				$data[] = $filename;
 			}
 
@@ -1657,7 +1645,7 @@ class ReedSyntheticController extends Controller{
 				'message' => "Data Berhasil Disimpan"
 			);
 			return Response::json($response);
-			
+
 		} 
 
 		catch (\Exception $e) {
@@ -1668,7 +1656,7 @@ class ReedSyntheticController extends Controller{
 			return Response::json($response);
 		}
 	}
-	
+
 
 	public function inputResinReceive(Request $request){
 
@@ -1694,13 +1682,93 @@ class ReedSyntheticController extends Controller{
 			);
 			return Response::json($response);
 		} catch (Exception $e) {
-			
+
 			$response = array(
 				'status' => false,
 				'message' => $e->getMessage(),
 			);
 			return Response::json($response);
 		}
+	}
+
+	public function reprintPackingOrder(Request $request){
+
+		$data = ReedPackingOrder::where('order_id', $request->get('order_id'))->first();
+
+		try {
+			$data->print = 1;
+			$data->save();
+
+			$this->printOrder($data);
+
+			$response = array(
+				'status' => true,
+				'message' => 'Print Packing Order Success'
+			);
+			return Response::json($response);
+		} catch (Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+
+	}
+
+	public function printOrder($data){
+		if (Auth::user()->role_code == 'MIS'){			
+			$printer_name = 'MIS';
+		}else{
+			$printer_name = 'KDO MP';
+		}
+
+		$connector = new WindowsPrintConnector($printer_name);
+		$printer = new Printer($connector);
+
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->setEmphasis(true);
+		$printer->setReverseColors(true);
+		$printer->setTextSize(2, 2);
+		$printer->text("  REED SYNTHETIC  "."\n");
+		$printer->feed(1);
+		$printer->initialize();
+
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->qrCode($data->order_id, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
+		$printer->initialize();
+
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->setEmphasis(true);
+		$printer->setTextSize(1, 1);
+		$printer->text($data->order_id."\n");
+		$printer->initialize();
+		$printer->feed(1);
+
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->setEmphasis(true);
+		$printer->setTextSize(2, 2);
+		$printer->text($data->material_number."\n");
+
+		$printer->initialize();
+		$printer->setEmphasis(true);
+		$printer->setTextSize(2, 2);
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->text($data->material_description."\n");
+
+
+		$printer->initialize();
+		$printer->setEmphasis(true);
+		$printer->setTextSize(2, 2);
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->feed(2);
+		$printer->text("Packing Date"."\n");
+		$printer->text(date('d-m-Y', strtotime($data->due_date))."\n");
+
+		$printer->feed(2);
+		$printer->cut();
+		$printer->close();
+
 	}
 
 	public function printLabel($data){

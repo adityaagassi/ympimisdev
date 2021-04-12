@@ -67,7 +67,6 @@
 
 
 		<div class="col-xs-12" id="picking">
-			{{-- <input id="qr_item" type="text" style="border:0; width: 100%; text-align: center; height: 20px; background-color: #3c3c3c; height: 0px;"> --}}
 
 			<input id="qr_item" type="text" style="border:0; width: 100%; text-align: center; height: 20px; color: white; background-color: #3c3c3c; height: 50px;">
 
@@ -93,24 +92,14 @@
 				</tbody>
 			</table>
 
-			<table class="table table-bordered table-stripped">
-				<thead style="background-color: orange;">
-					<tr>
-						<th width="50%" style="font-size: 2.5vw; vertical-align: middle;">
-							<span id="hours">00</span>:
-							<span id="minutes">00</span>:
-							<span id="seconds">00</span>
-						</th>
-						<th width="50%" style="font-size: 2.5vw;">
-							<button id="start" onclick="startPacking()" class="btn btn-success" style="font-weight: bold; font-size: 3vw; width: 100%;">START</button>
-							<button id="finish" onclick="finishPacking()" class="btn btn-danger" style="font-weight: bold; font-size: 3vw; width: 100%;">FINISH</button></span>
-						</th>
-					</tr>
-				</thead>
-			</table>
-
+			<div class="col-xs-2 pull-right">
+				<a href="{{ url("/index/reed") }}" class="btn btn-info" style="width: 100%; font-size: 1vw; font-weight: bold;"><i class="fa fa-arrow-right"></i> Ke Halaman Packing</a>
+			</div>
 
 		</div>
+
+		
+
 	</div>
 </section>
 
@@ -225,7 +214,7 @@
 
 	$('#kanban').keydown(function(event) {
 		if (event.keyCode == 13 || event.keyCode == 9) {
-			if($("#kanban").val().length >= 11){
+			if($("#kanban").val().length == 9){
 				selectChecksheet();
 			}
 			else{
@@ -291,34 +280,6 @@
 					total_actual += value.actual_quantity;
 				});
 
-
-				if(total_quantity == total_actual){
-					if(result.order.start_laser != null){
-						time = new Date(result.order.start_laser);
-						document.getElementById("hours").innerHTML = pad(parseInt(diff_seconds(new Date(), time) / 3600));
-						document.getElementById("minutes").innerHTML = pad(parseInt((diff_seconds(new Date(), time) % 3600) / 60));
-						document.getElementById("seconds").innerHTML = pad(diff_seconds(new Date(), time) % 60);
-
-						$('#start').hide();
-
-						$('#finish').show();
-						$('#finish').prop('disabled', false);
-
-					}else{
-						$('#start').prop('disabled', false);
-						$('#start').show();
-
-						$('#finish').hide();
-						$('#finish').prop('disabled', true);
-					}
-				}else{
-					$('#start').prop('disabled', true);
-					$('#start').show();
-
-					$('#finish').hide();
-					$('#finish').prop('disabled', true);
-
-				}
 
 				$('#pickingTableBody').append(pickingData);
 				setInterval(focusTag, 1000);

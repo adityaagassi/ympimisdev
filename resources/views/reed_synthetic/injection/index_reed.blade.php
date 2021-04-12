@@ -33,20 +33,6 @@
 			<a href="{{ url('index/reed/injection_verification') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Injection Verification</a>
 			<a href="{{ url('index/reed/injection_delivery') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">After Injection Delivery</a>
 
-			<span style="font-size: 3vw; color: green;"><i class="fa fa-angle-double-down"></i> Laser Marking <i class="fa fa-angle-double-down"></i></span>
-			<a href="{{ url('index/reed/laser_verification') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Laser Marking Verification</a>
-
-			<span style="font-size: 3vw; color: green;"><i class="fa fa-angle-double-down"></i> Trimming <i class="fa fa-angle-double-down"></i></span>
-			<a href="{{ url('index/reed/trimming_verification') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Trimming Verification</a>
-
-			<span style="font-size: 3vw; color: green;"><i class="fa fa-angle-double-down"></i> Annealing <i class="fa fa-angle-double-down"></i></span>
-			<a href="{{ url('index/reed/annealing_verification') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Annealing Verification</a>
-
-			<span style="font-size: 3vw; color: green;"><i class="fa fa-angle-double-down"></i> Packing <i class="fa fa-angle-double-down"></i></span>
-			<a href="{{ url('index/reed/packing_verification') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Packing Verification</a>
-
-
-
 		</div>
 
 

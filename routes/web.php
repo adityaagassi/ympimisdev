@@ -136,6 +136,7 @@ Route::get('fetch/general/mosaic_detail', 'GeneralController@fetchMosaicDetail')
 Route::get('index/general/pointing_call/{id}', 'GeneralController@indexGeneralPointingCall');
 Route::get('fetch/general/pointing_call', 'GeneralController@fetchGeneralPointingCall');
 Route::post('edit/general/pointing_call_pic', 'GeneralController@editGeneralPointingCallPic');
+Route::get('fetch/general/pointing_call_general', 'GeneralController@fetchGeneralPointingCallGeneral');
 
 //GENERAL
 Route::get('index/general/omi_visitor', 'GeneralController@indexOmiVisitor');
@@ -4513,8 +4514,15 @@ Route::post('post/drop/exim', 'WarehouseNewController@postDropExim');
 Route::get('fetch/drop/exim', 'WarehouseNewController@fetchEximFinish');
 Route::post('post/finish_inter', 'WarehouseNewController@postFinishInter');
 Route::post('post/vendor', 'WarehouseNewController@postVendor');
-
-
+Route::get('create/vendor', 'WarehouseNewController@getGmc');
+Route::post('save/vendor', 'WarehouseNewController@updateVendor');
+Route::get('index/pelayanan', 'WarehouseNewController@indexPelayanan');
+Route::post('save/pelayanan', 'WarehouseNewController@postPelayanan');
+Route::get('fetch/pelayanan/job', 'WarehouseNewController@fetch_pelayanan');
+Route::get('index/detail/{kode_request}', 'WarehouseNewController@indexDetailPelayanan');
+Route::get('fetch/detail/request', 'WarehouseNewController@fetchDetailPelayanan');
+Route::post('post/pelayanan', 'WarehouseNewController@savepelayanan');
+Route::post('update/permintaan', 'WarehouseNewController@updatePermintaan');
 
 
 //Sanding
@@ -4634,11 +4642,23 @@ Route::get('index/reed/trimming_verification', 'ReedSyntheticController@indexTri
 Route::get('index/reed/annealing_verification', 'ReedSyntheticController@indexAnnealingVerification');
 
 //Packing
-Route::get('index/reed/packing_verification', 'ReedSyntheticController@indexPackingVerification');
+Route::get('index/final/reed_synthetic', 'ReedSyntheticController@indexFinalReed');
+
+Route::get('index/reed/picking_verification', 'ReedSyntheticController@indexPickingVerification');
 Route::get('fetch/reed/packing_picking_list', 'ReedSyntheticController@fetchPackingPickingList');
 Route::post('scan/reed/packing_picking', 'ReedSyntheticController@scanPackingPicking');
 Route::post('fetch/reed/start_packing', 'ReedSyntheticController@fetchStartPacking');
 Route::post('fetch/reed/finish_packing', 'ReedSyntheticController@fetchFinishPacking');
+
+Route::get('index/reed/packing_verification', 'ReedSyntheticController@indexPackingVerification');
+
+
+Route::get('index/reed/packing_order', 'ReedSyntheticController@indexPackingOrder');
+Route::get('fetch/reed/packing_material', 'ReedSyntheticController@fetchPackingMaterial');
+Route::post('create/reed/packing_order', 'ReedSyntheticController@createPackingOrder');
+Route::get('fetch/reed/packing_order', 'ReedSyntheticController@fetchPackingOrder');
+Route::get('reprint/reed/packing_order', 'ReedSyntheticController@reprintPackingOrder');
+
 
 //Warehouse
 
@@ -4654,9 +4674,10 @@ Route::get('print/reed/resin_receive', 'ReedSyntheticController@fetchPrintReceiv
 Route::get('index/reed/store_verification', 'ReedSyntheticController@indexStoreVerification');
 Route::post('scan/reed/store_verification', 'ReedSyntheticController@scanStoreVerification');
 
-
-
 //End Reed Project
+
+
+
 
 Route::get('index/fibration/data', 'TrialController@indexFIbrationSensor');
 Route::get('fetch/fibration/data2', 'TrialController@fetchFIbrationSensor');
@@ -4685,7 +4706,7 @@ Route::get('index/server_room/{id}', 'PingController@ServerRoomPing');
 Route::get('post/server_room/ping/trend', 'PingController@ServerRoomPingTrend');
 Route::get('post/server_room/network_usage', 'PingController@PostNetworkUsage');
 
-Route::get('post/server_room/all_app_hardisk', 'PingController@PostNetworkUsage');
+Route::get('post/server_room/all_app_hardisk', 'PingController@HardiskAllNetwork');
 Route::get('post/server_room/all_app_ping', 'PingController@AppStatusPingTrend');
 
 //End Server Room

@@ -844,7 +844,7 @@
                                 </a>
                                 <br>
                                 <a href="{{ url("/index/reed") }}">
-                                    <i class="fa fa-caret-right"></i> Injection Reed (??)
+                                    <i class="fa fa-caret-right"></i> Injection Reed Synthetic (??)
                                 </a>
                             </td>
                         </tr>
@@ -961,6 +961,10 @@
                                 <br>
                                 <a href="{{ url("index/recorder_process") }}">
                                     <i class="fa fa-caret-right"></i> Recorder (リコーダー)
+                                </a>
+                                <br>
+                                 <a href="{{ url("index/final/reed_synthetic") }}">
+                                    <i class="fa fa-caret-right"></i> Reed Synthetic ()
                                 </a>
                                 <br>
                                 <a href="{{ url("/index/display/sub_assy/assy_sax?date=&surface2=&key2=&model2=&hpl2=&order2=") }}">
