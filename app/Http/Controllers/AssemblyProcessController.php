@@ -403,11 +403,19 @@ class AssemblyProcessController extends Controller
 		$tag->serial_number = null;
 		$tag->model = null;
 
+		$log_process = LogProcess::where('log_processes.serial_number', '=', $request->get('serial_number'))
+		->where('log_processes.model', '=', $request->get('model'));
+
+		$stamp_inventory = StampInventory::where('stamp_inventories.serial_number', '=', $request->get('serial_number'))
+		->where('stamp_inventories.model', '=', $request->get('model'));
+
 		try {
 			$inventories->forceDelete();
 			$serials->forceDelete();
 			$tag->save();
 			$details->forceDelete();
+			$log_process->save();
+			$stamp_inventory->forceDelete();
 
 			$response = array(
 				'status' => true,
