@@ -770,9 +770,9 @@
 				var check = $('#qty_check').val();
 
 				total_ok = check - total_ng;
-				if (total_ok != 0) {
+				// if (total_ok != 0) {
 					ng_ratio = (total_ng / check) * 100;
-				}
+				// }
 
 				$('#total_ok').val(total_ok);
 				$('#ng_ratio').val(ng_ratio);
