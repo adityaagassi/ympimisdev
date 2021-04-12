@@ -134,7 +134,7 @@ class AssemblyProcessController extends Controller
 		  $datas = $plc->read_data('D50', 5);
 
 		 if($counter->plc_counter == $datas[0]){
-		// if($counter->plc_counter == 33){
+		// if($counter->plc_counter == 35){
 			$response = array(
 				'status' => true,
 				'status_code' => 'no_stamp',
@@ -232,7 +232,7 @@ class AssemblyProcessController extends Controller
 		$serial = CodeGenerator::where('note', '=', $request->get('origin_group_code'))->first();
 		$serial->index = $serial->index+1;
 		 $counter->plc_counter = $datas[0];
-		// $counter->plc_counter = 33;
+		// $counter->plc_counter = 35;
 
 		try{
 			if($request->get('location') != 'stampkd-process'){
@@ -414,7 +414,7 @@ class AssemblyProcessController extends Controller
 			$serials->forceDelete();
 			$tag->save();
 			$details->forceDelete();
-			$log_process->save();
+			$log_process->forceDelete();
 			$stamp_inventory->forceDelete();
 
 			$response = array(
