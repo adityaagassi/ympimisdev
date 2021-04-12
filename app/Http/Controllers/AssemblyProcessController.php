@@ -130,11 +130,11 @@ class AssemblyProcessController extends Controller
 		->first();
 		$auth_id = Auth::id();
 
-		  $plc = new ActMLEasyIf(0);
-		  $datas = $plc->read_data('D50', 5);
+		  // $plc = new ActMLEasyIf(0);
+		  // $datas = $plc->read_data('D50', 5);
 
-		 if($counter->plc_counter == $datas[0]){
-		// if($counter->plc_counter == 35){
+		 // if($counter->plc_counter == $datas[0]){
+		if($counter->plc_counter == 36){
 			$response = array(
 				'status' => true,
 				'status_code' => 'no_stamp',
@@ -231,8 +231,8 @@ class AssemblyProcessController extends Controller
 		$tag->model = $request->get('model');
 		$serial = CodeGenerator::where('note', '=', $request->get('origin_group_code'))->first();
 		$serial->index = $serial->index+1;
-		 $counter->plc_counter = $datas[0];
-		// $counter->plc_counter = 35;
+		 // $counter->plc_counter = $datas[0];
+		$counter->plc_counter = 36;
 
 		try{
 			if($request->get('location') != 'stampkd-process'){
@@ -404,10 +404,12 @@ class AssemblyProcessController extends Controller
 		$tag->model = null;
 
 		$log_process = LogProcess::where('log_processes.serial_number', '=', $request->get('serial_number'))
-		->where('log_processes.model', '=', $request->get('model'));
+		->where('log_processes.model', '=', $request->get('model'))
+		->where('origin_group_code',$request->get('origin_group_code'));
 
 		$stamp_inventory = StampInventory::where('stamp_inventories.serial_number', '=', $request->get('serial_number'))
-		->where('stamp_inventories.model', '=', $request->get('model'));
+		->where('stamp_inventories.model', '=', $request->get('model'))
+		->where('origin_group_code',$request->get('origin_group_code'));
 
 		try {
 			$inventories->forceDelete();
@@ -442,10 +444,23 @@ class AssemblyProcessController extends Controller
 		$tag = AssemblyTag::where('serial_number',$request->get('serial_number'))->where('model',$request->get('model_asli'))->where('origin_group_code',$request->get('origin_group_code'))->first();
 		$tag->model = $request->get('model');
 
+		$log_process = LogProcess::where('log_processes.serial_number', '=', $request->get('serial_number'))
+		->where('log_processes.model', '=', $request->get('model_asli'))
+		->where('origin_group_code',$request->get('origin_group_code'))->first();
+		$log_process->model = $request->get('model');
+
+		$stamp_inventory = StampInventory::where('stamp_inventories.serial_number', '=', $request->get('serial_number'))
+		->where('stamp_inventories.model', '=', $request->get('model_asli'))
+		->where('origin_group_code',$request->get('origin_group_code'))->first();
+		$stamp_inventory->model = $request->get('model');
+
+
 		try {
 			$inventories->save();
 			$tag->save();
 			$details->save();
+			$log_process->save();
+			$stamp_inventory->save();
 
 			$response = array(
 				'status' => true,
