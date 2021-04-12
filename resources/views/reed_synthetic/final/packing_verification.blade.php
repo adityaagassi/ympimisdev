@@ -248,7 +248,7 @@
 				$('#picking').show();
 				$('#pickingTableBody').html("");
 
-				$('#order_id').val(result.order.id);
+				$('#order_id').val(result.order.order_id);
 				$('#material').text(" ("+result.order.material_number+" - "+result.order.material_description+")")
 
 
