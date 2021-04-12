@@ -575,10 +575,10 @@
                                 <i class="fa fa-caret-right"></i> HRqu (従業員の情報サービス)
                             </a>
                             <br>
-                            <a href="{{ url("/index/resume_pajak") }}">
+                            <!-- <a href="{{ url("/index/resume_pajak") }}">
                                 <i class="fa fa-caret-right"></i> Resume Pengisian NPWP (納税義務者番号データのまとめ)
                             </a>
-                            <br>
+                            <br> -->
 
                             <a href="{{ route('emp_service', ['id' => '2', 'tahun' => $tahun]) }}">
                                 <i class="fa fa-caret-right"></i> e-Kaizen (E-改善)

@@ -375,7 +375,8 @@ class SurveyController extends Controller
 	public function fetchSurveyCovidReport()
 	{
 		try {
-			$survey = DB::SELECT("SELECT
+			$survey = DB::SELECT("
+				SELECT
 				miraimobile.survey_logs.id as id_survey,
 				miraimobile.survey_logs.employee_id,
 				employee_syncs.name,
@@ -388,12 +389,35 @@ class SurveyController extends Controller
 				miraimobile.survey_logs.answer,
 				miraimobile.survey_logs.poin,
 				miraimobile.survey_logs.total,
-				miraimobile.survey_logs.keterangan 
+				miraimobile.survey_logs.keterangan,
+				miraimobile.survey_logs.created_at
 			FROM
 				miraimobile.survey_logs
-				JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_logs.employee_id
-			ORDER BY
-				miraimobile.survey_logs.tanggal desc");
+				LEFT JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_logs.employee_id
+				
+			UNION 
+
+			SELECT
+				miraimobile.survey_covid_logs.id as id_survey,
+				miraimobile.survey_covid_logs.employee_id,
+				employee_syncs.name,
+				employee_syncs.department,
+				employee_syncs.section,
+				employee_syncs.`group`,
+				employee_syncs.sub_group,
+				miraimobile.survey_covid_logs.tanggal,
+				miraimobile.survey_covid_logs.question,
+				miraimobile.survey_covid_logs.answer,
+				miraimobile.survey_covid_logs.poin,
+				miraimobile.survey_covid_logs.total,
+				miraimobile.survey_covid_logs.keterangan,
+				miraimobile.survey_covid_logs.created_at
+			FROM
+				miraimobile.survey_covid_logs
+				LEFT JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_covid_logs.employee_id 
+
+				order by created_at desc 
+");
 			$response = array(
 				'status' => true,
 				'survey' => $survey,
@@ -411,7 +435,8 @@ class SurveyController extends Controller
 	public function fetchSurveyCovidReportDetail(Request $request)
 	{
 		try {
-			$survey = DB::SELECT("SELECT
+			$survey = DB::SELECT("
+			SELECT
 				miraimobile.survey_logs.id as id_survey,
 				miraimobile.survey_logs.employee_id,
 				employee_syncs.name,
@@ -424,13 +449,35 @@ class SurveyController extends Controller
 				miraimobile.survey_logs.answer,
 				miraimobile.survey_logs.poin,
 				miraimobile.survey_logs.total,
-				miraimobile.survey_logs.keterangan 
+				miraimobile.survey_logs.keterangan
 			FROM
 				miraimobile.survey_logs
 				JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_logs.employee_id
-				where miraimobile.survey_logs.id = '".$request->get('id')."'
-			ORDER BY
-				miraimobile.survey_logs.tanggal");
+				where miraimobile.survey_logs.employee_id = '".$request->get('employee_id')."'
+				and miraimobile.survey_logs.tanggal = '".$request->get('tanggal')."'
+				
+			UNION 
+
+			SELECT
+				miraimobile.survey_covid_logs.id as id_survey,
+				miraimobile.survey_covid_logs.employee_id,
+				employee_syncs.name,
+				employee_syncs.department,
+				employee_syncs.section,
+				employee_syncs.`group`,
+				employee_syncs.sub_group,
+				miraimobile.survey_covid_logs.tanggal,
+				miraimobile.survey_covid_logs.question,
+				miraimobile.survey_covid_logs.answer,
+				miraimobile.survey_covid_logs.poin,
+				miraimobile.survey_covid_logs.total,
+				miraimobile.survey_covid_logs.keterangan 
+			FROM
+				miraimobile.survey_covid_logs
+				JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_covid_logs.employee_id
+				where miraimobile.survey_covid_logs.employee_id = '".$request->get('employee_id')."'
+				and miraimobile.survey_covid_logs.tanggal = '".$request->get('tanggal')."'
+			");
 			$response = array(
 				'status' => true,
 				'survey' => $survey,

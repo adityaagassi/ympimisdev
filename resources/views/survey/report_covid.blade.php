@@ -359,7 +359,7 @@
 						var color = '#ffadad';
 					}
 					tableData += '<td style="background-color: '+color+'">'+ keterangan +'</td>';
-					tableData += '<td><button class="btn btn-primary" onclick="fetchDetail(\''+value.id_survey+'\')">Detail</button></td>';
+					tableData += '<td><button class="btn btn-primary" onclick="fetchDetail(\''+value.employee_id+'\',\''+value.tanggal+'\')">Detail</button></td>';
 					tableData += '</tr>';
 				});
 				$('#example1Body').append(tableData);
@@ -446,10 +446,11 @@
 		});
 	}
 
-	function fetchDetail(id) {
+	function fetchDetail(employee_id,tanggal) {
 		$('#loading').show();
 		var data = {
-			id:id
+			employee_id:employee_id,
+			tanggal:tanggal
 		}
 
 		$.get('{{ url("fetch/survey_covid/report/detail") }}',data, function(result, status, xhr){
