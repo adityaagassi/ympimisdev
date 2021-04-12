@@ -567,7 +567,7 @@ table > thead > tr > th{
 						,{
 							type: 'column',
 							data: series3,
-							name: 'Not Answer',
+							name: 'No Answer',
 							colorByPoint: false,
 							color:'#a83232'
 						},
@@ -621,7 +621,7 @@ table > thead > tr > th{
 					            colorByPoint: false,
 								color:'#32a852'
 					        }, {
-					            name: 'Not Answer',
+					            name: 'No Answer',
 					            y: belum,
 					            colorByPoint: false,
 								color:'#a83232'

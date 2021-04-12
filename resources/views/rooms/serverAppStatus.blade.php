@@ -47,19 +47,52 @@
 	<div class="row" style="padding: 0">
 		<div class="col-xs-12">
 			<div class="row">
-				<div class="col-md-6">
-					<div class="col-md-12 content-header">
-	          			<h1>APP STATUS</h1>
+				<div class="col-md-6" style="padding: 0;padding-left: 10px">
+					<div class="col-md-12 content-header" style="border: 1px solid white">
+	          			<h1>MIRAI DB</h1>
 					</div>
 					<div class="col-md-4" style="padding:0">
-						<div id="container_memory" style="width: 100%;height: 250px;"></div>
+						<div id="container_memory_mirai_db" style="width: 100%;height: 250px;"></div>
 					</div>
 					<div class="col-md-8" style="padding:0">
-						<div id="container_hardisk" style="width: 100%;height: 250px;"></div>
+						<div id="chart_internet_mirai_db" style="width: 100%;height: 250px"></div>
 					</div>
 				</div>
-				<div class="col-xs-6" style="padding: 0;padding-left: 10px">
 
+				<div class="col-xs-6" style="padding-left: 10px">
+					<div class="col-md-12 content-header" style="border: 1px solid white">
+	          			<h1>YMPISERVER</h1>
+					</div>
+					<div class="col-md-4" style="padding:0">
+						<div id="container_memory_ympiserver" style="width: 100%;height: 250px;"></div>
+					</div>
+					<div class="col-md-8" style="padding:0">
+						<div id="chart_internet_ympiserver" style="width: 100%;height: 250px;"></div>
+					</div>
+				</div>
+
+				<div class="col-xs-6" style="padding: 0;padding-left: 10px">
+					<div class="col-md-12 content-header" style="border: 1px solid white">
+	          			<h1>SUNFISH DB</h1>
+					</div>
+					<div class="col-md-4" style="padding:0">
+						<div id="container_memory_sunfish_db" style="width: 100%;height: 250px;"></div>
+					</div>
+					<div class="col-md-8" style="padding:0">
+						<div id="chart_internet_sunfish_db" style="width: 100%;height: 250px;"></div>
+					</div>
+				</div>
+
+				<div class="col-xs-6" style="padding-left: 10px">
+					<div class="col-md-12 content-header" style="border: 1px solid white">
+	          			<h1>REPORTMAN SERVER</h1>
+					</div>
+					<div class="col-md-4" style="padding:0">
+						<div id="container_memory_reportman" style="width: 100%;height: 250px;"></div>
+					</div>
+					<div class="col-md-8" style="padding:0">
+						<div id="chart_internet_reportman" style="width: 100%;height: 250px"></div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -81,21 +114,116 @@
 	jQuery(document).ready(function(){
 		postData();
 
-		setInterval(postData, 60000);
-	
+		setInterval(postData, 120000);
 	});
 
 	function postData() {
-		$.get('{{ url("post/server_room/network_usage") }}', function(result, status, xhr){
+
+		var ip = ['10.109.52.2','10.109.52.1','10.109.52.9','10.109.48.3'];
+		var remark = ['mirai db','ympiserver','sunfish db','reportman'];
+
+		for (var i = 0; i < ip.length; i++) {
+			var url = '{{ url("fetch/display/fetch_hit") }}'+'/'+ip[i];
+
+			var no = 0;
+			$.get(url, function(result, status, xhr){
+				var time;
+				if (result.sta == 0) {
+					if (result.output.length == 8) {
+						timearray = /time\=(.*)?ms|time\<(.*)?ms /g.exec(result.output[2]);
+						if(timearray[1] != undefined){
+							time = timearray[1];
+						}else if(timearray[2] != undefined){
+							time = timearray[2];
+						}
+						status = "Alive";
+					}
+					else{
+						time = 0;
+						status = "Host Unreachable";
+					}
+				}
+				else{
+					time = 0;
+					status = "Timed Out";
+				}
+
+				var data = {	
+					ip : ip[no],
+					remark : remark[no],
+					hasil_hit : time,
+					status : status
+				}
+
+				no++;
+
+				$.post('{{ url("post/display/ip_log") }}', data, function(result, status, xhr){
+					if(result.status){
+						// openSuccessGritter("Success","IP Log Created");
+					} else {
+						openErrorGritter('Error',result.message);
+					}
+				});
+			});
+		}
+
+		
+
+		$.get('{{ url("post/server_room/all_app_status") }}', function(result, status, xhr){
 			if (result.status) {
 
-				var memory_used = 0;
-				var memory_free = 0;			
+				ping_mirai_db = [];
+				time_ping_mirai_db = [];
+				var hardisk_used_mirai_db = 0;
+				var hardisk_free_mirai_db = 0;
 
-				memory_used = parseFloat(result.memory_used.toFixed(2));
-				memory_free = parseFloat(result.memory_free.toFixed(2));
+				ping_ympiserver = [];
+				time_ping_ympiserver = [];
+				var hardisk_used_ympiserver = 0;
+				var hardisk_free_ympiserver = 0;
 
-				Highcharts.chart('container_memory', {
+				ping_sunfish_db = [];
+				time_ping_sunfish_db = [];
+				var hardisk_used_sunfish_db = 0;
+				var hardisk_free_sunfish_db = 0;
+
+				ping_reportman = [];
+				time_ping_reportman = [];
+				var hardisk_used_reportman = 0;
+				var hardisk_free_reportman = 0;
+
+				hardisk_used_mirai_db = parseFloat(result.hardisk_used_mirai_db.toFixed(2));
+				hardisk_free_mirai_db = parseFloat(result.hardisk_free_mirai_db.toFixed(2));
+
+				hardisk_used_ympiserver = parseFloat(result.hardisk_used_ympiserver.toFixed(2));
+				hardisk_free_ympiserver = parseFloat(result.hardisk_free_ympiserver.toFixed(2));
+
+				hardisk_used_sunfish_db = parseFloat(result.hardisk_used_sunfish_db.toFixed(2));
+				hardisk_free_sunfish_db = parseFloat(result.hardisk_free_sunfish_db.toFixed(2));
+
+				hardisk_used_reportman = parseFloat(result.hardisk_used_reportman.toFixed(2));
+				hardisk_free_reportman = parseFloat(result.hardisk_free_reportman.toFixed(2));
+
+				$.each(result.data_ping, function(index, value){
+					if (value.remark == "mirai db") {
+						ping_mirai_db.push(value.data_time);
+						time_ping_mirai_db.push(value.time);						
+					}
+					else if (value.remark == "ympiserver") {
+						ping_ympiserver.push(value.data_time);
+						time_ping_ympiserver.push(value.time);						
+					}
+					else if (value.remark == "sunfish db") {
+						ping_sunfish_db.push(value.data_time);
+						time_ping_sunfish_db.push(value.time);						
+					}
+					else if (value.remark == "reportman") {
+						ping_reportman.push(value.data_time);
+						time_ping_reportman.push(value.time);						
+					}
+				})
+
+				Highcharts.chart('container_memory_mirai_db', {
 				    chart: {
 				        plotBackgroundColor: null,
 				        plotBorderWidth: null,
@@ -122,7 +250,149 @@
 				            cursor: 'pointer',
 				            dataLabels: {
 				                enabled: true,
-				                format: '<b>{point.name}</b>: {point.y} Gib',
+				                distance: -30,
+				                format: '{point.y} Gib',
+				                style: {
+				                    fontWeight: 'bold',
+				                    color: 'white'
+				                }
+				            },
+				            startAngle: -90,
+				            endAngle: 90,
+				            center: ['50%', '75%'],
+				            size: '110%'
+				        }
+				    },
+				    credits: {
+						enabled: false
+					},
+					exporting: {
+						enabled: false
+					},
+				    series: [{
+        				type: 'pie',
+				        name: 'Hardisk',
+       					innerSize: '50%',
+				        data: [{
+				            name: 'Usage',
+				            y: hardisk_used_mirai_db,
+							color: "#a83232"
+				        }, {
+				            name: 'Free',
+				            y: hardisk_free_mirai_db,
+							color:'#32a852'
+				        }]
+				    }]
+				});
+
+				Highcharts.chart('chart_internet_mirai_db', {
+					chart: {
+						type: 'spline',
+						height: '250px'
+					},
+
+					title: {
+						text: ''
+					},
+
+					yAxis: {
+						title: {
+							text: 'Time (ms)'
+						},
+						gridLineWidth: 1,
+					},
+
+					xAxis: {
+						categories: ping_mirai_db,
+						tickInterval: 1
+					},
+
+					legend: {
+						enabled: false
+					},
+
+					credits:{
+						enabled:false
+					},
+
+					exporting: {
+						enabled: false
+					},
+
+					plotOptions: {
+						series: {
+							label: {
+								connectorAllowed: false
+							},
+							marker: {
+								enabled: false
+							},
+							animation: false,
+						},
+						spline: {
+							dataLabels: {
+								enabled: true,
+								formatter: function(){
+									var isLast = false;
+									if(this.point.x === this.series.data[this.series.data.length -1].x && this.point.y === this.series.data[this.series.data.length -1].y) isLast = true;
+									if (isLast) {
+										return this.x;
+									} else {
+										return '';
+									}
+								},
+								allowOverlap: true
+							},
+						}
+					},
+
+					series: [
+					{
+						name: 'Time',
+						data: time_ping_mirai_db,
+						color: '#901aeb',
+						lineWidth: 3
+					}],
+
+					responsive: {
+						rules: [{
+							condition: {
+								maxWidth: 500
+							},
+						}]
+					}
+
+				});
+
+
+				Highcharts.chart('container_memory_ympiserver', {
+				    chart: {
+				        plotBackgroundColor: null,
+				        plotBorderWidth: null,
+				        plotShadow: false,
+				        type: 'pie'
+				    },
+				    title: {
+				        text: null,
+				        align: 'center',
+				        verticalAlign: 'middle',
+				        y: 60
+				    },
+				    tooltip: {
+				        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+				    },
+				    accessibility: {
+				        point: {
+				            valueSuffix: '%'
+				        }
+				    },
+				    plotOptions: {
+				        pie: {
+				            allowPointSelect: true,
+				            cursor: 'pointer',
+				            dataLabels: {
+				                enabled: true,
+				                format: '{point.y} Tib',
 				                distance: -30,
 				            },
 				            startAngle: -90,
@@ -140,19 +410,375 @@
 					},
 				    series: [{
         				type: 'pie',
-				        name: 'Memory',
+				        name: 'Hardisk',
        					innerSize: '50%',
 				        data: [{
 				            name: 'Usage',
-				            y: memory_used,
+				            y: hardisk_used_ympiserver,
 							color: "#a83232"
 				        }, {
 				            name: 'Free',
-				            y: memory_free,
+				            y: hardisk_free_ympiserver,
 							color:'#32a852'
 				        }]
 				    }]
 				});
+
+				Highcharts.chart('chart_internet_ympiserver', {
+					chart: {
+						type: 'spline',
+						height: '250px'
+					},
+
+					title: {
+						text: ''
+					},
+
+					yAxis: {
+						title: {
+							text: 'Time (ms)'
+						},
+						gridLineWidth: 1,
+					},
+
+					xAxis: {
+						categories: ping_ympiserver,
+						tickInterval: 1
+					},
+
+					legend: {
+						enabled: false
+					},
+
+					credits:{
+						enabled:false
+					},
+
+					exporting: {
+						enabled: false
+					},
+
+					plotOptions: {
+						series: {
+							label: {
+								connectorAllowed: false
+							},
+							marker: {
+								enabled: false
+							},
+							animation: false,
+						},
+						spline: {
+							dataLabels: {
+								enabled: true,
+								formatter: function(){
+									var isLast = false;
+									if(this.point.x === this.series.data[this.series.data.length -1].x && this.point.y === this.series.data[this.series.data.length -1].y) isLast = true;
+									if (isLast) {
+										return this.x;
+									} else {
+										return '';
+									}
+								},
+								allowOverlap: true
+							},
+						}
+					},
+
+					series: [
+					{
+						name: 'Time',
+						data: time_ping_ympiserver,
+						color: '#901aeb',
+						lineWidth: 3
+					}],
+
+					responsive: {
+						rules: [{
+							condition: {
+								maxWidth: 500
+							},
+						}]
+					}
+
+				});
+
+				Highcharts.chart('container_memory_sunfish_db', {
+				    chart: {
+				        plotBackgroundColor: null,
+				        plotBorderWidth: null,
+				        plotShadow: false,
+				        type: 'pie'
+				    },
+				    title: {
+				        text: null,
+				        align: 'center',
+				        verticalAlign: 'middle',
+				        y: 60
+				    },
+				    tooltip: {
+				        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+				    },
+				    accessibility: {
+				        point: {
+				            valueSuffix: '%'
+				        }
+				    },
+				    plotOptions: {
+				        pie: {
+				            allowPointSelect: true,
+				            cursor: 'pointer',
+				            dataLabels: {
+				                enabled: true,
+				                format: '{point.y} Gib',
+				                distance: -30,
+				            },
+				            startAngle: -90,
+				            endAngle: 90,
+				            center: ['50%', '75%'],
+				            size: '110%',
+				            animation: false,
+				        }
+				    },
+				    credits: {
+						enabled: false
+					},
+					exporting: {
+						enabled: false
+					},
+				    series: [{
+        				type: 'pie',
+				        name: 'Hardisk',
+       					innerSize: '50%',
+				        data: [{
+				            name: 'Usage',
+				            y: hardisk_used_sunfish_db,
+							color: "#a83232"
+				        }, {
+				            name: 'Free',
+				            y: hardisk_free_sunfish_db,
+							color:'#32a852'
+				        }]
+				    }]
+				});
+
+				Highcharts.chart('chart_internet_sunfish_db', {
+					chart: {
+						type: 'spline',
+						height: '250px'
+					},
+
+					title: {
+						text: ''
+					},
+
+					yAxis: {
+						title: {
+							text: 'Time (ms)'
+						},
+						gridLineWidth: 1,
+					},
+
+					xAxis: {
+						categories: ping_sunfish_db,
+						tickInterval: 1
+					},
+
+					legend: {
+						enabled: false
+					},
+
+					credits:{
+						enabled:false
+					},
+
+					exporting: {
+						enabled: false
+					},
+
+					plotOptions: {
+						series: {
+							label: {
+								connectorAllowed: false
+							},
+							marker: {
+								enabled: false
+							},
+							animation: false,
+						},
+						spline: {
+							dataLabels: {
+								enabled: true,
+								formatter: function(){
+									var isLast = false;
+									if(this.point.x === this.series.data[this.series.data.length -1].x && this.point.y === this.series.data[this.series.data.length -1].y) isLast = true;
+									if (isLast) {
+										return this.x;
+									} else {
+										return '';
+									}
+								},
+								allowOverlap: true
+							},
+						}
+					},
+
+					series: [
+					{
+						name: 'Time',
+						data: time_ping_sunfish_db,
+						color: '#901aeb',
+						lineWidth: 3
+					}],
+
+					responsive: {
+						rules: [{
+							condition: {
+								maxWidth: 500
+							},
+						}]
+					}
+
+				});
+
+				Highcharts.chart('container_memory_reportman', {
+				    chart: {
+				        plotBackgroundColor: null,
+				        plotBorderWidth: null,
+				        plotShadow: false,
+				        type: 'pie'
+				    },
+				    title: {
+				        text: null,
+				        align: 'center',
+				        verticalAlign: 'middle',
+				        y: 60
+				    },
+				    tooltip: {
+				        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+				    },
+				    accessibility: {
+				        point: {
+				            valueSuffix: '%'
+				        }
+				    },
+				    plotOptions: {
+				        pie: {
+				            allowPointSelect: true,
+				            cursor: 'pointer',
+				            dataLabels: {
+				                enabled: true,
+				                format: '{point.y} Gib',
+				                distance: -30,
+				            },
+				            startAngle: -90,
+				            endAngle: 90,
+				            center: ['50%', '75%'],
+				            size: '110%',
+				            animation: false,
+				        }
+				    },
+				    credits: {
+						enabled: false
+					},
+					exporting: {
+						enabled: false
+					},
+				    series: [{
+        				type: 'pie',
+				        name: 'Hardisk',
+       					innerSize: '50%',
+				        data: [{
+				            name: 'Usage',
+				            y: hardisk_used_reportman,
+							color: "#a83232"
+				        }, {
+				            name: 'Free',
+				            y: hardisk_free_reportman,
+							color:'#32a852'
+				        }]
+				    }]
+				});
+
+				Highcharts.chart('chart_internet_reportman', {
+					chart: {
+						type: 'spline',
+						height: '250px'
+					},
+
+					title: {
+						text: ''
+					},
+
+					yAxis: {
+						title: {
+							text: 'Time (ms)'
+						},
+						gridLineWidth: 1,
+					},
+
+					xAxis: {
+						categories: ping_reportman,
+						tickInterval: 1
+					},
+
+					legend: {
+						enabled: false
+					},
+
+					credits:{
+						enabled:false
+					},
+
+					exporting: {
+						enabled: false
+					},
+
+					plotOptions: {
+						series: {
+							label: {
+								connectorAllowed: false
+							},
+							marker: {
+								enabled: false
+							},
+							animation: false,
+						},
+						spline: {
+							dataLabels: {
+								enabled: true,
+								formatter: function(){
+									var isLast = false;
+									if(this.point.x === this.series.data[this.series.data.length -1].x && this.point.y === this.series.data[this.series.data.length -1].y) isLast = true;
+									if (isLast) {
+										return this.x;
+									} else {
+										return '';
+									}
+								},
+								allowOverlap: true
+							},
+						}
+					},
+
+					series: [
+					{
+						name: 'Time',
+						data: time_ping_reportman,
+						color: '#901aeb',
+						lineWidth: 3
+					}],
+
+					responsive: {
+						rules: [{
+							condition: {
+								maxWidth: 500
+							},
+						}]
+					}
+
+				});
+
 			}
 		});
 	}

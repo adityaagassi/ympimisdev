@@ -261,6 +261,10 @@
 						enabled:false
 					},
 
+					exporting: {
+						enabled: false
+					},
+
 					plotOptions: {
 						series: {
 							label: {
@@ -334,6 +338,10 @@
 
 					credits:{
 						enabled:false
+					},
+
+					exporting: {
+						enabled: false
 					},
 
 					plotOptions: {

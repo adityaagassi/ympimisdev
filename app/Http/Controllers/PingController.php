@@ -121,6 +121,15 @@ class PingController extends Controller
   {
     $data = exec("ping -n 1 $ip", $output, $status);
 
+    // $ping = new \JJG\Ping($ip);
+    // $latency = $ping->ping();
+    // if ($latency !== false) {
+    //   print 'Latency is ' . $latency . ' ms';
+    // }
+    // else {
+    //   print 'Host could not be reached.';
+    // }
+
     $response = array(
       'status' => true,
       'data' => $data,
@@ -167,7 +176,7 @@ class PingController extends Controller
   {
     if($id == 'ping'){
       $title = 'Ping Server Status';
-      $title_jp = '';
+      $title_jp = 'pingサーバーのステータス';
 
       return view('rooms.serverPing', array(
         'title' => $title,
@@ -177,7 +186,7 @@ class PingController extends Controller
 
     else if($id == 'database'){
       $title = 'Database Server Status';
-      $title_jp = '';
+      $title_jp = 'データベースサーバーのステータス';
 
       return view('rooms.serverDatabase', array(
         'title' => $title,
@@ -187,7 +196,7 @@ class PingController extends Controller
 
     else if($id == 'mirai_status'){
       $title = 'MIRAI Server Status';
-      $title_jp = '';
+      $title_jp = 'MIRAIサーバーのステータス';
 
       return view('rooms.serverNetworkUsage', array(
         'title' => $title,
@@ -196,8 +205,8 @@ class PingController extends Controller
     }
 
     else if($id == 'app_status'){
-      $title = 'All App Server Status';
-      $title_jp = '';
+      $title = 'System Server Status';
+      $title_jp = 'システムサーバーのステータス';
 
       return view('rooms.serverAppStatus', array(
         'title' => $title,
@@ -289,4 +298,85 @@ class PingController extends Controller
   }
 
 
+
+  public function AllHardiskPingStatus()
+  {
+    $result = "";
+    $api = 'http://10.109.52.2/phpsysinfo/xml.php?json';
+    
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
+    curl_setopt($ch, CURLOPT_URL, $api);
+    $result=curl_exec($ch);
+    curl_close($ch);
+
+    $arr = json_decode($result, true);
+
+    $hardisk_free_mirai_db = $arr['FileSystem']['Mount'][0]['@attributes']['Free'] / 1073741824;
+    $hardisk_used_mirai_db = $arr['FileSystem']['Mount'][0]['@attributes']['Used'] / 1073741824;
+
+    $result2 = "";
+    $api2 = 'http://10.109.52.1:887/phpsysinfo/xml.php?json';
+    
+    $ch2 = curl_init();
+    curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true); 
+    curl_setopt($ch2, CURLOPT_URL, $api2);
+    $result2=curl_exec($ch2);
+    curl_close($ch2);
+
+    $arr2 = json_decode($result2, true);
+
+    $hardisk_free_ympiserver = $arr2['FileSystem']['Mount'][1]['@attributes']['Free'] / 1099511627776;
+    $hardisk_used_ympiserver = $arr2['FileSystem']['Mount'][1]['@attributes']['Used'] / 1099511627776;
+
+    $result3 = "";
+    $api3 = 'http://10.109.52.9:8080/phpsysinfo/xml.php?json';
+    
+    $ch3 = curl_init();
+    curl_setopt($ch3, CURLOPT_RETURNTRANSFER, true); 
+    curl_setopt($ch3, CURLOPT_URL, $api3);
+    $result3=curl_exec($ch3);
+    curl_close($ch3);
+
+    $arr3 = json_decode($result3, true);
+    
+    $hardisk_free_sunfish_db = $arr3['FileSystem']['Mount'][1]['@attributes']['Free'] / 1073741824;
+    $hardisk_used_sunfish_db = $arr3['FileSystem']['Mount'][1]['@attributes']['Used'] / 1073741824;
+
+    $result4 = "";
+    $api4 = 'http://10.109.48.3/phpsysinfo/xml.php?json';
+    
+    $ch4 = curl_init();
+    curl_setopt($ch4, CURLOPT_RETURNTRANSFER, true); 
+    curl_setopt($ch4, CURLOPT_URL, $api4);
+    $result4=curl_exec($ch4);
+    curl_close($ch4);
+
+    $arr4 = json_decode($result4, true);
+
+    $hardisk_free_reportman = $arr4['FileSystem']['Mount'][4]['@attributes']['Free'] / 1073741824;
+    $hardisk_used_reportman = $arr4['FileSystem']['Mount'][4]['@attributes']['Used'] / 1073741824;
+
+    $data_ping = Pinglog::whereRaw('DATE_FORMAT(created_at,"%Y-%m-%d %H:%i:%s") >= "'.date('Y-m-d 06:00:00').'"')
+    // ->where('remark','=','mirai db')
+    ->select('*', db::raw('DATE_FORMAT(created_at, "%H:%i") as data_time'))
+    ->orderBy('id', 'asc')
+    ->get();
+
+    $response = array(
+      'status' => true,
+      'message' => 'Data Berhasil Ditemukan',
+      'hardisk_free_mirai_db' => $hardisk_free_mirai_db,
+      'hardisk_used_mirai_db' => $hardisk_used_mirai_db,
+      'hardisk_free_ympiserver' => $hardisk_free_ympiserver,
+      'hardisk_used_ympiserver' => $hardisk_used_ympiserver,
+      'hardisk_free_sunfish_db' => $hardisk_free_sunfish_db,
+      'hardisk_used_sunfish_db' => $hardisk_used_sunfish_db,
+      'hardisk_free_reportman' => $hardisk_free_reportman,
+      'hardisk_used_reportman' => $hardisk_used_reportman,
+      'data_ping' => $data_ping
+    );
+
+    return Response::json($response);
+  }
 }

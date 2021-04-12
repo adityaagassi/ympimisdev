@@ -151,12 +151,6 @@ table > thead > tr > th{
 						</thead>
 						<tbody id="tableDetailBody">
 						</tbody>
-						<!-- <tfoot>
-							<tr>
-								<th colspan="5">Total Duration</th>
-								<th id="totalDetail">9</th>
-							</tr>
-						</tfoot> -->
 					</table>
 				</div>
 			</div>
