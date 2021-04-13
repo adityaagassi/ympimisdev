@@ -61,19 +61,19 @@
 							<table class="table table-responsive" style="height: 250px;border: 0;background:#2a2a2b">
 								<tr>
 									<th style="vertical-align: top;font-weight: bold;font-size: 1.2vw;color: white;border-top: 1px solid #111">Hostname</th>
-									<th style="vertical-align: bottom;font-weight: bold;font-size: 1.6vw;border-top: 1px solid #111"><span class="pull-right text-green" id="hostname"></span></th>
+									<th style="vertical-align: bottom;font-weight: bold;font-size: 1.6vw;border-top: 1px solid #111"><span class="pull-right" id="hostname" style="color: orange;"></span></th>
 								</tr>
 								<tr>
 									<th style="vertical-align: top;font-weight: bold;font-size: 1.2vw;color: white;border-top: 1px solid #111">IP Address</th>
-									<th style="vertical-align: bottom;font-weight: bold;font-size: 1.6vw;border-top: 1px solid #111"><span class="pull-right text-green" id="ip_address"></span></th>
+									<th style="vertical-align: bottom;font-weight: bold;font-size: 1.6vw;border-top: 1px solid #111"><span class="pull-right" id="ip_address" style="color: orange;"></span></th>
 								</tr>
 								<tr>
 									<th style="vertical-align: top;font-weight: bold;font-size: 1.2vw;color: white;border-top: 1px solid #111">Alive Time</th>
-									<th style="vertical-align: bottom;font-weight: bold;font-size: 1.2vw;border-top: 1px solid #111"><span class="pull-right text-red" id="uptime"></span></th>
+									<th style="vertical-align: bottom;font-weight: bold;font-size: 1.6vw;border-top: 1px solid #111"><span class="pull-right" id="uptime" style="color: orange;"></span></th>
 								</tr>
 								<tr>
 									<th style="vertical-align: top;font-weight: bold;font-size: 1.2vw;color: white;border-top: 1px solid #111">Last Boot</th>
-									<th style="vertical-align: bottom;font-weight: bold;font-size: 1.4vw;border-top: 1px solid #111"><span class="pull-right text-red" id="last_boot"></span></th>
+									<th style="vertical-align: bottom;font-weight: bold;font-size: 1.6vw;border-top: 1px solid #111"><span class="pull-right" id="last_boot" style="color: orange;"></span></th>
 								</tr>
 							</table>
 						</div>
@@ -108,15 +108,15 @@
 							<tr style="border: 1px solid white">
 								<td width="33%" style="text-align: center;vertical-align: middle;">
 									<span style="font-weight: bold; color: #d1a8ff; font-size: 50px;">Received</span><br>
-									<span id="time_receive" style="font-size: 40px;color:#fff"></span>
+									<span id="time_receive" style="font-size: 40px;color:#fff; font-weight: bold;"></span>
 								</td>
 								<td width="33%" style="text-align: center;vertical-align: middle;">
 									<span style="font-weight: bold; color: #d1a8ff; font-size: 50px;">Sent</span><br>
-									<span id="time_sent" style="font-size: 40px;color:#fff"></span>
+									<span id="time_sent" style="font-size: 40px;color:#fff; font-weight: bold;"></span>
 								</td>
 								<td width="33%" style="text-align: center;vertical-align: middle;;">
 									<span style="font-weight: bold; color: #d1a8ff; font-size: 50px;">Error</span><br>
-									<span id="time_error" style="font-size: 40px;color:#fff"></span>
+									<span id="time_error" style="font-size: 40px;color:#fff; font-weight: bold;"></span>
 								</td>
 								<td width="55%"><div id="chart_co1" style="height: 200px"></div></td>
 							</tr>

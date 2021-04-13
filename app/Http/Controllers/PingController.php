@@ -267,7 +267,7 @@ class PingController extends Controller
       'hostname' => $arr['Vitals']['@attributes']['Hostname'],
       'ip' => $arr['Vitals']['@attributes']['IPAddr'],
       'remark' => $arr['Network']['NetDevice'][5]['@attributes']['Name'],
-      'uptime' => $dtF->diff($dtT)->format('%a days, %h hours, %i minutes'),
+      'uptime' => $dtF->diff($dtT)->format('%aDay %hHour %iMin'),
       'last_boot' => $datetime,
       'received' => number_format($received, 2, '.', ''),
       'sent' => number_format($sent, 2, '.', ''),
