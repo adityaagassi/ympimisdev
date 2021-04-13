@@ -21,7 +21,7 @@
                 <th>Grade</th>
                 <th>EmployeeStatus</th>
                 <th>Company</th>
-                <th>Resign_Reason</th>
+                <!-- <th>Resign_Reason</th> -->
             </tr>
         </thead>
         <tbody>
@@ -51,6 +51,11 @@
                         $middle = $nama[1];
                         $last = $nama[2];
                     }
+                    else if($jumlah_nama >= 3){
+                        $first = $nama[0];
+                        $middle = $nama[1];
+                        $last = $nama[2];
+                    }
                 ?>
                 <td>{{ $first }}</td>
                 <td>{{ $middle }}</td>
@@ -65,7 +70,7 @@
                 <td>{{ $mjo->grade }}</td>
                 <td>{{ $mjo->pegawai }}</td>
                 <td>{{ 'PT. Yamaha Musical Product Indonesia' }}</td>
-                <td>{{ $mjo->alasan }}</td>
+                <!-- <td>{{ $mjo->alasan }}</td> -->
             </tr>
             
             @endforeach

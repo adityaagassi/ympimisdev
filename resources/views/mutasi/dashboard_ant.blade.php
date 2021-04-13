@@ -155,7 +155,7 @@ table > thead > tr > th{
               <tr>
                 <th style="background-color: black; font-size: 16px; font-weight: bold; padding: 2px; border-right: 5px solid red !important; color:white" colspan="4">Asal</th>
                 <th style="background-color: black; font-size: 16px; font-weight: bold; padding: 2px; border-right: 5px solid red !important; color:white" colspan="4">Tujuan</th>
-                <th style="background-color: #448aff; font-size: 16px; font-weight: bold; padding: 2px; color:white" colspan="3">HR</th>
+                <th style="background-color: #448aff; font-size: 16px; font-weight: bold; padding: 2px; color:white" colspan="2">HR</th>
               </tr>
               <tr>
                 <th style="background-color: black; font-weight: bold; padding: 2px; color:white">Chief/Foreman</th>
@@ -168,7 +168,7 @@ table > thead > tr > th{
                 <th style="background-color: black; font-weight: bold; padding: 2px; border-right: 5px solid red !important; color:white">GM</th>
                 <th style="background-color: black; font-weight: bold; padding: 2px; color:white">Manager HR</th>
                 <th style="background-color: black; font-weight: bold; padding: 2px; color:white">Dir HR</th>
-                <th style="background-color: black; font-weight: bold; padding: 2px; color:white">HR</th>
+                <!-- <th style="background-color: black; font-weight: bold; padding: 2px; color:white">HR</th> -->
               </tr>
             </thead>
             <tbody id="tableResumeBody"></tbody>
@@ -242,8 +242,8 @@ table > thead > tr > th{
                         <div class="input-group-addon">
                           <i class="fa fa-calendar"></i>
                         </div>
-                        <input type="text" class="form-control pull-right datepicker" value="<?= date('d M Y') ?>" placeholder="Date Mutation" disabled>
-                        <input type="hidden" class="form-control pull-right datepicker" id="tanggal" name="tanggal" value="<?= date('Y-m-d') ?>" placeholder="Date Mutation">
+                        <!-- <input type="text" class="form-control pull-right datepicker" value="<?= date('d M Y') ?>" placeholder="Date Mutation" disabled> -->
+                        <input type="text" class="form-control pull-right" id="tanggal" name="tanggal" value="<?= date('Y-m-d') ?>" placeholder="Date Mutation">
                       </div>
                     </div>
                     <div class="form-group">
@@ -328,7 +328,7 @@ table > thead > tr > th{
                   </div>
                   <div class="form-group">
                       <label id="labelposition">Alasan<span class="text-red">*</span></label>
-                      <textarea class="form-control" id="alasan" name="alasan" rows="3"></textarea>
+                      <textarea class="form-control" id="alasan" name="alasan" rows="3" required></textarea>
                   </div>
                 <div id="tambah"></div>
                 <div class="col-md-12">
@@ -524,12 +524,17 @@ table > thead > tr > th{
 
     function checkSubGroup(value) {
           
-          if (value === 'Kosong') {
+          if (value == 'Kosong') {
               $('#ke_group').val("").trigger('change');
               $('#ke_section').val("").trigger('change');
-          }else{
+          } else if (value == $("#sub_group").val()) {
+              alert('Sub Group Tidak Boleh Sama');
+              $('#ke_sub_group').prop('selectedIndex', 0).change();
+              return false;
+          } else{
             var data = {
-            sub_group:$('#ke_sub_group').val(),
+            ke_sub_group:$('#ke_sub_group').val(),
+            // ke_sub_group:$('#ke_sub_group').val(),
             // department:$('#ke_department').val(),
           }
           
@@ -546,19 +551,29 @@ table > thead > tr > th{
                 $('#ke_department').show();
 
                 $.each(result.employee, function(key, value) {
-                  if ($('#ke_sub_group').val() == value.sub_group) {
-                      
-                      // $('#ke_group').val(value.group).trigger('change');
+                      $('#ke_group').val(value.group).trigger('change');
+                      $('#ke_section').val(value.section).trigger('change');
                       $('#ke_department').val(value.department);
-                    // $('#ke_sub_group').val(value.sub_group);
-                  }
-                  if ($('#ke_group').val() != value.group) {
-                    $('#ke_group').val(value.group).trigger('change');
-                  }
+                  // if ($('#ke_sub_group').val() == value.sub_group) {
+                  //     alert('Sub Group Tidak Boleh Sama');
 
-                  if ($('#ke_section').val() != value.section) {
-                    $('#ke_section').val(value.section).trigger('change');
-                  }
+                  //     $('#ke_sub_group').prop('selectedIndex', 0).change();
+                  //     $('#ke_group').prop('selectedIndex', 0).change();
+                  //     $('#ke_section').prop('selectedIndex', 0).change();
+                  //     $('#ke_department').val("");
+                  // }
+                  // else{
+                      
+                  // }
+
+
+                  // if ($('#ke_group').val() != value.group) {
+                  //   $('#ke_group').val(value.group).trigger('change');
+                  // }
+
+                  // if ($('#ke_section').val() != value.section) {
+                  //   $('#ke_section').val(value.section).trigger('change');
+                  // }
                 });
               }
               // else{
@@ -571,6 +586,10 @@ table > thead > tr > th{
           
           if (value === 'Kosong') {
               $('#ke_section').val("").trigger('change');
+          }else if (value == $("#group").val()) {
+              alert('Group Tidak Boleh Sama');
+              $('#ke_group').prop('selectedIndex', 0).change();
+              return false;
           }else{
               var data = {
             group:$('#ke_group').val(),
@@ -589,15 +608,17 @@ table > thead > tr > th{
                 $('#ke_department').show();
 
                 $.each(result.employee, function(key, value) {
-                  if ($('#ke_group').val() != value.group) {
-                    $('#ke_department').val(value.department);
+                  $('#ke_section').val(value.section).trigger('change');
+                  $('#ke_department').val(value.department);
+                  // if ($('#ke_group').val() != value.group) {
+                    
                     // $('#ke_group').val(value.group);
                     
-                  }
+                  // }
 
-                  if ($('#ke_section').val() != value.section) {
-                    $('#ke_section').val(value.section).trigger('change');
-                  }
+                  // if ($('#ke_section').val() != value.section) {
+                    
+                  // }
                     
                     // $('#ke_sub_group').val(value.sub_group).trigger('change');
                 });
@@ -609,7 +630,15 @@ table > thead > tr > th{
           }
     }
     function checkSection(value) {
-          var data = {
+          // var data = {
+          //   section:$('#ke_section').val(),
+          // }
+          if (value == $("#section").val()) {
+              alert('Section Tidak Boleh Sama');
+              $('#ke_section').prop('selectedIndex', 0).change();
+              return false;
+          }else{
+              var data = {
             section:$('#ke_section').val(),
           }
            
@@ -626,9 +655,10 @@ table > thead > tr > th{
                 $('#ke_department').show();
 
                 $.each(result.employee, function(key, value) {
-                  if ($('#ke_section').val() != value.section) {
-                    $('#ke_department').val(value.department);
-                  }
+                  $('#ke_department').val(value.department);
+                  // if ($('#ke_section').val() != $('#section').val()) {
+                    
+                  // }
                   // if ($('#ke_section').val() == ) {
                     
                     // $('#ke_group').val(value.group).trigger('change');
@@ -641,6 +671,7 @@ table > thead > tr > th{
               //   alert('Sub Group Tidak ditemukan');
               // }
           });
+        }
     }
 
 
@@ -659,6 +690,7 @@ table > thead > tr > th{
     minViewMode: "months",
     autoclose: true,
    });
+
   $('#tanggal').datepicker({
       autoclose: true,
       format: 'yyyy-mm-dd',
@@ -675,7 +707,7 @@ table > thead > tr > th{
       var ke_seksi = $('#ke_seksi').val();
       var ke_sub_seksi = $('#ke_sub_seksi').val();
       var ke_jabatan = $('#ke_jabatan').val();
-      if(employee_id == '' || department == '' || section == '' ||  position == '' || name == '' || tanggal == ''|| ke_departemen == '' || ke_seksi == '' || ke_sub_seksi == '' || ke_jabatan == ''){
+      if(employee_id == '' || department == '' ||  position == '' || name == '' || tanggal == ''|| ke_departemen == '' || ke_seksi == '' || ke_sub_seksi == '' || ke_jabatan == ''){
         alert('Semua Data Harus Diisi Dahulu.');  
       }
       else{
@@ -704,7 +736,7 @@ table > thead > tr > th{
           body += '<td>'+ value.nama +'</td>';
           body += '<td>'+ (value.sub_group || 'None') +'</td>';
           body += '<td>'+ (value.group || 'None') +'</td>';
-          body += '<td>'+ value.seksi +'</td>';
+          body += '<td>'+ (value.seksi || 'None') +'</td>';
           body += '<td>'+ value.departemen +'</td>';
           body += '<td>'+ value.jabatan +'</td>';
           body += '<td>'+ (value.ke_sub_group || 'None') +'</td>';
@@ -737,13 +769,15 @@ table > thead > tr > th{
               $('#bodyDetail').empty();
               $('#bodyDetail').html("");
 
+        var urlreport = '{{ url("mutasi_ant/report/") }}';
+
         $.each(result.resumes, function(key, value) {
           body += '<tr>';
           if (value.status == "All Approved") {
-                    body += '<td><span class="label label-success">'+ value.nik +'</span></td>';
+                    body += '<td><span class="label label-success"><a href="'+urlreport+'/'+value.id+'" style="color:white">'+ value.nik +'</a></span></td>';
               }
           else if (value.status == "Rejected") {
-                    body += '<td><span class="label label-danger">'+ value.nik +'</span></td>';
+                    body += '<td><span class="label label-success"><a href="'+urlreport+'/'+value.id+'" style="color:white">'+ value.nik +'</a></span></td>';
               }
           else{
                   body += '<td>'+ value.nik +'</td>';
@@ -751,7 +785,7 @@ table > thead > tr > th{
           body += '<td>'+ value.nama +'</td>';
           body += '<td>'+ (value.sub_group || 'None') +'</td>';
           body += '<td>'+ (value.group || 'None') +'</td>';
-          body += '<td>'+ value.seksi +'</td>';
+          body += '<td>'+ (value.seksi || 'None') +'</td>';
           body += '<td>'+ value.departemen +'</td>';
           body += '<td>'+ value.jabatan +'</td>';
           body += '<td>'+ (value.ke_sub_group || 'None') +'</td>';
@@ -1463,22 +1497,25 @@ Highcharts.createElement('link', {
               bodyResume  += '<td style="background-color:black"><span style="color:black">None</span></td>';
             };
             // jika all approved hr akan
-            if ("{{ Auth::user()->role_code }}" == "HR" || "{{ Auth::user()->role_code }}" == "MIS") {
-              if (value.status == "All Approved") {
-                    if (value.remark != null) {
-                    bodyResume  += '<td style="background-color:black"><span class="label label-warning">Finish</span></td>'; 
-                    }
-                    else{
-                    bodyResume  += '<td style="background-color:black"><span class="label label-danger"><a href="'+finish+'/'+value.id+'" style="color:white">Click To Finish</a></span></td>';
-                    }
-                  }
-              else if(value.status == "Rejected"){
-                bodyResume  += '<td style="background-color:black"><span class="label label-danger"><a href="'+urlreport+'/'+value.id+'" style="color:white">Rejected</a></span></td>';
-              }
-              else{
-                bodyResume  += '<td style="background-color:black">'+("")+'</td>';
-                }  
-              }
+            // if ("{{ Auth::user()->role_code }}" == "HR" || "{{ Auth::user()->role_code }}" == "MIS") {
+            //   if (value.status == "All Approved") {
+            //         if (value.remark != null) {
+            //         bodyResume  += '<td style="background-color:black"><span class="label label-warning">Finish</span></td>'; 
+            //         }
+            //         else{
+            //         bodyResume  += '<td style="background-color:black"><span class="label label-danger"><a href="'+finish+'/'+value.id+'" style="color:white">Click To Finish</a></span></td>';
+            //         }
+            //       }
+            //   else if(value.status == "Rejected"){
+            //     bodyResume  += '<td style="background-color:black"><span class="label label-danger"><a href="'+urlreport+'/'+value.id+'" style="color:white">Rejected</a></span></td>';
+            //   }
+            //   else{
+            //     bodyResume  += '<td style="background-color:black">'+("")+'</td>';
+            //     }  
+            //   }
+            // else{
+            //     bodyResume  += '<td style="background-color:black">'+("")+'</td>';
+            //     }  
             // else{
               // bodyResume  += '<td style="background-color:black"><span class="label label-danger"><a href="'+urlreport+'/'+value.id+'" style="color:white">Rejected</a></span></td>';
               // }

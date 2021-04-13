@@ -137,6 +137,8 @@ Route::get('index/general/pointing_call/{id}', 'GeneralController@indexGeneralPo
 Route::get('fetch/general/pointing_call', 'GeneralController@fetchGeneralPointingCall');
 Route::post('edit/general/pointing_call_pic', 'GeneralController@editGeneralPointingCallPic');
 
+Route::get('index/safety_riding', 'GeneralController@indexSafetyRiding');
+
 //GENERAL
 Route::get('index/general/omi_visitor', 'GeneralController@indexOmiVisitor');
 Route::get('fetch/general/omi_visitor', 'GeneralController@fetchOmiVisitor');
@@ -614,6 +616,7 @@ Route::get('fetch/report/detail_ot_by_employee', 'OvertimeController@detailOvert
 Route::get('index/report/overtime_resume', 'OvertimeController@indexMonthlyResume');
 Route::get('fetch/report/overtime_resume', 'OvertimeController@fetchMonthlyResume');
 Route::get('index/report/overtime_yearly', 'OvertimeController@indexYearlyResume');
+Route::get('fetch/report/overtime_yearly', 'OvertimeController@fetchYearlyResume');
 
 Route::get('index/report/ga_report', 'OvertimeController@indexGAReport');
 Route::get('fetch/report/ga_report', 'OvertimeController@fetchGAReport');
@@ -4527,6 +4530,8 @@ Route::post('post/pelayanan', 'WarehouseNewController@savepelayanan');
 Route::post('update/permintaan', 'WarehouseNewController@updatePermintaan');
 Route::get('fetch/history/request', 'WarehouseNewController@fetchRequest');
 Route::post('update/pelayanan', 'WarehouseNewController@updatePelayanan');
+Route::get('index/pengantaran/request', 'WarehouseNewController@index_pengantaran');
+Route::get('fetch/pengantaran', 'WarehouseNewController@fetchPengantaran');
 
 
 //Sanding

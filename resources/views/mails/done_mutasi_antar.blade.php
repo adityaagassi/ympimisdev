@@ -101,6 +101,9 @@
               </tr>
             </thead>
         	</table>
+          <br>
+          <span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
+          <a href="{{ url('mutasi_ant/hr') }}">Data Mutasi</a><br>
 		</center>
 	</div>
 </body>

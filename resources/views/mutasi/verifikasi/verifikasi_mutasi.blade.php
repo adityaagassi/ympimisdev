@@ -211,33 +211,33 @@
     <br>
         <table style="width: 100%; font-family: arial; border-collapse: collapse; ">
             <tr style="background-color: rgb(126,86,134);">
-                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">6</th>
-                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">5</th>
+                <!-- <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">6</th>
+                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">5</th> -->
                 <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">4</th>
                 <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">3</th>
                 <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">2</th> 
                 <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">1</th>
             </tr>
             <tr style="background-color: rgb(126,86,134);">
-                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">Manager HRGA</th>
-                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">GM</th>
-                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">DGM</th>
+                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">HR</th>
+                <!-- <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">GM</th>
+                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">DGM</th> -->
                 <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">Manager Departemen</th>
                 <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">Chief/Foreman Tujuan</th>
                 <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">Chief/Foreman Asal</th>
             </tr>
             <tr>
                 <td style="height: 40px; width: 6%; border:1px solid black; text-align: center; font-weight: bold">{{ $resumes[0]->nama_manager }}</td>
-                <td style="height: 40px; width: 6%; border:1px solid black; text-align: center; font-weight: bold">{{ $resumes[0]->nama_gm_tujuan }}</td>
-                <td style="height: 40px; width: 6%; border:1px solid black; text-align: center; font-weight: bold">{{ $resumes[0]->nama_dgm_tujuan }}</td>
+                <!-- <td style="height: 40px; width: 6%; border:1px solid black; text-align: center; font-weight: bold">{{ $resumes[0]->nama_gm_tujuan }}</td>
+                <td style="height: 40px; width: 6%; border:1px solid black; text-align: center; font-weight: bold">{{ $resumes[0]->nama_dgm_tujuan }}</td> -->
                 <td style="height: 40px; width: 6%; border:1px solid black; text-align: center; font-weight: bold">{{ $resumes[0]->nama_manager_tujuan }}</td>
                 <td style="height: 40px; width: 6%; border:1px solid black; text-align: center; font-weight: bold">{{ $resumes[0]->nama_chief_tujuan }}</td>
                 <td style="height: 40px; width: 6%; border:1px solid black; text-align: center; font-weight: bold">{{ $resumes[0]->nama_chief_asal }}</td>
             </tr>
             <tr>
                 <td style="width: 6%; border:1px solid black; text-align: center;"><?=$resumes[0]->date_manager_hrga?></td>
-                <td style="width: 6%; border:1px solid black; text-align: center;"><?=$resumes[0]->date_gm_tujuan?></td>
-                <td style="width: 6%; border:1px solid black; text-align: center;"><?=$resumes[0]->date_dgm_tujuan?></td>
+                <!-- <td style="width: 6%; border:1px solid black; text-align: center;"><?=$resumes[0]->date_gm_tujuan?></td>
+                <td style="width: 6%; border:1px solid black; text-align: center;"><?=$resumes[0]->date_dgm_tujuan?></td> -->
                 <td style="width: 6%; border:1px solid black; text-align: center;"><?=$resumes[0]->date_manager_tujuan?></td>
                 <td style="width: 6%; border:1px solid black; text-align: center;"><?=$resumes[0]->date_atasan_tujuan?></td>
                 <td style="width: 6%; border:1px solid black; text-align: center;"><?=$resumes[0]->date_atasan_asal?></td>
@@ -410,33 +410,33 @@
     <br>
         <table style="width: 100%; font-family: arial; border-collapse: collapse; ">
             <tr style="background-color: rgb(126,86,134);">
-                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">6</th>
-                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">5</th>
+               <!--  <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">6</th>
+                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">5</th> -->
                 <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">4</th>
                 <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">3</th>
                 <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">2</th> 
                 <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">1</th>
             </tr>
             <tr style="background-color: rgb(126,86,134);">
-                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">Manager HRGA</th>
-                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">GM</th>
-                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">DGM</th>
+                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">HR</th>
+                <!-- <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">GM</th>
+                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">DGM</th> -->
                 <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">Manager Departemen</th>
                 <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">Chief/Foreman Tujuan</th>
                 <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">Chief/Foreman Asal</th>
             </tr>
             <tr>
                 <td style="height: 40px; width: 6%; border:1px solid black; text-align: center; font-weight: bold">{{ $resumes[0]->nama_manager }}</td>
-                <td style="height: 40px; width: 6%; border:1px solid black; text-align: center; font-weight: bold">{{ $resumes[0]->nama_gm_tujuan }}</td>
-                <td style="height: 40px; width: 6%; border:1px solid black; text-align: center; font-weight: bold">{{ $resumes[0]->nama_dgm_tujuan }}</td>
+                <!-- <td style="height: 40px; width: 6%; border:1px solid black; text-align: center; font-weight: bold">{{ $resumes[0]->nama_gm_tujuan }}</td>
+                <td style="height: 40px; width: 6%; border:1px solid black; text-align: center; font-weight: bold">{{ $resumes[0]->nama_dgm_tujuan }}</td> -->
                 <td style="height: 40px; width: 6%; border:1px solid black; text-align: center; font-weight: bold">{{ $resumes[0]->nama_manager_tujuan }}</td>
                 <td style="height: 40px; width: 6%; border:1px solid black; text-align: center; font-weight: bold">{{ $resumes[0]->nama_chief_tujuan }}</td>
                 <td style="height: 40px; width: 6%; border:1px solid black; text-align: center; font-weight: bold">{{ $resumes[0]->nama_chief_asal }}</td>
             </tr>
             <tr>
                 <td style="width: 6%; border:1px solid black; text-align: center;"><?=$resumes[0]->date_manager_hrga?></td>
-                <td style="width: 6%; border:1px solid black; text-align: center;"><?=$resumes[0]->date_gm_tujuan?></td>
-                <td style="width: 6%; border:1px solid black; text-align: center;"><?=$resumes[0]->date_dgm_tujuan?></td>
+                <!-- <td style="width: 6%; border:1px solid black; text-align: center;"><?=$resumes[0]->date_gm_tujuan?></td>
+                <td style="width: 6%; border:1px solid black; text-align: center;"><?=$resumes[0]->date_dgm_tujuan?></td> -->
                 <td style="width: 6%; border:1px solid black; text-align: center;"><?=$resumes[0]->date_manager_tujuan?></td>
                 <td style="width: 6%; border:1px solid black; text-align: center;"><?=$resumes[0]->date_atasan_tujuan?></td>
                 <td style="width: 6%; border:1px solid black; text-align: center;"><?=$resumes[0]->date_atasan_asal?></td>

@@ -21,7 +21,7 @@
                 <th>Grade</th>
                 <th>EmployeeStatus</th>
                 <th>Company</th>
-                <th>Resign_Reason</th>
+                <!-- <th>Resign_Reason</th> -->
             </tr>
         </thead>
         <tbody>
@@ -65,7 +65,7 @@
                 <td>{{ $mjo->grade }}</td>
                 <td>{{ $mjo->pegawai }}</td>
                 <td>{{ 'PT. Yamaha Musical Product Indonesia' }}</td>
-                <td>{{ $mjo->alasan }}</td>
+                <!-- <td>{{ $mjo->alasan }}</td> -->
             </tr>
             
             @endforeach

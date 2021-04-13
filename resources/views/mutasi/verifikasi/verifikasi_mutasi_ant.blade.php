@@ -216,28 +216,33 @@
     <br>
         <table style="width: 100%; font-family: arial; border-collapse: collapse; ">
             <tr style="background-color: rgb(126,86,134);">
-                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">10</th>
-                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">9</th>
-                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">8</th>
-                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">7</th> 
-                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">6</th>
-                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">5</th>
-                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">4</th>
-                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">3</th>
-                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">2</th> 
-                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">1</th>
+                <th colspan="1" style="font-size: 9px; width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">10</th>
+                <th colspan="1" style="font-size: 9px; width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">9</th>
+                <th colspan="1" style="font-size: 9px; width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">8</th>
+                <th colspan="1" style="font-size: 9px; width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">7</th> 
+                <th colspan="1" style="font-size: 9px; width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">6</th>
+                <th colspan="1" style="font-size: 9px; width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">5</th>
+                <th colspan="1" style="font-size: 9px; width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">4</th>
+                <th colspan="1" style="font-size: 9px; width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">3</th>
+                <th colspan="1" style="font-size: 9px; width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">2</th> 
+                <th colspan="1" style="font-size: 9px; width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">1</th>
+                </tr>
+                <tr style="background-color: rgb(126,86,134);">
+                <th colspan="2" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">HR</th>
+                <th colspan="4" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">Tujuan</th>
+                <th colspan="4" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">Asal</th>
             </tr>
             <tr style="background-color: rgb(126,86,134);">
-                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">Direktur HRGA</th>
-                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">Manager HRGA</th>
-                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">GM Tujuan</th>
-                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">DGM Tujuan</th>
-                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">Manager Tujuan</th>
-                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">Chief/Foreman Tujuan</th>
-                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">GM Asal</th>
-                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">DGM Asal</th>
-                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">Manager Asal</th> 
-                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">Chief/Foreman Asal</th>
+                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">Direktur</th>
+                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">Manager</th>
+                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">GM</th>
+                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">DGM</th>
+                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">Manager</th>
+                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">Chief/Foreman</th>
+                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">GM</th>
+                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">DGM</th>
+                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">Manager</th> 
+                <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">Chief/Foreman</th>
             </tr>
             <tr>
                 <td style="height: 40px; width: 6%; border:1px solid black; text-align: center; font-weight: bold">{{ $resumes[0]->nama_direktur_hr }}</td>
