@@ -92,6 +92,14 @@
                                 <i class="fa fa-caret-right"></i> Company Agreement List (会社の契約書)
                             </a>
                             <br>
+                            <a href="{{ url("dashboard/mutasi") }}">
+                                <i class="fa fa-caret-right"></i> Mutasi Satu Department (部門内部署移動)
+                            </a>
+                            <br>
+                            <a href="{{ url("dashboard_ant/mutasi") }}">
+                                <i class="fa fa-caret-right"></i> Mutasi Antar Department (部門跨ぐ部署移動)
+                            </a>
+                            <br>
                         </td>
                     </tr>
                     <tr>
