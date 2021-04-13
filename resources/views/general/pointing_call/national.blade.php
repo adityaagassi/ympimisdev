@@ -31,6 +31,7 @@
 	});
 
 	jQuery(document).ready(function() {
+		$('body').addClass('fixed');
 		fetchPoint();
 		// $(document).bind("contextmenu",function(e){
 		// 	return false;
