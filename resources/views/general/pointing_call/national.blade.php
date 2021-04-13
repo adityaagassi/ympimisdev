@@ -60,7 +60,7 @@
 				$.each(result.pointing_calls, function(key, value){
 					image_data += '<div class="row" id="'+value.point_title+'" name="'+count+'" tabindex="1" style="height: 100%;">';
 					image_data += '<input type="hidden" name="inp_'+count+'" value="'+value.point_no/value.point_max+'">';
-					image_data += '<center><img src="{{ asset('images/pointing_calls/national') }}/'+value.point_title+'_'+value.point_no+'.jpg" style="height: '+h+';"></center>';
+					image_data += '<center><img src="{{ asset('images/pointing_calls/national') }}/'+value.point_title+'_'+value.point_no+'.jpg" style="height: '+h+'; max-width: 100%;"></center>';
 					image_data += '</div>';
 					count += 1;
 				});
