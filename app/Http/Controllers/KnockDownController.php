@@ -1896,7 +1896,7 @@ class KnockDownController extends Controller{
 	public function fetchKD($id){
 		// $datefrom = date('Y-m-01');
 		
-		$date = date('Y-m-d', strtotime('+7 day'));
+		$date = date('Y-m-d', strtotime('+3 day'));
 		$now = WeeklyCalendar::where('week_date', $date)->first();
 		$dateto = WeeklyCalendar::where('week_name', $now->week_name)->orderBy('week_date', 'desc')->first();
 		$first = date('Y-m-01');
