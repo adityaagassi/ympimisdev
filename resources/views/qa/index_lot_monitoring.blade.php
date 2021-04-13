@@ -45,7 +45,7 @@
 	}
 
 	.gambar {
-	    width: 350px;
+	    width: 280px;
 	    background-color: none;
 	    border-radius: 5px;
 	    margin-left: 15px;
@@ -91,7 +91,7 @@
 		<div class="gambar" style="margin-top:0px" id="container_{{$locs[0]}}">
 			<table style="text-align:center;width:100%">
 				<tr>
-					<td colspan="2" style="border: 1px solid #fff !important;background-color: white;color: black;font-size: 25px">{{$locs[1]}}
+					<td colspan="2" style="border: 1px solid #fff !important;background-color: white;color: black;font-size: 20px">{{$locs[1]}}
 					</td>
 				</tr>
 				<tr>

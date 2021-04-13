@@ -110,12 +110,12 @@
 					</tr>
 					<tr>
 						<th style=" background-color: #d1d1d1; text-align: center; color: #14213d; padding:0;font-size: 15px;">Loc</th>
-						<th colspan="2" style="background-color: #d1d1d1; text-align: center; color: #14213d; padding:0;font-size: 15px;">Lot Number</th>
+						<th colspan="2" style="background-color: #d1d1d1; text-align: center; color: #14213d; padding:0;font-size: 15px;">Urutan Lot Dalam Satu Kedatangan</th>
 					</tr>
 					<tr>
 						<td style="background-color: #14213d; text-align: center;color: white; font-size:15px;" id="loc">{{$loc}}</td>
 						<td colspan="2">
-							<input type="text" class="pull-right numpad2" name="lot_number" style="height: 50px;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;color: #14213d" id="lot_number" placeholder="Lot Number">
+							<input type="text" class="pull-right numpad2" name="lot_number" style="height: 50px;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;color: #14213d" id="lot_number" placeholder="Urutan Lot Dalam Satu Kedatangan">
 						</td>
 					</tr>
 					
@@ -915,7 +915,7 @@
 	}
 
 	function confirmNgLog() {
-		if ($('#status_lot').val() == '-') {
+		if ($('#status_lot').val() == '-' || $('#material_number').val() == "" || $('#qty_rec').val() == "" || $('#lot_number').val() == "" || $('#qty_check').val() == "" || $('#invoice').val() == "" || $('#inspection_level').val() == "-") {
 			alert('Isi Semua Data');
 		}else{
 			var incoming_check_code = $('#incoming_check_code').val();
