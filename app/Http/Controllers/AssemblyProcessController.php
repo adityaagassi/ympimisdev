@@ -1757,7 +1757,7 @@ class AssemblyProcessController extends Controller
 	{
 		$location = $request->get('process');
 
-		$onko = DB::select("SELECT * FROM assembly_onkos where origin_group_code = '041' and location = '".$location."'");
+		$onko = DB::select("SELECT * FROM assembly_onkos where origin_group_code = '041' and location = '".$location."' ORDER BY `key`");
 
 		if($onko == null){
 			$response = array(
