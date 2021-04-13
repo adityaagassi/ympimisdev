@@ -664,7 +664,7 @@
 	}
 
 	function confNgTemp() {
-		if ($('#qty_ng').val() == "" || $('#status_ng').val() == "") {
+		if ($('#qty_ng').val() == "" || $('#status_ng').val() == "-") {
 			alert('Isi Semua Data');
 		}else{
 			var material_number = $('#material_number').val();
