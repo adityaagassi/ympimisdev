@@ -184,8 +184,17 @@ class MutasiController extends Controller
             if ($request->get('ke_sub_group') == 'Kosong') {
                 $emp = '';
             }else{
-                $emp = DB::SELECT("select sub_group, `group`, section, department, position from employee_syncs where
-            `sub_group` = '".$request->get('ke_sub_group')."' group by department, section, `group`");
+            //     $emp = DB::SELECT("select sub_group, `group`, section, department, position from employee_syncs where
+            // `sub_group` = '".$request->get('ke_sub_group')."' group by department, section, `group`");
+                $emp = DB::SELECT("SELECT
+    DISTINCT(sub_group),
+    `group`,
+    section,
+    department
+FROM
+    employee_syncs 
+WHERE
+    `sub_group` = '".$request->get('ke_sub_group')."' ");
             }
 
             if (count($emp) > 0) {
