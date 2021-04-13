@@ -504,7 +504,7 @@ class GeneralAffairController extends Controller
 					'driver' => $driver
 				];
 
-				Mail::to(['rianita.widiastuti@music.yamaha.com', 'heriyanto@music.yamaha.com', 'dicky.kurniawan@music.yamaha.com'])
+				Mail::to(['rianita.widiastuti@music.yamaha.com', 'heriyanto@music.yamaha.com', 'putri.sukma.riyanti@music.yamaha.com'])
 				->bcc(['aditya.agassi@music.yamaha.com'])
 				->send(new SendEmail($data, 'driver_approval_notification'));
 
@@ -527,7 +527,7 @@ class GeneralAffairController extends Controller
 					'driver' => $driver
 				];
 
-				Mail::to(['rianita.widiastuti@music.yamaha.com', 'heriyanto@music.yamaha.com', 'dicky.kurniawan@music.yamaha.com'])
+				Mail::to(['rianita.widiastuti@music.yamaha.com', 'heriyanto@music.yamaha.com', 'putri.sukma.riyanti@music.yamaha.com'])
 				->bcc(['aditya.agassi@music.yamaha.com'])
 				->send(new SendEmail($data, 'driver_approval_notification'));
 
