@@ -1128,6 +1128,7 @@ class AssyProcessController extends Controller
 		group by `key`, model, surface) as final2
 		join materials on materials.`key` = final2.`key` and materials.model = final2.model and materials.surface = final2.surface
 		".$where." ".$where2." ".$where3." ".$where4." ".$dd." concat(final2.`key`,final2.model,final2.surface) in (".$gmc.")
+		group by `key`, model, surface, stockroom
 		order by field(concat(final2.`key`,final2.model,final2.surface), ".$gmc.")";
 
 		$stok = db::select($picking2);

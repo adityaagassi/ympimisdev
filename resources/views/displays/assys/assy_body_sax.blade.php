@@ -380,11 +380,11 @@
 
 				}
 
-				console.table(temporary);
+				// console.table(temporary);
 
-				console.table(result.plan);
+				// console.table(result.plan);
 
-				console.table(result.stok);
+				// console.table(result.stok);
 					// console.log(result.plan.length+" "+result.stok.length);
 
 
