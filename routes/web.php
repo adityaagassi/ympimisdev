@@ -1033,8 +1033,8 @@ Route::group(['nav' => 'M19', 'middleware' => 'permission'], function(){
 	Route::post('calculate/material/usage', 'RawMaterialController@calculateUsage');
 
 //DISPLAY RAW MATERIAL
-	Route::post('upload/material/material_monitoring', 'MaterialController@uploadMaterialMonitoring');
 });
+	Route::post('upload/material/material_monitoring', 'MaterialController@uploadMaterialMonitoring');
 Route::get('index/material/usage', 'RawMaterialController@indexUsage');
 Route::get('fetch/material/usage', 'RawMaterialController@fetchUsage');
 Route::get('index/material/smbmr', 'RawMaterialController@indexSmbmr');
@@ -4382,6 +4382,7 @@ Route::get('index/scrap', 'ScrapController@indexScrap');
 Route::get('index/scrap/data', 'ScrapController@indexScrapData');
 Route::get('fetch/scrap/data', 'ScrapController@fetchScrapData');
 Route::get('fetch/scrap/list', 'ScrapController@fetchScrapList');
+Route::get('fetch/scrap/list/assy', 'ScrapController@fetchScrapListAssy');
 Route::get('fetch/scrap', 'ScrapController@fetchScrap');
 Route::get('fetch/scrap/resume', 'ScrapController@fetchScrapResume');
 Route::post('print/scrap', 'ScrapController@printScrap');
@@ -4532,6 +4533,12 @@ Route::get('fetch/history/request', 'WarehouseNewController@fetchRequest');
 Route::post('update/pelayanan', 'WarehouseNewController@updatePelayanan');
 Route::get('index/pengantaran/request', 'WarehouseNewController@index_pengantaran');
 Route::get('fetch/pengantaran', 'WarehouseNewController@fetchPengantaran');
+Route::get('fetch/history/pelayanan', 'WarehouseNewController@fetchHistoryPelayanan');
+Route::get('fetch/pengantaran/pelayanan', 'WarehouseNewController@fetchPeng');
+Route::post('update/pengantaran', 'WarehouseNewController@updatePengantaran');
+
+
+
 
 
 //Sanding
@@ -4598,6 +4605,7 @@ Route::get('fetch/qa/display/incoming/ng_rate/detail', 'QualityAssuranceControll
 Route::get('index/qa/report/incoming', 'QualityAssuranceController@indexReportIncomingCheck')->name('report_incoming_qa');
 Route::get('fetch/qa/report/incoming', 'QualityAssuranceController@fetchReportIncomingCheck');
 Route::get('excel/qa/report/incoming', 'QualityAssuranceController@excelReportIncomingCheck');
+Route::get('fetch/qa/report/incoming/edit', 'QualityAssuranceController@fetchReportIncomingCheckEdit');
 
 //QA Report Lot Out Incoming Check
 Route::get('index/qa/report/incoming/lot_out', 'QualityAssuranceController@indexReportLotOut');

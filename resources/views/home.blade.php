@@ -845,7 +845,7 @@
                                 </a>
                                 <br>
                                 <a href="{{ url("/index/reed") }}">
-                                    <i class="fa fa-caret-right"></i> Injection Reed Synthetic (??)
+                                    <i class="fa fa-caret-right"></i> Injection Reed Synthetic (樹脂リード成形)
                                 </a>
                             </td>
                         </tr>
@@ -965,7 +965,7 @@
                                 </a>
                                 <br>
                                 <a href="{{ url("index/final/reed_synthetic") }}">
-                                    <i class="fa fa-caret-right"></i> Reed Synthetic ()
+                                    <i class="fa fa-caret-right"></i> Reed Synthetic (樹脂リード)
                                 </a>
                                 <br>
                                 <a href="{{ url("/index/display/sub_assy/assy_sax?date=&surface2=&key2=&model2=&hpl2=&order2=") }}">
