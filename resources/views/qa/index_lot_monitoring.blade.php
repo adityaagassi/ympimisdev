@@ -209,13 +209,13 @@
 
 					$.each(result.lot_detail, function(key2,value2){
 						if (value2.location == 'wi1') {
-				  			var loc = 'Woodwind Instrument (WI) 1';
+				  			var loc = 'WI 1';
 				  		}else if (value2.location == 'wi2') {
-				  			var loc = 'Woodwind Instrument (WI) 2';
+				  			var loc = 'WI 2';
 				  		}else if(value2.location == 'ei'){
-				  			var loc = 'Educational Instrument (EI)';
+				  			var loc = 'EI';
 				  		}else if(value2.location == 'sx'){
-				  			var loc = 'Saxophone Body';
+				  			var loc = 'Sax Body';
 				  		}else if (value2.location == 'cs'){
 				  			var loc = 'Case';
 				  		}else if(value2.location == 'ps'){
