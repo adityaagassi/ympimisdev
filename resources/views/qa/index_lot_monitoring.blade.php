@@ -45,7 +45,7 @@
 	}
 
 	.gambar {
-	    width: 280px;
+	    width: 180px;
 	    background-color: none;
 	    border-radius: 5px;
 	    margin-left: 15px;
@@ -63,15 +63,15 @@
 <section class="content" style="padding-top: 0;">
 	<div class="row" style="text-align: center;margin-left: 5px;margin-right: 5px">
 		<div class="col-xs-12" style="margin-left: 0px;margin-right: 0px;padding-bottom: 10px;padding-left: 0px">
-			<div class="col-xs-5" style="background-color: rgb(126,86,134);padding-left: 5px;padding-right: 5px;height:48px;vertical-align: middle;">
-				<span style="font-size: 30px;color: white;width: 100%;" id="periode"></span>
+			<div class="col-xs-4" style="background-color: rgb(126,86,134);padding-left: 5px;padding-right: 5px;height:30px;vertical-align: middle;">
+				<span style="font-size: 20px;color: white;width: 100%;" id="periode"></span>
 			</div>
 			<div class="col-xs-2" style="padding-left: 10px;">
 				<div class="input-group date">
 					<div class="input-group-addon" style="border: none; background-color: rgb(126,86,134); color: white;">
 						<i class="fa fa-calendar"></i>
 					</div>
-					<input type="text" class="form-control datepicker" id="date_from" name="date_from" placeholder="Select Date From" style="height:48px;font-size: 20px">
+					<input type="text" class="form-control datepicker" id="date_from" name="date_from" placeholder="Select Date From" style="height:30px;">
 				</div>
 			</div>
 			<div class="col-xs-2" style="padding-left: 0;">
@@ -79,11 +79,11 @@
 					<div class="input-group-addon" style="border: none; background-color: rgb(126,86,134); color: white;">
 						<i class="fa fa-calendar"></i>
 					</div>
-					<input type="text" class="form-control datepicker" id="date_to" name="date_to" placeholder="Select Date To" style="height:48px;font-size: 20px">
+					<input type="text" class="form-control datepicker" id="date_to" name="date_to" placeholder="Select Date To" style="height:30px;">
 				</div>
 			</div>
 			<div class="col-xs-1" style="padding-left: 0;">
-				<button class="btn btn-default pull-left" onclick="fetchLotStatus()" style="font-weight: bold;height:48px;font-size: 20px;background-color: rgb(126,86,134);color: white">
+				<button class="btn btn-default pull-left" onclick="fetchLotStatus()" style="font-weight: bold;height:30px;background-color: rgb(126,86,134);color: white">
 					Search
 				</button>
 			</div>
@@ -93,20 +93,34 @@
 		<?php $locs = explode("_", $location) ?>
 		<div class="gambar" style="margin-top:0px" id="container_{{$locs[0]}}">
 			<table style="text-align:center;width:100%">
+				<?php
+				if ($locs[0] == 'wi1') {
+		  			$loc = 'WI 1';
+		  		}else if ($locs[0] == 'wi2') {
+		  			$loc = 'WI 2';
+		  		}else if($locs[0] == 'ei'){
+		  			$loc = 'EI';
+		  		}else if($locs[0] == 'sx'){
+		  			$loc = 'Sax Body';
+		  		}else if ($locs[0] == 'cs'){
+		  			$loc = 'Case';
+		  		}else if($locs[0] == 'ps'){
+		  			$loc = 'Pipe Silver';
+		  		} ?>
 				<tr>
-					<td colspan="2" style="border: 1px solid #fff !important;background-color: white;color: black;font-size: 20px">{{$locs[1]}}
+					<td colspan="2" style="border: 1px solid #fff !important;background-color: white;color: black;font-size: 20px">{{$loc}}
 					</td>
 				</tr>
 				<tr>
-					<td style="border: 1px solid #fff;border-bottom: 2px solid white;background-color: black;color: white;font-size: 25px;width: 50%;">LOT OK
+					<td style="border: 1px solid #fff;border-bottom: 2px solid white;background-color: black;color: white;font-size: 15px;width: 50%;">LOT OK
 					</td>
-					<td style="border: 1px solid #fff;border-bottom: 2px solid white;background-color: black;color: white;font-size: 25px;width: 50%;">LOT OUT
+					<td style="border: 1px solid #fff;border-bottom: 2px solid white;background-color: black;color: white;font-size: 15px;width: 50%;">LOT OUT
 					</td>
 				</tr>
 				<tr>
-					<td style="border: 1px solid #fff;color: white;font-size: 100px;" id="lot_ok_td_{{$locs[0]}}"><span id="lot_ok_{{$locs[0]}}">0</span>
+					<td style="border: 1px solid #fff;color: white;font-size: 80px;" id="lot_ok_td_{{$locs[0]}}"><span id="lot_ok_{{$locs[0]}}">0</span>
 					</td>
-					<td style="border: 1px solid #fff;font-size: 100px;" id="lot_out_td_{{$locs[0]}}"><span id="lot_out_{{$locs[0]}}">0</span>
+					<td style="border: 1px solid #fff;font-size: 80px;" id="lot_out_td_{{$locs[0]}}"><span id="lot_out_{{$locs[0]}}">0</span>
 					</td>
 				</tr>
 			</table>
@@ -115,7 +129,7 @@
 		<div class="box box-solid" style="margin-bottom: 0px;margin-left: 0px;margin-right: 0px;margin-top: 10px">
 			<div class="box-body">
 				<div class="col-xs-12" style="margin-top: 0px;padding-top: 10px;padding: 0px">
-					<table id="table_lot" class="table table-bordered table-striped" style="margin-bottom: 0;margin-top: 0px;padding-top: 0px;font-size: 20px">
+					<table id="table_lot" class="table table-bordered table-striped" style="margin-bottom: 0;margin-top: 0px;padding-top: 0px;font-size: 17px">
 						<thead style="background-color: rgb(126,86,134);">
 							<tr>
 								<th style="border: 1px solid black;padding: 0px;width: 1%">Date</th>
