@@ -348,17 +348,24 @@ class QualityAssuranceController extends Controller
              if ($date_to == "") {
                   $first = "DATE(NOW())";
                   $last = "DATE(NOW())";
+                  $date = date('Y-m-d');
+                  $monthTitle = date("d F Y", strtotime($date));
              }else{
                   $first = "DATE(NOW())";
                   $last = "'".$date_to."'";
+                  $date = date('Y-m-d');
+                  $monthTitle = date("d F Y", strtotime($date)).' - '.date("d F Y", strtotime($date_to));
              }
         }else{
              if ($date_to == "") {
                   $first = "'".$date_from."'";
                   $last = "DATE(NOW())";
+                  $date = date('Y-m-d');
+                  $monthTitle = date("d F Y", strtotime($date_from)).' - '.date("d F Y", strtotime($date));
              }else{
                   $first = "'".$date_from."'";
                   $last = "'".$date_to."'";
+                  $monthTitle = date("d F Y", strtotime($date_from)).' - '.date("d F Y", strtotime($date_to));
              }
         }
 
@@ -392,7 +399,8 @@ class QualityAssuranceController extends Controller
         $lot_detail = DB::SELECT("SELECT
         *,
         DATE( qa_incoming_logs.created_at ) AS date_lot,
-        ( SELECT GROUP_CONCAT( ng_name ) FROM qa_incoming_ng_logs WHERE qa_incoming_ng_logs.incoming_check_code = qa_incoming_logs.incoming_check_code ) AS ng_name 
+        ( SELECT GROUP_CONCAT( ng_name ) FROM qa_incoming_ng_logs WHERE qa_incoming_ng_logs.incoming_check_code = qa_incoming_logs.incoming_check_code ) AS ng_name,
+         ( SELECT DISTINCT(vendor_shortname) FROM qa_materials WHERE qa_materials.vendor = qa_incoming_logs.vendor ) AS vendor_shortname 
       FROM
         qa_incoming_logs 
         left join employee_syncs on employee_syncs.employee_id = qa_incoming_logs.inspector_id
@@ -405,6 +413,7 @@ class QualityAssuranceController extends Controller
         $response = array(
             'status' => true,
             'lot_count' => $lot_count,
+            'monthTitle' => $monthTitle,
             'lot_detail' => $lot_detail,
         );
         return Response::json($response);

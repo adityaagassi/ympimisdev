@@ -63,24 +63,27 @@
 <section class="content" style="padding-top: 0;">
 	<div class="row" style="text-align: center;margin-left: 5px;margin-right: 5px">
 		<div class="col-xs-12" style="margin-left: 0px;margin-right: 0px;padding-bottom: 10px;padding-left: 0px">
-			<div class="col-xs-2" style="padding-left: 0;">
+			<div class="col-xs-5" style="background-color: rgb(126,86,134);padding-left: 5px;padding-right: 5px;height:48px;vertical-align: middle;">
+				<span style="font-size: 30px;color: white;width: 100%;" id="periode"></span>
+			</div>
+			<div class="col-xs-2" style="padding-left: 10px;">
 				<div class="input-group date">
-					<div class="input-group-addon bg-green" style="border: none; background-color: #605ca8; color: white;">
+					<div class="input-group-addon" style="border: none; background-color: rgb(126,86,134); color: white;">
 						<i class="fa fa-calendar"></i>
 					</div>
-					<input type="text" class="form-control datepicker" id="date_from" name="date_from" placeholder="Select Date From">
+					<input type="text" class="form-control datepicker" id="date_from" name="date_from" placeholder="Select Date From" style="height:48px;font-size: 20px">
 				</div>
 			</div>
 			<div class="col-xs-2" style="padding-left: 0;">
 				<div class="input-group date">
-					<div class="input-group-addon bg-green" style="border: none; background-color: #605ca8; color: white;">
+					<div class="input-group-addon" style="border: none; background-color: rgb(126,86,134); color: white;">
 						<i class="fa fa-calendar"></i>
 					</div>
-					<input type="text" class="form-control datepicker" id="date_to" name="date_to" placeholder="Select Date To">
+					<input type="text" class="form-control datepicker" id="date_to" name="date_to" placeholder="Select Date To" style="height:48px;font-size: 20px">
 				</div>
 			</div>
-			<div class="col-xs-2" style="padding-left: 0;">
-				<button class="btn btn-success pull-left" onclick="fetchLotStatus()" style="font-weight: bold;">
+			<div class="col-xs-1" style="padding-left: 0;">
+				<button class="btn btn-default pull-left" onclick="fetchLotStatus()" style="font-weight: bold;height:48px;font-size: 20px;background-color: rgb(126,86,134);color: white">
 					Search
 				</button>
 			</div>
@@ -111,9 +114,6 @@
 		@endforeach
 		<div class="box box-solid" style="margin-bottom: 0px;margin-left: 0px;margin-right: 0px;margin-top: 10px">
 			<div class="box-body">
-				<div class="col-xs-12" style="background-color: rgb(126,86,134)">
-					<span style="font-size: 40px;color: white;width: 100%;">LOT OUT DETAILS</span>
-				</div>
 				<div class="col-xs-12" style="margin-top: 0px;padding-top: 10px;padding: 0px">
 					<table id="table_lot" class="table table-bordered table-striped" style="margin-bottom: 0;margin-top: 0px;padding-top: 0px;font-size: 20px">
 						<thead style="background-color: rgb(126,86,134);">
@@ -225,10 +225,10 @@
 						body_lot += '<td>'+value2.date_lot+'</td>';
 						body_lot += '<td>'+loc+'</td>';
 						body_lot += '<td>'+value2.invoice+'</td>';
-						body_lot += '<td>'+value2.employee_id+'<br>'+value2.name+'</td>';
+						body_lot += '<td>'+value2.employee_id+'<br>'+value2.name.split(' ').slice(0,2).join(' ')+'</td>';
 						body_lot += "<td>"+value2.lot_number+"</td>";
 						body_lot += '<td>'+value2.material_number+'<br>'+value2.material_description+'</td>';
-						body_lot += '<td>'+value2.vendor+'</td>';
+						body_lot += '<td>'+value2.vendor_shortname+'</td>';
 						body_lot += '<td>'+value2.qty_check+' Pc(s)</td>';
 						body_lot += '<td>'+value2.total_ng+' Pc(s)</td>';
 						body_lot += '<td>'+value2.ng_ratio.toFixed(2)+' %</td>';
@@ -237,6 +237,8 @@
 					});
 
 					$('#body_table_lot').append(body_lot);
+
+					$('#periode').html('Periode '+result.monthTitle);
 				}
 			}
 		});
