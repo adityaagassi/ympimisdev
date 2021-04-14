@@ -335,7 +335,7 @@
 			}				
 		}
 		else if(id == 'usage'){
-			var upload = $('#usagelData').val();
+			var upload = $('#usageData').val();
 			var period = $('#usagePeriod').val();
 			if(period == ""){
 				alert('Data periode tidak boleh kosong');
