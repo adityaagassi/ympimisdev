@@ -2902,6 +2902,109 @@ public function fetchNgReport($process,Request $request)
 	}
 }
 
+public function indexKdCardCleaning()
+{
+	$title = "KD Card Cleaning";
+	$title_jp = "";
+	return view('processes.assembly.flute.kd_cleaning')
+	->with('page', 'KD Card Cleaning')
+	->with('head', 'Assembly Process')
+	->with('title', $title)
+	->with('title_jp', $title_jp);
+}
+
+public function scanKdCardCleaning(Request $request)
+{
+	$details = AssemblyDetail::where('tag',dechex($request->get('tag')))->first();
+	$details2 = AssemblyDetail::where('tag',dechex($request->get('tag')))->get();
+
+	$serials = AssemblySerial::where('serial_number',$details->serial_number)->where('origin_group_code',$details->origin_group_code)->first();
+
+	$tag = AssemblyTag::where('serial_number',$details->serial_number)->where('model',$details->model)->where('origin_group_code',$details->origin_group_code)->first();
+	$tag->serial_number = null;
+	$tag->model = null;
+
+	$stamp_inventory = StampInventory::where('stamp_inventories.serial_number', '=', $details->serial_number)
+	->where('stamp_inventories.model', '=', $details->model)
+	->where('origin_group_code',$details->origin_group_code);
+
+	$now = date('Y-m-d H:i:s');
+
+	foreach ($details2 as $detail) {
+		$detailss = new AssemblyLog([
+			'tag' => $detail->tag,
+			'serial_number' => $detail->serial_number,
+			'model' => $detail->model,
+			'location' => $detail->location,
+			'operator_id' => $detail->operator_id,
+			'sedang_start_date' => $detail->sedang_start_date,
+			'sedang_finish_date' => $detail->sedang_finish_date,
+			'origin_group_code' => $detail->origin_group_code,
+			'created_by' => $detail->created_by
+		]);
+		$detailss->save();
+	}
+
+	AssemblyDetail::where('tag',dechex($request->get('tag')))->forceDelete();
+
+	$log = new AssemblyLog([
+		'tag' => $details->tag,
+		'serial_number' => $details->serial_number,
+		'model' => $details->model,
+		'location' => 'labelkd-print',
+		'operator_id' => Auth::user()->username,
+		'sedang_start_date' => $now,
+		'sedang_finish_date' => $now,
+		'origin_group_code' => '041',
+		'created_by' => Auth::user()->username
+	]);
+					
+
+	try {
+		$serials->forceDelete();
+		$tag->save();
+		$stamp_inventory->forceDelete();
+		$log->save();
+
+		$response = array(
+			'status' => true,
+			'message' => 'Cleaning Card Success'
+		);
+		return Response::json($response);
+	} catch (\Exception $e) {
+		$response = array(
+			'status' => false,
+			'message' => 'Failed Cleaning Data'
+		);
+		return Response::json($response);
+	}
+}
+
+public function fetchKdCardCleaning(Request $request)
+{
+	try {
+		$history = DB::SELECT("SELECT
+			* 
+		FROM
+			assembly_logs 
+		WHERE
+			location = 'labelkd-print' 
+			AND DATE( created_at ) >= DATE_FORMAT( NOW() - INTERVAL 3 DAY, '%Y-%m-%d' ) 
+			AND DATE( created_at ) <= DATE_FORMAT( NOW(), '%Y-%m-%d' )");
+		$response = array(
+			'status' => true,
+			'history' => $history
+		);
+		return Response::json($response);
+	} catch (\Exception $e) {
+		$response = array(
+			'status' => false,
+			'message' => 'Failed Get Data'
+		);
+		return Response::json($response);
+	}
+}
+
 function dec2hex($number){
 
 	$hexvalues = array('0','1','2','3','4','5','6','7',

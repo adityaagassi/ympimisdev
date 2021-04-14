@@ -1034,7 +1034,7 @@ Route::group(['nav' => 'M19', 'middleware' => 'permission'], function(){
 
 //DISPLAY RAW MATERIAL
 });
-	Route::post('upload/material/material_monitoring', 'MaterialController@uploadMaterialMonitoring');
+Route::post('upload/material/material_monitoring', 'MaterialController@uploadMaterialMonitoring');
 Route::get('index/material/usage', 'RawMaterialController@indexUsage');
 Route::get('fetch/material/usage', 'RawMaterialController@fetchUsage');
 Route::get('index/material/smbmr', 'RawMaterialController@indexSmbmr');
@@ -1117,6 +1117,8 @@ Route::get('fetch/ga_control/driver_detail', 'GeneralAffairController@fetchDrive
 Route::get('index/ga_control/live_cooking', 'GeneralAffairController@indexLiveCooking');
 Route::get('index/ga_control/bento', 'GeneralAffairController@indexBento');
 
+//BENTO
+Route::get('index/ga_control/bento', 'GeneralAffairController@indexBento');
 
 
 //STD CONTROL
@@ -4153,6 +4155,9 @@ Route::get('fetch/maintenance/mttbf/list', 'MaintenanceController@fetchMttbf');
 Route::get('index/maintenance/mttr/list', 'MaintenanceController@indexMttr');
 Route::get('fetch/maintenance/mttr/list', 'MaintenanceController@fetchMttr');
 
+// -------------------------      MTTR           -------------------
+Route::get('index/maintenance/tpm/dashboard', 'MaintenanceController@indextpm');
+
 
 //Assemblies
 Route::get('index/kensa/{location}', 'AssemblyProcessController@kensa');
@@ -4187,6 +4192,10 @@ Route::get('index/assembly/flute/label_kecil/{id}/{remark}', 'AssemblyProcessCon
 Route::get('index/assembly/flute/label_kecil2/{id}/{remark}', 'AssemblyProcessController@labelKecil2Fl');
 Route::get('index/assembly/flute/label_deskripsi/{id}/{remark}', 'AssemblyProcessController@labelDeskripsi');
 Route::get('fetch/check_carb_new', 'AssemblyProcessController@fetchCheckCarb');
+
+Route::get('index/assembly/flute/kd_cleaning', 'AssemblyProcessController@indexKdCardCleaning');
+Route::get('scan/assembly/flute/kd_cleaning', 'AssemblyProcessController@scanKdCardCleaning');
+Route::get('fetch/assembly/flute/kd_cleaning', 'AssemblyProcessController@fetchKdCardCleaning');
 
 
 
@@ -4405,6 +4414,9 @@ Route::get('fetch/kd_scrap_closure', 'ScrapController@fetchKdScrapClosure');
 Route::post('scan/scrap_warehouse', 'ScrapController@scanScrapWarehouse');
 Route::get('display/scrap_warehouse', 'ScrapController@displayScrapWarehouse');
 Route::get('fetch/scrap/monitoring', 'ScrapController@fetchMonitoringScrap');
+// ============================================================================================
+Route::get('index/scrap/create', 'ScrapController@createScrap');
+
 
 //Mutasi
 Route::get('dashboard/mutasi', 'MutasiController@dashboard');
@@ -4662,20 +4674,26 @@ Route::get('index/reed/annealing_verification', 'ReedSyntheticController@indexAn
 //Packing
 Route::get('index/final/reed_synthetic', 'ReedSyntheticController@indexFinalReed');
 
+Route::get('index/reed/packing_order', 'ReedSyntheticController@indexPackingOrder');
+Route::get('fetch/reed/packing_material', 'ReedSyntheticController@fetchPackingMaterial');
+Route::post('create/reed/packing_order', 'ReedSyntheticController@createPackingOrder');
+Route::get('fetch/reed/packing_order', 'ReedSyntheticController@fetchPackingOrder');
+Route::get('reprint/reed/packing_order', 'ReedSyntheticController@reprintPackingOrder');
+
 Route::get('index/reed/picking_verification', 'ReedSyntheticController@indexPickingVerification');
 Route::get('fetch/reed/packing_picking_list', 'ReedSyntheticController@fetchPackingPickingList');
 Route::post('scan/reed/packing_picking', 'ReedSyntheticController@scanPackingPicking');
 Route::post('fetch/reed/start_packing', 'ReedSyntheticController@fetchStartPacking');
 Route::post('fetch/reed/finish_packing', 'ReedSyntheticController@fetchFinishPacking');
 
+Route::get('index/reed/case_paper_verification', 'ReedSyntheticController@indexCaseSuportPaper');
+
+
+
 Route::get('index/reed/packing_verification', 'ReedSyntheticController@indexPackingVerification');
 
 
-Route::get('index/reed/packing_order', 'ReedSyntheticController@indexPackingOrder');
-Route::get('fetch/reed/packing_material', 'ReedSyntheticController@fetchPackingMaterial');
-Route::post('create/reed/packing_order', 'ReedSyntheticController@createPackingOrder');
-Route::get('fetch/reed/packing_order', 'ReedSyntheticController@fetchPackingOrder');
-Route::get('reprint/reed/packing_order', 'ReedSyntheticController@reprintPackingOrder');
+
 
 
 //Warehouse
@@ -4725,8 +4743,8 @@ Route::group(['nav' => 'M33', 'middleware' => 'permission'], function(){
 	Route::get('index/server_room/{id}', 'PingController@ServerRoomPing');
 	Route::get('post/server_room/ping/trend', 'PingController@ServerRoomPingTrend');
 	Route::get('post/server_room/network_usage', 'PingController@PostNetworkUsage');
-
 	Route::get('post/server_room/all_app_status', 'PingController@AllHardiskPingStatus');
+	Route::get('post/server_room/speedtest', 'PingController@ServerRoomSpeedtest');
 
 	//End Server Room
 });
