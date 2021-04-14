@@ -2486,4 +2486,77 @@ public function fetchGAReport(Request $request)
 	return $response;
 }
 
+public function indexYearlyResume()
+{
+	$title = 'Overtime Fiscal Year Resume';
+	$title_jp = '年度残業まとめ';
+
+	return view('overtimes.reports.overtime_yearly', array(
+		'title' => $title,
+		'title_jp' => $title_jp
+	))->with('page', 'Overtime by Fiscal');
+}
+
+public function fetchYearlyResume(Request $request)
+{
+	if ($request->get('fiscal') != "") {
+		$fy = $request->get('fiscal');
+	} else {
+		$fy = 'FY197';
+	}
+
+	$fy_cal = DB::table('weekly_calendars')->where('fiscal_year', '=', $fy)->select(db::raw('DATE_FORMAT(week_date,"%Y-%m") as mon'))->groupBy(db::raw('DATE_FORMAT(week_date,"%Y-%m")'))->get();
+	$fy_arr = [];
+
+	foreach ($fy_cal as $fy2) {
+		array_push($fy_arr, $fy2->mon);
+	}
+
+	$from = $fy_arr[0];
+	$to = end($fy_arr);
+
+	$act_data = db::connection('sunfish')->select("SELECT mon, ROUND(jam, 2) as jam_fix from
+		(select FORMAT(VIEW_YMPI_Emp_OvertimePlan.ShiftStart, 'yyyy-MM') as mon, SUM (
+		CASE
+		WHEN COALESCE ( VIEW_YMPI_Emp_OvertimePlan.total_ot, 0 ) > 0 THEN
+		cast(VIEW_YMPI_Emp_OvertimePlan.total_ot as float)/ 60 ELSE cast(VIEW_YMPI_Emp_OvertimePlan.TOTAL_OVT_PLAN as float) / 60
+		END 
+		) AS jam from VIEW_YMPI_Emp_OvertimePlan
+		where FORMAT(VIEW_YMPI_Emp_OvertimePlan.ShiftStart, 'yyyy-MM') >= '".$from."'
+		and FORMAT(VIEW_YMPI_Emp_OvertimePlan.ShiftStart, 'yyyy-MM') <= '".$to."'
+		GROUP BY FORMAT(VIEW_YMPI_Emp_OvertimePlan.ShiftStart, 'yyyy-MM')) mstr");
+
+	$fq_data = db::select("SELECT dt_bdg as dt, SUM(budget) as budget, SUM(forecast) as fq from
+		(select cost_centers2.cost_center, cost_center_name, bdg.dt as dt_bdg, fq.dt as dt_fq, ROUND(SUM(budget), 2) as budget, forecast from cost_centers2
+		left join 
+		(select cost_center, DATE_FORMAT(period, '%Y-%m') as dt, budget from budgets
+		where DATE_FORMAT(period, '%Y-%m') >= '".$from."'
+		AND DATE_FORMAT(period, '%Y-%m') <= '".$to."') as bdg 
+		on bdg.cost_center = cost_centers2.cost_center
+		left join
+		(select cost_center, DATE_FORMAT(`date`, '%Y-%m') as dt, ROUND(SUM(`hour`), 2) as forecast from forecasts
+		where DATE_FORMAT(`date`, '%Y-%m') >= '".$from."'
+		AND DATE_FORMAT(`date`, '%Y-%m') <= '".$to."'
+		group by DATE_FORMAT(`date`, '%Y-%m'), cost_center) as fq
+		on fq.cost_center = cost_centers2.cost_center AND fq.dt = bdg.dt
+		group by cost_centers2.cost_center, cost_center_name, bdg.dt, fq.dt, forecast
+		) as mstr
+		group by dt_bdg
+		order by dt_bdg asc, cost_center asc");
+
+	$response = array(
+		'status' => true,
+		'act' => $act_data,
+		'fq' => $fq_data,
+		'fy' => $fy
+	);
+
+	// $response = array(
+	// 	'status' => true,
+	// 	'fy_cal' => $fy_arr,
+	// );
+	
+	return $response;
+}
+
 }

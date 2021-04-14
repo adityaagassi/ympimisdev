@@ -267,7 +267,7 @@ class QualityAssuranceController extends Controller
   			$ng_ratio = $request->get('ng_ratio');
   			$status_lot = $request->get('status_lot');
 
-			 QaIncomingLog::create([
+			 $log = QaIncomingLog::create([
   	        'incoming_check_code' => $incoming_check_code,
             'inspector_id' => $inspector,
             'location' => $location,
@@ -294,6 +294,7 @@ class QualityAssuranceController extends Controller
         foreach ($ng_temp as $key) {
         	QaIncomingNgLog::create([
 			         'incoming_check_code' => $incoming_check_code,
+               'incoming_check_log_id' => $log->id,
               'inspector_id' => $inspector,
               'location' => $key->location,
               'lot_number' => $lot_number,
