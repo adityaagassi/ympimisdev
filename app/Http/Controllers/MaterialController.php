@@ -153,7 +153,7 @@ public function uploadMaterialMonitoring(Request $request){
      if($id == 'inout'){
           $period_from = date('Y-m-d', strtotime($request->get('inoutFrom')));
           $period_to = date('Y-m-d', strtotime($request->get('inoutTo')));
-          $delete = MaterialPlanDelivery::where('entry_date', '>=', $period_from)
+          $delete = MaterialInOut::where('entry_date', '>=', $period_from)
           ->where('entry_date', '<=', $period_to)
           ->forceDelete();
      }
@@ -332,7 +332,7 @@ public function uploadMaterialMonitoring(Request $request){
                else if(strlen($issue_location) < 3 || strlen($issue_location) > 4){
                     array_push($error_count, 'Location Unmatch '.$material.' '.$issue_location.' '.$receive_location.' ('.strlen($material).')');
                }
-               else if($array_push == "" || $material == "" || $issue_location == "" || $receive_location == "" || $quantity == "" || $entry_date == "" || $posting_date == ""){
+               else if($movement_type == "" || $material == "" || $issue_location == "" || $receive_location == "" || $quantity == "" || $entry_date == "" || $posting_date == ""){
                     array_push($error_count, 'Data Blank '.$material); 
                }
                // else if(date('Y-m', strtotime($posting_date)) != $request->get('period')){
