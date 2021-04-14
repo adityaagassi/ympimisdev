@@ -120,11 +120,11 @@
 							<tr>
 								<th style="border: 1px solid black;padding: 0px;width: 1%">Date</th>
 								<th style="border: 1px solid black;padding: 0px;width: 2%">Loc</th>
+								<th style="border: 1px solid black;padding: 0px;width: 1%">Invoice</th>
 								<th style="border: 1px solid black;padding: 0px;width: 2%">Employee</th>
 								<th style="border: 1px solid black;padding: 0px;width: 2%">Lot Number</th>
 								<th style="border: 1px solid black;padding: 0px;width: 3%">Material</th>
 								<th style="border: 1px solid black;padding: 0px;width: 3%">Vendor</th>
-								<th style="border: 1px solid black;padding: 0px;width: 1%">Invoice</th>
 								<th style="border: 1px solid black;padding: 0px;width: 1%">Qty Check</th>
 								<th style="border: 1px solid black;padding: 0px;width: 1%">Qty NG</th>
 								<th style="border: 1px solid black;padding: 0px;width: 1%">NG Ratio (%)</th>
@@ -224,14 +224,14 @@
 						body_lot += '<tr>';
 						body_lot += '<td>'+value2.date_lot+'</td>';
 						body_lot += '<td>'+loc+'</td>';
-						body_lot += '<td>'+value2.employee_id+'<br>'+value2.name+'</td>';
-						body_lot += '<td>'+value2.lot_number+'</td>';
-						body_lot += '<td>'+value2.material_number+' - '+value2.material_description+'</td>';
-						body_lot += '<td>'+value2.vendor+'</td>';
 						body_lot += '<td>'+value2.invoice+'</td>';
-						body_lot += '<td>'+value2.qty_check+'</td>';
-						body_lot += '<td>'+value2.total_ng+'</td>';
-						body_lot += '<td>'+value2.ng_ratio+'</td>';
+						body_lot += '<td>'+value2.employee_id+'<br>'+value2.name+'</td>';
+						body_lot += "<td>"+value2.lot_number+"</td>";
+						body_lot += '<td>'+value2.material_number+'<br>'+value2.material_description+'</td>';
+						body_lot += '<td>'+value2.vendor+'</td>';
+						body_lot += '<td>'+value2.qty_check+' Pc(s)</td>';
+						body_lot += '<td>'+value2.total_ng+' Pc(s)</td>';
+						body_lot += '<td>'+value2.ng_ratio.toFixed(2)+' %</td>';
 						body_lot += '<td>'+value2.ng_name+'</td>';
 						body_lot += '</tr>';
 					});
