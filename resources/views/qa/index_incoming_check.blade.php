@@ -161,7 +161,7 @@
 							<input type="number" class="pull-right numpad2" name="qty_rec" style="height: 50px;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;color: #14213d" id="qty_rec" placeholder="Qty Rec">
 						</td>
 						<td>
-							<input type="number" class="pull-right numpad" name="qty_check" style="height: 50px;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;color: #14213d" id="qty_check" placeholder="Qty Check">
+							<input type="number" class="pull-right numpad" name="qty_check" style="height: 50px;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;color: #14213d" id="qty_check" placeholder="Qty Check" onchange="inputQtyCheck(this.value)">
 						</td>
 					</tr>
 				</tbody>
@@ -543,6 +543,10 @@
 		ng_list();
 	});
 
+	function inputQtyCheck(value) {
+		$('#total_ok').val(value);
+	}
+
 	function changeVendor() {
 		$("#vendor_choose").val($("#vendorSelect").val());
 	}
@@ -586,7 +590,7 @@
 				}
 			});
 		}
-
+		$('#ng_ratio').val('0');
 		$('#incoming_check_code').val("");
 	}
 
@@ -770,9 +774,9 @@
 				var check = $('#qty_check').val();
 
 				total_ok = check - total_ng;
-				// if (total_ok != 0) {
+				if (check != "") {
 					ng_ratio = (total_ng / check) * 100;
-				// }
+				}
 
 				$('#total_ok').val(total_ok);
 				$('#ng_ratio').val(ng_ratio);

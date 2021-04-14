@@ -949,6 +949,7 @@ class QualityAssuranceController extends Controller
         }
 
         $datas = DB::SELECT("SELECT
+          qa_incoming_logs.id as id_log,
           qa_incoming_logs.location,
           employee_syncs.employee_id,
           employee_syncs.name,
@@ -1375,6 +1376,59 @@ class QualityAssuranceController extends Controller
         $response = array(
             'status' => true,
             'detail' => $detail,
+        );
+        return Response::json($response);
+      } catch (\Exception $e) {
+        $response = array(
+            'status' => false,
+            'message' => $e->getMessage()
+        );
+        return Response::json($response);
+      }
+    }
+
+    public function fetchReportIncomingCheckEdit(Request $request)
+    {
+      try {
+        $datas = DB::SELECT("SELECT
+          qa_incoming_logs.id as id_log,
+          qa_incoming_logs.incoming_check_code,
+          qa_incoming_logs.location,
+          qa_incoming_logs.lot_number,
+          employee_syncs.employee_id,
+          employee_syncs.name,
+          qa_incoming_logs.material_number,
+          qa_incoming_logs.material_description,
+          qa_incoming_logs.vendor,
+          qa_incoming_logs.invoice,
+          qa_incoming_logs.inspection_level,
+          qa_incoming_logs.`repair`,
+          DATE(qa_incoming_logs.created_at) as date,
+          qa_incoming_logs.`return`,
+          qa_incoming_logs.`qty_rec`,
+          qa_incoming_logs.`qty_check`,
+          qa_incoming_logs.`total_ok`,
+          qa_incoming_logs.`total_ng`,
+          qa_incoming_logs.`ng_ratio`,
+          qa_incoming_logs.`status_lot`,
+          DATE( qa_incoming_logs.created_at ) AS created,
+          ( SELECT GROUP_CONCAT( ng_name SEPARATOR '_' ) FROM qa_incoming_ng_logs WHERE qa_incoming_ng_logs.incoming_check_code = qa_incoming_logs.incoming_check_code ) AS ng_name,
+          ( SELECT GROUP_CONCAT( qty_ng SEPARATOR '_' ) FROM qa_incoming_ng_logs WHERE qa_incoming_ng_logs.incoming_check_code = qa_incoming_logs.incoming_check_code ) AS ng_qty,
+          ( SELECT GROUP_CONCAT( status_ng SEPARATOR '_' ) FROM qa_incoming_ng_logs WHERE qa_incoming_ng_logs.incoming_check_code = qa_incoming_logs.incoming_check_code ) AS status_ng,
+          ( SELECT GROUP_CONCAT( note_ng SEPARATOR '_' ) FROM qa_incoming_ng_logs WHERE qa_incoming_ng_logs.incoming_check_code = qa_incoming_logs.incoming_check_code ) AS note_ng 
+        FROM
+          qa_incoming_logs
+          JOIN employee_syncs ON employee_syncs.employee_id = qa_incoming_logs.inspector_id 
+        WHERE
+          qa_incoming_logs.id = '".$request->get('id')."'
+        ORDER BY
+          qa_incoming_logs.material_number,
+          qa_incoming_logs.created_at desc,
+          qa_incoming_logs.lot_number");
+
+        $response = array(
+            'status' => true,
+            'datas' => $datas,
         );
         return Response::json($response);
       } catch (\Exception $e) {
