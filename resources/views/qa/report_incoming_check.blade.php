@@ -113,6 +113,17 @@
 	  left: 1px;
 	}
 
+	input::-webkit-outer-spin-button,
+	input::-webkit-inner-spin-button {
+		/* display: none; <- Crashes Chrome on hover */
+		-webkit-appearance: none;
+		margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+	}
+
+	input[type=number] {
+		-moz-appearance:textfield; /* Firefox */
+	}
+
 </style>
 @stop
 @section('header')
@@ -245,6 +256,100 @@
 			</div>
 		</div>
 	</div>
+
+	<div class="modal modal-default fade" id="edit_modal">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="col-xs-12" style="background-color: #00a65a; padding-right: 1%;">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">
+								&times;
+							</span>
+						</button>
+						<h1 style="text-align: center; margin:5px; font-weight: bold;color: white">Edit Report Incoming Check</h1>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="box-body">
+								<input type="hidden" value="{{csrf_token()}}" name="_token" />
+
+								<div class="form-group row" align="right">
+									<label class="col-sm-4">Loc<span class="text-red">*</span></label>
+									<div class="col-sm-5" align="left">
+										<input type="location_edit" class="form-control" id="location_edit" placeholder="Location" required readonly>
+										<input type="hidden" class="form-control" id="incoming_check_code_edit" placeholder="Check Code" required>
+										<input type="hidden" class="form-control" id="id_log_edit" placeholder="Check Code" required>
+									</div>
+								</div>
+								<div class="form-group row" align="right">
+									<label class="col-sm-4">Date<span class="text-red">*</span></label>
+									<div class="col-sm-5" align="left">
+										<input type="date_edit" class="form-control" id="date_edit" placeholder="Date" required readonly>
+									</div>
+								</div>
+								<div class="form-group row" align="right">
+									<label class="col-sm-4">Material<span class="text-red">*</span></label>
+									<div class="col-sm-5" align="left">
+										<select class="form-control select3" id='material_edit' data-placeholder="Select Material" style="width: 100%;color: black !important">
+											<option value=""></option>
+											@foreach($materials as $material)
+											<option value="{{$material->material_number}}">{{$material->material_number}} - {{$material->material_description}}</option>
+											@endforeach
+										</select>
+									</div>
+								</div>
+								<div class="form-group row" align="right">
+									<label class="col-sm-4">Invoice<span class="text-red">*</span></label>
+									<div class="col-sm-5" align="left">
+										<input type="invoice_edit" class="form-control" id="invoice_edit" placeholder="Invoice" required>
+									</div>
+								</div>
+								<div class="form-group row" align="right">
+									<label class="col-sm-4">Inspection Level<span class="text-red">*</span></label>
+									<div class="col-sm-5" align="left">
+										<select class="form-control select3" id="inspection_level_edit" data-placeholder="Select Inspection Level" style="width: 100%;color: black !important">
+											<option value=""></option>
+											@foreach($inspection_levels as $inspection_level)
+											<option value="{{$inspection_level->inspection_level}}">{{$inspection_level->inspection_level}}</option>
+											@endforeach
+										</select>
+									</div>
+								</div>
+								<div class="form-group row" align="right">
+									<label class="col-sm-4">Lot Number<span class="text-red">*</span></label>
+									<div class="col-sm-5" align="left">
+										<input type="number" class="form-control" id="lot_number_edit" placeholder="Lot Number" required>
+									</div>
+								</div>
+								<div class="form-group row" align="right">
+									<label class="col-sm-4">Qty Recieve<span class="text-red">*</span></label>
+									<div class="col-sm-5" align="left">
+										<input type="number" class="form-control" id="qty_rec_edit" placeholder="Qty Recieve" required>
+									</div>
+								</div>
+								<div class="form-group row" align="right">
+									<label class="col-sm-4">Status Lot<span class="text-red">*</span></label>
+									<div class="col-sm-5" align="left">
+										<select class="form-control select3" id="status_lot_edit" data-placeholder="Select Lot Status" style="width: 100%;color: black !important">
+											<option value=""></option>
+											<option value="Lot OK">Lot OK</option>
+											<option value="Lot Out">Lot Out</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-success" onclick="updateIncomingReport()">Update</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </section>
 @endsection
 
@@ -275,6 +380,10 @@
 				}
 			}
 		});
+		$('.select3').select2({
+			dropdownParent: $('#edit_modal')
+		});
+		cancelAll();
 
 		fillList();
 
@@ -287,6 +396,19 @@
 		todayHighlight: true,	
 		endDate: '<?php echo $tgl_max ?>'
 	});
+
+	function cancelAll() {
+		$('#location_edit').val('');
+		$('#date_edit').val('');
+		$('#material_edit').val('').trigger('change');
+		$('#invoice_edit').val('');
+		$('#inspection_level_edit').val('').trigger('change');
+		$('#lot_number_edit').val('');
+		$('#qty_rec_edit').val('');
+		$('#status_lot_edit').val('').trigger('change');
+		$('#incoming_check_code_edit').val('');
+		$('#id_log_edit').val('');
+	}
 
 	function changeVendor() {
 		$("#vendor").val($("#vendorSelect").val());
@@ -326,6 +448,7 @@
 		tableData += '<th rowspan="2">Note</th>';
 		tableData += '<th rowspan="2">NG Ratio</th>';
 		tableData += '<th rowspan="2">Lot Status</th>';
+		tableData += '<th rowspan="2">Action</th>';
 		tableData += '</tr>';
 		tableData += '<tr>';
 		tableData += '<th>Repair</th>';
@@ -335,26 +458,6 @@
 		tableData += '</thead>';
 		tableData += '<tbody id="example1Body">';
 		tableData += "</tbody>";
-		// tableData += "<tfoot>";
-		// tableData += "<tr>";
-		// tableData += "<th></th>";
-		// tableData += "<th></th>";
-		// tableData += "<th></th>";
-		// tableData += "<th></th>";
-		// tableData += "<th></th>";
-		// tableData += "<th></th>";
-		// tableData += "<th></th>";
-		// tableData += "<th></th>";
-		// tableData += "<th></th>";
-		// tableData += "<th></th>";
-		// tableData += "<th></th>";
-		// tableData += "<th></th>";
-		// tableData += "<th></th>";
-		// tableData += "<th></th>";
-		// tableData += "<th></th>";
-		// tableData += "<th></th>";
-		// tableData += "<th></th>";
-		// tableData += "</tr>";
 		tableData += "</tfoot>";
 		tableData += "</table>";
 		$('#divTable').append(tableData);
@@ -479,6 +582,7 @@
 					}
 					tableData += '<td style="vertical-align:middle" rowspan="'+jumlah+'">'+ value.ng_ratio.toFixed(2) +'</td>';
 					tableData += '<td style="vertical-align:middle" rowspan="'+jumlah+'">'+ value.status_lot +'</td>';
+					tableData += '<td style="vertical-align:middle" rowspan="'+jumlah+'"><button class="btn btn-warning" onclick="editIncomingReport(\''+value.id_log+'\')">Edit</button></td>';
 					tableData += '</tr>';
 					if (value.ng_name != null) {
 						for (var i = 1 ;i < ng_name.length; i++) {
@@ -536,139 +640,83 @@
 		});
 	}
 
-	// function exportExcel() {
-	// 	var date_from = $('#date_from').val();
-	// 	var date_to = $('#date_to').val();
-	// 	var vendor = $('#vendor').val();
-	// 	var material = $('#material').val();
-	// 	var location = $('#location').val();
-	// 	var inspection_level = $('#inspection_level').val();
+	function editIncomingReport(id) {
+		$('#loading').show();
+		cancelAll();
+		var data = {
+			id:id
+		}
+		$.get('{{ url("fetch/qa/report/incoming/edit") }}',data, function(result, status, xhr){
+			if (result.status) {
+				$.each(result.datas, function(key, value) {
+					if (value.location == 'wi1') {
+			  			var loc = 'Woodwind Instrument (WI) 1';
+			  		}else if (value.location == 'wi2') {
+			  			var loc = 'Woodwind Instrument (WI) 2';
+			  		}else if(value.location == 'ei'){
+			  			var loc = 'Educational Instrument (EI)';
+			  		}else if(value.location == 'sx'){
+			  			var loc = 'Saxophone Body';
+			  		}else if (value.location == 'cs'){
+			  			var loc = 'Case';
+			  		}else if(value.location == 'ps'){
+			  			var loc = 'Pipe Silver';
+			  		}
+					$('#location_edit').val(loc);
+					$('#date_edit').val(value.date);
+					$('#material_edit').val(value.material_number).trigger('change');
+					$('#invoice_edit').val(value.invoice);
+					$('#inspection_level_edit').val(value.inspection_level).trigger('change');
+					$('#lot_number_edit').val(value.lot_number);
+					$('#qty_rec_edit').val(value.qty_rec);
+					$('#status_lot_edit').val(value.status_lot).trigger('change');
+					$('#incoming_check_code_edit').val(value.incoming_check_code);
+					$('#id_log_edit').val(value.id_log);
+				});
+				$('#edit_modal').modal('show');
+				$('#loading').hide();
+			}else{
+				$('#loading').hide();
+				openErrorGritter('Error!',result.message);
+			}
+		});
+	}
 
-	// 	// var data = {
-	// 	// 	date_from:date_from,
-	// 	// 	date_to:date_to,
-	// 	// 	vendor:vendor,
-	// 	// 	material:material,
-	// 	// 	location:location,
-	// 	// 	inspection_level:inspection_level,
-	// 	// }
-	// 	if (date_from != "") {
-	// 		date_from = $('#date_from').val();
-	// 	}else{
-	// 		date_from = "kosong";
-	// 	}
+	function updateIncomingReport() {
+		$('#loading').show();
+		var material = $('#material_edit').val();
+		var invoice = $('#invoice_edit').val();
+		var inspection_level = $('#inspection_level_edit').val();
+		var lot_number = $('#lot_number_edit').val();
+		var qty_rec = $('#qty_rec_edit').val();
+		var status_lot = $('#status_lot_edit').val();
+		var incoming_check_code = $('#incoming_check_code_edit').val();
+		var id_log = $('#id_log_edit').val();
 
-	// 	if (date_to != "") {
-	// 		date_to = $('#date_to').val();
-	// 	}else{
-	// 		date_to = "kosong";
-	// 	}
+		var data = {
+			material:material,
+			invoice:invoice,
+			inspection_level:inspection_level,
+			lot_number:lot_number,
+			qty_rec:qty_rec,
+			status_lot:status_lot,
+			incoming_check_code:incoming_check_code,
+			id_log:id_log,
+		}
 
-	// 	if (vendor != "") {
-	// 		vendor = $('#vendor').val();
-	// 	}else{
-	// 		vendor = "kosong";
-	// 	}
-
-	// 	if (material != "") {
-	// 		material = $('#material').val();
-	// 	}else{
-	// 		material = "kosong";
-	// 	}
-
-	// 	if (location != "") {
-	// 		location = $('#location').val();
-	// 	}else{
-	// 		location = "kosong";
-	// 	}
-
-	// 	if (inspection_level !="") {
-	// 		inspection_level = $('#inspection_level').val();
-	// 	}else{
-	// 		inspection_level = "kosong";
-	// 	}
-	// 	var url = '{{url("excel/qa/report/incoming")}}';
-	// 	window.location = url;
-	// 	// console.log('{{url("excel/qa/report/incoming")}}'+'/'+data);
-
-	// 	// $.get('{{ url("excel/qa/report/incoming") }}',data, function(result, status, xhr){
-	// 	// });
-	// }
-
-	// $("form#exportForm").submit(function(e) {
-	// 	// if ($('#file').val() == '') {
-	// 	// 	openErrorGritter('Error!', 'You need to select file');
-	// 	// 	return false;
-	// 	// }
-
-	// 	$("#loading").show();
-
-	// 	e.preventDefault();    
-	// 	var date_from = $('#date_from').val();
-	// 	var date_to = $('#date_to').val();
-	// 	var vendor = $('#vendor').val();
-	// 	var material = $('#material').val();
-	// 	var location = $('#location').val();
-	// 	var inspection_level = $('#inspection_level').val();
-
-	// 	var formData = new FormData();
-	// 	formData.append('date_from', date_from);
-	// 	formData.append('date_to', date_to);
-	// 	formData.append('vendor', vendor);
-	// 	formData.append('material', material);
-	// 	formData.append('location', location);
-	// 	formData.append('inspection_level', inspection_level);
-	// 	if (formData.length == 0) {
-	// 		$.ajax({
-	// 			url: '{{ url("excel/qa/report/incoming") }}',
-	// 			type: 'GET',
-	// 			success: function (result, status, xhr) {
-	// 				if(result.message){
-	// 					$("#loading").hide();
-	// 					openSuccessGritter('Success', result.message);
-
-	// 				}else{
-	// 					$("#loading").hide();
-	// 					openErrorGritter('Error!', result.message);
-	// 				}
-	// 			},
-	// 			error: function(result, status, xhr){
-	// 				$("#loading").hide();
-					
-	// 				openErrorGritter('Error!', result.message);
-	// 			},
-	// 			cache: false,
-	// 			contentType: false,
-	// 			processData: false
-	// 		});
-	// 	}else{
-	// 		$.ajax({
-	// 			url: '{{ url("excel/qa/report/incoming") }}',
-	// 			type: 'GET',
-	// 			data: formData,
-	// 			success: function (result, status, xhr) {
-	// 				if(result.message){
-	// 					$("#loading").hide();
-	// 					openSuccessGritter('Success', result.message);
-
-	// 				}else{
-	// 					$("#loading").hide();
-	// 					openErrorGritter('Error!', result.message);
-	// 				}
-	// 			},
-	// 			error: function(result, status, xhr){
-	// 				$("#loading").hide();
-					
-	// 				openErrorGritter('Error!', result.message);
-	// 			},
-	// 			cache: false,
-	// 			contentType: false,
-	// 			processData: false
-	// 		});
-	// 	}
-
-		
-	// });
+		$.post('{{ url("update/qa/report/incoming") }}',data, function(result, status, xhr){
+			if (result.status) {
+				fillList();
+				$('#loading').hide();
+				$('#edit_modal').modal('hide');
+				cancelAll();
+				openSuccessGritter('Success',result.message);
+			}else{
+				$('#loading').hide();
+				openErrorGritter('Error!',result.message);
+			}
+		});
+	}
 
 	function openSuccessGritter(title, message){
 		jQuery.gritter.add({

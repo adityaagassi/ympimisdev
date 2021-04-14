@@ -1440,4 +1440,58 @@ class QualityAssuranceController extends Controller
         return Response::json($response);
       }
     }
+
+    public function updateReportIncomingCheck(Request $request)
+    {
+      try {
+        $material = $request->get('material');
+        $invoice = $request->get('invoice');
+        $inspection_level = $request->get('inspection_level');
+        $lot_number = $request->get('lot_number');
+        $qty_rec = $request->get('qty_rec');
+        $status_lot = $request->get('status_lot');
+        $incoming_check_code = $request->get('incoming_check_code');
+        $id_log = $request->get('id_log');
+
+        $log = QaIncomingLog::where('id',$id_log)->first();
+        $materials = QaMaterial::where('material_number',$material)->first();
+        $log->material_number = $materials->material_number;
+        $log->material_description = $materials->material_description;
+        $log->vendor = $materials->vendor;
+        $log->lot_number = $lot_number;
+        $log->invoice = $invoice;
+        $log->inspection_level = $inspection_level;
+        $log->qty_rec = $qty_rec;
+        $log->status_lot = $status_lot;
+
+        $ng_log = QaIncomingNgLog::where('incoming_check_log_id',$id_log)->get();
+        if (count($ng_log) > 0) {
+          foreach($ng_log as $ng_logs){
+            $nglogs = QaIncomingNgLog::where('id',$ng_logs->id)->first();
+            $nglogs->material_number = $materials->material_number;
+            $nglogs->material_description = $materials->material_description;
+            $nglogs->vendor = $materials->vendor;
+            $nglogs->lot_number = $lot_number;
+            $nglogs->invoice = $invoice;
+            $nglogs->inspection_level = $inspection_level;
+            $nglogs->qty_rec = $qty_rec;
+            $nglogs->save();
+          }
+        }
+
+        $log->save();
+
+        $response = array(
+            'status' => true,
+            'message' => 'Success Update Data'
+        );
+        return Response::json($response);
+      } catch (\Exception $e) {
+        $response = array(
+            'status' => false,
+            'message' => $e->getMessage()
+        );
+        return Response::json($response);
+      }
+    }
 }

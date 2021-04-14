@@ -4606,6 +4606,7 @@ Route::get('index/qa/report/incoming', 'QualityAssuranceController@indexReportIn
 Route::get('fetch/qa/report/incoming', 'QualityAssuranceController@fetchReportIncomingCheck');
 Route::get('excel/qa/report/incoming', 'QualityAssuranceController@excelReportIncomingCheck');
 Route::get('fetch/qa/report/incoming/edit', 'QualityAssuranceController@fetchReportIncomingCheckEdit');
+Route::post('update/qa/report/incoming', 'QualityAssuranceController@updateReportIncomingCheck');
 
 //QA Report Lot Out Incoming Check
 Route::get('index/qa/report/incoming/lot_out', 'QualityAssuranceController@indexReportLotOut');

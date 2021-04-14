@@ -115,7 +115,7 @@
 					<tr>
 						<td style="background-color: #14213d; text-align: center;color: white; font-size:15px;" id="loc">{{$loc}}</td>
 						<td colspan="2">
-							<input type="text" class="pull-right numpad2" name="lot_number" style="height: 50px;font-size: 1.5vw;width: 100%;text-align: center;vertical-align: middle;color: #14213d" id="lot_number" placeholder="Urutan Lot Dalam Satu Kedatangan">
+							<input type="text" class="pull-right numpad2" name="lot_number" style="height: 50px;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;color: #14213d" id="lot_number" placeholder="Urutan Lot Dalam Satu Kedatangan">
 						</td>
 					</tr>
 					
