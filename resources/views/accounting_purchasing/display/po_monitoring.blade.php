@@ -247,7 +247,7 @@ hr { background-color: red; height: 1px; border: 0; }
 
     drawChart();
     fetchTable();
-    setInterval(fetchTable, 300000);
+    setInterval(fetchTable, 180000);
   });
 
   var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
