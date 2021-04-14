@@ -235,7 +235,12 @@ public function uploadMaterialMonitoring(Request $request){
                $material = $uploadColumn[0];
                $due_date = $uploadColumn[1];
                $usage = $uploadColumn[2];
-               $remark = $uploadColumn[3];
+               // if(!$uploadColumn[3]){
+               //      $remark = "";
+               // }
+               // else{
+               //      $remark = $uploadColumn[3];
+               // }
 
                if(strlen($material) < 7 || strlen($material) > 8){
                     array_push($error_count, 'GMC Unmatch '.$material.' ('.strlen($material).')');
@@ -243,8 +248,8 @@ public function uploadMaterialMonitoring(Request $request){
                else if($due_date == "" || $material == "" || $usage == ""){
                     array_push($error_count, 'Data Blank '.$material); 
                }
-               else if(date('Y-m', strtotime($due_date)) != $request->get('period')){
-                    array_push($error_count, 'Period Unmatch '.$material.' '.$due_date);                     
+               else if(date('Y-m', strtotime($due_date)) != date('Y-m', strtotime($request->get('period')))){
+                    array_push($error_count, 'Period Unmatch '.$material.' '.date('Y-m', strtotime($due_date)).' '.date('Y-m', strtotime($request->get('period'))));                     
                }
                else if(preg_match("/[a-z]/i", $usage)){
                     array_push($error_count, 'Data not number '.$material.' '.$due_date.' '.$usage);                    
