@@ -37,6 +37,11 @@
   	text-transform: uppercase;
   }
 
+  .text-yellow{
+  	font-size: 40px !important;
+    font-weight: bold;
+  }
+
 
 </style>
 @endsection
@@ -47,15 +52,15 @@
 	<div class="row" style="padding: 0">
 		<div class="col-xs-12">
 			<div class="row">
-				<div class="col-md-12 content-header">
+<!-- 				<div class="col-md-12 content-header">
 	          		<h1>MIRAI SERVER STATUS</h1>
-				</div>
+				</div> -->
 				<div class="col-xs-12" style="padding-top: 0px;margin-top: 10px">
 					<div class="col-xs-3" style="padding: 0;padding-left: 10px">
 						<div class="box box-solid">
 							<div class="box-header" style="background-color: #ff851b;">
 								<center>
-									<span style="font-size: 22px; font-weight: bold; color: black;">SYSTEM INFORMATION</span>
+									<span style="font-size: 22px; font-weight: bold; color: black;"><b>SYSTEM INFORMATION</b></span>
 								</center>
 							</div>
 							<table class="table table-responsive" style="height: 250px;border: 0;background:#2a2a2b">
@@ -82,7 +87,7 @@
 					<div class="col-xs-3" style="padding-left: 10px;padding-right: 0">
 						<div class="box box-solid">
 							<div class="box-header" style="background-color: #ff851b;">
-								<center><span style="font-size: 22px; font-weight: bold; color: black;">Memory Usage</span></center>
+								<center><span style="font-size: 22px; font-weight: bold; color: black;"><b>Memory Usage</b></span></center>
 							</div>
 							<div id="container_memory" style="width: 100%;height: 250px;"></div>
 						</div>
@@ -91,7 +96,7 @@
 					<div class="col-xs-6" style="padding-left: 10px">
 						<div class="box box-solid">
 							<div class="box-header" style="background-color: #ff851b;">
-								<center><span style="font-size: 22px; font-weight: bold; color: black;">Hardisk Status</span></center>
+								<center><span style="font-size: 22px; font-weight: bold; color: black;"><b>Hardisk Status</b></span></center>
 							</div>
 							<div id="container_hardisk" style="width: 100%;height: 250px;"></div>
 						</div>
@@ -101,7 +106,7 @@
 					<div class="box box-solid">
 						<div class="box-header" style="background-color: #ff851b;">
 							<center>
-								<span style="font-size: 22px; font-weight: bold; color: black;">Network Usage</span>
+								<span style="font-size: 22px; font-weight: bold; color: black;"><b>Network Usage</b></span>
 							</center>
 						</div>
 						<table class="table table-responsive" style="height: 200px;background-color: #2a2a2b">

@@ -231,10 +231,14 @@
 				        type: 'pie'
 				    },
 				    title: {
-				        text: null,
+				        text: 'Hardisk<br>Capacity',
 				        align: 'center',
 				        verticalAlign: 'middle',
-				        y: 60
+				        y: 20,
+				        style: {
+		                    fontWeight: 'bold',
+		                    fontSize: '14px'
+		                }
 				    },
 				    tooltip: {
 				        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -249,6 +253,8 @@
 				            allowPointSelect: true,
 				            cursor: 'pointer',
 				            dataLabels: {
+  								padding: 0,
+          						allowOverlap: true,
 				                enabled: true,
 				                distance: -30,
 				                format: '{point.y} Gib',
@@ -292,7 +298,7 @@
 					},
 
 					title: {
-						text: ''
+						text: 'REPLY ROUND TRIP TIME (ms)'
 					},
 
 					yAxis: {
@@ -373,10 +379,14 @@
 				        type: 'pie'
 				    },
 				    title: {
-				        text: null,
+				        text: 'Hardisk<br>Capacity',
 				        align: 'center',
 				        verticalAlign: 'middle',
-				        y: 60
+				        y: 20,
+				        style: {
+		                    fontWeight: 'bold',
+		                    fontSize: '14px'
+		                }
 				    },
 				    tooltip: {
 				        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -391,6 +401,8 @@
 				            allowPointSelect: true,
 				            cursor: 'pointer',
 				            dataLabels: {
+  								padding: 0,
+          						allowOverlap: true,
 				                enabled: true,
 				                format: '{point.y} Tib',
 				                distance: -30,
@@ -431,7 +443,7 @@
 					},
 
 					title: {
-						text: ''
+						text: 'REPLY ROUND TRIP TIME (ms)'
 					},
 
 					yAxis: {
@@ -511,10 +523,14 @@
 				        type: 'pie'
 				    },
 				    title: {
-				        text: null,
+				        text: 'Hardisk<br>Capacity',
 				        align: 'center',
 				        verticalAlign: 'middle',
-				        y: 60
+				        y: 20,
+				        style: {
+		                    fontWeight: 'bold',
+		                    fontSize: '14px'
+		                }
 				    },
 				    tooltip: {
 				        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -529,6 +545,8 @@
 				            allowPointSelect: true,
 				            cursor: 'pointer',
 				            dataLabels: {
+  								padding: 0,
+          						allowOverlap: true,
 				                enabled: true,
 				                format: '{point.y} Gib',
 				                distance: -30,
@@ -569,7 +587,7 @@
 					},
 
 					title: {
-						text: ''
+						text: 'REPLY ROUND TRIP TIME (ms)'
 					},
 
 					yAxis: {
@@ -649,10 +667,14 @@
 				        type: 'pie'
 				    },
 				    title: {
-				        text: null,
+				        text: 'Hardisk<br>Capacity',
 				        align: 'center',
 				        verticalAlign: 'middle',
-				        y: 60
+				        y: 20,
+				        style: {
+		                    fontWeight: 'bold',
+		                    fontSize: '14px'
+		                }
 				    },
 				    tooltip: {
 				        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -667,6 +689,8 @@
 				            allowPointSelect: true,
 				            cursor: 'pointer',
 				            dataLabels: {
+  								padding: 0,
+          						allowOverlap: true,
 				                enabled: true,
 				                format: '{point.y} Gib',
 				                distance: -30,
@@ -707,7 +731,7 @@
 					},
 
 					title: {
-						text: ''
+						text: 'REPLY ROUND TRIP TIME (ms)'
 					},
 
 					yAxis: {

@@ -50,6 +50,11 @@
 	<div class="row" style="padding: 0">
 		<div class="col-xs-12">
 			<div class="row">
+
+				<div class="col-md-12 content-header" style="background-color: #424242 !important;color: #fff">
+					<h2>REPLY ROUND TRIP TIME</h2>
+				</div>
+
 				<div class="col-md-6 content-header" style="background-color: #4a148c !important">
 	          		<h1>INTERNET</h1>
 				</div>
@@ -59,18 +64,15 @@
 
 				<div class="col-md-6 content-header" style="color: #fff;padding: 0">
       				<div class="isi">
-	      				<span id="time_internet"> 0</span>
+	      				<span id="time_internet"> 0</span> <span style="font-size: 100px">ms</span>
 	      			</div>
       			</div>
 
       			<div class="col-md-6 content-header" style="background-color: yellow !important;color: #000;padding: 0">
       				<div class="isi">
-	      				<span id="time_vpn"> 0</span>
+	      				<span id="time_vpn"> 0</span> <span style="font-size: 100px">ms</span>
 	      			</div>
       			</div>
-				<div class="col-md-12 content-header" style="background-color: #1565c0 !important;color: #fff">
-					<h2>REPLY ROUND TRIP TIME (ms)</h2>
-				</div>
 
 				<div class="col-md-6" style="padding: 0">
 					<div class="box box-solid" style="background-color:#3c3c3c !important; color: white; box-shadow: 0 0 0 0 !important;">
@@ -220,16 +222,19 @@
 
 				categories_vpn = [];
 				ping_time_vpn = [];
+				max = [];
 
 				$.each(result.data_ping, function(index, value){
 					categories_internet.push(value.data_time);
 					ping_time_internet.push(value.time);
+					max.push(120);
 				})
 
 				$.each(result.data_vpn, function(index, value){
 					categories_vpn.push(value.data_time);
 					ping_time_vpn.push(value.time);
 				})
+
 
 				Highcharts.chart('chart_internet', {
 					chart: {
@@ -250,7 +255,7 @@
 
 					xAxis: {
 						categories: categories_internet,
-						tickInterval: 15
+						tickInterval: 30
 					},
 
 					legend: {
@@ -294,6 +299,12 @@
 
 					series: [
 					{
+						type: 'line',
+						name: 'Max',
+						color: 'red',
+						data: max
+					},
+					{
 						name: 'Time',
 						data: ping_time_internet,
 						color: '#901aeb',
@@ -329,7 +340,7 @@
 
 					xAxis: {
 						categories: categories_vpn,
-						tickInterval: 15
+						tickInterval: 30
 					},
 
 					legend: {
@@ -372,6 +383,12 @@
 					},
 
 					series: [
+					{
+						type: 'line',
+						name: 'Max',
+						color: 'red',
+						data: max
+					},
 					{
 						name: 'Time',
 						data: ping_time_vpn,
