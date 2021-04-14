@@ -284,7 +284,7 @@ public function uploadMaterialMonitoring(Request $request){
                if(strlen($material) < 7 || strlen($material) > 8){
                     array_push($error_count, 'GMC Unmatch '.$material.' ('.strlen($material).')');
                }
-               else if($due_date == "" || $material == "" || $usage == ""){
+               else if($due_date == "" || $material == "" || $remark == ""){
                     array_push($error_count, 'Data Blank '.$material); 
                }
                else if(date('Y-m', strtotime($due_date)) != $request->get('period')){

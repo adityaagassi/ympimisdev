@@ -472,11 +472,11 @@ class IndirectMaterialController extends Controller{
 			$schedule->save();
 
 
-			$chemical_solution = ChemicalSolution::where('id', $schedule->solution_id)
-			->update([
-				'is_add_schedule' => 1,
-				// 'actual_quantity' => 0
-			]);
+			// $chemical_solution = ChemicalSolution::where('id', $schedule->solution_id)
+			// ->update([
+			// 	'is_add_schedule' => 1,
+			// 	'actual_quantity' => 0
+			// ]);
 
 
 			$pick = IndirectMaterialPick::where('cost_center_id', $location)
@@ -1009,10 +1009,29 @@ class IndirectMaterialController extends Controller{
 		try {
 			$schedule = IndirectMaterialSchedule::where('id', $id)->first();
 
-			$larutan = ChemicalSolution::where('id', $schedule->solution_id)
-			->update([
-				'actual_quantity' => 0 
-			]);
+			$larutan = ChemicalSolution::where('id', $schedule->solution_id)->first();
+			$larutan->is_add_schedule = 1;
+			$larutan->save();
+
+			if($schedule->category == 'Pembuatan Baru'){
+				$larutan = ChemicalSolution::where('id', $schedule->solution_id)
+				->update([
+					'actual_quantity' => 0 
+				]);
+
+				$log = new ChemicalControlLog([
+					'date' => date('Y-m-d'),
+					'solution_name' => $solution->solution_name,
+					'cost_center_id' => $solution->cost_center_id,
+					'target_max' => $solution->target_max,
+					'target_warning' => $solution->target_warning,
+					'note' => '-',
+					'quantity' => 0,
+					'accumulative' => 0,
+					'created_by' => Auth::id()
+				]);
+				$log->save();
+			}
 
 			$change = IndirectMaterialSchedule::where('schedule_date', $schedule->schedule_date)
 			->where('solution_id', $schedule->solution_id)

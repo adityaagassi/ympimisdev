@@ -238,7 +238,7 @@
 
 					$('#body_table_lot').append(body_lot);
 
-					$('#periode').html('Periode '+result.monthTitle);
+					$('#periode').html('Periode On '+result.monthTitle);
 				}
 			}
 		});

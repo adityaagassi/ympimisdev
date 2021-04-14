@@ -349,23 +349,23 @@ class QualityAssuranceController extends Controller
                   $first = "DATE(NOW())";
                   $last = "DATE(NOW())";
                   $date = date('Y-m-d');
-                  $monthTitle = date("d F Y", strtotime($date));
+                  $monthTitle = date("d-m-Y", strtotime($date));
              }else{
                   $first = "DATE(NOW())";
                   $last = "'".$date_to."'";
                   $date = date('Y-m-d');
-                  $monthTitle = date("d F Y", strtotime($date)).' - '.date("d F Y", strtotime($date_to));
+                  $monthTitle = date("d-m-Y", strtotime($date)).' to '.date("d-m-Y", strtotime($date_to));
              }
         }else{
              if ($date_to == "") {
                   $first = "'".$date_from."'";
                   $last = "DATE(NOW())";
                   $date = date('Y-m-d');
-                  $monthTitle = date("d F Y", strtotime($date_from)).' - '.date("d F Y", strtotime($date));
+                  $monthTitle = date("d-m-Y", strtotime($date_from)).' to '.date("d-m-Y", strtotime($date));
              }else{
                   $first = "'".$date_from."'";
                   $last = "'".$date_to."'";
-                  $monthTitle = date("d F Y", strtotime($date_from)).' - '.date("d F Y", strtotime($date_to));
+                  $monthTitle = date("d-m-Y", strtotime($date_from)).' to '.date("d-m-Y", strtotime($date_to));
              }
         }
 
