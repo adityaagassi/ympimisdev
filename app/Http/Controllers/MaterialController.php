@@ -19,6 +19,7 @@ use App\MaterialStockPolicy;
 use App\MaterialRequirementPlan;
 use App\MaterialPlanDelivery;
 use App\MaterialInOut;
+use Carbon\Carbon;
 
 class MaterialController extends Controller
 {
@@ -233,10 +234,10 @@ public function uploadMaterialMonitoring(Request $request){
 
           if($id == 'usage'){
                $material = $uploadColumn[0];
-               $due_date = $uploadColumn[1];
+               $due_date = Carbon::createFromFormat('d/m/Y', $uploadColumn[1])->format('Y-m-d');
                $usage = $uploadColumn[2];
                // if(!$uploadColumn[3]){
-               //      $remark = "";
+                    $remark = "";
                // }
                // else{
                //      $remark = $uploadColumn[3];
@@ -275,7 +276,8 @@ public function uploadMaterialMonitoring(Request $request){
 
           if($id == 'delivery'){
                $material = $uploadColumn[0];
-               $due_date = $uploadColumn[1];
+               $due_date = Carbon::createFromFormat('d/m/Y', $uploadColumn[1])->format('Y-m-d');
+               // $due_date = $uploadColumn[1];
                $quantity = $uploadColumn[2];
                $remark = $uploadColumn[3];
 
@@ -316,8 +318,10 @@ public function uploadMaterialMonitoring(Request $request){
                $issue_location = $uploadColumn[2];
                $receive_location = $uploadColumn[3];
                $quantity = $uploadColumn[4];
-               $entry_date = $uploadColumn[5];
-               $posting_date = $uploadColumn[6];
+               $entry_date = Carbon::createFromFormat('d/m/Y', $uploadColumn[5])->format('Y-m-d');
+               // $entry_date = $uploadColumn[5];
+               $posting_date = Carbon::createFromFormat('d/m/Y', $uploadColumn[6])->format('Y-m-d');
+               // $posting_date = $uploadColumn[6];
 
                if(strlen($material) < 7 || strlen($material) > 8){
                     array_push($error_count, 'GMC Unmatch '.$material.' ('.strlen($material).')');
