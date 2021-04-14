@@ -110,12 +110,12 @@
 					</tr>
 					<tr>
 						<th style=" background-color: #d1d1d1; text-align: center; color: #14213d; padding:0;font-size: 15px;">Loc</th>
-						<th colspan="2" style="background-color: #d1d1d1; text-align: center; color: #14213d; padding:0;font-size: 15px;">Urutan Lot Dalam Satu Kedatangan</th>
+						<th colspan="2" style="background-color: #d1d1d1; text-align: center; color: #14213d; padding:0;font-size: 15px;">Urutan Lot Dalam Satu Kedatangan (Bukan Qty Recieve)</th>
 					</tr>
 					<tr>
 						<td style="background-color: #14213d; text-align: center;color: white; font-size:15px;" id="loc">{{$loc}}</td>
 						<td colspan="2">
-							<input type="text" class="pull-right numpad2" name="lot_number" style="height: 50px;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;color: #14213d" id="lot_number" placeholder="Urutan Lot Dalam Satu Kedatangan">
+							<input type="text" class="pull-right numpad2" name="lot_number" style="height: 50px;font-size: 1.5vw;width: 100%;text-align: center;vertical-align: middle;color: #14213d" id="lot_number" placeholder="Urutan Lot Dalam Satu Kedatangan">
 						</td>
 					</tr>
 					
@@ -158,10 +158,10 @@
 					</tr>
 					<tr>
 						<td>
-							<input type="number" class="pull-right numpad2" name="qty_rec" style="height: 50px;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;color: #14213d" id="qty_rec" placeholder="Qty Rec">
+							<input type="number" class="pull-right numpad2" name="qty_rec" style="height: 50px;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;color: #14213d" id="qty_rec" placeholder="Quantity Recieve">
 						</td>
 						<td>
-							<input type="number" class="pull-right numpad" name="qty_check" style="height: 50px;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;color: #14213d" id="qty_check" placeholder="Qty Check" onchange="inputQtyCheck(this.value)">
+							<input type="number" class="pull-right numpad" name="qty_check" style="height: 50px;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;color: #14213d" id="qty_check" placeholder="Quantity Check" onchange="inputQtyCheck(this.value)">
 						</td>
 					</tr>
 				</tbody>
