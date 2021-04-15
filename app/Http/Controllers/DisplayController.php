@@ -116,7 +116,14 @@ class DisplayController extends Controller
 			sum( plan )- sum( picking )) AS diff2,
 			round( sum( stock ) / sum( plan ), 1 ) AS ava,
 			IF
-			( round( sum( stock ) / sum( plan ), 1 )>= 1, 1, 0 ) AS safe,
+			( round( sum( stock ) / sum( plan ), 1 )> 2, 1, 0 ) AS ultra_safe,
+			IF
+			(
+			round( sum( stock ) / sum( plan ), 1 )>= 1 
+			AND round( sum( stock ) / sum( plan ), 1 )<= 2,
+			1,
+			0 
+			) AS safe,
 			IF
 			(
 			round( sum( stock ) / sum( plan ), 1 )< 1 

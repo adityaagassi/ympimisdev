@@ -30,7 +30,7 @@
 		</div>
 	</div>
 	<div class="row" id="monitoring" style="margin-top: 10px;">
-		
+
 	</div>
 </section>
 
@@ -65,10 +65,11 @@
 
 @endsection
 @section('scripts')
-<script src="{{ url("js/highstock.js")}}"></script>
+<script src="{{ url("js/highcharts.js")}}"></script>
 <script src="{{ url("js/highcharts-3d.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
+<script src="{{ url("js/accessibility.js")}}"></script>
 <script>
 	$.ajaxSetup({
 		headers: {
@@ -104,6 +105,7 @@
 				key_details.reduce(function (res, value) {
 					if (!res[value.hpl]) {
 						res[value.hpl] = {
+							ultra_safe: 0,
 							safe: 0,
 							unsafe: 0,
 							zero: 0,
@@ -111,6 +113,7 @@
 						};
 						new_group.push(res[value.hpl])
 					}
+					res[value.hpl].ultra_safe += value.ultra_safe
 					res[value.hpl].safe += value.safe
 					res[value.hpl].unsafe += value.unsafe
 					res[value.hpl].zero += value.zero
@@ -126,16 +129,19 @@
 				});
 
 				for (var i = 0; i < new_group.length; i++) {
+
 					Highcharts.chart(new_group[i].hpl, {
 						chart: {
 							backgroundColor: 'rgb(80,80,80)',
-							type: 'pie'
+							type: 'pie',
+							options3d: {
+								enabled: true,
+								alpha: 45,
+								beta: 0
+							}
 						},
 						title: {
 							text: 'STOCK AVAILABILITY FOR - '+new_group[i].hpl+' '
-						},
-						tooltip: {
-							pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
 						},
 						accessibility: {
 							point: {
@@ -147,20 +153,28 @@
 							symbolRadius: 1,
 							borderWidth: 1
 						},
+						credits:{
+							enabled:false
+						},
+						tooltip: {
+							pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+						},
 						plotOptions: {
 							pie: {
 								allowPointSelect: true,
 								cursor: 'pointer',
-								borderColor: 'rgb(126,86,134)',
+								edgeWidth: 1,
+								edgeColor: 'rgb(126,86,134)',
+								depth: 35,
 								dataLabels: {
 									enabled: true,
 									format: '<b>{point.y} item(s)</b><br>{point.percentage:.1f} %',
-									distance: -50,
+									// distance: -50,
 									style:{
 										fontSize:'0.8vw',
 										textOutline:0
 									},
-									color:'black'
+									color:'white'
 								},
 								showInLegend: true,
 								point: {
@@ -172,26 +186,101 @@
 								}
 							}
 						},
-						credits:{
-							enabled:false
-						},						
 						series: [{
+							type: 'pie',
 							name: new_group[i].hpl,
 							data: [{
-								name: 'Stock >= 1 Day',
+								name: 'Stock > 2 Day',
+								y: new_group[i].ultra_safe	,
+								color: '#005005'
+							}, {
+								name: 'Stock 1-2 Day',
 								y: new_group[i].safe,
 								color: '#90ee7e'
 							}, {
 								name: 'Stock < 1 Day',
 								y: new_group[i].unsafe,
-								color: '#f7a35c'
+								color: '#ffeb3b'
 							}, {
 								name: 'Stock Zero',
 								y: new_group[i].zero,
-								color: '#f45b5b'
+								color: '#d32f2f'
 							}]
 						}]
 					});
+
+
+					// Highcharts.chart(new_group[i].hpl, {
+					// 	chart: {
+					// 		backgroundColor: 'rgb(80,80,80)',
+					// 		type: 'pie',
+					// 		options3d: {
+					// 			enabled: true,
+					// 			alpha: 45,
+					// 			beta: 0
+					// 		}
+					// 	},
+					// 	title: {
+					// 		text: 'STOCK AVAILABILITY FOR - '+new_group[i].hpl+' '
+					// 	},
+					// 	tooltip: {
+					// 		pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+					// 	},
+					// 	accessibility: {
+					// 		point: {
+					// 			valueSuffix: '%'
+					// 		}
+					// 	},
+					// 	legend: {
+					// 		enabled: true,
+					// 		symbolRadius: 1,
+					// 		borderWidth: 1
+					// 	},
+					// 	plotOptions: {
+					// 		pie: {
+					// 			allowPointSelect: true,
+					// 			cursor: 'pointer',
+					// 			borderColor: 'rgb(126,86,134)',
+					// 			dataLabels: {
+					// 				enabled: true,
+					// 				format: '<b>{point.y} item(s)</b><br>{point.percentage:.1f} %',
+					// 				distance: -50,
+					// 				style:{
+					// 					fontSize:'0.8vw',
+					// 					textOutline:0
+					// 				},
+					// 				color:'black'
+					// 			},
+					// 			showInLegend: true,
+					// 			point: {
+					// 				events: {
+					// 					click: function () {
+					// 						fetchDetail(this.series.name, this.name);
+					// 					}
+					// 				}
+					// 			}
+					// 		}
+					// 	},
+					// 	credits:{
+					// 		enabled:false
+					// 	},						
+					// 	series: [{
+					// 		name: new_group[i].hpl,
+					// 		data: [{
+					// 			name: 'Stock >= 1 Day',
+					// 			y: new_group[i].safe,
+					// 			color: '#90ee7e'
+					// 		}, {
+					// 			name: 'Stock < 1 Day',
+					// 			y: new_group[i].unsafe,
+					// 			color: '#f7a35c'
+					// 		}, {
+					// 			name: 'Stock Zero',
+					// 			y: new_group[i].zero,
+					// 			color: '#f45b5b'
+					// 		}]
+					// 	}]
+					// });
 				}
 
 			}
@@ -199,318 +288,331 @@
 				alert('Unidentified ERROR!');
 			}
 		});
-	}
+}
 
-	function fetchDetail(hpl, cat){
-		$('#tableDetail').DataTable().clear();
-		$('#tableDetail').DataTable().destroy();
-		$('#tableDetailBody').html("");
-		$('#modalDetailTitle').text('Stock Condition Of '+hpl+' With '+cat);
-		var tableDetailBody = "";
-		$.each(key_details, function(key, value){
-			if(value.hpl == hpl){
-				if(cat == 'Stock >= 1 Day'){
-					if(value.safe == 1){
-						tableDetailBody += '<tr>';
-						tableDetailBody += '<td>'+value.model+'</td>';
-						tableDetailBody += '<td>'+value.key+'</td>';
-						tableDetailBody += '<td>'+value.surface+'</td>';
-						tableDetailBody += '<td>'+value.plan_ori+'</td>';
-						tableDetailBody += '<td>'+value.plan+'</td>';
-						tableDetailBody += '<td>'+value.stock+'</td>';
-						tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
-						tableDetailBody += '</tr>';
-					}				
-				}
-				if(cat == 'Stock < 1 Day'){
-					if(value.unsafe == 1){
-						tableDetailBody += '<tr>';
-						tableDetailBody += '<td>'+value.model+'</td>';
-						tableDetailBody += '<td>'+value.key+'</td>';
-						tableDetailBody += '<td>'+value.surface+'</td>';
-						tableDetailBody += '<td>'+value.plan_ori+'</td>';
-						tableDetailBody += '<td>'+value.plan+'</td>';
-						tableDetailBody += '<td>'+value.stock+'</td>';
-						tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
-						tableDetailBody += '</tr>';
-					}
-				}
-				if(cat == 'Stock Zero'){
-					if(value.zero == 1){
-						tableDetailBody += '<tr>';
-						tableDetailBody += '<td>'+value.model+'</td>';
-						tableDetailBody += '<td>'+value.key+'</td>';
-						tableDetailBody += '<td>'+value.surface+'</td>';
-						tableDetailBody += '<td>'+value.plan_ori+'</td>';
-						tableDetailBody += '<td>'+value.plan+'</td>';
-						tableDetailBody += '<td>'+value.stock+'</td>';
-						tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
-						tableDetailBody += '</tr>';
-					}
+function fetchDetail(hpl, cat){
+	$('#tableDetail').DataTable().clear();
+	$('#tableDetail').DataTable().destroy();
+	$('#tableDetailBody').html("");
+	$('#modalDetailTitle').text('Stock Condition Of '+hpl+' With '+cat);
+	var tableDetailBody = "";
+	$.each(key_details, function(key, value){
+		if(value.hpl == hpl){
+			if(cat == 'Stock > 2 Day'){
+				if(value.ultra_safe == 1){
+					tableDetailBody += '<tr>';
+					tableDetailBody += '<td>'+value.model+'</td>';
+					tableDetailBody += '<td>'+value.key+'</td>';
+					tableDetailBody += '<td>'+value.surface+'</td>';
+					tableDetailBody += '<td>'+value.plan_ori+'</td>';
+					tableDetailBody += '<td>'+value.plan+'</td>';
+					tableDetailBody += '<td>'+value.stock+'</td>';
+					tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
+					tableDetailBody += '</tr>';
+				}				
+			}
+			if(cat == 'Stock 1-2 Day'){
+				if(value.safe == 1){
+					tableDetailBody += '<tr>';
+					tableDetailBody += '<td>'+value.model+'</td>';
+					tableDetailBody += '<td>'+value.key+'</td>';
+					tableDetailBody += '<td>'+value.surface+'</td>';
+					tableDetailBody += '<td>'+value.plan_ori+'</td>';
+					tableDetailBody += '<td>'+value.plan+'</td>';
+					tableDetailBody += '<td>'+value.stock+'</td>';
+					tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
+					tableDetailBody += '</tr>';
+				}				
+			}
+			if(cat == 'Stock < 1 Day'){
+				if(value.unsafe == 1){
+					tableDetailBody += '<tr>';
+					tableDetailBody += '<td>'+value.model+'</td>';
+					tableDetailBody += '<td>'+value.key+'</td>';
+					tableDetailBody += '<td>'+value.surface+'</td>';
+					tableDetailBody += '<td>'+value.plan_ori+'</td>';
+					tableDetailBody += '<td>'+value.plan+'</td>';
+					tableDetailBody += '<td>'+value.stock+'</td>';
+					tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
+					tableDetailBody += '</tr>';
 				}
 			}
-		});
+			if(cat == 'Stock Zero'){
+				if(value.zero == 1){
+					tableDetailBody += '<tr>';
+					tableDetailBody += '<td>'+value.model+'</td>';
+					tableDetailBody += '<td>'+value.key+'</td>';
+					tableDetailBody += '<td>'+value.surface+'</td>';
+					tableDetailBody += '<td>'+value.plan_ori+'</td>';
+					tableDetailBody += '<td>'+value.plan+'</td>';
+					tableDetailBody += '<td>'+value.stock+'</td>';
+					tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
+					tableDetailBody += '</tr>';
+				}
+			}
+		}
+	});
 
-		$('#tableDetailBody').append(tableDetailBody);
+	$('#tableDetailBody').append(tableDetailBody);
 
-		$('#tableDetail').DataTable({
-			'dom': 'Bfrtip',
-			'responsive':true,
-			'lengthMenu': [
-			[ 10, 25, 50, -1 ],
-			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
-			],
-			'buttons': {
-				buttons:[
-				{
-					extend: 'pageLength',
-					className: 'btn btn-default',
-				},
-				{
-					extend: 'copy',
-					className: 'btn btn-success',
-					text: '<i class="fa fa-copy"></i> Copy',
-					exportOptions: {
-						columns: ':not(.notexport)'
-					}
-				},
-				{
-					extend: 'excel',
-					className: 'btn btn-info',
-					text: '<i class="fa fa-file-excel-o"></i> Excel',
-					exportOptions: {
-						columns: ':not(.notexport)'
-					}
-				},
-				{
-					extend: 'print',
-					className: 'btn btn-warning',
-					text: '<i class="fa fa-print"></i> Print',
-					exportOptions: {
-						columns: ':not(.notexport)'
-					}
-				},
-				]
+	$('#tableDetail').DataTable({
+		'dom': 'Bfrtip',
+		'responsive':true,
+		'lengthMenu': [
+		[ 10, 25, 50, -1 ],
+		[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+		],
+		'buttons': {
+			buttons:[
+			{
+				extend: 'pageLength',
+				className: 'btn btn-default',
 			},
-			'paging': false,
-			'lengthChange': true,
-			'searching': true,
-			'ordering': true,
-			'order': [6, 'asc'],
-			'info': true,
-			'autoWidth': true,
-			"sPaginationType": "full_numbers",
-			"bJQueryUI": true,
-			"bAutoWidth": false,
-			"processing": true
-		});
-
-		$('#modalDetail').modal('show');
-	}
-
-	Highcharts.createElement('link', {
-		href: '{{ url("fonts/UnicaOne.css")}}',
-		rel: 'stylesheet',
-		type: 'text/css'
-	}, null, document.getElementsByTagName('head')[0]);
-
-	Highcharts.theme = {
-		colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
-		'#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
-		chart: {
-			backgroundColor: {
-				linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
-				stops: [
-				[0, '#2a2a2b'],
-				[1, '#3e3e40']
-				]
-			},
-			style: {
-				fontFamily: 'sans-serif'
-			},
-			plotBorderColor: '#606063'
-		},
-		title: {
-			style: {
-				color: '#E0E0E3',
-				textTransform: 'uppercase',
-				fontSize: '20px'
-			}
-		},
-		subtitle: {
-			style: {
-				color: '#E0E0E3',
-				textTransform: 'uppercase'
-			}
-		},
-		xAxis: {
-			gridLineColor: '#707073',
-			labels: {
-				style: {
-					color: '#E0E0E3'
+			{
+				extend: 'copy',
+				className: 'btn btn-success',
+				text: '<i class="fa fa-copy"></i> Copy',
+				exportOptions: {
+					columns: ':not(.notexport)'
 				}
 			},
-			lineColor: '#707073',
-			minorGridLineColor: '#505053',
-			tickColor: '#707073',
-			title: {
-				style: {
-					color: '#A0A0A3'
+			{
+				extend: 'excel',
+				className: 'btn btn-info',
+				text: '<i class="fa fa-file-excel-o"></i> Excel',
+				exportOptions: {
+					columns: ':not(.notexport)'
+				}
+			},
+			{
+				extend: 'print',
+				className: 'btn btn-warning',
+				text: '<i class="fa fa-print"></i> Print',
+				exportOptions: {
+					columns: ':not(.notexport)'
+				}
+			},
+			]
+		},
+		'paging': false,
+		'lengthChange': true,
+		'searching': true,
+		'ordering': true,
+		'order': [6, 'asc'],
+		'info': true,
+		'autoWidth': true,
+		"sPaginationType": "full_numbers",
+		"bJQueryUI": true,
+		"bAutoWidth": false,
+		"processing": true
+	});
 
-				}
-			}
+	$('#modalDetail').modal('show');
+}
+
+Highcharts.createElement('link', {
+	href: '{{ url("fonts/UnicaOne.css")}}',
+	rel: 'stylesheet',
+	type: 'text/css'
+}, null, document.getElementsByTagName('head')[0]);
+
+Highcharts.theme = {
+	colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
+	'#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+	chart: {
+		backgroundColor: {
+			linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
+			stops: [
+			[0, '#2a2a2b'],
+			[1, '#3e3e40']
+			]
 		},
-		yAxis: {
-			gridLineColor: '#707073',
-			labels: {
-				style: {
-					color: '#E0E0E3'
-				}
-			},
-			lineColor: '#707073',
-			minorGridLineColor: '#505053',
-			tickColor: '#707073',
-			tickWidth: 1,
-			title: {
-				style: {
-					color: '#A0A0A3'
-				}
-			}
+		style: {
+			fontFamily: 'sans-serif'
 		},
-		tooltip: {
-			backgroundColor: 'rgba(0, 0, 0, 0.85)',
-			style: {
-				color: '#F0F0F0'
-			}
-		},
-		plotOptions: {
-			series: {
-				dataLabels: {
-					color: 'white'
-				},
-				marker: {
-					lineColor: '#333'
-				}
-			},
-			boxplot: {
-				fillColor: '#505053'
-			},
-			candlestick: {
-				lineColor: 'white'
-			},
-			errorbar: {
-				color: 'white'
-			}
-		},
-		legend: {
-			itemStyle: {
-				color: '#E0E0E3'
-			},
-			itemHoverStyle: {
-				color: '#FFF'
-			},
-			itemHiddenStyle: {
-				color: '#606063'
-			}
-		},
-		credits: {
-			style: {
-				color: '#666'
-			}
-		},
+		plotBorderColor: '#606063'
+	},
+	title: {
+		style: {
+			color: '#E0E0E3',
+			textTransform: 'uppercase',
+			fontSize: '20px'
+		}
+	},
+	subtitle: {
+		style: {
+			color: '#E0E0E3',
+			textTransform: 'uppercase'
+		}
+	},
+	xAxis: {
+		gridLineColor: '#707073',
 		labels: {
 			style: {
-				color: '#707073'
+				color: '#E0E0E3'
 			}
 		},
+		lineColor: '#707073',
+		minorGridLineColor: '#505053',
+		tickColor: '#707073',
+		title: {
+			style: {
+				color: '#A0A0A3'
 
-		drilldown: {
-			activeAxisLabelStyle: {
-				color: '#F0F0F3'
+			}
+		}
+	},
+	yAxis: {
+		gridLineColor: '#707073',
+		labels: {
+			style: {
+				color: '#E0E0E3'
+			}
+		},
+		lineColor: '#707073',
+		minorGridLineColor: '#505053',
+		tickColor: '#707073',
+		tickWidth: 1,
+		title: {
+			style: {
+				color: '#A0A0A3'
+			}
+		}
+	},
+	tooltip: {
+		backgroundColor: 'rgba(0, 0, 0, 0.85)',
+		style: {
+			color: '#F0F0F0'
+		}
+	},
+	plotOptions: {
+		series: {
+			dataLabels: {
+				color: 'white'
 			},
-			activeDataLabelStyle: {
-				color: '#F0F0F3'
+			marker: {
+				lineColor: '#333'
 			}
 		},
-
-		navigation: {
-			buttonOptions: {
-				symbolStroke: '#DDDDDD',
-				theme: {
-					fill: '#505053'
-				}
-			}
+		boxplot: {
+			fillColor: '#505053'
 		},
+		candlestick: {
+			lineColor: 'white'
+		},
+		errorbar: {
+			color: 'white'
+		}
+	},
+	legend: {
+		itemStyle: {
+			color: '#E0E0E3'
+		},
+		itemHoverStyle: {
+			color: '#FFF'
+		},
+		itemHiddenStyle: {
+			color: '#606063'
+		}
+	},
+	credits: {
+		style: {
+			color: '#666'
+		}
+	},
+	labels: {
+		style: {
+			color: '#707073'
+		}
+	},
 
-		rangeSelector: {
-			buttonTheme: {
-				fill: '#505053',
-				stroke: '#000000',
-				style: {
-					color: '#CCC'
+	drilldown: {
+		activeAxisLabelStyle: {
+			color: '#F0F0F3'
+		},
+		activeDataLabelStyle: {
+			color: '#F0F0F3'
+		}
+	},
+
+	navigation: {
+		buttonOptions: {
+			symbolStroke: '#DDDDDD',
+			theme: {
+				fill: '#505053'
+			}
+		}
+	},
+
+	rangeSelector: {
+		buttonTheme: {
+			fill: '#505053',
+			stroke: '#000000',
+			style: {
+				color: '#CCC'
+			},
+			states: {
+				hover: {
+					fill: '#707073',
+					stroke: '#000000',
+					style: {
+						color: 'white'
+					}
 				},
-				states: {
-					hover: {
-						fill: '#707073',
-						stroke: '#000000',
-						style: {
-							color: 'white'
-						}
-					},
-					select: {
-						fill: '#000003',
-						stroke: '#000000',
-						style: {
-							color: 'white'
-						}
+				select: {
+					fill: '#000003',
+					stroke: '#000000',
+					style: {
+						color: 'white'
 					}
 				}
-			},
-			inputBoxBorderColor: '#505053',
-			inputStyle: {
-				backgroundColor: '#333',
-				color: 'silver'
-			},
-			labelStyle: {
-				color: 'silver'
 			}
 		},
-
-		navigator: {
-			handles: {
-				backgroundColor: '#666',
-				borderColor: '#AAA'
-			},
-			outlineColor: '#CCC',
-			maskFill: 'rgba(255,255,255,0.1)',
-			series: {
-				color: '#7798BF',
-				lineColor: '#A6C7ED'
-			},
-			xAxis: {
-				gridLineColor: '#505053'
-			}
+		inputBoxBorderColor: '#505053',
+		inputStyle: {
+			backgroundColor: '#333',
+			color: 'silver'
 		},
+		labelStyle: {
+			color: 'silver'
+		}
+	},
 
-		scrollbar: {
-			barBackgroundColor: '#808083',
-			barBorderColor: '#808083',
-			buttonArrowColor: '#CCC',
-			buttonBackgroundColor: '#606063',
-			buttonBorderColor: '#606063',
-			rifleColor: '#FFF',
-			trackBackgroundColor: '#404043',
-			trackBorderColor: '#404043'
+	navigator: {
+		handles: {
+			backgroundColor: '#666',
+			borderColor: '#AAA'
 		},
+		outlineColor: '#CCC',
+		maskFill: 'rgba(255,255,255,0.1)',
+		series: {
+			color: '#7798BF',
+			lineColor: '#A6C7ED'
+		},
+		xAxis: {
+			gridLineColor: '#505053'
+		}
+	},
 
-		legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
-		background2: '#505053',
-		dataLabelsColor: '#B0B0B3',
-		textColor: '#C0C0C0',
-		contrastTextColor: '#F0F0F3',
-		maskColor: 'rgba(255,255,255,0.3)'
-	};
-	Highcharts.setOptions(Highcharts.theme);
+	scrollbar: {
+		barBackgroundColor: '#808083',
+		barBorderColor: '#808083',
+		buttonArrowColor: '#CCC',
+		buttonBackgroundColor: '#606063',
+		buttonBorderColor: '#606063',
+		rifleColor: '#FFF',
+		trackBackgroundColor: '#404043',
+		trackBorderColor: '#404043'
+	},
+
+	legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
+	background2: '#505053',
+	dataLabelsColor: '#B0B0B3',
+	textColor: '#C0C0C0',
+	contrastTextColor: '#F0F0F3',
+	maskColor: 'rgba(255,255,255,0.3)'
+};
+Highcharts.setOptions(Highcharts.theme);
 
 </script>
 @endsection
