@@ -748,6 +748,7 @@ class PressController extends Controller
 
 		$prod_result = db::select("
 			select *,
+			mp_record_prods.process as process_asli,
 				mp_record_prods.id AS prod_result_id 
 			from mp_record_prods
 			join employee_syncs on mp_record_prods.pic= employee_syncs.employee_id

@@ -139,7 +139,7 @@
 												<td>{{$prod_result->product}}</td>
 												<td>{{$prod_result->material_number}}</td>
 												<td>{{$prod_result->material_name}}</td>
-												<td>{{$prod_result->process}}</td>
+												<td>{{$prod_result->process_asli}}</td>
 												<td>{{$prod_result->machine}}</td>
 												<td>{{$prod_result->start_time}}</td>
 												<td>{{$prod_result->end_time}}</td>
