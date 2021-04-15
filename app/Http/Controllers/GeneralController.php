@@ -59,6 +59,22 @@ class GeneralController extends Controller{
 
 	}
 
+	public function indexSafetyRiding(){
+		$title = "Safety Riding";
+		$title_jp = "『安全運転宣言』　実践記録表";
+
+		$employee = EmployeeSync::where('employee_id', '=', Auth::user()->username)->first();
+
+		$employees = EmployeeSync::where('department', '=', $employee->department)->orderBy('hire_date', 'asc')->get();
+
+		return view('general.pointing_call.safety_riding', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'employees' => $employees,
+			'agreement_statuses' => $this->agreement_statuses
+		));
+	}
+
 	public function indexAgreement(){
 
 		$title = "Company Agreement List";
@@ -2139,13 +2155,40 @@ public function fetchGeneralPointingCall(Request $request){
 		// ->whereNull('deleted_at')
 		// ->get();
 
-		$pointing_calls = db::table('pointing_calls')
-		->where('location', '=', $request->get('location'))
-		->where('point_title', '<>', 'pic')
-		->where('point_title', '<>', 'safety_riding')
-		->where('remark', '1')
-		->whereNull('deleted_at')
-		->get();
+		// $pointing_calls = db::table('pointing_calls')
+		// ->where('location', '=', $request->get('location'))
+		// ->where('point_title', '<>', 'pic')
+		// ->where('point_title', '<>', 'safety_riding')
+		// ->where('remark', '1')
+		// ->whereNull('deleted_at')
+		// ->get();
+
+		$pointing_calls = db::select("SELECT
+			pc.point_title,
+			pc.point_no,
+			pm.point_max 
+			FROM
+			pointing_calls AS pc
+			LEFT JOIN (
+			SELECT
+			point_title,
+			max( point_no ) AS point_max 
+			FROM
+			`pointing_calls` 
+			WHERE
+			location = '".$request->get('location')."' 
+			AND deleted_at IS NULL 
+			AND point_title <> 'pic' 
+			AND point_title <> 'safety_riding' 
+			GROUP BY
+			point_title 
+			) AS pm ON pm.point_title = pc.point_title 
+			WHERE
+			pc.location = '".$request->get('location')."' 
+			AND pc.remark = '1' 
+			AND pc.deleted_at IS NULL 
+			AND pc.point_title <> 'pic' 
+			AND pc.point_title <> 'safety_riding'");
 
 		$response = array(
 			'status' => true,
