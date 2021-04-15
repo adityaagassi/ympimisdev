@@ -171,8 +171,8 @@ class AssemblyProcessController extends Controller
 		$taghex = $this->dec2hex($request->get('tagBody'));
 
 		$tag = AssemblyTag::where('remark', '=', $request->get('tagName'))->where('tag', '=', $taghex)->first();
-		$material = db::table('materials')->where('model', '=', $request->get('model'))
-		->where('xy', '=', 'SP')->first();
+		// $material = db::table('materials')->where('model', '=', $request->get('model'))
+		// ->where('xy', '=', 'SP')->first();
 
 		$log = new AssemblyDetail([
 			'tag' => $tag->tag,
@@ -188,9 +188,9 @@ class AssemblyProcessController extends Controller
 		]);
 
 		$sp = '';
-		if(count($material) > 0){
-			$sp = 'SP';
-		}
+		// if(count($material) > 0){
+		// 	$sp = 'SP';
+		// }
 
 		if($request->get('location') != 'stampkd-process'){
 			$inventory = AssemblyInventory::firstOrCreate(
