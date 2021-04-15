@@ -60,19 +60,27 @@
 				$.each(result.pointing_calls, function(key, value){
 					image_data += '<div class="row" id="'+value.point_title+'" name="'+count+'" tabindex="1" style="height: 100%;">';
 					image_data += '<input type="hidden" name="inp_'+count+'" value="'+value.point_no/value.point_max+'">';
-					image_data += '<center><img src="{{ asset('images/pointing_calls/national') }}/'+value.point_title+'_'+value.point_no+'.jpg" style="height: '+h+'; max-width: 100%;"></center>';
+					if(value.point_title == 'slogan_mutu'){
+						image_data += '<center><img src="{{ asset('images/pointing_calls/national') }}/'+value.point_title+'_'+value.point_no+'.jpg" style="max-width: 80%;"></center>';						
+					}
+					else if(value.point_title == 'diamond'){
+						image_data += '<center><img src="{{ asset('images/pointing_calls/national') }}/'+value.point_title+'_'+value.point_no+'.jpg" style="height: 90vh;"></center>';		
+					}
+					else{
+						image_data += '<center><img src="{{ asset('images/pointing_calls/national') }}/'+value.point_title+'_'+value.point_no+'.jpg" style="height: '+h+'; max-width: 100%;"></center>';
+					}
 					image_data += '</div>';
 					count += 1;
 				});
 
 				$('.content').append(image_data);
 
-				if($("[name='inp_1']").val() > 0.5){
-					window.scrollTo(0, document.body.scrollHeight);	
-				}
-				if($("[name='inp_1']").val() <= 0.5){
-					window.scrollTo(0, 0);
-				}
+				// if($("[name='inp_1']").val() > 0.5){
+				// 	window.scrollTo(0, document.body.scrollHeight);	
+				// }
+				// if($("[name='inp_1']").val() <= 0.5){
+				// 	window.scrollTo(0, 0);
+				// }
 
 				for(var i = 2; i <= count; i++){
 					$("[name='"+i+"']").hide();	
@@ -80,41 +88,13 @@
 
 				var curr = 1;
 
-				$('img').click(function() {
-					if(curr == 1){
-						curr = count;
-					}
-
-					if(curr <= 0){
-						curr = 1;
-					}
-
-					var c = curr--;
-
-					for (var i = 1; i <= count; i++) {
-						$("[name='"+i+"']").hide();	
-					}
-
-					$("[name='"+curr+"']").show();
-
-
-					curr = curr--;
-
-					if($("[name='inp_"+curr+"']").val() > 0.5){
-						window.scrollTo(0, document.body.scrollHeight);	
-					}
-					if($("[name='inp_"+curr+"']").val() <= 0.5){
-						window.scrollTo(0, 0);
-					}
-				});
-
-				$('img').bind("contextmenu",function(e){
+				$('.row').click(function() {
 					var c;
 
 					if(curr == count-1){
 						curr = 1;
 						c = 1;
-					}else{
+					}else{	
 						c = curr++;
 					}
 
@@ -132,6 +112,59 @@
 					}
 					return false;
 				}); 
+
+				// $('.row').click(function() {
+				// 	if(curr == 1){
+				// 		curr = count;
+				// 	}
+
+				// 	if(curr <= 0){
+				// 		curr = 1;
+				// 	}
+
+				// 	var c = curr--;
+
+				// 	for (var i = 1; i <= count; i++) {
+				// 		$("[name='"+i+"']").hide();	
+				// 	}
+
+				// 	$("[name='"+curr+"']").show();
+
+
+				// 	curr = curr--;
+
+				// 	if($("[name='inp_"+curr+"']").val() > 0.5){
+				// 		window.scrollTo(0, document.body.scrollHeight);	
+				// 	}
+				// 	if($("[name='inp_"+curr+"']").val() <= 0.5){
+				// 		window.scrollTo(0, 0);
+				// 	}
+				// });
+
+				// $('.row').bind("contextmenu",function(e){
+				// 	var c;
+
+				// 	if(curr == count-1){
+				// 		curr = 1;
+				// 		c = 1;
+				// 	}else{	
+				// 		c = curr++;
+				// 	}
+
+				// 	for (var i = 1; i <= count; i++) {
+				// 		$("[name='"+i+"']").hide();	
+				// 	}
+
+				// 	$("[name='"+curr+"']").show();
+
+				// 	if($("[name='inp_"+curr+"']").val() > 0.5){
+				// 		window.scrollTo(0, document.body.scrollHeight);	
+				// 	}
+				// 	if($("[name='inp_"+curr+"']").val() <= 0.5){
+				// 		window.scrollTo(0, 0);
+				// 	}
+				// 	return false;
+				// }); 
 
 				$(function() {
 					$(document).keydown(function(e) {
@@ -160,6 +193,7 @@
 								window.scrollTo(0, 0);
 							}
 
+							console.log('tampil = '+curr+'; jml = '+count);
 							break;
 
 							case 37:
@@ -189,6 +223,7 @@
 								window.scrollTo(0, 0);
 							}
 
+							console.log('tampil = '+curr+'; jml = '+count);
 							break;
 
 						}
@@ -199,7 +234,7 @@
 				alert('Unidentified ERROR!')
 			}
 		});
-	}
+}
 
 </script>
 @endsection
