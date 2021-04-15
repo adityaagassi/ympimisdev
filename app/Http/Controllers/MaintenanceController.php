@@ -106,7 +106,7 @@ class MaintenanceController extends Controller
 			['location' => 'Office', 'alias' => 'ofc', 'area' => ['Office']],
 			['location' => 'Plating', 'alias' => 'plt', 'area' => ['Plating']],
 			['location' => 'Pianica', 'alias' => 'pnc', 'area' => ['Pianica']],
-			['location' => 'Painting', 'alias' => 'lcq', 'area' => ['Lacquering']],
+			['location' => 'Painting', 'alias' => 'lcq', 'area' => ['Lacquering', 'Painting']],
 			['location' => 'Quality Assurance', 'alias' => 'qa', 'area' => ['Quality Assurance']],
 			['location' => 'Recorder', 'alias' => 'rcd', 'area' => ['Recorder']],
 			['location' => 'Reed Plate', 'alias' => 'rpl', 'area' => ['Reed Plate']],
@@ -117,6 +117,7 @@ class MaintenanceController extends Controller
 			['location' => 'Workshop', 'alias' => 'wrk', 'area' => ['Workshop']],
 			['location' => 'WWT', 'alias' => 'wwt', 'area' => ['WWT']],
 			['location' => 'MTC', 'alias' => 'mtc', 'area' => ['Maintenance']],
+			['location' => 'Gudang MTC', 'alias' => 'mtc2', 'area' => ['Maintenance Gudang']],
 			['location' => 'Press', 'alias' => 'prs', 'area' => ['Press']]
 		];
 	}

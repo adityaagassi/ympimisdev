@@ -60,13 +60,14 @@
   }
 
   .op {
-    background-color: green;
     border-radius: 50%;
     display: inline-block;
     height: 22px;
     width: 22px;
     border: 1px solid yellow;
     font-size: 11px;
+    position: relative;
+    z-index: 10000;
   }
 
   /* Tooltip text */
@@ -205,7 +206,7 @@
             <div id="wrk" class="kotak" style="left: 750px; top: 565px; width: 40px; height: 70px">WRK <br>
               <div class="isi"></div>
             </div>
-            <div id="mtc" class="kotak" style="left: 1030px; top: 640px; width: 150px; height: 50px">MTC <br>
+            <div id="mtc2" class="kotak" style="left: 1030px; top: 640px; width: 150px; height: 50px">MTC <br>
               <div class="isi">
                 <!-- <div class="op">HW<span class="tooltiptext">Achmad Hagi Wahyudi</span></div> -->
               </div>
@@ -303,7 +304,17 @@
           $.each(value2.area, function(index3, value3){
             if (value3 == value.location) {
               loc_op.push({emp_id: value.employee_id, name: value.name, loc: value2.alias});
-              $("#"+value2.alias).find(".isi").append('<div class="op" >'+value.short_name+'<span class="tooltiptext">'+value.name+'</span></div>');
+
+              stile = "";
+              if (value.remark == 'Machine Production') {
+                stile = "style='background-color:green'";
+              } else if(value.remark == 'Utility') {
+                stile = "style='background-color:#de68b3'";
+              } else {
+                stile = "style='background-color:#ed6137'";
+              }
+
+              $("#"+value2.alias).find(".isi").append('<div class="op" '+stile+'>'+value.short_name+'<span class="tooltiptext">'+value.name+'</span></div>');
             }
           })
         })
