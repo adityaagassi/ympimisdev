@@ -283,11 +283,19 @@
 					checksheetTable += '<td>'+value.material_number+'</td>';
 					checksheetTable += '<td>'+value.material_description+'</td>';
 					checksheetTable += '<td>'+value.quantity+'</td>';
-					if(value.print_status != 1){
-						checksheetTable += '<td><button class="btn btn-info btn-sm" id="'+value.order_id+'" onclick="reprintChecksheet(id)">Print</button>&nbsp;<button class="btn btn-danger btn-sm" id="'+value.order_id+'" onclick="deleteChecksheet(id)"><i class="fa fa-trash"></i></button></td>';
+					if(value.print != 1){
+						checksheetTable += '<td>';
+						checksheetTable += '<button class="btn btn-primary btn-sm" id="'+value.order_id+'" onclick="reprintChecksheet(id)">Print</button>';
+						checksheetTable += '&nbsp;';
+						// checksheetTable += '<button class="btn btn-danger btn-sm" id="'+value.order_id+'" onclick="deleteChecksheet(id)"><i class="fa fa-trash"></i></button>';
+						checksheetTable += '</td>';
 					}
 					else{
-						checksheetTable += '<td><button class="btn btn-info btn-sm" id="'+value.order_id+'" onclick="reprintChecksheet(id)">Re-Print</button>&nbsp;<button class="btn btn-danger btn-sm" id="'+value.order_id+'" onclick="deleteChecksheet(id)"><i class="fa fa-trash"></i></button></td>';						
+						checksheetTable += '<td>';
+						checksheetTable += '<button class="btn btn-info btn-sm" id="'+value.order_id+'" onclick="reprintChecksheet(id)">Re-Print</button>';
+						checksheetTable += '&nbsp;';
+						// checksheetTable += '<button class="btn btn-danger btn-sm" id="'+value.order_id+'" onclick="deleteChecksheet(id)"><i class="fa fa-trash"></i></button>';
+						checksheetTable += '</td>';					
 					}
 					checksheetTable += '</tr>';
 				});

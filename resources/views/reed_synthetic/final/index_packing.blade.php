@@ -27,7 +27,10 @@
 			<span style="font-size: 3vw; color: green;"><i class="fa fa-angle-double-down"></i> Packing <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url('index/reed/packing_order') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Create Packing Order</a>
 			<a href="{{ url('index/reed/picking_verification') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Picking Verification</a>
-			<a href="{{ url('index/reed/packing') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Packing Verification</a>
+
+			<a href="{{ url('index/reed/case_paper_verification') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Case & Suport Paper Verification</a>
+
+			<a href="{{ url('index/reed/packing_verification') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Packing Verification</a>
 
 
 
