@@ -35,8 +35,8 @@ class WeeklyActivityReportController extends Controller
     function index($id)
     {
         $activityList = ActivityList::find($id);
-    	$weekly_report = WeeklyActivityReport::where('activity_list_id',$id)->orderBy('weekly_activity_reports.id','desc')
-            ->get();
+    	// $weekly_report = WeeklyActivityReport::where('activity_list_id',$id)->orderBy('weekly_activity_reports.id','desc')
+     //        ->get();
 
         $emp_id = Auth::user()->username;
         $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
@@ -61,7 +61,8 @@ class WeeklyActivityReportController extends Controller
         $subsection2 = DB::select($querySubSection);
         $subsection3 = DB::select($querySubSection);
 
-    	$data = array('weekly_report' => $weekly_report,
+    	$data = array(
+        // 'weekly_report' => $weekly_report,
                       'subsection' => $subsection,
                       'subsection2' => $subsection2,
                       'subsection3' => $subsection3,

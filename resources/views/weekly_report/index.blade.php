@@ -170,54 +170,56 @@
 									</tr>
 								</thead>
 								<tbody>
-									@foreach($weekly_report as $weekly_report)
-									<?php $type = [] ?>
-									<tr>
-										<td>{{$weekly_report->subsection}}</td>
-										<td>{{$weekly_report->date}}</td>
-										<td><?php $tinjauan = explode(',', $weekly_report->report_type);
-										for ($i = 0; $i < count($tinjauan); $i++) {
-										 	if($tinjauan[$i] == 1){
-										 		$type[] = 'Man';
-										 	}elseif ($tinjauan[$i] == 2) {
-										 		$type[] = 'Machine';
-										 	}elseif ($tinjauan[$i] == 3) {
-										 		$type[] = 'Material';
-										 	}elseif ($tinjauan[$i] == 4) {
-										 		$type[] = 'Method';
-										 	}elseif ($tinjauan[$i] == 5) {
-										 		$type[] = 'Other';
-										 	}
-										 }
-										 echo implode(' , ', $type);
-										 ?></td>
-										<td><?php echo $weekly_report->problem ?></td>
-										<td><?php echo $weekly_report->action ?></td>
-										<td><?php echo $weekly_report->foto_aktual ?></td>
-										<td>
-											@if($weekly_report->send_status == "")
-						                		<label class="label label-danger">Not Yet Sent</label>
-						                	@else
-						                		<label class="label label-success">Sent</label>
-						                	@endif
-										</td>
-										<td>@if($weekly_report->approval == "")
-						                		<label class="label label-danger">Not Approved</label>
-						                	@else
-						                		<label class="label label-success">Approved</label>
-						                	@endif</td>
-										<td>
-											<center>
-												<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_weekly_report('{{ url("index/weekly_report/update") }}','{{ $weekly_report->id }}');">
-									               Edit
-									            </button>
-												<a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/weekly_report/destroy") }}','{{ implode(' , ', $type) }} - {{ $weekly_report->date }}','{{ $id }}', '{{ $weekly_report->id }}');">
-													Delete
-												</a>
-											</center>
-										</td>
-									</tr>
-									@endforeach
+									<?php if (ISSET($weekly_report)): ?>
+										@foreach($weekly_report as $weekly_report)
+										<?php $type = [] ?>
+										<tr>
+											<td>{{$weekly_report->subsection}}</td>
+											<td>{{$weekly_report->date}}</td>
+											<td><?php $tinjauan = explode(',', $weekly_report->report_type);
+											for ($i = 0; $i < count($tinjauan); $i++) {
+											 	if($tinjauan[$i] == 1){
+											 		$type[] = 'Man';
+											 	}elseif ($tinjauan[$i] == 2) {
+											 		$type[] = 'Machine';
+											 	}elseif ($tinjauan[$i] == 3) {
+											 		$type[] = 'Material';
+											 	}elseif ($tinjauan[$i] == 4) {
+											 		$type[] = 'Method';
+											 	}elseif ($tinjauan[$i] == 5) {
+											 		$type[] = 'Other';
+											 	}
+											 }
+											 echo implode(' , ', $type);
+											 ?></td>
+											<td><?php echo $weekly_report->problem ?></td>
+											<td><?php echo $weekly_report->action ?></td>
+											<td><?php echo $weekly_report->foto_aktual ?></td>
+											<td>
+												@if($weekly_report->send_status == "")
+							                		<label class="label label-danger">Not Yet Sent</label>
+							                	@else
+							                		<label class="label label-success">Sent</label>
+							                	@endif
+											</td>
+											<td>@if($weekly_report->approval == "")
+							                		<label class="label label-danger">Not Approved</label>
+							                	@else
+							                		<label class="label label-success">Approved</label>
+							                	@endif</td>
+											<td>
+												<center>
+													<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_weekly_report('{{ url("index/weekly_report/update") }}','{{ $weekly_report->id }}');">
+										               Edit
+										            </button>
+													<a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/weekly_report/destroy") }}','{{ implode(' , ', $type) }} - {{ $weekly_report->date }}','{{ $id }}', '{{ $weekly_report->id }}');">
+														Delete
+													</a>
+												</center>
+											</td>
+										</tr>
+										@endforeach
+									<?php endif ?>
 								</tbody>
 								<tfoot>
 									<tr>
