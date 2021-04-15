@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class ReedLaserOrder extends Model{
 
-
 	protected $fillable = [	
 		'kanban',
 		'material_number',

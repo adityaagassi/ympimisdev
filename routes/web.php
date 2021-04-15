@@ -4686,11 +4686,13 @@ Route::post('scan/reed/packing_picking', 'ReedSyntheticController@scanPackingPic
 Route::post('fetch/reed/start_packing', 'ReedSyntheticController@fetchStartPacking');
 Route::post('fetch/reed/finish_packing', 'ReedSyntheticController@fetchFinishPacking');
 
-Route::get('index/reed/case_paper_verification', 'ReedSyntheticController@indexCaseSuportPaper');
 
+Route::get('index/reed/case_paper_verification', 'ReedSyntheticController@indexCaseSuportPaper');
+Route::post('scan/reed/packing_reed_case', 'ReedSyntheticController@scanPackingReedCase');
 
 
 Route::get('index/reed/packing_verification', 'ReedSyntheticController@indexPackingVerification');
+Route::post('scan/reed/packing_box', 'ReedSyntheticController@scanPackingBox');
 
 
 
