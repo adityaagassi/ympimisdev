@@ -4114,7 +4114,7 @@ public function fetchKaizenResumeDetail(Request $request){
      $q = "SELECT kaizen_leaders.employee_id, employee_syncs.`name`, employee_syncs.position as grade, employee_syncs.`section`, employee_syncs.`group`, COALESCE(kz,0) as kz from kaizen_leaders 
      left join (select employee_id, count(kaizen_forms.id) as kz from kaizen_forms
      left join kaizen_scores on kaizen_scores.id_kaizen = kaizen_forms.id
-     where DATE_FORMAT(kaizen_scores.created_at,'%Y-%m-%d') in (select week_date from weekly_calendars where fiscal_year = 'FY198') and `status` = 1 group by employee_id (select week_date from weekly_calendars where fiscal_year = '".$fiscal->fiscal_year."') and `status` = 1 group by employee_id) as kaizens on kaizens.employee_id = kaizen_leaders.employee_id
+     where DATE_FORMAT(kaizen_scores.created_at,'%Y-%m-%d') in (select week_date from weekly_calendars where fiscal_year = '".$fiscal->fiscal_year."') and `status` = 1 group by employee_id) as kaizens on kaizens.employee_id = kaizen_leaders.employee_id
      inner join employee_syncs on employee_syncs.employee_id = kaizen_leaders.employee_id
      where kaizen_leaders.leader_id = '".$leader."' and employee_syncs.end_date is null
      order by kz asc";
