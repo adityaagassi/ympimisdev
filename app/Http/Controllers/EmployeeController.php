@@ -806,26 +806,26 @@ class EmployeeController extends Controller
 
      public function exportDataPajak(Request $request){
 
-       $time = date('d-m-Y H;i;s');
+        $time = date('d-m-Y H;i;s');
 
 
-       $npwp_detail = db::select(
-        "SELECT * from employee_taxes order by id asc");
+        $npwp_detail = db::select(
+            "SELECT * from employee_taxes order by id asc");
 
-       $data = array(
-        'npwp_detail' => $npwp_detail
-   );
+        $data = array(
+            'npwp_detail' => $npwp_detail
+       );
 
-       ob_clean();
+        ob_clean();
 
-       Excel::create('Data NPWP '.$time, function($excel) use ($data){
-        $excel->sheet('Data', function($sheet) use ($data) {
-           return $sheet->loadView('employees.report.resume_pajak_excel', $data);
-      });
-   })->export('xlsx');
-  }
+        Excel::create('Data NPWP '.$time, function($excel) use ($data){
+            $excel->sheet('Data', function($sheet) use ($data) {
+              return $sheet->loadView('employees.report.resume_pajak_excel', $data);
+         });
+       })->export('xlsx');
+   }
 
-  public function fetchEmployeeResume(Request $request){
+   public function fetchEmployeeResume(Request $request){
 
      $tanggal = "";
      $addcostcenter = "";
@@ -4149,7 +4149,9 @@ public function fetchKaizenResume(Request $request)
 // group by final.leader_id, employee_syncs.`name` order by total_belum desc";
 
           $q = "select kaizen_leaders.leader_id as leader, A.`name`, count(kz) as total_sudah, count(coalesce(kz, 1)) as total_operator, count(coalesce(kz, 1))-count(kz) total_belum from kaizen_leaders 
-          left join (select employee_id, count(id) as kz from kaizen_forms where propose_date in (select week_date from weekly_calendars where fiscal_year = '".$fiscal->fiscal_year."') and `status` = '1' group by employee_id) as kaizens on kaizens.employee_id = kaizen_leaders.employee_id
+          left join (select employee_id, count(kaizen_forms.id) as kz from kaizen_forms 
+          left join kaizen_scores on kaizen_scores.id_kaizen = kaizen_forms.id
+          where DATE_FORMAT(kaizen_scores.created_at,'%Y-%m-%d') in (select week_date from weekly_calendars where fiscal_year = '".$fiscal->fiscal_year."') and `status` = '1' group by employee_id) as kaizens on kaizens.employee_id = kaizen_leaders.employee_id
           left join employee_syncs on employee_syncs.employee_id = kaizen_leaders.employee_id
           left join employee_syncs A on A.employee_id = kaizen_leaders.leader_id
           where employee_syncs.end_date is null and A.end_date is null and A.employee_id is not null
