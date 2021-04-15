@@ -2858,23 +2858,71 @@ public function fetchNgReport($process,Request $request)
 	if ($process == 'qa') {
 		$ng_report = DB::SELECT("SELECT
 			*,
-			CONCAT( checked.employee_id, ' - ', checked.NAME ) AS checked_by,
-			COALESCE ( CONCAT( caused.employee_id, ' - ', caused.NAME ), operator_id ) AS caused_by,
-			assembly_ng_logs.created_at as created
-			FROM
+			CONCAT( checked.employee_id, '<br>', checked.NAME ) AS checked_by,
+			assembly_ng_logs.created_at AS created,
+		IF
+			(
+				location LIKE '%qa-fungsi%',(
+				SELECT
+					GROUP_CONCAT( CONCAT( fungsi_detail.employee_id, '<br>', fungsi_detail.NAME ) ) 
+				FROM
+					assembly_details
+					LEFT JOIN employee_syncs fungsi_detail ON fungsi_detail.employee_id = assembly_details.operator_id 
+				WHERE
+					location = 'renraku-fungsi' 
+					AND tag = assembly_ng_logs.tag 
+					AND serial_number = assembly_ng_logs.serial_number 
+				),
+				(
+				SELECT
+					GROUP_CONCAT( CONCAT( visual_detail.employee_id, '<br>', visual_detail.NAME ) ) 
+				FROM
+					assembly_details
+					LEFT JOIN employee_syncs visual_detail ON visual_detail.employee_id = assembly_details.operator_id 
+				WHERE
+					location = 'fukiage1-visual' 
+					AND tag = assembly_ng_logs.tag 
+					AND serial_number = assembly_ng_logs.serial_number 
+				) 
+			) AS operator_id_details,
+		IF
+			(
+				location LIKE '%qa-fungsi%',(
+				SELECT
+					GROUP_CONCAT( CONCAT( fungsi_log.employee_id, '<br>', fungsi_log.NAME ) ) 
+				FROM
+					assembly_logs
+					LEFT JOIN employee_syncs fungsi_log ON fungsi_log.employee_id = assembly_logs.operator_id 
+				WHERE
+					location = 'renraku-fungsi' 
+					AND tag = assembly_ng_logs.tag 
+					AND serial_number = assembly_ng_logs.serial_number 
+				),
+				(
+				SELECT
+					GROUP_CONCAT( CONCAT( visual_log.employee_id, '<br>', visual_log.NAME ) ) 
+				FROM
+					assembly_logs
+					LEFT JOIN employee_syncs visual_log ON visual_log.employee_id = assembly_logs.operator_id 
+				WHERE
+					location = 'fukiage1-visual' 
+					AND tag = assembly_ng_logs.tag 
+					AND serial_number = assembly_ng_logs.serial_number 
+				) 
+			) AS operator_id_log 
+		FROM
 			`assembly_ng_logs`
-			LEFT JOIN employee_syncs checked ON checked.employee_id = assembly_ng_logs.employee_id
-			LEFT JOIN employee_syncs caused ON caused.employee_id = assembly_ng_logs.operator_id 
-			WHERE
-			location LIKE '%qa%'
+			LEFT JOIN employee_syncs checked ON checked.employee_id = assembly_ng_logs.employee_id 
+		WHERE
+			location LIKE '%qa%' 
 			".$locnow."
-			AND 
-			DATE(assembly_ng_logs.created_at) BETWEEN '".$from."' and '".$now."'");
+			AND DATE( assembly_ng_logs.created_at ) BETWEEN '".$from."' AND '".$now."'");
 	}else{
 		$ng_report = DB::SELECT("SELECT
 			*,
 			CONCAT( checked.employee_id, ' - ', checked.NAME ) AS checked_by,
-			COALESCE ( CONCAT( caused.employee_id, ' - ', caused.NAME ), operator_id ) AS caused_by,
+			COALESCE ( CONCAT( caused.employee_id, ' - ', caused.NAME ), operator_id ) AS operator_id_details,
+			null as operator_id_log,
 			assembly_ng_logs.created_at as created
 			FROM
 			`assembly_ng_logs`
@@ -2884,7 +2932,7 @@ public function fetchNgReport($process,Request $request)
 			location NOT LIKE '%qa%'
 			".$locnow."
 			AND 
-			DATE(assembly_ng_logs.created_at) BETWEEN '".$from."' and '".$now."'");
+			DATE(assembly_ng_logs.created_at) BETWEEN '".$from."' AND '".$now."'");
 	}
 
 	try {

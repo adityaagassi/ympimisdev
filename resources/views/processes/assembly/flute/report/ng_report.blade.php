@@ -111,11 +111,12 @@ thead input {
 										<th>Model</th>
 										<th>Process</th>
 										<th>NG Name</th>
-										<th>Onko</th>
-										<th>Value</th>
-										<th>Location</th>
-										<th>Checked By</th>
-										<th>Caused By</th>
+										<th>NG Detail</th>
+										<th>Kunci</th>
+										<th>Nilai</th>
+										<th>Lokasi NG</th>
+										<th>PIC Check</th>
+										<th>PIC Produksi</th>
 										<th>Created At</th>
 									</tr>
 								</thead>
@@ -123,6 +124,7 @@ thead input {
 								</tbody>
 								<tfoot>
 									<tr>
+										<th></th>
 										<th></th>
 										<th></th>
 										<th></th>
@@ -221,7 +223,9 @@ thead input {
 					tableData += '<td>'+ value.serial_number +'</td>';
 					tableData += '<td>'+ value.model +'</td>';
 					tableData += '<td>'+ value.location +'</td>';
-					tableData += '<td>'+ value.ng_name +'</td>';
+					var ng = value.ng_name.split(' - ');
+					tableData += '<td>'+ ng[0] +'</td>';
+					tableData += '<td>'+ ng[1] +'</td>';
 					tableData += '<td>'+ value.ongko +'</td>';
 					if (value.value_bawah == null) {
 						tableData += '<td></td>';
@@ -230,7 +234,15 @@ thead input {
 					}
 					tableData += '<td>'+ (value.value_lokasi || "") +'</td>';
 					tableData += '<td>'+ value.checked_by +'</td>';
-					tableData += '<td>'+ value.caused_by +'</td>';
+					if (value.operator_id_details != null && value.operator_id_log == null) {
+						var opid = value.operator_id_details.split(',');
+						tableData += '<td>'+ opid.join('<br>') +'</td>';
+					}else if (value.operator_id_details == null && value.operator_id_log != null) {
+						var opid = value.operator_id_log.split(',');
+						tableData += '<td>'+ opid.join('<br>') +'</td>';
+					}else{
+						tableData += '<td></td>';
+					}
 					tableData += '<td>'+ value.created +'</td>';
 					tableData += '</tr>';
 				});
