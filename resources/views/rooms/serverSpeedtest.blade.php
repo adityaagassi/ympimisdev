@@ -174,7 +174,7 @@
 					$('#ping').append().empty();
 					$('#ping').html(value.ping+'<br><span style="font-size:80px;vertical-align: top;line-height: 40px;">ms</span>');
 
-					if(parseFloat(value.download) >= 30) {
+					if(parseFloat(value.download) >= 50) {
 						$("#download").addClass("bg-green");	
 						$("#download").removeClass('bg-orange');	
 						$("#download").removeClass('bg-red');

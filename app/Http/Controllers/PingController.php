@@ -217,7 +217,7 @@ class PingController extends Controller
 
     else if($id == 'speedtest'){
       $title = 'Speedtest Information';
-      $title_jp = '';
+      $title_jp = 'スピードテスト情報';
 
       return view('rooms.serverSpeedtest', array(
         'title' => $title,

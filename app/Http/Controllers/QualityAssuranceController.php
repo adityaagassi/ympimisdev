@@ -52,6 +52,24 @@ class QualityAssuranceController extends Controller
   		->with('jpn', '品保');
   	}
 
+    public function index_cpar()
+    {
+      return view('cpar.index_cpar')
+      ->with('title', 'Quality Assurance')
+      ->with('title_jp', '品保')
+      ->with('page', 'Quality Assurance')
+      ->with('jpn', '品保');
+    }
+
+    public function index_ymmj()
+    {
+      return view('qc_ymmj.index_ymmj')
+      ->with('title', 'Quality Assurance')
+      ->with('title_jp', '品保')
+      ->with('page', 'Quality Assurance')
+      ->with('jpn', '品保');
+    }
+
   	public function indexIncomingCheck($location)
   	{
   		$inspection_level = QaInspectionLevel::get();

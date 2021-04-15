@@ -198,50 +198,13 @@
                                         <i class="fa fa-caret-right"></i> Driver Monitoring System (ドライバー管理システム)
                                     </a>
                                     <br>
-                                    <a href="#">
-                                        <i class="fa fa-caret-right"></i> Live Cooking Order (ライブクッキングの予約)
-                                    </a>
-                                    <br>
-                                    <a href="#">
+                                    <a href="{{ url("index/ga_control/bento") }}">
                                         <i class="fa fa-caret-right"></i> Japanese Food Order (和食弁当の予約)
                                     </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <span style="font-weight: bold;">Quality Assurance (品保)</span>
-                                    <br>                            
-                                    <a href="{{ url("index/qc_report/grafik_cpar") }}">
-                                        <i class="fa fa-caret-right"></i> CPAR & CAR Monitoring (是正予防策・是正策監視)
-                                    </a>
-                                    <br>
-                                    <a href="{{ url("index/qc_report") }}">
-                                        <i class="fa fa-caret-right"></i> Corrective & Preventive Action Request (是正予防策依頼)
-                                    </a>
-                                    <br>
-                                    <a href="{{ url("index/qc_car") }}">
-                                        <i class="fa fa-caret-right"></i> Corrective Action Report (是正策リポート)
-                                    </a>
-                                    <br>
-                                    <a href="{{ url("index/cpar/resume") }}">
-                                        <i class="fa fa-caret-right"></i> Resume CPAR & CAR (是正予防策・是正策のまとめ)
-                                    </a>
-                                    <br>
-                                    <a href="{{ url("index/qc_report/grafik_kategori") }}">
-                                        <i class="fa fa-caret-right"></i> Report CPAR By Category (種類別の是正処置報告書)
-                                    </a>
-                                    <br>                   
-                                    <a href="{{ url("index/qa_ymmj") }}">
-                                        <i class="fa fa-caret-right"></i> Form Ketidaksesuaian YMMJ (YMMJ不具合リポート)
-                                    </a>
-                                    <br>
-                                    <a href="{{ url("index/qa_ymmj/grafik_ymmj") }}">
-                                        <i class="fa fa-caret-right"></i> Report YMMJ (YMMJへの報告)
-                                    </a>
-                                    <br>
-                                    <a href="{{ url("index/qa") }}">
-                                        <i class="fa fa-caret-right"></i> Incoming Check (受入検査)
-                                    </a>
+                                    {{-- <br>
+                                    <a href="#">
+                                        <i class="fa fa-caret-right"></i> Live Cooking Order (ライブクッキングの予約)
+                                    </a> --}}
                                 </td>
                             </tr>
                             {{-- <tr>
@@ -306,6 +269,60 @@
                         </td>
                     </tr>
 
+                </tbody>
+            </table>
+
+            <table class="table table-bordered">
+                <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
+                    <tr>
+                        <th>Quality Assurance<br>品保</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <a href="{{ url("index/qc_report/grafik_cpar") }}">
+                                <i class="fa fa-caret-right"></i> CPAR & CAR Monitoring (是正予防策・是正策監視)
+                            </a>
+                            <br>
+                            <!-- <a href="{{ url("index/qc_report") }}">
+                                <i class="fa fa-caret-right"></i> Corrective & Preventive Action Request (是正予防策依頼)
+                            </a>
+                            <br>
+                            <a href="{{ url("index/qc_car") }}">
+                                <i class="fa fa-caret-right"></i> Corrective Action Report (是正策リポート)
+                            </a>
+                            <br>
+                            <a href="{{ url("index/cpar/resume") }}">
+                                <i class="fa fa-caret-right"></i> Resume CPAR & CAR (是正予防策・是正策のまとめ)
+                            </a>
+                            <br>
+                            <a href="{{ url("index/qc_report/grafik_kategori") }}">
+                                <i class="fa fa-caret-right"></i> Report CPAR By Category (種類別の是正処置報告書)
+                            </a>
+                            <br>       -->
+                            <a href="{{ url("index/qa_cpar") }}">
+                                <i class="fa fa-caret-right"></i> QA CPAR & CAR Data (品保是正予防策リポートと是正策データ
+)
+                            </a>
+                            <br>
+                            <a href="{{ url("index/qa_ymmj_index") }}">
+                                <i class="fa fa-caret-right"></i> QA YMMJ Report (YMMJ品保の報告データ
+)
+                            </a>
+                            <!-- <a href="{{ url("index/qa_ymmj") }}">
+                                <i class="fa fa-caret-right"></i> Form Ketidaksesuaian YMMJ (YMMJ不具合リポート)
+                            </a>
+                            <br>
+                            <a href="{{ url("index/qa_ymmj/grafik_ymmj") }}">
+                                <i class="fa fa-caret-right"></i> Report YMMJ (YMMJへの報告)
+                            </a> -->
+                            <br>
+                            <a href="{{ url("index/qa") }}">
+                                <i class="fa fa-caret-right"></i> QA Incoming Check (受入検査)
+                            </a>
+                        </td>                 
+                    </tr>
                 </tbody>
             </table>
 
@@ -461,7 +478,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                     <td>
+                       <td>
                         {{--     <a href="{{ url("index/report/overtime_outsource") }}">
                             <i class="fa fa-caret-right"></i> Outsource OT (派遣社員の残業管理)
                         </a> --}}
@@ -474,12 +491,33 @@
                                 <i class="fa fa-caret-right"></i> Yamaha Day Mosaic Art Project
                             </a>
                             <br> --}}
+
+                            <span style="font-weight: bold;">Mirai Mobile Report (モバイルMIRAIの記録)</span>
+                            <br>
                             <a href="{{ url("index/mirai_mobile/index") }}">
-                                <i class="fa fa-caret-right"></i> MIRAI Mobile Report(モバイルMIRAIの記録)
+                                <i class="fa fa-caret-right"></i> Mirai Mobile Data(MIRAIモバイルデータ)
                             </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">Server & Network Information (サーバーとネットワーク情報)</span>
                             <br>
                             <a href="{{ url("index/server_room") }}">
                                 <i class="fa fa-caret-right"></i> Server Room Monitoring (サーバールームモニタリング)
+                            </a>
+                            <br>
+                            <a href="{{ url("index/display/ip?location=server") }}">
+                                <i class="fa fa-caret-right"></i> Internet Protocol Monitoring (IP管理)
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">Health Monitoring (健康監視)</span>
+                            <br>
+                            <a href="{{ url("index/temperature") }}">
+                                <i class="fa fa-caret-right"></i> Body Temperature (体温)
                             </a>
                             <br>
                             <a href="{{ url("index/display/clinic_monitoring") }}">
@@ -493,54 +531,6 @@
                             <a href="{{ url("index/display/clinic_disease?month=") }}">
                                 <i class="fa fa-caret-right"></i> Clinic Diagnostic Data (クリニック見立てデータ)
                             </a>
-                            {{--  <br>
-                                <a href="{{ url("index/emergency_response") }}">
-                                    <i class="fa fa-caret-right"></i> Emergency Condition (緊急事態)
-                                </a> --}}
-                                <br>
-                                <a href="{{ url("index/toilet") }}">
-                                    <i class="fa fa-caret-right"></i> Toilet Availability (トイレステイタス(空席・使用中))
-                                </a>
-                                <br>
-                                <a href="{{ url("index/display/ip?location=server") }}">
-                                    <i class="fa fa-caret-right"></i> Internet Protocol Monitoring (IP管理)
-                                </a>
-                                <br>
-                            <!-- <a href="{{ url("visitor_confirmation_manager") }}">
-                                <i class="fa fa-caret-right"></i> Visitor Confirmation (来客の確認)
-                            </a>
-                            <br> -->
-                            <a href="{{ url("visitor_display") }}">
-                                <i class="fa fa-caret-right"></i> Visitor Monitoring (来客の管理)
-                            </a>
-                            <br>
-                            <a href="{{ url("index/display/pantry_visit?tanggal=") }}">
-                                <i class="fa fa-caret-right"></i> Pantry Visitor Monitoring (給湯室の来室者監視)
-                            </a>
-                            <br>
-                            <a href="{{ url("index/temperature") }}">
-                                <i class="fa fa-caret-right"></i> Body Temperature (体温)
-                            </a>
-                            <br>
-                            <a href="{{ url("index/temperature/room_temperature") }}">
-                                <i class="fa fa-caret-right"></i> Room Temperature (室内温度)
-                            </a>
-                            <br>
-                            <a href="{{ url("index/meeting") }}">
-                                <i class="fa fa-caret-right"></i> Meeting List (会議リスト)
-                            </a>
-                            <br>
-                            <a href="{{ secure_url("index/std_control/safety_shoes") }}">
-                                <i class="fa fa-caret-right"></i> Safety Shoes Control (安全靴管理システム)
-                            </a>
-                            <!-- <br>
-                            <a href="{{ url("index/survey") }}">
-                                <i class="fa fa-caret-right"></i> Emergency Survey (エマージェンシーサーベイ)
-                            </a> -->
-                            <br>
-                            <a href="{{ url('index/general/queue','mcu') }}">
-                                <i class="fa fa-caret-right"></i> Medical Check Up Queue (健康診断待ち行列)
-                            </a>
                             <br>
                             <a href="{{ url('index/general/oxymeter') }}">
                                 <i class="fa fa-caret-right"></i> Oxymeter Check(オキシメーター検査)
@@ -551,12 +541,50 @@
                             </a>
                             <br>
                             <a href="{{ url('index/general/airvisual') }}">
-                                <i class="fa fa-caret-right"></i> CO2 Monitor(二酸化炭素モニター)
+                                <i class="fa fa-caret-right"></i> CO<sub>2</sub> Monitor(二酸化炭素モニター)
+                            </a>
+                            <br>
+                            <a href="{{ url('index/general/queue','mcu') }}">
+                                <i class="fa fa-caret-right"></i> Medical Check Up Queue (健康診断待ち行列)
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">Visitor Monitoring (来客の管理)</span>
+                            <br>
+                            <a href="{{ url("visitor_display") }}">
+                                <i class="fa fa-caret-right"></i> Visitor Data (ビジターデータ)
                             </a>
                             <!-- <br>
-                            <a href="{{ url("index/display/office_clock") }}">
-                                <i class="fa fa-caret-right"></i> Office Clock (??)
+                            <a href="{{ url("index/display/pantry_visit?tanggal=") }}">
+                                <i class="fa fa-caret-right"></i> Pantry Visitor Monitoring (給湯室の来室者監視)
                             </a> -->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">Other Monitoring (その他の監視)</span>
+                            <br>
+                            <a href="{{ secure_url("index/std_control/safety_shoes") }}">
+                                <i class="fa fa-caret-right"></i> Safety Shoes Control (安全靴管理システム)
+                            </a>
+                            <br>
+                            <a href="{{ url("index/meeting") }}">
+                                <i class="fa fa-caret-right"></i> Meeting List (会議リスト)
+                            </a>
+                            <!-- <br>
+                            <a href="{{ url("index/toilet") }}">
+                                <i class="fa fa-caret-right"></i> Toilet Availability (トイレステイタス(空席・使用中))
+                            </a> -->
+                            <br>
+                            <a href="{{ url("index/temperature/room_temperature") }}">
+                                <i class="fa fa-caret-right"></i> Room Temperature (室内温度)
+                            </a>
+                            <!-- <a href="{{ url("visitor_confirmation_manager") }}">
+                                <i class="fa fa-caret-right"></i> Visitor Confirmation (来客の確認)
+                            </a>
+                            <br> -->
                         </td>
                     </tr>
                 </tbody>
@@ -647,19 +675,19 @@
                                 <i class="fa fa-caret-right"></i> Sharepoint;
                             </a>
                             <a href="https://a01.yamaha.co.jp/fw/dfw/SAP2/Citrix/XenApp/site/default.aspx" target="_blank">
-                               SAP;
-                           </a>
-                           <a href="https://adagio.yamaha.co.jp/imart/default.portal" target="_blank">
-                               Adagio;
-                           </a>
-                           <a href="https://a01.yamaha.co.jp/fw/dfw/MA5/ma5/EntranceServlet" target="_blank">
-                               MA5;
-                           </a>
-                       </td>     
-                   </tr>                                                                             
-               </tbody>
-           </table>
-           <table class="table table-bordered">
+                             SAP;
+                         </a>
+                         <a href="https://adagio.yamaha.co.jp/imart/default.portal" target="_blank">
+                             Adagio;
+                         </a>
+                         <a href="https://a01.yamaha.co.jp/fw/dfw/MA5/ma5/EntranceServlet" target="_blank">
+                             MA5;
+                         </a>
+                     </td>     
+                 </tr>                                                                             
+             </tbody>
+         </table>
+         <table class="table table-bordered">
             <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
                 <tr>
                     <th>Workshop<br>ワークショップ</th>
@@ -703,7 +731,7 @@
                     <td>
                         <span style="font-weight: bold;">Smart TPM (??)</span>
                         <br>
-                        <a href="{{ url("/machinery_monitoring?mesin=") }}">
+                        <a href="{{ url("index/maintenance/tpm/dashboard") }}">
                             <i class="fa fa-caret-right"></i> Smart TPM (??)
                         </a>
                     </td>                     
@@ -723,10 +751,10 @@
                         <a href="http://10.109.52.7/mtnc/login/log" target="_blank">
                             <i class="fa fa-caret-right"></i> Planned Maintenance Activity Finding (??)
                         </a>
-                        <br>
+                        <!-- <br>
                         <a href="{{ url("index/maintenance/mttbf/list") }}">
                             <i class="fa fa-caret-right"></i> MTBF (??)
-                        </a>
+                        </a> -->
                        <!--  <br> 
                         <a href="{{ url("index/maintenance/mttbf/report") }}">
                             <i class="fa fa-caret-right"></i> MTBF Report (??)
@@ -739,10 +767,10 @@
                         <a href="{{ url("index/maintenance/operator/position") }}">
                             <i class="fa fa-caret-right"></i> Maintenance Operator Location (保全班作業者の位置)
                         </a>
-                        <br>
+                        <!-- <br>
                         <a href="{{ url("index/maintenance/operator/workload") }}">
                             <i class="fa fa-caret-right"></i> Maintenance Operator Workload (??)
-                        </a>
+                        </a> -->
                     </td>                     
                 </tr>
                 <tr>
@@ -787,10 +815,10 @@
                         <a href="{{ url("index/maintenance/apar/resume") }}">
                             <i class="fa fa-caret-right"></i> APAR Resume (消火栓・消火器の点検進捗のまとめ)
                         </a>
-                        <br>
+                        <!-- <br>
                         <a href="{{ url("index/maintenance/pic/Utility") }}">
                             <i class="fa fa-caret-right"></i> PIC List (担当者リスト)
-                        </a>
+                        </a> -->
                         <!-- <br>
                         <a href="{{ url('/index/production_report/index/13') }}">
                             <i class="fa fa-caret-right"></i> PE Field Report (??)
@@ -938,6 +966,10 @@
                                 <br>
                                 <a href="{{ url("/index/process_middle_sx") }}">
                                     <i class="fa fa-caret-right"></i> Saxophone (サックス表面処理)
+                                </a>
+                                <br>
+                                <a href="{{ url("/index/display/stockroom_monitoring") }}">
+                                    <i class="fa fa-caret-right"></i> Stockroom Monitoring (ストックルームの監視)
                                 </a>
                                 <br>
                                 <a href="{{ url("/index/middle/stock_monitoring") }}">
@@ -1179,10 +1211,6 @@
                                                         <br>
                                                         <a href="{{ url("/index/display/eff_scrap") }}">
                                                             <i class="fa fa-caret-right"></i> Scrap Monitoring (スクラップの監視)
-                                                        </a>
-                                                        <br>
-                                                        <a href="{{ url("/index/display/stockroom_monitoring") }}">
-                                                            <i class="fa fa-caret-right"></i> Stockroom Monitoring (ストックルームの監視)
                                                         </a>
                                                         <br>
                                                         <a href="{{ url("/index/general/pointing_call/japanese") }}">
