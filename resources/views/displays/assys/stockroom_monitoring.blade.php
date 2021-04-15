@@ -174,7 +174,8 @@
 										fontSize:'0.8vw',
 										textOutline:0
 									},
-									color:'white'
+									color:'white',
+									connectorWidth: '3px'
 								},
 								showInLegend: true,
 								point: {
