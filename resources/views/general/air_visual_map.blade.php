@@ -270,12 +270,25 @@
 							table_content += '</div>';
 
 							cls = "";
+							if (result.last_data[4].co >= 1000) {
+								cls = "alarm";
+								count_alarm++;
+							}
+
+							table_content += '<div class="judul '+cls+'" style="margin-top: 400px; margin-left: 100px; width: 220px; height: 130px">';
+							table_content += '<b style="font-size: 30px; color: #f39c12">'+result.last_data[4].location+'</b><br>';
+							table_content += '<b style="font-size: 18px">CO2 : '+result.last_data[4].co+' ppm</b><br>';
+							table_content += '<b style="font-size: 18px">Temp. : '+result.last_data[4].temperature+' &#8451;</b><br>';
+							table_content += '<b style="font-size: 18px">Humd. : '+result.last_data[4].humidity+' %</b>';
+							table_content += '</div>';
+
+							cls = "";
 							if (result.last_data[0].co >= 1000) {
 								cls = "alarm";
 								count_alarm++;
 							}
 
-							table_content += '<div class="judul '+cls+'" style="margin-top: 900px; margin-left: 100px; width: 220px; height: 130px">';
+							table_content += '<div class="judul '+cls+'" style="margin-top: 600px; margin-left: 100px; width: 220px; height: 130px">';
 							table_content += '<b style="font-size: 30px; color: #f39c12">'+result.last_data[0].location+'</b><br>';
 							table_content += '<b style="font-size: 18px">CO2 : '+result.last_data[0].co+' ppm</b><br>';
 							table_content += '<b style="font-size: 18px">Temp. : '+result.last_data[0].temperature+' &#8451;</b><br>';

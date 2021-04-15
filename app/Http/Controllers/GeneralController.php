@@ -2612,6 +2612,7 @@ public function postAirVisual()
 		'https://www.airvisual.com/api/v2/node/606bb8c5efbeaf90b42b8e98',
 		'https://www.airvisual.com/api/v2/node/606bbb0c97b9294b00b2b297',
 		'https://www.airvisual.com/api/v2/node/606bbe7797b929136cb2b2a4',
+		'https://www.airvisual.com/api/v2/node/6076926f61972e5d329d4207'
 	];
 
 	foreach ($arr_api as $api) {
