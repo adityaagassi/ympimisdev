@@ -132,17 +132,17 @@
 					<table id="table_lot" class="table table-bordered table-striped" style="margin-bottom: 0;margin-top: 0px;padding-top: 0px;font-size: 17px">
 						<thead style="background-color: rgb(126,86,134);">
 							<tr>
-								<th style="border: 1px solid black;padding: 0px;width: 1%">Date</th>
-								<th style="border: 1px solid black;padding: 0px;width: 2%">Loc</th>
-								<th style="border: 1px solid black;padding: 0px;width: 1%">Invoice</th>
-								<th style="border: 1px solid black;padding: 0px;width: 2%">PIC Check</th>
-								<th style="border: 1px solid black;padding: 0px;width: 1%">Lot Number</th>
-								<th style="border: 1px solid black;padding: 0px;width: 3%">Material</th>
-								<th style="border: 1px solid black;padding: 0px;width: 3%">Vendor</th>
-								<th style="border: 1px solid black;padding: 0px;width: 1%">Qty Check</th>
-								<th style="border: 1px solid black;padding: 0px;width: 1%">Qty NG</th>
-								<th style="border: 1px solid black;padding: 0px;width: 1%">NG Ratio (%)</th>
-								<th style="border: 1px solid black;padding: 0px;width: 2%">Defect</th>
+								<th style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">Check Date</th>
+								<th style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">Loc</th>
+								<th style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">Invoice</th>
+								<th style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 5%">Check PIC</th>
+								<th style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">Lot Number</th>
+								<th style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 7%">Material</th>
+								<th style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">Vendor</th>
+								<th style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">Check Qty</th>
+								<th style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">NG Qty</th>
+								<th style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">NG (%)</th>
+								<th style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 4%">Defect</th>
 							</tr>
 						</thead>
 						<tbody id="body_table_lot" style="text-align:center;">
@@ -236,17 +236,17 @@
 				  			var loc = 'Pipe Silver';
 				  		}
 						body_lot += '<tr>';
-						body_lot += '<td>'+value2.date_lot+'</td>';
-						body_lot += '<td>'+loc+'</td>';
-						body_lot += '<td>'+value2.invoice+'</td>';
-						body_lot += '<td>'+value2.employee_id+'<br>'+value2.name.split(' ').slice(0,2).join(' ')+'</td>';
-						body_lot += "<td>"+value2.lot_number+"</td>";
-						body_lot += '<td>'+value2.material_number+'<br>'+value2.material_description+'</td>';
-						body_lot += '<td>'+value2.vendor_shortname+'</td>';
-						body_lot += '<td>'+value2.qty_check+' Pc(s)</td>';
-						body_lot += '<td>'+value2.total_ng+' Pc(s)</td>';
-						body_lot += '<td>'+value2.ng_ratio.toFixed(2)+' %</td>';
-						body_lot += '<td>'+value2.ng_name+'</td>';
+						body_lot += '<td style="font-size: 1vw; padding-top: 2px; padding-bottom: 2px;">'+value2.date_lot+'</td>';
+						body_lot += '<td style="font-size: 1vw; padding-top: 2px; padding-bottom: 2px;">'+loc+'</td>';
+						body_lot += '<td style="font-size: 1vw; padding-top: 2px; padding-bottom: 2px;">'+value2.invoice+'</td>';
+						body_lot += '<td style="font-size: 1vw; padding-top: 2px; padding-bottom: 2px;">'+value2.employee_id+'<br>'+value2.name.replace(/(.{14})..+/, "$1&hellip;")+'</td>';
+						body_lot += '<td style="font-size: 1vw; padding-top: 2px; padding-bottom: 2px;">'+value2.lot_number+'</td>';
+						body_lot += '<td style="font-size: 1vw; padding-top: 2px; padding-bottom: 2px;">'+value2.material_number+'<br>'+value2.material_description.replace(/(.{25})..+/, "$1&hellip;")+'</td>';
+						body_lot += '<td style="font-size: 1vw; padding-top: 2px; padding-bottom: 2px;">'+value2.vendor_shortname+'</td>';
+						body_lot += '<td style="font-size: 1vw; padding-top: 2px; padding-bottom: 2px;">'+value2.qty_check+' Pc(s)</td>';
+						body_lot += '<td style="font-size: 1vw; padding-top: 2px; padding-bottom: 2px;">'+value2.total_ng+' Pc(s)</td>';
+						body_lot += '<td style="font-size: 1vw; padding-top: 2px; padding-bottom: 2px;">'+value2.ng_ratio.toFixed(2)+' %</td>';
+						body_lot += '<td style="font-size: 1vw; padding-top: 2px; padding-bottom: 2px;">'+value2.ng_name.replace(/(.{25})..+/, "$1&hellip;")+'</td>';
 						body_lot += '</tr>';
 					});
 
