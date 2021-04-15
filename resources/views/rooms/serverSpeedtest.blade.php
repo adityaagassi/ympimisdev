@@ -57,9 +57,9 @@
 		<div class="col-xs-12">
 			<div class="row">
 				<div class="col-xs-12" style="padding-top: 0px;margin-top: 10px">
-					<div class="col-xs-3" style="padding: 0;padding-left: 10px">
+					<div class="col-xs-3" style="padding-left: 10px">
 						<div class="box box-solid">
-							<div class="box-header" style="background-color: #a31545;">
+							<div class="box-header" style="background-color: #605ca8;">
 								<center>
 									<span style="font-size: 22px; font-weight: bold; color: white;"><b>INFORMATION</b></span>
 								</center>
@@ -91,18 +91,18 @@
 						</div>
 					</div>
 
-					<div class="col-xs-3" style="padding-left: 10px;padding-right: 0">
+					<div class="col-xs-3" style="padding-left: 10px;">
 						<div class="box box-solid">
-							<div class="box-header" style="background-color: #a31545;">
+							<div class="box-header" style="background-color: #b28900;">
 								<center><span style="font-size: 22px; font-weight: bold; color: white;"><b>Upload</b></span></center>
 							</div>
-							<div id="upload" style="width: 100%;height: 250px;margin: 0;font-size: 100px;text-align: center;vertical-align: middle;font-weight: bold;"></div>
+							<div id="upload" style="width: 100%;height: 250px;margin: 0;font-size: 100px;text-align: center;vertical-align: middle;font-weight: bold;color: "></div>
 						</div>
 					</div>
 
 					<div class="col-xs-3" style="padding-left: 10px">
 						<div class="box box-solid">
-							<div class="box-header" style="background-color: #a31545;">
+							<div class="box-header" style="background-color: #757ce8;">
 								<center><span style="font-size: 22px; font-weight: bold; color: white;"><b>Download</b></span></center>
 							</div>
 							<div id="download" style="width: 100%;height: 250px;margin: 0;font-size: 100px;text-align: center;vertical-align: middle;font-weight: bold;"></div>
@@ -296,20 +296,20 @@
 					series: [
 					{
 						name: 'Download',
-						color: 'blue',
+						color: '#757ce8',
 						data: download,
 						lineWidth: 3
 					},
 					{
 						name: 'Upload',
-						color: 'green',
+						color: '#b28900',
 						data: upload,
 						lineWidth: 3
 					},
 					{
 						name: 'Ping',
 						data: ping,
-						color: '#901aeb',
+						color: '#a31545',
 						lineWidth: 3
 					}],
 

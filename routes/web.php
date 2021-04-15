@@ -3581,6 +3581,9 @@ Route::get('fetch/recorder/kensa_report', 'RecorderProcessController@fetchKensaR
 Route::get('index/webcam', 'WebcamController@index');
 Route::post('index/webcam/create', 'WebcamController@create');
 
+
+Route::get('index/qa_cpar', 'QualityAssuranceController@index_cpar');
+
 Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 
 	//CPAR
@@ -3646,6 +3649,7 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	Route::post('index/qc_report/deleteVerifikasi', 'QcReportController@deleteVerifikasi');
 
 	// Form Ketidaksesuaian YMMJ
+	Route::get('index/qa_ymmj_index', 'QualityAssuranceController@index_ymmj');
 	Route::get('index/qa_ymmj', 'QcYmmjController@index');
 	Route::post('index/qa_ymmj/form', 'QcYmmjController@filter');
 	Route::get('index/qa_ymmj/create', 'QcYmmjController@create');
@@ -4128,8 +4132,8 @@ Route::post('import/maintenance/planned', 'MaintenanceController@importPM');
 Route::get('fetch/maintenance/plan/checkList', 'MaintenanceController@fetchItemCheckList');
 
 Route::post('post/maintenance/pm/check', 'MaintenanceController@postPlannedCheck');
-Route::post('post/maintenance/pm/session', 'MaintenanceController@postPlannedSession');
-Route::get('get/maintenance/pm/session', 'MaintenanceController@getPlannedSession');
+Route::post('post/maintenance/pm/ng', 'MaintenanceController@postPlannedNotGood');
+Route::get('get/maintenance/pm/ng', 'MaintenanceController@getPlannedNotGood');
 
 
 Route::get('index/maintenance/pm/monitoring', 'MaintenanceController@indexPlannedMonitoring');
