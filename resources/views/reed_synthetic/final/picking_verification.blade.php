@@ -258,6 +258,13 @@
 
 				$.each(result.data, function(key, value){
 
+					if(key == 2 && value.remark == 'TRIAL'){
+						pickingData += '<tr>';
+						pickingData += '<th colspan="7" style="background-color: rgb(60,60,60); font-size: 1.8vw; height:2%; text-align center; height:40px; color: #3c3c3c;">NEXT</th>';
+						pickingData += '</tr>';
+
+					}
+
 					pickingData += '<tr>';
 					pickingData += '<td style="font-size: 1.8vw; height:2%; vertical-align:middle; height:40px;">'+(key+1)+'</td>';
 					pickingData += '<td style="font-size: 1.8vw; height:2%; vertical-align:middle; height:40px;">'+value.picking_list+'</td>';
@@ -266,11 +273,9 @@
 					pickingData += '<td style="font-size: 1.8vw; height:2%; vertical-align:middle; height:40px;">'+value.quantity+'</td>';
 					pickingData += '<td style="font-size: 1.8vw; height:2%; vertical-align:middle; height:40px;">'+value.actual_quantity+'</td>';
 
-
 					if(value.quantity != value.actual_quantity){
 						pickingData += '<td style="font-size: 1.8vw; height:2%; vertical-align:middle; height:40px; background-color: rgb(255,204,255);">-</td>';
-					}
-					else{
+					}else{
 						pickingData += '<td style="font-size: 1.8vw; height:2%; vertical-align:middle; height:40px; background-color: rgb(204,255,255);">OK</td>';						
 					}
 					pickingData += '</tr>';
