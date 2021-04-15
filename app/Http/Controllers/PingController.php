@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use App\IpList;
 use App\PingLog;
 use App\PingNetworkUsageLog;
+use App\PingSpeedtest;
 use Response;
 use DataTables;
 
@@ -212,7 +213,17 @@ class PingController extends Controller
         'title' => $title,
         'title_jp' => $title_jp
       ))->with('page', 'Server Room All App Status');    
-    }  
+    }
+
+    else if($id == 'speedtest'){
+      $title = 'Speedtest Information';
+      $title_jp = '';
+
+      return view('rooms.serverSpeedtest', array(
+        'title' => $title,
+        'title_jp' => $title_jp
+      ))->with('page', 'Server Room SpeedTest');    
+    }    
   }
 
   public function ServerRoomPingTrend()
@@ -377,6 +388,40 @@ class PingController extends Controller
       'data_ping' => $data_ping
     );
 
+    return Response::json($response);
+  }
+
+  public function ServerRoomSpeedtest()
+  {
+    $path = "speedtest/speedtest.txt";
+    $data = json_decode(file_get_contents($path), true);
+
+    $download = $data['download']/1000000;
+    $upload = $data['upload']/1000000;
+
+    $ping = PingSpeedtest::create([
+      'download' => number_format($download, 2, '.', ''),
+      'upload' => number_format($upload, 2, '.', ''),
+      'ping' => number_format($data['ping'], 2, '.', ''),
+      'city' => $data['server']['name'],
+      'country' => $data['server']['country'],
+      'address' => $data['client']['ip'],
+      'service_provider' => $data['client']['isp'],
+      'created_by' => Auth::user()->username
+   ]);
+
+    $ping->save();
+
+    $speedtest = PingSpeedtest::whereRaw('DATE_FORMAT(created_at,"%Y-%m-%d %H:%i:%s") >= "'.date('Y-m-d 06:00:00').'"')
+    ->select('*', db::raw('DATE_FORMAT(created_at, "%H:%i") as data_time'))
+    ->orderBy('id', 'asc')
+    ->get();
+
+    $response = array(
+      'status' => true,
+      'message' => 'Data Berhasil Didapatkan',
+      'speedtest' => $speedtest,
+    );
     return Response::json($response);
   }
 }

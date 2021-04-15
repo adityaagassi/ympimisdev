@@ -29,6 +29,7 @@
 			<a href="{{ url('index/server_room/mirai_status') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;margin-top: 5px">MIRAI Server Status</a>
 			<a href="{{ url('index/server_room/database') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;margin-top: 5px">Database Status</a>
 			<a href="{{ url('index/server_room/ping') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;margin-top: 5px">Internet & VPN Status</a>
+			<a href="{{ url('index/server_room/speedtest') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;margin-top: 5px">Speed Test</a>
 		</div>
 	</div>
 </section>

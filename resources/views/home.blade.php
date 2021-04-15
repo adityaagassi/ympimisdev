@@ -478,6 +478,10 @@
                                 <i class="fa fa-caret-right"></i> MIRAI Mobile Report(モバイルMIRAIの記録)
                             </a>
                             <br>
+                            <a href="{{ url("index/server_room") }}">
+                                <i class="fa fa-caret-right"></i> Server Room Monitoring (サーバールームモニタリング)
+                            </a>
+                            <br>
                             <a href="{{ url("index/display/clinic_monitoring") }}">
                                 <i class="fa fa-caret-right"></i> Clinic Monitoring (クリニック監視)
                             </a>
@@ -548,10 +552,6 @@
                             <br>
                             <a href="{{ url('index/general/airvisual') }}">
                                 <i class="fa fa-caret-right"></i> CO2 Monitor(二酸化炭素モニター)
-                            </a>
-                            <br>
-                            <a href="{{ url("index/server_room") }}">
-                                <i class="fa fa-caret-right"></i> Server Room Monitoring (サーバールームモニタリング)
                             </a>
                             <!-- <br>
                             <a href="{{ url("index/display/office_clock") }}">

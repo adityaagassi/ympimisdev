@@ -21,7 +21,15 @@
     font-weight: bold;
   }
 
-  .content-header .isi {
+  .content-header .keterangan {
+    margin: 0;
+    font-size: 3vw;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+
+  .content-header .isi_internet {
     margin: 0;
     font-size: 150px;
     text-align: center;
@@ -29,11 +37,12 @@
     font-weight: bold;
   }
 
-  .content-header .keterangan {
+  .content-header .isi_vpn {
     margin: 0;
-    font-size: 3vw;
+    font-size: 150px;
     text-align: center;
     vertical-align: middle;
+    font-weight: bold;
   }
 
   .content-wrapper{
@@ -55,21 +64,21 @@
 					<h2>REPLY ROUND TRIP TIME</h2>
 				</div>
 
-				<div class="col-md-6 content-header" style="background-color: #4a148c !important">
+				<div class="col-md-6 content-header" style="background-color: #4a148c !important;border-right: 10px solid #424242">
 	          		<h1>INTERNET</h1>
 				</div>
-				<div class="col-md-6 content-header" style="background-color: #ffeb3b !important;color: #000">
+				<div class="col-md-6 content-header" style="background-color: #ffeb3b !important;border-left: 10px solid #424242;color: #000">
 	          		<h1>VPN</h1>  
 				</div>
 
-				<div class="col-md-6 content-header" style="color: #fff;padding: 0">
-      				<div class="isi">
+				<div class="col-md-6 content-header" style="color: #fff;padding: 0;border-right: 10px solid #424242">
+      				<div id="isi_internet" class="isi_internet">
 	      				<span id="time_internet"> 0</span> <span style="font-size: 100px">ms</span>
 	      			</div>
       			</div>
 
-      			<div class="col-md-6 content-header" style="background-color: yellow !important;color: #000;padding: 0">
-      				<div class="isi">
+      			<div class="col-md-6 content-header" style="background-color: yellow !important;color: #000;padding: 0;border-left: 10px solid #424242;">
+      				<div id="isi_vpn" class="isi_vpn">
 	      				<span id="time_vpn"> 0</span> <span style="font-size: 100px">ms</span>
 	      			</div>
       			</div>
@@ -77,8 +86,8 @@
 				<div class="col-md-6" style="padding: 0">
 					<div class="box box-solid" style="background-color:#3c3c3c !important; color: white; box-shadow: 0 0 0 0 !important;">
 						<div class="box-body" style="padding: 0px">
-							<div class="div_name" style="border: 1px solid white; padding-left: 10px; padding-right: 10px; border-radius: 5px;text-align: center;">
-								<div style="font-weight: bold; font-size: 30px; display: inline-block; border-radius: 5px;">Internet Connection Today</div>
+							<div class="div_name" style="border-right: 10px solid #424242; padding-left: 10px; padding-right: 10px; text-align: center;">
+								<div style="font-weight: bold; font-size: 30px; display: inline-block; ">Internet Connection Today</div>
 								<div id="chart_internet" style="margin-top: 5px;margin-left: 10px"></div>
 							</div>
 						</div>
@@ -88,8 +97,8 @@
 				<div class="col-md-6" style="padding: 0">
 					<div class="box box-solid" style="background-color:#3c3c3c !important; color: white; box-shadow: 0 0 0 0 !important;">
 						<div class="box-body" style="padding: 0px">
-							<div class="div_name" style="border: 1px solid white;padding-right: 20px; border-radius: 5px;text-align: center;">
-								<div style="font-weight: bold; font-size: 30px; display: inline-block; border-radius: 5px;">VPN Connection Today</div>
+							<div class="div_name" style="border-left: 10px solid #424242;padding-right: 20px; text-align: center;">
+								<div style="font-weight: bold; font-size: 30px; display: inline-block; ">VPN Connection Today</div>
 								<div id="chart_vpn" style="margin-top: 5px;margin-left: 10px"></div>
 							</div>
 						</div>
@@ -165,6 +174,23 @@
 
 			$('#time_internet').append().empty();
 			$('#time_internet').html(time);
+
+			if(time > 0 && time < 120) {
+				$("#isi_internet").addClass("bg-green");	
+				$("#isi_internet").removeClass('bg-orange');	
+				$("#isi_internet").removeClass('bg-red');
+
+			}
+			else if(time > 120){
+				$("#isi_internet").addClass("bg-orange");
+				$("#isi_internet").removeClass('bg-green');	
+				$("#isi_internet").removeClass('bg-red');
+			}
+			else if(time == 0){
+				$("#isi_internet").addClass("bg-red");
+				$("#isi_internet").removeClass('bg-green');	
+				$("#isi_internet").removeClass('bg-orange');
+			}
 		});
 
 		var ip2 = '133.176.54.20';
@@ -212,6 +238,23 @@
 
 			$('#time_vpn').append().empty();
 			$('#time_vpn').html(time);
+
+			if(time > 0 && time < 120) {
+				$("#isi_vpn").addClass("bg-green");	
+				$("#isi_vpn").removeClass('bg-orange');	
+				$("#isi_vpn").removeClass('bg-red');
+
+			}
+			else if(time > 120){
+				$("#isi_vpn").addClass("bg-orange");
+				$("#isi_vpn").removeClass('bg-green');	
+				$("#isi_vpn").removeClass('bg-red');
+			}
+			else if(time == 0){
+				$("#isi_vpn").addClass("bg-red");
+				$("#isi_vpn").removeClass('bg-green');	
+				$("#isi_vpn").removeClass('bg-orange');
+			}
 		});
 
 		$.get('{{ url("post/server_room/ping/trend") }}', function(result, status, xhr){
@@ -300,7 +343,7 @@
 					series: [
 					{
 						type: 'line',
-						name: 'Max',
+						name: 'Minimum Ping',
 						color: 'red',
 						data: max
 					},
@@ -385,7 +428,7 @@
 					series: [
 					{
 						type: 'line',
-						name: 'Max',
+						name: 'Minimum Ping',
 						color: 'red',
 						data: max
 					},
