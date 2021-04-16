@@ -218,7 +218,7 @@
 					var series = [];
 
 					$.each(result.material_defect, function(key,value){
-						categories.push(value.ng_name);
+						categories.push(value.ng_name.replace(/(.{13})..+/, "$1&hellip;"));
 						series.push(parseInt(value.count));
 					});
 
@@ -354,7 +354,7 @@
 					        text: 'MATERIAL STATUS'
 					    },
 					    tooltip: {
-					        pointFormat: '{series.name}: <b>{point.y}<br>{point.percentage:.1f}%</b>'
+					        pointFormat: '{series.name}<br><b>{point.y} Pc(s)<br>{point.percentage:.1f}%</b>'
 					    },
 					    accessibility: {
 					        point: {
@@ -367,7 +367,7 @@
 					            dataLabels: {
 					                enabled: true,
 					                connectorColor: '#fff',
-					                format: '<b>{point.name}</b>: {point.y}<br>{point.percentage:.1f} %',
+					                format: '<b>{point.name}</b><br>{point.y} Pc(s)<br>{point.percentage:.1f} %',
 					                style:{
 					                	fontSize:'13px'
 					                }

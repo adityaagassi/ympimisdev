@@ -1119,6 +1119,7 @@ Route::get('index/ga_control/bento', 'GeneralAffairController@indexBento');
 
 //BENTO
 Route::get('index/ga_control/bento', 'GeneralAffairController@indexBento');
+Route::get('fetch/ga_control/bento_quota', 'GeneralAffairController@indexBentoQuota');
 
 
 //STD CONTROL
@@ -3809,6 +3810,11 @@ Route::get('fetch/audit_patrol_monitoring/all', 'AuditController@fetchMonitoring
 Route::get('index/audit_patrol_monitoring_detail', 'AuditController@detailMonitoringAll');
 Route::get('index/audit_patrol_monitoring_detail_bulan', 'AuditController@detailMonitoringBulanAll');
 Route::get('index/audit_patrol_monitoring_table', 'AuditController@fetchTableAuditAll');
+
+
+Route::get('index/monthly_patrol_team', 'AuditController@indexMonthlyPatrolTeam');
+Route::get('fetch/monthly_patrol_team', 'AuditController@fetchMonthlyPatrolTeam');
+Route::get('index/monthly_patrol_team/detail', 'AuditController@detailMonthlyPatrolTeam');
 
 Route::get('export/patrol/list', 'AuditController@exportPatrol');
 

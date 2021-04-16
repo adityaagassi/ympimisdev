@@ -43,7 +43,8 @@
 		<div class="col-xs-6" style="text-align: center;">
 			<span style="font-size: 30px; color: red;"><i class="fa fa-angle-double-down"></i> Monitoring <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url('index/audit_patrol/monitoring') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">GM & Presdir Patrol Monitoring (パトロール監視)</a>
-			<a href="{{ url('index/audit_patrol_monitoring/monthly_patrol') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Monthly Patrol Monitoring (パトロール監視)</a>
+			<a href="{{ url('index/audit_patrol_monitoring/monthly_patrol') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;width: 75%;display: inline-block;">Monthly Patrol Monitoring (パトロール監視)</a>
+			<a href="{{ url('index/monthly_patrol_team') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;width: 24%;display: inline-block;">By Team</a>
 		</div>
 	</div>
 

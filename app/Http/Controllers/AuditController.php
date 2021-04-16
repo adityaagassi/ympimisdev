@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Mail;
 use App\AuditAllResult;
 use App\StandarisasiAuditIso;
 use App\EmployeeSync;
+use App\User;
+use App\LogProcess;
 
 class AuditController extends Controller
 {
@@ -1072,9 +1074,8 @@ public function detailPenanganan(Request $request){
       ->make(true);
   }
 
-
-  public function packing_documentation()
-  {
+  public function index_packing_documentation()
+  { 
     $title = "Packing Documentation";
     $title_jp = "";
 
@@ -1083,4 +1084,197 @@ public function detailPenanganan(Request $request){
       'title_jp' => $title_jp
     ))->with('page', 'Packing Documentation'); 
   }
+
+
+  public function packing_documentation($loc)
+  { 
+    if ($loc == 'fl') {
+      $loc = 'Flute';
+
+      $data = LogProcess::select('*')
+      ->where('origin_group_code','=','041')
+      ->where('process_code','=','6')
+      ->get();
+    } 
+    else if ($loc == 'cl') {
+      $loc = 'Clarinet';
+
+      $data = "";
+    } 
+    else if ($loc == 'sx') {
+      $data = LogProcess::select('*')
+      ->where('origin_group_code','=','043')
+      ->where('process_code','=','4')
+      ->get();
+    }
+    else{
+      $loc = $loc;
+    }
+
+    $title = "Packing Documentation ".$loc;
+    $title_jp = "";
+
+    $user = User::where('username', Auth::user()->username)
+    ->select('*')
+    ->first();
+
+    return view('documentation.packing_documentation', array(
+      'title' => $title,
+      'title_jp' => $title_jp,
+      'user' => $user,
+      'data' => $data
+    ))->with('page', 'Packing Documentation'); 
+  }
+
+  public function documentation_data(Request $request){
+
+      try{
+
+        $sn = LogProcess::select('log_processes.*')
+        ->where('serial_number','=',$request->get('tag'))
+        ->where('origin_group_code','=','041')
+        ->where('process_code','=','6')
+        ->whereNull('log_processes.deleted_at')
+        ->first();
+
+        if (count($sn) > 0) {
+            $response = array(
+                'status' => true,
+                'message' => 'Base Data Ditemukan',
+                'sn' => $sn
+            );
+            return Response::json($response);
+        }
+        else{
+            $response = array(
+                'status' => false,
+                'message' => 'Data Tidak Ditemukan',
+            );
+            return Response::json($response);
+        }
+
+      }catch(\Exception $e){
+          $response = array(
+              'status' => false,
+              'message' => $e->getMessage(),
+          );
+          return Response::json($response);
+      }
+  }
+
+  public function documentation_post(Request $request)
+    {
+        try{
+            $stock = new MpKanagataOrder([
+              'tanggal' => date('Y-m-d H:i:s'),
+              'employee_id' => $request->get('employee_id'),
+              'employee_name' => $request->get('employee_name'),
+              'serial_number' => $request->get('serial_number'),
+              'model' => $model->get('model'),
+              'created_by' => Auth::user()->username
+            ]);
+
+            $stock->save();
+            $response = array(
+              'status' => true,
+              'message' => 'Data Dokumentasi Serial Number Berhasil Dimasukkan'
+            );
+            return Response::json($response);
+
+        }
+        catch(\Exception $e){
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+            return Response::json($response);
+        }
+    }
+
+    // Audit & Patrol By Team Monthly Patrol
+
+    public function indexMonthlyPatrolTeam(){
+
+      return view('audit.patrol_monthly_team',  
+         array(
+           'title' => 'Monthly Patrol By Team', 
+           'title_jp' => '',
+         )
+       )->with('page', 'Monthly Patrol By Team');
+     }
+
+    public function fetchMonthlyPatrolTeam(Request $request){
+
+      $first = date("Y-m-d", strtotime('-30 days'));
+
+      $check = AuditAllResult::where('status_ditangani', '=', 'close')
+      ->orderBy('tanggal', 'asc')
+      ->select(db::raw('date(tanggal) as audit_date'))
+      ->first();
+
+      if($first > date("Y-m-d", strtotime($check->tanggal))){
+        $first = date("Y-m-d", strtotime($check->tanggal));
+      }
+
+      $data_bulan = db::select("
+        SELECT
+        auditor_name,
+        sum( CASE WHEN status_ditangani IS NULL AND kategori = 'EHS & 5S Patrol' THEN 1 ELSE 0 END ) AS jumlah_belum,
+        sum( CASE WHEN status_ditangani IS NOT NULL AND kategori = 'EHS & 5S Patrol' THEN 1 ELSE 0 END ) AS jumlah_sudah
+        FROM
+        audit_all_results 
+        WHERE
+        kategori in ('EHS & 5S Patrol')
+        and point_judul != 'Positive Finding'
+        GROUP BY
+        auditor_name ASC"
+      );
+
+      $response = array(
+        'status' => true,
+        'data_bulan' => $data_bulan
+      );
+
+      return Response::json($response);
+    }
+
+    public function detailMonthlyPatrolTeam(Request $request){
+
+      $auditor = $request->get('auditor');
+      $status = $request->get('status');
+
+      if ($status != null) {
+
+        if ($status == "Temuan Open") {
+          $stat = 'and audit_all_results.status_ditangani is null and kategori = "EHS & 5S Patrol"';
+        }
+        else if ($status == "Temuan Close") {
+          $stat = 'and audit_all_results.status_ditangani = "close" and kategori = "EHS & 5S Patrol"';
+        }
+
+      } else{
+        $stat = '';
+      }
+
+        $query = "select audit_all_results.* FROM audit_all_results where audit_all_results.deleted_at is null and auditor_name = '".$auditor."' ".$stat."";
+
+        $detail = db::select($query);
+
+        return DataTables::of($detail)
+
+        ->editColumn('tanggal', function($detail){
+          return date('d-M-Y', strtotime($detail->tanggal));
+        })
+
+        ->editColumn('foto', function($detail){
+          return '<img src="'.url('files/patrol').'/'.$detail->foto.'" width="250">';
+        })
+
+        ->editColumn('penanganan', function($detail){
+          return $detail->penanganan;
+        })
+
+        ->rawColumns(['tanggal' => 'tanggal', 'foto' => 'foto','penanganan' => 'penanganan'])
+        ->make(true);
+    }
 }
