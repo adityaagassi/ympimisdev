@@ -186,25 +186,16 @@
 @section('scripts')
 <script src="{{ url("bower_components/jquery/dist/jquery.min.js")}}"></script>
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
+
 <script src="{{ url("js/highcharts.js")}}"></script>
 <script src="{{ url("js/highcharts-more.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
 <script src="{{ url("js/solid-gauge.js")}}"></script>
 <script src="{{ url("js/accessibility.js")}}"></script>
-{{-- <script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/highcharts-more.js"></script>
-<script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script src="https://code.highcharts.com/modules/export-data.js"></script>
-<script src="https://code.highcharts.com/modules/accessibility.js"></script> --}}
 
-{{-- <script src="{{ url("js/dataTables.buttons.min.js")}}"></script> --}}
-{{-- <script src="{{ url("js/buttons.flash.min.js")}}"></script> --}}
 <script src="{{ url("js/jszip.min.js")}}"></script>
 <script src="{{ url("js/vfs_fonts.js")}}"></script>
-{{-- <script src="{{ url("js/buttons.html5.min.js")}}"></script> --}}
-{{-- <script src="{{ url("js/buttons.print.min.js")}}"></script> --}}
 
 <script>
   $.ajaxSetup({
