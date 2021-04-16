@@ -1115,11 +1115,11 @@ Route::get('fetch/ga_control/driver_request', 'GeneralAffairController@fetchDriv
 Route::post('create/ga_control/driver_request', 'GeneralAffairController@createDriverRequest');
 Route::get('fetch/ga_control/driver_detail', 'GeneralAffairController@fetchDriverDetail');
 Route::get('index/ga_control/live_cooking', 'GeneralAffairController@indexLiveCooking');
-Route::get('index/ga_control/bento', 'GeneralAffairController@indexBento');
 
 //BENTO
 Route::get('index/ga_control/bento', 'GeneralAffairController@indexBento');
-Route::get('fetch/ga_control/bento_quota', 'GeneralAffairController@indexBentoQuota');
+Route::get('fetch/ga_control/bento_quota', 'GeneralAffairController@fetchBentoQuota');
+Route::post('input/ga_control/bento_order', 'GeneralAffairController@inputBentoOrder');
 
 
 //STD CONTROL
@@ -3549,7 +3549,9 @@ Route::get('fetch/recorder/rc_picking_result', 'RecorderProcessController@fetch_
 
 //RETURN MATERIAL RC
 Route::get('index/recorder/return', 'RecorderProcessController@indexReturn');
-Route::get('scan/recorder/tag_product', 'RecorderProcessController@scanProduct');
+Route::get('fetch/recorder/return/product', 'RecorderProcessController@fetchProductReturn');
+Route::get('fetch/recorder/return/resume', 'RecorderProcessController@fetchProductResume');
+Route::post('input/recorder/return', 'RecorderProcessController@inputReturn');
 
 //RECORDER CDM
 Route::get('index/recorder/cdm', 'RecorderProcessController@indexCdm');
@@ -4479,6 +4481,7 @@ Route::get('mutasi_ant/report/{id}', 'MutasiController@report_mutasi_ant');
 Route::get('mutasi/report/{id}', 'MutasiController@report_mutasi');
 Route::get('mutasi_ant/finish/{id}', 'MutasiController@finish_ant');
 Route::get('mutasi/finish/{id}', 'MutasiController@finish');
+Route::get('mutasi/email/{id}', 'MutasiController@email');
 //Show
 Route::get('mutasi/show/{id}', 'MutasiController@showApproval');
 Route::get('mutasi_ant/show/{id}', 'MutasiController@showAntApproval');
@@ -4562,6 +4565,8 @@ Route::get('fetch/pengantaran', 'WarehouseNewController@fetchPengantaran');
 Route::get('fetch/history/pelayanan', 'WarehouseNewController@fetchHistoryPelayanan');
 Route::get('fetch/pengantaran/pelayanan', 'WarehouseNewController@fetchPeng');
 Route::post('update/pengantaran', 'WarehouseNewController@updatePengantaran');
+Route::get('index/import/get_job_now', 'WarehouseNewController@get_job_new');
+
 
 
 

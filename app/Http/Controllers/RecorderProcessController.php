@@ -24,6 +24,7 @@ use App\InjectionTag;
 use App\RcAssyInitial;
 use App\RcKensaInitial;
 use App\RcKensa;
+use App\RcReturnLog;
 use App\Libraries\ActMLEasyIf;
 use Response;
 use DataTables;
@@ -2972,30 +2973,88 @@ class RecorderProcessController extends Controller
       ))->with('page', 'Return Material Recorder');
     }
 
-    public function scanProduct(Request $request)
-    {
-        try {
-            $tag = DB::SELECT("SELECT * FROM `injection_tags`  left join return_materials on injection_tags.material_number = return_materials.material_number where tag = '".$request->get('tag')."' and location = 'RC91'");
 
-            if (count($tag) > 0) {
-                $response = array(
-                    'status' => true,
-                    'data' => $tag
-                );
-                return Response::json($response);
-            }else{
-                $response = array(
-                    'status' => false,
-                );
-                return Response::json($response);
-            }
-        } catch (\Exception $e) {
-            $response = array(
-                'status' => false,
-                'message' => $e->getMessage(),
-            );
-            return Response::json($response);
+    public function fetchProductReturn(Request $request)
+    {
+      try {
+          $product = DB::SELECT("SELECT
+            * 
+          FROM
+            injection_parts 
+          WHERE
+            remark = 'injection' 
+            AND deleted_at IS NULL ");
+
+          if (count($product) > 0) {
+              $response = array(
+                  'status' => true,
+                  'datas' => $product
+              );
+              return Response::json($response);
+          }else{
+              $response = array(
+                  'status' => false,
+              );
+              return Response::json($response);
+          }
+      } catch (\Exception $e) {
+          $response = array(
+              'status' => false,
+              'message' => $e->getMessage(),
+          );
+          return Response::json($response);
+      }
+    }
+
+    public function inputReturn(Request $request)
+    {
+      try {
+        $cdm = RcReturnLog::create([
+          'material_number' => $request->get('material_number'),
+          'material_description' => $request->get('material_description'),
+          'part_code' => $request->get('part_code'),
+          'part_type' => $request->get('part_type'),
+          'color' => $request->get('color'),
+          'quantity' => $request->get('quantity'),
+          'created_by' => Auth::id(),
+        ]);
+
+        $inventory = InjectionInventory::where('material_number',$request->get('material_number'))->where('location','RC91')->first();
+
+        if (count($inventory) > 0) {
+          $inventory->quantity = $inventory->quantity - $request->get('quantity');
+          $inventory->save(); 
         }
+        $response = array(
+            'status' => true,
+            'message' => 'Return Success'
+        );
+        return Response::json($response);
+      } catch (\Exception $e) {
+        $response = array(
+            'status' => false,
+            'message' => $e->getMessage(),
+        );
+        return Response::json($response);
+      }
+    }
+
+    public function fetchProductResume(Request $request)
+    {
+      try {
+        $return = RcReturnLog::select('rc_return_logs.*','users.*','rc_return_logs.created_at as created')->join('users','users.id','rc_return_logs.created_by')->get();
+        $response = array(
+            'status' => true,
+            'return' => $return
+        );
+        return Response::json($response);
+      } catch (\Exception $e) {
+        $response = array(
+            'status' => false,
+            'message' => $e->getMessage(),
+        );
+        return Response::json($response);
+      }
     }
 
     public function indexCdm()
