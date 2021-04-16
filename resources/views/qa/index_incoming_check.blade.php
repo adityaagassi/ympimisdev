@@ -670,6 +670,8 @@
 	function confNgTemp() {
 		if ($('#qty_ng').val() == "" || $('#status_ng').val() == "-") {
 			alert('Isi Semua Data');
+		}else if($('#qty_ng').val() > $('#total_ok').val()){
+			openErrorGritter('Error!','Quantity NG tidak boleh melebihi Total OK. Total OK adalah '+$('#total_ok').val()+' Pc(s)');
 		}else{
 			var material_number = $('#material_number').val();
 			var material_description = $('#material_description').text();
