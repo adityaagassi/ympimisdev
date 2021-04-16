@@ -602,15 +602,15 @@
 				process : 'Forging'
 			}
 
-			$.get('{{ url("fetch/press/fetchProcess") }}', data, function(result, status, xhr){
-				if(result.status){
-					$("#process_desc_select").show();
-					$('#process_desc').html(result.process_desc);
-				}
-				else{
-					alert('Attempt to retrieve data failed');
-				}
-			});
+			// $.get('{{ url("fetch/press/fetchProcess") }}', data, function(result, status, xhr){
+			// 	if(result.status){
+			// 		$("#process_desc_select").show();
+			// 		$('#process_desc').html(result.process_desc);
+			// 	}
+			// 	else{
+			// 		alert('Attempt to retrieve data failed');
+			// 	}
+			// });
 
 			$.get('{{ url("fetch/press/press_list") }}', data, function(result, status, xhr){
 				if(result.status){
@@ -769,6 +769,8 @@
 			}
 			$.get('{{ url("fetch/press/fetchMaterialList") }}', data, function(result, status, xhr){
 				if(result.status){
+					$('#process_desc').html("");
+					var processes = "";
 					$('#id_silver').val(result.count.id);
 					$('#material_number').val(result.count.material_number);
 					$('#material_description').val(result.count.material_description);
@@ -780,6 +782,31 @@
 					fetchTotalPunch(result.punch_first.punch_die_number);
 					fetchTotalDie(result.dies_first.punch_die_number);
 					$('#addCount').val("0");
+
+					if (result.count.process_1 != null) {
+						processes += '<option value="'+result.count.process_1+'">'+result.count.process_1+'</option>';
+					}
+
+					if (result.count.process_2 != null) {
+						processes += '<option value="'+result.count.process_2+'">'+result.count.process_2+'</option>';
+					}
+
+					if (result.count.process_3 != null) {
+						processes += '<option value="'+result.count.process_3+'">'+result.count.process_3+'</option>';
+					}
+
+					if (result.count.process_4 != null) {
+						processes += '<option value="'+result.count.process_4+'">'+result.count.process_4+'</option>';
+					}
+
+					if (result.count.process_5 != null) {
+						processes += '<option value="'+result.count.process_5+'">'+result.count.process_5+'</option>';
+					}
+
+
+					$('#process_desc').append(processes);
+
+					$('#process_desc_select').show();
 				}
 				else{
 					alert('Attempt to retrieve data failed');

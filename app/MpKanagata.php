@@ -10,7 +10,7 @@ class MpKanagata extends Model
     use SoftDeletes;
 
 	protected $fillable = [
-		'material_number','material_name','material_description','process','product','part','punch_die_number','using','spare','total','remark','created_by'
+		'material_number','material_name','material_description','process','process_1','process_2','process_3','process_4','process_5','product','part','punch_die_number','using','spare','need_kanban','remark','created_by'
 	];
 
     public function user()
