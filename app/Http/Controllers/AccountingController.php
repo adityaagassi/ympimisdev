@@ -7567,6 +7567,7 @@ public function budget_detail(Request $request)
                 acc_actual_logs.deleted_at IS NULL 
                 AND acc_budgets.periode = "FY198"
                 AND acc_budgets.budget_no = "'.$request->get('id').'" 
+                AND acc_actual_logs.investment_no != "NO_INPUT"
             GROUP BY
                 month_date 
                 
@@ -8765,6 +8766,7 @@ public function fetch_budget_detail(Request $request){
             'Actual' as `status`
             from acc_actual_logs
             where acc_actual_logs.budget_no = '".$budget."' 
+            and acc_actual_logs.investment_no != 'NO_INPUT'
             ) a        
             ";
     else{
