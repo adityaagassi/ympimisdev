@@ -392,7 +392,7 @@
 											<b>Spesifikasi</b>
 										</div>
 										<div class="col-xs-1" style="padding:5px;">
-											<b>Request Date</b>
+											<b>Tgl Kedatangan</b>
 										</div>
 										<div class="col-xs-1" style="padding:5px;">
 											<b>Mata Uang</b>
@@ -673,7 +673,7 @@
 											<b>Stok WIP</b>
 										</div> -->
 										<div class="col-xs-1" style="padding:5px;">
-											<b>Request Date</b>
+											<b>Tgl Kedatangan</b>
 										</div>
 										<div class="col-xs-1" style="padding:5px;">
 											<b>Mata Uang</b>

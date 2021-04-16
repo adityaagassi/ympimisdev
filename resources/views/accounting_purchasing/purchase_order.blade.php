@@ -817,7 +817,7 @@
                   <b>UOM</b>
                 </div>
                 <div class="col-xs-1" style="padding:5px;">
-                  <b>Request Date</b>
+                  <b>Tgl Kedatangan</b>
                 </div>
                 <div class="col-xs-1" style="padding:5px;">
                   <b>Mata Uang</b>
@@ -906,7 +906,7 @@
 								<th style="width: 5%;">Deskripsi</th>
 								<th style="width: 4%;">Spesifikasi</th>
 								<th style="width: 2%;">Stock</th>
-								<th style="width: 3%;">Request Date</th>
+								<th style="width: 3%;">Tgl Kedatangan</th>
 								<th style="width: 3%;">Mata Uang</th>
 								<th style="width: 4%;">Harga</th>
 								<th style="width: 2%;">Jumlah</th>
