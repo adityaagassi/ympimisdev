@@ -1636,7 +1636,7 @@ Highcharts.createElement('link', {
             //   }
             // }
             if (value.remark != '2') {
-            bodyResume  += '<td style="background-color:black; border-left: 5px solid red !important"><a class="btn btn-success btn-xs" href="'+email+'/'+value.id+'" style="color:white"><i class="fa fa-envelope"></i>Send Email</a><a class="btn btn-danger btn-xs" onclick="editForm(\''+value.id+'\');" style="color:white"><i class="fa fa-trash"></i>Edit</a></td>';  
+            bodyResume  += '<td style="background-color:black; border-left: 5px solid red !important"><a class="btn btn-success btn-xs" href="'+email+'/'+value.id+'" style="color:white"><i class="fa fa-envelope"></i>Send Email</a><a class="btn btn-danger btn-xs" onclick="editForm(\''+value.id+'\');" style="color:white"><i class="fa fa-edit"></i>Edit</a></td>';  
             }
             else{
               bodyResume  += '<td style="background-color:black; border-left: 5px solid red !important"><a class="btn btn-warning btn-xs" href="'+urlreport+'/'+value.id+'" style="color:white"><i class="fa fa-edit"></i>Report</a></td>';
