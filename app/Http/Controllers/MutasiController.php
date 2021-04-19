@@ -188,14 +188,14 @@ class MutasiController extends Controller
             //     $emp = DB::SELECT("select sub_group, `group`, section, department, position from employee_syncs where
             // `sub_group` = '".$request->get('ke_sub_group')."' group by department, section, `group`");
                 $emp = DB::SELECT("SELECT
-    DISTINCT(sub_group),
-    `group`,
-    section,
-    department
-FROM
-    employee_syncs 
-WHERE
-    `sub_group` = '".$request->get('ke_sub_group')."' ");
+                DISTINCT(sub_group),
+                `group`,
+                section,
+                department
+            FROM
+                employee_syncs 
+            WHERE
+                `sub_group` = '".$request->get('ke_sub_group')."' ");
             }
 
             if (count($emp) > 0) {
@@ -637,8 +637,6 @@ WHERE
                                 }
                             }
 
-
-
                 $mutasi->app_ca = 'Approved';
                 $mutasi->date_atasan_asal = date('Y-m-d H-y-s');
                 $mutasi->posisi = 'chf_tujuan';
@@ -649,6 +647,53 @@ WHERE
                 // $mutasi->dgm_tujuan = $dgm;
                 // $mutasi->nama_dgm_tujuan = $nama_dgm;            
                 $mutasi->save();
+
+                if ($mutasi->chief_or_foreman_asal == $mutasi->chief_or_foreman_tujuan) {
+                    $manager = db::select("select employee_id, `name` from employee_syncs where position = 'Manager' and department ='".$mutasi->departemen."'"); 
+                if ($manager != null)
+                {
+                    foreach ($manager as $mgr)
+                    {
+                        $manager = $mgr->employee_id;
+                        $nama_manager = $mgr->name;
+                    }
+                }
+                else
+                {
+                    if ($mutasi->departemen == 'Production Engineering Department') {
+                        $manager = 'PI0703002';
+                        $nama_manager = 'Susilo Basri Prasetyo';
+                    }
+                    elseif 
+                        ($mutasi->departemen == 'Woodwind Instrument - Body Parts Process (WI-BPP) Department') {
+                        $manager = 'PI9805006';
+                        $nama_manager = 'Fatchur Rozi';
+                    }
+                    elseif 
+                        ($mutasi->departemen == 'Woodwind Instrument - Key Parts Process (WI-KPP) Department') {
+                        $manager = 'PI9906002';
+                        $nama_manager = 'Khoirul Umam';
+                    }
+                    else{
+                        $manager = 'PI0109004';
+                        $nama_manager = 'Budhi Apriyanto'; 
+                    }
+                }
+                $mutasi->app_ct = 'Approved';
+                $mutasi->date_atasan_tujuan = date('Y-m-d H-y-s');
+                $mutasi->posisi = 'mgr';
+                $mutasi->manager_tujuan = $manager;
+                $mutasi->nama_manager_tujuan = $nama_manager;           
+                $mutasi->save();
+                $mails = "select distinct email from mutasi_depts join users on mutasi_depts.manager_tujuan = users.username where mutasi_depts.id = ".$mutasi->id;
+                $mailtoo = DB::select($mails);
+
+                $isimail = "select id, nama, nik, sub_group, ke_sub_group, `group`, ke_group, seksi, ke_seksi, departemen, jabatan, rekomendasi, tanggal, tanggal_maksimal, alasan from mutasi_depts where mutasi_depts.id = ".$mutasi->id;
+                $mutasi = db::select($isimail);
+                Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_satu'));
+
+                return redirect('/dashboard/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
+                }
 
                 if ($mutasi->manager_tujuan != null) {
                     $mutasi->posisi = 'mgr';
