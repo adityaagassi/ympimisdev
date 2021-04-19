@@ -388,7 +388,13 @@ class FloController extends Controller
 
 	public function fetch_flo_lading(Request $request){
 		$invoice_number = $request->input('id');
+
 		$flo = Flo::where('invoice_number', '=', $invoice_number)->first();
+
+		if(count($flo) <= 0){
+			$flo = KnockDown::where('invoice_number', '=', $invoice_number)->first();
+		}
+		
 		$bl_date= date('m/d/Y', strtotime($flo->bl_date));
 		$response = array(
 			'status' => true,
@@ -1263,22 +1269,22 @@ class FloController extends Controller
 				$inventoryWIP->quantity = ($inventoryWIP->quantity+$flo->actual);
 				$inventoryWIP->save();
 
-				// if($flo->transfer != null){
-				// 	$log_transaction = new LogTransaction([
-				// 		'material_number' => $flo->shipmentschedule->material_number,
-				// 		'issue_plant' => '8190',
-				// 		'issue_storage_location' => $flo->shipmentschedule->material->issue_storage_location,
-				// 		'receive_plant' => '8191',
-				// 		'receive_storage_location' => 'FSTK',
-				// 		'transaction_code' => 'MB1B',
-				// 		'mvt' => '9P2',
-				// 		'transaction_date' => date('Y-m-d H:i:s'),
-				// 		'qty' => $flo->actual,
-				// 		'created_by' => $id
-				// 	]);
-				// 	$log_transaction->save();
-				// 	$flo->transfer = null;
-				// }
+				if($flo->transfer != null){
+					// $log_transaction = new LogTransaction([
+					// 	'material_number' => $flo->shipmentschedule->material_number,
+					// 	'issue_plant' => '8190',
+					// 	'issue_storage_location' => $flo->shipmentschedule->material->issue_storage_location,
+					// 	'receive_plant' => '8191',
+					// 	'receive_storage_location' => 'FSTK',
+					// 	'transaction_code' => 'MB1B',
+					// 	'mvt' => '9P2',
+					// 	'transaction_date' => date('Y-m-d H:i:s'),
+					// 	'qty' => $flo->actual,
+					// 	'created_by' => $id
+					// ]);
+					// $log_transaction->save();
+					$flo->transfer = null;
+				}
 			}
 
 			if($request->get('status') == '3'){
