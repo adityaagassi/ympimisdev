@@ -1014,17 +1014,17 @@ class IndirectMaterialController extends Controller{
 			$larutan->save();
 
 			if($schedule->category == 'Pembuatan Baru'){
-				$larutan = ChemicalSolution::where('id', $schedule->solution_id)
+				$update_qty_larutan = ChemicalSolution::where('id', $schedule->solution_id)
 				->update([
 					'actual_quantity' => 0 
 				]);
 
 				$log = new ChemicalControlLog([
 					'date' => date('Y-m-d'),
-					'solution_name' => $solution->solution_name,
-					'cost_center_id' => $solution->cost_center_id,
-					'target_max' => $solution->target_max,
-					'target_warning' => $solution->target_warning,
+					'solution_name' => $larutan->solution_name,
+					'cost_center_id' => $larutan->cost_center_id,
+					'target_max' => $larutan->target_max,
+					'target_warning' => $larutan->target_warning,
 					'note' => '-',
 					'quantity' => 0,
 					'accumulative' => 0,
