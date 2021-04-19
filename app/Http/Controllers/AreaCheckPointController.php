@@ -10,6 +10,7 @@ use App\ActivityList;
 use Illuminate\Support\Facades\DB;
 use App\User;
 use App\AreaCheckPoint;
+use App\AreaCode;
 use Response;
 use DataTables;
 use Excel;
@@ -26,7 +27,6 @@ class AreaCheckPointController extends Controller
             $http_user_agent = $_SERVER['HTTP_USER_AGENT']; 
             if (preg_match('/Word|Excel|PowerPoint|ms-office/i', $http_user_agent)) 
             {
-                // Prevent MS office products detecting the upcoming re-direct .. forces them to launch the browser to this link
                 die();
             }
         }
@@ -46,14 +46,18 @@ class AreaCheckPointController extends Controller
         $foreman = $activityList->foreman_dept;
         $frequency = $activityList->frequency;
 
+        $area_code = AreaCode::get();
+
     	$data = array('area_check_point' => $area_check_point,
-    				  'departments' => $departments,
-    				  'activity_name' => $activity_name,
+            				  'departments' => $departments,
+            				  'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
                       'leader' => $leader,
+                      'area_code' => $area_code,
+                      'area_code2' => $area_code,
                       'foreman' => $foreman,
-    				  'id' => $id,
-              'frequency' => $frequency,
+            				  'id' => $id,
+                      'frequency' => $frequency,
                       'id_departments' => $id_departments);
     	return view('area_check_point.index', $data
     		)->with('page', 'Area Check Point');
@@ -66,6 +70,7 @@ class AreaCheckPointController extends Controller
                 AreaCheckPoint::create([
                     'activity_list_id' => $id,
                     'point_check' => $request->get('inputpoint_check'),
+                    'location' => $request->get('inputlocation'),
                     'leader' => $request->get('inputleader'),
                     'foreman' => $request->get('inputforeman'),
                     'created_by' => $id_user
@@ -119,6 +124,7 @@ class AreaCheckPointController extends Controller
             $detail = AreaCheckPoint::find($request->get("id"));
             $data = array('area_check_point_id' => $detail->id,
                           'point_check' => $detail->point_check,
+                          'location' => $detail->location,
                           'leader' => $detail->leader,
                           'foreman' => $detail->foreman);
 
@@ -154,6 +160,7 @@ class AreaCheckPointController extends Controller
                 
                   $area_check_point = AreaCheckPoint::find($area_check_point_id);
                   $area_check_point->point_check = $request->get('editpoint_check');
+                  $area_check_point->location = $request->get('editlocation');
                   $area_check_point->save();
 
             return redirect('index/area_check_point/index/'.$id)

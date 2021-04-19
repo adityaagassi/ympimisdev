@@ -11,6 +11,7 @@ use App\User;
 use Illuminate\Support\Facades\DB;
 use App\AreaCheckPoint;
 use App\AreaCheck;
+use App\AreaCode;
 use Response;
 use DataTables;
 use Excel;
@@ -59,6 +60,8 @@ class AreaCheckController extends Controller
         $subsection2 = DB::select($querySubSection);
         $subsection3 = DB::select($querySubSection);
 
+        $area_code = AreaCode::get();
+
         $queryPointCheck = "select * from area_check_points where activity_list_id = '".$id."' and deleted_at is null";
         $point_check = DB::select($queryPointCheck);
         $point_check2 = DB::select($queryPointCheck);
@@ -77,6 +80,9 @@ class AreaCheckController extends Controller
                       'subsection3' => $subsection3,
                       'point_check' => $point_check,
                       'point_check2' => $point_check2,
+                      'area_code' => $area_code,
+                      'area_code2' => $area_code,
+                      'area_code3' => $area_code,
                       'point_check3' => $point_check3,
                       'pic' => $pic,
                       'pic2' => $pic2,
@@ -95,15 +101,20 @@ class AreaCheckController extends Controller
         if(strlen($request->get('month')) != null){
             $year = substr($request->get('month'),0,4);
             $month = substr($request->get('month'),-2);
-            $area_check = AreaCheck::where('activity_list_id',$id)
+            $area_check = AreaCheck::join('area_check_points','area_check_points.id','area_checks.area_check_point_id')->where('area_checks.activity_list_id',$id)
                 ->whereYear('date', '=', $year)
                 ->whereMonth('date', '=', $month)
-                ->orderBy('area_checks.id','desc')
-                ->get();
+                ->orderBy('area_checks.id','desc');
         }
         else{
-            $area_check = AreaCheck::where('activity_list_id',$id)
-            ->orderBy('area_checks.id','desc')->get();
+            $area_check = AreaCheck::join('area_check_points','area_check_points.id','area_checks.area_check_point_id')->where('area_checks.activity_list_id',$id)
+            ->orderBy('area_checks.id','desc');
+        }
+
+        if(strlen($request->get('location')) != null){
+          $area_check = $area_check->where('area_check_points.location',$request->get('location'))->get();
+        }else{
+          $area_check = $area_check->get();
         }
 
         // foreach ($activityList as $activityList) {
@@ -114,6 +125,8 @@ class AreaCheckController extends Controller
         $leader = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
         $frequency = $activityList->frequency;
+
+        $area_code = AreaCode::get();
 
         $querySubSection = "SELECT
             DISTINCT(employee_syncs.group) AS sub_section_name 
@@ -141,6 +154,9 @@ class AreaCheckController extends Controller
                       'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
                       'leader' => $leader,
+                      'area_code' => $area_code,
+                      'area_code2' => $area_code,
+                      'area_code3' => $area_code,
 					            'subsection' => $subsection,
                       'subsection2' => $subsection2,
                       'subsection3' => $subsection3,
@@ -171,8 +187,6 @@ class AreaCheckController extends Controller
     {
         	try{    
               $id_user = Auth::id();
-              // $interview_id = $request->get('interview_id');
-              
                 AreaCheck::create([
                     'activity_list_id' => $id,
                     'department' => $request->get('department'),
@@ -206,7 +220,7 @@ class AreaCheckController extends Controller
           try{
             $detail = AreaCheck::find($request->get("id"));
             $data = array('area_check_id' => $detail->id,
-            			  'area_check_point_id' => $detail->area_check_point_id,
+            			        'area_check_point_id' => $detail->area_check_point_id,
                           'department' => $detail->department,
                           'subsection' => $detail->subsection,
                           'date' => $detail->date,
@@ -268,7 +282,7 @@ class AreaCheckController extends Controller
             }
     }
 
-    function print_area_check($id,$month)
+    function print_area_check($id,$month,$location)
     {
 
         $activityList = ActivityList::find($id);
@@ -280,13 +294,15 @@ class AreaCheckController extends Controller
         $date = db::select("select week_date from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$month."' and week_date not in (select tanggal from ftm.kalender)");
         $countdate = count($date);
 
-        $point_check = db::select("select * from area_check_points where activity_list_id = '".$id."'");
+        $point_check = db::select("select * from area_check_points where activity_list_id = '".$id."' and location = '".$location."'");
 
         $areaCheckQuery = "select * from area_checks
           JOIN activity_lists on activity_lists.id = area_checks.activity_list_id
+          join area_check_points on area_check_points.id = area_checks.area_check_point_id
           where DATE_FORMAT(area_checks.date,'%Y-%m') = '".$month."'
-          and activity_list_id = '".$id."'
-          and department_id = '".$id_departments."'
+          and area_checks.activity_list_id = '".$id."'
+          and area_check_points.location = '".$location."'
+          and activity_lists.department_id = '".$id_departments."'
           and area_checks.deleted_at is null";
         $area_check = DB::select($areaCheckQuery);
         $area_check2 = DB::select($areaCheckQuery);

@@ -69,6 +69,7 @@ table.table-bordered > tfoot > tr > th{
 		            <thead style="background-color: rgba(126,86,134,.7);">
 		              <tr>
 		                <th>Point Check</th>
+                    <th>Location</th>
 		                <th>Action</th>
 		              </tr>
 		            </thead>
@@ -77,10 +78,10 @@ table.table-bordered > tfoot > tr > th{
 		              @foreach($area_check_point as $area_check_point)
 		              <tr>
 		                <td>{{$area_check_point->point_check}}</td>
+                    <td>{{$area_check_point->location}}</td>
 		                <td>
 		                  <center>
-		                    <a class="btn btn-info btn-sm" href="{{url('index/area_check_point/show/'.$id.'/'.$area_check_point->id)}}">View</a>
-							<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit('{{ url("index/area_check_point/update") }}','{{ $id }}','{{ $area_check_point->id }}');">
+							     <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit('{{ url("index/area_check_point/update") }}','{{ $id }}','{{ $area_check_point->id }}');">
 				               Edit
 				            </button>
 		                    <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/area_check_point/destroy") }}', '{{ $area_check_point->point_check }}','{{ $id }}', '{{ $area_check_point->id }}');">
@@ -95,6 +96,7 @@ table.table-bordered > tfoot > tr > th{
 		            <tfoot>
 		              <tr>
 		                <th></th>
+                    <th></th>
 		                <th></th>
 		              </tr>
 		            </tfoot>
@@ -141,17 +143,26 @@ table.table-bordered > tfoot > tr > th{
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 	            <div class="form-group">
 	              <label for="">Point Check</label>
-				  <input type="text" class="form-control" name="inputpoint_check" id="inputpoint_check" placeholder="Masukkan Point Check" required>
+				        <input type="text" class="form-control" name="inputpoint_check" id="inputpoint_check" placeholder="Masukkan Point Check" required>
 	            </div>
+              <div class="form-group">
+                <label for="">Lokasi</label>
+                <select class="form-control select2" name="inputlocation" id="inputlocation" style="width: 100%;" data-placeholder="Pilih Lokasi" required>
+                  <option value=""></option>
+                  @foreach($area_code as $area_code)
+                    <option value="{{ $area_code->area }}">{{ $area_code->area }}</option>
+                  @endforeach
+                </select>
+              </div>
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 	            <div class="form-group">
 	              <label for="">Leader</label>
-				  <input type="text" class="form-control" name="inputleader" id="inputleader" placeholder="Masukkan Leader" value="{{ $leader }}" readonly>
+				        <input type="text" class="form-control" name="inputleader" id="inputleader" placeholder="Masukkan Leader" value="{{ $leader }}" readonly>
 	            </div>
 	            <div class="form-group">
 	              <label for="">Foreman</label>
-				  <input type="text" class="form-control" name="inputforeman" id="inputforeman" placeholder="Masukkan Leader" value="{{ $foreman }}" readonly>
+				        <input type="text" class="form-control" name="inputforeman" id="inputforeman" placeholder="Masukkan Leader" value="{{ $foreman }}" readonly>
 	            </div>
             </div>
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -185,6 +196,15 @@ table.table-bordered > tfoot > tr > th{
 	              <label for="">Point Check</label>
 				  <input type="text" class="form-control" name="editpoint_check" id="editpoint_check" placeholder="Masukkan Point Check" required>
 	            </div>
+              <div class="form-group">
+                <label for="">Lokasi</label>
+                <select class="form-control select2" name="editlocation" id="editlocation" style="width: 100%;" data-placeholder="Pilih Lokasi ..." required>
+                  <option value=""></option>
+                  @foreach($area_code2 as $area_code2)
+                    <option value="{{ $area_code2->area }}">{{ $area_code2->area }}</option>
+                  @endforeach
+                </select>
+              </div>
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 	            <div class="form-group">
@@ -246,13 +266,7 @@ table.table-bordered > tfoot > tr > th{
 			autoclose: true,
 		});
 		
-		$('.select2').select2({
-			language : {
-				noResults : function(params) {
-					return "There is no date";
-				}
-			}
-		});
+		$('.select2').select2();
 	});
 
 	
@@ -352,6 +366,7 @@ table.table-bordered > tfoot > tr > th{
                   var data = data.data;
                   // console.log(data);
                   $("#editpoint_check").val(data.point_check);
+                  $("#editlocation").val(data.location).trigger('change');
                 }
             });
       jQuery('#formedit').attr("action", url+'/'+id+'/'+area_check_point_id);

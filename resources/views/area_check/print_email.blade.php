@@ -3,7 +3,7 @@
 <section class="content-header">
   <h1>
     Approval {{ $activity_name }} - {{ $leader }}
-    <a class="btn btn-info pull-right" style="margin-right: 10px" href="{{url('index/area_check/print_area_check/'.$id.'/'.$month)}}">Cetak / Save PDF</a>
+    <!-- <a class="btn btn-info pull-right" style="margin-right: 10px" href="{{url('index/area_check/print_area_check/'.$id.'/'.$month)}}">Cetak / Save PDF</a> -->
     @if($jml_null > 0 && $role_code != 'M')
 	<label id="approval1" class="label label-success pull-right"><input type="checkbox" onclick="checkAll(this.checked)">Approve All</label>
 	@endif

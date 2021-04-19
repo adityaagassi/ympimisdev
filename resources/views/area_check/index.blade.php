@@ -78,12 +78,26 @@
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
 									<div class="form-group">
+										<label>Month</label>
 										<div class="input-group date">
 											<div class="input-group-addon bg-white">
 												<i class="fa fa-calendar"></i>
 											</div>
 											<input type="text" class="form-control datepicker" id="tgl"name="month" placeholder="Select Month" autocomplete="off">
 										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-12 col-md-offset-2">
+								<div class="col-md-10">
+									<div class="form-group">
+										<label>Location</label>
+										<select class="form-control select2" name="location" id="location" style="width: 100%;" data-placeholder="Pilih Lokasi" required>
+											<option value=""></option>
+											@foreach($area_code as $area_code)
+												<option value="{{$area_code->area}}">{{$area_code->area}}</option>
+											@endforeach
+										</select>
 									</div>
 								</div>
 							</div>
@@ -107,12 +121,26 @@
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
 									<div class="form-group">
+										<label>Month</label>
 										<div class="input-group date">
 											<div class="input-group-addon bg-white">
 												<i class="fa fa-calendar"></i>
 											</div>
 											<input type="text" class="form-control datepicker2" id="tgl_print" name="month" placeholder="Select Month" required autocomplete="off">
 										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-12 col-md-offset-2">
+								<div class="col-md-10">
+									<div class="form-group">
+										<label>Location</label>
+										<select class="form-control select2" name="location_print" id="location_print" style="width: 100%;" data-placeholder="Pilih Lokasi" required>
+											<option value=""></option>
+											@foreach($area_code2 as $area_code2)
+												<option value="{{$area_code2->area}}">{{$area_code2->area}}</option>
+											@endforeach
+										</select>
 									</div>
 								</div>
 							</div>
@@ -134,6 +162,7 @@
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
 									<div class="form-group">
+										<label>Month</label>
 										<div class="input-group date">
 											<div class="input-group-addon bg-white">
 												<i class="fa fa-calendar"></i>
@@ -158,6 +187,7 @@
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
 										<th>Group</th>
+										<th>Location</th>
 										<th>Point Check</th>
 										<th>Date</th>
 										<th>Condition</th>
@@ -172,6 +202,7 @@
 									@foreach($area_check as $area_check)
 									<tr>
 										<td>{{$area_check->subsection}}</td>
+										<td>{{$area_check->area_check_point->location}}</td>
 										<td>{{$area_check->area_check_point->point_check}}</td>
 										<td>{{$area_check->date}}</td>
 										<td>{{$area_check->condition}}</td>
@@ -206,6 +237,7 @@
 								</tbody>
 								<tfoot>
 									<tr>
+										<th></th>
 										<th></th>
 										<th></th>
 										<th></th>
@@ -278,9 +310,8 @@
             		<?php $no = 1 ?>
 	              <label>Point Check</label>
 	                <select class="form-control" name="inputpoint_check" id="inputpoint_check" style="width: 100%;" data-placeholder="Pilih Point Check..." required>
-	                  <!-- <option value=""></option> -->
 	                  @foreach($point_check as $point_check)
-	                    <option value="{{ $point_check->id }}">{{ $no }}. {{ $point_check->point_check }}</option>
+	                    <option value="{{ $point_check->id }}">{{ $no }}. {{ $point_check->location }} - {{ $point_check->point_check }}</option>
 	                    <?php $no++ ?>
 	                  @endforeach
 	                </select>
@@ -356,7 +387,7 @@
 	                <select class="form-control" name="editpoint_check" id="editpoint_check" style="width: 100%;" data-placeholder="Pilih Point Check..." required>
 	                  <!-- <option value=""></option> -->
 	                  @foreach($point_check2 as $point_check2)
-	                    <option value="{{ $point_check2->id }}">{{ $no }}. {{ $point_check2->point_check }}</option>
+	                    <option value="{{ $point_check2->id }}">{{ $no }}. {{ $point_check2->location }} - {{ $point_check2->point_check }}</option>
 	                    <?php $no++ ?>
 	                  @endforeach
 	                </select>
@@ -644,12 +675,12 @@
 	}
 
 	function print_pdf(id,month) {
-		if (month == "") {
-			alert('Pilih Bulan');
+		if (month == "" || $('#location_print').val() == "") {
+			alert('Masukkan Bulan & Lokasi');
 		}else{
 			var url = "{{url('index/area_check/print_area_check/')}}";
 			// console.log(url + '/' + id+ '/' + month);
-			window.open(url + '/' + id+ '/' + month,"_blank");
+			window.open(url + '/' + id+ '/' + month + '/' +$('#location_print').val(),"_blank");
 		}
 	}
 </script>

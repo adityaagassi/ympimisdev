@@ -112,7 +112,7 @@
 											<div class="input-group-addon bg-white">
 												<i class="fa fa-calendar"></i>
 											</div>
-											<input type="text" class="form-control datepicker2" id="tgl_print" name="month" placeholder="Select Date" required autocomplete="off">
+											<input type="text" class="form-control datepicker" id="tgl_print" name="month" placeholder="Select Date" required autocomplete="off">
 										</div>
 									</div>
 								</div>
@@ -139,7 +139,7 @@
 											<div class="input-group-addon bg-white">
 												<i class="fa fa-calendar"></i>
 											</div>
-											<input type="text" class="form-control datepicker2" id="tgl" name="month" placeholder="Select Date" required autocomplete="off">
+											<input type="text" class="form-control datepicker" id="tgl" name="month" placeholder="Select Date" required autocomplete="off">
 										</div>
 									</div>
 								</div>

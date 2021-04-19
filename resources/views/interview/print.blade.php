@@ -59,20 +59,20 @@ table {
 							<b style='color:green'>Approved</b><br>
 							<b style='color:green'>{{ $interview->approved_date }}</b>
 						@endif<br>
-					{{ $interview->foreman }}<br>Foreman</center></td>
+					{{ $interview->foreman }}</center></td>
 					<td style="border: 1px solid black;vertical-align: middle;padding-top: 0px;padding-bottom: 0px;" rowspan="5"><center>Prepared<br>
 						@if($interview->approval_leader != Null)
 							<b style='color:green'>Approved</b><br>
 							<b style='color:green'>{{ $interview->approved_date_leader }}</b>
 						@endif<br>
-						{{ $interview->leader }}<br>Leader</center></td>
+						{{ $interview->leader }}</center></td>
 				</tr>
 				<tr>
 					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;" colspan="2">Section</td>
 					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;" colspan="3">{{ strtoupper($interview->section) }}</td>
 				</tr>
 				<tr>
-					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;" colspan="2">Sub Section</td>
+					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;" colspan="2">Group</td>
 					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;" colspan="3">{{ strtoupper($interview->subsection) }}</td>
 				</tr>
 				<tr>

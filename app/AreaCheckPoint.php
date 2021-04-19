@@ -10,7 +10,7 @@ class AreaCheckPoint extends Model
     use SoftDeletes;
 
 	protected $fillable = [
-		'activity_list_id', 'point_check','leader','foreman','created_by'
+		'activity_list_id', 'point_check','location','leader','foreman','created_by'
 	];
 
 	public function activity_lists()
