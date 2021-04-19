@@ -33,6 +33,14 @@
 		</div>
 		<div class="col-xs-12">
 			<div class="row">
+				<div class="col-xs-6" id="eff_add_year" style="padding: 0; height: 250px;">
+				</div>
+				<div class="col-xs-6" id="eff_add_month" style="padding: 0; height: 250px;">
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-12">
+			<div class="row">
 				<div class="col-xs-6" id="eff_monitoring_year" style="padding: 0;">
 				</div>
 				<div class="col-xs-6" id="eff_monitoring_month" style="padding: 0;">
@@ -78,7 +86,7 @@
 @endsection
 @section('scripts')
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
-<script src="{{ url("js/highstock.js")}}"></script>
+<script src="{{ url("js/highcharts.js")}}"></script>
 <script src="{{ url("js/highcharts-3d.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
@@ -100,6 +108,7 @@
 			todayHighlight: true
 		});
 		$('.select2').select2();
+		fetchAdd();
 	});
 
 	$.date = function(dateObject) {
@@ -150,7 +159,7 @@
 					else{
 						$('#loading').hide();
 						alert(result.message);
-						clearData();					
+						clearData();
 					}
 				});			
 			}
@@ -164,53 +173,309 @@
 			class_name: 'growl-success',
 			image: '{{ url("images/image-screen.png") }}',
 			sticky: false,
-			time: '2000'
+			time: '3000'
 		});
 	}
 
-	function openInfoGritter(title, message){
+	function openErrorGritter(title, message) {
 		jQuery.gritter.add({
 			title: title,
 			text: message,
-			class_name: 'growl-info',
-			image: '{{ url("images/image-unregistered.png") }}',
+			class_name: 'growl-danger',
+			image: '{{ url("images/image-stop.png") }}',
 			sticky: false,
-			time: '2000'
+			time: '3000'
 		});
 	}
 
-	function fetchChart(id){
-		$('#loading').show();
+	function fetchAdd()	{
 		var period = $('#fiscal_year').val();
 		var data = {
 			period:period
 		}
-		$.get('{{ url("fetch/display/efficiency_monitoring_monthly") }}', data, function(result, status, xhr) {
+		$.get('{{ url("fetch/display/efficiency_monitoring_monthly_add") }}', data, function(result, status, xhr) {
 			if(result.status){
-				var title = result.period.split(" ");
-				$('#title_text').text('Efficiency Data '+title[0]);
-				var h = $('#period_title').height();
-				$('#fiscal_year').css('height', h);
 
-				var cost_center_name_month = [];
-				cost_center_name_month.push('YMPI');
-				var month = {};
+				var yearCategories = [];
+
+				$.each(result.years, function(key, value){
+					if(jQuery.inArray(value.month_date, yearCategories) === -1){
+						yearCategories.push(value.month_date);
+					}
+				});
+
+				var years = result.years;
+				year = [];
+
+				years.reduce(function (res, value) {
+					if (!res[value.month_date]) {
+						res[value.month_date] = {
+							month_date: value.month_date,
+							total_input: 0,
+							total_output: 0
+						};
+						year.push(res[value.month_date]);
+					}
+					res[value.month_date].total_input += value.total_input;
+					res[value.month_date].total_output += value.total_output;
+					var percentage = (res[value.month_date].total_output/res[value.month_date].total_input)*100;
+					if(res[value.month_date].total_output == 0){
+						percentage = 0;
+					}
+					res[value.month_date].total_percentage = percentage;
+					return res;
+				}, {});
+
+				var max_height_percentage = 120;
+				var data_input = [];
+				var data_output = [];
+				var data_percentage = [];
+
+
+				$.each(year, function(key, value){
+					data_input.push(value.total_input);
+					data_output.push(value.total_output);
+					data_percentage.push(value.total_percentage);
+
+					if(value.total_percentage >= 120 && value.total_percentage <= 200){
+						max_height_percentage = Math.round(value.total_percentage);
+					}
+				});
+
+				Highcharts.chart('eff_add_year', {
+					chart: {
+						type: 'column',
+						backgroundColor	: '#6d6d6d'
+					},
+					title: {
+						text: 'YMPI FY197'
+					},
+					credits: {
+						enabled: false
+					},
+					xAxis: {
+						tickInterval: 1,
+						gridLineWidth: 1,
+						categories: yearCategories,
+						crosshair: true
+					},
+					yAxis: [{
+						min: 0,
+						title: {
+							text: null
+						}
+					}, { 
+						min: 0,
+						max:max_height_percentage,
+						title: {
+							text: null
+						},
+						labels: {
+							format: '{value}%',
+						},
+						opposite: true
+					}],
+					tooltip: {
+						headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+						pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+						'<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+						footerFormat: '</table>',
+						shared: true,
+						useHTML: true
+					},
+					plotOptions: {
+						column: {
+							pointPadding: 0.05,
+							groupPadding: 0.1,
+							borderWidth: 0
+						}
+					},
+					series: [{
+						name: 'Input Hour(s)',
+						data: data_input
+
+					}, {
+						name: 'Output Hour(s)',
+						data: data_output
+					},{
+						name: 'Efficiency %',
+						type: 'spline',
+						yAxis: 1,
+						dataLabels: {
+							enabled: true,
+							formatter: function () {
+								return Highcharts.numberFormat(this.y,1)+'%';
+							}
+						},
+						data: data_percentage
+
+					}]
+				});
+
+				var month = [];
 				var months = result.months;
-				$('#eff_monitoring_month').html("");
-				var eff_monitoring_month = "";
 				var monthCategories = [];
-				month['YMPI'] = [];
-
-				eff_monitoring_month += '<div class="col-xs-12" style="padding:0; height:300px;" id="eff_month_YMPI"></div><hr>';
 
 				$.each(result.months, function(key, value){
-					if(jQuery.inArray(value.cost_center_name, cost_center_name_month) === -1){
-						month[value.cost_center_name] = [];
-						cost_center_name_month.push(value.cost_center_name);
-						eff_monitoring_month += '<div class="col-xs-12" style="padding:0; height:250px;" id="eff_month_'+value.cost_center_name+'"></div><hr>';
-					}
-
 					var cat = value.week_date.split('-');
+					if(jQuery.inArray(cat[2], monthCategories) === -1){
+						monthCategories.push(cat[2]);
+					}
+				});
+
+				months.reduce(function (res, value) {
+					if (!res[value.week_date]) {
+						res[value.week_date] = {
+							week_date: value.week_date,
+							total_output: 0,
+							total_input: 0
+						};
+						month.push(res[value.week_date]);
+					}
+					res[value.week_date].total_input += value.total_input;
+					res[value.week_date].total_output += value.total_output;
+					var percentage = (res[value.week_date].total_output/res[value.week_date].total_input)*100;
+					if(res[value.week_date].total_output == 0){
+						percentage = 0;
+					}
+					res[value.week_date].total_percentage = percentage;
+					return res;
+				}, {});
+
+				var max_height_percentage = 120;
+
+				var sum_input = [];
+				var sum_output = [];
+				var sum_percentage = [];
+
+				var total_input = 0;
+				var total_output = 0;
+
+				var max_height_percentage = 120;
+
+				$.each(month, function(key, value){
+					total_input += value.total_input;
+					total_output += value.total_output;
+					sum_input.push(total_input);
+					sum_output.push(total_output);
+					sum_percentage.push((total_output/total_input)*100);
+
+					if((total_output/total_input)*100 >= 120 && (total_output/total_input)*100 <= 200)
+					{
+						max_height_percentage = Math.round(((total_output/total_input)*100)+10);			
+					}
+				});
+
+				Highcharts.chart('eff_add_month', {
+					chart: {
+						type: 'column',
+						backgroundColor	: '#6d6d6d'
+					},
+					title: {
+						text: 'YMPI FEBRUARY FY197'
+					},
+					credits: {
+						enabled: false
+					},
+					xAxis: {
+						tickInterval: 1,
+						gridLineWidth: 1,
+						categories: monthCategories,
+						crosshair: true
+					},
+					yAxis: [{
+						min: 0,
+						title: {
+							text: null
+						}
+					}, { 
+						min: 0,
+						max:max_height_percentage,
+						title: {
+							text: null
+						},
+						labels: {
+							format: '{value}%',
+						},
+						opposite: true
+					}],
+					tooltip: {
+						headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+						pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+						'<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+						footerFormat: '</table>',
+						shared: true,
+						useHTML: true
+					},
+					plotOptions: {
+						column: {
+							pointPadding: 0.05,
+							groupPadding: 0.1,
+							borderWidth: 0
+						}
+					},
+					series: [{
+						name: 'Input Hour(s)',
+						data: sum_input
+
+					}, {
+						name: 'Output Hour(s)',
+						data: sum_output
+					},{
+						name: 'Efficiency %',
+						type: 'spline',
+						yAxis: 1,
+						dataLabels: {
+							enabled: true,
+							formatter: function () {
+								return Highcharts.numberFormat(this.y,1)+'%';
+							}
+						},
+						data: sum_percentage
+
+					}]
+				});
+
+
+			}
+			else{
+				alert('Unidentified Error!');
+			}
+		});			
+}
+
+function fetchChart(id){
+	$('#loading').show();
+	var period = $('#fiscal_year').val();
+	var data = {
+		period:period
+	}
+	$.get('{{ url("fetch/display/efficiency_monitoring_monthly") }}', data, function(result, status, xhr) {
+		if(result.status){
+			var title = result.period.split(" ");
+			$('#title_text').text('Efficiency Data '+title[0]);
+			var h = $('#period_title').height();
+			$('#fiscal_year').css('height', h);
+
+			var cost_center_name_month = [];
+			cost_center_name_month.push('YMPI');
+			var month = {};
+			var months = result.months;
+			$('#eff_monitoring_month').html("");
+			var eff_monitoring_month = "";
+			var monthCategories = [];
+			month['YMPI'] = [];
+
+			eff_monitoring_month += '<div class="col-xs-12" style="padding:0; height:300px;" id="eff_month_YMPI"></div><hr>';
+
+			$.each(result.months, function(key, value){
+				if(jQuery.inArray(value.cost_center_name, cost_center_name_month) === -1){
+					month[value.cost_center_name] = [];
+					cost_center_name_month.push(value.cost_center_name);
+					eff_monitoring_month += '<div class="col-xs-12" style="padding:0; height:250px;" id="eff_month_'+value.cost_center_name+'"></div><hr>';
+				}
+
+				var cat = value.week_date.split('-');
 					// console.log(cat[2]);
 
 					if(jQuery.inArray(cat[2], monthCategories) === -1){
@@ -225,292 +490,292 @@
 				});
 
 
-				months.reduce(function (res, value) {
-					if (!res[value.week_date]) {
-						res[value.week_date] = {
-							week_date: value.week_date,
-							total_output: 0,
-							total_input: 0
-						};
-						month['YMPI'].push(res[value.week_date]);
-					}
-					res[value.week_date].total_input += value.total_input;
-					res[value.week_date].total_output += value.total_output;
-					return res;
-				}, {});
-
-
-				$('#eff_monitoring_month').append(eff_monitoring_month);
-				var sum_input = {};
-				var sum_output = {};
-				var sum_percentage = {};
-
-				for(var i = 0; i < cost_center_name_month.length; i++){
-					var id_div_month = 'eff_month_'+cost_center_name_month[i];
-					var total_input = 0;
-					var total_output = 0;
-					sum_input[cost_center_name_month[i]] = [];
-					sum_output[cost_center_name_month[i]] = [];
-					sum_percentage[cost_center_name_month[i]] = [];
-
-					var max_height_percentage = 120;
-
-					$.each(month[cost_center_name_month[i]], function(key, value){
-						total_input += value.total_input;
-						total_output += value.total_output;
-						sum_input[cost_center_name_month[i]].push(total_input);
-						sum_output[cost_center_name_month[i]].push(total_output);
-						sum_percentage[cost_center_name_month[i]].push((total_output/total_input)*100);
-
-						if((total_output/total_input)*100 >= 120 && (total_output/total_input)*100 <= 200)
-						{
-							max_height_percentage = Math.round(((total_output/total_input)*100)+10);			
-						}
-					});
-
-					var cc_name = cost_center_name_month[i];
-					if(cost_center_name_month[i] == 'FINAL'){
-						cc_name = 'ASSEMBLY';
-					}
-					if(cost_center_name_month[i] == 'MIDDLE'){
-						cc_name = 'SURFACE TREATMENT';
-					}
-
-					Highcharts.chart(id_div_month, {
-						chart: {
-							type: 'column',
-							backgroundColor	: null
-						},
-						title: {
-							text: cc_name+' '+title[1]
-						},
-						credits: {
-							enabled: false
-						},
-						xAxis: {
-							tickInterval: 1,
-							gridLineWidth: 1,
-							categories: monthCategories,
-							crosshair: true
-						},
-						yAxis: [{
-							min: 0,
-							title: {
-								text: null
-							}
-						}, { 
-							min: 0,
-							max:max_height_percentage,
-							title: {
-								text: null
-							},
-							labels: {
-								format: '{value}%',
-							},
-							opposite: true
-						}],
-						tooltip: {
-							headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-							pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-							'<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
-							footerFormat: '</table>',
-							shared: true,
-							useHTML: true
-						},
-						plotOptions: {
-							column: {
-								pointPadding: 0.05,
-								groupPadding: 0.1,
-								borderWidth: 0
-							}
-						},
-						series: [{
-							name: 'Input Hour(s)',
-							data: sum_input[cost_center_name_month[i]]
-
-						}, {
-							name: 'Output Hour(s)',
-							data: sum_output[cost_center_name_month[i]]
-						},{
-							name: 'Efficiency %',
-							type: 'spline',
-							yAxis: 1,
-							dataLabels: {
-								enabled: true,
-								formatter: function () {
-									return Highcharts.numberFormat(this.y,1)+'%';
-								}
-							},
-							data: sum_percentage[cost_center_name_month[i]]
-
-						}]
-					});
+			months.reduce(function (res, value) {
+				if (!res[value.week_date]) {
+					res[value.week_date] = {
+						week_date: value.week_date,
+						total_output: 0,
+						total_input: 0
+					};
+					month['YMPI'].push(res[value.week_date]);
 				}
+				res[value.week_date].total_input += value.total_input;
+				res[value.week_date].total_output += value.total_output;
+				return res;
+			}, {});
 
-				var cost_center_name_year = [];
-				cost_center_name_year.push('YMPI');
-				var year = {};
-				var years = result.years;
-				$('#eff_monitoring_year').html("");
-				var eff_monitoring_year = "";
-				var yearCategories = [];
-				year['YMPI'] = [];
 
-				eff_monitoring_year += '<div class="col-xs-12" style="padding:0; height:300px;" id="eff_year_YMPI"></div><hr>';
+			$('#eff_monitoring_month').append(eff_monitoring_month);
+			var sum_input = {};
+			var sum_output = {};
+			var sum_percentage = {};
 
-				$.each(result.years, function(key, value){
-					if(jQuery.inArray(value.cost_center_name, cost_center_name_year) === -1){
-						year[value.cost_center_name] = [];
-						cost_center_name_year.push(value.cost_center_name);
-						eff_monitoring_year += '<div class="col-xs-12" style="padding:0; height:250px;" id="eff_year_'+value.cost_center_name+'"></div><hr>';
+			for(var i = 0; i < cost_center_name_month.length; i++){
+				var id_div_month = 'eff_month_'+cost_center_name_month[i];
+				var total_input = 0;
+				var total_output = 0;
+				sum_input[cost_center_name_month[i]] = [];
+				sum_output[cost_center_name_month[i]] = [];
+				sum_percentage[cost_center_name_month[i]] = [];
+
+				var max_height_percentage = 120;
+
+				$.each(month[cost_center_name_month[i]], function(key, value){
+					total_input += value.total_input;
+					total_output += value.total_output;
+					sum_input[cost_center_name_month[i]].push(total_input);
+					sum_output[cost_center_name_month[i]].push(total_output);
+					sum_percentage[cost_center_name_month[i]].push((total_output/total_input)*100);
+
+					if((total_output/total_input)*100 >= 120 && (total_output/total_input)*100 <= 200)
+					{
+						max_height_percentage = Math.round(((total_output/total_input)*100)+10);			
 					}
-
-					if(jQuery.inArray(value.month_date, yearCategories) === -1){
-						yearCategories.push(value.month_date);
-					}
-
-					var percentage = (value.total_output/value.total_input)*100;
-
-					if(value.total_output == 0){
-						percentage = 0;
-					}
-
-					year[value.cost_center_name].push({
-						week_date: value.month_date, 
-						total_input:value.total_input,
-						total_output:value.total_output,
-						total_percentage:percentage
-					});
 				});
 
-				years.reduce(function (res, value) {
-					if (!res[value.month_date]) {
-						res[value.month_date] = {
-							month_date: value.month_date,
-							total_input: 0,
-							total_output: 0
-						};
-						year['YMPI'].push(res[value.month_date]);
-					}
-					res[value.month_date].total_input += value.total_input;
-					res[value.month_date].total_output += value.total_output;
-					var percentage = (res[value.month_date].total_output/res[value.month_date].total_input)*100;
-					if(res[value.month_date].total_output == 0){
-						percentage = 0;
-					}
-					res[value.month_date].total_percentage = percentage;
-					return res;
-				}, {});
-
-				$('#eff_monitoring_year').append(eff_monitoring_year);
-
-				var data_input = {};
-				var data_output = {};
-				var data_percentage = {};
-
-				for(var i = 0; i < cost_center_name_year.length; i++){
-					var id_div_year = 'eff_year_'+cost_center_name_year[i];
-					data_input[cost_center_name_year[i]] = [];
-					data_output[cost_center_name_year[i]] = [];
-					data_percentage[cost_center_name_year[i]] = [];
-
-					var max_height_percentage = 120;
-
-					$.each(year[cost_center_name_year[i]], function(key, value){
-						data_input[cost_center_name_year[i]].push(value.total_input);
-						data_output[cost_center_name_year[i]].push(value.total_output);
-						data_percentage[cost_center_name_year[i]].push(value.total_percentage);
-
-						if(value.total_percentage >= 120 && value.total_percentage <= 200){
-							max_height_percentage = Math.round(value.total_percentage);
-						}
-					});
-
-					var cc_name = cost_center_name_month[i];
-					if(cost_center_name_month[i] == 'FINAL'){
-						cc_name = 'ASSEMBLY';
-					}
-					if(cost_center_name_month[i] == 'MIDDLE'){
-						cc_name = 'SURFACE TREATMENT';
-					}
-
-					Highcharts.chart(id_div_year, {
-						chart: {
-							type: 'column',
-							backgroundColor	: null
-						},
-						title: {
-							text: cc_name+' '+title[0]
-						},
-						credits: {
-							enabled: false
-						},
-						xAxis: {
-							tickInterval: 1,
-							gridLineWidth: 1,
-							categories: yearCategories,
-							crosshair: true
-						},
-						yAxis: [{
-							min: 0,
-							title: {
-								text: null
-							}
-						}, { 
-							min: 0,
-							max:max_height_percentage,
-							title: {
-								text: null
-							},
-							labels: {
-								format: '{value}%',
-							},
-							opposite: true
-						}],
-						tooltip: {
-							headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-							pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-							'<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
-							footerFormat: '</table>',
-							shared: true,
-							useHTML: true
-						},
-						plotOptions: {
-							column: {
-								pointPadding: 0.05,
-								groupPadding: 0.1,
-								borderWidth: 0
-							}
-						},
-						series: [{
-							name: 'Input Hour(s)',
-							data: data_input[cost_center_name_year[i]]
-
-						}, {
-							name: 'Output Hour(s)',
-							data: data_output[cost_center_name_year[i]]
-						},{
-							name: 'Efficiency %',
-							type: 'spline',
-							yAxis: 1,
-							dataLabels: {
-								enabled: true,
-								formatter: function () {
-									return Highcharts.numberFormat(this.y,1)+'%';
-								}
-							},
-							data: data_percentage[cost_center_name_year[i]]
-
-						}]
-					});
+				var cc_name = cost_center_name_month[i];
+				if(cost_center_name_month[i] == 'FINAL'){
+					cc_name = 'ASSEMBLY';
 				}
-				$('#loading').hide();
+				if(cost_center_name_month[i] == 'MIDDLE'){
+					cc_name = 'SURFACE TREATMENT';
+				}
+
+				Highcharts.chart(id_div_month, {
+					chart: {
+						type: 'column',
+						backgroundColor	: null
+					},
+					title: {
+						text: cc_name+' '+title[1]
+					},
+					credits: {
+						enabled: false
+					},
+					xAxis: {
+						tickInterval: 1,
+						gridLineWidth: 1,
+						categories: monthCategories,
+						crosshair: true
+					},
+					yAxis: [{
+						min: 0,
+						title: {
+							text: null
+						}
+					}, { 
+						min: 0,
+						max:max_height_percentage,
+						title: {
+							text: null
+						},
+						labels: {
+							format: '{value}%',
+						},
+						opposite: true
+					}],
+					tooltip: {
+						headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+						pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+						'<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+						footerFormat: '</table>',
+						shared: true,
+						useHTML: true
+					},
+					plotOptions: {
+						column: {
+							pointPadding: 0.05,
+							groupPadding: 0.1,
+							borderWidth: 0
+						}
+					},
+					series: [{
+						name: 'Input Hour(s)',
+						data: sum_input[cost_center_name_month[i]]
+
+					}, {
+						name: 'Output Hour(s)',
+						data: sum_output[cost_center_name_month[i]]
+					},{
+						name: 'Efficiency %',
+						type: 'spline',
+						yAxis: 1,
+						dataLabels: {
+							enabled: true,
+							formatter: function () {
+								return Highcharts.numberFormat(this.y,1)+'%';
+							}
+						},
+						data: sum_percentage[cost_center_name_month[i]]
+
+					}]
+				});
 			}
-			else{
-				alert('Attempt to retrieve data failed');
-				$('#loading').hide();
+
+			var cost_center_name_year = [];
+			cost_center_name_year.push('YMPI');
+			var year = {};
+			var years = result.years;
+			$('#eff_monitoring_year').html("");
+			var eff_monitoring_year = "";
+			var yearCategories = [];
+			year['YMPI'] = [];
+
+			eff_monitoring_year += '<div class="col-xs-12" style="padding:0; height:300px;" id="eff_year_YMPI"></div><hr>';
+
+			$.each(result.years, function(key, value){
+				if(jQuery.inArray(value.cost_center_name, cost_center_name_year) === -1){
+					year[value.cost_center_name] = [];
+					cost_center_name_year.push(value.cost_center_name);
+					eff_monitoring_year += '<div class="col-xs-12" style="padding:0; height:250px;" id="eff_year_'+value.cost_center_name+'"></div><hr>';
+				}
+
+				if(jQuery.inArray(value.month_date, yearCategories) === -1){
+					yearCategories.push(value.month_date);
+				}
+
+				var percentage = (value.total_output/value.total_input)*100;
+
+				if(value.total_output == 0){
+					percentage = 0;
+				}
+
+				year[value.cost_center_name].push({
+					week_date: value.month_date, 
+					total_input:value.total_input,
+					total_output:value.total_output,
+					total_percentage:percentage
+				});
+			});
+
+			years.reduce(function (res, value) {
+				if (!res[value.month_date]) {
+					res[value.month_date] = {
+						month_date: value.month_date,
+						total_input: 0,
+						total_output: 0
+					};
+					year['YMPI'].push(res[value.month_date]);
+				}
+				res[value.month_date].total_input += value.total_input;
+				res[value.month_date].total_output += value.total_output;
+				var percentage = (res[value.month_date].total_output/res[value.month_date].total_input)*100;
+				if(res[value.month_date].total_output == 0){
+					percentage = 0;
+				}
+				res[value.month_date].total_percentage = percentage;
+				return res;
+			}, {});
+
+			$('#eff_monitoring_year').append(eff_monitoring_year);
+
+			var data_input = {};
+			var data_output = {};
+			var data_percentage = {};
+
+			for(var i = 0; i < cost_center_name_year.length; i++){
+				var id_div_year = 'eff_year_'+cost_center_name_year[i];
+				data_input[cost_center_name_year[i]] = [];
+				data_output[cost_center_name_year[i]] = [];
+				data_percentage[cost_center_name_year[i]] = [];
+
+				var max_height_percentage = 120;
+
+				$.each(year[cost_center_name_year[i]], function(key, value){
+					data_input[cost_center_name_year[i]].push(value.total_input);
+					data_output[cost_center_name_year[i]].push(value.total_output);
+					data_percentage[cost_center_name_year[i]].push(value.total_percentage);
+
+					if(value.total_percentage >= 120 && value.total_percentage <= 200){
+						max_height_percentage = Math.round(value.total_percentage);
+					}
+				});
+
+				var cc_name = cost_center_name_month[i];
+				if(cost_center_name_month[i] == 'FINAL'){
+					cc_name = 'ASSEMBLY';
+				}
+				if(cost_center_name_month[i] == 'MIDDLE'){
+					cc_name = 'SURFACE TREATMENT';
+				}
+
+				Highcharts.chart(id_div_year, {
+					chart: {
+						type: 'column',
+						backgroundColor	: null
+					},
+					title: {
+						text: cc_name+' '+title[0]
+					},
+					credits: {
+						enabled: false
+					},
+					xAxis: {
+						tickInterval: 1,
+						gridLineWidth: 1,
+						categories: yearCategories,
+						crosshair: true
+					},
+					yAxis: [{
+						min: 0,
+						title: {
+							text: null
+						}
+					}, { 
+						min: 0,
+						max:max_height_percentage,
+						title: {
+							text: null
+						},
+						labels: {
+							format: '{value}%',
+						},
+						opposite: true
+					}],
+					tooltip: {
+						headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+						pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+						'<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+						footerFormat: '</table>',
+						shared: true,
+						useHTML: true
+					},
+					plotOptions: {
+						column: {
+							pointPadding: 0.05,
+							groupPadding: 0.1,
+							borderWidth: 0
+						}
+					},
+					series: [{
+						name: 'Input Hour(s)',
+						data: data_input[cost_center_name_year[i]]
+
+					}, {
+						name: 'Output Hour(s)',
+						data: data_output[cost_center_name_year[i]]
+					},{
+						name: 'Efficiency %',
+						type: 'spline',
+						yAxis: 1,
+						dataLabels: {
+							enabled: true,
+							formatter: function () {
+								return Highcharts.numberFormat(this.y,1)+'%';
+							}
+						},
+						data: data_percentage[cost_center_name_year[i]]
+
+					}]
+				});
 			}
-		});
+			$('#loading').hide();
+		}
+		else{
+			alert('Attempt to retrieve data failed');
+			$('#loading').hide();
+		}
+	});
 }
 
 Highcharts.createElement('link', {

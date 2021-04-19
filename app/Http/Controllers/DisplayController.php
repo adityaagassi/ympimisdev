@@ -347,6 +347,138 @@ public function inputEfficiencyMonitoringMonthly(Request $request){
 
 }
 
+public function fetchEfficiencyMonitoringMonthlyAdd(Request $request){
+
+	$month_target = '2021-02';
+
+	$weekly_calendar = WeeklyCalendar::whereRaw("DATE_FORMAT(week_date, '%Y-%m') = '".$month_target."'")
+	->whereRaw("week_date <= '".date('Y-m-d')."'")
+	->select("fiscal_year", db::raw("date_format(week_date, '%Y-%m') as month_date"), db::raw("date_format(week_date, '%M') as month_name"))
+	->first();
+
+	$weekly_months = db::select("SELECT
+		wc.week_date,
+		cc.cost_center_name 
+		FROM
+		weekly_calendars AS wc
+		CROSS JOIN ( SELECT DISTINCT cost_center_eff AS cost_center_name FROM cost_centers2 WHERE cost_center_eff IS NOT NULL ) AS cc 
+		WHERE
+		DATE_FORMAT( wc.week_date, '%Y-%m') = '".$weekly_calendar->month_date."'
+		AND cc.cost_center_name IS NOT NULL
+		AND wc.week_date <= '".date('Y-m-d')."'
+		ORDER BY
+		field( cc.cost_center_name, 'FINAL', 'MIDDLE', 'SOLDERING', 'INITIAL', 'PN ASSY', 'RC ASSY', 'INJECTION', 'VENOVA', 'MOUTHPIECE', 'CASE', 'PN REED PLATE' ),
+		wc.week_date ASC");
+
+	$months = db::select("SELECT
+		weekly_calendars.fiscal_year,
+		efficiency_uploads.cost_center_name,
+		weekly_calendars.week_date,
+		efficiency_uploads.total_input,
+		efficiency_uploads.total_output 
+		FROM
+		efficiency_uploads
+		LEFT JOIN weekly_calendars ON weekly_calendars.week_date = efficiency_uploads.total_date 
+		WHERE
+		date_format(weekly_calendars.week_date, '%Y-%m') = '".$weekly_calendar->month_date."'
+		AND weekly_calendars.week_date <= '2021-03-31'
+		ORDER BY
+		weekly_calendars.week_date ASC,
+		efficiency_uploads.cost_center_name ASC");
+
+	$result_months = array();
+
+	foreach($weekly_months as $weekly_month){
+		$week_date = $weekly_month->week_date;
+		$cost_center_name = $weekly_month->cost_center_name;
+		$total_input = 0;
+		$total_output = 0;
+
+		foreach ($months as $month) {
+			if($month->week_date == $week_date && $month->cost_center_name == $cost_center_name){
+				$total_input = $month->total_input;
+				$total_output = $month->total_output;
+			}
+		}
+
+		array_push($result_months,
+			[
+				'week_date' => $week_date,
+				'cost_center_name' => $cost_center_name,
+				'total_input' => $total_input,
+				'total_output' => $total_output
+			]);
+	}
+
+	$weekly_years = db::select("SELECT
+		DISTINCT
+		date_format( wc.week_date, '%Y-%m' ) AS month_date,
+		cc.cost_center_name 
+		FROM
+		weekly_calendars AS wc
+		CROSS JOIN ( SELECT DISTINCT cost_center_eff AS cost_center_name FROM cost_centers2 WHERE cost_center_eff IS NOT NULL ) AS cc 
+		WHERE
+		wc.fiscal_year = '".$weekly_calendar->fiscal_year."'
+		AND wc.week_date <= '".date('Y-m-d')."'
+		AND cc.cost_center_name IS NOT NULL
+		ORDER BY
+		field( cc.cost_center_name, 'FINAL', 'MIDDLE', 'SOLDERING', 'INITIAL', 'PN ASSY', 'RC ASSY', 'INJECTION', 'VENOVA', 'MOUTHPIECE', 'CASE', 'PN REED PLATE' ),
+		wc.week_date ASC");
+
+	$years = db::select("SELECT
+		weekly_calendars.fiscal_year,
+		efficiency_uploads.cost_center_name,
+		date_format( weekly_calendars.week_date, '%Y-%m' ) AS month_date,
+		sum( efficiency_uploads.total_input ) AS total_input,
+		sum( efficiency_uploads.total_output ) AS total_output 
+		FROM
+		efficiency_uploads
+		LEFT JOIN weekly_calendars ON weekly_calendars.week_date = efficiency_uploads.total_date 
+		WHERE
+		weekly_calendars.fiscal_year = '".$weekly_calendar->fiscal_year."'
+		AND weekly_calendars.week_date <= '2021-03-31'
+		GROUP BY
+		weekly_calendars.fiscal_year,
+		efficiency_uploads.cost_center_name,
+		date_format( weekly_calendars.week_date, '%Y-%m' ) 
+		ORDER BY
+		weekly_calendars.week_date ASC,
+		efficiency_uploads.cost_center_name ASC");
+
+	$result_years = array();
+
+	foreach($weekly_years as $weekly_year){
+		$month_date = $weekly_year->month_date;
+		$cost_center_name = $weekly_year->cost_center_name;
+		$total_input = 0;
+		$total_output = 0;
+
+		foreach ($years as $year) {
+			if($year->month_date == $month_date && $year->cost_center_name == $cost_center_name){
+				$total_input = $year->total_input;
+				$total_output = $year->total_output;
+			}
+		}
+
+		array_push($result_years,
+			[
+				'month_date' => $month_date,
+				'cost_center_name' => $cost_center_name,
+				'total_input' => $total_input,
+				'total_output' => $total_output
+			]);
+	}
+
+	$response = array(
+		'status' => true,
+		'months' => $result_months,
+		'years' => $result_years,
+		'period' => $weekly_calendar->fiscal_year." ".$weekly_calendar->month_name
+	);
+	return Response::json($response);
+
+}
+
 public function fetchEfficiencyMonitoringMonthly(Request $request){
 
 	$month_target = date('Y-m');

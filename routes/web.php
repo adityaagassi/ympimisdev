@@ -1947,7 +1947,7 @@ Route::group(['nav' => 'S29', 'middleware' => 'permission'], function(){
 	Route::post('delete/kdo_detail', 'KnockDownController@deleteKdDetail');
 
 	Route::get('index/kd_splitter', 'KnockDownController@indexKdSplitter');
-	Route::post('scan/kd_splitter', 'KnockDownController@scanKdSplitter');
+	Route::get('scan/kd_splitter', 'KnockDownController@scanKdSplitter');
 });
 
 Route::get('upload_kd', 'KnockDownController@indexUploadSch');
@@ -3069,6 +3069,7 @@ Route::get('index/display/efficiency_monitoring_monthly', 'DisplayController@ind
 
 Route::get('fetch/display/efficiency_monitoring', 'DisplayController@fetchEfficiencyMonitoring');
 Route::get('fetch/display/efficiency_monitoring_monthly', 'DisplayController@fetchEfficiencyMonitoringMonthly');
+Route::get('fetch/display/efficiency_monitoring_monthly_add', 'DisplayController@fetchEfficiencyMonitoringMonthlyAdd');
 
 //DISPLAY STOCK
 Route::get('index/display/stockroom_monitoring', 'DisplayController@indexStockroomMonitoring');
@@ -3411,7 +3412,7 @@ Route::post('index/area_check/store/{id}', 'AreaCheckController@store');
 Route::get('index/area_check/getareacheck','AreaCheckController@getareacheck')->name('area_check.getareacheck');
 Route::post('index/area_check/update/{id}','AreaCheckController@update');
 Route::get('index/area_check/destroy/{id}/{area_check_id}', 'AreaCheckController@destroy');
-Route::get('index/area_check/print_area_check/{id}/{month}','AreaCheckController@print_area_check');
+Route::get('index/area_check/print_area_check/{id}/{month}/{location}','AreaCheckController@print_area_check');
 Route::get('index/area_check/print_area_check_email/{id}/{month}','AreaCheckController@print_area_check_email');
 Route::post('index/area_check/sendemail/{id}','AreaCheckController@sendemail');
 Route::post('index/area_check/approval/{id}/{month}','AreaCheckController@approval');
@@ -4376,6 +4377,10 @@ Route::group(['nav' => 'M32', 'middleware' => 'permission'], function(){
 	Route::get('index/survey_covid/report', 'SurveyController@indexSurveyCovidReport');
 	Route::get('fetch/survey_covid/report', 'SurveyController@fetchSurveyCovidReport');
 	Route::get('fetch/survey_covid/report/detail', 'SurveyController@fetchSurveyCovidReportDetail');
+
+	//Guest Assessment Covid
+	Route::get('index/guest_assessment/report', 'MiraiMobileController@indexGuestAssessmentReport');
+	Route::get('fetch/guest_assessment/report', 'MiraiMobileController@fetchGuestAssessmentReport');
 });
 
 //audit MIS
@@ -4434,7 +4439,7 @@ Route::get('fetch/scrap/logs', 'ScrapController@fetchLogs');
 Route::get('fetch/scrap_detail', 'ScrapController@fetchScrapDetail');
 Route::get('fetch/scrap_warehouse', 'ScrapController@fetchScrapWarehouse');
 Route::get('fetch/kd_scrap_closure', 'ScrapController@fetchKdScrapClosure');
-Route::post('scan/scrap_warehouse', 'ScrapController@scanScrapWarehouse');
+Route::get('scan/scrap_warehouse', 'ScrapController@scanScrapWarehouse');
 Route::get('display/scrap_warehouse', 'ScrapController@displayScrapWarehouse');
 Route::get('fetch/scrap/monitoring', 'ScrapController@fetchMonitoringScrap');
 // ============================================================================================
@@ -4577,11 +4582,8 @@ Route::get('fetch/history/pelayanan', 'WarehouseNewController@fetchHistoryPelaya
 Route::get('fetch/pengantaran/pelayanan', 'WarehouseNewController@fetchPeng');
 Route::post('update/pengantaran', 'WarehouseNewController@updatePengantaran');
 Route::get('index/import/get_job_now', 'WarehouseNewController@get_job_new');
-
-
-
-
-
+Route::get('fetch/lokasi/pengantaran', 'WarehouseNewController@fetchCekPengantaran');
+Route::post('post/pengantaran/lokasi', 'WarehouseNewController@updateLokasi');
 
 //Sanding
 
