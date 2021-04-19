@@ -736,11 +736,11 @@ WHERE
             // $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where employee_id = 'PI0603019' or employee_id = 'PI0811002'";  
             $mailtoo = DB::select($mails);
 
-            $isimail = "select id, nama, nik, sub_group, ke_sub_group, `group`, ke_group, seksi, ke_seksi, departemen, jabatan, rekomendasi, tanggal, alasan from mutasi_depts where mutasi_depts.id = ".$mutasi->id;
+            $isimail = "select id, nama, nik, sub_group, ke_sub_group, `group`, ke_group, seksi, ke_seksi, departemen, jabatan, rekomendasi, tanggal, tanggal_maksimal, alasan from mutasi_depts where mutasi_depts.id = ".$mutasi->id;
             
 
             $mutasi = db::select($isimail);
-            Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','mokhamad.khamdan.khabibi@music.yamaha.com'])->send(new SendEmail($mutasi, 'done_mutasi_satu'));
+            Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_satu'));
 
             return redirect('/dashboard/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
             
