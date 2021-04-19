@@ -40,7 +40,7 @@ thead input {
 @section('header')
 <section class="content-header">
 	<h1>
-		{{$title}} <span class="text-purple"><small>{{$title_jp}}</small></span>
+		{{$title}} <small><span class="text-purple">{{$title_jp}}</span></small>
 	</h1>
 	<ol class="breadcrumb">
 	</ol>

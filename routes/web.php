@@ -1122,6 +1122,7 @@ Route::get('index/ga_control/bento', 'GeneralAffairController@indexBento');
 Route::get('fetch/ga_control/bento_quota', 'GeneralAffairController@fetchBentoQuota');
 Route::get('fetch/ga_control/bento_order_list', 'GeneralAffairController@fetchBentoOrderList');
 Route::post('input/ga_control/bento_order', 'GeneralAffairController@inputBentoOrder');
+Route::post('edit/ga_control/bento_order', 'GeneralAffairController@editBentoOrder');
 
 
 //STD CONTROL
@@ -1944,6 +1945,9 @@ Route::group(['nav' => 'S29', 'middleware' => 'permission'], function(){
 	Route::post('delete/kdo_delivery', 'KnockDownController@deleteKdDelivery');	
 	Route::post('delete/kdo', 'KnockDownController@deleteKd');
 	Route::post('delete/kdo_detail', 'KnockDownController@deleteKdDetail');
+
+	Route::get('index/kd_splitter', 'KnockDownController@indexKdSplitter');
+	Route::post('scan/kd_splitter', 'KnockDownController@scanKdSplitter');
 });
 
 Route::get('upload_kd', 'KnockDownController@indexUploadSch');
@@ -4191,6 +4195,7 @@ Route::get('fetch/assembly/ng_temp', 'AssemblyProcessController@fetchNgTemp');
 Route::get('fetch/assembly/ng_temp_by_id', 'AssemblyProcessController@fetchNgTempById');
 Route::get('fetch/assembly/ng_logs', 'AssemblyProcessController@fetchNgLogs');
 Route::post('input/assembly/ng_temp', 'AssemblyProcessController@inputNgTemp');
+Route::post('input/assembly/ganti_kunci', 'AssemblyProcessController@inputGantiKunci');
 Route::post('input/assembly/repair_process', 'AssemblyProcessController@inputRepairProcess');
 Route::get('delete/assembly/delete_ng_temp', 'AssemblyProcessController@deleteNgTemp');
 Route::post('input/assembly/ng_onko', 'AssemblyProcessController@inputNgOnko');
@@ -4453,6 +4458,7 @@ Route::get('create_ant/mutasi', 'MutasiController@createAnt');
 Route::post('create_ant/mutasi', 'MutasiController@storeAnt');
 //Edit
 Route::post('edit/mutasi', 'MutasiController@editMutasi');
+Route::post('edit/mutasi_ant', 'MutasiController@editMutasiAnt');
 //Rejected
 Route::get('rejected/{id}', 'MutasiController@rejected');
 Route::get('rejectedantar_departemen/{id}', 'MutasiController@rejectedAnt');
