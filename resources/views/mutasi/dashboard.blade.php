@@ -157,6 +157,7 @@ table > thead > tr > th{
                 <th style="background-color: black; font-size: 16px; font-weight: bold; padding: 2px; border-right: 5px solid red !important; color:white">Tujuan</th>
                 <th style="background-color: black; font-size: 16px; font-weight: bold; padding: 2px; border-right: 5px solid red !important; color:white">Department</th>
                 <th style="background-color: #448aff; font-size: 16px; font-weight: bold; padding: 2px;  color:white">HR</th>
+                <th style="background-color: black; font-size: 16px; font-weight: bold; padding: 2px;  color:white; border-left: 5px solid red !important">Action</th>
               </tr>
               <tr>
                 <th style="background-color: black; font-weight: bold; padding: 2px; color:white; border-right: 5px solid red !important;">Chief/Foreman</th>
@@ -169,6 +170,7 @@ table > thead > tr > th{
                 <th style="background-color: black; font-weight: bold; padding: 2px; color:white; border-right: 5px solid red !important;">GM</th> -->
                 <!-- <th style="background-color: black; font-weight: bold; padding: 2px; border-right: 5px solid red !important; color:white">GM</th> -->
                 <th style="background-color: black; font-weight: bold; padding: 2px; color:white"></th>
+                <th style="background-color: black; font-weight: bold; padding: 2px; color:white; border-left: 5px solid red !important"></th>
                 <!-- <th style="background-color: black; font-weight: bold; padding: 2px; color:white">HR</th> -->
               </tr>
             </thead>
@@ -321,6 +323,145 @@ table > thead > tr > th{
 </div>
 </form>
 
+<input type="hidden" value="{{csrf_token()}}" name="_token" />
+  <div class="modal fade" id="modalEdit">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">Edit Satu Department</h4>
+          <br>
+          <div class="nav-tabs-custom tab-danger">
+            <ul class="nav nav-tabs">
+              <li class="vendor-tab active disabledTab"><a href="#tab_1_edit" data-toggle="tab" id="tab_header_1">Data Karyawan</a></li>
+              <li class="vendor-tab disabledTab"><a href="#tab_2_edit" data-toggle="tab" id="tab_header_2">Masukkan Alasan</a></li>
+            </ul>
+          </div>
+          <div class="tab-content">
+            <div class="tab-pane active" id="tab_1_edit">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="col-md-6">
+                    <div class="form-group" hidden="hidden">
+                      <input type="text" class="form-control pull-right" id="id" name="id" readonly>
+                    </div>
+                    <div class="form-group">
+                      <label>NIK<span class="text-red">*</span></label>
+                      <input type="text" class="form-control" id="employee_id_edit" name="employee_id_edit" readonly>
+                    </div>
+                    <div class="form-group">
+                      <label id="label_section">Sub Group<span class="text-red">*</span></label>
+                      <input type="text" class="form-control" id="sub_group_edit" name="sub_group_edit" readonly>
+                    </div>
+                    <div class="form-group">
+                      <label id="label_group">Group<span class="text-red">*</span></label>
+                      <input type="text" class="form-control" id="group_edit" name="group_edit" readonly>
+                    </div>
+                    <div class="form-group">
+                      <label id="label_section">Seksi<span class="text-red">*</span></label>
+                      <input type="text" class="form-control" id="section_edit" name="section_edit" readonly>
+                    </div>
+                    <div class="form-group">
+                      <label id="labeldept">Department<span class="text-red">*</span></label>
+                      <input type="text" class="form-control" id="department_edit" name="department_edit" readonly>
+                    </div>
+                    <div class="form-group">
+                      <label id="labelposition">Jabatan<span class="text-red">*</span></label>
+                      <input type="text" class="form-control" id="position_edit" name="position_edit" readonly>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group" hidden="hidden">
+                      <label id="labelnama">Nama<span class="text-red">*</span></label>
+                      <input type="text" class="form-control pull-right" id="name_edit" name="name_edit" readonly>
+                    </div>
+                    <div class="form-group">
+                      <label>Tanggal Mutasi<span class="text-red">*</span></label>
+                      <div class="input-group date">
+                        <div class="input-group-addon">
+                          <i class="fa fa-calendar"></i>
+                        </div>
+                        <!-- <input type="text" class="form-control pull-right datepicker" value="<?= date('Y-m-d') ?>" placeholder="Date Mutation" disabled> -->
+                        <input type="text" class="form-control pull-right" id="tanggal_edit" name="tanggal_edit" value="<?= date('Y-m-d') ?>" placeholder="Date Mutation">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label id="label_ke_sub_group">Ke Sub Group<span class="text-red">*</span></label>
+                       <select class="form-control select2" id="ke_sub_group_edit" name="ke_sub_group_edit" data-placeholder='Pilih Sub Group' style="width: 100%" onchange="checkSubGroup(this.value)">
+                          <option value="">&nbsp;</option>
+                          <!-- <option value="Kosong">Kosong</option> -->
+                          @foreach($sub_group as $row)
+                          <option value="{{$row->sub_group}}">{{$row->sub_group}}</option>
+                          @endforeach
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label id="label_ke_roup">Ke Group<span class="text-red">*</span></label>
+                      <!-- <input type="text" class="form-control" id="ke_group" name="ke_group"> -->
+                      <select class="form-control select2" id="ke_group_edit" name="ke_group_edit" data-placeholder='Pilih Group' style="width: 100%" onchange="checkGroup(this.value)">
+                          <option value="">&nbsp;</option>
+                          <!-- <option value="Kosong">Kosong</option> -->
+                          @foreach($group as $row)
+                          <option value="{{$row->group}}">{{$row->group}}</option>
+                          @endforeach
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label id="label_ke_section">Ke Seksi<span class="text-red">*</span></label>
+                      <select class="form-control select2" id="ke_section_edit" name="ke_section_edit" data-placeholder='Pilih Seksi' style="width: 100%" onchange="checkSection(this.value)">
+                          <option value="">&nbsp;</option>
+                          <!-- <option value="Kosong">Kosong</option> -->
+                          @foreach($section as $row)
+                          <option value="{{$row->section}}">{{$row->section}}</option>
+                          @endforeach
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label id="label_ke_dept">Ke Department<span class="text-red">*</span></label>
+                      <input type="text" class="form-control" id="department1_edit" name="department1_edit" readonly>
+                    </div>
+                    <div class="form-group">
+                      <label id="labelposition">Ke Jabatan<span class="text-red">*</span></label>
+                      <input type="text" class="form-control" id="position1_edit" name="position1_edit" readonly>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-11">
+                  <a class="btn btn-primary btnNextEdit pull-right">Lanjut</a>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane" id="tab_2_edit">
+              <div class="row">
+                <div class="col-md-12" style="margin-bottom : 5px">
+                  <div class="form-group">
+                      <label id="labelposition">Rekomendasi Atasan<span class="text-red">*</span></label>
+                      <input type="text" class="form-control" id="rekom" name="rekom" value="MUTASI INTERN (DALAM SATU SEKSI)" readonly>
+                  </div>
+                  <div class="form-group">
+                      <label id="labelposition">Alasan<span class="text-red">*</span></label>
+                      <textarea class="form-control" id="alasan_edit" name="alasan_edit" rows="3" required></textarea>
+                  </div>
+                <div id="tambah"></div>
+                <div class="col-md-12">
+                  <br>
+                  <button class="btn btn-success pull-right" onclick="update()">Update</button>
+                  <span class="pull-right">&nbsp;</span>
+                  <a class="btn btn-primary btnPrevious pull-right">Sebelum</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 <div class="modal fade" id="modalDetail">
     <div class="modal-dialog modal-lg" style="width: 80%">
       <div class="modal-content">
@@ -358,7 +499,7 @@ table > thead > tr > th{
 
 @section('scripts')
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
-<script src="{{ url("js/highstock.js")}}"></script>
+<script src="{{ url("js/highcharts.js")}}"></script>
 <script src="{{ url("js/highcharts-3d.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
@@ -419,7 +560,7 @@ table > thead > tr > th{
 
     value = $(elem).val();
 
-    console.log(value);
+    // console.log(value);
     select = "";
     $("#ke_seksi").empty();
 
@@ -435,7 +576,7 @@ table > thead > tr > th{
   function getGroup(elem){
     value = $(elem).val();
 
-    console.log(value);
+    // console.log(value);
     select = "";
     $("#ke_sub_seksi").empty();
 
@@ -647,6 +788,11 @@ table > thead > tr > th{
     daysOfWeekDisabled: "0",
     autoclose:true
     });
+  $('#tanggal_edit').datepicker({
+    format: "yyyy-mm-dd",
+    daysOfWeekDisabled: "0",
+    autoclose:true
+    });
   $('.btnNext').click(function(){
       var employee_id = $('#employee_id').val();
       var department = $('#department').val();
@@ -663,8 +809,15 @@ table > thead > tr > th{
       }
       else{
         $('.nav-tabs > .active').next('li').find('a').trigger('click');
+        console.log('lanjut create');
       }
     });
+
+    $('.btnNextEdit').click(function(){
+      $('.nav-tabs > .active').next('li').find('a').trigger('click');
+        // console.log('lanjut edit');
+    });
+
     $('.btnPrevious').click(function(){
       $('.nav-tabs > .active').prev('li').find('a').trigger('click');
     });
@@ -672,6 +825,8 @@ table > thead > tr > th{
   function openModalCreate(){
       $('#modalCreate').modal('show');
     }
+  // function openModalEdit(){
+  //   }
 
   function openModalDetail(id){
     var data = {id:id};
@@ -1192,6 +1347,73 @@ Highcharts.createElement('link', {
     });
   }
 
+  function editForm(id) {
+    
+    $('#modalEdit').modal('show');
+
+    var data = {
+      id:id
+    }
+
+    $.get('{{ url("fetch/mutasi") }}',data, function(result, status, xhr){
+      if(result.status){
+        $.each(result.resumes, function(key, value) {
+          $("#id").val(value.id);
+          $("#employee_id_edit").val(value.nik+'-'+value.nama);
+          $("#sub_group_edit").val(value.sub_group);
+          $("#group_edit").val(value.group);
+          $("#section_edit").val(value.seksi);
+          $("#department_edit").val(value.departemen);
+          $("#position_edit").val(value.jabatan);
+          $("#tanggal_edit").val(value.tanggal);
+          $("#ke_sub_group_edit").val(value.ke_sub_group).trigger('change.select2');
+          $("#ke_group_edit").val(value.ke_group).trigger('change.select2');
+          $("#ke_section_edit").val(value.ke_seksi).trigger('change.select2');
+          $("#department1_edit").val(value.departemen);
+          $("#position1_edit").val(value.jabatan);
+          $("#alasan_edit").val(value.alasan);
+        });
+      }
+      else{
+        alert('No Data');
+      }
+    });
+  }
+
+  function update() {
+
+    var id = $('#id').val();
+    var tanggal = $('#tanggal_edit').val();
+    var ke_sub_group = $('#ke_sub_group_edit').val();
+    var ke_group = $('#ke_group_edit').val();
+    var ke_seksi = $('#ke_section_edit').val();
+    var alasan = $('#alasan_edit').val();
+    var data = {
+      id:id,
+      tanggal:tanggal,
+      ke_sub_group:ke_sub_group,
+      ke_group:ke_group,
+      ke_seksi:ke_seksi,
+      alasan:alasan
+    }
+
+    // console.log(data);
+
+    $.post('{{ url("edit/mutasi") }}',data, function(result, status, xhr){
+        $('#modalEdit').modal('hide');
+        drawChart();
+        fillTable();
+      // if(result.status){
+      //   window.location.reload();
+      //   openSuccessGritter('Success','Update Data Done');
+      // }
+      // else{
+      //   audio_error.play();
+      //   openErrorGritter('Error',result.message);
+      // }
+    });
+  }
+
   function fillTable(){
     var dateto = $('#dateto').val();
     var data = {
@@ -1251,10 +1473,17 @@ Highcharts.createElement('link', {
             var urlreport = '{{ url("mutasi/report/") }}';
             var urlverifikasi = '{{ url("mutasi/verifikasi/") }}';
             var finish = '{{ url("mutasi/finish/")}}';
+            var email = '{{ url("mutasi/email/")}}';
+            var edit = '{{ url("mutasi/edit/")}}';
 
             bodyResume  += '<tr>';
             bodyResume  += '<td style="border-right: 5px solid red !important;"><a href="javascript:void(0)" id="'+value.id+'" onclick="openModalDetail('+value.id+')" style="color:black">'+value.nik+' - '+nama2+'</a></td>';
-            bodyResume  += '<td style="border-right: 5px solid red !important; background-color:black"><span class="label label-warning">'+name2+'</span></td>';
+            if (value.remark == null) {
+              bodyResume  += '<td style="border-right: 5px solid red !important; background-color:black"><span class="label label-warning">'+name2+'</span></td>';
+            }else{
+              bodyResume  += '<td style="border-right: 5px solid red !important; background-color:black"><span class="label label-success">'+name2+'</span></td>';
+            }
+            // bodyResume  += '<td style="border-right: 5px solid red !important; background-color:black"><span class="label label-warning">'+name2+'</span></td>';
             // jika chief asal
             if (value.nama_chief_asal != null) {
               //chief asal
@@ -1406,6 +1635,12 @@ Highcharts.createElement('link', {
             //   bodyResume  += '<td style="background-color:black">'+("")+'</td>';
             //   }
             // }
+            if (value.remark != '2') {
+            bodyResume  += '<td style="background-color:black; border-left: 5px solid red !important"><a class="btn btn-success btn-xs" href="'+email+'/'+value.id+'" style="color:white"><i class="fa fa-envelope"></i>Send Email</a><a class="btn btn-danger btn-xs" onclick="editForm(\''+value.id+'\');" style="color:white"><i class="fa fa-edit"></i>Edit</a></td>';  
+            }
+            else{
+              bodyResume  += '<td style="background-color:black; border-left: 5px solid red !important"><a class="btn btn-warning btn-xs" href="'+urlreport+'/'+value.id+'" style="color:white"><i class="fa fa-edit"></i>Report</a></td>';
+            }
             bodyResume  += '</tr>';
           })
 

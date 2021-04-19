@@ -183,7 +183,8 @@ class MutasiController extends Controller
 
             if ($request->get('ke_sub_group') == 'Kosong') {
                 $emp = '';
-            }else{
+            }
+            else{
             //     $emp = DB::SELECT("select sub_group, `group`, section, department, position from employee_syncs where
             // `sub_group` = '".$request->get('ke_sub_group')."' group by department, section, `group`");
                 $emp = DB::SELECT("SELECT
@@ -1039,6 +1040,22 @@ WHERE
 
 
         return redirect('/dashboard/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
+    }
+
+    public function editMutasiAnt(Request $request){
+            $id = $request->get('id');
+
+            $mutasi = MutasiAnt::where('id',$id)->first();
+            $mutasi->tanggal = $request->get('tanggal');
+            $mutasi->ke_seksi = $request->get('ke_seksi');
+            $mutasi->ke_group = $request->get('ke_group');
+            $mutasi->ke_sub_group = $request->get('ke_sub_group');
+            $mutasi->ke_departemen = $request->get('ke_department_edit');
+            $mutasi->alasan = $request->get('alasan');
+            $mutasi->save();
+
+
+        return redirect('/dashboard_ant/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
     }
 
     public function fetchMutasiSatuDetail(Request $request){
