@@ -129,11 +129,15 @@
 							<input type="text" id="material_description" style="width: 100%; height: 50px; font-size: 25px; text-align: center;" disabled>
 						</div>
 						<div class="col-xs-6">
+							<span style="font-weight: bold; font-size: 16px;">Target:</span>
+							<input type="number" class="form-control" id="target" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
+						</div>
+						<div class="col-xs-6">
 							<span style="font-weight: bold; font-size: 16px;">Qty Packing:</span>
-							<input type="number" class="form-control" id="qty_packing" style="width: 100%; height: 50px; font-size: 30px; text-align: center;">
+							<input type="number" class="form-control numpad" id="qty_packing" style="width: 100%; height: 50px; font-size: 30px; text-align: center;">
 						</div>
 
-						<div class="col-xs-6" style="padding-top: 3.9%;">
+						<div class="col-xs-12" style="padding-top: 3.9%;">
 							<button class="btn btn-primary" onclick="print()" style="font-size: 2.5vw; width: 100%; font-weight: bold; padding: 0;">
 								CONFIRM
 							</button>
@@ -410,6 +414,7 @@
 		var production_id = $("#production_id").val();
 		var material_number = $("#material_number").val();
 		var quantity = $("#qty_packing").val();
+		var target = $("#target").val();
 		var location = "{{ $location }}";
 
 		var url = '';
@@ -434,6 +439,11 @@
 			return false;
 		}
 
+		if(parseInt(quantity) > parseInt(target)){
+			alert("Quantity lebih besar dari target");
+			return false;
+		}
+
 
 		$("#loading").show();
 		$.post(url, data,  function(result, status, xhr){
@@ -441,17 +451,17 @@
 				var id = result.knock_down_detail.id;
 				printLabelSubassy(id, ('print'+id));
 
+				fillTableList();
+				$('#kdo_detail').DataTable().ajax.reload();
 
 				$('#production_id').val('');
 				$('#due_date').val('');
 				$('#material_number').val('');
 				$('#material_description').val('');
+				$('#target').val('');
 				$('#qty_packing').val('');
 
 				$("#loading").hide();
-
-				fillTableList();
-				$('#kdo_detail').DataTable().ajax.reload();
 				openSuccessGritter('Success', result.message);
 			}else{
 				$("#loading").hide();
@@ -475,12 +485,14 @@
 		$('#due_date').val(due_date);
 		$('#material_number').val(material_number);
 		$('#material_description').val(material_description);
+		$('#target').val(target);
 
-		if((target/lot_completion) >= 1){
-			$('#qty_packing').val(lot_completion);
-		}else{
-			$('#qty_packing').val(target);
-		}
+
+		// if((target/lot_completion) >= 1){
+		// 	$('#qty_packing').val(lot_completion);
+		// }else{
+		// 	$('#qty_packing').val(target);
+		// }
 		
 	}
 
