@@ -201,7 +201,7 @@
         var list = "";
         $.each(result.datas, function(index, value){
           if (value.operator_id == value2.employee_id) {
-            if (value.remark == '3') {
+            if (value.remark == '5') {
               pend += '<tr>';
               pend += '<td class="pending" width="50%">'+value.order_no+'</td>';
               pend += '<td class="pending" width="50%">'+(value.start_actual || '')+'</td>';
@@ -211,7 +211,7 @@
               prog += '<td class="inprogress" width="50%">'+value.order_no+'</td>';
               prog += '<td class="inprogress" width="50%">'+(value.start_actual || '')+'</td>';
               prog += '</tr>';
-            } else if (value.remark == '5') {
+            } else if (value.remark == '3') {
               list += '<tr>';
               list += '<td width="50%">'+value.order_no+'</td>';
               list += '<td width="50%"></td>';
