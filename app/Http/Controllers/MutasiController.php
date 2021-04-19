@@ -426,6 +426,19 @@ WHERE
         ))->with('page', 'Mutasi');
     }
 
+    public function getMutasi(Request $request)
+    {
+        $resumes = Mutasi::select('nik', 'nama','sub_group', 'group', 'seksi', 'departemen', 'jabatan', 'rekomendasi','ke_sub_group', 'ke_group', 'ke_seksi', 'ke_jabatan', 'tanggal', 'alasan')
+        ->where('mutasi_depts.id', '=', $request->get('id'))
+        ->get();
+
+        $response = array(
+            'status' => true,
+            'resumes' => $resumes
+        );
+        return Response::json($response);
+    }
+
     public function store(Request $request)
     {
             $chief = null;
@@ -500,6 +513,12 @@ WHERE
                                 $nama_chief = $cf->name;
                             }
                         }
+                    else{
+                            if($request->get('section') == 'Software Section') {
+                                $chief = 'PI0103002';
+                                $nama_chief = 'Agus Yulianto';
+                            }
+                        }
                 }
                 else{
                         $chf = db::select("select employee_id, `name` from employee_syncs where position = 'foreman' and section = '".$seksi."'");
@@ -544,12 +563,12 @@ WHERE
             ]);
             $mutasi->save();
 
-            $mails = "select distinct email from mutasi_depts join users on mutasi_depts.chief_or_foreman_asal = users.username where mutasi_depts.id = ".$mutasi->id;
-            $mailtoo = DB::select($mails);
+            // $mails = "select distinct email from mutasi_depts join users on mutasi_depts.chief_or_foreman_asal = users.username where mutasi_depts.id = ".$mutasi->id;
+            // $mailtoo = DB::select($mails);
 
-            $isimail = "select id, nama, tanggal, tanggal_maksimal, departemen, seksi, ke_seksi from mutasi_depts where mutasi_depts.id = ".$mutasi->id;
-            $mutasi = db::select($isimail);
-            Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_satu'));
+            // $isimail = "select id, nama, tanggal, tanggal_maksimal, departemen, seksi, ke_seksi from mutasi_depts where mutasi_depts.id = ".$mutasi->id;
+            // $mutasi = db::select($isimail);
+            // Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_satu'));
             return redirect('/dashboard/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
             }
             catch (QueryException $e){
@@ -711,11 +730,11 @@ WHERE
             //     $mails = "select distinct email from mutasi_depts join users on mutasi_depts.dgm_tujuan = users.username where mutasi_depts.id = ".$mutasi->id;
             // }
             // else{
-            //     $mails = "select distinct email from mutasi_depts join users on mutasi_depts.manager_tujuan = users.username where mutasi_depts.id = ".$mutasi->id;    
+            $mails = "select distinct email from mutasi_depts join users on mutasi_depts.manager_tujuan = users.username where mutasi_depts.id = ".$mutasi->id;
             // }
 
-            $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where employee_id = 'PI0603019' or employee_id = 'PI0811002'";  
-            $mailtoo = DB::select($mails);
+            // $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where employee_id = 'PI0603019' or employee_id = 'PI0811002'";  
+            // $mailtoo = DB::select($mails);
 
             $isimail = "select id, nama, nik, sub_group, ke_sub_group, `group`, ke_group, seksi, ke_seksi, departemen, jabatan, rekomendasi, tanggal, alasan from mutasi_depts where mutasi_depts.id = ".$mutasi->id;
             
@@ -996,7 +1015,7 @@ WHERE
 
     public function fetchMutasiDetail(Request $request){
 
-        $resumes = MutasiAnt::select('nik', 'nama', 'sub_group', 'group', 'seksi', 'departemen', 'jabatan', 'rekomendasi', 'ke_sub_group', 'ke_group', 'ke_seksi', 'ke_departemen', 'ke_jabatan', 'tanggal', 'alasan')
+        $resumes = MutasiAnt::select('id', 'nik', 'nama', 'sub_group', 'group', 'seksi', 'departemen', 'jabatan', 'rekomendasi', 'ke_sub_group', 'ke_group', 'ke_seksi', 'ke_departemen', 'ke_jabatan', 'tanggal', 'alasan')
         ->where('mutasi_ant_depts.id', '=', $request->get('id'))
         ->get();
 
@@ -1007,9 +1026,24 @@ WHERE
         return Response::json($response);
     }
 
+    public function editMutasi(Request $request){
+            $id = $request->get('id');
+
+            $mutasi = Mutasi::where('id',$id)->first();
+            $mutasi->tanggal = $request->get('tanggal');
+            $mutasi->ke_seksi = $request->get('ke_seksi');
+            $mutasi->ke_group = $request->get('ke_group');
+            $mutasi->ke_sub_group = $request->get('ke_sub_group');
+            $mutasi->alasan = $request->get('alasan');
+            $mutasi->save();
+
+
+        return redirect('/dashboard/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
+    }
+
     public function fetchMutasiSatuDetail(Request $request){
 
-        $resumes = Mutasi::select('nik', 'nama','sub_group', 'group', 'seksi', 'departemen', 'jabatan', 'rekomendasi','ke_sub_group', 'ke_group', 'ke_seksi', 'ke_jabatan', 'tanggal', 'alasan')
+        $resumes = Mutasi::select('id', 'nik', 'nama','sub_group', 'group', 'seksi', 'departemen', 'jabatan', 'rekomendasi','ke_sub_group', 'ke_group', 'ke_seksi', 'ke_jabatan', 'tanggal', 'alasan')
         ->where('mutasi_depts.id', '=', $request->get('id'))
         ->get();
 
@@ -1352,35 +1386,35 @@ WHERE
             ]);
             $mutasi->save();
 
-            if ($mutasi->chief_or_foreman_asal != null) {
-                $mails = "select distinct email from mutasi_ant_depts join users on mutasi_ant_depts.chief_or_foreman_asal = users.username where mutasi_ant_depts.id = ".$mutasi->id;
-                $mailtoo = DB::select($mails);
-            }
-            else if($mutasi->manager_asal != null){
-                $mutasi->posisi = 'mgr_asal';
-                $mutasi->save();
+            // if ($mutasi->chief_or_foreman_asal != null) {
+            //     $mails = "select distinct email from mutasi_ant_depts join users on mutasi_ant_depts.chief_or_foreman_asal = users.username where mutasi_ant_depts.id = ".$mutasi->id;
+            //     $mailtoo = DB::select($mails);
+            // }
+            // else if($mutasi->manager_asal != null){
+            //     $mutasi->posisi = 'mgr_asal';
+            //     $mutasi->save();
 
-                $mails = "select distinct email from mutasi_ant_depts join users on mutasi_ant_depts.manager_asal = users.username where mutasi_ant_depts.id = ".$mutasi->id;
-                $mailtoo = DB::select($mails);   
-            }
-            else if($mutasi->dgm_asal != null){
-                $mutasi->posisi = 'dgm_asal';
-                $mutasi->save();
+            //     $mails = "select distinct email from mutasi_ant_depts join users on mutasi_ant_depts.manager_asal = users.username where mutasi_ant_depts.id = ".$mutasi->id;
+            //     $mailtoo = DB::select($mails);   
+            // }
+            // else if($mutasi->dgm_asal != null){
+            //     $mutasi->posisi = 'dgm_asal';
+            //     $mutasi->save();
 
-                $mails = "select distinct email from mutasi_ant_depts join users on mutasi_ant_depts.dgm_asal = users.username where mutasi_ant_depts.id = ".$mutasi->id;
-                $mailtoo = DB::select($mails);   
-            }
-            else{
-                $mutasi->posisi = 'mgr_asal';
-                $mutasi->save();
+            //     $mails = "select distinct email from mutasi_ant_depts join users on mutasi_ant_depts.dgm_asal = users.username where mutasi_ant_depts.id = ".$mutasi->id;
+            //     $mailtoo = DB::select($mails);   
+            // }
+            // else{
+            //     $mutasi->posisi = 'mgr_asal';
+            //     $mutasi->save();
 
-                $mails = "select distinct email from mutasi_ant_depts join users on mutasi_ant_depts.manager_asal = users.username where mutasi_ant_depts.id = ".$mutasi->id;
-                $mailtoo = DB::select($mails);
-            }
+            //     $mails = "select distinct email from mutasi_ant_depts join users on mutasi_ant_depts.manager_asal = users.username where mutasi_ant_depts.id = ".$mutasi->id;
+            //     $mailtoo = DB::select($mails);
+            // }
 
-            $isimail = "select id, nama, tanggal, tanggal_maksimal, departemen,ke_departemen from mutasi_ant_depts where mutasi_ant_depts.id = ".$mutasi->id;
-            $mutasi = db::select($isimail);
-            Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_ant'));
+            // $isimail = "select id, nama, tanggal, tanggal_maksimal, departemen,ke_departemen from mutasi_ant_depts where mutasi_ant_depts.id = ".$mutasi->id;
+            // $mutasi = db::select($isimail);
+            // Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_ant'));
             return redirect('/dashboard_ant/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
             }
             catch (QueryException $e){
@@ -2455,6 +2489,79 @@ WHERE
         $mutasi->save();
 
         return redirect('/dashboard/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
+    }
+
+    public function email(Request $request, $id){
+        $chief = null;
+            $nama_chief = null;
+            $posit = null;
+
+            
+            
+            // $departemen = $mutasi->departemen;
+            // $seksi = $mutasi->seksi;
+            // $ke_sub_group = $mutasi->ke_sub_group;
+            // $ke_group = $mutasi->ke_group;
+            // $ke_seksi = $mutasi->ke_seksi;
+            // $position = $mutasi->position;
+            $mutasi = Mutasi::find($id);
+            $mutasi->remark = '2';
+            $mutasi->save();
+        
+
+            $mails = "select distinct email from mutasi_depts join users on mutasi_depts.chief_or_foreman_asal = users.username where mutasi_depts.id = ".$mutasi->id;
+            $mailtoo = DB::select($mails);
+
+            $isimail = "select id, nama, tanggal, tanggal_maksimal, departemen, seksi, ke_seksi from mutasi_depts where mutasi_depts.id = ".$mutasi->id;
+            $mutasi = db::select($isimail);
+            Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_satu'));
+            return redirect('/dashboard/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
+    }
+
+    public function emailAnt(Request $request, $id){
+            $manager = null;
+            $nama_manager = null;
+            $chief = null;
+            $nama_chief = null;
+            $posit = null;
+            $dgm = null;
+            $nama_dgm = null;
+
+            $mutasi = MutasiAnt::find($id);
+            $mutasi->remark = '2';
+            $mutasi->save();
+        
+
+            if ($mutasi->chief_or_foreman_asal != null) {
+                $mails = "select distinct email from mutasi_ant_depts join users on mutasi_ant_depts.chief_or_foreman_asal = users.username where mutasi_ant_depts.id = ".$mutasi->id;
+                $mailtoo = DB::select($mails);
+            }
+            else if($mutasi->manager_asal != null){
+                $mutasi->posisi = 'mgr_asal';
+                $mutasi->save();
+
+                $mails = "select distinct email from mutasi_ant_depts join users on mutasi_ant_depts.manager_asal = users.username where mutasi_ant_depts.id = ".$mutasi->id;
+                $mailtoo = DB::select($mails);   
+            }
+            else if($mutasi->dgm_asal != null){
+                $mutasi->posisi = 'dgm_asal';
+                $mutasi->save();
+
+                $mails = "select distinct email from mutasi_ant_depts join users on mutasi_ant_depts.dgm_asal = users.username where mutasi_ant_depts.id = ".$mutasi->id;
+                $mailtoo = DB::select($mails);   
+            }
+            else{
+                $mutasi->posisi = 'mgr_asal';
+                $mutasi->save();
+
+                $mails = "select distinct email from mutasi_ant_depts join users on mutasi_ant_depts.manager_asal = users.username where mutasi_ant_depts.id = ".$mutasi->id;
+                $mailtoo = DB::select($mails);
+            }
+
+            $isimail = "select id, nama, tanggal, tanggal_maksimal, departemen,ke_departemen from mutasi_ant_depts where mutasi_ant_depts.id = ".$mutasi->id;
+            $mutasi = db::select($isimail);
+            Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_ant'));
+            return redirect('/dashboard_ant/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
     }
 
     public function fetchMonitoringMutasiAnt(Request $request)
