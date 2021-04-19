@@ -1521,4 +1521,29 @@ class QualityAssuranceController extends Controller
         return Response::json($response);
       }
     }
+
+    public function deleteReportIncomingCheck(Request $request)
+    {
+      try {
+        $log = QaIncomingLog::where('id',$request->get('id'))->forceDelete();
+        $ng_log = QaIncomingNgLog::where('incoming_check_log_id',$request->get('id'))->get();
+        if (count($ng_log) > 0) {
+          foreach ($ng_log as $key) {
+            QaIncomingNgLog::where('id',$key->id)->forceDelete();
+          }
+        }
+
+        $response = array(
+            'status' => true,
+            'message' => 'Success Delete Data'
+        );
+        return Response::json($response);
+      } catch (\Exception $e) {
+        $response = array(
+            'status' => false,
+            'message' => $e->getMessage()
+        );
+        return Response::json($response);
+      }
+    }
 }

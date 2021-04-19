@@ -159,7 +159,7 @@
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="box box-solid">
-				<div class="box-body" style="overflow-x: scroll;">
+				<div class="box-body">
 					<form method="GET" action="{{ url('excel/qa/report/incoming') }}">
 					<h4>Filter</h4>
 					<div class="row">
@@ -248,8 +248,8 @@
 						</div>
 					</div>
 					</form>
-					<div class="col-xs-12">
-						<div class="row" id="divTable">
+					<div class="col-xs-12" style="direction: rtl;transform: rotate(180deg);overflow-y: hidden;overflow-x: scroll;">
+						<div class="row" id="divTable" style="direction: ltr;transform: rotate(-180deg);">
 						</div>
 					</div>
 				</div>
@@ -582,7 +582,7 @@
 					}
 					tableData += '<td style="vertical-align:middle" rowspan="'+jumlah+'">'+ value.ng_ratio.toFixed(2) +'</td>';
 					tableData += '<td style="vertical-align:middle" rowspan="'+jumlah+'">'+ value.status_lot +'</td>';
-					tableData += '<td style="vertical-align:middle" rowspan="'+jumlah+'"><button class="btn btn-warning" onclick="editIncomingReport(\''+value.id_log+'\')">Edit</button></td>';
+					tableData += '<td style="vertical-align:middle" rowspan="'+jumlah+'"><button class="btn btn-warning" onclick="editIncomingReport(\''+value.id_log+'\')">Edit</button><button class="btn btn-danger" onclick="deleteIncomingReport(\''+value.id_log+'\')">Delete</button></td>';
 					tableData += '</tr>';
 					if (value.ng_name != null) {
 						for (var i = 1 ;i < ng_name.length; i++) {
@@ -680,6 +680,25 @@
 				openErrorGritter('Error!',result.message);
 			}
 		});
+	}
+
+	function deleteIncomingReport(id) {
+		if (confirm('Apakah Anda yakin akan menghapus data?')) {
+			$('#loading').show();
+			var data = {
+				id:id
+			}
+			$.get('{{ url("fetch/qa/report/incoming/delete") }}',data, function(result, status, xhr){
+				if (result.status) {
+					fillList();
+					$('#loading').hide();
+					openSuccessGritter('Success',result.message);
+				}else{
+					$('#loading').hide();
+					openErrorGritter('Error!',result.message);
+				}
+			});
+		}
 	}
 
 	function updateIncomingReport() {

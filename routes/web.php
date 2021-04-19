@@ -93,7 +93,8 @@ Route::get('/', function () {
 			// return redirect()->action('EmployeeController@indexEmployeeService', ['id' => 1]);
 			return \redirect()->route('emp_service', ['id' => 1, 'tahun' => date('Y')]);
 			// return redirect()->route('index/employee/service/{ctg}', ['ctg' => 'home']);
-		} else {
+		} 
+		else {
 			return view('home');
 		}
 	} else {
@@ -1119,6 +1120,7 @@ Route::get('index/ga_control/live_cooking', 'GeneralAffairController@indexLiveCo
 //BENTO
 Route::get('index/ga_control/bento', 'GeneralAffairController@indexBento');
 Route::get('fetch/ga_control/bento_quota', 'GeneralAffairController@fetchBentoQuota');
+Route::get('fetch/ga_control/bento_order_list', 'GeneralAffairController@fetchBentoOrderList');
 Route::post('input/ga_control/bento_order', 'GeneralAffairController@inputBentoOrder');
 
 
@@ -4449,6 +4451,8 @@ Route::get('create/mutasi', 'MutasiController@create');
 Route::post('create/mutasi', 'MutasiController@store');
 Route::get('create_ant/mutasi', 'MutasiController@createAnt');
 Route::post('create_ant/mutasi', 'MutasiController@storeAnt');
+//Edit
+Route::post('edit/mutasi', 'MutasiController@editMutasi');
 //Rejected
 Route::get('rejected/{id}', 'MutasiController@rejected');
 Route::get('rejectedantar_departemen/{id}', 'MutasiController@rejectedAnt');
@@ -4482,6 +4486,7 @@ Route::get('mutasi/report/{id}', 'MutasiController@report_mutasi');
 Route::get('mutasi_ant/finish/{id}', 'MutasiController@finish_ant');
 Route::get('mutasi/finish/{id}', 'MutasiController@finish');
 Route::get('mutasi/email/{id}', 'MutasiController@email');
+Route::get('mutasi_ant/email/{id}', 'MutasiController@emailAnt');
 //Show
 Route::get('mutasi/show/{id}', 'MutasiController@showApproval');
 Route::get('mutasi_ant/show/{id}', 'MutasiController@showAntApproval');
@@ -4612,7 +4617,7 @@ Route::get('dies/stock_control', 'ToolsController@dies_control_stock');
 Route::get('fetch/dies/stock_control', 'ToolsController@fetch_dies_control_stock');
 
 // QA Incoming Check
-Route::get('index/qa', 'QualityAssuranceController@index');
+Route::get('index/qa', 'QualityAssuranceController@index')->name('qa_index');
 Route::get('index/qa/incoming_check/{location}', 'QualityAssuranceController@indexIncomingCheck');
 Route::get('fetch/qa/check_material', 'QualityAssuranceController@fetchCheckMaterial');
 Route::post('input/qa/ng_temp', 'QualityAssuranceController@inputNgTemp');
@@ -4637,6 +4642,7 @@ Route::get('index/qa/report/incoming', 'QualityAssuranceController@indexReportIn
 Route::get('fetch/qa/report/incoming', 'QualityAssuranceController@fetchReportIncomingCheck');
 Route::get('excel/qa/report/incoming', 'QualityAssuranceController@excelReportIncomingCheck');
 Route::get('fetch/qa/report/incoming/edit', 'QualityAssuranceController@fetchReportIncomingCheckEdit');
+Route::get('fetch/qa/report/incoming/delete', 'QualityAssuranceController@deleteReportIncomingCheck');
 Route::post('update/qa/report/incoming', 'QualityAssuranceController@updateReportIncomingCheck');
 
 //QA Report Lot Out Incoming Check
