@@ -175,7 +175,6 @@
 							<th style="width: 1%">No.</th>
 							<th style="width: 5%">Question</th>
 							<th style="width: 1%">Answer</th>
-							<th style="width: 1%">Point</th>
 						</tr>
 					</thead>
 					<tbody id="bodyTableDetail">
@@ -239,13 +238,13 @@
 		tableData += "<table id='example1' class='table table-bordered table-striped table-hover'>";
 		tableData += '<thead style="background-color: rgba(126,86,134,.7);">';
 		tableData += '<tr>';
-		tableData += '<th>Tanggal</th>';
-		tableData += '<th>Nama</th>';
-		tableData += '<th>Perusahaan</th>';
-		tableData += '<th>Phone</th>';
-		tableData += '<th>Status</th>';
-		tableData += '<th>File</th>';
-		tableData += '<th>Detail</th>';
+		tableData += '<th width="1%">Tanggal</th>';
+		tableData += '<th width="5%">Nama</th>';
+		tableData += '<th width="5%">Perusahaan</th>';
+		tableData += '<th width="2%">Phone</th>';
+		tableData += '<th width="3%">Status</th>';
+		tableData += '<th width="1%">File</th>';
+		tableData += '<th width="2%">Detail</th>';
 		tableData += '</tr>';
 		tableData += '</thead>';
 		tableData += '<tbody id="example1Body">';
@@ -306,7 +305,7 @@
 					}else{
 						tableData += '<td></td>';
 					}
-					tableData += '<td><button class="btn btn-warning" onclick="fetchDetail(\''+value.employee_id+'\',\''+value.tanggal+'\')"><i class="fa fa-eye"></i> Detail</button></td>';
+					tableData += '<td><button class="btn btn-warning" onclick="fetchDetail(\''+value.id+'\')"><i class="fa fa-eye"></i></button></td>';
 					tableData += '</tr>';
 				});
 				$('#example1Body').append(tableData);
@@ -393,16 +392,15 @@
 		});
 	}
 
-	function fetchDetail(employee_id,tanggal) {
+	function fetchDetail(id) {
 		$('#loading').show();
 		var data = {
-			employee_id:employee_id,
-			tanggal:tanggal
+			id:id
 		}
 
-		$.get('{{ url("fetch/survey_covid/report/detail") }}',data, function(result, status, xhr){
+		$.get('{{ url("fetch/guest_assessment/report/detail") }}',data, function(result, status, xhr){
 			if(result.status){
-				$('#myModalLabel').html("Survey Covid-19 Detail<br>"+result.survey[0].employee_id+" - "+result.survey[0].name+"");
+				$('#myModalLabel').html("Guest Assessment Detail<br>"+result.guest[0].name+" - "+result.guest[0].company+" - "+result.guest[0].phone+" ");
 
 				$('#tableDetail').DataTable().clear();
 				$('#tableDetail').DataTable().destroy();
@@ -410,29 +408,26 @@
 
 				var total_point = 0;
 				var tableData = "";
-				
 
-				$.each(result.survey, function(key, value) {
-					var question = JSON.parse(value.question);
-					var answer = JSON.parse(value.answer);
-					var poin = JSON.parse(value.poin);
+				$.each(result.guest, function(key, value) {
+					var question = value.question.split(',');
+					var answer = value.answer.split(',');
+
 					var index = 1;
-					for (var i = 0; i < question.length; i++) {
+					for (var i = 0; i < 5; i++) {
 						tableData += '<tr>';
 						tableData += '<td  style="width: 1%;border:1px solid black;padding:2px">'+ index +'</td>';
 						tableData += '<td  style="width: 5%;text-align:left;border:1px solid black;padding:2px">'+ question[i] +'</td>';
-						tableData += '<td  style="width: 1%;border:1px solid black;padding:2px">'+ answer[i] +'</td>';
-						tableData += '<td  style="width: 1%;border:1px solid black;padding:2px">'+ poin[i] +'</td>';
+						if (answer[i] == "Iya") {
+							tableData += '<td style="background-color:red; color: white; width: 1%;border:1px solid black;padding:2px">'+ answer[i] +'</td>';
+						}
+						else{
+							tableData += '<td style="background-color:green; color: white; width: 1%;border:1px solid black;padding:2px">'+ answer[i] +'</td>';
+						}
 						tableData += '</tr>';
 						index++;
-						total_point = total_point + parseInt(poin[i]);
 					}
 				});
-				// tableData += '<tr>';
-				// tableData += '<td style="font-weight:bold;border-bottom:3px solid black;border-left: 1px solid black; border-right:1px solid black;border-top:3px solid black;background-color:#cddc39" colspan="3">TOTAL</td>';
-				// tableData += '<td style="font-weight:bold;border-bottom:3px solid black;border-left: 1px solid black; border-right:1px solid black;border-top:3px solid black;background-color:#cddc39">'+ total_point +'</td>';
-				// tableData += '</tr>';
-
 				$("#bodyTableDetail").append(tableData);
 
 				var table = $('#tableDetail').DataTable({

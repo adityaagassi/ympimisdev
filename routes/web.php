@@ -4383,6 +4383,7 @@ Route::group(['nav' => 'M32', 'middleware' => 'permission'], function(){
 	//Guest Assessment Covid
 	Route::get('index/guest_assessment/report', 'MiraiMobileController@indexGuestAssessmentReport');
 	Route::get('fetch/guest_assessment/report', 'MiraiMobileController@fetchGuestAssessmentReport');
+	Route::get('fetch/guest_assessment/report/detail', 'MiraiMobileController@fetchGuestAssessmentReportDetail');
 });
 
 //audit MIS

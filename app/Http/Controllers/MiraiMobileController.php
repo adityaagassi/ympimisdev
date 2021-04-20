@@ -646,5 +646,26 @@ public function indexGuestAssessmentReport()
     }
   }
 
+  public function fetchGuestAssessmentReportDetail(Request $request)
+  {
+    try {
+      $guest = DB::SELECT("
+        SELECT * FROM miraimobile.guest_logs where miraimobile.guest_logs.id = '".$request->get('id')."'
+      ");
+
+      $response = array(
+        'status' => true,
+        'guest' => $guest
+      );
+      return Response::json($response);
+    } catch (\Exception $e) {
+      $response = array(
+        'status' => false,
+        'message' => $e->getMessage()
+      );
+      return Response::json($response);
+    }
+  }
+
 
 }
