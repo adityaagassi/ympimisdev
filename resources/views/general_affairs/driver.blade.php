@@ -494,9 +494,9 @@
 			format: "yyyy-mm-dd",
 			todayHighlight: true	
 		});
-		setInterval(fetchRequest, 30000);
-		setInterval(fetchDriverDuty, 30000);
-		setInterval(fetchDriver, 30000);
+		setInterval(fetchRequest, 60000);
+		setInterval(fetchDriverDuty, 60000);
+		setInterval(fetchDriver, 60000);
 	});
 	
 	$('.timepicker').timepicker({
