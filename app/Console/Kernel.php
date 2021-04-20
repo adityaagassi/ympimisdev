@@ -60,6 +60,7 @@ class Kernel extends ConsoleKernel
         Commands\UploadTransferKitto::class,
         Commands\UploadCompletionKitto::class,
         Commands\RecordDailyStocks::class,
+        Commands\RecordStockMiddle::class,
         
     ];
 
@@ -94,6 +95,8 @@ class Kernel extends ConsoleKernel
         // $schedule->command('plan:leaves')->monthlyOn(1, '01:00');
 
         $schedule->command('record:daily_stocks')->dailyAt('07:00');
+        $schedule->command('record:stock_middle')->dailyAt('07:00');
+        $schedule->command('record:stock_middle')->dailyAt('16:00');
 
         $schedule->command('email:shipment')->weekdays()->dailyAt('08:40');
         $schedule->command('email:overtime')->weekdays()->dailyAt('08:42');

@@ -118,7 +118,10 @@ class MaintenanceController extends Controller
 			['location' => 'WWT', 'alias' => 'wwt', 'area' => ['WWT']],
 			['location' => 'MTC', 'alias' => 'mtc', 'area' => ['Maintenance']],
 			['location' => 'Gudang MTC', 'alias' => 'mtc2', 'area' => ['Maintenance Gudang']],
-			['location' => 'Press', 'alias' => 'prs', 'area' => ['Press']]
+			['location' => 'Press', 'alias' => 'prs', 'area' => ['Press']],
+			['location' => 'Transformer Room 1', 'alias' => 'trf1', 'area' => ['Transformer Room 1']],
+			['location' => 'Transformer Room 2', 'alias' => 'trf2', 'area' => ['Transformer Room 2']],
+			['location' => 'Transformer Room 3', 'alias' => 'trf3', 'area' => ['Transformer Room 3']]
 		];
 	}
 
@@ -193,11 +196,25 @@ class MaintenanceController extends Controller
 		->select('employee_id', 'name', 'section', 'group')
 		->first();
 
+		$area = db::select('SELECT * from 
+			(SELECT machine_id as area_code, location FROM `maintenance_plan_items`
+			union all
+			SELECT area_code, area as location from area_codes
+		) master_area');
+
+		$area = db::select('SELECT master_area.*, maintenance_operator_locations.employee_id from 
+			(SELECT machine_id as area_code, location FROM `maintenance_plan_items`
+			union all
+			SELECT area_code, area as location from area_codes
+			) master_area
+			left join maintenance_operator_locations on maintenance_operator_locations.qr_code = master_area.area_code');
+
 		return view('maintenance.spk', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
 			'employee_id' => Auth::user()->username,
-			'name' => $employee->name
+			'name' => $employee->name,
+			'area_list' => $area
 		))->with('page', 'SPK')->with('head2', 'SPK')->with('head', 'Maintenance');	
 	}
 
@@ -503,12 +520,15 @@ class MaintenanceController extends Controller
 
 	public function indexPlannedForm()
 	{
-		$title = 'Planned Maintenance';
+		$title = 'Planned Maintenance Check';
 		$title_jp = '??';
 
-		$item_check = MaintenancePlanItem::select('machine_id', 'machine_name', 'description', 'category', 'area')->get();
+		$item_check = MaintenancePlanItem::select('machine_id', 'maintenance_plan_items.machine_name', 'description', 'location', 'maintenance_plan_item_checks.remark')
+		->leftJoin('maintenance_plan_item_checks', 'maintenance_plan_item_checks.machine_name', '=', 'maintenance_plan_items.machine_name')
+		->groupBy('machine_id', 'maintenance_plan_items.machine_name', 'description', 'location', 'maintenance_plan_item_checks.remark')
+		->get();
 
-		$op_mtc = EmployeeSync::where('department', '=', 'Maintenance')->whereNull('end_date')->select('employee_id', 'name')->orderBy('name','asc')->get();
+		$op_mtc = EmployeeSync::where('department', '=', 'Maintenance Department')->whereNull('end_date')->select('employee_id', 'name')->orderBy('name','asc')->get();
 
 		return view('maintenance.planned.maintenance_plan_form', array(
 			'title' => $title,
@@ -690,6 +710,18 @@ class MaintenanceController extends Controller
 			'title' => $title,
 			'title_jp' => $title_jp
 		))->with('page','Maintenance SPK Workload')->with('head', 'Maintenance');
+	}
+
+	public function indextpm()
+	{
+		$title = 'Smart TPM';
+		$title_jp = '??';
+
+		return view('maintenance.tpm.dashboard', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page','Maintenance SPK Workload')->with('head', 'Maintenance');
+
 	}
 
 	// -----------------------  END INDEX --------------------
@@ -1040,7 +1072,7 @@ class MaintenanceController extends Controller
 
 	public function fetchSPKProgressDetail(Request $request)
 	{
-		$detail = 'SELECT maintenance_job_orders.order_no, department_shortname as bagian, priority, type, category, machine_name, description, DATE_FORMAT(maintenance_job_orders.created_at,"%d %b %Y") target_date, process_code, employee_syncs.name, date(maintenance_job_orders.created_at) as dt';
+		$detail = 'SELECT maintenance_job_orders.order_no, department_shortname as bagian, priority, type, maintenance_job_orders.category, maintenance_job_orders.machine_name as machine_temp, maintenance_plan_items.description as machine_desc, maintenance_job_orders.description, DATE_FORMAT(maintenance_job_orders.created_at,"%d %b %Y") target_date, process_code, employee_syncs.name, date(maintenance_job_orders.created_at) as dt';
 
 		if ($request->get('process_name') != 'Listed' && $request->get('process_name') != 'InProgress') {
 			$detail .= ', cause, handling';
@@ -1048,6 +1080,7 @@ class MaintenanceController extends Controller
 
 		$detail .= ' from maintenance_job_orders 
 		left join (select process_code, process_name from processes where remark = "maintenance") prs on prs.process_code = maintenance_job_orders.remark
+		left join maintenance_plan_items on maintenance_plan_items.machine_id = maintenance_job_orders.machine_name
 		left join employee_syncs on employee_syncs.employee_id = maintenance_job_orders.created_by
 		left join departments on departments.department_name = SUBSTRING_INDEX(maintenance_job_orders.section,"_",1)';
 
@@ -1409,8 +1442,28 @@ class MaintenanceController extends Controller
 		->where('operator_id', '=', strtoupper(Auth::user()->username))
 		->update(['start_actual' => date('Y-m-d H:i:s')]);
 
+		//location
+		$mtc_op = new MaintenanceOperatorLocation;
+		$mtc_op->employee_id = Auth::user()->username;
+		$mtc_op->employee_name = Auth::user()->name;
+		$mtc_op->qr_code = $request->get('code');
+		$mtc_op->machine_id = $request->get('code');
+		$mtc_op->description = $request->get('location');
+		$mtc_op->location = $request->get('location');
+		$mtc_op->remark = 'spk';
+		$mtc_op->created_by = Auth::user()->username;
+		$mtc_op->save();
+
+		$area = db::select('SELECT master_area.*, maintenance_operator_locations.employee_id from 
+			(SELECT machine_id as area_code, location FROM `maintenance_plan_items`
+			union all
+			SELECT area_code, area as location from area_codes
+			) master_area
+			left join maintenance_operator_locations on maintenance_operator_locations.qr_code = master_area.area_code');
+
 		$response = array(
 			'status' => true,
+			'area' => $area
 		);
 		return Response::json($response);
 	}
@@ -1599,6 +1652,24 @@ class MaintenanceController extends Controller
 				$machine_log->save();
 			}
 
+
+			$op_qty = MaintenanceOperatorLocation::where('employee_id', '=', Auth::user()->username)->first();
+
+			$mtc_op_log = new MaintenanceOperatorLocationLog;
+			$mtc_op_log->employee_id = $op_qty->employee_id;
+			$mtc_op_log->employee_name = $op_qty->employee_name;
+			$mtc_op_log->qr_code = $op_qty->qr_code;
+			$mtc_op_log->machine_id = $op_qty->machine_id;
+			$mtc_op_log->description = $op_qty->description;
+			$mtc_op_log->location = $op_qty->location;
+			$mtc_op_log->remark = $op_qty->remark;
+			$mtc_op_log->logged_in_at = $op_qty->created_at;
+			$mtc_op_log->logged_out_at = date('Y-m-d H:i:s');
+			$mtc_op_log->created_by = Auth::user()->username;
+			$mtc_op_log->save();
+
+			$op_qty->forceDelete();
+
 			$response = array(
 				'status' => true,
 				'message' => ''
@@ -1697,6 +1768,24 @@ class MaintenanceController extends Controller
 			$spk_log->created_by = Auth::user()->username;
 			$spk_log->save();
 
+			$op_qty = MaintenanceOperatorLocation::where('employee_id', '=', Auth::user()->username)->first();
+
+
+			$mtc_op_log = new MaintenanceOperatorLocationLog;
+			$mtc_op_log->employee_id = $op_qty->employee_id;
+			$mtc_op_log->employee_name = $op_qty->employee_name;
+			$mtc_op_log->qr_code = $op_qty->qr_code;
+			$mtc_op_log->machine_id = $op_qty->machine_id;
+			$mtc_op_log->description = $op_qty->description;
+			$mtc_op_log->location = $op_qty->location;
+			$mtc_op_log->remark = $op_qty->remark;
+			$mtc_op_log->logged_in_at = $op_qty->created_at;
+			$mtc_op_log->logged_out_at = date('Y-m-d H:i:s');
+			$mtc_op_log->created_by = Auth::user()->username;
+			$mtc_op_log->save();
+
+			$op_qty->forceDelete();
+
 			$response = array(
 				'status' => true,
 				'message' => 'OK'
@@ -1779,6 +1868,23 @@ class MaintenanceController extends Controller
 			$spk_log->created_by = Auth::user()->username;
 			$spk_log->save();
 
+			$op_qty = MaintenanceOperatorLocation::where('employee_id', '=', Auth::user()->username)->first();
+
+			$mtc_op_log = new MaintenanceOperatorLocationLog;
+			$mtc_op_log->employee_id = $op_qty->employee_id;
+			$mtc_op_log->employee_name = $op_qty->employee_name;
+			$mtc_op_log->qr_code = $op_qty->qr_code;
+			$mtc_op_log->machine_id = $op_qty->machine_id;
+			$mtc_op_log->description = $op_qty->description;
+			$mtc_op_log->location = $op_qty->location;
+			$mtc_op_log->remark = $op_qty->remark;
+			$mtc_op_log->logged_in_at = $op_qty->created_at;
+			$mtc_op_log->logged_out_at = date('Y-m-d H:i:s');
+			$mtc_op_log->created_by = Auth::user()->username;
+			$mtc_op_log->save();
+
+			$op_qty->forceDelete();
+
 			$response = array(
 				'status' => true,
 				'message' => 'OK'
@@ -1799,6 +1905,7 @@ class MaintenanceController extends Controller
 			left join `maintenance_job_orders` on proc.process_code = maintenance_job_orders.remark
 			GROUP BY process_name");
 	}
+	
 	// --------------------------  APAR ----------------------
 
 	public function fetchAparList(Request $request)
@@ -2837,109 +2944,48 @@ class MaintenanceController extends Controller
 
 	public function postPlannedCheck(Request $request)
 	{
-		// try {
-		// 	foreach ($request->get('check_list') as $val) {
-		// 		$mtc_check = new MaintenancePlanCheck;
-		// 		$mtc_check->item_code = $request->get('item_check');
-
-		// 		$mtc_check->item_check = $val[0];
-		// 		$mtc_check->substance = $val[1];
-		// 		$mtc_check->remark = $val[2];
-
-		// 		if ($val[3] == '1') {
-		// 			$mtc_check->check = 'OK';
-		// 		} else {
-		// 			$mtc_check->check = 'NG';
-		// 		}
-
-		// 		$mtc_check->check_value = $val[4];
-		// 		$mtc_check->created_by = $request->get('operator');
-
-		// 		$mtc_check->save();
-		// 	}
-
-		// 	$response = array(
-		// 		'status' => true,
-		// 		'message' => 'success'
-		// 	);
-		// 	return Response::json($response);
-		// } catch (QueryException $e) {
-		// 	$response = array(
-		// 		'status' => false,
-		// 		'message' => $e->getMessage()
-		// 	);
-		// 	return Response::json($response);
-		// }
-
-		$verif = true;
 		if ($request->get('ng')) {
 			$arr_ng = $request->get('ng');
-
-			foreach ($request->get('ng') as $ngs) {
-				if ($request->session()->get('pm.description'.$ngs) == "" || $request->session()->get('pm.before'.$ngs) == "") {
-					$verif = false;
-				}
-			}
 		} else {
 			$arr_ng = [];
 		} 
 
-		if ($verif == false) {
-			$response = array(
-				'status' => false,
-				'message' => 'Harap melengkapi kolom NG'
-			);
-			return Response::json($response);
-		} else {
-			$mtc_item_check = MaintenancePlanItemCheck::select('id','machine_name', 'item_check', 'substance', 'remark')->whereIn('id', $request->get('ids'))->get();
+		$ido = array_diff($request->get('ids'), $arr_ng);
+		$cek_val = $request->get('val');
 
-			// $mtc_item_check = MaintenancePlanItem::select('id','machine_name', 'item_check', 'substance', 'remark')->where('machine_name', '')->get();
-
-			foreach ($mtc_item_check as $itm) {
-				$mtc_check = new MaintenancePlanCheck;
-				if (in_array($itm->id, $arr_ng))
-				{
-					$remark = $request->session()->get('pm.description'.$itm->id);
-					$before = $request->session()->get('pm.before'.$itm->id);
-					$after = $request->session()->get('pm.after'.$itm->id);
-
-					$before_name = $request->get('operator')."_before_".$itm->id."_".date('Y-m-d H:i');
-					$after_name = $request->get('operator')."_after_".$itm->id."_".date('Y-m-d H:i');
-
-					file_put_contents(public_path('images/planned_maintenance')."/".$before_name.".png", $before);
-					file_put_contents(public_path('images/planned_maintenance')."/".$after_name.".png", $after);
-
-					$check = "NG";
-
-				} else {
-					$check = "OK";
-					$before_name = null;
-					$after_name = null;
-					$remark = null;
+		foreach ($ido as $itm) {
+			$val = null;
+			if (count($cek_val) > 0) {
+				for ($i=0; $i < count($cek_val); $i++) { 
+					if (preg_replace('/[^0-9]/', '', $cek_val[$i]['id']) == $itm) {
+						$val = $cek_val[$i]['value'];
+					}
 				}
-				$mtc_check->item_code = $itm->machine_name;
-
-				$mtc_check->item_check = $itm->item_check;
-				$mtc_check->substance = $itm->substance;
-				$mtc_check->period = $itm->remark;
-				$mtc_check->check = $check;
-				$mtc_check->photo_before = $before_name;
-				$mtc_check->photo_after = $after_name;
-				$mtc_check->remark = $remark;
-
-				// $mtc_check->check_value = $val[4];
-				$mtc_check->created_by = $request->get('operator');
-
-				$mtc_check->save();
 			}
 
-			$response = array(
-				'status' => true,
-				'message' => 'OK'
-			);
-			return Response::json($response);
+			$mtc_itm = MaintenancePlanItemCheck::where('id', '=', $itm)->select('machine_name', 'item_check', 'substance', 'remark')->first();
+
+			
+			$mtc_check = MaintenancePlanCheck::firstOrNew(array('item_code' => $mtc_itm->machine_name, 'item_check' => $mtc_itm->item_check, 'substance' => $mtc_itm->substance));
+			$mtc_check->period = $mtc_itm->remark;
+			$mtc_check->check = 'OK';
+			$mtc_check->check_value = $val;
+			$mtc_check->description = null;
+			$mtc_check->photo_before = null;
+			$mtc_check->photo_after = null;
+			$mtc_check->remark = null;
+			$mtc_check->created_by = Auth::user()->username;
+
+			$mtc_check->save();
 		}
 
+
+		$response = array(
+			'status' => true,
+			'message' => 'OK'
+		);
+		return Response::json($response);
+		
 	}
 
 	// public function getHistoryPlanned(Request $request)
@@ -3029,32 +3075,52 @@ class MaintenanceController extends Controller
 		return Response::json($response);
 	}
 
-	public function postPlannedSession(Request $request)
+	public function postPlannedNotGood(Request $request)
 	{
-		$request->session()->put('pm.description'.$request->get('id'), $request->get('desc'));
-		$request->session()->put('pm.before'.$request->get('id'), $request->get('before'));
-		$request->session()->put('pm.after'.$request->get('id'), $request->get('after'));
+		$poin_cek = MaintenancePlanItemCheck::where('id', '=', $request->get('id'))->first();
 
-		// $request->session()->forget('pm');
-
-		$datas = $request->session()->get('pm.before'.$request->get('id'));
+		$pm = MaintenancePlanCheck::firstOrNew(array('item_code' => $poin_cek->machine_name, 'item_check' => $poin_cek->item_check, 'substance' => $poin_cek->substance));
+		$pm->period = $poin_cek->remark;
+		$pm->check = 'NG';
+		$pm->check_value = $request->get('cek_val');
+		$pm->description = $request->get('desc');
+		$pm->photo_before = $request->get('before');
+		$pm->photo_after = $request->get('after');
+		$pm->remark = $request->get('keterangan');
+		$pm->created_by = Auth::user()->username;
+		$pm->save();
 
 		$response = array(
 			'status' => true,
-			'datas' => $datas,
-			'session' => $request->session()->all()
+			'datas' => $pm
 		);
 		return Response::json($response);
 	}
 
-	public function getPlannedSession(Request $request)
+	public function getPlannedNotGood(Request $request)
 	{
-		$datas = [];
-		$datas['desc'] = $request->session()->get('pm.description'.$request->get('id'));
-		$datas['before'] = $request->session()->get('pm.before'.$request->get('id'));
-		$datas['after'] = $request->session()->get('pm.after'.$request->get('id'));
+		DB::connection()->enableQueryLog();
+		$poin_cek = MaintenancePlanItemCheck::where('maintenance_plan_item_checks.id', '=', $request->get('id'))
+		->where(db::raw('DATE_FORMAT(maintenance_plan_checks.updated_at, "%Y-%m-%d")'), '=', date('Y-m-d'))
+		// ->leftJoin('maintenance_plan_checks', 'maintenance_plan_item_checks.machine_name')
+		->leftJoin('maintenance_plan_checks', function($join)
+		{
+			$join->on('maintenance_plan_item_checks.machine_name', '=', 'maintenance_plan_checks.item_code');
+			$join->on('maintenance_plan_item_checks.item_check','=', 'maintenance_plan_checks.item_check');
+			$join->on('maintenance_plan_item_checks.substance','=', 'maintenance_plan_checks.substance');
+			$join->on('maintenance_plan_item_checks.remark','=', 'maintenance_plan_checks.period');
+		})
+		->select('maintenance_plan_checks.description', 'maintenance_plan_checks.remark', 'photo_before', 'photo_after')
+		->first();
 
-		return Response::json($datas);
+		// $poin_cek = db::select('SELECT `maintenance_plan_checks`.`description`, `maintenance_plan_checks`.`remark`, `photo_before`, `photo_after` from `maintenance_plan_item_checks` left join `maintenance_plan_checks` on `maintenance_plan_item_checks`.`machine_name` = `maintenance_plan_checks`.`item_code` and `maintenance_plan_item_checks`.`item_check` = `maintenance_plan_checks`.`item_check` and `maintenance_plan_item_checks`.`substance` = `maintenance_plan_checks`.`substance` and `maintenance_plan_item_checks`.`remark` = `maintenance_plan_checks`.`period` where `maintenance_plan_item_checks`.`id` = '.$request->get('id').' and DATE_FORMAT(maintenance_plan_checks.updated_at, "%Y-%m-%d") = "'.date('Y-m-d').'" and `maintenance_plan_item_checks`.`deleted_at` is null limit 1');
+
+		$response = array(
+			'status' => true,
+			'datas' => $poin_cek,
+			'query' => DB::getQueryLog()
+		);
+		return Response::json($response);
 	}
 
 	public function getPlannedSchedule(Request $request)
@@ -3341,9 +3407,10 @@ class MaintenanceController extends Controller
 		$dt = date('Y-m-d');
 		// $emp_loc = MaintenanceOperatorLocation::select('employee_id', 'employee_name', 'location', 'remark', 'created_at', db::raw('RIGHT(acronym(employee_name), 2) AS short_name'))->get();
 
-		$emp_loc = db::select("SELECT employee_syncs.employee_id, `name`, RIGHT(acronym(`name`), 2) as short_name, shiftdaily_code, location, maintenance_operator_locations.remark as job, attend_code from employee_syncs
+		$emp_loc = db::select("SELECT employee_syncs.employee_id, `name`, RIGHT(acronym(`name`), 2) as short_name, shiftdaily_code, location, maintenance_operator_locations.remark as job, attend_code, maintenance_pics.remark from employee_syncs
 			left join sunfish_shift_syncs on sunfish_shift_syncs.employee_id = employee_syncs.employee_id
 			left join maintenance_operator_locations on maintenance_operator_locations.employee_id = employee_syncs.employee_id
+			left join maintenance_pics on employee_syncs.employee_id = maintenance_pics.pic_id
 			where shift_date = '".$dt."' and  `group` = 'Maintenance Group' and end_date is null
 			order by shiftdaily_code asc");
 
