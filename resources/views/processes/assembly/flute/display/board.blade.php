@@ -183,7 +183,7 @@
 
 	jQuery(document).ready(function() {
 		fetchTable();
-		// setInterval(fetchTable, 1000);
+		setInterval(fetchTable, 1000);
 		// fillChartActualNgByOp();
 		// setInterval(function(){
 		// 	fillChartActualNgByOp();
