@@ -162,7 +162,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-				<button type="submit" class="btn btn-success">Confirm</button>
+				<button type="submit" class="btn btn-success" onclick="updateConfirm()">Confirm</button>
 			</div>
 		</div>
 	</div>
@@ -244,14 +244,32 @@
 		}
 	}
 
+	function updateConfirm(){
+		var invoice_number = $('#modal_invoice_number').val();
+		var bl_date = $('#modal_bl_date').val();
+		var data = {
+			invoice_number : invoice_number,
+			bl_date : bl_date,
+		}
+		$.post('{{ url("input/flo_lading") }}', data, function(result, status, xhr){
+			if(result.status){
+				$('#flo_invoice_table').DataTable().ajax.reload();
+				$('#invoice_number').val('').change();
+				$('#bl_date').val('');
+				openSuccessGritter('Success!', result.message);
+			}
+			else{
+				openErrorGritter('Error!', 'Invoice number and bl date required');
+				audio_error.play();				
+			}
+		});
+	}
+
 	function editConfirmation(id){
 		var data = {
 			id:id,
 		}
 		$.get('{{ url("fetch/flo_lading") }}', data, function(result, status, xhr){
-			console.log(status);
-			console.log(result);
-			console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
 					$('#modal_invoice_number').val(result.invoice_number);
