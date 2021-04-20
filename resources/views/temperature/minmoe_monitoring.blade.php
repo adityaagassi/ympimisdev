@@ -297,7 +297,7 @@
 
 @endsection
 @section('scripts')
-<script src="{{ url("js/highstock.js")}}"></script>
+<script src="{{ url("js/highcharts.js")}}"></script>
 <script src="{{ url("js/highcharts-3d.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
@@ -396,8 +396,8 @@
 					$.each(result.attendance, function(key, value) {
 						var emp_no = value.employee_id;
 						if (value.temperature != '-' && value.temperature >= 37.5) {
-							detail_abnormal.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups,temp:value.temperature});
-						}
+								detail_abnormal.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups,temp:value.temperature});
+							}
 						detail_all.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups,temp:value.temperature,point:value.point});
 						if (value.remark == 'OFC' || value.remark == 'Jps') {
 							if (value.checks == null) {
