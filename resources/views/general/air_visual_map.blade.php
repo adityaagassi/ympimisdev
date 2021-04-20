@@ -275,7 +275,7 @@
 								count_alarm++;
 							}
 
-							table_content += '<div class="judul '+cls+'" style="margin-top: 400px; margin-left: 100px; width: 220px; height: 130px">';
+							table_content += '<div class="judul '+cls+'" style="margin-top: 450px; margin-left: 100px; width: 220px; height: 130px">';
 							table_content += '<b style="font-size: 30px; color: #f39c12">'+result.last_data[1].location+'</b><br>';
 							table_content += '<b style="font-size: 18px">CO2 : '+result.last_data[1].co+' ppm</b><br>';
 							table_content += '<b style="font-size: 18px">Temp. : '+result.last_data[1].temperature+' &#8451;</b><br>';
@@ -288,7 +288,7 @@
 								count_alarm++;
 							}
 
-							table_content += '<div class="judul '+cls+'" style="margin-top: 600px; margin-left: 100px; width: 220px; height: 130px">';
+							table_content += '<div class="judul '+cls+'" style="margin-top: 700px; margin-left: 100px; width: 220px; height: 130px">';
 							table_content += '<b style="font-size: 30px; color: #f39c12">'+result.last_data[0].location+'</b><br>';
 							table_content += '<b style="font-size: 18px">CO2 : '+result.last_data[0].co+' ppm</b><br>';
 							table_content += '<b style="font-size: 18px">Temp. : '+result.last_data[0].temperature+' &#8451;</b><br>';

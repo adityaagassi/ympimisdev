@@ -2515,7 +2515,7 @@ public function fetchQueue($remark,Request $request)
 	//  -------------------------   OXYMETER ------------
 public function indexOxymeterCheck()
 {
-	$title = "Oxymeter Check";
+	$title = "Oximeter Check";
 	$title_jp = "オキシメーター検査";
 
 		// $employees = EmployeeSync::orderBy('department', 'asc')->get();
@@ -2595,7 +2595,7 @@ public function fetchOxymeterHistory(Request $request)
 
 public function indexOxymeterMonitoring()
 {
-	$title = "Oxymeter Monitoring";
+	$title = "Oximeter Monitoring";
 	$title_jp = "オキシメーターモニター";
 
 	return view('general.oxymeter.index_monitoring', array(
@@ -2616,19 +2616,28 @@ public function fetchOxymeterMonitoring(Request $request)
 	$oxy_log = GeneralAttendanceLog::leftJoin('employees', 'employees.employee_id', '=', 'general_attendance_logs.employee_id')
 	->where('purpose_code', '=', 'Oxymeter')
 	->where('general_attendance_logs.due_date', '=', $dt)
-	->where('employees.remark', '=', 'OFC')
 	->select('general_attendance_logs.remark', db::raw('COUNT(general_attendance_logs.remark) as qty'))
 	->groupBy('general_attendance_logs.remark')
 	->get();
 
-	$shift_log = db::select("SELECT sunfish_shift_syncs.employee_id, employees.name, employees.remark, shiftdaily_code, oxymeter.remark as oxy from sunfish_shift_syncs
+	$pulse_log = GeneralAttendanceLog::leftJoin('employees', 'employees.employee_id', '=', 'general_attendance_logs.employee_id')
+	->where('purpose_code', '=', 'Oxymeter')
+	->where('general_attendance_logs.due_date', '=', $dt)
+	->select('general_attendance_logs.remark2', db::raw('COUNT(general_attendance_logs.remark2) as qty'))
+	->groupBy('general_attendance_logs.remark2')
+	->get();
+
+	$shift_log = db::select("SELECT sunfish_shift_syncs.employee_id, employees.name, employees.remark, shiftdaily_code, attend_code, departments.department_shortname, section, `group`, oxymeter.remark as oxy, oxymeter.remark2 as pulse, oxymeter.attend_date as check_time from sunfish_shift_syncs
 		left join employees on employees.employee_id = sunfish_shift_syncs.employee_id
 		left join (select * from general_attendance_logs where purpose_code = 'Oxymeter' and due_date = '".$dt."') as oxymeter on oxymeter.employee_id = sunfish_shift_syncs.employee_id
-		where shift_date = '".$dt."' and employees.remark = 'OFC'");
+		left join employee_syncs on sunfish_shift_syncs.employee_id = employee_syncs.employee_id
+		left join departments on employee_syncs.department = departments.department_name
+		where shift_date = '".$dt."'");
 	
 	$response = array(
 		'status' => true,
-		'datas' => $oxy_log,
+		'oxy_datas' => $oxy_log,
+		'pulse_datas' => $pulse_log,
 		'shift' => $shift_log
 	);
 	return Response::json($response);

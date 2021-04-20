@@ -177,6 +177,38 @@
 							</tr>
 						</tbody>
 					</table>
+
+					<span style="color: white; font-size: 1.7vw; font-weight: bold;"><i class="fa fa-caret-right"></i> Production</span>
+					<table class="table table-bordered" id="tableTotalPrd" style="margin-bottom: 5px;">
+						<thead>
+							<tr>
+								<th style="width:2%; text-align: center;color: white; font-size: 1.2vw;border-bottom: 2px solid black">Shift Schedule</th>
+								<th style="width: 3%; text-align: center;color: white; font-size: 1.2vw;border-bottom: 2px solid black">Checked</th>
+								<th style="width: 3%; text-align: center;color: white; font-size: 1.2vw;border-bottom: 2px solid black">Unchecked</th>
+								<th style="width: 3%; text-align: center;color: white; font-size: 1.2vw;border-bottom: 2px solid black">Total</th>
+							</tr>
+						</thead>
+						<tbody id="tableTotalBodyPrd">
+							<tr>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="">Shift 1</td>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_check_prd_1"></td>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_uncheck_prd_1"></td>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_person_prd_1"></td>
+							</tr>
+							<tr>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="">Shift 2</td>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_check_prd_2"></td>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_uncheck_prd_2"></td>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_person_prd_2"></td>
+							</tr>
+							<tr>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="">Shift 3</td>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_check_prd_3"></td>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_uncheck_prd_3"></td>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_person_prd_3"></td>
+							</tr>
+						</tbody>
+					</table>
 				<!-- 	<span style="color: white; font-size: 1.7vw; font-weight: bold;"><i class="fa fa-caret-right"></i> Production</span>
 					<table class="table table-bordered" id="tableTotalPrd" style="margin-bottom: 5px;">
 						<thead>
@@ -222,6 +254,23 @@
 							</tr>			
 						</thead>
 						<tbody id="bodyAbnormal">
+						</tbody>
+					</table>
+
+					<span style="color: white; font-size: 1.7vw; font-weight: bold;"><i class="fa fa-caret-right"></i> Pulse Rate Below Standard</span>
+					<table class="table table-bordered" id="tableAbnormalPulse" style="margin-bottom: 5px;">
+						<thead style="color: white">
+							<tr>
+								<th style="width: 1%;">#</th>
+								<th style="width: 3%;">ID</th>
+								<th style="width: 9%;">Name</th>
+								<th style="width: 3%;">Dept</th>
+								<th style="width: 3%;">Shift</th>
+								<th style="width: 2%;">Time</th>
+								<th style="width: 2%;">Pulse</th>
+							</tr>			
+						</thead>
+						<tbody id="AbnormalPulse">
 						</tbody>
 					</table>
 				</div>
@@ -271,9 +320,6 @@
 			<div class="modal-header">
 				<h4 style="padding-bottom: 15px" class="modal-title" id="modalDetailTitleCheck"></h4>
 				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
-					<center>
-						<i class="fa fa-spinner fa-spin" id="loadingDetailCheck" style="font-size: 80px;"></i>
-					</center>
 					<table class="table table-hover table-bordered table-striped" id="tableDetailCheck">
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr style="color: white">
@@ -285,7 +331,7 @@
 								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Group</th>
 								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Shift</th>
 								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Attendance</th>
-								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Time In</th>
+								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Check Time</th>
 							</tr>
 						</thead>
 						<tbody id="tableDetailCheckBody">
@@ -299,8 +345,7 @@
 
 @endsection
 @section('scripts')
-<script src="{{ url("js/highstock.js")}}"></script>
-<script src="{{ url("js/highcharts-3d.js")}}"></script>
+<script src="{{ url("js/highcharts.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
 <script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
@@ -323,8 +368,11 @@
 			todayHighlight: true,	
 			endDate: new Date()
 		});
+
 		$('.select2').select2();
+
 		draw_data();
+		setInterval(draw_data,300000);
 	});
 
 	function draw_data() {
@@ -335,6 +383,7 @@
 		$.get('{{ url("fetch/general/oxymeter/data") }}', data, function(result, status, xhr){
 			var xCategories = [];
 			var xSeries = [];
+			var xSeriesPulse = [];
 			var xColor = [];
 
 
@@ -342,24 +391,32 @@
 			// total_uncheck_ofc_1
 			// total_person_ofc_1
 
-			for (var i = 80; i <= 100; i++) {
+			for (var i = 71; i <= 120; i++) {
 				xCategories.push(i);
 				var stat = 0;
-				$.each(result.datas, function(index, value){
+				$.each(result.oxy_datas, function(index, value){
 					if (parseInt(value.remark) == i) {
 						stat = 1;
 						xSeries.push(value.qty);
-						if (parseInt(value.remark) >= 95) {
-							xColor.push("#8cd790");
-						} else {
-							xColor.push("#ed5c64");
-						}
 					}
 				})
 
 				if (stat == 0) {
 					xSeries.push(0);
-					xColor.push("#8cd790");
+				}
+
+				// ---------  Pulse ----------
+
+				var stat2 = 0;
+				$.each(result.pulse_datas, function(index, value){
+					if (parseInt(value.remark2) == i) {
+						stat2 = 1;
+						xSeriesPulse.push(value.qty);
+					}
+				})
+
+				if (stat2 == 0) {
+					xSeriesPulse.push(0);
 				}
 			}
 
@@ -373,6 +430,18 @@
 			$("#total_uncheck_ofc_2").empty();
 			$("#total_person_ofc_2").empty();
 
+			$("#total_check_prd_1").empty();
+			$("#total_uncheck_prd_1").empty();
+			$("#total_person_prd_1").empty();
+
+			$("#total_check_prd_2").empty();
+			$("#total_uncheck_prd_2").empty();
+			$("#total_person_prd_2").empty();
+
+			$("#total_check_prd_3").empty();
+			$("#total_uncheck_prd_3").empty();
+			$("#total_person_prd_3").empty();
+
 			var ofc_cek_1 = 0;
 			var ofc_uncek_1 = 0;
 			var ofc_total_1 = 0;
@@ -381,39 +450,232 @@
 			var ofc_uncek_2 = 0;
 			var ofc_total_2 = 0;
 
+			var prd_cek_1 = 0;
+			var prd_uncek_1 = 0;
+			var prd_total_1 = 0;
+
+			var prd_cek_2 = 0;
+			var prd_uncek_2 = 0;
+			var prd_total_2 = 0;
+
+			var prd_cek_3 = 0;
+			var prd_uncek_3 = 0;
+			var prd_total_3 = 0;
+
 			var below_rate = [];
+			var below_rate_pulse = [];
+
+
+			var detail_check_ofc_1 = [];
+			var detail_uncheck_ofc_1 = [];
+			var detail_total_ofc_1 = [];
+
+			var detail_check_ofc_2 = [];
+			var detail_uncheck_ofc_2 = [];
+			var detail_total_ofc_2 = [];
+
+			var detail_check_prd_1 = [];
+			var detail_uncheck_prd_1 = [];
+			var detail_total_prd_1 = [];
+
+			var detail_check_prd_2 = [];
+			var detail_uncheck_prd_2 = [];
+			var detail_total_prd_2 = [];
+
+			var detail_check_prd_3 = [];
+			var detail_uncheck_prd_3 = [];
+			var detail_total_prd_3 = [];
 
 
 			$.each(result.shift, function(index, value){
-				if (~value.shiftdaily_code.indexOf("1")) {
-					ofc_total_1++;
-					if (value.oxy != null) {
-						ofc_cek_1++;
-					} else {
-						ofc_uncek_1++;
+				if (value.remark == 'OFC' || value.remark == 'Jps') {
+					if (~value.shiftdaily_code.indexOf("1")) {
+						ofc_total_1++;
+						if (value.oxy != null) {
+							ofc_cek_1++;
+							detail_check_ofc_1.push({'employee_id': value.employee_id,' name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
+						} else {
+							ofc_uncek_1++;
+							detail_uncheck_ofc_1.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
+						}
+
+						detail_total_ofc_1.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.groups});
+					} else if (~value.shiftdaily_code.indexOf("2")) {
+						ofc_total_2++;
+						if (value.oxy != null) {
+							ofc_cek_2++;
+							detail_check_ofc_2.push({'employee_id': value.employee_id,' name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
+						} else {
+							ofc_uncek_2++;
+							detail_uncheck_ofc_2.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
+						}
+
+						detail_total_ofc_2.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.groups});
 					}
-				} else if (~value.shiftdaily_code.indexOf("2")) {
-					ofc_total_2++;
-					if (value.oxy != null) {
-						ofc_cek_2++;
-					} else {
-						ofc_uncek_2++;
+				} else {
+					if (~value.shiftdaily_code.indexOf("1")) {
+						prd_total_1++;
+						if (value.oxy != null) {
+							prd_cek_1++;
+							detail_check_prd_1.push({'employee_id': value.employee_id,' name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
+						} else {
+							prd_uncek_1++;
+							detail_uncheck_prd_1.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
+						}
+						detail_total_prd_1.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.groups});
+					} else if (~value.shiftdaily_code.indexOf("2")) {
+						prd_total_2++;
+						if (value.oxy != null) {
+							prd_cek_2++;
+							detail_check_prd_2.push({'employee_id': value.employee_id,' name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
+						} else {
+							prd_uncek_2++;
+							detail_uncheck_prd_2.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
+						}
+						detail_total_prd_2.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.groups});
+					}  else if (~value.shiftdaily_code.indexOf("3")) {
+						prd_total_3++;
+						if (value.oxy != null) {
+							prd_cek_3++;
+							detail_check_prd_3.push({'employee_id': value.employee_id,' name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
+						} else {
+							prd_uncek_3++;
+							detail_uncheck_prd_3.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
+						}
+						detail_total_prd_3.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.groups});
 					}
 				}
+
 
 				if (parseInt(value.oxy) < 95) {
 					below_rate.push({'emp_id': value.employee_id, 'name': value.name, 'shift': value.shiftdaily_code, 'oxy': value.oxy});
 				}
+
+				if (parseInt(value.pulse) > 100 ) {
+					below_rate_pulse.push({'emp_id': value.employee_id, 'name': value.name, 'shift': value.shiftdaily_code, 'pulse': value.pulse});
+				}
+
+				
 			})
 
 
-			$("#total_check_ofc_1").text(ofc_cek_1);
-			$("#total_uncheck_ofc_1").text(ofc_uncek_1);
-			$("#total_person_ofc_1").text(ofc_total_1);
+$("#total_check_ofc_1").text(ofc_cek_1);
+$("#total_uncheck_ofc_1").text(ofc_uncek_1);
+$("#total_person_ofc_1").text(ofc_total_1);
 
-			$("#total_check_ofc_2").text(ofc_cek_2);
-			$("#total_uncheck_ofc_2").text(ofc_uncek_2);
-			$("#total_person_ofc_2").text(ofc_total_2);
+$("#total_check_ofc_2").text(ofc_cek_2);
+$("#total_uncheck_ofc_2").text(ofc_uncek_2);
+$("#total_person_ofc_2").text(ofc_total_2);
+
+$("#total_check_prd_1").text(prd_cek_1);
+$("#total_uncheck_prd_1").text(prd_uncek_1);
+$("#total_person_prd_1").text(prd_total_1);
+
+$("#total_check_prd_2").text(prd_cek_2);
+$("#total_uncheck_prd_2").text(prd_uncek_2);
+$("#total_person_prd_2").text(prd_total_2);
+
+$("#total_check_prd_3").text(prd_cek_3);
+$("#total_uncheck_prd_3").text(prd_uncek_3);
+$("#total_person_prd_3").text(prd_total_3);
+
+
+			// ------------------   ADD CLICK LISTENER  ---------------------
+
+			var elem_total_check_ofc_1 = document.getElementById('total_check_ofc_1');
+
+			elem_total_check_ofc_1.addEventListener('click', function(){
+				checkDetails(detail_check_ofc_1);
+			});
+
+			var elem_total_uncheck_ofc_1 = document.getElementById('total_uncheck_ofc_1');
+
+			elem_total_uncheck_ofc_1.addEventListener('click', function(){
+				checkDetails(detail_uncheck_ofc_1);
+			});
+
+			var elem_total_person_ofc_1 = document.getElementById('total_person_ofc_1');
+
+			elem_total_person_ofc_1.addEventListener('click', function(){
+				checkDetails(detail_total_ofc_1);
+			});
+
+			var elem_total_check_ofc_2 = document.getElementById('total_check_ofc_2');
+
+			elem_total_check_ofc_2.addEventListener('click', function(){
+				checkDetails(detail_check_ofc_2);
+			});
+
+			var elem_total_uncheck_ofc_2 = document.getElementById('total_uncheck_ofc_2');
+
+			elem_total_uncheck_ofc_2.addEventListener('click', function(){
+				checkDetails(detail_uncheck_ofc_2);
+			});
+
+			var elem_total_person_ofc_2 = document.getElementById('total_person_ofc_2');
+
+			elem_total_person_ofc_2.addEventListener('click', function(){
+				checkDetails(detail_total_ofc_2);
+			});
+
+			
+			// -----------------------------------------------
+
+
+			var elem_total_check_prd_1 = document.getElementById('total_check_prd_1');
+
+			elem_total_check_prd_1.addEventListener('click', function(){
+				checkDetails(detail_check_prd_1);
+			});
+
+			var elem_total_uncheck_prd_1 = document.getElementById('total_uncheck_prd_1');
+
+			elem_total_uncheck_prd_1.addEventListener('click', function(){
+				checkDetails(detail_uncheck_prd_1);
+			});
+
+			var elem_total_person_prd_1 = document.getElementById('total_person_prd_1');
+
+			elem_total_person_prd_1.addEventListener('click', function(){
+				checkDetails(detail_total_prd_1);
+			});
+
+			var elem_total_check_prd_2 = document.getElementById('total_check_prd_2');
+
+			elem_total_check_prd_2.addEventListener('click', function(){
+				checkDetails(detail_check_prd_2);
+			});
+
+			var elem_total_uncheck_prd_2 = document.getElementById('total_uncheck_prd_2');
+
+			elem_total_uncheck_prd_2.addEventListener('click', function(){
+				checkDetails(detail_uncheck_prd_2);
+			});
+
+			var elem_total_person_prd_2 = document.getElementById('total_person_prd_2');
+
+			elem_total_person_prd_2.addEventListener('click', function(){
+				checkDetails(detail_total_prd_2);
+			});
+
+			var elem_total_check_prd_3 = document.getElementById('total_check_prd_3');
+
+			elem_total_check_prd_3.addEventListener('click', function(){
+				checkDetails(detail_check_prd_3);
+			});
+
+			var elem_total_uncheck_prd_3 = document.getElementById('total_uncheck_prd_3');
+
+			elem_total_uncheck_prd_3.addEventListener('click', function(){
+				checkDetails(detail_uncheck_prd_3);
+			});
+
+			var elem_total_person_prd_3 = document.getElementById('total_person_prd_3');
+
+			elem_total_person_prd_3.addEventListener('click', function(){
+				checkDetails(detail_total_prd_3);
+			});
+
 
 
 			// ------------------  TABLE BELOW RATE ------------------------
@@ -434,6 +696,25 @@
 
 			$("#bodyAbnormal").append(body);
 
+			// ----------------- TABLE BELOW RATE PULSE ------------------
+
+			$("#AbnormalPulse").empty();
+			var body = "";
+
+			$.each(below_rate_pulse, function(index, value){
+				body += "<tr>";
+				body += "<td class='alert'>"+(index + 1)+"</td>";
+				body += "<td class='alert'>"+value.emp_id+"</td>";
+				body += "<td class='alert'>"+value.name+"</td>";
+				body += "<td class='alert'>-</td>";
+				body += "<td class='alert'>"+value.shift+"</td>";
+				body += "<td class='alert'>-</td>";
+				body += "<td class='alert'>"+value.pulse+"</td>";
+				body += "</tr>";
+			})
+
+			$("#AbnormalPulse").append(body);			
+
 
 			// ------------------   GRAFIK   ----------------------------
 			Highcharts.chart('chart', {
@@ -441,7 +722,7 @@
 					type: 'column'
 				},
 				title: {
-					text: 'OXYGEN METER MONITORING',
+					text: 'OXYGEN AND PULSE METER MONITORING',
 					style: {
 						fontSize: '20px',
 						fontWeight: 'bold'
@@ -449,17 +730,15 @@
 				},
 				xAxis: {
 					categories: xCategories,
-					gridLineWidth: 1,
+					// gridLineWidth: 1,
 					gridLineColor: 'RGB(204,255,255)',
 					label: {
 						style: {
-							fontSize: '20px',
+							// fontSize: '20px',
 							fontWeight: 'bold'
 						},
+						step: 1
 					},
-					title: {
-						text: 'Oxygen Meter',
-					}
 				},
 				yAxis: {
 					min: 0,
@@ -481,26 +760,98 @@
 							enabled: true
 						}
 					}, 
-					series: {
-						colorByPoint: true,
-						colors: xColor
-					}
 				},
-				legend: {
-					enabled: false
-				},
+				
 				credits: {
 					enabled: false
 				},
 				series: [{
 					name: 'Oxygen',
 					data: xSeries
+				},
+				{
+					name: 'Pulse',
+					data: xSeriesPulse
 				}]
 			});
 		})
-	}
+}
 
+function checkDetails(param) {
+	$('#modalDetailCheck').modal('show');
+	$('#modalDetailTitleCheck').html("");
 
+	$('#tableDetailCheckBody').html('');
+
+	$('#tableDetailCheck').DataTable().clear();
+	$('#tableDetailCheck').DataTable().destroy();
+
+	var index = 1;
+	var resultData = "";
+	var total = 0;
+
+	$.each(param, function(key, value) {
+		resultData += '<tr>';
+		resultData += '<td>'+ index +'</td>';
+		resultData += '<td>'+ value.employee_id +'</td>';
+		resultData += '<td>'+ value.name +'</td>';
+		resultData += '<td>'+ value.dept +'</td>';
+		resultData += '<td>'+ value.section +'</td>';
+		resultData += '<td>'+ value.group +'</td>';
+		resultData += '<td>'+ value.shift +'</td>';
+		resultData += '<td>'+ value.attend_code +'</td>';
+		resultData += '<td>'+ (value.check_time || '' ) +'</td>';
+		resultData += '</tr>';
+		index += 1;
+	});
+	$('#tableDetailCheckBody').append(resultData);
+	$('#modalDetailTitleCheck').html("<center><span style='font-size: 20px; font-weight: bold;'>Detail Employees</span></center>");
+
+	var table = $('#tableDetailCheck').DataTable({
+		'dom': 'Bfrtip',
+		'responsive':true,
+		'lengthMenu': [
+		[ 10, 25, 50, -1 ],
+		[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+		],
+		'buttons': {
+			buttons:[
+			{
+				extend: 'pageLength',
+				className: 'btn btn-default',
+			},
+			{
+				extend: 'excel',
+				className: 'btn btn-info',
+				text: '<i class="fa fa-file-excel-o"></i> Excel',
+				exportOptions: {
+					columns: ':not(.notexport)'
+				}
+			},
+			{
+				extend: 'print',
+				className: 'btn btn-warning',
+				text: '<i class="fa fa-print"></i> Print',
+				exportOptions: {
+					columns: ':not(.notexport)'
+				}
+			}
+			]
+		},
+		'paging': true,
+		'lengthChange': true,
+		'pageLength': 10,
+		'searching': true	,
+		'ordering': true,
+		'order': [],
+		'info': true,
+		'autoWidth': true,
+		"sPaginationType": "full_numbers",
+		"bJQueryUI": true,
+		"bAutoWidth": false,
+		"processing": true
+	});
+}
 	// STYLE CHART
 	Highcharts.createElement('link', {
 		href: '{{ url("fonts/UnicaOne.css")}}',
@@ -509,8 +860,8 @@
 	}, null, document.getElementsByTagName('head')[0]);
 
 	Highcharts.theme = {
-		colors: ['#8cd790', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
-		'#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+		colors: ['#aaeeee', '#bd67cf', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
+		'#eeaaee', '#55BF3B', '#DF5353', '#7798BF'],
 		chart: {
 			backgroundColor: {
 				linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },

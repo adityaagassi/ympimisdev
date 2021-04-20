@@ -88,7 +88,7 @@
                 </td>
               </tr>
               <tr>
-                <th colspan="4" style="background-color: #7e5686; color: white"><center>Heart Rate :</center></th>
+                <th colspan="4" style="background-color: #7e5686; color: white"><center>Pulse Rate :</center></th>
               </tr>
               <tr>
                 <td colspan="4" id="tombol_group" style="display: none">
@@ -300,7 +300,7 @@ function save(val, ctg) {
 function getHistory() {
   var data = {
     username : "{{ Auth::user()->id }}",
-    limit : 5,
+    // limit : 5,
     dt : "{{ date('Y-m-d') }}"
   }
 
