@@ -240,7 +240,7 @@
 							</tr>
 						</tbody>
 					</table> -->
-					<span style="color: white; font-size: 1.7vw; font-weight: bold;"><i class="fa fa-caret-right"></i> Oxygen Rate Below Standard</span>
+					<span style="color: white; font-size: 1.7vw; font-weight: bold;"><i class="fa fa-caret-right"></i> Oxygen Rate < 95</span>
 					<table class="table table-bordered" id="tableAbnormal" style="margin-bottom: 5px;">
 						<thead style="color: white">
 							<tr>
@@ -257,7 +257,7 @@
 						</tbody>
 					</table>
 
-					<span style="color: white; font-size: 1.7vw; font-weight: bold;"><i class="fa fa-caret-right"></i> Pulse Rate Below Standard</span>
+					<span style="color: white; font-size: 1.7vw; font-weight: bold;"><i class="fa fa-caret-right"></i> Pulse Rate < 60 and Pulse Rate > 100</span>
 					<table class="table table-bordered" id="tableAbnormalPulse" style="margin-bottom: 5px;">
 						<thead style="color: white">
 							<tr>
@@ -493,7 +493,7 @@
 						ofc_total_1++;
 						if (value.oxy != null) {
 							ofc_cek_1++;
-							detail_check_ofc_1.push({'employee_id': value.employee_id,' name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
+							detail_check_ofc_1.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
 						} else {
 							ofc_uncek_1++;
 							detail_uncheck_ofc_1.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
@@ -504,7 +504,7 @@
 						ofc_total_2++;
 						if (value.oxy != null) {
 							ofc_cek_2++;
-							detail_check_ofc_2.push({'employee_id': value.employee_id,' name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
+							detail_check_ofc_2.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
 						} else {
 							ofc_uncek_2++;
 							detail_uncheck_ofc_2.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
@@ -517,7 +517,7 @@
 						prd_total_1++;
 						if (value.oxy != null) {
 							prd_cek_1++;
-							detail_check_prd_1.push({'employee_id': value.employee_id,' name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
+							detail_check_prd_1.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
 						} else {
 							prd_uncek_1++;
 							detail_uncheck_prd_1.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
