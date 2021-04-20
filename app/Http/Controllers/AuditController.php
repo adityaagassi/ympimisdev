@@ -1277,4 +1277,19 @@ public function detailPenanganan(Request $request){
         ->rawColumns(['tanggal' => 'tanggal', 'foto' => 'foto','penanganan' => 'penanganan'])
         ->make(true);
     }
+
+    public function ExportMonthlyPatrolTeam(){
+      $query = "select audit_all_results.* FROM audit_all_results where audit_all_results.deleted_at is null and audit_all_results.status_ditangani = 'close' and kategori = 'EHS & 5S Patrol'";
+
+      $detail = db::select($query);
+
+      return view('audit.patrol_monthly_team_export',  
+         array(
+           'title' => 'Monthly Patrol By Team List', 
+           'title_jp' => '',
+           'data' => $detail
+         )
+       )->with('page', 'Monthly Patrol By Team List');
+
+    }
 }

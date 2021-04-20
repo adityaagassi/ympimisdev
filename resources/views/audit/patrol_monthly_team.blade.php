@@ -130,7 +130,7 @@
   <section class="content" style="padding-top: 0; padding-bottom: 0">
     <div class="row">
       <input type="hidden" value="{{csrf_token()}}" name="_token" />
-      
+      <a href="{{url('index/monthly_patrol_team/export')}}" type="button" class="btn btn-success">Export List</a>
       <div class="col-md-12" style="padding-top: 10px;">
         <div id="chart_bulan" style="width: 99%; height: 300px;"></div>
       </div>

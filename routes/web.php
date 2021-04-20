@@ -3826,6 +3826,7 @@ Route::get('index/audit_patrol_monitoring_table', 'AuditController@fetchTableAud
 Route::get('index/monthly_patrol_team', 'AuditController@indexMonthlyPatrolTeam');
 Route::get('fetch/monthly_patrol_team', 'AuditController@fetchMonthlyPatrolTeam');
 Route::get('index/monthly_patrol_team/detail', 'AuditController@detailMonthlyPatrolTeam');
+Route::get('index/monthly_patrol_team/export', 'AuditController@ExportMonthlyPatrolTeam');
 
 Route::get('export/patrol/list', 'AuditController@exportPatrol');
 
