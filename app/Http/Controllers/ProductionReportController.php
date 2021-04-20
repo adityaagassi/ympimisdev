@@ -3100,7 +3100,7 @@ class ProductionReportController extends Controller
     public function indexAuditIKMonitoring()
     {
         $title = 'Audit IK Monitoring';
-        $title_jp = '';
+        $title_jp = '作業手順書監査表示';
 
         return view('production_report.audit_ik_monitoring', array(
             'title' => $title,
