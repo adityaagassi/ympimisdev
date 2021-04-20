@@ -1948,6 +1948,7 @@ Route::group(['nav' => 'S29', 'middleware' => 'permission'], function(){
 
 	Route::get('index/kd_splitter', 'KnockDownController@indexKdSplitter');
 	Route::get('scan/kd_splitter', 'KnockDownController@scanKdSplitter');
+	Route::post('fetch/kd_splitter', 'KnockDownController@fetchKdSplitter');
 });
 
 Route::get('upload_kd', 'KnockDownController@indexUploadSch');
@@ -4441,6 +4442,7 @@ Route::get('fetch/scrap_warehouse', 'ScrapController@fetchScrapWarehouse');
 Route::get('fetch/kd_scrap_closure', 'ScrapController@fetchKdScrapClosure');
 Route::get('scan/scrap_warehouse', 'ScrapController@scanScrapWarehouse');
 Route::get('display/scrap_warehouse', 'ScrapController@displayScrapWarehouse');
+Route::get('monitoring/scrap/wip', 'ScrapController@MonitoringWip');
 Route::get('fetch/scrap/monitoring', 'ScrapController@fetchMonitoringScrap');
 // ============================================================================================
 Route::get('index/scrap/create', 'ScrapController@createScrap');

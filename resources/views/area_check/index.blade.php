@@ -202,8 +202,8 @@
 									@foreach($area_check as $area_check)
 									<tr>
 										<td>{{$area_check->subsection}}</td>
-										<td>{{$area_check->area_check_point->location}}</td>
-										<td>{{$area_check->area_check_point->point_check}}</td>
+										<td>{{$area_check->location}}</td>
+										<td>{{$area_check->point_check}}</td>
 										<td>{{$area_check->date}}</td>
 										<td>{{$area_check->condition}}</td>
 										<td>{{$area_check->pic}}</td>
@@ -221,12 +221,12 @@
 						                	@endif</td>
 										<td>
 											<center>
-												{{-- <a class="btn btn-info btn-sm" href="{{url('index/area_check/show/'.$id.'/'.$area_check->id)}}">View</a> --}}
-												{{-- <a href="{{url('index/daily_check_fg/edit/'.$id.'/'.$daily_check->id)}}" class="btn btn-warning btn-xs">Edit</a> --}}
-												<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_area_check('{{ url("index/area_check/update") }}','{{ $area_check->id }}');">
+												{{-- <a class="btn btn-info btn-sm" href="{{url('index/area_check/show/'.$id.'/'.$area_check->id_area)}}">View</a> --}}
+												{{-- <a href="{{url('index/daily_check_fg/edit/'.$id.'/'.$daily_check->id_area)}}" class="btn btn-warning btn-xs">Edit</a> --}}
+												<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_area_check('{{ url("index/area_check/update") }}','{{ $area_check->id_area }}');">
 									               Edit
 									            </button>
-												<a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/area_check/destroy") }}', '{{ $area_check->area_check_point->point_check }} - {{ $area_check->date }}','{{ $id }}', '{{ $area_check->id }}');">
+												<a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/area_check/destroy") }}', '{{ $area_check->point_check }} - {{ $area_check->date }}','{{ $id }}', '{{ $area_check->id_area }}');">
 													Delete
 												</a>
 											</center>

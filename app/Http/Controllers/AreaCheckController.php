@@ -37,8 +37,17 @@ class AreaCheckController extends Controller
     function index($id)
     {
         $activityList = ActivityList::find($id);
-    	$area_check = AreaCheck::where('activity_list_id',$id)
-            ->orderBy('area_checks.id','desc')->get();
+    	$area_check = DB::SELECT("SELECT
+        *,area_checks.id as id_area
+      FROM
+        `area_checks`
+        JOIN area_check_points ON area_check_points.id = area_checks.area_check_point_id 
+      WHERE
+        area_checks.activity_list_id = '".$id."' 
+        and area_checks.deleted_at is null
+        and area_check_points.deleted_at is null
+      ORDER BY
+        area_checks.id DESC");
 
     	$activity_name = $activityList->activity_name;
         $departments = $activityList->departments->department_name;
@@ -98,24 +107,32 @@ class AreaCheckController extends Controller
     function filter_area_check(Request $request,$id)
     {
         $activityList = ActivityList::find($id);
+
         if(strlen($request->get('month')) != null){
-            $year = substr($request->get('month'),0,4);
-            $month = substr($request->get('month'),-2);
-            $area_check = AreaCheck::join('area_check_points','area_check_points.id','area_checks.area_check_point_id')->where('area_checks.activity_list_id',$id)
-                ->whereYear('date', '=', $year)
-                ->whereMonth('date', '=', $month)
-                ->orderBy('area_checks.id','desc');
+          $month = "and DATE_FORMAT(area_checks.date,'%Y-%m') = '".$request->get('month')."'";
         }
         else{
-            $area_check = AreaCheck::join('area_check_points','area_check_points.id','area_checks.area_check_point_id')->where('area_checks.activity_list_id',$id)
-            ->orderBy('area_checks.id','desc');
+            $month = "";
         }
 
         if(strlen($request->get('location')) != null){
-          $area_check = $area_check->where('area_check_points.location',$request->get('location'))->get();
+          $location = "and area_check_points.location = '".$request->get('location')."'";
         }else{
-          $area_check = $area_check->get();
+          $location = "";
         }
+
+        $area_check = DB::SELECT("SELECT
+          *,area_checks.id as id_area
+        FROM
+          `area_checks`
+          JOIN area_check_points ON area_check_points.id = area_checks.area_check_point_id 
+        WHERE
+          area_checks.activity_list_id = '".$id."' 
+          and area_checks.deleted_at is null
+          and area_check_points.deleted_at is null
+          ".$location." ".$month."
+        ORDER BY
+          area_checks.id DESC");
 
         // foreach ($activityList as $activityList) {
         $activity_name = $activityList->activity_name;
