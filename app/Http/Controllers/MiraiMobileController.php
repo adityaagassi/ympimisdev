@@ -25,6 +25,16 @@ class MiraiMobileController extends Controller
     ))->with('page', 'MIRAI Mobile');
   }
 
+  public function indexCoronaMap(){
+    $title = 'YMPI Corona Mapping';
+    $title_jp = '??';
+
+    return view('mirai_mobile.corona_map', array(
+      'title' => $title,
+      'title_jp' => $title_jp
+    ))->with('page', 'MIRAI Mobile');
+  }
+
   public function indexCoronaInformation(){
     $title = 'Daily Corona Data';
     $title_jp = 'インドネシア国内の新型コロナウイルス感染症の感染拡大データ';
@@ -584,17 +594,17 @@ public function fetchIndicationData(Request $request)
   ( question = 'Pernah Berinteraksi dengan Suspect / Positif COVID-19' AND answer = 'iya', 1, 0 )) AS Kontak,
   ROUND(REPLACE(REPLACE(GROUP_CONCAT(IF(question = 'Suhu Tubuh' AND answer IS NOT NULL, answer, 0 )), 0,''), ',', ''),1) AS Suhu 
   FROM
-    quiz_logs
-    LEFT JOIN employees ON quiz_logs.employee_id = employees.employee_id 
+  quiz_logs
+  LEFT JOIN employees ON quiz_logs.employee_id = employees.employee_id 
   WHERE
-    keterangan IS NULL 
-    AND end_date IS NULL 
-    AND answer_date = '".$tgl."'
+  keterangan IS NULL 
+  AND end_date IS NULL 
+  AND answer_date = '".$tgl."'
   GROUP BY
-    employee_id,
-    `name`,
-    date( created_at ),
-    department 
+  employee_id,
+  `name`,
+  date( created_at ),
+  department 
   ORDER BY date";
 
    // having Demam = 1 or Batuk = 1 or Pusing = 1 or Tenggorokan = 1 or Sesak = 1 or Indera = 1 or Kontak = 1 
@@ -605,6 +615,36 @@ public function fetchIndicationData(Request $request)
   );
   return Response::json($response);
 }
+
+public function indexGuestAssessmentReport()
+  {
+    $title = 'Report Guest Assessment Covid-19';
+    $title_jp = '';
+
+    return view('mirai_mobile.guest_assessment', array(
+      'title' => $title,
+      'title_jp' => $title_jp
+    ))->with('page', 'Report Guest Assessment')->with('head','Report Guest Assessment');
+  }
+
+  public function fetchGuestAssessmentReport()
+  {
+    try {
+      $guest = DB::SELECT("SELECT * from miraimobile.guest_logs order by created_at desc");
+
+      $response = array(
+        'status' => true,
+        'guest' => $guest
+      );
+      return Response::json($response);
+    } catch (\Exception $e) {
+      $response = array(
+        'status' => false,
+        'message' => $e->getMessage()
+      );
+      return Response::json($response);
+    }
+  }
 
 
 }
