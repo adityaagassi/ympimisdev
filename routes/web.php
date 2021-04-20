@@ -1105,6 +1105,7 @@ Route::group(['nav' => 'S39', 'middleware' => 'permission'], function(){
 	Route::get('index/ga_control/driver_log', 'GeneralAffairController@indexDriverLog');
 	Route::get('fetch/ga_control/driver_log', 'GeneralAffairController@fetchDriverLog');
 	Route::post('create/ga_control/driver_duty', 'GeneralAffairController@createDriverDuty');
+	Route::get('index/ga_control/bento_report', 'GeneralAffairController@indexBentoReport');
 });
 Route::get('approve/ga_control/driver/{id}', 'GeneralAffairController@approveRequest');
 Route::get('reject/ga_control/driver/{id}', 'GeneralAffairController@rejectRequest');
@@ -1949,7 +1950,12 @@ Route::group(['nav' => 'S29', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_splitter', 'KnockDownController@indexKdSplitter');
 	Route::get('scan/kd_splitter', 'KnockDownController@scanKdSplitter');
 	Route::post('fetch/kd_splitter', 'KnockDownController@fetchKdSplitter');
+	Route::get('fetch/kdo_splitter_detail', 'KnockDownController@fetchKDOSplitterDetail');
+	Route::get('index/print_label_split/{id}', 'KnockDownController@indexPrintLabelSplit');
+
 });
+
+
 
 Route::get('upload_kd', 'KnockDownController@indexUploadSch');
 
@@ -4297,13 +4303,17 @@ Route::group(['nav' => 'M28', 'middleware' => 'permission'], function(){
 	Route::get('print/report/skill_map_evaluation/{location}/{evaluation_code}', 'SkillMapController@printSkillMapEvaluation');
 });
 
-//NG Jelas Report
+//NG Jelas Report & Audit IK
 Route::group(['nav' => 'M30', 'middleware' => 'permission'], function(){
 	Route::get('index/audit_ng_jelas_monitoring', 'ProductionReportController@indexNgJelasMonitoring');
 	Route::get('fetch/audit_ng_jelas_monitoring', 'ProductionReportController@fetchNgJelasMonitoring');
 	Route::get('fetch/audit_ng_jelas_monitoring2', 'ProductionReportController@fetchNgJelasMonitoring2');
 	Route::get('fetch/detail_audit_ng_jelas_monitoring', 'ProductionReportController@fetchDetailNgJelasMonitoring');
 	Route::get('fetch/detail_audit_ng_jelas_monitoring2', 'ProductionReportController@fetchDetailNgJelasMonitoring2');
+
+	Route::get('index/audit_ik_monitoring', 'ProductionReportController@indexAuditIKMonitoring');
+	Route::get('fetch/audit_ik_monitoring', 'ProductionReportController@fetchAuditIKMonitoring');
+	Route::get('fetch/detail_audit_ik_monitoring', 'ProductionReportController@fetchDetailAuditIKMonitoring');
 });
 
 //ROOMS
@@ -4440,6 +4450,8 @@ Route::get('index/scrap/resume', 'ScrapController@indexScrapResume');
 Route::get('index/scrap/warehouse', 'ScrapController@indexWarehouse');
 Route::get('index/scrap/logs', 'ScrapController@indexLogs');
 Route::get('fetch/scrap/logs', 'ScrapController@fetchLogs');
+Route::post('cancel/scrap', 'ScrapController@cancelScrap');
+// Route::get('delete/scrap', 'ScrapController@deleteScrap');
 Route::get('fetch/scrap_detail', 'ScrapController@fetchScrapDetail');
 Route::get('fetch/scrap_warehouse', 'ScrapController@fetchScrapWarehouse');
 Route::get('fetch/kd_scrap_closure', 'ScrapController@fetchKdScrapClosure');
@@ -4589,6 +4601,8 @@ Route::post('update/pengantaran', 'WarehouseNewController@updatePengantaran');
 Route::get('index/import/get_job_now', 'WarehouseNewController@get_job_new');
 Route::get('fetch/lokasi/pengantaran', 'WarehouseNewController@fetchCekPengantaran');
 Route::post('post/pengantaran/lokasi', 'WarehouseNewController@updateLokasi');
+Route::get('get/lokasi', 'WarehouseNewController@getLokasi');
+
 
 //Sanding
 

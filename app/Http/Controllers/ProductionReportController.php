@@ -3096,5 +3096,151 @@ class ProductionReportController extends Controller
         return Response::json($response);
 
     }
+
+    public function indexAuditIKMonitoring()
+    {
+        $title = 'Audit IK Monitoring';
+        $title_jp = '';
+
+        return view('production_report.audit_ik_monitoring', array(
+            'title' => $title,
+            'title_jp' => $title_jp,
+        ))->with('page', 'Audit IK Monitoring');
+    }
+
+    public function fetchAuditIKMonitoring(Request $request)
+    {
+        try {
+            if ($request->get('month') != "") {
+                $month = $request->get('month');
+            }else{
+                $month = date('Y-m');
+            }
+
+            $audit_ik = DB::SELECT("SELECT
+                activity_lists.id,
+                leader_dept,
+                department_shortname,
+                ( SELECT count( audit_guidances.id ) FROM audit_guidances WHERE audit_guidances.activity_list_id = activity_lists.id AND audit_guidances.`month` = '".$month."' ) AS plan,
+                (
+                SELECT
+                    count( audit_guidances.id ) 
+                FROM
+                    audit_guidances 
+                WHERE
+                    audit_guidances.activity_list_id = activity_lists.id 
+                    AND audit_guidances.`month` = '".$month."' 
+                    AND STATUS = 'Sudah Dikerjakan' 
+                ) AS done,
+                (
+                SELECT
+                    count( audit_guidances.id ) 
+                FROM
+                    audit_guidances 
+                WHERE
+                    audit_guidances.activity_list_id = activity_lists.id 
+                    AND audit_guidances.`month` = '".$month."' 
+                    AND STATUS = 'Belum Dikerjakan' 
+                ) AS not_yet 
+            FROM
+                activity_lists
+                LEFT JOIN departments ON departments.id = activity_lists.department_id 
+            WHERE
+                activity_type = 'Laporan Aktivitas' 
+                AND department_shortname != 'KP' 
+            ORDER BY
+                department_shortname");
+
+            $monthTitle = date("F Y", strtotime($month));
+
+            $response = array(
+                'status' => true,
+                'audit_ik' => $audit_ik,
+                'month' => $month,
+                'monthTitle' => $monthTitle,
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function fetchDetailAuditIKMonitoring(Request $request)
+    {
+        try {
+            $leader = $request->get('leader');
+            $month = $request->get('month');
+            $kondisi = $request->get('kondisi');
+
+            $ldr = explode(' - ', $leader);
+
+            $datass = [];
+
+            if ($kondisi == 'Belum Dikerjakan') {
+                $datas = DB::SELECT("SELECT
+                    * 
+                FROM
+                    audit_guidances
+                    LEFT JOIN activity_lists ON activity_lists.id = audit_guidances.activity_list_id 
+                WHERE
+                    leader_dept = '".$ldr[1]."' 
+                    AND `month` = '".$month."' 
+                    AND `status` = '".$kondisi."'");
+            }else{
+                $datas = DB::SELECT("SELECT
+                    *,audit_guidances.id as id_guide
+                FROM
+                    audit_guidances
+                    LEFT JOIN activity_lists ON activity_lists.id = audit_guidances.activity_list_id 
+                WHERE
+                    leader_dept = '".$ldr[1]."' 
+                    AND `month` = '".$month."' 
+                    AND `status` = '".$kondisi."'");
+
+                foreach ($datas as $key) {
+                    $dd = DB::SELECT("SELECT
+                        department,
+                        section,
+                        subsection,
+                        audit_report_activities.date,
+                        audit_guidances.no_dokumen,
+                        audit_guidances.nama_dokumen,
+                        audit_guidances.month,
+                        audit_report_activities.kesesuaian_aktual_proses,
+                        audit_report_activities.kesesuaian_qc_kouteihyo,
+                        audit_report_activities.kelengkapan_point_safety,
+                        audit_report_activities.tindakan_perbaikan,
+                        audit_report_activities.target,
+                        audit_report_activities.operator 
+                    FROM
+                        audit_report_activities
+                        JOIN audit_guidances ON audit_guidances.id = audit_report_activities.audit_guidance_id 
+                    WHERE
+                        audit_guidance_id = '".$key->id_guide."'");
+                    array_push($datass, $dd);
+                }
+            }
+
+            $monthTitle = date("F Y", strtotime($month));
+            $response = array(
+                'status' => true,
+                'datass' => $datass,
+                'datas' => $datas,
+                'month' => $month,
+                'monthTitle' => $monthTitle,
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+            return Response::json($response);
+        }
+    }
 }
 

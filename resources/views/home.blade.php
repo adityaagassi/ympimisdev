@@ -302,13 +302,11 @@
                             </a>
                             <br>       -->
                             <a href="{{ url("index/qa_cpar") }}">
-                                <i class="fa fa-caret-right"></i> QA CPAR & CAR Data (品保是正予防策リポートと是正策データ
-)
+                                <i class="fa fa-caret-right"></i> QA CPAR & CAR Data (品保是正予防策リポートと是正策データ)
                             </a>
                             <br>
                             <a href="{{ url("index/qa_ymmj_index") }}">
-                                <i class="fa fa-caret-right"></i> QA YMMJ Report (YMMJ品保の報告データ
-)
+                                <i class="fa fa-caret-right"></i> QA YMMJ Report (YMMJ品保の報告データ)
                             </a>
                             <!-- <a href="{{ url("index/qa_ymmj") }}">
                                 <i class="fa fa-caret-right"></i> Form Ketidaksesuaian YMMJ (YMMJ不具合リポート)
@@ -533,11 +531,11 @@
                             </a>
                             <br>
                             <a href="{{ url('index/general/oxymeter') }}">
-                                <i class="fa fa-caret-right"></i> Oxymeter Check(オキシメーター検査)
+                                <i class="fa fa-caret-right"></i> Oximeter Check(オキシメーター検査)
                             </a>
                             <br>
                             <a href="{{ url('index/general/oxymeter/monitoring') }}">
-                                <i class="fa fa-caret-right"></i> Oxymeter Monitoring(オキシメーターモニター)
+                                <i class="fa fa-caret-right"></i> Oximeter Monitoring(オキシメーターモニター)
                             </a>
                             <br>
                             <a href="{{ url('index/general/airvisual') }}">
@@ -727,7 +725,7 @@
                 </tr>
             </thead>
             <tbody>
-               <!--  <tr>
+                <tr>
                     <td>
                         <span style="font-weight: bold;">Smart TPM (??)</span>
                         <br>
@@ -735,7 +733,7 @@
                             <i class="fa fa-caret-right"></i> Smart TPM (??)
                         </a>
                     </td>                     
-                </tr> -->
+                </tr>
                 <tr>
                     <td>
                         <span style="font-weight: bold;">Machine Monitoring (マシン監視)</span>
@@ -1033,6 +1031,15 @@
                                 <br>
                                 <a href="{{ url("/index/audit_ng_jelas_monitoring") }}">
                                     <i class="fa fa-caret-right"></i> Audit NG Jelas Monitoring (明らか不良監査の監視)
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="font-weight: bold;">Audit IK (作業手順書監査)</span>
+                                <br>
+                                <a href="{{ url("/index/audit_ik_monitoring") }}">
+                                    <i class="fa fa-caret-right"></i> Audit IK Monitoring (作業手順書監査表示)
                                 </a>
                             </td>
                         </tr>
