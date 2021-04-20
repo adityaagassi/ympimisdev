@@ -152,7 +152,7 @@
               <td>{{$patrol->auditee_name}}</td>
               <td>{{$patrol->point_judul}}</td>
               <td>{{$patrol->note}}</td>
-              <td><img src="{{url('files/patrol/')}}{{$patrol->foto}}" width="250"></td>
+              <td><img src="{{url('files/patrol')}}/{{$patrol->foto}}" width="250"></td>
               <td><?= $patrol->penanganan ?></td>
             </tr>
             @endforeach
