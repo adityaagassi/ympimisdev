@@ -1019,8 +1019,8 @@ class AssemblyProcessController extends Controller
 
 		if ($loc == 'perakitanawal-kensa,tanpoawase-process') {
 			$work_stations = DB::select("SELECT
-				IF(assemblies.location = 'perakitanawal-kensa','Perakitan Ulang',assemblies.location) as location,
-				assemblies.location,
+			IF
+				( assemblies.location = 'perakitanawal-kensa', 'Perakitan Ulang', assemblies.location ) AS location,
 				location_number,
 				online_time,
 				assemblies.operator_id,
@@ -1031,43 +1031,21 @@ class AssemblyProcessController extends Controller
 				DATE( sedang_time ) AS sedang_date,
 				( SELECT standard_time FROM assembly_std_times WHERE location = assemblies.location ) AS std_time,
 				( SELECT count( DISTINCT ( serial_number )) FROM assembly_logs WHERE operator_id = assemblies.operator_id AND DATE( created_at ) = '".$now."' ) + ( SELECT count( DISTINCT ( serial_number )) FROM assembly_details WHERE operator_id = assemblies.operator_id AND DATE( created_at ) = '".$now."' ) AS perolehan,
+				( SELECT GROUP_CONCAT( ng_name ORDER BY assembly_ng_logs.id DESC) AS ng_name FROM assembly_ng_logs WHERE assembly_ng_logs.serial_number = assemblies.sedang_serial_number  LIMIT 4 ) AS ng_name,
+				( SELECT GROUP_CONCAT( ongko ORDER BY assembly_ng_logs.id DESC) AS ongko FROM assembly_ng_logs WHERE assembly_ng_logs.serial_number = assemblies.sedang_serial_number  LIMIT 4) AS onko,
 				(
 				SELECT
-				GROUP_CONCAT(
-				DISTINCT (
-				SUBSTRING_INDEX( ng_name, '-', 1 ))) AS ng_name 
-				FROM
-				assembly_ng_logs 
-				WHERE
-				operator_id = assemblies.operator_id 
-				AND DATE( created_at ) = '".$now."' 
-				) AS ng_name,
-				(
-				SELECT
-				GROUP_CONCAT( qty_ng ) AS qty_ng 
-				FROM
-				( SELECT COUNT( ng_name ) AS qty_ng, operator_id FROM assembly_ng_logs WHERE DATE( created_at ) = '".$now."' GROUP BY ng_name,operator_id ) ss 
-				WHERE
-				operator_id = assemblies.operator_id 
-				) AS qty_ng,
-				(
-				SELECT
-					GROUP_CONCAT(  SUBSTRING_INDEX( ng_name, ' -', 1 )  ) AS ng_name 
+					GROUP_CONCAT(
+						COALESCE ( value_atas, 0 ),
+						'-',
+					COALESCE ( value_bawah, 0 ) ORDER BY assembly_ng_logs.id DESC) AS valueses 
 				FROM
 					assembly_ng_logs 
 				WHERE
-					operator_id = assemblies.operator_id 
-					AND DATE( created_at ) = '".$now."' 
-					) as ng_name_detail,
-					(
-				SELECT
-					GROUP_CONCAT(  IF(assembly_ng_logs.value_bawah is null,value_atas,CONCAT(value_atas,'-',value_bawah))  ) AS ng_name 
-				FROM
-					assembly_ng_logs 
-				WHERE
-					operator_id = assemblies.operator_id 
-					AND DATE( created_at ) = '".$now."' 
-					) as qty_ng_detail
+					assembly_ng_logs.serial_number = assemblies.sedang_serial_number
+				 LIMIT 4 
+				) AS valueses,
+				( SELECT GROUP_CONCAT( COALESCE ( value_lokasi, 0 ) ORDER BY assembly_ng_logs.id DESC) AS valueses FROM assembly_ng_logs WHERE assembly_ng_logs.serial_number = assemblies.sedang_serial_number  LIMIT 4) AS lokasi 
 				FROM
 				assemblies
 				LEFT JOIN employee_syncs ON employee_syncs.employee_id = assemblies.operator_id 
@@ -1078,7 +1056,8 @@ class AssemblyProcessController extends Controller
 				ORDER BY remark, location_number asc");
 		}else if ($loc == 'tanpoawase-process') {
 			$work_stations = DB::select("SELECT
-				IF(assemblies.location = 'perakitanawal-kensa','Perakitan Ulang',assemblies.location) as location,
+			IF
+				( assemblies.location = 'perakitanawal-kensa', 'Perakitan Ulang', assemblies.location ) AS location,
 				location_number,
 				online_time,
 				assemblies.operator_id,
@@ -1089,43 +1068,21 @@ class AssemblyProcessController extends Controller
 				DATE( sedang_time ) AS sedang_date,
 				( SELECT standard_time FROM assembly_std_times WHERE location = assemblies.location ) AS std_time,
 				( SELECT count( DISTINCT ( serial_number )) FROM assembly_logs WHERE operator_id = assemblies.operator_id AND DATE( created_at ) = '".$now."' ) + ( SELECT count( DISTINCT ( serial_number )) FROM assembly_details WHERE operator_id = assemblies.operator_id AND DATE( created_at ) = '".$now."' ) AS perolehan,
+				( SELECT GROUP_CONCAT( ng_name ORDER BY assembly_ng_logs.id DESC) AS ng_name FROM assembly_ng_logs WHERE assembly_ng_logs.serial_number = assemblies.sedang_serial_number  LIMIT 4 ) AS ng_name,
+				( SELECT GROUP_CONCAT( ongko ORDER BY assembly_ng_logs.id DESC) AS ongko FROM assembly_ng_logs WHERE assembly_ng_logs.serial_number = assemblies.sedang_serial_number  LIMIT 4) AS onko,
 				(
 				SELECT
-				GROUP_CONCAT(
-				DISTINCT (
-				SUBSTRING_INDEX( ng_name, '-', 1 ))) AS ng_name 
-				FROM
-				assembly_ng_logs 
-				WHERE
-				operator_id = assemblies.operator_id 
-				AND DATE( created_at ) = '".$now."' 
-				) AS ng_name,
-				(
-				SELECT
-				GROUP_CONCAT( qty_ng ) AS qty_ng 
-				FROM
-				( SELECT COUNT( ng_name ) AS qty_ng, operator_id FROM assembly_ng_logs WHERE DATE( created_at ) = '".$now."' GROUP BY ng_name,operator_id ) ss 
-				WHERE
-				operator_id = assemblies.operator_id 
-				) AS qty_ng,
-				(
-				SELECT
-					GROUP_CONCAT(  SUBSTRING_INDEX( ng_name, ' -', 1 )  ) AS ng_name 
+					GROUP_CONCAT(
+						COALESCE ( value_atas, 0 ),
+						'-',
+					COALESCE ( value_bawah, 0 ) ORDER BY assembly_ng_logs.id DESC) AS valueses 
 				FROM
 					assembly_ng_logs 
 				WHERE
-					operator_id = assemblies.operator_id 
-					AND DATE( created_at ) = '".$now."' 
-					) as ng_name_detail,
-					(
-				SELECT
-					GROUP_CONCAT(  IF(assembly_ng_logs.value_bawah is null,value_atas,CONCAT(value_atas,'-',value_bawah))  ) AS ng_name 
-				FROM
-					assembly_ng_logs 
-				WHERE
-					operator_id = assemblies.operator_id 
-					AND DATE( created_at ) = '".$now."' 
-					) as qty_ng_detail
+					assembly_ng_logs.serial_number = assemblies.sedang_serial_number
+				 LIMIT 4 
+				) AS valueses,
+				( SELECT GROUP_CONCAT( COALESCE ( value_lokasi, 0 ) ORDER BY assembly_ng_logs.id DESC) AS valueses FROM assembly_ng_logs WHERE assembly_ng_logs.serial_number = assemblies.sedang_serial_number  LIMIT 4) AS lokasi 
 				FROM
 				assemblies
 				LEFT JOIN employee_syncs ON employee_syncs.employee_id = assemblies.operator_id 
@@ -1136,7 +1093,8 @@ class AssemblyProcessController extends Controller
 				ORDER BY remark, location_number asc");
 		}else if($loc == 'tanpoawase-kensa,tanpoawase-fungsi,repair-process-1,repair-process-2'){
 			$work_stations = DB::select("SELECT
-				IF(assemblies.location = 'perakitanawal-kensa','Perakitan Ulang',assemblies.location) as location,
+			IF
+				( assemblies.location = 'perakitanawal-kensa', 'Perakitan Ulang', assemblies.location ) AS location,
 				location_number,
 				online_time,
 				assemblies.operator_id,
@@ -1147,43 +1105,21 @@ class AssemblyProcessController extends Controller
 				DATE( sedang_time ) AS sedang_date,
 				( SELECT standard_time FROM assembly_std_times WHERE location = assemblies.location ) AS std_time,
 				( SELECT count( DISTINCT ( serial_number )) FROM assembly_logs WHERE operator_id = assemblies.operator_id AND DATE( created_at ) = '".$now."' ) + ( SELECT count( DISTINCT ( serial_number )) FROM assembly_details WHERE operator_id = assemblies.operator_id AND DATE( created_at ) = '".$now."' ) AS perolehan,
+				( SELECT GROUP_CONCAT( ng_name ) AS ng_name FROM assembly_ng_logs WHERE assembly_ng_logs.serial_number = assemblies.sedang_serial_number LIMIT 4 ) AS ng_name,
+				( SELECT GROUP_CONCAT( ongko ) AS ongko FROM assembly_ng_logs WHERE assembly_ng_logs.serial_number = assemblies.sedang_serial_number  LIMIT 4) AS onko,
 				(
 				SELECT
-				GROUP_CONCAT(
-				DISTINCT (
-				SUBSTRING_INDEX( ng_name, '-', 1 ))) AS ng_name 
-				FROM
-				assembly_ng_logs 
-				WHERE
-				operator_id = assemblies.operator_id 
-				AND DATE( created_at ) = '".$now."' 
-				) AS ng_name,
-				(
-				SELECT
-				GROUP_CONCAT( qty_ng ) AS qty_ng 
-				FROM
-				( SELECT COUNT( ng_name ) AS qty_ng, operator_id FROM assembly_ng_logs WHERE DATE( created_at ) = '".$now."' GROUP BY ng_name,operator_id ) ss 
-				WHERE
-				operator_id = assemblies.operator_id 
-				) AS qty_ng,
-				(
-				SELECT
-					GROUP_CONCAT(  SUBSTRING_INDEX( ng_name, ' -', 1 )  ) AS ng_name 
+					GROUP_CONCAT(
+						COALESCE ( value_atas, 0 ),
+						'-',
+					COALESCE ( value_bawah, 0 )) AS valueses 
 				FROM
 					assembly_ng_logs 
 				WHERE
-					operator_id = assemblies.operator_id 
-					AND DATE( created_at ) = '".$now."' 
-					) as ng_name_detail,
-					(
-				SELECT
-					GROUP_CONCAT(  IF(assembly_ng_logs.value_bawah is null,value_atas,CONCAT(value_atas,'-',value_bawah))  ) AS ng_name 
-				FROM
-					assembly_ng_logs 
-				WHERE
-					operator_id = assemblies.operator_id 
-					AND DATE( created_at ) = '".$now."' 
-					) as qty_ng_detail
+					assembly_ng_logs.serial_number = assemblies.sedang_serial_number
+				 LIMIT 4 
+				) AS valueses,
+				( SELECT GROUP_CONCAT( COALESCE ( value_lokasi, 0 )) AS valueses FROM assembly_ng_logs WHERE assembly_ng_logs.serial_number = assemblies.sedang_serial_number  LIMIT 4) AS lokasi 
 				FROM
 				assemblies
 				LEFT JOIN employee_syncs ON employee_syncs.employee_id = assemblies.operator_id 
@@ -1194,10 +1130,11 @@ class AssemblyProcessController extends Controller
 				(assemblies.location in ('repair-process')
 					and assemblies.location_number in ('1','2')
 				AND assemblies.origin_group_code = '041')
-				ORDER BY location desc");
+				ORDER BY location ASC");
 		}else if($loc == 'fukiage1-process,repair-ringan'){
 			$work_stations = DB::select("SELECT
-				IF(assemblies.location = 'perakitanawal-kensa','Perakitan Ulang',assemblies.location) as location,
+			IF
+				( assemblies.location = 'perakitanawal-kensa', 'Perakitan Ulang', assemblies.location ) AS location,
 				location_number,
 				online_time,
 				assemblies.operator_id,
@@ -1208,43 +1145,21 @@ class AssemblyProcessController extends Controller
 				DATE( sedang_time ) AS sedang_date,
 				( SELECT standard_time FROM assembly_std_times WHERE location = assemblies.location ) AS std_time,
 				( SELECT count( DISTINCT ( serial_number )) FROM assembly_logs WHERE operator_id = assemblies.operator_id AND DATE( created_at ) = '".$now."' ) + ( SELECT count( DISTINCT ( serial_number )) FROM assembly_details WHERE operator_id = assemblies.operator_id AND DATE( created_at ) = '".$now."' ) AS perolehan,
+				( SELECT GROUP_CONCAT( ng_name ORDER BY assembly_ng_logs.id DESC) AS ng_name FROM assembly_ng_logs WHERE assembly_ng_logs.serial_number = assemblies.sedang_serial_number  LIMIT 4 ) AS ng_name,
+				( SELECT GROUP_CONCAT( ongko ORDER BY assembly_ng_logs.id DESC) AS ongko FROM assembly_ng_logs WHERE assembly_ng_logs.serial_number = assemblies.sedang_serial_number  LIMIT 4) AS onko,
 				(
 				SELECT
-				GROUP_CONCAT(
-				DISTINCT (
-				SUBSTRING_INDEX( ng_name, '-', 1 ))) AS ng_name 
-				FROM
-				assembly_ng_logs 
-				WHERE
-				operator_id = assemblies.operator_id 
-				AND DATE( created_at ) = '".$now."' 
-				) AS ng_name,
-				(
-				SELECT
-				GROUP_CONCAT( qty_ng ) AS qty_ng 
-				FROM
-				( SELECT COUNT( ng_name ) AS qty_ng, operator_id FROM assembly_ng_logs WHERE DATE( created_at ) = '".$now."' GROUP BY ng_name,operator_id ) ss 
-				WHERE
-				operator_id = assemblies.operator_id 
-				) AS qty_ng,
-				(
-				SELECT
-					GROUP_CONCAT(  SUBSTRING_INDEX( ng_name, ' -', 1 )  ) AS ng_name 
+					GROUP_CONCAT(
+						COALESCE ( value_atas, 0 ),
+						'-',
+					COALESCE ( value_bawah, 0 ) ORDER BY assembly_ng_logs.id DESC) AS valueses 
 				FROM
 					assembly_ng_logs 
 				WHERE
-					operator_id = assemblies.operator_id 
-					AND DATE( created_at ) = '".$now."' 
-					) as ng_name_detail,
-					(
-				SELECT
-					GROUP_CONCAT(  IF(assembly_ng_logs.value_bawah is null,value_atas,CONCAT(value_atas,'-',value_bawah))  ) AS ng_name 
-				FROM
-					assembly_ng_logs 
-				WHERE
-					operator_id = assemblies.operator_id 
-					AND DATE( created_at ) = '".$now."' 
-					) as qty_ng_detail
+					assembly_ng_logs.serial_number = assemblies.sedang_serial_number
+				 LIMIT 4 
+				) AS valueses,
+				( SELECT GROUP_CONCAT( COALESCE ( value_lokasi, 0 ) ORDER BY assembly_ng_logs.id DESC) AS valueses FROM assembly_ng_logs WHERE assembly_ng_logs.serial_number = assemblies.sedang_serial_number  LIMIT 4) AS lokasi 
 				FROM
 				assemblies
 				LEFT JOIN employee_syncs ON employee_syncs.employee_id = assemblies.operator_id 
@@ -1259,7 +1174,8 @@ class AssemblyProcessController extends Controller
 		}
 		else{
 			$work_stations = DB::select("SELECT
-				assemblies.location,
+			IF
+				( assemblies.location = 'perakitanawal-kensa', 'Perakitan Ulang', assemblies.location ) AS location,
 				location_number,
 				online_time,
 				assemblies.operator_id,
@@ -1270,43 +1186,21 @@ class AssemblyProcessController extends Controller
 				DATE( sedang_time ) AS sedang_date,
 				( SELECT standard_time FROM assembly_std_times WHERE location = assemblies.location ) AS std_time,
 				( SELECT count( DISTINCT ( serial_number )) FROM assembly_logs WHERE operator_id = assemblies.operator_id AND DATE( created_at ) = '".$now."' ) + ( SELECT count( DISTINCT ( serial_number )) FROM assembly_details WHERE operator_id = assemblies.operator_id AND DATE( created_at ) = '".$now."' ) AS perolehan,
+				( SELECT GROUP_CONCAT( ng_name ORDER BY assembly_ng_logs.id DESC) AS ng_name FROM assembly_ng_logs WHERE assembly_ng_logs.serial_number = assemblies.sedang_serial_number  LIMIT 4 ) AS ng_name,
+				( SELECT GROUP_CONCAT( ongko ORDER BY assembly_ng_logs.id DESC) AS ongko FROM assembly_ng_logs WHERE assembly_ng_logs.serial_number = assemblies.sedang_serial_number  LIMIT 4) AS onko,
 				(
 				SELECT
-				GROUP_CONCAT(
-				DISTINCT (
-				SUBSTRING_INDEX( ng_name, '-', 1 ))) AS ng_name 
-				FROM
-				assembly_ng_logs 
-				WHERE
-				operator_id = assemblies.operator_id 
-				AND DATE( created_at ) = '".$now."' 
-				) AS ng_name,
-				(
-				SELECT
-				GROUP_CONCAT( qty_ng ) AS qty_ng 
-				FROM
-				( SELECT COUNT( ng_name ) AS qty_ng, operator_id FROM assembly_ng_logs WHERE DATE( created_at ) = '".$now."' GROUP BY ng_name,operator_id ) ss 
-				WHERE
-				operator_id = assemblies.operator_id 
-				) AS qty_ng,
-				(
-				SELECT
-					GROUP_CONCAT(  SUBSTRING_INDEX( ng_name, ' -', 1 )  ) AS ng_name 
+					GROUP_CONCAT(
+						COALESCE ( value_atas, 0 ),
+						'-',
+					COALESCE ( value_bawah, 0 ) ORDER BY assembly_ng_logs.id DESC) AS valueses 
 				FROM
 					assembly_ng_logs 
 				WHERE
-					operator_id = assemblies.operator_id 
-					AND DATE( created_at ) = '".$now."' 
-					) as ng_name_detail,
-					(
-				SELECT
-					GROUP_CONCAT(  IF(assembly_ng_logs.value_bawah is null,value_atas,CONCAT(value_atas,'-',value_bawah))  ) AS ng_name 
-				FROM
-					assembly_ng_logs 
-				WHERE
-					operator_id = assemblies.operator_id 
-					AND DATE( created_at ) = '".$now."' 
-					) as qty_ng_detail
+					assembly_ng_logs.serial_number = assemblies.sedang_serial_number
+				 LIMIT 4 
+				) AS valueses,
+				( SELECT GROUP_CONCAT( COALESCE ( value_lokasi, 0 ) ORDER BY assembly_ng_logs.id DESC) AS valueses FROM assembly_ng_logs WHERE assembly_ng_logs.serial_number = assemblies.sedang_serial_number  LIMIT 4) AS lokasi 
 				FROM
 				assemblies
 				LEFT JOIN employee_syncs ON employee_syncs.employee_id = assemblies.operator_id 
@@ -1339,9 +1233,9 @@ class AssemblyProcessController extends Controller
 				'std_time' => $ws->std_time,
 				'perolehan' => $ws->perolehan,
 				'ng_name' => $ws->ng_name,
-				'qty_ng' => $ws->qty_ng,
-				'ng_name_detail' => $ws->ng_name_detail,
-				'qty_ng_detail' => $ws->qty_ng_detail
+				'onko' => $ws->onko,
+				'valueses' => $ws->valueses,
+				'lokasi' => $ws->lokasi
 			]);
 		}
 
@@ -2518,7 +2412,7 @@ class AssemblyProcessController extends Controller
 					$location = $location.",";
 				}
 			}
-			$addlocation = "and location in (".$location.") ";
+			$addlocation = "and SUBSTRING_INDEX( assembly_operators.location, '-', 2 ) in (".$location.") ";
 		}
 
 		if(strlen($request->get('tanggal'))>0){
@@ -2531,46 +2425,67 @@ class AssemblyProcessController extends Controller
 		->select('target')
 		->first();
 
-		$ng_rate = db::select("SELECT
-			ao.employee_id AS operator_id,
-			SUBSTRING_INDEX( e.NAME, ' ', 2 ) AS `name`,
+		$ng_rate = db::select("SELECT DISTINCT
+			( assembly_logs.operator_id ) AS employee_id,
+			CONCAT(( assembly_logs.operator_id ),'-',SUBSTRING_INDEX( employee_syncs.NAME, ' ', 2 )) as opname,
+			SUBSTRING_INDEX( assembly_operators.location, '-', 2 ) AS `location`,
+			SUBSTRING_INDEX( employee_syncs.NAME, ' ', 2 ) AS `name`,
 			COALESCE ( ng.`check`, 0 ) AS `check`,
 			COALESCE ( ng.ng, 0 ) AS ng,
-			0 AS rate 
-			FROM
-			assembly_operators ao
-			LEFT JOIN employee_syncs e ON ao.employee_id = e.employee_id
+			COALESCE ( ng2.`check`, 0 ) AS `check2`,
+			COALESCE ( ng2.ng, 0 ) AS ng2
+		FROM
+			assembly_logs
+			LEFT JOIN employee_syncs ON employee_syncs.employee_id = assembly_logs.operator_id
+			LEFT JOIN assembly_operators ON assembly_operators.employee_id = assembly_logs.operator_id
 			LEFT JOIN (
 			SELECT
-			count( id ) AS ng,
-			count( id ) AS `check`,
-			operator_id 
+				count( id ) AS ng,
+				count( id ) AS `check`,
+				operator_id 
 			FROM
-			assembly_ng_logs 
+				assembly_ng_logs 
 			WHERE
-			DATE( created_at ) = '".$now."' '".$addlocation."'
+				DATE( created_at ) = '".$now."' 
 			GROUP BY
-			operator_id 
-		) ng ON ao.employee_id = ng.operator_id");
+				operator_id 
+			) ng ON assembly_logs.operator_id = ng.operator_id
+			LEFT JOIN (
+			SELECT
+				count( id ) AS ng,
+				count( id ) AS `check`,
+				operator_id 
+			FROM
+				assembly_ng_logs 
+			WHERE
+				DATE( created_at ) = '".$now."' 
+			GROUP BY
+				operator_id 
+			) ng2 ON SUBSTRING_INDEX( assembly_operators.location, '-', 2 ) = ng2.operator_id 
+		WHERE
+			employee_syncs.end_date IS NULL 
+			AND assembly_logs.operator_id != 'null' 
+			AND assembly_logs.operator_id != 'assy-fl' 
+			".$addlocation."");
 
-		$target = db::select("select eg.`group`, eg.employee_id, e.name, ng.material_number, concat(m.model, ' ', m.`key`) as `key`, ng.ng_name, ng.quantity, ng.created_at from employee_groups eg left join 
-			(select * from welding_ng_logs where deleted_at is null ".$addlocation." and remark in 
-			(select remark.remark from
-			(select operator_id, max(remark) as remark from welding_ng_logs where DATE(welding_time) ='".$now."' ".$addlocation." group by operator_id) 
-			remark)
-			) ng 
-			on eg.employee_id = ng.operator_id
-			left join materials m on m.material_number = ng.material_number
-			left join employee_syncs e on e.employee_id = eg.employee_id
-			where eg.location = 'soldering'
-			order by eg.`group`, e.`name` asc");
+		// $target = db::select("select eg.`group`, eg.employee_id, e.name, ng.material_number, concat(m.model, ' ', m.`key`) as `key`, ng.ng_name, ng.quantity, ng.created_at from employee_groups eg left join 
+		// 	(select * from welding_ng_logs where deleted_at is null ".$addlocation." and remark in 
+		// 	(select remark.remark from
+		// 	(select operator_id, max(remark) as remark from welding_ng_logs where DATE(welding_time) ='".$now."' ".$addlocation." group by operator_id) 
+		// 	remark)
+		// 	) ng 
+		// 	on eg.employee_id = ng.operator_id
+		// 	left join materials m on m.material_number = ng.material_number
+		// 	left join employee_syncs e on e.employee_id = eg.employee_id
+		// 	where eg.location = 'soldering'
+		// 	order by eg.`group`, e.`name` asc");
 
-		$operator = db::select("select g.group, g.employee_id, e.name from employee_groups g
-			left join employee_syncs e on e.employee_id = g.employee_id
-			where g.location = 'soldering'
-			order by g.`group`, e.name asc");
+		// $operator = db::select("select g.group, g.employee_id, e.name from employee_groups g
+		// 	left join employee_syncs e on e.employee_id = g.employee_id
+		// 	where g.location = 'soldering'
+		// 	order by g.`group`, e.name asc");
 
-		// $dateTitle = date("d M Y", strtotime($now));
+		$dateTitle = date("d M Y", strtotime($now));
 
 		$location = "";
 		if($request->get('location') != null) {
@@ -2589,9 +2504,9 @@ class AssemblyProcessController extends Controller
 		$response = array(
 			'status' => true,
 			'ng_rate' => $ng_rate,
-			'target' => $target,
-			'operator' => $operator,
-			'ng_target' => $ng_target->target,
+			// 'target' => $target,
+			// 'operator' => $operator,
+			// 'ng_target' => $ng_target->target,
 			'dateTitle' => $now,
 			'title' => $location
 		);

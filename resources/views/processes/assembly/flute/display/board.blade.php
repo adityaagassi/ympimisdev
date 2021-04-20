@@ -87,14 +87,14 @@
 <section class="content" style="padding: 0px;">
 	<input type="hidden" value="{{ $loc }}" id="loc">
 	<div class="row" style="padding-left: 10px;padding-right: 10px">
-		<div class="col-xs-6">
+		<div class="col-xs-12">
 			<table id="assemblyTable" class="table table-bordered">
 				<thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 16px;">
 					<tr>
 						<th style="width: 0.66%; padding: 0;">WS</th>
 						<th style="width: 0.66%; padding: 0;">Operator</th>
 						<th style="width: 0.66%; padding: 0; background-color:#4ff05a;">Sedang</th>
-						<th style="width: 0.66%; padding: 0; background-color:#ffbdbd;">NG List</th>
+						<th style="width: 0.66%; padding: 0; background-color:#ffbdbd;">List NG (4 Teratas)</th>
 					</tr>
 				</thead>
 				<tbody id="assemblyTableBody">
@@ -103,7 +103,7 @@
 				</tfoot>
 			</table>
 		</div>
-		<div class="col-xs-6">
+		<!-- <div class="col-xs-6"> -->
 			<!-- <div class="box box-solid">
 				<div class="box-body">
 					<div id="container2" style="width:100%; height:200px;"></div>
@@ -119,14 +119,14 @@
 					<div id="container3" style="width:100%; height:200px;"></div>
 				</div>
 			</div> -->
-			<div class="box box-solid">
+			<!-- <div class="box box-solid">
 				<div class="box-body">
 					<div id="container2" style="width:100%; height:310px;"></div>
 					<div id="container" style="width:100%; height:310px;"></div>
 					<div id="container3" style="width:100%; height:310px;"></div>
 				</div>
-			</div>
-		</div>
+			</div> -->
+		<!-- </div> -->
 	</div>
 
 	<!-- <div class="modal fade" id="myModal">
@@ -183,15 +183,15 @@
 
 	jQuery(document).ready(function() {
 		fetchTable();
-		setInterval(fetchTable, 1000);
-		fillChartActualNgByOp();
-		setInterval(function(){
-			fillChartActualNgByOp();
-		}, 60000);
-		fillChartActualNg();
-		setInterval(function(){
-			fillChartActualNg();
-		}, 60000);
+		// setInterval(fetchTable, 1000);
+		// fillChartActualNgByOp();
+		// setInterval(function(){
+		// 	fillChartActualNgByOp();
+		// }, 60000);
+		// fillChartActualNg();
+		// setInterval(function(){
+		// 	fillChartActualNg();
+		// }, 60000);
 	});
 
 	var akan_assy = [];
@@ -290,7 +290,7 @@
 								if (value.sedang == "<br>")
 									color3 = 'class="sedang"';
 								else
-									color3 = 'style="color:#a4fa98"';
+									color3 = 'style="color:#a4fa98;font-size:16px"';
 							}
 							else {
 								color = '';
@@ -309,7 +309,7 @@
 								if (value.sedang == "<br>")
 									color3 = 'class="sedang"';
 								else
-									color3 = 'style="color:#a4fa98"';
+									color3 = 'style="color:#a4fa98;font-size:16px"';
 							}
 							else {
 								color = 'style="background-color: #575c57"';
@@ -357,6 +357,7 @@
 							assemblyTableBody += '<td height="5%" style="font-size:20px">'+value.ws+'</td>';
 							assemblyTableBody += '<td style="font-size:20px">Not Found</td>';
 							assemblyTableBody += '<td '+color3+'>'+sedang2+'<br>'+timeada+timekosong+'</td>';
+							assemblyTableBody += '<td></td>';
 						}else{
 							assemblyTableBody += '<tr '+color+'>';
 							assemblyTableBody += '<td height="5%" style="font-size:20px">'+value.ws+'</td>';
@@ -371,18 +372,29 @@
 							// 	assemblyTableBody += '</td>';
 							// }else{
 								assemblyTableBody += '<td '+color3+'>'+sedang2+'<br>'+timeada+timekosong;
-								assemblyTableBody += '<div class="progress-group">';
-								assemblyTableBody += '<div class="progress" style="background-color: #212121; height: 20px; border: 1px solid; padding: 0px; margin: 0px;">';
-								assemblyTableBody += '<div class="progress-bar progress-bar-success progress-bar-striped" id="progress_bar_'+index+'" style="font-size: 12px; padding-top: 0.5%;width:'+parseFloat(percent)+'%"></div>';
-								assemblyTableBody += '</div>';
-								assemblyTableBody += '</div>';
+								// assemblyTableBody += '<div class="progress-group">';
+								// assemblyTableBody += '<div class="progress" style="background-color: #212121; height: 20px; border: 1px solid; padding: 0px; margin: 0px;">';
+								// assemblyTableBody += '<div class="progress-bar progress-bar-success progress-bar-striped" id="progress_bar_'+index+'" style="font-size: 12px; padding-top: 0.5%;width:'+parseFloat(percent)+'%"></div>';
+								// assemblyTableBody += '</div>';
+								// assemblyTableBody += '</div>';
 								assemblyTableBody += '</td>';
-								if (value.ng_name_detail != null) {
-									assemblyTableBody += '<td style="color:#ffbdbd">';
-									var ng_name_detail = value.ng_name_detail.split(',');
-									var qty_ng_detail = value.qty_ng_detail.split(',');
-									for(var i = 0; i< ng_name_detail.length;i++){
-										assemblyTableBody += ng_name_detail[i]+' = '+qty_ng_detail[i]+', ';
+								if (value.ng_name != null) {
+									assemblyTableBody += '<td style="color:white">';
+									var ng_name = value.ng_name.split(',');
+									var onko = value.onko.split(',');
+									var valueses = value.valueses.split(',');
+									var lokasi = value.lokasi.split(',');
+									for(var i = 0; i< 4;i++){
+										assemblyTableBody += '<span style="font-weight:bold;font-size:14px;margin-top:5px">'+ng_name[i]+' Kunci '+onko[i];
+										if (valueses[i] == '1-0') {
+											assemblyTableBody += ' Jumlah (1)';
+										}else{
+											assemblyTableBody += ' Jam '+valueses[i]+'';
+										}
+										if (lokasi[i] != '0') {
+											assemblyTableBody += ' Lokasi '+lokasi[i]+'';
+										}
+										assemblyTableBody += '</span><br>';
 									}
 									assemblyTableBody += '</td>';
 								}else{
