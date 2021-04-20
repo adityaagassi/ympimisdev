@@ -3042,10 +3042,38 @@ class RecorderProcessController extends Controller
     public function fetchProductResume(Request $request)
     {
       try {
-        $return = RcReturnLog::select('rc_return_logs.*','users.*','rc_return_logs.created_at as created')->join('users','users.id','rc_return_logs.created_by')->get();
+        $return = RcReturnLog::select('rc_return_logs.*','users.*','rc_return_logs.created_at as created','rc_return_logs.id as id_log')->join('users','users.id','rc_return_logs.created_by')->get();
         $response = array(
             'status' => true,
             'return' => $return
+        );
+        return Response::json($response);
+      } catch (\Exception $e) {
+        $response = array(
+            'status' => false,
+            'message' => $e->getMessage(),
+        );
+        return Response::json($response);
+      }
+    }
+
+    public function deleteProductResume(Request $request)
+    {
+      try {
+        $rc_return_logs = RcReturnLog::where('id',$request->get('id'))->first();
+
+        $inventory = InjectionInventory::where('material_number',$rc_return_logs->material_number)->where('location','RC91')->first();
+
+        if (count($inventory) > 0) {
+          $inventory->quantity = $inventory->quantity + $rc_return_logs->quantity;
+          $inventory->save(); 
+        }
+
+        $rc_return_logs->forceDelete();
+
+        $response = array(
+            'status' => true,
+            'message' => 'Delete Return Success'
         );
         return Response::json($response);
       } catch (\Exception $e) {

@@ -136,11 +136,13 @@
 											<th style="width: 1%;">#</th>
 											<th style="width: 1%;">Material</th>
 											<th style="width: 6%;">Desc</th>
-											<th style="width: 1%;">Issue</th>
-											<th style="width: 1%;">Receive</th>
+											<th style="width: 1%;">Part Code</th>
+											<th style="width: 1%;">Type</th>
+											<th style="width: 1%;">Color</th>
 											<th style="width: 1%;">Qty</th>
 											<th style="width: 1%;">Creator</th>
 											<th style="width: 1%;">Created</th>
+											<th style="width: 1%;">Action</th>
 										</tr>
 									</thead>
 									<tbody id="tableBodyResume">
@@ -348,12 +350,32 @@
 				tableData += '<td>'+ value.quantity +'</td>';
 				tableData += '<td>'+ value.name +'</td>';
 				tableData += '<td>'+ value.created +'</td>';
+				tableData += '<td><button class="btn btn-danger" onclick="deleteReturn(\''+value.id_log+'\')" style="font-weight:bold">Delete</button></td>';
 
 				count += 1;
 			});
 			$('#tableBodyResume').append(tableData);
 			$("#loading").hide();
 		});
+	}
+
+	function deleteReturn(id) {
+		if (confirm("Apakah Anda yakin akan menghapus data?")) {
+			$('#loading').show();
+			var data = {
+				id:id
+			}
+			$.get('<?php echo e(url("delete/recorder/return/resume")); ?>',data, function(result, status, xhr){
+				if (result.status) {
+					fetchResume();
+					$('#loading').hide();
+					openSuccessGritter('Success',result.message);
+				}else{
+					$('#loading').hide();
+					openErrorGritter('Error!',result.message);
+				}
+			});
+		}
 	}
 
 	function openSuccessGritter(title, message){

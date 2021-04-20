@@ -3559,6 +3559,7 @@ Route::get('fetch/recorder/rc_picking_result', 'RecorderProcessController@fetch_
 Route::get('index/recorder/return', 'RecorderProcessController@indexReturn');
 Route::get('fetch/recorder/return/product', 'RecorderProcessController@fetchProductReturn');
 Route::get('fetch/recorder/return/resume', 'RecorderProcessController@fetchProductResume');
+Route::get('delete/recorder/return/resume', 'RecorderProcessController@deleteProductResume');
 Route::post('input/recorder/return', 'RecorderProcessController@inputReturn');
 
 //RECORDER CDM
