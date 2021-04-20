@@ -384,17 +384,21 @@
 									var onko = value.onko.split(',');
 									var valueses = value.valueses.split(',');
 									var lokasi = value.lokasi.split(',');
-									for(var i = 0; i< 4;i++){
-										assemblyTableBody += '<span style="font-weight:bold;font-size:14px;margin-top:5px">'+ng_name[i]+' Kunci '+onko[i];
-										if (valueses[i] == '1-0') {
-											assemblyTableBody += ' Jumlah (1)';
-										}else{
-											assemblyTableBody += ' Jam '+valueses[i]+'';
-										}
-										if (lokasi[i] != '0') {
-											assemblyTableBody += ' Lokasi '+lokasi[i]+'';
-										}
-										assemblyTableBody += '</span><br>';
+									for(var i = 0; i< ng_name.length;i++){
+										// if (ng_name[i].length > 0) {
+											if (i <= 3) {
+												assemblyTableBody += '<span style="font-weight:bold;font-size:14px;margin-top:5px">'+ng_name[i]+' Kunci '+onko[i];
+												if (valueses[i] == '1-0') {
+													assemblyTableBody += ' Jumlah (1)';
+												}else{
+													assemblyTableBody += ' Jam '+valueses[i]+'';
+												}
+												if (lokasi[i] != '0') {
+													assemblyTableBody += ' Lokasi '+lokasi[i]+'';
+												}
+												assemblyTableBody += '</span><br>';
+											}
+										// }
 									}
 									assemblyTableBody += '</td>';
 								}else{
