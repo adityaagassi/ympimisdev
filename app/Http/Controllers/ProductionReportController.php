@@ -3173,7 +3173,11 @@ class ProductionReportController extends Controller
     {
         try {
             $leader = $request->get('leader');
-            $month = $request->get('month');
+            if ($request->get('month') != "") {
+                $month = $request->get('month');
+            }else{
+                $month = date('Y-m');
+            }
             $kondisi = $request->get('kondisi');
 
             $ldr = explode(' - ', $leader);
