@@ -301,7 +301,7 @@
 					tableData += '<td style="background-color: '+color+'">'+ keterangan +'</td>';
 					
 					if (value.file != null) {
-						tableData += '<td><a href="files/gsa/'+value.file+'" target="_blank" class="fa fa-paperclip"></a></td>';
+						tableData += '<td><a href="http://10.109.33.10/miraimobile/public/files/gsa/'+value.file+'" target="_blank" class="fa fa-paperclip"></a></td>';
 					}else{
 						tableData += '<td></td>';
 					}
