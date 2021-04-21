@@ -112,7 +112,7 @@
       <span class="info-box-text">INVOICE NO  </span>
       <span class="info-box-number">{{$time->invoice}}</span>
       <span class="info-box-text">DATE   </span>
-      <span class="info-box-number">{{date('d-M-Y', strtotime($time->Stuffing_date))}}</span>
+      <span class="info-box-number">{{date('d-M-Y', strtotime($time->invoice_date))}}</span>
       <span class="info-box-text">PAYMENT  </span>
       <span class="info-box-number">{{$time->payment}}</span>
       <span class="info-box-text">SHIPPER  </span>
