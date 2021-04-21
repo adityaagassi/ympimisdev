@@ -662,6 +662,14 @@ class WorkshopController extends Controller{
 			$workshop_job_orders = $workshop_job_orders->where('workshop_job_orders.remark', '=', $request->get('remark'));
 		}
 
+		if (strlen($request->get('automation')) > 0 ) {
+			if ($request->get('automation') == 'OTOMATIS') {
+				$workshop_job_orders = $workshop_job_orders->where('workshop_job_orders.problem_description', '=', 'Pembuatan Part Kensa Jig Welding');
+			} else {
+				$workshop_job_orders = $workshop_job_orders->where('workshop_job_orders.problem_description', '<>', 'Pembuatan Part Kensa Jig Welding');
+			}
+		}
+
 		$workshop_job_orders = $workshop_job_orders->orderBy('workshop_job_orders.order_no', 'asc')
 		->select(
 			'workshop_job_orders.order_no',
@@ -1492,6 +1500,14 @@ class WorkshopController extends Controller{
 		}else{
 			$workshop_job_orders = $workshop_job_orders->orderBy('workshop_job_orders.priority', 'desc');
 			$workshop_job_orders = $workshop_job_orders->orderBy('workshop_job_orders.target_date', 'asc');
+		}
+
+		if (strlen($request->get('automation')) > 0 ) {
+			if ($request->get('automation') == 'OTOMATIS') {
+				$workshop_job_orders = $workshop_job_orders->where('workshop_job_orders.problem_description', '=', 'Pembuatan Part Kensa Jig Welding');
+			} else {
+				$workshop_job_orders = $workshop_job_orders->where('workshop_job_orders.problem_description', '<>', 'Pembuatan Part Kensa Jig Welding');
+			}
 		}
 
 

@@ -249,6 +249,17 @@
 														</select>
 													</div>
 												</div>
+
+												<div class="col-md-4">
+													<div class="form-group">
+														<label>Jenis WJO</label>
+														<select class="form-control select2" data-placeholder="Pilih Jenis" name="automation" id="automation" style="width: 100% height: 35px; font-size: 15px;">
+															<option value=""></option>
+															<option value="OTOMATIS">OTOMATIS</option>
+															<option value="MANUAL">MANUAL</option>
+														</select>
+													</div>
+												</div>
 												
 											</div>
 										</div>
@@ -1576,6 +1587,7 @@
 			// var pic = $('#pic').val();
 			var remark = $('#remark').val(); 
 			var approvedBy = $('#approvedBy').val(); 
+			var automation = $('#automation').val(); 
 			var data = {
 				reqFrom:reqFrom,
 				reqTo:reqTo,
@@ -1589,7 +1601,7 @@
 				req:req,
 				// rawMaterial:rawMaterial,
 				// material:material,
-				// pic:pic,
+				automation:automation,
 				remark:remark,
 				approvedBy:approvedBy
 			}
