@@ -1879,7 +1879,7 @@ Route::group(['nav' => 'S53', 'middleware' => 'permission'], function(){
 Route::group(['nav' => 'S24', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_zpro/{id}', 'KnockDownController@indexKD');
 	Route::post('fetch/kd_print_zpro', 'KnockDownController@printLabel');	
-	Route::post('fetch/kd_print_zpro_new', 'KnockDownController@printLabelTanpo');	
+	Route::post('fetch/kd_print_zpro_new', 'KnockDownController@printLabelNew');	
 	Route::post('fetch/kd_force_print_zpro', 'KnockDownController@forcePrintLabel');
 
 	Route::get('index/print_label_zpro/{id}', 'KnockDownController@indexPrintLabelZpro');
