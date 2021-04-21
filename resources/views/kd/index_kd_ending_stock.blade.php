@@ -375,6 +375,8 @@
 			url = '{{ url("index/print_label_bpro") }}'+'/'+kd_detail;
 		}else if(location == 'welding-body'){
 			url = '{{ url("index/print_label_welding") }}'+'/'+kd_detail;
+		}else if(location == 'welding-keypost'){
+			url = '{{ url("index/print_label_welding") }}'+'/'+kd_detail;
 		}
 
 		newwindow = window.open(url, windowName, 'height=250,width=450');
@@ -401,6 +403,8 @@
 			url = '{{ url("fetch/kd_print_bpro") }}';
 		}else if(location == 'welding-body'){
 			url = '{{ url("fetch/kd_print_welding_body") }}';
+		}else if(location == 'welding-keypost'){
+			url = '{{ url("fetch/kd_print_welding_keypost") }}';
 		}
 
 		var data = {

@@ -1908,7 +1908,7 @@ Route::group(['nav' => 'S54', 'middleware' => 'permission'], function(){
 	Route::post('fetch/kd_print_welding_body', 'KnockDownController@printLabelNewSingle');	
 	Route::get('index/print_label_welding/{id}', 'KnockDownController@indexPrintLabelA6');
 
-	Route::post('fetch/kd_print_welding_keypost', 'KnockDownController@printLabelNew');
+	Route::post('fetch/kd_print_welding_keypost', 'KnockDownController@printLabelNewSingle');
 });
 
 

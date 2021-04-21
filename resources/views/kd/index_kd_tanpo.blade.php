@@ -86,10 +86,9 @@
 							<table class="table table-hover table-bordered table-striped" id="tableList">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th style="width: 15%;">Stuffing Date</th>
+										<th style="width: 15%;">Due Date</th>
 										<th style="width: 10%;">Material</th>
 										<th style="width: 50%;">Description</th>
-										<th style="width: 15%;">Destination</th>
 										<th style="width: 10%;">Target</th>
 									</tr>					
 								</thead>
@@ -97,7 +96,7 @@
 								</tbody>
 								<tfoot style="background-color: rgb(252, 248, 227);">
 									<tr>
-										<th colspan="4" style="text-align:center;">Total:</th>
+										<th colspan="3" style="text-align:center;">Total:</th>
 										<th></th>
 									</tr>
 								</tfoot>
@@ -107,61 +106,61 @@
 				</div>
 				<div class="col-xs-6">
 					<div class="row">
-						<input type="hidden" id="shipment_id">
+						<input type="hidden" id="production_id">
+						<input type="hidden" id="cek_due_date">
+
 						
+						<div class="col-xs-6">
+							<span style="font-weight: bold; font-size: 16px;">Due Date:</span>
+						</div>
 						<div class="col-xs-6">
 							<span style="font-weight: bold; font-size: 16px;">Material Number:</span>
 						</div>
 						<div class="col-xs-6">
-							<span style="font-weight: bold; font-size: 16px;">Quantity:</span>
+							<input type="text" id="due_date"  style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
 						</div>
+						
 						<div class="col-xs-6">
 							<input type="text" id="material_number" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
 						</div>
-						<div class="col-xs-6">
-							<input type="text" id="quantity"  style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
-						</div>
+						
 						<div class="col-xs-12">
 							<span style="font-weight: bold; font-size: 16px;">Material Description:</span>
 							<input type="text" id="material_description" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
 						</div>
+						
+
 						<div class="col-xs-6">
-							<span style="font-weight: bold; font-size: 16px;">Destination:</span>
+							<span style="font-weight: bold; font-size: 16px;">Actual Count:</span>
+						</div>
+
+						<div class="col-xs-6">
+							<span style="font-weight: bold; font-size: 16px;">Quantity:</span>
 						</div>
 						<div class="col-xs-6">
-							<span style="font-weight: bold; font-size: 16px;">Stuffing Date:</span>
+							<input type="text" id="actual_count" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
 						</div>
 						<div class="col-xs-6">
-							<input type="text" id="destination"  style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
+							<input type="text" id="quantity"  style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
 						</div>
-						<div class="col-xs-6">
-							<input type="text" id="shipment_date"  style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
-						</div>
+
+
 						<div class="col-xs-12">
-							<div class="row">
-								<div class="col-xs-6">
-									<span style="font-weight: bold; font-size: 16px;">Actual Count:</span>
-									<input type="text" id="actual_count" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
-								</div>
-								<div class="col-xs-6" style="padding-bottom: 10px;">	
-									<br>
-									<button class="btn btn-primary" onclick="print()" style="font-size: 40px; width: 100%; font-weight: bold; padding: 0;">
-										CONFIRM
-									</button>
-								</div>
-							</div>
+							<br>
+							<button class="btn btn-primary" onclick="print()" style="font-size: 40px; width: 100%; font-weight: bold; padding: 0;">
+								CONFIRM
+							</button>
 						</div>
+
 						<div class="col-xs-12">
 							<span style="font-size: 20px; font-weight: bold;">PACKED LIST:</span>
 							<table class="table table-hover" id="tablePack">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th style="width: 5%;">No</th>
-										<th style="width: 15%;">Stuffing Date</th>
-										<th style="width: 15%;">Material Number</th>
-										<th style="width: 35%;">Description</th>
-										<th style="width: 15%;">Destination</th>
-										<th style="width: 10%;">Quantity</th>
+										<th style="width: 10%;">No</th>
+										<th style="width: 20%;">Material Number</th>
+										<th style="width: 50%;">Description</th>
+										<th style="width: 20%;">Quantity</th>
 									</tr>					
 								</thead>
 								<tbody id="tableBodyPack">
@@ -194,10 +193,8 @@
 									<th style="width: 5%">Material Description</th>
 									<th style="width: 2%">Location</th>
 									<th style="width: 1%">Qty</th>
-									<th style="width: 2%">Stuffing Date</th>
-									<th style="width: 2%">Destination</th>
 									<th style="width: 3%">Created At</th>
-									<!-- <th style="width: 1%">Reprint</th> -->
+									<th style="width: 1%">Reprint</th>
 									<th style="width: 1%">Delete</th>
 								</tr>
 							</thead>
@@ -212,8 +209,6 @@
 									<th></th>
 									<th></th>
 									<th></th>
-									<th></th>
-									<!-- <th></th> -->
 									<th></th>
 								</tr>
 							</tfoot>
@@ -433,10 +428,8 @@
 			{ "data": "material_description" },
 			{ "data": "location" },
 			{ "data": "quantity" },
-			{ "data": "st_date" },
-			{ "data": "destination_shortname" },
 			{ "data": "updated_at" },
-			// { "data": "reprintKDO" },
+			{ "data": "reprintKDO" },
 			{ "data": "deleteKDO" }
 			]
 		});
@@ -579,6 +572,7 @@
 		$.post('{{ url("fetch/kd_force_print_tanpo") }}', data,  function(result, status, xhr){
 			if(result.status){
 				$("#loading").hide();
+				$('#cek_due_date').val('');				
 				$('#actual_count').val(result.actual_count);
 				fillTableList();
 				fillTablePack();
@@ -597,13 +591,17 @@
 	}
 
 	function print() {
-		var shipment_id = $("#shipment_id").val();
+		var production_id = $("#production_id").val();
 		var material_number = $("#material_number").val();
 		var quantity = $("#quantity").val();
 		var location = "{{ $location }}";
 
+		var cek_due_date = $("#cek_due_date").val();
+		var due_date = $("#due_date").val();
+
+
 		var data = {
-			shipment_id : shipment_id,
+			production_id : production_id,
 			material_number : material_number,
 			quantity : quantity,
 			location : location,
@@ -614,18 +612,30 @@
 			return false;
 		}
 
+		console.log(cek_due_date);
+		console.log(due_date);
+
+		if(cek_due_date != ''){
+			if(cek_due_date != due_date){
+				alert("Dalam packed list semua due date harus sama");
+				return false;
+			}
+		}
+
 
 		$("#loading").show();
-		$.post('{{ url("fetch/kd_print_zpro_new") }}', data,  function(result, status, xhr){
+		$.post('{{ url("fetch/kd_print_tanpo") }}', data,  function(result, status, xhr){
 			if(result.status){
 
+
 				$('#actual_count').val('');
-				$('#shipment_id').val('');
+				$('#production_id').val('');
+				$('#due_date').val('');
 				$('#material_number').val('');
 				$('#quantity').val('');
 				$('#material_description').val('');
-				$('#destination').val('');
-				$('#shipment_date').val('');
+
+				$('#cek_due_date').val(due_date);
 
 				$("#loading").hide();
 				$('#actual_count').val(result.actual_count);
@@ -643,8 +653,8 @@
 	}
 
 	function fillField(param) {
+		//Source Code dibawah hanya fokus mendapatkan actual count
 		var location = "{{ $location }}";
-
 		data = {
 			id: param,
 			location : location,
@@ -652,15 +662,26 @@
 
 		$.get('{{ url("fetch/kd_detail") }}', data,  function(result, status, xhr){
 			if(result.status){
-				$('#shipment_id').val(result.detail[0].id);
-				$('#destination').val(result.detail[0].destination_shortname);
-				$('#shipment_date').val(result.detail[0].st_date);
-				$('#material_number').val(result.detail[0].material_number);
-				$('#quantity').val(result.detail[0].quantity);
-				$('#material_description').val(result.detail[0].material_description);
 				$('#actual_count').val(result.actual_count);
+
+				//Fill field
+				var data = param.split('_');
+				var id = data[0];
+				var lot_completion = data[1];
+
+				var due_date = $('#'+param).find('td').eq(0).text();
+				var material_number = $('#'+param).find('td').eq(1).text();
+				var material_description = $('#'+param).find('td').eq(2).text();
+				var quantity = $('#'+param).find('td').eq(3).text();
+
+				$('#production_id').val(id);
+				$('#due_date').val(due_date);
+				$('#material_number').val(material_number);
+				$('#material_description').val(material_description);
+				$('#quantity').val(quantity);
 			}
 		});
+
 	}
 
 	function fillTablePack(){
@@ -677,10 +698,8 @@
 				$.each(result.pack, function(key, value) {
 					tableData += '<tr>';
 					tableData += '<td>'+ ++count +'</td>';
-					tableData += '<td>'+ value.st_date +'</td>';
 					tableData += '<td>'+ value.material_number +'</td>';
 					tableData += '<td>'+ value.material_description +'</td>';
-					tableData += '<td>'+ value.destination_shortname +'</td>';
 					tableData += '<td>'+ value.quantity +'</td>';
 					tableData += '</tr>';
 					total_qty += value.quantity;
@@ -688,10 +707,13 @@
 				$('#tableBodyPack').append(tableData);
 
 				tableFoot += '<tr>';
-				tableFoot += '<th colspan="5" style="text-align:center;">Total:</th>';
+				tableFoot += '<th colspan="3" style="text-align:center;">Total:</th>';
 				tableFoot += '<th>'+ total_qty +'</th>';
 				tableFoot += '</tr>';
 				$('#tableFootPack').append(tableFoot);
+			}else{
+				$('#tableBodyPack').append().empty();
+				$('#tableFootPack').append().empty();
 			}
 
 		});
@@ -700,7 +722,7 @@
 
 	function fillTableList(){
 
-		$.get('{{ url("fetch/kd_new/".$location) }}',  function(result, status, xhr){
+		$.get('{{ url("fetch/kd/".$location) }}',  function(result, status, xhr){
 			$('#tableList').DataTable().clear();
 			$('#tableList').DataTable().destroy();
 			$('#tableBodyList').html("");
@@ -708,11 +730,10 @@
 			var tableData = "";
 			var total_target = 0;
 			$.each(result.target, function(key, value) {
-				tableData += '<tr onclick="fillField(\''+value.id+'\')">';
-				tableData += '<td>'+ value.st_date +'</td>';
+				tableData += '<tr id="'+value.id+'_'+value.lot_completion+'" onclick="fillField(id)">';
+				tableData += '<td>'+ value.due_date +'</td>';
 				tableData += '<td>'+ value.material_number +'</td>';
 				tableData += '<td>'+ value.material_description +'</td>';
-				tableData += '<td>'+ value.destination_shortname +'</td>';
 				tableData += '<td>'+ value.target +'</td>';
 				tableData += '</tr>';
 				total_target += value.target;
@@ -767,10 +788,10 @@
 						i : 0;
 					};
 					var api = this.api();
-					var totalPlan = api.column(4).data().reduce(function (a, b) {
+					var totalPlan = api.column(3).data().reduce(function (a, b) {
 						return intVal(a)+intVal(b);
 					}, 0)
-					$(api.column(4).footer()).html(totalPlan);
+					$(api.column(3).footer()).html(totalPlan);
 				},
 				'paging': true,
 				'lengthChange': true,

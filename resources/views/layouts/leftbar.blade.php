@@ -1044,6 +1044,12 @@
   @endif
 
   @if(in_array('S29', $navs))
+  @if(isset($page) && $page == "KD Splitter")<li class="active">@else<li>@endif
+    <a href="{{ url("index/kd_splitter") }}"><i class="fa fa-hand-scissors-o"></i> <span>KD  <i class="fa fa-angle-right"></i> Splitter</span></a>
+  </li>
+  @endif
+
+  @if(in_array('S29', $navs))
   @if(isset($page) && $page == "KD Stuffing")<li class="active">@else<li>@endif
     <a href="{{ url("index/kd_stuffing") }}"><i class="fa fa-truck"></i> <span>KD  <i class="fa fa-angle-right"></i> Stuffing</span></a>
   </li>
@@ -1639,7 +1645,7 @@
 </li>
 @endif
 
-@if(in_array('R6', $navs))
+
 @if(isset($head) && $head == "Transaction")<li class="treeview active">@else<li class="treeview">@endif
   <a href="#">
    <i class="fa fa-tv"></i> <span>Transaction</span>
@@ -1648,18 +1654,17 @@
   </span>
 </a>
 <ul class="treeview-menu">
-{{-- @if(isset($page) && $page == "Completion Transaction")<li class="active">@else<li>@endif
+<!-- @if(isset($page) && $page == "Completion Transaction")<li class="active">@else<li>@endif
   <a href="{{ url("/index/tr_completion") }}"><i class="fa fa-table"></i> Completion</a>
 </li>
 @if(isset($page) && $page == "Transfer Transaction")<li class="active">@else<li>@endif
   <a href="{{ url("/index/tr_transfer") }}"><i class="fa fa-table"></i> Transfer</a>
-</li> --}}
+</li> -->
 @if(isset($page) && $page == "History Transaction")<li class="active">@else<li>@endif
   <a href="{{ url("/index/tr_history") }}"><i class="fa fa-table"></i> Transaction History</a>
 </li>
 </ul>
 </li>
-@endif
 
 @if(in_array('R9', $navs))
 @if(isset($head) && $head == "Overtime Report")<li class="treeview active">@else<li class="treeview">@endif

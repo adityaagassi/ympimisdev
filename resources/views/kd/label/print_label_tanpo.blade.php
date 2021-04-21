@@ -19,10 +19,10 @@
 		}
 
 		@page {
-			margin-top: 5%; 
+			margin-top: 2%; 
 			margin-bottom: 0px; 
-			margin-left: 5%;
-			margin-right: 5%;
+			margin-left: 4%;
+			margin-right: 4%;
 			vertical-align: middle;
 		}
 
@@ -32,7 +32,7 @@
 		}
 
 		.text {
-			font-size: 11pt;
+			font-size: 12pt;
 		}
 
 		.desc {
@@ -90,13 +90,11 @@
 		<tbody>
 			<tr>
 				<td height="110px" style="text-align: left;">
-					Stuffing Date :
-					<br>
-					{{ date('d F Y', strtotime($knock_down_details[0]->st_date)) }}
+					{{ date('d F Y', strtotime($knock_down_details[0]->date)) }}
 				</td>
 				<td height="110px" style="vertical-align: middle; text-align: right;">
 					<img id="barcode" src="{{ public_path() . '/qr_code'.$kd_number.'.png' }}">
-					<p id="kd_number">{{ $kd_number }}&nbsp;&nbsp;</p>
+					<p id="kd_number">{{ $kd_number }}&nbsp;&nbsp;&nbsp;</p>
 				</td>
 			</tr>
 		</tbody>
