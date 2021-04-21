@@ -1866,7 +1866,7 @@ Route::group(['nav' => 'S58', 'middleware' => 'permission'], function(){
 });
 
 //TANPO
-Route::group(['nav' => 'S53', 'middleware' => 'permission'], function(){
+Route::group(['nav' => 'S52', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_tanpo/{id}', 'KnockDownController@indexKD');
 	Route::post('fetch/kd_print_tanpo', 'KnockDownController@printLabelTanpo');
 	Route::post('fetch/kd_force_print_tanpo', 'KnockDownController@forcePrintLabel');
