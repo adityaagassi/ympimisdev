@@ -11152,9 +11152,7 @@ public function transfer_budget_post_new(Request $request)
 }
 
 public function fetch_transfer_budget(){
-    $data = db::select('
-        select * from acc_budget_transfers where deleted_at is null
-        ');
+    $data = db::select('select * from acc_budget_transfers where deleted_at is null order by id desc');
 
     $response = array(
         'status' => true,
