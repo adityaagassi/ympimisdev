@@ -232,7 +232,7 @@ table > thead > tr > th{
                       <label id="labelposition">Jabatan<span class="text-red">*</span></label>
                       <input type="text" class="form-control" id="position" name="position" readonly>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" hidden="hidden">
                       <label id="labelposition">Grade<span class="text-red">*</span></label>
                       <input type="text" class="form-control" id="grade" name="grade" readonly>
                     </div>
