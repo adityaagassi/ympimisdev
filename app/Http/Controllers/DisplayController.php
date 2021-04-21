@@ -492,6 +492,10 @@ public function fetchEfficiencyMonitoringMonthly(Request $request){
 	->select("fiscal_year", db::raw("date_format(week_date, '%Y-%m') as month_date"), db::raw("date_format(week_date, '%M') as month_name"))
 	->first();
 
+	
+	$fiscal = WeeklyCalendar::where('fiscal_year', '=', $weekly_calendar->fiscal_year)->select(db::raw('min(week_date) as first_date'))->first();
+
+
 	if($weekly_calendar->month_date < '2021-04'){
 		$weekly_months = db::select("SELECT
 			wc.week_date,
@@ -588,8 +592,9 @@ public function fetchEfficiencyMonitoringMonthly(Request $request){
 			weekly_calendars AS wc
 			CROSS JOIN ( SELECT DISTINCT cost_center_eff_2 AS cost_center_name FROM cost_centers2 WHERE cost_center_eff IS NOT NULL ) AS cc 
 			WHERE
-			wc.fiscal_year = '".$weekly_calendar->fiscal_year."'
-			AND wc.week_date <= '".date('Y-m-d')."'
+			DATE_FORMAT(wc.week_date, '%Y-%m') = '2021-02'
+			or ( wc.week_date >= '".$fiscal->first_date."'
+			AND wc.week_date <= '".date('Y-m-d')."')
 			AND cc.cost_center_name IS NOT NULL
 			ORDER BY
 			field( cc.cost_center_name, 'FINAL', 'MIDDLE', 'SOLDERING', 'BODY PARTS PROCESS', 'KEY PARTS PROCESS', 'CASE', 'EDUCATIONAL INSTRUMENT' ),
@@ -606,8 +611,9 @@ public function fetchEfficiencyMonitoringMonthly(Request $request){
 		efficiency_uploads
 		LEFT JOIN weekly_calendars ON weekly_calendars.week_date = efficiency_uploads.total_date 
 		WHERE
-		weekly_calendars.fiscal_year = '".$weekly_calendar->fiscal_year."'
-		AND weekly_calendars.week_date <= '".date('Y-m-d')."'
+		DATE_FORMAT(weekly_calendars.week_date, '%Y-%m') = '2021-02'
+		or ( weekly_calendars.week_date >= '".$fiscal->first_date."'
+		AND weekly_calendars.week_date <= '".date('Y-m-d')."')
 		GROUP BY
 		weekly_calendars.fiscal_year,
 		efficiency_uploads.cost_center_name,

@@ -31,14 +31,14 @@
 				@endforeach
 			</select>
 		</div>
-		<div class="col-xs-12">
+	{{-- 	<div class="col-xs-12">
 			<div class="row">
 				<div class="col-xs-6" id="eff_add_year" style="padding: 0; height: 250px;">
 				</div>
 				<div class="col-xs-6" id="eff_add_month" style="padding: 0; height: 250px;">
 				</div>
 			</div>
-		</div>
+		</div> --}}
 		<div class="col-xs-12">
 			<div class="row">
 				<div class="col-xs-6" id="eff_monitoring_year" style="padding: 0;">
@@ -108,7 +108,7 @@
 			todayHighlight: true
 		});
 		$('.select2').select2();
-		fetchAdd();
+		// fetchAdd();
 	});
 
 	$.date = function(dateObject) {
@@ -714,7 +714,12 @@ function fetchChart(id){
 						tickInterval: 1,
 						gridLineWidth: 1,
 						categories: yearCategories,
-						crosshair: true
+						crosshair: true,
+						plotBands: [{
+							from: -0.5,
+							to: 0.5,
+							color: 'rgba(255, 140, 26, .3)'
+						}]
 					},
 					yAxis: [{
 						min: 0,

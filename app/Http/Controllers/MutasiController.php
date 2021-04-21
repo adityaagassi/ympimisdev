@@ -62,6 +62,7 @@ class MutasiController extends Controller
             $section = db::select('SELECT DISTINCT department, section FROM employee_syncs');
             $group   = db::select('SELECT DISTINCT section, `group` FROM employee_syncs');
             $sub_group   = db::select('SELECT DISTINCT sub_group FROM employee_syncs');
+            $position   = db::select('SELECT DISTINCT position FROM employee_syncs');
         }else{
             $user    = db::select('SELECT employee_id,name FROM employee_syncs where department = "'.$emp_dept->department.'"');
             $dept  = db::select('SELECT DISTINCT department FROM employee_syncs where department = "'.$emp_dept->department.'"');
@@ -87,7 +88,8 @@ class MutasiController extends Controller
           'group' => $group,
           'section' => $section,
           'sub_group' => $sub_group,
-          'user' => $user
+          'user' => $user,
+          'position' => $position
       )
     )->with('page', 'Mutasi Satu Departemen');
     }
@@ -147,7 +149,7 @@ class MutasiController extends Controller
      public function get_employee( Request $request)
     {
         try {
-            $emp = DB::SELECT("select employee_id, `name`, sub_group, `group`, section, department, position from employee_syncs where
+            $emp = DB::SELECT("select employee_id, `name`, sub_group, `group`, section, department, position, grade_code from employee_syncs where
             `employee_id` = '".$request->get('employee_id')."'
             AND `end_date` IS NULL");
 
