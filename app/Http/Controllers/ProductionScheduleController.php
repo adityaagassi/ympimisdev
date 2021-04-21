@@ -255,7 +255,7 @@ class ProductionScheduleController extends Controller{
                     $hpl1 = $hpl1.',';
                 }
             }
-            $hpl1 = "m.hpl IN (".$hpl1.") ";
+            $hpl1 = "WHERE m.hpl IN (".$hpl1.") ";
         }
 
         $hpl2 = '';
@@ -275,7 +275,7 @@ class ProductionScheduleController extends Controller{
         $materials = DB::select("SELECT m.material_number, m.material_description, m.hpl, r.destination_code, d.destination_shortname FROM materials m
             LEFT JOIN production_requests r ON r.material_number = m.material_number
             LEFT JOIN destinations d ON d.destination_code = r.destination_code
-            WHERE ".$hpl1."
+            ".$hpl1."
             ORDER BY m.hpl ASC, m.material_number ASC, d.destination_shortname DESC");
 
         $shipments = DB::select("SELECT ps.st_date, ps.material_number, m.hpl, d.destination_shortname, SUM(ps.quantity) AS quantity FROM production_schedules_three_steps ps
