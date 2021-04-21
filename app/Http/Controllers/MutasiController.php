@@ -3065,7 +3065,6 @@ class MutasiController extends Controller
             'mutasi_depts.ke_jabatan')
         // ->where(db::raw('date(created_at)'),'=', $today)
         ->where('mutasi_depts.status', '=', 'All Approved')
-        ->where('mutasi_depts.remark', null)
         ->orderBy('mutasi_depts.tanggal', 'asc')
         ->get(); 
         }
@@ -3078,7 +3077,6 @@ class MutasiController extends Controller
             'mutasi_depts.position_code',
             'mutasi_depts.ke_jabatan')
         ->where('mutasi_depts.status', '=', 'All Approved')
-        ->where('mutasi_depts.remark', null)
         ->where(db::raw('date(tanggal)'),'=', $tanggal)
         ->orderBy('mutasi_depts.tanggal', 'asc')
         ->get(); 
