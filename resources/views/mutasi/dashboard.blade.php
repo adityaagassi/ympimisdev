@@ -233,6 +233,10 @@ table > thead > tr > th{
                       <label id="labelposition">Jabatan<span class="text-red">*</span></label>
                       <input type="text" class="form-control" id="position" name="position" readonly>
                     </div>
+                    <div class="form-group">
+                      <label id="labelposition">Grade<span class="text-red">*</span></label>
+                      <input type="text" class="form-control" id="grade" name="grade" readonly>
+                    </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group" hidden="hidden">
@@ -284,9 +288,17 @@ table > thead > tr > th{
                       <label id="label_ke_dept">Ke Department<span class="text-red">*</span></label>
                       <input type="text" class="form-control" id="department1" name="department1" readonly>
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                       <label id="labelposition">Ke Jabatan<span class="text-red">*</span></label>
                       <input type="text" class="form-control" id="position1" name="position1" readonly>
+                    </div> -->
+                    <div class="form-group">
+                      <label id="label_ke_section">Ke Jabatan<span class="text-red">*</span></label>
+                      <select class="form-control select2" id="position1" name="position1" data-placeholder='Pilih Jabatan' style="width: 100%">
+                          <!-- <option value="">&nbsp;</option> -->
+                          <!-- <option value="Kosong">Kosong</option> -->
+                          
+                      </select>
                     </div>
                   </div>
                 </div>
@@ -524,6 +536,7 @@ table > thead > tr > th{
     $('#department').show();
     $('#labelposition').show();
     $('#position').show();
+    $('#grade').show();
 
     $('#label_ke_sub_group').show();
     $('#ke_sub_group').show();
@@ -592,9 +605,7 @@ table > thead > tr > th{
   function checkEmp(value) {
         if (value.length == 9) {
             var data = {
-                employee_id:$('#employee_id').val(),
-                department:$('#department').val(),
-                section:$('#section').val()
+                employee_id:$('#employee_id').val()
               }
 
               $.get('{{ url("dashboard/mutasi/get_employee") }}',data, function(result, status, xhr){
@@ -608,6 +619,7 @@ table > thead > tr > th{
                     $('#group').show();
                     $('#section').show();
                     $('#sub_group').show();
+                    $('#grade').show();
 
                     $.each(result.employee, function(key, value) {
                         $('#name').val(value.name);
@@ -619,12 +631,38 @@ table > thead > tr > th{
                         $('#position1').val(value.position);
                         $('#department1').val(value.department);
                         $('#section1').val(value.section);
+                        $('#grade').val(value.grade_code);
+                    });
+
+                    var data2  = {
+                      jabatan:$('#grade').val()
+                    }
+
+                    $.get('{{ url("dashboard/mutasi/get_grade") }}',data2, function(result, status, xhr){
+                        if(result.status){
+                          $('#position1').html("");
+                          var opbfsel = "";
+                          opbfsel += '<option value="">Pilih Jabatan</option>';
+                          $.each(result.position, function(key, value) {
+                            opbfsel += '<option value="'+value.position+'">'+value.position+'</option>';
+                          });
+                          $('#position1').append(opbfsel);
+
+                          // $('#grade').show();
+
+                          // console.log(result.position);
+                          
+
+                        }
                     });
                   }
                   // else{
                   //   alert('NIK Tidak ditemukan');
                   // }
               });
+
+              
+
         }else{
             $('#labelnama').show();
             $('#name').show();
@@ -635,6 +673,7 @@ table > thead > tr > th{
             $('#group').show();
             $('#section').show();
             $('#sub_group').show();
+            $('#grade').show();
         }
     }
  

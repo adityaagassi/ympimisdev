@@ -130,11 +130,16 @@
         <div class="box-body">
           <div id="map" style="height: 768px;">
             <img src="{{ url("/images/ympi_map.png") }}" height="100%" width="100%">
-
+            <div id="boi" class="kotak" style="left: 60px; top: 155px; height: 50px; width: 80px">BOI <br>
+              <div class="isi"></div>
+            </div>
             <div id="tri_d" class="kotak" style="height: 25px; top: 540px; left: 495px">3D <br>
               <div class="isi"></div>
             </div>
             <div id="assy" class="kotak" style="left: 245px; top: 415px; width: 150px; height: 110px">ASSY <br>
+              <div class="isi"></div>
+            </div>
+            <div id="com1" class="kotak" style="left: 300px; top: 380px; height: 35px">COM1 <br>
               <div class="isi"></div>
             </div>
             <div id="bpro" class="kotak" style="left: 410px; top: 415px; width: 170px; height: 110px">BPRO <br>
@@ -185,7 +190,16 @@
             <div id="pnc" class="kotak" style="left: 590px; top: 565px; width: 90px; height: 70px">PNC <br>
               <div class="isi"></div>
             </div>
+            <div id="trf1" class="kotak" style="left: 590px; top: 640px; width: 50px; height: 40px">TRF1 <br>
+              <div class="isi"></div>
+            </div>
+            <div id="trf2" class="kotak" style="left: 750px; top: 640px; width: 50px; height: 40px">TRF2 <br>
+              <div class="isi"></div>
+            </div>
             <div id="rcd" class="kotak" style="left: 870px; top: 565px; width: 70px; height: 30px">RCD <br>
+              <div class="isi"></div>
+            </div>
+            <div id="mpc" class="kotak" style="left: 970px; top: 565px; width: 70px; height: 30px">MPC <br>
               <div class="isi"></div>
             </div>
             <div id="ctn" class="kotak" style="left: 370px; top: 165px; width: 70px; height: 130px">CTN <br>
@@ -198,6 +212,12 @@
               <div class="isi"></div>
             </div>
             <div id="vnv" class="kotak" style="left: 1200px; top: 610px; width: 30px; height: 25px">VNV <br>
+              <div class="isi"></div>
+            </div>
+            <div id="com3" class="kotak" style="left: 1230px; top: 605px; height: 35px">COM3 <br>
+              <div class="isi"></div>
+            </div>
+            <div id="trf3" class="kotak" style="left: 1200px; top: 640px; height: 35px">TRF3 <br>
               <div class="isi"></div>
             </div>
             <div id="wrh" class="kotak" style="left: 820px; top: 415px; width: 140px; height: 110px">WRH <br>
@@ -223,7 +243,13 @@
             <div id="inj" class="kotak" style="left: 860px; top: 605px; width: 150px; height: 30px">INJ <br>
               <div class="isi"></div>
             </div>
+            <div id="com2" class="kotak" style="left: 860px; top: 640px; height: 35px">COM2 <br>
+              <div class="isi"></div>
+            </div>
             <div id="qa" class="kotak" style="left: 820px; top: 525px; width: 50px; height: 25px">QA <br>
+              <div class="isi"></div>
+            </div>
+            <div id="oa" class="kotak" style="left: 100px; top: 675px; width: 250px; height: 30px; background: #ad1d35">OUTDOOR <br>
               <div class="isi"></div>
             </div>
 

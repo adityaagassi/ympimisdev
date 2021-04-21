@@ -232,6 +232,10 @@ table > thead > tr > th{
                       <label id="labelposition">Jabatan<span class="text-red">*</span></label>
                       <input type="text" class="form-control" id="position" name="position" readonly>
                     </div>
+                    <div class="form-group">
+                      <label id="labelposition">Grade<span class="text-red">*</span></label>
+                      <input type="text" class="form-control" id="grade" name="grade" readonly>
+                    </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group" hidden="hidden">
@@ -284,8 +288,9 @@ table > thead > tr > th{
                       <input type="text" class="form-control" id="ke_department" name="ke_department" readonly>
                     </div>
                     <div class="form-group">
-                      <label id="labelposition">Ke Position<span class="text-red">*</span></label>
-                      <input type="text" class="form-control" id="position1" name="position1" readonly>
+                      <label id="label_ke_section">Ke Jabatan<span class="text-red">*</span></label>
+                      <select class="form-control select2" id="position1" name="position1" data-placeholder='Pilih Jabatan' style="width: 100%">
+                      </select>
                     </div>
 
                     <!-- <div class="form-group">
@@ -544,6 +549,7 @@ table > thead > tr > th{
     $('#department').show();
     $('#labelposition').show();
     $('#position').show();
+    $('#grade').show();
 
     $('#label_ke_sub_group').show();
     $('#ke_sub_group').show();
@@ -628,6 +634,7 @@ table > thead > tr > th{
                     $('#group').show();
                     $('#section').show();
                     $('#sub_group').show();
+                    $('#grade').show();
 
                     $.each(result.employee, function(key, value) {
                         $('#name').val(value.name);
@@ -637,6 +644,28 @@ table > thead > tr > th{
                         $('#section').val(value.section);
                         $('#sub_group').val(value.sub_group);
                         $('#position1').val(value.position);
+                        $('#grade').val(value.grade_code);
+                    });
+                    var data2  = {
+                      jabatan:$('#grade').val()
+                    }
+
+                    $.get('{{ url("dashboard/mutasi/get_grade") }}',data2, function(result, status, xhr){
+                        if(result.status){
+                          $('#position1').html("");
+                          var opbfsel = "";
+                          opbfsel += '<option value="">Pilih Jabatan</option>';
+                          $.each(result.position, function(key, value) {
+                            opbfsel += '<option value="'+value.position+'">'+value.position+'</option>';
+                          });
+                          $('#position1').append(opbfsel);
+
+                          // $('#grade').show();
+
+                          // console.log(result.position);
+                          
+
+                        }
                     });
                   }
                   else{
@@ -653,6 +682,7 @@ table > thead > tr > th{
             $('#group').show();
             $('#section').show();
             $('#sub_group').show();
+            $('#grade').show();
         }
     }
 

@@ -48,7 +48,7 @@ use Excel;
 
 class MutasiController extends Controller
 {
-    public function dashboard()
+    public function dashboard(Request $request)
     {
 
         $emp_dept = EmployeeSync::where('employee_id', Auth::user()->username)
@@ -62,7 +62,14 @@ class MutasiController extends Controller
             $section = db::select('SELECT DISTINCT department, section FROM employee_syncs');
             $group   = db::select('SELECT DISTINCT section, `group` FROM employee_syncs');
             $sub_group   = db::select('SELECT DISTINCT sub_group FROM employee_syncs');
-            $position   = db::select('SELECT DISTINCT position FROM employee_syncs');
+
+
+            // $grade = $request->get('jabatan');
+            // $jabatan = "where grade_code = '".$grade."' ";
+
+            // $position = db::select("SELECT position FROM jabatan ".$jabatan." ");
+
+    
         }else{
             $user    = db::select('SELECT employee_id,name FROM employee_syncs where department = "'.$emp_dept->department.'"');
             $dept  = db::select('SELECT DISTINCT department FROM employee_syncs where department = "'.$emp_dept->department.'"');
@@ -72,7 +79,7 @@ class MutasiController extends Controller
             $sub_group   = db::select('SELECT DISTINCT sub_group FROM employee_syncs where department = "'.$emp_dept->department.'"');
         }
 
-        
+        // var_dump($position);
 
       // $departement = db::select("select DISTINCT department from employee_syncs");
       
@@ -88,8 +95,7 @@ class MutasiController extends Controller
           'group' => $group,
           'section' => $section,
           'sub_group' => $sub_group,
-          'user' => $user,
-          'position' => $position
+          'user' => $user
       )
     )->with('page', 'Mutasi Satu Departemen');
     }
@@ -153,6 +159,11 @@ class MutasiController extends Controller
             `employee_id` = '".$request->get('employee_id')."'
             AND `end_date` IS NULL");
 
+            // $grade = $request->get('jabatan');
+            // $jabatan = "where grade_code = '".$grade."' ";
+
+            // $position = db::select("SELECT position FROM jabatan ".$jabatan." ");
+
             if (count($emp) > 0) {
                 $response = array(
                     'status' => true,
@@ -165,6 +176,40 @@ class MutasiController extends Controller
                     'status' => false,
                     'message' => 'Failed',
                     'employee' => ''
+                );
+                return Response::json($response);
+            }
+        }   
+            catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function get_grade( Request $request)
+    {
+        try {
+            $grade = $request->get('jabatan');
+            $jabatan = "where grade_code = '".$grade."' ";
+
+            $position = db::select("SELECT position FROM jabatan ".$jabatan." ");
+
+            // var_dump($positon);
+
+            if (count($grade) > 0) {
+                $response = array(
+                    'status' => true,
+                    'message' => 'Success',
+                    'position' => $position
+                );
+                return Response::json($response);
+            }else{
+                $response = array(
+                    'status' => false,
+                    'message' => 'failed'
                 );
                 return Response::json($response);
             }
