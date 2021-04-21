@@ -255,19 +255,7 @@ class ProductionScheduleController extends Controller{
                     $hpl1 = $hpl1.',';
                 }
             }
-            $hpl1 = "WHERE m.hpl IN (".$hpl1.") ";
-        }
-
-        $hpl2 = '';
-        if($request->get('hpl') != null){
-            $hpls =  $request->get('hpl');
-            for ($i=0; $i < count($hpls); $i++) {
-                $hpl2 = $hpl2."'".$hpls[$i]."'";
-                if($i != (count($hpls)-1)){
-                    $hpl2 = $hpl2.',';
-                }
-            }
-            $hpl2 = "AND m.hpl IN (".$hpl2.") ";
+            $hpl1 = "AND m.hpl IN (".$hpl1.") ";
         }
 
         $dates = PsiCalendar::where('sales_period', 'like', '%'.$month.'%')->get();
@@ -275,6 +263,7 @@ class ProductionScheduleController extends Controller{
         $materials = DB::select("SELECT m.material_number, m.material_description, m.hpl, r.destination_code, d.destination_shortname FROM materials m
             LEFT JOIN production_requests r ON r.material_number = m.material_number
             LEFT JOIN destinations d ON d.destination_code = r.destination_code
+            WHERE m.category = 'KD'
             ".$hpl1."
             ORDER BY m.hpl ASC, m.material_number ASC, d.destination_shortname DESC");
 
@@ -282,7 +271,7 @@ class ProductionScheduleController extends Controller{
             LEFT JOIN materials m ON m.material_number = ps.material_number
             LEFT JOIN destinations d ON d.destination_code = ps.destination_code
             WHERE DATE_FORMAT(ps.st_month, '%Y-%m') = '".$month."'
-            ".$hpl2."
+            ".$hpl1."
             GROUP BY ps.st_date, ps.material_number, m.hpl, d.destination_shortname
             ORDER BY m.hpl ASC, ps.material_number ASC, d.destination_shortname DESC");
 

@@ -6151,11 +6151,11 @@ class MiddleProcessController extends Controller
 	public function fetchBuffing(Request $request)
 	{
 		$started_at = date('Y-m-d H:i:s');
-		$kanban = intval($request->get("tag"));
+		// $kanban = intval($request->get("tag"));
 		try{
 			$tags = db::connection('digital_kanban')->table('buffing_inventories')
 			->select('material_num','operator_id','material_tag_id','material_qty','lokasi','updated_at')
-			->where('material_tag_id','=', $kanban)
+			->where('material_tag_id','=', $request->get("tag"))
 			->first();
 
 			$material = Material::select("model","key")
