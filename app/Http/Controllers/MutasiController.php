@@ -619,6 +619,10 @@ class MutasiController extends Controller
                                 $chief = 'PI1110001';
                                 $nama_chief = 'Eko Prasetyo Wicaksono';
                             }
+                            else if($request->get('department') == 'Woodwind Instrument - Welding Process (WI-WP) Department'){
+                                $chief = 'PI9809008';
+                                $nama_chief = 'Mey Indah Astuti';
+                            }
                         }
                     }
         try {
