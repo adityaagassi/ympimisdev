@@ -269,13 +269,25 @@ class SurveyController extends Controller
 				GROUP BY
 					a.department,
 					departments.department_shortname
-					
-					");
+				");
+
+			$nilai = DB::SELECT("
+				SELECT
+					sum(CASE WHEN miraimobile.survey_logs.total <= 35 THEN 1 ELSE 0 END) AS jumlah_rendah,
+					sum(CASE WHEN miraimobile.survey_logs.total > 35 AND miraimobile.survey_logs.total <= 80 THEN 1 ELSE 0 END) AS jumlah_sedang,
+					sum(CASE WHEN miraimobile.survey_logs.total > 80 THEN 1 ELSE 0 END) AS jumlah_tinggi
+				FROM
+					miraimobile.survey_logs
+					JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_logs.employee_id 
+				WHERE
+					miraimobile.survey_logs.survey_code = 'covid' 
+				");
 
 			$response = array(
 				'status' => true,
 				'survey' => $survey,
 				'keterangan' => $keterangan,
+				'nilai' => $nilai
 			);
 			return Response::json($response);
 		} catch (\Exception $e) {

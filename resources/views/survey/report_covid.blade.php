@@ -354,7 +354,7 @@
 					}else if(parseInt(value.total) > 35 && parseInt(value.total) <= 80){
 						var keterangan = 'Sedang';
 						var color = '#ffea8c';
-					}else if(parseInt(value.total) > 81){
+					}else if(parseInt(value.total) > 80){
 						var keterangan = 'Tinggi';
 						var color = '#ffadad';
 					}

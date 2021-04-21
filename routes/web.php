@@ -56,7 +56,7 @@ Route::post('xml_parser_upload', 'TrialController@xmlParserUpload');
 Route::get('trialmail', 'TrialController@trialmail');
 
 Route::get('/trial', function () {
-	return view('trial');
+	return view('mails.bento.bento_request');
 });
 
 Route::get('/trialPrint', function () {
@@ -1868,7 +1868,7 @@ Route::group(['nav' => 'S58', 'middleware' => 'permission'], function(){
 //TANPO
 Route::group(['nav' => 'S53', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_tanpo/{id}', 'KnockDownController@indexKD');
-	Route::post('fetch/kd_print_tanpo', 'KnockDownController@printLabelNew');
+	Route::post('fetch/kd_print_tanpo', 'KnockDownController@printLabelTanpo');
 	Route::post('fetch/kd_force_print_tanpo', 'KnockDownController@forcePrintLabel');
 
 	Route::get('index/print_label_tanpo/{kd_number}', 'KnockDownController@indexPrintLabelTanpo');	
@@ -1879,7 +1879,7 @@ Route::group(['nav' => 'S53', 'middleware' => 'permission'], function(){
 Route::group(['nav' => 'S24', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_zpro/{id}', 'KnockDownController@indexKD');
 	Route::post('fetch/kd_print_zpro', 'KnockDownController@printLabel');	
-	Route::post('fetch/kd_print_zpro_new', 'KnockDownController@printLabelNew');	
+	Route::post('fetch/kd_print_zpro_new', 'KnockDownController@printLabelTanpo');	
 	Route::post('fetch/kd_force_print_zpro', 'KnockDownController@forcePrintLabel');
 
 	Route::get('index/print_label_zpro/{id}', 'KnockDownController@indexPrintLabelZpro');
@@ -4469,6 +4469,7 @@ Route::get('dashboard_ant/mutasi', 'MutasiController@dashboardAnt');
 Route::get('fetch/mutasi/resume', 'MutasiController@fetchResumeMutasi');
 Route::get('fetch/mutasi/resume_ant', 'MutasiController@fetchResumeMutasiAnt');
 Route::get('dashboard/mutasi/get_employee', 'MutasiController@get_employee');
+Route::get('dashboard/mutasi/get_grade', 'MutasiController@get_grade');
 Route::get('dashboard/mutasi/get_tujuan', 'MutasiController@get_tujuan');
 Route::get('dashboard/mutasi/get_section', 'MutasiController@get_section');
 Route::get('dashboard/mutasi/get_group', 'MutasiController@get_group');
@@ -4602,7 +4603,8 @@ Route::get('index/import/get_job_now', 'WarehouseNewController@get_job_new');
 Route::get('fetch/lokasi/pengantaran', 'WarehouseNewController@fetchCekPengantaran');
 Route::post('post/pengantaran/lokasi', 'WarehouseNewController@updateLokasi');
 Route::get('get/lokasi', 'WarehouseNewController@getLokasi');
-
+Route::get('fetch/detail/pengantaran', 'WarehouseNewController@fetchDetailPengantaran');
+Route::get('fetch/detail/pelayanan', 'WarehouseNewController@fetchDetailMaterial');
 
 //Sanding
 

@@ -112,6 +112,12 @@ table > thead > tr > th{
 		<div class="col-xs-12" style="margin-top: 0px;">
 			<div class="row" style="margin:0px;">
 				<div class="col-xs-2" style="padding-right: 0;">
+					<select class="form-control select2" id="periode" data-placeholder="Pilih Periode" style="width: 100%;">
+						<option value=""></option>
+						<option value=""></option>
+					</select>
+				</div>
+				<div class="col-xs-2" style="padding-right: 0;">
 					<select class="form-control select2" id="keterangan" data-placeholder="Pilih Survey" style="width: 100%;">
 						<option value=""></option>
 						<option value="covid">Covid</option>
@@ -122,11 +128,14 @@ table > thead > tr > th{
 				</div>
 				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;"></div>
 			</div>
-			<div class="col-xs-8" style="margin-top: 5px;padding-right: 5px">
+			<div class="col-xs-12" style="margin-top: 5px;padding-right: 5px">
 				<div id="container1" style="width: 100%;height: 500px;"></div>
 			</div>
-			<div class="col-xs-4" style="margin-top: 5px;padding-left: 0px">
+			<div class="col-xs-6" style="margin-top: 5px;padding-left: 0px">
 				<div id="container2" style="width: 100%;height: 500px;"></div>
+			</div>
+			<div class="col-xs-6" style="margin-top: 5px;padding-left: 0px">
+				<div id="container3" style="width: 100%;height: 500px;"></div>
 			</div>
 		</div>
 	</div>
@@ -159,7 +168,7 @@ table > thead > tr > th{
 </div>
 @endsection
 @section('scripts')
-<script src="{{ url("js/highstock.js")}}"></script>
+<script src="{{ url("js/highcharts.js")}}"></script>
 <script src="{{ url("js/highcharts-3d.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
@@ -431,6 +440,11 @@ table > thead > tr > th{
 					var series = []
 					var series2 = [];
 
+
+					var jml_rendah = 0;
+					var jml_sedang = 0;
+					var jml_tinggi = 0;
+
 					var keterangan = 'covid-19';
 
 					for (var i = 0; i < result.survey.length; i++) {
@@ -446,6 +460,9 @@ table > thead > tr > th{
 						series2.push([dept[i], jml_belum[i]]);
 					}
 
+					jml_rendah = (parseInt(result.nilai[0].jumlah_rendah));
+					jml_sedang = (parseInt(result.nilai[0].jumlah_sedang));
+					jml_tinggi = (parseInt(result.nilai[0].jumlah_tinggi));
 
 					Highcharts.chart('container1', {
 						chart: {
@@ -553,10 +570,10 @@ table > thead > tr > th{
 					        type: 'pie'
 					    },
 					    title: {
-					        text: 'Total Answer'
+					        text: 'Total Answer By Person'
 					    },
 					    tooltip: {
-					        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+					        pointFormat: '{series.name}: <b>{point.y}</b>'
 					    },
 					    accessibility: {
 					        point: {
@@ -569,7 +586,7 @@ table > thead > tr > th{
 					            cursor: 'pointer',
 					            dataLabels: {
 					                enabled: true,
-					                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+					                format: '<b>{point.name}</b>: {point.y}'
 					            },
 					            animation: false,
 					        }
@@ -595,6 +612,58 @@ table > thead > tr > th{
 					    }]
 					});
 
+					Highcharts.chart('container3', {
+					    chart: {
+					        plotBackgroundColor: null,
+					        plotBorderWidth: null,
+					        plotShadow: false,
+					        type: 'pie'
+					    },
+					    title: {
+					        text: 'Total Answer By Type'
+					    },
+					    tooltip: {
+					        pointFormat: '{series.name}: <b>{point.y}</b>'
+					    },
+					    accessibility: {
+					        point: {
+					            valueSuffix: '%'
+					        }
+					    },
+					    plotOptions: {
+					        pie: {
+					            allowPointSelect: true,
+					            cursor: 'pointer',
+					            dataLabels: {
+					                enabled: true,
+					                format: '<b>{point.name}</b>: {point.y}'
+					            },
+					            animation: false,
+					        }
+					    },credits: {
+							enabled: false
+						},
+					    series: [{
+					        name: 'Nilai',
+					        colorByPoint: true,
+					        data: [{
+					            name: 'Rendah',
+					            y: jml_rendah,
+					            colorByPoint: false,
+								color: "#348ceb"
+					        }, {
+					            name: 'Sedang',
+					            y: jml_sedang,
+					            colorByPoint: false,
+								color:'#ebab34'
+					        }, {
+					            name: 'Tinggi',
+					            y: jml_tinggi,
+					            colorByPoint: false,
+								color:'#eb4c34'
+					        }]
+					    }]
+					});
 
 				}
 			}
