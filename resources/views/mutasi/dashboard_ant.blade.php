@@ -153,20 +153,20 @@ table > thead > tr > th{
                 <th style="padding: 0;vertical-align: middle;font-size: 16px;background-color: black;color:white; border-right: 5px solid red !important;" rowspan="3">Created By</th>
               </tr>
               <tr>
-                <th style="background-color: black; font-size: 16px; font-weight: bold; padding: 2px; border-right: 5px solid red !important; color:white" colspan="4">Asal</th>
-                <th style="background-color: black; font-size: 16px; font-weight: bold; padding: 2px; border-right: 5px solid red !important; color:white" colspan="4">Tujuan</th>
+                <th style="background-color: black; font-size: 16px; font-weight: bold; padding: 2px; border-right: 5px solid red !important; color:white" colspan="3">Asal</th>
+                <th style="background-color: black; font-size: 16px; font-weight: bold; padding: 2px; border-right: 5px solid red !important; color:white" colspan="3">Tujuan</th>
                 <th style="background-color: #448aff; font-size: 16px; font-weight: bold; padding: 2px; color:white" colspan="2">HR</th>
                 <th style="background-color: black; font-size: 16px; font-weight: bold; padding: 2px;  color:white; border-left: 5px solid red !important">Action</th>
               </tr>
               <tr>
                 <th style="background-color: black; font-weight: bold; padding: 2px; color:white">Chief/Foreman</th>
                 <th style="background-color: black; font-weight: bold; padding: 2px; color:white">Manager</th>
-                <th style="background-color: black; font-weight: bold; padding: 2px; color:white">DGM</th>
-                <th style="background-color: black; font-weight: bold; padding: 2px; border-right: 5px solid red !important; color:white">GM</th>
+                <th style="background-color: black; font-weight: bold; padding: 2px; border-right: 5px solid red !important; color:white">DGM</th>
+                <!-- <th style="background-color: black; font-weight: bold; padding: 2px; border-right: 5px solid red !important; color:white">GM</th> -->
                 <th style="background-color: black; font-weight: bold; padding: 2px; color:white">Chief/Foreman</th>
                 <th style="background-color: black; font-weight: bold; padding: 2px; color:white">Manager</th>
-                <th style="background-color: black; font-weight: bold; padding: 2px; color:white">DGM</th>
-                <th style="background-color: black; font-weight: bold; padding: 2px; border-right: 5px solid red !important; color:white">GM</th>
+                <th style="background-color: black; font-weight: bold; padding: 2px; color:white; border-right: 5px solid red !important;">DGM</th>
+                <!-- <th style="background-color: black; font-weight: bold; padding: 2px; border-right: 5px solid red !important; color:white">GM</th> -->
                 <th style="background-color: black; font-weight: bold; padding: 2px; color:white">Manager HR</th>
                 <th style="background-color: black; font-weight: bold; padding: 2px; color:white">Dir HR</th>
                 <th style="background-color: black; font-weight: bold; padding: 2px; color:white; border-left: 5px solid red !important"></th>
@@ -1617,40 +1617,40 @@ Highcharts.createElement('link', {
             if (value.nama_dgm_asal != null) {
               //dgm asal
               if (value.app_da == "Approved") {
-                    bodyResume  += '<td style="background-color:black"><span class="label label-success"><a href="'+urlreport+'/'+value.id+'" style="color:white">'+value.nama_dgm_asal+'</a></span></td>';      
+                    bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span class="label label-success"><a href="'+urlreport+'/'+value.id+'" style="color:white">'+value.nama_dgm_asal+'</a></span></td>';      
               }
               else if(value.status == 'Rejected') {
-               bodyResume  += '<td style="background-color:black"><span class="label label-danger"><a href="'+urlreport+'/'+value.id+'" style="color:white">'+value.nama_dgm_asal+'</a></span></td>';
+               bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span class="label label-danger"><a href="'+urlreport+'/'+value.id+'" style="color:white">'+value.nama_dgm_asal+'</a></span></td>';
               }
               else{
-                  bodyResume  += '<td style="background-color:black"><span class="label label-danger"><a href="'+urlverifikasi+'/'+value.id+'" style="color:white">'+value.nama_dgm_asal+'</a></span></td>';
+                  bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span class="label label-danger"><a href="'+urlverifikasi+'/'+value.id+'" style="color:white">'+value.nama_dgm_asal+'</a></span></td>';
               }
             }
             else if(value.nama_dgm_asal == null){
-                bodyResume  += '<td style="background-color:black">'+("")+'</td>';
-            }
-            else{
-              bodyResume  += '<td style="background-color:black"><span style="color:white">None</span></td>';
-            };  
-            // jika gm asal
-            if (value.nama_gm_asal != null) {
-              //gm asal
-              if (value.app_ga == "Approved") {
-                    bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span class="label label-success"><a href="'+urlreport+'/'+value.id+'" style="color:white">'+value.nama_gm_asal+'</a></span></td>';    
-              }
-              else if(value.status == 'Rejected') {
-               bodyResume  += '<td style="background-color:black"><span class="label label-danger"><a href="'+urlreport+'/'+value.id+'" style="color:white">'+value.nama_gm_asal+'</a></span></td>';
-              }
-              else{
-                  bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span class="label label-danger"><a href="'+urlverifikasi+'/'+value.id+'" style="color:white">'+value.nama_gm_asal+'</a></span></td>';
-              }
-            }
-            else if(value.nama_gm_asal == null){
                 bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;">'+("")+'</td>';
             }
             else{
               bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span style="color:white">None</span></td>';
-            }; 
+            };  
+            // jika gm asal
+            // if (value.nama_gm_asal != null) {
+            //   //gm asal
+            //   if (value.app_ga == "Approved") {
+            //         bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span class="label label-success"><a href="'+urlreport+'/'+value.id+'" style="color:white">'+value.nama_gm_asal+'</a></span></td>';    
+            //   }
+            //   else if(value.status == 'Rejected') {
+            //    bodyResume  += '<td style="background-color:black"><span class="label label-danger"><a href="'+urlreport+'/'+value.id+'" style="color:white">'+value.nama_gm_asal+'</a></span></td>';
+            //   }
+            //   else{
+            //       bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span class="label label-danger"><a href="'+urlverifikasi+'/'+value.id+'" style="color:white">'+value.nama_gm_asal+'</a></span></td>';
+            //   }
+            // }
+            // else if(value.nama_gm_asal == null){
+            //     bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;">'+("")+'</td>';
+            // }
+            // else{
+            //   bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span style="color:white">None</span></td>';
+            // }; 
             // jika chief tujuan
             if (value.nama_chief_tujuan != null) {
               //chief tujuan
@@ -1693,40 +1693,40 @@ Highcharts.createElement('link', {
             if (value.nama_dgm_tujuan != null) {
               //dgm tujuan
               if (value.app_dt == "Approved") {
-                    bodyResume  += '<td style="background-color:black"><span class="label label-success"><a href="'+urlreport+'/'+value.id+'" style="color:white">'+value.nama_dgm_tujuan+'</a></span></td>';
+                    bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span class="label label-success"><a href="'+urlreport+'/'+value.id+'" style="color:white">'+value.nama_dgm_tujuan+'</a></span></td>';
               }
               else if(value.status == 'Rejected') {
-               bodyResume  += '<td style="background-color:black"><span class="label label-danger"><a href="'+urlreport+'/'+value.id+'" style="color:white">'+value.nama_dgm_tujuan+'</a></span></td>';
+               bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span class="label label-danger"><a href="'+urlreport+'/'+value.id+'" style="color:white">'+value.nama_dgm_tujuan+'</a></span></td>';
               }
               else{
-                  bodyResume  += '<td style="background-color:black"><span class="label label-danger"><a href="'+urlverifikasi+'/'+value.id+'" style="color:white">'+value.nama_dgm_tujuan+'</a></span></td>';
+                  bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span class="label label-danger"><a href="'+urlverifikasi+'/'+value.id+'" style="color:white">'+value.nama_dgm_tujuan+'</a></span></td>';
               }
             }
             else if(value.nama_dgm_tujuan == null){
-                bodyResume  += '<td style="background-color:black">'+("")+'</td>';
-            }
-            else{
-              bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span style="color:white">None</span></td>';
-            }; 
-            // jika gm tujuan
-            if (value.nama_gm_tujuan != null) {
-              //gm tujuan
-              if (value.app_gt == "Approved") {
-                    bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span class="label label-success"><a href="'+urlreport+'/'+value.id+'" style="color:white">'+value.nama_gm_tujuan+'</a></span></td>';           
-              }
-              else if(value.status == 'Rejected') {
-               bodyResume  += '<td style="background-color:black"><span class="label label-danger"><a href="'+urlreport+'/'+value.id+'" style="color:white">'+value.nama_gm_tujuan+'</a></span></td>';
-              }
-              else{
-                  bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span class="label label-danger"><a href="'+urlverifikasi+'/'+value.id+'" style="color:white">'+value.nama_gm_tujuan+'</a></span></td>';
-              }
-            }
-            else if(value.nama_gm_tujuan == null){
                 bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;">'+("")+'</td>';
             }
             else{
               bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span style="color:white">None</span></td>';
             }; 
+            // jika gm tujuan
+            // if (value.nama_gm_tujuan != null) {
+            //   //gm tujuan
+            //   if (value.app_gt == "Approved") {
+            //         bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span class="label label-success"><a href="'+urlreport+'/'+value.id+'" style="color:white">'+value.nama_gm_tujuan+'</a></span></td>';           
+            //   }
+            //   else if(value.status == 'Rejected') {
+            //    bodyResume  += '<td style="background-color:black"><span class="label label-danger"><a href="'+urlreport+'/'+value.id+'" style="color:white">'+value.nama_gm_tujuan+'</a></span></td>';
+            //   }
+            //   else{
+            //       bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span class="label label-danger"><a href="'+urlverifikasi+'/'+value.id+'" style="color:white">'+value.nama_gm_tujuan+'</a></span></td>';
+            //   }
+            // }
+            // else if(value.nama_gm_tujuan == null){
+            //     bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;">'+("")+'</td>';
+            // }
+            // else{
+            //   bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span style="color:white">None</span></td>';
+            // }; 
             // jika manager hr
             if (value.nama_manager != null) {
               //manager hr
