@@ -359,27 +359,62 @@ class MutasiController extends Controller
         $today = date('Y-m-d');
         $dateto = $request->get('dateto');
 
-        if ($dateto == "") {
+        $emp_dept = EmployeeSync::where('employee_id', Auth::user()->username)
+        ->select('employee_id', 'department')
+        ->first();
+
+        // where department = "'.$emp_dept->department.'"')
+
+        if (Auth::user()->role_code == "MIS" || $emp_dept->employee_id == "PI0603019") {
+            if ($dateto == "") {
             $resumes = Mutasi::select('mutasi_depts.id', 'status', 'nik', 'nama', 'nama_chief_asal', 'nama_chief_tujuan', 'nama_manager_tujuan', 'nama_dgm_tujuan', 'nama_gm_tujuan', 'nama_manager', 'app_ca', 'app_ct', 'app_mt', 'app_dt', 'app_gt', 'app_m', 'posisi', 
                 'users.name', 'mutasi_depts.created_by', 'remark')
-                ->WHERE('mutasi_depts.deleted_at',null )
+                ->where('mutasi_depts.deleted_at',null )
                 // ->where(DB::raw("DATE_FORMAT(tanggal, '%Y-%m-%d')"),$today)
                 ->where('mutasi_depts.status',null)
                 // ->where('mutasi_depts.status', null)
                 ->leftJoin('users', 'users.id', '=', 'mutasi_depts.created_by')
                 ->orderBy('mutasi_depts.tanggal', 'asc')
                 ->get();
+            }
+            else{
+                $resumes = Mutasi::select('mutasi_depts.id', 'status', 'nik', 'nama', 'nama_chief_asal', 'nama_chief_tujuan', 'nama_manager_tujuan', 'nama_dgm_tujuan', 'nama_gm_tujuan', 'nama_manager', 'app_ca', 'app_ct', 'app_mt', 'app_dt', 'app_gt', 'app_m', 'posisi', 
+                    'users.name', 'mutasi_depts.created_by', 'remark')
+                    ->where('mutasi_depts.deleted_at',null )
+                    ->where('mutasi_depts.status',null)
+                    ->where(DB::raw("DATE_FORMAT(tanggal, '%Y-%m')"),$dateto)
+                    ->leftJoin('users', 'users.id', '=', 'mutasi_depts.created_by')
+                    ->orderBy('mutasi_depts.tanggal', 'asc')
+                    ->get();
+            }    
         }
         else{
-            $resumes = Mutasi::select('mutasi_depts.id', 'status', 'nik', 'nama', 'nama_chief_asal', 'nama_chief_tujuan', 'nama_manager_tujuan', 'nama_dgm_tujuan', 'nama_gm_tujuan', 'nama_manager', 'app_ca', 'app_ct', 'app_mt', 'app_dt', 'app_gt', 'app_m', 'posisi', 
+            if ($dateto == "") {
+            $resumes = Mutasi::select('mutasi_depts.id', 'status', 'nik', 'nama', 'nama_chief_asal', 'nama_chief_tujuan', 'nama_manager_tujuan', 'nama_dgm_tujuan', 'nama_gm_tujuan', 'nama_manager', 'app_ca', 'app_ct', 'app_mt', 'app_dt', 'app_gt', 'app_m', 'posisi', 'departemen',  
                 'users.name', 'mutasi_depts.created_by', 'remark')
-                ->WHERE('mutasi_depts.deleted_at',null )
+                ->where('mutasi_depts.departemen', $emp_dept->department)
+                ->where('mutasi_depts.deleted_at',null )
+                // ->where(DB::raw("DATE_FORMAT(tanggal, '%Y-%m-%d')"),$today)
                 ->where('mutasi_depts.status',null)
-                ->where(DB::raw("DATE_FORMAT(tanggal, '%Y-%m')"),$dateto)
+                // ->where('mutasi_depts.status', null)
                 ->leftJoin('users', 'users.id', '=', 'mutasi_depts.created_by')
                 ->orderBy('mutasi_depts.tanggal', 'asc')
                 ->get();
+            }
+            else{
+                $resumes = Mutasi::select('mutasi_depts.id', 'status', 'nik', 'nama', 'nama_chief_asal', 'nama_chief_tujuan', 'nama_manager_tujuan', 'nama_dgm_tujuan', 'nama_gm_tujuan', 'nama_manager', 'app_ca', 'app_ct', 'app_mt', 'app_dt', 'app_gt', 'app_m', 'posisi', 'departemen', 
+                    'users.name', 'mutasi_depts.created_by', 'remark')
+                    ->where('mutasi_depts.departemen', $emp_dept->department)
+                    ->where('mutasi_depts.deleted_at',null )
+                    ->where('mutasi_depts.status',null)
+                    ->where(DB::raw("DATE_FORMAT(tanggal, '%Y-%m')"),$dateto)
+                    ->leftJoin('users', 'users.id', '=', 'mutasi_depts.created_by')
+                    ->orderBy('mutasi_depts.tanggal', 'asc')
+                    ->get();
+            }
         }
+
+        
 
         
         $response = array(
@@ -693,13 +728,13 @@ class MutasiController extends Controller
                 Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_satu'));
 
                 return redirect('/dashboard/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
-                }
-
+                } 
+                else{
                 if ($mutasi->manager_tujuan != null) {
-                    $mutasi->posisi = 'mgr';
-                    $mutasi->save();
+                $mutasi->posisi = 'mgr';
+                $mutasi->save();
 
-                    $mails = "select distinct email from mutasi_depts join users on mutasi_depts.manager_tujuan = users.username where mutasi_depts.id = ".$mutasi->id;
+                $mails = "select distinct email from mutasi_depts join users on mutasi_depts.manager_tujuan = users.username where mutasi_depts.id = ".$mutasi->id;
                 }
                 else{
                     $mails = "select distinct email from mutasi_depts join users on mutasi_depts.chief_or_foreman_tujuan = users.username where mutasi_depts.id = ".$mutasi->id;    
@@ -710,6 +745,7 @@ class MutasiController extends Controller
                 $mutasi = db::select($isimail);
                 Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_satu'));
                 return redirect('/dashboard/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');  
+                }
             }
             catch (QueryException $e){
             return back()->with('error', 'Error')->with('page', 'Mutasi Error');
@@ -1012,10 +1048,15 @@ class MutasiController extends Controller
         $tanggal = date('Y-m-d');
         $dateto = $request->get('dateto');
 
-        if ($dateto == "") {
+        $emp_dept = EmployeeSync::where('employee_id', Auth::user()->username)
+        ->select('employee_id', 'department')
+        ->first();
+
+        if (Auth::user()->role_code == "MIS" || $emp_dept->employee_id == "PI0603019") { 
+            if ($dateto == "") {
             $resumes = MutasiAnt::select('mutasi_ant_depts.id', 'status', 'nik', 'nama', 'nama_chief_asal', 'nama_manager_asal', 'nama_dgm_asal', 'nama_gm_asal', 'nama_chief_tujuan', 'nama_manager_tujuan', 'nama_dgm_tujuan', 'nama_gm_tujuan', 'nama_manager', 'nama_direktur_hr', 'app_ca', 'app_ma', 'app_da', 'app_ga', 'app_ct', 'app_mt', 'app_dt', 'app_gt', 'app_m', 'app_dir', 'posisi', 
                 'users.name', 'mutasi_ant_depts.created_by', 'remark')
-                 ->WHERE('mutasi_ant_depts.deleted_at',null )
+                 ->where('mutasi_ant_depts.deleted_at',null )
                  // ->where(DB::raw("DATE_FORMAT(tanggal, '%Y-%m-%d')"),$tanggal)
                  ->where('mutasi_ant_depts.status',null)
                  ->leftJoin('users', 'users.id', '=', 'mutasi_ant_depts.created_by')
@@ -1025,16 +1066,45 @@ class MutasiController extends Controller
 
                   // var_dump($tanggal);
                   // die();
-        else{
+            else{
+                $resumes = MutasiAnt::select('mutasi_ant_depts.id', 'status', 'nik', 'nama', 'nama_chief_asal', 'nama_manager_asal', 'nama_dgm_asal', 'nama_gm_asal', 'nama_chief_tujuan', 'nama_manager_tujuan', 'nama_dgm_tujuan', 'nama_gm_tujuan', 'nama_manager', 'nama_direktur_hr', 'app_ca', 'app_ma', 'app_da', 'app_ga', 'app_ct', 'app_mt', 'app_dt', 'app_gt', 'app_m', 'app_dir', 'posisi', 
+                     'users.name', 'mutasi_ant_depts.created_by', 'remark')
+                     ->where('mutasi_ant_depts.deleted_at',null )
+                     ->where(DB::raw("DATE_FORMAT(tanggal, '%Y-%m')"),$dateto)
+                     ->where('mutasi_ant_depts.status',null)
+                     ->leftJoin('users', 'users.id', '=', 'mutasi_ant_depts.created_by')
+                     ->orderBy('mutasi_ant_depts.tanggal', 'asc')
+                     ->get();
+            }
+        }else{
+            if ($dateto == "") {
             $resumes = MutasiAnt::select('mutasi_ant_depts.id', 'status', 'nik', 'nama', 'nama_chief_asal', 'nama_manager_asal', 'nama_dgm_asal', 'nama_gm_asal', 'nama_chief_tujuan', 'nama_manager_tujuan', 'nama_dgm_tujuan', 'nama_gm_tujuan', 'nama_manager', 'nama_direktur_hr', 'app_ca', 'app_ma', 'app_da', 'app_ga', 'app_ct', 'app_mt', 'app_dt', 'app_gt', 'app_m', 'app_dir', 'posisi', 
-                 'users.name', 'mutasi_ant_depts.created_by', 'remark')
-                 ->WHERE('mutasi_ant_depts.deleted_at',null )
-                 ->where(DB::raw("DATE_FORMAT(tanggal, '%Y-%m')"),$dateto)
+                'users.name', 'mutasi_ant_depts.created_by', 'remark')
+                 ->where('mutasi_ant_depts.departemen', $emp_dept->department)
+                 ->where('mutasi_ant_depts.deleted_at',null )
+                 // ->where(DB::raw("DATE_FORMAT(tanggal, '%Y-%m-%d')"),$tanggal)
                  ->where('mutasi_ant_depts.status',null)
                  ->leftJoin('users', 'users.id', '=', 'mutasi_ant_depts.created_by')
                  ->orderBy('mutasi_ant_depts.tanggal', 'asc')
                  ->get();
+                  }
+
+                  // var_dump($tanggal);
+                  // die();
+            else{
+                $resumes = MutasiAnt::select('mutasi_ant_depts.id', 'status', 'nik', 'nama', 'nama_chief_asal', 'nama_manager_asal', 'nama_dgm_asal', 'nama_gm_asal', 'nama_chief_tujuan', 'nama_manager_tujuan', 'nama_dgm_tujuan', 'nama_gm_tujuan', 'nama_manager', 'nama_direktur_hr', 'app_ca', 'app_ma', 'app_da', 'app_ga', 'app_ct', 'app_mt', 'app_dt', 'app_gt', 'app_m', 'app_dir', 'posisi', 
+                     'users.name', 'mutasi_ant_depts.created_by', 'remark')
+                     ->where('mutasi_ant_depts.departemen', $emp_dept->department)
+                     ->where('mutasi_ant_depts.deleted_at',null )
+                     ->where(DB::raw("DATE_FORMAT(tanggal, '%Y-%m')"),$dateto)
+                     ->where('mutasi_ant_depts.status',null)
+                     ->leftJoin('users', 'users.id', '=', 'mutasi_ant_depts.created_by')
+                     ->orderBy('mutasi_ant_depts.tanggal', 'asc')
+                     ->get();
+            }
         }
+
+
         $response = array(
             'status' => true,
             'resumes' => $resumes
@@ -1117,6 +1187,9 @@ class MutasiController extends Controller
     }
 
      public function viewMutasiDetail(Request $request){
+        $emp_dept = EmployeeSync::where('employee_id', Auth::user()->username)
+          ->select('employee_id', 'department')
+          ->first();
         
         // $bulan = $request->get('bulan');
         // $status = $request->get('status');
@@ -1160,6 +1233,8 @@ class MutasiController extends Controller
             FROM
             mutasi_ant_depts 
             WHERE
+            departemen = '".$emp_dept->department."'
+            AND
             DATE_FORMAT(tanggal, '%Y-%m') = '".$dateto."'
             and ".$status."
             ORDER BY
@@ -1172,6 +1247,8 @@ class MutasiController extends Controller
             FROM
             mutasi_ant_depts 
             WHERE
+            departemen = '".$emp_dept->department."'
+            AND
             DATE_FORMAT(tanggal, '%M') = '".$bulan."'
             and ".$status."
             ORDER BY
@@ -1189,6 +1266,9 @@ class MutasiController extends Controller
     }
 
     public function viewMutasiSatuDetail(Request $request){
+        $emp_dept = EmployeeSync::where('employee_id', Auth::user()->username)
+          ->select('employee_id', 'department')
+          ->first();
 
         $bulan = $request->get('bulan');
         $status = $request->get('status');
@@ -1209,6 +1289,8 @@ class MutasiController extends Controller
             FROM
             mutasi_depts 
             WHERE
+            departemen = '".$emp_dept->department."'
+            AND
             DATE_FORMAT(tanggal, '%Y-%m') = '".$dateto."'
             and ".$status."
             ORDER BY
@@ -1221,6 +1303,8 @@ class MutasiController extends Controller
             FROM
             mutasi_depts 
             WHERE
+            departemen = '".$emp_dept->department."'
+            AND
             DATE_FORMAT(tanggal, '%M') = '".$bulan."'
             and ".$status."
             ORDER BY
@@ -1542,7 +1626,7 @@ class MutasiController extends Controller
                 }
                 else
                 {   
-                    if ($mutasi->departemen == 'Woodwind Instrument - Body Parts Process (WI-BPP) Department') {
+                    if ($mutasi->departemen == 'Woodwind Instrument - Welding Process (WI-WP) Department') {
                         $manager = 'PI0108010';
                         $nama_manager = 'Yudi Abtadipa';
                     }
@@ -1579,13 +1663,13 @@ class MutasiController extends Controller
                     $mutasi->date_atasan_asal = date('Y-m-d H-y-s');
                     $mutasi->posisi = 'mgr_asal';
                     $mutasi->manager_asal = $manager;
-                    $mutasi->nama_manager_asal = $nama_manager;
-                    $mutasi->dgm_asal = $dgm;
-                    $mutasi->nama_dgm_asal = $nama_dgm;         
+                    $mutasi->nama_manager_asal = $nama_manager;        
                     $mutasi->save();
 
                     if ($mutasi->manager_asal == null) {
                         $mutasi->posisi = 'dgm_asal';
+                        $mutasi->dgm_asal = $dgm;
+                        $mutasi->nama_dgm_asal = $nama_dgm; 
                         $mutasi->save();
                     }
             }
@@ -2637,48 +2721,101 @@ class MutasiController extends Controller
           // } else {
           //     $dep = '';
           // }
-          if ($dateto != "") {
-            $data = db::select("
-            SELECT
-            count( nik ) AS jumlah,
-            monthname( tanggal ) AS bulan,
-            YEAR ( tanggal ) AS tahun,
-            sum( CASE WHEN `status` is null THEN 1 ELSE 0 END ) AS Proces,
-            sum( CASE WHEN `status` = 'All Approved' THEN 1 ELSE 0 END ) AS Signed,
-            sum( CASE WHEN `status` = 'Rejected' THEN 1 ELSE 0 END ) AS NotSigned 
-            FROM
-            mutasi_ant_depts 
-            WHERE
-            mutasi_ant_depts.deleted_at IS NULL 
-            AND DATE_FORMAT( tanggal, '%Y-%m' ) = '".$dateto."'
-            GROUP BY
-            bulan,
-            tahun 
-            ORDER BY
-            tahun,
-            MONTH ( tanggal ) ASC
-            ");
+
+           $emp_dept = EmployeeSync::where('employee_id', Auth::user()->username)
+          ->select('employee_id', 'department')
+          ->first();
+
+          if (Auth::user()->role_code == "MIS" || $emp_dept->employee_id == "PI0603019") {
+              if ($dateto != "") {
+                $data = db::select("
+                SELECT
+                count( nik ) AS jumlah,
+                monthname( tanggal ) AS bulan,
+                YEAR ( tanggal ) AS tahun,
+                sum( CASE WHEN `status` is null THEN 1 ELSE 0 END ) AS Proces,
+                sum( CASE WHEN `status` = 'All Approved' THEN 1 ELSE 0 END ) AS Signed,
+                sum( CASE WHEN `status` = 'Rejected' THEN 1 ELSE 0 END ) AS NotSigned 
+                FROM
+                mutasi_ant_depts 
+                WHERE
+                mutasi_ant_depts.deleted_at IS NULL 
+                AND DATE_FORMAT( tanggal, '%Y-%m' ) = '".$dateto."'
+                GROUP BY
+                bulan,
+                tahun 
+                ORDER BY
+                tahun,
+                MONTH ( tanggal ) ASC
+                ");
+              }else{
+                $data = db::select("
+                SELECT
+                count( nik ) AS jumlah,
+                monthname( tanggal ) AS bulan,
+                YEAR ( tanggal ) AS tahun,
+                sum( CASE WHEN `status` is null THEN 1 ELSE 0 END ) AS Proces,
+                sum( CASE WHEN `status` = 'All Approved' THEN 1 ELSE 0 END ) AS Signed,
+                sum( CASE WHEN `status` = 'Rejected' THEN 1 ELSE 0 END ) AS NotSigned 
+                FROM
+                mutasi_ant_depts 
+                WHERE
+                mutasi_ant_depts.deleted_at IS NULL
+                GROUP BY
+                bulan,
+                tahun 
+                ORDER BY
+                tahun,
+                MONTH ( tanggal ) ASC
+                ");
+              }
           }else{
-            $data = db::select("
-            SELECT
-            count( nik ) AS jumlah,
-            monthname( tanggal ) AS bulan,
-            YEAR ( tanggal ) AS tahun,
-            sum( CASE WHEN `status` is null THEN 1 ELSE 0 END ) AS Proces,
-            sum( CASE WHEN `status` = 'All Approved' THEN 1 ELSE 0 END ) AS Signed,
-            sum( CASE WHEN `status` = 'Rejected' THEN 1 ELSE 0 END ) AS NotSigned 
-            FROM
-            mutasi_ant_depts 
-            WHERE
-            mutasi_ant_depts.deleted_at IS NULL
-            GROUP BY
-            bulan,
-            tahun 
-            ORDER BY
-            tahun,
-            MONTH ( tanggal ) ASC
-            ");
+                if ($dateto != "") {
+                $data = db::select("
+                SELECT
+                count( nik ) AS jumlah,
+                monthname( tanggal ) AS bulan,
+                YEAR ( tanggal ) AS tahun,
+                sum( CASE WHEN `status` is null THEN 1 ELSE 0 END ) AS Proces,
+                sum( CASE WHEN `status` = 'All Approved' THEN 1 ELSE 0 END ) AS Signed,
+                sum( CASE WHEN `status` = 'Rejected' THEN 1 ELSE 0 END ) AS NotSigned 
+                FROM
+                mutasi_ant_depts 
+                WHERE
+                mutasi_ant_depts.departemen = '".$emp_dept->department."'
+                AND mutasi_ant_depts.deleted_at IS NULL 
+                AND DATE_FORMAT( tanggal, '%Y-%m' ) = '".$dateto."'
+                GROUP BY
+                bulan,
+                tahun 
+                ORDER BY
+                tahun,
+                MONTH ( tanggal ) ASC
+                ");
+              }else{
+                $data = db::select("
+                SELECT
+                count( nik ) AS jumlah,
+                monthname( tanggal ) AS bulan,
+                YEAR ( tanggal ) AS tahun,
+                sum( CASE WHEN `status` is null THEN 1 ELSE 0 END ) AS Proces,
+                sum( CASE WHEN `status` = 'All Approved' THEN 1 ELSE 0 END ) AS Signed,
+                sum( CASE WHEN `status` = 'Rejected' THEN 1 ELSE 0 END ) AS NotSigned 
+                FROM
+                mutasi_ant_depts 
+                WHERE
+                mutasi_ant_depts.departemen = '".$emp_dept->department."'
+                AND mutasi_ant_depts.deleted_at IS NULL
+                GROUP BY
+                bulan,
+                tahun 
+                ORDER BY
+                tahun,
+                MONTH ( tanggal ) ASC
+                ");
+              }
           }
+          
           
 
           $response = array(
@@ -2702,48 +2839,102 @@ class MutasiController extends Controller
           //     $dateto = $dateto;
           // }
 
-          if ($dateto != "") {
-            $data = db::select("
-            SELECT
-            count( nik ) AS jumlah,
-            monthname( tanggal ) AS bulan,
-            YEAR ( tanggal ) AS tahun,
-            sum( CASE WHEN `status` is null THEN 1 ELSE 0 END ) AS Proces,
-            sum( CASE WHEN `status` = 'All Approved' THEN 1 ELSE 0 END ) AS Signed,
-            sum( CASE WHEN `status` = 'Rejected' THEN 1 ELSE 0 END ) AS NotSigned 
-            FROM
-            mutasi_depts 
-            WHERE
-            mutasi_depts.deleted_at IS NULL 
-            AND DATE_FORMAT( tanggal, '%Y-%m' ) = '".$dateto."'
-            GROUP BY
-            bulan,
-            tahun 
-            ORDER BY
-            tahun,
-            MONTH ( tanggal ) ASC
-            ");
-          }else{
-            $data = db::select("
-            SELECT
-            count( nik ) AS jumlah,
-            monthname( tanggal ) AS bulan,
-            YEAR ( tanggal ) AS tahun,
-            sum( CASE WHEN `status` is null THEN 1 ELSE 0 END ) AS Proces,
-            sum( CASE WHEN `status` = 'All Approved' THEN 1 ELSE 0 END ) AS Signed,
-            sum( CASE WHEN `status` = 'Rejected' THEN 1 ELSE 0 END ) AS NotSigned 
-            FROM
-            mutasi_depts 
-            WHERE
-            mutasi_depts.deleted_at IS NULL
-            GROUP BY
-            bulan,
-            tahun 
-            ORDER BY
-            tahun,
-            MONTH ( tanggal ) ASC
-            ");
+          $emp_dept = EmployeeSync::where('employee_id', Auth::user()->username)
+          ->select('employee_id', 'department')
+          ->first();
+
+          if (Auth::user()->role_code == "MIS" || $emp_dept->employee_id == "PI0603019") {
+              if ($dateto != "") {
+                    $data = db::select("
+                    SELECT
+                    count( nik ) AS jumlah,
+                    monthname( tanggal ) AS bulan,
+                    YEAR ( tanggal ) AS tahun,
+                    sum( CASE WHEN `status` is null THEN 1 ELSE 0 END ) AS Proces,
+                    sum( CASE WHEN `status` = 'All Approved' THEN 1 ELSE 0 END ) AS Signed,
+                    sum( CASE WHEN `status` = 'Rejected' THEN 1 ELSE 0 END ) AS NotSigned 
+                    FROM
+                    mutasi_depts 
+                    WHERE
+                    mutasi_depts.deleted_at IS NULL 
+                    AND DATE_FORMAT( tanggal, '%Y-%m' ) = '".$dateto."'
+                    GROUP BY
+                    bulan,
+                    tahun 
+                    ORDER BY
+                    tahun,
+                    MONTH ( tanggal ) ASC
+                    ");
+              }else{
+                    $data = db::select("
+                    SELECT
+                    count( nik ) AS jumlah,
+                    monthname( tanggal ) AS bulan,
+                    YEAR ( tanggal ) AS tahun,
+                    sum( CASE WHEN `status` is null THEN 1 ELSE 0 END ) AS Proces,
+                    sum( CASE WHEN `status` = 'All Approved' THEN 1 ELSE 0 END ) AS Signed,
+                    sum( CASE WHEN `status` = 'Rejected' THEN 1 ELSE 0 END ) AS NotSigned 
+                    FROM
+                    mutasi_depts 
+                    WHERE
+                    mutasi_depts.deleted_at IS NULL
+                    GROUP BY
+                    bulan,
+                    tahun 
+                    ORDER BY
+                    tahun,
+                    MONTH ( tanggal ) ASC
+                    ");
+                }
           }
+          else{
+            if ($dateto != "") {
+                    $data = db::select("
+                    SELECT
+                    count( nik ) AS jumlah,
+                    monthname( tanggal ) AS bulan,
+                    YEAR ( tanggal ) AS tahun,
+                    sum( CASE WHEN `status` is null THEN 1 ELSE 0 END ) AS Proces,
+                    sum( CASE WHEN `status` = 'All Approved' THEN 1 ELSE 0 END ) AS Signed,
+                    sum( CASE WHEN `status` = 'Rejected' THEN 1 ELSE 0 END ) AS NotSigned 
+                    FROM
+                    mutasi_depts 
+                    WHERE
+                    mutasi_depts.departemen = '".$emp_dept->department."'
+                    AND mutasi_depts.deleted_at IS NULL 
+                    AND DATE_FORMAT( tanggal, '%Y-%m' ) = '".$dateto."'
+                    GROUP BY
+                    bulan,
+                    tahun 
+                    ORDER BY
+                    tahun,
+                    MONTH ( tanggal ) ASC
+                    ");
+              }else{
+                    $data = db::select("
+                    SELECT
+                    count( nik ) AS jumlah,
+                    monthname( tanggal ) AS bulan,
+                    YEAR ( tanggal ) AS tahun,
+                    sum( CASE WHEN `status` is null THEN 1 ELSE 0 END ) AS Proces,
+                    sum( CASE WHEN `status` = 'All Approved' THEN 1 ELSE 0 END ) AS Signed,
+                    sum( CASE WHEN `status` = 'Rejected' THEN 1 ELSE 0 END ) AS NotSigned 
+                    FROM
+                    mutasi_depts 
+                    WHERE
+                    mutasi_depts.departemen = '".$emp_dept->department."'
+                    AND mutasi_depts.deleted_at IS NULL
+                    GROUP BY
+                    bulan,
+                    tahun 
+                    ORDER BY
+                    tahun,
+                    MONTH ( tanggal ) ASC
+                    ");
+                }
+          }
+
+          
 
           
 

@@ -1485,23 +1485,25 @@ Highcharts.createElement('link', {
             }
             // bodyResume  += '<td style="border-right: 5px solid red !important; background-color:black"><span class="label label-warning">'+name2+'</span></td>';
             // jika chief asal
-            if (value.nama_chief_asal != null) {
-              //chief asal
-              if (value.app_ca == "Approved") {
-                bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span class="label label-success"><a href="'+urlreport+'/'+value.id+'" style="color:white">'+chief_asal+'</a></span></td>';
-              }
-              else if(value.status == 'Rejected') {
-               bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span class="label label-danger"><a href="'+urlreport+'/'+value.id+'" style="color:white">'+chief_asal+'</a></span></td>';
-              }
-              else{
-                  bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span class="label label-danger"><a href="'+urlverifikasi+'/'+value.id+'" style="color:white">'+chief_asal+'</a></span></td>';
-              }
-            }
-            else if(chief_asal == null){
-                bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;">'+("")+'</td>';
+            if (value.remark != 2) {
+              bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;">'+("")+'</td>';
             }
             else{
-              bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span style="color:white>None</span></td>';
+              if (value.nama_chief_asal != null) {
+              //chief asal
+                if (value.app_ca == "Approved") {
+                  bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span class="label label-success"><a href="'+urlreport+'/'+value.id+'" style="color:white">'+chief_asal+'</a></span></td>';
+                }
+                else if(value.status == 'Rejected') {
+                 bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span class="label label-danger"><a href="'+urlreport+'/'+value.id+'" style="color:white">'+chief_asal+'</a></span></td>';
+                }
+                else{
+                    bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span class="label label-danger"><a href="'+urlverifikasi+'/'+value.id+'" style="color:white">'+chief_asal+'</a></span></td>';
+                }
+              }
+              else if(chief_asal == null){
+                  bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;">'+("")+'</td>';
+              }
             };
             // jika chief tujuan
             if (value.nama_chief_tujuan != null) {
