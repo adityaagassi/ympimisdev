@@ -61,7 +61,7 @@
 		<div class="col-xs-4" style="text-align: center; color: red;">
 			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> Display <i class="fa fa-angle-double-down"></i></span>
 
-			<!-- <a href='{{ url("index/injection_schedule") }}' class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Injection Schedule</a> -->
+			<a href='{{ url("index/injection_schedule") }}' class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Injection Schedule</a>
 
 			<a href="{{ url('/index/injection/machine_monitoring') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Machine Monitoring</a>
 

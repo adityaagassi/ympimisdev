@@ -52,136 +52,138 @@ class InjectionScheduleCommand extends Command
         //     $invent = InjectionInventory::find($key->id);
         //     $invent->forceDelete();
         // }
-        // $j = 2;
-        // $nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays($j)));
-        // $weekly_calendars = DB::SELECT("SELECT * FROM `weekly_calendars`");
-        // foreach ($weekly_calendars as $key) {
-        //     if ($key->week_date == $nextdayplus1) {
-        //         if ($key->remark == 'H') {
-        //             $nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(++$j)));
-        //         }
-        //     }
-        // }
-        // if (date('D')=='Fri' || date('D')=='Sat') {
-        //     $nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays($j)));
-        // }
+        InjectionScheduleTemp::truncate();
+        InjectionScheduleLog::truncate();
+        $j = 7;
+        $nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays($j)));
+        $weekly_calendars = DB::SELECT("SELECT * FROM `weekly_calendars`");
+        foreach ($weekly_calendars as $key) {
+            if ($key->week_date == $nextdayplus1) {
+                if ($key->remark == 'H') {
+                    $nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(++$j)));
+                }
+            }
+        }
+        if (date('D')=='Fri' || date('D')=='Sat') {
+            $nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays($j)));
+        }
 
-        // // $nextdayplus1 = date('Y-m-t');
+        // $nextdayplus1 = date('Y-m-t');
 
-        // $first = date('Y-m-01');
-        // $now = date('Y-m-d');
+        $first = date('Y-m-01');
+        $now = date('Y-m-d');
 
-        // $tomorrow = date('Y-m-d', strtotime(carbon::now()->addDays(1)));
+        $tomorrow = date('Y-m-d', strtotime(carbon::now()->addDays(1)));
 
-        // $data = DB::SELECT("SELECT
-        //     c.material_number,
-        //     c.material_description,
-        //     c.part_code,
-        //     c.color,
-        //     SUM( c.stock ) AS stock,
-        //     SUM( c.plan ) AS plan,
-        //     SUM( c.stock ) - SUM( c.plan ) AS diff,
-        // IF
-        //     (
-        //         SUM( c.stock ) - SUM( c.plan ) >= 0,
-        //         0,-(
-        //         SUM( c.stock ) - SUM( c.plan ))) AS debt 
-        // FROM
-        //     (
-        //     SELECT
-        //         gmc as material_number,
-        //         part_name as material_description,
-        //         color,
-        //         part_code,
-        //         COALESCE (( SELECT quantity FROM injection_inventories WHERE location = 'RC91' AND material_number = gmc ), 0 ) AS stock,
-        //         0 AS plan 
-        //     FROM
-        //         injection_parts 
-        //     WHERE
-        //         remark = 'injection' 
-        //         and deleted_at is null
+        $data = DB::SELECT("SELECT
+            c.material_number,
+            c.material_description,
+            c.part_code,
+            c.color,
+            SUM( c.stock ) AS stock,
+            SUM( c.plan ) AS plan,
+            SUM( c.stock ) - SUM( c.plan ) AS diff,
+        IF
+            (
+                SUM( c.stock ) - SUM( c.plan ) >= 0,
+                0,-(
+                SUM( c.stock ) - SUM( c.plan ))) AS debt 
+        FROM
+            (
+            SELECT
+                gmc as material_number,
+                part_name as material_description,
+                color,
+                part_code,
+                COALESCE (( SELECT SUM(quantity) FROM injection_inventories WHERE location = 'RC11' AND material_number = gmc ), 0 ) AS stock,
+                0 AS plan 
+            FROM
+                injection_parts 
+            WHERE
+                remark = 'injection' 
+                and deleted_at is null
 
-        // UNION ALL
+        UNION ALL
 
-        // SELECT
-        //         a.material_number,
-        //         a.material_description,
-        //         a.color,
-        //         a.part_code,
-        //         0 AS stock,
-        //         sum( a.plan )- sum( a.stamp ) AS plan 
-        //     FROM
-        //         (
-        //         SELECT
-        //             injection_part_details.gmc as material_number,
-        //             injection_part_details.part as material_description,
-        //             injection_part_details.color,
-        //             injection_part_details.part_code,
-        //             SUM( quantity ) AS plan,
-        //             0 AS stamp 
-        //         FROM
-        //             production_schedules
-        //             LEFT JOIN materials ON materials.material_number = production_schedules.material_number
-        //             LEFT JOIN injection_part_details ON injection_part_details.model = materials.model 
-        //         WHERE
-        //             materials.category = 'FG' 
-        //             AND materials.origin_group_code = '072' 
-        //             AND production_schedules.due_date BETWEEN '".$first."' 
-        //             AND '".$nextdayplus1."' 
-        //         GROUP BY
-        //             material_number,part,color,part_code
+        SELECT
+                a.material_number,
+                a.material_description,
+                a.color,
+                a.part_code,
+                0 AS stock,
+                sum( a.plan )- sum( a.stamp ) AS plan 
+            FROM
+                (
+                SELECT
+                    injection_part_details.gmc as material_number,
+                    injection_part_details.part as material_description,
+                    injection_part_details.color,
+                    injection_part_details.part_code,
+                    SUM( quantity ) AS plan,
+                    0 AS stamp 
+                FROM
+                    production_schedules
+                    LEFT JOIN materials ON materials.material_number = production_schedules.material_number
+                    LEFT JOIN injection_part_details ON injection_part_details.model = materials.model 
+                WHERE
+                    materials.category = 'FG' 
+                    AND materials.origin_group_code = '072' 
+                    AND production_schedules.due_date BETWEEN '".$first."' 
+                    AND '".$nextdayplus1."' 
+                GROUP BY
+                    material_number,part,color,part_code
                 
-        //         UNION ALL
+                UNION ALL
                 
-        //         SELECT
-        //             injection_part_details.gmc as material_number,
-        //             injection_part_details.part as material_description,
-        //             injection_part_details.color,
-        //             injection_part_details.part_code,
-        //             0 AS plan,
-        //             SUM( quantity ) AS stamp 
-        //         FROM
-        //             flo_details
-        //             LEFT JOIN materials ON materials.material_number = flo_details.material_number
-        //             LEFT JOIN injection_part_details ON injection_part_details.model = materials.model 
-        //         WHERE
-        //             materials.category = 'FG' 
-        //             AND materials.origin_group_code = '072' 
-        //             AND DATE( flo_details.created_at ) BETWEEN '".$first."' 
-        //             AND '".$nextdayplus1."'
-        //         GROUP BY
-        //             material_number,
-        //             part,color,part_code
-        //         ) a GROUP BY
-        //         a.material_number,a.material_description,a.color,a.part_code
-        //     ) c 
-        // GROUP BY
-        //     c.material_number,c.material_description,c.color,c.part_code
-        // ORDER BY
-        // material_number");
+                SELECT
+                    injection_part_details.gmc as material_number,
+                    injection_part_details.part as material_description,
+                    injection_part_details.color,
+                    injection_part_details.part_code,
+                    0 AS plan,
+                    SUM( quantity ) AS stamp 
+                FROM
+                    flo_details
+                    LEFT JOIN materials ON materials.material_number = flo_details.material_number
+                    LEFT JOIN injection_part_details ON injection_part_details.model = materials.model 
+                WHERE
+                    materials.category = 'FG' 
+                    AND materials.origin_group_code = '072' 
+                    AND DATE( flo_details.created_at ) BETWEEN '".$first."' 
+                    AND '".$nextdayplus1."'
+                GROUP BY
+                    material_number,
+                    part,color,part_code
+                ) a GROUP BY
+                a.material_number,a.material_description,a.color,a.part_code
+            ) c 
+        GROUP BY
+            c.material_number,c.material_description,c.color,c.part_code
+        ORDER BY
+        material_number");
 
-        // foreach ($data as $key) {
-        //     if ($key->debt != 0) {
-        //         // $partpart = explode(' ',$key->part_code);
-        //         // $colorcolor = explode(')',$key->color);
+        foreach ($data as $key) {
+            if ($key->debt != 0) {
+                // $partpart = explode(' ',$key->part_code);
+                // $colorcolor = explode(')',$key->color);
 
-        //         $schedule = InjectionScheduleTemp::firstOrNew([
-        //             'material_number' => $key->material_number,
-        //             'date' => date('Y-m-d')
-        //         ]);
-        //         $schedule->date = date('Y-m-d');
-        //         $schedule->due_date = $tomorrow;
-        //         $schedule->material_description = $key->material_description;
-        //         $schedule->part = $key->part_code;
-        //         $schedule->color = $key->color;
-        //         $schedule->stock = $key->stock;
-        //         $schedule->plan = $key->plan;
-        //         $schedule->diff = $key->diff;
-        //         $schedule->debt = $key->debt;
-        //         $schedule->created_by = '1930';
-        //         $schedule->save();
-        //     }
-        // }
+                $schedule = InjectionScheduleTemp::firstOrNew([
+                    'material_number' => $key->material_number,
+                    'date' => date('Y-m-d')
+                ]);
+                $schedule->date = date('Y-m-d');
+                $schedule->due_date = $tomorrow;
+                $schedule->material_description = $key->material_description;
+                $schedule->part = $key->part_code;
+                $schedule->color = $key->color;
+                $schedule->stock = $key->stock;
+                $schedule->plan = $key->plan;
+                $schedule->diff = $key->diff;
+                $schedule->debt = $key->debt;
+                $schedule->created_by = '1930';
+                $schedule->save();
+            }
+        }
 
         // $debttoday = DB::SELECT("SELECT
         //         date,
@@ -301,9 +303,67 @@ class InjectionScheduleCommand extends Command
         //         date = DATE(
         //         NOW())) b");
 
-        // $schedules = [];
+        $debttoday = DB::SELECT("SELECT
+            date,
+            due_date,
+            material_number,
+            material_description,
+            b.part,
+            b.color,
+            stock,
+            plan,
+            diff,
+            debt,
+            model,
+            cycle,
+            shoot,
+            qty,
+            qty_hako,
+            machine,
+            CONCAT( 'Mesin ', SPLIT_STRING ( machine, ',', 1 ) ) AS mesin1,
+            CONCAT( 'Mesin ', SPLIT_STRING ( machine, ',', 2 ) ) AS mesin2,
+            CONCAT( 'Mesin ', SPLIT_STRING ( machine, ',', 3 ) ) AS mesin3,
+            ROUND(((( b.debt / b.shoot )* b.cycle )/ 60 )/ 60 ) AS jam,
+            ROUND((( b.debt / b.shoot )* b.cycle )/ 60 ) AS menit,
+            ROUND(( b.debt / b.shoot )* b.cycle ) AS detik 
+        FROM
+            (
+            SELECT
+                date,
+                due_date,
+                material_number,
+                material_description,
+                a.part,
+                a.color,
+                stock,
+                plan,
+                diff,
+                debt,
+                model,
+                cycle,
+                shoot,
+                qty,
+                qty_hako,
+                machine,
+                CONCAT( 'Mesin ', SPLIT_STRING ( machine, ',', 1 ) ) AS mesin1,
+                CONCAT( 'Mesin ', SPLIT_STRING ( machine, ',', 2 ) ) AS mesin2,
+                CONCAT( 'Mesin ', SPLIT_STRING ( machine, ',', 3 ) ) AS mesin3 
+            FROM
+                injection_schedule_temps AS a
+                LEFT JOIN injection_machine_cycle_times ON injection_machine_cycle_times.part = a.part 
+                AND injection_machine_cycle_times.color = a.color 
+            WHERE
+            date = DATE(
+            NOW())) b");
 
-        // $count = 0;
+        $mesin = DB::SELECT("SELECT
+            mesin 
+        FROM
+            injection_machine_masters");
+
+        $schedules = [];
+
+        $count = 0;
 
         // foreach ($debttoday as $val) {
         //     $mesinwork = $val->machine_now;
@@ -376,27 +436,197 @@ class InjectionScheduleCommand extends Command
         //     }
         // }
 
-        // // var_dump($schedules);
+        foreach ($debttoday as $key) {
+            $schedules[] = array(
+                'material_number' => $key->material_number,
+                'material_description' => $key->material_description,
+                'part' => $key->part,
+                'color' => $key->color,
+                'qty' => $key->debt,
+                'start_time' => date('Y-m-d H:i:s'),
+                'end_time' => date("Y-m-d H:i:s",strtotime(date('Y-m-d H:i:s'))+$key->detik),
+                'machine' => $key->mesin1,
+                'created_by' => 1,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            );
+        }
 
-        // for ($i=0; $i < count($schedules); $i++) {
-        //     DB::table('injection_schedule_logs')->insert([
-        //         $schedules[$i]
-        //     ]);
+        for ($i=0; $i < count($schedules); $i++) {
+            DB::table('injection_schedule_logs')->insert([
+                $schedules[$i]
+            ]);
+        }
+
+        // $getMesinWork = DB::SELECT("SELECT
+        //     *,
+        //     a.id AS id_log,
+        //     CONCAT( 'Mesin ', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 1 ) ) AS mesin1,
+        //     CONCAT( 'Mesin ', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) ) AS mesin2,
+        //     CONCAT( 'Mesin ', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 3 ) ) AS mesin3,
+        //     TIMESTAMPDIFF( SECOND, start_time, end_time ) AS detik 
+        // FROM
+        //     injection_schedule_logs a
+        //     LEFT JOIN injection_machine_cycle_times ON injection_machine_cycle_times.part = a.part 
+        //     AND injection_machine_cycle_times.color = a.color 
+        // WHERE
+        //     a.machine = 'Mesin 1' 
+        //     LIMIT 9999999 OFFSET 1");
+
+        // $getMesinWorkFirst = DB::SELECT("SELECT
+        //     *,
+        //     a.id AS id_log,
+        //     CONCAT( 'Mesin ', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 1 ) ) AS mesin1,
+        //     CONCAT( 'Mesin ', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) ) AS mesin2,
+        //     CONCAT( 'Mesin ', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 3 ) ) AS mesin3,
+        //     TIMESTAMPDIFF( SECOND, start_time, end_time ) AS detik 
+        // FROM
+        //     injection_schedule_logs a
+        //     LEFT JOIN injection_machine_cycle_times ON injection_machine_cycle_times.part = a.part 
+        //     AND injection_machine_cycle_times.color = a.color 
+        // WHERE
+        //     a.machine = 'Mesin 1' LIMIT 1");
+        // if (count($getMesinWork) > 1) {
+        //     $end_time = "";
+        //     foreach ($getMesinWorkFirst as $key) {
+        //         $end_time = $key->end_time;
+        //     }
+        //     foreach ($getMesinWork as $vul) {
+        //         $updatemesin = InjectionScheduleLog::find($vul->id_log);
+        //         $updatemesin->start_time = date("Y-m-d H:i:s",strtotime($end_time)+14400);
+        //         $updatemesin->end_time = date("Y-m-d H:i:s",strtotime($vul->end_time)+14400);
+        //         $end_time = date("Y-m-d H:i:s",strtotime($vul->end_time)+14400);
+        //         $updatemesin->save();
+        //     }
         // }
+
+        $mesinsama = DB::SELECT("SELECT
+            injection_schedule_logs.*,
+            SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 1 ) AS machine_1,
+        IF
+            ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ), 0 ) AS machine_2,
+        IF
+            ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 3 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 3 ), 0 ) AS machine_3 
+        FROM
+            injection_schedule_logs
+            INNER JOIN ( SELECT machine FROM injection_schedule_logs GROUP BY machine HAVING COUNT( machine ) > 1 ) temp ON injection_schedule_logs.machine = temp.machine
+            JOIN injection_machine_cycle_times ON injection_machine_cycle_times.part = injection_schedule_logs.part 
+            AND injection_machine_cycle_times.color = injection_schedule_logs.color 
+        ORDER BY
+            injection_schedule_logs.machine,
+        IF
+        ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ), 0 )");
+
+        if (count($mesinsama) > 0) {
+            // foreach ($mesinsama as $key) {
+                
+            // }
+            foreach ($mesin as $key) {
+                $mesins = [];
+                // if (in_array($key->mesin, $mesinsama))
+                // {
+                    for ($i=0; $i < count($mesinsama); $i++) { 
+                        if ($mesinsama[$i]->machine == $key->mesin) {
+                            array_push($mesins, $mesinsama[$i]);
+                        }
+                    }
+                // }
+                for ($j=1; $j < count($mesins); $j++) { 
+                    if ($mesins[$j]->machine_2 != 0) {
+                        $log = InjectionScheduleLog::where('id',$mesins[$j]->id)->first();
+                        $log->machine = 'Mesin '.$mesins[$j]->machine_2;
+                        $log->save();
+                    }
+                    // else{
+                    //     $loglog = InjectionScheduleLog::where('machine','Mesin 2')->get();
+                    //     $end = $loglog[0]->end_time;
+                    //     // if (count($log) > 1) {
+                    //     //     $log2 = InjectionScheduleLog::where('id',$log[1]->id)->first();
+                    //     //     $ts1 = strtotime($log2->start_time);
+                    //     //     $ts2 = strtotime($log2->end_time);     
+                    //     //     $seconds_diff = $ts2 - $ts1;
+                    //     //     $secondall = $seconds_diff+14400;
+                    //     //     $log2->start_time = date("Y-m-d H:i:s",strtotime($end)+14400);
+                    //     //     $log2->end_time = date("Y-m-d H:i:s",strtotime($end)+$secondall);
+                    //     //     $log2->save();
+                    //     // }
+                    // }
+                }
+            }
+        }
+
+        $mesinsama2 = DB::SELECT("SELECT
+            injection_schedule_logs.*,
+            SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 1 ) AS machine_1,
+        IF
+            ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ), 0 ) AS machine_2,
+        IF
+            ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 3 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 3 ), 0 ) AS machine_3 
+        FROM
+            injection_schedule_logs
+            INNER JOIN ( SELECT machine FROM injection_schedule_logs GROUP BY machine HAVING COUNT( machine ) > 1 ) temp ON injection_schedule_logs.machine = temp.machine
+            JOIN injection_machine_cycle_times ON injection_machine_cycle_times.part = injection_schedule_logs.part 
+            AND injection_machine_cycle_times.color = injection_schedule_logs.color 
+        ORDER BY
+            injection_schedule_logs.machine,
+        IF
+        ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ), 0 )");
+
+        if (count($mesinsama2) > 0) {
+            // foreach ($mesinsama as $key) {
+                
+            // }
+            foreach ($mesin as $key) {
+                $mesins = [];
+                // if (in_array($key->mesin, $mesinsama))
+                // {
+                    for ($i=0; $i < count($mesinsama2); $i++) { 
+                        if ($mesinsama2[$i]->machine == $key->mesin) {
+                            array_push($mesins, $mesinsama2[$i]);
+                        }
+                    }
+                // }
+                for ($j=1; $j < count($mesins); $j++) { 
+                    if ($mesins[$j]->machine_2 == 0) {
+                        $log = InjectionScheduleLog::where('machine',$mesins[$j]->machine)->get();
+                        $end = $log[0]->end_time;
+                        if (count($log) > 1) {
+                            for ($k=1; $k < count($log); $k++) {
+                                $log2 = InjectionScheduleLog::where('id',$log[$k]->id)->first();
+                                $ts1 = strtotime($log2->start_time);
+                                $ts2 = strtotime($log2->end_time);
+                                $seconds_diff = $ts2 - $ts1;
+                                $secondall = $seconds_diff+14400;
+                                $log2->start_time = date("Y-m-d H:i:s",strtotime($end)+14400);
+                                $end_time = date("Y-m-d H:i:s",strtotime($end)+$secondall);
+                                $log2->end_time = $end_time;
+                                $log2->save();
+                                $end = $end_time;
+                            }
+                        }
+                    }else {
+                        $log = InjectionScheduleLog::where('machine',$mesins[$j]->machine)->get();
+                        $end = $log[0]->end_time;
+                        if (count($log) > 1) {
+                            for ($l=1; $l < count($log); $l++) { 
+                                $log2 = InjectionScheduleLog::where('id',$log[$l]->id)->first();
+                                $ts1 = strtotime($log2->start_time);
+                                $ts2 = strtotime($log2->end_time);
+                                $seconds_diff = $ts2 - $ts1;
+                                $secondall = $seconds_diff+14400;
+                                $log2->start_time = date("Y-m-d H:i:s",strtotime($end)+14400);
+                                $end_time = date("Y-m-d H:i:s",strtotime($end)+$secondall);
+                                $log2->end_time = $end_time;
+                                $log2->save();
+                                $end = $end_time;
+                            }
+                        }
+                    }
+                    // else{
+                    
+                    // }
+                }
+            }
+        }
     }
-
-    // public function checkMachine($mesin,$due_date)
-    // {
-    //     $machineavl = DB::SELECT("SELECT * FROM injection_schedule_logs where machine = 'Mesin ".$mesin."' and DATE(end_time) < '".$due_date."' ORDER BY id desc");
-
-    //     $end_time = "";
-
-    //     if (count($machineavl) > 0) {
-    //         foreach ($machineavl as $key) {
-    //             $end_time = $key->end_time;
-    //         }
-    //     }
-
-    //     return $end_time;
-    // }
 }
