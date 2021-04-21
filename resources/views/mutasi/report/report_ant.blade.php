@@ -181,8 +181,8 @@
 		<br>
 		<table style="width: 100%; font-family: arial; border-collapse: collapse; ">
 				<tr style="background-color: rgb(126,86,134);">
-						<th colspan="1" style="font-size: 9px; width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">10</th>
-                        <th colspan="1" style="font-size: 9px; width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">9</th>
+						<!-- <th colspan="1" style="font-size: 9px; width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">10</th> -->
+                        <!-- <th colspan="1" style="font-size: 9px; width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">9</th> -->
                         <th colspan="1" style="font-size: 9px; width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">8</th>
                         <th colspan="1" style="font-size: 9px; width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">7</th> 
                         <th colspan="1" style="font-size: 9px; width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">6</th>
@@ -194,17 +194,17 @@
 				</tr>
 				<tr style="background-color: rgb(126,86,134);">
 						<th colspan="2" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">HR</th>
-						<th colspan="4" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">Tujuan</th>
-						<th colspan="4" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">Asal</th>
+						<th colspan="3" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">Tujuan</th>
+						<th colspan="3" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">Asal</th>
 				</tr>
 				<tr style="background-color: rgb(126,86,134);">
 						<th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">Direktur</th>
 						<th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">Manager</th>
-						<th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">GM</th>
+						<!-- <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">GM</th> -->
 						<th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">DGM</th>
 						<th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">Manager</th>
 						<th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">Chief/Foreman</th>
-                        <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">GM</th>
+                        <!-- <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">GM</th> -->
                         <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">DGM</th>
                         <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">Manager</th> 
                         <th colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black; text-align: center;">Chief/Foreman</th>
@@ -212,11 +212,11 @@
 				<tr>
 						<td style="height: 40px; width: 6%; border:1px solid black; text-align: center; font-weight: bold">{{ $pr[0]->nama_direktur_hr }}</td>
 						<td style="height: 40px; width: 6%; border:1px solid black; text-align: center; font-weight: bold">{{ $pr[0]->nama_manager }}</td>
-						<td style="height: 40px; width: 6%; border:1px solid black; text-align: center; font-weight: bold">{{ $pr[0]->nama_gm_tujuan }}</td>
+						<!-- <td style="height: 40px; width: 6%; border:1px solid black; text-align: center; font-weight: bold">{{ $pr[0]->nama_gm_tujuan }}</td> -->
 						<td style="height: 40px; width: 6%; border:1px solid black; text-align: center; font-weight: bold">{{ $pr[0]->nama_dgm_tujuan }}</td>
 						<td style="height: 40px; width: 6%; border:1px solid black; text-align: center; font-weight: bold">{{ $pr[0]->nama_manager_tujuan }}</td>
 						<td style="height: 40px; width: 6%; border:1px solid black; text-align: center; font-weight: bold">{{ $pr[0]->nama_chief_tujuan }}</td>
-						<td style="height: 40px; width: 6%; border:1px solid black; text-align: center; font-weight: bold">{{ $pr[0]->nama_gm_asal }}</td>
+						<!-- <td style="height: 40px; width: 6%; border:1px solid black; text-align: center; font-weight: bold">{{ $pr[0]->nama_gm_asal }}</td> -->
 						<td style="height: 40px; width: 6%; border:1px solid black; text-align: center; font-weight: bold">{{ $pr[0]->nama_dgm_asal }}</td>
 						<td style="height: 40px; width: 6%; border:1px solid black; text-align: center; font-weight: bold">{{ $pr[0]->nama_manager_asal }}</td>
 						<td style="height: 40px; width: 6%; border:1px solid black; text-align: center; font-weight: bold">{{ $pr[0]->nama_chief_asal }}</td>
@@ -224,11 +224,11 @@
 				<tr>
 						<td style="width: 6%; border:1px solid black; text-align: center;">{{$pr[0]->date_direktur_hr}}</td>
 						<td style="width: 6%; border:1px solid black; text-align: center;">{{$pr[0]->date_manager_hrga}}</td>
-						<td style="width: 6%; border:1px solid black; text-align: center;">{{$pr[0]->date_gm_tujuan}}</td>
+						<!-- <td style="width: 6%; border:1px solid black; text-align: center;">{{$pr[0]->date_gm_tujuan}}</td> -->
 						<td style="width: 6%; border:1px solid black; text-align: center;">{{$pr[0]->date_dgm_tujuan}}</td>
 						<td style="width: 6%; border:1px solid black; text-align: center;">{{$pr[0]->date_manager_tujuan}}</td>
 						<td style="width: 6%; border:1px solid black; text-align: center;">{{$pr[0]->date_atasan_tujuan}}</td>
-						<td style="width: 6%; border:1px solid black; text-align: center;">{{$pr[0]->date_gm_asal}}</td>
+						<!-- <td style="width: 6%; border:1px solid black; text-align: center;">{{$pr[0]->date_gm_asal}}</td> -->
 						<td style="width: 6%; border:1px solid black; text-align: center;">{{$pr[0]->date_dgm_asal}}</td>
 						<td style="width: 6%; border:1px solid black; text-align: center;">{{$pr[0]->date_manager_asal}}</td>
 						<td style="width: 6%; border:1px solid black; text-align: center;">{{$pr[0]->date_atasan_asal}}</td>
