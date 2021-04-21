@@ -246,33 +246,43 @@ class ProductionScheduleController extends Controller{
             $month = date('Y-m');
         }
 
-        $hpl = '';
+        $hpl1 = '';
         if($request->get('hpl') != null){
             $hpls =  $request->get('hpl');
             for ($i=0; $i < count($hpls); $i++) {
-                $hpl = $hpl."'".$hpls[$i]."'";
+                $hpl1 = $hpl1."'".$hpls[$i]."'";
                 if($i != (count($hpls)-1)){
-                    $hpl = $hpl.',';
+                    $hpl1 = $hpl1.',';
                 }
             }
-            $hpl = "AND m.hpl IN (".$hpl.") ";
+            $hpl1 = "m.hpl IN (".$hpl1.") ";
+        }
+
+        $hpl2 = '';
+        if($request->get('hpl') != null){
+            $hpls =  $request->get('hpl');
+            for ($i=0; $i < count($hpls); $i++) {
+                $hpl2 = $hpl2."'".$hpls[$i]."'";
+                if($i != (count($hpls)-1)){
+                    $hpl2 = $hpl2.',';
+                }
+            }
+            $hpl2 = "AND m.hpl IN (".$hpl2.") ";
         }
 
         $dates = PsiCalendar::where('sales_period', 'like', '%'.$month.'%')->get();
 
-        $materials = DB::select("SELECT DISTINCT ps.material_number, m.material_description, m.hpl, r.destination_code, d.destination_shortname FROM production_schedules_two_steps ps
-            LEFT JOIN materials m ON m.material_number = ps.material_number
-            LEFT JOIN production_requests r ON r.material_number = ps.material_number
+        $materials = DB::select("SELECT m.material_number, m.material_description, m.hpl, r.destination_code, d.destination_shortname FROM materials m
+            LEFT JOIN production_requests r ON r.material_number = m.material_number
             LEFT JOIN destinations d ON d.destination_code = r.destination_code
-            WHERE DATE_FORMAT(ps.due_date, '%Y-%m') = '".$month."'
-            ".$hpl."
-            ORDER BY m.hpl ASC, ps.material_number ASC, d.destination_shortname DESC");
+            WHERE ".$hpl1."
+            ORDER BY m.hpl ASC, m.material_number ASC, d.destination_shortname DESC");
 
         $shipments = DB::select("SELECT ps.st_date, ps.material_number, m.hpl, d.destination_shortname, SUM(ps.quantity) AS quantity FROM production_schedules_three_steps ps
             LEFT JOIN materials m ON m.material_number = ps.material_number
             LEFT JOIN destinations d ON d.destination_code = ps.destination_code
             WHERE DATE_FORMAT(ps.st_month, '%Y-%m') = '".$month."'
-            ".$hpl."
+            ".$hpl2."
             GROUP BY ps.st_date, ps.material_number, m.hpl, d.destination_shortname
             ORDER BY m.hpl ASC, ps.material_number ASC, d.destination_shortname DESC");
 
@@ -1109,14 +1119,14 @@ class ProductionScheduleController extends Controller{
                 return Response::json($response);
             }
             else{
-             $response = array(
+               $response = array(
                 'status' => false,
                 'datas' => $production_schedule
             );
-             return Response::json($response);
-         }
-     }
-     catch (QueryException $e){
+               return Response::json($response);
+           }
+       }
+       catch (QueryException $e){
         $error_code = $e->errorInfo[1];
         if($error_code == 1062){
             return redirect('/index/production_schedule')->with('error', 'Production schedule with preferred due date already exist.')->with('page', 'Production Schedule');
@@ -1129,28 +1139,28 @@ class ProductionScheduleController extends Controller{
 
 public function edit(Request $request)
 {
- $due_date = date('Y-m-d', strtotime(str_replace('/','-', $request->get('due_date'))));
+   $due_date = date('Y-m-d', strtotime(str_replace('/','-', $request->get('due_date'))));
 
- try{
-  $production_schedule = ProductionSchedule::find($request->get('id'));
-  $production_schedule->quantity = $request->get('quantity');
-  $production_schedule->save();
+   try{
+      $production_schedule = ProductionSchedule::find($request->get('id'));
+      $production_schedule->quantity = $request->get('quantity');
+      $production_schedule->save();
 
-  $response = array(
-   'status' => true,
-   'datas' => $production_schedule
-);
-  return Response::json($response);
-}
-catch (QueryException $e){
-  $error_code = $e->errorInfo[1];
-  if($error_code == 1062){
-   return redirect('/index/production_schedule')->with('error', 'Production schedule with preferred due date already exist.')->with('page', 'Production Schedule');
-}
-else{
-   return redirect('/index/production_schedule')->with('error', $e->getMessage())->with('page', 'Production Schedule');
-}
-}
+      $response = array(
+         'status' => true,
+         'datas' => $production_schedule
+     );
+      return Response::json($response);
+  }
+  catch (QueryException $e){
+      $error_code = $e->errorInfo[1];
+      if($error_code == 1062){
+         return redirect('/index/production_schedule')->with('error', 'Production schedule with preferred due date already exist.')->with('page', 'Production Schedule');
+     }
+     else{
+         return redirect('/index/production_schedule')->with('error', $e->getMessage())->with('page', 'Production Schedule');
+     }
+ }
 }
 
     /**
@@ -1178,23 +1188,23 @@ else{
             $production_schedule->forceDelete();
         }
         else{
-           $response = array(
+         $response = array(
             'status' => false
         );
-           return Response::json($response);   
-       }
+         return Response::json($response);   
+     }
 
-       $response = array('status' => true);
-       return Response::json($response);
-   }
+     $response = array('status' => true);
+     return Response::json($response);
+ }
 
-   public function destroy(Request $request){
-       $date_from = date('Y-m-d', strtotime($request->get('datefrom')));
-       $date_to = date('Y-m-d', strtotime($request->get('dateto')));
+ public function destroy(Request $request){
+     $date_from = date('Y-m-d', strtotime($request->get('datefrom')));
+     $date_to = date('Y-m-d', strtotime($request->get('dateto')));
 
-       $materials = Material::select('material_number');
+     $materials = Material::select('material_number');
 
-       foreach($request->get('location') as $location){
+     foreach($request->get('location') as $location){
         $locations = explode(",", $location);
 
         $category = $locations[0];
