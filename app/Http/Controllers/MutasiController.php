@@ -1131,7 +1131,7 @@ class MutasiController extends Controller
             if ($dateto == "") {
             $resumes = MutasiAnt::select('mutasi_ant_depts.id', 'status', 'nik', 'nama', 'nama_chief_asal', 'nama_manager_asal', 'nama_dgm_asal', 'nama_gm_asal', 'nama_chief_tujuan', 'nama_manager_tujuan', 'nama_dgm_tujuan', 'nama_gm_tujuan', 'nama_manager', 'nama_direktur_hr', 'app_ca', 'app_ma', 'app_da', 'app_ga', 'app_ct', 'app_mt', 'app_dt', 'app_gt', 'app_m', 'app_dir', 'posisi', 
                 'users.name', 'mutasi_ant_depts.created_by', 'remark')
-                 ->where('mutasi_ant_depts.departemen', $emp_dept->department)
+                 // ->where('mutasi_ant_depts.departemen', $emp_dept->department)
                  ->where('mutasi_ant_depts.deleted_at',null )
                  // ->where(DB::raw("DATE_FORMAT(tanggal, '%Y-%m-%d')"),$tanggal)
                  ->where('mutasi_ant_depts.status',null)
@@ -1145,7 +1145,7 @@ class MutasiController extends Controller
             else{
                 $resumes = MutasiAnt::select('mutasi_ant_depts.id', 'status', 'nik', 'nama', 'nama_chief_asal', 'nama_manager_asal', 'nama_dgm_asal', 'nama_gm_asal', 'nama_chief_tujuan', 'nama_manager_tujuan', 'nama_dgm_tujuan', 'nama_gm_tujuan', 'nama_manager', 'nama_direktur_hr', 'app_ca', 'app_ma', 'app_da', 'app_ga', 'app_ct', 'app_mt', 'app_dt', 'app_gt', 'app_m', 'app_dir', 'posisi', 
                      'users.name', 'mutasi_ant_depts.created_by', 'remark')
-                     ->where('mutasi_ant_depts.departemen', $emp_dept->department)
+                     // ->where('mutasi_ant_depts.departemen', $emp_dept->department)
                      ->where('mutasi_ant_depts.deleted_at',null )
                      ->where(DB::raw("DATE_FORMAT(tanggal, '%Y-%m')"),$dateto)
                      ->where('mutasi_ant_depts.status',null)
@@ -1241,28 +1241,6 @@ class MutasiController extends Controller
         $emp_dept = EmployeeSync::where('employee_id', Auth::user()->username)
           ->select('employee_id', 'department')
           ->first();
-        
-        // $bulan = $request->get('bulan');
-        // $status = $request->get('status');
-
-        // if ($status == "Not Approved") {
-        //     $status = "Rejected";
-        // }else if($status == "Approved"){
-        //     $status = "All Approved";
-        // }else if($status == "Proces"){
-        //     $status = null;
-        // }
-
-        // if ($request->get('dateto') == "") {
-        //       $dateto = date('Y-m', strtotime(carbon::now()));
-        //   } else {
-        //       $dateto = $request->get('dateto');
-        //   }
-
-        // $resumes = MutasiAnt::select('status', 'nik', 'nama', 'sub_group', 'group', 'seksi', 'departemen', 'jabatan', 'rekomendasi', 'ke_sub_group', 'ke_group', 'ke_seksi', 'ke_departemen', 'ke_jabatan', 'tanggal', 'alasan')
-        // ->where(DB::raw("DATE_FORMAT(tanggal, '%Y-%m')"),$dateto)
-        // ->where('status','=',$status)
-        // ->get();
 
         $bulan = $request->get('bulan');
         $status = $request->get('status');
@@ -1284,8 +1262,6 @@ class MutasiController extends Controller
             FROM
             mutasi_ant_depts 
             WHERE
-            departemen = '".$emp_dept->department."'
-            AND
             DATE_FORMAT(tanggal, '%Y-%m') = '".$dateto."'
             and ".$status."
             ORDER BY
@@ -1298,8 +1274,6 @@ class MutasiController extends Controller
             FROM
             mutasi_ant_depts 
             WHERE
-            departemen = '".$emp_dept->department."'
-            AND
             DATE_FORMAT(tanggal, '%M') = '".$bulan."'
             and ".$status."
             ORDER BY
@@ -2833,8 +2807,7 @@ class MutasiController extends Controller
                 FROM
                 mutasi_ant_depts 
                 WHERE
-                mutasi_ant_depts.departemen = '".$emp_dept->department."'
-                AND mutasi_ant_depts.deleted_at IS NULL 
+                mutasi_ant_depts.deleted_at IS NULL 
                 AND DATE_FORMAT( tanggal, '%Y-%m' ) = '".$dateto."'
                 GROUP BY
                 bulan,
@@ -2855,8 +2828,7 @@ class MutasiController extends Controller
                 FROM
                 mutasi_ant_depts 
                 WHERE
-                mutasi_ant_depts.departemen = '".$emp_dept->department."'
-                AND mutasi_ant_depts.deleted_at IS NULL
+                mutasi_ant_depts.deleted_at IS NULL
                 GROUP BY
                 bulan,
                 tahun 
