@@ -33,6 +33,12 @@ class SendEmail extends Mailable
     
     public function build()
     {
+        if($this->remark == 'bento_request'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Japanese Food Order Requested (和食弁当の予約)')->view('mails.bento.bento_request');
+        }
+        if($this->remark == 'bento_confirm'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Japanese Food Order Confirmed (和食弁当の予約)')->view('mails.bento.bento_confirm');
+        }
         if($this->remark == 'shipment'){
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('MIS Shipment Reminder (情報管理システムの出荷通知)')->view('mails.shipment');
         }
