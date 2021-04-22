@@ -1106,6 +1106,8 @@ Route::group(['nav' => 'S39', 'middleware' => 'permission'], function(){
 	Route::get('fetch/ga_control/driver_log', 'GeneralAffairController@fetchDriverLog');
 	Route::post('create/ga_control/driver_duty', 'GeneralAffairController@createDriverDuty');
 	Route::get('index/ga_control/bento_report', 'GeneralAffairController@indexBentoReport');
+	Route::get('approve/ga_control/bento/{id}', 'GeneralAffairController@approveBento');
+	Route::get('reject/ga_control/bento/{id}', 'GeneralAffairController@rejectBento');
 });
 Route::get('approve/ga_control/driver/{id}', 'GeneralAffairController@approveRequest');
 Route::get('reject/ga_control/driver/{id}', 'GeneralAffairController@rejectRequest');
@@ -1576,6 +1578,13 @@ Route::get('purchase_requisition/monitoringpch', 'AccountingController@monitorin
 Route::get('fetch/purchase_requisition/monitoringpch', 'AccountingController@fetchMonitoringPRPch');
 Route::get('purchase_requisition/tablepch', 'AccountingController@fetchtablePRPch');
 Route::get('purchase_requisition/detailPch', 'AccountingController@detailMonitoringPRPch');
+
+
+
+Route::group(['nav' => 'S61', 'middleware' => 'permission'], function(){
+	//Purchase Requisition
+	Route::get('canteen/purchase_requisition', 'GeneralAffairController@purchase_requisition');
+});
 
 //PO Monitoring & Control
 
@@ -2052,6 +2061,8 @@ Route::get('fetch/workshop/operator_detail', 'WorkshopController@fetchOperatorDe
 Route::get('fetch/workshop/machine_detail', 'WorkshopController@fetchmachineDetail');
 Route::get('fetch/workshop/process_detail', 'WorkshopController@fetchProcessDetail');
 Route::get('fetch/workshop/drawingMaterial', 'WorkshopController@fetchDrawingMaterial');
+Route::get('index/workshop/perolehan', 'WorkshopController@indexWJOPerolehan');
+Route::get('fetch/workshop/perolehan', 'WorkshopController@fetchWJOPerolehan');
 
 Route::get('index/middle/op_analysis', 'MiddleProcessController@indexOpAnalysis');
 Route::get('fetch/middle/op_analysis', 'MiddleProcessController@fetchOpAnalysis');
@@ -4605,6 +4616,12 @@ Route::post('post/pengantaran/lokasi', 'WarehouseNewController@updateLokasi');
 Route::get('get/lokasi', 'WarehouseNewController@getLokasi');
 Route::get('fetch/detail/pengantaran', 'WarehouseNewController@fetchDetailPengantaran');
 Route::get('fetch/detail/pelayanan', 'WarehouseNewController@fetchDetailMaterial');
+Route::post('update/pengecekan', 'WarehouseNewController@updatePengecekanPeng');
+Route::get('index/monitoring/internal', 'WarehouseNewController@index_monitoring');
+Route::get('fetch/status', 'WarehouseNewController@fetchStatus');
+
+
+
 
 //Sanding
 
