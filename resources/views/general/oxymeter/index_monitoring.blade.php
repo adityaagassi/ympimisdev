@@ -330,7 +330,8 @@
 								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Sect</th>
 								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Group</th>
 								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Shift</th>
-								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Attendance</th>
+								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Oxygen Rate</th>
+								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Pulse Rate</th>
 								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Check Time</th>
 							</tr>
 						</thead>
@@ -493,56 +494,56 @@
 						ofc_total_1++;
 						if (value.oxy != null) {
 							ofc_cek_1++;
-							detail_check_ofc_1.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
+							detail_check_ofc_1.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'oxy':value.oxy, 'pulse':value.pulse, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
 						} else {
 							ofc_uncek_1++;
-							detail_uncheck_ofc_1.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
+							detail_uncheck_ofc_1.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'oxy':value.oxy,  'pulse':value.pulse, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
 						}
 
-						detail_total_ofc_1.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.groups});
+						detail_total_ofc_1.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'oxy':value.oxy,  'pulse':value.pulse, 'check_time':value.check_time, 'section':value.section, 'group':value.groups});
 					} else if (~value.shiftdaily_code.indexOf("2")) {
 						ofc_total_2++;
 						if (value.oxy != null) {
 							ofc_cek_2++;
-							detail_check_ofc_2.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
+							detail_check_ofc_2.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'oxy':value.oxy,  'pulse':value.pulse, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
 						} else {
 							ofc_uncek_2++;
-							detail_uncheck_ofc_2.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
+							detail_uncheck_ofc_2.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'oxy':value.oxy,  'pulse':value.pulse, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
 						}
 
-						detail_total_ofc_2.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.groups});
+						detail_total_ofc_2.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'oxy':value.oxy,  'pulse':value.pulse, 'check_time':value.check_time, 'section':value.section, 'group':value.groups});
 					}
 				} else {
 					if (~value.shiftdaily_code.indexOf("1")) {
 						prd_total_1++;
 						if (value.oxy != null) {
 							prd_cek_1++;
-							detail_check_prd_1.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
+							detail_check_prd_1.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'oxy':value.oxy,  'pulse':value.pulse, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
 						} else {
 							prd_uncek_1++;
-							detail_uncheck_prd_1.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
+							detail_uncheck_prd_1.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'oxy':value.oxy,  'pulse':value.pulse, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
 						}
-						detail_total_prd_1.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.groups});
+						detail_total_prd_1.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'oxy':value.oxy,  'pulse':value.pulse, 'check_time':value.check_time, 'section':value.section, 'group':value.groups});
 					} else if (~value.shiftdaily_code.indexOf("2")) {
 						prd_total_2++;
 						if (value.oxy != null) {
 							prd_cek_2++;
-							detail_check_prd_2.push({'employee_id': value.employee_id,' name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
+							detail_check_prd_2.push({'employee_id': value.employee_id,' name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'oxy':value.oxy,  'pulse':value.pulse, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
 						} else {
 							prd_uncek_2++;
-							detail_uncheck_prd_2.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
+							detail_uncheck_prd_2.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'oxy':value.oxy,  'pulse':value.pulse, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
 						}
-						detail_total_prd_2.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.groups});
+						detail_total_prd_2.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'oxy':value.oxy,  'pulse':value.pulse, 'check_time':value.check_time, 'section':value.section, 'group':value.groups});
 					}  else if (~value.shiftdaily_code.indexOf("3")) {
 						prd_total_3++;
 						if (value.oxy != null) {
 							prd_cek_3++;
-							detail_check_prd_3.push({'employee_id': value.employee_id,' name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
+							detail_check_prd_3.push({'employee_id': value.employee_id,' name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'oxy':value.oxy,  'pulse':value.pulse, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
 						} else {
 							prd_uncek_3++;
-							detail_uncheck_prd_3.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
+							detail_uncheck_prd_3.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'oxy':value.oxy,  'pulse':value.pulse, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
 						}
-						detail_total_prd_3.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'attend_code':value.attend_code, 'check_time':value.check_time, 'section':value.section, 'group':value.groups});
+						detail_total_prd_3.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'oxy':value.oxy,  'pulse':value.pulse, 'check_time':value.check_time, 'section':value.section, 'group':value.groups});
 					}
 				}
 
@@ -796,10 +797,11 @@ function checkDetails(param) {
 		resultData += '<td>'+ value.employee_id +'</td>';
 		resultData += '<td>'+ value.name +'</td>';
 		resultData += '<td>'+ value.dept +'</td>';
-		resultData += '<td>'+ value.section +'</td>';
-		resultData += '<td>'+ value.group +'</td>';
+		resultData += '<td>'+ (value.section || '') +'</td>';
+		resultData += '<td>'+ (value.group || '') +'</td>';
 		resultData += '<td>'+ value.shift +'</td>';
-		resultData += '<td>'+ value.attend_code +'</td>';
+		resultData += '<td>'+ value.oxy +'</td>';
+		resultData += '<td>'+ value.pulse +'</td>';
 		resultData += '<td>'+ (value.check_time || '' ) +'</td>';
 		resultData += '</tr>';
 		index += 1;
