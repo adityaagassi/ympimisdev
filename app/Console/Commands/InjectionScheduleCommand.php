@@ -574,6 +574,8 @@ class InjectionScheduleCommand extends Command
                             $end_time = date("Y-m-d H:i:s",strtotime($end)+$secondall);
                             $log->end_time = $end_time;
                             $log->save();
+                        }else{
+                            $end_time = $mesins[$j]->end_time;
                         }
                         $end = $end_time;
                     }
