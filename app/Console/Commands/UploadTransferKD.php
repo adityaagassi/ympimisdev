@@ -96,70 +96,71 @@ class UploadTransferKD extends Command
             exit;
         }
     }
+    
     function uploadFTP($from, $to) {
-            $upload = FTP::connection()->uploadFile($from, $to);
-            return $upload;
-        }
+        $upload = FTP::connection()->uploadFile($from, $to, FTP_BINARY);
+        return $upload;
+    }
 
-        function writeString($text, $maxLength, $char) {
-            if ($maxLength > 0) {
-                $textLength = 0;
-                if ($text != null) {
-                    $textLength = strlen($text);
-                }
-                else {
-                    $text = "";
-                }
-                for ($i = 0; $i < ($maxLength - $textLength); $i++) {
-                    $text .= $char;
-                }
-            }
-            return strtoupper($text);
-        }
-
-        function writeDecimal($text, $maxLength, $char) {
-            if ($maxLength > 0) {
-                $textLength = 0;
-                if ($text != null) {
-                    if(fmod($text,1) > 0){
-                        $decimal = self::decimal(fmod($text,1));
-                        $decimalLength = strlen($decimal);
-
-                        for ($j = 0; $j < (3- $decimalLength); $j++) {
-                            $decimal = $decimal . $char;
-                        }
-                    }
-                    else{
-                        $decimal = $char . $char . $char;
-                    }
-                    $textLength = strlen(floor($text));
-                    $text = floor($text);
-                }
-                else {
-                    $text = "";
-                }
-                for ($i = 0; $i < (($maxLength - 4) - $textLength); $i++) {
-                    $text = $char . $text;
-                }
-            }
-            $text .= "." . $decimal;
-            return $text;
-        }
-
-        function writeDate($created_at, $type) {
-            $datetime = strtotime($created_at);
-            if ($type == "completion") {
-                $text = date("dmY", $datetime);
-                return $text;
+    function writeString($text, $maxLength, $char) {
+        if ($maxLength > 0) {
+            $textLength = 0;
+            if ($text != null) {
+                $textLength = strlen($text);
             }
             else {
-                $text = date("Ymd", $datetime);
-                return $text;
+                $text = "";
+            }
+            for ($i = 0; $i < ($maxLength - $textLength); $i++) {
+                $text .= $char;
             }
         }
+        return strtoupper($text);
+    }
 
-        function decimal($number){
-            $num = explode('.', $number);
-            return $num[1];
+    function writeDecimal($text, $maxLength, $char) {
+        if ($maxLength > 0) {
+            $textLength = 0;
+            if ($text != null) {
+                if(fmod($text,1) > 0){
+                    $decimal = self::decimal(fmod($text,1));
+                    $decimalLength = strlen($decimal);
+
+                    for ($j = 0; $j < (3- $decimalLength); $j++) {
+                        $decimal = $decimal . $char;
+                    }
+                }
+                else{
+                    $decimal = $char . $char . $char;
+                }
+                $textLength = strlen(floor($text));
+                $text = floor($text);
+            }
+            else {
+                $text = "";
+            }
+            for ($i = 0; $i < (($maxLength - 4) - $textLength); $i++) {
+                $text = $char . $text;
+            }
         }
+        $text .= "." . $decimal;
+        return $text;
+    }
+
+    function writeDate($created_at, $type) {
+        $datetime = strtotime($created_at);
+        if ($type == "completion") {
+            $text = date("dmY", $datetime);
+            return $text;
+        }
+        else {
+            $text = date("Ymd", $datetime);
+            return $text;
+        }
+    }
+
+    function decimal($number){
+        $num = explode('.', $number);
+        return $num[1];
+    }
 }

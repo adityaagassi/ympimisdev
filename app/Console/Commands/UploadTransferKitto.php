@@ -43,7 +43,7 @@ class UploadTransferKitto extends Command
     public function handle()
     {
         $date = date('Y-m-d H:i:s');
-        $kittofilename = 'ympigm_upload_kitto_' . date('ymdhis') . '.txt';
+        $kittofilename = 'ympigm_upload_kitto_' . date('ymdHis') . '.txt';
         $kittofilepath = public_path() . "/uploads/sap/transfers/" . $kittofilename;
         $kittofiledestination = "ma/ympigm/" . $kittofilename;
 
@@ -164,7 +164,7 @@ class UploadTransferKitto extends Command
     }
 
     function uploadFTP($from, $to) {
-        $upload = FTP::connection()->uploadFile($from, $to);
+        $upload = FTP::connection()->uploadFile($from, $to, FTP_BINARY);
         return $upload;
     }
 

@@ -133,7 +133,7 @@ class UploadCompletions extends Command
     }
 
     function uploadFTP($from, $to) {
-        $upload = FTP::connection()->uploadFile($from, $to);
+        $upload = FTP::connection()->uploadFile($from, $to, FTP_BINARY);
         return $upload;
     }
 
