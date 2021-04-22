@@ -68,9 +68,9 @@
 @section('content')
 <section class="content" style="overflow-y:hidden; overflow-x:scroll; padding-top: 0px">
 	<div class="row">
-		<div class="col-xs-12" style="padding: 0 5px 0 5px">
+		<div class="col-xs-12">
 			
-			<table id="example1" class="table table-bordered">
+			<!-- <table id="example1" class="table table-bordered">
 				<thead style="background-color: #b89cff;">
 					<tr id="mc_head">
 					</tr>
@@ -79,7 +79,10 @@
 				</thead>
 				<tbody id="mc_body" style="color: white">
 				</tbody>
-			</table>
+			</table> -->
+			<div class="row">
+				<div class="container" id="container" style="width: 100%"></div>
+			</div>
 		</div>
 	</div>
 </section>
@@ -90,12 +93,11 @@
 
 @section('scripts')
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
-<script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
-<script src="{{ url("js/buttons.flash.min.js")}}"></script>
-<script src="{{ url("js/jszip.min.js")}}"></script>
-<script src="{{ url("js/vfs_fonts.js")}}"></script>
-<script src="{{ url("js/buttons.html5.min.js")}}"></script>
-<script src="{{ url("js/buttons.print.min.js")}}"></script>
+<script src="{{ url("js/highcharts-gantt.js")}}"></script>
+<script src="{{ url("js/exporting.js")}}"></script>
+<script src="{{ url("js/moment.min.js")}}"></script>
+<script src="{{ url("js/bootstrap-datetimepicker.min.js")}}"></script>
+<script src="{{ url("plugins/timepicker/bootstrap-timepicker.min.js")}}"></script>
 <script>
 	$.ajaxSetup({
 		headers: {
@@ -105,139 +107,418 @@
 
 	jQuery(document).ready(function() {
 		drawTable();
-		// setInterval(drawTable, 1000);
+		setInterval(drawTable, 50000);
 	});
 
 	
 
 	function drawTable() {
-		$.get('{{ url("fetch/schedule") }}',  function(result, status, xhr){
-			$("#mc_head").empty();
-			$("#mc_body").empty();
+		$.get('{{ url("fetch/injection_schedule") }}',  function(result, status, xhr){
+			if (result.status) {
+				var today = new Date();
+				var day = 1000 * 60 * 60 * 24;
+				var map = Highcharts.map;
+				var dateFormat = Highcharts.dateFormat;
+				var mesin = [];
+				var series = [];
+				var schedules = [];
 
-			var tgl= [];
+				today.setUTCHours(0);
+				today.setUTCMinutes(0);
+				today.setUTCSeconds(0);
+				today.setUTCMilliseconds(0);
+				today = today.getTime();
 
-			var	head = "<th rowspan=2 style='padding-left: 2px; padding-right: 2px; vertical-align: middle;'>Machine</th>";
-			var head2 = "";
+				for (var i = 0; i < result.mesin.length; i++) {
+					var deal = [];
+					var unfilled = true;
+						for(var j = 0; j < result.schedule.length;j++){
+							if (result.schedule[j].machine == result.mesin[i]) {
+								unfilled = false;
+								deal.push({
+									machine : result.schedule[j].machine,
+									material : result.schedule[j].material_number+' - '+result.schedule[j].material_description,
+									part : result.schedule[j].part+' - '+result.schedule[j].color,
+									qty : result.schedule[j].qty,
+									start_time : Date.parse(result.schedule[j].start_time),
+									end_time : Date.parse(result.schedule[j].end_time)
+								});
+							}
+						}
+						if (unfilled) {
+							deal.push({
+								machine : result.mesin[i],
+								material : "",
+								part : "",
+								qty : 0,
+								start_time : 0,
+								end_time : 0
+							});
+						}
 
-			
-			for (var i = 0; i < result.tgl.length; i++) {
-				tgl.push(result.tgl[i].week_date)
-			}
 
+					schedules.push(
+						{name: result.mesin[i],
+						current: 0,
+						deals: deal}
+					);
+				}
 
-			for (var z = 1; z <= 31; z++) {
-				head += "<th colspan=24>"+tgl[z-1]+"</th>";
-				for (var x = 1; x <= 24; x++) {
-					if (x % 4 == 0) {
-						head2 += "<th>"+x+"</th>";
-					} else {
-						head2 += "<th>&nbsp;</th>";
+				series = schedules.map(function (car, i) {
+				    var data = car.deals.map(function (deal) {
+				        return {
+				            id: 'deal-' + i,
+				            machine: deal.machine,
+				            material: deal.material,
+				            part: deal.part,
+				            qty: deal.qty,
+				            start: deal.start_time,
+				            end: deal.end_time,
+				            y: i
+				        };
+				    });
+				    return {
+				        name: car.name,
+				        data: data,
+				        current: car.deals[car.current]
+				    };
+				});
+
+				var chart = Highcharts.ganttChart('container', {
+				    series: series,
+					chart: {
+						backgroundColor: null
+					},
+					title: {
+						text: null,
+					},
+					tooltip: {
+						pointFormat: '<span>Mesin: <b>{point.machine}</b></span><br/><span>Material:<b> {point.material}</b></span><br/><span>Part: <b>{point.part}</b></span><br/><span>From: <b>{point.start:%e %b %Y, %H:%M}</b></span><br/><span>To: <b>{point.end:%e %b %Y, %H:%M}</b></span><br/><span>Qty: <b>{point.qty}</b></span>'
+					},
+					xAxis:
+					[{
+						tickInterval: 1000 * 60 * 60,
+						min: today,
+						max: today + 2 * day,
+						currentDateIndicator:{
+							enabled: true,
+							color : '#fff',
+							label: {
+								style: {
+									fontSize: '14px',
+									color: '#FFB300',
+									fontWeight: 'bold'
+								}
+							}
+						},
+						scrollbar: {
+							enabled: true,
+							barBackgroundColor: 'gray',
+							barBorderRadius: 7,
+							barBorderWidth: 0,
+							buttonBackgroundColor: 'gray',
+							buttonBorderWidth: 0,
+							buttonArrowColor: 'white',
+							buttonBorderRadius: 7,
+							rifleColor: 'white',
+							trackBackgroundColor: '#3C3C3C',
+							trackBorderWidth: 1,
+							trackBorderColor: 'silver',
+							trackBorderRadius: 7
+						}
+					},{
+						tickInterval: 1000 * 60 * 60 * 24
+					}],
+					yAxis: {
+						type: 'category',
+						grid: {
+							columns: [{
+								title: {
+									text: null
+								},
+								categories: map(series, function(s) {
+									return s.name;
+								})
+							}]
+						}
+					},
+					plotOptions: {
+						gantt: {
+							animation: false,
+						},
+						series:{
+							cursor: 'pointer',
+							dataLabels: {
+						        enabled: true,
+						        format: '{point.material}',
+						        style: {
+						          cursor: 'default',
+						          pointerEvents: 'none',
+						          fontSize:'10px'
+						        }
+						    }
+						}
+					},
+					credits: {
+						enabled: false
+					},
+					exporting: {
+						enabled: false
 					}
-				}
+				});
+
+				$.each(chart.yAxis[0].ticks, function(i, tick) {
+					$('.highcharts-yaxis-labels text').hover(function () {
+						$(this).css('fill', '#33c570');
+						$(this).css('cursor', 'pointer');
+					},
+					function () {
+						$(this).css('cursor', 'pointer');
+						$(this).css('fill', 'white');
+					});
+				});
+			}else{
+				audio_error.play();
+				openErrorGritter('Error!', result.message);
 			}
-
-			$("#mc_head").append(head);
-			$("#mc_head2").append(head2);
-
-			var body = "";
-			for (var i = 1; i <= 11; i++) {
-				if (i != 10) {
-					body += "<tr id='machine_"+i+"'>";
-					body += "<td style='font-size: 20px; vertical-align: middle;'>#"+i+"</td>";
-					body += "</tr>";
-				}
-			}
-
-			$("#mc_body").append(body);
-
-
-			for (var x = 1; x <= 11; x++) {
-				var data = "";
-				if (x != 10) {
-					for (var y = 1; y <= 31; y++) {
-					// if () {}
-					data += "<td style='padding:0px' colspan=24><div style='width:240px' id='"+x+"_"+y+"'></div></div></td>";
-				}
-			}
-			$("#machine_"+x).append(data);
-		}
-
-		console.table(result.schedule);
-
-		$.each(result.schedule, function(index, value){
-			// var machine = value.mesin.split(" ")[1];
-			var machine = value.mesin.split("MESIN")[1];
-			var due_date = parseInt(value.due_date.split("-")[2]);
-			var time = ((((value.qty / value.shoot) * value.cycle) / 60) / 60);
-			var text = "";
-			var textqty = "";
-			var fontColor = "black";
-			var color = "";
-
-			if(isNaN(time)) {
-				time = 24;
-				text = "OFF";
-				textqty = "";
-			} else {
-				text = value.color.split(" - ")[0];
-				textqty = value.qty;
-			}
-
-			var part_color = value.part.split(" ")[0].charAt(value.part.split(" ")[0].length-1);
-
-
-			// if (part_color == "B") {
-			// 	color = "#4a74ff";
-			// } else if (part_color == "G") {
-			// 	color = "#76f562";
-			// } else if (part_color == "P") {
-			// 	color = "#f76fa8";
-			// }  else if (part_color == "F") {
-			// 	color = "white";
-			// } else {
-			// 	if (value.color.split(" - ")[1] == "ivory") {
-			// 		color = "#faedbb";
-			// 	} else if (value.color.split(" - ")[1] == "BEIGE") {
-			// 		color = "#595c59";
-			// 		fontColor = "white";
-			// 	}
-			// }
-
-			if (value.color.split(" - ")[1] == "ivory") {
-					color = "#faedbb";
-				} else if (value.color.split(" - ")[1] == "BEIGE") {
-					color = "#595c59";
-					fontColor = "white";
-				} else if (value.color.split(" - ")[1] == "skelton") {
-					if (part_color == "B") {
-					color = "#4a74ff";
-				} else if (part_color == "G") {
-					color = "#76f562";
-				} else if (part_color == "P") {
-					color = "#f76fa8";
-				}  else if (part_color == "F") {
-					color = "white";
-
-				}
-			}
-
-			// if (value.color.split(" - ")[1] == "ivory") {
-			// 	color = "#faedbb";
-			// }
-			// else if (value.color.split(" - ")[1] == "BEIGE") {
-			// 	color = "#ddd";
-			// } else if (value.color.split(" - ")[1] == "skelton") {
-			// 	color = "#de391f";
-			// }
-
-			$("#"+machine+"_"+due_date).append("<div class='bar' style='width:"+time.toFixed(1) * 10+"px; background-color:"+color+"; color:"+fontColor+"'><div class='text-rotasi'>"+text+' '+textqty+"</div></div>");
-				console.log(machine+"_"+due_date);
-			})
-	})
+		})
 	}
 
 
+	Highcharts.createElement('link', {
+		href: '{{ url("fonts/UnicaOne.css")}}',
+		rel: 'stylesheet',
+		type: 'text/css'
+	}, null, document.getElementsByTagName('head')[0]);
+
+	Highcharts.theme = {
+		colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
+		'#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+		chart: {
+			backgroundColor: {
+				linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
+				stops: [
+				[0, '#2a2a2b'],
+				[1, '#3e3e40']
+				]
+			},
+			style: {
+				fontFamily: 'sans-serif'
+			},
+			plotBorderColor: '#606063'
+		},
+		title: {
+			style: {
+				color: '#E0E0E3',
+				textTransform: 'uppercase',
+				fontSize: '20px'
+			}
+		},
+		subtitle: {
+			style: {
+				color: '#E0E0E3',
+				textTransform: 'uppercase'
+			}
+		},
+		xAxis: {
+			gridLineColor: '#707073',
+			labels: {
+				style: {
+					color: '#E0E0E3'
+				}
+			},
+			lineColor: '#707073',
+			minorGridLineColor: '#505053',
+			tickColor: '#707073',
+			title: {
+				style: {
+					color: '#A0A0A3'
+
+				}
+			}
+		},
+		yAxis: {
+			gridLineColor: '#707073',
+			labels: {
+				style: {
+					color: '#E0E0E3'
+				}
+			},
+			lineColor: '#707073',
+			minorGridLineColor: '#505053',
+			tickColor: '#707073',
+			tickWidth: 1,
+			title: {
+				style: {
+					color: '#A0A0A3'
+				}
+			}
+		},
+		tooltip: {
+			backgroundColor: 'rgba(0, 0, 0, 0.85)',
+			style: {
+				color: '#F0F0F0'
+			}
+		},
+		plotOptions: {
+			series: {
+				dataLabels: {
+					color: 'white'
+				},
+				marker: {
+					lineColor: '#333'
+				}
+			},
+			boxplot: {
+				fillColor: '#505053'
+			},
+			candlestick: {
+				lineColor: 'white'
+			},
+			errorbar: {
+				color: 'white'
+			}
+		},
+		legend: {
+			itemStyle: {
+				color: '#E0E0E3'
+			},
+			itemHoverStyle: {
+				color: '#FFF'
+			},
+			itemHiddenStyle: {
+				color: '#606063'
+			}
+		},
+		credits: {
+			style: {
+				color: '#666'
+			}
+		},
+		labels: {
+			style: {
+				color: '#707073'
+			}
+		},
+
+		drilldown: {
+			activeAxisLabelStyle: {
+				color: '#F0F0F3'
+			},
+			activeDataLabelStyle: {
+				color: '#F0F0F3'
+			}
+		},
+
+		navigation: {
+			buttonOptions: {
+				symbolStroke: '#DDDDDD',
+				theme: {
+					fill: '#505053'
+				}
+			}
+		},
+
+		rangeSelector: {
+			buttonTheme: {
+				fill: '#505053',
+				stroke: '#000000',
+				style: {
+					color: '#CCC'
+				},
+				states: {
+					hover: {
+						fill: '#707073',
+						stroke: '#000000',
+						style: {
+							color: 'white'
+						}
+					},
+					select: {
+						fill: '#000003',
+						stroke: '#000000',
+						style: {
+							color: 'white'
+						}
+					}
+				}
+			},
+			inputBoxBorderColor: '#505053',
+			inputStyle: {
+				backgroundColor: '#333',
+				color: 'silver'
+			},
+			labelStyle: {
+				color: 'silver'
+			}
+		},
+
+		navigator: {
+			handles: {
+				backgroundColor: '#666',
+				borderColor: '#AAA'
+			},
+			outlineColor: '#CCC',
+			maskFill: 'rgba(255,255,255,0.1)',
+			series: {
+				color: '#7798BF',
+				lineColor: '#A6C7ED'
+			},
+			xAxis: {
+				gridLineColor: '#505053'
+			}
+		},
+
+		scrollbar: {
+			barBackgroundColor: '#808083',
+			barBorderColor: '#808083',
+			buttonArrowColor: '#CCC',
+			buttonBackgroundColor: '#606063',
+			buttonBorderColor: '#606063',
+			rifleColor: '#FFF',
+			trackBackgroundColor: '#404043',
+			trackBorderColor: '#404043'
+		},
+
+		legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
+		background2: '#505053',
+		dataLabelsColor: '#B0B0B3',
+		textColor: '#C0C0C0',
+		contrastTextColor: '#F0F0F3',
+		maskColor: 'rgba(255,255,255,0.3)'
+	};
+	Highcharts.setOptions(Highcharts.theme);
+
+	Highcharts.setOptions({
+		global: {
+			useUTC: true,
+			timezoneOffset: -420
+		}
+	});
+
+	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+
+	function openSuccessGritter(title, message){
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-success',
+			image: '{{ url("images/image-screen.png") }}',
+			sticky: false,
+			time: '3000'
+		});
+	}
+
+	function openErrorGritter(title, message) {
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-danger',
+			image: '{{ url("images/image-stop.png") }}',
+			sticky: false,
+			time: '3000'
+		});
+	}
 </script>
 
 @stop
