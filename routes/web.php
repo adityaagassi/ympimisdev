@@ -1105,9 +1105,9 @@ Route::group(['nav' => 'S39', 'middleware' => 'permission'], function(){
 	Route::get('index/ga_control/driver_log', 'GeneralAffairController@indexDriverLog');
 	Route::get('fetch/ga_control/driver_log', 'GeneralAffairController@fetchDriverLog');
 	Route::post('create/ga_control/driver_duty', 'GeneralAffairController@createDriverDuty');
-	Route::get('index/ga_control/bento_report', 'GeneralAffairController@indexBentoReport');
 	Route::get('approve/ga_control/bento/{id}', 'GeneralAffairController@approveBento');
 	Route::get('reject/ga_control/bento/{id}', 'GeneralAffairController@rejectBento');
+	Route::post('upload/ga_control/bento_menu', 'GeneralAffairController@uploadBentoMenu');
 });
 Route::get('approve/ga_control/driver/{id}', 'GeneralAffairController@approveRequest');
 Route::get('reject/ga_control/driver/{id}', 'GeneralAffairController@rejectRequest');

@@ -132,30 +132,51 @@
 
 				for (var i = 0; i < result.mesin.length; i++) {
 					var deal = [];
+					// var colors_skeleton = [];
 					var unfilled = true;
 						for(var j = 0; j < result.schedule.length;j++){
 							if (result.schedule[j].machine == result.mesin[i]) {
+								var colors_skeleton = "";
 								if (result.schedule[j].type == 'molding') {
 									unfilled = false;
 									deal.push({
 										machine : result.schedule[j].machine,
+										materials : "",
 										material : result.schedule[j].material_number+' - '+result.schedule[j].material_description,
 										part : result.schedule[j].part+' - '+result.schedule[j].color,
 										qty : result.schedule[j].qty,
 										start_time : Date.parse(result.schedule[j].start_time),
 										end_time : Date.parse(result.schedule[j].end_time),
-										colors : '#55bf3b'
+										colors : '#8729c2'
 									});
 								}else{
 									unfilled = false;
+									if (result.schedule[j].color == 'BLUE') {
+										var colors_skeleton = '#1432b8';
+									}else if(result.schedule[j].color == 'PINK'){
+										var colors_skeleton = '#b8149f';
+									}else if(result.schedule[j].color == 'GREEN'){
+										var colors_skeleton = '#14b833';
+									}else if(result.schedule[j].color == 'RED'){
+										var colors_skeleton = '#ff4a4a';
+									}else if(result.schedule[j].color == 'IVORY'){
+										var colors_skeleton = '#fff5a6';
+									}else if(result.schedule[j].color == 'BROWN'){
+										var colors_skeleton = '#b85e14';
+									}else if(result.schedule[j].color == 'BEIGE'){
+										var colors_skeleton = '#b87f14';
+									}else{
+										var colors_skeleton = '#000';
+									}
 									deal.push({
 										machine : result.schedule[j].machine,
+										materials : result.schedule[j].material_number+' - '+result.schedule[j].material_description,
 										material : result.schedule[j].material_number+' - '+result.schedule[j].material_description,
 										part : result.schedule[j].part+' - '+result.schedule[j].color,
 										qty : result.schedule[j].qty,
 										start_time : Date.parse(result.schedule[j].start_time),
 										end_time : Date.parse(result.schedule[j].end_time),
-										colors : '#df5353'
+										colors : colors_skeleton
 									});
 								}
 							}
@@ -186,6 +207,7 @@
 				            id: 'deal-' + i,
 				            machine: deal.machine,
 				            material: deal.material,
+				            materials: deal.materials,
 				            part: deal.part,
 				            qty: deal.qty,
 				            start: deal.start_time,
@@ -216,17 +238,21 @@
 					[{
 						tickInterval: 1000 * 60 * 60,
 						min: today,
-						max: today + 2 * day,
+						max: today + 1 * day,
 						currentDateIndicator:{
 							enabled: true,
-							color : '#fff',
+							width: 3,
+				            dashStyle: 'dot',
+				            color: 'red',
 							label: {
 								style: {
 									fontSize: '14px',
-									color: '#FFB300',
+									color: '#fff',
 									fontWeight: 'bold'
-								}
-							}
+								},
+								x: -90,
+								y: -4,
+							},
 						},
 						scrollbar: {
 							enabled: true,
@@ -257,7 +283,7 @@
 									return s.name;
 								})
 							}]
-						}
+						},
 					},
 					plotOptions: {
 						gantt: {
@@ -267,13 +293,22 @@
 							cursor: 'pointer',
 							dataLabels: {
 						        enabled: true,
-						        format: '{point.material}',
+						        format: '{point.materials}',
 						        style: {
 						          cursor: 'default',
 						          pointerEvents: 'none',
-						          fontSize:'10px'
+						          fontSize:'13px'
 						        }
-						    }
+						    },
+						    pointPadding: -0.31,
+						    point: {
+								events: {
+									click: function () {
+										alert('Edit Schedule');
+									}
+								}
+							},
+							borderWidth: 0
 						}
 					},
 					credits: {

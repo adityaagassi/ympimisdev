@@ -389,6 +389,13 @@ class InjectionScheduleCommand extends Command
             ]);
         }
 
+        $id_schedule = InjectionScheduleLog::get();
+        for ($i=0; $i < count($id_schedule); $i++) { 
+            $log = InjectionScheduleLog::where('id',$id_schedule[$i]->id)->first();
+            $log->id_schedule = $log->id;
+            $log->save();
+        }
+
         $mesinsama = DB::SELECT("SELECT
             injection_schedule_logs.*,
             SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 1 ) AS machine_1,
@@ -630,6 +637,7 @@ class InjectionScheduleCommand extends Command
         $schedules = [];
         for ($i=0; $i < count($generatemolding); $i++) { 
             $schedules[] = array(
+                'id_schedule' => $generatemolding[$i]->id,
                 'machine' => $generatemolding[$i]->machine,
                 'material_number' => $generatemolding[$i]->material_number,
                 'material_description' => $generatemolding[$i]->material_description,

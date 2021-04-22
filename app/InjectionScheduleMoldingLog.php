@@ -10,7 +10,7 @@ class InjectionScheduleMoldingLog extends Model
     use SoftDeletes;
 
     protected $fillable = [
-		'machine','material_number','material_description','part','color', 'qty','start_time','end_time','created_by'
+		'id_schedule','machine','material_number','material_description','part','color', 'qty','start_time','end_time','created_by'
 	];
 
 	public function user()
