@@ -95,6 +95,7 @@
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
 <script src="{{ url("js/highcharts-gantt.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
+<script src="{{ url("js/export-data.js")}}"></script>
 <script src="{{ url("js/moment.min.js")}}"></script>
 <script src="{{ url("js/bootstrap-datetimepicker.min.js")}}"></script>
 <script src="{{ url("plugins/timepicker/bootstrap-timepicker.min.js")}}"></script>
