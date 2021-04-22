@@ -407,12 +407,16 @@ class MutasiController extends Controller
         $dateto = $request->get('dateto');
 
         $emp_dept = EmployeeSync::where('employee_id', Auth::user()->username)
-        ->select('employee_id', 'department')
+        ->select('employee_id', 'department', 'position')
         ->first();
+        $dept = $emp_dept->department;
 
-        // where department = "'.$emp_dept->department.'"')
+        $email = Auth::user()->email;
+        $dpts = db::select("SELECT remark FROM send_emails where email = '".$email."' and remark like '%Department%'");
+        $dpts = json_decode(json_encode($dpts), true);
+        
 
-        if (Auth::user()->role_code == "MIS" || $emp_dept->employee_id == "PI0603019") {
+        if (Auth::user()->role_code == "MIS" || $emp_dept->employee_id == "PI0603019" || $emp_dept->employee_id == "PI1110002") {
             if ($dateto == "") {
             $resumes = Mutasi::select('mutasi_depts.id', 'status', 'nik', 'nama', 'nama_chief_asal', 'nama_chief_tujuan', 'nama_manager_tujuan', 'nama_dgm_tujuan', 'nama_gm_tujuan', 'nama_manager', 'app_ca', 'app_ct', 'app_mt', 'app_dt', 'app_gt', 'app_m', 'posisi', 
                 'users.name', 'mutasi_depts.created_by', 'remark')
@@ -435,11 +439,37 @@ class MutasiController extends Controller
                     ->get();
             }    
         }
+        else if ($emp_dept->position == "Manager") {
+            if ($dateto == "") {
+            $resumes = Mutasi::select('mutasi_depts.id', 'status', 'nik', 'nama', 'nama_chief_asal', 'nama_chief_tujuan', 'nama_manager_tujuan', 'nama_dgm_tujuan', 'nama_gm_tujuan', 'nama_manager', 'app_ca', 'app_ct', 'app_mt', 'app_dt', 'app_gt', 'app_m', 'posisi', 
+                'users.name', 'mutasi_depts.created_by', 'remark')
+                ->whereIn('mutasi_depts.departemen', $dpts)
+                ->where('mutasi_depts.deleted_at',null )
+                // ->where(DB::raw("DATE_FORMAT(tanggal, '%Y-%m-%d')"),$today)
+                ->where('mutasi_depts.status',null)
+                // ->where('mutasi_depts.status', null)
+                ->leftJoin('users', 'users.id', '=', 'mutasi_depts.created_by')
+                ->orderBy('mutasi_depts.tanggal', 'asc')
+                ->get();
+            }
+            else{
+                $resumes = Mutasi::select('mutasi_depts.id', 'status', 'nik', 'nama', 'nama_chief_asal', 'nama_chief_tujuan', 'nama_manager_tujuan', 'nama_dgm_tujuan', 'nama_gm_tujuan', 'nama_manager', 'app_ca', 'app_ct', 'app_mt', 'app_dt', 'app_gt', 'app_m', 'posisi', 
+                    'users.name', 'mutasi_depts.created_by', 'remark')
+                    ->whereIn('mutasi_depts.departemen', $dpts)
+                    ->where('mutasi_depts.deleted_at',null )
+                    ->where('mutasi_depts.status',null)
+                    ->where(DB::raw("DATE_FORMAT(tanggal, '%Y-%m')"),$dateto)
+                    ->leftJoin('users', 'users.id', '=', 'mutasi_depts.created_by')
+                    ->orderBy('mutasi_depts.tanggal', 'asc')
+                    ->get();
+            }    
+        }
         else{
             if ($dateto == "") {
             $resumes = Mutasi::select('mutasi_depts.id', 'status', 'nik', 'nama', 'nama_chief_asal', 'nama_chief_tujuan', 'nama_manager_tujuan', 'nama_dgm_tujuan', 'nama_gm_tujuan', 'nama_manager', 'app_ca', 'app_ct', 'app_mt', 'app_dt', 'app_gt', 'app_m', 'posisi', 'departemen',  
                 'users.name', 'mutasi_depts.created_by', 'remark')
-                // ->where('mutasi_depts.departemen', $emp_dept->department)
+                ->where('mutasi_depts.departemen', $dept)
+                // ->whereIn('mutasi_depts.departemen', $dpts)
                 ->where('mutasi_depts.deleted_at',null )
                 // ->where(DB::raw("DATE_FORMAT(tanggal, '%Y-%m-%d')"),$today)
                 ->where('mutasi_depts.status',null)
@@ -451,6 +481,7 @@ class MutasiController extends Controller
             else{
                 $resumes = Mutasi::select('mutasi_depts.id', 'status', 'nik', 'nama', 'nama_chief_asal', 'nama_chief_tujuan', 'nama_manager_tujuan', 'nama_dgm_tujuan', 'nama_gm_tujuan', 'nama_manager', 'app_ca', 'app_ct', 'app_mt', 'app_dt', 'app_gt', 'app_m', 'posisi', 'departemen', 
                     'users.name', 'mutasi_depts.created_by', 'remark')
+                    ->where('mutasi_depts.departemen', $dept)
                     // ->where('mutasi_depts.departemen', $emp_dept->department)
                     ->where('mutasi_depts.deleted_at',null )
                     ->where('mutasi_depts.status',null)
@@ -1318,45 +1349,119 @@ class MutasiController extends Controller
 
     public function viewMutasiSatuDetail(Request $request){
         $emp_dept = EmployeeSync::where('employee_id', Auth::user()->username)
-          ->select('employee_id', 'department')
-          ->first();
+            ->select('employee_id', 'department', 'position')
+            ->first();
+            $dept = $emp_dept->department;
 
-        $bulan = $request->get('bulan');
-        $status = $request->get('status');
+          $email = Auth::user()->email;
+          $dpts = db::select("SELECT remark FROM send_emails where email = '".$email."' and remark like '%Department%'");
+          $dpts = json_decode(json_encode($dpts), true);
+          $dpts2 = [];
 
-        if ($status == "Tidak Disetujui") {
-            $status = "status = 'Rejected'";
-        }else if($status == "Disetujui"){
-            $status = "status = 'All Approved'";
-        }else if($status == "Proses"){
-            $status = "status is null";
+          foreach ($dpts as $dpt) {
+              array_push($dpts2, $dpt['remark']);
+          }
+
+          $dpts2 = "'".implode("' , '", $dpts2)."'";
+
+            $bulan = $request->get('bulan');
+            $status = $request->get('status');
+
+            if ($status == "Tidak Disetujui") {
+                $status = "status = 'Rejected'";
+            }else if($status == "Disetujui"){
+                $status = "status = 'All Approved'";
+            }else if($status == "Proses"){
+                $status = "status is null";
+            }
+
+            $dateto = $request->get('dateto');
+
+            if (Auth::user()->role_code == "MIS" || $emp_dept->employee_id == "PI0603019" || $emp_dept->employee_id == "PI1110002") {
+                if ($dateto != "") {
+                $resumes = db::select("
+                    SELECT id ,status, nik, nama, `sub_group`, `group`, seksi, departemen, jabatan, rekomendasi, ke_sub_group, ke_group, ke_seksi, ke_jabatan, tanggal, alasan
+                    FROM
+                    mutasi_depts 
+                    WHERE
+                    DATE_FORMAT(tanggal, '%Y-%m') = '".$dateto."'
+                    and ".$status."
+                    ORDER BY
+                    tanggal
+                ");
+              }else{
+                $resumes = db::select("
+                    SELECT
+                    id, status, nik, nama, `sub_group`, `group`, seksi, departemen, jabatan, rekomendasi, ke_sub_group, ke_group, ke_seksi, ke_jabatan, tanggal, alasan
+                    FROM
+                    mutasi_depts 
+                    WHERE
+                    DATE_FORMAT(tanggal, '%M') = '".$bulan."'
+                    and ".$status."
+                    ORDER BY
+                    tanggal
+                ");
+            }
         }
-
-        $dateto = $request->get('dateto');
-
-        if ($dateto != "") {
-            $resumes = db::select("
-            SELECT id ,status, nik, nama, `sub_group`, `group`, seksi, departemen, jabatan, rekomendasi, ke_sub_group, ke_group, ke_seksi, ke_jabatan, tanggal, alasan
-            FROM
-            mutasi_depts 
-            WHERE
-            DATE_FORMAT(tanggal, '%Y-%m') = '".$dateto."'
-            and ".$status."
-            ORDER BY
-            tanggal
-            ");
-          }else{
-            $resumes = db::select("
-            SELECT
-            id, status, nik, nama, `sub_group`, `group`, seksi, departemen, jabatan, rekomendasi, ke_sub_group, ke_group, ke_seksi, ke_jabatan, tanggal, alasan
-            FROM
-            mutasi_depts 
-            WHERE
-            DATE_FORMAT(tanggal, '%M') = '".$bulan."'
-            and ".$status."
-            ORDER BY
-            tanggal
-            ");
+            else if ($emp_dept->position == "Manager") {
+                if ($dateto != "") {
+                $resumes = db::select("
+                    SELECT id ,status, nik, nama, `sub_group`, `group`, seksi, departemen, jabatan, rekomendasi, ke_sub_group, ke_group, ke_seksi, ke_jabatan, tanggal, alasan
+                    FROM
+                    mutasi_depts 
+                    WHERE
+                    mutasi_depts.departemen IN (".$dpts2.")
+                    AND
+                    DATE_FORMAT(tanggal, '%Y-%m') = '".$dateto."'
+                    and ".$status."
+                    ORDER BY
+                    tanggal
+                ");
+              }else{
+                $resumes = db::select("
+                    SELECT
+                    id, status, nik, nama, `sub_group`, `group`, seksi, departemen, jabatan, rekomendasi, ke_sub_group, ke_group, ke_seksi, ke_jabatan, tanggal, alasan
+                    FROM
+                    mutasi_depts 
+                    WHERE
+                    mutasi_depts.departemen IN (".$dpts2.")
+                    AND
+                    DATE_FORMAT(tanggal, '%M') = '".$bulan."'
+                    and ".$status."
+                    ORDER BY
+                    tanggal
+                ");
+            }      
+        }
+        else{
+            if ($dateto != "") {
+                $resumes = db::select("
+                    SELECT id ,status, nik, nama, `sub_group`, `group`, seksi, departemen, jabatan, rekomendasi, ke_sub_group, ke_group, ke_seksi, ke_jabatan, tanggal, alasan
+                    FROM
+                    mutasi_depts 
+                    WHERE
+                    mutasi_depts.departemen = '".$dept."'
+                    AND
+                    DATE_FORMAT(tanggal, '%Y-%m') = '".$dateto."'
+                    and ".$status."
+                    ORDER BY
+                    tanggal
+                ");
+              }else{
+                $resumes = db::select("
+                    SELECT
+                    id, status, nik, nama, `sub_group`, `group`, seksi, departemen, jabatan, rekomendasi, ke_sub_group, ke_group, ke_seksi, ke_jabatan, tanggal, alasan
+                    FROM
+                    mutasi_depts 
+                    WHERE
+                    mutasi_depts.departemen = '".$dept."'
+                    AND
+                    DATE_FORMAT(tanggal, '%M') = '".$bulan."'
+                    and ".$status."
+                    ORDER BY
+                    tanggal
+                ");
+            }
         }
 
        
@@ -2875,17 +2980,25 @@ class MutasiController extends Controller
           $dateto = $request->get('dateto');
           $today = date('Y-m');
 
-          // if ($dateto == "") {
-          //     $dateto = "";
-          // } else {
-          //     $dateto = $dateto;
-          // }
-
           $emp_dept = EmployeeSync::where('employee_id', Auth::user()->username)
-          ->select('employee_id', 'department')
-          ->first();
+            ->select('employee_id', 'department', 'position')
+            ->first();
+            $dept = $emp_dept->department;
 
-          if (Auth::user()->role_code == "MIS" || $emp_dept->employee_id == "PI0603019") {
+          $email = Auth::user()->email;
+          $dpts = db::select("SELECT remark FROM send_emails where email = '".$email."' and remark like '%Department%'");
+          $dpts = json_decode(json_encode($dpts), true);
+          $dpts2 = [];
+
+          foreach ($dpts as $dpt) {
+              array_push($dpts2, $dpt['remark']);
+          }
+
+          $dpts2 = "'".implode("' , '", $dpts2)."'";
+          // dd($dpts2);
+          
+
+          if (Auth::user()->role_code == "MIS" || $emp_dept->employee_id == "PI0603019" || $emp_dept->employee_id == "PI1110002") {
               if ($dateto != "") {
                     $data = db::select("
                     SELECT
@@ -2929,8 +3042,8 @@ class MutasiController extends Controller
                     ");
                 }
           }
-          else{
-            if ($dateto != "") {
+          else if ($emp_dept->position == "Manager") {
+              if ($dateto != "") {
                     $data = db::select("
                     SELECT
                     count( nik ) AS jumlah,
@@ -2942,7 +3055,8 @@ class MutasiController extends Controller
                     FROM
                     mutasi_depts 
                     WHERE
-                    mutasi_depts.deleted_at IS NULL 
+                    mutasi_depts.departemen IN (".$dpts2.")
+                    AND mutasi_depts.deleted_at IS NULL 
                     AND DATE_FORMAT( tanggal, '%Y-%m' ) = '".$dateto."'
                     GROUP BY
                     bulan,
@@ -2963,7 +3077,54 @@ class MutasiController extends Controller
                     FROM
                     mutasi_depts 
                     WHERE
-                    mutasi_depts.deleted_at IS NULL
+                    mutasi_depts.departemen IN (".$dpts2.")
+                    AND mutasi_depts.deleted_at IS NULL
+                    GROUP BY
+                    bulan,
+                    tahun 
+                    ORDER BY
+                    tahun,
+                    MONTH ( tanggal ) ASC
+                    ");
+                }
+          }
+          else{
+            if ($dateto != "") {
+                    $data = db::select("
+                    SELECT
+                    count( nik ) AS jumlah,
+                    monthname( tanggal ) AS bulan,
+                    YEAR ( tanggal ) AS tahun,
+                    sum( CASE WHEN `status` is null THEN 1 ELSE 0 END ) AS Proces,
+                    sum( CASE WHEN `status` = 'All Approved' THEN 1 ELSE 0 END ) AS Signed,
+                    sum( CASE WHEN `status` = 'Rejected' THEN 1 ELSE 0 END ) AS NotSigned 
+                    FROM
+                    mutasi_depts 
+                    WHERE
+                    mutasi_depts.departemen = '".$dept."'
+                    AND mutasi_depts.deleted_at IS NULL 
+                    AND DATE_FORMAT( tanggal, '%Y-%m' ) = '".$dateto."'
+                    GROUP BY
+                    bulan,
+                    tahun 
+                    ORDER BY
+                    tahun,
+                    MONTH ( tanggal ) ASC
+                    ");
+              }else{
+                    $data = db::select("
+                    SELECT
+                    count( nik ) AS jumlah,
+                    monthname( tanggal ) AS bulan,
+                    YEAR ( tanggal ) AS tahun,
+                    sum( CASE WHEN `status` is null THEN 1 ELSE 0 END ) AS Proces,
+                    sum( CASE WHEN `status` = 'All Approved' THEN 1 ELSE 0 END ) AS Signed,
+                    sum( CASE WHEN `status` = 'Rejected' THEN 1 ELSE 0 END ) AS NotSigned 
+                    FROM
+                    mutasi_depts 
+                    WHERE
+                    mutasi_depts.departemen = '".$dept."'
+                    AND mutasi_depts.deleted_at IS NULL
                     GROUP BY
                     bulan,
                     tahun 
@@ -2987,32 +3148,6 @@ class MutasiController extends Controller
 
           return Response::json($response); 
       }
-
-
-    //   public function __construct()
-    // {
-    //     $this->dept = ['Management Information System Department', 'Accounting Department', 'Woodwind Instrument - Final Assembly (WI-FA) Department', 'Educational Instrument (EI) Department', 'General Affairs Department', 'Human Resources Department', 'Logistic Department', 'Maintenance Department', 'Woodwind Instrument - Key Parts Process (WI-KPP) Department', 'Procurement Department', 'Production Control Department', 'Production Engineering Department', 'Purchasing Control Department', 'Quality Assurance Department', 'Woodwind Instrument - Welding Process (WI-WP) Department', 'Woodwind Instrument - Body Parts Process (WI-BPP) Department', 'Woodwind Instrument - Surface Treatment (WI-ST) Department'];
-
-    //     $this->uom = ['bag', 'bar', 'batang', 'belt', 'botol', 'bottle', 'box', 'Btg', 'Btl', 'btng', 'buah', 'buku', 'Can', 'Case', 'container', 'cps', 'day', 'days', 'dos', 'doz', 'Drum', 'dus', 'dz', 'dzn', 'EA', 'G', 'galon', 'gr', 'hari', 'hour', 'job', 'JRG', 'kaleng', 'ken', 'Kg', 'kgm', 'klg', 'L', 'Lbr', 'lbs', 'lembar', 'License', 'lisence', 'lisensi', 'lmbr', 'lonjor', 'Lot', 'ls', 'ltr', 'lubang', 'lusin', 'm', 'm2', 'm²', 'm3', 'malam', 'meter', 'ml', 'month', 'Mtr', 'night', 'OH', 'Ons', 'orang', 'OT', 'Pac', 'Pack', 'package', 'pad', 'pail', 'pair', 'pairs', 'pak', 'Pasang', 'pc', 'Pca', 'Pce', 'Pck', 'pcs', 'Pcs', 'Person', 'pick up', 'pil', 'ply', 'point', 'pot', 'prs', 'prsn', 'psc', 'PSG', 'psn', 'Rim', 'rol', 'roll', 'rolls', 'sak', 'sampel', 'sample', 'Set', 'Set', 'Sets', 'sheet', 'shoot', 'slop', 'sum', 'tank', 'tbg', 'time', 'titik', 'ton', 'tube', 'Um', 'Unit', 'user', 'VA', 'yard', 'zak'
-
-    //     ];
-
-    //     $this->transportation = ['AIR', 'BOAT', 'COURIER SERVICE', 'DHL', 'FEDEX', 'SUV-Car'];
-
-    //     $this->delivery = ['CIF Surabaya', 'CIP', 'Cost And Freight ', 'Delivered At Frontier', 'Delivered Duty Paid', 'Delivered Duty Unpaid', 'Delivered Ex Quay', 'Ex Works', 'Ex Factory', 'Ex Ship', 'FRANCO', 'Franco', 'FOB', 'Flee Alongside Ship', 'Free Carrier (FCA)', 'Letter Of Credits','DAP Consignee (Surabaya Factory)'];
-
-    //         // $this->dgm = 'PI1910003';
-    //         // $this->gm = 'PI1206001';
-
-    //     $this->dgm = 'PI0109004';
-    //     $this->gm = 'PI1206001';
-    //     $this->gm_acc = 'PI1712018';
-
-    //     $this->manager_acc = 'PI9902017/Romy Agung Kurniawan'; //Pak Romy
-    //     $this->dir_acc = 'PI1712018/Kyohei Iida'; //Pak Ida
-    //     $this->presdir = 'PI1301001/Hiroshi Ura'; //Pak Ura
-    // }
-
     public function HrExport(){
         return view('mutasi.hr_export', array(
             'title' => 'HR',
@@ -3023,24 +3158,6 @@ class MutasiController extends Controller
 
     public function FetchHrExport(Request $request)
     {
-
-        // $tanggal = "";
-        // $adddepartment = "";
-
-        // if (strlen($request->get('datefrom')) > 0)
-        // {
-        //     $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
-        //     $tanggal = "and A.tgl_po >= '" . $datefrom . " 00:00:00' ";
-        //     if (strlen($request->get('dateto')) > 0)
-        //     {
-        //         $dateto = date('Y-m-d', strtotime($request->get('dateto')));
-        //         $tanggal = $tanggal . "and A.tgl_po  <= '" . $dateto . " 23:59:59' ";
-        //     }
-        // }
-
-        // $qry = "SELECT * FROM acc_purchase_orders A WHERE A.deleted_at IS NULL " . $tanggal . " order by A.id DESC";
-        // $po = DB::select($qry);
-
         $today     = date("Y-m-d");
         $tanggal = $request->get('dateto');
 
