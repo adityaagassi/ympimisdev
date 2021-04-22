@@ -13,6 +13,11 @@ use App\DriverList;
 use App\DriverDetail;
 use App\DriverLog;
 use App\EmployeeSync;
+use App\BentoQuota;
+use App\User;
+use App\Bento;
+use App\BentoMenu;
+use Carbon\Carbon;
 use Response;
 
 class GeneralAffairController extends Controller
@@ -20,6 +25,212 @@ class GeneralAffairController extends Controller
 	public function __construct()
 	{
 		$this->middleware('auth');
+	}
+
+	public function indexBentoReport(){
+		$title = "Japanese Food Order Report";
+		$title_jp = "和食弁当の予約";
+
+		$menus = BentoMenu::orderBy('due_date', 'desc')->where('due_date', '>=', date('Y-m-01'))->get();
+		$quotas = BentoQuota::orderBy('due_date', 'desc')->where('due_date', '>=', date('Y-m-01'))->get();
+
+		return view('general_affairs.bento_report', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+		))->with('head', 'GA Control')->with('page', 'Japanese Food Order Report');
+	}
+
+	public function approveBento($id){
+		$title = "Bento Message";
+		$title_jp = "";
+		$message = "";
+		$message2 = "";
+		$bento_lists = array();
+
+		$bento_ids = explode('-', $id);
+
+		foreach($bento_ids as $bento_id){
+			if($bento_id != ""){
+				$bento = Bento::where('id', '=', $bento_id)->first();
+
+				if(strlen($bento->approver_id)>0){
+
+					$message = 'Bento Request Already Confirmed';
+					$message2 = "Can't approve order";
+
+					return view('general_affairs.bento_message', array(
+						'title' => $title,
+						'title_jp' => $title_jp,
+						'message' => $message,
+						'message2' => $message2
+					))->with('head', 'Bento Request');
+				}
+
+				$message = "Bento Request Approved";
+				$message2 = "";
+
+				$bento->approver_id = Auth::user()->username;
+				$bento->approver_name = Auth::user()->name;
+				$bento->status = 'Approved';
+
+				$bento->save();
+
+				array_push($bento_lists, 
+					[
+						'id' => $bento->id,
+						'order_by' => $bento->order_by,
+						'order_by_name' => $bento->order_by_name,
+						'charge_to' => $bento->charge_to,
+						'charge_to_name' => $bento->charge_to_name,
+						'due_date' => $bento->due_date,
+						'employee_id' => $bento->employee_id,
+						'employee_name' => $bento->employee_name,
+						'department' => $bento->department,
+						'section' => $bento->section,
+						'status' => $bento->status,
+						'created_by' => $bento->created_by,
+						'approver_id' => $bento->approver_id,
+						'approver_name' => $bento->approver_name
+					]);
+			}
+		}
+
+
+		$user = User::where('id', '=', $bento_lists[0]['created_by'])->first();
+
+		if($user->role_code == 'YEMI'){
+			Mail::to(['rianita.widiastuti@music.yamaha.com', $user->email])->cc(['putri.sukma.riyanti@music.yamaha.com', 'merlinda.dyah@music.yamaha.com', 'prawoto@music.yamaha.com'])->bcc(['aditya.agassi@music.yamaha.com'])->send(new SendEmail($bento_lists, 'bento_confirm'));
+		}
+		else{
+			Mail::to(['rianita.widiastuti@music.yamaha.com', $user->email])->cc(['putri.sukma.riyanti@music.yamaha.com'])->bcc(['aditya.agassi@music.yamaha.com'])->send(new SendEmail($bento_lists, 'bento_confirm'));
+		}
+
+		return view('general_affairs.bento_message', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'message' => $message,
+			'message2' => $message2
+		))->with('head', 'Bento Request');
+	}
+
+	public function rejectBento($id){
+		$title = "Bento Message";
+		$title_jp = "";
+		$message = "";
+		$message2 = "";
+		$bento_lists = array();
+
+		$bento_ids = explode('-', $id);
+
+		foreach($bento_ids as $bento_id){
+			if($bento_id != ""){
+				$bento = Bento::where('id', '=', $bento_id)->first();
+
+				if(strlen($bento->approver_id)>0){
+
+					$message = "Bento Request Already Confirmed";
+					$message2 = "Can't reject order";
+
+					return view('general_affairs.bento_message', array(
+						'title' => $title,
+						'title_jp' => $title_jp,
+						'message' => $message,
+						'message2' => $message2
+					))->with('head', 'Bento Request');
+				}
+
+				$bento->approver_id = Auth::user()->username;
+				$bento->approver_name = Auth::user()->name;
+				$bento->status = 'Rejected';
+
+				$bento->save();
+
+				array_push($bento_lists, 
+					[
+						'id' => $bento->id,
+						'order_by' => $bento->order_by,
+						'order_by_name' => $bento->order_by_name,
+						'charge_to' => $bento->charge_to,
+						'charge_to_name' => $bento->charge_to_name,
+						'due_date' => $bento->due_date,
+						'employee_id' => $bento->employee_id,
+						'employee_name' => $bento->employee_name,
+						'department' => $bento->department,
+						'section' => $bento->section,
+						'status' => $bento->status,
+						'created_by' => $bento->created_by,
+						'approver_id' => $bento->approver_id,
+						'approver_name' => $bento->approver_name
+					]);
+			}
+		}
+
+		$user = User::where('id', '=', $bento_lists[0]['created_by'])->first();
+
+		if($user->role_code == 'YEMI'){
+			Mail::to(['rianita.widiastuti@music.yamaha.com', $user->email])->cc(['putri.sukma.riyanti@music.yamaha.com', 'merlinda.dyah@music.yamaha.com', 'prawoto@music.yamaha.com'])->bcc(['aditya.agassi@music.yamaha.com'])->send(new SendEmail($bento_lists, 'bento_confirm'));
+		}
+		else{
+			Mail::to(['rianita.widiastuti@music.yamaha.com', $user->email])->cc(['putri.sukma.riyanti@music.yamaha.com'])->bcc(['aditya.agassi@music.yamaha.com'])->send(new SendEmail($bento_lists, 'bento_confirm'));
+		}
+
+		return view('general_affairs.bento_message', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'message' => $message,
+			'message2' => $message2
+		))->with('head', 'Bento Request');
+	}
+
+	public function indexBento(){
+
+		$title = "Japanese Food Order";
+		$title_jp = "和食弁当の予約";
+
+		if(Auth::user()->role_code == 'YEMI'){
+			$employees = User::where('role_code', '=', 'YEMI')
+			->orderBy('name', 'asc')
+			->select(db::raw('username as employee_id'), 'name')
+			->get();
+
+			$location = 'YEMI';
+		}
+		else{
+			// $employees = db::select('SELECT
+			// 	employee_id,
+			// 	name 
+			// 	FROM
+			// 	employee_syncs 
+			// 	WHERE
+			// 	department = ( SELECT department FROM employee_syncs WHERE employee_id = "'.Auth::user()->username.'" ) 
+			// 	AND end_date IS NULL 
+			// 	ORDER BY
+			// 	name ASC');
+
+			$employee = EmployeeSync::where('employee_id', '=', Auth::user()->username)
+			->first();
+
+			$employees = EmployeeSync::orderBy('name', 'asc')
+			->whereNull('end_date')
+			->where('department', '=', $employee->department)
+			->select('employee_id', 'name')
+			->get();
+
+			$location = 'YMPI';		
+		}
+
+		$bentos = BentoMenu::orderBy('due_date', 'desc')
+		->select(db::raw('date_format(due_date, "%b %Y") as period'), 'menu_image')
+		->take(2)
+		->get();
+
+		return view('general_affairs.bento', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'employees' => $employees,
+			'location' => $location,
+			'bentos' => $bentos
+		))->with('head', 'GA Control')->with('page', 'Japanese Food Order');
 	}
 
 	public function indexDriverLog(){
@@ -50,6 +261,206 @@ class GeneralAffairController extends Controller
 			'employees' => $employees,
 			'driver_lists' => $driver_lists
 		))->with('head', 'GA Control')->with('page', 'Driver Control');
+	}
+
+	public function fetchBentoQuota(Request $request){
+		$due_date = date('Y-m-d', strtotime($request->get('due_date')));
+		$bento_quota = BentoQuota::where('due_date', '=', $due_date)->first();
+
+		$response = array(
+			'status' => true,
+			'bento_quota' => $bento_quota
+		);
+		return Response::json($response);
+	}
+
+	public function fetchBentoOrderList(){
+
+		$now = date('Y-m-d', strtotime(carbon::now()->addDays(1)));
+		$last = date('Y-m-d', strtotime(carbon::now()->addDays(10)));
+
+		if(Auth::user()->role_code == 'GA'){
+			$unconfirmed = Bento::get();
+		}
+		else{
+			$unconfirmed = Bento::where('created_by', '=', Auth::id())
+			->get();
+		}
+
+		$quotas = BentoQuota::where('due_date', '>=', $now)
+		->where('due_date', '<=', $last)
+		->select(db::raw('date_format(due_date, "%a, %d %b %Y") as due_date'), 'serving_quota', 'serving_ordered')
+		->orderBy('due_date', 'asc')
+		->get();
+
+		$response = array(
+			'status' => true,
+			'unconfirmed' => $unconfirmed,
+			'quotas' => $quotas
+		);
+		return Response::json($response);
+	}
+
+	public function editBentoOrder(Request $request){
+		try{
+
+			if($request->get('status') == 'edit'){
+				$bento = Bento::where('id', '=', $request->get("id"))->first();
+
+				if($request->get('location') != 'YEMI'){
+					$bento_quota = BentoQuota::where('due_date', '=', $bento->due_date)->first();
+					$bento_quota->serving_ordered = $bento_quota->serving_ordered-1;
+					$bento_quota->save();
+				}
+
+				$bento->order_by = $request->get('order_by');
+				$bento->order_by_name = $request->get('order_by_name');
+				$bento->charge_to = $request->get('charge_to');
+				$bento->charge_to_name = $request->get('charge_to_name');
+				$bento->due_date = $request->get('due_date');
+
+				$employee_id = explode('-', $request->get('employee_id'));
+				$bento->employee_id = $employee_id[0];
+
+				$employee = EmployeeSync::where('employee_id', '=', $employee_id[0])->first();
+
+				$bento->employee_name = $employee->name;
+				$bento->department = $employee->department;
+				$bento->section = $employee->section;
+
+				if($request->get('location') != 'YEMI'){
+					$bento_quota = BentoQuota::where('due_date', '=', $request->get('due_date'))->first();
+					$bento_quota->serving_ordered = $bento_quota->serving_ordered-1;
+					$bento_quota->save();
+				}
+
+				$bento->save();
+
+				$response = array(
+					'status' => true,
+					'message' => 'Your order has been edited, please wait for approval'
+				);
+				return Response::json($response);				
+			}
+
+			if($request->get('status') == 'delete'){
+
+				$bento = Bento::where('id', '=', $request->get("id"))->first();
+
+				if($request->get('location') != 'YEMI'){
+					$bento_quota = BentoQuota::where('due_date', '=', $bento->due_date)->first();
+					$bento_quota->serving_ordered = $bento_quota->serving_ordered-1;
+					$bento_quota->save();
+				}
+
+				$bento->forceDelete();
+
+				$response = array(
+					'status' => true,
+					'message' => 'Your order has been deleted'
+				);
+				return Response::json($response);				
+			}
+
+
+		}
+		catch(\Exception $e){
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function inputBentoOrder(Request $request){
+		try{
+			$order_lists = $request->get('order_list');
+			$order_by = User::where('username', '=', $request->get('order_by'))->first();
+			$charge_to = User::where('username', '=', $request->get('charge_to'))->first();
+			$bento_lists = array();
+
+			foreach($order_lists as $order_list) {
+				$order = explode("_", $order_list);
+				$bento_quota = BentoQuota::where('due_date', '=', $order[1])->first();
+
+				if($order_by->role_code == 'YEMI'){
+					$employee = User::where('username', '=', $order[0]);
+					$bento = new Bento([
+						'order_by' => $order_by->username,
+						'order_by_name' => $order_by->name,
+						'charge_to' => $charge_to->username,
+						'charge_to_name' => $charge_to_name->username,
+						'due_date' => $order[1],
+						'employee_id' => $order[0],
+						'employee_name' => $employee->name,
+						'department' => 'YEMI',
+						'section' => 'YEMI',
+						'status' => 'Waiting For Confirmation',
+						'created_by' => Auth::id()
+					]);
+				}
+				else{
+					$employee = EmployeeSync::where('employee_id', '=', $order[0])->first();
+
+					$bento = new Bento([
+						'order_by' => $order_by->username,
+						'order_by_name' => $order_by->name,
+						'charge_to' => $charge_to->username,
+						'charge_to_name' => $charge_to->name,
+						'due_date' => $order[1],
+						'employee_id' => $order[0],
+						'employee_name' => $employee->name,
+						'department' => $employee->department,
+						'section' => $employee->section,
+						'status' => 'Waiting For Confirmation',
+						'created_by' => Auth::id()
+					]);
+					$bento_quota->serving_ordered = $bento_quota->serving_ordered+1;
+					$bento_quota->save();
+				}
+
+				$bento->save();
+
+				array_push($bento_lists, 
+					[
+						'id' => $bento->id,
+						'order_by' => $bento->order_by,
+						'order_by_name' => $bento->order_by_name,
+						'charge_to' => $bento->charge_to,
+						'charge_to_name' => $bento->charge_to_name,
+						'due_date' => $bento->due_date,
+						'employee_id' => $bento->employee_id,
+						'employee_name' => $bento->employee_name,
+						'department' => $bento->department,
+						'section' => $bento->section,
+						'status' => $bento->status,
+						'created_by' => $bento->created_by
+					]);
+
+			}
+
+			if($order_by->role_code == 'YEMI'){
+				Mail::to(['rianita.widiastuti@music.yamaha.com', $order_by->email])->cc(['putri.sukma.riyanti@music.yamaha.com', 'merlinda.dyah@music.yamaha.com', 'prawoto@music.yamaha.com'])->bcc(['aditya.agassi@music.yamaha.com'])->send(new SendEmail($bento_lists, 'bento_request'));
+			}
+			else{
+				Mail::to(['rianita.widiastuti@music.yamaha.com', $order_by->email])->cc(['putri.sukma.riyanti@music.yamaha.com'])->bcc(['aditya.agassi@music.yamaha.com'])->send(new SendEmail($bento_lists, 'bento_request'));	
+			}
+
+			$response = array(
+				'status' => true,
+				'message' => 'Your order has been created, please wait for approval<br>予約完了です。ご確認をお待ちください。'
+			);
+			return Response::json($response);
+
+		}
+		catch(\Exception $e){
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
 	}
 
 	public function fetchDriverLog(Request $request){
@@ -765,23 +1176,40 @@ class GeneralAffairController extends Controller
 		return Response::json($response); 
 	}
 
-	public function indexLiveCooking(){
-		$title = "Live Cooking";
-		$title_jp = "";
 
-		return view('general_affairs.live_cooking', array(
+
+    // CANTEEN ORDER -> PR PO RECEIVE //
+    // CANTEEN ORDER -> PR PO RECEIVE //
+    // CANTEEN ORDER -> PR PO RECEIVE //
+    // CANTEEN ORDER -> PR PO RECEIVE //
+
+
+	public function purchase_requisition()
+	{
+		$title = 'Purchase Requisition Canteen';
+		$title_jp = '';
+
+		$emp = EmployeeSync::where('employee_id', Auth::user()->username)
+		->select('employee_id', 'name', 'position', 'department', 'section', 'group')
+		->first();
+
+		$staff = db::select("select DISTINCT employee_id, name, section, position from employee_syncs
+			where end_date is null and (position like '%Staff%')");
+
+		$items = db::select("select kode_item, kategori, deskripsi from acc_item_canteens where deleted_at is null");
+		$dept = $this->dept;
+
+		return view('accounting_purchasing.purchase_requisition', array(
 			'title' => $title,
-			'title_jp' => $title_jp
-		))->with('head', 'GA Control')->with('page', 'Live Cooking');
+			'title_jp' => $title_jp,
+			'employee' => $emp,
+			'items' => $items,
+			'dept' => $dept,
+			'staff' => $staff,
+			'uom' => $this->uom
+		))
+		->with('page', 'Purchase Requisition')
+		->with('head', 'PR');
 	}
 
-	public function indexBento(){
-		$title = "Bento";
-		$title_jp = "";
-
-		return view('general_affairs.bento', array(
-			'title' => $title,
-			'title_jp' => $title_jp
-		))->with('head', 'GA Control')->with('page', 'Bento');
-	}
 }

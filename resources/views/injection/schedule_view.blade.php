@@ -135,15 +135,29 @@
 					var unfilled = true;
 						for(var j = 0; j < result.schedule.length;j++){
 							if (result.schedule[j].machine == result.mesin[i]) {
-								unfilled = false;
-								deal.push({
-									machine : result.schedule[j].machine,
-									material : result.schedule[j].material_number+' - '+result.schedule[j].material_description,
-									part : result.schedule[j].part+' - '+result.schedule[j].color,
-									qty : result.schedule[j].qty,
-									start_time : Date.parse(result.schedule[j].start_time),
-									end_time : Date.parse(result.schedule[j].end_time)
-								});
+								if (result.schedule[j].type == 'molding') {
+									unfilled = false;
+									deal.push({
+										machine : result.schedule[j].machine,
+										material : result.schedule[j].material_number+' - '+result.schedule[j].material_description,
+										part : result.schedule[j].part+' - '+result.schedule[j].color,
+										qty : result.schedule[j].qty,
+										start_time : Date.parse(result.schedule[j].start_time),
+										end_time : Date.parse(result.schedule[j].end_time),
+										colors : '#55bf3b'
+									});
+								}else{
+									unfilled = false;
+									deal.push({
+										machine : result.schedule[j].machine,
+										material : result.schedule[j].material_number+' - '+result.schedule[j].material_description,
+										part : result.schedule[j].part+' - '+result.schedule[j].color,
+										qty : result.schedule[j].qty,
+										start_time : Date.parse(result.schedule[j].start_time),
+										end_time : Date.parse(result.schedule[j].end_time),
+										colors : '#df5353'
+									});
+								}
 							}
 						}
 						if (unfilled) {
@@ -153,7 +167,8 @@
 								part : "",
 								qty : 0,
 								start_time : 0,
-								end_time : 0
+								end_time : 0,
+								colors : ""
 							});
 						}
 
@@ -175,6 +190,7 @@
 				            qty: deal.qty,
 				            start: deal.start_time,
 				            end: deal.end_time,
+				            color: deal.colors,
 				            y: i
 				        };
 				    });

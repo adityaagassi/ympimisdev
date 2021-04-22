@@ -21,7 +21,7 @@
                 <th>Grade</th>
                 <th>EmployeeStatus</th>
                 <th>Company</th>
-                <!-- <th>Resign_Reason</th> -->
+                <th>Resign_Reason</th>
             </tr>
         </thead>
         <tbody>

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\InjectionScheduleTemp;
 use App\InjectionScheduleLog;
+use App\InjectionScheduleMoldingLog;
 use App\InjectionMachineCycleTime;
 use App\InjectionMachineMaster;
 use App\InjectionInventory;
@@ -54,7 +55,8 @@ class InjectionScheduleCommand extends Command
         // }
         InjectionScheduleTemp::truncate();
         InjectionScheduleLog::truncate();
-        $j = 30;
+        InjectionScheduleMoldingLog::truncate();
+        $j = 7;
         $nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays($j)));
         $weekly_calendars = DB::SELECT("SELECT * FROM `weekly_calendars`");
         foreach ($weekly_calendars as $key) {
@@ -405,8 +407,8 @@ class InjectionScheduleCommand extends Command
         ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ), 0 )");
 
         if (count($mesinsama) > 0) {
-            // $dandori = 0;
-            // $dandori_time = 0;
+            $dandori = 0;
+            $dandori_time = 0;
             foreach ($mesin as $key) {
                 $mesins = [];
                 for ($i=0; $i < count($mesinsama); $i++) { 
@@ -441,28 +443,12 @@ class InjectionScheduleCommand extends Command
             }
         }
 
-        $mesinsamadandori = DB::SELECT("SELECT
-            injection_schedule_logs.*,
-            SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 1 ) AS machine_1,
-        IF
-            ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ), 0 ) AS machine_2,
-        IF
-            ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 3 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 3 ), 0 ) AS machine_3 
-        FROM
-            injection_schedule_logs
-            INNER JOIN ( SELECT machine FROM injection_schedule_logs GROUP BY machine HAVING COUNT( machine ) > 1 ) temp ON injection_schedule_logs.machine = temp.machine
-            JOIN injection_machine_cycle_times ON injection_machine_cycle_times.part = injection_schedule_logs.part 
-            AND injection_machine_cycle_times.color = injection_schedule_logs.color 
-                        and start_time = CONCAT(DATE(NOW()),' 07:00:00')
-        ORDER BY
-            injection_schedule_logs.machine,
-        IF
-        ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ), 0 )");
+        $mesinsamadandori = DB::SELECT("select * from injection_schedule_logs");
 
         if (count($mesinsamadandori) > 0) {
             $dandori = 0;
             $dandori_time = 0;
-            for ($m=2; $m < count($mesinsamadandori); $m++) {
+            for ($m=0; $m < count($mesinsamadandori); $m++) {
                 if ($dandori % 2 == 0) {
                     $dandori_time = $dandori_time + 14400;
                 }
@@ -473,7 +459,7 @@ class InjectionScheduleCommand extends Command
                 $secondall = $seconds_diff+$dandori_time;
                 $log->start_time = date("Y-m-d H:i:s",strtotime(date('Y-m-d 07:00:00'))+$dandori_time);
                 $log->end_time = date("Y-m-d H:i:s",strtotime(date('Y-m-d 07:00:00'))+$secondall);
-                // $log->save();
+                $log->save();
                 $dandori++;
             }
         }
@@ -518,7 +504,7 @@ class InjectionScheduleCommand extends Command
                                 $log2->start_time = date("Y-m-d H:i:s",strtotime($end)+14400);
                                 $end_time = date("Y-m-d H:i:s",strtotime($end)+$secondall);
                                 $log2->end_time = $end_time;
-                                // $log2->save();
+                                $log2->save();
                                 $end = $end_time;
                             }
                         }
@@ -535,7 +521,7 @@ class InjectionScheduleCommand extends Command
                                 $log2->start_time = date("Y-m-d H:i:s",strtotime($end)+14400);
                                 $end_time = date("Y-m-d H:i:s",strtotime($end)+$secondall);
                                 $log2->end_time = $end_time;
-                                // $log2->save();
+                                $log2->save();
                                 $end = $end_time;
                             }
                         }
@@ -578,7 +564,7 @@ class InjectionScheduleCommand extends Command
                         if ($mesins[$j]->start_time > $end) {
                             $log2 = InjectionScheduleLog::where('id',$mesins[$j]->id)->first();
                             $log2->machine = 'Mesin '.$mesins[$j]->machine_1;
-                            // $log2->save();
+                            $log2->save();
                         }
                     }
                 }
@@ -630,7 +616,7 @@ class InjectionScheduleCommand extends Command
                             $log->start_time = date("Y-m-d H:i:s",strtotime($end)+14400);
                             $end_time = date("Y-m-d H:i:s",strtotime($end)+$secondall);
                             $log->end_time = $end_time;
-                            // $log->save();
+                            $log->save();
                         }else{
                             $end_time = $mesins[$j]->end_time;
                         }
@@ -638,6 +624,30 @@ class InjectionScheduleCommand extends Command
                     }
                 }
             }
+        }
+
+        $generatemolding = DB::SELECT("SELECT * FROM injection_schedule_logs");
+        $schedules = [];
+        for ($i=0; $i < count($generatemolding); $i++) { 
+            $schedules[] = array(
+                'machine' => $generatemolding[$i]->machine,
+                'material_number' => $generatemolding[$i]->material_number,
+                'material_description' => $generatemolding[$i]->material_description,
+                'part' => $generatemolding[$i]->part,
+                'color' => $generatemolding[$i]->color,
+                'qty' => $generatemolding[$i]->qty,
+                'start_time' => date("Y-m-d H:i:s",strtotime($generatemolding[$i]->start_time)-14400),
+                'end_time' => $generatemolding[$i]->start_time,
+                'created_by' => 1,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            );
+        }
+
+        for ($j=0; $j < count($schedules); $j++) {
+            DB::table('injection_schedule_molding_logs')->insert([
+                $schedules[$j]
+            ]);
         }
     }
 }

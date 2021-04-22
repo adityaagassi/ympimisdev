@@ -6049,7 +6049,16 @@ class InjectionsController extends Controller
         // $schedule = [];
 
         // for ($i = 0; $i < count($this->mesin); $i++) {
-            $schedule = db::select("select * from injection_schedule_logs where date(start_time) >= '".$first."' and date(end_time) <= '".$last."'");
+            $schedule = db::select("SELECT
+                injection_schedule_logs.*,
+                'material' AS type 
+            FROM
+                injection_schedule_logs UNION ALL
+            SELECT
+                injection_schedule_molding_logs.*,
+                'molding' AS type 
+            FROM
+                injection_schedule_molding_logs");
         // }
 
 
