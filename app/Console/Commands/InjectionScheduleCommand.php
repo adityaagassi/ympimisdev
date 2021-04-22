@@ -419,6 +419,27 @@ class InjectionScheduleCommand extends Command
                         $log->save();
                     }
                 }
+
+                $dandori = 0;
+                $dandori_time = 0;
+
+                for ($m=0; $m < count($mesins); $m++) {
+                    var_dump($dandori);
+                    if ($mesins[$m]->start_time == date('Y-m-d 07:00:00')) {
+                        if ($dandori % 2 == 0) {
+                            $dandori_time = $dandori_time + 14400;
+                        }
+                        $log = InjectionScheduleLog::where('id',$mesins[$m]->id)->first();
+                        $ts1 = strtotime($log->start_time);
+                        $ts2 = strtotime($log->end_time);
+                        $seconds_diff = $ts2 - $ts1;
+                        $secondall = $seconds_diff+$dandori_time;
+                        $log->start_time = date("Y-m-d H:i:s",strtotime(date('Y-m-d 07:00:00'))+$dandori_time);
+                        $log->end_time = date("Y-m-d H:i:s",strtotime(date('Y-m-d 07:00:00'))+$secondall);
+                        $log->save();
+                        $dandori++;
+                    }
+                }
             }
         }
 
@@ -447,6 +468,7 @@ class InjectionScheduleCommand extends Command
                         array_push($mesins, $mesinsama2[$i]);
                     }
                 }
+
                 for ($j=1; $j < count($mesins); $j++) { 
                     if ($mesins[$j]->machine_2 == 0) {
                         $log = InjectionScheduleLog::where('machine',$mesins[$j]->machine)->get();
