@@ -3079,7 +3079,6 @@ class MutasiController extends Controller
                 ->leftJoin(db::raw('employee_syncs as grade'), 'mutasi_depts.nik', '=', 'grade.employee_id')
                 ->leftJoin(db::raw('employee_syncs as posisi'), 'mutasi_depts.nik', '=', 'posisi.employee_id')
                 ->where('mutasi_depts.status', '=', 'All Approved')
-                ->where('mutasi_depts.remark', null)
                 ->orderBy('mutasi_depts.tanggal', 'asc')
                 ->get();
         }
@@ -3100,7 +3099,6 @@ class MutasiController extends Controller
                 ->leftJoin(db::raw('employee_syncs as grade'), 'mutasi_depts.nik', '=', 'grade.employee_id')
                 ->leftJoin(db::raw('employee_syncs as posisi'), 'mutasi_depts.nik', '=', 'posisi.employee_id')
                 ->where('mutasi_depts.status', '=', 'All Approved')
-                ->where('mutasi_depts.remark', null)
                 ->where(db::raw('date(tanggal)'),'=', $tanggal)
                 ->orderBy('mutasi_depts.tanggal', 'asc')
                 ->get();
