@@ -54,7 +54,7 @@ class InjectionScheduleCommand extends Command
         // }
         InjectionScheduleTemp::truncate();
         InjectionScheduleLog::truncate();
-        $j = 7;
+        $j = 30;
         $nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays($j)));
         $weekly_calendars = DB::SELECT("SELECT * FROM `weekly_calendars`");
         foreach ($weekly_calendars as $key) {
@@ -365,77 +365,6 @@ class InjectionScheduleCommand extends Command
 
         $count = 0;
 
-        // foreach ($debttoday as $val) {
-        //     $mesinwork = $val->machine_now;
-        //     if ($mesinwork == $val->mesin1work || $mesinwork == $val->mesin2work || $mesinwork == $val->mesin3work) {
-        //         $getMesinWork = DB::SELECT("SELECT * FROM injection_schedule_logs where machine = '".$mesinwork."' and DATE(end_time) <= '".$val->due_date."' ORDER BY id desc limit 1" );
-        //         foreach ($getMesinWork as $key) {
-        //             $schedules[] = array(
-        //                 'material_number' => $val->material_number,
-        //                 'material_description' => $val->material_description,
-        //                 'part' => $val->part,
-        //                 'color' => $val->color,
-        //                 'qty' => $val->debt,
-        //                 'start_time' => $key->end_time,
-        //                 'end_time' => date("Y-m-d H:i:s",strtotime(date($key->end_time))+$val->detik),
-        //                 'machine' => $mesinwork,
-        //                 'created_by' => 1,
-        //                 'created_at' => date('Y-m-d H:i:s'),
-        //                 'updated_at' => date('Y-m-d H:i:s'),
-        //             );
-        //         }
-        //     }else{
-        //         $start_time = date('Y-m-d H:i:s');
-        //         $end_time = date("Y-m-d H:i:s",strtotime(date('Y-m-d H:i:s'))+$val->detik);
-        //         if (count($schedules) > 0) {
-        //             for ($i = 0; $i < count($schedules); $i++) {
-        //                 if ($mesinwork == $schedules[$i]['machine']) {
-        //                     if ($val->mesin2 != "Mesin ") {
-        //                         $mesinwork = $val->mesin2;
-        //                     }else{
-        //                         $mesinwork = $val->mesin1;
-        //                     }
-        //                 }
-        //             }
-
-        //             for ($j = 0; $j < count($schedules); $j++) {
-        //                 if ($mesinwork == $schedules[$j]['machine']) {
-        //                     if ($val->mesin3 != "Mesin ") {
-        //                         $mesinwork = $val->mesin3;
-        //                     }else{
-        //                         $mesinwork = $val->mesin1;
-        //                     }
-        //                 }
-        //             }
-        //         }
-
-        //         for ($k = 0; $k < count($schedules); $k++) {
-        //             if ($mesinwork == $schedules[$k]['machine']) {
-        //                 $start_time = date("Y-m-d H:i:s",strtotime(date($schedules[$k]['end_time']))+7200);
-        //                 $end_time = date("Y-m-d H:i:s",strtotime(date($schedules[$k]['end_time']))+$val->detik);
-        //                 break;
-        //             }else{
-        //                 $start_time = date('Y-m-d H:i:s');
-        //                 $end_time = date("Y-m-d H:i:s",strtotime(date('Y-m-d H:i:s'))+$val->detik);
-        //             }
-        //         }
-
-        //         $schedules[] = array(
-        //             'material_number' => $val->material_number,
-        //             'material_description' => $val->material_description,
-        //             'part' => $val->part,
-        //             'color' => $val->color,
-        //             'qty' => $val->debt,
-        //             'start_time' => $start_time,
-        //             'end_time' => $end_time,
-        //             'machine' => $mesinwork,
-        //             'created_by' => 1,
-        //             'created_at' => date('Y-m-d H:i:s'),
-        //             'updated_at' => date('Y-m-d H:i:s'),
-        //         );
-        //     }
-        // }
-
         foreach ($debttoday as $key) {
             $schedules[] = array(
                 'material_number' => $key->material_number,
@@ -458,48 +387,6 @@ class InjectionScheduleCommand extends Command
             ]);
         }
 
-        // $getMesinWork = DB::SELECT("SELECT
-        //     *,
-        //     a.id AS id_log,
-        //     CONCAT( 'Mesin ', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 1 ) ) AS mesin1,
-        //     CONCAT( 'Mesin ', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) ) AS mesin2,
-        //     CONCAT( 'Mesin ', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 3 ) ) AS mesin3,
-        //     TIMESTAMPDIFF( SECOND, start_time, end_time ) AS detik 
-        // FROM
-        //     injection_schedule_logs a
-        //     LEFT JOIN injection_machine_cycle_times ON injection_machine_cycle_times.part = a.part 
-        //     AND injection_machine_cycle_times.color = a.color 
-        // WHERE
-        //     a.machine = 'Mesin 1' 
-        //     LIMIT 9999999 OFFSET 1");
-
-        // $getMesinWorkFirst = DB::SELECT("SELECT
-        //     *,
-        //     a.id AS id_log,
-        //     CONCAT( 'Mesin ', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 1 ) ) AS mesin1,
-        //     CONCAT( 'Mesin ', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) ) AS mesin2,
-        //     CONCAT( 'Mesin ', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 3 ) ) AS mesin3,
-        //     TIMESTAMPDIFF( SECOND, start_time, end_time ) AS detik 
-        // FROM
-        //     injection_schedule_logs a
-        //     LEFT JOIN injection_machine_cycle_times ON injection_machine_cycle_times.part = a.part 
-        //     AND injection_machine_cycle_times.color = a.color 
-        // WHERE
-        //     a.machine = 'Mesin 1' LIMIT 1");
-        // if (count($getMesinWork) > 1) {
-        //     $end_time = "";
-        //     foreach ($getMesinWorkFirst as $key) {
-        //         $end_time = $key->end_time;
-        //     }
-        //     foreach ($getMesinWork as $vul) {
-        //         $updatemesin = InjectionScheduleLog::find($vul->id_log);
-        //         $updatemesin->start_time = date("Y-m-d H:i:s",strtotime($end_time)+14400);
-        //         $updatemesin->end_time = date("Y-m-d H:i:s",strtotime($vul->end_time)+14400);
-        //         $end_time = date("Y-m-d H:i:s",strtotime($vul->end_time)+14400);
-        //         $updatemesin->save();
-        //     }
-        // }
-
         $mesinsama = DB::SELECT("SELECT
             injection_schedule_logs.*,
             SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 1 ) AS machine_1,
@@ -518,39 +405,19 @@ class InjectionScheduleCommand extends Command
         ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ), 0 )");
 
         if (count($mesinsama) > 0) {
-            // foreach ($mesinsama as $key) {
-                
-            // }
             foreach ($mesin as $key) {
                 $mesins = [];
-                // if (in_array($key->mesin, $mesinsama))
-                // {
-                    for ($i=0; $i < count($mesinsama); $i++) { 
-                        if ($mesinsama[$i]->machine == $key->mesin) {
-                            array_push($mesins, $mesinsama[$i]);
-                        }
+                for ($i=0; $i < count($mesinsama); $i++) { 
+                    if ($mesinsama[$i]->machine == $key->mesin) {
+                        array_push($mesins, $mesinsama[$i]);
                     }
-                // }
+                }
                 for ($j=1; $j < count($mesins); $j++) { 
                     if ($mesins[$j]->machine_2 != 0) {
                         $log = InjectionScheduleLog::where('id',$mesins[$j]->id)->first();
                         $log->machine = 'Mesin '.$mesins[$j]->machine_2;
                         $log->save();
                     }
-                    // else{
-                    //     $loglog = InjectionScheduleLog::where('machine','Mesin 2')->get();
-                    //     $end = $loglog[0]->end_time;
-                    //     // if (count($log) > 1) {
-                    //     //     $log2 = InjectionScheduleLog::where('id',$log[1]->id)->first();
-                    //     //     $ts1 = strtotime($log2->start_time);
-                    //     //     $ts2 = strtotime($log2->end_time);     
-                    //     //     $seconds_diff = $ts2 - $ts1;
-                    //     //     $secondall = $seconds_diff+14400;
-                    //     //     $log2->start_time = date("Y-m-d H:i:s",strtotime($end)+14400);
-                    //     //     $log2->end_time = date("Y-m-d H:i:s",strtotime($end)+$secondall);
-                    //     //     $log2->save();
-                    //     // }
-                    // }
                 }
             }
         }
@@ -573,19 +440,13 @@ class InjectionScheduleCommand extends Command
         ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ), 0 )");
 
         if (count($mesinsama2) > 0) {
-            // foreach ($mesinsama as $key) {
-                
-            // }
             foreach ($mesin as $key) {
                 $mesins = [];
-                // if (in_array($key->mesin, $mesinsama))
-                // {
-                    for ($i=0; $i < count($mesinsama2); $i++) { 
-                        if ($mesinsama2[$i]->machine == $key->mesin) {
-                            array_push($mesins, $mesinsama2[$i]);
-                        }
+                for ($i=0; $i < count($mesinsama2); $i++) { 
+                    if ($mesinsama2[$i]->machine == $key->mesin) {
+                        array_push($mesins, $mesinsama2[$i]);
                     }
-                // }
+                }
                 for ($j=1; $j < count($mesins); $j++) { 
                     if ($mesins[$j]->machine_2 == 0) {
                         $log = InjectionScheduleLog::where('machine',$mesins[$j]->machine)->get();
@@ -622,11 +483,90 @@ class InjectionScheduleCommand extends Command
                             }
                         }
                     }
-                    // else{
-                    
-                    // }
                 }
             }
         }
+
+        // $mesinsama3 = DB::SELECT("SELECT
+        //     injection_schedule_logs.*,
+        //     SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 1 ) AS machine_1,
+        // IF
+        //     ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ), 0 ) AS machine_2,
+        // IF
+        //     ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 3 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 3 ), 0 ) AS machine_3 
+        // FROM
+        //     injection_schedule_logs
+        //     INNER JOIN ( SELECT machine FROM injection_schedule_logs GROUP BY machine HAVING COUNT( machine ) > 1 ) temp ON injection_schedule_logs.machine = temp.machine
+        //     JOIN injection_machine_cycle_times ON injection_machine_cycle_times.part = injection_schedule_logs.part 
+        //     AND injection_machine_cycle_times.color = injection_schedule_logs.color 
+        //     and IF
+        //     ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ), 0 ) != 0
+        // ORDER BY
+        //     injection_schedule_logs.machine,
+        // IF
+        // ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ), 0 )");
+
+        // if (count($mesinsama3) > 0) {
+        //     foreach ($mesin as $key) {
+        //         $mesins = [];
+        //         for ($i=0; $i < count($mesinsama3); $i++) { 
+        //             if ($mesinsama3[$i]->machine == $key->mesin) {
+        //                 array_push($mesins, $mesinsama3[$i]);
+        //             }
+        //         }
+        //         for ($j=1; $j < count($mesins); $j++) { 
+        //             $log = InjectionScheduleLog::where('machine','Mesin '.$mesins[$j]->machine_1)->orderBy('id','desc')->first();
+        //             if (count($log) > 0) {
+        //                 $end = $log->end_time;
+        //                 if ($mesins[$j]->start_time > $end) {
+        //                     $log2 = InjectionScheduleLog::where('id',$mesins[$j]->id)->first();
+        //                     $log2->machine = 'Mesin '.$mesins[$j]->machine_1;
+        //                     $log2->save();
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+
+        // $mesinsama4 = DB::SELECT("SELECT
+        //     injection_schedule_logs.*,
+        //     SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 1 ) AS machine_1,
+        // IF
+        //     ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ), 0 ) AS machine_2,
+        // IF
+        //     ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 3 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 3 ), 0 ) AS machine_3 
+        // FROM
+        //     injection_schedule_logs
+        //     INNER JOIN ( SELECT machine FROM injection_schedule_logs GROUP BY machine HAVING COUNT( machine ) > 1 ) temp ON injection_schedule_logs.machine = temp.machine
+        //     JOIN injection_machine_cycle_times ON injection_machine_cycle_times.part = injection_schedule_logs.part 
+        //     AND injection_machine_cycle_times.color = injection_schedule_logs.color 
+        //     and IF
+        //     ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ), 0 ) != 0
+        // ORDER BY
+        //     injection_schedule_logs.machine,
+        // IF
+        // ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ), 0 )");
+
+        // if (count($mesinsama4) > 0) {
+        //     foreach ($mesin as $key) {
+        //         $mesins = [];
+        //         for ($i=0; $i < count($mesinsama4); $i++) { 
+        //             if ($mesinsama4[$i]->machine == $key->mesin) {
+        //                 array_push($mesins, $mesinsama4[$i]);
+        //             }
+        //         }
+        //         for ($j=1; $j < count($mesins); $j++) { 
+        //             $log = InjectionScheduleLog::where('id',$mesins[$j]->id)->first();
+        //             if (count($log) > 0) {
+        //                 $end = $log->end_time;
+        //                 if ($mesins[$j]->start_time > $end) {
+        //                     $log2 = InjectionScheduleLog::where('id',$mesins[$j]->id)->first();
+        //                     $log2->machine = 'Mesin '.$mesins[$j]->machine_1;
+        //                     $log2->save();
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
     }
 }
