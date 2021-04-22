@@ -1564,24 +1564,29 @@ Highcharts.createElement('link', {
               bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span style="color:white">None</span></td>';
             }; 
             // jika manager tujuan
-            if (value.nama_manager_tujuan != null) {
-              //manager tujuan
-              if (value.app_mt == "Approved") {
-                    bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span class="label label-success"><a href="'+urlreport+'/'+value.id+'" style="color:white">'+manager_tujuan+'</a></span></td>';           
+            if (value.remark != 2) {
+              bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;">'+("")+'</td>';
+            }else{
+                if (value.nama_manager_tujuan != null) {
+                //manager tujuan
+                  if (value.app_mt == "Approved") {
+                        bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span class="label label-success"><a href="'+urlreport+'/'+value.id+'" style="color:white">'+manager_tujuan+'</a></span></td>';           
+                  }
+                  else if(value.status == 'Rejected') {
+                   bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span class="label label-danger"><a href="'+urlreport+'/'+value.id+'" style="color:white">'+manager_tujuan+'</a></span></td>';
+                  }
+                  else{
+                      bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span class="label label-danger"><a href="'+urlverifikasi+'/'+value.id+'" style="color:white">'+manager_tujuan+'</a></span></td>';
+                  }
               }
-              else if(value.status == 'Rejected') {
-               bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span class="label label-danger"><a href="'+urlreport+'/'+value.id+'" style="color:white">'+manager_tujuan+'</a></span></td>';
+              else if(manager_tujuan == null){
+                  bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;">'+("")+'</td>';
               }
               else{
-                  bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span class="label label-danger"><a href="'+urlverifikasi+'/'+value.id+'" style="color:white">'+manager_tujuan+'</a></span></td>';
-              }
+                bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span style="color:white">None</span></td>';
+              }; 
             }
-            else if(manager_tujuan == null){
-                bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;">'+("")+'</td>';
-            }
-            else{
-              bodyResume  += '<td style="background-color:black; border-right: 5px solid red !important;"><span style="color:white">None</span></td>';
-            }; 
+            
             // jika dgm tujuan
             // if (value.nama_dgm_tujuan != null) {
               //dgm tujuan

@@ -3166,7 +3166,7 @@ class MutasiController extends Controller
             $excel->sheet('HR', function($sheet) use ($data) {
               return $sheet->loadView('mutasi.mutasi_excel', $data);
           });
-        })->export('xlsx');
+        })->export('xls');
     }
 
     public function AntHrExport(){
@@ -3358,6 +3358,6 @@ class MutasiController extends Controller
             $excel->sheet('HR', function($sheet) use ($data) {
               return $sheet->loadView('mutasi.mutasi_ant_excel', $data);
           });
-        })->export('xlsx');
+        })->export('xls');
     }
 }
