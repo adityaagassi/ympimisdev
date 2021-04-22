@@ -71,7 +71,7 @@
 				<?php 
 					$commentby = explode("/", $comment)
 				?>
-				<h2>Commended By : <?= $commentby[2] ?></h2>
+				<h2>Commented By : <?= $commentby[2] ?></h2>
 				<h3>Question : <?= $comment_note ?></h3>
 				@else
 					<h2>Not Approved</h2>

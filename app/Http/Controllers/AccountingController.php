@@ -10549,7 +10549,7 @@ public function detailMonitoringInv(Request $request){
     }
     if ($invest->posisi == "user" && $invest->status == "comment")
     {
-        return '<label class="label label-warning">Commended</label>';
+        return '<label class="label label-warning">Commented</label>';
     }
     else if ($invest->posisi == "acc_budget" || $invest->posisi == "acc_pajak")
     {
