@@ -527,6 +527,8 @@ class MutasiController extends Controller
             $chief = null;
             $nama_chief = null;
             $posit = null;
+            $manager = null
+            $nama_manager = null
 
             $submission_date = $request->get('submission_date');
             $mutasi_date = date('Y-m-d', strtotime($submission_date . ' + 7 days'));
@@ -603,6 +605,39 @@ class MutasiController extends Controller
                             }
                         }
                 }
+                else if($position == 'Chief' || $position == 'Foreman' || $position == 'Coordinator'){
+                                $manager = db::select("select employee_id, `name` from employee_syncs where position = 'Manager' and department ='".$mutasi->departemen."'"); 
+                                if ($manager != null)
+                                {
+                                    foreach ($manager as $mgr)
+                                    {
+                                        $manager = $mgr->employee_id;
+                                        $nama_manager = $mgr->name;
+                                    }
+                                }
+                                else
+                                {
+                                    if ($mutasi->departemen == 'Woodwind Instrument - Welding Process (WI-WP) Department') {
+                                        $manager = 'PI0108010';
+                                        $nama_manager = 'Yudi Abtadipa';
+                                    }
+                                    elseif 
+                                        ($mutasi->departemen == 'Woodwind Instrument - Key Parts Process (WI-KPP) Department') {
+                                        $manager = 'PI9906002';
+                                        $nama_manager = 'Khoirul Umam';
+                                    }
+                                    elseif 
+                                        ($mutasi->departemen == 'Purchasing Control Department') {
+                                        $manager = 'PI9807014';
+                                        $nama_manager = 'Imron Faizal';
+                                    }
+                                    else{
+                                        // $manager = null;
+                                        $manager = 'PI0109004';
+                                        $nama_manager = 'Budhi Apriyanto'; 
+                                        }
+                                    }
+                }
                 else{
                         $chf = db::select("select employee_id, `name` from employee_syncs where position = 'foreman' and section = '".$seksi."'");
                     
@@ -634,7 +669,7 @@ class MutasiController extends Controller
                 'group' => $request->get('group'),
                 'seksi' => $request->get('section'),
                 'departemen' => $request->get('department'),
-                'jabatan' => $request->get('position'),
+                'jabatan' => $request->get('position1'),
                 'rekomendasi' => $request->get('rekom'),
                 'ke_sub_group' => $sub_group,
                 'ke_group' => $grp,

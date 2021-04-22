@@ -46,12 +46,6 @@ class InjectionScheduleCommand extends Command
      */
     public function handle()
     {
-
-        // $inventory = InjectionInventory::get();
-        // foreach ($inventory as $key) {
-        //     $invent = InjectionInventory::find($key->id);
-        //     $invent->forceDelete();
-        // }
         InjectionScheduleTemp::truncate();
         InjectionScheduleLog::truncate();
         $j = 30;
@@ -67,8 +61,6 @@ class InjectionScheduleCommand extends Command
         if (date('D')=='Fri' || date('D')=='Sat') {
             $nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays($j)));
         }
-
-        // $nextdayplus1 = date('Y-m-t');
 
         $first = date('Y-m-01');
         $now = date('Y-m-d');
@@ -164,9 +156,6 @@ class InjectionScheduleCommand extends Command
 
         foreach ($data as $key) {
             if ($key->debt != 0) {
-                // $partpart = explode(' ',$key->part_code);
-                // $colorcolor = explode(')',$key->color);
-
                 $schedule = InjectionScheduleTemp::firstOrNew([
                     'material_number' => $key->material_number,
                     'date' => date('Y-m-d')
@@ -487,86 +476,101 @@ class InjectionScheduleCommand extends Command
             }
         }
 
-        // $mesinsama3 = DB::SELECT("SELECT
-        //     injection_schedule_logs.*,
-        //     SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 1 ) AS machine_1,
-        // IF
-        //     ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ), 0 ) AS machine_2,
-        // IF
-        //     ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 3 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 3 ), 0 ) AS machine_3 
-        // FROM
-        //     injection_schedule_logs
-        //     INNER JOIN ( SELECT machine FROM injection_schedule_logs GROUP BY machine HAVING COUNT( machine ) > 1 ) temp ON injection_schedule_logs.machine = temp.machine
-        //     JOIN injection_machine_cycle_times ON injection_machine_cycle_times.part = injection_schedule_logs.part 
-        //     AND injection_machine_cycle_times.color = injection_schedule_logs.color 
-        //     and IF
-        //     ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ), 0 ) != 0
-        // ORDER BY
-        //     injection_schedule_logs.machine,
-        // IF
-        // ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ), 0 )");
+        $mesinsama3 = DB::SELECT("SELECT
+            injection_schedule_logs.*,
+            SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 1 ) AS machine_1,
+        IF
+            ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ), 0 ) AS machine_2,
+        IF
+            ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 3 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 3 ), 0 ) AS machine_3 
+        FROM
+            injection_schedule_logs
+            INNER JOIN ( SELECT machine FROM injection_schedule_logs GROUP BY machine HAVING COUNT( machine ) > 1 ) temp ON injection_schedule_logs.machine = temp.machine
+            JOIN injection_machine_cycle_times ON injection_machine_cycle_times.part = injection_schedule_logs.part 
+            AND injection_machine_cycle_times.color = injection_schedule_logs.color 
+            and IF
+            ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ), 0 ) != 0
+        ORDER BY
+            injection_schedule_logs.machine,
+        IF
+        ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ), 0 )");
 
-        // if (count($mesinsama3) > 0) {
-        //     foreach ($mesin as $key) {
-        //         $mesins = [];
-        //         for ($i=0; $i < count($mesinsama3); $i++) { 
-        //             if ($mesinsama3[$i]->machine == $key->mesin) {
-        //                 array_push($mesins, $mesinsama3[$i]);
-        //             }
-        //         }
-        //         for ($j=1; $j < count($mesins); $j++) { 
-        //             $log = InjectionScheduleLog::where('machine','Mesin '.$mesins[$j]->machine_1)->orderBy('id','desc')->first();
-        //             if (count($log) > 0) {
-        //                 $end = $log->end_time;
-        //                 if ($mesins[$j]->start_time > $end) {
-        //                     $log2 = InjectionScheduleLog::where('id',$mesins[$j]->id)->first();
-        //                     $log2->machine = 'Mesin '.$mesins[$j]->machine_1;
-        //                     $log2->save();
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+        if (count($mesinsama3) > 0) {
+            foreach ($mesin as $key) {
+                $mesins = [];
+                for ($i=0; $i < count($mesinsama3); $i++) { 
+                    if ($mesinsama3[$i]->machine == $key->mesin) {
+                        array_push($mesins, $mesinsama3[$i]);
+                    }
+                }
+                for ($j=1; $j < count($mesins); $j++) { 
+                    $log = InjectionScheduleLog::where('machine','Mesin '.$mesins[$j]->machine_1)->orderBy('id','desc')->first();
+                    if (count($log) > 0) {
+                        $end = $log->end_time;
+                        if ($mesins[$j]->start_time > $end) {
+                            $log2 = InjectionScheduleLog::where('id',$mesins[$j]->id)->first();
+                            $log2->machine = 'Mesin '.$mesins[$j]->machine_1;
+                            $log2->save();
+                        }
+                    }
+                }
+            }
+        }
 
-        // $mesinsama4 = DB::SELECT("SELECT
-        //     injection_schedule_logs.*,
-        //     SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 1 ) AS machine_1,
-        // IF
-        //     ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ), 0 ) AS machine_2,
-        // IF
-        //     ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 3 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 3 ), 0 ) AS machine_3 
-        // FROM
-        //     injection_schedule_logs
-        //     INNER JOIN ( SELECT machine FROM injection_schedule_logs GROUP BY machine HAVING COUNT( machine ) > 1 ) temp ON injection_schedule_logs.machine = temp.machine
-        //     JOIN injection_machine_cycle_times ON injection_machine_cycle_times.part = injection_schedule_logs.part 
-        //     AND injection_machine_cycle_times.color = injection_schedule_logs.color 
-        //     and IF
-        //     ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ), 0 ) != 0
-        // ORDER BY
-        //     injection_schedule_logs.machine,
-        // IF
-        // ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ), 0 )");
+        $mesinsama4 = DB::SELECT("SELECT
+            injection_schedule_logs.*,
+            SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 1 ) AS machine_1,
+        IF
+            ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ), 0 ) AS machine_2,
+        IF
+            ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 3 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 3 ), 0 ) AS machine_3 
+        FROM
+            injection_schedule_logs
+            INNER JOIN ( SELECT machine FROM injection_schedule_logs GROUP BY machine HAVING COUNT( machine ) > 1 ) temp ON injection_schedule_logs.machine = temp.machine
+            JOIN injection_machine_cycle_times ON injection_machine_cycle_times.part = injection_schedule_logs.part 
+            AND injection_machine_cycle_times.color = injection_schedule_logs.color 
+            and IF
+            ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ), 0 ) != 0
+        ORDER BY
+            injection_schedule_logs.machine,
+        IF
+        ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ), 0 )");
 
-        // if (count($mesinsama4) > 0) {
-        //     foreach ($mesin as $key) {
-        //         $mesins = [];
-        //         for ($i=0; $i < count($mesinsama4); $i++) { 
-        //             if ($mesinsama4[$i]->machine == $key->mesin) {
-        //                 array_push($mesins, $mesinsama4[$i]);
-        //             }
-        //         }
-        //         for ($j=1; $j < count($mesins); $j++) { 
-        //             $log = InjectionScheduleLog::where('id',$mesins[$j]->id)->first();
-        //             if (count($log) > 0) {
-        //                 $end = $log->end_time;
-        //                 if ($mesins[$j]->start_time > $end) {
-        //                     $log2 = InjectionScheduleLog::where('id',$mesins[$j]->id)->first();
-        //                     $log2->machine = 'Mesin '.$mesins[$j]->machine_1;
-        //                     $log2->save();
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+        if (count($mesinsama4) > 0) {
+            foreach ($mesin as $key) {
+                $mesins = [];
+                for ($i=0; $i < count($mesinsama4); $i++) { 
+                    if ($mesinsama4[$i]->machine == $key->mesin) {
+                        array_push($mesins, $mesinsama4[$i]);
+                    }
+                }
+                for ($j=0; $j < count($mesins); $j++) { 
+                    $end = $mesins[$j]->end_time;
+                    $k = $j+1;
+                    if ($k != count($mesins)) {
+                        $log = InjectionScheduleLog::where('id','>=',$mesins[$k]->id)->get();
+                        if (count($log) > 0) {
+                            for ($l=0; $l < count($log); $l++) { 
+                                $logses = InjectionScheduleLog::where('id',$log[$l]->id)->first();
+                                $ts1 = strtotime($end);
+                                $ts2 = strtotime($logses->start_time);
+                                $seconds_diff = $ts2 - $ts1;
+                                if ($seconds_diff > 14400) {
+                                    $ts1 = strtotime($logses->start_time);
+                                    $ts2 = strtotime($logses->end_time);
+                                    $seconds_diff = $ts2 - $ts1;
+                                    $secondall = $seconds_diff+14400;
+                                    $logses->start_time = date("Y-m-d H:i:s",strtotime($end)+14400);
+                                    $end_time = date("Y-m-d H:i:s",strtotime($end)+$secondall);
+                                    $logses->end_time = $end_time;
+                                    $logses->save();
+                                    $end = $end_time;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
