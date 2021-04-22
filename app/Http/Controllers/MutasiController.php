@@ -3016,6 +3016,7 @@ class MutasiController extends Controller
             'mutasi_depts.ke_jabatan')
         // ->where(db::raw('date(created_at)'),'=', $today)
         ->where('mutasi_depts.status', '=', 'All Approved')
+        ->where('mutasi_depts.remark', '=', '2')
         ->orderBy('mutasi_depts.tanggal', 'asc')
         ->get(); 
         }
@@ -3028,6 +3029,7 @@ class MutasiController extends Controller
             'mutasi_depts.position_code',
             'mutasi_depts.ke_jabatan')
         ->where('mutasi_depts.status', '=', 'All Approved')
+        ->where('mutasi_depts.remark', '=', '2')
         ->where(db::raw('date(tanggal)'),'=', $tanggal)
         ->orderBy('mutasi_depts.tanggal', 'asc')
         ->get(); 
@@ -3079,6 +3081,7 @@ class MutasiController extends Controller
                 ->leftJoin(db::raw('employee_syncs as grade'), 'mutasi_depts.nik', '=', 'grade.employee_id')
                 ->leftJoin(db::raw('employee_syncs as posisi'), 'mutasi_depts.nik', '=', 'posisi.employee_id')
                 ->where('mutasi_depts.status', '=', 'All Approved')
+                ->where('mutasi_depts.remark', '=', '2')
                 ->orderBy('mutasi_depts.tanggal', 'asc')
                 ->get();
         }
@@ -3099,6 +3102,7 @@ class MutasiController extends Controller
                 ->leftJoin(db::raw('employee_syncs as grade'), 'mutasi_depts.nik', '=', 'grade.employee_id')
                 ->leftJoin(db::raw('employee_syncs as posisi'), 'mutasi_depts.nik', '=', 'posisi.employee_id')
                 ->where('mutasi_depts.status', '=', 'All Approved')
+                ->where('mutasi_depts.remark', '=', '2')
                 ->where(db::raw('date(tanggal)'),'=', $tanggal)
                 ->orderBy('mutasi_depts.tanggal', 'asc')
                 ->get();
@@ -3108,7 +3112,7 @@ class MutasiController extends Controller
             'resumes' => $resumes
         );
 
-        $mutasi = Mutasi::where('tanggal','=',$tanggal)->get();
+        $mutasi = Mutasi::where('status','=', 'All Approved')->get();
         foreach ($mutasi as $update) {
             $update->remark = '1';
             $update->save();
