@@ -527,8 +527,8 @@ class MutasiController extends Controller
             $chief = null;
             $nama_chief = null;
             $posit = null;
-            $manager = null
-            $nama_manager = null
+            $manager = null;
+            $nama_manager = null;
 
             $submission_date = $request->get('submission_date');
             $mutasi_date = date('Y-m-d', strtotime($submission_date . ' + 7 days'));
@@ -680,6 +680,8 @@ class MutasiController extends Controller
                 'alasan' => $request->get('alasan'),
                 'chief_or_foreman_asal' => $chief,
                 'nama_chief_asal' => $nama_chief,
+                'manager_tujuan' => $manager,
+                'nama_manager_tujuan' => $nama_manager,
                 'position_code' => $posit,
                 'created_by' => $id
             ]);
