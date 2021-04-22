@@ -926,12 +926,6 @@ class MutasiController extends Controller
                 $data = array(
                     'resumes' => $resumes
                 );
-
-                // Excel::create('Mutasi Satu Departemen - '.$resumes[0]->nama, function($excel) use ($data){
-                //     $excel->sheet('HR', function($sheet) use ($data) {
-                //         return $sheet->loadView('mutasi.mutasi_excel', $data);
-                //     });
-                //     })->store('xls', public_path('mutasi/satu_departemen'));
             }
             
 
@@ -1040,11 +1034,6 @@ class MutasiController extends Controller
 
                 // dd($data);
 
-                Excel::create('Mutasi Satu Departemen - '.$resumes[0]->nama, function($excel) use ($data){
-                    $excel->sheet('HR', function($sheet) use ($data) {
-                        return $sheet->loadView('mutasi.mutasi_excel', $data);
-                    });
-                    })->store('xls', public_path('mutasi/satu_departemen'));
 
                 // $nik = $mutasi->nik;
                 // $position_code = $mutasi->position_code;
@@ -2494,17 +2483,7 @@ class MutasiController extends Controller
             $data = array(
                 'resumes' => $resumes
             );
-            // if ($mutasi->status == 'All Approved') {
-            //     ob_clean();
-            //     Excel::create('Mutasi Antar Departemen - '.$resumes[0]->nama, function($excel) use ($data){
-            //         $excel->sheet('HR', function($sheet) use ($data) {
-            //             return $sheet->loadView('mutasi.mutasi_ant_excel', $data);
-            //         });
-            //         })->store('xls', public_path('mutasi/antar_departemen'));              
-            // }
-
-            // var_dump($resumes);
-            // die();
+            
             $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where employee_id = 'PI0603019' or employee_id = 'PI0811002'";  
             $mailtoo = DB::select($mails);
 
