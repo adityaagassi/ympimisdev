@@ -606,7 +606,7 @@ class MutasiController extends Controller
                         }
                 }
                 else if($position == 'Chief' || $position == 'Foreman' || $position == 'Coordinator'){
-                                $manager = db::select("select employee_id, `name` from employee_syncs where position = 'Manager' and department ='".$mutasi->departemen."'"); 
+                                $manager = db::select("select employee_id, `name` from employee_syncs where position = 'Manager' and department ='".$departemen."'"); 
                                 if ($manager != null)
                                 {
                                     foreach ($manager as $mgr)
@@ -617,17 +617,17 @@ class MutasiController extends Controller
                                 }
                                 else
                                 {
-                                    if ($mutasi->departemen == 'Woodwind Instrument - Welding Process (WI-WP) Department') {
+                                    if ($departemen == 'Woodwind Instrument - Welding Process (WI-WP) Department') {
                                         $manager = 'PI0108010';
                                         $nama_manager = 'Yudi Abtadipa';
                                     }
                                     elseif 
-                                        ($mutasi->departemen == 'Woodwind Instrument - Key Parts Process (WI-KPP) Department') {
+                                        ($departemen == 'Woodwind Instrument - Key Parts Process (WI-KPP) Department') {
                                         $manager = 'PI9906002';
                                         $nama_manager = 'Khoirul Umam';
                                     }
                                     elseif 
-                                        ($mutasi->departemen == 'Purchasing Control Department') {
+                                        ($departemen == 'Purchasing Control Department') {
                                         $manager = 'PI9807014';
                                         $nama_manager = 'Imron Faizal';
                                     }
@@ -1340,8 +1340,6 @@ class MutasiController extends Controller
             FROM
             mutasi_depts 
             WHERE
-            departemen = '".$emp_dept->department."'
-            AND
             DATE_FORMAT(tanggal, '%Y-%m') = '".$dateto."'
             and ".$status."
             ORDER BY
@@ -1354,8 +1352,6 @@ class MutasiController extends Controller
             FROM
             mutasi_depts 
             WHERE
-            departemen = '".$emp_dept->department."'
-            AND
             DATE_FORMAT(tanggal, '%M') = '".$bulan."'
             and ".$status."
             ORDER BY
@@ -2695,8 +2691,15 @@ class MutasiController extends Controller
             $mutasi->remark = '2';
             $mutasi->save();
         
-
-            $mails = "select distinct email from mutasi_depts join users on mutasi_depts.chief_or_foreman_asal = users.username where mutasi_depts.id = ".$mutasi->id;
+            if ($mutasi->chief_or_foreman_asal != null) {
+                $mails = "select distinct email from mutasi_depts join users on mutasi_depts.chief_or_foreman_asal = users.username where mutasi_depts.id = ".$mutasi->id;
+            }
+            else if($mutasi->manager_tujuan != null){
+                $mutasi->posisi = 'mgr';
+                $mutasi->save();
+                $mails = "select distinct email from mutasi_depts join users on mutasi_depts.manager_tujuan = users.username where mutasi_depts.id = ".$mutasi->id;
+            }
+            
             $mailtoo = DB::select($mails);
 
             $isimail = "select id, nama, tanggal, tanggal_maksimal, departemen, seksi, ke_seksi from mutasi_depts where mutasi_depts.id = ".$mutasi->id;
@@ -2939,8 +2942,7 @@ class MutasiController extends Controller
                     FROM
                     mutasi_depts 
                     WHERE
-                    mutasi_depts.departemen = '".$emp_dept->department."'
-                    AND mutasi_depts.deleted_at IS NULL 
+                    mutasi_depts.deleted_at IS NULL 
                     AND DATE_FORMAT( tanggal, '%Y-%m' ) = '".$dateto."'
                     GROUP BY
                     bulan,
@@ -2961,8 +2963,7 @@ class MutasiController extends Controller
                     FROM
                     mutasi_depts 
                     WHERE
-                    mutasi_depts.departemen = '".$emp_dept->department."'
-                    AND mutasi_depts.deleted_at IS NULL
+                    mutasi_depts.deleted_at IS NULL
                     GROUP BY
                     bulan,
                     tahun 
