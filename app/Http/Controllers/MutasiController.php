@@ -669,7 +669,7 @@ class MutasiController extends Controller
                 'group' => $request->get('group'),
                 'seksi' => $request->get('section'),
                 'departemen' => $request->get('department'),
-                'jabatan' => $request->get('position1'),
+                'jabatan' => $request->get('position'),
                 'rekomendasi' => $request->get('rekom'),
                 'ke_sub_group' => $sub_group,
                 'ke_group' => $grp,

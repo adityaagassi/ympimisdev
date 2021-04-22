@@ -58,7 +58,7 @@
                 <td>{{ '1' }}</td>
                 <td>{{ 'Movement' }}</td>
                 <td>{{ 'Mutation' }}</td>
-                <td>{{ $mjo->tanggal }}</td>
+                <td><?php echo date('d/m/Y', strtotime($mjo->tanggal)) ?></td>
                 <td>{{ '' }}</td>
                 <td>{{ $mjo->position_code }}</td>
                 <td>{{ $mjo->posisi }}</td>
