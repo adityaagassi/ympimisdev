@@ -64,8 +64,11 @@
 						image_data += '<center><img src="{{ asset('images/pointing_calls/national') }}/'+value.point_title+'_'+value.point_no+'.gif" style="max-width: 80%;"></center>';						
 					}
 					else if(value.point_title == 'diamond'){
-						image_data += '<center><img src="{{ asset('images/pointing_calls/national') }}/'+value.point_title+'_'+value.point_no+'.gif" style="height: 90vh;"></center>';		
+						image_data += '<div class="col-xs-4" style="font-weight:bold; font-size: 2vw; background-color: yellow;">'+value.point_description+'</div><div class="col-xs-8"><img src="{{ asset('images/pointing_calls/national') }}/'+value.point_title+'_'+value.point_no+'.gif" style="height: 85vh;"></div>';		
 					}
+					// else if(value.point_title == 'k3'){
+					// 	image_data += '<div class="col-xs-4" style="font-weight:bold; font-size: 2vw; background-color: yellow;">'+value.point_description+'</div><div class="col-xs-8"><img src="{{ asset('images/pointing_calls/national') }}/'+value.point_title+'_'+value.point_no+'.gif" style="height: '+h+'; max-width: 100%;"></div>';
+					// }
 					else{
 						image_data += '<center><img src="{{ asset('images/pointing_calls/national') }}/'+value.point_title+'_'+value.point_no+'.gif" style="height: '+h+'; max-width: 100%;"></center>';
 					}

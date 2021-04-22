@@ -405,6 +405,8 @@ class InjectionScheduleCommand extends Command
         ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ), 0 )");
 
         if (count($mesinsama) > 0) {
+            $dandori = 0;
+            $dandori_time = 0;
             foreach ($mesin as $key) {
                 $mesins = [];
                 for ($i=0; $i < count($mesinsama); $i++) { 
@@ -420,11 +422,7 @@ class InjectionScheduleCommand extends Command
                     }
                 }
 
-                $dandori = 0;
-                $dandori_time = 0;
-
                 for ($m=0; $m < count($mesins); $m++) {
-                    var_dump($dandori);
                     if ($mesins[$m]->start_time == date('Y-m-d 07:00:00')) {
                         if ($dandori % 2 == 0) {
                             $dandori_time = $dandori_time + 14400;
@@ -440,6 +438,43 @@ class InjectionScheduleCommand extends Command
                         $dandori++;
                     }
                 }
+            }
+        }
+
+        $mesinsamadandori = DB::SELECT("SELECT
+            injection_schedule_logs.*,
+            SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 1 ) AS machine_1,
+        IF
+            ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ), 0 ) AS machine_2,
+        IF
+            ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 3 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 3 ), 0 ) AS machine_3 
+        FROM
+            injection_schedule_logs
+            INNER JOIN ( SELECT machine FROM injection_schedule_logs GROUP BY machine HAVING COUNT( machine ) > 1 ) temp ON injection_schedule_logs.machine = temp.machine
+            JOIN injection_machine_cycle_times ON injection_machine_cycle_times.part = injection_schedule_logs.part 
+            AND injection_machine_cycle_times.color = injection_schedule_logs.color 
+                        and start_time = CONCAT(DATE(NOW()),' 07:00:00')
+        ORDER BY
+            injection_schedule_logs.machine,
+        IF
+        ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ), 0 )");
+
+        if (count($mesinsamadandori) > 0) {
+            $dandori = 0;
+            $dandori_time = 0;
+            for ($m=2; $m < count($mesinsamadandori); $m++) {
+                if ($dandori % 2 == 0) {
+                    $dandori_time = $dandori_time + 14400;
+                }
+                $log = InjectionScheduleLog::where('id',$mesinsamadandori[$m]->id)->first();
+                $ts1 = strtotime($log->start_time);
+                $ts2 = strtotime($log->end_time);
+                $seconds_diff = $ts2 - $ts1;
+                $secondall = $seconds_diff+$dandori_time;
+                $log->start_time = date("Y-m-d H:i:s",strtotime(date('Y-m-d 07:00:00'))+$dandori_time);
+                $log->end_time = date("Y-m-d H:i:s",strtotime(date('Y-m-d 07:00:00'))+$secondall);
+                $log->save();
+                $dandori++;
             }
         }
 
