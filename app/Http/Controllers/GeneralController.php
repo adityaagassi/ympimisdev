@@ -788,6 +788,7 @@ class GeneralController extends Controller{
 						$shoes->save();
 					}else{
 						$shoes = new GeneralShoesStock([
+							'condition' => 'Layak Pakai',
 							'merk' => $stock[$i]['merk'],
 							'gender' => $stock[$i]['gender'],
 							'size' => $stock[$i]['size'],
@@ -2165,6 +2166,7 @@ public function fetchGeneralPointingCall(Request $request){
 
 		$pointing_calls = db::select("SELECT
 			pc.point_title,
+			pc.point_description,
 			pc.point_no,
 			pm.point_max 
 			FROM
@@ -2174,7 +2176,7 @@ public function fetchGeneralPointingCall(Request $request){
 			point_title,
 			max( point_no ) AS point_max 
 			FROM
-			`pointing_calls` 
+			`pointing_calls`
 			WHERE
 			location = '".$request->get('location')."' 
 			AND deleted_at IS NULL 

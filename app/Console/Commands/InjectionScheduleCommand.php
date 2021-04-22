@@ -405,8 +405,8 @@ class InjectionScheduleCommand extends Command
         ( SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ) != '', SPLIT_STRING ( injection_machine_cycle_times.machine, ',', 2 ), 0 )");
 
         if (count($mesinsama) > 0) {
-            $dandori = 0;
-            $dandori_time = 0;
+            // $dandori = 0;
+            // $dandori_time = 0;
             foreach ($mesin as $key) {
                 $mesins = [];
                 for ($i=0; $i < count($mesinsama); $i++) { 
@@ -422,22 +422,22 @@ class InjectionScheduleCommand extends Command
                     }
                 }
 
-                for ($m=0; $m < count($mesins); $m++) {
-                    if ($mesins[$m]->start_time == date('Y-m-d 07:00:00')) {
-                        if ($dandori % 2 == 0) {
-                            $dandori_time = $dandori_time + 14400;
-                        }
-                        $log = InjectionScheduleLog::where('id',$mesins[$m]->id)->first();
-                        $ts1 = strtotime($log->start_time);
-                        $ts2 = strtotime($log->end_time);
-                        $seconds_diff = $ts2 - $ts1;
-                        $secondall = $seconds_diff+$dandori_time;
-                        $log->start_time = date("Y-m-d H:i:s",strtotime(date('Y-m-d 07:00:00'))+$dandori_time);
-                        $log->end_time = date("Y-m-d H:i:s",strtotime(date('Y-m-d 07:00:00'))+$secondall);
-                        $log->save();
-                        $dandori++;
-                    }
-                }
+                // for ($m=0; $m < count($mesins); $m++) {
+                //     if ($mesins[$m]->start_time == date('Y-m-d 07:00:00')) {
+                //         if ($dandori % 2 == 0) {
+                //             $dandori_time = $dandori_time + 14400;
+                //         }
+                //         $log = InjectionScheduleLog::where('id',$mesins[$m]->id)->first();
+                //         $ts1 = strtotime($log->start_time);
+                //         $ts2 = strtotime($log->end_time);
+                //         $seconds_diff = $ts2 - $ts1;
+                //         $secondall = $seconds_diff+$dandori_time;
+                //         $log->start_time = date("Y-m-d H:i:s",strtotime(date('Y-m-d 07:00:00'))+$dandori_time);
+                //         $log->end_time = date("Y-m-d H:i:s",strtotime(date('Y-m-d 07:00:00'))+$secondall);
+                //         $log->save();
+                //         $dandori++;
+                //     }
+                // }
             }
         }
 
@@ -473,7 +473,7 @@ class InjectionScheduleCommand extends Command
                 $secondall = $seconds_diff+$dandori_time;
                 $log->start_time = date("Y-m-d H:i:s",strtotime(date('Y-m-d 07:00:00'))+$dandori_time);
                 $log->end_time = date("Y-m-d H:i:s",strtotime(date('Y-m-d 07:00:00'))+$secondall);
-                $log->save();
+                // $log->save();
                 $dandori++;
             }
         }
@@ -518,7 +518,7 @@ class InjectionScheduleCommand extends Command
                                 $log2->start_time = date("Y-m-d H:i:s",strtotime($end)+14400);
                                 $end_time = date("Y-m-d H:i:s",strtotime($end)+$secondall);
                                 $log2->end_time = $end_time;
-                                $log2->save();
+                                // $log2->save();
                                 $end = $end_time;
                             }
                         }
@@ -535,7 +535,7 @@ class InjectionScheduleCommand extends Command
                                 $log2->start_time = date("Y-m-d H:i:s",strtotime($end)+14400);
                                 $end_time = date("Y-m-d H:i:s",strtotime($end)+$secondall);
                                 $log2->end_time = $end_time;
-                                $log2->save();
+                                // $log2->save();
                                 $end = $end_time;
                             }
                         }
@@ -578,7 +578,7 @@ class InjectionScheduleCommand extends Command
                         if ($mesins[$j]->start_time > $end) {
                             $log2 = InjectionScheduleLog::where('id',$mesins[$j]->id)->first();
                             $log2->machine = 'Mesin '.$mesins[$j]->machine_1;
-                            $log2->save();
+                            // $log2->save();
                         }
                     }
                 }
@@ -630,7 +630,7 @@ class InjectionScheduleCommand extends Command
                             $log->start_time = date("Y-m-d H:i:s",strtotime($end)+14400);
                             $end_time = date("Y-m-d H:i:s",strtotime($end)+$secondall);
                             $log->end_time = $end_time;
-                            $log->save();
+                            // $log->save();
                         }else{
                             $end_time = $mesins[$j]->end_time;
                         }
