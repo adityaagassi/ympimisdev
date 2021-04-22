@@ -439,7 +439,7 @@ class MutasiController extends Controller
             if ($dateto == "") {
             $resumes = Mutasi::select('mutasi_depts.id', 'status', 'nik', 'nama', 'nama_chief_asal', 'nama_chief_tujuan', 'nama_manager_tujuan', 'nama_dgm_tujuan', 'nama_gm_tujuan', 'nama_manager', 'app_ca', 'app_ct', 'app_mt', 'app_dt', 'app_gt', 'app_m', 'posisi', 'departemen',  
                 'users.name', 'mutasi_depts.created_by', 'remark')
-                ->where('mutasi_depts.departemen', $emp_dept->department)
+                // ->where('mutasi_depts.departemen', $emp_dept->department)
                 ->where('mutasi_depts.deleted_at',null )
                 // ->where(DB::raw("DATE_FORMAT(tanggal, '%Y-%m-%d')"),$today)
                 ->where('mutasi_depts.status',null)
@@ -451,7 +451,7 @@ class MutasiController extends Controller
             else{
                 $resumes = Mutasi::select('mutasi_depts.id', 'status', 'nik', 'nama', 'nama_chief_asal', 'nama_chief_tujuan', 'nama_manager_tujuan', 'nama_dgm_tujuan', 'nama_gm_tujuan', 'nama_manager', 'app_ca', 'app_ct', 'app_mt', 'app_dt', 'app_gt', 'app_m', 'posisi', 'departemen', 
                     'users.name', 'mutasi_depts.created_by', 'remark')
-                    ->where('mutasi_depts.departemen', $emp_dept->department)
+                    // ->where('mutasi_depts.departemen', $emp_dept->department)
                     ->where('mutasi_depts.deleted_at',null )
                     ->where('mutasi_depts.status',null)
                     ->where(DB::raw("DATE_FORMAT(tanggal, '%Y-%m')"),$dateto)
