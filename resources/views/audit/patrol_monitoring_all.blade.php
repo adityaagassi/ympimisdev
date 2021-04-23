@@ -356,16 +356,16 @@
                   : <span name="tanggal_edit" id="tanggal_edit"> </span>
                 </div>
                 <div class="col-md-12">
-                  <label for="lokasi_edit">Lokasi</label>
-                  : <span name="lokasi_edit" id="lokasi_edit"> </span>
-                </div>
-                <div class="col-md-12">
                   <label for="poin_edit">Kategori Patrol</label>
                   : <span name="poin_edit" id="poin_edit"> </span>
                 </div>
                 <div class="col-md-12">
                   <label for="pic_edit">PIC</label>
                   : <span name="pic_edit" id="pic_edit"> </span>
+                </div>
+                <div class="col-md-12">
+                  <label for="lokasi_edit">Lokasi</label>
+                  : <input type="text" class="form-control" name="lokasi_edit" id="lokasi_edit"> </span>
                 </div>
                 <div class="col-md-12">
                   <label for="note_edit">Note</label>
@@ -1041,9 +1041,9 @@
       if (result.status) {
         $("#id_penanganan_edit").val(id);
         $("#tanggal_edit").text(result.audit[0].tanggal);
-        $("#lokasi_edit").text(result.audit[0].lokasi);
         $("#poin_edit").text(result.audit[0].point_judul);
         $("#pic_edit").text(result.audit[0].auditee_name);
+        $("#lokasi_edit").val(result.audit[0].lokasi);
         $("#note_edit").val(result.audit[0].note);
 
         images_edit += '<img src="{{ url("files/patrol") }}/'+result.audit[0].foto+'" width="300">';
@@ -1062,6 +1062,7 @@
     var data = {
       id: $("#id_penanganan_edit").val(),
       note : $("#note_edit").val(),
+      lokasi : $("#lokasi_edit").val(),
     };
 
     $.post('{{ url("post/audit_patrol/edit") }}', data, function(result, status, xhr){

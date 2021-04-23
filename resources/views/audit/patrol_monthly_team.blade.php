@@ -130,9 +130,24 @@
   <section class="content" style="padding-top: 0; padding-bottom: 0">
     <div class="row">
       <input type="hidden" value="{{csrf_token()}}" name="_token" />
-      <a href="{{url('index/monthly_patrol_team/export')}}" type="button" class="btn btn-success">Export List</a>
+      <div class="col-md-2" style="padding-top: 10px;">
+        <div class="input-group date">
+          <div class="input-group-addon bg-green" style="border: none;">
+            <i class="fa fa-calendar"></i>
+          </div>
+          <input type="text" class="form-control datepicker" id="month" name="month" placeholder="Select Month" onchange="drawChart()">
+        </div>
+      </div>
+      <div class="col-md-2" style="padding-top: 10px;">
+        <a href="{{url('index/monthly_patrol_team/export')}}" type="button" class="btn btn-success">Export List</a>
+      </div>
+      
       <div class="col-md-12" style="padding-top: 10px;">
         <div id="chart_bulan" style="width: 99%; height: 300px;"></div>
+      </div>
+
+      <div class="col-md-12" style="padding-top: 10px;">
+        <div id="chart_lokasi" style="width: 99%; height: 300px;"></div>
       </div>
       
     </div>
@@ -206,22 +221,19 @@
   });
 
   $('.datepicker').datepicker({
-    autoclose: true,
-    format: "dd-mm-yyyy",
-    todayHighlight: true,
+    format: "yyyy-mm",
+    startView: "months", 
+    minViewMode: "months",
+    autoclose: true
   });
 
   function drawChart() {    
 
-    var datefrom = $('#datefrom').val();
-    var dateto = $('#dateto').val();
-    var status = $('#status').val();
+    var month = $('#month').val();
     var category = $('#category').val();
 
     var data = {
-      datefrom: datefrom,
-      dateto: dateto,
-      status: status,
+      month: month,
       category: category
     };
 
@@ -232,10 +244,21 @@
         var belum_ditangani_bulan = [];
         var sudah_ditangani_bulan = [];
 
+        var lokasi = [];
+        var belum_ditangani_lokasi = [];
+        var sudah_ditangani_lokasi = [];
+
         $.each(result.data_bulan, function(key, value) {
           auditor.push(value.auditor_name);
+
           belum_ditangani_bulan.push({y: parseInt(value.jumlah_belum)});
           sudah_ditangani_bulan.push({y: parseInt(value.jumlah_sudah)});
+        });
+
+        $.each(result.data_lokasi, function(key, value) {
+          lokasi.push(value.lokasi);
+          belum_ditangani_lokasi.push({y: parseInt(value.jumlah_belum)});
+          sudah_ditangani_lokasi.push({y: parseInt(value.jumlah_sudah)});
         });
 
         $('#chart_bulan').highcharts({
@@ -323,6 +346,112 @@
             color: { 
               pattern: {
                 path: 'M 0 1.5 L 2.5 1.5 L 2.5 0 M 2.5 5 L 2.5 3.5 L 5 3.5',
+                color: "#f0891a",
+                width: 5,
+                height: 5
+              }
+            }
+          },
+          {
+            name: 'Temuan Close',
+            data: sudah_ditangani_bulan,
+            color: { 
+              pattern: {
+                path: 'M 0 1.5 L 2.5 1.5 L 2.5 0 M 2.5 5 L 2.5 3.5 L 5 3.5',
+                color: "#2472b3",
+                width: 5,
+                height: 5
+              }
+            }
+          }
+          ]
+        })
+
+        $('#chart_lokasi').highcharts({
+          chart: {
+            type: 'column',
+            backgroundColor: null
+          },
+          title: {
+            text: "Temuan Patrol by Lokasi"
+          },
+          xAxis: {
+            type: 'category',
+            categories: lokasi,
+            lineWidth:2,
+            lineColor:'#9e9e9e',
+            gridLineWidth: 1,
+            labels: {
+              formatter: function (e) {
+                return this.value;
+              }
+            }
+          },
+          yAxis: {
+            lineWidth:2,
+            lineColor:'#fff',
+            type: 'linear',
+            title: {
+              text: 'Total Temuan'
+            },
+            stackLabels: {
+              enabled: true,
+              style: {
+                fontWeight: 'bold',
+                color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+              }
+            }
+          },
+          legend: {
+            itemStyle:{
+              color: "white",
+              fontSize: "12px",
+              fontWeight: "bold",
+
+            }
+          },
+          plotOptions: {
+            series: {
+              // cursor: 'pointer',
+              point: {
+                events: {
+                  click: function () {
+                    showModalLokasi(this.category,this.series.name);
+                  }
+                }
+              },
+              dataLabels: {
+                enabled: false,
+                format: '{point.y}'
+              }
+            },
+            column: {
+              color:  Highcharts.ColorString,
+              stacking: 'normal',
+              pointPadding: 0.93,
+              groupPadding: 0.93,
+              borderWidth: 1,
+              dataLabels: {
+                enabled: true
+              }
+            }
+          },
+          credits: {
+            enabled: false
+          },
+
+          tooltip: {
+            formatter:function(){
+              return this.series.name+' : ' + this.y;
+            }
+          },
+          series: [
+          {
+            name: 'Temuan Open',
+            data: belum_ditangani_bulan,
+            color: { 
+              pattern: {
+                path: 'M 0 1.5 L 2.5 1.5 L 2.5 0 M 2.5 5 L 2.5 3.5 L 5 3.5',
                 color: "#b22a00",
                 width: 5,
                 height: 5
@@ -354,6 +483,9 @@
   function showModal(auditor, status) {
     tabel = $('#example4').DataTable();
     tabel.destroy();
+
+
+    var month = $('#month').val();
 
     $("#myModalBulan").modal("show");
 
@@ -414,7 +546,8 @@
         "url" : "{{ url("index/monthly_patrol_team/detail") }}",
         "data" : {
           auditor : auditor,
-          status : status
+          status : status,
+          month : month
         }
       },
       "columns": [

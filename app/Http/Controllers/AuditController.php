@@ -775,6 +775,7 @@ public function detailPenanganan(Request $request){
     try{
       $audit = AuditAllResult::find($request->get("id"));
       $audit->note = $request->get('note');
+      $audit->lokasi = $request->get('lokasi');
       $audit->save();
 
       $response = array(
@@ -1216,6 +1217,12 @@ public function detailPenanganan(Request $request){
         $first = date("Y-m-d", strtotime($check->tanggal));
       }
 
+      if ($request->get('month') != "") {
+        $month = "and DATE_FORMAT(tanggal,'%Y-%m') = '".$request->get('month')."'";
+      }else{
+        $month = "";
+      }
+
       $data_bulan = db::select("
         SELECT
         auditor_name,
@@ -1226,13 +1233,32 @@ public function detailPenanganan(Request $request){
         WHERE
         kategori in ('EHS & 5S Patrol')
         and point_judul != 'Positive Finding'
+        ".$month."
         GROUP BY
-        auditor_name ASC"
+        auditor_name ASC
+        "
+      );
+
+      $data_lokasi = db::select("
+        SELECT
+        lokasi,
+        sum( CASE WHEN status_ditangani IS NULL AND kategori = 'EHS & 5S Patrol' THEN 1 ELSE 0 END ) AS jumlah_belum,
+        sum( CASE WHEN status_ditangani IS NOT NULL AND kategori = 'EHS & 5S Patrol' THEN 1 ELSE 0 END ) AS jumlah_sudah
+        FROM
+        audit_all_results 
+        WHERE
+        kategori in ('EHS & 5S Patrol')
+        and point_judul != 'Positive Finding'
+        ".$month."
+        GROUP BY
+        lokasi ASC
+        "
       );
 
       $response = array(
         'status' => true,
-        'data_bulan' => $data_bulan
+        'data_bulan' => $data_bulan,
+        'data_lokasi' => $data_lokasi
       );
 
       return Response::json($response);
@@ -1242,6 +1268,12 @@ public function detailPenanganan(Request $request){
 
       $auditor = $request->get('auditor');
       $status = $request->get('status');
+
+      if ($request->get('month') != "") {
+        $month = "and DATE_FORMAT(tanggal,'%Y-%m') = '".$request->get('month')."'";
+      }else{
+        $month = "";
+      }
 
       if ($status != null) {
 
@@ -1256,7 +1288,7 @@ public function detailPenanganan(Request $request){
         $stat = '';
       }
 
-        $query = "select audit_all_results.* FROM audit_all_results where audit_all_results.deleted_at is null and auditor_name = '".$auditor."' ".$stat."";
+        $query = "select audit_all_results.* FROM audit_all_results where audit_all_results.deleted_at is null and auditor_name = '".$auditor."' ".$stat." ".$month." ";
 
         $detail = db::select($query);
 

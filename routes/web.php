@@ -143,6 +143,7 @@ Route::post('edit/general/pointing_call_pic', 'GeneralController@editGeneralPoin
 Route::get('index/safety_riding', 'GeneralController@indexSafetyRiding');
 Route::get('fetch/general/safety_riding_member', 'GeneralController@fetchSafetyRidingMember');
 Route::get('fetch/general/safety_riding', 'GeneralController@fetchSafetyRiding');
+Route::get('fetch/general/safety_riding_pdf/{id}', 'GeneralController@fetchSafetyRidingPdf');
 Route::post('create/general/safety_riding', 'GeneralController@createSafetyRiding');
 
 //GENERAL
@@ -2842,6 +2843,9 @@ Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::get('persen/CheckSheet/{id}', 'CheckSheet@persen');
 	Route::get('fill/reason', 'CheckSheet@getReason');
 
+	Route::post('import/driver_photo', 'CheckSheet@importDriverPhoto');
+
+
 	Route::get('delete/deleteReimport', 'CheckSheet@deleteReimport');
 });
 
@@ -4199,7 +4203,7 @@ Route::get('index/maintenance/operator', 'MaintenanceController@indexOperator');
 
 
 // -------------------------      MTTBF         -------------------
-Route::get('index/maintenance/mttbf/list', 'MaintenanceController@indexMttbf');
+Route::get('index/maintenance/machine_report/list', 'MaintenanceController@indexMttbf');
 Route::get('index/maintenance/mttbf/report', 'MaintenanceController@indexMttbfReport');
 Route::get('fetch/maintenance/mttbf/list', 'MaintenanceController@fetchMttbf');
 
