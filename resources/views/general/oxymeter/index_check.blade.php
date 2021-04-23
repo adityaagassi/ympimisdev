@@ -116,7 +116,7 @@
                   <th>EMPLOYEE ID</th>
                   <th>EMPLOYEE NAME</th>
                   <th>OXYGEN RATE</th>
-                  <th>HEART RATE</th>
+                  <th>PULSE RATE</th>
                 </tr>
               </thead>
               <tbody id="body_history">

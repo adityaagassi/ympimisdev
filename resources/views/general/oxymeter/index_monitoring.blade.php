@@ -549,11 +549,11 @@
 
 
 				if (parseInt(value.oxy) < 95) {
-					below_rate.push({'emp_id': value.employee_id, 'name': value.name, 'shift': value.shiftdaily_code, 'oxy': value.oxy});
+					below_rate.push({'emp_id': value.employee_id, 'name': value.name, 'shift': value.shiftdaily_code, 'oxy': value.oxy, 'dept': value.department_shortname});
 				}
 
 				if (parseInt(value.pulse) > 100 ) {
-					below_rate_pulse.push({'emp_id': value.employee_id, 'name': value.name, 'shift': value.shiftdaily_code, 'pulse': value.pulse});
+					below_rate_pulse.push({'emp_id': value.employee_id, 'name': value.name, 'shift': value.shiftdaily_code, 'pulse': value.pulse, 'dept': value.department_shortname});
 				}
 
 				
@@ -688,7 +688,7 @@ $("#total_person_prd_3").text(prd_total_3);
 				body += "<td class='alert'>"+(index + 1)+"</td>";
 				body += "<td class='alert'>"+value.emp_id+"</td>";
 				body += "<td class='alert'>"+value.name+"</td>";
-				body += "<td class='alert'>-</td>";
+				body += "<td class='alert'>"+value.dept+"</td>";
 				body += "<td class='alert'>"+value.shift+"</td>";
 				body += "<td class='alert'>-</td>";
 				body += "<td class='alert'>"+value.oxy+"</td>";
@@ -707,7 +707,7 @@ $("#total_person_prd_3").text(prd_total_3);
 				body += "<td class='alert'>"+(index + 1)+"</td>";
 				body += "<td class='alert'>"+value.emp_id+"</td>";
 				body += "<td class='alert'>"+value.name+"</td>";
-				body += "<td class='alert'>-</td>";
+				body += "<td class='alert'>"+value.dept+"</td>";
 				body += "<td class='alert'>"+value.shift+"</td>";
 				body += "<td class='alert'>-</td>";
 				body += "<td class='alert'>"+value.pulse+"</td>";
