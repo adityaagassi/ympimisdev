@@ -141,8 +141,9 @@
 						<thead>
 							<tr>
 								<th style="width: 40%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Nama NG</th>
-								<th style="width: 20%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Value / Jumlah</th>
-								<th style="width: 20%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Onko</th>
+								<th style="width: 10%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Value / Jumlah</th>
+								<th style="width: 10%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Onko</th>
+								<th style="width: 20%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Kptsn</th>
 								<th style="width: 20%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Oleh</th>
 							</tr>
 						</thead>
@@ -164,9 +165,11 @@
 								<th style="width: 1%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Onko</th>
 								<th style="width: 1%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Loc</th>
 								<th style="width: 2%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Oleh</th>
+								<th style="width: 2%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Kptsn</th>
 								<th style="width: 2%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Repair</th>
 								<?php if ($loc2 == 'repair-process'): ?>
 									<th style="width: 2%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Action</th>
+									<th style="width: 2%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Ganti Kunci</th>
 								<?php endif ?>
 							</tr>
 						</thead>
@@ -266,7 +269,6 @@
 					<h4 id="judul_onko" style="padding-top: 10px;font-weight: bold;text-align:center;background-color: #75ff9f;padding: 5px">Pilih Operator Asal NG</h4>
 						<select class="form-control" style="width: 100%;font-size:20px;padding:5px;text-align:center" id="operator_id_before_select" data-placeholder="Pilih Operator" onchange="changeOperator(this.id)"></select>
 						<input type="hidden" id="operator_id_before" value="OPID">
-
 					<div style="padding-top: 10px">
 						<button id="confNg" style="width: 100%; margin-top: 10px; font-size: 3vw; padding:0; font-weight: bold; border-color: black; color: white;" onclick="confNgTemp()" class="btn btn-success">CONFIRM</button>
 					</div>
@@ -275,53 +277,6 @@
 		</div>
 	</div>
 </div>
-
-<div class="modal fade" id="modalGantiKunci">
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
-			<div class="modal-header">
-				<div class="modal-body table-responsive no-padding">
-					<h4 id="judul_ngGantiKunci" style="font-weight: bold;text-align:center;background-color: #61d2ff;padding: 5px">Action</h4>
-					<div class="row">
-						<div class="col-xs-12" id="ngDetailGantiKunci">
-						</div>
-						<div class="col-xs-12" id="ngDetailFixGantiKunci" style="display: none;padding-top: 5px">
-							<center><button class="btn btn-primary" style="width:100%;font-size: 25px;font-weight: bold;" onclick="getNgChangeGantiKunci()" id="ngFixGantiKunci">NG
-							</button></center>
-							<input type="hidden" id="ngFix2GantiKunci" value="NG">
-						</div>
-					</div>
-
-					<h4 id="judul_onkoGantiKunci" style="padding-top: 10px;font-weight: bold;text-align:center;background-color: #ffd375;padding: 5px">Pilih Onko Yang Diganti</h4>
-					<div class="row">
-						<div class="col-xs-12" id="onkoBodyGantiKunci">
-						</div>
-						<div class="col-xs-12" id="onkoBodyFixGantiKunci" style="display: none;padding-top: 5px">
-							<center><button class="btn btn-warning" style="width:100%;font-size: 25px;font-weight: bold" onclick="getOnkoChangeGantiKunci()" id="onkoFixGantiKunci">ONKO
-							</button></center>
-							<input type="hidden" id="onkoFix2GantiKunci" value="ONKO">
-						</div>
-					</div>
-
-					<h4 id="judul_onkoGantiKunci2" style="padding-top: 10px;font-weight: bold;text-align:center;background-color: #ffd375;padding: 5px">Pilih Onko Pengganti</h4>
-					<div class="row">
-						<div class="col-xs-12" id="onkoBodyGantiKunci2">
-						</div>
-						<div class="col-xs-12" id="onkoBodyFixGantiKunci2" style="display: none;padding-top: 5px">
-							<center><button class="btn btn-warning" style="width:100%;font-size: 25px;font-weight: bold" onclick="getOnkoChangeGantiKunci2()" id="onkoFixGantiKunci2">ONKO
-							</button></center>
-							<input type="hidden" id="onkoFix2GantiKunci2" value="ONKO">
-						</div>
-					</div>
-					<div style="padding-top: 10px">
-						<button id="confGantiKunci" style="width: 100%; margin-top: 10px; font-size: 3vw; padding:0; font-weight: bold; border-color: black; color: white;" onclick="confNgTempGantiKunci()" class="btn btn-success">CONFIRM</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-
 <div class="modal fade" id="modalNgTanpoAwase">
 	<div class="modal-dialog modal-lg" style="width: 1200px">
 		<div class="modal-content">
@@ -714,8 +669,8 @@
 						// bodyNgOnko += '<div class="col-xs-3" style="padding-top: 5px">';
 						// bodyNgOnko += '<center><button class="btn btn-primary" id="'+value.key+' ('+value.nomor+')" style="width: 180px;font-size: 15px" onclick="getOnkoTanpoAwase(this.id,'+value.id+')">'+value.key+' ('+value.nomor+')';
 						// bodyNgOnko += '</button></center></div>';
-						bodyNgOnko += '<div class="col-xs-3">'
-						bodyNgOnko += '<div style="text-align:center;font-weight:bold;font-size:20px">'+value.keynomor+'</div>';
+						bodyNgOnko += '<div class="col-xs-3" style="padding-top:5px">'
+						bodyNgOnko += '<div style="text-align:center;font-weight:bold;font-size:20px;background-color:#d6ff75;border-top:3px solid red;border-bottom: 3px solid red">'+value.keynomor+'</div>';
 						// bodyNgOnko += '<div id="slider'+index+'"></div>';
 						bodyNgOnko += '<div>';
 						bodyNgOnko += '<select style="width:47%;font-size:20px;padding:5px;text-align:center" id="pilihan1_'+index+'" onchange="changeTanpoAwase(this.id)">';
@@ -1003,65 +958,6 @@
 					// });
 					$('#modalNgTanpoAwase').modal('show');
 				});
-			}else if (ng_name === 'Ganti Kunci') {
-				var btn = document.getElementById('confGantiKunci');
-				btn.disabled = false;
-				btn.innerText = 'Confirm'
-
-				var location = '{{$loc_spec}}';
-				var data = {
-					ng_name:ng_name,
-					location:location,
-					process:$('#process').val()
-				}
-				var bodyDetail = "";
-				$('#ngDetailFixGantiKunci').hide();
-				$('#ngDetailGantiKunci').show();
-				$('#ngDetailGantiKunci').html("");
-
-				var bodyNgOnko = "";
-				$('#onkoBodyFixGantiKunci').hide();
-				$('#onkoBodyGantiKunci').show();
-				$('#onkoBodyGantiKunci').html("");
-
-				var bodyNgOnko2 = "";
-				$('#onkoBodyFixGantiKunci2').hide();
-				$('#onkoBodyGantiKunci2').show();
-				$('#onkoBodyGantiKunci2').html("");
-
-				$.get('{{ url("fetch/assembly/ng_detail") }}', data, function(result, status, xhr){
-					bodyDetail += '<div class="row">';
-					$.each(result.ng_detail, function(key, value) {
-						bodyDetail += '<div class="col-xs-4" style="padding-top: 10px">';
-						bodyDetail += '<center><button class="btn btn-primary" id="'+value.ng_name+' - '+value.ng_detail+'" style="width: 250px;font-size: 25px;" onclick="getNgGantiKunci(this.id,\''+value.process_before+'\')">'+value.ng_name+' - '+value.ng_detail;
-						bodyDetail += '</button></center></div>';
-						$('#judul_ng').html(value.ng_name);
-					});
-					bodyDetail += '</div>';
-
-					$('#ngDetailGantiKunci').append(bodyDetail);
-
-					bodyNgOnko += '<div class="row">';
-					$.each(result.onko, function(key, value) {
-						bodyNgOnko += '<div class="col-xs-3" style="padding-top: 5px">';
-						bodyNgOnko += '<center><button class="btn btn-warning" id="'+value.key+' ('+value.nomor+')" style="width: 180px;font-size: 20px" onclick="getOnkoGantiKunci(this.id)">'+value.key+' ('+value.nomor+')';
-						bodyNgOnko += '</button></center></div>';
-					});
-					bodyNgOnko += '</div>';
-
-					$('#onkoBodyGantiKunci').append(bodyNgOnko);
-
-					bodyNgOnko2 += '<div class="row">';
-					$.each(result.onko, function(key, value) {
-						bodyNgOnko2 += '<div class="col-xs-3" style="padding-top: 5px">';
-						bodyNgOnko2 += '<center><button class="btn btn-warning" id="'+value.key+' ('+value.nomor+')" style="width: 180px;font-size: 20px" onclick="getOnkoGantiKunci2(this.id)">'+value.key+' ('+value.nomor+')';
-						bodyNgOnko2 += '</button></center></div>';
-					});
-					bodyNgOnko2 += '</div>';
-
-					$('#onkoBodyGantiKunci2').append(bodyNgOnko2);
-					$('#modalGantiKunci').modal('show');
-				});
 			}
 			else{
 				var btn = document.getElementById('confNg');
@@ -1174,13 +1070,22 @@
 					bodyNgTemp += '<td style="font-size: 15px;">'+value.ongko+'</td>';
 				}
 				bodyNgTemp += '<td style="font-size: 15px;">'+value.location+'</td>';
-				bodyNgTemp += '<td style="font-size: 15px;">'+value.name+'</td>';
+				bodyNgTemp += '<td style="font-size: 15px;">'+(value.name||"")+'</td>';
+				bodyNgTemp += '<td style="font-size: 15px;">'+(value.decision||"")+'</td>';
 				if ($('#location_now2').val() == 'repair-process') {
 					if (value.repair_status == null) {
+						var ganti = "Ganti Kunci";
+						var repair = "repair";
 						bodyNgTemp += '<td style="font-size: 15px;"></td>';
-						bodyNgTemp += '<td style="font-size: 15px;"><button class="btn btn-warning btn-sm" onclick="repairProcess(\''+value.id+'\')">Repairing</button></td>';
+						bodyNgTemp += '<td style="font-size: 15px;"><button class="btn btn-warning btn-sm" onclick="repairProcess(\''+repair+'\',\''+value.id+'\')">Repairing</button></td>';
+						if (value.decision == null) {
+							bodyNgTemp += '<td style="font-size: 15px;"><button class="btn btn-danger btn-sm" onclick="repairProcess(\''+ganti+'\',\''+value.id+'\')">Ganti Kunci</button></td>';
+						}else{
+							bodyNgTemp += '<td style="font-size: 15px;"></td>';
+						}
 					}else{
 						bodyNgTemp += '<td style="font-size: 15px;">'+value.repair_status+'</td>';
+						bodyNgTemp += '<td style="font-size: 15px;"></td>';
 						bodyNgTemp += '<td style="font-size: 15px;"></td>';
 					}
 				}else{
@@ -1197,22 +1102,43 @@
 		});
 	}
 
-	function repairProcess(id) {
-		if (confirm("Apakah Anda selesai melakukan Repair?")) {
-			var employee_id = $('#employee_id').val();
-			var data = {
-				id:id,
-				employee_id:employee_id,
-			}
-
-			$.post('{{ url("input/assembly/repair_process") }}', data, function(result, status, xhr){
-				if (result.status) {
-					fetchNgHistory();
-					openSuccessGritter('Success',result.message);
-				}else{
-					openErrorGritter('Error!',result.message);
+	function repairProcess(ganti,id) {
+		if (ganti === "repair") {
+			if (confirm("Apakah Anda selesai melakukan Repair?")) {
+				var employee_id = $('#employee_id').val();
+				var data = {
+					id:id,
+					employee_id:employee_id,
+					ganti:ganti
 				}
-			});
+
+				$.post('{{ url("input/assembly/repair_process") }}', data, function(result, status, xhr){
+					if (result.status) {
+						fetchNgHistory();
+						openSuccessGritter('Success',result.message);
+					}else{
+						openErrorGritter('Error!',result.message);
+					}
+				});
+			}
+		}else{
+			if (confirm("Apakah Anda selesai mengganti kunci?")) {
+				var employee_id = $('#employee_id').val();
+				var data = {
+					id:id,
+					employee_id:employee_id,
+					ganti:ganti
+				}
+
+				$.post('{{ url("input/assembly/repair_process") }}', data, function(result, status, xhr){
+					if (result.status) {
+						fetchNgHistory();
+						openSuccessGritter('Success',result.message);
+					}else{
+						openErrorGritter('Error!',result.message);
+					}
+				});
+			}
 		}
 	}
 
@@ -1253,6 +1179,7 @@
 				}else{
 					bodyNgTemp += '<td style="font-size: 20px;">'+value.ongko+'</td>';
 				}
+				bodyNgTemp += '<td style="font-size: 20px;">'+(value.decision || "")+'</td>';
 				bodyNgTemp += '<td style="font-size: 20px;">'+value.name+'</td>';
 				bodyNgTemp += "</tr>";
 			});
@@ -1287,26 +1214,12 @@
 		$('#ngFix2').val(value);
 	}
 
-	function getNgGantiKunci(value,process_before) {
-		$('#ngDetailGantiKunci').hide();
-		$('#ngDetailFixGantiKunci').show();
-		$('#ngFixGantiKunci').html(value);
-		$('#ngFix2GantiKunci').val(value);
-	}
-
 	function getNgChange() {
 		$('#ngDetail').show();
 		$('#ngDetailFix').hide();
 		$('#ngFix').html("NG");
 		$('#ngFix2').val("NG");
 		$('#operator_id_before').val("OPID");
-	}
-
-	function getNgChangeGantiKunci() {
-		$('#ngDetailGantiKunci').show();
-		$('#ngDetailFixGantiKunci').hide();
-		$('#ngFixGantiKunci').html("NG");
-		$('#ngFix2GantiKunci').val("NG");
 	}
 
 	function getOnko(value) {
@@ -1316,38 +1229,11 @@
 		$('#onkoFix2').val(value);
 	}
 
-	function getOnkoGantiKunci(value) {
-		$('#onkoBodyGantiKunci').hide();
-		$('#onkoBodyFixGantiKunci').show();
-		$('#onkoFixGantiKunci').html(value);
-		$('#onkoFix2GantiKunci').val(value);
-	}
-	function getOnkoGantiKunci2(value) {
-		$('#onkoBodyGantiKunci2').hide();
-		$('#onkoBodyFixGantiKunci2').show();
-		$('#onkoFixGantiKunci2').html(value);
-		$('#onkoFix2GantiKunci2').val(value);
-	}
-
 	function getOnkoChange() {
 		$('#onkoBody').show();
 		$('#onkoBodyFix').hide();
 		$('#onkoFix').html("ONKO");
 		$('#onkoFix2').val("ONKO");
-	}
-
-	function getOnkoChangeGantiKunci() {
-		$('#onkoBodyGantiKunci').show();
-		$('#onkoBodyFixGantiKunci').hide();
-		$('#onkoFixGantiKunci').html("ONKO");
-		$('#onkoFix2GantiKunci').val("ONKO");
-	}
-
-	function getOnkoChangeGantiKunci2() {
-		$('#onkoBodyGantiKunci2').show();
-		$('#onkoBodyFixGantiKunci2').hide();
-		$('#onkoFixGantiKunci2').html("ONKO");
-		$('#onkoFix2GantiKunci2').val("ONKO");
 	}
 
 	function getOnkoDetail(value) {
@@ -1478,7 +1364,7 @@
 				ng: $('#ngFix2').val(),
 				onko: $('#onkoFix2').val(),
 				origin_group_code : '041',
-				operator_id : $('#operator_id_before').val()
+				operator_id : $('#operator_id_before').val(),
 			}
 
 			$.post('{{ url("input/assembly/ng_temp") }}', data, function(result, status, xhr){
@@ -1500,48 +1386,6 @@
 			});
 		}
 	}
-
-	function confNgTempGantiKunci() {
-		if ($('#ngFix2GantiKunci').val() == "NG" || $('#onkoFix2GantiKunci').val() == "ONKO" || $('#onkoFix2GantiKunci2').val() == "ONKO") {
-			audio_error.play();
-			openErrorGritter('Error!', "Harus Dipilih Semua!");
-		}else{
-			var btn = document.getElementById('confGantiKunci');
-			btn.disabled = true;
-			btn.innerText = 'Posting...';
-
-			var data = {
-				tag : $('#tag2').val(),
-				employee_id : $('#employee_id').val(),
-				serial_number : $('#serial_number2').val(),
-				model : $('#model2').val(),
-				location : $('#location_now2').val(),
-				started_at : $('#started_at').val(),
-				ng: $('#ngFix2GantiKunci').val(),
-				onko: $('#onkoFix2GantiKunci').val(),
-				onko2: $('#onkoFix2GantiKunci2').val(),
-				origin_group_code : '041',
-			}
-
-			$.post('{{ url("input/assembly/ganti_kunci") }}', data, function(result, status, xhr){
-				if(result.status){
-					var btn = document.getElementById('confGantiKunci');
-					btn.disabled = false;
-					btn.innerText = 'CONFIRM';
-					$('#modalGantiKunci').modal('hide');
-					fetchNgTemp();
-					openSuccessGritter('Success!', result.message);
-				}
-				else{
-					var btn = document.getElementById('confGantiKunci');
-					btn.disabled = false;
-					btn.innerText = 'CONFIRM';
-					audio_error.play();
-					openErrorGritter('Error!', result.message);
-				}
-			});
-		}
-	}	
 
 	function disabledButton() {
 		if($('#tag').val() != ""){

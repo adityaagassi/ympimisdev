@@ -1609,11 +1609,17 @@ class AssemblyProcessController extends Controller
 	public function inputRepairProcess(Request $request)
 	{
 		try {
-			$repair = AssemblyNgLog::where('id',$request->get('id'))->first();
-			$repair->repair_status = 'Repaired';
-			$repair->repaired_by = $request->get('employee_id');
-			$repair->repaired_at = date('Y-m-d H:i:s');
-			$repair->save();
+			if ($request->get('ganti') == 'repair') {
+				$repair = AssemblyNgLog::where('id',$request->get('id'))->first();
+				$repair->repair_status = 'Repaired';
+				$repair->repaired_by = $request->get('employee_id');
+				$repair->repaired_at = date('Y-m-d H:i:s');
+				$repair->save();
+			}else{
+				$repair = AssemblyNgLog::where('id',$request->get('id'))->first();
+				$repair->decision = 'Ganti Kunci';
+				$repair->save();
+			}
 
 			$response = array(
 				'status' => true,
@@ -1765,49 +1771,6 @@ class AssemblyProcessController extends Controller
 		}
 	}
 
-	public function inputGantiKunci(Request $request)
-	{
-		if($request->get('ng')){
-				$assembly_ng_temp = new AssemblyNgTemp([
-					'employee_id' => $request->get('employee_id'),
-					'tag' => strtoupper(dechex($request->get('tag'))),
-					'serial_number' => $request->get('serial_number'),
-					'model' => $request->get('model'),
-					'location' => $request->get('location'),
-					'ng_name' => $request->get('ng'),
-					'value_atas' => 1,
-					'ongko' => $request->get('onko'),
-					'value_lokasi' => $request->get('onko2'),
-					'operator_id' => $request->get('employee_id'),
-					'started_at' => $request->get('started_at'),
-					'origin_group_code' => $request->get('origin_group_code'),
-					'created_by' => Auth::id()
-				]);
-
-				try{
-					$assembly_ng_temp->save();
-					$response = array(
-						'status' => true,
-						'message' => 'Sukses Input NG',
-					);
-					return Response::json($response);
-				}
-				catch(\Exception $e){
-					$response = array(
-						'status' => false,
-						'message' => $e->getMessage(),
-					);
-					return Response::json($response);
-				}
-		}else{
-			$response = array(
-				'status' => false,
-				'message' => 'Gagal Input NG',
-			);
-			return Response::json($response);
-		}
-	}
-
 	public function deleteNgTemp(Request $request)
 	{
 		$model = $request->get('model');
@@ -1838,46 +1801,23 @@ class AssemblyProcessController extends Controller
 			$ng_temp = AssemblyNgTemp::where('serial_number',$serial_number)->where('employee_id',$employee_id)->where('tag',$tag)->where('origin_group_code','041')->get();
 			$jumlah_ng = 0;
 			foreach ($ng_temp as $ng) {
-				if ($ng->ng_name == 'Ganti Kunci - Ganti Kunci') {
-					$assembly_ng_log = new AssemblyNgLog([
-						'employee_id' => $request->get('employee_id'),
-						'tag' => strtoupper(dechex($request->get('tag'))),
-						'serial_number' => $request->get('serial_number'),
-						'model' => $request->get('model'),
-						'location' => $request->get('location'),
-						'ongko' => $ng->ongko,
-						'ng_name' => $ng->ng_name,
-						'value_atas' => $ng->value_atas,
-						'value_bawah' => $ng->value_bawah,
-						'value_lokasi' => $ng->value_lokasi,
-						'operator_id' => $ng->operator_id,
-						'sedang_start_date' => $ng->started_at,
-						'sedang_finish_date' => $finished_at,
-						'repair_status' => 'Repaired',
-						'repaired_by' => $request->get('employee_id'),
-						'repaired_at' => date("Y-m-d H:i:s"),
-						'origin_group_code' => $request->get('origin_group_code'),
-						'created_by' => Auth::id()
-					]);
-				}else{
-					$assembly_ng_log = new AssemblyNgLog([
-						'employee_id' => $request->get('employee_id'),
-						'tag' => strtoupper(dechex($request->get('tag'))),
-						'serial_number' => $request->get('serial_number'),
-						'model' => $request->get('model'),
-						'location' => $request->get('location'),
-						'ongko' => $ng->ongko,
-						'ng_name' => $ng->ng_name,
-						'value_atas' => $ng->value_atas,
-						'value_bawah' => $ng->value_bawah,
-						'value_lokasi' => $ng->value_lokasi,
-						'operator_id' => $ng->operator_id,
-						'sedang_start_date' => $ng->started_at,
-						'sedang_finish_date' => $finished_at,
-						'origin_group_code' => $request->get('origin_group_code'),
-						'created_by' => Auth::id()
-					]);
-				}
+				$assembly_ng_log = new AssemblyNgLog([
+					'employee_id' => $request->get('employee_id'),
+					'tag' => strtoupper(dechex($request->get('tag'))),
+					'serial_number' => $request->get('serial_number'),
+					'model' => $request->get('model'),
+					'location' => $request->get('location'),
+					'ongko' => $ng->ongko,
+					'ng_name' => $ng->ng_name,
+					'value_atas' => $ng->value_atas,
+					'value_bawah' => $ng->value_bawah,
+					'value_lokasi' => $ng->value_lokasi,
+					'operator_id' => $ng->operator_id,
+					'sedang_start_date' => $ng->started_at,
+					'sedang_finish_date' => $finished_at,
+					'origin_group_code' => $request->get('origin_group_code'),
+					'created_by' => Auth::id()
+				]);
 
 				$started_at = $ng->started_at;
 
