@@ -20,6 +20,9 @@
 		</p>
 	</div>
 	<input type="hidden" id="location" value="{{ $location }}">
+	<div class="row" id="container">
+
+	</div>
 </section>
 @endsection
 @section('scripts')
@@ -45,7 +48,7 @@
 		}
 		$.get('{{ url("fetch/general/pointing_call") }}', data, function(result, status, xhr){
 			if(result.status){
-				$('.content').html("");
+				$('#container').html("");
 				var count = 1;
 				var image_data = "";
 				var h = "";
@@ -61,22 +64,27 @@
 					image_data += '<div class="row" id="'+value.point_title+'" name="'+count+'" tabindex="1" style="height: 100%;">';
 					image_data += '<input type="hidden" name="inp_'+count+'" value="'+value.point_no/value.point_max+'">';
 					if(value.point_title == 'slogan_mutu'){
+						image_data += '<div style="font-weight:bold; font-size: 2vw; background-color: yellow; width:100%; position: fixed; bottom:0; text-align:center;">'+value.point_description+'</div>';
 						image_data += '<center><img src="{{ asset('images/pointing_calls/national') }}/'+value.point_title+'_'+value.point_no+'.gif" style="max-width: 80%;"></center>';						
 					}
 					else if(value.point_title == 'diamond'){
-						image_data += '<div class="col-xs-4" style="font-weight:bold; font-size: 2vw; background-color: yellow;">'+value.point_description+'</div><div class="col-xs-8"><img src="{{ asset('images/pointing_calls/national') }}/'+value.point_title+'_'+value.point_no+'.gif" style="height: 85vh;"></div>';		
+						image_data += '<div style="font-weight:bold; font-size: 2vw; background-color: yellow; width:100%; position: fixed; bottom:0; text-align:center;">'+value.point_description+'</div>';
+
+						image_data += '<center><img src="{{ asset('images/pointing_calls/national') }}/'+value.point_title+'_'+value.point_no+'.gif" style="height: 85vh;"></center>';		
 					}
 					// else if(value.point_title == 'k3'){
 					// 	image_data += '<div class="col-xs-4" style="font-weight:bold; font-size: 2vw; background-color: yellow;">'+value.point_description+'</div><div class="col-xs-8"><img src="{{ asset('images/pointing_calls/national') }}/'+value.point_title+'_'+value.point_no+'.gif" style="height: '+h+'; max-width: 100%;"></div>';
 					// }
 					else{
+						image_data += '<div style="font-weight:bold; font-size: 2vw; background-color: yellow; width:100%; position: fixed; bottom:0; text-align:center;">'+value.point_description+'</div>';
+						
 						image_data += '<center><img src="{{ asset('images/pointing_calls/national') }}/'+value.point_title+'_'+value.point_no+'.gif" style="height: '+h+'; max-width: 100%;"></center>';
 					}
 					image_data += '</div>';
 					count += 1;
 				});
 
-				$('.content').append(image_data);
+				$('#container').append(image_data);
 
 				// if($("[name='inp_1']").val() > 0.5){
 				// 	window.scrollTo(0, document.body.scrollHeight);	
