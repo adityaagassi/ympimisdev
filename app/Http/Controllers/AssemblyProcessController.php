@@ -3053,7 +3053,6 @@ public function fetchSerialNumberReport($process,Request $request)
 				GROUP_CONCAT( a.op_qa_fungsi SEPARATOR '' ) AS op_qa_fungsi,
 				GROUP_CONCAT( a.op_qa_visual_1 SEPARATOR '' ) AS op_qa_visual1,
 				GROUP_CONCAT( a.op_qa_visual_2 SEPARATOR '' ) AS op_qa_visual2,
-				SUBSTRING_INDEX( a.created, ',', 1 ) AS created,
 				(
 				SELECT
 					GROUP_CONCAT( ng_name ) 
