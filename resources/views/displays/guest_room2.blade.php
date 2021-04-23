@@ -49,22 +49,38 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <body class="body">
-	{{var_dump($weather)}}
 	<div class="row" style="padding-bottom: 0px;">
-		<div class="col-xs-4">
-			<h1 id="jam" style="margin-top: 0px;font-size: 10em;font-weight: bold;margin-bottom: -20px;color: white; "></h1>
-			<span id="tanggal" style="font-size: 3.2em;color: white;font-weight: bold;"></span>
+		<table class="table" style="width: 100%">
+			<tr>
+				<td rowspan="3" style="vertical-align: top;"><h1 id="jam" style="margin-top: 0px;font-size: 15em;font-weight: bold;margin-bottom: -40px;color: white; "></h1><br>
+					<span id="tanggal" style="font-size: 3.9em;color: white;font-weight: bold;">23 December 2021</span>
+				</td>
+				<td style="text-align: right;width: 230px">
+					<div class="col-xs-4" style="width: 230px;text-align: right" id="weather1">
+				    	<a href='https://www.accuweather.com/en/id/pasuruan/203183/weather-forecast/203183' class='aw-widget-legal'></a><div id='awcc1535343665265' class='aw-widget-current'  data-locationkey='203183' data-unit='c' data-language='id' data-useip='false' data-uid='awcc1535343665265'></div><script type="text/javascript" src="https://oap.accuweather.com/launch.js"></script>
+				    </div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="col-xs-4" style="width: 230px;" id="weather2">
+				    	<a href='https://www.accuweather.com/en/id/jakarta/208971/weather-forecast/208971' class='aw-widget-legal'></a><div id='awcc1535343722607' class='aw-widget-current'  data-locationkey='208971' data-unit='c' data-language='id' data-useip='false' data-uid='awcc1535343722607'></div><script type="text/javascript" src="https://oap.accuweather.com/launch.js"></script>
+				    </div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="col-xs-4" style="width: 230px;" id="weather3">
+				    	<a href='https://www.accuweather.com/en/jp/hamamatsu-shi/226090/weather-forecast/226090' class='aw-widget-legal'></a><div id='awcc1535343845965' class='aw-widget-current'  data-locationkey='226090' data-unit='c' data-language='id' data-useip='false' data-uid='awcc1535343845965'></div><script type="text/javascript" src="https://oap.accuweather.com/launch.js"></script>
+				    </div>
+				</td>
+			</tr>
+		</table>
+		<div class="col-lg-6">
+			
 		</div>
-	    <div class="col-xs-4" style="width: 220px;padding-top: 50px;padding-left: 20px" id="weather1">
-	    	<a href='https://www.accuweather.com/en/id/pasuruan/203183/weather-forecast/203183' class='aw-widget-legal'></a><div id='awcc1535343665265' class='aw-widget-current'  data-locationkey='203183' data-unit='c' data-language='id' data-useip='false' data-uid='awcc1535343665265'></div><script type="text/javascript" src="https://oap.accuweather.com/launch.js"></script>
-	    </div>
-
-	    <div class="col-xs-4" style="width: 220px;padding-left: 20px" id="weather2">
-	    	<a href='https://www.accuweather.com/en/id/jakarta/208971/weather-forecast/208971' class='aw-widget-legal'></a><div id='awcc1535343722607' class='aw-widget-current'  data-locationkey='208971' data-unit='c' data-language='id' data-useip='false' data-uid='awcc1535343722607'></div><script type="text/javascript" src="https://oap.accuweather.com/launch.js"></script>
-	    </div>
-
-	    <div class="col-xs-4" style="width: 220px;padding-left: 20px" id="weather3">
-	    	<a href='https://www.accuweather.com/en/jp/hamamatsu-shi/226090/weather-forecast/226090' class='aw-widget-legal'></a><div id='awcc1535343845965' class='aw-widget-current'  data-locationkey='226090' data-unit='c' data-language='id' data-useip='false' data-uid='awcc1535343845965'></div><script type="text/javascript" src="https://oap.accuweather.com/launch.js"></script>
+	    <div class="col-xs-6">
+	    	
 	    </div>
 	</div>
 </body>
@@ -79,7 +95,7 @@
 
 	jQuery(document).ready(function(){
 
-		$('#tanggal').html('{{$dateTitle}}');
+		// $('#tanggal').html('{{$dateTitle}}');
 
 		setInterval(resetWeather,3600000);
 
