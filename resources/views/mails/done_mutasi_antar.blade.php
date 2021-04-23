@@ -77,7 +77,8 @@
               </tr>
               <tr align="center">
                 <td colspan="3" style="font-size: 12px; border: 1px solid black; font-weight: bold">Departemen</td>
-                <td colspan="10" style="font-size: 12px; border: 1px solid black">{{$departemen}}</td>
+                <td colspan="5" style="font-size: 12px; border: 1px solid black">{{$departemen}}</td>
+                <td colspan="5" style="font-size: 12px; border: 1px solid black">{{$ke_departemen}}</td>
               </tr>
               <tr align="center">
                 <td colspan="3" style="font-size: 12px; border: 1px solid black; font-weight: bold">Jabatan</td>

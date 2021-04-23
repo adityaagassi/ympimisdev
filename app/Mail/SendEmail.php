@@ -392,14 +392,14 @@ class SendEmail extends Mailable
 
         if($this->remark == 'mutasi_satu'){
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
-            ->subject('Aproval Mutasi Satu Departemen')
+            ->subject('Approval Mutasi Satu Departemen')
             ->view('mails.mutasi_satu');
         }  
 
         if($this->remark == 'done_mutasi_satu'){
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
             ->priority(1)
-            ->subject('Aproval Mutasi Satu Departemen')
+            ->subject('Approval Mutasi Satu Departemen')
             ->view('mails.done_mutasi_satu');
             // ->attach(public_path('mutasi/satu_departemen/Mutasi Satu Departemen - '.$this->data[0]->nama).'.xls');
         }

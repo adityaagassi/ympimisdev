@@ -146,7 +146,7 @@ table > thead > tr > th{
           <table id="tableResume" class="table table-bordered" style="width: 100%;margin-top: 0px">
             <thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 12px;font-weight: bold">
               <tr>
-                <th style="background-color: black; font-weight: bold; padding: 10px; color:white ; font-size: 16px" colspan="13">Progress Aproval</th>
+                <th style="background-color: black; font-weight: bold; padding: 10px; color:white ; font-size: 16px" colspan="13">Progress Approval</th>
               </tr>
               <tr>
                 <th style="padding: 0;vertical-align: middle;font-size: 16px;background-color: black;color:white; border-right: 5px solid red !important;" rowspan="3">NIK-Name</th>
