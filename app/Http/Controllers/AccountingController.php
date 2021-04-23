@@ -46,7 +46,6 @@ class AccountingController extends Controller
         $this->dept = ['Management Information System Department', 'Accounting Department', 'Woodwind Instrument - Final Assembly (WI-FA) Department', 'Educational Instrument (EI) Department', 'General Affairs Department', 'Human Resources Department', 'Logistic Department', 'Maintenance Department', 'Woodwind Instrument - Key Parts Process (WI-KPP) Department', 'Procurement Department', 'Production Control Department', 'Production Engineering Department', 'Purchasing Control Department', 'Quality Assurance Department', 'Woodwind Instrument - Welding Process (WI-WP) Department', 'Woodwind Instrument - Body Parts Process (WI-BPP) Department', 'Woodwind Instrument - Surface Treatment (WI-ST) Department'];
 
         $this->uom = ['bag', 'bar', 'batang', 'belt', 'botol', 'bottle', 'box', 'Btg', 'Btl', 'btng', 'buah', 'buku', 'Can', 'Case', 'container', 'cps', 'day', 'days', 'dos', 'doz', 'Drum', 'dus', 'dz', 'dzn', 'EA', 'G', 'galon', 'gr', 'hari', 'hour', 'job', 'JRG', 'kaleng', 'ken', 'Kg', 'kgm', 'klg', 'L', 'Lbr', 'lbs', 'lembar', 'License', 'lisence', 'lisensi', 'lmbr', 'lonjor', 'Lot', 'ls', 'ltr', 'lubang', 'lusin', 'm', 'm2', 'm²', 'm3', 'malam', 'meter', 'ml', 'month', 'Mtr', 'night', 'OH', 'Ons', 'orang', 'OT', 'Pac', 'Pack', 'package', 'pad', 'pail', 'pair', 'pairs', 'pak', 'Pasang', 'pc', 'Pca', 'Pce', 'Pck', 'pcs', 'Pcs', 'Person', 'pick up', 'pil', 'ply', 'point', 'pot', 'prs', 'prsn', 'psc', 'PSG', 'psn', 'Rim', 'rol', 'roll', 'rolls', 'sak', 'sampel', 'sample', 'Set', 'Set', 'Sets', 'sheet', 'shoot', 'slop', 'sum', 'tank', 'tbg', 'time', 'titik', 'ton', 'tube', 'Um', 'Unit', 'user', 'VA', 'yard', 'zak'
-
         ];
 
         $this->transportation = ['AIR', 'BOAT', 'COURIER SERVICE', 'DHL', 'FEDEX', 'SUV-Car'];
@@ -8967,25 +8966,27 @@ public function import_receive(Request $request){
 
                             if ($budget_log->status != "Actual") {
                                     //get Data Budget Based On Periode Dan Nomor
-                                $budgetdata = AccBudget::where('budget_no','=',$po_detail->budget_item)->where('periode','=', $fiscal)->first();
+                                $budgetdata = AccBudget::where('budget_no','=',$po_detail->budget_item)->first();
+
+                                // ->where('periode','=', $fiscal)
 
                                     //Tambahkan Budget Skrg Dengan PO yang Ada Di Log
                                 $totalPlusPO = $budgetdata->$sisa_bulan + $amount_po;
 
-                                $updatebudget = AccBudget::where('budget_no','=',$po_detail->budget_item)->where('periode','=', $fiscal)
+                                $updatebudget = AccBudget::where('budget_no','=',$po_detail->budget_item)
                                 ->update([
                                     $sisa_bulan => $totalPlusPO
                                 ]);
                             }
 
                                 // get Data Budget Based On Periode Dan Nomor
-                            $budgetdata = AccBudget::where('budget_no','=',$po_detail->budget_item)->where('periode','=', $fiscal)->first();
+                            $budgetdata = AccBudget::where('budget_no','=',$po_detail->budget_item)->first();
 
                                 // Kurangi dengan amount_dollar
                             $totalminusreceive = $budgetdata->$sisa_bulan - $amount_dollar;
 
                                 // Setelah itu update data budgetnya dengan yang actual
-                            $dataupdate = AccBudget::where('budget_no','=',$po_detail->budget_item)->where('periode', $fiscal)
+                            $dataupdate = AccBudget::where('budget_no','=',$po_detail->budget_item)
                             ->update([
                                 $sisa_bulan => $totalminusreceive
                             ]);
