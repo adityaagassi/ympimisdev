@@ -82,7 +82,7 @@
               </tr>
               <tr align="center">
                 <td colspan="3" style="font-size: 12px; border: 1px solid black; font-weight: bold">Jabatan</td>
-                <td colspan="10" style="font-size: 12px; border: 1px solid black">{{$jabatan}}</td>
+                <td colspan="10" style="font-size: 12px; border: 1px solid black">{{$ke_jabatan}}</td>
               </tr>
               <tr>
                 <td colspan="2">&nbsp;</td>
