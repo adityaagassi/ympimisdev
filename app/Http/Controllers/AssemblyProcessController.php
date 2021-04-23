@@ -2797,6 +2797,7 @@ public function fetchNgReport($process,Request $request)
 			*,
 			CONCAT( checked.employee_id, '<br>', checked.NAME ) AS checked_by,
 			assembly_ng_logs.created_at AS created,
+			CONCAT( repaired.employee_id, '<br>', repaired.name ) AS repaires,
 		IF
 			(
 				location LIKE '%qa-fungsi%',(
@@ -2850,6 +2851,7 @@ public function fetchNgReport($process,Request $request)
 		FROM
 			`assembly_ng_logs`
 			LEFT JOIN employee_syncs checked ON checked.employee_id = assembly_ng_logs.employee_id 
+			LEFT JOIN employee_syncs repaired ON repaired.employee_id = assembly_ng_logs.repaired_by 
 		WHERE
 			location LIKE '%qa%' 
 			".$locnow."
@@ -2860,11 +2862,13 @@ public function fetchNgReport($process,Request $request)
 			CONCAT( checked.employee_id, ' - ', checked.NAME ) AS checked_by,
 			COALESCE ( CONCAT( caused.employee_id, ' - ', caused.NAME ), operator_id ) AS operator_id_details,
 			null as operator_id_log,
-			assembly_ng_logs.created_at as created
+			assembly_ng_logs.created_at as created,
+			CONCAT( repaired.employee_id, '<br>', repaired.name ) AS repaires
 			FROM
 			`assembly_ng_logs`
 			LEFT JOIN employee_syncs checked ON checked.employee_id = assembly_ng_logs.employee_id
 			LEFT JOIN employee_syncs caused ON caused.employee_id = assembly_ng_logs.operator_id 
+			LEFT JOIN employee_syncs repaired ON repaired.employee_id = assembly_ng_logs.repaired_by 
 			WHERE
 			location NOT LIKE '%qa%'
 			".$locnow."

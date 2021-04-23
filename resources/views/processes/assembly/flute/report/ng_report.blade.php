@@ -117,6 +117,9 @@ thead input {
 										<th>Lokasi NG</th>
 										<th>PIC Check</th>
 										<th>PIC Produksi</th>
+										<th>Repair Status</th>
+										<th>PIC Repair</th>
+										<th>Key Decision</th>
 										<th>Created At</th>
 									</tr>
 								</thead>
@@ -124,6 +127,9 @@ thead input {
 								</tbody>
 								<tfoot>
 									<tr>
+										<th></th>
+										<th></th>
+										<th></th>
 										<th></th>
 										<th></th>
 										<th></th>
@@ -243,6 +249,9 @@ thead input {
 					}else{
 						tableData += '<td></td>';
 					}
+					tableData += '<td>'+ (value.repair_status || "") +'</td>';
+					tableData += '<td>'+ (value.repaires || "") +'</td>';
+					tableData += '<td>'+ (value.decision || "Tidak Ganti Kunci") +'</td>';
 					tableData += '<td>'+ value.created +'</td>';
 					tableData += '</tr>';
 				});
