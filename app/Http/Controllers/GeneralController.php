@@ -75,7 +75,7 @@ class GeneralController extends Controller{
 			'title_jp' => $title_jp,
 			'employees' => $employees,
 			'agreement_statuses' => $this->agreement_statuses
-		));
+		))->with('page', 'Safety Riding');
 	}
 
 	public function fetchSafetyRiding(){
