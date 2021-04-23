@@ -53,9 +53,9 @@
 		<table class="table" style="width: 100%">
 			<tr>
 				<td rowspan="3" style="vertical-align: top;"><h1 id="jam" style="margin-top: 0px;font-size: 15em;font-weight: bold;margin-bottom: -40px;color: white; "></h1><br>
-					<span id="tanggal" style="font-size: 3.9em;color: white;font-weight: bold;">23 December 2021</span>
+					<span id="tanggal" style="font-size: 3.9em;color: white;font-weight: bold;"></span>
 				</td>
-				<td style="text-align: right;width: 230px">
+				<td style="text-align: right;width: 20px">
 					<div class="col-xs-4" style="width: 230px;text-align: right" id="weather1">
 				    	<a href='https://www.accuweather.com/en/id/pasuruan/203183/weather-forecast/203183' class='aw-widget-legal'></a><div id='awcc1535343665265' class='aw-widget-current'  data-locationkey='203183' data-unit='c' data-language='id' data-useip='false' data-uid='awcc1535343665265'></div><script type="text/javascript" src="https://oap.accuweather.com/launch.js"></script>
 				    </div>
@@ -95,7 +95,7 @@
 
 	jQuery(document).ready(function(){
 
-		// $('#tanggal').html('{{$dateTitle}}');
+		$('#tanggal').html('{{$dateTitle}}');
 
 		setInterval(resetWeather,3600000);
 
