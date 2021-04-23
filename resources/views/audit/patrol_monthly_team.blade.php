@@ -51,6 +51,14 @@
     color: black;
   }
 
+  #example5 {
+    border:1px solid black;    
+  }
+
+  #example5 > tbody > tr > td {
+    color: black;
+  }
+
   .dataTables_length {
     color: white;
   }
@@ -165,6 +173,43 @@
           <div class="row">
             <div class="col-md-12">
               <table id="example4" class="table table-striped table-bordered table-hover" style="width: 100%;color: black"> 
+                <thead style="background-color: rgba(126,86,134,.7);">
+                  <tr>
+                    <th>Auditor Name</th>
+                    <th>Tanggal</th>
+                    <th>Lokasi</th>
+                    <th>Auditee</th>
+                    <th>Poin Judul</th>
+                    <th>Note</th>
+                    <th>Foto</th>
+                    <th>Penanganan</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="myModalLokasi">
+    <div class="modal-dialog modal-lg" style="width:1250px;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 style="float: right;" id="modal-title"></h4>
+          <h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
+          <br><h4 class="modal-title" id="judul_table_lokasi"></h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12">
+              <table id="example5" class="table table-striped table-bordered table-hover" style="width: 100%;color: black"> 
                 <thead style="background-color: rgba(126,86,134,.7);">
                   <tr>
                     <th>Auditor Name</th>
@@ -412,7 +457,7 @@
           },
           plotOptions: {
             series: {
-              // cursor: 'pointer',
+              cursor: 'pointer',
               point: {
                 events: {
                   click: function () {
@@ -448,7 +493,7 @@
           series: [
           {
             name: 'Temuan Open',
-            data: belum_ditangani_bulan,
+            data: belum_ditangani_lokasi,
             color: { 
               pattern: {
                 path: 'M 0 1.5 L 2.5 1.5 L 2.5 0 M 2.5 5 L 2.5 3.5 L 5 3.5',
@@ -460,7 +505,7 @@
           },
           {
             name: 'Temuan Close',
-            data: sudah_ditangani_bulan,
+            data: sudah_ditangani_lokasi,
             color: { 
               pattern: {
                 path: 'M 0 1.5 L 2.5 1.5 L 2.5 0 M 2.5 5 L 2.5 3.5 L 5 3.5',
@@ -483,8 +528,6 @@
   function showModal(auditor, status) {
     tabel = $('#example4').DataTable();
     tabel.destroy();
-
-
     var month = $('#month').val();
 
     $("#myModalBulan").modal("show");
@@ -564,6 +607,90 @@
 
     $('#judul_table_bulan').append().empty();
     $('#judul_table_bulan').append('<center><b>Team Patrol '+auditor+' '+status+'</b></center>'); 
+  }
+
+  function showModalLokasi(lokasi, status) {
+    tabel = $('#example5').DataTable();
+    tabel.destroy();
+    var month = $('#month').val();
+
+    $("#myModalLokasi").modal("show");
+
+    var table = $('#example5').DataTable({
+      'dom': 'Bfrtip',
+      'responsive': true,
+      'lengthMenu': [
+      [ 10, 25, 50, -1 ],
+      [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+      ],
+      'buttons': {
+        buttons:[
+        {
+          extend: 'pageLength',
+          className: 'btn btn-default',
+          // text: '<i class="fa fa-print"></i> Show',
+        },
+        {
+          extend: 'copy',
+          className: 'btn btn-success',
+          text: '<i class="fa fa-copy"></i> Copy',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        {
+          extend: 'excel',
+          className: 'btn btn-info',
+          text: '<i class="fa fa-file-excel-o"></i> Excel',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        {
+          extend: 'print',
+          className: 'btn btn-warning',
+          text: '<i class="fa fa-print"></i> Print',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        ]
+      },
+      'paging': true,
+      'lengthChange': true,
+      'searching': true,
+      'ordering': true,
+      'order': [],
+      'info': true,
+      'autoWidth': true,
+      "sPaginationType": "full_numbers",
+      "bJQueryUI": true,
+      "bAutoWidth": false,
+      "processing": true,
+      "serverSide": true,
+      "ajax": {
+        "type" : "get",
+        "url" : "{{ url("index/monthly_patrol_team/detail_lokasi") }}",
+        "data" : {
+          lokasi : lokasi,
+          status : status,
+          month : month
+        }
+      },
+      "columns": [
+      {"data": "auditor_name", "width": "5%"},
+      {"data": "tanggal" , "width": "5%"},
+      {"data": "lokasi" , "width": "5%"},
+      {"data": "auditee_name" , "width": "5%"},
+      {"data": "point_judul", "width": "5%"},
+      {"data": "note", "width": "15%"},
+      {"data": "foto", "width": "20%"},
+      {"data": "penanganan", "width": "25%"}
+      ]    
+    });
+
+    $('#judul_table_lokasi').append().empty();
+    $('#judul_table_lokasi').append('<center><b>Team Patrol Lokasi '+lokasi+' '+status+'</b></center>'); 
   }
 
   function capitalizeFirstLetter(string) {

@@ -1310,6 +1310,52 @@ public function detailPenanganan(Request $request){
         ->make(true);
     }
 
+    public function detailLokasiMonthlyPatrolTeam(Request $request){
+
+      $lokasi = $request->get('lokasi');
+      $status = $request->get('status');
+
+      if ($request->get('month') != "") {
+        $month = "and DATE_FORMAT(tanggal,'%Y-%m') = '".$request->get('month')."'";
+      }else{
+        $month = "";
+      }
+
+      if ($status != null) {
+
+        if ($status == "Temuan Open") {
+          $stat = 'and audit_all_results.status_ditangani is null and kategori = "EHS & 5S Patrol"';
+        }
+        else if ($status == "Temuan Close") {
+          $stat = 'and audit_all_results.status_ditangani = "close" and kategori = "EHS & 5S Patrol"';
+        }
+
+      } else{
+        $stat = '';
+      }
+
+        $query = "select audit_all_results.* FROM audit_all_results where audit_all_results.deleted_at is null and lokasi = '".$lokasi."' ".$stat." ".$month." ";
+
+        $detail = db::select($query);
+
+        return DataTables::of($detail)
+
+        ->editColumn('tanggal', function($detail){
+          return date('d-M-Y', strtotime($detail->tanggal));
+        })
+
+        ->editColumn('foto', function($detail){
+          return '<img src="'.url('files/patrol').'/'.$detail->foto.'" width="250">';
+        })
+
+        ->editColumn('penanganan', function($detail){
+          return $detail->penanganan;
+        })
+
+        ->rawColumns(['tanggal' => 'tanggal', 'foto' => 'foto','penanganan' => 'penanganan'])
+        ->make(true);
+    }
+
     public function ExportMonthlyPatrolTeam(){
       $query = "select audit_all_results.* FROM audit_all_results where audit_all_results.deleted_at is null and audit_all_results.status_ditangani = 'close' and kategori = 'EHS & 5S Patrol'";
 
