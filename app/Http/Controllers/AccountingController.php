@@ -7631,7 +7631,6 @@ public function budget_detail(Request $request)
                 LEFT JOIN acc_budgets on acc_budgets.budget_no = acc_budget_histories.budget 
             WHERE
                 budget_month_receive IS NOT NULL 
-                AND periode = "FY198"
                 AND budget_no = "'.$request->get('id').'"
             GROUP BY
                 budget_month_receive 
@@ -7649,7 +7648,6 @@ public function budget_detail(Request $request)
                LEFT JOIN acc_budgets on acc_budgets.budget_no = acc_actual_logs.budget_no 
             WHERE
                 acc_actual_logs.deleted_at IS NULL 
-                AND acc_budgets.periode = "FY198"
                 AND acc_budgets.budget_no = "'.$request->get('id').'" 
                 AND acc_actual_logs.investment_no != "NO_INPUT"
             GROUP BY
@@ -7668,7 +7666,6 @@ public function budget_detail(Request $request)
                 LEFT JOIN acc_budgets on acc_budgets.budget_no = acc_budget_histories.budget 
             WHERE
                 budget_month IS NOT NULL 
-                AND periode = "FY198"  
                 AND budget_no = "'.$request->get('id').'"
             GROUP BY
                 budget_month
@@ -7686,7 +7683,6 @@ public function budget_detail(Request $request)
                 LEFT JOIN acc_budgets on acc_budgets.budget_no = acc_budget_histories.budget 
             WHERE
                 budget_month IS NOT NULL 
-                AND periode = "FY198" 
                 AND budget_no = "'.$request->get('id').'"
             GROUP BY
                 budget_month
@@ -7704,7 +7700,6 @@ public function budget_detail(Request $request)
                 LEFT JOIN acc_budgets on acc_budgets.budget_no = acc_budget_histories.budget 
             WHERE
                 budget_month IS NOT NULL 
-                AND periode = "FY198"  
                 AND budget_no = "'.$request->get('id').'"
             GROUP BY
                 budget_month_po

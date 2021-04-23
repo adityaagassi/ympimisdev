@@ -238,10 +238,11 @@
         	<div class="col-md-12">
 	          	<table class="table table-striped text-center">
 	          		<tr>
-	          			<th>Budget </th>
-	          			<th>Budget Awal</th>
-	          			<th style="background-color: orange;color: white">Budget Simulasi</th>
-	          			<th style="background-color: green;color: white">Sisa Budget</th>
+	          			<th width="15%">Bulan</th>
+	          			<th width="15%">Budget Awal</th>
+	          			<th width="20%" style="background-color: orange;color: white">Budget Simulasi</th>
+	          			<th width="20%" style="background-color: blue;color: white">Penggunaan Budget</th>
+	          			<th width="20%" style="background-color: green;color: white">Sisa Budget</th>
 	          		</tr>
 	          		<tr>
 	          			<td>
@@ -252,6 +253,9 @@
 	          			</td>
 	          			<td>
 	          				<input type="text" class="form-control" id="edit_budget_simulasi4" name="edit_budget_simulasi4">
+	          			</td>
+	          			<td>
+	          				<label id="budget_penggunaan_edit4" name="budget_penggunaan_edit4"></label>
 	          			</td>
 	          			<td class="sisa">
 	          				<input type="text" class="form-control" id="edit_budget_sisa4" name="edit_budget_sisa4">
@@ -267,6 +271,9 @@
 	          			<td>
 	          				<input type="text" class="form-control" id="edit_budget_simulasi5" name="edit_budget_simulasi5">
 	          			</td>
+	          			<td>
+	          				<label id="budget_penggunaan_edit5" name="budget_penggunaan_edit5"></label>
+	          			</td>
 	          			<td class="sisa">
 	          				<input type="text" class="form-control" id="edit_budget_sisa5" name="edit_budget_sisa5">
 	          			</td>
@@ -280,6 +287,9 @@
 	          			</td>
 	          			<td>
 	          				<input type="text" class="form-control" id="edit_budget_simulasi6" name="edit_budget_simulasi6">
+	          			</td>
+	          			<td>
+	          				<label id="budget_penggunaan_edit6" name="budget_penggunaan_edit6"></label>
 	          			</td>
 	          			<td class="sisa">
 	          				<input type="text" class="form-control" id="edit_budget_sisa6" name="edit_budget_sisa6">
@@ -295,6 +305,9 @@
 	          			<td>
 	          				<input type="text" class="form-control" id="edit_budget_simulasi7" name="edit_budget_simulasi7">
 	          			</td>
+	          			<td>
+	          				<label id="budget_penggunaan_edit7" name="budget_penggunaan_edit7"></label>
+	          			</td>
 	          			<td class="sisa">
 	          				<input type="text" class="form-control" id="edit_budget_sisa7" name="edit_budget_sisa7">
 	          			</td>
@@ -308,6 +321,9 @@
 	          			</td>
 	          			<td>
 	          				<input type="text" class="form-control" id="edit_budget_simulasi8" name="edit_budget_simulasi8">
+	          			</td>
+	          			<td>
+	          				<label id="budget_penggunaan_edit8" name="budget_penggunaan_edit8"></label>
 	          			</td>
 	          			<td class="sisa">
 	          				<input type="text" class="form-control" id="edit_budget_sisa8" name="edit_budget_sisa8">
@@ -323,6 +339,9 @@
 	          			<td>
 	          				<input type="text" class="form-control" id="edit_budget_simulasi9" name="edit_budget_simulasi9">
 	          			</td>
+	          			<td>
+	          				<label id="budget_penggunaan_edit9" name="budget_penggunaan_edit9"></label>
+	          			</td>
 	          			<td class="sisa">
 	          				<input type="text" class="form-control" id="edit_budget_sisa9" name="edit_budget_sisa9">
 	          			</td>
@@ -336,6 +355,9 @@
 	          			</td>
 	          			<td>
 	          				<input type="text" class="form-control" id="edit_budget_simulasi10" name="edit_budget_simulasi10">
+	          			</td>
+	          			<td>
+	          				<label id="budget_penggunaan_edit10" name="budget_penggunaan_edit10"></label>
 	          			</td>
 	          			<td class="sisa">
 	          				<input type="text" class="form-control" id="edit_budget_sisa10" name="edit_budget_sisa10">
@@ -351,6 +373,9 @@
 	          			<td>
 	          				<input type="text" class="form-control" id="edit_budget_simulasi11" name="edit_budget_simulasi11">
 	          			</td>
+	          			<td>
+	          				<label id="budget_penggunaan_edit11" name="budget_penggunaan_edit11"></label>
+	          			</td>
 	          			<td class="sisa">
 	          				<input type="text" class="form-control" id="edit_budget_sisa11" name="edit_budget_sisa11">
 	          			</td>
@@ -364,6 +389,9 @@
 	          			</td>
 	          			<td>
 	          				<input type="text" class="form-control" id="edit_budget_simulasi12" name="edit_budget_simulasi12">
+	          			</td>
+	          			<td>
+	          				<label id="budget_penggunaan_edit12" name="budget_penggunaan_edit12"></label>
 	          			</td>
 	          			<td class="sisa">
 	          				<input type="text" class="form-control" id="edit_budget_sisa12" name="edit_budget_sisa12">
@@ -379,6 +407,9 @@
 	          			<td>
 	          				<input type="text" class="form-control" id="edit_budget_simulasi1" name="edit_budget_simulasi1">
 	          			</td>
+	          			<td>
+	          				<label id="budget_penggunaan_edit13" name="budget_penggunaan_edit13"></label>
+	          			</td>
 	          			<td class="sisa">
 	          				<input type="text" class="form-control" id="edit_budget_sisa1" name="edit_budget_sisa1">
 	          			</td>
@@ -393,6 +424,9 @@
 	          			<td>
 	          				<input type="text" class="form-control" id="edit_budget_simulasi2" name="edit_budget_simulasi2">
 	          			</td>
+	          			<td>
+	          				<label id="budget_penggunaan_edit14" name="budget_penggunaan_edit14"></label>
+	          			</td>
 	          			<td class="sisa">
 	          				<input type="text" class="form-control" id="edit_budget_sisa2" name="edit_budget_sisa2">
 	          			</td>
@@ -406,6 +440,9 @@
 	          			</td>
 	          			<td>
 	          				<input type="text" class="form-control" id="edit_budget_simulasi3" name="edit_budget_simulasi3">
+	          			</td>
+	          			<td>
+	          				<label id="budget_penggunaan_edit15" name="budget_penggunaan_edit15"></label>
 	          			</td>
 	          			<td class="sisa">
 	          				<input type="text" class="form-control" id="edit_budget_sisa3" name="edit_budget_sisa3">
@@ -964,7 +1001,7 @@
 	              // }
 	              table += '<td>';
 	              table += '<button class="btn btn-md btn-warning" data-toggle="tooltip" title="Details" onclick="modalView(\''+value.budget_no+'\')"><i class="fa fa-eye"></i></button>';
-	              if ("{{Auth::user()->role_code == 'ACC-SPL'}}" || "{{Auth::user()->role_code == 'MIS'}}") {
+	              if ("{{Auth::user()->role_code == 'ACC-SPL'}}") {
 	              	table += ' <button class="btn btn-md btn-primary" data-toggle="tooltip" title="Details" onclick="editView(\''+value.budget_no+'\')"><i class="fa fa-edit"></i></button>';  
 	              }
 	              table += '</td>';
@@ -1254,7 +1291,6 @@
 
 	    $.get('{{ url("budget/detail") }}', data, function(result, status, xhr){
 
-
 	    	$("#edit_budget_awal4").val(result.datas.apr_budget_awal).attr('readonly',true);
 	    	$("#edit_budget_awal5").val(result.datas.may_budget_awal).attr('readonly',true);
 	    	$("#edit_budget_awal6").val(result.datas.jun_budget_awal).attr('readonly',true);
@@ -1280,6 +1316,24 @@
 	    	$("#edit_budget_simulasi1").val(result.datas.jan_after_adj);
 	    	$("#edit_budget_simulasi2").val(result.datas.feb_after_adj);
 	    	$("#edit_budget_simulasi3").val(result.datas.mar_after_adj);
+
+	    	$("#budget_penggunaan_edit4").text('$0');
+	    	$("#budget_penggunaan_edit5").text('$0');
+	    	$("#budget_penggunaan_edit6").text('$0');
+	    	$("#budget_penggunaan_edit7").text('$0');
+	    	$("#budget_penggunaan_edit8").text('$0');
+	    	$("#budget_penggunaan_edit9").text('$0');
+	    	$("#budget_penggunaan_edit10").text('$0');
+	    	$("#budget_penggunaan_edit11").text('$0');
+	    	$("#budget_penggunaan_edit12").text('$0');
+	    	$("#budget_penggunaan_edit13").text('$0');
+	    	$("#budget_penggunaan_edit14").text('$0');
+	    	$("#budget_penggunaan_edit15").text('$0');
+
+	    	$.each(result.data_penggunaan, function(key, value) {
+		    	var total_penggunaan = value.PR + value.Investment + value.PO + value.Actual;
+		    	$("#budget_penggunaan_edit"+value.month_number).text('$'+total_penggunaan.toFixed(2));
+	        })
 
 	    	$("#edit_budget_sisa4").val(+result.datas.apr_sisa_budget);
 	    	$("#edit_budget_sisa5").val(+result.datas.may_sisa_budget);
