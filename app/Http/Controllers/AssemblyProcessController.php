@@ -3104,7 +3104,7 @@ public function fetchSerialNumberReport($process,Request $request)
 				WHERE
 					location = 'qa-fungsi' 
 				GROUP BY
-					asl.serial_number UNION ALL
+					asl.serial_number,asl.model UNION ALL
 				SELECT DISTINCT
 					( asl.serial_number ),
 					asl.model,
@@ -3123,7 +3123,7 @@ public function fetchSerialNumberReport($process,Request $request)
 				WHERE
 					location = 'qa-visual1' 
 				GROUP BY
-					asl.serial_number UNION ALL
+					asl.serial_number,asl.model UNION ALL
 				SELECT DISTINCT
 					( asl.serial_number ),
 					asl.model,
@@ -3142,7 +3142,7 @@ public function fetchSerialNumberReport($process,Request $request)
 				WHERE
 					location = 'qa-visual2' 
 				GROUP BY
-					asl.serial_number 
+					asl.serial_number,asl.model
 				) a 
 				WHERE
 				a.created BETWEEN '".$from."' 
