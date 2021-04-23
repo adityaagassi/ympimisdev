@@ -193,7 +193,7 @@
 										<!-- <th>Transfer ($)</th> -->
 										<th>Actual ($)</th>
 										<th>Ending ($)</th>
-										<th>Detail</th>
+										<th width="8%">Detail</th>
 									</tr>
 								</thead>
 								<tbody id="tablebudget">
@@ -225,6 +225,204 @@
 	</div>
 </section>
 
+<div class="modal fade" id="editModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" style="width: 1200px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Detail Budget <span id="budget_no"></span></h4>
+      </div>
+      <div class="modal-body">
+        <div class="box-body">
+        	<input type="hidden" value="{{csrf_token()}}" name="_token" />
+        	<div class="col-md-12">
+	          	<table class="table table-striped text-center">
+	          		<tr>
+	          			<th>Budget </th>
+	          			<th>Budget Awal</th>
+	          			<th style="background-color: orange;color: white">Budget Simulasi</th>
+	          			<th style="background-color: green;color: white">Sisa Budget</th>
+	          		</tr>
+	          		<tr>
+	          			<td>
+	          				April
+	          			</td>
+	          			<td>
+	          				<input type="text" class="form-control" id="edit_budget_awal4" name="edit_budget_awal4">
+	          			</td>
+	          			<td>
+	          				<input type="text" class="form-control" id="edit_budget_simulasi4" name="edit_budget_simulasi4">
+	          			</td>
+	          			<td class="sisa">
+	          				<input type="text" class="form-control" id="edit_budget_sisa4" name="edit_budget_sisa4">
+	          			</td>
+	          		</tr>
+	          		<tr>
+	          			<td>
+	          				Mei
+	          			</td>
+	          			<td>
+	          				<input type="text" class="form-control" id="edit_budget_awal5" name="edit_budget_awal5">
+	          			</td>
+	          			<td>
+	          				<input type="text" class="form-control" id="edit_budget_simulasi5" name="edit_budget_simulasi5">
+	          			</td>
+	          			<td class="sisa">
+	          				<input type="text" class="form-control" id="edit_budget_sisa5" name="edit_budget_sisa5">
+	          			</td>
+	          		</tr>
+	          		<tr>
+	          			<td>
+	          				Juni
+	          			</td>
+	          			<td>
+	          				<input type="text" class="form-control" id="edit_budget_awal6" name="edit_budget_awal6">
+	          			</td>
+	          			<td>
+	          				<input type="text" class="form-control" id="edit_budget_simulasi6" name="edit_budget_simulasi6">
+	          			</td>
+	          			<td class="sisa">
+	          				<input type="text" class="form-control" id="edit_budget_sisa6" name="edit_budget_sisa6">
+	          			</td>
+	          		</tr>
+	          		<tr>
+	          			<td>
+	          				Juli
+	          			</td>
+	          			<td>
+	          				<input type="text" class="form-control" id="edit_budget_awal7" name="edit_budget_awal7">
+	          			</td>
+	          			<td>
+	          				<input type="text" class="form-control" id="edit_budget_simulasi7" name="edit_budget_simulasi7">
+	          			</td>
+	          			<td class="sisa">
+	          				<input type="text" class="form-control" id="edit_budget_sisa7" name="edit_budget_sisa7">
+	          			</td>
+	          		</tr>
+	          		<tr>
+	          			<td>
+	          				Agustus
+	          			</td>
+	          			<td>
+	          				<input type="text" class="form-control" id="edit_budget_awal8" name="edit_budget_awal8">
+	          			</td>
+	          			<td>
+	          				<input type="text" class="form-control" id="edit_budget_simulasi8" name="edit_budget_simulasi8">
+	          			</td>
+	          			<td class="sisa">
+	          				<input type="text" class="form-control" id="edit_budget_sisa8" name="edit_budget_sisa8">
+	          			</td>
+	          		</tr>
+	          		<tr>
+	          			<td>
+	          				September
+	          			</td>
+	          			<td>
+	          				<input type="text" class="form-control" id="edit_budget_awal9" name="edit_budget_awal9">
+	          			</td>
+	          			<td>
+	          				<input type="text" class="form-control" id="edit_budget_simulasi9" name="edit_budget_simulasi9">
+	          			</td>
+	          			<td class="sisa">
+	          				<input type="text" class="form-control" id="edit_budget_sisa9" name="edit_budget_sisa9">
+	          			</td>
+	          		</tr>
+	          		<tr>
+	          			<td>
+	          				Oktober
+	          			</td>
+	          			<td>
+	          				<input type="text" class="form-control" id="edit_budget_awal10" name="edit_budget_awal10">
+	          			</td>
+	          			<td>
+	          				<input type="text" class="form-control" id="edit_budget_simulasi10" name="edit_budget_simulasi10">
+	          			</td>
+	          			<td class="sisa">
+	          				<input type="text" class="form-control" id="edit_budget_sisa10" name="edit_budget_sisa10">
+	          			</td>
+	          		</tr>
+	          		<tr>
+	          			<td>
+	          				November
+	          			</td>
+	          			<td>
+	          				<input type="text" class="form-control" id="edit_budget_awal11" name="edit_budget_awal11">
+	          			</td>
+	          			<td>
+	          				<input type="text" class="form-control" id="edit_budget_simulasi11" name="edit_budget_simulasi11">
+	          			</td>
+	          			<td class="sisa">
+	          				<input type="text" class="form-control" id="edit_budget_sisa11" name="edit_budget_sisa11">
+	          			</td>
+	          		</tr>
+	          		<tr>
+	          			<td>
+	          				December
+	          			</td>
+	          			<td>
+	          				<input type="text" class="form-control" id="edit_budget_awal12" name="edit_budget_awal12">
+	          			</td>
+	          			<td>
+	          				<input type="text" class="form-control" id="edit_budget_simulasi12" name="edit_budget_simulasi12">
+	          			</td>
+	          			<td class="sisa">
+	          				<input type="text" class="form-control" id="edit_budget_sisa12" name="edit_budget_sisa12">
+	          			</td>
+	          		</tr>
+	          		<tr>
+	          			<td>
+	          				Januari
+	          			</td>
+	          			<td>
+	          				<input type="text" class="form-control" id="edit_budget_awal1" name="edit_budget_awal1">
+	          			</td>
+	          			<td>
+	          				<input type="text" class="form-control" id="edit_budget_simulasi1" name="edit_budget_simulasi1">
+	          			</td>
+	          			<td class="sisa">
+	          				<input type="text" class="form-control" id="edit_budget_sisa1" name="edit_budget_sisa1">
+	          			</td>
+	          		</tr>
+	          		<tr>
+	          			<td>
+	          				Februari
+	          			</td>
+	          			<td>
+	          				<input type="text" class="form-control" id="edit_budget_awal2" name="edit_budget_awal2">
+	          			</td>
+	          			<td>
+	          				<input type="text" class="form-control" id="edit_budget_simulasi2" name="edit_budget_simulasi2">
+	          			</td>
+	          			<td class="sisa">
+	          				<input type="text" class="form-control" id="edit_budget_sisa2" name="edit_budget_sisa2">
+	          			</td>
+	          		</tr>
+	          		<tr>
+	          			<td>
+	          				Maret
+	          			</td>
+	          			<td>
+	          				<input type="text" class="form-control" id="edit_budget_awal3" name="edit_budget_awal3">
+	          			</td>
+	          			<td>
+	          				<input type="text" class="form-control" id="edit_budget_simulasi3" name="edit_budget_simulasi3">
+	          			</td>
+	          			<td class="sisa">
+	          				<input type="text" class="form-control" id="edit_budget_sisa3" name="edit_budget_sisa3">
+	          			</td>
+	          		</tr>
+	          	</table>
+	          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <input type="hidden" id="id_edit" name="id_edit">
+        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-success pull-right" data-dismiss="modal" onclick="editbudget()">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="modal fade" id="ViewModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" style="width: 1200px">
@@ -764,8 +962,12 @@
 	              // if (ending >= 0) {
 	              	table += '<td style="color:blue">'+ending.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })+'</td>';                
 	              // }
-
-	              table += '<td><button class="btn btn-md btn-warning" data-toggle="tooltip" title="Details" onclick="modalView(\''+value.budget_no+'\')"><i class="fa fa-eye"></i></button></td>';  
+	              table += '<td>';
+	              table += '<button class="btn btn-md btn-warning" data-toggle="tooltip" title="Details" onclick="modalView(\''+value.budget_no+'\')"><i class="fa fa-eye"></i></button>';
+	              if ("{{Auth::user()->role_code == 'ACC-SPL'}}" || "{{Auth::user()->role_code == 'MIS'}}") {
+	              	table += ' <button class="btn btn-md btn-primary" data-toggle="tooltip" title="Details" onclick="editView(\''+value.budget_no+'\')"><i class="fa fa-edit"></i></button>';  
+	              }
+	              table += '</td>';
 
 	              table += '</tr>';
 	          })
@@ -1041,6 +1243,60 @@
 	    })
 	  }
 
+	  function editView(id) {
+
+	    $("#editModal").modal("show");
+	    $("#id_edit").val(id);
+
+	    var data = {
+	      id:id
+	    };
+
+	    $.get('{{ url("budget/detail") }}', data, function(result, status, xhr){
+
+
+	    	$("#edit_budget_awal4").val(result.datas.apr_budget_awal).attr('readonly',true);
+	    	$("#edit_budget_awal5").val(result.datas.may_budget_awal).attr('readonly',true);
+	    	$("#edit_budget_awal6").val(result.datas.jun_budget_awal).attr('readonly',true);
+	    	$("#edit_budget_awal7").val(result.datas.jul_budget_awal).attr('readonly',true);
+	    	$("#edit_budget_awal8").val(result.datas.aug_budget_awal).attr('readonly',true);
+	    	$("#edit_budget_awal9").val(result.datas.sep_budget_awal).attr('readonly',true);
+	    	$("#edit_budget_awal10").val(result.datas.oct_budget_awal).attr('readonly',true);
+	    	$("#edit_budget_awal11").val(result.datas.nov_budget_awal).attr('readonly',true);
+	    	$("#edit_budget_awal12").val(result.datas.dec_budget_awal).attr('readonly',true);
+	    	$("#edit_budget_awal1").val(result.datas.jan_budget_awal).attr('readonly',true);
+	    	$("#edit_budget_awal2").val(result.datas.feb_budget_awal).attr('readonly',true);
+	    	$("#edit_budget_awal3").val(result.datas.mar_budget_awal).attr('readonly',true);
+
+	    	$("#edit_budget_simulasi4").val(result.datas.apr_after_adj);
+	    	$("#edit_budget_simulasi5").val(result.datas.may_after_adj);
+	    	$("#edit_budget_simulasi6").val(result.datas.jun_after_adj);
+	    	$("#edit_budget_simulasi7").val(result.datas.jul_after_adj);
+	    	$("#edit_budget_simulasi8").val(result.datas.aug_after_adj);
+	    	$("#edit_budget_simulasi9").val(result.datas.sep_after_adj);
+	    	$("#edit_budget_simulasi10").val(result.datas.oct_after_adj);
+	    	$("#edit_budget_simulasi11").val(result.datas.nov_after_adj);
+	    	$("#edit_budget_simulasi12").val(result.datas.dec_after_adj);
+	    	$("#edit_budget_simulasi1").val(result.datas.jan_after_adj);
+	    	$("#edit_budget_simulasi2").val(result.datas.feb_after_adj);
+	    	$("#edit_budget_simulasi3").val(result.datas.mar_after_adj);
+
+	    	$("#edit_budget_sisa4").val(+result.datas.apr_sisa_budget);
+	    	$("#edit_budget_sisa5").val(+result.datas.may_sisa_budget);
+	    	$("#edit_budget_sisa6").val(+result.datas.jun_sisa_budget);
+	    	$("#edit_budget_sisa7").val(+result.datas.jul_sisa_budget);
+	    	$("#edit_budget_sisa8").val(+result.datas.aug_sisa_budget);
+	    	$("#edit_budget_sisa9").val(+result.datas.sep_sisa_budget);
+	    	$("#edit_budget_sisa10").val(+result.datas.oct_sisa_budget);
+	    	$("#edit_budget_sisa11").val(+result.datas.nov_sisa_budget);
+	    	$("#edit_budget_sisa12").val(+result.datas.dec_sisa_budget);
+	    	$("#edit_budget_sisa1").val(+result.datas.jan_sisa_budget);
+	    	$("#edit_budget_sisa2").val(+result.datas.feb_sisa_budget);
+	    	$("#edit_budget_sisa3").val(+result.datas.mar_sisa_budget);
+
+	    })
+	  }
+
 	  $("form#importForm").submit(function(e) {
 		if ($('#upload_file').val() == '') {
 			openErrorGritter('Error!', 'You need to select file');
@@ -1238,6 +1494,34 @@
 	    $('#judul_table').append('<center><b>'+status+' Budget '+budget+'</center></b>');
 	    
 	  }
+
+	function editbudget() {
+	  var simulasi = [];
+	  var sisa = [];
+
+	  for (var i = 1; i <= 12; i++) {
+	  	simulasi.push($('#edit_budget_simulasi'+i).val());
+	  	sisa.push($('#edit_budget_sisa'+i).val());
+	  }
+
+      var data = {
+		simulasi: simulasi,
+		sisa: sisa,
+		budget : $('#id_edit').val()
+      };
+
+      $.post('{{ url("budget/edit") }}', data, function(result, status, xhr){
+        if(result.status == true){    
+			$("#loading").hide();
+			openSuccessGritter("Success","Budget Berhasil Diupdate");
+			fetchTable();
+		}
+		else {
+			$("#loading").hide();
+			openErrorGritter('Error!', result.datas);
+		}
+      })
+    }
 
 	function openSuccessGritter(title, message){
       jQuery.gritter.add({

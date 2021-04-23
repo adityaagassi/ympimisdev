@@ -128,6 +128,7 @@ Route::get('fetch/general/surat_dokter', 'GeneralController@fetchSuratDokter');
 Route::post('input/general/surat_dokter', 'GeneralController@inputSuratDokter');
 Route::post('delete/general/surat_dokter', 'GeneralController@deleteSuratDokter');
 
+
 //MOSAIC
 Route::get('index/general/mosaic', 'GeneralController@indexMosaic');
 Route::get('fetch/general/mosaic', 'GeneralController@fetchMosaic');
@@ -138,7 +139,11 @@ Route::get('index/general/pointing_call/{id}', 'GeneralController@indexGeneralPo
 Route::get('fetch/general/pointing_call', 'GeneralController@fetchGeneralPointingCall');
 Route::post('edit/general/pointing_call_pic', 'GeneralController@editGeneralPointingCallPic');
 
+//SAFETY RIDING
 Route::get('index/safety_riding', 'GeneralController@indexSafetyRiding');
+Route::get('fetch/general/safety_riding_member', 'GeneralController@fetchSafetyRidingMember');
+Route::get('fetch/general/safety_riding', 'GeneralController@fetchSafetyRiding');
+Route::post('create/general/safety_riding', 'GeneralController@createSafetyRiding');
 
 //GENERAL
 Route::get('index/general/omi_visitor', 'GeneralController@indexOmiVisitor');
@@ -1714,6 +1719,7 @@ Route::get('investment/detailActual', 'AccountingController@detailMonitoringInvA
 
 //Budget
 Route::get('budget/info', 'AccountingController@budget_info');
+Route::post('budget/edit', 'AccountingController@budget_edit');
 Route::get('budget/report', 'AccountingController@budget_control');
 Route::get('fetch/budget/info', 'AccountingController@fetch_budget_info');
 Route::get('fetch/budget/table', 'AccountingController@fetch_budget_table');
@@ -4219,7 +4225,6 @@ Route::get('fetch/assembly/ng_temp', 'AssemblyProcessController@fetchNgTemp');
 Route::get('fetch/assembly/ng_temp_by_id', 'AssemblyProcessController@fetchNgTempById');
 Route::get('fetch/assembly/ng_logs', 'AssemblyProcessController@fetchNgLogs');
 Route::post('input/assembly/ng_temp', 'AssemblyProcessController@inputNgTemp');
-Route::post('input/assembly/ganti_kunci', 'AssemblyProcessController@inputGantiKunci');
 Route::post('input/assembly/repair_process', 'AssemblyProcessController@inputRepairProcess');
 Route::get('delete/assembly/delete_ng_temp', 'AssemblyProcessController@deleteNgTemp');
 Route::post('input/assembly/ng_onko', 'AssemblyProcessController@inputNgOnko');

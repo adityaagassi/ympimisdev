@@ -7430,6 +7430,91 @@ return Response::json($response);
 
 }
 
+public function budget_edit(Request $request){
+    try {
+        $simulasi = $request->get('simulasi');
+        $sisa = $request->get('sisa');
+
+        $simulasi_jan = $simulasi[0];
+        $simulasi_feb = $simulasi[1];
+        $simulasi_mar = $simulasi[2];
+        $simulasi_apr = $simulasi[3];
+        $simulasi_may = $simulasi[4];
+        $simulasi_jun = $simulasi[5];
+        $simulasi_jul = $simulasi[6];
+        $simulasi_aug = $simulasi[7];
+        $simulasi_sep = $simulasi[8];
+        $simulasi_oct = $simulasi[9];
+        $simulasi_nov = $simulasi[10];
+        $simulasi_des = $simulasi[11];
+        $sisa_jan = $sisa[0];
+        $sisa_feb = $sisa[1];
+        $sisa_mar = $sisa[2];
+        $sisa_apr = $sisa[3];
+        $sisa_may = $sisa[4];
+        $sisa_jun = $sisa[5];
+        $sisa_jul = $sisa[6];
+        $sisa_aug = $sisa[7];
+        $sisa_sep = $sisa[8];
+        $sisa_oct = $sisa[9];
+        $sisa_nov = $sisa[10];
+        $sisa_des = $sisa[11];
+
+        $amount = $simulasi[0] + $simulasi[1] + $simulasi[2] + $simulasi[3] + $simulasi[4] + $simulasi[5] + $simulasi[6] + $simulasi[7] + $simulasi[8] + $simulasi[9] + $simulasi[10] + $simulasi[11];
+
+        $updatebudget = AccBudget::where('budget_no','=',$request->get('budget'))
+        ->update([
+            'amount' => $amount,
+            'jan_after_adj' => $simulasi_jan,
+            'feb_after_adj' => $simulasi_feb,
+            'mar_after_adj' => $simulasi_mar,
+            'apr_after_adj' => $simulasi_apr,
+            'may_after_adj' => $simulasi_may,
+            'jun_after_adj' => $simulasi_jun,
+            'jul_after_adj' => $simulasi_jul,
+            'aug_after_adj' => $simulasi_aug,
+            'sep_after_adj' => $simulasi_sep,
+            'oct_after_adj' => $simulasi_oct,
+            'nov_after_adj' => $simulasi_nov,
+            'dec_after_adj' => $simulasi_des,
+            'jan_sisa_budget' => $sisa_jan,
+            'feb_sisa_budget' => $sisa_feb,
+            'mar_sisa_budget' => $sisa_mar,
+            'apr_sisa_budget' => $sisa_apr,
+            'may_sisa_budget' => $sisa_may,
+            'jun_sisa_budget' => $sisa_jun,
+            'jul_sisa_budget' => $sisa_jul,
+            'aug_sisa_budget' => $sisa_aug,
+            'sep_sisa_budget' => $sisa_sep,
+            'oct_sisa_budget' => $sisa_oct,
+            'nov_sisa_budget' => $sisa_nov,
+            'dec_sisa_budget' => $sisa_des
+        ]);
+
+        $response = array(
+            'status' => true,
+            'datas' => 'Berhasil Update Data',
+        );
+        return Response::json($response);
+    } catch (QueryException $e){
+         $error_code = $e->errorInfo[1];
+            if($error_code == 1062){
+                $response = array(
+                   'status' => false,
+                   'datas' => 'Errpr'
+                );
+                return Response::json($response);
+            }
+            else{
+                $response = array(
+                   'status' => false,
+                   'datas' => $e->getMessage()
+                );
+                return Response::json($response);
+            }
+     }
+}
+
 public function budget_log()
 {
     $title = 'Budget Log';
