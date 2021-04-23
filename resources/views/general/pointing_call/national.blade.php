@@ -5,6 +5,15 @@
 		background-color: white !important;
 		padding-top: 0 !important;
 	}
+	table.table-bordered{
+		border:1px solid black;
+	}
+	table.table-bordered > thead > tr > th{
+		border:1px solid black;
+	}
+	table.table-bordered > tbody > tr > td{
+		border:1px solid rgb(211,211,211);
+	}
 	#loading { display: none; }
 </style>
 @stop
@@ -20,7 +29,7 @@
 		</p>
 	</div>
 	<input type="hidden" id="location" value="{{ $location }}">
-	<div class="row" id="container">
+	<div id="container">
 
 	</div>
 </section>
@@ -75,6 +84,24 @@
 					// else if(value.point_title == 'k3'){
 					// 	image_data += '<div class="col-xs-4" style="font-weight:bold; font-size: 2vw; background-color: yellow;">'+value.point_description+'</div><div class="col-xs-8"><img src="{{ asset('images/pointing_calls/national') }}/'+value.point_title+'_'+value.point_no+'.gif" style="height: '+h+'; max-width: 100%;"></div>';
 					// }
+					else if(value.point_title == 'janji_safety'){
+						image_data += '<div id="'+value.point_title+'" name="'+count+'" tabindex="1" style="padding-left: 10px; padding-right: 10px;">';
+						image_data += '<center><span style="font-weight: bold; font-size: 2vw;">{{ date('Y') }}年 {{ date('m') }}月 Catatan Record Penerapan 『Janji Safety Riding』</span></center><br><br>';
+						image_data += '<span style="font-weight: bold; font-size: 1.3vw;">① Perkirakan waktu untuk tiba dengan selamat di tempat tujuan. (Mari berangkat kerja lebih awal.)</span><br>';
+						image_data += '<span style="font-weight: bold; font-size: 1.3vw;">② Marilah patuhi aturan berlalu lintas demi orang-orang tercinta kita.</span><br><br><br>';
+						image_data += '<span style="font-weight: bold; font-size: 1.5vw;">'+result.safety_ridings[0].department+'</span><br>';
+						image_data += '<table class="table table-bordered">';
+						image_data += '<thead>';
+						image_data += '<tr style="background-color: rgba(126,86,134,.7); font-size:1.3vw;">';
+						image_data += '<th style="width: 1%;">Nama</th>';
+						image_data += '<th style="width: 3%;">Janji Safety Riding</th>';
+						image_data += '</tr>';
+						image_data += '</thead>';
+						image_data += '<tbody id="safetyTableBody">';
+						image_data += '</tbody>';
+						image_data += '</table>';
+						image_data += '</div>';
+					}
 					else{
 						image_data += '<div style="font-weight:bold; font-size: 2vw; background-color: yellow; width:100%; position: fixed; bottom:0; text-align:center;">'+value.point_description+'</div>';
 						
@@ -84,7 +111,17 @@
 					count += 1;
 				});
 
+				var safety_data = "";
+				$('#safetyTableBody').html("");
+
+				$.each(result.safety_ridings, function(key, value){
+					safety_data += '<tr>';
+					safety_data += '<td style="font-size: 1.3vw;">'+value.employee_name+'</td>';
+					safety_data += '<td style="font-size: 1.3vw;">'+value.safety_riding+'</td>';
+					safety_data += '</tr>';	
+				});
 				$('#container').append(image_data);
+				$('#safetyTableBody').append(safety_data);
 
 				// if($("[name='inp_1']").val() > 0.5){
 				// 	window.scrollTo(0, document.body.scrollHeight);	

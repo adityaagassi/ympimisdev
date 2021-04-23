@@ -22,8 +22,11 @@ use App\GeneralShoesRequest;
 use App\GeneralShoesStock;
 use App\User;
 use App\Agreement;
+use App\SafetyRiding;
 use App\AgreementAttachment;
 use App\GeneralAirVisualLog;
+use App\WeeklyCalendar;
+use PDF;
 use Auth;
 use Excel;
 use DataTables;
@@ -73,6 +76,154 @@ class GeneralController extends Controller{
 			'employees' => $employees,
 			'agreement_statuses' => $this->agreement_statuses
 		));
+	}
+
+	public function fetchSafetyRiding(){
+		$employee = Employee::where('employees.employee_id', '=', Auth::user()->username)
+		->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'employees.employee_id')
+		->select('employees.remark', 'employee_syncs.department')
+		->first();
+
+		$safety_ridings = SafetyRiding::leftJoin('users', 'users.id', '=', 'safety_ridings.created_by')
+		->where('department', '=', $employee->department)
+		->where('location', '=', $employee->remark)
+		->select(
+			db::raw('date_format(safety_ridings.period, "%b %Y") as vperiod'), 
+			db::raw('date_format(safety_ridings.created_at, "%d-%b-%Y") as vcreated'), 
+			'safety_ridings.period', 
+			'safety_ridings.location', 
+			'safety_ridings.department', 
+			'users.username', 
+			'users.name', 
+			db::raw('date_format(safety_ridings.created_at, "%Y-%m-%d") as created'))
+		->distinct()
+		->get();
+
+		$response = array(
+			'status' => true,
+			'safety_ridings' => $safety_ridings
+		);
+		return Response::json($response);
+	}
+
+	public function fetchSafetyRidingPdf($id){
+
+		$param = explode('_', $id);
+
+		$first = date('Y-m-01', strtotime($param[0]));
+		$last = date('Y-m-t', strtotime($param[0]));
+
+		$weekly_calendars = WeeklyCalendar::where('week_date', '>=', $first)
+		->where('week_date', '<=', $last)
+		->get();
+
+		$safety_ridings = SafetyRiding::leftJoin('users', 'users.id', '=', 'safety_ridings.created_by')
+		->where('location', '=', $param[1])
+		->where('period', '=', $param[0])
+		->where('department', '=', $param[2])
+		->select(
+			'safety_ridings.period',
+			'safety_ridings.department',
+			'safety_ridings.employee_name',
+			'safety_ridings.safety_riding',
+			'users.name'
+		)
+		->get();
+
+		$chief = Employee::leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'employees.employee_id')
+		->where('employees.remark', '=', $param[1])
+		->where('employee_syncs.department', '=', $param[2])
+		->where('employee_syncs.position', '=', 'Chief')
+		->select('employee_syncs.name')
+		->first();
+
+		$manager = Employee::leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'employees.employee_id')
+		->where('employees.remark', '=', $param[1])
+		->where('employee_syncs.department', '=', $param[2])
+		->where('employee_syncs.position', '=', 'Manager')
+		->select('employee_syncs.name')
+		->first();
+
+		$pdf = \App::make('dompdf.wrapper');
+		$pdf->getDomPDF()->set_option("enable_php", true);
+		$pdf->setPaper('A4', 'landscape');
+
+		// $pdf->loadView('general.pointing_call.safety_riding_pdf', array(
+		// 	'weekly_calendars' => $weekly_calendars,
+		// 	'safety_ridings' => $safety_ridings,
+		// 	'chief' => $chief,
+		// 	'manager' => $manager
+		// ));
+
+		// return $pdf->stream("general.pointing_call.safety_riding_pdf");
+
+		return view('general.pointing_call.safety_riding_pdf', array(
+			'weekly_calendars' => $weekly_calendars,
+			'safety_ridings' => $safety_ridings,
+			'chief' => $chief,
+			'manager' => $manager
+		));
+	}
+
+	public function fetchSafetyRidingMember(){
+		$employee = Employee::where('employees.employee_id', '=', Auth::user()->username)
+		->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'employees.employee_id')
+		->select('employees.remark', 'employee_syncs.department')
+		->first();
+
+		$employees = Employee::where('employees.remark', '=', $employee->remark)
+		->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'employees.employee_id')
+		->where('employee_syncs.department', '=', $employee->department)
+		->whereNull('employee_syncs.end_date')
+		->select('employee_syncs.employee_id', 'employee_syncs.name', 'employee_syncs.department', 'employees.remark')
+		->get();
+
+		$response = array(
+			'status' => true,
+			'employees' => $employees
+		);
+		return Response::json($response);
+	}
+
+	public function createSafetyRiding(Request $request){
+		try{
+
+			foreach($request->get('safety_ridings') as $safety_riding){
+				$safety = explode('_', $safety_riding);
+
+				$input = SafetyRiding::updateOrCreate(
+					[
+						'period' => $request->get('period'),
+						'employee_id' => $safety[0],
+						'department' => $request->get('department')
+					],
+					[
+						'period' => date('Y-m-01', strtotime($request->get('period'))),
+						'location' => $request->get('location'),
+						'department' => $request->get('department'),
+						'employee_id' => $safety[0],
+						'employee_name' => $safety[1],
+						'safety_riding' => $safety[2],
+						'created_by' => Auth::id()
+					]
+				);
+
+				$input->save();
+			}
+
+			$response = array(
+				'status' => true,
+				'message' => 'Safety Riding berhasil dibuat'
+			);
+			return Response::json($response);
+		}
+		catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
 	}
 
 	public function indexAgreement(){
@@ -2164,6 +2315,17 @@ public function fetchGeneralPointingCall(Request $request){
 		// ->whereNull('deleted_at')
 		// ->get();
 
+		
+		$employee = Employee::where('employees.employee_id', '=', Auth::user()->username)
+		->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'employees.employee_id')
+		->select('employees.remark', 'employee_syncs.department')
+		->first();
+
+		$safety_ridings = SafetyRiding::where('location', '=', $employee->remark)
+		->where('department', '=', $employee->department)
+		->where('period', '=', date('Y-m-01'))
+		->get();
+
 		$pointing_calls = db::select("SELECT
 			pc.point_title,
 			pc.point_description,
@@ -2195,6 +2357,7 @@ public function fetchGeneralPointingCall(Request $request){
 		$response = array(
 			'status' => true,
 			'pointing_calls' => $pointing_calls,
+			'safety_ridings' => $safety_ridings
 			// 'pics' => $pics
 		);
 		return Response::json($response);
