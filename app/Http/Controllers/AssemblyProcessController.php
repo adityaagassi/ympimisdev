@@ -953,12 +953,13 @@ class AssemblyProcessController extends Controller
 		$tag = $request->get('tag');
 		$tag = strtoupper(dechex($tag));
 
-		$data = AssemblyDetail::where('tag', $tag)
-		->whereIn('location', ['qa-visual2', 'qa-visual1', 'qa-fungsi'])
+		$data = AssemblyInventory::where('tag', $tag)
+		// ->whereIn('location', ['qa-visual2', 'qa-visual1', 'qa-fungsi'])
+		->where('location', 'qa-visual2')
 		->where('origin_group_code', $origin_group_code)
-		->get();
+		->first();
 
-		if(count($data) >= 3){
+		if(count($data) > 0){
 			$remark = "";
 			if($data->remark == 'SP'){
 				$remark = "AND stamp_hierarchies.remark = 'SP'";
