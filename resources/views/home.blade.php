@@ -476,7 +476,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                       <td>
+                     <td>
                         {{--     <a href="{{ url("index/report/overtime_outsource") }}">
                             <i class="fa fa-caret-right"></i> Outsource OT (派遣社員の残業管理)
                         </a> --}}
@@ -493,7 +493,7 @@
                             <span style="font-weight: bold;">Mirai Mobile Report (モバイルMIRAIの記録)</span>
                             <br>
                             <a href="{{ url("index/mirai_mobile/index") }}">
-                                <i class="fa fa-caret-right"></i> Mirai Mobile Data(MIRAIモバイルデータ)
+                                <i class="fa fa-caret-right"></i> Mirai Mobile Data (MIRAIモバイルデータ)
                             </a>
                         </td>
                     </tr>
@@ -526,20 +526,20 @@
                                 <i class="fa fa-caret-right"></i> Clinic Visit (クリニック訪問)
                             </a>
                             <br>
+                            <a href="{{ url('index/general/oxymeter') }}">
+                                <i class="fa fa-caret-right"></i> Oximeter Check (オキシメーター検査)
+                            </a>
+                            <br>
                             <a href="{{ url("index/display/clinic_disease?month=") }}">
                                 <i class="fa fa-caret-right"></i> Clinic Diagnostic Data (クリニック見立てデータ)
                             </a>
                             <br>
-                            <a href="{{ url('index/general/oxymeter') }}">
-                                <i class="fa fa-caret-right"></i> Oximeter Check(オキシメーター検査)
-                            </a>
-                            <br>
                             <a href="{{ url('index/general/oxymeter/monitoring') }}">
-                                <i class="fa fa-caret-right"></i> Oximeter Monitoring(オキシメーターモニター)
+                                <i class="fa fa-caret-right"></i> Oximeter Monitoring (オキシメーターモニター)
                             </a>
                             <br>
                             <a href="{{ url('index/general/airvisual') }}">
-                                <i class="fa fa-caret-right"></i> CO<sub>2</sub> Monitor(二酸化炭素モニター)
+                                <i class="fa fa-caret-right"></i> CO<sub>2</sub> Monitor (二酸化炭素モニター)
                             </a>
                             <br>
                             <a href="{{ url('index/general/queue','mcu') }}">
@@ -673,19 +673,19 @@
                                 <i class="fa fa-caret-right"></i> Sharepoint;
                             </a>
                             <a href="https://a01.yamaha.co.jp/fw/dfw/SAP2/Citrix/XenApp/site/default.aspx" target="_blank">
-                             SAP;
-                         </a>
-                         <a href="https://adagio.yamaha.co.jp/imart/default.portal" target="_blank">
-                             Adagio;
-                         </a>
-                         <a href="https://a01.yamaha.co.jp/fw/dfw/MA5/ma5/EntranceServlet" target="_blank">
-                             MA5;
-                         </a>
-                     </td>     
-                 </tr>                                                                             
-             </tbody>
-         </table>
-         <table class="table table-bordered">
+                               SAP;
+                           </a>
+                           <a href="https://adagio.yamaha.co.jp/imart/default.portal" target="_blank">
+                               Adagio;
+                           </a>
+                           <a href="https://a01.yamaha.co.jp/fw/dfw/MA5/ma5/EntranceServlet" target="_blank">
+                               MA5;
+                           </a>
+                       </td>     
+                   </tr>                                                                             
+               </tbody>
+           </table>
+           <table class="table table-bordered">
             <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
                 <tr>
                     <th>Workshop<br>ワークショップ</th>
