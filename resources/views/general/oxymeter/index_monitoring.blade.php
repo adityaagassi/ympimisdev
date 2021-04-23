@@ -704,13 +704,13 @@ $("#total_person_prd_3").text(prd_total_3);
 
 			$.each(below_rate_pulse, function(index, value){
 				body += "<tr>";
-				body += "<td class='alert'>"+(index + 1)+"</td>";
-				body += "<td class='alert'>"+value.emp_id+"</td>";
-				body += "<td class='alert'>"+value.name+"</td>";
-				body += "<td class='alert'>"+value.dept+"</td>";
-				body += "<td class='alert'>"+value.shift+"</td>";
-				body += "<td class='alert'>-</td>";
-				body += "<td class='alert'>"+value.pulse+"</td>";
+				body += "<td>"+(index + 1)+"</td>";
+				body += "<td>"+value.emp_id+"</td>";
+				body += "<td>"+value.name+"</td>";
+				body += "<td>"+value.dept+"</td>";
+				body += "<td>"+value.shift+"</td>";
+				body += "<td>-</td>";
+				body += "<td>"+value.pulse+"</td>";
 				body += "</tr>";
 			})
 
@@ -800,8 +800,8 @@ function checkDetails(param) {
 		resultData += '<td>'+ (value.section || '') +'</td>';
 		resultData += '<td>'+ (value.group || '') +'</td>';
 		resultData += '<td>'+ value.shift +'</td>';
-		resultData += '<td>'+ value.oxy +'</td>';
-		resultData += '<td>'+ value.pulse +'</td>';
+		resultData += '<td>'+ (value.oxy || '') +'</td>';
+		resultData += '<td>'+ (value.pulse || '') +'</td>';
 		resultData += '<td>'+ (value.check_time || '' ) +'</td>';
 		resultData += '</tr>';
 		index += 1;
