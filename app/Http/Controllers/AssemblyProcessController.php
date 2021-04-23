@@ -63,21 +63,30 @@ class AssemblyProcessController extends Controller
 		];
 
 		$this->location_fl_display = [
-			'stamp',
-			'perakitan',
-			'kariawase',
-			'tanpoire',
-			'perakitanawal',
-			'tanpoawase',
-			'seasoning',
-			'kango',
-			'renraku',
+			'fukiage1-process',
+			'fukiage1-visual',
+			'fukiage2-process',
+			'kango-fungsi',
+			'kango-kensa',
+			'kango-process',
+			'kariawase-process',
+			'kariawase-repair',
+			'kariawase-fungsi',
+			'perakitanawal-kensa',
+			'perakitan-process',
+			'renraku-fungsi',
+			'renraku-process',
+			'repair-process',
+			'seasoning-process',
+			'stamp-process',
+			'tanpoawase-fungsi',
+			'tanpoawase-kensa',
+			'tanpoawase-process',
+			'tanpoire-process',
 			'qa-fungsi',
-			'fukiage1',
-			'fukiage2',
 			'qa-visual1',
 			'qa-visual2',
-			'packing'
+			'kariawase-visual',
 		];
 	}
 
@@ -945,11 +954,11 @@ class AssemblyProcessController extends Controller
 		$tag = strtoupper(dechex($tag));
 
 		$data = AssemblyInventory::where('tag', $tag)
-		->where('location', 'qa-visual2')
+		->whereIn('location', ['qa-visual2', 'qa-visual1', 'qa-fungsi'])
 		->where('origin_group_code', $origin_group_code)
-		->first();
+		->get();
 
-		if($data){
+		if(count($data) >= 3){
 			$remark = "";
 			if($data->remark == 'SP'){
 				$remark = "AND stamp_hierarchies.remark = 'SP'";
@@ -967,7 +976,8 @@ class AssemblyProcessController extends Controller
 			return Response::json($response);
 		}else{
 			$response = array(
-				'status' => false
+				'status' => false,
+				'message' => 'Kartu Tidak Ditemukan atau Kartu belum melewati proses QA-Fungsi, QA-Visual1, atau QA-Visual2'
 			);
 			return Response::json($response);
 		}
@@ -2215,7 +2225,7 @@ class AssemblyProcessController extends Controller
 	}
 
 	public function indexNgRate(){
-		$locations = $this->location_fl;
+		$locations = $this->location_fl_display;
 
 		return view('processes.assembly.flute.display.ng_rate', array(
 			'title' => 'NG Rate',
@@ -2389,7 +2399,7 @@ class AssemblyProcessController extends Controller
 		$title = 'NG Rate by Operator';
 		$title_jp = '作業者不良率';
 
-		$locations = $this->location_fl;
+		$locations = $this->location_fl_display;
 
 		return view('processes.assembly.flute.display.op_rate', array(
 			'title' => $title,
@@ -2506,7 +2516,7 @@ class AssemblyProcessController extends Controller
 			'ng_rate' => $ng_rate,
 			// 'target' => $target,
 			// 'operator' => $operator,
-			// 'ng_target' => $ng_target->target,
+			'ng_target' => $ng_target->target,
 			'dateTitle' => $now,
 			'title' => $location
 		);
@@ -3023,6 +3033,182 @@ public function fetchKdCardCleaning(Request $request)
 		$response = array(
 			'status' => true,
 			'history' => $history
+		);
+		return Response::json($response);
+	} catch (\Exception $e) {
+		$response = array(
+			'status' => false,
+			'message' => 'Failed Get Data'
+		);
+		return Response::json($response);
+	}
+}
+
+public function indexSerialNumberReport($process)
+{
+	if ($process == 'qa') {
+		$title = 'Serial Number Report - QA';
+		$title_jp = '';
+	}
+
+	$models = db::table('materials')->where('origin_group_code', '=', '041')
+		->where('category', '=', 'FG')
+		->orderBy('model', 'asc')
+		->select('model')
+		->distinct()
+		->get();
+
+	return view('processes.assembly.flute.report.serial_number_report',array(
+		'process' => $process,
+		'models' => $models,
+	))->with('page', 'Serial Number Report Assy Fl')
+	->with('head', 'Assembly Process')
+	->with('title', $title)
+	->with('title_jp', $title_jp);
+}
+
+public function fetchSerialNumberReport($process,Request $request)
+{
+	try {
+		$date_from = $request->get('datefrom');
+		$date_to = $request->get('dateto');
+		$model = $request->get('model');
+
+		if($date_to == ""){
+			if($date_from == ""){
+				$from = date('Y-m')."-01";
+				$now = date('Y-m-d');
+			}
+			elseif($date_from != ""){
+				$from = $date_from;
+				$now = date('Y-m-d');
+			}
+		}
+		elseif($date_to != ""){
+			if($date_from == ""){
+				$from = date('Y-m')."-01";
+				$now = $date_to;
+			}
+			elseif($date_from != ""){
+				$from = $date_from;
+				$now = $date_to;
+			}
+		}
+
+		if ($model == "") {
+			$models = "";
+		}else{
+			$models = "AND model = '".$model."'";
+		}
+		if ($process == 'qa') {
+			$report = DB::SELECT("SELECT
+				a.serial_number,
+				a.model,
+				GROUP_CONCAT( a.op_qa_fungsi SEPARATOR '' ) AS op_qa_fungsi,
+				GROUP_CONCAT( a.op_qa_visual_1 SEPARATOR '' ) AS op_qa_visual1,
+				GROUP_CONCAT( a.op_qa_visual_2 SEPARATOR '' ) AS op_qa_visual2,
+				min( a.created ) AS created,
+				(
+				SELECT
+					GROUP_CONCAT( ng_name ) 
+				FROM
+					assembly_ng_logs 
+				WHERE
+					a.serial_number = assembly_ng_logs.serial_number 
+					AND a.model = assembly_ng_logs.model 
+					AND location = 'qa-fungsi' 
+				) AS ng_fungsi,
+				(
+				SELECT
+					GROUP_CONCAT( ng_name ) 
+				FROM
+					assembly_ng_logs 
+				WHERE
+					a.serial_number = assembly_ng_logs.serial_number 
+					AND a.model = assembly_ng_logs.model 
+					AND location = 'qa-visual1' 
+				) AS ng_visual1,
+				(
+				SELECT
+					GROUP_CONCAT( ng_name ) 
+				FROM
+					assembly_ng_logs 
+				WHERE
+					a.serial_number = assembly_ng_logs.serial_number 
+					AND a.model = assembly_ng_logs.model 
+					AND location = 'qa-visual2' 
+				) AS ng_visual2 
+			FROM
+				(
+				SELECT DISTINCT
+					( asl.serial_number ),
+					asl.model,
+					GROUP_CONCAT(
+						DISTINCT (
+							CONCAT(
+								asl.operator_id,
+								'<br>',
+							SUBSTRING_INDEX( employee_syncs.NAME, ' ', 2 )))) AS op_qa_fungsi,
+					'' AS op_qa_visual_1,
+					'' AS op_qa_visual_2,
+					DATE( asl.created_at ) AS created 
+				FROM
+					assembly_logs asl
+					JOIN employee_syncs ON employee_syncs.employee_id = asl.operator_id 
+				WHERE
+					location = 'qa-fungsi' 
+				GROUP BY
+					asl.serial_number UNION ALL
+				SELECT DISTINCT
+					( asl.serial_number ),
+					asl.model,
+					'' AS op_qa_fungsi,
+					GROUP_CONCAT(
+						DISTINCT (
+							CONCAT(
+								asl.operator_id,
+								'<br>',
+							SUBSTRING_INDEX( employee_syncs.NAME, ' ', 2 )))) AS op_qa_visual_1,
+					'' AS op_qa_visual_2,
+					DATE( asl.created_at ) AS created 
+				FROM
+					assembly_logs asl
+					JOIN employee_syncs ON employee_syncs.employee_id = asl.operator_id 
+				WHERE
+					location = 'qa-visual1' 
+				GROUP BY
+					asl.serial_number UNION ALL
+				SELECT DISTINCT
+					( asl.serial_number ),
+					asl.model,
+					'' AS op_qa_fungsi,
+					'' AS op_qa_visual_1,
+					GROUP_CONCAT(
+						DISTINCT (
+							CONCAT(
+								asl.operator_id,
+								'<br>',
+							SUBSTRING_INDEX( employee_syncs.NAME, ' ', 2 )))) AS op_qa_visual_2,
+					DATE( asl.created_at ) AS created 
+				FROM
+					assembly_logs asl
+					JOIN employee_syncs ON employee_syncs.employee_id = asl.operator_id 
+				WHERE
+					location = 'qa-visual2' 
+				GROUP BY
+					asl.serial_number 
+				) a 
+				WHERE
+				a.created BETWEEN '".$from."' 
+				AND '".$now."' 
+				".$models."
+			GROUP BY
+				a.serial_number,
+				a.model");
+		}
+		$response = array(
+			'status' => true,
+			'report' => $report
 		);
 		return Response::json($response);
 	} catch (\Exception $e) {

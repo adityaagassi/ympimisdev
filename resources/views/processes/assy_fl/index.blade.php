@@ -98,6 +98,7 @@
 			<a href="{{ url('/index/assembly/stamp_record') }}" class="btn btn-default btn-block" style="font-size: 17px; border-color: purple;">Stamp Record New</a>
 			<a href="{{ url('/index/assembly/ng_report','production') }}" class="btn btn-default btn-block" style="font-size: 17px; border-color: purple;">Production NG Report</a>
 			<a href="{{ url('/index/assembly/ng_report','qa') }}" class="btn btn-default btn-block" style="font-size: 17px; border-color: purple;">QA NG Report</a>
+			<a href="{{ url('/index/assembly/serial_number_report','qa') }}" class="btn btn-default btn-block" style="font-size: 17px; border-color: purple;">QA Serial Number Report</a>
 		</div>
 	</div>
 </section>

@@ -1335,6 +1335,9 @@ Route::get('fetch/welding/op_trend', 'WeldingProcessController@fetchWeldingTrend
 Route::get('index/welding/resume_kanban', 'WeldingProcessController@indexResumeKanban');
 Route::get('fetch/welding/resume_kanban', 'WeldingProcessController@fetchResumeKanban');
 
+Route::get('index/tpro/resume_kanban', 'InitialProcessController@indexResumeKanban');
+Route::get('fetch/tpro/resume_kanban', 'InitialProcessController@fetchResumeKanban');
+
 //JIG
 Route::group(['nav' => 'M27', 'middleware' => 'permission'], function(){
 	Route::get('index/welding/jig_bom', 'WeldingProcessController@indexWeldingJigBom');
@@ -1583,7 +1586,7 @@ Route::get('purchase_requisition/detailPch', 'AccountingController@detailMonitor
 
 Route::group(['nav' => 'S61', 'middleware' => 'permission'], function(){
 	//Purchase Requisition
-	Route::get('canteen/purchase_requisition', 'GeneralAffairController@purchase_requisition');
+	Route::get('canteen/purchase_requisition', 'GeneralAffairController@canteen_purchase_requisition');
 });
 
 //PO Monitoring & Control
@@ -4264,6 +4267,9 @@ Route::get('fetch/assembly/stamp_record', 'AssemblyProcessController@fetchStampR
 Route::get('index/assembly/ng_report/{process}', 'AssemblyProcessController@indexNgReport');
 Route::get('fetch/assembly/ng_report/{process}', 'AssemblyProcessController@fetchNgReport');
 
+Route::get('index/assembly/serial_number_report/{process}', 'AssemblyProcessController@indexSerialNumberReport');
+Route::get('fetch/assembly/serial_number_report/{process}', 'AssemblyProcessController@fetchSerialNumberReport');
+
 Route::get('edit/assembly/stamp', 'AssemblyProcessController@editStamp');
 Route::post('destroy/assembly/stamp', 'AssemblyProcessController@destroyStamp');
 Route::post('update/assembly/stamp', 'AssemblyProcessController@updateStamp');
@@ -4619,6 +4625,9 @@ Route::get('fetch/detail/pelayanan', 'WarehouseNewController@fetchDetailMaterial
 Route::post('update/pengecekan', 'WarehouseNewController@updatePengecekanPeng');
 Route::get('index/monitoring/internal', 'WarehouseNewController@index_monitoring');
 Route::get('fetch/status', 'WarehouseNewController@fetchStatus');
+Route::get('fetch/import/display', 'WarehouseNewController@fetch_import_display');
+
+
 
 
 

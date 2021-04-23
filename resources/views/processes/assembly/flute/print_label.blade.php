@@ -419,7 +419,7 @@
 
 			}else{
 				$("#tag").val('');
-				openErrorGritter('Error', 'Tag Not Found');
+				openErrorGritter('Error', result.message);
 			}
 		});
 	}
