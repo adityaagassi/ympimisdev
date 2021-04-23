@@ -3160,7 +3160,7 @@ public function fetchSerialNumberReport($process,Request $request)
 	} catch (\Exception $e) {
 		$response = array(
 			'status' => false,
-			'message' => 'Failed Get Data'
+			'message' => $e->getMessage()
 		);
 		return Response::json($response);
 	}
