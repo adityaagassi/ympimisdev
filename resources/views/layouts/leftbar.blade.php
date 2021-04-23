@@ -26,6 +26,10 @@
       <li class="header">Administration Menu</li>
       @endif
 
+      @if(isset($page) && $page == "Safety Riding")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/safety_riding") }}"><i class="fa fa-motorcycle"></i> <span>Safety Riding</span></a>
+      </li>
+
       @if(in_array('A1', $navs))
       @if(isset($page) && $page == "Batch Setting")<li class="active">@else<li>@endif
         <a href="{{ url("/index/batch_setting") }}"><i class="fa fa-clock-o"></i> <span>Batch Setting</span></a>
@@ -131,6 +135,10 @@
 
       @if(isset($page) && $page == "Middle Resume Kanban")<li class="active">@else<li>@endif
         <a href="{{ url('/index/middle/resume_kanban') }}"><i class="fa fa-exchange"></i> <span>Middle Resume Kanban</span></a>
+      </li>
+
+      @if(isset($page) && $page == "T Pro Resume Kanban")<li class="active">@else<li>@endif
+        <a href="{{ url('/index/tpro/resume_kanban') }}"><i class="fa fa-exchange"></i> <span>T Pro Resume Kanban</span></a>
       </li>
 
     </ul>
@@ -370,7 +378,10 @@
           <a href="{{ url("/index/purchase_item") }}"><i class="fa fa-sort-alpha-asc"></i><span>Purchase Item</span></a>
         </li>
         @if(isset($page) && $page == "Budget")<li class="active">@else<li>@endif
-          <a href="{{ url("budget/info") }}"><i class="fa fa-money"></i><span>Budget Info</span></a>
+          <a href="{{ url("budget/info") }}"><i class="fa fa-money"></i><span>Budget Information</span></a>
+        </li>
+        @if(isset($page) && $page == "Budget Monthly")<li class="active">@else<li>@endif
+          <a href="{{ url("budget/monthly") }}"><i class="fa fa-money"></i><span>Budget Monthly</span></a>
         </li>
         @if(isset($page) && $page == "Cek Kedatangan")<li class="active">@else<li>@endif
           <a href="{{ url("warehouse/cek_kedatangan") }}"><i class="fa fa-sticky-note-o"></i>Cek Kedatangan Barang</a>
@@ -399,7 +410,10 @@
           <a href="{{ url("/index/purchase_item") }}"><i class="fa fa-sort-alpha-asc"></i><span>Purchase Item</span></a>
         </li>
         @if(isset($page) && $page == "Budget")<li class="active">@else<li>@endif
-          <a href="{{ url("budget/info") }}"><i class="fa fa-money"></i><span>Budget Info</span></a>
+          <a href="{{ url("budget/info") }}"><i class="fa fa-money"></i><span>Budget Information</span></a>
+        </li>
+        @if(isset($page) && $page == "Budget Monthly")<li class="active">@else<li>@endif
+          <a href="{{ url("budget/monthly") }}"><i class="fa fa-money"></i><span>Budget Monthly</span></a>
         </li>
         @if(isset($page) && $page == "Cek Kedatangan")<li class="active">@else<li>@endif
           <a href="{{ url("warehouse/cek_kedatangan") }}"><i class="fa fa-sticky-note-o"></i>Cek Kedatangan Barang</a>
@@ -569,6 +583,31 @@
 
         @if(isset($page) && $page == "Cek Kedatangan")<li class="active">@else<li>@endif
           <a href="{{ url("warehouse/cek_kedatangan") }}"><i class="fa fa-sticky-note-o"></i>Cek Kedatangan Barang</a>
+        </li>
+      </ul>
+    </li>
+    @endif
+
+    @if(in_array('S48', $navs))
+    @if(isset($head) && $head == "Canteen")<li class="treeview active">@else<li class="treeview">@endif
+      <a href="#">
+        <i class="fa fa-cutlery"></i> <span>Canteen</span>
+        <span class="pull-right-container">
+          <i class="fa fa-angle-left pull-right"></i>
+        </span>
+      </a>
+      <ul class="treeview-menu">
+        @if(isset($page) && $page == "Purchase Requisition Canteen")<li class="active">@else<li>@endif
+          <a href="{{ url("canteen/purchase_requisition") }}"><i class="fa fa-shopping-cart"></i>PR Canteen</a>
+        </li>
+        @if(isset($page) && $page == "Purchase Requisition Control")<li class="active">@else<li>@endif
+          <a href="{{ url("canteen/purchase_requisition/monitoring") }}"><i class="fa fa-tv"></i>PR Monitoring Canteen</a>
+        </li>
+        @if(isset($page) && $page == "Item Canteen")<li class="active">@else<li>@endif
+          <a href="{{ url("canteen/purchase_item") }}"><i class="fa fa-sort-alpha-asc"></i><span>Item Canteen</span></a>
+        </li>
+        @if(isset($page) && $page == "Cek Kedatangan")<li class="active">@else<li>@endif
+          <a href="{{ url("ga/cek_kedatangan") }}"><i class="fa fa-truck"></i>Cek Kedatangan Canteen</a>
         </li>
       </ul>
     </li>
@@ -1241,6 +1280,10 @@
     <a href="{{ url("/index/workshop/receipt") }}"><i class="fa fa-envelope-o"></i> <span>WJO Receipt</span></a>
   </li>
 
+  @if(isset($page) && $page == "WJO Report")<li class="active">@else<li>@endif
+    <a href="{{ url('/index/workshop/perolehan') }}"><i class="fa fa-bar-chart"></i> <span>WJO Report</span></a>
+  </li>
+
   @if(isset($page) && $page == "Leader Task Monitoring")<li class="active">@else<li>@endif
     <a href="{{ url('/index/production_report/index/13') }}"><i class="fa fa-book"></i> <span>PE Field Report</span></a>
   </li>
@@ -1286,12 +1329,12 @@
       </span>
     </a>
     <ul class="treeview-menu">
-      @if(isset($page) && $page == "Planned Maintenance Data")<li class="active">@else<li>@endif
-        <a href="{{ url("/index/maintenance/planned/master") }}"><i class="fa fa-edit"></i> <span>PM Data</span></a>
+      @if(isset($page) && $page == "Planned Maintenance Form")<li class="active">@else<li>@endif
+        <a href="{{ secure_url("/index/maintenance/planned/form") }}"><i class="fa fa-list"></i> <span>PM Check</span></a>
       </li>
 
-      @if(isset($page) && $page == "Planned Maintenance Form")<li class="active">@else<li>@endif
-        <a href="{{ url("/index/maintenance/planned/form") }}"><i class="fa fa-list"></i> <span>PM Check</span></a>
+      @if(isset($page) && $page == "Planned Maintenance Data")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/maintenance/planned/master") }}"><i class="fa fa-edit"></i> <span>PM Data</span></a>
       </li>
 
     </ul>
@@ -1504,25 +1547,36 @@
  </span>
 </a>
 <ul class="treeview-menu">
-   @if(isset($page) && $page == "Display Job")<li class="active">@else<li>@endif
-    <a href="{{ url("/index/display/job") }}"><i class="fa fa-tv"></i> <span>Display Job</span></a>
-  </li>
-  @if(isset($page) && $page == "Create Packing List")<li class="active">@else<li>@endif
-    <a href="{{ url("/index/create_packinglist") }}"><i class="fa fa-newspaper-o"></i> <span>Create Packing List</span></a>
-  </li>
-  @if(isset($page) && $page == "Warehouse Internal Job")<li class="active">@else<li>@endif
-    <a href="{{ secure_url("/warehouse/internal") }}"><i class="fa fa-newspaper-o"></i> <span>Warehouse Internal Job</span></a>
-  </li>
-  @if(isset($page) && $page == "Drop Material Exim")<li class="active">@else<li>@endif
-    <a href="{{ secure_url("/index/drop/exim") }}"><i class="fa fa-newspaper-o"></i> <span>Drop Material Exim</span></a>
-  </li>
+ @if(isset($page) && $page == "Display Job")<li class="active">@else<li>@endif
+  <a href="{{ secure_url("/index/display/job") }}"><i class="fa fa-tv"></i> <span>Display Job</span></a>
+</li>
+ @if(isset($page) && $page == "Monitoring Internal")<li class="active">@else<li>@endif
+  <a href="{{ url("/index/monitoring/internal") }}"><i class="fa fa-tv"></i> <span>Monitoring Internal</span></a>
+</li>
 
-  @if(isset($page) && $page == "Index Warehouse")<li class="active">@else<li>@endif
-    <a href="{{ secure_url("/index/warehouse/jobs") }}"><i class="fa fa-newspaper-o"></i> <span>Warehouse Job</span></a>
-  </li>  
-  @if(isset($page) && $page == "Create Job Employee")<li class="active">@else<li>@endif
-    <a href="{{ url("/index/create_job") }}"><i class="fa fa-newspaper-o"></i> <span>Create Job Employee</span></a>
-  </li>
+@if(isset($page) && $page == "Create Packing List")<li class="active">@else<li>@endif
+  <a href="{{ url("/index/create_packinglist") }}"><i class="fa fa-newspaper-o"></i> <span>Create Packing List</span></a>
+</li>
+@if(isset($page) && $page == "Warehouse Internal Job")<li class="active">@else<li>@endif
+  <a href="{{ secure_url("/warehouse/internal") }}"><i class="fa fa-newspaper-o"></i> <span>Warehouse Internal Job</span></a>
+</li>
+@if(isset($page) && $page == "Drop Material Exim")<li class="active">@else<li>@endif
+  <a href="{{ url("/index/drop/exim") }}"><i class="fa fa-newspaper-o"></i> <span>Drop Material Exim</span></a>
+</li>
+@if(isset($page) && $page == "Request Produksi")<li class="active">@else<li>@endif
+  <a href="{{ secure_url("/index/pelayanan") }}"><i class="fa fa-newspaper-o"></i> <span>Request Produksi</span></a>
+</li>
+
+@if(isset($page) && $page == "Pengantaran Material")<li class="active">@else<li>@endif
+  <a href="{{ secure_url("/index/pengantaran/request") }}"><i class="fa fa-newspaper-o"></i> <span>Pengantaran Material</span></a>
+</li>
+
+@if(isset($page) && $page == "Index Warehouse")<li class="active">@else<li>@endif
+  <a href="{{ secure_url("/index/warehouse/jobs") }}"><i class="fa fa-newspaper-o"></i> <span>Warehouse Job</span></a>
+</li>  
+@if(isset($page) && $page == "Create Job Employee")<li class="active">@else<li>@endif
+  <a href="{{ url("/index/create_job") }}"><i class="fa fa-newspaper-o"></i> <span>Create Job Employee</span></a>
+</li>
 </ul>
 </li>
 
@@ -1586,8 +1640,11 @@
   @if(isset($page) && $page == "Create Scrap List")<li class="active">@else<li>@endif
     <a href="{{ url("/index/scrap") }}"><i class="fa fa-pencil-square-o"></i> <span>Create Scrap Slip</span></a>
   </li>
-  @if(isset($page) && $page == "Unitisasi")<li class="active">@else<li>@endif
-    <a href="{{ url("index/scrap/view") }}"><i class="fa fa-newspaper-o"></i> <span>Unitisasi</span></a>
+  @if(isset($page) && $page == "Monitoring Lokasi")<li class="active">@else<li>@endif
+    <a href="{{ url("monitoring/scrap/wip") }}"><i class="fa fa-pencil-square-o"></i> <span>Monitoring Lokasi</span></a>
+  </li>
+  @if(isset($page) && $page == "Inputor Menu")<li class="active">@else<li>@endif
+    <a href="{{ url("index/scrap/view") }}"><i class="fa fa-newspaper-o"></i> <span>Inputor Menu</span></a>
   </li>
   @if(isset($page) && $page == "Warehouse")<li class="active">@else<li>@endif
     <a href="{{ url("index/scrap/warehouse") }}"><i class="fa fa-shopping-cart"></i> <span>Warehouse</span></a>
