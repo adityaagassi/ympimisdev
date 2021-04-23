@@ -958,8 +958,13 @@ class AssemblyProcessController extends Controller
 		->where('location', 'qa-visual2')
 		->where('origin_group_code', $origin_group_code)
 		->first();
+		$data2 = AssemblyDetail::where('tag', $tag)
+		->whereIn('location', ['qa-visual2', 'qa-visual1', 'qa-fungsi'])
+		// ->where('location', 'qa-visual2')
+		->where('origin_group_code', $origin_group_code)
+		->get();
 
-		if(count($data) > 0){
+		if(count($data2) >= 3){
 			$remark = "";
 			if($data->remark == 'SP'){
 				$remark = "AND stamp_hierarchies.remark = 'SP'";
