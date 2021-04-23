@@ -3053,7 +3053,7 @@ public function fetchSerialNumberReport($process,Request $request)
 				GROUP_CONCAT( a.op_qa_fungsi SEPARATOR '' ) AS op_qa_fungsi,
 				GROUP_CONCAT( a.op_qa_visual_1 SEPARATOR '' ) AS op_qa_visual1,
 				GROUP_CONCAT( a.op_qa_visual_2 SEPARATOR '' ) AS op_qa_visual2,
-				min( a.created ) AS created,
+				SUBSTRING_INDEX( a.created, ',', 1 ) AS created,
 				(
 				SELECT
 					GROUP_CONCAT( ng_name ) 
@@ -3097,14 +3097,16 @@ public function fetchSerialNumberReport($process,Request $request)
 							SUBSTRING_INDEX( employee_syncs.NAME, ' ', 2 )))) AS op_qa_fungsi,
 					'' AS op_qa_visual_1,
 					'' AS op_qa_visual_2,
-					DATE( asl.created_at ) AS created 
+					GROUP_CONCAT(
+					DATE( asl.created_at )) AS created 
 				FROM
 					assembly_logs asl
 					JOIN employee_syncs ON employee_syncs.employee_id = asl.operator_id 
 				WHERE
 					location = 'qa-fungsi' 
 				GROUP BY
-					asl.serial_number,asl.model UNION ALL
+					asl.serial_number,
+					asl.model UNION ALL
 				SELECT DISTINCT
 					( asl.serial_number ),
 					asl.model,
@@ -3116,14 +3118,16 @@ public function fetchSerialNumberReport($process,Request $request)
 								'<br>',
 							SUBSTRING_INDEX( employee_syncs.NAME, ' ', 2 )))) AS op_qa_visual_1,
 					'' AS op_qa_visual_2,
-					DATE( asl.created_at ) AS created 
+					GROUP_CONCAT(
+					DATE( asl.created_at )) AS created 
 				FROM
 					assembly_logs asl
 					JOIN employee_syncs ON employee_syncs.employee_id = asl.operator_id 
 				WHERE
 					location = 'qa-visual1' 
 				GROUP BY
-					asl.serial_number,asl.model UNION ALL
+					asl.serial_number,
+					asl.model UNION ALL
 				SELECT DISTINCT
 					( asl.serial_number ),
 					asl.model,
@@ -3135,19 +3139,21 @@ public function fetchSerialNumberReport($process,Request $request)
 								asl.operator_id,
 								'<br>',
 							SUBSTRING_INDEX( employee_syncs.NAME, ' ', 2 )))) AS op_qa_visual_2,
-					DATE( asl.created_at ) AS created 
+					GROUP_CONCAT(
+					DATE( asl.created_at )) AS created 
 				FROM
 					assembly_logs asl
 					JOIN employee_syncs ON employee_syncs.employee_id = asl.operator_id 
 				WHERE
 					location = 'qa-visual2' 
 				GROUP BY
-					asl.serial_number,asl.model
+					asl.serial_number,
+					asl.model 
 				) a 
-				WHERE
+			WHERE
 				a.created BETWEEN '".$from."' 
 				AND '".$now."' 
-				".$models."
+				".$model."
 			GROUP BY
 				a.serial_number,
 				a.model");
