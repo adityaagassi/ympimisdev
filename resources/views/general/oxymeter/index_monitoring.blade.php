@@ -373,7 +373,7 @@
 		$('.select2').select2();
 
 		draw_data();
-		setInterval(draw_data,300000);
+		setInterval(draw_data, 60000);
 	});
 
 	function draw_data() {
@@ -749,7 +749,7 @@ $("#total_person_prd_3").text(prd_total_3);
 					tickInterval: 1,
 				},
 				tooltip: {
-					headerFormat: '<span style="font-size:10px">Oxygen Rate <b>{point.key}</b></span><table>',
+					headerFormat: '<span style="font-size:10px">{series.name} <b>{point.key}</b></span><table>',
 					pointFormat: '<tr><td style="padding:0"><b>{point.y} Person</b></td></tr>',
 					footerFormat: '</table>',
 					useHTML: true

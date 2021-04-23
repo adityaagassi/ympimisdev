@@ -2634,7 +2634,7 @@ public function fetchOxymeterMonitoring(Request $request)
 		left join (select * from general_attendance_logs where purpose_code = 'Oxymeter' and due_date = '".$dt."') as oxymeter on oxymeter.employee_id = sunfish_shift_syncs.employee_id
 		left join employee_syncs on sunfish_shift_syncs.employee_id = employee_syncs.employee_id
 		left join departments on employee_syncs.department = departments.department_name
-		where shift_date = '".$dt."'");
+		where shift_date = '".$dt."' and employees.remark <> 'Jps' and employees.employee_id NOT LIKE 'OS%'");
 	
 	$response = array(
 		'status' => true,
