@@ -953,7 +953,7 @@ class AssemblyProcessController extends Controller
 		$tag = $request->get('tag');
 		$tag = strtoupper(dechex($tag));
 
-		$data = AssemblyInventory::where('tag', $tag)
+		$data = AssemblyDetail::where('tag', $tag)
 		->whereIn('location', ['qa-visual2', 'qa-visual1', 'qa-fungsi'])
 		->where('origin_group_code', $origin_group_code)
 		->get();
