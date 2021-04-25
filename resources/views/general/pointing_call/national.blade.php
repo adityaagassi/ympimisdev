@@ -89,7 +89,8 @@
 						image_data += '<center><span style="font-weight: bold; font-size: 2vw;">{{ date('Y') }}年 {{ date('m') }}月 Catatan Record Penerapan 『Janji Safety Riding』</span></center><br><br>';
 						image_data += '<span style="font-weight: bold; font-size: 1.3vw;">① Perkirakan waktu untuk tiba dengan selamat di tempat tujuan. (Mari berangkat kerja lebih awal.)</span><br>';
 						image_data += '<span style="font-weight: bold; font-size: 1.3vw;">② Marilah patuhi aturan berlalu lintas demi orang-orang tercinta kita.</span><br><br><br>';
-						image_data += '<span style="font-weight: bold; font-size: 1.5vw;">'+result.safety_ridings[0].department+'</span><br>';
+						// image_data += '<span style="font-weight: bold; font-size: 1.5vw;">'+result.safety_ridings[0].department+'</span><br>';
+						image_data += '<span style="font-weight: bold; font-size: 1.5vw;"></span><br>';
 						image_data += '<table class="table table-bordered">';
 						image_data += '<thead>';
 						image_data += '<tr style="background-color: rgba(126,86,134,.7); font-size:1.3vw;">';
