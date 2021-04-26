@@ -98,6 +98,16 @@ class DisplayController extends Controller
 		$yesterday = date('Y-m-d', strtotime('-1 day', strtotime($date)));
 		$end = date('Y-m-t', strtotime($date));
 
+		
+		// ( histories.transfer_movement_type = '9I4', -( histories.lot ), 0 ))) AS picking,
+		// ( histories.transfer_movement_type = '9I4', IF(day(histories.created_at) < 6, 0, -(histories.lot)),0))) AS picking,
+
+		// ( histories.transfer_movement_type = '9I4', -( histories.lot ), 0 )))) AS plan,
+		// ( histories.transfer_movement_type = '9I4', IF(day(histories.created_at) < 6, 0, -(histories.lot)),0)))) AS plan,
+
+		// ( histories.transfer_movement_type = '9I4', ( histories.lot ), 0 )) AS minus,
+		// ( histories.transfer_movement_type = '9I4', IF(day(histories.created_at) < 6, 0, histories.lot),0)) AS minus,
+
 		$stockroom_keys = db::select("SELECT
 			materials.issue_storage_location,
 			materials.hpl,
@@ -164,7 +174,7 @@ class DisplayController extends Controller
 			histories.transfer_movement_type = '9I3',
 			histories.lot,
 			IF
-			( histories.transfer_movement_type = '9I4', -( histories.lot ), 0 ))) AS picking,
+			( histories.transfer_movement_type = '9I4', IF(day(histories.created_at) < 6, 0, -(histories.lot)),0))) as picking,
 			0 AS plus,
 			0 AS minus,
 			0 AS stock,
@@ -222,7 +232,7 @@ class DisplayController extends Controller
 			histories.transfer_movement_type = '9I3',
 			histories.lot,
 			IF
-			( histories.transfer_movement_type = '9I4', -( histories.lot ), 0 )))) AS plan,
+			( histories.transfer_movement_type = '9I4', IF(day(histories.created_at) < 6, 0, -(histories.lot)),0)))) AS plan,
 			0 AS plan_ori 
 			FROM
 			(
@@ -267,7 +277,7 @@ class DisplayController extends Controller
 			( histories.transfer_movement_type = '9I3', histories.lot, 0 )) AS plus,
 			sum(
 			IF
-			( histories.transfer_movement_type = '9I4', ( histories.lot ), 0 )) AS minus,
+			( histories.transfer_movement_type = '9I4', IF(day(histories.created_at) < 6, 0, histories.lot),0)) AS minus,
 			0 AS stock,
 			0 AS plan_ori 
 			FROM
@@ -995,6 +1005,9 @@ public function fetchEfficiencyMonitoring(Request $request){
 }
 
 public function index_dp_production_result(){
+	$title = "Daily Production Result";
+	$title_jp = "日常生産実績";
+
 	$activity =  new UserActivityLog([
 		'activity' => 'FG Daily Production Result (日常生産実績)',
 		'created_by' => Auth::id(),
@@ -1004,6 +1017,8 @@ public function index_dp_production_result(){
 	$origin_groups = OriginGroup::orderBy('origin_group_name', 'asc')->get();
 	return view('displays.production_result', array(
 		'origin_groups' => $origin_groups,
+		'title' => $title,
+		'title_jp' => $title_jp
 	))->with('page', 'Display Production Result')->with('head', 'Display');
 }
 

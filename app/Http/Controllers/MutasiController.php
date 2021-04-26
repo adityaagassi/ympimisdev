@@ -376,7 +376,7 @@ class MutasiController extends Controller
 
             // $isimail = "select id, nama, tanggal, tanggal_maksimal, departemen, seksi, ke_seksi from mutasi_depts where mutasi_depts.id = ".$mutasi->id;
             // $mutasi = db::select($isimail);
-            // Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','mokhamad.khamdan.khabibi@music.yamaha.com'])->send(new SendEmail($mutasi, 'rejected_mutasi'));
+            // Mail::to($mailtoo)->bcc(['lukmannul.arif@music.yamaha.com','mokhamad.khamdan.khabibi@music.yamaha.com'])->send(new SendEmail($mutasi, 'rejected_mutasi'));
             return redirect('/dashboard/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
             }
             catch (QueryException $e){
@@ -395,7 +395,7 @@ class MutasiController extends Controller
 
             // $isimail = "select id, nama, tanggal, tanggal_maksimal, departemen,ke_departemen from mutasi_ant_depts where mutasi_ant_depts.id = ".$mutasi->id;
             // $mutasi = db::select($isimail);
-            // Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','mokhamad.khamdan.khabibi@music.yamaha.com'])->send(new SendEmail($mutasi, 'rejected_mutasi_ant'));
+            // Mail::to($mailtoo)->bcc(['lukmannul.arif@music.yamaha.com','mokhamad.khamdan.khabibi@music.yamaha.com'])->send(new SendEmail($mutasi, 'rejected_mutasi_ant'));
             return redirect('/dashboard_ant/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
             }
             catch (QueryException $e){
@@ -754,7 +754,7 @@ class MutasiController extends Controller
 
             // $isimail = "select id, nama, tanggal, tanggal_maksimal, departemen, seksi, ke_seksi from mutasi_depts where mutasi_depts.id = ".$mutasi->id;
             // $mutasi = db::select($isimail);
-            // Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_satu'));
+            // Mail::to($mailtoo)->bcc(['lukmannul.arif@music.yamaha.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_satu'));
             return redirect('/dashboard/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
             }
             catch (QueryException $e){
@@ -875,7 +875,7 @@ class MutasiController extends Controller
 
                 $isimail = "select id, nama, nik, sub_group, ke_sub_group, `group`, ke_group, seksi, ke_seksi, departemen, jabatan, rekomendasi, tanggal, tanggal_maksimal, alasan from mutasi_depts where mutasi_depts.id = ".$mutasi->id;
                 $mutasi = db::select($isimail);
-                Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_satu'));
+                Mail::to($mailtoo)->bcc(['lukmannul.arif@music.yamaha.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_satu'));
 
                 return redirect('/dashboard/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
                 } 
@@ -893,7 +893,7 @@ class MutasiController extends Controller
                 $mailtoo = DB::select($mails);
                 $isimail = "select id, nama, tanggal, tanggal_maksimal, departemen, seksi, ke_seksi from mutasi_depts where mutasi_depts.id = ".$mutasi->id;
                 $mutasi = db::select($isimail);
-                Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_satu'));
+                Mail::to($mailtoo)->bcc(['lukmannul.arif@music.yamaha.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_satu'));
                 return redirect('/dashboard/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');  
                 }
             }
@@ -972,7 +972,7 @@ class MutasiController extends Controller
             
 
             $mutasi = db::select($isimail);
-            Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_satu'));
+            Mail::to($mailtoo)->bcc(['lukmannul.arif@music.yamaha.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_satu'));
 
             return redirect('/dashboard/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
             
@@ -980,7 +980,7 @@ class MutasiController extends Controller
             
             // $isimail = "select id, nama, tanggal, tanggal_maksimal, departemen, seksi, ke_seksi from mutasi_depts where mutasi_depts.id = ".$mutasi->id;
             // $mutasi = db::select($isimail);
-            // Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_satu'));
+            // Mail::to($mailtoo)->bcc(['lukmannul.arif@music.yamaha.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_satu'));
             // return redirect('/dashboard/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
             }
             catch (QueryException $e){
@@ -1035,7 +1035,7 @@ class MutasiController extends Controller
             
 
             $mutasi = db::select($isimail);
-            Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','mokhamad.khamdan.khabibi@music.yamaha.com'])->send(new SendEmail($mutasi, 'done_mutasi_satu'));
+            Mail::to($mailtoo)->bcc(['lukmannul.arif@music.yamaha.com','mokhamad.khamdan.khabibi@music.yamaha.com'])->send(new SendEmail($mutasi, 'done_mutasi_satu'));
 
             return redirect('/dashboard/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
             // var_dump($data);
@@ -1066,7 +1066,7 @@ class MutasiController extends Controller
                 $mailtoo = DB::select($mails);
             $isimail = "select id, nama, tanggal, tanggal_maksimal, departemen, seksi, ke_seksi from mutasi_depts where mutasi_depts.id = ".$mutasi->id;
             $mutasi = db::select($isimail);
-            Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_satu'));
+            Mail::to($mailtoo)->bcc(['lukmannul.arif@music.yamaha.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_satu'));
             return redirect('/dashboard/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
             }
             catch (QueryException $e){
@@ -1089,7 +1089,7 @@ class MutasiController extends Controller
                 $mailtoo = DB::select($mails);
             $isimail = "select id, nama, tanggal, tanggal_maksimal, departemen, seksi, ke_seksi from mutasi_depts where mutasi_depts.id = ".$mutasi->id;
             $mutasi = db::select($isimail);
-            Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_satu'));
+            Mail::to($mailtoo)->bcc(['lukmannul.arif@music.yamaha.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_satu'));
             return redirect('/dashboard/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
             }
             catch (QueryException $e){
@@ -1164,7 +1164,7 @@ class MutasiController extends Controller
             
 
             $mutasi = db::select($isimail);
-            Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','mokhamad.khamdan.khabibi@music.yamaha.com'])->send(new SendEmail($mutasi, 'done_mutasi_satu'));
+            Mail::to($mailtoo)->bcc(['lukmannul.arif@music.yamaha.com','mokhamad.khamdan.khabibi@music.yamaha.com'])->send(new SendEmail($mutasi, 'done_mutasi_satu'));
 
             return redirect('/dashboard/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
             // var_dump($data);
@@ -1780,7 +1780,7 @@ class MutasiController extends Controller
 
             // $isimail = "select id, nama, tanggal, tanggal_maksimal, departemen,ke_departemen from mutasi_ant_depts where mutasi_ant_depts.id = ".$mutasi->id;
             // $mutasi = db::select($isimail);
-            // Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_ant'));
+            // Mail::to($mailtoo)->bcc(['lukmannul.arif@music.yamaha.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_ant'));
             return redirect('/dashboard_ant/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
             }
             catch (QueryException $e){
@@ -1910,7 +1910,7 @@ class MutasiController extends Controller
             }
             $isimail = "select id, nama, tanggal, tanggal_maksimal, departemen,ke_departemen from mutasi_ant_depts where mutasi_ant_depts.id = ".$mutasi->id;
             $mutasi = db::select($isimail);
-            Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_ant'));
+            Mail::to($mailtoo)->bcc(['lukmannul.arif@music.yamaha.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_ant'));
             return redirect('/dashboard_ant/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
             }
             catch (QueryException $e){
@@ -1981,7 +1981,7 @@ class MutasiController extends Controller
             
             $isimail = "select id, nama, tanggal, tanggal_maksimal, departemen,ke_departemen from mutasi_ant_depts where mutasi_ant_depts.id = ".$mutasi->id;
             $mutasi = db::select($isimail);
-            Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_ant'));
+            Mail::to($mailtoo)->bcc(['lukmannul.arif@music.yamaha.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_ant'));
             return redirect('/dashboard_ant/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
             }
             catch (QueryException $e){
@@ -2056,6 +2056,8 @@ class MutasiController extends Controller
 
             $mutasi->app_da = 'Approved';
             $mutasi->app_ga = 'Approved';
+            $mutasi->nama_gm_asal = 'Yukitaka Hayakawa';
+            $mutasi->date_gm_asal = date('Y-m-d H-y-s');
             $mutasi->date_dgm_asal = date('Y-m-d H-y-s');
             // $mutasi->posisi = 'gm_asal';
             $mutasi->posisi = 'chf_tujuan';
@@ -2071,7 +2073,7 @@ class MutasiController extends Controller
             $mutasi->save();
 
             if ($mutasi->chief_or_foreman_tujuan != null) {
-                $mutasi->posisi = 'chf_tujuan';
+                // $mutasi->posisi = 'chf_tujuan';
                 $mails = "select distinct email from mutasi_ant_depts join users on mutasi_ant_depts.chief_or_foreman_tujuan = users.username where mutasi_ant_depts.id = ".$mutasi->id;
                 $mailtoo = DB::select($mails);
             }
@@ -2086,7 +2088,7 @@ class MutasiController extends Controller
             //     $mailtoo = DB::select($mails);
             $isimail = "select id, nama, tanggal, tanggal_maksimal, departemen,ke_departemen from mutasi_ant_depts where mutasi_ant_depts.id = ".$mutasi->id;
             $mutasi = db::select($isimail);
-            Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_ant'));
+            Mail::to($mailtoo)->bcc(['lukmannul.arif@music.yamaha.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_ant'));
             return redirect('/dashboard_ant/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
             }
             catch (QueryException $e){
@@ -2237,7 +2239,7 @@ class MutasiController extends Controller
             }
             $isimail = "select id, nama, tanggal, tanggal_maksimal, departemen,ke_departemen from mutasi_ant_depts where mutasi_ant_depts.id = ".$mutasi->id;
             $mutasi = db::select($isimail);
-            Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_ant'));
+            Mail::to($mailtoo)->bcc(['lukmannul.arif@music.yamaha.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_ant'));
             return redirect('/dashboard_ant/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
             }
             catch (QueryException $e){
@@ -2449,7 +2451,7 @@ class MutasiController extends Controller
             }
             $isimail = "select id, nama, tanggal, tanggal_maksimal, departemen,ke_departemen from mutasi_ant_depts where mutasi_ant_depts.id = ".$mutasi->id;
             $mutasi = db::select($isimail);
-            Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_ant'));
+            Mail::to($mailtoo)->bcc(['lukmannul.arif@music.yamaha.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_ant'));
             return redirect('/dashboard_ant/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
             }
             catch (QueryException $e){
@@ -2516,7 +2518,7 @@ class MutasiController extends Controller
             }
             $isimail = "select id, nama, tanggal, tanggal_maksimal, departemen,ke_departemen from mutasi_ant_depts where mutasi_ant_depts.id = ".$mutasi->id;
             $mutasi = db::select($isimail);
-            Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_ant'));
+            Mail::to($mailtoo)->bcc(['lukmannul.arif@music.yamaha.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_ant'));
             return redirect('/dashboard_ant/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
             }
             catch (QueryException $e){
@@ -2591,6 +2593,8 @@ class MutasiController extends Controller
 
             $mutasi->app_dt = 'Approved';
             $mutasi->app_gt = 'Approved';
+            $mutasi->nama_gm_tujuan = 'Yukitaka Hayakawa';
+            $mutasi->date_gm_tujuan = date('Y-m-d H-y-s');
             $mutasi->date_dgm_tujuan = date('Y-m-d H-y-s');
             $mutasi->posisi = 'mgr_hrga';
             $mutasi->posisi = 'mgr_hrga';
@@ -2602,7 +2606,7 @@ class MutasiController extends Controller
                 $mailtoo = DB::select($mails);
             $isimail = "select id, nama, tanggal, tanggal_maksimal, departemen,ke_departemen from mutasi_ant_depts where mutasi_ant_depts.id = ".$mutasi->id;
             $mutasi = db::select($isimail);
-            Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_ant'));
+            Mail::to($mailtoo)->bcc(['lukmannul.arif@music.yamaha.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_ant'));
             return redirect('/dashboard_ant/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
             }
             catch (QueryException $e){
@@ -2625,7 +2629,7 @@ class MutasiController extends Controller
                 $mailtoo = DB::select($mails);
             $isimail = "select id, nama, tanggal, tanggal_maksimal, departemen,ke_departemen from mutasi_ant_depts where mutasi_ant_depts.id = ".$mutasi->id;
             $mutasi = db::select($isimail);
-            Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_ant'));
+            Mail::to($mailtoo)->bcc(['lukmannul.arif@music.yamaha.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_ant'));
             return redirect('/dashboard_ant/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
             }
             catch (QueryException $e){
@@ -2647,7 +2651,7 @@ class MutasiController extends Controller
             $mailtoo = DB::select($mails);
             $isimail = "select id, nama, tanggal, tanggal_maksimal, departemen,ke_departemen from mutasi_ant_depts where mutasi_ant_depts.id = ".$mutasi->id;
             $mutasi = db::select($isimail);
-            Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_ant'));
+            Mail::to($mailtoo)->bcc(['lukmannul.arif@music.yamaha.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_ant'));
             return redirect('/dashboard_ant/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
             }
             catch (QueryException $e){
@@ -2696,7 +2700,7 @@ class MutasiController extends Controller
             $isimail = "select id, nama, nik, sub_group, ke_sub_group, `group`, ke_group, seksi, ke_seksi, departemen, jabatan, rekomendasi, tanggal, alasan from mutasi_ant_depts where mutasi_ant_depts.id = ".$mutasi->id;
             
             $mutasi = db::select($isimail);
-            Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','mokhamad.khamdan.khabibi@music.yamaha.com'])->send(new SendEmail($mutasi, 'done_mutasi_ant'));
+            Mail::to($mailtoo)->bcc(['lukmannul.arif@music.yamaha.com','mokhamad.khamdan.khabibi@music.yamaha.com'])->send(new SendEmail($mutasi, 'done_mutasi_ant'));
             return redirect('/dashboard_ant/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
             }
             catch (QueryException $e){
@@ -2877,7 +2881,7 @@ class MutasiController extends Controller
 
             $isimail = "select id, nama, tanggal, tanggal_maksimal, departemen, seksi, ke_seksi from mutasi_depts where mutasi_depts.id = ".$mutasi->id;
             $mutasi = db::select($isimail);
-            Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_satu'));
+            Mail::to($mailtoo)->bcc(['lukmannul.arif@music.yamaha.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_satu'));
             return redirect('/dashboard/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
     }
 
@@ -2923,7 +2927,7 @@ class MutasiController extends Controller
 
             $isimail = "select id, nama, tanggal, tanggal_maksimal, departemen,ke_departemen from mutasi_ant_depts where mutasi_ant_depts.id = ".$mutasi->id;
             $mutasi = db::select($isimail);
-            Mail::to($mailtoo)->bcc(['lukmannularif87@gmail.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_ant'));
+            Mail::to($mailtoo)->bcc(['lukmannul.arif@music.yamaha.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_ant'));
             return redirect('/dashboard_ant/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
     }
 

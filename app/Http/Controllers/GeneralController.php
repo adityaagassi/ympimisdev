@@ -2374,7 +2374,8 @@ public function fetchGeneralPointingCall(Request $request){
 		$response = array(
 			'status' => true,
 			'pointing_calls' => $pointing_calls,
-			'safety_ridings' => $safety_ridings
+			'safety_ridings' => $safety_ridings,
+			'department' => $employee->department
 			// 'pics' => $pics
 		);
 		return Response::json($response);
