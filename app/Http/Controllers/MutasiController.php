@@ -720,6 +720,10 @@ class MutasiController extends Controller
                                 $chief = 'PI9809008';
                                 $nama_chief = 'Mey Indah Astuti';
                             }
+                            else if($request->get('section') == 'Press and Sanding Process Section'){
+                                $chief = 'PI9903003';
+                                $nama_chief = 'Slamet Hariadi';
+                            }
                         }
                     }
         try {
