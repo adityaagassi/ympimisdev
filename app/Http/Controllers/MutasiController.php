@@ -66,12 +66,12 @@ class MutasiController extends Controller
             $sub_group   = db::select('SELECT DISTINCT sub_group FROM employee_syncs');
         }
         else if($emp_dept->employee_id == 'PI1710002'){
-            $user    = db::select('SELECT employee_id,name FROM employee_syncs where department = "'.$emp_dept->department.'" or "'.$departement2.'"');
-            $dept  = db::select('SELECT DISTINCT department FROM employee_syncs where department = "'.$emp_dept->department.'" or "'.$departement2.'"');
-            $post    = db::select('SELECT DISTINCT position FROM employee_syncs where department = "'.$emp_dept->department.'" or "'.$departement2.'"');
-            $section = db::select('SELECT DISTINCT department, section FROM employee_syncs where department = "'.$emp_dept->department.'" or "'.$departement2.'"');
-            $group   = db::select('SELECT DISTINCT section, `group` FROM employee_syncs where department = "'.$emp_dept->department.'" or "'.$departement2.'"');
-            $sub_group   = db::select('SELECT DISTINCT sub_group FROM employee_syncs where department = "'.$emp_dept->department.'" or "'.$departement2.'"');
+            $user    = db::select('SELECT employee_id,name FROM employee_syncs where department = "'.$emp_dept->department.'" or department = "'.$departement2.'"');
+            $dept  = db::select('SELECT DISTINCT department FROM employee_syncs where department = "'.$emp_dept->department.'" or department = "'.$departement2.'"');
+            $post    = db::select('SELECT DISTINCT position FROM employee_syncs where department = "'.$emp_dept->department.'" or department = "'.$departement2.'"');
+            $section = db::select('SELECT DISTINCT department, section FROM employee_syncs where department = "'.$emp_dept->department.'" or department = "'.$departement2.'"');
+            $group   = db::select('SELECT DISTINCT section, `group` FROM employee_syncs where department = "'.$emp_dept->department.'" or department = "'.$departement2.'"');
+            $sub_group   = db::select('SELECT DISTINCT sub_group FROM employee_syncs where department = "'.$emp_dept->department.'" or department = "'.$departement2.'"');
         }
         else{
             $user    = db::select('SELECT employee_id,name FROM employee_syncs where department = "'.$emp_dept->department.'"');
