@@ -119,7 +119,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('email:kaizen')->weekdays()->dailyAt('08:45');
         $schedule->command('email:hrq')->weekdays()->dailyAt('07:45');
         $schedule->command('log:room_temperature')->everyThirtyMinutes();
-        $schedule->command('log:survey_covid')->weekly();
+        $schedule->command('log:survey_covid')->weekends()->dailyAt('21:00');
 
         // $schedule->command('notif:machine')->dailyAt('07:00');
         // $schedule->command('email:kaizen')->everyMinute();
