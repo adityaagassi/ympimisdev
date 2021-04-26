@@ -328,6 +328,7 @@
 				$('#tableCreateBody').html("");
 				$('#createPeriod').val("");
 				$('#modalCreate').modal('hide');
+				fetchSafety();
 				audio_ok.play();
 			}
 			else{
