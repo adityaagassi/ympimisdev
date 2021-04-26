@@ -424,7 +424,7 @@
 
 				$.each(result.schedule, function(key, value){
 					$('#id_schedule').val(value.id_schedule);
-					$('#start_date').val(value.start_date);
+					$('#start_date').val(value.start_date).datepicker({dateFormat:'yyyy-mm-dd' });
 					$('#start_time').val(value.start_times);
 					$('#machine').val(value.machine).trigger('change.select2');
 				});
