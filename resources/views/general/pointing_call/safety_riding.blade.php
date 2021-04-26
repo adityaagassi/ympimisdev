@@ -180,7 +180,7 @@
 					tableList += '<td>'+value.vperiod+'</td>';
 					tableList += '<td>'+value.location+'</td>';
 					tableList += '<td>'+value.department+'</td>';
-					tableList += '<td>'+value.username+' - '+value.name+'</td>';
+					tableList += '<td>'+value.name+'</td>';
 					tableList += '<td>'+value.vcreated+'</td>';
 					tableList += '<td><a style="color: white;" class="btn btn-info" href="{{ url('fetch/general/safety_riding_pdf') }}/'+param+'" target="_blank"><i class="fa fa-file-pdf-o"></i></a></td>';
 					tableList += '</tr>';

@@ -84,20 +84,45 @@ class GeneralController extends Controller{
 		->select('employees.remark', 'employee_syncs.department')
 		->first();
 
-		$safety_ridings = SafetyRiding::leftJoin('users', 'users.id', '=', 'safety_ridings.created_by')
-		->where('department', '=', $employee->department)
-		->where('location', '=', $employee->remark)
-		->select(
-			db::raw('date_format(safety_ridings.period, "%b %Y") as vperiod'), 
-			db::raw('date_format(safety_ridings.created_at, "%d-%b-%Y") as vcreated'), 
-			'safety_ridings.period', 
-			'safety_ridings.location', 
-			'safety_ridings.department', 
-			'users.username', 
-			'users.name', 
-			db::raw('date_format(safety_ridings.created_at, "%Y-%m-%d") as created'))
-		->distinct()
-		->get();
+		// $safety_ridings = SafetyRiding::leftJoin('users', 'users.id', '=', 'safety_ridings.created_by')
+		// ->where('department', '=', $employee->department)
+		// ->where('location', '=', $employee->remark)
+		// ->select(
+		// 	db::raw('date_format(safety_ridings.period, "%b %Y") as vperiod'), 
+		// 	db::raw('date_format(safety_ridings.created_at, "%d-%b-%Y") as vcreated'), 
+		// 	'safety_ridings.period', 
+		// 	'safety_ridings.location', 
+		// 	'safety_ridings.department', 
+		// 	'users.username', 
+		// 	'users.name', 
+		// 	db::raw('date_format(safety_ridings.created_at, "%Y-%m-%d") as created'))
+		// ->distinct()
+		// ->get();
+
+		$safety_ridings = db::select("SELECT
+			date_format( safety_ridings.period, '%b %Y' ) AS vperiod,
+			date_format( safety_ridings.created_at, '%d-%b-%Y' ) AS vcreated,
+			safety_ridings.period,
+			safety_ridings.location,
+			safety_ridings.department,
+			group_concat( DISTINCT users.NAME ) AS name,
+			date_format( safety_ridings.created_at, '%Y-%m-%d' ) AS created 
+			FROM
+			safety_ridings
+			LEFT JOIN users ON users.id = safety_ridings.created_by 
+			WHERE
+			safety_ridings.department = '".$employee->department."' 
+			AND safety_ridings.location = '".$employee->remark."' 
+			GROUP BY
+			date_format( safety_ridings.period, '%b %Y' ),
+			date_format( safety_ridings.created_at, '%d-%b-%Y' ),
+			safety_ridings.period,
+			safety_ridings.location,
+			safety_ridings.department,
+			date_format(
+			safety_ridings.created_at,
+			'%Y-%m-%d' 
+		)");
 
 		$response = array(
 			'status' => true,
