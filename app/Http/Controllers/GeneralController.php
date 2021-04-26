@@ -165,18 +165,35 @@ class GeneralController extends Controller{
 		));
 	}
 
-	public function fetchSafetyRidingMember(){
+	public function fetchSafetyRidingMember(Request $request){
 		$employee = Employee::where('employees.employee_id', '=', Auth::user()->username)
 		->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'employees.employee_id')
 		->select('employees.remark', 'employee_syncs.department')
 		->first();
 
-		$employees = Employee::where('employees.remark', '=', $employee->remark)
-		->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'employees.employee_id')
-		->where('employee_syncs.department', '=', $employee->department)
-		->whereNull('employee_syncs.end_date')
-		->select('employee_syncs.employee_id', 'employee_syncs.name', 'employee_syncs.department', 'employees.remark')
-		->get();
+		// $employees = Employee::where('employees.remark', '=', $employee->remark)
+		// ->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'employees.employee_id')
+		// ->leftJoin('safety_ridings', 'safety_ridings.employee_id', '=', 'employee_syncs.employee_id')
+		// ->where('safety_ridings.period', '=', date('Y-m-01', strtotime($request->get('period'))))
+		// ->where('employee_syncs.department', '=', $employee->department)
+		// ->whereNull('employee_syncs.end_date')
+		// ->select('employee_syncs.employee_id', 'employee_syncs.name', 'employee_syncs.department', 'employees.remark', 'safety_ridings.safety_riding')
+		// ->get();
+
+		$employees = db::select("SELECT
+			employee_syncs.employee_id,
+			employee_syncs.name,
+			employee_syncs.department,
+			employees.remark,
+			sr.safety_riding 
+			FROM
+			employees
+			LEFT JOIN employee_syncs ON employee_syncs.employee_id = employees.employee_id
+			LEFT JOIN ( SELECT employee_id, safety_riding FROM safety_ridings WHERE safety_ridings.period = '".date('Y-m-01', strtotime($request->get('period')))."' ) AS sr ON sr.employee_id = employees.employee_id 
+			WHERE
+			employees.remark = '".$employee->remark."' 
+			AND employee_syncs.department = '".$employee->department."' 
+			AND employee_syncs.end_date IS NULL");
 
 		$response = array(
 			'status' => true,
@@ -193,7 +210,7 @@ class GeneralController extends Controller{
 
 				$input = SafetyRiding::updateOrCreate(
 					[
-						'period' => $request->get('period'),
+						'period' => date('Y-m-01', strtotime($request->get('period'))),
 						'employee_id' => $safety[0],
 						'department' => $request->get('department')
 					],
@@ -885,7 +902,7 @@ class GeneralController extends Controller{
 				->first();
 
 				$stock->temp_stock = $stock->temp_stock + $request[$i]['qty'];
-				
+
 				try {
 					$stock->save();
 				} catch (Exception $e) {
@@ -916,7 +933,7 @@ class GeneralController extends Controller{
 			);
 			return Response::json($response);
 		}
-		
+
 	}
 
 	public function inputSafetyShoes(Request $request){
@@ -1529,7 +1546,7 @@ class GeneralController extends Controller{
 	}
 
 	public function fetchSafetyShoesLog(Request $request){
-		
+
 		$data = GeneralShoesLog::leftJoin(db::raw("(SELECT id, concat(SPLIT_STRING(`name`, ' ', 1), ' ', SPLIT_STRING(`name`, ' ', 2)) as `name` FROM users) AS request_user"), 'general_shoes_logs.requested_by', '=', 'request_user.id')
 		->leftJoin(db::raw("(SELECT id, concat(SPLIT_STRING(`name`, ' ', 1), ' ', SPLIT_STRING(`name`, ' ', 2)) as `name` FROM users) AS create_user"), 'general_shoes_logs.created_by', '=', 'create_user.id');
 
@@ -1540,7 +1557,7 @@ class GeneralController extends Controller{
 		if(strlen($request->get('dateto')) > 0 ){
 			$data = $data->where(db::raw('date(general_shoes_logs.created_at)'), '<=', $request->get('dateto'));
 		}
-		
+
 		if($request->get('department') != null){
 			$data = $data->whereIn('general_shoes_logs.department', $request->get('department'));
 		}
@@ -1602,7 +1619,7 @@ class GeneralController extends Controller{
 		);
 		return Response::json($response);
 
-		
+
 	}
 
 	public function fetchDetailSafetyShoes(Request $request){

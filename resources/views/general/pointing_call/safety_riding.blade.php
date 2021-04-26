@@ -105,7 +105,7 @@
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Select Periode<span class="text-red"> :</span></label>
 							<div class="col-sm-3">
-								<input type="text" class="form-control" id="createPeriod" placeholder="Select Date">
+								<input type="text" class="form-control" id="createPeriod" placeholder="Select Date" onchange="fetchMember(value)">
 							</div>
 						</div>
 					</div>
@@ -249,8 +249,12 @@
 		});
 	}
 
-	function openModalCreate(){
-		$.get('{{ url("fetch/general/safety_riding_member") }}', function(result, status, xhr){
+	function fetchMember(period){
+		count = 1;
+		var data = {
+			period:period
+		}
+		$.get('{{ url("fetch/general/safety_riding_member") }}', data, function(result, status, xhr){
 			if(result.status){
 				$('#createLocation').val(result.employees[0].remark);
 				$('#createDepartment').val(result.employees[0].department);
@@ -262,13 +266,17 @@
 					tableCreate += '<td>'+count+'</td>';
 					tableCreate += '<td><input type="text" class="form-control" id="employee_'+count+'" value="'+value.employee_id+'" disabled></td>';
 					tableCreate += '<td><input type="text" class="form-control" id="name_'+count+'" value="'+value.name+'" disabled></td>';
-					tableCreate += '<td><input type="text" class="form-control" id="safety_'+count+'"></td>';
+					if(value.safety_riding == null){
+						tableCreate += '<td><input type="text" class="form-control" id="safety_'+count+'" value=""></td>';
+					}
+					else{
+						tableCreate += '<td><input type="text" class="form-control" id="safety_'+count+'" value="'+value.safety_riding+'"></td>';
+					}
 					tableCreate += '</tr>';
 					count += 1;
 				});
 
 				$('#tableCreateBody').append(tableCreate);
-				$('#modalCreate').modal('show');
 			}
 			else{
 				alert('Unidentified Error');
@@ -276,6 +284,12 @@
 				return false;				
 			}
 		});
+	}
+
+	function openModalCreate(){
+		$('#tableCreateBody').html("");
+		$('#createPeriod').val("");
+		$('#modalCreate').modal('show');
 	}
 
 	function inputSafety(){
@@ -311,6 +325,9 @@
 		$.post('{{ url("create/general/safety_riding") }}', data, function(result, status, xhr){
 			if(result.status){
 				openSuccessGritter('Success', result.message);
+				$('#tableCreateBody').html("");
+				$('#createPeriod').val("");
+				$('#modalCreate').modal('hide');
 				audio_ok.play();
 			}
 			else{
