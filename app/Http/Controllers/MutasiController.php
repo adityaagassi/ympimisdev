@@ -56,6 +56,7 @@ class MutasiController extends Controller
           ->first();
 
         $departement2 = 'Woodwind Instrument - Key Parts Process (WI-KPP) Department';
+        $departement3 = 'Woodwind Instrument - Welding Process (WI-WP) Department';
 
         if ($emp_dept->department == 'Management Information System Department' || $emp_dept->department == 'Human Resources Department') {
             $user    = db::select('SELECT employee_id,name FROM employee_syncs');
@@ -72,6 +73,14 @@ class MutasiController extends Controller
             $section = db::select('SELECT DISTINCT department, section FROM employee_syncs where department = "'.$emp_dept->department.'" or department = "'.$departement2.'"');
             $group   = db::select('SELECT DISTINCT section, `group` FROM employee_syncs where department = "'.$emp_dept->department.'" or department = "'.$departement2.'"');
             $sub_group   = db::select('SELECT DISTINCT sub_group FROM employee_syncs where department = "'.$emp_dept->department.'" or department = "'.$departement2.'"');
+        }
+        else if($emp_dept->employee_id == 'PI0804012'){
+            $user    = db::select('SELECT employee_id,name FROM employee_syncs where department = "'.$emp_dept->department.'" or department = "'.$departement3.'"');
+            $dept  = db::select('SELECT DISTINCT department FROM employee_syncs where department = "'.$emp_dept->department.'" or department = "'.$departement3.'"');
+            $post    = db::select('SELECT DISTINCT position FROM employee_syncs where department = "'.$emp_dept->department.'" or department = "'.$departement3.'"');
+            $section = db::select('SELECT DISTINCT department, section FROM employee_syncs where department = "'.$emp_dept->department.'" or department = "'.$departement3.'"');
+            $group   = db::select('SELECT DISTINCT section, `group` FROM employee_syncs where department = "'.$emp_dept->department.'" or department = "'.$departement3.'"');
+            $sub_group   = db::select('SELECT DISTINCT sub_group FROM employee_syncs where department = "'.$emp_dept->department.'" or department = "'.$departement3.'"');
         }
         else{
             $user    = db::select('SELECT employee_id,name FROM employee_syncs where department = "'.$emp_dept->department.'"');
@@ -470,7 +479,7 @@ class MutasiController extends Controller
                     ->get();
             }    
         }
-        else if ($emp_dept->employee_id == "PI1710002") {
+        else if ($emp_dept->employee_id == "PI1710002" || $emp_dept->employee_id == "PI0804012") {
             if ($dateto == "") {
             $resumes = Mutasi::select('mutasi_depts.id', 'status', 'nik', 'nama', 'nama_chief_asal', 'nama_chief_tujuan', 'nama_manager_tujuan', 'nama_dgm_tujuan', 'nama_gm_tujuan', 'nama_manager', 'app_ca', 'app_ct', 'app_mt', 'app_dt', 'app_gt', 'app_m', 'posisi', 
                 'users.name', 'mutasi_depts.created_by', 'remark')
@@ -1475,7 +1484,7 @@ class MutasiController extends Controller
                 ");
             }      
         }
-        else if ($emp_dept->employee_id == "PI1710002") {
+        else if ($emp_dept->employee_id == "PI1710002" || $emp_dept->employee_id == "PI0804012") {
                 if ($dateto != "") {
                 $resumes = db::select("
                     SELECT id ,status, nik, nama, `sub_group`, `group`, seksi, departemen, jabatan, rekomendasi, ke_sub_group, ke_group, ke_seksi, ke_jabatan, tanggal, alasan
@@ -3175,7 +3184,7 @@ class MutasiController extends Controller
                     ");
                 }
           }
-          else if ($emp_dept->employee_id == "PI1710002") {
+          else if ($emp_dept->employee_id == "PI1710002" || $emp_dept->employee_id == "PI0804012") {
               if ($dateto != "") {
                     $data = db::select("
                     SELECT
