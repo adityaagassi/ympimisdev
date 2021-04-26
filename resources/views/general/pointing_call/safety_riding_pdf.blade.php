@@ -91,9 +91,9 @@
 				@endif
 				@else
 				@if($weekly_calendar->remark == 'H')
-				<td style="text-align: center; background-color: rgba(80,80,80,0.3); width: 1%;">&check;</td>
+				<td style="text-align: center; background-color: rgba(80,80,80,0.3); width: 1%;">&#9711;</td>
 				@else
-				<td style="text-align: center; width: 1%;">&check;</td>
+				<td style="text-align: center; width: 1%;">&#9711;</td>
 				@endif
 				@endif
 				@endforeach

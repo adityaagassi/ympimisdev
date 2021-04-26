@@ -298,12 +298,12 @@
 			return false;
 		}
 
-		for (var i = 1; i < count; i++) {
-			if($('#safety_'+i+'').val() == ""){
-				openErrorGritter('Error!', 'Pastikan semua safety riding karyawan terisi');
-				return false;
-			}
-		}
+		// for (var i = 1; i < count; i++) {
+		// 	if($('#safety_'+i+'').val() == ""){
+		// 		openErrorGritter('Error!', 'Pastikan semua safety riding karyawan terisi');
+		// 		return false;
+		// 	}
+		// }
 
 		var safety_ridings = [];
 		var department = $('#createDepartment').val();
