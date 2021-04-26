@@ -300,7 +300,7 @@
 					[{
 						tickInterval: 1000 * 60 * 60,
 						min: today,
-						max: today + 30 * day,
+						max: today + 7 * day,
 						currentDateIndicator:{
 							enabled: true,
 							width: 3,
