@@ -166,12 +166,18 @@ class CparController extends Controller
       //get chief foreman manager from departemen
 
       if ($dept->department == 'Educational Instrument (EI) Department') {
-  
         $cfm = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Educational Instrument (EI) Department' and employee_id in ('PI1110001','PI9906002')");
-  
-      }else{
-        $cfm = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = '".$dept->department."' and position in ('chief','foreman','manager')");
+      } 
 
+      else if($dept->department == 'Woodwind Instrument - Welding Process (WI-WP) Department'){
+        $cfm = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and employee_id in ('PI9809008','PI0108010')");
+      } 
+
+      else if($dept->department == 'Woodwind Instrument - Key Parts Process (WI-KPP) Department'){
+        $cfm = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and employee_id in ('PI9903003','PI9906002')");
+      }
+      else{
+        $cfm = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = '".$dept->department."' and position in ('chief','foreman','manager')");
       }
 
 
