@@ -1,6 +1,8 @@
 @extends('layouts.display')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
+<link rel="stylesheet" href="{{ url("plugins/timepicker/bootstrap-timepicker.min.css")}}">
+<link type='text/css' rel="stylesheet" href="{{ url("css/bootstrap-datetimepicker.min.css")}}">
 <style type="text/css">
 	thead input {
 		width: 100%;
@@ -69,19 +71,58 @@
 <section class="content" style="overflow-y:hidden; overflow-x:scroll; padding-top: 0px">
 	<div class="row">
 		<div class="col-xs-12">
-			
-			<!-- <table id="example1" class="table table-bordered">
-				<thead style="background-color: #b89cff;">
-					<tr id="mc_head">
-					</tr>
-					<tr id="mc_head2">
-					</tr>
-				</thead>
-				<tbody id="mc_body" style="color: white">
-				</tbody>
-			</table> -->
 			<div class="row">
 				<div class="container" id="container" style="width: 100%"></div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal modal-default fade" id="edit_modal">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="col-xs-12" style="background-color: #00a65a; padding-right: 1%;">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">
+								&times;
+							</span>
+						</button>
+						<h1 style="text-align: center; margin:5px; font-weight: bold;color: white">Injection Schedule Adjustment</h1>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="box-body">
+								<input type="hidden" value="{{csrf_token()}}" name="_token" />
+								<input type="hidden" name="id_schedule" id="id_schedule">
+								<div class="form-group row" align="right">
+									<label class="col-sm-4">Mesin<span class="text-red">*</span></label>
+									<div class="col-sm-5" align="left">
+										<select class="form-control select2" data-placeholder="Select Machine" name="machine" id="machine" style="width: 100%">
+											<option value=""></option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group row" align="right">
+									<label class="col-sm-4">Start Date<span class="text-red">*</span></label>
+									<div class="col-sm-5">
+										<input type="start_date" class="form-control datepicker" id="start_date" placeholder="Start Date" required>
+									</div>
+								</div>
+								<div class="form-group row" align="right">
+									<label class="col-sm-4">Start Time<span class="text-red">*</span></label>
+									<div class="col-sm-5">
+										<input type="start_time" class="form-control timepicker" id="start_time" placeholder="Start Time" required>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-success" onclick="addOperator()"><i class="fa fa-plus"></i> Add Operator</button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -108,7 +149,24 @@
 
 	jQuery(document).ready(function() {
 		drawTable();
+		$('.select2').select2({
+			dropdownParent: $('#edit_modal')
+		});
 		setInterval(drawTable, 50000);
+		$('.datepicker').datepicker({
+			autoclose: true,
+			format: "yyyy-mm-dd",
+			todayHighlight: true
+		});
+
+		$('.timepicker').timepicker({
+			use24hours: true,
+			showInputs: false,
+			showMeridian: false,
+			minuteStep: 1,
+			defaultTime: '00:00:00',
+			timeFormat: 'hh:mm:ss'
+		})
 	});
 
 	
@@ -140,6 +198,7 @@
 								if (result.schedule[j].type == 'molding') {
 									unfilled = false;
 									deal.push({
+										id_schedule : result.schedule[j].id_schedule,
 										machine : result.schedule[j].machine,
 										materials : "",
 										material : result.schedule[j].material_number+' - '+result.schedule[j].material_description,
@@ -169,6 +228,7 @@
 										var colors_skeleton = '#000';
 									}
 									deal.push({
+										id_schedule : result.schedule[j].id_schedule,
 										machine : result.schedule[j].machine,
 										materials : result.schedule[j].material_number+' - '+result.schedule[j].material_description,
 										material : result.schedule[j].material_number+' - '+result.schedule[j].material_description,
@@ -183,6 +243,7 @@
 						}
 						if (unfilled) {
 							deal.push({
+								id_schedule :0,
 								machine : result.mesin[i],
 								material : "",
 								part : "",
@@ -205,6 +266,7 @@
 				    var data = car.deals.map(function (deal) {
 				        return {
 				            id: 'deal-' + i,
+				            id_schedule: deal.id_schedule,
 				            machine: deal.machine,
 				            material: deal.material,
 				            materials: deal.materials,
@@ -238,7 +300,7 @@
 					[{
 						tickInterval: 1000 * 60 * 60,
 						min: today,
-						max: today + 1 * day,
+						max: today + 30 * day,
 						currentDateIndicator:{
 							enabled: true,
 							width: 3,
@@ -304,7 +366,7 @@
 						    point: {
 								events: {
 									click: function () {
-										alert('Edit Schedule');
+										editSchedule(this.id_schedule);
 									}
 								}
 							},
@@ -334,6 +396,45 @@
 				openErrorGritter('Error!', result.message);
 			}
 		})
+	}
+
+	function editSchedule(id_schedule) {
+		var data = {
+			id_schedule:id_schedule
+		}
+
+		$.get('{{ url("fetch/injection_schedule/adjustment") }}',data,  function(result, status, xhr){
+			if (result.status) {
+				
+				var machine = "";
+				$('#machine').html("");
+				machine += '<option value=""></option>';
+				$.each(result.schedule, function(key, value){
+					if (value.machine_1 != 0) {
+						machine += '<option value="Mesin '+value.machine_1+'">Mesin '+value.machine_1+'</option>';
+					}
+					if (value.machine_2 != 0) {
+						machine += '<option value="Mesin '+value.machine_2+'">Mesin '+value.machine_2+'</option>';
+					}
+					if (value.machine_3 != 0) {
+						machine += '<option value="Mesin '+value.machine_3+'">Mesin '+value.machine_3+'</option>';
+					}
+				});
+				$('#machine').append(machine);
+
+				$.each(result.schedule, function(key, value){
+					$('#id_schedule').val(value.id_schedule);
+					$('#start_date').val(value.start_date);
+					$('#start_time').val(value.start_times);
+					$('#machine').val(value.machine).trigger('change.select2');
+				});
+
+				$('#edit_modal').modal('show');
+			}else{
+				audio_error.play();
+				openErrorGritter('Error!', result.message);
+			}
+		});
 	}
 
 
