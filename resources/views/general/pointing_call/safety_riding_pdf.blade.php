@@ -21,11 +21,24 @@
 			</span>
 		</center>
 		<br>
-		<span>
-			① Perkirakan waktu untuk tiba dengan selamat di tempat tujuan. (Mari berangkat kerja lebih awal.)
-			<br>
-			② Marilah patuhi aturan berlalu lintas demi orang-orang tercinta kita.
-		</span>
+		<table style="border: 0px;">
+			<tr>
+				<th style="text-align: left; border: 0px;">
+					<span>
+						① Perkirakan waktu untuk tiba dengan selamat di tempat tujuan. (Mari berangkat kerja lebih awal.)
+						<br>
+						② Marilah patuhi aturan berlalu lintas demi orang-orang tercinta kita.
+					</span>
+				</th>
+				<th style="text-align: right; border: 0px;">
+					<span>
+						No Dok. : YMPI/STD/FK3/054<br>
+						Rev		: 00<br>
+						Tanggal	: 01 April 2015
+					</span>
+				</th>
+			</tr>
+		</table>
 		<br>
 		<br>
 		<table style="width: 50%;">
