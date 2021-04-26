@@ -2357,16 +2357,22 @@ public function fetchGeneralPointingCall(Request $request){
 		// ->whereNull('deleted_at')
 		// ->get();
 
+		$safety_ridings = "";
+		$department = "";
 		
 		$employee = Employee::where('employees.employee_id', '=', Auth::user()->username)
 		->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'employees.employee_id')
 		->select('employees.remark', 'employee_syncs.department')
 		->first();
 
-		$safety_ridings = SafetyRiding::where('location', '=', $employee->remark)
-		->where('department', '=', $employee->department)
-		->where('period', '=', date('Y-m-01'))
-		->get();
+		if($employee){
+			$safety_ridings = SafetyRiding::where('location', '=', $employee->remark)
+			->where('department', '=', $employee->department)
+			->where('period', '=', date('Y-m-01'))
+			->get();
+
+			$department = $employee->department;
+		}
 
 		$pointing_calls = db::select("SELECT
 			pc.point_title,
@@ -2400,7 +2406,7 @@ public function fetchGeneralPointingCall(Request $request){
 			'status' => true,
 			'pointing_calls' => $pointing_calls,
 			'safety_ridings' => $safety_ridings,
-			'department' => $employee->department
+			'department' => $department
 			// 'pics' => $pics
 		);
 		return Response::json($response);
