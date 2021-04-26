@@ -265,15 +265,23 @@
 						var dataone = result.dataworkall[i].split("+");
 						if (dataone[0] == value.molding_code) {
 							if (dataone[1] == 'PAUSE') {
-								duration_dandori = duration_dandori - parseFloat(dataone[4]);
+								duration_total = duration_total - parseFloat(dataone[4]);
 								duration_pause = duration_pause + parseFloat(dataone[4]);
 								reason_pause.push(dataone[5]+" "+dataone[4]+" Menit");
 							}else if(dataone[1] == "APPROVAL QA"){
-								duration_dandori = duration_dandori + parseFloat(dataone[4]);
-								duration_approval = duration_approval + parseFloat(dataone[4]);
+								if (dataone[4].length > 0) {
+									duration_total = duration_total - parseFloat(dataone[4]);
+									duration_approval = duration_approval + parseFloat(dataone[4]);
+								}else{
+									duration_approval = 0;
+								}
 							}else if(dataone[1] == "CEK VISUAL & DIMENSI"){
-								duration_dandori = duration_dandori - parseFloat(dataone[4]);
-								duration_check = duration_check + parseFloat(dataone[4]);
+								if (dataone[4].length > 0) {
+									duration_total = duration_total - parseFloat(dataone[4]);
+									duration_check = duration_check + parseFloat(dataone[4]);
+								}else{
+									duration_check = 0;
+								}
 							}
 						}
 					}
@@ -285,11 +293,11 @@
 					tableData += '<td>'+ value.last_shot +'</td>';
 					tableData += '<td>'+ value.start_time +'</td>';
 					tableData += '<td>'+ value.end_time +'</td>';
-					tableData += '<td>'+ duration_dandori +'</td>';
-					tableData += '<td>'+ duration_approval +'</td>';
-					tableData += '<td>'+ duration_check +'</td>';
-					tableData += '<td>'+ duration_pause +'</td>';
-					tableData += '<td>'+ duration_total +'</td>';
+					tableData += '<td>'+ duration_total.toFixed(2) +'</td>';
+					tableData += '<td>'+ duration_approval.toFixed(2) +'</td>';
+					tableData += '<td>'+ duration_check.toFixed(2) +'</td>';
+					tableData += '<td>'+ duration_pause.toFixed(2) +'</td>';
+					tableData += '<td>'+ parseFloat(value.duration).toFixed(2) +'</td>';
 					tableData += '<td>'+ reason_pause.join(', ') +'</td>';
 					tableData += '<td>'+ (value.note || "") +'</td>';
 					tableData += '<td>'+ (value.decision || "") +'</td>';

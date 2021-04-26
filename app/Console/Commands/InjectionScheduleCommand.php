@@ -316,7 +316,6 @@ class InjectionScheduleCommand extends Command
             plan,
             diff,
             debt,
-            model,
             cycle,
             shoot,
             qty,
@@ -341,15 +340,14 @@ class InjectionScheduleCommand extends Command
                 plan,
                 diff,
                 debt,
-                model,
                 cycle,
                 shoot,
                 qty,
                 qty_hako,
-                machine,
-                CONCAT( 'Mesin ', SPLIT_STRING ( machine, ',', 1 ) ) AS mesin1,
-                CONCAT( 'Mesin ', SPLIT_STRING ( machine, ',', 2 ) ) AS mesin2,
-                CONCAT( 'Mesin ', SPLIT_STRING ( machine, ',', 3 ) ) AS mesin3 
+                ( SELECT DISTINCT ( mesin ) FROM injection_molding_masters WHERE injection_molding_masters.product = a.part ) AS machine,
+                CONCAT( 'Mesin ', SPLIT_STRING ( ( SELECT DISTINCT ( mesin ) FROM injection_molding_masters WHERE injection_molding_masters.product = a.part ), ',', 1 ) ) AS mesin1,
+                CONCAT( 'Mesin ', SPLIT_STRING ( ( SELECT DISTINCT ( mesin ) FROM injection_molding_masters WHERE injection_molding_masters.product = a.part ), ',', 2 ) ) AS mesin2,
+                CONCAT( 'Mesin ', SPLIT_STRING ( ( SELECT DISTINCT ( mesin ) FROM injection_molding_masters WHERE injection_molding_masters.product = a.part ), ',', 3 ) ) AS mesin3 
             FROM
                 injection_schedule_temps AS a
                 LEFT JOIN injection_machine_cycle_times ON injection_machine_cycle_times.part = a.part 
@@ -450,26 +448,26 @@ class InjectionScheduleCommand extends Command
             }
         }
 
-        $mesinsamadandori = DB::SELECT("select * from injection_schedule_logs");
+        // $mesinsamadandori = DB::SELECT("select * from injection_schedule_logs");
 
-        if (count($mesinsamadandori) > 0) {
-            $dandori = 0;
-            $dandori_time = 0;
-            for ($m=0; $m < count($mesinsamadandori); $m++) {
-                if ($dandori % 2 == 0) {
-                    $dandori_time = $dandori_time + 14400;
-                }
-                $log = InjectionScheduleLog::where('id',$mesinsamadandori[$m]->id)->first();
-                $ts1 = strtotime($log->start_time);
-                $ts2 = strtotime($log->end_time);
-                $seconds_diff = $ts2 - $ts1;
-                $secondall = $seconds_diff+$dandori_time;
-                $log->start_time = date("Y-m-d H:i:s",strtotime(date('Y-m-d 07:00:00'))+$dandori_time);
-                $log->end_time = date("Y-m-d H:i:s",strtotime(date('Y-m-d 07:00:00'))+$secondall);
-                $log->save();
-                $dandori++;
-            }
-        }
+        // if (count($mesinsamadandori) > 0) {
+        //     $dandori = 0;
+        //     $dandori_time = 0;
+        //     for ($m=0; $m < count($mesinsamadandori); $m++) {
+        //         if ($dandori % 2 == 0) {
+        //             $dandori_time = $dandori_time + 14400;
+        //         }
+        //         $log = InjectionScheduleLog::where('id',$mesinsamadandori[$m]->id)->first();
+        //         $ts1 = strtotime($log->start_time);
+        //         $ts2 = strtotime($log->end_time);
+        //         $seconds_diff = $ts2 - $ts1;
+        //         $secondall = $seconds_diff+$dandori_time;
+        //         $log->start_time = date("Y-m-d H:i:s",strtotime(date('Y-m-d 07:00:00'))+$dandori_time);
+        //         $log->end_time = date("Y-m-d H:i:s",strtotime(date('Y-m-d 07:00:00'))+$secondall);
+        //         $log->save();
+        //         $dandori++;
+        //     }
+        // }
 
         $mesinsama2 = DB::SELECT("SELECT
             injection_schedule_logs.*,
@@ -630,6 +628,52 @@ class InjectionScheduleCommand extends Command
                         $end = $end_time;
                     }
                 }
+            }
+        }
+
+        $mesinsamadandori = DB::SELECT("SELECT
+            * 
+        FROM
+            injection_schedule_logs 
+        WHERE
+            start_time = CONCAT(
+                DATE(
+                NOW()),
+            ' 07:00:00')");
+
+        if (count($mesinsamadandori) > 0) {
+            $dandori = 0;
+            $dandori_time = 0;
+            for ($m=0; $m < count($mesinsamadandori); $m++) {
+                if ($dandori % 2 == 0) {
+                    $dandori_time = $dandori_time + 14400;
+                }
+                $log = InjectionScheduleLog::where('id',$mesinsamadandori[$m]->id)->first();
+                $ts1 = strtotime($log->start_time);
+                $ts2 = strtotime($log->end_time);
+                $seconds_diff = $ts2 - $ts1;
+                $secondall = $seconds_diff+$dandori_time;
+                $log->start_time = date("Y-m-d H:i:s",strtotime(date('Y-m-d 07:00:00'))+$dandori_time);
+                $end_time = date("Y-m-d H:i:s",strtotime(date('Y-m-d 07:00:00'))+$secondall);
+                $log->end_time = $end_time;
+                $log->save();
+                $logs = InjectionScheduleLog::where('machine',$log->machine)->get();
+                $end = $end_time;
+                if (count($logs) > 0) {
+                    for ($u=1; $u < count($logs); $u++) { 
+                        $log2 = InjectionScheduleLog::where('id',$logs[$u]->id)->first();
+                        $ts1 = strtotime($log2->start_time);
+                        $ts2 = strtotime($log2->end_time);
+                        $seconds_diff = $ts2 - $ts1;
+                        $secondall = $seconds_diff+14400;
+                        $log2->start_time = date("Y-m-d H:i:s",strtotime($end)+14400);
+                        $end_time = date("Y-m-d H:i:s",strtotime($end)+$secondall);
+                        $log2->end_time = $end_time;
+                        $log2->save();
+                        $end = $end_time;
+                    }
+                }
+                $dandori++;
             }
         }
 

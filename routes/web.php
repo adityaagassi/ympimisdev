@@ -461,6 +461,8 @@ Route::post('input/injection/stock', 'InjectionsController@inputStock');
 // injection schedule
 Route::get('index/injection_schedule', 'InjectionsController@indexInjectionSchedule');
 Route::get('fetch/injection_schedule', 'InjectionsController@fetchInjectionSchedule');
+Route::get('fetch/injection_schedule/adjustment', 'InjectionsController@fetchInjectionScheduleAdjustment');
+Route::get('adjust/injection_schedule/adjustment', 'InjectionsController@adjustInjectionScheduleAdjustment');
 
 Route::group(['nav' => 'M31', 'middleware' => 'permission'], function(){
 	Route::get('index/injection/tag', 'InjectionsController@indexInjectionTag');
@@ -2844,6 +2846,8 @@ Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::get('fill/reason', 'CheckSheet@getReason');
 
 	Route::post('import/driver_photo', 'CheckSheet@importDriverPhoto');
+	Route::post('import/seal_photo', 'CheckSheet@importSealPhoto');
+	Route::post('closure/check_checksheet', 'CheckSheet@check_nomor');
 
 
 	Route::get('delete/deleteReimport', 'CheckSheet@deleteReimport');
@@ -3832,6 +3836,8 @@ Route::get('fetch/audit_patrol', 'AuditController@fetch_audit');
 Route::post('post/audit_patrol', 'AuditController@post_audit');
 Route::post('post/audit_patrol_file', 'AuditController@post_audit_file');
 
+Route::get('index/audit_patrol_std', 'AuditController@index_patrol_daily');
+
 Route::get('index/audit_patrol_stocktaking', 'AuditController@index_audit_stocktaking');
 Route::post('post/audit_patrol_stocktaking', 'AuditController@post_audit_stocktaking');
 
@@ -4486,6 +4492,8 @@ Route::get('scan/scrap_warehouse', 'ScrapController@scanScrapWarehouse');
 Route::get('display/scrap_warehouse', 'ScrapController@displayScrapWarehouse');
 Route::get('monitoring/scrap/wip', 'ScrapController@MonitoringWip');
 Route::get('fetch/scrap/monitoring', 'ScrapController@fetchMonitoringScrap');
+Route::get('scrap/data/monitoring', 'ScrapController@fatchMonitoringDisplayScrap');
+Route::get('scrap/monitoring/display', 'ScrapController@MonitoringScrapDisplay');
 // ============================================================================================
 Route::get('index/scrap/create', 'ScrapController@createScrap');
 
@@ -4636,6 +4644,8 @@ Route::post('update/pengecekan', 'WarehouseNewController@updatePengecekanPeng');
 Route::get('index/monitoring/internal', 'WarehouseNewController@index_monitoring');
 Route::get('fetch/status', 'WarehouseNewController@fetchStatus');
 Route::get('fetch/import/display', 'WarehouseNewController@fetch_import_display');
+Route::post('post/pengantaran/lokasi_awal', 'WarehouseNewController@updateLokasiAwalPengantaran');
+
 
 
 

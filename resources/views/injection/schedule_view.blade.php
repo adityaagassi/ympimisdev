@@ -78,7 +78,7 @@
 	</div>
 
 	<div class="modal modal-default fade" id="edit_modal">
-		<div class="modal-dialog modal-lg">
+		<div class="modal-dialog modal-md">
 			<div class="modal-content">
 				<div class="modal-header">
 					<div class="col-xs-12" style="background-color: #00a65a; padding-right: 1%;">
@@ -121,7 +121,8 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button class="btn btn-success" onclick="addOperator()"><i class="fa fa-plus"></i> Add Operator</button>
+					<button class="btn btn-danger pull-left" data-dismiss="modal"><i class="fa fa-close"></i> Cancel</button>
+					<button class="btn btn-success" onclick="adjustSchedule()"><i class="fa fa-pencil-square-o"></i> Adjust Schedule</button>
 				</div>
 			</div>
 		</div>
@@ -165,8 +166,12 @@
 			showMeridian: false,
 			minuteStep: 1,
 			defaultTime: '00:00:00',
-			timeFormat: 'hh:mm:ss'
+			format: 'hh:mm:ss'
 		})
+		// $('.timepicker').timepicker({ 
+		// 	timeFormat: 'HH:mm:ss',
+		// 	showMeridian: false,
+		// });
 	});
 
 	
@@ -211,19 +216,19 @@
 								}else{
 									unfilled = false;
 									if (result.schedule[j].color == 'BLUE') {
-										var colors_skeleton = '#1432b8';
+										var colors_skeleton = '#708aff';
 									}else if(result.schedule[j].color == 'PINK'){
-										var colors_skeleton = '#b8149f';
+										var colors_skeleton = '#ff70e5';
 									}else if(result.schedule[j].color == 'GREEN'){
-										var colors_skeleton = '#14b833';
+										var colors_skeleton = '#afff8f';
 									}else if(result.schedule[j].color == 'RED'){
-										var colors_skeleton = '#ff4a4a';
+										var colors_skeleton = '#ff8f8f';
 									}else if(result.schedule[j].color == 'IVORY'){
 										var colors_skeleton = '#fff5a6';
 									}else if(result.schedule[j].color == 'BROWN'){
-										var colors_skeleton = '#b85e14';
+										var colors_skeleton = '#8a7063';
 									}else if(result.schedule[j].color == 'BEIGE'){
-										var colors_skeleton = '#b87f14';
+										var colors_skeleton = '#dba286';
 									}else{
 										var colors_skeleton = '#000';
 									}
@@ -424,7 +429,7 @@
 
 				$.each(result.schedule, function(key, value){
 					$('#id_schedule').val(value.id_schedule);
-					$('#start_date').val(value.start_date).datepicker({dateFormat:'yyyy-mm-dd' });
+					$('#start_date').val(value.start_date).datepicker("setDate", new Date(value.start_date) );
 					$('#start_time').val(value.start_times);
 					$('#machine').val(value.machine).trigger('change.select2');
 				});
@@ -437,7 +442,30 @@
 		});
 	}
 
+	function adjustSchedule() {
+		var id_schedule = $('#id_schedule').val();
+		var start_date = $('#start_date').val();
+		var start_time = $('#start_time').val();
+		var machine = $('#machine').val();
 
+		var data = {
+			id_schedule:id_schedule,
+			start_date:start_date,
+			start_time:start_time,
+			machine:machine,
+		}
+
+		$.get('{{ url("adjust/injection_schedule/adjustment") }}',data,  function(result, status, xhr){
+			if (result.status) {
+				$('#edit_modal').modal('hide');
+				openSuccessGritter('Success',result.message);
+				drawTable();
+			}else{
+				audio_error.play();
+				openErrorGritter('Error!', result.message);
+			}
+		});
+	}
 	Highcharts.createElement('link', {
 		href: '{{ url("fonts/UnicaOne.css")}}',
 		rel: 'stylesheet',

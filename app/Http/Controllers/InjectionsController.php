@@ -48,6 +48,8 @@ use App\InjectionDryer;
 use App\InjectionResin;
 use App\EmployeeSync;
 use App\InjectionHistoryMoldingWorks;
+use App\InjectionScheduleLog;
+use App\InjectionScheduleMoldingLog;
 use Response;
 use DataTables;
 use Carbon\Carbon;
@@ -6046,25 +6048,16 @@ class InjectionsController extends Controller
         $last = date('Y-m-t');
         $first = date('Y-m-01');
 
-        // $schedule = [];
-
-        // for ($i = 0; $i < count($this->mesin); $i++) {
-            $schedule = db::select("SELECT
-                injection_schedule_logs.*,
-                'material' AS type 
-            FROM
-                injection_schedule_logs UNION ALL
-            SELECT
-                injection_schedule_molding_logs.*,
-                'molding' AS type 
-            FROM
-                injection_schedule_molding_logs");
-        // }
-
-
-        // $sch2 = db::select("SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d')>='2019-11-01' and DATE_FORMAT(week_date,'%Y-%m-%d')<='2019-11-31'");
-
-        
+        $schedule = db::select("SELECT
+            injection_schedule_logs.*,
+            'material' AS type 
+        FROM
+            injection_schedule_logs UNION ALL
+        SELECT
+            injection_schedule_molding_logs.*,
+            'molding' AS type 
+        FROM
+            injection_schedule_molding_logs");
 
         $response = array(
             'status' => true,            
@@ -6072,10 +6065,277 @@ class InjectionsController extends Controller
             'mesin' => $this->mesin, 
             'first' => $first,
             'last' => $last
-
         );
         return Response::json($response);
 
+    }
+
+    public function fetchInjectionScheduleAdjustment(Request $request)
+    {
+        try {
+            $schedule = DB::SELECT("SELECT DISTINCT
+                ( id_schedule ),
+                injection_schedule_logs.*,
+                DATE( injection_schedule_logs.start_time ) AS start_date,
+                TIME( injection_schedule_logs.start_time ) AS start_times,
+                SPLIT_STRING ( injection_molding_masters.mesin, ',', 1 ) AS machine_1,
+            IF
+                ( SPLIT_STRING ( injection_molding_masters.mesin, ',', 2 ) != '', SPLIT_STRING ( injection_molding_masters.mesin, ',', 2 ), 0 ) AS machine_2,
+            IF
+                ( SPLIT_STRING ( injection_molding_masters.mesin, ',', 3 ) != '', SPLIT_STRING ( injection_molding_masters.mesin, ',', 3 ), 0 ) AS machine_3 
+            FROM
+                injection_schedule_logs
+                LEFT JOIN injection_molding_masters ON injection_molding_masters.product = injection_schedule_logs.part 
+            WHERE
+                injection_schedule_logs.id = '".$request->get('id_schedule')."'");
+            $response = array(
+                'status' => true,            
+                'schedule' => $schedule,          
+                'mesin' => $this->mesin,
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function adjustInjectionScheduleAdjustment(Request $request)
+    {
+        try {
+            $id_schedule = $request->get('id_schedule');
+            $start_date = $request->get('start_date');
+            $start_time = $request->get('start_time');
+            $machine = $request->get('machine');
+
+            $start = explode(':', $start_time);
+
+            $schedule = InjectionScheduleLog::select('injection_schedule_logs.*',DB::RAW("DATE_FORMAT(start_time,'%Y-%m-%d %H:%i') as starts"))->where('id_schedule',$id_schedule)->first();
+            if ($machine != $schedule->machine) {
+                //MESIN BEDA
+                $starts = $start_date.' '.sprintf('%02d', $start[0]).':'.$start[1].':00';
+
+                $checks = InjectionScheduleLog::where('start_time','<=', $starts)->where('end_time','>=', $starts)->where('machine',$machine)->orderBy('id','desc')->first();
+                if (count($checks) > 0) {
+                        $status = false;
+                        $message = "Di Mesin ".$machine." dan jam yang dipilih sudah ada schedule. Silahkan pilih jam lebih dari jam ".$checks->end_time;
+                }else{
+                    $checks = InjectionScheduleLog::where('machine',$machine)->where('end_time','<',$starts)->first();
+                    if (count($checks) > 0) {
+                        $ts1 = strtotime($checks->end_time);
+                        $ts2 = strtotime($starts);
+                        $seconds_diff = $ts2 - $ts1;          
+                        $minimum = date("Y-m-d H:i:s",strtotime($checks->end_time)+14400);
+
+                        if ($seconds_diff < 14400) {
+                            $status = false;
+                            $message = "Silahkan pilih jam lebih dari ".$minimum;
+                        }else{
+                            $schedule->machine = $machine;
+                            $ts1 = strtotime($schedule->start_time);
+                            $ts2 = strtotime($schedule->end_time);
+                            $seconds_diff = $ts2 - $ts1;
+                            $schedule->start_time = $starts;
+                            $end_time = date("Y-m-d H:i:s",strtotime($starts)+$seconds_diff);
+                            $schedule->end_time = $end_time;
+                            $schedule->save();
+
+                            $dandori = InjectionScheduleMoldingLog::where('id_schedule',$schedule->id_schedule)->first();
+                            $dandori->machine = $machine;
+                            $dandori->start_time = date("Y-m-d H:i:s",strtotime($starts)-14400);
+                            $dandori->end_time = $starts;
+                            $dandori->save();
+                            $end = $end_time;
+
+                            $next = InjectionScheduleLog::where('start_time','>',$starts)->where('machine',$machine)->get();
+                            if (count($next) > 0) {
+                                for ($i=0; $i < count($next); $i++) { 
+                                    $log2 = InjectionScheduleLog::where('id',$next[$i]->id)->first();
+                                    $ts1 = strtotime($log2->start_time);
+                                    $ts2 = strtotime($log2->end_time);
+                                    $seconds_diff = $ts2 - $ts1;
+                                    $secondall = $seconds_diff+14400;
+                                    $start_time = date("Y-m-d H:i:s",strtotime($end)+14400);
+                                    $log2->start_time = $start_time;
+                                    $end_time = date("Y-m-d H:i:s",strtotime($end)+$secondall);
+                                    $log2->end_time = $end_time;
+                                    $log2->save();
+                                    $end = $end_time;
+
+                                    $dandori = InjectionScheduleMoldingLog::where('id_schedule',$log2->id_schedule)->first();
+
+                                    $dandori->start_time = date("Y-m-d H:i:s",strtotime($start_time)-14400);
+                                    $dandori->end_time = $start_time;
+                                    $dandori->save();
+                                }
+                            }
+                            $status = true;
+                            $message = 'Success Adjust Schedule';
+                        }
+                    }else{
+                        $schedule->machine = $machine;
+                        $ts1 = strtotime($schedule->start_time);
+                        $ts2 = strtotime($schedule->end_time);
+                        $seconds_diff = $ts2 - $ts1;
+                        $schedule->start_time = $starts;
+                        $end_time = date("Y-m-d H:i:s",strtotime($starts)+$seconds_diff);
+                        $schedule->end_time = $end_time;
+                        $schedule->save();
+
+                        $dandori = InjectionScheduleMoldingLog::where('id_schedule',$schedule->id_schedule)->first();
+                        $dandori->machine = $machine;
+                        $dandori->start_time = date("Y-m-d H:i:s",strtotime($starts)-14400);
+                        $dandori->end_time = $starts;
+                        $dandori->save();
+                        $end = $end_time;
+
+                        $next = InjectionScheduleLog::where('start_time','>',$starts)->where('machine',$machine)->get();
+                        if (count($next) > 0) {
+                            for ($i=0; $i < count($next); $i++) { 
+                                $log2 = InjectionScheduleLog::where('id',$next[$i]->id)->first();
+                                $ts1 = strtotime($log2->start_time);
+                                $ts2 = strtotime($log2->end_time);
+                                $seconds_diff = $ts2 - $ts1;
+                                $secondall = $seconds_diff+14400;
+                                $start_time = date("Y-m-d H:i:s",strtotime($end)+14400);
+                                $log2->start_time = $start_time;
+                                $end_time = date("Y-m-d H:i:s",strtotime($end)+$secondall);
+                                $log2->end_time = $end_time;
+                                $log2->save();
+                                $end = $end_time;
+
+                                $dandori = InjectionScheduleMoldingLog::where('id_schedule',$log2->id_schedule)->first();
+
+                                $dandori->start_time = date("Y-m-d H:i:s",strtotime($start_time)-14400);
+                                $dandori->end_time = $start_time;
+                                $dandori->save();
+                            }
+                        }
+                        $status = true;
+                        $message = 'Success Adjust Schedule';
+                    }
+                }
+            }else{
+                //MESIN SAMA
+                if ($start_date.' '.$start_time != $schedule->start_time) {
+                    $starts = $start_date.' '.sprintf('%02d', $start[0]).':'.$start[1].':00';
+
+                    $checks = InjectionScheduleLog::where('start_time','<=', $starts)->where('end_time','>=', $starts)->where('machine',$machine)->where('id_schedule','!=',$id_schedule)->get();
+                    if (count($checks) > 0) {
+                        $status = false;
+                        $message = "Di jam tersebut sudah ada schedule";
+                    }else{
+                        $checks = InjectionScheduleLog::where('machine',$machine)->where('end_time','<',$starts)->first();
+                        if (count($checks) > 0) {
+                            $ts1 = strtotime($checks->end_time);
+                            $ts2 = strtotime($starts);
+                            $seconds_diff = $ts2 - $ts1;          
+                            $minimum = date("Y-m-d H:i:s",strtotime($checks->end_time)+14400);
+                            if ($seconds_diff < 14400) {
+                                $status = false;
+                                $message = "Silahkan pilih jam lebih dari ".$minimum;
+                            }else{
+                                $ts1 = strtotime($schedule->start_time);
+                                $ts2 = strtotime($schedule->end_time);
+                                $seconds_diff = $ts2 - $ts1;
+                                $secondall = $seconds_diff+14400;
+                                $schedule->start_time = $starts;
+                                $end_time = date("Y-m-d H:i:s",strtotime($starts)+$seconds_diff);
+                                $schedule->end_time = $end_time;
+                                $schedule->save();
+
+                                $dandori = InjectionScheduleMoldingLog::where('id_schedule',$schedule->id_schedule)->first();
+
+                                $dandori->start_time = date("Y-m-d H:i:s",strtotime($starts)-14400);
+                                $dandori->end_time = $starts;
+                                $dandori->save();
+
+                                $end = $end_time;
+                                $next = InjectionScheduleLog::where('id','>',$schedule->id)->where('machine',$schedule->machine)->get();
+                                if (count($next) > 0) {
+                                    for ($i=0; $i < count($next); $i++) { 
+                                        $log2 = InjectionScheduleLog::where('id',$next[$i]->id)->first();
+                                        $ts1 = strtotime($log2->start_time);
+                                        $ts2 = strtotime($log2->end_time);
+                                        $seconds_diff = $ts2 - $ts1;
+                                        $secondall = $seconds_diff+14400;
+                                        $start_time = date("Y-m-d H:i:s",strtotime($end)+14400);
+                                        $log2->start_time = $start_time;
+                                        $end_time = date("Y-m-d H:i:s",strtotime($end)+$secondall);
+                                        $log2->end_time = $end_time;
+                                        $log2->save();
+                                        $end = $end_time;
+
+                                        $dandori = InjectionScheduleMoldingLog::where('id_schedule',$log2->id_schedule)->first();
+
+                                        $dandori->start_time = date("Y-m-d H:i:s",strtotime($start_time)-14400);
+                                        $dandori->end_time = $start_time;
+                                        $dandori->save();
+                                    }
+                                }
+                                $status = true;
+                                $message = 'Success Adjust Schedule';
+                            }
+                        }else{
+                            $ts1 = strtotime($schedule->start_time);
+                            $ts2 = strtotime($schedule->end_time);
+                            $seconds_diff = $ts2 - $ts1;
+                            $secondall = $seconds_diff+14400;
+                            $schedule->start_time = $starts;
+                            $end_time = date("Y-m-d H:i:s",strtotime($starts)+$seconds_diff);
+                            $schedule->end_time = $end_time;
+                            $schedule->save();
+
+                            $dandori = InjectionScheduleMoldingLog::where('id_schedule',$schedule->id_schedule)->first();
+
+                            $dandori->start_time = date("Y-m-d H:i:s",strtotime($starts)-14400);
+                            $dandori->end_time = $starts;
+                            $dandori->save();
+
+                            $end = $end_time;
+                            $next = InjectionScheduleLog::where('id','>',$schedule->id)->where('machine',$schedule->machine)->get();
+                            if (count($next) > 0) {
+                                for ($i=0; $i < count($next); $i++) { 
+                                    $log2 = InjectionScheduleLog::where('id',$next[$i]->id)->first();
+                                    $ts1 = strtotime($log2->start_time);
+                                    $ts2 = strtotime($log2->end_time);
+                                    $seconds_diff = $ts2 - $ts1;
+                                    $secondall = $seconds_diff+14400;
+                                    $start_time = date("Y-m-d H:i:s",strtotime($end)+14400);
+                                    $log2->start_time = $start_time;
+                                    $end_time = date("Y-m-d H:i:s",strtotime($end)+$secondall);
+                                    $log2->end_time = $end_time;
+                                    $log2->save();
+                                    $end = $end_time;
+
+                                    $dandori = InjectionScheduleMoldingLog::where('id_schedule',$log2->id_schedule)->first();
+
+                                    $dandori->start_time = date("Y-m-d H:i:s",strtotime($start_time)-14400);
+                                    $dandori->end_time = $start_time;
+                                    $dandori->save();
+                                }
+                            }
+                            $status = true;
+                            $message = 'Success Adjust Schedule';
+                        }
+                    }
+                }
+            }
+            $response = array(
+                'status' => $status,
+                'message' => $message
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+            return Response::json($response);
+        }
     }
 
     public function indexInputStock()
