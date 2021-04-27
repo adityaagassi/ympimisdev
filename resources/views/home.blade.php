@@ -749,10 +749,10 @@
                         <a href="http://10.109.52.7/mtnc/login/log" target="_blank">
                             <i class="fa fa-caret-right"></i> Planned Maintenance Activity Finding (??)
                         </a>
-                        <!-- <br>
-                        <a href="{{ url("index/maintenance/mttbf/list") }}">
-                            <i class="fa fa-caret-right"></i> MTBF (??)
-                        </a> -->
+                        <br>
+                        <a href="{{ url("index/maintenance/machine_report/list") }}">
+                            <i class="fa fa-caret-right"></i> Machine Breakdown Report (??)
+                        </a>
                        <!--  <br> 
                         <a href="{{ url("index/maintenance/mttbf/report") }}">
                             <i class="fa fa-caret-right"></i> MTBF Report (??)
