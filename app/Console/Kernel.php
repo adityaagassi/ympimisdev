@@ -142,7 +142,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('update:pointing_calls')->dailyAt('01:00');
         $schedule->command('skill:unfulfilled_log')->dailyAt('01:00');
         $schedule->command('costcenter:history')->dailyAt('01:00');
-        // $schedule->command('injection:schedule')->dailyAt('04:00');
+        $schedule->command('injection:schedule')->monthlyOn(1, '04:00');;
 
 
         $schedule->command('kd:shipment')->everyThirtyMinutes();
