@@ -1109,12 +1109,15 @@ class IndirectMaterialController extends Controller{
 			return Response::json($response);
 		}		
 
-		$data = db::select("SELECT s.material_number, chm.material_description, chm.storage_location, s.in_date, s.exp_date, COUNT(s.material_number) AS qty FROM indirect_material_stocks s
+		$data = db::select("SELECT resume.material_number, resume.material_description, resume.storage_location, GROUP_CONCAT(' ', resume.exp_date, ' (', resume.qty, ')') AS exp_date, SUM(resume.qty) AS qty FROM
+			(SELECT s.material_number, mpdl.material_description, chm.storage_location, s.in_date, s.exp_date, COUNT(s.material_number) AS qty FROM indirect_material_stocks s
 			LEFT JOIN (SELECT DISTINCT material_number, material_description, storage_location FROM chemical_solution_composers) AS chm
 			ON chm.material_number = s.material_number
+			LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
 			WHERE ".$condition."
-			GROUP BY s.material_number, chm.material_description, chm.storage_location, s.in_date, s.exp_date
-			ORDER BY s.exp_date ASC");
+			GROUP BY s.material_number, chm.material_description, chm.storage_location, s.in_date, s.exp_date) AS resume
+			GROUP BY resume.material_number, resume.material_description, resume.storage_location
+			ORDER BY qty DESC");
 
 		$response = array(
 			'status' => true,

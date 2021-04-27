@@ -65,7 +65,6 @@
 									<th style="width: 10%; vertical-align: middle;">Material</th>
 									<th style="width: 40%; vertical-align: middle;">Description</th>
 									<th style="width: 20%; vertical-align: middle;">Location</th>
-									<th style="width: 10%; vertical-align: middle;">In Date</th>
 									<th style="width: 10%; vertical-align: middle;">Exp Date</th>
 									<th style="width: 10%; vertical-align: middle;">Qty</th>
 								</tr>
@@ -336,11 +335,8 @@
 			if(xhr.status == 200){
 				if(result.status){
 					
-					
-
 					// $('#last_update').html('<b>'+ title_text +'</b>');
 					
-
 					var series = [];
 					var categories = [];
 					
@@ -377,21 +373,6 @@
 								enabled: true,
 								text: "Quantity"
 							},
-							plotLines: [{
-								color: '#FF0000',
-								width: 2,
-								value: 480,
-								label: {
-									align:'right',
-									text: '480min',
-									x:-7,
-									style: {
-										fontSize: '1vw',
-										color: '#FF0000',
-										fontWeight: 'bold'
-									}
-								}
-							}],
 						},
 						xAxis: {
 							categories: categories,
@@ -477,18 +458,17 @@
 						detail += '<td>'+value.material_number+'</td>';
 						detail += '<td>'+(value.material_description || '-')+'</td>';
 						detail += '<td>'+(value.storage_location || '-')+'</td>';
-						detail += '<td>'+value.in_date+'</td>';
 						detail += '<td>'+value.exp_date+'</td>';
 						detail += '<td>'+value.qty+'</td>';
 						detail += '</tr>';
 
-						total += value.qty;
+						total += parseInt(value.qty);
 
 					});
 					$('#tableDetailBody').append(detail);
 
 					detailDataFoot += '<tr>';
-					detailDataFoot += '<td style="background-color: rgb(252, 248, 227);" colspan="5">Total</td>';
+					detailDataFoot += '<td style="background-color: rgb(252, 248, 227);" colspan="4">Total</td>';
 					detailDataFoot += '<td style="background-color: rgb(252, 248, 227);"><b>'+total+'</b></td>';
 					detailDataFoot += '</tr>';
 					$('#tableDetailBody').append(detailDataFoot);
