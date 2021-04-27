@@ -226,7 +226,11 @@
             <div id="wrk" class="kotak" style="left: 750px; top: 565px; width: 40px; height: 70px">WRK <br>
               <div class="isi"></div>
             </div>
-            <div id="mtc2" class="kotak" style="left: 1030px; top: 640px; width: 150px; height: 50px">MTC <br>
+            <div id="mtc" class="kotak" style="left: 800px; top: 565px; width: 40px; height: 70px">MTC<br>
+              <div class="isi">
+              </div>
+            </div>
+            <div id="mtc2" class="kotak" style="left: 1030px; top: 640px; width: 150px; height: 50px">MTC 2<br>
               <div class="isi">
                 <!-- <div class="op">HW<span class="tooltiptext">Achmad Hagi Wahyudi</span></div> -->
               </div>

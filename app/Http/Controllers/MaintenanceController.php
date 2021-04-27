@@ -121,7 +121,12 @@ class MaintenanceController extends Controller
 			['location' => 'Press', 'alias' => 'prs', 'area' => ['Press']],
 			['location' => 'Transformer Room 1', 'alias' => 'trf1', 'area' => ['Transformer Room 1']],
 			['location' => 'Transformer Room 2', 'alias' => 'trf2', 'area' => ['Transformer Room 2']],
-			['location' => 'Transformer Room 3', 'alias' => 'trf3', 'area' => ['Transformer Room 3']]
+			['location' => 'Transformer Room 3', 'alias' => 'trf3', 'area' => ['Transformer Room 3']],
+			['location' => 'Compressor Assy', 'alias' => 'com1', 'area' => ['Compressor Assy']],
+			['location' => 'Compressor Recorder', 'alias' => 'com2', 'area' => ['Compressor Recorder']],
+			['location' => 'Compressor T-Pro', 'alias' => 'com3', 'area' => ['Compressor T-Pro']],
+			['location' => 'Outdoor', 'alias' => 'oa', 'area' => ['Outdoor']],
+			// Compressor Recorder
 		];
 	}
 
