@@ -387,8 +387,8 @@ class SurveyController extends Controller
 	public function fetchSurveyCovidReport(Request $request)
 	{
 		try {
-			$date_from = $request->get('date_from');
-	        $date_to = $request->get('date_to');
+			$date_from = $request->get('tanggal_from');
+	        $date_to = $request->get('tanggal_to');
 	        if ($date_from == "") {
 	             if ($date_to == "") {
 	                  $where1 = "WHERE DATE( miraimobile.survey_logs.created_at ) BETWEEN DATE(NOW() - INTERVAL 7 DAY) AND DATE(NOW())";
