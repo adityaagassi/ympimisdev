@@ -2367,8 +2367,13 @@ public function fetchGeneralPointingCall(Request $request){
 
 		if($employee){
 			$safety_ridings = SafetyRiding::where('location', '=', $employee->remark)
-			->where('department', '=', $employee->department)
-			->where('period', '=', date('Y-m-01'))
+			->where('department', '=', $employee->department);
+			
+			if($employee->department == 'Educational Instrument (EI) Department'){
+				$safety_ridings = $safety_ridings->orWhere('department', '=', 'Woodwind Instrument - Key Parts Process (WI-KPP) Department');
+			}
+
+			$safety_ridings = $safety_ridings->where('period', '=', date('Y-m-01'))
 			->get();
 
 			$department = $employee->department;
