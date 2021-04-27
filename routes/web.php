@@ -1595,6 +1595,8 @@ Route::get('purchase_requisition/detailPch', 'AccountingController@detailMonitor
 Route::group(['nav' => 'S61', 'middleware' => 'permission'], function(){
 	//Purchase Requisition
 	Route::get('canteen/purchase_requisition', 'GeneralAffairController@canteen_purchase_requisition');
+	Route::get('fetch/canteen/purchase_requisition', 'GeneralAffairController@fetch_canteen_purchase_requisition');
+	Route::get('fetch/canteen/purchase_requisition/itemlist', 'GeneralAffairController@fetch_item_list');
 });
 
 //PO Monitoring & Control
@@ -4726,10 +4728,12 @@ Route::get('fetch/qa/report/incoming/delete', 'QualityAssuranceController@delete
 Route::post('update/qa/report/incoming', 'QualityAssuranceController@updateReportIncomingCheck');
 
 //QA Report Lot Out Incoming Check
-Route::get('index/qa/report/incoming/lot_out', 'QualityAssuranceController@indexReportLotOut');
-Route::get('fetch/qa/report/incoming/lot_out', 'QualityAssuranceController@fetchReportLotOut');
-Route::post('input/qa/report/incoming/lot_out/evidence', 'QualityAssuranceController@inputReportLotOut');
-Route::get('send/qa/report/incoming/lot_out', 'QualityAssuranceController@sendReportLotOut');
+Route::group(['nav' => 'R11', 'middleware' => 'permission'], function(){
+	Route::get('index/qa/report/incoming/lot_out', 'QualityAssuranceController@indexReportLotOut');
+	Route::get('fetch/qa/report/incoming/lot_out', 'QualityAssuranceController@fetchReportLotOut');
+	Route::post('input/qa/report/incoming/lot_out/evidence', 'QualityAssuranceController@inputReportLotOut');
+	Route::get('send/qa/report/incoming/lot_out', 'QualityAssuranceController@sendReportLotOut');
+});
 
 //Health Indicator
 Route::get('index/health/{loc}', 'HealthController@index');
