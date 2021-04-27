@@ -3836,7 +3836,7 @@ Route::get('fetch/audit_patrol', 'AuditController@fetch_audit');
 Route::post('post/audit_patrol', 'AuditController@post_audit');
 Route::post('post/audit_patrol_file', 'AuditController@post_audit_file');
 
-Route::get('index/audit_patrol_std', 'AuditController@index_patrol_daily');
+Route::get('index/audit_patrol_daily', 'AuditController@index_patrol_daily');
 
 Route::get('index/audit_patrol_stocktaking', 'AuditController@index_audit_stocktaking');
 Route::post('post/audit_patrol_stocktaking', 'AuditController@post_audit_stocktaking');
@@ -4490,10 +4490,17 @@ Route::get('fetch/scrap_warehouse', 'ScrapController@fetchScrapWarehouse');
 Route::get('fetch/kd_scrap_closure', 'ScrapController@fetchKdScrapClosure');
 Route::get('scan/scrap_warehouse', 'ScrapController@scanScrapWarehouse');
 Route::get('display/scrap_warehouse', 'ScrapController@displayScrapWarehouse');
-Route::get('monitoring/scrap/wip', 'ScrapController@MonitoringWip');
-Route::get('fetch/scrap/monitoring', 'ScrapController@fetchMonitoringScrap');
+
+
 Route::get('scrap/data/monitoring', 'ScrapController@fatchMonitoringDisplayScrap');
 Route::get('scrap/monitoring/display', 'ScrapController@MonitoringScrapDisplay');
+
+
+
+Route::get('scrap/view/monitoring/wip', 'ScrapController@MonitoringWip');
+Route::get('scrap/data/monitoring/wip', 'ScrapController@fetchMonitoringScrap');
+Route::get('scrap/list/wip', 'ScrapController@ListWip');
+Route::get('scrap/resume/list/wip', 'ScrapController@ResumeListWip');
 // ============================================================================================
 Route::get('index/scrap/create', 'ScrapController@createScrap');
 

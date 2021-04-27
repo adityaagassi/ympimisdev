@@ -89,6 +89,26 @@ class AuditController extends Controller
 		))->with('page', 'Audit Patrol');
 	}
 
+  public function index_patrol_daily()
+  {
+    $title = "Patrol Daily Shift 1 & 2";
+    $title_jp = "";
+
+    $emp = EmployeeSync::where('employee_id', Auth::user()->username)
+    ->select('employee_id', 'name', 'position', 'department')->first();
+
+    $auditee = db::select("select DISTINCT employee_id, name, section, position from employee_syncs
+      where end_date is null and (position like '%Staff%' or position like '%Chief%' or position like '%Foreman%' or position like '%Manager%' or position like '%Coordinator%')");
+
+    return view('audit.patrol_daily', array(
+      'title' => $title,
+      'title_jp' => $title_jp,
+      'employee' => $emp,
+      'auditee' => $auditee,
+      'location' => $this->location
+    ))->with('page', 'Patrol Daily');
+  }
+
   public function fetch_patrol(Request $request){
 
 
@@ -220,9 +240,7 @@ class AuditController extends Controller
 		try {
 			$id_user = Auth::id();
 			$tujuan_upload = 'files/patrol';
-
-            // dd($request);
-
+      
 			for ($i=0; $i < $request->input('jumlah'); $i++) { 
 
 				$file = $request->file('file_datas_'.$i);
