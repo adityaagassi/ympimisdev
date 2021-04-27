@@ -1115,7 +1115,7 @@ class IndirectMaterialController extends Controller{
 			ON chm.material_number = s.material_number
 			LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
 			WHERE ".$condition."
-			GROUP BY s.material_number, chm.material_description, chm.storage_location, s.in_date, s.exp_date) AS resume
+			GROUP BY s.material_number, mpdl.material_description, chm.storage_location, s.in_date, s.exp_date) AS resume
 			GROUP BY resume.material_number, resume.material_description, resume.storage_location
 			ORDER BY qty DESC");
 
