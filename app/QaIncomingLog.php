@@ -28,6 +28,7 @@ class QaIncomingLog extends Model
 		'status_lot',
 		'report_evidence',
 		'send_email_status',
+		'send_email_at',
 		'created_by'
 	];
 }

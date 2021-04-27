@@ -19,6 +19,8 @@ use Response;
 use Excel;
 use DataTables;
 use Carbon\Carbon;
+use App\Mail\SendEmail;
+use Illuminate\Support\Facades\Mail;
 
 class QualityAssuranceController extends Controller
 {
@@ -1154,6 +1156,9 @@ class QualityAssuranceController extends Controller
           qa_incoming_logs.`total_ng`,
           qa_incoming_logs.`ng_ratio`,
           qa_incoming_logs.`status_lot`,
+          qa_incoming_logs.`report_evidence`,
+          qa_incoming_logs.`send_email_status`,
+          qa_incoming_logs.`send_email_at`,
           DATE( qa_incoming_logs.created_at ) AS created,
           ( SELECT GROUP_CONCAT( ng_name SEPARATOR '_' ) FROM qa_incoming_ng_logs WHERE qa_incoming_ng_logs.incoming_check_code = qa_incoming_logs.incoming_check_code ) AS ng_name,
           ( SELECT GROUP_CONCAT( qty_ng SEPARATOR '_' ) FROM qa_incoming_ng_logs WHERE qa_incoming_ng_logs.incoming_check_code = qa_incoming_logs.incoming_check_code ) AS ng_qty,
@@ -1165,11 +1170,35 @@ class QualityAssuranceController extends Controller
         WHERE
           DATE( qa_incoming_logs.created_at ) >= ".$first." 
           AND DATE( qa_incoming_logs.created_at ) <= ".$last."
+          AND status_lot = 'Lot Out'
           ".$locationin." ".$inspection_levelin." ".$materialin." ".$vendorin." ");
 
         $response = array(
             'status' => true,
             'datas' => $datas,
+        );
+        return Response::json($response);
+      } catch (\Exception $e) {
+        $response = array(
+            'status' => false,
+            'message' => $e->getMessage()
+        );
+        return Response::json($response);
+      }
+    }
+
+    public function inputReportLotOut(Request $request)
+    {
+      try {
+        $id_log = $request->get('id_log');
+        $report_evidence = $request->get('report_evidence');
+        $log = QaIncomingLog::where('id',$id_log)->first();
+        $log->report_evidence = $report_evidence;
+        $log->save();
+
+        $response = array(
+            'status' => true,
+            'message' => 'Success Input Evidence'
         );
         return Response::json($response);
       } catch (\Exception $e) {
@@ -1439,6 +1468,7 @@ class QualityAssuranceController extends Controller
           qa_incoming_logs.`total_ng`,
           qa_incoming_logs.`ng_ratio`,
           qa_incoming_logs.`status_lot`,
+          qa_incoming_logs.`report_evidence`,
           DATE( qa_incoming_logs.created_at ) AS created,
           ( SELECT GROUP_CONCAT( ng_name SEPARATOR '_' ) FROM qa_incoming_ng_logs WHERE qa_incoming_ng_logs.incoming_check_code = qa_incoming_logs.incoming_check_code ) AS ng_name,
           ( SELECT GROUP_CONCAT( qty_ng SEPARATOR '_' ) FROM qa_incoming_ng_logs WHERE qa_incoming_ng_logs.incoming_check_code = qa_incoming_logs.incoming_check_code ) AS ng_qty,
@@ -1536,6 +1566,82 @@ class QualityAssuranceController extends Controller
         $response = array(
             'status' => true,
             'message' => 'Success Delete Data'
+        );
+        return Response::json($response);
+      } catch (\Exception $e) {
+        $response = array(
+            'status' => false,
+            'message' => $e->getMessage()
+        );
+        return Response::json($response);
+      }
+    }
+
+    public function sendReportLotOut(Request $request)
+    {
+      try {
+        $id = $request->get('id');
+        $log = QaIncomingLog::where('qa_incoming_logs.id',$id)->first();
+        $log->send_email_status = 'Sent';
+        $log->send_email_at = date('Y-m-d H:i:s');
+
+        $datas = DB::SELECT("SELECT
+          qa_incoming_logs.id as id_log,
+          qa_incoming_logs.incoming_check_code,
+          qa_incoming_logs.location,
+          qa_incoming_logs.lot_number,
+          employee_syncs.employee_id,
+          employee_syncs.name,
+          qa_incoming_logs.material_number,
+          qa_incoming_logs.material_description,
+          qa_incoming_logs.vendor,
+          qa_incoming_logs.invoice,
+          qa_incoming_logs.inspection_level,
+          qa_incoming_logs.`repair`,
+          DATE(qa_incoming_logs.created_at) as date,
+          qa_incoming_logs.`return`,
+          qa_incoming_logs.`qty_rec`,
+          qa_incoming_logs.`qty_check`,
+          qa_incoming_logs.`total_ok`,
+          qa_incoming_logs.`total_ng`,
+          qa_incoming_logs.`ng_ratio`,
+          qa_incoming_logs.`status_lot`,
+          qa_incoming_logs.`report_evidence`,
+          DATE( qa_incoming_logs.created_at ) AS created,
+          ( SELECT GROUP_CONCAT( ng_name SEPARATOR '_' ) FROM qa_incoming_ng_logs WHERE qa_incoming_ng_logs.incoming_check_code = qa_incoming_logs.incoming_check_code ) AS ng_name,
+          ( SELECT GROUP_CONCAT( qty_ng SEPARATOR '_' ) FROM qa_incoming_ng_logs WHERE qa_incoming_ng_logs.incoming_check_code = qa_incoming_logs.incoming_check_code ) AS ng_qty,
+          ( SELECT GROUP_CONCAT( status_ng SEPARATOR '_' ) FROM qa_incoming_ng_logs WHERE qa_incoming_ng_logs.incoming_check_code = qa_incoming_logs.incoming_check_code ) AS status_ng,
+          ( SELECT GROUP_CONCAT( note_ng SEPARATOR '_' ) FROM qa_incoming_ng_logs WHERE qa_incoming_ng_logs.incoming_check_code = qa_incoming_logs.incoming_check_code ) AS note_ng 
+        FROM
+          qa_incoming_logs
+          JOIN employee_syncs ON employee_syncs.employee_id = qa_incoming_logs.inspector_id 
+        WHERE
+          qa_incoming_logs.id = '".$request->get('id')."'
+        ORDER BY
+          qa_incoming_logs.material_number,
+          qa_incoming_logs.created_at desc,
+          qa_incoming_logs.lot_number");
+
+        $mailto = QaMaterial::select('email')->where('material_number',$log->material_number)->first();
+        $mail_to = $mailto->email;
+
+        $cc = [];
+        $cc[0] = 'nasiqul.ibat@music.yamaha.com';
+        // $cc[0] = 'yayuk.wahyuni@music.yamaha.com';
+        // $cc[1] = 'agustina.hayati@music.yamaha.com';
+        // $cc[2] = 'ratri.sulistyorini@music.yamaha.com';
+        // $cc[3] = 'abdissalam.saidi@music.yamaha.com';
+
+        $bcc = [];
+        $bcc[0] = 'mokhamad.khamdan.khabibi@music.yamaha.com';
+
+        Mail::to($mail_to)->cc($cc,'CC')->bcc($bcc,'BCC')->send(new SendEmail($datas, 'qa_incoming_check'));
+
+        $log->save();
+
+        $response = array(
+            'status' => true,
+            'message' => 'Email Berhasil Terkirim'
         );
         return Response::json($response);
       } catch (\Exception $e) {
