@@ -35,7 +35,7 @@
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url('index/audit_patrol') }}" class="btn btn-default btn-block" style="font-size: 1.7vw; border-color: green;">5S Patrol GM & Presdir (社長パトロール)</a>
 			<a href="{{ url('index/audit_patrol_std') }}" class="btn btn-default btn-block" style="font-size: 1.7vw; border-color: green;">EHS & 5S Monthly Patrol</a>
-			<a href="{{ url('index/audit_patrol_daily') }}" class="btn btn-default btn-block" style="font-size: 1.7vw; border-color: green;">Patrol Daily Shift 1 dan Shift 2</a>
+			<a href="{{ url('index/audit_patrol_daily') }}" class="btn btn-default btn-block" style="font-size: 1.7vw; border-color: green;">Daily Patrol Shift 1 dan Shift 2</a>
 			<!-- <a href="{{ url('') }}" class="btn btn-default btn-block" style="font-size: 1.7vw; border-color: green;">Patrol Daily Covid</a> -->
 			<!-- <hr style="border: 1px solid red"> -->
 			
@@ -44,10 +44,10 @@
 			<span style="font-size: 30px; color: red;"><i class="fa fa-angle-double-down"></i> Monitoring <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url('index/audit_patrol/monitoring') }}" class="btn btn-default btn-block" style="font-size: 1.7vw; border-color: red;">GM & Presdir Patrol Monitoring (パトロール監視)</a>
 			<a href="{{ url('index/audit_patrol_monitoring/monthly_patrol') }}" class="btn btn-default btn-block" style="font-size: 1.7vw; border-color: red;width: 65%;display: inline-block;">Monthly Patrol Monitoring & Response</a>  
-			<a href="{{ url('index/patrol_resume/monthly_patrol') }}" class="btn btn-default btn-block" style="font-size: 1.7vw; border-color: red;width: 34%;display: inline-block;">By Location</a>
+			<a href="{{ url('index/patrol_resume/monthly_patrol') }}" class="btn btn-default btn-block" style="font-size: 1.7vw; border-color: red;width: 34%;display: inline-block;">Monthly By Location</a>
 
-			<a href="{{ url('index/audit_patrol_monitoring/daily_patrol') }}" class="btn btn-default btn-block" style="font-size: 1.7vw; border-color: red;width: 65%;display: inline-block;">Patrol Daily Monitoring & Response</a>  
-			<a href="{{ url('index/patrol_resume/daily_patrol') }}" class="btn btn-default btn-block" style="font-size: 1.7vw; border-color: red;width: 34%;display: inline-block;">By Location</a>
+			<a href="{{ url('index/audit_patrol_monitoring/daily_patrol') }}" class="btn btn-default btn-block" style="font-size: 1.7vw; border-color: red;width: 65%;display: inline-block;">Daily Patrol Monitoring & Response</a>  
+			<a href="{{ url('index/patrol_resume/daily_patrol') }}" class="btn btn-default btn-block" style="font-size: 1.7vw; border-color: red;width: 34%;display: inline-block;">Daily By Location</a>
 		</div>
 	</div>
 
