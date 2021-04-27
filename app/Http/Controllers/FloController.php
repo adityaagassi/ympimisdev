@@ -1297,7 +1297,12 @@ class FloController extends Controller
 				$inventoryWIP->quantity = ($inventoryWIP->quantity+$flo->actual);
 				$inventoryWIP->save();
 
-				if($flo->transfer != null){
+
+				$flo_detail = FloDetail::where('flo_number', $flo->flo_number)
+				->whereNotNull('transfer')
+				->get();
+
+				if(count($flo_detail) > 0){
 					// $log_transaction = new LogTransaction([
 					// 	'material_number' => $flo->shipmentschedule->material_number,
 					// 	'issue_plant' => '8190',
@@ -1311,8 +1316,14 @@ class FloController extends Controller
 					// 	'created_by' => $id
 					// ]);
 					// $log_transaction->save();
+					// $flo->transfer = null;
 
-					$flo->transfer = null;
+					$flo_detail = FloDetail::where('flo_number', $flo->flo_number)
+					->whereNotNull('transfer')
+					->update([
+						'transfer' => null
+					]);
+
 				}
 
 				$transaction_transfer = new TransactionTransfer([
