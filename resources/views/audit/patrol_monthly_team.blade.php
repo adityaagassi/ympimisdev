@@ -138,6 +138,7 @@
   <section class="content" style="padding-top: 0; padding-bottom: 0">
     <div class="row">
       <input type="hidden" value="{{csrf_token()}}" name="_token" />
+      <input type="hidden" value="{{ $category }}" id="category" name="category">
       <div class="col-md-2" style="padding-top: 10px;">
         <div class="input-group date">
           <div class="input-group-addon bg-green" style="border: none;">
@@ -146,9 +147,9 @@
           <input type="text" class="form-control datepicker" id="month" name="month" placeholder="Select Month" onchange="drawChart()">
         </div>
       </div>
-      <div class="col-md-2" style="padding-top: 10px;">
-        <a href="{{url('index/monthly_patrol_team/export')}}" type="button" class="btn btn-success">Export List</a>
-      </div>
+      <!-- <div class="col-md-2" style="padding-top: 10px;">
+        <a href="{{url('index/patrol_resume/export')}}" type="button" class="btn btn-success">Export List</a>
+      </div> -->
       
       <div class="col-md-12" style="padding-top: 10px;">
         <div id="chart_bulan" style="width: 99%; height: 300px;"></div>
@@ -282,7 +283,7 @@
       category: category
     };
 
-    $.get('{{ url("fetch/monthly_patrol_team") }}', data, function(result, status, xhr) {
+    $.get('{{ url("fetch/patrol_resume") }}', data, function(result, status, xhr) {
       if(result.status){
 
         var auditor = [];
@@ -355,7 +356,7 @@
               point: {
                 events: {
                   click: function () {
-                    showModal(this.category,this.series.name);
+                    showModal(this.category,this.series.name,result.category);
                   }
                 }
               },
@@ -461,7 +462,7 @@
               point: {
                 events: {
                   click: function () {
-                    showModalLokasi(this.category,this.series.name);
+                    showModalLokasi(this.category,this.series.name,result.category);
                   }
                 }
               },
@@ -525,7 +526,7 @@
 
 
 
-  function showModal(auditor, status) {
+  function showModal(auditor, status, category) {
     tabel = $('#example4').DataTable();
     tabel.destroy();
     var month = $('#month').val();
@@ -586,11 +587,12 @@
       "serverSide": true,
       "ajax": {
         "type" : "get",
-        "url" : "{{ url("index/monthly_patrol_team/detail") }}",
+        "url" : "{{ url("fetch/patrol_resume/detail") }}",
         "data" : {
           auditor : auditor,
           status : status,
-          month : month
+          month : month,
+          category : category
         }
       },
       "columns": [
@@ -609,7 +611,7 @@
     $('#judul_table_bulan').append('<center><b>Team Patrol '+auditor+' '+status+'</b></center>'); 
   }
 
-  function showModalLokasi(lokasi, status) {
+  function showModalLokasi(lokasi, status, category) {
     tabel = $('#example5').DataTable();
     tabel.destroy();
     var month = $('#month').val();
@@ -670,11 +672,12 @@
       "serverSide": true,
       "ajax": {
         "type" : "get",
-        "url" : "{{ url("index/monthly_patrol_team/detail_lokasi") }}",
+        "url" : "{{ url("fetch/patrol_resume/detail_lokasi") }}",
         "data" : {
           lokasi : lokasi,
           status : status,
-          month : month
+          month : month,
+          category : category
         }
       },
       "columns": [

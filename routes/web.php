@@ -3859,11 +3859,11 @@ Route::get('index/audit_patrol_monitoring_detail_bulan', 'AuditController@detail
 Route::get('index/audit_patrol_monitoring_table', 'AuditController@fetchTableAuditAll');
 
 
-Route::get('index/monthly_patrol_team', 'AuditController@indexMonthlyPatrolTeam');
-Route::get('fetch/monthly_patrol_team', 'AuditController@fetchMonthlyPatrolTeam');
-Route::get('index/monthly_patrol_team/detail', 'AuditController@detailMonthlyPatrolTeam');
-Route::get('index/monthly_patrol_team/detail_lokasi', 'AuditController@detailLokasiMonthlyPatrolTeam');
-Route::get('index/monthly_patrol_team/export', 'AuditController@ExportMonthlyPatrolTeam');
+Route::get('index/patrol_resume/{id}', 'AuditController@indexPatrolResume');
+Route::get('fetch/patrol_resume', 'AuditController@fetchPatrolResume');
+Route::get('fetch/patrol_resume/detail', 'AuditController@detailPatrolResume');
+Route::get('fetch/patrol_resume/detail_lokasi', 'AuditController@detailLokasiPatrolResume');
+Route::get('fetch/patrol_resume/export', 'AuditController@ExportMonthlyPatrolResume');
 
 Route::get('export/patrol/list', 'AuditController@exportPatrol');
 
@@ -4489,14 +4489,12 @@ Route::get('fetch/scrap_detail', 'ScrapController@fetchScrapDetail');
 Route::get('fetch/scrap_warehouse', 'ScrapController@fetchScrapWarehouse');
 Route::get('fetch/kd_scrap_closure', 'ScrapController@fetchKdScrapClosure');
 Route::get('scan/scrap_warehouse', 'ScrapController@scanScrapWarehouse');
-Route::get('display/scrap_warehouse', 'ScrapController@displayScrapWarehouse');
-
-
 Route::get('scrap/data/monitoring', 'ScrapController@fatchMonitoringDisplayScrap');
 Route::get('scrap/monitoring/display', 'ScrapController@MonitoringScrapDisplay');
 
 
-
+Route::get('scrap/view/display/warehouse', 'ScrapController@displayScrapWarehouse');
+Route::get('scrap/date/display/warehouse', 'ScrapController@fetchMonitoringScrapWarehouse');
 Route::get('scrap/view/monitoring/wip', 'ScrapController@MonitoringWip');
 Route::get('scrap/data/monitoring/wip', 'ScrapController@fetchMonitoringScrap');
 Route::get('scrap/list/wip', 'ScrapController@ListWip');
@@ -4730,6 +4728,8 @@ Route::post('update/qa/report/incoming', 'QualityAssuranceController@updateRepor
 //QA Report Lot Out Incoming Check
 Route::get('index/qa/report/incoming/lot_out', 'QualityAssuranceController@indexReportLotOut');
 Route::get('fetch/qa/report/incoming/lot_out', 'QualityAssuranceController@fetchReportLotOut');
+Route::post('input/qa/report/incoming/lot_out/evidence', 'QualityAssuranceController@inputReportLotOut');
+Route::get('send/qa/report/incoming/lot_out', 'QualityAssuranceController@sendReportLotOut');
 
 //Health Indicator
 Route::get('index/health/{loc}', 'HealthController@index');

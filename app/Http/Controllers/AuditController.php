@@ -134,6 +134,7 @@ class AuditController extends Controller
         audit_all_results 
       WHERE point_judul is not null
       and jenis = 'Patrol'
+      and point_judul != 'Negative Finding'
       GROUP BY
         point_judul
       ORDER BY point_judul ASC
@@ -930,7 +931,11 @@ public function detailPenanganan(Request $request){
 
       if ($request->get('category') == "monthly_patrol") {
         $category = "EHS & 5S Patrol";
-      }else if ($request->get('category') == "stocktaking") {
+      }
+      else if ($request->get('category') == "daily_patrol") {
+        $category = "Patrol Daily";
+      }
+      else if ($request->get('category') == "stocktaking") {
         $category = "Audit Stocktaking";
       }
 
@@ -997,7 +1002,11 @@ public function detailPenanganan(Request $request){
 
       if ($request->get('category') == "monthly_patrol") {
         $category = "EHS & 5S Patrol";
-      }else if ($request->get('category') == "stocktaking") {
+      }
+      else if ($request->get('category') == "daily_patrol") {
+        $category = "Patrol Daily";
+      }
+      else if ($request->get('category') == "stocktaking") {
         $category = "Audit Stocktaking";
       }
 
@@ -1092,6 +1101,198 @@ public function detailPenanganan(Request $request){
       ->rawColumns(['tanggal' => 'tanggal', 'foto' => 'foto','penanganan' => 'penanganan'])
       ->make(true);
   }
+
+    // Audit & Patrol By Team Monthly Patrol
+
+    public function indexPatrolResume($id){
+
+      return view('audit.patrol_monthly_team',  
+         array(
+           'title' => 'Monthly Patrol Resume', 
+           'title_jp' => '',
+           'category' => $id
+         )
+       )->with('page', 'Monthly Patrol Resume');
+     }
+
+    public function fetchPatrolResume(Request $request){
+
+      $first = date("Y-m-d", strtotime('-30 days'));
+
+      $check = AuditAllResult::where('status_ditangani', '=', 'close')
+      ->orderBy('tanggal', 'asc')
+      ->select(db::raw('date(tanggal) as audit_date'))
+      ->first();
+
+      if($first > date("Y-m-d", strtotime($check->tanggal))){
+        $first = date("Y-m-d", strtotime($check->tanggal));
+      }
+
+      if ($request->get('month') != "") {
+        $month = "and DATE_FORMAT(tanggal,'%Y-%m') = '".$request->get('month')."'";
+      }else{
+        $month = "";
+      }
+
+      if ($request->get('category') == "monthly_patrol") {
+        $category = "EHS & 5S Patrol";
+      }
+      else if ($request->get('category') == "daily_patrol") {
+        $category = "Patrol Daily";
+      }
+      else if ($request->get('category') == "stocktaking") {
+        $category = "Audit Stocktaking";
+      }
+
+      $data_bulan = db::select("
+        SELECT
+        auditor_name,
+        sum( CASE WHEN status_ditangani IS NULL AND kategori = '".$category."' THEN 1 ELSE 0 END ) AS jumlah_belum,
+        sum( CASE WHEN status_ditangani IS NOT NULL AND kategori = '".$category."' THEN 1 ELSE 0 END ) AS jumlah_sudah
+        FROM
+        audit_all_results 
+        WHERE
+        kategori in ('".$category."')
+        and point_judul != 'Positive Finding'
+        ".$month."
+        GROUP BY
+        auditor_name ASC
+        "
+      );
+
+      $data_lokasi = db::select("
+        SELECT
+        lokasi,
+        sum( CASE WHEN status_ditangani IS NULL AND kategori = '".$category."' THEN 1 ELSE 0 END ) AS jumlah_belum,
+        sum( CASE WHEN status_ditangani IS NOT NULL AND kategori = '".$category."' THEN 1 ELSE 0 END ) AS jumlah_sudah
+        FROM
+        audit_all_results 
+        WHERE
+        kategori in ('".$category."')
+        and point_judul != 'Positive Finding'
+        ".$month."
+        GROUP BY
+        lokasi ASC
+        "
+      );
+
+      $response = array(
+        'status' => true,
+        'data_bulan' => $data_bulan,
+        'data_lokasi' => $data_lokasi,
+        'category' => $category
+      );
+
+      return Response::json($response);
+    }
+
+    public function detailPatrolResume(Request $request){
+
+      $auditor = $request->get('auditor');
+      $status = $request->get('status');
+
+      if ($request->get('month') != "") {
+        $month = "and DATE_FORMAT(tanggal,'%Y-%m') = '".$request->get('month')."'";
+      }else{
+        $month = "";
+      }
+
+      if ($status != null) {
+
+        if ($status == "Temuan Open") {
+          $stat = 'and audit_all_results.status_ditangani is null and kategori = "'.$request->get('category').'"';
+        }
+        else if ($status == "Temuan Close") {
+          $stat = 'and audit_all_results.status_ditangani = "close" and kategori = "'.$request->get('category').'"';
+        }
+
+      } else{
+        $stat = '';
+      }
+
+        $query = "select audit_all_results.* FROM audit_all_results where audit_all_results.deleted_at is null and auditor_name = '".$auditor."' ".$stat." ".$month." and point_judul != 'Positive Finding'";
+
+        $detail = db::select($query);
+
+        return DataTables::of($detail)
+
+        ->editColumn('tanggal', function($detail){
+          return date('d-M-Y', strtotime($detail->tanggal));
+        })
+
+        ->editColumn('foto', function($detail){
+          return '<img src="'.url('files/patrol').'/'.$detail->foto.'" width="250">';
+        })
+
+        ->editColumn('penanganan', function($detail){
+          return $detail->penanganan;
+        })
+
+        ->rawColumns(['tanggal' => 'tanggal', 'foto' => 'foto','penanganan' => 'penanganan'])
+        ->make(true);
+    }
+
+    public function detailLokasiPatrolResume(Request $request){
+
+      $lokasi = $request->get('lokasi');
+      $status = $request->get('status');
+
+      if ($request->get('month') != "") {
+        $month = "and DATE_FORMAT(tanggal,'%Y-%m') = '".$request->get('month')."'";
+      }else{
+        $month = "";
+      }
+
+      if ($status != null) {
+
+        if ($status == "Temuan Open") {
+          $stat = 'and audit_all_results.status_ditangani is null and kategori = "'.$request->get('category').'"';
+        }
+        else if ($status == "Temuan Close") {
+          $stat = 'and audit_all_results.status_ditangani = "close" and kategori = "'.$request->get('category').'"';
+        }
+
+      } else{
+        $stat = '';
+      }
+
+        $query = "select audit_all_results.* FROM audit_all_results where audit_all_results.deleted_at is null and lokasi = '".$lokasi."' ".$stat." ".$month." and point_judul != 'Positive Finding'";
+
+        $detail = db::select($query);
+
+        return DataTables::of($detail)
+
+        ->editColumn('tanggal', function($detail){
+          return date('d-M-Y', strtotime($detail->tanggal));
+        })
+
+        ->editColumn('foto', function($detail){
+          return '<img src="'.url('files/patrol').'/'.$detail->foto.'" width="250">';
+        })
+
+        ->editColumn('penanganan', function($detail){
+          return $detail->penanganan;
+        })
+
+        ->rawColumns(['tanggal' => 'tanggal', 'foto' => 'foto','penanganan' => 'penanganan'])
+        ->make(true);
+    }
+
+    public function ExportMonthlyPatrolResume(){
+      $query = "select audit_all_results.* FROM audit_all_results where audit_all_results.deleted_at is null and audit_all_results.status_ditangani = 'close' and kategori = 'EHS & 5S Patrol'";
+
+      $detail = db::select($query);
+
+      return view('audit.patrol_monthly_team_export',  
+         array(
+           'title' => 'Monthly Patrol By Team List', 
+           'title_jp' => '',
+           'data' => $detail
+         )
+       )->with('page', 'Monthly Patrol By Team List');
+
+    }
+
 
   public function index_packing_documentation()
   { 
@@ -1208,184 +1409,5 @@ public function detailPenanganan(Request $request){
             );
             return Response::json($response);
         }
-    }
-
-    // Audit & Patrol By Team Monthly Patrol
-
-    public function indexMonthlyPatrolTeam(){
-
-      return view('audit.patrol_monthly_team',  
-         array(
-           'title' => 'Monthly Patrol By Team', 
-           'title_jp' => '',
-         )
-       )->with('page', 'Monthly Patrol By Team');
-     }
-
-    public function fetchMonthlyPatrolTeam(Request $request){
-
-      $first = date("Y-m-d", strtotime('-30 days'));
-
-      $check = AuditAllResult::where('status_ditangani', '=', 'close')
-      ->orderBy('tanggal', 'asc')
-      ->select(db::raw('date(tanggal) as audit_date'))
-      ->first();
-
-      if($first > date("Y-m-d", strtotime($check->tanggal))){
-        $first = date("Y-m-d", strtotime($check->tanggal));
-      }
-
-      if ($request->get('month') != "") {
-        $month = "and DATE_FORMAT(tanggal,'%Y-%m') = '".$request->get('month')."'";
-      }else{
-        $month = "";
-      }
-
-      $data_bulan = db::select("
-        SELECT
-        auditor_name,
-        sum( CASE WHEN status_ditangani IS NULL AND kategori = 'EHS & 5S Patrol' THEN 1 ELSE 0 END ) AS jumlah_belum,
-        sum( CASE WHEN status_ditangani IS NOT NULL AND kategori = 'EHS & 5S Patrol' THEN 1 ELSE 0 END ) AS jumlah_sudah
-        FROM
-        audit_all_results 
-        WHERE
-        kategori in ('EHS & 5S Patrol')
-        and point_judul != 'Positive Finding'
-        ".$month."
-        GROUP BY
-        auditor_name ASC
-        "
-      );
-
-      $data_lokasi = db::select("
-        SELECT
-        lokasi,
-        sum( CASE WHEN status_ditangani IS NULL AND kategori = 'EHS & 5S Patrol' THEN 1 ELSE 0 END ) AS jumlah_belum,
-        sum( CASE WHEN status_ditangani IS NOT NULL AND kategori = 'EHS & 5S Patrol' THEN 1 ELSE 0 END ) AS jumlah_sudah
-        FROM
-        audit_all_results 
-        WHERE
-        kategori in ('EHS & 5S Patrol')
-        and point_judul != 'Positive Finding'
-        ".$month."
-        GROUP BY
-        lokasi ASC
-        "
-      );
-
-      $response = array(
-        'status' => true,
-        'data_bulan' => $data_bulan,
-        'data_lokasi' => $data_lokasi
-      );
-
-      return Response::json($response);
-    }
-
-    public function detailMonthlyPatrolTeam(Request $request){
-
-      $auditor = $request->get('auditor');
-      $status = $request->get('status');
-
-      if ($request->get('month') != "") {
-        $month = "and DATE_FORMAT(tanggal,'%Y-%m') = '".$request->get('month')."'";
-      }else{
-        $month = "";
-      }
-
-      if ($status != null) {
-
-        if ($status == "Temuan Open") {
-          $stat = 'and audit_all_results.status_ditangani is null and kategori = "EHS & 5S Patrol"';
-        }
-        else if ($status == "Temuan Close") {
-          $stat = 'and audit_all_results.status_ditangani = "close" and kategori = "EHS & 5S Patrol"';
-        }
-
-      } else{
-        $stat = '';
-      }
-
-        $query = "select audit_all_results.* FROM audit_all_results where audit_all_results.deleted_at is null and auditor_name = '".$auditor."' ".$stat." ".$month." ";
-
-        $detail = db::select($query);
-
-        return DataTables::of($detail)
-
-        ->editColumn('tanggal', function($detail){
-          return date('d-M-Y', strtotime($detail->tanggal));
-        })
-
-        ->editColumn('foto', function($detail){
-          return '<img src="'.url('files/patrol').'/'.$detail->foto.'" width="250">';
-        })
-
-        ->editColumn('penanganan', function($detail){
-          return $detail->penanganan;
-        })
-
-        ->rawColumns(['tanggal' => 'tanggal', 'foto' => 'foto','penanganan' => 'penanganan'])
-        ->make(true);
-    }
-
-    public function detailLokasiMonthlyPatrolTeam(Request $request){
-
-      $lokasi = $request->get('lokasi');
-      $status = $request->get('status');
-
-      if ($request->get('month') != "") {
-        $month = "and DATE_FORMAT(tanggal,'%Y-%m') = '".$request->get('month')."'";
-      }else{
-        $month = "";
-      }
-
-      if ($status != null) {
-
-        if ($status == "Temuan Open") {
-          $stat = 'and audit_all_results.status_ditangani is null and kategori = "EHS & 5S Patrol"';
-        }
-        else if ($status == "Temuan Close") {
-          $stat = 'and audit_all_results.status_ditangani = "close" and kategori = "EHS & 5S Patrol"';
-        }
-
-      } else{
-        $stat = '';
-      }
-
-        $query = "select audit_all_results.* FROM audit_all_results where audit_all_results.deleted_at is null and lokasi = '".$lokasi."' ".$stat." ".$month." ";
-
-        $detail = db::select($query);
-
-        return DataTables::of($detail)
-
-        ->editColumn('tanggal', function($detail){
-          return date('d-M-Y', strtotime($detail->tanggal));
-        })
-
-        ->editColumn('foto', function($detail){
-          return '<img src="'.url('files/patrol').'/'.$detail->foto.'" width="250">';
-        })
-
-        ->editColumn('penanganan', function($detail){
-          return $detail->penanganan;
-        })
-
-        ->rawColumns(['tanggal' => 'tanggal', 'foto' => 'foto','penanganan' => 'penanganan'])
-        ->make(true);
-    }
-
-    public function ExportMonthlyPatrolTeam(){
-      $query = "select audit_all_results.* FROM audit_all_results where audit_all_results.deleted_at is null and audit_all_results.status_ditangani = 'close' and kategori = 'EHS & 5S Patrol'";
-
-      $detail = db::select($query);
-
-      return view('audit.patrol_monthly_team_export',  
-         array(
-           'title' => 'Monthly Patrol By Team List', 
-           'title_jp' => '',
-           'data' => $detail
-         )
-       )->with('page', 'Monthly Patrol By Team List');
-
     }
 }

@@ -135,32 +135,47 @@
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="col-xs-12" style="text-align: center;margin-top:-30px;padding: 0">
-				<h3 class="box-title" style="color: white;margin-top: 10px;font-size: 28px;font-weight: bold;background-color: #009688;padding: 10px">Patrol Daily Shift 1 & 2<span class="text-purple"></span></h3>
+				<h3 class="box-title" style="color: white;margin-top: 10px;font-size: 28px;font-weight: bold;background-color: #a31545;padding: 10px">Patrol Daily Shift 1 & 2<span class="text-purple"></span></h3>
 
 			</div>
-			<div class="col-xs-12" style="padding-right: 0; padding-left: 0; margin-bottom: 2%;">
-				<span style="padding: 0px;color: white; font-size: 30px;font-weight: bold;">Audit Date :</span>
-				<span style="padding: 0px;color: white; font-size: 30px;font-weight: bold;"><?= date("d F Y") ?></span>
-				<br>
-				<span style="padding: 0px;color: white; font-size: 30px;font-weight: bold;">Auditor :</span>
-				<span style="padding: 0px;color: white; font-size: 30px;font-weight: bold;" id="employee_name"></span>
 
-
-				<span id="category" style="display: none"></span>
+			<div class="col-xs-3" style="padding-left: 0">
+				<div class="box box-solid">
+					<div class="box-header" style="background-color: #605ca8;">
+						<center>
+							<span style="font-size: 22px; font-weight: bold; color: white;"><b>INFORMATION</b></span>
+						</center>
+					</div>
+					<table class="table table-responsive" style="border: 0;background:#2a2a2b">
+						<tr>
+							<th style="vertical-align: top;font-weight: bold;font-size: 1.2vw;color: white;border-top: 1px solid #111">Audit Date</th>
+							<th style="vertical-align: top;font-weight: bold;font-size: 1.6vw;border-top: 1px solid #111"><span class="pull-right" style="color: orange;"><?= date("d F Y") ?></span>
+							</th>
+						</tr>
+						<tr>
+							<th style="vertical-align: top;font-weight: bold;font-size: 1.2vw;color: white;border-top: 1px solid #111">Auditor</th>
+							<th style="vertical-align: top;font-weight: bold;font-size: 1.6vw;border-top: 1px solid #111"><span class="pull-right" style="color: orange;" id="employee_name"></span></th>
+						</tr>
+						<tr>
+							<th style="vertical-align: top;font-weight: bold;font-size: 1.2vw;color: white;border-top: 1px solid #111">Patrol</th>
+							<th style="vertical-align: top;font-weight: bold;font-size: 1.6vw;border-top: 1px solid #111"><span class="pull-right" style="color: orange;" id="category" ></span></th>
+						</tr>
+					</table>
+				</div>
 			</div>
 
 			<input type="hidden" id="employee_id" class="employee_id" >
 
-			<div class="col-xs-12" style="padding: 0">
+			<div class="col-xs-9" style="padding: 0">
 
-				<table class="table table-bordered" style="width: 100%; color: white;" id="tableResult">
+				<table class="table table-bordered" style="width: 100%; color: white;margin-bottom: 10px" id="tableResult">
 					<thead style="font-weight: bold; background-color: rgb(220,220,220);">
 						<tr>
-							<th style="border-right: 1px solid white">Location</th>
-							<th style="border-right: 1px solid white">Audit Type</th>
-							<th style="border-right: 1px solid white">Photo</th>
-							<th style="border-right: 1px solid white">Problem</th>
-							<th style="border-right: 1px solid white">PIC</th>
+							<th style="border-right: 1px solid white;font-size: 22px; font-weight: bold; color: white;">Location</th>
+							<th style="border-right: 1px solid white;font-size: 22px; font-weight: bold; color: white;">Type</th>
+							<th style="border-right: 1px solid white;font-size: 22px; font-weight: bold; color: white;">Photo</th>
+							<th style="border-right: 1px solid white;font-size: 22px; font-weight: bold; color: white;">Note</th>
+							<th style="border-right: 1px solid white;font-size: 22px; font-weight: bold; color: white;">PIC</th>
 							<!-- <th style="color: white;border-right: 1px solid white;width: 1%">Act</th> -->
 						</tr>
 					</thead>
@@ -206,7 +221,6 @@
 						</tr>
 					</tbody>
 				</table>
-				<br>
 				<button class="btn btn-success" style="width: 100%;font-size: 25px" onclick="cek()"><i class="fa fa-check"></i> Submit</button>
 			</div>
 		</div>
@@ -244,13 +258,11 @@
 	<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
 
 	<script>
-
 		$.ajaxSetup({
 			headers: {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			}
 		});
-
 
 		var counter = 2;
 		var add_point = [];
@@ -271,13 +283,12 @@
 		})
 
 
-		$('#category').html("Audit Stocktaking");
+		$('#category').html("Patrol Daily");
 		$('#employee_name').html("{{$employee->name}}");
 		$('#employee_id').val("{{$employee->employee_id}}");
 
 		function buttonImage(elem) {
 			$(elem).closest("td").find("input").click();
-			// console.log(input);
 		}
 
 		function readURL(input,idfile) {
@@ -340,7 +351,7 @@
 
 
 				$.ajax({
-					url:"{{ url('post/audit_patrol_stocktaking') }}",
+					url:"{{ url('post/audit_patrol_file') }}",
 					method:"POST",
 					data:formData,
 					dataType:'JSON',
@@ -354,7 +365,7 @@
 						$("#patrol_pic").val("").trigger("change");
 						$("#blah").hide();
 						$("#btnImage").show();
-						openSuccessGritter("Success", "Audit Berhasil Disimpan");
+						openSuccessGritter("Success", "Patrol Berhasil Disimpan");
 						// location.reload();
 					},
 					error: function (response) {

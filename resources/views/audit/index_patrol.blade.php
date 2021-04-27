@@ -18,11 +18,11 @@
 @section('content')
 <section class="content">
 	<div class="row">
-        <div class="col-md-7">
+        <div class="col-md-7" style="padding-right: 0">
           <div id="chart_kategori" style="width: 99%; height: 300px;"></div>
         </div>
 
-        <div class="col-md-5">
+        <div class="col-md-5" style="padding-left: 3px">
           <div id="chart_type" style="width: 99%; height: 300px;"></div>
         </div>
 
@@ -31,20 +31,23 @@
 			</h3>
 		</div>
 		
-		<div class="col-xs-6" style="text-align: center;">
+		<div class="col-xs-6" style="text-align: center;padding-right: 0">
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process <i class="fa fa-angle-double-down"></i></span>
-			<a href="{{ url('index/audit_patrol') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">5S Patrol GM & Presdir (社長パトロール)</a>
-			<a href="{{ url('index/audit_patrol_std') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">EHS & 5S Monthly Patrol</a>
-			<!-- <a href="{{ url('') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Patrol Daily Shift 1 dan Shift 2</a>
-			<a href="{{ url('') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Patrol Daily Covid</a> -->
+			<a href="{{ url('index/audit_patrol') }}" class="btn btn-default btn-block" style="font-size: 1.7vw; border-color: green;">5S Patrol GM & Presdir (社長パトロール)</a>
+			<a href="{{ url('index/audit_patrol_std') }}" class="btn btn-default btn-block" style="font-size: 1.7vw; border-color: green;">EHS & 5S Monthly Patrol</a>
+			<a href="{{ url('index/audit_patrol_daily') }}" class="btn btn-default btn-block" style="font-size: 1.7vw; border-color: green;">Patrol Daily Shift 1 dan Shift 2</a>
+			<!-- <a href="{{ url('') }}" class="btn btn-default btn-block" style="font-size: 1.7vw; border-color: green;">Patrol Daily Covid</a> -->
 			<!-- <hr style="border: 1px solid red"> -->
 			
 		</div>
-		<div class="col-xs-6" style="text-align: center;">
+		<div class="col-xs-6" style="text-align: center;padding-left: 5px">
 			<span style="font-size: 30px; color: red;"><i class="fa fa-angle-double-down"></i> Monitoring <i class="fa fa-angle-double-down"></i></span>
-			<a href="{{ url('index/audit_patrol/monitoring') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">GM & Presdir Patrol Monitoring (パトロール監視)</a>
-			<a href="{{ url('index/audit_patrol_monitoring/monthly_patrol') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;width: 75%;display: inline-block;">Monthly Patrol Monitoring (パトロール監視)</a>
-			<a href="{{ url('index/monthly_patrol_team') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;width: 24%;display: inline-block;">By Team</a>
+			<a href="{{ url('index/audit_patrol/monitoring') }}" class="btn btn-default btn-block" style="font-size: 1.7vw; border-color: red;">GM & Presdir Patrol Monitoring (パトロール監視)</a>
+			<a href="{{ url('index/audit_patrol_monitoring/monthly_patrol') }}" class="btn btn-default btn-block" style="font-size: 1.7vw; border-color: red;width: 65%;display: inline-block;">Monthly Patrol Monitoring & Response</a>  
+			<a href="{{ url('index/patrol_resume/monthly_patrol') }}" class="btn btn-default btn-block" style="font-size: 1.7vw; border-color: red;width: 34%;display: inline-block;">By Location</a>
+
+			<a href="{{ url('index/audit_patrol_monitoring/daily_patrol') }}" class="btn btn-default btn-block" style="font-size: 1.7vw; border-color: red;width: 65%;display: inline-block;">Patrol Daily Monitoring & Response</a>  
+			<a href="{{ url('index/patrol_resume/daily_patrol') }}" class="btn btn-default btn-block" style="font-size: 1.7vw; border-color: red;width: 34%;display: inline-block;">By Location</a>
 		</div>
 	</div>
 
