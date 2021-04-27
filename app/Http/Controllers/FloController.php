@@ -34,6 +34,8 @@ use App\ShipmentSchedule;
 use App\MasterChecksheet;
 use Illuminate\Support\Facades\Mail;
 use App\ShipmentReservation;
+use App\TransactionTransfer;
+
 
 
 class FloController extends Controller
@@ -363,27 +365,53 @@ class FloController extends Controller
 			$hpl = "AND m.hpl IN (".$hpl.") ";
 		}
 
-		$data = db::select("SELECT st.st_date, st.destination_shortname, st.hpl, st.material_number, st.material_description, st.quantity, COALESCE(flo.actual,0) AS actual, st.quantity - COALESCE(flo.actual,0) AS diff  FROM
+		$data = db::select("SELECT st.st_date,
+			st.destination_shortname,
+			st.hpl,
+			st.material_number,
+			st.material_description,
+			st.quantity,
+			st.quantity - COALESCE ( flo.actual, 0 ) AS target,
+			COALESCE ( prod.actual, 0 ) AS prod,
+			COALESCE ( intransit.actual, 0 ) AS intransit,
+			COALESCE ( fstk.actual, 0 ) AS fstk,
+			(COALESCE ( prod.actual, 0 ) + COALESCE ( intransit.actual, 0 ) + COALESCE ( fstk.actual, 0 )) - st.quantity AS diff
+			FROM
 			(SELECT st.id, st.st_date, d.destination_shortname, m.hpl, st.material_number, m.material_description, st.quantity FROM shipment_schedules st
 			LEFT JOIN materials m ON m.material_number = st.material_number
 			LEFT JOIN destinations d ON d.destination_code = st.destination_code
-			WHERE m.category = 'FG'
-			".$hpl."
-			) AS st
+			WHERE m.category = 'FG' 
+			".$hpl." ) AS st
 			LEFT JOIN
 			(SELECT shipment_schedule_id, SUM(actual) AS actual FROM flos
-			GROUP BY shipment_schedule_id
-			) flo
-			ON st.id = flo.shipment_schedule_id
-			HAVING diff > 0
-			ORDER BY st.st_date ASC, diff DESC");
+			GROUP BY shipment_schedule_id) flo
+			ON st.id = flo.shipment_schedule_id 
+			LEFT JOIN
+			(SELECT shipment_schedule_id, SUM(actual) AS actual FROM flos
+			WHERE flos.`status` = '0'
+			GROUP BY shipment_schedule_id) prod
+			ON st.id = prod.shipment_schedule_id 
+			LEFT JOIN
+			(SELECT shipment_schedule_id, SUM(actual) AS actual FROM flos
+			WHERE flos.`status` = '1'
+			GROUP BY shipment_schedule_id) intransit
+			ON st.id = intransit.shipment_schedule_id 
+			LEFT JOIN
+			(SELECT shipment_schedule_id, SUM(actual) AS actual FROM flos
+			WHERE flos.`status` = '2'
+			GROUP BY shipment_schedule_id) fstk
+			ON st.id = fstk.shipment_schedule_id 
+			HAVING target > 0 AND diff < 0 
+			ORDER BY st.st_date ASC, diff ASC");
 
-		$response = array(
-			'status' => true,
-			'data' => $data,
-			'date' => date('Y-m-d H:i:s')
-		);
-		return Response::json($response);
+		return DataTables::of($data)->make(true);
+
+		// $response = array(
+		// 	'status' => true,
+		// 	'data' => $data,
+		// 	'date' => date('Y-m-d H:i:s')
+		// );
+		// return Response::json($response);
 	}
 
 	public function fetch_flo_lading(Request $request){
@@ -1283,8 +1311,25 @@ class FloController extends Controller
 					// 	'created_by' => $id
 					// ]);
 					// $log_transaction->save();
+
 					$flo->transfer = null;
 				}
+
+				$transaction_transfer = new TransactionTransfer([
+					'plant' => '8190',
+					'serial_number' => $flo->flo_number,
+					'material_number' => $flo->shipmentschedule->material_number,
+					'issue_plant' => '8190',
+					'issue_location' => $flo->shipmentschedule->material->issue_storage_location,
+					'receive_plant' => '8191',
+					'receive_location' => 'FSTK',
+					'transaction_code' => 'MB1B',
+					'movement_type' => '9P2',
+					'quantity' => $flo->actual,
+					'created_by' => $id
+				]);
+				$transaction_transfer->save();
+
 			}
 
 			if($request->get('status') == '3'){

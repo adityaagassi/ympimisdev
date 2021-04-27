@@ -885,11 +885,9 @@
   </li>
   @endif
 
-  @if(in_array('S2', $navs) || in_array('S2', $navs))
   @if(isset($page) && $page == "FLO Open Destination")<li class="active">@else<li>@endif
     <a href="{{ url("/index/flo_open") }}"><i class="glyphicon glyphicon-info-sign"></i> <span>FLO  <i class="fa fa-angle-right"></i> Open Destination</span></a>
   </li>
-  @endif
 
   @if(in_array('S7', $navs))
   @if(isset($page) && $page == "FLO Maedaoshi BI")<li class="active">@else<li>@endif

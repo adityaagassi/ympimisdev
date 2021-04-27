@@ -96,7 +96,7 @@
 				<button class="btn btn-success" onclick="fillTableList()">Update Table</button>
 			</div>
 			<div class="pull-right" style="margin: 0px; padding: 10px; font-size: 1vw; color: white;">
-				<p style="color: white; font-weight: bold">Last Update at <span id="update_at"></span></p>
+				<p style="color: white; font-weight: bold"><span id="update_at"></span></p>
 			</div>
 
 
@@ -107,15 +107,20 @@
 			<table class="table table-hover table-bordered" id="tableList">
 				<thead style="background-color: rgba(126,86,134,.7);">
 					<tr>
-						<th style="width: 15%;">Stuffing Date</th>
-						<th style="width: 15%;">Destination</th>
-						<th style="width: 10%;">HPL</th>
-						<th style="width: 10%;">GMC</th>
-						<th style="width: 30%;">Description</th>
-						<th style="width: 10%;">Plan</th>
-						<th style="width: 10%;">Actual</th>
-						<th style="width: 10%;">Diff.</th>
-					</tr>					
+						<th rowspan="2" style="width: 10%; vertical-align: middle;">Stuffing Date</th>
+						<th rowspan="2" style="width: 10%; vertical-align: middle;">Destination</th>
+						<th rowspan="2" style="width: 10%; vertical-align: middle;">HPL</th>
+						<th rowspan="2" style="width: 10%; vertical-align: middle;">GMC</th>
+						<th rowspan="2" style="width: 20%; vertical-align: middle;">Description</th>
+						<th rowspan="2" style="width: 10%; vertical-align: middle;">Plan</th>
+						<th colspan="3" style="width: 30%; vertical-align: middle;">Actual</th>
+						<th rowspan="2" style="width: 10%; vertical-align: middle;">Diff.</th>
+					</tr>
+					<tr>
+						<th style="width: 10%; vertical-align: middle;">Production</th>
+						<th style="width: 10%; vertical-align: middle;">Intransit</th>
+						<th style="width: 10%; vertical-align: middle;">FSTK</th>
+					</tr>
 				</thead>
 				<tbody id="tableBodyList">
 				</tbody>
@@ -147,10 +152,17 @@
 	jQuery(document).ready(function() {
 		$('.select2').select2();
 		
-		fillTableList();
-		setInterval(fillTableList, 10000);
-
+		reloadTable();
+		setInterval(reloadTable, 30000);
 	});
+
+	function reloadTable() {
+		var hpl = $('#hpl').val();
+
+		if(hpl.length > 0){
+			$('#tableList').DataTable().ajax.reload(null, false);
+		}
+	}
 
 
 	function fillTableList(){
@@ -160,93 +172,79 @@
 			hpl:hpl,
 		}
 
-		console.log(hpl);
+		$('#tableList').DataTable().destroy();
 
+		$('#tableList').DataTable({
+			'dom': 'Bfrtip',
+			'responsive':true,
+			'lengthMenu': [
+			[ 10, 25, 50, -1 ],
+			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+			],
+			'buttons': {
+				buttons:[
+				{
+					extend: 'pageLength',
+					className: 'btn btn-default',
+				},
+				{
+					extend: 'copy',
+					className: 'btn btn-success',
+					text: '<i class="fa fa-copy"></i> Copy',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'excel',
+					className: 'btn btn-info',
+					text: '<i class="fa fa-file-excel-o"></i> Excel',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'print',
+					className: 'btn btn-warning',
+					text: '<i class="fa fa-print"></i> Print',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				]
+			},
+			'paging': true,
+			'lengthChange': true,
+			'pageLength': 10,
+			'searching': true,
+			'ordering': false,
+			'order': [],
+			'info': true,
+			'autoWidth': true,
+			"sPaginationType": "full_numbers",
+			"bJQueryUI": true,
+			"bAutoWidth": false,
+			"processing": true,
+			"ajax": {
+				"type" : "get",
+				"url" : "{{ url("fetch/flo_open") }}",
+				"data" : data,
+			},
+			"columns": [
+			{ "data": "st_date" },
+			{ "data": "destination_shortname" },
+			{ "data": "hpl" },
+			{ "data": "material_number" },
+			{ "data": "material_description" },
+			{ "data": "quantity" },
+			{ "data": "prod" },
+			{ "data": "intransit" },
+			{ "data": "fstk" },
+			{ "data": "diff" }
+			]
 
-		if(hpl.length > 0){
-			$.get('{{ url("fetch/flo_open") }}', data,  function(result, status, xhr){
-				$('#tableList').DataTable().clear();
-				$('#tableList').DataTable().destroy();
-				$('#tableBodyList').html("");
-
-				$('#update_at').text(result.date);
-
-				var tableData = "";
-				var total_target = 0;
-				$.each(result.data, function(key, value) {
-					tableData += '<tr onclick="fillField(id)">';
-					tableData += '<td>'+ value.st_date +'</td>';
-					tableData += '<td>'+ value.destination_shortname +'</td>';
-					tableData += '<td>'+ value.hpl +'</td>';
-					tableData += '<td>'+ value.material_number +'</td>';
-					tableData += '<td>'+ value.material_description +'</td>';
-					tableData += '<td>'+ value.quantity +'</td>';
-					tableData += '<td>'+ value.quantity +'</td>';
-					tableData += '<td>'+ value.quantity +'</td>';
-					tableData += '</tr>';
-				});
-				$('#tableBodyList').append(tableData);
-
-
-				$('#tableList').DataTable({
-					'dom': 'Bfrtip',
-					'responsive':true,
-					'lengthMenu': [
-					[ 10, 25, 50, -1 ],
-					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
-					],
-					'buttons': {
-						buttons:[
-						{
-							extend: 'pageLength',
-							className: 'btn btn-default',
-						},
-						{
-							extend: 'copy',
-							className: 'btn btn-success',
-							text: '<i class="fa fa-copy"></i> Copy',
-							exportOptions: {
-								columns: ':not(.notexport)'
-							}
-						},
-						{
-							extend: 'excel',
-							className: 'btn btn-info',
-							text: '<i class="fa fa-file-excel-o"></i> Excel',
-							exportOptions: {
-								columns: ':not(.notexport)'
-							}
-						},
-						{
-							extend: 'print',
-							className: 'btn btn-warning',
-							text: '<i class="fa fa-print"></i> Print',
-							exportOptions: {
-								columns: ':not(.notexport)'
-							}
-						},
-						]
-					},
-					'paging': true,
-					'lengthChange': true,
-					'pageLength': 10,
-					'searching': true,
-					'ordering': true,
-					'order': [],
-					'info': true,
-					'autoWidth': true,
-					"sPaginationType": "full_numbers",
-					"bJQueryUI": true,
-					"bAutoWidth": false,
-					"processing": true
-
-				});
-			});
-		}
-
-		
+		});
 	}
-
 
 
 	function openSuccessGritter(title, message){
