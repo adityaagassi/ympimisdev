@@ -384,9 +384,29 @@ class SurveyController extends Controller
 		))->with('page', 'Report Survey Covid')->with('head','Report Survey Covid');
 	}
 
-	public function fetchSurveyCovidReport()
+	public function fetchSurveyCovidReport(Request $request)
 	{
 		try {
+			$date_from = $request->get('date_from');
+	        $date_to = $request->get('date_to');
+	        if ($date_from == "") {
+	             if ($date_to == "") {
+	                  $where1 = "WHERE DATE( miraimobile.survey_logs.created_at ) BETWEEN DATE(NOW() - INTERVAL 7 DAY) AND DATE(NOW())";
+	                  $where2 = "WHERE DATE( miraimobile.survey_covid_logs.created_at ) BETWEEN DATE(NOW() - INTERVAL 7 DAY) AND DATE(NOW())";
+	             }else{
+	                  $where1 = "WHERE DATE( miraimobile.survey_logs.created_at ) BETWEEN DATE('".$date_to."' - INTERVAL 7 DAY) AND '".$date_to."'";
+	                  $where2 = "WHERE DATE( miraimobile.survey_covid_logs.created_at ) BETWEEN DATE('".$date_to."' - INTERVAL 7 DAY) AND '".$date_to."'";
+	             }
+	        }else{
+	             if ($date_to == "") {
+	                  $where1 = "WHERE DATE( miraimobile.survey_logs.created_at ) BETWEEN '".$date_from."' AND DATE(NOW())";
+	                  $where2 = "WHERE DATE( miraimobile.survey_covid_logs.created_at ) BETWEEN '".$date_from."' AND DATE(NOW())";
+	             }else{
+	                  $where1 = "WHERE DATE( miraimobile.survey_logs.created_at ) BETWEEN '".$date_from."' AND '".$date_to."'";
+	                  $where2 = "WHERE DATE( miraimobile.survey_covid_logs.created_at ) BETWEEN '".$date_from."' AND '".$date_to."'";
+	             }
+	        }
+
 			$survey = DB::SELECT("
 				SELECT
 				miraimobile.survey_logs.id as id_survey,
@@ -406,7 +426,7 @@ class SurveyController extends Controller
 			FROM
 				miraimobile.survey_logs
 				LEFT JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_logs.employee_id
-				
+				".$where1."
 			UNION 
 
 			SELECT
@@ -427,7 +447,7 @@ class SurveyController extends Controller
 			FROM
 				miraimobile.survey_covid_logs
 				LEFT JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_covid_logs.employee_id 
-
+				".$where2."
 				order by created_at desc 
 ");
 			$response = array(

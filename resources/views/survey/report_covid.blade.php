@@ -112,14 +112,7 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		{{$title}} <span class="text-purple">{{$title_jp}}</span>
-		<!-- <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#importExcel">
-			<i class="fa fa-file-excel-o"></i>&nbsp;&nbsp;
-			Upload Excel
-		</button> -->
-		<!-- <a class="buttonclass">
-			button
-		</a> -->
+		{{$title}} <small><span class="text-purple">{{$title_jp}}</span></small>
 	</h1>
 	<ol class="breadcrumb">
 	</ol>
@@ -151,7 +144,7 @@
 		<div class="col-xs-12">
 			<div class="box box-solid">
 				<div class="box-body" style="overflow-x: scroll;">
-					<!-- <h4>Filter</h4>
+					<h4>Filter</h4>
 					<div class="row">
 						<div class="col-md-4 col-md-offset-2">
 							<span style="font-weight: bold;">Date From</span>
@@ -174,38 +167,16 @@
 									<input type="text" class="form-control datepicker" id="tanggal_to"name="tanggal_to" placeholder="Select Date To" autocomplete="off">
 								</div>
 							</div>
-						</div> -->
-						<!-- <div class="col-md-4 col-md-offset-2">
-							<span style="font-weight: bold;">Temp From</span>
-							<div class="form-group">
-								<div class="input-group date">
-									<div class="input-group-addon bg-white">
-										<i class="fa fa-thermometer-empty"></i>
-									</div>
-									<input type="text" class="form-control" id="temp_from" name="temp_from" placeholder="Input Temp From (Ex: 36.5)" autocomplete="off">
-								</div>
-							</div>
-						</div>
-						<div class="col-md-4">
-							<span style="font-weight: bold;">Temp To</span>
-							<div class="form-group">
-								<div class="input-group date">
-									<div class="input-group-addon bg-white">
-										<i class="fa fa-thermometer-full"></i>
-									</div>
-									<input type="text" class="form-control" id="temp_to"name="temp_to" placeholder="Input Temp To (Ex: 37.5)" autocomplete="off">
-								</div>
-							</div>
 						</div>
 						<div class="col-md-6 col-md-offset-2">
 							<div class="col-md-10">
 								<div class="form-group pull-right">
-									<a href="{{ url('index/temperature') }}" class="btn btn-warning">Back</a>
-									<a href="{{ url('index/temperature/minmoe') }}" class="btn btn-danger">Clear</a>
+									<a href="{{ url('index/mirai_mobile/index') }}" class="btn btn-warning">Back</a>
+									<a href="{{ url('index/survey_covid/report') }}" class="btn btn-danger">Clear</a>
 									<button class="btn btn-primary col-sm-14" onclick="fillList()">Search</button>
 								</div>
 							</div>
-						</div> -->
+						</div>
 						<div class="col-xs-12">
 							<div class="row" id="divTable">
 							</div>
@@ -274,7 +245,7 @@
 			}
 		});
 
-		fillList();
+		// fillList();
 
 		$('body').toggleClass("sidebar-collapse");
 	});
