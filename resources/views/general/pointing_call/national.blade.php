@@ -101,7 +101,7 @@
 						image_data += '<tr style="background-color: rgba(126,86,134,.7); font-size:1.3vw;">';
 						image_data += '<th style="width: 1%; text-align: center;">#</th>';
 						image_data += '<th style="width: 10%;">Nama</th>';
-						image_data += '<th style="width: 20%;">Janji Safety Riding</th>';
+						image_data += '<th style="width: 30%;">Janji Safety Riding</th>';
 						image_data += '</tr>';
 						image_data += '</thead>';
 						image_data += '<tbody id="safetyTableBody">';
@@ -126,7 +126,7 @@
 					safety_data += '<tr>';
 					safety_data += '<td style="font-size: 1.3vw; text-align: center;">'+safety_count+'</td>';
 					safety_data += '<td style="font-size: 1.3vw;">'+value.employee_name+'</td>';
-					safety_data += '<td style="font-size: 1.3vw;">'+value.safety_riding+'</td>';
+					safety_data += '<td style="font-size: 1.3vw;">'+value.safety_riding.toUpperCase()+'</td>';
 					safety_data += '</tr>';	
 					safety_count += 1;
 				});
