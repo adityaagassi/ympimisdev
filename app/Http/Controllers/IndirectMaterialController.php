@@ -65,7 +65,7 @@ class IndirectMaterialController extends Controller{
 
 	public function indexSolutionControl(){
 		$title = 'Chemical Solution Control';
-		$title_jp = '??';
+		$title_jp = ' 薬品管理表示';
 
 		$username = Auth::user()->username;
 		$solutions;
@@ -97,7 +97,7 @@ class IndirectMaterialController extends Controller{
 
 	public function indexPickingSchedule(){
 		$title = 'Chemical Picking Schedule';
-		$title_jp = '??';
+		$title_jp = ' 薬品取出し日程';
 
 		$larutans = db::select("SELECT chemical_solutions.id, chemical_solutions.solution_name, indirect_material_cost_centers.section, indirect_material_cost_centers.location from chemical_solutions
 			LEFT JOIN indirect_material_cost_centers ON indirect_material_cost_centers.id = chemical_solutions.cost_center_id");
@@ -148,7 +148,7 @@ class IndirectMaterialController extends Controller{
 
 	public function indexRequest(){
 		$title = 'Indirect Material Request';
-		$title_jp = '??';
+		$title_jp = ' 間接材料の依頼';
 
 		$locations = db::select("SELECT id, section, location FROM indirect_material_cost_centers
 			WHERE id in (SELECT DISTINCT cost_center_id FROM chemical_solutions)

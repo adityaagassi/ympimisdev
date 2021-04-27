@@ -44,7 +44,7 @@ class AssyProcessController extends Controller
 
 		}elseif ($id == 'assy_cl' || $id == 'welding_cl'){
 			$title = 'Clarinet Picking Monitor';
-			$title_jp = '??';
+			$title_jp = 'クラリネットピッキング監視';
 
 			return view('displays.assys.assy_picking_cl', array(
 				'title' => $title,
