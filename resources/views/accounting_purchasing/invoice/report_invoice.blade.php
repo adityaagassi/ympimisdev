@@ -63,7 +63,7 @@
 					<td colspan="3" style="text-align: left;font-size: 11px"><b>: <?= date('d-M-y', strtotime($invoice->invoice_date)) ?></b></td>
 				</tr>
 				<tr>
-					<td colspan="" style="text-align: left;font-size: 11px">Jawa Timur Indonesia</td>
+					<td colspan="10" style="text-align: left;font-size: 11px">Jawa Timur Indonesia</td>
 				</tr>
 
 				<tr>
@@ -73,6 +73,97 @@
 				<tr>
 					<td colspan="10" style="text-align: center;font-size: 30px"><b><u>Tanda Terima</u></b></td>
 				</tr>
+
+				<tr>
+					<td colspan="10"><br></td>
+				</tr>
+
+				<tr>
+					<td colspan="10">Yang Bertanda Tangan di bawah ini telah menerima, dokumen dari :</td>
+				</tr>
+
+				<tr>
+					<td colspan="10"><b>Supplier :</b></td>
+				</tr>
+
+				<tr>
+					<td colspan="6">&nbsp;&nbsp;&nbsp;<b>{{$invoice->supplier_name}}</b></td>
+					<td colspan="4"><b>Telp :</b> {{$invoice->supplier_phone}}</td>
+				</tr>
+				<tr>
+					<td colspan="6">&nbsp;&nbsp;&nbsp;<b>{{$invoice->supplier_address}}</b></td>
+					<td colspan="4"><b>Fax &nbsp;:</b> {{$invoice->supplier_fax}}</td>
+				</tr>
+				<tr>
+					<td colspan="6">&nbsp;&nbsp;&nbsp;<b>{{$invoice->supplier_city}}</b></td>
+					<td colspan="4"><b>Attn :</b> {{$invoice->contact_name}}</td>
+				</tr>
+				<tr>
+					<td colspan="10"><br></td>
+				</tr>
+				<tr>
+					<td colspan="10">Dengan Perincian Sebagai Berikut :</td>
+				</tr>
+				<tr>
+					<td colspan="2"><b>No. Invoice / Faktur / Nota</b></td>
+					<td colspan="8">: {{$invoice->invoice_no}}</td>
+				</tr>
+				<tr>
+					<td colspan="2"><b>Mata Uang</b></td>
+					<td colspan="8">: {{$invoice->currency}}</td>
+				</tr>
+				<tr>
+					<td colspan="2"><b>Nilai</b></td>
+					<td colspan="8">: {{$invoice->amount}}</td>
+				</tr>
+				<tr>
+					<td colspan="2"><b>No. NPWP</b></td>
+					<td colspan="8">: {{$invoice->npwp}}</td>
+				</tr>
+				<tr>
+					<td colspan="2"><b>No PO</b></td>
+					<td colspan="8">: {{$invoice->po_number}}</td>
+				</tr>
+				<tr>
+					<td colspan="2"><b>Pembayaran / Jatuh Tempo</b></td>
+					<td colspan="8">: {{$invoice->payment_term}}</td>
+				</tr>
+				<tr>
+					<td colspan="3"><b>&nbsp;&nbsp;&nbsp;1. No.Kwitansi/Official Receipt</b></td>
+					<td colspan="7">: {{$invoice->kwitansi}}</td>
+				</tr>
+				<tr>
+					<td colspan="3"><b>&nbsp;&nbsp;&nbsp;2. No.DO/Surat Jalan/Pengantar</b></td>
+					<td colspan="7">: {{$invoice->surat_jalan}}</td>
+				</tr>
+				<tr>
+					<td colspan="3"><b>&nbsp;&nbsp;&nbsp;3. No.Berita Acara Penyelesaian</b></td>
+					<td colspan="7">: {{$invoice->bap}}</td>
+				</tr>								
+				<tr>
+					<td colspan="3"><b>&nbsp;&nbsp;&nbsp;4. No.Faktur Pajak</b></td>
+					<td colspan="7">: {{$invoice->faktur_pajak}}</td>
+				</tr>	
+				<tr>
+					<td colspan="8"></td>
+					<td colspan="2"><center>Pasuruan, <?= date('d-M-y', strtotime($invoice->invoice_date)) ?></center></td>
+				</tr>
+				<tr>
+					<td colspan="8"></td>
+					<td colspan="2"><center>Penerima</center></td>
+				</tr>
+				<tr>
+					<td colspan="10"><br></td>
+				</tr>
+				<tr>
+					<td colspan="8"></td>
+					<td colspan="2"><center>Amelia Novrinta</center></td>
+				</tr>
+				<tr>
+					<td colspan="8"></td>
+					<td colspan="2"><center>Telp.</center></td>
+				</tr>
+
 			</thead>
 		</table>
 	</header>
