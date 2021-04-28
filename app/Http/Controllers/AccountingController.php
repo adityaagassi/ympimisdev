@@ -7530,7 +7530,7 @@ public function budget_log()
 
     return view('accounting_purchasing.master.budget_log', array(
         'title' => $title,
-        '   ' => $ ,
+        'title_jp' => $title_jp,
         'status' => $status
     ))->with('page', 'Budget Log')
     ->with('head', 'Budget Log');
