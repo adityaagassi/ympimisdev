@@ -69,7 +69,7 @@ class AuditController extends Controller
 	public function index_patrol()
 	{
 		$title = "5S Patrol GM & Presdir";
-		$title_jp = "";
+		$title_jp = "社長、部長の5Sパトロール";
 
 		$emp = EmployeeSync::where('employee_id', Auth::user()->username)
 		->select('employee_id', 'name', 'position', 'department')->first();
@@ -92,7 +92,7 @@ class AuditController extends Controller
   public function index_patrol_daily()
   {
     $title = "Patrol Daily Shift 1 & 2";
-    $title_jp = "";
+    $title_jp = "1・2直パトロール";
 
     $emp = EmployeeSync::where('employee_id', Auth::user()->username)
     ->select('employee_id', 'name', 'position', 'department')->first();
@@ -120,6 +120,7 @@ class AuditController extends Controller
       FROM
         audit_all_results 
       WHERE jenis = 'Patrol'
+      and point_judul != 'Positive Finding'
       GROUP BY
         kategori
       ORDER BY jumlah_belum ASC
@@ -135,6 +136,7 @@ class AuditController extends Controller
       WHERE point_judul is not null
       and jenis = 'Patrol'
       and point_judul != 'Negative Finding'
+      and point_judul != 'Positive Finding'
       GROUP BY
         point_judul
       ORDER BY point_judul ASC
@@ -152,7 +154,7 @@ class AuditController extends Controller
   public function index_mis()
   {
     $title = "Audit MIS";
-    $title_jp = "";
+    $title_jp = "MIS監査";
 
     $emp = EmployeeSync::where('employee_id', Auth::user()->username)
     ->select('employee_id', 'name', 'position', 'department')->first();
@@ -172,7 +174,7 @@ class AuditController extends Controller
   public function index_std()
   {
     $title = "EHS & 5S Monthly Patrol";
-    $title_jp = "";
+    $title_jp = "EHS・5S月次パトロール";
 
     $emp = EmployeeSync::where('employee_id', Auth::user()->username)
     ->select('employee_id', 'name', 'position', 'department')->first();
@@ -192,7 +194,7 @@ class AuditController extends Controller
   public function index_audit_stocktaking()
   {
     $title = "Audit Stocktaking";
-    $title_jp = "";
+    $title_jp = "棚卸監査";
 
     $emp = EmployeeSync::where('employee_id', Auth::user()->username)
     ->select('employee_id', 'name', 'position', 'department')->first();
@@ -522,37 +524,42 @@ public function detailMonitoring(Request $request){
       $df = '';
     }
 
-    $query = "select audit_all_results.* FROM audit_all_results where audit_all_results.deleted_at is null and tanggal = '".$tgl."' ".$stat."";
+    $query = "select audit_all_results.* FROM audit_all_results where audit_all_results.deleted_at is null and tanggal = '".$tgl."' ".$stat." and point_judul != 'Positive Finding'";
 
     $detail = db::select($query);
 
     return DataTables::of($detail)
 
-    ->editColumn('kategori', function($detail){
+    ->editColumn('auditor_name', function($detail){
       $kategori = '';
 
       if($detail->kategori == "S-Up And EHS Patrol Presdir"){
-       $kategori = "Presdir";
-     }else if ($detail->kategori == "5S Patrol GM"){
-       $kategori = "GM";
-     }
+        $kategori = "Presdir";
+      }else if ($detail->kategori == "5S Patrol GM"){
+        $kategori = "GM";
+      }else{
+        $kategori = $detail->kategori;
+      }
 
-     return $kategori;
+      $tgl = date('d-M-Y', strtotime($detail->tanggal));
+
+     return 'Patrol '.$kategori.'<br>Auditor '.$detail->auditor_name.'<br>'.$tgl.'<br>Lokasi '.$detail->lokasi;
     })
 
-    ->editColumn('tanggal', function($detail){
-      return date('d-M-Y', strtotime($detail->tanggal));
-    })
 
     ->editColumn('foto', function($detail){
-      return '<img src="'.url('files/patrol').'/'.$detail->foto.'" width="250">';
+      return $detail->note.'<br><img src="'.url('files/patrol').'/'.$detail->foto.'" width="250">';
+    })
+
+    ->editColumn('auditee_name', function($detail){
+      return $detail->point_judul.'<br>'.$detail->auditee_name;
     })
 
     ->editColumn('penanganan', function($detail){
       return $detail->penanganan;
     })
 
-    ->rawColumns(['tanggal' => 'tanggal', 'foto' => 'foto','penanganan' => 'penanganan'])
+    ->rawColumns(['auditor_name' => 'auditor_name', 'auditee_name' => 'auditee_name', 'foto' => 'foto','penanganan' => 'penanganan'])
     ->make(true);
 }
 
@@ -560,7 +567,6 @@ public function detailMonitoring(Request $request){
 public function detailMonitoringCategory(Request $request){
 
     $kategori = $request->get('kategori');
-
     $status = $request->get('status');
 
     if ($status != null) {
@@ -580,37 +586,42 @@ public function detailMonitoringCategory(Request $request){
       $kategori = "EHS & 5S Patrol";
     }
 
-    $query = "select audit_all_results.* FROM audit_all_results where audit_all_results.deleted_at is null and kategori = '".$kategori."' ".$stat."";
+    $query = "select audit_all_results.* FROM audit_all_results where audit_all_results.deleted_at is null and kategori = '".$kategori."' ".$stat." and point_judul != 'Positive Finding'";
 
     $detail = db::select($query);
 
     return DataTables::of($detail)
 
-    ->editColumn('kategori', function($detail){
+    ->editColumn('auditor_name', function($detail){
       $kategori = '';
 
       if($detail->kategori == "S-Up And EHS Patrol Presdir"){
-       $kategori = "Presdir";
-     }else if ($detail->kategori == "5S Patrol GM"){
-       $kategori = "GM";
-     }
+        $kategori = "Presdir";
+      }else if ($detail->kategori == "5S Patrol GM"){
+        $kategori = "GM";
+      }else{
+        $kategori = $detail->kategori;
+      }
 
-     return $kategori;
+      $tgl = date('d-M-Y', strtotime($detail->tanggal));
+
+     return 'Patrol '.$kategori.'<br>Auditor '.$detail->auditor_name.'<br>'.$tgl.'<br>Lokasi '.$detail->lokasi;
     })
 
-    ->editColumn('tanggal', function($detail){
-      return date('d-M-Y', strtotime($detail->tanggal));
-    })
 
     ->editColumn('foto', function($detail){
-      return '<img src="'.url('files/patrol').'/'.$detail->foto.'" width="250">';
+      return $detail->note.'<br><img src="'.url('files/patrol').'/'.$detail->foto.'" width="250">';
+    })
+
+    ->editColumn('auditee_name', function($detail){
+      return $detail->point_judul.'<br>'.$detail->auditee_name;
     })
 
     ->editColumn('penanganan', function($detail){
       return $detail->penanganan;
     })
 
-    ->rawColumns(['tanggal' => 'tanggal', 'foto' => 'foto','penanganan' => 'penanganan'])
+    ->rawColumns(['auditor_name' => 'auditor_name', 'auditee_name' => 'auditee_name', 'foto' => 'foto','penanganan' => 'penanganan'])
     ->make(true);
 }
 
@@ -638,37 +649,42 @@ public function detailMonitoringBulan(Request $request){
       $stat = '';
     }
 
-    $query = "select audit_all_results.* FROM audit_all_results where audit_all_results.deleted_at is null and monthname(tanggal) = '".$bulan."' ".$stat."";
+    $query = "select audit_all_results.* FROM audit_all_results where audit_all_results.deleted_at is null and monthname(tanggal) = '".$bulan."' ".$stat." and point_judul != 'Positive Finding'";
 
     $detail = db::select($query);
 
     return DataTables::of($detail)
 
-    ->editColumn('kategori', function($detail){
+    ->editColumn('auditor_name', function($detail){
       $kategori = '';
 
       if($detail->kategori == "S-Up And EHS Patrol Presdir"){
-       $kategori = "Presdir";
-     }else if ($detail->kategori == "5S Patrol GM"){
-       $kategori = "GM";
-     }
+        $kategori = "Presdir";
+      }else if ($detail->kategori == "5S Patrol GM"){
+        $kategori = "GM";
+      }else{
+        $kategori = $detail->kategori;
+      }
 
-     return $kategori;
+      $tgl = date('d-M-Y', strtotime($detail->tanggal));
+
+     return 'Patrol '.$kategori.'<br>Auditor '.$detail->auditor_name.'<br>'.$tgl.'<br>Lokasi '.$detail->lokasi;
     })
 
-    ->editColumn('tanggal', function($detail){
-      return date('d-M-Y', strtotime($detail->tanggal));
-    })
 
     ->editColumn('foto', function($detail){
-      return '<img src="'.url('files/patrol').'/'.$detail->foto.'" width="250">';
+      return $detail->note.'<br><img src="'.url('files/patrol').'/'.$detail->foto.'" width="250">';
+    })
+
+    ->editColumn('auditee_name', function($detail){
+      return $detail->point_judul.'<br>'.$detail->auditee_name;
     })
 
     ->editColumn('penanganan', function($detail){
       return $detail->penanganan;
     })
 
-    ->rawColumns(['tanggal' => 'tanggal', 'foto' => 'foto','penanganan' => 'penanganan'])
+    ->rawColumns(['auditor_name' => 'auditor_name', 'auditee_name' => 'auditee_name', 'foto' => 'foto','penanganan' => 'penanganan'])
     ->make(true);
 }
 
@@ -690,37 +706,42 @@ public function detailMonitoringType(Request $request){
       $stat = '';
     }
 
-    $query = "select audit_all_results.* FROM audit_all_results where audit_all_results.deleted_at is null and point_judul = '".$type."' ".$stat."";
+    $query = "select audit_all_results.* FROM audit_all_results where audit_all_results.deleted_at is null and point_judul = '".$type."' ".$stat." and point_judul != 'Positive Finding'";
 
     $detail = db::select($query);
 
     return DataTables::of($detail)
 
-    ->editColumn('kategori', function($detail){
+   ->editColumn('auditor_name', function($detail){
       $kategori = '';
 
       if($detail->kategori == "S-Up And EHS Patrol Presdir"){
-       $kategori = "Presdir";
-     }else if ($detail->kategori == "5S Patrol GM"){
-       $kategori = "GM";
-     }
+        $kategori = "Presdir";
+      }else if ($detail->kategori == "5S Patrol GM"){
+        $kategori = "GM";
+      }else{
+        $kategori = $detail->kategori;
+      }
 
-     return $kategori;
+      $tgl = date('d-M-Y', strtotime($detail->tanggal));
+
+     return 'Patrol '.$kategori.'<br>Auditor '.$detail->auditor_name.'<br>'.$tgl.'<br>Lokasi '.$detail->lokasi;
     })
 
-    ->editColumn('tanggal', function($detail){
-      return date('d-M-Y', strtotime($detail->tanggal));
-    })
 
     ->editColumn('foto', function($detail){
-      return '<img src="'.url('files/patrol').'/'.$detail->foto.'" width="250">';
+      return $detail->note.'<br><img src="'.url('files/patrol').'/'.$detail->foto.'" width="250">';
+    })
+
+    ->editColumn('auditee_name', function($detail){
+      return $detail->point_judul.'<br>'.$detail->auditee_name;
     })
 
     ->editColumn('penanganan', function($detail){
       return $detail->penanganan;
     })
 
-    ->rawColumns(['tanggal' => 'tanggal', 'foto' => 'foto','penanganan' => 'penanganan'])
+    ->rawColumns(['auditor_name' => 'auditor_name', 'auditee_name' => 'auditee_name', 'foto' => 'foto','penanganan' => 'penanganan'])
     ->make(true);
 }
 
@@ -910,7 +931,7 @@ public function detailPenanganan(Request $request){
       return view('audit.patrol_monitoring_all',  
          array(
            'title' => 'Audit & Patrol Monitoring', 
-           'title_jp' => '',
+           'title_jp' => '監査・パトロールの表示',
            'category' => $id
          )
        )->with('page', 'Audit Patrol Monitoring');
@@ -1046,19 +1067,36 @@ public function detailPenanganan(Request $request){
 
     return DataTables::of($detail)
 
-    ->editColumn('tanggal', function($detail){
-      return date('d-M-Y', strtotime($detail->tanggal));
+    ->editColumn('auditor_name', function($detail){
+      $kategori = '';
+
+      if($detail->kategori == "S-Up And EHS Patrol Presdir"){
+        $kategori = "Presdir";
+      }else if ($detail->kategori == "5S Patrol GM"){
+        $kategori = "GM";
+      }else{
+        $kategori = $detail->kategori;
+      }
+
+      $tgl = date('d-M-Y', strtotime($detail->tanggal));
+
+     return 'Patrol '.$kategori.'<br>Auditor '.$detail->auditor_name.'<br>'.$tgl.'<br>Lokasi '.$detail->lokasi;
     })
 
+
     ->editColumn('foto', function($detail){
-      return '<img src="'.url('files/patrol').'/'.$detail->foto.'" width="250">';
+      return $detail->note.'<br><img src="'.url('files/patrol').'/'.$detail->foto.'" width="250">';
+    })
+
+    ->editColumn('auditee_name', function($detail){
+      return $detail->point_judul.'<br>'.$detail->auditee_name;
     })
 
     ->editColumn('penanganan', function($detail){
       return $detail->penanganan;
     })
 
-    ->rawColumns(['tanggal' => 'tanggal', 'foto' => 'foto','penanganan' => 'penanganan'])
+    ->rawColumns(['auditor_name' => 'auditor_name', 'auditee_name' => 'auditee_name', 'foto' => 'foto','penanganan' => 'penanganan'])
     ->make(true);
   }
 
@@ -1086,20 +1124,37 @@ public function detailPenanganan(Request $request){
 
       return DataTables::of($detail)
 
-      ->editColumn('tanggal', function($detail){
-        return date('d-M-Y', strtotime($detail->tanggal));
-      })
+      ->editColumn('auditor_name', function($detail){
+      $kategori = '';
 
-      ->editColumn('foto', function($detail){
-        return '<img src="'.url('files/patrol').'/'.$detail->foto.'" width="250">';
-      })
+      if($detail->kategori == "S-Up And EHS Patrol Presdir"){
+        $kategori = "Presdir";
+      }else if ($detail->kategori == "5S Patrol GM"){
+        $kategori = "GM";
+      }else{
+        $kategori = $detail->kategori;
+      }
 
-      ->editColumn('penanganan', function($detail){
-        return $detail->penanganan;
-      })
+      $tgl = date('d-M-Y', strtotime($detail->tanggal));
 
-      ->rawColumns(['tanggal' => 'tanggal', 'foto' => 'foto','penanganan' => 'penanganan'])
-      ->make(true);
+     return 'Patrol '.$kategori.'<br>Auditor '.$detail->auditor_name.'<br>'.$tgl.'<br>Lokasi '.$detail->lokasi;
+    })
+
+
+    ->editColumn('foto', function($detail){
+      return $detail->note.'<br><img src="'.url('files/patrol').'/'.$detail->foto.'" width="250">';
+    })
+
+    ->editColumn('auditee_name', function($detail){
+      return $detail->point_judul.'<br>'.$detail->auditee_name;
+    })
+
+    ->editColumn('penanganan', function($detail){
+      return $detail->penanganan;
+    })
+
+    ->rawColumns(['auditor_name' => 'auditor_name', 'auditee_name' => 'auditee_name', 'foto' => 'foto','penanganan' => 'penanganan'])
+    ->make(true);
   }
 
     // Audit & Patrol By Team Monthly Patrol
@@ -1109,7 +1164,7 @@ public function detailPenanganan(Request $request){
       return view('audit.patrol_monthly_team',  
          array(
            'title' => 'Monthly Patrol Resume', 
-           'title_jp' => '',
+           'title_jp' => '月次パトロールめとめ',
            'category' => $id
          )
        )->with('page', 'Monthly Patrol Resume');
@@ -1216,19 +1271,36 @@ public function detailPenanganan(Request $request){
 
         return DataTables::of($detail)
 
-        ->editColumn('tanggal', function($detail){
-          return date('d-M-Y', strtotime($detail->tanggal));
+        ->editColumn('auditor_name', function($detail){
+          $kategori = '';
+
+          if($detail->kategori == "S-Up And EHS Patrol Presdir"){
+            $kategori = "Presdir";
+          }else if ($detail->kategori == "5S Patrol GM"){
+            $kategori = "GM";
+          }else{
+            $kategori = $detail->kategori;
+          }
+
+          $tgl = date('d-M-Y', strtotime($detail->tanggal));
+
+         return 'Patrol '.$kategori.'<br>Auditor '.$detail->auditor_name.'<br>'.$tgl.'<br>Lokasi '.$detail->lokasi;
         })
 
+
         ->editColumn('foto', function($detail){
-          return '<img src="'.url('files/patrol').'/'.$detail->foto.'" width="250">';
+          return $detail->note.'<br><img src="'.url('files/patrol').'/'.$detail->foto.'" width="250">';
+        })
+
+        ->editColumn('auditee_name', function($detail){
+          return $detail->point_judul.'<br>'.$detail->auditee_name;
         })
 
         ->editColumn('penanganan', function($detail){
           return $detail->penanganan;
         })
 
-        ->rawColumns(['tanggal' => 'tanggal', 'foto' => 'foto','penanganan' => 'penanganan'])
+        ->rawColumns(['auditor_name' => 'auditor_name', 'auditee_name' => 'auditee_name', 'foto' => 'foto','penanganan' => 'penanganan'])
         ->make(true);
     }
 
@@ -1262,19 +1334,36 @@ public function detailPenanganan(Request $request){
 
         return DataTables::of($detail)
 
-        ->editColumn('tanggal', function($detail){
-          return date('d-M-Y', strtotime($detail->tanggal));
+        ->editColumn('auditor_name', function($detail){
+          $kategori = '';
+
+          if($detail->kategori == "S-Up And EHS Patrol Presdir"){
+            $kategori = "Presdir";
+          }else if ($detail->kategori == "5S Patrol GM"){
+            $kategori = "GM";
+          }else{
+            $kategori = $detail->kategori;
+          }
+
+          $tgl = date('d-M-Y', strtotime($detail->tanggal));
+
+         return 'Patrol '.$kategori.'<br>Auditor '.$detail->auditor_name.'<br>'.$tgl.'<br>Lokasi '.$detail->lokasi;
         })
 
+
         ->editColumn('foto', function($detail){
-          return '<img src="'.url('files/patrol').'/'.$detail->foto.'" width="250">';
+          return $detail->note.'<br><img src="'.url('files/patrol').'/'.$detail->foto.'" width="250">';
+        })
+
+        ->editColumn('auditee_name', function($detail){
+          return $detail->point_judul.'<br>'.$detail->auditee_name;
         })
 
         ->editColumn('penanganan', function($detail){
           return $detail->penanganan;
         })
 
-        ->rawColumns(['tanggal' => 'tanggal', 'foto' => 'foto','penanganan' => 'penanganan'])
+        ->rawColumns(['auditor_name' => 'auditor_name', 'auditee_name' => 'auditee_name', 'foto' => 'foto','penanganan' => 'penanganan'])
         ->make(true);
     }
 
@@ -1285,11 +1374,11 @@ public function detailPenanganan(Request $request){
 
       return view('audit.patrol_monthly_team_export',  
          array(
-           'title' => 'Monthly Patrol By Team List', 
-           'title_jp' => '',
+           'title' => 'Monthly Patrol By Location List', 
+           'title_jp' => '場所別の月次パトロール',
            'data' => $detail
          )
-       )->with('page', 'Monthly Patrol By Team List');
+       )->with('page', 'Monthly Patrol By Location List');
 
     }
 
@@ -1297,7 +1386,7 @@ public function detailPenanganan(Request $request){
   public function index_packing_documentation()
   { 
     $title = "Packing Documentation";
-    $title_jp = "";
+    $title_jp = "梱包作業の書類化";
 
     return view('documentation.index_packing_documentation', array(
       'title' => $title,
@@ -1332,7 +1421,7 @@ public function detailPenanganan(Request $request){
     }
 
     $title = "Packing Documentation ".$loc;
-    $title_jp = "";
+    $title_jp = "梱包作業の書類化";
 
     $user = User::where('username', Auth::user()->username)
     ->select('*')

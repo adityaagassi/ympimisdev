@@ -176,12 +176,8 @@
               <table id="example4" class="table table-striped table-bordered table-hover" style="width: 100%;color: black"> 
                 <thead style="background-color: rgba(126,86,134,.7);">
                   <tr>
-                    <th>Auditor Name</th>
-                    <th>Tanggal</th>
-                    <th>Lokasi</th>
+                    <th>Auditor</th>
                     <th>Auditee</th>
-                    <th>Poin Judul</th>
-                    <th>Note</th>
                     <th>Foto</th>
                     <th>Penanganan</th>
                   </tr>
@@ -213,12 +209,8 @@
               <table id="example5" class="table table-striped table-bordered table-hover" style="width: 100%;color: black"> 
                 <thead style="background-color: rgba(126,86,134,.7);">
                   <tr>
-                    <th>Auditor Name</th>
-                    <th>Tanggal</th>
-                    <th>Lokasi</th>
+                    <th>Auditor</th>
                     <th>Auditee</th>
-                    <th>Poin Judul</th>
-                    <th>Note</th>
                     <th>Foto</th>
                     <th>Penanganan</th>
                   </tr>
@@ -313,7 +305,7 @@
             backgroundColor: null
           },
           title: {
-            text: "Temuan Patrol by Team"
+            text: "Temuan Patrol by Auditor"
           },
           xAxis: {
             type: 'category',
@@ -596,14 +588,10 @@
         }
       },
       "columns": [
-      {"data": "auditor_name", "width": "5%"},
-      {"data": "tanggal" , "width": "5%"},
-      {"data": "lokasi" , "width": "5%"},
-      {"data": "auditee_name" , "width": "5%"},
-      {"data": "point_judul", "width": "5%"},
-      {"data": "note", "width": "15%"},
-      {"data": "foto", "width": "20%"},
-      {"data": "penanganan", "width": "25%"}
+      {"data": "auditor_name", "width": "20%"},
+      {"data": "auditee_name" , "width": "20%"},
+      {"data": "foto", "width": "30%"},
+      {"data": "penanganan", "width": "30%"}
       ]    
     });
 
@@ -681,14 +669,10 @@
         }
       },
       "columns": [
-      {"data": "auditor_name", "width": "5%"},
-      {"data": "tanggal" , "width": "5%"},
-      {"data": "lokasi" , "width": "5%"},
-      {"data": "auditee_name" , "width": "5%"},
-      {"data": "point_judul", "width": "5%"},
-      {"data": "note", "width": "15%"},
-      {"data": "foto", "width": "20%"},
-      {"data": "penanganan", "width": "25%"}
+      {"data": "auditor_name", "width": "20%"},
+      {"data": "auditee_name" , "width": "20%"},
+      {"data": "foto", "width": "30%"},
+      {"data": "penanganan", "width": "30%"}
       ]    
     });
 
