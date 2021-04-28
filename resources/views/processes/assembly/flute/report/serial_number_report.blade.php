@@ -110,12 +110,15 @@ thead input {
 										<th>Serial Number</th>
 										<th>Model</th>
 										<th>Operator QA Fungsi</th>
+										<th>Cek Fungsi Produksi</th>
 										<th>Result QA Fungsi</th>
 										<th>NG QA Fungsi</th>
 										<th>Operator QA Visual 1</th>
+										<th>Cek Visual Produksi</th>
 										<th>Result QA Visual 1</th>
 										<th>NG QA Visual 1</th>
 										<th>Operator QA Visual 2</th>
+										<th>Cek Visual Produksi</th>
 										<th>Result QA Visual 2</th>
 										<th>NG QA Visual 2</th>
 									</tr>
@@ -219,6 +222,7 @@ thead input {
 					tableData += '<td>'+ value.serial_number +'</td>';
 					tableData += '<td>'+ value.model +'</td>';
 					tableData += '<td>'+ value.op_qa_fungsi +'</td>';
+					tableData += '<td>'+ value.operator_fungsi.split(',').join('<br>') +'</td>';
 					if (value.ng_fungsi == null) {
 						tableData += '<td><span class="label label-success">OK</span></td>';
 						tableData += '<td></td>';
@@ -227,6 +231,7 @@ thead input {
 						tableData += '<td>'+value.ng_fungsi.split(',').join('<br>')+'</td>';
 					}
 					tableData += '<td>'+ value.op_qa_visual1 +'</td>';
+					tableData += '<td>'+ value.operator_visual.split(',').join('<br>')+'</td>';
 					if (value.ng_visual1 == null) {
 						tableData += '<td><span class="label label-success">OK</span></td>';
 						tableData += '<td></td>';
@@ -235,6 +240,7 @@ thead input {
 						tableData += '<td>'+value.ng_visual1.split(',').join('<br>')+'</td>';
 					}
 					tableData += '<td>'+ value.op_qa_visual2 +'</td>';
+					tableData += '<td>'+ value.operator_visual.split(',').join('<br>')+'</td>';
 					if (value.ng_visual2 == null) {
 						tableData += '<td><span class="label label-success">OK</span></td>';
 						tableData += '<td></td>';
