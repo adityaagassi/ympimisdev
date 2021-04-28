@@ -3569,7 +3569,7 @@ class MaintenanceController extends Controller
 		}
 		
 
-		$datas = db::select("SELECT mjo.machine_name, SUM(TIMESTAMPDIFF(MINUTE,created_at,fin)) as down_time_min, dt as repair_time, COUNT(mjo.order_no) as down_time_count from 
+		$datas = db::select("SELECT mjo.machine_name, SUM(TIMESTAMPDIFF(MINUTE,created_at,fin)) as down_time_min, SUM(dt) as repair_time, COUNT(mjo.order_no) as down_time_count from 
 			(select order_no, machine_name, created_at from maintenance_job_orders
 			where deleted_at is null and remark in (5,6) 
 			and machine_name is not null and machine_name <> 'Lain - lain' and type = 'Perbaikan'
