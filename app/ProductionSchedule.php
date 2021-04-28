@@ -10,7 +10,7 @@ class ProductionSchedule extends Model
 	Use SoftDeletes;
 
 	protected $fillable = [
-		'material_number', 'due_date', 'quantity', 'created_by'
+		'material_number', 'due_date', 'quantity', 'actual_quantity', 'created_by'
 	];
 
 	public function user()

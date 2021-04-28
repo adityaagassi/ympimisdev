@@ -258,12 +258,13 @@ class ProductionScheduleController extends Controller{
             $hpl1 = "AND m.hpl IN (".$hpl1.") ";
         }
 
-        $dates = PsiCalendar::where('sales_period', 'like', '%'.$month.'%')->get();
+        $dates = PsiCalendar::where('stuffing_period', 'like', '%'.$month.'%')->get();
 
-        $materials = DB::select("SELECT m.material_number, m.material_description, m.hpl, r.destination_code, d.destination_shortname FROM materials m
-            LEFT JOIN production_requests r ON r.material_number = m.material_number
+        $materials = DB::select("SELECT r.material_number, m.material_description, m.hpl, r.destination_code, d.destination_shortname FROM production_requests r
+            LEFT JOIN materials m ON r.material_number = m.material_number
             LEFT JOIN destinations d ON d.destination_code = r.destination_code
             WHERE m.category = 'KD'
+            AND DATE_FORMAT(r.request_month, '%Y-%m') = '".$month."'            
             ".$hpl1."
             ORDER BY m.hpl ASC, m.material_number ASC, d.destination_shortname DESC");
 
@@ -326,8 +327,10 @@ class ProductionScheduleController extends Controller{
         ->get();
 
         $psi_start = PsiCalendar::where('sales_period', 'like', '%'.$month.'%')->orderBy('week_date', 'ASC')->first();
-        
         $psi_finish = PsiCalendar::where('sales_period', 'like', '%'.$month.'%')->orderBy('week_date', 'DESC')->first();
+
+        $end_st = PsiCalendar::where('stuffing_period', 'like', '%'.$month.'%')->orderBy('week_date', 'DESC')->first();
+
 
 
         for ($i=0; $i < count($request); $i++) {
@@ -357,8 +360,23 @@ class ProductionScheduleController extends Controller{
                 }
 
                 $st_date = date('Y-m-d', strtotime('+'.$koef.' day', strtotime($productions[$j]->due_date)));
-                $bl_date = date('Y-m-d', strtotime('+3 day', strtotime($st_date)));
 
+                $loopAgain = false;
+                do {
+                    $weekly_calendar = WeeklyCalendar::where('week_date', $st_date)->first();
+                    if($weekly_calendar->remark == 'H'){
+                        $st_date = date('Y-m-d', strtotime('+ 1 day', strtotime($st_date)));
+                        $loopAgain = true;
+                    }else{
+                        $loopAgain = false;
+                    }
+                } while ($loopAgain);
+
+                if($st_date > $end_st->week_date){
+                    break;
+                }
+
+                $bl_date = date('Y-m-d', strtotime('+3 day', strtotime($st_date)));
                 $quantity = $productions[$j]->quantity;
                 $diff = $st_plan - $productions[$j]->quantity;
 
@@ -432,7 +450,6 @@ class ProductionScheduleController extends Controller{
             'status' => true
         );
         return Response::json($response);
-
     }
 
 

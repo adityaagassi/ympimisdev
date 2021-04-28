@@ -142,18 +142,18 @@ class AccountingController extends Controller
             $id_user = Auth::id();
 
             $supplier = AccSupplier::create(['vendor_code' => $request->get('vendor_code') ,
-               'supplier_name' => $request->get('supplier_name') ,
-               'supplier_address' => $request->get('supplier_address') ,
-               'supplier_city' => $request->get('supplier_city') ,
-               'supplier_phone' => $request->get('supplier_phone') ,
-               'supplier_fax' => $request->get('supplier_fax') ,
-               'contact_name' => $request->get('contact_name') ,
-               'supplier_npwp' => $request->get('supplier_npwp') ,
-               'supplier_duration' => $request->get('supplier_duration') ,
-               'position' => $request->get('position') ,
-               'supplier_status' => $request->get('supplier_status') ,
-               'created_by' => $id_user
-           ]);
+             'supplier_name' => $request->get('supplier_name') ,
+             'supplier_address' => $request->get('supplier_address') ,
+             'supplier_city' => $request->get('supplier_city') ,
+             'supplier_phone' => $request->get('supplier_phone') ,
+             'supplier_fax' => $request->get('supplier_fax') ,
+             'contact_name' => $request->get('contact_name') ,
+             'supplier_npwp' => $request->get('supplier_npwp') ,
+             'supplier_duration' => $request->get('supplier_duration') ,
+             'position' => $request->get('position') ,
+             'supplier_status' => $request->get('supplier_status') ,
+             'created_by' => $id_user
+         ]);
 
             $supplier->save();
 
@@ -1320,9 +1320,9 @@ class AccountingController extends Controller
             $detail_pr = AccPurchaseRequisition::select('acc_purchase_requisitions.*','acc_purchase_requisition_items.*','acc_budget_histories.beg_bal','acc_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
             ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
             ->join('acc_budget_histories', function($join) {
-               $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
-               $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
-           })
+             $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
+             $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
+         })
             ->where('acc_purchase_requisitions.id', '=', $data->id)
             ->distinct()
             ->get();
@@ -1499,9 +1499,9 @@ class AccountingController extends Controller
             $detail_pr = AccPurchaseRequisition::select('acc_purchase_requisitions.*','acc_purchase_requisition_items.*','acc_budget_histories.beg_bal','acc_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
             ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
             ->join('acc_budget_histories', function($join) {
-               $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
-               $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
-           })
+             $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
+             $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
+         })
             ->where('acc_purchase_requisitions.id', '=', $id)
             ->distinct()
             ->get();
@@ -1570,9 +1570,9 @@ class AccountingController extends Controller
             $detail_pr = AccPurchaseRequisition::select('acc_purchase_requisitions.*','acc_purchase_requisition_items.*','acc_budget_histories.beg_bal','acc_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
             ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
             ->join('acc_budget_histories', function($join) {
-               $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
-               $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
-           })
+             $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
+             $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
+         })
             ->where('acc_purchase_requisitions.id', '=', $id)
             ->distinct()
             ->get();
@@ -1609,9 +1609,9 @@ class AccountingController extends Controller
         $detail_pr = AccPurchaseRequisition::select('acc_purchase_requisitions.*','acc_purchase_requisition_items.*','acc_budget_histories.beg_bal','acc_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
         ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
         ->join('acc_budget_histories', function($join) {
-           $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
-           $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
-       })
+         $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
+         $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
+     })
         ->where('acc_purchase_requisitions.id', '=', $id)
         ->distinct()
         ->get();
@@ -1733,9 +1733,9 @@ class AccountingController extends Controller
             $detail_pr = AccPurchaseRequisition::select('acc_purchase_requisitions.*','acc_purchase_requisition_items.*','acc_budget_histories.beg_bal','acc_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
             ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
             ->join('acc_budget_histories', function($join) {
-               $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
-               $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
-           })
+             $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
+             $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
+         })
             ->where('acc_purchase_requisitions.id', '=', $id)
             ->distinct()
             ->get();
@@ -1796,9 +1796,9 @@ class AccountingController extends Controller
                     $detail_pr = AccPurchaseRequisition::select('acc_purchase_requisitions.*','acc_purchase_requisition_items.*','acc_budget_histories.beg_bal','acc_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
                     ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
                     ->join('acc_budget_histories', function($join) {
-                       $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
-                       $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
-                   })
+                     $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
+                     $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
+                 })
                     ->where('acc_purchase_requisitions.id', '=', $id)
                     ->distinct()
                     ->get();
@@ -1848,9 +1848,9 @@ class AccountingController extends Controller
                     $detail_pr = AccPurchaseRequisition::select('acc_purchase_requisitions.*','acc_purchase_requisition_items.*','acc_budget_histories.beg_bal','acc_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
                     ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
                     ->join('acc_budget_histories', function($join) {
-                       $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
-                       $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
-                   })
+                     $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
+                     $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
+                 })
                     ->where('acc_purchase_requisitions.id', '=', $id)
                     ->distinct()
                     ->get();
@@ -1884,9 +1884,9 @@ class AccountingController extends Controller
                     $detail_pr = AccPurchaseRequisition::select('acc_purchase_requisitions.*','acc_purchase_requisition_items.*','acc_budget_histories.beg_bal','acc_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
                     ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
                     ->join('acc_budget_histories', function($join) {
-                       $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
-                       $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
-                   })
+                     $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
+                     $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
+                 })
                     ->where('acc_purchase_requisitions.id', '=', $id)
                     ->distinct()
                     ->get();
@@ -1954,9 +1954,9 @@ class AccountingController extends Controller
                 $detail_pr = AccPurchaseRequisition::select('acc_purchase_requisitions.*','acc_purchase_requisition_items.*','acc_budget_histories.beg_bal','acc_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
                 ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
                 ->join('acc_budget_histories', function($join) {
-                   $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
-                   $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
-               })
+                 $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
+                 $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
+             })
                 ->where('acc_purchase_requisitions.id', '=', $id)
                 ->distinct()
                 ->get();
@@ -1990,9 +1990,9 @@ class AccountingController extends Controller
                 $detail_pr = AccPurchaseRequisition::select('acc_purchase_requisitions.*','acc_purchase_requisition_items.*','acc_budget_histories.beg_bal','acc_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
                 ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
                 ->join('acc_budget_histories', function($join) {
-                   $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
-                   $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
-               })
+                 $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
+                 $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
+             })
                 ->where('acc_purchase_requisitions.id', '=', $id)
                 ->distinct()
                 ->get();
@@ -2054,9 +2054,9 @@ class AccountingController extends Controller
                 $detail_pr = AccPurchaseRequisition::select('acc_purchase_requisitions.*','acc_purchase_requisition_items.*','acc_budget_histories.beg_bal','acc_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
                 ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
                 ->join('acc_budget_histories', function($join) {
-                   $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
-                   $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
-               })
+                 $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
+                 $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
+             })
                 ->where('acc_purchase_requisitions.id', '=', $id)
                 ->distinct()
                 ->get();
@@ -2089,9 +2089,9 @@ class AccountingController extends Controller
                 $detail_pr = AccPurchaseRequisition::select('acc_purchase_requisitions.*','acc_purchase_requisition_items.*','acc_budget_histories.beg_bal','acc_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
                 ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
                 ->join('acc_budget_histories', function($join) {
-                   $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
-                   $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
-               })
+                 $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
+                 $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
+             })
                 ->where('acc_purchase_requisitions.id', '=', $id)
                 ->distinct()
                 ->get();
@@ -2210,9 +2210,9 @@ class AccountingController extends Controller
         ->join('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
         // ->leftJoin('acc_items', 'acc_purchase_requisition_items.item_code', '=', 'acc_items.kode_item')
         ->join('acc_budget_histories', function($join) {
-           $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
-           $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
-       })
+         $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
+         $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
+     })
         ->where('acc_purchase_requisitions.id', '=', $request->get('id'))
         ->whereNull('acc_purchase_requisition_items.sudah_po')
         ->get();
@@ -2249,9 +2249,9 @@ class AccountingController extends Controller
         ->join('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
         // ->leftJoin('acc_items', 'acc_purchase_requisition_items.item_code', '=', 'acc_items.kode_item')
         ->join('acc_budget_histories', function($join) {
-           $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
-           $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
-       })
+         $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
+         $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
+     })
         ->where('acc_purchase_requisitions.id', '=', $request->get('id'))
         ->get();
 
@@ -2453,9 +2453,9 @@ class AccountingController extends Controller
             $detail_pr = AccPurchaseRequisition::select('acc_purchase_requisitions.*','acc_purchase_requisition_items.*','acc_budget_histories.beg_bal','acc_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
             ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
             ->join('acc_budget_histories', function($join) {
-               $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
-               $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
-           })
+             $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
+             $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
+         })
             ->where('acc_purchase_requisitions.id', '=', $request->get('id_edit_pr'))
             ->distinct()
             ->get();
@@ -3554,24 +3554,24 @@ class AccountingController extends Controller
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
-             $response = array(
-              'status' => false,
-              'datas' => "NO PO Already Exist",
-          );
-             return Response::json($response);
-         }
-         else{
-             $response = array(
-              'status' => false,
-              'datas' => "Update NO PO Error.",
-          );
-             return Response::json($response);
-         }
-     }
- }
+               $response = array(
+                  'status' => false,
+                  'datas' => "NO PO Already Exist",
+              );
+               return Response::json($response);
+           }
+           else{
+               $response = array(
+                  'status' => false,
+                  'datas' => "Update NO PO Error.",
+              );
+               return Response::json($response);
+           }
+       }
+   }
 
- public function delete_item_po(Request $request)
- {
+   public function delete_item_po(Request $request)
+   {
     try
     {
         $item = AccPurchaseOrderDetail::find($request->get('id'));
@@ -3710,17 +3710,17 @@ class AccountingController extends Controller
 
 
         } catch (Exception $e) {
-         $response = array(
-          'status' => false,
-          'datas' => "Gagal"
-      );
+           $response = array(
+              'status' => false,
+              'datas' => "Gagal"
+          );
 
-         return Response::json($response);
-     }
- }
+           return Response::json($response);
+       }
+   }
 
- public function cancel_purchase_order(Request $request)
- {
+   public function cancel_purchase_order(Request $request)
+   {
     try
     {
         $po = AccPurchaseOrder::find($request->get('id'));
@@ -3730,7 +3730,7 @@ class AccountingController extends Controller
         ->get();
 
         if ($budget_log != null) {
-            
+
             foreach ($budget_log as $log) {
                 $sisa_bulan = $log->budget_month_po.'_sisa_budget';
                 $budget = AccBudget::where('budget_no', $log->budget)->first();
@@ -4759,9 +4759,9 @@ class AccountingController extends Controller
             $detail_pr = AccPurchaseRequisition::select('acc_purchase_requisitions.*','acc_purchase_requisition_items.*','acc_budget_histories.beg_bal','acc_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
             ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
             ->join('acc_budget_histories', function($join) {
-               $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
-               $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
-           })
+             $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
+             $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
+         })
             ->where('acc_purchase_requisitions.id', '=', $request->get('id_edit_pr'))
             ->distinct()
             ->get();
@@ -5344,7 +5344,7 @@ class AccountingController extends Controller
             if ($budget_log != null) {
                 //FY
                 // $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$date'");
-                
+
                 // foreach ($fy as $fys) {
                 //     $fiscal = $fys->fiscal_year;
                 // }
@@ -6223,7 +6223,7 @@ class AccountingController extends Controller
                 $master = AccInvestmentBudget::where('id', '=', $request->get('id'))->delete();
 
             }else{
-                
+
                 $delete_budget_log = AccBudgetHistory::where('budget', '=', $get_budget_item->budget_no)
                 ->where('category_number', '=', $get_budget_item->reff_number)
                 ->delete();
@@ -7497,19 +7497,19 @@ public function budget_edit(Request $request){
         );
         return Response::json($response);
     } catch (QueryException $e){
-       $error_code = $e->errorInfo[1];
-       if($error_code == 1062){
+     $error_code = $e->errorInfo[1];
+     if($error_code == 1062){
         $response = array(
-         'status' => false,
-         'datas' => 'Errpr'
-     );
+           'status' => false,
+           'datas' => 'Errpr'
+       );
         return Response::json($response);
     }
     else{
         $response = array(
-         'status' => false,
-         'datas' => $e->getMessage()
-     );
+           'status' => false,
+           'datas' => $e->getMessage()
+       );
         return Response::json($response);
     }
 }
@@ -8983,7 +8983,7 @@ public function import_receive(Request $request){
 
                             if (count($actual) == 0) { //kalo insert
 
-                               $data2 = AccActual::create([
+                             $data2 = AccActual::create([
                                 'currency' => $currency,
                                 'vendor_code' => $vendor_code,
                                 'vendor_name' => $vendor_name,
@@ -9009,13 +9009,13 @@ public function import_receive(Request $request){
                                 'created_by' => Auth::id()
                             ]);
 
-                               $data2->save();
+                             $data2->save();
 
                                //Get PO
-                               $po_detail = AccPurchaseOrder::join('acc_purchase_order_details','acc_purchase_orders.no_po','=','acc_purchase_order_details.no_po')
-                               ->where('no_po_sap', (int)$no_po_sap[0])
-                               ->where('no_item',$item_no)
-                               ->first();
+                             $po_detail = AccPurchaseOrder::join('acc_purchase_order_details','acc_purchase_orders.no_po','=','acc_purchase_order_details.no_po')
+                             ->where('no_po_sap', (int)$no_po_sap[0])
+                             ->where('no_item',$item_no)
+                             ->first();
 
                              // $total_all = $po_detail->qty_receive + $qty;
 
@@ -9026,17 +9026,17 @@ public function import_receive(Request $request){
 
                                 //get log amount
 
-                               $budget_log = AccBudgetHistory::where('po_number','=',$po_detail->no_po)
-                               ->where(DB::raw('SUBSTRING(no_item, 1, 7)'),'=',$item_no)
-                               ->where('budget','=',$po_detail->budget_item)
-                               ->first();
+                             $budget_log = AccBudgetHistory::where('po_number','=',$po_detail->no_po)
+                             ->where(DB::raw('SUBSTRING(no_item, 1, 7)'),'=',$item_no)
+                             ->where('budget','=',$po_detail->budget_item)
+                             ->first();
 
-                               $amount_po = $budget_log->amount_po;
-                               $datereceive = $data2->receive_date;
+                             $amount_po = $budget_log->amount_po;
+                             $datereceive = $data2->receive_date;
                                 //Get Data From Budget Master
-                               $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$datereceive'");
+                             $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$datereceive'");
 
-                               foreach ($fy as $fys) {
+                             foreach ($fy as $fys) {
                                 $fiscal = $fys->fiscal_year;
                             }
 
@@ -9446,21 +9446,21 @@ if ($department != null) {
 
           //per tgl
 $data = db::select("
-   select date.week_date, coalesce(belum_diterima.total, 0) as jumlah_belum, coalesce(sudah_diterima.total, 0) as jumlah_sudah from 
-   (select week_date from weekly_calendars 
-   where date(week_date) >= '".$datefrom."'
-   and date(week_date) <= '".$dateto."') date
-   left join
-   (select date(submission_date) as date, count(id) as total from acc_purchase_requisitions
-   where date(submission_date) >= '".$datefrom."' and date(submission_date) <= '".$dateto."' and acc_purchase_requisitions.deleted_at is null and receive_date is null  ".$dep."
-   group by date(submission_date)) belum_diterima
-   on date.week_date = belum_diterima.date
-   left join
-   (select date(submission_date) as date, count(id) as total from acc_purchase_requisitions
-   where date(submission_date) >= '".$datefrom."' and date(submission_date) <= '".$dateto."' and acc_purchase_requisitions.deleted_at is null and receive_date is not null ".$dep."
-   group by date(submission_date)) sudah_diterima
-   on date.week_date = sudah_diterima.date
-   order by week_date asc");
+ select date.week_date, coalesce(belum_diterima.total, 0) as jumlah_belum, coalesce(sudah_diterima.total, 0) as jumlah_sudah from 
+ (select week_date from weekly_calendars 
+ where date(week_date) >= '".$datefrom."'
+ and date(week_date) <= '".$dateto."') date
+ left join
+ (select date(submission_date) as date, count(id) as total from acc_purchase_requisitions
+ where date(submission_date) >= '".$datefrom."' and date(submission_date) <= '".$dateto."' and acc_purchase_requisitions.deleted_at is null and receive_date is null  ".$dep."
+ group by date(submission_date)) belum_diterima
+ on date.week_date = belum_diterima.date
+ left join
+ (select date(submission_date) as date, count(id) as total from acc_purchase_requisitions
+ where date(submission_date) >= '".$datefrom."' and date(submission_date) <= '".$dateto."' and acc_purchase_requisitions.deleted_at is null and receive_date is not null ".$dep."
+ group by date(submission_date)) sudah_diterima
+ on date.week_date = sudah_diterima.date
+ order by week_date asc");
 
           //per department
 $data_dept = db::select("
@@ -10332,53 +10332,53 @@ $dep = 'and acc_investments.applicant_department in '.$dept;
 
           //per tgl
 $data = db::select("
-   SELECT
-   date2.week_date,
-   date2.week_name,
-   sum( date2.not_finish ) AS undone,
-   sum( date2.finish ) done 
-   FROM
-   (
-   SELECT
-   date.week_date,
-   date.week_name,
-   COALESCE ( not_finish.total, 0 ) AS not_finish,
-   COALESCE ( finish.total, 0 ) AS finish 
-   FROM
-   ( SELECT week_date, week_name FROM weekly_calendars WHERE date( week_date ) >= '".$datefrom."' AND date( week_date ) <= '".$dateto."' ) date
-   LEFT JOIN (
-   SELECT
-   date( submission_date ) AS date,
-   count( id ) AS total 
-   FROM
-   acc_investments 
-   WHERE
-   date( submission_date ) >= '".$datefrom."' 
-   AND date( submission_date ) <= '".$dateto."' ".$dep." 
-   AND acc_investments.deleted_at IS NULL 
-   AND posisi = 'finished' 
-   GROUP BY
-   date( submission_date )) finish ON date.week_date = finish.date
-   LEFT JOIN (
-   SELECT
-   date( submission_date ) AS date,
-   count( id ) AS total 
-   FROM
-   acc_investments 
-   WHERE
-   date( submission_date ) >= '".$datefrom."' 
-   AND date( submission_date ) <= '".$dateto."' ".$dep." 
-   AND acc_investments.deleted_at IS NULL 
-   AND `posisi` != 'finished' 
-   GROUP BY
-   date( submission_date )) not_finish ON date.week_date = not_finish.date 
-   ORDER BY
-   week_date ASC 
-   ) date2 
-   GROUP BY
-   date2.week_name       
-   ORDER BY week_date ASC   
-   ");
+ SELECT
+ date2.week_date,
+ date2.week_name,
+ sum( date2.not_finish ) AS undone,
+ sum( date2.finish ) done 
+ FROM
+ (
+ SELECT
+ date.week_date,
+ date.week_name,
+ COALESCE ( not_finish.total, 0 ) AS not_finish,
+ COALESCE ( finish.total, 0 ) AS finish 
+ FROM
+ ( SELECT week_date, week_name FROM weekly_calendars WHERE date( week_date ) >= '".$datefrom."' AND date( week_date ) <= '".$dateto."' ) date
+ LEFT JOIN (
+ SELECT
+ date( submission_date ) AS date,
+ count( id ) AS total 
+ FROM
+ acc_investments 
+ WHERE
+ date( submission_date ) >= '".$datefrom."' 
+ AND date( submission_date ) <= '".$dateto."' ".$dep." 
+ AND acc_investments.deleted_at IS NULL 
+ AND posisi = 'finished' 
+ GROUP BY
+ date( submission_date )) finish ON date.week_date = finish.date
+ LEFT JOIN (
+ SELECT
+ date( submission_date ) AS date,
+ count( id ) AS total 
+ FROM
+ acc_investments 
+ WHERE
+ date( submission_date ) >= '".$datefrom."' 
+ AND date( submission_date ) <= '".$dateto."' ".$dep." 
+ AND acc_investments.deleted_at IS NULL 
+ AND `posisi` != 'finished' 
+ GROUP BY
+ date( submission_date )) not_finish ON date.week_date = not_finish.date 
+ ORDER BY
+ week_date ASC 
+ ) date2 
+ GROUP BY
+ date2.week_name       
+ ORDER BY week_date ASC   
+ ");
 
 $data_investment_belum_po = db::select("
     SELECT
@@ -11105,17 +11105,17 @@ public function transfer_budget_post(Request $request)
         $id_user = Auth::id();
 
         $acc = AccBudgetTransfer::create([
-           'request_date' => date('Y-m-d'),
-           'budget_from' => $budget_from,
-           'budget_to' => $budget_to,
-           'amount' => $request->get('amount'),
-           'approval_f' => $manager_from,
-           'approval_t' => $manager_to,
-           'approval_from' => $manager_name_from,
-           'approval_to' => $manager_name_to,
-           'posisi' => $posisi,
-           'created_by' => $id_user
-       ]);
+         'request_date' => date('Y-m-d'),
+         'budget_from' => $budget_from,
+         'budget_to' => $budget_to,
+         'amount' => $request->get('amount'),
+         'approval_f' => $manager_from,
+         'approval_t' => $manager_to,
+         'approval_from' => $manager_name_from,
+         'approval_to' => $manager_name_to,
+         'posisi' => $posisi,
+         'created_by' => $id_user
+     ]);
 
         $acc->save();
 
@@ -11138,9 +11138,9 @@ public function transfer_budget_post(Request $request)
 
     } catch (QueryException $e){
       $response = array(
-       'status' => false,
-       'datas' => $e->getMessage()
-   );
+         'status' => false,
+         'datas' => $e->getMessage()
+     );
       return Response::json($response);
   }
 }
@@ -11148,7 +11148,7 @@ public function transfer_budget_post(Request $request)
 public function transfer_budget_post_new(Request $request)
 {
     try {
-       
+
         $budget_from = $request->get('budget_from');
         $budget_to = $request->get('budget_to');
         $amount = $request->get('amount');
@@ -11225,9 +11225,9 @@ public function transfer_budget_post_new(Request $request)
 
     } catch (QueryException $e){
       $response = array(
-       'status' => false,
-       'datas' => $e->getMessage()
-   );
+         'status' => false,
+         'datas' => $e->getMessage()
+     );
       return Response::json($response);
   }
 }
@@ -11769,9 +11769,9 @@ public function transfer_approvalto($id){
 
                     if($po_detail->qty < ($po_detail->qty_receive + (int) $itm['qty']) ){
                         $response = array(
-                           'status' => false,
-                           'message' => 'Jumlah Yang Dimasukkan Melebihi Pembelian Barang',
-                       );
+                         'status' => false,
+                         'message' => 'Jumlah Yang Dimasukkan Melebihi Pembelian Barang',
+                     );
                         return Response::json($response);
                     }
 
@@ -11859,9 +11859,9 @@ public function transfer_approvalto($id){
 
                     if($po_detail->qty < ($po_detail->qty_receive + (int) $itm['qty']) ){
                         $response = array(
-                           'status' => false,
-                           'message' => 'Jumlah Yang Dimasukkan Melebihi Pembelian Barang',
-                       );
+                         'status' => false,
+                         'message' => 'Jumlah Yang Dimasukkan Melebihi Pembelian Barang',
+                     );
                         return Response::json($response);
                     }
 
@@ -11980,7 +11980,7 @@ public function transfer_approvalto($id){
     }
 
     public function fetch_cetak_bukti(Request $request){
-        
+
         //Get PO
         $receive = AccReceive::where('no_po', $request->get('no_po'))
         ->where('no_item', $request->get('no_item'))
@@ -12054,7 +12054,7 @@ public function transfer_approvalto($id){
 public function cetak_bukti_penerimaan($id)
 {
 
-   $receives = db::select("
+ $receives = db::select("
     SELECT 
     acc_receive_reports.no_po,
     acc_receive_reports.nama_item,
@@ -12069,17 +12069,17 @@ public function cetak_bukti_penerimaan($id)
     id_print = '".$id."'
     AND acc_receive_reports.deleted_at IS NULL
     ");
-   
 
-   $pdf = \App::make('dompdf.wrapper');
-   $pdf->getDomPDF()->set_option("enable_php", true);
-   $pdf->setPaper('A4', 'potrait');
 
-   $pdf->loadView('accounting_purchasing.master.receive_print_report', array(
-      'receives' => $receives,
-  ));
+ $pdf = \App::make('dompdf.wrapper');
+ $pdf->getDomPDF()->set_option("enable_php", true);
+ $pdf->setPaper('A4', 'potrait');
 
-   return $pdf->stream($id.".pdf");
+ $pdf->loadView('accounting_purchasing.master.receive_print_report', array(
+  'receives' => $receives,
+));
+
+ return $pdf->stream($id.".pdf");
 }
 
 public function cek_kedatangan(){
@@ -12106,25 +12106,25 @@ public function fetch_kedatangan(Request $request)
     }
 
     $kedatangan = DB::select("
-     SELECT DISTINCT
-     acc_receives.*,
-     acc_purchase_order_details.no_pr,
-     IF
-     ( goods_price != 0, goods_price, service_price ) AS price,
-     acc_purchase_orders.no_po_sap,
-     acc_purchase_orders.supplier_code,
-     acc_purchase_orders.supplier_name 
-     FROM
-     `acc_receives`
-     LEFT JOIN acc_purchase_order_details ON acc_receives.no_po = acc_purchase_order_details.no_po
-     JOIN acc_purchase_orders ON acc_purchase_orders.no_po = acc_receives.no_po 
-     AND acc_receives.no_item = acc_purchase_order_details.no_item 
-     WHERE
-     acc_receives.deleted_at IS NULL 
-     and acc_purchase_orders.deleted_at IS NULL 
-     ".$tanggal."
-     ORDER BY
-     acc_receives.id desc");
+       SELECT DISTINCT
+       acc_receives.*,
+       acc_purchase_order_details.no_pr,
+       IF
+       ( goods_price != 0, goods_price, service_price ) AS price,
+       acc_purchase_orders.no_po_sap,
+       acc_purchase_orders.supplier_code,
+       acc_purchase_orders.supplier_name 
+       FROM
+       `acc_receives`
+       LEFT JOIN acc_purchase_order_details ON acc_receives.no_po = acc_purchase_order_details.no_po
+       JOIN acc_purchase_orders ON acc_purchase_orders.no_po = acc_receives.no_po 
+       AND acc_receives.no_item = acc_purchase_order_details.no_item 
+       WHERE
+       acc_receives.deleted_at IS NULL 
+       and acc_purchase_orders.deleted_at IS NULL 
+       ".$tanggal."
+       ORDER BY
+       acc_receives.id desc");
 
     return DataTables::of($kedatangan)
     ->addColumn('amount_po', function ($kedatangan)
@@ -12373,7 +12373,7 @@ public function invoice_import_receive(Request $request){
 
                     if (count($actual) == 0) { //kalo insert
 
-                       $data2 = AccInvoiceReceiveReport::create([
+                     $data2 = AccInvoiceReceiveReport::create([
                         'tanggal_upload' => date('Y-m-d'),
                         'currency' => $currency,
                         'vendor_code' => $vendor_code,
@@ -12401,9 +12401,9 @@ public function invoice_import_receive(Request $request){
                         'created_by' => Auth::id()
                     ]);
 
-                       $data2->save();
+                     $data2->save();
 
-                   } else if (count($actual) > 0){ 
+                 } else if (count($actual) > 0){ 
 
                     $data2 = AccInvoiceReceiveReport::where('document_no','=',$document_no)
                     ->update([
@@ -12646,8 +12646,19 @@ public function report_invoice($id){
     return $pdf->stream("Invoice ".$invoice->no_po. ".pdf");
 }
 
-      //==================================//
-    //          FIXED ASSET             //
-    //==================================//
+    //=============================================================//
+    //                     FIXED ASSET                             //
+    //=============================================================//
+
+public function indexFixedAsset()
+{
+    $title = 'Index Fixed Asset';
+    $title_jp = '??';
+
+    return view('fixed_asset.index', array(
+        'title' => $title,
+        'title_jp' => $title_jp
+    ))->with('page', 'Fixed Asset Index');  
+}
 
 }
