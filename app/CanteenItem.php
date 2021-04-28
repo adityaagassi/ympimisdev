@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class CanteenItem extends Model
 {
 	protected $fillable = [
-		'kode_item','kategori','deskripsi','uom','harga','lot','moq','leadtime','currency','remark','created_by'
+		'kode_item','kategori','deskripsi','uom','harga','currency','remark','created_by'
 	];
 
 	public function user()
