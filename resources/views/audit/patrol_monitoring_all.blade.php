@@ -408,8 +408,10 @@
                 </div>
               </div>
               <div class="col-md-7">
+                <h4>Catatan Penanganan</h4>
+                <textarea class="form-control" required="" name="penanganan" id="penanganan" style="height: 100px;"></textarea> 
                 <h4>Bukti Penanganan</h4>
-                <textarea class="form-control" required="" name="penanganan" style="height: 250px;"></textarea> 
+                <input type="file" required="" id="bukti_penanganan" name="bukti_penanganan"></textarea> 
               </div>
             </div>
           </div>
@@ -417,7 +419,7 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
           <input type="hidden" id="id_penanganan">
-          <button type="button" onclick="update_penanganan()" class="btn btn-success" data-dismiss="modal"><i class="fa fa-pencil"></i> Submit Penanganan Audit</button>
+          <button type="button" onclick="update_penanganan()" class="btn btn-success" data-dismiss="modal"><i class="fa fa-pencil"></i> Submit Penanganan</button>
         </div>
       </div>
     </div>
@@ -431,7 +433,7 @@
 <script src="{{ url("js/highcharts.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
-<script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
+<!-- <script src="{{ asset('/ckeditor/ckeditor.js') }}"></script> -->
 <script src="{{ url("js/pattern-fill.js")}}"></script>
 
 <script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
@@ -452,11 +454,6 @@
     drawChart();
     fetchTable();
     setInterval(fetchTable, 300000);
-  });
-
-  CKEDITOR.replace('penanganan' ,{
-    filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
-    height: '250px'
   });
 
   $('.datepicker').datepicker({
@@ -984,25 +981,58 @@
 
   function update_penanganan() {
 
-    var data = {
-      id: $("#id_penanganan").val(),
-      penanganan : CKEDITOR.instances.penanganan.getData()
-    };
-
-    if (CKEDITOR.instances.penanganan.getData() == null || CKEDITOR.instances.penanganan.getData() == "") {
-      openErrorGritter("Error","Penanganan Harus Diisi");
+    if ($("#penanganan").val() == "") {
+      openErrorGritter("Error","Catatan Penanganan Harus Diisi");
       return false;
     }
 
-    $.post('{{ url("post/audit_patrol/penanganan") }}', data, function(result, status, xhr){
-      if (result.status == true) {
+    if ($("#bukti_penanganan").val() == "") {
+      openErrorGritter("Error","Bukti Penanganan Harus Diisi");
+      return false;
+    }
+
+
+    var formData = new FormData();
+    formData.append('id', $("#id_penanganan").val());
+    formData.append('penanganan', $("#penanganan").val());
+    formData.append('bukti_penanganan', $('#bukti_penanganan').prop('files')[0]);
+
+    // var data = {
+    //   id: $("#id_penanganan").val(),
+    //   penanganan : CKEDITOR.instances.penanganan.getData()
+    // };
+
+
+    // $.post('{{ url("post/audit_patrol/penanganan") }}', data, function(result, status, xhr){
+    //   if (result.status == true) {
+    //     openSuccessGritter("Success","Audit Berhasil Ditangani");
+    //     fetchTable();
+    //     drawChart();
+    //   } else {
+    //     openErrorGritter("Error",result.datas);
+    //   }
+    // })
+
+    $.ajax({
+      url:"{{ url('post/audit_patrol/penanganan_new') }}",
+      method:"POST",
+      data:formData,
+      dataType:'JSON',
+      contentType: false,
+      cache: false,
+      processData: false,
+      success: function (response) {
         openSuccessGritter("Success","Audit Berhasil Ditangani");
+        $('#modalPenanganan').modal("hide");
         fetchTable();
         drawChart();
-      } else {
+      },
+      error: function (response) {
         openErrorGritter("Error",result.datas);
-      }
-    })
+        $('#modalPenanganan').modal("hide");
+      },
+    });
+
   }
 
   function edit(id) {

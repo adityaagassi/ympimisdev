@@ -3875,6 +3875,7 @@ Route::get('index/audit_patrol/detail_type', 'AuditController@detailMonitoringTy
 Route::get('index/audit_patrol/table', 'AuditController@fetchTable_audit');
 Route::get('index/audit_patrol/detail_penanganan', 'AuditController@detailPenanganan');
 Route::post('post/audit_patrol/penanganan', 'AuditController@postPenanganan');
+Route::post('post/audit_patrol/penanganan_new', 'AuditController@postPenangananNew');
 Route::post('post/audit_patrol/edit', 'AuditController@editAudit');
 
 Route::get('index/audit_patrol_monitoring/{id}', 'AuditController@indexMonitoringAll');

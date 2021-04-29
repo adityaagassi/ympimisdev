@@ -10,7 +10,7 @@ class AuditAllResult extends Model
     use SoftDeletes;
 
     protected $fillable = [
-		'jenis','tanggal','kategori','auditor_id','auditor_name','lokasi','auditee','auditee_name','point_judul','foto','note','penanganan','tanggal_penanganan','status_ditangani','created_by'
+		'jenis','tanggal','kategori','auditor_id','auditor_name','lokasi','auditee','auditee_name','point_judul','foto','note','penanganan','bukti_penanganan','tanggal_penanganan','status_ditangani','created_by'
 	];
 
 	public function user()

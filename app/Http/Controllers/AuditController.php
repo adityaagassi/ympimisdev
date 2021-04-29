@@ -576,7 +576,16 @@ public function detailMonitoring(Request $request){
     })
 
     ->editColumn('penanganan', function($detail){
-      return $detail->penanganan;
+
+      $bukti = "";
+
+      if ($detail->bukti_penanganan != null) {
+        $bukti = '<br><img src="'.url('files/patrol').'/'.$detail->bukti_penanganan.'" width="250">';
+      }else{
+        $bukti = "";
+      }
+
+      return $detail->penanganan.''.$bukti;
     })
 
     ->rawColumns(['auditor_name' => 'auditor_name', 'auditee_name' => 'auditee_name', 'foto' => 'foto','penanganan' => 'penanganan'])
@@ -638,7 +647,16 @@ public function detailMonitoringCategory(Request $request){
     })
 
     ->editColumn('penanganan', function($detail){
-      return $detail->penanganan;
+
+      $bukti = "";
+
+      if ($detail->bukti_penanganan != null) {
+        $bukti = '<br><img src="'.url('files/patrol').'/'.$detail->bukti_penanganan.'" width="250">';
+      }else{
+        $bukti = "";
+      }
+
+      return $detail->penanganan.''.$bukti;
     })
 
     ->rawColumns(['auditor_name' => 'auditor_name', 'auditee_name' => 'auditee_name', 'foto' => 'foto','penanganan' => 'penanganan'])
@@ -701,7 +719,16 @@ public function detailMonitoringBulan(Request $request){
     })
 
     ->editColumn('penanganan', function($detail){
-      return $detail->penanganan;
+
+      $bukti = "";
+
+      if ($detail->bukti_penanganan != null) {
+        $bukti = '<br><img src="'.url('files/patrol').'/'.$detail->bukti_penanganan.'" width="250">';
+      }else{
+        $bukti = "";
+      }
+
+      return $detail->penanganan.''.$bukti;
     })
 
     ->rawColumns(['auditor_name' => 'auditor_name', 'auditee_name' => 'auditee_name', 'foto' => 'foto','penanganan' => 'penanganan'])
@@ -758,7 +785,16 @@ public function detailMonitoringType(Request $request){
     })
 
     ->editColumn('penanganan', function($detail){
-      return $detail->penanganan;
+
+      $bukti = "";
+
+      if ($detail->bukti_penanganan != null) {
+        $bukti = '<br><img src="'.url('files/patrol').'/'.$detail->bukti_penanganan.'" width="250">';
+      }else{
+        $bukti = "";
+      }
+
+      return $detail->penanganan.''.$bukti;
     })
 
     ->rawColumns(['auditor_name' => 'auditor_name', 'auditee_name' => 'auditee_name', 'foto' => 'foto','penanganan' => 'penanganan'])
@@ -896,6 +932,50 @@ public function detailPenanganan(Request $request){
    }
  }
 }
+
+  public function postPenangananNew(Request $request)
+   {
+    try{
+      $id_user = Auth::id();
+      $tujuan_upload = 'files/patrol';
+
+      $file = $request->file('bukti_penanganan');
+      $nama = $file->getClientOriginalName();
+      $filename = pathinfo($nama, PATHINFO_FILENAME);
+      $extension = pathinfo($nama, PATHINFO_EXTENSION);
+      $filename = md5($filename.date('YmdHisa')).'.'.$extension;
+      $file->move($tujuan_upload,$filename);
+
+      $audit = AuditAllResult::find($request->input("id"));
+      $audit->penanganan = $request->input('penanganan');
+      $audit->bukti_penanganan = $filename;
+      $audit->tanggal_penanganan = date('Y-m-d');
+      $audit->status_ditangani = 'close';
+      $audit->save();
+
+      $response = array(
+        'status' => true,
+      );
+      return Response::json($response);
+    }
+    catch (QueryException $e){
+      $error_code = $e->errorInfo[1];
+      if($error_code == 1062){
+       $response = array(
+        'status' => false,
+        'datas' => "Audit Already Exist",
+      );
+       return Response::json($response);
+     }
+     else{
+       $response = array(
+        'status' => false,
+        'datas' => $e->getMessage(),
+      );
+       return Response::json($response);
+     }
+   }
+  }
 
   public function exportPatrol(Request $request){
       $time = date('d-m-Y H;i;s');
@@ -1119,7 +1199,16 @@ public function detailPenanganan(Request $request){
     })
 
     ->editColumn('penanganan', function($detail){
-      return $detail->penanganan;
+
+      $bukti = "";
+
+      if ($detail->bukti_penanganan != null) {
+        $bukti = '<br><img src="'.url('files/patrol').'/'.$detail->bukti_penanganan.'" width="250">';
+      }else{
+        $bukti = "";
+      }
+
+      return $detail->penanganan.''.$bukti;
     })
 
     ->rawColumns(['auditor_name' => 'auditor_name', 'auditee_name' => 'auditee_name', 'foto' => 'foto','penanganan' => 'penanganan'])
@@ -1176,7 +1265,16 @@ public function detailPenanganan(Request $request){
     })
 
     ->editColumn('penanganan', function($detail){
-      return $detail->penanganan;
+
+      $bukti = "";
+
+      if ($detail->bukti_penanganan != null) {
+        $bukti = '<br><img src="'.url('files/patrol').'/'.$detail->bukti_penanganan.'" width="250">';
+      }else{
+        $bukti = "";
+      }
+
+      return $detail->penanganan.''.$bukti;
     })
 
     ->rawColumns(['auditor_name' => 'auditor_name', 'auditee_name' => 'auditee_name', 'foto' => 'foto','penanganan' => 'penanganan'])
@@ -1326,7 +1424,16 @@ public function detailPenanganan(Request $request){
         })
 
         ->editColumn('penanganan', function($detail){
-          return $detail->penanganan;
+
+          $bukti = "";
+
+          if ($detail->bukti_penanganan != null) {
+            $bukti = '<br><img src="'.url('files/patrol').'/'.$detail->bukti_penanganan.'" width="250">';
+          }else{
+            $bukti = "";
+          }
+
+          return $detail->penanganan.''.$bukti;
         })
 
         ->rawColumns(['auditor_name' => 'auditor_name', 'auditee_name' => 'auditee_name', 'foto' => 'foto','penanganan' => 'penanganan'])
