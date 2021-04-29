@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
+use Response;
 
 class Permission
 {
@@ -26,6 +27,15 @@ class Permission
             return $next($request);
         }
 
-        return redirect('404');
-    }
+        if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+            $response = array(
+                'status' => false,
+                'message' => 'You dont have permission',
+            );
+            return Response::json($response);
+        }
+        else{
+         return redirect('404'); 
+     } 
+ }
 }
