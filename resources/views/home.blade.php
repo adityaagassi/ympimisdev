@@ -201,10 +201,10 @@
                                     <a href="{{ url("index/ga_control/bento") }}">
                                         <i class="fa fa-caret-right"></i> Japanese Food Order (和食弁当の予約)
                                     </a>
-                                    {{-- <br>
-                                    <a href="#">
+                                    <br>
+                                    <a href="{{ url('index/ga_control/live_cooking') }}">
                                         <i class="fa fa-caret-right"></i> Live Cooking Order (ライブクッキングの予約)
-                                    </a> --}}
+                                    </a>
                                 </td>
                             </tr>
                             {{-- <tr>
@@ -400,6 +400,27 @@
             <table class="table table-bordered">
                 <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
                     <tr>
+                        <th>Fixed Asset Control<br>??? </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <a href="{{ url("index/fixed_asset") }}">
+                                <i class="fa fa-caret-right"></i> Fixed Asset Form (??)
+                            </a>  
+                            <br> 
+                            <a href="{{ url("/index/audit_internal") }}">
+                                <i class="fa fa-caret-right"></i> Fixed Asset Audit (??)
+                            </a>
+                        </td>                     
+                    </tr>                    
+                </tbody>
+            </table>
+
+            <table class="table table-bordered">
+                <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
+                    <tr>
                         <th>Stock Taking<br>棚卸し</th>
                     </tr>
                 </thead>
@@ -476,7 +497,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                     <td>
+                       <td>
                         {{--     <a href="{{ url("index/report/overtime_outsource") }}">
                             <i class="fa fa-caret-right"></i> Outsource OT (派遣社員の残業管理)
                         </a> --}}
@@ -673,19 +694,19 @@
                                 <i class="fa fa-caret-right"></i> Sharepoint;
                             </a>
                             <a href="https://a01.yamaha.co.jp/fw/dfw/SAP2/Citrix/XenApp/site/default.aspx" target="_blank">
-                               SAP;
-                           </a>
-                           <a href="https://adagio.yamaha.co.jp/imart/default.portal" target="_blank">
-                               Adagio;
-                           </a>
-                           <a href="https://a01.yamaha.co.jp/fw/dfw/MA5/ma5/EntranceServlet" target="_blank">
-                               MA5;
-                           </a>
-                       </td>     
-                   </tr>                                                                             
-               </tbody>
-           </table>
-           <table class="table table-bordered">
+                             SAP;
+                         </a>
+                         <a href="https://adagio.yamaha.co.jp/imart/default.portal" target="_blank">
+                             Adagio;
+                         </a>
+                         <a href="https://a01.yamaha.co.jp/fw/dfw/MA5/ma5/EntranceServlet" target="_blank">
+                             MA5;
+                         </a>
+                     </td>     
+                 </tr>                                                                             
+             </tbody>
+         </table>
+         <table class="table table-bordered">
             <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
                 <tr>
                     <th>Workshop<br>ワークショップ</th>
@@ -753,15 +774,15 @@
                         <a href="{{ url("index/maintenance/machine_report/list") }}">
                             <i class="fa fa-caret-right"></i> Machine Breakdown Report (??)
                         </a>
-                       <!--  <br> 
-                        <a href="{{ url("index/maintenance/mttbf/report") }}">
-                            <i class="fa fa-caret-right"></i> MTBF Report (??)
+                        <br> 
+                        <a href="{{ url("index/maintenance/machine_report/graph") }}">
+                            <i class="fa fa-caret-right"></i> Machine Breakdown Graph (??)
                         </a>
                         <br>
-                        <a href="{{ url("index/maintenance/mttr/list") }}">
+                        <!-- <a href="{{ url("index/maintenance/mttr/list") }}">
                             <i class="fa fa-caret-right"></i> MTTR (??)
-                        </a> -->
-                        <br>
+                        </a>
+                        <br> -->
                         <a href="{{ url("index/maintenance/operator/position") }}">
                             <i class="fa fa-caret-right"></i> Maintenance Operator Location (保全班作業者の位置)
                         </a>

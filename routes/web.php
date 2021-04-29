@@ -1126,7 +1126,6 @@ Route::get('fetch/ga_control/driver_edit', 'GeneralAffairController@fetchDriverE
 Route::get('fetch/ga_control/driver_request', 'GeneralAffairController@fetchDriverRequest');
 Route::post('create/ga_control/driver_request', 'GeneralAffairController@createDriverRequest');
 Route::get('fetch/ga_control/driver_detail', 'GeneralAffairController@fetchDriverDetail');
-Route::get('index/ga_control/live_cooking', 'GeneralAffairController@indexLiveCooking');
 
 //BENTO
 Route::get('index/ga_control/bento', 'GeneralAffairController@indexBento');
@@ -1135,6 +1134,12 @@ Route::get('fetch/ga_control/bento_order_list', 'GeneralAffairController@fetchBe
 Route::post('input/ga_control/bento_order', 'GeneralAffairController@inputBentoOrder');
 Route::post('edit/ga_control/bento_order', 'GeneralAffairController@editBentoOrder');
 
+//LIVE COOKING
+Route::get('index/ga_control/live_cooking', 'GeneralAffairController@indexLiveCooking');
+Route::get('download/ga_control/live_cooking', 'GeneralAffairController@downloadFileExcelLiveCooking');
+Route::post('upload/ga_control/live_cooking_menu', 'GeneralAffairController@uploadLiveCookingMenu');
+Route::get('fetch/ga_control/live_cooking_order_list', 'GeneralAffairController@fetchLiveCookingOrderList');
+Route::get('live_cooking/menu/{periode}', 'GeneralAffairController@fetchLiveCookingMenu');
 
 //STD CONTROL
 Route::get('index/std_control/safety_shoes', 'GeneralController@indexSafetyShoes');
@@ -1145,6 +1150,7 @@ Route::get('fetch/std_control/detail_safety_shoes', 'GeneralController@fetchDeta
 
 // STD
 Route::post('input/std_control/safety_shoes', 'GeneralController@inputSafetyShoes');
+Route::post('input/std_control/safety_shoes_new', 'GeneralController@inputSafetyShoesNew');
 
 //PRD
 Route::post('input/std_control/req_safety_shoes', 'GeneralController@inputReqSafetyShoes');
@@ -1597,6 +1603,21 @@ Route::group(['nav' => 'S61', 'middleware' => 'permission'], function(){
 	Route::get('canteen/purchase_requisition', 'GeneralAffairController@canteen_purchase_requisition');
 	Route::get('fetch/canteen/purchase_requisition', 'GeneralAffairController@fetch_canteen_purchase_requisition');
 	Route::get('fetch/canteen/purchase_requisition/itemlist', 'GeneralAffairController@fetch_item_list');
+	Route::get('canteen/purchase_requisition/get_detailitem', 'GeneralAffairController@prgetitemdesc')->name('getcanteenitem');
+
+	//Master Item & Category
+	Route::get('canteen/purchase_item', 'GeneralAffairController@master_item');
+	Route::get('canteen/fetch/purchase_item', 'GeneralAffairController@fetch_item');
+
+	Route::get('canteen/purchase_item/create', 'GeneralAffairController@create_item');
+	Route::post('canteen/purchase_item/create_post', 'GeneralAffairController@create_item_post');
+	Route::get('canteen/purchase_item/update/{id}', 'GeneralAffairController@update_item');
+	Route::post('canteen/purchase_item/edit_post', 'GeneralAffairController@update_item_post');
+	Route::get('canteen/purchase_item/delete/{id}', 'GeneralAffairController@delete_item');
+	Route::get('canteen/purchase_item/get_kode_item', 'GeneralAffairController@get_kode_item');
+
+	Route::get('canteen/purchase_item/create_category', 'GeneralAffairController@create_item_category');
+	Route::post('canteen/purchase_item/create_category', 'GeneralAffairController@create_item_category_post');
 });
 
 //PO Monitoring & Control
@@ -1802,6 +1823,7 @@ Route::get('invoice/tanda_terima_detail', 'AccountingController@fetch_invoice_de
 Route::post('create/invoice/tanda_terima', 'AccountingController@create_invoice');
 Route::post('edit/invoice/tanda_terima', 'AccountingController@edit_invoice');
 Route::get('invoice/report/{id}', 'AccountingController@report_invoice');
+Route::get('export/invoice/tanda_terima', 'AccountingController@export_tanda_terima');
 
 Route::get('scan/middle/operator', 'MiddleProcessController@scanMiddleOperator');
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
@@ -4216,8 +4238,10 @@ Route::get('index/maintenance/machine_report/list', 'MaintenanceController@index
 Route::get('index/maintenance/mttbf/report', 'MaintenanceController@indexMttbfReport');
 Route::get('fetch/maintenance/mttbf/list', 'MaintenanceController@fetchMttbf');
 
+Route::get('index/maintenance/machine_report/graph', 'MaintenanceController@indexMachineGraph');
+
 // -------------------------      MTTR           -------------------
-Route::get('index/maintenance/mttr/list', 'MaintenanceController@indexMttr');
+// Route::get('index/maintenance/mttr/list', 'MaintenanceController@indexMttr');
 Route::get('fetch/maintenance/mttr/list', 'MaintenanceController@fetchMttr');
 
 // -------------------------      MTTR           -------------------
@@ -4501,6 +4525,7 @@ Route::get('scrap/view/monitoring/wip', 'ScrapController@MonitoringWip');
 Route::get('scrap/data/monitoring/wip', 'ScrapController@fetchMonitoringScrap');
 Route::get('scrap/list/wip', 'ScrapController@ListWip');
 Route::get('scrap/resume/list/wip', 'ScrapController@ResumeListWip');
+Route::get('scrap/resume/list/wh', 'ScrapController@ResumeListWh');
 // ============================================================================================
 Route::get('index/scrap/create', 'ScrapController@createScrap');
 
@@ -4650,13 +4675,10 @@ Route::get('fetch/detail/pelayanan', 'WarehouseNewController@fetchDetailMaterial
 Route::post('update/pengecekan', 'WarehouseNewController@updatePengecekanPeng');
 Route::get('index/monitoring/internal', 'WarehouseNewController@index_monitoring');
 Route::get('fetch/status', 'WarehouseNewController@fetchStatus');
-Route::get('fetch/import/display', 'WarehouseNewController@fetch_import_display');
 Route::post('post/pengantaran/lokasi_awal', 'WarehouseNewController@updateLokasiAwalPengantaran');
-
-
-
-
-
+Route::get('fetch/display_internal', 'WarehouseNewController@fetch_internal_wr');
+Route::get('fetch/detail/penerimaan', 'WarehouseNewController@fetchInternalPenerimaan');
+Route::get('fetch/detail/pelayanan/internal', 'WarehouseNewController@fetchInternalPelayanan');
 
 
 //Sanding
@@ -4846,6 +4868,14 @@ Route::get('fetch/packing_documentation', 'AuditController@documentation');
 Route::get('fetch/packing_documentation/data', 'AuditController@documentation_data');
 
 //End Dokumentasi Packing
+
+
+//  -------------------------  FIXED ASSET -------------------------
+
+Route::get('index/fixed_asset', 'AccountingController@indexFixedAsset');
+Route::get('index/fixed_asset/registration_asset_form', 'AccountingController@indexAssetRegistration');
+
+//  -----------------------  END FIXED ASSET ------------------------
 
 
 

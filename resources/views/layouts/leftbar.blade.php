@@ -26,9 +26,11 @@
       <li class="header">Administration Menu</li>
       @endif
 
+      @if(in_array('A1', $navs))
       @if(isset($page) && $page == "Safety Riding")<li class="active">@else<li>@endif
         <a href="{{ url("/index/safety_riding") }}"><i class="fa fa-motorcycle"></i> <span>Safety Riding</span></a>
       </li>
+      @endif
 
       @if(in_array('A1', $navs))
       @if(isset($page) && $page == "Batch Setting")<li class="active">@else<li>@endif
@@ -351,12 +353,17 @@
     <li class="header">Service Menu</li>
     @endif
 
-    @if(in_array('Dashboard', $navs))
+    @if(in_array('General', $navs))
     @if(isset($page) && $page == "Operator Loss Time")<li class="active">@else<li>@endif
       <a href="{{ url("index/efficiency/operator_loss_time") }}"><i class="fa fa-clock-o"></i> <span>OP Loss Time Record</span></a>
     </li>
     @endif
 
+    @if(in_array('S62', $navs))
+    @if(isset($page) && $page == "Japanese Food Order")<li class="active">@else<li>@endif
+      <a href="{{ url("index/ga_control/bento") }}"><i class="glyphicon glyphicon-cutlery"></i> <span>Japanese Food Order</span></a>
+    </li>
+    @endif
 
     @if(in_array('S45', $navs))
     @if(isset($head) && $head == "Purchasing")<li class="treeview active">@else<li class="treeview">@endif
@@ -588,7 +595,7 @@
     </li>
     @endif
 
-    @if(in_array('S48', $navs))
+    @if(in_array('S61', $navs))
     @if(isset($head) && $head == "Canteen")<li class="treeview active">@else<li class="treeview">@endif
       <a href="#">
         <i class="fa fa-cutlery"></i> <span>Canteen</span>
@@ -1639,16 +1646,16 @@
     <a href="{{ url("/index/scrap") }}"><i class="fa fa-pencil-square-o"></i> <span>Create Scrap Slip</span></a>
   </li>
   @if(isset($page) && $page == "Monitoring Lokasi")<li class="active">@else<li>@endif
-    <a href="{{ url("monitoring/scrap/wip") }}"><i class="fa fa-pencil-square-o"></i> <span>Monitoring Lokasi</span></a>
+    <a href="{{ url("scrap/view/monitoring/wip") }}"><i class="fa fa-television"></i> <span>Display Monitoring WIP</span></a>
   </li>
   @if(isset($page) && $page == "Inputor Menu")<li class="active">@else<li>@endif
-    <a href="{{ url("index/scrap/view") }}"><i class="fa fa-newspaper-o"></i> <span>Inputor Menu</span></a>
+    <a href="{{ url("scrap/list/wip") }}"><i class="fa fa-newspaper-o"></i> <span>List Monitoring WIP</span></a>
   </li>
   @if(isset($page) && $page == "Warehouse")<li class="active">@else<li>@endif
-    <a href="{{ url("index/scrap/warehouse") }}"><i class="fa fa-shopping-cart"></i> <span>Warehouse</span></a>
+    <a href="{{ url("index/scrap/warehouse") }}"><i class="fa fa-shopping-cart"></i> <span>Warehouse Confirmation</span></a>
   </li>
   @if(isset($page) && $page == "Display")<li class="active">@else<li>@endif
-    <a href="{{ url("display/scrap_warehouse") }}"><i class="fa fa-television"></i> <span>Display</span></a>
+    <a href="{{ url("scrap/view/display/warehouse") }}"><i class="fa fa-television"></i> <span>Display Monitoring WH</span></a>
   </li>
   @if(isset($page) && $page == "Scrap Logs")<li class="active">@else<li>@endif
     <a href="{{ url("index/scrap_record") }}"><i class="fa fa-list-alt"></i> <span>Scrap Logs</span></a>

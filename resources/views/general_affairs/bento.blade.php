@@ -79,18 +79,32 @@
 	<h1>
 		{{ $title }}
 		<small><span class="text-purple">{{ $title_jp }}</span></small>
-		<a href="{{ url("/index/ga_control/bento_report") }}" class="btn btn-danger pull-right" style="margin-left: 5px; width: 20%; color: white;" onclick="modalCreate();"><i class="fa fa-list"></i> Bento Report</a>
+		<button class="btn btn-danger pull-right" style="margin-left: 5px; width: 20%;" onclick="modalUploadMenu();"><i class="fa fa-upload"></i> Upload Menu</button>
+		<button class="btn btn-warning pull-right" style="margin-left: 5px; width: 20%;" onclick="modalResume();"><i class="fa fa-list"></i> Resume Report</button>
 	</h1>
 </section>
 @endsection
 
 @section('content')
 <section class="content">
+	@if (session('status'))
+	<div class="alert alert-success alert-dismissible">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		<h4><i class="icon fa fa-thumbs-o-up"></i> Success!</h4>
+		{{ session('status') }}
+	</div>   
+	@endif
+	@if (session('error'))
+	<div class="alert alert-danger alert-dismissible">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		<h4><i class="icon fa fa-ban"></i> Error!</h4>
+		{{ session('error') }}
+	</div>   
+	@endif
 	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8; display: none">
 		<p style="position: absolute; color: White; top: 45%; left: 45%;">
 			<span style="font-size: 5vw;"><i class="fa fa-spin fa-circle-o-notch"></i></span>
 		</p>
-
 	</div>
 	<div class="row">
 		<input type="hidden" id="location" value="{{ $location }}">
@@ -150,10 +164,12 @@
 					<table class="table table-hover table-bordered table-striped" id="tableOrderList">
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
-								<th style="width: 3%;">Ordered By<br>予約者</th>
-								<th style="width: 3%;">Charged To<br>請求先</th>
+								<th style="width: 1%;">Order By ID<br>予約者</th>
+								<th style="width: 3%;">Order By Name<br>予約者</th>
+								{{-- <th style="width: 3%;">Charged To<br>請求先</th> --}}
 								<th style="width: 1%;">Date<br>日付</th>
-								<th style="width: 3%;">Ordered For<br>予約対象者</th>
+								<th style="width: 1%;">Order For ID<br>予約対象者</th>
+								<th style="width: 3%;">Order For Name<br>予約対象者</th>
 								<th style="width: 3%;">Dept<br>部門</th>
 								<th style="width: 2%;">Sect</th>
 								<th style="width: 1%;">Status</th>
@@ -162,18 +178,6 @@
 						</thead>
 						<tbody id="tableOrderListBody">
 						</tbody>
-						<tfoot style="background-color: RGB(252, 248, 227);">
-							<tr>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-							</tr>
-						</tfoot>
 					</table>
 				</div>
 			</div>
@@ -185,10 +189,12 @@
 					<table class="table table-hover table-bordered table-striped" id="tableHistory">
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
-								<th style="width: 3%;">Ordered By<br>予約者</th>
-								<th style="width: 3%;">Charged To<br>請求先</th>
+								<th style="width: 1%;">Order By ID<br>予約者</th>
+								<th style="width: 3%;">Order By Name<br>予約者</th>
+								{{-- <th style="width: 3%;">Charged To<br>請求先</th> --}}
 								<th style="width: 1%;">Date<br>日付</th>
-								<th style="width: 3%;">Ordered For<br>予約対象者</th>
+								<th style="width: 1%;">Order For ID<br>予約対象者</th>
+								<th style="width: 3%;">Order For Name<br>予約対象者</th>
 								<th style="width: 3%;">Dept<br>部門</th>
 								<th style="width: 2%;">Sect</th>
 								<th style="width: 1%;">Status</th>
@@ -197,18 +203,6 @@
 						</thead>
 						<tbody id="tableHistoryBody">
 						</tbody>
-						<tfoot style="background-color: RGB(252, 248, 227);">
-							<tr>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-							</tr>
-						</tfoot>
 					</table>
 				</div>
 			</div>
@@ -298,6 +292,74 @@
 	</div>
 </div>
 
+<div class="modal fade" id="modalDetail">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<center><h3 style="background-color: #f39c12; font-weight: bold; padding: 3px; margin-top: 0; color: black;">Order Resume <span id="modalDetailTitle"></span></h3>
+					<table class="table table-hover table-bordered table-striped">
+						<thead>
+							<tr>
+								<th style="width: 1%;">Approved YMPI</th>
+								<th style="width: 1%;">Approved YEMI</th>
+								<th style="width: 1%;">Waiting</th>
+								<th style="width: 1%;">Rejected</th>
+							</tr>
+							<tr>
+								<th id="countApprovedYMPI" style="font-weight: bold; font-size: 2vw;"></th>
+								<th id="countApprovedYEMI" style="font-weight: bold; font-size: 2vw;"></th>
+								<th id="countWaiting" style="font-weight: bold; font-size: 2vw;"></th>
+								<th id="countRejected" style="font-weight: bold; font-size: 2vw;"></th>
+							</tr>
+						</thead>
+					</table>
+				</center>
+				<div class="modal-body table-responsive no-padding" style="min-height: 100px; padding-bottom: 5px;">
+					<h4 style="background-color: #ccff90; font-weight: bold; padding: 3px; margin-top: 0; color: black;">Approved</h4>
+					<table class="table table-hover table-bordered table-striped" id="tableDetailApproved">
+						<thead style="background-color: #ccff90;">
+							<tr>
+								<th style="width: 1%;">Order By ID</th>
+								<th style="width: 5%;">Order By Name</th>
+								<th style="width: 1%;">Order For ID</th>
+								<th style="width: 5%;">Order For Name</th>
+							</tr>
+						</thead>
+						<tbody id="tableDetailApprovedBody">
+						</tbody>
+					</table>
+					<h4 style="background-color: yellow; font-weight: bold; padding: 3px; margin-top: 0; color: black;">Waiting</h4>
+					<table class="table table-hover table-bordered table-striped" id="tableDetailWaiting">
+						<thead style="background-color: yellow;">
+							<tr>
+								<th style="width: 1%;">Order By ID</th>
+								<th style="width: 5%;">Order By Name</th>
+								<th style="width: 1%;">Order For ID</th>
+								<th style="width: 5%;">Order For Name</th>
+							</tr>
+						</thead>
+						<tbody id="tableDetailWaitingBody">
+						</tbody>
+					</table>
+					<h4 style="background-color: #ff6090; font-weight: bold; padding: 3px; margin-top: 0; color: black;">Rejected</h4>
+					<table class="table table-hover table-bordered table-striped" id="tableDetailRejected">
+						<thead style="background-color: #ff6090;">
+							<tr>
+								<th style="width: 1%;">Order By ID</th>
+								<th style="width: 5%;">Order By Name</th>
+								<th style="width: 1%;">Order For ID</th>
+								<th style="width: 5%;">Order For Name</th>
+							</tr>
+						</thead>
+						<tbody id="tableDetailRejectedBody">
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div class="modal fade" id="modalEdit">
 	<div class="modal-dialog modal-md">
 		<div class="modal-content">
@@ -358,11 +420,63 @@
 	<div class="modal-dialog modal-md" style="width: 80%;">
 		<div class="modal-content">
 			<div class="modal-header" id="modalMenuBody">
-
 			</div>
 		</div>
 	</div>
 </div>
+
+<div class="modal fade" id="modalUploadMenu">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="modal-header">
+				<center><h3 style="background-color: #f39c12; font-weight: bold; padding: 3px; margin-top: 0; color: white;">Upload Menu</h3>
+				</center>
+				<div class="modal-body table-responsive no-padding" style="min-height: 100px; padding-bottom: 5px;">
+					<div class="form-group">
+						<label for="" class="col-sm-3 control-label">Periode<span class="text-red"> :</span></label>
+						<div class="col-sm-5">
+							<input type="text" class="form-control" id="menuDate" name="menuDate" placeholder="Select Date">
+							<span class="help-block" id="checkDate2"></span>
+						</div>
+					</div>
+					<center><input type="file" name="menuFile" id="menuFile"></center>
+					<div class="modal-footer" style="margin-top: 10px;">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+						<button onclick="uploadMenu()" class="btn btn-success">Upload</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalResume">
+	<div class="modal-dialog modal-lg" style="width: 90%;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<center><h3 style="background-color: #f39c12; font-weight: bold; padding: 3px; margin-top: 0; color: black;">Resume Report</h3>
+				</center>
+				<div class="modal-body table-responsive no-padding" style="min-height: 100px; padding-bottom: 5px;">
+					<div class="form-group">
+						<label for="" class="col-sm-3 control-label" style="text-align: right;">Periode<span class="text-red"> :</span></label>
+						<div class="col-sm-3">
+							<input type="text" class="form-control" id="resumeDate" name="resumeDate" placeholder="Select Date">
+							<span class="help-block" id="checkDate2"></span>
+						</div>
+						<div class="col-sm-3">
+							<button onclick="fetchResume()" class="btn btn-success">Search</button>
+						</div>
+					</div>
+					<div class="col-xs-12">
+						<table class="table table-hover table-bordered table-striped" id="tableResume">
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 @endsection
 
 @section('scripts')
@@ -396,6 +510,20 @@
 			// todayHighlight: true,
 			startDate: date	
 		});
+		$('#menuDate').datepicker({
+			autoclose: true,
+			format: "yyyy-mm",
+			startView: "months", 
+			minViewMode: "months",
+			autoclose: true,
+		});
+		$('#resumeDate').datepicker({
+			autoclose: true,
+			format: "yyyy-mm",
+			startView: "months", 
+			minViewMode: "months",
+			autoclose: true,
+		});
 		$('.select2').select2();
 		$('#dateOk').hide();
 		$('#dateError').hide();
@@ -415,12 +543,150 @@
 		});
 	})
 
-
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 	var audio_ok = new Audio('{{ url("sounds/sukses.mp3") }}');
 	var employees = [];
 	var count = 0;
 	var quota_left = 0;
+
+	function modalResume(){
+		$('#modalResume').modal('show');
+	}
+
+	function fetchResume(){
+		var date = $('#resumeDate').val();
+		var data = {
+			resume:date
+		}
+		$.get('{{ url("fetch/ga_control/bento_order_list") }}', data, function(result, status, xhr){
+			if(result.status){
+				$('#tableResume').html("");
+				var tableResume = "";
+				var calendars = result.calendars;
+
+				tableResume += '<thead>';
+				tableResume += '<tr>';
+				tableResume += '<th style="width: 1%; font-size:0.8vw;">ID</th>';
+				tableResume += '<th style="width: 5%; font-size:0.8vw;">Name</th>';
+
+				var res = [];
+
+				$.each(result.bentos, function(key, value){
+					if($.inArray(value.employee_id+'_'+value.employee_name, res) === -1){
+						res.push(value.employee_id+'_'+value.employee_name);
+					}
+				});
+
+
+				$.each(result.calendars, function(key, value){
+					if(value.remark == 'H'){
+						tableResume += '<th style="width: 0.1%; font-size:0.8vw; background-color: rgba(80,80,80,0.5)">'+value.header+'</th>';
+					}
+					else{
+						tableResume += '<th style="width: 0.1%; font-size:0.8vw;">'+value.header+'</th>';						
+					}
+				});
+
+				tableResume += '<th style="width: 1%; font-size:0.8vw;">Qty</th>';
+				tableResume += '<th style="width: 1%; font-size:0.8vw;">Amt</th>';
+				tableResume += '</tr>';
+				tableResume += '</thead>';
+				tableResume += '<tbody>';
+				var insert = false;
+				var cnt = 0;
+
+				for (var i = 0; i < res.length; i++) {
+					var str = res[i].split('_');
+					tableResume += '<tr>';
+					tableResume += '<td>'+str[0]+'</td>';
+					tableResume += '<td>'+str[1]+'</td>';
+					for (var j = 0; j < calendars.length; j++) {
+						insert = false;
+						$.each(result.bentos, function(key, value){
+							if(value.due_date == calendars[j].week_date && str[0] == value.employee_id){
+								tableResume += '<td style="text-align: center; background-color: #ccff90;">'+value.qty+'</td>';
+								insert = true;
+								cnt += value.qty;
+							}
+						});
+						if(insert == false){
+							if(calendars[j].remark == 'H'){
+								tableResume += '<td style="text-align: center; background-color: rgba(80,80,80,0.5);"></td>';
+							}
+							else{
+								tableResume += '<td style="text-align: center; background-color: #ff6090;"></td>';								
+							}
+						}
+					}
+					tableResume += '<td style="text-align: center;">'+cnt+'</td>';
+					tableResume += '<td style="text-align: center;">'+cnt*20000+'</td>';
+					tableResume += '</tr>';
+					cnt = 0;
+				}
+
+				tableResume += '</tbody>';
+
+				$('#tableResume').append(tableResume);
+				$('#tableResume').DataTable().clear();
+				$('#tableResume').DataTable().destroy();
+				$('#tableResume').html('');
+				$('#tableResume').append(tableResume);
+
+
+				$('#tableResume').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'lengthMenu': [
+					[ 10, 25, 50, -1 ],
+					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
+						{
+							extend: 'copy',
+							className: 'btn btn-success',
+							text: '<i class="fa fa-copy"></i> Copy',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'excel',
+							className: 'btn btn-info',
+							text: '<i class="fa fa-file-excel-o"></i> Excel',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'print',
+							className: 'btn btn-warning',
+							text: '<i class="fa fa-print"></i> Print',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						]
+					},
+					'paging': false,
+					'lengthChange': true,
+					'searching': true,
+					'ordering': false,
+					'info': true,
+					'autoWidth': true,
+					"sPaginationType": "full_numbers",
+					"bJQueryUI": true,
+					"bAutoWidth": false,
+					"processing": true
+				});
+			}
+			else{
+				alert('Unidentified Error');
+				audio_error.play();
+				return false;				
+			}
+		});
+	}
 
 	function fetchOrderList(){
 		$.get('{{ url("fetch/ga_control/bento_order_list") }}', function(result, status, xhr){
@@ -488,7 +754,15 @@
 							pointPadding: 0.05,
 							groupPadding: 0.1,
 							borderWidth: 1,
-							borderColor: 'black'
+							borderColor: 'black',
+							cursor: 'pointer',
+							point: {
+								events: {
+									click: function () {
+										fetchDetail(this.category);
+									}
+								}
+							}
 						}
 					},
 					series: [{
@@ -526,10 +800,12 @@
 				$.each(result.unconfirmed, function(key, value){
 					if(value.status == 'Waiting For Confirmation'){
 						tableOrderList += '<tr>';
-						tableOrderList += '<td>'+value.order_by+'<br>'+value.order_by_name+'</td>';
-						tableOrderList += '<td>'+value.charge_to+'<br>'+value.charge_to_name+'</td>';
+						tableOrderList += '<td>'+value.order_by+'</td>';
+						tableOrderList += '<td>'+value.order_by_name+'</td>';
+						// tableOrderList += '<td>'+value.charge_to+'<br>'+value.charge_to_name+'</td>';
 						tableOrderList += '<td>'+value.due_date+'</td>';
-						tableOrderList += '<td>'+value.employee_id+'<br>'+value.employee_name+'</td>';
+						tableOrderList += '<td>'+value.employee_id+'</td>';
+						tableOrderList += '<td>'+value.employee_name+'</td>';
 						tableOrderList += '<td>'+value.department+'</td>';
 						tableOrderList += '<td>'+value.section+'</td>';
 						tableOrderList += '<td style="background-color: yellow; font-weight:bold;">'+value.status+'</td>';
@@ -538,17 +814,19 @@
 					}
 					else{
 						tableHistory += '<tr>';
-						tableHistory += '<td>'+value.order_by+'<br>'+value.order_by_name+'</td>';
-						tableHistory += '<td>'+value.charge_to+'<br>'+value.charge_to_name+'</td>';
+						tableHistory += '<td>'+value.order_by+'</td>';
+						tableHistory += '<td>'+value.order_by_name+'</td>';
+						// tableHistory += '<td>'+value.charge_to+'<br>'+value.charge_to_name+'</td>';
 						tableHistory += '<td>'+value.due_date+'</td>';
-						tableHistory += '<td>'+value.employee_id+'<br>'+value.employee_name+'</td>';
+						tableHistory += '<td>'+value.employee_id+'</td>';
+						tableHistory += '<td>'+value.employee_name+'</td>';
 						tableHistory += '<td>'+value.department+'</td>';
 						tableHistory += '<td>'+value.section+'</td>';
 						if(value.status == 'Rejected'){
-							tableHistory += '<td style="background-color: red; font-weight:bold;">'+value.status+'</td>';							
+							tableHistory += '<td style="background-color: #ff6090; font-weight:bold;">'+value.status+'</td>';							
 						}
 						else{
-							tableHistory += '<td style="background-color: green; font-weight:bold;">'+value.status+'</td>';							
+							tableHistory += '<td style="background-color: #ccff90; font-weight:bold;">'+value.status+'</td>';							
 						}
 						tableHistory += '<td>'+value.approver_id+'<br>'+value.approver_name+'</td>';
 						tableHistory += '</tr>';
@@ -618,6 +896,142 @@
 		});
 }
 
+function fetchDetail(date){
+	$('#loading').show();
+	var data = {
+		date:date
+	}
+	$.get('{{ url("fetch/ga_control/bento_order_list") }}', data, function(result, status, xhr){
+		if(result.status){
+			$('#tableDetailApprovedBody').html('');
+			$('#tableDetailRejectedBody').html('');
+			$('#tableDetailWaitingBody').html('');
+
+			$('#tableDetailApproved').DataTable().clear();
+			$('#tableDetailApproved').DataTable().destroy();
+
+			var tableDetailApprovedBody = "";
+			var tableDetailRejectedBody = "";
+			var tableDetailWaitingBody = "";
+
+			var countApprovedYEMI = 0;
+			var countApprovedYMPI = 0;
+			var countWaiting = 0;
+			var countRejected = 0;
+
+			$.each(result.bentos, function(key, value){
+				if(value.status == 'Approved' && value.department != 'YEMI'){
+					countApprovedYMPI += 1;
+					tableDetailApprovedBody += '<tr>';
+					tableDetailApprovedBody += '<td>'+value.order_by+'</td>';
+					tableDetailApprovedBody += '<td>'+value.order_by_name+'</td>';
+					tableDetailApprovedBody += '<td>'+value.employee_id+'</td>';
+					tableDetailApprovedBody += '<td>'+value.employee_name+'</td>';
+					tableDetailApprovedBody += '</tr>';
+				}
+				else if(value.status == 'Approved' && value.department == 'YEMI'){
+					countApprovedYEMI += 1;
+					tableDetailApprovedBody += '<tr>';
+					tableDetailApprovedBody += '<td>'+value.order_by+'</td>';
+					tableDetailApprovedBody += '<td>'+value.order_by_name+'</td>';
+					tableDetailApprovedBody += '<td>'+value.employee_id+'</td>';
+					tableDetailApprovedBody += '<td>'+value.employee_name+'</td>';
+					tableDetailApprovedBody += '</tr>';
+				}
+				else if(value.status == 'Rejected'){
+					countRejected += 1;
+					tableDetailRejectedBody += '<tr>';
+					tableDetailRejectedBody += '<td>'+value.order_by+'</td>';
+					tableDetailRejectedBody += '<td>'+value.order_by_name+'</td>';
+					tableDetailRejectedBody += '<td>'+value.employee_id+'</td>';
+					tableDetailRejectedBody += '<td>'+value.employee_name+'</td>';
+					tableDetailRejectedBody += '</tr>';
+				}
+				else{
+					countWaiting += 1;
+					tableDetailWaitingBody += '<tr>';
+					tableDetailWaitingBody += '<td>'+value.order_by+'</td>';
+					tableDetailWaitingBody += '<td>'+value.order_by_name+'</td>';
+					tableDetailWaitingBody += '<td>'+value.employee_id+'</td>';
+					tableDetailWaitingBody += '<td>'+value.employee_name+'</td>';
+					tableDetailWaitingBody += '</tr>';
+				}
+			});
+
+			$('#tableDetailApprovedBody').append(tableDetailApprovedBody);
+			$('#tableDetailRejectedBody').append(tableDetailRejectedBody);
+			$('#tableDetailWaitingBody').append(tableDetailWaitingBody);
+
+			$('#countApprovedYEMI').text(countApprovedYEMI);
+			$('#countApprovedYMPI').text(countApprovedYMPI);
+			$('#countWaiting').text(countWaiting);
+			$('#countRejected').text(countRejected);
+
+			$('#tableDetailApproved').DataTable({
+				'dom': 'Bfrtip',
+				'responsive':true,
+				'lengthMenu': [
+				[ 10, 25, 50, -1 ],
+				[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+				],
+				'buttons': {
+					buttons:[
+					{
+						extend: 'pageLength',
+						className: 'btn btn-default',
+					},
+					{
+						extend: 'copy',
+						className: 'btn btn-success',
+						text: '<i class="fa fa-copy"></i> Copy',
+						exportOptions: {
+							columns: ':not(.notexport)'
+						}
+					},
+					{
+						extend: 'excel',
+						className: 'btn btn-info',
+						text: '<i class="fa fa-file-excel-o"></i> Excel',
+						exportOptions: {
+							columns: ':not(.notexport)'
+						}
+					},
+					{
+						extend: 'print',
+						className: 'btn btn-warning',
+						text: '<i class="fa fa-print"></i> Print',
+						exportOptions: {
+							columns: ':not(.notexport)'
+						}
+					},
+					]
+				},
+				'paging': true,
+				'lengthChange': true,
+				'searching': true,
+				'ordering': true,
+				'order': [],
+				'info': true,
+				'autoWidth': true,
+				"sPaginationType": "full_numbers",
+				"bJQueryUI": true,
+				"bAutoWidth": false,
+				"processing": true
+			});
+
+			$('#modalDetailTitle').text(date);
+			$('#modalDetail').modal('show');
+			$('#loading').hide();
+		}
+		else{
+			$('#loading').hide();
+			alert('Unidentified Error');
+			audio_error.play();
+			return false;
+		}
+	});
+}
+
 function openModalMenu(id){
 	$('#modalMenuBody').html("");
 	var modalMenuBody = "";
@@ -660,6 +1074,54 @@ function deleteOrder(){
 	else{
 		return false;
 	}
+}
+
+function modalUploadMenu(){
+	$('#modalUploadMenu').modal('show');
+}
+
+function uploadMenu(){
+
+	if($('#menuDate').val() == ""){
+		openErrorGritter('Error!', 'Please input period');
+		audio_error.play();
+		return false;	
+	}
+
+	var formData = new FormData();
+	var newAttachment  = $('#menuFile').prop('files')[0];
+	var file = $('#menuFile').val().replace(/C:\\fakepath\\/i, '').split(".");
+
+	formData.append('newAttachment', newAttachment);
+	formData.append('menuDate', $("#menuDate").val());
+
+	formData.append('extension', file[1]);
+	formData.append('file_name', file[0]);
+
+	$.ajax({
+		url:"{{ url('upload/ga_control/bento_menu') }}",
+		method:"POST",
+		data:formData,
+		dataType:'JSON',
+		contentType: false,
+		cache: false,
+		processData: false,
+		success:function(data)
+		{
+			if (data.status) {
+				openSuccessGritter('Success!',data.message);
+				audio_ok.play();
+				$('#menuDate').val("");
+				$('#menuFile').val("");
+				$('#modalUploadMenu').modal('hide');
+				location.reload(true);
+			}else{
+				openErrorGritter('Error!',data.message);
+				audio_error.play();
+			}
+
+		}
+	});
 }
 
 function editOrder(){

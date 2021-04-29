@@ -34,19 +34,19 @@
 			<br>
 			<table style="border:1px solid black;border-collapse: collapse;" width="40%">
 				<thead style="background-color: #fdd835">
-					<tr>
+					{{-- <tr>
 						<th style="width: 1%; border:1px solid black;" colspan="2">Order Information<br><span style="color: purple;">予約の情報</span></th>
+					</tr> --}}
+					<tr>
+						<th style="width: 3%; border:1px solid black;">Ordered By<br><span style="color: purple;">予約者</span></th>
+						{{-- <th style="width: 3%; border:1px solid black;">Charged To<br><span style="color: purple;">請求先</span></th> --}}
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td style="width: 1%; border:1px solid black;">Ordered By<br><span style="color: purple;">予約者</span></td>
-						<td style="width: 6%; border:1px solid black; text-align: left !important;">{{ $data[0]["order_by"] }}<br>{{ $data[0]["order_by_name"] }}</td>
-					</tr>
-					<tr>
-						<td style="width: 1%; border:1px solid black;">Charged To<br><span style="color: purple;">請求先</span></td>
-						<td style="width: 6%; border:1px solid black; text-align: left !important;">{{ $data[0]['charge_to'] }}<br>{{ $data[0]['charge_to_name'] }}</td>
-					</tr>				
+						<td style="width: 6%; border:1px solid black; text-align: center !important;">{{ $data[0]["order_by"] }}<br>{{ $data[0]["order_by_name"] }}</td>
+						{{-- 	<td style="width: 6%; border:1px solid black; text-align: left !important;">{{ $data[0]['charge_to'] }}<br>{{ $data[0]['charge_to_name'] }}</td> --}}
+					</tr>		
 				</tbody>
 			</table>
 			<br>
