@@ -299,7 +299,7 @@ function save(val, ctg) {
 
 function getHistory() {
   var data = {
-    username : "{{ Auth::user()->id }}",
+    username : "{{ Auth::user()->username }}",
     // limit : 5,
     dt : "{{ date('Y-m-d') }}"
   }

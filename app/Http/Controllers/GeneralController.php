@@ -73,8 +73,7 @@ class GeneralController extends Controller{
 		return view('general.pointing_call.safety_riding', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
-			'employees' => $employees,
-			'agreement_statuses' => $this->agreement_statuses
+			'employees' => $employees
 		))->with('page', 'Safety Riding');
 	}
 
@@ -273,7 +272,7 @@ class GeneralController extends Controller{
 		$title = "Company Agreement List";
 		$title_jp = "会社の契約書";
 
-		$employees = EmployeeSync::orderBy('department', 'asc')->get();
+		$employees = EmployeeSync::orderBy('department', 'asc')->whereNotNull('department')->get();
 
 		return view('general.agreements.index', array(
 			'title' => $title,
@@ -367,7 +366,7 @@ class GeneralController extends Controller{
 
 			$manager = db::select("select email from send_emails where remark = '".$request->input('newDepartment')."'");
 
-			Mail::to(['adhi.satya.indradhi@music.yamaha.com', Auth::user()->email])->cc(['prawoto@music.yamaha.com', $manager[0]->email])->bcc(['aditya.agassi@music.yamaha.com'])->send(new SendEmail($agreements, 'update_agreement'));
+			Mail::to(['adhi.satya.indradhi@music.yamaha.com', Auth::user()->email])->cc(['prawoto@music.yamaha.com', $manager[0]->email])->bcc(['aditya.agassi@music.yamaha.com', 'anton.budi.santoso@music.yamaha.com'])->send(new SendEmail($agreements, 'update_agreement'));
 
 			$response = array(
 				'status' => true,
@@ -517,7 +516,7 @@ class GeneralController extends Controller{
 
 			$manager = db::select("select email from send_emails where remark = '".$request->input('newDepartment')."'");
 
-			Mail::to(['adhi.satya.indradhi@music.yamaha.com', Auth::user()->email])->cc(['prawoto@music.yamaha.com', $manager[0]->email])->bcc(['aditya.agassi@music.yamaha.com'])->send(new SendEmail($agreements, 'new_agreement'));
+			Mail::to(['adhi.satya.indradhi@music.yamaha.com', Auth::user()->email])->cc(['prawoto@music.yamaha.com', $manager[0]->email])->bcc(['aditya.agassi@music.yamaha.com', 'anton.budi.santoso@music.yamaha.com'])->send(new SendEmail($agreements, 'new_agreement'));
 
 			$response = array(
 				'status' => true,
@@ -959,6 +958,90 @@ class GeneralController extends Controller{
 			return Response::json($response);
 		}
 
+	}
+
+	public function inputSafetyShoesNew(Request $request){
+		$stock = $request->get('stock');
+		$data = array();
+
+		DB::beginTransaction();
+		for ($i=0; $i < count($stock); $i++) {
+			try {
+				$shoes = GeneralShoesStock::where('merk',  $stock[$i]['merk'])
+				->where('condition', 'Baru')
+				->where('gender', $stock[$i]['gender'])
+				->where('size', $stock[$i]['size'])
+				->first();
+
+				if($shoes){
+					$shoes->temp_stock = $shoes->temp_stock + $stock[$i]['qty'];
+					$shoes->quantity = $shoes->quantity + $stock[$i]['qty'];
+					$shoes->save();
+				}else{
+					$shoes = new GeneralShoesStock([
+						'condition' => 'Baru',
+						'merk' => $stock[$i]['merk'],
+						'gender' => $stock[$i]['gender'],
+						'size' => $stock[$i]['size'],
+						'temp_stock' => $stock[$i]['qty'],
+						'quantity' => $stock[$i]['qty'],
+						'created_by' => Auth::id()
+					]);
+					$shoes->save();
+				}
+				
+
+				array_push($data,[
+					'merk' => $stock[$i]['merk'],
+					'gender' => $stock[$i]['gender'],
+					'size' => $stock[$i]['size'],
+					'quantity' => $stock[$i]['qty'],
+					'status' => 'Baru'
+				]);
+
+
+				$log = new GeneralShoesLog([
+					'merk' => $stock[$i]['merk'],
+					'gender' => $stock[$i]['gender'],
+					'size' => $stock[$i]['size'],
+					'quantity' => $stock[$i]['qty'],
+					'status' => 'Simpan',
+					'condition' => 'Baru',
+					'employee_id' => '',
+					'name' => '',
+					'department' => '',
+					'section' => '',
+					'group' => '',
+					'sub_group' => '',
+					'created_by' => Auth::id()
+				]);
+			} catch (Exception $e) {
+				DB::rollback();
+				$response = array(
+					'status' => false,
+					'message' => $e->getMessage()
+				);
+				return Response::json($response);
+			}
+		}
+
+		// $mail_to = db::table('send_emails')
+		// ->where('remark', '=', 'safety_shoes')
+		// ->WhereNull('deleted_at')
+		// ->select('email')
+		// ->get();
+
+		// Mail::to($mail_to)
+		// ->bcc('aditya.agassi@music.yamaha.com')
+		// ->send(new SendEmail($data, 'safety_shoes'));
+
+		DB::commit();
+
+		$response = array(
+			'status' => true,
+			'message' => 'Safety Shoes berhasil ditambahkan'
+		);
+		return Response::json($response);
 	}
 
 	public function inputSafetyShoes(Request $request){
