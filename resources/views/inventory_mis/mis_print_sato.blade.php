@@ -76,9 +76,9 @@
 		initialize();
 		defineCustomPaperSize();
 
-		// setTimeout(function() {
-		// 	printWindow(window, 'Label Kecil');
-		// }, 3000)
+		setTimeout(function() {
+			printWindow(window, 'Label Kecil');
+		}, 5000)
 
 	});
 
