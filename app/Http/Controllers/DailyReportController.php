@@ -491,4 +491,13 @@ public function printInventory($id)
     // $printer->cut();
     // $printer->close();
 }
+
+public function printInventory2($id)
+{
+    $device_detail =  MisInventory::where("id", '=', $id)->first();
+    
+    return view('inventory_mis.mis_print_sato', array(
+        'device_detail' => $device_detail,
+    ));
+}
 }
