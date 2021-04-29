@@ -96,6 +96,11 @@ class CheckSheet extends Controller{
                $seal_photo = asset("/files/checksheet/seal/".$time->seal_photo);
           }
 
+          $container_photo = '';
+          if(strlen($time->container_photo) > 0){
+               $container_photo = asset("/files/checksheet/container/".$time->container_photo);
+          }
+
           $detail = DetailChecksheet::where('id_checkSheet','=' ,$time->id_checkSheet)->get();
           $container = AreaInspection::orderBy('id','ASC')->get();
           $Inspection = Inspection::where('id_checkSheet','=' ,$time->id_checkSheet)->get();
@@ -107,6 +112,7 @@ class CheckSheet extends Controller{
                'inspection' => $Inspection,
                'photo' => $photo,
                'seal_photo' => $seal_photo,
+               'container_photo' => $container_photo,
           ))->with('page', 'Check Sheet');
      }
 
@@ -122,6 +128,11 @@ class CheckSheet extends Controller{
           $seal_photo = '';
           if(strlen($time->seal_photo) > 0){
                $seal_photo = asset("/files/checksheet/seal/".$time->seal_photo);
+          }
+
+          $container_photo = '';
+          if(strlen($time->container_photo) > 0){
+               $container_photo = asset("/files/checksheet/container/".$time->container_photo);
           }
 
           $detail = db::select("select cek.*, IFNULL(inv.quantity,0) as stock from (
@@ -142,6 +153,7 @@ class CheckSheet extends Controller{
                'inspection' => $Inspection,
                'photo' => $photo,
                'seal_photo' => $seal_photo,
+               'container_photo' => $container_photo,
           ))->with('page', 'Check Sheet');
      }
 
@@ -727,10 +739,10 @@ class CheckSheet extends Controller{
 
 
           $response = array(
-           'status' => true,
-           'message' => 'Update Success',
-           'reason' => 'ok'
-      );
+              'status' => true,
+              'message' => 'Update Success',
+              'reason' => 'ok'
+         );
           return Response::json($response);
      }
 
@@ -751,7 +763,8 @@ class CheckSheet extends Controller{
                $ck->save();
 
                $response = array(
-                    'status' => true
+                    'status' => true,
+                    'photo' => asset("/files/checksheet/driver/".$filename)
                );
                return Response::json($response);
 
@@ -789,6 +802,43 @@ class CheckSheet extends Controller{
                $response = array(
                     'status' => true,
                     'photo' => asset("/files/checksheet/seal/".$filename)
+               );
+               return Response::json($response);
+
+
+          }catch (\Exception $e) {
+               $response = array(
+                    'status' => false,
+                    'message' => $e->getMessage()
+               );
+               return Response::json($response);
+          }
+     }
+
+     public function importContainerPhoto(Request $request){
+
+          try {
+               $directory = 'files\checksheet\container';
+
+               $filename = $request->input('id_checkSheet');
+               $filename = $request->input('id_checkSheet');
+
+
+
+               $file = $request->file('file_datas');
+               $name = $file->getClientOriginalName();
+               $extension = pathinfo($name, PATHINFO_EXTENSION);
+               $filename = $request->input('id_checkSheet').'.'.$extension;
+
+               $file->move($directory,$filename);
+
+               $ck = MasterChecksheet::where('id_checkSheet', '=', $request->input('id_checkSheet'))->first();
+               $ck->container_photo = $filename;
+               $ck->save();
+
+               $response = array(
+                    'status' => true,
+                    'photo' => asset("/files/checksheet/container/".$filename)
                );
                return Response::json($response);
 

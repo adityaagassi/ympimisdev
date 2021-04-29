@@ -179,6 +179,7 @@
         <p id="id_checkSheet_master_id" hidden>{{$time->id}}</p>
         <input type="hidden" id="driver_photo_hidden" value="{{ $photo }}">
         <input type="hidden" id="seal_photo_hidden" value="{{ $seal_photo }}">
+        <input type="hidden" id="container_photo_hidden" value="{{ $container_photo }}">
         <input type="hidden" id="seal_number_hidden" value="{{ $time->seal_number }}">
         <input type="hidden" id="countainer_number_hidden" value="{{ $time->countainer_number }}">
         <input type="hidden" id="shipment_condition" value="{{ $time->carier }}">
@@ -205,7 +206,7 @@
                                     <tr>
                                         <th style="vertical-align: middle;">DRIVER PHOTO</th>
                                         <th>
-                                            <input type="file" class="file" style="display:none" onchange="readURL(this);" id="input_photo">
+                                            <input accept="image/*" capture="environment" type="file" class="file" style="display:none" onchange="readURL(this);" id="input_photo">
                                             <button class="btn btn-primary btn-lg" id="btnImage" value="Photo" onclick="buttonImage(this)" style="font-size: 1.5vw; width: 300px; height: 200px;"><i class="fa  fa-file-image-o"></i>&nbsp;&nbsp;&nbsp;Photo Driver</button>
                                             <img width="150px" id="driver_photo" src="" onclick="buttonImage(this)" style="display: none; width: 300px; height: 200px;" alt="your image"/>
                                         </th>
@@ -623,22 +624,20 @@
                                     <tr>
                                         <th style="vertical-align: middle;">SEAL PHOTO</th>
                                         <th>
-                                            <input type="file" class="file" style="display:none" onchange="readSeal(this);" id="input_seal">
+                                            <input accept="image/*" capture="environment" type="file" class="file" style="display:none" onchange="readSeal(this);" id="input_seal">
                                             <button class="btn btn-primary btn-lg" id="btnSeal" onclick="buttonImage(this)" style="font-size: 1.5vw; width: 300px; height: 200px;"><i class="fa  fa-file-image-o"></i>&nbsp;&nbsp;&nbsp;Photo Seal</button>
                                             <img width="150px" id="seal_photo" src="" onclick="buttonImage(this)" style="display: none; width: 300px; height: 200px;" alt="your image"/>
                                         </th>
                                     </tr>
-
-                                </tbody>
-                                <tfoot id="closure_foot">
-                                    <tr style="background-color: rgb(252, 248, 227);">
-                                        <th colspan="2">
-                                            <button class="btn btn-success btn-lg" id="btnClosure" onclick="closure()">Submit</button>
-
+                                    <tr>
+                                        <th style="vertical-align: middle;">CONTAINER PHOTO</th>
+                                        <th>
+                                            <input accept="image/*" capture="environment" type="file" class="file" style="display:none" onchange="readContainer(this);" id="input_container">
+                                            <button class="btn btn-primary btn-lg" id="btnContainer" onclick="buttonImage(this)" style="font-size: 1.5vw; width: 300px; height: 200px;"><i class="fa  fa-file-image-o"></i>&nbsp;&nbsp;&nbsp;Photo Container</button>
+                                            <img width="150px" id="container_photo" src="" onclick="buttonImage(this)" style="display: none; width: 300px; height: 200px;" alt="your image"/>
                                         </th>
                                     </tr>
-                                </tfoot>
-
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -691,6 +690,7 @@
 
         showDriverPhoto();
         showSealPhoto();
+        showContainerPhoto();
         shipmentCondition();
 
         $('#rows1').removeAttr('hidden');
@@ -763,38 +763,34 @@
         }
     }
 
+    function showContainerPhoto() {
+        var photo = $("#container_photo_hidden").val();
+
+        if(photo != ''){
+            $("#container_photo").show();
+            $("#btnContainer").hide();
+            $("#container_photo").attr('src', photo);
+        }else{
+            $("#container_photo").hide();
+            $("#btnContainer").show();
+
+        }
+
+    }
+
     function showSealPhoto() {
         var photo = $("#seal_photo_hidden").val();
         var seal = $("#seal_number_hidden").val();
         var countainer = $("#countainer_number_hidden").val();
 
         if(photo != ''){
-            $("#closure_foot").hide();
-
             $("#seal_photo").show();
             $("#btnSeal").hide();
             $("#seal_photo").attr('src', photo);
 
-            $("#driver_name").prop("disabled", true);
-            $("#seal_number").prop("disabled", true);
-            $("#countainer_number").prop("disabled", true);
-            $("#no_pol").prop("disabled", true);
-
-            $("#closure_seal_number").prop("disabled", true);
-            $("#closure_countainer_number").prop("disabled", true);
-
             $("#closure_seal_number").val(seal);
             $("#closure_countainer_number").val(countainer);
         }else{
-            $("#closure_seal_number").prop("disabled", false);
-            $("#closure_countainer_number").prop("disabled", false);
-
-            $("#driver_name").prop("disabled", false);
-            $("#seal_number").prop("disabled", false);
-            $("#countainer_number").prop("disabled", false);
-            $("#no_pol").prop("disabled", false);
-
-            $("#closure_foot").show();
             $("#seal_photo").hide();
             $("#btnSeal").show();
 
@@ -816,7 +812,104 @@
 
     }
 
-    function closure(){
+    function saveContainer(){
+        var id_checkSheet = document.getElementById("id_checkSheet_master").innerHTML;
+
+        var formData = new FormData();
+        formData.append('id_checkSheet', id_checkSheet);    
+
+
+        formData.append('file_datas', $('#input_container').prop('files')[0]);
+        var file = $('#input_container').val().replace(/C:\\fakepath\\/i, '').split(".");
+        formData.append('extension', file[1]);
+        formData.append('photo_name', file[0]);
+
+        $.ajax({
+            url:"{{ url('import/container_photo') }}",
+            method:"POST",
+            data:formData,
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function (result, status, xhr) {
+                $("#container_photo_hidden").val(result.photo);
+                openSuccessGritter("Success", "Closure Photo Saved Successfully");
+            },
+            error: function (result, status, xhr) {
+                console.log(result.message);
+            },
+        })
+
+    }
+
+    function readContainer(input) {
+        var insert = true;
+
+        if($('#input_container').prop('files')[0] == undefined){
+            insert = false;
+        }
+
+        if($('#closure_seal_number').val() == ''){
+            insert = false;
+        }
+
+        if($('#closure_countainer_number').val() == ''){
+            insert = false;
+        }
+
+        if (insert) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    var img = $(input).closest("th").find("img");
+                    $(img).show();
+                    $(img).attr('src', e.target.result);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+
+            }
+
+            $(input).closest("th").find("button").hide();
+            saveContainer();
+        }else{
+            openErrorGritter("Error", "Complete Field Before Take Photo");
+        }
+
+    }
+
+    function saveSeal(){
+
+        var id_checkSheet = document.getElementById("id_checkSheet_master").innerHTML;
+
+        var formData = new FormData();
+        formData.append('id_checkSheet', id_checkSheet);    
+
+        formData.append('file_datas', $('#input_seal').prop('files')[0]);
+        var file = $('#input_seal').val().replace(/C:\\fakepath\\/i, '').split(".");
+        formData.append('extension', file[1]);
+        formData.append('photo_name', file[0]);
+
+        $.ajax({
+            url:"{{ url('import/seal_photo') }}",
+            method:"POST",
+            data:formData,
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function (result, status, xhr) {
+                $("#seal_photo_hidden").val(result.photo);
+                openSuccessGritter("Success", "Closure Photo Saved Successfully");
+            },
+            error: function (result, status, xhr) {
+                console.log(result.message);
+            },
+        })
+        
+    }
+
+    function readSeal(input) {
         var insert = true;
 
         if($('#input_seal').prop('files')[0] == undefined){
@@ -832,54 +925,25 @@
         }
 
         if (insert) {
-            var id_checkSheet = document.getElementById("id_checkSheet_master").innerHTML;
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
 
-            var formData = new FormData();
+                reader.onload = function(e) {
+                    var img = $(input).closest("th").find("img");
+                    $(img).show();
+                    $(img).attr('src', e.target.result);
+                };
 
-            formData.append('id_checkSheet', id_checkSheet);    
+                reader.readAsDataURL(input.files[0]);
 
+            }
 
-            formData.append('file_datas', $('#input_seal').prop('files')[0]);
-            var file = $('#input_seal').val().replace(/C:\\fakepath\\/i, '').split(".");
-            formData.append('extension', file[1]);
-            formData.append('photo_name', file[0]);
-
-            $.ajax({
-                url:"{{ url('import/seal_photo') }}",
-                method:"POST",
-                data:formData,
-                contentType: false,
-                cache: false,
-                processData: false,
-                success: function (result, status, xhr) {
-                    $('#closure_foot').hide();
-                    $("#seal_photo_hidden").val(result.photo);
-                    openSuccessGritter("Success", "Closure Photo Saved Successfully");
-                },
-                error: function (result, status, xhr) {
-                    console.log(result.message);
-                },
-            })
+            $(input).closest("th").find("button").hide();
+            saveSeal();
         }else{
-            openErrorGritter("Error", "Complete Field Before Submit");
-        }
-    }
-
-    function readSeal(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-
-            reader.onload = function(e) {
-                var img = $(input).closest("th").find("img");
-                $(img).show();
-                $(img).attr('src', e.target.result);
-            };
-
-            reader.readAsDataURL(input.files[0]);
-
+            openErrorGritter("Error", "Complete Field Before Take Photo");
         }
 
-        $(input).closest("th").find("button").hide();
     }
 
     function buttonImage(elem) {
@@ -925,7 +989,8 @@
             contentType: false,
             cache: false,
             processData: false,
-            success: function (result, status, xhr) { 
+            success: function (result, status, xhr) {
+                $("#driver_photo_hidden").val(result.photo);
                 openSuccessGritter("Success", "Driver's Photo Saved Successfully");
             },
             error: function (result, status, xhr) {
@@ -1182,20 +1247,36 @@
         }
 
         if(jumlah != semua){
-            $('#ALERT').modal('show');
+            openErrorGritter("Error", 'Condition of Cargo Not Match');
             return false;
         }
 
         var shipment_condition = $("#shipment_condition").val();
         if(shipment_condition == 'C1'){
-            var photo = $("#seal_photo_hidden").val();
+            var driver_name = $("#driver_name").val();
+            if(driver_name == ''){
+                openErrorGritter("Error", "Driver's Name Empty");
+                return false;
+            }
 
-            if(photo == ''){
-                $('#ALERT').modal('show');
+            var photo_driver = $("#driver_photo_hidden").val();
+            if(photo_driver == ''){
+                openErrorGritter("Error", "Driver's Photo Empty");
+                return false;
+            }
+
+            var photo_seal = $("#seal_photo_hidden").val();
+            if(photo_seal == ''){
+                openErrorGritter("Error", "Seal's Photo Empty");
+                return false;
+            }
+
+            var photo_container = $("#container_photo_hidden").val();
+            if(photo_container == ''){
+                openErrorGritter("Error", "Container's Photo Empty");
                 return false;
             }
         }
-
 
         document.getElementById("kirim").submit(); 
 

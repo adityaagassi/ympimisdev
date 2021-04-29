@@ -8,7 +8,7 @@ class MasterChecksheet extends Model
 {
 	use SoftDeletes;
 	protected $fillable = [
-		'no_pol','check_by','status','id_input','id_checkSheet','countainer_number', 'destination', 'invoice', 'seal_number', 'etd_sub', 'payment', 'carier', 'shipped_from', 'shipped_to', 'Stuffing_date','created_by','reason','finish_stuffing','start_stuffing','invoice_date','toward', 'ct_size', 'ycj_ref_number', 'period', 'driver_name', 'driver_photo', 'seal_photo' 
+		'no_pol','check_by','status','id_input','id_checkSheet','countainer_number', 'destination', 'invoice', 'seal_number', 'etd_sub', 'payment', 'carier', 'shipped_from', 'shipped_to', 'Stuffing_date','created_by','reason','finish_stuffing','start_stuffing','invoice_date','toward', 'ct_size', 'ycj_ref_number', 'period', 'driver_name', 'driver_photo', 'seal_photo', 'container_photo' 
 	];
 
 	public function user()

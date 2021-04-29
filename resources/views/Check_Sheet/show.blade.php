@@ -168,6 +168,7 @@
         <p id="id_checkSheet_master_id" hidden>{{$time->id}}</p>
         <input type="hidden" id="driver_photo_hidden" value="{{ $photo }}">
         <input type="hidden" id="seal_photo_hidden" value="{{ $seal_photo }}">
+        <input type="hidden" id="container_photo_hidden" value="{{ $container_photo }}">
         <input type="hidden" id="shipment_condition" value="{{ $time->carier }}">
 
 
@@ -567,6 +568,13 @@
                                             <img width="150px" id="seal_photo" src="" style="display: none; width: 300px; height: 200px;" alt="your image"/>
                                         </th>
                                     </tr>
+                                    <tr>
+                                        <th style="vertical-align: middle;">CONTAINER PHOTO</th>
+                                        <th>
+                                            <button class="btn btn-primary btn-lg" id="btnContainer" style="font-size: 1.5vw; width: 300px; height: 200px;" disabled><i class="fa  fa-file-image-o"></i>&nbsp;&nbsp;&nbsp;Photo Not Found</button>
+                                            <img width="150px" id="container_photo" src="" style="display: none; width: 300px; height: 200px;" alt="your image"/>
+                                        </th>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -652,6 +660,7 @@
 
         showDriverPhoto();
         showSealPhoto();
+        showContainerPhoto();
         shipmentCondition();
 
     });
@@ -671,6 +680,19 @@
 
             $('#seal_sea').hide();
             $('#seal_non_sea').show();
+        }
+    }
+
+    function showContainerPhoto() {
+        var photo = $("#container_photo_hidden").val();
+       
+        if(photo != ''){
+            $("#container_photo").show();
+            $("#btnContainer").hide();
+            $("#container_photo").attr('src', photo);
+        }else{
+            $("#container_photo").hide();
+            $("#btnContainer").show();
         }
     }
 
