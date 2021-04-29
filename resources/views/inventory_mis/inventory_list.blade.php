@@ -311,7 +311,7 @@
                     body += "<td>"+value.location+"</td>";
                     body += "<td>"+value.qty+"</td>";
                     body += "<td>"+value.used_by+"</td>";
-                    body += "<td><button class='btn btn-primary btn-sm' onclick='openModalUpdate("+value.id+")'>Edit</button>&nbsp;<button class='btn btn-danger btn-sm' onclick='deleting("+value.id+")'>Delete</button>&nbsp;<button class='btn btn-warning btn-sm' onclick='printing("+value.id+")'><i class='fa fa-print'></i> Print</button></td>";
+                    body += "<td><button class='btn btn-primary btn-sm' onclick='openModalUpdate("+value.id+")'>Edit</button>&nbsp;<button class='btn btn-danger btn-sm' onclick='deleting("+value.id+")'>Delete</button>&nbsp;<button class='btn btn-warning btn-sm' onclick='print2("+value.id+")'><i class='fa fa-print'></i> Print</button></td>";
                     body += "</tr>";
 
                     arr_ctg.push(value.category);
@@ -559,6 +559,30 @@
                     get_inv();
                })
           }
+     }
+
+     function printing(id) {
+          var ids = [];
+
+          ids.push(id);
+
+          var data = {
+               id : ids
+          }
+
+          window.open('{{ url("print/inventory_mis/") }}/'+id, '_blank');
+     }
+
+
+     function print2(id) {
+
+          newwindow = window.open('{{ url("print2/inventory_mis/") }}'+'/'+id, 'height=250,width=450');
+
+          if (window.focus) {
+               newwindow.focus();
+          }
+
+          return false;
      }
 
      function unique(list) {

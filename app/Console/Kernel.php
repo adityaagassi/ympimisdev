@@ -116,6 +116,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('sync:shift_sunfish')->weekdays()->dailyAt('12:30');
         $schedule->command('sync:shift_sunfish')->weekdays()->dailyAt('14:30');
         $schedule->command('sync:shift_sunfish')->weekdays()->dailyAt('16:30');
+        $schedule->command('sync:shift_sunfish')->weekdays()->dailyAt('17:00');
         $schedule->command('sync:shift_sunfish')->weekdays()->dailyAt('19:30');
         $schedule->command('email:kaizen')->weekdays()->dailyAt('08:45');
         $schedule->command('email:hrq')->weekdays()->dailyAt('07:45');
