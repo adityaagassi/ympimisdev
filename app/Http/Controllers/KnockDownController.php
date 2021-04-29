@@ -2164,7 +2164,7 @@ class KnockDownController extends Controller{
 	}
 
 	public function fetchKDNew($id){
-		$dateto = date('Y-m-d', strtotime('+14 day'));
+		$dateto = date('Y-m-d', strtotime('+21 day'));
 
 		$storage = '';
 		$order = '';
