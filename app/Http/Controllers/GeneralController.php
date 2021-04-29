@@ -2788,7 +2788,8 @@ public function fetchOxymeterHistory(Request $request)
 	->where('purpose_code', '=', 'Oxymeter');
 
 	if(strlen($request->get('username')) > 0 ){
-		$oxy_log = $oxy_log->where('general_attendance_logs.created_by', '=', $request->get('username'));
+		$dpt = EmployeeSync::where('employee_id', '=', $request->get('username'))->first();
+		$oxy_log = $oxy_log->where('employee_syncs.department', '=', $dpt->department);
 	}
 
 	if(strlen($request->get('dt')) > 0 ){
