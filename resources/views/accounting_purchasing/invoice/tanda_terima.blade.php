@@ -180,19 +180,16 @@
 							</div>
 						</div>
 						<div class="col-md-12" style="margin-bottom: 5px;">
-							<!-- <label for="surat_jalan" class="col-sm-3 control-label">Surat Jalan</label>
-							<div class="col-sm-9">
-								<input type="text" class="form-control pull-right" id="surat_jalan" name="surat_jalan" placeholder="Surat Jalan">
-							</div> -->
-
 							<label for="surat_jalan" class="col-sm-3 control-label">Surat Jalan</label>
 							<div class="col-sm-9">
-								<select class="form-control select4" id="surat_jalan" name="surat_jalan" data-placeholder='Pilih Surat Jalan' style="width: 100%">
+								<!-- <select class="form-control select4" id="surat_jalan" name="surat_jalan" data-placeholder='Pilih Surat Jalan' style="width: 100%">
 									<option value="">&nbsp;</option>
 									@foreach($surat_jalan as $sj)
 									<option value="{{$sj->invoice_no}}">{{$sj->invoice_no}}</option>
 									@endforeach
-								</select>
+								</select> -->
+
+								<input type="text"  class="form-control" id="surat_jalan" name="surat_jalan" placeholder="Surat Jalan">
 							</div>
 						</div>
 						<div class="col-md-12" style="margin-bottom: 5px;">
@@ -208,7 +205,7 @@
 							</div>
 						</div>
 						<div class="col-md-12" style="margin-bottom: 5px;">
-							<label for="faktur_pajak" class="col-sm-3 control-label">Faktur Pajak<span class="text-red">*</span></label>
+							<label for="faktur_pajak" class="col-sm-3 control-label">Faktur Pajak</label>
 							<div class="col-sm-9">
 								<input type="text" class="form-control pull-right" id="faktur_pajak" name="faktur_pajak"  placeholder="Faktur Pajak">
 							</div>
@@ -219,12 +216,13 @@
 						<div class="col-md-12" style="margin-bottom: 5px;">
 							<label for="po_number" class="col-sm-3 control-label">PO Number<span class="text-red">*</span></label>
 							<div class="col-sm-9">
-								<select class="form-control select4" id="po_number" name="po_number" data-placeholder='Pilih Nomor PO' style="width: 100%">
+								<!-- <select class="form-control select4" id="po_number" name="po_number" data-placeholder='Pilih Nomor PO' style="width: 100%">
 									<option value="">&nbsp;</option>
 									@foreach($no_po as $np)
 									<option value="{{$np->no_po_sap}}">{{$np->no_po_sap}}</option>
 									@endforeach
-								</select>
+								</select> -->
+								<input type="text"  class="form-control" id="po_number" name="po_number" placeholder="PO Number">
 							</div>
 						</div>
 						<div class="col-md-12" style="margin-bottom: 5px;">
@@ -395,14 +393,14 @@
 				if(result.status){
 
 					$('#supplier_code').html('');
-					$('#surat_jalan').html('');
-					$('#po_number').html('');
+					// $('#surat_jalan').html('');
+					// $('#po_number').html('');
 					$('#payment_term').html('');
 					$('#currency').html('');
 
 					var supplier_code = "";
-					var surat_jalan = "";
-					var po_number = "";
+					// var surat_jalan = "";
+					// var po_number = "";
 					var payment_term = "";
 					var currency = "";
 
@@ -423,34 +421,34 @@
 					$('#invoice_no').val(result.invoice.invoice_no);
 					$('#kwitansi').val(result.invoice.kwitansi);
 
-					$.each(result.surat_jalan, function(key, value){
-						if(value.invoice_no == result.invoice.surat_jalan){
-							surat_jalan += '<option value="'+value.invoice_no+'" selected>'+value.invoice_no+'</option>';
-						}
-						else{
-							surat_jalan += '<option value="'+value.invoice_no+'">'+value.invoice_no+'</option>';
-						}
-					});
+					// $.each(result.surat_jalan, function(key, value){
+					// 	if(value.invoice_no == result.invoice.surat_jalan){
+					// 		surat_jalan += '<option value="'+value.invoice_no+'" selected>'+value.invoice_no+'</option>';
+					// 	}
+					// 	else{
+					// 		surat_jalan += '<option value="'+value.invoice_no+'">'+value.invoice_no+'</option>';
+					// 	}
+					// });
 
 
-					$('#surat_jalan').append(surat_jalan);
-
-					// $('#surat_jalan').val(result.invoice.surat_jalan);
+					// $('#surat_jalan').append(surat_jalan);
+					$('#surat_jalan').val(result.invoice.surat_jalan);
 					
 					$('#bap').val(result.invoice.bap);
 					$('#npwp').val(result.invoice.npwp);
 					$('#faktur_pajak').val(result.invoice.faktur_pajak);
 
-					$.each(result.no_po, function(key, value){
-						if(value.no_po_sap == result.invoice.po_number){
-							po_number += '<option value="'+value.no_po_sap+'" selected>'+value.no_po_sap+'</option>';
-						}
-						else{
-							po_number += '<option value="'+value.no_po_sap+'">'+value.no_po_sap+'</option>';
-						}
-					});
+					// $.each(result.no_po, function(key, value){
+					// 	if(value.no_po_sap == result.invoice.po_number){
+					// 		po_number += '<option value="'+value.no_po_sap+'" selected>'+value.no_po_sap+'</option>';
+					// 	}
+					// 	else{
+					// 		po_number += '<option value="'+value.no_po_sap+'">'+value.no_po_sap+'</option>';
+					// 	}
+					// });
 
-					$('#po_number').append(po_number);
+					// $('#po_number').append(po_number);
+					$('#po_number').val(result.invoice.po_number);
 
 
 					$.each(result.payment_term, function(key, value){
@@ -505,7 +503,7 @@
 		$('#loading').show();
 
 		if(id == 'new'){
-			if($("#invoice_date").val() == "" || $('#supplier_code').val() == null || $('#invoice_no').val() == "" || $('#faktur_pajak').val() == "" || $('#po_number').val() == "" || $('#payment_term').val() == "" || $('#currency').val() == "" || $('#amount').val() == "" || $('#do_date').val() == "" || $('#due_date').val() == ""){
+			if($("#invoice_date").val() == "" || $('#supplier_code').val() == null || $('#invoice_no').val() == "" || $('#po_number').val() == "" || $('#payment_term').val() == "" || $('#currency').val() == "" || $('#amount').val() == "" || $('#do_date').val() == "" || $('#due_date').val() == ""){
 				
 				$('#loading').hide();
 				openErrorGritter('Error', "Please fill field with (*) sign.");
@@ -558,7 +556,7 @@
 			});
 		}
 		else{
-			if($("#invoice_date").val() == "" || $('#supplier_code').val() == "" || $('#invoice_no').val() == "" || $('#faktur_pajak').val() == "" || $('#po_number').val() == "" || $('#payment_term').val() == "" || $('#currency').val() == "" || $('#amount').val() == "" || $('#do_date').val() == "" || $('#due_date').val() == ""){
+			if($("#invoice_date").val() == "" || $('#supplier_code').val() == "" || $('#invoice_no').val() == "" || $('#po_number').val() == "" || $('#payment_term').val() == "" || $('#currency').val() == "" || $('#amount').val() == "" || $('#do_date').val() == "" || $('#due_date').val() == ""){
 				
 				$('#loading').hide();
 				openErrorGritter('Error', "Please fill field with (*) sign.");
@@ -620,11 +618,11 @@
 		$("#supplier_name").val('');
 		$('#invoice_no').val('');
 		$('#kwitansi').val('');
-		$('#surat_jalan').val('').trigger('change');
+		$('#surat_jalan').val('');
 		$('#bap').val("");
 		$('#npwp').val("");
 		$('#faktur_pajak').val('');
-		$("#po_number").val('').trigger('change');
+		$("#po_number").val('');
 		$("#payment_term").val('').trigger('change');
 		$("#currency").val('').trigger('change');
 		$('#amount').val('');

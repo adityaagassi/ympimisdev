@@ -151,11 +151,11 @@
 				</tr>
 				<tr>
 					<td colspan="7"></td>
-					<td colspan="3"><center>Amelia Novrinta</center></td>
+					<td colspan="3"><center>Shega Erik Wicaksono</center></td>
 				</tr>
 				<tr>
 					<td colspan="7"></td>
-					<td colspan="3"><center>Telp: 0343-740290 Ext:1152</center></td>
+					<td colspan="3"><center>Telp: 0343-740290 Ext:1129</center></td>
 				</tr>
 				<tr>
 					<td colspan="10">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</td>
