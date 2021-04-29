@@ -2871,6 +2871,7 @@ Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 
 	Route::post('import/driver_photo', 'CheckSheet@importDriverPhoto');
 	Route::post('import/seal_photo', 'CheckSheet@importSealPhoto');
+	Route::post('import/container_photo', 'CheckSheet@importContainerPhoto');
 	Route::post('closure/check_checksheet', 'CheckSheet@check_nomor');
 
 
@@ -4241,6 +4242,7 @@ Route::get('index/maintenance/mttbf/report', 'MaintenanceController@indexMttbfRe
 Route::get('fetch/maintenance/mttbf/list', 'MaintenanceController@fetchMttbf');
 
 Route::get('index/maintenance/machine_report/graph', 'MaintenanceController@indexMachineGraph');
+Route::get('fetch/maintenance/machine_report/graph', 'MaintenanceController@fetchMachineBreakdownGraph');
 
 // -------------------------      MTTR           -------------------
 // Route::get('index/maintenance/mttr/list', 'MaintenanceController@indexMttr');
@@ -4644,7 +4646,6 @@ Route::get('fetch/finish/job', 'WarehouseNewController@finish_job');
 Route::get('fetch/detail/job', 'WarehouseNewController@createDetail');
 Route::get('index/display/job', 'WarehouseNewController@display_job');
 Route::get('fetch/import/job', 'WarehouseNewController@fetch_import');
-Route::get('fetch/history/job', 'WarehouseNewController@fetch_history');
 Route::post('post/save/penataan', 'WarehouseNewController@savePenataan');
 Route::get('index/drop/exim', 'WarehouseNewController@indexDropExim');
 Route::get('fetch/list/drop/exim', 'WarehouseNewController@fetchDropExim');
@@ -4681,6 +4682,9 @@ Route::post('post/pengantaran/lokasi_awal', 'WarehouseNewController@updateLokasi
 Route::get('fetch/display_internal', 'WarehouseNewController@fetch_internal_wr');
 Route::get('fetch/detail/penerimaan', 'WarehouseNewController@fetchInternalPenerimaan');
 Route::get('fetch/detail/pelayanan/internal', 'WarehouseNewController@fetchInternalPelayanan');
+Route::get('fetch/resume', 'WarehouseNewController@fetch_internal_wr');
+Route::get('fetch/finish/internal', 'WarehouseNewController@fetchHistoryFinish');
+Route::get('fetch/history/jobs', 'WarehouseNewController@detail_history');
 
 
 //Sanding
