@@ -225,7 +225,7 @@
       }
       else{
         openErrorGritter('Error!', 'Nomor Slip Tidak Sesuai.');
-        $("#slip_scrap_number").val().replace(/[^0-9]/gi, '');
+        $("#slip_scrap_number").val('');
         audio_error.play();
       }
     }
@@ -335,6 +335,9 @@
   }
 
   // var currClosureID = '';
+  function reset(){
+    $('#slip_scrap_number').val("");
+  }
 
 
   function scanScrap(){
@@ -346,17 +349,17 @@
 
     $.get('{{ url("scan/scrap_warehouse") }}', data,  function(result, status, xhr){
       if(result.status){
+        openSuccessGritter('Success!', result.message);
+        audio_ok.play();
         $("#slip_scrap_number").val("");
         $("#slip_scrap_number").focus();
-        // $('#scrap_detail').DataTable().ajax.reload();
         fetchScrapDetail();
-        audio_ok.play();
-        openSuccessGritter('Success!', result.message);
       }else{
         openErrorGritter('Error!', result.message);
         audio_error.play();
         $("#slip_scrap_number").val("");
         $("#slip_scrap_number").focus();
+        fetchScrapDetail();
       }
     });
   }

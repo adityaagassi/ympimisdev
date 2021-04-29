@@ -9,12 +9,16 @@
 	}
 	thead>tr>th{
 		text-align:center;
+		overflow:hidden;
 	}
 	tbody>tr>td{
 		text-align:center;
 	}
 	tfoot>tr>th{
 		text-align:center;
+	}
+	th:hover {
+		overflow: visible;
 	}
 	td:hover {
 		overflow: visible;
@@ -26,12 +30,27 @@
 		border:1px solid black;
 	}
 	table.table-bordered > tbody > tr > td{
-		border:1px solid rgb(211,211,211);
-		padding-top: 0;
-		padding-bottom: 0;
+		border:1px solid black;
+		vertical-align: middle;
+		padding:0;
+		font-size: 13px;
+		text-align: center;
 	}
 	table.table-bordered > tfoot > tr > th{
-		border:1px solid rgb(211,211,211);
+		border:1px solid black;
+		padding:0;
+	}
+	td{
+		overflow:hidden;
+		text-overflow: ellipsis;
+	}
+
+	.table-striped > tbody > tr:nth-child(2n+1) > td, .table-striped > tbody > tr:nth-child(2n+1) > th {
+		background-color: #ffd8b7;
+	}
+
+	.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+		background-color: #FFD700;
 	}
 	#loading, #error { display: none; }
 	
@@ -65,7 +84,7 @@
 					<div class="row">
 						<div class="col-md-4 col-md-offset-2">
 							<div class="form-group">
-								<label>Slip Printed From</label>
+								<label>Received From</label>
 								<div class="input-group date">
 									<div class="input-group-addon">
 										<i class="fa fa-calendar"></i>
@@ -76,7 +95,7 @@
 						</div>
 						<div class="col-md-4">
 							<div class="form-group">
-								<label>Slip Printed To</label>
+								<label>Received To</label>
 								<div class="input-group date">
 									<div class="input-group-addon">
 										<i class="fa fa-calendar"></i>
@@ -154,7 +173,7 @@
 					<div class="row">
 						<div class="col-md-12" style="overflow-x: auto;">
 							<table id="logTable" class="table table-bordered table-striped table-hover" style="width: 100%;">
-								<thead style="background-color: rgba(126,86,134,.7);" >
+								<thead style="background-color: rgb(126,86,134); color: #FFD700;">
 									<tr>
 										<th style="width: 0.1%">No Slip</th>
 										<th style="width: 0.1%">Material</th>
@@ -204,6 +223,7 @@
 	});
 
 	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
 		$('#datefrom').datepicker({
 			autoclose: true,
 			todayHighlight: true
