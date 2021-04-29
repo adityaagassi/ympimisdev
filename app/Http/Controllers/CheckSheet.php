@@ -727,10 +727,10 @@ class CheckSheet extends Controller{
 
 
           $response = array(
-              'status' => true,
-              'message' => 'Update Success',
-              'reason' => 'ok'
-         );
+           'status' => true,
+           'message' => 'Update Success',
+           'reason' => 'ok'
+      );
           return Response::json($response);
      }
 
@@ -787,7 +787,8 @@ class CheckSheet extends Controller{
                $ck->save();
 
                $response = array(
-                    'status' => true
+                    'status' => true,
+                    'photo' => asset("/files/checksheet/seal/".$filename)
                );
                return Response::json($response);
 

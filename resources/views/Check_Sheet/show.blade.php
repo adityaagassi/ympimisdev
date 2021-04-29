@@ -168,11 +168,13 @@
         <p id="id_checkSheet_master_id" hidden>{{$time->id}}</p>
         <input type="hidden" id="driver_photo_hidden" value="{{ $photo }}">
         <input type="hidden" id="seal_photo_hidden" value="{{ $seal_photo }}">
+        <input type="hidden" id="shipment_condition" value="{{ $time->carier }}">
+
 
         <div class="tab-content no-padding">
             <div class="chart tab-pane active" id="seal" style="position: relative;">
                 <div class="box-body">
-                    <div class="col-xs-8 col-xs-offset-2">
+                    <div class="col-xs-8 col-xs-offset-2" id="driver_sea">
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped">
                                 <thead style="background-color: rgba(126,86,134,.7);">
@@ -217,7 +219,11 @@
                             </table>
                         </div>
                     </div>
-
+                    <div class="col-xs-8 col-xs-offset-2" id="driver_non_sea" style="margin-bottom: 100px; margin-top: 100px;">
+                        <center>
+                            <h1 style="text-transform: uppercase;">Seal information is only for shipping condition by Sea</h1>
+                        </center>
+                    </div>
                 </div>
             </div>
 
@@ -533,7 +539,7 @@
 
             <div class="chart tab-pane" id="closure" style="position: relative;">
                 <div class="box-body">
-                    <div class="col-xs-8 col-xs-offset-2">
+                    <div class="col-xs-8 col-xs-offset-2" id="seal_sea">
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped">
                                 <thead style="background-color: rgba(126,86,134,.7);">
@@ -557,7 +563,7 @@
                                     <tr>
                                         <th style="vertical-align: middle;">SEAL PHOTO</th>
                                         <th>
-                                            <button class="btn btn-primary btn-lg" id="btnSeal" style="font-size: 1.5vw; width: 300px; height: 200px;"><i class="fa  fa-file-image-o"></i>&nbsp;&nbsp;&nbsp;Photo Not Found</button>
+                                            <button class="btn btn-primary btn-lg" id="btnSeal" style="font-size: 1.5vw; width: 300px; height: 200px;" disabled><i class="fa  fa-file-image-o"></i>&nbsp;&nbsp;&nbsp;Photo Not Found</button>
                                             <img width="150px" id="seal_photo" src="" style="display: none; width: 300px; height: 200px;" alt="your image"/>
                                         </th>
                                     </tr>
@@ -565,7 +571,11 @@
                             </table>
                         </div>
                     </div>
-
+                    <div class="col-xs-8 col-xs-offset-2" id="seal_non_sea" style="margin-bottom: 100px; margin-top: 100px;">
+                        <center>
+                            <h1 style="text-transform: uppercase;">Closure information is only for shipping condition by Sea</h1>
+                        </center>
+                    </div>
                 </div>
             </div>
 
@@ -642,7 +652,27 @@
 
         showDriverPhoto();
         showSealPhoto();
+        shipmentCondition();
+
     });
+
+    function shipmentCondition() {
+        var shipment_condition = $("#shipment_condition").val();
+        console.log(shipment_condition);
+        if(shipment_condition == 'C1'){
+            $('#driver_sea').show();
+            $('#driver_non_sea').hide();
+
+            $('#seal_sea').show();
+            $('#seal_non_sea').hide();
+        }else{
+            $('#driver_sea').hide();
+            $('#driver_non_sea').show();
+
+            $('#seal_sea').hide();
+            $('#seal_non_sea').show();
+        }
+    }
 
     function showSealPhoto() {
         var photo = $("#seal_photo_hidden").val();

@@ -151,9 +151,6 @@
         </div>
     </div>
 
-    
-
-
     <div class="nav-tabs-custom">
         <ul class="nav nav-tabs pull-left">
             <li class="active">
@@ -184,12 +181,13 @@
         <input type="hidden" id="seal_photo_hidden" value="{{ $seal_photo }}">
         <input type="hidden" id="seal_number_hidden" value="{{ $time->seal_number }}">
         <input type="hidden" id="countainer_number_hidden" value="{{ $time->countainer_number }}">
+        <input type="hidden" id="shipment_condition" value="{{ $time->carier }}">
 
         <div class="tab-content no-padding">
 
             <div class="chart tab-pane active" id="seal" style="position: relative;">
                 <div class="box-body">
-                    <div class="col-xs-8 col-xs-offset-2">
+                    <div class="col-xs-8 col-xs-offset-2" id="driver_sea">
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped">
                                 <thead style="background-color: rgba(126,86,134,.7);">
@@ -235,7 +233,11 @@
                             </table>
                         </div>
                     </div>
-
+                    <div class="col-xs-8 col-xs-offset-2" id="driver_non_sea" style="margin-bottom: 100px; margin-top: 100px;">
+                        <center>
+                            <h1 style="text-transform: uppercase;">Seal information is only for shipping condition by Sea</h1>
+                        </center>
+                    </div>
                 </div>
             </div>
 
@@ -597,7 +599,7 @@
 
             <div class="chart tab-pane" id="closure" style="position: relative;">
                 <div class="box-body">
-                    <div class="col-xs-8 col-xs-offset-2">
+                    <div class="col-xs-8 col-xs-offset-2" id="seal_sea">
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped">
                                 <thead style="background-color: rgba(126,86,134,.7);">
@@ -640,32 +642,38 @@
                             </table>
                         </div>
                     </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal modal-warning fade" id="ALERT">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Warning</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>Data Not Match</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline pull-right" data-dismiss="modal">Close</button>
-
+                    <div class="col-xs-8 col-xs-offset-2" id="seal_non_sea" style="margin-bottom: 100px; margin-top: 100px;">
+                        <center>
+                            <h1 style="text-transform: uppercase;">Closure information is only for shipping condition by Sea</h1>
+                        </center>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    
 </section>
+
+<div class="modal modal-warning fade" id="ALERT">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Warning</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Data Not Match</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-right" data-dismiss="modal">Close</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 @endsection
 @section('scripts')
@@ -683,6 +691,7 @@
 
         showDriverPhoto();
         showSealPhoto();
+        shipmentCondition();
 
         $('#rows1').removeAttr('hidden');
         var count = document.getElementById("count").value;
@@ -736,6 +745,24 @@
 
     });
 
+    function shipmentCondition() {
+        var shipment_condition = $("#shipment_condition").val();
+        console.log(shipment_condition);
+        if(shipment_condition == 'C1'){
+            $('#driver_sea').show();
+            $('#driver_non_sea').hide();
+
+            $('#seal_sea').show();
+            $('#seal_non_sea').hide();
+        }else{
+            $('#driver_sea').hide();
+            $('#driver_non_sea').show();
+
+            $('#seal_sea').hide();
+            $('#seal_non_sea').show();
+        }
+    }
+
     function showSealPhoto() {
         var photo = $("#seal_photo_hidden").val();
         var seal = $("#seal_number_hidden").val();
@@ -772,7 +799,7 @@
             $("#btnSeal").show();
 
         }
-        
+
     }
 
     function showDriverPhoto() {
@@ -786,12 +813,12 @@
             $("#driver_photo").hide();
             $("#btnImage").show();
         }
-        
+
     }
 
     function closure(){
         var insert = true;
-        
+
         if($('#input_seal').prop('files')[0] == undefined){
             insert = false;
         }
@@ -803,14 +830,14 @@
         if($('#closure_countainer_number').val() == ''){
             insert = false;
         }
-        
+
         if (insert) {
             var id_checkSheet = document.getElementById("id_checkSheet_master").innerHTML;
 
             var formData = new FormData();
 
             formData.append('id_checkSheet', id_checkSheet);    
-            
+
 
             formData.append('file_datas', $('#input_seal').prop('files')[0]);
             var file = $('#input_seal').val().replace(/C:\\fakepath\\/i, '').split(".");
@@ -826,6 +853,7 @@
                 processData: false,
                 success: function (result, status, xhr) {
                     $('#closure_foot').hide();
+                    $("#seal_photo_hidden").val(result.photo);
                     openSuccessGritter("Success", "Closure Photo Saved Successfully");
                 },
                 error: function (result, status, xhr) {
@@ -1155,9 +1183,22 @@
 
         if(jumlah != semua){
             $('#ALERT').modal('show');
-        }else{
-            document.getElementById("kirim").submit(); 
+            return false;
         }
+
+        var shipment_condition = $("#shipment_condition").val();
+        if(shipment_condition == 'C1'){
+            var photo = $("#seal_photo_hidden").val();
+
+            if(photo == ''){
+                $('#ALERT').modal('show');
+                return false;
+            }
+        }
+
+
+        document.getElementById("kirim").submit(); 
+
     }
 
     function totalconfirm(){
