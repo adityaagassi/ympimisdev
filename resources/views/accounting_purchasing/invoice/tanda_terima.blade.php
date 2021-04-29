@@ -49,10 +49,51 @@
 	</div>
 	<div class="box">
 		<div class="box-header">
-			<h3 class="box-title">List Tanda Terima<span class="text-purple"> ??</span></span></h3>
-			<button class="btn btn-success pull-right" onclick="newData('new')">Buat Tanda Terima</button>
+			<input type="hidden" value="{{csrf_token()}}" name="_token" />
+			<form method="GET" action="{{ url("export/invoice/tanda_terima") }}">
+				<div class="col-md-2" style="padding: 0">
+					<div class="form-group">
+						<label>Date From</label>
+						<div class="input-group date">
+							<div class="input-group-addon">
+								<i class="fa fa-calendar"></i>
+							</div>
+							<input type="text" class="form-control pull-right datepicker" id="datefrom" name="datefrom">
+						</div>
+					</div>
+				</div>
+				<div class="col-md-2">
+					<div class="form-group">
+						<label>Date To</label>
+						<div class="input-group date">
+							<div class="input-group-addon">
+								<i class="fa fa-calendar"></i>
+							</div>
+							<input type="text" class="form-control pull-right datepicker" id="dateto" name="dateto">
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<div class="col-md-4" style="padding-right: 0;">
+							<label style="color: white;"> x</label>
+							<button type="submit" class="btn btn-primary form-control"><i class="fa fa-download"></i> Export List Tanda Terima</button>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-2">
+					<div class="form-group">
+							<label style="color: white;"> x</label>
+							<a class="btn btn-success pull-right" style="width: 100%" onclick="newData('new')"><i class="fa fa-plus"></i> &nbsp;Buat Tanda Terima</a>
+					</div>
+				</div>
+			</form>
 		</div>
 		<div class="box-body">
+			<div class="row">
+				
+			</div>
+
 			<table id="listTable" class="table table-bordered table-striped table-hover">
 				<thead style="background-color: rgba(126,86,134,.7);">
 					<tr>
@@ -303,14 +344,14 @@
 
     	$('body').toggleClass("sidebar-collapse");
 
-		$('.datepicker').datepicker({
+		fetchTable();
+	});
+
+	$('.datepicker').datepicker({
 			autoclose: true,
 			format: "yyyy-mm-dd",
 			todayHighlight: true,	
 		});
-
-		fetchTable();
-	});
 
 	$('.select2').select2({
 		dropdownAutoWidth : true,

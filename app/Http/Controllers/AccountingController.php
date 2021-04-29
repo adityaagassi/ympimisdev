@@ -675,9 +675,17 @@ class AccountingController extends Controller
             {
                 return '<label class="label label-danger">Not Sent</a>';
             }
-            else if($pr->status == "approval")
+            else if($pr->posisi == "manager" && $pr->status == "approval")
             {
-                return '<label class="label label-warning">Approval</a>';
+                return '<label class="label label-warning">Approval Manager</a>';
+            }
+            else if($pr->posisi == "dgm" && $pr->status == "approval")
+            {
+                return '<label class="label label-warning">Approval DGM</a>';
+            }
+            else if($pr->posisi == "gm" && $pr->status == "approval")
+            {
+                return '<label class="label label-warning">Approval GM</a>';
             }
             else if ($pr->status == "approval_acc")
             {
@@ -12642,8 +12650,42 @@ public function report_invoice($id){
 
     $pdf->loadView('accounting_purchasing.invoice.report_invoice', array(
         'invoice' => $invoice,
+        'id' => $id
     ));
     return $pdf->stream("Invoice ".$invoice->no_po. ".pdf");
+}
+
+public function export_tanda_terima(Request $request){
+
+    $time = date('d-m-Y H;i;s');
+    $tanggal = "";
+
+    if (strlen($request->get('datefrom')) > 0)
+    {
+        $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+        $tanggal = "and invoice_date >= '" . $datefrom . " 00:00:00' ";
+        if (strlen($request->get('dateto')) > 0)
+        {
+            $dateto = date('Y-m-d', strtotime($request->get('dateto')));
+            $tanggal = $tanggal . "and invoice_date  <= '" . $dateto . " 23:59:59' ";
+        }
+    }
+
+    $tanda_terima = db::select(
+        "Select acc_invoices.* from acc_invoices join acc_suppliers on acc_invoices.supplier_code = acc_suppliers.vendor_code WHERE acc_invoices.deleted_at IS NULL " . $tanggal . " order by acc_invoices.id ASC");
+        // and acc_purchase_orders.posisi = 'pch' and acc_purchase_orders.`status` = 'not_sap' and no_po_sap is null 
+
+    $data = array(
+        'tanda_terima' => $tanda_terima
+    );
+
+    ob_clean();
+
+    Excel::create('Tanda Terima List '.$time, function($excel) use ($data){
+        $excel->sheet('Location', function($sheet) use ($data) {
+          return $sheet->loadView('accounting_purchasing.invoice.invoice_excel', $data);
+      });
+    })->export('xlsx');
 }
 
     //=============================================================//
@@ -12659,6 +12701,17 @@ public function indexFixedAsset()
         'title' => $title,
         'title_jp' => $title_jp
     ))->with('page', 'Fixed Asset Index');  
+}
+
+public function indexAssetRegistration()
+{
+    $title = 'Asset Registration Form';
+    $title_jp = '??';
+
+    return view('fixed_asset.form.registration_form', array(
+        'title' => $title,
+        'title_jp' => $title_jp
+    ))->with('page', 'Fixed Asset Registration Form');  
 }
 
 }

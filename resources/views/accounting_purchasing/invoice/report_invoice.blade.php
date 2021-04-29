@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	<style type="text/css">
 		body{
-			font-size: 10px;
+			font-size: 12px;
 		}
 
 		#isi > thead > tr > td {
@@ -50,12 +50,9 @@
 					<td colspan="10" style="font-weight: bold;font-size: 13px">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
 				</tr>
 				<tr>
-					<td colspan="10">&nbsp;</td>
-				</tr>
-				<tr>
 					<td colspan="6" style="text-align: left;font-size: 11px">Jl. Rembang Industri I/36 Kawasan Industri PIER - Pasuruan</td>
 					<td colspan="1" style="text-align: left;font-size: 11px;width: 16%"><b>Nomor Tanda Terima</b></td>
-					<td colspan="3" style="text-align: left;font-size: 11px"><b>: {{$invoice->id}}</b></td>
+					<td colspan="3" style="text-align: left;font-size: 11px"><b>: {{$id}}</b></td>
 				</tr>
 				<tr>
 					<td colspan="6" style="text-align: left;font-size: 11px">Phone : (0343) 740290 Fax : (0343) 740291</td>
@@ -67,10 +64,6 @@
 				</tr>
 
 				<tr>
-					<td colspan="10"><br></td>
-				</tr>
-
-				<tr>
 					<td colspan="10" style="text-align: center;font-size: 30px"><b><u>Tanda Terima</u></b></td>
 				</tr>
 
@@ -79,7 +72,7 @@
 				</tr>
 
 				<tr>
-					<td colspan="10">Yang Bertanda Tangan di bawah ini telah menerima, dokumen dari :</td>
+					<td colspan="10" >Yang Bertanda Tangan di bawah ini telah menerima, dokumen dari :</td>
 				</tr>
 
 				<tr>
@@ -126,7 +119,8 @@
 				</tr>
 				<tr>
 					<td colspan="2"><b>Pembayaran / Jatuh Tempo</b></td>
-					<td colspan="8">: {{$invoice->payment_term}}</td>
+					<td colspan="4">: {{$invoice->payment_term}}</td>
+					<td colspan="4"><b>/ (<?= date('d-M-y', strtotime($invoice->due_date)) ?>)</b></td>
 				</tr>
 				<tr>
 					<td colspan="3"><b>&nbsp;&nbsp;&nbsp;1. No.Kwitansi/Official Receipt</b></td>
@@ -145,23 +139,26 @@
 					<td colspan="7">: {{$invoice->faktur_pajak}}</td>
 				</tr>	
 				<tr>
-					<td colspan="8"></td>
-					<td colspan="2"><center>Pasuruan, <?= date('d-M-y', strtotime($invoice->invoice_date)) ?></center></td>
+					<td colspan="7"></td>
+					<td colspan="3"><center>Pasuruan, <?= date('d-M-y', strtotime($invoice->invoice_date)) ?></center></td>
 				</tr>
 				<tr>
-					<td colspan="8"></td>
-					<td colspan="2"><center>Penerima</center></td>
+					<td colspan="7"></td>
+					<td colspan="3"><center>Penerima</center></td>
 				</tr>
 				<tr>
-					<td colspan="10"><br></td>
+					<td colspan="10"><br><br></td>
 				</tr>
 				<tr>
-					<td colspan="8"></td>
-					<td colspan="2"><center>Amelia Novrinta</center></td>
+					<td colspan="7"></td>
+					<td colspan="3"><center>Amelia Novrinta</center></td>
 				</tr>
 				<tr>
-					<td colspan="8"></td>
-					<td colspan="2"><center>Telp.</center></td>
+					<td colspan="7"></td>
+					<td colspan="3"><center>Telp: 0343-740290 Ext:1152</center></td>
+				</tr>
+				<tr>
+					<td colspan="10">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</td>
 				</tr>
 
 			</thead>
