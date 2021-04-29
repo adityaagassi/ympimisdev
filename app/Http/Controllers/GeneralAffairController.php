@@ -535,6 +535,27 @@ public function inputBentoOrder(Request $request){
 		$charge_to = User::where('username', '=', $request->get('charge_to'))->first();
 		$bento_lists = array();
 
+		$check_quota = array();
+
+		foreach($order_lists as $order_list) {
+			$order = explode("_", $order_list);
+
+			array_push($check_quota, $order[1]);
+		}
+
+		$check = array_count_values($check_quota);
+
+		foreach ($check as $key => $val) {
+			$bento_quota = BentoQuota::where('due_date', '=', $key)->first();
+			if($bento_quota->serving_quota-$bento_quota->serving_ordered < $val){
+				$response = array(
+					'status' => false,
+					'message' => 'Maximum quota reached, please check your order.'
+				);
+				return Response::json($response);
+			}
+		}
+
 		foreach($order_lists as $order_list) {
 			$order = explode("_", $order_list);
 			$bento_quota = BentoQuota::where('due_date', '=', $order[1])->first();
@@ -1357,69 +1378,69 @@ public function indexLiveCooking()
 	$user = Auth::user()->username;
 
 	$roles = CanteenLiveCookingAdmin::where('employee_id',$user)->first();
-
-	if ($roles->live_cooking_role == 'leader') {
-		$emp = KaizenLeader::select('employee_syncs.employee_id','employee_syncs.name')->where('leader_id',$user)->join('employee_syncs','employee_syncs.employee_id','kaizen_leaders.employee_id')->get();
-	}else if($roles->live_cooking_role == 'ga'){
-		$emp = EmployeeSync::select('employee_id','name')->where('employee_syncs.end_date',null)->get();
-	}else if($roles->live_cooking_role == 'ofc'){
-		$dept = '';
-		if($roles->department != null){
-			$depts =  explode(",", $roles->department);
-			for ($i=0; $i < count($depts); $i++) {
-				$dept = $dept."'".$depts[$i]."'";
-				if($i != (count($depts)-1)){
-					$dept = $dept.',';
-				}
-			}
-			$deptin = " and `department` in (".$dept.") ";
-		}
-		else{
-			$deptin = "";
-		}
-		$emp = DB::SELECT("SELECT
-			* 
-			FROM
-			employee_syncs
-			JOIN employees ON employees.employee_id = employee_syncs.employee_id 
-			WHERE
-			employee_syncs.end_date IS NULL 
-			".$deptin."
-			AND remark = 'OFC'");
-	}else if($roles->live_cooking_role == 'all'){
-		$emp = DB::SELECT("SELECT
-			* 
-			FROM
-			employee_syncs
-			JOIN employees ON employees.employee_id = employee_syncs.employee_id 
-			WHERE
-			employee_syncs.end_date IS NULL");
-	}
-
-	$live_cookings = DB::SELECT('SELECT DISTINCT
-		( periode ),
-		date_format( due_date, "%b %Y" ) AS period 
-		FROM
-		canteen_live_cooking_menus 
-		WHERE
-		DATE_FORMAT( NOW(), "%Y-%m" ) = periode UNION ALL
-		SELECT
-		DATE_FORMAT(
-		DATE_SUB(
-		LAST_DAY( DATE_ADD( NOW(), INTERVAL 1 MONTH ) ),
-		INTERVAL DAY ( LAST_DAY( DATE_ADD( NOW(), INTERVAL 1 MONTH ) ) )- 1 DAY 
-		),
-		"%Y-%m"
-		),
-		DATE_FORMAT(
-		DATE_SUB(
-		LAST_DAY( DATE_ADD( NOW(), INTERVAL 1 MONTH ) ),
-		INTERVAL DAY ( LAST_DAY( DATE_ADD( NOW(), INTERVAL 1 MONTH ) ) )- 1 DAY 
-		),
-		"%b %Y"
-	) AS period');
-
 	if (count($roles) > 0) {
+		if ($roles->live_cooking_role == 'leader') {
+			$emp = KaizenLeader::select('employee_syncs.employee_id','employee_syncs.name')->where('leader_id',$user)->join('employee_syncs','employee_syncs.employee_id','kaizen_leaders.employee_id')->get();
+		}else if($roles->live_cooking_role == 'ga'){
+			$emp = EmployeeSync::select('employee_id','name')->where('employee_syncs.end_date',null)->get();
+		}else if($roles->live_cooking_role == 'ofc'){
+			$dept = '';
+			if($roles->department != null){
+				$depts =  explode(",", $roles->department);
+				for ($i=0; $i < count($depts); $i++) {
+					$dept = $dept."'".$depts[$i]."'";
+					if($i != (count($depts)-1)){
+						$dept = $dept.',';
+					}
+				}
+				$deptin = " and `department` in (".$dept.") ";
+			}
+			else{
+				$deptin = "";
+			}
+			$emp = DB::SELECT("SELECT
+				* 
+				FROM
+				employee_syncs
+				JOIN employees ON employees.employee_id = employee_syncs.employee_id 
+				WHERE
+				employee_syncs.end_date IS NULL 
+				".$deptin."
+				AND remark = 'OFC'");
+		}else if($roles->live_cooking_role == 'all'){
+			$emp = DB::SELECT("SELECT
+				* 
+				FROM
+				employee_syncs
+				JOIN employees ON employees.employee_id = employee_syncs.employee_id 
+				WHERE
+				employee_syncs.end_date IS NULL");
+		}
+
+		$live_cookings = DB::SELECT('SELECT DISTINCT
+			( periode ),
+			date_format( due_date, "%b %Y" ) AS period 
+			FROM
+			canteen_live_cooking_menus 
+			WHERE
+			DATE_FORMAT( NOW(), "%Y-%m" ) = periode UNION ALL
+			SELECT
+			DATE_FORMAT(
+			DATE_SUB(
+			LAST_DAY( DATE_ADD( NOW(), INTERVAL 1 MONTH ) ),
+			INTERVAL DAY ( LAST_DAY( DATE_ADD( NOW(), INTERVAL 1 MONTH ) ) )- 1 DAY 
+			),
+			"%Y-%m"
+			),
+			DATE_FORMAT(
+			DATE_SUB(
+			LAST_DAY( DATE_ADD( NOW(), INTERVAL 1 MONTH ) ),
+			INTERVAL DAY ( LAST_DAY( DATE_ADD( NOW(), INTERVAL 1 MONTH ) ) )- 1 DAY 
+			),
+			"%b %Y"
+		) AS period');
+
+		
 		return view('general_affairs.live_cooking', array(
 			'title' => $title,
 			'title_jp' => $title_jp,

@@ -85,7 +85,7 @@
 					// 	image_data += '<div class="col-xs-4" style="font-weight:bold; font-size: 2vw; background-color: rgba(255,255,0,0.85);">'+value.point_description+'</div><div class="col-xs-8"><img src="{{ asset('images/pointing_calls/national') }}/'+value.point_title+'_'+value.point_no+'.gif" style="height: '+h+'; max-width: 100%;"></div>';
 					// }
 					else if(value.point_title == 'janji_safety'){
-						image_data += '<div id="'+value.point_title+'" name="'+count+'" tabindex="1" style="padding-left: 10px; padding-right: 10px;">';
+						image_data += '<div id="'+value.point_title+'" name="'+count+'" tabindex="1" style="padding-left: 10px; padding-right: 10px; min-height:100vh;">';
 						image_data += '<center><span style="font-weight: bold; font-size: 2vw;">{{ date('Y') }}年 {{ date('m') }}月 Catatan Record Penerapan 『Janji Safety Riding』</span></center><br>';
 						image_data += '<span style="font-weight: bold; font-size: 1.3vw;">① Perkirakan waktu untuk tiba dengan selamat di tempat tujuan. (Mari berangkat kerja lebih awal.)</span><br>';
 						image_data += '<span style="font-weight: bold; font-size: 1.3vw;">② Marilah patuhi aturan berlalu lintas demi orang-orang tercinta kita.</span><br><br>';

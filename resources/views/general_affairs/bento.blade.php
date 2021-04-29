@@ -113,6 +113,7 @@
 			<div class="box box-danger">				
 				<div class="box-header">
 					<h3 class="box-title">Quota Information <span class="text-purple">予約枠の情報</span></h3>
+					<button class="btn btn-info pull-right" onclick="fetchOrderList()"><i class="fa fa-refresh"></i> Refresh</button>
 				</div>
 				<div class="box-body">
 					<div id="container" style="height: 150px;">
