@@ -109,6 +109,26 @@ class AuditController extends Controller
     ))->with('page', 'Patrol Daily');
   }
 
+  public function index_patrol_covid()
+  {
+    $title = "Patrol Covid";
+    $title_jp = "コロナ対策パトロール";
+
+    $emp = EmployeeSync::where('employee_id', Auth::user()->username)
+    ->select('employee_id', 'name', 'position', 'department')->first();
+
+    $auditee = db::select("select DISTINCT employee_id, name, section, position from employee_syncs
+      where end_date is null and (position like '%Staff%' or position like '%Chief%' or position like '%Foreman%' or position like '%Manager%' or position like '%Coordinator%')");
+
+    return view('audit.patrol_covid', array(
+      'title' => $title,
+      'title_jp' => $title_jp,
+      'employee' => $emp,
+      'auditee' => $auditee,
+      'location' => $this->location
+    ))->with('page', 'Patrol Covid');
+  }
+
   public function fetch_patrol(Request $request){
 
 
@@ -956,6 +976,9 @@ public function detailPenanganan(Request $request){
       else if ($request->get('category') == "daily_patrol") {
         $category = "Patrol Daily";
       }
+      else if ($request->get('category') == "covid_patrol") {
+        $category = "Patrol Covid";
+      }
       else if ($request->get('category') == "stocktaking") {
         $category = "Audit Stocktaking";
       }
@@ -1026,6 +1049,9 @@ public function detailPenanganan(Request $request){
       }
       else if ($request->get('category') == "daily_patrol") {
         $category = "Patrol Daily";
+      }
+      else if ($request->get('category') == "covid_patrol") {
+        $category = "Patrol Covid";
       }
       else if ($request->get('category') == "stocktaking") {
         $category = "Audit Stocktaking";
@@ -1194,6 +1220,9 @@ public function detailPenanganan(Request $request){
       }
       else if ($request->get('category') == "daily_patrol") {
         $category = "Patrol Daily";
+      }
+      else if ($request->get('category') == "covid_patrol") {
+        $category = "Patrol Covid";
       }
       else if ($request->get('category') == "stocktaking") {
         $category = "Audit Stocktaking";

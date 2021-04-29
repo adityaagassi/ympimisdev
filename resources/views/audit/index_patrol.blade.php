@@ -36,7 +36,7 @@
 			<a href="{{ url('index/audit_patrol') }}" class="btn btn-default btn-block" style="font-size: 1.7vw; border-color: green;">5S Patrol GM & Presdir (社長パトロール)</a>
 			<a href="{{ url('index/audit_patrol_std') }}" class="btn btn-default btn-block" style="font-size: 1.7vw; border-color: green;">EHS & 5S Monthly Patrol</a>
 			<a href="{{ url('index/audit_patrol_daily') }}" class="btn btn-default btn-block" style="font-size: 1.7vw; border-color: green;">Daily Patrol Shift 1 dan Shift 2</a>
-			<!-- <a href="{{ url('') }}" class="btn btn-default btn-block" style="font-size: 1.7vw; border-color: green;">Patrol Daily Covid</a> -->
+			<a href="{{ url('index/audit_patrol_covid') }}" class="btn btn-default btn-block" style="font-size: 1.7vw; border-color: green;">Covid-19 Patrol</a>
 			<!-- <hr style="border: 1px solid red"> -->
 			
 		</div>
@@ -48,6 +48,9 @@
 
 			<a href="{{ url('index/audit_patrol_monitoring/daily_patrol') }}" class="btn btn-default btn-block" style="font-size: 1.7vw; border-color: red;width: 65%;display: inline-block;">Daily Patrol Monitoring & Response</a>  
 			<a href="{{ url('index/patrol_resume/daily_patrol') }}" class="btn btn-default btn-block" style="font-size: 1.7vw; border-color: red;width: 34%;display: inline-block;">Daily By Location</a>
+
+			<a href="{{ url('index/audit_patrol_monitoring/covid_patrol') }}" class="btn btn-default btn-block" style="font-size: 1.7vw; border-color: red;width: 65%;display: inline-block;">Patrol Covid Monitoring & Response</a>  
+			<a href="{{ url('index/patrol_resume/covid_patrol') }}" class="btn btn-default btn-block" style="font-size: 1.7vw; border-color: red;width: 34%;display: inline-block;">Covid By Location</a>
 		</div>
 	</div>
 

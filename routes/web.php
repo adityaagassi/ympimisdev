@@ -3861,6 +3861,7 @@ Route::post('post/audit_patrol', 'AuditController@post_audit');
 Route::post('post/audit_patrol_file', 'AuditController@post_audit_file');
 
 Route::get('index/audit_patrol_daily', 'AuditController@index_patrol_daily');
+Route::get('index/audit_patrol_covid', 'AuditController@index_patrol_covid');
 
 Route::get('index/audit_patrol_stocktaking', 'AuditController@index_audit_stocktaking');
 Route::post('post/audit_patrol_stocktaking', 'AuditController@post_audit_stocktaking');
