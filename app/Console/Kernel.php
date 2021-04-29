@@ -110,6 +110,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('plan:injections')->weekdays()->dailyAt('08:40');
         $schedule->command('sync:sunfish')->weekdays()->dailyAt('03:01');
         $schedule->command('sync:shift_sunfish')->weekdays()->dailyAt('05:30');
+        $schedule->command('sync:shift_sunfish')->weekdays()->dailyAt('07:00');
         $schedule->command('sync:shift_sunfish')->weekdays()->dailyAt('08:00');
         $schedule->command('sync:shift_sunfish')->weekdays()->dailyAt('09:30');
         $schedule->command('sync:shift_sunfish')->weekdays()->dailyAt('12:30');

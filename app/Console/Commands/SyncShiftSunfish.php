@@ -73,5 +73,37 @@ class SyncShiftSunfish extends Command
         {
             DB::table('sunfish_shift_syncs')->insert($t);
         }
+
+        $ivms = DB::SELECT("SELECT
+            * 
+        FROM
+            ivms.ivms_attendance_triggers 
+        WHERE
+            auth_date BETWEEN DATE( NOW() - INTERVAL 3 DAY ) 
+            AND DATE(
+            NOW() 
+            )");
+        $suhu = [];
+
+        foreach ($ivms as $data) {
+            $suhutinggi = array(
+                 'employee_id' => $data->employee_id,
+                 'auth_date' => $data->auth_date,
+                 'auth_datetime' => $data->auth_datetime,
+                 'device' => $data->device,
+                 'device_serial' => $data->device_serial,
+                 'created_by' => 1,
+                 'created_at' => date('Y-m-d H:i:s'),
+                 'updated_at' => date('Y-m-d H:i:s'),
+            );
+            array_push($suhu,$suhutinggi);
+        }
+
+        DB::table('ivms_attendance')->truncate();
+        foreach (array_chunk($suhu,1000) as $t)  
+        {
+            DB::table('ivms_attendance')->insert($t);
+        }
+
     }
 }
