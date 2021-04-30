@@ -78,7 +78,7 @@
 	});
 
 	jQuery(document).ready(function() {
-		$('#resumeDate').datepicker({
+		$('#datepicker').datepicker({
 			autoclose: true,
 			format: "yyyy-mm-dd",
 			startView: "months", 
