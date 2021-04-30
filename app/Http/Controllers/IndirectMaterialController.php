@@ -340,15 +340,17 @@ class IndirectMaterialController extends Controller{
 				$new->save();
 
 			}
-			// elseif ($pick->remark == 'out') {
-			// 	$out = new IndirectMaterialOut([
-			// 		'qr_code' => $pick->qr_code,
-			// 		'material_number' => $pick->material_number,
-			// 		'cost_center_id' => $pick->cost_center_id,
-			// 		'created_by' => Auth::id()
-			// 	]);
-			// 	$out->save();
-			// }
+			elseif ($pick->remark == 'out') {
+				$out = new IndirectMaterialOut([
+					'qr_code' => $pick->qr_code,
+					'material_number' => $pick->material_number,
+					'cost_center_id' => $pick->cost_center_id,
+					'in_date' => $pick->in_date,
+					'exp_date' => $pick->exp_date,
+					'created_by' => Auth::id()
+				]);
+				$out->save();
+			}
 
 			$pick->delete();
 
@@ -1245,7 +1247,7 @@ class IndirectMaterialController extends Controller{
 			}
 
 			// CEK EXPIRED
-			if($now >= $stock->exp_date){
+			if($now >= $out->exp_date){
 				$response = array(
 					'status' => false,
 					'message' => 'Chemical Expired'
@@ -1289,7 +1291,7 @@ class IndirectMaterialController extends Controller{
 				]);
 				$pick->save();
 
-				// $delete_out = IndirectMaterialOut::where('qr_code', $qr)->delete();
+				$delete_out = IndirectMaterialOut::where('qr_code', $qr)->delete();
 
 				$response = array(
 					'status' => true,
