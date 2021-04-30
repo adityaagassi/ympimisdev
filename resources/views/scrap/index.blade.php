@@ -477,9 +477,9 @@
 		var valcl = $('#valcl').val();
 
 
-		if(material == ''){
+		if(material == '' || receive_location == '' || reason == ''){
 			$('#loading').hide();
-			openErrorGritter('Error!', 'Pilih material yang akan di scrap');
+			openErrorGritter('Error!', 'Isi data secara lengkap');
 			return false;
 		}
 		if(quantity == '' || quantity == 0){
