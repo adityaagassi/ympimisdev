@@ -284,12 +284,12 @@
 						<div class="col-xs-8">
 							<div class="input-group">
 								<div class="input-group-btn">
-									<button type="button" class="btn btn-danger" style="font-size: 35px; height: 60px; text-align: center;"><span class="fa fa-minus" onclick="minusCount()"></span></button>
+									<button type="button" class="btn btn-danger" style="font-size: 35px; height: 60px; text-align: center;"  onclick="minusCount()"><span class="fa fa-minus"></span></button>
 								</div>
 								<input id="quantity" name="quantity" style="font-size: 40px; height: 60px; text-align: center;" type="number" class="form-control numpad" value="0">
 
 								<div class="input-group-btn">
-									<button type="button" class="btn btn-success" style="font-size: 35px; height: 60px; text-align: center;"><span class="fa fa-plus" onclick="plusCount()"></span></button>
+									<button type="button" class="btn btn-success" style="font-size: 35px; height: 60px; text-align: center;" onclick="plusCount()"><span class="fa fa-plus"></span></button>
 								</div>
 							</div>
 						</div>
