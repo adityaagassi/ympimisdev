@@ -171,6 +171,9 @@
 									<th style="width: 2%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Action</th>
 									<th style="width: 2%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Ganti Kunci</th>
 								<?php endif ?>
+								<?php if ($loc2 == 'qa-fungsi'): ?>
+									<th style="width: 2%; background-color: rgb(220,220,220); padding:0;font-size: 15px;" >Verif QA</th>
+								<?php endif ?>
 							</tr>
 						</thead>
 						<tbody id="ngHistoryBody">
@@ -1176,6 +1179,18 @@
 						bodyNgTemp += '<td style="font-size: 15px;">'+value.repair_status+'</td>';
 					}
 				}
+				if ($('#location_now2').val() == 'qa-fungsi') {
+					if (value.verified_by == null) {
+						var ganti = 'verif';
+						if (value.ng_name == 'Ganti Kunci - Ganti Kunci' || value.decision == 'Ganti Kunci') {
+							bodyNgTemp += '<td style="font-size: 15px;"><button class="btn btn-success btn-sm" onclick="repairProcess(\''+ganti+'\',\''+value.id+'\')">Verified</button></td>';
+						}else{
+							bodyNgTemp += '<td style="font-size: 15px;"></td>';
+						}
+					}else{
+						bodyNgTemp += '<td style="font-size: 15px;">OK</td>';
+					}
+				}
 				bodyNgTemp += "</tr>";
 			});
 
@@ -1186,6 +1201,24 @@
 	function repairProcess(ganti,id) {
 		if (ganti === "repair") {
 			if (confirm("Apakah Anda selesai melakukan Repair?")) {
+				var employee_id = $('#employee_id').val();
+				var data = {
+					id:id,
+					employee_id:employee_id,
+					ganti:ganti
+				}
+
+				$.post('{{ url("input/assembly/repair_process") }}', data, function(result, status, xhr){
+					if (result.status) {
+						fetchNgHistory();
+						openSuccessGritter('Success',result.message);
+					}else{
+						openErrorGritter('Error!',result.message);
+					}
+				});
+			}
+		}else if(ganti === 'verif'){
+			if (confirm("Apakah Anda proses Ganti Kunci sudah OK?")) {
 				var employee_id = $('#employee_id').val();
 				var data = {
 					id:id,

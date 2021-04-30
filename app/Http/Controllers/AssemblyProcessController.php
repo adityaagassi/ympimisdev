@@ -1615,6 +1615,11 @@ class AssemblyProcessController extends Controller
 				$repair->repaired_by = $request->get('employee_id');
 				$repair->repaired_at = date('Y-m-d H:i:s');
 				$repair->save();
+			}else if($request->get('ganti') == 'verif'){
+				$repair = AssemblyNgLog::where('id',$request->get('id'))->first();
+				$repair->verified_by = $request->get('employee_id');
+				$repair->verified_at = date('Y-m-d H:i:s');
+				$repair->save();
 			}else{
 				$repair = AssemblyNgLog::where('id',$request->get('id'))->first();
 				$repair->decision = 'Ganti Kunci';
