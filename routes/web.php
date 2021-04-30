@@ -19,6 +19,8 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 
 Route::get('minkd', 'TrialController@minkd');
 
+Route::get('force_print', 'TrialController@forcePrint');
+
 Route::get('testmail', 'TrialController@testmail');
 Route::get('testmail2', 'AccountingController@coba');
 Route::get('testprint', 'TrialController@testPrint');
@@ -1114,6 +1116,7 @@ Route::group(['nav' => 'S39', 'middleware' => 'permission'], function(){
 	Route::get('fetch/ga_control/driver_log', 'GeneralAffairController@fetchDriverLog');
 	Route::post('create/ga_control/driver_duty', 'GeneralAffairController@createDriverDuty');
 	Route::get('approve/ga_control/bento/{id}', 'GeneralAffairController@approveBento');
+	Route::get('index/ga_control/bento_approve/{id}', 'GeneralAffairController@indexBentoApprove');
 	Route::get('reject/ga_control/bento/{id}', 'GeneralAffairController@rejectBento');
 	Route::post('upload/ga_control/bento_menu', 'GeneralAffairController@uploadBentoMenu');
 });
@@ -1140,6 +1143,9 @@ Route::get('download/ga_control/live_cooking', 'GeneralAffairController@download
 Route::post('upload/ga_control/live_cooking_menu', 'GeneralAffairController@uploadLiveCookingMenu');
 Route::get('fetch/ga_control/live_cooking_order_list', 'GeneralAffairController@fetchLiveCookingOrderList');
 Route::get('live_cooking/menu/{periode}', 'GeneralAffairController@fetchLiveCookingMenu');
+Route::post('input/ga_control/live_cooking_order', 'GeneralAffairController@inputLiveCookingOrder');
+Route::get('fetch/ga_control/live_cooking_employees', 'GeneralAffairController@fetchLiveCookingEmployees');
+Route::post('edit/ga_control/live_cooking_order', 'GeneralAffairController@editLiveCookingOrder');
 
 //STD CONTROL
 Route::get('index/std_control/safety_shoes', 'GeneralController@indexSafetyShoes');
@@ -1604,6 +1610,7 @@ Route::group(['nav' => 'S61', 'middleware' => 'permission'], function(){
 	Route::get('fetch/canteen/purchase_requisition', 'GeneralAffairController@fetch_canteen_purchase_requisition');
 	Route::get('fetch/canteen/purchase_requisition/itemlist', 'GeneralAffairController@fetch_item_list');
 	Route::get('canteen/purchase_requisition/get_detailitem', 'GeneralAffairController@prgetitemdesc')->name('getcanteenitem');
+	Route::post('canteen/create/purchase_requisition', 'GeneralAffairController@create_purchase_requisition');
 
 	//Master Item & Category
 	Route::get('canteen/purchase_item', 'GeneralAffairController@master_item');
@@ -4269,6 +4276,7 @@ Route::post('input/assembly/ng_temp', 'AssemblyProcessController@inputNgTemp');
 Route::post('input/assembly/repair_process', 'AssemblyProcessController@inputRepairProcess');
 Route::get('delete/assembly/delete_ng_temp', 'AssemblyProcessController@deleteNgTemp');
 Route::post('input/assembly/ng_onko', 'AssemblyProcessController@inputNgOnko');
+Route::post('input/assembly/ganti_kunci', 'AssemblyProcessController@inputGantiKunci');
 Route::get('fetch/assembly/get_process_before', 'AssemblyProcessController@getProcessBefore');
 
 Route::get('fetch/assembly', 'AssemblyProcessController@fetchAssembly');
@@ -4533,7 +4541,6 @@ Route::get('scrap/resume/list/wh', 'ScrapController@ResumeListWh');
 // ============================================================================================
 Route::get('index/scrap/create', 'ScrapController@createScrap');
 
-
 //Mutasi
 Route::get('dashboard/mutasi', 'MutasiController@dashboard');
 Route::get('dashboard_ant/mutasi', 'MutasiController@dashboardAnt');
@@ -4609,6 +4616,10 @@ Route::get('mutasi_ant/hr', 'MutasiController@AntHrExport');
 Route::get('fetch/mutasi_ant/hr', 'MutasiController@AntFetchHrExport');
 Route::get('excel/mutasi_ant/hr', 'MutasiController@AntHrExportExcel');
 
+//Payment Request
+Route::get('payment_request/index', 'PaymentRequestController@IndexPaymentRequest');
+
+
 //Warehouse
 Route::get('index/warehouse', 'WarehouseController@index');
 Route::get('scan/data/warehouse', 'WarehouseController@scanInjectionOperator');
@@ -4671,6 +4682,7 @@ Route::get('fetch/pengantaran/pelayanan', 'WarehouseNewController@fetchPeng');
 Route::post('update/pengantaran', 'WarehouseNewController@updatePengantaran');
 Route::get('index/import/get_job_now', 'WarehouseNewController@get_job_new');
 Route::get('fetch/lokasi/pengantaran', 'WarehouseNewController@fetchCekPengantaran');
+
 Route::post('post/pengantaran/lokasi', 'WarehouseNewController@updateLokasi');
 Route::get('get/lokasi', 'WarehouseNewController@getLokasi');
 Route::get('fetch/detail/pengantaran', 'WarehouseNewController@fetchDetailPengantaran');

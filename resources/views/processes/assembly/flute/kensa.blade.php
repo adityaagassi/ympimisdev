@@ -362,6 +362,43 @@
 		</div>
 	</div>
 </div>
+<div class="modal fade" id="modalGantiKunci">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-body table-responsive no-padding">
+					<h4 id="judul_ngGantiKunci" style="font-weight: bold;text-align:center;background-color: #61d2ff;padding: 5px">Action</h4>
+					<div class="row">
+						<div class="col-xs-12" id="ngDetailGantiKunci">
+						</div>
+						<div class="col-xs-12" id="ngDetailFixGantiKunci" style="display: none;padding-top: 5px">
+							<center><button class="btn btn-primary" style="width:100%;font-size: 25px;font-weight: bold;" onclick="getNgChangeGantiKunci()" id="ngFixGantiKunci">NG
+							</button></center>
+							<input type="hidden" id="ngFix2GantiKunci" value="NG">
+						</div>
+					</div>
+
+					<h4 id="judul_onkoGantiKunci" style="padding-top: 10px;font-weight: bold;text-align:center;background-color: #ffd375;padding: 5px">Pilih Onko Yang Diganti</h4>
+					<div class="row">
+						<div class="col-xs-12" id="onkoBodyGantiKunci">
+						</div>
+						<div class="col-xs-12" id="onkoBodyFixGantiKunci" style="display: none;padding-top: 5px">
+							<center><button class="btn btn-warning" style="width:100%;font-size: 25px;font-weight: bold" onclick="getOnkoChangeGantiKunci()" id="onkoFixGantiKunci">ONKO
+							</button></center>
+							<input type="hidden" id="onkoFix2GantiKunci" value="ONKO">
+						</div>
+					</div>
+
+					
+					<div style="padding-top: 10px">
+						<button id="confGantiKunci" style="width: 100%; margin-top: 10px; font-size: 3vw; padding:0; font-weight: bold; border-color: black; color: white;" onclick="confNgTempGantiKunci()" class="btn btn-success">CONFIRM</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 
 @endsection
 @section('scripts')
@@ -958,8 +995,52 @@
 					// });
 					$('#modalNgTanpoAwase').modal('show');
 				});
-			}
-			else{
+			}else if (ng_name === 'Ganti Kunci') {
+				var btn = document.getElementById('confGantiKunci');
+				btn.disabled = false;
+				btn.innerText = 'Confirm'
+
+				var location = '{{$loc_spec}}';
+				var data = {
+					ng_name:ng_name,
+					location:location,
+					process:$('#process').val()
+				}
+				var bodyDetail = "";
+				$('#ngDetailFixGantiKunci').hide();
+				$('#ngDetailGantiKunci').show();
+				$('#ngDetailGantiKunci').html("");
+
+				var bodyNgOnko = "";
+				$('#onkoBodyFixGantiKunci').hide();
+				$('#onkoBodyGantiKunci').show();
+				$('#onkoBodyGantiKunci').html("");
+
+				$.get('{{ url("fetch/assembly/ng_detail") }}', data, function(result, status, xhr){
+					bodyDetail += '<div class="row">';
+					$.each(result.ng_detail, function(key, value) {
+							bodyDetail += '<div class="col-xs-4" style="padding-top: 10px">';
+							bodyDetail += '<center><button class="btn btn-primary" id="'+value.ng_name+' - '+value.ng_detail+'" style="width: 250px;font-size: 25px;" onclick="getNgGantiKunci(this.id,\''+value.process_before+'\')">'+value.ng_name+' - '+value.ng_detail;
+						bodyDetail += '</button></center></div>';
+						$('#judul_ng').html(value.ng_name);
+					});
+					bodyDetail += '</div>';
+
+					$('#ngDetailGantiKunci').append(bodyDetail);
+
+					bodyNgOnko += '<div class="row">';
+					$.each(result.onko, function(key, value) {
+						bodyNgOnko += '<div class="col-xs-3" style="padding-top: 5px">';
+						bodyNgOnko += '<center><button class="btn btn-warning" id="'+value.key+' ('+value.nomor+')" style="width: 180px;font-size: 20px" onclick="getOnkoGantiKunci(this.id)">'+value.key+' ('+value.nomor+')';
+						bodyNgOnko += '</button></center></div>';
+					});
+					bodyNgOnko += '</div>';
+
+					$('#onkoBodyGantiKunci').append(bodyNgOnko);
+
+					$('#modalGantiKunci').modal('show');
+				});
+			}else{
 				var btn = document.getElementById('confNg');
 				btn.disabled = false;
 				btn.innerText = 'Confirm'
@@ -1266,6 +1347,39 @@
 		$('#idOnkoTanpoAwase').val("ONKO");
 	}
 
+	function getNgGantiKunci(value,process_before) {
+		$('#ngDetailGantiKunci').hide();
+		$('#ngDetailFixGantiKunci').show();
+		$('#ngFixGantiKunci').html(value);
+		$('#ngFix2GantiKunci').val(value);
+	}
+
+ 
+	function getNgChangeGantiKunci() {
+		$('#ngDetailGantiKunci').show();
+		$('#ngDetailFixGantiKunci').hide();
+		$('#ngFixGantiKunci').html("NG");
+		$('#ngFix2GantiKunci').val("NG");
+	}
+
+
+	function getOnkoGantiKunci(value) {
+		$('#onkoBodyGantiKunci').hide();
+		$('#onkoBodyFixGantiKunci').show();
+		$('#onkoFixGantiKunci').html(value);
+		$('#onkoFix2GantiKunci').val(value);
+	}
+	
+
+	function getOnkoChangeGantiKunci() {
+		$('#onkoBodyGantiKunci').show();
+		$('#onkoBodyFixGantiKunci').hide();
+		$('#onkoFixGantiKunci').html("ONKO");
+		$('#onkoFix2GantiKunci').val("ONKO");
+	}
+
+	
+
 	function confNgOnkoTanpoAwase() {
 		var onko = [];
 		var value_atas = [];
@@ -1386,6 +1500,47 @@
 			});
 		}
 	}
+
+	function confNgTempGantiKunci() {
+		if ($('#ngFix2GantiKunci').val() == "NG" || $('#onkoFix2GantiKunci').val() == "ONKO") {
+			audio_error.play();
+			openErrorGritter('Error!', "Harus Dipilih Semua!");
+		}else{
+			var btn = document.getElementById('confGantiKunci');
+			btn.disabled = true;
+			btn.innerText = 'Posting...';
+
+			var data = {
+				tag : $('#tag2').val(),
+				employee_id : $('#employee_id').val(),
+				serial_number : $('#serial_number2').val(),
+				model : $('#model2').val(),
+				location : $('#location_now2').val(),
+				started_at : $('#started_at').val(),
+				ng: $('#ngFix2GantiKunci').val(),
+				onko: $('#onkoFix2GantiKunci').val(),
+				origin_group_code : '041',
+			}
+
+			$.post('{{ url("input/assembly/ganti_kunci") }}', data, function(result, status, xhr){
+				if(result.status){
+					var btn = document.getElementById('confGantiKunci');
+					btn.disabled = false;
+					btn.innerText = 'CONFIRM';
+					$('#modalGantiKunci').modal('hide');
+					fetchNgTemp();
+					openSuccessGritter('Success!', result.message);
+				}
+				else{
+					var btn = document.getElementById('confGantiKunci');
+					btn.disabled = false;
+					btn.innerText = 'CONFIRM';
+					audio_error.play();
+					openErrorGritter('Error!', result.message);
+				}
+			});
+		}
+	}	
 
 	function disabledButton() {
 		if($('#tag').val() != ""){
