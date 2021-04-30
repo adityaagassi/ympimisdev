@@ -46,8 +46,8 @@
 								<th style="width: 1%;">Model</th>
 								<th style="width: 1%;">Key</th>
 								<th style="width: 1%;">Surface</th>
-								<th style="width: 1%;">Plan Original</th>
 								<th style="width: 1%;">Plan Acc</th>
+								<th style="width: 1%;">Plan Original</th>
 								<th style="width: 1%;">Stock</th>
 								<th style="width: 1%;">Availability<br>(Stock&divide;Plan Acc)</th>
 							</tr>
@@ -78,6 +78,13 @@
 	});
 
 	jQuery(document).ready(function() {
+		$('#resumeDate').datepicker({
+			autoclose: true,
+			format: "yyyy-mm-dd",
+			startView: "months", 
+			minViewMode: "months",
+			autoclose: true,
+		});
 		fetchChart();
 		setInterval(fetchChart, 1000*60*5);
 	});
