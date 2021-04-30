@@ -82,6 +82,8 @@
 		<div class="col-xs-12">
 			<div class="row">
 				<div class="col-xs-12">
+					<input id="code" type="text" style="border:0; width: 100%; text-align: center; height: 20px; color: white; background-color: #3c3c3c; height: 5px;">
+
 					<div class="box box-danger">
 						<div class="box-body">
 							<div class="col-xs-12">
@@ -601,6 +603,49 @@
 		$('#scanner').hide();
 		$('#modalScan').modal('hide');
 		$(".modal-backdrop").remove();
+	}
+
+	$('#code').keydown(function(event) {
+		if (event.keyCode == 13 || event.keyCode == 9) {
+			var code = $('#code').val();
+			manualCheckQR(code);	
+		}
+	});
+
+	function manualCheckQR(code) {
+		var material_number = $('#material_number').val();
+		var location = $('#location').val();
+		var schedule_id = $('#schedule_id').val();
+
+		if(material_number != '' && location != '' && schedule_id != ''){
+			var data = {
+				qr : code,
+				material_number : material_number,
+				location : location,
+				schedule_id : schedule_id
+			}
+
+			$("#loading").show();
+
+			$.get('{{ url("fetch/check_qr") }}', data, function(result, status, xhr){
+				if(result.status){
+					fillPicked();
+					$("#loading").hide();
+					$('#code').val('');
+					openSuccessGritter('Success', result.message);
+
+				}else{
+					$("#loading").hide();
+					openErrorGritter('Error!', result.message);
+				}
+
+			});
+		}else{
+			$('#code').val('');
+			openSuccessGritter('Success', 'Pilih schedule');
+		}
+
+		
 	}
 
 	function fillPicked(){

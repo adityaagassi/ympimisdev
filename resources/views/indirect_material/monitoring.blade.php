@@ -390,7 +390,7 @@
 						},
 						tooltip: {
 							headerFormat: '<span>{point.category}</span><br/>',
-							pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y} Minutes</b> <br/>',
+							pointFormat: '<span style="color:{point.color}; font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b><br/>',
 						},
 						plotOptions: {
 							series:{
@@ -418,7 +418,7 @@
 						},
 						series: [
 						{
-							name:'Time',
+							name: 'Total',
 							type: 'column',
 							colorByPoint: true,
 							data: series,
