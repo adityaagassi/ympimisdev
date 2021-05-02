@@ -32,11 +32,10 @@
         <li class="header">Administration Menu</li>
         @endif
 
-        @if(in_array('A1', $navs))
+
         @if(isset($page) && $page == "Safety Riding")<li class="active">@else<li>@endif
           <a href="{{ url("/index/safety_riding") }}"><i class="fa fa-motorcycle"></i> <span>Safety Riding</span></a>
         </li>
-        @endif
 
         @if(in_array('A1', $navs))
         @if(isset($page) && $page == "Batch Setting")<li class="active">@else<li>@endif
@@ -685,6 +684,9 @@
         </li>
         @if(isset($page) && $page == "Tanda Terima")<li class="active">@else<li>@endif
           <a href="{{ url("invoice/tanda_terima") }}"><i class="fa fa-files-o"></i>Tanda Terima</a>
+        </li>
+        @if(isset($page) && $page == "Payment Request")<li class="active">@else<li>@endif
+          <a href="{{ url("payment_request/index") }}"><i class="fa fa-money"></i>Payment Request</a>
         </li>
 
       </ul>
