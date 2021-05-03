@@ -1389,6 +1389,7 @@ public function overtimeControl(Request $request)
 			WHERE
 			VIEW_YMPI_Emp_OvertimePlan.ShiftStart >= '".$tanggal." 00:00:00' 
 			AND VIEW_YMPI_Emp_OvertimePlan.ShiftEnd <= '".$tanggal1." 23:59:59' 
+			AND VIEW_YMPI_Emp_OvertimePlan.emp_no NOT LIKE 'OS%'
 			GROUP BY
 			VIEW_YMPI_Emp_OvertimePlan.emp_no 
 			) AS ot

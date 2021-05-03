@@ -1442,7 +1442,8 @@ public function fetchTotalMeeting(Request $request){
                ) AS Q ON Q.orderer = X.orderer 
                AND Q.Department = VIEW_YMPI_Emp_OrgUnit.Department 
                WHERE
-               VIEW_YMPI_Emp_OrgUnit.Department IS NOT NULL");
+               VIEW_YMPI_Emp_OrgUnit.Department IS NOT NULL
+               and VIEW_YMPI_Emp_OrgUnit.Emp_no NOT LIKE 'OS%'");
      }
      if($first <= '2020-01-01'){
           if($last_mirai >= '2020-01-01'){
@@ -1533,6 +1534,7 @@ public function fetchTotalMeeting(Request $request){
                LEFT JOIN VIEW_YMPI_Emp_OrgUnit B ON B.Emp_no = A.Emp_no 
                WHERE
                A.daytype = 'WD' and FORMAT ( A.ovtplanfrom, 'yyyy-MM' ) = '".$period."'
+               and B.emp_no NOT LIKE 'OS%'
                GROUP BY
                A.Emp_no,
                FORMAT ( A.ovtplanfrom, 'yyyy-MM' ),
@@ -1578,6 +1580,7 @@ public function fetchTotalMeeting(Request $request){
                LEFT JOIN VIEW_YMPI_Emp_OrgUnit B ON B.Emp_no = A.Emp_no 
                WHERE
                A.daytype = 'WD' and FORMAT ( A.ovtplanfrom, 'yyyy-MM' ) = '".$period."'
+               and B.emp_no NOT LIKE 'OS%'
                GROUP BY
                FORMAT ( A.ovtplanfrom, 'yyyy-MM' ),
                FORMAT ( A.ovtplanfrom, 'MMMM yyyy' ),
@@ -1621,6 +1624,7 @@ public function fetchTotalMeeting(Request $request){
                LEFT JOIN VIEW_YMPI_Emp_OrgUnit B ON B.Emp_no = A.Emp_no 
                WHERE
                A.daytype = 'WD' and FORMAT ( A.ovtplanfrom, 'yyyy-MM' ) = '".$period."'
+               and B.emp_no NOT LIKE 'OS%'
                GROUP BY
                FORMAT ( A.ovtplanfrom, 'yyyy-MM' ),
                FORMAT ( A.ovtplanfrom, 'MMMM yyyy' ),
