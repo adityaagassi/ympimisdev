@@ -15,7 +15,7 @@
 
         @if(Auth::user()->role_code != 'YEMI')
         @if(isset($page) && $page == "Create MIS Ticket")<li class="active">@else<li>@endif
-          <a href="{{ url("/home") }}"><i class="fa fa-industry"></i> <span>Create Ticket</span></a>
+          <a href="{{ url("/home") }}"><i class="fa fa-wrench"></i> <span>Create Ticket</span></a>
         </li>
         @endif
         @endif

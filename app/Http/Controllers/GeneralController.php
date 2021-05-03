@@ -120,8 +120,10 @@ class GeneralController extends Controller{
 			safety_ridings.department,
 			date_format(
 			safety_ridings.created_at,
-			'%Y-%m-%d' 
-		)");
+			'%Y-%m-%d')
+			ORDER BY
+			safety_ridings.created_at DESC
+			");
 
 		$response = array(
 			'status' => true,
