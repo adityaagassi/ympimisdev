@@ -167,11 +167,11 @@
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
 								<th style="width: 1%;">No. Order</th>
-								<th style="width: 1%;">Order By ID<br>予約者</th>
+								<th style="width: 1%;">Order By<br>予約者</th>
 								<th style="width: 3%;">Order By Name<br>予約者</th>
 								{{-- <th style="width: 3%;">Charged To<br>請求先</th> --}}
 								<th style="width: 1%;">Date<br>日付</th>
-								<th style="width: 1%;">Order For ID<br>予約対象者</th>
+								<th style="width: 1%;">Order For<br>予約対象者</th>
 								<th style="width: 3%;">Order For Name<br>予約対象者</th>
 								<th style="width: 3%;">Dept<br>部門</th>
 								<th style="width: 2%;">Sect</th>
@@ -193,11 +193,11 @@
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
 								<th style="width: 1%;">No. Order</th>
-								<th style="width: 1%;">Order By ID<br>予約者</th>
+								<th style="width: 1%;">Order By<br>予約者</th>
 								<th style="width: 3%;">Order By Name<br>予約者</th>
 								{{-- <th style="width: 3%;">Charged To<br>請求先</th> --}}
 								<th style="width: 1%;">Date<br>日付</th>
-								<th style="width: 1%;">Order For ID<br>予約対象者</th>
+								<th style="width: 1%;">Order For<br>予約対象者</th>
 								<th style="width: 3%;">Order For Name<br>予約対象者</th>
 								<th style="width: 3%;">Dept<br>部門</th>
 								<th style="width: 2%;">Sect</th>
@@ -1076,6 +1076,7 @@ function cancelOrder(id){
 		});
 	}
 	else{
+		$('#loading').hide();
 		return false;
 	}
 }
@@ -1111,6 +1112,7 @@ function deleteOrder(){
 		});
 	}
 	else{
+		$('#loading').hide();
 		return false;
 	}
 }
@@ -1345,6 +1347,7 @@ function confirmOrder(){
 		});
 	}
 	else{
+		$('#loading').hide();
 		return false;
 	}
 }

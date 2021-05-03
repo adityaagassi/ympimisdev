@@ -22,10 +22,10 @@
 			This is an automatic notification. Please do not reply to this address.</p>
 			<span style="font-weight: bold; color: green; font-size: 24px;">Your Order Has Been CONFIRMED by</span>
 			<br>
-			<span style="font-weight: bold;">{{ $data['bento_lists'][0]["approver_id"] }} - {{ $data['bento_lists'][0]["approver_name"] }}</span>
+			<span style="font-weight: bold;">{{ $data["approver_id"] }} - {{ $data["approver_name"] }}</span>
 			<br>
 			<br>
-			<table style="border:1px solid black;border-collapse: collapse;" width="60%">
+			<table style="border:1px solid black;border-collapse: collapse;" width="95%">
 				<thead style="background-color: #63ccff">
 					<tr>
 						<th style="border:1px solid black; width: 2%;">Name</th>
@@ -40,8 +40,8 @@
 					<?php
 					$name = [];
 					for ($i=0; $i < count($data['bento_lists']); $i++) {
-						if(!in_array($data['bento_lists'][$i]['employee_name'], $name)){
-							array_push($name, $data['bento_lists'][$i]['employee_name']);
+						if(!in_array($data['bento_lists'][$i]->employee_name, $name)){
+							array_push($name, $data['bento_lists'][$i]->employee_name);
 						}
 					}
 					for ($i=0; $i < count($name); $i++) {
@@ -55,11 +55,11 @@
 							$inserted = false;
 
 							for ($k=0; $k < count($data['bento_lists']); $k++) {
-								if($data['calendars'][$j]['week_date'] == $data['bento_lists'][$k]['due_date'] && $data['bento_lists'][$k]['employee_name'] == $name[$i] && $data['bento_lists'][$k]['status'] == "Approved"){
+								if($data['calendars'][$j]['week_date'] == $data['bento_lists'][$k]->due_date && $data['bento_lists'][$k]->employee_name == $name[$i] && $data['bento_lists'][$k]->status == "Approved"){
 									print_r('<td style="border: 1px solid black; text-align: center; background-color: #ccff90;">&#9745;</td>');
 									$inserted = true;
 								}
-								if($data['calendars'][$j]['week_date'] == $data['bento_lists'][$k]['due_date'] && $data['bento_lists'][$k]['employee_name'] == $name[$i] && $data['bento_lists'][$k]['status'] == "Rejected"){
+								if($data['calendars'][$j]['week_date'] == $data['bento_lists'][$k]->due_date && $data['bento_lists'][$k]->employee_name == $name[$i] && $data['bento_lists'][$k]->status == "Rejected"){
 									print_r('<td style="border: 1px solid black; text-align: center; background-color: #ff6090;">&#9746;</td>');
 									$inserted = true;
 								}

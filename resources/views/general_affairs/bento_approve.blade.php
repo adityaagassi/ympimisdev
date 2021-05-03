@@ -164,6 +164,7 @@
 	}
 
 	function confirmOrder(){
+		$('#loading').show();
 		if(confirm("Are you sure want to make this order? この予約内容でよろしいですか。")){
 			var rejected = [];
 			var approved = [];
@@ -188,12 +189,14 @@
 
 			$.post('{{ url("approve/ga_control/bento") }}', data, function(result, status, xhr){
 				if(result.status){
+					$('#loading').hide();
 					audio_ok.play();
 					openSuccessGritter('Success!', result.message);
 					location.reload(true);
 					return false;
 				}
 				else{
+					$('#loading').hide();
 					audio_error.play();
 					openErrorGritter('Error!', result.message);
 					return false;
@@ -201,6 +204,7 @@
 			});
 		}
 		else{
+			$('#loading').hide();
 			return false;
 		}
 	}

@@ -34,6 +34,8 @@ use App\CanteenPurchaseRequisition;
 use App\CanteenPurchaseRequisitionItem;
 use App\CanteenItem;
 use App\CanteenItemCategory;
+use App\AccBudget;
+use App\CanteenBudgetHistory;
 
 class GeneralAffairController extends Controller
 {
@@ -43,6 +45,10 @@ class GeneralAffairController extends Controller
 
 		$this->uom = ['bag', 'bar', 'batang', 'belt', 'botol', 'bottle', 'box', 'Btg', 'Btl', 'btng', 'buah', 'buku', 'Can', 'Case', 'container', 'cps', 'day', 'days', 'dos', 'doz', 'Drum', 'dus', 'dz', 'dzn', 'EA', 'G', 'galon', 'gr', 'hari', 'hour', 'job', 'JRG', 'kaleng', 'ken', 'Kg', 'kgm', 'klg', 'L', 'Lbr', 'lbs', 'lembar', 'License', 'lisence', 'lisensi', 'lmbr', 'lonjor', 'Lot', 'ls', 'ltr', 'lubang', 'lusin', 'm', 'm2', 'm²', 'm3', 'malam', 'meter', 'ml', 'month', 'Mtr', 'night', 'OH', 'Ons', 'orang', 'OT', 'Pac', 'Pack', 'package', 'pad', 'pail', 'pair', 'pairs', 'pak', 'Pasang', 'pc', 'Pca', 'Pce', 'Pck', 'Pcs', 'Person', 'pick up', 'pil', 'ply', 'point', 'pot', 'prs', 'prsn', 'psc', 'PSG', 'psn', 'Rim', 'rol', 'roll', 'rolls', 'sak', 'sampel', 'sample', 'Set', 'Set', 'Sets', 'sheet', 'shoot', 'slop', 'sum', 'tank', 'tbg', 'time', 'titik', 'ton', 'tube', 'Um', 'Unit', 'user', 'VA', 'yard', 'zak'
 	];
+
+	$this->dgm = 'PI0109004';
+	$this->gm = 'PI1206001';
+	$this->gm_acc = 'PI1712018';
 }
 
 public function indexBentoReport(){
@@ -150,16 +156,83 @@ public function approveBento(Request $request){
 			]);
 		}
 
-		$bento_lists = Bento::where('order_id', '=', $request->get('order_id'))->get();
-		
-		$calendars = WeeklyCalendar::where('week_date', '>=', $list->min_date)
-		->where('week_date', '<=', $list->max_date)
-		->get();
+		// $bento_lists = Bento::leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'bentos.employee_id')
+		// ->where('order_id', '=', $request->get('order_id'))
+		// ->select(
+		// 	'bentos.id',
+		// 	'bentos.order_id',
+		// 	'bentos.order_by',
+		// 	'bentos.order_by_name',
+		// 	'bentos.charge_to',
+		// 	'bentos.charge_to_name',
+		// 	'bentos.due_date',
+		// 	'bentos.employee_id',
+		// 	'bentos.employee_name',
+		// 	'bentos.email',
+		// 	'bentos.department',
+		// 	'bentos.section',
+		// 	'bentos.status',
+		// 	'bentos.approver_id',
+		// 	'bentos.approver_name',
+		// 	'bentos.remark',
+		// 	'bentos.created_by',
+		// 	'bentos.deleted_at',
+		// 	'bentos.created_at',
+		// 	'bentos.updated_at',
+		// 	'employee_syncs.grade_code'
+		// )
+		// ->get();
 
-		$bentos = [
-			'bento_lists' => $bento_lists,
-			'calendars' => $calendars
-		];
+		$bento_lists = db::select("SELECT
+			b.employee_id,
+			b.employee_name,
+			b.due_date,
+			b.status,
+			b.email,
+			es.grade_code 
+			FROM
+			bentos AS b
+			LEFT JOIN employee_syncs AS es ON b.employee_id = es.employee_id 
+			WHERE
+			b.order_id = '".$request->get('order_id')."'");
+
+		if($list->department == 'YEMI' || $bento_lists[0]->grade_code == 'J0-'){
+			$first = date('Y-m-01', strtotime($list->max_date));
+			$last = date('Y-m-t', strtotime($list->max_date));
+			$bento_lists = db::select("SELECT
+				j.employee_id,
+				j.employee_name,
+				u.email,
+				b.due_date,
+				b.status 
+				FROM
+				japaneses AS j
+				LEFT JOIN ( SELECT * FROM bentos WHERE due_date >= '".$first."' AND due_date <= '".$last."' ) AS b ON b.employee_id = j.employee_id
+				LEFT JOIN users AS u ON u.username = j.employee_id");
+
+			$calendars = WeeklyCalendar::where('week_date', '>=', $first)
+			->where('week_date', '<=', $last)
+			->get();
+
+			$bentos = [
+				'approver_id' => Auth::user()->username,
+				'approver_name' => Auth::user()->name,
+				'bento_lists' => $bento_lists,
+				'calendars' => $calendars
+			];
+		}
+		else{
+			$calendars = WeeklyCalendar::where('week_date', '>=', $list->min_date)
+			->where('week_date', '<=', $list->max_date)
+			->get();
+
+			$bentos = [
+				'approver_id' => Auth::user()->username,
+				'approver_name' => Auth::user()->name,
+				'bento_lists' => $bento_lists,
+				'calendars' => $calendars
+			];
+		}
 
 		if($list->department != 'YEMI'){
 			$email = User::where('username', '=', $bento_lists[0]->order_by)->first();
@@ -206,6 +279,7 @@ public function approveBento(Request $request){
 				'putri.sukma.riyanti@music.yamaha.com', 
 				'merlinda.dyah@music.yamaha.com', 
 				'novita.siswindarti@music.yamaha.com', 
+				'hiroshi.ura@music.yamaha.com', 
 				'prawoto@music.yamaha.com'
 			])
 			->bcc([
@@ -411,6 +485,7 @@ public function rejectBento($id){
 			'rianita.widiastuti@music.yamaha.com', 
 			'putri.sukma.riyanti@music.yamaha.com', 
 			'merlinda.dyah@music.yamaha.com', 
+			'hiroshi.ura@music.yamaha.com',
 			'prawoto@music.yamaha.com'])
 		->bcc([
 			'aditya.agassi@music.yamaha.com', 
@@ -2277,525 +2352,519 @@ public function prgetitemdesc(Request $request)
 	//==================================//
     //            Master Item           //
     //==================================//
-	public function master_item()
+public function master_item()
+{
+	$title = 'Food Item';
+	$title_jp = '';
+
+	$item_categories = CanteenItemCategory::select('canteen_item_categories.*')->whereNull('canteen_item_categories.deleted_at')
+	->get();
+
+	return view('general_affairs.report.canteen_purchase_item', array(
+		'title' => $title,
+		'title_jp' => $title_jp,
+		'uom' => $this->uom,
+		'item_category' => $item_categories,
+	))->with('page', 'Food Item')
+	->with('head', 'Food Item');
+}
+
+public function fetch_item(Request $request)
+{
+	$items = CanteenItem::select('canteen_items.id', 'canteen_items.kode_item', 'canteen_items.kategori', 'canteen_items.deskripsi', 'canteen_items.uom', 'canteen_items.harga','canteen_items.currency');
+
+	if ($request->get('keyword') != null)
 	{
-		$title = 'Food Item';
-		$title_jp = '';
-
-		$item_categories = CanteenItemCategory::select('canteen_item_categories.*')->whereNull('canteen_item_categories.deleted_at')
-		->get();
-
-		return view('general_affairs.report.canteen_purchase_item', array(
-			'title' => $title,
-			'title_jp' => $title_jp,
-			'uom' => $this->uom,
-			'item_category' => $item_categories,
-		))->with('page', 'Food Item')
-		->with('head', 'Food Item');
+		$items = $items->where('deskripsi', 'like', '%' . $request->get('keyword') . '%');
 	}
 
-	public function fetch_item(Request $request)
+	if ($request->get('category') != null)
 	{
-		$items = CanteenItem::select('canteen_items.id', 'canteen_items.kode_item', 'canteen_items.kategori', 'canteen_items.deskripsi', 'canteen_items.uom', 'canteen_items.harga','canteen_items.currency');
-
-		if ($request->get('keyword') != null)
-		{
-			$items = $items->where('deskripsi', 'like', '%' . $request->get('keyword') . '%');
-		}
-
-		if ($request->get('category') != null)
-		{
-			$items = $items->where('canteen_items.kategori', $request->get('category'));
-		}
-
-		if ($request->get('uom') != null)
-		{
-			$items = $items->whereIn('canteen_items.uom', $request->get('uom'));
-		}
-
-		$items = $items->orderBy('canteen_items.id', 'ASC')
-		->get();
-
-		return DataTables::of($items)
-		->addColumn('action', function ($items)
-		{
-			$id = $items->id;
-
-			if (Auth::user()->role_code == "MIS" || Auth::user()->role_code == "PCH" || Auth::user()->role_code == "PCH-SPL") {
-				return ' 
-				<a href="purchase_item/update/' . $id . '" class="btn btn-warning btn-xs"><i class="fa fa-edit"></i> Edit</a> 
-				<a href="purchase_item/delete/' . $id . '" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> Delete</a>
-				';
-			}else{
-				return '-';                
-			}
-		})
-		->addColumn('image', function ($items)
-		{
-			$item_code = $items->kode_item;
-
-			if (file_exists(public_path() .'/images/purchase_item/'.$item_code.'.jpg')) {
-				return '<img src="'.url('images/purchase_item').'/'.$item_code.'.jpg" width="250">';
-			}
-			else if (file_exists(public_path() .'/images/purchase_item/'.$item_code.'.png')) {
-				return '<img src="'.url('images/purchase_item').'/'.$item_code.'.png" width="250">';
-			}
-			else{
-				return '-';
-			}
-
-		})
-		->rawColumns(['action' => 'action','image' => 'image'])
-		->make(true);
+		$items = $items->where('canteen_items.kategori', $request->get('category'));
 	}
 
-	public function create_item()
+	if ($request->get('uom') != null)
 	{
-		$title = 'Create Item';
-		$title_jp = '購入アイテムを作成';
-
-		$emp = EmployeeSync::where('employee_id', Auth::user()->username)
-		->select('employee_id', 'name', 'position', 'department', 'section', 'group')
-		->first();
-
-		$item_categories = CanteenItemCategory::select('canteen_item_categories.*')->whereNull('canteen_item_categories.deleted_at')
-		->get();
-
-		return view('general_affairs.report.canteen_create_purchase_item', array(
-			'title' => $title,
-			'title_jp' => $title_jp,
-			'employee' => $emp,
-			'item_category' => $item_categories,
-			'uom' => $this->uom
-		))
-		->with('page', 'Purchase Item');
+		$items = $items->whereIn('canteen_items.uom', $request->get('uom'));
 	}
 
-	public function create_item_post(Request $request)
+	$items = $items->orderBy('canteen_items.id', 'ASC')
+	->get();
+
+	return DataTables::of($items)
+	->addColumn('action', function ($items)
 	{
-		try
-		{
-			$id_user = Auth::id();
+		$id = $items->id;
 
-			$item = CanteenItem::create([
-				'kode_item' => $request->get('item_code') , 
-				'kategori' => $request->get('item_category') , 
-				'deskripsi' => $request->get('item_desc') , 
-				'uom' => $request->get('item_uom') , 
-				'harga' => $request->get('item_price') , 
-				'currency' => $request->get('item_currency') , 
-				'created_by' => $id_user
-			]);
-
-			$item->save();
-
-			$response = array(
-				'status' => true,
-				'datas' => "Berhasil",
-				'id' => $item->id
-			);
-			return Response::json($response);
-
+		if (Auth::user()->role_code == "MIS" || Auth::user()->role_code == "PCH" || Auth::user()->role_code == "PCH-SPL") {
+			return ' 
+			<a href="purchase_item/update/' . $id . '" class="btn btn-warning btn-xs"><i class="fa fa-edit"></i> Edit</a> 
+			<a href="purchase_item/delete/' . $id . '" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> Delete</a>
+			';
+		}else{
+			return '-';                
 		}
-		catch(QueryException $e)
-		{
-			$response = array(
-				'status' => false,
-				'datas' => $e->getMessage()
-			);
-			return Response::json($response);
+	})
+	->addColumn('image', function ($items)
+	{
+		$item_code = $items->kode_item;
+
+		if (file_exists(public_path() .'/images/purchase_item/'.$item_code.'.jpg')) {
+			return '<img src="'.url('images/purchase_item').'/'.$item_code.'.jpg" width="250">';
 		}
+		else if (file_exists(public_path() .'/images/purchase_item/'.$item_code.'.png')) {
+			return '<img src="'.url('images/purchase_item').'/'.$item_code.'.png" width="250">';
+		}
+		else{
+			return '-';
+		}
+
+	})
+	->rawColumns(['action' => 'action','image' => 'image'])
+	->make(true);
+}
+
+public function create_item()
+{
+	$title = 'Create Item';
+	$title_jp = '購入アイテムを作成';
+
+	$emp = EmployeeSync::where('employee_id', Auth::user()->username)
+	->select('employee_id', 'name', 'position', 'department', 'section', 'group')
+	->first();
+
+	$item_categories = CanteenItemCategory::select('canteen_item_categories.*')->whereNull('canteen_item_categories.deleted_at')
+	->get();
+
+	return view('general_affairs.report.canteen_create_purchase_item', array(
+		'title' => $title,
+		'title_jp' => $title_jp,
+		'employee' => $emp,
+		'item_category' => $item_categories,
+		'uom' => $this->uom
+	))
+	->with('page', 'Purchase Item');
+}
+
+public function create_item_post(Request $request)
+{
+	try
+	{
+		$id_user = Auth::id();
+
+		$item = CanteenItem::create([
+			'kode_item' => $request->get('item_code') , 
+			'kategori' => $request->get('item_category') , 
+			'deskripsi' => $request->get('item_desc') , 
+			'uom' => $request->get('item_uom') , 
+			'harga' => $request->get('item_price') , 
+			'currency' => $request->get('item_currency') , 
+			'created_by' => $id_user
+		]);
+
+		$item->save();
+
+		$response = array(
+			'status' => true,
+			'datas' => "Berhasil",
+			'id' => $item->id
+		);
+		return Response::json($response);
+
+	}
+	catch(QueryException $e)
+	{
+		$response = array(
+			'status' => false,
+			'datas' => $e->getMessage()
+		);
+		return Response::json($response);
+	}
+}
+
+public function update_item($id)
+{
+	$title = 'Edit Food Item';
+	$title_jp = '購入アイテムを編集';
+
+	$item = CanteenItem::find($id);
+
+	$emp = EmployeeSync::where('employee_id', Auth::user()->username)
+	->select('employee_id', 'name', 'position', 'department', 'section', 'group')
+	->first();
+
+	$item_categories = CanteenItemCategory::select('canteen_item_categories.*')->whereNull('canteen_item_categories.deleted_at')
+	->get();
+
+	return view('general_affairs.report.canteen_edit_purchase_item', array(
+		'title' => $title,
+		'title_jp' => $title_jp,
+		'item' => $item,
+		'employee' => $emp,
+		'item_category' => $item_categories,
+		'uom' => $this->uom
+	))
+	->with('page', 'Purchase Item');
+}
+
+public function update_item_post(Request $request)
+{
+	try
+	{
+		$id_user = Auth::id();
+
+		$inv = CanteenItem::where('id', $request->get('id'))
+		->update([
+			'kode_item' => $request->get('item_code') , 
+			'kategori' => $request->get('item_category') , 
+			'deskripsi' => $request->get('item_desc') , 
+			'uom' => $request->get('item_uom') , 
+			'harga' => $request->get('item_price') , 
+			'currency' => $request->get('item_currency') , 
+			'created_by' => $id_user
+		]);
+
+		$response = array(
+			'status' => true,
+			'datas' => "Berhasil"
+		);
+		return Response::json($response);
+
+	}
+	catch(QueryException $e)
+	{
+		$response = array(
+			'status' => false,
+			'datas' => $e->getMessage()
+		);
+		return Response::json($response);
+	}
+}
+
+public function delete_item($id)
+{
+	$items = CanteenItem::find($id);
+	$items->delete();
+
+	return redirect('/canteen/purchase_item')
+	->with('status', 'Food Item has been deleted.')
+	->with('page', 'Food Item');
+}
+
+public function get_kode_item(Request $request)
+{
+	$kategori = $request->kategori;
+
+	$query = "SELECT kode_item FROM `canteen_items` where kategori='$kategori' order by kode_item DESC LIMIT 1";
+	$nomorurut = DB::select($query);
+
+	if ($nomorurut != null)
+	{
+		$nomor = substr($nomorurut[0]->kode_item, -3);
+		$nomor = $nomor + 1;
+		$nomor = sprintf('%03d', $nomor);
+
+	}
+	else
+	{
+		$nomor = "001";
 	}
 
-	public function update_item($id)
-	{
-		$title = 'Edit Food Item';
-		$title_jp = '購入アイテムを編集';
+	$result['no_urut'] = $nomor;
 
-		$item = CanteenItem::find($id);
-
-		$emp = EmployeeSync::where('employee_id', Auth::user()->username)
-		->select('employee_id', 'name', 'position', 'department', 'section', 'group')
-		->first();
-
-		$item_categories = CanteenItemCategory::select('canteen_item_categories.*')->whereNull('canteen_item_categories.deleted_at')
-		->get();
-
-		return view('general_affairs.report.canteen_edit_purchase_item', array(
-			'title' => $title,
-			'title_jp' => $title_jp,
-			'item' => $item,
-			'employee' => $emp,
-			'item_category' => $item_categories,
-			'uom' => $this->uom
-		))
-		->with('page', 'Purchase Item');
-	}
-
-	public function update_item_post(Request $request)
-	{
-		try
-		{
-			$id_user = Auth::id();
-
-			$inv = CanteenItem::where('id', $request->get('id'))
-			->update([
-				'kode_item' => $request->get('item_code') , 
-				'kategori' => $request->get('item_category') , 
-				'deskripsi' => $request->get('item_desc') , 
-				'uom' => $request->get('item_uom') , 
-				'harga' => $request->get('item_price') , 
-				'currency' => $request->get('item_currency') , 
-				'created_by' => $id_user
-			]);
-
-			$response = array(
-				'status' => true,
-				'datas' => "Berhasil"
-			);
-			return Response::json($response);
-
-		}
-		catch(QueryException $e)
-		{
-			$response = array(
-				'status' => false,
-				'datas' => $e->getMessage()
-			);
-			return Response::json($response);
-		}
-	}
-
-	public function delete_item($id)
-	{
-		$items = CanteenItem::find($id);
-		$items->delete();
-
-		return redirect('/canteen/purchase_item')
-		->with('status', 'Food Item has been deleted.')
-		->with('page', 'Food Item');
-	}
-
-	public function get_kode_item(Request $request)
-	{
-		$kategori = $request->kategori;
-
-		$query = "SELECT kode_item FROM `canteen_items` where kategori='$kategori' order by kode_item DESC LIMIT 1";
-		$nomorurut = DB::select($query);
-
-		if ($nomorurut != null)
-		{
-			$nomor = substr($nomorurut[0]->kode_item, -3);
-			$nomor = $nomor + 1;
-			$nomor = sprintf('%03d', $nomor);
-
-		}
-		else
-		{
-			$nomor = "001";
-		}
-
-		$result['no_urut'] = $nomor;
-
-		return json_encode($result);
-	}
+	return json_encode($result);
+}
 
 	    //==================================//
 	    //       Create Item Category       //
 	    //==================================//
-	public function create_item_category()
+public function create_item_category()
+{
+	$title = 'Create Item Category';
+	$title_jp = '購入アイテムの種類を作成';
+
+	return view('general_affairs.report.canteen_create_category_item', array(
+		'title' => $title,
+		'title_jp' => $title_jp
+	))->with('page', 'Food Item');
+}
+
+public function create_item_category_post(Request $request)
+{
+	try
 	{
-		$title = 'Create Item Category';
-		$title_jp = '購入アイテムの種類を作成';
+		$id_user = Auth::id();
 
-		return view('general_affairs.report.canteen_create_category_item', array(
-			'title' => $title,
-			'title_jp' => $title_jp
-		))->with('page', 'Food Item');
+		$item_category = CanteenItemCategory::create([
+			'category_id' => $request->get('category_id') , 
+			'category_name' => $request->get('category_name') , 
+			'created_by' => $id_user
+		]);
+
+		$item_category->save();
+
+		$response = array(
+			'status' => true,
+			'datas' => "Berhasil"
+		);
+		return Response::json($response);
 	}
-
-	public function create_item_category_post(Request $request)
+	catch(QueryException $e)
 	{
-		try
-		{
-			$id_user = Auth::id();
-
-			$item_category = CanteenItemCategory::create([
-				'category_id' => $request->get('category_id') , 
-				'category_name' => $request->get('category_name') , 
-				'created_by' => $id_user
-			]);
-
-			$item_category->save();
-
-			$response = array(
-				'status' => true,
-				'datas' => "Berhasil"
-			);
-			return Response::json($response);
-		}
-		catch(QueryException $e)
-		{
-			$response = array(
-				'status' => false,
-				'datas' => $e->getMessage()
-			);
-			return Response::json($response);
-		}
+		$response = array(
+			'status' => false,
+			'datas' => $e->getMessage()
+		);
+		return Response::json($response);
 	}
+}
 
-	public function create_purchase_requisition(Request $request)
-    {
-        $id = Auth::id();
+public function create_purchase_requisition(Request $request)
+{
+	$id = Auth::id();
 
-        $lop = $request->get('lop');
+	$lop = $request->get('lop');
 
-        try
-        {
-            $staff = null;
-            $manager = null;
-            $manager_name = null;
-            $posisi = null;
-            $gm = null;
+	try
+	{
+		$staff = null;
+		$manager = null;
+		$manager_name = null;
+		$posisi = null;
+		$gm = null;
 
             //Jika GA pak arief
-            if($request->get('department') == "General Affairs Department")
-            {
-                $manag = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Human Resources Department' and position = 'manager'");
-            }
+		if($request->get('department') == "General Affairs Department")
+		{
+			$manag = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Human Resources Department' and position = 'manager'");
+		}
 
-            else
-            {
+		else
+		{
                 // Get Manager
-                $manag = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = '" . $request->get('department') . "' and position = 'manager'");
-            }
+			$manag = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = '" . $request->get('department') . "' and position = 'manager'");
+		}
 
-            if ($manag != null)
-            {
-                $posisi = "user";
+		if ($manag != null)
+		{
+			$posisi = "user";
 
-                foreach ($manag as $mg)
-                {
-                    $manager = $mg->employee_id;
-                    $manager_name = $mg->name;
-                }
-            }
+			foreach ($manag as $mg)
+			{
+				$manager = $mg->employee_id;
+				$manager_name = $mg->name;
+			}
+		}
 
-            else
-            {
-                $posisi = "user";
-            }
+		else
+		{
+			$posisi = "user";
+		}
 
             //Cek File
-            $files = array();
-            $file = new CanteenPurchaseRequisition();
-            if ($request->file('reportAttachment') != NULL)
-            {
-                if ($files = $request->file('reportAttachment'))
-                {
-                    foreach ($files as $file)
-                    {
-                        $nama = $file->getClientOriginalName();
-                        $file->move('files/pr', $nama);
-                        $data[] = $nama;
-                    }
-                }
-                $file->filename = json_encode($data);
-            }
-            else
-            {
-                $file->filename = NULL;
-            }
+		$files = array();
+		$file = new CanteenPurchaseRequisition();
+		if ($request->file('reportAttachment') != NULL)
+		{
+			if ($files = $request->file('reportAttachment'))
+			{
+				foreach ($files as $file)
+				{
+					$nama = $file->getClientOriginalName();
+					$file->move('files/pr', $nama);
+					$data[] = $nama;
+				}
+			}
+			$file->filename = json_encode($data);
+		}
+		else
+		{
+			$file->filename = NULL;
+		}
 
-            if($request->get('department') == "Human Resources Department" || $request->get('department') == "General Affairs Department"){
+		if($request->get('department') == "Human Resources Department" || $request->get('department') == "General Affairs Department"){
                 //GM Pak Arief
-                $getgm = EmployeeSync::select('employee_id', 'name', 'position')
-                ->where('employee_id','=','PI9709001')
-                ->first();
+			$getgm = EmployeeSync::select('employee_id', 'name', 'position')
+			->where('employee_id','=','PI9709001')
+			->first();
 
-                $gm = $getgm->employee_id;
-            }
+			$gm = $getgm->employee_id;
+		}
             //if accounting maka GM Pak IDA
-            else if($request->get('department') == "Accounting Department"){
-                $gm = $this->gm_acc;
-            }
+		else if($request->get('department') == "Accounting Department"){
+			$gm = $this->gm_acc;
+		}
             //Selain Itu GM Pak Budhi
-            else{
-                $gm = $this->dgm;
-            }
+		else{
+			$gm = $this->dgm;
+		}
 
 
-            $data = new CanteenPurchaseRequisition([
-                'no_pr' => $request->get('no_pr') , 
-                'emp_id' => $request->get('emp_id') , 
-                'emp_name' => $request->get('emp_name') , 
-                'department' => $request->get('department') , 
-                'section' => $request->get('section') , 
-                'submission_date' => $submission_date, 
-                'note' => $request->get('note') , 
-                'file' => $file->filename, 
-                'file_pdf' => 'PR'.$request->get('no_pr').'.pdf', 
-                'posisi' => $posisi, 
-                'status' => 'approval', 
-                'no_budget' => $request->get('budget_no'), 
-                'staff' => $staff,
-                'manager' => $manager,
-                'manager_name' => $manager_name,
-                'gm' => $gm, 
-                'created_by' => $id
-            ]);
+		$data = new CanteenPurchaseRequisition([
+			'no_pr' => $request->get('no_pr') , 
+			'emp_id' => $request->get('emp_id') , 
+			'emp_name' => $request->get('emp_name') , 
+			'department' => $request->get('department') , 
+			'section' => $request->get('section') , 
+			'submission_date' => $request->get('submission_date'), 
+			'note' => $request->get('note') , 
+			'file' => $file->filename, 
+			'file_pdf' => 'PR'.$request->get('no_pr').'.pdf', 
+			'posisi' => $posisi, 
+			'status' => 'approval', 
+			'no_budget' => $request->get('budget_no'), 
+			'staff' => $staff,
+			'manager' => $manager,
+			'manager_name' => $manager_name,
+			'gm' => $gm, 
+			'created_by' => $id
+		]);
 
-            $data->save();
+		$data->save();
 
-            for ($i = 1;$i <= $lop;$i++)
-            {
-                $item_code = "item_code" . $i;
-                $item_desc = "item_desc" . $i;
-                $item_stock = "item_stock" . $i;
-                $item_request_date = "req_date" . $i;
-                $item_currency = "item_currency" . $i;
-                $item_currency_text = "item_currency_text" . $i;
-                $item_price = "item_price" . $i;
-                $item_qty = "qty" . $i;
-                $item_uom = "uom" . $i;
-                $item_amount = "amount" . $i;
-                $status = "";
-                if ($request->get($item_code) == "kosong")
-                {
-                    $request->get($item_code) == "";
-                }
+		for ($i = 1;$i <= $lop;$i++)
+		{
+			$item_code = "item_code" . $i;
+			$item_desc = "item_desc" . $i;
+			$item_request_date = "req_date" . $i;
+			$item_currency = "item_currency" . $i;
+			$item_currency_text = "item_currency_text" . $i;
+			$item_price = "item_price" . $i;
+			$item_qty = "qty" . $i;
+			$item_uom = "uom" . $i;
+			$item_amount = "amount" . $i;
+			$status = "";
+			if ($request->get($item_code) == "kosong")
+			{
+				$request->get($item_code) == "";
+			}
 
-                if ($request->get($item_code) != null)
-                {
-                    $status = "fixed";
-                }
-                else
-                {
-                    $status = "sementara";
-                }
+			if ($request->get($item_code) != null)
+			{
+				$status = "fixed";
+			}
+			else
+			{
+				$status = "sementara";
+			}
 
-                if ($request->get($item_currency) != "")
-                {
-                    $current = $request->get($item_currency);
-                }
-                else if ($request->get($item_currency_text) != "")
-                {
-                    $current = $request->get($item_currency_text);
-                }
+			if ($request->get($item_currency) != "")
+			{
+				$current = $request->get($item_currency);
+			}
+			else if ($request->get($item_currency_text) != "")
+			{
+				$current = $request->get($item_currency_text);
+			}
 
-                $data2 = new CanteenPurchaseRequisitionItem([
-                    'no_pr' => $request->get('no_pr') , 
-                    'item_code' => $request->get($item_code) ,
-                    'item_stock' => $request->get($item_stock) , 
-                    'item_request_date' => $request->get($item_request_date), 
-                    'item_currency' => $current, 
-                    'item_price' => $request->get($item_price), 
-                    'item_qty' => $request->get($item_qty),
-                    'item_uom' => $request->get($item_uom),
-                    'item_amount' => $request->get($item_amount),
-                    'created_by' => $id
-                ]);
+			$data2 = new CanteenPurchaseRequisitionItem([
+				'no_pr' => $request->get('no_pr') , 
+				'item_code' => $request->get($item_code) ,
+				'item_desc' => $request->get($item_desc) , 
+				'item_request_date' => $request->get($item_request_date), 
+				'item_currency' => $current, 
+				'item_price' => $request->get($item_price), 
+				'item_qty' => $request->get($item_qty),
+				'item_uom' => $request->get($item_uom),
+				'item_amount' => $request->get($item_amount),
+				'created_by' => $id
+			]);
 
-                $data2->save();
+			$data2->save();
 
-                $dollar = "konversi_dollar" . $i;
+			$dollar = "konversi_dollar" . $i;
 
-                $getbulan = AccBudget::select('budget_no', 'periode')
-                ->where('budget_no', $request->get('budget_no'))
-                ->first();
+			$getbulan = AccBudget::select('budget_no', 'periode')
+			->where('budget_no', $request->get('budget_no'))
+			->first();
 
-                if ($getbulan->periode == "FY198") {
-                    $month = strtolower(date('M'));
-                }
-                else{
-                    $month = "apr";
-                }
+			if ($getbulan->periode == "FY198") {
+				$month = strtolower(date('M'));
+			}
+			else{
+				$month = "apr";
+			}
 
-                $data3 = new AccBudgetHistory([
-                    'budget' => $request->get('budget_no'),
-                    'budget_month' => $month,
-                    'budget_date' => date('Y-m-d'),
-                    'category_number' => $request->get('no_pr'),
-                    'no_item' => $request->get($item_desc),
-                    'beg_bal' => $request->get('budget'),
-                    'amount' => $request->get($dollar),
-                    'status' => 'PR',
-                    'created_by' => $id
-                ]);
+			$data3 = new CanteenBudgetHistory([
+				'budget' => $request->get('budget_no'),
+				'budget_month' => $month,
+				'budget_date' => date('Y-m-d'),
+				'category_number' => $request->get('no_pr'),
+				'no_item' => $request->get($item_desc),
+				'beg_bal' => $request->get('budget'),
+				'amount' => $request->get($dollar),
+				'status' => 'PR',
+				'created_by' => $id
+			]);
 
-                $data3->save();
+			$data3->save();
+		}
 
-                $updatekebutuhan = AccItem::where('kode_item','=',$request->get($item_code))->update([
-                    'peruntukan' => $request->get($peruntukan),
-                    'kebutuhan' => $request->get($kebutuhan)
-                ]);
-            }
+		$totalPembelian = $request->get('TotalPembelian');
+		if ($totalPembelian != null) {
+			$getbulan = AccBudget::select('budget_no', 'periode')
+			->where('budget_no', $request->get('budget_no'))
+			->first();
 
-            $totalPembelian = $request->get('TotalPembelian');
-            if ($totalPembelian != null) {
-                $getbulan = AccBudget::select('budget_no', 'periode')
-                ->where('budget_no', $request->get('budget_no'))
-                ->first();
+			if ($getbulan->periode == "FY198") {
+				$bulan = strtolower(date('M'));
+				$fiscal = "FY198";
+			}
+			else{
+				$bulan = "apr";
+				$fiscal = "FY199";
+			}
 
-                if ($getbulan->periode == "FY198") {
-                    $bulan = strtolower(date('M'));
-                    $fiscal = "FY198";
-                }
-                else{
-                    $bulan = "apr";
-                    $fiscal = "FY199";
-                }
-
-                $sisa_bulan = $bulan.'_sisa_budget';                    
+			$sisa_bulan = $bulan.'_sisa_budget';                    
                 //get Data Budget Based On Periode Dan Nomor
-                $budget = AccBudget::where('budget_no','=',$request->get('budget_no'))->first();
+			$budget = AccBudget::where('budget_no','=',$request->get('budget_no'))->first();
                 //perhitungan 
-                $total = $budget->$sisa_bulan - $totalPembelian;
+			$total = $budget->$sisa_bulan - $totalPembelian;
 
-                if ($total < 0 ) {
-                    return false;
-                }
+			if ($total < 0 ) {
+				return false;
+			}
 
-                $dataupdate = AccBudget::where('budget_no',$request->get('budget_no'))->update([
-                    $sisa_bulan => $total
-                ]);
-            }
+			$dataupdate = AccBudget::where('budget_no',$request->get('budget_no'))->update([
+				$sisa_bulan => $total
+			]);
+		}
 
-            $detail_pr = CanteenPurchaseRequisition::select('acc_purchase_requisitions.*','acc_purchase_requisition_items.*','acc_budget_histories.beg_bal','acc_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
-            ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
-            ->join('acc_budget_histories', function($join) {
-             $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
-             $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
-         })
-            ->where('acc_purchase_requisitions.id', '=', $data->id)
-            ->distinct()
-            ->get();
+         //    $detail_pr = CanteenPurchaseRequisition::select('acc_purchase_requisitions.*','acc_purchase_requisition_items.*','acc_budget_histories.beg_bal','acc_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
+         //    ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
+         //    ->join('acc_budget_histories', function($join) {
+         //     $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
+         //     $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
+         // })
+         //    ->where('acc_purchase_requisitions.id', '=', $data->id)
+         //    ->distinct()
+         //    ->get();
 
-            $exchange_rate = AccExchangeRate::select('*')
-            ->where('periode','=',date('Y-m-01', strtotime($detail_pr[0]->submission_date)))
-            ->where('currency','!=','USD')
-            ->orderBy('currency','ASC')
-            ->get();
+         //    $exchange_rate = AccExchangeRate::select('*')
+         //    ->where('periode','=',date('Y-m-01', strtotime($detail_pr[0]->submission_date)))
+         //    ->where('currency','!=','USD')
+         //    ->orderBy('currency','ASC')
+         //    ->get();
 
-            $pdf = \App::make('dompdf.wrapper');
-            $pdf->getDomPDF()->set_option("enable_php", true);
-            $pdf->setPaper('A4', 'landscape');
+         //    $pdf = \App::make('dompdf.wrapper');
+         //    $pdf->getDomPDF()->set_option("enable_php", true);
+         //    $pdf->setPaper('A4', 'landscape');
 
-            $pdf->loadView('accounting_purchasing.report.report_pr', array(
-                'pr' => $detail_pr,
-                'rate' => $exchange_rate
-            ));
+         //    $pdf->loadView('accounting_purchasing.report.report_pr', array(
+         //        'pr' => $detail_pr,
+         //        'rate' => $exchange_rate
+         //    ));
 
-            $pdf->save(public_path() . "/pr_list/PR".$detail_pr[0]->no_pr.".pdf");
+         //    $pdf->save(public_path() . "/pr_list/PR".$detail_pr[0]->no_pr.".pdf");
 
 
-            return redirect('/canteen/purchase_requisition')->with('status', 'PR Berhasil Dibuat')
-            ->with('page', 'Purchase Requisition');
-        }
-        catch(QueryException $e)
-        {
-            return redirect('/canteen/purchase_requisition')->with('error', $e->getMessage())
-            ->with('page', 'Purchase Requisition');
-        }
-    }
+		return redirect('/canteen/purchase_requisition')->with('status', 'PR Berhasil Dibuat')
+		->with('page', 'Purchase Requisition');
+	}
+	catch(QueryException $e)
+	{
+		return redirect('/canteen/purchase_requisition')->with('error', $e->getMessage())
+		->with('page', 'Purchase Requisition');
+	}
+}
 }
