@@ -315,7 +315,7 @@ class ProductionScheduleController extends Controller{
         ->where(db::raw('date_format(production_schedules_two_steps.due_date, "%Y-%m")') ,$month)
         ->whereIn('materials.hpl', $request->get('hpl'))
         ->update([
-            'production_schedules_two_steps.st_plan' => 0
+            'production_schedules_two_steps.st_plan' => 0,
             'production_schedules_two_steps.updated_at' => date('Y-m-d H:i:s')
         ]);
 
