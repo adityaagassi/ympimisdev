@@ -732,7 +732,7 @@
 
 					});
 				}else{
-					alert('Failed to Retrieve Data');
+					// alert('Failed to Retrieve Data');
 				}
 			}
 		});		
@@ -852,7 +852,7 @@ function fetchTemperatureDetail(temperature){
 			intervaltemp = setInterval(fetchTemperature,300000);
 		}
 		else{
-			alert('Attempt to retrieve data failed');
+			// alert('Attempt to retrieve data failed');
 		}
 	});
 }
