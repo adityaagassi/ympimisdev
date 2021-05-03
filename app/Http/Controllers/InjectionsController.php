@@ -50,6 +50,7 @@ use App\EmployeeSync;
 use App\InjectionHistoryMoldingWorks;
 use App\InjectionScheduleLog;
 use App\InjectionScheduleMoldingLog;
+use App\InjectionScheduleAdjustmentLog;
 use Response;
 use DataTables;
 use Carbon\Carbon;
@@ -6137,13 +6138,34 @@ class InjectionsController extends Controller
                             $status = false;
                             $message = "Silahkan pilih jam lebih dari ".$minimum;
                         }else{
+                            $machines = $schedule->machine;
                             $schedule->machine = $machine;
                             $ts1 = strtotime($schedule->start_time);
                             $ts2 = strtotime($schedule->end_time);
                             $seconds_diff = $ts2 - $ts1;
+                            $startes = $schedule->start_time;
+                            $endes = $schedule->end_time;
                             $schedule->start_time = $starts;
                             $end_time = date("Y-m-d H:i:s",strtotime($starts)+$seconds_diff);
                             $schedule->end_time = $end_time;
+                            InjectionScheduleAdjustmentLog::create([
+                                'id_schedule' => $schedule->id,
+                                'machine_from' => $machines,
+                                'machine_to' => $machine,
+                                'material_number' => $schedule->material_number,
+                                'material_description' => $schedule->material_description,
+                                'part' => $schedule->part,
+                                'color' => $schedule->color,
+                                'qty' => $schedule->qty,
+                                'start_time_from' =>$startes,
+                                'end_time_from' => $endes,
+                                'start_time_to' =>$starts,
+                                'end_time_to' => $end_time,
+                                'reason' => $reason,
+                                'created_by' => 1,
+                                'created_at' => date('Y-m-d H:i:s'),
+                                'updated_at' => date('Y-m-d H:i:s'),
+                            ]);
                             $schedule->reason = $reason;
                             $schedule->save();
 
@@ -6180,13 +6202,34 @@ class InjectionsController extends Controller
                             $message = 'Success Adjust Schedule';
                         }
                     }else{
+                        $machines = $schedule->machine;
                         $schedule->machine = $machine;
                         $ts1 = strtotime($schedule->start_time);
                         $ts2 = strtotime($schedule->end_time);
                         $seconds_diff = $ts2 - $ts1;
+                        $startes = $schedule->start_time;
+                        $endes = $schedule->end_time;
                         $schedule->start_time = $starts;
                         $end_time = date("Y-m-d H:i:s",strtotime($starts)+$seconds_diff);
                         $schedule->end_time = $end_time;
+                        InjectionScheduleAdjustmentLog::create([
+                            'id_schedule' => $schedule->id,
+                            'machine_from' => $machines,
+                            'machine_to' => $machine,
+                            'material_number' => $schedule->material_number,
+                            'material_description' => $schedule->material_description,
+                            'part' => $schedule->part,
+                            'color' => $schedule->color,
+                            'qty' => $schedule->qty,
+                            'start_time_from' =>$startes,
+                            'end_time_from' => $endes,
+                            'start_time_to' =>$starts,
+                            'end_time_to' => $end_time,
+                            'reason' => $reason,
+                            'created_by' => 1,
+                            'created_at' => date('Y-m-d H:i:s'),
+                            'updated_at' => date('Y-m-d H:i:s'),
+                        ]);
                         $schedule->reason = $reason;
                         $schedule->save();
 
@@ -6247,9 +6290,29 @@ class InjectionsController extends Controller
                                 $ts2 = strtotime($schedule->end_time);
                                 $seconds_diff = $ts2 - $ts1;
                                 $secondall = $seconds_diff+14400;
+                                $startes = $schedule->start_time;
+                                $endes = $schedule->end_time;
                                 $schedule->start_time = $starts;
                                 $end_time = date("Y-m-d H:i:s",strtotime($starts)+$seconds_diff);
                                 $schedule->end_time = $end_time;
+                                InjectionScheduleAdjustmentLog::create([
+                                    'id_schedule' => $schedule->id,
+                                    'machine_from' => $schedule->machine,
+                                    'machine_to' => $schedule->machine,
+                                    'material_number' => $schedule->material_number,
+                                    'material_description' => $schedule->material_description,
+                                    'part' => $schedule->part,
+                                    'color' => $schedule->color,
+                                    'qty' => $schedule->qty,
+                                    'start_time_from' => $startes,
+                                    'end_time_from' => $endes,
+                                    'start_time_to' =>$starts,
+                                    'end_time_to' => $end_time,
+                                    'reason' => $reason,
+                                    'created_by' => 1,
+                                    'created_at' => date('Y-m-d H:i:s'),
+                                    'updated_at' => date('Y-m-d H:i:s'),
+                                ]);
                                 $schedule->reason = $reason;
                                 $schedule->save();
 
@@ -6290,9 +6353,29 @@ class InjectionsController extends Controller
                             $ts2 = strtotime($schedule->end_time);
                             $seconds_diff = $ts2 - $ts1;
                             $secondall = $seconds_diff+14400;
+                            $startes = $schedule->start_time;
+                            $endes = $schedule->end_time;
                             $schedule->start_time = $starts;
                             $end_time = date("Y-m-d H:i:s",strtotime($starts)+$seconds_diff);
                             $schedule->end_time = $end_time;
+                            InjectionScheduleAdjustmentLog::create([
+                                'id_schedule' => $schedule->id,
+                                'machine_from' => $schedule->machine,
+                                'machine_to' => $schedule->machine,
+                                'material_number' => $schedule->material_number,
+                                'material_description' => $schedule->material_description,
+                                'part' => $schedule->part,
+                                'color' => $schedule->color,
+                                'qty' => $schedule->qty,
+                                'start_time_from' => $startes,
+                                'end_time_from' => $endes,
+                                'start_time_to' =>$starts,
+                                'end_time_to' => $end_time,
+                                'reason' => $reason,
+                                'created_by' => 1,
+                                'created_at' => date('Y-m-d H:i:s'),
+                                'updated_at' => date('Y-m-d H:i:s'),
+                            ]);
                             $schedule->reason = $reason;
                             $schedule->save();
 
@@ -6329,6 +6412,9 @@ class InjectionsController extends Controller
                             $message = 'Success Adjust Schedule';
                         }
                     }
+                }else{
+                    $status = true;
+                    $message = 'Success Adjust Schedule';
                 }
             }
             $response = array(

@@ -456,30 +456,35 @@
 	}
 
 	function adjustSchedule() {
-		var id_schedule = $('#id_schedule').val();
-		var start_date = $('#start_date').val();
-		var start_time = $('#start_time').val();
-		var machine = $('#machine').val();
-		var reason = $('#reason').val();
+		if ($('#reason').val() == '') {
+			audio_error.play();
+			openErrorGritter('Error!', "Masukkan reason");
+		}else{
+			var id_schedule = $('#id_schedule').val();
+			var start_date = $('#start_date').val();
+			var start_time = $('#start_time').val();
+			var machine = $('#machine').val();
+			var reason = $('#reason').val();
 
-		var data = {
-			id_schedule:id_schedule,
-			start_date:start_date,
-			start_time:start_time,
-			machine:machine,
-			reason:reason,
-		}
-
-		$.get('{{ url("adjust/injection_schedule/adjustment") }}',data,  function(result, status, xhr){
-			if (result.status) {
-				$('#edit_modal').modal('hide');
-				openSuccessGritter('Success',result.message);
-				drawTable();
-			}else{
-				audio_error.play();
-				openErrorGritter('Error!', result.message);
+			var data = {
+				id_schedule:id_schedule,
+				start_date:start_date,
+				start_time:start_time,
+				machine:machine,
+				reason:reason,
 			}
-		});
+
+			$.get('{{ url("adjust/injection_schedule/adjustment") }}',data,  function(result, status, xhr){
+				if (result.status) {
+					$('#edit_modal').modal('hide');
+					openSuccessGritter('Success',result.message);
+					drawTable();
+				}else{
+					audio_error.play();
+					openErrorGritter('Error!', result.message);
+				}
+			});
+		}
 	}
 	Highcharts.createElement('link', {
 		href: '{{ url("fonts/UnicaOne.css")}}',
