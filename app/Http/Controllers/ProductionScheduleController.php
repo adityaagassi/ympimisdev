@@ -300,6 +300,18 @@ class ProductionScheduleController extends Controller{
             $month = date('Y-m');
         }
 
+        $hpl1 = '';
+        if($request->get('hpl') != null){
+            $hpls =  $request->get('hpl');
+            for ($i=0; $i < count($hpls); $i++) {
+                $hpl1 = $hpl1."'".$hpls[$i]."'";
+                if($i != (count($hpls)-1)){
+                    $hpl1 = $hpl1.',';
+                }
+            }
+            $hpl1 = "AND materials.hpl IN (".$hpl1.") ";
+        }
+
         $delete = ProductionSchedulesTwoStep::leftJoin('materials', 'materials.material_number', 'production_schedules_two_steps.material_number')
         ->where(db::raw('date_format(production_schedules_two_steps.due_date, "%Y-%m")') ,$month)
         ->whereIn('materials.hpl', $request->get('hpl'))
@@ -311,35 +323,26 @@ class ProductionScheduleController extends Controller{
         ->whereIn('materials.hpl', $request->get('hpl'))
         ->delete();
 
-        $update_step2 = ProductionSchedulesTwoStep::leftJoin('materials', 'materials.material_number', 'production_schedules_two_steps.material_number')
-        ->where(db::raw('date_format(production_schedules_two_steps.due_date, "%Y-%m")') ,$month)
-        ->whereIn('materials.hpl', $request->get('hpl'))
-        ->update([
-            'production_schedules_two_steps.st_plan' => 0,
-            'production_schedules_two_steps.updated_at' => date('Y-m-d H:i:s')
-        ]);
+        $update_step2 = db::select("UPDATE `production_schedules_two_steps` LEFT JOIN `materials` ON `materials`.`material_number` = `production_schedules_two_steps`.`material_number` 
+            SET `production_schedules_two_steps`.`st_plan` = 0
+            WHERE date_format( production_schedules_two_steps.due_date, '%Y-%m' ) = '".$month."'"
+            .$hpl1); 
 
-        $update_stock = FirstInventory::leftJoin('materials', 'materials.material_number', 'first_inventories.material_number')
-        ->where(db::raw('date_format(first_inventories.stock_date, "%Y-%m")') , $month)
-        ->whereIn('materials.hpl', $request->get('hpl'))
-        ->update([
-            'first_inventories.st_plan' => 0,
-            'first_inventories.updated_at' => date('Y-m-d H:i:s')
-        ]);
+        $update_stock = db::select("UPDATE `first_inventories` LEFT JOIN `materials` ON `materials`.`material_number` = `first_inventories`.`material_number` 
+            SET `first_inventories`.`st_plan` = 0
+            WHERE date_format( first_inventories.stock_date, '%Y-%m' ) = '".$month."'"
+            .$hpl1);
 
-        $update_request = ProductionRequest::leftJoin('materials', 'materials.material_number', 'production_requests.material_number')
-        ->where('production_requests.request_month', $month.'-01')
-        ->whereIn('materials.hpl', $request->get('hpl'))
-        ->update([
-            'production_requests.st_plan' => 0,
-            'production_requests.updated_at' => date('Y-m-d H:i:s')
-        ]);
+        $update_request = db::select("UPDATE `production_requests` LEFT JOIN `materials` ON `materials`.`material_number` = `production_requests`.`material_number` 
+            SET `production_requests`.`st_plan` = 0
+            WHERE production_requests.request_month = '".$month."-01'"
+            .$hpl1);
 
         $request = ProductionRequest::leftJoin('materials', 'materials.material_number', 'production_requests.material_number')
         ->where(db::raw('date_format(production_requests.request_month, "%Y-%m")') , $month)
         ->whereIn('materials.hpl', $request->get('hpl'))
-        ->orderBy('material_number', 'ASC')
-        ->orderBy('priority', 'ASC')
+        ->orderBy('production_requests.material_number', 'ASC')
+        ->orderBy('production_requests.priority', 'ASC')
         ->get();
 
         $psi_start = PsiCalendar::where('sales_period', 'like', '%'.$month.'%')->orderBy('week_date', 'ASC')->first();
@@ -1143,14 +1146,14 @@ class ProductionScheduleController extends Controller{
                 return Response::json($response);
             }
             else{
-               $response = array(
+             $response = array(
                 'status' => false,
                 'datas' => $production_schedule
             );
-               return Response::json($response);
-           }
-       }
-       catch (QueryException $e){
+             return Response::json($response);
+         }
+     }
+     catch (QueryException $e){
         $error_code = $e->errorInfo[1];
         if($error_code == 1062){
             return redirect('/index/production_schedule')->with('error', 'Production schedule with preferred due date already exist.')->with('page', 'Production Schedule');
@@ -1163,28 +1166,28 @@ class ProductionScheduleController extends Controller{
 
 public function edit(Request $request)
 {
-   $due_date = date('Y-m-d', strtotime(str_replace('/','-', $request->get('due_date'))));
+ $due_date = date('Y-m-d', strtotime(str_replace('/','-', $request->get('due_date'))));
 
-   try{
-      $production_schedule = ProductionSchedule::find($request->get('id'));
-      $production_schedule->quantity = $request->get('quantity');
-      $production_schedule->save();
+ try{
+  $production_schedule = ProductionSchedule::find($request->get('id'));
+  $production_schedule->quantity = $request->get('quantity');
+  $production_schedule->save();
 
-      $response = array(
-         'status' => true,
-         'datas' => $production_schedule
-     );
-      return Response::json($response);
-  }
-  catch (QueryException $e){
-      $error_code = $e->errorInfo[1];
-      if($error_code == 1062){
-         return redirect('/index/production_schedule')->with('error', 'Production schedule with preferred due date already exist.')->with('page', 'Production Schedule');
-     }
-     else{
-         return redirect('/index/production_schedule')->with('error', $e->getMessage())->with('page', 'Production Schedule');
-     }
- }
+  $response = array(
+   'status' => true,
+   'datas' => $production_schedule
+);
+  return Response::json($response);
+}
+catch (QueryException $e){
+  $error_code = $e->errorInfo[1];
+  if($error_code == 1062){
+   return redirect('/index/production_schedule')->with('error', 'Production schedule with preferred due date already exist.')->with('page', 'Production Schedule');
+}
+else{
+   return redirect('/index/production_schedule')->with('error', $e->getMessage())->with('page', 'Production Schedule');
+}
+}
 }
 
     /**
@@ -1212,23 +1215,23 @@ public function edit(Request $request)
             $production_schedule->forceDelete();
         }
         else{
-         $response = array(
+           $response = array(
             'status' => false
         );
-         return Response::json($response);   
-     }
+           return Response::json($response);   
+       }
 
-     $response = array('status' => true);
-     return Response::json($response);
- }
+       $response = array('status' => true);
+       return Response::json($response);
+   }
 
- public function destroy(Request $request){
-     $date_from = date('Y-m-d', strtotime($request->get('datefrom')));
-     $date_to = date('Y-m-d', strtotime($request->get('dateto')));
+   public function destroy(Request $request){
+       $date_from = date('Y-m-d', strtotime($request->get('datefrom')));
+       $date_to = date('Y-m-d', strtotime($request->get('dateto')));
 
-     $materials = Material::select('material_number');
+       $materials = Material::select('material_number');
 
-     foreach($request->get('location') as $location){
+       foreach($request->get('location') as $location){
         $locations = explode(",", $location);
 
         $category = $locations[0];
