@@ -33,9 +33,11 @@
         @endif
 
 
+        @if(in_array('A11', $navs))
         @if(isset($page) && $page == "Safety Riding")<li class="active">@else<li>@endif
           <a href="{{ url("/index/safety_riding") }}"><i class="fa fa-motorcycle"></i> <span>Safety Riding</span></a>
         </li>
+        @endif
 
         @if(in_array('A1', $navs))
         @if(isset($page) && $page == "Batch Setting")<li class="active">@else<li>@endif
