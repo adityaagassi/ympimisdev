@@ -103,7 +103,7 @@ thead input {
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-12">
+						<div class="col-md-12" style="overflow-x: scroll;">
 							<table id="tableNgReport" class="table table-bordered table-striped table-hover">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
@@ -121,6 +121,7 @@ thead input {
 										<th>Cek Visual Produksi</th>
 										<th>Result QA Visual 2</th>
 										<th>NG QA Visual 2</th>
+										<th>Ganti Kunci</th>
 									</tr>
 								</thead>
 								<tbody id="bodyTableNgReport">
@@ -221,7 +222,7 @@ thead input {
 					tableData += '<tr>';
 					tableData += '<td>'+ value.serial_number +'</td>';
 					tableData += '<td>'+ value.model +'</td>';
-					tableData += '<td>'+ value.op_qa_fungsi +'</td>';
+					tableData += '<td>'+ value.op_qa_fungsi.split(',').join('<br>') +'</td>';
 					tableData += '<td>'+ value.operator_fungsi.split(',').join('<br>') +'</td>';
 					if (value.ng_fungsi == null) {
 						tableData += '<td><span class="label label-success">OK</span></td>';
@@ -230,7 +231,7 @@ thead input {
 						tableData += '<td><span class="label label-danger">NG</span></td>';
 						tableData += '<td>'+value.ng_fungsi.split(',').join('<br>')+'</td>';
 					}
-					tableData += '<td>'+ value.op_qa_visual1 +'</td>';
+					tableData += '<td>'+ value.op_qa_visual1.split(',').join('<br>') +'</td>';
 					tableData += '<td>'+ value.operator_visual.split(',').join('<br>')+'</td>';
 					if (value.ng_visual1 == null) {
 						tableData += '<td><span class="label label-success">OK</span></td>';
@@ -239,7 +240,7 @@ thead input {
 						tableData += '<td><span class="label label-danger">NG</span></td>';
 						tableData += '<td>'+value.ng_visual1.split(',').join('<br>')+'</td>';
 					}
-					tableData += '<td>'+ value.op_qa_visual2 +'</td>';
+					tableData += '<td>'+ value.op_qa_visual2.split(',').join('<br>') +'</td>';
 					tableData += '<td>'+ value.operator_visual.split(',').join('<br>')+'</td>';
 					if (value.ng_visual2 == null) {
 						tableData += '<td><span class="label label-success">OK</span></td>';
@@ -247,6 +248,11 @@ thead input {
 					}else{
 						tableData += '<td><span class="label label-danger">NG</span></td>';
 						tableData += '<td>'+value.ng_visual2.split(',').join('<br>')+'</td>';
+					}
+					if (value.ganti_kunci == null) {
+						tableData += '<td></td>';
+					}else{
+						tableData += '<td>'+value.ganti_kunci.split(',').join('<br>')+'</td>';
 					}
 				});
 				$('#bodyTableNgReport').append(tableData);

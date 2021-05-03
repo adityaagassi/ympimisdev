@@ -1612,6 +1612,7 @@ class AssemblyProcessController extends Controller
 			if ($request->get('ganti') == 'repair') {
 				$repair = AssemblyNgLog::where('id',$request->get('id'))->first();
 				$repair->repair_status = 'Repaired';
+				$repair->decision = 'Tidak Ganti';
 				$repair->repaired_by = $request->get('employee_id');
 				$repair->repaired_at = date('Y-m-d H:i:s');
 				$repair->save();
@@ -1788,6 +1789,7 @@ class AssemblyProcessController extends Controller
 					'ng_name' => $request->get('ng'),
 					'value_atas' => 1,
 					'ongko' => $request->get('onko'),
+					'decision' => 'Ganti Kunci',
 					'operator_id' => $request->get('employee_id'),
 					'started_at' => $request->get('started_at'),
 					'origin_group_code' => $request->get('origin_group_code'),
@@ -3125,140 +3127,163 @@ public function fetchSerialNumberReport($process,Request $request)
 		}
 		if ($process == 'qa') {
 			$report = DB::SELECT("SELECT
-	a.serial_number,
-	a.model,
-	GROUP_CONCAT( a.op_qa_fungsi SEPARATOR '' ) AS op_qa_fungsi,
-	GROUP_CONCAT( a.op_qa_visual_1 SEPARATOR '' ) AS op_qa_visual1,
-	GROUP_CONCAT( a.op_qa_visual_2 SEPARATOR '' ) AS op_qa_visual2,
-	(
-	SELECT
-		GROUP_CONCAT( ng_name ) 
-	FROM
-		assembly_ng_logs 
-	WHERE
-		a.serial_number = assembly_ng_logs.serial_number 
-		AND a.model = assembly_ng_logs.model 
-		AND location = 'qa-fungsi' 
-	) AS ng_fungsi,
-	(
-	SELECT
-		GROUP_CONCAT( ng_name ) 
-	FROM
-		assembly_ng_logs 
-	WHERE
-		a.serial_number = assembly_ng_logs.serial_number 
-		AND a.model = assembly_ng_logs.model 
-		AND location = 'qa-visual1' 
-	) AS ng_visual1,
-	(
-	SELECT
-		GROUP_CONCAT( ng_name ) 
-	FROM
-		assembly_ng_logs 
-	WHERE
-		a.serial_number = assembly_ng_logs.serial_number 
-		AND a.model = assembly_ng_logs.model 
-		AND location = 'qa-visual2' 
-	) AS ng_visual2,
-	COALESCE ((
-		SELECT
-			GROUP_CONCAT( CONCAT( employee_syncs.employee_id, '<br>', employee_syncs.NAME ) ) 
-		FROM
-			assembly_logs
-			LEFT JOIN employee_syncs ON employee_syncs.employee_id = assembly_logs.operator_id 
-		WHERE
-			location = 'renraku-fungsi' 
-			AND a.model = assembly_logs.model 
-			AND a.serial_number = assembly_logs.serial_number 
-			),
-		'' 
-	) AS operator_fungsi,
-	COALESCE ((
-		SELECT
-			GROUP_CONCAT( CONCAT( employee_syncs.employee_id, '<br>', employee_syncs.NAME ) ) 
-		FROM
-			assembly_logs
-			LEFT JOIN employee_syncs ON employee_syncs.employee_id = assembly_logs.operator_id 
-		WHERE
-			location = 'fukiage1-visual' 
-			AND a.model = assembly_logs.model 
-			AND a.serial_number = assembly_logs.serial_number 
-			),
-		'' 
-	) AS operator_visual 
-FROM
-	(
-	SELECT DISTINCT
-		( asl.serial_number ),
-		asl.model,
-		GROUP_CONCAT(
+				a.serial_number,
+				a.model,
+				GROUP_CONCAT( a.op_qa_fungsi SEPARATOR '' ) AS op_qa_fungsi,
+				GROUP_CONCAT( a.op_qa_visual_1 SEPARATOR '' ) AS op_qa_visual1,
+				GROUP_CONCAT( a.op_qa_visual_2 SEPARATOR '' ) AS op_qa_visual2,
+				(
+				SELECT
+					GROUP_CONCAT( ng_name, '=', ongko ) 
+				FROM
+					assembly_ng_logs 
+				WHERE
+					a.serial_number = assembly_ng_logs.serial_number 
+					AND a.model = assembly_ng_logs.model 
+					AND location = 'qa-fungsi' 
+				) AS ng_fungsi,
+				(
+				SELECT
+					GROUP_CONCAT( ng_name, '=', ongko, '<br>(', ss.employee_id, '<br>', SUBSTRING(ss.name,1,14),'...', ')' ) 
+				FROM
+					assembly_ng_logs
+					LEFT JOIN employee_syncs ss ON ss.employee_id = assembly_ng_logs.verified_by 
+				WHERE
+					( a.serial_number = assembly_ng_logs.serial_number AND a.model = assembly_ng_logs.model AND location = 'repair-process' AND ng_name = 'Ganti Kunci - Ganti Kunci' ) 
+					OR ( a.serial_number = assembly_ng_logs.serial_number AND a.model = assembly_ng_logs.model AND decision = 'Ganti Kunci' ) 
+				) AS ganti_kunci,
+				(
+				SELECT
+					GROUP_CONCAT( ng_name, '=', ongko ) 
+				FROM
+					assembly_ng_logs 
+				WHERE
+					a.serial_number = assembly_ng_logs.serial_number 
+					AND a.model = assembly_ng_logs.model 
+					AND location = 'qa-visual1' 
+				) AS ng_visual1,
+				(
+				SELECT
+					GROUP_CONCAT( ng_name, '=', ongko ) 
+				FROM
+					assembly_ng_logs 
+				WHERE
+					a.serial_number = assembly_ng_logs.serial_number 
+					AND a.model = assembly_ng_logs.model 
+					AND location = 'qa-visual2' 
+				) AS ng_visual2,
+				COALESCE ((
+					SELECT
+						GROUP_CONCAT(
+						DISTINCT (
+							CONCAT(
+								employee_syncs.employee_id,
+								'<br>',
+							SUBSTRING(employee_syncs.name,1,14),'...'))) 
+					FROM
+						assembly_logs
+						LEFT JOIN employee_syncs ON employee_syncs.employee_id = assembly_logs.operator_id 
+					WHERE
+						location = 'renraku-fungsi' 
+						AND a.model = assembly_logs.model 
+						AND a.serial_number = assembly_logs.serial_number 
+						),
+					'' 
+				) AS operator_fungsi,
+				COALESCE ((
+					SELECT
+						GROUP_CONCAT(
+						DISTINCT (
+							CONCAT(
+								employee_syncs.employee_id,
+								'<br>',
+							SUBSTRING(employee_syncs.name,1,14),'...'))) 
+					FROM
+						assembly_logs
+						LEFT JOIN employee_syncs ON employee_syncs.employee_id = assembly_logs.operator_id 
+					WHERE
+						location = 'fukiage1-visual' 
+						AND a.model = assembly_logs.model 
+						AND a.serial_number = assembly_logs.serial_number 
+						),
+					'' 
+				) AS operator_visual 
+			FROM
+				(
+				SELECT DISTINCT
+					( asl.serial_number ),
+					asl.model,
+					GROUP_CONCAT(
 			DISTINCT (
 				CONCAT(
 					asl.operator_id,
 					'<br>',
-				SUBSTRING_INDEX( employee_syncs.NAME, ' ', 2 )))) AS op_qa_fungsi,
-		'' AS op_qa_visual_1,
-		'' AS op_qa_visual_2,
-		GROUP_CONCAT(
-		DATE( asl.created_at )) AS created 
-	FROM
-		assembly_logs asl
-		JOIN employee_syncs ON employee_syncs.employee_id = asl.operator_id 
-	WHERE
-		location = 'qa-fungsi' 
-	GROUP BY
-		asl.serial_number,
-		asl.model UNION ALL
-	SELECT DISTINCT
-		( asl.serial_number ),
-		asl.model,
-		'' AS op_qa_fungsi,
-		GROUP_CONCAT(
+				SUBSTRING(employee_syncs.name,1,14),'...'))) AS op_qa_fungsi,
+					'' AS op_qa_visual_1,
+					'' AS op_qa_visual_2,
+					GROUP_CONCAT(
+						DISTINCT (
+						DATE( asl.created_at ))) AS created 
+				FROM
+					assembly_logs asl
+					JOIN employee_syncs ON employee_syncs.employee_id = asl.operator_id 
+				WHERE
+					location = 'qa-fungsi' 
+				GROUP BY
+					asl.serial_number,
+					asl.model UNION ALL
+				SELECT DISTINCT
+					( asl.serial_number ),
+					asl.model,
+					'' AS op_qa_fungsi,
+					GROUP_CONCAT(
 			DISTINCT (
 				CONCAT(
 					asl.operator_id,
 					'<br>',
-				SUBSTRING_INDEX( employee_syncs.NAME, ' ', 2 )))) AS op_qa_visual_1,
-		'' AS op_qa_visual_2,
-		GROUP_CONCAT(
-		DATE( asl.created_at )) AS created 
-	FROM
-		assembly_logs asl
-		JOIN employee_syncs ON employee_syncs.employee_id = asl.operator_id 
-	WHERE
-		location = 'qa-visual1' 
-	GROUP BY
-		asl.serial_number,
-		asl.model UNION ALL
-	SELECT DISTINCT
-		( asl.serial_number ),
-		asl.model,
-		'' AS op_qa_fungsi,
-		'' AS op_qa_visual_1,
-		GROUP_CONCAT(
+				SUBSTRING(employee_syncs.name,1,14),'...'))) AS op_qa_visual_1,
+					'' AS op_qa_visual_2,
+					GROUP_CONCAT(
+						DISTINCT (
+						DATE( asl.created_at ))) AS created 
+				FROM
+					assembly_logs asl
+					JOIN employee_syncs ON employee_syncs.employee_id = asl.operator_id 
+				WHERE
+					location = 'qa-visual1' 
+				GROUP BY
+					asl.serial_number,
+					asl.model UNION ALL
+				SELECT DISTINCT
+					( asl.serial_number ),
+					asl.model,
+					'' AS op_qa_fungsi,
+					'' AS op_qa_visual_1,
+					GROUP_CONCAT(
 			DISTINCT (
 				CONCAT(
 					asl.operator_id,
 					'<br>',
-				SUBSTRING_INDEX( employee_syncs.NAME, ' ', 2 )))) AS op_qa_visual_2,
-		GROUP_CONCAT(
-		DATE( asl.created_at )) AS created 
-	FROM
-		assembly_logs asl
-		JOIN employee_syncs ON employee_syncs.employee_id = asl.operator_id 
-	WHERE
-		location = 'qa-visual2' 
-	GROUP BY
-		asl.serial_number,
-		asl.model 
-	) a 
-WHERE
-	a.created BETWEEN '".$from."' 
-	AND '".$now."' 
-	".$model."
-GROUP BY
-	a.serial_number,
-	a.model");
+				SUBSTRING(employee_syncs.name,1,14),'...'))) AS op_qa_visual_2,
+					GROUP_CONCAT(
+						DISTINCT (
+						DATE( asl.created_at ))) AS created 
+				FROM
+					assembly_logs asl
+					JOIN employee_syncs ON employee_syncs.employee_id = asl.operator_id 
+				WHERE
+					location = 'qa-visual2' 
+				GROUP BY
+					asl.serial_number,
+					asl.model 
+				) a 
+			WHERE
+				a.created BETWEEN '".$from."' 
+				AND '".$now."'
+				".$models."
+			GROUP BY
+				a.serial_number,
+				a.model");
 		}
 		$response = array(
 			'status' => true,
