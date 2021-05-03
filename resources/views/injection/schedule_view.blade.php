@@ -116,6 +116,12 @@
 										<input type="start_time" class="form-control timepicker" id="start_time" placeholder="Start Time" required>
 									</div>
 								</div>
+								<div class="form-group row" align="right">
+									<label class="col-sm-4">Reason<span class="text-red">*</span></label>
+									<div class="col-sm-8">
+										<input type="text" class="form-control" id="reason" placeholder="Reason" required>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -404,42 +410,49 @@
 	}
 
 	function editSchedule(id_schedule) {
-		var data = {
-			id_schedule:id_schedule
-		}
-
-		$.get('{{ url("fetch/injection_schedule/adjustment") }}',data,  function(result, status, xhr){
-			if (result.status) {
-				
-				var machine = "";
-				$('#machine').html("");
-				machine += '<option value=""></option>';
-				$.each(result.schedule, function(key, value){
-					if (value.machine_1 != 0) {
-						machine += '<option value="Mesin '+value.machine_1+'">Mesin '+value.machine_1+'</option>';
-					}
-					if (value.machine_2 != 0) {
-						machine += '<option value="Mesin '+value.machine_2+'">Mesin '+value.machine_2+'</option>';
-					}
-					if (value.machine_3 != 0) {
-						machine += '<option value="Mesin '+value.machine_3+'">Mesin '+value.machine_3+'</option>';
-					}
-				});
-				$('#machine').append(machine);
-
-				$.each(result.schedule, function(key, value){
-					$('#id_schedule').val(value.id_schedule);
-					$('#start_date').val(value.start_date).datepicker("setDate", new Date(value.start_date) );
-					$('#start_time').val(value.start_times);
-					$('#machine').val(value.machine).trigger('change.select2');
-				});
-
-				$('#edit_modal').modal('show');
-			}else{
-				audio_error.play();
-				openErrorGritter('Error!', result.message);
+		var role = '{{$role}}';
+		var username = '{{$auth}}';
+		if (role == 'MIS' || username == 'PI1110001' || username == 'PI9911003') {
+			var data = {
+				id_schedule:id_schedule
 			}
-		});
+
+			$.get('{{ url("fetch/injection_schedule/adjustment") }}',data,  function(result, status, xhr){
+				if (result.status) {
+					
+					var machine = "";
+					$('#machine').html("");
+					machine += '<option value=""></option>';
+					$.each(result.schedule, function(key, value){
+						if (value.machine_1 != 0) {
+							machine += '<option value="Mesin '+value.machine_1+'">Mesin '+value.machine_1+'</option>';
+						}
+						if (value.machine_2 != 0) {
+							machine += '<option value="Mesin '+value.machine_2+'">Mesin '+value.machine_2+'</option>';
+						}
+						if (value.machine_3 != 0) {
+							machine += '<option value="Mesin '+value.machine_3+'">Mesin '+value.machine_3+'</option>';
+						}
+					});
+					$('#machine').append(machine);
+
+					$.each(result.schedule, function(key, value){
+						$('#id_schedule').val(value.id_schedule);
+						$('#start_date').val(value.start_date).datepicker("setDate", new Date(value.start_date) );
+						$('#start_time').val(value.start_times);
+						$('#machine').val(value.machine).trigger('change.select2');
+						$('#reason').val(value.reason);
+					});
+
+					$('#edit_modal').modal('show');
+				}else{
+					audio_error.play();
+					openErrorGritter('Error!', result.message);
+				}
+			});
+		}else{
+			openErrorGritter('Error!','Anda tidak memiliki Otoritas');
+		}
 	}
 
 	function adjustSchedule() {
@@ -447,12 +460,14 @@
 		var start_date = $('#start_date').val();
 		var start_time = $('#start_time').val();
 		var machine = $('#machine').val();
+		var reason = $('#reason').val();
 
 		var data = {
 			id_schedule:id_schedule,
 			start_date:start_date,
 			start_time:start_time,
 			machine:machine,
+			reason:reason,
 		}
 
 		$.get('{{ url("adjust/injection_schedule/adjustment") }}',data,  function(result, status, xhr){

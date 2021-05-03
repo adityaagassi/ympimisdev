@@ -6040,6 +6040,8 @@ class InjectionsController extends Controller
         return view('injection.schedule_view',array(
             'title' => $title,
             'title_jp' => $title_jp,
+            'auth' => Auth::user()->username,
+            'role' => Auth::user()->role_code,
         ))->with('page', 'Injection Schedule View')->with('jpn', '???');
     }
 
@@ -6110,6 +6112,7 @@ class InjectionsController extends Controller
             $start_date = $request->get('start_date');
             $start_time = $request->get('start_time');
             $machine = $request->get('machine');
+            $reason = $request->get('reason');
 
             $start = explode(':', $start_time);
 
@@ -6141,6 +6144,7 @@ class InjectionsController extends Controller
                             $schedule->start_time = $starts;
                             $end_time = date("Y-m-d H:i:s",strtotime($starts)+$seconds_diff);
                             $schedule->end_time = $end_time;
+                            $schedule->reason = $reason;
                             $schedule->save();
 
                             $dandori = InjectionScheduleMoldingLog::where('id_schedule',$schedule->id_schedule)->first();
@@ -6183,6 +6187,7 @@ class InjectionsController extends Controller
                         $schedule->start_time = $starts;
                         $end_time = date("Y-m-d H:i:s",strtotime($starts)+$seconds_diff);
                         $schedule->end_time = $end_time;
+                        $schedule->reason = $reason;
                         $schedule->save();
 
                         $dandori = InjectionScheduleMoldingLog::where('id_schedule',$schedule->id_schedule)->first();
@@ -6245,6 +6250,7 @@ class InjectionsController extends Controller
                                 $schedule->start_time = $starts;
                                 $end_time = date("Y-m-d H:i:s",strtotime($starts)+$seconds_diff);
                                 $schedule->end_time = $end_time;
+                                $schedule->reason = $reason;
                                 $schedule->save();
 
                                 $dandori = InjectionScheduleMoldingLog::where('id_schedule',$schedule->id_schedule)->first();
@@ -6287,6 +6293,7 @@ class InjectionsController extends Controller
                             $schedule->start_time = $starts;
                             $end_time = date("Y-m-d H:i:s",strtotime($starts)+$seconds_diff);
                             $schedule->end_time = $end_time;
+                            $schedule->reason = $reason;
                             $schedule->save();
 
                             $dandori = InjectionScheduleMoldingLog::where('id_schedule',$schedule->id_schedule)->first();
