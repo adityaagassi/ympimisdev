@@ -19,7 +19,7 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 
 Route::get('minkd', 'TrialController@minkd');
 
-Route::get('force_print', 'TrialController@forcePrint');
+Route::get('force_print', 'TrialController@testPrint');
 
 Route::get('testmail', 'TrialController@testmail');
 Route::get('testmail2', 'AccountingController@coba');
@@ -1115,7 +1115,8 @@ Route::group(['nav' => 'S39', 'middleware' => 'permission'], function(){
 	Route::get('index/ga_control/driver_log', 'GeneralAffairController@indexDriverLog');
 	Route::get('fetch/ga_control/driver_log', 'GeneralAffairController@fetchDriverLog');
 	Route::post('create/ga_control/driver_duty', 'GeneralAffairController@createDriverDuty');
-	Route::get('approve/ga_control/bento/{id}', 'GeneralAffairController@approveBento');
+	// Route::get('approve/ga_control/bento/{id}', 'GeneralAffairController@approveBento');
+	Route::post('approve/ga_control/bento', 'GeneralAffairController@approveBento');
 	Route::get('index/ga_control/bento_approve/{id}', 'GeneralAffairController@indexBentoApprove');
 	Route::get('reject/ga_control/bento/{id}', 'GeneralAffairController@rejectBento');
 	Route::post('upload/ga_control/bento_menu', 'GeneralAffairController@uploadBentoMenu');
@@ -3900,6 +3901,7 @@ Route::get('fetch/patrol_resume/detail_lokasi', 'AuditController@detailLokasiPat
 Route::get('fetch/patrol_resume/export', 'AuditController@ExportMonthlyPatrolResume');
 
 Route::get('export/patrol/list', 'AuditController@exportPatrol');
+Route::get('export/patrol_all/list', 'AuditController@exportPatrolAll');
 
 
 //Audit Internal ISO
@@ -4619,6 +4621,10 @@ Route::get('excel/mutasi_ant/hr', 'MutasiController@AntHrExportExcel');
 //Payment Request
 Route::get('payment_request/index', 'PaymentRequestController@IndexPaymentRequest');
 
+//Auto Approve Adagio
+Route::get('adagio/home/index', 'AdagioAutoController@IndexAdagioIndexHome');
+Route::post('adagio/home/create', 'AdagioAutoController@CreateAdagioIndexHome');
+Route::get('adagio/home/data', 'AdagioAutoController@DataAdagioaHome');
 
 //Warehouse
 Route::get('index/warehouse', 'WarehouseController@index');

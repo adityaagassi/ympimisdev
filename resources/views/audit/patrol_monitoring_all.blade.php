@@ -131,9 +131,9 @@
     <div class="row">
       <input type="hidden" value="{{csrf_token()}}" name="_token" />
       <input type="hidden" value="{{ $category }}" id="category" name="category">
-          <!-- <?php if(Auth::user()->role_code == "MIS" || Auth::user()->role_code == "GA" || Auth::user()->role_code == "GA-SPL") { ?>
+          <?php if(Auth::user()->role_code == "MIS" || Auth::user()->role_code == "GA" || Auth::user()->role_code == "GA-SPL") { ?>
 
-          <form method="GET" action="{{ url("export/patrol/list") }}">
+          <form method="GET" action="{{ url("export/patrol_all/list") }}">
           <div class="col-md-12" style="padding: 1px !important">
             <div class="col-xs-2">
               <div class="input-group date">
@@ -141,20 +141,7 @@
                   <i class="fa fa-calendar"></i>
                 </div>
                 <input type="text" class="form-control datepicker" id="date" name="date" placeholder="Select Date">
-              </div>
-            </div>
-            <div class="col-xs-2">
-              <div class="input-group">
-                <div class="input-group-addon bg-blue">
-                  <i class="fa fa-search"></i>
-                </div>
-                <select class="form-control select2" id="status" name="status" data-placeholder="Pilih Status" style="border-color: #605ca8">
-                    <option value=""></option>
-                    <option value="Temuan GM Close">Temuan GM Close</option>
-                    <option value="Temuan Presdir Close">Temuan Presdir Close</option>
-                    <option value="Temuan GM Open">Temuan GM Open</option>
-                    <option value="Temuan Presdir Open">Temuan Presdir Open</option>
-                </select>
+                <input type="hidden" value="{{ $category }}" id="category_export" name="category_export">
               </div>
             </div>
             <div class="col-xs-2">
@@ -164,7 +151,7 @@
           </div>
           </form>
 
-        <?php } ?> -->
+        <?php } ?>
       
       <div class="col-md-12" style="padding-top: 10px;">
         <div id="chart_bulan" style="width: 99%; height: 300px;"></div>

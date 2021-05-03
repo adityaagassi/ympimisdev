@@ -299,7 +299,15 @@ class AuditController extends Controller
 
         $auditdata = db::select($isimail);
 
-        Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com'])->send(new SendEmail($auditdata, 'patrol'));
+        if ($request->input('category') == "Patrol Daily") {
+          $mailscc = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where section = 'Secretary Admin Section' and employee_id != 'PI9704001'";  
+          $mailtoocc = DB::select($mailscc);
+
+          Mail::to($mailtoo)->cc($mailtoocc)->bcc(['rio.irvansyah@music.yamaha.com'])->send(new SendEmail($auditdata, 'patrol'));
+        }else{
+          Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com'])->send(new SendEmail($auditdata, 'patrol'));
+        }
+
 			}
 
 			$response = array(
@@ -1021,6 +1029,53 @@ public function detailPenanganan(Request $request){
       })->export('xlsx');
     }
 
+    public function exportPatrolAll(Request $request){
+      $time = date('d-m-Y H;i;s');
+
+      $tanggal = "";
+      $kategori = "";
+
+      if (strlen($request->get('date')) > 0)
+      {
+          $date = date('Y-m-d', strtotime($request->get('date')));
+          $tanggal = "and tanggal = '" . $date . "'";
+      }
+
+      if (strlen($request->get('category_export')) > 0)
+      {
+
+          if ($request->get('category_export') == "monthly_patrol") {
+            $category = "EHS & 5S Patrol";
+          }
+          else if ($request->get('category_export') == "daily_patrol") {
+            $category = "Patrol Daily";
+          }
+          else if ($request->get('category_export') == "covid_patrol") {
+            $category = "Patrol Covid";
+          }
+          else if ($request->get('category_export') == "stocktaking") {
+            $category = "Audit Stocktaking";
+          }
+
+          $kategori = "and kategori = '".$category."'";
+      }
+
+      $detail = db::select(
+          "SELECT DISTINCT audit_all_results.* from audit_all_results WHERE audit_all_results.deleted_at IS NULL ".$tanggal." ".$kategori." order by id ASC");
+
+      $data = array(
+          'detail' => $detail
+      );
+
+      ob_clean();
+
+      Excel::create('Audit List '.$time, function($excel) use ($data){
+          $excel->sheet('Data', function($sheet) use ($data) {
+            return $sheet->loadView('audit.audit_excel', $data);
+        });
+      })->export('xlsx');
+    }
+
 
 
 
@@ -1496,7 +1551,16 @@ public function detailPenanganan(Request $request){
         })
 
         ->editColumn('penanganan', function($detail){
-          return $detail->penanganan;
+
+          $bukti = "";
+
+          if ($detail->bukti_penanganan != null) {
+            $bukti = '<br><img src="'.url('files/patrol').'/'.$detail->bukti_penanganan.'" width="250">';
+          }else{
+            $bukti = "";
+          }
+
+          return $detail->penanganan.''.$bukti;
         })
 
         ->rawColumns(['auditor_name' => 'auditor_name', 'auditee_name' => 'auditee_name', 'foto' => 'foto','penanganan' => 'penanganan'])
