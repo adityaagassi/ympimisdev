@@ -1105,7 +1105,7 @@ class AssemblyProcessController extends Controller
 				WHERE
 				".$addlocation."
 				and location_number in ('8','9','10','11','12','13','14','15','16','17')
-				AND assemblies.origin_group_code = '041'
+				AND assemblies.origin_group_code = '041' and assemblies.deleted_at is null
 				ORDER BY remark, location_number asc");
 		}else if($loc == 'tanpoawase-kensa,tanpoawase-fungsi,repair-process-1,repair-process-2'){
 			$work_stations = DB::select("SELECT
@@ -1141,11 +1141,11 @@ class AssemblyProcessController extends Controller
 				LEFT JOIN employee_syncs ON employee_syncs.employee_id = assemblies.operator_id 
 				WHERE
 				(assemblies.location in ('tanpoawase-kensa','tanpoawase-fungsi') 
-				AND assemblies.origin_group_code = '041')
+				AND assemblies.origin_group_code = '041' and assemblies.deleted_at is null)
 				OR
 				(assemblies.location in ('repair-process')
 					and assemblies.location_number in ('1','2')
-				AND assemblies.origin_group_code = '041')
+				AND assemblies.origin_group_code = '041' and assemblies.deleted_at is null)
 				ORDER BY location ASC");
 		}else if($loc == 'fukiage1-process,repair-ringan'){
 			$work_stations = DB::select("SELECT
@@ -1181,11 +1181,11 @@ class AssemblyProcessController extends Controller
 				LEFT JOIN employee_syncs ON employee_syncs.employee_id = assemblies.operator_id 
 				WHERE
 				(assemblies.location in ('fukiage1-process') 
-				AND assemblies.origin_group_code = '041')
+				AND assemblies.origin_group_code = '041' and assemblies.deleted_at is null)
 				OR
 				(assemblies.location in ('repair-process')
 					and assemblies.location_number in ('3','4','5')
-				AND assemblies.origin_group_code = '041')
+				AND assemblies.origin_group_code = '041' and assemblies.deleted_at is null)
 				ORDER BY location,location_number asc");
 		}
 		else{

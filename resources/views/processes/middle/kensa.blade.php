@@ -420,6 +420,8 @@
 			}
 		}
 
+		// console.log($('#material_tag').val());
+
 		var data = {
 			loc: $('#loc').val(),
 			tag: $('#material_tag').val(),
