@@ -312,11 +312,6 @@ class ProductionScheduleController extends Controller{
             $hpl1 = "AND materials.hpl IN (".$hpl1.") ";
         }
 
-        $delete = ProductionSchedulesTwoStep::leftJoin('materials', 'materials.material_number', 'production_schedules_two_steps.material_number')
-        ->where(db::raw('date_format(production_schedules_two_steps.due_date, "%Y-%m")') ,$month)
-        ->whereIn('materials.hpl', $request->get('hpl'))
-        ->delete();
-
         $delete_step3 = ProductionSchedulesThreeStep::leftJoin('materials', 'materials.material_number', 'production_schedules_three_steps.material_number')
         // ->where('production_schedules_three_steps.st_month', $month.'-01')
         ->where('production_schedules_three_steps.st_date', '>=',  $month.'-01')
