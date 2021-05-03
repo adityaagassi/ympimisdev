@@ -667,33 +667,17 @@ class MaintenanceController extends Controller
 			'machine_group' => $machine_group,
 			'machine_location' => $machine_location,
 		))->with('page','MTBF')->with('head', 'Maintenance');
-	}
+	}	
 
-	// public function indexMttr()
-	// {
-	// 	$title = 'MTTR';
-	// 	$title_jp = '??';
-
-	// 	$machine = MaintenancePlanItem::select('machine_id', 'description', 'area', 'location')->get();
-
-	// 	return view('maintenance.machine_status', array(
-	// 		'title' => $title,
-	// 		'title_jp' => $title_jp,
-	// 		'machine' => $machine
-	// 	))->with('page','MTTR')->with('head', 'Maintenance');
-	// }
-
-	public function indexMttbfReport()
+	public function indexMachineGraph()
 	{
-		$title = 'MTBF Report';
+		$title = 'Maintenance Breakdown Graph';
 		$title_jp = '??';
-
-		// $machine = MaintenancePlanItem::select('machine_id', 'description', 'area', 'location')->get();
 
 		return view('maintenance.report.mttbf_report', array(
 			'title' => $title,
 			'title_jp' => $title_jp
-		))->with('page','MTTBF Report')->with('head', 'Maintenance');
+		))->with('page','Maintenance Graph Report')->with('head', 'Maintenance');
 	}
 
 	public function indexOperatorWorkload()
@@ -3521,46 +3505,6 @@ class MaintenanceController extends Controller
 		$l_hours = $l_hours->select('maintenance_machine_load_hours.machine_id', 'machine_group', 'description', 'area', 'load_hour', 'shift_number', 'trouble', 'working_day', db::raw('DATE_FORMAT(mon,"%b %Y") as mon2'))
 		->get();
 
-		$chart_data = db::select('SELECT machine_group,DATE_FORMAT(mon, "%b %Y") mon2, ROUND(AVG(mttbf),2) as avg_mttbf from
-			(SELECT maintenance_machine_load_hours.machine_id ,machine_group, mon, IFNULL(load_hour / trouble, 0 ) as mttbf FROM `maintenance_machine_load_hours`
-			left join maintenance_plan_items on maintenance_machine_load_hours.machine_id = maintenance_plan_items.machine_id) mstr
-			group by machine_group, mon
-			order by machine_group asc, mon asc');
-
-
-		// -------------------- MTBF -------------------
-
-	// 		select mjo.machine_name, SUM(TIMESTAMPDIFF(MINUTE,created_at,finished_at)) as down_time, SUM(TIMESTAMPDIFF(MINUTE,started_at,finished_at)) as repair_time, COUNT(mjo.order_no) as down_number from
-	// (select order_no, machine_name, created_at from maintenance_job_orders
-	// where deleted_at is null and remark <> 7 
-	// and machine_name is not null and machine_name <> 'Lain - lain'
-	// and DATE_FORMAT(created_at, "%Y-%m") = '2021-04') mjo
-	// left join
-	// (select order_no, GROUP_CONCAT(started_at) started_at, GROUP_CONCAT(finished_at) finished_at from maintenance_job_reports
-	// group by order_no) rpt on mjo.order_no = rpt.order_no
-	// group by machine_name
-
-
-		// QUERY 2
-
-	// 		select mjo.machine_name, SUM(TIMESTAMPDIFF(MINUTE,created_at,fin)) as down_time_min, dt as repair_time, COUNT(mjo.order_no) as down_time_count from 
-	// (select order_no, machine_name, created_at from maintenance_job_orders
-	// where deleted_at is null and remark <> 7 
-	// and machine_name is not null and machine_name <> 'Lain - lain'
-	// and DATE_FORMAT(created_at, "%Y-%m") = '2021-04') mjo
-	// left join
-	// (
-	// SELECT order_no, max(down_time) as dt from
-	// (SELECT order_no, operator_id, SUM(TIMESTAMPDIFF(MINUTE,started_at,finished_at)) as down_time from maintenance_job_reports
-	// group by order_no, operator_id) as rpt
-	// group by order_no
-	// ) rpts on mjo.order_no = rpts.order_no
-	// left join 
-	// (
-	// select order_no, max(finished_at) as fin from maintenance_job_reports
-	// group by order_no
-	// ) as rptrep on mjo.order_no = rptrep.order_no
-	// group by machine_name
 
 		$period = date('Y-m');
 
@@ -3592,16 +3536,55 @@ class MaintenanceController extends Controller
 		$response = array(
 			'status' => true,
 			'l_hours' => $l_hours,
-			'chart_data' => $chart_data,
 			'datas' => $datas,
 			'query' => DB::getQueryLog()
 		);
 		return Response::json($response);
 	}
 
-	public function fetchMttr(Request $request)
+	public function fetchMachineBreakdownGraph(Request $request)
 	{
-		$mttr = MaintenanceJobOrder::where('');
+		if ($request->get('fiscal')) {
+			$dates = db::select("SELECT week_date FROM `weekly_calendars` where fiscal_year = '".$request->get('fiscal')."' and week_date <= NOW() ORDER BY week_date asc");
+		} else {
+			$dates = db::select("SELECT week_date FROM `weekly_calendars` where fiscal_year = (SELECT fiscal_year from weekly_calendars where week_date = DATE(NOW())) and week_date <= NOW()
+				ORDER BY week_date asc");
+		}
+
+		$load_hour = db::select("SELECT maintenance_machine_load_hours.machine_id, machine_group, description, area, load_hour, shift_number, trouble, working_day, DATE_FORMAT(mon,'%Y-%m') as mon2 from maintenance_machine_load_hours
+			left join maintenance_plan_items on maintenance_machine_load_hours.machine_id = maintenance_plan_items.machine_id
+			where mon >= '".$dates[0]->week_date."' AND mon <= '".$dates[count($dates)-1]->week_date."'");
+
+
+		$mon_min = explode('-', $dates[0]->week_date);
+		$mon_max = explode('-', $dates[count($dates)-1]->week_date);
+
+		$chart_data = db::select("SELECT DATE_FORMAT(created_at, '%Y-%m') as mon, mjo.machine_name, SUM(TIMESTAMPDIFF(MINUTE,created_at,fin)) as down_time_min, SUM(dt) as repair_time, COUNT(mjo.order_no) as down_time_count from 
+			(select order_no, machine_name, created_at from maintenance_job_orders
+			where deleted_at is null and remark in (5,6) 
+			and machine_name is not null and machine_name <> 'Lain - lain' and type = 'Perbaikan'
+			and DATE_FORMAT(created_at, '%Y-%m') >= '".$mon_min[0]."-".$mon_min[1]."' 
+			and DATE_FORMAT(created_at, '%Y-%m') <= '".$mon_max[0]."-".$mon_max[1]."') mjo
+			left join
+			(
+			SELECT order_no, max(down_time) as dt from
+			(SELECT order_no, operator_id, SUM(TIMESTAMPDIFF(MINUTE,started_at,finished_at)) as down_time from maintenance_job_reports
+			group by order_no, operator_id) as rpt
+			group by order_no
+			) rpts on mjo.order_no = rpts.order_no
+			left join 
+			(
+			select order_no, max(finished_at) as fin from maintenance_job_reports
+			group by order_no
+			) as rptrep on mjo.order_no = rptrep.order_no
+			group by DATE_FORMAT(created_at, '%Y-%m'), machine_name");
+
+		$response = array(
+			'status' => true,
+			'load_hour' => $load_hour,
+			'chart_data' => $chart_data
+		);
+		return Response::json($response);
 	}
 
 }
