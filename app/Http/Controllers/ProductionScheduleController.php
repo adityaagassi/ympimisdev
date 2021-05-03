@@ -332,7 +332,7 @@ class ProductionScheduleController extends Controller{
             'st_plan' => 0
         ]);
 
-        $request = ProductionRequest:::leftJoin('materials', 'materials.material_number', 'production_requests.material_number')
+        $request = ProductionRequest::leftJoin('materials', 'materials.material_number', 'production_requests.material_number')
         ->where(db::raw('date_format(production_requests.request_month, "%Y-%m")') , $month)
         ->whereIn('materials.hpl', $request->get('hpl'))
         ->orderBy('material_number', 'ASC')
