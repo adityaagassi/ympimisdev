@@ -315,21 +315,24 @@ class ProductionScheduleController extends Controller{
         ->where(db::raw('date_format(production_schedules_two_steps.due_date, "%Y-%m")') ,$month)
         ->whereIn('materials.hpl', $request->get('hpl'))
         ->update([
-            'st_plan' => 0
+            'production_schedules_two_steps.st_plan' => 0
+            'production_schedules_two_steps.updated_at' => date('Y-m-d H:i:s')
         ]);
 
         $update_stock = FirstInventory::leftJoin('materials', 'materials.material_number', 'first_inventories.material_number')
         ->where(db::raw('date_format(first_inventories.stock_date, "%Y-%m")') , $month)
         ->whereIn('materials.hpl', $request->get('hpl'))
         ->update([
-            'st_plan' => 0
+            'first_inventories.st_plan' => 0,
+            'first_inventories.updated_at' => date('Y-m-d H:i:s')
         ]);
 
         $update_request = ProductionRequest::leftJoin('materials', 'materials.material_number', 'production_requests.material_number')
         ->where('production_requests.request_month', $month.'-01')
         ->whereIn('materials.hpl', $request->get('hpl'))
         ->update([
-            'st_plan' => 0
+            'production_requests.st_plan' => 0,
+            'production_requests.updated_at' => date('Y-m-d H:i:s')
         ]);
 
         $request = ProductionRequest::leftJoin('materials', 'materials.material_number', 'production_requests.material_number')
