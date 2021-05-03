@@ -284,7 +284,8 @@ public function approveBento(Request $request){
 			])
 			->bcc([
 				'aditya.agassi@music.yamaha.com', 
-				'anton.budi.santoso@music.yamaha.com'
+				'anton.budi.santoso@music.yamaha.com',
+				'budhi.apriyanto@music.yamaha.com'
 			])
 			->send(new SendEmail($bentos, 'bento_approve'));
 
