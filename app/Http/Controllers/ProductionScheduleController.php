@@ -300,28 +300,41 @@ class ProductionScheduleController extends Controller{
             $month = date('Y-m');
         }
 
+        $delete = ProductionSchedulesTwoStep::leftJoin('materials', 'materials.material_number', 'production_schedules_two_steps.material_number')
+        ->where(db::raw('date_format(production_schedules_two_steps.due_date, "%Y-%m")') ,$month)
+        ->whereIn('materials.hpl', $request->get('hpl'))
+        ->delete();
 
+        $delete_step3 = ProductionSchedulesThreeStep::leftJoin('materials', 'materials.material_number', 'production_schedules_three_steps.material_number')
+        // ->where('production_schedules_three_steps.st_month', $month.'-01')
+        ->where('production_schedules_three_steps.st_date', '>=',  $month.'-01')
+        ->whereIn('materials.hpl', $request->get('hpl'))
+        ->delete();
 
-        $delete_step3 = ProductionSchedulesThreeStep::where('st_month', $month.'-01')->delete();
-
-        $update_step2 = ProductionSchedulesTwoStep::where(db::raw('date_format(due_date, "%Y-%m")') , $month)
+        $update_step2 = ProductionSchedulesTwoStep::leftJoin('materials', 'materials.material_number', 'production_schedules_two_steps.material_number')
+        ->where(db::raw('date_format(production_schedules_two_steps.due_date, "%Y-%m")') ,$month)
+        ->whereIn('materials.hpl', $request->get('hpl'))
         ->update([
             'st_plan' => 0
         ]);
 
-        $update_stock = FirstInventory::where(db::raw('date_format(stock_date, "%Y-%m")') , $month)
+        $update_stock = FirstInventory::leftJoin('materials', 'materials.material_number', 'first_inventories.material_number')
+        ->where(db::raw('date_format(first_inventories.stock_date, "%Y-%m")') , $month)
+        ->whereIn('materials.hpl', $request->get('hpl'))
         ->update([
             'st_plan' => 0
         ]);
 
-        $update_request = ProductionRequest::where('request_month', $month.'-01')
+        $update_request = ProductionRequest::leftJoin('materials', 'materials.material_number', 'production_requests.material_number')
+        ->where('production_requests.request_month', $month.'-01')
+        ->whereIn('materials.hpl', $request->get('hpl'))
         ->update([
             'st_plan' => 0
         ]);
 
-
-
-        $request = ProductionRequest::where(db::raw('date_format(request_month, "%Y-%m")') , $month)
+        $request = ProductionRequest:::leftJoin('materials', 'materials.material_number', 'production_requests.material_number')
+        ->where(db::raw('date_format(production_requests.request_month, "%Y-%m")') , $month)
+        ->whereIn('materials.hpl', $request->get('hpl'))
         ->orderBy('material_number', 'ASC')
         ->orderBy('priority', 'ASC')
         ->get();
@@ -330,7 +343,6 @@ class ProductionScheduleController extends Controller{
         $psi_finish = PsiCalendar::where('sales_period', 'like', '%'.$month.'%')->orderBy('week_date', 'DESC')->first();
 
         $end_st = PsiCalendar::where('stuffing_period', 'like', '%'.$month.'%')->orderBy('week_date', 'DESC')->first();
-
 
 
         for ($i=0; $i < count($request); $i++) {
@@ -347,9 +359,12 @@ class ProductionScheduleController extends Controller{
                 SELECT 'plan' AS type, ps.due_date, ps.material_number, (ps.quantity - ps.st_plan) AS quantity, m.hpl FROM production_schedules_two_steps ps
                 LEFT JOIN materials m ON ps.material_number = m.material_number
                 WHERE ps.material_number = '".$request[$i]->material_number."'
-                AND ps.due_date BETWEEN '".$psi_start->week_date."' AND '".$psi_finish->week_date."'
+                AND ps.due_date >= '".$month."-01'
                 HAVING quantity > 0
                 ORDER BY due_date ASC");
+
+            // AND ps.due_date BETWEEN '".$psi_start->week_date."' AND '".$psi_finish->week_date."'
+
 
             for ($j=0; $j < count($productions); $j++) {
                 $koef;
