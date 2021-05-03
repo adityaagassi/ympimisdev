@@ -196,6 +196,14 @@ public function approveBento(Request $request){
 			WHERE
 			b.order_id = '".$request->get('order_id')."'");
 
+		
+		$mail_to = array();
+		foreach($bento_lists as $bento_list){
+			if(!in_array($bento_list->email, $mail_to)){
+				array_push($mail_to, $bento_list->email);
+			}
+		}
+
 		if($list->department == 'YEMI' || $bento_lists[0]->grade_code == 'J0-'){
 			$first = date('Y-m-01', strtotime($list->max_date));
 			$last = date('Y-m-t', strtotime($list->max_date));
@@ -268,12 +276,6 @@ public function approveBento(Request $request){
 			->send(new SendEmail($bentos, 'bento_approve'));
 		}
 		else{
-			$mail_to = array();
-			foreach($bento_lists as $bento_list){
-				if(!in_array($bento_list->email, $mail_to)){
-					array_push($mail_to, $bento_list->email);
-				}
-			}
 			Mail::to($mail_to)->cc([
 				'rianita.widiastuti@music.yamaha.com', 
 				'putri.sukma.riyanti@music.yamaha.com', 
