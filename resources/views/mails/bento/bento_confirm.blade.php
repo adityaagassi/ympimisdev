@@ -22,14 +22,24 @@
 			This is an automatic notification. Please do not reply to this address.</p>
 			<?php
 			if($data[0]['status'] == 'Rejected'){
-				print_r ('<span style="font-weight: bold; color: red; font-size: 24px;">Your Order Has Been REJECTED</span>');
+				print_r ('<span style="font-weight: bold; color: red; font-size: 24px;">Your Order Has Been REJECTED By</span>');
+			}
+			else if($data[0]['status'] == 'Cancelled'){
+				print_r ('<span style="font-weight: bold; color: red; font-size: 24px;">Your Order Has Been CANCELLED By</span>');
 			}
 			else{
-				print_r ('<span style="font-weight: bold; color: green; font-size: 24px;">Your Order Has Been APPROVED</span>');
+				print_r ('<span style="font-weight: bold; color: green; font-size: 24px;">Your Order Has Been APPROVED By</span>');
 			}
 			?>
 			<br>
-			<span style="font-weight: bold;">by: {{ $data[0]["approver_id"] }} - {{ $data[0]["approver_name"] }}</span>
+			<?php
+			if($data[0]['status'] == 'Cancelled'){
+				print_r ('<span style="font-weight: bold;">'.$data[0]["order_by"].' - '.$data[0]["order_by_name"].'</span>');
+			}
+			else{
+				print_r ('<span style="font-weight: bold;">'.$data[0]["approver_id"].' - '.$data[0]["approver_name"].'</span>');
+			}
+			?>
 			<br>
 			<br>
 			<table style="border:1px solid black;border-collapse: collapse;" width="40%">

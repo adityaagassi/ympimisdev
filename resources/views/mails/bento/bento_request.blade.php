@@ -34,7 +34,7 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td style="width: 6%; border:1px solid black; text-align: left !important;">{{ $data[0]["order_by"] }} - {{ $data[0]["order_by_name"] }}</td>
+						<td style="width: 6%; border:1px solid black; text-align: center !important;">{{ $data[0]["order_by"] }} - {{ $data[0]["order_by_name"] }}</td>
 						{{-- <td style="width: 6%; border:1px solid black; text-align: left !important;">{{ $data[0]['charge_to'] }}<br>{{ $data[0]['charge_to_name'] }}</td> --}}
 					</tr>			
 				</tbody>
@@ -43,10 +43,8 @@
 			<table style="border:1px solid black;border-collapse: collapse;" width="60%">
 				<thead style="background-color: #63ccff">
 					<tr>
-						<th style="width: 1%; border:1px solid black;" colspan="4">Order List<br><span style="color: purple;">予約内容</span></th>
-					</tr>
-					<tr>
 						<th style="width: 1%; border:1px solid black;">#</th>
+						<th style="width: 1%; border:1px solid black;">Order ID<br><span style="color: purple;">予約対象者</span></th>
 						<th style="width: 1%; border:1px solid black;">Ordered For ID<br><span style="color: purple;">予約対象者</span></th>
 						<th style="width: 1%; border:1px solid black;">Ordered For Name<br><span style="color: purple;">予約対象者</span></th>
 						<th style="width: 1%; border:1px solid black;">Due Date<br><span style="color: purple;">日付</span></th>
@@ -56,9 +54,9 @@
 					<?php
 					$id = "";
 					for ($i=0; $i < count($data); $i++) { 
-						$id .= $data[$i]['id']."-";
 						print_r ('<tr>
 							<td style="border:1px solid black; width:1%;">'.($i+1).'</td>
+							<td style="border:1px solid black; width:1%;">'.$data[$i]['order_id'].'</td>
 							<td style="border:1px solid black; width:1%;">'.$data[$i]['employee_id'].'</td>
 							<td style="border:1px solid black; width:8%;">'.$data[$i]['employee_name'].'</td>
 							<td style="border:1px solid black; width:3%;">'.$data[$i]['due_date'].'</td>
@@ -71,9 +69,7 @@
 			<br><br>
 			<span style="font-weight: bold;"><i>For YMPI General Affair PIC</i></span>
 			<br><br>
-			<a style="background-color: green; width: 50px; text-decoration: none;color: white;font-size: 20px;" href="{{ url("approve/ga_control/bento/".$id) }}">&nbsp;&nbsp;&nbsp; Approve (承認) &nbsp;&nbsp;&nbsp;</a>
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<a style="background-color: red; width: 50px; text-decoration: none;color: white;font-size: 20px;" href="{{ url("reject/ga_control/bento/".$id) }}">&nbsp; Reject (却下）&nbsp;</a>
+			<a style="background-color: green; width: 50px; text-decoration: none;color: white;font-size: 20px;" href="{{ url("index/ga_control/bento_approve/".$data[0]['order_id']) }}">&nbsp;&nbsp;&nbsp; Confirm Here &nbsp;&nbsp;&nbsp;</a>
 		</center>
 	</div>
 </body>

@@ -20,9 +20,9 @@
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
 			<p style="font-size: 18px;">Japanese Food Order <span style="color: purple;">和食弁当の予約</span><br>
 			This is an automatic notification. Please do not reply to this address.</p>
-			<span style="font-weight: bold; color: green; font-size: 24px;">Your Order Has Been APPROVED</span>
+			<span style="font-weight: bold; color: green; font-size: 24px;">Your Order Has Been CONFIRMED by</span>
 			<br>
-			<span style="font-weight: bold;">by: {{ $data['bento_lists'][0]["approver_id"] }} - {{ $data['bento_lists'][0]["approver_name"] }}</span>
+			<span style="font-weight: bold;">{{ $data['bento_lists'][0]["approver_id"] }} - {{ $data['bento_lists'][0]["approver_name"] }}</span>
 			<br>
 			<br>
 			<table style="border:1px solid black;border-collapse: collapse;" width="60%">
@@ -55,8 +55,12 @@
 							$inserted = false;
 
 							for ($k=0; $k < count($data['bento_lists']); $k++) {
-								if($data['calendars'][$j]['week_date'] == $data['bento_lists'][$k]['due_date'] && $data['bento_lists'][$k]['employee_name'] == $name[$i]){
-									print_r('<td style="border: 1px solid black; text-align: center; background-color: #ccff90; font-weight: bold;">&#9711;</td>');
+								if($data['calendars'][$j]['week_date'] == $data['bento_lists'][$k]['due_date'] && $data['bento_lists'][$k]['employee_name'] == $name[$i] && $data['bento_lists'][$k]['status'] == "Approved"){
+									print_r('<td style="border: 1px solid black; text-align: center; background-color: #ccff90;">&#9745;</td>');
+									$inserted = true;
+								}
+								if($data['calendars'][$j]['week_date'] == $data['bento_lists'][$k]['due_date'] && $data['bento_lists'][$k]['employee_name'] == $name[$i] && $data['bento_lists'][$k]['status'] == "Rejected"){
+									print_r('<td style="border: 1px solid black; text-align: center; background-color: #ff6090;">&#9746;</td>');
 									$inserted = true;
 								}
 							}
@@ -69,6 +73,9 @@
 					?>
 				</tbody>
 			</table>
+			<br>
+			<span style="background-color: #ccff90;">&nbsp;&nbsp;&#9745; = Approved&nbsp;&nbsp;</span>
+			<span style="background-color: #ff6090;">&nbsp;&nbsp;&#9746; = Rejected&nbsp;&nbsp;</span>
 		</center>
 	</div>
 </body>

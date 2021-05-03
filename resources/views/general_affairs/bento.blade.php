@@ -130,6 +130,7 @@
 				<div class="box-body">
 					<div class="row">
 						<div class="col-xs-6">
+							<center><span style="font-weight: bold; font-size: 1.3vw; color: red;"><i class="fa fa-angle-double-right"></i> @ IDR 20K <i class="fa fa-angle-double-left"></i></span></center>
 							<table class="table table-hover table-bordered table-striped" id="tableInformation">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
@@ -165,6 +166,7 @@
 					<table class="table table-hover table-bordered table-striped" id="tableOrderList">
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
+								<th style="width: 1%;">No. Order</th>
 								<th style="width: 1%;">Order By ID<br>予約者</th>
 								<th style="width: 3%;">Order By Name<br>予約者</th>
 								{{-- <th style="width: 3%;">Charged To<br>請求先</th> --}}
@@ -190,6 +192,7 @@
 					<table class="table table-hover table-bordered table-striped" id="tableHistory">
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
+								<th style="width: 1%;">No. Order</th>
 								<th style="width: 1%;">Order By ID<br>予約者</th>
 								<th style="width: 3%;">Order By Name<br>予約者</th>
 								{{-- <th style="width: 3%;">Charged To<br>請求先</th> --}}
@@ -200,6 +203,7 @@
 								<th style="width: 2%;">Sect</th>
 								<th style="width: 1%;">Status</th>
 								<th style="width: 3%;">GA</th>
+								<th style="width: 1%;">Action</th>
 							</tr>
 						</thead>
 						<tbody id="tableHistoryBody">
@@ -305,31 +309,34 @@
 								<th style="width: 1%;">Approved YEMI</th>
 								<th style="width: 1%;">Waiting</th>
 								<th style="width: 1%;">Rejected</th>
+								<th style="width: 1%;">Cancelled</th>
 							</tr>
 							<tr>
 								<th id="countApprovedYMPI" style="font-weight: bold; font-size: 2vw;"></th>
 								<th id="countApprovedYEMI" style="font-weight: bold; font-size: 2vw;"></th>
 								<th id="countWaiting" style="font-weight: bold; font-size: 2vw;"></th>
 								<th id="countRejected" style="font-weight: bold; font-size: 2vw;"></th>
+								<th id="countCancelled" style="font-weight: bold; font-size: 2vw;"></th>
 							</tr>
 						</thead>
 					</table>
 				</center>
 				<div class="modal-body table-responsive no-padding" style="min-height: 100px; padding-bottom: 5px;">
-					<h4 style="background-color: #ccff90; font-weight: bold; padding: 3px; margin-top: 0; color: black;">Approved</h4>
+					{{-- <h4 style="background-color: #ccff90; font-weight: bold; padding: 3px; margin-top: 0; color: black;">Approved</h4> --}}
 					<table class="table table-hover table-bordered table-striped" id="tableDetailApproved">
-						<thead style="background-color: #ccff90;">
+						<thead style="background-color: #f39c12;">
 							<tr>
 								<th style="width: 1%;">Order By ID</th>
 								<th style="width: 5%;">Order By Name</th>
 								<th style="width: 1%;">Order For ID</th>
 								<th style="width: 5%;">Order For Name</th>
+								<th style="width: 1%;">Status</th>
 							</tr>
 						</thead>
 						<tbody id="tableDetailApprovedBody">
 						</tbody>
 					</table>
-					<h4 style="background-color: yellow; font-weight: bold; padding: 3px; margin-top: 0; color: black;">Waiting</h4>
+				{{-- 	<h4 style="background-color: yellow; font-weight: bold; padding: 3px; margin-top: 0; color: black;">Other</h4>
 					<table class="table table-hover table-bordered table-striped" id="tableDetailWaiting">
 						<thead style="background-color: yellow;">
 							<tr>
@@ -341,8 +348,8 @@
 						</thead>
 						<tbody id="tableDetailWaitingBody">
 						</tbody>
-					</table>
-					<h4 style="background-color: #ff6090; font-weight: bold; padding: 3px; margin-top: 0; color: black;">Rejected</h4>
+					</table> --}}
+					{{-- <h4 style="background-color: #ff6090; font-weight: bold; padding: 3px; margin-top: 0; color: black;">Rejected</h4>
 					<table class="table table-hover table-bordered table-striped" id="tableDetailRejected">
 						<thead style="background-color: #ff6090;">
 							<tr>
@@ -354,7 +361,7 @@
 						</thead>
 						<tbody id="tableDetailRejectedBody">
 						</tbody>
-					</table>
+					</table> --}}
 				</div>
 			</div>
 		</div>
@@ -682,7 +689,7 @@
 				});
 			}
 			else{
-				alert('Unidentified Error');
+				openErrorGritter(result.message);
 				audio_error.play();
 				return false;				
 			}
@@ -720,7 +727,13 @@
 						tickInterval: 1,
 						gridLineWidth: 1,
 						categories: cat,
-						crosshair: true
+						crosshair: true,
+						labels: {
+							style: {
+								textOverflow: 'none'
+							},
+							rotation: 0
+						} 
 					},
 					yAxis: [{
 						min: 0,
@@ -799,8 +812,9 @@
 				var tableHistory = "";
 
 				$.each(result.unconfirmed, function(key, value){
-					if(value.status == 'Waiting For Confirmation'){
+					if(value.status == 'Waiting'){
 						tableOrderList += '<tr>';
+						tableOrderList += '<td>'+value.order_id+'</td>';
 						tableOrderList += '<td>'+value.order_by+'</td>';
 						tableOrderList += '<td>'+value.order_by_name+'</td>';
 						// tableOrderList += '<td>'+value.charge_to+'<br>'+value.charge_to_name+'</td>';
@@ -810,11 +824,12 @@
 						tableOrderList += '<td>'+value.department+'</td>';
 						tableOrderList += '<td>'+value.section+'</td>';
 						tableOrderList += '<td style="background-color: yellow; font-weight:bold;">'+value.status+'</td>';
-						tableOrderList += '<td><button class="btn btn-warning" onclick="openModalEdit(\''+value.id+'\''+','+'\''+value.order_by+'\''+','+'\''+value.order_by_name+'\''+','+'\''+value.charge_to+'\''+','+'\''+value.charge_to_name+'\''+','+'\''+value.due_date+'\''+','+'\''+value.employee_id+'\')" id="'+value.id+'"><i class="fa fa-pencil"></i></button></td>';
+						tableOrderList += '<td><button class="btn btn-warning" onclick="openModalEdit(\''+value.id+'\',\''+value.order_by+'\',\''+value.order_by_name+'\',\''+value.charge_to+'\',\''+value.charge_to_name+'\',\''+value.due_date+'\',\''+value.employee_id+'\')" id="'+value.id+'"><i class="fa fa-pencil"></i></button></td>';
 						tableOrderList += '</tr>';
 					}
 					else{
 						tableHistory += '<tr>';
+						tableHistory += '<td>'+value.order_id+'</td>';
 						tableHistory += '<td>'+value.order_by+'</td>';
 						tableHistory += '<td>'+value.order_by_name+'</td>';
 						// tableHistory += '<td>'+value.charge_to+'<br>'+value.charge_to_name+'</td>';
@@ -826,10 +841,19 @@
 						if(value.status == 'Rejected'){
 							tableHistory += '<td style="background-color: #ff6090; font-weight:bold;">'+value.status+'</td>';							
 						}
-						else{
+						else if(value.status == 'Approved'){
 							tableHistory += '<td style="background-color: #ccff90; font-weight:bold;">'+value.status+'</td>';							
 						}
+						else{
+							tableHistory += '<td style="background-color: black; color: white; font-weight:bold;">'+value.status+'</td>';
+						}
 						tableHistory += '<td>'+value.approver_id+'<br>'+value.approver_name+'</td>';
+						if(value.status == 'Approved'){
+							tableHistory += '<td><button class="btn btn-danger" onclick="cancelOrder(id)" id="'+value.id+'"><i class="fa fa-trash"></i></button></td>';
+						}
+						else{
+							tableHistory += '<td><button class="btn btn-danger" disabled><i class="fa fa-trash"></i></button></td>';							
+						}
 						tableHistory += '</tr>';
 					}
 				});
@@ -905,68 +929,55 @@ function fetchDetail(date){
 	$.get('{{ url("fetch/ga_control/bento_order_list") }}', data, function(result, status, xhr){
 		if(result.status){
 			$('#tableDetailApprovedBody').html('');
-			$('#tableDetailRejectedBody').html('');
-			$('#tableDetailWaitingBody').html('');
 
 			$('#tableDetailApproved').DataTable().clear();
 			$('#tableDetailApproved').DataTable().destroy();
 
 			var tableDetailApprovedBody = "";
-			var tableDetailRejectedBody = "";
-			var tableDetailWaitingBody = "";
 
 			var countApprovedYEMI = 0;
 			var countApprovedYMPI = 0;
 			var countWaiting = 0;
 			var countRejected = 0;
+			var countCancelled = 0;
 
 			$.each(result.bentos, function(key, value){
-				if(value.status == 'Approved' && value.department != 'YEMI'){
-					countApprovedYMPI += 1;
-					tableDetailApprovedBody += '<tr>';
-					tableDetailApprovedBody += '<td>'+value.order_by+'</td>';
-					tableDetailApprovedBody += '<td>'+value.order_by_name+'</td>';
-					tableDetailApprovedBody += '<td>'+value.employee_id+'</td>';
-					tableDetailApprovedBody += '<td>'+value.employee_name+'</td>';
-					tableDetailApprovedBody += '</tr>';
+				tableDetailApprovedBody += '<tr>';
+				tableDetailApprovedBody += '<td>'+value.order_by+'</td>';
+				tableDetailApprovedBody += '<td>'+value.order_by_name+'</td>';
+				tableDetailApprovedBody += '<td>'+value.employee_id+'</td>';
+				tableDetailApprovedBody += '<td>'+value.employee_name+'</td>';
+				if(value.status == 'Waiting'){
+					countWaiting += 1;
+					tableDetailApprovedBody += '<td style="background-color: yellow; font-weight:bold;">'+value.status+'</td>';					
 				}
-				else if(value.status == 'Approved' && value.department == 'YEMI'){
-					countApprovedYEMI += 1;
-					tableDetailApprovedBody += '<tr>';
-					tableDetailApprovedBody += '<td>'+value.order_by+'</td>';
-					tableDetailApprovedBody += '<td>'+value.order_by_name+'</td>';
-					tableDetailApprovedBody += '<td>'+value.employee_id+'</td>';
-					tableDetailApprovedBody += '<td>'+value.employee_name+'</td>';
-					tableDetailApprovedBody += '</tr>';
-				}
-				else if(value.status == 'Rejected'){
+				if(value.status == 'Rejected'){
 					countRejected += 1;
-					tableDetailRejectedBody += '<tr>';
-					tableDetailRejectedBody += '<td>'+value.order_by+'</td>';
-					tableDetailRejectedBody += '<td>'+value.order_by_name+'</td>';
-					tableDetailRejectedBody += '<td>'+value.employee_id+'</td>';
-					tableDetailRejectedBody += '<td>'+value.employee_name+'</td>';
-					tableDetailRejectedBody += '</tr>';
+					tableDetailApprovedBody += '<td style="background-color: #ff6090; font-weight:bold;">'+value.status+'</td>';							
+				}
+				else if(value.status == 'Approved'){
+					if(value.department == 'YEMI'){
+						countApprovedYEMI += 1;
+					}
+					else{
+						countApprovedYMPI += 1;
+					}
+					tableDetailApprovedBody += '<td style="background-color: #ccff90; font-weight:bold;">'+value.status+'</td>';							
 				}
 				else{
-					countWaiting += 1;
-					tableDetailWaitingBody += '<tr>';
-					tableDetailWaitingBody += '<td>'+value.order_by+'</td>';
-					tableDetailWaitingBody += '<td>'+value.order_by_name+'</td>';
-					tableDetailWaitingBody += '<td>'+value.employee_id+'</td>';
-					tableDetailWaitingBody += '<td>'+value.employee_name+'</td>';
-					tableDetailWaitingBody += '</tr>';
+					countCancelled += 1;
+					tableDetailApprovedBody += '<td style="background-color: black; color: white; font-weight:bold;">'+value.status+'</td>';
 				}
+				tableDetailApprovedBody += '</tr>';
 			});
 
 			$('#tableDetailApprovedBody').append(tableDetailApprovedBody);
-			$('#tableDetailRejectedBody').append(tableDetailRejectedBody);
-			$('#tableDetailWaitingBody').append(tableDetailWaitingBody);
 
 			$('#countApprovedYEMI').text(countApprovedYEMI);
 			$('#countApprovedYMPI').text(countApprovedYMPI);
 			$('#countWaiting').text(countWaiting);
 			$('#countRejected').text(countRejected);
+			$('#countCancelled').text(countRejected);
 
 			$('#tableDetailApproved').DataTable({
 				'dom': 'Bfrtip',
@@ -1043,6 +1054,32 @@ function openModalMenu(id){
 	$('#modalMenu').modal('show');
 }
 
+function cancelOrder(id){
+	var location = $('#location').val();
+	var data = {
+		id:id,
+		status:'cancel',
+		location:location
+	}
+	if(confirm("Are you sure want to cancel this order? この予約を削除しますか。")){
+		$.post('{{ url("edit/ga_control/bento_order") }}', data, function(result, status, xhr){
+			if(result.status){
+				audio_ok.play();
+				openSuccessGritter(result.message);
+				fetchOrderList();
+			}
+			else{
+				audio_error.play();
+				openErrorGritter(result.message);
+				return false;				
+			}
+		});
+	}
+	else{
+		return false;
+	}
+}
+
 function deleteOrder(){
 	var id = $('#editID').val();
 	var location = $('#location').val();
@@ -1052,11 +1089,11 @@ function deleteOrder(){
 		location:location
 	}
 	if(confirm("Are you sure want to delete this order? この予約を削除しますか。")){
-		$.post('{{ url("edit/ga_control/bento_order") }}', function(result, status, xhr){
+		$.post('{{ url("edit/ga_control/bento_order") }}', data, function(result, status, xhr){
 			if(result.status){
 				audio_ok.play();
 				openSuccessGritter(result.message);
-				$('#modalCreate').modal('hide');
+				$('#modalEdit').modal('hide');
 				$('#editID').val("");
 				$('#editUser').val("");
 				$('#editUserName').val("");
@@ -1064,6 +1101,7 @@ function deleteOrder(){
 				$('#editChargeName').val("");
 				$('#editDate').val("");
 				$('#editEmployee').html("");
+				fetchOrderList();
 			}
 			else{
 				audio_error.play();

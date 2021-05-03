@@ -366,11 +366,11 @@
     </li>
     @endif
 
-    @if(in_array('S62', $navs))
+    {{-- @if(in_array('S62', $navs)) --}}
     @if(isset($page) && $page == "Japanese Food Order")<li class="active">@else<li>@endif
       <a href="{{ url("index/ga_control/bento") }}"><i class="glyphicon glyphicon-cutlery"></i> <span>Japanese Food Order</span></a>
     </li>
-    @endif
+    {{-- @endif --}}
 
     @if(in_array('S45', $navs))
     @if(isset($head) && $head == "Purchasing")<li class="treeview active">@else<li class="treeview">@endif
@@ -1673,6 +1673,23 @@
   </li>
   @if(isset($page) && $page == "Scrap Logs")<li class="active">@else<li>@endif
     <a href="{{ url("index/scrap_record") }}"><i class="fa fa-list-alt"></i> <span>Scrap Logs</span></a>
+  </li>
+</ul>
+</li>
+@endif
+
+@if(in_array('R10', $navs))
+@if(isset($head) && $head == "Auto Approve Adagio")
+<li class="treeview active">@else<li class="treeview">@endif
+ <a href="#">
+  <i class="fa fa-trash"></i> <span>Auto Approve Adagio</span>
+  <span class="pull-right-container">
+   <i class="fa fa-angle-left pull-right"></i>
+  </span>
+ </a>
+<ul class="treeview-menu">
+  @if(isset($page) && $page == "Create Master Approve")<li class="active">@else<li>@endif
+    <a href="{{ url("adagio/home/index") }}"><i class="fa fa-pencil-square-o"></i> <span>Create Master Approve</span></a>
   </li>
 </ul>
 </li>
