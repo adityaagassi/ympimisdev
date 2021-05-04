@@ -227,6 +227,37 @@
 				$(function() {
 					$(document).keydown(function(e) {
 						switch(e.which) {
+							case 40:
+							if(curr == 1){
+								curr = count;
+							}
+
+							if(curr <= 0){
+								curr = 1;
+							}
+
+							var c = curr--;
+
+							for (var i = 1; i <= count; i++) {
+								$("[name='"+i+"']").hide();	
+							}
+
+							$("[name='"+curr+"']").show();
+
+
+							curr = curr--;
+
+							if($("[name='inp_"+curr+"']").val() > 0.5){
+								window.scrollTo(0, document.body.scrollHeight);	
+							}
+							if($("[name='inp_"+curr+"']").val() <= 0.5){
+								window.scrollTo(0, 0);
+							}
+
+							console.log('tampil = '+curr+'; jml = '+count);
+							break;
+
+
 							case 39:
 
 							var c;
@@ -253,6 +284,35 @@
 
 							console.log('tampil = '+curr+'; jml = '+count);
 							break;
+
+
+							case 38:
+
+							var c;
+
+							if(curr == count-1){
+								curr = 1;
+								c = 1;
+							}else{
+								c = curr++;
+							}
+
+							for (var i = 1; i <= count; i++) {
+								$("[name='"+i+"']").hide();	
+							}
+
+							$("[name='"+curr+"']").show();
+
+							if($("[name='inp_"+curr+"']").val() > 0.5){
+								window.scrollTo(0, document.body.scrollHeight);	
+							}
+							if($("[name='inp_"+curr+"']").val() <= 0.5){
+								window.scrollTo(0, 0);
+							}
+
+							console.log('tampil = '+curr+'; jml = '+count);
+							break;
+
 
 							case 37:
 							if(curr == 1){
