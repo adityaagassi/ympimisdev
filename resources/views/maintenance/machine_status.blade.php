@@ -181,7 +181,7 @@
           <th>MACHINE ID</th>
           <th>MACHINE DESC</th>
           <th>LOCATION</th>
-          <th>LOAD HOUR(S)</th>
+          <th>LOAD HOURS <br> (min)</th>
           <th>SHIFT <br> NUMBER</th>
           <th>DOWN TIME <br> (number)</th>
           <th>DOWN TIME <br> (min)</th>

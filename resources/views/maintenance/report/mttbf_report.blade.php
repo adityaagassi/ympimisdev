@@ -70,17 +70,51 @@
         <div class="input-group-addon bg-blue">
           <i class="fa fa-search"></i>
         </div>
-        <select class="form-control select2" onchange="drawChart()" id="fiscal_year" data-placeholder="Select Fiscal" style="border-color: #605ca8" >
+        <select class="form-control select2" id="fiscal_year" data-placeholder="Select Fiscal" style="border-color: #605ca8" >
           <option value=""></option>
           <option value="FY197">FY197</option>
           <option value="FY198">FY198</option>
         </select>
       </div>
+      <br>
+    </div>
+
+    <div class="col-xs-2">
+      <div class="input-group">
+        <div class="input-group-addon bg-blue">
+          <i class="fa fa-search"></i>
+        </div>
+        <select class="form-control select2" id="machine_group" data-placeholder="Select Machine Group" style="border-color: #605ca8" >
+          <option value=""></option>
+          @foreach($machine_group as $mg)
+          <option value="{{ $mg->machine_group }}">{{ $mg->machine_group }}</option>
+          @endforeach
+        </select>
+      </div>
+      <br>
+    </div>
+
+    <div class="col-xs-2">
+      <button type="button" class="btn btn-primary" onclick="drawChart()"><i class="fa fa-refresh"></i> Update Chart</button>
+      <br>
     </div>
 
     <div class="col-xs-12">
-      <div id="chart_mtbf"></div>
-      <div id="chart_mttr"></div>
+      <div class="box box-solid">
+        <div class="box-head" style="background-color: #605ca8; color: white"><center><b>MTBF (AVG)</b></center></div>
+        <div class="box-body" style="background-color: #212121">  
+          <div id="chart_mtbf"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xs-12">
+      <div class="box box-solid">
+        <div class="box-head" style="background-color: #605ca8; color: white"><center><b>MTTR (AVG)</b></center></div>
+        <div class="box-body" style="background-color: #212121">  
+          <div id="chart_mttr"></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -107,14 +141,17 @@
 
   jQuery(document).ready(function() {
     $('body').toggleClass("sidebar-collapse");
-    $('.select2').select2();
+    $('.select2').select2({
+      allowClear: true
+    });
 
     drawChart()
   });
 
   function drawChart() {
     var data = {
-      fiscal : $("#fiscal_year").val()
+      fiscal : $("#fiscal_year").val(),
+      machine_group : $("#machine_group").val()
     }
 
     $.get('{{ url("fetch/maintenance/machine_report/graph") }}', data, function(result) {
@@ -230,6 +267,10 @@
           }
         },
 
+        credits : {
+          enabled: false
+        },
+
         series: [{
           name : 'MTBF',
           data : series1
@@ -286,6 +327,10 @@
               connectorAllowed: false
             },
           }
+        },
+
+        credits : {
+          enabled: false
         },
 
         series: [{

@@ -674,9 +674,12 @@ class MaintenanceController extends Controller
 		$title = 'Maintenance Breakdown Graph';
 		$title_jp = '??';
 
+		$machine_group = MaintenancePlanItem::select('machine_group')->whereNotNull('machine_group')->groupBy('machine_group')->get();
+
 		return view('maintenance.report.mttbf_report', array(
 			'title' => $title,
-			'title_jp' => $title_jp
+			'title_jp' => $title_jp,
+			'machine_group' => $machine_group
 		))->with('page','Maintenance Graph Report')->with('head', 'Maintenance');
 	}
 
@@ -3559,7 +3562,13 @@ class MaintenanceController extends Controller
 		$mon_min = explode('-', $dates[0]->week_date);
 		$mon_max = explode('-', $dates[count($dates)-1]->week_date);
 
-		$chart_data = db::select("SELECT DATE_FORMAT(created_at, '%Y-%m') as mon, mjo.machine_name, SUM(TIMESTAMPDIFF(MINUTE,created_at,fin)) as down_time_min, SUM(dt) as repair_time, COUNT(mjo.order_no) as down_time_count from 
+		$where_group = "";
+		if ($request->get('machine_group')) {
+			$where_group = "where machine_group = '".$request->get('machine_group')."'";
+		}
+
+		$chart_data = db::select("SELECT masters.*, maintenance_plan_items.machine_group from
+			(SELECT DATE_FORMAT(created_at, '%Y-%m') as mon, mjo.machine_name, SUM(TIMESTAMPDIFF(MINUTE,created_at,fin)) as down_time_min, SUM(dt) as repair_time, COUNT(mjo.order_no) as down_time_count from 
 			(select order_no, machine_name, created_at from maintenance_job_orders
 			where deleted_at is null and remark in (5,6) 
 			and machine_name is not null and machine_name <> 'Lain - lain' and type = 'Perbaikan'
@@ -3577,7 +3586,8 @@ class MaintenanceController extends Controller
 			select order_no, max(finished_at) as fin from maintenance_job_reports
 			group by order_no
 			) as rptrep on mjo.order_no = rptrep.order_no
-			group by DATE_FORMAT(created_at, '%Y-%m'), machine_name");
+			group by DATE_FORMAT(created_at, '%Y-%m'), machine_name) as masters
+			left join maintenance_plan_items on maintenance_plan_items.machine_id = masters.machine_name ".$where_group);
 
 		$response = array(
 			'status' => true,
