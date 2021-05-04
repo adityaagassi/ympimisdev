@@ -203,7 +203,7 @@
 					<span style="color: white; font-size: 1.7vw; font-weight: bold;"><i class="fa fa-caret-right"></i> Detail Cek Suhu >= 37.5 °C</span>
 					<table class="table table-bordered" id="tableAbnormal" style="margin-bottom: 5px;">
 						<thead>
-							<tr>
+							<tr style="color: white">
 								<th style="width: 1%;">#</th>
 								<th style="width: 3%;">ID</th>
 								<th style="width: 9%;">Name</th>
@@ -282,12 +282,6 @@
 						</thead>
 						<tbody id="tableDetailCheckBody">
 						</tbody>
-						<!-- <tfoot>
-							<tr>
-								<th colspan="5">Total Duration</th>
-								<th id="totalDetail">9</th>
-							</tr>
-						</tfoot> -->
 					</table>
 				</div>
 			</div>
@@ -330,6 +324,24 @@
 	});
 
 	var detail_all = [];
+
+	function perbandingan(a,b){
+		return a-b;
+	}
+	function dynamicSort(property) {
+	    var sortOrder = 1;
+	    if(property[0] === "-") {
+	        sortOrder = -1;
+	        property = property.substr(1);
+	    }
+	    return function (a,b) {
+	        /* next line works with strings and numbers, 
+	         * and you may want to customize it to your needs
+	         */
+	        var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+	        return result * sortOrder;
+	    }
+	}
 
 
 	function fetchTemperature(){
@@ -386,21 +398,33 @@
 					var detail_total_prd_3 = [];
 
 					var detail_abnormal = [];
-					// var detail_all = [];
+					detail_all = [];
 
 					var resultData = "";
 
 					var dataPersonTemperature = [];
 					var dataTemperature = [];
 
-					$.each(result.attendance, function(key, value) {
+					$.each(result.datas, function(key, value) {
 						var emp_no = value.employee_id;
-						if (value.temperature != '-' && value.temperature >= 37.5) {
-								detail_abnormal.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups,temp:value.temperature});
+						if (value.temperature != null) {
+							var temps = value.temperature.split(',');
+							var tmps = 0;
+							var point = "";
+							for (var i = 0; i < temps.length; i++) {
+								if (temps[i].split('_')[0] == value.time_in) {
+									tmps = parseFloat(temps[i].split('_')[1]);
+									point = temps[i].split('_')[2];
+									dataTemperature.push({temperature: tmps});
+									detail_all.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups,temp:tmps,point:point});
+								}
 							}
-						detail_all.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups,temp:value.temperature,point:value.point});
+							if (tmps >= 37.5) {
+								detail_abnormal.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups,temp:tmps});
+							}
+						}
 						if (value.remark == 'OFC' || value.remark == 'Jps') {
-							if (value.checks == null) {
+							if (value.time_in == null) {
 
 								if (value.shiftdaily_code.match(/Shift_1/gi)) {
 									uncheck_ofc_1++;
@@ -443,7 +467,7 @@
 								}
 							}
 						}else{
-							if (value.checks == null) {
+							if (value.time_in == null) {
 
 								if (value.shiftdaily_code.match(/Shift_1/gi)) {
 									uncheck_prd_1++;
@@ -609,16 +633,16 @@
 					var index = 1;
 					var resultDataAbnormal = "";
 
-					$.each(result.dataabnormal, function(key, value) {
-						if (value.temperature >= 37.5) {
+					$.each(detail_abnormal, function(key, value) {
+						if (value.temp >= 37.5) {
 							resultDataAbnormal += '<tr>';
 							resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+index+'</td>';
 							resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+value.employee_id+'</td>';
 							resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.name +'</td>';
-							resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.department_shortname +'</td>';
+							resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.dept +'</td>';
 							resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.shift +'</td>';
-							resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.date_in +'</td>';
-							resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.temperature +'</td>';
+							resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.time_in +'</td>';
+							resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.temp +'</td>';
 							resultDataAbnormal += '</tr>';
 							index++;
 						}
@@ -635,29 +659,25 @@
 					var temp2 = [];
 
 					var ind = 0;
-					var counts = result.attendance.reduce((p, c) => {
-					  var name = String(c.temperature);
+					var counts = dataTemperature.reduce((p, c) => {
+					  var name = parseFloat(c.temperature);
 					  if (!p.hasOwnProperty(name)) {
-					    p[name] = 0;
+					    p[parseFloat(name)] = 0;
 					  }
-					  p[name]++;
+					  p[parseFloat(name)]++;
 					  return p;
 					}, {});
 
+
 					$.each(counts, function(key, value) {
 						if (key != "-" && key != "null") {
-							categories2.push(key+' °C');
+							categories2.push(parseFloat(key));
 							temp2.push(parseFloat(value));
-							series2.push({y:parseFloat(value),key:key});
+							series2.push({y:parseFloat(value),key:parseFloat(key)});
 						}
 					});
 
-					$.each(result.datatoday, function(key, value) {
-						// console.log(value);
-						categories1.push(value.temperature+' °C');
-						temp.push(parseFloat(value.temperature));
-						series1.push({y:parseFloat(value.count),key:value.temperature});
-					});
+					categories2.sort(perbandingan);
 
 					var total = 0;
 					for(var i = 0; i < temp.length; i++) {
@@ -685,11 +705,14 @@
 							}
 						},
 						xAxis: {
-							categories: categories1,
+							categories: categories2,
 							type: 'category',
 							gridLineWidth: 1,
 							gridLineColor: 'RGB(204,255,255)',
 							labels: {
+								formatter: function() {
+						          return this.value+' °C';
+						        },
 								style: {
 									fontSize: '20px'
 								}
@@ -723,9 +746,17 @@
 							}
 						},
 						series: [{
+							zoneAxis: 'x',
+					        dataLabels: {
+					            enabled: true,
+					        },
+					        // dataSorting: {
+					        //     enabled: true,
+					        //     sortKey: 'key'
+					        // },
 							name:'Person(s)',
 							type: 'column',
-							data: series1,
+							data: series2.sort(dynamicSort('key')),
 							showInLegend: false,
 							color: '#00a65a'
 						}]
@@ -740,7 +771,6 @@
 
 function fetchTemperatureDetail(temperature){
 	clearInterval(intervaltemp);
-	$('#modalDetail').modal('show');
 	$('#loadingDetail').show();
 	$('#modalDetailTitle').html("");
 	$('#tableDetail').hide();
@@ -755,8 +785,8 @@ function fetchTemperatureDetail(temperature){
 		location:'{{$loc}}'
 	}
 
-	$.get('{{ url("fetch/temperature/detail_minmoe_monitoring") }}', data, function(result, status, xhr) {
-		if(result.status){
+	// $.get('{{ url("fetch/temperature/detail_minmoe_monitoring") }}', data, function(result, status, xhr) {
+	// 	if(result.status){
 
 			$('#tableDetailBody').html('');
 
@@ -767,39 +797,39 @@ function fetchTemperatureDetail(temperature){
 			var resultData = "";
 			var total = 0;
 
-			$.each(result.details, function(key, value) {
-				if (value.temperature === temperature) {
-					resultData += '<tr>';
-					resultData += '<td>'+ index +'</td>';
-					resultData += '<td>'+ value.employee_id +'</td>';
-					resultData += '<td>'+ value.name +'</td>';
-					resultData += '<td>'+ value.department_shortname +'</td>';
-					resultData += '<td>'+ value.section +'</td>';
-					resultData += '<td>'+ value.groups +'</td>';
-					resultData += '<td>'+ value.point +'</td>';
-					resultData += '<td>'+ value.date_in +'</td>';
-					resultData += '<td>'+ value.temperature +' °C</td>';
-					resultData += '</tr>';
-					index += 1;
-				}
-			});
-
-			// $.each(detail_all, function(key, value) {
-			// 	if (value.temp === temperature) {
+			// $.each(result.details, function(key, value) {
+			// 	if (value.temperature === temperature) {
 			// 		resultData += '<tr>';
 			// 		resultData += '<td>'+ index +'</td>';
 			// 		resultData += '<td>'+ value.employee_id +'</td>';
 			// 		resultData += '<td>'+ value.name +'</td>';
-			// 		resultData += '<td>'+ value.dept +'</td>';
+			// 		resultData += '<td>'+ value.department_shortname +'</td>';
 			// 		resultData += '<td>'+ value.section +'</td>';
-			// 		resultData += '<td>'+ value.group +'</td>';
+			// 		resultData += '<td>'+ value.groups +'</td>';
 			// 		resultData += '<td>'+ value.point +'</td>';
-			// 		resultData += '<td>'+ value.time_in +'</td>';
-			// 		resultData += '<td>'+ value.temp +' °C</td>';
+			// 		resultData += '<td>'+ value.date_in +'</td>';
+			// 		resultData += '<td>'+ value.temperature +' °C</td>';
 			// 		resultData += '</tr>';
 			// 		index += 1;
 			// 	}
 			// });
+
+			$.each(detail_all, function(key, value) {
+				if (value.temp === temperature) {
+					resultData += '<tr>';
+					resultData += '<td>'+ index +'</td>';
+					resultData += '<td>'+ value.employee_id +'</td>';
+					resultData += '<td>'+ value.name +'</td>';
+					resultData += '<td>'+ value.dept +' Dept</td>';
+					resultData += '<td>'+ value.section +'</td>';
+					resultData += '<td>'+ value.group +'</td>';
+					resultData += '<td>'+ value.point +'</td>';
+					resultData += '<td>'+ value.time_in +'</td>';
+					resultData += '<td>'+ value.temp +' °C</td>';
+					resultData += '</tr>';
+					index += 1;
+				}
+			});
 			$('#tableDetailBody').append(resultData);
 			$('#modalDetailTitle').html("<center><span style='font-size: 20px; font-weight: bold;'>Detail Employees on "+temperature+" °C</span></center>");
 
@@ -850,11 +880,12 @@ function fetchTemperatureDetail(temperature){
 					"processing": true
 				});
 			intervaltemp = setInterval(fetchTemperature,300000);
-		}
-		else{
-			// alert('Attempt to retrieve data failed');
-		}
-	});
+			$('#modalDetail').modal('show');
+	// 	}
+	// 	else{
+	// 		// alert('Attempt to retrieve data failed');
+	// 	}
+	// });
 }
 
 function checkDetails(checkParam) {
@@ -878,12 +909,12 @@ function checkDetails(checkParam) {
 		resultData += '<td>'+ index +'</td>';
 		resultData += '<td>'+ value.employee_id +'</td>';
 		resultData += '<td>'+ value.name +'</td>';
-		resultData += '<td>'+ value.dept +'</td>';
+		resultData += '<td>'+ value.dept +' Dept</td>';
 		resultData += '<td>'+ value.section +'</td>';
 		resultData += '<td>'+ value.group +'</td>';
 		resultData += '<td>'+ value.shift +'</td>';
 		resultData += '<td>'+ value.attend_code +'</td>';
-		resultData += '<td>'+ value.time_in +'</td>';
+		resultData += '<td>'+ (value.time_in || "") +'</td>';
 		resultData += '</tr>';
 		index += 1;
 	});
