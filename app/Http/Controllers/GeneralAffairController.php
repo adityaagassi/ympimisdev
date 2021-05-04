@@ -204,43 +204,43 @@ public function approveBento(Request $request){
 			}
 		}
 
-		if($list->department == 'YEMI' || $bento_lists[0]->grade_code == 'J0-'){
-			$first = date('Y-m-01', strtotime($list->max_date));
-			$last = date('Y-m-t', strtotime($list->max_date));
-			$bento_lists = db::select("SELECT
-				j.employee_id,
-				j.employee_name,
-				u.email,
-				b.due_date,
-				b.status 
-				FROM
-				japaneses AS j
-				LEFT JOIN ( SELECT * FROM bentos WHERE due_date >= '".$first."' AND due_date <= '".$last."' ) AS b ON b.employee_id = j.employee_id
-				LEFT JOIN users AS u ON u.username = j.employee_id");
+		// if($list->department == 'YEMI' || $bento_lists[0]->grade_code == 'J0-'){
+		// 	$first = date('Y-m-01', strtotime($list->max_date));
+		// 	$last = date('Y-m-t', strtotime($list->max_date));
+		// 	$bento_lists = db::select("SELECT
+		// 		j.employee_id,
+		// 		j.employee_name,
+		// 		u.email,
+		// 		b.due_date,
+		// 		b.status 
+		// 		FROM
+		// 		japaneses AS j
+		// 		LEFT JOIN ( SELECT * FROM bentos WHERE due_date >= '".$first."' AND due_date <= '".$last."' ) AS b ON b.employee_id = j.employee_id
+		// 		LEFT JOIN users AS u ON u.username = j.employee_id");
 
-			$calendars = WeeklyCalendar::where('week_date', '>=', $first)
-			->where('week_date', '<=', $last)
-			->get();
+		// 	$calendars = WeeklyCalendar::where('week_date', '>=', $first)
+		// 	->where('week_date', '<=', $last)
+		// 	->get();
 
-			$bentos = [
-				'approver_id' => Auth::user()->username,
-				'approver_name' => Auth::user()->name,
-				'bento_lists' => $bento_lists,
-				'calendars' => $calendars
-			];
-		}
-		else{
-			$calendars = WeeklyCalendar::where('week_date', '>=', $list->min_date)
-			->where('week_date', '<=', $list->max_date)
-			->get();
+		// 	$bentos = [
+		// 		'approver_id' => Auth::user()->username,
+		// 		'approver_name' => Auth::user()->name,
+		// 		'bento_lists' => $bento_lists,
+		// 		'calendars' => $calendars
+		// 	];
+		// }
+		// else{
+		$calendars = WeeklyCalendar::where('week_date', '>=', $list->min_date)
+		->where('week_date', '<=', $list->max_date)
+		->get();
 
-			$bentos = [
-				'approver_id' => Auth::user()->username,
-				'approver_name' => Auth::user()->name,
-				'bento_lists' => $bento_lists,
-				'calendars' => $calendars
-			];
-		}
+		$bentos = [
+			'approver_id' => Auth::user()->username,
+			'approver_name' => Auth::user()->name,
+			'bento_lists' => $bento_lists,
+			'calendars' => $calendars
+		];
+		// }
 
 		if($list->department != 'YEMI'){
 			$email = User::where('username', '=', $bento_lists[0]->order_by)->first();
@@ -276,21 +276,22 @@ public function approveBento(Request $request){
 			->send(new SendEmail($bentos, 'bento_approve'));
 		}
 		else{
-			Mail::to($mail_to)->cc([
+			Mail::to([
+				'merlinda.dyah@music.yamaha.com', 
+				'novita.siswindarti@music.yamaha.com'
+			])
+			->cc([
 				'rianita.widiastuti@music.yamaha.com', 
 				'putri.sukma.riyanti@music.yamaha.com', 
-				'merlinda.dyah@music.yamaha.com', 
-				'novita.siswindarti@music.yamaha.com', 
-				'hiroshi.ura@music.yamaha.com', 
-				'prawoto@music.yamaha.com'
+				'prawoto@music.yamaha.com', 
+				'helmi.helmi@music.yamaha.com'
 			])
 			->bcc([
 				'aditya.agassi@music.yamaha.com', 
 				'anton.budi.santoso@music.yamaha.com',
-				'budhi.apriyanto@music.yamaha.com'
+				'agus.yulianto@music.yamaha.com'
 			])
 			->send(new SendEmail($bentos, 'bento_approve'));
-
 		}
 
 		$response = array(

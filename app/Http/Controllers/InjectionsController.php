@@ -5662,7 +5662,7 @@ class InjectionsController extends Controller
                 )) =  '".$request->get('color').")'";
             }
 
-            $j = 3;
+            $j = 2;
             $nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays($j)));
             if (date('D')=='Thu') {
                 $nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(++$j)));

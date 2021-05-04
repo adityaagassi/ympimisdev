@@ -538,6 +538,11 @@
 
 		fetchOrderList();
 	});
+	
+	$("#modalCreate").modal({
+		backdrop: 'static',
+		keyboard: false
+	});
 
 	$(function () {
 		$('.select2').select2({
