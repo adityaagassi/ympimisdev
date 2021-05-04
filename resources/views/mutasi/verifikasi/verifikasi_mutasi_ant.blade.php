@@ -279,31 +279,31 @@
                   <div class="panel-heading">Approval : </div>
                   <div class="panel-body center-text"  style="padding: 20px">
                     @if(($user == $resumes[0]->chief_or_foreman_asal || Auth::user()->role_code == "MIS") && $resumes[0]->app_ca == null && $resumes[0]->posisi == "chf_asal")
-                    <a href="{{url('approvechief_or_foremanasal/'.$resumes[0]->id)}}" style="color: white"><button class="btn btn-success col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px">Verifikasi</button></a>
+                    <a href="{{url('approvechief_or_foremanasal/'.$resumes[0]->id)}}" style="color: white"><button class="btn btn-success col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px" onclick="loading()">Verifikasi</button></a>
                     @elseif(($user == $resumes[0]->manager_asal || Auth::user()->role_code == "MIS") && $resumes[0]->app_ma == null && $resumes[0]->posisi == "mgr_asal")
-                    <a href="{{url('approve_manager_asal/'.$resumes[0]->id)}}" style="color: white"><button class="btn btn-success col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px">Verifikasi</button></a>
+                    <a href="{{url('approve_manager_asal/'.$resumes[0]->id)}}" style="color: white"><button class="btn btn-success col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px" onclick="loading()">Verifikasi</button></a>
                     @elseif(($user == $resumes[0]->dgm_asal || Auth::user()->role_code == "MIS") && $resumes[0]->app_da == null && $resumes[0]->posisi == "dgm_asal")
-                    <a href="{{url('approve_dgm_asal/'.$resumes[0]->id)}}" style="color: white"><button class="btn btn-success col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px">Verifikasi</button></a>
+                    <a href="{{url('approve_dgm_asal/'.$resumes[0]->id)}}" style="color: white"><button class="btn btn-success col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px" onclick="loading()">Verifikasi</button></a>
                     @elseif(($user == $resumes[0]->gm_asal || Auth::user()->role_code == "MIS") && $resumes[0]->app_ga == null && $resumes[0]->posisi == "gm_asal")
-                    <a href="{{url('approve_gm_asal/'.$resumes[0]->id)}}" style="color: white"><button class="btn btn-success col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px">Verifikasi</button></a>
+                    <a href="{{url('approve_gm_asal/'.$resumes[0]->id)}}" style="color: white"><button class="btn btn-success col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px" onclick="loading()">Verifikasi</button></a>
                     @elseif(($user == $resumes[0]->chief_or_foreman_tujuan || Auth::user()->role_code == "MIS") && $resumes[0]->app_ct == null && $resumes[0]->posisi == "chf_tujuan")
-                    <a href="{{url('approvechief_or_foremantujuan/'.$resumes[0]->id)}}" style="color: white"><button class="btn btn-success col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px">Verifikasi</button></a>
+                    <a href="{{url('approvechief_or_foremantujuan/'.$resumes[0]->id)}}" style="color: white"><button class="btn btn-success col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px" onclick="loading()">Verifikasi</button></a>
                     @elseif(($user == $resumes[0]->manager_tujuan || Auth::user()->role_code == "MIS") && $resumes[0]->app_mt == null && $resumes[0]->posisi == "mgr_tujuan")
-                    <a href="{{url('approve_manager_tujuan/'.$resumes[0]->id)}}" style="color: white"><button class="btn btn-success col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px">Verifikasi</button></a>
+                    <a href="{{url('approve_manager_tujuan/'.$resumes[0]->id)}}" style="color: white"><button class="btn btn-success col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px" onclick="loading()">Verifikasi</button></a>
                     @elseif(($user == $resumes[0]->dgm_tujuan || Auth::user()->role_code == "MIS") && $resumes[0]->app_dt == null && $resumes[0]->posisi == "dgm_tujuan")
-                    <a href="{{url('approve_dgm_tujuan/'.$resumes[0]->id)}}" style="color: white"><button class="btn btn-success col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px">Verifikasi</button></a>
+                    <a href="{{url('approve_dgm_tujuan/'.$resumes[0]->id)}}" style="color: white"><button class="btn btn-success col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px" onclick="loading()">Verifikasi</button></a>
                     @elseif(($user == $resumes[0]->gm_tujuan || Auth::user()->role_code == "MIS") && $resumes[0]->app_gt == null && $resumes[0]->posisi == "gm_tujuan")
-                    <a href="{{url('approve_gm_tujuan/'.$resumes[0]->id)}}" style="color: white"><button class="btn btn-success col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px">Verifikasi</button></a>
+                    <a href="{{url('approve_gm_tujuan/'.$resumes[0]->id)}}" style="color: white"><button class="btn btn-success col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px" onclick="loading()">Verifikasi</button></a>
                     @elseif(($user == $resumes[0]->manager_hrga || Auth::user()->role_code == "MIS") && $resumes[0]->app_m == null && $resumes[0]->posisi == "mgr_hrga")
-                    <a href="{{url('approvemanager_hrga/'.$resumes[0]->id)}}" style="color: white"><button class="btn btn-success col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px">Verifikasi</button></a>
+                    <a href="{{url('approvemanager_hrga/'.$resumes[0]->id)}}" style="color: white"><button class="btn btn-success col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px" onclick="loading()">Verifikasi</button></a>
                     @elseif(($user == $resumes[0]->direktur_hr || Auth::user()->role_code == "MIS") && $resumes[0]->app_dir == null && $resumes[0]->posisi == "dir_hr")
-                    <a href="{{url('approvedirektur_hr/'.$resumes[0]->id)}}" style="color: white"><button class="btn btn-success col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px">Verifikasi</button></a>
+                    <a href="{{url('approvedirektur_hr/'.$resumes[0]->id)}}" style="color: white"><button class="btn btn-success col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px" onclick="loading()">Verifikasi</button></a>
                     @else
-                    <button class="btn btn-danger col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px"><a href="" style="color: white">Verifikasi</a></button>
+                    <button class="btn btn-danger col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px"><a href="" style="color: white" onclick="loading()">Verifikasi</a></button>
                     @endif
                     <br>
                     <br>
-                    <a href="{{url('rejectedantar_departemen/'.$resumes[0]->id)}}" style="color: white"><button class="btn btn-danger col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px">Rejected</button></a>
+                    <a href="{{url('rejectedantar_departemen/'.$resumes[0]->id)}}" style="color: white"><button class="btn btn-danger col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px" onclick="loading()">Rejected</button></a>
                   </div>
                 </div>
               </div>
@@ -518,14 +518,11 @@
       });
       $('body').toggleClass("sidebar-collapse");
       var id = "{{ $mutasi->id }}";
-
 });
+
     function loading(){
       $("#loading").show();
     }
-
-
-    // document.getElementById("myForm").addEventListener("submit", loading);
     
     $.ajaxSetup({
       headers: {
