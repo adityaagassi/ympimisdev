@@ -124,7 +124,7 @@
 @section('content')
 <section class="content" style="padding-top: 0;">
 	<div class="row">
-		<div class="col-xs-12" style="padding-bottom: 5px;">
+		<div class="col-xs-12" style="padding-bottom: 10px; padding-left: 0px;">
 			<div class="row">
 				<form method="GET" action="{{ action('TemperatureController@indexBodyTempMonitoring') }}">
 					<div class="col-xs-2" style="padding-right: 0;">
@@ -490,28 +490,30 @@
 
 			$.each(result.shift, function(index, value){
 				if (value.remark == 'OFC' || value.remark == 'Jps') {
-					if (~value.shiftdaily_code.indexOf("1")) {
-						ofc_total_1++;
-						if (value.oxy != null) {
-							ofc_cek_1++;
-							detail_check_ofc_1.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'oxy':value.oxy, 'pulse':value.pulse, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
-						} else {
-							ofc_uncek_1++;
-							detail_uncheck_ofc_1.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'oxy':value.oxy,  'pulse':value.pulse, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
-						}
+					if (value.remark == 'OFC') {
+						if (~value.shiftdaily_code.indexOf("1")) {
+							ofc_total_1++;
+							if (value.oxy != null) {
+								ofc_cek_1++;
+								detail_check_ofc_1.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'oxy':value.oxy, 'pulse':value.pulse, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
+							} else {
+								ofc_uncek_1++;
+								detail_uncheck_ofc_1.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'oxy':value.oxy,  'pulse':value.pulse, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
+							}
 
-						detail_total_ofc_1.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'oxy':value.oxy,  'pulse':value.pulse, 'check_time':value.check_time, 'section':value.section, 'group':value.groups});
-					} else if (~value.shiftdaily_code.indexOf("2")) {
-						ofc_total_2++;
-						if (value.oxy != null) {
-							ofc_cek_2++;
-							detail_check_ofc_2.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'oxy':value.oxy,  'pulse':value.pulse, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
-						} else {
-							ofc_uncek_2++;
-							detail_uncheck_ofc_2.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'oxy':value.oxy,  'pulse':value.pulse, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
-						}
+							detail_total_ofc_1.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'oxy':value.oxy,  'pulse':value.pulse, 'check_time':value.check_time, 'section':value.section, 'group':value.groups});
+						} else if (~value.shiftdaily_code.indexOf("2")) {
+							ofc_total_2++;
+							if (value.oxy != null) {
+								ofc_cek_2++;
+								detail_check_ofc_2.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'oxy':value.oxy,  'pulse':value.pulse, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
+							} else {
+								ofc_uncek_2++;
+								detail_uncheck_ofc_2.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'oxy':value.oxy,  'pulse':value.pulse, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
+							}
 
-						detail_total_ofc_2.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'oxy':value.oxy,  'pulse':value.pulse, 'check_time':value.check_time, 'section':value.section, 'group':value.groups});
+							detail_total_ofc_2.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'oxy':value.oxy,  'pulse':value.pulse, 'check_time':value.check_time, 'section':value.section, 'group':value.groups});
+						}
 					}
 				} else {
 					if (~value.shiftdaily_code.indexOf("1")) {
@@ -560,25 +562,25 @@
 			})
 
 
-$("#total_check_ofc_1").text(ofc_cek_1);
-$("#total_uncheck_ofc_1").text(ofc_uncek_1);
-$("#total_person_ofc_1").text(ofc_total_1);
+				$("#total_check_ofc_1").text(ofc_cek_1);
+				$("#total_uncheck_ofc_1").text(ofc_uncek_1);
+				$("#total_person_ofc_1").text(ofc_total_1);
 
-$("#total_check_ofc_2").text(ofc_cek_2);
-$("#total_uncheck_ofc_2").text(ofc_uncek_2);
-$("#total_person_ofc_2").text(ofc_total_2);
+				$("#total_check_ofc_2").text(ofc_cek_2);
+				$("#total_uncheck_ofc_2").text(ofc_uncek_2);
+				$("#total_person_ofc_2").text(ofc_total_2);
 
-$("#total_check_prd_1").text(prd_cek_1);
-$("#total_uncheck_prd_1").text(prd_uncek_1);
-$("#total_person_prd_1").text(prd_total_1);
+				$("#total_check_prd_1").text(prd_cek_1);
+				$("#total_uncheck_prd_1").text(prd_uncek_1);
+				$("#total_person_prd_1").text(prd_total_1);
 
-$("#total_check_prd_2").text(prd_cek_2);
-$("#total_uncheck_prd_2").text(prd_uncek_2);
-$("#total_person_prd_2").text(prd_total_2);
+				$("#total_check_prd_2").text(prd_cek_2);
+				$("#total_uncheck_prd_2").text(prd_uncek_2);
+				$("#total_person_prd_2").text(prd_total_2);
 
-$("#total_check_prd_3").text(prd_cek_3);
-$("#total_uncheck_prd_3").text(prd_uncek_3);
-$("#total_person_prd_3").text(prd_total_3);
+				$("#total_check_prd_3").text(prd_cek_3);
+				$("#total_uncheck_prd_3").text(prd_uncek_3);
+				$("#total_person_prd_3").text(prd_total_3);
 
 
 			// ------------------   ADD CLICK LISTENER  ---------------------
