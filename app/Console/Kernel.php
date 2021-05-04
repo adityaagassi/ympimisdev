@@ -54,6 +54,7 @@ class Kernel extends ConsoleKernel
         Commands\ResumeNgBuffing::class,
         Commands\ResumeNgLacquering::class,
         Commands\ResumeNgPlating::class,
+        Commands\RawMaterialReminder::class,
 
 
         //KITTO
@@ -147,7 +148,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('injection:schedule')->monthlyOn(1, '04:00');;
 
 
-        $schedule->command('kd:shipment')->everyThirtyMinutes();
+        // $schedule->command('kd:shipment')->everyThirtyMinutes();
+        $schedule->command('email:raw_material_reminder')->dailyAt('10:00');
 
 
         $schedule->command('resume:buffing')->hourlyAt(10);

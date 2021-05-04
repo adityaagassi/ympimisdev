@@ -81,6 +81,9 @@ class SendEmail extends Mailable
         if($this->remark == 'clinic_visit'){
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Clinic Visit Data')->view('mails.clinic_visit');
         }
+        if($this->remark == 'raw_material_reminder'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Raw Material Reminder')->view('mails.raw_material_reminder');
+        }
         if($this->remark == 'audit'){
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Audit NG Jelas (生産監査報告)')->view('mails.audit');
         }
