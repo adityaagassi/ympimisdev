@@ -20,7 +20,7 @@
 	<div>
 		<center>
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
-			<p style="font-size: 20px;">Raw Material Reminder</p>
+			<p style="font-size: 20px;">Stock Alert <75%<br>{{ $data['date'] }}</p>
 			<p style="font-size: 20px;">PIC : {{ $data['user']->name }}</p>
 
 			This is an automatic notification. Please do not reply to this address.

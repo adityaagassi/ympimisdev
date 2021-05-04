@@ -43,8 +43,8 @@ class RawMaterialReminder extends Command
      */
     public function handle(){
 
-        $period = date('Y-m');
-        $due_date = date('Y-m-d');
+        $period = date('2021-04');
+        $due_date = date('2021-04-26');
 
         $now = WeeklyCalendar::where('week_date', $due_date)->first();
 
@@ -85,7 +85,8 @@ class RawMaterialReminder extends Command
                 if(count($material) > 0){
                     $data = [
                         'material' => $material,
-                        'user' => $user
+                        'user' => $user,
+                        'date' => date('l, d M Y')
                     ];
 
                     Mail::to([$user->email])
