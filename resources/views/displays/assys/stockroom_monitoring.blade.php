@@ -81,9 +81,8 @@
 		$('#datepicker').datepicker({
 			autoclose: true,
 			format: "yyyy-mm-dd",
-			startView: "months", 
-			minViewMode: "months",
 			autoclose: true,
+			todayHighlight: true,
 		});
 		fetchChart();
 		setInterval(fetchChart, 1000*60*5);
