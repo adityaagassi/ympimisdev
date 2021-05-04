@@ -242,6 +242,8 @@
     }
 
     $.get('{{ url("fetch/maintenance/mttbf/list") }}', data, function(result, status, xhr) {
+      $('#table_master').DataTable().clear();
+      $('#table_master').DataTable().destroy();
       $("#tb_body").empty();
       var body = "";
 
@@ -277,6 +279,34 @@
         body += '</tr>';
       })
       $("#tb_body").append(body);
+
+      var table = $('#table_master').DataTable({
+        'dom': 'Bfrtip',
+        'responsive':true,
+        'lengthMenu': [
+        [ 10, 25, 50, -1 ],
+        [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+        ],
+        'buttons': {
+          buttons:[
+          {
+            extend: 'pageLength',
+            className: 'btn btn-default',
+          },
+          ]
+        },
+        'paging': true,
+        'lengthChange': true,
+        'searching': true,
+        'ordering': true,
+        'info': true,
+        'autoWidth': true,
+        "sPaginationType": "full_numbers",
+        "bJQueryUI": true,
+        "bAutoWidth": false,
+        "processing": true,
+        "order": [[ 2, 'desc' ]]
+      });
     })
     
   }
