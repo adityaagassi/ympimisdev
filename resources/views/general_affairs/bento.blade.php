@@ -150,7 +150,7 @@
 						</div>
 						<div class="col-xs-6">
 							<button class="btn btn-success" style="font-weight: bold; font-size: 1.5vw; height: 150px; width: 100%;" onclick="openModalCreate()">
-								<span class="blink_text"><i class="glyphicon glyphicon-cutlery"></i><br>Click Here To Order<br>予約するにはここを押す</span>
+								<span class="blink_text">&#10102;<br>Click Here To Order <i class="glyphicon glyphicon-cutlery"></i><br>予約するにはここを押す</span>
 							</button>
 						</div>
 					</div>
@@ -215,11 +215,14 @@
 	</div>
 </section>
 
-<div class="modal fade" id="modalCreate">
+<div class="modal fade" id="modalCreate" data-backdrop="static" data-keyboard="false">
 	<div class="modal-dialog modal-md">
 		<div class="modal-content">
 			<div class="modal-header">
-				<center><h3 style="background-color: #00a65a; font-weight: bold; padding: 3px; margin-top: 0; color: white;">Create Your Order<br>予約を作成</h3>
+				<center>
+					<h3 style="background-color: #00a65a; font-weight: bold; padding: 3px; margin-top: 0; color: white;">
+						Create Your Order<br>予約を作成
+					</h3>
 				</center>
 				<div class="modal-body table-responsive no-padding" style="min-height: 100px; padding-bottom: 5px;">
 					<form class="form-horizontal">
@@ -290,7 +293,8 @@
 							</table>
 						</div>
 					</div>
-					<button class="btn btn-success pull-right" style="font-weight: bold; font-size: 2vw; width: 100%;" onclick="confirmOrder()">CONFIRM ORDER 確認 <i class="fa fa-shopping-cart"></i></button>
+					<button class="btn btn-danger pull-left" data-dismiss="modal" aria-label="Close" style="font-weight: bold; font-size: 2vw; width: 30%;">CANCEL</button>
+					<button class="btn btn-success pull-right" style="font-weight: bold; font-size: 2vw; width: 68%;" onclick="confirmOrder()">CONFIRM 確認 <i class="fa fa-shopping-cart"></i></button>
 				</div>
 			</div>
 		</div>
@@ -537,11 +541,6 @@
 		$('#dateError').hide();
 
 		fetchOrderList();
-	});
-	
-	$("#modalCreate").modal({
-		backdrop: 'static',
-		keyboard: false
 	});
 
 	$(function () {
