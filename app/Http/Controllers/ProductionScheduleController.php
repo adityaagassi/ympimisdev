@@ -370,8 +370,10 @@ class ProductionScheduleController extends Controller{
             for ($j=0; $j < count($productions); $j++) {
                 $koef;
                 if($request[$i]->destination_code == 'Y31507'){
+                    $st_day = [2,5];
                     $koef = $this->ymmj[date('l', strtotime($productions[$j]->due_date))];
                 }else if($request[$i]->destination_code == 'Y81804'){
+                    $st_day = [1,3];
                     $koef = $this->xy[date('l', strtotime($productions[$j]->due_date))];
                 }
 
@@ -384,7 +386,14 @@ class ProductionScheduleController extends Controller{
                         $st_date = date('Y-m-d', strtotime('+ 1 day', strtotime($st_date)));
                         $loopAgain = true;
                     }else{
-                        $loopAgain = false;
+                        $day = intval(date('N', strtotime($st_date)));
+                        if(in_array($day, $st_day)){
+                            $loopAgain = false;
+                        }else{
+                            $st_date = date('Y-m-d', strtotime('+ 1 day', strtotime($st_date)));
+                            $loopAgain = true;
+                        }
+
                     }
                 } while ($loopAgain);
 
@@ -1141,14 +1150,14 @@ class ProductionScheduleController extends Controller{
                 return Response::json($response);
             }
             else{
-             $response = array(
+               $response = array(
                 'status' => false,
                 'datas' => $production_schedule
             );
-             return Response::json($response);
-         }
-     }
-     catch (QueryException $e){
+               return Response::json($response);
+           }
+       }
+       catch (QueryException $e){
         $error_code = $e->errorInfo[1];
         if($error_code == 1062){
             return redirect('/index/production_schedule')->with('error', 'Production schedule with preferred due date already exist.')->with('page', 'Production Schedule');
@@ -1161,28 +1170,28 @@ class ProductionScheduleController extends Controller{
 
 public function edit(Request $request)
 {
- $due_date = date('Y-m-d', strtotime(str_replace('/','-', $request->get('due_date'))));
+   $due_date = date('Y-m-d', strtotime(str_replace('/','-', $request->get('due_date'))));
 
- try{
-  $production_schedule = ProductionSchedule::find($request->get('id'));
-  $production_schedule->quantity = $request->get('quantity');
-  $production_schedule->save();
+   try{
+      $production_schedule = ProductionSchedule::find($request->get('id'));
+      $production_schedule->quantity = $request->get('quantity');
+      $production_schedule->save();
 
-  $response = array(
-   'status' => true,
-   'datas' => $production_schedule
-);
-  return Response::json($response);
-}
-catch (QueryException $e){
-  $error_code = $e->errorInfo[1];
-  if($error_code == 1062){
-   return redirect('/index/production_schedule')->with('error', 'Production schedule with preferred due date already exist.')->with('page', 'Production Schedule');
-}
-else{
-   return redirect('/index/production_schedule')->with('error', $e->getMessage())->with('page', 'Production Schedule');
-}
-}
+      $response = array(
+         'status' => true,
+         'datas' => $production_schedule
+     );
+      return Response::json($response);
+  }
+  catch (QueryException $e){
+      $error_code = $e->errorInfo[1];
+      if($error_code == 1062){
+         return redirect('/index/production_schedule')->with('error', 'Production schedule with preferred due date already exist.')->with('page', 'Production Schedule');
+     }
+     else{
+         return redirect('/index/production_schedule')->with('error', $e->getMessage())->with('page', 'Production Schedule');
+     }
+ }
 }
 
     /**
@@ -1210,23 +1219,23 @@ else{
             $production_schedule->forceDelete();
         }
         else{
-           $response = array(
+         $response = array(
             'status' => false
         );
-           return Response::json($response);   
-       }
+         return Response::json($response);   
+     }
 
-       $response = array('status' => true);
-       return Response::json($response);
-   }
+     $response = array('status' => true);
+     return Response::json($response);
+ }
 
-   public function destroy(Request $request){
-       $date_from = date('Y-m-d', strtotime($request->get('datefrom')));
-       $date_to = date('Y-m-d', strtotime($request->get('dateto')));
+ public function destroy(Request $request){
+     $date_from = date('Y-m-d', strtotime($request->get('datefrom')));
+     $date_to = date('Y-m-d', strtotime($request->get('dateto')));
 
-       $materials = Material::select('material_number');
+     $materials = Material::select('material_number');
 
-       foreach($request->get('location') as $location){
+     foreach($request->get('location') as $location){
         $locations = explode(",", $location);
 
         $category = $locations[0];

@@ -46,6 +46,7 @@
     <ol class="breadcrumb">
         <li>
             <a data-toggle="modal" data-target="#importModal" class="btn btn-success btn-sm" style="color:white">Import {{ $page }}s</a>
+            <a data-toggle="modal" data-target="#info" class="btn btn-info btn-sm" style="color:white">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-info-circle"></i>&nbsp;&nbsp;&nbsp;Shipment Roles&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
         </li>
     </ol>
 </section>
@@ -163,6 +164,36 @@
     </div>
 </section>
 
+<div class="modal fade" id="info" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id ="importForm" method="post" action="{{ url('import/production_schedule_kd') }}" enctype="multipart/form-data">
+                <input type="hidden" value="{{csrf_token()}}" name="_token" />
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Shipment Roles</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-6 col-xs-offset-3">
+                            <h2>YMMJ</h2>
+                            YMMJ : Senin - Rabu export Jumat<br>
+                            YMMJ : Kamis - Minggu export Selasa
+
+                            <h2>XY</h2>
+                            XY : Selasa - Kamis export Senin<br>
+                            XY : Jumat - Senin export Rabu
+
+                        </div>
+                    </div>                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
