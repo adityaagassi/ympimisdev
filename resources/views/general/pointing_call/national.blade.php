@@ -227,7 +227,7 @@
 				$(function() {
 					$(document).keydown(function(e) {
 						switch(e.which) {
-							case 38:
+							case 40:
 							if(curr == 1){
 								curr = count;
 							}
@@ -286,7 +286,7 @@
 							break;
 
 
-							case 40:
+							case 38:
 
 							var c;
 
