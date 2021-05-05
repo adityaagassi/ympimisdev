@@ -42,6 +42,7 @@ class Kernel extends ConsoleKernel
         // Commands\SchedulingChemical::class,
         // Commands\SendEmailChemicalNotInput::class,
         // Commands\SendEmailChemicalUnpicked::class,
+        Commands\InterviewPointingCallCommand::class,
         Commands\UpdatePointingCall::class,
         Commands\SkillUnfulfilledLogCommand::class,
         Commands\CostCenterHistoryCommand::class,
@@ -146,6 +147,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('skill:unfulfilled_log')->dailyAt('01:00');
         $schedule->command('costcenter:history')->dailyAt('01:00');
         $schedule->command('injection:schedule')->monthlyOn(1, '04:00');;
+        $schedule->command('interview:schedule')->monthlyOn(1, '02:00');;
 
 
         $schedule->command('kd:shipment')->everyThirtyMinutes();

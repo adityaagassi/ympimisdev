@@ -382,7 +382,7 @@
 
 		$.post("{{url('index/interview/store/'.$id)}}", data, function(result, status, xhr){
 			if (result.status) {
-				openSuccessGritter('Success');
+				openSuccessGritter('Success','Interview untuk '+$('#section').val()+' berhasil dibuat');
 				location.reload();
 			}
 		});
