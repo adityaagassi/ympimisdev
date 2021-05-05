@@ -160,7 +160,7 @@ class GeneralController extends Controller{
 		->where('employees.remark', '=', $param[1])
 		->where('employee_syncs.department', '=', $param[2])
 		->where('employee_syncs.position', '=', 'Chief')
-		->whereNull('employee_sync.end_date')
+		->whereNull('employee_syncs.end_date')
 		->select('employee_syncs.name')
 		->first();
 
@@ -168,7 +168,7 @@ class GeneralController extends Controller{
 		->where('employees.remark', '=', $param[1])
 		->where('employee_syncs.department', '=', $param[2])
 		->where('employee_syncs.position', '=', 'Manager')
-		->whereNull('employee_sync.end_date')
+		->whereNull('employee_syncs.end_date')
 		->select('employee_syncs.name')
 		->first();
 
