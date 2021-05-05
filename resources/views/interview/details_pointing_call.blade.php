@@ -36,8 +36,8 @@ table.table-bordered > tfoot > tr > th{
 }
 #loading, #error { display: none; }
 label {
-		cursor: pointer;
-	}
+	cursor: pointer;
+}
 </style>
 @stop
 @section('header')

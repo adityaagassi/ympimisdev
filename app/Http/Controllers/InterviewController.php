@@ -570,11 +570,12 @@ class InterviewController extends Controller
         $activity_alias = $interview->activity_lists->activity_alias;
         $activity_id = $interview->activity_lists->id;
         $leader = $interview->activity_lists->leader_dept;
+        $section = $interview->section;
 
         $pointing_call = PointingCallItem::where('point_title','!=','pic')->where('point_title','!=','janji_safety')->get();
         
 
-        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department like '%".$departments."%' and employee_syncs.end_date is null";
+        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department like '%".$departments."%' and employee_syncs.section like '%".$section."%' and employee_syncs.end_date is null";
         $operator = DB::select($queryOperator);
         $operator2 = DB::select($queryOperator);
 
