@@ -1790,6 +1790,11 @@ Route::get('fetch/transaksi', 'AccountingController@fetch_upload_transaksi');
 Route::post('import/transaksi', 'AccountingController@import_transaksi');
 Route::post('delete/actual/transaksi', 'AccountingController@delete_transaksi');
 
+Route::get('outstanding_all_equipment', 'AccountingController@outstanding_all_equipment');
+Route::get('export/outstanding_purchase_requisition', 'AccountingController@exportOutstandingPR');
+Route::get('export/outstanding_investment', 'AccountingController@exportOutstandingInvestment');
+Route::get('export/outstanding_purchase_order', 'AccountingController@exportOutstandingPO');
+
 //Receive Barang
 Route::get('warehouse/receive_equipment', 'AccountingController@wh_receive_equipment');
 Route::get('fetch/warehouse/equipment', 'AccountingController@fetch_receive_equipment');

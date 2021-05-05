@@ -29,6 +29,7 @@
                 <th style="background-color: #ffeb3b;">User</th>
                 <th style="background-color: #ffeb3b;">Note</th>
                 <th style="background-color: #ffeb3b;">Budget</th>
+                <th style="background-color: #ffeb3b;">Area</th>
                 <th style="background-color: #ffeb3b;">ID Code</th>
                 <th style="background-color: #ffeb3b;">Kode Vendor</th>
                 <th style="background-color: #ffeb3b;">PO / JO</th>
@@ -74,7 +75,6 @@
                 }else{
                     $amount = $po->service_price * $po->qty; 
                 }
-
             ?>
 
             <tr>
@@ -112,8 +112,15 @@
                 <td>{{ $po->note }}</td>
                 <td>{{ $po->budget_item }}</td>
                 <td></td>
-                <td></td>
-                <td></td>
+                <td>{{ $po->supplier_name }}</td>
+                <td>{{ $po->supplier_code }}</td>
+                <td>
+                    @if($po->goods_price != "0" || $po->goods_price != 0)
+                        PO
+                    @elseif($po->service_price != "0" || $po->service_price != 0)
+                        JO
+                    @endif
+                </td>
                 <td>{{ $po->gl_number }}</td>
                 <td></td>
                 <td>{{ $po->cost_center }}</td>

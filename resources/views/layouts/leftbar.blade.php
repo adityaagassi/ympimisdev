@@ -595,6 +595,10 @@
           <a href="{{ url("upload_transaksi") }}"><i class="fa fa-upload"></i>Upload Transaksi Non-PO</a>
         </li>
 
+        @if(isset($page) && $page == "Outstanding")<li class="active">@else<li>@endif
+          <a href="{{ url("outstanding_all_equipment") }}"><i class="fa fa-download"></i>Outstanding (PR PO Investment)</a>
+        </li>
+
         @if(isset($page) && $page == "Cek Kedatangan")<li class="active">@else<li>@endif
           <a href="{{ url("warehouse/cek_kedatangan") }}"><i class="fa fa-sticky-note-o"></i>Cek Kedatangan Barang</a>
         </li>

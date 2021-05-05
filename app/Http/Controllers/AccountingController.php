@@ -35,6 +35,7 @@ use App\AccInvoicePaymentTerm;
 use App\EmployeeSync;
 use App\UtilityItemNumber;
 use App\UtilityOrder;
+use App\FixedAssetClasification;
 use Carbon\Carbon;
 use App\Mail\SendEmail;
 use Illuminate\Support\Facades\Mail;
@@ -45,19 +46,18 @@ class AccountingController extends Controller
     {
         $this->dept = ['Management Information System Department', 'Accounting Department', 'Woodwind Instrument - Final Assembly (WI-FA) Department', 'Educational Instrument (EI) Department', 'General Affairs Department', 'Human Resources Department', 'Logistic Department', 'Maintenance Department', 'Woodwind Instrument - Key Parts Process (WI-KPP) Department', 'Procurement Department', 'Production Control Department', 'Production Engineering Department', 'Purchasing Control Department', 'Quality Assurance Department', 'Woodwind Instrument - Welding Process (WI-WP) Department', 'Woodwind Instrument - Body Parts Process (WI-BPP) Department', 'Woodwind Instrument - Surface Treatment (WI-ST) Department'];
 
-        $this->uom = ['bag', 'bar', 'batang', 'belt', 'botol', 'bottle', 'box', 'Btg', 'Btl', 'btng', 'buah', 'buku', 'Can', 'Case', 'container', 'cps', 'day', 'days', 'dos', 'doz', 'Drum', 'dus', 'dz', 'dzn', 'EA', 'G', 'galon', 'gr', 'hari', 'hour', 'job', 'JRG', 'kaleng', 'ken', 'Kg', 'kgm', 'klg', 'L', 'Lbr', 'lbs', 'lembar', 'License', 'lisence', 'lisensi', 'lmbr', 'lonjor', 'Lot', 'ls', 'ltr', 'lubang', 'lusin', 'm', 'm2', 'm²', 'm3', 'malam', 'meter', 'ml', 'month', 'Mtr', 'night', 'OH', 'Ons', 'orang', 'OT', 'Pac', 'Pack', 'package', 'pad', 'pail', 'pair', 'pairs', 'pak', 'Pasang', 'pc', 'Pca', 'Pce', 'Pck', 'pcs', 'Pcs', 'Person', 'pick up', 'pil', 'ply', 'point', 'pot', 'prs', 'prsn', 'psc', 'PSG', 'psn', 'Rim', 'rol', 'roll', 'rolls', 'sak', 'sampel', 'sample', 'Set', 'Set', 'Sets', 'sheet', 'shoot', 'slop', 'sum', 'tank', 'tbg', 'time', 'titik', 'ton', 'tube', 'Um', 'Unit', 'user', 'VA', 'yard', 'zak'
-    ];
+        $this->uom = ['bag', 'bar', 'belt', 'box', 'Btg', 'Btl', 'buah', 'buku', 'Can', 'Case', 'cps', 'day', 'Drum', 'galon', 'gr','job', 'JRG', 'Kg', 'kgm', 'Lbr', 'lbs', 'month', 'License', 'Lot',  'ltr', 'lubang', 'm²', 'm3', 'Mtr', 'Pack', 'package', 'pad', 'pail', 'pair', 'pc', 'Pce', 'Pcs', 'Rim', 'roll', 'sample', 'Set','sheet', 'tbg', 'titik'];
 
-    $this->transportation = ['AIR', 'BOAT', 'COURIER SERVICE', 'DHL', 'FEDEX', 'SUV-Car'];
+        $this->transportation = ['AIR', 'BOAT', 'COURIER SERVICE', 'DHL', 'FEDEX', 'SUV-Car'];
 
-    $this->delivery = ['CIF Surabaya', 'CIP', 'Cost And Freight ', 'Delivered At Frontier', 'Delivered Duty Paid', 'Delivered Duty Unpaid', 'Delivered Ex Quay', 'Ex Works', 'Ex Factory', 'Ex Ship', 'FRANCO', 'Franco', 'FOB', 'Flee Alongside Ship', 'Free Carrier (FCA)', 'Letter Of Credits','DAP Consignee (Surabaya Factory)'];
+        $this->delivery = ['CIF Surabaya', 'CIP', 'Cost And Freight ', 'Delivered At Frontier', 'Delivered Duty Paid', 'Delivered Duty Unpaid', 'Delivered Ex Quay', 'Ex Works', 'Ex Factory', 'Ex Ship', 'FRANCO', 'Franco', 'FOB', 'Flee Alongside Ship', 'Free Carrier (FCA)', 'Letter Of Credits','DAP Consignee (Surabaya Factory)'];
 
-            // $this->dgm = 'PI1910003';
-            // $this->gm = 'PI1206001';
+        // $this->dgm = 'PI1910003';
+        // $this->gm = 'PI1206001';
 
-    $this->dgm = 'PI0109004';
-    $this->gm = 'PI1206001';
-    $this->gm_acc = 'PI1712018';
+        $this->dgm = 'PI0109004';
+        $this->gm = 'PI1206001';
+        $this->gm_acc = 'PI1712018';
 
         $this->manager_acc = 'PI9902017/Romy Agung Kurniawan'; //Pak Romy
         $this->dir_acc = 'PI1712018/Kyohei Iida'; //Pak Ida
@@ -10994,6 +10994,205 @@ public function delete_transaksi(Request $request)
     return Response::json($response);
 }
 
+    public function exportOutstandingPR(Request $request){
+
+        $time = date('d-m-Y H;i;s');
+
+        $tanggal = "";
+
+        if (strlen($request->get('date_pr')) > 0)
+        {
+            $datepr = date('Y-m-d', strtotime($request->get('date_pr')));
+        }
+
+        $pr_detail = db::select(
+            "SELECT
+                acc_purchase_requisitions.no_budget,
+                '' AS no_po,
+                acc_purchase_requisitions.no_pr,
+                acc_purchase_requisition_items.item_desc,
+                acc_purchase_requisitions.department,
+                acc_purchase_requisition_items.item_currency,
+                acc_purchase_requisition_items.item_qty,
+                acc_purchase_requisition_items.item_price,
+                acc_purchase_requisition_items.item_amount,
+                acc_purchase_requisitions.submission_date,
+                monthname( submission_date ) AS periode 
+            FROM
+                acc_purchase_requisitions
+                JOIN acc_purchase_requisition_items ON acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr 
+            WHERE
+                acc_purchase_requisitions.deleted_at IS NULL 
+                AND sudah_po IS NULL 
+                AND submission_date <= '".$datepr."'
+
+            UNION ALL
+
+            SELECT
+                acc_purchase_requisitions.no_budget,
+                acc_purchase_order_details.no_po,
+                acc_purchase_requisitions.no_pr,
+                acc_purchase_requisition_items.item_desc,
+                acc_purchase_requisitions.department,
+                acc_purchase_requisition_items.item_currency,
+                acc_purchase_requisition_items.item_qty,
+                acc_purchase_requisition_items.item_price,
+                acc_purchase_requisition_items.item_amount,
+                acc_purchase_requisitions.submission_date,
+                monthname( submission_date ) AS periode 
+            FROM
+                acc_purchase_requisitions
+                JOIN acc_purchase_requisition_items ON acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr
+                JOIN acc_purchase_order_details ON acc_purchase_order_details.no_pr = acc_purchase_requisition_items.no_pr
+            WHERE
+                acc_purchase_requisitions.deleted_at IS NULL 
+                AND sudah_po IS NOT NULL 
+                AND submission_date <= '".$datepr."' AND DATE_FORMAT(acc_purchase_order_details.created_at,'%Y-%m-%d') > '".$datepr."'");
+
+        $data = array(
+            'pr_detail' => $pr_detail
+        );
+
+        ob_clean();
+
+        Excel::create('Outstanding PR List '.$datepr, function($excel) use ($data){
+            $excel->sheet('Location', function($sheet) use ($data) {
+              return $sheet->loadView('accounting_purchasing.report.outstanding_pr_excel', $data);
+          });
+        })->export('xlsx');
+    }
+
+    public function exportOutstandingInvestment(Request $request){
+        $time = date('d-m-Y H;i;s');
+        $tanggal = "";
+
+        if (strlen($request->get('date_inv')) > 0)
+        {
+            $dateinv = date('Y-m-d', strtotime($request->get('date_inv')));
+        }
+
+        $inv_detail = db::select(
+            "
+            SELECT
+                acc_investment_budgets.budget_no,
+                '' AS no_po,
+                acc_investments.reff_number,
+                acc_investment_details.detail,
+                acc_investments.applicant_department,
+                acc_investments.currency,
+                acc_investment_details.qty,
+                acc_investment_details.price,
+                acc_investment_details.amount,
+                acc_investments.submission_date,
+                monthname( submission_date ) AS periode 
+            FROM
+                acc_investments
+                JOIN acc_investment_details ON acc_investments.reff_number = acc_investment_details.reff_number 
+                    join acc_investment_budgets ON acc_investments.reff_number = acc_investment_budgets.reff_number
+            WHERE
+                acc_investments.deleted_at IS NULL 
+                AND sudah_po IS NULL 
+                AND submission_date <= '".$dateinv."'
+                    
+                    
+            UNION ALL
+
+            SELECT
+                acc_investment_budgets.budget_no,
+                acc_purchase_order_details.no_po,
+                acc_investments.reff_number,
+                acc_investment_details.detail,
+                acc_investments.applicant_department,
+                acc_investments.currency,
+                acc_investment_details.qty,
+                acc_investment_details.price,
+                acc_investment_details.amount,
+                acc_investments.submission_date,
+                monthname( submission_date ) AS periode 
+            FROM
+                acc_investments
+                JOIN acc_investment_details ON acc_investments.reff_number = acc_investment_details.reff_number
+                    join acc_investment_budgets ON acc_investments.reff_number = acc_investment_budgets.reff_number
+                JOIN acc_purchase_order_details ON acc_purchase_order_details.no_pr = acc_investment_details.reff_number
+            WHERE
+                acc_investments.deleted_at IS NULL 
+                AND sudah_po IS NOT NULL 
+                AND submission_date <= '".$dateinv."' AND DATE_FORMAT(acc_purchase_order_details.created_at,'%Y-%m-%d') > '".$dateinv."'");
+
+        $data = array(
+            'inv_detail' => $inv_detail
+        );
+
+        ob_clean();
+
+        Excel::create('Outstanding Investment List '.$dateinv, function($excel) use ($data){
+            $excel->sheet('Location', function($sheet) use ($data) {
+              return $sheet->loadView('accounting_purchasing.report.outstanding_inv_excel', $data);
+          });
+        })->export('xlsx');
+    }
+
+    public function exportOutstandingPO(Request $request){
+        $time = date('d-m-Y H;i;s');
+        $tanggal = "";
+
+        if (strlen($request->get('date_po')) > 0)
+        {
+            $datepo = date('Y-m-d', strtotime($request->get('date_po')));
+        }
+
+        $po_detail = db::select(
+            "
+                SELECT
+                acc_purchase_orders.remark,
+                acc_purchase_requisitions.department AS department_pr,
+                acc_investments.applicant_department AS department_investment,
+                acc_purchase_order_details.budget_item,
+                acc_purchase_order_details.no_po,
+                acc_purchase_order_details.no_pr,
+                acc_purchase_order_details.nama_item,
+                acc_purchase_orders.currency,
+                acc_purchase_order_details.qty,
+                acc_purchase_order_details.goods_price,
+                acc_purchase_order_details.service_price,
+                DATE_FORMAT( tgl_po, '%Y-%m-%d' ) AS tgl_po,
+                monthname( tgl_po ) AS periode 
+            FROM
+                acc_purchase_orders
+                JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po
+                LEFT JOIN acc_purchase_requisitions ON acc_purchase_order_details.no_pr = acc_purchase_requisitions.no_pr
+                LEFT JOIN acc_investments ON acc_purchase_order_details.no_pr = acc_investments.reff_number
+                JOIN acc_budget_histories ON acc_budget_histories.category_number = acc_purchase_order_details.no_pr and acc_budget_histories.no_item = acc_purchase_order_details.nama_item
+            WHERE
+                acc_purchase_orders.deleted_at IS NULL 
+                AND acc_budget_histories.`status` != 'Actual'
+                AND DATE_FORMAT( tgl_po, '%Y-%m-%d' ) <= '".$datepo."'");
+
+        $data = array(
+            'po_detail' => $po_detail
+        );
+
+        ob_clean();
+
+        Excel::create('Outstanding PO List '.$datepo, function($excel) use ($data){
+            $excel->sheet('Location', function($sheet) use ($data) {
+              return $sheet->loadView('accounting_purchasing.report.outstanding_po_excel', $data);
+          });
+        })->export('xlsx');
+    }
+
+public function outstanding_all_equipment()
+{
+    $title = 'Outstanding PR PO Investment';
+    $title_jp = '';
+
+    return view('accounting_purchasing.master.outstanding', array(
+        'title' => $title,
+        'title_jp' => $title_jp,
+    ))->with('page', 'Data Outstanding')
+    ->with('head', 'Data Outstanding');
+}
+
     //==================================//
     //          Transfer Budget         //
     //==================================//
@@ -12708,9 +12907,12 @@ public function indexAssetRegistration()
     $title = 'Asset Registration Form';
     $title_jp = '??';
 
+    $clasification = FixedAssetClasification::select('category', 'category_code', 'clasification_name', 'life_time')->get();
+
     return view('fixed_asset.form.registration_form', array(
         'title' => $title,
-        'title_jp' => $title_jp
+        'title_jp' => $title_jp,
+        'clasification' => $clasification
     ))->with('page', 'Fixed Asset Registration Form');  
 }
 
