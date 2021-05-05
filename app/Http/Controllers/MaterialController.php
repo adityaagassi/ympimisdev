@@ -175,10 +175,10 @@ public function uploadMaterialMonitoring(Request $request){
                     array_push($error_count, 'GMC Unmatch '.$material.' ('.strlen($material).')');
                }
                else if(strlen($vendor_code) < 4){
-                    array_push($error_count, 'Vendor Code Unmatch '.$vendor_code.' ('.strlen($vendor_code).')');             
+                    array_push($error_count, 'Vendor Code Unmatch ['.$vendor_code.'] ('.strlen($vendor_code).')');             
                }
                else if($category != 'LOKAL' && $category != 'IMPORT'){
-                    array_push($error_count, 'Category Code Unmatch '.$category.' ('.strlen($category).')'); 
+                    array_push($error_count, 'Category Code Unmatch ['.$category.'] ('.strlen($category).')'); 
                }
                else if($material == "" || $description == "" || $vendor_code == "" || $vendor_name == "" || $category == "" || $pic == "" || $remark == ""){
                     array_push($error_count, 'Data Blank '.$material); 
