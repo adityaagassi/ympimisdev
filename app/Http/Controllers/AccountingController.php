@@ -11016,7 +11016,7 @@ public function delete_transaksi(Request $request)
                 acc_purchase_requisition_items.item_qty,
                 acc_purchase_requisition_items.item_price,
                 acc_purchase_requisition_items.item_amount,
-                acc_purchase_requisitions.submission_date,
+                DATE_FORMAT(acc_purchase_requisitions.submission_date,'%Y-%m-%d') as submission_date,
                 monthname( submission_date ) AS periode 
             FROM
                 acc_purchase_requisitions
@@ -11038,7 +11038,7 @@ public function delete_transaksi(Request $request)
                 acc_purchase_requisition_items.item_qty,
                 acc_purchase_requisition_items.item_price,
                 acc_purchase_requisition_items.item_amount,
-                acc_purchase_requisitions.submission_date,
+                DATE_FORMAT(acc_purchase_requisitions.submission_date,'%Y-%m-%d') as submission_date,
                 monthname( submission_date ) AS periode 
             FROM
                 acc_purchase_requisitions
@@ -11083,7 +11083,7 @@ public function delete_transaksi(Request $request)
                 acc_investment_details.qty,
                 acc_investment_details.price,
                 acc_investment_details.amount,
-                acc_investments.submission_date,
+                DATE_FORMAT(acc_investments.submission_date,'%Y-%m-%d') as submission_date,
                 monthname( submission_date ) AS periode 
             FROM
                 acc_investments
@@ -11107,7 +11107,7 @@ public function delete_transaksi(Request $request)
                 acc_investment_details.qty,
                 acc_investment_details.price,
                 acc_investment_details.amount,
-                acc_investments.submission_date,
+                DATE_FORMAT(acc_investments.submission_date,'%Y-%m-%d') as submission_date,
                 monthname( submission_date ) AS periode 
             FROM
                 acc_investments
