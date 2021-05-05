@@ -43,8 +43,8 @@ class RawMaterialReminder extends Command
      */
     public function handle(){
 
-        $period = date('2021-04');
-        $due_date = date('2021-04-26');
+        $period = date('Y-m');
+        $due_date = date('Y-m-d');
 
         $now = WeeklyCalendar::where('week_date', $due_date)->first();
 
