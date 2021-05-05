@@ -131,7 +131,7 @@
                 <td style="vertical-align:middle" rowspan="{{$jumlah}}">{{round($datas->ng_ratio,2)}}</td>
                 <td style="vertical-align:middle" rowspan="{{$jumlah}}">{{$datas->status_lot}}</td>
             </tr>
-            <?php if ($datas->ng_name != null) { 
+            <?php if ($datas->ng_name != null && count($datas->ng_name) > 1) { 
                 for($i = 1 ;$i < $jumlah; $i++){ ?>
                     <tr>
                         <td></td>
