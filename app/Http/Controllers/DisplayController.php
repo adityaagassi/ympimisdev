@@ -174,7 +174,7 @@ class DisplayController extends Controller
 			histories.transfer_movement_type = '9I3',
 			histories.lot,
 			IF
-			( histories.transfer_movement_type = '9I4', IF(day(histories.created_at) < 6, 0, -(histories.lot)),0))) as picking,
+			( histories.transfer_movement_type = '9I4', IF(day(histories.created_at) < 5, 0, -(histories.lot)),0))) as picking,
 			0 AS plus,
 			0 AS minus,
 			0 AS stock,
@@ -232,7 +232,7 @@ class DisplayController extends Controller
 			histories.transfer_movement_type = '9I3',
 			histories.lot,
 			IF
-			( histories.transfer_movement_type = '9I4', IF(day(histories.created_at) < 6, 0, -(histories.lot)),0)))) AS plan,
+			( histories.transfer_movement_type = '9I4', IF(day(histories.created_at) < 5, 0, -(histories.lot)),0)))) AS plan,
 			0 AS plan_ori 
 			FROM
 			(
@@ -277,7 +277,7 @@ class DisplayController extends Controller
 			( histories.transfer_movement_type = '9I3', histories.lot, 0 )) AS plus,
 			sum(
 			IF
-			( histories.transfer_movement_type = '9I4', IF(day(histories.created_at) < 6, 0, histories.lot),0)) AS minus,
+			( histories.transfer_movement_type = '9I4', IF(day(histories.created_at) < 5, 0, histories.lot),0)) AS minus,
 			0 AS stock,
 			0 AS plan_ori 
 			FROM
