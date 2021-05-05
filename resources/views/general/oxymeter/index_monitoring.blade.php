@@ -530,7 +530,7 @@
 						prd_total_2++;
 						if (value.oxy != null) {
 							prd_cek_2++;
-							detail_check_prd_2.push({'employee_id': value.employee_id,' name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'oxy':value.oxy,  'pulse':value.pulse, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
+							detail_check_prd_2.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'oxy':value.oxy,  'pulse':value.pulse, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
 						} else {
 							prd_uncek_2++;
 							detail_uncheck_prd_2.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'oxy':value.oxy,  'pulse':value.pulse, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
@@ -540,7 +540,7 @@
 						prd_total_3++;
 						if (value.oxy != null) {
 							prd_cek_3++;
-							detail_check_prd_3.push({'employee_id': value.employee_id,' name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'oxy':value.oxy,  'pulse':value.pulse, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
+							detail_check_prd_3.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'oxy':value.oxy,  'pulse':value.pulse, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
 						} else {
 							prd_uncek_3++;
 							detail_uncheck_prd_3.push({'employee_id': value.employee_id,'name':value.name, 'dept': value.department_shortname, 'shift': value.shiftdaily_code, 'oxy':value.oxy,  'pulse':value.pulse, 'check_time':value.check_time, 'section':value.section, 'group':value.group});
