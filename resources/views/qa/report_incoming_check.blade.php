@@ -427,40 +427,41 @@
 	}
 
 	function initiateTable() {
+		$('#example1').DataTable().clear();
+				$('#example1').DataTable().destroy();
 		$('#divTable').html("");
 		var tableData = "";
 		tableData += "<table id='example1' class='table table-bordered table-striped table-hover'>";
 		tableData += '<thead style="background-color: rgba(126,86,134,.7);">';
 		tableData += '<tr>';
-		tableData += '<th rowspan="2">Loc</th>';
-		tableData += '<th rowspan="2">Date</th>';
-		tableData += '<th rowspan="2">Inspector</th>';
-		tableData += '<th rowspan="2">Vendor</th>';
-		tableData += '<th rowspan="2">Invoice</th>';
-		tableData += '<th rowspan="2">Inspection Level</th>';
-		tableData += '<th rowspan="2">Lot Number</th>';
-		tableData += '<th rowspan="2">Material</th>';
-		tableData += '<th rowspan="2">Desc</th>';
-		tableData += '<th rowspan="2">Qty Rec</th>';
-		tableData += '<th rowspan="2">Qty Check</th>';
-		tableData += '<th rowspan="2">Defect</th>';
-		tableData += '<th colspan="3">Jumlah NG</th>';
-		tableData += '<th rowspan="2">Note</th>';
-		tableData += '<th rowspan="2">NG Ratio</th>';
-		tableData += '<th rowspan="2">Lot Status</th>';
-		tableData += '<th rowspan="2">Action</th>';
-		tableData += '</tr>';
-		tableData += '<tr>';
+		tableData += '<th>ID</th>';
+		tableData += '<th>Loc</th>';
+		tableData += '<th>Date</th>';
+		tableData += '<th>Inspector</th>';
+		tableData += '<th>Vendor</th>';
+		tableData += '<th>Invoice</th>';
+		tableData += '<th>Inspection Level</th>';
+		tableData += '<th>Lot Number</th>';
+		tableData += '<th>Material</th>';
+		tableData += '<th>Desc</th>';
+		tableData += '<th>Qty Rec</th>';
+		tableData += '<th>Qty Check</th>';
+		tableData += '<th>Defect</th>';
 		tableData += '<th>Repair</th>';
 		tableData += '<th>Return</th>';
 		tableData += '<th>Scrap</th>';
+		tableData += '<th>Note</th>';
+		tableData += '<th>NG Ratio</th>';
+		tableData += '<th>Lot Status</th>';
+		tableData += '<th>Action</th>';
 		tableData += '</tr>';
 		tableData += '</thead>';
 		tableData += '<tbody id="example1Body">';
 		tableData += "</tbody>";
-		tableData += "</tfoot>";
 		tableData += "</table>";
 		$('#divTable').append(tableData);
+
+		
 	}
 
 	function fillList(){
@@ -484,6 +485,8 @@
 			if(result.status){
 
 				initiateTable();
+
+				
 				
 				var tableData = "";
 				var index = 0;
@@ -519,74 +522,21 @@
 					}
 
 					
-					tableData += '<tr>';
-					tableData += '<td rowspan="'+jumlah+'">'+ loc +'</td>';
-					tableData += '<td rowspan="'+jumlah+'">'+ value.created +'</td>';
-					tableData += '<td rowspan="'+jumlah+'">'+ value.employee_id +'<br>'+ value.name +'</td>';
-					tableData += '<td rowspan="'+jumlah+'">'+ value.vendor +'</td>';
-					tableData += '<td rowspan="'+jumlah+'">'+ value.invoice +'</td>';
-					tableData += '<td rowspan="'+jumlah+'">'+ value.inspection_level +'</td>';
-					tableData += '<td rowspan="'+jumlah+'">'+ value.lot_number +'</td>';
-					tableData += '<td rowspan="'+jumlah+'">'+ value.material_number +'</td>';
-					tableData += '<td rowspan="'+jumlah+'">'+ value.material_description +'</td>';
-					tableData += '<td rowspan="'+jumlah+'">'+ value.qty_rec +'</td>';
-					tableData += '<td rowspan="'+jumlah+'">'+ value.qty_check +'</td>';
-					if (value.ng_name != null) {
-						tableData += '<td>';
-						tableData += '<span class="label label-danger">'+ng_name[0]+'</span><br>';
-						tableData += '</td>';
-						if (status_ng[0] == 'Repair') {
-							tableData += '<td>';
-							tableData += '<span class="label label-danger">'+ng_qty[0]+'</span><br>';
-							tableData += '</td>';
-							tableData += '<td>';
-							tableData += '</td>';
-							tableData += '<td>';
-							tableData += '</td>';
-						}else if (status_ng[0] == 'Return') {
-							tableData += '<td>';
-							tableData += '</td>';
-							tableData += '<td>';
-							tableData += '<span class="label label-danger">'+ng_qty[0]+'</span><br>';
-							tableData += '</td>';
-							tableData += '<td>';
-							tableData += '</td>';
-						}else if (status_ng[0] == 'Scrap') {
-							tableData += '<td>';
-							tableData += '</td>';
-							tableData += '<td>';
-							tableData += '</td>';
-							tableData += '<td>';
-							tableData += '<span class="label label-danger">'+ng_qty[0]+'</span><br>';
-							tableData += '</td>';
-						}
-						if (note_ng.length > 0) {
-							tableData += '<td>';
-							tableData += '<span class="label label-danger">'+note_ng[0]+'</span><br>';
-							tableData += '</td>';
-						}else{
-							tableData += '<td>';
-							tableData += '</td>';
-						}
-					}else{
-						tableData += '<td>';
-						tableData += '</td>';
-						tableData += '<td>';
-						tableData += '</td>';
-						tableData += '<td>';
-						tableData += '</td>';
-						tableData += '<td>';
-						tableData += '</td>';
-						tableData += '<td>';
-						tableData += '</td>';
-					}
-					tableData += '<td style="vertical-align:middle" rowspan="'+jumlah+'">'+ value.ng_ratio.toFixed(2) +'</td>';
-					tableData += '<td style="vertical-align:middle" rowspan="'+jumlah+'">'+ value.status_lot +'</td>';
-					tableData += '<td style="vertical-align:middle" rowspan="'+jumlah+'"><button class="btn btn-warning" onclick="editIncomingReport(\''+value.id_log+'\')">Edit</button><button class="btn btn-danger" onclick="deleteIncomingReport(\''+value.id_log+'\')">Delete</button></td>';
-					tableData += '</tr>';
-					if (value.ng_name != null) {
-						for (var i = 1 ;i < ng_name.length; i++) {
-							tableData += '<tr>';
+					for (var i = 0; i < jumlah; i++) {
+						tableData += '<tr>';
+						tableData += '<td>'+ value.id_log +'</td>';
+						tableData += '<td>'+ loc +'</td>';
+						tableData += '<td>'+ value.created +'</td>';
+						tableData += '<td>'+ value.employee_id +'<br>'+ value.name +'</td>';
+						tableData += '<td>'+ value.vendor +'</td>';
+						tableData += '<td>'+ value.invoice +'</td>';
+						tableData += '<td>'+ value.inspection_level +'</td>';
+						tableData += '<td>'+ value.lot_number +'</td>';
+						tableData += '<td>'+ value.material_number +'</td>';
+						tableData += '<td>'+ value.material_description +'</td>';
+						tableData += '<td>'+ value.qty_rec +'</td>';
+						tableData += '<td>'+ value.qty_check +'</td>';
+						if (value.ng_name != null) {
 							tableData += '<td>';
 							tableData += '<span class="label label-danger">'+ng_name[i]+'</span><br>';
 							tableData += '</td>';
@@ -623,13 +573,134 @@
 								tableData += '<td>';
 								tableData += '</td>';
 							}
-							tableData += '</tr>';
+						}else{
+							tableData += '<td>';
+							tableData += '</td>';
+							tableData += '<td>';
+							tableData += '</td>';
+							tableData += '<td>';
+							tableData += '</td>';
+							tableData += '<td>';
+							tableData += '</td>';
+							tableData += '<td>';
+							tableData += '</td>';
 						}
+						tableData += '<td style="vertical-align:middle">'+ value.ng_ratio.toFixed(2) +'</td>';
+						tableData += '<td style="vertical-align:middle">'+ value.status_lot +'</td>';
+						tableData += '<td style="vertical-align:middle"><button class="btn btn-warning" onclick="editIncomingReport(\''+value.id_log+'\')">Edit</button><button class="btn btn-danger" onclick="deleteIncomingReport(\''+value.id_log+'\')">Delete</button></td>';
+						tableData += '</tr>';
 					}
+					
+					
+					
+
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					// if (value.ng_name != null) {
+					// 	for (var i = 1 ;i < ng_name.length; i++) {
+					// 		tableData += '<tr>';
+					// 		tableData += '<td>';
+					// 		tableData += '<span class="label label-danger">'+ng_name[i]+'</span><br>';
+					// 		tableData += '</td>';
+					// 		if (status_ng[i] == 'Repair') {
+					// 			tableData += '<td>';
+					// 			tableData += '<span class="label label-danger">'+ng_qty[i]+'</span><br>';
+					// 			tableData += '</td>';
+					// 			tableData += '<td>';
+					// 			tableData += '</td>';
+					// 			tableData += '<td>';
+					// 			tableData += '</td>';
+					// 		}else if (status_ng[i] == 'Return') {
+					// 			tableData += '<td>';
+					// 			tableData += '</td>';
+					// 			tableData += '<td>';
+					// 			tableData += '<span class="label label-danger">'+ng_qty[i]+'</span><br>';
+					// 			tableData += '</td>';
+					// 			tableData += '<td>';
+					// 			tableData += '</td>';
+					// 		}else if (status_ng[i] == 'Scrap') {
+					// 			tableData += '<td>';
+					// 			tableData += '</td>';
+					// 			tableData += '<td>';
+					// 			tableData += '</td>';
+					// 			tableData += '<td>';
+					// 			tableData += '<span class="label label-danger">'+ng_qty[i]+'</span><br>';
+					// 			tableData += '</td>';
+					// 		}
+					// 		if (note_ng.length > 0) {
+					// 			tableData += '<td>';
+					// 			tableData += '<span class="label label-danger">'+note_ng[i]+'</span><br>';
+					// 			tableData += '</td>';
+					// 		}else{
+					// 			tableData += '<td>';
+					// 			tableData += '</td>';
+					// 		}
+					// 		tableData += '</tr>';
+					// 	}
+					// }
 
 					index++;
 				});
 				$('#example1Body').append(tableData);
+
+				$('#example1').DataTable({
+						'dom': 'Bfrtip',
+						'responsive':true,
+						'lengthMenu': [
+						[ 10, 25, 50, -1 ],
+						[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+						],
+						'buttons': {
+							buttons:[
+							{
+								extend: 'pageLength',
+								className: 'btn btn-default',
+							},
+							{
+								extend: 'copy',
+								className: 'btn btn-success',
+								text: '<i class="fa fa-copy"></i> Copy',
+								exportOptions: {
+									columns: ':not(.notexport)'
+								}
+							},
+							{
+								extend: 'excel',
+								className: 'btn btn-info',
+								text: '<i class="fa fa-file-excel-o"></i> Excel',
+								exportOptions: {
+									columns: ':not(.notexport)'
+								}
+							},
+							{
+								extend: 'print',
+								className: 'btn btn-warning',
+								text: '<i class="fa fa-print"></i> Print',
+								exportOptions: {
+									columns: ':not(.notexport)'
+								}
+							},
+							]
+						},
+						'paging': true,
+						'lengthChange': true,
+						'searching': true,
+						'ordering': true,
+						'order': [],
+						'info': true,
+						'autoWidth': true,
+						"sPaginationType": "full_numbers",
+						"bJQueryUI": true,
+						"bAutoWidth": false,
+						"processing": true
+					});
 				$('#loading').hide();
 
 			}
