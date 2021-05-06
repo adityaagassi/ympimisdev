@@ -608,7 +608,6 @@
 				$('#createDescription').val(result.groups[0].description);
 				tableData = "";
 				$.each(result.groups, function(key, value){
-					tableData += "<tr>";
 					tableData += "<tr id='rowParticipant"+value.employee_id+"'>";
 					tableData += "<td>"+value.employee_id+"</td>";
 					tableData += "<td>"+value.name+"</td>";

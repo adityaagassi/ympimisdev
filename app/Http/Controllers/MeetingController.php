@@ -40,6 +40,7 @@ class MeetingController extends Controller
 			'Training Room 1',
 			'Training Room 2',
 			'Training Room 3',
+			'Canteen',
 			'Meeting Room Leader WSTA',
 			'Meeting Area M-Pro',
 			'Partition Room PE M-Pro',
@@ -47,7 +48,16 @@ class MeetingController extends Controller
 			'Genba Training Center',
 			'Assembly',
 			'Surface Treatment',
-			'Welding'
+			'Buffing-Barrel',
+			'Welding',
+			'Body Process',
+			'Pianica',
+			'Recorder',
+			'Venova',
+			'Mouthpiece Storage',
+			'Maintenance',
+			'Workshop',
+			'Warehouse'
 		];
 	}
 
