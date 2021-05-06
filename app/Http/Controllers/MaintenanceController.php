@@ -1065,7 +1065,7 @@ class MaintenanceController extends Controller
 
 	public function fetchSPKProgressDetail(Request $request)
 	{
-		$detail = 'SELECT maintenance_job_orders.order_no, department_shortname as bagian, priority, type, maintenance_job_orders.category, maintenance_job_orders.machine_name as machine_temp, maintenance_plan_items.description as machine_desc, maintenance_job_orders.description, DATE_FORMAT(maintenance_job_orders.created_at,"%d %b %Y") target_date, process_code, employee_syncs.name, date(maintenance_job_orders.created_at) as dt';
+		$detail = 'SELECT maintenance_job_orders.order_no, department_shortname as bagian, priority, type, maintenance_job_orders.category, maintenance_job_orders.machine_name as machine_temp, maintenance_plan_items.description as machine_desc, machine_remark, maintenance_job_orders.description, DATE_FORMAT(maintenance_job_orders.created_at,"%d %b %Y") target_date, process_code, employee_syncs.name, date(maintenance_job_orders.created_at) as dt';
 
 		if ($request->get('process_name') != 'Listed' && $request->get('process_name') != 'InProgress') {
 			$detail .= ', cause, handling';

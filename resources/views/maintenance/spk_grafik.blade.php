@@ -523,7 +523,13 @@ function showModalDetail(ctg, date) {
 			body += "<td>"+value.dt+"</td>";
 			body += "<td>"+value.type+"</td>";
 			body += "<td>"+value.category+"</td>";
-			body += "<td>"+((value.machine_desc || value.machine_temp) || '')+"</td>";
+
+			if (value.machine_temp == 'Lain - lain') {
+				body += "<td>"+(value.machine_remark || '')+"</td>";
+			} else {
+				body += "<td>"+(value.machine_desc || '')+"</td>";
+			}
+
 			body += "<td>"+value.description+"</td>";
 			body += "<td>"+value.target_date+"</td>";
 			body += "<td></td>";
