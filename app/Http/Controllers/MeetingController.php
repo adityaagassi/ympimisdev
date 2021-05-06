@@ -190,8 +190,8 @@ class MeetingController extends Controller
 		}
 
 		$meeting_detail = MeetingDetail::where('meeting_id', '=', $request->get('meeting_id'))
-				->where('employee_id', '=', $employee->employee_id)
-				->first();
+		->where('employee_id', '=', $employee->employee_id)
+		->first();
 
 		$batas_clinic = 20;
 		$batas_thorax = 10;
@@ -256,7 +256,7 @@ class MeetingController extends Controller
 				}
 				$meeting_detail->save();
 			}else{
-				if($meeting_detail != null){
+				if($meeting_detail){
 					if($meeting_detail->status != 0){
 						$response = array(
 							'status' => false,
@@ -270,16 +270,21 @@ class MeetingController extends Controller
 					$meeting_detail->attend_time = date('Y-m-d H:i:s');
 				}
 				else{
+					$response = array(
+						'status' => false,
+						'message' => 'ID tidak terdapat pada list',
+					);
+					return Response::json($response);
 
-					$meeting_detail = new MeetingDetail([
-						'meeting_id' => $request->get('meeting_id'),
-						'employee_tag' => $employee->tag,
-						'employee_id' => $employee->employee_id,
-						'status' => 2,
-						'attend_time' => date('Y-m-d H:i:s'),
-						'created_by' => $id,
-						'created_at' => date('Y-m-d H:i:s')
-					]);
+					// $meeting_detail = new MeetingDetail([
+					// 	'meeting_id' => $request->get('meeting_id'),
+					// 	'employee_tag' => $employee->tag,
+					// 	'employee_id' => $employee->employee_id,
+					// 	'status' => 2,
+					// 	'attend_time' => date('Y-m-d H:i:s'),
+					// 	'created_by' => $id,
+					// 	'created_at' => date('Y-m-d H:i:s')
+					// ]);
 				}
 				$meeting_detail->save();
 			}
@@ -633,55 +638,55 @@ class MeetingController extends Controller
 				SUM( a.hadir ) AS hadir,
 				SUM( a.tidak ) AS tidak,
 				sum( a.tanpa_undangan ) AS tanpa_undangan 
-			FROM
+				FROM
 				(
 				SELECT COALESCE
-					( department_shortname, '' ) AS department_shortname,
-					count(
-					DISTINCT ( employee_syncs.employee_id )) AS hadir,
-					0 AS tidak,
-					0 AS tanpa_undangan 
+				( department_shortname, '' ) AS department_shortname,
+				count(
+				DISTINCT ( employee_syncs.employee_id )) AS hadir,
+				0 AS tidak,
+				0 AS tanpa_undangan 
 				FROM
-					meeting_details
-					LEFT JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
-					LEFT JOIN departments ON departments.department_name = employee_syncs.department 
+				meeting_details
+				LEFT JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
+				LEFT JOIN departments ON departments.department_name = employee_syncs.department 
 				WHERE
-					meeting_id = '".$request->get('id')."' 
-					AND `status` = 1 
+				meeting_id = '".$request->get('id')."' 
+				AND `status` = 1 
 				GROUP BY
-					department_shortname UNION ALL
+				department_shortname UNION ALL
 				SELECT COALESCE
-					( department_shortname, '' ) AS department_shortname,
-					0 AS hadir,
-					count(
-					DISTINCT ( employee_syncs.employee_id )) AS tidak,
-					0 AS tanpa_undangan 
+				( department_shortname, '' ) AS department_shortname,
+				0 AS hadir,
+				count(
+				DISTINCT ( employee_syncs.employee_id )) AS tidak,
+				0 AS tanpa_undangan 
 				FROM
-					meeting_details
-					LEFT JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
-					LEFT JOIN departments ON departments.department_name = employee_syncs.department 
+				meeting_details
+				LEFT JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
+				LEFT JOIN departments ON departments.department_name = employee_syncs.department 
 				WHERE
-					meeting_id = '".$request->get('id')."' 
-					AND `status` = 0 
+				meeting_id = '".$request->get('id')."' 
+				AND `status` = 0 
 				GROUP BY
-					department_shortname UNION ALL
+				department_shortname UNION ALL
 				SELECT COALESCE
-					( department_shortname, '' ) AS department_shortname,
-					0 AS hadir,
-					0 AS tidak,
-					count(
-					DISTINCT ( employee_syncs.employee_id )) AS tanpa_undangan 
+				( department_shortname, '' ) AS department_shortname,
+				0 AS hadir,
+				0 AS tidak,
+				count(
+				DISTINCT ( employee_syncs.employee_id )) AS tanpa_undangan 
 				FROM
-					meeting_details
-					LEFT JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
-					LEFT JOIN departments ON departments.department_name = employee_syncs.department 
+				meeting_details
+				LEFT JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
+				LEFT JOIN departments ON departments.department_name = employee_syncs.department 
 				WHERE
-					meeting_id = '".$request->get('id')."' 
-					AND `status` = 2 
+				meeting_id = '".$request->get('id')."' 
+				AND `status` = 2 
 				GROUP BY
-					department_shortname 
+				department_shortname 
 				) a 
-			GROUP BY
+				GROUP BY
 				a.department_shortname");
 
 			$meeting = Meeting::select('*',DB::RAW('DATE_FORMAT(meetings.start_time,"%d-%b-%Y") as date'),DB::RAW('DATE_FORMAT(meetings.start_time,"%H:%i") as start'),DB::RAW('DATE_FORMAT(meetings.end_time,"%H:%i") as end'))->where('id',$request->get('id'))->first();
@@ -714,26 +719,26 @@ class MeetingController extends Controller
 
 			if ($request->get('dept') == '') {
 				$details = DB::SELECT("SELECT
-				*,
-				COALESCE(department,'') as department,
-				COALESCE(section,'') as section
-			FROM
-				`meeting_details`
-				LEFT JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
-				LEFT JOIN departments ON departments.department_name = employee_syncs.department 
-			WHERE
-				meeting_id = ".$request->get('id')."
-				AND department_shortname is null
-				AND status = ".$status);
+					*,
+					COALESCE(department,'') as department,
+					COALESCE(section,'') as section
+					FROM
+					`meeting_details`
+					LEFT JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
+					LEFT JOIN departments ON departments.department_name = employee_syncs.department 
+					WHERE
+					meeting_id = ".$request->get('id')."
+					AND department_shortname is null
+					AND status = ".$status);
 			}else{
 				$details = DB::SELECT("SELECT
 					*,
 					COALESCE(section,'') as section
-				FROM
+					FROM
 					`meeting_details`
 					LEFT JOIN employee_syncs ON employee_syncs.employee_id = meeting_details.employee_id
 					LEFT JOIN departments ON departments.department_name = employee_syncs.department 
-				WHERE
+					WHERE
 					meeting_id = ".$request->get('id')."
 					AND department_shortname = '".$request->get('dept')."' 
 					AND status = ".$status);
