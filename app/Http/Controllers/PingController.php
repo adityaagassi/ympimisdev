@@ -337,8 +337,8 @@ class PingController extends Controller
 
     $arr2 = json_decode($result2, true);
 
-    $hardisk_free_ympiserver = $arr2['FileSystem']['Mount'][1]['@attributes']['Free'] / 1099511627776;
-    $hardisk_used_ympiserver = $arr2['FileSystem']['Mount'][1]['@attributes']['Used'] / 1099511627776;
+    $hardisk_free_ympiserver = $arr2['FileSystem']['Mount'][2]['@attributes']['Free'] / 1099511627776;
+    $hardisk_used_ympiserver = $arr2['FileSystem']['Mount'][2]['@attributes']['Used'] / 1099511627776;
 
     $result3 = "";
     $api3 = 'http://10.109.52.9:8080/phpsysinfo/xml.php?json';

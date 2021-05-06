@@ -137,7 +137,7 @@
                 <td></td>
                 <td>{{ $po->nama_item }}</td>
                 <td>{{ $po->qty }}</td>
-                <td>{{ $po->uom }}</td>
+                <td>PC</td>
                 <td></td>
                 <td><?php echo date('d.m.Y', strtotime($po->delivery_date)) ?></td>
                 <td>
