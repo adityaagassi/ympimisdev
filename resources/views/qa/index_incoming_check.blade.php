@@ -91,7 +91,7 @@
 		</p>
 	</div>
 	<input type="hidden" id="location" value="{{ $location }}">
-	<input type="hidden" id="employee_id">
+	<input type="hidden" id="employee_id" value="{{$emp->employee_id}}">
 	<input type="hidden" id="start_time" value="">
 	<input type="hidden" id="incoming_check_code" value="">
 	
@@ -105,8 +105,8 @@
 					</tr>
 					<tr>
 						<td style="background-color: #fca311; color: #14213d; text-align: center; font-size:15px;" id="date">{{date("Y-m-d")}}</td>
-						<td style="background-color: #14213d; color: white; text-align: center; font-size:15px; width: 30%;" id="op"></td>
-						<td style="background-color: #fca311; text-align: center; color: #14213d; font-size: 15px;" id="op2"></td>
+						<td style="background-color: #14213d; color: white; text-align: center; font-size:15px; width: 30%;" id="op">{{$emp->employee_id}}</td>
+						<td style="background-color: #fca311; text-align: center; color: #14213d; font-size: 15px;" id="op2">{{$emp->name}}</td>
 					</tr>
 					<tr>
 						<th style=" background-color: #d1d1d1; text-align: center; color: #14213d; padding:0;font-size: 15px;">Loc</th>
@@ -497,12 +497,12 @@
 	$.fn.numpad.defaults.onKeypadCreate = function(){$(this).find('.done').addClass('btn-primary');};
 
 	jQuery(document).ready(function() {
-		$('#modalOperator').modal({
-			backdrop: 'static',
-			keyboard: false
-		});
-		$("#operator").val('');
-		$("#operator").focus();
+		// $('#modalOperator').modal({
+		// 	backdrop: 'static',
+		// 	keyboard: false
+		// });
+		// $("#operator").val('');
+		// $("#operator").focus();
 		$('.select2').select2({
 			language : {
 				noResults : function(params) {
@@ -602,9 +602,9 @@
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
-	$('#modalOperator').on('shown.bs.modal', function () {
-		$('#operator').focus();
-	});
+	// $('#modalOperator').on('shown.bs.modal', function () {
+	// 	$('#operator').focus();
+	// });
 
 	$('#operator').keydown(function(event) {
 		if (event.keyCode == 13 || event.keyCode == 9) {
