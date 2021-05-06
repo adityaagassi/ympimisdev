@@ -36,6 +36,7 @@ Route::get('trial_loc2/{lat}/{long}', 'TrialController@getLocation');
 
 Route::get('index/whatsapp_api', 'ChatBotController@index');
 Route::get('whatsapp_api', 'TrialController@indexWhatsappApi');
+Route::get('whatsapp_api_trial', 'TrialController@whatsapp_api');
 Route::get('kirimTelegram/{pesan}', 'TrialController@kirimTelegram');
 
 Route::get('index_push_pull_trial', 'TrialController@index_push_pull_trial');
@@ -58,7 +59,7 @@ Route::post('xml_parser_upload', 'TrialController@xmlParserUpload');
 Route::get('trialmail', 'TrialController@trialmail');
 
 Route::get('/trial', function () {
-	return view('mails.bento.bento_request');
+	return view('trial');
 });
 
 Route::get('/trialPrint', function () {
@@ -1135,6 +1136,7 @@ Route::get('fetch/ga_control/driver_detail', 'GeneralAffairController@fetchDrive
 Route::get('index/ga_control/bento', 'GeneralAffairController@indexBento');
 Route::get('fetch/ga_control/bento_quota', 'GeneralAffairController@fetchBentoQuota');
 Route::get('fetch/ga_control/bento_order_list', 'GeneralAffairController@fetchBentoOrderList');
+Route::get('fetch/ga_control/bento_order_edit', 'GeneralAffairController@fetchBentoOrderEdit');
 Route::post('input/ga_control/bento_order', 'GeneralAffairController@inputBentoOrder');
 Route::post('edit/ga_control/bento_order', 'GeneralAffairController@editBentoOrder');
 
@@ -1910,8 +1912,8 @@ Route::group(['nav' => 'S56', 'middleware' => 'permission'], function(){
 //CASE
 Route::group(['nav' => 'S53', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_case/{id}', 'KnockDownController@indexKD');
-	Route::post('fetch/kd_print_case', 'KnockDownController@printLabelNewSingle');
-	Route::get('index/print_label_case/{id}', 'KnockDownController@indexPrintLabelSubassy');
+	Route::post('fetch/kd_print_case', 'KnockDownController@printLabelCase');
+	Route::get('index/print_label_case/{id}', 'KnockDownController@indexPrintLabelCase');
 });
 
 //CLBODY
@@ -2038,6 +2040,7 @@ Route::get('fetch/kd_shipment_progress_detail', 'KnockDownController@fetchKdShip
 Route::get('fetch/kdo_closure', 'KnockDownController@fetchKDOClosure');
 Route::get('fetch/kdo', 'KnockDownController@fetchKDO');
 Route::get('fetch/kdo_detail', 'KnockDownController@fetchKDODetail');
+Route::get('fetch/kdo_detail_case', 'KnockDownController@fetchKDODetailCase');
 Route::get('fetch/kd_reprint_kdo', 'KnockDownController@reprintKDO');
 Route::get('fetch/container_resume', 'KnockDownController@fetchContainerResume');
 
@@ -4507,46 +4510,53 @@ View::composer('*', function ($view) {
 // ====================================
 
 //Scrap
-Route::get('index/scrap', 'ScrapController@indexScrap');
-Route::get('index/scrap/data', 'ScrapController@indexScrapData');
-Route::get('fetch/scrap/data', 'ScrapController@fetchScrapData');
-Route::get('fetch/scrap/list', 'ScrapController@fetchScrapList');
-Route::get('fetch/scrap/list/assy', 'ScrapController@fetchScrapListAssy');
-Route::get('fetch/scrap', 'ScrapController@fetchScrap');
-Route::get('fetch/scrap/resume', 'ScrapController@fetchScrapResume');
-Route::post('print/scrap', 'ScrapController@printScrap');
-Route::get('reprint/scrap', 'ScrapController@reprintScrap');
-Route::post('confirm/scrap', 'ScrapController@confirmScrap');
-Route::post('delete/scrap', 'ScrapController@deleteScrap');
-// Route::get('index/scrap_logs', 'ScrapController@indexScrapLogs');
-// Route::get('fetch/scrap_logs', 'ScrapController@fetchScrapLogs');
+
+Route::group(['nav' => 'M35', 'middleware' => 'permission'], function(){
+	Route::get('index/scrap', 'ScrapController@indexScrap');
+	Route::get('index/scrap/create', 'ScrapController@createScrap');
+	Route::get('fetch/scrap', 'ScrapController@fetchScrap');
+	Route::get('fetch/scrap/list', 'ScrapController@fetchScrapList');
+	Route::post('confirm/scrap', 'ScrapController@confirmScrap');
+	Route::post('print/scrap', 'ScrapController@printScrap');
+	Route::get('fetch/scrap/resume', 'ScrapController@fetchScrapResume');
+	Route::post('delete/scrap', 'ScrapController@deleteScrap');
+
+	Route::get('scrap/view/monitoring/wip', 'ScrapController@MonitoringWip');
+	Route::get('scrap/resume/list/wip', 'ScrapController@ResumeListWip');
+	Route::get('scrap/resume/list/wh', 'ScrapController@ResumeListWh');
+	Route::get('scrap/data/monitoring/wip', 'ScrapController@fetchMonitoringScrap');
+	Route::get('scrap/list/wip', 'ScrapController@ListWip');
+	Route::get('scrap/resume/month', 'ScrapController@ResumeListMonth');	
+});
+	// Route::get('index/scrap/data', 'ScrapController@indexScrapData');
+	// Route::get('fetch/scrap/data', 'ScrapController@fetchScrapData');
+	// Route::get('fetch/scrap/list/assy', 'ScrapController@fetchScrapListAssy');
+	
+Route::group(['nav' => 'M36', 'middleware' => 'permission'], function(){
+	Route::get('index/scrap/warehouse', 'ScrapController@indexWarehouse');
+	Route::get('scan/scrap_warehouse', 'ScrapController@scanScrapWarehouse');
+	Route::get('scrap/view/display/warehouse', 'ScrapController@displayScrapWarehouse');
+	Route::get('scrap/date/display/warehouse', 'ScrapController@fetchMonitoringScrapWarehouse');
+	Route::get('fetch/scrap_warehouse', 'ScrapController@fetchScrapWarehouse');
+});
+
 Route::get('index/scrap_record', 'ScrapController@indexScrapRecord');
+Route::get('fetch/scrap/logs', 'ScrapController@fetchLogs');
+Route::post('cancel/scrap', 'ScrapController@cancelScrap');
+Route::get('reprint/scrap', 'ScrapController@reprintScrap');
 Route::get('fetch/scrap_record', 'ScrapController@fetchRecord');
 Route::get('index/scrap/view', 'ScrapController@indexScrapView');
 Route::post('update/scrap', 'ScrapController@updateScrap');
-Route::get('index/scrap/resume', 'ScrapController@indexScrapResume');
-Route::get('index/scrap/warehouse', 'ScrapController@indexWarehouse');
+Route::get('index/scrap/resume', 'ScrapController@indexScrapResume');	
 Route::get('index/scrap/logs', 'ScrapController@indexLogs');
-Route::get('fetch/scrap/logs', 'ScrapController@fetchLogs');
-Route::post('cancel/scrap', 'ScrapController@cancelScrap');
-// Route::get('delete/scrap', 'ScrapController@deleteScrap');
 Route::get('fetch/scrap_detail', 'ScrapController@fetchScrapDetail');
 Route::get('fetch/scrap_warehouse', 'ScrapController@fetchScrapWarehouse');
 Route::get('fetch/kd_scrap_closure', 'ScrapController@fetchKdScrapClosure');
-Route::get('scan/scrap_warehouse', 'ScrapController@scanScrapWarehouse');
 Route::get('scrap/data/monitoring', 'ScrapController@fatchMonitoringDisplayScrap');
 Route::get('scrap/monitoring/display', 'ScrapController@MonitoringScrapDisplay');
 
-
-Route::get('scrap/view/display/warehouse', 'ScrapController@displayScrapWarehouse');
-Route::get('scrap/date/display/warehouse', 'ScrapController@fetchMonitoringScrapWarehouse');
-Route::get('scrap/view/monitoring/wip', 'ScrapController@MonitoringWip');
-Route::get('scrap/data/monitoring/wip', 'ScrapController@fetchMonitoringScrap');
-Route::get('scrap/list/wip', 'ScrapController@ListWip');
-Route::get('scrap/resume/list/wip', 'ScrapController@ResumeListWip');
-Route::get('scrap/resume/list/wh', 'ScrapController@ResumeListWh');
 // ============================================================================================
-Route::get('index/scrap/create', 'ScrapController@createScrap');
+
 
 //Mutasi
 Route::get('dashboard/mutasi', 'MutasiController@dashboard');
@@ -4615,21 +4625,37 @@ Route::get('fetch/mutasi/monitoring', 'MutasiController@fetchMonitoringMutasi');
 
 Route::get('mutasi/cek_email', 'MutasiController@viewCekEmail');
 
-Route::get('mutasi/hr', 'MutasiController@HrExport');
-Route::get('fetch/mutasi/hr', 'MutasiController@FetchHrExport');
-Route::get('excel/mutasi/hr', 'MutasiController@HrExportExcel');
 
-Route::get('mutasi_ant/hr', 'MutasiController@AntHrExport');
-Route::get('fetch/mutasi_ant/hr', 'MutasiController@AntFetchHrExport');
-Route::get('excel/mutasi_ant/hr', 'MutasiController@AntHrExportExcel');
+//report HR
+Route::group(['nav' => 'R12', 'middleware' => 'permission'], function(){
+	Route::get('mutasi/hr', 'MutasiController@HrExport');
+	Route::get('fetch/mutasi/hr', 'MutasiController@FetchHrExport');
+	Route::get('excel/mutasi/hr', 'MutasiController@HrExportExcel');
+	Route::get('mutasi_ant/hr', 'MutasiController@AntHrExport');
+	Route::get('fetch/mutasi_ant/hr', 'MutasiController@AntFetchHrExport');
+	Route::get('excel/mutasi_ant/hr', 'MutasiController@AntHrExportExcel');
+});
+
+// Route::group(['nav' => 'R9', 'middleware' => 'permission'], function(){
+	
+// });
 
 //Payment Request
 Route::get('payment_request/index', 'PaymentRequestController@IndexPaymentRequest');
 
 //Auto Approve Adagio
-Route::get('adagio/home/index', 'AdagioAutoController@IndexAdagioIndexHome');
-Route::post('adagio/home/create', 'AdagioAutoController@CreateAdagioIndexHome');
-Route::get('adagio/home/data', 'AdagioAutoController@DataAdagioaHome');
+//input approval
+Route::group(['nav' => 'M34', 'middleware' => 'permission'], function(){
+	Route::get('adagio/home/index', 'AdagioAutoController@IndexAdagioIndexHome');
+	Route::post('adagio/home/create', 'AdagioAutoController@CreateAdagioIndexHome');
+	Route::get('adagio/home/data', 'AdagioAutoController@DataAdagioaHome');
+});
+//input send file
+Route::group(['nav' => 'M34', 'middleware' => 'permission'], function(){
+	Route::get('adagio/send/file', 'AdagioAutoController@AdagioIndexSendFile');
+	Route::get('adagio/select/user', 'AdagioAutoController@AdagioDataUser');
+	Route::get('adagio/data/approval', 'AdagioAutoController@AdagioDataApproval');
+});
 
 //Warehouse
 Route::get('index/warehouse', 'WarehouseController@index');

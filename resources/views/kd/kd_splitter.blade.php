@@ -319,13 +319,13 @@
                 $('#kdo_detail_body').html("");
 
                 var body = '';
-                body += '<tr id="row'+result.kd.kd_number+'">';
-                body += '<td style="vertical-align: middle;">'+result.kd.kd_number+'</td>';
-                body += '<td style="vertical-align: middle;">'+result.kd.material_number+'</td>';
-                body += '<td style="vertical-align: middle;">'+result.kd.material_description+'</td>';
-                body += '<td style="vertical-align: middle;">'+result.kd.location+'</td>';
-                body += '<td style="vertical-align: middle;">'+result.kd.quantity+'</td>';
-                body += '<td><a href="javascript:void(0)" class="btn btn-sm btn-primary" onclick="showModal(id)" id="'+result.kd.kd_number+'""><i class="fa fa-hand-scissors-o"> Split</i></a></td>';
+                body += '<tr id="row'+result.kd[0].kd_number+'">';
+                body += '<td style="vertical-align: middle;">'+result.kd[0].kd_number+'</td>';
+                body += '<td style="vertical-align: middle;">'+result.kd[0].material_number+'</td>';
+                body += '<td style="vertical-align: middle;">'+result.kd[0].material_description+'</td>';
+                body += '<td style="vertical-align: middle;">'+result.kd[0].location+'</td>';
+                body += '<td style="vertical-align: middle;">'+result.kd[0].quantity+'</td>';
+                body += '<td><a href="javascript:void(0)" class="btn btn-sm btn-primary" onclick="showModal(id)" id="'+result.kd[0].kd_number+'""><i class="fa fa-hand-scissors-o"> Split</i></a></td>';
                 body += '</tr>';
 
                 $('#kdo_detail_body').append(body);

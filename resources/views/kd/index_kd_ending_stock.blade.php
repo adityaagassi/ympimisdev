@@ -473,6 +473,7 @@
 
 
 	function fillTableList(){
+		var location = "{{ $location }}";
 
 		$.get('{{ url("fetch/kd/".$location) }}',  function(result, status, xhr){
 			$('#tableList').DataTable().clear();
@@ -482,7 +483,11 @@
 			var tableData = "";
 			var total_target = 0;
 			$.each(result.target, function(key, value) {
-				tableData += '<tr id="'+value.id+'_'+value.lot_completion+'" onclick="fillField(id)">';
+				if(location == 'welding-keypost'){
+					tableData += '<tr id="'+value.id+'_'+value.lot_pallet+'" onclick="fillField(id)">';
+				}else{
+					tableData += '<tr id="'+value.id+'_'+value.lot_completion+'" onclick="fillField(id)">';
+				}
 				tableData += '<td>'+ value.due_date +'</td>';
 				tableData += '<td>'+ value.material_number +'</td>';
 				tableData += '<td>'+ value.material_description +'</td>';

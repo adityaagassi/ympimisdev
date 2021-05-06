@@ -112,6 +112,8 @@
 				<div class="col-xs-5" style="margin-top: 3%;">
 					<div class="row">
 						<input type="hidden" id="production_id">
+						<input type="hidden" id="lot_completion">
+						<input type="hidden" id="lot_pallet">
 						<div class="col-xs-6">
 							<span style="font-weight: bold; font-size: 16px;">Due Date:</span>
 						</div>
@@ -347,7 +349,7 @@
 			"serverSide": true,
 			"ajax": {
 				"type" : "get",
-				"url" : "{{ url("fetch/kdo_detail") }}",
+				"url" : "{{ url("fetch/kdo_detail_case") }}",
 				"data" : data,
 			},
 			"columns": [
@@ -385,8 +387,6 @@
 		var kd_detail = data[0];
 		var location = data[1];
 
-		// window.open('{{ url("index/print_label_zpro") }}'+'/'+kd_detail, '_blank');
-
 		printLabelSubassy(kd_detail, ('reprint'+kd_detail));
 		openSuccessGritter('Success!', "Reprint Success");
 
@@ -415,6 +415,8 @@
 		var material_number = $("#material_number").val();
 		var quantity = $("#qty_packing").val();
 		var target = $("#target").val();
+		var lot_completion = $("#lot_completion").val();
+		var lot_pallet = $("#lot_pallet").val();
 		var location = "{{ $location }}";
 
 		var url = '';
@@ -440,7 +442,18 @@
 		}
 
 		if(parseInt(quantity) > parseInt(target)){
-			alert("Quantity lebih besar dari target");
+			alert("Quantity lebih dari target");
+			return false;
+		}
+
+		if(parseInt(quantity) < parseInt(lot_completion)){
+			console.log(lot_completion);
+			alert("Quantity kurang dari lot CS");
+			return false;
+		}
+
+		if(parseInt(quantity) > parseInt(lot_pallet)){
+			alert("Quantity lebih dari lot Pallet ( "+lot_pallet+" / Pallet )");
 			return false;
 		}
 
@@ -475,6 +488,7 @@
 		var data = param.split('_');
 		var id = data[0];
 		var lot_completion = data[1];
+		var lot_pallet = data[2];
 
 		var due_date = $('#'+param).find('td').eq(0).text();
 		var material_number = $('#'+param).find('td').eq(1).text();
@@ -487,13 +501,9 @@
 		$('#material_description').val(material_description);
 		$('#target').val(target);
 
+		$('#lot_completion').val(lot_completion);
+		$('#lot_pallet').val(lot_pallet);
 
-		// if((target/lot_completion) >= 1){
-		// 	$('#qty_packing').val(lot_completion);
-		// }else{
-		// 	$('#qty_packing').val(target);
-		// }
-		
 	}
 
 
@@ -507,7 +517,7 @@
 			var tableData = "";
 			var total_target = 0;
 			$.each(result.target, function(key, value) {
-				tableData += '<tr id="'+value.id+'_'+value.lot_completion+'" onclick="fillField(id)">';
+				tableData += '<tr id="'+value.id+'_'+value.lot_completion+'_'+value.lot_pallet+'" onclick="fillField(id)">';
 				tableData += '<td>'+ value.due_date +'</td>';
 				tableData += '<td>'+ value.material_number +'</td>';
 				tableData += '<td>'+ value.material_description +'</td>';
