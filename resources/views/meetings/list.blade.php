@@ -55,8 +55,8 @@
 	}
 
 	div.dataTables_filter label, 
-     div.dataTables_wrapper div.dataTables_info {
-	     color: white;
+	div.dataTables_wrapper div.dataTables_info {
+		color: white;
 	}
 </style>
 @stop
@@ -252,7 +252,7 @@
 				audio_ok.play();
 				$('#tag').val("");
 				$('#tag').focus();
-				fetchAttendance(meeting_id);
+				// fetchAttendance(meeting_id);
 				openSuccessGritter('Success!', result.message);
 			}
 			else{
