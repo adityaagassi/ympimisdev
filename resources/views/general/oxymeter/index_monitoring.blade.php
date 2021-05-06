@@ -716,7 +716,7 @@
 				body += "</tr>";
 			})
 
-			$("#AbnormalPulse").append(body);			
+			$("#AbnormalPulse").append(body);
 
 
 			// ------------------   GRAFIK   ----------------------------
@@ -725,7 +725,7 @@
 					type: 'column'
 				},
 				title: {
-					text: 'OXYGEN AND PULSE METER MONITORING',
+					text: 'OXYGEN AND PULSE METER MONITORING <br> ON '+result.date,
 					style: {
 						fontSize: '20px',
 						fontWeight: 'bold'

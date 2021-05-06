@@ -2944,7 +2944,8 @@ public function fetchOxymeterMonitoring(Request $request)
 		'status' => true,
 		'oxy_datas' => $oxy_log,
 		'pulse_datas' => $pulse_log,
-		'shift' => $shift_log
+		'shift' => $shift_log,
+		'date' => date('d M Y',strtotime($dt))
 	);
 	return Response::json($response);
 }
