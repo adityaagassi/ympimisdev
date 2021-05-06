@@ -1213,6 +1213,11 @@ class QualityAssuranceController extends Controller
     public function excelReportIncomingCheck(Request $request)
     {
       try {
+        if ($request->get('publish') != null) {
+          $stattsss = 'no_merge';
+        }else{
+          $stattsss = 'merge';
+        }
         $date_from = $request->get('date_from');
         $date_to = $request->get('date_to');
         if ($date_from == "") {
@@ -1292,8 +1297,11 @@ class QualityAssuranceController extends Controller
         else{
           $inspection_levelin = "";
         }
+
+
         // var_dump($data);
         $datas = DB::SELECT("SELECT
+          qa_incoming_logs.id as id_log,
           qa_incoming_logs.location,
           employee_syncs.employee_id,
           employee_syncs.name,
@@ -1329,16 +1337,25 @@ class QualityAssuranceController extends Controller
         'datas' => $datas
         );
 
-           ob_clean();
-        Excel::create('Incoming Check QA Report', function($excel) use ($data){
-          $excel->sheet('Incoming Check QA', function($sheet) use ($data) {
-            return $sheet->loadView('qa.excel_incoming_check', $data);
-          });
-        })->export('xlsx');
+        if ($stattsss == 'no_merge') {
+          ob_clean();
+          Excel::create('Incoming Check QA Report', function($excel) use ($data){
+            $excel->sheet('Incoming Check QA', function($sheet) use ($data) {
+              return $sheet->loadView('qa.excel_incoming_check_without_merge', $data);
+            });
+          })->export('xlsx');
+        }else{
+          ob_clean();
+          Excel::create('Incoming Check QA Report', function($excel) use ($data){
+            $excel->sheet('Incoming Check QA', function($sheet) use ($data) {
+              return $sheet->loadView('qa.excel_incoming_check', $data);
+            });
+          })->export('xlsx');
+        }
 
         return redirect()->route('report_incoming_qa')->with('status','Success Export Data');
       } catch (\Exception $e) {
-        return redirect()->route('report_incoming_qa')->with('error','Failed Export Data');
+        return redirect()->route('report_incoming_qa')->with('error',$e->getMessage());
       }
     }
 
