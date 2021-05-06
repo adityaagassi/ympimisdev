@@ -73,7 +73,7 @@
             }else if($datas->location == 'ps'){
                 $loc = 'Pipe Silver';
             } ?>
-            <?php for($i = 0; $i < count($jumlah) ; $i++){ ?>
+            <?php for($i = 0; $i < $jumlah ; $i++){ ?>
                 <tr>
                     <td>{{ $index++ }}</td>
                     <td> {{$datas->id_log}}</td>
@@ -88,7 +88,7 @@
                     <td> {{$datas->material_description}} </td>
                     <td> {{$datas->qty_rec}} </td>
                     <td> {{$datas->qty_check}} </td>
-                    <?php if ($datas->ng_name != null) { ?>
+                    <?php if ($datas->ng_name != null && count($ng_name) > 0) { ?>
                         <td>{{$ng_name[$i]}}</td>
                         <?php if ($status_ng[$i] == 'Repair') {?>
                             <td>{{$ng_qty[$i]}}</td>
@@ -119,7 +119,6 @@
                     <td style="vertical-align:middle">{{$datas->status_lot}}</td>
                 </tr>
             <?php } ?>
-           
             @endforeach
         </tbody>
     </table>

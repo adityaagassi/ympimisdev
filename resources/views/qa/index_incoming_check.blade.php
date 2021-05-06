@@ -91,7 +91,7 @@
 		</p>
 	</div>
 	<input type="hidden" id="location" value="{{ $location }}">
-	<input type="hidden" id="employee_id" value="{{$emp->employee_id}}">
+	<input type="hidden" id="employee_id">
 	<input type="hidden" id="start_time" value="">
 	<input type="hidden" id="incoming_check_code" value="">
 	
@@ -105,8 +105,8 @@
 					</tr>
 					<tr>
 						<td style="background-color: #fca311; color: #14213d; text-align: center; font-size:15px;" id="date">{{date("Y-m-d")}}</td>
-						<td style="background-color: #14213d; color: white; text-align: center; font-size:15px; width: 30%;" id="op">{{$emp->employee_id}}</td>
-						<td style="background-color: #fca311; text-align: center; color: #14213d; font-size: 15px;" id="op2">{{$emp->name}}</td>
+						<td style="background-color: #14213d; color: white; text-align: center; font-size:15px; width: 30%;" id="op"></td>
+						<td style="background-color: #fca311; text-align: center; color: #14213d; font-size: 15px;" id="op2"></td>
 					</tr>
 					<tr>
 						<th style=" background-color: #d1d1d1; text-align: center; color: #14213d; padding:0;font-size: 15px;">Loc</th>
@@ -243,6 +243,11 @@
 					</tr>
 				</tbody>
 			</table>
+			<div class="col-xs-12" style="padding: 0px;padding-top: 10px;">
+				<button class="btn btn-info" onclick="location.reload()" style="font-size: 25px;font-weight: bold;width: 100%">
+					GANTI OPERATOR
+				</button>
+			</div>
 		</div>
 
 		<div class="col-xs-6" style="padding-right: 0;">
@@ -291,7 +296,7 @@
 	</div>
 </section>
 
-<!-- <div class="modal fade" id="modalOperator">
+<div class="modal fade" id="modalOperator">
 	<div class="modal-dialog modal-sm">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -304,7 +309,7 @@
 			</div>
 		</div>
 	</div>
-</div> -->
+</div>
 
 <div class="modal fade" id="modalNg">
 	<div class="modal-dialog modal-lg">
@@ -492,11 +497,12 @@
 	$.fn.numpad.defaults.onKeypadCreate = function(){$(this).find('.done').addClass('btn-primary');};
 
 	jQuery(document).ready(function() {
-		// $('#modalOperator').modal({
-		// 	backdrop: 'static',
-		// 	keyboard: false
-		// });
-		// $("#operator").val('');
+		$('#modalOperator').modal({
+			backdrop: 'static',
+			keyboard: false
+		});
+		$("#operator").val('');
+		$("#operator").focus();
 		$('.select2').select2({
 			language : {
 				noResults : function(params) {
@@ -596,41 +602,39 @@
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
-	// $('#modalOperator').on('shown.bs.modal', function () {
-	// 	$('#operator').focus();
-	// });
+	$('#modalOperator').on('shown.bs.modal', function () {
+		$('#operator').focus();
+	});
 
-	// $('#operator').keydown(function(event) {
-	// 	if (event.keyCode == 13 || event.keyCode == 9) {
-	// 		if($("#operator").val().length >= 8){
-	// 			var data = {
-	// 				employee_id : $("#operator").val(),
-	// 			}
+	$('#operator').keydown(function(event) {
+		if (event.keyCode == 13 || event.keyCode == 9) {
+			if($("#operator").val().length >= 8){
+				var data = {
+					employee_id : $("#operator").val(),
+				}
 				
-	// 			$.get('{{ url("scan/injeksi/operator") }}', data, function(result, status, xhr){
-	// 				if(result.status){
-	// 					openSuccessGritter('Success!', result.message);
-	// 					$('#modalOperator').modal('hide');
-	// 					$('#modalMesin').modal('show');
-	// 					$('#op').html(result.employee.employee_id);
-	// 					$('#op2').html(result.employee.name);
-	// 					$('#employee_id').val(result.employee.employee_id);
-	// 					$('#material_number').focus();
-	// 				}
-	// 				else{
-	// 					audio_error.play();
-	// 					openErrorGritter('Error', result.message);
-	// 					$('#operator').val('');
-	// 				}
-	// 			});
-	// 		}
-	// 		else{
-	// 			openErrorGritter('Error!', 'Employee ID Invalid.');
-	// 			audio_error.play();
-	// 			$("#operator").val("");
-	// 		}			
-	// 	}
-	// });
+				$.get('{{ url("scan/injeksi/operator") }}', data, function(result, status, xhr){
+					if(result.status){
+						openSuccessGritter('Success!', result.message);
+						$('#modalOperator').modal('hide');
+						$('#op').html(result.employee.employee_id);
+						$('#op2').html(result.employee.name);
+						$('#employee_id').val(result.employee.employee_id);
+					}
+					else{
+						audio_error.play();
+						openErrorGritter('Error', result.message);
+						$('#operator').val('');
+					}
+				});
+			}
+			else{
+				openErrorGritter('Error!', 'Employee ID Invalid.');
+				audio_error.play();
+				$("#operator").val("");
+			}			
+		}
+	});
 
 	function checkMaterial(material_number) {
 		if (material_number.length === 7) {

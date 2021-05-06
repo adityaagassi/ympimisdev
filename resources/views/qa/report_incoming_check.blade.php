@@ -236,13 +236,15 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-8 col-md-offset-4">
+						<div class="col-md-8 col-md-offset-3">
 							<div class="col-md-12">
 								<div class="form-group pull-left">
 									<a href="{{ url('index/qa') }}" class="btn btn-warning">Back</a>
 									<a href="{{ url('index/qa/report/incoming') }}" class="btn btn-danger">Clear</a>
 									<a class="btn btn-primary col-sm-14" href="javascript:void(0)" onclick="fillList()">Search</a>
-									<button class="btn btn-success"><i class="fa fa-download"></i> Export Excel</button>
+									<!-- <button class="btn btn-success"><i class="fa fa-download"></i> Export Excel Without Merge</button> -->
+									<input class="btn btn-success" type="submit" name="publish" value="Export Excel Without Merge">
+									<input class="btn btn-warning" type="submit" name="save" value="Export Excel With Merge">
 								</div>
 							</div>
 						</div>
