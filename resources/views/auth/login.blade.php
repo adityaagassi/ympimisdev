@@ -19,7 +19,7 @@
   </div>
   <div class="login-box">
     <div class="login-box-body">
-      <p class="login-box-msg" style="font-weight: bold; color: rgb(200,0,0);">Mulai 20 Januari 2020 Username (NIK) MIRAI menggunakan NIK baru.</p>
+      {{-- <p class="login-box-msg" style="font-weight: bold; color: rgb(200,0,0);">Mulai 20 Januari 2020 Username (NIK) MIRAI menggunakan NIK baru.</p> --}}
       <form method="post" action="{{ route('login') }}">
         {{ csrf_field() }}
         <div class="form-group has-feedback {{ $errors->has('username') ? ' has-error' : '' }}">
@@ -30,7 +30,7 @@
           <input autocomplete="off" type="password" class="form-control" placeholder="Password" id="password" name="password" required>
           <span class="glyphicon glyphicon-lock form-control-feedback"></span>
           @if($errors->has('username'))
-          <span class="help-block">These credentials do not match our records.</span>
+          <span class="help-block"></span>
           @endif
         </div>
         <div class="row">

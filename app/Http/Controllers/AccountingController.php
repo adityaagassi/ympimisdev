@@ -1731,8 +1731,8 @@ class AccountingController extends Controller
                 $pr->dateapprovalgm = date('Y-m-d H:i:s');
                 $pr->status = "approval_acc";
 
-                //kirim email ke Mas Shega & Mas Erlangga
-                $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.department = 'Purchasing Control Department' and (employee_id = 'PI1908032' or employee_id = 'PI1810020'  or employee_id = 'PI0904006')";
+                //kirim email ke Mas Shega & Mas Hamzah
+                $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.department = 'Purchasing Control Department' and (employee_id = 'PI1810020'  or employee_id = 'PI0904006')";
                 $mailtoo = DB::select($mails);
             }
 
@@ -2053,8 +2053,8 @@ class AccountingController extends Controller
                 $pr->dateapprovalgm = date('Y-m-d H:i:s');
                 $pr->status = "approval_acc";
 
-                //kirim email ke Mas Shega & Mas Erlangga
-                $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.department = 'Purchasing Control Department' and (employee_id = 'PI1908032' or employee_id = 'PI1810020' or employee_id = 'PI0904006')";
+                //kirim email ke Mas Shega & Mas Hamzah
+                $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.department = 'Purchasing Control Department' and (employee_id = 'PI1810020'  or employee_id = 'PI0904006')";
                 $mailtoo = DB::select($mails);
 
                 $pr->save();
@@ -2506,6 +2506,26 @@ class AccountingController extends Controller
             return redirect('/purchase_requisition')->with('error', $e->getMessage())
             ->with('page', 'Purchase Requisition');
         }
+    }
+
+    public function jurnal_po(){
+        $title = "Jurnal PO";
+        $title_jp = "";
+
+        return view('accounting_purchasing.report.jurnal_po', array(
+            'title' => $title,
+            'title_jp' => $title_jp
+        ));
+    }
+
+    public function delivery_control(){
+        $title = "Delivery Control";
+        $title_jp = "";
+
+        return view('accounting_purchasing.report.delivery_control', array(
+            'title' => $title,
+            'title_jp' => $title_jp
+        ));
     }
 
     //==================================//
@@ -6630,8 +6650,8 @@ class AccountingController extends Controller
 
                 $pdf->save(public_path() . "/investment_list/INV_".$judul.".pdf");
 
-                //kirim email ke Mas Shega & Mas Erlangga
-                $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.department = 'Purchasing Control Department' and (employee_id = 'PI1908032' or employee_id = 'PI1810020')";
+                //kirim email ke Mas Shega & Mas Hamzah
+                $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.department = 'Purchasing Control Department' and (employee_id = 'PI1810020'  or employee_id = 'PI0904006')";
                 $mailtoo = DB::select($mails);
 
 
@@ -11711,8 +11731,8 @@ public function transfer_approvalto($id){
                     $investment->posisi = "finished";
                     $investment->approval_presdir = $investment->approval_presdir."/Approved/".date('Y-m-d H:i:s');
 
-                    //kirim email ke Mas Shega & Mas Erlangga
-                    $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.department = 'Purchasing Control Department' and (employee_id = 'PI1908032' or employee_id = 'PI1810020')";
+                    //kirim email ke Mas Shega & Mas Hamzah
+                    $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.department = 'Purchasing Control Department' and (employee_id = 'PI1810020'  or employee_id = 'PI0904006')";
                     $mailtoo = DB::select($mails);
                 }
 
@@ -12907,7 +12927,7 @@ public function indexAssetRegistration()
     $title = 'Asset Registration Form';
     $title_jp = '??';
 
-    $clasification = FixedAssetClasification::select('category', 'category_code', 'clasification_name', 'life_time')->get();
+    $clasification = FixedAssetClasification::select('id', 'category', 'category_code', 'clasification_name', 'life_time')->get();
 
     return view('fixed_asset.form.registration_form', array(
         'title' => $title,
