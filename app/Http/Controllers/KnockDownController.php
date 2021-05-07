@@ -1213,6 +1213,131 @@ class KnockDownController extends Controller{
 		return Response::json($response);
 	}
 
+	public function deleteKdCase(Request $request){
+		$id = Auth::id();
+
+		$detail = KnockDownDetail::where('id', '=', $request->get('id'))->first();
+		if(!$detail){
+			$response = array(
+				'status' => false,
+				'message' => 'KDO Not Found'
+			);
+			return Response::json($response);
+		}
+
+		$kd_number = $detail->kd_number;
+		$knock_down = KnockDown::where('kd_number', '=', $kd_number)
+		->where('status', '=', '1')
+		->first();
+
+		if(!$knock_down){
+			$response = array(
+				'status' => false,
+				'message' => 'KDO status tidak sesuai'
+			);
+			return Response::json($response);
+		}
+
+
+
+		$knock_down_details = KnockDownDetail::where('kd_number', '=', $kd_number)->get();
+		$storage_location = '';
+		$material_number = '';
+
+		DB::beginTransaction();
+		foreach ($knock_down_details as $knock_down_detail) {
+			$storage_location = $knock_down_detail->storage_location;
+			$material_number = $knock_down_detail->material_number;
+
+			try{
+				$inventoryWIP = Inventory::firstOrNew([
+					'plant' => '8190',
+					'material_number' => $knock_down_detail->material_number,
+					'storage_location' => $knock_down_detail->storage_location
+				]);
+				$inventoryWIP->quantity = ($inventoryWIP->quantity - $knock_down_detail->quantity);
+				$inventoryWIP->save();
+
+
+				$child = BomComponent::where('material_parent', $knock_down_detail->material_number)->get();
+				for ($i=0; $i < count($child); $i++) { 
+					$inv_child = Inventory::where('plant','=','8190')
+					->where('material_number','=',$child[$i]->material_child)
+					->where('storage_location','=',$knock_down_detail->storage_location)
+					->first();
+
+					if($inv_child){
+						$inv_child->quantity = $inv_child->quantity + ($knock_down_detail->quantity * $child[$i]->usage);
+						$inv_child->save();
+					}
+				}
+
+				if(!is_null($knock_down_detail->shipment_schedule_id)){
+					$shipment_sch = ShipmentSchedule::where('id', $knock_down_detail->shipment_schedule_id)->first();
+					$shipment_sch->actual_quantity = $shipment_sch->actual_quantity - $knock_down_detail->quantity;
+					$shipment_sch->save();
+				}
+
+			}
+			catch(\Exception $e){
+				DB::rollback();
+
+				$error_log = new ErrorLog([
+					'error_message' => $e->getMessage(),
+					'created_by' => $id
+				]);
+				$error_log->save();
+				$response = array(
+					'status' => false,
+					'message' => $e->getMessage(),
+				);
+				return Response::json($response);
+			}
+		}
+
+		try{
+			$transaction_completion = new TransactionCompletion([
+				'serial_number' => $kd_number,
+				'material_number' => $material_number,
+				'issue_plant' => '8190',
+				'issue_location' => $storage_location,
+				'quantity' => $knock_down->actual_count,
+				'movement_type' => '102',
+				'reference_file' => 'directly_executed_on_sap',
+				'created_by' => $id,
+			]);
+			
+			DB::transaction(function() use ($knock_down, $kd_number, $transaction_completion){
+				$knock_down->forceDelete();
+				$delete_detail = KnockDownDetail::where('kd_number', '=', $kd_number)->forceDelete();
+				$transaction_completion->save();
+			});
+
+		}
+		catch(\Exception $e){
+			DB::rollback();
+
+			$error_log = new ErrorLog([
+				'error_message' => $e->getMessage(),
+				'created_by' => $id
+			]);
+			$error_log->save();
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+
+
+		DB::commit();
+		$response = array(
+			'status' => true,
+			'message' => 'KDO berhasil di cancel'
+		);
+		return Response::json($response);
+	}
+
 	public function deleteKd(Request $request){
 		$id = Auth::id();
 		$kd_number = $request->get('kd_number');
@@ -2085,15 +2210,16 @@ class KnockDownController extends Controller{
 		}
 
 		$knock_down_details = $knock_down_details->select(
-			'knock_down_details.id',
 			'knock_down_details.kd_number',
 			'knock_down_details.material_number',
 			'materials.material_description',
 			'storage_locations.location',
 			'knock_downs.updated_at',
+			db::raw('MAX(knock_down_details.id) AS id'), 
 			db::raw('SUM(knock_down_details.quantity) AS quantity') 
 		)
-		->groupBy('knock_down_details.kd_number',
+		->groupBy(
+			'knock_down_details.kd_number',
 			'knock_down_details.material_number',
 			'materials.material_description',
 			'storage_locations.location',

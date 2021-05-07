@@ -239,35 +239,9 @@
 			var data = {
 				id:id
 			}
-			$.post('{{ url("delete/kdo_detail") }}', data, function(result, status, xhr){
+			$.post('{{ url("delete/kdo_case") }}', data, function(result, status, xhr){
 				if(result.status){
 					fillTableList();
-					$('#kdo_table').DataTable().ajax.reload();
-					$('#kdo_detail').DataTable().ajax.reload();
-					$("#loading").hide();
-					openSuccessGritter('Success!', result.message);
-				}
-				else{
-					$("#loading").hide();
-					openErrorGritter('Error!', result.message);
-				}
-			});
-		}
-		else{
-			$("#loading").hide();				
-		}
-	}
-
-	function deleteKDO(id){
-		if(confirm("Apa anda yakin akan menghapus data?")){
-			$("#loading").show();
-			var data = {
-				kd_number:id
-			}
-			$.post('{{ url("delete/kdo") }}', data, function(result, status, xhr){
-				if(result.status){
-					fillTableList();
-					$('#kdo_table').DataTable().ajax.reload();
 					$('#kdo_detail').DataTable().ajax.reload();
 					$("#loading").hide();
 					openSuccessGritter('Success!', result.message);
