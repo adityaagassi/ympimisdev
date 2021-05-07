@@ -11063,7 +11063,7 @@ public function delete_transaksi(Request $request)
             FROM
                 acc_purchase_requisitions
                 JOIN acc_purchase_requisition_items ON acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr
-                JOIN acc_purchase_order_details ON acc_purchase_order_details.no_pr = acc_purchase_requisition_items.no_pr
+                JOIN acc_purchase_order_details ON acc_purchase_order_details.no_pr = acc_purchase_requisition_items.no_pr and acc_purchase_order_details.nama_item = acc_purchase_requisition_items.item_desc
             WHERE
                 acc_purchase_requisitions.deleted_at IS NULL 
                 AND sudah_po IS NOT NULL 
@@ -11133,7 +11133,7 @@ public function delete_transaksi(Request $request)
                 acc_investments
                 JOIN acc_investment_details ON acc_investments.reff_number = acc_investment_details.reff_number
                     join acc_investment_budgets ON acc_investments.reff_number = acc_investment_budgets.reff_number
-                JOIN acc_purchase_order_details ON acc_purchase_order_details.no_pr = acc_investment_details.reff_number
+                JOIN acc_purchase_order_details ON acc_purchase_order_details.no_pr = acc_investment_details.reff_number and acc_purchase_order_details.nama_item = acc_investment_details.detail 
             WHERE
                 acc_investments.deleted_at IS NULL 
                 AND sudah_po IS NOT NULL 
