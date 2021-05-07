@@ -79,7 +79,12 @@
 									$inserted = true;
 								}
 								if($data['calendars'][$j]['week_date'] == $data['bento_lists'][$k]->due_date && $data['bento_lists'][$k]->employee_name == $name[$i] && $data['bento_lists'][$k]->status == "Cancelled"){
-									print_r('<td style="border: 1px solid black; text-align: center; background-color: black; color: white; padding: 0px 0px 0px 0px; font-size:16px;">&#9746;</td>');
+									if($data['bento_lists'][$k]->revise == 1){
+										print_r('<td style="border: 1px solid black; text-align: center; background-color: #ffee58; color: white; padding: 0px 0px 0px 0px; font-size:16px;">&#9744;</td>');
+									}
+									if($data['bento_lists'][$k]->revise >= 2){
+										print_r('<td style="border: 1px solid black; text-align: center; background-color: #29b6f6; color: white; padding: 0px 0px 0px 0px; font-size:16px;">&#9744;</td>');
+									}
 									$inserted = true;
 								}
 							}

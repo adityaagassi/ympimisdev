@@ -1137,6 +1137,8 @@ Route::get('index/ga_control/bento', 'GeneralAffairController@indexBento');
 Route::get('fetch/ga_control/bento_quota', 'GeneralAffairController@fetchBentoQuota');
 Route::get('fetch/ga_control/bento_order_list', 'GeneralAffairController@fetchBentoOrderList');
 Route::get('fetch/ga_control/bento_order_edit', 'GeneralAffairController@fetchBentoOrderEdit');
+Route::get('fetch/ga_control/bento_order_log', 'GeneralAffairController@fetchBentoOrderLog');
+Route::get('fetch/ga_control/bento_order_count', 'GeneralAffairController@fetchBentoOrderCount');
 Route::post('input/ga_control/bento_order', 'GeneralAffairController@inputBentoOrder');
 Route::post('edit/ga_control/bento_order', 'GeneralAffairController@editBentoOrder');
 
