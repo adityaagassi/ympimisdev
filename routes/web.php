@@ -2026,6 +2026,8 @@ Route::group(['nav' => 'S29', 'middleware' => 'permission'], function(){
 	Route::get('fetch/kdo_splitter_detail', 'KnockDownController@fetchKDOSplitterDetail');
 	Route::get('index/print_label_split/{id}', 'KnockDownController@indexPrintLabelSplit');
 
+
+	Route::get('index/reprint_wh/{id}', 'KnockDownController@indexPrintLabelSubassy');
 });
 
 
