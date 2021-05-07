@@ -4,7 +4,8 @@
   <link rel="shortcut icon" type="image/x-icon" href="{{ url("logo_mirai.png")}}" />
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta content="width=device-width, user-scalable=yes, initial-scale=1.0" name="viewport">
+  {{-- <meta content="width=device-width, user-scalable=yes, initial-scale=1.0" name="viewport"> --}}
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <title>
     @if(isset($title) && isset($title_jp))
     {{$title}} {{$title_jp}}

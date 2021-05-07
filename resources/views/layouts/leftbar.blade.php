@@ -481,6 +481,12 @@
             @if(isset($page) && $page == "Purchase Order Monitoring")<li class="active">@else<li>@endif
               <a href="{{ url("purchase_order/monitoring") }}"><i class="fa fa-tv"></i>PO Monitoring</a>
             </li>
+            @if(isset($page) && $page == "Jurnal PO")<li class="active">@else<li>@endif
+              <a href="{{ url("purchase_order/jurnal_po") }}"><i class="fa fa-book"></i>Jurnal PO</a>
+            </li>
+            @if(isset($page) && $page == "Delivery Control")<li class="active">@else<li>@endif
+              <a href="{{ url("purchase_order/delivery_control") }}"><i class="fa fa-book"></i>Delivery Control</a>
+            </li>
           </ul>
         </li>
 
@@ -1573,6 +1579,9 @@
  @if(isset($page) && $page == "Display Job")<li class="active">@else<li>@endif
   <a href="{{ secure_url("/index/display/job") }}"><i class="fa fa-tv"></i> <span>Display Job</span></a>
 </li>
+@if(isset($page) && $page == "Warehouse Operator")<li class="active">@else<li>@endif
+  <a href="{{ url("/index/shiff/operator/internal") }}"><i class="fa fa-newspaper-o"></i> <span>Warehouse Operator</span></a>
+</li>
 @if(isset($page) && $page == "Monitoring Internal")<li class="active">@else<li>@endif
   <a href="{{ url("/index/monitoring/internal") }}"><i class="fa fa-tv"></i> <span>Monitoring Internal</span></a>
 </li>
@@ -1647,6 +1656,16 @@
   @if(isset($page) && $page == "Antar Department")<li class="active">@else<li>@endif
     <a href="{{ url("dashboard_ant/mutasi") }}"><i class="fa fa-retweet"></i> <span>Antar Department</span></a>
   </li>
+  @if(in_array('R12', $navs))
+    @if(isset($page) && $page == "Report Mutasi Satu Departemen")<li class="active">@else<li>@endif
+      <a href="{{ url("mutasi/hr") }}"><i class="glyphicon glyphicon-cutlery"></i> <span>Report Mutasi Satu Departemen</span></a>
+    </li>
+  @endif
+  @if(in_array('R12', $navs))
+    @if(isset($page) && $page == "Report Mutasi Satu Departemen")<li class="active">@else<li>@endif
+      <a href="{{ url("mutasi_ant/hr") }}"><i class="glyphicon glyphicon-cutlery"></i> <span>Report Mutasi Satu Departemen</span></a>
+    </li>
+  @endif
 </ul>
 </li>
 @endif 
@@ -1660,23 +1679,27 @@
  </span>
 </a>
 <ul class="treeview-menu">
-  @if(isset($page) && $page == "Create Scrap List")<li class="active">@else<li>@endif
-    <a href="{{ url("/index/scrap") }}"><i class="fa fa-pencil-square-o"></i> <span>Create Scrap Slip</span></a>
+  @if(in_array('M35', $navs))
+  @if(isset($page) && $page == "Buat Slip Scrap")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/scrap") }}"><i class="fa fa-pencil-square-o"></i> <span>Buat Slip Scrap</span></a>
   </li>
   @if(isset($page) && $page == "Monitoring Lokasi")<li class="active">@else<li>@endif
-    <a href="{{ url("scrap/view/monitoring/wip") }}"><i class="fa fa-television"></i> <span>Display Monitoring WIP</span></a>
+    <a href="{{ url("scrap/view/monitoring/wip") }}"><i class="fa fa-television"></i> <span>Monitoring Lokasi</span></a>
   </li>
-  @if(isset($page) && $page == "Inputor Menu")<li class="active">@else<li>@endif
-    <a href="{{ url("scrap/list/wip") }}"><i class="fa fa-newspaper-o"></i> <span>List Monitoring WIP</span></a>
+  @if(isset($page) && $page == "Monitoring List")<li class="active">@else<li>@endif
+    <a href="{{ url("scrap/list/wip") }}"><i class="fa fa-newspaper-o"></i> <span>Monitoring List</span></a>
   </li>
-  @if(isset($page) && $page == "Warehouse")<li class="active">@else<li>@endif
-    <a href="{{ url("index/scrap/warehouse") }}"><i class="fa fa-shopping-cart"></i> <span>Warehouse Confirmation</span></a>
+  @endif
+  @if(in_array('M36', $navs))
+  @if(isset($page) && $page == "Konfirmasi Warehouse")<li class="active">@else<li>@endif
+    <a href="{{ url("index/scrap/warehouse") }}"><i class="fa fa-shopping-cart"></i> <span>Konfirmasi Warehouse</span></a>
   </li>
-  @if(isset($page) && $page == "Display")<li class="active">@else<li>@endif
-    <a href="{{ url("scrap/view/display/warehouse") }}"><i class="fa fa-television"></i> <span>Display Monitoring WH</span></a>
+  @if(isset($page) && $page == "Monitoring Warehouse")<li class="active">@else<li>@endif
+    <a href="{{ url("scrap/view/display/warehouse") }}"><i class="fa fa-television"></i> <span>Monitoring Warehouse</span></a>
   </li>
-  @if(isset($page) && $page == "Scrap Logs")<li class="active">@else<li>@endif
-    <a href="{{ url("index/scrap_record") }}"><i class="fa fa-list-alt"></i> <span>Scrap Logs</span></a>
+  @endif
+  @if(isset($page) && $page == "Report Scrap")<li class="active">@else<li>@endif
+    <a href="{{ url("index/scrap_record") }}"><i class="fa fa-list-alt"></i> <span>Report Scrap</span></a>
   </li>
 </ul>
 </li>
@@ -1686,15 +1709,27 @@
 @if(isset($head) && $head == "Auto Approve Adagio")
 <li class="treeview active">@else<li class="treeview">@endif
  <a href="#">
-  <i class="fa fa-trash"></i> <span>Auto Approve Adagio</span>
+  <i class="fa fa-users"></i> <span>Auto Approve Adagio</span>
   <span class="pull-right-container">
    <i class="fa fa-angle-left pull-right"></i>
   </span>
  </a>
 <ul class="treeview-menu">
-  @if(isset($page) && $page == "Create Master Approve")<li class="active">@else<li>@endif
+  <!-- @if(isset($page) && $page == "Create Master Approve")<li class="active">@else<li>@endif
     <a href="{{ url("adagio/home/index") }}"><i class="fa fa-pencil-square-o"></i> <span>Create Master Approve</span></a>
-  </li>
+  </li> -->
+  @if(in_array('M34', $navs))
+    @if(isset($page) && $page == "Create Master Approve")
+    <li class="active">@else<li>@endif
+      <a href="{{ url("adagio/home/index") }}"><i class="fa fa-pencil-square-o"></i> <span>Create Master Approve</span></a>
+    </li>
+  @endif
+  @if(in_array('R10', $navs))
+    @if(isset($page) && $page == "Send File")
+    <li class="active">@else<li>@endif
+      <a href="{{ url("adagio/send/file") }}"><i class="fa fa-file-archive-o"></i> <span>Send File</span></a>
+    </li>
+  @endif
 </ul>
 </li>
 @endif

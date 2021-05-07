@@ -24,7 +24,6 @@ use App\Bento;
 use App\BentoMenu;
 use App\CanteenLiveCooking;
 use App\CanteenLiveCookingMenu;
-use App\CanteenLiveCookingAdmin;
 use App\KaizenLeader;
 use Carbon\Carbon;
 use App\GeneralAttendance;
@@ -35,7 +34,9 @@ use App\CanteenPurchaseRequisitionItem;
 use App\CanteenItem;
 use App\CanteenItemCategory;
 use App\AccBudget;
+use App\Employee;
 use App\CanteenBudgetHistory;
+use App\AccExchangeRate;
 
 class GeneralAffairController extends Controller
 {
@@ -109,36 +110,31 @@ public function uploadBentoMenu(Request $request){
 	}
 }
 
-public function indexBentoApprove($id){
+public function indexBentoApprove(){
 	$title = 'Bento Approval';
 	$title_jp = '';
 
-	$bentos = Bento::where('order_id', '=', $id)->get();
-	$order_id = $id;
+	$bentos = Bento::where('status', '=', 'Waiting')->get();
 
 	return view('general_affairs.bento_approve', array(
 		'title' => $title,
 		'title_jp' => $title_jp,
-		'bentos' => $bentos,
-		'order_id' => $order_id
+		'bentos' => $bentos
 	))->with('head', 'Bento Request');
 }
 
 public function approveBento(Request $request){
 	try{
 
-		$list = Bento::where('order_id', '=', $request->get('order_id'))
-		->select(
-			'department',
-			db::raw('min(due_date) as min_date'),
-			db::raw('max(due_date) as max_date')
-		)
-		->groupBy('department')
-		->first();
+		$ids = array();
+
 
 		if(count($request->get('rejected'))>0){
-			$rejected = Bento::where('order_id', '=', $request->get('order_id'))
-			->whereIn('id', $request->get('rejected'))
+			foreach ($request->get('rejected') as $reject) {
+				array_push($ids, $reject);
+			}
+
+			$rejected = Bento::whereIn('id', $request->get('rejected'))
 			->update([
 				'status' => 'Rejected',
 				'approver_id' => Auth::user()->username,
@@ -147,8 +143,11 @@ public function approveBento(Request $request){
 		}
 
 		if(count($request->get('approved'))>0){
-			$approved = Bento::where('order_id', '=', $request->get('order_id'))
-			->whereIn('id', $request->get('approved'))
+			foreach ($request->get('approved') as $approve) {
+				array_push($ids, $approve);
+			}
+
+			$approved = Bento::whereIn('id', $request->get('approved'))
 			->update([
 				'status' => 'Approved',
 				'approver_id' => Auth::user()->username,
@@ -156,135 +155,70 @@ public function approveBento(Request $request){
 			]);
 		}
 
-		// $bento_lists = Bento::leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'bentos.employee_id')
-		// ->where('order_id', '=', $request->get('order_id'))
-		// ->select(
-		// 	'bentos.id',
-		// 	'bentos.order_id',
-		// 	'bentos.order_by',
-		// 	'bentos.order_by_name',
-		// 	'bentos.charge_to',
-		// 	'bentos.charge_to_name',
-		// 	'bentos.due_date',
-		// 	'bentos.employee_id',
-		// 	'bentos.employee_name',
-		// 	'bentos.email',
-		// 	'bentos.department',
-		// 	'bentos.section',
-		// 	'bentos.status',
-		// 	'bentos.approver_id',
-		// 	'bentos.approver_name',
-		// 	'bentos.remark',
-		// 	'bentos.created_by',
-		// 	'bentos.deleted_at',
-		// 	'bentos.created_at',
-		// 	'bentos.updated_at',
-		// 	'employee_syncs.grade_code'
-		// )
-		// ->get();
+		$list_jp = Bento::whereIn('id', $ids)
+		->where('grade_code', '=', 'J0-')
+		->select(
+			db::raw('min(due_date) as min_date'),
+			db::raw('max(due_date) as max_date')
+		)
+		->first();
 
-		$bento_lists = db::select("SELECT
-			b.employee_id,
-			b.employee_name,
-			b.due_date,
-			b.status,
-			b.email,
-			es.grade_code 
-			FROM
-			bentos AS b
-			LEFT JOIN employee_syncs AS es ON b.employee_id = es.employee_id 
-			WHERE
-			b.order_id = '".$request->get('order_id')."'");
-
-		
-		$mail_to = array();
-		foreach($bento_lists as $bento_list){
-			if(!in_array($bento_list->email, $mail_to)){
-				array_push($mail_to, $bento_list->email);
-			}
-		}
-
-		// if($list->department == 'YEMI' || $bento_lists[0]->grade_code == 'J0-'){
-		// 	$first = date('Y-m-01', strtotime($list->max_date));
-		// 	$last = date('Y-m-t', strtotime($list->max_date));
-		// 	$bento_lists = db::select("SELECT
-		// 		j.employee_id,
-		// 		j.employee_name,
-		// 		u.email,
-		// 		b.due_date,
-		// 		b.status 
-		// 		FROM
-		// 		japaneses AS j
-		// 		LEFT JOIN ( SELECT * FROM bentos WHERE due_date >= '".$first."' AND due_date <= '".$last."' ) AS b ON b.employee_id = j.employee_id
-		// 		LEFT JOIN users AS u ON u.username = j.employee_id");
-
-		// 	$calendars = WeeklyCalendar::where('week_date', '>=', $first)
-		// 	->where('week_date', '<=', $last)
-		// 	->get();
-
-		// 	$bentos = [
-		// 		'approver_id' => Auth::user()->username,
-		// 		'approver_name' => Auth::user()->name,
-		// 		'bento_lists' => $bento_lists,
-		// 		'calendars' => $calendars
-		// 	];
-		// }
-		// else{
-		$calendars = WeeklyCalendar::where('week_date', '>=', $list->min_date)
-		->where('week_date', '<=', $list->max_date)
+		$lists = Bento::whereIn('bentos.id', $ids)
+		->where('bentos.grade_code', '!=', 'J0-')
+		->leftJoin('users', 'users.username', '=', 'bentos.order_by')
+		->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'bentos.order_by')
+		->select(
+			'users.email',
+			'employee_syncs.phone',
+			db::raw('min(bentos.due_date) as min_date'),
+			db::raw('max(bentos.due_date) as max_date')		
+		)
+		->groupBy(
+			'users.email',
+			'employee_syncs.phone'
+		)
 		->get();
+		
+		if(strlen($list_jp->max_date) > 0){
+			$first = date('Y-m-01', strtotime($list_jp->max_date));
+			$last = date('Y-m-t', strtotime($list_jp->max_date));
+			$bento_lists = db::select("SELECT
+				j.employee_id,
+				j.employee_name,
+				u.email,
+				b.due_date,
+				b.revise,
+				b.status 
+				FROM
+				japaneses AS j
+				LEFT JOIN ( SELECT * FROM bentos WHERE due_date >= '".$first."' AND due_date <= '".$last."' ) AS b ON b.employee_id = j.employee_id
+				LEFT JOIN users AS u ON u.username = j.employee_id");
 
-		$bentos = [
-			'approver_id' => Auth::user()->username,
-			'approver_name' => Auth::user()->name,
-			'bento_lists' => $bento_lists,
-			'calendars' => $calendars
-		];
-		// }
+			$calendars = WeeklyCalendar::where('week_date', '>=', $first)
+			->where('week_date', '<=', $last)
+			->get();
 
-		if($list->department != 'YEMI'){
-			$email = User::where('username', '=', $bento_lists[0]->order_by)->first();
-			// $mail_to = array();
-			foreach ($bento_lists as $bento_list) {
-				// if(!in_array($bento_list->email, $mail_to)){
-				// 	array_push($mail_to, $bento_list->email);
-				// }
-				if($bento_list->status == 'Rejected'){
-					$quota = BentoQuota::where('due_date', '=', $bento_list->due_date)->first();
-					$quota->serving_ordered = $quota->serving_ordered-1;
-					$quota->save();
-				}
-				else{
-					$attendance = new GeneralAttendance([
-						'purpose_code' => 'Bento',
-						'due_date' => $bento_list->due_date,
-						'employee_id' => $bento_list->employee_id,
-						'created_by' => Auth::id()
-					]);
-
-					$attendance->save();
+			$mail_to = array();
+			foreach($bento_lists as $bento_list){
+				if(!in_array($bento_list->email, $mail_to)){
+					array_push($mail_to, $bento_list->email);
 				}
 			}
-			Mail::to($email->email)->cc([
-				'rianita.widiastuti@music.yamaha.com', 
-				'putri.sukma.riyanti@music.yamaha.com'
-			])
-			->bcc([
-				'aditya.agassi@music.yamaha.com', 
-				'anton.budi.santoso@music.yamaha.com'
-			])
-			->send(new SendEmail($bentos, 'bento_approve'));
-		}
-		else{
-			Mail::to([
-				'merlinda.dyah@music.yamaha.com', 
-				'novita.siswindarti@music.yamaha.com'
-			])
+
+			$bentos = [
+				'bento_lists' => $bento_lists,
+				'calendars' => $calendars
+			];
+
+			Mail::to($mail_to)
 			->cc([
 				'rianita.widiastuti@music.yamaha.com', 
 				'putri.sukma.riyanti@music.yamaha.com', 
-				'prawoto@music.yamaha.com', 
-				'helmi.helmi@music.yamaha.com'
+				'prawoto@music.yamaha.com',
+				'budhi.apriyanto@music.yamaha.com', 
+				'helmi.helmi@music.yamaha.com',
+				'merlinda.dyah@music.yamaha.com', 
+				'novita.siswindarti@music.yamaha.com'
 			])
 			->bcc([
 				'aditya.agassi@music.yamaha.com', 
@@ -294,6 +228,95 @@ public function approveBento(Request $request){
 			->send(new SendEmail($bentos, 'bento_approve'));
 		}
 
+		if(count($lists) > 0){
+			foreach($lists as $list){
+				$in_id = "";
+
+				for($x = 0; $x < count($ids); $x++) {
+					$in_id = $in_id."'".$ids[$x]."'";
+					if($x != count($ids)-1){
+						$in_id = $in_id.",";
+					}
+				}
+
+				$bento_lists = db::select("SELECT
+					b.employee_id,
+					b.employee_name,
+					b.due_date,
+					b.revise,
+					b.status,
+					b.email,
+					es.grade_code 
+					FROM
+					bentos AS b
+					LEFT JOIN employee_syncs AS es ON b.employee_id = es.employee_id 
+					LEFT JOIN users AS u ON b.order_by = u.username 
+					WHERE
+					b.id in (".$in_id.")
+					AND u.email = '".$list->email."'");
+
+				$calendars = WeeklyCalendar::where('week_date', '>=', $list->min_date)
+				->where('week_date', '<=', $list->max_date)
+				->get();
+
+				$bentos = [
+					'bento_lists' => $bento_lists,
+					'calendars' => $calendars
+				];
+
+				foreach ($bento_lists as $bento_list) {
+					if($bento_list->status == 'Rejected'){
+						$quota = BentoQuota::where('due_date', '=', $bento_list->due_date)->first();
+						$quota->serving_ordered = $quota->serving_ordered-1;
+						$quota->save();
+					}
+					else{
+						$attendance = new GeneralAttendance([
+							'purpose_code' => 'Bento',
+							'due_date' => $bento_list->due_date,
+							'employee_id' => $bento_list->employee_id,
+							'created_by' => Auth::id()
+						]);
+
+						$attendance->save();
+					}
+				}
+
+				if(strpos($list->email, '@music.yamaha.com') == false){	
+					$curl = curl_init();
+
+					curl_setopt_array($curl, array(
+						CURLOPT_URL => 'https://app.whatspie.com/api/messages',
+						CURLOPT_RETURNTRANSFER => true,
+						CURLOPT_ENCODING => '',
+						CURLOPT_MAXREDIRS => 10,
+						CURLOPT_TIMEOUT => 0,
+						CURLOPT_FOLLOWLOCATION => true,
+						CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+						CURLOPT_CUSTOMREQUEST => 'POST',
+						CURLOPT_POSTFIELDS => 'receiver=6282244167224&device=628113669871&message=Test%20Bot&type=chat',
+						CURLOPT_HTTPHEADER => array(
+							'Accept: application/json',
+							'Content-Type: application/x-www-form-urlencoded',
+							'Authorization: Bearer UAqINT9e23uRiQmYttEUiFQ9qRMUXk8sADK2EiVSgLODdyOhgU'
+						),
+					));
+
+					curl_exec($curl);
+				}
+				else{
+					Mail::to($list->email)->cc([
+						'rianita.widiastuti@music.yamaha.com', 
+						'putri.sukma.riyanti@music.yamaha.com'
+					])
+					->bcc([
+						'aditya.agassi@music.yamaha.com', 
+						'anton.budi.santoso@music.yamaha.com'
+					])
+					->send(new SendEmail($bentos, 'bento_approve'));
+				}
+			}
+		}
 		$response = array(
 			'status' => true,
 			'bentos' => $bentos,
@@ -308,122 +331,6 @@ public function approveBento(Request $request){
 		);
 		return Response::json($response);
 	}
-	// $title = "Bento Message";
-	// $title_jp = "";
-	// $message = "Bento Request Approved";
-	// $message2 = "";
-	// $bento_lists = array();
-	// $bento_ids = explode('-', $id);
-
-	// foreach($bento_ids as $bento_id){
-	// 	if($bento_id != ""){
-	// 		$bento = Bento::where('id', '=', $bento_id)->first();
-
-	// 		if(strlen($bento->approver_id)>0){
-
-	// 			$message = 'Bento Request Already Confirmed';
-	// 			$message2 = "Can't approve order";
-
-	// 			return view('general_affairs.bento_message', array(
-	// 				'title' => $title,
-	// 				'title_jp' => $title_jp,
-	// 				'message' => $message,
-	// 				'message2' => $message2
-	// 			))->with('head', 'Bento Request');
-	// 		}
-
-	// 		$bento->approver_id = Auth::user()->username;
-	// 		$bento->approver_name = Auth::user()->name;
-	// 		$bento->status = 'Approved';
-
-	// 		$bento->save();
-
-	// 		if($bento->department != 'YEMI'){
-	// 			$attendance = new GeneralAttendance([
-	// 				'purpose_code' => 'Bento',
-	// 				'due_date' => $bento->due_date,
-	// 				'employee_id' => $bento->employee_id,
-	// 				'created_by' => Auth::id()
-	// 			]);
-
-	// 			$attendance->save();
-	// 		}
-
-	// 		$department = $bento->department;
-
-	// 		array_push($bento_lists, 
-	// 			[
-	// 				'id' => $bento->id,
-	// 				'order_by' => $bento->order_by,
-	// 				'order_by_name' => $bento->order_by_name,
-	// 				'charge_to' => $bento->charge_to,
-	// 				'charge_to_name' => $bento->charge_to_name,
-	// 				'due_date' => $bento->due_date,
-	// 				'employee_id' => $bento->employee_id,
-	// 				'employee_name' => $bento->employee_name,
-	// 				'department' => $bento->department,
-	// 				'section' => $bento->section,
-	// 				'status' => $bento->status,
-	// 				'created_by' => $bento->created_by,
-	// 				'approver_id' => $bento->approver_id,
-	// 				'approver_name' => $bento->approver_name
-	// 			]);
-	// 	}
-	// }
-
-	// if($department == 'YEMI'){
-
-	// 	$list = Bento::whereIn('id', $bento_ids)
-	// 	->select(
-	// 		db::raw('min(due_date) as min_date'),
-	// 		db::raw('max(due_date) as max_date')
-	// 	)
-	// 	->first();
-
-	// 	$bento_lists = Bento::leftJoin('users', 'users.username', '=', 'bentos.employee_id')
-	// 	->where('department', '=', 'YEMI')
-	// 	->where('due_date', '>=', $list->min_date)
-	// 	->where('due_date', '<=', $list->max_date)
-	// 	->select(
-	// 		'bentos.order_by',
-	// 		'bentos.order_by_name',
-	// 		'bentos.due_date',
-	// 		'bentos.employee_id',
-	// 		'bentos.employee_name',
-	// 		'users.email'
-	// 	)
-	// 	->get();
-
-	// 	$mail_to = array();
-
-	// 	foreach($bento_lists as $bento_list){
-	// 		if(!in_array($bento_list->email, $mail_to)){
-	// 			array_push($mail_to, $bento_list->email);
-	// 		}
-	// 	}
-
-	// 	$calendars = WeeklyCalendar::where('week_date', '>=', $list->min_date)
-	// 	->where('week_date', '<=', $list->max_date)
-	// 	->get();
-
-	// 	$bentos = [
-	// 		'bento_lists' => $bento_lists,
-	// 		'calendars' => $calendars
-	// 	];
-
-	// 	Mail::to($mail_to)->cc(['rianita.widiastuti@music.yamaha.com', 'putri.sukma.riyanti@music.yamaha.com', 'merlinda.dyah@music.yamaha.com', 'novita.siswindarti@music.yamaha.com', 'prawoto@music.yamaha.com'])->bcc(['aditya.agassi@music.yamaha.com', 'anton.budi.santoso@music.yamaha.com'])->send(new SendEmail($bentos, 'bento_approve'));
-	// }
-	// else{
-	// 	$user = User::where('id', '=', $bento_lists[0]['created_by'])->first();
-	// 	Mail::to([$user->email])->cc(['rianita.widiastuti@music.yamaha.com', 'putri.sukma.riyanti@music.yamaha.com'])->bcc(['aditya.agassi@music.yamaha.com', 'anton.budi.santoso@music.yamaha.com'])->send(new SendEmail($bento_lists, 'bento_confirm'));
-	// }
-
-	// return view('general_affairs.bento_message', array(
-	// 	'title' => $title,
-	// 	'title_jp' => $title_jp,
-	// 	'message' => $message,
-	// 	'message2' => $message2
-	// ))->with('head', 'Bento Request');
 }
 
 public function rejectBento($id){
@@ -525,31 +432,54 @@ public function indexBento(){
 	if(Auth::user()->role_code == 'YEMI'){
 		$employees = User::where('role_code', '=', 'YEMI')
 		->orderBy('name', 'asc')
-		->select(db::raw('username as employee_id'), 'name')
+		->select(db::raw('username as employee_id'), 'name', db::raw('"J0-" as grade_code'))
 		->get();
 
 		$location = 'YEMI';
 	}
 	else{
-			// $employees = db::select('SELECT
-			// 	employee_id,
-			// 	name 
-			// 	FROM
-			// 	employee_syncs 
-			// 	WHERE
-			// 	department = ( SELECT department FROM employee_syncs WHERE employee_id = "'.Auth::user()->username.'" ) 
-			// 	AND end_date IS NULL 
-			// 	ORDER BY
-			// 	name ASC');
+		if(Auth::user()->role_code == 'GA' || Auth::user()->role_code == 'MIS'){
+			$yemi = User::where('role_code', '=', 'YEMI')
+			->orderBy('name', 'asc')
+			->select(db::raw('username as employee_id'), 'name', db::raw('"J0-" as grade_code'));
 
-		// $employee = EmployeeSync::where('employee_id', '=', Auth::user()->username)
-		// ->first();
+			$employees = EmployeeSync::orderBy('name', 'asc')
+			->whereNull('end_date')
+			->select('employee_id', 'name', 'grade_code')
+			->union($yemi)
+			->get();
+		}
+		else{
+			$employees = EmployeeSync::orderBy('name', 'asc')
+			->whereNull('end_date')
+			->where('grade_code', '!=', 'J0-')
+			->select('employee_id', 'name', 'grade_code')
+			->get();
+		}
 
-		$employees = EmployeeSync::orderBy('name', 'asc')
-		->whereNull('end_date')
-		// ->where('department', '=', $employee->department)
-		->select('employee_id', 'name')
-		->get();
+		// $employees = db::select("SELECT
+		// 	* 
+		// 	FROM
+		// 	(
+		// 	SELECT
+		// 	employee_id,
+		// 	name,
+		// 	grade_code 
+		// 	FROM
+		// 	`employee_syncs` 
+		// 	WHERE
+		// 	end_date IS NULL UNION ALL
+		// 	SELECT
+		// 	username AS employee_id,
+		// 	name,
+		// 	'J0-' AS grade_code 
+		// 	FROM
+		// 	users 
+		// 	WHERE
+		// 	role_code = 'YEMI' 
+		// 	ORDER BY
+		// 	employee_id ASC 
+		// ) AS e");
 
 		$location = 'YMPI';		
 	}
@@ -605,6 +535,18 @@ public function fetchBentoQuota(Request $request){
 	$response = array(
 		'status' => true,
 		'bento_quota' => $bento_quota
+	);
+	return Response::json($response);
+}
+
+public function fetchBentoOrderEdit(Request $request){
+	$bento = Bento::where('due_date', '=', $request->get('due_date'))
+	->where('employee_name', '=', $request->get('employee_name'))
+	->first();
+
+	$response = array(
+		'status' => true,
+		'bento' => $bento
 	);
 	return Response::json($response);
 }
@@ -673,19 +615,32 @@ public function fetchBentoOrderList(Request $request){
 			$unconfirmed = Bento::get();
 		}
 		else{
-			$unconfirmed = Bento::where('created_by', '=', Auth::id())
-			->get();
+			// $unconfirmed = Bento::where('created_by', '=', Auth::id())
+			// ->get();
+
+			$unconfirmed = db::select("SELECT
+				* 
+				FROM
+				bentos 
+				WHERE
+				created_by = '".Auth::id()."' 
+				OR employee_id = '".Auth::user()->username."' 
+				OR order_by = '".Auth::user()->username."'");
 		}
 
-		$quotas = BentoQuota::where('due_date', '>=', $now)
-		->where('due_date', '<=', $last)
-		->select(db::raw('date_format(due_date, "%a, %d %b %Y") as due_date'), 'serving_quota', 'serving_ordered')
-		->get();
+		// $quotas = BentoQuota::where('due_date', '>=', $now)
+		// ->where('due_date', '<=', $last)
+		// ->where('remark', '!=', 'H')
+		// ->select(db::raw('date_format(due_date, "%a, %d %b %Y") as due_date'), 'serving_quota', 'serving_ordered')
+		// ->get();
+
+		$menus = BentoQuota::whereNull('deleted_at')->get();
 
 		$response = array(
 			'status' => true,
 			'unconfirmed' => $unconfirmed,
-			'quotas' => $quotas
+			// 'quotas' => $quotas,
+			'menus' => $menus
 		);
 		return Response::json($response);
 	}
@@ -696,11 +651,71 @@ public function editBentoOrder(Request $request){
 
 		if($request->get('status') == 'edit'){
 			$bento = Bento::where('id', '=', $request->get("id"))->first();
+			$employee_id = explode('_', $request->get('employee_id'));
+			$bento_quota_old = BentoQuota::where('due_date', '=', $bento->due_date)->first();
+			$bento_quota_new = BentoQuota::where('due_date', '=', $request->get('due_date'))->first();
+			$now = date('Y-m-d H:i:s');
+			$limit = date('Y-m-d 09:00:00', strtotime($bento->due_date));
 
-			if($request->get('location') != 'YEMI'){
-				$bento_quota = BentoQuota::where('due_date', '=', $bento->due_date)->first();
-				$bento_quota->serving_ordered = $bento_quota->serving_ordered-1;
-				$bento_quota->save();
+			$date_old = date('Y-m-d', strtotime($bento->due_date));
+			if(
+				$bento->order_by == $request->get('order_by') &&
+				$bento->order_by_name == $request->get('order_by_name') &&
+				$bento->charge_to == $request->get('charge_to') &&
+				$bento->charge_to_name == $request->get('charge_to_name') &&
+				$bento->due_date == $request->get('due_date')&&
+				$bento->employee_id == $employee_id[1]
+			){
+				$response = array(
+					'status' => false,
+					'message' => 'There is no change in your order<br>ご注文に変更なし'
+				);
+				return Response::json($response);	
+			}
+
+
+			if(strlen($bento_quota_new->menu) <= 0){
+				$response = array(
+					'status' => false,
+					'message' => 'There is order(s) without menu or in holiday.'
+				);
+				return Response::json($response);
+			}
+
+			if($now > $limit){
+				$response = array(
+					'status' => false,
+					'message' => 'Can not edit order, time limit reached. Max change on day 09:00',
+				);
+				return Response::json($response);
+			}
+
+			// $diff = date_diff(date_create(date('Y-m-d')), date_create(date('Y-m-d', strtotime($bento->due_date))));
+			// if($diff->format("%R%a") <= 0){
+			// 	$response = array(
+			// 		'status' => false,
+			// 		'message' => 'Your order exceeded time limit. Max order change day before'
+			// 	);
+			// 	return Response::json($response);
+			// }
+
+			if($employee_id[2] != 'J0-'){
+				if($bento_quota_new->serving_quota-$bento_quota_new->serving_ordered <= 0){
+					$response = array(
+						'status' => false,
+						'message' => 'Maximum quota reached, please check your order.'
+					);
+					return Response::json($response);
+				}
+				$bento_quota_old->serving_ordered = $bento_quota_old->serving_ordered-1;
+				$bento_quota_old->save();
+
+				if($bento->status == 'Approved'){
+					$attendance = GeneralAttendance::where('due_date', '=', $date_old)
+					->where('employee_id', '=', $bento->employee_id)
+					->first();
+					$attendance->forceDelete();
+				}
 			}
 
 			$bento->order_by = $request->get('order_by');
@@ -708,20 +723,47 @@ public function editBentoOrder(Request $request){
 			$bento->charge_to = $request->get('charge_to');
 			$bento->charge_to_name = $request->get('charge_to_name');
 			$bento->due_date = $request->get('due_date');
+			$bento->revise = $bento->revise+1;
 
-			$employee_id = explode('-', $request->get('employee_id'));
 			$bento->employee_id = $employee_id[0];
 
 			$employee = EmployeeSync::where('employee_id', '=', $employee_id[0])->first();
 
-			$bento->employee_name = $employee->name;
-			$bento->department = $employee->department;
-			$bento->section = $employee->section;
 
-			if($request->get('location') != 'YEMI'){
+			if($employee != ""){
+				$bento->employee_name = $employee->name;
+				$bento->department = $employee->department;
+				$bento->section = $employee->section;
+			}
+			else{
+				$bento->employee_name = $employee_id[1];
+				$bento->department = 'YEMI';
+				$bento->section = 'YEMI';
+			}
+
+			if($employee_id[2] != 'J0-'){
 				$bento_quota = BentoQuota::where('due_date', '=', $request->get('due_date'))->first();
 				$bento_quota->serving_ordered = $bento_quota->serving_ordered+1;
 				$bento_quota->save();
+
+				if($bento->status == 'Approved'){
+					if($date_old == $request->get('due_date')){
+						$attendance = new GeneralAttendance([
+							'purpose_code' => 'Bento',
+							'due_date' => $request->get('due_date'),
+							'employee_id' => $employee_id[0],
+							'created_by' => Auth::id()
+						]);
+
+						$attendance->save();
+					}
+				}
+			}
+
+			if($date_old != $request->get('due_date')){
+				$bento->status = 'Waiting';
+				$bento->approver_id = null;
+				$bento->approver_name = null;
 			}
 
 			$bento->save();
@@ -729,25 +771,6 @@ public function editBentoOrder(Request $request){
 			$response = array(
 				'status' => true,
 				'message' => 'Your order has been edited, please wait for approval'
-			);
-			return Response::json($response);				
-		}
-
-		if($request->get('status') == 'delete'){
-
-			$bento = Bento::where('id', '=', $request->get("id"))->first();
-
-			if($request->get('location') != 'YEMI'){
-				$bento_quota = BentoQuota::where('due_date', '=', $bento->due_date)->first();
-				$bento_quota->serving_ordered = $bento_quota->serving_ordered-1;
-				$bento_quota->save();
-			}
-
-			$bento->forceDelete();
-
-			$response = array(
-				'status' => true,
-				'message' => 'Your order has been deleted'
 			);
 			return Response::json($response);				
 		}
@@ -762,7 +785,7 @@ public function editBentoOrder(Request $request){
 			if($now > $limit){
 				$response = array(
 					'status' => false,
-					'message' => 'Can not cancel order, time limit reached.',
+					'message' => 'Can not cancel order, time limit reached. Max change on day 09:00',
 				);
 				return Response::json($response);
 			}
@@ -771,38 +794,45 @@ public function editBentoOrder(Request $request){
 				$bento_quota = BentoQuota::where('due_date', '=', $bento->due_date)->first();
 				$bento_quota->serving_ordered = $bento_quota->serving_ordered-1;
 				$bento_quota->save();
+				if($bento->status == 'Approved'){
+					$attendance = GeneralAttendance::where('due_date', '=', $bento->due_date)
+					->where('employee_id', '=', $bento->employee_id)
+					->first();
+					$attendance->forceDelete();
+				}
 			}
 
 			$bento->status = 'Cancelled';
+			$bento->revise = $bento->revise+1;
 
 			$bento->save();
 
 			$user = User::where('username', '=', $bento->order_by)->first();
 			$bento_lists = Bento::where('id', '=', $request->get('id'))->get();
 
-			if($request->get('location') != 'YEMI'){
-				Mail::to([$user->email])->cc([
-					'rianita.widiastuti@music.yamaha.com', 
-					'putri.sukma.riyanti@music.yamaha.com'
-				])
-				->bcc([
-					'aditya.agassi@music.yamaha.com', 
-					'anton.budi.santoso@music.yamaha.com'
-				])
-				->send(new SendEmail($bento_lists, 'bento_confirm'));
-			}
-			else{
-				Mail::to([$user->email])->cc([
-					'rianita.widiastuti@music.yamaha.com', 
-					'putri.sukma.riyanti@music.yamaha.com', 
-					'merlinda.dyah@music.yamaha.com', 
-					'prawoto@music.yamaha.com'])
-				->bcc([
-					'aditya.agassi@music.yamaha.com', 
-					'anton.budi.santoso@music.yamaha.com'
-				])
-				->send(new SendEmail($bento_lists, 'bento_confirm'));
-			}
+			// if($request->get('location') != 'YEMI'){
+			// 	Mail::to([$user->email])->cc([
+			// 		'rianita.widiastuti@music.yamaha.com', 
+			// 		'putri.sukma.riyanti@music.yamaha.com'
+			// 	])
+			// 	->bcc([
+			// 		'aditya.agassi@music.yamaha.com', 
+			// 		'anton.budi.santoso@music.yamaha.com'
+			// 	])
+			// 	->send(new SendEmail($bento_lists, 'bento_confirm'));
+			// }
+			// else{
+			// 	Mail::to([$user->email])->cc([
+			// 		'rianita.widiastuti@music.yamaha.com', 
+			// 		'putri.sukma.riyanti@music.yamaha.com', 
+			// 		'merlinda.dyah@music.yamaha.com', 
+			// 		'prawoto@music.yamaha.com'])
+			// 	->bcc([
+			// 		'aditya.agassi@music.yamaha.com', 
+			// 		'anton.budi.santoso@music.yamaha.com'
+			// 	])
+			// 	->send(new SendEmail($bento_lists, 'bento_confirm'));
+			// }
 
 			$response = array(
 				'status' => true,
@@ -839,21 +869,46 @@ public function inputBentoOrder(Request $request){
 		$order_id = $code_generator->prefix . $number;
 
 		$check_quota = array();
+		$check_menu = array();
 
 		foreach($order_lists as $order_list) {
 			$order = explode("_", $order_list);
-
-			array_push($check_quota, $order[1]);
+			if($order[2] != 'J0-'){
+				array_push($check_quota, $order[1]);	
+			}
+			array_push($check_menu, $order[1]);
 		}
 
 		$check = array_count_values($check_quota);
+		$check2 = array_count_values($check_menu);
 
-		foreach ($check as $key => $val) {
+		if(count($check) > 0){
+			foreach ($check as $key => $val) {
+				$bento_quota = BentoQuota::where('due_date', '=', $key)->first();
+				if($bento_quota->serving_quota-$bento_quota->serving_ordered < $val){
+					$response = array(
+						'status' => false,
+						'message' => 'Maximum quota reached, please check your order.'
+					);
+					return Response::json($response);
+				}
+			}
+		}
+
+		foreach ($check2 as $key => $val) {
 			$bento_quota = BentoQuota::where('due_date', '=', $key)->first();
-			if($bento_quota->serving_quota-$bento_quota->serving_ordered < $val){
+			$diff = date_diff(date_create(date('Y-m-d')), date_create(date('Y-m-d', strtotime($key))));
+			if($diff->format("%R%a") <= 0){
 				$response = array(
 					'status' => false,
-					'message' => 'Maximum quota reached, please check your order.'
+					'message' => 'Your order exceeded time limit. Max order one day before'
+				);
+				return Response::json($response);
+			}
+			if(strlen($bento_quota->menu) <= 0){
+				$response = array(
+					'status' => false,
+					'message' => 'There is order(s) with no menu yet or in holiday.'
 				);
 				return Response::json($response);
 			}
@@ -874,6 +929,7 @@ public function inputBentoOrder(Request $request){
 					'due_date' => $order[1],
 					'employee_id' => $order[0],
 					'employee_name' => $employee->name,
+					'grade_code' => $order[2],
 					'email' => $employee->email,
 					'department' => 'YEMI',
 					'section' => 'YEMI',
@@ -949,12 +1005,12 @@ public function inputBentoOrder(Request $request){
 		$code_generator->index = $code_generator->index+1;
 		$code_generator->save();
 
-		if($order_by->role_code == 'YEMI'){
-			Mail::to(['rianita.widiastuti@music.yamaha.com'])->cc(['putri.sukma.riyanti@music.yamaha.com', 'prawoto@music.yamaha.com'])->bcc(['aditya.agassi@music.yamaha.com', 'anton.budi.santoso@music.yamaha.com'])->send(new SendEmail($bento_lists, 'bento_request'));
-		}
-		else{
-			Mail::to(['rianita.widiastuti@music.yamaha.com'])->cc(['putri.sukma.riyanti@music.yamaha.com'])->bcc(['aditya.agassi@music.yamaha.com', 'anton.budi.santoso@music.yamaha.com'])->send(new SendEmail($bento_lists, 'bento_request'));
-		}
+		// if($order_by->role_code == 'YEMI'){
+		// 	Mail::to(['rianita.widiastuti@music.yamaha.com'])->cc(['putri.sukma.riyanti@music.yamaha.com', 'prawoto@music.yamaha.com'])->bcc(['aditya.agassi@music.yamaha.com', 'anton.budi.santoso@music.yamaha.com'])->send(new SendEmail($bento_lists, 'bento_request'));
+		// }
+		// else{
+		// 	Mail::to(['rianita.widiastuti@music.yamaha.com'])->cc(['putri.sukma.riyanti@music.yamaha.com'])->bcc(['aditya.agassi@music.yamaha.com', 'anton.budi.santoso@music.yamaha.com'])->send(new SendEmail($bento_lists, 'bento_request'));
+		// }
 
 		$response = array(
 			'status' => true,
@@ -1694,91 +1750,29 @@ public function indexLiveCooking()
 
 	$user = Auth::user()->username;
 
-	$roles = CanteenLiveCookingAdmin::where('employee_id',$user)->first();
-	if (count($roles) > 0) {
-		if ($roles->live_cooking_role == 'prod') {
-			$emp = DB::SELECT("SELECT
-				* 
-				FROM
-				employee_syncs
-				JOIN employees ON employees.employee_id = employee_syncs.employee_id 
-				WHERE
-				( employee_syncs.end_date IS NULL AND remark != 'OFC' AND department = '".$roles->department."' AND section = '".$roles->section."' ) 
-				OR (
-				employee_syncs.end_date IS NULL 
-				AND remark IS NULL 
-				AND department = '".$roles->department."' 
-				AND section = '".$roles->section."')");
-		}else if($roles->live_cooking_role == 'ga'){
-			$emp = EmployeeSync::select('employee_id','name')->where('employee_syncs.end_date',null)->get();
-		}else if($roles->live_cooking_role == 'ofc'){
-			$dept = '';
-			if($roles->department != null){
-				$depts =  explode(",", $roles->department);
-				for ($i=0; $i < count($depts); $i++) {
-					$dept = $dept."'".$depts[$i]."'";
-					if($i != (count($depts)-1)){
-						$dept = $dept.',';
-					}
-				}
-				$deptin = " and `department` in (".$dept.") ";
-			}
-			else{
-				$deptin = "";
-			}
-			$emp = DB::SELECT("SELECT
-				* 
-				FROM
-				employee_syncs
-				JOIN employees ON employees.employee_id = employee_syncs.employee_id 
-				WHERE
-				employee_syncs.end_date IS NULL 
-				".$deptin."
-				AND remark = 'OFC'");
-		}else if($roles->live_cooking_role == 'all'){
-			$emp = DB::SELECT("SELECT
-				* 
-				FROM
-				employee_syncs
-				JOIN employees ON employees.employee_id = employee_syncs.employee_id 
-				WHERE
-				employee_syncs.end_date IS NULL");
-		}
+	$menus = CanteenLiveCookingMenu::where('periode',date('Y-m'))->get();
+	$today = CanteenLiveCookingMenu::where('due_date',date('Y-m-d'))->first();
+	$dateOrder = date('Y-m-d', strtotime("-7 day", strtotime(date('Y-m-01'))));
 
-		$live_cookings = DB::SELECT('SELECT DISTINCT
-			( periode ),
-			date_format( due_date, "%b %Y" ) AS period 
-			FROM
-			canteen_live_cooking_menus 
-			WHERE
-			DATE_FORMAT( NOW(), "%Y-%m" ) = periode UNION ALL
-			SELECT
-			DATE_FORMAT(
-			DATE_SUB(
-			LAST_DAY( DATE_ADD( NOW(), INTERVAL 1 MONTH ) ),
-			INTERVAL DAY ( LAST_DAY( DATE_ADD( NOW(), INTERVAL 1 MONTH ) ) )- 1 DAY 
-			),
-			"%Y-%m"
-			),
-			DATE_FORMAT(
-			DATE_SUB(
-			LAST_DAY( DATE_ADD( NOW(), INTERVAL 1 MONTH ) ),
-			INTERVAL DAY ( LAST_DAY( DATE_ADD( NOW(), INTERVAL 1 MONTH ) ) )- 1 DAY 
-			),
-			"%b %Y"
-		) AS period');
+	$t1 = strtotime(date('Y-m-d'));
+	$t2 = strtotime(date('Y-'.date('m',strtotime('first day of +1 month')).'-01'));
 
-
-		return view('general_affairs.live_cooking', array(
-			'title' => $title,
-			'title_jp' => $title_jp,
-			'employees' => $emp,
-			'roles' => $roles,
-			'live_cookings' => $live_cookings,
-		))->with('head', 'GA Control')->with('page', 'Live Cooking Order');
-	}else{
-		return view('404');
-	}
+	$interval = $t2 - $t1;
+	$total_sec = abs($t2-$t1);
+	$total_min = floor($total_sec/60);
+	$total_hour = floor($total_min/60);
+	$total_day = floor($total_hour/24);
+	$month_now = date('Y-m');
+	return view('general_affairs.live_cooking', array(
+		'title' => $title,
+		'title_jp' => $title_jp,
+		'menus' => $menus,
+		'user' => $user,
+		'today' => $today,
+		'total_day' => 6,
+		'monthTitle' => date('F Y'),
+		'month_now' => $month_now
+	))->with('head', 'GA Control')->with('page', 'Live Cooking Order');
 }
 
 public function fetchLiveCookingMenu($periode)
@@ -1876,93 +1870,125 @@ public function fetchLiveCookingOrderList(Request $request)
 		$last = date('Y-m-d', strtotime(carbon::now()->addDays(20)));
 
 		$periode = date('Y-m');
+		$nextPeriode = date('Y-'.date('m',strtotime('first day of +1 month')));
 
-		$roles = CanteenLiveCookingAdmin::where('employee_id',Auth::user()->username)->first();
+		// $roles = CanteenLiveCookingAdmin::where('employee_id',Auth::user()->username)->first();
 
-		if ($roles->live_cooking_role == 'ga') {
-			$resumes = DB::SELECT("SELECT
-				canteen_live_cookings.id AS id_live,
-				order_by,
-				emp_by.`name` AS name_by,
-				order_for,
-				emp_for.`name` AS name_for,
-				due_date,
-				`status`,
-				remark,
-				emp_by.department,
-				emp_by.section
-				FROM
-				canteen_live_cookings
-				LEFT JOIN employee_syncs emp_by ON emp_by.employee_id = canteen_live_cookings.order_by
-				LEFT JOIN employee_syncs emp_for ON emp_for.employee_id = canteen_live_cookings.order_for
-				where DATE_FORMAT(due_date,'%Y-%m') = '".$periode."'
-				order by due_date");
+		// if ($roles->live_cooking_role == 'ga') {
+		// $resumes = DB::SELECT("SELECT
+		// 	canteen_live_cookings.id AS id_live,
+		// 	order_by,
+		// 	emp_by.`name` AS name_by,
+		// 	order_for,
+		// 	emp_for.`name` AS name_for,
+		// 	due_date,
+		// 	`status`,
+		// 	remark,
+		// 	emp_by.department,
+		// 	emp_by.section
+		// 	FROM
+		// 	canteen_live_cookings
+		// 	LEFT JOIN employee_syncs emp_by ON emp_by.employee_id = canteen_live_cookings.order_by
+		// 	LEFT JOIN employee_syncs emp_for ON emp_for.employee_id = canteen_live_cookings.order_for
+		// 	where DATE_FORMAT(due_date,'%Y-%m') = '".$periode."'
+		// 	order by due_date");
 
-			$quotas = CanteenLiveCookingMenu::where('due_date', '>=', $now)
-			->where('due_date', '<=', $last)
-			->select(db::raw('date_format(due_date, "%a, %d %b %Y") as due_date'), 'serving_quota', 'serving_ordered')
-			->get();
-		}else if($roles->live_cooking_role == 'all'){
-			$resumes = DB::SELECT("SELECT
-				canteen_live_cookings.id AS id_live,
-				order_by,
-				emp_by.`name` AS name_by,
-				order_for,
-				emp_for.`name` AS name_for,
-				due_date,
-				`status`,
-				remark,
-				emp_by.department,
-				emp_by.section
-				FROM
-				canteen_live_cookings
-				LEFT JOIN employee_syncs emp_by ON emp_by.employee_id = canteen_live_cookings.order_by
-				LEFT JOIN employee_syncs emp_for ON emp_for.employee_id = canteen_live_cookings.order_for
-				where DATE_FORMAT(due_date,'%Y-%m') = '".$periode."'
-				order by due_date");
-			$quotas = CanteenLiveCookingMenu::where('due_date', '>=', $now)
-			->where('due_date', '<=', $last)
-			->select(db::raw('date_format(due_date, "%a, %d %b %Y") as due_date'), 'serving_quota', 'serving_ordered')
-			->get();
-		}else if($roles->live_cooking_role == 'prod'){
-			$resumes = DB::SELECT("SELECT
-				canteen_live_cookings.id AS id_live,
-				order_by,
-				emp_by.`name` AS name_by,
-				order_for,
-				emp_for.`name` AS name_for,
-				due_date,
-				`status`,
-				remark,
-				emp_by.department,
-				emp_by.section
-				FROM
-				canteen_live_cookings
-				LEFT JOIN employee_syncs emp_by ON emp_by.employee_id = canteen_live_cookings.order_by
-				LEFT JOIN employee_syncs emp_for ON emp_for.employee_id = canteen_live_cookings.order_for
-				WHERE
-				order_by = '".Auth::user()->username."'
-				and DATE_FORMAT(due_date,'%Y-%m') = '".$periode."'
-				order by due_date ");
+		// 	$quotas = CanteenLiveCookingMenu::where('due_date', '>=', $now)
+		// 	->where('due_date', '<=', $last)
+		// 	->select(db::raw('date_format(due_date, "%a, %d %b %Y") as due_date'), 'serving_quota', 'serving_ordered')
+		// 	->get();
+		// }else if($roles->live_cooking_role == 'all'){
+		// 	$resumes = DB::SELECT("SELECT
+		// 		canteen_live_cookings.id AS id_live,
+		// 		order_by,
+		// 		emp_by.`name` AS name_by,
+		// 		order_for,
+		// 		emp_for.`name` AS name_for,
+		// 		due_date,
+		// 		`status`,
+		// 		remark,
+		// 		emp_by.department,
+		// 		emp_by.section
+		// 		FROM
+		// 		canteen_live_cookings
+		// 		LEFT JOIN employee_syncs emp_by ON emp_by.employee_id = canteen_live_cookings.order_by
+		// 		LEFT JOIN employee_syncs emp_for ON emp_for.employee_id = canteen_live_cookings.order_for
+		// 		where DATE_FORMAT(due_date,'%Y-%m') = '".$periode."'
+		// 		order by due_date");
+		// 	$quotas = CanteenLiveCookingMenu::where('due_date', '>=', $now)
+		// 	->where('due_date', '<=', $last)
+		// 	->select(db::raw('date_format(due_date, "%a, %d %b %Y") as due_date'), 'serving_quota', 'serving_ordered')
+		// 	->get();
+		// }else if($roles->live_cooking_role == 'prod'){
+		$resumes = DB::SELECT("SELECT
+			canteen_live_cookings.id AS id_live,
+			order_by,
+			emp_by.`name` AS name_by,
+			order_for,
+			emp_for.`name` AS name_for,
+			due_date,
+			`status`,
+			remark,
+			emp_by.department,
+			emp_by.section
+			FROM
+			canteen_live_cookings
+			LEFT JOIN employee_syncs emp_by ON emp_by.employee_id = canteen_live_cookings.order_by
+			LEFT JOIN employee_syncs emp_for ON emp_for.employee_id = canteen_live_cookings.order_for
+			WHERE
+			order_by = '".Auth::user()->username."'
+			and DATE_FORMAT(due_date,'%Y-%m') = '".$periode."'
+			order by due_date ");
 
-			$quotas = DB::SELECT("SELECT
-				date_format( due_date, '%a, %d %b %Y' ) AS due_date,
-				due_date as due_dates,
-				( SELECT order_quota FROM canteen_live_cooking_admins WHERE canteen_live_cooking_admins.department = '".$roles->department."' AND section = '".$roles->section."' ) AS serving_quota,
-				( SELECT count( id ) FROM canteen_live_cookings WHERE canteen_live_cookings.order_by = '".Auth::user()->username."' AND canteen_live_cookings.due_date = canteen_live_cooking_menus.due_date ) AS serving_ordered 
-				FROM
-				canteen_live_cooking_menus 
-				WHERE
-				due_date >= '".$now."' 
-				AND due_date <= '".$last."' 
-				GROUP BY
-				due_date");
-		}
+		$quotas = DB::SELECT("SELECT
+			date_format( due_date, '%a, %d %b %Y' ) AS due_date,
+			due_date as due_dates,
+			serving_quota,serving_ordered 
+			FROM
+			canteen_live_cooking_menus 
+			WHERE
+			due_date >= '".$now."' 
+			AND due_date <= '".$last."' 
+			GROUP BY
+			due_date");
+
+		$menus = DB::SELECT("SELECT
+			a.* 
+			FROM
+			(
+			SELECT
+			week_date,
+			weekly_calendars.remark,
+			( SELECT menu_name FROM canteen_live_cooking_menus WHERE due_date = week_date ) AS menu_name,
+			( SELECT serving_quota FROM canteen_live_cooking_menus WHERE due_date = week_date ) AS serving_quota,
+			( SELECT serving_ordered FROM canteen_live_cooking_menus WHERE due_date = week_date ) AS serving_ordered 
+			FROM
+			weekly_calendars 
+			WHERE
+			DATE_FORMAT( week_date, '%Y-%m' ) = '".$periode."' UNION ALL
+			SELECT
+			week_date,
+			weekly_calendars.remark,
+			( SELECT menu_name FROM canteen_live_cooking_menus WHERE due_date = week_date ) AS menu_name,
+			( SELECT serving_quota FROM canteen_live_cooking_menus WHERE due_date = week_date ) AS serving_quota,
+			( SELECT serving_ordered FROM canteen_live_cooking_menus WHERE due_date = week_date ) AS serving_ordered 
+			FROM
+			weekly_calendars 
+			WHERE
+			DATE_FORMAT( week_date, '%Y-%m' ) = '".$nextPeriode."' 
+		) a");
+		// }
+
+		$calendars = WeeklyCalendar::where(db::raw('date_format(week_date, "%Y-%m")'), '=', $periode)
+		->select('week_date', db::raw('date_format(week_date, "%d") as header'), 'remark')
+		->get();
 
 		$response = array(
 			'status' => true,
 			'resumes' => $resumes,
 			'quota' => $quotas,
+			'calendars' => $calendars,
+			'menus' => $menus,
 			'now' => $now
 		);
 		return Response::json($response);
@@ -1978,54 +2004,74 @@ public function fetchLiveCookingOrderList(Request $request)
 public function fetchLiveCookingEmployees(Request $request)
 {
 	try {
-		if ($request->get('roles') == 'prod') {
-			$emp = DB::SELECT("SELECT
-				* 
-				FROM
-				employee_syncs
-				JOIN employees ON employees.employee_id = employee_syncs.employee_id 
-				WHERE
-				( employee_syncs.end_date IS NULL AND remark != 'OFC' AND department = '".$request->get('department')."' AND section = '".$request->get('section')."' ) 
-				OR (
-				employee_syncs.end_date IS NULL 
-				AND remark IS NULL 
-				AND department = '".$request->get('department')."' 
-				AND section = '".$request->get('section')."')");
-		}else if($request->get('roles') == 'ga'){
-			$emp = EmployeeSync::select('employee_id','name')->where('employee_syncs.end_date',null)->get();
-		}else if($request->get('roles') == 'ofc'){
-			$dept = '';
-			if($roles->department != null){
-				$depts =  explode(",", $roles->department);
-				for ($i=0; $i < count($depts); $i++) {
-					$dept = $dept."'".$depts[$i]."'";
-					if($i != (count($depts)-1)){
-						$dept = $dept.',';
-					}
-				}
-				$deptin = " and `department` in (".$dept.") ";
-			}
-			else{
-				$deptin = "";
-			}
-			$emp = DB::SELECT("SELECT
-				* 
-				FROM
-				employee_syncs
-				JOIN employees ON employees.employee_id = employee_syncs.employee_id 
-				WHERE
-				employee_syncs.end_date IS NULL 
-				".$deptin."
-				AND remark = 'OFC'");
-		}else if($request->get('roles') == 'all'){
-			$emp = DB::SELECT("SELECT
-				* 
-				FROM
-				employee_syncs
-				JOIN employees ON employees.employee_id = employee_syncs.employee_id 
-				WHERE
-				employee_syncs.end_date IS NULL");
-		}
+		// if ($request->get('roles') == 'prod') {
+		// 	$emp = DB::SELECT("SELECT
+		// 		* 
+		// 		FROM
+		// 		employee_syncs
+		// 		JOIN employees ON employees.employee_id = employee_syncs.employee_id 
+		// 		WHERE
+		// 		( employee_syncs.end_date IS NULL AND remark != 'OFC' AND department = '".$request->get('department')."' AND section = '".$request->get('section')."' ) 
+		// 		OR (
+		// 		employee_syncs.end_date IS NULL 
+		// 		AND remark IS NULL 
+		// 		AND department = '".$request->get('department')."' 
+		// 		AND section = '".$request->get('section')."')");
+		// }else if($request->get('roles') == 'ga'){
+		// 	$emp = EmployeeSync::select('employee_id','name')->where('employee_syncs.end_date',null)->get();
+		// }else if($request->get('roles') == 'ofc'){
+		// 	$dept = '';
+		// 	if($roles->department != null){
+		// 		$depts =  explode(",", $roles->department);
+		// 		for ($i=0; $i < count($depts); $i++) {
+		// 			$dept = $dept."'".$depts[$i]."'";
+		// 			if($i != (count($depts)-1)){
+		// 				$dept = $dept.',';
+		// 			}
+		// 		}
+		// 		$deptin = " and `department` in (".$dept.") ";
+		// 	}
+		// 	else{
+		// 		$deptin = "";
+		// 	}
+		// 	$emp = DB::SELECT("SELECT
+		// 		* 
+		// 		FROM
+		// 		employee_syncs
+		// 		JOIN employees ON employees.employee_id = employee_syncs.employee_id 
+		// 		WHERE
+		// 		employee_syncs.end_date IS NULL 
+		// 		".$deptin."
+		// 		AND remark = 'OFC'");
+		// }else if($request->get('roles') == 'all'){
+		// 	$emp = DB::SELECT("SELECT
+		// 		* 
+		// 		FROM
+		// 		employee_syncs
+		// 		JOIN employees ON employees.employee_id = employee_syncs.employee_id 
+		// 		WHERE
+		// 		employee_syncs.end_date IS NULL");
+		// }
+
+		$emp = DB::SELECT("SELECT
+			canteen_live_cookings.id AS id_live,
+			order_by,
+			emp_by.`name` AS name_by,
+			order_for,
+			emp_for.`name` AS name_for,
+			due_date,
+			`status`,
+			remark,
+			emp_by.department,
+			emp_by.section
+			FROM
+			canteen_live_cookings
+			LEFT JOIN employee_syncs emp_by ON emp_by.employee_id = canteen_live_cookings.order_by
+			LEFT JOIN employee_syncs emp_for ON emp_for.employee_id = canteen_live_cookings.order_for
+			WHERE
+			emp_for.name = '".$request->get('for_name')."'
+			and due_date = '".$request->get('due_date')."'
+			order by due_date");
 
 		$response = array(
 			'status' => true,
@@ -2044,58 +2090,23 @@ public function fetchLiveCookingEmployees(Request $request)
 public function inputLiveCookingOrder(Request $request)
 {
 	try{
-		$order_lists = $request->get('order_list');
-		foreach ($order_lists as $key) {
-			$order = explode("_", $key);
-		}
-		$quotas = CanteenLiveCookingAdmin::where('employee_id',Auth::user()->username)->first();
-		$quota = CanteenLiveCooking::where('due_date',$order[1])->where('order_by',$request->get('order_by'))->get();
-
-		$countall = count($order_lists) + count($quota);
-
-		if ($countall <= $quotas->order_quota) {
-			$order_by = User::where('username', '=', $request->get('order_by'))->first();
-			$live_lists = array();
-			$quota = 0;
-
-			foreach($order_lists as $order_list) {
-				$order = explode("_", $order_list);
-
-				$live_cooking = CanteenLiveCooking::updateOrCreate(
-					[
-						'due_date' => strtoupper($order[1]),
-						'order_for' => $order[0]
-					],
-					[
-						'order_by' => strtoupper($order_by->username),
-						'due_date' => strtoupper($order[1]),
-						'order_for' => $order[0],
-						'status' => 'Confirmed',
-						'created_by' => Auth::id()
-					]
-				);
-				$live_cooking->save();
-			}
-
-			foreach ($order_lists as $key) {
-				$order = explode("_", $order_list);
-			}
-
-			$quota = CanteenLiveCooking::where('due_date',$order[1])->get();
-
-			$live_quota = CanteenLiveCookingMenu::where('due_date', '=', $order[1])->first();
-			$live_quota->serving_ordered = count($quota);
-			$live_quota->save();
-
-			$response = array(
-				'status' => true,
-				'message' => 'Order Anda telah berhasil diinput.'
+		$quotas = CanteenLiveCookingMenu::where('due_date',$request->get('due_date'))->first();
+		if ($quotas->serving_ordered < $quotas->serving_ordered ) {
+			$live_cooking = CanteenLiveCooking::create(
+				[
+					'order_by' => strtoupper($request->get('order_by')),
+					'due_date' => $request->get('date'),
+					'order_for' => strtoupper($request->get('order_by')),
+					'status' => 'Confirmed',
+					'created_by' => Auth::id()
+				]
 			);
-			return Response::json($response);
-		}else{
+			$live_cooking->save();
+		}
+		else{
 			$response = array(
 				'status' => false,
-				'message' => 'Order Anda pada tanggal '.$order[1].' telah melebihi kuota.',
+				'message' => 'Order Anda pada tanggal '.$request->get('quota').' telah melebihi kuota.',
 			);
 			return Response::json($response);
 		}
@@ -2109,34 +2120,88 @@ public function inputLiveCookingOrder(Request $request)
 	}
 }
 
+public function randomLiveCooking(Request $request)
+{
+	try {
+		$periode = $request->get('menuDateRandom');
+		$dateFrom = $request->get('dateFromRandom');
+		$dateTo = $request->get('dateToRandom');
+
+		$menus = CanteenLiveCookingMenu::where('periode',$periode)->where('due_date','>=',$dateFrom)->where('due_date','<=',$dateTo)->get();
+		foreach ($menus as $val) { 
+			$emp = DB::SELECT("SELECT
+				employees.id,
+				employee_syncs.employee_id,
+				employee_syncs.`name`,
+				sunfish_shift_syncs.shiftdaily_code 
+				FROM
+				employee_syncs
+				LEFT JOIN employees ON employees.employee_id = employee_syncs.employee_id
+				LEFT JOIN sunfish_shift_syncs ON sunfish_shift_syncs.employee_id = employee_syncs.employee_id 
+				WHERE
+				employees.live_cooking = 0 
+				AND employee_syncs.end_date IS NULL 
+				AND sunfish_shift_syncs.shift_date = '".$val->due_date."' 
+				AND shiftdaily_code LIKE '%Shift_1%' 
+				ORDER BY
+				RAND()
+				LIMIT ".$val->serving_quota."");
+			$datanow = CanteenLiveCooking::where('due_date',$val->due_date)->forceDelete();
+			// if (count($datanow) > 0) {
+			// 	$datanow->forceDelete();
+			// }
+			foreach ($emp as $key) {
+				$live_cooking = CanteenLiveCooking::create(
+					[
+						'order_by' => $key->employee_id,
+						'due_date' => $val->due_date,
+						'order_for' => $key->employee_id,
+						'status' => 'Confirmed',
+						'created_by' => Auth::id()
+					]
+				);
+				$live_cooking->save();
+
+				$empys = Employee::where('id',$key->id)->first();
+				$empys->live_cooking = 1;
+				$empys->save();
+			}
+		}
+		// $emp = EmployeeSync::where('')
+		$response = array(
+			'status' => true,
+			'message' => 'Success Randomize'
+		);
+		return Response::json($response);
+	} catch (\Exception $e) {
+		$response = array(
+			'status' => false,
+			'message' => $e->getMessage(),
+		);
+		return Response::json($response);
+	}
+}
+
 public function editLiveCookingOrder(Request $request)
 {
 	try {
 		if ($request->get('status') == 'edit') {
-			$quota = CanteenLiveCooking::where('due_date',$request->get('due_date'))->where('order_by',$request->get('order_by'))->get();
+			$orders = CanteenLiveCooking::where('due_date',$request->get('due_date'))->get();
+			$quota = CanteenLiveCookingMenu::where('due_date',$request->get('due_date'))->first();
 			$live_cooking = CanteenLiveCooking::where('id',$request->get('id'))->first();
+			$check = CanteenLiveCooking::where('due_date',$request->get('due_date'))->where('order_for',$request->get('order_for'))->first();
 			if ($live_cooking->due_date == $request->get('due_date')) {
-				if (count($quota) <= $request->get('quota')) {
-					$employee_id = explode('-', $request->get('order_for'));
-					$live_cooking->order_for = $employee_id[0];
-					$live_cooking->save();
-					$status = true;
-					$message = 'Update Data Berhasil';
-				}else{
-					$status = false;
-					$message = 'Kuota Anda pada tanggal '.$request->get('due_date').' telah penuh.';
-				}
+				$status = true;
+				$message = 'Update Data Berhasil';
 			}else{
-				if (count($quota) < $request->get('quota')) {
+				if ($quota->serving_ordered < $quota->serving_quota) {
 					$live_cooking->due_date = $request->get('due_date');
-					$employee_id = explode('-', $request->get('order_for'));
-					$live_cooking->order_for = $employee_id[0];
 					$live_cooking->save();
 					$status = true;
 					$message = 'Update Data Berhasil';
 				}else{
 					$status = false;
-					$message = 'Kuota Anda pada tanggal '.$request->get('due_date').' telah penuh.';
+					$message = 'Kuota pada tanggal '.date('d F Y',strtotime($request->get('due_date'))).' telah penuh.';
 				}
 			}
 		}else{
@@ -2623,6 +2688,34 @@ public function create_item_category_post(Request $request)
 	}
 }
 
+public function get_nomor_pr(Request $request)
+    {
+        $datenow = date('Y-m-d');
+        $tahun = date('y');
+        $bulan = date('m');
+
+        $query = "SELECT no_pr FROM `canteen_purchase_requisitions` where DATE_FORMAT(submission_date, '%y') = '$tahun' and month(submission_date) = '$bulan' order by id DESC LIMIT 1";
+        $nomorurut = DB::select($query);
+
+        if ($nomorurut != null)
+        {
+            $nomor = substr($nomorurut[0]->no_pr, -3);
+            $nomor = $nomor + 1;
+            $nomor = sprintf('%03d', $nomor);
+        }
+        else
+        {
+            $nomor = "001";
+        }
+
+        $result['tahun'] = $tahun;
+        $result['bulan'] = $bulan;
+        $result['dept'] = 'CA';
+        $result['no_urut'] = $nomor;
+
+        return json_encode($result);
+    }
+
 public function create_purchase_requisition(Request $request)
 {
 	$id = Auth::id();
@@ -2637,7 +2730,7 @@ public function create_purchase_requisition(Request $request)
 		$posisi = null;
 		$gm = null;
 
-            //Jika GA pak arief
+	            //Jika GA pak arief
 		if($request->get('department') == "General Affairs Department")
 		{
 			$manag = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Human Resources Department' and position = 'manager'");
@@ -2645,7 +2738,7 @@ public function create_purchase_requisition(Request $request)
 
 		else
 		{
-                // Get Manager
+	                // Get Manager
 			$manag = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = '" . $request->get('department') . "' and position = 'manager'");
 		}
 
@@ -2665,7 +2758,7 @@ public function create_purchase_requisition(Request $request)
 			$posisi = "user";
 		}
 
-            //Cek File
+	            //Cek File
 		$files = array();
 		$file = new CanteenPurchaseRequisition();
 		if ($request->file('reportAttachment') != NULL)
@@ -2687,18 +2780,18 @@ public function create_purchase_requisition(Request $request)
 		}
 
 		if($request->get('department') == "Human Resources Department" || $request->get('department') == "General Affairs Department"){
-                //GM Pak Arief
+	                //GM Pak Arief
 			$getgm = EmployeeSync::select('employee_id', 'name', 'position')
 			->where('employee_id','=','PI9709001')
 			->first();
 
 			$gm = $getgm->employee_id;
 		}
-            //if accounting maka GM Pak IDA
+	            //if accounting maka GM Pak IDA
 		else if($request->get('department') == "Accounting Department"){
 			$gm = $this->gm_acc;
 		}
-            //Selain Itu GM Pak Budhi
+	            //Selain Itu GM Pak Budhi
 		else{
 			$gm = $this->dgm;
 		}
@@ -2820,9 +2913,9 @@ public function create_purchase_requisition(Request $request)
 			}
 
 			$sisa_bulan = $bulan.'_sisa_budget';                    
-                //get Data Budget Based On Periode Dan Nomor
+	                //get Data Budget Based On Periode Dan Nomor
 			$budget = AccBudget::where('budget_no','=',$request->get('budget_no'))->first();
-                //perhitungan 
+	                //perhitungan 
 			$total = $budget->$sisa_bulan - $totalPembelian;
 
 			if ($total < 0 ) {
@@ -2834,32 +2927,32 @@ public function create_purchase_requisition(Request $request)
 			]);
 		}
 
-         //    $detail_pr = CanteenPurchaseRequisition::select('acc_purchase_requisitions.*','acc_purchase_requisition_items.*','acc_budget_histories.beg_bal','acc_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
-         //    ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
-         //    ->join('acc_budget_histories', function($join) {
-         //     $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
-         //     $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
-         // })
-         //    ->where('acc_purchase_requisitions.id', '=', $data->id)
-         //    ->distinct()
-         //    ->get();
+	         //    $detail_pr = CanteenPurchaseRequisition::select('canteen_purchase_requisitions.*','canteen_purchase_requisition_items.*','canteen_budget_histories.beg_bal','canteen_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = canteen_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
+	         //    ->leftJoin('canteen_purchase_requisition_items', 'canteen_purchase_requisitions.no_pr', '=', 'canteen_purchase_requisition_items.no_pr')
+	         //    ->join('canteen_budget_histories', function($join) {
+	         //     $join->on('canteen_budget_histories.category_number', '=', 'canteen_purchase_requisition_items.no_pr');
+	         //     $join->on('canteen_budget_histories.no_item','=', 'canteen_purchase_requisition_items.item_desc');
+	         // })
+	         //    ->where('canteen_purchase_requisitions.id', '=', $data->id)
+	         //    ->distinct()
+	         //    ->get();
 
-         //    $exchange_rate = AccExchangeRate::select('*')
-         //    ->where('periode','=',date('Y-m-01', strtotime($detail_pr[0]->submission_date)))
-         //    ->where('currency','!=','USD')
-         //    ->orderBy('currency','ASC')
-         //    ->get();
+	         //    $exchange_rate = AccExchangeRate::select('*')
+	         //    ->where('periode','=',date('Y-m-01', strtotime($detail_pr[0]->submission_date)))
+	         //    ->where('currency','!=','USD')
+	         //    ->orderBy('currency','ASC')
+	         //    ->get();
 
-         //    $pdf = \App::make('dompdf.wrapper');
-         //    $pdf->getDomPDF()->set_option("enable_php", true);
-         //    $pdf->setPaper('A4', 'landscape');
+	         //    $pdf = \App::make('dompdf.wrapper');
+	         //    $pdf->getDomPDF()->set_option("enable_php", true);
+	         //    $pdf->setPaper('A4', 'landscape');
 
-         //    $pdf->loadView('accounting_purchasing.report.report_pr', array(
-         //        'pr' => $detail_pr,
-         //        'rate' => $exchange_rate
-         //    ));
+	         //    $pdf->loadView('general_affairs.report.report_pr', array(
+	         //        'pr' => $detail_pr,
+	         //        'rate' => $exchange_rate
+	         //    ));
 
-         //    $pdf->save(public_path() . "/pr_list/PR".$detail_pr[0]->no_pr.".pdf");
+	         //    $pdf->save(public_path() . "/kantin/pr_list/PR".$detail_pr[0]->no_pr.".pdf");
 
 
 		return redirect('/canteen/purchase_requisition')->with('status', 'PR Berhasil Dibuat')
@@ -2871,4 +2964,383 @@ public function create_purchase_requisition(Request $request)
 		->with('page', 'Purchase Requisition');
 	}
 }
+
+public function edit_purchase_requisition(Request $request)
+{
+	$purchase_requistion = CanteenPurchaseRequisition::find($request->get('id'));
+	$purchase_requistion_item = CanteenPurchaseRequisition::select('canteen_purchase_requisition_items.*','canteen_budget_histories.budget', 'canteen_budget_histories.budget_month', 'canteen_budget_histories.budget_date', 'canteen_budget_histories.category_number','canteen_budget_histories.no_item','canteen_budget_histories.amount','canteen_budget_histories.beg_bal')
+	->join('canteen_purchase_requisition_items', 'canteen_purchase_requisitions.no_pr', '=', 'canteen_purchase_requisition_items.no_pr')
+	->join('canteen_budget_histories', function($join) {
+		$join->on('canteen_budget_histories.category_number', '=', 'canteen_purchase_requisition_items.no_pr');
+		$join->on('canteen_budget_histories.no_item','=', 'canteen_purchase_requisition_items.item_desc');
+	})
+	->where('canteen_purchase_requisitions.id', '=', $request->get('id'))
+	->whereNull('canteen_purchase_requisition_items.sudah_po')
+	->get();
+
+	$response = array(
+		'status' => true,
+		'purchase_requisition' => $purchase_requistion,
+		'purchase_requisition_item' => $purchase_requistion_item
+	);
+	return Response::json($response);
+}
+
+public function update_purchase_requisition(Request $request)
+    {
+        $id = Auth::id();
+        $lop2 = $request->get('lop2');
+        $lop = explode(',', $request->get('looping'));
+        try
+        {
+            foreach ($lop as $lp)
+            {
+                $item_code = "item_code_edit" . $lp;
+                $item_desc = "item_desc_edit" . $lp;
+                $item_spec = "item_spec_edit" . $lp;
+                $item_uom = "uom_edit" . $lp;
+                $item_req = "req_date_edit" . $lp;
+                $item_qty = "qty_edit" . $lp;
+                $item_price = "item_price_edit" . $lp;
+                $item_amount = "amount_edit" . $lp;
+
+                // $amount = preg_replace('/[^0-9]/', '', $request->get($item_amount));
+
+                $data2 = CanteenPurchaseRequisitionItem::where('id', $lp)->update([
+                  'item_code' => $request->get($item_code), 
+                  'item_desc' => $request->get($item_desc), 
+                  'item_spec' => $request->get($item_spec),
+                  'item_uom' => $request->get($item_uom), 
+                  'item_request_date' => $request->get($item_req), 
+                  'item_qty' => $request->get($item_qty),
+                  'item_price' => $request->get($item_price),
+                  'item_amount' => $request->get($item_amount),
+                  'created_by' => $id
+              ]);
+
+            }
+
+            for ($i = 2;$i <= $lop2;$i++)
+            {
+
+                $item_code = "item_code" . $i;
+                $item_desc = "item_desc" . $i;
+                $item_spec = "item_spec" . $i;
+                $item_req = "req_date" . $i;
+                $item_currency = "item_currency" . $i;
+                $item_currency_text = "item_currency_text" . $i;
+                $item_price = "item_price" . $i;
+                $item_qty = "qty" . $i;
+                $item_uom = "uom" . $i;
+                $item_amount = "amount" . $i;
+                $dollar = "konversi_dollar" . $i;
+                $status = "";
+
+                //Jika ada value kosong
+                if ($request->get($item_code) == "kosong")
+                {
+                    $request->get($item_code) == "";
+                }
+
+                //Jika item kosong
+                if ($request->get($item_code) != null)
+                {
+                    $status = "fixed";
+                }
+                else
+                {
+                    $status = "sementara";
+                }
+
+                if ($request->get($item_currency) != "")
+                {
+                    $current = $request->get($item_currency);
+                }
+                else if ($request->get($item_currency_text) != "")
+                {
+                    $current = $request->get($item_currency_text);
+                }
+
+
+                $data2 = new CanteenPurchaseRequisitionItem([
+                    'no_pr' => $request->get('no_pr_edit') , 
+                    'item_code' => $request->get($item_code) , 
+                    'item_desc' => $request->get($item_desc) , 
+                    'item_spec' => $request->get($item_spec) ,
+                    'item_request_date' => $request->get($item_req) , 
+                    'item_currency' => $current,
+                    'item_price' => $request->get($item_price),
+                    'item_qty' => $request->get($item_qty) , 
+                    'item_uom' => $request->get($item_uom) , 
+                    'item_amount' => $request->get($item_amount), 
+                    'status' => $status, 
+                    'created_by' => $id
+                ]);
+
+                $data2->save();
+
+                $getbulan = AccBudget::select('budget_no', 'periode')
+                ->where('budget_no', $request->get('no_budget_edit'))
+                ->first();
+
+                if ($getbulan->periode == "FY198") {
+                    $bulan = strtolower(date('M'));
+                }
+                else{
+                    $bulan = "apr";
+                }
+
+                $sisa_bulan = $bulan.'_sisa_budget';
+
+                 //get Data Budget Based On Periode Dan Nomor
+                $budgetdata = AccBudget::where('budget_no','=',$request->get('no_budget_edit'))->first();
+
+                //Get Amount Di PO
+                $total_dollar = $request->get($dollar);
+
+                $totalminusPO = $budgetdata->$sisa_bulan - $total_dollar;
+
+                // Setelah itu update data budgetnya dengan yang actual
+                $dataupdate = AccBudget::where('budget_no',$request->get('no_budget_edit'))
+                ->update([
+                    $sisa_bulan => $totalminusPO
+                ]);
+
+                // $month = strtolower(date("M",strtotime($request->get('tgl_pengajuan_edit'))));
+                $begbal = $request->get('SisaBudgetEdit') + $request->get('TotalPembelianEdit');
+
+                $getbulan = AccBudget::select('budget_no', 'periode')
+                ->where('budget_no', $request->get('no_budget_edit'))
+                ->first();
+
+                if ($getbulan->periode == "FY198") {
+                    $month = strtolower(date('M'));
+                }
+                else{
+                    $month = "apr";
+                }
+
+                $data3 = new AccBudgetHistory([
+                    'budget' => $request->get('no_budget_edit'),
+                    'budget_month' => $month,
+                    'budget_date' => date('Y-m-d'),
+                    'category_number' => $request->get('no_pr_edit'),
+                    'beg_bal' => $begbal,
+                    'no_item' => $request->get($item_desc),
+                    'amount' => $request->get($dollar),
+                    'status' => 'PR',
+                    'created_by' => $id
+                ]);
+
+                $data3->save();
+            }
+
+            $detail_pr = AccPurchaseRequisition::select('canteen_purchase_requisitions.*','canteen_purchase_requisition_items.*','canteen_budget_histories.beg_bal','canteen_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = canteen_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
+            ->leftJoin('canteen_purchase_requisition_items', 'canteen_purchase_requisitions.no_pr', '=', 'canteen_purchase_requisition_items.no_pr')
+            ->join('canteen_budget_histories', function($join) {
+             $join->on('canteen_budget_histories.category_number', '=', 'canteen_purchase_requisition_items.no_pr');
+             $join->on('canteen_budget_histories.no_item','=', 'canteen_purchase_requisition_items.item_desc');
+         })
+            ->where('canteen_purchase_requisitions.id', '=', $request->get('id_edit_pr'))
+            ->distinct()
+            ->get();
+
+            $exchange_rate = AccExchangeRate::select('*')
+            ->where('periode','=',date('Y-m-01', strtotime($detail_pr[0]->submission_date)))
+            ->where('currency','!=','USD')
+            ->orderBy('currency','ASC')
+            ->get();
+
+            $pdf = \App::make('dompdf.wrapper');
+            $pdf->getDomPDF()->set_option("enable_php", true);
+            $pdf->setPaper('A4', 'landscape');
+
+            $pdf->loadView('general_affairs.report.report_pr', array(
+                'pr' => $detail_pr,
+                'rate' => $exchange_rate
+            ));
+
+            $pdf->save(public_path() . "/kantin/pr_list/PR".$detail_pr[0]->no_pr.".pdf");
+
+            return redirect('/purchase_requisition')
+            ->with('status', 'Purchase Requisition Berhasil Dirubah')
+            ->with('page', 'Purchase Requisition');
+        }
+        catch(QueryException $e)
+        {
+            return redirect('/purchase_requisition')->with('error', $e->getMessage())
+            ->with('page', 'Purchase Requisition');
+        }
+    }
+
+    public function delete_purchase_requisition(Request $request)
+    {
+        try
+        {
+            $pr = AccPurchaseRequisition::find($request->get('id'));
+
+            $budget_log = AccBudgetHistory::where('category_number', '=', $pr->no_pr)
+            ->get();
+
+            foreach ($budget_log as $log) {
+                $sisa_bulan = $log->budget_month.'_sisa_budget';
+                $budget = AccBudget::where('budget_no', $log->budget)->first();
+
+                $total = $budget->$sisa_bulan + $log->amount; //add total
+                $dataupdate = AccBudget::where('budget_no', $log->budget)->update([
+                    $sisa_bulan => $total
+                ]);
+            }
+
+            $delete_budget_log = AccBudgetHistory::where('category_number', '=', $pr->no_pr)->delete();
+            $delete_pr_item = AccPurchaseRequisitionItem::where('no_pr', '=', $pr->no_pr)->delete();
+            $delete_pr = AccPurchaseRequisition::where('no_pr', '=', $pr->no_pr)->delete();
+
+            $response = array(
+                'status' => true,
+            );
+
+            return Response::json($response);
+        }
+        catch(QueryException $e)
+        {
+            return redirect('/purchase_requisition')->with('error', $e->getMessage())
+            ->with('page', 'Purchase Requisition');
+        }
+    }
+
+    public function delete_item_pr(Request $request)
+    {
+        try
+        {
+            $master_item = AccPurchaseRequisitionItem::find($request->get('id'));
+
+            $budget_log = AccBudgetHistory::where('no_item', '=', $master_item->item_desc)
+            ->where('category_number', '=', $master_item->no_pr)
+            ->first();
+
+            $sisa_bulan = $budget_log->budget_month.'_sisa_budget';
+
+            $budget = AccBudget::where('budget_no', $budget_log->budget)->first();
+
+            $total = $budget->$sisa_bulan + $budget_log->amount; //add total
+
+            $dataupdate = AccBudget::where('budget_no', $budget_log->budget)->update([
+                $sisa_bulan => $total
+            ]);
+
+            $delete_budget_log = AccBudgetHistory::where('no_item', '=', $master_item->item_desc)
+            ->where('category_number', '=', $master_item->no_pr)
+            ->delete();
+
+            $delete_item = AccPurchaseRequisitionItem::where('id', '=', $request->get('id'))->delete();
+
+            $response = array(
+                'status' => true,
+            );
+
+            return Response::json($response);
+
+        }
+        catch(QueryException $e)
+        {
+            return redirect('/purchase_requisition')->with('error', $e->getMessage())
+            ->with('page', 'Purchase Requisition');
+        }
+
+    }
+
+    //==================================//
+    //          Report PR               //
+    //==================================//
+    public function report_purchase_requisition($id){
+
+        $detail_pr = CanteenPurchaseRequisition::select('canteen_purchase_requisitions.*','canteen_purchase_requisition_items.*','canteen_budget_histories.beg_bal','canteen_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = canteen_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
+        ->leftJoin('canteen_purchase_requisition_items', 'canteen_purchase_requisitions.no_pr', '=', 'canteen_purchase_requisition_items.no_pr')
+        ->join('canteen_budget_histories', function($join) {
+	         $join->on('canteen_budget_histories.category_number', '=', 'canteen_purchase_requisition_items.no_pr');
+	         $join->on('canteen_budget_histories.no_item','=', 'canteen_purchase_requisition_items.item_desc');
+	     })
+        ->where('canteen_purchase_requisitions.id', '=', $id)
+        ->distinct()
+        ->get();
+
+        $exchange_rate = AccExchangeRate::select('*')
+        ->where('periode','=',date('Y-m-01', strtotime($detail_pr[0]->submission_date)))
+        ->where('currency','!=','USD')
+        ->orderBy('currency','ASC')
+        ->get();
+
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->getDomPDF()->set_option("enable_php", true);
+        $pdf->setPaper('A4', 'potrait');
+
+        $pdf->loadView('general_affairs.report.report_pr', array(
+            'pr' => $detail_pr,
+            'rate' => $exchange_rate
+        ));
+
+        $path = "kantin/pr_list/" . $detail_pr[0]->no_pr . ".pdf";
+        return $pdf->stream("PR ".$detail_pr[0]->no_pr. ".pdf");
+
+        // return view('general_affairs.report.report_pr', array(
+        //  'pr' => $detail_pr,
+        // ))->with('page', 'PR')->with('head', 'PR List');
+    }
+
+    public function pr_send_email(Request $request){
+        $pr = AccPurchaseRequisition::find($request->get('id'));
+
+        try{
+            if ($pr->posisi == "user")
+            {
+                $mails = "select distinct email from canteen_purchase_requisitions join users on canteen_purchase_requisitions.staff = users.username where canteen_purchase_requisitions.id = ".$request->get('id');
+                $mailtoo = DB::select($mails);
+
+                $pr->posisi = "staff";
+
+                    // Jika gaada staff
+                if ($mailtoo == null)
+                {   
+                        //ke manager
+                    $mails = "select distinct email from canteen_purchase_requisitions join users on canteen_purchase_requisitions.manager = users.username where canteen_purchase_requisitions.id = ".$request->get('id');
+                    $mailtoo = DB::select($mails);
+
+                    $pr->posisi = "manager";
+
+                        // Jika Gaada Manager
+                    if ($mailtoo == null)
+                    { 
+                            // ke DGM
+                        $mails = "select distinct email from canteen_purchase_requisitions join users on canteen_purchase_requisitions.dgm = users.username where canteen_purchase_requisitions.id = ".$request->get('id');
+                        $mailtoo = DB::select($mails);
+
+                        $pr->posisi = "dgm";
+                    }
+                }
+
+                $pr->save();
+
+                $isimail = "select canteen_purchase_requisitions.*,canteen_purchase_requisition_items.item_stock, canteen_purchase_requisition_items.item_desc, canteen_purchase_requisition_items.kebutuhan, canteen_purchase_requisition_items.peruntukan, canteen_purchase_requisition_items.item_qty, canteen_purchase_requisition_items.item_uom FROM canteen_purchase_requisitions join canteen_purchase_requisition_items on canteen_purchase_requisitions.no_pr = canteen_purchase_requisition_items.no_pr where canteen_purchase_requisitions.id = ".$request->get('id');
+                $purchaserequisition = db::select($isimail);
+
+                Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($purchaserequisition, 'purchase_requisition'));
+
+                $response = array(
+                  'status' => true,
+                  'datas' => "Berhasil"
+              );
+
+                return Response::json($response);
+            }
+        } 
+        catch (Exception $e) {
+            $response = array(
+              'status' => false,
+              'datas' => "Gagal"
+          );
+            return Response::json($response);
+        }
+    }
+
 }

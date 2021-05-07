@@ -65,7 +65,7 @@
 		</p>
 	</div>
 	<div class="row">
-		<input type="hidden" id="order_id" value="{{ $order_id }}">
+		{{-- <input type="hidden" id="order_id" value="{{ $order_id }}"> --}}
 		<div class="col-xs-12">
 			<table class="table table-hover table-bordered table-striped" id="tableConfirm">
 				<thead style="background-color: rgba(126,86,134,.7);">
@@ -80,6 +80,7 @@
 					</tr>
 				</thead>
 				<tbody>
+					{{-- @if(count($bentos)>0) --}}
 					@foreach($bentos as $bento)
 					@if($bento->status == 'Waiting')
 					<tr id="list_{{ $bento->id }}" style="background-color: #ccff90">
@@ -106,9 +107,10 @@
 						</td>
 					</tr>
 					@endforeach
+					{{-- @endif --}}
 				</tbody>
 			</table>
-			@if($bentos[0]->status == 'Waiting')
+			@if(count($bentos) > 0)
 			<button class="btn btn-success" style="width: 100%; font-weight: bold; font-size: 2vw;" onclick="confirmOrder()">
 				CONFIRM ORDER
 			</button>
@@ -127,7 +129,6 @@
 <script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
 <script src="{{ url("js/buttons.flash.min.js")}}"></script>
 <script src="{{ url("js/jszip.min.js")}}"></script>
-{{-- <script src="{{ url("js/pdfmake.min.js")}}"></script> --}}
 <script src="{{ url("js/vfs_fonts.js")}}"></script>
 <script src="{{ url("js/buttons.html5.min.js")}}"></script>
 <script src="{{ url("js/buttons.print.min.js")}}"></script>

@@ -1630,10 +1630,20 @@ Route::group(['nav' => 'S61', 'middleware' => 'permission'], function(){
 	Route::get('canteen/purchase_item/create_category', 'GeneralAffairController@create_item_category');
 	Route::post('canteen/purchase_item/create_category', 'GeneralAffairController@create_item_category_post');
 
-	Route::get('canteen/edit/purchase_requisition', 'AccountingController@edit_purchase_requisition');
-	Route::post('canteen/delete/purchase_requisition', 'AccountingController@delete_purchase_requisition');
-	Route::post('canteen/delete/purchase_requisition_item', 'AccountingController@delete_item_pr');
-	Route::get('canteen/purchase_requisition/sendemail', 'AccountingController@pr_send_email');
+	Route::get('canteen/edit/purchase_requisition', 'GeneralAffairController@edit_purchase_requisition');
+	Route::post('canteen/update/purchase_requisition', 'GeneralAffairController@update_purchase_requisition');
+
+	Route::post('canteen/delete/purchase_requisition', 'GeneralAffairController@delete_purchase_requisition');
+	Route::post('canteen/delete/purchase_requisition_item', 'GeneralAffairController@delete_item_pr');
+	Route::get('canteen/purchase_requisition/sendemail', 'GeneralAffairController@pr_send_email');
+
+	Route::get('canteen/detail/purchase_requisition/po', 'AccountingController@detail_pr_po');
+
+
+	Route::get('canteen/purchase_requisition/report/{id}', 'GeneralAffairController@report_purchase_requisition');
+	Route::get('canteen/purchase_requisition/check/{id}', 'AccountingController@check_purchase_requisition');
+	Route::post('canteen/purchase_requisition/checked/{id}', 'AccountingController@checked_purchase_requisition');
+
 	
 	//nomor PR
 	Route::get('canteen_purchase_requisition/get_nomor_pr', 'GeneralAffairController@get_nomor_pr');
@@ -2025,7 +2035,6 @@ Route::group(['nav' => 'S29', 'middleware' => 'permission'], function(){
 	Route::post('fetch/kd_splitter', 'KnockDownController@fetchKdSplitter');
 	Route::get('fetch/kdo_splitter_detail', 'KnockDownController@fetchKDOSplitterDetail');
 	Route::get('index/print_label_split/{id}', 'KnockDownController@indexPrintLabelSplit');
-
 
 	Route::get('index/reprint_wh/{id}', 'KnockDownController@indexPrintLabelSubassy');
 });
@@ -4758,6 +4767,8 @@ Route::post('update/warehouse_operator', 'WarehouseNewController@updateOperatorW
 Route::post('delete/warehouse_operator', 'WarehouseNewController@deleteOperatorWarehouse');
 Route::post('insert/warehouse_operator', 'WarehouseNewController@insertOperatorWarehouse');
 Route::get('fetch/detail/gmc', 'WarehouseNewController@fetchDetaiGmc');
+Route::get('fetch/detail/gmc/pel', 'WarehouseNewController@fetchDetaiGmcPel');
+
 
 
 
