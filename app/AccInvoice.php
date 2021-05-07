@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class AccInvoice extends Model
 {
     protected $fillable = [
-		'invoice_date','supplier_code','supplier_name','kwitansi','invoice_no','surat_jalan','bap','npwp','faktur_pajak','po_number','payment_term','currency','amount','do_date','due_date','distribution_date','created_by'
+		'invoice_date','supplier_code','supplier_name','kwitansi','invoice_no','surat_jalan','bap','npwp','faktur_pajak','po_number','payment_term','currency','amount','do_date','due_date','distribution_date','created_by','created_name'
 	];
 
 	public function user()

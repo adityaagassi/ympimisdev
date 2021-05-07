@@ -151,7 +151,7 @@
 				</tr>
 				<tr>
 					<td colspan="7"></td>
-					<td colspan="3"><center>Shega Erik Wicaksono</center></td>
+					<td colspan="3"><center>{{$invoice->created_name}}</center></td>
 				</tr>
 				<tr>
 					<td colspan="7"></td>

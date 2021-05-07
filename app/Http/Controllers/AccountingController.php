@@ -12705,8 +12705,6 @@ public function index_invoice(){
     $title = "Tanda Terima";
     $title_jp = "領収書";
 
-    $employees = EmployeeSync::orderBy('department', 'asc')->get();
-
     $vendor = AccSupplier::select('acc_suppliers.*')->whereNull('acc_suppliers.deleted_at')
     ->distinct()
     ->get();
@@ -12726,7 +12724,6 @@ public function index_invoice(){
     return view('accounting_purchasing.invoice.tanda_terima', array(
         'title' => $title,
         'title_jp' => $title_jp,
-        'employees' => $employees,
         'vendor' => $vendor,
         'payment_term' => $payment_term,
         'no_po' => $no_po,
@@ -12770,7 +12767,8 @@ public function create_invoice(Request $request){
             'do_date' => $request->input('do_date'),
             'due_date' => $request->input('due_date'),
             'distribution_date' => $request->input('distribution_date'),
-            'created_by' => Auth::user()->username
+            'created_by' => Auth::user()->username,
+            'created_name' => Auth::user()->name
         ]);
 
         $invoice->save();
