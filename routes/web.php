@@ -1118,7 +1118,7 @@ Route::group(['nav' => 'S39', 'middleware' => 'permission'], function(){
 	Route::post('create/ga_control/driver_duty', 'GeneralAffairController@createDriverDuty');
 	// Route::get('approve/ga_control/bento/{id}', 'GeneralAffairController@approveBento');
 	Route::post('approve/ga_control/bento', 'GeneralAffairController@approveBento');
-	Route::get('index/ga_control/bento_approve/{id}', 'GeneralAffairController@indexBentoApprove');
+	Route::get('index/ga_control/bento_approve', 'GeneralAffairController@indexBentoApprove');
 	Route::get('reject/ga_control/bento/{id}', 'GeneralAffairController@rejectBento');
 	Route::post('upload/ga_control/bento_menu', 'GeneralAffairController@uploadBentoMenu');
 });
@@ -1149,6 +1149,7 @@ Route::get('live_cooking/menu/{periode}', 'GeneralAffairController@fetchLiveCook
 Route::post('input/ga_control/live_cooking_order', 'GeneralAffairController@inputLiveCookingOrder');
 Route::get('fetch/ga_control/live_cooking_employees', 'GeneralAffairController@fetchLiveCookingEmployees');
 Route::post('edit/ga_control/live_cooking_order', 'GeneralAffairController@editLiveCookingOrder');
+Route::get('fetch/ga_control/live_cooking_randomize', 'GeneralAffairController@randomLiveCooking');
 
 //STD CONTROL
 Route::get('index/std_control/safety_shoes', 'GeneralController@indexSafetyShoes');
@@ -1628,6 +1629,14 @@ Route::group(['nav' => 'S61', 'middleware' => 'permission'], function(){
 
 	Route::get('canteen/purchase_item/create_category', 'GeneralAffairController@create_item_category');
 	Route::post('canteen/purchase_item/create_category', 'GeneralAffairController@create_item_category_post');
+
+	Route::get('canteen/edit/purchase_requisition', 'AccountingController@edit_purchase_requisition');
+	Route::post('canteen/delete/purchase_requisition', 'AccountingController@delete_purchase_requisition');
+	Route::post('canteen/delete/purchase_requisition_item', 'AccountingController@delete_item_pr');
+	Route::get('canteen/purchase_requisition/sendemail', 'AccountingController@pr_send_email');
+	
+	//nomor PR
+	Route::get('canteen_purchase_requisition/get_nomor_pr', 'GeneralAffairController@get_nomor_pr');
 });
 
 //PO Monitoring & Control
@@ -1668,6 +1677,9 @@ Route::group(['nav' => 'S43', 'middleware' => 'permission'], function(){
 	Route::post('delete/purchase_order_item', 'AccountingController@delete_item_po');
 	Route::get('fetch/purchase_order/prlist', 'AccountingController@fetchPrList');
 	Route::get('fetch/purchase_order/pilih_pr', 'AccountingController@pilihPR');
+
+	Route::get('purchase_order/delivery_control', 'AccountingController@delivery_control');
+	Route::get('purchase_order/jurnal_po', 'AccountingController@jurnal_po');
 
 	Route::post('cancel/purchase_order', 'AccountingController@cancel_purchase_order');
 	Route::get('purchase_order/get_item', 'AccountingController@pogetitem');
@@ -2005,6 +2017,7 @@ Route::group(['nav' => 'S29', 'middleware' => 'permission'], function(){
 	Route::post('delete/kdo_stuffing', 'KnockDownController@deleteKdStuffing');
 	Route::post('delete/kdo_delivery', 'KnockDownController@deleteKdDelivery');	
 	Route::post('delete/kdo', 'KnockDownController@deleteKd');
+	Route::post('delete/kdo_case', 'KnockDownController@deleteKdCase');
 	Route::post('delete/kdo_detail', 'KnockDownController@deleteKdDetail');
 
 	Route::get('index/kd_splitter', 'KnockDownController@indexKdSplitter');
@@ -4531,7 +4544,7 @@ Route::group(['nav' => 'M35', 'middleware' => 'permission'], function(){
 	// Route::get('index/scrap/data', 'ScrapController@indexScrapData');
 	// Route::get('fetch/scrap/data', 'ScrapController@fetchScrapData');
 	// Route::get('fetch/scrap/list/assy', 'ScrapController@fetchScrapListAssy');
-	
+
 Route::group(['nav' => 'M36', 'middleware' => 'permission'], function(){
 	Route::get('index/scrap/warehouse', 'ScrapController@indexWarehouse');
 	Route::get('scan/scrap_warehouse', 'ScrapController@scanScrapWarehouse');
@@ -4637,7 +4650,7 @@ Route::group(['nav' => 'R12', 'middleware' => 'permission'], function(){
 });
 
 // Route::group(['nav' => 'R9', 'middleware' => 'permission'], function(){
-	
+
 // });
 
 //Payment Request
@@ -4649,6 +4662,9 @@ Route::group(['nav' => 'M34', 'middleware' => 'permission'], function(){
 	Route::get('adagio/home/index', 'AdagioAutoController@IndexAdagioIndexHome');
 	Route::post('adagio/home/create', 'AdagioAutoController@CreateAdagioIndexHome');
 	Route::get('adagio/home/data', 'AdagioAutoController@DataAdagioaHome');
+	Route::get('adagio/home/edit', 'AdagioAutoController@DataAdagioaEdit');
+	Route::post('adagio/home/update', 'AdagioAutoController@DataAdagioaUpdate');
+	Route::post('adagio/home/delete', 'AdagioAutoController@DataAdagioaDelete');
 });
 //input send file
 Route::group(['nav' => 'M34', 'middleware' => 'permission'], function(){
@@ -4734,6 +4750,14 @@ Route::get('fetch/detail/pelayanan/internal', 'WarehouseNewController@fetchInter
 Route::get('fetch/resume', 'WarehouseNewController@fetch_internal_wr');
 Route::get('fetch/finish/internal', 'WarehouseNewController@fetchHistoryFinish');
 Route::get('fetch/history/jobs', 'WarehouseNewController@detail_history');
+Route::get('index/shiff/operator/internal', 'WarehouseNewController@indexShiffOperator');
+Route::get('fetch/operator', 'WarehouseNewController@fetch_operator');
+Route::post('update/warehouse_operator', 'WarehouseNewController@updateOperatorWarehouse');
+Route::post('delete/warehouse_operator', 'WarehouseNewController@deleteOperatorWarehouse');
+Route::post('insert/warehouse_operator', 'WarehouseNewController@insertOperatorWarehouse');
+Route::get('fetch/detail/gmc', 'WarehouseNewController@fetchDetaiGmc');
+
+
 
 
 //Sanding

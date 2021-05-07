@@ -59,7 +59,7 @@ class MutasiController extends Controller
         $departement3 = 'Woodwind Instrument - Welding Process (WI-WP) Department';
 
         if ($emp_dept->department == 'Management Information System Department' || $emp_dept->department == 'Human Resources Department') {
-            $user    = db::select('SELECT employee_id,name FROM employee_syncs');
+            $user    = db::select('SELECT employee_id,name FROM employee_syncs where `end_date` is null');
             $dept  = db::select('SELECT DISTINCT department FROM employee_syncs');
             $post    = db::select('SELECT DISTINCT position FROM employee_syncs');
             $section = db::select('SELECT DISTINCT department, section FROM employee_syncs');
@@ -67,7 +67,7 @@ class MutasiController extends Controller
             $sub_group   = db::select('SELECT DISTINCT sub_group FROM employee_syncs');
         }
         else if($emp_dept->employee_id == 'PI1710002'){
-            $user    = db::select('SELECT employee_id,name FROM employee_syncs where department = "'.$emp_dept->department.'" or department = "'.$departement2.'"');
+            $user    = db::select('SELECT employee_id,name FROM employee_syncs where department = "'.$emp_dept->department.'" or department = "'.$departement2.'" and `end_date` is null');
             $dept  = db::select('SELECT DISTINCT department FROM employee_syncs where department = "'.$emp_dept->department.'" or department = "'.$departement2.'"');
             $post    = db::select('SELECT DISTINCT position FROM employee_syncs where department = "'.$emp_dept->department.'" or department = "'.$departement2.'"');
             $section = db::select('SELECT DISTINCT department, section FROM employee_syncs where department = "'.$emp_dept->department.'" or department = "'.$departement2.'"');
@@ -75,7 +75,7 @@ class MutasiController extends Controller
             $sub_group   = db::select('SELECT DISTINCT sub_group FROM employee_syncs where department = "'.$emp_dept->department.'" or department = "'.$departement2.'"');
         }
         else if($emp_dept->employee_id == 'PI0804012'){
-            $user    = db::select('SELECT employee_id,name FROM employee_syncs where department = "'.$emp_dept->department.'" or department = "'.$departement3.'"');
+            $user    = db::select('SELECT employee_id,name FROM employee_syncs where department = "'.$emp_dept->department.'" or department = "'.$departement3.'" and `end_date` is null');
             $dept  = db::select('SELECT DISTINCT department FROM employee_syncs where department = "'.$emp_dept->department.'" or department = "'.$departement3.'"');
             $post    = db::select('SELECT DISTINCT position FROM employee_syncs where department = "'.$emp_dept->department.'" or department = "'.$departement3.'"');
             $section = db::select('SELECT DISTINCT department, section FROM employee_syncs where department = "'.$emp_dept->department.'" or department = "'.$departement3.'"');
@@ -83,7 +83,7 @@ class MutasiController extends Controller
             $sub_group   = db::select('SELECT DISTINCT sub_group FROM employee_syncs where department = "'.$emp_dept->department.'" or department = "'.$departement3.'"');
         }
         else{
-            $user    = db::select('SELECT employee_id,name FROM employee_syncs where department = "'.$emp_dept->department.'"');
+            $user    = db::select('SELECT employee_id,name FROM employee_syncs where department = "'.$emp_dept->department.'" and `end_date` is null');
             $dept  = db::select('SELECT DISTINCT department FROM employee_syncs where department = "'.$emp_dept->department.'"');
             $post    = db::select('SELECT DISTINCT position FROM employee_syncs where department = "'.$emp_dept->department.'"');
             $section = db::select('SELECT DISTINCT department, section FROM employee_syncs where department = "'.$emp_dept->department.'"');
@@ -133,7 +133,7 @@ class MutasiController extends Controller
        $post    = db::select('SELECT DISTINCT position FROM employee_syncs ORDER BY position ASC');
        $section = db::select('SELECT DISTINCT department, section FROM employee_syncs ORDER BY section ASC');
        $group   = db::select('SELECT DISTINCT section, `group` FROM employee_syncs ORDER BY `group` ASC');
-       $user    = db::select('SELECT employee_id,name FROM employee_syncs');
+       $user    = db::select('SELECT employee_id,name FROM employee_syncs where `end_date` is null');
        $sub_group   = db::select('SELECT DISTINCT sub_group FROM employee_syncs ORDER BY sub_group ASC');
       }
       else{
@@ -141,7 +141,7 @@ class MutasiController extends Controller
        $post    = db::select('SELECT DISTINCT position FROM employee_syncs ORDER BY position ASC');
        $section = db::select('SELECT DISTINCT department, section FROM employee_syncs ORDER BY section ASC');
        $group   = db::select('SELECT DISTINCT section, `group` FROM employee_syncs ORDER BY `group` ASC');
-       $user    = db::select('SELECT employee_id,name FROM employee_syncs where department = "'.$emp_dept->department.'"');
+       $user    = db::select('SELECT employee_id,name FROM employee_syncs where department = "'.$emp_dept->department.'" and `end_date` is null');
        $sub_group   = db::select('SELECT DISTINCT sub_group FROM employee_syncs ORDER BY sub_group ASC');
       }
        
