@@ -133,20 +133,20 @@
 						</a>
 					</li>
 					<li>
-						<a href="#" style="font-size: 18px; font-weight: bold; padding-top: 5px; padding-bottom: 5px;">Hadir
+						<a href="#" style="font-size: 18px; font-weight: bold; padding-top: 5px; padding-bottom: 5px;">Sudah Ambil
 							<span class="pull-right text-green" id="meet5">0</span>
 						</a>
 					</li>
 					<li>
-						<a href="#" style="font-size: 18px; font-weight: bold; padding-top: 5px; padding-bottom: 5px;">Belum Hadir
+						<a href="#" style="font-size: 18px; font-weight: bold; padding-top: 5px; padding-bottom: 5px;">Belum Ambil
 							<span class="pull-right text-green" id="meet6">0</span>
 						</a>
 					</li>
-					<li>
+<!-- 					<li>
 						<a href="#" style="font-size: 18px; font-weight: bold; padding-top: 5px; padding-bottom: 5px;">Hadir Tanpa Undangan
 							<span class="pull-right text-green" id="meet8">0</span>
 						</a>
-					</li>
+					</li> -->
 				</ul>
 			</div>
 		</div>
@@ -252,7 +252,7 @@
 				audio_ok.play();
 				$('#tag').val("");
 				$('#tag').focus();
-				// fetchAttendance(meeting_id);
+				fetchAttendance(meeting_id);
 				openSuccessGritter('Success!', result.message);
 			}
 			else{
@@ -319,13 +319,13 @@
 					tableData += "<td style='font-size: 18px;'>"+value.name+"</td>";
 					tableData += "<td style='font-size: 18px;'>"+value.department+"</td>";
 					if(value.status == 0){
-						tableData += "<td style='background-color: RGB(255,204,255);'>"+value.status+" - Belum Hadir</td>";
+						tableData += "<td style='background-color: RGB(255,204,255);'>"+value.status+" - Belum Ambil</td>";
 					}
 					if(value.status == 1){
-						tableData += "<td style='background-color: RGB(204,255,255);'>"+value.status+" - Hadir</td>";
+						tableData += "<td style='background-color: RGB(204,255,255);'>"+value.status+" - Sudah Ambil</td>";
 					}
 					if(value.status == 2){
-						tableData += "<td style='background-color: RGB(204,255,255);'>"+value.status+" - Hadir</td>";
+						tableData += "<td style='background-color: RGB(204,255,255);'>"+value.status+" - Sudah Ambil</td>";
 					}
 					if(value.attend_time == null){
 						tableData += "<td style='font-size: 18px;'>-</td>";
