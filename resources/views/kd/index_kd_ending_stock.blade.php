@@ -484,7 +484,7 @@
 			var total_target = 0;
 			$.each(result.target, function(key, value) {
 				if(location == 'welding-keypost'){
-					tableData += '<tr id="'+value.id+'_'+value.lot_pallet+'" onclick="fillField(id)">';
+					tableData += '<tr id="'+value.id+'_'+value.lot_carton+'" onclick="fillField(id)">';
 				}else{
 					tableData += '<tr id="'+value.id+'_'+value.lot_completion+'" onclick="fillField(id)">';
 				}

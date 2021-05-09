@@ -2350,6 +2350,7 @@ class KnockDownController extends Controller{
 			(p.quantity - p.actual_quantity) AS target,
 			v.lot_completion,
 			v.lot_pallet,
+			v.lot_carton,
 			((p.quantity - p.actual_quantity) / v.lot_completion) AS box
 			FROM production_schedules p
 			LEFT JOIN materials m ON m.material_number = p.material_number
