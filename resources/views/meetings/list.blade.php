@@ -247,9 +247,12 @@
 			meeting_id:meeting_id
 		}
 
+		$('#tag').prop('readonly', true);
+
 		$.post('{{ url("scan/meeting/attendance") }}', data, function(result, status, xhr){
 			if(result.status){
 				audio_ok.play();
+				$('#tag').prop('readonly', false);
 				$('#tag').val("");
 				$('#tag').focus();
 				fetchAttendance(meeting_id);
@@ -257,6 +260,7 @@
 			}
 			else{
 				audio_error.play();
+				$('#tag').prop('readonly', false);
 				$('#tag').val("");
 				$('#tag').focus();
 				openErrorGritter('Error!', result.message);
@@ -271,13 +275,13 @@
 		}
 		$.get('{{ url("fetch/meeting/attendance") }}', data, function(result, status, xhr){
 			if(result.status){
-				$('#meetingSubject').text(result.attendances[0].subject);
-				$('#meet1').text(result.attendances[0].organizer_name);
-				$('#meet2').text(result.attendances[0].start_time);
-				$('#meet3').text(result.attendances[0].end_time);
-				$('#meet4').text(result.attendances[0].diff+ " Minute(s)");
-				$('#desc').text(result.attendances[0].description);
-				$('#loc').text(result.attendances[0].location);
+				$('#meetingSubject').text(result.meeting.subject);
+				$('#meet1').text(result.meeting.organizer_name);
+				$('#meet2').text(result.meeting.start_time);
+				$('#meet3').text(result.meeting.end_time);
+				$('#meet4').text(result.meeting.diff+ " Minute(s)");
+				$('#desc').text(result.meeting.description);
+				$('#loc').text(result.meeting.location);
 
 				$('#tableAttendance').DataTable().clear();
 				$('#tableAttendance').DataTable().destroy();
@@ -317,7 +321,7 @@
 					tableData += "<td style='font-size: 18px;'>"+no+"</td>";
 					tableData += "<td style='font-size: 18px;'>"+value.employee_id+"</td>";
 					tableData += "<td style='font-size: 18px;'>"+value.name+"</td>";
-					tableData += "<td style='font-size: 18px;'>"+value.department+"</td>";
+					tableData += "<td style='font-size: 18px;'>"+(value.department || '')+"</td>";
 					if(value.status == 0){
 						tableData += "<td style='background-color: RGB(255,204,255);'>"+value.status+" - Belum Ambil</td>";
 					}

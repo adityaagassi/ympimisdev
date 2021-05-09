@@ -10,6 +10,6 @@ class MeetingDetail extends Model
 	use SoftDeletes;
 
 	protected $fillable = [
-		'meeting_id', 'employee_id', 'created_by', 'employee_tag', 'status', 'remark', 'attend_time'
+		'meeting_id', 'employee_id', 'name', 'department', 'created_by', 'employee_tag', 'status', 'remark', 'attend_time'
 	];
 }

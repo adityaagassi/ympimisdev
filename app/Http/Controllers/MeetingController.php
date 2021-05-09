@@ -189,6 +189,83 @@ class MeetingController extends Controller
 
 	public function scanMeetingAttendance(Request $request){
 		$id = Auth::id();
+		$meeting_detail = MeetingDetail::where('meeting_id', '=', $request->get('meeting_id'))
+		->where('employee_tag', '=', $request->get('tag'))
+		->first();
+
+		if(!$meeting_detail){
+			$response = array(
+				'status' => false,
+				'message' => 'ID tidak terdapat pada list'
+			);
+			return Response::json($response);
+		}
+
+		try{
+			if($meeting_detail){
+				if($meeting_detail->status != 0){
+					$response = array(
+						'status' => false,
+						'message' => 'Already attended / Sudah Pernah Scan',
+					);
+					return Response::json($response);
+				}
+
+				$meeting_detail->status = '1';
+				$meeting_detail->attend_time = date('Y-m-d H:i:s');
+				$meeting_detail->save();
+			}else{
+				$response = array(
+					'status' => false,
+					'message' => 'ID tidak terdapat pada list'
+				);
+				return Response::json($response);
+
+
+				// $employee = db::table('employees')->where('tag', '=', $request->get('tag'))->first();
+
+				// if($employee == null){
+				// 	$response = array(
+				// 		'status' => false,
+				// 		'message' => 'ID Card not found'
+				// 	);
+				// 	return Response::json($response);
+				// }
+
+				// $employee_syncs = db::table('employee_syncs')->where('employee_id', '=', $employee->employee_id)->first();
+				
+				// $meeting_detail = new MeetingDetail([
+				// 	'meeting_id' => $request->get('meeting_id'),
+				// 	'employee_tag' => $employee->tag,
+				// 	'employee_id' => $employee->employee_id,
+				// 	'name' => $employee_syncs->name,
+				// 	'department' => $employee_syncs->department,
+				// 	'status' => 2,
+				// 	'attend_time' => date('Y-m-d H:i:s'),
+				// 	'created_by' => $id,
+				// 	'created_at' => date('Y-m-d H:i:s')
+				// ]);
+				// $meeting_detail->save();	
+			}
+		}
+		catch(\Exception $e){
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+
+		$response = array(
+			'status' => true,
+			'message' => 'Attendance success'
+		);
+		return Response::json($response);
+	}
+
+	public function scanMeetingAttendanceBackup(Request $request){
+
+		$id = Auth::id();
 		$employee = db::table('employees')->where('tag', '=', $request->get('tag'))->first();
 
 		if($employee == null){
@@ -208,96 +285,96 @@ class MeetingController extends Controller
 		$batas_audiometri = 10;
 
 		try{
-			// $meeting = Meeting::where('id',$request->get('meeting_id'))->first();
-			// if ($meeting->subject == 'Medical Check Up') {
-			// 	if($meeting_detail != null){
+			$meeting = Meeting::where('id',$request->get('meeting_id'))->first();
+			if ($meeting->subject == 'Medical Check Up') {
+				if($meeting_detail != null){
 
-			// 		$loc = explode(" - ", $meeting->description);
-			// 		$flow = GeneralFlow::where('remark','mcu')->where('employee_id',$employee->employee_id)->where('flow_name',$loc[1])->first();
-			// 		$flow_next = $flow->flow_index + 1;
-			// 		$flow_new = GeneralFlow::where('remark','mcu')->where('employee_id',$employee->employee_id)->where('flow_index',$flow_next)->first();
+					$loc = explode(" - ", $meeting->description);
+					$flow = GeneralFlow::where('remark','mcu')->where('employee_id',$employee->employee_id)->where('flow_name',$loc[1])->first();
+					$flow_next = $flow->flow_index + 1;
+					$flow_new = GeneralFlow::where('remark','mcu')->where('employee_id',$employee->employee_id)->where('flow_index',$flow_next)->first();
 
-			// 		if (count($flow_new) > 0) {
-			// 			$meeting_new = DB::SELECT("SELECT * FROM meetings where `subject` = 'Medical Check Up' and SPLIT_STRING(description, ' - ', 2) = '".$flow_new->flow_name."'");
+					if (count($flow_new) > 0) {
+						$meeting_new = DB::SELECT("SELECT * FROM meetings where `subject` = 'Medical Check Up' and SPLIT_STRING(description, ' - ', 2) = '".$flow_new->flow_name."'");
 
-			// 			foreach ($meeting_new as $key) {
-			// 				$meeting_new_id = $key->id;
-			// 			}
+						foreach ($meeting_new as $key) {
+							$meeting_new_id = $key->id;
+						}
 
-			// 			$meeting_detail_check = DB::SELECT("SELECT * FROM meeting_details where meeting_id = ".$meeting_new_id." and employee_id = '".$employee->employee_id."'");
+						$meeting_detail_check = DB::SELECT("SELECT * FROM meeting_details where meeting_id = ".$meeting_new_id." and employee_id = '".$employee->employee_id."'");
 
-			// 			if (count($meeting_detail_check) == 0) {
-			// 				$meeting_detail_new = new MeetingDetail([
-			// 					'meeting_id' => $meeting_new_id,
-			// 					'employee_tag' => null,
-			// 					'employee_id' => $employee->employee_id,
-			// 					'status' => 0,
-			// 					'attend_time' => null,
-			// 					'created_by' => $id
-			// 				]);
-			// 				$meeting_detail_new->save();
-			// 			}
-			// 		}
+						if (count($meeting_detail_check) == 0) {
+							$meeting_detail_new = new MeetingDetail([
+								'meeting_id' => $meeting_new_id,
+								'employee_tag' => null,
+								'employee_id' => $employee->employee_id,
+								'status' => 0,
+								'attend_time' => null,
+								'created_by' => $id
+							]);
+							$meeting_detail_new->save();
+						}
+					}
 
-			// 		if($meeting_detail->status != 0){
-			// 			$response = array(
-			// 				'status' => false,
-			// 				'message' => '<b>Already attended / Sudah Pernah Scan</b>',
-			// 			);
-			// 			return Response::json($response);
-			// 		}
+					if($meeting_detail->status != 0){
+						$response = array(
+							'status' => false,
+							'message' => '<b>Already attended / Sudah Pernah Scan</b>',
+						);
+						return Response::json($response);
+					}
 
-			// 		$meeting_detail->employee_tag = $employee->tag;
-			// 		$meeting_detail->status = '1';
-			// 		$meeting_detail->attend_time = date('Y-m-d H:i:s');
-			// 		$meeting_detail->created_at = date('Y-m-d H:i:s');
-			// 	}
-			// 	else{
+					$meeting_detail->employee_tag = $employee->tag;
+					$meeting_detail->status = '1';
+					$meeting_detail->attend_time = date('Y-m-d H:i:s');
+					$meeting_detail->created_at = date('Y-m-d H:i:s');
+				}
+				else{
 
-			// 		$meeting_detail = new MeetingDetail([
-			// 			'meeting_id' => $request->get('meeting_id'),
-			// 			'employee_tag' => $employee->tag,
-			// 			'employee_id' => $employee->employee_id,
-			// 			'status' => 1,
-			// 			'attend_time' => date('Y-m-d H:i:s'),
-			// 			'created_by' => $id,
-			// 			'created_at' => date('Y-m-d H:i:s')
-			// 		]);
-			// 	}
-			// 	$meeting_detail->save();
-			// }else{
-			if($meeting_detail){
-				if($meeting_detail->status != 0){
+					$meeting_detail = new MeetingDetail([
+						'meeting_id' => $request->get('meeting_id'),
+						'employee_tag' => $employee->tag,
+						'employee_id' => $employee->employee_id,
+						'status' => 1,
+						'attend_time' => date('Y-m-d H:i:s'),
+						'created_by' => $id,
+						'created_at' => date('Y-m-d H:i:s')
+					]);
+				}
+				$meeting_detail->save();
+			}else{
+				if($meeting_detail){
+					if($meeting_detail->status != 0){
+						$response = array(
+							'status' => false,
+							'message' => 'Already attended / Sudah Pernah Scan',
+						);
+						return Response::json($response);
+					}
+
+					$meeting_detail->employee_tag = $employee->tag;
+					$meeting_detail->status = '1';
+					$meeting_detail->attend_time = date('Y-m-d H:i:s');
+				}
+				else{
 					$response = array(
 						'status' => false,
-						'message' => 'Already attended / Sudah Pernah Scan',
+						'message' => 'ID tidak terdapat pada list',
 					);
 					return Response::json($response);
+
+					$meeting_detail = new MeetingDetail([
+						'meeting_id' => $request->get('meeting_id'),
+						'employee_tag' => $employee->tag,
+						'employee_id' => $employee->employee_id,
+						'status' => 2,
+						'attend_time' => date('Y-m-d H:i:s'),
+						'created_by' => $id,
+						'created_at' => date('Y-m-d H:i:s')
+					]);
 				}
-
-				$meeting_detail->employee_tag = $employee->tag;
-				$meeting_detail->status = '1';
-				$meeting_detail->attend_time = date('Y-m-d H:i:s');
+				$meeting_detail->save();
 			}
-			else{
-				$response = array(
-					'status' => false,
-					'message' => 'ID tidak terdapat pada list',
-				);
-				return Response::json($response);
-
-					// $meeting_detail = new MeetingDetail([
-					// 	'meeting_id' => $request->get('meeting_id'),
-					// 	'employee_tag' => $employee->tag,
-					// 	'employee_id' => $employee->employee_id,
-					// 	'status' => 2,
-					// 	'attend_time' => date('Y-m-d H:i:s'),
-					// 	'created_by' => $id,
-					// 	'created_at' => date('Y-m-d H:i:s')
-					// ]);
-			}
-			$meeting_detail->save();
-			// }
 		}
 		catch(\Exception $e){
 			$response = array(
@@ -357,7 +434,20 @@ class MeetingController extends Controller
 
 	public function fetchMeetingAttendance(Request $request){
 
-		$meeting = Meeting::where('id',$request->get('id'))->first();
+		$meeting = Meeting::where('id',$request->get('id'))
+		->leftJoin('employee_syncs as org', 'org.employee_id', '=', 'meetings.organizer_id')
+		->select(
+			'org.name as organizer_name',
+			db::raw('date_format(meetings.start_time, "%a, %d %b %Y %H:%i") as start_time'),
+			db::raw('date_format(meetings.end_time, "%a, %d %b %Y %H:%i") as end_time'),
+			db::raw('timestampdiff(minute, meetings.start_time, meetings.end_time) as diff'),
+			'meetings.organizer_id',
+			'meetings.subject',
+			'meetings.description',
+			'meetings.location',
+			'meetings.status as meeting_status'
+		)
+		->first();
 
 		if ($meeting->subject == 'Medical Check Up') {
 			$attendances = Meeting::leftJoin('meeting_details', 'meetings.id', '=', 'meeting_details.meeting_id')
@@ -371,19 +461,31 @@ class MeetingController extends Controller
 			->orderBy('meeting_details.created_at', 'asc')
 			->get();
 		}else{
-			$attendances = Meeting::leftJoin('meeting_details', 'meetings.id', '=', 'meeting_details.meeting_id')
-			->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'meeting_details.employee_id')
-			->leftJoin('employee_syncs as org', 'org.employee_id', '=', 'meetings.organizer_id')
-			// ->leftJoin('employee_syncs as org', 'employee_syncs.employee_id', '=', 'meetings.organizer_id')
-			->where('meetings.id', '=', $request->get('id'))
-			->select('org.name as organizer_name', db::raw('date_format(meetings.start_time, "%a, %d %b %Y %H:%i") as start_time'), db::raw('date_format(meetings.end_time, "%a, %d %b %Y %H:%i") as end_time'), db::raw('timestampdiff(minute, meetings.start_time, meetings.end_time) as diff'), 'meetings.organizer_id', 'meetings.subject','meetings.description','meetings.location', 'meeting_details.employee_id', 'employee_syncs.name', 'employee_syncs.department', 'meeting_details.attend_time', 'meeting_details.status', 'meetings.status as meeting_status')
+			// $attendances = Meeting::leftJoin('meeting_details', 'meetings.id', '=', 'meeting_details.meeting_id')
+			// ->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'meeting_details.employee_id')
+			// ->leftJoin('employee_syncs as org', 'org.employee_id', '=', 'meetings.organizer_id')
+			// // ->leftJoin('employee_syncs as org', 'employee_syncs.employee_id', '=', 'meetings.organizer_id')
+			// ->where('meetings.id', '=', $request->get('id'))
+			// ->select('org.name as organizer_name', db::raw('date_format(meetings.start_time, "%a, %d %b %Y %H:%i") as start_time'), db::raw('date_format(meetings.end_time, "%a, %d %b %Y %H:%i") as end_time'), db::raw('timestampdiff(minute, meetings.start_time, meetings.end_time) as diff'), 'meetings.organizer_id', 'meetings.subject','meetings.description','meetings.location', 'meeting_details.employee_id', 'employee_syncs.name', 'employee_syncs.department', 'meeting_details.attend_time', 'meeting_details.status', 'meetings.status as meeting_status')
+			// ->orderBy('meeting_details.attend_time', 'desc')
+			// ->orderBy('meeting_details.id', 'asc')
+			// // ->orderBy('meeting_details.created_at', 'asc')
+			// ->get();
+
+			$attendances = MeetingDetail::where('meeting_id', '=', $request->get('id'))
+			->select(
+				'meeting_details.employee_id',
+				'meeting_details.name',
+				'meeting_details.department',
+				'meeting_details.attend_time',
+				'meeting_details.status'
+			)
 			->orderBy('meeting_details.attend_time', 'desc')
 			->orderBy('meeting_details.id', 'asc')
-			// ->orderBy('meeting_details.created_at', 'asc')
 			->get();
 		}
 
-		if($attendances[0]->meeting_status == 'close'){
+		if($meeting->meeting_status == 'close'){
 			$response = array(
 				'status' => false,
 				'message' => 'This meeting already closed.'
@@ -393,7 +495,8 @@ class MeetingController extends Controller
 
 		$response = array(
 			'status' => true,
-			'attendances' => $attendances
+			'attendances' => $attendances,
+			'meeting' => $meeting
 		);
 		return Response::json($response);
 	}
@@ -462,9 +565,27 @@ class MeetingController extends Controller
 			$attendances = $request->get('attendances');
 
 			for ($i=0; $i < count($attendances); $i++) { 
+
+				$tag = '';
+				$name = '';
+				$department = '';
+				$employee = db::table('employees')->where('employee_id', $attendances[$i])->first();
+				if($employee){
+					$tag = $employee->tag;
+				}
+
+				$employee_syncs = db::table('employee_syncs')->where('employee_id', $attendances[$i])->first();
+				if($employee_syncs){
+					$name = $employee_syncs->name;
+					$department = $employee_syncs->department;
+				}
+
 				$meeting_details = new MeetingDetail([
 					'meeting_id' => $meeting->id,
 					'employee_id' => $attendances[$i],
+					'employee_tag' => $tag,
+					'name' => $name,
+					'department' => $department,
 					'status' => 0,
 					'created_by' => $id
 				]);
