@@ -2162,7 +2162,7 @@ class KnockDownController extends Controller{
 		->whereIn('knock_downs.kd_number',  $kd_number);
 
 		$knock_down_details = $knock_down_details->select(
-			db::raw('MAX(knock_down_details.id) AS id') 
+			db::raw('MAX(knock_down_details.id) AS id'),
 			'knock_down_details.kd_number',
 			'knock_down_details.material_number',
 			'materials.material_description',
@@ -2170,7 +2170,8 @@ class KnockDownController extends Controller{
 			'knock_downs.updated_at',
 			db::raw('SUM(knock_down_details.quantity) AS quantity') 
 		)
-		->groupBy('knock_down_details.kd_number',
+		->groupBy(
+			'knock_down_details.kd_number',
 			'knock_down_details.material_number',
 			'materials.material_description',
 			'storage_locations.location',
