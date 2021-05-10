@@ -4651,16 +4651,19 @@ Route::get('fetch/mutasi/monitoring', 'MutasiController@fetchMonitoringMutasi');
 
 Route::get('mutasi/cek_email', 'MutasiController@viewCekEmail');
 
-
 //report HR
-Route::group(['nav' => 'R12', 'middleware' => 'permission'], function(){
-	Route::get('mutasi/hr', 'MutasiController@HrExport');
-	Route::get('fetch/mutasi/hr', 'MutasiController@FetchHrExport');
-	Route::get('excel/mutasi/hr', 'MutasiController@HrExportExcel');
-	Route::get('mutasi_ant/hr', 'MutasiController@AntHrExport');
-	Route::get('fetch/mutasi_ant/hr', 'MutasiController@AntFetchHrExport');
-	Route::get('excel/mutasi_ant/hr', 'MutasiController@AntHrExportExcel');
-});
+
+Route::get('mutasi/hr', 'MutasiController@HrExport');
+Route::get('fetch/mutasi/hr', 'MutasiController@FetchHrExport');
+Route::get('excel/mutasi/hr', 'MutasiController@HrExportExcel');
+Route::get('mutasi_ant/hr', 'MutasiController@AntHrExport');
+Route::get('fetch/mutasi_ant/hr', 'MutasiController@AntFetchHrExport');
+Route::get('excel/mutasi_ant/hr', 'MutasiController@AntHrExportExcel');
+
+
+// Route::group(['nav' => 'R12', 'middleware' => 'permission'], function(){
+	
+// });
 
 // Route::group(['nav' => 'R9', 'middleware' => 'permission'], function(){
 
