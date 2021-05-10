@@ -25,6 +25,7 @@
                 <th>Date</th>
                 <th>DO Date</th>
                 <th>Distribution Date</th>
+                <th>Created By</th>
             </tr>
         </thead>
         <tbody>
@@ -53,6 +54,7 @@
                 <td><?php echo date('d-m-Y', strtotime($tt->invoice_date)) ?></td>
                 <td><?php echo date('d-m-Y', strtotime($tt->do_date)) ?></td>
                 <td><?php echo date('d-m-Y', strtotime($tt->distribution_date)) ?></td>
+                <td>{{ $tt->created_name }}</td>
             </tr>
 
             @endforeach
