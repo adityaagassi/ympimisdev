@@ -7850,7 +7850,7 @@ public function import_budget(Request $request){
                     $data2->feb_after_adj = $feb_adj;
                     $data2->mar_after_adj = $mar_adj;
                     // $data2->apr_sisa_budget = $apr_sisa;
-                    $data2->may_sisa_budget = $may_sisa;
+                    // $data2->may_sisa_budget = $may_sisa;
                     $data2->jun_sisa_budget = $jun_sisa;
                     $data2->jul_sisa_budget = $jul_sisa;
                     $data2->aug_sisa_budget = $aug_sisa;
@@ -12932,6 +12932,36 @@ public function indexAssetRegistration()
         'title_jp' => $title_jp,
         'clasification' => $clasification
     ))->with('page', 'Fixed Asset Registration Form');  
+}
+
+
+    //=============================================================//
+    //                     Payment Request                         //
+    //=============================================================//
+
+public function IndexPaymentRequest(){
+
+    $title = "Payment Request";
+    $title_jp = "??";
+
+    $employees = EmployeeSync::orderBy('department', 'asc')->get();
+
+    $vendor = AccSupplier::select('acc_suppliers.*')->whereNull('acc_suppliers.deleted_at')
+    ->distinct()
+    ->get();
+
+    $payment_term = AccInvoicePaymentTerm::select('*')->whereNull('deleted_at')
+    ->distinct()
+    ->get();
+
+    return view('accounting_purchasing.payment_request.index_payment', array(
+        'title' => $title,
+        'title_jp' => $title_jp,
+        'employees' => $employees,
+        'vendor' => $vendor,
+        'payment_term' => $payment_term
+    ));
+
 }
 
 }
