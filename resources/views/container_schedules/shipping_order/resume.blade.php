@@ -684,7 +684,7 @@ function showDetail(category) {
 				detail += '<td '+color+'>'+value.plan_teus+'</td>';
 				detail += '<td '+color+'>'+value.plan+'</td>';
 				detail += '<td '+color+'>'+(value.fortyhc || '' )+'</td>';
-				detail += '<td '+color+'>'+(value.fourty || '' )+'</td>';
+				detail += '<td '+color+'>'+(value.forty || '' )+'</td>';
 				detail += '<td '+color+'>'+(value.twenty || '' )+'</td>';
 				detail += '<td '+color+'>'+(value.booking_number || '')+'</td>';
 				detail += '<td '+color+'>'+value.carier+'</td>';
