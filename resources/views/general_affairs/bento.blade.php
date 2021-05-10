@@ -4,6 +4,13 @@
 <link rel="stylesheet" href="{{ url("bower_components/fullcalendar/dist/fullcalendar.min.css")}}">
 <link rel="stylesheet" href="{{ url("bower_components/fullcalendar/dist/fullcalendar.print.min.css")}}" media="print">
 <style type="text/css">
+	.modal-body {
+		min-height: calc(100vh - 210px);
+		overflow-y: auto;
+		overflow-x: hidden;
+		max-height: 100%;
+		position: relative;
+	}
 	table > tr:hover {
 		background-color: #7dfa8c;
 	}
@@ -97,7 +104,6 @@
 		<small><span class="text-purple">{{ $title_jp }}</span></small>
 		@if(Auth::user()->role_code == 'GA' || Auth::user()->role_code == 'MIS')
 		<button class="btn btn-info pull-right" style="margin-left: 5px; width: 10%;" onclick="modalLog();"><i class="fa fa-list"></i> Log</button>
-		<button class="btn btn-danger pull-right" style="margin-left: 5px; width: 10%;" onclick="modalUploadMenu();"><i class="fa fa-upload"></i> Menu</button>
 		<button class="btn btn-warning pull-right" style="margin-left: 5px; width: 10%;" onclick="modalResume();"><i class="fa fa-list"></i> Resume</button>
 		<a href="{{ url("index/ga_control/bento_approve") }}" class="btn btn-success pull-right" style="margin-left: 5px; width: 10%;"><i class="fa fa-check"></i> Confirm (<span style="font-weight: bold;" id="countConfirm">0</span>)</a>
 		@endif
@@ -360,18 +366,27 @@
 				<center><h3 style="background-color: #f39c12; font-weight: bold; padding: 3px; margin-top: 0; color: white;">Upload Menu</h3>
 				</center>
 				<div class="modal-body table-responsive no-padding" style="min-height: 100px; padding-bottom: 5px;">
-					<div class="form-group">
-						<label for="" class="col-sm-3 control-label">Period 期間<span class="text-red"> :</span></label>
-						<div class="col-sm-5">
-							<input type="text" class="form-control" id="menuDate" name="menuDate" placeholder="Select Date">
-							<span class="help-block" id="checkDate2"></span>
+					<form class="form-horizontal">
+						<div class="form-group">
+							<label for="" class="col-sm-4 control-label" style="padding-top: 0;">Period<span class="text-red"> :</span></label>
+							<div class="col-sm-7">
+								<input type="text" class="form-control" id="menuDate" name="menuDate" placeholder="Select Date" disabled>
+							</div>
 						</div>
-					</div>
-					<center><input type="file" name="menuFile" id="menuFile"></center>
-					<div class="modal-footer" style="margin-top: 10px;">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-						<button onclick="uploadMenu()" class="btn btn-success">Upload</button>
-					</div>
+						<div class="form-group">
+							<label for="" class="col-sm-4 control-label" style="padding-top: 0;">Menu Name<span class="text-red"> :</span></label>
+							<div class="col-sm-7">
+								<input type="text" class="form-control" name="menuName" id="menuName" placeholder="Enter Menu Name">
+							</div>					
+						</div>
+						<div class="form-group">
+							<label for="" class="col-sm-4 control-label" style="padding-top: 0;">Quota<span class="text-red"> :</span></label>
+							<div class="col-sm-7">
+								<input type="number" class="form-control" name="menuQuota" id="menuQuota" placeholder="Enter Quantity">
+							</div>					
+						</div>
+					</form>
+					<button class="btn btn-success pull-right" id="editOrderBtn" style="font-weight: bold;" onclick="uploadMenu()">Save</button>
 				</div>
 			</div>
 		</div>
@@ -535,17 +550,13 @@
 		});
 		$('#menuDate').datepicker({
 			autoclose: true,
-			format: "yyyy-mm",
-			startView: "months", 
-			minViewMode: "months",
-			autoclose: true,
+			format: "yyyy-mm-dd",
 		});
 		$('#resumeDate').datepicker({
 			autoclose: true,
 			format: "yyyy-mm",
 			startView: "months", 
 			minViewMode: "months",
-			autoclose: true,
 		});
 		$('.select2').select2();
 		$('#dateOk').hide();
@@ -898,7 +909,7 @@
 					}
 					else{
 						cal = {
-							title: value.menu+" ("+value.serving_ordered+"/"+value.serving_quota+")",
+							title: "#"+value.menu+" ("+value.serving_ordered+"/"+value.serving_quota+")",
 							start: Date.parse(value.due_date),
 							allDay: true,
 							backgroundColor:  'rgb(126,86,134)',
@@ -1026,60 +1037,80 @@
 			checkServing(d);
 		}
 		if(cat == 'edit'){
-
-			var data = {
-				due_date:d,
-				employee_name:id
+			if(id.substring(0, 5) == 'Libur'){
+				audio_error.play();
+				openErrorGritter('Libur 休日');
+				return false;	
 			}
-
-			$.get('{{ url("fetch/ga_control/bento_order_edit") }}', data, function(result, status, xhr){
-				if(result.status){
-					$('#addCartBtn').removeClass('disabled');
-					$('#addCartBtn').removeAttr('disabled','disabled');
-
-					$('#editOrderBtn').removeClass('disabled');
-					$('#editOrderBtn').removeAttr('disabled','disabled');
-
-					$('#cancelOrderBtn').removeClass('disabled');
-					$('#cancelOrderBtn').removeAttr('disabled','disabled');
-
-					if(result.bento.status == 'Cancelled' || result.bento.status == 'Rejected'){
-						$('#editOrderBtn').addClass('disabled');
-						$('#editOrderBtn').attr('disabled','disabled');
-
-						$('#cancelOrderBtn').addClass('disabled');
-						$('#cancelOrderBtn').attr('disabled','disabled');
-					}
-
-					$('#editID').val(result.bento.id);
-					$('#editUser').val(result.bento.order_by);
-					$('#editUserName').val(result.bento.order_by_name);
-					$('#editCharge').val(result.bento.charge_to);
-					$('#editChargeName').val(result.bento.charge_to_name);
-					$('#editDate').val(result.bento.due_date);
-					var employee_list = JSON.parse($('#employee_list').val());
-					$('#editEmployee').html("");
-					var editEmployee = "";
-
-					$.each(employee_list, function(key, value){
-						editEmployee += '<option></option>';
-						if(value.employee_id == result.bento.employee_id){
-							editEmployee += '<option value="'+value.employee_id+'_'+value.name+'_'+value.grade_code+'" selected>'+value.employee_id+' - '+value.name+'</option>';
-						}
-						else{
-							editEmployee += '<option value="'+value.employee_id+'_'+value.name+'_'+value.grade_code+'">'+value.employee_id+' - '+value.name+'</option>';				
-						}
-					});
-
-					$('#editEmployee').append(editEmployee);
-					$('#modalEdit').modal('show');
+			else if(id.substring(0, 7) == 'No Menu' || id.substring(0, 1) == '#'){
+				if("{{ Auth::user()->role_code }}" == 'MIS' || "{{ Auth::user()->role_code }}" == 'GA'){
+					$('#menuDate').val(d);
+					$('#menuName').val('');
+					$('#menuQuota').val('');
+					$('#modalUploadMenu').modal('show');
 				}
 				else{
-					alert('Unidentified Error');
 					audio_error.play();
-					return false;
+					openErrorGritter('You do not have authority.');
+					return false;					
 				}
-			});
+			}
+			else{
+				var data = {
+					due_date:d,
+					employee_name:id
+				}
+
+				$.get('{{ url("fetch/ga_control/bento_order_edit") }}', data, function(result, status, xhr){
+					if(result.status){
+						$('#addCartBtn').removeClass('disabled');
+						$('#addCartBtn').removeAttr('disabled','disabled');
+
+						$('#editOrderBtn').removeClass('disabled');
+						$('#editOrderBtn').removeAttr('disabled','disabled');
+
+						$('#cancelOrderBtn').removeClass('disabled');
+						$('#cancelOrderBtn').removeAttr('disabled','disabled');
+
+						if(result.bento.status == 'Cancelled' || result.bento.status == 'Rejected'){
+							$('#editOrderBtn').addClass('disabled');
+							$('#editOrderBtn').attr('disabled','disabled');
+
+							$('#cancelOrderBtn').addClass('disabled');
+							$('#cancelOrderBtn').attr('disabled','disabled');
+						}
+
+						$('#editID').val(result.bento.id);
+						$('#editUser').val(result.bento.order_by);
+						$('#editUserName').val(result.bento.order_by_name);
+						$('#editCharge').val(result.bento.charge_to);
+						$('#editChargeName').val(result.bento.charge_to_name);
+						$('#editDate').val(result.bento.due_date);
+						var employee_list = JSON.parse($('#employee_list').val());
+						$('#editEmployee').html("");
+						var editEmployee = "";
+
+						$.each(employee_list, function(key, value){
+							editEmployee += '<option></option>';
+							if(value.employee_id == result.bento.employee_id){
+								editEmployee += '<option value="'+value.employee_id+'_'+value.name+'_'+value.grade_code+'" selected>'+value.employee_id+' - '+value.name+'</option>';
+							}
+							else{
+								editEmployee += '<option value="'+value.employee_id+'_'+value.name+'_'+value.grade_code+'">'+value.employee_id+' - '+value.name+'</option>';				
+							}
+						});
+
+						$('#editEmployee').append(editEmployee);
+						$('#modalEdit').modal('show');
+					}
+					else{
+						alert('Unidentified Error');
+						audio_error.play();
+						return false;
+					}
+				});
+			}		
+
 
 			// $('#addCartBtn').removeClass('disabled');
 			// $('#addCartBtn').removeAttr('disabled','disabled');
@@ -1187,52 +1218,35 @@
 		}
 	}
 
-	function modalUploadMenu(){
-		$('#modalUploadMenu').modal('show');
-	}
-
 	function uploadMenu(){
+		$('#loading').show();
+		
+		var date = $('#menuDate').val();
+		var menu = $('#menuName').val();
+		var quota = $('#menuQuota').val();
 
-		if($('#menuDate').val() == ""){
-			openErrorGritter('Error!', 'Please input period');
-			audio_error.play();
-			return false;	
+		var data = {
+			date:date,
+			menu:menu,
+			quota:quota
 		}
 
-		var formData = new FormData();
-		var newAttachment  = $('#menuFile').prop('files')[0];
-		var file = $('#menuFile').val().replace(/C:\\fakepath\\/i, '').split(".");
-
-		formData.append('newAttachment', newAttachment);
-		formData.append('menuDate', $("#menuDate").val());
-
-		formData.append('extension', file[1]);
-		formData.append('file_name', file[0]);
-
-		$.ajax({
-			url:"{{ url('upload/ga_control/bento_menu') }}",
-			method:"POST",
-			data:formData,
-			dataType:'JSON',
-			contentType: false,
-			cache: false,
-			processData: false,
-			success:function(data)
-			{
-				if (data.status) {
-					openSuccessGritter('Success!',data.message);
-					audio_ok.play();
-					$('#menuDate').val("");
-					$('#menuFile').val("");
-					$('#modalUploadMenu').modal('hide');
-					location.reload(true);
-				}else{
-					openErrorGritter('Error!',data.message);
-					audio_error.play();
-				}
+		$.post('{{ url("input/ga_control/bento_menu") }}', data, function(result, status, xhr){
+			if(result.status){
+				audio_ok.play();
+				openSuccessGritter(result.message);
+				fetchOrderList();
+				$('#modalUploadMenu').modal('hide');
+				$('#loading').hide();
 
 			}
-		});
+			else{
+				$('#loading').hide();
+				audio_error.play();
+				openErrorGritter(result.message);
+				return false;				
+			}
+		});	
 	}
 
 	function editOrder(){

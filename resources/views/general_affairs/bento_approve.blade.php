@@ -79,46 +79,12 @@
 						<th style="width: 1%;">Action</th>
 					</tr>
 				</thead>
-				<tbody>
-					{{-- @if(count($bentos)>0) --}}
-					@foreach($bentos as $bento)
-					@if($bento->status == 'Waiting')
-					<tr id="list_{{ $bento->id }}" style="background-color: #ccff90">
-					@elseif($bento->status == 'Approved')
-					<tr id="list_{{ $bento->id }}" style="background-color: #ccff90">
-					@elseif($bento->status == 'Rejected')
-					<tr id="list_{{ $bento->id }}" style="background-color: #ff6090">
-					@endif
-						<td style="font-weight: bold;">{{ $bento->order_id }}</td>
-						<td style="font-weight: bold;">{{ $bento->order_by }}</td>
-						<td style="font-weight: bold;">{{ $bento->order_by_name }}</td>
-						<td style="font-weight: bold;">{{ date("D, d M Y", strtotime($bento->due_date)) }}</td>
-						<td style="font-weight: bold;">{{ $bento->employee_id }}</td>
-						<td style="font-weight: bold;">{{ $bento->employee_name }}</td>
-						<td style="font-weight: bold;">
-							@if($bento->status == 'Waiting')
-							<select class="form-control select2" id="status_{{ $bento->id }}" style="width: 100%;" onchange="statusChange(value)">
-								<option value="{{ $bento->id }}_Approved">Approve</option>
-								<option value="{{ $bento->id }}_Rejected">Reject</option>
-							</select>
-							@else
-							{{ $bento->status }}
-							@endif
-						</td>
-					</tr>
-					@endforeach
-					{{-- @endif --}}
+				<tbody id="tableConfirmBody">
 				</tbody>
 			</table>
-			@if(count($bentos) > 0)
-			<button class="btn btn-success" style="width: 100%; font-weight: bold; font-size: 2vw;" onclick="confirmOrder()">
+			<button class="btn btn-success" style="width: 100%; font-weight: bold; font-size: 2vw;" onclick="confirmOrder()" id="btnConfirm">
 				CONFIRM ORDER
 			</button>
-			@else
-			<button class="btn btn-success" style="width: 100%; font-weight: bold; font-size: 2vw;" disabled>
-				CONFIRMED
-			</button>
-			@endif
 		</div>
 	</div>
 </section>
@@ -147,7 +113,8 @@
 	jQuery(document).ready(function() {
 		$('.select2').select2({
 			minimumResultsForSearch: -1
-		});	
+		});
+		fetchList();
 	});
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
@@ -162,6 +129,41 @@
 		else{
 			$('#list_'+str[0]).css('background-color', '#ff6090');
 		}
+	}
+
+	function fetchList(){
+		$.get('{{ url("fetch/ga_control/bento_order_list") }}', function(result, status, xhr){
+			if(result.status){
+				$('#tableConfirmBody').html("");
+				var tableConfirmBody = "";
+
+				$.each(result.unconfirmed, function(key, value){
+					if(value.status == 'Waiting'){
+						tableConfirmBody += '<tr id="list_'+value.id+'" style="background-color: #ccff90">';
+						tableConfirmBody += '<td>'+value.order_id+'</td>';
+						tableConfirmBody += '<td>'+value.order_by+'</td>';
+						tableConfirmBody += '<td>'+value.order_by_name+'</td>';
+						tableConfirmBody += '<td>'+value.due_date+'</td>';
+						tableConfirmBody += '<td>'+value.employee_id+'</td>';
+						tableConfirmBody += '<td>'+value.employee_name+'</td>';
+						tableConfirmBody += '<td>';
+						tableConfirmBody += '<select class="form-control select2" id="status_'+value.id+'" style="width: 100%;" onchange="statusChange(value)">';
+						tableConfirmBody += '<option value="'+value.id+'_Approved">Approve</option>';
+						tableConfirmBody += '<option value="'+value.id+'_Rejected">Reject</option>';
+						tableConfirmBody += '</select>';
+						tableConfirmBody += '</td>';
+						tableConfirmBody += '</tr>';
+					}
+				});
+
+				$('#tableConfirmBody').append(tableConfirmBody);
+			}
+			else{
+				alert('Unidentified Error');
+				audio_error.play();
+				return false;						
+			}
+		});
 	}
 
 	function confirmOrder(){
@@ -190,10 +192,11 @@
 
 			$.post('{{ url("approve/ga_control/bento") }}', data, function(result, status, xhr){
 				if(result.status){
-					$('#loading').hide();
+					fetchList();
 					audio_ok.play();
 					openSuccessGritter('Success!', result.message);
-					location.reload(true);
+					$('#loading').hide();
+
 					return false;
 				}
 				else{

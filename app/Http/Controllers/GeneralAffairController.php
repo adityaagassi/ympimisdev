@@ -65,46 +65,24 @@ public function indexBentoReport(){
 	))->with('head', 'GA Control')->with('page', 'Japanese Food Order Report');
 }
 
-public function uploadBentoMenu(Request $request){
-	$filename = "";
-	$file_destination = 'images/bento_menu';
+public function inputBentoMenu(Request $request){
+	try{
+		$bento_menu = BentoQuota::where('due_date', '=', $request->get('date'))
+		->update([
+			'serving_quota' => $request->get('quota'),
+			'menu' => $request->get('menu')
+		]);
 
-	if (count($request->file('newAttachment')) > 0) {
-		try{
-			$file = $request->file('newAttachment');
-			$filename = date('Y-m-01', strtotime($request->get('menuDate'))).'.'.$request->input('extension');
-			$file->move($file_destination, $filename);
-
-			$menu = BentoMenu::updateOrCreate(
-				[
-					'due_date' => date('Y-m-01', strtotime($request->get('menuDate')))
-				],
-				[
-					'due_date' => date('Y-m-01', strtotime($request->get('menuDate'))),
-					'menu_image' => $file_destination.'/'.$filename,
-					'created_by' => Auth::id()
-				]
-			);
-			$menu->save();
-
-			$response = array(
-				'status' => true,
-				'message' => 'Menu image succesfully uploaded'
-			);
-			return Response::json($response);
-		}
-		catch(\Exception $e){
-			$response = array(
-				'status' => false,
-				'message' => $e->getMessage(),
-			);
-			return Response::json($response);
-		}
+		$response = array(
+			'status' => true,
+			'message' => 'Menu updated',
+		);
+		return Response::json($response);
 	}
-	else{
+	catch(\Exception $e){
 		$response = array(
 			'status' => false,
-			'message' => 'Please select file to attach'
+			'message' => $e->getMessage(),
 		);
 		return Response::json($response);
 	}
@@ -114,12 +92,9 @@ public function indexBentoApprove(){
 	$title = 'Bento Approval';
 	$title_jp = '';
 
-	$bentos = Bento::where('status', '=', 'Waiting')->get();
-
 	return view('general_affairs.bento_approve', array(
 		'title' => $title,
-		'title_jp' => $title_jp,
-		'bentos' => $bentos
+		'title_jp' => $title_jp
 	))->with('head', 'Bento Request');
 }
 
@@ -282,8 +257,18 @@ public function approveBento(Request $request){
 					}
 				}
 
-				if(strpos($list->email, '@music.yamaha.com') == false){	
+				if(strpos($list->email, '@music.yamaha.com') == false){
 					$curl = curl_init();
+
+					if(substr($list->phone, 0, 1) == '+' ){
+						$phone = substr($list->phone, 1, 15);
+					}
+					else if(substr($list->phone, 0, 1) == '0'){
+						$phone = "62".substr($list->phone, 1, 15);
+					}
+					else{
+						$phone = $list->phone;
+					}
 
 					curl_setopt_array($curl, array(
 						CURLOPT_URL => 'https://app.whatspie.com/api/messages',
@@ -294,7 +279,8 @@ public function approveBento(Request $request){
 						CURLOPT_FOLLOWLOCATION => true,
 						CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 						CURLOPT_CUSTOMREQUEST => 'POST',
-						CURLOPT_POSTFIELDS => 'receiver=6282244167224&device=628113669871&message=Test%20Bot&type=chat',
+						// CURLOPT_POSTFIELDS => 'receiver=6282244167224&device=628113669871&message=Order%20bento%20anda%20tanggal%202021-05-06.%20Telah%20dikonfirmasi.%0ASilahkan%20cek%20pada%20MIRAI.%0A%0AYMPI%20GA%20Dept.&type=chat',
+						CURLOPT_POSTFIELDS => 'receiver='.$phone.'&device=628113669871&message=Order%20bento%20anda%20telan%20dikofirmasi.%0ASilahkan%20cek%20kembali%20di%20MIRAI.%0A%0A-YMPI%20GA%20Dept.-&type=chat',
 						CURLOPT_HTTPHEADER => array(
 							'Accept: application/json',
 							'Content-Type: application/x-www-form-urlencoded',
@@ -319,7 +305,6 @@ public function approveBento(Request $request){
 		}
 		$response = array(
 			'status' => true,
-			'bentos' => $bentos,
 			'message' => 'Order Has Been Confirmed'
 		);
 		return Response::json($response);
@@ -706,8 +691,8 @@ public function editBentoOrder(Request $request){
 				$bento->order_by_name == $request->get('order_by_name') &&
 				$bento->charge_to == $request->get('charge_to') &&
 				$bento->charge_to_name == $request->get('charge_to_name') &&
-				$bento->due_date == $request->get('due_date')&&
-				$bento->employee_id == $employee_id[1]
+				$bento->due_date == $request->get('due_date') &&
+				$bento->employee_id == $employee_id[0]
 			){
 				$response = array(
 					'status' => false,
@@ -715,7 +700,6 @@ public function editBentoOrder(Request $request){
 				);
 				return Response::json($response);	
 			}
-
 
 			if(strlen($bento_quota_new->menu) <= 0){
 				$response = array(
@@ -728,7 +712,7 @@ public function editBentoOrder(Request $request){
 			if($now > $limit){
 				$response = array(
 					'status' => false,
-					'message' => 'Can not edit order, time limit reached. Max change on day 09:00',
+					'message' => 'Can not edit order, time limit reached. Max change request on day before 09:00',
 				);
 				return Response::json($response);
 			}
