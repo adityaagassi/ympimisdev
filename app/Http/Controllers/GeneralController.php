@@ -2876,7 +2876,7 @@ public function fetchOxymeterHistory(Request $request)
 
 	if(strlen($request->get('username')) > 0 ){
 		$dpt = EmployeeSync::where('employee_id', '=', $request->get('username'))->first();
-		$oxy_log = $oxy_log->where('employee_syncs.department', '=', $dpt->department);
+		$oxy_log = $oxy_log->whereRaw('(employee_syncs.department = "'.$dpt->department.'" OR general_attendance_logs.created_by = "'.Auth::user()->id.'")');
 	}
 
 	if(strlen($request->get('dt')) > 0 ){
