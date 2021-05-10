@@ -9,6 +9,7 @@ use App\Mail\SendEmail;
 use Carbon\Carbon;
 use App\User;
 use App\WeeklyCalendar;
+use App\MaterialControl;
 
 class RawMaterialReminder extends Command
 {
@@ -53,6 +54,8 @@ class RawMaterialReminder extends Command
 
             for ($i=0; $i < count($pic); $i++) {
                 $user = User::where('username', $pic[$i]->pic)->first();
+                $cc_user = MaterialControl::where('pic', $pic[$i]->pic)->first();
+                $cc_email = User::where('username', $cc_user->control)->first();
 
                 $material = db::select("SELECT msp.period, msp.material_number, msp.material_description, '".$due_date."' AS stock_date, COALESCE ( s.stock_total, 0 ) AS stock, msp.policy, ROUND( COALESCE ( s.stock_total, 0 ) / msp.policy * 100 , 2) AS percentage
                     FROM material_stock_policies AS msp
@@ -77,7 +80,7 @@ class RawMaterialReminder extends Command
                     ORDER BY percentage ASC");
 
                 $cc = array();
-                array_push($cc, 'adianto.heru@music.yamaha.com');
+                array_push($cc, 'adianto.heru@music.yamaha.com', $cc_email->email);
 
                 $bcc = array();
                 array_push($bcc, 'muhammad.ikhlas@music.yamaha.com');
