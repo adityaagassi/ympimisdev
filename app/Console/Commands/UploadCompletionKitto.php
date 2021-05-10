@@ -50,12 +50,16 @@ class UploadCompletionKitto extends Command
         $title = "";
         $body = "";
         $mail_to = [
-            'aditya.agassi@music.yamaha.com', 
-            'muhammad.ikhlas@music.yamaha.com',
-            'mei.rahayu@music.yamaha.com',
-            'istiqomah@music.yamaha.com',
+            'yusli.erwandi@music.yamaha.com',
             'silvy.firliani@music.yamaha.com',
-            'fathor.rahman@music.yamaha.com'
+            'istiqomah@music.yamaha.com',
+            'fathor.rahman@music.yamaha.com',
+            'ade.laksmana.putra@music.yamaha.com'
+        ];
+
+        $bcc = [
+            'aditya.agassi@music.yamaha.com', 
+            'muhammad.ikhlas@music.yamaha.com'
         ];
 
         $not_uploads = db::connection('mysql2')->table('histories')
@@ -106,7 +110,7 @@ class UploadCompletionKitto extends Command
             $error_log->save();
             $title = "Kitto Upload Completion Tidak Ada Data";
             $body = "Count Upload = ".count($upload_completions)."\n\nKeterangan: Tidak ada data yang diupload";
-            self::mailReport($title, $body, $mail_to);
+            self::mailReport($title, $body, $mail_to, $bcc);
             exit;
         }
 
@@ -130,8 +134,7 @@ class UploadCompletionKitto extends Command
 
             $title = "Kitto Upload Completion Berhasil";
             $body = "Count Upload = ".$row_count."\n\nKeterangan: Upload Berhasil";
-            self::mailReport($title, $body, $mail_to);
-            exit;
+            
         }
         catch(\Exception $e){
             $transfers = db::connection('mysql2')->table('histories')
@@ -150,20 +153,20 @@ class UploadCompletionKitto extends Command
 
             $title = "Kitto Upload Completion Gagal";
             $body = "Count Upload = ".count($upload_completions)."\n\nKeterangan: Upload Gagal (".$e->getMessage().")";
-            self::mailReport($title, $body, $mail_to);
-            exit;
         }
-
+        self::mailReport($title, $body, $mail_to, $bcc);
+        exit;
         
     }
 
-    function mailReport($title, $body, $mail_to){
-        Mail::raw([], function($message) use($title, $body, $mail_to){
-          $message->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia');
-          $message->to($mail_to);
-          $message->subject($title);
-          $message->setBody($body, 'text/plain');}
-      ); 
+    function mailReport($title, $body, $mail_to, $bcc){
+        Mail::raw([], function($message) use($title, $body, $mail_to, $bcc){
+            $message->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia');
+            $message->to($mail_to);
+            $message->bcc($bcc);
+            $message->subject($title);
+            $message->setBody($body, 'text/plain');}
+        ); 
     }
 
     function uploadFTP($from, $to) {
