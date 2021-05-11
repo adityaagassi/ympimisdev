@@ -236,12 +236,7 @@ public function uploadMaterialMonitoring(Request $request){
                $material = $uploadColumn[0];
                $due_date = Carbon::createFromFormat('d/m/Y', $uploadColumn[1])->format('Y-m-d');
                $usage = $uploadColumn[2];
-               // if(!$uploadColumn[3]){
                $remark = "";
-               // }
-               // else{
-               //      $remark = $uploadColumn[3];
-               // }
 
                if(strlen($material) < 7 || strlen($material) > 8){
                     array_push($error_count, 'GMC Unmatch '.$material.' ('.strlen($material).')');
