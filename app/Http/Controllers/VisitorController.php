@@ -1375,7 +1375,7 @@ public function filldisplay($nik, Request $request)
 					visitors.reason,
 					visitors.employee,
 					visitors.id,
-					company,
+					visitors.company,
 					visitor_details.full_name,
 					visitor_details.id_number AS total1,
 					purpose,
@@ -1386,11 +1386,13 @@ public function filldisplay($nik, Request $request)
 					visitor_details.out_time,
 					visitors.remark,
 					visitors.created_at,
-					DATE_FORMAT( visitors.created_at, '%Y-%m-%d' ) AS tgl 
+					DATE_FORMAT( visitors.created_at, '%Y-%m-%d' ) AS tgl,
+					CONCAT(body_temperatures.suhu,' °C') as suhu
 				FROM
 					visitors
 					LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
 					LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
+					LEFT JOIN body_temperatures ON body_temperatures.created_at = visitors.created_at 
 				) a 
 			".$where."
 			GROUP BY

@@ -80,7 +80,7 @@
 					<thead style="background-color: #fff;">
 						<tr id="total">
 							{{-- <th colspan="7"><b id="totalvi"></b></th> --}}
-							<th style="background-color: rgba(220,105,0,.75);" colspan="6">Visitor</th>
+							<th style="background-color: rgba(220,105,0,.75);" colspan="7">Visitor</th>
 							<th style="background-color: rgba(126,86,134);" colspan="2">Employee</th>
 							<th style="background-color: rgba(85,85,85);" colspan="4">Action</th>
 						</tr>
@@ -89,6 +89,7 @@
 							{{-- <th >Id</th> --}}
 							<th style="background-color: rgba(220,105,0,.75)" >Company</th>
 							<th style="background-color: rgba(220,105,0,.75)" >Full Name</th>
+							<th style="background-color: rgba(220,105,0,.75)" >Temp</th>
 							<th style="background-color: rgba(220,105,0,.75)" >Total</th>
 							<th style="background-color: rgba(220,105,0,.75)" >Purpose</th>
 							<th style="background-color: rgba(220,105,0,.75)" >Status</th>
@@ -97,7 +98,7 @@
 							<th style="background-color: rgba(85,85,85);" >IN</th>
 							<th style="background-color: rgba(85,85,85);" >OUT</th>
 							<th style="background-color: rgba(85,85,85);" >Meet</th>
-							<th style="background-color: rgba(85,85,85);" >Reason	</th>
+							<th style="background-color: rgba(85,85,85);" >Reason</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -323,6 +324,7 @@
 			// { "data": "id"},
 			{ "data": "company"},
 			{ "data": "full_name"},
+			{ "data": "suhu"},
 			{ "data": "total"},
 			{ "data": "purpose"},
 			{ "data": "status"},
