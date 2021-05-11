@@ -139,7 +139,7 @@ public function uploadMaterialMonitoring(Request $request){
 
      if($id == 'usage'){
           $period = date('Y-m-01', strtotime($request->get('period')));
-          $delete = MaterialRequirementPlan::where('period', '=', $period)->forceDelete();
+          $delete = MaterialRequirementPlan::where('due_date', '=', $period)->forceDelete();
      }
 
      if($id == 'delivery'){
@@ -322,7 +322,7 @@ public function uploadMaterialMonitoring(Request $request){
                     array_push($error_count, 'GMC Unmatch '.$material.' ('.strlen($material).')');
                }
                else if(strlen($movement_type) != 3){
-                    array_push($error_count, 'MvT Unmatch '.$material.' ('.strlen($material).')');
+                    array_push($error_count, 'MvT Unmatch '.$movement_type.' ('.strlen($material).')');
                }
                else if(strlen($issue_location) < 3 || strlen($issue_location) > 4){
                     array_push($error_count, 'Location Unmatch '.$material.' '.$issue_location.' '.$receive_location.' ('.strlen($material).')');
