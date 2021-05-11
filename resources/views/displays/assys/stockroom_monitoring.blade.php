@@ -159,7 +159,6 @@
 						$('#monitoring').append(monitoring);
 					}
 				});
-				console.log(ava_new_group);
 
 				for (var i = 0; i < ava_new_group.length; i++) {
 					Highcharts.chart('condition_'+ava_new_group[i].ava_hpl, {
@@ -346,22 +345,22 @@ function fetchDetail(hpl, cat, c){
 	var tableDetailBody = "";
 	$.each(key_details, function(key, value){
 		if(c == 'pick'){
-			if(value.diff > 0){
-				if(value.hpl == hpl){
-					if(cat == 'Stock > 2 Day'){
-						if(value.ultra_safe == 1){
-							tableDetailBody += '<tr>';
-							tableDetailBody += '<td>'+value.model+'</td>';
-							tableDetailBody += '<td>'+value.key+'</td>';
-							tableDetailBody += '<td>'+value.surface+'</td>';
-							tableDetailBody += '<td>'+value.plan_ori+'</td>';
-							tableDetailBody += '<td>'+value.plan+'</td>';
-							tableDetailBody += '<td>'+value.stock+'</td>';
-							tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
-							tableDetailBody += '</tr>';
-						}				
-					}
-					if(cat == 'Stock 1-2 Day'){
+			if(value.hpl == hpl){
+				if(value.diff > 0){
+					// if(cat == 'Stock > 2 Day'){
+					// 	if(value.ultra_safe == 1){
+					// 		tableDetailBody += '<tr>';
+					// 		tableDetailBody += '<td>'+value.model+'</td>';
+					// 		tableDetailBody += '<td>'+value.key+'</td>';
+					// 		tableDetailBody += '<td>'+value.surface+'</td>';
+					// 		tableDetailBody += '<td>'+value.plan_ori+'</td>';
+					// 		tableDetailBody += '<td>'+value.plan+'</td>';
+					// 		tableDetailBody += '<td>'+value.stock+'</td>';
+					// 		tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
+					// 		tableDetailBody += '</tr>';
+					// 	}				
+					// }
+					if(cat == 'Stock >= 1 Day'){
 						if(value.safe == 1){
 							tableDetailBody += '<tr>';
 							tableDetailBody += '<td>'+value.model+'</td>';
@@ -406,7 +405,7 @@ function fetchDetail(hpl, cat, c){
 		else{
 			if(value.hpl == hpl){
 				if(cat == 'Stock > 2 Day'){
-					if(value.ultra_safe == 1){
+					if(value.ava_ultra_safe == 1){
 						tableDetailBody += '<tr>';
 						tableDetailBody += '<td>'+value.model+'</td>';
 						tableDetailBody += '<td>'+value.key+'</td>';
@@ -419,7 +418,7 @@ function fetchDetail(hpl, cat, c){
 					}				
 				}
 				if(cat == 'Stock 1-2 Day'){
-					if(value.safe == 1){
+					if(value.ava_safe == 1){
 						tableDetailBody += '<tr>';
 						tableDetailBody += '<td>'+value.model+'</td>';
 						tableDetailBody += '<td>'+value.key+'</td>';
@@ -432,7 +431,7 @@ function fetchDetail(hpl, cat, c){
 					}				
 				}
 				if(cat == 'Stock < 1 Day'){
-					if(value.unsafe == 1){
+					if(value.ava_unsafe == 1){
 						tableDetailBody += '<tr>';
 						tableDetailBody += '<td>'+value.model+'</td>';
 						tableDetailBody += '<td>'+value.key+'</td>';
@@ -445,7 +444,7 @@ function fetchDetail(hpl, cat, c){
 					}
 				}
 				if(cat == 'Stock Zero'){
-					if(value.zero == 1){
+					if(value.ava_zero == 1){
 						tableDetailBody += '<tr>';
 						tableDetailBody += '<td>'+value.model+'</td>';
 						tableDetailBody += '<td>'+value.key+'</td>';
