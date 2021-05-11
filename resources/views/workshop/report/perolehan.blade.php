@@ -92,27 +92,28 @@
 		</div>
 	</div>
 
-	<div class="modal fade" id="modal-machine" style="color: black;">
+	<div class="modal fade" id="modal-detail" style="color: black;">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h4 class="modal-title" style="text-transform: uppercase; text-align: center;"><b>Machine Productivity Details</b></h4>
-					<h5 class="modal-title" style="text-align: center;" id="judul-machine"></h5>
+					<h4 class="modal-title" style="text-transform: uppercase; text-align: center;"><b>WJO Details</b></h4>
 				</div>
 				<div class="modal-body">
 					<div class="row">
 						<div class="col-md-12">
-							<table id="machine" class="table table-striped table-bordered" style="width: 100%;"> 
-								<thead id="machine-head" style="background-color: rgba(126,86,134,.7);">
+							<table id="detail" class="table table-striped table-bordered" style="width: 100%;"> 
+								<thead id="detail-head" style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th>Machine Name</th>
-										<th>Process Name</th>
-										<th>Operator</th>
-										<th>Started at</th>
-										<th>Finished at</th>
+										<th width="10%">Bulan</th>
+										<th>WJO Number</th>
+										<th>Kategori</th>
+										<th>Deskripsi</th>
+										<th>Pemohon</th>
+										<th>Status WJO</th>
+										<th>Status</th>
 									</tr>
 								</thead>
-								<tbody id="machine-body">
+								<tbody id="detail-body">
 								</tbody>
 							</table>
 						</div>
@@ -389,7 +390,73 @@
 }
 
 function showWJODetail(param) {
-	console.log(param);
+	$("#modal-detail").modal('show');
+
+	var data = {
+		mon : param
+	}
+
+	$('#detail').DataTable().clear();
+	$('#detail').DataTable().destroy();
+	$('#detail-body').html("");
+	$.get('{{ url("detail/workshop/perolehan") }}', data, function(result, status, xhr){
+		var body = "";
+
+		$.each(result.detail_datas, function(index, value){
+			body += '<tr>';
+			body += '<td>'+value.mon+'</td>';
+			body += '<td>'+value.order_no+'</td>';
+			body += '<td>'+value.category+'</td>';
+			body += '<td>'+value.problem_description+'</td>';
+			body += '<td>'+value.name+'</td>';
+			body += '<td>'+value.process_name+'</td>';
+
+			if (value.problem_description == 'Pembuatan Part Kensa Jig Welding') {
+				body += '<td style="background-color: #2b908f">Automatic</td>';
+			} else {
+				body += '<td style="background-color: #90ee7e">Manual</td>';
+			}
+			body += '</tr>';
+		})
+
+		$("#detail-body").append(body);
+
+		var table = $('#detail').DataTable({
+			'dom': 'Bfrtip',
+			'responsive':true,
+			'pageLength': 25,
+			'lengthMenu': [
+			[ 10, 25, 50, -1 ],
+			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+			],
+			'buttons': {
+				buttons:[
+				{
+					extend: 'pageLength',
+					className: 'btn btn-default',
+				},
+				{
+					extend: 'excel',
+					className: 'btn btn-info',
+					text: '<i class="fa fa-file-excel-o"></i> Excel',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				}
+				]
+			},
+			'paging': true,
+			'lengthChange': true,
+			'searching': true,
+			'ordering': true,
+			'info': true,
+			'autoWidth': true,
+			"sPaginationType": "full_numbers",
+			"bJQueryUI": true,
+			"bAutoWidth": false,
+			"processing": true,
+		});
+	})
 }
 
 Highcharts.createElement('link', {

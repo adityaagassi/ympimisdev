@@ -2165,26 +2165,40 @@ class WorkshopController extends Controller{
 			group by DATE_FORMAT(created_at,"%Y-%m"), DATE_FORMAT(created_at,"%Y %b")');
 
 		$datas = db::select('SELECT crossing.mon, crossing.process_name, IFNULL(jml_wjo,0) wjo from
-		( select * from
-		(select DATE_FORMAT(week_date,"%b %Y") as mon from weekly_calendars
-		where week_date >= "'.$date_from.'" and week_date <= "'.$date_to.'"
-		group by DATE_FORMAT(week_date,"%b %Y")
-		order by week_date asc) as date_master
-		cross join (select process_name from processes where remark = "workshop") as prcs ) crossing
-		left join 
-		(
-		select DATE_FORMAT(created_at,"%b %Y") as mon, prs.process_name, count(id) as jml_wjo from workshop_job_orders
-		left join (select process_code, process_name from processes where remark = "workshop") prs on workshop_job_orders.remark = prs.process_code
-		where deleted_at is null and remark not in(5,6) and DATE_FORMAT(created_at, "%Y-%m-%d") >= "'.$date_from.'"
-		group by prs.process_name, DATE_FORMAT(created_at,"%b %Y")
-		ORDER BY created_at, process_name asc
-	) as wjo on crossing.mon = wjo.mon and crossing.process_name = wjo.process_name');
+			( select * from
+			(select DATE_FORMAT(week_date,"%b %Y") as mon from weekly_calendars
+			where week_date >= "'.$date_from.'" and week_date <= "'.$date_to.'"
+			group by DATE_FORMAT(week_date,"%b %Y")
+			order by week_date asc) as date_master
+			cross join (select process_name from processes where remark = "workshop") as prcs ) crossing
+			left join 
+			(
+			select DATE_FORMAT(created_at,"%b %Y") as mon, prs.process_name, count(id) as jml_wjo from workshop_job_orders
+			left join (select process_code, process_name from processes where remark = "workshop") prs on workshop_job_orders.remark = prs.process_code
+			where deleted_at is null and remark not in(5,6) and DATE_FORMAT(created_at, "%Y-%m-%d") >= "'.$date_from.'"
+			group by prs.process_name, DATE_FORMAT(created_at,"%b %Y")
+			ORDER BY created_at, process_name asc
+		) as wjo on crossing.mon = wjo.mon and crossing.process_name = wjo.process_name');
 
-	$response = array(
-		'status' => true,
-		'automation_datas' => $automation,
-		'result_datas' => $datas
-	);
-	return Response::json($response);
-}
+		$response = array(
+			'status' => true,
+			'automation_datas' => $automation,
+			'result_datas' => $datas
+		);
+		return Response::json($response);
+	}
+
+	public function detailWJOPerolehan(Request $request)
+	{
+		$datas = db::select("SELECT '".$request->get('mon')."' as mon, order_no, category, problem_description, `name`, process_name from workshop_job_orders 
+		left join (select * from processes where remark = 'workshop') processes on workshop_job_orders.remark = processes.process_code
+		left join employee_syncs on employee_syncs.employee_id = workshop_job_orders.created_by
+		where workshop_job_orders.deleted_at is null and workshop_job_orders.remark not in (5,6) and DATE_FORMAT(workshop_job_orders.created_at,'%Y %b') = '".$request->get('mon')."'");
+
+		$response = array(
+			'status' => true,
+			'detail_datas' => $datas
+		);
+		return Response::json($response);
+	}
 }
