@@ -3481,7 +3481,75 @@ public function fetchChecklogData(Request $request)
      $datachecklog = [];
 
      foreach ($emp as $key) {
-          $checklog = DB::SELECT("SELECT *,DATE_FORMAT(auth_datetime,'%H:%i') as time_in FROM ivms.ivms_attendance_triggers where employee_id = '".$key->employee_id."' ".$tanggal."");
+          $checklog = DB::SELECT("SELECT
+          IF
+               (
+                    ivms.ivms_attendance.auth_datetime < '2020-12-14 10:00:00',
+                    SPLIT_STRING ( person_name, ' ' , 1 ),
+               IF
+                    (
+                         LENGTH( attend_id ) = 6 && attend_id NOT LIKE '%OS%',
+                         CONCAT( 'PI0', attend_id ),
+                    IF
+                         (
+                              LENGTH( attend_id ) = 5 && attend_id NOT LIKE '%OS%',
+                              CONCAT( 'PI00', attend_id ),
+                         IF
+                              (
+                                   LENGTH( attend_id ) = 4 && attend_id NOT LIKE '%OS%',
+                                   CONCAT( 'PI000', attend_id ),
+                              IF
+                                   (
+                                        LENGTH( attend_id ) = 3 && attend_id NOT LIKE '%OS%',
+                                        CONCAT( 'PI0000', attend_id ),
+                                   IF
+                                        (
+                                             LENGTH( attend_id ) = 2 && attend_id NOT LIKE '%OS%',
+                                             CONCAT( 'PI00000', attend_id ),
+                                        IF
+                                             (
+                                                  LENGTH( attend_id ) = 1 && attend_id NOT LIKE '%OS%',
+                                                  CONCAT( 'PI000000', attend_id ),
+                                             IF
+                                             ( LENGTH( attend_id ) = 6 && attend_id LIKE '%OS%', attend_id, CONCAT( 'PI', attend_id ) )))))))) AS `nik`,
+               ivms.`ivms_attendance`.`device` AS `device`,
+               ivms.`ivms_attendance`.auth_datetime,
+               ivms.`ivms_attendance`.`device_serial` AS `device_serial`,
+               DATE_FORMAT( auth_datetime, '%H:%i' ) AS time_in,
+               auth_date 
+          FROM
+               ivms.`ivms_attendance` 
+          WHERE
+          IF
+               (
+                    ivms.ivms_attendance.auth_datetime < '2020-12-14 10:00:00',
+                    SPLIT_STRING ( person_name, ' ', 1 ),
+               IF
+                    (
+                         LENGTH( attend_id ) = 6 && attend_id NOT LIKE '%OS%',
+                         CONCAT( 'PI0', attend_id ),
+                    IF
+                         (
+                              LENGTH( attend_id ) = 5 && attend_id NOT LIKE '%OS%',
+                              CONCAT( 'PI00', attend_id ),
+                         IF
+                              (
+                                   LENGTH( attend_id ) = 4 && attend_id NOT LIKE '%OS%',
+                                   CONCAT( 'PI000', attend_id ),
+                              IF
+                                   (
+                                        LENGTH( attend_id ) = 3 && attend_id NOT LIKE '%OS%',
+                                        CONCAT( 'PI0000', attend_id ),
+                                   IF
+                                        (
+                                             LENGTH( attend_id ) = 2 && attend_id NOT LIKE '%OS%',
+                                             CONCAT( 'PI00000', attend_id ),
+                                        IF
+                                             (
+                                                  LENGTH( attend_id ) = 1 && attend_id NOT LIKE '%OS%',
+                                                  CONCAT( 'PI000000', attend_id ),
+                                        IF
+               ( LENGTH( attend_id ) = 6 && attend_id LIKE '%OS%', attend_id, CONCAT( 'PI', attend_id ) )))))))) = '".$key->employee_id."' ".$tanggal."");
 
           foreach ($checklog as $val) {
                $datachecklog[] = array(
