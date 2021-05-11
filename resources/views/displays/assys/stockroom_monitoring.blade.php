@@ -143,7 +143,7 @@
 						};
 						ava_new_group.push(ava_res[value.hpl])
 					}
-					ava_res[value.hpl].ava_safe += value.ava_ultra_safe
+					ava_res[value.hpl].ava_ultra_safe += value.ava_ultra_safe
 					ava_res[value.hpl].ava_safe += value.ava_safe
 					ava_res[value.hpl].ava_unsafe += value.ava_unsafe
 					ava_res[value.hpl].ava_zero += value.ava_zero
