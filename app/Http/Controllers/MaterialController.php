@@ -139,7 +139,7 @@ public function uploadMaterialMonitoring(Request $request){
 
      if($id == 'usage'){
           $period = date('Y-m-01', strtotime($request->get('period')));
-          $delete = MaterialStockPolicy::where('period', '=', $period)->forceDelete();
+          $delete = MaterialRequirementPlan::where('period', '=', $period)->forceDelete();
      }
 
      if($id == 'delivery'){
@@ -237,7 +237,7 @@ public function uploadMaterialMonitoring(Request $request){
                $due_date = Carbon::createFromFormat('d/m/Y', $uploadColumn[1])->format('Y-m-d');
                $usage = $uploadColumn[2];
                // if(!$uploadColumn[3]){
-                    $remark = "";
+               $remark = "";
                // }
                // else{
                //      $remark = $uploadColumn[3];
