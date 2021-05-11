@@ -189,7 +189,7 @@ thead input {
 		$('.select2').select2({
 			allowClear:true
 		});
-		fillData();
+		// fillData();
 	});
 
 	
