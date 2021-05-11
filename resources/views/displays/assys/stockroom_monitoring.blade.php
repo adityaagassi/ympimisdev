@@ -213,7 +213,7 @@
 								point: {
 									events: {
 										click: function () {
-											fetchDetail(this.series.name, this.name);
+											fetchDetail(this.series.name, this.name, 'stock');
 										}
 									}
 								}
@@ -282,7 +282,7 @@
 								point: {
 									events: {
 										click: function () {
-											fetchDetail(this.series.name, this.name);
+											fetchDetail(this.series.name, this.name, 'pick');
 										}
 									}
 								}
@@ -338,124 +338,184 @@
 		});
 }
 
-function fetchDetail(hpl, cat){
+function fetchDetail(hpl, cat, c){
 	$('#tableDetail').DataTable().clear();
 	$('#tableDetail').DataTable().destroy();
 	$('#tableDetailBody').html("");
 	$('#modalDetailTitle').text('Stock Condition Of '+hpl+' With '+cat);
 	var tableDetailBody = "";
 	$.each(key_details, function(key, value){
-		if(value.hpl == hpl){
-			if(cat == 'Stock > 2 Day'){
-				if(value.ultra_safe == 1){
-					tableDetailBody += '<tr>';
-					tableDetailBody += '<td>'+value.model+'</td>';
-					tableDetailBody += '<td>'+value.key+'</td>';
-					tableDetailBody += '<td>'+value.surface+'</td>';
-					tableDetailBody += '<td>'+value.plan_ori+'</td>';
-					tableDetailBody += '<td>'+value.plan+'</td>';
-					tableDetailBody += '<td>'+value.stock+'</td>';
-					tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
-					tableDetailBody += '</tr>';
-				}				
-			}
-			if(cat == 'Stock 1-2 Day'){
-				if(value.safe == 1){
-					tableDetailBody += '<tr>';
-					tableDetailBody += '<td>'+value.model+'</td>';
-					tableDetailBody += '<td>'+value.key+'</td>';
-					tableDetailBody += '<td>'+value.surface+'</td>';
-					tableDetailBody += '<td>'+value.plan_ori+'</td>';
-					tableDetailBody += '<td>'+value.plan+'</td>';
-					tableDetailBody += '<td>'+value.stock+'</td>';
-					tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
-					tableDetailBody += '</tr>';
-				}				
-			}
-			if(cat == 'Stock < 1 Day'){
-				if(value.unsafe == 1){
-					tableDetailBody += '<tr>';
-					tableDetailBody += '<td>'+value.model+'</td>';
-					tableDetailBody += '<td>'+value.key+'</td>';
-					tableDetailBody += '<td>'+value.surface+'</td>';
-					tableDetailBody += '<td>'+value.plan_ori+'</td>';
-					tableDetailBody += '<td>'+value.plan+'</td>';
-					tableDetailBody += '<td>'+value.stock+'</td>';
-					tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
-					tableDetailBody += '</tr>';
+		if(c == 'pick'){
+			if(value.diff > 0){
+				if(value.hpl == hpl){
+					if(cat == 'Stock > 2 Day'){
+						if(value.ultra_safe == 1){
+							tableDetailBody += '<tr>';
+							tableDetailBody += '<td>'+value.model+'</td>';
+							tableDetailBody += '<td>'+value.key+'</td>';
+							tableDetailBody += '<td>'+value.surface+'</td>';
+							tableDetailBody += '<td>'+value.plan_ori+'</td>';
+							tableDetailBody += '<td>'+value.plan+'</td>';
+							tableDetailBody += '<td>'+value.stock+'</td>';
+							tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
+							tableDetailBody += '</tr>';
+						}				
+					}
+					if(cat == 'Stock 1-2 Day'){
+						if(value.safe == 1){
+							tableDetailBody += '<tr>';
+							tableDetailBody += '<td>'+value.model+'</td>';
+							tableDetailBody += '<td>'+value.key+'</td>';
+							tableDetailBody += '<td>'+value.surface+'</td>';
+							tableDetailBody += '<td>'+value.plan_ori+'</td>';
+							tableDetailBody += '<td>'+value.plan+'</td>';
+							tableDetailBody += '<td>'+value.stock+'</td>';
+							tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
+							tableDetailBody += '</tr>';
+						}				
+					}
+					if(cat == 'Stock < 1 Day'){
+						if(value.unsafe == 1){
+							tableDetailBody += '<tr>';
+							tableDetailBody += '<td>'+value.model+'</td>';
+							tableDetailBody += '<td>'+value.key+'</td>';
+							tableDetailBody += '<td>'+value.surface+'</td>';
+							tableDetailBody += '<td>'+value.plan_ori+'</td>';
+							tableDetailBody += '<td>'+value.plan+'</td>';
+							tableDetailBody += '<td>'+value.stock+'</td>';
+							tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
+							tableDetailBody += '</tr>';
+						}
+					}
+					if(cat == 'Stock Zero'){
+						if(value.zero == 1){
+							tableDetailBody += '<tr>';
+							tableDetailBody += '<td>'+value.model+'</td>';
+							tableDetailBody += '<td>'+value.key+'</td>';
+							tableDetailBody += '<td>'+value.surface+'</td>';
+							tableDetailBody += '<td>'+value.plan_ori+'</td>';
+							tableDetailBody += '<td>'+value.plan+'</td>';
+							tableDetailBody += '<td>'+value.stock+'</td>';
+							tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
+							tableDetailBody += '</tr>';
+						}
+					}
 				}
 			}
-			if(cat == 'Stock Zero'){
-				if(value.zero == 1){
-					tableDetailBody += '<tr>';
-					tableDetailBody += '<td>'+value.model+'</td>';
-					tableDetailBody += '<td>'+value.key+'</td>';
-					tableDetailBody += '<td>'+value.surface+'</td>';
-					tableDetailBody += '<td>'+value.plan_ori+'</td>';
-					tableDetailBody += '<td>'+value.plan+'</td>';
-					tableDetailBody += '<td>'+value.stock+'</td>';
-					tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
-					tableDetailBody += '</tr>';
+			else{
+				if(value.hpl == hpl){
+					if(cat == 'Stock > 2 Day'){
+						if(value.ultra_safe == 1){
+							tableDetailBody += '<tr>';
+							tableDetailBody += '<td>'+value.model+'</td>';
+							tableDetailBody += '<td>'+value.key+'</td>';
+							tableDetailBody += '<td>'+value.surface+'</td>';
+							tableDetailBody += '<td>'+value.plan_ori+'</td>';
+							tableDetailBody += '<td>'+value.plan+'</td>';
+							tableDetailBody += '<td>'+value.stock+'</td>';
+							tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
+							tableDetailBody += '</tr>';
+						}				
+					}
+					if(cat == 'Stock 1-2 Day'){
+						if(value.safe == 1){
+							tableDetailBody += '<tr>';
+							tableDetailBody += '<td>'+value.model+'</td>';
+							tableDetailBody += '<td>'+value.key+'</td>';
+							tableDetailBody += '<td>'+value.surface+'</td>';
+							tableDetailBody += '<td>'+value.plan_ori+'</td>';
+							tableDetailBody += '<td>'+value.plan+'</td>';
+							tableDetailBody += '<td>'+value.stock+'</td>';
+							tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
+							tableDetailBody += '</tr>';
+						}				
+					}
+					if(cat == 'Stock < 1 Day'){
+						if(value.unsafe == 1){
+							tableDetailBody += '<tr>';
+							tableDetailBody += '<td>'+value.model+'</td>';
+							tableDetailBody += '<td>'+value.key+'</td>';
+							tableDetailBody += '<td>'+value.surface+'</td>';
+							tableDetailBody += '<td>'+value.plan_ori+'</td>';
+							tableDetailBody += '<td>'+value.plan+'</td>';
+							tableDetailBody += '<td>'+value.stock+'</td>';
+							tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
+							tableDetailBody += '</tr>';
+						}
+					}
+					if(cat == 'Stock Zero'){
+						if(value.zero == 1){
+							tableDetailBody += '<tr>';
+							tableDetailBody += '<td>'+value.model+'</td>';
+							tableDetailBody += '<td>'+value.key+'</td>';
+							tableDetailBody += '<td>'+value.surface+'</td>';
+							tableDetailBody += '<td>'+value.plan_ori+'</td>';
+							tableDetailBody += '<td>'+value.plan+'</td>';
+							tableDetailBody += '<td>'+value.stock+'</td>';
+							tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
+							tableDetailBody += '</tr>';
+						}
+					}
 				}
 			}
 		}
 	});
 
-	$('#tableDetailBody').append(tableDetailBody);
+$('#tableDetailBody').append(tableDetailBody);
 
-	$('#tableDetail').DataTable({
-		'dom': 'Bfrtip',
-		'responsive':true,
-		'lengthMenu': [
-		[ 10, 25, 50, -1 ],
-		[ '10 rows', '25 rows', '50 rows', 'Show all' ]
-		],
-		'buttons': {
-			buttons:[
-			{
-				extend: 'pageLength',
-				className: 'btn btn-default',
-			},
-			{
-				extend: 'copy',
-				className: 'btn btn-success',
-				text: '<i class="fa fa-copy"></i> Copy',
-				exportOptions: {
-					columns: ':not(.notexport)'
-				}
-			},
-			{
-				extend: 'excel',
-				className: 'btn btn-info',
-				text: '<i class="fa fa-file-excel-o"></i> Excel',
-				exportOptions: {
-					columns: ':not(.notexport)'
-				}
-			},
-			{
-				extend: 'print',
-				className: 'btn btn-warning',
-				text: '<i class="fa fa-print"></i> Print',
-				exportOptions: {
-					columns: ':not(.notexport)'
-				}
-			},
-			]
+$('#tableDetail').DataTable({
+	'dom': 'Bfrtip',
+	'responsive':true,
+	'lengthMenu': [
+	[ 10, 25, 50, -1 ],
+	[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+	],
+	'buttons': {
+		buttons:[
+		{
+			extend: 'pageLength',
+			className: 'btn btn-default',
 		},
-		'paging': false,
-		'lengthChange': true,
-		'searching': true,
-		'ordering': true,
-		'order': [6, 'asc'],
-		'info': true,
-		'autoWidth': true,
-		"sPaginationType": "full_numbers",
-		"bJQueryUI": true,
-		"bAutoWidth": false,
-		"processing": true
-	});
+		{
+			extend: 'copy',
+			className: 'btn btn-success',
+			text: '<i class="fa fa-copy"></i> Copy',
+			exportOptions: {
+				columns: ':not(.notexport)'
+			}
+		},
+		{
+			extend: 'excel',
+			className: 'btn btn-info',
+			text: '<i class="fa fa-file-excel-o"></i> Excel',
+			exportOptions: {
+				columns: ':not(.notexport)'
+			}
+		},
+		{
+			extend: 'print',
+			className: 'btn btn-warning',
+			text: '<i class="fa fa-print"></i> Print',
+			exportOptions: {
+				columns: ':not(.notexport)'
+			}
+		},
+		]
+	},
+	'paging': false,
+	'lengthChange': true,
+	'searching': true,
+	'ordering': true,
+	'order': [6, 'asc'],
+	'info': true,
+	'autoWidth': true,
+	"sPaginationType": "full_numbers",
+	"bJQueryUI": true,
+	"bAutoWidth": false,
+	"processing": true
+});
 
-	$('#modalDetail').modal('show');
+$('#modalDetail').modal('show');
 }
 
 Highcharts.createElement('link', {
