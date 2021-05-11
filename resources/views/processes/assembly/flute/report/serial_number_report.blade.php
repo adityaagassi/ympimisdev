@@ -122,6 +122,8 @@ thead input {
 										<th>Result QA Visual 2</th>
 										<th>NG QA Visual 2</th>
 										<th>Ganti Kunci</th>
+										<th>Packing Date</th>
+										<th>Packing Time</th>
 									</tr>
 								</thead>
 								<tbody id="bodyTableNgReport">
@@ -254,6 +256,8 @@ thead input {
 					}else{
 						tableData += '<td>'+value.ganti_kunci.split(',').join('<br>')+'</td>';
 					}
+					tableData += '<td>'+value.created_at.split(' ')[0]+'</td>';
+					tableData += '<td>'+value.created_at.split(' ')[1]+'</td>';
 				});
 				$('#bodyTableNgReport').append(tableData);
 

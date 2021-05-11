@@ -3207,7 +3207,8 @@ public function fetchSerialNumberReport($process,Request $request)
 						AND a.serial_number = assembly_logs.serial_number 
 						),
 					'' 
-				) AS operator_visual 
+				) AS operator_visual,
+				assembly_logs.created_at 
 			FROM
 				(
 				SELECT DISTINCT
@@ -3277,8 +3278,10 @@ public function fetchSerialNumberReport($process,Request $request)
 					asl.serial_number,
 					asl.model 
 				) a 
+				LEFT JOIN assembly_logs ON assembly_logs.serial_number = a.serial_number 
+				AND assembly_logs.location = 'packing' 
 			WHERE
-				a.created BETWEEN '".$from."' 
+				DATE( assembly_logs.created_at ) BETWEEN '".$from."' 
 				AND '".$now."'
 				".$models."
 			GROUP BY
