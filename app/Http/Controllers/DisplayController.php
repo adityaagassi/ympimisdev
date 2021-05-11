@@ -126,11 +126,8 @@ class DisplayController extends Controller
 			sum( plan )- sum( picking )) AS diff2,
 			round( sum( stock ) / sum( plan ), 1 ) AS ava,
 			IF
-			( round( sum( stock ) / sum( plan ), 1 )> 2, 1, 0 ) AS ultra_safe,
-			IF
 			(
-			round( sum( stock ) / sum( plan ), 1 )>= 1 
-			AND round( sum( stock ) / sum( plan ), 1 )<= 2,
+			round( sum( stock ) / sum( plan ), 1 )>= 1,
 			1,
 			0 
 			) AS safe,
@@ -142,7 +139,25 @@ class DisplayController extends Controller
 			0 
 			) AS unsafe,
 			IF
-			( sum( stock )<= 0, 1, 0 ) AS zero 
+			( sum( stock )<= 0, 1, 0 ) AS zero,
+			IF
+			( round( sum( stock ) / sum( plan ), 1 )> 2, 1, 0 ) AS ava_ultra_safe,
+			IF
+			(
+			round( sum( stock ) / sum( plan ), 1 )>= 1 
+			AND round( sum( stock ) / sum( plan ), 1 )<= 2,
+			1,
+			0 
+			) AS ava_safe,
+			IF
+			(
+			round( sum( stock ) / sum( plan ), 1 )< 1 
+			AND round( sum( stock ) / sum( plan ), 1 )> 0,
+			1,
+			0 
+			) AS ava_unsafe,
+			IF
+			( round( sum( stock ) / sum( plan ), 1 ) <= 0, 1, 0 ) AS ava_zero 
 			FROM
 			(
 			SELECT
@@ -311,9 +326,7 @@ class DisplayController extends Controller
 			materials.model,
 			materials.`key`,
 			materials.surface,
-			materials.issue_storage_location 
-			HAVING 
-			diff > 0
+			materials.issue_storage_location
 			ORDER BY
 			diff DESC");
 

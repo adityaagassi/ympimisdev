@@ -29,6 +29,9 @@
 			</div>
 		</div>
 	</div>
+	<div class="row" id="condition" style="margin-top: 10px;">
+
+	</div>
 	<div class="row" id="monitoring" style="margin-top: 10px;">
 
 	</div>
@@ -105,38 +108,61 @@
 				key_details = result.stockroom_keys;
 				var hpl = [];
 				$('#monitoring').html("");
+				$('#condition').html("");
 				var monitoring = "";
+				var condition = "";
 				var new_group = [];
+				var ava_new_group = [];
 
 				key_details.reduce(function (res, value) {
-					if (!res[value.hpl]) {
-						res[value.hpl] = {
-							ultra_safe: 0,
-							safe: 0,
-							unsafe: 0,
-							zero: 0,
-							hpl: value.hpl
-						};
-						new_group.push(res[value.hpl])
+					if(value.diff > 0){
+						if (!res[value.hpl]) {
+							res[value.hpl] = {
+								safe: 0,
+								unsafe: 0,
+								zero: 0,
+								hpl: value.hpl
+							};
+							new_group.push(res[value.hpl])
+						}
+						res[value.hpl].safe += value.safe
+						res[value.hpl].unsafe += value.unsafe
+						res[value.hpl].zero += value.zero
+						return res;
 					}
-					res[value.hpl].ultra_safe += value.ultra_safe
-					res[value.hpl].safe += value.safe
-					res[value.hpl].unsafe += value.unsafe
-					res[value.hpl].zero += value.zero
-					return res;
+				}, {});
+
+				key_details.reduce(function (ava_res, value) {
+					if (!ava_res[value.hpl]) {
+						ava_res[value.hpl] = {
+							ava_ultra_safe: 0,
+							ava_safe: 0,
+							ava_unsafe: 0,
+							ava_zero: 0,
+							ava_hpl: value.hpl
+						};
+						ava_new_group.push(ava_res[value.hpl])
+					}
+					ava_res[value.hpl].ava_safe += value.ava_ultra_safe
+					ava_res[value.hpl].ava_safe += value.ava_safe
+					ava_res[value.hpl].ava_unsafe += value.ava_unsafe
+					ava_res[value.hpl].ava_zero += value.ava_zero
+					return ava_res;
 				}, {});
 
 				$.each(result.stockroom_keys, function(key, value){
 					if(hpl.indexOf(value.hpl) === -1){
 						hpl.push(value.hpl);
+						condition = '<div style="" class="col-xs-4" id="condition_'+value.hpl+'"></div>';
+						$('#condition').append(condition);
 						monitoring = '<div style="" class="col-xs-4" id="'+value.hpl+'"></div>';
 						$('#monitoring').append(monitoring);
 					}
 				});
+				console.log(ava_new_group);
 
-				for (var i = 0; i < new_group.length; i++) {
-
-					Highcharts.chart(new_group[i].hpl, {
+				for (var i = 0; i < ava_new_group.length; i++) {
+					Highcharts.chart('condition_'+ava_new_group[i].ava_hpl, {
 						chart: {
 							backgroundColor: 'rgb(80,80,80)',
 							type: 'pie',
@@ -147,7 +173,7 @@
 							}
 						},
 						title: {
-							text: 'STOCK AVAILABILITY FOR - '+new_group[i].hpl+' '
+							text: 'STOCK AVAILABILITY FOR - '+ava_new_group[i].ava_hpl+' '
 						},
 						accessibility: {
 							point: {
@@ -195,99 +221,114 @@
 						},
 						series: [{
 							type: 'pie',
-							name: new_group[i].hpl,
+							name: ava_new_group[i].ava_hpl,
 							data: [{
 								name: 'Stock > 2 Day',
-								y: new_group[i].ultra_safe	,
+								y: ava_new_group[i].ava_ultra_safe	,
 								color: '#005005'
 							}, {
 								name: 'Stock 1-2 Day',
-								y: new_group[i].safe,
+								y: ava_new_group[i].ava_safe,
 								color: '#90ee7e'
 							}, {
 								name: 'Stock < 1 Day',
-								y: new_group[i].unsafe,
+								y: ava_new_group[i].ava_unsafe,
 								color: '#ffeb3b'
 							}, {
 								name: 'Stock Zero',
-								y: new_group[i].zero,
+								y: ava_new_group[i].ava_zero,
 								color: '#d32f2f'
 							}]
 						}]
 					});
+				}
 
+				for (var i = 0; i < new_group.length; i++) {
 
-					// Highcharts.chart(new_group[i].hpl, {
-					// 	chart: {
-					// 		backgroundColor: 'rgb(80,80,80)',
-					// 		type: 'pie',
-					// 		options3d: {
-					// 			enabled: true,
-					// 			alpha: 45,
-					// 			beta: 0
-					// 		}
-					// 	},
-					// 	title: {
-					// 		text: 'STOCK AVAILABILITY FOR - '+new_group[i].hpl+' '
-					// 	},
-					// 	tooltip: {
-					// 		pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-					// 	},
-					// 	accessibility: {
-					// 		point: {
-					// 			valueSuffix: '%'
-					// 		}
-					// 	},
-					// 	legend: {
-					// 		enabled: true,
-					// 		symbolRadius: 1,
-					// 		borderWidth: 1
-					// 	},
-					// 	plotOptions: {
-					// 		pie: {
-					// 			allowPointSelect: true,
-					// 			cursor: 'pointer',
-					// 			borderColor: 'rgb(126,86,134)',
-					// 			dataLabels: {
-					// 				enabled: true,
-					// 				format: '<b>{point.y} item(s)</b><br>{point.percentage:.1f} %',
-					// 				distance: -50,
-					// 				style:{
-					// 					fontSize:'0.8vw',
-					// 					textOutline:0
-					// 				},
-					// 				color:'black'
-					// 			},
-					// 			showInLegend: true,
-					// 			point: {
-					// 				events: {
-					// 					click: function () {
-					// 						fetchDetail(this.series.name, this.name);
-					// 					}
-					// 				}
-					// 			}
-					// 		}
-					// 	},
-					// 	credits:{
-					// 		enabled:false
-					// 	},						
-					// 	series: [{
-					// 		name: new_group[i].hpl,
-					// 		data: [{
-					// 			name: 'Stock >= 1 Day',
-					// 			y: new_group[i].safe,
-					// 			color: '#90ee7e'
-					// 		}, {
-					// 			name: 'Stock < 1 Day',
-					// 			y: new_group[i].unsafe,
-					// 			color: '#f7a35c'
-					// 		}, {
-					// 			name: 'Stock Zero',
-					// 			y: new_group[i].zero,
-					// 			color: '#f45b5b'
-					// 		}]
-					// 	}]
-					// });
+					Highcharts.chart(new_group[i].hpl, {
+						chart: {
+							backgroundColor: 'rgb(80,80,80)',
+							type: 'column',
+							options3d: {
+								enabled: true,
+								alpha: 15,
+								beta: 15,
+								depth: 50,
+								viewDistance: 25
+							}
+						},
+						title: {
+							text: 'PICKING AVAILABILITY FOR - '+new_group[i].hpl+' '
+						},
+						xAxis: {
+							categories: ['Stock Zero', 'Stock < 1 Day', 'Stock >= 1 Day']
+						},
+						legend: {
+							enabled: false,
+							symbolRadius: 1,
+							borderWidth: 1
+						},
+						plotOptions: {
+							series: {
+								depth: 25,
+								colorByPoint: true
+							},
+							column: {
+								edgeWidth: 1,
+								edgeColor: 'rgb(126,86,134)',
+								pointPadding: 0.05,
+								groupPadding: 0.1,
+								cursor: 'pointer',
+								point: {
+									events: {
+										click: function () {
+											fetchDetail(this.series.name, this.name);
+										}
+									}
+								}
+							}
+						},						
+						credits:{
+							enabled:false
+						},
+						tooltip: {
+							pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+						},
+						series: [{
+							name: new_group[i].hpl,
+							data: [{
+								name: 'Stock Zero',
+								y: new_group[i].zero,
+								color: '#d32f2f',
+								dataLabels: {
+									enabled: true,
+									style: {
+										fontSize: '1.3vw'
+									}
+								}
+							}, {
+								name: 'Stock < 1 Day',
+								y: new_group[i].unsafe,
+								color: '#ffeb3b',
+								dataLabels: {
+									enabled: true,
+									style: {
+										fontSize: '1.3vw'
+									}
+								}
+							}, {
+								name: 'Stock >= 1 Day',
+								y: new_group[i].safe,
+								color: '#90ee7e',
+								dataLabels: {
+									enabled: true,
+									style: {
+										fontSize: '1.3vw'
+									}
+								}
+							}]
+						}]
+					});
 				}
 
 			}
