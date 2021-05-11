@@ -10,6 +10,6 @@ class MaterialRequirementPlan extends Model
 	Use SoftDeletes;
 
 	protected $fillable = [
-		'due_date', 'material_number', 'quantity', 'remark', 'created_by'
+		'due_date', 'material_number', 'usage', 'remark', 'created_by'
 	];
 }
