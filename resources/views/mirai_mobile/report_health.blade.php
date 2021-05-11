@@ -105,9 +105,9 @@
                 <th>NIK</th>
                 <th>Nama</th>
                 <th>Jam Masuk</th>
-                <th>Location Masuk</th>
+                <!-- <th>Location Masuk</th> -->
                 <th>Jam Keluar</th>
-                <th>Location Keluar</th>
+                <!-- <th>Location Keluar</th> -->
                 <th>Village</th>
                 <th>City</th>
                 <th>Status</th>
@@ -127,8 +127,8 @@
                 <th></th>
                 <th></th>
                 <th></th>
-                <th></th>
-                <th></th>
+          <!--       <th></th>
+                <th></th> -->
               </tr>
             </tfoot>
           </table>
@@ -207,7 +207,7 @@
           tableData += '<td>'+ value.employee_id +'</td>';     
           tableData += '<td>'+ value.name +'</td>';
           tableData += '<td>'+ value.time_in +'</td>';
-          tableData += '<td><a target="_blank" href="https://172.17.128.87/miraidev/public/trial3?lat='+value.lat_in+'&long='+value.lng_in+'" class="btn btn-warning btn-sm"><i class="fa fa-map-marker"></i>&nbsp;&nbsp;Location</a></td>';
+          // tableData += '<td><a target="_blank" href="https://10.109.52.1/miraidev/public/trial_loc2?lat='+value.lat_in+'&long='+value.lng_in+'" class="btn btn-warning btn-sm"><i class="fa fa-map-marker"></i>&nbsp;&nbsp;Location</a></td>';
           // var data2 = {
           //   lat : value.lat_in,
           //   lng : value.lng_in
@@ -227,7 +227,7 @@
 
           // });
           tableData += '<td>'+ value.time_out +'</td>';
-          tableData += '<td><a target="_blank" href="https://172.17.128.87/miraidev/public/trial3?lat='+value.lat_out+'&long='+value.lng_out+'" class="btn btn-warning btn-sm"><i class="fa fa-map-marker"></i>&nbsp;&nbsp;Location</a></td>';
+          // tableData += '<td><a target="_blank" href="https://172.17.128.87/miraidev/public/trial3?lat='+value.lat_out+'&long='+value.lng_out+'" class="btn btn-warning btn-sm"><i class="fa fa-map-marker"></i>&nbsp;&nbsp;Location</a></td>';
           tableData += '<td>'+ value.village +'</td>';
           tableData += '<td>'+ value.city +'</td>';
           tableData += '<td>'+ value.remark +'</td>';

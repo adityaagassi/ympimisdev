@@ -46,13 +46,15 @@
 					<table class="table table-hover table-bordered table-striped" id="tableDetail">
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
-								<th style="width: 1%;">Model</th>
-								<th style="width: 1%;">Key</th>
-								<th style="width: 1%;">Surface</th>
+								<th style="width: 4%;">Key</th>
 								<th style="width: 1%;">Plan Acc</th>
-								<th style="width: 1%;">Plan Original</th>
+								<th style="width: 1%;">Pick Acc</th>
+								<th style="width: 1%;">Return Acc</th>
+								<th style="width: 1%;">Plan</th>
+								<th style="width: 1%;">Pick</th>
+								<th style="width: 1%;">Diff</th>
 								<th style="width: 1%;">Stock</th>
-								<th style="width: 1%;">Availability<br>(Stock&divide;Plan Acc)</th>
+								<th style="width: 1%;">Ava</th>
 							</tr>
 						</thead>
 						<tbody id="tableDetailBody">
@@ -363,39 +365,45 @@ function fetchDetail(hpl, cat, c){
 					if(cat == 'Stock >= 1 Day'){
 						if(value.safe == 1){
 							tableDetailBody += '<tr>';
-							tableDetailBody += '<td>'+value.model+'</td>';
-							tableDetailBody += '<td>'+value.key+'</td>';
-							tableDetailBody += '<td>'+value.surface+'</td>';
-							tableDetailBody += '<td>'+value.plan_ori+'</td>';
-							tableDetailBody += '<td>'+value.plan+'</td>';
-							tableDetailBody += '<td>'+value.stock+'</td>';
-							tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
+							tableDetailBody += '<td style="width: 4%;">'+value.model+' '+value.key+' '+value.surface+'</td>';
+							tableDetailBody += '<td style="width: 1%;">'+value.plan_ori+'</td>';
+							tableDetailBody += '<td style="width: 1%;">'+value.plus+'</td>';
+							tableDetailBody += '<td style="width: 1%;">'+value.minus+'</td>';
+							tableDetailBody += '<td style="width: 1%;">'+value.plan+'</td>';
+							tableDetailBody += '<td style="width: 1%;">'+value.picking+'</td>';
+							tableDetailBody += '<td style="width: 1%;">'+value.diff*-1+'</td>';
+							tableDetailBody += '<td style="width: 1%;">'+value.stock+'</td>';
+							tableDetailBody += '<td style="width: 1%;">'+value.ava+' Day(s)</td>';
 							tableDetailBody += '</tr>';
 						}				
 					}
 					if(cat == 'Stock < 1 Day'){
 						if(value.unsafe == 1){
 							tableDetailBody += '<tr>';
-							tableDetailBody += '<td>'+value.model+'</td>';
-							tableDetailBody += '<td>'+value.key+'</td>';
-							tableDetailBody += '<td>'+value.surface+'</td>';
-							tableDetailBody += '<td>'+value.plan_ori+'</td>';
-							tableDetailBody += '<td>'+value.plan+'</td>';
-							tableDetailBody += '<td>'+value.stock+'</td>';
-							tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
+							tableDetailBody += '<td style="width: 4%;">'+value.model+' '+value.key+' '+value.surface+'</td>';
+							tableDetailBody += '<td style="width: 1%;">'+value.plan_ori+'</td>';
+							tableDetailBody += '<td style="width: 1%;">'+value.plus+'</td>';
+							tableDetailBody += '<td style="width: 1%;">'+value.minus+'</td>';
+							tableDetailBody += '<td style="width: 1%;">'+value.plan+'</td>';
+							tableDetailBody += '<td style="width: 1%;">'+value.picking+'</td>';
+							tableDetailBody += '<td style="width: 1%;">'+value.diff*-1+'</td>';
+							tableDetailBody += '<td style="width: 1%;">'+value.stock+'</td>';
+							tableDetailBody += '<td style="width: 1%;">'+value.ava+' Day(s)</td>';
 							tableDetailBody += '</tr>';
 						}
 					}
 					if(cat == 'Stock Zero'){
 						if(value.zero == 1){
 							tableDetailBody += '<tr>';
-							tableDetailBody += '<td>'+value.model+'</td>';
-							tableDetailBody += '<td>'+value.key+'</td>';
-							tableDetailBody += '<td>'+value.surface+'</td>';
-							tableDetailBody += '<td>'+value.plan_ori+'</td>';
-							tableDetailBody += '<td>'+value.plan+'</td>';
-							tableDetailBody += '<td>'+value.stock+'</td>';
-							tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
+							tableDetailBody += '<td style="width: 4%;">'+value.model+' '+value.key+' '+value.surface+'</td>';
+							tableDetailBody += '<td style="width: 1%;">'+value.plan_ori+'</td>';
+							tableDetailBody += '<td style="width: 1%;">'+value.plus+'</td>';
+							tableDetailBody += '<td style="width: 1%;">'+value.minus+'</td>';
+							tableDetailBody += '<td style="width: 1%;">'+value.plan+'</td>';
+							tableDetailBody += '<td style="width: 1%;">'+value.picking+'</td>';
+							tableDetailBody += '<td style="width: 1%;">'+value.diff*-1+'</td>';
+							tableDetailBody += '<td style="width: 1%;">'+value.stock+'</td>';
+							tableDetailBody += '<td style="width: 1%;">'+value.ava+' Day(s)</td>';
 							tableDetailBody += '</tr>';
 						}
 					}
@@ -407,52 +415,60 @@ function fetchDetail(hpl, cat, c){
 				if(cat == 'Stock > 2 Day'){
 					if(value.ava_ultra_safe == 1){
 						tableDetailBody += '<tr>';
-						tableDetailBody += '<td>'+value.model+'</td>';
-						tableDetailBody += '<td>'+value.key+'</td>';
-						tableDetailBody += '<td>'+value.surface+'</td>';
-						tableDetailBody += '<td>'+value.plan_ori+'</td>';
-						tableDetailBody += '<td>'+value.plan+'</td>';
-						tableDetailBody += '<td>'+value.stock+'</td>';
-						tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
+						tableDetailBody += '<td style="width: 4%;">'+value.model+' '+value.key+' '+value.surface+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.plan_ori+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.plus+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.minus+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.plan+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.picking+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.diff*-1+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.stock+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.ava+' Day(s)</td>';
 						tableDetailBody += '</tr>';
 					}				
 				}
 				if(cat == 'Stock 1-2 Day'){
 					if(value.ava_safe == 1){
 						tableDetailBody += '<tr>';
-						tableDetailBody += '<td>'+value.model+'</td>';
-						tableDetailBody += '<td>'+value.key+'</td>';
-						tableDetailBody += '<td>'+value.surface+'</td>';
-						tableDetailBody += '<td>'+value.plan_ori+'</td>';
-						tableDetailBody += '<td>'+value.plan+'</td>';
-						tableDetailBody += '<td>'+value.stock+'</td>';
-						tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
+						tableDetailBody += '<td style="width: 4%;">'+value.model+' '+value.key+' '+value.surface+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.plan_ori+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.plus+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.minus+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.plan+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.picking+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.diff*-1+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.stock+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.ava+' Day(s)</td>';
 						tableDetailBody += '</tr>';
 					}				
 				}
 				if(cat == 'Stock < 1 Day'){
 					if(value.ava_unsafe == 1){
 						tableDetailBody += '<tr>';
-						tableDetailBody += '<td>'+value.model+'</td>';
-						tableDetailBody += '<td>'+value.key+'</td>';
-						tableDetailBody += '<td>'+value.surface+'</td>';
-						tableDetailBody += '<td>'+value.plan_ori+'</td>';
-						tableDetailBody += '<td>'+value.plan+'</td>';
-						tableDetailBody += '<td>'+value.stock+'</td>';
-						tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
+						tableDetailBody += '<td style="width: 4%;">'+value.model+' '+value.key+' '+value.surface+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.plan_ori+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.plus+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.minus+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.plan+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.picking+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.diff*-1+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.stock+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.ava+' Day(s)</td>';
 						tableDetailBody += '</tr>';
 					}
 				}
 				if(cat == 'Stock Zero'){
 					if(value.ava_zero == 1){
 						tableDetailBody += '<tr>';
-						tableDetailBody += '<td>'+value.model+'</td>';
-						tableDetailBody += '<td>'+value.key+'</td>';
-						tableDetailBody += '<td>'+value.surface+'</td>';
-						tableDetailBody += '<td>'+value.plan_ori+'</td>';
-						tableDetailBody += '<td>'+value.plan+'</td>';
-						tableDetailBody += '<td>'+value.stock+'</td>';
-						tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
+						tableDetailBody += '<td style="width: 4%;">'+value.model+' '+value.key+' '+value.surface+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.plan_ori+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.plus+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.minus+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.plan+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.picking+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.diff*-1+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.stock+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.ava+' Day(s)</td>';
 						tableDetailBody += '</tr>';
 					}
 				}

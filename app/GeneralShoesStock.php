@@ -11,7 +11,7 @@ class GeneralShoesStock extends Model{
 	use SoftDeletes;
 
     protected $fillable = [
-		'merk', 'gender', 'size', 'temp_stock', 'quantity', 'created_by'
+		'condition', 'merk', 'gender', 'size', 'temp_stock', 'quantity', 'created_by'
 	];
 
 }

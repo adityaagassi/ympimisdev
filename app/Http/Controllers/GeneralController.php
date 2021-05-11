@@ -845,6 +845,8 @@ class GeneralController extends Controller{
 			$request = GeneralShoesRequest::leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'general_shoes_requests.employee_id')
 			->where('general_shoes_requests.request_id', $request_id)
 			->select(
+				'general_shoes_requests.condition',
+				'general_shoes_requests.metode',
 				'general_shoes_requests.merk',
 				'general_shoes_requests.gender',
 				'general_shoes_requests.size',
@@ -866,6 +868,8 @@ class GeneralController extends Controller{
 						'size' => $request[$i]['size'],
 						'quantity' => -1,
 						'status' => 'Pinjam',
+						'metode' => $request[$i]['metode'],
+						'condition' => $request[$i]['condition'],
 						'employee_id' => $request[$i]['employee_id'],
 						'name' => $request[$i]['name'],
 						'department' => $request[$i]['department'],
@@ -879,12 +883,17 @@ class GeneralController extends Controller{
 
 
 					$stock = GeneralShoesStock::where('gender', $request[$i]['gender'])
+					->where('condition', $request[$i]['condition'])
 					->where('merk', $request[$i]['merk'])
 					->where('size', $request[$i]['size'])
 					->first();
 
-					$stock->quantity = $stock->quantity - 1;
-					$stock->save();
+					if($stock){
+						$stock->quantity = $stock->quantity - 1;
+						$stock->save();						
+					}
+
+
 
 
 				} catch (Exception $e) {
@@ -1019,6 +1028,8 @@ class GeneralController extends Controller{
 					'sub_group' => '',
 					'created_by' => Auth::id()
 				]);
+				$log->save();
+
 			} catch (Exception $e) {
 				DB::rollback();
 				$response = array(
@@ -1029,15 +1040,15 @@ class GeneralController extends Controller{
 			}
 		}
 
-		// $mail_to = db::table('send_emails')
-		// ->where('remark', '=', 'safety_shoes')
-		// ->WhereNull('deleted_at')
-		// ->select('email')
-		// ->get();
+		$mail_to = db::table('send_emails')
+		->where('remark', '=', 'safety_shoes')
+		->WhereNull('deleted_at')
+		->select('email')
+		->get();
 
-		// Mail::to($mail_to)
-		// ->bcc('aditya.agassi@music.yamaha.com')
-		// ->send(new SendEmail($data, 'safety_shoes'));
+		Mail::to($mail_to)
+		->bcc(['aditya.agassi@music.yamaha.com', 'muhammad.ikhlas@music.yamaha.com'])
+		->send(new SendEmail($data, 'safety_shoes'));
 
 		DB::commit();
 
@@ -1096,12 +1107,20 @@ class GeneralController extends Controller{
 				]);
 
 
+				$condition = '';
+				if($stock[$i]['status'] == 'Simpan'){
+					$condition = 'Layak Pakai';
+				}else{
+					$condition = 'Tidak Layak';
+				}
+
 				$log = new GeneralShoesLog([
 					'merk' => $stock[$i]['merk'],
 					'gender' => $stock[$i]['gender'],
 					'size' => $stock[$i]['size'],
 					'quantity' => $stock[$i]['qty'],
 					'status' => $stock[$i]['status'],
+					'condition' => $condition,
 					'employee_id' => $emp->employee_id,
 					'name' => $emp->name,
 					'department' => $emp->department,
@@ -1128,7 +1147,7 @@ class GeneralController extends Controller{
 		->get();
 
 		Mail::to($mail_to)
-		->bcc('aditya.agassi@music.yamaha.com')
+		->bcc(['aditya.agassi@music.yamaha.com', 'muhammad.ikhlas@music.yamaha.com'])
 		->send(new SendEmail($data, 'safety_shoes'));
 
 		DB::commit();
@@ -1145,44 +1164,6 @@ class GeneralController extends Controller{
 		$printer = $request->get('printer');
 
 		DB::beginTransaction();
-		for ($i=0; $i < count($employee); $i++) {
-			$stock = GeneralShoesStock::where('merk',  $employee[$i]['merk']);
-			if($employee[$i]['gender'] == 'L'){
-				$stock = $stock->where('gender',  $employee[$i]['gender']);
-			}
-			$stock = $stock->where('size',  $employee[$i]['size'])
-			->first();
-
-			if($stock){
-				if($stock->temp_stock >= 1){
-					$stock->temp_stock = $stock->temp_stock - 1;
-					$stock->save();
-				}else{
-					DB::rollback();
-
-					$stock = GeneralShoesStock::where('merk',  $employee[$i]['merk'])
-					->where('gender',  $employee[$i]['gender'])
-					->where('size',  $employee[$i]['size'])
-					->first();
-
-					$response = array(
-						'status' => false,
-						'message' => 'Sepatu '.$employee[$i]['merk'].' ukuran '.$employee[$i]['size'].' ('.$employee[$i]['gender'].') stock tidak cukup. Stock tersisa '.$stock->temp_stock
-					);
-					return Response::json($response);
-				}
-			}else{
-				DB::rollback();
-				$response = array(
-					'status' => false,
-					'message' => 'Tidak ada Sepatu '.$employee[$i]['merk']. ' ukuran '.$employee[$i]['size'].' ('.$employee[$i]['gender'].')'
-				);
-				return Response::json($response);
-			}			
-		}
-		DB::commit();
-
-
 		$prefix_now = 'REQ'.date("y").date("m");
 		$code_generator = CodeGenerator::where('note','=','general-request')->first();
 		if ($prefix_now != $code_generator->prefix){
@@ -1190,54 +1171,168 @@ class GeneralController extends Controller{
 			$code_generator->index = '0';
 			$code_generator->save();
 		}
-
 		$number = sprintf("%'.0" . $code_generator->length . "d", $code_generator->index+1);
 		$request_id = $code_generator->prefix . $number;
 		$code_generator->index = $code_generator->index+1;
 		$code_generator->save();
 
-
 		for ($i=0; $i < count($employee); $i++) {
-			try{
-				$request = new GeneralShoesRequest([
-					'request_id' => $request_id,
-					'employee_id' => $employee[$i]['employee_id'],
-					'gender' => $employee[$i]['gender'],
-					'merk' => $employee[$i]['merk'],
-					'size' => $employee[$i]['size'],
-					'created_by' => Auth::id()
-				]);
-				$request->save();
 
-			} catch (Exception $e) {
-				$response = array(
-					'status' => false,
-					'message' => $e->getMessage()
-				);
-				return Response::json($response);
+			$cek_baru = true;
+			//CEK LAYAK PAKAI
+			$stock = GeneralShoesStock::where('merk',  $employee[$i]['merk']);
+			if($employee[$i]['gender'] == 'L'){
+				$stock = $stock->where('gender',  $employee[$i]['gender']);
+			}
+			$stock = $stock->where('size',  $employee[$i]['size'])
+			->where('condition', 'Layak Pakai')
+			->first();
+
+			if($stock){
+				if($stock->temp_stock >= 1){
+					try {
+						$stock->temp_stock = $stock->temp_stock - 1;
+						$stock->save();
+						$cek_baru = false;
+
+						$request = new GeneralShoesRequest([
+							'request_id' => $request_id,
+							'employee_id' => $employee[$i]['employee_id'],
+							'gender' => $employee[$i]['gender'],
+							'merk' => $employee[$i]['merk'],
+							'size' => $employee[$i]['size'],
+							'condition' => 'Layak Pakai',
+							'metode' => 'Stock',
+							'created_by' => Auth::id()
+						]);
+						$request->save();	
+					} catch (Exception $e) {
+						DB::rollback();
+						$response = array(
+							'status' => false,
+							'message' => $e->getMessage()
+						);
+						return Response::json($response);
+						
+					}
+
+					
+				}
+			}
+
+			//CEK BARU
+			if($cek_baru){
+				$new = GeneralShoesStock::where('merk',  $employee[$i]['merk']);
+				if($employee[$i]['gender'] == 'L'){
+					$new = $new->where('gender',  $employee[$i]['gender']);
+				}
+				$new = $new->where('size',  $employee[$i]['size'])
+				->where('condition', 'Baru')
+				->first();
+
+				if($new){
+					if($new->temp_stock > 0){
+						try {
+							$new->temp_stock = $new->temp_stock - 1;
+							$new->save();
+
+							$request = new GeneralShoesRequest([
+								'request_id' => $request_id,
+								'employee_id' => $employee[$i]['employee_id'],
+								'gender' => $employee[$i]['gender'],
+								'merk' => $employee[$i]['merk'],
+								'size' => $employee[$i]['size'],
+								'condition' => 'Baru',
+								'metode' => 'Stock',
+								'created_by' => Auth::id()
+							]);
+							$request->save();
+						} catch (Exception $e) {
+							DB::rollback();
+							$response = array(
+								'status' => false,
+								'message' => $e->getMessage()
+							);
+							return Response::json($response);
+						}
+
+					}else{
+						try {
+							$request = new GeneralShoesRequest([
+								'request_id' => $request_id,
+								'employee_id' => $employee[$i]['employee_id'],
+								'gender' => $employee[$i]['gender'],
+								'merk' => $employee[$i]['merk'],
+								'size' => $employee[$i]['size'],
+								'condition' => 'Baru',
+								'metode' => 'PR',
+								'created_by' => Auth::id()
+							]);
+							$request->save();	
+						} catch (Exception $e) {
+							DB::rollback();
+							$response = array(
+								'status' => false,
+								'message' => $e->getMessage()
+							);
+							return Response::json($response);
+						}
+					}
+				}else{
+					try {
+						$request = new GeneralShoesRequest([
+							'request_id' => $request_id,
+							'employee_id' => $employee[$i]['employee_id'],
+							'gender' => $employee[$i]['gender'],
+							'merk' => $employee[$i]['merk'],
+							'size' => $employee[$i]['size'],
+							'condition' => 'Baru',
+							'metode' => 'PR',
+							'created_by' => Auth::id()
+						]);
+						$request->save();	
+					} catch (Exception $e) {
+						DB::rollback();
+						$response = array(
+							'status' => false,
+							'message' => $e->getMessage()
+						);
+						return Response::json($response);
+					}
+				}
 			}
 		}
 
-		$data = GeneralShoesRequest::leftJoin('users', 'users.id', '=', 'general_shoes_requests.created_by')
+		DB::commit();
+
+		$data = GeneralShoesRequest::leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'general_shoes_requests.employee_id')
 		->where('general_shoes_requests.request_id', $request_id)
 		->select(
-			'general_shoes_requests.gender',
+			'general_shoes_requests.employee_id',
+			db::raw("concat(SPLIT_STRING(employee_syncs.`name`, ' ', 1), ' ', SPLIT_STRING(employee_syncs.`name`, ' ', 2)) AS `name`"),
 			'general_shoes_requests.merk',
-			'general_shoes_requests.size',
-			'users.name',
-			db::raw('COUNT(general_shoes_requests.id) AS qty')
-		)
-		->groupBy(
 			'general_shoes_requests.gender',
-			'general_shoes_requests.merk',
 			'general_shoes_requests.size',
-			'users.name'
+			'general_shoes_requests.metode',
+			'general_shoes_requests.condition'
 		)
-		->orderBy('general_shoes_requests.gender', 'ASC')
-		->orderBy('general_shoes_requests.size', 'ASC')
 		->get();
 
-		$this->safetyShoesSlip($data, $request_id, $printer, 'Print');
+		$mail_to = db::table('users')
+		->where('id', '=', Auth::id())
+		->where('email', 'like', '%music.yamaha%')
+		->first();
+
+		if($mail_to){
+			Mail::to(['evi.nur.cholifah@music.yamaha.com'])
+			->cc([$mail_to->email])
+			->bcc(['aditya.agassi@music.yamaha.com', 'muhammad.ikhlas@music.yamaha.com'])
+			->send(new SendEmail($data, 'safety_shoes_request'));
+		}else{
+			Mail::to(['evi.nur.cholifah@music.yamaha.com'])
+			->bcc(['aditya.agassi@music.yamaha.com', 'muhammad.ikhlas@music.yamaha.com'])
+			->send(new SendEmail($data, 'safety_shoes_request'));
+		}
 
 		$response = array(
 			'status' => true,
@@ -1254,7 +1349,9 @@ class GeneralController extends Controller{
 		$data = GeneralShoesRequest::leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'general_shoes_requests.employee_id')
 		->leftJoin('users', 'users.id', '=', 'general_shoes_requests.created_by')
 		->where('general_shoes_requests.request_id', $request_id)
+		->where('general_shoes_requests.metode', 'Stock')
 		->select(
+			'general_shoes_requests.condition',
 			'employee_syncs.gender',
 			'general_shoes_requests.merk',
 			'general_shoes_requests.size',
@@ -1262,6 +1359,7 @@ class GeneralController extends Controller{
 			db::raw('COUNT(general_shoes_requests.id) AS qty')
 		)
 		->groupBy(
+			'general_shoes_requests.condition',
 			'employee_syncs.gender',
 			'general_shoes_requests.merk',
 			'general_shoes_requests.size',
@@ -1271,7 +1369,33 @@ class GeneralController extends Controller{
 		->orderBy('general_shoes_requests.size', 'ASC')
 		->get();
 
-		$this->safetyShoesSlip($data, $request_id, $printer, 'Reprint');
+		$request = GeneralShoesRequest::where('request_id', $request_id)->first();
+		if(count($data) > 0){
+			$this->safetyShoesSlipWh($data, $request, $printer);			
+		}
+
+
+
+		$data = GeneralShoesRequest::leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'general_shoes_requests.employee_id')
+		->leftJoin('users', 'users.id', '=', 'general_shoes_requests.created_by')
+
+		->where('general_shoes_requests.request_id', $request_id)
+		->select(
+			'general_shoes_requests.employee_id',
+			db::raw("concat(SPLIT_STRING(employee_syncs.`name`, ' ', 1), ' ', SPLIT_STRING(employee_syncs.`name`, ' ', 2)) AS `name`"),
+			'general_shoes_requests.merk',
+			'general_shoes_requests.gender',
+			'general_shoes_requests.size',
+			'general_shoes_requests.metode',
+			'general_shoes_requests.condition',
+			db::raw('users.name AS requester')	
+		)
+		->orderBy('general_shoes_requests.metode', 'DESC')
+		->get();
+
+		$this->safetyShoesSlipStd($data, $request, $printer);
+		// $this->safetyShoesSlipPrd($data, $request, $printer);
+
 
 		$response = array(
 			'status' => true
@@ -1279,51 +1403,190 @@ class GeneralController extends Controller{
 		return Response::json($response);
 	}
 
-	public function safetyShoesSlip($data, $request_id, $printer_name, $remark){
-
-
+	public function safetyShoesSlipWh($data, $request, $printer_name){
 		$connector = new WindowsPrintConnector($printer_name);
 		$printer = new Printer($connector);
 
 		$printer->initialize();
-
+		$printer->setFont(Printer::MODE_FONT_A);
 		$printer->setJustification(Printer::JUSTIFY_CENTER);
 		$printer->setEmphasis(true);
 		$printer->setReverseColors(true);
 		$printer->setTextSize(2, 2);
-		$printer->text(strtoupper(" safety shoes request \n"));
+		$printer->text(strtoupper("  safety shoes request  \n"));
 		$printer->initialize();
 
 		$printer->feed(1);
 		$printer->setJustification(Printer::JUSTIFY_CENTER);
-		$printer->qrCode($request_id, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
+		$printer->qrCode($request->request_id, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
 		$printer->setTextSize(1, 1);
-		$printer->text($request_id."\n");
+		$printer->text($request->request_id."\n");
 		$printer->feed(1);
 
 
 		$printer->initialize();
-		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->setJustification(Printer::JUSTIFY_LEFT);
 		$total_qty = 0;
 		for ($i=0; $i < count($data); $i++) {
 			$gender = $this->writeString('('.$data[$i]->gender.')', 2, ' ');
 			$size = $this->writeString($data[$i]->size, 2, ' ');
 			$qty = $this->writeNumber($data[$i]->qty, 2, ' ');
 			$merk = $this->writeString($data[$i]->merk, 8, ' ');
+			$condition = $this->writeString('('.$data[$i]->condition.')', 13, ' ');
 
-			$printer->text($merk ." ".$gender." Size ".$size." -> ".$qty. " Pasang");
+			$printer->text($merk ." ".$gender." Size ".$size. " (".$data[$i]->condition.") -> ".$qty. " Pasang");
 			$printer->feed(1);
 
 		}
 		$printer->feed(2);
 		$printer->initialize();
 		$printer->setJustification(Printer::JUSTIFY_CENTER);
-		if($remark == 'Reprint'){
-			$printer->text(" Reprint "."\n");
-		}
-		$printer->textRaw($data[0]->name."\n");
-		$printer->textRaw("(".date("d-M-Y H:i:s").")\n");
+		$printer->setUnderline(true);
+		$printer->text('Created At');
+		$printer->feed(1);
+		$printer->setUnderline(false);
+
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$date = date('d-F-Y H:i:s', strtotime($request->created_at));
+		$printer->textRaw($date);
 		$printer->feed(2);
+
+		$printer->initialize();
+		$printer->setTextSize(1, 1);
+		$printer->setJustification(Printer::JUSTIFY_LEFT);
+		$printer->setFont(Printer::MODE_FONT_B);
+		$printer->text("*) Slip for Warehouse");
+		$printer->feed(1);	
+
+		$printer->cut();
+		$printer->close();
+	}
+
+	public function safetyShoesSlipStd($data, $request, $printer_name){
+		$connector = new WindowsPrintConnector($printer_name);
+		$printer = new Printer($connector);
+
+		$printer->initialize();
+		$printer->setFont(Printer::MODE_FONT_A);
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->setEmphasis(true);
+		$printer->setReverseColors(true);
+		$printer->setTextSize(2, 2);
+		$printer->text(strtoupper("  safety shoes request  \n"));
+		$printer->initialize();
+
+		$printer->feed(1);
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->qrCode($request->request_id, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
+		$printer->setTextSize(1, 1);
+		$printer->text($request->request_id."\n");
+		$printer->feed(1);
+
+		$printer->initialize();
+		$printer->setJustification(Printer::JUSTIFY_LEFT);
+
+		$count = 0;
+		for ($i=1; $i < count($data); $i++) {
+			$count++;
+			$order = $this->writeString($count.".", 3, ' ');
+			$gender = $this->writeString('('.$data[$i]->gender.')', 2, ' ');
+			$size = $this->writeString($data[$i]->size, 2, ' ');
+			$merk = $this->writeString($data[$i]->merk, 8, ' ');
+
+			$printer->text($order ." ".$data[$i]->employee_id." - ".$data[$i]->name);
+			$printer->feed(1);
+			$printer->text("    ".$merk ." ".$gender." Size ".$size. " (".$data[$i]->metode." - ".$data[$i]->condition.")");
+			$printer->feed(1);
+
+		}
+		$printer->feed(2);
+		$printer->initialize();
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->setUnderline(true);
+		$printer->text('Created By');
+		$printer->feed(1);
+		$printer->setUnderline(false);
+
+		$printer->initialize();
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->textRaw($data[0]->requester."\n");
+		$date = date('d-F-Y H:i:s', strtotime($request->created_at));
+		$printer->textRaw($date);
+		$printer->feed(2);
+
+		$printer->initialize();
+		$printer->setTextSize(1, 1);
+		$printer->setJustification(Printer::JUSTIFY_LEFT);
+		$printer->setFont(Printer::MODE_FONT_B);
+		$printer->text("*) Slip for Standardization");
+		$printer->feed(1);	
+
+		$printer->cut();
+		$printer->close();
+	}
+
+	public function safetyShoesSlipPrd($data, $request, $printer_name){
+		$connector = new WindowsPrintConnector($printer_name);
+		$printer = new Printer($connector);
+
+
+		$printer->initialize();
+		$printer->setFont(Printer::MODE_FONT_A);
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->setEmphasis(true);
+		$printer->setReverseColors(true);
+		$printer->setTextSize(2, 2);
+		$printer->text(strtoupper("  safety shoes request  \n"));
+		$printer->initialize();
+
+		$printer->feed(1);
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->qrCode($request->request_id, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
+		$printer->setTextSize(1, 1);
+		$printer->text($request->request_id."\n");
+		$printer->feed(1);
+
+
+		$printer->initialize();
+		$printer->setJustification(Printer::JUSTIFY_LEFT);
+
+		$count = 0;
+		for ($i=1; $i < count($data); $i++) {
+			$count++;
+			$order = $this->writeString($count.".", 3, ' ');
+			$gender = $this->writeString('('.$data[$i]->gender.')', 2, ' ');
+			$size = $this->writeString($data[$i]->size, 2, ' ');
+			$merk = $this->writeString($data[$i]->merk, 8, ' ');
+
+			$printer->text($order ." ".$data[$i]->employee_id." - ".$data[$i]->name);
+			$printer->feed(1);
+			$printer->text("    ".$merk ." ".$gender." Size ".$size. " (".$data[$i]->metode." - ".$data[$i]->condition.")");
+			$printer->feed(1);
+
+		}
+		$printer->feed(2);
+		$printer->initialize();
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->setUnderline(true);
+		$printer->text('Created By');
+		$printer->feed(1);
+		$printer->setUnderline(false);
+
+		$printer->initialize();
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->textRaw($data[0]->name."\n");
+		$date = date('d-F-Y H:i:s', strtotime($request->created_at));
+		$printer->textRaw($date);
+		$printer->feed(2);
+		
+		$printer->initialize();
+		$printer->setTextSize(1, 1);
+		$printer->setJustification(Printer::JUSTIFY_LEFT);
+		$printer->setFont(Printer::MODE_FONT_B);
+		$printer->text("*) Slip for Production/Requester");
+		$printer->feed(1);	
+
+
 		$printer->cut();
 		$printer->close();
 	}
@@ -2526,6 +2789,7 @@ public function scanSafetyShoes(Request $request){
 
 	$data = GeneralShoesRequest::leftJoin('users', 'users.id', '=', 'general_shoes_requests.created_by')
 	->where('general_shoes_requests.request_id', $request_id)
+	->where('general_shoes_requests.metode', 'Stock')
 	->select(
 		'general_shoes_requests.gender',
 		'general_shoes_requests.merk',
