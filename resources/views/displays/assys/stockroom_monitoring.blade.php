@@ -402,59 +402,59 @@ function fetchDetail(hpl, cat, c){
 					}
 				}
 			}
-			else{
-				if(value.hpl == hpl){
-					if(cat == 'Stock > 2 Day'){
-						if(value.ultra_safe == 1){
-							tableDetailBody += '<tr>';
-							tableDetailBody += '<td>'+value.model+'</td>';
-							tableDetailBody += '<td>'+value.key+'</td>';
-							tableDetailBody += '<td>'+value.surface+'</td>';
-							tableDetailBody += '<td>'+value.plan_ori+'</td>';
-							tableDetailBody += '<td>'+value.plan+'</td>';
-							tableDetailBody += '<td>'+value.stock+'</td>';
-							tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
-							tableDetailBody += '</tr>';
-						}				
+		}
+		else{
+			if(value.hpl == hpl){
+				if(cat == 'Stock > 2 Day'){
+					if(value.ultra_safe == 1){
+						tableDetailBody += '<tr>';
+						tableDetailBody += '<td>'+value.model+'</td>';
+						tableDetailBody += '<td>'+value.key+'</td>';
+						tableDetailBody += '<td>'+value.surface+'</td>';
+						tableDetailBody += '<td>'+value.plan_ori+'</td>';
+						tableDetailBody += '<td>'+value.plan+'</td>';
+						tableDetailBody += '<td>'+value.stock+'</td>';
+						tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
+						tableDetailBody += '</tr>';
+					}				
+				}
+				if(cat == 'Stock 1-2 Day'){
+					if(value.safe == 1){
+						tableDetailBody += '<tr>';
+						tableDetailBody += '<td>'+value.model+'</td>';
+						tableDetailBody += '<td>'+value.key+'</td>';
+						tableDetailBody += '<td>'+value.surface+'</td>';
+						tableDetailBody += '<td>'+value.plan_ori+'</td>';
+						tableDetailBody += '<td>'+value.plan+'</td>';
+						tableDetailBody += '<td>'+value.stock+'</td>';
+						tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
+						tableDetailBody += '</tr>';
+					}				
+				}
+				if(cat == 'Stock < 1 Day'){
+					if(value.unsafe == 1){
+						tableDetailBody += '<tr>';
+						tableDetailBody += '<td>'+value.model+'</td>';
+						tableDetailBody += '<td>'+value.key+'</td>';
+						tableDetailBody += '<td>'+value.surface+'</td>';
+						tableDetailBody += '<td>'+value.plan_ori+'</td>';
+						tableDetailBody += '<td>'+value.plan+'</td>';
+						tableDetailBody += '<td>'+value.stock+'</td>';
+						tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
+						tableDetailBody += '</tr>';
 					}
-					if(cat == 'Stock 1-2 Day'){
-						if(value.safe == 1){
-							tableDetailBody += '<tr>';
-							tableDetailBody += '<td>'+value.model+'</td>';
-							tableDetailBody += '<td>'+value.key+'</td>';
-							tableDetailBody += '<td>'+value.surface+'</td>';
-							tableDetailBody += '<td>'+value.plan_ori+'</td>';
-							tableDetailBody += '<td>'+value.plan+'</td>';
-							tableDetailBody += '<td>'+value.stock+'</td>';
-							tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
-							tableDetailBody += '</tr>';
-						}				
-					}
-					if(cat == 'Stock < 1 Day'){
-						if(value.unsafe == 1){
-							tableDetailBody += '<tr>';
-							tableDetailBody += '<td>'+value.model+'</td>';
-							tableDetailBody += '<td>'+value.key+'</td>';
-							tableDetailBody += '<td>'+value.surface+'</td>';
-							tableDetailBody += '<td>'+value.plan_ori+'</td>';
-							tableDetailBody += '<td>'+value.plan+'</td>';
-							tableDetailBody += '<td>'+value.stock+'</td>';
-							tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
-							tableDetailBody += '</tr>';
-						}
-					}
-					if(cat == 'Stock Zero'){
-						if(value.zero == 1){
-							tableDetailBody += '<tr>';
-							tableDetailBody += '<td>'+value.model+'</td>';
-							tableDetailBody += '<td>'+value.key+'</td>';
-							tableDetailBody += '<td>'+value.surface+'</td>';
-							tableDetailBody += '<td>'+value.plan_ori+'</td>';
-							tableDetailBody += '<td>'+value.plan+'</td>';
-							tableDetailBody += '<td>'+value.stock+'</td>';
-							tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
-							tableDetailBody += '</tr>';
-						}
+				}
+				if(cat == 'Stock Zero'){
+					if(value.zero == 1){
+						tableDetailBody += '<tr>';
+						tableDetailBody += '<td>'+value.model+'</td>';
+						tableDetailBody += '<td>'+value.key+'</td>';
+						tableDetailBody += '<td>'+value.surface+'</td>';
+						tableDetailBody += '<td>'+value.plan_ori+'</td>';
+						tableDetailBody += '<td>'+value.plan+'</td>';
+						tableDetailBody += '<td>'+value.stock+'</td>';
+						tableDetailBody += '<td>'+value.ava+' Day(s)</td>';
+						tableDetailBody += '</tr>';
 					}
 				}
 			}
