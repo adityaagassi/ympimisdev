@@ -66,19 +66,17 @@
 		@if($user)
 		@if($user->department == 'Management Information System Department' || $user->group == 'Standardization Group')
 		<div class="col-xs-12 pull-right" style="padding-left: 0;">
-			<button class="btn btn-success pull-right" style="margin-left: 5px; width: 16%;" data-toggle="modal" data-target="#modalCreate"><i class="fa fa-plus"></i>&nbsp;Add Stock</button>
+			<button class="btn btn-success pull-right" style="margin-left: 5px; width: 12%;" data-toggle="modal" data-target="#modalBaru"><i class="fa fa-plus"></i>&nbsp; Sepatu Baru</button>
+			<button class="btn btn-success pull-right" style="margin-left: 5px; width: 12%;" data-toggle="modal" data-target="#modalLayakPakai"><i class="fa fa-plus"></i>&nbsp; Sepatu Layak Pakai</button>
 		</div>
 		@endif
 		@endif
 
-		<div class="col-xs-6" style="margin-top: 1%; margin-bottom: 1%;">
+		<div class="col-xs-8" style="margin-top: 1%; margin-bottom: 1%;">
 			<div id="container1"></div>
 		</div>
-		<div class="col-xs-3" style="margin-top: 1%; margin-bottom: 1%;">
+		<div class="col-xs-4" style="margin-top: 1%; margin-bottom: 1%;">
 			<div id="container2"></div>
-		</div>
-		<div class="col-xs-3" style="margin-top: 1%; margin-bottom: 1%;">
-			<div id="container3"></div>
 		</div>
 
 		<div class="col-xs-10">
@@ -93,8 +91,7 @@
 						<th style="width: 5%;">Pemohon</th>
 						<th style="width: 1%;">Laki-laki</th>
 						<th style="width: 1%;">Perempuan</th>
-						<th style="width: 1%;">Reprint</th>
-						<th style="width: 1%;">Details</th>
+						<th style="width: 1%;">Action</th>
 					</tr>
 				</thead>
 				<tbody id="tableRequestBody">
@@ -125,12 +122,12 @@
 	</div>
 </section>
 
-<div class="modal fade" id="modalCreate">
+<div class="modal fade" id="modalLayakPakai">
 	<div class="modal-dialog" style="width: 80%;">
 		<div class="modal-content">
 			<div class="modal-header">
 				<center>
-					<span style="font-weight: bold; font-size: 1.5vw;">Add Safety Shoes Stock</span>
+					<span style="font-weight: bold; font-size: 1.5vw;">Tambah Stok Safety Shoes Bekas</span>
 				</center>
 				<hr>
 				<div class="modal-body table-responsive no-padding" style="min-height: 100px; padding-bottom: 5px;">
@@ -206,6 +203,62 @@
 	</div>
 </div>
 
+<div class="modal fade" id="modalBaru">
+	<div class="modal-dialog" style="width: 60%;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<center>
+					<span style="font-weight: bold; font-size: 1.5vw;">Tambah Stok Safety Shoes Baru</span>
+				</center>
+				<hr>
+				<div class="modal-body table-responsive no-padding" style="min-height: 100px; padding-bottom: 5px;">
+					<div class="col-xs-12" style="padding-bottom: 5px;">
+
+						<div class="col-xs-10 col-xs-offset-1">
+							
+
+							<div class="col-xs-7" style="padding-left: 1%; padding-right: 0px;">
+								<select class="form-control select5" name="baruSizeUk" id="baruSizeUk" data-placeholder="Pilih Sepatu" style="width: 100%;">
+								</select>
+							</div>
+							<div class="col-xs-3" style="padding-left: 1%; padding-right: 0px;">
+								<input style="text-align: center;" class="form-control" type="number" min="1" value="1" id="baruQty" name="baruQty" placeholder="input Qty">
+							</div>
+
+							<div class="col-xs-2" style="padding-left: 1%; padding-right: 0px;">
+								<a class="btn btn-success" style="width: 100%;" onclick="addStockNew()">Tambahkan</a>
+							</div>
+
+
+						</div>
+
+						<div class="col-xs-12">
+							<span style="font-weight: bold; font-size: 1vw;">Safety Shoes<span class="text-red">*</span></span>
+							<table class="table table-hover table-bordered table-striped" id="tableAddNew">
+								<thead style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th style="width: 4%;">Sepatu</th>
+										<th style="width: 1%;">Qty</th>
+										<th style="width: 1%;">#</th>
+									</tr>
+								</thead>
+								<tbody id="tableAddNewBody">
+								</tbody>
+							</table>
+						</div>
+
+					</div>
+				</div>
+				<div class="box-footer">
+					<div class="col-xs-12">
+						<a class="btn btn-primary pull-right" onclick="submitNew()" style="font-size: 1.5vw; width: 100%; font-weight: bold;">CONFIRM</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div class="modal fade" id="modalRequest">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
@@ -216,20 +269,6 @@
 				<hr>
 				<div class="modal-body table-responsive no-padding" style="min-height: 100px; padding-bottom: 5px;">
 					<div class="col-xs-12" style="padding-bottom: 5px;">
-
-						<div class="col-xs-6 col-xs-offset-3">
-							<div class="col-xs-12" style="padding: 0px;">
-								<span style="font-weight: bold; font-size: 16px;">Pilih Printer:<span class="text-red">*</span></span>
-							</div>
-							<div class="col-xs-12" style="padding-left: 0px; padding-right: 0px;">
-								<select class="form-control select3" name="reqPrinter" id="reqPrinter" data-placeholder="Pilih Nama Printer" style="width: 100%;">
-									<option></option>
-									@foreach($printers as $printer)
-									<option value="{{ $printer }}">{{ $printer }}</option>
-									@endforeach								
-								</select>
-							</div>
-						</div>
 
 						<div class="col-xs-12" style="margin-top: 1%;">
 							<div class="col-xs-5" style="padding-left: 0px; padding-right: 0px;">
@@ -388,6 +427,7 @@
 									<th style="width: 4%;">Merk</th>
 									<th style="width: 1%;">Gender</th>
 									<th style="width: 2%;">Size</th>
+									<th style="width: 2%;">Condition</th>
 									<th style="width: 2%;">Stock</th>
 								</tr>
 							</thead>
@@ -406,8 +446,7 @@
 @endsection
 @section('scripts')
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
-<script src="{{ url("js/highcharts-gantt.js")}}"></script>
-<script src="{{ url("js/exporting.js")}}"></script>
+<script src="{{ url("js/highcharts.js")}}"></script>
 <script src="{{ url("js/moment.min.js")}}"></script>
 <script src="{{ url("js/bootstrap-datetimepicker.min.js")}}"></script>
 <script src="{{ url("plugins/timepicker/bootstrap-timepicker.min.js")}}"></script>
@@ -421,6 +460,7 @@
 
 	jQuery(document).ready(function() {
 		clearAll();
+		optionSize();
 		
 		fetchStock();
 		setInterval(fetchStock, 50000);
@@ -429,10 +469,12 @@
 		setInterval(fetchRequest, 50000);
 	});
 
+	var stockNew = [];
 	var stock = [];
 	var employee = [];
 	var vdo;
 	var shoesName = '';
+	var shoesSize = '';
 
 
 	var sizeChart = [
@@ -445,34 +487,34 @@
 	{type : 'Cheetah', gender : 'L', uk : '10', ind:'44-45'},
 	{type : 'Cheetah', gender : 'L', uk : '11', ind:'46'},
 	{type : 'Cheetah', gender : 'L', uk : '12', ind:'47'},
-	{type : 'Kings', gender : 'L', uk : '3', ind:'36'},
-	{type : 'Kings', gender : 'L', uk : '4', ind:'37'},
-	{type : 'Kings', gender : 'L', uk : '5', ind:'38'},
-	{type : 'Kings', gender : 'L', uk : '6', ind:'39-40'},
-	{type : 'Kings', gender : 'L', uk : '7', ind:'41'},
-	{type : 'Kings', gender : 'L', uk : '8', ind:'42'},
-	{type : 'Kings', gender : 'L', uk : '9', ind:'43'},
-	{type : 'Kings', gender : 'L', uk : '10', ind:'44-45'},
-	{type : 'Kings', gender : 'L', uk : '11', ind:'46'},
-	{type : 'Krisbow', gender : 'L', uk : '5', ind:'38'},
-	{type : 'Krisbow', gender : 'L', uk : '6', ind:'39'},
-	{type : 'Krisbow', gender : 'L', uk : '6.5', ind:'40'},
-	{type : 'Krisbow', gender : 'L', uk : '7', ind:'41'},
-	{type : 'Krisbow', gender : 'L', uk : '8', ind:'42'},
-	{type : 'Krisbow', gender : 'L', uk : '9', ind:'43'},
-	{type : 'Krisbow', gender : 'L', uk : '10', ind:'44'},
+	// {type : 'Kings', gender : 'L', uk : '3', ind:'36'},
+	// {type : 'Kings', gender : 'L', uk : '4', ind:'37'},
+	// {type : 'Kings', gender : 'L', uk : '5', ind:'38'},
+	// {type : 'Kings', gender : 'L', uk : '6', ind:'39-40'},
+	// {type : 'Kings', gender : 'L', uk : '7', ind:'41'},
+	// {type : 'Kings', gender : 'L', uk : '8', ind:'42'},
+	// {type : 'Kings', gender : 'L', uk : '9', ind:'43'},
+	// {type : 'Kings', gender : 'L', uk : '10', ind:'44-45'},
+	// {type : 'Kings', gender : 'L', uk : '11', ind:'46'},
+	// {type : 'Krisbow', gender : 'L', uk : '5', ind:'38'},
+	// {type : 'Krisbow', gender : 'L', uk : '6', ind:'39'},
+	// {type : 'Krisbow', gender : 'L', uk : '6.5', ind:'40'},
+	// {type : 'Krisbow', gender : 'L', uk : '7', ind:'41'},
+	// {type : 'Krisbow', gender : 'L', uk : '8', ind:'42'},
+	// {type : 'Krisbow', gender : 'L', uk : '9', ind:'43'},
+	// {type : 'Krisbow', gender : 'L', uk : '10', ind:'44'},
 	{type : 'Cheetah', gender : 'P', uk : '2.5', ind:'35'},
 	{type : 'Cheetah', gender : 'P', uk : '3.5', ind:'36'},
 	{type : 'Cheetah', gender : 'P', uk : '4', ind:'37'},
 	{type : 'Cheetah', gender : 'P', uk : '5', ind:'38'},
 	{type : 'Cheetah', gender : 'P', uk : '6', ind:'39'},
 	{type : 'Cheetah', gender : 'P', uk : '6.5', ind:'40'},
-	{type : 'Kings', gender : 'P', uk : '3', ind:'35'},
-	{type : 'Kings', gender : 'P', uk : '4', ind:'36'},
-	{type : 'Kings', gender : 'P', uk : '5', ind:'37'},
-	{type : 'Kings', gender : 'P', uk : '6', ind:'38'},
-	{type : 'Kings', gender : 'P', uk : '7', ind:'39'},
-	{type : 'Kings', gender : 'P', uk : '8', ind:'40'},
+	// {type : 'Kings', gender : 'P', uk : '3', ind:'35'},
+	// {type : 'Kings', gender : 'P', uk : '4', ind:'36'},
+	// {type : 'Kings', gender : 'P', uk : '5', ind:'37'},
+	// {type : 'Kings', gender : 'P', uk : '6', ind:'38'},
+	// {type : 'Kings', gender : 'P', uk : '7', ind:'39'},
+	// {type : 'Kings', gender : 'P', uk : '8', ind:'40'},
 	];
 
 	function stopScan() {
@@ -649,6 +691,7 @@
 
 
 	function clearAll(){
+		stockNew = [];
 		stock = [];
 		employee = [];
 		$('#tableAddStockBody').html('');
@@ -658,19 +701,28 @@
 		$("#addStatus").prop('selectedIndex', 0).change();
 		$("#addQty").val(1);
 
+		$('#tableAddNewBody').html('');
+		$("#baruSizeUk").prop('selectedIndex', 0).change();			
+		$("#baruQty").val(1);
+
 		$('#tableCreateReqBody').html('');
-		$("#reqPrinter").prop('selectedIndex', 0).change();
 		$("#reqEmp").prop('selectedIndex', 0).change();
 		$("#reqSizeUk").prop('selectedIndex', 0).change();
 		$("#reqSize").val('');
 
 		$("#repPrinter").prop('selectedIndex', 0).change();
-
 	}
 
 	$(function () {
+		$('.select5').select2({
+			dropdownParent: $('#modalBaru'),
+			allowClear: true,
+		});
+	})
+
+	$(function () {
 		$('.select4').select2({
-			dropdownParent: $('#modalCreate'),
+			dropdownParent: $('#modalLayakPakai'),
 			allowClear: true,
 		});
 	})
@@ -689,6 +741,17 @@
 		});
 	})
 
+	function optionSize() {
+		$("#baruSizeUk").html('');
+
+		var message = '<option value=""></option>';
+		for(var i = 0; i < sizeChart.length; i++) {
+			message += '<option value="'+sizeChart[i].ind+'(ime)( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'">( '+sizeChart[i].gender+' ) - '+sizeChart[i].type+' - Size UK.'+sizeChart[i].uk+'  EUR.'+sizeChart[i].ind+'</option>';
+		}
+
+		$("#baruSizeUk").html(message);
+	}
+
 	$("#addEmp").change(function(){
 		$("#addSizeUk").html('');
 
@@ -706,6 +769,53 @@
 		$("#addSize").val(data[0]);
 		shoesName = data[1];
 	});
+
+	$("#baruSizeUk").change(function(){
+		if($('#baruSizeUk').val() != null){
+			var message = $("#baruSizeUk").val();
+			var data = message.split('(ime)');
+			shoesSize = data[0];
+			shoesName = data[1];
+		}
+
+	});
+
+	function addStockNew() {
+		if($('#baruSizeUk').val() != "" && $('#baruQty').val() != ""){
+			var baruSizeUk = $('#baruSizeUk').val();
+			var qty = $('#baruQty').val();
+			var size = shoesSize;
+
+			var data1 = shoesName.replaceAll("(", "");
+			var data2 = data1.replaceAll(")", "");
+			var data3 = data2.replaceAll(" ", "");
+			var data = data3.split('-');
+
+			tableData = "";
+			tableData += "<tr id='rowNew"+data[1]+data[0]+size+qty+"'>";
+			tableData += '<td>'+shoesName+'</td>';
+			tableData += '<td>'+qty+'</td>';
+			tableData += "<td><a href='javascript:void(0)' onclick='remNew(id)' id='"+data[1]+data[0]+size+qty+"' class='btn btn-danger btn-xs' style='margin-right:5px;'><i class='fa fa-trash'></i></a></td>";
+			tableData += '</tr>';
+
+			stockNew.push({
+				'merk' : data[1],
+				'gender' : data[0],
+				'size' : size,
+				'qty' : qty
+			});
+
+			$('#tableAddNewBody').append(tableData);
+
+			$("#baruSizeUk").prop('selectedIndex', 0).change();			
+			$("#baruQty").val(1);
+
+			console.log(stockNew);
+		}else{
+			openErrorGritter('Error!', 'Pilih Sepatu dan Qty terlebih dahulu');	
+		}
+		
+	}
 
 
 	function addStock(){
@@ -779,6 +889,20 @@
 		console.log(stock);
 	}
 
+	function remNew(id) {
+		console.log(id);
+
+		$('#rowNew'+id).remove();
+
+		for (var i = 0; i < stockNew.length; i++) {
+			if((stockNew[i].merk + stockNew[i].gender + stockNew[i].size + stockNew[i].qty) == id){
+				stockNew.splice(i, 1);
+			}
+		}
+		
+		console.log(stockNew);
+	}
+
 	function submitStock(){
 		$('#loading').show();
 
@@ -789,7 +913,35 @@
 
 			$.post('{{ url("input/std_control/safety_shoes") }}', data, function(result, status, xhr){
 				if(result.status){
-					$('#modalCreate').modal('hide');
+					$('#modalLayakPakai').modal('hide');
+					openSuccessGritter('Success!', result.message);
+
+					fetchStock();
+					fetchRequest();
+					clearAll();
+					$('#loading').hide();
+				}else{
+					$('#loading').hide();
+					openErrorGritter('Error!', result.message);
+				}
+			});
+		}else{
+			$('#loading').hide();
+			openErrorGritter('Error!', 'Semua point form harus diisi');
+		}	
+	}
+
+	function submitNew(){
+		$('#loading').show();
+
+		if(stockNew.length > 0){
+			var data = {
+				stock : stockNew
+			}
+
+			$.post('{{ url("input/std_control/safety_shoes_new") }}', data, function(result, status, xhr){
+				if(result.status){
+					$('#modalBaru').modal('hide');
 					openSuccessGritter('Success!', result.message);
 
 					fetchStock();
@@ -923,7 +1075,7 @@
 	function submitReq(){
 		$('#loading').show();
 
-		if(employee.length > 0 && $('#reqPrinter').val() != ""){
+		if(employee.length > 0){
 			var printer = $('#reqPrinter').val();
 
 			var data = {
@@ -974,8 +1126,10 @@
 					tableData += '<td style="padding:0;">'+result.request[i].name+'</td>';
 					tableData += '<td style="padding:0;">'+result.request[i].l+'</td>';
 					tableData += '<td style="padding:0;">'+result.request[i].p+'</td>';
-					tableData += '<td style="padding:0;"><button class="btn btn-primary btn-sm" onclick="reprintSlip(\''+result.request[i].request_id+'\')"><i class="fa fa-print"></i></button></td>';
-					tableData += '<td style="padding:0;"><button class="btn btn-success btn-sm" onclick="fetchDetailRequest(\''+result.request[i].request_id+'\')"><i class="fa fa-list"></i></button></td>';
+					tableData += '<td style="padding:0;">';
+					tableData += '<button class="btn btn-primary btn-sm" onclick="reprintSlip(\''+result.request[i].request_id+'\')"><i class="fa fa-print"></i></button>';
+					tableData += '<button class="btn btn-success btn-sm" onclick="fetchDetailRequest(\''+result.request[i].request_id+'\')"><i class="fa fa-list"></i></button>';
+					tableData += '</td>';
 					tableData += '</tr>';
 					no ++;
 				}
@@ -1102,7 +1256,7 @@
 						backgroundColor: null
 					},
 					title: {
-						text: 'Safety Shoes Stock'
+						text: 'Stock Safety Shoes'
 					},
 					xAxis: {
 						categories: series,
@@ -1175,7 +1329,8 @@
 						plotBorderWidth: null,
 						plotShadow: false,
 						type: 'pie',
-						backgroundColor: null
+						backgroundColor: null,
+						animation: false,
 					},
 					title: {
 						text: null
@@ -1223,343 +1378,281 @@
 
 
 
-
-
-				var total_cheetah = 0;
-				var total_kings = 0;
-				var total_krisbow = 0;
-
-				for (var i = 0; i < result.data.length; i++) {
-					if(result.data[i].merk == 'Cheetah'){
-						total_cheetah += result.data[i].quantity;
-					}else if(result.data[i].merk == 'Kings'){
-						total_kings += result.data[i].quantity;
-					}else if(result.data[i].merk == 'Krisbow'){
-						total_krisbow += result.data[i].quantity;
-					}
-				}
-
-				Highcharts.chart('container3', {
-					chart: {
-						plotBackgroundColor: null,
-						plotBorderWidth: null,
-						plotShadow: false,
-						type: 'pie',
-						backgroundColor: null
-					},
-					title: {
-						text: null
-					},
-					accessibility: {
-						point: {
-							valueSuffix: '%'
-						}
-					},
-					credits: {
-						enabled: false
-					},
-					plotOptions: {
-						pie: {
-							size: 230,
-							allowPointSelect: true,
-							cursor: 'pointer',
-							showInLegend: true
-						}
-					},
-					tooltip: {
-						pointFormat: 'Stok: <b>{point.y} Pasang</b>'
-					},
-					series: [{
-						data: [{
-							name: 'Cheetah',
-							y: total_cheetah,
-							color: '#2b908f'
-						}, {
-							name: 'Kings',
-							y: total_kings,
-							color: '#90ee7e'
-						}, {
-							name: 'Krisbow',
-							y: total_krisbow,
-							color: '#f45b5b'
-						}]
-					}]
-				});				
-
 			}else{
 				alert('Attempt to retrieve data failed.');
 			}
 		});
-}
-
-function showStockDetail(series, size) {
-	$('#loading').show();
-
-	var data = {
-		gender: series[0],
-		size: size.replaceAll('Size ', '')
 	}
 
-	$.get('{{ url("fetch/std_control/safety_shoes_detail") }}', data, function(result, status, xhr){
-		if(result.status){
-			$('#tableDetailStockBody').html("");
+	function showStockDetail(series, size) {
+		$('#loading').show();
 
-			$('#detail_stock').text('Stock Safety Shoes ' + series + ' ' + size);
-
-			var detail = '';
-			$.each(result.data, function(key, value){
-				detail += '<tr>';
-				detail += '<td>'+value.merk+'</td>';
-				detail += '<td>'+value.gender+'</td>';
-				detail += '<td>'+value.size+'</td>';
-				detail += '<td>'+value.quantity+'</td>';
-				detail += '</tr>';
-			});
-
-			$('#tableDetailStockBody').append(detail);
-
-			$('#modalStock').modal('show');
-			$('#loading').hide();
+		var data = {
+			gender: series[0],
+			size: size.replaceAll('Size ', '')
 		}
-		else{
-			openErrorGritter('Error!', result.message);
-		}
-	});
-}
 
-Highcharts.createElement('link', {
-	href: '{{ url("fonts/UnicaOne.css")}}',
-	rel: 'stylesheet',
-	type: 'text/css'
-}, null, document.getElementsByTagName('head')[0]);
+		$.get('{{ url("fetch/std_control/safety_shoes_detail") }}', data, function(result, status, xhr){
+			if(result.status){
+				$('#tableDetailStockBody').html("");
 
-Highcharts.theme = {
-	colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
-	'#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
-	chart: {
-		backgroundColor: {
-			linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
-			stops: [
-			[0, '#2a2a2b'],
-			[1, '#3e3e40']
-			]
-		},
-		style: {
-			fontFamily: 'sans-serif'
-		},
-		plotBorderColor: '#606063'
-	},
-	title: {
-		style: {
-			color: '#E0E0E3',
-			textTransform: 'uppercase',
-			fontSize: '20px'
-		}
-	},
-	subtitle: {
-		style: {
-			color: '#E0E0E3',
-			textTransform: 'uppercase'
-		}
-	},
-	xAxis: {
-		gridLineColor: '#707073',
-		labels: {
-			style: {
-				color: '#E0E0E3'
+				$('#detail_stock').text('Stock Safety Shoes ' + series + ' ' + size);
+
+				var detail = '';
+				$.each(result.data, function(key, value){
+					detail += '<tr>';
+					detail += '<td>'+value.merk+'</td>';
+					detail += '<td>'+value.gender+'</td>';
+					detail += '<td>'+value.size+'</td>';
+					detail += '<td>'+value.condition+'</td>';
+					detail += '<td>'+value.quantity+'</td>';
+					detail += '</tr>';
+				});
+
+				$('#tableDetailStockBody').append(detail);
+
+				$('#modalStock').modal('show');
+				$('#loading').hide();
 			}
+			else{
+				openErrorGritter('Error!', result.message);
+			}
+		});
+	}
+
+	Highcharts.createElement('link', {
+		href: '{{ url("fonts/UnicaOne.css")}}',
+		rel: 'stylesheet',
+		type: 'text/css'
+	}, null, document.getElementsByTagName('head')[0]);
+
+	Highcharts.theme = {
+		colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
+		'#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+		chart: {
+			backgroundColor: {
+				linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
+				stops: [
+				[0, '#2a2a2b'],
+				[1, '#3e3e40']
+				]
+			},
+			style: {
+				fontFamily: 'sans-serif'
+			},
+			plotBorderColor: '#606063'
 		},
-		lineColor: '#707073',
-		minorGridLineColor: '#505053',
-		tickColor: '#707073',
 		title: {
 			style: {
-				color: '#A0A0A3'
-
-			}
-		}
-	},
-	yAxis: {
-		gridLineColor: '#707073',
-		labels: {
-			style: {
-				color: '#E0E0E3'
+				color: '#E0E0E3',
+				textTransform: 'uppercase',
+				fontSize: '20px'
 			}
 		},
-		lineColor: '#707073',
-		minorGridLineColor: '#505053',
-		tickColor: '#707073',
-		tickWidth: 1,
-		title: {
+		subtitle: {
 			style: {
-				color: '#A0A0A3'
+				color: '#E0E0E3',
+				textTransform: 'uppercase'
 			}
-		}
-	},
-	tooltip: {
-		backgroundColor: 'rgba(0, 0, 0, 0.85)',
-		style: {
-			color: '#F0F0F0'
-		}
-	},
-	plotOptions: {
-		series: {
-			dataLabels: {
-				color: 'white'
+		},
+		xAxis: {
+			gridLineColor: '#707073',
+			labels: {
+				style: {
+					color: '#E0E0E3'
+				}
 			},
-			marker: {
-				lineColor: '#333'
-			}
-		},
-		boxplot: {
-			fillColor: '#505053'
-		},
-		candlestick: {
-			lineColor: 'white'
-		},
-		errorbar: {
-			color: 'white'
-		}
-	},
-	legend: {
-		itemStyle: {
-			color: '#E0E0E3'
-		},
-		itemHoverStyle: {
-			color: '#FFF'
-		},
-		itemHiddenStyle: {
-			color: '#606063'
-		}
-	},
-	credits: {
-		style: {
-			color: '#666'
-		}
-	},
-	labels: {
-		style: {
-			color: '#707073'
-		}
-	},
+			lineColor: '#707073',
+			minorGridLineColor: '#505053',
+			tickColor: '#707073',
+			title: {
+				style: {
+					color: '#A0A0A3'
 
-	drilldown: {
-		activeAxisLabelStyle: {
-			color: '#F0F0F3'
-		},
-		activeDataLabelStyle: {
-			color: '#F0F0F3'
-		}
-	},
-
-	navigation: {
-		buttonOptions: {
-			symbolStroke: '#DDDDDD',
-			theme: {
-				fill: '#505053'
-			}
-		}
-	},
-
-	rangeSelector: {
-		buttonTheme: {
-			fill: '#505053',
-			stroke: '#000000',
-			style: {
-				color: '#CCC'
-			},
-			states: {
-				hover: {
-					fill: '#707073',
-					stroke: '#000000',
-					style: {
-						color: 'white'
-					}
-				},
-				select: {
-					fill: '#000003',
-					stroke: '#000000',
-					style: {
-						color: 'white'
-					}
 				}
 			}
 		},
-		inputBoxBorderColor: '#505053',
-		inputStyle: {
-			backgroundColor: '#333',
-			color: 'silver'
+		yAxis: {
+			gridLineColor: '#707073',
+			labels: {
+				style: {
+					color: '#E0E0E3'
+				}
+			},
+			lineColor: '#707073',
+			minorGridLineColor: '#505053',
+			tickColor: '#707073',
+			tickWidth: 1,
+			title: {
+				style: {
+					color: '#A0A0A3'
+				}
+			}
 		},
-		labelStyle: {
-			color: 'silver'
+		tooltip: {
+			backgroundColor: 'rgba(0, 0, 0, 0.85)',
+			style: {
+				color: '#F0F0F0'
+			}
+		},
+		plotOptions: {
+			series: {
+				dataLabels: {
+					color: 'white'
+				},
+				marker: {
+					lineColor: '#333'
+				}
+			},
+			boxplot: {
+				fillColor: '#505053'
+			},
+			candlestick: {
+				lineColor: 'white'
+			},
+			errorbar: {
+				color: 'white'
+			}
+		},
+		legend: {
+			itemStyle: {
+				color: '#E0E0E3'
+			},
+			itemHoverStyle: {
+				color: '#FFF'
+			},
+			itemHiddenStyle: {
+				color: '#606063'
+			}
+		},
+		credits: {
+			style: {
+				color: '#666'
+			}
+		},
+		labels: {
+			style: {
+				color: '#707073'
+			}
+		},
+
+		drilldown: {
+			activeAxisLabelStyle: {
+				color: '#F0F0F3'
+			},
+			activeDataLabelStyle: {
+				color: '#F0F0F3'
+			}
+		},
+
+		navigation: {
+			buttonOptions: {
+				symbolStroke: '#DDDDDD',
+				theme: {
+					fill: '#505053'
+				}
+			}
+		},
+
+		rangeSelector: {
+			buttonTheme: {
+				fill: '#505053',
+				stroke: '#000000',
+				style: {
+					color: '#CCC'
+				},
+				states: {
+					hover: {
+						fill: '#707073',
+						stroke: '#000000',
+						style: {
+							color: 'white'
+						}
+					},
+					select: {
+						fill: '#000003',
+						stroke: '#000000',
+						style: {
+							color: 'white'
+						}
+					}
+				}
+			},
+			inputBoxBorderColor: '#505053',
+			inputStyle: {
+				backgroundColor: '#333',
+				color: 'silver'
+			},
+			labelStyle: {
+				color: 'silver'
+			}
+		},
+
+		navigator: {
+			handles: {
+				backgroundColor: '#666',
+				borderColor: '#AAA'
+			},
+			outlineColor: '#CCC',
+			maskFill: 'rgba(255,255,255,0.1)',
+			series: {
+				color: '#7798BF',
+				lineColor: '#A6C7ED'
+			},
+			xAxis: {
+				gridLineColor: '#505053'
+			}
+		},
+
+		scrollbar: {
+			barBackgroundColor: '#808083',
+			barBorderColor: '#808083',
+			buttonArrowColor: '#CCC',
+			buttonBackgroundColor: '#606063',
+			buttonBorderColor: '#606063',
+			rifleColor: '#FFF',
+			trackBackgroundColor: '#404043',
+			trackBorderColor: '#404043'
+		},
+
+		legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
+		background2: '#505053',
+		dataLabelsColor: '#B0B0B3',
+		textColor: '#C0C0C0',
+		contrastTextColor: '#F0F0F3',
+		maskColor: 'rgba(255,255,255,0.3)'
+	};
+	Highcharts.setOptions(Highcharts.theme);
+
+	Highcharts.setOptions({
+		global: {
+			useUTC: true,
+			timezoneOffset: -420
 		}
-	},
+	});
 
-	navigator: {
-		handles: {
-			backgroundColor: '#666',
-			borderColor: '#AAA'
-		},
-		outlineColor: '#CCC',
-		maskFill: 'rgba(255,255,255,0.1)',
-		series: {
-			color: '#7798BF',
-			lineColor: '#A6C7ED'
-		},
-		xAxis: {
-			gridLineColor: '#505053'
-		}
-	},
+	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
-	scrollbar: {
-		barBackgroundColor: '#808083',
-		barBorderColor: '#808083',
-		buttonArrowColor: '#CCC',
-		buttonBackgroundColor: '#606063',
-		buttonBorderColor: '#606063',
-		rifleColor: '#FFF',
-		trackBackgroundColor: '#404043',
-		trackBorderColor: '#404043'
-	},
-
-	legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
-	background2: '#505053',
-	dataLabelsColor: '#B0B0B3',
-	textColor: '#C0C0C0',
-	contrastTextColor: '#F0F0F3',
-	maskColor: 'rgba(255,255,255,0.3)'
-};
-Highcharts.setOptions(Highcharts.theme);
-
-Highcharts.setOptions({
-	global: {
-		useUTC: true,
-		timezoneOffset: -420
+	function openSuccessGritter(title, message){
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-success',
+			image: '{{ url("images/image-screen.png") }}',
+			sticky: false,
+			time: '3000'
+		});
 	}
-});
 
-var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
-
-function openSuccessGritter(title, message){
-	jQuery.gritter.add({
-		title: title,
-		text: message,
-		class_name: 'growl-success',
-		image: '{{ url("images/image-screen.png") }}',
-		sticky: false,
-		time: '3000'
-	});
-}
-
-function openErrorGritter(title, message) {
-	jQuery.gritter.add({
-		title: title,
-		text: message,
-		class_name: 'growl-danger',
-		image: '{{ url("images/image-stop.png") }}',
-		sticky: false,
-		time: '3000'
-	});
-}
+	function openErrorGritter(title, message) {
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-danger',
+			image: '{{ url("images/image-stop.png") }}',
+			sticky: false,
+			time: '3000'
+		});
+	}
 </script>
 @endsection
