@@ -512,9 +512,11 @@ Route::group(['nav' => 'R6', 'middleware' => 'permission'], function(){
 	Route::get('fetch/tr_transfer', 'InventoryController@fetchTransfer');
 	Route::get('download/tr_transfer', 'InventoryController@downloadTransfer');
 
-	Route::get('index/tr_history', 'InventoryController@indexHistory');
-	Route::get('fetch/tr_history', 'InventoryController@fetchHistory');
+	
 });
+
+Route::get('index/tr_history', 'InventoryController@indexHistory');
+Route::get('fetch/tr_history', 'InventoryController@fetchHistory');
 
 Route::group(['nav' => 'R7', 'middleware' => 'permission'], function(){
 	Route::get('index/overtime_confirmation', 'OvertimeController@indexOvertimeConfirmation');
@@ -1120,7 +1122,7 @@ Route::group(['nav' => 'S39', 'middleware' => 'permission'], function(){
 	Route::post('approve/ga_control/bento', 'GeneralAffairController@approveBento');
 	Route::get('index/ga_control/bento_approve', 'GeneralAffairController@indexBentoApprove');
 	Route::get('reject/ga_control/bento/{id}', 'GeneralAffairController@rejectBento');
-	Route::post('upload/ga_control/bento_menu', 'GeneralAffairController@uploadBentoMenu');
+	Route::post('input/ga_control/bento_menu', 'GeneralAffairController@inputBentoMenu');
 });
 Route::get('approve/ga_control/driver/{id}', 'GeneralAffairController@approveRequest');
 Route::get('reject/ga_control/driver/{id}', 'GeneralAffairController@rejectRequest');
@@ -1163,10 +1165,11 @@ Route::get('fetch/std_control/detail_safety_shoes', 'GeneralController@fetchDeta
 // STD
 Route::post('input/std_control/safety_shoes', 'GeneralController@inputSafetyShoes');
 Route::post('input/std_control/safety_shoes_new', 'GeneralController@inputSafetyShoesNew');
+Route::get('reprint/std_control/safety_shoes', 'GeneralController@reprintReqSafetyShoes');
+
 
 //PRD
 Route::post('input/std_control/req_safety_shoes', 'GeneralController@inputReqSafetyShoes');
-Route::get('reprint/std_control/safety_shoes', 'GeneralController@reprintReqSafetyShoes');
 
 
 //WH
@@ -1864,6 +1867,10 @@ Route::post('edit/invoice/tanda_terima', 'AccountingController@edit_invoice');
 Route::get('invoice/report/{id}', 'AccountingController@report_invoice');
 Route::get('export/invoice/tanda_terima', 'AccountingController@export_tanda_terima');
 
+//Payment Request
+Route::get('payment_request', 'AccountingController@IndexPaymentRequest');
+Route::get('fetch/payment_request', 'AccountingController@fetch_invoice');
+
 Route::get('scan/middle/operator', 'MiddleProcessController@scanMiddleOperator');
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 	Route::get('scan/middle/kensa', 'MiddleProcessController@ScanMiddleKensa');
@@ -2141,6 +2148,7 @@ Route::get('fetch/workshop/process_detail', 'WorkshopController@fetchProcessDeta
 Route::get('fetch/workshop/drawingMaterial', 'WorkshopController@fetchDrawingMaterial');
 Route::get('index/workshop/perolehan', 'WorkshopController@indexWJOPerolehan');
 Route::get('fetch/workshop/perolehan', 'WorkshopController@fetchWJOPerolehan');
+Route::get('detail/workshop/perolehan', 'WorkshopController@detailWJOPerolehan');
 
 Route::get('index/middle/op_analysis', 'MiddleProcessController@indexOpAnalysis');
 Route::get('fetch/middle/op_analysis', 'MiddleProcessController@fetchOpAnalysis');
@@ -4662,15 +4670,12 @@ Route::get('excel/mutasi_ant/hr', 'MutasiController@AntHrExportExcel');
 
 
 // Route::group(['nav' => 'R12', 'middleware' => 'permission'], function(){
-	
+
 // });
 
 // Route::group(['nav' => 'R9', 'middleware' => 'permission'], function(){
 
 // });
-
-//Payment Request
-Route::get('payment_request/index', 'PaymentRequestController@IndexPaymentRequest');
 
 //Auto Approve Adagio
 //input approval
@@ -4685,8 +4690,14 @@ Route::group(['nav' => 'M34', 'middleware' => 'permission'], function(){
 //input send file
 Route::group(['nav' => 'M34', 'middleware' => 'permission'], function(){
 	Route::get('adagio/send/file', 'AdagioAutoController@AdagioIndexSendFile');
+	Route::get('adagio/resume', 'AdagioAutoController@AdagioIndexResume');
+	Route::get('adagio/nomor_file', 'AdagioAutoController@AdagioNoFile');
 	Route::get('adagio/select/user', 'AdagioAutoController@AdagioDataUser');
 	Route::get('adagio/data/approval', 'AdagioAutoController@AdagioDataApproval');
+	Route::get('adagio/data/resume', 'AdagioAutoController@AdagioDataResume');
+	Route::get('adagio/data/report/{id}', 'AdagioAutoController@AdagioDataReport');
+	Route::get('adagio/data/fetch/{id}', 'AdagioAutoController@AdagioDataFetch');
+	Route::post('adagio/send', 'AdagioAutoController@AdagioSendFile');
 });
 
 //Warehouse
@@ -4773,8 +4784,7 @@ Route::post('delete/warehouse_operator', 'WarehouseNewController@deleteOperatorW
 Route::post('insert/warehouse_operator', 'WarehouseNewController@insertOperatorWarehouse');
 Route::get('fetch/detail/gmc', 'WarehouseNewController@fetchDetaiGmc');
 Route::get('fetch/detail/gmc/pel', 'WarehouseNewController@fetchDetaiGmcPel');
-
-
+Route::post('update/status/operator', 'WarehouseNewController@StatusOperatorWarehouse');
 
 
 
