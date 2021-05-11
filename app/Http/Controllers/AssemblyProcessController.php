@@ -3286,7 +3286,8 @@ public function fetchSerialNumberReport($process,Request $request)
 				".$models."
 			GROUP BY
 				a.serial_number,
-				a.model");
+				a.model,
+				assembly_logs.created_at");
 		}
 		$response = array(
 			'status' => true,
