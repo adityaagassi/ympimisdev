@@ -104,13 +104,16 @@
                 <th>Tanggal</th>
                 <th>NIK</th>
                 <th>Nama</th>
-                <th>Jam Masuk</th>
-                <!-- <th>Location Masuk</th> -->
-                <th>Jam Keluar</th>
+                <th>Dept</th>
+                <th>Sect</th>
+                <th>Group</th>
+                <th>Waktu Absensi</th>
+                <th>Location</th>
+                <!-- <th>Jam Keluar</th> -->
                 <!-- <th>Location Keluar</th> -->
-                <th>Village</th>
+                <!-- <th>Village</th>
                 <th>City</th>
-                <th>Status</th>
+                <th>Status</th> -->
                 <!-- <th>Action</th> -->
               </tr>
             </thead>
@@ -127,6 +130,10 @@
                 <th></th>
                 <th></th>
                 <th></th>
+                <!-- <th></th>
+                <th></th>
+                <th></th> -->
+                <!-- <th></th> -->
           <!--       <th></th>
                 <th></th> -->
               </tr>
@@ -203,11 +210,17 @@
           var year = d.getFullYear();      
 
           tableData += '<tr>';     
-          tableData += '<td>'+ day +' '+month+' '+year +'</td>';
+          tableData += '<td>'+ value.date+'</td>';
           tableData += '<td>'+ value.employee_id +'</td>';     
           tableData += '<td>'+ value.name +'</td>';
-          tableData += '<td>'+ value.time_in +'</td>';
-          // tableData += '<td><a target="_blank" href="https://10.109.52.1/miraidev/public/trial_loc2?lat='+value.lat_in+'&long='+value.lng_in+'" class="btn btn-warning btn-sm"><i class="fa fa-map-marker"></i>&nbsp;&nbsp;Location</a></td>';
+          tableData += '<td>'+ (value.department || "") +'</td>';
+          tableData += '<td>'+ (value.section || "") +'</td>';
+          tableData += '<td>'+ (value.group || "") +'</td>';
+          tableData += '<td>'+ value.date_in +'</td>';
+          // $.each(, function(key2, value2) {
+            var url = '{{url("")}}';
+            tableData += '<td><a target="_blank" href="'+url+'/trial_loc2/'+value.location.latitude+'/'+value.location.longitude+'" class="btn btn-warning btn-sm"><i class="fa fa-map-marker"></i>&nbsp;&nbsp;Location</a></td>';
+          // })
           // var data2 = {
           //   lat : value.lat_in,
           //   lng : value.lng_in
@@ -217,8 +230,9 @@
 
           //     console.log(value.data);
 
-          //     $.each(result.data, function(key, value) {
-          //       console.log(value.village);
+          //     $.each(result.data, function(key2, value2) {
+          //       // console.log(value.village);
+          //       tableData += '<td>'+ value2.village +'</td>';
           //     });
           //   }
           //   else{
@@ -226,11 +240,11 @@
           //   }
 
           // });
-          tableData += '<td>'+ value.time_out +'</td>';
+          // tableData += '<td>'+ value.time_out +'</td>';
           // tableData += '<td><a target="_blank" href="https://172.17.128.87/miraidev/public/trial3?lat='+value.lat_out+'&long='+value.lng_out+'" class="btn btn-warning btn-sm"><i class="fa fa-map-marker"></i>&nbsp;&nbsp;Location</a></td>';
-          tableData += '<td>'+ value.village +'</td>';
-          tableData += '<td>'+ value.city +'</td>';
-          tableData += '<td>'+ value.remark +'</td>';
+          // tableData += '<td>'+ value.village +'</td>';
+          // tableData += '<td>'+ value.city +'</td>';
+          // tableData += '<td>'+ value.remark +'</td>';
           tableData += '</tr>';
           count += 1;
         });

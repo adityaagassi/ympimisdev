@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Response;
 use DataTables;
 use Excel;
+use App\EmployeeSync;
 
 class MiraiMobileController extends Controller
 {
@@ -214,29 +215,56 @@ class MiraiMobileController extends Controller
   public function fetchHealthData(Request $request)
   {
     $tgl = date('Y-m-d', strtotime($request->get('tanggal')));
-    $q =  'select att.*, groups.remark from
-    (select employee_id, `name`, answer_date, SUM(masuk) lat_in, SUM(masuk1) lng_in, IF(SUM(id_out) - SUM(id_in) <> 7 AND SUM(jam_out) - SUM(jam_in) > 1, SUM(keluar),null) lat_out, IF(SUM(id_out) - SUM(id_in) <> 7 AND SUM(jam_out) - SUM(jam_in) > 1, SUM(keluar2),null) lng_out, SEC_TO_TIME(SUM(time_in)) time_in, IF(SUM(id_out) - SUM(id_in) <> 7 AND SUM(jam_out) - SUM(jam_in) > 1, SEC_TO_TIME(SUM(time_out)),null) time_out, TRIM("," FROM GROUP_CONCAT(village)) as village, TRIM("," FROM GROUP_CONCAT(city)) as city from
-    (
-    SELECT employee_id, `name`, answer_date, latitude as masuk, longitude as masuk1, 0 as keluar, 0 as keluar2, id as id_in, 0 as id_out, DATE_FORMAT(created_at, "%H") as jam_in, 0 as jam_out, TIME_TO_SEC(DATE_FORMAT(created_at, "%H:%i")) as time_in, 0 as time_out, village, city FROM quiz_logs
-    WHERE id IN (
-    SELECT MIN(id)
-    FROM quiz_logs
-    GROUP BY employee_id, `name`, answer_date
-    )
-    union all
-    SELECT employee_id, `name`, answer_date, 0 as masuk, 0 as masuk1, latitude as keluar, longitude as keluar2, 0 as id_in, id as id_out, 0 as jam_in,  DATE_FORMAT(created_at, "%H") as jam_out, 0 as time_in,  TIME_TO_SEC(DATE_FORMAT(created_at, "%H:%i")) as time_out, "" as village, "" as city FROM quiz_logs
-    WHERE id IN (
-    SELECT MAX(id)
-    FROM quiz_logs
-    GROUP BY employee_id, `name`, answer_date
-    )
-    ) as semua
-    group by employee_id, `name`, answer_date) as att
-    left join groups on att.employee_id = groups.employee_id AND att.answer_date = groups.tanggal where att.answer_date = "'.$tgl.'"';
+    // $q =  'select att.*, groups.remark from
+    // (select employee_id, `name`, answer_date, SUM(masuk) lat_in, SUM(masuk1) lng_in, IF(SUM(id_out) - SUM(id_in) <> 7 AND SUM(jam_out) - SUM(jam_in) > 1, SUM(keluar),null) lat_out, IF(SUM(id_out) - SUM(id_in) <> 7 AND SUM(jam_out) - SUM(jam_in) > 1, SUM(keluar2),null) lng_out, SEC_TO_TIME(SUM(time_in)) time_in, IF(SUM(id_out) - SUM(id_in) <> 7 AND SUM(jam_out) - SUM(jam_in) > 1, SEC_TO_TIME(SUM(time_out)),null) time_out, TRIM("," FROM GROUP_CONCAT(village)) as village, TRIM("," FROM GROUP_CONCAT(city)) as city from
+    // (
+    // SELECT employee_id, `name`, answer_date, latitude as masuk, longitude as masuk1, 0 as keluar, 0 as keluar2, id as id_in, 0 as id_out, DATE_FORMAT(created_at, "%H") as jam_in, 0 as jam_out, TIME_TO_SEC(DATE_FORMAT(created_at, "%H:%i")) as time_in, 0 as time_out, village, city FROM quiz_logs
+    // WHERE id IN (
+    // SELECT MIN(id)
+    // FROM quiz_logs
+    // GROUP BY employee_id, `name`, answer_date
+    // )
+    // union all
+    // SELECT employee_id, `name`, answer_date, 0 as masuk, 0 as masuk1, latitude as keluar, longitude as keluar2, 0 as id_in, id as id_out, 0 as jam_in,  DATE_FORMAT(created_at, "%H") as jam_out, 0 as time_in,  TIME_TO_SEC(DATE_FORMAT(created_at, "%H:%i")) as time_out, "" as village, "" as city FROM quiz_logs
+    // WHERE id IN (
+    // SELECT MAX(id)
+    // FROM quiz_logs
+    // GROUP BY employee_id, `name`, answer_date
+    // )
+    // ) as semua
+    // group by employee_id, `name`, answer_date) as att
+    // left join groups on att.employee_id = groups.employee_id AND att.answer_date = groups.tanggal where att.answer_date = "'.$tgl.'"';
+
+    $list = DB::CONNECTION('sunfish')->select("SELECT
+      * 
+    FROM
+      [dbo].[VIEW_AR_YMPI] AS A 
+    WHERE
+      format ( a.dateTime, 'yyyy-MM-dd' ) = '".$tgl."'");
+
+    $lists = [];
+
+    for ($i=0; $i < count($list); $i++) { 
+      $listss = EmployeeSync::where('employee_id',$list[$i]->emp_no)->first();
+
+      $listes = array(
+           'employee_id' => $listss->employee_id,
+           'name' => $listss->name,
+           'date' => date('Y-m-d',strtotime($list[$i]->dateTime)),
+           'date_in' => $list[$i]->dateTime,
+           'task' => $list[$i]->taskDesc,
+           'department' => $listss->department,
+           'section' => $listss->section,
+           'group' => $listss->group,
+           'location' => json_decode($list[$i]->location),
+      );
+      array_push($lists,$listes);
+    }
+
 
     $response = array(
       'status' => true,
-      'lists' => DB::connection('mobile')->select($q),
+      'lists' => $lists,
     );
     return Response::json($response);
   }
@@ -396,23 +424,26 @@ class MiraiMobileController extends Controller
 
   public function getLocation($lat, $long){
 
-    $url = "https://locationiq.org/v1/reverse.php?key=29e75d503929a1&lat=".$lat."&lon=".$long."&format=json";
-    $curlHandle = curl_init();
-    curl_setopt($curlHandle, CURLOPT_URL, $url);
-    curl_setopt($curlHandle, CURLOPT_HEADER, 0);
-    curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($curlHandle, CURLOPT_SSL_VERIFYHOST, 2);
-    curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, 0);
-    curl_setopt($curlHandle, CURLOPT_TIMEOUT,30);
-    curl_setopt($curlHandle, CURLOPT_POST, 1);
-    $results = curl_exec($curlHandle);
-    curl_close($curlHandle);
+    // $url = "https://locationiq.org/v1/reverse.php?key=pk.456ed0d079b6f646ad4db592aa541ba0&lat=".$lat."&lon=".$long."&format=json";
+    // // $url = "https://www.google.com/maps/@".$lat.",".$long."";
+    // $curlHandle = curl_init();
+    // curl_setopt($curlHandle, CURLOPT_URL, $url);
+    // curl_setopt($curlHandle, CURLOPT_HEADER, 0);
+    // curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, 1);
+    // curl_setopt($curlHandle, CURLOPT_SSL_VERIFYHOST, 2);
+    // curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, 0);
+    // curl_setopt($curlHandle, CURLOPT_TIMEOUT,30);
+    // curl_setopt($curlHandle, CURLOPT_POST, 1);
+    // $results = curl_exec($curlHandle);
+    // curl_close($curlHandle);
 
-    $response = array(
-      'status' => true,
-      'data' => $results,
-    );
-    return Response::json($response);
+    // $response = array(
+    //  'status' => true,
+    //  'data' => $results,
+    // );
+    // return Response::json($response);
+
+    return "<img src='https://maps.locationiq.com/v3/staticmap?key=pk.456ed0d079b6f646ad4db592aa541ba0&center=".$lat.",".$long."&zoom=14&size=1800x1800&format=png&markers=icon:large-green-cutout|".$lat.",".$long."'>";
   }
 
   public function location(){
