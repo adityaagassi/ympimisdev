@@ -269,6 +269,20 @@ class MiraiMobileController extends Controller
     return Response::json($response);
   }
 
+  public function fetchHealthDataLoc(Request $request)
+  {
+    $tgl = date('Y-m-d', strtotime($request->get('tanggal')));
+
+    $lists = db::select('SELECT date_in, employee_id, `name`, department, section, `group`, latitude, longitude, mock, time_in, village, state_district FROM greatday_attendances where date_in = "'.$tgl.'"');
+
+    $response = array(
+      'status' => true,
+      'lists' => $lists,
+    );
+    return Response::json($response);
+    
+  }
+
   public function fetchShiftData(Request $request)
   {
     $q =  'select * from groups';

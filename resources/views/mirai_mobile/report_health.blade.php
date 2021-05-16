@@ -135,14 +135,14 @@
                 <th></th> -->
                 <!-- <th></th> -->
           <!--       <th></th>
-                <th></th> -->
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-      </div>
+            <th></th> -->
+          </tr>
+        </tfoot>
+      </table>
     </div>
   </div>
+</div>
+</div>
 </div>
 </section>
 
@@ -193,144 +193,241 @@
       tanggal:tanggal
     }
 
-    $.get('{{ url("fetch/mirai_mobile/report_attendance") }}', data, function(result, status, xhr){
-      if(result.status){
-        $('#tableResult').DataTable().clear();
+    $.get('{{ url("fetch/mirai_mobile/report_attendance/with_loc") }}', data, function(result, status, xhr){
+      $('#tableResult').DataTable().clear();
         $('#tableResult').DataTable().destroy();
         $('#tableBodyResult').html("");
         var tableData = "";
-        var count = 1;
+      $.each(result.lists, function(key, value) {
+       tableData += '<tr>';     
+       tableData += '<td>'+ value.date_in+'</td>';
+       tableData += '<td>'+ value.employee_id +'</td>';     
+       tableData += '<td>'+ value.name +'</td>';
+       tableData += '<td>'+ (value.department || "") +'</td>';
+       tableData += '<td>'+ (value.section || "") +'</td>';
+       tableData += '<td>'+ (value.group || "") +'</td>';
+       tableData += '<td>'+ value.time_in +'</td>';
+       tableData += '<td>'+ value.village +', '+ value.state_district +'</td>';
+       tableData += '</tr>';     
 
-        $.each(result.lists, function(key, value) {
+     })
 
-          var d = new Date(value.answer_date);
-          var day = d.getDate();
-          var months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-          var month = months[d.getMonth()];
-          var year = d.getFullYear();      
 
-          tableData += '<tr>';     
-          tableData += '<td>'+ value.date+'</td>';
-          tableData += '<td>'+ value.employee_id +'</td>';     
-          tableData += '<td>'+ value.name +'</td>';
-          tableData += '<td>'+ (value.department || "") +'</td>';
-          tableData += '<td>'+ (value.section || "") +'</td>';
-          tableData += '<td>'+ (value.group || "") +'</td>';
-          tableData += '<td>'+ value.date_in +'</td>';
-          // $.each(, function(key2, value2) {
-            var url = '{{url("")}}';
-            tableData += '<td><a target="_blank" href="'+url+'/trial_loc2/'+value.location.latitude+'/'+value.location.longitude+'" class="btn btn-warning btn-sm"><i class="fa fa-map-marker"></i>&nbsp;&nbsp;Location</a></td>';
-          // })
-          // var data2 = {
-          //   lat : value.lat_in,
-          //   lng : value.lng_in
-          // }
-          // $.get('{{ url("fetch/location_employee") }}', data2, function(result, status, xhr){
-          //   if(result.status){
+      $('#tableBodyResult').append(tableData);
 
-          //     console.log(value.data);
-
-          //     $.each(result.data, function(key2, value2) {
-          //       // console.log(value.village);
-          //       tableData += '<td>'+ value2.village +'</td>';
-          //     });
-          //   }
-          //   else{
-          //     alert('Attempt to retrieve data failed');
-          //   }
-
-          // });
-          // tableData += '<td>'+ value.time_out +'</td>';
-          // tableData += '<td><a target="_blank" href="https://172.17.128.87/miraidev/public/trial3?lat='+value.lat_out+'&long='+value.lng_out+'" class="btn btn-warning btn-sm"><i class="fa fa-map-marker"></i>&nbsp;&nbsp;Location</a></td>';
-          // tableData += '<td>'+ value.village +'</td>';
-          // tableData += '<td>'+ value.city +'</td>';
-          // tableData += '<td>'+ value.remark +'</td>';
-          tableData += '</tr>';
-          count += 1;
-        });
-
-        $('#tableBodyResult').append(tableData);
-
-        $('#tableResult tfoot th').each( function () {
-            var title = $(this).text();
-            $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
-          } );
-        var table = $('#tableResult').DataTable({
-          'dom': 'Bfrtip',
-          'responsive':true,
-          'lengthMenu': [
-          [ 5, 10, 25, -1 ],
-          [ '5 rows', '10 rows', '25 rows', 'Show all' ]
-          ],
-          'buttons': {
-            buttons:[
-            {
-              extend: 'pageLength',
-              className: 'btn btn-default',
-            },
-            {
-              extend: 'copy',
-              className: 'btn btn-success',
-              text: '<i class="fa fa-copy"></i> Copy',
-              exportOptions: {
-                columns: ':not(.notexport)'
-              }
-            },
-            {
-              extend: 'excel',
-              className: 'btn btn-info',
-              text: '<i class="fa fa-file-excel-o"></i> Excel',
-              exportOptions: {
-                columns: ':not(.notexport)'
-              }
-            },
-            {
-              extend: 'print',
-              className: 'btn btn-warning',
-              text: '<i class="fa fa-print"></i> Print',
-              exportOptions: {
-                columns: ':not(.notexport)'
-              }
-            },
-            ]
+      $('#tableResult tfoot th').each( function () {
+        var title = $(this).text();
+        $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
+      } );
+      var table = $('#tableResult').DataTable({
+        'dom': 'Bfrtip',
+        'responsive':true,
+        'lengthMenu': [
+        [ 5, 10, 25, -1 ],
+        [ '5 rows', '10 rows', '25 rows', 'Show all' ]
+        ],
+        'buttons': {
+          buttons:[
+          {
+            extend: 'pageLength',
+            className: 'btn btn-default',
           },
-          'paging': true,
-          'lengthChange': true,
-          'pageLength': 15,
-          'searching': true,
-          'ordering': true,
-          'order': [],
-          'info': true,
-          'autoWidth': true,
-          "sPaginationType": "full_numbers",
-          "bJQueryUI": true,
-          "bAutoWidth": false,
-          "processing": true
-        });
+          {
+            extend: 'copy',
+            className: 'btn btn-success',
+            text: '<i class="fa fa-copy"></i> Copy',
+            exportOptions: {
+              columns: ':not(.notexport)'
+            }
+          },
+          {
+            extend: 'excel',
+            className: 'btn btn-info',
+            text: '<i class="fa fa-file-excel-o"></i> Excel',
+            exportOptions: {
+              columns: ':not(.notexport)'
+            }
+          },
+          {
+            extend: 'print',
+            className: 'btn btn-warning',
+            text: '<i class="fa fa-print"></i> Print',
+            exportOptions: {
+              columns: ':not(.notexport)'
+            }
+          },
+          ]
+        },
+        'paging': true,
+        'lengthChange': true,
+        'pageLength': 15,
+        'searching': true,
+        'ordering': true,
+        'order': [],
+        'info': true,
+        'autoWidth': true,
+        "sPaginationType": "full_numbers",
+        "bJQueryUI": true,
+        "bAutoWidth": false,
+        "processing": true
+      });
 
 
-        table.columns().every( function () {
-            var that = this;
+      table.columns().every( function () {
+        var that = this;
 
-            $( 'input', this.footer() ).on( 'keyup change', function () {
-              if ( that.search() !== this.value ) {
-                that
-                .search( this.value )
-                .draw();
-              }
-            } );
-          } );
+        $( 'input', this.footer() ).on( 'keyup change', function () {
+          if ( that.search() !== this.value ) {
+            that
+            .search( this.value )
+            .draw();
+          }
+        } );
+      } );
 
-          $('#tableResult tfoot tr').appendTo('#tableResult thead');
+      $('#tableResult tfoot tr').appendTo('#tableResult thead');
 
-        $('#loading').hide();
-      }
-      else{
-        $('#loading').hide();
-        alert('Attempt to retrieve data failed');
-      }
+      $('#loading').hide();
+    })
 
-    });      // $('#judul_table').append().empty();
+    // $.get('{{ url("fetch/mirai_mobile/report_attendance") }}', data, function(result, status, xhr){
+    //   if(result.status){
+    //     $('#tableResult').DataTable().clear();
+    //     $('#tableResult').DataTable().destroy();
+    //     $('#tableBodyResult').html("");
+    //     var tableData = "";
+    //     var count = 1;
+
+        // $.each(result.lists, function(key, value) {
+
+    //       var d = new Date(value.answer_date);
+    //       var day = d.getDate();
+    //       var months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+    //       var month = months[d.getMonth()];
+    //       var year = d.getFullYear();      
+
+    //       tableData += '<tr>';     
+    //       tableData += '<td>'+ value.date+'</td>';
+    //       tableData += '<td>'+ value.employee_id +'</td>';     
+    //       tableData += '<td>'+ value.name +'</td>';
+    //       tableData += '<td>'+ (value.department || "") +'</td>';
+    //       tableData += '<td>'+ (value.section || "") +'</td>';
+    //       tableData += '<td>'+ (value.group || "") +'</td>';
+    //       tableData += '<td>'+ value.date_in +'</td>';
+    //       // $.each(, function(key2, value2) {
+    //         var url = '{{url("")}}';
+    //         tableData += '<td><a target="_blank" href="'+url+'/trial_loc2/'+value.location.latitude+'/'+value.location.longitude+'" class="btn btn-warning btn-sm"><i class="fa fa-map-marker"></i>&nbsp;&nbsp;Location</a></td>';
+    //       // })
+    //       // var data2 = {
+    //       //   lat : value.lat_in,
+    //       //   lng : value.lng_in
+    //       // }
+    //       // $.get('{{ url("fetch/location_employee") }}', data2, function(result, status, xhr){
+    //       //   if(result.status){
+
+    //       //     console.log(value.data);
+
+    //       //     $.each(result.data, function(key2, value2) {
+    //       //       // console.log(value.village);
+    //       //       tableData += '<td>'+ value2.village +'</td>';
+    //       //     });
+    //       //   }
+    //       //   else{
+    //       //     alert('Attempt to retrieve data failed');
+    //       //   }
+
+    //       // });
+    //       // tableData += '<td>'+ value.time_out +'</td>';
+    //       // tableData += '<td><a target="_blank" href="https://172.17.128.87/miraidev/public/trial3?lat='+value.lat_out+'&long='+value.lng_out+'" class="btn btn-warning btn-sm"><i class="fa fa-map-marker"></i>&nbsp;&nbsp;Location</a></td>';
+    //       // tableData += '<td>'+ value.village +'</td>';
+    //       // tableData += '<td>'+ value.city +'</td>';
+    //       // tableData += '<td>'+ value.remark +'</td>';
+    //       tableData += '</tr>';
+    //       count += 1;
+    //     });
+
+    //     $('#tableBodyResult').append(tableData);
+
+    //     $('#tableResult tfoot th').each( function () {
+    //         var title = $(this).text();
+    //         $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
+    //       } );
+    //     var table = $('#tableResult').DataTable({
+    //       'dom': 'Bfrtip',
+    //       'responsive':true,
+    //       'lengthMenu': [
+    //       [ 5, 10, 25, -1 ],
+    //       [ '5 rows', '10 rows', '25 rows', 'Show all' ]
+    //       ],
+    //       'buttons': {
+    //         buttons:[
+    //         {
+    //           extend: 'pageLength',
+    //           className: 'btn btn-default',
+    //         },
+    //         {
+    //           extend: 'copy',
+    //           className: 'btn btn-success',
+    //           text: '<i class="fa fa-copy"></i> Copy',
+    //           exportOptions: {
+    //             columns: ':not(.notexport)'
+    //           }
+    //         },
+    //         {
+    //           extend: 'excel',
+    //           className: 'btn btn-info',
+    //           text: '<i class="fa fa-file-excel-o"></i> Excel',
+    //           exportOptions: {
+    //             columns: ':not(.notexport)'
+    //           }
+    //         },
+    //         {
+    //           extend: 'print',
+    //           className: 'btn btn-warning',
+    //           text: '<i class="fa fa-print"></i> Print',
+    //           exportOptions: {
+    //             columns: ':not(.notexport)'
+    //           }
+    //         },
+    //         ]
+    //       },
+    //       'paging': true,
+    //       'lengthChange': true,
+    //       'pageLength': 15,
+    //       'searching': true,
+    //       'ordering': true,
+    //       'order': [],
+    //       'info': true,
+    //       'autoWidth': true,
+    //       "sPaginationType": "full_numbers",
+    //       "bJQueryUI": true,
+    //       "bAutoWidth": false,
+    //       "processing": true
+    //     });
+
+
+    //     table.columns().every( function () {
+    //         var that = this;
+
+    //         $( 'input', this.footer() ).on( 'keyup change', function () {
+    //           if ( that.search() !== this.value ) {
+    //             that
+    //             .search( this.value )
+    //             .draw();
+    //           }
+    //         } );
+    //       } );
+
+    //       $('#tableResult tfoot tr').appendTo('#tableResult thead');
+
+    //     $('#loading').hide();
+    //   }
+    //   else{
+    //     $('#loading').hide();
+    //     alert('Attempt to retrieve data failed');
+    //   }
+
+    // });      // $('#judul_table').append().empty();
       // $('#judul_table').append('<center>Pengecekan Tanggal <b>'+tanggal+'</b> dengan Judgement <b>'+jdgm+'</b> (<b>'+remark+'</b>)</center>');
       
     }

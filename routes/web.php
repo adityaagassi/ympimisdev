@@ -4473,6 +4473,7 @@ Route::group(['nav' => 'M32', 'middleware' => 'permission'], function(){
 	//report attendance
 	Route::get('index/mirai_mobile/report_attendance', 'MiraiMobileController@health');
 	Route::get('fetch/mirai_mobile/report_attendance', 'MiraiMobileController@fetchHealthData');
+	Route::get('fetch/mirai_mobile/report_attendance/with_loc', 'MiraiMobileController@fetchHealthDataLoc');
 	Route::get('fetch/location_employee', 'MiraiMobileController@fetchLocationEmployee');
 	Route::get('index/mirai_mobile/report_attendance_sbh', 'MiraiMobileController@healthSbh');
 	Route::get('fetch/mirai_mobile/report_attendance_sbh', 'MiraiMobileController@fetchHealthDataSbh');
