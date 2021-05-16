@@ -50,6 +50,7 @@ class Kernel extends ConsoleKernel
         Commands\KDShipment::class,
         Commands\SendEmailSPKNotification::class,
         Commands\EmailAgreement::class,
+        Commands\GreatdayAttendanceCommand::class,
         Commands\SyncShiftSunfish::class,
 
         Commands\ResumeNgBuffing::class,
@@ -63,6 +64,10 @@ class Kernel extends ConsoleKernel
         Commands\UploadCompletionKitto::class,
         Commands\RecordDailyStocks::class,
         Commands\RecordStockMiddle::class,
+
+        //WH
+        Commands\UpdateStatusOperator::class,
+
         
     ];
 
@@ -146,8 +151,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('update:pointing_calls')->dailyAt('01:00');
         $schedule->command('skill:unfulfilled_log')->dailyAt('01:00');
         $schedule->command('costcenter:history')->dailyAt('01:00');
-        $schedule->command('injection:schedule')->monthlyOn(1, '04:00');;
-        $schedule->command('interview:schedule')->monthlyOn(1, '02:00');;
+        $schedule->command('injection:schedule')->monthlyOn(1, '04:00');
+        $schedule->command('interview:schedule')->monthlyOn(1, '02:00');
 
 
         $schedule->command('kd:shipment')->everyThirtyMinutes();
@@ -157,9 +162,22 @@ class Kernel extends ConsoleKernel
         $schedule->command('resume:buffing')->hourlyAt(10);
         $schedule->command('resume:lacquering')->hourlyAt(10);
         $schedule->command('resume:plating')->hourlyAt(10);
+
+        //Warehouse
+        // $schedule->command('update:operator_internal')->dailyAt('07:00');
+        // $schedule->command('update:operator_internal')->dailyAt('16:00');
+        // $schedule->command('update:operator_internal')->dailyAt('16:00');
+
+        $schedule->command('sync:greatday_attendance')->dailyAt('17:00');
+
+
+        
+        
+
+
     }
 
-    /**
+    /**l
      * Register the Closure based commands for the application.
      *
      * @return void
