@@ -66,7 +66,7 @@ class Kernel extends ConsoleKernel
         Commands\RecordStockMiddle::class,
 
         //WH
-        Commands\UpdateStatusOperator::class,
+        // Commands\UpdateStatusOperator::class,
 
         
     ];
