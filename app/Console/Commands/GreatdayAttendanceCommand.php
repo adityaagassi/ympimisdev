@@ -156,13 +156,13 @@ class GreatdayAttendanceCommand extends Command
 
           $menu = GreatdayAttendance::updateOrCreate(
                 [
-                    'date_in' => date('Y-m-d'),
+                    'date_in' => date('Y-m-d',strtotime($list[$i]->dateTime)),
                     'employee_id' => $listss->employee_id,
                 ],
                 [
                     'employee_id' => $listss->employee_id,
                    'name' => $listss->name,
-                   'date_in' => date('Y-m-d'),
+                   'date_in' => date('Y-m-d',strtotime($list[$i]->dateTime)),
                    'time_in' => $list[$i]->dateTime,
                    'task' => $list[$i]->taskDesc,
                    'department' => $listss->department,
