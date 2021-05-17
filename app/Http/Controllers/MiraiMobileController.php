@@ -237,9 +237,9 @@ class MiraiMobileController extends Controller
 
     $list = DB::CONNECTION('sunfish')->select("SELECT
       * 
-    FROM
+      FROM
       [dbo].[VIEW_AR_YMPI] AS A 
-    WHERE
+      WHERE
       format ( a.dateTime, 'yyyy-MM-dd' ) = '".$tgl."'");
 
     $lists = [];
@@ -248,16 +248,16 @@ class MiraiMobileController extends Controller
       $listss = EmployeeSync::where('employee_id',$list[$i]->emp_no)->first();
 
       $listes = array(
-           'employee_id' => $listss->employee_id,
-           'name' => $listss->name,
-           'date' => date('Y-m-d',strtotime($list[$i]->dateTime)),
-           'date_in' => $list[$i]->dateTime,
-           'task' => $list[$i]->taskDesc,
-           'department' => $listss->department,
-           'section' => $listss->section,
-           'group' => $listss->group,
-           'location' => json_decode($list[$i]->location),
-      );
+       'employee_id' => $listss->employee_id,
+       'name' => $listss->name,
+       'date' => date('Y-m-d',strtotime($list[$i]->dateTime)),
+       'date_in' => $list[$i]->dateTime,
+       'task' => $list[$i]->taskDesc,
+       'department' => $listss->department,
+       'section' => $listss->section,
+       'group' => $listss->group,
+       'location' => json_decode($list[$i]->location),
+     );
       array_push($lists,$listes);
     }
 
@@ -273,7 +273,7 @@ class MiraiMobileController extends Controller
   {
     $tgl = date('Y-m-d', strtotime($request->get('tanggal')));
 
-    $lists = db::select('SELECT date_in, employee_id, `name`, department, section, `group`, latitude, longitude, mock, time_in, village, state_district FROM greatday_attendances where DATE(time_in) = "'.$tgl.'"');
+    $lists = db::select('SELECT * FROM greatday_attendances where DATE(time_in) = "'.$tgl.'"');
 
     $response = array(
       'status' => true,
@@ -662,55 +662,55 @@ public function fetchIndicationData(Request $request)
 }
 
 public function indexGuestAssessmentReport()
-  {
-    $title = 'Report Guest Assessment Covid-19';
-    $title_jp = '';
+{
+  $title = 'Report Guest Assessment Covid-19';
+  $title_jp = '';
 
-    return view('mirai_mobile.guest_assessment', array(
-      'title' => $title,
-      'title_jp' => $title_jp
-    ))->with('page', 'Report Guest Assessment')->with('head','Report Guest Assessment');
+  return view('mirai_mobile.guest_assessment', array(
+    'title' => $title,
+    'title_jp' => $title_jp
+  ))->with('page', 'Report Guest Assessment')->with('head','Report Guest Assessment');
+}
+
+public function fetchGuestAssessmentReport()
+{
+  try {
+    $guest = DB::SELECT("SELECT * from miraimobile.guest_logs order by created_at desc");
+
+    $response = array(
+      'status' => true,
+      'guest' => $guest
+    );
+    return Response::json($response);
+  } catch (\Exception $e) {
+    $response = array(
+      'status' => false,
+      'message' => $e->getMessage()
+    );
+    return Response::json($response);
   }
+}
 
-  public function fetchGuestAssessmentReport()
-  {
-    try {
-      $guest = DB::SELECT("SELECT * from miraimobile.guest_logs order by created_at desc");
-
-      $response = array(
-        'status' => true,
-        'guest' => $guest
-      );
-      return Response::json($response);
-    } catch (\Exception $e) {
-      $response = array(
-        'status' => false,
-        'message' => $e->getMessage()
-      );
-      return Response::json($response);
-    }
-  }
-
-  public function fetchGuestAssessmentReportDetail(Request $request)
-  {
-    try {
-      $guest = DB::SELECT("
-        SELECT * FROM miraimobile.guest_logs where miraimobile.guest_logs.id = '".$request->get('id')."'
+public function fetchGuestAssessmentReportDetail(Request $request)
+{
+  try {
+    $guest = DB::SELECT("
+      SELECT * FROM miraimobile.guest_logs where miraimobile.guest_logs.id = '".$request->get('id')."'
       ");
 
-      $response = array(
-        'status' => true,
-        'guest' => $guest
-      );
-      return Response::json($response);
-    } catch (\Exception $e) {
-      $response = array(
-        'status' => false,
-        'message' => $e->getMessage()
-      );
-      return Response::json($response);
-    }
+    $response = array(
+      'status' => true,
+      'guest' => $guest
+    );
+    return Response::json($response);
+  } catch (\Exception $e) {
+    $response = array(
+      'status' => false,
+      'message' => $e->getMessage()
+    );
+    return Response::json($response);
   }
+}
 
 
 }

@@ -13,7 +13,8 @@
     padding: 3px;
   }
   tbody>tr>td{
-    text-align:center;
+    text-align:left;
+    vertical-align: middle;
   }
   tfoot>tr>th{
     text-align:center;
@@ -101,28 +102,24 @@
             <thead style="background-color: rgba(126,86,134,.7);">
               <tr>
                 <!-- <th>Nama</th> -->
-                <th>Tanggal</th>
-                <th>NIK</th>
-                <th>Nama</th>
-                <th>Dept</th>
-                <th>Sect</th>
-                <th>Group</th>
-                <th>Waktu Absensi</th>
-                <th>Village</th>
-                <th>State District</th>
-                <!-- <th>Jam Keluar</th> -->
-                <!-- <th>Location Keluar</th> -->
-                <!-- <th>Village</th>
-                <th>City</th>
-                <th>Status</th> -->
-                <!-- <th>Action</th> -->
+                <th style="width: 1%;">Date</th>
+                <th style="width: 1%;">ID</th>
+                <th style="width: 4%;">Name</th>
+                <th style="width: 4%;">Dept</th>
+                <th style="width: 2%;">Sect</th>
+                <th style="width: 2%;">Group</th>
+                <th style="width: 1%;">Created At</th>
+                <th style="width: 1%;">Village</th>
+                <th style="width: 1%;">District</th>
+                <th style="width: 1%;">State</th>
+                <th style="width: 1%;">Lat</th>
+                <th style="width: 1%;">Lon</th>
               </tr>
             </thead>
             <tbody id="tableBodyResult">
             </tbody>
             <tfoot>
               <tr>
-                <!-- <th></th> -->
                 <th></th>
                 <th></th>
                 <th></th>
@@ -132,19 +129,16 @@
                 <th></th>
                 <th></th>
                 <th></th>
-                <!-- <th></th>
                 <th></th>
-                <th></th> -->
-                <!-- <th></th> -->
-          <!--       <th></th>
-            <th></th> -->
-          </tr>
-        </tfoot>
-      </table>
+                <th></th>
+                <th></th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
-</div>
-</div>
 </div>
 </section>
 
@@ -197,9 +191,9 @@
 
     $.get('{{ url("fetch/mirai_mobile/report_attendance/with_loc") }}', data, function(result, status, xhr){
       $('#tableResult').DataTable().clear();
-        $('#tableResult').DataTable().destroy();
-        $('#tableBodyResult').html("");
-        var tableData = "";
+      $('#tableResult').DataTable().destroy();
+      $('#tableBodyResult').html("");
+      var tableData = "";
       $.each(result.lists, function(key, value) {
        tableData += '<tr>';     
        tableData += '<td>'+ value.date_in+'</td>';
@@ -211,9 +205,11 @@
        tableData += '<td>'+ value.time_in +'</td>';
        tableData += '<td>'+ (value.village || "") +'</td>';
        tableData += '<td>'+ (value.state_district || "") +'</td>';
+       tableData += '<td>'+ (value.state || "") +'</td>';
+       tableData += '<td>'+ (value.latitude || "") +'</td>';
+       tableData += '<td>'+ (value.longitude || "") +'</td>';
        tableData += '</tr>';     
-
-     })
+     });
 
 
       $('#tableBodyResult').append(tableData);
