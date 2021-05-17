@@ -42,7 +42,7 @@ class GreatdayAttendanceCommand extends Command
      */
     public function handle()
     {
-        $tgl = date('Y-m-14');
+        $tgl = date('Y-m-d');
         $list = DB::CONNECTION('sunfish')->select("SELECT
           * 
         FROM
