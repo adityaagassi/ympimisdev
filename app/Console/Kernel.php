@@ -51,6 +51,7 @@ class Kernel extends ConsoleKernel
         Commands\SendEmailSPKNotification::class,
         Commands\EmailAgreement::class,
         Commands\GreatdayAttendanceCommand::class,
+        Commands\GeocodeUpdate::class,
         Commands\SyncShiftSunfish::class,
 
         Commands\ResumeNgBuffing::class,
@@ -169,12 +170,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('update:operator_internal')->dailyAt('16:00');
 
         $schedule->command('sync:greatday_attendance')->dailyAt('17:00');
-
-
-        
-        
-
-
+        $schedule->command('update:geocode')->dailyAt('18:00');
     }
 
     /**l
