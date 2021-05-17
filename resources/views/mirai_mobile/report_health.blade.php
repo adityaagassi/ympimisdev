@@ -108,7 +108,8 @@
                 <th>Sect</th>
                 <th>Group</th>
                 <th>Waktu Absensi</th>
-                <th>Location</th>
+                <th>Village</th>
+                <th>State District</th>
                 <!-- <th>Jam Keluar</th> -->
                 <!-- <th>Location Keluar</th> -->
                 <!-- <th>Village</th>
@@ -122,6 +123,7 @@
             <tfoot>
               <tr>
                 <!-- <th></th> -->
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -207,7 +209,8 @@
        tableData += '<td>'+ (value.section || "") +'</td>';
        tableData += '<td>'+ (value.group || "") +'</td>';
        tableData += '<td>'+ value.time_in +'</td>';
-       tableData += '<td>'+ value.village +', '+ value.state_district +'</td>';
+       tableData += '<td>'+ (value.village || "") +'</td>';
+       tableData += '<td>'+ (value.state_district || "") +'</td>';
        tableData += '</tr>';     
 
      })
