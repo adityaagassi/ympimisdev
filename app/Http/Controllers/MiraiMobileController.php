@@ -273,7 +273,7 @@ class MiraiMobileController extends Controller
   {
     $tgl = date('Y-m-d', strtotime($request->get('tanggal')));
 
-    $lists = db::select('SELECT date_in, employee_id, `name`, department, section, `group`, latitude, longitude, mock, time_in, village, state_district FROM greatday_attendances where date_in = "'.$tgl.'"');
+    $lists = db::select('SELECT date_in, employee_id, `name`, department, section, `group`, latitude, longitude, mock, time_in, village, state_district FROM greatday_attendances where DATE(time_in) = "'.$tgl.'"');
 
     $response = array(
       'status' => true,
