@@ -3366,7 +3366,7 @@ public function fetchAttendanceData(Request $request)
                     $attend_code = $attend_code." or ";
                }
           }
-          $addattend_code = "and A.Attend_Code in (".$attend_code.") ";
+          $addattend_code = "and (".$attend_code.") ";
      }
 
      if($request->get('shift') != null) {
