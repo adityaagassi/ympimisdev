@@ -191,6 +191,20 @@
 							</div>
 						</div>
 					</div>
+					<div class="row">
+
+						<div class="col-md-8 col-md-offset-2">
+							<div class="form-group">
+								<label>Shift</label>
+								<select class="form-control select2" multiple="multiple" name="shift" id='shift' data-placeholder="Select Shift Code" style="width: 100%;">
+									<option value=""></option>
+									@foreach($shifts as $shift)
+									<option value="{{ $shift->shiftdaily_code }}">{{ $shift->shiftdaily_code }}</option>
+									@endforeach
+								</select>
+							</div>
+						</div>
+					</div>
 					<div class="col-md-4 col-md-offset-6">
 						<div class="form-group pull-right">
 							<a href="javascript:void(0)" onClick="clearConfirmation()" class="btn btn-danger">Clear</a>
@@ -272,6 +286,7 @@
 		var group = $('#group').val();
 		var employee_id = $('#employee_id').val();
 		var attend_code = $('#attend_code').val();
+		var shift = $('#shift').val();
 		
 		var data = {
 			datefrom:datefrom,
@@ -282,6 +297,7 @@
 			group:group,
 			employee_id:employee_id,
 			attend_code:attend_code,
+			shift:shift,
 		}
 
 		// $.get('{{ url("fetch/report/attendance_data") }}', data, function(result, status, xhr){

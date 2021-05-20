@@ -58,6 +58,9 @@ public function handle()
         if (ISSET($latlong->mock)) {
             $mock = $latlong->mock;
         }
+        // pk.2a8bbcfe2d56fd3f61c2aeb2dd556e69
+
+        // pk.c876df7db9f4dc1f1ec939df75a98ae7
 
         $insert = GreatdayAttendance::updateOrCreate(
             [

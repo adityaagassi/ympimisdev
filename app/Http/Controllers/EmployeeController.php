@@ -806,26 +806,26 @@ class EmployeeController extends Controller
 
      public function exportDataPajak(Request $request){
 
-       $time = date('d-m-Y H;i;s');
+        $time = date('d-m-Y H;i;s');
 
 
-       $npwp_detail = db::select(
-        "SELECT * from employee_taxes order by id asc");
+        $npwp_detail = db::select(
+            "SELECT * from employee_taxes order by id asc");
 
-       $data = array(
-        'npwp_detail' => $npwp_detail
-   );
+        $data = array(
+            'npwp_detail' => $npwp_detail
+       );
 
-       ob_clean();
+        ob_clean();
 
-       Excel::create('Data NPWP '.$time, function($excel) use ($data){
-        $excel->sheet('Data', function($sheet) use ($data) {
-           return $sheet->loadView('employees.report.resume_pajak_excel', $data);
-      });
-   })->export('xlsx');
-  }
+        Excel::create('Data NPWP '.$time, function($excel) use ($data){
+            $excel->sheet('Data', function($sheet) use ($data) {
+              return $sheet->loadView('employees.report.resume_pajak_excel', $data);
+         });
+       })->export('xlsx');
+   }
 
-  public function fetchEmployeeResume(Request $request){
+   public function fetchEmployeeResume(Request $request){
 
      $tanggal = "";
      $addcostcenter = "";
@@ -1004,6 +1004,13 @@ public function attendanceData()
      $title_jp = '出席データ';
      $attend_codes = $this->attend;
 
+     $shifts = DB::SELECT("SELECT DISTINCT
+          ( shiftdaily_code ) 
+     FROM
+          sunfish_shift_syncs 
+     ORDER BY
+          shiftdaily_code");
+
      $q = "select employee_syncs.employee_id, employee_syncs.name, employee_syncs.department, employee_syncs.`section`, employee_syncs.`group`, employee_syncs.cost_center, cost_centers2.cost_center_name from employee_syncs left join cost_centers2 on cost_centers2.cost_center = employee_syncs.cost_center";
 
      $datas = db::select($q);
@@ -1012,7 +1019,8 @@ public function attendanceData()
           'title' => $title,
           'title_jp' => $title_jp,
           'datas' => $datas,
-          'attend_codes' => $attend_codes
+          'attend_codes' => $attend_codes,
+          'shifts' => $shifts
      ));
 }
 
@@ -3275,6 +3283,7 @@ public function fetchAttendanceData(Request $request)
      $addgrup = "";
      $addnik = "";
      $addattend_code = "";
+     $addshift = "";
 
      if(strlen($request->get('datefrom')) > 0){
           $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
@@ -3357,7 +3366,23 @@ public function fetchAttendanceData(Request $request)
                     $attend_code = $attend_code." or ";
                }
           }
-          $addattend_code = "and (".$attend_code.") ";
+          $addattend_code = "and A.Attend_Code in (".$attend_code.") ";
+     }
+
+     if($request->get('shift') != null) {
+          $shifts = $request->get('shift');
+          $shiftlen = count($shifts);
+          $shift = "";
+
+          for($x = 0; $x < $shiftlen; $x++) {
+               for($x = 0; $x < $shiftlen; $x++) {
+               $shift = $shift."'".$shifts[$x]."'";
+               if($x != $shiftlen-1){
+                    $shift = $shift.",";
+               }
+          }
+          }
+          $addshift = "and A.shiftdaily_code in (".$shift.") ";
      }
 
      $qry = "SELECT
@@ -3376,7 +3401,7 @@ public function fetchAttendanceData(Request $request)
      VIEW_YMPI_Emp_Attendance A
      LEFT JOIN VIEW_YMPI_Emp_OrgUnit B ON A.emp_no = B.emp_no 
      WHERE
-     A.emp_no IS NOT NULL ".$tanggal."".$addcostcenter."".$adddepartment."".$addsection."".$addgrup."".$addnik."".$addattend_code."
+     A.emp_no IS NOT NULL ".$tanggal."".$addcostcenter."".$adddepartment."".$addsection."".$addgrup."".$addnik."".$addattend_code." ".$addshift." 
      ORDER BY
      A.emp_no ASC";
 
@@ -4502,11 +4527,24 @@ public function fetchEmployeeByTag(Request $request)
           $emp = $emp->where('tag', '=', $request->get('tag'));
           $emp = $emp->first();       
 
-          $response = array(
-               'status' => true,
-               'datas' => $emp
-          );
-          return Response::json($response);      
+          if (count($emp) > 0) {
+               $response = array(
+                    'status' => true,
+                    'datas' => $emp
+               );
+               return Response::json($response);
+          } else {
+          //      $emp = Employee::whereNull('end_date');
+          // $emp = $emp->where('tag', '=', $request->get('tag'));
+          // $emp = $emp->first(); 
+               $response = array(
+                    'status' => false,
+                    'datas' => null
+               );
+               return Response::json($response);
+          }
+
+          
      } catch (QueryException $e) {
           $response = array(
                'status' => false,
