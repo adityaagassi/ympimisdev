@@ -43,10 +43,15 @@
 			<div class="modal-header">
 				<center><h4 style="font-weight: bold;" class="modal-title" id="modalDetailTitle"></h4></center>
 				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
+					<span style="font-weight: bold;">
+						Jika Plan &gt; 0 (Ava = Stock &divide; Plan)<br>
+						Jika Plan &#8924; 0 (Ava = Stock &divide; Plan Avg (Rata2 plan s/d hari ini))
+					</span>
 					<table class="table table-hover table-bordered table-striped" id="tableDetail">
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
 								<th style="width: 4%;">Key</th>
+								<th style="width: 1%;">Plan Avg</th>
 								<th style="width: 1%;">Plan Acc</th>
 								<th style="width: 1%;">Pick Acc</th>
 								<th style="width: 1%;">Return Acc</th>
@@ -366,6 +371,7 @@ function fetchDetail(hpl, cat, c){
 						if(value.safe == 1){
 							tableDetailBody += '<tr>';
 							tableDetailBody += '<td style="width: 4%;">'+value.model+' '+value.key+' '+value.surface+'</td>';
+							tableDetailBody += '<td style="width: 1%;">'+value.plan_schedule+'</td>';
 							tableDetailBody += '<td style="width: 1%;">'+value.plan_ori+'</td>';
 							tableDetailBody += '<td style="width: 1%;">'+value.plus+'</td>';
 							tableDetailBody += '<td style="width: 1%;">'+value.minus+'</td>';
@@ -381,6 +387,7 @@ function fetchDetail(hpl, cat, c){
 						if(value.unsafe == 1){
 							tableDetailBody += '<tr>';
 							tableDetailBody += '<td style="width: 4%;">'+value.model+' '+value.key+' '+value.surface+'</td>';
+							tableDetailBody += '<td style="width: 1%;">'+value.plan_schedule+'</td>';
 							tableDetailBody += '<td style="width: 1%;">'+value.plan_ori+'</td>';
 							tableDetailBody += '<td style="width: 1%;">'+value.plus+'</td>';
 							tableDetailBody += '<td style="width: 1%;">'+value.minus+'</td>';
@@ -396,6 +403,7 @@ function fetchDetail(hpl, cat, c){
 						if(value.zero == 1){
 							tableDetailBody += '<tr>';
 							tableDetailBody += '<td style="width: 4%;">'+value.model+' '+value.key+' '+value.surface+'</td>';
+							tableDetailBody += '<td style="width: 1%;">'+value.plan_schedule+'</td>';
 							tableDetailBody += '<td style="width: 1%;">'+value.plan_ori+'</td>';
 							tableDetailBody += '<td style="width: 1%;">'+value.plus+'</td>';
 							tableDetailBody += '<td style="width: 1%;">'+value.minus+'</td>';
@@ -416,6 +424,7 @@ function fetchDetail(hpl, cat, c){
 					if(value.ava_ultra_safe == 1){
 						tableDetailBody += '<tr>';
 						tableDetailBody += '<td style="width: 4%;">'+value.model+' '+value.key+' '+value.surface+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.plan_schedule+'</td>';
 						tableDetailBody += '<td style="width: 1%;">'+value.plan_ori+'</td>';
 						tableDetailBody += '<td style="width: 1%;">'+value.plus+'</td>';
 						tableDetailBody += '<td style="width: 1%;">'+value.minus+'</td>';
@@ -431,6 +440,7 @@ function fetchDetail(hpl, cat, c){
 					if(value.ava_safe == 1){
 						tableDetailBody += '<tr>';
 						tableDetailBody += '<td style="width: 4%;">'+value.model+' '+value.key+' '+value.surface+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.plan_schedule+'</td>';
 						tableDetailBody += '<td style="width: 1%;">'+value.plan_ori+'</td>';
 						tableDetailBody += '<td style="width: 1%;">'+value.plus+'</td>';
 						tableDetailBody += '<td style="width: 1%;">'+value.minus+'</td>';
@@ -446,6 +456,7 @@ function fetchDetail(hpl, cat, c){
 					if(value.ava_unsafe == 1){
 						tableDetailBody += '<tr>';
 						tableDetailBody += '<td style="width: 4%;">'+value.model+' '+value.key+' '+value.surface+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.plan_schedule+'</td>';
 						tableDetailBody += '<td style="width: 1%;">'+value.plan_ori+'</td>';
 						tableDetailBody += '<td style="width: 1%;">'+value.plus+'</td>';
 						tableDetailBody += '<td style="width: 1%;">'+value.minus+'</td>';
@@ -461,6 +472,7 @@ function fetchDetail(hpl, cat, c){
 					if(value.ava_zero == 1){
 						tableDetailBody += '<tr>';
 						tableDetailBody += '<td style="width: 4%;">'+value.model+' '+value.key+' '+value.surface+'</td>';
+						tableDetailBody += '<td style="width: 1%;">'+value.plan_schedule+'</td>';
 						tableDetailBody += '<td style="width: 1%;">'+value.plan_ori+'</td>';
 						tableDetailBody += '<td style="width: 1%;">'+value.plus+'</td>';
 						tableDetailBody += '<td style="width: 1%;">'+value.minus+'</td>';

@@ -108,13 +108,268 @@ class DisplayController extends Controller
 		// ( histories.transfer_movement_type = '9I4', ( histories.lot ), 0 )) AS minus,
 		// ( histories.transfer_movement_type = '9I4', IF(day(histories.created_at) < 6, 0, histories.lot),0)) AS minus,
 
+		// $stockroom_keys = db::select("SELECT
+		// 	materials.issue_storage_location,
+		// 	materials.hpl,
+		// 	materials.model,
+		// 	materials.`key`,
+		// 	materials.surface,
+		// 	sum( plan ) AS plan,
+		// 	sum( picking ) AS picking,
+		// 	sum( plus ) AS plus,
+		// 	sum( minus ) AS minus,
+		// 	sum( stock ) AS stock,
+		// 	sum( plan_ori ) AS plan_ori,
+		// 	(
+		// 	sum( plan )- sum( picking )) AS diff,
+		// 	sum( stock ) - (
+		// 	sum( plan )- sum( picking )) AS diff2,
+		// 	round( sum( stock ) / sum( plan ), 1 ) AS ava,
+		// 	IF
+		// 	(
+		// 	round( sum( stock ) / sum( plan ), 1 )>= 1,
+		// 	1,
+		// 	0 
+		// 	) AS safe,
+		// 	IF
+		// 	(
+		// 	round( sum( stock ) / sum( plan ), 1 )< 1 
+		// 	AND round( sum( stock ) / sum( plan ), 1 )> 0,
+		// 	1,
+		// 	0 
+		// 	) AS unsafe,
+		// 	IF
+		// 	( sum( stock )<= 0, 1, 0 ) AS zero,
+		// 	IF
+		// 	( round( sum( stock ) / sum( plan ), 1 )> 2, 1, 0 ) AS ava_ultra_safe,
+		// 	IF
+		// 	(
+		// 	round( sum( stock ) / sum( plan ), 1 )>= 1 
+		// 	AND round( sum( stock ) / sum( plan ), 1 )<= 2,
+		// 	1,
+		// 	0 
+		// 	) AS ava_safe,
+		// 	IF
+		// 	(
+		// 	round( sum( stock ) / sum( plan ), 1 )< 1 
+		// 	AND round( sum( stock ) / sum( plan ), 1 )> 0,
+		// 	1,
+		// 	0 
+		// 	) AS ava_unsafe,
+		// 	IF
+		// 	( round( sum( stock ) / sum( plan ), 1 ) <= 0, 1, 0 ) AS ava_zero 
+		// 	FROM
+		// 	(
+		// 	SELECT
+		// 	material_number,
+		// 	sum( plan ) AS plan,
+		// 	sum( picking ) AS picking,
+		// 	sum( plus ) AS plus,
+		// 	sum( minus ) AS minus,
+		// 	sum( stock ) AS stock,
+		// 	sum( plan_ori ) AS plan_ori 
+		// 	FROM
+		// 	(
+		// 	SELECT
+		// 	material_number,
+		// 	plan,
+		// 	picking,
+		// 	plus,
+		// 	minus,
+		// 	stock,
+		// 	plan_ori 
+		// 	FROM
+		// 	(
+		// 	SELECT
+		// 	materials.material_number,
+		// 	0 AS plan,
+		// 	sum(
+		// 	IF
+		// 	(
+		// 	histories.transfer_movement_type = '9I3',
+		// 	histories.lot,
+		// 	IF
+		// 	( histories.transfer_movement_type = '9I4', IF(day(histories.created_at) < 5, 0, -(histories.lot)),0))) as picking,
+		// 	0 AS plus,
+		// 	0 AS minus,
+		// 	0 AS stock,
+		// 	0 AS plan_ori 
+		// 	FROM
+		// 	(
+		// 	SELECT
+		// 	materials.id,
+		// 	materials.material_number 
+		// 	FROM
+		// 	kitto.materials 
+		// 	WHERE
+		// 	materials.location IN ( 'SX51', 'CL51' ) 
+		// 	AND category = 'key'
+		// 	) AS materials
+		// 	LEFT JOIN kitto.histories ON materials.id = histories.transfer_material_id 
+		// 	WHERE
+		// 	date( histories.created_at ) = '".$now."' 
+		// 	AND histories.category IN ( 'transfer', 'transfer_cancel', 'transfer_return', 'transfer_adjustment' ) 
+		// 	GROUP BY
+		// 	materials.material_number 
+		// 	) AS pick UNION ALL
+		// 	SELECT
+		// 	inventories.material_number,
+		// 	0 AS plan,
+		// 	0 AS picking,
+		// 	0 AS plus,
+		// 	0 AS minus,
+		// 	sum( inventories.lot ) AS stock,
+		// 	0 AS plan_ori 
+		// 	FROM
+		// 	kitto.inventories
+		// 	LEFT JOIN kitto.materials ON materials.material_number = inventories.material_number 
+		// 	WHERE
+		// 	materials.location IN ( 'SX51', 'CL51' ) 
+		// 	AND materials.category = 'key'
+		// 	GROUP BY
+		// 	inventories.material_number UNION ALL
+		// 	SELECT
+		// 	material_number,
+		// 	sum( plan ) AS plan,
+		// 	0 AS picking,
+		// 	0 AS plus,
+		// 	0 AS minus,
+		// 	0 AS stock,
+		// 	sum( plan_ori ) AS plan_ori 
+		// 	FROM
+		// 	(
+		// 	SELECT
+		// 	materials.material_number,
+		// 	-(
+		// 	sum(
+		// 	IF
+		// 	(
+		// 	histories.transfer_movement_type = '9I3',
+		// 	histories.lot,
+		// 	IF
+		// 	( histories.transfer_movement_type = '9I4', IF(day(histories.created_at) < 5, 0, -(histories.lot)),0)))) AS plan,
+		// 	0 AS plan_ori 
+		// 	FROM
+		// 	(
+		// 	SELECT
+		// 	materials.id,
+		// 	materials.material_number 
+		// 	FROM
+		// 	kitto.materials 
+		// 	WHERE
+		// 	materials.location IN ( 'SX51', 'CL51' ) 
+		// 	AND category = 'key' 
+		// 	) AS materials
+		// 	LEFT JOIN kitto.histories ON materials.id = histories.transfer_material_id 
+		// 	WHERE
+		// 	date( histories.created_at ) >= '".$first."' 
+		// 	AND date( histories.created_at ) <= '".$yesterday."' 
+		// 	AND histories.category IN ( 'transfer', 'transfer_cancel', 'transfer_return', 'transfer_adjustment' ) 
+		// 	GROUP BY
+		// 	materials.material_number UNION ALL
+		// 	SELECT
+		// 	assy_picking_schedules.material_number,
+		// 	sum( quantity ) AS plan,
+		// 	sum( quantity ) AS plan_ori 
+		// 	FROM
+		// 	assy_picking_schedules
+		// 	LEFT JOIN materials ON materials.material_number = assy_picking_schedules.material_number 
+		// 	WHERE
+		// 	due_date >= '".$first."' 
+		// 	AND due_date <= '".$now."' 
+		// 	AND assy_picking_schedules.remark IN ( 'SX51', 'CL51' ) 
+		// 	GROUP BY
+		// 	assy_picking_schedules.material_number 
+		// 	) AS plan 
+		// 	GROUP BY
+		// 	material_number UNION ALL
+		// 	SELECT
+		// 	materials.material_number,
+		// 	0 AS plan,
+		// 	0 AS picking,
+		// 	sum(
+		// 	IF
+		// 	( histories.transfer_movement_type = '9I3', histories.lot, 0 )) AS plus,
+		// 	sum(
+		// 	IF
+		// 	( histories.transfer_movement_type = '9I4', IF(day(histories.created_at) < 5, 0, histories.lot),0)) AS minus,
+		// 	0 AS stock,
+		// 	0 AS plan_ori 
+		// 	FROM
+		// 	(
+		// 	SELECT
+		// 	materials.id,
+		// 	materials.material_number 
+		// 	FROM
+		// 	kitto.materials 
+		// 	WHERE
+		// 	materials.location IN ( 'SX51', 'CL51' ) 
+		// 	AND category = 'key'
+		// 	) AS materials
+		// 	LEFT JOIN kitto.histories ON materials.id = histories.transfer_material_id 
+		// 	WHERE
+		// 	date( histories.created_at ) >= '".$first."' 
+		// 	AND date( histories.created_at ) <= '".$now."' 
+		// 	AND histories.category IN ( 'transfer', 'transfer_cancel', 'transfer_return', 'transfer_adjustment' ) 
+		// 	GROUP BY
+		// 	materials.material_number 
+		// 	) AS final 
+		// 	GROUP BY
+		// 	material_number 
+		// 	HAVING
+		// 	plan_ori > 0 
+		// 	) AS final2
+		// 	JOIN materials ON final2.material_number = materials.material_number 
+		// 	GROUP BY
+		// 	materials.issue_storage_location,
+		// 	materials.hpl,
+		// 	materials.model,
+		// 	materials.`key`,
+		// 	materials.surface,
+		// 	materials.issue_storage_location
+		// 	ORDER BY
+		// 	diff DESC");
+
 		$stockroom_keys = db::select("SELECT
+			issue_storage_location,
+			hpl,
+			model,
+			`key`,
+			surface,
+			plan,
+			plan_schedule,
+			picking,
+			plus,
+			minus,
+			stock,
+			plan_ori,
+			diff,
+			diff2,
+			ava,
+			IF
+			( ava >= 1, 1, 0 ) AS safe,
+			IF
+			( ava < 1 AND ava > 0, 1, 0 ) AS unsafe,
+			IF
+			( stock <= 0, 1, 0 ) AS zero,
+			IF
+			( ava > 2, 1, 0 ) AS ava_ultra_safe,
+			IF
+			( ava >= 1 AND ava <= 2, 1, 0 ) AS ava_safe,
+			IF
+			( ava < 1 AND ava > 0, 1, 0 ) AS ava_unsafe,
+			IF
+			( ava <= 0, 1, 0 ) AS ava_zero 
+			FROM
+			(
+			SELECT
 			materials.issue_storage_location,
 			materials.hpl,
 			materials.model,
 			materials.`key`,
 			materials.surface,
 			sum( plan ) AS plan,
+			round( sum( plan_schedule ) , 0 ) AS plan_schedule,
 			sum( picking ) AS picking,
 			sum( plus ) AS plus,
 			sum( minus ) AS minus,
@@ -124,44 +379,16 @@ class DisplayController extends Controller
 			sum( plan )- sum( picking )) AS diff,
 			sum( stock ) - (
 			sum( plan )- sum( picking )) AS diff2,
-			round( sum( stock ) / sum( plan ), 1 ) AS ava,
 			IF
 			(
-			round( sum( stock ) / sum( plan ), 1 )>= 1,
-			1,
-			0 
-			) AS safe,
-			IF
-			(
-			round( sum( stock ) / sum( plan ), 1 )< 1 
-			AND round( sum( stock ) / sum( plan ), 1 )> 0,
-			1,
-			0 
-			) AS unsafe,
-			IF
-			( sum( stock )<= 0, 1, 0 ) AS zero,
-			IF
-			( round( sum( stock ) / sum( plan ), 1 )> 2, 1, 0 ) AS ava_ultra_safe,
-			IF
-			(
-			round( sum( stock ) / sum( plan ), 1 )>= 1 
-			AND round( sum( stock ) / sum( plan ), 1 )<= 2,
-			1,
-			0 
-			) AS ava_safe,
-			IF
-			(
-			round( sum( stock ) / sum( plan ), 1 )< 1 
-			AND round( sum( stock ) / sum( plan ), 1 )> 0,
-			1,
-			0 
-			) AS ava_unsafe,
-			IF
-			( round( sum( stock ) / sum( plan ), 1 ) <= 0, 1, 0 ) AS ava_zero 
+			sum( plan ) <= 0,
+			round( sum( stock )/ sum( plan_schedule ), 1 ),
+			round( sum( stock ) / sum( plan ), 1 )) AS ava 
 			FROM
 			(
 			SELECT
 			material_number,
+			sum( plan_schedule ) AS plan_schedule,
 			sum( plan ) AS plan,
 			sum( picking ) AS picking,
 			sum( plus ) AS plus,
@@ -172,6 +399,7 @@ class DisplayController extends Controller
 			(
 			SELECT
 			material_number,
+			plan_schedule,
 			plan,
 			picking,
 			plus,
@@ -182,6 +410,7 @@ class DisplayController extends Controller
 			(
 			SELECT
 			materials.material_number,
+			0 AS plan_schedule,
 			0 AS plan,
 			sum(
 			IF
@@ -189,22 +418,13 @@ class DisplayController extends Controller
 			histories.transfer_movement_type = '9I3',
 			histories.lot,
 			IF
-			( histories.transfer_movement_type = '9I4', IF(day(histories.created_at) < 5, 0, -(histories.lot)),0))) as picking,
+			( histories.transfer_movement_type = '9I4', IF ( DAY ( histories.created_at ) < 5, 0, -( histories.lot )), 0 ))) AS picking,
 			0 AS plus,
 			0 AS minus,
 			0 AS stock,
 			0 AS plan_ori 
 			FROM
-			(
-			SELECT
-			materials.id,
-			materials.material_number 
-			FROM
-			kitto.materials 
-			WHERE
-			materials.location IN ( 'SX51', 'CL51' ) 
-			AND category = 'key'
-			) AS materials
+			( SELECT materials.id, materials.material_number FROM kitto.materials WHERE materials.location IN ( 'SX51', 'CL51' ) AND category = 'key' ) AS materials
 			LEFT JOIN kitto.histories ON materials.id = histories.transfer_material_id 
 			WHERE
 			date( histories.created_at ) = '".$now."' 
@@ -214,6 +434,7 @@ class DisplayController extends Controller
 			) AS pick UNION ALL
 			SELECT
 			inventories.material_number,
+			0 AS plan_schedule,
 			0 AS plan,
 			0 AS picking,
 			0 AS plus,
@@ -225,11 +446,12 @@ class DisplayController extends Controller
 			LEFT JOIN kitto.materials ON materials.material_number = inventories.material_number 
 			WHERE
 			materials.location IN ( 'SX51', 'CL51' ) 
-			AND materials.category = 'key'
+			AND materials.category = 'key' 
 			GROUP BY
 			inventories.material_number UNION ALL
 			SELECT
 			material_number,
+			sum( plan_schedule ) AS plan_schedule,
 			sum( plan ) AS plan,
 			0 AS picking,
 			0 AS plus,
@@ -240,6 +462,7 @@ class DisplayController extends Controller
 			(
 			SELECT
 			materials.material_number,
+			0 AS plan_schedule,
 			-(
 			sum(
 			IF
@@ -247,19 +470,10 @@ class DisplayController extends Controller
 			histories.transfer_movement_type = '9I3',
 			histories.lot,
 			IF
-			( histories.transfer_movement_type = '9I4', IF(day(histories.created_at) < 5, 0, -(histories.lot)),0)))) AS plan,
+			( histories.transfer_movement_type = '9I4', IF ( DAY ( histories.created_at ) < 5, 0, -( histories.lot )), 0 )))) AS plan,
 			0 AS plan_ori 
 			FROM
-			(
-			SELECT
-			materials.id,
-			materials.material_number 
-			FROM
-			kitto.materials 
-			WHERE
-			materials.location IN ( 'SX51', 'CL51' ) 
-			AND category = 'key' 
-			) AS materials
+			( SELECT materials.id, materials.material_number FROM kitto.materials WHERE materials.location IN ( 'SX51', 'CL51' ) AND category = 'key' ) AS materials
 			LEFT JOIN kitto.histories ON materials.id = histories.transfer_material_id 
 			WHERE
 			date( histories.created_at ) >= '".$first."' 
@@ -269,6 +483,7 @@ class DisplayController extends Controller
 			materials.material_number UNION ALL
 			SELECT
 			assy_picking_schedules.material_number,
+			AVG( NULLIF( quantity, 0 ) ) AS plan_schedule,
 			sum( quantity ) AS plan,
 			sum( quantity ) AS plan_ori 
 			FROM
@@ -285,6 +500,7 @@ class DisplayController extends Controller
 			material_number UNION ALL
 			SELECT
 			materials.material_number,
+			0 AS plan_schedule,
 			0 AS plan,
 			0 AS picking,
 			sum(
@@ -292,20 +508,11 @@ class DisplayController extends Controller
 			( histories.transfer_movement_type = '9I3', histories.lot, 0 )) AS plus,
 			sum(
 			IF
-			( histories.transfer_movement_type = '9I4', IF(day(histories.created_at) < 5, 0, histories.lot),0)) AS minus,
+			( histories.transfer_movement_type = '9I4', IF ( DAY ( histories.created_at ) < 5, 0, histories.lot ), 0 )) AS minus,
 			0 AS stock,
 			0 AS plan_ori 
 			FROM
-			(
-			SELECT
-			materials.id,
-			materials.material_number 
-			FROM
-			kitto.materials 
-			WHERE
-			materials.location IN ( 'SX51', 'CL51' ) 
-			AND category = 'key'
-			) AS materials
+			( SELECT materials.id, materials.material_number FROM kitto.materials WHERE materials.location IN ( 'SX51', 'CL51' ) AND category = 'key' ) AS materials
 			LEFT JOIN kitto.histories ON materials.id = histories.transfer_material_id 
 			WHERE
 			date( histories.created_at ) >= '".$first."' 
@@ -316,8 +523,6 @@ class DisplayController extends Controller
 			) AS final 
 			GROUP BY
 			material_number 
-			HAVING
-			plan_ori > 0 
 			) AS final2
 			JOIN materials ON final2.material_number = materials.material_number 
 			GROUP BY
@@ -326,7 +531,10 @@ class DisplayController extends Controller
 			materials.model,
 			materials.`key`,
 			materials.surface,
-			materials.issue_storage_location
+			materials.issue_storage_location 
+			) AS final3 
+			HAVING
+			plan_schedule > 0
 			ORDER BY
 			diff DESC");
 
