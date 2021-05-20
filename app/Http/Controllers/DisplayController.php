@@ -533,7 +533,7 @@ class DisplayController extends Controller
 			materials.surface,
 			materials.issue_storage_location 
 			) AS final3 
-			HAVING
+			WHERE
 			plan_schedule > 0
 			ORDER BY
 			diff DESC");
