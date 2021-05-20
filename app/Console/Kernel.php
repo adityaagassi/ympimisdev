@@ -156,7 +156,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('interview:schedule')->monthlyOn(1, '02:00');
 
 
-        $schedule->command('kd:shipment')->everyThirtyMinutes();
+        // $schedule->command('kd:shipment')->everyThirtyMinutes();
         $schedule->command('email:raw_material_reminder')->dailyAt('11:00');
 
 
