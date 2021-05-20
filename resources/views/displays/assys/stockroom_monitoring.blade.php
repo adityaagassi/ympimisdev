@@ -44,8 +44,11 @@
 				<center><h4 style="font-weight: bold;" class="modal-title" id="modalDetailTitle"></h4></center>
 				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
 					<span style="font-weight: bold;">
+						STOCK AVAILABILITY<br>
 						Jika Plan &gt; 0 (Ava = Stock &divide; Plan)<br>
-						Jika Plan &#8924; 0 (Ava = Stock &divide; Plan Avg (Rata2 plan s/d hari ini))
+						Jika Plan &#8924; 0 (Ava = Stock &divide; Plan Avg (Rata2 plan s/d hari H))<br><br>
+						PICKING AVAILABILITY<br>
+						Jika ada kurang ambil saja yang ditampilkan
 					</span>
 					<table class="table table-hover table-bordered table-striped" id="tableDetail">
 						<thead style="background-color: rgba(126,86,134,.7);">
