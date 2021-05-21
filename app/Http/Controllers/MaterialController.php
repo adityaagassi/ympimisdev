@@ -412,6 +412,7 @@ class MaterialController extends Controller{
      public function fetchMaterialMonitoringSingle(Request $request){
           $material_number = $request->get('material_number');
           $period = date('Y-m-d');
+          $month = date('Y-m');
 
           $generates = self::generateMaterialMonitoring($period);
 
@@ -419,7 +420,38 @@ class MaterialController extends Controller{
           $results1 = array();
           $count_item = 0;
 
-          foreach ($generates['policies'] as $policy) {
+          $policies = db::select("SELECT msp.period,
+               msp.material_number,
+               msp.material_description,
+               mc.vendor_code,
+               mc.vendor_name,
+               '".$period."' AS stock_date,
+               COALESCE ( s.stock_total, 0 ) AS stock,
+               msp.policy,
+               COALESCE ( s.stock_total, 0 ) / msp.policy AS percentage 
+               FROM material_stock_policies AS msp
+               LEFT JOIN
+               (SELECT sls.material_number,
+               sls.stock_date,
+               sum(IF( sl.category = 'MSTK', sls.unrestricted, 0 )) AS stock_mstk,
+               sum(IF( sl.category = 'WIP', sls.unrestricted, 0 )) AS stock_wip,
+               sum( sls.unrestricted ) AS stock_total 
+               FROM storage_location_stocks AS sls
+               LEFT JOIN storage_locations AS sl ON sls.storage_location = sl.storage_location 
+               WHERE sls.stock_date = '".$period."' 
+               AND sls.material_number = '".$material_number."' 
+               GROUP BY sls.material_number, sls.stock_date 
+               ORDER BY sls.material_number ASC, sls.stock_date ASC 
+               ) AS s
+               ON s.material_number = msp.material_number
+               LEFT JOIN material_controls mc ON mc.material_number = msp.material_number 
+               WHERE msp.material_number = '".$material_number."' 
+               AND msp.policy > 0
+               AND msp.material_number IN ( SELECT material_number FROM material_controls ) 
+               AND date_format( msp.period, '%Y-%m' ) = '".$month."' 
+               ORDER BY percentage ASC");
+
+          foreach ($policies as $policy) {
                if($policy->material_number == $material_number){
                     array_push($material_percentages, [
                          'material_number' => $policy->material_number,
@@ -454,65 +486,67 @@ class MaterialController extends Controller{
                $actual_usage = 0;
                $actual_delivery = 0;
 
-               if(!in_array(date('D, d M y', strtotime($material->due_date)), $categories)){
-                    array_push($categories, date('D, d M y', strtotime($material->due_date)));
+               if($material->material_number == $material_number){
+                    if(!in_array(date('D, d M y', strtotime($material->due_date)), $categories)){
+                         array_push($categories, date('D, d M y', strtotime($material->due_date)));
 
-                    if(date('D, d M y', strtotime($period)) == date('D, d M y', strtotime($material->due_date))){
-                         $count_now = count($categories);
-                    }
-               }
-
-               foreach($generates['stocks'] as $stock){
-
-                    if($material->material_number == $stock->material_number && $material->due_date == $stock->stock_date){
-                         $stock_mstk = $stock->stock_mstk;
-                         $stock_wip = $stock->stock_wip;
-                         $stock_total = $stock->stock_total;
+                         if(date('D, d M y', strtotime($period)) == date('D, d M y', strtotime($material->due_date))){
+                              $count_now = count($categories);
+                         }
                     }
 
-               }
+                    foreach($generates['stocks'] as $stock){
 
-               foreach($generates['mrps'] as $mrp){
-                    if($material->material_number == $mrp->material_number && $material->due_date == $mrp->due_date){
-                         $usage = $mrp->usage;
+                         if($material->material_number == $stock->material_number && $material->due_date == $stock->stock_date){
+                              $stock_mstk = $stock->stock_mstk;
+                              $stock_wip = $stock->stock_wip;
+                              $stock_total = $stock->stock_total;
+                         }
+
                     }
-               }
 
-               foreach($generates['deliveries'] as $delivery){
-                    if($material->material_number == $delivery->material_number && $material->due_date == $delivery->due_date){
-                         $delivery_quantity = $delivery->quantity;
+                    foreach($generates['mrps'] as $mrp){
+                         if($material->material_number == $mrp->material_number && $material->due_date == $mrp->due_date){
+                              $usage = $mrp->usage;
+                         }
                     }
-               }
 
-               foreach($generates['material_ins'] as $material_in){
-                    if($material->material_number == $material_in->material_number && $material->due_date == $material_in->posting_date){
-                         $actual_delivery = $material_in->quantity;
+                    foreach($generates['deliveries'] as $delivery){
+                         if($material->material_number == $delivery->material_number && $material->due_date == $delivery->due_date){
+                              $delivery_quantity = $delivery->quantity;
+                         }
                     }
-               }
 
-               foreach($generates['material_outs'] as $material_out){
-                    if($material->material_number == $material_out->material_number && $material->due_date == $material_out->posting_date){
-                         $actual_usage = $material_out->quantity;
+                    foreach($generates['material_ins'] as $material_in){
+                         if($material->material_number == $material_in->material_number && $material->due_date == $material_in->posting_date){
+                              $actual_delivery = $material_in->quantity;
+                         }
                     }
-               }
 
-               array_push($results1, [
-                    'material_number' => $material->material_number,
-                    'material_description' => $material->material_description,
-                    'vendor_code' => $material->vendor_code,
-                    'vendor_name' => $material->vendor_name,
-                    'category' => $material->category,
-                    'pic' => $material->pic,
-                    'remark' => $material->remark,
-                    'due_date' => $material->due_date,
-                    'stock_mstk' => $stock_mstk,
-                    'stock_wip' => $stock_wip,
-                    'stock_total' => $stock_total,
-                    'plan_delivery' => $delivery_quantity,
-                    'actual_delivery' => $actual_delivery,
-                    'plan_usage' => $usage,
-                    'actual_usage' => $actual_usage
-               ]);
+                    foreach($generates['material_outs'] as $material_out){
+                         if($material->material_number == $material_out->material_number && $material->due_date == $material_out->posting_date){
+                              $actual_usage = $material_out->quantity;
+                         }
+                    }
+
+                    array_push($results1, [
+                         'material_number' => $material->material_number,
+                         'material_description' => $material->material_description,
+                         'vendor_code' => $material->vendor_code,
+                         'vendor_name' => $material->vendor_name,
+                         'category' => $material->category,
+                         'pic' => $material->pic,
+                         'remark' => $material->remark,
+                         'due_date' => $material->due_date,
+                         'stock_mstk' => $stock_mstk,
+                         'stock_wip' => $stock_wip,
+                         'stock_total' => $stock_total,
+                         'plan_delivery' => $delivery_quantity,
+                         'actual_delivery' => $actual_delivery,
+                         'plan_usage' => $usage,
+                         'actual_usage' => $actual_usage
+                    ]);
+               }               
           }
 
           $results2 = array();
