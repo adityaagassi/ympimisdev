@@ -414,44 +414,13 @@ class MaterialController extends Controller{
           $period = date('Y-m-d');
           $month = date('Y-m');
 
-          $generates = self::generateMaterialMonitoring($period);
+          $generates = self::generateMaterialMonitoringSingle($period, $material_number);
 
           $material_percentages = array();
           $results1 = array();
           $count_item = 0;
 
-          $policies = db::select("SELECT msp.period,
-               msp.material_number,
-               msp.material_description,
-               mc.vendor_code,
-               mc.vendor_name,
-               '".$period."' AS stock_date,
-               COALESCE ( s.stock_total, 0 ) AS stock,
-               msp.policy,
-               COALESCE ( s.stock_total, 0 ) / msp.policy AS percentage 
-               FROM material_stock_policies AS msp
-               LEFT JOIN
-               (SELECT sls.material_number,
-               sls.stock_date,
-               sum(IF( sl.category = 'MSTK', sls.unrestricted, 0 )) AS stock_mstk,
-               sum(IF( sl.category = 'WIP', sls.unrestricted, 0 )) AS stock_wip,
-               sum( sls.unrestricted ) AS stock_total 
-               FROM storage_location_stocks AS sls
-               LEFT JOIN storage_locations AS sl ON sls.storage_location = sl.storage_location 
-               WHERE sls.stock_date = '".$period."' 
-               AND sls.material_number = '".$material_number."' 
-               GROUP BY sls.material_number, sls.stock_date 
-               ORDER BY sls.material_number ASC, sls.stock_date ASC 
-               ) AS s
-               ON s.material_number = msp.material_number
-               LEFT JOIN material_controls mc ON mc.material_number = msp.material_number 
-               WHERE msp.material_number = '".$material_number."' 
-               AND msp.policy > 0
-               AND msp.material_number IN ( SELECT material_number FROM material_controls ) 
-               AND date_format( msp.period, '%Y-%m' ) = '".$month."' 
-               ORDER BY percentage ASC");
-
-          foreach ($policies as $policy) {
+          foreach ($generates['policies'] as $policy) {
                if($policy->material_number == $material_number){
                     array_push($material_percentages, [
                          'material_number' => $policy->material_number,
@@ -754,8 +723,156 @@ class MaterialController extends Controller{
           return Response::json($response);
      }
 
-     function generateMaterialMonitoring($due_date){
+     function generateMaterialMonitoringSingle($due_date, $material_number){
 
+          $period = date('Y-m', strtotime($due_date));
+
+          $first = date('Y-m-01', strtotime($due_date));
+          $last = date('Y-m-t', strtotime($due_date));
+
+          $policies = db::select("SELECT msp.period,
+               msp.material_number,
+               msp.material_description,
+               mc.vendor_code,
+               mc.vendor_name,
+               '".$due_date."' AS stock_date,
+               COALESCE ( s.stock_total, 0 ) AS stock,
+               msp.policy,
+               COALESCE ( s.stock_total, 0 ) / msp.policy AS percentage 
+               FROM material_stock_policies AS msp
+               LEFT JOIN
+               (SELECT sls.material_number,
+               sls.stock_date,
+               sum(IF( sl.category = 'MSTK', sls.unrestricted, 0 )) AS stock_mstk,
+               sum(IF( sl.category = 'WIP', sls.unrestricted, 0 )) AS stock_wip,
+               sum( sls.unrestricted ) AS stock_total 
+               FROM storage_location_stocks AS sls
+               LEFT JOIN storage_locations AS sl ON sls.storage_location = sl.storage_location 
+               WHERE sls.stock_date = '".$due_date."' 
+               AND sls.material_number = '".$material_number."' 
+               GROUP BY sls.material_number, sls.stock_date 
+               ORDER BY sls.material_number ASC, sls.stock_date ASC 
+               ) AS s
+               ON s.material_number = msp.material_number
+               LEFT JOIN material_controls mc ON mc.material_number = msp.material_number 
+               WHERE msp.material_number = '".$material_number."' 
+               AND msp.policy > 0
+               AND msp.material_number IN ( SELECT material_number FROM material_controls ) 
+               AND date_format( msp.period, '%Y-%m' ) = '".$period."' 
+               ORDER BY percentage ASC");
+
+          $materials = db::select("SELECT
+               mc.material_number,
+               wc.week_date AS due_date,
+               mc.material_description,
+               mc.vendor_code,
+               mc.vendor_name,
+               mc.category,
+               mc.pic,
+               mc.remark 
+               FROM
+               weekly_calendars AS wc
+               CROSS JOIN material_controls AS mc 
+               WHERE
+               mc.deleted_at IS NULL 
+               AND date_format( wc.week_date, '%Y-%m' ) = '".$period."' 
+               AND mc.material_number = '".$material_number."'
+               AND wc.remark <> 'H'
+               ORDER BY
+               mc.material_number ASC,
+               wc.week_date ASC");
+
+          $stocks = db::select("SELECT
+               sls.material_number,
+               sls.stock_date,
+               sum(
+               IF
+               ( sl.category = 'MSTK', sls.unrestricted, 0 )) AS stock_mstk,
+               sum(
+               IF
+               ( sl.category = 'WIP', sls.unrestricted, 0 )) AS stock_wip,
+               sum( sls.unrestricted ) AS stock_total 
+               FROM
+               storage_location_stocks AS sls
+               LEFT JOIN storage_locations AS sl ON sls.storage_location = sl.storage_location 
+               WHERE
+               date( sls.stock_date ) >= '".$first."' 
+               AND date( sls.stock_date ) <= '".$due_date."'
+               AND sls.material_number = '".$material_number."' 
+               AND sl.category IN ('MSTK', 'WIP')
+               GROUP BY
+               sls.material_number,
+               sls.stock_date 
+               ORDER BY
+               sls.material_number ASC,
+               sls.stock_date ASC");
+
+          $mrps = db::select("SELECT
+               mrp.material_number,
+               mrp.due_date,
+               mrp.usage 
+               FROM
+               material_requirement_plans AS mrp 
+               WHERE
+               date_format( mrp.due_date, '%Y-%m' ) = '".$period."'
+               AND mrp.material_number = '".$material_number."'");
+
+          $deliveries = db::select("SELECT
+               mpd.material_number,
+               mpd.due_date,
+               mpd.quantity 
+               FROM
+               material_plan_deliveries AS mpd 
+               WHERE
+               date_format( mpd.due_date, '%Y-%m' ) = '".$period."'
+               AND mpd.material_number = '".$material_number."'");
+
+          $material_ins = db::select("SELECT
+               mio.posting_date,
+               mio.material_number,
+               sum( mio.quantity ) AS quantity 
+               FROM
+               material_in_outs AS mio 
+               WHERE
+               mio.issue_location = 'MSTK' 
+               AND mio.movement_type IN ( '101', '102', '9T3', '9T4' )
+               AND date( mio.posting_date) >= '".$first."' 
+               AND date( mio.posting_date) < '".$due_date."'
+               AND material_number = '".$material_number."' 
+               GROUP BY
+               mio.posting_date,
+               mio.material_number");
+
+          $material_outs = db::select("SELECT
+               mio.posting_date,
+               mio.material_number,
+               sum( mio.quantity ) AS quantity 
+               FROM
+               material_in_outs AS mio 
+               WHERE
+               mio.issue_location = 'MSTK' 
+               AND mio.movement_type IN ( '9I3', '9I4' ) 
+               AND date( mio.posting_date) >= '".$first."' 
+               AND date( mio.posting_date) < '".$due_date."'
+               AND material_number = '".$material_number."' 
+               GROUP BY
+               mio.posting_date,
+               mio.material_number");
+
+          return array(
+               'policies' => $policies,
+               'material_numbers' => [$material_number],
+               'materials' => $materials,
+               'stocks' => $stocks,
+               'mrps' => $mrps,
+               'deliveries' => $deliveries,
+               'material_ins' => $material_ins,
+               'material_outs' => $material_outs
+          );
+
+     }
+
+     function generateMaterialMonitoring($due_date){
 
           $period = date('Y-m', strtotime($due_date));
 
