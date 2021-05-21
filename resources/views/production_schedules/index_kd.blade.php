@@ -45,7 +45,9 @@
     </h1>
     <ol class="breadcrumb">
         <li>
+            @if(Auth::user()->role->role_code == 'MIS' || Auth::user()->role->role_code == 'PROD')
             <a data-toggle="modal" data-target="#importModal" class="btn btn-success btn-sm" style="color:white">Import {{ $page }}s</a>
+            @endif
             <a data-toggle="modal" data-target="#info" class="btn btn-info btn-sm" style="color:white">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-info-circle"></i>&nbsp;&nbsp;&nbsp;Shipment Roles&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
         </li>
     </ol>
@@ -696,10 +698,10 @@ function generate() {
 }
 
 function shipment() {
- var month = $('#shipment_month').val();
- var hpl = $('#shipment_hpl').val();
+   var month = $('#shipment_month').val();
+   var hpl = $('#shipment_hpl').val();
 
- var data = {
+   var data = {
     month : month,
     hpl : hpl,
 }

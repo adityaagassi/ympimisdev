@@ -44,11 +44,13 @@
   </h1>
   <ol class="breadcrumb">
     <li>
+      @if(Auth::user()->role->role_code == 'MIS' || Auth::user()->role->role_code == 'PROD')
       <a data-toggle="modal" data-target="#deleteModal" class="btn btn-danger btn-sm" style="color:white">Delete {{ $page }}s</a>
       &nbsp;
       <a data-toggle="modal" data-target="#importModal" class="btn btn-success btn-sm" style="color:white">Import {{ $page }}s</a>
       &nbsp;
       <a data-toggle="modal" data-target="#createModal" class="btn btn-primary btn-sm" style="color:white">Create {{ $page }}</a>
+      @endif
     </li>
   </ol>
 </section>
