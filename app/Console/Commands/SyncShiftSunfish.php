@@ -42,6 +42,7 @@ class SyncShiftSunfish extends Command
     {
         $insert = array();
         $month = date('Y-m');
+        $nextmonth = date('Y-m', strtotime("+1 month", strtotime(date('Y-m-d'))));
         $datas = db::connection('sunfish')->select("SELECT
             VIEW_YMPI_Emp_Attendance.emp_no AS employee_id,
             VIEW_YMPI_Emp_Attendance.shiftdaily_code AS shiftdaily_code,
@@ -51,7 +52,8 @@ class SyncShiftSunfish extends Command
             VIEW_YMPI_Emp_Attendance 
         WHERE
             VIEW_YMPI_Emp_Attendance.emp_no <> 'sunfish' 
-            AND FORMAT ( shiftstarttime, 'yyyy-MM' ) = '".$month."' 
+            AND FORMAT ( shiftstarttime, 'yyyy-MM' ) BETWEEN '".$month."'
+            AND '".$nextmonth."' 
         ORDER BY
             shift_date");
         $datas2 = json_decode(json_encode($datas), true);
