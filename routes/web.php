@@ -775,11 +775,7 @@ Route::group(['nav' => 'A7', 'middleware' => 'permission'], function(){
 });
 
 Route::group(['nav' => 'A8', 'middleware' => 'permission'], function(){
-	Route::get('index/middle/barrel_adjustment', 'MiddleProcessController@indexBarrelAdjustment');
-	Route::get('index/middle/buffing_adjustment', 'MiddleProcessController@indexBuffingAdjustment');
-	Route::get('fetch/middle/buffing_adjustment', 'MiddleProcessController@fetchBuffingAdjustment');
-	Route::post('post/middle/buffing_delete_queue', 'MiddleProcessController@deleteBuffingQueue');
-	Route::post('post/middle/buffing_add_queue', 'MiddleProcessController@addBuffingQueue');
+	Route::get('index/middle/barrel_adjustment', 'MiddleProcessController@indexBarrelAdjustment');	
 	Route::get('index/middle/wip_adjustment', 'MiddleProcessController@indexWIPAdjustment');
 	Route::get('fetch/middle/barrel_adjustment', 'MiddleProcessController@fetchBarrelAdjustment');
 	Route::get('fetch/middle/barrel_inactive/{id}', 'MiddleProcessController@fetchBarrelInactive');
@@ -789,12 +785,14 @@ Route::group(['nav' => 'A8', 'middleware' => 'permission'], function(){
 	Route::post('post/middle/new/barrel_inactive', 'MiddleProcessController@CreateInactive');
 	Route::post('import/barrel_inactive', 'MiddleProcessController@importInactive');
 
-	Route::get('index/middle/resume_kanban', 'MiddleProcessController@indexResumeKanban');
-	Route::get('fetch/middle/resume_kanban', 'MiddleProcessController@fetchResumeKanban');
-
 });
 
 Route::group(['nav' => 'A9', 'middleware' => 'permission'], function(){
+	Route::get('index/middle/buffing_adjustment', 'MiddleProcessController@indexBuffingAdjustment');
+	Route::get('fetch/middle/buffing_adjustment', 'MiddleProcessController@fetchBuffingAdjustment');
+	Route::post('post/middle/buffing_delete_queue', 'MiddleProcessController@deleteBuffingQueue');
+	Route::post('post/middle/buffing_add_queue', 'MiddleProcessController@addBuffingQueue');
+	
 	Route::get('index/middle/buffing_canceled', 'MiddleProcessController@indexBuffingCanceled');
 	Route::get('fetch/middle/buffing_canceled', 'MiddleProcessController@fetchBuffingCanceled');
 	Route::post('delete/middle/buffing_canceled', 'MiddleProcessController@deleteBuffingCanceled');
@@ -813,6 +811,10 @@ Route::group(['nav' => 'A9', 'middleware' => 'permission'], function(){
 	Route::post('update/middle/buffing_op_eff_check', 'MiddleProcessController@updateEffCheck');
 	Route::post('update/middle/buffing_op_ng_check', 'MiddleProcessController@updateNgCheck');
 });
+
+
+Route::get('index/middle/resume_kanban', 'MiddleProcessController@indexResumeKanban');
+Route::get('fetch/middle/resume_kanban', 'MiddleProcessController@fetchResumeKanban');
 
 Route::get('setting/user', 'UserController@index_setting');
 Route::post('setting/user', 'UserController@setting');
@@ -1876,6 +1878,9 @@ Route::get('export/invoice/tanda_terima', 'AccountingController@export_tanda_ter
 //Payment Request
 Route::get('payment_request', 'AccountingController@IndexPaymentRequest');
 Route::get('fetch/payment_request', 'AccountingController@fetchPaymentRequest');
+Route::get('detail/payment_request', 'AccountingController@fetchPaymentRequestDetail');
+Route::post('create/payment_request', 'AccountingController@create_invoice');
+Route::post('edit/payment_request', 'AccountingController@edit_invoice');
 
 Route::get('scan/middle/operator', 'MiddleProcessController@scanMiddleOperator');
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
