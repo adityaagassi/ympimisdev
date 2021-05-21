@@ -645,7 +645,7 @@ class MaedaoshiController extends Controller
 					try{
 						$update_stock = db::select("UPDATE injection_inventories AS ii
 							LEFT JOIN injection_part_details AS ipd ON ipd.gmc = ii.material_number 
-							SET ii.quantity = ii.quantity + ".$material_volume->lot_completion." 
+							SET ii.quantity = ii.quantity - ".$material_volume->lot_completion." 
 							WHERE
 							ipd.model = '".$material->model."' 
 							AND ii.location = '".$material->issue_storage_location."'");
