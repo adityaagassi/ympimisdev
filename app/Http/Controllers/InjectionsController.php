@@ -5675,9 +5675,9 @@ class InjectionsController extends Controller
                     }
                 }
             }
-            if (date('D')=='Fri' || date('D')=='Sat') {
-                $nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(++$j)));
-            }
+            // if (date('D')=='Fri' || date('D')=='Sat') {
+            //     $nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(++$j)));
+            // }
 
             $first = date('Y-m-01');
             $now = date('Y-m-d');
