@@ -359,6 +359,8 @@
           datatable += '<th>No. Dokumen</th>';
           datatable += '<th>Nama Dokumen</th>';
           datatable += '<th>Target</th>';
+          datatable += '<th>Leader</th>';
+          datatable += '<th>Foreman</th>';
           datatable += '</tr>';
           datatable += '</thead>';
 
@@ -368,6 +370,8 @@
               datatable += '<td>'+result.datas[j].no_dokumen+'</td>';
               datatable += '<td>'+result.datas[j].nama_dokumen+'</td>';
               datatable += '<td>'+result.datas[j].month+'</td>';
+              datatable += '<td>'+result.datas[j].leader+'</td>';
+              datatable += '<td>'+result.datas[j].foreman+'</td>';
               datatable += '</tr>';
               datatable += '</tbody>';
           }
