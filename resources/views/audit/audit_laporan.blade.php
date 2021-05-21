@@ -119,9 +119,16 @@
         <div class="row">
           <div class="col-xs-6">
             <label for="auditee">Pilih Auditee</label>
-            <input type="text" class="form-control" id="auditee_all" placeholder="Auditee" readonly value="{{$audit->auditee}} - {{$audit->auditee_name}}">
-            <input type="hidden" class="form-control" name="auditee" id="auditee" placeholder="auditee" value="{{$audit->auditee}}">
-            <input type="hidden" class="form-control" name="auditee_name" id="auditee_name" placeholder="auditee_name" value="{{$audit->auditee_name}}">
+
+            <select class="form-control select2" name="auditee" id="auditee" data-placeholder="Pilih Auditee" style="width: 100%; font-size: 20px;" onchange="getName(this);">
+                <option></option>
+                @foreach($auditee as $audite)
+                <option value="{{ $audite->employee_id }}">{{ $audite->employee_id }} - {{ $audite->name }}</option>
+                @endforeach
+            </select>
+
+            <input type="hidden" class="form-control" name="auditee_name" id="auditee_name" placeholder="auditee_name">
+
             <input type="hidden" class="form-control" name="auditee_due_date" id="auditee_due_date" placeholder="Masukkan Due Date" value="<?= date('Y-m-d', strtotime(date('Y-m-d') .'+ 1 month'));?>">
             <input type="hidden" class="form-control" id="id_checklist" value="{{ $audit->id }}">
           </div>
@@ -267,6 +274,19 @@
           filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
           height: '200px'
         });
+
+        function getName(elem){
+
+         $.ajax({
+           url: "{{ route('admin.pogetname') }}?authorized4="+elem.value,
+           method: 'GET',
+           success: function(data) {
+             var json = data,
+             obj = JSON.parse(json);
+             $('#auditee_name').val(obj.name);
+           } 
+         });
+        }
 
 
         function openSuccessGritter(title, message){

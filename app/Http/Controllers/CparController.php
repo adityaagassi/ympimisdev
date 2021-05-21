@@ -3548,9 +3548,14 @@ class CparController extends Controller
       $emp = EmployeeSync::where('employee_id', Auth::user()->username)
       ->select('employee_id', 'name', 'position', 'department')->first();
 
+
+      $auditee = db::select("select DISTINCT employee_id, name, section, position from employee_syncs
+      where end_date is null and (position like '%Staff%' or position like '%Chief%' or position like '%Foreman%' or position like '%Manager%' or position like '%Coordinator%')");
+
       return view('audit.audit_laporan', array(
         'audit' => $audit,
-        'employee' => $emp
+        'employee' => $emp,
+        'auditee' => $auditee
       ))->with('page', 'Form Audit');
     }
 
