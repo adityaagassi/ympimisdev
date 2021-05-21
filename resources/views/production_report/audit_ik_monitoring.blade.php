@@ -77,16 +77,24 @@
     </p>
   </div>
   <div class="row" style="padding-left: 20px;padding-right: 20px;padding-top: 0px;margin-top: 0px">
-    <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10" style="background-color: rgb(126,86,134);text-align: center;height: 40px;padding-right: 5px">
+    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8" style="background-color: rgb(126,86,134);text-align: center;height: 40px;padding-right: 5px">
       <span style="color: white;font-size: 25px;font-weight: bold;" id="title_periode">
       </span>
     </div>
-    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="padding-left: 5px">
+    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="padding-left: 5px;padding-right: 5px">
       <div class="input-group date">
         <div class="input-group-addon" style="border-color: rgb(126,86,134);background-color: rgb(126,86,134);color: white">
           <i class="fa fa-calendar"></i>
         </div>
-        <input type="text" class="form-control datepicker2" id="week_date" onchange="drawChart()" placeholder="Select Month" style="border-color: #00a65a;height: 40px">
+        <input type="text" class="form-control datepicker2" id="month_from" onchange="drawChart()" placeholder="Select Month From" style="border-color: #00a65a;height: 40px">
+      </div>
+    </div>
+    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="padding-left: 0px">
+      <div class="input-group date">
+        <div class="input-group-addon" style="border-color: rgb(126,86,134);background-color: rgb(126,86,134);color: white">
+          <i class="fa fa-calendar"></i>
+        </div>
+        <input type="text" class="form-control datepicker2" id="month_to" onchange="drawChart()" placeholder="Select Month To" style="border-color: #00a65a;height: 40px">
       </div>
     </div>
     <div class="col-xs-12" style="padding-top: 10px;padding-left: 0px;">
@@ -194,24 +202,26 @@
 
   var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
   function drawChart(){
-    var week_date = $('#week_date').val();
+    var month_from = $('#month_from').val();
+    var month_to = $('#month_to').val();
     var data = {
-      month: week_date
-    };
+      month_from: month_from,
+      month_to: month_to,
+    }
     $.get('{{ url("fetch/audit_ik_monitoring") }}', data, function(result, status, xhr) {
       if(xhr.status == 200){
         if(result.status){
-          $('#title_periode').html('Periode On '+result.monthTitle);
+          $('#title_periode').html('Periode On '+result.firstTitle+' - '+result.lastTitle);
           var categories = [];
           var plan = [];
           var done = [];
           var not_yet = [];
 
           for(var i = 0; i< result.audit_ik.length;i++){
-            categories.push(result.audit_ik[i].department_shortname+' - '+result.audit_ik[i].leader_dept);
+            categories.push(result.audit_ik[i].months);
             plan.push(parseInt(result.audit_ik[i].plan));
-            done.push(parseInt(result.audit_ik[i].done));
-            not_yet.push(parseInt(result.audit_ik[i].not_yet));
+            done.push({y:parseInt(result.audit_ik[i].done),key:result.audit_ik[i].month});
+            not_yet.push({y:parseInt(result.audit_ik[i].not_yet),key:result.audit_ik[i].month});
           }
 
           Highcharts.chart('container', {
@@ -232,6 +242,9 @@
               labels: {
                 formatter: function (e) {
                   return this.value;
+                },
+                style: {
+                  fontSize:"15px",
                 }
               }
             },
@@ -246,7 +259,7 @@
                 enabled: true,
                 style: {
                   fontWeight: 'bold',
-                  fontSize:"13px",
+                  fontSize:"15px",
                   color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
                 }
               },
@@ -297,7 +310,7 @@
                 point: {
                   events: {
                     click: function () {
-                      showModal(this.category,this.series.name);
+                      showModal(this.options.key,this.series.name);
                     }
                   }
                 },
@@ -324,20 +337,20 @@
     });
   }
 
-  function showModal(leader,kondisi) {
+  function showModal(month,kondisi) {
     $('#loading').show();
-    var week_date = $('#week_date').val();
     var data = {
-      leader:leader,
-      month:week_date,
-      kondisi:kondisi,
+      month: month,
+      kondisi: kondisi,
     }
 
     $.get('{{ url("fetch/detail_audit_ik_monitoring") }}', data, function(result, status, xhr) {
       if(result.status){
-
         $('#data-activity').html('');
         var datatable = "";
+
+        $('#data_log_sudah').DataTable().clear();
+        $('#data_log_sudah').DataTable().destroy();
 
         if (kondisi === 'Belum Dikerjakan') {
           datatable += '<table id="data-log" class="table table-striped table-bordered" style="width: 100%;">';
@@ -361,81 +374,160 @@
           datatable += '</table>';
           datatable += '<hr style="border:2px solid black">';
         }else{
+          datatable += '<table id="data_log_sudah" class="table table-striped table-bordered" style="width: 100%;">';
+          datatable += '<thead>'
+          datatable += '<tr style="border-bottom:3px solid black;border-top:3px solid black;background-color:#fcba03">';
+          datatable += '<th>Dokumen</th>';
+          datatable += '</tr>';
+          datatable += '</thead>';
+          datatable += '<tbody style="border:1px solid black">';
           for(var j = 0; j < result.datas.length;j++){
-            datatable += '<table id="data-log" class="table table-bordered table-striped" style="width: 100%;">';
-            datatable += '<thead>'
-            datatable += '<tr style="border-bottom:3px solid black;border-top:3px solid black;background-color:#7e5686">';
-            datatable += '<th colspan="2" style="color:white;">'+result.datass[j][0].no_dokumen+'</th>';
-            datatable += '</tr>';
-            datatable += '<tr style="border-bottom:3px solid black;border-top:3px solid black;background-color:#cddc39;color:black;font-size:15px">';
-            datatable += '<th style="width:1%">Target : '+result.datass[j][0].month+'</th>';
-            datatable += '<th style="width:3%">Nama Dokumen : '+result.datass[j][0].nama_dokumen+'</th>';
-            datatable += '</tr>';
-            datatable += '</thead>';
+            datatable += '<tr>';
+            datatable += '<td>';
+            datatable += '<div class="box-group" id="accordion">';
+                datatable += '<div class="panel box box-solid">';
+                  datatable += '<div class="box-header with-border" style="background-color:#7e5686;text-align:center">';
+                    datatable += '<h4 class="box-title">';
+                      datatable += '<a data-toggle="collapse" data-parent="#accordion" href="#collapse'+j+'" aria-expanded="false" class="collapsed" style="color:white;">'+result.datass[j][0].no_dokumen+' - '+result.datass[j][0].nama_dokumen+' ('+result.datass[j][0].leader+')';
+                      datatable += '</a>';
+                    datatable += '</h4>';
+                  datatable += '</div>';
+                  datatable += '<div id="collapse'+j+'" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">';
+                    datatable += '<div class="box-body">';
+                    datatable += '<table id="data-log" class="table table-bordered table-striped" style="width: 100%;">';
+                      datatable += '<thead>';
+                      datatable += '<tr style="border-bottom:3px solid black;border-top:3px solid black;background-color:#cddc39;color:black;font-size:15px">';
+                      datatable += '<th style="width:1%">Target : '+result.datass[j][0].month+'</th>';
+                      datatable += '<th style="width:3%">Nama Dokumen : '+result.datass[j][0].nama_dokumen+'</th>';
+                      datatable += '</tr>';
+                      datatable += '</thead>';
 
-            datatable += '<tbody style="border:1px solid black">';
-            datatable += '<tr>';
-            datatable += '<td style="border:1px solid black">Dept</td>';
-            datatable += '<td style="border:1px solid black">'+result.datass[j][0].department+'</td>';
+                      datatable += '<tbody style="border:1px solid black">';
+                      datatable += '<tr>';
+                      datatable += '<td style="border:1px solid black">Dept</td>';
+                      datatable += '<td style="border:1px solid black">'+result.datass[j][0].department+'</td>';
+                      datatable += '</tr>';
+                      datatable += '<tr>';
+                      datatable += '<td style="border:1px solid black">Section</td>';
+                      datatable += '<td style="border:1px solid black">'+result.datass[j][0].section+'</td>';
+                      datatable += '</tr>';
+                      datatable += '<tr>';
+                      datatable += '<td style="border:1px solid black">Group</td>';
+                      datatable += '<td style="border:1px solid black">'+result.datass[j][0].subsection+'</td>';
+                      datatable += '</tr>';
+                      datatable += '<tr>';
+                      datatable += '<td style="border:1px solid black">Audit Date</td>';
+                      datatable += '<td style="border:1px solid black">'+result.datass[j][0].date+'</td>';
+                      datatable += '</tr>';
+                      datatable += '<tr>';
+                      datatable += '<td style="border:1px solid black">Kesesuaian Aktual</td>';
+                      datatable += '<td style="border:1px solid black">'+result.datass[j][0].kesesuaian_aktual_proses+'</td>';
+                      datatable += '</tr>';
+                      datatable += '<tr>';
+                      datatable += '<td style="border:1px solid black">Kesesuaian QC Kouteihyo</td>';
+                      datatable += '<td style="border:1px solid black">'+result.datass[j][0].kesesuaian_qc_kouteihyo+'</td>';
+                      datatable += '</tr>';
+                      datatable += '<tr>';
+                      datatable += '<td style="border:1px solid black">Kelengkapan Point Safety</td>';
+                      datatable += '<td style="border:1px solid black">'+result.datass[j][0].kelengkapan_point_safety+'</td>';
+                      datatable += '</tr>';
+                      datatable += '<tr>';
+                      datatable += '<td style="border:1px solid black">Tindakan Perbaikan</td>';
+                      datatable += '<td style="border:1px solid black">'+result.datass[j][0].tindakan_perbaikan+'</td>';
+                      datatable += '</tr>';
+                      if (result.datass[j][0].tindakan_perbaikan == '-') {
+                        datatable += '<tr>';
+                        datatable += '<td style="border:1px solid black">Target Perbaikan</td>';
+                        datatable += '<td style="border:1px solid black"></td>';
+                        datatable += '</tr>';
+                      }else{
+                        datatable += '<tr>';
+                        datatable += '<td style="border:1px solid black">Target Perbaikan</td>';
+                        datatable += '<td style="border:1px solid black">'+result.datass[j][0].target+'</td>';
+                        datatable += '</tr>';
+                      }
+                      datatable += '<tr>';
+                      datatable += '<td>PIC</td>';
+                      datatable += '<td>'+result.datass[j][0].operator+'</td>';
+                      datatable += '</tr>';
+                      datatable += '<tr>';
+                      datatable += '<td>Leader</td>';
+                      datatable += '<td>'+result.datass[j][0].leader+'</td>';
+                      datatable += '</tr>';
+                      datatable += '</tbody>';
+                      datatable += '</table>';
+                    datatable += '</div>';
+                  datatable += '</div>';
+                datatable += '</div>';
+            datatable += '</div>';
+            datatable += '</td>';
             datatable += '</tr>';
-            datatable += '<tr>';
-            datatable += '<td style="border:1px solid black">Section</td>';
-            datatable += '<td style="border:1px solid black">'+result.datass[j][0].section+'</td>';
-            datatable += '</tr>';
-            datatable += '<tr>';
-            datatable += '<td style="border:1px solid black">Group</td>';
-            datatable += '<td style="border:1px solid black">'+result.datass[j][0].subsection+'</td>';
-            datatable += '</tr>';
-            datatable += '<tr>';
-            datatable += '<td style="border:1px solid black">Audit Date</td>';
-            datatable += '<td style="border:1px solid black">'+result.datass[j][0].date+'</td>';
-            datatable += '</tr>';
-            datatable += '<tr>';
-            datatable += '<td style="border:1px solid black">Kesesuaian Aktual</td>';
-            datatable += '<td style="border:1px solid black">'+result.datass[j][0].kesesuaian_aktual_proses+'</td>';
-            datatable += '</tr>';
-            datatable += '<tr>';
-            datatable += '<td style="border:1px solid black">Kesesuaian QC Kouteihyo</td>';
-            datatable += '<td style="border:1px solid black">'+result.datass[j][0].kesesuaian_qc_kouteihyo+'</td>';
-            datatable += '</tr>';
-            datatable += '<tr>';
-            datatable += '<td style="border:1px solid black">Kelengkapan Point Safety</td>';
-            datatable += '<td style="border:1px solid black">'+result.datass[j][0].kelengkapan_point_safety+'</td>';
-            datatable += '</tr>';
-            datatable += '<tr>';
-            datatable += '<td style="border:1px solid black">Tindakan Perbaikan</td>';
-            datatable += '<td style="border:1px solid black">'+result.datass[j][0].tindakan_perbaikan+'</td>';
-            datatable += '</tr>';
-            if (result.datass[j][0].tindakan_perbaikan == '-') {
-              datatable += '<tr>';
-              datatable += '<td style="border:1px solid black">Target Perbaikan</td>';
-              datatable += '<td style="border:1px solid black"></td>';
-              datatable += '</tr>';
-            }else{
-              datatable += '<tr>';
-              datatable += '<td style="border:1px solid black">Target Perbaikan</td>';
-              datatable += '<td style="border:1px solid black">'+result.datass[j][0].target+'</td>';
-              datatable += '</tr>';
-            }
-            datatable += '<tr>';
-            datatable += '<td>PIC</td>';
-            datatable += '<td>'+result.datass[j][0].operator+'</td>';
-            datatable += '</tr>';
-            datatable += '</tbody>';
-
-            datatable += '</table>';
-            datatable += '<hr style="border:2px solid black">';
           }
+          datatable += '</tbody>';
+          datatable += '</table>';
         }
 
         $('#data-activity').append(datatable);
 
-        var ldr = leader.split(' - ');
+        $('#data_log_sudah').DataTable({
+          'dom': 'Bfrtip',
+          'responsive':true,
+          'lengthMenu': [
+          [ 10, 25, 50, -1 ],
+          [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+          ],
+          'buttons': {
+            buttons:[
+            {
+              extend: 'pageLength',
+              className: 'btn btn-default',
+            },
+            {
+              extend: 'copy',
+              className: 'btn btn-success',
+              text: '<i class="fa fa-copy"></i> Copy',
+              exportOptions: {
+                columns: ':not(.notexport)'
+              }
+            },
+            {
+              extend: 'excel',
+              className: 'btn btn-info',
+              text: '<i class="fa fa-file-excel-o"></i> Excel',
+              exportOptions: {
+                columns: ':not(.notexport)'
+              }
+            },
+            {
+              extend: 'print',
+              className: 'btn btn-warning',
+              text: '<i class="fa fa-print"></i> Print',
+              exportOptions: {
+                columns: ':not(.notexport)'
+              }
+            },
+            ]
+          },
+          'paging': true,
+          'lengthChange': true,
+          'searching': true,
+          'ordering': true,
+          'order': [],
+          'info': true,
+          'autoWidth': true,
+          "sPaginationType": "full_numbers",
+          "bJQueryUI": true,
+          "bAutoWidth": false,
+          "processing": true
+        });
 
-        $('#judul_weekly').html('<b>Audit IK Oleh '+ldr[1]+' ('+ldr[0]+') <br>Bulan '+result.monthTitle+' <br>yang '+kondisi+'<b>');
+        $('#judul_weekly').html('<b>Audit IK <br>Bulan '+result.monthTitle+' <br>dengan Kondisi '+kondisi+'<b>');
 
         $('#loading').hide();
         $('#modalDetail').modal('show');
+      }else{
+        $('#loading').hide();
+        openErrorGritter('Error!',result.message);
       }
     });
   }
@@ -633,4 +725,26 @@
   };
   Highcharts.setOptions(Highcharts.theme);
 
+
+function openSuccessGritter(title, message){
+  jQuery.gritter.add({
+    title: title,
+    text: message,
+    class_name: 'growl-success',
+    image: '{{ url("images/image-screen.png") }}',
+    sticky: false,
+    time: '5000'
+  });
+}
+
+function openErrorGritter(title, message) {
+  jQuery.gritter.add({
+    title: title,
+    text: message,
+    class_name: 'growl-danger',
+    image: '{{ url("images/image-stop.png") }}',
+    sticky: false,
+    time: '5000'
+  });
+}
 </script>

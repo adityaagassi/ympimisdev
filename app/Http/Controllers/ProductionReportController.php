@@ -3111,53 +3111,60 @@ class ProductionReportController extends Controller
     public function fetchAuditIKMonitoring(Request $request)
     {
         try {
-            if ($request->get('month') != "") {
-                $month = $request->get('month');
+            $month_from = $request->get('month_from');
+            $month_to = $request->get('month_to');
+            if ($month_from == "") {
+                 if ($month_to == "") {
+                      $first = "DATE_FORMAT( NOW() - INTERVAL 1 YEAR, '%Y-%m' )";
+                      $last = "DATE_FORMAT( NOW(), '%Y-%m' ) ";
+                      $firstTitle = date("F Y", strtotime(date('Y-m-d').' - 1 year'));
+                      $lastTitle = date("F Y", strtotime(date('Y-m-d')));
+                 }else{
+                      $first = "DATE_FORMAT( NOW() - INTERVAL 1 YEAR, '%Y-%m' ) ";
+                      $last = "'".$month_to."'";
+                      $firstTitle = date("F Y", strtotime(date('Y-m-d').' - 1 year'));
+                      $lastTitle = date("F Y", strtotime(date($month_to.'-01')));
+                 }
             }else{
-                $month = date('Y-m');
+                 if ($month_to == "") {
+                      $first = "'".$month_from."'";
+                      $last = "DATE_FORMAT( NOW(), '%Y-%m' ) ";
+                      $firstTitle = date("F Y", strtotime(date($month_from.'-01')));
+                      $lastTitle = date("F Y", strtotime(date('Y-m-d')));
+                 }else{
+                      $first = "'".$month_from."'";
+                      $last = "'".$month_to."'";
+                      $firstTitle = date("F Y", strtotime(date($month_from.'-01')));
+                      $lastTitle = date("F Y", strtotime(date($month_to.'-01')));
+                 }
             }
 
-            $audit_ik = DB::SELECT("SELECT
-                activity_lists.id,
-                leader_dept,
-                department_shortname,
-                ( SELECT count( audit_guidances.id ) FROM audit_guidances WHERE audit_guidances.activity_list_id = activity_lists.id AND audit_guidances.`month` = '".$month."' ) AS plan,
-                (
-                SELECT
-                    count( audit_guidances.id ) 
-                FROM
-                    audit_guidances 
-                WHERE
-                    audit_guidances.activity_list_id = activity_lists.id 
-                    AND audit_guidances.`month` = '".$month."' 
-                    AND STATUS = 'Sudah Dikerjakan' 
-                ) AS done,
-                (
-                SELECT
-                    count( audit_guidances.id ) 
-                FROM
-                    audit_guidances 
-                WHERE
-                    audit_guidances.activity_list_id = activity_lists.id 
-                    AND audit_guidances.`month` = '".$month."' 
-                    AND STATUS = 'Belum Dikerjakan' 
-                ) AS not_yet 
+            $audit_ik = DB::SELECT("SELECT DISTINCT
+            (
+            DATE_FORMAT( week_date, '%Y-%m' )) AS `month`,
+            DATE_FORMAT( week_date, '%M %Y' ) as `months`,
+            (
+            SELECT
+                count( audit_guidances.id ) 
             FROM
-                activity_lists
-                LEFT JOIN departments ON departments.id = activity_lists.department_id 
+                audit_guidances 
             WHERE
-                activity_type = 'Laporan Aktivitas' 
-                AND department_shortname != 'KP' 
-            ORDER BY
-                department_shortname");
-
-            $monthTitle = date("F Y", strtotime($month));
+            audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' )) AS plan,
+            ( SELECT count( audit_guidances.id ) FROM audit_guidances WHERE audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' ) AND `status` = 'Sudah Dikerjakan' ) AS done,
+            ( SELECT count( audit_guidances.id ) FROM audit_guidances WHERE audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' ) AND `status` = 'Belum Dikerjakan' ) AS not_yet 
+        FROM
+            weekly_calendars 
+        WHERE
+            DATE_FORMAT( weekly_calendars.week_date, '%Y-%m' ) BETWEEN ".$first." 
+            AND ".$last."
+        ORDER BY
+            `month`");
 
             $response = array(
                 'status' => true,
                 'audit_ik' => $audit_ik,
-                'month' => $month,
-                'monthTitle' => $monthTitle,
+                'firstTitle' => $firstTitle,
+                'lastTitle' => $lastTitle,
             );
             return Response::json($response);
         } catch (\Exception $e) {
@@ -3172,15 +3179,12 @@ class ProductionReportController extends Controller
     public function fetchDetailAuditIKMonitoring(Request $request)
     {
         try {
-            $leader = $request->get('leader');
             if ($request->get('month') != "") {
                 $month = $request->get('month');
             }else{
                 $month = date('Y-m');
             }
             $kondisi = $request->get('kondisi');
-
-            $ldr = explode(' - ', $leader);
 
             $datass = [];
 
@@ -3190,9 +3194,8 @@ class ProductionReportController extends Controller
                 FROM
                     audit_guidances
                     LEFT JOIN activity_lists ON activity_lists.id = audit_guidances.activity_list_id 
-                WHERE
-                    leader_dept = '".$ldr[1]."' 
-                    AND `month` = '".$month."' 
+                WHERE 
+                    `month` = '".$month."' 
                     AND `status` = '".$kondisi."'");
             }else{
                 $datas = DB::SELECT("SELECT
@@ -3200,9 +3203,8 @@ class ProductionReportController extends Controller
                 FROM
                     audit_guidances
                     LEFT JOIN activity_lists ON activity_lists.id = audit_guidances.activity_list_id 
-                WHERE
-                    leader_dept = '".$ldr[1]."' 
-                    AND `month` = '".$month."' 
+                WHERE 
+                    `month` = '".$month."' 
                     AND `status` = '".$kondisi."'");
 
                 foreach ($datas as $key) {
@@ -3219,7 +3221,8 @@ class ProductionReportController extends Controller
                         audit_report_activities.kelengkapan_point_safety,
                         audit_report_activities.tindakan_perbaikan,
                         audit_report_activities.target,
-                        audit_report_activities.operator 
+                        audit_report_activities.operator,
+                        audit_report_activities.leader 
                     FROM
                         audit_report_activities
                         JOIN audit_guidances ON audit_guidances.id = audit_report_activities.audit_guidance_id 
