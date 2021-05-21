@@ -57,7 +57,17 @@ class RawMaterialReminder extends Command
                 $cc_user = MaterialControl::where('pic', $pic[$i]->pic)->first();
                 $cc_email = User::where('username', $cc_user->control)->first();
 
-                $material = db::select("SELECT msp.period, msp.material_number, msp.material_description, '".$due_date."' AS stock_date, COALESCE ( s.stock_total, 0 ) AS stock, msp.policy, ROUND( COALESCE ( s.stock_total, 0 ) / msp.policy * 100 , 2) AS percentage
+                $material = db::select("SELECT msp.period,
+                    msp.material_number,
+                    msp.material_description,
+                    mc.vendor_code,
+                    mc.vendor_name,
+                    '".$due_date."' AS stock_date,
+                    COALESCE ( s.stock_total, 0 ) AS stock,
+                    plan.plan,
+                    msp.day,
+                    ROUND(msp.policy, 3) AS policy,
+                    ROUND( COALESCE ( s.stock_total, 0 ) / msp.policy * 100 , 2) AS percentage
                     FROM material_stock_policies AS msp
                     LEFT JOIN
                     (SELECT sls.material_number, sls.stock_date,
@@ -71,7 +81,11 @@ class RawMaterialReminder extends Command
                     GROUP BY sls.material_number, sls.stock_date 
                     ORDER BY sls.material_number ASC, sls.stock_date ASC) AS s
                     ON s.material_number = msp.material_number
-                    LEFT JOIN material_controls mc on mc.material_number = msp.material_number
+                    LEFT JOIN material_controls mc ON mc.material_number = msp.material_number
+                    LEFT JOIN (SELECT material_number, MIN(due_date) AS plan FROM material_plan_deliveries
+                    WHERE due_date >= '".$due_date."'
+                    GROUP BY material_number) AS plan
+                    ON plan.material_number = msp.material_number
                     WHERE msp.policy > 0
                     AND msp.material_number in (SELECT material_number FROM material_controls)
                     AND date_format( msp.period, '%Y-%m' ) = '".$period."'
@@ -79,17 +93,60 @@ class RawMaterialReminder extends Command
                     HAVING percentage < 75
                     ORDER BY percentage ASC");
 
+                $resume = array();
+
+                for ($j=0; $j < count($material); $j++) { 
+
+                    $plan_usage = db::select("SELECT material_number, due_date, `usage` FROM material_requirement_plans
+                        WHERE material_number = '". $material[$j]->material_number ."'
+                        AND due_date >= '".$due_date."'
+                        ORDER BY due_date ASC");
+
+                    $sum = 0;
+                    $stock_out_date = date('Y-m-d');
+                    for ($k=0; $k < count($plan_usage); $k++) { 
+                        $sum += $plan_usage[$k]->usage;
+
+                        if($material[$j]->stock >= $sum){
+                            $stock_out_date = $plan_usage[$k]->due_date;
+                        }else{
+                            break;
+                        }
+                    }
+
+                    $adjustment = 'Re-schedule in';
+                    if($stock_out_date < $material[$j]->plan){
+                        $adjustment = 'Re-schedule out';
+                    }
+
+                    $row = array();
+                    $row['material_number'] = $material[$j]->material_number;
+                    $row['material_description'] = $material[$j]->material_description;
+                    $row['vendor_code'] = $material[$j]->vendor_code;
+                    $row['vendor_name'] = $material[$j]->vendor_name;
+                    $row['stock_date'] = $material[$j]->stock_date;
+                    $row['stock'] = $material[$j]->stock;
+                    $row['stock_out_date'] = $stock_out_date;
+                    $row['plan_delivery'] = $material[$j]->plan;
+                    $row['adjustment'] = $adjustment;
+                    $row['day'] = $material[$j]->day;
+                    $row['policy'] = $material[$j]->policy;
+                    $row['percentage'] = $material[$j]->percentage;
+                    $resume[] = $row;
+                }
+
                 $cc = array();
                 array_push($cc, 'adianto.heru@music.yamaha.com', $cc_email->email);
 
                 $bcc = array();
                 array_push($bcc, 'muhammad.ikhlas@music.yamaha.com');
 
-                if(count($material) > 0){
+                if(count($resume) > 0){
                     $data = [
-                        'material' => $material,
+                        'material' => $resume,
                         'user' => $user,
-                        'date' => date('l, d M Y')
+                        'date' => date('Y-m-d'),
+                        'date_text' => date('l, d M Y')
                     ];
 
                     Mail::to([$user->email])

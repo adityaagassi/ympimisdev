@@ -10,6 +10,6 @@ class MaterialStockPolicy extends Model
 	Use SoftDeletes;
 
 	protected $fillable = [
-		'period', 'material_number', 'material_description', 'policy', 'created_by'
+		'period', 'material_number', 'material_description', 'day', 'policy', 'created_by'
 	];
 }

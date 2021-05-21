@@ -48,8 +48,11 @@
 		<div class="col-xs-12" style="padding-bottom: 10px;">
 			<div id="period_title" class="col-xs-7" style="background-color: #64b5f6;"><center><span style="color: black; font-size: 2vw; font-weight: bold;" id="title_text"></span></center>
 			</div>
-			<div class="col-xs-1">
+			<div class="col-xs-1" style="padding-right: 0px">
 				<a data-toggle="modal" data-target="#uploadModal" id="btnUpload" class="btn btn-info" style="width: 100%;"><i class="fa fa-upload" style="font-size: 2vw;"></i></a>
+			</div>
+			<div class="col-xs-1" style="padding-right: 0px">
+				<a data-toggle="modal" data-target="#detailModal" id="btnDetail" class="btn btn-info" style="width: 100%;"><i class="fa fa-search" style="font-size: 2vw;"></i></a>
 			</div>
 			<div class="col-xs-2 pull-right" style="padding-right: 0;">
 				<div class="input-group date">
@@ -73,7 +76,7 @@
 				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
 					<button class="btn btn-info" style="width: 100%; margin-bottom: 5px; font-weight: bold; color: black;" onclick="modalOpen('material')">MONITORED MATERIALS</button>
 					<button class="btn btn-info" style="width: 100%; margin-bottom: 5px; font-weight: bold; color: black;" onclick="modalOpen('policy')">STOCK POLICY</button>
-					<button class="btn btn-info" style="width: 100%; margin-bottom: 5px; font-weight: bold; color: black;" onclick="modalOpen('usage')">MRP USAGE</button>
+					<button class="btn btn-info" style="width: 100%; margin-bottom: 5px; font-weight: bold; color: black;" onclick="modalOpen('usage')">PLAN USAGE</button>
 					<button class="btn btn-info" style="width: 100%; margin-bottom: 5px; font-weight: bold; color: black;" onclick="modalOpen('delivery')">DELIVERY PLAN</button>
 					<button class="btn btn-info" style="width: 100%; margin-bottom: 5px; font-weight: bold; color: black;" onclick="modalOpen('inout')">MATERIAL IN/OUT</button>
 				</div>
@@ -82,12 +85,12 @@
 	</div>
 </div>
 
-<div class="modal fade" id="materialModal">
+<div class="modal fade" id="materialModal" style="overflow-y:auto;">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title">Upload Monitored Material</h4>
-				<span>Format Upload: [GMC][DESKRIPSI][KODE VENDOR][NAMA VENDOR][KATEGORI][PIC][REMARK]</span>
+				<span>Format Upload: [GMC][DESKRIPSI][KODE VENDOR][NAMA VENDOR][KATEGORI][NIK BUYER][NIK CONTROL][REMARK]</span>
 				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
 					<textarea id="materialData" style="height: 100px; width: 100%;"></textarea>
 				</div>
@@ -102,7 +105,8 @@
 								<th style="width: 7%">Description</th>
 								<th style="width: 5%">Vendor</th>
 								<th style="width: 1%">Category</th>
-								<th style="width: 1%">PIC</th>
+								<th style="width: 1%">BUYER</th>
+								<th style="width: 1%">CONTROL</th>
 								<th style="width: 2%">Remark</th>
 							</tr>
 						</thead>
@@ -120,7 +124,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title">Upload Stock Policy</h4>
-				<span>Format Upload: [GMC][DESKRIPSI][POLICY]</span>
+				<span>Format Upload: [GMC][DESKRIPSI][POLICY(DAY)][POLICY(QTY)]</span>
 				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
 					<div class="form-group">
 						<div class="input-group date">
@@ -229,7 +233,7 @@
 <script src="{{ url("js/vfs_fonts.js")}}"></script>
 <script src="{{ url("js/buttons.html5.min.js")}}"></script>
 <script src="{{ url("js/buttons.print.min.js")}}"></script>
-<script src="{{ url("js/highstock.js")}}"></script>
+<script src="{{ url("js/highcharts.js")}}"></script>
 <script src="{{ url("js/highcharts-3d.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
@@ -410,7 +414,8 @@
 						tableBody += '<td>'+value.material_description+'</td>';
 						tableBody += '<td>'+value.vendor_code+'-'+value.vendor_name+'</td>';
 						tableBody += '<td>'+value.category+'</td>';
-						tableBody += '<td>'+value.pic+'</td>';
+						tableBody += '<td>'+value.buyer+'</td>';
+						tableBody += '<td>'+value.control+'</td>';
 						tableBody += '<td>'+value.remark+'</td>';
 						tableBody += '</tr>';
 					});
@@ -548,6 +553,7 @@
 				var h = $('#period_title').height();
 				$('#period').css('height', h);
 				$('#btnUpload').css('height', h);
+				$('#btnDetail').css('height', h);
 
 				var count_material = 0;
 				var div_chart = "";
@@ -568,6 +574,7 @@
 					div_chart += '<div class="box-header">';
 					div_chart += '<span style="font-weight: bold; font-size: 1.2vw;">'+count_material+') '+value.material_number+' '+value.material_description+'</span>';
 					div_chart += '<span style="font-weight: bold; font-size: 1.2vw; color:red;" class="pull-right">('+value.percentage+'%)</span>';	
+					div_chart += '<br><span style="font-weight: bold; font-size: 1vw;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+value.vendor_code+' - '+value.vendor_name+'</span>';
 					div_chart += '<div class="box-body" style="padding: 10px 0 10px 0;">';
 					div_chart += '<div style="height: 350px;" id="chart_'+value.material_number+'"></div>';
 					div_chart += '</div>';
