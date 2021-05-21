@@ -110,11 +110,14 @@ class MaterialController extends Controller{
                $material_code = $id;
           }
 
+          $material = MaterialControl::orderBy('material_number', 'ASC')->get();
+
 
           return view('materials.material_monitoring', array(
                'title' => $title,
                'title_jp' => $title_jp,
-               'material_code' => $material_code
+               'material_code' => $material_code,
+               'materials' => $material
           ))->with('page', 'Raw Material Monitoring')->with('Head', 'Raw Material Monitoring'); 
      }
 
@@ -406,21 +409,18 @@ class MaterialController extends Controller{
           return Response::json($response);
      }
 
-
-     public function fetchMaterialMonitoring(Request $request){
+     public function fetchMaterialMonitoringSingle(Request $request){
+          $material_number = $request->get('material_number');
           $period = date('Y-m-d');
 
-          if(strlen($request->get('period'))>0){
-               $period = $request->get('period');
-          }
-          $generates =  self::generateMaterialMonitoring($period);
+          $generates = self::generateMaterialMonitoring($period);
 
           $material_percentages = array();
           $results1 = array();
           $count_item = 0;
 
           foreach ($generates['policies'] as $policy) {
-               if($policy->percentage < 0.75){
+               if($policy->material_number == $material_number){
                     array_push($material_percentages, [
                          'material_number' => $policy->material_number,
                          'material_description' => $policy->material_description,
@@ -432,6 +432,14 @@ class MaterialController extends Controller{
                     ]);
                     $count_item++;
                }
+          }
+
+          if(count($material_percentages) == 0){
+               $response = array(
+                    'status' => false,
+                    'message' => 'Stock Policy Not Found'
+               );
+               return Response::json($response);
           }
 
           $categories = array();
@@ -513,8 +521,6 @@ class MaterialController extends Controller{
                $plan_stock = 0;
 
                if($results1[$i]['due_date'] > $period){
-               // $plan_stock = $results2[count($results2)-1]['stock_total']+$results2[count($results2)-1]['actual_delivery']-$results2[count($results2)-1]['plan_usage'];
-               // if($plan_stock != 0){
                     $del = 0;
                     if($results2[count($results2)-1]['plan_delivery'] == 0){
                          $del = $results2[count($results2)-1]['actual_delivery'];
@@ -522,8 +528,164 @@ class MaterialController extends Controller{
                     else{
                          $del = $results2[count($results2)-1]['plan_delivery'];
                     }
-                    $plan_stock = $results2[count($results2)-1]['stock_total']+$results2[count($results2)-1]['plan_stock']+$del-$results2[count($results2)-1]['plan_usage'];
-               // }
+                    $plan_stock = $results2[count($results2)-1]['stock_total'] + $results2[count($results2)-1]['plan_stock'] + $del - $results2[count($results2)-1]['plan_usage'];
+               }
+
+               array_push($results2, [
+                    'material_number' => $results1[$i]['material_number'],
+                    'material_description' => $results1[$i]['material_description'],
+                    'vendor_code' => $results1[$i]['vendor_code'],
+                    'vendor_name' => $results1[$i]['vendor_name'],
+                    'category' => $results1[$i]['category'],
+                    'pic' => $results1[$i]['pic'],
+                    'remark' => $results1[$i]['remark'],
+                    'due_date' => $results1[$i]['due_date'],
+                    'stock_mstk' => $results1[$i]['stock_mstk'],
+                    'stock_wip' => $results1[$i]['stock_wip'],
+                    'stock_total' => $results1[$i]['stock_total'],
+                    'plan_delivery' => $results1[$i]['plan_delivery'],
+                    'actual_delivery' => $results1[$i]['actual_delivery'],
+                    'plan_usage' => $results1[$i]['plan_usage'],
+                    'actual_usage' => $results1[$i]['actual_usage'],
+                    'plan_stock' => $plan_stock
+               ]);
+          }
+
+          $response = array(
+               'status' => true,
+               'count_now' => $count_now,
+               'period' => date('d M y', strtotime($period)),
+               'categories' => $categories,
+               'material_percentages' => $material_percentages,
+               'results' => $results2,
+               'count_item' => $count_item
+          );
+          return Response::json($response);
+     }
+
+
+     public function fetchMaterialMonitoring(Request $request){
+          $period = date('Y-m-d');
+
+          if(strlen($request->get('period'))>0){
+               $period = $request->get('period');
+          }
+          $generates = self::generateMaterialMonitoring($period);
+
+          $material_percentages = array();
+          $results1 = array();
+          $count_item = 0;
+
+          foreach ($generates['policies'] as $policy) {
+               if($policy->percentage < 0.75){                    
+                    array_push($material_percentages, [
+                         'material_number' => $policy->material_number,
+                         'material_description' => $policy->material_description,
+                         'vendor_code' => $policy->vendor_code,
+                         'vendor_name' => $policy->vendor_name,
+                         'stock' => $policy->stock,
+                         'policy' => $policy->policy,
+                         'percentage' => round($policy->percentage*100, 2)
+                    ]);
+                    $count_item++;
+               }
+          }
+
+          if(count($material_percentages) == 0){
+               $response = array(
+                    'status' => false,
+                    'message' => 'Stock Policy Not Found'
+               );
+               return Response::json($response);
+          }
+
+          $categories = array();
+          $count_now = 0;
+
+          foreach ($generates['materials'] as $material){
+               $stock_mstk = 0;
+               $stock_wip = 0;
+               $stock_total = 0;
+               $usage = 0;
+               $delivery_quantity = 0;
+               $actual_usage = 0;
+               $actual_delivery = 0;
+
+               if(!in_array(date('D, d M y', strtotime($material->due_date)), $categories)){
+                    array_push($categories, date('D, d M y', strtotime($material->due_date)));
+
+                    if(date('D, d M y', strtotime($period)) == date('D, d M y', strtotime($material->due_date))){
+                         $count_now = count($categories);
+                    }
+               }
+
+               foreach($generates['stocks'] as $stock){
+
+                    if($material->material_number == $stock->material_number && $material->due_date == $stock->stock_date){
+                         $stock_mstk = $stock->stock_mstk;
+                         $stock_wip = $stock->stock_wip;
+                         $stock_total = $stock->stock_total;
+                    }
+
+               }
+
+               foreach($generates['mrps'] as $mrp){
+                    if($material->material_number == $mrp->material_number && $material->due_date == $mrp->due_date){
+                         $usage = $mrp->usage;
+                    }
+               }
+
+               foreach($generates['deliveries'] as $delivery){
+                    if($material->material_number == $delivery->material_number && $material->due_date == $delivery->due_date){
+                         $delivery_quantity = $delivery->quantity;
+                    }
+               }
+
+               foreach($generates['material_ins'] as $material_in){
+                    if($material->material_number == $material_in->material_number && $material->due_date == $material_in->posting_date){
+                         $actual_delivery = $material_in->quantity;
+                    }
+               }
+
+               foreach($generates['material_outs'] as $material_out){
+                    if($material->material_number == $material_out->material_number && $material->due_date == $material_out->posting_date){
+                         $actual_usage = $material_out->quantity;
+                    }
+               }
+
+               array_push($results1, [
+                    'material_number' => $material->material_number,
+                    'material_description' => $material->material_description,
+                    'vendor_code' => $material->vendor_code,
+                    'vendor_name' => $material->vendor_name,
+                    'category' => $material->category,
+                    'pic' => $material->pic,
+                    'remark' => $material->remark,
+                    'due_date' => $material->due_date,
+                    'stock_mstk' => $stock_mstk,
+                    'stock_wip' => $stock_wip,
+                    'stock_total' => $stock_total,
+                    'plan_delivery' => $delivery_quantity,
+                    'actual_delivery' => $actual_delivery,
+                    'plan_usage' => $usage,
+                    'actual_usage' => $actual_usage
+               ]);
+          }
+
+          $results2 = array();
+
+          for($i = 0; $i < count($results1); $i++){
+               $plan_stock = 0;
+
+               if($results1[$i]['due_date'] > $period){
+                    $del = 0;
+                    if($results2[count($results2)-1]['plan_delivery'] == 0){
+                         $del = $results2[count($results2)-1]['actual_delivery'];
+                    }else{
+                         $del = $results2[count($results2)-1]['plan_delivery'];
+                    }
+
+                    $plan_stock = $results2[count($results2)-1]['stock_total'] + $results2[count($results2)-1]['plan_stock'] + $del - $results2[count($results2)-1]['plan_usage'];
                }
 
                array_push($results2, [

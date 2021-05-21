@@ -3197,6 +3197,7 @@ Route::get('scan/efficiency/employee', 'EfficiencyController@scanEmployee');
 //DISPLAY RAW MATERIAL
 Route::get('index/material/material_monitoring/{id}', 'MaterialController@indexMaterialMonitoring');
 Route::get('fetch/material/material_monitoring', 'MaterialController@fetchMaterialMonitoring');
+Route::get('fetch/material/material_monitoring_single', 'MaterialController@fetchMaterialMonitoringSingle');
 Route::get('fetch/material/material_control', 'MaterialController@fetchMaterialControl');
 
 //DISPLAY STUFFING TIME

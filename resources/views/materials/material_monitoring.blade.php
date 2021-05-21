@@ -68,6 +68,33 @@
 	</div>
 </section>
 
+<div class="modal fade" id="detailModal">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="col-xs-12" style="background-color: #64b5f6;">
+					<h1 style="text-align: center; margin:5px; font-weight: bold;">Stock Condition By GMC</h1>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-xs-8 col-xs-offset-2" style="margin-bottom: 3%;">
+						<select class="form-control select2" onchange="drawChart()" name="searchMaterial" id="searchMaterial" data-placeholder="Select Material" style="width: 100%;">
+							<option></option>
+							@foreach($materials as $material)
+							<option value="{{ $material->material_number }}">{{ $material->material_number }} - {{ $material->material_description }}</option>
+							@endforeach
+						</select>
+					</div>
+
+					<div class="col-xs-12" id="material_monitoring_single">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div class="modal fade" id="uploadModal">
 	<div class="modal-dialog modal-sm">
 		<div class="modal-content">
@@ -296,6 +323,18 @@
 
 	});
 
+	$(function () {
+		$('.select2').select2({
+			dropdownParent: $('#detailModal'),
+			allowClear: true,
+		});
+	})
+
+	$('#detailModal').on('hidden.bs.modal', function () {
+		$('#material_monitoring_single').html("");
+		$("#searchMaterial").prop('selectedIndex', 0).change();			
+	});
+
 	function clearData(){
 		$('#materialData').val("");
 		$('#policyData').val("");
@@ -429,12 +468,6 @@
 						[ '10 rows', '25 rows', '50 rows', 'Show all' ]
 						],
 						'buttons': {
-							// dom: {
-							// 	button: {
-							// 		tag:'button',
-							// 		className:''
-							// 	}
-							// },
 							buttons:[
 							{
 								extend: 'pageLength',
@@ -540,203 +573,398 @@
 		});
 	}
 
-	function fetchChart(id){
-		$('#loading').show();
-		var period = $('#period').val();
-		var data = {
-			period:period
-		}
-		$.get('{{ url("fetch/material/material_monitoring") }}', data, function(result, status, xhr) {
-			if(result.status){
+	function drawChart() {
+		var material_number = $('#searchMaterial').val();
 
-				$('#title_text').text('Stock Condition on '+result.period+' ('+result.count_item+' item(s) <75%)');
-				var h = $('#period_title').height();
-				$('#period').css('height', h);
-				$('#btnUpload').css('height', h);
-				$('#btnDetail').css('height', h);
+		if(material_number.length != ''){
+			var data = {
+				material_number:material_number
+			}	
 
-				var count_material = 0;
-				var div_chart = "";
-				$('#material_monitoring').html("");
-
-				if(result.material_percentages.length == 0){
-					alert('Data pada periode tersebut belum di update atau ditambahkan');
+			$('#loading').show();
+			$.get('{{ url("fetch/material/material_monitoring_single") }}', data, function(result, status, xhr) {
+				if(result.status){
 					$('#loading').hide();
-					return false;
-				}
 
-				var now = new Date();
+					var count_material = 0;
+					var div_chart = "";
+					$('#material_monitoring_single').html("");
 
-				$.each(result.material_percentages, function(key, value){
-					count_material += 1;
-					div_chart += '<div class="col-xs-6" style="padding: 0 5px 0 5px;">';
-					div_chart += '<div class="box box-solid" style="margin-bottom: 10px;">';
-					div_chart += '<div class="box-header">';
-					div_chart += '<span style="font-weight: bold; font-size: 1.2vw;">'+count_material+') '+value.material_number+' '+value.material_description+'</span>';
-					div_chart += '<span style="font-weight: bold; font-size: 1.2vw; color:red;" class="pull-right">('+value.percentage+'%)</span>';	
-					div_chart += '<br><span style="font-weight: bold; font-size: 1vw;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+value.vendor_code+' - '+value.vendor_name+'</span>';
-					div_chart += '<div class="box-body" style="padding: 10px 0 10px 0;">';
-					div_chart += '<div style="height: 350px;" id="chart_'+value.material_number+'"></div>';
-					div_chart += '</div>';
-					div_chart += '</div>';
-					div_chart += '</div>';
-					div_chart += '</div>';
-					$('#material_monitoring').append(div_chart);
-					div_chart = "";
+					var now = new Date();
 
-					var material_number = value.material_number;
-					var stock_total = [];
-					var stock_wip = [];
-					var stock_mstk = [];
-					var plan_usage = [];
-					var plan_delivery = [];
-					var plan_stock = [];
-					var actual_usage = [];
-					var actual_delivery = [];
-					var stock_policy = [];
-					var policy = value.policy;
-					var percentage = 0;
-					var stock_percentage = [];
+					$.each(result.material_percentages, function(key, value){
 
-					for(var i = 0; i < result.results.length; i++){
-						if(result.results[i].material_number == material_number){
-							stock_total.push(parseFloat(result.results[i].stock_total));
-							stock_mstk.push(parseFloat(result.results[i].stock_mstk));
-							stock_wip.push(parseFloat(result.results[i].stock_wip));
-							stock_policy.push(parseFloat(policy));
-							plan_usage.push(parseFloat(result.results[i].plan_usage));
-							plan_delivery.push(parseFloat(result.results[i].plan_delivery));
-							actual_usage.push(parseFloat(result.results[i].actual_usage));
-							actual_delivery.push(parseFloat(result.results[i].actual_delivery));
-							plan_stock.push(parseFloat(result.results[i].plan_stock));
-							if(result.results[i].stock_total > 0){
-								percentage = (parseFloat(result.results[i].stock_total)/parseFloat(policy))*100;
-							}
-							else{
-								percentage = (parseFloat(result.results[i].plan_stock)/parseFloat(policy))*100;
-							}
-							stock_percentage.push((parseFloat(percentage)).toFixed(2));
-						}
-					}
+						div_chart += '<div class="col-xs-12" style="padding: 0 5px 0 5px;">';
+						div_chart += '<div class="box box-solid" style="margin-bottom: 10px;">';
+						div_chart += '<div class="box-header">';
+						div_chart += '<span style="font-weight: bold; font-size: 1.2vw;">'+value.material_number+' '+value.material_description+'</span>';
+						div_chart += '<span style="font-weight: bold; font-size: 1.2vw; color:red;" class="pull-right">('+value.percentage+'%)</span>';	
+						div_chart += '<br><span style="font-weight: bold; font-size: 1vw;">'+value.vendor_code+' - '+value.vendor_name+'</span>';
+						div_chart += '<div class="box-body" style="padding: 10px 0 10px 0;">';
+						div_chart += '<div style="height: 350px;" id="chart_single_'+value.material_number+'"></div>';
+						div_chart += '</div>';
+						div_chart += '</div>';
+						div_chart += '</div>';
+						div_chart += '</div>';
+						$('#material_monitoring_single').append(div_chart);
+						div_chart = "";
 
-					var chart_name = 'chart_'+value.material_number;
+						var material_number = value.material_number;
+						var stock_total = [];
+						var stock_wip = [];
+						var stock_mstk = [];
+						var plan_usage = [];
+						var plan_delivery = [];
+						var plan_stock = [];
+						var actual_usage = [];
+						var actual_delivery = [];
+						var stock_policy = [];
+						var policy = value.policy;
+						var percentage = 0;
+						var stock_percentage = [];
 
-					Highcharts.chart(chart_name, {
-						chart: {
-							backgroundColor	: null
-						},
-						title: {
-							text: null
-						},
-						credits: {
-							enabled: false
-						},
-						xAxis: {
-							tickInterval: 1,
-							gridLineWidth: 1,
-							categories: result.categories,
-							crosshair: true,
-							plotBands:[{
-								from: result.count_now-1.5,
-								to: result.count_now-0.5,
-								color: 'rgba(68, 170, 213, .2)',
-								label: {
-									text: 'Today',
-									style: {
-										color: '#999999'
-									},
-									y: 20
+						console.log(material_number);
+
+						for(var i = 0; i < result.results.length; i++){
+							if(result.results[i].material_number == material_number){
+								stock_total.push(parseFloat(result.results[i].stock_total));
+								stock_mstk.push(parseFloat(result.results[i].stock_mstk));
+								stock_wip.push(parseFloat(result.results[i].stock_wip));
+								stock_policy.push(parseFloat(policy));
+								plan_usage.push(parseFloat(result.results[i].plan_usage));
+								plan_delivery.push(parseFloat(result.results[i].plan_delivery));
+								actual_usage.push(parseFloat(result.results[i].actual_usage));
+								actual_delivery.push(parseFloat(result.results[i].actual_delivery));
+								plan_stock.push(parseFloat(result.results[i].plan_stock));
+
+								if(result.results[i].stock_total > 0){
+									percentage = (parseFloat(result.results[i].stock_total)/parseFloat(policy))*100;
+								}else{
+									percentage = (parseFloat(result.results[i].plan_stock)/parseFloat(policy))*100;
 								}
-							}]
-						},
-						yAxis: [{
+								stock_percentage.push((parseFloat(percentage)).toFixed(2));
+							}
+						}
+
+						var chart_name = 'chart_single_'+value.material_number;
+
+						Highcharts.chart(chart_name, {
+							chart: {
+								backgroundColor	: null
+							},
 							title: {
 								text: null
-							}
-						}],
-						legend: {
-							align: 'right',
-							verticalAlign: 'top',
-							layout: 'vertical',
-							x: 0,
-							y: 100,
-							symbolRadius: 1,
-							borderWidth: 1
-						},
-						tooltip: {
-							headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-							pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-							'<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
-							footerFormat: '</table>',
-							shared: true,
-							useHTML: true
-						},
-						plotOptions: {
-							column: {
-								stacking: 'normal',
-								pointPadding: 0.93,
-								groupPadding: 0.93,
-								borderWidth: 0.8,
-								borderColor: '#212121'
-							}
-						},
-						series: [{
-							name: 'Stock Policy',
-							type: 'area',
-							marker:{
-								enabled:false
 							},
-							lineColor: 'red',
-							color: 'RGBA(255,0,0,0.05)',
-							data: stock_policy,
-							dashStyle: 'shortdash'
-						}, {
-							name: 'Plan Delivery',
-							type: 'column',
-							data: plan_delivery,
-							color: '#64b5f6'
-						}, {
-							name: 'Plan Stock',
-							type: 'column',
-							data: plan_stock,
-							color: '#757575'
-						}, {
-							name: 'Actual Delivery',
-							type: 'column',
-							stack: 'Stock',
-							data: actual_delivery,
-							color: '#fff176'
+							credits: {
+								enabled: false
+							},
+							xAxis: {
+								tickInterval: 1,
+								gridLineWidth: 1,
+								categories: result.categories,
+								crosshair: true,
+								plotBands:[{
+									from: result.count_now-1.5,
+									to: result.count_now-0.5,
+									color: 'rgba(68, 170, 213, .2)',
+									label: {
+										text: 'Today',
+										style: {
+											color: '#999999'
+										},
+										y: 20
+									}
+								}]
+							},
+							yAxis: [{
+								title: {
+									text: null
+								}
+							}],
+							legend: {
+								align: 'right',
+								verticalAlign: 'top',
+								layout: 'vertical',
+								x: 0,
+								y: 100,
+								symbolRadius: 1,
+								borderWidth: 1
+							},
+							tooltip: {
+								headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+								pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+								'<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+								footerFormat: '</table>',
+								shared: true,
+								useHTML: true
+							},
+							plotOptions: {
+								column: {
+									stacking: 'normal',
+									pointPadding: 0.93,
+									groupPadding: 0.93,
+									borderWidth: 0.8,
+									borderColor: '#212121'
+								}
+							},
+							series: [
+							{
+								name: 'Stock Policy',
+								type: 'area',
+								marker:{
+									enabled:false
+								},
+								lineColor: 'red',
+								color: 'RGBA(255,0,0,0.05)',
+								data: stock_policy,
+								dashStyle: 'shortdash'
+							}, {
+								name: 'Plan Delivery',
+								type: 'column',
+								data: plan_delivery,
+								color: '#64b5f6'
+							}, {
+								name: 'Plan Stock',
+								type: 'column',
+								data: plan_stock,
+								color: '#757575'
+							}, {
+								name: 'Actual Delivery',
+								type: 'column',
+								stack: 'Stock',
+								data: actual_delivery,
+								color: '#fff176'
+							}, {
+								name: 'Actual WIP',
+								type: 'column',
+								stack: 'Stock',
+								data: stock_wip,
+								color: '#dcedc8'
+							}, {
+								name: 'Actual MSTK',
+								type: 'column',
+								stack: 'Stock',
+								data: stock_mstk,
+								color: '#4caf50'
+							}, {
+								name: 'Plan Usage',
+								type: 'spline',
+								data: plan_usage,
+								dashStyle: 'shortdash',
+								color: '#212121'
+							}, {
+								name: 'Actual Usage',
+								type: 'spline',
+								data: actual_usage,
+								color: '#f57f17'
+							}]
+						});
 
-						}, {
-							name: 'Actual WIP',
-							type: 'column',
-							stack: 'Stock',
-							data: stock_wip,
-							color: '#dcedc8'
-
-						}, {
-							name: 'Actual MSTK',
-							type: 'column',
-							stack: 'Stock',
-							data: stock_mstk,
-							color: '#4caf50'
-
-						}, {
-							name: 'Plan Usage',
-							type: 'spline',
-							data: plan_usage,
-							dashStyle: 'shortdash',
-							color: '#212121'
-						}, {
-							name: 'Actual Usage',
-							type: 'spline',
-							data: actual_usage,
-							color: '#f57f17'
-						}]
 					});
 
-					$('#loading').hide();
+}else{
+	$('#loading').hide();
+	alert(result.message);
+}
+});
+}
+}
+
+function fetchChart(id){
+	$('#loading').show();
+	var period = $('#period').val();
+	var data = {
+		period:period
+	}
+	$.get('{{ url("fetch/material/material_monitoring") }}', data, function(result, status, xhr) {
+		if(result.status){
+
+			$('#title_text').text('Stock Condition on '+result.period+' ('+result.count_item+' item(s) <75%)');
+			var h = $('#period_title').height();
+			$('#period').css('height', h);
+			$('#btnUpload').css('height', h);
+			$('#btnDetail').css('height', h);
+
+			var count_material = 0;
+			var div_chart = "";
+			$('#material_monitoring').html("");
+
+			if(result.material_percentages.length == 0){
+				alert('Data pada periode tersebut belum di update atau ditambahkan');
+				$('#loading').hide();
+				return false;
+			}
+
+			var now = new Date();
+
+			$.each(result.material_percentages, function(key, value){
+				count_material += 1;
+				div_chart += '<div class="col-xs-6" style="padding: 0 5px 0 5px;">';
+				div_chart += '<div class="box box-solid" style="margin-bottom: 10px;">';
+				div_chart += '<div class="box-header">';
+				div_chart += '<span style="font-weight: bold; font-size: 1.2vw;">'+count_material+') '+value.material_number+' '+value.material_description+'</span>';
+				div_chart += '<span style="font-weight: bold; font-size: 1.2vw; color:red;" class="pull-right">('+value.percentage+'%)</span>';	
+				div_chart += '<br><span style="font-weight: bold; font-size: 1vw;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+value.vendor_code+' - '+value.vendor_name+'</span>';
+				div_chart += '<div class="box-body" style="padding: 10px 0 10px 0;">';
+				div_chart += '<div style="height: 350px;" id="chart_'+value.material_number+'"></div>';
+				div_chart += '</div>';
+				div_chart += '</div>';
+				div_chart += '</div>';
+				div_chart += '</div>';
+				$('#material_monitoring').append(div_chart);
+				div_chart = "";
+
+				var material_number = value.material_number;
+				var stock_total = [];
+				var stock_wip = [];
+				var stock_mstk = [];
+				var plan_usage = [];
+				var plan_delivery = [];
+				var plan_stock = [];
+				var actual_usage = [];
+				var actual_delivery = [];
+				var stock_policy = [];
+				var policy = value.policy;
+				var percentage = 0;
+				var stock_percentage = [];
+
+				for(var i = 0; i < result.results.length; i++){
+					if(result.results[i].material_number == material_number){
+						stock_total.push(parseFloat(result.results[i].stock_total));
+						stock_mstk.push(parseFloat(result.results[i].stock_mstk));
+						stock_wip.push(parseFloat(result.results[i].stock_wip));
+						stock_policy.push(parseFloat(policy));
+						plan_usage.push(parseFloat(result.results[i].plan_usage));
+						plan_delivery.push(parseFloat(result.results[i].plan_delivery));
+						actual_usage.push(parseFloat(result.results[i].actual_usage));
+						actual_delivery.push(parseFloat(result.results[i].actual_delivery));
+						plan_stock.push(parseFloat(result.results[i].plan_stock));
+						if(result.results[i].stock_total > 0){
+							percentage = (parseFloat(result.results[i].stock_total)/parseFloat(policy))*100;
+						}
+						else{
+							percentage = (parseFloat(result.results[i].plan_stock)/parseFloat(policy))*100;
+						}
+						stock_percentage.push((parseFloat(percentage)).toFixed(2));
+					}
+				}
+
+				var chart_name = 'chart_'+value.material_number;
+
+				Highcharts.chart(chart_name, {
+					chart: {
+						backgroundColor	: null
+					},
+					title: {
+						text: null
+					},
+					credits: {
+						enabled: false
+					},
+					xAxis: {
+						tickInterval: 1,
+						gridLineWidth: 1,
+						categories: result.categories,
+						crosshair: true,
+						plotBands:[{
+							from: result.count_now-1.5,
+							to: result.count_now-0.5,
+							color: 'rgba(68, 170, 213, .2)',
+							label: {
+								text: 'Today',
+								style: {
+									color: '#999999'
+								},
+								y: 20
+							}
+						}]
+					},
+					yAxis: [{
+						title: {
+							text: null
+						}
+					}],
+					legend: {
+						align: 'right',
+						verticalAlign: 'top',
+						layout: 'vertical',
+						x: 0,
+						y: 100,
+						symbolRadius: 1,
+						borderWidth: 1
+					},
+					tooltip: {
+						headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+						pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+						'<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+						footerFormat: '</table>',
+						shared: true,
+						useHTML: true
+					},
+					plotOptions: {
+						column: {
+							stacking: 'normal',
+							pointPadding: 0.93,
+							groupPadding: 0.93,
+							borderWidth: 0.8,
+							borderColor: '#212121'
+						}
+					},
+					series: [
+					{
+						name: 'Stock Policy',
+						type: 'area',
+						marker:{
+							enabled:false
+						},
+						lineColor: 'red',
+						color: 'RGBA(255,0,0,0.05)',
+						data: stock_policy,
+						dashStyle: 'shortdash'
+					}, {
+						name: 'Plan Delivery',
+						type: 'column',
+						data: plan_delivery,
+						color: '#64b5f6'
+					}, {
+						name: 'Plan Stock',
+						type: 'column',
+						data: plan_stock,
+						color: '#757575'
+					}, {
+						name: 'Actual Delivery',
+						type: 'column',
+						stack: 'Stock',
+						data: actual_delivery,
+						color: '#fff176'
+					}, {
+						name: 'Actual WIP',
+						type: 'column',
+						stack: 'Stock',
+						data: stock_wip,
+						color: '#dcedc8'
+					}, {
+						name: 'Actual MSTK',
+						type: 'column',
+						stack: 'Stock',
+						data: stock_mstk,
+						color: '#4caf50'
+					}, {
+						name: 'Plan Usage',
+						type: 'spline',
+						data: plan_usage,
+						dashStyle: 'shortdash',
+						color: '#212121'
+					}, {
+						name: 'Actual Usage',
+						type: 'spline',
+						data: actual_usage,
+						color: '#f57f17'
+					}]
 				});
+
+				$('#loading').hide();
+			});
 }
 else{
 	$('#loading').hide();
