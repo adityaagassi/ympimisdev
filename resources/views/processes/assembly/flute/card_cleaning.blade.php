@@ -124,7 +124,7 @@ table.table-bordered > tfoot > tr > th{
 				var data = {
 					tag:tag
 				}
-				$.get('{{ url("scan/assembly/flute/kd_cleaning") }}', data, function(result, status, xhr){
+				$.get('{{ url("scan/assembly/flute/card_cleaning") }}', data, function(result, status, xhr){
 					if (result.status) {
 						openSuccessGritter('Success',result.message);
 						$('#tag_product').removeAttr('disabled');
@@ -157,7 +157,7 @@ table.table-bordered > tfoot > tr > th{
 	}
 
 	function fetchKanbanHistory() {
-		$.get('{{ url("fetch/assembly/flute/kd_cleaning") }}',  function(result, status, xhr){
+		$.get('{{ url("fetch/assembly/flute/card_cleaning") }}',  function(result, status, xhr){
 			if (result.status) {
 				$('#tableHistoryBody').html("");
 				var table = "";

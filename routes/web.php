@@ -180,7 +180,11 @@ Route::get('/project_timeline', 'HomeController@indexProjectTimeline');
 Route::get('/fetch/mis_investment', 'HomeController@fetch_mis_investment');
 Route::get('download/manual/{reference_file}', 'HomeController@download');
 
-//Vistor Controll
+//MIS TICKET
+Route::group(['nav' => 'S63', 'middleware' => 'permission'], function(){
+	Route::post('input/ticket', 'TicketController@inputTicket');
+});
+Route::get('/index/ticket/{id}', 'TicketController@indexTicket');
 
 //Vistor Controll
 Route::get('visitor_index', 'VisitorController@index');
@@ -1152,6 +1156,7 @@ Route::get('fetch/ga_control/live_cooking_order_list', 'GeneralAffairController@
 Route::get('live_cooking/menu/{periode}', 'GeneralAffairController@fetchLiveCookingMenu');
 Route::post('input/ga_control/live_cooking_order', 'GeneralAffairController@inputLiveCookingOrder');
 Route::get('fetch/ga_control/live_cooking_employees', 'GeneralAffairController@fetchLiveCookingEmployees');
+Route::get('detail/ga_control/live_cooking', 'GeneralAffairController@detailLiveCooking');
 Route::post('edit/ga_control/live_cooking_order', 'GeneralAffairController@editLiveCookingOrder');
 Route::get('fetch/ga_control/live_cooking_randomize', 'GeneralAffairController@randomLiveCooking');
 
@@ -1695,6 +1700,7 @@ Route::group(['nav' => 'S43', 'middleware' => 'permission'], function(){
 
 	Route::get('purchase_order/delivery_control', 'AccountingController@delivery_control');
 	Route::get('purchase_order/jurnal_po', 'AccountingController@jurnal_po');
+	Route::get('fetch/purchase_order/jurnal_po', 'AccountingController@fetchJurnal');
 
 	Route::post('cancel/purchase_order', 'AccountingController@cancel_purchase_order');
 	Route::get('purchase_order/get_item', 'AccountingController@pogetitem');
@@ -1869,7 +1875,7 @@ Route::get('export/invoice/tanda_terima', 'AccountingController@export_tanda_ter
 
 //Payment Request
 Route::get('payment_request', 'AccountingController@IndexPaymentRequest');
-Route::get('fetch/payment_request', 'AccountingController@fetch_invoice');
+Route::get('fetch/payment_request', 'AccountingController@fetchPaymentRequest');
 
 Route::get('scan/middle/operator', 'MiddleProcessController@scanMiddleOperator');
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
@@ -4343,6 +4349,10 @@ Route::get('index/assembly/flute/kd_cleaning', 'AssemblyProcessController@indexK
 Route::get('scan/assembly/flute/kd_cleaning', 'AssemblyProcessController@scanKdCardCleaning');
 Route::get('fetch/assembly/flute/kd_cleaning', 'AssemblyProcessController@fetchKdCardCleaning');
 
+Route::get('index/assembly/flute/card_cleaning', 'AssemblyProcessController@indexCardCleaning');
+Route::get('scan/assembly/flute/card_cleaning', 'AssemblyProcessController@scanCardCleaning');
+Route::get('fetch/assembly/flute/card_cleaning', 'AssemblyProcessController@fetchCardCleaning');
+
 
 
 Route::get('index/board/{location}', 'AssemblyProcessController@indexAssemblyBoard');
@@ -4700,6 +4710,8 @@ Route::group(['nav' => 'M34', 'middleware' => 'permission'], function(){
 	Route::get('adagio/data/report/{id}', 'AdagioAutoController@AdagioDataReport');
 	Route::get('adagio/data/fetch/{id}', 'AdagioAutoController@AdagioDataFetch');
 	Route::post('adagio/send', 'AdagioAutoController@AdagioSendFile');
+	Route::post('adagio/delete', 'AdagioAutoController@AdagioDelete');
+	Route::post('adagio/sendmail', 'AdagioAutoController@AdagioSendEmail');
 });
 
 //Warehouse

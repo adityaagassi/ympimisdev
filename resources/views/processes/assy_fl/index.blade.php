@@ -46,6 +46,7 @@
 			<a href="{{ url("index/middle/buffing_target/assy_fl") }}" class="btn btn-default btn-block" style="font-size: 17px; border-color: green;">Assembly Flute Target</a>
 			<a href='{{ url("index/assembly/flute/print_label") }}' class="btn btn-default btn-block" style="font-size: 17px; border-color: green;">Print Label Packing</b></a>
 			<a href='{{ url("index/assembly/flute/kd_cleaning") }}' class="btn btn-default btn-block" style="font-size: 17px; border-color: green;">KD Card Cleaning</b></a>
+			<a href='{{ url("index/assembly/flute/card_cleaning") }}' class="btn btn-default btn-block" style="font-size: 17px; border-color: green;">Card Cleaning</b></a>
 		</div>
 
 		<div class="col-xs-4" style="text-align: center; color: red;">
