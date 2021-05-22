@@ -516,6 +516,10 @@
                             <a href="{{ url("index/mirai_mobile/index") }}">
                                 <i class="fa fa-caret-right"></i> Mirai Mobile Data (MIRAIモバイルデータ)
                             </a>
+                            <br>
+                            <a href="{{ url("index/survey_covid") }}">
+                                <i class="fa fa-caret-right"></i> Resume Pengisian Survey Covid
+                            </a>
                         </td>
                     </tr>
                     <tr>
