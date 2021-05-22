@@ -131,12 +131,17 @@ table > thead > tr > th{
 			<div class="col-xs-12" style="margin-top: 5px;padding-right: 5px">
 				<div id="container1" style="width: 100%;height: 500px;"></div>
 			</div>
+
+			<?php if(Auth::user()->role_code == "MIS" || Auth::user()->role_code == "GA" || Auth::user()->role_code == "GA-SPL" || Auth::user()->role_code == "HR" || Auth::user()->role_code == "HR-SPL") { ?>
+
 			<div class="col-xs-6" style="margin-top: 5px;padding-left: 0px">
 				<div id="container2" style="width: 100%;height: 500px;"></div>
 			</div>
 			<div class="col-xs-6" style="margin-top: 5px;padding-left: 0px">
 				<div id="container3" style="width: 100%;height: 500px;"></div>
 			</div>
+
+			<?php } ?>
 		</div>
 	</div>
 </section>

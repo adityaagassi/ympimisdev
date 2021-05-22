@@ -38,6 +38,7 @@ class Kernel extends ConsoleKernel
         Commands\RoomTemperatureLog::class,
         Commands\SurveyCovid::class,
         Commands\UpdateAddress::class,
+        Commands\HighestCovidCommand::class,
         // Commands\APARAutoPR::class,
         // Commands\SchedulingChemical::class,
         // Commands\SendEmailChemicalNotInput::class,
@@ -171,6 +172,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('sync:greatday_attendance')->dailyAt('17:00');
         $schedule->command('update:geocode')->dailyAt('18:00');
+        $schedule->command('highest:survey_covid')->weekly()->sundays()->at('18:30');
     }
 
     /**l

@@ -451,5 +451,11 @@ class SendEmail extends Mailable
             ->subject('Approval Mutasi Antar Departemen (異なるセクションへの人事異動の承認)')
             ->view('mails.rejected_mutasi_antar');
         }   
+
+        if($this->remark == 'highest_covid'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+            ->subject('Highest Survey Covid Report')
+            ->view('mails.highest_covid');
+        }
     }
 }

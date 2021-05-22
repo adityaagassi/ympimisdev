@@ -2023,7 +2023,7 @@ Route::group(['nav' => 'S25', 'middleware' => 'permission'], function(){
 	//Based on shipment sch
 	Route::post('fetch/kd_print_subassy_new', 'KnockDownController@printLabelNew');
 	//Based on production sch item=1
-	Route::post('fetch/kd_print_subassy_new_single', 'KnockDownController@printLabelNewSingle');
+	Route::post('fetch/kd_print_subassy_new_single', 'KnockDownController@printLabelSubassyNew');
 
 	Route::get('index/print_label_subassy/{id}', 'KnockDownController@indexPrintLabelSubassy');
 
@@ -2032,9 +2032,8 @@ Route::group(['nav' => 'S25', 'middleware' => 'permission'], function(){
 
 //CLOSURE
 Route::group(['nav' => 'S27', 'middleware' => 'permission'], function(){
-	Route::get('index/kd_closure', 'KnockDownController@indexKDClosure');
-	Route::get('scan/kd_closure', 'KnockDownController@scanKDClosure');
-	Route::post('fetch/kd_closure', 'KnockDownController@fetchKDClosure');
+	// Route::get('index/kd_closure', 'KnockDownController@indexKDClosure');
+	Route::post('scan/kd_closure', 'KnockDownController@scanKDClosure');
 });
 
 
@@ -2067,6 +2066,7 @@ Route::get('fetch/kd/{id}', 'KnockDownController@fetchKd');
 Route::get('fetch/kd_new/{id}', 'KnockDownController@fetchKdNew');
 Route::get('fetch/kd_pack/{id}', 'KnockDownController@fetchKdPack');
 Route::get('fetch/check_kd', 'KnockDownController@fetchCheckKd');
+Route::get('fetch/check_export_kd', 'KnockDownController@fetchCheckExportKd');
 Route::get('fetch/kd_delivery_closure', 'KnockDownController@fetchKdDeliveryClosure');
 // Route::get('fetch/kd_print', 'KnockDownController@fetchKdPrint');
 Route::get('fetch/kd_detail', 'KnockDownController@fetchKdDetail');
@@ -4513,10 +4513,6 @@ Route::group(['nav' => 'M32', 'middleware' => 'permission'], function(){
 	Route::get('fetch/survey', 'SurveyController@fetchSurvey');
 	Route::get('fetch/survey/detail', 'SurveyController@fetchSurveyDetail');
 
-	//Survey Covid
-	Route::get('index/survey_covid', 'SurveyController@indexSurveyCovid');
-	Route::get('fetch/survey_covid', 'SurveyController@fetchSurveyCovid');
-	Route::get('fetch/survey_covid/detail', 'SurveyController@fetchSurveyCovidDetail');
 
 	Route::get('index/survey_covid/report', 'SurveyController@indexSurveyCovidReport');
 	Route::get('fetch/survey_covid/report', 'SurveyController@fetchSurveyCovidReport');
@@ -4527,6 +4523,11 @@ Route::group(['nav' => 'M32', 'middleware' => 'permission'], function(){
 	Route::get('fetch/guest_assessment/report', 'MiraiMobileController@fetchGuestAssessmentReport');
 	Route::get('fetch/guest_assessment/report/detail', 'MiraiMobileController@fetchGuestAssessmentReportDetail');
 });
+
+//Survey Covid
+Route::get('index/survey_covid', 'SurveyController@indexSurveyCovid');
+Route::get('fetch/survey_covid', 'SurveyController@fetchSurveyCovid');
+Route::get('fetch/survey_covid/detail', 'SurveyController@fetchSurveyCovidDetail');
 
 //audit MIS
 Route::get('index/audit_mis', 'DailyReportController@indexAuditMIS');
