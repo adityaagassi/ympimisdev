@@ -2026,7 +2026,6 @@ Route::group(['nav' => 'S25', 'middleware' => 'permission'], function(){
 	Route::post('fetch/kd_print_subassy_new_single', 'KnockDownController@printLabelNewSingle');
 
 	Route::get('index/print_label_subassy/{id}', 'KnockDownController@indexPrintLabelSubassy');
-	// Route::get('index/print_label_subassy_kecil/{id}', 'KnockDownController@indexPrintLabelSubassyKecil');
 
 });
 

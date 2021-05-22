@@ -7177,4 +7177,73 @@ class InjectionsController extends Controller
             return Response::json($response);
         }
     }
+
+    public function indexInjectionTransaction()
+    {
+        $title = 'Transaction History';
+        $title_jp = '';
+        return view('injection.transaction_history',array(
+            'title' => $title,
+            'title_jp' => $title_jp,
+        ))->with('page', 'Transaction History')->with('jpn', '');
+    }
+
+    public function fetchInjectionTransaction(Request $request)
+    {
+        try {
+              $date_from = $request->get('tanggal_from');
+              $date_to = $request->get('tanggal_to');
+              if ($date_from == '') {
+                   if ($date_to == '') {
+                        $wheredate = "AND DATE(injection_transactions.created_at) BETWEEN CONCAT(DATE_FORMAT(NOW(),'%Y-%m-01')) AND DATE(NOW())";
+                   }else{
+                        $wheredate = "AND DATE(injection_transactions.created_at) BETWEEN CONCAT(DATE_FORMAT(NOW(),'%Y-%m-01')) AND '".$date_to."'";
+                   }
+              }else{
+                   if ($date_to == '') {
+                        $wheredate = "AND DATE(injection_transactions.created_at) BETWEEN '".$date_from."' AND DATE(NOW())";
+                   }else{
+                        $wheredate = "AND DATE(injection_transactions.created_at) BETWEEN '".$date_from."' AND '".$date_to."'";
+                   }
+              }
+
+              if ($request->get('location') == "") {
+                  $location = '';
+              }else{
+                  $location = "AND injection_transactions.location = '".$request->get('location')."'";
+              }
+
+              if ($request->get('status') == "") {
+                  $status = '';
+              }else{
+                  $status = "AND injection_transactions.status = '".$request->get('status')."'";
+              }
+            $data = DB::SELECT("SELECT
+                *,
+                injection_transactions.created_at AS created 
+            FROM
+                `injection_transactions`
+                LEFT JOIN employee_syncs ON operator_id = employee_syncs.employee_id
+                LEFT JOIN injection_parts ON injection_parts.gmc = injection_transactions.material_number 
+            WHERE
+                `status` != 'INPUT STOCK' 
+                AND injection_parts.deleted_at IS NULL 
+                AND injection_parts.remark = 'injection'
+                ".$wheredate."
+                ".$location."
+                ".$status."
+                order by injection_transactions.id desc");
+            $response = array(
+                'status' => true,
+                'datas' => $data,
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+            return Response::json($response);
+        }
+    }
 }

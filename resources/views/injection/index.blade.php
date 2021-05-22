@@ -83,7 +83,7 @@
 			 <a href="{{ url('index/recorder/report_torque_check','First Shot Approval') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Report Torque Check</a>
 			 <a href="{{ url('index/injection/inventories') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Injection Inventories</a>
 			 <a href="{{ url('index/injection/report_setup_molding') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Setup Molding History</a>
-			 <!-- <a href="{{ url('index/injection/transactions') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Injection Transaction</a> -->
+			 <a href="{{ url('index/injection/transactions') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Transaction History</a>
 		</div>
 	</div>
 

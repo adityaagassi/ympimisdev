@@ -41,6 +41,7 @@
 			<a href="{{ url('index/recorder/report_torque_check','After Injection') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Report Torque Check</a>
 			<a href="{{ url('index/recorder/cdm_report') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Report CDM</a>
 			<a href="{{ url('index/recorder/kensa_report') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Report Kensa Kakuning</a>
+			<a href="{{ url('index/injection/transactions') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Transaction History</a>
 			<!-- <a href="{{ url("/index/recorder/resume_assy_rc") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Resume Assembly Recorder</a> -->
 		</div>
 	</div>
