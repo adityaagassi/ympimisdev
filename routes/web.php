@@ -2023,7 +2023,8 @@ Route::group(['nav' => 'S25', 'middleware' => 'permission'], function(){
 	//Based on shipment sch
 	Route::post('fetch/kd_print_subassy_new', 'KnockDownController@printLabelNew');
 	//Based on production sch item=1
-	Route::post('fetch/kd_print_subassy_new_single', 'KnockDownController@printLabelSubassyNew');
+	// Route::post('fetch/kd_print_subassy_new_single', 'KnockDownController@printLabelSubassyNew');
+	Route::post('fetch/kd_print_subassy_new_single', 'KnockDownController@printLabelNewSingle');
 
 	Route::get('index/print_label_subassy/{id}', 'KnockDownController@indexPrintLabelSubassy');
 
