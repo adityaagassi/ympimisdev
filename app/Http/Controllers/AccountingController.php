@@ -8649,21 +8649,23 @@ public function fetch_budget_monthly_table(Request $request)
         ROUND( SUM( a.actual ), 2 ) AS Actual
         FROM
         (
+
         SELECT
-        budget_month_receive AS bulan,
-        budget_no,
-        ROUND( sum( CASE WHEN `status` = "Actual" THEN acc_budget_histories.amount_receive ELSE 0 END ), 2 ) AS Actual,         
+        DATE_FORMAT(receive_date, "%b") AS bulan,
+        acc_actuals.budget_no,
+        ROUND( SUM( amount_dollar ), 2 ) AS Actual,       
         0 AS PR,
         0 AS Investment,
         0 AS PO
         FROM
-        acc_budget_histories
-        LEFT JOIN acc_budgets ON acc_budget_histories.budget = acc_budgets.budget_no 
+        acc_actuals
+        LEFT JOIN acc_budgets ON acc_actuals.budget_no = acc_budgets.budget_no 
         WHERE
-        budget_month_receive IS NOT NULL
+        DATE_FORMAT(receive_date, "%b") IS NOT NULL
         '.$fiscal.' '.$cat.' '.$dept.'
         GROUP BY
-        budget_month_receive, budget_no
+        DATE_FORMAT(receive_date, "%b"), budget_no
+
         
         UNION ALL
         
@@ -8835,6 +8837,23 @@ public function fetch_budget_monthly_table(Request $request)
         ORDER BY
         budget_no, month_number
         ');
+
+    //actual 
+
+    // SELECT
+    // budget_month_receive AS bulan,
+    // budget_no,
+    // ROUND( sum( CASE WHEN `status` = "Actual" THEN acc_budget_histories.amount_receive ELSE 0 END ), 2 ) AS Actual,         
+    // 0 AS PR,
+    // 0 AS Investment,
+    // 0 AS PO
+    // FROM
+    // acc_budget_histories
+    // LEFT JOIN acc_budgets ON acc_budget_histories.budget = acc_budgets.budget_no 
+    // WHERE
+    // budget_month_receive IS NOT NULL
+    // GROUP BY
+    // budget_month_receive, budget_no
 
 $response = array(
     'status' => true,
