@@ -397,7 +397,7 @@
                 </tbody>
             </table>
 
-            <table class="table table-bordered">
+            <!-- <table class="table table-bordered">
                 <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
                     <tr>
                         <th>Fixed Asset Control<br>??? </th>
@@ -416,7 +416,7 @@
                         </td>                     
                     </tr>                    
                 </tbody>
-            </table>
+            </table> -->
 
             <table class="table table-bordered">
                 <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
@@ -1089,7 +1089,7 @@
                                 </a>
                             </td>
                         </tr>
-                        <tr>
+                        <!-- <tr>
                             <td>
                                 <span style="font-weight: bold;">Information & Evidence ()</span>
                                 <br>
@@ -1097,7 +1097,7 @@
                                     <i class="fa fa-caret-right"></i> Packing Documentation ()
                                 </a>
                             </td>
-                        </tr>
+                        </tr> -->
                     </tbody>
                 </table>
             </div>
