@@ -503,8 +503,10 @@ class PantryController extends Controller
 
             $item = [];
             $index = 1;
+            $antar = "";
             foreach ($order as $key) {
-                array_push($item, '('.$index.'. '.$key->minuman.' - '.$key->minuman.' - '.$key->keterangan.' - '.$key->gula.')');
+                array_push($item, '%0A'.$index.'.%20'.$key->minuman.'%20-%20'.$key->informasi.'%20-%20'.$key->keterangan.'%20-%20'.$key->gula.'%20-%20Jumlah%20:%20'.$key->jumlah);
+                $antar = $key->tempat;
                 $index++;
             }
 
@@ -514,21 +516,47 @@ class PantryController extends Controller
             // $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
             // $fd = @implode('', file($url));
 
-            $chat_id = [];
-            array_push($chat_id, '895527318');
-            array_push($chat_id, '1582057350');
-            array_push($chat_id, '703902954');
-            $pesan = "Ada Pesanan Pantry : ".join(', ',$item)." Dari ".$name.". Mohon untuk segera dibuatkan. Terimakasih.";
+            $phone = [];
+            array_push($phone, '62811372398');
+            array_push($phone, '6282334197238');
+            array_push($phone, '6285645896741');
+            array_push($phone, '6281554119011');
+            $pesan = "Ada%20Pesanan%20Pantry%20:%0A".join('%0A',$item)."%0A%0ADari%20".$name.".%0ADiantar%20ke%20".$antar.".%0A%0AMohon%20untuk%20segera%20dibuatkan.%0ATerimakasih.";
 
-            for ($i = 0; $i < count($chat_id);$i++) {
+            for ($i = 0; $i < count($phone);$i++) {
                 // $pesan = json_encode($pesan);
-                $API = "https://api.telegram.org/bot".$this->bot_token."/sendmessage?chat_id=".$chat_id[$i]."&text=$pesan";
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-                curl_setopt($ch, CURLOPT_URL, $API);
-                $result = curl_exec($ch);
-                curl_close($ch);
+                // $API = "https://api.telegram.org/bot".$this->bot_token."/sendmessage?phone=".$phone[$i]."&text=$pesan";
+                // $ch = curl_init();
+                // curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                // curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+                // curl_setopt($ch, CURLOPT_URL, $API);
+                // $result = curl_exec($ch);
+                // curl_close($ch);
+                $curl = curl_init();
+
+                curl_setopt_array($curl, array(
+                  CURLOPT_URL => 'https://app.whatspie.com/api/messages',
+                  CURLOPT_RETURNTRANSFER => true,
+                  CURLOPT_ENCODING => '',
+                  CURLOPT_MAXREDIRS => 10,
+                  CURLOPT_TIMEOUT => 0,
+                  CURLOPT_FOLLOWLOCATION => true,
+                  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                  CURLOPT_CUSTOMREQUEST => 'POST',
+                  CURLOPT_POSTFIELDS => 'receiver='.$phone[$i].'&device=628113669871&message='.$pesan.'&type=chat',
+                  CURLOPT_HTTPHEADER => array(
+                    'Accept: application/json',
+                    'Content-Type: application/x-www-form-urlencoded',
+                    'Authorization: Bearer UAqINT9e23uRiQmYttEUiFQ9qRMUXk8sADK2EiVSgLODdyOhgU'
+                  ),
+                  // CURLOPT_POSTFIELDS => 'receiver='.$phone.'&device=6282334197238&message=Anda%20telah%20terjadwal%20Live%20Cooking%20pada%20tanggal%20'.$due_date_replace.'.%0ASilahkan%20cek%20di%20MIRAI.%0A%0A-YMPI%20GA%20Dept.-&type=chat',
+                  // CURLOPT_HTTPHEADER => array(
+                  //   'Accept: application/json',
+                  //   'Content-Type: application/x-www-form-urlencoded',
+                  //   'Authorization: Bearer OPd8jOytcihnTxoh3WIPLcgdjNAqZgEOjxRbIBb8JnsN7heixZ'
+                  // ),
+                ));
+                curl_exec($curl);
                 // return $result;
             }
 
