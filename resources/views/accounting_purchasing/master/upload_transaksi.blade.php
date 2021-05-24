@@ -92,6 +92,8 @@
 								<select class="form-control select2" multiple="multiple" id='periode' data-placeholder="Select Periode" style="width: 100%;">
 									<option value="FY196">FY196</option>
 									<option value="FY197">FY197</option>
+									<option value="FY198">FY198</option>
+									<option value="FY199">FY199</option>
 								</select>
 							</div>
 						</div>

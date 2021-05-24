@@ -699,10 +699,6 @@
       @if(isset($page) && $page == "Tanda Terima")<li class="active">@else<li>@endif
         <a href="{{ url("invoice/tanda_terima") }}"><i class="fa fa-files-o"></i>Tanda Terima</a>
       </li>
-      @if(isset($page) && $page == "Payment Request")<li class="active">@else<li>@endif
-        <a href="{{ url("payment_request") }}"><i class="fa fa-money"></i>Payment Request</a>
-      </li>
-
     </ul>
   </li>
   @endif

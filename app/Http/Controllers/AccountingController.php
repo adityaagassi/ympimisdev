@@ -32,6 +32,7 @@ use App\AccInvestmentBudget;
 use App\AccInvoice;
 use App\AccInvoiceReceiveReport;
 use App\AccInvoicePaymentTerm;
+use App\AccPaymentRequest;
 use App\EmployeeSync;
 use App\UtilityItemNumber;
 use App\UtilityOrder;
@@ -2516,6 +2517,25 @@ class AccountingController extends Controller
             'title' => $title,
             'title_jp' => $title_jp
         ));
+    }
+
+    public function fetchJurnal(){
+        $employee_id = Auth::user()->username;
+        $employee = EmployeeSync::where('employee_id', '=', $employee_id)->first();
+
+        $where = "";
+
+        if($employee->department != 'Management Information System Department' && $employee->department != 'Human Resources Department' && Auth::user()->role_code != 'S'){
+            $where = "WHERE a.department = '".$employee->department."'";
+        }
+
+        $jurnal = db::select("SELECT supplier_code,supplier_name,acc_purchase_order_details.no_po , nama_item, delivery_date FROM `acc_purchase_order_details` JOIN acc_purchase_orders on acc_purchase_orders.no_po = acc_purchase_order_details.no_po");
+
+        $response = array(
+            'status' => true,
+            'jurnal' => $jurnal
+        );
+        return Response::json($response);
     }
 
     public function delivery_control(){
@@ -10945,19 +10965,21 @@ public function import_transaksi(Request $request){
 
                     $data2->save();
 
-                    if ($budget_no != "" || $budget_no != null) {
-                        $bulan = strtolower(date("M",strtotime($post_date)));
-                        $sisa_bulan = $bulan.'_sisa_budget';
+                    if ($investment_no != "NO_INPUT" || $investment_no != "NO INPUT") {
+                        if ($budget_no != "" || $budget_no != null) {
+                            $bulan = strtolower(date("M",strtotime($post_date)));
+                            $sisa_bulan = $bulan.'_sisa_budget';
 
-                        $budgetdata = AccBudget::where('budget_no','=',$budget_no)->where('periode','=', $periode)->first();
+                            $budgetdata = AccBudget::where('budget_no','=',$budget_no)->where('periode','=', $periode)->first();
 
-                            //Kurangi Budget Skrg Dengan Actual
-                        $total = $budgetdata->$sisa_bulan - $local_amount;
+                                //Kurangi Budget Skrg Dengan Actual
+                            $total = $budgetdata->$sisa_bulan - $local_amount;
 
-                        $updatebudget = AccBudget::where('budget_no','=',$budget_no)->where('periode','=', $periode)
-                        ->update([
-                            $sisa_bulan => $total
-                        ]);
+                            $updatebudget = AccBudget::where('budget_no','=',$budget_no)->where('periode','=', $periode)
+                            ->update([
+                                $sisa_bulan => $total
+                            ]);
+                        }
                     }
 
 
@@ -12869,7 +12891,7 @@ public function report_invoice($id){
         'invoice' => $invoice,
         'id' => $id
     ));
-    return $pdf->stream("Invoice ".$invoice->no_po. ".pdf");
+    return $pdf->stream("Tanda Terima ".$invoice->invoice_no. ".pdf");
 }
 
 public function export_tanda_terima(Request $request){
@@ -12962,6 +12984,44 @@ public function IndexPaymentRequest(){
         'payment_term' => $payment_term
     ));
 
+}
+
+public function fetchPaymentRequest(){
+    $payment = db::select("SELECT
+            *
+        FROM
+        acc_payment_requests
+        order by id desc
+        ");
+
+    $response = array(
+        'status' => true,
+        'payment' => $payment
+    );
+    return Response::json($response);
+}
+
+public function fetchPaymentRequestDetail(Request $request){
+    
+    $payment = AccPaymentRequest::find($request->get('id'));
+
+    $employees = EmployeeSync::orderBy('department', 'asc')->get();
+
+    $vendor = AccSupplier::select('acc_suppliers.*')->whereNull('acc_suppliers.deleted_at')
+    ->distinct()
+    ->get();
+
+    $payment_term = AccInvoicePaymentTerm::select('*')->whereNull('deleted_at')
+    ->distinct()
+    ->get();
+
+    $response = array(
+        'status' => true,
+        'payment' => $payment,
+        'vendor' => $vendor,
+        'payment_term' => $payment_term
+    );
+    return Response::json($response);
 }
 
 }

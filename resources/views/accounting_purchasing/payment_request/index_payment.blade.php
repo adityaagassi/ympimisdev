@@ -24,7 +24,73 @@
 		border:1px solid rgb(150,150,150);
 		vertical-align: middle;
 		text-align: center;
+	}
 
+	.container {
+	  display: block;
+	  position: relative;
+	  padding-left: 35px;
+	  margin-bottom: 12px;
+	  cursor: pointer;
+	  font-size: 16px;
+	  -webkit-user-select: none;
+	  -moz-user-select: none;
+	  -ms-user-select: none;
+	  user-select: none;
+	}
+
+	/* Hide the browser's default checkbox */
+	.container input {
+	  position: absolute;
+	  opacity: 0;
+	  cursor: pointer;
+	  height: 0;
+	  width: 0;
+	}
+
+	/* Create a custom checkbox */
+	.checkmark {
+	  position: absolute;
+	  top: 0;
+	  left: 0;
+	  height: 25px;
+	  width: 25px;
+	  background-color: #eee;
+	}
+
+	/* On mouse-over, add a grey background color */
+	.container:hover input ~ .checkmark {
+	  background-color: #ccc;
+	}
+
+	/* When the checkbox is checked, add a blue background */
+	.container input:checked ~ .checkmark {
+	  background-color: #2196F3;
+	}
+
+	/* Create the checkmark/indicator (hidden when not checked) */
+	.checkmark:after {
+	  content: "";
+	  position: absolute;
+	  display: none;
+	}
+
+	/* Show the checkmark when checked */
+	.container input:checked ~ .checkmark:after {
+	  display: block;
+	}
+
+	/* Style the checkmark/indicator */
+	.container .checkmark:after {
+	  left: 10px;
+	  top: 5px;
+	  width: 5px;
+	  height: 12px;
+	  border: solid white;
+	  border-width: 0 3px 3px 0;
+	  -webkit-transform: rotate(45deg);
+	  -ms-transform: rotate(45deg);
+	  transform: rotate(45deg);
 	}
 	#loading { display: none; }
 </style>
@@ -79,14 +145,14 @@
 					<div class="form-group">
 						<div class="col-md-4" style="padding-right: 0;">
 							<label style="color: white;"> x</label>
-							<button type="submit" class="btn btn-primary form-control"><i class="fa fa-download"></i> Export List Payment Request</button>
+							<button type="submit" class="btn btn-primary form-control"><i class="fa fa-download"></i> Export Payment Request</button>
 						</div>
 					</div>
 				</div>
 				<div class="col-md-2" style="padding-right: 0;">
 					<div class="form-group">
 							<label style="color: white;"> x</label>
-							<a class="btn btn-success pull-right" style="width: 100%" onclick="newData('new')"><i class="fa fa-plus"></i> &nbsp;Buat Payment Request</a>
+							<a class="btn btn-success pull-right" style="width: 100%" onclick="newData('new')"><i class="fa fa-plus"></i> &nbsp;Create Payment Request</a>
 					</div>
 				</div>
 			</form>
@@ -100,11 +166,13 @@
 				<thead style="background-color: rgba(126,86,134,.7);">
 					<tr>
 						<th>#</th>
-						<th>Name Of Vendor</th>
-						<th>Ammount Of Payment</th>
+						<th>Submission Date</th>
+						<th>Vendor</th>
 						<th>Payment Term</th>
 						<th>Due Date</th>
-						<th>PO Number</th>
+						<th>Kind Of Material</th>
+						<th>Amount</th>
+						<th>Document Attach</th>
 						<th>Action</th>
 					</tr>
 				</thead>
@@ -118,10 +186,8 @@
 						<th></th>
 						<th></th>
 						<th></th>
-						<!-- <th></th>
 						<th></th>
 						<th></th>
-						<th></th> -->
 						<th></th>
 					</tr>
 				</tfoot>
@@ -142,19 +208,20 @@
 					<input type="hidden" id="id_edit">
 					<div class="col-md-6">
 
-						<!-- <div class="col-md-12" style="margin-bottom: 5px;">
-							<label for="invoice_date" class="col-sm-3 control-label">Name Of Vendor<span class="text-red">*</span></label>
+						<div class="col-md-12" style="margin-bottom: 5px;">
+							<label for="payment_date" class="col-sm-3 control-label">Submission Date<span class="text-red">*</span></label>
 							<div class="col-sm-9">
 								<div class="input-group date">
 									<div class="input-group-addon">	
 										<i class="fa fa-calendar"></i>
 									</div>
-									<input type="text" class="form-control pull-right datepicker" id="invoice_date" name="invoice_date" value="<?php echo date('Y-m-d') ?>" placeholder="Invoice Date">
+									<input type="text" class="form-control pull-right datepicker" id="payment_date" name="payment_date" value="<?php echo date('Y-m-d') ?>" placeholder="Payment Date">
 								</div>
 							</div>
-						</div> -->
+						</div>
+						
 						<div class="col-md-12" style="margin-bottom: 5px;">
-							<label for="supplier_code" class="col-sm-3 control-label">Vendor Of Name<span class="text-red">*</span></label>
+							<label for="supplier_code" class="col-sm-3 control-label">Vendor Name<span class="text-red">*</span></label>
 							<div class="col-sm-9">
 								<select class="form-control select4" id="supplier_code" name="supplier_code" data-placeholder='Choose Supplier Name' style="width: 100%" onchange="getSupplier(this)">
 									<option value="">&nbsp;</option>
@@ -165,36 +232,16 @@
 								<input type="hidden" class="form-control" id="supplier_name" name="supplier_name" readonly="">
 							</div>
 						</div>
-						<div class="col-md-12" style="margin-bottom: 5px;">
-							<label for="kwitansi" class="col-sm-3 control-label">Amount Of Payment</label>
-							<div class="col-sm-9">
-								<input type="text" class="form-control" id="kwitansi" name="kwitansi" placeholder="Amount Of Payment">
-							</div>
-						</div>
-						<div class="col-md-12" style="margin-bottom: 5px;">
-							<label for="invoice_no" class="col-sm-3 control-label">Payment Term<span class="text-red">*</span></label>
-							<div class="col-sm-9">
-								<input type="text" class="form-control pull-right" id="invoice_no" name="invoice_no" placeholder="Payment Term">							
-							</div>
-						</div>
-						<div class="col-md-12" style="margin-bottom: 5px;">
-							<label for="invoice_date" class="col-sm-3 control-label">Due Date<span class="text-red">*</span></label>
-							<div class="col-sm-9">
-								<div class="input-group date">
-									<div class="input-group-addon">	
-										<i class="fa fa-calendar"></i>
-									</div>
-									<input type="text" class="form-control pull-right datepicker" id="invoice_date" name="invoice_date" value="<?php echo date('Y-m-d') ?>" placeholder="Due Date">
-								</div>
-							</div>
-						</div> 
 						
-					</div>
-					<div class="col-md-6">
-						<div class="col-md-12" style="margin-bottom: 5px;">
-							<label for="po_number" class="col-sm-3 control-label">PO Number<span class="text-red">*</span></label>
+						<div class="col-md-12" style="margin-bottom: 5px">
+							<label for="Currency" class="col-sm-3 control-label">Currency<span class="text-red">*</span></label>
 							<div class="col-sm-9">
-								<input type="text"  class="form-control" id="po_number" name="po_number" placeholder="PO Number">
+								<select class="form-control select4" id="currency" name="currency" data-placeholder='Currency' style="width: 100%">
+									<option value="">&nbsp;</option>
+									<option value="USD">USD</option>
+									<option value="IDR">IDR</option>
+									<option value="JPY">JPY</option>
+								</select>
 							</div>
 						</div>
 						<div class="col-md-12" style="margin-bottom: 5px;">
@@ -208,60 +255,100 @@
 								</select>
 							</div>
 						</div>
-						<div class="col-md-12" style="margin-bottom: 5px">
-							<label for="Currency" class="col-sm-3 control-label">Currency<span class="text-red">*</span></label>
+						<div class="col-md-12" style="margin-bottom: 5px;">
+							<label for="invoice_date" class="col-sm-3 control-label">Due Date<span class="text-red">*</span></label>
 							<div class="col-sm-9">
-								<select class="form-control select4" id="currency" name="currency" data-placeholder='Currency' style="width: 100%">
-									<option value="">&nbsp;</option>
-									<option value="USD">USD</option>
-									<option value="IDR">IDR</option>
-									<option value="JPY">JPY</option>
-								</select>
+								<div class="input-group date">
+									<div class="input-group-addon">	
+										<i class="fa fa-calendar"></i>
+									</div>
+									<input type="text" class="form-control pull-right datepicker" id="invoice_date" name="invoice_date" placeholder="Due Date">
+								</div>
 							</div>
-						</div>
+						</div> 
+						
+					</div>
+					<div class="col-md-6">
 						<div class="col-md-12" style="margin-bottom: 5px;">
 							<label for="amount" class="col-sm-3 control-label">Amount<span class="text-red">*</span></label>
 							<div class="col-sm-9">
 								<input type="text" class="form-control" id="amount" name="amount" placeholder="Total Amount">
 							</div>
 						</div>
+
 						<div class="col-md-12" style="margin-bottom: 5px">
-							<label for="do_date" class="col-sm-3 control-label">DO Date<span class="text-red">*</span></label>
+							<label for="material" class="col-sm-3 control-label">Kind Of Material<span class="text-red">*</span></label>
 							<div class="col-sm-9">
-								<div class="input-group date">
-									<div class="input-group-addon">	
-										<i class="fa fa-calendar"></i>
-									</div>
-									<input type="text" class="form-control pull-right datepicker" id="do_date" name="do_date" placeholder="Document Date">
-								</div>
+								<select class="form-control select4" id="kind_of" name="kind_of" data-placeholder='Kind Of Material' style="width: 100%">
+									<option value="">&nbsp;</option>
+									<option value="Electricity">Electricity</option>
+									<option value="Gas">Gas</option>
+									<option value="Water">Water</option>
+									<option value="Raw Materials">Raw Materials</option>
+									<option value="Other (PPH)">Other (PPH)</option>
+									<option value="Constool">Constool</option>
+								</select>
 							</div>
 						</div>
+
 						<div class="col-md-12" style="margin-bottom: 5px">
-							<label for="do_date" class="col-sm-3 control-label">Due Date<span class="text-red">*</span></label>
+							<label for="document" class="col-sm-3 control-label">Attached Documents<span class="text-red">*</span></label>
 							<div class="col-sm-9">
-								<div class="input-group date">
-									<div class="input-group-addon">	
-										<i class="fa fa-calendar"></i>
-									</div>
-									<input type="text" class="form-control pull-right datepicker" id="due_date" name="due_date" placeholder="Due Date">
-								</div>
+
+							    <label class="container">
+							  		Local
+								 	<input type="checkbox" id="doc_local" name="doc_local" value="Local">
+								 	<span class="checkmark"></span>
+
+								</label>
+
+								<label class="container">
+								 	Import
+								    <input type="checkbox" id="doc_import" name="doc_import" style="margin-left: 50px;" value="Import">
+								 	<span class="checkmark"></span>
+								</label>
+
+							    <label class="container">
+							  		Invoice
+								 	<input type="checkbox" id="doc_invoice" name="doc_invoice" value="invoice">
+								 	<span class="checkmark"></span>
+								</label>
+
+								<label class="container">
+							  		Receipt
+								 	<input type="checkbox" id="doc_receipt" name="doc_receipt" value="receipt">
+								 	<span class="checkmark"></span>
+								</label>
+								<label class="container">
+							  		Surat Jalan
+								 	<input type="checkbox" id="doc_surat_jalan" name="doc_surat_jalan" value="surat_jalan">
+								 	<span class="checkmark"></span>
+								</label>
+								<label class="container">
+							  		Faktur Pajak
+								 	<input type="checkbox" id="doc_faktur_pajak" name="doc_faktur_pajak" value="faktur_pajak">
+								 	<span class="checkmark"></span>
+								</label>
+								<label class="container">
+							  		Chess Report
+								 	<input type="checkbox" id="doc_chess" name="doc_chess" value="doc_chess">
+								 	<span class="checkmark"></span>
+								</label>
+
+						</div>
+
+						<div class="col-md-12" style="margin-bottom: 5px">
+							<label for="file" class="col-sm-3 control-label">File<span class="text-red">*</span></label>
+							<div class="col-sm-9">
+								<input type="file" id="file_attach" name="file_attach">
 							</div>
 						</div>
-						<div class="col-md-12" style="margin-bottom: 5px">
-							<label for="do_date" class="col-sm-3 control-label">Distribution Date</label>
-							<div class="col-sm-9">
-								<div class="input-group date">
-									<div class="input-group-addon">	
-										<i class="fa fa-calendar"></i>
-									</div>
-									<input type="text" class="form-control pull-right datepicker" id="distribution_date" name="distribution_date" placeholder="Distribution Date">
-								</div>
-							</div>
-						</div>
+
 					</div>
+				</div>
 					<div class="col-md-12">
-						<a class="btn btn-success pull-right" onclick="SaveInvoice('new')" style="width: 100%; font-weight: bold; font-size: 1.5vw;" id="newButton">CREATE</a>
-						<a class="btn btn-info pull-right" onclick="SaveInvoice('update')" style="width: 100%; font-weight: bold; font-size: 1.5vw;" id="updateButton">UPDATE</a>
+						<a class="btn btn-success pull-right" onclick="Save('new')" style="width: 100%; font-weight: bold; font-size: 1.5vw;" id="newButton">CREATE</a>
+						<a class="btn btn-info pull-right" onclick="Save('update')" style="width: 100%; font-weight: bold; font-size: 1.5vw;" id="updateButton">UPDATE</a>
 					</div>
 				</div>
 			</div>
@@ -290,7 +377,6 @@
 	jQuery(document).ready(function() {
 
     	$('body').toggleClass("sidebar-collapse");
-
 		fetchTable();
 	});
 
@@ -326,7 +412,7 @@
 
 		if(id == 'new'){
 
-			$('#modalNewTitle').text('Buat Payment Request');
+			$('#modalNewTitle').text('Create Payment Request');
 			$('#newButton').show();
 			$('#updateButton').hide();
 			clearNew();
@@ -338,25 +424,21 @@
 			var data = {
 				id:id
 			}
-			$.get('{{ url("invoice/tanda_terima_detail") }}', data, function(result, status, xhr){
+			$.get('{{ url("detail/payment_request") }}', data, function(result, status, xhr){
 				if(result.status){
 
 					$('#supplier_code').html('');
-					// $('#surat_jalan').html('');
-					// $('#po_number').html('');
 					$('#payment_term').html('');
 					$('#currency').html('');
 
 					var supplier_code = "";
-					// var surat_jalan = "";
-					// var po_number = "";
 					var payment_term = "";
 					var currency = "";
 
-					$('#invoice_date').val(result.invoice.invoice_date);
+					$('#submission_date').val(result.payment.submission_date);
 
 					$.each(result.vendor, function(key, value){
-						if(value.vendor_code == result.invoice.supplier_code){
+						if(value.vendor_code == result.payment.supplier_code){
 							supplier_code += '<option value="'+value.vendor_code+'" selected>'+value.vendor_code+' - '+value.supplier_name+'</option>';
 						}
 						else{
@@ -366,42 +448,18 @@
 
 					$('#supplier_code').append(supplier_code);
 
-					$('#supplier_name').val(result.invoice.supplier_name);
-					$('#invoice_no').val(result.invoice.invoice_no);
-					$('#kwitansi').val(result.invoice.kwitansi);
-
-					// $.each(result.surat_jalan, function(key, value){
-					// 	if(value.invoice_no == result.invoice.surat_jalan){
-					// 		surat_jalan += '<option value="'+value.invoice_no+'" selected>'+value.invoice_no+'</option>';
-					// 	}
-					// 	else{
-					// 		surat_jalan += '<option value="'+value.invoice_no+'">'+value.invoice_no+'</option>';
-					// 	}
-					// });
-
-
-					// $('#surat_jalan').append(surat_jalan);
-					$('#surat_jalan').val(result.invoice.surat_jalan);
-					
-					$('#bap').val(result.invoice.bap);
-					$('#npwp').val(result.invoice.npwp);
-					$('#faktur_pajak').val(result.invoice.faktur_pajak);
-
-					// $.each(result.no_po, function(key, value){
-					// 	if(value.no_po_sap == result.invoice.po_number){
-					// 		po_number += '<option value="'+value.no_po_sap+'" selected>'+value.no_po_sap+'</option>';
-					// 	}
-					// 	else{
-					// 		po_number += '<option value="'+value.no_po_sap+'">'+value.no_po_sap+'</option>';
-					// 	}
-					// });
-
-					// $('#po_number').append(po_number);
-					$('#po_number').val(result.invoice.po_number);
+					$('#supplier_name').val(result.payment.supplier_name);
+					$('#payment_no').val(result.payment.payment_no);
+					$('#kwitansi').val(result.payment.kwitansi);
+					$('#surat_jalan').val(result.payment.surat_jalan);
+					$('#bap').val(result.payment.bap);
+					$('#npwp').val(result.payment.npwp);
+					$('#faktur_pajak').val(result.payment.faktur_pajak);
+					$('#po_number').val(result.payment.po_number);
 
 
 					$.each(result.payment_term, function(key, value){
-						if(value.payment_term == result.invoice.payment_term){
+						if(value.payment_term == result.payment.payment_term){
 							payment_term += '<option value="'+value.payment_term+'" selected>'+value.payment_term+'</option>';
 						}
 						else{
@@ -411,17 +469,17 @@
 
 					$('#payment_term').append(payment_term);
 
-					if(result.invoice.currency == "USD"){
+					if(result.payment.currency == "USD"){
 						currency += '<option value="USD" selected>USD</option>';
 						currency += '<option value="IDR">IDR</option>';
 						currency += '<option value="JPY">JPY</option>';
 					}
-					else if (result.invoice.currency == "IDR"){
+					else if (result.payment.currency == "IDR"){
 						currency += '<option value="USD">USD</option>';
 						currency += '<option value="IDR" selected>IDR</option>';
 						currency += '<option value="JPY">JPY</option>';
 					}
-					else if (result.invoice.currency == "JPY"){
+					else if (result.payment.currency == "JPY"){
 						currency += '<option value="USD">USD</option>';
 						currency += '<option value="IDR">IDR</option>';
 						currency += '<option value="JPY" selected>JPY</option>';
@@ -429,13 +487,13 @@
 
 					$('#currency').append(currency);
 
-					$('#amount').val(result.invoice.amount);
-					$('#do_date').val(result.invoice.do_date);
-					$('#due_date').val(result.invoice.due_date);
-					$('#distribution_date').val(result.invoice.distribution_date);
+					$('#amount').val(result.payment.amount);
+					$('#do_date').val(result.payment.do_date);
+					$('#due_date').val(result.payment.due_date);
+					$('#distribution_date').val(result.payment.distribution_date);
 
-					$('#id_edit').val(result.invoice.id);
-					$('#modalNewTitle').text('Update Tanda Terima');
+					$('#id_edit').val(result.payment.id);
+					$('#modalNewTitle').text('Update Payment Request');
 					$('#loading').hide();
 					$('#modalNew').modal('show');
 				}
@@ -448,11 +506,11 @@
 		}
 	}
 
-	function SaveInvoice(id){
+	function Save(id){	
 		$('#loading').show();
 
 		if(id == 'new'){
-			if($("#invoice_date").val() == "" || $('#supplier_code').val() == null || $('#invoice_no').val() == "" || $('#po_number').val() == "" || $('#payment_term').val() == "" || $('#currency').val() == "" || $('#amount').val() == "" || $('#do_date').val() == "" || $('#due_date').val() == ""){
+			if($("#submission_date").val() == "" || $('#supplier_code').val() == null || $('#currency').val() == "" || $('#payment_term').val() == "" || $('#due_date').val() == "" || $('#amount').val() == "" || $('#kind_of').val() == ""){
 				
 				$('#loading').hide();
 				openErrorGritter('Error', "Please fill field with (*) sign.");
@@ -460,26 +518,23 @@
 			}
 
 			var formData = new FormData();
-			formData.append('invoice_date', $("#invoice_date").val());
+			formData.append('submission_date', $("#submission_date").val());
 			formData.append('supplier_code', $("#supplier_code").val());
 			formData.append('supplier_name', $("#supplier_name").val());
-			formData.append('kwitansi', $("#kwitansi").val());
-			formData.append('invoice_no', $("#invoice_no").val());
-			formData.append('surat_jalan', $("#surat_jalan").val());
-			formData.append('bap', $("#bap").val());
-			formData.append('npwp', $("#npwp").val());
-			formData.append('faktur_pajak', $("#faktur_pajak").val());
-
-			formData.append('po_number', $("#po_number").val());
-			formData.append('payment_term', $("#payment_term").val());
 			formData.append('currency', $("#currency").val());
-			formData.append('amount', $("#amount").val());
-			formData.append('do_date', $("#do_date").val());
+			formData.append('payment_term', $("#payment_term").val());
 			formData.append('due_date', $("#due_date").val());
-			formData.append('distribution_date', $("#distribution_date").val());
+			formData.append('amount', $("#amount").val());
+			formData.append('kind_of', $("#kind_of").val());
+			
+			formData.append('file_attach', $(this).prop('files')[0]);
+			var file=$(this).val().replace(/C:\\fakepath\\/i, '').split(".");
+			formData.append('extension', file[1]);
+			formData.append('foto_name', file[0]);
+
 
 			$.ajax({
-				url:"{{ url('create/invoice/tanda_terima') }}",
+				url:"{{ url('create/payment_request') }}",
 				method:"POST",
 				data:formData,
 				dataType:'JSON',
@@ -505,7 +560,7 @@
 			});
 		}
 		else{
-			if($("#invoice_date").val() == "" || $('#supplier_code').val() == "" || $('#invoice_no').val() == "" || $('#po_number').val() == "" || $('#payment_term').val() == "" || $('#currency').val() == "" || $('#amount').val() == "" || $('#do_date').val() == "" || $('#due_date').val() == ""){
+			if($("#submission_date").val() == "" || $('#supplier_code').val() == null || $('#currency').val() == "" || $('#payment_term').val() == "" || $('#due_date').val() == "" || $('#amount').val() == "" || $('#kind_of').val() == ""){
 				
 				$('#loading').hide();
 				openErrorGritter('Error', "Please fill field with (*) sign.");
@@ -514,26 +569,22 @@
 
 			var formData = new FormData();
 			formData.append('id_edit', $("#id_edit").val());
-			formData.append('invoice_date', $("#invoice_date").val());
+			formData.append('submission_date', $("#submission_date").val());
 			formData.append('supplier_code', $("#supplier_code").val());
 			formData.append('supplier_name', $("#supplier_name").val());
-			formData.append('kwitansi', $("#kwitansi").val());
-			formData.append('invoice_no', $("#invoice_no").val());
-			formData.append('surat_jalan', $("#surat_jalan").val());
-			formData.append('bap', $("#bap").val());
-			formData.append('npwp', $("#npwp").val());
-			formData.append('faktur_pajak', $("#faktur_pajak").val());
-
-			formData.append('po_number', $("#po_number").val());
-			formData.append('payment_term', $("#payment_term").val());
 			formData.append('currency', $("#currency").val());
-			formData.append('amount', $("#amount").val());
-			formData.append('do_date', $("#do_date").val());
+			formData.append('payment_term', $("#payment_term").val());
 			formData.append('due_date', $("#due_date").val());
-			formData.append('distribution_date', $("#distribution_date").val());
+			formData.append('amount', $("#amount").val());
+			formData.append('kind_of', $("#kind_of").val());
+			
+			formData.append('file_attach', $(this).prop('files')[0]);
+			var file=$(this).val().replace(/C:\\fakepath\\/i, '').split(".");
+			formData.append('extension', file[1]);
+			formData.append('foto_name', file[0]);
 
 			$.ajax({
-				url:"{{ url('edit/invoice/tanda_terima') }}",
+				url:"{{ url('edit/payment_request') }}",
 				method:"POST",
 				data:formData,
 				dataType:'JSON',
@@ -562,27 +613,19 @@
 
 	function clearNew(){
 		$('#id_edit').val('');
-		$("#invoice_date").val('');
+		$("#submission_date").val('');
 		$("#supplier_code").val('').trigger('change');
 		$("#supplier_name").val('');
-		$('#invoice_no').val('');
-		$('#kwitansi').val('');
-		$('#surat_jalan').val('');
-		$('#bap').val("");
-		$('#npwp').val("");
-		$('#faktur_pajak').val('');
-		$("#po_number").val('');
+		$('#currency').val('').trigger('change');
 		$("#payment_term").val('').trigger('change');
 		$("#currency").val('').trigger('change');
 		$('#amount').val('');
-		$('#do_date').val('');
-		$('#due_date').val('');
-		$('#distribution_date').val('');
+		$("#kind_of").val('').trigger('change');
 	}
 
 	function fetchTable(){
 		$('#loading').show();
-		$.get('{{ url("fetch/invoice/tanda_terima") }}', function(result, status, xhr){
+		$.get('{{ url("fetch/payment_request") }}', function(result, status, xhr){
 			if(result.status){
 				$('#listTable').DataTable().clear();
 				$('#listTable').DataTable().destroy();				
@@ -590,26 +633,22 @@
 				var listTableBody = "";
 				var count_all = 0;
 
-				$.each(result.invoice, function(key, value){
+				$.each(result.payment, function(key, value){
 					listTableBody += '<tr>';
 					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:0.1%;">'+parseInt(key+1)+'</td>';
-					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:1%;">'+value.invoice_date+'</td>';
+					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:1%;">'+value.submission_date+'</td>';
 					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:3%;">'+value.supplier_code+' - '+value.supplier_name+'</td>';
-					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:2%;">'+value.invoice_no+'</td>';
-					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:1%;">'+value.surat_jalan+'</td>';
-					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:1%;">'+value.po_number+'</td>';
-					// listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:3%;">'+value.payment_term+'</td>';
-					// listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:0.1%;">'+value.currency+'</td>';
-					// listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:1%;text-align:right">'+value.amount+'</td>';
-					// listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:1%;">'+value.due_date+'</td>';
-					listTableBody += '<td style="width:2%;"><center><button class="btn btn-md btn-warning" onclick="newData(\''+value.id+'\')"><i class="fa fa-eye"></i> </button>  <a class="btn btn-md btn-danger" target="_blank" href="{{ url("invoice/report") }}/'+value.id+'"><i class="fa fa-file-pdf-o"></i> </a></center></td>';
+					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:2%;">'+value.payment_term+'</td>';
+					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:1%;">'+value.due_date+'</td>';
+					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:1%;">'+value.kind_of+'</td>';
+					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:3%;">'+value.amount+'</td>';
+					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:0.1%;">'+value.file+'</td>';
+					listTableBody += '<td style="width:2%;"><center><button class="btn btn-md btn-warning" onclick="newData(\''+value.id+'\')"><i class="fa fa-eye"></i> </button>  <a class="btn btn-md btn-danger" target="_blank" href="{{ url("payment_request/report") }}/'+value.id+'"><i class="fa fa-file-pdf-o"></i> </a></center></td>';
 					listTableBody += '</tr>';
 
 
 					count_all += 1;
 				});
-
-				$('#count_all').text(count_all);
 
 				$('#listTableBody').append(listTableBody);
 

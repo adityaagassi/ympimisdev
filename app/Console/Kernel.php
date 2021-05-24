@@ -51,6 +51,7 @@ class Kernel extends ConsoleKernel
         Commands\KDShipment::class,
         Commands\SendEmailSPKNotification::class,
         Commands\EmailAgreement::class,
+        // Commands\LiveCookingCommand::class,
         Commands\GreatdayAttendanceCommand::class,
         Commands\GeocodeUpdate::class,
         Commands\SyncShiftSunfish::class,
@@ -130,8 +131,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('email:kaizen')->weekdays()->dailyAt('08:45');
         $schedule->command('email:hrq')->weekdays()->dailyAt('07:45');
         $schedule->command('log:room_temperature')->everyThirtyMinutes();
-        $schedule->command('log:survey_covid')->weekends()->dailyAt('21:00');
-
+        $schedule->command('log:survey_covid')->weekly()->saturdays()->at('12:00');
+        $schedule->command('highest:survey_covid')->weekly()->sundays()->at('18:30');
+        
+        // $schedule->command('log:survey_covid')->weekends()->dailyAt('21:00');
         // $schedule->command('notif:machine')->dailyAt('07:00');
         // $schedule->command('email:kaizen')->everyMinute();
         // $schedule->command('employee:history')->monthlyOn(date('t'), '20:01');
@@ -157,6 +160,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('interview:schedule')->monthlyOn(1, '02:00');
 
 
+        // $schedule->command('kd:shipment')->everyTenMinutes();
         $schedule->command('kd:shipment')->everyThirtyMinutes();
         $schedule->command('email:raw_material_reminder')->dailyAt('11:00');
 
@@ -172,7 +176,6 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('sync:greatday_attendance')->dailyAt('17:00');
         $schedule->command('update:geocode')->dailyAt('18:00');
-        $schedule->command('highest:survey_covid')->weekly()->sundays()->at('18:30');
     }
 
     /**l
