@@ -3323,11 +3323,10 @@ public function fetchSerialNumberReport($process,Request $request)
 					( asl.serial_number ),
 					asl.model,
 					GROUP_CONCAT(
-			DISTINCT (
 				CONCAT(
 					asl.operator_id,
 					'<br>',
-				SUBSTRING(employee_syncs.name,1,14),'...'))) AS op_qa_fungsi,
+				SUBSTRING(employee_syncs.name,1,14),'...')) AS op_qa_fungsi,
 					'' AS op_qa_visual_1,
 					'' AS op_qa_visual_2,
 					GROUP_CONCAT(
@@ -3346,11 +3345,10 @@ public function fetchSerialNumberReport($process,Request $request)
 					asl.model,
 					'' AS op_qa_fungsi,
 					GROUP_CONCAT(
-			DISTINCT (
 				CONCAT(
 					asl.operator_id,
 					'<br>',
-				SUBSTRING(employee_syncs.name,1,14),'...'))) AS op_qa_visual_1,
+				SUBSTRING(employee_syncs.name,1,14),'...')) AS op_qa_visual_1,
 					'' AS op_qa_visual_2,
 					GROUP_CONCAT(
 						DISTINCT (
@@ -3369,11 +3367,10 @@ public function fetchSerialNumberReport($process,Request $request)
 					'' AS op_qa_fungsi,
 					'' AS op_qa_visual_1,
 					GROUP_CONCAT(
-			DISTINCT (
 				CONCAT(
 					asl.operator_id,
 					'<br>',
-				SUBSTRING(employee_syncs.name,1,14),'...'))) AS op_qa_visual_2,
+				SUBSTRING(employee_syncs.name,1,14),'...')) AS op_qa_visual_2,
 					GROUP_CONCAT(
 						DISTINCT (
 						DATE( asl.created_at ))) AS created 
