@@ -1091,12 +1091,21 @@ class TemperatureController extends Controller
                $mail_to = [];
 
                for ($i = 0;$i < count($suhu); $i++) {
-                    $fc = DB::SELECT("SELECT
-                         * 
-                    FROM
-                         send_emails 
-                    WHERE
-                         remark = '".$suhu[$i]['section']."'");
+                    if ($suhu[$i]['section'] == "") {
+                         $fc = DB::SELECT("SELECT
+                              * 
+                         FROM
+                              send_emails 
+                         WHERE
+                              remark = '".$suhu[$i]['department']."'");
+                    }else{
+                         $fc = DB::SELECT("SELECT
+                              * 
+                         FROM
+                              send_emails 
+                         WHERE
+                              remark = '".$suhu[$i]['section']."'");
+                    }
 
 
                     if (count($fc) > 0) {
