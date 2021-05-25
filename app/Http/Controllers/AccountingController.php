@@ -1711,17 +1711,29 @@ class AccountingController extends Controller
 
             else if ($pr->posisi == "dgm")
             {
-                $pr->posisi = "gm";
+
+                $pr->posisi = 'pch';
                 $pr->approvaldgm = "Approved";
                 $pr->dateapprovaldgm = date('Y-m-d H:i:s');
+                $pr->approvalgm = "Approved";
+                $pr->dateapprovalgm = date('Y-m-d H:i:s');
+                $pr->status = "approval_acc";
 
-                $mailto = "select distinct email from acc_purchase_requisitions join users on acc_purchase_requisitions.gm = users.username where acc_purchase_requisitions.id = '" . $pr->id . "'";
-                $mails = DB::select($mailto);
+                //kirim email ke Mas Shega & Mas Hamzah
+                $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.department = 'Purchasing Control Department' and (employee_id = 'PI1810020'  or employee_id = 'PI0904006')";
+                $mailtoo = DB::select($mails);
 
-                foreach ($mails as $mail)
-                {
-                    $mailtoo = $mail->email;
-                }
+                // $pr->posisi = "gm";
+                // $pr->approvaldgm = "Approved";
+                // $pr->dateapprovaldgm = date('Y-m-d H:i:s');
+
+                // $mailto = "select distinct email from acc_purchase_requisitions join users on acc_purchase_requisitions.gm = users.username where acc_purchase_requisitions.id = '" . $pr->id . "'";
+                // $mails = DB::select($mailto);
+
+                // foreach ($mails as $mail)
+                // {
+                //     $mailtoo = $mail->email;
+                // }
             }
 
             else if ($pr->posisi == "gm")
@@ -1946,19 +1958,33 @@ class AccountingController extends Controller
         try{
             if ($pr->posisi == "dgm")
             {
-                $pr->posisi = "gm";
+
+                $pr->posisi = 'pch';
                 $pr->approvaldgm = "Approved";
                 $pr->dateapprovaldgm = date('Y-m-d H:i:s');
+                $pr->approvalgm = "Approved";
+                $pr->dateapprovalgm = date('Y-m-d H:i:s');
+                $pr->status = "approval_acc";
 
-                $mailto = "select distinct email from acc_purchase_requisitions join users on acc_purchase_requisitions.gm = users.username where acc_purchase_requisitions.id = '" . $pr->id . "'";
-                $mails = DB::select($mailto);
-
-                foreach ($mails as $mail)
-                {
-                    $mailtoo = $mail->email;
-                }
+                //kirim email ke Mas Shega & Mas Hamzah
+                $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.department = 'Purchasing Control Department' and (employee_id = 'PI1810020'  or employee_id = 'PI0904006')";
+                $mailtoo = DB::select($mails);
 
                 $pr->save();
+
+                // $pr->posisi = "gm";
+                // $pr->approvaldgm = "Approved";
+                // $pr->dateapprovaldgm = date('Y-m-d H:i:s');
+
+                // $mailto = "select distinct email from acc_purchase_requisitions join users on acc_purchase_requisitions.gm = users.username where acc_purchase_requisitions.id = '" . $pr->id . "'";
+                // $mails = DB::select($mailto);
+
+                // foreach ($mails as $mail)
+                // {
+                //     $mailtoo = $mail->email;
+                // }
+
+                // $pr->save();
 
                 $detail_pr = AccPurchaseRequisition::select('acc_purchase_requisitions.*','acc_purchase_requisition_items.*','acc_budget_histories.beg_bal','acc_budget_histories.amount',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
                 ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
@@ -10984,21 +11010,19 @@ public function import_transaksi(Request $request){
 
                     $data2->save();
 
-                    if ($investment_no != "NO_INPUT" || $investment_no != "NO INPUT") {
-                        if ($budget_no != "" || $budget_no != null) {
-                            $bulan = strtolower(date("M",strtotime($post_date)));
-                            $sisa_bulan = $bulan.'_sisa_budget';
+                    if ($budget_no != "" || $budget_no != null) {
+                        $bulan = strtolower(date("M",strtotime($post_date)));
+                        $sisa_bulan = $bulan.'_sisa_budget';
 
-                            $budgetdata = AccBudget::where('budget_no','=',$budget_no)->where('periode','=', $periode)->first();
+                        $budgetdata = AccBudget::where('budget_no','=',$budget_no)->where('periode','=', $periode)->first();
 
-                                //Kurangi Budget Skrg Dengan Actual
-                            $total = $budgetdata->$sisa_bulan - $local_amount;
+                            //Kurangi Budget Skrg Dengan Actual
+                        $total = $budgetdata->$sisa_bulan - $local_amount;
 
-                            $updatebudget = AccBudget::where('budget_no','=',$budget_no)->where('periode','=', $periode)
-                            ->update([
-                                $sisa_bulan => $total
-                            ]);
-                        }
+                        $updatebudget = AccBudget::where('budget_no','=',$budget_no)->where('periode','=', $periode)
+                        ->update([
+                            $sisa_bulan => $total
+                        ]);
                     }
 
 
