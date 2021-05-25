@@ -1662,8 +1662,8 @@ Route::group(['nav' => 'S61', 'middleware' => 'permission'], function(){
 	Route::get('canteen_purchase_requisition/approvemanager/{id}', 'GeneralAffairController@prapprovalmanager');
 	Route::get('canteen_purchase_requisition/approvegm/{id}', 'GeneralAffairController@prapprovalgm');
 	Route::get('canteen_purchase_requisition/reject/{id}', 'GeneralAffairController@prreject');
-	Route::get('canteen/purchase_requisition/check/{id}', 'AccountingController@check_purchase_requisition');
-	Route::post('canteen/purchase_requisition/checked/{id}', 'AccountingController@checked_purchase_requisition');
+	Route::get('canteen/purchase_requisition/check/{id}', 'GeneralAffairController@check_purchase_requisition');
+	Route::post('canteen/purchase_requisition/checked/{id}', 'GeneralAffairController@checked_purchase_requisition');
 
 });
 

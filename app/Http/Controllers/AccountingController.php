@@ -2763,7 +2763,7 @@ class AccountingController extends Controller
 
             if ($po->posisi == "staff_pch")
             {
-                return '<label class="label label-danger">Staff PCH</label>';
+                return '<label class="label label-danger">Staff Purchasing</label>';
             }
 
             else if ($po->posisi == "manager_pch")
@@ -3952,7 +3952,7 @@ class AccountingController extends Controller
                 $po->autentikasi_3 = $_HASIL;
                 $po->status = "not_sap";
 
-                    //kirim email Staff PCH sebagai pemberitahuan
+                    //kirim email Staff Purchasing sebagai pemberitahuan
                 $mailto = "select distinct email from acc_purchase_orders join users on acc_purchase_orders.buyer_id = users.username where acc_purchase_orders.id = '" . $id . "'";
                 $mails = DB::select($mailto);
 
@@ -3982,7 +3982,7 @@ class AccountingController extends Controller
             //     // $po->autentikasi_4 = $_HASIL;
             //     $po->status = "not_sap";
 
-            //         //kirim email Staff PCH sebagai pemberitahuan
+            //         //kirim email Staff Purchasing sebagai pemberitahuan
             //     $mailto = "select distinct email from acc_purchase_orders join users on acc_purchase_orders.buyer_id = users.username where acc_purchase_orders.id = '" . $id . "'";
             //     $mails = DB::select($mailto);
 
@@ -4198,7 +4198,7 @@ class AccountingController extends Controller
                 $po->date_approval_authorized3 = date('Y-m-d H:i:s');
                 $po->status = "not_sap";
 
-                    //kirim email Staff PCH sebagai pemberitahuan
+                    //kirim email Staff Purchasing sebagai pemberitahuan
                 $mailto = "select distinct email from acc_purchase_orders join users on acc_purchase_orders.buyer_id = users.username where acc_purchase_orders.id = '" . $id . "'";
                 $mails = DB::select($mailto);
 
@@ -4323,7 +4323,7 @@ class AccountingController extends Controller
                 $po->date_approval_authorized4 = date('Y-m-d H:i:s');
                 $po->status = "not_sap";
 
-                    //kirim email Staff PCH sebagai pemberitahuan
+                    //kirim email Staff Purchasing sebagai pemberitahuan
                 $mailto = "select distinct email from acc_purchase_orders join users on acc_purchase_orders.buyer_id = users.username where acc_purchase_orders.id = '" . $id . "'";
                 $mails = DB::select($mailto);
 
@@ -6412,8 +6412,11 @@ class AccountingController extends Controller
         try{
             if ($invest->posisi == "dgm")
             {
-                $invest->posisi = "gm";
+
+                // $invest->posisi = "gm";
                 $invest->approval_dgm = $invest->approval_dgm."/Approved/".date('Y-m-d H:i:s');
+                $invest->posisi = "manager_acc";
+                $invest->approval_gm = $invest->approval_gm."/Approved/".date('Y-m-d H:i:s');
                 $invest->save();
 
                 $judul = substr($invest->reff_number, 0, 7);
@@ -6438,7 +6441,8 @@ class AccountingController extends Controller
 
                 $pdf->save(public_path() . "/investment_list/INV_".$judul.".pdf");
 
-                $user = explode("/", $invest->approval_gm);
+                // $user = explode("/", $invest->approval_gm);
+                $user = explode("/", $invest->approval_manager_acc);
 
                 $mails = "select distinct email from users where users.username = '".$user[0]."'";
                 $mailtoo = DB::select($mails);
@@ -10241,7 +10245,7 @@ public function detailMonitoringPO(Request $request){
 
     if ($po->posisi == "staff_pch")
     {
-        return '<label class="label label-danger">Staff PCH</label>';
+        return '<label class="label label-danger">Staff Purchasing</label>';
     }
 
     else if ($po->posisi == "manager_pch")
@@ -13004,67 +13008,67 @@ public function indexAssetRegistration()
     //                     Payment Request                         //
     //=============================================================//
 
-public function IndexPaymentRequest(){
+    public function IndexPaymentRequest(){
 
-    $title = "Payment Request";
-    $title_jp = "??";
+        $title = "Payment Request";
+        $title_jp = "??";
 
-    $employees = EmployeeSync::orderBy('department', 'asc')->get();
+        $employees = EmployeeSync::orderBy('department', 'asc')->get();
 
-    $vendor = AccSupplier::select('acc_suppliers.*')->whereNull('acc_suppliers.deleted_at')
-    ->distinct()
-    ->get();
+        $vendor = AccSupplier::select('acc_suppliers.*')->whereNull('acc_suppliers.deleted_at')
+        ->distinct()
+        ->get();
 
-    $payment_term = AccInvoicePaymentTerm::select('*')->whereNull('deleted_at')
-    ->distinct()
-    ->get();
+        $payment_term = AccInvoicePaymentTerm::select('*')->whereNull('deleted_at')
+        ->distinct()
+        ->get();
 
-    return view('accounting_purchasing.payment_request.index_payment', array(
-        'title' => $title,
-        'title_jp' => $title_jp,
-        'employees' => $employees,
-        'vendor' => $vendor,
-        'payment_term' => $payment_term
-    ));
+        return view('accounting_purchasing.payment_request.index_payment', array(
+            'title' => $title,
+            'title_jp' => $title_jp,
+            'employees' => $employees,
+            'vendor' => $vendor,
+            'payment_term' => $payment_term
+        ));
 
-}
+    }
 
-public function fetchPaymentRequest(){
-    $payment = db::select("SELECT
-            *
-        FROM
-        acc_payment_requests
-        order by id desc
-        ");
+    public function fetchPaymentRequest(){
+        $payment = db::select("SELECT
+                *
+            FROM
+            acc_payment_requests
+            order by id desc
+            ");
 
-    $response = array(
-        'status' => true,
-        'payment' => $payment
-    );
-    return Response::json($response);
-}
+        $response = array(
+            'status' => true,
+            'payment' => $payment
+        );
+        return Response::json($response);
+    }
 
-public function fetchPaymentRequestDetail(Request $request){
-    
-    $payment = AccPaymentRequest::find($request->get('id'));
+    public function fetchPaymentRequestDetail(Request $request){
+        
+        $payment = AccPaymentRequest::find($request->get('id'));
 
-    $employees = EmployeeSync::orderBy('department', 'asc')->get();
+        $employees = EmployeeSync::orderBy('department', 'asc')->get();
 
-    $vendor = AccSupplier::select('acc_suppliers.*')->whereNull('acc_suppliers.deleted_at')
-    ->distinct()
-    ->get();
+        $vendor = AccSupplier::select('acc_suppliers.*')->whereNull('acc_suppliers.deleted_at')
+        ->distinct()
+        ->get();
 
-    $payment_term = AccInvoicePaymentTerm::select('*')->whereNull('deleted_at')
-    ->distinct()
-    ->get();
+        $payment_term = AccInvoicePaymentTerm::select('*')->whereNull('deleted_at')
+        ->distinct()
+        ->get();
 
-    $response = array(
-        'status' => true,
-        'payment' => $payment,
-        'vendor' => $vendor,
-        'payment_term' => $payment_term
-    );
-    return Response::json($response);
-}
+        $response = array(
+            'status' => true,
+            'payment' => $payment,
+            'vendor' => $vendor,
+            'payment_term' => $payment_term
+        );
+        return Response::json($response);
+    }
 
 }
