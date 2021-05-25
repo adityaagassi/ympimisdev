@@ -13,6 +13,8 @@ use App\PantryOrder;
 use App\PantryMenu;
 use App\PantryLog;
 use App\User;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SendEmail;
 
 class PantryController extends Controller
 {
@@ -502,10 +504,12 @@ class PantryController extends Controller
             ]);
 
             $item = [];
+            $item_email = [];
             $index = 1;
             $antar = "";
             foreach ($order as $key) {
                 array_push($item, '%0A'.$index.'.%20'.$key->minuman.'%20-%20'.$key->informasi.'%20-%20'.$key->keterangan.'%20-%20'.$key->gula.'%20-%20Jumlah%20:%20'.$key->jumlah);
+                array_push($item_email, ''.$index.'. '.$key->minuman.' - '.$key->informasi.' - '.$key->keterangan.' - '.$key->gula.' - Jumlah : '.$key->jumlah);
                 $antar = $key->tempat;
                 $index++;
             }
@@ -517,21 +521,35 @@ class PantryController extends Controller
             // $fd = @implode('', file($url));
 
             $phone = [];
-            array_push($phone, '62811372398');
             array_push($phone, '6282334197238');
+            array_push($phone, '62811372398');
             array_push($phone, '6285645896741');
             array_push($phone, '6281554119011');
+            array_push($phone, '6282336050550');
+            array_push($phone, '6285646597775');
+
             $pesan = "Ada%20Pesanan%20Pantry%20:%0A".join('%0A',$item)."%0A%0ADari%20".$name.".%0ADiantar%20ke%20".$antar.".%0A%0AMohon%20untuk%20segera%20dibuatkan.%0ATerimakasih.";
 
+            $bodyHtml2 = "<html><h2>Pantry Order</h2><p>Ada Pesanan Pantry<br> ".join('<br>',$item_email)."</p><p>Dari : ".$name."</p><p>Diantar ke : ".$antar."</p><p>Mohon segera dibuatkan. Terimakasih.</p></html>";
+
+            $bcc = [];
+            $bcc[0] = 'mokhamad.khamdan.khabibi@music.yamaha.com';
+            $bcc[1] = 'rio.irvansyah@music.yamaha.com';
+            $bcc[1] = 'anton.budi.santoso@music.yamaha.com';
+
+            $mail_to = [];
+            $mail_to[0] = 'rianita.widiastuti@music.yamaha.com';
+            $mail_to[1] = 'putri.sukma.riyanti@music.yamaha.com';
+
+            Mail::raw([], function($message) use($bodyHtml2,$mail_to,$bcc) {
+                $message->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia');
+                $message->to($mail_to);
+                $message->bcc($bcc);
+                $message->subject('Pantry Order');
+                $message->setBody($bodyHtml2, 'text/html' );
+            });
+
             for ($i = 0; $i < count($phone);$i++) {
-                // $pesan = json_encode($pesan);
-                // $API = "https://api.telegram.org/bot".$this->bot_token."/sendmessage?phone=".$phone[$i]."&text=$pesan";
-                // $ch = curl_init();
-                // curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                // curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-                // curl_setopt($ch, CURLOPT_URL, $API);
-                // $result = curl_exec($ch);
-                // curl_close($ch);
                 $curl = curl_init();
 
                 curl_setopt_array($curl, array(
@@ -549,15 +567,8 @@ class PantryController extends Controller
                     'Content-Type: application/x-www-form-urlencoded',
                     'Authorization: Bearer UAqINT9e23uRiQmYttEUiFQ9qRMUXk8sADK2EiVSgLODdyOhgU'
                   ),
-                  // CURLOPT_POSTFIELDS => 'receiver='.$phone.'&device=6282334197238&message=Anda%20telah%20terjadwal%20Live%20Cooking%20pada%20tanggal%20'.$due_date_replace.'.%0ASilahkan%20cek%20di%20MIRAI.%0A%0A-YMPI%20GA%20Dept.-&type=chat',
-                  // CURLOPT_HTTPHEADER => array(
-                  //   'Accept: application/json',
-                  //   'Content-Type: application/x-www-form-urlencoded',
-                  //   'Authorization: Bearer OPd8jOytcihnTxoh3WIPLcgdjNAqZgEOjxRbIBb8JnsN7heixZ'
-                  // ),
                 ));
                 curl_exec($curl);
-                // return $result;
             }
 
 // $sms = gw_send_sms('API3Y9RTZ5R6Y','API3Y9RTZ5R6Y3Y9RT','YMPI','6285645896741','Terdapat Order Pantry');
