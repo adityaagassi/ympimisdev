@@ -650,7 +650,7 @@ class TransactionController extends Controller
 				$printer_name = 'FLO Printer 102';
 			}
 			else if($receive == 'SX91'){
-				$material = Material::where('material_number', $material_number)->first();
+				$material = Material::where('material_number', $material)->first();
 
 				if($material){
 					if(str_contains($material->key, 'KEY')){
@@ -732,7 +732,7 @@ class TransactionController extends Controller
 				$printer_name = 'FLO Printer 102';
 			}
 			else if($receive == 'SX91'){
-				$material = Material::where('material_number', $material_number)->first();
+				$material = Material::where('material_number', $material)->first();
 
 				if($material){
 					if(str_contains($material->key, 'KEY')){
