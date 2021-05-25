@@ -535,7 +535,7 @@ class PantryController extends Controller
             $bcc = [];
             $bcc[0] = 'mokhamad.khamdan.khabibi@music.yamaha.com';
             $bcc[1] = 'rio.irvansyah@music.yamaha.com';
-            $bcc[1] = 'anton.budi.santoso@music.yamaha.com';
+            $bcc[2] = 'anton.budi.santoso@music.yamaha.com';
 
             $mail_to = [];
             $mail_to[0] = 'rianita.widiastuti@music.yamaha.com';
