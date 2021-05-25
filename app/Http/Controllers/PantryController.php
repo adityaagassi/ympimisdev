@@ -533,13 +533,13 @@ class PantryController extends Controller
             $bodyHtml2 = "<html><h2>Pantry Order</h2><p>Ada Pesanan Pantry<br> ".join('<br>',$item_email)."</p><p>Dari : ".$name."</p><p>Diantar ke : ".$antar."</p><p>Mohon segera dibuatkan. Terimakasih.</p></html>";
 
             $bcc = [];
-            $bcc[0] = 'mokhamad.khamdan.khabibi@music.yamaha.com';
-            $bcc[1] = 'rio.irvansyah@music.yamaha.com';
-            $bcc[2] = 'anton.budi.santoso@music.yamaha.com';
+            $bcc[0] = "mokhamad.khamdan.khabibi@music.yamaha.com";
+            $bcc[1] = "rio.irvansyah@music.yamaha.com";
+            $bcc[2] = "anton.budi.santoso@music.yamaha.com";
 
             $mail_to = [];
-            $mail_to[0] = 'rianita.widiastuti@music.yamaha.com';
-            $mail_to[1] = 'putri.sukma.riyanti@music.yamaha.com';
+            $mail_to[0] = "rianita.widiastuti@music.yamaha.com";
+            $mail_to[1] = "putri.sukma.riyanti@music.yamaha.com";
 
             Mail::raw([], function($message) use($bodyHtml2,$mail_to,$bcc) {
                 $message->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia');
