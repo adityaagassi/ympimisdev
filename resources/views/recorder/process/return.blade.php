@@ -118,7 +118,7 @@
 								</div>
 							</div>
 							<div class="col-xs-5" style="padding-bottom: 10px;">
-								<button class="btn btn-primary" onclick="finishTransaction()" style="font-size: 40px; width: 100%; font-weight: bold; padding: 0;">
+								<button class="btn btn-success" onclick="finishTransaction()" style="font-size: 40px; width: 100%; font-weight: bold; padding: 0;">
 									FINISH
 								</button>
 							</div>
