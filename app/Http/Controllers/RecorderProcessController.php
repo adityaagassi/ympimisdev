@@ -3042,10 +3042,35 @@ class RecorderProcessController extends Controller
     public function fetchProductResume(Request $request)
     {
       try {
-        $return = RcReturnLog::select('rc_return_logs.*','users.*','rc_return_logs.created_at as created','rc_return_logs.id as id_log')->join('users','users.id','rc_return_logs.created_by')->get();
+        $datefrom = $request->get('datefrom');
+        $dateto = $request->get('dateto');
+
+        if ($datefrom == '') {
+          $datefrom = date('Y-m-01');
+        }else{
+          $datefrom = $request->get('datefrom');
+        }
+
+        if ($dateto == '') {
+          $dateto = date('Y-m-d');
+        }else{
+          $dateto = $request->get('dateto');
+        }
+
+        $return = RcReturnLog::select('rc_return_logs.*','users.*','rc_return_logs.created_at as created','rc_return_logs.id as id_log')
+          ->join('users','users.id','rc_return_logs.created_by')
+          ->whereDate('rc_return_logs.created_at','>=',$datefrom)
+          ->whereDate('rc_return_logs.created_at','<=',$dateto)
+          ->orderBy('rc_return_logs.created_at','desc')->get();
+
+        $datefromtitle = date('d M Y',strtotime($datefrom));
+        $datetotitle = date('d M Y',strtotime($dateto));
+
         $response = array(
             'status' => true,
-            'return' => $return
+            'return' => $return,
+            'datefromtitle' => $datefromtitle,
+            'datetotitle' => $datetotitle,
         );
         return Response::json($response);
       } catch (\Exception $e) {

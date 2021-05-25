@@ -129,25 +129,56 @@
 					<div class="row">
 						<div class="box box-solid">
 							<div class="box-body">
-								<span style="font-size: 20px; font-weight: bold;">RETURN HARI INI (<?php echo e(date('d-M-Y')); ?>)</span>
-								<table class="table table-hover table-striped table-bordered" id="tableResume">
-									<thead>
-										<tr>
-											<th style="width: 1%;">#</th>
-											<th style="width: 1%;">Material</th>
-											<th style="width: 6%;">Desc</th>
-											<th style="width: 1%;">Part Code</th>
-											<th style="width: 1%;">Type</th>
-											<th style="width: 1%;">Color</th>
-											<th style="width: 1%;">Qty</th>
-											<th style="width: 1%;">Creator</th>
-											<th style="width: 1%;">Created</th>
-											<th style="width: 1%;">Action</th>
-										</tr>
-									</thead>
-									<tbody id="tableBodyResume">
-									</tbody>
-								</table>
+								<span style="font-size: 20px; font-weight: bold;" id="resumeTitle">RESUME RETURN (<?php echo e(date('01 M Y')); ?> - <?php echo e(date('d M Y')); ?>)</span>
+								<div class="col-xs-12">
+									<div class="row">
+										<div class="col-xs-4" style="padding-left: 0px;padding-right: 5px">
+											<div class="form-group">
+												<div class="input-group date">
+													<div class="input-group-addon">
+														<i class="fa fa-calendar"></i>
+													</div>
+													<input type="text" class="form-control pull-right datepicker" id="datefrom" name="datefrom" placeholder="Date From">
+												</div>
+											</div>
+										</div>
+										<div class="col-xs-4" style="padding-left: 0px;padding-right: 5px">
+											<div class="form-group">
+												<div class="input-group date">
+													<div class="input-group-addon">
+														<i class="fa fa-calendar"></i>
+													</div>
+													<input type="text" class="form-control pull-right datepicker" id="dateto" name="dateto" placeholder="Date To">
+												</div>
+											</div>
+										</div>
+										<div class="col-xs-4" style="padding-left: 0px;padding-right: 0px">
+											<button id="search" style="width: 100%" onClick="fetchResume()" class="btn btn-primary"><b>Search</b></button>
+										</div>
+									</div>
+								</div>
+								<div class="col-xs-12" style="overflow-x: scroll;">
+									<div class="row">
+										<table class="table table-hover table-striped table-bordered" id="tableResume">
+											<thead>
+												<tr>
+													<th style="width: 1%;">#</th>
+													<th style="width: 1%;">Material</th>
+													<th style="width: 6%;">Desc</th>
+													<th style="width: 1%;">Part Code</th>
+													<th style="width: 1%;">Type</th>
+													<th style="width: 1%;">Color</th>
+													<th style="width: 1%;">Qty</th>
+													<th style="width: 1%;">Creator</th>
+													<th style="width: 1%;">Created</th>
+													<th style="width: 1%;">Action</th>
+												</tr>
+											</thead>
+											<tbody id="tableBodyResume">
+											</tbody>
+										</table>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -201,6 +232,20 @@
 		$('.numpad').numpad({
 			hidePlusMinusButton : true,
 			decimalSeparator : '.'
+		});
+
+		$('#datefrom').datepicker({
+			autoclose: true,
+			format: "yyyy-mm-dd",
+			todayHighlight: true,
+			// startDate: date
+		});
+
+		$('#dateto').datepicker({
+			autoclose: true,
+			format: "yyyy-mm-dd",
+			todayHighlight: true,
+			// startDate: date
 		});
 	});
 
@@ -334,11 +379,18 @@
 	}
 
 	function fetchResume(){
-		$("#loading").show();
-		$.get('<?php echo e(url("fetch/recorder/return/resume")); ?>', function(result, status, xhr){
+		// $("#loading").show();
+		var data = {
+			datefrom:$('#datefrom').val(),
+			dateto:$('#dateto').val()
+		}
+		$.get('<?php echo e(url("fetch/recorder/return/resume")); ?>', data,function(result, status, xhr){
 			$('#tableBodyResume').html("");
+			$('#tableResume').DataTable().clear();
+			$('#tableResume').DataTable().destroy();
 			var tableData = "";
 			var count = 1;
+			$('#resumeTitle').html('RESUME RETURN ('+result.datefromtitle+' - '+result.datetotitle+')');
 			$.each(result.return, function(key, value) {
 				tableData += '<tr>';
 				tableData += '<td>'+ count +'</td>';
@@ -355,7 +407,57 @@
 				count += 1;
 			});
 			$('#tableBodyResume').append(tableData);
-			$("#loading").hide();
+			$('#tableResume').DataTable({
+				'dom': 'Bfrtip',
+				'responsive':true,
+				'lengthMenu': [
+				[ 10, 25, 50, -1 ],
+				[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+				],
+				'buttons': {
+					buttons:[
+					{
+						extend: 'pageLength',
+						className: 'btn btn-default',
+					},
+					{
+						extend: 'copy',
+						className: 'btn btn-success',
+						text: '<i class="fa fa-copy"></i> Copy',
+						exportOptions: {
+							columns: ':not(.notexport)'
+						}
+					},
+					{
+						extend: 'excel',
+						className: 'btn btn-info',
+						text: '<i class="fa fa-file-excel-o"></i> Excel',
+						exportOptions: {
+							columns: ':not(.notexport)'
+						}
+					},
+					{
+						extend: 'print',
+						className: 'btn btn-warning',
+						text: '<i class="fa fa-print"></i> Print',
+						exportOptions: {
+							columns: ':not(.notexport)'
+						}
+					},
+					]
+				},
+				'paging': true,
+				'lengthChange': true,
+				'searching': true,
+				'ordering': true,
+				'order': [],
+				'info': true,
+				'autoWidth': true,
+				"sPaginationType": "full_numbers",
+				"bJQueryUI": true,
+				"bAutoWidth": false,
+				"processing": true
+			});
 		});
 	}
 
