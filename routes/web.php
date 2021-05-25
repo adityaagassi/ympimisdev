@@ -1162,6 +1162,7 @@ Route::get('fetch/ga_control/live_cooking_employees', 'GeneralAffairController@f
 Route::get('detail/ga_control/live_cooking', 'GeneralAffairController@detailLiveCooking');
 Route::post('edit/ga_control/live_cooking_order', 'GeneralAffairController@editLiveCookingOrder');
 Route::get('fetch/ga_control/live_cooking_randomize', 'GeneralAffairController@randomLiveCooking');
+Route::get('report/ga_control/live_cooking', 'GeneralAffairController@reportLiveCooking');
 
 //STD CONTROL
 Route::get('index/std_control/safety_shoes', 'GeneralController@indexSafetyShoes');
@@ -1652,14 +1653,18 @@ Route::group(['nav' => 'S61', 'middleware' => 'permission'], function(){
 
 	Route::get('canteen/detail/purchase_requisition/po', 'AccountingController@detail_pr_po');
 
-
 	Route::get('canteen/purchase_requisition/report/{id}', 'GeneralAffairController@report_purchase_requisition');
-	Route::get('canteen/purchase_requisition/check/{id}', 'AccountingController@check_purchase_requisition');
-	Route::post('canteen/purchase_requisition/checked/{id}', 'AccountingController@checked_purchase_requisition');
-
 	
 	//nomor PR
 	Route::get('canteen_purchase_requisition/get_nomor_pr', 'GeneralAffairController@get_nomor_pr');
+
+	//Approval Canteen Purchase Requisition
+	Route::get('canteen_purchase_requisition/approvemanager/{id}', 'GeneralAffairController@prapprovalmanager');
+	Route::get('canteen_purchase_requisition/approvegm/{id}', 'GeneralAffairController@prapprovalgm');
+	Route::get('canteen_purchase_requisition/reject/{id}', 'GeneralAffairController@prreject');
+	Route::get('canteen/purchase_requisition/check/{id}', 'AccountingController@check_purchase_requisition');
+	Route::post('canteen/purchase_requisition/checked/{id}', 'AccountingController@checked_purchase_requisition');
+
 });
 
 //PO Monitoring & Control
@@ -1701,14 +1706,14 @@ Route::group(['nav' => 'S43', 'middleware' => 'permission'], function(){
 	Route::get('fetch/purchase_order/prlist', 'AccountingController@fetchPrList');
 	Route::get('fetch/purchase_order/pilih_pr', 'AccountingController@pilihPR');
 
-	Route::get('purchase_order/delivery_control', 'AccountingController@delivery_control');
-	Route::get('purchase_order/jurnal_po', 'AccountingController@jurnal_po');
-	Route::get('fetch/purchase_order/jurnal_po', 'AccountingController@fetchJurnal');
-
 	Route::post('cancel/purchase_order', 'AccountingController@cancel_purchase_order');
 	Route::get('purchase_order/get_item', 'AccountingController@pogetitem');
 	Route::get('export/purchase_order/list', 'AccountingController@exportPO');
 	Route::post('update/purchase_requisition/po', 'AccountingController@update_purchase_requisition_po');
+
+	Route::get('purchase_order/delivery_control', 'AccountingController@delivery_control');
+	Route::get('purchase_order/jurnal_po', 'AccountingController@jurnal_po');
+	Route::get('fetch/purchase_order/jurnal_po', 'AccountingController@fetchJurnal');
 
 	//Purchase Order Khusus investment
 	Route::get('purchase_order_investment', 'AccountingController@purchase_order_investment');
@@ -1721,6 +1726,12 @@ Route::group(['nav' => 'S43', 'middleware' => 'permission'], function(){
 
 	Route::get('edit/investment', 'AccountingController@edit_investment_po');
 	Route::post('update/investment/po', 'AccountingController@update_investment_po');
+
+	//Purchase Order Khusus Kantin
+	Route::get('purchase_order_canteen', 'AccountingController@purchase_order_canteen');
+	Route::get('fetch/purchase_order_canteen', 'AccountingController@fetch_purchase_order_canteen');
+	Route::get('fetch/po_canteen_outstanding', 'AccountingController@fetch_po_outstanding_canteen');
+
 
 });
 
@@ -2008,7 +2019,7 @@ Route::group(['nav' => 'S60', 'middleware' => 'permission'], function(){
 //WELDING
 Route::group(['nav' => 'S54', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_welding/{id}', 'KnockDownController@indexKD');
-	Route::post('fetch/kd_print_welding_body', 'KnockDownController@printLabelNewSingle');	
+	Route::post('fetch/kd_print_welding_body', 'KnockDownController@printLabelWeldingBody');	
 	Route::get('index/print_label_welding/{id}', 'KnockDownController@indexPrintLabelA6');
 
 	Route::post('fetch/kd_print_welding_keypost', 'KnockDownController@printLabelNewSingle');
@@ -2050,7 +2061,7 @@ Route::group(['nav' => 'S29', 'middleware' => 'permission'], function(){
 	Route::post('delete/kdo_case', 'KnockDownController@deleteKdCase');
 	Route::post('delete/kdo_detail', 'KnockDownController@deleteKdDetail');
 
-	Route::get('index/kd_splitter', 'KnockDownController@indexKdSplitter');
+	Route::get('index/kd_splitter/{id}', 'KnockDownController@indexKdSplitter');
 	Route::get('scan/kd_splitter', 'KnockDownController@scanKdSplitter');
 	Route::post('fetch/kd_splitter', 'KnockDownController@fetchKdSplitter');
 	Route::get('fetch/kdo_splitter_detail', 'KnockDownController@fetchKDOSplitterDetail');
@@ -4720,7 +4731,13 @@ Route::group(['nav' => 'M34', 'middleware' => 'permission'], function(){
 	Route::post('adagio/send', 'AdagioAutoController@AdagioSendFile');
 	Route::post('adagio/delete', 'AdagioAutoController@AdagioDelete');
 	Route::post('adagio/sendmail', 'AdagioAutoController@AdagioSendEmail');
+	Route::get('adagio/verivikasi/{id}', 'AdagioAutoController@AdagioVerivikasi');
+	Route::get('adagio/rejected/{id}', 'AdagioAutoController@AdagioReject');
+	Route::get('adagio/send_email/{id}', 'AdagioAutoController@AdagioEmail');	
+	Route::get('adagio/monitoring', 'AdagioAutoController@AdagioMonitoring');
+	Route::get('adagio/fetch/monitoring', 'AdagioAutoController@AdagioFetchMonitoring');
 });
+
 
 //Warehouse
 Route::get('index/warehouse', 'WarehouseController@index');

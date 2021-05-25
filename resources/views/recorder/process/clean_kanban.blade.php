@@ -164,6 +164,8 @@ table.table-bordered > tfoot > tr > th{
 		$.get('{{ url("fetch/injection/clean_kanban") }}',  function(result, status, xhr){
 			if (result.status) {
 				$('#tableHistoryBody').html("");
+				$('#tableHistory').DataTable().clear();
+				$('#tableHistory').DataTable().destroy();
 				var table = "";
 				$.each(result.datas, function(key, value) {
 					table += '<tr>';
@@ -178,6 +180,57 @@ table.table-bordered > tfoot > tr > th{
 					table += '</tr>';
 				});
 				$('#tableHistoryBody').append(table);
+				$('#tableHistory').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'lengthMenu': [
+					[ 10, 25, 50, -1 ],
+					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
+						{
+							extend: 'pageLength',
+							className: 'btn btn-default',
+						},
+						{
+							extend: 'copy',
+							className: 'btn btn-success',
+							text: '<i class="fa fa-copy"></i> Copy',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'excel',
+							className: 'btn btn-info',
+							text: '<i class="fa fa-file-excel-o"></i> Excel',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'print',
+							className: 'btn btn-warning',
+							text: '<i class="fa fa-print"></i> Print',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						]
+					},
+					'paging': true,
+					'lengthChange': true,
+					'searching': true,
+					'ordering': true,
+					'order': [],
+					'info': true,
+					'autoWidth': true,
+					"sPaginationType": "full_numbers",
+					"bJQueryUI": true,
+					"bAutoWidth": false,
+					"processing": true
+				});
 			}else{
 				openErrorGritter('Error!',result.message);
 			}
