@@ -17,6 +17,8 @@ use App\User;
 use App\ReturnLog;
 use App\ReturnAdditional;
 use App\SapCompletion;
+use App\InjectionInventory;
+use App\Material;
 use DataTables;
 use DateTime;
 use Response;
@@ -81,7 +83,8 @@ class TransactionController extends Controller
 
 		return view('return.return_logs', array(
 			'title' => 'Return Logs',
-			'title_jp' => '??',
+			'title_jp' => 'リターンログ
+			',
 			'storage_locations' => $storage_locations,
 			'materials' => $materials
 		))->with('page', 'Return Logs');
@@ -94,7 +97,7 @@ class TransactionController extends Controller
 
 		return view('return.index', array(
 			'title' => 'Return Material',
-			'title_jp' => '??',
+			'title_jp' => 'リターン材',
 			'storage_locations' => $this->storage_location
 		))->with('page', 'Return');
 	}
@@ -106,7 +109,7 @@ class TransactionController extends Controller
 
 		return view('return.list', array(
 			'title' => 'Data Return Material',
-			'title_jp' => '??',
+			'title_jp' => 'リターン材データ',
 			'storage_locations' => $storage_locations
 		))->with('page', 'Return');
 	}
@@ -244,7 +247,6 @@ class TransactionController extends Controller
 				->where('material_number', '=', $return->material_number)
 				->first();
 
-
 				$return_log = new ReturnLog([
 					'return_id' => $return->id,
 					'material_number' => $return->material_number,
@@ -259,6 +261,20 @@ class TransactionController extends Controller
 				]);
 				$return_log->save();
 				
+				// if($return->issue_location == 'RC11'){
+				// 	try{
+				// 		$return_injection = InjectionInventory::where('material_number', '=', $return->material_number)
+				// 		->where('location', '=', 'RC11')
+				// 		->first();
+
+				// 		$return_injection->quantity = $return_injection->quantity-$return_quantity;
+
+				// 		$return_injection->save();
+				// 	}
+				// 	catch(\Exception $e){
+
+				// 	}
+				// }
 
 				$return_data = db::connection('mysql2')->table('transfers_return')->insert([
 					'material_id' => $material->id,
@@ -634,7 +650,17 @@ class TransactionController extends Controller
 				$printer_name = 'FLO Printer 102';
 			}
 			else if($receive == 'SX91'){
-				$printer_name = 'FLO Printer 103';
+				$material = Material::where('material_number', $material_number)->first();
+
+				if($material){
+					if(str_contains($material->key, 'KEY')){
+						$printer_name = 'KDO-SX';
+					}else{
+						$printer_name = 'FLO Printer 103';
+					}
+				}else{
+					$printer_name = 'FLO Printer 103';
+				}
 			}
 			else if($receive == 'FL91'){
 				$printer_name = 'FLO Printer 101';			
@@ -706,7 +732,17 @@ class TransactionController extends Controller
 				$printer_name = 'FLO Printer 102';
 			}
 			else if($receive == 'SX91'){
-				$printer_name = 'FLO Printer 103';
+				$material = Material::where('material_number', $material_number)->first();
+
+				if($material){
+					if(str_contains($material->key, 'KEY')){
+						$printer_name = 'KDO-SX';
+					}else{
+						$printer_name = 'FLO Printer 103';
+					}
+				}else{
+					$printer_name = 'FLO Printer 103';
+				}
 			}
 			else if($receive == 'FL91'){
 				$printer_name = 'FLO Printer 101';			
