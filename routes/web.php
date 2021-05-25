@@ -480,8 +480,9 @@ Route::group(['nav' => 'M31', 'middleware' => 'permission'], function(){
 	Route::get('edit/injection/tag', 'InjectionsController@editInjectionTag');
 	Route::post('update/injection/tag', 'InjectionsController@updateInjectionTag');
 	Route::get('delete/injection/tag/{id}', 'InjectionsController@deleteInjectionTag');
-	Route::post('remove/injection/tag', 'InjectionsController@removeInjectionTag');
 });
+Route::post('remove/injection/tag', 'InjectionsController@removeInjectionTag');
+Route::get('fetch/injection/clean_kanban', 'InjectionsController@fetchInjectionCleanKanban');
 
 Route::get('index/injection/traceability', 'InjectionsController@indexInjectionTraceability');
 Route::get('fetch/injection/traceability', 'InjectionsController@fetchInjectionTraceability');
@@ -3633,6 +3634,7 @@ Route::get('index/recorder/get_push_pull','RecorderProcessController@get_push_pu
 Route::post('index/recorder/update/{id}','RecorderProcessController@update');
 Route::get('index/recorder/get_resume','RecorderProcessController@get_resume');
 Route::post('index/recorder/update_resume/{id}','RecorderProcessController@update_resume');
+Route::get('index/recorder/clean_kanban','RecorderProcessController@indexCleanKanban');
 
 //MACHINE PARAMETER
 Route::get('index/machine_parameter/{remark}','RecorderProcessController@indexMachineParameter');

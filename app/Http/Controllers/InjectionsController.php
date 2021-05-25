@@ -6673,6 +6673,11 @@ class InjectionsController extends Controller
     {
         try {
             $transaction = InjectionTag::where('tag',$request->get('tag'))->first();
+
+            $process = InjectionProcessLog::where('tag_product',$request->get('tag'))->where('material_number',$transaction->material_number)->where('cavity',$transaction->cavity)->where('remark',null)->first();
+            $process->remark = 'Close';
+            $process->save();
+
             $transaction->operator_id = null;
             $transaction->part_name = null;
             $transaction->part_type = null;
@@ -6687,12 +6692,33 @@ class InjectionsController extends Controller
             $transaction->remark = null;
             $transaction->save();
 
-            $process = InjectionProcessLog::where('tag_product',$request->get('tag'))->where('material_number',$request->get('material_number'))->where('cavity',$request->get('cavity'))->where('remark',null)->first();
-                $process->remark = 'Close';
-                $process->save();
-
             $response = array(
                 'status' => true
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function fetchInjectionCleanKanban()
+    {
+        try {
+            $process = InjectionProcessLog::where('injection_process_logs.remark','Close')
+            ->select('injection_process_logs.material_number','injection_process_logs.part_type','injection_process_logs.color','injection_process_logs.shot','injection_process_logs.cavity','injection_tags.mat_desc','injection_tags.no_kanban','injection_process_logs.updated_at as created')
+            ->whereDate('injection_process_logs.updated_at','>=',date('Y-m-01'))
+            ->whereDate('injection_process_logs.updated_at','<=',date('Y-m-d'))
+            ->leftjoin('injection_tags','injection_tags.tag','injection_process_logs.tag_product')
+            ->orderBy('injection_process_logs.updated_at','desc')
+            ->get();
+
+            $response = array(
+                'status' => true,
+                'datas' => $process
             );
             return Response::json($response);
         } catch (\Exception $e) {

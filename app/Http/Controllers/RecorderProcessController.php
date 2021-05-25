@@ -7552,5 +7552,13 @@ class RecorderProcessController extends Controller
         return Response::json($response);
       }
     }
+
+    public function indexCleanKanban()
+    {
+      return view('recorder.process.clean_kanban', array(
+        'title' => 'Clean Kanban Recorder',
+        'title_jp' => '??'
+      ))->with('page', 'Clean Kanban Recorder');
+    }
 }
   
