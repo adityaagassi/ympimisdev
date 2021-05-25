@@ -958,7 +958,7 @@ class AssemblyProcessController extends Controller
 		->where('location', 'qa-visual2')
 		->where('origin_group_code', $origin_group_code)
 		->first();
-		$data2 = AssemblyDetail::where('tag', $tag)
+		$data2 = AssemblyDetail::select('location')->distinct()->where('tag', $tag)
 		->whereIn('location', ['qa-visual2', 'qa-visual1', 'qa-fungsi'])
 		// ->where('location', 'qa-visual2')
 		->where('origin_group_code', $origin_group_code)
