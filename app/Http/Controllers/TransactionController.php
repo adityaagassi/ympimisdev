@@ -653,7 +653,7 @@ class TransactionController extends Controller
 				$mt = Material::where('material_number', $material)->first();
 
 				if($mt){
-					if(str_contains($mt->key, 'KEY')){
+					if(str_contains($mt->hpl, 'KEY')){
 						$printer_name = 'KDO SX';
 					}else{
 						$printer_name = 'FLO Printer 103';
@@ -735,7 +735,7 @@ class TransactionController extends Controller
 				$mt = Material::where('material_number', $material)->first();
 
 				if($mt){
-					if(str_contains($mt->key, 'KEY')){
+					if(str_contains($mt->hpl, 'KEY')){
 						$printer_name = 'KDO SX';
 					}else{
 						$printer_name = 'FLO Printer 103';
@@ -763,6 +763,7 @@ class TransactionController extends Controller
 				$printer_name = 'MIS';
 			}
 		}
+
 
 		$connector = new WindowsPrintConnector($printer_name);
 		$printer = new Printer($connector);
