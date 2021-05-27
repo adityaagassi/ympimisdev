@@ -423,20 +423,19 @@
 			$("#loading").show();
 			$.post(url, data,  function(result, status, xhr){
 				if(result.status){
-					var id = result.knock_down_detail.id;
-					printLabel(id, ('print'+id));
-
-
 					$('#production_id').val('');
 					$('#due_date').val('');
 					$('#material_number').val('');
 					$('#material_description').val('');
 					$('#qty_packing').val('');
 
-					$("#loading").hide();
-
 					fillTableList();
 					$('#kdo_detail').DataTable().ajax.reload();
+
+					var id = result.knock_down_detail.id;
+					printLabel(id, ('print'+id));
+
+					$("#loading").hide();
 					openSuccessGritter('Success', result.message);
 				}else{
 					$("#loading").hide();

@@ -700,6 +700,11 @@
 					printLabel(shipment_id, result.kd_number, ('print'+kd_number));
 				}
 
+				fillTableList();
+				$('#kdo_table').DataTable().ajax.reload();
+				$('#kdo_detail').DataTable().ajax.reload();
+				$('#kdo_open').DataTable().ajax.reload();
+
 				$('#kd_number').val('');
 				$('#shipment_id').val('');
 				$('#st_date').val('');
@@ -709,11 +714,6 @@
 				$('#qty_packing').val('');
 
 				$("#loading").hide();
-
-				fillTableList();
-				$('#kdo_table').DataTable().ajax.reload();
-				$('#kdo_detail').DataTable().ajax.reload();
-				$('#kdo_open').DataTable().ajax.reload();
 				openSuccessGritter('Success', result.message);
 			}else{
 				$("#loading").hide();

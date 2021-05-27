@@ -637,10 +637,11 @@
 
 				$('#cek_due_date').val(due_date);
 
-				$("#loading").hide();
 				$('#actual_count').val(result.actual_count);
 				fillTableList();
 				fillTablePack();
+
+				$("#loading").hide();
 				openSuccessGritter('Success', result.message);
 			}else{
 				$("#loading").hide();

@@ -648,12 +648,13 @@
 				$('#destination').val('');
 				$('#shipment_date').val('');
 
-				$("#loading").hide();
 				$('#actual_count').val(result.actual_count);
 				fillTableList();
 				fillTablePack();
 				$('#kdo_table').DataTable().ajax.reload();
 				$('#kdo_detail').DataTable().ajax.reload();
+
+				$("#loading").hide();
 				openSuccessGritter('Success', result.message);
 			}else{
 				$("#loading").hide();

@@ -38,7 +38,7 @@
 @section('header')
 <section class="content-header">
   <h1>
-    Knock Down Outputs <span class="text-purple"> ???</span>
+    Knock Down Outputs <span class="text-purple"> KDアウトプット</span>
     <small>Delivery to Warehouse <span class="text-purple">倉庫送り</span></small>
   </h1>
 </section>
@@ -383,7 +383,7 @@
       { "data": "actual_count" },
       { "data": "remark" },
       { "data": "updated_at" },
-      { "data": "reprintKDO" },
+      { "data": "reprintKDODelivery" },
       { "data": "deleteKDO" }
       ]
     });

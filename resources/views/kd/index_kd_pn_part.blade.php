@@ -481,6 +481,8 @@
 				var id = result.knock_down_detail_id;
 				printLabelSubassy(id, ('print'+id));
 
+				fillTableList();
+				$('#kdo_detail').DataTable().ajax.reload();
 
 				$('#shipment_id').val('');
 				$('#st_date').val('');
@@ -490,9 +492,6 @@
 				$('#qty_packing').val('');
 
 				$("#loading").hide();
-
-				fillTableList();
-				$('#kdo_detail').DataTable().ajax.reload();
 				openSuccessGritter('Success', result.message);
 			}else{
 				$("#loading").hide();

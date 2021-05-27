@@ -492,6 +492,22 @@
         </ul>
       </li>
 
+      @if(isset($head2) && $head2 == "Purchase Order Canteen")<li class="treeview active menu-open">@else<li class="treeview">@endif
+        <a href="#"><i class="fa fa-book"></i>Purchase Order Canteen
+          <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+          </span>
+        </a>
+        <ul class="treeview-menu">
+          @if(isset($page) && $page == "Purchase Order Canteen")<li class="active">@else<li>@endif
+            <a href="{{ url("purchase_order_canteen") }}"><i class="fa fa-book"></i>PO Canteen</a>
+          </li>
+          @if(isset($page) && $page == "Purchase Order Canteen Monitoring")<li class="active">@else<li>@endif
+            <a href="{{ url("purchase_order_canteen/monitoring") }}"><i class="fa fa-tv"></i>PO Canteen Monitoring</a>
+          </li>
+        </ul>
+      </li>
+
       @if(isset($head2) && $head2 == "Data Master")<li class="treeview active menu-open">@else<li class="treeview">@endif
         <a href="#"><i class="fa fa-list-ul"></i>Data Master
           <span class="pull-right-container">
@@ -1126,31 +1142,47 @@
   @endif
 
   @if(in_array('S29', $navs))
-  @if(isset($page) && $page == "KD Splitter")<li class="active">@else<li>@endif
-    <a href="{{ url("index/kd_splitter") }}"><i class="fa fa-hand-scissors-o"></i> <span>KD  <i class="fa fa-angle-right"></i> Splitter</span></a>
-  </li>
-  @endif
-
-  @if(in_array('S29', $navs))
-  @if(isset($page) && $page == "KD Stuffing")<li class="active">@else<li>@endif
-    <a href="{{ url("index/kd_stuffing") }}"><i class="fa fa-truck"></i> <span>KD  <i class="fa fa-angle-right"></i> Stuffing</span></a>
-  </li>
-  @endif
-
-  @if(Auth::user()->role_code != 'YEMI')
-  @if(isset($head) && $head == "Stocktaking")
+  @if(isset($head) && $head == "KD Splitter")
   <li class="treeview active">@else<li class="treeview">@endif
     <a href="#">
-     <i class="fa fa-cubes"></i> <span>Stocktaking</span>
+     <i class="fa fa-scissors"></i>  <span>KD  <i class="fa fa-angle-right"></i> Splitter</span>
      <span class="pull-right-container">
       <i class="fa fa-angle-left pull-right"></i>
     </span>
   </a>
   <ul class="treeview-menu">
-    @if(isset($page) && $page == "Monthly Stock Taking")<li class="active">@else<li>@endif
-      <a href="{{ url("index/stocktaking/menu") }}"><i class="fa fa-list-alt"></i> Monthly Stock Taking</a>
+    @if(isset($page) && $page == "KD Splitter Case")<li class="active">@else<li>@endif
+      <a href="{{ url("index/kd_splitter/case") }}"><i class="fa fa fa-pencil-square-o"></i> <span>KD  <i class="fa fa-angle-right"></i> Case</span></a>
+    </li>
+    @if(isset($page) && $page == "KD Splitter PN Part")<li class="active">@else<li>@endif
+      <a href="{{ url("index/kd_splitter/pn-part") }}"><i class="fa fa fa-pencil-square-o"></i> <span>KD  <i class="fa fa-angle-right"></i> PN Part</span></a>
     </li>
   </ul>
+</li>
+
+
+@endif
+
+@if(in_array('S29', $navs))
+@if(isset($page) && $page == "KD Stuffing")<li class="active">@else<li>@endif
+  <a href="{{ url("index/kd_stuffing") }}"><i class="fa fa-truck"></i> <span>KD  <i class="fa fa-angle-right"></i> Stuffing</span></a>
+</li>
+@endif
+
+@if(Auth::user()->role_code != 'YEMI')
+@if(isset($head) && $head == "Stocktaking")
+<li class="treeview active">@else<li class="treeview">@endif
+  <a href="#">
+   <i class="fa fa-cubes"></i> <span>Stocktaking</span>
+   <span class="pull-right-container">
+    <i class="fa fa-angle-left pull-right"></i>
+  </span>
+</a>
+<ul class="treeview-menu">
+  @if(isset($page) && $page == "Monthly Stock Taking")<li class="active">@else<li>@endif
+    <a href="{{ url("index/stocktaking/menu") }}"><i class="fa fa-list-alt"></i> Monthly Stock Taking</a>
+  </li>
+</ul>
 </li>
 @endif
 
@@ -1426,6 +1458,9 @@
     </li>
     @if(isset($page) && $page == "MP Position")<li class="active">@else<li>@endif
       <a href="{{ secure_url("/index/maintenance/operator") }}"><i class="fa fa-map-pin"></i> <span>Sign to Area</span></a>
+    </li>
+    @if(isset($page) && $page == "Skill Map Maintenance")<li class="active">@else<li>@endif
+      <a href="{{ url('index/skill_map','maintenance') }}"><i class="fa fa-sitemap"></i> <span>Skill Map</span></a>
     </li>
   </li>
 </ul>
@@ -1747,6 +1782,10 @@
     @if(isset($page) && $page == "User")
     <li class="active">@else<li>@endif
       <a href="{{ url("adagio/resume") }}"><i class="fa fa-file-archive-o"></i> <span>User</span></a>
+    </li>
+    @if(isset($page) && $page == "Monitoring")
+    <li class="active">@else<li>@endif
+      <a href="{{ url("adagio/monitoring") }}"><i class="fa fa-tv"></i> <span>Monitoring</span></a>
     </li>
     @endif
   </ul>

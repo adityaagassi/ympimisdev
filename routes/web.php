@@ -183,6 +183,7 @@ Route::get('download/manual/{reference_file}', 'HomeController@download');
 //MIS TICKET
 Route::group(['nav' => 'S63', 'middleware' => 'permission'], function(){
 	Route::post('input/ticket', 'TicketController@inputTicket');
+	Route::get('approval/ticket', 'TicketController@approvalTicket');
 });
 Route::get('/index/ticket/{id}', 'TicketController@indexTicket');
 
@@ -1651,7 +1652,7 @@ Route::group(['nav' => 'S61', 'middleware' => 'permission'], function(){
 	Route::post('canteen/delete/purchase_requisition_item', 'GeneralAffairController@delete_item_pr');
 	Route::get('canteen/purchase_requisition/sendemail', 'GeneralAffairController@pr_send_email');
 
-	Route::get('canteen/detail/purchase_requisition/po', 'AccountingController@detail_pr_po');
+	Route::get('canteen/detail/purchase_requisition/po', 'AccountingController@detail_pr_po_canteen');
 
 	Route::get('canteen/purchase_requisition/report/{id}', 'GeneralAffairController@report_purchase_requisition');
 	
@@ -1731,6 +1732,8 @@ Route::group(['nav' => 'S43', 'middleware' => 'permission'], function(){
 	Route::get('purchase_order_canteen', 'AccountingController@purchase_order_canteen');
 	Route::get('fetch/purchase_order_canteen', 'AccountingController@fetch_purchase_order_canteen');
 	Route::get('fetch/po_canteen_outstanding', 'AccountingController@fetch_po_outstanding_canteen');
+
+	Route::post('update/purchase_requisition_canteen/po', 'AccountingController@update_purchase_requisition_canteen_po');
 
 
 });
@@ -2035,8 +2038,8 @@ Route::group(['nav' => 'S25', 'middleware' => 'permission'], function(){
 	//Based on shipment sch
 	Route::post('fetch/kd_print_subassy_new', 'KnockDownController@printLabelNew');
 	//Based on production sch item=1
-	// Route::post('fetch/kd_print_subassy_new_single', 'KnockDownController@printLabelSubassyNew');
-	Route::post('fetch/kd_print_subassy_new_single', 'KnockDownController@printLabelNewSingle');
+	Route::post('fetch/kd_print_subassy_new_single', 'KnockDownController@printLabelSubassyNew');
+	// Route::post('fetch/kd_print_subassy_new_single', 'KnockDownController@printLabelNewSingle');
 
 	Route::get('index/print_label_subassy/{id}', 'KnockDownController@indexPrintLabelSubassy');
 

@@ -39,7 +39,7 @@
 @section('header')
 <section class="content-header">
      <h1>
-          Knock Down Outputs <span class="text-purple"> ???</span>
+          Knock Down Outputs <span class="text-purple"> KDアウトプット</span>
           <small>Containers Stuffing <span class="text-purple">コンテナ積み込</span></small>
      </h1>
 </section>
@@ -51,7 +51,7 @@
           <div class="col-xs-12" id="main">
                <div class="box">
                     <div class="box-header">
-                         <h3 class="box-title">Knock Downs Stuffing <span class="text-purple">??</span></h3>
+                         <h3 class="box-title">Knock Downs Stuffing <span class="text-purple">KDスタッフィング</span></h3>
                     </div>
                     <div class="box-body" style="padding-bottom: 30px;">
                          <div class="row">
