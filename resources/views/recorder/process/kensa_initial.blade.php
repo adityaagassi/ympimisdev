@@ -814,10 +814,10 @@ table.table-bordered > tfoot > tr > th{
 			$('#loading').hide();
 		}
 		if (product.match(/YRS/gi)) {
-			if ($('#tag_head').val() == '' || $('#tag_middle').val() == '' || $('#tag_foot').val() == '' || $('#tag_block').val() == '') {
-				alert('Semua Data Harus Diisi.');
-				$('#loading').hide();
-			}else{
+			// if ($('#tag_head').val() == '' || $('#tag_middle').val() == '' || $('#tag_foot').val() == '' || $('#tag_block').val() == '') {
+			// 	alert('Semua Data Harus Diisi.');
+			// 	$('#loading').hide();
+			// }else{
 				var tag_head = $('#tag_head').val();
 				var tag_middle = $('#tag_middle').val();
 				var tag_foot = $('#tag_foot').val();
@@ -882,7 +882,7 @@ table.table-bordered > tfoot > tr > th{
 					cavity_block:cavity_block,
 					location_block:location_block,
 				}
-			}
+			// }
 
 			$.post('{{ url("input/recorder/kensa/initial") }}', data, function(result, status, xhr){
 				if(result.status){
@@ -899,10 +899,10 @@ table.table-bordered > tfoot > tr > th{
 			});
 		}
 		else {
-			if ($('#tag_head_yrf').val() == "" || $('#tag_body_yrf').val() == "" || $('#tag_stopper_yrf').val() == "") {
-				alert('Semua Data Harus Diisi');
-				$('#loading').hide();
-			}else{
+			// if ($('#tag_head_yrf').val() == "" || $('#tag_body_yrf').val() == "" || $('#tag_stopper_yrf').val() == "") {
+			// 	alert('Semua Data Harus Diisi');
+			// 	$('#loading').hide();
+			// }else{
 				var tag_head_yrf = $('#tag_head_yrf').val();
 				var tag_body_yrf = $('#tag_body_yrf').val();
 				var tag_stopper_yrf = $('#tag_stopper_yrf').val();
@@ -966,7 +966,7 @@ table.table-bordered > tfoot > tr > th{
 						openErrorGritter('Error', result.message);
 					}
 				});
-			}
+			// }
 		}
 	}
 
