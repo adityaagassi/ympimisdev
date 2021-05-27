@@ -39,6 +39,7 @@
 	<h1>
 		{{ $title }}
 		<small><span class="text-purple">{{ $title_jp }}</span></small>
+		<button class="btn btn-info pull-right" style="margin-left: 5px; width: 10%;" onclick="fetchList();"><i class="fa fa-refresh"></i> Refresh</button>
 	</h1>
 </section>
 @endsection
@@ -111,9 +112,6 @@
 	});
 
 	jQuery(document).ready(function() {
-		$('.select2').select2({
-			minimumResultsForSearch: -1
-		});
 		fetchList();
 	});
 
@@ -157,6 +155,10 @@
 				});
 
 				$('#tableConfirmBody').append(tableConfirmBody);
+
+				$('.select2').select2({
+					minimumResultsForSearch: -1
+				});
 			}
 			else{
 				alert('Unidentified Error');

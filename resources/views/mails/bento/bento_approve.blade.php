@@ -18,8 +18,7 @@
 	<div>
 		<center>
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
-			{{-- <p style="font-size: 18px;">Japanese Food Order <span style="color: purple;">和食弁当の予約</span><br> --}}
-			This is an automatic notification. Please do not reply to this address. 返信不要の自動通知です。</p>
+			<p>This is an automatic notification. Please do not reply to this address. 返信不要の自動通知です。</p>
 			<span style="font-weight: bold; color: green; font-size: 24px;">Your Order Has Been Confirmed by YMPI あなたのご注文はYMPIにより確認済み</span>
 			<br>
 			<br>
