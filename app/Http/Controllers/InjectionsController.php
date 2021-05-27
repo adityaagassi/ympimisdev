@@ -6675,8 +6675,10 @@ class InjectionsController extends Controller
             $transaction = InjectionTag::where('tag',$request->get('tag'))->first();
 
             $process = InjectionProcessLog::where('tag_product',$request->get('tag'))->where('material_number',$transaction->material_number)->where('cavity',$transaction->cavity)->where('remark',null)->first();
-            $process->remark = 'Close';
-            $process->save();
+            if (count($process) > 0) {
+                $process->remark = 'Close';
+                $process->save();
+            }
 
             $transaction->operator_id = null;
             $transaction->part_name = null;
