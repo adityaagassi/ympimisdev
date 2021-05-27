@@ -184,7 +184,7 @@
 									<th style="width: 1%">Qty</th>
 									<th style="width: 3%">Created At</th>
 									<th style="width: 1%">Reprint</th>
-									<th style="width: 1%">Delete</th>
+									<!-- <th style="width: 1%">Delete</th> -->
 								</tr>
 							</thead>
 							<tbody>
@@ -198,7 +198,7 @@
 									<th></th>
 									<th></th>
 									<th></th>
-									<th></th>
+									<!-- <th></th> -->
 								</tr>
 							</tfoot>
 						</table>
@@ -457,7 +457,7 @@
 			{ "data": "quantity" },
 			{ "data": "updated_at" },
 			{ "data": "reprintKDO" },
-			{ "data": "deleteKDO" }
+			// { "data": "deleteKDO" }
 			]
 		});
 

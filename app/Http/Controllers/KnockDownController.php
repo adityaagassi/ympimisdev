@@ -1544,8 +1544,9 @@ class KnockDownController extends Controller{
 		]);
 
 		$storage_location = $knock_down_detail->storage_location; 
-		$cs_breakdown;
-		$gms_breakdown;
+		$cs_breakdown = '';
+		$gms_breakdown = '';
+
 		if($storage_location == 'SX51'){
 			$child = BomComponent::where('material_parent', $knock_down_detail->material_number)->first();
 			if(!$child){
