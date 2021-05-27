@@ -112,17 +112,19 @@ table > thead > tr > th{
 		<div class="col-xs-12" style="margin-top: 0px;">
 			<div class="row" style="margin:0px;">
 				<div class="col-xs-2" style="padding-right: 0;">
-					<select class="form-control select2" id="periode" data-placeholder="Pilih Periode" style="width: 100%;">
-						<option value=""></option>
-						<option value=""></option>
-					</select>
+					<div class="input-group date">
+						<div class="input-group-addon bg-green" style="border: none;">
+							<i class="fa fa-calendar"></i>
+						</div>
+						<input type="text" class="form-control datepicker" id="tanggal" placeholder="Select Date">
+					</div>
 				</div>
-				<div class="col-xs-2" style="padding-right: 0;">
+				<!-- <div class="col-xs-2" style="padding-right: 0;">
 					<select class="form-control select2" id="keterangan" data-placeholder="Pilih Survey" style="width: 100%;">
 						<option value=""></option>
 						<option value="covid">Covid</option>
 					</select>
-				</div>
+				</div> -->
 				<div class="col-xs-2">
 					<button class="btn btn-success" onclick="fillChart()">Update Chart</button>
 				</div>
@@ -428,9 +430,17 @@ table > thead > tr > th{
 	}
 
 	function fillChart() {
+
+
+		var tanggal = $('#tanggal').val();
+		
+		var data = {
+			tanggal:tanggal
+		}
+
 		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
 
-		$.get('{{ url("fetch/survey_covid") }}', function(result, status, xhr) {
+		$.get('{{ url("fetch/survey_covid") }}',data, function(result, status, xhr) {
 			if(xhr.status == 200){
 				if(result.status){
 					//Chart Machine Report
@@ -444,7 +454,6 @@ table > thead > tr > th{
 
 					var series = []
 					var series2 = [];
-
 
 					var jml_rendah = 0;
 					var jml_sedang = 0;
@@ -682,9 +691,13 @@ table > thead > tr > th{
 		$('#loadingDetail').show();
 		$('#modalDetailTitle').html("");
 		$('#tableDetail').hide();
+
+		var tanggal = $('#tanggal').val();
+
 		var data = {
 			dept:dept,
-			answer:answer
+			answer:answer,
+			tanggal:tanggal
 		}
 
 		$.get('{{ url("fetch/survey_covid/detail") }}', data, function(result, status, xhr) {

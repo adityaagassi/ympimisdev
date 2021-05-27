@@ -225,53 +225,93 @@ class SurveyController extends Controller
 	public function fetchSurveyCovid(Request $request)
 	{
 		try {
-			if ($request->get('keterangan') == null) {
-				$keterangan = "covid";
-			}else{
-				$keterangan = $request->get('keterangan');
+
+			if ($request->get('tanggal') == "") {
+				$survey = DB::SELECT("
+					SELECT
+						SUM( a.count_sudah ) AS sudah,
+						SUM( a.count_belum ) AS belum,
+						a.department,
+						COALESCE ( departments.department_shortname, '' ) AS department_shortname 
+					FROM
+						(
+					SELECT
+						count( miraimobile.survey_logs.employee_id ) AS count_sudah,
+						0 AS count_belum,
+						COALESCE (employee_syncs.department, '' ) AS department 
+					FROM
+						miraimobile.survey_logs
+						JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_logs.employee_id 
+					GROUP BY
+						employee_syncs.department
+						
+						UNION ALL
+					SELECT
+						0 AS count_sudah,
+						count( employee_syncs.employee_id ) AS count_belum,
+						COALESCE ( employee_syncs.department, '' ) AS department 
+					FROM
+						miraimobile.survey_logs
+						RIGHT JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_logs.employee_id 
+					WHERE
+						miraimobile.survey_logs.employee_id IS NULL 
+						AND employee_syncs.end_date IS NULL 
+					GROUP BY
+						employee_syncs.department 
+						) a
+						LEFT JOIN departments ON a.department = departments.department_name 
+					GROUP BY
+						a.department,
+						departments.department_shortname
+					");
+			}
+			else{
+
+				$date = date('Y-m-d', strtotime($request->get("tanggal")));
+
+				$survey = DB::SELECT("
+					SELECT
+						SUM( a.count_sudah ) AS sudah,
+						SUM( a.count_belum ) AS belum,
+						a.department,
+						COALESCE ( departments.department_shortname, '' ) AS department_shortname 
+					FROM
+						(
+					SELECT
+						count( miraimobile.survey_covid_logs.employee_id ) AS count_sudah,
+						0 AS count_belum,
+						COALESCE (employee_syncs.department, '' ) AS department 
+					FROM
+						miraimobile.survey_covid_logs
+						JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_covid_logs.employee_id 
+					WHERE 
+						miraimobile.survey_covid_logs.tanggal = '".$date."' 
+					GROUP BY
+						employee_syncs.department
+						
+						UNION ALL
+
+					SELECT 
+						0 AS count_sudah,
+						SUM(IF(mobile.employee_id is null,1,0)) as count_belum,
+						COALESCE ( employee_syncs.department, '' ) AS department 
+					FROM 
+						(SELECT * from miraimobile.survey_covid_logs where tanggal = '".$date."') as mobile
+						RIGHT JOIN employee_syncs ON employee_syncs.employee_id = mobile.employee_id 
+						WHERE
+						employee_syncs.end_date IS NULL 
+						GROUP BY employee_syncs.department
+					) a
+						LEFT JOIN departments ON a.department = departments.department_name 
+					GROUP BY
+						a.department,
+						departments.department_shortname
+					");
 			}
 
-			$survey = DB::SELECT("
-				SELECT
-					SUM( a.count_sudah ) AS sudah,
-					SUM( a.count_belum ) AS belum,
-					a.department,
-					COALESCE ( departments.department_shortname, '' ) AS department_shortname 
-				FROM
-					(
-				SELECT
-					count( miraimobile.survey_logs.employee_id ) AS count_sudah,
-					0 AS count_belum,
-					COALESCE (employee_syncs.department, '' ) AS department 
-				FROM
-					miraimobile.survey_logs
-					JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_logs.employee_id 
-				WHERE 
-					miraimobile.survey_logs.survey_code = '".$keterangan."' 
-				GROUP BY
-					employee_syncs.department
-					
-					UNION ALL
-				SELECT
-					0 AS count_sudah,
-					count( employee_syncs.employee_id ) AS count_belum,
-					COALESCE ( employee_syncs.department, '' ) AS department 
-				FROM
-					miraimobile.survey_logs
-					RIGHT JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_logs.employee_id 
-				WHERE
-					miraimobile.survey_logs.employee_id IS NULL 
-					AND employee_syncs.end_date IS NULL 
-				GROUP BY
-					employee_syncs.department 
-					) a
-					LEFT JOIN departments ON a.department = departments.department_name 
-				GROUP BY
-					a.department,
-					departments.department_shortname
-				");
+			if ($request->get('tanggal') == "") {
 
-			$nilai = DB::SELECT("
+				$nilai = DB::SELECT("
 				SELECT
 					sum(CASE WHEN miraimobile.survey_logs.total <= 35 THEN 1 ELSE 0 END) AS jumlah_rendah,
 					sum(CASE WHEN miraimobile.survey_logs.total > 35 AND miraimobile.survey_logs.total <= 80 THEN 1 ELSE 0 END) AS jumlah_sedang,
@@ -282,11 +322,27 @@ class SurveyController extends Controller
 				WHERE
 					miraimobile.survey_logs.survey_code = 'covid' 
 				");
+			}
+			else{
+
+				$date = date('Y-m-d', strtotime($request->get("tanggal")));
+
+				$nilai = DB::SELECT("
+				SELECT
+					sum( CASE WHEN miraimobile.survey_covid_logs.total <= 35 THEN 1 ELSE 0 END ) AS jumlah_rendah,
+					sum( CASE WHEN miraimobile.survey_covid_logs.total > 35 AND miraimobile.survey_covid_logs.total <= 80 THEN 1 ELSE 0 END ) AS jumlah_sedang,
+					sum( CASE WHEN miraimobile.survey_covid_logs.total > 80 THEN 1 ELSE 0 END ) AS jumlah_tinggi 
+				FROM
+					miraimobile.survey_covid_logs
+					JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_covid_logs.employee_id 
+				WHERE
+					miraimobile.survey_covid_logs.tanggal = '".$date."'
+				");
+			}
 
 			$response = array(
 				'status' => true,
 				'survey' => $survey,
-				'keterangan' => $keterangan,
 				'nilai' => $nilai
 			);
 			return Response::json($response);
@@ -332,7 +388,9 @@ class SurveyController extends Controller
                 }
             }else{
                 if ($answer == "Belum") {
-                     $survey = DB::SELECT("SELECT
+
+					if ($request->get('tanggal') == "") {
+						$survey = DB::SELECT("SELECT
                           employee_syncs.employee_id,
                           employee_syncs.name,
                           COALESCE(department_shortname,'') as department
@@ -344,7 +402,27 @@ class SurveyController extends Controller
                           department_shortname = '".$dept."'
                           and miraimobile.survey_logs.employee_id is null
                           and employee_syncs.end_date is null");
+			        }
+			        else{
+			            $date = date('Y-m-d', strtotime($request->get("tanggal")));
+
+			            $survey = DB::SELECT("SELECT
+							employee_syncs.employee_id,
+							employee_syncs.name,
+							COALESCE ( department_shortname, '' ) AS department 
+						FROM
+							( SELECT * FROM miraimobile.survey_covid_logs WHERE tanggal = '".$date."' ) AS mobile
+							RIGHT JOIN employee_syncs ON employee_syncs.employee_id = mobile.employee_id
+							JOIN departments ON department_name = employee_syncs.department 
+						WHERE
+							department_shortname = '".$dept."' 
+							AND mobile.employee_id IS NULL 
+							AND employee_syncs.end_date IS NULL");
+			        }
+
+                     
                 }else{
+                	if ($request->get('tanggal') == "") {
                      $survey = DB::SELECT("SELECT
                           employee_syncs.employee_id,
                           employee_syncs.name,
@@ -356,6 +434,24 @@ class SurveyController extends Controller
                           WHERE
                           department_shortname = '".$dept."'
                           and employee_syncs.end_date is null");
+                 	}
+			        else{
+			            $date = date('Y-m-d', strtotime($request->get("tanggal")));
+
+			            $survey = DB::SELECT("SELECT
+                          employee_syncs.employee_id,
+                          employee_syncs.name,
+                          COALESCE(department_shortname,'') as department
+                          FROM
+                          miraimobile.survey_covid_logs
+                          LEFT JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_covid_logs.employee_id
+                          join departments on department_name = employee_syncs.department
+                          WHERE
+                          department_shortname = '".$dept."'
+                          and miraimobile.survey_covid_logs.tanggal = '".$date."'
+                          and employee_syncs.end_date is null");
+			         }
+
                 }
            }
 
