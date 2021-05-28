@@ -507,7 +507,7 @@
 			autoclose: true,
 			format: "yyyy-mm-dd",
 			todayHighlight: true,
-			// startDate: date
+			startDate: date
 		});
 
 		$('#datefrom').datepicker({
