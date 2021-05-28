@@ -2234,7 +2234,7 @@ public function randomLiveCooking(Request $request)
 					AND employee_syncs.employee_id NOT LIKE '%OS%' 
 					AND sunfish_shift_syncs.shift_date = '".$val->due_date."' 
 					AND shiftdaily_code LIKE '%Shift_1%' 
-					AND ( attend_code NOT LIKE '%OFF%' AND attend_code NOT LIKE '%CUTI%' AND attend_code NOT LIKE '%CK%' AND attend_code NOT LIKE '%IPU%' ) 
+					AND ( attend_code NOT LIKE '%OFF%' AND attend_code NOT LIKE '%CUTI%' AND attend_code NOT LIKE '%CK%' AND attend_code NOT LIKE '%IPU%' AND attend_code NOT LIKE '%SAKIT%' ) 
 					ORDER BY
 					RAND() 
 					LIMIT ".$val->serving_quota."");
