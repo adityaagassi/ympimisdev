@@ -147,19 +147,19 @@ table.table-bordered{
             </div>
         </div>
         <?php if(Auth::user()->role_code == "MIS" || Auth::user()->role_code == "ACC" || Auth::user()->role_code == "ACC-SPL") { ?>
-        <div class="col-md-3">
-            <div class="input-group">
-              <div class="input-group-addon bg-blue">
-                <i class="fa fa-search"></i>
+            <div class="col-md-3">
+              <div class="input-group">
+                <div class="input-group-addon bg-blue">
+                  <i class="fa fa-search"></i>
+                </div>
+                <select class="form-control select2" onchange="drawChart()" id="department" data-placeholder="Select Department" style="border-color: #605ca8" >
+                    <option value=""></option>
+                    @foreach($department as $dept)
+                      <option value="{{$dept->department}}">{{$dept->department}}</option>
+                    @endforeach
+                  </select>
               </div>
-              <select class="form-control select2" onchange="drawChart()" id="department" data-placeholder="Select Department" style="border-color: #605ca8" >
-                  <option value=""></option>
-                  @foreach($department as $dept)
-                    <option value="{{$dept->department}}">{{$dept->department}}</option>
-                  @endforeach
-                </select>
-            </div>
-        </div>
+          </div>
             <?php } else { ?>
               <input type="hidden" name="department" id='department' data-placeholder="Select Department" style="width: 100%;" value="{{$emp_dept->department}}">
             <?php } ?>
@@ -369,6 +369,11 @@ table.table-bordered{
                 stack: 'alone'
               },
               {
+                name: 'Actual',
+                data: sisa,
+                color: '#90ee7e'
+              },
+              {
                 name: 'Unrealized PR',
                 data: pr,
                 color: '#ffeb3b',
@@ -384,12 +389,6 @@ table.table-bordered{
                 name: 'Unrealized PO',
                 data: po,
                 color: '#607d8b',
-                stack: 'all'
-              },
-              {
-                name: 'Actual',
-                data: sisa,
-                color: '#90ee7e',
                 stack: 'all'
               }
 

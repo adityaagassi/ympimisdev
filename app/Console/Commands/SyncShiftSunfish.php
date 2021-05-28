@@ -41,7 +41,7 @@ class SyncShiftSunfish extends Command
     public function handle()
     {
         $insert = array();
-        $month = date('Y-m');
+        $month = date('Y-m', strtotime("-12 month", strtotime(date('Y-m-d'))));
         $nextmonth = date('Y-m', strtotime("+1 month", strtotime(date('Y-m-d'))));
         $datas = db::connection('sunfish')->select("SELECT
             VIEW_YMPI_Emp_Attendance.emp_no AS employee_id,

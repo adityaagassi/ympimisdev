@@ -51,7 +51,7 @@ class Kernel extends ConsoleKernel
         Commands\KDShipment::class,
         Commands\SendEmailSPKNotification::class,
         Commands\EmailAgreement::class,
-        // Commands\LiveCookingCommand::class,
+        Commands\LiveCookingCommand::class,
         Commands\GreatdayAttendanceCommand::class,
         Commands\GeocodeUpdate::class,
         Commands\SyncShiftSunfish::class,
@@ -175,6 +175,8 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('sync:greatday_attendance')->dailyAt('17:00');
         $schedule->command('update:geocode')->dailyAt('18:00');
+
+        // $schedule->command('generate:live_cooking')->dailyAt('04:00');
     }
 
     /**l

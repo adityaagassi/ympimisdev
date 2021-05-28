@@ -1352,7 +1352,6 @@ class QualityAssuranceController extends Controller
             });
           })->export('xlsx');
         }
-
         return redirect()->route('report_incoming_qa')->with('status','Success Export Data');
       } catch (\Exception $e) {
         return redirect()->route('report_incoming_qa')->with('error',$e->getMessage());
