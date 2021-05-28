@@ -8,7 +8,7 @@ use App\ShipmentSchedule;
 use App\KnockDownDetail;
 
 class KDShipment extends Command{
-    
+
     /**
      * The name and signature of the console command.
      *
@@ -47,12 +47,13 @@ class KDShipment extends Command{
             AND kd.`status` > 0
             ORDER BY kdd.kd_number ASC");
 
+        $kon = 0;
         foreach($knock_down_details as $knock_down_detail){
 
             if($knock_down_detail->hpl == 'MP'){
 
                 $shipment_schedules = DB::select("SELECT ss.id, ss.quantity, ss.actual_quantity FROM shipment_schedules AS ss
-                    WHERE ss.quantity < ss.actual_quantity
+                    WHERE ss.quantity > ss.actual_quantity
                     AND ss.material_number = '".$knock_down_detail->material_number."'
                     ORDER BY ss.st_date ASC");
 
@@ -65,13 +66,14 @@ class KDShipment extends Command{
                         try{
                             $update_shipment = ShipmentSchedule::where('id', '=', $shipment_schedule->id)
                             ->update([
-                                'actual_quantity' => $shipment_schedule->actual_quantity+$knock_down_detail->quantity
+                                'actual_quantity' => $shipment_schedule->actual_quantity + $knock_down_detail->quantity
                             ]);
                             $update_detail = KnockDownDetail::where('id', '=', $knock_down_detail->id)
                             ->update([
                                 'shipment_schedule_id' => $shipment_schedule->id
                             ]);
                             $found = 1;
+                            break;
                         }
                         catch(\Exception $e){
                             $error_log = new ErrorLog([
@@ -80,30 +82,28 @@ class KDShipment extends Command{
                             ]);
                             $error_log->save();
                         }
+
                     }
                 }
 
                 if($found == 0){
-                    $shipment_schedule = ShipmentSchedule::whereRaw('shipment_schedules.quantity > shipment_schedules.actual_quantity')
-                    ->where('material_number', '=', $knock_down_detail->material_number)
-                    ->orderBy('st_date', 'ASC')
-                    ->get();
-
-                    for ($i=0; $i < count($shipment_schedule); $i++) { 
+                    foreach($shipment_schedules as $shipment_schedule){
                         $diff = $shipment_schedule->quantity - $shipment_schedule->actual_quantity;
                         $mod = $knock_down_detail->quantity % $diff;
 
                         if($diff >= $knock_down_detail->quantity){
-                            if($mod == 0 || $knock_down_detail->quantity == 100){
+                            if( ($mod == 0) || ($knock_down_detail->quantity == 100) || ($diff % 100 == $knock_down_detail->quantity) ){
                                 try{
                                     $update_detail = KnockDownDetail::where('id', '=', $knock_down_detail->id)
                                     ->update([
-                                        'shipment_schedule_id' => $shipment_schedule[$i]->id
+                                        'shipment_schedule_id' => $shipment_schedule->id
                                     ]);
 
-                                    $update_shipment = ShipmentSchedule::where('id', $shipment_schedule[$i]->id)->first();
+                                    $update_shipment = ShipmentSchedule::where('id', $shipment_schedule->id)->first();
                                     $update_shipment->actual_quantity = $update_shipment->actual_quantity + $knock_down_detail->quantity;
                                     $update_shipment->save();
+
+                                    break;
                                 }
                                 catch(\Exception $e){
                                     $error_log = new ErrorLog([
@@ -122,8 +122,8 @@ class KDShipment extends Command{
                 ->where('material_number', '=', $knock_down_detail->material_number)
                 ->first();
 
-                if($shipment_schedule != null){
-                    $diff = $shipment_schedule->quantity-$shipment_schedule->actual_quantity;
+                if($shipment_schedule){
+                    $diff = $shipment_schedule->quantity - $shipment_schedule->actual_quantity;
 
                     if($diff >= $knock_down_detail->quantity){
                         try{
