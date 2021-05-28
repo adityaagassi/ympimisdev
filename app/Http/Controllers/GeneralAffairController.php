@@ -2019,7 +2019,7 @@ public function fetchLiveCookingOrderList(Request $request)
 			due_date >= '".$now."' 
 			AND due_date <= '".$last."' 
 			GROUP BY
-			due_date");
+			due_date,serving_quota,serving_ordered");
 
 		$menus = DB::SELECT("SELECT
 			a.* 
