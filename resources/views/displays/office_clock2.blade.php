@@ -277,11 +277,11 @@ table > thead > tr > th{
 					var dateend = addZero(time.getFullYear())+'-'+addZero((time.getMonth()+1))+'-'+addZero(time.getDate())+' 13:10:00';
 					countDownDate = new Date(dateend).getTime();
 					x = setInterval(countdown,1000);
-				}else if(timeref >= '15:00:00' && timeref <= '15:10:00'){
+				}else if(timeref >= '14:50:00' && timeref <= '15:00:00'){
 					$('#istirahat_info').show();
 					$('#visitor_info').hide();
 					$('#jam').hide();
-					document.getElementById("istirahat_info").innerHTML = "<span style='background-color:#FFFF00;padding-left:70px;padding-right:70px;text-shadow:-5px -5px 0 #fff, 5px -5px 0 #fff, -5px 5px 0 #fff, 5px 5px 0 #fff'>WAKTU ISTIRAHAT 休憩時間</span><br><span style='color:#000;font-weight:bold'>(15:00 - 15:10)</span><br><span id='timeristirahat' style='font-size:2em;color:#000;font-weight:bold'></span><br><span style='font-size:0.75em;color:#000;font-weight:bold'>("+addZero(time.getHours())+':'+addZero(time.getMinutes())+")</span>";
+					document.getElementById("istirahat_info").innerHTML = "<span style='background-color:#FFFF00;padding-left:70px;padding-right:70px;text-shadow:-5px -5px 0 #fff, 5px -5px 0 #fff, -5px 5px 0 #fff, 5px 5px 0 #fff'>WAKTU ISTIRAHAT 休憩時間</span><br><span style='color:#000;font-weight:bold'>(14:50 - 15:00)</span><br><span id='timeristirahat' style='font-size:2em;color:#000;font-weight:bold'></span><br><span style='font-size:0.75em;color:#000;font-weight:bold'>("+addZero(time.getHours())+':'+addZero(time.getMinutes())+")</span>";
 					document.getElementById("istirahat_info").style.fontSize = '7em';
 					document.getElementById("istirahat_info").style.marginBottom = '10px';
 					$(".content-wrapper").css("background-image","url({{url('data_file/sakura.jpg')}})",'important');
@@ -306,7 +306,7 @@ table > thead > tr > th{
 					istirahat = "Istirahat";
 
 					var currentdate = new Date(); 
-					var dateend = addZero(time.getFullYear())+'-'+addZero((time.getMonth()+1))+'-'+addZero(time.getDate())+' 15:10:00';
+					var dateend = addZero(time.getFullYear())+'-'+addZero((time.getMonth()+1))+'-'+addZero(time.getDate())+' 15:00:00';
 					countDownDate = new Date(dateend).getTime();
 					x = setInterval(countdown,1000);
 				}else{
