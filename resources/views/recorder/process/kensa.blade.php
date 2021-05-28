@@ -297,7 +297,7 @@
 				</button>
 			</div>
 			<div class="col-xs-6" style="padding-left: 10px;padding-right: 0">
-				<button class="btn btn-success" style="width: 100%;font-size: 30px;font-weight: bold;" onclick="selesaiProses()">
+				<button class="btn btn-success" style="width: 100%;font-size: 30px;font-weight: bold;" onclick="selesaiProses('selesai')">
 					SELESAI PROSES
 				</button>
 			</div>
@@ -1996,6 +1996,7 @@
 		if (confirm('Apakah Anda yakin akan ganti / inisialisasi produk?')) {
 			// $("#modalProduct").modal('show');
 			// reset();
+			selesaiProses('ganti');
 			var data = {
 				employee_id:$('#employee_id').val(),
 			}
@@ -2102,9 +2103,11 @@
 					
 					// reset();
 					// clearAll();
+					location.reload();
 					$('#start_time').val(getActualFullDate());
 					intervalUpdate = setInterval(updateTemp,60000);
 					openSuccessGritter('Success','Sukses Ganti Produk');
+
 				}
 				else{
 					$('#loading').hide();
@@ -2228,7 +2231,7 @@
 		});
 	}
 
-	function selesaiProses() {
+	function selesaiProses(gantiselesai) {
 		if (confirm('Apakah Anda yakin akan mengakhiri proses?')) {
 			var start_time = $('#start_time').val();
 			var employee_id = $('#employee_id').val();
@@ -2339,9 +2342,11 @@
 			$.post('{{ url("input/recorder/kensa") }}', data, function(result, status, xhr){
 				if(result.status){
 					$('#loading').hide();
-					alert('Kensa Selesai');
 					openSuccessGritter('Success','Kensa Selesai');
-					location.reload();
+					if (gantiselesai === 'selesai') {
+						alert('Kensa Selesai');
+						location.reload();
+					}
 					clearInterval(intervalUpdate);
 				}
 				else{
