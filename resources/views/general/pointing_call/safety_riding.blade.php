@@ -75,7 +75,7 @@
 				<th style="width: 1%;">Periode</th>
 				<th style="width: 1%;">Location</th>
 				<th style="width: 4%;">Department</th>
-				<th style="width: 4%;">Created By</th>
+				<th style="width: 4%;">Updated By</th>
 				<th style="width: 4%;">Created At</th>
 				<th style="width: 1%;">Action</th>
 			</tr>
