@@ -6827,7 +6827,7 @@ class RecorderProcessController extends Controller
             ]);
           }else{
             RcAssyInitial::create([
-              'product' => $kensaoldhead[0]->product,
+              'product' => $product,
               'material_number' => $kensaoldhead[0]->material_number,
               'part_name' => $kensaoldhead[0]->part_name,
               'part_type' => $kensaoldhead[0]->part_type,
@@ -6905,7 +6905,7 @@ class RecorderProcessController extends Controller
             ]);
           }else{
             RcAssyInitial::create([
-               'product' => $kensaoldmiddle[0]->product,
+               'product' => $product,
                'material_number' => $kensaoldmiddle[0]->material_number,
                'part_name' => $kensaoldmiddle[0]->part_name,
                'part_type' => $kensaoldmiddle[0]->part_type,
@@ -6983,7 +6983,7 @@ class RecorderProcessController extends Controller
             ]);
           }else{
             RcAssyInitial::create([
-               'product' => $kensaoldfoot[0]->product,
+               'product' => $product,
                'material_number' => $kensaoldfoot[0]->material_number,
                'part_name' => $kensaoldfoot[0]->part_name,
                'part_type' => $kensaoldfoot[0]->part_type,
@@ -7061,7 +7061,7 @@ class RecorderProcessController extends Controller
             ]);
           }else{
             RcAssyInitial::create([
-               'product' => $kensaoldblock[0]->product,
+               'product' => $product,
                'material_number' => $kensaoldblock[0]->material_number,
                'part_name' => $kensaoldblock[0]->part_name,
                'part_type' => $kensaoldblock[0]->part_type,
@@ -7642,7 +7642,7 @@ class RecorderProcessController extends Controller
             ]);
           }else{
             RcAssyInitial::create([
-              'product' => $kensaoldheadyrf[0]->product,
+              'product' => $product,
               'material_number' => $kensaoldheadyrf[0]->material_number,
               'part_name' => $kensaoldheadyrf[0]->part_name,
               'part_type' => $kensaoldheadyrf[0]->part_type,
@@ -7720,7 +7720,7 @@ class RecorderProcessController extends Controller
             ]);
           }else{
             RcAssyInitial::create([
-              'product' => $kensaoldbodyyrf[0]->product,
+              'product' => $product,
               'material_number' => $kensaoldbodyyrf[0]->material_number,
               'part_name' => $kensaoldbodyyrf[0]->part_name,
               'part_type' => $kensaoldbodyyrf[0]->part_type,
@@ -7798,7 +7798,7 @@ class RecorderProcessController extends Controller
             ]);
           }else{
             RcAssyInitial::create([
-              'product' => $kensaoldstopperyrf[0]->product,
+              'product' => $product,
               'material_number' => $kensaoldstopperyrf[0]->material_number,
               'part_name' => $kensaoldstopperyrf[0]->part_name,
               'part_type' => $kensaoldstopperyrf[0]->part_type,
