@@ -39,10 +39,10 @@
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 	<section class="content">
 		<div class="row">
-			<div class="col-md-8">
+			<div class="col-md-7">
 				<div id="container" style="width: 100%; height: 300; margin: 0 auto;"></div>
 			</div>
-			<div class="col-md-4">
+			<div class="col-md-5">
 				<div id="container2" style="width: 100%; margin: 0 auto;"></div>
 			</div>
 			<div class="col-md-12">
@@ -107,9 +107,6 @@
 				originGroupCode : '041'
 			}
 			$.get('{{ url("fetch/wipflallchart") }}', data, function(result, status, xhr){
-				console.log(status);
-				console.log(result);
-				console.log(xhr);
 				if(xhr.status == 200){
 					if(result.status){
 						$('#last_update').html('<b>Last Updated: '+ getActualFullDate() +'</b>');
@@ -122,28 +119,53 @@
 						for (i = 0; i < data.length; i++) {
 							stockCat.push(data[i].model);
 							stockPlan.push(data[i].plan);
-							stockActual.push(data[i].stock);
+							stockActual.push(parseInt(data[i].stock));
 							maxPlan.push(data[i].max_plan);
 						}
 
 						var stockData = result.stockData;
-						var stock1 = '';
-						var stock2 = '';
-						var stock3 = '';
-						var stock4 = '';
+						var stock1 = 0;
+						var stock2 = 0;
+						var stock3 = 0;
+						var stock4 = 0;
+						var stock5 = 0;
+						var stock6 = 0;
+						var stock7 = 0;
+						var stock8 = 0;
+						var stock9 = 0;
+						var stock10 = 0;
+
 
 						for (x = 0; x < stockData.length; x++) {
-							if(stockData[x].process_code == 1){
-								stock1 = stockData[x].qty;
+							if(stockData[x].process_code == 1 || stockData[x].process_code == 2){
+								stock1 += parseInt(stockData[x].qty);
 							}
-							if(stockData[x].process_code == 2){
-								stock2 = stockData[x].qty;
+							if(stockData[x].process_code == 3 || stockData[x].process_code == 4 || stockData[x].process_code == 5 || stockData[x].process_code == 6){
+								stock2 += parseInt(stockData[x].qty);
 							}
-							if(stockData[x].process_code == 3){
-								stock3 = stockData[x].qty;
+							if(stockData[x].process_code == 7 || stockData[x].process_code == 8){
+								stock3 += parseInt(stockData[x].qty);
 							}
-							if(stockData[x].process_code == 4){
-								stock4 = stockData[x].qty;
+							if(stockData[x].process_code == 9 || stockData[x].process_code == 10 || stockData[x].process_code == 11){
+								stock4 += parseInt(stockData[x].qty);
+							}
+							if(stockData[x].process_code == 12){
+								stock5 += parseInt(stockData[x].qty);
+							}
+							if(stockData[x].process_code == 13 || stockData[x].process_code == 14){
+								stock6 += parseInt(stockData[x].qty);
+							}
+							if(stockData[x].process_code == 15 || stockData[x].process_code == 16){
+								stock7 += parseInt(stockData[x].qty);
+							}
+							if(stockData[x].process_code == 17 || stockData[x].process_code == 20){
+								stock8 += parseInt(stockData[x].qty);
+							}
+							if(stockData[x].process_code == 18 || stockData[x].process_code == 19 || stockData[x].process_code == 22){
+								stock9 += parseInt(stockData[x].qty);
+							}
+							if(stockData[x].process_code == 21 || stockData[x].process_code == 23){
+								stock10 += parseInt(stockData[x].qty);
 							}
 						}
 
@@ -231,8 +253,98 @@
 						}]
 					});
 
+						// Highcharts.chart('container2', {
+						// 	colors: ['rgb(241,92,128)','rgb(128,133,233)','rgb(247,163,92)','rgb(144,237,125)'],
+						// 	chart: {
+						// 		backgroundColor: null,
+						// 		type: 'pie',
+						// 		spacingTop: 0,
+						// 		spacingLeft: 0,
+						// 		spacingRight: 0,
+						// 		spacingBottom: 0
+						// 	},
+						// 	exporting: { enabled: false },
+						// 	title: {
+						// 		text: null
+						// 	},
+						// 	tooltip: {
+						// 		pointFormat: '{series.name}: <b>{point.y}</b>'
+						// 	},
+						// 	legend:{
+						// 		enabled:false
+						// 	},
+						// 	plotOptions: {
+						// 		pie: {
+						// 			allowPointSelect: true,
+						// 			cursor: 'pointer',
+						// 			borderColor: 'rgb(126,86,134)',
+						// 			dataLabels: {
+						// 				enabled: true,
+						// 				format: '<b>{point.name}<br/>{point.y} sets</b>',
+						// 				distance: -50,
+						// 				style:{
+						// 					fontSize:'16px',
+						// 					textOutline:0
+						// 				},
+						// 				color:'black',
+						// 			},
+						// 			showInLegend: true
+						// 		},
+						// 		series:{
+						// 			animation:{
+						// 				duration:false
+						// 			}
+						// 		}
+						// 	},
+						// 	credits:{
+						// 		enabled: false
+						// 	},
+						// 	series: [{
+						// 		data: [{
+						// 			name: 'Stamp - Perakitan',
+						// 			y: stock1
+						// 		},
+						// 		{
+						// 			name: 'Kariawase',
+						// 			y: stock2
+						// 		},
+						// 		{
+						// 			name: 'Tanpoire - Perakitan Ulang',
+						// 			y: stock3
+						// 		},
+						// 		{
+						// 			name: 'Tanpo Awase',
+						// 			y: stock4
+						// 		},
+						// 		{
+						// 			name: 'Yuge',
+						// 			y: stock5
+						// 		},
+						// 		{
+						// 			name: 'Kango',
+						// 			y: stock6
+						// 		},
+						// 		{
+						// 			name: 'Renraku',
+						// 			y: stock7
+						// 		},
+						// 		{
+						// 			name: 'QA Fungsi - Repair',
+						// 			y: stock8
+						// 		},
+						// 		{
+						// 			name: 'Fukiage 1 & 2',
+						// 			y: stock9
+						// 		},
+						// 		{
+						// 			name: 'QA Visual 1 & 2',
+						// 			y: stock10
+						// 		}
+						// 		]
+						// 	}]
+						// });
 						Highcharts.chart('container2', {
-							colors: ['rgb(241,92,128)','rgb(128,133,233)','rgb(247,163,92)','rgb(144,237,125)'],
+						    colors: ['rgb(241,92,128)','rgb(128,133,233)','rgb(247,163,92)','rgb(144,237,125)'],
 							chart: {
 								backgroundColor: null,
 								type: 'pie',
@@ -241,57 +353,77 @@
 								spacingRight: 0,
 								spacingBottom: 0
 							},
-							exporting: { enabled: false },
+						    exporting: { enabled: false },
 							title: {
 								text: null
 							},
-							tooltip: {
-								pointFormat: '{series.name}: <b>{point.y}</b>'
-							},
-							legend:{
-								enabled:false
-							},
-							plotOptions: {
-								pie: {
-									allowPointSelect: true,
-									cursor: 'pointer',
-									borderColor: 'rgb(126,86,134)',
-									dataLabels: {
-										enabled: true,
-										format: '<b>{point.name}<br/>{point.y} sets</b>',
-										distance: -50,
-										style:{
-											fontSize:'16px',
-											textOutline:0
-										},
-										color:'black',
-									},
-									showInLegend: true
-								},
-								series:{
-									animation:{
-										duration:false
-									}
-								}
-							},
-							credits:{
+						    tooltip: {
+						        pointFormat: '{series.name}: <b>{point.y}</b>'
+						    },
+						    accessibility: {
+						        // point: {
+						        //     valueSuffix: '%'
+						        // }
+						    },
+						    plotOptions: {
+						        pie: {
+						            allowPointSelect: true,
+						            cursor: 'pointer',
+						            dataLabels: {
+						                enabled: true,
+						                format: '<b>{point.name}<br/>{point.y} sets</b>',
+						                style: {
+						                    fontSize: '14px'
+						                }
+						            },
+						            animation: false,
+						        }
+						    },credits: {
 								enabled: false
 							},
-							series: [{
-								data: [{
-									name: 'Stamp-Kariawase',
+						    series: [{
+						        data: [{
+									name: 'Stamp - Perakitan',
 									y: stock1
-								}, {
-									name: 'Tanpoawase',
+								},
+								{
+									name: 'Kariawase',
 									y: stock2
-								}, {
-									name: 'Yuge-Kanggou',
+								},
+								{
+									name: 'Tanpoire - Perakitan Ulang',
 									y: stock3
-								}, {
-									name: 'Chousei',
+								},
+								{
+									name: 'Tanpo Awase',
 									y: stock4
-								}]
-							}]
+								},
+								{
+									name: 'Yuge',
+									y: stock5
+								},
+								{
+									name: 'Kango',
+									y: stock6
+								},
+								{
+									name: 'Renraku',
+									y: stock7
+								},
+								{
+									name: 'QA Fungsi - Repair',
+									y: stock8
+								},
+								{
+									name: 'Fukiage 1 & 2',
+									y: stock9
+								},
+								{
+									name: 'QA Visual 1 & 2',
+									y: stock10
+								}
+								]
+						    }]
 						});
 						setTimeout(fetchChartStock, 60000);
 					}
@@ -307,10 +439,7 @@
 }
 
 function fetchTableStock(){
-	$.get('{{ url("fetch/wipflallstock") }}', function(result, status, xhr){
-		console.log(status);
-		console.log(result);
-		console.log(xhr);
+	$.get('{{ url("fetch/wipflallstock") }}', function(result, status, xhr){		
 		if(xhr.status == 200){
 			if(result.status){
 				$('#tableStock').html("");
@@ -337,7 +466,7 @@ function fetchTableStock(){
 				tableHead += '<th style="width:10%; background-color: rgba(126,86,134,.7); text-align: center; font-size: 18px;">Process/Model</th>';
 				tableFoot += '<th style="text-align: center; width: 10%; font-size: 2vw;">Total</th>';
 				totalHead = 0;
-				$.each(result.inventory, function(index, value) {
+				$.each(result.stampperakitan, function(index, value) {
 					if ($.inArray(value.model, heads)==-1) {
 						heads.push(value.model);
 						tableHead += '<th style="width:4.5%; background-color: rgba(126,86,134,.7); text-align: center; font-size: 18px;">'+value.model.substring(3)+'</th>';
@@ -360,52 +489,97 @@ function fetchTableStock(){
 				$('#tableHead').append(tableHead);
 
 				tableBody += '<tr>';
-				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 16px; font-weight: bold; width:50%;">Stamping-Kariawase</td>';
+				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 16px; font-weight: bold; width:50%;">Stamp - Perakitan</td>';
 				total1 = 0;
-				$.each(result.inventory, function(index, value){
-					if(value.process_code == 1){
-						tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+value.quantity+'</td>';
-						total1 += value.quantity;
-					}
+				$.each(result.stampperakitan, function(index, value){
+					tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+parseInt(value.quantity)+'</td>';
+					total1 += parseInt(value.quantity);
 				})
 				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+total1+'</td>';
 				tableBody += '</tr>';
+
 				tableBody += '<tr>';
-				tableBody += '<td style="background-color: rgb(255,255,255); text-align: center; color: black; font-size: 16px; font-weight: bold;">Tanpo awase</td>';
+				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 16px; font-weight: bold; width:50%;">Kariawase</td>';
 				total2 = 0;
-				$.each(result.inventory, function(index, value){
-					if(value.process_code == 2){
-						tableBody += '<td style="background-color: rgb(255,255,255); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+value.quantity+'</td>';
-						total2 += value.quantity;
-					}
+				$.each(result.kariawase, function(index, value){
+					tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+parseInt(value.quantity)+'</td>';
+					total2 += parseInt(value.quantity);
 				})
-				tableBody += '<td style="background-color: rgb(255,255,255); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+total2+'</td>';
+				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+total2+'</td>';
 				tableBody += '</tr>';
+
 				tableBody += '<tr>';
-				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 16px; font-weight: bold;">Seasoning-Kanggou</td>';
+				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 16px; font-weight: bold; width:50%;">Tanpoire - Perakitan Ulang</td>';
 				total3 = 0;
-				$.each(result.inventory, function(index, value){
-					if(value.process_code == 3){
-						tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+value.quantity+'</td>';
-						total3 += value.quantity;
-					}
+				$.each(result.tanpoireperakitan, function(index, value){
+					tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+parseInt(value.quantity)+'</td>';
+					total3 += parseInt(value.quantity);
 				})
 				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+total3+'</td>';
 				tableBody += '</tr>';
+
 				tableBody += '<tr>';
-				tableBody += '<td style="background-color: rgb(255,255,255); text-align: center; color: black; font-size: 16px; font-weight: bold;">Chousei</td>';
+				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 16px; font-weight: bold; width:50%;">Tanpo Awase</td>';
 				total4 = 0;
-				$.each(result.inventory, function(index, value){
-					if(value.process_code == 4){
-						tableBody += '<td style="background-color: rgb(255,255,255); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+value.quantity+'</td>';
-						total4 += value.quantity;
-					}
+				$.each(result.tanpoawase, function(index, value){
+					tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+parseInt(value.quantity)+'</td>';
+					total4 += parseInt(value.quantity);
 				})
-				tableBody += '<td style="background-color: rgb(255,255,255); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+total4+'</td>';
+				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+total4+'</td>';
+				tableBody += '</tr>';
+
+				tableBody += '<tr>';
+				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 16px; font-weight: bold; width:50%;">Seasoning - Kango</td>';
+				total5 = 0;
+				$.each(result.seasoningkango, function(index, value){
+					tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+parseInt(value.quantity)+'</td>';
+					total5 += parseInt(value.quantity);
+				})
+				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+total5+'</td>';
+				tableBody += '</tr>';
+
+				tableBody += '<tr>';
+				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 16px; font-weight: bold; width:50%;">Renraku</td>';
+				total6 = 0;
+				$.each(result.renraku, function(index, value){
+					tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+parseInt(value.quantity)+'</td>';
+					total6 += parseInt(value.quantity);
+				})
+				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+total6+'</td>';
+				tableBody += '</tr>';
+
+				tableBody += '<tr>';
+				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 16px; font-weight: bold; width:50%;">QA Fungsi</td>';
+				total7 = 0;
+				$.each(result.qafungsi, function(index, value){
+					tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+parseInt(value.quantity)+'</td>';
+					total7 += parseInt(value.quantity);
+				})
+				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+total7+'</td>';
+				tableBody += '</tr>';
+
+				tableBody += '<tr>';
+				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 16px; font-weight: bold; width:50%;">Fukiage 1 & 2- Repair</td>';
+				total8 = 0;
+				$.each(result.fukiagerepair, function(index, value){
+					tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+parseInt(value.quantity)+'</td>';
+					total8 += parseInt(value.quantity);
+				})
+				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+total8+'</td>';
+				tableBody += '</tr>';
+
+				tableBody += '<tr>';
+				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 16px; font-weight: bold; width:50%;">Qa Visual 1 & 2</td>';
+				total9 = 0;
+				$.each(result.qavisual, function(index, value){
+					tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+parseInt(value.quantity)+'</td>';
+					total9 += parseInt(value.quantity);
+				})
+				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+total9+'</td>';
 				tableBody += '</tr>';
 
 				$('#tableBody').append(tableBody);
-				totalFoot = total1+total2+total3+total4;
+				totalFoot = total1+total2+total3+total4+total5+total6+total7+total8+total9;
 				tableFoot += '<th style="text-align: center; width: 4.5%; font-size: 2vw; background-color: RGB(255,204,255);">'+totalFoot+'</th>';
 				tableFoot += '</tr>';
 				$('#tableFoot').append(tableFoot);

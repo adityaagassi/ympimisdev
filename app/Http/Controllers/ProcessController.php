@@ -136,6 +136,58 @@ class ProcessController extends Controller
 		))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');		
 	}
 
+	// public function fetchwipflallstock(){
+	// 	$first = date('Y-m-01');
+
+	// 	if(date('D')=='Fri' || date('D')=='Wed' || date('D')=='Thu' || date('D')=='Sat'){
+	// 		$h4 = date('Y-m-d', strtotime(carbon::now()->addDays(5)));
+	// 	}
+	// 	elseif(date('D')=='Sun'){
+	// 		$h4 = date('Y-m-d', strtotime(carbon::now()->addDays(4)));
+	// 	}
+	// 	else{
+	// 		$h4 = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
+	// 	}
+
+	// 	$query = "
+	// 	select result1.model, result1.process_code, result1.process_name, if(result2.quantity is null, 0, result2.quantity) as quantity from
+	// 	(
+	// 	select distinct model, processes.process_code, processes.process_name from materials left join processes on processes.remark = CONCAT('YFL',materials.origin_group_code) where processes.remark = 'YFL041' and processes.process_code <> '5' and materials.category = 'FG') as result1
+	// 	left join
+	// 	(
+	// 	select stamp_inventories.model, stamp_inventories.process_code, sum(stamp_inventories.quantity) as quantity from stamp_inventories where stamp_inventories.status is null and stamp_inventories.deleted_at is null group by stamp_inventories.model, stamp_inventories.process_code
+	// 	) as result2 
+	// 	on result2.model = result1.model and result2.process_code = result1.process_code order by result1.model asc";
+
+	// 	$query2 = "
+	// 	select result1.model, if(result2.plan is null or result2.plan < 0, 0, result2.plan) as plan from
+	// 	(
+	// 	select distinct materials.model from materials where materials.origin_group_code = '041' and materials.category = 'FG'
+	// 	) as result1
+	// 	left join
+	// 	(
+	// 	select materials.model, sum(plan) as plan from
+	// 	(
+	// 	select material_number, sum(quantity) as plan from production_schedules where due_date >= '".$first."' and due_date <= '".$h4."' group by material_number
+	// 	union all
+	// 	select material_number, -(sum(quantity)) as plan from flo_details where date(created_at) >= '".$first."' and date(created_at) <= '".$h4."' group by material_number
+	// 	) r
+	// 	left join materials on materials.material_number = r.material_number
+	// 	group by materials.model
+	// 	) as result2
+	// 	on result1.model = result2.model order by result1.model asc";
+
+	// 	$inventory = DB::select($query);
+	// 	$plan = DB::select($query2);
+
+	// 	$response = array(
+	// 		'status' => true,
+	// 		'inventory' => $inventory,
+	// 		'plan' => $plan,
+	// 	);
+	// 	return Response::json($response);
+	// }
+
 	public function fetchwipflallstock(){
 		$first = date('Y-m-01');
 
@@ -149,15 +201,379 @@ class ProcessController extends Controller
 			$h4 = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
 		}
 
+		$stampperakitan = DB::SELECT("SELECT
+			a.model,
+			'1,2' as process_code,
+			SUM( a.quantity ) quantity
+		FROM
+			(
+			SELECT DISTINCT
+				( model ),
+				process_code,
+				COALESCE ((
+					SELECT
+						count( id ) 
+					FROM
+						assembly_inventories 
+					WHERE
+						assembly_inventories.location = process_name 
+						AND assembly_inventories.model = materials.model 
+					GROUP BY
+						location,
+						model 
+					ORDER BY
+						model 
+						),
+					0 
+				) AS quantity 
+			FROM
+				materials
+				LEFT JOIN processes ON processes.remark = materials.origin_group_code 
+			WHERE
+				category = 'FG' 
+				AND origin_group_code = 041 
+				AND process_code IN ( 1,2 ) 
+			ORDER BY
+				model 
+			) a 
+		GROUP BY
+			a.model");
+
+		$kariawase = DB::SELECT("SELECT
+			a.model,
+			'3,4,5,6' as process_code,
+			SUM( a.quantity ) quantity
+		FROM
+			(
+			SELECT DISTINCT
+				( model ),
+				process_code,
+				COALESCE ((
+					SELECT
+						count( id ) 
+					FROM
+						assembly_inventories 
+					WHERE
+						assembly_inventories.location = process_name 
+						AND assembly_inventories.model = materials.model 
+					GROUP BY
+						location,
+						model 
+					ORDER BY
+						model 
+						),
+					0 
+				) AS quantity 
+			FROM
+				materials
+				LEFT JOIN processes ON processes.remark = materials.origin_group_code 
+			WHERE
+				category = 'FG' 
+				AND origin_group_code = 041 
+				AND process_code IN ( 3,4,5,6 ) 
+			ORDER BY
+				model 
+			) a 
+		GROUP BY
+			a.model");
+
+		$tanpoireperakitan = DB::SELECT("SELECT
+			a.model,
+			'7,8' as process_code,
+			SUM( a.quantity ) quantity
+		FROM
+			(
+			SELECT DISTINCT
+				( model ),
+				process_code,
+				COALESCE ((
+					SELECT
+						count( id ) 
+					FROM
+						assembly_inventories 
+					WHERE
+						assembly_inventories.location = process_name 
+						AND assembly_inventories.model = materials.model 
+					GROUP BY
+						location,
+						model 
+					ORDER BY
+						model 
+						),
+					0 
+				) AS quantity 
+			FROM
+				materials
+				LEFT JOIN processes ON processes.remark = materials.origin_group_code 
+			WHERE
+				category = 'FG' 
+				AND origin_group_code = 041 
+				AND process_code IN ( 7,8 ) 
+			ORDER BY
+				model 
+			) a 
+		GROUP BY
+			a.model");
+
+		$tanpoawase = DB::SELECT("SELECT
+			a.model,
+			'9,10,11' as process_code,
+			SUM( a.quantity ) quantity
+		FROM
+			(
+			SELECT DISTINCT
+				( model ),
+				process_code,
+				COALESCE ((
+					SELECT
+						count( id ) 
+					FROM
+						assembly_inventories 
+					WHERE
+						assembly_inventories.location = process_name 
+						AND assembly_inventories.model = materials.model 
+					GROUP BY
+						location,
+						model 
+					ORDER BY
+						model 
+						),
+					0 
+				) AS quantity 
+			FROM
+				materials
+				LEFT JOIN processes ON processes.remark = materials.origin_group_code 
+			WHERE
+				category = 'FG' 
+				AND origin_group_code = 041 
+				AND process_code IN ( 9,10,11 ) 
+			ORDER BY
+				model 
+			) a 
+		GROUP BY
+			a.model");
+
+		$seasoningkango = DB::SELECT("SELECT
+			a.model,
+			'12,13,14' as process_code,
+			SUM( a.quantity ) quantity
+		FROM
+			(
+			SELECT DISTINCT
+				( model ),
+				process_code,
+				COALESCE ((
+					SELECT
+						count( id ) 
+					FROM
+						assembly_inventories 
+					WHERE
+						assembly_inventories.location = process_name 
+						AND assembly_inventories.model = materials.model 
+					GROUP BY
+						location,
+						model 
+					ORDER BY
+						model 
+						),
+					0 
+				) AS quantity 
+			FROM
+				materials
+				LEFT JOIN processes ON processes.remark = materials.origin_group_code 
+			WHERE
+				category = 'FG' 
+				AND origin_group_code = 041 
+				AND process_code IN ( 12,13,14 ) 
+			ORDER BY
+				model 
+			) a 
+		GROUP BY
+			a.model");
+
+		$renraku = DB::SELECT("SELECT
+			a.model,
+			'15,16' as process_code,
+			SUM( a.quantity ) quantity
+		FROM
+			(
+			SELECT DISTINCT
+				( model ),
+				process_code,
+				COALESCE ((
+					SELECT
+						count( id ) 
+					FROM
+						assembly_inventories 
+					WHERE
+						assembly_inventories.location = process_name 
+						AND assembly_inventories.model = materials.model 
+					GROUP BY
+						location,
+						model 
+					ORDER BY
+						model 
+						),
+					0 
+				) AS quantity 
+			FROM
+				materials
+				LEFT JOIN processes ON processes.remark = materials.origin_group_code 
+			WHERE
+				category = 'FG' 
+				AND origin_group_code = 041 
+				AND process_code IN ( 15,16 ) 
+			ORDER BY
+				model 
+			) a 
+		GROUP BY
+			a.model");
+
+		$qafungsi = DB::SELECT("SELECT
+			a.model,
+			'17' as process_code,
+			SUM( a.quantity ) quantity
+		FROM
+			(
+			SELECT DISTINCT
+				( model ),
+				process_code,
+				COALESCE ((
+					SELECT
+						count( id ) 
+					FROM
+						assembly_inventories 
+					WHERE
+						assembly_inventories.location = process_name 
+						AND assembly_inventories.model = materials.model 
+					GROUP BY
+						location,
+						model 
+					ORDER BY
+						model 
+						),
+					0 
+				) AS quantity 
+			FROM
+				materials
+				LEFT JOIN processes ON processes.remark = materials.origin_group_code 
+			WHERE
+				category = 'FG' 
+				AND origin_group_code = 041 
+				AND process_code IN ( 17 ) 
+			ORDER BY
+				model 
+			) a 
+		GROUP BY
+			a.model");
+
+		$fukiagerepair = DB::SELECT("SELECT
+			a.model,
+			'18,19,20,22' as process_code,
+			SUM( a.quantity ) quantity
+		FROM
+			(
+			SELECT DISTINCT
+				( model ),
+				process_code,
+				COALESCE ((
+					SELECT
+						count( id ) 
+					FROM
+						assembly_inventories 
+					WHERE
+						assembly_inventories.location = process_name 
+						AND assembly_inventories.model = materials.model 
+					GROUP BY
+						location,
+						model 
+					ORDER BY
+						model 
+						),
+					0 
+				) AS quantity 
+			FROM
+				materials
+				LEFT JOIN processes ON processes.remark = materials.origin_group_code 
+			WHERE
+				category = 'FG' 
+				AND origin_group_code = 041 
+				AND process_code IN ( 18,19,20,22 ) 
+			ORDER BY
+				model 
+			) a 
+		GROUP BY
+			a.model");
+
+		$qavisual = DB::SELECT("SELECT
+			a.model,
+			'21,23' as process_code,
+			SUM( a.quantity ) quantity
+		FROM
+			(
+			SELECT DISTINCT
+				( model ),
+				process_code,
+				COALESCE ((
+					SELECT
+						count( id ) 
+					FROM
+						assembly_inventories 
+					WHERE
+						assembly_inventories.location = process_name 
+						AND assembly_inventories.model = materials.model 
+					GROUP BY
+						location,
+						model 
+					ORDER BY
+						model 
+						),
+					0 
+				) AS quantity 
+			FROM
+				materials
+				LEFT JOIN processes ON processes.remark = materials.origin_group_code 
+			WHERE
+				category = 'FG' 
+				AND origin_group_code = 041 
+				AND process_code IN ( 21,23 ) 
+			ORDER BY
+				model 
+			) a 
+		GROUP BY
+			a.model");
+
 		$query = "
-		select result1.model, result1.process_code, result1.process_name, if(result2.quantity is null, 0, result2.quantity) as quantity from
-		(
-		select distinct model, processes.process_code, processes.process_name from materials left join processes on processes.remark = CONCAT('YFL',materials.origin_group_code) where processes.remark = 'YFL041' and processes.process_code <> '5' and materials.category = 'FG') as result1
-		left join
-		(
-		select stamp_inventories.model, stamp_inventories.process_code, sum(stamp_inventories.quantity) as quantity from stamp_inventories where stamp_inventories.status is null and stamp_inventories.deleted_at is null group by stamp_inventories.model, stamp_inventories.process_code
-		) as result2 
-		on result2.model = result1.model and result2.process_code = result1.process_code order by result1.model asc";
+		SELECT DISTINCT
+			( model ),
+			process_code,
+			process_name,
+			COALESCE ((
+				SELECT
+					count( id ) 
+				FROM
+					assembly_inventories 
+				WHERE
+					assembly_inventories.location = process_name 
+					AND assembly_inventories.model = materials.model 
+				GROUP BY
+					location,
+					model 
+				ORDER BY
+					model 
+					),
+				0 
+			) AS quantity 
+		FROM
+			materials
+			LEFT JOIN processes ON processes.remark = materials.origin_group_code 
+		WHERE
+			category = 'FG' 
+			AND origin_group_code = 041 
+		ORDER BY
+			model,
+			CAST(
+			process_code AS INT)";
 
 		$query2 = "
 		select result1.model, if(result2.plan is null or result2.plan < 0, 0, result2.plan) as plan from
@@ -177,12 +593,19 @@ class ProcessController extends Controller
 		) as result2
 		on result1.model = result2.model order by result1.model asc";
 
-		$inventory = DB::select($query);
 		$plan = DB::select($query2);
 
 		$response = array(
 			'status' => true,
-			'inventory' => $inventory,
+			'stampperakitan' => $stampperakitan,
+			'kariawase' => $kariawase,
+			'tanpoireperakitan' => $tanpoireperakitan,
+			'tanpoawase' => $tanpoawase,
+			'seasoningkango' => $seasoningkango,
+			'renraku' => $renraku,
+			'qafungsi' => $qafungsi,
+			'fukiagerepair' => $fukiagerepair,
+			'qavisual' => $qavisual,
 			'plan' => $plan,
 		);
 		return Response::json($response);
@@ -870,6 +1293,88 @@ class ProcessController extends Controller
 		->make(true);
 	}
 
+	// public function fetchwipflallchart(Request $request){
+
+	// 	$first = date('Y-m-01');
+	// 	$now = date('Y-m-d');
+
+	// 	$target = DB::table('production_schedules')
+	// 	->leftJoin('materials', 'materials.material_number', '=', 'production_schedules.material_number')
+	// 	->where('production_schedules.due_date', '=', $now)
+	// 	->where('materials.category', '=', 'FG')
+	// 	->where('materials.hpl', '=', 'FLFG');
+	// 	$stock = DB::table('stamp_inventories');
+
+	// 	$targetFL = $target->where('origin_group_code', '=', $request->get('originGroupCode'))->sum('production_schedules.quantity');
+	// 	$stockFL = $stock->where('origin_group_code', '=', $request->get('originGroupCode'))->whereNull('status')->sum('stamp_inventories.quantity');
+
+	// 	if($targetFL != 0){
+	// 		$dayFL = floor($stockFL/$targetFL);
+	// 		$addFL = ($stockFL/$targetFL)-$dayFL;
+	// 		$currStock = round($stockFL/$targetFL,1);
+	// 	}
+	// 	else{
+	// 		$dayFL = 2;
+	// 		$addFL = 1;
+	// 		$currStock = round($stockFL/1,1);
+	// 	}
+
+	// 	$last = date('Y-m-d', strtotime(carbon::now()->endOfMonth()));
+
+	// 	if(date('D')=='Fri' || date('D')=='Wed' || date('D')=='Thu' || date('D')=='Sat'){
+	// 		$hFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL+2)));
+	// 		$aFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL+3)));
+	// 	}
+	// 	elseif(date('D')=='Sun'){
+	// 		$hFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL+1)));
+	// 		$aFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL+2)));
+	// 	}
+	// 	else{
+	// 		$hFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL)));
+	// 		$aFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL+1)));
+	// 	}
+
+	// 	$query = "select stamp_inventories.process_code, sum(stamp_inventories.quantity) as qty from stamp_inventories where stamp_inventories.status is null and stamp_inventories.origin_group_code = '041' and stamp_inventories.deleted_at is null group by stamp_inventories.process_code";
+
+	// 	$query2 = "select model, sum(plan) as plan, sum(stock) as stock, sum(max_plan) as max_plan from
+	// 	(
+	// 	select materials.model, sum(plan) as plan, 0 as stock, sum(max_plan) as max_plan from
+	// 	(
+	// 	select material_number, sum(quantity) as plan, 0 as max_plan from production_schedules where due_date >= '".$first."' and due_date <= '".$hFL."' group by material_number
+
+	// 	union all
+
+	// 	select material_number, round(sum(quantity)*".$addFL.") as plan, 0 as max_plan from production_schedules where due_date = '".$aFL."' group by material_number
+
+	// 	union all
+
+	// 	select material_number, 0 as plan, sum(quantity) as max_plan from production_schedules where due_date >= '".$first."' and due_date <= '".$last."' group by material_number
+
+	// 	union all
+
+	// 	select material_number, -(sum(quantity)) as plan, -(sum(quantity)) as max_plan from flo_details where date(created_at) >= '".$first."' and date(created_at) <= '".$aFL."' group by material_number
+	// 	) result1
+	// 	left join materials on materials.material_number = result1.material_number
+	// 	group by materials.model
+
+	// 	union all
+
+	// 	select model, 0 as plan, sum(quantity) as stock, 0 as max_plan from stamp_inventories where status is null and model like 'YFL%' group by model
+	// 	) as result2
+	// 	group by model having model like 'YFL%' and plan > 0 or stock > 0 order by model asc";
+
+	// 	$stockData = DB::select($query);
+	// 	$efficiencyData = DB::select($query2);
+
+	// 	$response = array(
+	// 		'status' => true,
+	// 		'efficiencyData' => $efficiencyData,
+	// 		'stockData' => $stockData,
+	// 		'currStock' => $currStock,
+	// 	);
+	// 	return Response::json($response);
+	// }
+
 	public function fetchwipflallchart(Request $request){
 
 		$first = date('Y-m-01');
@@ -880,10 +1385,10 @@ class ProcessController extends Controller
 		->where('production_schedules.due_date', '=', $now)
 		->where('materials.category', '=', 'FG')
 		->where('materials.hpl', '=', 'FLFG');
-		$stock = DB::table('stamp_inventories');
+		$stock = DB::table('assembly_inventories');
 
 		$targetFL = $target->where('origin_group_code', '=', $request->get('originGroupCode'))->sum('production_schedules.quantity');
-		$stockFL = $stock->where('origin_group_code', '=', $request->get('originGroupCode'))->whereNull('status')->sum('stamp_inventories.quantity');
+		$stockFL = $stock->where('origin_group_code', '=', $request->get('originGroupCode'))->count('assembly_inventories.id');
 
 		if($targetFL != 0){
 			$dayFL = floor($stockFL/$targetFL);
@@ -911,7 +1416,13 @@ class ProcessController extends Controller
 			$aFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL+1)));
 		}
 
-		$query = "select stamp_inventories.process_code, sum(stamp_inventories.quantity) as qty from stamp_inventories where stamp_inventories.status is null and stamp_inventories.origin_group_code = '041' and stamp_inventories.deleted_at is null group by stamp_inventories.process_code";
+		$query = "SELECT
+				processes.process_code,
+				( SELECT count( id ) FROM assembly_inventories WHERE location = processes.process_name ) AS qty 
+			FROM
+				processes 
+			WHERE
+				processes.remark = 041";
 
 		$query2 = "select model, sum(plan) as plan, sum(stock) as stock, sum(max_plan) as max_plan from
 		(
@@ -936,7 +1447,7 @@ class ProcessController extends Controller
 
 		union all
 
-		select model, 0 as plan, sum(quantity) as stock, 0 as max_plan from stamp_inventories where status is null and model like 'YFL%' group by model
+		select model, 0 as plan, count(id) as stock, 0 as max_plan from assembly_inventories where location = 'stamp-process' group by model
 		) as result2
 		group by model having model like 'YFL%' and plan > 0 or stock > 0 order by model asc";
 
