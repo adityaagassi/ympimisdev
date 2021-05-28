@@ -6181,8 +6181,8 @@ class RecorderProcessController extends Controller
               }
             }
 
-            $kensaold->status = 'Close';
-            $kensaold->save();
+            // $kensaold->status = 'Close';
+            // $kensaold->save();
           }
         }
 
@@ -7834,6 +7834,14 @@ class RecorderProcessController extends Controller
               'status' => 'Open',
               'created_by' => Auth::id()
             ]);
+          }
+        }
+
+        if (count($rckensa) > 0) {
+          foreach ($rckensa as $key) {
+            $kensaold = RcAssyInitial::where('id',$key->id)->first();
+            $kensaold->status = 'Close';
+            $kensaold->save();
           }
         }
         $response = array(
