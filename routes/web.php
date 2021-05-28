@@ -186,6 +186,7 @@ Route::group(['nav' => 'S63', 'middleware' => 'permission'], function(){
 	Route::get('approval/ticket', 'TicketController@approvalTicket');
 });
 Route::get('/index/ticket/{id}', 'TicketController@indexTicket');
+Route::get('/fetch/ticket', 'TicketController@fetchTicket');
 
 //Vistor Controll
 Route::get('visitor_index', 'VisitorController@index');
@@ -1730,11 +1731,23 @@ Route::group(['nav' => 'S43', 'middleware' => 'permission'], function(){
 
 	//Purchase Order Khusus Kantin
 	Route::get('purchase_order_canteen', 'AccountingController@purchase_order_canteen');
+	Route::post('create/purchase_order_canteen', 'AccountingController@create_purchase_order_canteen');
 	Route::get('fetch/purchase_order_canteen', 'AccountingController@fetch_purchase_order_canteen');
 	Route::get('fetch/po_canteen_outstanding', 'AccountingController@fetch_po_outstanding_canteen');
 
 	Route::post('update/purchase_requisition_canteen/po', 'AccountingController@update_purchase_requisition_canteen_po');
+	Route::get('fetch/purchase_order/kantinlist', 'AccountingController@fetchPrKantinList');
+	Route::get('fetch/purchase_order/pilih_prkantin', 'AccountingController@pilihPrKantin');
+	Route::get('purchase_order/get_item_kantin', 'AccountingController@pogetitemkantin');
 
+	Route::get('canteen/purchase_order/report/{id}', 'AccountingController@report_purchase_order_canteen');
+	Route::get('purchase_order_canteen/sendemail', 'AccountingController@po_send_email_canteen');
+
+	Route::get('edit/purchase_order_canteen', 'AccountingController@edit_purchase_order_canteen');
+	Route::post('update/purchase_order_canteen', 'AccountingController@update_purchase_order');
+	Route::post('delete/purchase_order_canteen_item', 'AccountingController@delete_item_po');
+
+	Route::post('cancel/purchase_order_canteen', 'AccountingController@cancel_purchase_order_canteen');
 
 });
 
@@ -2043,14 +2056,16 @@ Route::group(['nav' => 'S25', 'middleware' => 'permission'], function(){
 
 	Route::get('index/print_label_subassy/{id}', 'KnockDownController@indexPrintLabelSubassy');
 
+	Route::post('scan/kd_closure', 'KnockDownController@scanKDClosure');
+	
+
 });
 
 
 //CLOSURE
-Route::group(['nav' => 'S27', 'middleware' => 'permission'], function(){
-	// Route::get('index/kd_closure', 'KnockDownController@indexKDClosure');
-	Route::post('scan/kd_closure', 'KnockDownController@scanKDClosure');
-});
+// Route::group(['nav' => 'S27', 'middleware' => 'permission'], function(){
+// 	Route::get('index/kd_closure', 'KnockDownController@indexKDClosure');
+// });
 
 
 Route::group(['nav' => 'S29', 'middleware' => 'permission'], function(){
@@ -5023,6 +5038,7 @@ Route::get('fetch/packing_documentation/data', 'AuditController@documentation_da
 
 Route::get('index/fixed_asset', 'AccountingController@indexFixedAsset');
 Route::get('index/fixed_asset/registration_asset_form', 'AccountingController@indexAssetRegistration');
+Route::post('send/fixed_asset/registration_asset_form', 'AccountingController@assetRegistration');
 
 //  -----------------------  END FIXED ASSET ------------------------
 
