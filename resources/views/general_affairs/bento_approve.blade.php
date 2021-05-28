@@ -2,35 +2,35 @@
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
-	td:hover {
-		overflow: visible;
-	}
-	table.table-bordered{
-		border:1px solid black;
-	}
-	table.table-bordered > thead > tr > th{
-		font-size: 0.93vw;
-		border:1px solid black;
-		padding-top: 5px;
-		padding-bottom: 5px;
-		vertical-align: middle;
-	}
-	table.table-bordered > tbody > tr > td{
-		border:1px solid black;
-		padding-top: 3px;
-		padding-bottom: 3px;
-		padding-left: 2px;
-		padding-right: 2px;
-		vertical-align: middle;
-	}
-	table.table-bordered > tfoot > tr > th{
-		font-size: 0.8vw;
-		border:1px solid black;
-		padding-top: 0;
-		padding-bottom: 0;
-		vertical-align: middle;
-	}	
-	#loading, #error { display: none; }
+td:hover {
+	overflow: visible;
+}
+table.table-bordered{
+	border:1px solid black;
+}
+table.table-bordered > thead > tr > th{
+	font-size: 0.93vw;
+	border:1px solid black;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	vertical-align: middle;
+}
+table.table-bordered > tbody > tr > td{
+	border:1px solid black;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-left: 2px;
+	padding-right: 2px;
+	vertical-align: middle;
+}
+table.table-bordered > tfoot > tr > th{
+	font-size: 0.8vw;
+	border:1px solid black;
+	padding-top: 0;
+	padding-bottom: 0;
+	vertical-align: middle;
+}	
+#loading, #error { display: none; }
 </style>
 @endsection
 
@@ -112,6 +112,9 @@
 	});
 
 	jQuery(document).ready(function() {
+		$('.select2').select2({
+			minimumResultsForSearch: -1
+		});
 		fetchList();
 	});
 

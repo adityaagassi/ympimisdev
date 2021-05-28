@@ -4,96 +4,96 @@
 <link rel="stylesheet" href="{{ url("bower_components/fullcalendar/dist/fullcalendar.min.css")}}">
 <link rel="stylesheet" href="{{ url("bower_components/fullcalendar/dist/fullcalendar.print.min.css")}}" media="print">
 <style type="text/css">
-	.modal-body {
-		min-height: calc(100vh - 210px);
-		overflow-y: auto;
-		overflow-x: hidden;
-		max-height: 100%;
-		position: relative;
-	}
-	table > tr:hover {
-		background-color: #7dfa8c;
-	}
-	thead input {
-		width: 100%;
-		padding: 3px;
-		box-sizing: border-box;
-	}
-	thead>tr>th{
-		text-align:center;
-	}
-	tbody>tr>td{
-		text-align:center;
-	}
-	tfoot>tr>th{
-		text-align:center;
-	}
-	td:hover {
-		overflow: visible;
-	}
-	table.table-bordered{
-		border:1px solid black;
-	}
-	table.table-bordered > thead > tr > th{
-		font-size: 0.8vw;
-		border:1px solid black;
-		padding-top: 5px;
-		padding-bottom: 5px;
-		vertical-align: middle;
-	}
-	table.table-bordered > tbody > tr > td{
-		border:1px solid black;
-		padding-top: 3px;
-		padding-bottom: 3px;
-		padding-left: 2px;
-		padding-right: 2px;
-		vertical-align: middle;
-	}
-	table.table-bordered > tfoot > tr > th{
-		font-size: 0.8vw;
-		border:1px solid black;
-		padding-top: 0;
-		padding-bottom: 0;
-		vertical-align: middle;
-	}
-	.blink_text {
+.modal-body {
+	min-height: calc(100vh - 210px);
+	overflow-y: auto;
+	overflow-x: hidden;
+	max-height: 100%;
+	position: relative;
+}
+table > tr:hover {
+	background-color: #7dfa8c;
+}
+thead input {
+	width: 100%;
+	padding: 3px;
+	box-sizing: border-box;
+}
+thead>tr>th{
+	text-align:center;
+}
+tbody>tr>td{
+	text-align:center;
+}
+tfoot>tr>th{
+	text-align:center;
+}
+td:hover {
+	overflow: visible;
+}
+table.table-bordered{
+	border:1px solid black;
+}
+table.table-bordered > thead > tr > th{
+	font-size: 0.8vw;
+	border:1px solid black;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	vertical-align: middle;
+}
+table.table-bordered > tbody > tr > td{
+	border:1px solid black;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-left: 2px;
+	padding-right: 2px;
+	vertical-align: middle;
+}
+table.table-bordered > tfoot > tr > th{
+	font-size: 0.8vw;
+	border:1px solid black;
+	padding-top: 0;
+	padding-bottom: 0;
+	vertical-align: middle;
+}
+.blink_text {
 
-		animation:1.2s blinker linear infinite;
-		-webkit-animation:1.2s blinker linear infinite;
-		-moz-animation:1.2s blinker linear infinite;
+	animation:1.2s blinker linear infinite;
+	-webkit-animation:1.2s blinker linear infinite;
+	-moz-animation:1.2s blinker linear infinite;
 
-		color: yellow;
-	}
+	color: yellow;
+}
 
-	@-moz-keyframes blinker {  
-		50% { opacity: 0.7; }
-		100% { opacity: 1.0; }
-	}
+@-moz-keyframes blinker {  
+	50% { opacity: 0.7; }
+	100% { opacity: 1.0; }
+}
 
-	@-webkit-keyframes blinker {
-		50% { opacity: 0.7; }
-		100% { opacity: 1.0; }
-	}
+@-webkit-keyframes blinker {
+	50% { opacity: 0.7; }
+	100% { opacity: 1.0; }
+}
 
-	@keyframes blinker {  
-		50% { opacity: 0.7; }
-		100% { opacity: 1.0; }
-	}
+@keyframes blinker {  
+	50% { opacity: 0.7; }
+	100% { opacity: 1.0; }
+}
 
-	.fc-event {
-		font-size: 1vw;
-		cursor: pointer;
-	}
+.fc-event {
+	font-size: 1vw;
+	cursor: pointer;
+}
 
-	.fc-event-time, .fc-event-title {
-		padding: 0 1px;
-		white-space: nowrap;
-	}
+.fc-event-time, .fc-event-title {
+	padding: 0 1px;
+	white-space: nowrap;
+}
 
-	.fc-title {
-		white-space: normal;
-	}
-	#loading, #error { display: none; }
+.fc-title {
+	white-space: normal;
+}
+#loading, #error { display: none; }
 </style>
 @endsection
 
