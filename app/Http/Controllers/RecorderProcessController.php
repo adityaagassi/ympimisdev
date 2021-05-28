@@ -6599,7 +6599,7 @@ class RecorderProcessController extends Controller
               $lot_number_resin_foot = $key_foot->lot_number;
               $qty_resin_foot = $key_foot->qty;
               $create_resin_foot = $key_foot->created_at;
-              $operator_resin_foot = $key_head->employee_id;
+              $operator_resin_foot = $key_foot->employee_id;
             }
           }
 
