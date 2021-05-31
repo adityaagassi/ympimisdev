@@ -383,6 +383,20 @@ class SurveyController extends Controller
                           and miraimobile.survey_logs.employee_id is null
 					 and employee_syncs.employee_id != 'PI1612005'
                           and employee_syncs.end_date is null");
+
+
+					$survey_info = DB::SELECT("SELECT
+                          employee_syncs.employee_id,
+                          employee_syncs.name,
+                          COALESCE(department_shortname,'') as department
+                          FROM
+                          miraimobile.survey_logs
+                          RIGHT JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_logs.employee_id
+                          join departments on department_name = employee_syncs.department
+                          WHERE
+                          miraimobile.survey_logs.employee_id is null
+					 and employee_syncs.employee_id != 'PI1612005'
+                          and employee_syncs.end_date is null");
 			        }
 			        else{
 			            $date = date('Y-m-d', strtotime($request->get("tanggal")));
@@ -400,12 +414,27 @@ class SurveyController extends Controller
 							AND mobile.employee_id IS NULL 
 							AND employee_syncs.employee_id != 'PI1612005'
 							AND employee_syncs.end_date IS NULL");
+
+			            $survey_info = DB::SELECT("
+			            	SELECT
+							employee_syncs.employee_id,
+							employee_syncs.name,
+							COALESCE ( department_shortname, '' ) AS department 
+						FROM
+							( SELECT * FROM miraimobile.survey_covid_logs WHERE tanggal = '".$date."' ) AS mobile
+							RIGHT JOIN employee_syncs ON employee_syncs.employee_id = mobile.employee_id
+							JOIN departments ON department_name = employee_syncs.department 
+						WHERE
+							mobile.employee_id IS NULL 
+							AND employee_syncs.employee_id != 'PI1612005'
+							AND employee_syncs.end_date IS NULL
+					");
 			        }
 
                      
                 }else{
                 	if ($request->get('tanggal') == "") {
-                     $survey = DB::SELECT("SELECT
+                     	$survey = DB::SELECT("SELECT
                           employee_syncs.employee_id,
                           employee_syncs.name,
                           COALESCE(department_shortname,'') as department
@@ -417,6 +446,19 @@ class SurveyController extends Controller
                           department_shortname = '".$dept."'
 					 and employee_syncs.employee_id != 'PI1612005'
                           and employee_syncs.end_date is null");
+
+                     	$survey_info = DB::SELECT("SELECT
+                          employee_syncs.employee_id,
+                          employee_syncs.name,
+                          COALESCE(department_shortname,'') as department
+                          FROM
+                          miraimobile.survey_logs
+                          LEFT JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_logs.employee_id
+                          join departments on department_name = employee_syncs.department
+                          WHERE
+					 employee_syncs.employee_id != 'PI1612005'
+                          and employee_syncs.end_date is null");
+
                  	}
 			        else{
 			            $date = date('Y-m-d', strtotime($request->get("tanggal")));
@@ -433,13 +475,121 @@ class SurveyController extends Controller
                           department_shortname = '".$dept."'
                           and miraimobile.survey_covid_logs.tanggal = '".$date."'
                           and employee_syncs.end_date is null");
-			         }
 
-                }
+			           $survey_info = DB::SELECT("SELECT
+	                     employee_syncs.employee_id,
+	                     employee_syncs.name,
+	                     COALESCE(department_shortname,'') as department
+	                     FROM
+	                     miraimobile.survey_covid_logs
+	                     LEFT JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_covid_logs.employee_id
+	                     join departments on department_name = employee_syncs.department
+	                     WHERE
+	                     miraimobile.survey_covid_logs.tanggal = '".$date."'
+	                     and employee_syncs.end_date is null");
+			         }
+               }
+
+               
+		  	$category = $request->get('category');
+
+               if ($request->get('tanggal') == "") {
+	               if ($category == "Rendah") {
+	               	$survey_category = DB::SELECT("SELECT
+                          employee_syncs.employee_id,
+                          employee_syncs.name,
+                          COALESCE(department_shortname,'') as department
+                          FROM
+                          miraimobile.survey_logs
+                          LEFT JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_logs.employee_id
+                          join departments on department_name = employee_syncs.department
+                          WHERE
+					 employee_syncs.employee_id != 'PI1612005'
+					 and total <= 35
+                          and employee_syncs.end_date is null");
+	               }
+	               else if ($category == "Sedang"){
+	               	$survey_category = DB::SELECT("SELECT
+                          employee_syncs.employee_id,
+                          employee_syncs.name,
+                          COALESCE(department_shortname,'') as department
+                          FROM
+                          miraimobile.survey_logs
+                          LEFT JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_logs.employee_id
+                          join departments on department_name = employee_syncs.department
+                          WHERE
+					 employee_syncs.employee_id != 'PI1612005'
+					 and total > 35 and total <= 80
+                          and employee_syncs.end_date is null");
+	               }
+	               else {
+	               	$survey_category = DB::SELECT("SELECT
+                          employee_syncs.employee_id,
+                          employee_syncs.name,
+                          COALESCE(department_shortname,'') as department
+                          FROM
+                          miraimobile.survey_logs
+                          LEFT JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_logs.employee_id
+                          join departments on department_name = employee_syncs.department
+                          WHERE
+					 employee_syncs.employee_id != 'PI1612005'
+					 and total > 80
+                          and employee_syncs.end_date is null");
+	               }
+	           }
+
+	           else {
+	               if ($category == "Rendah") {
+	               	$survey_category = DB::SELECT("SELECT
+                          employee_syncs.employee_id,
+                          employee_syncs.name,
+                          COALESCE(department_shortname,'') as department
+                          FROM
+                          miraimobile.survey_covid_logs
+                          LEFT JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_covid_logs.employee_id
+                          join departments on department_name = employee_syncs.department
+                          WHERE
+					 employee_syncs.employee_id != 'PI1612005'
+					 and total <= 35
+                          and employee_syncs.end_date is null");
+	               }
+	               else if ($category == "Sedang"){
+	               	$survey_category = DB::SELECT("SELECT
+                          employee_syncs.employee_id,
+                          employee_syncs.name,
+                          COALESCE(department_shortname,'') as department
+                          FROM
+                          miraimobile.survey_covid_logs
+                          LEFT JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_covid_logs.employee_id
+                          join departments on department_name = employee_syncs.department
+                          WHERE
+					 employee_syncs.employee_id != 'PI1612005'
+					 and total > 35 and total <= 80
+                          and employee_syncs.end_date is null");
+	               }
+	               else {
+	               	$survey_category = DB::SELECT("SELECT
+                          employee_syncs.employee_id,
+                          employee_syncs.name,
+                          COALESCE(department_shortname,'') as department
+                          FROM
+                          miraimobile.survey_covid_logs
+                          LEFT JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_covid_logs.employee_id
+                          join departments on department_name = employee_syncs.department
+                          WHERE
+					 employee_syncs.employee_id != 'PI1612005'
+					 and total > 80
+                          and employee_syncs.end_date is null");
+	               }
+	           }
+
+
 
 			$response = array(
 				'status' => true,
-				'survey' => $survey
+				'survey' => $survey,
+				'survey_info' => $survey_info,
+				'survey_category' => $survey_category
 			);
 			return Response::json($response);
 		} catch (\Exception $e) {

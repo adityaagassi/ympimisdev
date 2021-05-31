@@ -100,6 +100,28 @@ table > thead > tr > th{
 	#tableDetail_info.dataTables_length {
 		color: black;
 	}
+
+	div#tableDetailPie_info.dataTables_info,
+	 div#tableDetailPie_filter.dataTables_filter label,
+	 div#tableDetailPie_wrapper.dataTables_wrapper{
+		color: black;
+	}
+
+	#tableDetailPie_info.dataTables_info,
+	#tableDetailPie_info.dataTables_length {
+		color: black;
+	}
+
+	div#tableDetailCategory_info.dataTables_info,
+	 div#tableDetailCategory_filter.dataTables_filter label,
+	 div#tableDetailCategory_wrapper.dataTables_wrapper{
+		color: black;
+	}
+
+	#tableDetailCategory_info.dataTables_info,
+	#tableDetailCategory_info.dataTables_length {
+		color: black;
+	}
 	
 
 </style>
@@ -178,6 +200,56 @@ table > thead > tr > th{
 		</div>
 	</div>
 </div>
+
+<div class="modal fade" id="modalDetailPie">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 style="padding-bottom: 15px;color: black" class="modal-title" id="modalDetailTitlePie"></h4>
+				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
+					<table class="table table-hover table-bordered table-striped" id="tableDetailPie">
+						<thead style="background-color: rgba(126,86,134,.7);">
+							<tr style="color: white">
+								<th style="width: 1%;">#</th>
+								<th style="width: 6%;">Employee ID</th>
+								<th style="width: 9%;">Name</th>
+								<th style="width: 9%;">Dept</th>
+							</tr>
+						</thead>
+						<tbody id="tableDetailBodyPie">
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalDetailCategory">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 style="padding-bottom: 15px;color: black" class="modal-title" id="modalDetailTitleCategory"></h4>
+				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
+					<table class="table table-hover table-bordered table-striped" id="tableDetailCategory">
+						<thead style="background-color: rgba(126,86,134,.7);">
+							<tr style="color: white">
+								<th style="width: 1%;">#</th>
+								<th style="width: 6%;">Employee ID</th>
+								<th style="width: 9%;">Name</th>
+								<th style="width: 9%;">Dept</th>
+							</tr>
+						</thead>
+						<tbody id="tableDetailBodyCategory">
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
 @endsection
 @section('scripts')
 <script src="{{ url("js/highcharts.js")}}"></script>
@@ -201,7 +273,7 @@ table > thead > tr > th{
 	jQuery(document).ready(function(){
 		$('.select2').select2();
 		fillChart();
-		intervalChart = setInterval(fillChart, 30000);
+		intervalChart = setInterval(fillChart, 60000);
 	});
 
 	$('.datepicker').datepicker({
@@ -435,8 +507,6 @@ table > thead > tr > th{
 	}
 
 	function fillChart() {
-
-
     $("#loading").show();
 
 		var tanggal = $('#tanggal').val();
@@ -621,7 +691,14 @@ table > thead > tr > th{
 					                format: '<b>{point.name}</b>: {point.y}'
 					            },
 					            animation: false,
-											showInLegend: true
+											showInLegend: true,
+											point: {
+												events: {
+													click: function () {
+														fetchDetailAnswer(this.name);
+													}
+												}
+											}
 					        }
 					    },credits: {
 							enabled: false
@@ -680,7 +757,14 @@ table > thead > tr > th{
 					                format: '<b>{point.name}</b>: {point.y}'
 					            },
 					            animation: false,
-											showInLegend: true
+											showInLegend: true,
+											point: {
+												events: {
+													click: function () {
+														fetchDetailCategory(this.name);
+													}
+												}
+											}
 					        }
 					    },credits: {
 							enabled: false
@@ -804,7 +888,7 @@ table > thead > tr > th{
 						"bAutoWidth": false,
 						"processing": true
 					});
-				intervalChart = setInterval(fillChart,30000);
+				intervalChart = setInterval(fillChart,60000);
 			}
 			else{
 				alert('Attempt to retrieve data failed');
@@ -812,6 +896,191 @@ table > thead > tr > th{
 		});
   	}
 
+	function fetchDetailAnswer(answer) {
+
+		$('#modalDetailPie').modal('show');
+		$('#modalDetailTitlePie').html("");
+		$('#tableDetailPie').hide();
+    $("#loading").show();
+
+		var tanggal = $('#tanggal').val();
+
+		var data = {
+			answer:answer,
+			tanggal:tanggal
+		}
+
+		$.get('{{ url("fetch/survey_covid/detail") }}', data, function(result, status, xhr) {
+			if(result.status){
+
+      	$("#loading").hide();
+				$('#tableDetailBodyPie').html('');
+
+				$('#tableDetailPie').DataTable().clear();
+				$('#tableDetailPie').DataTable().destroy();
+
+				var index = 1;
+				var resultData = "";
+				var total = 0;
+
+				var keterangan = "covid";
+
+				$.each(result.survey_info, function(key, value) {
+					resultData += '<tr>';
+					resultData += '<td>'+ index +'</td>';
+					resultData += '<td>'+ value.employee_id +'</td>';
+					resultData += '<td>'+ value.name +'</td>';
+					resultData += '<td>'+ value.department +'</td>';
+					resultData += '</tr>';
+					index += 1;
+				});
+				$('#tableDetailBodyPie').append(resultData);
+				$('#modalDetailTitlePie').html("<center><span style='font-size: 20px; font-weight: bold;'>Detail Employees With Answer <b>'"+answer+"'</b><br>On Survey "+keterangan+"</span></center>");
+
+				$('#tableDetailPie').show();
+				var table = $('#tableDetailPie').DataTable({
+						'dom': 'Bfrtip',
+						'responsive':true,
+						'lengthMenu': [
+						[ 10, 25, 50, -1 ],
+						[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+						],
+						'buttons': {
+							buttons:[
+							{
+								extend: 'pageLength',
+								className: 'btn btn-default',
+							},
+							{
+								extend: 'excel',
+								className: 'btn btn-info',
+								text: '<i class="fa fa-file-excel-o"></i> Excel',
+								exportOptions: {
+									columns: ':not(.notexport)'
+								}
+							},
+							{
+								extend: 'print',
+								className: 'btn btn-warning',
+								text: '<i class="fa fa-print"></i> Print',
+								exportOptions: {
+									columns: ':not(.notexport)'
+								}
+							}
+							]
+						},
+						'paging': true,
+						'lengthChange': true,
+						'pageLength': 10,
+						'searching': true	,
+						'ordering': true,
+						'order': [],
+						'info': true,
+						'autoWidth': true,
+						"sPaginationType": "full_numbers",
+						"bJQueryUI": true,
+						"bAutoWidth": false,
+						"processing": true
+					});
+			}
+			else{
+				alert('Attempt to retrieve data failed');
+			}
+		});
+  }
+
+  function fetchDetailCategory(category) {
+
+		$('#modalDetailCategory').modal('show');
+		$('#modalDetailTitleCategory').html("");
+		$('#tableDetailCategory').hide();
+    $("#loading").show();
+
+		var tanggal = $('#tanggal').val();
+
+		var data = {
+			category:category,
+			tanggal:tanggal
+		}
+
+		$.get('{{ url("fetch/survey_covid/detail") }}', data, function(result, status, xhr) {
+			if(result.status){
+
+      	$("#loading").hide();
+				$('#tableDetailBodyCategory').html('');
+
+				$('#tableDetailCategory').DataTable().clear();
+				$('#tableDetailCategory').DataTable().destroy();
+
+				var index = 1;
+				var resultData = "";
+				var total = 0;
+
+				var keterangan = "covid";
+
+				$.each(result.survey_category, function(key, value) {
+					resultData += '<tr>';
+					resultData += '<td>'+ index +'</td>';
+					resultData += '<td>'+ value.employee_id +'</td>';
+					resultData += '<td>'+ value.name +'</td>';
+					resultData += '<td>'+ value.department +'</td>';
+					resultData += '</tr>';
+					index += 1;
+				});
+				$('#tableDetailBodyCategory').append(resultData);
+				$('#modalDetailTitleCategory').html("<center><span style='font-size: 20px; font-weight: bold;'>Detail Karyawan Dengan <b> Resiko '"+category+"'</b></center>");
+
+				$('#tableDetailCategory').show();
+				var table = $('#tableDetailCategory').DataTable({
+						'dom': 'Bfrtip',
+						'responsive':true,
+						'lengthMenu': [
+						[ 10, 25, 50, -1 ],
+						[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+						],
+						'buttons': {
+							buttons:[
+							{
+								extend: 'pageLength',
+								className: 'btn btn-default',
+							},
+							{
+								extend: 'excel',
+								className: 'btn btn-info',
+								text: '<i class="fa fa-file-excel-o"></i> Excel',
+								exportOptions: {
+									columns: ':not(.notexport)'
+								}
+							},
+							{
+								extend: 'print',
+								className: 'btn btn-warning',
+								text: '<i class="fa fa-print"></i> Print',
+								exportOptions: {
+									columns: ':not(.notexport)'
+								}
+							}
+							]
+						},
+						'paging': true,
+						'lengthChange': true,
+						'pageLength': 10,
+						'searching': true	,
+						'ordering': true,
+						'order': [],
+						'info': true,
+						'autoWidth': true,
+						"sPaginationType": "full_numbers",
+						"bJQueryUI": true,
+						"bAutoWidth": false,
+						"processing": true
+					});
+			}
+			else{
+				alert('Attempt to retrieve data failed');
+			}
+		});
+  }
 
 </script>
 @endsection
