@@ -107,6 +107,11 @@ table > thead > tr > th{
 @section('header')
 @endsection
 @section('content')
+<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8; display: none">
+    <p style="position: absolute; color: White; top: 45%; left: 27%;">
+      <span style="font-size: 40px">Loading, please wait a moment . . . <i class="fa fa-spin fa-refresh"></i></span>
+    </p>
+  </div>
 <section class="content" style="padding-top: 0;">
 	<div class="row">
 		<div class="col-xs-12" style="margin-top: 0px;">
@@ -196,7 +201,7 @@ table > thead > tr > th{
 	jQuery(document).ready(function(){
 		$('.select2').select2();
 		fillChart();
-		intervalChart = setInterval(fillChart, 15000);
+		intervalChart = setInterval(fillChart, 30000);
 	});
 
 	$('.datepicker').datepicker({
@@ -432,6 +437,8 @@ table > thead > tr > th{
 	function fillChart() {
 
 
+    $("#loading").show();
+
 		var tanggal = $('#tanggal').val();
 		
 		var data = {
@@ -443,6 +450,9 @@ table > thead > tr > th{
 		$.get('{{ url("fetch/survey_covid") }}',data, function(result, status, xhr) {
 			if(xhr.status == 200){
 				if(result.status){
+
+
+		      $("#loading").hide();
 					//Chart Machine Report
 					var dept = [];
 
@@ -581,7 +591,12 @@ table > thead > tr > th{
 					        plotBackgroundColor: null,
 					        plotBorderWidth: null,
 					        plotShadow: false,
-					        type: 'pie'
+					        type: 'pie',
+									options3d: {
+										enabled: true,
+										alpha: 45,
+										beta: 0
+									}
 					    },
 					    title: {
 					        text: 'Total Answer By Person'
@@ -598,11 +613,15 @@ table > thead > tr > th{
 					        pie: {
 					            allowPointSelect: true,
 					            cursor: 'pointer',
+											edgeWidth: 1,
+											edgeColor: 'rgb(126,86,134)',
+											depth: 35,
 					            dataLabels: {
 					                enabled: true,
 					                format: '<b>{point.name}</b>: {point.y}'
 					            },
 					            animation: false,
+											showInLegend: true
 					        }
 					    },credits: {
 							enabled: false
@@ -631,7 +650,12 @@ table > thead > tr > th{
 					        plotBackgroundColor: null,
 					        plotBorderWidth: null,
 					        plotShadow: false,
-					        type: 'pie'
+					        type: 'pie',
+									options3d: {
+										enabled: true,
+										alpha: 45,
+										beta: 0
+									}
 					    },
 					    title: {
 					        text: 'Total Answer By Type'
@@ -648,11 +672,15 @@ table > thead > tr > th{
 					        pie: {
 					            allowPointSelect: true,
 					            cursor: 'pointer',
+											edgeWidth: 1,
+											edgeColor: 'rgb(126,86,134)',
+											depth: 35,
 					            dataLabels: {
 					                enabled: true,
 					                format: '<b>{point.name}</b>: {point.y}'
 					            },
 					            animation: false,
+											showInLegend: true
 					        }
 					    },credits: {
 							enabled: false
@@ -692,6 +720,9 @@ table > thead > tr > th{
 		$('#modalDetailTitle').html("");
 		$('#tableDetail').hide();
 
+
+    $("#loading").show();
+
 		var tanggal = $('#tanggal').val();
 
 		var data = {
@@ -702,6 +733,8 @@ table > thead > tr > th{
 
 		$.get('{{ url("fetch/survey_covid/detail") }}', data, function(result, status, xhr) {
 			if(result.status){
+
+      	$("#loading").hide();
 				$('#tableDetailBody').html('');
 
 				$('#tableDetail').DataTable().clear();
@@ -771,7 +804,7 @@ table > thead > tr > th{
 						"bAutoWidth": false,
 						"processing": true
 					});
-				intervalChart = setInterval(fillChart,15000);
+				intervalChart = setInterval(fillChart,30000);
 			}
 			else{
 				alert('Attempt to retrieve data failed');

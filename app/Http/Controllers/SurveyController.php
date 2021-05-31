@@ -42,7 +42,7 @@ class SurveyController extends Controller
 				SUM( a.count_tidak )+ SUM( a.count_iya )) AS belum,
 				sum( a.count_iya ) AS iya,
 				a.department,
-				COALESCE ( departments.department_shortname, '' ) AS department_shortname 
+				department_shortname
 			FROM
 				(
 				SELECT
@@ -86,6 +86,7 @@ class SurveyController extends Controller
 					department 
 				) a
 				LEFT JOIN departments ON a.department = departments.department_name 
+			WHERE a.department != ''
 			GROUP BY
 				a.department,
 				departments.department_shortname");
@@ -124,7 +125,7 @@ class SurveyController extends Controller
 				$keterangan = $request->get('keterangan');
 			}
 
-			if ($dept == "") {
+			if ($dept == "MNGT") {
 				if ($answer == null) {
 					$survey = DB::SELECT("SELECT
 						employee_syncs.employee_id,
@@ -232,7 +233,7 @@ class SurveyController extends Controller
 						SUM( a.count_sudah ) AS sudah,
 						SUM( a.count_belum ) AS belum,
 						a.department,
-						COALESCE ( departments.department_shortname, '' ) AS department_shortname 
+						department_shortname
 					FROM
 						(
 					SELECT
@@ -242,6 +243,7 @@ class SurveyController extends Controller
 					FROM
 						miraimobile.survey_logs
 						JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_logs.employee_id 
+					WHERE employee_syncs.employee_id != 'PI1612005'
 					GROUP BY
 						employee_syncs.department
 						
@@ -256,10 +258,12 @@ class SurveyController extends Controller
 					WHERE
 						miraimobile.survey_logs.employee_id IS NULL 
 						AND employee_syncs.end_date IS NULL 
+					  	AND employee_syncs.employee_id != 'PI1612005'
 					GROUP BY
 						employee_syncs.department 
 						) a
 						LEFT JOIN departments ON a.department = departments.department_name 
+					WHERE a.department != ''
 					GROUP BY
 						a.department,
 						departments.department_shortname
@@ -274,7 +278,7 @@ class SurveyController extends Controller
 						SUM( a.count_sudah ) AS sudah,
 						SUM( a.count_belum ) AS belum,
 						a.department,
-						COALESCE ( departments.department_shortname, '' ) AS department_shortname 
+						department_shortname
 					FROM
 						(
 					SELECT
@@ -286,6 +290,7 @@ class SurveyController extends Controller
 						JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_covid_logs.employee_id 
 					WHERE 
 						miraimobile.survey_covid_logs.tanggal = '".$date."' 
+						AND employee_syncs.employee_id != 'PI1612005'
 					GROUP BY
 						employee_syncs.department
 						
@@ -300,9 +305,11 @@ class SurveyController extends Controller
 						RIGHT JOIN employee_syncs ON employee_syncs.employee_id = mobile.employee_id 
 						WHERE
 						employee_syncs.end_date IS NULL 
+						AND employee_syncs.employee_id != 'PI1612005'
 						GROUP BY employee_syncs.department
 					) a
 						LEFT JOIN departments ON a.department = departments.department_name 
+					WHERE a.department != ''
 					GROUP BY
 						a.department,
 						departments.department_shortname
@@ -358,39 +365,12 @@ class SurveyController extends Controller
 	public function fetchSurveyCovidDetail(Request $request)
 	{
 		try {
-		    $answer = $request->get('answer');
+		  $answer = $request->get('answer');
             $dept = $request->get('dept');
 
-            if ($dept == "") {
-                if ($answer == "Belum") {
-                     $survey = DB::SELECT("SELECT
-                          employee_syncs.employee_id,
-                          employee_syncs.name,
-                          '' as department
-                          FROM
-                          miraimobile.survey_logs
-                          RIGHT JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_logs.employee_id
-                          WHERE
-                          department IS NULL
-                          and miraimobile.survey_logs.employee_id is null
-                          and employee_syncs.end_date is null");
-                }else{
-                     $survey = DB::SELECT("SELECT
-                          employee_syncs.employee_id,
-                          employee_syncs.name,
-                          '' as department
-                          FROM
-                          miraimobile.survey_logs
-                          LEFT JOIN employee_syncs ON employee_syncs.employee_id = miraimobile.survey_logs.employee_id
-                          WHERE
-                          department IS NULL
-                          and employee_syncs.end_date is null");
-                }
-            }else{
-                if ($answer == "Belum") {
-
-					if ($request->get('tanggal') == "") {
-						$survey = DB::SELECT("SELECT
+               if ($answer == "Belum") {
+				if ($request->get('tanggal') == "") {
+					$survey = DB::SELECT("SELECT
                           employee_syncs.employee_id,
                           employee_syncs.name,
                           COALESCE(department_shortname,'') as department
@@ -401,6 +381,7 @@ class SurveyController extends Controller
                           WHERE
                           department_shortname = '".$dept."'
                           and miraimobile.survey_logs.employee_id is null
+					 and employee_syncs.employee_id != 'PI1612005'
                           and employee_syncs.end_date is null");
 			        }
 			        else{
@@ -417,6 +398,7 @@ class SurveyController extends Controller
 						WHERE
 							department_shortname = '".$dept."' 
 							AND mobile.employee_id IS NULL 
+							AND employee_syncs.employee_id != 'PI1612005'
 							AND employee_syncs.end_date IS NULL");
 			        }
 
@@ -433,6 +415,7 @@ class SurveyController extends Controller
                           join departments on department_name = employee_syncs.department
                           WHERE
                           department_shortname = '".$dept."'
+					 and employee_syncs.employee_id != 'PI1612005'
                           and employee_syncs.end_date is null");
                  	}
 			        else{
@@ -453,7 +436,6 @@ class SurveyController extends Controller
 			         }
 
                 }
-           }
 
 			$response = array(
 				'status' => true,
