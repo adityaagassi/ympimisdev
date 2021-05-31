@@ -207,7 +207,7 @@ class MutasiController extends Controller
             $grade = $request->get('jabatan');
             $jabatan = "where grade_code = '".$grade."' ";
 
-            $position = db::select("SELECT position FROM jabatan ".$jabatan." ");
+            $position = db::select("SELECT position FROM jabatan ".$jabatan."");
 
             // var_dump($positon);
 
@@ -1693,7 +1693,7 @@ class MutasiController extends Controller
                 }
             }
             else{
-                $chf = db::select("select employee_id, `name` from employee_syncs where (position = 'chief' or position = 'foreman') and department = '".$department_asal."'");
+                $chf = db::select("select employee_id, `name` from employee_syncs where (position = 'chief' or position = 'foreman') and section = '".$seksi."'");
                 if ($chf != null)
                 {
                     foreach ($chf as $cf)
@@ -2865,7 +2865,7 @@ class MutasiController extends Controller
     }
 
     public function email(Request $request, $id){
-        $chief = null;
+            $chief = null;
             $nama_chief = null;
             $posit = null;
 
