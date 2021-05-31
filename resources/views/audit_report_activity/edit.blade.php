@@ -75,13 +75,13 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Audit Schedule<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="audit_guidance_id" style="width: 100%;" data-placeholder="Choose a Schedule This Month..." required>
+              <select class="form-control select2" name="audit_guidance_id" style="width: 100%;" data-placeholder="Pilih Schedule ..." required>
                 <option value=""></option>
                 @foreach($guidance as $guidance)
                   @if($audit_report_activity->audit_guidance_id == $guidance->id)
-                    <option value="{{ $guidance->id }}" selected>{{ $guidance->no_dokumen }} - {{ $guidance->nama_dokumen }} - {{ $guidance->status }}</option>
+                    <option value="{{ $guidance->id }}" selected>({{ date('M Y',strtotime($guidance->month)) }}) {{ $guidance->no_dokumen }} - {{ $guidance->nama_dokumen }}</option>
                   @else
-                    <option value="{{ $guidance->id }}">{{ $guidance->no_dokumen }} - {{ $guidance->nama_dokumen }} - {{ $guidance->status }}</option>
+                    <option value="{{ $guidance->id }}">{{ $guidance->no_dokumen }} - {{ $guidance->nama_dokumen }}</option>
                   @endif
                 @endforeach
               </select>

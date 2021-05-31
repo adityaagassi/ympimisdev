@@ -68,10 +68,10 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Audit Schedule</label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="audit_guidance_id" style="width: 100%;" data-placeholder="Pilih Schedule Bulan Ini" required>
+              <select class="form-control select2" name="audit_guidance_id" style="width: 100%;" data-placeholder="Pilih Schedule" required>
                 <option value=""></option>
                 @foreach($guidance as $guidance)
-                  <option value="{{ $guidance->id }}">({{ $guidance->month }}) {{ $guidance->no_dokumen }} - {{ $guidance->nama_dokumen }}</option>
+                  <option value="{{ $guidance->id }}">({{ date('M Y',strtotime($guidance->month)) }}) {{ $guidance->no_dokumen }} - {{ $guidance->nama_dokumen }}</option>
                 @endforeach
               </select>
               <br>
