@@ -499,13 +499,13 @@ function fetchTableStock(){
 				tableBody += '</tr>';
 
 				tableBody += '<tr>';
-				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 16px; font-weight: bold; width:50%;">Kariawase</td>';
+				tableBody += '<td style="background-color: rgb(245, 245, 245); text-align: center; color: black; font-size: 16px; font-weight: bold; width:50%;">Kariawase</td>';
 				total2 = 0;
 				$.each(result.kariawase, function(index, value){
-					tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+parseInt(value.quantity)+'</td>';
+					tableBody += '<td style="background-color: rgb(245, 245, 245); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+parseInt(value.quantity)+'</td>';
 					total2 += parseInt(value.quantity);
 				})
-				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+total2+'</td>';
+				tableBody += '<td style="background-color: rgb(245, 245, 245); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+total2+'</td>';
 				tableBody += '</tr>';
 
 				tableBody += '<tr>';
@@ -519,13 +519,13 @@ function fetchTableStock(){
 				tableBody += '</tr>';
 
 				tableBody += '<tr>';
-				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 16px; font-weight: bold; width:50%;">Tanpo Awase</td>';
+				tableBody += '<td style="background-color: rgb(245, 245, 245); text-align: center; color: black; font-size: 16px; font-weight: bold; width:50%;">Tanpo Awase</td>';
 				total4 = 0;
 				$.each(result.tanpoawase, function(index, value){
-					tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+parseInt(value.quantity)+'</td>';
+					tableBody += '<td style="background-color: rgb(245, 245, 245); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+parseInt(value.quantity)+'</td>';
 					total4 += parseInt(value.quantity);
 				})
-				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+total4+'</td>';
+				tableBody += '<td style="background-color: rgb(245, 245, 245); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+total4+'</td>';
 				tableBody += '</tr>';
 
 				tableBody += '<tr>';
@@ -539,13 +539,13 @@ function fetchTableStock(){
 				tableBody += '</tr>';
 
 				tableBody += '<tr>';
-				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 16px; font-weight: bold; width:50%;">Renraku</td>';
+				tableBody += '<td style="background-color: rgb(245, 245, 245); text-align: center; color: black; font-size: 16px; font-weight: bold; width:50%;">Renraku</td>';
 				total6 = 0;
 				$.each(result.renraku, function(index, value){
-					tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+parseInt(value.quantity)+'</td>';
+					tableBody += '<td style="background-color: rgb(245, 245, 245); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+parseInt(value.quantity)+'</td>';
 					total6 += parseInt(value.quantity);
 				})
-				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+total6+'</td>';
+				tableBody += '<td style="background-color: rgb(245, 245, 245); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+total6+'</td>';
 				tableBody += '</tr>';
 
 				tableBody += '<tr>';
@@ -559,13 +559,13 @@ function fetchTableStock(){
 				tableBody += '</tr>';
 
 				tableBody += '<tr>';
-				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 16px; font-weight: bold; width:50%;">Fukiage 1 & 2- Repair</td>';
+				tableBody += '<td style="background-color: rgb(245, 245, 245); text-align: center; color: black; font-size: 16px; font-weight: bold; width:50%;">Fukiage 1 & 2- Repair</td>';
 				total8 = 0;
 				$.each(result.fukiagerepair, function(index, value){
-					tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+parseInt(value.quantity)+'</td>';
+					tableBody += '<td style="background-color: rgb(245, 245, 245); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+parseInt(value.quantity)+'</td>';
 					total8 += parseInt(value.quantity);
 				})
-				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+total8+'</td>';
+				tableBody += '<td style="background-color: rgb(245, 245, 245); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+total8+'</td>';
 				tableBody += '</tr>';
 
 				tableBody += '<tr>';
