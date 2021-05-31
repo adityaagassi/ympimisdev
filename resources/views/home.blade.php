@@ -397,7 +397,7 @@
                 </tbody>
             </table>
 
-            <!-- <table class="table table-bordered">
+            <table class="table table-bordered">
                 <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
                     <tr>
                         <th>Fixed Asset Control<br>??? </th>
@@ -416,7 +416,7 @@
                         </td>                     
                     </tr>                    
                 </tbody>
-            </table> -->
+            </table>
 
             <table class="table table-bordered">
                 <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
@@ -1080,7 +1080,7 @@
                                     <i class="fa fa-caret-right"></i> Key Parts Process (WI-KPP) Report (主要部品加工)
                                 </a>
                                 <br>
-                                <a href="{{ url("/index/production_report/index/18") }}">
+                                <a href="{{ url("/index/production_report/index/17") }}">
                                     <i class="fa fa-caret-right"></i> Body Parts Process (WI-BPP) Report (ボディパーツ加工)
                                 </a>
                                 <br>

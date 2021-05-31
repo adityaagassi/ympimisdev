@@ -40,6 +40,9 @@
 <section class="content-header">
 	<h1>
 		{{ $activity_name }} - {{ $leader }}
+		<a class="btn btn-info pull-right" style="margin-left: 5px" href="{{url('index/audit_guidance/index/'.$id)}}">
+			Manage Schedule
+		</a>
 		<a href="{{ url('index/audit_report_activity/create/'.$id) }}" class="btn btn-primary pull-right">Buat Audit IK</a>
 	</h1>
 	<ol class="breadcrumb">
@@ -76,8 +79,8 @@
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
 									<div class="form-group">
-										<label>Sub Section</label>
-										<select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Pilih Sub Section">
+										<label>Group</label>
+										<select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Pilih Group">
 											<option value=""></option>
 											@foreach($subsection as $subsection)
 											<option value="{{ $subsection->sub_section_name }}">{{ $subsection->sub_section_name }}</option>
@@ -93,7 +96,7 @@
 											<div class="input-group-addon bg-white">
 												<i class="fa fa-calendar"></i>
 											</div>
-											<input type="text" class="form-control datepicker" id="tgl"name="month" placeholder="Select Date" autocomplete="off">
+											<input type="text" class="form-control datepicker" id="tgl"name="month" placeholder="Pilih Bulan" autocomplete="off">
 										</div>
 									</div>
 								</div>
@@ -122,7 +125,7 @@
 											<div class="input-group-addon bg-white">
 												<i class="fa fa-calendar"></i>
 											</div>
-											<input type="text" class="form-control datepicker2" id="tgl_print" name="month" placeholder="Select Month" required autocomplete="off">
+											<input type="text" class="form-control datepicker2" id="tgl_print" name="month" placeholder="Pilih Bulan" required autocomplete="off">
 										</div>
 									</div>
 								</div>
@@ -145,8 +148,8 @@
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
 									<div class="form-group">
-										<label>Sub Section</label>
-										<select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Pilih Sub Section" required>
+										<label>Group</label>
+										<select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Pilih Group" required>
 											<option value=""></option>
 											@foreach($subsection3 as $subsection3)
 											<option value="{{ $subsection3->sub_section_name }}">{{ $subsection3->sub_section_name }}</option>
@@ -162,7 +165,7 @@
 											<div class="input-group-addon bg-white">
 												<i class="fa fa-calendar"></i>
 											</div>
-											<input type="text" class="form-control datepicker2" id="tgl" name="month" placeholder="Select Date" required autocomplete="off">
+											<input type="text" class="form-control datepicker2" id="tgl" name="month" placeholder="Pilih Bulan" required autocomplete="off">
 										</div>
 									</div>
 								</div>
@@ -190,7 +193,7 @@
 							<table id="example1" class="table table-bordered table-striped table-hover">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th>Sub Section</th>
+										<th>Group</th>
 										<th>Date</th>
 										<th>Nama Dokumen</th>
 										<th>No. Dokumen</th>

@@ -40,6 +40,9 @@ table.table-bordered > tfoot > tr > th{
 <section class="content-header">
 	<h1>
 		Schedule {{ $activity_name }} - {{ $leader }}
+		<a class="btn btn-info pull-right" style="margin-left: 5px" href="{{url('index/audit_report_activity/index/'.$id)}}">
+			Lakukan Audit
+		</a>
 		<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal">
 			Buat Schedule
 		</button>
@@ -71,12 +74,12 @@ table.table-bordered > tfoot > tr > th{
 						<div class="col-md-12 col-md-offset-4">
 							<div class="col-md-3">
 								<div class="form-group">
-									<label>Month</label>
+									<label>Bulan</label>
 									<div class="input-group date">
 										<div class="input-group-addon">
 											<i class="fa fa-calendar"></i>
 										</div>
-										<input type="text" class="form-control pull-right" id="date" name="month" autocomplete="off" placeholder="Pilih Month">
+										<input type="text" class="form-control pull-right" id="date" name="month" autocomplete="off" placeholder="Pilih Bulan">
 									</div>
 								</div>
 							</div>
@@ -184,12 +187,12 @@ table.table-bordered > tfoot > tr > th{
 				  <input type="text" class="form-control" name="inputno_dokumen" id="inputno_dokumen" placeholder="Masukkan No. Dokumen" required>
 	            </div>
 	            <div class="form-group">
-	              <label for="">Month</label>
+	              <label for="">Bulan</label>
 	              <div class="input-group date">
 					  <div class="input-group-addon">
 						<i class="fa fa-calendar"></i>
 					  </div>
-					  <input type="text" class="form-control pull-right" id="inputmonth" name="inputmonth" autocomplete="off" placeholder="Pilih Month" required>
+					  <input type="text" class="form-control pull-right" id="inputmonth" name="inputmonth" autocomplete="off" placeholder="Pilih Bulan" required>
 				  </div>
 	            </div>
             </div>
@@ -244,12 +247,12 @@ table.table-bordered > tfoot > tr > th{
 				  <input type="text" class="form-control" name="editno_dokumen" id="editno_dokumen" placeholder="Masukkan No. Dokumen" required>
 	            </div>
 	            <div class="form-group">
-	              <label for="">Month</label>
+	              <label for="">Bulan</label>
 	              <div class="input-group date">
 					  <div class="input-group-addon">
 						<i class="fa fa-calendar"></i>
 					  </div>
-					  <input type="text" class="form-control pull-right" id="editmonth" name="editmonth" autocomplete="off" placeholder="Pilih Month" required>
+					  <input type="text" class="form-control pull-right" id="editmonth" name="editmonth" autocomplete="off" placeholder="Pilih Bulan" required>
 				  </div>
 	            </div>
             </div>
