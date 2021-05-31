@@ -130,8 +130,19 @@
               <input type="text" class="form-control" name="kesesuaian_qc_kouteihyo" placeholder="Kesesuaian QC Kouteihyo">
             </div>
           </div>
+          <div class="form-group row">
+            <label class="col-sm-4">Hasil Keseluruhan</label>
+            <div class="col-sm-8">
+              <div class="radio">
+                <label><input type="radio" name="condition" value="Sesuai">Sesuai</label>
+              </div>
+              <div class="radio">
+                <label><input type="radio" name="condition" value="Tidak Sesuai">Tidak Sesuai</label>
+              </div>
+            </div>
+          </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Operator</label>
+            <label class="col-sm-4">Scan ID Card</label>
             <div class="col-sm-8" align="left">
               <select class="form-control select2" name="operator" style="width: 100%;" data-placeholder="Pilih Operator" required>
                 <option value=""></option>
@@ -139,7 +150,14 @@
                 <option value="{{ $operator->name }}">{{ $operator->employee_id }} - {{ $operator->name }}</option>
                 @endforeach
               </select>
+              <!-- <input type="text" name="scan_operator" style="width: 100%;" class="form-control" placeholder="Scan ID Card Here"> -->
             </div>
+          </div>
+          <!-- <div class="form-group row" align="right">
+            <label class="col-sm-4">Operator</label>
+            <div class="col-sm-8" align="left">
+              <input type="text" name="operator" style="width: 100%;" class="form-control" placeholder="Operator">
+            </div> -->
           </div>
           <!-- <div class="form-group row" align="right" id='scanner'>
             <label class="col-sm-4">Scan QR Code</label>
@@ -230,6 +248,37 @@
         reader.readAsDataURL(input.files[0]);
       }
     }
+
+    $('#scan_operator').keydown(function(event) {
+      if (event.keyCode == 13 || event.keyCode == 9) {
+        if($("#scan_operator").val().length >= 8){
+          var data = {
+            employee_id : $("#scan_operator").val(),
+            id : '{{$id}}',
+          }
+          
+          $.get('{{ url("scan/training_report/participant") }}', data, function(result, status, xhr){
+            if(result.status){
+              var operator = $('#operator').val().split(',');
+              operator.push(result.employee.name);
+              $('#operator').val(operator.join(','));
+              openSuccessGritter('Success!', result.message);
+              $('#scan_operator').val('');
+            }
+            else{
+              audio_error.play();
+              openErrorGritter('Error', result.message);
+              $('#scan_operator').val('');
+            }
+          });
+        }
+        else{
+          openErrorGritter('Error!', 'Employee ID Invalid.');
+          audio_error.play();
+          $("#scan_operator").val("");
+        }     
+      }
+    });
   </script>
   @stop
 

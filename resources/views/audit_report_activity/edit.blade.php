@@ -141,6 +141,17 @@
               <input type="text" class="form-control" name="kesesuaian_qc_kouteihyo" placeholder="Kesesuaian QC Kouteihyo" value="{{ $audit_report_activity->kesesuaian_qc_kouteihyo }}">
             </div>
           </div>
+          <div class="form-group row">
+            <label class="col-sm-4">Hasil Keseluruhan</label>
+            <div class="col-sm-8">
+              <div class="radio">
+                <label><input type="radio" name="condition" value="Sesuai" @if($audit_report_activity->condition == "Sesuai") checked @endif >Sesuai</label>
+              </div>
+              <div class="radio">
+                <label><input type="radio" name="condition" value="Tidak Sesuai" @if($audit_report_activity->condition == "Tidak Sesuai") checked @endif >Tidak Sesuai</label>
+              </div>
+            </div>
+          </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Operator<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">

@@ -200,6 +200,7 @@
 										<th>Kesesuaian Aktual Proses</th>
 										<th>Kelengkapan Point Safety</th>
 										<th>Kesesuaian QC Kouteihyo</th>
+										<th>Hasil Keseluruhan</th>
 										<th>Send Status</th>
 										<th>Approval Status</th>
 										<th>Action</th>
@@ -215,22 +216,29 @@
 										<td><?php echo $audit_report_activity->kesesuaian_aktual_proses ?></td>
 										<td>{{$audit_report_activity->kelengkapan_point_safety}}</td>
 										<td>{{$audit_report_activity->kesesuaian_qc_kouteihyo}}</td>
-										<td>
+										<td style="text-align: center;">
+											@if($audit_report_activity->condition == "Tidak Sesuai")
+						                		<label class="label label-danger">{{$audit_report_activity->condition}}</label>
+						                	@else
+						                		<label class="label label-success">{{$audit_report_activity->condition}}</label>
+						                	@endif
+										</td>
+										<td style="text-align: center;">
 											@if($audit_report_activity->send_status == "")
 						                		<label class="label label-danger">Not Yet Sent</label>
 						                	@else
 						                		<label class="label label-success">Sent</label>
 						                	@endif
 										</td>
-										<td>@if($audit_report_activity->approval == "")
+										<td style="text-align: center;">@if($audit_report_activity->approval == "")
 						                		<label class="label label-danger">Not Approved</label>
 						                	@else
 						                		<label class="label label-success">Approved</label>
 						                	@endif</td>
 										<td>
 											<center>
-												<a href="{{url('index/audit_report_activity/edit/'.$id.'/'.$audit_report_activity->id)}}" class="btn btn-warning">Edit</a>
-												<a href="javascript:void(0)" class="btn btn-danger" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/audit_report_activity/destroy") }}', '{{ $audit_report_activity->no_dokumen }} - {{ $audit_report_activity->nama_dokumen }} - {{ $audit_report_activity->date }}','{{ $id }}', '{{ $audit_report_activity->id }}');">
+												<a href="{{url('index/audit_report_activity/edit/'.$id.'/'.$audit_report_activity->id)}}" class="btn btn-warning btn-sm">Edit</a>
+												<a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/audit_report_activity/destroy") }}', '{{ $audit_report_activity->no_dokumen }} - {{ $audit_report_activity->nama_dokumen }} - {{ $audit_report_activity->date }}','{{ $id }}', '{{ $audit_report_activity->id }}');">
 													Delete
 												</a>
 											</center>
@@ -240,6 +248,7 @@
 								</tbody>
 								<tfoot>
 									<tr>
+										<th></th>
 										<th></th>
 										<th></th>
 										<th></th>

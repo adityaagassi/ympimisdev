@@ -240,6 +240,7 @@ class AuditReportActivityController extends Controller
                 'target' => $request->input('target'),
                 'kelengkapan_point_safety' => $request->input('kelengkapan_point_safety'),
                 'kesesuaian_qc_kouteihyo' => $request->input('kesesuaian_qc_kouteihyo'),
+                'condition' => $request->input('condition'),
                 'operator' => $request->input('operator'),
                 'leader' => $request->input('leader'),
                 'foreman' => $request->input('foreman'),
@@ -326,6 +327,7 @@ class AuditReportActivityController extends Controller
                 $audit_report_activity->target = $request->get('target');
                 $audit_report_activity->kelengkapan_point_safety = $request->get('kelengkapan_point_safety');
                 $audit_report_activity->kesesuaian_qc_kouteihyo = $request->get('kesesuaian_qc_kouteihyo');
+                $audit_report_activity->condition = $request->get('condition');
                 $audit_report_activity->operator = $request->get('operator');
                 $audit_report_activity->leader = $request->get('leader');
                 $audit_report_activity->foreman = $request->get('foreman');
