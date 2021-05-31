@@ -55,9 +55,9 @@
             </div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Sub Section</label>
+            <label class="col-sm-4">Group</label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Pilih Sub Section" required>
+              <select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Pilih Group" required>
                 <option value=""></option>
                 @foreach($subsection as $subsection)
                 <option value="{{ $subsection->sub_section_name }}">{{ $subsection->sub_section_name }}</option>
@@ -74,6 +74,11 @@
                   <option value="{{ $guidance->id }}">({{ $guidance->month }}) {{ $guidance->no_dokumen }} - {{ $guidance->nama_dokumen }}</option>
                 @endforeach
               </select>
+              <br>
+              <br>
+              <a class="btn btn-info pull-right" target="_blank" style="margin-left: 5px" href="{{url('index/audit_guidance/index/'.$id)}}">
+                Manage Schedule
+              </a>
             </div>
           </div>
           <div class="form-group row" align="right">
@@ -109,7 +114,7 @@
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
                 </div>
-                <input type="text" class="form-control pull-right" id="date" name="target" placeholder="Select Date">
+                <input type="text" class="form-control pull-right" id="date" name="target" placeholder="Pilih Tanggal Target">
               </div>
             </div>
           </div>

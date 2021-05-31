@@ -58,9 +58,9 @@
             </div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Sub Section<span class="text-red">*</span></label>
+            <label class="col-sm-4">Group<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Choose a Sub Section..." required>
+              <select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Pilih Group..." required>
                 <option value=""></option>
                 @foreach($subsection as $subsection)
                   @if($audit_report_activity->subsection == $subsection->sub_section_name)
@@ -85,6 +85,11 @@
                   @endif
                 @endforeach
               </select>
+              <br>
+              <br>
+              <a class="btn btn-info pull-right" target="_blank" style="margin-left: 5px" href="{{url('index/audit_guidance/index/'.$id)}}">
+                Manage Schedule
+              </a>
             </div>
           </div>
           <div class="form-group row" align="right">
