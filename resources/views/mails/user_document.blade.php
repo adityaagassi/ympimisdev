@@ -23,7 +23,7 @@
 			<p style="font-size: 18px;">User documents that are about to expire</p>
 			<p style="font-weight: bold;">Total Document: {{ $data['jml'] }}</p>
 			This is an automatic notification. Please do not reply to this address.
-			<table style="border:1px solid black; border-collapse: collapse;" width="70%">
+			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
 						<th style="width: 1%; border:1px solid black;">#</th>
@@ -31,8 +31,8 @@
 						<th style="width: 1%; border:1px solid black;">Document No.</th>
 						<th style="width: 2%; border:1px solid black;">Employee ID</th>
 						<th style="width: 2%; border:1px solid black;">Name</th>
-						<th style="width: 2%; border:1px solid black;">Valid To</th>
 						<th style="width: 2%; border:1px solid black;">Valid From</th>
+						<th style="width: 2%; border:1px solid black;">Valid To</th>
 						<th style="width: 2%; border:1px solid black;">Condition</th>
 						<th style="width: 4%; border:1px solid black;">Active</th>
 					</tr>
@@ -59,7 +59,7 @@
 			<br>
 
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
-			<a href="{{ url("user_document") }}">Users Document Details</a><br>
+			<a href="http://10.109.52.4/mirai/public/index/user_document">Users Document Details</a><br>
 
 		</center>
 	</div>
