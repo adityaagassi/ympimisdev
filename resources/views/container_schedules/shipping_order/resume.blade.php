@@ -280,7 +280,7 @@
 						<table class="table table-hover table-bordered table-striped" id="tableDetail">
 							<thead style="background-color: rgba(126,86,134,.7);">
 								<tr>
-									<th style="width: 2%; vertical-align: middle;" colspan="7">RESUME</th>
+									<th style="width: 2%; vertical-align: middle;" colspan="9">RESUME</th>
 								</tr>
 								<tr>
 									<th style="width: 2%; vertical-align: middle;">YCJ Ref No.</th>
@@ -290,6 +290,8 @@
 									<th style="width: 4%; vertical-align: middle;">Country</th>
 									<th style="width: 4%; vertical-align: middle;">Plan (TEU)</th>
 									<th style="width: 4%; vertical-align: middle;">Plan (Ordinary)</th>
+									<th style="width: 25%; vertical-align: middle;">Invoice</th>
+									<th style="width: 4%; vertical-align: middle;">ATD</th>
 								</tr>
 							</thead>
 							<tbody id="tableDetailBody">
@@ -346,11 +348,7 @@
 <script src="{{ url("js/vfs_fonts.js")}}"></script>
 <script src="{{ url("js/buttons.html5.min.js")}}"></script>
 <script src="{{ url("js/buttons.print.min.js")}}"></script>
-
-<script src="{{ url("js/highstock.js")}}"></script>
-<script src="{{ url("js/highcharts-3d.js")}}"></script>
-<script src="{{ url("js/exporting.js")}}"></script>
-<script src="{{ url("js/export-data.js")}}"></script>
+<script src="{{ url("js/highcharts.js")}}"></script>
 <script>
 
 	$.ajaxSetup({
@@ -713,6 +711,8 @@ function showDetail(category) {
 				detail += '<td '+color+'>'+value.country+'</td>';
 				detail += '<td '+color+'>'+value.plan_teus+'</td>';
 				detail += '<td '+color+'>'+value.plan+'</td>';
+				detail += '<td '+color+'>'+value.invoice+'</td>';
+				detail += '<td '+color+'>'+(value.actual_departed || '-')+'</td>';
 				detail += '</tr>';
 			});
 			$('#tableDetailBody').append(detail);

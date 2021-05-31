@@ -375,9 +375,20 @@ class ContainerScheduleController extends Controller{
         $date = $request->get('date');
         $st_date = date('m-d', strtotime($date));
 
-        $resume = db::select("SELECT DISTINCT period, ycj_ref_number, shipper, port_loading, port_of_delivery, country, stuffing_date, plan, plan_teus FROM shipment_reservations
+        $resume = db::select("SELECT bml.*, cs.invoice, atd.actual_departed FROM
+            (SELECT DISTINCT period, ycj_ref_number, shipper, port_loading, port_of_delivery, country, stuffing_date, plan, plan_teus FROM shipment_reservations
             WHERE DATE_FORMAT(stuffing_date,'%m-%d') = '".$st_date."'
-            AND period = '".$period."'");
+            AND period = '".$period."') AS bml
+            LEFT JOIN
+            (SELECT DISTINCT period, ycj_ref_number, invoice FROM master_checksheets
+            WHERE period = '".$period."') AS cs
+            ON bml.ycj_ref_number = cs.ycj_ref_number
+            LEFT JOIN
+            (SELECT period, ycj_ref_number, actual_departed FROM shipment_reservations
+            WHERE DATE_FORMAT(stuffing_date,'%m-%d') = '".$st_date."'
+            AND period = '".$period."'
+            AND actual_departed IS NOT NULL) AS atd
+            ON bml.ycj_ref_number = atd.ycj_ref_number");
 
         $detail = ShipmentReservation::where(db::raw("DATE_FORMAT(stuffing_date,'%m-%d')"), $st_date)
         ->where('period', $period)
