@@ -338,7 +338,7 @@
 							point: {
 								events: {
 									click: function () {
-										showMachineDetail(this.category, result.date);
+										showWJODetail(this.category);
 									}
 								}
 							},
