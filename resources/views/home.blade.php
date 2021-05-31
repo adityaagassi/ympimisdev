@@ -1077,7 +1077,11 @@
                                 </a>
                                 <br>
                                 <a href="{{ url("/index/production_report/index/12") }}">
-                                    <i class="fa fa-caret-right"></i> Parts Process (WI-PP) Report (部品加工)
+                                    <i class="fa fa-caret-right"></i> Key Parts Process (WI-KPP) Report (主要部品加工)
+                                </a>
+                                <br>
+                                <a href="{{ url("/index/production_report/index/18") }}">
+                                    <i class="fa fa-caret-right"></i> Body Parts Process (WI-BPP) Report (ボディパーツ加工)
                                 </a>
                                 <br>
                                 <a href="{{ url("/index/production_report/index/15") }}">
