@@ -551,6 +551,7 @@ class SurveyController extends Controller
                           WHERE
 					 employee_syncs.employee_id != 'PI1612005'
 					 and total <= 35
+					 and miraimobile.survey_covid_logs.tanggal = '".$date."'
                           and employee_syncs.end_date is null");
 	               }
 	               else if ($category == "Sedang"){
@@ -565,6 +566,7 @@ class SurveyController extends Controller
                           WHERE
 					 employee_syncs.employee_id != 'PI1612005'
 					 and total > 35 and total <= 80
+					 and miraimobile.survey_covid_logs.tanggal = '".$date."'
                           and employee_syncs.end_date is null");
 	               }
 	               else {
@@ -579,6 +581,7 @@ class SurveyController extends Controller
                           WHERE
 					 employee_syncs.employee_id != 'PI1612005'
 					 and total > 80
+					 and miraimobile.survey_covid_logs.tanggal = '".$date."'
                           and employee_syncs.end_date is null");
 	               }
 	           }
