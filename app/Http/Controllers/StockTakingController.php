@@ -1149,14 +1149,19 @@ class StockTakingController extends Controller{
 		}
 	}
 
-	public function indexCheckInput()
-	{
-		$title = 'Check Input Physical Inventory (PI)';
+	public function indexCheckInput(){
+
+		$title = 'Check Input Physical Inventory';
 		$title_jp = '';
+
+		$store = db::select("SELECT DISTINCT sl.area, st.location, st.store FROM stocktaking_new_lists st
+			LEFT JOIN storage_locations sl ON sl.storage_location = st.location
+			ORDER BY sl.area, st.location, st.store ASC");
 
 		return view('stocktakings.monthly.check_input_new', array(
 			'title' => $title,
-			'title_jp' => $title_jp
+			'title_jp' => $title_jp,
+			'stores' => $store
 		))->with('page', 'Check Input PI')->with('head', 'Stocktaking');
 	}
 
@@ -4620,42 +4625,75 @@ s.id ASC");
 		return Response::json($response);
 	}
 
-	public function fetchCheckInputStoreListNew(Request $request)
-	{
-		$store = db::select("SELECT
-			s.id,
-			s.store,
-			s.sub_store,
-			s.category,
-			s.material_number,
-			mpdl.material_description,
-			m.`key`,
-			m.model,
-			m.surface,
-			mpdl.bun,
-			s.location,
-			mpdl.storage_location,
-			v.lot_completion,
-			v.lot_transfer,
-			IF
-			( s.location = mpdl.storage_location, v.lot_completion, v.lot_transfer ) AS lot,
-			s.remark,
-			s.process,
-			s.quantity,
-			s.audit1,
-			s.final_count
-			FROM
-			stocktaking_new_lists s
-			LEFT JOIN materials m ON m.material_number = s.material_number
+	public function fetchCheckInputStoreListNew(Request $request){
+
+		$store = db::select("SELECT s.id, s.location, s.store, s.sub_store, s.category, s.material_number, mpdl.material_description, mpdl.bun,
+			s.remark, s.process, s.quantity,
+			concat(SPLIT_STRING(inputor.`name`, ' ', 1), ' ', SPLIT_STRING(inputor.`name`, ' ', 2)) as inputor,
+			concat(SPLIT_STRING(auditor.`name`, ' ', 1), ' ', SPLIT_STRING(auditor.`name`, ' ', 2)) as auditor,
+			s.audit1, s.final_count 
+			FROM stocktaking_new_lists s
 			LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
-			LEFT JOIN material_volumes v ON v.material_number = s.material_number 
-			WHERE s.print_status = 1
-			AND s.store = '". $request->get('store'). "'
-			ORDER BY s.quantity asc,s.id");
+			LEFT JOIN employee_syncs AS inputor ON inputor.employee_id = s.inputed_by
+			LEFT JOIN employee_syncs AS auditor ON auditor.employee_id = s.audit1_by
+			WHERE s.print_status = 1 
+			AND s.store = '". $request->get('store'). "' 
+			ORDER BY s.id");
+
+		$belum = 0;
+		$input = 0;
+		$progress_audit = 0;
+		$audit = 0;
+		$breakdown = 0;
+
+		for ($i=0; $i < count($store); $i++) {
+			if($store[$i]->process == 0){
+				$belum++;
+			}
+
+			if($store[$i]->quantity == 0){
+				$input++;
+			}
+
+			if($store[$i]->audit1 > 0){
+				$progress_audit++;
+			}
+
+			if($store[$i]->process == 2){
+				$audit++;
+			}
+
+			if($store[$i]->process == 4){
+				$breakdown++;
+			}
+		}
+
+		$status = '';
+		$process = 0;
+		if($breakdown > 0){
+			$status = 'Variance keluar';
+			$process = 5;
+		}else if($audit > 0){
+			$status = 'Sudah Audit';
+			$process = 4;
+		}else if(count($store) == $belum){
+			$status = 'Belum Input PI';
+			$process = 1;
+		}else{
+			if($progress_audit > 0){
+				$status = 'Progress Audit';
+				$process = 3;
+			}else{
+				$status = 'Progress Input PI';
+				$process = 2;
+			}
+		}
 
 		$response = array(
 			'status' => true,
 			'store' => $store,
+			'process_name' => $status,
+			'process' => $process,
 		);
 		return Response::json($response);
 	}
@@ -4774,6 +4812,56 @@ s.id ASC");
 			);
 			return Response::json($response);
 		}
+	}
+
+	public function updateOpenInput(Request $request){
+		try {
+			$update = StocktakingNewList::where('store', $request->get('store'))
+			->where('print_status', '1')
+			->update([
+				'process' => 1
+			]);
+
+			$response = array(
+				'status' => true,
+				'message' => 'Input PI Berhasil diBuka'
+			);
+			return Response::json($response);
+		} catch (Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function updateStoreNoUse(Request $request){
+
+		try {
+			$update = StocktakingNewList::where('store', $request->get('store'))
+			->where('print_status', '1')
+			->update([
+				'process' => 2,
+				'remark' => 'USE',
+				'quantity' => 0,
+				'inputed_by' => Auth::user()->username
+			]);
+
+			$response = array(
+				'status' => true,
+				'message' => 'Update No Use Berhasil'
+			);
+			return Response::json($response);
+		} catch (Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+		
+		
 	}
 
 	public function updateNoUse(Request $request){
@@ -5304,7 +5392,7 @@ s.id ASC");
 	}
 
 	function uploadFTP($from, $to) {
-        $upload = FTP::connection()->uploadFile($from, $to, FTP_BINARY);
+		$upload = FTP::connection()->uploadFile($from, $to, FTP_BINARY);
 		return $upload;
 	}
 

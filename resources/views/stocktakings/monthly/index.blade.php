@@ -172,7 +172,7 @@
 					<a id="revise" href="{{ secure_url("index/stocktaking/revise_new") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green;">Revise Physical Inventory (PI)</a>
 					@endif
 
-					<a id="check_new" href="{{ secure_url("index/stocktaking/check_input_new") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green;">Check Input</a>
+					<a id="check_new" href="{{ url("index/stocktaking/check_input_new") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green;">Check Input</a>
 
 				</div>
 				<div class="col-xs-12 col-md-3 col-lg-3" style="text-align: center;">
@@ -497,11 +497,9 @@
 @endsection
 @section('scripts')
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
-<script src="{{ url("js/highstock.js")}}"></script>
-<script src="{{ url("js/highcharts-3d.js")}}"></script>
-<script src="{{ url("js/exporting.js")}}"></script>
-<script src="{{ url("js/export-data.js")}}"></script>
 <script src="{{ url("js/icheck.min.js")}}"></script>
+<script src="{{ url("js/highcharts.js")}}"></script>
+
 <script>
 	$.ajaxSetup({
 		headers: {
@@ -696,6 +694,7 @@
 					$('#no_use').addClass('disabled');
 					$('#input_pi').addClass('disabled');
 					$('#audit1').addClass('disabled');
+					$('#check_new').addClass('disabled');
 					$('#audit2').addClass('disabled');
 					$('#breakdown').addClass('disabled');
 					$('#unmatch').addClass('disabled');
@@ -709,6 +708,7 @@
 					$('#no_use').removeClass('disabled');
 					$('#input_pi').removeClass('disabled');
 					$('#audit1').removeClass('disabled');
+					$('#check_new').removeClass('disabled');
 					$('#audit2').removeClass('disabled');
 					$('#breakdown').removeClass('disabled');
 					$('#unmatch').removeClass('disabled');
@@ -731,6 +731,7 @@
 				$('#no_use').addClass('disabled');
 				$('#input_pi').addClass('disabled');
 				$('#audit1').addClass('disabled');
+				$('#check_new').addClass('disabled');
 				$('#audit2').addClass('disabled');
 				$('#breakdown').addClass('disabled');
 				$('#unmatch').addClass('disabled');

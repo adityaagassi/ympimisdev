@@ -125,13 +125,13 @@
 			</div>
 		</div>
 
-		{{-- <div class="col-xs-12">
+		<div class="col-xs-12">
 			<div class="nav-tabs-custom">
 				<div class="tab-content">
 					<div id="container2"></div>				
 				</div>
 			</div>
-		</div> --}}
+		</div>
 	</div>
 
 	<div class="modal fade" id="modalVariance">
@@ -244,11 +244,7 @@
 @endsection
 @section('scripts')
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
-<script src="{{ url("js/highstock.js")}}"></script>
-<script src="{{ url("js/highcharts-3d.js")}}"></script>
-<script src="{{ url("js/exporting.js")}}"></script>
-<script src="{{ url("js/export-data.js")}}"></script>
-<script src="{{ url("js/icheck.min.js")}}"></script>
+<script src="{{ url("js/highcharts.js")}}"></script>
 <script>
 	$.ajaxSetup({
 		headers: {
@@ -287,7 +283,6 @@
 			var year = now.getFullYear();
 
 			$('#month').val(year +'-'+ month);
-			// $('#month').val('2020-11');
 		}
 
 		monthChange();
@@ -300,7 +295,6 @@
 
 	function monthChange(){
 		var month = $('#month').val();
-		// var month = '2020-11';
 
 		$('#month_inquiry').val(month);
 		$('#month_variance').val(month);
@@ -317,7 +311,7 @@
 
 				filledList();
 				auditedList();	
-				// variance();
+				variance();
 
 				$('#modalMonth').modal('hide');
 

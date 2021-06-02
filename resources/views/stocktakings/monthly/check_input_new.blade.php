@@ -4,11 +4,14 @@
 <link href="{{ url("css/jquery.numpad.css") }}" rel="stylesheet">
 
 <style type="text/css">
-	/*Start CSS Numpad*/
-	.nmpd-grid {border: none; padding: 20px;}
-	.nmpd-grid>tbody>tr>td {border: none;}
-	/*End CSS Numpad*/
-
+	.nmpd-grid {
+		border: none;
+		padding: 20px;
+	}
+	.nmpd-grid>tbody>tr>td {
+		border: none;
+	}
+	
 	thead>tr>th{
 		text-align:center;
 		overflow:hidden;
@@ -33,17 +36,11 @@
 	}
 	table.table-bordered > thead > tr > th{
 		border:1px solid black;
-		padding-top: 0;
-		padding-bottom: 0;
 		vertical-align: middle;
-		color: white;
 	}
 	table.table-bordered > tbody > tr > td{
 		border:1px solid black;
-		padding-top: 9px;
-		padding-bottom: 9px;
 		vertical-align: middle;
-		background-color: white;
 	}
 	thead {
 		background-color: rgb(126,86,134);
@@ -68,6 +65,20 @@
 		font-size: 20px;
 		color: #fff;
 	}
+	.head-table {
+		background-color: rgb(204,255,255);
+		text-align: center;
+		color: yellow;
+		background-color: rgb(50, 50, 50);
+		font-size:18px;
+	}
+	.head-title{
+		background-color: rgb(220,220,220);
+		text-align: center;
+		color: black;
+		padding:0;
+		font-size: 25px;
+	}
 
 </style>
 @stop
@@ -86,7 +97,7 @@
 	<div class="row" style="margin-left: 1%; margin-right: 1%;" id="main">
 		<div class="col-xs-12" style="padding-left: 0px;">
 			<div class="col-xs-12 col-md-6 col-md-offset-3" style="padding-right: 0; padding-left: 0; margin-bottom: 2%;">
-				<div class="input-group input-group-lg">
+				<!-- <div class="input-group input-group-lg">
 					<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: none; font-size: 18px;">
 						<i class="fa fa-qrcode"></i>
 					</div>
@@ -94,48 +105,57 @@
 					<span class="input-group-btn">
 						<button style="font-weight: bold;" href="javascript:void(0)" class="btn btn-success btn-flat" data-toggle="modal" data-target="#scanModal"><i class="fa fa-camera"></i>&nbsp;&nbsp;Scan</button>
 					</span>
+				</div> -->
+
+				<div class="form-group">
+					<select class="form-control select2" name="store" onchange="storeChange()" id='store' data-placeholder="Select Store" style="width: 100%;">
+						<option value="">Select Store</option>
+						@foreach($stores as $store)
+						<option value="{{ $store->store }}">{{ $store->area }} - {{ $store->location }} - {{ $store->store }}</option>
+						@endforeach
+					</select>
 				</div>
 			</div>
 		</div>
+
+
+		<div class="col-xs-6" style="padding-right: 0; padding-left: 0; margin-top: 0%;">
+			<h2 id="process_name" style="color: yellow; text-transform: uppercase; margin: 0px;"></h2>
+		</div>
+
+		<div class="col-xs-6" style="padding: 0px; margin-bottom: 1%;">
+			@if(Auth::user()->role->role_code == 'MIS' || Auth::user()->role->role_code == 'PROD' || Auth::user()->role->role_code == 'PC')
+			<button type="button" style="margin-left: 1%; font-size:20px; height: 40px; font-weight: bold; padding: 5%; padding-top: 0px; padding-bottom: 0px;" onclick="storeNoUse()" id="store_no_use" class="btn btn-danger pull-right">STORE NO USE</button>
+			<button type="button" style="margin-left: 1%; font-size:20px; height: 40px; font-weight: bold; margin-right: 1%; padding: 5%; padding-top: 0px; padding-bottom: 0px;" onclick="openInput()" id="open_input" class="btn btn-success pull-right">&nbsp;OPEN INPUT&nbsp;</button>
+			@endif
+		</div>
+		
 
 		<div class="col-xs-12" style="padding-right: 0; padding-left: 0; margin-top: 0%;">
 			<table class="table table-bordered" id="store_table">
 				<thead>
 					<tr>
-						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 25px;" colspan="10" id='store_title'>STORE</th>
+						<th class="head-title" id='store_title' colspan="12">STORE</th>
 					</tr>
 					<tr>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">#ID</th>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">Location</th>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">SUB STORE</th>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">CATEGORY</th>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">MATERIAL NUMBER</th>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">MATERIAL DESCRIPTION</th>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">UOM</th>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">COUNT PI</th>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">AUDIT 1</th>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">FINAL PI</th>
+						<th class="head-table">#ID</th>
+						<th class="head-table">SLOC</th>
+						<th class="head-table">SUB STORE</th>
+						<th class="head-table">CATEGORY</th>
+						<th class="head-table">MATERIAL</th>
+						<th class="head-table">DESCRIPTION</th>
+						<th class="head-table">UOM</th>
+						<th class="head-table">COUNT PI</th>
+						<th class="head-table">INPUTOR</th>
+						<th class="head-table">AUDIT 1</th>
+						<th class="head-table">AUDITOR</th>
+						<th class="head-table">FINAL PI</th>
 					</tr>
 				</thead>
 				<tbody id="store_body">
 				</tbody>
 			</table>
 		</div>
-
-	<!-- 	<div class="col-xs-12" style="padding: 0px;" id="progress-confirm">
-			<div class="col-xs-9" style="padding: 0px;">
-				<div class="progress-group">
-					<div class="progress" style="height: 40px; margin-bottom: 10px;">
-						<span id="progress-text" style="padding-top: 0.8%;">0% Complete</span>
-						<div class="progress-bar progress-bar-success progress-bar-striped active" id="progress-bar" style="padding-top: 0.8%;"></div>
-					</div>
-				</div>
-			</div>
-			<div class="col-xs-3">
-				<button type="button" style="font-size:20px; height: 40px; font-weight: bold; margin-right: 1%; padding: 9.5%; padding-top: 0px; padding-bottom: 0px;" onclick="canc()" id="cancel" class="btn btn-danger">&nbsp;CANCEL&nbsp;</button>
-				<button type="button" style="font-size:20px; height: 40px; font-weight: bold; padding: 9.5%; padding-top: 0px; padding-bottom: 0px;" onclick="conf()" id="confirm" class="btn btn-success" disabled>CONFIRM</button>
-			</div>
-		</div> -->
 	</div>
 
 	<div class="modal modal-default fade" id="scanModal">
@@ -172,6 +192,7 @@
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
 <script src="{{ url("js/jsQR.js")}}"></script>
 <script src="{{ url("js/jquery.numpad.js")}}"></script>
+<script src="{{ url("js/highcharts.js")}}"></script>
 <script>
 	$.ajaxSetup({
 		headers: {
@@ -196,11 +217,29 @@
 			decimalSeparator : '.'
 		});
 
-		$('.select2').select2();
+		$('.select2').select2({
+			minimumInputLength: 3,
+			allowClear: true,
+		});
 
 		$('#qr_code').focus();
+		$("#process_name").text('');
+
+		$("#store_no_use").hide();
+		$("#open_input").hide();
+
 
 	});
+
+	function clearAll(){
+		$("#store_title").text("");
+		$("#store_body").html('');
+		$("#process_name").text("");
+
+		$("#store_no_use").hide();
+		$("#open_input").hide();
+	}
+
 
 
 	function stopScan() {
@@ -227,6 +266,12 @@
 			fillStore(id);
 		}
 	});
+
+	function storeChange() {
+		var id = $("#store").val();
+		fillStore(id);
+	}
+
 
 	function showCheck(kode) {
 		$(".modal-backdrop").add();
@@ -290,6 +335,48 @@
 		}
 	}
 
+	function storeNoUse() {
+		var store = $("#store").val();
+
+		var data = {
+			store : store
+		}
+
+		$('#loading').show();
+		$.post('{{ url("update/stocktaking/no_use") }}', data, function(result, status, xhr){
+			if (result.status) {
+				fillStore(store);
+
+				$('#loading').hide();
+				openSuccessGritter('Success', result.message);
+			}else {
+				$('#loading').hide();
+				openErrorGritter('Error', result.message);
+			}
+		});
+	}
+
+	function openInput(argument) {
+		var store = $("#store").val();
+
+		var data = {
+			store : store
+		}
+
+		$('#loading').show();
+		$.post('{{ url("update/stocktaking/open_input") }}', data, function(result, status, xhr){
+			if (result.status) {
+				fillStore(store);
+
+				$('#loading').hide();
+				openSuccessGritter('Success', result.message);
+			}else {
+				$('#loading').hide();
+				openErrorGritter('Error', result.message);
+			}
+		});
+	}
+
 
 	function fillStore(store){
 		var data = {
@@ -297,23 +384,34 @@
 			process : 1
 		}
 
+		$('#loading').show();
 		$.get('{{ url("fetch/stocktaking/check_input_store_list_new") }}', data, function(result, status, xhr){
 			if (result.status) {
 				if(result.store.length <= 0){
+					clearAll();
+					$('#loading').hide();
 					openErrorGritter('Error', 'Store Not Found');
 					return false;
 				}
 
 				// $('#qr_code').prop('disabled', true);
-				$('#scanner').hide();
-				$('#scanModal').modal('hide');
-				$(".modal-backdrop").remove();
+				// $('#scanner').hide();
+				// $('#scanModal').modal('hide');
+				// $(".modal-backdrop").remove();
+
+
+				//Button Open Input
+				$("#open_input").show();
+				if(result.status < 5){
+					$("#open_input").hide();
+				}
+				$("#store_no_use").show();
 
 				$("#store_body").empty();
 				$("#store_title").text("");
 				$("#store_title").text("STORE : " + store.toUpperCase());
 
-				$('#progress-bar').removeClass('active');						
+				$("#process_name").text("PROGRES : " +result.process_name);
 
 				var body = '';
 				var num = '';
@@ -321,7 +419,7 @@
 
 					var css = ''
 					if(result.store[i].quantity == null){
-						css = 'style="background-color: #ff8c8c"';
+						css = 'style="padding: 0px; background-color: #ff8c8c"';
 					}else{
 						if(result.store[i].category == 'SINGLE'){
 							var css = 'style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 15px;"';
@@ -341,43 +439,27 @@
 					if(result.store[i].quantity != null){
 						body += '<td '+css+'>'+result.store[i].quantity+'</td>';
 					}else{
-						body += '<td '+css+'>'+'-'+'</td>';							
+						body += '<td '+css+'>-</td>';
 					}
+					body += '<td '+css+'>'+(result.store[i].inputor || '-')+'</td>';
 
 					if(result.store[i].audit1 != null){
-						body += '<td '+css+'>'+result.store[i].audit1+'</td>';
+						body += '<td '+css+'>'+(result.store[i].audit1 || '-')+'</td>';
 					}else{
-						body += '<td '+css+'></td>';							
+						body += '<td '+css+'>-</td>';
 					}
+					body += '<td '+css+'>'+(result.store[i].auditor || '-')+'</td>';
+
 
 					if(result.store[i].final_count != null){
 						body += '<td '+css+'>'+result.store[i].final_count+'</td>';
 					}else{
-						body += '<td '+css+'></td>';							
-					}
-					
-
-					// if(result.store[i].process == 1){
-					// 	if (result.store[i].quantity != 0) {
-					// 		if(result.store[i].audit1){
-					// 			body += '<td '+css+'><button style="width: 50%; height: 100%;" onclick="cancAudit(\''+result.store[i].id+'\')" class="btn btn-xs btn-danger form-control"><span><i class="fa fa-close"></i></span></button></td>';
-					// 		}else{
-					// 			body += '<td '+css+'><button style="width: 50%; height: 100%;" onclick="showAudit(\''+result.store[i].id+'\')" class="btn btn-xs btn-success form-control"><span><i class="fa fa-check-square-o"></i></span></button></td>';
-					// 		}
-					// 	}
-					// 	else{
-					// 		body += '<td '+css+'></td>';
-					// 	}
-
-					// 	$('#confirm').show();
-					// 	$('#progress-bar').addClass('active');
-
-					// }else{
-					// 	body += '<td '+css+'>-</td>';
-					// }
+						body += '<td '+css+'>-</td>';
+					}	
 
 					body += '</tr>';
 
+					$('#loading').hide();
 				}
 				$("#store_body").append(body);
 
@@ -391,32 +473,6 @@
 			}
 		});
 	}
-
-	// function save(){
-	// 	var id = $("#id").val();
-	// 	var quantity = $("#sum_total").val();
-	// 	var auditor_name = $("#auditor").val();
-	// 	var data = auditor_name.split(' - ');
-	// 	var auditor = data[0];
-
-	// 	var data = {
-	// 		id : id,
-	// 		quantity : quantity,
-	// 		auditor : auditor
-	// 	}
-
-	// 	$.post('{{ url("fetch/stocktaking/update_audit_new/audit1") }}', data, function(result, status, xhr){
-	// 		if (result.status) {
-	// 			openSuccessGritter('Success', result.message);
-	// 			var store = $("#qr_code").val();
-
-	// 			fillStore(store);
-	// 			cancInput();
-	// 		}else{
-	// 			openErrorGritter('Error', result.message);
-	// 		}
-	// 	});
-	// }
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
