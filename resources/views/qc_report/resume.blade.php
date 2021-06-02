@@ -85,8 +85,8 @@
                   </thead>
                   <tbody>
                   	<tr>
-                  		<td rowspan="3">Eksternal</td>
-                  		<td rowspan="3">Komplain Parts dan FG yang diproduksi oleh YMPI</td>
+                  		<td rowspan="4">Eksternal</td>
+                  		<td rowspan="4">Komplain Parts dan FG yang diproduksi oleh YMPI</td>
                   		<td>NG Jelas</td>
                   		<td>Komplain diterima by email oleh GM dari QA YCJ (Tiap bulan)</td>
                   		<td>Semua</td>
@@ -104,12 +104,12 @@
                   		<td>Semua</td>
                   		<td><h3 style="margin: 0px;font-size: 2vw;" id='FG'>0</h3></td>
                   	</tr>
-                  	<!-- <tr>
-                  		<td>Claim Rate</td>
+                  	<tr>
+                  		<td>Market Claim</td>
                   		<td>Komplain diterima by email oleh GM dari QA YCJ (Tiap bulan)</td>
                   		<td>Kasus critical atau kasus terjadi 3x berturut-turut</td>
                   		<td><h3 style="margin: 0px;font-size: 2vw;" id='Claim'>0</h3></td>
-                  	</tr> -->
+                  	</tr>
                   	<tr>
                   		<td>Internal</td>
                   		<td>Informasi antar bagian di dalam proses</td>
@@ -231,6 +231,11 @@
 
 		drawNumber();
 		setInterval(drawNumber, 300000);
+	});
+
+	$('.select2').select2({
+		allowClear:true,
+		dropdownAutoWidth : true,
 	});
 
 	function addZero(i) {

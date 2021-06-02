@@ -151,9 +151,7 @@ td{
                 <th>Penemu</th>    
                 <th>Manager</th>    
                 <th>Departemen</th>
-                <th>Lokasi</th>
                 <th>Tgl Permintaan</th>
-                <th>Tgl Balas</th>
                 <th>Kategori</th> 
                 <th>Sumber Komplain</th>
                 <th>Status</th>
@@ -185,8 +183,6 @@ td{
             </tbody>
             <tfoot>
               <tr>
-                <th></th>
-                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -353,9 +349,7 @@ td{
           { "data": "penemu" },
           { "data": "name" },
           { "data": "department_name" , "width": "15%"},
-          { "data": "lokasi" },
           { "data": "tgl_permintaan" },
-          { "data": "tgl_balas" },
           { "data": "kategori" },
           { "data": "sumber_komplain" },
           { "data": "status_name" },

@@ -144,9 +144,12 @@ table > thead > tr > th{
               <i class="fa fa-search"></i>
             </div>
             <select class="form-control select2" multiple="multiple" onchange="drawChart()" id="kategori" data-placeholder="Select Kategori" style="width: 100%">
-                <option value="Eksternal">Eksternal</option>
-                <option value="Internal">Internal</option>
-                <option value="Supplier">Supplier</option>
+                <option value="NG Jelas">Eksternal - NG Jelas</option>
+                <option value="KD Parts">Eksternal - KD Parts</option>
+                <option value="FG">Eksternal - FG</option>
+                <option value="Market Claim">Eksternal - Market Claim</option>
+                <option value="Ketidaksesuaian Kualitas">Internal</option>
+                <option value="Non YMMJ">Supplier</option>
             </select>
           </div>
         </div>

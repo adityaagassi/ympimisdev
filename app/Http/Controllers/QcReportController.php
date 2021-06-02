@@ -87,7 +87,7 @@ class QcReportController extends Controller
         ->leftjoin('employees as leader','qc_cpars.leader','=','leader.employee_id')
         ->leftjoin('statuses','qc_cpars.status_code','=','statuses.status_code')
         ->leftjoin('qc_cars','qc_cpars.cpar_no','=','qc_cars.cpar_no')
-        ->select('qc_cpars.id','qc_cpars.cpar_no','qc_cpars.kategori', 'staff.name as staffname', 'leader.name as leadername', 'employees.name', 'qc_cpars.lokasi', 'qc_cpars.tgl_permintaan', 'qc_cpars.tgl_balas', 'qc_cpars.via_komplain', 'qc_cpars.judul_komplain', 'qc_cpars.judul_komplain', 'qc_cpars.email_status', 'departments.department_name', 'qc_cpars.sumber_komplain', 'qc_cpars.status_code', 'statuses.status_name', 'qc_cpars.created_at', 'qc_cars.id as id_car')
+        ->select('qc_cpars.id','qc_cpars.cpar_no','qc_cpars.kategori','qc_cpars.kategori_komplain', 'staff.name as staffname', 'leader.name as leadername', 'employees.name', 'qc_cpars.lokasi', 'qc_cpars.tgl_permintaan', 'qc_cpars.tgl_balas', 'qc_cpars.via_komplain', 'qc_cpars.judul_komplain', 'qc_cpars.judul_komplain', 'qc_cpars.email_status', 'departments.department_name', 'qc_cpars.sumber_komplain', 'qc_cpars.status_code', 'statuses.status_name', 'qc_cpars.created_at', 'qc_cars.id as id_car')
         ->whereNull('qc_cpars.deleted_at');
 
         if(strlen($request->get('bulandari')) > 0){
@@ -141,8 +141,8 @@ class QcReportController extends Controller
             return date('d-m-Y', strtotime($cpar_details->tgl_permintaan));
           })
 
-        ->editColumn('tgl_balas',function($cpar_details){
-            return date('d-m-Y', strtotime($cpar_details->tgl_balas));
+         ->editColumn('kategori',function($cpar_details){
+            return $cpar_details->kategori .' - '.$cpar_details->kategori_komplain;
           })
 
 
@@ -174,22 +174,24 @@ class QcReportController extends Controller
           // }
 
           if($cpar_details->status_name == "Unverified CAR"){
-            return '<a href="qc_report/update/'.$idcpar.'" class="btn btn-primary btn-xs">Detail</a>
-                    <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('.$idcpar.');">Delete</a>
-                    <a href="qc_car/detail/'.$idcar.'" class="btn btn-warning btn-xs">Detail CAR</a>
+            return '<a href="qc_report/update/'.$idcpar.'" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Detail CPAR</a>
+                    <a href="qc_car/detail/'.$idcar.'" class="btn btn-warning btn-sm"><i class="fa fa-pencil"></i> Detail CAR</a>
                     ';
           }
 
+          // <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('.$idcpar.');">Delete</a>
+
           else if($cpar_details->status_name == "QA Verification" || $cpar_details->status_name == "Closed"){
-            return '<a href="qc_report/print_cpar/'.$idcpar.'" class="btn btn-success btn-xs">Report CPAR</a>
-                    <a href="qc_car/print_car_new/'.$idcar.'" class="btn btn-success btn-xs">Report CAR</a><br>
+            return '<a href="qc_report/print_cpar/'.$idcpar.'" class="btn btn-success btn-sm"><i class="fa fa-file-pdf-o"></i> Report CPAR</a>
+                    <a href="qc_car/print_car_new/'.$idcar.'" class="btn btn-success btn-sm"><i class="fa fa-file-pdf-o"></i> Report CAR</a><br>
                     ';
           }
 
           else{
-            return '<a href="qc_report/update/'.$idcpar.'" class="btn btn-primary btn-xs">Detail</a>
-                  <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('.$idcpar.');">Delete</a>';
+            return '<a href="qc_report/update/'.$idcpar.'" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Detail</a>';
           }
+
+          // <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('.$idcpar.');">Delete</a>
 
         })
 
@@ -806,7 +808,7 @@ class QcReportController extends Controller
           $cat = json_encode($kategori);
           $kat = str_replace(array("[","]"),array("(",")"),$cat);
 
-          $kate = 'and qc_cpars.kategori in'.$kat;
+          $kate = 'and qc_cpars.kategori_komplain in'.$kat;
       }else{
           $kate = '';
       }
@@ -1620,7 +1622,7 @@ class QcReportController extends Controller
           $cat = json_encode($kategori);
           $kat = str_replace(array("[","]"),array("(",")"),$cat);
 
-          $kate = 'and kategori in'.$kat;
+          $kate = 'and kategori_komplain in'.$kat;
       }else{
           $kate = '';
       }
@@ -2767,7 +2769,7 @@ class QcReportController extends Controller
           sum(case when qc_cpars.kategori_komplain = 'FG' then 1 else 0 end) as FG, 
           sum(case when qc_cpars.kategori_komplain = 'KD Parts' then 1 else 0 end) as KD,
           sum(case when qc_cpars.kategori_komplain = 'NG Jelas' then 1 else 0 end) as NG,
-          SUM(case when qc_cpars.kategori_komplain = 'Claim Rate' then 1 else 0 end) as Claim 
+          SUM(case when qc_cpars.kategori_komplain = 'Market Claim' then 1 else 0 end) as Claim 
           from qc_cpars LEFT JOIN weekly_calendars on qc_cpars.tgl_permintaan = weekly_calendars.week_date where fiscal_year='".$fiscal."' and qc_cpars.deleted_at is null
         ");
 
