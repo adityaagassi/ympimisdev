@@ -3063,7 +3063,7 @@ class StockTakingController extends Controller{
 				GROUP BY location, material_number
 				UNION ALL
 				SELECT storage_location AS location, material_number, 0 as pi, sum(unrestricted) AS book FROM stocktaking_location_stocks
-				WHERE stock_date = '2020-11-30'
+				WHERE stock_date = '".$calendar->date."'
 				GROUP BY storage_location, material_number) AS union_pi_book
 				GROUP BY location, material_number) AS pi_book
 				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = pi_book.material_number
