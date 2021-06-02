@@ -1170,6 +1170,7 @@ table.table-bordered > tfoot > tr > th{
 					fetchOrderList();
 				}
 				else{
+					$('#loading').hide();
 					audio_error.play();
 					openErrorGritter(result.message);
 					return false;				
@@ -1206,6 +1207,7 @@ table.table-bordered > tfoot > tr > th{
 					fetchOrderList();
 				}
 				else{
+					$('#loading').hide();
 					audio_error.play();
 					openErrorGritter(result.message);
 					return false;				
@@ -1371,6 +1373,7 @@ table.table-bordered > tfoot > tr > th{
 		var location = $('#location').val();
 
 		if(order_list.length <= 0){
+			$('#loading').hide();
 			audio_error.play();
 			openErrorGritter('Please create your order list<br>予約内容を記入してください');
 			return false;
