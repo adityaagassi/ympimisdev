@@ -313,11 +313,12 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 				</div> --}}
 			</div>
 			<div class="col-md-8" style="padding-bottom: 10px;">
+				<a href="{{ url("index/ga_control/bento") }}" class="btn btn-warning"><i class="glyphicon glyphicon-cutlery"></i>&nbsp; Order Bento &nbsp;<i class="fa fa-angle-double-right"></i></a>
 				<button class="btn btn-success" onclick="questionForm()" id="btnTanya"><i class="fa fa-question-circle"></i>&nbsp; Tanya HR &nbsp;<i class="fa fa-angle-double-right"></i></button>
 				<button class="btn btn-default" onclick="kembali()" style="display: none" id="btnKembali"><i class="fa fa-angle-double-left"></i>&nbsp; Kembali</button>
 
 				<?php if (strpos($profil[0]->position, 'Operator') !== false) { ?>
-					<button class="btn btn-primary" onclick="ekaizen()" id="btnKaizen"><i class="fa  fa-bullhorn"></i>&nbsp; e - Kaizen &nbsp;<i class="fa fa-angle-double-right"></i></button>
+				<button class="btn btn-primary" onclick="ekaizen()" id="btnKaizen"><i class="fa  fa-bullhorn"></i>&nbsp; e - Kaizen &nbsp;<i class="fa fa-angle-double-right"></i></button>
 				<?php } ?>
 				<div class="pull-right">
 					<select class="form-control select2" onchange="get_data(this)" data-placeholder='tahun'>
