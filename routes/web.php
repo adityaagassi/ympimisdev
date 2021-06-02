@@ -3426,6 +3426,7 @@ Route::get('index/audit_report_activity/print_audit_report_email/{id}/{month}', 
 Route::post('index/audit_report_activity/send_email/{id}', 'AuditReportActivityController@sendemail');
 Route::post('index/audit_report_activity/approval/{id}', 'AuditReportActivityController@approval');
 Route::get('index/getemployee', 'AuditReportActivityController@getemployee');
+Route::get('scan/audit_report_activity/participant', 'AuditReportActivityController@scanEmployee');
 
 //Interview
 Route::get('index/interview/index/{id}', 'InterviewController@index');

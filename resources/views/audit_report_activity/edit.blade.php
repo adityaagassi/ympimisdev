@@ -141,9 +141,9 @@
               <input type="text" class="form-control" name="kesesuaian_qc_kouteihyo" placeholder="Kesesuaian QC Kouteihyo" value="{{ $audit_report_activity->kesesuaian_qc_kouteihyo }}">
             </div>
           </div>
-          <div class="form-group row">
+          <div class="form-group row" align="right">
             <label class="col-sm-4">Hasil Keseluruhan</label>
-            <div class="col-sm-8">
+            <div class="col-sm-8" align="left">
               <div class="radio">
                 <label><input type="radio" name="condition" value="Sesuai" @if($audit_report_activity->condition == "Sesuai") checked @endif >Sesuai</label>
               </div>
@@ -153,9 +153,29 @@
             </div>
           </div>
           <div class="form-group row" align="right">
+            <label class="col-sm-4">Penanganan</label>
+            <div class="col-sm-8" align="left">
+              <div class="radio">
+                <label><input type="radio" name="handling" value="Tidak Ada Penanganan" @if($audit_report_activity->handling == "Tidak Ada Penanganan") checked @endif>Tidak Ada Penanganan</label>
+              </div>
+              <div class="radio">
+                <label><input type="radio" name="handling" value="Training Ulang IK" @if($audit_report_activity->handling == "Training Ulang IK") checked @endif>Training Ulang IK</label>
+              </div>
+              <div class="radio">
+                <label><input type="radio" name="handling" value="Revisi IK" @if($audit_report_activity->handling == "Revisi IK") checked @endif>Revisi IK</label>
+              </div>
+              <div class="radio">
+                <label><input type="radio" name="handling" value="Pembuatan Jig / Repair Jig" @if($audit_report_activity->handling == "Pembuatan Jig / Repair Jig") checked @endif>Pembuatan Jig / Repair Jig</label>
+              </div>
+              <div class="radio">
+                <label><input type="radio" name="handling" value="IK Tidak Digunakan" @if($audit_report_activity->handling == "IK Tidak Digunakan") checked @endif>IK Tidak Digunakan</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row" align="right">
             <label class="col-sm-4">Operator<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="operator" style="width: 100%;" data-placeholder="Choose an Operator..." required>
+              <!-- <select class="form-control select2" name="operator" style="width: 100%;" data-placeholder="Choose an Operator..." required>
                 <option value=""></option>
                 @foreach($operator as $operator)
                 @if($audit_report_activity->operator == $operator->name)
@@ -164,7 +184,11 @@
                   <option value="{{ $operator->name }}">{{ $operator->employee_id }} - {{ $operator->name }}</option>
                 @endif
                 @endforeach
-              </select>
+              </select> -->
+              <a href="javascript:void(0)" class="btn btn-primary" onclick="openModalOperator()">
+                Edit Operator
+              </a>
+              <input type="hidden" name="operator" style="width: 100%;" class="form-control" id="operator" placeholder="Nama Operator" value="{{$audit_report_activity->operator}}" readonly>
             </div>
           </div>
           <div class="form-group row" align="right">
@@ -191,7 +215,33 @@
       </div>
     </form>
   </div>
-
+<div class="modal fade" id="operator-modal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" align="center"><b>Scan Operator</b></h4>
+      </div>
+      <div class="modal-body">
+        <div class="box-body">
+          <div class="col-xs-12">
+            <div class="row">
+              <input type="text" id="scan_operator" placeholder="Scan ID Card Here ..." style="width: 100%;font-size: 20px;text-align:center;">
+              <input type="text" id="operator_on_modal" placeholder="" style="width: 100%;font-size: 20px;text-align:center;">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-success" style="width: 100%;font-size: 20px;font-weight: bold" onclick="selesaiOperator()">
+          SELESAI
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
   @endsection
 
   @section('scripts')
@@ -231,6 +281,50 @@
 
         reader.readAsDataURL(input.files[0]);
       }
+    }
+
+    function openModalOperator() {
+      $('#operator-modal').modal('show');
+      $('#scan_operator').val('');
+      $('#operator_on_modal').val($('#operator').val());
+      $('#scan_operator').focus();
+    }
+
+    $('#scan_operator').keydown(function(event) {
+      if (event.keyCode == 13 || event.keyCode == 9) {
+        if($("#scan_operator").val().length >= 8){
+          var data = {
+            employee_id : $("#scan_operator").val(),
+          }
+          
+          $.get('{{ url("scan/audit_report_activity/participant") }}', data, function(result, status, xhr){
+            if(result.status){
+              if ($('#operator_on_modal').val() == '') {
+                $('#operator_on_modal').val(result.employee.name);
+              }else{
+                var emp = $('#operator_on_modal').val().split(',');
+                emp.push(result.employee.name);
+                $('#operator_on_modal').val('');
+                $('#operator_on_modal').val(emp.join(','));
+              }
+              $('#scan_operator').val('');
+            }
+            else{
+              $('#scan_operator').val('');
+            }
+          });
+        }
+        else{
+          $("#scan_operator").val("");
+        }     
+      }
+    });
+
+    function selesaiOperator() {
+      $('#operator').val($('#operator_on_modal').val());
+      $('#scan_operator').val('');
+      $('#operator_on_modal').val('');
+      $('#operator-modal').modal('hide');
     }
   </script>
   @stop
