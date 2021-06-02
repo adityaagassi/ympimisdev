@@ -970,7 +970,7 @@ class MouthpieceController extends Controller
 		}else if (Auth::user()->role_code == 'OP-WH-Exim') {
 			$printer_name = 'FLO Printer LOG';
 		}else{
-			$printer_name = 'KDO MP';
+			$printer_name = 'KDO ZPRO';
 		}
 
 		$connector = new WindowsPrintConnector($printer_name);
