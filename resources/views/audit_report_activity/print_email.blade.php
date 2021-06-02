@@ -103,7 +103,8 @@
 					<td class="head" style="text-align: center;"><?php echo $laporanAktivitas->kesesuaian_aktual_proses ?></td>
 					<td rowspan="3" class="head" style="text-align: center;">{{ $laporanAktivitas->kelengkapan_point_safety }}</td>
 					<td rowspan="3" class="head" style="text-align: center;">{{ $laporanAktivitas->kesesuaian_qc_kouteihyo }}</td>
-					<td rowspan="3" class="head" colspan="2"><center>{{ $laporanAktivitas->operator }}</center></td>
+					<?php $emp = explode(',', $laporanAktivitas->operator) ?>
+					<td class="head" rowspan="3" style="padding-top: 0px;padding-bottom: 0px;"><center><?php echo join('<br>',$emp) ?></center></td>
 					@if($jml_null > 0 && $role_code != 'M')
 					<td rowspan="3" class="head" id="approval2">
 						<input type="hidden" value="{{csrf_token()}}" name="_token" />

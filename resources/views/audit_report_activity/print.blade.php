@@ -91,7 +91,8 @@
 					<td class="head" style="text-align: center;padding-top: 0px;padding-bottom: 0px;"><?php echo $laporanAktivitas->kesesuaian_aktual_proses ?></td>
 					<td class="head" rowspan="3" style="text-align: center;padding-top: 0px;padding-bottom: 0px;">{{ $laporanAktivitas->kelengkapan_point_safety }}</td>
 					<td class="head" rowspan="3" style="text-align: center;padding-top: 0px;padding-bottom: 0px;">{{ $laporanAktivitas->kesesuaian_qc_kouteihyo }}</td>
-					<td class="head" rowspan="3" style="padding-top: 0px;padding-bottom: 0px;"><center>{{ $laporanAktivitas->operator }}</center></td>
+					<?php $emp = explode(',', $laporanAktivitas->operator) ?>
+					<td class="head" rowspan="3" style="padding-top: 0px;padding-bottom: 0px;"><center><?php echo join('<br>',$emp) ?></center></td>
 				</tr>
 				<tr>
 					<td style="padding-top: 0px;padding-bottom: 0px;">Tindakan Perbaikan : {{ $laporanAktivitas->tindakan_perbaikan }}</td>
