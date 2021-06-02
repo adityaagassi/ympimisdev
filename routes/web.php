@@ -17,6 +17,9 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 }
 
 
+// Route::get('trial_view', 'TrialController@trialView');
+
+
 Route::get('minkd', 'TrialController@minkd');
 
 Route::get('force_print', 'TrialController@testPrint');
@@ -185,8 +188,10 @@ Route::group(['nav' => 'S63', 'middleware' => 'permission'], function(){
 	Route::post('input/ticket', 'TicketController@inputTicket');
 	Route::get('approval/ticket', 'TicketController@approvalTicket');
 });
+Route::get('/index/ticket/detail/{id}', 'TicketController@indexTicketDetail');
 Route::get('/index/ticket/{id}', 'TicketController@indexTicket');
 Route::get('/fetch/ticket', 'TicketController@fetchTicket');
+Route::get('/fetch/ticket/pdf/{id}', 'TicketController@fetchTicketPDF');
 
 //Vistor Controll
 Route::get('visitor_index', 'VisitorController@index');
@@ -653,6 +658,7 @@ Route::get('fetch/overtime_report', 'OvertimeController@overtimeReport');
 Route::get('fetch/overtime_report_detail', 'OvertimeController@overtimeReportDetail');
 Route::get('index/report/total_meeting', 'EmployeeController@indexTotalMeeting');
 Route::get('fetch/report/total_meeting', 'EmployeeController@fetchTotalMeeting');
+Route::get('fetch/report/att_rate', 'EmployeeController@fetchAttendanceRate');
 Route::get('fetch/report/gender', 'EmployeeController@fetchReportGender');
 Route::get('fetch/report/status1', 'EmployeeController@fetchReportStatus');
 Route::get('fetch/report/serikat', 'EmployeeController@reportSerikat');
@@ -1676,15 +1682,24 @@ Route::get('fetch/purchase_order/monitoring', 'AccountingController@fetchMonitor
 Route::get('purchase_order/detail', 'AccountingController@detailMonitoringPO');
 Route::get('purchase_order/table', 'AccountingController@fetchtablePO');
 
-//Approval Purchase Requisition
+
+Route::get('canteen/purchase_order/monitoring', 'AccountingController@monitoringPOCanteen');
+Route::get('fetch/canteen/purchase_order/monitoring', 'AccountingController@fetchMonitoringPOCanteen');
+Route::get('canteen/purchase_order/detail', 'AccountingController@detailMonitoringPOCanteen');
+Route::get('canteen/purchase_order/table', 'AccountingController@fetchtablePOCanteen');
+
+//Approval Purchase Order Canteen
 Route::get('purchase_order/verifikasi/{id}', 'AccountingController@verifikasi_purchase_order');
 Route::post('purchase_order/approval/{id}', 'AccountingController@approval_purchase_order');
 Route::post('purchase_order/notapprove/{id}', 'AccountingController@reject_purchase_order');
 
+Route::get('canteen/purchase_order/verifikasi/{id}', 'AccountingController@verifikasi_purchase_order_canteen');
+Route::post('canteen/purchase_order/approval/{id}', 'AccountingController@approval_purchase_order_canteen');
+Route::post('canteen/purchase_order/notapprove/{id}', 'AccountingController@reject_purchase_order_canteen');
+
 //New Approval Purchase Order
 Route::get('purchase_order/approvemanager/{id}', 'AccountingController@poapprovalmanager');
 Route::get('purchase_order/approvedgm/{id}', 'AccountingController@poapprovaldgm');
-Route::get('purchase_order/approvegm/{id}', 'AccountingController@poapprovalgm');
 Route::get('purchase_order/approvegm/{id}', 'AccountingController@poapprovalgm');
 Route::get('purchase_order/reject/{id}', 'AccountingController@poreject');
 Route::post('purchase_order/notapprove/{id}', 'AccountingController@reject_purchase_order');
@@ -1735,20 +1750,25 @@ Route::group(['nav' => 'S43', 'middleware' => 'permission'], function(){
 	Route::get('fetch/purchase_order_canteen', 'AccountingController@fetch_purchase_order_canteen');
 	Route::get('fetch/po_canteen_outstanding', 'AccountingController@fetch_po_outstanding_canteen');
 
+	//Update PR / Pilih PR Di PO 
 	Route::post('update/purchase_requisition_canteen/po', 'AccountingController@update_purchase_requisition_canteen_po');
 	Route::get('fetch/purchase_order/kantinlist', 'AccountingController@fetchPrKantinList');
 	Route::get('fetch/purchase_order/pilih_prkantin', 'AccountingController@pilihPrKantin');
 	Route::get('purchase_order/get_item_kantin', 'AccountingController@pogetitemkantin');
 
+	//report & Approval
 	Route::get('canteen/purchase_order/report/{id}', 'AccountingController@report_purchase_order_canteen');
 	Route::get('purchase_order_canteen/sendemail', 'AccountingController@po_send_email_canteen');
+	Route::get('purchase_order_canteen/approvemanager/{id}', 'AccountingController@poapprovalmanagercanteen');
+	
+	//edit PO SAP
+	Route::post('purchase_order_canteen/edit_sap', 'AccountingController@edit_sap_canteen');
 
+	//edit delete PO
 	Route::get('edit/purchase_order_canteen', 'AccountingController@edit_purchase_order_canteen');
-	Route::post('update/purchase_order_canteen', 'AccountingController@update_purchase_order');
-	Route::post('delete/purchase_order_canteen_item', 'AccountingController@delete_item_po');
-
+	Route::post('update/purchase_order_canteen', 'AccountingController@update_purchase_order_canteen');
+	Route::post('delete/purchase_order_canteen_item', 'AccountingController@delete_item_po_canteen');
 	Route::post('cancel/purchase_order_canteen', 'AccountingController@cancel_purchase_order_canteen');
-
 });
 
 //investment
@@ -3733,7 +3753,7 @@ Route::get('fetch/recorder/kensa/initial', 'RecorderProcessController@fetchKensa
 Route::post('input/recorder/kensa/initial', 'RecorderProcessController@inputKensaInitial');
 Route::post('input/recorder/kensa/initial/product', 'RecorderProcessController@inputKensaInitialProduct');
 
-//NG RATE ASSY RC
+//KENSA KAKUNING ASSY RC
 Route::get('index/recorder/kensa', 'RecorderProcessController@indexKensa');
 Route::get('fetch/recorder/kensa', 'RecorderProcessController@fetchKensa');
 Route::get('scan/recorder/kensa/operator', 'RecorderProcessController@scanKensaRecorderOperator');
@@ -3743,6 +3763,10 @@ Route::post('input/recorder/kensa', 'RecorderProcessController@inputKensa');
 Route::post('update/recorder/kensa', 'RecorderProcessController@updateKensa');
 Route::get('index/recorder/kensa_report', 'RecorderProcessController@indexKensaReport');
 Route::get('fetch/recorder/kensa_report', 'RecorderProcessController@fetchKensaReport');
+
+//KENSA KAKUNING DISPLAY ASSY RC
+Route::get('index/recorder/display/kensa', 'RecorderProcessController@indexDisplayKensa');
+Route::get('fetch/recorder/display/kensa', 'RecorderProcessController@fetchDisplayKensa');
 
 //WEBCAM
 Route::get('index/webcam', 'WebcamController@index');
@@ -4470,16 +4494,18 @@ Route::group(['nav' => 'M28', 'middleware' => 'permission'], function(){
 
 //NG Jelas Report & Audit IK
 Route::group(['nav' => 'M30', 'middleware' => 'permission'], function(){
-	Route::get('index/audit_ng_jelas_monitoring', 'ProductionReportController@indexNgJelasMonitoring');
-	Route::get('fetch/audit_ng_jelas_monitoring', 'ProductionReportController@fetchNgJelasMonitoring');
-	Route::get('fetch/audit_ng_jelas_monitoring2', 'ProductionReportController@fetchNgJelasMonitoring2');
-	Route::get('fetch/detail_audit_ng_jelas_monitoring', 'ProductionReportController@fetchDetailNgJelasMonitoring');
-	Route::get('fetch/detail_audit_ng_jelas_monitoring2', 'ProductionReportController@fetchDetailNgJelasMonitoring2');
-
-	Route::get('index/audit_ik_monitoring', 'ProductionReportController@indexAuditIKMonitoring');
-	Route::get('fetch/audit_ik_monitoring', 'ProductionReportController@fetchAuditIKMonitoring');
-	Route::get('fetch/detail_audit_ik_monitoring', 'ProductionReportController@fetchDetailAuditIKMonitoring');
+	
 });
+
+Route::get('index/audit_ng_jelas_monitoring', 'ProductionReportController@indexNgJelasMonitoring');
+Route::get('fetch/audit_ng_jelas_monitoring', 'ProductionReportController@fetchNgJelasMonitoring');
+Route::get('fetch/audit_ng_jelas_monitoring2', 'ProductionReportController@fetchNgJelasMonitoring2');
+Route::get('fetch/detail_audit_ng_jelas_monitoring', 'ProductionReportController@fetchDetailNgJelasMonitoring');
+Route::get('fetch/detail_audit_ng_jelas_monitoring2', 'ProductionReportController@fetchDetailNgJelasMonitoring2');
+
+Route::get('index/audit_ik_monitoring', 'ProductionReportController@indexAuditIKMonitoring');
+Route::get('fetch/audit_ik_monitoring', 'ProductionReportController@fetchAuditIKMonitoring');
+Route::get('fetch/detail_audit_ik_monitoring', 'ProductionReportController@fetchDetailAuditIKMonitoring');
 
 //ROOMS
 Route::get('/meetingroom1', function () {
@@ -4738,6 +4764,7 @@ Route::group(['nav' => 'M34', 'middleware' => 'permission'], function(){
 	Route::get('adagio/home/edit', 'AdagioAutoController@DataAdagioaEdit');
 	Route::post('adagio/home/update', 'AdagioAutoController@DataAdagioaUpdate');
 	Route::post('adagio/home/delete', 'AdagioAutoController@DataAdagioaDelete');
+	Route::get('adagio/deletecategory', 'AdagioAutoController@DataAdagioaDeleteCategory');
 });
 //input send file
 Route::group(['nav' => 'M34', 'middleware' => 'permission'], function(){
@@ -4748,6 +4775,7 @@ Route::group(['nav' => 'M34', 'middleware' => 'permission'], function(){
 	Route::get('adagio/data/approval', 'AdagioAutoController@AdagioDataApproval');
 	Route::get('adagio/data/resume', 'AdagioAutoController@AdagioDataResume');
 	Route::get('adagio/data/report/{id}', 'AdagioAutoController@AdagioDataReport');
+	Route::get('adagio/done/report/{id}', 'AdagioAutoController@AdagioDataDoneReport');
 	Route::get('adagio/data/fetch/{id}', 'AdagioAutoController@AdagioDataFetch');
 	Route::post('adagio/send', 'AdagioAutoController@AdagioSendFile');
 	Route::post('adagio/delete', 'AdagioAutoController@AdagioDelete');
@@ -5040,7 +5068,8 @@ Route::get('fetch/packing_documentation/data', 'AuditController@documentation_da
 //  -------------------------  FIXED ASSET -------------------------
 
 Route::get('index/fixed_asset', 'AccountingController@indexFixedAsset');
-Route::get('index/fixed_asset/registration_asset_form', 'AccountingController@indexAssetRegistration');
+Route::get('index/fixed_assfetch/kaizen/reportet/registration_asset_form', 'AccountingController@indexAssetRegistration');
+Route::get('fetch/fixed_asset/registration_asset_form', 'AccountingController@fetchAssetRegistration');
 Route::post('send/fixed_asset/registration_asset_form', 'AccountingController@assetRegistration');
 
 //  -----------------------  END FIXED ASSET ------------------------
