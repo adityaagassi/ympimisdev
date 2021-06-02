@@ -2284,11 +2284,11 @@ class StockTakingController extends Controller{
 		$calendar = StocktakingCalendar::where(db::raw("DATE_FORMAT(date,'%Y-%m')"), $month)->first();
 
 		// $date = date('Ymd');
-		$date = '20210430';
+		// $date = '20210430';
 
 		if($calendar){
-			$filename = 'ympipi_upload_' . $date . '.txt';
-			// $filename = 'ympipi_upload_' . $calendar->date . '.txt';
+			// $filename = 'ympipi_upload_' . $date . '.txt';
+			$filename = 'ympipi_upload_' . $calendar->date . '.txt';
 			$filepath = public_path() . "/uploads/sap/stocktaking/" . $filename;
 			$filedestination = "ma/ympipi/" . $filename;
 
