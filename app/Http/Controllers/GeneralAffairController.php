@@ -66,6 +66,13 @@ public function indexBentoReport(){
 }
 
 public function inputBentoMenu(Request $request){
+	if(strlen($request->get('menu')) <= 0 || strlen($request->get('menu')) <= 0){
+		$response = array(
+			'status' => false,
+			'message' => 'Please fill up menu name and quota.'
+		);
+		return Response::json($response);
+	}
 	try{
 		$bento_menu = BentoQuota::where('due_date', '=', $request->get('date'))
 		->update([

@@ -877,6 +877,14 @@ table.table-bordered > tfoot > tr > th{
 		});
 	}
 
+	function titleCase(str) {
+		var splitStr = str.toLowerCase().split(' ');
+		for (var i = 0; i < splitStr.length; i++) {
+			splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);     
+		}
+		return splitStr.join(' '); 
+	}
+
 	function fetchOrderList(){
 		$.get('{{ url("fetch/ga_control/bento_order_list") }}', function(result, status, xhr){
 			if(result.status){
@@ -909,7 +917,7 @@ table.table-bordered > tfoot > tr > th{
 					}
 					else{
 						cal = {
-							title: "#"+value.menu+" ("+value.serving_ordered+"/"+value.serving_quota+")",
+							title: "#"+titleCase(value.menu)+" ("+value.serving_ordered+"/"+value.serving_quota+")",
 							start: Date.parse(value.due_date),
 							allDay: true,
 							backgroundColor:  'rgb(126,86,134)',
