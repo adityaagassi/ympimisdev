@@ -1844,12 +1844,12 @@
   </span>
 </a>
 <ul class="treeview-menu">
-<!-- @if(isset($page) && $page == "Completion Transaction")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/tr_completion") }}"><i class="fa fa-table"></i> Completion</a>
+@if(isset($page) && $page == "Completion Transaction")<li class="active">@else<li>@endif
+  <a href="{{ url("/index/tr_completion") }}"><i class="fa fa-table"></i>FLO Completion History</a>
 </li>
 @if(isset($page) && $page == "Transfer Transaction")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/tr_transfer") }}"><i class="fa fa-table"></i> Transfer</a>
-</li> -->
+  <a href="{{ url("/index/tr_transfer") }}"><i class="fa fa-table"></i>FLO Transfer History</a>
+</li>
 @if(isset($page) && $page == "History Transaction")<li class="active">@else<li>@endif
   <a href="{{ url("/index/tr_history") }}"><i class="fa fa-table"></i> Transaction History</a>
 </li>
