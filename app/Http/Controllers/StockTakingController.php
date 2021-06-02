@@ -2288,7 +2288,7 @@ class StockTakingController extends Controller{
 
 		if($calendar){
 			// $filename = 'ympipi_upload_' . $date . '.txt';
-			$filename = 'ympipi_upload_' . $calendar->date . '.txt';
+			$filename = 'ympipi_upload_' . str_replace('-', '', $calendar->date) . '.txt';
 			$filepath = public_path() . "/uploads/sap/stocktaking/" . $filename;
 			$filedestination = "ma/ympipi/" . $filename;
 
