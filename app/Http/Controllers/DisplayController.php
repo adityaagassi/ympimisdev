@@ -418,7 +418,7 @@ class DisplayController extends Controller
 			histories.transfer_movement_type = '9I3',
 			histories.lot,
 			IF
-			( histories.transfer_movement_type = '9I4', IF ( DAY ( histories.created_at ) < 5, 0, -( histories.lot )), 0 ))) AS picking,
+			( histories.transfer_movement_type = '9I4', IF ( DAY ( histories.created_at ) < 4, 0, -( histories.lot )), 0 ))) AS picking,
 			0 AS plus,
 			0 AS minus,
 			0 AS stock,
@@ -470,7 +470,7 @@ class DisplayController extends Controller
 			histories.transfer_movement_type = '9I3',
 			histories.lot,
 			IF
-			( histories.transfer_movement_type = '9I4', IF ( DAY ( histories.created_at ) < 5, 0, -( histories.lot )), 0 )))) AS plan,
+			( histories.transfer_movement_type = '9I4', IF ( DAY ( histories.created_at ) < 4, 0, -( histories.lot )), 0 )))) AS plan,
 			0 AS plan_ori 
 			FROM
 			( SELECT materials.id, materials.material_number FROM kitto.materials WHERE materials.location IN ( 'SX51', 'CL51' ) AND category = 'key' ) AS materials
@@ -508,7 +508,7 @@ class DisplayController extends Controller
 			( histories.transfer_movement_type = '9I3', histories.lot, 0 )) AS plus,
 			sum(
 			IF
-			( histories.transfer_movement_type = '9I4', IF ( DAY ( histories.created_at ) < 5, 0, histories.lot ), 0 )) AS minus,
+			( histories.transfer_movement_type = '9I4', IF ( DAY ( histories.created_at ) < 4, 0, histories.lot ), 0 )) AS minus,
 			0 AS stock,
 			0 AS plan_ori 
 			FROM
