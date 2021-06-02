@@ -164,7 +164,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 
 						<a class="btn btn-primary" href="{{ url("index/update_emp_data/".strtoupper($emp_id)) }}"><i class="fa fa-edit"></i>&nbsp; Update Data Karyawan</a>
 						
-						<a class="btn btn-warning" style="margin-top: 5px;" href="{{ url("index/perpajakan/".strtoupper($emp_id)) }}"><i class="fa fa-file"></i>&nbsp; Update Data NPWP / Perpajakan</a>
+						<!-- <a class="btn btn-warning" style="margin-top: 5px;" href="{{ url("index/perpajakan/".strtoupper($emp_id)) }}"><i class="fa fa-file"></i>&nbsp; Update Data NPWP / Perpajakan</a> -->
 						{{-- <span>{{ $profil[0]->birth_place }}, {{ date("d F Y",strtotime($profil[0]->birth_date)) }}</span> --}}
 					</div>
 					<div class="col-xs-12" style="padding-top: 10px;">
@@ -869,7 +869,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 			}
 		});
 
-		$("#modalBerita").modal('show');
+		// $("#modalBerita").modal('show');
 
 		// $('#kz_sub_leader').select2({ width: 'resolve' });
 
