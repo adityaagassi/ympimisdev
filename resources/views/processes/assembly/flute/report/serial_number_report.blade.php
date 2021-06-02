@@ -104,21 +104,58 @@ thead input {
 					</div>
 					<div class="row">
 						<div class="col-md-12" style="overflow-x: scroll;">
-							<table id="tableNgReport" class="table table-bordered table-striped table-hover">
+							<div style="background-color: orange;text-align: center;color: white;font-size: 20px;font-weight: bold;margin-bottom: 10px">
+								<span style="width: 100%">QA FUNGSI</span>
+							</div>
+							<table id="tableNgReportFungsi" class="table table-bordered table-striped table-hover">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
 										<th>Serial Number</th>
 										<th>Model</th>
-										<th>Operator QA Fungsi</th>
 										<th>Cek Fungsi Produksi</th>
+										<th>Operator QA Fungsi</th>
 										<th>Result QA Fungsi</th>
 										<th>NG QA Fungsi</th>
-										<th>Operator QA Visual 1</th>
+										<th>Ganti Kunci</th>
+										<th>Packing Date</th>
+										<th>Packing Time</th>
+									</tr>
+								</thead>
+								<tbody id="bodyTableNgReportFungsi">
+								</tbody>
+							</table>
+
+							<div style="background-color: green;text-align: center;color: white;font-size: 20px;font-weight: bold;margin-bottom: 10px">
+								<span style="width: 100%">QA VISUAL 1</span>
+							</div>
+							<table id="tableNgReportVisual1" class="table table-bordered table-striped table-hover">
+								<thead style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th>Serial Number</th>
+										<th>Model</th>
 										<th>Cek Visual Produksi</th>
+										<th>Operator QA Visual 1</th>
 										<th>Result QA Visual 1</th>
 										<th>NG QA Visual 1</th>
-										<th>Operator QA Visual 2</th>
+										<th>Ganti Kunci</th>
+										<th>Packing Date</th>
+										<th>Packing Time</th>
+									</tr>
+								</thead>
+								<tbody id="bodyTableNgReportVisual1">
+								</tbody>
+							</table>
+
+							<div style="background-color: blue;text-align: center;color: white;font-size: 20px;font-weight: bold;margin-bottom: 10px">
+								<span style="width: 100%">QA VISUAL 2</span>
+							</div>
+							<table id="tableNgReportVisual2" class="table table-bordered table-striped table-hover">
+								<thead style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th>Serial Number</th>
+										<th>Model</th>
 										<th>Cek Visual Produksi</th>
+										<th>Operator QA Visual 2</th>
 										<th>Result QA Visual 2</th>
 										<th>NG QA Visual 2</th>
 										<th>Ganti Kunci</th>
@@ -126,23 +163,8 @@ thead input {
 										<th>Packing Time</th>
 									</tr>
 								</thead>
-								<tbody id="bodyTableNgReport">
+								<tbody id="bodyTableNgReportVisual2">
 								</tbody>
-								<!-- <tfoot>
-									<tr>
-										<th></th>
-										<th></th>
-										<th></th>
-										<th></th>
-										<th></th>
-										<th></th>
-										<th></th>
-										<th></th>
-										<th></th>
-										<th></th>
-										<th></th>
-									</tr>
-								</tfoot> -->
 							</table>
 						</div>
 					</div>
@@ -216,52 +238,244 @@ thead input {
 		}
 		$.get(url,data, function(result, status, xhr){
 			if(result.status){
-				$('#tableNgReport').DataTable().clear();
-				$('#tableNgReport').DataTable().destroy();
-				$('#bodyTableNgReport').html("");
-				var tableData = "";
-				$.each(result.report, function(key, value) {
-					tableData += '<tr>';
-					tableData += '<td>'+ value.serial_number +'</td>';
-					tableData += '<td>'+ value.model +'</td>';
-					tableData += '<td>'+ value.op_qa_fungsi.split(',').join('<br>') +'</td>';
-					tableData += '<td>'+ value.operator_fungsi.split(',').join('<br>') +'</td>';
+				$('#tableNgReportFungsi').DataTable().clear();
+				$('#tableNgReportFungsi').DataTable().destroy();
+				$('#bodyTableNgReportFungsi').html("");
+				var tableDataFungsi = "";
+				
+				$.each(result.report_fungsi, function(key, value) {
 					if (value.ng_fungsi == null) {
-						tableData += '<td><span class="label label-success">OK</span></td>';
-						tableData += '<td></td>';
+						tableDataFungsi += '<tr>';
+						tableDataFungsi += '<td>'+ value.serial_number +'</td>';
+						tableDataFungsi += '<td>'+ value.model +'</td>';
+						tableDataFungsi += '<td>'+ value.operator_fungsi.split(',').join('<br>') +'</td>';
+						tableDataFungsi += '<td>'+ value.op_qa_fungsi.split(',').join('<br>') +'</td>';
+						tableDataFungsi += '<td><span class="label label-success">OK</span></td>';
+						tableDataFungsi += '<td></td>';
+						if (value.ganti_kunci == null) {
+							tableDataFungsi += '<td></td>';
+						}else{
+							tableDataFungsi += '<td>'+value.ganti_kunci.split(',').join('<br>')+'</td>';
+						}
+						tableDataFungsi += '<td>'+value.created_at.split(' ')[0]+'</td>';
+						tableDataFungsi += '<td>'+value.created_at.split(' ')[1]+'</td>';
 					}else{
-						tableData += '<td><span class="label label-danger">NG</span></td>';
-						tableData += '<td>'+value.ng_fungsi.split(',').join('<br>')+'</td>';
+						var ng_fungsi = value.ng_fungsi.split(',');
+						for (var i = 0; i < ng_fungsi.length; i++) {
+							tableDataFungsi += '<tr>';
+							tableDataFungsi += '<td>'+ value.serial_number +'</td>';
+							tableDataFungsi += '<td>'+ value.model +'</td>';
+							tableDataFungsi += '<td>'+ value.operator_fungsi.split(',').join('<br>') +'</td>';
+							tableDataFungsi += '<td>'+ value.op_qa_fungsi.split(',').join('<br>') +'</td>';
+							tableDataFungsi += '<td><span class="label label-danger">NG</span></td>';
+							tableDataFungsi += '<td>'+ng_fungsi[i]+'</td>';
+							if (value.ganti_kunci == null) {
+								tableDataFungsi += '<td></td>';
+							}else{
+								tableDataFungsi += '<td>'+value.ganti_kunci.split(',').join('<br>')+'</td>';
+							}
+							tableDataFungsi += '<td>'+value.created_at.split(' ')[0]+'</td>';
+							tableDataFungsi += '<td>'+value.created_at.split(' ')[1]+'</td>';
+						}
 					}
-					tableData += '<td>'+ value.op_qa_visual1.split(',').join('<br>') +'</td>';
-					tableData += '<td>'+ value.operator_visual.split(',').join('<br>')+'</td>';
-					if (value.ng_visual1 == null) {
-						tableData += '<td><span class="label label-success">OK</span></td>';
-						tableData += '<td></td>';
-					}else{
-						tableData += '<td><span class="label label-danger">NG</span></td>';
-						tableData += '<td>'+value.ng_visual1.split(',').join('<br>')+'</td>';
-					}
-					tableData += '<td>'+ value.op_qa_visual2.split(',').join('<br>') +'</td>';
-					tableData += '<td>'+ value.operator_visual.split(',').join('<br>')+'</td>';
-					if (value.ng_visual2 == null) {
-						tableData += '<td><span class="label label-success">OK</span></td>';
-						tableData += '<td></td>';
-					}else{
-						tableData += '<td><span class="label label-danger">NG</span></td>';
-						tableData += '<td>'+value.ng_visual2.split(',').join('<br>')+'</td>';
-					}
-					if (value.ganti_kunci == null) {
-						tableData += '<td></td>';
-					}else{
-						tableData += '<td>'+value.ganti_kunci.split(',').join('<br>')+'</td>';
-					}
-					tableData += '<td>'+value.created_at.split(' ')[0]+'</td>';
-					tableData += '<td>'+value.created_at.split(' ')[1]+'</td>';
 				});
-				$('#bodyTableNgReport').append(tableData);
+				$('#bodyTableNgReportFungsi').append(tableDataFungsi);
 
-				var table = $('#tableNgReport').DataTable({
+				var table = $('#tableNgReportFungsi').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'lengthMenu': [
+					[ 10, 25, 50, -1 ],
+					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
+						{
+							extend: 'pageLength',
+							className: 'btn btn-default',
+						},
+						{
+							extend: 'copy',
+							className: 'btn btn-success',
+							text: '<i class="fa fa-copy"></i> Copy',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'excel',
+							className: 'btn btn-info',
+							text: '<i class="fa fa-file-excel-o"></i> Excel',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'print',
+							className: 'btn btn-warning',
+							text: '<i class="fa fa-print"></i> Print',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						}
+						]
+					},
+					'paging': true,
+					'lengthChange': true,
+					'pageLength': 10,
+					'searching': true,
+					"processing": true,
+					'ordering': true,
+					'order': [],
+					'info': true,
+					'autoWidth': true,
+					"sPaginationType": "full_numbers",
+					"bJQueryUI": true,
+					"bAutoWidth": false,
+					"processing": true
+				});
+
+				$('#tableNgReportVisual1').DataTable().clear();
+				$('#tableNgReportVisual1').DataTable().destroy();
+				$('#bodyTableNgReportVisual1').html("");
+				var tableDataVisual1 = "";
+				
+				$.each(result.report_visual1, function(key, value) {
+					if (value.ng_visual1 == null) {
+						tableDataVisual1 += '<tr>';
+						tableDataVisual1 += '<td>'+ value.serial_number +'</td>';
+						tableDataVisual1 += '<td>'+ value.model +'</td>';
+						tableDataVisual1 += '<td>'+ value.operator_visual.split(',').join('<br>')+'</td>';
+						tableDataVisual1 += '<td>'+ value.op_qa_visual1.split(',').join('<br>') +'</td>';
+						tableDataVisual1 += '<td><span class="label label-success">OK</span></td>';
+						tableDataVisual1 += '<td></td>';
+						if (value.ganti_kunci == null) {
+							tableDataVisual1 += '<td></td>';
+						}else{
+							tableDataVisual1 += '<td>'+value.ganti_kunci.split(',').join('<br>')+'</td>';
+						}
+						tableDataVisual1 += '<td>'+value.created_at.split(' ')[0]+'</td>';
+						tableDataVisual1 += '<td>'+value.created_at.split(' ')[1]+'</td>';
+					}else{
+						var ng_visual1 = value.ng_visual1.split(',');
+						for (var i = 0; i < ng_visual1.length; i++) {
+							tableDataVisual1 += '<tr>';
+							tableDataVisual1 += '<td>'+ value.serial_number +'</td>';
+							tableDataVisual1 += '<td>'+ value.model +'</td>';
+							tableDataVisual1 += '<td>'+ value.operator_visual.split(',').join('<br>')+'</td>';
+							tableDataVisual1 += '<td>'+ value.op_qa_visual1.split(',').join('<br>') +'</td>';
+							tableDataVisual1 += '<td><span class="label label-danger">NG</span></td>';
+							tableDataVisual1 += '<td>'+ng_visual1[i]+'</td>';
+							if (value.ganti_kunci == null) {
+								tableDataVisual1 += '<td></td>';
+							}else{
+								tableDataVisual1 += '<td>'+value.ganti_kunci.split(',').join('<br>')+'</td>';
+							}
+							tableDataVisual1 += '<td>'+value.created_at.split(' ')[0]+'</td>';
+							tableDataVisual1 += '<td>'+value.created_at.split(' ')[1]+'</td>';
+						}
+					}
+				});
+				$('#bodyTableNgReportVisual1').append(tableDataVisual1);
+
+				var table = $('#tableNgReportVisual1').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'lengthMenu': [
+					[ 10, 25, 50, -1 ],
+					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
+						{
+							extend: 'pageLength',
+							className: 'btn btn-default',
+						},
+						{
+							extend: 'copy',
+							className: 'btn btn-success',
+							text: '<i class="fa fa-copy"></i> Copy',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'excel',
+							className: 'btn btn-info',
+							text: '<i class="fa fa-file-excel-o"></i> Excel',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'print',
+							className: 'btn btn-warning',
+							text: '<i class="fa fa-print"></i> Print',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						}
+						]
+					},
+					'paging': true,
+					'lengthChange': true,
+					'pageLength': 10,
+					'searching': true,
+					"processing": true,
+					'ordering': true,
+					'order': [],
+					'info': true,
+					'autoWidth': true,
+					"sPaginationType": "full_numbers",
+					"bJQueryUI": true,
+					"bAutoWidth": false,
+					"processing": true
+				});
+
+				$('#tableNgReportVisual2').DataTable().clear();
+				$('#tableNgReportVisual2').DataTable().destroy();
+				$('#bodyTableNgReportVisual2').html("");
+				var tableDataVisual2 = "";
+				
+				$.each(result.report_visual2, function(key, value) {
+					if (value.ng_visual2 == null) {
+						tableDataVisual2 += '<tr>';
+						tableDataVisual2 += '<td>'+ value.serial_number +'</td>';
+						tableDataVisual2 += '<td>'+ value.model +'</td>';
+						tableDataVisual2 += '<td>'+ value.operator_visual.split(',').join('<br>')+'</td>';
+						tableDataVisual2 += '<td>'+ value.op_qa_visual2.split(',').join('<br>') +'</td>';
+						tableDataVisual2 += '<td><span class="label label-success">OK</span></td>';
+						tableDataVisual2 += '<td></td>';
+						if (value.ganti_kunci == null) {
+							tableDataVisual2 += '<td></td>';
+						}else{
+							tableDataVisual2 += '<td>'+value.ganti_kunci.split(',').join('<br>')+'</td>';
+						}
+						tableDataVisual2 += '<td>'+value.created_at.split(' ')[0]+'</td>';
+						tableDataVisual2 += '<td>'+value.created_at.split(' ')[1]+'</td>';
+					}else{
+						var ng_visual2 = value.ng_visual2.split(',');
+						for (var i = 0; i < ng_visual2.length; i++) {
+							tableDataVisual2 += '<tr>';
+							tableDataVisual2 += '<td>'+ value.serial_number +'</td>';
+							tableDataVisual2 += '<td>'+ value.model +'</td>';
+							tableDataVisual2 += '<td>'+ value.operator_visual.split(',').join('<br>')+'</td>';
+							tableDataVisual2 += '<td>'+ value.op_qa_visual2.split(',').join('<br>') +'</td>';
+							tableDataVisual2 += '<td><span class="label label-danger">NG</span></td>';
+							tableDataVisual2 += '<td>'+ng_visual2[i]+'</td>';
+							if (value.ganti_kunci == null) {
+								tableDataVisual2 += '<td></td>';
+							}else{
+								tableDataVisual2 += '<td>'+value.ganti_kunci.split(',').join('<br>')+'</td>';
+							}
+							tableDataVisual2 += '<td>'+value.created_at.split(' ')[0]+'</td>';
+							tableDataVisual2 += '<td>'+value.created_at.split(' ')[1]+'</td>';
+						}
+					}
+				});
+				$('#bodyTableNgReportVisual2').append(tableDataVisual2);
+
+				var table = $('#tableNgReportVisual2').DataTable({
 					'dom': 'Bfrtip',
 					'responsive':true,
 					'lengthMenu': [

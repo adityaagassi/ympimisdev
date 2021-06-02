@@ -236,7 +236,13 @@ class PingController extends Controller
     ->get();
 
     $data_vpn = Pinglog::whereRaw('DATE_FORMAT(created_at,"%Y-%m-%d %H:%i:%s") >= "'.date('Y-m-d 06:00:00').'"')
-    ->where('remark','=','vpn')
+    ->where('remark','=','VPN')
+    ->select('*', db::raw('DATE_FORMAT(created_at, "%H:%i") as data_time'))
+    ->orderBy('id', 'asc')
+    ->get();
+
+    $data_vpn_yamaha = Pinglog::whereRaw('DATE_FORMAT(created_at,"%Y-%m-%d %H:%i:%s") >= "'.date('Y-m-d 06:00:00').'"')
+    ->where('remark','=','VPN Yamaha')
     ->select('*', db::raw('DATE_FORMAT(created_at, "%H:%i") as data_time'))
     ->orderBy('id', 'asc')
     ->get();
@@ -245,7 +251,8 @@ class PingController extends Controller
       'status' => true,
       'message' => 'Data Berhasil Didapatkan',
       'data_ping' => $data_ping,
-      'data_vpn' => $data_vpn
+      'data_vpn' => $data_vpn,
+      'data_vpn_yamaha' => $data_vpn_yamaha
     );
     return Response::json($response);
   }
