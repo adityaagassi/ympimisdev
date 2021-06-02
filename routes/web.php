@@ -2779,10 +2779,12 @@ Route::get('fetch/stocktaking/kitto_vs_pi', 'StockTakingController@fetchKittoVsP
 Route::get('fetch/stocktaking/kitto_vs_book', 'StockTakingController@fetchKittoVsBook');
 Route::get('fetch/stocktaking/pi_vs_lot', 'StockTakingController@fetchPiVsLot');
 
+
 //checkInput
 Route::get('index/stocktaking/check_input_new', 'StockTakingController@indexCheckInput');
 Route::get('fetch/stocktaking/check_input_store_list_new', 'StockTakingController@fetchCheckInputStoreListNew');
-Route::get('fetch/stocktaking/pi_vs_book', 'StockTakingController@fetchPiVsBook');
+Route::post('update/stocktaking/no_use', 'StockTakingController@updateStoreNoUse');
+Route::post('update/stocktaking/open_input', 'StockTakingController@updateOpenInput');
 
 
 Route::get('index/stocktaking/material_forecast', 'StockTakingController@indexStocktakingMaterialForecast');
