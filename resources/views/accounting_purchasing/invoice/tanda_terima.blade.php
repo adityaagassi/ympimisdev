@@ -103,10 +103,10 @@
 						<th>Invoice No</th>
 						<th>Surat Jalan</th>
 						<th>PO Number</th>
-						<th>Payment Term</th>
 						<th>Currency</th>
 						<th>Amount</th>
 						<th>Due Date</th>
+						<th>Buyer</th>
 						<th>Action</th>
 					</tr>
 				</thead>
@@ -649,10 +649,10 @@
 					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:2%;">'+value.invoice_no+'</td>';
 					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:1%;">'+value.surat_jalan+'</td>';
 					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:1%;">'+value.po_number+'</td>';
-					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:3%;">'+value.payment_term+'</td>';
 					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:0.1%;">'+value.currency+'</td>';
 					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:1%;text-align:right">'+value.amount+'</td>';
 					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:1%;">'+value.due_date+'</td>';
+					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:3%;">'+value.created_name+'</td>';
 					listTableBody += '<td style="width:2%;"><center><button class="btn btn-md btn-warning" onclick="newData(\''+value.id+'\')"><i class="fa fa-eye"></i> </button>  <a class="btn btn-md btn-danger" target="_blank" href="{{ url("invoice/report") }}/'+value.id+'"><i class="fa fa-file-pdf-o"></i> </a></center></td>';
 					listTableBody += '</tr>';
 
