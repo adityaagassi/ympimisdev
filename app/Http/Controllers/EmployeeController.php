@@ -806,26 +806,26 @@ class EmployeeController extends Controller
 
      public function exportDataPajak(Request $request){
 
-        $time = date('d-m-Y H;i;s');
+       $time = date('d-m-Y H;i;s');
 
 
-        $npwp_detail = db::select(
-            "SELECT * from employee_taxes order by id asc");
+       $npwp_detail = db::select(
+        "SELECT * from employee_taxes order by id asc");
 
-        $data = array(
-            'npwp_detail' => $npwp_detail
-       );
+       $data = array(
+        'npwp_detail' => $npwp_detail
+   );
 
-        ob_clean();
+       ob_clean();
 
-        Excel::create('Data NPWP '.$time, function($excel) use ($data){
-            $excel->sheet('Data', function($sheet) use ($data) {
-              return $sheet->loadView('employees.report.resume_pajak_excel', $data);
-         });
-       })->export('xlsx');
-   }
+       Excel::create('Data NPWP '.$time, function($excel) use ($data){
+        $excel->sheet('Data', function($sheet) use ($data) {
+           return $sheet->loadView('employees.report.resume_pajak_excel', $data);
+      });
+   })->export('xlsx');
+  }
 
-   public function fetchEmployeeResume(Request $request){
+  public function fetchEmployeeResume(Request $request){
 
      $tanggal = "";
      $addcostcenter = "";
@@ -835,11 +835,11 @@ class EmployeeController extends Controller
      $addnik = "";
 
      if(strlen($request->get('datefrom')) > 0){
-          $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
-          $tanggal = "and tanggal >= '".$datefrom."' ";
+          $datefrom = date('Y-m-01', strtotime($request->get('datefrom')));
+          $tanggal = "and format(A.shiftstarttime, 'yyyy-MM-dd') >= '".$datefrom."' ";
           if(strlen($request->get('dateto')) > 0){
-               $dateto = date('Y-m-d', strtotime($request->get('dateto')));
-               $tanggal = $tanggal."and tanggal <= '".$dateto."' ";
+               $dateto = date('Y-m-t', strtotime($request->get('dateto')));
+               $tanggal = $tanggal."and format(A.shiftstarttime, 'yyyy-MM-dd') <= '".$dateto."' ";
           }
      }
 
@@ -859,7 +859,7 @@ class EmployeeController extends Controller
                     $department = $department.",";
                }
           }
-          $adddepartment = "and bagian.department in (".$department.") ";
+          $adddepartment = "and B.Department in (".$department.") ";
      }
 
      if($request->get('section') != null) {
@@ -901,7 +901,7 @@ class EmployeeController extends Controller
                     $nik = $nik.",";
                }
           }
-          $addnik = "and ovr.nik in (".$nik.") ";
+          $addnik = "and A.Emp_no in (".$nik.") ";
      }
 
      $presences = db::connection('sunfish')->select("SELECT
@@ -944,8 +944,10 @@ class EmployeeController extends Controller
           VIEW_YMPI_Emp_Attendance AS A
           left join VIEW_YMPI_Emp_OrgUnit as B on B.Emp_no = A.Emp_no
           WHERE
-          YEAR(A.shiftstarttime) >= '2020'
-          AND A.shiftstarttime <= '2020-04-30 23:59:59'
+          A.Emp_no IS NOT NULL
+          ".$tanggal."
+          ".$addnik."
+          ".$adddepartment."
           GROUP BY
           format ( A.shiftstarttime, 'MMMM yyyy' ),
           format ( A.shiftstarttime, 'yyyy-MM' ),
@@ -1006,9 +1008,9 @@ public function attendanceData()
 
      $shifts = DB::SELECT("SELECT DISTINCT
           ( shiftdaily_code ) 
-     FROM
+          FROM
           sunfish_shift_syncs 
-     ORDER BY
+          ORDER BY
           shiftdaily_code");
 
      $q = "select employee_syncs.employee_id, employee_syncs.name, employee_syncs.department, employee_syncs.`section`, employee_syncs.`group`, employee_syncs.cost_center, cost_centers2.cost_center_name from employee_syncs left join cost_centers2 on cost_centers2.cost_center = employee_syncs.cost_center";
@@ -3376,11 +3378,11 @@ public function fetchAttendanceData(Request $request)
 
           for($x = 0; $x < $shiftlen; $x++) {
                for($x = 0; $x < $shiftlen; $x++) {
-               $shift = $shift."'".$shifts[$x]."'";
-               if($x != $shiftlen-1){
-                    $shift = $shift.",";
+                    $shift = $shift."'".$shifts[$x]."'";
+                    if($x != $shiftlen-1){
+                         $shift = $shift.",";
+                    }
                }
-          }
           }
           $addshift = "and A.shiftdaily_code in (".$shift.") ";
      }
@@ -3507,73 +3509,73 @@ public function fetchChecklogData(Request $request)
 
      foreach ($emp as $key) {
           $checklog = DB::SELECT("SELECT
-          IF
-               (
-                    ivms.ivms_attendance.auth_datetime < '2020-12-14 10:00:00',
-                    SPLIT_STRING ( person_name, ' ' , 1 ),
                IF
-                    (
-                         LENGTH( attend_id ) = 6 && attend_id NOT LIKE '%OS%',
-                         CONCAT( 'PI0', attend_id ),
-                    IF
-                         (
-                              LENGTH( attend_id ) = 5 && attend_id NOT LIKE '%OS%',
-                              CONCAT( 'PI00', attend_id ),
-                         IF
-                              (
-                                   LENGTH( attend_id ) = 4 && attend_id NOT LIKE '%OS%',
-                                   CONCAT( 'PI000', attend_id ),
-                              IF
-                                   (
-                                        LENGTH( attend_id ) = 3 && attend_id NOT LIKE '%OS%',
-                                        CONCAT( 'PI0000', attend_id ),
-                                   IF
-                                        (
-                                             LENGTH( attend_id ) = 2 && attend_id NOT LIKE '%OS%',
-                                             CONCAT( 'PI00000', attend_id ),
-                                        IF
-                                             (
-                                                  LENGTH( attend_id ) = 1 && attend_id NOT LIKE '%OS%',
-                                                  CONCAT( 'PI000000', attend_id ),
-                                             IF
-                                             ( LENGTH( attend_id ) = 6 && attend_id LIKE '%OS%', attend_id, CONCAT( 'PI', attend_id ) )))))))) AS `nik`,
+               (
+               ivms.ivms_attendance.auth_datetime < '2020-12-14 10:00:00',
+               SPLIT_STRING ( person_name, ' ' , 1 ),
+               IF
+               (
+               LENGTH( attend_id ) = 6 && attend_id NOT LIKE '%OS%',
+               CONCAT( 'PI0', attend_id ),
+               IF
+               (
+               LENGTH( attend_id ) = 5 && attend_id NOT LIKE '%OS%',
+               CONCAT( 'PI00', attend_id ),
+               IF
+               (
+               LENGTH( attend_id ) = 4 && attend_id NOT LIKE '%OS%',
+               CONCAT( 'PI000', attend_id ),
+               IF
+               (
+               LENGTH( attend_id ) = 3 && attend_id NOT LIKE '%OS%',
+               CONCAT( 'PI0000', attend_id ),
+               IF
+               (
+               LENGTH( attend_id ) = 2 && attend_id NOT LIKE '%OS%',
+               CONCAT( 'PI00000', attend_id ),
+               IF
+               (
+               LENGTH( attend_id ) = 1 && attend_id NOT LIKE '%OS%',
+               CONCAT( 'PI000000', attend_id ),
+               IF
+               ( LENGTH( attend_id ) = 6 && attend_id LIKE '%OS%', attend_id, CONCAT( 'PI', attend_id ) )))))))) AS `nik`,
                ivms.`ivms_attendance`.`device` AS `device`,
                ivms.`ivms_attendance`.auth_datetime,
                ivms.`ivms_attendance`.`device_serial` AS `device_serial`,
                DATE_FORMAT( auth_datetime, '%H:%i' ) AS time_in,
                auth_date 
-          FROM
+               FROM
                ivms.`ivms_attendance` 
-          WHERE
-          IF
-               (
-                    ivms.ivms_attendance.auth_datetime < '2020-12-14 10:00:00',
-                    SPLIT_STRING ( person_name, ' ', 1 ),
+               WHERE
                IF
-                    (
-                         LENGTH( attend_id ) = 6 && attend_id NOT LIKE '%OS%',
-                         CONCAT( 'PI0', attend_id ),
-                    IF
-                         (
-                              LENGTH( attend_id ) = 5 && attend_id NOT LIKE '%OS%',
-                              CONCAT( 'PI00', attend_id ),
-                         IF
-                              (
-                                   LENGTH( attend_id ) = 4 && attend_id NOT LIKE '%OS%',
-                                   CONCAT( 'PI000', attend_id ),
-                              IF
-                                   (
-                                        LENGTH( attend_id ) = 3 && attend_id NOT LIKE '%OS%',
-                                        CONCAT( 'PI0000', attend_id ),
-                                   IF
-                                        (
-                                             LENGTH( attend_id ) = 2 && attend_id NOT LIKE '%OS%',
-                                             CONCAT( 'PI00000', attend_id ),
-                                        IF
-                                             (
-                                                  LENGTH( attend_id ) = 1 && attend_id NOT LIKE '%OS%',
-                                                  CONCAT( 'PI000000', attend_id ),
-                                        IF
+               (
+               ivms.ivms_attendance.auth_datetime < '2020-12-14 10:00:00',
+               SPLIT_STRING ( person_name, ' ', 1 ),
+               IF
+               (
+               LENGTH( attend_id ) = 6 && attend_id NOT LIKE '%OS%',
+               CONCAT( 'PI0', attend_id ),
+               IF
+               (
+               LENGTH( attend_id ) = 5 && attend_id NOT LIKE '%OS%',
+               CONCAT( 'PI00', attend_id ),
+               IF
+               (
+               LENGTH( attend_id ) = 4 && attend_id NOT LIKE '%OS%',
+               CONCAT( 'PI000', attend_id ),
+               IF
+               (
+               LENGTH( attend_id ) = 3 && attend_id NOT LIKE '%OS%',
+               CONCAT( 'PI0000', attend_id ),
+               IF
+               (
+               LENGTH( attend_id ) = 2 && attend_id NOT LIKE '%OS%',
+               CONCAT( 'PI00000', attend_id ),
+               IF
+               (
+               LENGTH( attend_id ) = 1 && attend_id NOT LIKE '%OS%',
+               CONCAT( 'PI000000', attend_id ),
+               IF
                ( LENGTH( attend_id ) = 6 && attend_id LIKE '%OS%', attend_id, CONCAT( 'PI', attend_id ) )))))))) = '".$key->employee_id."' ".$tanggal."");
 
           foreach ($checklog as $val) {
@@ -4552,6 +4554,35 @@ public function fetchEmployeeByTag(Request $request)
           );
           return Response::json($response);
      }
+}
+
+public function fetchAttendanceRate(Request $request)
+{
+     $attd = db::select("SELECT sunfish_shift_syncs.employee_id, sunfish_shift_syncs.shift_date, sunfish_shift_syncs.shiftdaily_code FROM `sunfish_shift_syncs`
+          where shift_date >= '2021-04-01'");
+
+     $emp = db::select("SELECT Emp_no, Full_name, employ_code
+          FROM employee_histories
+          WHERE id IN (
+          SELECT MAX(id)
+          FROM employee_histories
+          GROUP BY Emp_no)");
+
+     $base = [];
+
+     foreach ($attd as $att) {
+          foreach ($emp as $e) {
+               if ($att->employee_id == $e->Emp_no) {
+                    array_push($base, ['employee_id' => $att->employee_id, 'name' => $e->Full_name, 'date' => $att->shift_date, 'shift' => $att->shiftdaily_code]);
+               }
+          }
+     }
+
+     $response = array(
+          'status' => false,
+          'datas' => $base
+     );
+     return Response::json($response);
 }
 
 }
