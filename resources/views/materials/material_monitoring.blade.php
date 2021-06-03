@@ -599,9 +599,9 @@
 						div_chart += '<div class="box-header">';
 						div_chart += '<span style="font-weight: bold; font-size: 1.2vw;">'+value.material_number+' '+value.material_description+'</span>';
 						if(value.percentage < 75){
-							div_chart += '<span style="font-weight: bold; font-size: 1.2vw; color:red;" class="pull-right"> '+value.percentage+'%</span>';
+							div_chart += '<span style="font-weight: bold; font-size: 1.2vw; color:red;" class="pull-right">&nbsp;'+value.percentage+'%</span>';
 						}else{
-							div_chart += '<span style="font-weight: bold; font-size: 1.2vw;" class="pull-right"> '+value.percentage+'%</span>';
+							div_chart += '<span style="font-weight: bold; font-size: 1.2vw;" class="pull-right">&nbsp;'+value.percentage+'%</span>';
 						}
 						div_chart += '<span style="font-weight: bold; font-size: 1.2vw;" class="pull-right">Stock Condition : </span>';
 						div_chart += '<br><span style="font-weight: bold; font-size: 1vw;">'+value.vendor_code+' - '+value.vendor_name+'</span>';
@@ -806,7 +806,7 @@ function fetchChart(id){
 				div_chart += '<div class="box box-solid" style="margin-bottom: 10px;">';
 				div_chart += '<div class="box-header">';
 				div_chart += '<span style="font-weight: bold; font-size: 1.2vw;">'+value.material_number+' '+value.material_description+'</span>';
-				div_chart += '<span style="font-weight: bold; font-size: 1.2vw; color:red;" class="pull-right"> '+value.percentage+'%</span>';
+				div_chart += '<span style="font-weight: bold; font-size: 1.2vw; color:red;" class="pull-right">&nbsp;'+value.percentage+'%</span>';
 				div_chart += '<span style="font-weight: bold; font-size: 1.2vw;" class="pull-right">Stock Condition : </span>';
 				div_chart += '<br><span style="font-weight: bold; font-size: 1vw;">'+value.vendor_code+' - '+value.vendor_name+'</span>';
 				div_chart += '<br><span style="font-weight: bold; font-size: 1vw;">Stock Policy : '+value.day +' Days ('+value.policy+' '+value.bun+')</span>';
