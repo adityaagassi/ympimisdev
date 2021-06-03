@@ -139,10 +139,10 @@ class AssemblyProcessController extends Controller
 		->first();
 		$auth_id = Auth::id();
 
-		  $plc = new ActMLEasyIf(0);
-		  $datas = $plc->read_data('D50', 5);
+		$plc = new ActMLEasyIf(0);
+		$datas = $plc->read_data('D50', 5);
 
-		 if($counter->plc_counter == $datas[0]){
+		if($counter->plc_counter == $datas[0]){
 		// if($counter->plc_counter == 36){
 			$response = array(
 				'status' => true,
@@ -240,7 +240,7 @@ class AssemblyProcessController extends Controller
 		$tag->model = $request->get('model');
 		$serial = CodeGenerator::where('note', '=', $request->get('origin_group_code'))->first();
 		$serial->index = $serial->index+1;
-		 $counter->plc_counter = $datas[0];
+		$counter->plc_counter = $datas[0];
 		// $counter->plc_counter = 36;
 
 		try{
@@ -647,7 +647,8 @@ class AssemblyProcessController extends Controller
 			WHERE origin_group_code = '041' 
 			AND location = 'packing' 
 			AND serial_number = '".$id."'
-			order By assembly_logs.created_at desc");
+			ORDER BY created_at DESC
+			LIMIT 1");
 
 		return view('processes.assembly.flute.label.label_desc',array(
 			'barcode' => $barcode,
@@ -666,7 +667,9 @@ class AssemblyProcessController extends Controller
 		$des = DB::select("SELECT serial_number, model FROM assembly_logs 
 			WHERE origin_group_code = '041' 
 			AND location = 'packing' 
-			AND serial_number = '".$id."'");
+			AND serial_number = '".$id."'
+			ORDER BY created_at DESC
+			LIMIT 1");
 
 		return view('processes.assembly.flute.label.label_kecil2',array(
 			'barcode' => $barcode,
@@ -688,7 +691,8 @@ class AssemblyProcessController extends Controller
 			WHERE origin_group_code = '041' 
 			AND location = 'packing' 
 			AND serial_number = '".$id."'
-			order By assembly_logs.created_at desc");
+			ORDER BY created_at DESC
+			LIMIT 1");
 
 		return view('processes.assembly.flute.label.label_kecil',array(
 			'barcode' => $barcode,
@@ -885,9 +889,10 @@ class AssemblyProcessController extends Controller
 		$date = db::select("SELECT week_date, date_code from weekly_calendars
 			WHERE week_date = (SELECT DATE_FORMAT(created_at,'%Y-%m-%d') from assembly_logs
 			WHERE serial_number = '".$id."'
-			and location = 'packing'
-			and origin_group_code = '041'
-			order By assembly_logs.created_at desc)");
+			AND location = 'packing'
+			AND origin_group_code = '041'
+			ORDER BY created_at DESC
+			LIMIT 1)");
 
 		return view('processes.assembly.flute.label.label_besar_outer',array(
 			'barcode' => $barcode,
@@ -1040,7 +1045,7 @@ class AssemblyProcessController extends Controller
 
 		if ($loc == 'perakitanawal-kensa,tanpoawase-process') {
 			$work_stations = DB::select("SELECT
-			IF
+				IF
 				( assemblies.location = 'perakitanawal-kensa', 'Perakitan Ulang', assemblies.location ) AS location,
 				location_number,
 				online_time,
@@ -1056,15 +1061,15 @@ class AssemblyProcessController extends Controller
 				( SELECT GROUP_CONCAT( ongko ORDER BY assembly_ng_logs.id DESC) AS ongko FROM assembly_ng_logs WHERE assembly_ng_logs.serial_number = assemblies.sedang_serial_number  LIMIT 4) AS onko,
 				(
 				SELECT
-					GROUP_CONCAT(
-						COALESCE ( value_atas, 0 ),
-						'-',
-					COALESCE ( value_bawah, 0 ) ORDER BY assembly_ng_logs.id DESC) AS valueses 
+				GROUP_CONCAT(
+				COALESCE ( value_atas, 0 ),
+				'-',
+				COALESCE ( value_bawah, 0 ) ORDER BY assembly_ng_logs.id DESC) AS valueses 
 				FROM
-					assembly_ng_logs 
+				assembly_ng_logs 
 				WHERE
-					assembly_ng_logs.serial_number = assemblies.sedang_serial_number
-				 LIMIT 4 
+				assembly_ng_logs.serial_number = assemblies.sedang_serial_number
+				LIMIT 4 
 				) AS valueses,
 				( SELECT GROUP_CONCAT( COALESCE ( value_lokasi, 0 ) ORDER BY assembly_ng_logs.id DESC) AS valueses FROM assembly_ng_logs WHERE assembly_ng_logs.serial_number = assemblies.sedang_serial_number  LIMIT 4) AS lokasi 
 				FROM
@@ -1077,7 +1082,7 @@ class AssemblyProcessController extends Controller
 				ORDER BY remark, location_number asc");
 		}else if ($loc == 'tanpoawase-process') {
 			$work_stations = DB::select("SELECT
-			IF
+				IF
 				( assemblies.location = 'perakitanawal-kensa', 'Perakitan Ulang', assemblies.location ) AS location,
 				location_number,
 				online_time,
@@ -1093,15 +1098,15 @@ class AssemblyProcessController extends Controller
 				( SELECT GROUP_CONCAT( ongko ORDER BY assembly_ng_logs.id DESC) AS ongko FROM assembly_ng_logs WHERE assembly_ng_logs.serial_number = assemblies.sedang_serial_number  LIMIT 4) AS onko,
 				(
 				SELECT
-					GROUP_CONCAT(
-						COALESCE ( value_atas, 0 ),
-						'-',
-					COALESCE ( value_bawah, 0 ) ORDER BY assembly_ng_logs.id DESC) AS valueses 
+				GROUP_CONCAT(
+				COALESCE ( value_atas, 0 ),
+				'-',
+				COALESCE ( value_bawah, 0 ) ORDER BY assembly_ng_logs.id DESC) AS valueses 
 				FROM
-					assembly_ng_logs 
+				assembly_ng_logs 
 				WHERE
-					assembly_ng_logs.serial_number = assemblies.sedang_serial_number
-				 LIMIT 4 
+				assembly_ng_logs.serial_number = assemblies.sedang_serial_number
+				LIMIT 4 
 				) AS valueses,
 				( SELECT GROUP_CONCAT( COALESCE ( value_lokasi, 0 ) ORDER BY assembly_ng_logs.id DESC) AS valueses FROM assembly_ng_logs WHERE assembly_ng_logs.serial_number = assemblies.sedang_serial_number  LIMIT 4) AS lokasi 
 				FROM
@@ -1114,7 +1119,7 @@ class AssemblyProcessController extends Controller
 				ORDER BY remark, location_number asc");
 		}else if($loc == 'tanpoawase-kensa,tanpoawase-fungsi,repair-process-1,repair-process-2'){
 			$work_stations = DB::select("SELECT
-			IF
+				IF
 				( assemblies.location = 'perakitanawal-kensa', 'Perakitan Ulang', assemblies.location ) AS location,
 				location_number,
 				online_time,
@@ -1130,15 +1135,15 @@ class AssemblyProcessController extends Controller
 				( SELECT GROUP_CONCAT( ongko ) AS ongko FROM assembly_ng_logs WHERE assembly_ng_logs.serial_number = assemblies.sedang_serial_number  LIMIT 4) AS onko,
 				(
 				SELECT
-					GROUP_CONCAT(
-						COALESCE ( value_atas, 0 ),
-						'-',
-					COALESCE ( value_bawah, 0 )) AS valueses 
+				GROUP_CONCAT(
+				COALESCE ( value_atas, 0 ),
+				'-',
+				COALESCE ( value_bawah, 0 )) AS valueses 
 				FROM
-					assembly_ng_logs 
+				assembly_ng_logs 
 				WHERE
-					assembly_ng_logs.serial_number = assemblies.sedang_serial_number
-				 LIMIT 4 
+				assembly_ng_logs.serial_number = assemblies.sedang_serial_number
+				LIMIT 4 
 				) AS valueses,
 				( SELECT GROUP_CONCAT( COALESCE ( value_lokasi, 0 )) AS valueses FROM assembly_ng_logs WHERE assembly_ng_logs.serial_number = assemblies.sedang_serial_number  LIMIT 4) AS lokasi 
 				FROM
@@ -1149,12 +1154,12 @@ class AssemblyProcessController extends Controller
 				AND assemblies.origin_group_code = '041' and assemblies.deleted_at is null)
 				OR
 				(assemblies.location in ('repair-process')
-					and assemblies.location_number in ('1','2')
+				and assemblies.location_number in ('1','2')
 				AND assemblies.origin_group_code = '041' and assemblies.deleted_at is null)
 				ORDER BY location ASC");
 		}else if($loc == 'fukiage1-process,repair-ringan'){
 			$work_stations = DB::select("SELECT
-			IF
+				IF
 				( assemblies.location = 'perakitanawal-kensa', 'Perakitan Ulang', assemblies.location ) AS location,
 				location_number,
 				online_time,
@@ -1170,15 +1175,15 @@ class AssemblyProcessController extends Controller
 				( SELECT GROUP_CONCAT( ongko ORDER BY assembly_ng_logs.id DESC) AS ongko FROM assembly_ng_logs WHERE assembly_ng_logs.serial_number = assemblies.sedang_serial_number  LIMIT 4) AS onko,
 				(
 				SELECT
-					GROUP_CONCAT(
-						COALESCE ( value_atas, 0 ),
-						'-',
-					COALESCE ( value_bawah, 0 ) ORDER BY assembly_ng_logs.id DESC) AS valueses 
+				GROUP_CONCAT(
+				COALESCE ( value_atas, 0 ),
+				'-',
+				COALESCE ( value_bawah, 0 ) ORDER BY assembly_ng_logs.id DESC) AS valueses 
 				FROM
-					assembly_ng_logs 
+				assembly_ng_logs 
 				WHERE
-					assembly_ng_logs.serial_number = assemblies.sedang_serial_number
-				 LIMIT 4 
+				assembly_ng_logs.serial_number = assemblies.sedang_serial_number
+				LIMIT 4 
 				) AS valueses,
 				( SELECT GROUP_CONCAT( COALESCE ( value_lokasi, 0 ) ORDER BY assembly_ng_logs.id DESC) AS valueses FROM assembly_ng_logs WHERE assembly_ng_logs.serial_number = assemblies.sedang_serial_number  LIMIT 4) AS lokasi 
 				FROM
@@ -1189,13 +1194,13 @@ class AssemblyProcessController extends Controller
 				AND assemblies.origin_group_code = '041' and assemblies.deleted_at is null)
 				OR
 				(assemblies.location in ('repair-process')
-					and assemblies.location_number in ('3','4','5')
+				and assemblies.location_number in ('3','4','5')
 				AND assemblies.origin_group_code = '041' and assemblies.deleted_at is null)
 				ORDER BY location,location_number asc");
 		}
 		else{
 			$work_stations = DB::select("SELECT
-			IF
+				IF
 				( assemblies.location = 'perakitanawal-kensa', 'Perakitan Ulang', assemblies.location ) AS location,
 				location_number,
 				online_time,
@@ -1211,15 +1216,15 @@ class AssemblyProcessController extends Controller
 				( SELECT GROUP_CONCAT( ongko ORDER BY assembly_ng_logs.id DESC) AS ongko FROM assembly_ng_logs WHERE assembly_ng_logs.serial_number = assemblies.sedang_serial_number  LIMIT 4) AS onko,
 				(
 				SELECT
-					GROUP_CONCAT(
-						COALESCE ( value_atas, 0 ),
-						'-',
-					COALESCE ( value_bawah, 0 ) ORDER BY assembly_ng_logs.id DESC) AS valueses 
+				GROUP_CONCAT(
+				COALESCE ( value_atas, 0 ),
+				'-',
+				COALESCE ( value_bawah, 0 ) ORDER BY assembly_ng_logs.id DESC) AS valueses 
 				FROM
-					assembly_ng_logs 
+				assembly_ng_logs 
 				WHERE
-					assembly_ng_logs.serial_number = assemblies.sedang_serial_number
-				 LIMIT 4 
+				assembly_ng_logs.serial_number = assemblies.sedang_serial_number
+				LIMIT 4 
 				) AS valueses,
 				( SELECT GROUP_CONCAT( COALESCE ( value_lokasi, 0 ) ORDER BY assembly_ng_logs.id DESC) AS valueses FROM assembly_ng_logs WHERE assembly_ng_logs.serial_number = assemblies.sedang_serial_number  LIMIT 4) AS lokasi 
 				FROM
@@ -1547,7 +1552,7 @@ class AssemblyProcessController extends Controller
 		$ng_temp = db::select("SELECT
 			*,
 			IF ( assembly_ng_temps.operator_id LIKE '%PI%',( SELECT NAME FROM employee_syncs WHERE employee_syncs.employee_id = assembly_ng_temps.operator_id ),
-				assembly_ng_temps.operator_id 
+			assembly_ng_temps.operator_id 
 			) AS name 
 			FROM
 			`assembly_ng_temps` 
@@ -1584,7 +1589,7 @@ class AssemblyProcessController extends Controller
 		$ng_logs = db::select("SELECT
 			*,
 			IF ( assembly_ng_logs.operator_id LIKE '%PI%',( SELECT NAME FROM employee_syncs WHERE employee_syncs.employee_id = assembly_ng_logs.operator_id ),
-				assembly_ng_logs.operator_id 
+			assembly_ng_logs.operator_id 
 			) AS name 
 			FROM
 			`assembly_ng_logs` 
@@ -1785,37 +1790,37 @@ class AssemblyProcessController extends Controller
 	public function inputGantiKunci(Request $request)
 	{
 		if($request->get('ng')){
-				$assembly_ng_temp = new AssemblyNgTemp([
-					'employee_id' => $request->get('employee_id'),
-					'tag' => strtoupper(dechex($request->get('tag'))),
-					'serial_number' => $request->get('serial_number'),
-					'model' => $request->get('model'),
-					'location' => $request->get('location'),
-					'ng_name' => $request->get('ng'),
-					'value_atas' => 1,
-					'ongko' => $request->get('onko'),
-					'decision' => 'Ganti Kunci',
-					'operator_id' => $request->get('employee_id'),
-					'started_at' => $request->get('started_at'),
-					'origin_group_code' => $request->get('origin_group_code'),
-					'created_by' => Auth::id()
-				]);
+			$assembly_ng_temp = new AssemblyNgTemp([
+				'employee_id' => $request->get('employee_id'),
+				'tag' => strtoupper(dechex($request->get('tag'))),
+				'serial_number' => $request->get('serial_number'),
+				'model' => $request->get('model'),
+				'location' => $request->get('location'),
+				'ng_name' => $request->get('ng'),
+				'value_atas' => 1,
+				'ongko' => $request->get('onko'),
+				'decision' => 'Ganti Kunci',
+				'operator_id' => $request->get('employee_id'),
+				'started_at' => $request->get('started_at'),
+				'origin_group_code' => $request->get('origin_group_code'),
+				'created_by' => Auth::id()
+			]);
 
-				try{
-					$assembly_ng_temp->save();
-					$response = array(
-						'status' => true,
-						'message' => 'Sukses Input NG',
-					);
-					return Response::json($response);
-				}
-				catch(\Exception $e){
-					$response = array(
-						'status' => false,
-						'message' => $e->getMessage(),
-					);
-					return Response::json($response);
-				}
+			try{
+				$assembly_ng_temp->save();
+				$response = array(
+					'status' => true,
+					'message' => 'Sukses Input NG',
+				);
+				return Response::json($response);
+			}
+			catch(\Exception $e){
+				$response = array(
+					'status' => false,
+					'message' => $e->getMessage(),
+				);
+				return Response::json($response);
+			}
 		}else{
 			$response = array(
 				'status' => false,
@@ -2096,10 +2101,10 @@ class AssemblyProcessController extends Controller
 				assembly_details.sedang_start_date AS start_at,
 				employee_syncs.employee_id,
 				employee_syncs.name 
-			FROM
+				FROM
 				assembly_details
 				JOIN employee_syncs ON employee_syncs.employee_id = assembly_details.operator_id 
-			WHERE
+				WHERE
 				location = '".$request->get('location')."'
 				and DATE(assembly_details.created_at) = DATE(NOW())");
 
@@ -2467,35 +2472,35 @@ class AssemblyProcessController extends Controller
 			COALESCE ( ng.ng, 0 ) AS ng,
 			COALESCE ( ng2.`check`, 0 ) AS `check2`,
 			COALESCE ( ng2.ng, 0 ) AS ng2
-		FROM
+			FROM
 			assembly_logs
 			LEFT JOIN employee_syncs ON employee_syncs.employee_id = assembly_logs.operator_id
 			LEFT JOIN assembly_operators ON assembly_operators.employee_id = assembly_logs.operator_id
 			LEFT JOIN (
 			SELECT
-				count( id ) AS ng,
-				count( id ) AS `check`,
-				operator_id 
+			count( id ) AS ng,
+			count( id ) AS `check`,
+			operator_id 
 			FROM
-				assembly_ng_logs 
+			assembly_ng_logs 
 			WHERE
-				DATE( created_at ) = '".$now."' 
+			DATE( created_at ) = '".$now."' 
 			GROUP BY
-				operator_id 
+			operator_id 
 			) ng ON assembly_logs.operator_id = ng.operator_id
 			LEFT JOIN (
 			SELECT
-				count( id ) AS ng,
-				count( id ) AS `check`,
-				operator_id 
+			count( id ) AS ng,
+			count( id ) AS `check`,
+			operator_id 
 			FROM
-				assembly_ng_logs 
+			assembly_ng_logs 
 			WHERE
-				DATE( created_at ) = '".$now."' 
+			DATE( created_at ) = '".$now."' 
 			GROUP BY
-				operator_id 
+			operator_id 
 			) ng2 ON SUBSTRING_INDEX( assembly_operators.location, '-', 2 ) = ng2.operator_id 
-		WHERE
+			WHERE
 			employee_syncs.end_date IS NULL 
 			AND assembly_logs.operator_id != 'null' 
 			AND assembly_logs.operator_id != 'assy-fl' 
@@ -2875,61 +2880,61 @@ public function fetchNgReport($process,Request $request)
 			CONCAT( checked.employee_id, '<br>', checked.NAME ) AS checked_by,
 			assembly_ng_logs.created_at AS created,
 			CONCAT( repaired.employee_id, '<br>', repaired.name ) AS repaires,
-		IF
+			IF
 			(
-				location LIKE '%qa-fungsi%',(
-				SELECT
-					GROUP_CONCAT( CONCAT( fungsi_detail.employee_id, '<br>', fungsi_detail.NAME ) ) 
-				FROM
-					assembly_details
-					LEFT JOIN employee_syncs fungsi_detail ON fungsi_detail.employee_id = assembly_details.operator_id 
-				WHERE
-					location = 'renraku-fungsi' 
-					AND tag = assembly_ng_logs.tag 
-					AND serial_number = assembly_ng_logs.serial_number 
-				),
-				(
-				SELECT
-					GROUP_CONCAT( CONCAT( visual_detail.employee_id, '<br>', visual_detail.NAME ) ) 
-				FROM
-					assembly_details
-					LEFT JOIN employee_syncs visual_detail ON visual_detail.employee_id = assembly_details.operator_id 
-				WHERE
-					location = 'fukiage1-visual' 
-					AND tag = assembly_ng_logs.tag 
-					AND serial_number = assembly_ng_logs.serial_number 
-				) 
+			location LIKE '%qa-fungsi%',(
+			SELECT
+			GROUP_CONCAT( CONCAT( fungsi_detail.employee_id, '<br>', fungsi_detail.NAME ) ) 
+			FROM
+			assembly_details
+			LEFT JOIN employee_syncs fungsi_detail ON fungsi_detail.employee_id = assembly_details.operator_id 
+			WHERE
+			location = 'renraku-fungsi' 
+			AND tag = assembly_ng_logs.tag 
+			AND serial_number = assembly_ng_logs.serial_number 
+			),
+			(
+			SELECT
+			GROUP_CONCAT( CONCAT( visual_detail.employee_id, '<br>', visual_detail.NAME ) ) 
+			FROM
+			assembly_details
+			LEFT JOIN employee_syncs visual_detail ON visual_detail.employee_id = assembly_details.operator_id 
+			WHERE
+			location = 'fukiage1-visual' 
+			AND tag = assembly_ng_logs.tag 
+			AND serial_number = assembly_ng_logs.serial_number 
+			) 
 			) AS operator_id_details,
-		IF
+			IF
 			(
-				location LIKE '%qa-fungsi%',(
-				SELECT
-					GROUP_CONCAT( CONCAT( fungsi_log.employee_id, '<br>', fungsi_log.NAME ) ) 
-				FROM
-					assembly_logs
-					LEFT JOIN employee_syncs fungsi_log ON fungsi_log.employee_id = assembly_logs.operator_id 
-				WHERE
-					location = 'renraku-fungsi' 
-					AND tag = assembly_ng_logs.tag 
-					AND serial_number = assembly_ng_logs.serial_number 
-				),
-				(
-				SELECT
-					GROUP_CONCAT( CONCAT( visual_log.employee_id, '<br>', visual_log.NAME ) ) 
-				FROM
-					assembly_logs
-					LEFT JOIN employee_syncs visual_log ON visual_log.employee_id = assembly_logs.operator_id 
-				WHERE
-					location = 'fukiage1-visual' 
-					AND tag = assembly_ng_logs.tag 
-					AND serial_number = assembly_ng_logs.serial_number 
-				) 
+			location LIKE '%qa-fungsi%',(
+			SELECT
+			GROUP_CONCAT( CONCAT( fungsi_log.employee_id, '<br>', fungsi_log.NAME ) ) 
+			FROM
+			assembly_logs
+			LEFT JOIN employee_syncs fungsi_log ON fungsi_log.employee_id = assembly_logs.operator_id 
+			WHERE
+			location = 'renraku-fungsi' 
+			AND tag = assembly_ng_logs.tag 
+			AND serial_number = assembly_ng_logs.serial_number 
+			),
+			(
+			SELECT
+			GROUP_CONCAT( CONCAT( visual_log.employee_id, '<br>', visual_log.NAME ) ) 
+			FROM
+			assembly_logs
+			LEFT JOIN employee_syncs visual_log ON visual_log.employee_id = assembly_logs.operator_id 
+			WHERE
+			location = 'fukiage1-visual' 
+			AND tag = assembly_ng_logs.tag 
+			AND serial_number = assembly_ng_logs.serial_number 
+			) 
 			) AS operator_id_log 
-		FROM
+			FROM
 			`assembly_ng_logs`
 			LEFT JOIN employee_syncs checked ON checked.employee_id = assembly_ng_logs.employee_id 
 			LEFT JOIN employee_syncs repaired ON repaired.employee_id = assembly_ng_logs.repaired_by 
-		WHERE
+			WHERE
 			location LIKE '%qa%' 
 			".$locnow."
 			AND DATE( assembly_ng_logs.created_at ) BETWEEN '".$from."' AND '".$now."'");
@@ -3026,7 +3031,7 @@ public function scanKdCardCleaning(Request $request)
 		'origin_group_code' => '041',
 		'created_by' => Auth::user()->username
 	]);
-					
+
 
 	try {
 		$serials->forceDelete();
@@ -3054,9 +3059,9 @@ public function fetchKdCardCleaning(Request $request)
 	try {
 		$history = DB::SELECT("SELECT
 			* 
-		FROM
+			FROM
 			assembly_logs 
-		WHERE
+			WHERE
 			location = 'labelkd-print' 
 			AND DATE( created_at ) >= DATE_FORMAT( NOW() - INTERVAL 3 DAY, '%Y-%m-%d' ) 
 			AND DATE( created_at ) <= DATE_FORMAT( NOW(), '%Y-%m-%d' )
@@ -3133,7 +3138,7 @@ public function scanCardCleaning(Request $request)
 		'origin_group_code' => '041',
 		'created_by' => Auth::user()->username
 	]);
-					
+
 
 	try {
 		$serials->forceDelete();
@@ -3161,9 +3166,9 @@ public function fetchCardCleaning(Request $request)
 	try {
 		$history = DB::SELECT("SELECT
 			* 
-		FROM
+			FROM
 			assembly_logs 
-		WHERE
+			WHERE
 			location = 'packing-clearence' 
 			AND DATE( created_at ) >= DATE_FORMAT( NOW() - INTERVAL 3 DAY, '%Y-%m-%d' ) 
 			AND DATE( created_at ) <= DATE_FORMAT( NOW(), '%Y-%m-%d' )
@@ -3190,11 +3195,11 @@ public function indexSerialNumberReport($process)
 	}
 
 	$models = db::table('materials')->where('origin_group_code', '=', '041')
-		->where('category', '=', 'FG')
-		->orderBy('model', 'asc')
-		->select('model')
-		->distinct()
-		->get();
+	->where('category', '=', 'FG')
+	->orderBy('model', 'asc')
+	->select('model')
+	->distinct()
+	->get();
 
 	return view('processes.assembly.flute.report.serial_number_report',array(
 		'process' => $process,
@@ -3405,72 +3410,72 @@ public function fetchSerialNumberReport($process,Request $request)
 				GROUP_CONCAT( a.op_qa_fungsi SEPARATOR '' ) AS op_qa_fungsi,
 				(
 				SELECT
-					GROUP_CONCAT( ng_name, '=', ongko ) 
+				GROUP_CONCAT( ng_name, '=', ongko ) 
 				FROM
-					assembly_ng_logs 
+				assembly_ng_logs 
 				WHERE
-					a.serial_number = assembly_ng_logs.serial_number 
-					AND a.model = assembly_ng_logs.model 
-					AND location = 'qa-fungsi' 
+				a.serial_number = assembly_ng_logs.serial_number 
+				AND a.model = assembly_ng_logs.model 
+				AND location = 'qa-fungsi' 
 				) AS ng_fungsi,
 				(
 				SELECT
-					GROUP_CONCAT( ng_name, '=', ongko, '<br>(', ss.employee_id, '<br>', SUBSTRING(ss.name,1,14),'...', ')' ) 
+				GROUP_CONCAT( ng_name, '=', ongko, '<br>(', ss.employee_id, '<br>', SUBSTRING(ss.name,1,14),'...', ')' ) 
 				FROM
-					assembly_ng_logs
-					LEFT JOIN employee_syncs ss ON ss.employee_id = assembly_ng_logs.verified_by 
+				assembly_ng_logs
+				LEFT JOIN employee_syncs ss ON ss.employee_id = assembly_ng_logs.verified_by 
 				WHERE
-					( a.serial_number = assembly_ng_logs.serial_number AND a.model = assembly_ng_logs.model AND location = 'repair-process' AND ng_name = 'Ganti Kunci - Ganti Kunci' ) 
-					OR ( a.serial_number = assembly_ng_logs.serial_number AND a.model = assembly_ng_logs.model AND decision = 'Ganti Kunci' ) 
+				( a.serial_number = assembly_ng_logs.serial_number AND a.model = assembly_ng_logs.model AND location = 'repair-process' AND ng_name = 'Ganti Kunci - Ganti Kunci' ) 
+				OR ( a.serial_number = assembly_ng_logs.serial_number AND a.model = assembly_ng_logs.model AND decision = 'Ganti Kunci' ) 
 				) AS ganti_kunci,
 				COALESCE ((
-					SELECT
-						GROUP_CONCAT(
-						DISTINCT (
-							CONCAT(
-								employee_syncs.employee_id,
-								'<br>',
-							SUBSTRING(employee_syncs.name,1,14),'...'))) 
-					FROM
-						assembly_logs
-						LEFT JOIN employee_syncs ON employee_syncs.employee_id = assembly_logs.operator_id 
-					WHERE
-						location = 'renraku-fungsi' 
-						AND a.model = assembly_logs.model 
-						AND a.serial_number = assembly_logs.serial_number 
-						),
-					'' 
+				SELECT
+				GROUP_CONCAT(
+				DISTINCT (
+				CONCAT(
+				employee_syncs.employee_id,
+				'<br>',
+				SUBSTRING(employee_syncs.name,1,14),'...'))) 
+				FROM
+				assembly_logs
+				LEFT JOIN employee_syncs ON employee_syncs.employee_id = assembly_logs.operator_id 
+				WHERE
+				location = 'renraku-fungsi' 
+				AND a.model = assembly_logs.model 
+				AND a.serial_number = assembly_logs.serial_number 
+				),
+				'' 
 				) AS operator_fungsi,
 				assembly_logs.created_at 
-			FROM
+				FROM
 				(
 				SELECT DISTINCT
-					( asl.serial_number ),
-					asl.model,
-					GROUP_CONCAT(
+				( asl.serial_number ),
+				asl.model,
+				GROUP_CONCAT(
 				CONCAT(
-					asl.operator_id,
-					'<br>',
+				asl.operator_id,
+				'<br>',
 				SUBSTRING(employee_syncs.name,1,14),'...')) AS op_qa_fungsi,
-					GROUP_CONCAT(
-						DISTINCT (
-						DATE( asl.created_at ))) AS created 
+				GROUP_CONCAT(
+				DISTINCT (
+				DATE( asl.created_at ))) AS created 
 				FROM
-					assembly_logs asl
-					JOIN employee_syncs ON employee_syncs.employee_id = asl.operator_id 
+				assembly_logs asl
+				JOIN employee_syncs ON employee_syncs.employee_id = asl.operator_id 
 				WHERE
-					location = 'qa-fungsi' 
+				location = 'qa-fungsi' 
 				GROUP BY
-					asl.serial_number,
-					asl.model
+				asl.serial_number,
+				asl.model
 				) a 
 				LEFT JOIN assembly_logs ON assembly_logs.serial_number = a.serial_number 
 				AND assembly_logs.location = 'packing' 
-			WHERE
+				WHERE
 				DATE( assembly_logs.created_at ) BETWEEN '".$from."' 
 				AND '".$now."'
 				".$model."
-			GROUP BY
+				GROUP BY
 				a.serial_number,
 				a.model,
 				assembly_logs.created_at");
@@ -3481,74 +3486,74 @@ public function fetchSerialNumberReport($process,Request $request)
 				GROUP_CONCAT( a.op_qa_visual_1 SEPARATOR '' ) AS op_qa_visual1,
 				(
 				SELECT
-					GROUP_CONCAT( ng_name, '=', ongko, '<br>(', ss.employee_id, '<br>', SUBSTRING(ss.name,1,14),'...', ')' ) 
+				GROUP_CONCAT( ng_name, '=', ongko, '<br>(', ss.employee_id, '<br>', SUBSTRING(ss.name,1,14),'...', ')' ) 
 				FROM
-					assembly_ng_logs
-					LEFT JOIN employee_syncs ss ON ss.employee_id = assembly_ng_logs.verified_by 
+				assembly_ng_logs
+				LEFT JOIN employee_syncs ss ON ss.employee_id = assembly_ng_logs.verified_by 
 				WHERE
-					( a.serial_number = assembly_ng_logs.serial_number AND a.model = assembly_ng_logs.model AND location = 'repair-process' AND ng_name = 'Ganti Kunci - Ganti Kunci' ) 
-					OR ( a.serial_number = assembly_ng_logs.serial_number AND a.model = assembly_ng_logs.model AND decision = 'Ganti Kunci' ) 
+				( a.serial_number = assembly_ng_logs.serial_number AND a.model = assembly_ng_logs.model AND location = 'repair-process' AND ng_name = 'Ganti Kunci - Ganti Kunci' ) 
+				OR ( a.serial_number = assembly_ng_logs.serial_number AND a.model = assembly_ng_logs.model AND decision = 'Ganti Kunci' ) 
 				) AS ganti_kunci,
 				(
 				SELECT
-					GROUP_CONCAT( ng_name, '=', ongko ) 
+				GROUP_CONCAT( ng_name, '=', ongko ) 
 				FROM
-					assembly_ng_logs 
+				assembly_ng_logs 
 				WHERE
-					a.serial_number = assembly_ng_logs.serial_number 
-					AND a.model = assembly_ng_logs.model 
-					AND location = 'qa-visual1' 
+				a.serial_number = assembly_ng_logs.serial_number 
+				AND a.model = assembly_ng_logs.model 
+				AND location = 'qa-visual1' 
 				) AS ng_visual1,
 				COALESCE ((
-					SELECT
-						GROUP_CONCAT(
-						DISTINCT (
-							CONCAT(
-								employee_syncs.employee_id,
-								'<br>',
-							SUBSTRING(employee_syncs.name,1,14),'...'))) 
-					FROM
-						assembly_logs
-						LEFT JOIN employee_syncs ON employee_syncs.employee_id = assembly_logs.operator_id 
-					WHERE
-						location = 'fukiage1-visual' 
-						AND a.model = assembly_logs.model 
-						AND a.serial_number = assembly_logs.serial_number 
-						),
-					'' 
+				SELECT
+				GROUP_CONCAT(
+				DISTINCT (
+				CONCAT(
+				employee_syncs.employee_id,
+				'<br>',
+				SUBSTRING(employee_syncs.name,1,14),'...'))) 
+				FROM
+				assembly_logs
+				LEFT JOIN employee_syncs ON employee_syncs.employee_id = assembly_logs.operator_id 
+				WHERE
+				location = 'fukiage1-visual' 
+				AND a.model = assembly_logs.model 
+				AND a.serial_number = assembly_logs.serial_number 
+				),
+				'' 
 				) AS operator_visual,
 				assembly_logs.created_at 
-			FROM
+				FROM
 				(
 				SELECT DISTINCT
-					( asl.serial_number ),
-					asl.model,
-					'' AS op_qa_fungsi,
-					GROUP_CONCAT(
+				( asl.serial_number ),
+				asl.model,
+				'' AS op_qa_fungsi,
+				GROUP_CONCAT(
 				CONCAT(
-					asl.operator_id,
-					'<br>',
+				asl.operator_id,
+				'<br>',
 				SUBSTRING(employee_syncs.name,1,14),'...')) AS op_qa_visual_1,
-					'' AS op_qa_visual_2,
-					GROUP_CONCAT(
-						DISTINCT (
-						DATE( asl.created_at ))) AS created 
+				'' AS op_qa_visual_2,
+				GROUP_CONCAT(
+				DISTINCT (
+				DATE( asl.created_at ))) AS created 
 				FROM
-					assembly_logs asl
-					JOIN employee_syncs ON employee_syncs.employee_id = asl.operator_id 
+				assembly_logs asl
+				JOIN employee_syncs ON employee_syncs.employee_id = asl.operator_id 
 				WHERE
-					location = 'qa-visual1' 
+				location = 'qa-visual1' 
 				GROUP BY
-					asl.serial_number,
-					asl.model
+				asl.serial_number,
+				asl.model
 				) a 
 				LEFT JOIN assembly_logs ON assembly_logs.serial_number = a.serial_number 
 				AND assembly_logs.location = 'packing' 
-			WHERE
+				WHERE
 				DATE( assembly_logs.created_at ) BETWEEN '".$from."' 
 				AND '".$now."'
 				".$model."
-			GROUP BY
+				GROUP BY
 				a.serial_number,
 				a.model,
 				assembly_logs.created_at");
@@ -3559,74 +3564,74 @@ public function fetchSerialNumberReport($process,Request $request)
 				GROUP_CONCAT( a.op_qa_visual_2 SEPARATOR '' ) AS op_qa_visual2,
 				(
 				SELECT
-					GROUP_CONCAT( ng_name, '=', ongko, '<br>(', ss.employee_id, '<br>', SUBSTRING(ss.name,1,14),'...', ')' ) 
+				GROUP_CONCAT( ng_name, '=', ongko, '<br>(', ss.employee_id, '<br>', SUBSTRING(ss.name,1,14),'...', ')' ) 
 				FROM
-					assembly_ng_logs
-					LEFT JOIN employee_syncs ss ON ss.employee_id = assembly_ng_logs.verified_by 
+				assembly_ng_logs
+				LEFT JOIN employee_syncs ss ON ss.employee_id = assembly_ng_logs.verified_by 
 				WHERE
-					( a.serial_number = assembly_ng_logs.serial_number AND a.model = assembly_ng_logs.model AND location = 'repair-process' AND ng_name = 'Ganti Kunci - Ganti Kunci' ) 
-					OR ( a.serial_number = assembly_ng_logs.serial_number AND a.model = assembly_ng_logs.model AND decision = 'Ganti Kunci' ) 
+				( a.serial_number = assembly_ng_logs.serial_number AND a.model = assembly_ng_logs.model AND location = 'repair-process' AND ng_name = 'Ganti Kunci - Ganti Kunci' ) 
+				OR ( a.serial_number = assembly_ng_logs.serial_number AND a.model = assembly_ng_logs.model AND decision = 'Ganti Kunci' ) 
 				) AS ganti_kunci,
 				(
 				SELECT
-					GROUP_CONCAT( ng_name, '=', ongko ) 
+				GROUP_CONCAT( ng_name, '=', ongko ) 
 				FROM
-					assembly_ng_logs 
+				assembly_ng_logs 
 				WHERE
-					a.serial_number = assembly_ng_logs.serial_number 
-					AND a.model = assembly_ng_logs.model 
-					AND location = 'qa-visual2' 
+				a.serial_number = assembly_ng_logs.serial_number 
+				AND a.model = assembly_ng_logs.model 
+				AND location = 'qa-visual2' 
 				) AS ng_visual2,
 				COALESCE ((
-					SELECT
-						GROUP_CONCAT(
-						DISTINCT (
-							CONCAT(
-								employee_syncs.employee_id,
-								'<br>',
-							SUBSTRING(employee_syncs.name,1,14),'...'))) 
-					FROM
-						assembly_logs
-						LEFT JOIN employee_syncs ON employee_syncs.employee_id = assembly_logs.operator_id 
-					WHERE
-						location = 'fukiage1-visual' 
-						AND a.model = assembly_logs.model 
-						AND a.serial_number = assembly_logs.serial_number 
-						),
-					'' 
+				SELECT
+				GROUP_CONCAT(
+				DISTINCT (
+				CONCAT(
+				employee_syncs.employee_id,
+				'<br>',
+				SUBSTRING(employee_syncs.name,1,14),'...'))) 
+				FROM
+				assembly_logs
+				LEFT JOIN employee_syncs ON employee_syncs.employee_id = assembly_logs.operator_id 
+				WHERE
+				location = 'fukiage1-visual' 
+				AND a.model = assembly_logs.model 
+				AND a.serial_number = assembly_logs.serial_number 
+				),
+				'' 
 				) AS operator_visual,
 				assembly_logs.created_at 
-			FROM
+				FROM
 				(
 				SELECT DISTINCT
-					( asl.serial_number ),
-					asl.model,
-					'' AS op_qa_fungsi,
-					'' AS op_qa_visual_1,
-					GROUP_CONCAT(
+				( asl.serial_number ),
+				asl.model,
+				'' AS op_qa_fungsi,
+				'' AS op_qa_visual_1,
+				GROUP_CONCAT(
 				CONCAT(
-					asl.operator_id,
-					'<br>',
+				asl.operator_id,
+				'<br>',
 				SUBSTRING(employee_syncs.name,1,14),'...')) AS op_qa_visual_2,
-					GROUP_CONCAT(
-						DISTINCT (
-						DATE( asl.created_at ))) AS created 
+				GROUP_CONCAT(
+				DISTINCT (
+				DATE( asl.created_at ))) AS created 
 				FROM
-					assembly_logs asl
-					JOIN employee_syncs ON employee_syncs.employee_id = asl.operator_id 
+				assembly_logs asl
+				JOIN employee_syncs ON employee_syncs.employee_id = asl.operator_id 
 				WHERE
-					location = 'qa-visual2' 
+				location = 'qa-visual2' 
 				GROUP BY
-					asl.serial_number,
-					asl.model 
+				asl.serial_number,
+				asl.model 
 				) a 
 				LEFT JOIN assembly_logs ON assembly_logs.serial_number = a.serial_number 
 				AND assembly_logs.location = 'packing' 
-			WHERE
+				WHERE
 				DATE( assembly_logs.created_at ) BETWEEN '".$from."' 
 				AND '".$now."'
 				".$model."
-			GROUP BY
+				GROUP BY
 				a.serial_number,
 				a.model,
 				assembly_logs.created_at");
