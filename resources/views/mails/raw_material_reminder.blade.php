@@ -40,8 +40,8 @@
 						<th rowspan="2" style="width: 5%; border:1px solid black;">Percentage</th>
 					</tr>
 					<tr>
-						<th style="width: 4%; border:1px solid black;">Day</th>
-						<th style="width: 4%; border:1px solid black;">Qty</th>
+						<th style="width: 4%; border:1px solid black; background-color: rgb(126,86,134);">Day</th>
+						<th style="width: 4%; border:1px solid black; background-color: rgb(126,86,134);">Qty</th>
 					</tr>
 				</thead>
 				<tbody>					
