@@ -215,14 +215,18 @@
 					tableData += '<td>'+ value.cavity +'</td>';
 					tableData += '<td>'+ value.start_time +'</td>';
 					tableData += '<td>'+ value.end_time +'</td>';
-					ng_arr = value.ng_name.split(',');
-					qty_arr = value.ng_count.split(',');
+					if (value.ng_name != null) {
+						ng_arr = value.ng_name.split(',');
+						qty_arr = value.ng_count.split(',');
 
-					tableData += '<td>';
-					for(var i = 0; i < ng_arr.length; i++){
-						tableData += ng_arr[i] +' = '+ qty_arr[i]+'<br>';
+						tableData += '<td>';
+						for(var i = 0; i < ng_arr.length; i++){
+							tableData += ng_arr[i] +' = '+ qty_arr[i]+'<br>';
+						}
+						tableData += '</td>';
+					}else{
+						tableData += '<td></td>';
 					}
-					tableData += '</td>';
 					tableData += '<td>'+ value.employee_id +' - '+ value.name +'</td>';
 					tableData += '<td>'+ value.created +'</td>';
 					tableData += '</tr>';
