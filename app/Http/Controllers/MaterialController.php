@@ -18,6 +18,7 @@ use App\MaterialControl;
 use App\MaterialStockPolicy;
 use App\MaterialRequirementPlan;
 use App\MaterialPlanDelivery;
+use App\MaterialPlantDataList;
 use App\MaterialInOut;
 use Carbon\Carbon;
 
@@ -422,12 +423,16 @@ class MaterialController extends Controller{
 
           foreach ($generates['policies'] as $policy) {
                if($policy->material_number == $material_number){
+                    $mpdl = MaterialPlantDataList::where('material_number', $policy->material_number)->first();
+
                     array_push($material_percentages, [
                          'material_number' => $policy->material_number,
                          'material_description' => $policy->material_description,
+                         'bun' => $mpdl->bun,
                          'vendor_code' => $policy->vendor_code,
                          'vendor_name' => $policy->vendor_name,
                          'stock' => $policy->stock,
+                         'day' => $policy->day,
                          'policy' => $policy->policy,
                          'percentage' => round($policy->percentage*100, 2)
                     ]);
@@ -580,13 +585,17 @@ class MaterialController extends Controller{
           $count_item = 0;
 
           foreach ($generates['policies'] as $policy) {
-               if($policy->percentage < 0.75){                    
+               if($policy->percentage < 0.75){
+                    $mpdl = MaterialPlantDataList::where('material_number', $policy->material_number)->first();
+
                     array_push($material_percentages, [
                          'material_number' => $policy->material_number,
                          'material_description' => $policy->material_description,
+                         'bun' => $mpdl->bun,
                          'vendor_code' => $policy->vendor_code,
                          'vendor_name' => $policy->vendor_name,
                          'stock' => $policy->stock,
+                         'day' => $policy->day,
                          'policy' => $policy->policy,
                          'percentage' => round($policy->percentage*100, 2)
                     ]);
@@ -737,6 +746,7 @@ class MaterialController extends Controller{
                mc.vendor_name,
                '".$due_date."' AS stock_date,
                COALESCE ( s.stock_total, 0 ) AS stock,
+               msp.day,
                msp.policy,
                COALESCE ( s.stock_total, 0 ) / msp.policy AS percentage 
                FROM material_stock_policies AS msp
@@ -887,6 +897,7 @@ class MaterialController extends Controller{
                mc.vendor_name,
                '".$due_date."' AS stock_date,
                COALESCE ( s.stock_total, 0 ) AS stock,
+               msp.day,
                msp.policy,
                COALESCE ( s.stock_total, 0 ) / msp.policy AS percentage 
                FROM
