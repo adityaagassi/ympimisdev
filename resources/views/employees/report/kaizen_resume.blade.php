@@ -236,8 +236,8 @@
 				var prctg_belum = tot_belum / (tot_kumpul + tot_belum) * 100;
 
 				$("#tot_budget").html(tot_kumpul + tot_belum);
-				$("#tot_kumpul").html(tot_kumpul+" ( "+prctg_kumpul+" %)");
-				$("#tot_belum").html(tot_belum+" ( "+prctg_belum+" %)");
+				$("#tot_kumpul").html(tot_kumpul+" ( "+prctg_kumpul.toFixed(1)+" %)");
+				$("#tot_belum").html(tot_belum+" ( "+prctg_belum.toFixed(1)+" %)");
 
 				Highcharts.chart('kz_total', {
 					chart: {
