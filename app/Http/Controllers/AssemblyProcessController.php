@@ -897,8 +897,6 @@ class AssemblyProcessController extends Controller
 			ORDER BY created_at DESC
 			LIMIT 1)");
 
-		dd($date);
-
 		return view('processes.assembly.flute.label.label_besar_outer',array(
 			'barcode' => $barcode,
 			'date' => $date,

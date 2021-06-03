@@ -3150,8 +3150,8 @@ class ProductionReportController extends Controller
                 audit_guidances 
             WHERE
             audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' )) AS plan,
-            ( SELECT count( audit_guidances.id ) FROM audit_guidances WHERE audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' ) AND `status` = 'Sudah Dikerjakan' ) AS done,
-            ( SELECT count( audit_guidances.id ) FROM audit_guidances WHERE audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' ) AND `status` = 'Belum Dikerjakan' ) AS not_yet 
+            ( SELECT count( audit_guidances.id ) FROM audit_guidances WHERE audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' ) AND `status` = 'Sudah Dikerjakan' and audit_guidances.deleted_at is null) AS done,
+            ( SELECT count( audit_guidances.id ) FROM audit_guidances WHERE audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' ) AND `status` = 'Belum Dikerjakan' and audit_guidances.deleted_at is null) AS not_yet 
         FROM
             weekly_calendars 
         WHERE
@@ -3196,13 +3196,15 @@ class ProductionReportController extends Controller
                     LEFT JOIN activity_lists ON activity_lists.id = audit_guidances.activity_list_id 
                 WHERE 
                     `month` = '".$month."' 
-                    AND `status` = '".$kondisi."'");
+                    AND `status` = '".$kondisi."'
+                    and audit_guidances.deleted_at is null");
             }else{
                 $datas = DB::SELECT("SELECT
                     *,audit_guidances.id as id_guide
                 FROM
                     audit_guidances
                     LEFT JOIN activity_lists ON activity_lists.id = audit_guidances.activity_list_id 
+                    LEFT JOIN departments ON departments.id = activity_lists.department_id 
                 WHERE 
                     `month` = '".$month."' 
                     AND `status` = '".$kondisi."'");
