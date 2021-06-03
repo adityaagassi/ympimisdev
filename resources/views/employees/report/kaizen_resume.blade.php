@@ -99,6 +99,40 @@
 			<div class="col-xs-12">
 				<div id="kz_total" style="width: 100%; height: 500px;"></div>
 			</div>
+
+			<div class="col-xs-12" style="padding-top: 10px;">
+				<div class="box box-solid" style="background-color: rgb(240,240,240);">
+					<table style="width: 100%;">
+						<tr>
+							<td width="1%">
+								<div class="description-block border-right" style="color: #000">
+									<h5 class="description-header" style="font-size: 48px;">
+										<span class="description-percentage" id="tot_budget">-</span>
+									</h5>      
+									<span class="description-text" style="font-size: 32px;">Total Operator<br><span>作業者人数</span></span>   
+								</div>
+							</td>
+							<td width="1%">
+								<div class="description-block border-right text-green" style="color: #7300ab" >
+									<h5 class="description-header" style="font-size: 48px; ">
+										<span class="description-percentage" id="tot_kumpul">- (-)</span>
+									</h5>      
+									<span class="description-text" style="font-size: 32px;">Total Mengumpulkan<br><span >提出者</span></span>   
+								</div>
+							</td>
+							<td width="1%">
+								<div class="description-block border-right text-red" id="diff_text">
+									<h5 class="description-header" style="font-size: 48px;">
+										<span class="description-percentage" id="tot_belum">- (-)</span>
+									</h5>      
+									<span class="description-text" style="font-size: 32px;">Total Belum Mengumpulkan</span>
+									<br><span class="description-text" style="font-size: 32px;">未提出者</span>   
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
 		</div>
 	</div>
 </section>
@@ -183,12 +217,27 @@
 				var total_kz = [];
 				var ctg = [];
 
+				var tot_kz = 0;
+				var tot_kumpul = 0;
+				var tot_belum = 0;
+
 				$.each(result.datas, function(index, value){
 					kumpul.push(parseInt(value.total_sudah));
 					belum.push(parseInt(value.total_belum));
 					total_kz.push(parseInt(value.total_kaizen));
 					ctg.push(value.leader+"-"+value.name);
+
+					tot_kz += parseInt(value.total_kaizen);
+					tot_kumpul += parseInt(value.total_sudah);
+					tot_belum += parseInt(value.total_belum);
 				});
+
+				var prctg_kumpul = tot_kumpul / (tot_kumpul + tot_belum) * 100;
+				var prctg_belum = tot_belum / (tot_kumpul + tot_belum) * 100;
+
+				$("#tot_budget").html(tot_kumpul + tot_belum);
+				$("#tot_kumpul").html(tot_kumpul+" ( "+prctg_kumpul+" %)");
+				$("#tot_belum").html(tot_belum+" ( "+prctg_belum+" %)");
 
 				Highcharts.chart('kz_total', {
 					chart: {
@@ -196,7 +245,7 @@
 					},
 
 					title: {
-						text: 'Grafik Kaizen Teian '+result.fiscal
+						text: 'Grafik Pengumpulan Kaizen Teian '+result.fiscal+'<br> 改善提案提出実績グラフ '+result.fiscal
 					},
 
 					xAxis: {
@@ -242,7 +291,7 @@
 								enabled: true,
 								format: '{point.y}',
 								style:{
-									fontSize: '0.7vw'
+									fontSize: '1vw'
 								}
 							},
 						},
@@ -259,7 +308,7 @@
 					}, {
 						name: 'Mengumpulkan',
 						data: kumpul,
-						color: '#2caddb'
+						color: '#00a65a'
 					}
 					]
 				});
@@ -273,7 +322,7 @@
 		$('#modalDetail').modal('show');
 		$('#loading').show();
 		$('#modalDetailTitle').html("");
-		$('#modalDetailTitle').html("<center><span style='font-size: 20px; font-weight: bold;'>Stock: "+cat+"</span></center>");
+		$('#modalDetailTitle').html("<center><span style='font-size: 20px; font-weight: bold;'>Leader : "+cat+"</span></center>");
 		$('#tableDetail').hide();
 		var tanggal = $('#tgl').val();
 
@@ -327,6 +376,210 @@
 		viewMode: "months", 
 		minViewMode: "months"
 	});
+
+	Highcharts.createElement('link', {
+		href: '{{ url("fonts/UnicaOne.css")}}',
+		rel: 'stylesheet',
+		type: 'text/css'
+	}, null, document.getElementsByTagName('head')[0]);
+
+	Highcharts.theme = {
+		colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
+		'#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+		chart: {
+			backgroundColor: {
+				linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
+				stops: [
+				[0, '#2a2a2b'],
+				[1, '#3e3e40']
+				]
+			},
+			style: {
+				fontFamily: 'sans-serif'
+			},
+			plotBorderColor: '#606063'
+		},
+		title: {
+			style: {
+				color: '#E0E0E3',
+				textTransform: 'uppercase',
+				fontSize: '20px'
+			}
+		},
+		subtitle: {
+			style: {
+				color: '#E0E0E3',
+				textTransform: 'uppercase'
+			}
+		},
+		xAxis: {
+			gridLineColor: '#707073',
+			labels: {
+				style: {
+					color: '#E0E0E3'
+				}
+			},
+			lineColor: '#707073',
+			minorGridLineColor: '#505053',
+			tickColor: '#707073',
+			title: {
+				style: {
+					color: '#A0A0A3'
+
+				}
+			}
+		},
+		yAxis: {
+			gridLineColor: '#707073',
+			labels: {
+				style: {
+					color: '#E0E0E3'
+				}
+			},
+			lineColor: '#707073',
+			minorGridLineColor: '#505053',
+			tickColor: '#707073',
+			tickWidth: 1,
+			title: {
+				style: {
+					color: '#A0A0A3'
+				}
+			}
+		},
+		tooltip: {
+			backgroundColor: 'rgba(0, 0, 0, 0.85)',
+			style: {
+				color: '#F0F0F0'
+			}
+		},
+		plotOptions: {
+			series: {
+				dataLabels: {
+					color: 'white'
+				},
+				marker: {
+					lineColor: '#333'
+				}
+			},
+			boxplot: {
+				fillColor: '#505053'
+			},
+			candlestick: {
+				lineColor: 'white'
+			},
+			errorbar: {
+				color: 'white'
+			}
+		},
+		legend: {
+			itemStyle: {
+				color: '#E0E0E3'
+			},
+			itemHoverStyle: {
+				color: '#FFF'
+			},
+			itemHiddenStyle: {
+				color: '#606063'
+			}
+		},
+		credits: {
+			style: {
+				color: '#666'
+			}
+		},
+		labels: {
+			style: {
+				color: '#707073'
+			}
+		},
+
+		drilldown: {
+			activeAxisLabelStyle: {
+				color: '#F0F0F3'
+			},
+			activeDataLabelStyle: {
+				color: '#F0F0F3'
+			}
+		},
+
+		navigation: {
+			buttonOptions: {
+				symbolStroke: '#DDDDDD',
+				theme: {
+					fill: '#505053'
+				}
+			}
+		},
+
+		rangeSelector: {
+			buttonTheme: {
+				fill: '#505053',
+				stroke: '#000000',
+				style: {
+					color: '#CCC'
+				},
+				states: {
+					hover: {
+						fill: '#707073',
+						stroke: '#000000',
+						style: {
+							color: 'white'
+						}
+					},
+					select: {
+						fill: '#000003',
+						stroke: '#000000',
+						style: {
+							color: 'white'
+						}
+					}
+				}
+			},
+			inputBoxBorderColor: '#505053',
+			inputStyle: {
+				backgroundColor: '#333',
+				color: 'silver'
+			},
+			labelStyle: {
+				color: 'silver'
+			}
+		},
+
+		navigator: {
+			handles: {
+				backgroundColor: '#666',
+				borderColor: '#AAA'
+			},
+			outlineColor: '#CCC',
+			maskFill: 'rgba(255,255,255,0.1)',
+			series: {
+				color: '#7798BF',
+				lineColor: '#A6C7ED'
+			},
+			xAxis: {
+				gridLineColor: '#505053'
+			}
+		},
+
+		scrollbar: {
+			barBackgroundColor: '#808083',
+			barBorderColor: '#808083',
+			buttonArrowColor: '#CCC',
+			buttonBackgroundColor: '#606063',
+			buttonBorderColor: '#606063',
+			rifleColor: '#FFF',
+			trackBackgroundColor: '#404043',
+			trackBorderColor: '#404043'
+		},
+
+		legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
+		background2: '#505053',
+		dataLabelsColor: '#B0B0B3',
+		textColor: '#C0C0C0',
+		contrastTextColor: '#F0F0F3',
+		maskColor: 'rgba(255,255,255,0.3)'
+	};
+	Highcharts.setOptions(Highcharts.theme);
 
 </script>
 @endsection
