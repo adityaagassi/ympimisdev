@@ -65,7 +65,7 @@
 	@endif
 	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
 		<p style="position: absolute; color: White; top: 45%; left: 35%;">
-			<span style="font-size: 40px">Updating, please wait <i class="fa fa-spin fa-refresh"></i></span>
+			<span style="font-size: 40px">Please wait <i class="fa fa-spin fa-refresh"></i></span>
 		</p>
 	</div>
 	<div class="row">
@@ -192,6 +192,7 @@
 	}
 
 	function fetchReportCdm() {
+		$("#loading").show();
 		var data = {
 			date_from:$('#date_from').val(),
 			date_to:$('#date_to').val(),
@@ -199,7 +200,6 @@
 
 		$.get('{{ url("fetch/recorder/kensa_report") }}', data, function(result, status, xhr){
 			if(result.status){
-				openSuccessGritter('Success!', result.message);
 				$('#tableReportKensa').DataTable().clear();
 				$('#tableReportKensa').DataTable().destroy();
 				$('#bodyReportKensa').html("");
@@ -305,11 +305,12 @@
 				});
 
 				$('#tableReportKensa tfoot tr').appendTo('#tableReportKensa thead');
+				$("#loading").hide();
 			}
 			else{
 				audio_error.play();
 				openErrorGritter('Error', result.message);
-				$('#tag').val('');
+				$("#loading").hide();
 			}
 		});
 	}

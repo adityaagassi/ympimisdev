@@ -6041,22 +6041,26 @@ class RecorderProcessController extends Controller
 
         if($request->get('date_to') == null){
           if($request->get('date_from') == null){
-            $date = "";
+            $date_from = date('Y-m-01');
+            $date_to = date('Y-m-d');
           }
           elseif($request->get('date_from') != null){
-            $date = "and date(injection_cdm_checks.created_at) BETWEEN '".$date_from."' and '".$datenow."'";
+            $date_from = $request->get('date_from');
+            $date_to = date('Y-m-d');
           }
         }
         elseif($request->get('date_to') != null){
           if($request->get('date_from') == null){
-            $date = "and date(injection_cdm_checks.created_at) <= '".$date_to."'";
+            $date_from = date('Y-m-01');
+            $date_to = $request->get('date_to');
           }
           elseif($request->get('date_from') != null){
-            $date = "and date(injection_cdm_checks.created_at) BETWEEN '".$date_from."' and '".$date_to."'";
+            $date_from = $request->get('date_from');
+            $date_to = $request->get('date_to');
           }
         }
         
-        $data = RcKensa::select('*','rc_kensas.created_at as created')->join('employee_syncs','employee_syncs.employee_id','rc_kensas.operator_kensa')->join('injection_parts','injection_parts.gmc','rc_kensas.material_number')->where('injection_parts.deleted_at',null)->get();
+        $data = RcKensa::select('*','rc_kensas.created_at as created')->join('employee_syncs','employee_syncs.employee_id','rc_kensas.operator_kensa')->join('injection_parts','injection_parts.gmc','rc_kensas.material_number')->where('injection_parts.deleted_at',null)->whereDate('rc_kensas.created_at','>=',$date_from)->whereDate('rc_kensas.created_at','<=',$date_to)->orderBy('rc_kensas.created_at','desc')->get();
 
         $response = array(
               'status' => true,
@@ -7950,6 +7954,105 @@ class RecorderProcessController extends Controller
         'title' => 'Clean Kanban Recorder',
         'title_jp' => '??'
       ))->with('page', 'Clean Kanban Recorder');
+    }
+
+    public function indexDisplayKensa()
+    {
+      return view('recorder.display.kensa')
+      ->with('title', 'Display Kensa Kakuning Recorder')
+      ->with('title_jp', '')
+      ->with('page', 'Display Kensa Kakuning Recorder');
+    }
+
+    public function fetchDisplayKensa(Request $request)
+    {
+      try {
+        $initial = DB::SELECT("SELECT
+          * 
+        FROM
+          rc_assy_initials 
+        WHERE
+          `status` = 'Open'");
+
+        $kensa = DB::SELECT("SELECT
+          * 
+        FROM
+          rc_kensa_initials 
+        WHERE
+          `status` = 'Open'");
+
+        $response = array(
+          'status' => true,
+          'initial' => $initial,
+          'kensa' => $kensa,
+        );
+        return Response::json($response);
+      } catch (\Exception $e) {
+        $response = array(
+            'status' => false,
+            'message' => $e->getMessage(),
+        );
+        return Response::json($response);
+      }
+    }
+
+    public function indexNgRateKensa()
+    {
+      return view('recorder.display.ng_rate_kensa')
+      ->with('title', 'Display Kensa Kakuning Recorder')
+      ->with('title_jp', '')
+      ->with('page', 'Display Kensa Kakuning Recorder');
+    }
+
+    public function fetchNgRateKensa(Request $request)
+    {
+      try {
+        $resumes = DB::SELECT("SELECT
+          part_type,
+          GROUP_CONCAT((
+            SELECT
+              GROUP_CONCAT( ng_name ) 
+            FROM
+              rc_kensas 
+            WHERE
+              rc_kensas.material_number = rc_kensa_initials.material_number 
+              AND rc_kensas.serial_number = rc_kensa_initials.serial_number 
+            )) AS ng_name,
+          GROUP_CONCAT((
+            SELECT
+              GROUP_CONCAT( ng_count ) 
+            FROM
+              rc_kensas 
+            WHERE
+              rc_kensas.material_number = rc_kensa_initials.material_number 
+              AND rc_kensas.serial_number = rc_kensa_initials.serial_number 
+            )) AS ng_count 
+        FROM
+          rc_kensa_initials 
+        WHERE
+          rc_kensa_initials.serial_number NOT LIKE '%Z%' 
+        GROUP BY
+          part_type");
+
+        $ng_list = DB::SELECT("SELECT
+          GROUP_CONCAT(
+          DISTINCT ( ng_name )) 
+        FROM
+          rc_kensas");
+
+        $response = array(
+          'status' => true,
+          'resumes' => $resumes,
+          'ng_list' => $ng_list,
+        );
+        return Response::json($response);
+      } catch (\Exception $e) {
+        $response = array(
+            'status' => false,
+            'message' => $e->getMessage(),
+        );
+        return Response::json($response);
+      }
     }
 }
   
