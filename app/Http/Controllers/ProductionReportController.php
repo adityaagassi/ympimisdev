@@ -3160,11 +3160,22 @@ class ProductionReportController extends Controller
         ORDER BY
             `month`");
 
+            $department = DB::SELECT("SELECT DISTINCT
+                ( department_id ),
+                department_name,
+                department_shortname 
+            FROM
+                activity_lists
+                JOIN departments ON departments.id = activity_lists.department_id 
+            WHERE
+                activity_type = 'Laporan Aktivitas'");
+
             $response = array(
                 'status' => true,
                 'audit_ik' => $audit_ik,
                 'firstTitle' => $firstTitle,
                 'lastTitle' => $lastTitle,
+                'department' => $department,
             );
             return Response::json($response);
         } catch (\Exception $e) {

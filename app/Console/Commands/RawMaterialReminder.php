@@ -115,10 +115,13 @@ class RawMaterialReminder extends Command
                     }
 
                     $adjustment = 'Re-schedule in';
-                    if($stock_out_date < $material[$j]->plan){
-                        $adjustment = 'Re-schedule out';
-                    }
 
+                    if(is_null($material[$j]->plan)){
+                        if($material[$j]->plan < $stock_out_date){
+                            $adjustment = 'Re-schedule out';
+                        }
+                    }
+                    
                     $row = array();
                     $row['material_number'] = $material[$j]->material_number;
                     $row['material_description'] = $material[$j]->material_description;
