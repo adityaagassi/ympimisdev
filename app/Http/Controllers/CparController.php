@@ -1939,7 +1939,7 @@ class CparController extends Controller
 
         $audits->save();
 
-        $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.`group` = 'Standardization Group'";
+        $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.`section` = 'Standardization Process Control Section'";
         $mailtoo = DB::select($mails);
 
         $isimail = "select * FROM standarisasi_audits where standarisasi_audits.id = ".$audits->id;
@@ -2018,7 +2018,7 @@ class CparController extends Controller
         $data3 = StandarisasiAuditIso::where('id', $request->get('id_checklist'))
         ->update(['status_ditangani' => 'true']);
 
-        $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.`group` = 'Standardization Group'";
+        $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.`section` = 'Standardization Process Control Section'";
         $mailtoo = DB::select($mails);
 
         $isimail = "select * FROM standarisasi_audits where standarisasi_audits.id = ".$audits->id;
@@ -2290,7 +2290,7 @@ class CparController extends Controller
         		$audit->status = "cpar";
         		$audit->save();
 		                
-		        $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.`group` = 'Standardization Group'";
+		        $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.`section` = 'Standardization Process Control Section'";
 		        $mailtoo = DB::select($mails);
 
 		        $isimail = "select * FROM standarisasi_audits where standarisasi_audits.id = ".$audit->id;
@@ -2329,7 +2329,7 @@ class CparController extends Controller
             $mailto = "select distinct employees.name,email from standarisasi_audits join employees on standarisasi_audits.auditor = employees.employee_id join users on employees.employee_id = users.username where standarisasi_audits.id = '".$auditee->id."'";
             $mails = DB::select($mailto);
 
-            $mailtostd = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.`group` = 'Standardization Group'";
+            $mailtostd = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.`section` = 'Standardization Process Control Section'";
             $mailstd = DB::select($mailtostd);
 
           }
