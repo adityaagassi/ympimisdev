@@ -661,8 +661,10 @@ class AssemblyProcessController extends Controller
 		$barcode = DB::select("SELECT week_date, date_code from weekly_calendars
 			WHERE week_date = (SELECT DATE_FORMAT(created_at,'%Y-%m-%d') from assembly_logs
 			WHERE serial_number = '".$id."'
-			and location = 'packing'
-			and origin_group_code = '041')");
+			AND location = 'packing'
+			AND origin_group_code = '041'
+			ORDER BY created_at DESC
+			LIMIT 1)");
 
 		$des = DB::select("SELECT serial_number, model FROM assembly_logs 
 			WHERE origin_group_code = '041' 
@@ -683,9 +685,10 @@ class AssemblyProcessController extends Controller
 		$barcode = DB::select("SELECT week_date, date_code from weekly_calendars
 			WHERE week_date = (SELECT DATE_FORMAT(created_at,'%Y-%m-%d') from assembly_logs
 			WHERE serial_number = '".$id."'
-			and location = 'packing'
-			and origin_group_code = '041'
-			order By assembly_logs.created_at desc)");
+			AND location = 'packing'
+			AND origin_group_code = '041'
+			ORDER BY created_at DESC
+			LIMIT 1)");
 
 		$des = DB::select("SELECT serial_number, model FROM assembly_logs 
 			WHERE origin_group_code = '041' 
@@ -893,6 +896,8 @@ class AssemblyProcessController extends Controller
 			AND origin_group_code = '041'
 			ORDER BY created_at DESC
 			LIMIT 1)");
+
+		dd($date);
 
 		return view('processes.assembly.flute.label.label_besar_outer',array(
 			'barcode' => $barcode,
