@@ -19,6 +19,7 @@ use App\WorkshopOperator;
 use App\WorkshopTempProcess;
 use App\WorkshopTagAvailability;
 use App\WorkshopFlowProcess;
+use App\workshopFlow;
 use App\Employee;
 use App\EmployeeSync;
 use App\JigPartStock;
@@ -179,6 +180,12 @@ class WorkshopController extends Controller{
 		->orderBy("employees.employee_id")
 		->get();
 
+		$flow = workshopFlow::leftJoin('workshop_processes', 'workshop_flows.flow_process', '=' ,'workshop_processes.machine_code')
+		->select('workshop_flows.flow_name', 'workshop_flows.process_number', 'workshop_flows.flow_process', 'workshop_flows.duration', 'workshop_processes.process_name', 'workshop_processes.machine_name', 'workshop_processes.area_name', 'workshop_flows.flow_process')
+		->orderBy('workshop_flows.flow_name', 'asc')
+		->orderBy('workshop_flows.process_number', 'asc')
+		->get();
+
 		return view('workshop.wjo_list', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
@@ -189,6 +196,7 @@ class WorkshopController extends Controller{
 			'operators' => $this->operator,
 			'machines' => $this->machine,
 			'processes' => $process,
+			'flows' => $flow,
 		))->with('page', 'WJO List')->with('head', 'Workshop');	
 	}
 
@@ -2166,17 +2174,17 @@ class WorkshopController extends Controller{
 
 		$datas = db::select('SELECT crossing.mon, crossing.process_name, IFNULL(jml_wjo,0) wjo from
 			( select * from
-			(select DATE_FORMAT(week_date,"%b %Y") as mon from weekly_calendars
+			(select DATE_FORMAT(week_date,"%Y %b") as mon from weekly_calendars
 			where week_date >= "'.$date_from.'" and week_date <= "'.$date_to.'"
-			group by DATE_FORMAT(week_date,"%b %Y")
+			group by DATE_FORMAT(week_date,"%Y %b")
 			order by week_date asc) as date_master
 			cross join (select process_name from processes where remark = "workshop") as prcs ) crossing
 			left join 
 			(
-			select DATE_FORMAT(created_at,"%b %Y") as mon, prs.process_name, count(id) as jml_wjo from workshop_job_orders
+			select DATE_FORMAT(created_at,"%Y %b") as mon, prs.process_name, count(id) as jml_wjo from workshop_job_orders
 			left join (select process_code, process_name from processes where remark = "workshop") prs on workshop_job_orders.remark = prs.process_code
 			where deleted_at is null and remark not in(5,6) and DATE_FORMAT(created_at, "%Y-%m-%d") >= "'.$date_from.'"
-			group by prs.process_name, DATE_FORMAT(created_at,"%b %Y")
+			group by prs.process_name, DATE_FORMAT(created_at,"%Y %b")
 			ORDER BY created_at, process_name asc
 		) as wjo on crossing.mon = wjo.mon and crossing.process_name = wjo.process_name');
 

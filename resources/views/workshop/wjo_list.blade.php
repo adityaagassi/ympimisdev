@@ -599,7 +599,7 @@
 											</div> -->
 											<div class="col-xs-12">
 												<br>
-												<button class="btn btn-success pull-right" onclick="edit_action()"><i class="fa fa-save" ></i> Save</button>
+												<button class="btn btn-success pull-right" onclick="edit_action()"><i class="fa fa-save" ></i> OK</button>
 											</div>
 										</div>	
 									</div>
@@ -788,6 +788,32 @@
 															<span><i class="fa fa-gears"></i> Flow Processes</span>
 														</label>
 													</div>
+												</div>
+												<div class="col-xs-12" style="margin-bottom: 1%">
+													<div class="col-xs-4">
+														<label>Pilih Base Data Flow Process : </label>
+													</div>
+													<div class="col-xs-3">
+														<select class="form-control select3" style="width: 100%" id="select_flow" data-placeholder="Pilih Flow">
+														</select>
+													</div>
+													<div class="col-xs-2">
+														<div class="input-group date">
+															<div class="input-group-addon bg-blue" style="border: none;"><i class="fa fa-calendar"></i></div>
+															<input type="text" class="form-control datepicker" id="start_awal" placeholder="Start Date">
+														</div>
+													</div>
+													<div class="col-xs-2">
+														<div class="input-group date">
+															<div class="input-group-addon bg-blue" style="border: none;"><i class="fa fa-clock-o"></i></div>
+															<input type="text" class="form-control timepicker" id="start_time_awal" placeholder="Start Time">
+														</div>
+													</div>
+													<div class="col-xs-1">
+														<button class="btn btn-primary" onclick='fillProcesses();' type="button"><i class='fa fa-check' ></i> Save</button>
+													</div>
+												</div>
+												<div class="col-xs-12" style="margin-bottom: 1%">
 													<div class="col-xs-1" style="padding: 0px;">
 														<button class="btn btn-success" onclick='addProcess();'><i class='fa fa-plus' ></i> Add</button>
 													</div>
@@ -1111,6 +1137,8 @@
 			}
 		});
 
+		var wjo_flows = <?php echo json_encode($flows); ?>;
+
 		jQuery(document).ready(function() {
 			$('body').toggleClass("sidebar-collapse");
 
@@ -1194,11 +1222,27 @@
 			$('.btnPrevious').click(function(){
 				$('.nav-tabs > .active').prev('li').find('a').trigger('click');
 			});
+
+			var flw = [];
+			$.each(wjo_flows, function(key, value) {
+				if(jQuery.inArray(value.flow_name, flw) !== -1) {
+
+				} else {
+					flw.push(value.flow_name);
+				}
+			})
+
+			$("#select_flow").empty();
+			$("#select_flow").append('<option></option>');
+
+			$.each(flw, function(key, value) {
+				$("#select_flow").append('<option value="'+value+'" >'+value+'</option>');
+			})
 		});
 
 		$(function () {
 			$('.select3').select2({
-				dropdownParent: $('#modal-assignment')
+				dropdownParent: $('#process')
 			});
 
 			$('.select4').select2({
@@ -2457,8 +2501,182 @@ function open_modal_detail(wjo_num) {
 	})
 }
 
+// --------------- OTOMATISASI FLOW PROSES ----------------
+function fillProcesses() {
+	if ($("#select_flow").val() == '') {
+		openErrorGritter('Gagal', 'Harap Mengisi Base Flow');
+		return false;
+	}
+
+	if ($("#start_awal").val() == '' || $("#start_time_awal").val() == '') {
+		openErrorGritter('Gagal', 'Harap Mengisi Tanggal dan Waktu Mulai');
+		return false;
+	}
+
+	proses = 0;
+
+	var dt = $("#start_awal").val()+' '+$("#start_time_awal").val();
+	var bits = dt.split(/\D/);
+	var date = new Date(bits[0], --bits[1], bits[2], bits[3], bits[4]);
+
+	$('#process').empty();
+
+	var add = '';
+	$.each(wjo_flows, function(key, value) {
+		if (value.flow_name == $("#select_flow").val()) {
+			var times = format_two_digits(date.getHours())+':'+format_two_digits(date.getMinutes());
+
+			var date_new = add_minutes(date, parseInt(value.duration));
+			var times_new = format_two_digits(date_new.getHours())+':'+format_two_digits(date_new.getMinutes());
+
+			++proses;
+
+			add += '<div class="row" id="add_process_'+ proses +'" style="margin-bottom: 1%; position: static;">';
+			add += '<div class="col-xs-12" style="color: black; padding: 0px; position: static;">';
+			add += '<div class="col-xs-1" style="color: black; padding: 0px;">';
+			add += '<h3 id="flow_'+ proses +'" style="margin: 0px;">'+ proses +'</h3>';
+			add += '</div>';
+			add += '<div class="col-xs-6" style="color: black; padding: 0px; position: static;">';
+			add += '<select style="width: 100%;" class="form-control select3" name="process_'+ proses +'" id="process_'+ proses +'" data-placeholder="Select Process">';
+			add += '<option value=""></option>';
+			<?php 
+			$group = [];
+			foreach($machines as $machine) {
+				if(!in_array($machine->machine_name, $group)) { 
+					?>
+					if ("{{ $machine->machine_code }}" == value.flow_process) {
+						add += '<option value="{{ $machine->machine_code }}" selected>{{ $machine->process_name }} - {{ $machine->machine_name }} - {{ $machine->area_name }}</option>';
+					} else {
+						add += '<option value="{{ $machine->machine_code }}">{{ $machine->process_name }} - {{ $machine->machine_name }} - {{ $machine->area_name }}</option>';
+					}
+					<?php
+					array_push($group, $machine->machine_name);
+				}
+			}
+			?>
+			add += '</select>';
+			add += '</div>';
+			add += '<div class="col-xs-4">';
+			add += '<select class="form-control select4" data-placeholder="Pilih Operator" name="assign_pic_'+ proses +'" id="assign_pic" style="width: 100% height: 35px; font-size: 15px;" required>';
+			add += '<option value=""></option>';
+			add += '@foreach($operators as $operator)';
+			add += '<option value="{{ $operator->operator_id }}">{{ $operator->operator_id }} - {{ $operator->name }}</option>';
+			add += '@endforeach';
+			add += '</select>';
+			add += '</div>';
+			add += '<div class="col-xs-1" style="padding: 0px;">';
+			add += '<button class="btn btn-danger" id="'+proses+'" onClick="removeProcess(this)"><i class="fa fa-close"></i></button>';
+			add += '</div>';
+			add += '</div>';
+
+			add += '<div class="col-xs-11 col-xs-offset-1" style="color: black; padding: 0px; padding-right: 1%;">';
+			add += '<div class="col-xs-12" style="margin-top: 1%; padding: 0px;" align="left">';
+			add += '<div class="form-group" align="right">';
+			add += '<div class="col-xs-2" style="color: black; padding-left:0px">';
+			add += '<div class="form-group" style="margin-bottom: 0px;">';
+			add += '<input class="form-control" type="number" name="process_qty_'+ proses +'" id="process_qty_'+ proses +'" placeholder="Duration" style="width: 100%; height: 33px; font-size: 15px; text-align: center;" value="'+value.duration+'" required>';
+			add += '</div>';
+			add += '</div>';
+			add += '<div class="col-xs-2" align="right" style="padding: 0px;">';
+			add += '<div class="input-group date">';
+			add += '<div class="input-group-addon bg-blue" style="border: none;">';
+			add += '<i class="fa fa-calendar"></i>';
+			add += '</div>';
+			add += '<input type="text" class="form-control datepicker" name="start_'+ proses +'" id="start_'+ proses +'" placeholder="start Date" value="'+formatDate(date)+'" required>';
+			add += '</div>';
+			add += '</div>';
+			add += '<div class="col-xs-2" align="right" style="padding: 0px;">';
+			add += '<div class="input-group date">';
+			add += '<div class="input-group-addon bg-blue" style="border: none;">';
+			add += '<i class="fa fa-clock-o"></i>';
+			add += '</div>';
+			add += '<input type="text" class="form-control timepicker" id="start_time'+ proses +'" name="start_time'+ proses +'" placeholder="select Time" value="'+times+'" required>';
+			add += '</div>';
+			add += '</div>';
+			add += '<div class="col-xs-1" align="center" style="padding: 0px;">';
+			add += '<label style="margin-top: 1%;padding: 0px;">~</label>';
+			add += '</div>';
+			add += '<div class="col-xs-2" align="right" style="padding: 0px;">';
+			add += '<div class="input-group date">';
+			add += '<div class="input-group-addon bg-blue" style="border: none;">';
+			add += '<i class="fa fa-calendar"></i>';
+			add += '</div>';
+			add += '<input type="text" class="form-control datepicker" name="finish_'+ proses +'" id="finish_'+ proses +'" placeholder="Finish Date" value="'+formatDate(date_new)+'" required>';
+			add += '</div>';
+			add += '</div>';
+			add += '<div class="col-xs-2" align="right" style="padding: 0px;">';
+			add += '<div class="input-group date">';
+			add += '<div class="input-group-addon bg-blue" style="border: none;">';
+			add += '<i class="fa fa-clock-o"></i>';
+			add += '</div>';
+			add += '<input type="text" class="form-control timepicker" id="finish_time'+ proses +'" name="finish_time'+ proses +'" placeholder="select Time" value="'+times_new+'" required>';
+			add += '</div>';
+			add += '</div>';
+			add += '</div>';
+			add += '</div>';
+			add += '</div>';
+			add += '<div class="col-xs-12"><hr style="margin-top:10px; margin-bottom:10px"></div>';
+			add += '</div>';
+
+			date = date_new;
+		}
+	})
+
+$('#process').append(add);
+
+$(function () {
+	$('.select3').select2({
+		dropdownParent: $('#process')
+	});
+})
+
+$(function () {
+	$('.select4').select2({
+		dropdownParent: $('#process')
+	});
+})
+
+$('.datepicker').datepicker({
+	autoclose: true,
+	format: "yyyy-mm-dd",
+	todayHighlight: true,	
+});
+
+$('.timepicker').timepicker({
+	use24hours: true,
+	showInputs: false,
+	showMeridian: false,
+	minuteStep: 5,
+	defaultTime: '00:00',
+	timeFormat: 'hh:mm'
+})
+
+on_change_flow(proses);
+
+document.getElementById("assign_proses").value = proses;
+}
+
 function format_two_digits(n) {
 	return n < 10 ? '0' + n : n;
+}
+
+function formatDate(date) {
+	var d = new Date(date),
+	month = '' + (d.getMonth() + 1),
+	day = '' + d.getDate(),
+	year = d.getFullYear();
+
+	if (month.length < 2) 
+		month = '0' + month;
+	if (day.length < 2) 
+		day = '0' + day;
+
+	return [year, month, day].join('-');
+}
+
+
+function add_minutes(dt, minutes) {
+    return new Date(dt.getTime() + minutes*60000);
 }
 
 function openSuccessGritter(title, message){
