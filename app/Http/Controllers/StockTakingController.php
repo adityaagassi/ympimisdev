@@ -2283,9 +2283,6 @@ class StockTakingController extends Controller{
 		$month = $request->get('month');
 		$calendar = StocktakingCalendar::where(db::raw("DATE_FORMAT(date,'%Y-%m')"), $month)->first();
 
-		// $date = date('Ymd');
-		// $date = '20210430';
-
 		if($calendar){
 			// $filename = 'ympipi_upload_' . $date . '.txt';
 			$filename = 'ympipi_upload_' . str_replace('-', '', $calendar->date) . '.txt';

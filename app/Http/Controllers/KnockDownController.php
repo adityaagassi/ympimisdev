@@ -211,7 +211,7 @@ class KnockDownController extends Controller{
 	public function indexKD($id){
 		if($id == 'z-pro'){
 			$title = 'KD Z-PRO';
-			$title_jp = '';
+			$title_jp = 'ZプロKD';
 
 			return view('kd.index_kd_zpro', array(
 				'title' => $title,
@@ -221,7 +221,7 @@ class KnockDownController extends Controller{
 		}
 		else if($id == 'm-pro'){
 			$title = 'KD M-PRO';
-			$title_jp = '';
+			$title_jp = 'MプロKD';
 
 			return view('kd.index_kd_mpro', array(
 				'title' => $title,
@@ -231,7 +231,7 @@ class KnockDownController extends Controller{
 		}
 		else if($id == 'mouthpiece-packed'){
 			$title = 'KD Mouthpiece';
-			$title_jp = '';
+			$title_jp = '唄口KD';
 
 			return view('kd.index_kd', array(
 				'title' => $title,
@@ -241,7 +241,7 @@ class KnockDownController extends Controller{
 		}
 		else if($id == 'pn-part'){
 			$title = 'KD Pianica Part';
-			$title_jp = '';
+			$title_jp = 'ピアニカ部品KD';
 
 			return view('kd.index_kd_pn_part', array(
 				'title' => $title,
@@ -251,7 +251,7 @@ class KnockDownController extends Controller{
 		}
 		else if($id == 'vn-assy'){
 			$title = 'KD Venova Assy';
-			$title_jp = '';
+			$title_jp = 'ヴェノーヴァ集成KD';
 
 			return view('kd.index_kd', array(
 				'title' => $title,
@@ -261,7 +261,7 @@ class KnockDownController extends Controller{
 		}
 		else if($id == 'vn-injection'){
 			$title = 'KD Venova Injection';
-			$title_jp = '';
+			$title_jp = 'ヴェノーヴァ成形KD';
 
 			return view('kd.index_kd', array(
 				'title' => $title,
@@ -271,7 +271,7 @@ class KnockDownController extends Controller{
 		}
 		else if($id == 'case'){
 			$title = 'KD CASE';
-			$title_jp = '';
+			$title_jp = '唄口KD';
 
 			return view('kd.index_kd_case', array(
 				'title' => $title,
@@ -281,7 +281,7 @@ class KnockDownController extends Controller{
 		}
 		else if($id == 'tanpo'){
 			$title = 'KD TANPO';
-			$title_jp = '';
+			$title_jp = 'タンポKD';
 
 			return view('kd.index_kd_tanpo', array(
 				'title' => $title,
@@ -291,7 +291,7 @@ class KnockDownController extends Controller{
 		}
 		else if($id == 'cl-body'){
 			$title = 'KD CL Body';
-			$title_jp = '';
+			$title_jp = 'CL管体KD';
 
 			return view('kd.index_kd_ending_stock', array(
 				'title' => $title,
@@ -301,7 +301,7 @@ class KnockDownController extends Controller{
 		}
 		else if($id == 'b-pro'){
 			$title = 'KD B-PRO';
-			$title_jp = '';
+			$title_jp = 'BプロKD';
 
 			return view('kd.index_kd_ending_stock', array(
 				'title' => $title,
@@ -311,7 +311,7 @@ class KnockDownController extends Controller{
 		}
 		else if($id == 'welding-body'){
 			$title = 'KD Welding Body';
-			$title_jp = '';
+			$title_jp = '溶接管体KD';
 
 			return view('kd.index_kd_ending_stock', array(
 				'title' => $title,
@@ -321,7 +321,7 @@ class KnockDownController extends Controller{
 		}
 		else if($id == 'welding-keypost'){
 			$title = 'KD Welding Key Post';
-			$title_jp = '';
+			$title_jp = '溶接鍵柱KD';
 
 			return view('kd.index_kd_ending_stock', array(
 				'title' => $title,
@@ -332,17 +332,17 @@ class KnockDownController extends Controller{
 		else{
 			if($id == 'sub-assy-sx'){
 				$title = 'KD Assy - SubAssy SX';
-				$title_jp = '';
+				$title_jp = 'SX組立～仮組KD';
 			}
 			else if($id == 'sub-assy-fl')
 			{
 				$title = 'KD Sub Assy FL';
-				$title_jp = '';
+				$title_jp = 'FL仮組KD';
 			}
 			else if($id == 'sub-assy-cl')
 			{
 				$title = 'KD Sub Assy CL';
-				$title_jp = '';
+				$title_jp = 'CL仮組KD';
 			}
 			return view('kd.index_kd_subassy', array(
 				'title' => $title,
@@ -2228,7 +2228,7 @@ class KnockDownController extends Controller{
 			return '<a href="javascript:void(0)" class="btn btn-sm btn-danger" onClick="deleteKDO(id)" id="' . $knock_downs->kd_number . '"><i class="fa fa-trash"></i></a>';
 		})
 		->addColumn('reprintKDODelivery', function($knock_downs){
-			$list = array('z-pro', 'MP', 'vn-assy', 'vn-injection', 'vn-injection', 'case', 'pn-part');
+			$list = array('z-pro', 'MP', 'vn-assy', 'vn-injection', 'vn-injection', 'case', 'pn-part', 'sub-assy-fl');
 
 			if(in_array($knock_downs->remark, $list)){
 				return '<a href="javascript:void(0)" class="btn btn-sm btn-primary" onClick="reprintKDO(id)" id="' . $knock_downs->kd_number . '"><i class="fa fa-print"></i></a>';
