@@ -3207,7 +3207,8 @@ class ProductionReportController extends Controller
                     LEFT JOIN departments ON departments.id = activity_lists.department_id 
                 WHERE 
                     `month` = '".$month."' 
-                    AND `status` = '".$kondisi."'");
+                    AND `status` = '".$kondisi."'
+                    and audit_guidances.deleted_at is null");
 
                 foreach ($datas as $key) {
                     $dd = DB::SELECT("SELECT
