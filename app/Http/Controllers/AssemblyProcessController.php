@@ -930,6 +930,7 @@ class AssemblyProcessController extends Controller
 		->where('assembly_logs.origin_group_code', $origin_group_code)
 		->where('assembly_logs.location', 'packing')
 		->select('assembly_logs.serial_number', 'assembly_logs.model', 'materials.material_number', 'materials.material_description')
+		->orderBy('assembly_logs.created_at','desc')
 		->first();
 
 		if($log){
