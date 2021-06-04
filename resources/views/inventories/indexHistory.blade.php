@@ -97,8 +97,8 @@
 							</div>
 							<div class="col-md-4">
 								<div class="form-group">
-									<label>Origin Group</label>
-									<select class="form-control select2" multiple="multiple" name="originGroup" id='originGroup' data-placeholder="Select Origin Group" style="width: 100%;">
+									<label>Work Center</label>
+									<select class="form-control select2" multiple="multiple" name="originGroup" id='originGroup' data-placeholder="Select Work Center" style="width: 100%;">
 										<option></option>
 										@foreach($origin_groups as $origin_group)
 										<option value="{{ $origin_group->hpl }}">{{ $origin_group->category }} - {{ $origin_group->hpl }}</option>
