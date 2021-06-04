@@ -964,7 +964,7 @@ table.table-bordered > tfoot > tr > th{
 
 				$(function () {			
 					$('#calendar').fullCalendar({
-						height: 900,
+						height: 'auto',
 						header    : {
 							left  : 'prev,next today',
 							center: 'title',
