@@ -711,7 +711,7 @@ function showDetail(category) {
 				detail += '<td '+color+'>'+value.country+'</td>';
 				detail += '<td '+color+'>'+value.plan_teus+'</td>';
 				detail += '<td '+color+'>'+value.plan+'</td>';
-				detail += '<td '+color+'>'+value.invoice+'</td>';
+				detail += '<td '+color+'>'+(value.invoice || '-')+'</td>';
 				detail += '<td '+color+'>'+(value.actual_departed || '-')+'</td>';
 				detail += '</tr>';
 			});
