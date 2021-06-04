@@ -648,8 +648,11 @@
       @if(isset($page) && $page == "Item Canteen")<li class="active">@else<li>@endif
         <a href="{{ url("canteen/purchase_item") }}"><i class="fa fa-sort-alpha-asc"></i><span>Item Canteen</span></a>
       </li>
-      @if(isset($page) && $page == "Cek Kedatangan")<li class="active">@else<li>@endif
-        <a href="{{ url("ga/cek_kedatangan") }}"><i class="fa fa-truck"></i>Cek Kedatangan Canteen</a>
+      @if(isset($page) && $page == "Receive GA Kantin")<li class="active">@else<li>@endif
+        <a href="{{ url("ga/receive_kantin") }}"><i class="fa fa-share-square-o"></i>Terima Barang Kantin</a>
+      </li>
+      @if(isset($page) && $page == "Cek Kedatangan Kantin")<li class="active">@else<li>@endif
+        <a href="{{ url("ga/cek_kedatangan/kantin") }}"><i class="fa fa-truck"></i>Cek Kedatangan Kantin</a>
       </li>
     </ul>
   </li>
@@ -683,7 +686,7 @@
   @if(in_array('S49', $navs))
   @if(isset($head) && $head == "Receive GA")<li class="treeview active">@else<li class="treeview">@endif
     <a href="#">
-      <i class="fa fa-truck"></i> <span>Receive Barang GA</span>
+      <i class="fa fa-truck"></i> <span>Penerimaan Barang GA & Kantin</span>
       <span class="pull-right-container">
         <i class="fa fa-angle-left pull-right"></i>
       </span>
@@ -694,6 +697,12 @@
       </li>
       @if(isset($page) && $page == "Cek Kedatangan GA")<li class="active">@else<li>@endif
         <a href="{{ url("ga/cek_kedatangan") }}"><i class="fa fa-sticky-note-o"></i>Report Kedatangan Barang</a>
+      </li>
+      @if(isset($page) && $page == "Receive GA Kantin")<li class="active">@else<li>@endif
+        <a href="{{ url("ga/receive_kantin") }}"><i class="fa fa-share-square-o"></i>Terima Barang Kantin</a>
+      </li>
+      @if(isset($page) && $page == "Cek Kedatangan Kantin")<li class="active">@else<li>@endif
+        <a href="{{ url("ga/cek_kedatangan/kantin") }}"><i class="fa fa-truck"></i>Cek Kedatangan Kantin</a>
       </li>
     </ul>
   </li>
@@ -943,7 +952,7 @@
   </li>
   @endif
 
-  @if(Auth::user()->role_code != 'YEMI')
+  @if(Auth::user()->role_code != 'YEMI' && Auth::user()->role_code != 'emp-srv')
   @if(isset($page) && $page == "FLO Open Destination")<li class="active">@else<li>@endif
     <a href="{{ url("/index/flo_open") }}"><i class="glyphicon glyphicon-info-sign"></i> <span>FLO  <i class="fa fa-angle-right"></i> Open Destination</span></a>
   </li>
@@ -1169,7 +1178,7 @@
 </li>
 @endif
 
-@if(Auth::user()->role_code != 'YEMI')
+@if(Auth::user()->role_code != 'YEMI' && Auth::user()->role_code != 'emp-srv')
 @if(isset($head) && $head == "Stocktaking")
 <li class="treeview active">@else<li class="treeview">@endif
   <a href="#">
@@ -1514,7 +1523,7 @@
 </ul>
 </li> --}}
 
-@if(Auth::user()->role_code != 'YEMI')
+@if(Auth::user()->role_code != 'YEMI' && Auth::user()->role_code != 'emp-srv')
 @if(isset($head) && $head == "Indirect Material")<li class="treeview active">@else<li class="treeview">@endif
   <a href="#">
    <i class="fa fa-cube"></i> <span>Indirect Material</span>
@@ -1539,7 +1548,7 @@
 </li>
 @endif
 
-@if(Auth::user()->role_code != 'YEMI')
+@if(Auth::user()->role_code != 'YEMI' && Auth::user()->role_code != 'emp-srv')
 @if(isset($head) && $head == "Chemical")<li class="treeview active">@else<li class="treeview">@endif
   <a href="#">
    <i class="fa fa-tint"></i> <span>Chemical</span>
@@ -1755,42 +1764,22 @@
 </li>
 @endif
 
-@if(in_array('R10', $navs))
-@if(isset($head) && $head == "File Approve Adagio")
-<li class="treeview active">@else<li class="treeview">@endif
- <a href="#">
-  <i class="fa fa-users"></i> <span>File Approve Adagio</span>
-  <span class="pull-right-container">
-   <i class="fa fa-angle-left pull-right"></i>
- </span>
+@if(in_array('M34', $navs))
+@if(isset($head) && $head == "Approval Request")<li class="treeview active">@else<li class="treeview">@endif
+  <a href="#">
+  <i class="fa fa-paper-plane-o"></i> <span>Approval Request</span>
+   <span class="pull-right-container">
+    <i class="fa fa-angle-left pull-right"></i>
+  </span>
 </a>
 <ul class="treeview-menu">
-  <!-- @if(isset($page) && $page == "Create Master Approve")<li class="active">@else<li>@endif
-    <a href="{{ url("adagio/home/index") }}"><i class="fa fa-pencil-square-o"></i> <span>Create Master Approve</span></a>
-  </li> -->
-  @if(in_array('M34', $navs))
-  @if(isset($page) && $page == "Create Master Approve")
-  <li class="active">@else<li>@endif
-    <a href="{{ url("adagio/home/index") }}"><i class="fa fa-pencil-square-o"></i> <span>Create Master Approve</span></a>
-  </li>
-  @endif
-  @if(in_array('R10', $navs))
-    <!-- @if(isset($page) && $page == "Send File")
-    <li class="active">@else<li>@endif
-      <a href="{{ url("adagio/send/file") }}"><i class="fa fa-file-archive-o"></i> <span>Send File</span></a>
-    </li> -->
-    @if(isset($page) && $page == "User")
-    <li class="active">@else<li>@endif
-      <a href="{{ url("adagio/resume") }}"><i class="fa fa-file-archive-o"></i> <span>User</span></a>
-    </li>
-    @if(isset($page) && $page == "Monitoring")
-    <li class="active">@else<li>@endif
-      <a href="{{ url("adagio/monitoring") }}"><i class="fa fa-tv"></i> <span>Monitoring</span></a>
-    </li>
-    @endif
-  </ul>
+ @if(isset($page) && $page == "Monitoring")<li class="active">@else<li>@endif
+      <a href="{{ url("adagio/monitoring") }}"><i class="fa fa-file-pdf-o"></i> <span>File Submission</span></a>
+</li>
+</ul>
 </li>
 @endif
+
 
 @if(in_array('R8', $navs))
 @if(isset($head) && $head == "Employees")<li class="treeview active">@else<li class="treeview">@endif
@@ -1835,7 +1824,7 @@
 </li>
 @endif
 
-@if(Auth::user()->role_code != 'YEMI')
+@if(Auth::user()->role_code != 'YEMI' && Auth::user()->role_code != 'emp-srv')
 @if(isset($head) && $head == "Transaction")<li class="treeview active">@else<li class="treeview">@endif
   <a href="#">
    <i class="fa fa-tv"></i> <span>Transaction</span>

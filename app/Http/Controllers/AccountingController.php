@@ -47,6 +47,7 @@ use App\CanteenBudgetHistory;
 use App\CanteenPurchaseOrder;
 use App\CanteenPurchaseOrderDetail;
 use App\CanteenItem;
+use App\CanteenReceive;
 use Carbon\Carbon;
 use App\Mail\SendEmail;
 use Illuminate\Support\Facades\Mail;
@@ -9475,7 +9476,8 @@ public function monitoringPrPch(){
   return view('accounting_purchasing.display.pr_monitoring_pch',  
     array(
       'title' => 'Purchase Requisition Monitoring & Control', 
-      'title_jp' => 'PR監視・管理'
+      'title_jp' => 'PR監視・管理',
+      'department' => $dept
   )
     )->with('page', 'Purchase Requisition Control');
 }
@@ -12012,7 +12014,31 @@ public function transfer_approvalto($id){
             'title' => $title,
             'title_jp' => $title_jp,
             'po_detail' => $po_detail
-        ))->with('page', 'Receive Warehouse')->with('head', 'Receive Equipment Warehouse');
+        ))->with('page', 'Receive GA')->with('head', 'Receive GA');
+    }
+
+    public function wh_receive_kantin(){
+        $title = 'Receive Barang Kantin';
+        $title_jp = '';
+
+        $po_detail = db::select("
+            SELECT DISTINCT
+            canteen_purchase_order_details.no_po 
+            FROM
+            canteen_purchase_orders
+            JOIN canteen_purchase_order_details ON canteen_purchase_orders.no_po = canteen_purchase_order_details.no_po
+            WHERE
+            canteen_purchase_orders.posisi = 'pch' 
+            AND canteen_purchase_order_details.`status` IS NULL 
+            ORDER BY
+            canteen_purchase_order_details.id 
+        ");
+
+        return view('accounting_purchasing.master.receive_ga_kantin', array(
+            'title' => $title,
+            'title_jp' => $title_jp,
+            'po_detail' => $po_detail
+        ))->with('page', 'Receive GA Kantin')->with('head', 'Receive GA Kantin');
     }
 
     public function fetch_receive_equipment(Request $request){
@@ -12025,6 +12051,25 @@ public function transfer_approvalto($id){
             WHERE
             acc_purchase_orders.deleted_at is null and
             acc_purchase_orders.no_po = '". $request->get('no_po')."'" );
+
+        $response = array(
+            'status' => true,
+            'datas' => $data,
+        );
+        return Response::json($response);
+    }
+
+    public function fetch_receive_kantin(Request $request){
+        $data = db::select("
+            SELECT
+            canteen_purchase_order_details.* 
+            from canteen_purchase_orders 
+            join canteen_purchase_order_details on
+            canteen_purchase_orders.no_po = canteen_purchase_order_details.no_po
+            WHERE
+            canteen_purchase_orders.deleted_at is null and
+            canteen_purchase_orders.no_po = '". $request->get('no_po')."'" 
+        );
 
         $response = array(
             'status' => true,
@@ -12188,6 +12233,82 @@ public function transfer_approvalto($id){
             $response = array(
                 'status' => true,
                 'message' => 'Update Receive Berhasil'
+            );
+            return Response::json($response);
+        } 
+        catch (Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function update_receive_kantin(Request $request){
+        try {
+            $item = $request->get('item');
+
+            foreach ($item as $itm) {
+                if ($itm['qty'] != null && $itm['date'] != null) {
+
+                    //Get PO
+                    $po_detail = CanteenPurchaseOrderDetail::where('id', $itm['id'])
+                    ->first();
+
+                    if($po_detail->qty < ($po_detail->qty_receive + (int) $itm['qty']) ){
+                        $response = array(
+                         'status' => false,
+                         'message' => 'Jumlah Yang Dimasukkan Melebihi Pembelian Barang',
+                     );
+                        return Response::json($response);
+                    }
+
+                    $inv = CanteenPurchaseOrderDetail::where('id', $itm['id'])
+                    ->update([
+                        'qty_receive' => $po_detail->qty_receive + (int) $itm['qty'],
+                        'date_receive' => $itm['date'],
+                        'surat_jalan' => $itm['surat_jalan']
+                    ]);
+
+
+                    $receive = CanteenReceive::create([
+                        'no_po' => $itm['no_po'],
+                        'no_item' => $itm['no_item'],
+                        'nama_item' => $po_detail->nama_item,
+                        'qty' => $po_detail->qty,
+                        'qty_receive' => $itm['qty'],
+                        'date_receive' => $itm['date'],
+                        'surat_jalan' => $itm['surat_jalan'],
+                        'created_by' => Auth::id()
+                    ]);
+
+                    $receive->save();
+
+                    $budget_log = CanteenBudgetHistory::where('po_number','=',$itm['no_po'])
+                    ->where(DB::raw('SUBSTRING(no_item, 1, 7)'),'=',$itm['no_item'])
+                    ->first();
+
+                    $update_budget_log = CanteenBudgetHistory::where('po_number','=',$itm['no_po'])
+                    ->where(DB::raw('SUBSTRING(no_item, 1, 7)'),'=',$itm['no_item'])
+                    ->update([
+                        'budget_month_receive' => strtolower(date('M')),
+                        'amount_receive' => $budget_log->amount_po,
+                        'status' => 'Actual'
+                    ]);
+
+                    $datapo = CanteenPurchaseOrderDetail::where('id', $itm['id'])->first();
+
+                    if ($datapo->qty_receive >= $datapo->qty) {
+                        $update_qty_receive = CanteenPurchaseOrderDetail::where('id','=',$itm['id'])
+                        ->update(['status' => 'close']);
+                    }
+                }
+            }
+
+            $response = array(
+                'status' => true,
+                'message' => 'Update Receive Kantin Berhasil'
             );
             return Response::json($response);
         } 
@@ -12482,17 +12603,61 @@ public function fetch_kedatangan_ga(Request $request)
     ->make(true);
 }
 
+public function cek_kedatangan_kantin(){
+    $title = 'Cek Kedatangan Kantin';
+    $title_jp = '';
 
-    // public function coba()
-    // {
-    //     $isimail = "select acc_investments.*, acc_investment_budgets.budget_no, acc_investment_budgets.budget_name, acc_investment_budgets.category_budget, acc_investment_budgets.sisa as total_budget, acc_investment_budgets.total as total_pengeluaran FROM acc_investments join acc_investment_budgets on acc_investments.reff_number = acc_investment_budgets.reff_number where acc_investments.id = 22";
-    //             $invest = db::select($isimail);
+    $po_detail = db::select("SELECT DISTINCT canteen_receives.no_po from canteen_receives order by id desc");
 
-    //             return view('mails.investment', array(
-    //         'data' => $invest,
-    //     ));
-    // }
+    return view('accounting_purchasing.master.receive_cek_kedatangan_kantin', array(
+        'title' => $title,
+        'title_jp' => $title_jp,
+        'po_detail' => $po_detail
+    ))->with('page', 'Cek Kedatangan GA')->with('head', 'Receive Equipment Warehouse');
+}
 
+public function fetch_kedatangan_kantin(Request $request)
+{
+
+    $tanggal = "";
+
+    if (strlen($request->get('tanggal')) > 0)
+    {
+        $tanggal = "and canteen_receives.date_receive = '".$request->get('tanggal')."'";
+    }
+
+    $kedatangan = DB::select("
+        SELECT DISTINCT
+        canteen_receives.*, canteen_purchase_order_details.no_pr, IF(goods_price != 0,goods_price,service_price) as price, canteen_purchase_orders.no_po_sap, canteen_purchase_orders.supplier_code, canteen_purchase_orders.supplier_name
+        FROM
+        `canteen_receives`
+        LEFT JOIN canteen_purchase_order_details ON canteen_receives.no_po = canteen_purchase_order_details.no_po 
+        JOIN canteen_purchase_orders on canteen_purchase_orders.no_po = canteen_receives.no_po
+        AND canteen_receives.no_item = canteen_purchase_order_details.no_item
+        WHERE canteen_receives.deleted_at IS NULL and canteen_receives.no_po LIKE '%GA%' " . $tanggal . " order by canteen_receives.id DESC");
+
+    return DataTables::of($kedatangan)
+    ->addColumn('amount_po', function ($kedatangan)
+    {
+        $price = $kedatangan->price;
+        $qty_receive = $kedatangan->qty_receive;
+
+        return number_format($price * $qty_receive,2,".",",");  
+    })
+
+    ->editColumn('supplier_code', function ($kedatangan)
+    {
+        return $kedatangan->supplier_code.' - '.$kedatangan->supplier_name;  
+    })
+
+    ->editColumn('price', function ($kedatangan)
+    {
+        return number_format($kedatangan->price,2,".",",");  
+    })
+
+    ->rawColumns(['price' => 'price','amount_po' => 'amount_po'])
+    ->make(true);
+}
 
 public function exportInvestment(Request $request){
 

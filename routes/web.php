@@ -1898,18 +1898,29 @@ Route::post('fetch/warehouse/update_receive', 'AccountingController@update_recei
 Route::post('fetch/warehouse/update_receive_ga', 'AccountingController@update_receive_ga');
 
 //Receive Barang
+Route::get('warehouse/cek_kedatangan', 'AccountingController@cek_kedatangan');
+Route::get('fetch/warehouse/cek_kedatangan', 'AccountingController@fetch_kedatangan');
+
+Route::get('ga/cek_kedatangan', 'AccountingController@cek_kedatangan_ga');
+Route::get('fetch/ga/cek_kedatangan', 'AccountingController@fetch_kedatangan_ga');
+
 Route::get('warehouse/receive_ga', 'AccountingController@wh_receive_ga');
+
+Route::get('ga/receive_kantin', 'AccountingController@wh_receive_kantin');
+Route::get('fetch/ga/receive_kantin', 'AccountingController@fetch_receive_kantin');
+Route::post('fetch/ga/update_receive_kantin', 'AccountingController@update_receive_kantin');
+
+Route::get('ga/cek_kedatangan/kantin', 'AccountingController@cek_kedatangan_kantin');
+Route::get('fetch/ga/cek_kedatangan/kantin', 'AccountingController@fetch_kedatangan_kantin');
+
 
 //Print Label Barang
 Route::get('warehouse/print_equipment', 'AccountingController@wh_print_equipment');
 Route::get('fetch/warehouse/print_equipment', 'AccountingController@fetch_print_equipment');
 Route::get('print/warehouse/label/{id}', 'AccountingController@label_kedatangan');
 
-Route::get('warehouse/cek_kedatangan', 'AccountingController@cek_kedatangan');
-Route::get('fetch/warehouse/cek_kedatangan', 'AccountingController@fetch_kedatangan');
 
-Route::get('ga/cek_kedatangan', 'AccountingController@cek_kedatangan_ga');
-Route::get('fetch/ga/cek_kedatangan', 'AccountingController@fetch_kedatangan_ga');
+
 
 //Cetak Bukti Kedatangan
 Route::get('warehouse/cetak_bukti', 'AccountingController@wh_cetak_bukti');
