@@ -70,6 +70,7 @@ class InventoryController extends Controller
         $origin_groups = Material::whereIn('category', ['KD', 'FG'])
         ->select('hpl')
         ->distinct()
+        ->orderBy('hpl', 'ASC')
         ->get();
         
         return view('inventories.indexHistory', array(

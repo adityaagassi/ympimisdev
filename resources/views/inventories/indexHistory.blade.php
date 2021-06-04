@@ -101,7 +101,7 @@
 									<select class="form-control select2" multiple="multiple" name="originGroup" id='originGroup' data-placeholder="Select Origin Group" style="width: 100%;">
 										<option></option>
 										@foreach($origin_groups as $origin_group)
-										<option value="{{ $origin_group->origin_group_code }}">{{ $origin_group->origin_group_code }} - {{ $origin_group->origin_group_name }}</option>
+										<option value="{{ $origin_group->hpl }}">{{ $origin_group->hpl }}</option>
 										@endforeach
 									</select>
 								</div>
