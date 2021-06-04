@@ -229,6 +229,31 @@ class SendEmail extends Mailable
             }
         }
 
+        if($this->remark == 'canteen_purchase_requisition'){
+            if($this->data[0]->file_pdf != null && $this->data[0]->file != null){
+                $all_file = json_decode($this->data[0]->file);
+
+                return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+                ->priority(1)
+                ->subject('Canteen Purchase Requisition (購入申請)')
+                ->view('mails.canteen_purchase_requisition')
+                ->attach(public_path('files/pr/'.$all_file[0]))
+                ->attach(public_path('kantin/pr_list/'.$this->data[0]->file_pdf));
+            }
+            else if($this->data[0]->file_pdf != null){
+                return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+                ->priority(1)
+                ->subject('Canteen Purchase Requisition (購入申請)')
+                ->view('mails.canteen_purchase_requisition')
+                ->attach(public_path('kantin/pr_list/'.$this->data[0]->file_pdf));
+            }else{
+                return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+                ->priority(1)
+                ->subject('Canteen Purchase Requisition (購入申請)')
+                ->view('mails.canteen_purchase_requisition');
+            }
+        }
+
         if($this->remark == 'purchase_order'){
             if($this->data[0]->file_pdf != null ){
                 return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
@@ -241,6 +266,21 @@ class SendEmail extends Mailable
                 ->priority(1)
                 ->subject('Purchase Order (発注依頼)')
                 ->view('mails.purchase_order');
+            }
+        }
+
+        if($this->remark == 'canteen_purchase_order'){
+            if($this->data[0]->file_pdf != null ){
+                return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+                ->priority(1)
+                ->subject('Canteen Purchase Order (食堂の購入依頼)')
+                ->view('mails.canteen_purchase_order')
+                ->attach(public_path('kantin/po_list/'.$this->data[0]->file_pdf));
+            } else{
+                return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+                ->priority(1)
+                ->subject('Canteen Purchase Order (食堂の購入依頼)')
+                ->view('mails.canteen_purchase_order');
             }
         }
 

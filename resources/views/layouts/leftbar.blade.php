@@ -503,7 +503,7 @@
             <a href="{{ url("purchase_order_canteen") }}"><i class="fa fa-book"></i>PO Canteen</a>
           </li>
           @if(isset($page) && $page == "Purchase Order Canteen Monitoring")<li class="active">@else<li>@endif
-            <a href="{{ url("purchase_order_canteen/monitoring") }}"><i class="fa fa-tv"></i>PO Canteen Monitoring</a>
+            <a href="{{ url("canteen/purchase_order/monitoring") }}"><i class="fa fa-tv"></i>PO Canteen Monitoring</a>
           </li>
         </ul>
       </li>

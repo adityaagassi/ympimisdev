@@ -186,6 +186,7 @@ Route::get('download/manual/{reference_file}', 'HomeController@download');
 //MIS TICKET
 Route::group(['nav' => 'S63', 'middleware' => 'permission'], function(){
 	Route::post('input/ticket', 'TicketController@inputTicket');
+	Route::post('input/ticket/timeline', 'TicketController@inputTicketTimeline');
 	Route::get('approval/ticket', 'TicketController@approvalTicket');
 });
 Route::get('/index/ticket/detail/{id}', 'TicketController@indexTicketDetail');
@@ -1628,7 +1629,17 @@ Route::get('fetch/purchase_requisition/monitoringpch', 'AccountingController@fet
 Route::get('purchase_requisition/tablepch', 'AccountingController@fetchtablePRPch');
 Route::get('purchase_requisition/detailPch', 'AccountingController@detailMonitoringPRPch');
 
+//PR Monitoring Canteen
+Route::get('canteen/purchase_requisition/monitoring', 'AccountingController@monitoringPRCanteen');
+Route::get('fetch/canteen/purchase_requisition/monitoring', 'AccountingController@fetchMonitoringPRCanteen');
+Route::get('canteen/purchase_requisition/table', 'AccountingController@fetchtablePRCanteen');
+Route::get('canteen/purchase_requisition/detail', 'AccountingController@detailMonitoringPRCanteen');
+Route::get('canteen/purchase_requisition/detailPO', 'AccountingController@detailMonitoringPRPOCanteen');
 
+//Approval Purchase Requisition Canteen
+Route::get('canteen/purchase_requisition/verifikasi/{id}', 'AccountingController@verifikasi_purchase_requisition_canteen');
+Route::post('canteen/purchase_requisition/approval/{id}', 'AccountingController@approval_purchase_requisition_canteen');
+Route::post('canteen/purchase_requisition/notapprove/{id}', 'AccountingController@reject_purchase_requisition_canteen');
 
 Route::group(['nav' => 'S61', 'middleware' => 'permission'], function(){
 	//Purchase Requisition
@@ -3767,6 +3778,8 @@ Route::get('fetch/recorder/kensa_report', 'RecorderProcessController@fetchKensaR
 //KENSA KAKUNING DISPLAY ASSY RC
 Route::get('index/recorder/display/kensa', 'RecorderProcessController@indexDisplayKensa');
 Route::get('fetch/recorder/display/kensa', 'RecorderProcessController@fetchDisplayKensa');
+Route::get('index/recorder/display/ng_rate_kensa', 'RecorderProcessController@indexNgRateKensa');
+Route::get('fetch/recorder/display/ng_rate_kensa', 'RecorderProcessController@fetchNgRateKensa');
 
 //WEBCAM
 Route::get('index/webcam', 'WebcamController@index');
@@ -4372,6 +4385,10 @@ Route::get('fetch/maintenance/mttr/list', 'MaintenanceController@fetchMttr');
 // -------------------------      MTTR           -------------------
 Route::get('index/maintenance/tpm/dashboard', 'MaintenanceController@indextpm');
 
+// ---------------------      TROUBLE MACHINE           -------------------
+Route::get('index/maintenance/machine_report/report', 'MaintenanceController@machineTroubleReport');
+Route::get('fetch/maintenance/machine_report/report', 'MaintenanceController@fetchTroubleReport');
+
 
 //Assemblies
 Route::get('index/kensa/{location}', 'AssemblyProcessController@kensa');
@@ -4785,6 +4802,7 @@ Route::group(['nav' => 'M34', 'middleware' => 'permission'], function(){
 	Route::get('adagio/send_email/{id}', 'AdagioAutoController@AdagioEmail');	
 	Route::get('adagio/monitoring', 'AdagioAutoController@AdagioMonitoring');
 	Route::get('adagio/fetch/monitoring', 'AdagioAutoController@AdagioFetchMonitoring');
+	Route::get('adagio/report/{id}', 'AdagioAutoController@AdagiReport');
 });
 
 

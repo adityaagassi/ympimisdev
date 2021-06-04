@@ -224,7 +224,7 @@
         if(result.status == true){    
           $("#loading").hide();
           openSuccessGritter("Success","Berhasil Dibuat");
-          setTimeout(function(){ window.location = "{{ url('index/purchase_item') }}" }, 1000); 
+          setTimeout(function(){ window.location = "{{ url('canteen/purchase_item') }}" }, 1000); 
         }
         else {
           $("#loading").hide();

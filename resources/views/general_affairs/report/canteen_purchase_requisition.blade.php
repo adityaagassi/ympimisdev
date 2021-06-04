@@ -179,7 +179,7 @@
 		</div>
 	</section>
 
-	<form id="importForm" name="importForm" method="post" action="{{ url('create/purchase_requisition') }}" enctype="multipart/form-data">
+	<form id="importForm" name="importForm" method="post" action="{{ url('canteen/create/purchase_requisition') }}" enctype="multipart/form-data">
 		<input type="hidden" value="{{csrf_token()}}" name="_token" />
 		<div class="modal fade" id="modalCreate">
 			<div class="modal-dialog modal-lg" style="width: 1300px">
@@ -244,17 +244,6 @@
 												<label>File Terlampir (Optional)</label>
 												<input type="file" id="reportAttachment" name="reportAttachment[]" multiple="">
 											</div>
-											@if($employee->position == "Leader" && $employee->department != "Logistic Department")
-											<div class="form-group">
-												<label>Staff</label>
-												<select class="form-control select2" data-placeholder="Pilih Staff" name="staff" id="staff" style="width: 100% height: 35px;" required>
-													<option value=""></option>
-													@foreach($staff as $stf)
-													<option value="{{ $stf->employee_id }}">{{ $stf->employee_id }} - {{ $stf->name }} - {{ $stf->section }}</option>
-													@endforeach
-												</select>
-											</div>
-											@endif
 										</div>
 
 									</div>
@@ -378,10 +367,7 @@
 										<div class="col-xs-1" style="padding: 5px">
 											<select class="form-control select2" id="item_currency1" name="item_currency1" data-placeholder='Currency' style="width: 100%" onchange="currency(this)">
 												<option value="">&nbsp;</option>
-												<option value="USD">USD</option>
-												<option value="IDR">IDR</option>
-												<option value="JPY">JPY</option>
-											</select>
+												<option value="IDR">IDR</option>											</select>
 											<input type="text" class="form-control" id="item_currency_text1" name="item_currency_text1" style="display:none">
 										</div>
 
@@ -415,28 +401,14 @@
 
 									<div id="tambah"></div>
 
-									<div class="col-md-2 col-md-offset-5">
-										<p><b>Total Dollar</b></p>
-										<div class="input-group">
-											<span class="input-group-addon">$ </span><input type="text" id="total_usd" class="form-control" readonly>
-										</div>
-									</div>
-
-									<div class="col-md-2">
+									<div class="col-md-2 col-md-offset-6">
 										<p><b>Total Rupiah</b></p>
 										<div class="input-group">
 											<span class="input-group-addon">Rp. </span><input type="text" id="total_id" class="form-control" readonly>
 										</div>
 									</div>
 
-									<div class="col-md-2">
-										<p><b>Total Yen</b></p>
-										<div class="input-group">
-											<span class="input-group-addon">¥ </span><input type="text" id="total_yen" class="form-control" readonly>
-										</div>
-									</div>
-
-									<div class="col-md-3 col-md-offset-8" style="margin-top: 20px">
+									<div class="col-md-3">
 										<p><b>Total Keseluruhan</b></p>
 										<div class="input-group">
 											<span class="input-group-addon">$ </span><input type="text" id="total_keseluruhan" class="form-control" readonly>
@@ -486,7 +458,7 @@
 	</form>
 
 	<div class="modal fade in" id="modalEdit">
-		<form id="importFormEdit" name="importFormEdit" method="post" action="{{ url('update/purchase_requisition') }}">
+		<form id="importFormEdit" name="importFormEdit" method="post" action="{{ url('canteen/update/purchase_requisition') }}">
 			<input type="hidden" value="{{csrf_token()}}" name="_token" />
 			<div class="modal-dialog modal-lg" style="width: 1300px">
 				<div class="modal-content">
@@ -541,11 +513,8 @@
 										<div class="col-xs-1" style="padding:5px;">
 											<b>Kode Item</b>
 										</div>
-										<div class="col-xs-3" style="padding:5px;">
+										<div class="col-xs-4" style="padding:5px;">
 											<b>Deskripsi</b>
-										</div>
-										<div class="col-xs-1" style="padding:5px;">
-											<b>Spesifikasi</b>
 										</div>
 										<div class="col-xs-1" style="padding:5px;">
 											<b>Tgl Kedatangan</b>
@@ -570,7 +539,7 @@
 										</div>
 									</div>
 
-									<div  id="modalDetailBodyEdit">
+									<div id="modalDetailBodyEdit">
 									</div>
 
 
@@ -609,6 +578,7 @@
 									</div>
 								</div>
 								<div class="col-md-12">
+									<input type="hidden" class="form-control" id="id_edit_pr" name="id_edit_pr" placeholder="ID">
 									<button type="submit" class="btn btn-warning pull-right">Update</button>
 									<span class="pull-right">&nbsp;</span>
 								</div>
@@ -678,13 +648,10 @@
 
 		var no = 2;
 		var limitdate = "";
-		hasil_konversi_yen = 0;
 		hasil_konversi_id = 0;
 		item = [];
 		item_list = "";
-		total_usd = 0;
 		total_id = 0;
-		total_yen = 0;
 		exchange_rate = [];
 
 		$.ajaxSetup({
@@ -709,14 +676,8 @@
 
         getExchangeRate();
 
-        usd = document.getElementById('total_usd');
-        usd.value = 0;
-
         id = document.getElementById('total_id');
         id.value = 0;
-
-        yen = document.getElementById('total_yen');
-        yen.value = 0;
 
         limitdate = new Date();
         limitdate.setDate(limitdate.getDate());
@@ -789,7 +750,7 @@
         	var nomorpr = document.getElementById("no_pr");
 			
 			$.ajax({
-				url: "{{ url('purchase_requisition/get_nomor_pr') }}?dept=<?= $employee->department ?>&sect=<?= $employee->section ?>&group=<?= $employee->group ?>", 
+				url: "{{ url('canteen_purchase_requisition/get_nomor_pr') }}", 
 				type : 'GET', 
 				success : function(data){
 					var obj = jQuery.parseJSON(data);
@@ -845,12 +806,10 @@
 
 		var datefrom = $('#datefrom').val();
 		var dateto = $('#dateto').val();
-		var department = $('#department').val();
 		
 		var data = {
 			datefrom:datefrom,
-			dateto:dateto,
-			department:department,
+			dateto:dateto
 		}
 
 		var table = $('#prTable').DataTable({
@@ -915,7 +874,6 @@
 			{ "data": "department" },
 			{ "data": "submission_date" },
 			{ "data": "emp_name" },
-			{ "data": "no_budget" },
 			{ "data": "file" },
 			{ "data": "note" },
 			{ "data": "status" },
@@ -947,12 +905,11 @@
 
 	function openModalCreate(){
 		$('#modalCreate').modal('show');
-
 		//nomor PR auto generate
 		var nomorpr = document.getElementById("no_pr");
 
 		$.ajax({
-			url: "{{ url('purchase_requisition/get_nomor_pr') }}?dept=<?= $employee->department ?>&sect=<?= $employee->section ?>&group=<?= $employee->group ?>", 
+			url: "{{ url('canteen_purchase_requisition/get_nomor_pr') }}", 
 			type : 'GET', 
 			success : function(data){
 				var obj = jQuery.parseJSON(data);
@@ -965,7 +922,7 @@
 			}
 		});
 
-		pilihBudget('MIS20020A');
+		pilihBudget('CANTEEN01');
 	}
 
 	function clearConfirmation(){
@@ -996,11 +953,7 @@
 				$('#item_currency_text'+no).show();
 				$('#item_currency_text'+no).val(obj.currency).show().attr('readonly', true);
 
-				if (obj.currency == "USD") {
-					$('#ket_harga'+no).text("$");
-				}else if (obj.currency == "JPY") {
-					$('#ket_harga'+no).text("¥");
-				}else if (obj.currency == "IDR"){
+				if (obj.currency == "IDR"){
 					$('#ket_harga'+no).text("Rp.");
 				}
 
@@ -1034,11 +987,8 @@
 				$('#item_currency_edit'+no).hide();
 				$('#item_currency_text_edit'+no).show();
 				$('#item_currency_text_edit'+no).val(obj.currency).show().attr('readonly', true);
-				if (obj.currency == "USD") {
-					$('#ket_harga_edit'+no).text("$");
-				}else if (obj.currency == "JPY") {
-					$('#ket_harga_edit'+no).text("¥");
-				}else if (obj.currency == "IDR"){
+				
+				if (obj.currency == "IDR"){
 					$('#ket_harga_edit'+no).text("Rp.");
 				}
 
@@ -1164,13 +1114,8 @@
     		// amount.value = rubah(hasil);
     		amount.value = hasil.toFixed(2);
 
-    		total_usd = 0;
     		total_id = 0;
-    		total_yen = 0;
-    		total_usd_all = 0;
-    		total_yen_all = 0;
     		total_id_all = 0;
-    		total_yen_konversi = 0;
     		total_id_konversi = 0;
     		total_beli = 0;
 
@@ -1185,27 +1130,9 @@
         		var mata_uang_text = $('#item_currency_text'+i).val();
         		var dollar = document.getElementById('konversi_dollar'+i);
 
-        		tot_usd = document.getElementById('amount'+i).value;
-        		tot_yen = document.getElementById('amount'+i).value;
         		tot_id = document.getElementById('amount'+i).value;
 
-        		if (mata_uang == "USD" || mata_uang_text == "USD" ) {
-        			// total_usd += parseFloat(tot_usd.replace(/\D/g, ""));
-        			// total_konversi = parseFloat(tot_usd.replace(/\D/g, ""));
-
-        			total_usd += parseFloat(tot_usd);
-        			total_konversi = parseFloat(tot_usd);
-        			dollar.value = konversi("USD","USD",total_konversi);
-        		}
-        		else if (mata_uang == "JPY" || mata_uang_text == "JPY"){
-        			total_yen += parseFloat(tot_yen);
-
-        			total_konversi = parseFloat(tot_yen);
-        			dollar.value = konversi("JPY","USD",total_konversi);
-
-        			total_yen_konversi = parseFloat(konversi("JPY","USD",total_konversi));
-        		}
-        		else if (mata_uang == "IDR" || mata_uang_text == "IDR"){
+        		if (mata_uang == "IDR" || mata_uang_text == "IDR"){
         			total_id += parseFloat(tot_id);	
 
         			total_konversi = parseFloat(tot_id);
@@ -1214,11 +1141,9 @@
         			total_id_konversi = parseFloat(konversi("IDR","USD",total_id));
         		}
 
-        		document.getElementById('total_usd').value = rubah(total_usd);
-        		document.getElementById('total_yen').value = rubah(total_yen);
         		document.getElementById('total_id').value = rubah(total_id);
 
-        		total_beli = total_usd + total_yen_konversi + total_id_konversi;
+        		total_beli =  total_id_konversi;
         		budget = $('#budget').val();
 
         		if (total_beli > 0) {
@@ -1278,13 +1203,8 @@
 
       	if (!isNaN(hasil)) {
       		$("#amount_edit"+num).val(hasil.toFixed(2));
-    		total_usd = 0;
     		total_id = 0;
-    		total_yen = 0;
-    		total_usd_all = 0;
-    		total_yen_all = 0;
     		total_id_all = 0;
-    		total_yen_konversi = 0;
     		total_id_konversi = 0;
     		total_beli = 0;
 
@@ -1297,25 +1217,9 @@
       		var mata_uang_text = $('#item_currency_text_edit'+num).val();
       		var dollar = document.getElementById('konversi_dollar'+num);
 
-
-    		tot_usd = document.getElementById('amount_edit'+num).value;
-    		tot_yen = document.getElementById('amount_edit'+num).value;
     		tot_id = document.getElementById('amount_edit'+num).value;
 
-    		if (mata_uang == "USD" || mata_uang_text == "USD" ) {
-    			total_usd += parseFloat(tot_usd);
-    			total_konversi = parseFloat(tot_usd);
-    			dollar.value = konversi("USD","USD",total_konversi);
-    		}
-    		else if (mata_uang == "JPY" || mata_uang_text == "JPY"){
-    			total_yen += parseFloat(tot_yen);
-
-    			total_konversi = parseFloat(tot_yen);
-    			dollar.value = konversi("JPY","USD",total_konversi);
-
-    			total_yen_konversi = parseFloat(konversi("JPY","USD",total_konversi));
-    		}
-    		else if (mata_uang == "IDR" || mata_uang_text == "IDR"){
+    		if (mata_uang == "IDR" || mata_uang_text == "IDR"){
     			total_id += parseFloat(tot_id);	
 
     			total_konversi = parseFloat(tot_id);
@@ -1325,11 +1229,9 @@
     		}
       		
 
-      		document.getElementById('total_usd').value = rubah(total_usd);
-    		document.getElementById('total_yen').value = rubah(total_yen);
     		document.getElementById('total_id').value = rubah(total_id);
 
-    		total_beli = total_usd + total_yen_konversi + total_id_konversi;
+    		total_beli = total_id_konversi;
     		budget = $('#budget').val();
 
     		if (total_beli > 0) {
@@ -1364,9 +1266,6 @@
     		}
 
     		document.getElementById('total_keseluruhan').value = konversiToUSD(curr,'USD');
-
-
-
       	}
       }
 
@@ -1408,20 +1307,14 @@
         		torate = rate;
         	}
         }
-        if (from == "JPY") {
-        	hasil_konversi_yen = (total_yen / fromrate) * torate;
-        }
         if (from == "IDR") {
         	hasil_konversi_id = (total_id / fromrate) * torate;
         }
 
-        var hasil= total_usd + parseFloat(hasil_konversi_yen.toFixed(2)) + parseFloat(hasil_konversi_id.toFixed(2));
+        var hasil = parseFloat(hasil_konversi_id.toFixed(2));
         return hasil.toFixed(2);
 
-    	// document.getElementById('total_keseluruhan').value = total_usd + parseFloat(hasil_konversi_yen.toFixed(2)) + parseFloat(hasil_konversi_id.toFixed(2));
     }
-
-    //Fungsi Tambah
 
     function tambah(id,lop) {
     	var id = id;
@@ -1434,16 +1327,9 @@
     		lop = "lop2";
     	}
 
-    	var divdata = $("<div id='"+no+"' class='col-md-12' style='margin-bottom : 5px'><div class='col-xs-1' style='padding:5px;'><select class='form-control select3' data-placeholder='Choose Item' name='item_code"+no+"' id='item_code"+no+"' onchange='pilihItem(this)'><option></option></select></div><div class='col-xs-3' style='padding:5px;'><input type='text' class='form-control' id='item_desc"+no+"' name='item_desc"+no+"' placeholder='Description' required='' onkeyup='ubahDescTujuan(this)'></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_spec"+no+"' name='item_spec"+no+"' placeholder='Specification'></div><div class='col-xs-1' style='padding:5px;'><div class='input-group date'><div class='input-group-addon'><i class='fa fa-calendar' style='font-size: 10px'></i> </div><input type='text' class='form-control pull-right datepicker' id='req_date"+no+"' name='req_date"+no+"' placeholder='Tanggal' required=''></div></div> <div class='col-xs-1' style='padding: 5px'><select class='form-control select2' id='item_currency"+no+"' name='item_currency"+no+"'data-placeholder='Currency' style='width: 100%' onchange='currency(this)'><option value=''>&nbsp;</option><option value='USD'>USD</option><option value='IDR'>IDR</option><option value='JPY'>JPY</option></select><input type='text' class='form-control' id='item_currency_text"+no+"' name='item_currency_text"+no+"' style='display:none'></div> <div class='col-xs-1' style='padding:5px;'><div class='input-group'><span class='input-group-addon' id='ket_harga"+no+"' name='ket_harga"+no+"' style='padding:3px'>?</span><input type='text' class='form-control currency' id='item_price"+no+"' name='item_price"+no+"' placeholder='Harga' data-number-to-fixed='2' data-number-stepfactor='100' required='' style='padding:6px 6px'></div></div><div class='col-xs-1' style='padding:5px;'><input type='number' class='form-control' id='qty"+no+"' name='qty"+no+"' placeholder='Qty' onkeyup='getTotal(this.id)' required=''><input type='hidden' class='form-control' id='moq"+no+"' name='moq"+no+"' placeholder='Moq'></div><div class='col-xs-1' style='padding:5px;'><select class='form-control select6' id='uom"+no+"' name='uom"+no+"' data-placeholder='UOM' style='width: 100%;'><option></option>@foreach($uom as $um)<option value='{{ $um }}'>{{ $um }}</option>@endforeach</select></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='amount"+no+"' name='amount"+no+"' placeholder='Total' required='' readonly><input type='hidden' class='form-control' id='konversi_dollar"+no+"' name='konversi_dollar"+no+"' placeholder='Total' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'>&nbsp;<button onclick='kurang(this,\""+lop+"\");' class='btn btn-danger'><i class='fa fa-close'></i> </button> <button type='button' onclick='tambah(\""+id+"\",\""+lop+"\"); ' class='btn btn-success'><i class='fa fa-plus' ></i></button></div></div>");
-
-    	var tujuan = $("<div id='"+no+"' class='col-md-12' style='margin-bottom : 5px'><div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='tujuan_desc"+no+"' name='tujuan_desc"+no+"' placeholder='Description' required=''></div><div class='col-xs-6' style='padding:5px;'><input type='text' class='form-control' id='tujuan_peruntukan"+no+"' name='tujuan_peruntukan"+no+"' placeholder='Tujuan Pembelian / Peruntukan'></div><div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='item_stock"+no+"' name='item_stock"+no+"' placeholder='Stock'></div><div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='tujuan_kebutuhan"+no+"' name='tujuan_kebutuhan"+no+"' placeholder='Kebutuhan (e.g 10 pcs/hari)'></div></div>");
+    	var divdata = $("<div id='"+no+"' class='col-md-12' style='margin-bottom : 5px'><div class='col-xs-1' style='padding:5px;'><select class='form-control select3' data-placeholder='Choose Item' name='item_code"+no+"' id='item_code"+no+"' onchange='pilihItem(this)'><option></option></select></div><div class='col-xs-4' style='padding:5px;'><input type='text' class='form-control' id='item_desc"+no+"' name='item_desc"+no+"' placeholder='Description' required=''></div><div class='col-xs-1' style='padding:5px;'><div class='input-group date'><div class='input-group-addon'><i class='fa fa-calendar' style='font-size: 10px'></i> </div><input type='text' class='form-control pull-right datepicker' id='req_date"+no+"' name='req_date"+no+"' placeholder='Tanggal' required=''></div></div> <div class='col-xs-1' style='padding: 5px'><select class='form-control select2' id='item_currency"+no+"' name='item_currency"+no+"'data-placeholder='Currency' style='width: 100%' onchange='currency(this)'><option value=''></option><option value='IDR'>IDR</option></select><input type='text' class='form-control' id='item_currency_text"+no+"' name='item_currency_text"+no+"' style='display:none'></div> <div class='col-xs-1' style='padding:5px;'><div class='input-group'><span class='input-group-addon' id='ket_harga"+no+"' name='ket_harga"+no+"' style='padding:3px'>?</span><input type='text' class='form-control currency' id='item_price"+no+"' name='item_price"+no+"' placeholder='Harga' data-number-to-fixed='2' data-number-stepfactor='100' required='' style='padding:6px 6px'></div></div><div class='col-xs-1' style='padding:5px;'><input type='number' class='form-control' id='qty"+no+"' name='qty"+no+"' placeholder='Qty' onkeyup='getTotal(this.id)' required=''><input type='hidden' class='form-control' id='moq"+no+"' name='moq"+no+"' placeholder='Moq'></div><div class='col-xs-1' style='padding:5px;'><select class='form-control select6' id='uom"+no+"' name='uom"+no+"' data-placeholder='UOM' style='width: 100%;'><option></option>@foreach($uom as $um)<option value='{{ $um }}'>{{ $um }}</option>@endforeach</select></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='amount"+no+"' name='amount"+no+"' placeholder='Total' required='' readonly><input type='hidden' class='form-control' id='konversi_dollar"+no+"' name='konversi_dollar"+no+"' placeholder='Total' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'>&nbsp;<button onclick='kurang(this,\""+lop+"\");' class='btn btn-danger'><i class='fa fa-close'></i> </button> <button type='button' onclick='tambah(\""+id+"\",\""+lop+"\"); ' class='btn btn-success'><i class='fa fa-plus' ></i></button></div></div>");
 
     	$("#"+id).append(divdata);
-    	if (id == "tambah"){
-    		$("#peruntukan").append(tujuan);
-		}else{
-    		$("#peruntukan_edit").append(tujuan);
-		}
     	$("#item_code"+no).append(item_list);
 
 
@@ -1460,7 +1346,6 @@
     			dropdownParent: $("#"+id),
     			allowClear:true
     		});
-
 
 		  	$('.select6').select2({
     			dropdownParent: $("#"+id),
@@ -1482,13 +1367,11 @@
 		var ids = $(elem).parent('div').parent('div').attr('id');
 		var oldid = ids;
 		$(elem).parent('div').parent('div').remove();
-		$('#tujuan_desc'+ids).parent('div').parent('div').remove();
 		var newid = parseInt(ids) + 1;
 
 		$("#"+newid).attr("id",oldid);
 		$("#item_code"+newid).attr("name","item_code"+oldid);
 		$("#item_desc"+newid).attr("name","item_desc"+oldid);
-		$("#item_spec"+newid).attr("name","item_spec"+oldid);
 		$("#item_price"+newid).attr("name","item_price"+oldid);
 		$("#qty"+newid).attr("name","qty"+oldid);
 		$("#moq"+newid).attr("name","moq"+oldid);
@@ -1499,16 +1382,9 @@
 		$("#item_currency"+newid).attr("name","item_currency"+oldid);
 		$("#item_currency_text"+newid).attr("name","item_currency_text"+oldid);
 		$("#req_date"+newid).attr("name","req_date"+oldid);
-		$("#tujuan_desc"+newid).attr("name","tujuan_desc"+oldid);
-		$("#tujuan_peruntukan"+newid).attr("name","tujuan_peruntukan"+oldid);
-		$("#item_stock"+newid).attr("name","item_stock"+oldid);
-		$("#tujuan_kebutuhan"+newid).attr("name","tujuan_kebutuhan"+oldid);
-
-
 
 		$("#item_code"+newid).attr("id","item_code"+oldid);
 		$("#item_desc"+newid).attr("id","item_desc"+oldid);
-		$("#item_spec"+newid).attr("id","item_spec"+oldid);
 		$("#item_price"+newid).attr("id","item_price"+oldid);
 		$("#qty"+newid).attr("id","qty"+oldid);
 		$("#moq"+newid).attr("id","moq"+oldid);
@@ -1519,10 +1395,6 @@
 		$("#item_currency"+newid).attr("id","item_currency"+oldid);
 		$("#item_currency_text"+newid).attr("id","item_currency_text"+oldid);
 		$("#req_date"+newid).attr("id","req_date"+oldid);
-		$("#tujuan_desc"+newid).attr("id","tujuan_desc"+oldid);
-		$("#tujuan_peruntukan"+newid).attr("id","tujuan_peruntukan"+oldid);
-		$("#item_stock"+newid).attr("id","item_stock"+oldid);
-		$("#tujuan_kebutuhan"+newid).attr("id","tujuan_kebutuhan"+oldid);
 
 		no-=1;
 		var a = no -1;
@@ -1533,7 +1405,6 @@
 			$("#"+newid).attr("id",oldid);
 			$("#item_code"+newid).attr("name","item_code"+oldid);
 			$("#item_desc"+newid).attr("name","item_desc"+oldid);
-			$("#item_spec"+newid).attr("name","item_spec"+oldid);
 			$("#item_price"+newid).attr("name","item_price"+oldid);
 			$("#qty"+newid).attr("name","qty"+oldid);
 			$("#moq"+newid).attr("name","moq"+oldid);
@@ -1544,14 +1415,9 @@
 			$("#item_currency"+newid).attr("name","item_currency"+oldid);
 			$("#item_currency_text"+newid).attr("name","item_currency_text"+oldid);
 			$("#req_date"+newid).attr("name","req_date"+oldid);
-			$("#tujuan_desc"+newid).attr("name","tujuan_desc"+oldid);
-			$("#tujuan_peruntukan"+newid).attr("name","tujuan_peruntukan"+oldid);
-			$("#item_stock"+newid).attr("name","item_stock"+oldid);
-			$("#tujuan_kebutuhan"+newid).attr("name","tujuan_kebutuhan"+oldid);
 
 			$("#item_code"+newid).attr("id","item_code"+oldid);
 			$("#item_desc"+newid).attr("id","item_desc"+oldid);
-			$("#item_spec"+newid).attr("id","item_spec"+oldid);
 			$("#item_price"+newid).attr("id","item_price"+oldid);
 			$("#qty"+newid).attr("id","qty"+oldid);
 			$("#moq"+newid).attr("id","moq"+oldid);
@@ -1562,13 +1428,8 @@
 			$("#item_currency"+newid).attr("id","item_currency"+oldid);
 			$("#item_currency_text"+newid).attr("id","item_currency_text"+oldid);
 			$("#req_date"+newid).attr("id","req_date"+oldid);
-			$("#tujuan_desc"+newid).attr("id","tujuan_desc"+oldid);
-			$("#tujuan_peruntukan"+newid).attr("id","tujuan_peruntukan"+oldid);
-			$("#item_stock"+newid).attr("id","item_stock"+oldid);
-			$("#tujuan_kebutuhan"+newid).attr("id","tujuan_kebutuhan"+oldid);
 
 
-			// alert(i)
 		}
 		document.getElementById(lop).value = a;
 
@@ -1586,28 +1447,8 @@
 		var mata_uang = $('#item_currency'+no).val();
 		var mata_uang_text = $('#item_currency_text'+no).val();
 
-		if (mata_uang == "USD") {
-			$('#ket_harga'+no).text("$");
-			// var harga = document.getElementById("item_price"+no);
-			// harga.addEventListener("keyup", function(e) {
-			// 	harga.value = formatUang(this.value, "");
-			// });
-		}
-
-		else if (mata_uang == "IDR") {
-			$('#ket_harga'+no).text("Rp. ");																		
-			// var harga = document.getElementById("item_price"+no);
-			// harga.addEventListener("keyup", function(e) {
-			// 	harga.value = formatUang(this.value, "");
-			// });
-		}
-
-		else if (mata_uang == "JPY") {
-			$('#ket_harga'+no).text("¥");
-			// var harga = document.getElementById("item_price"+no);
-			// harga.addEventListener("keyup", function(e) {
-			// 	harga.value = formatUang(this.value, "");
-			// });
+		if (mata_uang == "IDR") {
+			$('#ket_harga'+no).text("Rp. ");
 		}
 	}
 
@@ -1665,7 +1506,7 @@
   		id:id
   	};
   	
-  	$.get('{{ url("edit/purchase_requisition") }}', data, function(result, status, xhr){	
+  	$.get('{{ url("canteen/edit/purchase_requisition") }}', data, function(result, status, xhr){	
 
   		$("#identitas_edit").val(result.purchase_requisition.emp_id+' - '+result.purchase_requisition.emp_name).attr('readonly', true);
   		$("#departemen_edit").val(result.purchase_requisition.department).attr('readonly', true);
@@ -1675,7 +1516,6 @@
   		$("#id_edit_pr").val(result.purchase_requisition.id).attr('readonly', true);
 
   		$('#modalDetailBodyEdit').html('');
-  		$('#modalDetailTujuan').html('');
   		
   		var ids = [];
   		var total_amount = 0;
@@ -1701,25 +1541,12 @@
 
   				isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_code_edit"+value.id+"' name='item_code_edit"+value.id+"' value="+value.item_code+" readonly=''></div>";
 
-  				// isi += "<div class='col-xs-1' style='padding:5px;'><select class='form-control select5 item_code_edit' data-placeholder='Choose Item' name='item_code_edit"+value.id+"' id='item_code_edit"+value.id+"' style='width: 100% height: 35px;' onchange='pilihItemEdit(this)'><option></option></select></div>";
 
   			} else{
-  				// isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_code_edit"+value.id+"' name='item_code_edit"+value.id+"'></div>";
   				isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_code_edit"+value.id+"' name='item_code_edit"+value.id+"' readonly=''></div>";
-  				// isi += "<div class='col-xs-1' style='padding:5px'><select class='form-control select5 item_code_edit' data-placeholder='Choose Item' name='item_code_edit"+value.id+"' id='item_code_edit"+value.id+"' style='width: 100% height: 35px;' onchange='pilihItemEdit(this)'></select></div>"
   			}
   			
-  			isi += "<div class='col-xs-3' style='padding:5px;'><input type='text' class='form-control' id='item_desc_edit"+value.id+"' name='item_desc_edit"+value.id+"' placeholder='Description' required='' value='"+value.item_desc+"'></div>";
-  			if (value.item_spec != null) {
-	  			isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_spec_edit"+value.id+"' name='item_spec_edit"+value.id+"' placeholder='Specification' value='"+value.item_spec+"'></div>";
-	  		}else{
-	  			isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_spec_edit"+value.id+"' name='item_spec_edit"+value.id+"' placeholder='Specification' value=''></div>";
-	  		}
-  			// if (value.item_stock != null) {
-  			// 	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='tujuan_stock_edit"+value.id+"' name='tujuan_stock_edit"+value.id+"' placeholder='Stock' value='"+value.item_stock+"'></div>";					
-  			// }else{
-  			// 	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='tujuan_stock_edit"+value.id+"' name='tujuan_stock_edit"+value.id+"' placeholder='Stock'></div>";
-  			// }
+  			isi += "<div class='col-xs-4' style='padding:5px;'><input type='text' class='form-control' id='item_desc_edit"+value.id+"' name='item_desc_edit"+value.id+"' placeholder='Description' required='' value='"+value.item_desc+"'></div>";
   			isi += "<div class='col-xs-1' style='padding:5px;'><div class='input-group date'><div class='input-group-addon'><i class='fa fa-calendar' style='font-size: 10px'></i> </div><input type='text' class='form-control pull-right datepicker' id='req_date_edit"+value.id+"' name='req_date_edit"+value.id+"' placeholder='Tanggal' required='' value='"+value.item_request_date+"'' readonly=''></div></div>";
   			isi += "<div class='col-xs-1' style='padding: 5px'><input type='text' class='form-control' id='item_currency_edit"+value.id+"' name='item_currency_edit"+value.id+"' value='"+value.item_currency+"' readonly=''><input type='text' class='form-control' id='item_currency_text_edit"+value.id+"' name='item_currency_text_edit"+value.id+"' readonly='' style='display:none'></div>";
   			isi += "<div class='col-xs-1' style='padding:5px;'><div class='input-group'><span class='input-group-addon' id='ket_harga_edit"+value.id+"' style='padding:3px'>?</span><input type='text' class='form-control currency' id='item_price_edit"+value.id+"' name='item_price_edit"+value.id+"' placeholder='Harga' data-number-to-fixed='2' data-number-stepfactor='100' required='' readonly='' value="+value.item_price+" style='padding: 6px 6px'></div></div>";
@@ -1730,26 +1557,9 @@
   			isi += "</div>";
 
 
-
-
-  			isi2 = "<div id='"+value.id+"' class='col-md-12' style='margin-bottom : 5px'>";
- 
- 			isi2 += "<div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='tujuan_desc_edit"+value.id+"' name='item_desc_edit"+value.id+"' placeholder='Description' required='' value='"+value.item_desc+"'></div>";
-
- 			isi2 += "<div class='col-xs-6' style='padding:5px;'><input type='text' class='form-control' id='tujuan_peruntukan_edit"+value.id+"' name='tujuan_peruntukan_edit"+value.id+"' placeholder='Peruntukan / Tujuan Pembelian' value='"+value.peruntukan+"'></div>";
-
-	  		if (value.item_stock != null) {
-	  			isi2 += "<div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='tujuan_stock_edit"+value.id+"' name='tujuan_stock_edit"+value.id+"' placeholder='Stock' value='"+value.item_stock+"'></div>";					
-	  		}else{
-	  			isi2 += "<div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='tujuan_stock_edit"+value.id+"' name='tujuan_stock_edit"+value.id+"' placeholder='Stock'></div>";
-	  		}
-	  		isi2 += "<div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='tujuan_kebutuhan_edit"+value.id+"' name='tujuan_kebutuhan_edit"+value.id+"' placeholder='Kebutuhan' value='"+value.kebutuhan+"'></div>";
-	  		isi2 += "</div>";
-
   			ids.push(value.id);
 
   			$('#modalDetailBodyEdit').append(isi);
-  			$('#modalDetailTujuan').append(isi2);
 
   			$('.item_code_edit').append(item_list);
 
@@ -1766,11 +1576,7 @@
   				});
   			})
 
-  			if (value.item_currency == "USD") {
-  				$('#ket_harga_edit'+value.id).text("$");
-  			}else if (value.item_currency == "JPY") {
-  				$('#ket_harga_edit'+value.id).text("¥");
-  			}else if (value.item_currency == "IDR"){
+  			if (value.item_currency == "IDR"){
   				$('#ket_harga_edit'+value.id).text("Rp.");
   			}
 
@@ -1830,7 +1636,7 @@ function delete_item(id) {
 
 	$("#loading").show();
 
-	$.post('{{ url("delete/purchase_requisition_item") }}', data, function(result, status, xhr){
+	$.post('{{ url("canteen/delete/purchase_requisition_item") }}', data, function(result, status, xhr){
 		if (result.status == true) {
         	openSuccessGritter("Success","Data Berhasil Dihapus");
         	$("#loading").hide();
@@ -1853,7 +1659,7 @@ function deletePR(id){
 
 	$("#loading").show();
 
-	$.post('{{ url("delete/purchase_requisition") }}', data, function(result, status, xhr){
+	$.post('{{ url("canteen/delete/purchase_requisition") }}', data, function(result, status, xhr){
 		if (result.status == true) {
         	openSuccessGritter("Success","Data Berhasil Dihapus");
         	$("#loading").hide();
@@ -1877,7 +1683,7 @@ function sendEmail(id) {
       	$("#loading").show();
       }
 
-      $.get('{{ url("purchase_requisition/sendemail") }}', data, function(result, status, xhr){
+      $.get('{{ url("canteen/purchase_requisition/sendemail") }}', data, function(result, status, xhr){
         openSuccessGritter("Success","Email Berhasil Terkirim");
       	$("#loading").hide();
         setTimeout(function(){  window.location.reload() }, 2500);
