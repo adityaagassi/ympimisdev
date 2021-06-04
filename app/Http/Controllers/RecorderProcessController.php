@@ -6060,7 +6060,57 @@ class RecorderProcessController extends Controller
           }
         }
         
-        $data = RcKensa::select('*','rc_kensas.created_at as created')->join('employee_syncs','employee_syncs.employee_id','rc_kensas.operator_kensa')->join('injection_parts','injection_parts.gmc','rc_kensas.material_number')->where('injection_parts.deleted_at',null)->whereDate('rc_kensas.created_at','>=',$date_from)->whereDate('rc_kensas.created_at','<=',$date_to)->orderBy('rc_kensas.created_at','desc')->get();
+        // $data = RcKensa::
+        // select('*','rc_kensas.created_at as created')
+        // ->join('employee_syncs','employee_syncs.employee_id','rc_kensas.operator_kensa')
+        // ->join('injection_parts','injection_parts.gmc','rc_kensas.material_number')
+        // ->where('injection_parts.deleted_at',null)
+        // ->whereDate('rc_kensas.created_at','>=',$date_from)
+        // ->whereDate('rc_kensas.created_at','<=',$date_to)
+        // ->orderBy('rc_kensas.created_at','desc')->get();
+
+        $data = DB::SELECT("SELECT DISTINCT
+          ( rc_kensas.serial_number ),
+          rc_kensas.tag,
+          rc_kensas.product,
+          rc_kensas.material_number,
+          injection_parts.part_name,
+          rc_kensas.cavity,
+          rc_kensas.start_time,
+          rc_kensas.end_time,
+          GROUP_CONCAT( rc_kensas.ng_name ) AS ng_name_kensa,
+          GROUP_CONCAT( rc_kensas.ng_count ) AS ng_count_kensa,
+          rc_kensas.created_at AS created,
+          empkensa.employee_id,
+          empkensa.`name`,
+          GROUP_CONCAT( rc_kensa_initials.ng_name ) AS ng_name,
+          GROUP_CONCAT( rc_kensa_initials.ng_count ) AS ng_count,
+          rc_kensa_initials.lot_number_resin,
+          rc_kensa_initials.mesin_injection,
+          rc_kensa_initials.dryer_resin,
+          rc_kensa_initials.molding,
+          rc_kensa_initials.qty_resin,
+          rc_kensa_initials.operator_injection,
+          rc_kensa_initials.operator_molding,
+          empinj.employee_id AS empinj,
+          empinj.`name` AS nameinj 
+        FROM
+          rc_kensas
+          LEFT JOIN employee_syncs empkensa ON empkensa.employee_id = rc_kensas.operator_kensa
+          LEFT JOIN injection_parts ON injection_parts.gmc = rc_kensas.material_number
+          LEFT JOIN rc_kensa_initials ON rc_kensa_initials.serial_number = rc_kensas.serial_number 
+          AND rc_kensa_initials.material_number = rc_kensas.material_number
+          LEFT JOIN employee_syncs empinj ON empinj.employee_id = rc_kensa_initials.operator_injection 
+        WHERE
+          injection_parts.deleted_at IS NULL 
+          AND injection_parts.remark = 'injection' 
+          AND DATE( rc_kensas.created_at ) >= '".$date_from."' 
+          AND DATE( rc_kensas.created_at ) <= '".$date_to."' 
+        GROUP BY
+          rc_kensas.serial_number,
+          rc_kensas.tag 
+        ORDER BY
+          rc_kensas.created_at DESC");
 
         $response = array(
               'status' => true,

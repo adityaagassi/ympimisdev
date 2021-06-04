@@ -117,7 +117,7 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-xs-12">
+						<div class="col-xs-12" style="overflow-x: scroll;">
 							<table id="tableReportKensa" class="table table-bordered table-striped table-hover">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
@@ -129,14 +129,32 @@
 										<th width="1%">Cav</th>
 										<th width="2%">Start</th>
 										<th width="2%">Finish</th>
-										<th width="3%">NG</th>
-										<th width="3%">By</th>
-										<th width="3%">At</th>
+										<th width="3%">Nama NG Kensa</th>
+										<th width="3%">Qty NG Kensa</th>
+										<th width="3%">Kensa By</th>
+										<th width="3%">Kensa At</th>
+										<th width="3%">NG Injection</th>
+										<th width="1%">Mesin</th>
+										<th width="3%">Inject By</th>
+										<th width="1%">Molding</th>
+										<th width="3%">OP Molding</th>
+										<th width="2%">Lot Number Resin</th>
+										<th width="1%">Qty Resin</th>
+										<th width="1%">Dryer</th>
 									</tr>
 								</thead>
 								<tbody id="bodyReportKensa">
 								</tbody>
 								<tfoot>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
 									<th></th>
 									<th></th>
 									<th></th>
@@ -206,30 +224,74 @@
 				var tableData = "";
 				var count = 1;
 				$.each(result.datas, function(key, value) {
-					tableData += '<tr>';
-					tableData += '<td>'+ count +'</td>';
-					tableData += '<td>'+ value.serial_number +'</td>';
-					tableData += '<td>'+ value.product +'</td>';
-					tableData += '<td>'+ value.material_number +'</td>';
-					tableData += '<td>'+ value.part_name +'</td>';
-					tableData += '<td>'+ value.cavity +'</td>';
-					tableData += '<td>'+ value.start_time +'</td>';
-					tableData += '<td>'+ value.end_time +'</td>';
+					var arr_ng_inj = "";
 					if (value.ng_name != null) {
 						ng_arr = value.ng_name.split(',');
 						qty_arr = value.ng_count.split(',');
 
-						tableData += '<td>';
 						for(var i = 0; i < ng_arr.length; i++){
-							tableData += ng_arr[i] +' = '+ qty_arr[i]+'<br>';
+							arr_ng_inj += ng_arr[i] +' = '+ qty_arr[i]+'<br>';
 						}
-						tableData += '</td>';
 					}else{
-						tableData += '<td></td>';
+						arr_ng_inj = '';
 					}
-					tableData += '<td>'+ value.employee_id +' - '+ value.name +'</td>';
-					tableData += '<td>'+ value.created +'</td>';
-					tableData += '</tr>';
+					if (value.ng_name_kensa != null) {
+						ng_arr = value.ng_name_kensa.split(',');
+						qty_arr = value.ng_count_kensa.split(',');
+
+						for(var i = 0; i < ng_arr.length; i++){
+							tableData += '<tr>';
+							tableData += '<td>'+ count +'</td>';
+							tableData += '<td>'+ value.serial_number +'</td>';
+							tableData += '<td>'+ value.product +'</td>';
+							tableData += '<td>'+ value.material_number +'</td>';
+							tableData += '<td>'+ value.part_name +'</td>';
+							tableData += '<td>'+ value.cavity +'</td>';
+							tableData += '<td>'+ value.start_time +'</td>';
+							tableData += '<td>'+ value.end_time +'</td>';
+							tableData += '<td>';
+							tableData += ng_arr[i] +'<br>';
+							tableData += '</td>';
+							tableData += '<td>';
+							tableData += qty_arr[i] +'<br>';
+							tableData += '</td>';
+							tableData += '<td>'+ value.employee_id +' - '+ value.name +'</td>';
+							tableData += '<td>'+ value.created +'</td>';
+							tableData += '<td>'+ arr_ng_inj +'</td>';
+							tableData += '<td>'+ value.mesin_injection +'</td>';
+							tableData += '<td>'+ value.empinj +' - '+ value.nameinj +'</td>';
+							tableData += '<td>'+ value.molding +'</td>';
+							tableData += '<td>'+ value.operator_molding +'</td>';
+							tableData += '<td>'+ value.lot_number_resin +'</td>';
+							tableData += '<td>'+ value.qty_resin +'</td>';
+							tableData += '<td>'+ value.dryer_resin +'</td>';
+							tableData += '</tr>';
+						}
+					}else{
+						tableData += '<tr>';
+						tableData += '<td>'+ count +'</td>';
+						tableData += '<td>'+ value.serial_number +'</td>';
+						tableData += '<td>'+ value.product +'</td>';
+						tableData += '<td>'+ value.material_number +'</td>';
+						tableData += '<td>'+ value.part_name +'</td>';
+						tableData += '<td>'+ value.cavity +'</td>';
+						tableData += '<td>'+ value.start_time +'</td>';
+						tableData += '<td>'+ value.end_time +'</td>';
+						tableData += '<td></td>';
+						tableData += '<td></td>';
+						tableData += '<td>'+ value.employee_id +' - '+ value.name +'</td>';
+						tableData += '<td>'+ value.created +'</td>';
+						tableData += '<td>'+ arr_ng_inj +'</td>';
+						tableData += '<td>'+ value.mesin_injection +'</td>';
+						tableData += '<td>'+ value.empinj +' - '+ value.nameinj +'</td>';
+						tableData += '<td>'+ value.molding +'</td>';
+						tableData += '<td>'+ value.operator_molding +'</td>';
+						tableData += '<td>'+ value.lot_number_resin +'</td>';
+						tableData += '<td>'+ value.qty_resin +'</td>';
+						tableData += '<td>'+ value.dryer_resin +'</td>';
+						tableData += '</tr>';
+					}
+					
 
 					count++;
 				});
