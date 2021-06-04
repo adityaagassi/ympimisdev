@@ -6108,7 +6108,8 @@ class RecorderProcessController extends Controller
           AND DATE( rc_kensas.created_at ) <= '".$date_to."' 
         GROUP BY
           rc_kensas.serial_number,
-          rc_kensas.tag 
+          rc_kensas.tag,
+          rc_kensas.product
         ORDER BY
           rc_kensas.created_at DESC");
 
