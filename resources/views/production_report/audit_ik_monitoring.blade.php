@@ -65,6 +65,11 @@
   .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
     background-color: #e8e8e8;
   }
+
+  #tableResume tr>td{
+    text-align:left;
+    padding-left: 7px;
+  }
   #loading, #error { display: none; }
 </style>
 @endsection
@@ -77,16 +82,25 @@
     </p>
   </div>
   <div class="row" style="padding-left: 20px;padding-right: 20px;padding-top: 0px;margin-top: 0px">
-    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8" style="background-color: rgb(126,86,134);text-align: center;height: 40px;padding-right: 5px">
+    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="background-color: rgb(126,86,134);text-align: center;height: 35px;padding-right: 5px">
       <span style="color: white;font-size: 25px;font-weight: bold;" id="title_periode">
       </span>
+    </div>
+    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="padding-left: 5px;padding-right: 5px">
+      <select class="form-control select2" data-placeholder="Pilih Department" style="height: 40px;width: 100%;padding-right: 0px" size="2" onchange="drawChart()" id="department_all">
+        <option value=""></option>
+        <option value="All">All</option>
+        @foreach($department_all as $dept)
+          <option value="{{$dept->id}}">{{$dept->department_shortname}}</option>
+        @endforeach
+      </select>
     </div>
     <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="padding-left: 5px;padding-right: 5px">
       <div class="input-group date">
         <div class="input-group-addon" style="border-color: rgb(126,86,134);background-color: rgb(126,86,134);color: white">
           <i class="fa fa-calendar"></i>
         </div>
-        <input type="text" class="form-control datepicker2" id="month_from" onchange="drawChart()" placeholder="Select Month From" style="border-color: #00a65a;height: 40px">
+        <input type="text" class="form-control datepicker2" id="month_from" onchange="drawChart()" placeholder="Select Month From" style="border-color: #00a65a;height: 35px">
       </div>
     </div>
     <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="padding-left: 0px">
@@ -94,11 +108,14 @@
         <div class="input-group-addon" style="border-color: rgb(126,86,134);background-color: rgb(126,86,134);color: white">
           <i class="fa fa-calendar"></i>
         </div>
-        <input type="text" class="form-control datepicker2" id="month_to" onchange="drawChart()" placeholder="Select Month To" style="border-color: #00a65a;height: 40px">
+        <input type="text" class="form-control datepicker2" id="month_to" onchange="drawChart()" placeholder="Select Month To" style="border-color: #00a65a;height: 35px">
       </div>
     </div>
     <div class="col-xs-12" style="padding-top: 10px;padding-left: 0px;">
         <div id="container" style="height: 500px"></div>
+    </div>
+    <div class="col-xs-12" style="padding-top: 10px;padding-left: 0px" id="div_resume">
+
     </div>
   </div>
     <div class="modal fade" id="modalDetail" style="color: black;">
@@ -110,12 +127,6 @@
           <div class="modal-body">
             <div class="row">
               <div class="col-md-12" id="data-activity">
-              <!-- <table id="data-log" class="table table-striped table-bordered" style="width: 100%;"> 
-                <thead id="data-activity-head-weekly" style="background-color: rgba(126,86,134,.7);">
-                </thead>
-                <tbody id="data-activity-weekly">
-                </tbody>
-              </table> -->
             </div>
           </div>
         </div>
@@ -132,6 +143,7 @@
 
 @section('scripts')
 <script src="{{ url("bower_components/jquery/dist/jquery.min.js")}}"></script>
+<script src="{{ url("js/moment.min.js")}}"></script>
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
 <script src="{{ url("js/highcharts.js")}}"></script>
 <script src="{{ url("js/highcharts-more.js")}}"></script>
@@ -141,6 +153,10 @@
 <script src="{{ url("js/accessibility.js")}}"></script>
 <script src="{{ url("js/jszip.min.js")}}"></script>
 <script src="{{ url("js/vfs_fonts.js")}}"></script>
+<!-- <script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
+<script src="{{ url("js/buttons.flash.min.js")}}"></script>
+<script src="{{ url("js/buttons.html5.min.js")}}"></script>
+<script src="{{ url("js/buttons.print.min.js")}}"></script> -->
 
 <script>
   $.ajaxSetup({
@@ -182,7 +198,7 @@
       interval=setTimeout(function(){
         statusx = "idle";
         drawChart()
-      },5000)
+      },10000)
     }
   });
 
@@ -204,9 +220,11 @@
   function drawChart(){
     var month_from = $('#month_from').val();
     var month_to = $('#month_to').val();
+    var department = $('#department_all').val();
     var data = {
       month_from: month_from,
       month_to: month_to,
+      department: department,
     }
     $.get('{{ url("fetch/audit_ik_monitoring") }}', data, function(result, status, xhr) {
       if(xhr.status == 200){
@@ -330,6 +348,170 @@
               color:'#00a65a',
             }]
           });
+
+          $("#div_resume").html('');
+          var tableresume = "";
+
+          for(var i = 0; i< result.department.length;i++){
+            // for(var j = 0; j< result.resume_all.length;j++){
+            //   if (result.resume_all[j].department_id == result.department[i].id_department) {
+
+            //   }
+            // }
+            var lengthspan = 0;
+
+            var total1 = 0;
+            var total2 = 0;
+            var total3 = 0;
+            var total4 = 0;
+            var total5 = 0;
+            var total6 = 0;
+            var total7 = 0;
+            var total8 = 0;
+            var total9 = 0;
+            var total10 = 0;
+            var total11 = 0;
+            var total12 = 0;
+            var total13 = 0;
+
+            var total = [];
+
+            for(var j = 0; j< result.resume_all.length;j++){
+              if (result.resume_all[j][0].department_id == result.department[i].id_department) {
+                lengthspan = result.resume_all[j].length;
+                for(var k = 0; k< result.resume_all[j].length;k++){
+                  total[k] = 0;
+                }
+              }
+            }
+
+            tableresume += '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="background-color: #e7ffb8;text-align: center;height: 35px;padding-right: 5px;margin-top:20px">';
+            tableresume += '<span style="font-size: 25px;font-weight: bold;">'+result.department[i].department_name+'</span>';
+            tableresume += '</div>';
+            tableresume += '<table id="tableResume" style="background-color: black;color: white;font-size: 15px;" class="table table-bordered">'
+              tableresume += '<tr>';
+                tableresume += '<td style="border: 1px solid white">課</td>';
+                tableresume += '<td style="border: 1px solid white">Item</td>';
+                for(var j = 0; j< result.resume_all.length;j++){
+                  if (result.resume_all[j][0].department_id == result.department[i].id_department) {
+                    lengthspan = result.resume_all[j].length;
+                    for(var k = 0; k< result.resume_all[j].length;k++){
+                      tableresume += '<td style="border: 1px solid white;text-align:center">'+result.resume_all[j][k].months+'</td>';
+                    }
+                  }
+                }
+                var lengthspanfix = lengthspan+2;
+              tableresume += '</tr>';
+              tableresume += '<tr>';
+                tableresume += '<td style="border: 1px solid white;font-weight: bold;">作業手順書数</td>';
+                tableresume += '<td style="border: 1px solid white">Jumlah IK</ td>';
+                for(var j = 0; j< result.resume_all.length;j++){
+                  if (result.resume_all[j][0].department_id == result.department[i].id_department) {
+                    for(var k = 0; k< result.resume_all[j].length;k++){
+                      tableresume += '<td style="border: 1px solid white;text-align:center">'+result.resume_all[j][k].plan+'</td>';
+                    }
+                  }
+                }
+              tableresume += '</tr>';
+              tableresume += '<tr>';
+                tableresume += '<td style="border: 1px solid white">監査が実施されました</td>';
+                tableresume += '<td style="border: 1px solid white">Sudah Dilakukan Audit</td>';
+                for(var j = 0; j< result.resume_all.length;j++){
+                  if (result.resume_all[j][0].department_id == result.department[i].id_department) {
+                    for(var k = 0; k< result.resume_all[j].length;k++){
+                      tableresume += '<td style="border: 1px solid white;text-align:center">'+result.resume_all[j][k].done+'</td>';
+                    }
+                  }
+                }
+              tableresume += '</tr>';
+              tableresume += '<tr>';
+                tableresume += '<td style="border: 1px solid white;font-weight: bold;">監査が実施されません</td>';
+                tableresume += '<td style="border: 1px solid white">Belum Dilakukan Audit</td>';
+                for(var j = 0; j< result.resume_all.length;j++){
+                  if (result.resume_all[j][0].department_id == result.department[i].id_department) {
+                    for(var k = 0; k< result.resume_all[j].length;k++){
+                      tableresume += '<td style="border: 1px solid white;text-align:center">'+result.resume_all[j][k].not_yet+'</td>';
+                    }
+                  }
+                }
+              tableresume += '</tr>';
+              tableresume += '<tr>';
+                tableresume += '<td style="border: 1px solid white">IKの内容はQC工程表の内容と違います</td>';
+                tableresume += '<td style="border: 1px solid white">Jumlah Proses yang Tidak Sesuai QC Koteihyo</td>';
+                for(var j = 0; j< result.resume_all.length;j++){
+                  if (result.resume_all[j][0].department_id == result.department[i].id_department) {
+                    for(var k = 0; k< result.resume_all[j].length;k++){
+                      tableresume += '<td style="border: 1px solid white;text-align:center">'+result.resume_all[j][k].tidak_sesuai+'</td>';
+                    }
+                  }
+                }
+              tableresume += '</tr>';
+              tableresume += '<tr style="background-color: white;background-color: #ffd154">';
+                tableresume += '<td colspan="'+lengthspanfix+'" style="border: 1px solid black;color: black;text-align: center;font-weight: bold;">Penanganan :</td>';
+              tableresume += '</tr>';
+              tableresume += '<tr>';
+                tableresume += '<td style="border: 1px solid white;color: #8abbff">作業仕様書再教育</td>';
+                tableresume += '<td style="border: 1px solid white">Traning Ulang IK</td>';
+                for(var j = 0; j< result.resume_all.length;j++){
+                  if (result.resume_all[j][0].department_id == result.department[i].id_department) {
+                    for(var k = 0; k< result.resume_all[j].length;k++){
+                      tableresume += '<td style="border: 1px solid white;text-align:center">'+result.resume_all[j][k].training_ulang+'</td>';
+                      total[k] = total[k] + parseInt(result.resume_all[j][k].training_ulang);
+                    }
+                  }
+                }
+              tableresume += '</tr>';
+              tableresume += '<tr>';
+                tableresume += '<td style="border: 1px solid white;color: #8abbff">作業仕様書修正→再教育（作業仕様書の内容が不適切だった場合）</td>';
+                tableresume += '<td style="border: 1px solid white">Revisi IK, Training Ulang (Jika Ada Isi IK yang Tidak Sesuai)</td>';
+                for(var j = 0; j< result.resume_all.length;j++){
+                  if (result.resume_all[j][0].department_id == result.department[i].id_department) {
+                    for(var k = 0; k< result.resume_all[j].length;k++){
+                      tableresume += '<td style="border: 1px solid white;text-align:center">'+result.resume_all[j][k].revisi_ik+'</td>';
+                      total[k] = total[k] + parseInt(result.resume_all[j][k].revisi_ik);
+                    }
+                  }
+                }
+              tableresume += '</tr>';
+              tableresume += '<tr>';
+                tableresume += '<td style="border: 1px solid white;color: #8abbff">治具修正・作成等（治具摩耗、適切な治具を使用していなかった等の場合</td>';
+                tableresume += '<td style="border: 1px solid white">Pembuatan Jig, Repair Jig (Jika Jig Aus atau Tidak Menggunakan Jig yang Benar)</td>';
+                for(var j = 0; j< result.resume_all.length;j++){
+                  if (result.resume_all[j][0].department_id == result.department[i].id_department) {
+                    for(var k = 0; k< result.resume_all[j].length;k++){
+                      tableresume += '<td style="border: 1px solid white;text-align:center">'+result.resume_all[j][k].jig+'</td>';
+                      total[k] = total[k] + parseInt(result.resume_all[j][k].jig);
+                    }
+                  }
+                }
+              tableresume += '</tr>';
+              tableresume += '<tr>';
+                tableresume += '<td style="border: 1px solid white;color: #ff6b6b;font-weight: bold;">使用されなくなったIK</td>';
+                tableresume += '<td style="border: 1px solid white">IK Obsolete</td>';
+                for(var j = 0; j< result.resume_all.length;j++){
+                  if (result.resume_all[j][0].department_id == result.department[i].id_department) {
+                    for(var k = 0; k< result.resume_all[j].length;k++){
+                      tableresume += '<td style="border: 1px solid white;text-align:center">'+result.resume_all[j][k].obsolete+'</td>';
+                      total[k] = total[k] + parseInt(result.resume_all[j][k].obsolete);
+                    }
+                  }
+                }
+              tableresume += '</tr>';
+              tableresume += '<tr>';
+                tableresume += '<td style="border: 1px solid white;color: #ff6b6b;font-weight: bold;background-color: yellow;border-top: 3px solid white;border-bottom:3px solid red">うち仕様書通り行われていなかった工程数</td>';
+                tableresume += '<td style="border: 1px solid white;background-color: yellow;color: black;font-weight: bold;border-top: 3px solid white;border-bottom:3px solid red;font-size:20px">Total Action</td>';
+                for(var j = 0; j< result.resume_all.length;j++){
+                  if (result.resume_all[j][0].department_id == result.department[i].id_department) {
+                    for(var k = 0; k< result.resume_all[j].length;k++){
+                      tableresume += '<td style="border: 1px solid white;background-color: yellow;color: black;font-weight: bold;border-top: 3px solid white;border-bottom:3px solid red;border-left:2px solid black;text-align:center;font-size:20px">'+total[k]+'</td>';
+                    }
+                  }
+                }
+              tableresume += '</tr>';
+            tableresume += '</table>';
+          }
+
+          $('#div_resume').html(tableresume);
         } else{
           alert('Attempt to retrieve data failed');
         }
@@ -386,6 +568,8 @@
           datatable += '</thead>';
           datatable += '<tbody style="border:1px solid black">';
           for(var j = 0; j < result.datas.length;j++){
+            $('#data-log-detail-'+j).DataTable().clear();
+            $('#data-log-detail-'+j).DataTable().destroy();
             datatable += '<tr>';
             datatable += '<td>';
             datatable += '<div class="box-group" id="accordion">';
@@ -398,7 +582,7 @@
                   datatable += '</div>';
                   datatable += '<div id="collapse'+j+'" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">';
                     datatable += '<div class="box-body">';
-                    datatable += '<table id="data-log" class="table table-bordered table-striped" style="width: 100%;">';
+                    datatable += '<table id="data-log-detail-'+j+'" class="table table-bordered table-striped" style="width: 100%;">';
                       datatable += '<thead>';
                       datatable += '<tr style="border-bottom:3px solid black;border-top:3px solid black;background-color:#cddc39;color:black;font-size:15px">';
                       datatable += '<th style="width:1%">Target : '+result.datass[j][0].month+'</th>';
@@ -451,12 +635,12 @@
                         datatable += '</tr>';
                       }
                       datatable += '<tr>';
-                      datatable += '<td>PIC</td>';
-                      datatable += '<td>'+result.datass[j][0].operator+'</td>';
+                      datatable += '<td style="border:1px solid black">PIC</td>';
+                      datatable += '<td style="border:1px solid black">'+result.datass[j][0].operator+'</td>';
                       datatable += '</tr>';
                       datatable += '<tr>';
-                      datatable += '<td>Leader</td>';
-                      datatable += '<td>'+result.datass[j][0].leader+'</td>';
+                      datatable += '<td style="border:1px solid black">Leader</td>';
+                      datatable += '<td style="border:1px solid black">'+result.datass[j][0].leader+'</td>';
                       datatable += '</tr>';
                       datatable += '</tbody>';
                       datatable += '</table>';
@@ -472,6 +656,61 @@
         }
 
         $('#data-activity').append(datatable);
+
+        for(var j = 0; j < result.datas.length;j++){
+
+            // $('#data-log-detail-'+j).DataTable({
+            //   'dom': 'Bfrtip',
+            //   'responsive':true,
+            //   'lengthMenu': [
+            //   [ 10, 25, 50, -1 ],
+            //   [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+            //   ],
+            //   'buttons': {
+            //     buttons:[
+            //     {
+            //       extend: 'pageLength',
+            //       className: 'btn btn-default',
+            //     },
+            //     {
+            //       extend: 'copy',
+            //       className: 'btn btn-success',
+            //       text: '<i class="fa fa-copy"></i> Copy',
+            //         exportOptions: {
+            //           columns: ':not(.notexport)'
+            //       }
+            //     },
+            //     {
+            //       extend: 'excel',
+            //       className: 'btn btn-info',
+            //       text: '<i class="fa fa-file-excel-o"></i> Excel',
+            //       exportOptions: {
+            //         columns: ':not(.notexport)'
+            //       }
+            //     },
+            //     {
+            //       extend: 'print',
+            //       className: 'btn btn-warning',
+            //       text: '<i class="fa fa-print"></i> Print',
+            //       exportOptions: {
+            //         columns: ':not(.notexport)'
+            //       }
+            //     }
+            //     ]
+            //   },
+            //   'paging': true,
+            //   'lengthChange': true,
+            //   'searching': true,
+            //   'ordering': true,
+            //   'order': [],
+            //   'info': true,
+            //   'autoWidth': true,
+            //   "sPaginationType": "full_numbers",
+            //   "bJQueryUI": true,
+            //   "bAutoWidth": false,
+            //   "processing": true
+            // });
+        }
 
         $('#data_log_sudah').DataTable({
           'dom': 'Bfrtip',
@@ -509,12 +748,14 @@
               exportOptions: {
                 columns: ':not(.notexport)'
               }
-            },
+            }
             ]
           },
           'paging': true,
           'lengthChange': true,
+          'pageLength': 10,
           'searching': true,
+          "processing": true,
           'ordering': true,
           'order': [],
           'info': true,
