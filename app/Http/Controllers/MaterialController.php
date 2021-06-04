@@ -433,7 +433,7 @@ class MaterialController extends Controller{
                          'vendor_name' => $policy->vendor_name,
                          'stock' => $policy->stock,
                          'day' => $policy->day,
-                         'policy' => $policy->policy,
+                         'policy' => round($policy->policy),
                          'percentage' => round($policy->percentage*100, 2)
                     ]);
                     $count_item++;
@@ -596,7 +596,7 @@ class MaterialController extends Controller{
                          'vendor_name' => $policy->vendor_name,
                          'stock' => $policy->stock,
                          'day' => $policy->day,
-                         'policy' => $policy->policy,
+                         'policy' => round($policy->policy),
                          'percentage' => round($policy->percentage*100, 2)
                     ]);
                     $count_item++;
