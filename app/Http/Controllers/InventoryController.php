@@ -67,7 +67,11 @@ class InventoryController extends Controller
 
     public function indexHistory(){
         $mvts = $this->mvt;
-        $origin_groups = OriginGroup::orderBy('origin_group_code', 'asc')->get();
+        $origin_groups = Material::whereIn('category', ['KD', 'FG'])
+        ->select('hpl')
+        ->distinct()
+        ->get();
+        
         return view('inventories.indexHistory', array(
             'mvts' => $mvts,
             'origin_groups' => $origin_groups,
@@ -98,7 +102,7 @@ class InventoryController extends Controller
 
         if($request->get('originGroup') != null){
             $origin_group_code = implode("','", $request->get('originGroup'));
-            $where2 = ' and materials.origin_group_code in (\''.$origin_group_code.'\')';
+            $where2 = ' and materials.hpl in (\''.$origin_group_code.'\')';
         }
         else{
             $where2 = '';
@@ -154,6 +158,7 @@ class InventoryController extends Controller
         from log_transactions 
         left join materials on materials.material_number = log_transactions.material_number
         where log_transactions.deleted_at is null
+        and log_transactions.mvt <> '9P2'   
         ".$where1."
         ".$where2."
         ".$where3."
