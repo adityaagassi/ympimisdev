@@ -678,13 +678,10 @@ public function fetchBentoOrderList(Request $request){
 		$now = date('Y-m-d', strtotime(carbon::now()->addDays(1)));
 		$last = date('Y-m-d', strtotime(carbon::now()->addDays(20)));
 
-		if(Auth::user()->role_code == 'GA'){
+		if(Auth::user()->role_code == 'GA' || Auth::user()->role_code == 'MIS'){
 			$unconfirmed = Bento::get();
 		}
 		else{
-			// $unconfirmed = Bento::where('created_by', '=', Auth::id())
-			// ->get();
-
 			$unconfirmed = db::select("SELECT
 				* 
 				FROM
@@ -695,18 +692,11 @@ public function fetchBentoOrderList(Request $request){
 				OR order_by = '".Auth::user()->username."'");
 		}
 
-		// $quotas = BentoQuota::where('due_date', '>=', $now)
-		// ->where('due_date', '<=', $last)
-		// ->where('remark', '!=', 'H')
-		// ->select(db::raw('date_format(due_date, "%a, %d %b %Y") as due_date'), 'serving_quota', 'serving_ordered')
-		// ->get();
-
 		$menus = BentoQuota::whereNull('deleted_at')->get();
 
 		$response = array(
 			'status' => true,
 			'unconfirmed' => $unconfirmed,
-			// 'quotas' => $quotas,
 			'menus' => $menus
 		);
 		return Response::json($response);
