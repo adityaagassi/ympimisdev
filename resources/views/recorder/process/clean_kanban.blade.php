@@ -124,26 +124,33 @@ table.table-bordered > tfoot > tr > th{
 		if (event.keyCode == 13 || event.keyCode == 9) {
 			if ($('#tag_product').val().length == 10) {
 				$('#tag_product').prop('disabled',true);
-				var tag = $('#tag_product').val();
-				var data = {
-					tag:tag
-				}
-				$.post('{{ url("remove/injection/tag") }}', data, function(result, status, xhr){
-					if (result.status) {
-						openSuccessGritter('Success',result.message);
-						$('#tag_product').removeAttr('disabled');
-						$('#tag_product').val('');
-						$('#tag_product').focus();
-						$('#loading').hide();
-						fetchKanbanHistory();
-					}else{
-						$('#tag_product').removeAttr('disabled');
-						$('#tag_product').val('');
-						$('#tag_product').focus();
-						openErrorGritter('Error!',result.message);
-						$('#loading').hide();
+				if (confirm('Apakah Anda yakin akan menghapus Kanban? Pastikan tidak ada material tersisa.')) {
+					var tag = $('#tag_product').val();
+					var data = {
+						tag:tag
 					}
-				});
+					$.post('{{ url("remove/injection/tag") }}', data, function(result, status, xhr){
+						if (result.status) {
+							openSuccessGritter('Success',result.message);
+							$('#tag_product').removeAttr('disabled');
+							$('#tag_product').val('');
+							$('#tag_product').focus();
+							$('#loading').hide();
+							fetchKanbanHistory();
+						}else{
+							$('#tag_product').removeAttr('disabled');
+							$('#tag_product').val('');
+							$('#tag_product').focus();
+							openErrorGritter('Error!',result.message);
+							$('#loading').hide();
+						}
+					});
+				}else{
+					$('#tag_product').removeAttr('disabled');
+					$('#tag_product').val('');
+					$('#tag_product').focus();
+					$('#loading').hide();
+				}
 			}else{
 				$('#tag_product').removeAttr('disabled');
 				$('#tag_product').val('');
