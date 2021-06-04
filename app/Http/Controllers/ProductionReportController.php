@@ -3102,9 +3102,17 @@ class ProductionReportController extends Controller
         $title = 'Audit IK Monitoring';
         $title_jp = '作業手順書監査表示';
 
+        $department_all = DB::SELECT("SELECT
+            * 
+        FROM
+            departments 
+        WHERE
+            department_shortname != 'JPN'");
+
         return view('production_report.audit_ik_monitoring', array(
             'title' => $title,
             'title_jp' => $title_jp,
+            'department_all' => $department_all,
         ))->with('page', 'Audit IK Monitoring');
     }
 
@@ -3139,36 +3147,194 @@ class ProductionReportController extends Controller
                  }
             }
 
+            $department_id = "";
+            if ($request->get('department') != "") {
+                $department_id = 'AND department_id = "'.$request->get('department').'"';
+            }else if($request->get('department') == "All" || $request->get('department') == ""){
+                $department_id = "";
+            }
+
             $audit_ik = DB::SELECT("SELECT DISTINCT
-            (
-            DATE_FORMAT( week_date, '%Y-%m' )) AS `month`,
-            DATE_FORMAT( week_date, '%M %Y' ) as `months`,
-            (
-            SELECT
-                count( audit_guidances.id ) 
+                (
+                DATE_FORMAT( week_date, '%Y-%m' )) AS `month`,
+                DATE_FORMAT( week_date, '%M %Y' ) AS `months`,
+                (
+                SELECT
+                    count( audit_guidances.id ) 
+                FROM
+                    audit_guidances
+                    LEFT JOIN activity_lists ON activity_lists.id = audit_guidances.activity_list_id 
+                WHERE
+                    audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' ) 
+                    AND audit_guidances.deleted_at IS NULL 
+                    ".$department_id." 
+                ) AS plan,
+                (
+                SELECT
+                    count( audit_guidances.id ) 
+                FROM
+                    audit_guidances
+                    LEFT JOIN activity_lists ON activity_lists.id = audit_guidances.activity_list_id 
+                WHERE
+                    audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' ) 
+                    AND `status` = 'Sudah Dikerjakan' 
+                    AND audit_guidances.deleted_at IS NULL 
+                    ".$department_id." 
+                ) AS done,
+                (
+                SELECT
+                    count( audit_guidances.id ) 
+                FROM
+                    audit_guidances
+                    LEFT JOIN activity_lists ON activity_lists.id = audit_guidances.activity_list_id 
+                WHERE
+                    audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' ) 
+                    AND `status` = 'Belum Dikerjakan' 
+                    ".$department_id." 
+                    AND audit_guidances.deleted_at IS NULL 
+                ) AS not_yet 
             FROM
-                audit_guidances 
+                weekly_calendars 
             WHERE
-            audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' )) AS plan,
-            ( SELECT count( audit_guidances.id ) FROM audit_guidances WHERE audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' ) AND `status` = 'Sudah Dikerjakan' and audit_guidances.deleted_at is null) AS done,
-            ( SELECT count( audit_guidances.id ) FROM audit_guidances WHERE audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' ) AND `status` = 'Belum Dikerjakan' and audit_guidances.deleted_at is null) AS not_yet 
-        FROM
-            weekly_calendars 
-        WHERE
-            DATE_FORMAT( weekly_calendars.week_date, '%Y-%m' ) BETWEEN ".$first." 
-            AND ".$last."
-        ORDER BY
-            `month`");
+                DATE_FORMAT( weekly_calendars.week_date, '%Y-%m' ) BETWEEN ".$first." 
+                AND ".$last."
+            ORDER BY
+                `month`");
 
             $department = DB::SELECT("SELECT DISTINCT
-                ( department_id ),
+                ( department_id ) as id_department,
                 department_name,
                 department_shortname 
             FROM
                 activity_lists
                 JOIN departments ON departments.id = activity_lists.department_id 
             WHERE
-                activity_type = 'Laporan Aktivitas'");
+                activity_type = 'Laporan Aktivitas'
+                ".$department_id."");
+
+            $resume_all = [];
+
+            foreach ($department as $key) {
+                $resume = DB::SELECT("SELECT DISTINCT
+                    (
+                    DATE_FORMAT( week_date, '%Y-%m' )) AS `month`,
+                    DATE_FORMAT( week_date, '%b %Y' ) AS `months`,
+                    ".$key->id_department." AS department_id,
+                    (
+                    SELECT
+                        count( audit_guidances.id ) 
+                    FROM
+                        audit_guidances
+                        LEFT JOIN activity_lists ON activity_lists.id = audit_guidances.activity_list_id 
+                    WHERE
+                        audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' )
+                        and audit_guidances.deleted_at is null 
+                        AND department_id = ".$key->id_department." 
+                    ) AS plan,
+                    (
+                    SELECT
+                        count( audit_guidances.id ) 
+                    FROM
+                        audit_guidances
+                        LEFT JOIN activity_lists ON activity_lists.id = audit_guidances.activity_list_id 
+                    WHERE
+                        audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' ) 
+                        AND `status` = 'Sudah Dikerjakan' 
+                        AND audit_guidances.deleted_at IS NULL 
+                        AND department_id = ".$key->id_department." 
+                    ) AS done,
+                    (
+                    SELECT
+                        count( audit_guidances.id ) 
+                    FROM
+                        audit_guidances
+                        LEFT JOIN activity_lists ON activity_lists.id = audit_guidances.activity_list_id 
+                    WHERE
+                        audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' ) 
+                        AND `status` = 'Belum Dikerjakan' 
+                        AND audit_guidances.deleted_at IS NULL 
+                        AND department_id = ".$key->id_department." 
+                    ) AS not_yet,
+                    (
+                    SELECT
+                        count( audit_guidances.id ) 
+                    FROM
+                        audit_guidances
+                        LEFT JOIN audit_report_activities ON audit_report_activities.audit_guidance_id = audit_guidances.id
+                        LEFT JOIN activity_lists ON activity_lists.id = audit_guidances.activity_list_id 
+                    WHERE
+                        audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' ) 
+                        AND `status` = 'Sudah Dikerjakan' 
+                        AND audit_guidances.deleted_at IS NULL 
+                        AND audit_report_activities.`condition` = 'Tidak Sesuai' 
+                        AND department_id = ".$key->id_department." 
+                    ) AS tidak_sesuai,
+                    (
+                    SELECT
+                        count( audit_guidances.id ) 
+                    FROM
+                        audit_guidances
+                        LEFT JOIN audit_report_activities ON audit_report_activities.audit_guidance_id = audit_guidances.id
+                        LEFT JOIN activity_lists ON activity_lists.id = audit_guidances.activity_list_id 
+                    WHERE
+                        audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' ) 
+                        AND `status` = 'Sudah Dikerjakan' 
+                        AND audit_guidances.deleted_at IS NULL 
+                        AND audit_report_activities.`handling` = 'Training Ulang IK' 
+                        AND department_id = ".$key->id_department." 
+                    ) AS training_ulang,
+                    (
+                    SELECT
+                        count( audit_guidances.id ) 
+                    FROM
+                        audit_guidances
+                        LEFT JOIN audit_report_activities ON audit_report_activities.audit_guidance_id = audit_guidances.id
+                        LEFT JOIN activity_lists ON activity_lists.id = audit_guidances.activity_list_id 
+                    WHERE
+                        audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' ) 
+                        AND `status` = 'Sudah Dikerjakan' 
+                        AND audit_guidances.deleted_at IS NULL 
+                        AND audit_report_activities.`handling` = 'Revisi IK' 
+                        AND department_id = ".$key->id_department." 
+                    ) AS revisi_ik,
+                    (
+                    SELECT
+                        count( audit_guidances.id ) 
+                    FROM
+                        audit_guidances
+                        LEFT JOIN audit_report_activities ON audit_report_activities.audit_guidance_id = audit_guidances.id
+                        LEFT JOIN activity_lists ON activity_lists.id = audit_guidances.activity_list_id 
+                    WHERE
+                        audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' ) 
+                        AND `status` = 'Sudah Dikerjakan' 
+                        AND audit_guidances.deleted_at IS NULL 
+                        AND audit_report_activities.`handling` = 'Pembuatan Jig / Repair Jig' 
+                        AND department_id = ".$key->id_department." 
+                    ) AS jig,
+                    (
+                    SELECT
+                        count( audit_guidances.id ) 
+                    FROM
+                        audit_guidances
+                        LEFT JOIN audit_report_activities ON audit_report_activities.audit_guidance_id = audit_guidances.id
+                        LEFT JOIN activity_lists ON activity_lists.id = audit_guidances.activity_list_id 
+                    WHERE
+                        audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' ) 
+                        AND `status` = 'Sudah Dikerjakan' 
+                        AND audit_guidances.deleted_at IS NULL 
+                        AND audit_report_activities.`handling` = 'IK Tidak Digunakan' 
+                        AND department_id = ".$key->id_department." 
+                    ) AS obsolete 
+                FROM
+                    weekly_calendars 
+                WHERE
+                    DATE_FORMAT( weekly_calendars.week_date, '%Y-%m' ) BETWEEN ".$first." 
+                    AND ".$last."
+                ORDER BY
+                    `month`");
+
+                array_push($resume_all, $resume);
+            }
 
             $response = array(
                 'status' => true,
@@ -3176,6 +3342,7 @@ class ProductionReportController extends Controller
                 'firstTitle' => $firstTitle,
                 'lastTitle' => $lastTitle,
                 'department' => $department,
+                'resume_all' => $resume_all,
             );
             return Response::json($response);
         } catch (\Exception $e) {
