@@ -802,14 +802,16 @@ function fetchChart(id){
 
 			var now = new Date();
 
-			$.each(result.material_percentages, function(key, value){div_chart += '<div class="col-xs-6" style="padding: 0 5px 0 5px;">';
+			$.each(result.material_percentages, function(key, value){
+				count_material++;
+				div_chart += '<div class="col-xs-6" style="padding: 0 5px 0 5px;">';
 				div_chart += '<div class="box box-solid" style="margin-bottom: 10px;">';
 				div_chart += '<div class="box-header">';
-				div_chart += '<span style="font-weight: bold; font-size: 1.2vw;">'+value.material_number+' '+value.material_description+'</span>';
+				div_chart += '<span style="font-weight: bold; font-size: 1.2vw;">'+count_material+') '+value.material_number+' '+value.material_description+'</span>';
 				div_chart += '<span style="font-weight: bold; font-size: 1.2vw; color:red;" class="pull-right">&nbsp;'+value.percentage+'%</span>';
 				div_chart += '<span style="font-weight: bold; font-size: 1.2vw;" class="pull-right">Stock Condition : </span>';
-				div_chart += '<br><span style="font-weight: bold; font-size: 1vw;">'+value.vendor_code+' - '+value.vendor_name+'</span>';
-				div_chart += '<br><span style="font-weight: bold; font-size: 1vw;">Stock Policy : '+value.day +' Days ('+value.policy+' '+value.bun+')</span>';
+				div_chart += '<br><span style="font-weight: bold; font-size: 1vw;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+value.vendor_code+' - '+value.vendor_name+'</span>';
+				div_chart += '<br><span style="font-weight: bold; font-size: 1vw;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Stock Policy : '+value.day +' Days ('+value.policy+' '+value.bun+')</span>';
 				div_chart += '<div class="box-body" style="padding: 10px 0 10px 0;">';
 				div_chart += '<div style="height: 350px;" id="chart_'+value.material_number+'"></div>';
 				div_chart += '</div>';
