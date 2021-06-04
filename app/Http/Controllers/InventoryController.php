@@ -68,8 +68,9 @@ class InventoryController extends Controller
     public function indexHistory(){
         $mvts = $this->mvt;
         $origin_groups = Material::whereIn('category', ['KD', 'FG'])
-        ->select('hpl')
+        ->select('category', 'hpl')
         ->distinct()
+        ->orderBy('category', 'ASC')
         ->orderBy('hpl', 'ASC')
         ->get();
         
