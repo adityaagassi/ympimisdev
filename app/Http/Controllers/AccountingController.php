@@ -7438,6 +7438,7 @@ $data = db::select('
   acc_actual_logs 
   WHERE
   acc_actual_logs.deleted_at IS NULL
+  and investment_no is null
   GROUP BY
   budget_no
 
@@ -7710,7 +7711,7 @@ public function budget_detail(Request $request)
         WHERE
         acc_actual_logs.deleted_at IS NULL 
         AND acc_budgets.budget_no = "'.$request->get('id').'" 
-        AND acc_actual_logs.investment_no != "NO_INPUT"
+        AND acc_actual_logs.investment_no is null
         GROUP BY
         month_date 
         
@@ -8925,7 +8926,7 @@ public function fetch_budget_detail(Request $request){
     'Actual' as `status`
     from acc_actual_logs
     where acc_actual_logs.budget_no = '".$budget."' 
-    and acc_actual_logs.investment_no != 'NO_INPUT'
+    and acc_actual_logs.investment_no is null
     ) a        
     ";
     else{
