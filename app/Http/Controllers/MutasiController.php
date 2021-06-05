@@ -1848,16 +1848,7 @@ class MutasiController extends Controller
                 $mutasi->save();
             }
             else{
-                $manager = db::select("select employee_id, `name` from employee_syncs where position = 'Manager' and department ='".$mutasi->departemen."'"); 
-                if ($manager != null)
-                {
-                    foreach ($manager as $mgr)
-                    {
-                        $manager = $mgr->employee_id;
-                        $nama_manager = $mgr->name;
-                    }
-                }
-                else
+                if ($mutasi->manager_asal == null)
                 {   
                     if ($mutasi->departemen == 'Woodwind Instrument - Welding Process (WI-WP) Department') {
                         $manager = 'PI0108010';
@@ -1878,17 +1869,25 @@ class MutasiController extends Controller
                         $manager = 'PI9707011';
                         $nama_manager = 'Prawoto';
                     }
+                    elseif 
+                        ($mutasi->departemen == 'Production Engineering Department') {
+                        $manager = 'PI0703002';
+                        $nama_manager = 'Susilo Basri Prasetyo';
+                    }
                     else{
                         $manager = null;
                         $dgm = 'PI0109004';
                         $nama_dgm = 'Budhi Apriyanto';
+                    }
+                }
+                else
+                {   
+                    $manager = db::select("select employee_id, `name` from employee_syncs where position = 'Manager' and department ='".$mutasi->departemen."'"); 
 
-                        // $mutasi->app_ca = 'Approved';
-                        // $mutasi->date_atasan_asal = date('Y-m-d H-y-s');
-                        // $mutasi->posisi = 'dgm_asal';
-                        // $mutasi->dgm_asal = $dgm;
-                        // $mutasi->nama_dgm_asal = $nama_dgm;            
-                        // $mutasi->save(); 
+                    foreach ($manager as $mgr)
+                    {
+                        $manager = $mgr->employee_id;
+                        $nama_manager = $mgr->name;
                     }
                 }
 
@@ -2393,40 +2392,45 @@ class MutasiController extends Controller
             // $mutasi->save();
             // }
             else{
-                $manager = db::select("select employee_id, `name` from employee_syncs where position = 'Manager' and department ='".$mutasi->ke_departemen."'"); 
-                if ($manager != null)
+                if ($mutasi->manager_tujuan == null)
                 {
-                    foreach ($manager as $mgr)
-                    {
-                        $manager = $mgr->employee_id;
-                        $nama_manager = $mgr->name;
-                    }
-                }
-                else
-                {   
-                    if ($mutasi->departemen == 'Woodwind Instrument - Body Parts Process (WI-BPP) Department') {
+                    if ($mutasi->ke_departemen == 'Woodwind Instrument - Body Parts Process (WI-BPP) Department') {
                         $manager = 'PI0108010';
                         $nama_manager = 'Yudi Abtadipa';
                     }
                     elseif 
-                        ($mutasi->departemen == 'Woodwind Instrument - Key Parts Process (WI-KPP) Department') {
+                        ($mutasi->ke_departemen == 'Woodwind Instrument - Key Parts Process (WI-KPP) Department') {
                         $manager = 'PI9906002';
                         $nama_manager = 'Khoirul Umam';
                     }
                     elseif 
-                        ($mutasi->departemen == 'Purchasing Control Department') {
+                        ($mutasi->ke_departemen == 'Purchasing Control Department') {
                         $manager = 'PI9807014';
                         $nama_manager = 'Imron Faizal';
                     }
                     elseif 
-                        ($mutasi->departemen == 'General Affairs Department') {
+                        ($mutasi->ke_departemen == 'General Affairs Department') {
                         $manager = 'PI9707011';
                         $nama_manager = 'Prawoto';
+                    }
+                    elseif 
+                        ($mutasi->ke_departemen == 'Production Engineering Department') {
+                        $manager = 'PI0703002';
+                        $nama_manager = 'Susilo Basri Prasetyo';
                     }
                     else{
                         $manager = null;
                         $dgm = 'PI0109004';
                         $nama_dgm = 'Budhi Apriyanto';
+                    }
+                }
+                else
+                {   $manager = db::select("select employee_id, `name` from employee_syncs where position = 'Manager' and department ='".$mutasi->ke_departemen."'"); 
+
+                    foreach ($manager as $mgr)
+                    {
+                        $manager = $mgr->employee_id;
+                        $nama_manager = $mgr->name;
                     }
                 }
 
