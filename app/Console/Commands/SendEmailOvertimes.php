@@ -78,6 +78,7 @@ public function handle()
     $datas = db::connection('sunfish')->select("SELECT
         e.cost_center_code,
         e.Department,
+        e.cost_center_name,
         ot.emp_no AS nik,
         e.Full_name AS name,
         e.pos_name_en,
@@ -96,7 +97,7 @@ public function handle()
         FROM
         VIEW_YMPI_Emp_OvertimePlan AS ot 
         WHERE
-        ot.emp_no <> 'SUNFISH' 
+        ot.emp_no <> 'SUNFISH'
         AND ot.ovtplanfrom >= '".$first." 00:00:00' 
         AND ot.ovtplanfrom <= '".$now." 23:59:59' 
         GROUP BY
@@ -105,6 +106,7 @@ public function handle()
         LEFT JOIN VIEW_YMPI_Emp_OrgUnit AS e ON ot.emp_no = e.Emp_no 
         WHERE
         jam > 0
+        AND e.pos_name_en <> 'Operator Outsource'
         ORDER BY
         ot.jam DESC");
 
@@ -130,7 +132,7 @@ public function handle()
         if(in_array($data->nik, $ofc) && $c_ofc <= 20){
             array_push($offices, [
                 'period' => $mon,
-                'department' => strtoupper($data->Department),
+                'department' => strtoupper($data->cost_center_name),
                 'grade' => ucwords($data->pos_name_en),
                 'employee_id' => strtoupper($data->nik),
                 'name' => ucwords($data->name),
@@ -141,7 +143,7 @@ public function handle()
         else if(!in_array($data->nik, $drv) && $c_prd <= 20){
             array_push($productions, [
                 'period' => $mon,
-                'department' => strtoupper($data->Department),
+                'department' => strtoupper($data->cost_center_name),
                 'grade' => ucwords($data->pos_name_en),
                 'employee_id' => strtoupper($data->nik),
                 'name' => ucwords($data->name),
