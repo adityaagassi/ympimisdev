@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 use App\ActivityList;
+use App\EmployeeSync;
 use Response;
 use Illuminate\Support\Facades\DB;
 use App\User;
@@ -138,11 +139,13 @@ class ActivityListController extends Controller
           $frekuensi = 'Kondisional';
         }
 
-        if($role_code == "MIS" || $role_code == "S" || $role_code == "F" || $role_code == "F-SPL"  || $role_code == "M" || $role_code == "G"){
-          $activityList = ActivityList::where('department_id',$id)->where('activity_type',$activity_type)->where('activity_name','!=','Null')->where('frequency',$frequency)->distinct()->get();
+        $emp = EmployeeSync::where('employee_id',$emp_id)->first();
+
+        if($emp->position == 'Leader'){
+          $activityList = ActivityList::where('department_id',$id)->where('activity_type',$activity_type)->where('leader_dept',$name)->where('activity_name','!=','Null')->where('frequency',$frequency)->where('remark',null)->get();
         }
         else{
-          $activityList = ActivityList::where('department_id',$id)->where('activity_type',$activity_type)->where('leader_dept',$name)->where('activity_name','!=','Null')->where('frequency',$frequency)->where('remark',null)->get();
+          $activityList = ActivityList::where('department_id',$id)->where('activity_type',$activity_type)->where('activity_name','!=','Null')->where('frequency',$frequency)->distinct()->get();
         }
 
         $response = array(
