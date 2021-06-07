@@ -8019,18 +8019,47 @@ class RecorderProcessController extends Controller
     {
       try {
         $initial = DB::SELECT("SELECT
-          * 
+          rc_assy_initials.product,
+          rc_assy_initials.part_type,
+          rc_assy_initials.material_number,
+          rc_assy_initials.tag,
+          rc_assy_initials.color,
+          rc_assy_initials.no_kanban_injection,
+          rc_assy_initials.cavity,
+          injection_tags.mat_desc 
         FROM
-          rc_assy_initials 
+          rc_assy_initials
+          LEFT JOIN injection_tags ON injection_tags.tag = rc_assy_initials.tag 
         WHERE
-          `status` = 'Open'");
+          `status` = 'Open'
+        ORDER BY
+          rc_assy_initials.id ASC");
 
-        $kensa = DB::SELECT("SELECT
-          * 
+        $kensa = DB::SELECT("SELECT DISTINCT
+          ( rc_kensa_initials.serial_number ),
+          employee_id,
+          rc_kensa_initials.product,
+          `name`,
+          GROUP_CONCAT( rc_kensa_initials.material_number ORDER BY rc_kensa_initials.id ASC) AS material_number,
+          GROUP_CONCAT( rc_kensa_initials.tag ORDER BY rc_kensa_initials.id ASC) AS tag,
+          GROUP_CONCAT( rc_kensa_initials.color ORDER BY rc_kensa_initials.id ASC) AS color,
+          GROUP_CONCAT( rc_kensa_initials.no_kanban_injection ORDER BY rc_kensa_initials.id ASC) AS no_kanban,
+          GROUP_CONCAT( rc_kensa_initials.cavity ORDER BY rc_kensa_initials.id ASC) AS cavity,
+          GROUP_CONCAT( injection_tags.mat_desc ORDER BY rc_kensa_initials.id ASC) AS mat_desc 
         FROM
-          rc_kensa_initials 
+          rc_kensa_initials
+          LEFT JOIN employee_syncs ON employee_syncs.employee_id = rc_kensa_initials.operator_kensa
+          LEFT JOIN injection_tags ON injection_tags.tag = rc_kensa_initials.tag 
         WHERE
-          `status` = 'Open'");
+          `status` = 'Open' 
+        GROUP BY
+          serial_number,
+          employee_id,
+          `name`,
+          rc_kensa_initials.product
+        ORDER BY
+          rc_kensa_initials.id DESC 
+          LIMIT 5");
 
         $response = array(
           'status' => true,
