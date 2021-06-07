@@ -142,7 +142,13 @@ class QcCarController extends Controller
         $getpic = "select employee_id, `name`, department from employee_syncs where department = '".$departemen[0]->department_name."' and (position like '%chief%' or position like '%foreman%')";
 
          $pic = DB::select($getpic);
-       } 
+       }
+       
+       else if ($departemen[0]->department_name == "Educational Instrument (EI) Department"){
+        $getpic = "select employee_id, `name`, department from employee_syncs where department = '".$departemen[0]->department_name."' and (position LIKE '%staff%' OR position LIKE '%chief%' OR position LIKE '%coordinator%')";
+
+         $pic = DB::select($getpic);
+       }
 
        else{
          $getpic = "select employee_id, `name`, department from employee_syncs where department = '".$departemen[0]->department_name."' and (position like '%staff%' or position like '%foreman%')";
