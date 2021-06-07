@@ -68,10 +68,10 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Audit Schedule</label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="audit_guidance_id" style="width: 100%;" data-placeholder="Pilih Schedule" required>
+              <select class="form-control select2" name="audit_guidance_id" style="width: 100%;" data-placeholder="Pilih Schedule" required onchange="changeGuidance(this.value)">
                 <option value=""></option>
                 @foreach($guidance as $guidance)
-                  <option value="{{ $guidance->id }}">({{ date('M Y',strtotime($guidance->month)) }}) {{ $guidance->no_dokumen }} - {{ $guidance->nama_dokumen }}</option>
+                  <option value="{{ $guidance->id }}_{{ $guidance->no_dokumen }}_{{ $guidance->nama_dokumen }}">({{ date('M Y',strtotime($guidance->month)) }}) {{ $guidance->no_dokumen }} - {{ $guidance->nama_dokumen }}</option>
                 @endforeach
               </select>
               <br>
@@ -84,13 +84,13 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Nama Dokumen</label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" name="nama_dokumen" placeholder="Masukkan Nama Dokumen" required>
+              <input type="text" class="form-control" name="nama_dokumen" id="nama_dokumen" placeholder="Masukkan Nama Dokumen" required>
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Nomor Dokumen</label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" name="no_dokumen" placeholder="Nomor Dokumen" required>
+              <input type="text" class="form-control" name="no_dokumen" id="no_dokumen" placeholder="Nomor Dokumen" required>
             </div>
           </div>
           <div class="form-group row" align="right">
@@ -210,6 +210,7 @@
         <div class="box-body">
           <div class="col-xs-12">
             <div class="row">
+              <center><span style="color: red;text-align: center;font-weight: bold;">Silahkan Scan lebih dari 1 Operator</span></center>
               <input type="text" id="scan_operator" placeholder="Scan ID Card Here ..." style="width: 100%;font-size: 20px;text-align:center;">
               <input type="text" id="operator_on_modal" placeholder="" style="width: 100%;font-size: 20px;text-align:center;">
             </div>
@@ -306,6 +307,12 @@
       $('#scan_operator').val('');
       $('#operator_on_modal').val('');
       $('#operator-modal').modal('hide');
+    }
+
+    function changeGuidance(value) {
+      var values = value.split('_');
+      $('#nama_dokumen').val(values[2]);
+      $('#no_dokumen').val(values[1]);
     }
   </script>
   @stop

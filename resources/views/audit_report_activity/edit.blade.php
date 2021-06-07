@@ -75,7 +75,7 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Audit Schedule<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="audit_guidance_id" style="width: 100%;" data-placeholder="Pilih Schedule ..." required>
+              <select class="form-control select2" name="audit_guidance_id" style="width: 100%;" data-placeholder="Pilih Schedule ..." required readonly>
                 <option value=""></option>
                 @foreach($guidance as $guidance)
                   @if($audit_report_activity->audit_guidance_id == $guidance->id)
@@ -188,7 +188,7 @@
               <a href="javascript:void(0)" class="btn btn-primary" onclick="openModalOperator()">
                 Edit Operator
               </a>
-              <input type="hidden" name="operator" style="width: 100%;" class="form-control" id="operator" placeholder="Nama Operator" value="{{$audit_report_activity->operator}}" readonly>
+              <input type="text" name="operator" style="width: 100%;" class="form-control" id="operator" placeholder="Nama Operator" value="{{$audit_report_activity->operator}}" readonly>
             </div>
           </div>
           <div class="form-group row" align="right">
@@ -228,6 +228,7 @@
         <div class="box-body">
           <div class="col-xs-12">
             <div class="row">
+              <center><span style="color: red;text-align: center;font-weight: bold;">Silahkan Scan lebih dari 1 Operator</span></center>
               <input type="text" id="scan_operator" placeholder="Scan ID Card Here ..." style="width: 100%;font-size: 20px;text-align:center;">
               <input type="text" id="operator_on_modal" placeholder="" style="width: 100%;font-size: 20px;text-align:center;">
             </div>
