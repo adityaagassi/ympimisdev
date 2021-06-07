@@ -37,11 +37,101 @@ class AuditController extends Controller
 
 		$this->location = ['Assembly','Accounting','Body Process','Exim','Material Process','Surface Treatment','Educational Instrument','Standardization','QA Process','Chemical Process Control','Human Resources','General Affairs','Workshop and Maintenance Molding','Production Engineering','Maintenance','Procurement','Production Control','Warehouse Material','Warehouse Finished Goods','Welding Process','Case Tanpo CL Body 3D Room'];
 
-    $this->point_sup = ['Jalan - Lantai - Tempat Kerja - Tembok - Atap', 'Kontrol Lemari Dokumen, Jig, Penyimpanan, Alat Kebersihan', 'Meja Kerja - Meja Office', 'Oa Perkakas Mesin - Telepon', 'Mesin - Equipment','Pencegahan Kebakaran - Pencegahan Bencana - Barang Berbahaya - Barang Beracun','Tempat Istirahat, Meeting Room, Lobby, Di Dalam Ruangan, Kantin','Kedisiplinan'];
+    $this->point_sup = [
+      'Jalan - Lantai - Tempat Kerja - Tembok - Atap', 
+      'Kontrol Lemari Dokumen, Jig, Penyimpanan, Alat Kebersihan', 
+      'Meja Kerja - Meja Office', 
+      'Material, WIP', 
+      'Mesin & Tools',
+      'Pencegahan Kebakaran - Pencegahan Bencana - Barang Berbahaya - Barang Beracun',
+      'Tempat Istirahat, Meeting Room, Lobby, Di Dalam Ruangan, Kantin',
+      'Kedisiplinan'
+    ];
 
-    $this->point_1 = ['Jalan', 'Kebersihan', 'Barang tidak diperlukan', 'Informasi Papan'];
+    $this->point_1 = [
+      'Pada koridor umum, lebar koridor dipastikan lebih dari 80cm dan garis pembatas tidak ada yang rusak atau terkelupas', 
+      'Pastikan selalu melakukan pengecekan di dalam ruangan apakah ada sarang laba-laba, yogore atau debu yang tersisa', 
+      'Barang yang tidak diperlukan tidak ada di tiang dan sekitar tembok. Diberi label pembagian tempat, label nama yang ditempatkan, label PIC kontrol', 
+      'Sebagai prinsipnya dilarang menempel informasi selain di papan informasi. Selain itu ditetapkan label PIC untuk papan informasi. Papan informasi di letakkan  lurus, sejajar , siku siku dan diberi 2 stopper atau lebih agar posisinya fix', 
+      'Permukaan lantai tidak ada yang rusak, selalu dibersihkan dan tidak ada yang melebihi garis pembatas sampai ke koridor/jalan. Maintenance jika ada kerusakan cat koridor dll',
+      '',
+      '',
+      'Untuk menempel informasi di papan informasi selain IK dll  menggunakan kertas "seminimum mungkin", lalu dimasukkan ke hardcase.  di tempel lurus, sejajar , siku siku dan diberi 2 stopper atau lebih agar posisinya fix '
+    ];
     
-    $this->point_2 = ['Jalan 2', 'Kebersihan 3', 'Barang tidak diperlukan 2', 'Informasi Papan 2'];
+    $this->point_2 = [
+      'Tidak menaruh barang di bagian atas almari/rak', 
+      'Dokumen yang disimpan dipilah(seiri) dan dirapikan(seiton), pastikan saat filling terpasang insert paper di punggung file.', 
+      'Pintu lemari, pintu lemari jig, pintu lemari penyimpanan, pintu lemari alat kebersihan semua harus ditutup. Pintu yang rusak di repair. Dilakukan maintenance agar pintu bisa dibuka tutup dengan lancar', 
+      'Pada lemari dokumen,lemari jig, lemari alat kebersihan dan lemari yang terkunci saja diperjelas dan ditetapkan PIC kontrolnya ,dilakukan pengontrolan agar tidak membawa  dan memindahkan kunci tanpa ijin ke tempat lain.', 
+      'Memberi label PIC 5S lemari, lemari jig, lemari penyimpanan, lemari alat kebersihan ', 
+      'Peletakkan lemari, lemari jig, lemari penyimpanan, lemari alat kebersihan di letakkan  lurus, sejajar dan siku-siku.', 
+      'Harus menggantungkan sapu, pengepel, cikrak dll. Bila ember diletakkan di dalam lemari harus diberi batas dengan jelas dan papan nama.', 
+      'Melakukan seiton dan semua diberi label untuk lemari buku, lemari jig dan lemari penyimpanan  agar barang yang diperlukan bisa langsung diambil tanpa perlu mencari-cari.'
+    ];
+
+    $this->point_3 = [
+      'Melakukan SEIRI barang di atas meja kerja dan meja office,dijaga kebersihannya, kursi juga ditempatkan di tempat yang telah ditentukan', 
+      'Dokumen yang digunakan tidak hanya disimpan tapi juga harus disusun secara jelas dengan menggunakan clip, tray, clear file agar bisa dibedakan dan agar bisa disimpan dengan lurus dan sejajar selama bekerja (termasuk ketika meninggalkan tempat). jangan menyimpan dokumen di atas meja', 
+      'Saat pulang diatas meja kerja, hanya diletakkan benda benda yang sedang dikerjakan. Semua tools dikembalikan ke sugata oki. Sugata oki harus tepat tidak boleh lebih atau kurang saat dikembalikan', 
+      'Diatas meja kerja sebisa mungkin hanya diletakkan dokumen yang dibutuhkan saja dan agar mudah diambil diberi sugata oki untuk tools. Prinsip pada saat bekerja adalah setiap setelah menggunakan tools langsung dikembalikan ke tempat semula.', 
+      'Untuk semua meja kerja dan meja office diberi label PIC 5S yang telah ditentukan', 
+      'Barang pribadi di letakkan di loker yang sudah ditetapkan ( tas, barang bawaan, pakaian), jangan diletakkan di sekitar meja kerja.', 
+      'Dokumen yang disimpan meja kerja dan meja office disimpan dipilah(seiri) dan dirapikan(seiton), pastikan saat filling terpasang inset paper di punggung file.',
+      'Meja kerja dan isi di laci di meja kerja adalah benda benda yang dibutuhkan untuk bekerja saja. Tools di meja kerja diberi sugata oki dan di laci hanya benda benda yang dibutuhkan untuk kerja.  dipilah(seiri) dan dirapikan(seiton) harus selalu dilakukan.'
+     ];
+
+    $this->point_4 = [
+      'Perhatikan ketinggian saat menumpuk barang, ditumpuk sesuai dengan jangkauan tangan pekerja. Jangan ada yang miring atau keluar batas pada saat menumpuk.', 
+      'Tempat peletakan returnable box dan pallet yang kosong di tetapkan PIC dan diberi label keduanya  ', 
+      'Tempat menaruh barang bergerak/berpindah-pindah seperti daisha, dsb ditentukan dan diberi label. Untuk barang yang tidak ditentukan tempatnya, diberi label Temporary place/tempat menaruh sementara diperjelas, ditentukan  PIC  dan batas waktu/sampai kapan penempatannya', 
+      'Penerapan langsung 3T dan pemberian label  (Tetap posisi・・menentukan tempat peletakan barang, Tetap jumlah・・menentukan jumlah yang diletakkan, Tetap barang・・menentukan barang yang diletakkan).', 
+      'Di tempat penyimpanan material KD diberi visual control/ label jumlah material existing, MAX material, MIN material, kapan harus order dll. Selain itu harus mematuhi jumlah tersebut ', 
+      'Tidak ada kerusakan pada palet dan returnable box yang dapat merusak produk, dan terjaga dengan baik dan bersih. sebagai prinsipnya selain yang tidak ada label nama perusahaan atau departemen yang bersangkutan tidak boleh dibawa.', 
+      '',
+      ''
+     ];
+
+    $this->point_5 = [
+      'Ketika meninggalkan tempat duduk, pastikan kondisi display laptop/PC dan lampu dalam keadaan OFF', 
+      'Keyboard dan monitor PC dirawat dengan baik agar tidak ada debu atau sidik jari yang tertinggal', 
+      'Panjang dan jenis kabel tools OA sesuai & tidak berdebu. Disekitar stop kontak tidak ada debu.prinsip OA tools di letakkan  lurus, sejajar dan siku-siku.', 
+      'Telepon diberi label nomor, kabel telepon tidak melilit, selalu terawat dan dalam kondisi bersih.  Letak telepon pada dasarnya diletakkan urus, sejajar dan siku-siku.', 
+      'Seluruh mesin dan fasilitas, dibersihkan sampai ke ujung/sudut-sudutnya, kontrol oiling, daily maintenance. Dan ditampilkan record yang paling baru. (jangan ada sarang laba-laba atau debu yang terlihat)', 
+      'Pipa dan kabel diatur agar panjangnya secukupnya tidak diletakkan di lantai. dipatenkan(dibuat fix) agar tidak membuat tersandung. Sebagai prinsipnya di letakkan  lurus, sejajar dan siku-siku.', 
+      'Memberi tanda di sekitar mesin dan di mesin itu sendiri agar mudah dimengerti saat mesin sedang beroperasi seperti lampu atau kalimat pengumuman. untuk gas,air, air RO listrik dll diberi tanda arah aliran nya, lalu untuk benda yang berputar diberi label arah putaran dan sisa putaran.',
+      'Seluruh mesin dan fasilitas diberi label PIC. Lalu, kunci di posisi yang benar (buka tutup, ON/OFF dll) dilepas dari mesin dan disimpan ditempat yang sudah ditentukan.'
+     ];
+
+    $this->point_6 = [
+      'Lorong evakuasi terjaga dengan baik, tanda penunjuk dijaga agar tetap jelas.', 
+      'Agar bisa segera diambil dari tempatnya (hydrant, APAR, tandu),usahakan tidak ada barang lain yang menghalangi. ', 
+      'Lokasi alat pemadam dan tandu,dll diberi tanda agar bisa ditemukan walaupun dari kejauhan.', 
+      'Benda beracun dan berbahaya disimpan di gudang yang ditetapkan dan diberi label nama dan quantity dan ada buku besar keluar masuknya barang, serta kunci gudangnya dikontrol.'
+     ];
+
+    $this->point_7 = [
+      'Ditempatkan dispenser atau tempat minum , ditunjuk PIC nya untuk menjaga kebersihannya. Lalu, pastikan tidak ada bekas ciprtatan air di pantry, wastafel dan toilet agar terjaga keindahan nya. ', 
+      'Tempat istirahat dan loker harus dijaga keindahan nya. Dilarang membawa barang barang yang tidak diperlukan. Isi loker harus dijaga jangan memasukkan barang yang tidak digunakan serta  dijaga kebersihan nya agar tetep indah . sudah menjadi tugas kita untuk menyimpan dan menjaga kebersihan barang barang perusahaan di loker', 
+      'Penetapan penanggung jawab kontrol suhu AC (kontrol suhu artinya bukan untuk setting suhu, tetapi suhu aktual dalam ruangan). Meletakkan termometer di beberapa titik. Peletakan hydrometer dengan tepat.suhu dikontrol jangan sampai kurang dari 28 derajat celcius', 
+      'Menentukan seluruh PIC jendela untuk dijiaga keindahan dan kebersihan nya sampai seperti tidak ada sidik jari yang menempel. Jangan menempel informasi di kaca. Lalu lemari atau fasilitas jangan menghalangi kaca ', 
+      'Jam selalu menunjukkan waktu yang tepat', 
+      'Menjaga kebersihan setelah memakai smoking room, buang sampah pada tempatnya, rapihkan kursi kembali setelah dipakai.', 
+      '', 
+      '', 
+     ];
+
+    $this->point_8 = [
+      'Memakai name tag di dada sebelah kiri agar dapat dibaca dengan baik oleh orang lain.selalu memakai "seragam yang tepat" (untuk pria tutup kancing sampai atas . Untuk wanita resleting dari bawah sampai atas ), potong kuku, kaos dalam jangan keluar dari seragam, celana panjang, sepatu dll)', 
+      'mengawali hari kerja dengan perasaan yang bersemangat. Harus mengucapkan salam di pagi, isang & sore hari di area kerja, serta senam harus dilakukan diluar ruangan dengan semangat dan tidak berbincang - bincang ', 
+      'Tidak memasukkan tangan di saku pada saat berjalan, jangan berlarian di pabrik pada saat bekerja, pindah lokasi, istirahat siang. Pada saat menuruni tangga harus memegang pegangan tangga.', 
+      'Pada tempat penyimpanan alat komunikasi seperti HP diberi label PIC, dan di  simpan. Space tempat penyimpanan yang kosong diberi label alasan "cuti:, "shift 2", "tidak digunakan"', 
+      'Memastikan sekali lagi isi 5S dan 3 Tei (3 ketetapan), dilakukan training dan seluruhnya harus dihafal', 
+      'Setiap hari pada saat pointing call hafal Filosofi Yamaha, Aturan K3 Yamaha, 6 Pasal Keselamatan Lalu Lintas Yamaha, dan 10 Komitmen Berkendara, dll', 
+      'Pada saat bel pertama cepat segera kembali ke tempat kerja, bersamaan dengan bunyi bel langsung segera bekerja kembali',
+      'Memahami dan mengaplikasikan untuk terus membersihkan ketika menyadari bahwa ada yang kotor di meja kerja, equipment, peralatan, kotak obat P3K, lemari, bola lampu, jendela, sampah yang terjatuh, dll. '
+     ];
+
 	}
 
   public function index()
@@ -85,7 +175,13 @@ class AuditController extends Controller
 			'location' => $this->location,
       'poin' => $this->point_sup,
       'point_1' => $this->point_1,
-      'point_2' => $this->point_2
+      'point_2' => $this->point_2,
+      'point_3' => $this->point_3,
+      'point_4' => $this->point_4,
+      'point_5' => $this->point_5,
+      'point_6' => $this->point_6,
+      'point_7' => $this->point_7,
+      'point_8' => $this->point_8
 		))->with('page', 'Audit Patrol');
 	}
 
@@ -263,6 +359,24 @@ class AuditController extends Controller
 		try {
 			$id_user = Auth::id();
 			$tujuan_upload = 'files/patrol';
+
+      $poin_sup = "";
+      $detail_poin_sup = "";
+
+      if ($request->input('poin_fix') == "" || $request->input('poin_fix') == null || $request->input('poin_fix') == "#0") {
+        $poin_sup = null;
+      }
+      else{
+        $poin_sup = $request->input('poin_fix');
+      }
+
+      if ($request->input('isi_poin_fix') == "" || $request->input('isi_poin_fix') == null || $request->input('isi_poin_fix') == "#1") {
+        $detail_poin_sup = null;
+      }
+      else{
+        $detail_poin_sup = $request->input('isi_poin_fix');
+      }
+
       
 			for ($i=0; $i < $request->input('jumlah'); $i++) { 
 
@@ -286,6 +400,8 @@ class AuditController extends Controller
 					'auditee_name' => $request->input('patrol_pic_'.$i),
 					'point_judul' => $request->input('patrol_detail_'.$i),
 					'note' => $request->input('note_'.$i),
+          'poin_sup' => $poin_sup,
+          'detail_poin_sup' => $detail_poin_sup,
 					'foto' => $filename,
 					'created_by' => $id_user
 				]);

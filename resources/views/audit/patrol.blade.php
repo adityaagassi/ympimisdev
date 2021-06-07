@@ -134,31 +134,202 @@
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="col-xs-12" style="padding-right: 0; padding-left: 0; margin-bottom: 2%;">
-				<table class="table table-bordered" style="width: 100%; margin-bottom: 0px">
-					<thead>
-						<tr>
-							<th style="width:15%; background-color: #0e92eb; color: white; text-align: center; padding:0;font-size: 18px;border: 1px solid black" colspan="3">General Information</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td style="padding: 0px; background-color: rgb(32, 145, 121); text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Patrol Date</td>
-							<td colspan="2" style="padding: 0px; background-color: rgb(0, 217, 255); text-align: center; color: #000000; font-size: 20px;border: 1px solid black"><?= date("d F Y") ?></td>
-						</tr>
-						<tr>
-							<td style="padding: 0px; background-color: rgb(32, 145, 121); text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Auditor</td>
-							<td colspan="2" style="padding: 0px; background-color: rgb(0, 217, 255); text-align: center; color: #000000; font-size: 20px;border: 1px solid black" id="employee_name"></td>
-						</tr>
-						<tr>
-							<td style="padding: 0px; background-color: rgb(32, 145, 121); text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Category</td>
-							<td colspan="2" style="padding: 0px; background-color: rgb(0, 217, 255); text-align: center; color: #000000; font-size: 20px;border: 1px solid black" id="category"></td>
-						</tr>
-						<tr>
-							<td style="padding: 0px; background-color: rgb(32, 145, 121); text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Location</td>
-							<td colspan="2" style="padding: 0px; background-color: rgb(0, 217, 255); text-align: center; color: #000000; font-size: 20px;border: 1px solid black" id="location"></td>
-						</tr>
-					</tbody>
-				</table>
+				<div class="col-xs-12" style="padding: 0" id="poin_head">
+				<?php $no = 1; ?>
+				<div class="col-xs-12">
+					<center><span style="font-size: 30px; color: red;"><i class="fa fa-angle-double-down"></i> S Up Target <i class="fa fa-angle-double-down"></i></span></center>
+				</div>
+				@foreach($poin as $point)
+					<div class="col-xs-3" style="padding-top: 5px;margin: 0;padding-right: 0; padding-left: 0;">
+						<center>
+							<button class="btn btn-success" id="point_{{$no}}" style="width: 99%;font-size: 1.3vw;font-weight: bold;white-space: normal;height: 100px;" onclick="getData(this.id)">
+							{{$point}}
+							</button>
+						</center>
+					</div>
+					<?php $no++ ?>
+				@endforeach
+				</div>
+				<div class="col-xs-12" id="poin_fix" style="padding-top: 5px;padding: 0">
+					<div class="col-xs-12" style="padding: 0">
+						<button class="btn btn-success" id="poin_fix2" style="width: 100%;font-size: 1.5vw;font-weight: bold;" onclick="changePoin()">#0</button>
+					</div>
+				</div>
+
+				<div class="col-xs-12" style="padding: 0" id="isi_poin_head_1">
+					<?php $no_sup = 1; ?>
+					@foreach($point_1 as $poin_1)
+
+					<div class="col-xs-3" style="padding-top: 5px;margin: 0;padding-right: 0; padding-left: 0;">
+						<center>
+							@if($no_sup <= 4)
+							<center><span style="font-size: 30px; color: blue;"><i class="fa fa-angle-double-down"></i> Step {{$no_sup}} <i class="fa fa-angle-double-down"></i></span></center>
+							@endif
+							<button class="btn btn-warning" id="{{$poin_1}}_1" style="width: 99%;font-size: 1.1vw;white-space: normal;height: 100px;" onclick="getDataIsi(this.id)">
+								{{$poin_1}}
+							</button>
+						</center>
+					</div>
+
+					<?php $no_sup++ ?>
+					@endforeach
+				</div>
+				<div class="col-xs-12" style="padding: 0" id="isi_poin_head_2">
+					<?php $no_sup = 1; ?>
+					@foreach($point_2 as $poin_2)
+					<div class="col-xs-3" style="padding-top: 5px;margin: 0;padding-right: 0; padding-left: 0;">
+						<center>
+							@if($no_sup <= 4)
+							<center><span style="font-size: 30px; color: blue;"><i class="fa fa-angle-double-down"></i> Step {{$no_sup}} <i class="fa fa-angle-double-down"></i></span></center>
+							@endif
+							<button class="btn btn-warning" id="{{$poin_2}}_2" style="width: 99%;font-size: 1.1vw;white-space: normal;height: 100px;" onclick="getDataIsi(this.id)">
+								{{$poin_2}}
+							</button>
+						</center>
+					</div>
+					<?php $no_sup++ ?>
+					@endforeach
+				</div>
+
+				<div class="col-xs-12" style="padding: 0" id="isi_poin_head_3">
+					<?php $no_sup = 1; ?>
+					@foreach($point_3 as $poin_3)
+					<div class="col-xs-3" style="padding-top: 5px;margin: 0;padding-right: 0; padding-left: 0;">
+						<center>
+							@if($no_sup <= 4)
+							<center><span style="font-size: 30px; color: blue;"><i class="fa fa-angle-double-down"></i> Step {{$no_sup}} <i class="fa fa-angle-double-down"></i></span></center>
+							@endif
+							<button class="btn btn-warning" id="{{$poin_2}}_3" style="width: 99%;font-size: 1.1vw;white-space: normal;height: 100px;" onclick="getDataIsi(this.id)">
+								{{$poin_3}}
+							</button>
+						</center>
+					</div>
+					<?php $no_sup++ ?>
+					@endforeach
+				</div>
+
+				<div class="col-xs-12" style="padding: 0" id="isi_poin_head_4">
+					<?php $no_sup = 1; ?>
+					@foreach($point_4 as $poin_4)
+					<div class="col-xs-3" style="padding-top: 5px;margin: 0;padding-right: 0; padding-left: 0;">
+						<center>
+							@if($no_sup <= 4)
+							<center><span style="font-size: 30px; color: blue;"><i class="fa fa-angle-double-down"></i> Step {{$no_sup}} <i class="fa fa-angle-double-down"></i></span></center>
+							@endif
+							<button class="btn btn-warning" id="{{$poin_4}}_4" style="width: 99%;font-size: 1.1vw;white-space: normal;height: 100px;" onclick="getDataIsi(this.id)">
+								{{$poin_4}}
+							</button>
+						</center>
+					</div>
+					<?php $no_sup++ ?>
+					@endforeach
+				</div>
+
+				<div class="col-xs-12" style="padding: 0" id="isi_poin_head_5">
+					<?php $no_sup = 1; ?>
+					@foreach($point_5 as $poin_5)
+					<div class="col-xs-3" style="padding-top: 5px;margin: 0;padding-right: 0; padding-left: 0;">
+						<center>
+							@if($no_sup <= 4)
+							<center><span style="font-size: 30px; color: blue;"><i class="fa fa-angle-double-down"></i> Step {{$no_sup}} <i class="fa fa-angle-double-down"></i></span></center>
+							@endif
+							<button class="btn btn-warning" id="{{$poin_5}}_5" style="width: 99%;font-size: 1.1vw;white-space: normal;height: 100px;" onclick="getDataIsi(this.id)">
+								{{$poin_5}}
+							</button>
+						</center>
+					</div>
+					<?php $no_sup++ ?>
+					@endforeach
+				</div>
+
+				<div class="col-xs-12" style="padding: 0" id="isi_poin_head_6">
+					<?php $no_sup = 1; ?>
+					@foreach($point_6 as $poin_6)
+					<div class="col-xs-3" style="padding-top: 5px;margin: 0;padding-right: 0; padding-left: 0;">
+						<center>
+							@if($no_sup <= 4)
+							<center><span style="font-size: 30px; color: blue;"><i class="fa fa-angle-double-down"></i> Step {{$no_sup}} <i class="fa fa-angle-double-down"></i></span></center>
+							@endif
+							<button class="btn btn-warning" id="{{$poin_6}}_6" style="width: 99%;font-size: 1.1vw;white-space: normal;height: 100px;" onclick="getDataIsi(this.id)">
+								{{$poin_6}}
+							</button>
+						</center>
+					</div>
+					<?php $no_sup++ ?>
+					@endforeach
+				</div>
+
+				<div class="col-xs-12" style="padding: 0" id="isi_poin_head_7">
+					<?php $no_sup = 1; ?>
+					@foreach($point_7 as $poin_7)
+					<div class="col-xs-3" style="padding-top: 5px;margin: 0;padding-right: 0; padding-left: 0;">
+						<center>
+							@if($no_sup <= 4)
+							<center><span style="font-size: 30px; color: blue;"><i class="fa fa-angle-double-down"></i> Step {{$no_sup}} <i class="fa fa-angle-double-down"></i></span></center>
+							@endif
+							<button class="btn btn-warning" id="{{$poin_7}}_7" style="width: 99%;font-size: 1.1vw;white-space: normal;height: 100px;" onclick="getDataIsi(this.id)">
+								{{$poin_7}}
+							</button>
+						</center>
+					</div>
+					<?php $no_sup++ ?>
+					@endforeach
+				</div>
+
+				<div class="col-xs-12" style="padding: 0" id="isi_poin_head_8">
+					<?php $no_sup = 1; ?>
+					@foreach($point_8 as $poin_8)
+					<div class="col-xs-3" style="padding-top: 5px;margin: 0;padding-right: 0; padding-left: 0;">
+						<center>
+							@if($no_sup <= 4)
+							<center><span style="font-size: 30px; color: blue;"><i class="fa fa-angle-double-down"></i> Step {{$no_sup}} <i class="fa fa-angle-double-down"></i></span></center>
+							@endif
+							<button class="btn btn-warning" id="{{$poin_8}}_8" style="width: 99%;font-size: 1.1vw;white-space: normal;height: 100px;" onclick="getDataIsi(this.id)">
+								{{$poin_8}}
+							</button>
+						</center>
+					</div>
+					<?php $no_sup++ ?>
+					@endforeach
+				</div>
+
+				<div class="col-xs-12" id="isi_poin_fix" style="padding: 0;padding-top: 5px;padding-bottom: 5px;">
+					<div class="col-xs-12" style="padding: 0">
+						<button class="btn btn-warning" id="isi_poin_fix2" style="width: 100%;font-size: 1vw;font-weight: bold;" onclick="changePoinIsi()">
+							#1
+						</button>
+						<input type="hidden" id="isi_isi">
+					</div>
+				</div>
+
+
+				<div class="col-xs-12" style="padding: 0;padding-top: 5px;">
+					<table class="table table-bordered" style="width: 100%; margin-bottom: 0px;">
+						<thead>
+							<tr>
+								<th style="width:15%; background-color: #0e92eb; color: white; text-align: center; padding:0;font-size: 18px;border: 1px solid black" colspan="3">General Information</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td style="padding: 0px; background-color: rgb(32, 145, 121); text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Patrol Date</td>
+								<td colspan="2" style="padding: 0px; background-color: rgb(0, 217, 255); text-align: center; color: #000000; font-size: 20px;border: 1px solid black"><?= date("d F Y") ?></td>
+							</tr>
+							<tr>
+								<td style="padding: 0px; background-color: rgb(32, 145, 121); text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Auditor</td>
+								<td colspan="2" style="padding: 0px; background-color: rgb(0, 217, 255); text-align: center; color: #000000; font-size: 20px;border: 1px solid black" id="employee_name"></td>
+							</tr>
+							<tr>
+								<td style="padding: 0px; background-color: rgb(32, 145, 121); text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Category</td>
+								<td colspan="2" style="padding: 0px; background-color: rgb(0, 217, 255); text-align: center; color: #000000; font-size: 20px;border: 1px solid black" id="category"></td>
+							</tr>
+							<tr>
+								<td style="padding: 0px; background-color: rgb(32, 145, 121); text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Location</td>
+								<td colspan="2" style="padding: 0px; background-color: rgb(0, 217, 255); text-align: center; color: #000000; font-size: 20px;border: 1px solid black" id="location"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</div>
 
 			<input type="hidden" id="employee_id">
@@ -170,7 +341,6 @@
 				</div> -->
 
 				<!-- <br><br><br> -->
-				
 
 				<table class="table table-bordered" style="width: 100%; color: white;" id="tableResult">
 					<thead style="font-weight: bold; color: white; background-color: #000000;">
@@ -319,6 +489,19 @@
 				backdrop: 'static',
 				keyboard: false
 			});
+
+
+			$('#poin_fix').hide();
+			$('#isi_poin_head_1').hide();
+			$('#isi_poin_head_2').hide();
+			$('#isi_poin_head_3').hide();
+			$('#isi_poin_head_4').hide();
+			$('#isi_poin_head_5').hide();
+			$('#isi_poin_head_6').hide();
+			$('#isi_poin_head_7').hide();
+			$('#isi_poin_head_8').hide();
+			$('#isi_poin_fix').hide();
+			$('#isi_poin_fix2').hide();
 		})
 
 		function selectData(id){
@@ -469,8 +652,6 @@
 				var patrol_pic = [];
 				var file = [];
 
-				
-
 				// $('.patrol_lokasi').each(function(i, obj) {
 				// 	patrol_lokasi.push($(this).val());
 				// })
@@ -540,6 +721,8 @@
 				formData.append('location', $('#location').text());
 				formData.append('auditor_id', $('#employee_id').val());
 				formData.append('auditor_name',  $('#employee_name').text());
+				formData.append('poin_fix',  $.trim($('#poin_fix2').text()));
+				formData.append('isi_poin_fix',  $.trim($('#isi_poin_fix2').text()));
 
 				$('.file').each(function(i, obj) {
 					formData.append('file_datas_'+i, $(this).prop('files')[0]);
@@ -628,6 +811,69 @@
 			sticky: false,
 			time: '2000'
 		});
+	}
+
+	function getData(poin) {
+
+		$('#poin_head').hide();
+		$('#poin_fix').show();
+		$('#poin_fix2').html($('#'+poin).text());
+
+		var point = poin.split('_');
+
+		var length = '{{count($poin)}}';
+		for (var i = 0; i <= length; i++) {
+			if (point[1] == i) {
+				$('#isi_poin_head_'+point[1]).show();
+				$('#isi_poin_fix').hide();
+				$('#isi_poin_fix2').hide();
+				$('#nomor_fix').val(point[1]);
+			}else{
+				$('#isi_poin_head_'+i).hide();
+				$('#isi_poin_fix').hide();
+				$('#isi_poin_fix2').hide();
+				$('#nomor_fix').val("");
+			}
+		}
+	}
+
+	function changePoin() {
+		$('#poin_head').show();
+		$('#poin_fix').hide();
+		$('#poin_fix2').html('#0');
+
+		var length = '{{count($poin)}}';
+		for (var i = 0; i <= length; i++) {
+			$('#isi_poin_head_'+i).hide();
+		}
+		$('#isi_poin_fix').hide();
+	}
+
+	function getDataIsi(detail_poin) {
+
+		var isi = detail_poin.split('_');
+
+		var length = '{{count($poin)}}';
+		for (var i = 0; i <= length; i++) {
+			$('#isi_poin_head_'+i).hide();
+		}
+		// $('#isi_poin_head').hide();
+		$('#isi_poin_fix').show();
+		$('#isi_poin_fix2').show();
+		$('#isi_poin_fix2').html(isi[0]);
+		$('#isi_isi').val(isi[1]);
+	}
+
+	function changePoinIsi(value) {
+
+		var i = $('#isi_isi').val();
+
+		var length = '{{count($poin)}}';
+
+		$('#isi_poin_head_'+i).show();
+
+		$('#isi_poin_fix').hide();
+		$('#isi_poin_fix2').html('#1');
 	}
 
 </script>
