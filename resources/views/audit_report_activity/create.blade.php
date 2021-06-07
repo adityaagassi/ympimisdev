@@ -2,6 +2,7 @@
 @section('header')
 <script src="{{ url("js/jsQR.js")}}"></script>
 <script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
+<link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <link rel="stylesheet" href="{{ url("plugins/timepicker/bootstrap-timepicker.min.css")}}">
 <section class="content-header">
   <h1>
@@ -33,7 +34,7 @@
 
   <!-- SELECT2 EXAMPLE -->
   <div class="box box-solid">
-    <form role="form" method="post" action="{{url('index/audit_report_activity/store/'.$id)}}" enctype="multipart/form-data">
+    <form role="form" method="post" action="{{url('index/audit_report_activity/store/'.$id)}}" enctype="multipart/form-data" onsubmit="return submitForm(this);">
       <div class="box-body">
         <input type="hidden" value="{{csrf_token()}}" name="_token" />
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
@@ -229,6 +230,7 @@
 
   @section('scripts')
   <script src="{{ url("plugins/timepicker/bootstrap-timepicker.min.js")}}"></script>
+  <script src="{{ url('js/jquery.gritter.min.js') }}"></script>
   <script>
     $(function () {
       $('.select2').select2()
@@ -313,6 +315,39 @@
       var values = value.split('_');
       $('#nama_dokumen').val(values[2]);
       $('#no_dokumen').val(values[1]);
+    }
+
+    function submitForm(form) {
+      if ($('#operator').val() == "") {
+        openErrorGritter('Error!','Silahkan Scan ID Card Operator.');
+        return false;
+      }else{
+        form.submit();
+      }
+    }
+
+    var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+
+    function openErrorGritter(title, message) {
+      jQuery.gritter.add({
+        title: title,
+        text: message,
+        class_name: 'growl-danger',
+        image: '{{ url("images/image-stop.png") }}',
+        sticky: false,
+        time: '2000'
+      });
+    }
+
+    function openSuccessGritter(title, message){
+      jQuery.gritter.add({
+        title: title,
+        text: message,
+        class_name: 'growl-success',
+        image: '{{ url("images/image-screen.png") }}',
+        sticky: false,
+        time: '2000'
+      });
     }
   </script>
   @stop
