@@ -226,9 +226,10 @@ class AuditReportActivityController extends Controller
     function store(Request $request,$id)
     {
             $id_user = Auth::id();
+            $audit_guidance_id = explode('_', $request->input('audit_guidance_id'));
             AuditReportActivity::create([
                 'activity_list_id' => $id,
-                'audit_guidance_id' => $request->input('audit_guidance_id'),
+                'audit_guidance_id' => $audit_guidance_id[0],
                 'department' => $request->input('department'),
                 'section' => $request->input('section'),
                 'subsection' => $request->input('subsection'),
@@ -248,7 +249,7 @@ class AuditReportActivityController extends Controller
                 'created_by' => $id_user
             ]);
 
-            $audit_guidance_id = $request->input('audit_guidance_id');
+            $audit_guidance_id = $audit_guidance_id[0];
             $audit_guidance = AuditGuidance::find($audit_guidance_id);
             $audit_guidance->status = 'Sudah Dikerjakan';
             $audit_guidance->save();
