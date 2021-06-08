@@ -1707,6 +1707,10 @@ class MutasiController extends Controller
                         $chief = 'PI0103002';
                         $nama_chief = 'Agus Yulianto';
                     }
+                    else if ($request->get('section') == 'Assembly CL . Tanpo . Case Process Section'){
+                        $chief = 'PI9707008';
+                        $nama_chief = 'Imbang Prasetyo';
+                    }
                     else{
                         $mgr = db::select("select employee_id, `name` from employee_syncs where position = 'manager' and department = '".$department_asal."'");
                         if ($mgr != null)
@@ -1874,11 +1878,16 @@ class MutasiController extends Controller
                         $manager = 'PI0703002';
                         $nama_manager = 'Susilo Basri Prasetyo';
                     }
-                    else{
-                        $manager = null;
-                        $dgm = 'PI0109004';
-                        $nama_dgm = 'Budhi Apriyanto';
+                    elseif 
+                        ($mutasi->departemen == 'Woodwind Instrument - Final Assembly (WI-FA) Department') {
+                        $manager = 'PI9707006';
+                        $nama_manager = 'Fattatul Mufidah';
                     }
+                    // else{
+                    //     $manager = null;
+                    //     $dgm = 'PI0109004';
+                    //     $nama_dgm = 'Budhi Apriyanto';
+                    // }
                 }
                 else
                 {   
@@ -1899,6 +1908,10 @@ class MutasiController extends Controller
                     $mutasi->save();
 
                     if ($mutasi->manager_asal == null) {
+                        $manager = null;
+                        $dgm = 'PI0109004';
+                        $nama_dgm = 'Budhi Apriyanto';
+
                         $mutasi->posisi = 'dgm_asal';
                         $mutasi->dgm_asal = $dgm;
                         $mutasi->nama_dgm_asal = $nama_dgm; 
