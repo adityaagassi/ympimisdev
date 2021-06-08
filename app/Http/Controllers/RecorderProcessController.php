@@ -6386,7 +6386,12 @@ class RecorderProcessController extends Controller
                   injection_process_logs.shot as qty,
                   opmesin.employee_id,
                   injection_process_logs.ng_name,
-                  injection_process_logs.ng_count
+                  injection_process_logs.ng_count,
+                  injection_process_logs.material_number,
+                  injection_process_logs.part_name,
+                  injection_process_logs.part_type,
+                  injection_process_logs.color,
+                  injection_process_logs.cavity
               FROM
                   injection_tags
                   LEFT JOIN injection_process_logs ON injection_process_logs.tag_product = injection_tags.tag
@@ -6407,6 +6412,13 @@ class RecorderProcessController extends Controller
               $employee_id_block = $key_block->employee_id;
               $ng_name_block = $key_block->ng_name;
               $ng_count_block = $key_block->ng_count;
+
+              $material_number_block = $key_block->material_number;
+              $part_name_block = $key_block->part_name;
+              $part_type_block = $key_block->part_type;
+              $color_block = $key_block->color;
+              $cavity_block = $key_block->cavity;
+              $location_block = 'RC91';
             }
           }
 
