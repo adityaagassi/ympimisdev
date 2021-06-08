@@ -7011,6 +7011,24 @@ public function post_adagio(Request $request)
     }
 }
 
+public function fetch_history_pembelian(Request $request){
+    $history = AccPurchaseOrder::whereNull('acc_purchase_orders.deleted_at');
+
+    if($request->get('keyword') != null){
+        $history = $history->where('nama_item', 'like', '%' . $request->get('keyword') . '%');
+    }
+    $history = $history->join('acc_purchase_order_details','acc_purchase_orders.no_po','=','acc_purchase_order_details.no_po');
+    $history = $history->select('acc_purchase_orders.supplier_name','acc_purchase_order_details.no_po','acc_purchase_order_details.nama_item','acc_purchase_order_details.goods_price','acc_purchase_order_details.service_price','acc_purchase_orders.tgl_po','acc_purchase_orders.currency');
+    $history = $history->orderBy('acc_purchase_orders.tgl_po', 'desc');
+    $history = $history->get();
+
+    $response = array(
+        'status' => true,
+        'history' => $history
+    );
+    return Response::json($response);
+}
+
 
         //==================================//
         //     Purchase Order Investment    //

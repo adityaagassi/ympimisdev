@@ -187,10 +187,14 @@ Route::get('download/manual/{reference_file}', 'HomeController@download');
 Route::group(['nav' => 'S63', 'middleware' => 'permission'], function(){
 	Route::post('input/ticket', 'TicketController@inputTicket');
 	Route::post('input/ticket/timeline', 'TicketController@inputTicketTimeline');
+	Route::post('edit/ticket', 'TicketController@editTicket');
 	Route::get('approval/ticket', 'TicketController@approvalTicket');
+	Route::get('approval/ticket/monitoring', 'TicketController@approvalTicketMonitoring');
 });
 Route::get('/index/ticket/detail/{id}', 'TicketController@indexTicketDetail');
 Route::get('/index/ticket/{id}', 'TicketController@indexTicket');
+Route::get('/index/ticket/monitoring/{id}', 'TicketController@indexTicketMonitoring');
+Route::get('/fetch/ticket/monitoring', 'TicketController@fetchTicketMonitoring');
 Route::get('/fetch/ticket', 'TicketController@fetchTicket');
 Route::get('/fetch/ticket/pdf/{id}', 'TicketController@fetchTicketPDF');
 
@@ -1743,6 +1747,10 @@ Route::group(['nav' => 'S43', 'middleware' => 'permission'], function(){
 	Route::get('purchase_order/jurnal_po', 'AccountingController@jurnal_po');
 	Route::get('fetch/purchase_order/jurnal_po', 'AccountingController@fetchJurnal');
 
+
+	Route::get('fetch/purchase_order/log_pembelian', 'AccountingController@fetch_history_pembelian');
+
+
 	//Purchase Order Khusus investment
 	Route::get('purchase_order_investment', 'AccountingController@purchase_order_investment');
 	Route::get('fetch/purchase_order_investment', 'AccountingController@fetch_purchase_order_investment');
@@ -1949,8 +1957,9 @@ Route::get('export/invoice/tanda_terima', 'AccountingController@export_tanda_ter
 Route::get('payment_request', 'AccountingController@IndexPaymentRequest');
 Route::get('fetch/payment_request', 'AccountingController@fetchPaymentRequest');
 Route::get('detail/payment_request', 'AccountingController@fetchPaymentRequestDetail');
-Route::post('create/payment_request', 'AccountingController@create_invoice');
-Route::post('edit/payment_request', 'AccountingController@edit_invoice');
+Route::post('create/payment_request', 'AccountingController@createPaymentRequest');
+Route::post('edit/payment_request', 'AccountingController@editPaymentRequest');
+Route::get('report/payment_request/{id}', 'AccountingController@report_payment_request');
 
 Route::get('scan/middle/operator', 'MiddleProcessController@scanMiddleOperator');
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
@@ -4259,6 +4268,7 @@ Route::get('fetch/maintenance/spk/monitoring', 'MaintenanceController@fetchSPKPr
 Route::get('fetch/maintenance/spk/monitoring/detail', 'MaintenanceController@fetchSPKProgressDetail');
 
 Route::get('index/maintenance/spk/weekly', 'MaintenanceController@indexSPKWeekly');
+Route::get('fetch/maintenance/spk/weekly_report', 'MaintenanceController@fetchSPKWeekly');
 
 // ---------------------      MACHINE LOG      ------------------
 Route::get('index/maintenance/machine/log', 'MaintenanceController@indexMachineHistory');
@@ -5068,6 +5078,9 @@ Route::get('print/reed/resin_receive', 'ReedSyntheticController@fetchPrintReceiv
 
 Route::get('index/reed/store_verification', 'ReedSyntheticController@indexStoreVerification');
 Route::post('scan/reed/store_verification', 'ReedSyntheticController@scanStoreVerification');
+
+Route::get('index/reed/warehouse_delivery', 'ReedSyntheticController@indexResinDelivery');
+
 
 //End Reed Project
 

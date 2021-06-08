@@ -59,6 +59,9 @@
 	</h1>
 	<ol class="breadcrumb">
 		<li>
+			<a href="javascript:void(0)" onclick="openHistory()" class="btn btn-md bg-green" style="color:white"><i class="fa fa-list"></i> Cek History Pembelian</a>
+		</li>
+		<li>
 			<a href="javascript:void(0)" onclick="openModalCreate()" class="btn btn-md bg-purple" style="color:white"><i class="fa fa-plus"></i> Create {{ $page }}</a>
 		</li>
 	</ol>
@@ -933,55 +936,98 @@
       </div>
   </div>
 
-<div class="modal fade" id="modalSAP" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  	<div class="modal-dialog modal-sm">
-    	<div class="modal-content">
-      		<div class="modal-header">
-	        	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-	        	<h4 class="modal-title" id="myModalLabel">Edit Nomor SAP</h4>
-      		</div>
-	      	<div class="modal-body">
-		        <div class="box-body">
-		          <input type="hidden" value="{{csrf_token()}}" name="_token" />
-		          <div class="row">
-			          <div class="col-xs-12">
-			            <label for="po_sap">No PO SAP<span class="text-red">*</span></label>
-			            <input type="text" class="form-control" name="no_po_sap" id="no_po_sap">
-			           </div>
-		          	</div>
-		        </div>
-	     	</div>
-		    <div class="modal-footer">
-		      <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
-		      <input type="hidden" id="id_edit_sap">
-		      <button type="button" onclick="edit_sap()" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-pencil"></i> Edit</button>
-		    </div>
-	  	</div>
+	<div class="modal fade" id="modalSAP" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  	<div class="modal-dialog modal-sm">
+	    	<div class="modal-content">
+	      		<div class="modal-header">
+		        	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		        	<h4 class="modal-title" id="myModalLabel">Edit Nomor SAP</h4>
+	      		</div>
+		      	<div class="modal-body">
+			        <div class="box-body">
+			          <input type="hidden" value="{{csrf_token()}}" name="_token" />
+			          <div class="row">
+				          <div class="col-xs-12">
+				            <label for="po_sap">No PO SAP<span class="text-red">*</span></label>
+				            <input type="text" class="form-control" name="no_po_sap" id="no_po_sap">
+				           </div>
+			          	</div>
+			        </div>
+		     	</div>
+			    <div class="modal-footer">
+			      <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+			      <input type="hidden" id="id_edit_sap">
+			      <button type="button" onclick="edit_sap()" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-pencil"></i> Edit</button>
+			    </div>
+		  	</div>
+		</div>
 	</div>
-</div>
 
-
-<div class="modal modal-danger fade in" id="modaldanger">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">×</span>
-				</button>
-				<h4 class="modal-title">Hapus Item</h4>
-			</div>
-			<div class="modal-body" id="modalDeleteBody">
-				<p></p>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
-				<a id="a" name="modalDeleteButton" type="button" onclick="delete_item(this.id)" class="btn btn-danger">Delete</a>
+	<div class="modal fade" id="modalHistory">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<center><h3 style="background-color: #1da12e; font-weight: bold; padding: 3px; margin-top: 0; color: black;">Cek History Pembelian</h3>
+					</center>
+					<div class="modal-body table-responsive no-padding" style="min-height: 100px; padding-bottom: 5px;">
+						<div class="col-md-9">
+							<div class="form-group">
+								<label>Enter Keyword</label>
+								<input type="text" class="form-control" id="keyword" name="keyword" placeholder="Masukkan Kode Item / Deskripsi">
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="form-group">
+								<div class="col-md-12">
+									<label style="color: white;"> xxxxxxxxxxxxxxxxxx</label>
+									<button id="search" onclick="fetchLog()" class="btn btn-info"><i class="fa fa-search"></i> Search</button>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-12">
+							<table class="table table-hover table-bordered table-striped" id="tableLog">
+								<thead style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th>No</th>
+										<th>Vendor</th>
+										<th>Nomor PO</th>
+										<th>Nama Item</th>
+										<th>Harga</th>
+										<th>Tanggal PO</th>
+									</tr>
+								</thead>
+								<tbody id="tableLogBody">
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
 
-<div class="modal modal-danger fade in" id="modaldangerPR">
+
+	<div class="modal modal-danger fade in" id="modaldanger">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+					<h4 class="modal-title">Hapus Item</h4>
+				</div>
+				<div class="modal-body" id="modalDeleteBody">
+					<p></p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+					<a id="a" name="modalDeleteButton" type="button" onclick="delete_item(this.id)" class="btn btn-danger">Delete</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal modal-danger fade in" id="modaldangerPR">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -1375,6 +1421,10 @@
 			}
 		});
 
+	}
+
+	function openHistory(){
+		$('#modalHistory').modal('show');
 	}
 
 	function getExchangeRate(){
@@ -2388,6 +2438,106 @@
             
       });
     }
+
+    $('#keyword').keydown(function(event) {
+		if (event.keyCode == 13 || event.keyCode == 9) {
+			fetchLog();
+		}
+	});
+
+    function fetchLog(){
+		$('#loading').show();
+		var keyword = $('#keyword').val();
+
+		var data = {
+			keyword:keyword
+		}
+
+		$.get('{{ url("fetch/purchase_order/log_pembelian") }}', data, function(result, status, xhr){
+			if(result.status){
+				$('#tableLog').DataTable().clear();
+				$('#tableLog').DataTable().destroy();
+				$('#tableLogBody').html('');
+				var tableLogBody = "";
+				var no = 1;
+				$.each(result.history, function(key, value){
+					tableLogBody += '<tr>';
+					tableLogBody += '<td>'+no+'</td>';
+					tableLogBody += '<td>'+value.supplier_name+'</td>';
+					tableLogBody += '<td>'+value.no_po+'</td>';
+					tableLogBody += '<td>'+value.nama_item+'</td>';
+					if (value.goods_price != 0 || value.goods_price != null) {
+						tableLogBody += '<td>('+value.currency+') '+value.goods_price.toLocaleString()+'</td>';
+					}else{
+						tableLogBody += '<td>('+value.currency+') '+value.service_price.toLocaleString()+'</td>';
+					}
+					tableLogBody += '<td>'+value.tgl_po+'</td>';
+					tableLogBody += '</tr>';
+					no++;
+				});
+				$('#tableLogBody').append(tableLogBody);
+
+				$('#tableLog').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'lengthMenu': [
+					[ 10, 25, 50, -1 ],
+					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
+						{
+							extend: 'pageLength',
+							className: 'btn btn-default',
+						},
+						{
+							extend: 'copy',
+							className: 'btn btn-success',
+							text: '<i class="fa fa-copy"></i> Copy',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'excel',
+							className: 'btn btn-info',
+							text: '<i class="fa fa-file-excel-o"></i> Excel',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'print',
+							className: 'btn btn-warning',
+							text: '<i class="fa fa-print"></i> Print',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						]
+					},
+					'paging': true,
+					'lengthChange': true,
+					'searching': true,
+					'ordering': true,
+					'order': [],
+					'info': true,
+					'autoWidth': true,
+					"sPaginationType": "full_numbers",
+					"bJQueryUI": true,
+					"bAutoWidth": false,
+					"processing": true
+				});
+				$('#loading').hide();
+			}
+			else{
+				$('#loading').hide();
+				alert('Unidentified Error');
+				audio_error.play();
+				return false;
+			}
+		});
+	}
 
 
 </script>
