@@ -50,6 +50,7 @@ class Kernel extends ConsoleKernel
         Commands\InjectionScheduleCommand::class,
         Commands\KDShipment::class,
         Commands\SendEmailSPKNotification::class,
+        Commands\SendEmailSPK::class,
         Commands\EmailAgreement::class,
         Commands\LiveCookingCommand::class,
         Commands\GreatdayAttendanceCommand::class,
@@ -161,6 +162,7 @@ class Kernel extends ConsoleKernel
 
 
         $schedule->command('kd:shipment')->everyTenMinutes();
+        $schedule->command('spk:notify')->everyTenMinutes();
         $schedule->command('email:raw_material_reminder')->dailyAt('11:00');
 
 
