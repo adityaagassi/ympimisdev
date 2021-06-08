@@ -887,8 +887,9 @@ class MaintenanceController extends Controller
 				$spk_log->save();
 			});	
 
-			$data = db::select("select spk.*, u.`name` from maintenance_job_orders spk
+			$data = db::select("SELECT spk.order_no, spk.priority, spk.type, spk.category, spk.machine_name as machine_temp, maintenance_plan_items.description as machine_desc, spk.machine_remark, spk.description, spk.machine_condition, spk.danger, spk.safety_note, u.`name`, spk.section, spk.target_date from maintenance_job_orders spk
 				left join employee_syncs u on spk.created_by = u.employee_id
+				left join maintenance_plan_items on maintenance_plan_items.machine_id = spk.machine_name
 				where order_no = '".$order_no."'");
 
 
@@ -930,6 +931,12 @@ class MaintenanceController extends Controller
 
 				// Mail::to('nasiqul.ibat@music.yamaha.com')
 				// ->send(new SendEmail($data, 'urgent_spk'));
+
+
+				//  ------------------------- NOTIF EMAIL -----------------
+				Mail::to(['susilo.basri@music.yamaha.com','bambang.supriyadi@music.yamaha.com', 'nadif@music.yamaha.com', 'priyo.jatmiko@music.yamaha.com', 'duta.narendratama@music.yamaha.com'])
+				->bcc(['nasiqul.ibat@music.yamaha.com'])
+				->send(new SendEmail($data, 'urgent_spk'));
 			} else {
 				if(strpos($bahaya, 'Bahan Kimia Beracun') !== false){
 					$remark = 2;
