@@ -10,6 +10,7 @@ class RcAssyInitial extends Model
     use SoftDeletes;
 
 	protected $fillable = [
+		'initial_code',
 		'tag',
 		'product',
 		'material_number',

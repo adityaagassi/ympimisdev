@@ -5761,6 +5761,7 @@ class RecorderProcessController extends Controller
 
           $initial_head = RcKensaInitial::where('serial_number',$serial_number)->where('part_type','HJ')->first();
           $tag_head = $initial_head->tag;
+          $kensa_initial_code = $initial_head->kensa_initial_code;
           $material_number_head = $initial_head->material_number;
           $cavity_head = $initial_head->cavity;
 
@@ -5769,6 +5770,7 @@ class RecorderProcessController extends Controller
           $initial_head->save();
 
           RcKensa::create([
+            'kensa_initial_code' => $kensa_initial_code,
             'serial_number' => $serial_number,
             'operator_kensa' => $operator_kensa,
             'product' => $product,
@@ -5785,12 +5787,14 @@ class RecorderProcessController extends Controller
           $tag_middle = $initial_middle->tag;
           $material_number_middle = $initial_middle->material_number;
           $cavity_middle = $initial_middle->cavity;
+          $kensa_initial_code = $initial_middle->kensa_initial_code;
 
           $initial_middle->ng_name_kensa = null;
           $initial_middle->ng_count_kensa = null;
           $initial_middle->save();
 
           RcKensa::create([
+            'kensa_initial_code' => $kensa_initial_code,
             'serial_number' => $serial_number,
             'operator_kensa' => $operator_kensa,
             'product' => $product,
@@ -5805,6 +5809,7 @@ class RecorderProcessController extends Controller
 
           $initial_foot = RcKensaInitial::where('serial_number',$serial_number)->where('part_type','like','%FJ%')->first();
           $tag_foot = $initial_foot->tag;
+          $kensa_initial_code = $initial_foot->kensa_initial_code;
           $material_number_foot = $initial_foot->material_number;
           $cavity_foot = $initial_foot->cavity;
 
@@ -5813,6 +5818,7 @@ class RecorderProcessController extends Controller
           $initial_foot->save();
 
           RcKensa::create([
+            'kensa_initial_code' => $kensa_initial_code,
             'serial_number' => $serial_number,
             'operator_kensa' => $operator_kensa,
             'product' => $product,
@@ -5827,6 +5833,7 @@ class RecorderProcessController extends Controller
 
           $initial_block = RcKensaInitial::where('serial_number',$serial_number)->where('part_type','like','%BJ%')->first();
           $tag_block = $initial_block->tag;
+          $kensa_initial_code = $initial_block->kensa_initial_code;
           $material_number_block = $initial_block->material_number;
           $cavity_block = $initial_block->cavity;
 
@@ -5835,6 +5842,7 @@ class RecorderProcessController extends Controller
           $initial_block->save();
 
           RcKensa::create([
+            'kensa_initial_code' => $kensa_initial_code,
             'serial_number' => $serial_number,
             'operator_kensa' => $operator_kensa,
             'product' => $product,
@@ -5863,6 +5871,7 @@ class RecorderProcessController extends Controller
 
           $initial_head_yrf = RcKensaInitial::where('serial_number',$serial_number)->where('part_type','A YRF H')->first();
           $tag_head_yrf = $initial_head_yrf->tag;
+          $kensa_initial_code = $initial_head_yrf->kensa_initial_code;
           $material_number_head_yrf = $initial_head_yrf->material_number;
           $cavity_head_yrf = $initial_head_yrf->cavity;
 
@@ -5871,6 +5880,7 @@ class RecorderProcessController extends Controller
           $initial_head_yrf->save();
 
           RcKensa::create([
+            'kensa_initial_code' => $kensa_initial_code,
             'serial_number' => $serial_number,
             'operator_kensa' => $operator_kensa,
             'product' => $product,
@@ -5885,6 +5895,7 @@ class RecorderProcessController extends Controller
 
           $initial_body_yrf = RcKensaInitial::where('serial_number',$serial_number)->where('part_type','like','%A YRF B%')->first();
           $tag_body_yrf = $initial_body_yrf->tag;
+          $kensa_initial_code = $initial_body_yrf->kensa_initial_code;
           $material_number_body_yrf = $initial_body_yrf->material_number;
           $cavity_body_yrf = $initial_body_yrf->cavity;
 
@@ -5893,6 +5904,7 @@ class RecorderProcessController extends Controller
           $initial_body_yrf->save();
 
           RcKensa::create([
+            'kensa_initial_code' => $kensa_initial_code,
             'serial_number' => $serial_number,
             'operator_kensa' => $operator_kensa,
             'product' => $product,
@@ -5907,6 +5919,7 @@ class RecorderProcessController extends Controller
 
           $initial_stopper_yrf = RcKensaInitial::where('serial_number',$serial_number)->where('part_type','like','%A YRF S%')->first();
           $tag_stopper_yrf = $initial_stopper_yrf->tag;
+          $kensa_initial_code = $initial_stopper_yrf->kensa_initial_code;
           $material_number_stopper_yrf = $initial_stopper_yrf->material_number;
           $cavity_stopper_yrf = $initial_stopper_yrf->cavity;
 
@@ -5916,6 +5929,7 @@ class RecorderProcessController extends Controller
 
           RcKensa::create([
             'serial_number' => $serial_number,
+            'kensa_initial_code' => $kensa_initial_code,
             'operator_kensa' => $operator_kensa,
             'product' => $product,
             'start_time' => $start_time,
@@ -6854,8 +6868,11 @@ class RecorderProcessController extends Controller
             $status_transaction_blocks = join('_',$status_transaction_block);
           }
 
+          $now = date('Y-m-d H:i:s');
+
           if ($tag_head != "") {
             RcAssyInitial::create([
+              'initial_code' => $tag_head.'_'.$material_number_head.'_'.$product.'_'.$no_kanban_head.'_'.$now,
               'product' => $product,
               'material_number' => $material_number_head,
               'part_name' => $part_name_head,
@@ -6894,6 +6911,7 @@ class RecorderProcessController extends Controller
             ]);
           }else{
             RcAssyInitial::create([
+              'initial_code' => $kensaoldhead[0]->tag.'_'.$kensaoldhead[0]->material_number.'_'.$product.'_'.$kensaoldhead[0]->no_kanban_injection.'_'.$now,
               'product' => $product,
               'material_number' => $kensaoldhead[0]->material_number,
               'part_name' => $kensaoldhead[0]->part_name,
@@ -6934,6 +6952,7 @@ class RecorderProcessController extends Controller
 
           if ($tag_middle != "") {
             RcAssyInitial::create([
+               'initial_code' => $tag_middle.'_'.$material_number_middle.'_'.$product.'_'.$no_kanban_middle.'_'.$now,
                'product' => $product,
                'material_number' => $material_number_middle,
                'part_name' => $part_name_middle,
@@ -6972,6 +6991,7 @@ class RecorderProcessController extends Controller
             ]);
           }else{
             RcAssyInitial::create([
+               'initial_code' => $kensaoldmiddle[0]->tag.'_'.$kensaoldmiddle[0]->material_number.'_'.$product.'_'.$kensaoldmiddle[0]->no_kanban_injection.'_'.$now,
                'product' => $product,
                'material_number' => $kensaoldmiddle[0]->material_number,
                'part_name' => $kensaoldmiddle[0]->part_name,
@@ -7012,6 +7032,7 @@ class RecorderProcessController extends Controller
 
           if ($tag_foot != "") {
             RcAssyInitial::create([
+              'initial_code' => $tag_foot.'_'.$material_number_foot.'_'.$product.'_'.$no_kanban_foot.'_'.$now,
               'product' => $product,
               'material_number' => $material_number_foot,
               'part_name' => $part_name_foot,
@@ -7050,6 +7071,7 @@ class RecorderProcessController extends Controller
             ]);
           }else{
             RcAssyInitial::create([
+              'initial_code' => $kensaoldfoot[0]->tag.'_'.$kensaoldfoot[0]->material_number.'_'.$product.'_'.$kensaoldfoot[0]->no_kanban_injection.'_'.$now,
                'product' => $product,
                'material_number' => $kensaoldfoot[0]->material_number,
                'part_name' => $kensaoldfoot[0]->part_name,
@@ -7090,6 +7112,7 @@ class RecorderProcessController extends Controller
 
           if ($tag_block != "") {
             RcAssyInitial::create([
+              'initial_code' => $tag_block.'_'.$material_number_block.'_'.$product.'_'.$no_kanban_block.'_'.$now,
               'product' => $product,
               'material_number' => $material_number_block,
               'part_name' => $part_name_block,
@@ -7128,6 +7151,7 @@ class RecorderProcessController extends Controller
             ]);
           }else{
             RcAssyInitial::create([
+              'initial_code' => $kensaoldblock[0]->tag.'_'.$kensaoldblock[0]->material_number.'_'.$product.'_'.$kensaoldblock[0]->no_kanban_injection.'_'.$now,
                'product' => $product,
                'material_number' => $kensaoldblock[0]->material_number,
                'part_name' => $kensaoldblock[0]->part_name,
@@ -7671,6 +7695,7 @@ class RecorderProcessController extends Controller
 
           if ($tag_head_yrf != "") {
             RcAssyInitial::create([
+              'initial_code' => $tag_head_yrf.'_'.$material_number_head_yrf.'_'.$product.'_'.$no_kanban_head_yrf.'_'.$now,
               'product' => $product,
               'material_number' => $material_number_head_yrf,
               'part_name' => $part_name_head_yrf,
@@ -7709,6 +7734,7 @@ class RecorderProcessController extends Controller
             ]);
           }else{
             RcAssyInitial::create([
+              'initial_code' => $kensaoldheadyrf[0]->tag.'_'.$kensaoldheadyrf[0]->material_number.'_'.$product.'_'.$kensaoldheadyrf[0]->no_kanban_injection.'_'.$now,
               'product' => $product,
               'material_number' => $kensaoldheadyrf[0]->material_number,
               'part_name' => $kensaoldheadyrf[0]->part_name,
@@ -7749,6 +7775,7 @@ class RecorderProcessController extends Controller
 
           if ($tag_body_yrf != "") {
             RcAssyInitial::create([
+              'initial_code' => $tag_body_yrf.'_'.$material_number_body_yrf.'_'.$product.'_'.$no_kanban_body_yrf.'_'.$now,
               'product' => $product,
               'material_number' => $material_number_body_yrf,
               'part_name' => $part_name_body_yrf,
@@ -7787,6 +7814,7 @@ class RecorderProcessController extends Controller
             ]);
           }else{
             RcAssyInitial::create([
+              'initial_code' => $kensaoldbodyyrf[0]->tag.'_'.$kensaoldbodyyrf[0]->material_number.'_'.$product.'_'.$kensaoldbodyyrf[0]->no_kanban_injection.'_'.$now,
               'product' => $product,
               'material_number' => $kensaoldbodyyrf[0]->material_number,
               'part_name' => $kensaoldbodyyrf[0]->part_name,
@@ -7827,6 +7855,7 @@ class RecorderProcessController extends Controller
 
           if ($tag_stopper_yrf != "") {
             RcAssyInitial::create([
+              'initial_code' => $tag_stopper_yrf.'_'.$material_number_stopper_yrf.'_'.$product.'_'.$no_kanban_stopper_yrf.'_'.$now,
               'product' => $product,
               'material_number' => $material_number_stopper_yrf,
               'part_name' => $part_name_stopper_yrf,
@@ -7865,6 +7894,7 @@ class RecorderProcessController extends Controller
             ]);
           }else{
             RcAssyInitial::create([
+              'initial_code' => $kensaoldstopperyrf[0]->tag.'_'.$kensaoldstopperyrf[0]->material_number.'_'.$product.'_'.$kensaoldstopperyrf[0]->no_kanban_injection.'_'.$now,
               'product' => $product,
               'material_number' => $kensaoldstopperyrf[0]->material_number,
               'part_name' => $kensaoldstopperyrf[0]->part_name,
@@ -7954,6 +7984,8 @@ class RecorderProcessController extends Controller
         $kensainitial = RcAssyInitial::where('status','Open')->get();
         foreach ($kensainitial as $key) {
           RcKensaInitial::create([
+            'initial_code' => $key->initial_code,
+            'kensa_initial_code' => $serial_number.'_'.date('Y-m-d H:i:s').'_'.$key->initial_code,
             'serial_number' => $serial_number,
             'operator_kensa' => $operator_kensa,
             'product' => $key->product,

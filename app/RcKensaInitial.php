@@ -10,6 +10,8 @@ class RcKensaInitial extends Model
     use SoftDeletes;
 
 	protected $fillable = [
+		'initial_code',
+		'kensa_initial_code',
 		'serial_number',
 		'operator_kensa',
 		'tag',
