@@ -1141,7 +1141,6 @@ Route::group(['nav' => 'S39', 'middleware' => 'permission'], function(){
 	// Route::get('approve/ga_control/bento/{id}', 'GeneralAffairController@approveBento');
 	Route::post('approve/ga_control/bento', 'GeneralAffairController@approveBento');
 	Route::get('index/ga_control/bento_approve', 'GeneralAffairController@indexBentoApprove');
-	Route::get('reject/ga_control/bento/{id}', 'GeneralAffairController@rejectBento');
 	Route::post('input/ga_control/bento_menu', 'GeneralAffairController@inputBentoMenu');
 });
 Route::get('approve/ga_control/driver/{id}', 'GeneralAffairController@approveRequest');
@@ -1959,7 +1958,7 @@ Route::get('fetch/payment_request', 'AccountingController@fetchPaymentRequest');
 Route::get('detail/payment_request', 'AccountingController@fetchPaymentRequestDetail');
 Route::post('create/payment_request', 'AccountingController@createPaymentRequest');
 Route::post('edit/payment_request', 'AccountingController@editPaymentRequest');
-Route::get('report/payment_request/{id}', 'AccountingController@report_payment_request');
+Route::get('report/payment_request/{id}', 'AccountingController@reportPaymentRequest');
 
 Route::get('scan/middle/operator', 'MiddleProcessController@scanMiddleOperator');
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
@@ -5110,7 +5109,7 @@ Route::get('fetch/packing_documentation/data', 'AuditController@documentation_da
 //  -------------------------  FIXED ASSET -------------------------
 
 Route::get('index/fixed_asset', 'AccountingController@indexFixedAsset');
-Route::get('index/fixed_assfetch/kaizen/reportet/registration_asset_form', 'AccountingController@indexAssetRegistration');
+Route::get('index/fixed_asset/registration_asset_form', 'AccountingController@indexAssetRegistration');
 Route::get('fetch/fixed_asset/registration_asset_form', 'AccountingController@fetchAssetRegistration');
 Route::post('send/fixed_asset/registration_asset_form', 'AccountingController@assetRegistration');
 

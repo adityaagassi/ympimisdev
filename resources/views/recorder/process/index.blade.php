@@ -35,7 +35,7 @@
 			<a href="{{ url('index/recorder/push_block_check_monitoring','After Injection') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Recorder Process Monitoring</a>
 			<a href="{{ url("index/recorder/rc_picking_result") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Recorder Picking Result</a>
 			<a href="{{ url('index/recorder/display/kensa') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Display Kensa Kakuning</a>
-			<!-- <a href="{{ url('index/recorder/display/ng_rate_kensa') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">NG Rate Kensa Kakuning</a> -->
+			<a href="{{ url('index/recorder/display/ng_rate_kensa?tanggal=') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">NG Rate Kensa Kakuning</a>
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
 			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>
