@@ -192,15 +192,17 @@ public function approveBento(Request $request){
 				'calendars' => $calendars
 			];
 
-			Mail::to($mail_to)
+			Mail::to('hiroshi.ura@music.yamaha.com')
 			->cc([
-				'rianita.widiastuti@music.yamaha.com', 
-				'putri.sukma.riyanti@music.yamaha.com', 
-				'prawoto@music.yamaha.com',
-				'budhi.apriyanto@music.yamaha.com', 
-				'helmi.helmi@music.yamaha.com',
-				'merlinda.dyah@music.yamaha.com', 
-				'novita.siswindarti@music.yamaha.com'
+				'budhi.apriyanto@music.yamaha.com',
+				'aditya.agassi@music.yamaha.com'
+				// 'rianita.widiastuti@music.yamaha.com', 
+				// 'putri.sukma.riyanti@music.yamaha.com', 
+				// 'prawoto@music.yamaha.com',
+				// 'budhi.apriyanto@music.yamaha.com', 
+				// 'helmi.helmi@music.yamaha.com',
+				// 'merlinda.dyah@music.yamaha.com', 
+				// 'novita.siswindarti@music.yamaha.com'
 			])
 			->bcc([
 				'aditya.agassi@music.yamaha.com', 
@@ -221,8 +223,10 @@ public function approveBento(Request $request){
 
 						Mail::to($rejected_list->email)
 						->cc([
-							'rianita.widiastuti@music.yamaha.com', 
-							'putri.sukma.riyanti@music.yamaha.com'
+							'budhi.apriyanto@music.yamaha.com', 
+							'aditya.agassi@music.yamaha.com'
+							// 'rianita.widiastuti@music.yamaha.com', 
+							// 'putri.sukma.riyanti@music.yamaha.com'
 						])
 						->bcc([
 							'aditya.agassi@music.yamaha.com', 
