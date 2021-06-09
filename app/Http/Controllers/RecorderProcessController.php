@@ -8131,43 +8131,31 @@ class RecorderProcessController extends Controller
     public function fetchNgRateKensa(Request $request)
     {
       try {
+        if ($request->get('tanggal') == "") {
+          $now = date('Y-m-d');
+        }else{
+          $now = $request->get('tanggal');
+        }
         $resumes = DB::SELECT("SELECT
-          part_type,
-          GROUP_CONCAT((
-            SELECT
-              GROUP_CONCAT( ng_name ) 
-            FROM
-              rc_kensas 
-            WHERE
-              rc_kensas.material_number = rc_kensa_initials.material_number 
-              AND rc_kensas.serial_number = rc_kensa_initials.serial_number 
-            )) AS ng_name,
-          GROUP_CONCAT((
-            SELECT
-              GROUP_CONCAT( ng_count ) 
-            FROM
-              rc_kensas 
-            WHERE
-              rc_kensas.material_number = rc_kensa_initials.material_number 
-              AND rc_kensas.serial_number = rc_kensa_initials.serial_number 
-            )) AS ng_count 
+          ng_name,
+          ng_count,
+          part_code 
         FROM
-          rc_kensa_initials 
+          rc_kensas 
+          LEFT JOIN injection_parts ON injection_parts.gmc = rc_kensas.material_number 
         WHERE
-          rc_kensa_initials.serial_number NOT LIKE '%Z%' 
-        GROUP BY
-          part_type");
+          rc_kensas.serial_number NOT LIKE '%Z%' 
+          AND DATE( rc_kensas.created_at ) = '".$now."'
+          AND ng_name IS NOT NULL
+          AND injection_parts.deleted_at IS NULL 
+        AND injection_parts.remark = 'injection'");
 
-        $ng_list = DB::SELECT("SELECT
-          GROUP_CONCAT(
-          DISTINCT ( ng_name )) 
-        FROM
-          rc_kensas");
+        $dateTitle = date('d M Y',strtotime($now));
 
         $response = array(
           'status' => true,
           'resumes' => $resumes,
-          'ng_list' => $ng_list,
+          'dateTitle' => $dateTitle
         );
         return Response::json($response);
       } catch (\Exception $e) {
