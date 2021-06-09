@@ -208,6 +208,31 @@ public function approveBento(Request $request){
 				'agus.yulianto@music.yamaha.com'
 			])
 			->send(new SendEmail($bentos, 'bento_approve'));
+
+			$rejected_lists = Bento::whereIn('id', $request->get('rejected'))->get();
+			$rejected_emails = [];
+
+			if(count($rejected_lists) > 0){
+				foreach($rejected_lists as $rejected_list){
+					if(!in_array($rejected_list->email, $rejected_emails)){
+						$rejecteds = Bento::whereIn('id', $request->get('rejected'))
+						->where('charge_to', '=', $rejected_list->charge_to)
+						->get();
+
+						Mail::to($rejected_list->email)
+						->cc([
+							'rianita.widiastuti@music.yamaha.com', 
+							'putri.sukma.riyanti@music.yamaha.com'
+						])
+						->bcc([
+							'aditya.agassi@music.yamaha.com', 
+							'anton.budi.santoso@music.yamaha.com'
+						])
+						->send(new SendEmail($rejecteds, 'bento_reject'));
+					}
+					array_push($rejected_emails, $rejected_list->email);
+				}			
+			}
 		}
 
 		if(count($lists) > 0){
@@ -342,6 +367,7 @@ public function approveBento(Request $request){
 				}
 			}
 		}
+
 		$response = array(
 			'status' => true,
 			'message' => 'Order Has Been Confirmed'
@@ -355,97 +381,6 @@ public function approveBento(Request $request){
 		);
 		return Response::json($response);
 	}
-}
-
-public function rejectBento($id){
-	$title = "Bento Message";
-	$title_jp = "";
-	$message = "Bento Request Rejected";
-	$message2 = "";
-	$bento_lists = array();
-
-	$bento_ids = explode('-', $id);
-
-	foreach($bento_ids as $bento_id){
-		if($bento_id != ""){
-			$bento = Bento::where('id', '=', $bento_id)->first();
-
-			if(strlen($bento->approver_id)>0){
-
-				$message = "Bento Request Already Confirmed";
-				$message2 = "Can't reject order";
-
-				return view('general_affairs.bento_message', array(
-					'title' => $title,
-					'title_jp' => $title_jp,
-					'message' => $message,
-					'message2' => $message2
-				))->with('head', 'Bento Request');
-			}
-
-			$bento->approver_id = Auth::user()->username;
-			$bento->approver_name = Auth::user()->name;
-			$bento->status = 'Rejected';
-
-			$quota = BentoQuota::where('due_date', '=', $bento->due_date)->first();
-			$quota->serving_ordered = $quota->serving_ordered-1;
-
-			$quota->save();
-			$bento->save();
-
-			array_push($bento_lists,
-				[
-					'id' => $bento->id,
-					'order_by' => $bento->order_by,
-					'order_by_name' => $bento->order_by_name,
-					'charge_to' => $bento->charge_to,
-					'charge_to_name' => $bento->charge_to_name,
-					'due_date' => $bento->due_date,
-					'employee_id' => $bento->employee_id,
-					'employee_name' => $bento->employee_name,
-					'department' => $bento->department,
-					'section' => $bento->section,
-					'status' => $bento->status,
-					'created_by' => $bento->created_by,
-					'approver_id' => $bento->approver_id,
-					'approver_name' => $bento->approver_name
-				]);
-		}
-	}
-
-	$user = User::where('id', '=', $bento_lists[0]['created_by'])->first();
-
-	if($user->role_code == 'YEMI'){
-		Mail::to([$user->email])->cc([
-			'rianita.widiastuti@music.yamaha.com', 
-			'putri.sukma.riyanti@music.yamaha.com', 
-			'merlinda.dyah@music.yamaha.com', 
-			'hiroshi.ura@music.yamaha.com',
-			'prawoto@music.yamaha.com'])
-		->bcc([
-			'aditya.agassi@music.yamaha.com', 
-			'anton.budi.santoso@music.yamaha.com'
-		])
-		->send(new SendEmail($bento_lists, 'bento_confirm'));
-	}
-	else{
-		Mail::to([$user->email])->cc([
-			'rianita.widiastuti@music.yamaha.com', 
-			'putri.sukma.riyanti@music.yamaha.com'
-		])
-		->bcc([
-			'aditya.agassi@music.yamaha.com', 
-			'anton.budi.santoso@music.yamaha.com'
-		])
-		->send(new SendEmail($bento_lists, 'bento_confirm'));
-	}
-
-	return view('general_affairs.bento_message', array(
-		'title' => $title,
-		'title_jp' => $title_jp,
-		'message' => $message,
-		'message2' => $message2
-	))->with('head', 'Bento Request');
 }
 
 public function indexBento(){
@@ -866,30 +801,6 @@ public function editBentoOrder(Request $request){
 			$user = User::where('username', '=', $bento->order_by)->first();
 			$bento_lists = Bento::where('id', '=', $request->get('id'))->get();
 
-			// if($request->get('location') != 'YEMI'){
-			// 	Mail::to([$user->email])->cc([
-			// 		'rianita.widiastuti@music.yamaha.com', 
-			// 		'putri.sukma.riyanti@music.yamaha.com'
-			// 	])
-			// 	->bcc([
-			// 		'aditya.agassi@music.yamaha.com', 
-			// 		'anton.budi.santoso@music.yamaha.com'
-			// 	])
-			// 	->send(new SendEmail($bento_lists, 'bento_confirm'));
-			// }
-			// else{
-			// 	Mail::to([$user->email])->cc([
-			// 		'rianita.widiastuti@music.yamaha.com', 
-			// 		'putri.sukma.riyanti@music.yamaha.com', 
-			// 		'merlinda.dyah@music.yamaha.com', 
-			// 		'prawoto@music.yamaha.com'])
-			// 	->bcc([
-			// 		'aditya.agassi@music.yamaha.com', 
-			// 		'anton.budi.santoso@music.yamaha.com'
-			// 	])
-			// 	->send(new SendEmail($bento_lists, 'bento_confirm'));
-			// }
-
 			$response = array(
 				'status' => true,
 				'message' => 'Your order has been cancelled'
@@ -1060,13 +971,6 @@ public function inputBentoOrder(Request $request){
 
 		$code_generator->index = $code_generator->index+1;
 		$code_generator->save();
-
-		// if($order_by->role_code == 'YEMI'){
-		// 	Mail::to(['rianita.widiastuti@music.yamaha.com'])->cc(['putri.sukma.riyanti@music.yamaha.com', 'prawoto@music.yamaha.com'])->bcc(['aditya.agassi@music.yamaha.com', 'anton.budi.santoso@music.yamaha.com'])->send(new SendEmail($bento_lists, 'bento_request'));
-		// }
-		// else{
-		// 	Mail::to(['rianita.widiastuti@music.yamaha.com'])->cc(['putri.sukma.riyanti@music.yamaha.com'])->bcc(['aditya.agassi@music.yamaha.com', 'anton.budi.santoso@music.yamaha.com'])->send(new SendEmail($bento_lists, 'bento_request'));
-		// }
 
 		$response = array(
 			'status' => true,

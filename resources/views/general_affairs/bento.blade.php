@@ -234,7 +234,7 @@ table.table-bordered > tfoot > tr > th{
 							</table>
 						</div>
 					</div>
-					<button class="btn btn-warning pull-left" data-dismiss="modal" aria-label="Close" style="font-weight: bold; font-size: 1.3vw; width: 30%;">EXIT<br>取消し</button>
+					<button class="btn btn-warning pull-left" data-dismiss="modal" aria-label="Close" style="font-weight: bold; font-size: 1.3vw; width: 30%;">Back<br>戻る</button>
 					<button class="btn btn-success pull-right" style="font-weight: bold; font-size: 1.3vw; width: 68%;" onclick="confirmOrder()">CONFIRM<br>確認 <i class="fa fa-shopping-cart"></i></button>
 				</div>
 			</div>
@@ -339,7 +339,7 @@ table.table-bordered > tfoot > tr > th{
 						</button>
 					</div>
 					<div class="col-xs-3" style="padding-right: 0;">
-						<button class="btn btn-warning" data-dismiss="modal" aria-label="Close" style="font-weight: bold; font-size: 1.3vw; width: 100%;">EXIT<br>取消し</button>
+						<button class="btn btn-warning" data-dismiss="modal" aria-label="Close" style="font-weight: bold; font-size: 1.3vw; width: 100%;">Back<br>戻る</button>
 					</div>
 					<div class="col-xs-5" style="padding-right: 0;">
 						<button class="btn btn-success" id="editOrderBtn" style="font-weight: bold; font-size: 1.3vw; width: 100%;" onclick="editOrder()">CONFIRM<br>確認</button>
@@ -986,36 +986,36 @@ table.table-bordered > tfoot > tr > th{
 						},
 						events    : cals,
 						editable  : false
-					})
+					});
 
-					var currColor = '#3c8dbc'
-					var colorChooser = $('#color-chooser-btn')
+					var currColor = '#3c8dbc';
+					var colorChooser = $('#color-chooser-btn');
 					$('#color-chooser > li > a').click(function (e) {
-						e.preventDefault()
-						currColor = $(this).css('color')
-						$('#add-new-event').css({ 'background-color': currColor, 'border-color': currColor })
-					})
+						e.preventDefault();
+						currColor = $(this).css('color');
+						$('#add-new-event').css({ 'background-color': currColor, 'border-color': currColor });
+					});
 					$('#add-new-event').click(function (e) {
-						e.preventDefault()
-						var val = $('#new-event').val()
+						e.preventDefault();
+						var val = $('#new-event').val();
 						if (val.length == 0) {
-							return
+							return;
 						}
 
-						var event = $('<div />')
+						var event = $('<div />');
 						event.css({
 							'background-color': currColor,
 							'border-color'    : currColor,
 							'color'           : '#fff'
-						}).addClass('external-event')
-						event.html(val)
-						$('#external-events').prepend(event)
+						}).addClass('external-event');
+						event.html(val);
+						$('#external-events').prepend(event);
 
-						init_events(event)
+						init_events(event);
 
-						$('#new-event').val('')
+						$('#new-event').val('');
 					})
-				})
+				});
 			}
 			else{
 				alert('Unidentified Error');
@@ -1480,6 +1480,10 @@ table.table-bordered > tfoot > tr > th{
 		$('#countTotal').text(count);
 		$('#'+id).remove();	
 	}
+
+	function truncate(str, n){
+		return (str.length > n) ? str.substr(0, n-1) + '&hellip;' : str;
+	};
 
 	function openSuccessGritter(title, message){
 		jQuery.gritter.add({

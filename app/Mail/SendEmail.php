@@ -33,14 +33,24 @@ class SendEmail extends Mailable
     
     public function build()
     {
-        if($this->remark == 'bento_request'){
-            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Japanese Food Order Requested (和食弁当の予約)')->view('mails.bento.bento_request');
+        if($this->remark == 'mis_ticket_approval'){
+            if($this->data['filename'] != null){
+                return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+                ->subject('MIS Ticket Request')
+                ->view('about_mis.ticket.mail_approval')
+                ->attach(public_path('files/mis_ticket/'.$this->data['filename']));
+            }
+            else{
+                return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+                ->subject('MIS Ticket Request')
+                ->view('about_mis.ticket.mail_approval');
+            }
         }
-        if($this->remark == 'bento_confirm'){
-            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Japanese Food Order Rejected (和食弁当の予約)')->view('mails.bento.bento_confirm');
+        if($this->remark == 'bento_reject'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Japanese Food Order Rejected (和食弁当の予約)')->view('mails.bento.bento_reject');
         }
         if($this->remark == 'bento_approve'){
-            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Japanese Food Order Approved (和食弁当の予約)')->view('mails.bento.bento_approve');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Japanese Food Order Confirmed (弁当の注文が確認済み)')->view('mails.bento.bento_approve');
         }
         if($this->remark == 'shipment'){
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('MIS Shipment Reminder (情報管理システムの出荷通知)')->view('mails.shipment');
@@ -197,7 +207,11 @@ class SendEmail extends Mailable
         }
 
         if($this->remark == 'urgent_spk'){
-            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('Urgent Maintenance Job Order ()')->view('mails.urgent_spk');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('Urgent Maintenance Job Order')->view('mails.urgent_spk');
+        }
+
+        if($this->remark == 'spk_machine_stop'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject(' Maintenance Job Order with Stopped Machine')->view('mails.spk_machine_stop');
         }
 
         if($this->remark == 'hrq'){
@@ -349,7 +363,7 @@ class SendEmail extends Mailable
                     return $email;
                 }
             }
-            else if ($this->data[0]->position == 'PC'){
+            else if ($this->data[0]->position == 'PC' || $this->data[0]->position == 'PC2'){
                 if($this->data[0]->file_translate != null){
                     $all_file = json_decode($this->data[0]->file_translate);
 
@@ -424,6 +438,12 @@ class SendEmail extends Mailable
             ->view('mails.safety_shoes');
         }
 
+        if($this->remark == 'safety_shoes_request'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+            ->subject('Safety Shoes Request (安全靴依頼)')
+            ->view('mails.safety_shoes_request');
+        }
+
         if($this->remark == 'spk_urgent'){
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
             ->subject('Maintenance SPK Urgent Notification (保全班の作業依頼書緊急通知)')
@@ -490,6 +510,20 @@ class SendEmail extends Mailable
             ->priority(1)
             ->subject('Approval Mutasi Antar Departemen (異なるセクションへの人事異動の承認)')
             ->view('mails.rejected_mutasi_antar');
+        }
+
+        if($this->remark == 'send_email'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+            ->priority(1)
+            ->subject('File Approval Pengganti Adagio (異なるセクションへの人事異動の承認)')
+            ->view('mails.send_email');
+        }
+
+        if($this->remark == 'send_email_done'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+            ->priority(1)
+            ->subject('File Approval Pengganti Adagio (異なるセクションへの人事異動の承認)')
+            ->view('mails.send_email_done');
         }   
 
         if($this->remark == 'highest_covid'){
@@ -497,5 +531,12 @@ class SendEmail extends Mailable
             ->subject('Highest Survey Covid Report')
             ->view('mails.highest_covid');
         }
+
+        if($this->remark == 'fixed_asset_registrations'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+            ->subject('Fixed Asset Registration')
+            ->view('mails.fixed_asset');
+        }
+
     }
 }
