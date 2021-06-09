@@ -465,7 +465,7 @@
 					var ng_rate_monthly = [];
 
 					for (var i = 0; i < result.monthly_kensa.length; i++) {
-						target.push(4.45);
+						target.push(5.9);
 						month.push(result.monthly_kensa[i].tgl);
 						ng.push(result.monthly_kensa[i].ng_rate);
 						ng[i] = ng[i] || 0;
