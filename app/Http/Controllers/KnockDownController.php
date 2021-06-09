@@ -2233,14 +2233,15 @@ class KnockDownController extends Controller{
 			if(in_array($knock_downs->remark, $list)){
 				return '<a href="javascript:void(0)" class="btn btn-sm btn-primary" onClick="reprintKDO(id)" id="' . $knock_downs->kd_number . '"><i class="fa fa-print"></i></a>';
 			}else{
-				return '-';
+				return '<span><i class="fa fa-minus"></i></span>';
 			}
 
 		})
 		->rawColumns([
 			'detailKDO' => 'detailKDO',
 			'reprintKDO' => 'reprintKDO',
-			'deleteKDO' => 'deleteKDO'
+			'deleteKDO' => 'deleteKDO',
+			'reprintKDODelivery' => 'reprintKDODelivery'
 		])
 		->make(true);
 	}
