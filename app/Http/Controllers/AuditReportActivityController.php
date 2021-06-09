@@ -101,19 +101,19 @@ class AuditReportActivityController extends Controller
             $subsection = $request->get('subsection');
             $year = substr($request->get('month'),0,4);
             $month = substr($request->get('month'),-2);
-            $auditReportActivity = AuditReportActivity::where('activity_list_id',$id)
+            $auditReportActivity = AuditReportActivity::where('audit_report_activities.activity_list_id',$id)
+                ->leftjoin('audit_guidances','audit_guidances.id','audit_report_activities.audit_guidance_id')
                 ->where('subsection',$subsection)
-                ->whereYear('date', '=', $year)
-                ->whereMonth('date', '=', $month)
+                ->where('audit_guidances.month', '=', $request->get('month'))
                 ->orderBy('audit_report_activities.id','desc')
                 ->get();
         }
         elseif ($request->get('month') > null && $request->get('subsection') == null) {
             $year = substr($request->get('month'),0,4);
             $month = substr($request->get('month'),-2);
-            $auditReportActivity = AuditReportActivity::where('activity_list_id',$id)
-                ->whereYear('date', '=', $year)
-                ->whereMonth('date', '=', $month)
+            $auditReportActivity = AuditReportActivity::where('audit_report_activities.activity_list_id',$id)
+                ->leftjoin('audit_guidances','audit_guidances.id','audit_report_activities.audit_guidance_id')
+                ->where('audit_guidances.month', '=', $request->get('month'))
                 ->orderBy('audit_report_activities.id','desc')
                 ->get();
         }
@@ -419,13 +419,19 @@ class AuditReportActivityController extends Controller
 
         if($month != null){
             // $month = $request->get('month');
-            $queryLaporanAktivitas = "select *, audit_report_activities.id as id_audit_report
-                from audit_report_activities
-                join activity_lists on activity_lists.id = audit_report_activities.activity_list_id
-                where activity_lists.id = '".$id."'
-                and activity_lists.department_id = '".$id_departments."'
-                and DATE_FORMAT(audit_report_activities.date,'%Y-%m') = '".$month."' 
-                and audit_report_activities.deleted_at is null";
+            $queryLaporanAktivitas = "SELECT
+              *,
+              audit_report_activities.id AS id_audit_report 
+            FROM
+              audit_report_activities
+              JOIN activity_lists ON activity_lists.id = audit_report_activities.activity_list_id
+              LEFT JOIN audit_guidances ON audit_guidance_id = audit_guidances.id 
+            WHERE
+              activity_lists.id = '".$id."' 
+              AND activity_lists.department_id = '".$id_departments."' 
+              AND audit_guidances.`month` = '".$month."' 
+              AND audit_guidances.deleted_at IS NULL 
+              AND audit_report_activities.deleted_at IS NULL";
             $laporanAktivitas = DB::select($queryLaporanAktivitas);
             $laporanAktivitas2 = DB::select($queryLaporanAktivitas);
         }
@@ -583,13 +589,19 @@ class AuditReportActivityController extends Controller
 
 
         if($month != null){
-            $queryLaporanAktivitas = "select *, audit_report_activities.id as id_audit_report
-                from audit_report_activities
-                join activity_lists on activity_lists.id = audit_report_activities.activity_list_id
-                where activity_lists.id = '".$id."'
-                and activity_lists.department_id = '".$id_departments."'
-                and DATE_FORMAT(audit_report_activities.date,'%Y-%m') = '".$month."' 
-                and audit_report_activities.deleted_at is null";
+            $queryLaporanAktivitas = "SELECT
+              *,
+              audit_report_activities.id AS id_audit_report 
+            FROM
+              audit_report_activities
+              JOIN activity_lists ON activity_lists.id = audit_report_activities.activity_list_id
+              LEFT JOIN audit_guidances ON audit_guidance_id = audit_guidances.id 
+            WHERE
+              activity_lists.id = '".$id."' 
+              AND activity_lists.department_id = '".$id_departments."' 
+              AND audit_guidances.`month` = '".$month."' 
+              AND audit_guidances.deleted_at IS NULL 
+              AND audit_report_activities.deleted_at IS NULL";
             $laporanAktivitas = DB::select($queryLaporanAktivitas);
             $laporanAktivitas2 = DB::select($queryLaporanAktivitas);
         }
@@ -654,15 +666,20 @@ class AuditReportActivityController extends Controller
           $subsection = $request->get('subsection');
           $month = $request->get('month');
           // $date = date('Y-m-d', strtotime($request->get('date')));
-          $query_laporan_aktivitas = "select *, audit_report_activities.id as id_audit_report
-                from audit_report_activities
-                join activity_lists on activity_lists.id = audit_report_activities.activity_list_id
-                join departments on departments.id =  activity_lists.department_id
-                where activity_lists.id = '".$id."'
-                and activity_lists.department_id = '".$id_departments."'
-                and audit_report_activities.subsection = '".$subsection."'
-                and DATE_FORMAT(audit_report_activities.date,'%Y-%m') = '".$month."'
-                and audit_report_activities.deleted_at is null";
+          $query_laporan_aktivitas = "SELECT
+            *,
+            audit_report_activities.id AS id_audit_report 
+          FROM
+            audit_report_activities
+            JOIN activity_lists ON activity_lists.id = audit_report_activities.activity_list_id
+            JOIN departments ON departments.id = activity_lists.department_id
+            LEFT JOIN audit_guidances ON audit_guidances.id = audit_guidance_id 
+          WHERE
+            activity_lists.id = '".$id."' 
+            AND activity_lists.department_id = '".$id_departments."' 
+            AND audit_report_activities.subsection = '".$subsection."' 
+            AND audit_guidances.`month` = '".$month."' 
+            AND audit_report_activities.deleted_at IS NULL";
           $laporan_aktivitas = DB::select($query_laporan_aktivitas);
           $laporan_aktivitas2 = DB::select($query_laporan_aktivitas);
           $laporan_aktivitas3 = DB::select($query_laporan_aktivitas);

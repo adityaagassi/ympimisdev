@@ -92,11 +92,12 @@
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
 									<div class="form-group">
+										<label>Bulan Schedule</label>
 										<div class="input-group date">
 											<div class="input-group-addon bg-white">
 												<i class="fa fa-calendar"></i>
 											</div>
-											<input type="text" class="form-control datepicker" id="tgl"name="month" placeholder="Pilih Bulan" autocomplete="off">
+											<input type="text" class="form-control datepicker" id="tgl"name="month" placeholder="Pilih Bulan Schedule" autocomplete="off">
 										</div>
 									</div>
 								</div>
@@ -121,11 +122,12 @@
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
 									<div class="form-group">
+										<label>Bulan Schedule</label>
 										<div class="input-group date">
 											<div class="input-group-addon bg-white">
 												<i class="fa fa-calendar"></i>
 											</div>
-											<input type="text" class="form-control datepicker2" id="tgl_print" name="month" placeholder="Pilih Bulan" required autocomplete="off">
+											<input type="text" class="form-control datepicker2" id="tgl_print" name="month" placeholder="Pilih Bulan Schedule" required autocomplete="off">
 										</div>
 									</div>
 								</div>
@@ -161,11 +163,12 @@
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
 									<div class="form-group">
+										<label>Bulan Schedule</label>
 										<div class="input-group date">
 											<div class="input-group-addon bg-white">
 												<i class="fa fa-calendar"></i>
 											</div>
-											<input type="text" class="form-control datepicker2" id="tgl" name="month" placeholder="Pilih Bulan" required autocomplete="off">
+											<input type="text" class="form-control datepicker2" id="tgl" name="month" placeholder="Pilih Bulan Schedule" required autocomplete="off">
 										</div>
 									</div>
 								</div>
