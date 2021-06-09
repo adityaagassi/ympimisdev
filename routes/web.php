@@ -160,9 +160,9 @@ Route::get('fetch/general/omi_visitor', 'GeneralController@fetchOmiVisitor');
 Route::get('index/general/queue/{remark}', 'GeneralController@indexQueue');
 Route::get('fetch/general/queue/{remark}', 'GeneralController@fetchQueue');
 
-Route::get('index/general/attendance_check', 'GeneralController@indexGeneralAttendanceCheck');
-Route::get('fetch/general/attendance_check', 'GeneralController@fetchGeneralAttendanceCheck');
-Route::post('scan/general/attendance_check', 'GeneralController@scanGeneralAttendanceCheck');
+Route::get('index/general/attendance_check', 'GeneralAttendanceController@indexGeneralAttendanceCheck');
+Route::get('fetch/general/attendance_check', 'GeneralAttendanceController@fetchGeneralAttendanceCheck');
+Route::post('scan/general/attendance_check', 'GeneralAttendanceController@scanGeneralAttendanceCheck');
 
 //OXYMETER
 Route::get('index/general/oxymeter', 'GeneralController@indexOxymeterCheck');
