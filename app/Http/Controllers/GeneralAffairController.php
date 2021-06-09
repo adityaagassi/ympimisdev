@@ -192,7 +192,10 @@ public function approveBento(Request $request){
 				'calendars' => $calendars
 			];
 
-			Mail::to('hiroshi.ura@music.yamaha.com')
+			Mail::to(
+				'hiroshi.ura@music.yamaha.com'
+				// $mail_to
+			)
 			->cc([
 				'budhi.apriyanto@music.yamaha.com',
 				'aditya.agassi@music.yamaha.com'
@@ -223,10 +226,8 @@ public function approveBento(Request $request){
 
 						Mail::to($rejected_list->email)
 						->cc([
-							'budhi.apriyanto@music.yamaha.com', 
-							'aditya.agassi@music.yamaha.com'
-							// 'rianita.widiastuti@music.yamaha.com', 
-							// 'putri.sukma.riyanti@music.yamaha.com'
+							'rianita.widiastuti@music.yamaha.com', 
+							'putri.sukma.riyanti@music.yamaha.com'
 						])
 						->bcc([
 							'aditya.agassi@music.yamaha.com', 
@@ -911,7 +912,7 @@ public function inputBentoOrder(Request $request){
 			else{
 				$employee = EmployeeSync::where('employee_id', '=', $order[0])
 				->leftJoin('users', 'users.username', '=', 'employee_syncs.employee_id')
-				->select('employee_syncs.name', 'employee_syncs.department', 'employee_syncs.section', 'users.email')
+				->select('employee_syncs.name', 'employee_syncs.department', 'employee_syncs.section', 'users.email', 'employee_syncs.grade_code')
 				->first();
 
 				if($employee->grade_code == 'J0-'){
@@ -923,6 +924,7 @@ public function inputBentoOrder(Request $request){
 						'charge_to_name' => $employee->name,
 						'due_date' => $order[1],
 						'employee_id' => $order[0],
+						'grade_code' => $order[2],
 						'employee_name' => $employee->name,
 						'email' => $employee->email,
 						'department' => $employee->department,
@@ -941,6 +943,7 @@ public function inputBentoOrder(Request $request){
 						'due_date' => $order[1],
 						'employee_id' => $order[0],
 						'employee_name' => $employee->name,
+						'grade_code' => $order[2],
 						'email' => $employee->email,
 						'department' => $employee->department,
 						'section' => $employee->section,
@@ -965,6 +968,7 @@ public function inputBentoOrder(Request $request){
 					'due_date' => $bento->due_date,
 					'employee_id' => $bento->employee_id,
 					'employee_name' => $bento->employee_name,
+					'grade_code' => $bento->grade_code,
 					'email' => $bento->email,
 					'department' => $bento->department,
 					'section' => $bento->section,
