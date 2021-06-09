@@ -518,7 +518,7 @@
 						data: datas,
 						name: "Total NG",
 						colorByPoint: false,
-						color: "#ffa8a8",
+						color: "#f0ad4e",
 						animation: false,
 						dataSorting: {
 				            enabled: true,
@@ -682,7 +682,7 @@
 						data: datas,
 						name: "Total NG",
 						colorByPoint: false,
-						color: "#f5a8ff",
+						color: "#5cb85c",
 						animation: false,
 						dataSorting: {
 				            enabled: true,
@@ -846,7 +846,7 @@
 						data: datas,
 						name: "Total NG",
 						colorByPoint: false,
-						color: "#c2f4ff",
+						color: "#f06565",
 						animation: false,
 						dataSorting: {
 				            enabled: true,
@@ -1010,7 +1010,7 @@
 						data: datas,
 						name: "Total NG",
 						colorByPoint: false,
-						color: "#ccffc2",
+						color: "#2d46d6",
 						animation: false,
 						dataSorting: {
 				            enabled: true,
