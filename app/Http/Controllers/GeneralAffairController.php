@@ -189,7 +189,8 @@ public function approveBento(Request $request){
 
 			$bentos = [
 				'bento_lists' => $bento_lists,
-				'calendars' => $calendars
+				'calendars' => $calendars,
+				'code' => 'japanese'
 			];
 
 			Mail::to(
@@ -277,7 +278,8 @@ public function approveBento(Request $request){
 
 				$bentos = [
 					'bento_lists' => $bento_lists,
-					'calendars' => $calendars
+					'calendars' => $calendars,
+					'code' => 'national'
 				];
 
 				foreach ($bento_lists as $bento_list) {
