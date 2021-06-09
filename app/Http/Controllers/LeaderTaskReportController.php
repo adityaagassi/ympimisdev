@@ -662,8 +662,8 @@ class LeaderTaskReportController extends Controller
             }
             elseif ($activity_type == 'Laporan Aktivitas') {
               $activity = DB::SELECT('SELECT DISTINCT
-                        ( activity_list_id ),
-                        CONCAT( "/index/audit_report_activity/print_audit_report/", activity_list_id, "/", "'.$month.'" ) AS link,
+                        ( audit_report_activities.activity_list_id ),
+                        CONCAT( "/index/audit_report_activity/print_audit_report/", audit_report_activities.activity_list_id, "/", "'.$month.'" ) AS link,
                         activity_lists.activity_name,activity_lists.leader_dept,activity_lists.frequency
                     FROM
                         audit_report_activities
@@ -672,7 +672,7 @@ class LeaderTaskReportController extends Controller
                     join audit_guidances on audit_guidances.id = audit_guidance_id
                 WHERE
                     audit_guidances.`month` = "'.$month.'" 
-                    AND activity_list_id = "'.$activity_list_id.'" 
+                    AND audit_report_activities.activity_list_id = "'.$activity_list_id.'" 
                     AND audit_report_activities.deleted_at IS NULL');
             }
             elseif ($activity_type == 'Pemahaman Proses') {
