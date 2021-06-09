@@ -46,6 +46,7 @@
     <ol class="breadcrumb">
         <li>
             @if(Auth::user()->role->role_code == 'MIS' || Auth::user()->role->role_code == 'PROD')
+            <a data-toggle="modal" data-target="#deleteModal" class="btn btn-danger btn-sm" style="color:white">Delete {{ $page }}s</a>
             <a data-toggle="modal" data-target="#importModal" class="btn btn-success btn-sm" style="color:white">Import {{ $page }}s</a>
             @endif
             <a data-toggle="modal" data-target="#info" class="btn btn-info btn-sm" style="color:white">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-info-circle"></i>&nbsp;&nbsp;&nbsp;Shipment Roles&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
@@ -117,8 +118,10 @@
                         <h3>Step1 : Production Schedule <span class="pull-right" id="month_prod"></span></h3>
                         <table id="tableProd" class="table table-bordered" style="width: 100%; font-size: 12px;">
                             <thead id="headProdSch" style="background-color: rgba(126,86,134,.7);">
+                                <th></th>
                             </thead>
                             <tbody id="bodyProdSch" style="vertical-align: middle;">
+                                <th></th>
                             </tbody>
                         </table>
                     </div>
@@ -135,8 +138,10 @@
                         <h3>Step2 : Packing Schedule <span class="pull-right" id="month_pack"></span></h3>
                         <table id="tablePack" class="table table-bordered" style="width: 100%; font-size: 12px;">
                             <thead id="headLotSch" style="background-color: rgba(126,86,134,.7);">
+                                <th></th>
                             </thead>
                             <tbody id="bodyLotSch" style="vertical-align: middle;">
+                                <th></th>
                             </tbody>
                         </table>
                     </div>
@@ -153,8 +158,10 @@
                         <h3>Step3 : Shipment Schedule <span class="pull-right" id="month_ship"></span></h3>
                         <table id="tableShip" class="table table-bordered" style="width: 100%; font-size: 12px;">
                             <thead id="headShipSch" style="background-color: rgba(126,86,134,.7);">
+                                <th></th>
                             </thead>
                             <tbody id="bodyShipSch" style="vertical-align: middle;">
+                                <th></th>
                             </tbody>
                         </table>
                     </div>
@@ -165,6 +172,50 @@
         </div>
     </div>
 </section>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <input type="hidden" value="{{csrf_token()}}" name="_token" />
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Delete Production Schedule</h4>
+                Delete Production Schedule akan mengahapus schedule yang telah ada<br>
+                Data Production Schedule yang dihapus tidak dapat dikembalikan
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-6 col-xs-offset-3">
+                        <div class="col-xs-12">
+                            <label>Select Month</label>
+                            <div class="input-group date pull-right" style="text-align: center;">
+                                <div class="input-group-addon bg-red">
+                                    <i class="fa fa-calendar"></i>
+                                </div>
+                                <input type="text" class="form-control monthpicker" name="delete_month" id="delete_month" placeholder="Select Month">  
+                            </div>
+
+                        </div>
+                        <div class="col-xs-12" style="margin-top: 3%;">
+                            <label>Select Work Center</label>
+                            <select class="form-control select2" multiple="multiple" id='delete_hpl' id='delete_hpl' data-placeholder="Select Work Center" style="width: 100%;">
+                                @foreach($locations as $location)
+                                <option value="{{ $location->hpl }}">KD  -  {{ $location->hpl }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>    
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row" style="margin-top: 7%; margin-right: 2%;">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button onclick="deleteProd()" class="btn btn-danger">Delete </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="modal fade" id="info" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -389,6 +440,8 @@
         $.get('{{ url("fetch/view_production_schedule_kd") }}', data,  function(result, status, xhr){
 
             $('#month_prod').text(result.month);
+            $('#tableProd').DataTable().clear();
+            $('#tableProd').DataTable().destroy();
             $('#headProdSch').html("");
             var ps = [];
             var tableHead = '<tr>';
@@ -454,108 +507,213 @@
             }
             $('#bodyProdSch').append(tableBody);
 
+            $('#tableProd').DataTable({
+                'dom': 'Bfrtip',
+                'responsive':true,
+                'lengthMenu': [
+                [ -1 ],
+                [ 'Show all' ]
+                ],
+                'buttons': {
+                    buttons:[
+                    {
+                        extend: 'pageLength',
+                        className: 'btn btn-default',
+                    },
+                    {
+                        extend: 'copy',
+                        className: 'btn btn-success',
+                        text: '<i class="fa fa-copy"></i> Copy',
+                        exportOptions: {
+                            columns: ':not(.notexport)'
+                        }
+                    },
+                    {
+                        extend: 'excel',
+                        className: 'btn btn-info',
+                        text: '<i class="fa fa-file-excel-o"></i> Excel',
+                        exportOptions: {
+                            columns: ':not(.notexport)'
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        className: 'btn btn-warning',
+                        text: '<i class="fa fa-print"></i> Print',
+                        exportOptions: {
+                            columns: ':not(.notexport)'
+                        }
+                    },
+                    ]
+                },
+                'paging': true,
+                'lengthChange': true,
+                'searching': true,
+                'ordering': false,
+                'info': true,
+                'autoWidth': true,
+                "sPaginationType": "full_numbers",
+                "bJQueryUI": true,
+                "bAutoWidth": false,
+                "processing": true
+
+            });
+
             $('#loading').hide();
         });
+}
+
+function fillTableGenerate(month, hpl) {
+
+    var data = {
+        month : month,
+        hpl : hpl,
     }
 
-    function fillTableGenerate(month, hpl) {
+    $('#loading').show();
 
-        var data = {
-            month : month,
-            hpl : hpl,
+    $.get('{{ url("fetch/view_generate_production_schedule_kd") }}', data,  function(result, status, xhr){
+
+        $('#month_pack').text(result.month);
+        $('#tablePack').DataTable().clear();
+        $('#tablePack').DataTable().destroy();
+        $('#headLotSch').html("");
+        var ps = [];
+        var tableHead = '<tr>';
+        tableHead += '<th style="vertical-align: middle; text-align: center;">GMC</th>';
+        tableHead += '<th style="vertical-align: middle; text-align: center; width: 30%;">DESC</th>';
+        tableHead += '<th style="vertical-align: middle; text-align: center;">WORK CENTER</th>';
+        tableHead += '<th style="vertical-align: middle; text-align: center;">LOT</th>';
+
+        for (var i = 0; i < result.dates.length; i++) {
+            tableHead += '<th style="vertical-align: middle; text-align: center;">'+ result.dates[i].week_date.slice(8) +'</th>';
+            ps.push({
+                'date' : result.dates[i].week_date,
+                'quantity' : 0
+            });
         }
 
-        $('#loading').show();
-
-        $.get('{{ url("fetch/view_generate_production_schedule_kd") }}', data,  function(result, status, xhr){
-
-            $('#month_pack').text(result.month);
-            $('#headLotSch').html("");
-            var ps = [];
-            var tableHead = '<tr>';
-            tableHead += '<th style="vertical-align: middle; text-align: center;">GMC</th>';
-            tableHead += '<th style="vertical-align: middle; text-align: center; width: 30%;">DESC</th>';
-            tableHead += '<th style="vertical-align: middle; text-align: center;">WORK CENTER</th>';
-            tableHead += '<th style="vertical-align: middle; text-align: center;">LOT</th>';
-
-            for (var i = 0; i < result.dates.length; i++) {
-                tableHead += '<th style="vertical-align: middle; text-align: center;">'+ result.dates[i].week_date.slice(8) +'</th>';
-                ps.push({
-                    'date' : result.dates[i].week_date,
-                    'quantity' : 0
-                });
-            }
-
-            tableHead += '<th style="vertical-align: middle; text-align: center;">PLAN PACKING</th>';
-            tableHead += '<th style="vertical-align: middle; text-align: center;">TOTAL SCHEDULE</th>';
-            tableHead += '<th style="vertical-align: middle; text-align: center;">Diff</th>';
-            tableHead += '</tr>';
-            $('#headLotSch').append(tableHead);
+        tableHead += '<th style="vertical-align: middle; text-align: center;">PLAN PACKING</th>';
+        tableHead += '<th style="vertical-align: middle; text-align: center;">TOTAL SCHEDULE</th>';
+        tableHead += '<th style="vertical-align: middle; text-align: center;">Diff</th>';
+        tableHead += '</tr>';
+        $('#headLotSch').append(tableHead);
 
 
-            $('#bodyLotSch').html("");
-            var tableBody = '';
+        $('#bodyLotSch').html("");
+        var tableBody = '';
 
-            for (var i = 0; i < result.materials.length; i++) {
-                tableBody += '<tr>';
-                tableBody += '<td style="vertical-align: middle; text-align: center;">'+result.materials[i].material_number+'</td>';
-                tableBody += '<td style="vertical-align: middle; text-align: left;">'+result.materials[i].material_description+'</td>';
-                tableBody += '<td style="vertical-align: middle; text-align: left;">'+result.materials[i].hpl+'</td>';
-                tableBody += '<td style="vertical-align: middle; text-align: center;">'+result.materials[i].lot_completion+'</td>';
+        for (var i = 0; i < result.materials.length; i++) {
+            tableBody += '<tr>';
+            tableBody += '<td style="vertical-align: middle; text-align: center;">'+result.materials[i].material_number+'</td>';
+            tableBody += '<td style="vertical-align: middle; text-align: left;">'+result.materials[i].material_description+'</td>';
+            tableBody += '<td style="vertical-align: middle; text-align: left;">'+result.materials[i].hpl+'</td>';
+            tableBody += '<td style="vertical-align: middle; text-align: center;">'+result.materials[i].lot_completion+'</td>';
 
-                var sum_row = 0;
-                var diff = 0;
+            var sum_row = 0;
+            var diff = 0;
 
-                for (var j = 0; j < result.dates.length; j++) {
-                    var inserted = false;
-                    if(result.dates[j].remark == 'H'){
-                        tableBody += '<th style="background-color: gainsboro;"></th>';
-                        inserted = true;
-                    }else{
-                        for (var k = 0; k < result.prod_schedules.length; k++) {
-                            if((result.prod_schedules[k].material_number == result.materials[i].material_number) && (result.prod_schedules[k].due_date == result.dates[j].week_date)){
+            for (var j = 0; j < result.dates.length; j++) {
+                var inserted = false;
+                if(result.dates[j].remark == 'H'){
+                    tableBody += '<th style="background-color: gainsboro;"></th>';
+                    inserted = true;
+                }else{
+                    for (var k = 0; k < result.prod_schedules.length; k++) {
+                        if((result.prod_schedules[k].material_number == result.materials[i].material_number) && (result.prod_schedules[k].due_date == result.dates[j].week_date)){
 
-                                if((result.prod_schedules[k].quantity % result.materials[i].lot_completion) == 0){
-                                    tableBody += '<th style="text-align: center; vertical-align: middle;">'+result.prod_schedules[k].quantity+'</th>';
-                                }else{
-                                    tableBody += '<td style="text-align: center; vertical-align: middle; background-color: rgb(255, 204, 255);">'+result.prod_schedules[k].quantity+'</td>';
-                                }
-
-                                sum_row += result.prod_schedules[k].quantity;
-                                inserted = true;
-
+                            if((result.prod_schedules[k].quantity % result.materials[i].lot_completion) == 0){
+                                tableBody += '<th style="text-align: center; vertical-align: middle;">'+result.prod_schedules[k].quantity+'</th>';
+                            }else{
+                                tableBody += '<td style="text-align: center; vertical-align: middle; background-color: rgb(255, 204, 255);">'+result.prod_schedules[k].quantity+'</td>';
                             }
+
+                            sum_row += result.prod_schedules[k].quantity;
+                            inserted = true;
+
                         }
                     }
-
-                    if(!inserted){
-                        tableBody += '<th style="text-align: center; vertical-align: middle;">0</th>';
-                    }
-                }
-                tableBody += '<th style="text-align: right; vertical-align: middle;">'+sum_row+'</th>';
-
-
-                for (var z = 0; z < result.sum_step_one.length; z++) {
-                    if(result.sum_step_one[z].material_number == result.materials[i].material_number){
-                        tableBody += '<th style="text-align: right; vertical-align: middle;">'+result.sum_step_one[z].quantity+'</th>';
-                        diff = sum_row - result.sum_step_one[z].quantity;
-                    }
                 }
 
-                if(diff == 0){
-                    tableBody += '<th style="text-align: right; vertical-align: middle;">'+diff+'</th>';
-                }else{
-                    tableBody += '<td style="text-align: center; vertical-align: middle; background-color: rgb(255, 204, 255);">'+diff+'</td>';
+                if(!inserted){
+                    tableBody += '<th style="text-align: center; vertical-align: middle;">0</th>';
                 }
+            }
+            tableBody += '<th style="text-align: right; vertical-align: middle;">'+sum_row+'</th>';
 
-                tableBody += '</tr>';
+
+            for (var z = 0; z < result.sum_step_one.length; z++) {
+                if(result.sum_step_one[z].material_number == result.materials[i].material_number){
+                    tableBody += '<th style="text-align: right; vertical-align: middle;">'+result.sum_step_one[z].quantity+'</th>';
+                    diff = sum_row - result.sum_step_one[z].quantity;
+                }
             }
 
-            $('#bodyLotSch').append(tableBody);
+            if(diff == 0){
+                tableBody += '<th style="text-align: right; vertical-align: middle;">'+diff+'</th>';
+            }else{
+                tableBody += '<td style="text-align: center; vertical-align: middle; background-color: rgb(255, 204, 255);">'+diff+'</td>';
+            }
 
-            $('#loading').hide();
+            tableBody += '</tr>';
+        }
+
+        $('#bodyLotSch').append(tableBody);
+
+        $('#tablePack').DataTable({
+            'dom': 'Bfrtip',
+            'responsive':true,
+            'lengthMenu': [
+            [ -1 ],
+            [ 'Show all' ]
+            ],
+            'buttons': {
+                buttons:[
+                {
+                    extend: 'pageLength',
+                    className: 'btn btn-default',
+                },
+                {
+                    extend: 'copy',
+                    className: 'btn btn-success',
+                    text: '<i class="fa fa-copy"></i> Copy',
+                    exportOptions: {
+                        columns: ':not(.notexport)'
+                    }
+                },
+                {
+                    extend: 'excel',
+                    className: 'btn btn-info',
+                    text: '<i class="fa fa-file-excel-o"></i> Excel',
+                    exportOptions: {
+                        columns: ':not(.notexport)'
+                    }
+                },
+                {
+                    extend: 'print',
+                    className: 'btn btn-warning',
+                    text: '<i class="fa fa-print"></i> Print',
+                    exportOptions: {
+                        columns: ':not(.notexport)'
+                    }
+                },
+                ]
+            },
+            'paging': true,
+            'lengthChange': true,
+            'searching': true,
+            'ordering': false,
+            'info': true,
+            'autoWidth': true,
+            "sPaginationType": "full_numbers",
+            "bJQueryUI": true,
+            "bAutoWidth": false,
+            "processing": true
 
         });
+        $('#loading').hide();
+
+    });
 }
 
 function fillTableShipment(month, hpl) {
@@ -570,6 +728,8 @@ function fillTableShipment(month, hpl) {
     $.get('{{ url("fetch/view_generate_shipment_schedule_kd") }}', data,  function(result, status, xhr){
 
         $('#month_ship').text(result.month);
+        $('#tableShip').DataTable().clear();
+        $('#tableShip').DataTable().destroy();
         $('#headShipSch').html("");
         var ps = [];
         var tableHead = '<tr style=>';
@@ -655,9 +815,95 @@ function fillTableShipment(month, hpl) {
 
         $('#bodyShipSch').append(tableBody);
 
+        $('#tableShip').DataTable({
+            'dom': 'Bfrtip',
+            'responsive':true,
+            'lengthMenu': [
+            [ -1 ],
+            [ 'Show all' ]
+            ],
+            'buttons': {
+                buttons:[
+                {
+                    extend: 'pageLength',
+                    className: 'btn btn-default',
+                },
+                {
+                    extend: 'copy',
+                    className: 'btn btn-success',
+                    text: '<i class="fa fa-copy"></i> Copy',
+                    exportOptions: {
+                        columns: ':not(.notexport)'
+                    }
+                },
+                {
+                    extend: 'excel',
+                    className: 'btn btn-info',
+                    text: '<i class="fa fa-file-excel-o"></i> Excel',
+                    exportOptions: {
+                        columns: ':not(.notexport)'
+                    }
+                },
+                {
+                    extend: 'print',
+                    className: 'btn btn-warning',
+                    text: '<i class="fa fa-print"></i> Print',
+                    exportOptions: {
+                        columns: ':not(.notexport)'
+                    }
+                },
+                ]
+            },
+            'paging': true,
+            'lengthChange': true,
+            'searching': true,
+            'ordering': false,
+            'info': true,
+            'autoWidth': true,
+            "sPaginationType": "full_numbers",
+            "bJQueryUI": true,
+            "bAutoWidth": false,
+            "processing": true
+
+        });
+
         $('#loading').hide();
 
     });
+}
+
+function deleteProd() {
+    var month = $('#delete_month').val();
+    var hpl = $('#delete_hpl').val();
+
+    var data = {
+        month : month,
+        hpl : hpl,
+    }
+
+    if(hpl.length < 1 || month == ''){
+        openErrorGritter("Error", "Select Month & Work Center");
+        return false;
+    }
+
+    $('#loading').show();
+
+    $.post('{{ url("delete/production_schedule_kd") }}', data, function(result, status, xhr){
+       if(result.status){
+
+        $('#delete_month').val('');
+        $("#delete_hpl").val("");
+        $("#delete_hpl").trigger("change");
+
+        $('#deleteModal').modal('hide');
+        $('#loading').hide();
+        openSuccessGritter("Success", result.message);
+
+    }else{
+        $('#loading').hide();
+        openErrorGritter("Error", result.message);
+    }
+});
 }
 
 function generate() {

@@ -104,6 +104,30 @@ class ProductionScheduleController extends Controller{
         return Response::json($response);
     }
 
+    public function deleteKD(Request $request){
+        $month = $request->get('month');
+        $hpl = $request->get('hpl');
+
+        try {
+            $delete = ProductionSchedulesOneStep::leftJoin('materials', 'materials.material_number', 'production_schedules_one_steps.material_number')
+            ->where(db::raw('date_format(production_schedules_one_steps.due_date, "%Y-%m")') ,$month)
+            ->whereIn('materials.hpl', $request->get('hpl'))
+            ->delete();
+
+            $response = array(
+                'status' => true,
+                'message' => 'Delete Production Schedule Successful'
+            );
+            return Response::json($response);
+        } catch (Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+            );
+            return Response::json($response);
+        }
+    }
+
 
     public function fetchViewGenerateProductionScheduleKd(Request $request){
 
@@ -180,7 +204,6 @@ class ProductionScheduleController extends Controller{
             }
             $hpl = "AND m.hpl IN (".$hpl.") ";
         }
-
 
         $delete = ProductionSchedulesTwoStep::leftJoin('materials', 'materials.material_number', 'production_schedules_two_steps.material_number')
         ->where(db::raw('date_format(production_schedules_two_steps.due_date, "%Y-%m")') ,$month)
@@ -943,8 +966,7 @@ class ProductionScheduleController extends Controller{
     }
 
 
-    public function index()
-    {
+    public function index(){
         $materials = Material::where('category', '=', 'FG')->get();
 
         $locations = Material::where('category', '=', 'FG')
@@ -957,14 +979,12 @@ class ProductionScheduleController extends Controller{
         ->get();
 
         return view('production_schedules.index', array(
-          'locations' => $locations,
-          'materials' => $materials
-      ))->with('page', 'Production Schedule');
-        //
+            'locations' => $locations,
+            'materials' => $materials
+        ))->with('page', 'Production Schedule');
     }
 
-    public function indexKD()
-    {
+    public function indexKD(){
 
         $materials = Material::where('category', '=', 'KD')->get();
 
@@ -983,8 +1003,8 @@ class ProductionScheduleController extends Controller{
         
     }
 
-    public function fetchSchedule(Request $request)
-    {
+    public function fetchSchedule(Request $request){
+
         $due_date = date('Y-m-d', strtotime("first day of -2 month"));
 
         $production_schedules = ProductionSchedule::leftJoin("materials","materials.material_number","=","production_schedules.material_number")
@@ -997,18 +1017,17 @@ class ProductionScheduleController extends Controller{
 
         return DataTables::of($production_schedules)
         ->addColumn('action', function($production_schedules){
-          return '
-          <button class="btn btn-xs btn-info" data-toggle="tooltip" title="Details" onclick="modalView('.$production_schedules->id.')">View</button>
-          <button class="btn btn-xs btn-warning" data-toggle="tooltip" title="Edit" onclick="modalEdit('.$production_schedules->id.')">Edit</button>
-          <button class="btn btn-xs btn-danger" data-toggle="tooltip" title="Delete" onclick="modalDelete('.$production_schedules->id.',\''.$production_schedules->material_number.'\',\''.$production_schedules->due_date.'\')">Delete</button>';
-      })
-
+            return '
+            <button class="btn btn-xs btn-info" data-toggle="tooltip" title="Details" onclick="modalView('.$production_schedules->id.')">View</button>
+            <button class="btn btn-xs btn-warning" data-toggle="tooltip" title="Edit" onclick="modalEdit('.$production_schedules->id.')">Edit</button>
+            <button class="btn btn-xs btn-danger" data-toggle="tooltip" title="Delete" onclick="modalDelete('.$production_schedules->id.',\''.$production_schedules->material_number.'\',\''.$production_schedules->due_date.'\')">Delete</button>';
+        })
         ->rawColumns(['action' => 'action'])
         ->make(true);
     }
 
-    public function fetchScheduleKD(Request $request)
-    {
+    public function fetchScheduleKD(Request $request){
+
         $due_date = date('Y-m-d', strtotime("first day of -1 month"));
 
         $production_schedules = ProductionSchedule::leftJoin("materials","materials.material_number","=","production_schedules.material_number")
@@ -1021,38 +1040,26 @@ class ProductionScheduleController extends Controller{
 
         return DataTables::of($production_schedules)
         ->addColumn('action', function($production_schedules){
-          return '
-          <button class="btn btn-xs btn-info" data-toggle="tooltip" title="Details" onclick="modalView('.$production_schedules->id.')">View</button>
-          <button class="btn btn-xs btn-warning" data-toggle="tooltip" title="Edit" onclick="modalEdit('.$production_schedules->id.')">Edit</button>
-          <button class="btn btn-xs btn-danger" data-toggle="tooltip" title="Delete" onclick="modalDelete('.$production_schedules->id.',\''.$production_schedules->material_number.'\',\''.$production_schedules->due_date.'\')">Delete</button>';
-      })
-
+            return '
+            <button class="btn btn-xs btn-info" data-toggle="tooltip" title="Details" onclick="modalView('.$production_schedules->id.')">View</button>
+            <button class="btn btn-xs btn-warning" data-toggle="tooltip" title="Edit" onclick="modalEdit('.$production_schedules->id.')">Edit</button>
+            <button class="btn btn-xs btn-danger" data-toggle="tooltip" title="Delete" onclick="modalDelete('.$production_schedules->id.',\''.$production_schedules->material_number.'\',\''.$production_schedules->due_date.'\')">Delete</button>';
+        })
         ->rawColumns(['action' => 'action'])
         ->make(true);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
+
+    public function create(){
     	$materials = Material::orderBy('material_number', 'ASC')->get();
     	return view('production_schedules.create', array(
     		'materials' => $materials
     	))->with('page', 'Production Schedule');
-        //
+
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
+    public function store(Request $request){
+
     	$due_date = date('Y-m-d', strtotime(str_replace('/','-', $request->get('due_date'))));
     	try
     	{
@@ -1083,14 +1090,8 @@ class ProductionScheduleController extends Controller{
     	}
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Request $request)
-    {
+
+    public function show(Request $request){
     	$query = "select production_schedule.material_number, production_schedule.due_date, production_schedule.quantity, users.`name`, material_description, origin_group_name, production_schedule.created_at, production_schedule.updated_at from
     	(select material_number, due_date, quantity, created_by, created_at, updated_at from production_schedules where id = "
     	.$request->get('id').") as production_schedule
@@ -1107,14 +1108,7 @@ class ProductionScheduleController extends Controller{
     	return Response::json($response);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function fetchEdit(Request $request)
-    {
+    public function fetchEdit(Request $request){
       // $materials = Material::orderBy('material_number', 'ASC')->get();
     	$production_schedule = ProductionSchedule::find($request->get("id"));
 
@@ -1125,15 +1119,8 @@ class ProductionScheduleController extends Controller{
     	return Response::json($response);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function editKD(Request $request)
-    {
+
+    public function editKD(Request $request){
         $due_date = date('Y-m-d', strtotime(str_replace('/','-', $request->get('due_date'))));
 
         try{
@@ -1150,58 +1137,49 @@ class ProductionScheduleController extends Controller{
                 return Response::json($response);
             }
             else{
-               $response = array(
-                'status' => false,
-                'datas' => $production_schedule
-            );
-               return Response::json($response);
-           }
-       }
-       catch (QueryException $e){
-        $error_code = $e->errorInfo[1];
-        if($error_code == 1062){
-            return redirect('/index/production_schedule')->with('error', 'Production schedule with preferred due date already exist.')->with('page', 'Production Schedule');
+                $response = array(
+                    'status' => false,
+                    'datas' => $production_schedule
+                );
+                return Response::json($response);
+            }
         }
-        else{
-            return redirect('/index/production_schedule')->with('error', $e->getMessage())->with('page', 'Production Schedule');
+        catch (QueryException $e){
+            $error_code = $e->errorInfo[1];
+            if($error_code == 1062){
+                return redirect('/index/production_schedule')->with('error', 'Production schedule with preferred due date already exist.')->with('page', 'Production Schedule');
+            }
+            else{
+                return redirect('/index/production_schedule')->with('error', $e->getMessage())->with('page', 'Production Schedule');
+            }
         }
     }
-}
 
-public function edit(Request $request)
-{
-   $due_date = date('Y-m-d', strtotime(str_replace('/','-', $request->get('due_date'))));
+    public function edit(Request $request){
+        $due_date = date('Y-m-d', strtotime(str_replace('/','-', $request->get('due_date'))));
 
-   try{
-      $production_schedule = ProductionSchedule::find($request->get('id'));
-      $production_schedule->quantity = $request->get('quantity');
-      $production_schedule->save();
+        try{
+            $production_schedule = ProductionSchedule::find($request->get('id'));
+            $production_schedule->quantity = $request->get('quantity');
+            $production_schedule->save();
 
-      $response = array(
-         'status' => true,
-         'datas' => $production_schedule
-     );
-      return Response::json($response);
-  }
-  catch (QueryException $e){
-      $error_code = $e->errorInfo[1];
-      if($error_code == 1062){
-         return redirect('/index/production_schedule')->with('error', 'Production schedule with preferred due date already exist.')->with('page', 'Production Schedule');
-     }
-     else{
-         return redirect('/index/production_schedule')->with('error', $e->getMessage())->with('page', 'Production Schedule');
-     }
- }
-}
+            $response = array(
+                'status' => true,
+                'datas' => $production_schedule
+            );
+            return Response::json($response);
+        }catch (QueryException $e){
+            $error_code = $e->errorInfo[1];
+            if($error_code == 1062){
+                return redirect('/index/production_schedule')->with('error', 'Production schedule with preferred due date already exist.')->with('page', 'Production Schedule');
+            }else{
+                return redirect('/index/production_schedule')->with('error', $e->getMessage())->with('page', 'Production Schedule');
+            }
+        }
+    }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function delete(Request $request)
-    {
+    
+    public function delete(Request $request){
     	$production_schedule = ProductionSchedule::find($request->get("id"));
     	$production_schedule->forceDelete();
 
@@ -1211,65 +1189,40 @@ public function edit(Request $request)
     	return Response::json($response);
     }
 
-    public function deleteKD(Request $request)
-    {
-        $production_schedule = ProductionSchedule::find($request->get("id"));
+    public function destroy(Request $request){
+        $date_from = date('Y-m-d', strtotime($request->get('datefrom')));
+        $date_to = date('Y-m-d', strtotime($request->get('dateto')));
 
-        if($production_schedule->quantity == 0){
-            $production_schedule->forceDelete();
+        $materials = Material::select('material_number');
+
+        foreach($request->get('location') as $location){
+            $locations = explode(",", $location);
+
+            $category = $locations[0];
+            $hpl = $locations[1];
+
+            $materials = Material::where('hpl', '=', $hpl)
+            ->where('category', $category)
+            ->select('material_number')
+            ->get();
+
+            try{
+                $production_schedules = ProductionSchedule::where('due_date', '>=', $date_from)
+                ->where('due_date', '<=', $date_to)
+                ->whereIn('material_number', $materials)
+                ->forceDelete();                
+            }
+            catch (\Exception $e) {
+                return redirect('/index/production_schedule')->with('error', $e->getMessage())->with('page', 'Production Schedule');
+            }
         }
-        else{
-         $response = array(
-            'status' => false
-        );
-         return Response::json($response);   
-     }
 
-     $response = array('status' => true);
-     return Response::json($response);
- }
-
- public function destroy(Request $request){
-     $date_from = date('Y-m-d', strtotime($request->get('datefrom')));
-     $date_to = date('Y-m-d', strtotime($request->get('dateto')));
-
-     $materials = Material::select('material_number');
-
-     foreach($request->get('location') as $location){
-        $locations = explode(",", $location);
-
-        $category = $locations[0];
-        $hpl = $locations[1];
-
-        $materials = Material::where('hpl', '=', $hpl)
-        ->where('category', $category)
-        ->select('material_number')
-        ->get();
-
-        try{
-            $production_schedules = ProductionSchedule::where('due_date', '>=', $date_from)
-            ->where('due_date', '<=', $date_to)
-            ->whereIn('material_number', $materials)
-            ->forceDelete();                
-        }
-        catch (\Exception $e) {
-            return redirect('/index/production_schedule')->with('error', $e->getMessage())->with('page', 'Production Schedule');
-        }
+        return redirect('/index/production_schedule')
+        ->with('status', 'Production schedules has been deleted.')
+        ->with('page', 'Production Schedule');
     }
 
-    return redirect('/index/production_schedule')
-    ->with('status', 'Production schedules has been deleted.')
-    ->with('page', 'Production Schedule');
-}
-
-    /**
-     * Import resource from Text File.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function import(Request $request)
-    {
+    public function import(Request $request){
     	try{
     		if($request->hasFile('production_schedule')){
                 // ProductionSchedule::truncate();
@@ -1295,9 +1248,7 @@ public function edit(Request $request)
     				}
     			}
     			return redirect('/index/production_schedule')->with('status', 'New production schedule has been imported.')->with('page', 'Production Schedule');
-    		}
-    		else
-    		{
+    		}else{
     			return redirect('/index/production_schedule')->with('error', 'Please select a file.')->with('page', 'Production Schedule');
     		}
     	}
@@ -1306,17 +1257,14 @@ public function edit(Request $request)
     		$error_code = $e->errorInfo[1];
     		if($error_code == 1062){
     			return back()->with('error', 'Production schedule with preferred due date already exist.')->with('page', 'Production Schedule');
-    		}
-    		else{
+    		}else{
     			return back()->with('error', $e->getMessage())->with('page', 'Production Schedule');
     		}
 
     	}
-            //
     }
 
-    public function importKd(Request $request)
-    {
+    public function importKd(Request $request){
 
         try{
             if($request->hasFile('production_schedule')){
@@ -1328,8 +1276,7 @@ public function edit(Request $request)
                 $data = file_get_contents($file);
 
                 $rows = explode("\r\n", $data);
-                foreach ($rows as $row)
-                {
+                foreach ($rows as $row){
                     if (strlen($row) > 0) {
                         $row = explode("\t", $row);
                         $production_schedule =  db::table('production_schedules_one_steps')
@@ -1346,9 +1293,7 @@ public function edit(Request $request)
                     }
                 }
                 return redirect('/index/production_schedule_kd')->with('status', 'New production schedule has been imported.')->with('page', 'Production Schedule');
-            }
-            else
-            {
+            }else{
                 return redirect('/index/production_schedule_kd')->with('error', 'Please select a file.')->with('page', 'Production Schedule');
             }
         }
@@ -1365,8 +1310,7 @@ public function edit(Request $request)
         }
     }
 
-    public function indexProductionData()
-    {
+    public function indexProductionData(){
     	$origin_groups = DB::table('origin_groups')->get();
     	$materials = Material::where('category','=','FG')->orderBy('material_number', 'ASC')->get();
     	$models = Material::where('category','=','FG')->orderBy('model', 'ASC')->distinct()->select('model')->get();
@@ -1381,97 +1325,91 @@ public function edit(Request $request)
     }
 
 
-    public function fetchProductionData(Request $request)
-    {
+    public function fetchProductionData(Request $request){
+        $first = date("Y-m-01", strtotime($request->get("dateTo")));
+        // $request->get("material_number");
+        // $request->get("model");
 
-    	$first = date("Y-m-01", strtotime($request->get("dateTo")));
-      // $request->get("material_number");
-      // $request->get("model");
+        // PRODUCTION SCHEDULE
+        $production_sch = ProductionSchedule::leftJoin("materials", "materials.material_number" ,"=" ,"production_schedules.material_number")
+        ->where("due_date", ">=", $first)
+        ->where("category", "=", "FG");
 
-      // PRODUCTION SCHEDULE
+        if($request->get("dateTo")) {
+            $production_sch = $production_sch->where("due_date", "<=", $request->get("dateTo"));
+        }
 
-    	$production_sch = ProductionSchedule::leftJoin("materials", "materials.material_number" ,"=" ,"production_schedules.material_number")
-    	->where("due_date", ">=", $first)
-    	->where("category", "=", "FG");
+        if($request->get("product_code") != "") {
+            $production_sch = $production_sch->where("origin_group_code", "=", $request->get("product_code"));
+        }
 
-    	if ($request->get("dateTo")) {
-    		$production_sch = $production_sch->where("due_date", "<=", $request->get("dateTo"));
-    	}
+        $production_sch = $production_sch->select("due_date", "production_schedules.material_number", "material_description", "quantity","origin_group_code","model")
+        ->get();
 
-    	if ($request->get("product_code") != "") {
-    		$production_sch = $production_sch->where("origin_group_code", "=", $request->get("product_code"));
-    	}
+        // ACT PACKING
+        $flo = FloDetail::leftJoin("materials", "materials.material_number" ,"=" ,"flo_details.material_number")
+        ->where(db::raw('DATE_FORMAT(flo_details.created_at,"%Y-%m-%d")'), ">=", $first)
+        ->where("category", "=", "FG");
 
-    	$production_sch = $production_sch->select("due_date", "production_schedules.material_number", "material_description", "quantity","origin_group_code","model")
-    	->get();
+        if($request->get("dateTo")) {
+            $flo = $flo->where(db::raw('DATE_FORMAT(flo_details.created_at,"%Y-%m-%d")'), "<=", $request->get("dateTo"));
+        }
 
-      // ACT PACKING
-
-    	$flo = FloDetail::leftJoin("materials", "materials.material_number" ,"=" ,"flo_details.material_number")
-    	->where(db::raw('DATE_FORMAT(flo_details.created_at,"%Y-%m-%d")'), ">=", $first)
-    	->where("category", "=", "FG");
-
-    	if ($request->get("dateTo")) {
-    		$flo = $flo->where(db::raw('DATE_FORMAT(flo_details.created_at,"%Y-%m-%d")'), "<=", $request->get("dateTo"));
-    	}
-
-    	$flo = $flo->select("flo_details.material_number", db::raw('sum(flo_details.quantity) as packing'), db::raw('DATE_FORMAT(flo_details.created_at,"%Y-%m-%d") as date'))
-    	->groupBy("flo_details.material_number", db::raw('DATE_FORMAT(flo_details.created_at,"%Y-%m-%d")'))
-    	->get();
+        $flo = $flo->select("flo_details.material_number", db::raw('sum(flo_details.quantity) as packing'), db::raw('DATE_FORMAT(flo_details.created_at,"%Y-%m-%d") as date'))
+        ->groupBy("flo_details.material_number", db::raw('DATE_FORMAT(flo_details.created_at,"%Y-%m-%d")'))
+        ->get();
 
 
-      // DELIVERY
+        // DELIVERY
+        if($request->get("dateTo")) {
+            $where = ' AND DATE_FORMAT(deliv.created_at, "%Y-%m-%d") <= "'.$request->get("dateTo").'"';
+        }else{
+            $where = '';
+        }
 
-    	if ($request->get("dateTo")) {
-    		$where = ' AND DATE_FORMAT(deliv.created_at, "%Y-%m-%d") <= "'.$request->get("dateTo").'"';
-    	} else {
-    		$where = '';
-    	}
+        if($request->get("product_code") != "") {
+            $product_codes = $request->get('product_code');
+            $codelength = count($product_codes);
+            $code = "";
 
-    	if ($request->get("product_code") != "") {
-    		$product_codes = $request->get('product_code');
-    		$codelength = count($product_codes);
-    		$code = "";
+            for($x = 0; $x < $codelength; $x++) {
+                $code = $code."'".$product_codes[$x]."'";
+                if($x != $codelength-1){
+                    $code = $code.",";
+                }
+            }
+            $where2 = " and origin_group_code in (".$code.") ";
+        }else{
+            $where2 = '';
+        }
 
-    		for($x = 0; $x < $codelength; $x++) {
-    			$code = $code."'".$product_codes[$x]."'";
-    			if($x != $codelength-1){
-    				$code = $code.",";
-    			}
-    		}
-    		$where2 = " and origin_group_code in (".$code.") ";
-    	} else {
-    		$where2 = '';
-    	}
+        $q_deliv = 'select * from (select flomaster.flo_number, flomaster.material_number, sum(flomaster.actual) deliv, flomaster.`status`, DATE_FORMAT(deliv.created_at, "%Y-%m-%d") date from
+        (select flos.flo_number, flos.material_number, actual, `status` from flos where `status` NOT IN (0,1,"m")) as flomaster left join 
+        (select flo_number, created_at from flo_logs where status_code = 2) as deliv on flomaster.flo_number = deliv.flo_number
+        where DATE_FORMAT(deliv.created_at, "%Y-%m-%d") >= "'.$first.'" '. $where .'
+        group by flomaster.material_number, DATE_FORMAT(deliv.created_at, "%Y-%m-%d")) alls
+        left join materials on materials.material_number = alls.material_number
+        where category = "FG" '.$where2.'
+        order by alls.material_number asc, alls.date asc';
 
-    	$q_deliv = 'select * from (select flomaster.flo_number, flomaster.material_number, sum(flomaster.actual) deliv, flomaster.`status`, DATE_FORMAT(deliv.created_at, "%Y-%m-%d") date from
-    	(select flos.flo_number, flos.material_number, actual, `status` from flos where `status` NOT IN (0,1,"m")) as flomaster left join 
-    	(select flo_number, created_at from flo_logs where status_code = 2) as deliv on flomaster.flo_number = deliv.flo_number
-    	where DATE_FORMAT(deliv.created_at, "%Y-%m-%d") >= "'.$first.'" '. $where .'
-    	group by flomaster.material_number, DATE_FORMAT(deliv.created_at, "%Y-%m-%d")) alls
-    	left join materials on materials.material_number = alls.material_number
-    	where category = "FG" '.$where2.'
-    	order by alls.material_number asc, alls.date asc';
+        $deliv = db::select($q_deliv);
 
-    	$deliv = db::select($q_deliv);
-
-    	$response = array(
-    		'status' => true,
-    		'production_sch' => $production_sch,
-    		'packing' => $flo,
-    		'deliv' => $deliv
-    	);
-    	return Response::json($response);
+        $response = array(
+            'status' => true,
+            'production_sch' => $production_sch,
+            'packing' => $flo,
+            'deliv' => $deliv
+        );
+        return Response::json($response);
     }
 
-    public function indexProductionMonitoring()
-    {
-    	$origin_groups = DB::table('origin_groups')->get();
+    public function indexProductionMonitoring(){
+        $origin_groups = DB::table('origin_groups')->get();
 
-    	return view('production_schedules.monitoring', array(
-    		'origin_groups' => $origin_groups,
-    		'title' => 'Production Schedule Monitoring',
-    		'title_jp' => ''
-    	))->with('page', 'Production Schedule');
+        return view('production_schedules.monitoring', array(
+            'origin_groups' => $origin_groups,
+            'title' => 'Production Schedule Monitoring',
+            'title_jp' => ''
+        ))->with('page', 'Production Schedule');
     }
 }
