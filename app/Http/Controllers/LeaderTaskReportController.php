@@ -668,9 +668,10 @@ class LeaderTaskReportController extends Controller
                     FROM
                         audit_report_activities
                     audit_report_activities 
-                    JOIN activity_lists ON activity_list_id = activity_lists.id 
+                    JOIN activity_lists ON activity_list_id = activity_lists.id
+                    join audit_guidances on audit_guidances.id = audit_guidance_id
                 WHERE
-                    DATE_FORMAT( audit_report_activities.date, "%Y-%m" ) = "'.$month.'" 
+                    audit_guidances.`month` = "'.$month.'" 
                     AND activity_list_id = "'.$activity_list_id.'" 
                     AND audit_report_activities.deleted_at IS NULL');
             }
