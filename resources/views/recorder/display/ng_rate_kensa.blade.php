@@ -38,7 +38,7 @@
 	<div class="row">
 		<div class="col-xs-12" style="padding-bottom: 5px;">
 			<div class="row">
-				<form method="GET" action="{{ action('AssemblyProcessController@indexNgRate') }}">
+				<form method="GET" action="{{ action('RecorderProcessController@indexNgRateKensa') }}">
 					<div class="col-xs-2" style="padding-right: 0;">
 						<div class="input-group date">
 							<div class="input-group-addon bg-green" style="border: none; background-color: #605ca8; color: white;">
@@ -153,8 +153,11 @@
 
 	jQuery(document).ready(function(){
 		$('#tanggal').datepicker({
+			<?php $tgl_max = date('Y-m-d') ?>
 			autoclose: true,
-			todayHighlight: true
+			format: "yyyy-mm-dd",
+			todayHighlight: true,	
+			endDate: '<?php echo $tgl_max ?>'
 		});
 		$('.select2').select2();
 		fetchChart();
@@ -490,7 +493,7 @@
 							point: {
 								events: {
 									click: function () {
-										ShowModal(this.category,result.date);
+										// ShowModal(this.category,result.date);
 									}
 								}
 							},
