@@ -72,35 +72,35 @@
 					<h2>REPLY ROUND TRIP TIME</h2>
 				</div>
 
-				<div class="col-md-4 content-header" style="background-color: #4a148c !important;border-right: 10px solid #424242">
+				<div class="col-md-6 content-header" style="background-color: #4a148c !important;border-right: 10px solid #424242">
 	          		<h1>INTERNET</h1>
 				</div>
-				<div class="col-md-4 content-header" style="background-color: #ffeb3b !important;border-left: 10px solid #424242;color: #000">
+				<div class="col-md-6 content-header" style="background-color: #ffeb3b !important;border-left: 10px solid #424242;color: #000">
 	          		<h1>VPN</h1>  
 				</div>
-				<div class="col-md-4 content-header" style="background-color: #fc5603 !important;border-left: 10px solid #424242;color: #000">
+				<!-- <div class="col-md-4 content-header" style="background-color: #fc5603 !important;border-left: 10px solid #424242;color: #000">
 	          		<h1>VPN Yamaha</h1>  
-				</div>
+				</div> -->
 
-				<div class="col-md-4 content-header" style="color: #fff;padding: 0;border-right: 10px solid #424242">
+				<div class="col-md-6 content-header" style="color: #fff;padding: 0;border-right: 10px solid #424242">
   				<div id="isi_internet" class="isi_internet">
     				<span id="time_internet"> 0</span> <span style="font-size: 100px">ms</span>
     			</div>
   			</div>
 
-  			<div class="col-md-4 content-header" style="background-color: yellow !important;color: #000;padding: 0;border-left: 10px solid #424242;">
+  			<div class="col-md-6 content-header" style="background-color: yellow !important;color: #000;padding: 0;border-left: 10px solid #424242;">
   				<div id="isi_vpn" class="isi_vpn">
     				<span id="time_vpn"> 0</span> <span style="font-size: 100px">ms</span>
     			</div>
   			</div>
 
-  			<div class="col-md-4 content-header" style="background-color: orange !important;color: #000;padding: 0;border-left: 10px solid #424242;">
+  			<!-- <div class="col-md-4 content-header" style="background-color: orange !important;color: #000;padding: 0;border-left: 10px solid #424242;">
   				<div id="isi_vpn_yamaha" class="isi_vpn_yamaha">
     				<span id="time_vpn_yamaha"> 0</span> <span style="font-size: 100px" id="keterangan_time_vpn_yamaha">ms</span>
     			</div>
-  			</div>
+  			</div> -->
 
-				<div class="col-md-4" style="padding: 0">
+				<div class="col-md-6" style="padding: 0">
 					<div class="box box-solid" style="background-color:#3c3c3c !important; color: white; box-shadow: 0 0 0 0 !important;">
 						<div class="box-body" style="padding: 0px">
 							<div class="div_name" style="border-right: 10px solid #424242; padding-left: 10px; padding-right: 10px; text-align: center;">
@@ -111,7 +111,7 @@
 					</div>
 				</div>
 
-				<div class="col-md-4" style="padding: 0">
+				<div class="col-md-6" style="padding: 0">
 					<div class="box box-solid" style="background-color:#3c3c3c !important; color: white; box-shadow: 0 0 0 0 !important;">
 						<div class="box-body" style="padding: 0px">
 							<div class="div_name" style="border-left: 10px solid #424242;padding-right: 20px; text-align: center;">
@@ -122,7 +122,7 @@
 					</div>
 				</div>
 
-				<div class="col-md-4" style="padding: 0">
+				<!-- <div class="col-md-4" style="padding: 0">
 					<div class="box box-solid" style="background-color:#3c3c3c !important; color: white; box-shadow: 0 0 0 0 !important;">
 						<div class="box-body" style="padding: 0px">
 							<div class="div_name" style="border-left: 10px solid #424242;padding-right: 20px; text-align: center;">
@@ -131,7 +131,7 @@
 							</div>
 						</div>
 					</div>
-				</div>
+				</div> -->
 
 
 			</div>
@@ -288,74 +288,74 @@
 			}
 		});
 
-		var ip3 = '10.110.52.5';
-		var remark3 = 'VPN Yamaha';
+		// var ip3 = '10.110.52.5';
+		// var remark3 = 'VPN Yamaha';
 
-			var url = '{{ url("fetch/display/fetch_hit") }}'+'/'+ip3;
+		// 	var url = '{{ url("fetch/display/fetch_hit") }}'+'/'+ip3;
 
-			$.get(url, function(result, status, xhr){
-				var time;
+		// 	$.get(url, function(result, status, xhr){
+		// 		var time;
 
-				if (result.sta == 0) {
-					if (result.output.length == 8) {
-						timearray = /time\=(.*)?ms|time\<(.*)?ms /g.exec(result.output[2]);
-					if(timearray[1] != undefined){
-						time = timearray[1];
-					}else if(timearray[2] != undefined){
-						time = timearray[2];
-					}
-					status = "Alive";
-				}
-				else{
-					time = 0;
-					status = "Host Unreachable";
-				}
-			}
-			else{
-				time = 0;
-				status = "Timed Out";
-			}
+		// 		if (result.sta == 0) {
+		// 			if (result.output.length == 8) {
+		// 				timearray = /time\=(.*)?ms|time\<(.*)?ms /g.exec(result.output[2]);
+		// 			if(timearray[1] != undefined){
+		// 				time = timearray[1];
+		// 			}else if(timearray[2] != undefined){
+		// 				time = timearray[2];
+		// 			}
+		// 			status = "Alive";
+		// 		}
+		// 		else{
+		// 			time = 0;
+		// 			status = "Host Unreachable";
+		// 		}
+		// 	}
+		// 	else{
+		// 		time = 0;
+		// 		status = "Timed Out";
+		// 	}
 			
-			var data = {	
-				ip : ip3,
-				remark : remark3,
-				hasil_hit : time,
-				status : status
-			}
+		// 	var data = {	
+		// 		ip : ip3,
+		// 		remark : remark3,
+		// 		hasil_hit : time,
+		// 		status : status
+		// 	}
 
-			$.post('{{ url("post/display/ip_log") }}', data, function(result, status, xhr){
-				if(result.status){
-				} else {
-					openErrorGritter('Error',result.message);
-				}
-			});
+		// 	$.post('{{ url("post/display/ip_log") }}', data, function(result, status, xhr){
+		// 		if(result.status){
+		// 		} else {
+		// 			openErrorGritter('Error',result.message);
+		// 		}
+		// 	});
 
-			$('#time_vpn_yamaha').append().empty();
-			$('#time_vpn_yamaha').html(time);
+		// 	$('#time_vpn_yamaha').append().empty();
+		// 	$('#time_vpn_yamaha').html(time);
 
-			if(time > 0 && time < 120) {
-				$("#isi_vpn_yamaha").addClass("bg-green");	
-				$("#isi_vpn_yamaha").removeClass('bg-orange');	
-				$("#isi_vpn_yamaha").removeClass('bg-red');
+		// 	if(time > 0 && time < 120) {
+		// 		$("#isi_vpn_yamaha").addClass("bg-green");	
+		// 		$("#isi_vpn_yamaha").removeClass('bg-orange');	
+		// 		$("#isi_vpn_yamaha").removeClass('bg-red');
 
-			}
-			else if(time > 120){
-				$("#isi_vpn_yamaha").addClass("bg-orange");
-				$("#isi_vpn_yamaha").removeClass('bg-green');	
-				$("#isi_vpn_yamaha").removeClass('bg-red');
-			}
-			else if(time == 0){
-				$("#isi_vpn_yamaha").addClass("bg-red");
-				$("#isi_vpn_yamaha").removeClass('bg-green');	
-				$("#isi_vpn_yamaha").removeClass('bg-orange');
+		// 	}
+		// 	else if(time > 120){
+		// 		$("#isi_vpn_yamaha").addClass("bg-orange");
+		// 		$("#isi_vpn_yamaha").removeClass('bg-green');	
+		// 		$("#isi_vpn_yamaha").removeClass('bg-red');
+		// 	}
+		// 	else if(time == 0){
+		// 		$("#isi_vpn_yamaha").addClass("bg-red");
+		// 		$("#isi_vpn_yamaha").removeClass('bg-green');	
+		// 		$("#isi_vpn_yamaha").removeClass('bg-orange');
 
-				$('#time_vpn_yamaha').html("Disconnected");
-				$('#time_vpn_yamaha').css("font-size", "90px");
+		// 		$('#time_vpn_yamaha').html("Disconnected");
+		// 		$('#time_vpn_yamaha').css("font-size", "90px");
 
-				$('#keterangan_time_vpn_yamaha').append().empty();
-				$('#keterangan_time_vpn_yamaha').html();
-			}
-		});
+		// 		$('#keterangan_time_vpn_yamaha').append().empty();
+		// 		$('#keterangan_time_vpn_yamaha').html();
+		// 	}
+		// });
 
 		$.get('{{ url("post/server_room/ping/trend") }}', function(result, status, xhr){
 			if (result.status) {
@@ -381,10 +381,10 @@
 					ping_time_vpn.push(value.time);
 				})
 
-				$.each(result.data_vpn_yamaha, function(index, value){
-					categories_vpn_yamaha.push(value.data_time);
-					ping_time_vpn_yamaha.push(value.time);
-				})
+				// $.each(result.data_vpn_yamaha, function(index, value){
+				// 	categories_vpn_yamaha.push(value.data_time);
+				// 	ping_time_vpn_yamaha.push(value.time);
+				// })
 
 				Highcharts.chart('chart_internet', {
 					chart: {
@@ -556,90 +556,90 @@
 
 				});
 
-				Highcharts.chart('chart_vpn_yamaha', {
-					chart: {
-						type: 'spline',
-						height: '250px'
-					},
+				// Highcharts.chart('chart_vpn_yamaha', {
+				// 	chart: {
+				// 		type: 'spline',
+				// 		height: '250px'
+				// 	},
 
-					title: {
-						text: ''
-					},
+				// 	title: {
+				// 		text: ''
+				// 	},
 
-					yAxis: {
-						title: {
-							text: 'Time (ms)'
-						},
-						gridLineWidth: 1,
-					},
+				// 	yAxis: {
+				// 		title: {
+				// 			text: 'Time (ms)'
+				// 		},
+				// 		gridLineWidth: 1,
+				// 	},
 
-					xAxis: {
-						categories: categories_vpn_yamaha,
-						tickInterval: 30
-					},
+				// 	xAxis: {
+				// 		categories: categories_vpn_yamaha,
+				// 		tickInterval: 30
+				// 	},
 
-					legend: {
-						enabled: false
-					},
+				// 	legend: {
+				// 		enabled: false
+				// 	},
 
-					credits:{
-						enabled:false
-					},
+				// 	credits:{
+				// 		enabled:false
+				// 	},
 
-					exporting: {
-						enabled: false
-					},
+				// 	exporting: {
+				// 		enabled: false
+				// 	},
 
-					plotOptions: {
-						series: {
-							label: {
-								connectorAllowed: false
-							},
-							marker: {
-								enabled: false
-							},
-							animation: false,
-						},
-						spline: {
-							dataLabels: {
-								enabled: true,
-								formatter: function(){
-									var isLast = false;
-									if(this.point.x === this.series.data[this.series.data.length -1].x && this.point.y === this.series.data[this.series.data.length -1].y) isLast = true;
-									if (isLast) {
-										return this.x;
-									} else {
-										return '';
-									}
-								},
-								allowOverlap: true
-							},
-						}
-					},
+				// 	plotOptions: {
+				// 		series: {
+				// 			label: {
+				// 				connectorAllowed: false
+				// 			},
+				// 			marker: {
+				// 				enabled: false
+				// 			},
+				// 			animation: false,
+				// 		},
+				// 		spline: {
+				// 			dataLabels: {
+				// 				enabled: true,
+				// 				formatter: function(){
+				// 					var isLast = false;
+				// 					if(this.point.x === this.series.data[this.series.data.length -1].x && this.point.y === this.series.data[this.series.data.length -1].y) isLast = true;
+				// 					if (isLast) {
+				// 						return this.x;
+				// 					} else {
+				// 						return '';
+				// 					}
+				// 				},
+				// 				allowOverlap: true
+				// 			},
+				// 		}
+				// 	},
 
-					series: [
-					{
-						type: 'line',
-						name: 'Minimum Ping',
-						color: 'red',
-						data: max
-					},
-					{
-						name: 'Time',
-						data: ping_time_vpn_yamaha,
-						color: 'yellow',
-						lineWidth: 3
-					}],
+				// 	series: [
+				// 	{
+				// 		type: 'line',
+				// 		name: 'Minimum Ping',
+				// 		color: 'red',
+				// 		data: max
+				// 	},
+				// 	{
+				// 		name: 'Time',
+				// 		data: ping_time_vpn_yamaha,
+				// 		color: 'yellow',
+				// 		lineWidth: 3
+				// 	}],
 
-					responsive: {
-						rules: [{
-							condition: {
-								maxWidth: 500
-							},
-						}]
-					}
+				// 	responsive: {
+				// 		rules: [{
+				// 			condition: {
+				// 				maxWidth: 500
+				// 			},
+				// 		}]
+				// 	}
 
-				});
+				// });
 			}
 		})
 	}
