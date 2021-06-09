@@ -214,7 +214,11 @@ public function approveBento(Request $request){
 			])
 			->send(new SendEmail($bentos, 'bento_approve'));
 
-			$rejected_lists = Bento::whereIn('id', $request->get('rejected'))->get();
+			$rejected_lists = [];
+
+			if(count($request->get('rejected')) > 0){
+				$rejected_lists = Bento::whereIn('id', $request->get('rejected'))->get();
+			}
 			$rejected_emails = [];
 
 			if(count($rejected_lists) > 0){
