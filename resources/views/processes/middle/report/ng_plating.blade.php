@@ -380,7 +380,7 @@
 					var ng_rate_monthly = [];
 
 					for (var i = 0; i < result.monthly_ic.length; i++) {
-						target.push(8.37);						
+						target.push(5.2);						
 						month.push(result.monthly_ic[i].tgl);
 						ng.push(result.monthly_ic[i].ng_rate);
 						ng[i] = ng[i] || 0;
