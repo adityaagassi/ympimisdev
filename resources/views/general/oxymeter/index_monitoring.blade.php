@@ -135,276 +135,246 @@
 							<input type="text" class="form-control datepicker" id="tanggal_from" name="tanggal_from" placeholder="Select Date" onchange="draw_data()">
 						</div>
 					</div>
-					<!-- <div class="col-md-3" style="padding-left: 3px;padding-right: 0px">
-						<div class="input-group">
-							<div class="input-group-addon bg-blue">
-								<i class="fa fa-search"></i>
-							</div>
-							<select class="form-control select2" multiple="multiple" id="group" data-placeholder="Select Group" style="border-color: #605ca8" onchange="fetchTemperature()">
-								
-							</select>
-						</div>
-					</div> -->
-					<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 1vw	;font-size: 1vw;color: white"></div>
-				</form>
+					<div style="margin: 0px;padding-top: 0px;padding-right: 1vw	;font-size: 25px;color: white; font-weight: bold">
+						<center>OXYGEN AND PULSE METER MONITORING on <span id='tgl'></span></center></div>
+					</form>
+				</div>
+			</div>
+			<div class="col-xs-12" style="padding-bottom: 5px;">
+				<div class="row">
+					<div class="col-xs-5">
+						<span style="color: white; font-size: 1.7vw; font-weight: bold;"><i class="fa fa-caret-right"></i> Office</span>
+						<table class="table table-bordered" id="tableTotalOfc" style="margin-bottom: 5px;">
+							<thead>
+								<tr>
+									<th style="width:2%; text-align: center;color: white; font-size: 1.2vw;border-bottom: 2px solid black">Shift Schedule</th>
+									<th style="width: 3%; text-align: center;color: white; font-size: 1.2vw;border-bottom: 2px solid black">Checked</th>
+									<th style="width: 3%; text-align: center;color: white; font-size: 1.2vw;border-bottom: 2px solid black">Unchecked</th>
+									<th style="width: 3%; text-align: center;color: white; font-size: 1.2vw;border-bottom: 2px solid black">Total</th>
+								</tr>
+							</thead>
+							<tbody id="tableTotalBodyOfc">
+								<tr>
+									<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="">Shift 1</td>
+									<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_check_ofc_1"></td>
+									<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_uncheck_ofc_1"></td>
+									<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_person_ofc_1"></td>
+								</tr>
+								<tr>
+									<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="">Shift 2</td>
+									<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_check_ofc_2"></td>
+									<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_uncheck_ofc_2"></td>
+									<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_person_ofc_2"></td>
+								</tr>
+							</tbody>
+						</table>
+
+						<span style="color: white; font-size: 1.7vw; font-weight: bold;"><i class="fa fa-caret-right"></i> Production</span>
+						<table class="table table-bordered" id="tableTotalPrd" style="margin-bottom: 5px;">
+							<thead>
+								<tr>
+									<th style="width:2%; text-align: center;color: white; font-size: 1.2vw;border-bottom: 2px solid black">Shift Schedule</th>
+									<th style="width: 3%; text-align: center;color: white; font-size: 1.2vw;border-bottom: 2px solid black">Checked</th>
+									<th style="width: 3%; text-align: center;color: white; font-size: 1.2vw;border-bottom: 2px solid black">Unchecked</th>
+									<th style="width: 3%; text-align: center;color: white; font-size: 1.2vw;border-bottom: 2px solid black">Total</th>
+								</tr>
+							</thead>
+							<tbody id="tableTotalBodyPrd">
+								<tr>
+									<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="">Shift 1</td>
+									<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_check_prd_1"></td>
+									<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_uncheck_prd_1"></td>
+									<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_person_prd_1"></td>
+								</tr>
+								<tr>
+									<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="">Shift 2</td>
+									<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_check_prd_2"></td>
+									<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_uncheck_prd_2"></td>
+									<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_person_prd_2"></td>
+								</tr>
+								<tr>
+									<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="">Shift 3</td>
+									<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_check_prd_3"></td>
+									<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_uncheck_prd_3"></td>
+									<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_person_prd_3"></td>
+								</tr>
+							</tbody>
+						</table>
+						<span style="color: white; font-size: 1.7vw; font-weight: bold;"><i class="fa fa-caret-right"></i> Oxygen Rate < 95</span>
+						<table class="table table-bordered" id="tableAbnormal" style="margin-bottom: 5px;">
+							<thead style="color: white">
+								<tr>
+									<th style="width: 1%;">#</th>
+									<th style="width: 3%;">ID</th>
+									<th style="width: 9%;">Name</th>
+									<th style="width: 3%;">Dept</th>
+									<th style="width: 3%;">Shift</th>
+									<th style="width: 2%;">Time</th>
+									<th style="width: 2%;">Oxy</th>
+								</tr>			
+							</thead>
+							<tbody id="bodyAbnormal">
+							</tbody>
+						</table>
+
+						<span style="color: white; font-size: 1.7vw; font-weight: bold;"><i class="fa fa-caret-right"></i> Pulse Rate < 60 and Pulse Rate > 100</span>
+						<table class="table table-bordered" id="tableAbnormalPulse" style="margin-bottom: 5px;">
+							<thead style="color: white">
+								<tr>
+									<th style="width: 1%;">#</th>
+									<th style="width: 3%;">ID</th>
+									<th style="width: 9%;">Name</th>
+									<th style="width: 3%;">Dept</th>
+									<th style="width: 3%;">Shift</th>
+									<th style="width: 2%;">Time</th>
+									<th style="width: 2%;">Pulse</th>
+								</tr>			
+							</thead>
+							<tbody id="AbnormalPulse">
+							</tbody>
+						</table>
+					</div>
+					<div class="col-xs-7">
+						<div id="chart" style="width: 100%;height: 300px"></div>
+						<div id="chart2" style="width: 100%;height: 300px"></div>
+					</div>
+				</div>
 			</div>
 		</div>
-		<div class="col-xs-12" style="padding-bottom: 5px;">
-			<div class="row">
-				<div class="col-xs-5">
-					<span style="color: white; font-size: 1.7vw; font-weight: bold;"><i class="fa fa-caret-right"></i> Office</span>
-					<table class="table table-bordered" id="tableTotalOfc" style="margin-bottom: 5px;">
-						<thead>
-							<tr>
-								<th style="width:2%; text-align: center;color: white; font-size: 1.2vw;border-bottom: 2px solid black">Shift Schedule</th>
-								<th style="width: 3%; text-align: center;color: white; font-size: 1.2vw;border-bottom: 2px solid black">Checked</th>
-								<th style="width: 3%; text-align: center;color: white; font-size: 1.2vw;border-bottom: 2px solid black">Unchecked</th>
-								<th style="width: 3%; text-align: center;color: white; font-size: 1.2vw;border-bottom: 2px solid black">Total</th>
-							</tr>
-						</thead>
-						<tbody id="tableTotalBodyOfc">
-							<tr>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="">Shift 1</td>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_check_ofc_1"></td>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_uncheck_ofc_1"></td>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_person_ofc_1"></td>
-							</tr>
-							<tr>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="">Shift 2</td>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_check_ofc_2"></td>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_uncheck_ofc_2"></td>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_person_ofc_2"></td>
-							</tr>
-						</tbody>
-					</table>
+	</section>
 
-					<span style="color: white; font-size: 1.7vw; font-weight: bold;"><i class="fa fa-caret-right"></i> Production</span>
-					<table class="table table-bordered" id="tableTotalPrd" style="margin-bottom: 5px;">
-						<thead>
-							<tr>
-								<th style="width:2%; text-align: center;color: white; font-size: 1.2vw;border-bottom: 2px solid black">Shift Schedule</th>
-								<th style="width: 3%; text-align: center;color: white; font-size: 1.2vw;border-bottom: 2px solid black">Checked</th>
-								<th style="width: 3%; text-align: center;color: white; font-size: 1.2vw;border-bottom: 2px solid black">Unchecked</th>
-								<th style="width: 3%; text-align: center;color: white; font-size: 1.2vw;border-bottom: 2px solid black">Total</th>
-							</tr>
-						</thead>
-						<tbody id="tableTotalBodyPrd">
-							<tr>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="">Shift 1</td>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_check_prd_1"></td>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_uncheck_prd_1"></td>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_person_prd_1"></td>
-							</tr>
-							<tr>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="">Shift 2</td>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_check_prd_2"></td>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_uncheck_prd_2"></td>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_person_prd_2"></td>
-							</tr>
-							<tr>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="">Shift 3</td>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_check_prd_3"></td>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_uncheck_prd_3"></td>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black;" id="total_person_prd_3"></td>
-							</tr>
-						</tbody>
-					</table>
-				<!-- 	<span style="color: white; font-size: 1.7vw; font-weight: bold;"><i class="fa fa-caret-right"></i> Production</span>
-					<table class="table table-bordered" id="tableTotalPrd" style="margin-bottom: 5px;">
-						<thead>
-							<tr>
-								<th style="width:2%; text-align: center;color: white; font-size: 1.2vw;">Shift Schedule</th>
-								<th style="width: 3%; text-align: center;color: white; font-size: 1.2vw;">Hadir</th>
-								<th style="width: 3%; text-align: center;color: white; font-size: 1.2vw">Belum Hadir</th>
-								<th style="width: 3%; text-align: center;color: white; font-size: 1.2vw">Total</th>
-							</tr>
-						</thead>
-						<tbody id="tableTotalBodyPrd">
-							<tr>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="">Shift 1</td>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="total_check_prd_1"></td>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="total_uncheck_prd_1"></td>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="total_person_prd_1"></td>
-							</tr>
-							<tr>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="">Shift 2</td>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="total_check_prd_2"></td>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="total_uncheck_prd_2"></td>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="total_person_prd_2"></td>
-							</tr>
-							<tr>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="">Shift 3</td>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="total_check_prd_3"></td>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="total_uncheck_prd_3"></td>
-								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="total_person_prd_3"></td>
-							</tr>
-						</tbody>
-					</table> -->
-					<span style="color: white; font-size: 1.7vw; font-weight: bold;"><i class="fa fa-caret-right"></i> Oxygen Rate < 95</span>
-					<table class="table table-bordered" id="tableAbnormal" style="margin-bottom: 5px;">
-						<thead style="color: white">
-							<tr>
-								<th style="width: 1%;">#</th>
-								<th style="width: 3%;">ID</th>
-								<th style="width: 9%;">Name</th>
-								<th style="width: 3%;">Dept</th>
-								<th style="width: 3%;">Shift</th>
-								<th style="width: 2%;">Time</th>
-								<th style="width: 2%;">Oxy</th>
-							</tr>			
-						</thead>
-						<tbody id="bodyAbnormal">
-						</tbody>
-					</table>
-
-					<span style="color: white; font-size: 1.7vw; font-weight: bold;"><i class="fa fa-caret-right"></i> Pulse Rate < 60 and Pulse Rate > 100</span>
-					<table class="table table-bordered" id="tableAbnormalPulse" style="margin-bottom: 5px;">
-						<thead style="color: white">
-							<tr>
-								<th style="width: 1%;">#</th>
-								<th style="width: 3%;">ID</th>
-								<th style="width: 9%;">Name</th>
-								<th style="width: 3%;">Dept</th>
-								<th style="width: 3%;">Shift</th>
-								<th style="width: 2%;">Time</th>
-								<th style="width: 2%;">Pulse</th>
-							</tr>			
-						</thead>
-						<tbody id="AbnormalPulse">
-						</tbody>
-					</table>
-				</div>
-				<div class="col-xs-7">
-					<div id="chart" style="width: 100%;height: 600px"></div>
+	<div class="modal fade" id="modalDetail">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 style="padding-bottom: 15px" class="modal-title" id="modalDetailTitle"></h4>
+					<div class="modal-body table-responsive no-padding" style="min-height: 100px">
+						<center>
+							<i class="fa fa-spinner fa-spin" id="loadingDetail" style="font-size: 80px;"></i>
+						</center>
+						<table class="table table-hover table-bordered table-striped" id="tableDetail">
+							<thead style="background-color: rgba(126,86,134,.7);">
+								<tr style="color: white">
+									<th style="width: 1%;">#</th>
+									<th style="width: 3%;">ID</th>
+									<th style="width: 9%;">Name</th>
+									<th style="width: 9%;">Dept</th>
+									<th style="width: 9%;">Sect</th>
+									<th style="width: 9%;">Group</th>
+									<th style="width: 9%;">Point</th>
+									<th style="width: 3%;">Time</th>
+									<th style="width: 2%;">Temp</th>
+								</tr>
+							</thead>
+							<tbody id="tableDetailBody">
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</section>
 
-<div class="modal fade" id="modalDetail">
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 style="padding-bottom: 15px" class="modal-title" id="modalDetailTitle"></h4>
-				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
-					<center>
-						<i class="fa fa-spinner fa-spin" id="loadingDetail" style="font-size: 80px;"></i>
-					</center>
-					<table class="table table-hover table-bordered table-striped" id="tableDetail">
-						<thead style="background-color: rgba(126,86,134,.7);">
-							<tr style="color: white">
-								<th style="width: 1%;">#</th>
-								<th style="width: 3%;">ID</th>
-								<th style="width: 9%;">Name</th>
-								<th style="width: 9%;">Dept</th>
-								<th style="width: 9%;">Sect</th>
-								<th style="width: 9%;">Group</th>
-								<th style="width: 9%;">Point</th>
-								<th style="width: 3%;">Time</th>
-								<th style="width: 2%;">Temp</th>
-							</tr>
-						</thead>
-						<tbody id="tableDetailBody">
-						</tbody>
-					</table>
+	<div class="modal fade" id="modalDetailCheck">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 style="padding-bottom: 15px" class="modal-title" id="modalDetailTitleCheck"></h4>
+					<div class="modal-body table-responsive no-padding" style="min-height: 100px">
+						<table class="table table-hover table-bordered table-striped" id="tableDetailCheck">
+							<thead style="background-color: rgba(126,86,134,.7);">
+								<tr style="color: white">
+									<th style="color:white;width: 1%; font-size: 1.2vw;">#</th>
+									<th style="color:white;width: 5%; font-size: 1.2vw; text-align: center;">ID</th>
+									<th style="color:white;width: 30%; font-size: 1.2vw; text-align: center;">Name</th>
+									<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Dept</th>
+									<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Sect</th>
+									<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Group</th>
+									<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Shift</th>
+									<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Oxygen Rate</th>
+									<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Pulse Rate</th>
+									<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Check Time</th>
+								</tr>
+							</thead>
+							<tbody id="tableDetailCheckBody">
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
 
-<div class="modal fade" id="modalDetailCheck">
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 style="padding-bottom: 15px" class="modal-title" id="modalDetailTitleCheck"></h4>
-				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
-					<table class="table table-hover table-bordered table-striped" id="tableDetailCheck">
-						<thead style="background-color: rgba(126,86,134,.7);">
-							<tr style="color: white">
-								<th style="color:white;width: 1%; font-size: 1.2vw;">#</th>
-								<th style="color:white;width: 5%; font-size: 1.2vw; text-align: center;">ID</th>
-								<th style="color:white;width: 30%; font-size: 1.2vw; text-align: center;">Name</th>
-								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Dept</th>
-								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Sect</th>
-								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Group</th>
-								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Shift</th>
-								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Oxygen Rate</th>
-								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Pulse Rate</th>
-								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Check Time</th>
-							</tr>
-						</thead>
-						<tbody id="tableDetailCheckBody">
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-
-@endsection
-@section('scripts')
-<script src="{{ url("js/highcharts.js")}}"></script>
-<script src="{{ url("js/exporting.js")}}"></script>
-<script src="{{ url("js/export-data.js")}}"></script>
-<script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
-<script src="{{ url("js/buttons.flash.min.js")}}"></script>
-<script src="{{ url("js/jszip.min.js")}}"></script>
-<script src="{{ url("js/vfs_fonts.js")}}"></script>
-<script src="{{ url("js/buttons.html5.min.js")}}"></script>
-<script src="{{ url("js/buttons.print.min.js")}}"></script>
-<script>
-	$.ajaxSetup({
-		headers: {
-			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-		}
-	});
-
-	jQuery(document).ready(function() {
-		$('.datepicker').datepicker({
-			autoclose: true,
-			format: "yyyy-mm-dd",
-			todayHighlight: true,	
-			endDate: new Date()
+	@endsection
+	@section('scripts')
+	<script src="{{ url("js/highcharts.js")}}"></script>
+	<script src="{{ url("js/exporting.js")}}"></script>
+	<script src="{{ url("js/export-data.js")}}"></script>
+	<script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
+	<script src="{{ url("js/buttons.flash.min.js")}}"></script>
+	<script src="{{ url("js/jszip.min.js")}}"></script>
+	<script src="{{ url("js/vfs_fonts.js")}}"></script>
+	<script src="{{ url("js/buttons.html5.min.js")}}"></script>
+	<script src="{{ url("js/buttons.print.min.js")}}"></script>
+	<script>
+		$.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
 		});
 
-		$('.select2').select2();
+		jQuery(document).ready(function() {
+			$('.datepicker').datepicker({
+				autoclose: true,
+				format: "yyyy-mm-dd",
+				todayHighlight: true,	
+				endDate: new Date()
+			});
 
-		draw_data();
-		setInterval(draw_data, 60000);
-	});
+			$('.select2').select2();
 
-	function draw_data() {
-		var data = {
-			dt : $("#tanggal_from").val()
-		}
+			draw_data();
+			setInterval(draw_data, 60000);
+		});
 
-		$.get('{{ url("fetch/general/oxymeter/data") }}', data, function(result, status, xhr){
-			var xCategories = [];
-			var xSeries = [];
-			var xSeriesPulse = [];
-			var xColor = [];
+		function draw_data() {
+			var data = {
+				dt : $("#tanggal_from").val()
+			}
 
+			$.get('{{ url("fetch/general/oxymeter/data") }}', data, function(result, status, xhr){
+				var xCategories = [];
+				var xCategories2 = [];
+				var xSeries = [];
+				var xSeriesPulse = [];
+				var xColor = [];
+
+				$("#tgl").text(result.date);
 
 			// total_check_ofc_1
 			// total_uncheck_ofc_1
 			// total_person_ofc_1
 
 			for (var i = 71; i <= 120; i++) {
-				xCategories.push(i);
-				var stat = 0;
-				$.each(result.oxy_datas, function(index, value){
-					if (parseInt(value.remark) == i) {
-						stat = 1;
-						xSeries.push(value.qty);
-					}
-				})
+				xCategories2.push(i);
 
-				if (stat == 0) {
-					xSeries.push(0);
+				if (i >= 80 && i <= 100) {
+					xCategories.push(i);
+					var stat = 0;
+
+					$.each(result.oxy_datas, function(index, value){
+						if (parseInt(value.remark) == i) {
+							stat = 1;
+							xSeries.push(value.qty);
+						}
+					})
+
+					if (stat == 0) {
+						xSeries.push(0);
+					}
 				}
+
+				
 
 				// ---------  Pulse ----------
 
@@ -562,25 +532,25 @@
 			})
 
 
-				$("#total_check_ofc_1").text(ofc_cek_1);
-				$("#total_uncheck_ofc_1").text(ofc_uncek_1);
-				$("#total_person_ofc_1").text(ofc_total_1);
+$("#total_check_ofc_1").text(ofc_cek_1);
+$("#total_uncheck_ofc_1").text(ofc_uncek_1);
+$("#total_person_ofc_1").text(ofc_total_1);
 
-				$("#total_check_ofc_2").text(ofc_cek_2);
-				$("#total_uncheck_ofc_2").text(ofc_uncek_2);
-				$("#total_person_ofc_2").text(ofc_total_2);
+$("#total_check_ofc_2").text(ofc_cek_2);
+$("#total_uncheck_ofc_2").text(ofc_uncek_2);
+$("#total_person_ofc_2").text(ofc_total_2);
 
-				$("#total_check_prd_1").text(prd_cek_1);
-				$("#total_uncheck_prd_1").text(prd_uncek_1);
-				$("#total_person_prd_1").text(prd_total_1);
+$("#total_check_prd_1").text(prd_cek_1);
+$("#total_uncheck_prd_1").text(prd_uncek_1);
+$("#total_person_prd_1").text(prd_total_1);
 
-				$("#total_check_prd_2").text(prd_cek_2);
-				$("#total_uncheck_prd_2").text(prd_uncek_2);
-				$("#total_person_prd_2").text(prd_total_2);
+$("#total_check_prd_2").text(prd_cek_2);
+$("#total_uncheck_prd_2").text(prd_uncek_2);
+$("#total_person_prd_2").text(prd_total_2);
 
-				$("#total_check_prd_3").text(prd_cek_3);
-				$("#total_uncheck_prd_3").text(prd_uncek_3);
-				$("#total_person_prd_3").text(prd_total_3);
+$("#total_check_prd_3").text(prd_cek_3);
+$("#total_uncheck_prd_3").text(prd_uncek_3);
+$("#total_person_prd_3").text(prd_total_3);
 
 
 			// ------------------   ADD CLICK LISTENER  ---------------------
@@ -722,10 +692,11 @@
 			// ------------------   GRAFIK   ----------------------------
 			Highcharts.chart('chart', {
 				chart: {
-					type: 'column'
+					type: 'column',
+					animation: false
 				},
 				title: {
-					text: 'OXYGEN AND PULSE METER MONITORING <br> ON '+result.date,
+					text: 'OXYGEN RATE',
 					style: {
 						fontSize: '20px',
 						fontWeight: 'bold'
@@ -748,7 +719,7 @@
 					title: {
 						text: 'Count Person(s)'
 					},
-					tickInterval: 1,
+					// tickInterval: 1,
 				},
 				tooltip: {
 					headerFormat: '<span style="font-size:10px">{series.name} <b>{point.key}</b></span><table>',
@@ -764,6 +735,10 @@
 						}
 					}, 
 				},
+
+				legend: {
+					enabled: false
+				},
 				
 				credits: {
 					enabled: false
@@ -771,10 +746,67 @@
 				series: [{
 					name: 'Oxygen',
 					data: xSeries
+				}]
+			});
+
+
+			Highcharts.chart('chart2', {
+				chart: {
+					type: 'column',
+					animation: false
 				},
-				{
+				title: {
+					text: 'PULSE RATE',
+					style: {
+						fontSize: '20px',
+						fontWeight: 'bold'
+					}
+				},
+				xAxis: {
+					categories: xCategories2,
+					// gridLineWidth: 1,
+					gridLineColor: 'RGB(204,255,255)',
+					label: {
+						style: {
+							// fontSize: '20px',
+							fontWeight: 'bold'
+						},
+						step: 1
+					},
+				},
+				yAxis: {
+					min: 0,
+					title: {
+						text: 'Count Person(s)'
+					},
+					// tickInterval: 1,
+				},
+				tooltip: {
+					headerFormat: '<span style="font-size:10px">{series.name} <b>{point.key}</b></span><table>',
+					pointFormat: '<tr><td style="padding:0"><b>{point.y} Person</b></td></tr>',
+					footerFormat: '</table>',
+					useHTML: true
+				},
+				plotOptions: {
+					column: {
+						borderWidth: 0,
+						dataLabels: {
+							enabled: true
+						}
+					}, 
+				},
+
+				legend: {
+					enabled: false
+				},
+				
+				credits: {
+					enabled: false
+				},
+				series: [{
 					name: 'Pulse',
-					data: xSeriesPulse
+					data: xSeriesPulse,
+					color: '#bd67cf'
 				}]
 			});
 		})
