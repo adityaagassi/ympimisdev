@@ -196,11 +196,14 @@
 						<div class="col-md-8 col-md-offset-2">
 							<div class="form-group">
 								<label>Shift</label>
-								<select class="form-control select2" multiple="multiple" name="shift" id='shift' data-placeholder="Select Shift Code" style="width: 100%;">
+								<select class="form-control select2" name="shift" id='shift' data-placeholder="Select Shift Code" style="width: 100%;">
 									<option value=""></option>
-									@foreach($shifts as $shift)
+									<option value="Shift_1">Shift_1</option>
+									<option value="Shift_2">Shift_2</option>
+									<option value="Shift_3">Shift_3</option>
+									<!-- @foreach($shifts as $shift)
 									<option value="{{ $shift->shiftdaily_code }}">{{ $shift->shiftdaily_code }}</option>
-									@endforeach
+									@endforeach -->
 								</select>
 							</div>
 						</div>
@@ -213,7 +216,7 @@
 					</div>
 
 					<div class="row">
-						<div class="col-md-12">
+						<div class="col-md-12" style="overflow-x: scroll;">
 							<table id="attendanceDataTable" class="table table-bordered table-striped table-hover">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
@@ -225,12 +228,14 @@
 										<th style="width: 1%">Group</th>
 										<th style="width: 1%">CC</th>
 										<th style="width: 1%">Shift</th>
-										<th style="width: 2%">Act. In</th>
-										<th style="width: 2%">Act. Out</th>
+										<th style="width: 2%">Act. In SF</th>
+										<th style="width: 2%">Act. Out SF</th>
 										<th style="width: 2%">Attend Code</th>
+										<th style="width: 2%">Shift Suggestion</th>
+										<th style="width: 2%">All Check</th>
 									</tr>
 								</thead>
-								<tbody>
+								<tbody id="bodyAttendanceDataTable">
 								</tbody>
 							</table>
 						</div>
@@ -300,98 +305,189 @@
 			shift:shift,
 		}
 
-		// $.get('{{ url("fetch/report/attendance_data") }}', data, function(result, status, xhr){
+		var tableData = "";
 
+		$.get('{{ url("fetch/report/attendance_data") }}', data, function(result, status, xhr){
+			if (result.status) {
+				$.each(result.attendances, function(key, value) {
+					tableData += '<tr>';
+					tableData += '<td>'+ value.tanggal +'</td>';
+					tableData += '<td>'+ value.emp_no +'</td>';
+					tableData += '<td>'+ value.Full_name +'</td>';
+					tableData += '<td>'+ (value.Department || "") +'</td>';
+					tableData += '<td>'+ (value.section || "") +'</td>';
+					tableData += '<td>'+ (value.groups || "") +'</td>';
+					tableData += '<td>'+ value.cost_center_code +'</td>';
+					tableData += '<td>'+ (value.shiftdaily_code || "") +'</td>';
+					tableData += '<td>'+ (value.starttime || "") +'</td>';
+					tableData += '<td>'+ (value.endtime || "") +'</td>';
+					tableData += '<td>'+ value.Attend_Code +'</td>';
+					var shifts = new RegExp(value.shift_suggest, 'g');
+					if (value.shiftdaily_code.match(shifts)) {
+						var color = '#c5ffb8';
+					}else{
+						var color = '#ffbcb8';
+					}
+					tableData += '<td style="background-color:'+color+'">'+ value.shift_suggest +'</td>';
+					if (value.act_in != null) {
+						var act_in = value.act_in.split(',');
+						tableData += '<td>';
+						for (var i = 0; i < act_in.length; i++) {
+							tableData += '<span class="label label-primary">'+act_in[i] +'</span>\n';
+						}
+						tableData += '</td>';
+					}else{
+						tableData += '<td></td>';
+					}
+					tableData += '</tr>';
+				});
+				$('#bodyAttendanceDataTable').append(tableData);
+				
+				var table = $('#attendanceDataTable').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'lengthMenu': [
+					[ 10, 25, 50, -1 ],
+					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
+						{
+							extend: 'pageLength',
+							className: 'btn btn-default',
+						},
+						{
+							extend: 'copy',
+							className: 'btn btn-success',
+							text: '<i class="fa fa-copy"></i> Copy',
+								exportOptions: {
+									columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'excel',
+							className: 'btn btn-info',
+							text: '<i class="fa fa-file-excel-o"></i> Excel',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'print',
+							className: 'btn btn-warning',
+							text: '<i class="fa fa-print"></i> Print',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						}
+						]
+					},
+					'paging': true,
+					'lengthChange': true,
+					'pageLength': 10,
+					'searching': true	,
+					'ordering': true,
+					'order': [],
+					'info': true,
+					'autoWidth': true,
+					"sPaginationType": "full_numbers",
+					"bJQueryUI": true,
+					"bAutoWidth": false,
+					"processing": true
+				});
+			}else{
+				alert('Get Data Failed');
+			}
+		});
+
+		// var table = $('#attendanceDataTable').DataTable({
+		// 	'dom': 'Bfrtip',
+		// 	'responsive': true,
+		// 	'lengthMenu': [
+		// 	[ 10, 25, 50, -1 ],
+		// 	[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+		// 	],
+		// 	'buttons': {
+		// 		buttons:[
+		// 		{
+		// 			extend: 'pageLength',
+		// 			className: 'btn btn-default',
+		// 			// text: '<i class="fa fa-print"></i> Show',
+		// 		},
+		// 		{
+		// 			extend: 'copy',
+		// 			className: 'btn btn-success',
+		// 			text: '<i class="fa fa-copy"></i> Copy',
+		// 			exportOptions: {
+		// 				columns: ':not(.notexport)'
+		// 			}
+		// 		},
+		// 		{
+		// 			extend: 'excel',
+		// 			className: 'btn btn-info',
+		// 			text: '<i class="fa fa-file-excel-o"></i> Excel',
+		// 			exportOptions: {
+		// 				columns: ':not(.notexport)'
+		// 			}
+		// 		},
+		// 		{
+		// 			extend: 'print',
+		// 			className: 'btn btn-warning',
+		// 			text: '<i class="fa fa-print"></i> Print',
+		// 			exportOptions: {
+		// 				columns: ':not(.notexport)'
+		// 			}
+		// 		},
+		// 		]
+		// 	},
+		// 	'paging': true,
+		// 	'lengthChange': true,
+		// 	'searching': true,
+		// 	'ordering': true,
+		// 	'order': [],
+		// 	'info': true,
+		// 	'autoWidth': true,
+		// 	"sPaginationType": "full_numbers",
+		// 	"bJQueryUI": true,
+		// 	"bAutoWidth": false,
+		// 	"processing": true,
+		// 	"serverSide": true,
+		// 	"ajax": {
+		// 		"type" : "get",
+		// 		"url" : "{{ url("fetch/report/attendance_data") }}",
+		// 		"data" : data
+		// 	},
+		// 	"columns": [
+		// 	{ "data": "tanggal" },
+		// 	{ "data": "emp_no" },
+		// 	{ "data": "Full_name" },
+		// 	{ "data": "Department" },
+		// 	{ "data": "section" },
+		// 	{ "data": "groups" },
+		// 	{ "data": "cost_center_code" },
+		// 	{ "data": "shiftdaily_code" },
+		// 	{ "data": "starttime" },
+		// 	{ "data": "endtime" },
+		// 	{ "data": "Attend_Code" }
+		// 	],
 		// });
 
-		var table = $('#attendanceDataTable').DataTable({
-			'dom': 'Bfrtip',
-			'responsive': true,
-			'lengthMenu': [
-			[ 10, 25, 50, -1 ],
-			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
-			],
-			'buttons': {
-				buttons:[
-				{
-					extend: 'pageLength',
-					className: 'btn btn-default',
-					// text: '<i class="fa fa-print"></i> Show',
-				},
-				{
-					extend: 'copy',
-					className: 'btn btn-success',
-					text: '<i class="fa fa-copy"></i> Copy',
-					exportOptions: {
-						columns: ':not(.notexport)'
-					}
-				},
-				{
-					extend: 'excel',
-					className: 'btn btn-info',
-					text: '<i class="fa fa-file-excel-o"></i> Excel',
-					exportOptions: {
-						columns: ':not(.notexport)'
-					}
-				},
-				{
-					extend: 'print',
-					className: 'btn btn-warning',
-					text: '<i class="fa fa-print"></i> Print',
-					exportOptions: {
-						columns: ':not(.notexport)'
-					}
-				},
-				]
-			},
-			'paging': true,
-			'lengthChange': true,
-			'searching': true,
-			'ordering': true,
-			'order': [],
-			'info': true,
-			'autoWidth': true,
-			"sPaginationType": "full_numbers",
-			"bJQueryUI": true,
-			"bAutoWidth": false,
-			"processing": true,
-			"serverSide": true,
-			"ajax": {
-				"type" : "get",
-				"url" : "{{ url("fetch/report/attendance_data") }}",
-				"data" : data
-			},
-			"columns": [
-			{ "data": "tanggal" },
-			{ "data": "emp_no" },
-			{ "data": "Full_name" },
-			{ "data": "Department" },
-			{ "data": "section" },
-			{ "data": "groups" },
-			{ "data": "cost_center_code" },
-			{ "data": "shiftdaily_code" },
-			{ "data": "starttime" },
-			{ "data": "endtime" },
-			{ "data": "Attend_Code" }
-			],
-		});
+		// $('#attendanceDataTable tfoot th').each( function () {
+		// 	var title = $(this).text();
+		// 	$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="3"/>' );
+		// });
 
-		$('#attendanceDataTable tfoot th').each( function () {
-			var title = $(this).text();
-			$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="3"/>' );
-		});
-
-		table.columns().every( function () {
-			var that = this;
-			$( 'input', this.footer() ).on( 'keyup change', function () {
-				if ( that.search() !== this.value ) {
-					that
-					.search( this.value )
-					.draw();
-				}
-			});
-		});
-		$('#attendanceDataTable tfoot tr').appendTo('#attendanceDataTable thead');
+		// table.columns().every( function () {
+		// 	var that = this;
+		// 	$( 'input', this.footer() ).on( 'keyup change', function () {
+		// 		if ( that.search() !== this.value ) {
+		// 			that
+		// 			.search( this.value )
+		// 			.draw();
+		// 		}
+		// 	});
+		// });
+		// $('#attendanceDataTable tfoot tr').appendTo('#attendanceDataTable thead');
 
 	}
 

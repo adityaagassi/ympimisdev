@@ -3292,7 +3292,7 @@ public function fetchAttendanceData(Request $request)
           $tanggal = "and A.shiftstarttime >= '".$datefrom." 00:00:00' ";
           if(strlen($request->get('dateto')) > 0){
                $dateto = date('Y-m-d', strtotime($request->get('dateto')));
-               $tanggal = $tanggal."and A.shiftendtime <= '".$dateto." 23:59:59' ";
+               $tanggal = $tanggal."and A.shiftstarttime <= '".$dateto." 23:59:59' ";
           }
      }
 
@@ -3372,19 +3372,19 @@ public function fetchAttendanceData(Request $request)
      }
 
      if($request->get('shift') != null) {
-          $shifts = $request->get('shift');
-          $shiftlen = count($shifts);
-          $shift = "";
+          // $shifts = $request->get('shift');
+          // $shiftlen = count($shifts);
+          // $shift = "";
 
-          for($x = 0; $x < $shiftlen; $x++) {
-               for($x = 0; $x < $shiftlen; $x++) {
-                    $shift = $shift."'".$shifts[$x]."'";
-                    if($x != $shiftlen-1){
-                         $shift = $shift.",";
-                    }
-               }
-          }
-          $addshift = "and A.shiftdaily_code in (".$shift.") ";
+          // for($x = 0; $x < $shiftlen; $x++) {
+          //      for($x = 0; $x < $shiftlen; $x++) {
+          //           $shift = $shift."'".$shifts[$x]."'";
+          //           if($x != $shiftlen-1){
+          //                $shift = $shift.",";
+          //           }
+          //      }
+          // }
+          $addshift = "and A.shiftdaily_code like '%".$request->get('shift')."%'";
      }
 
      $qry = "SELECT
@@ -3409,14 +3409,51 @@ public function fetchAttendanceData(Request $request)
 
      $attendances = db::connection('sunfish')->select($qry);
 
-     return DataTables::of($attendances)->make(true);
+     $attendanceall = [];
 
-// $response = array(
-//      'status' => true,
-//      'attendances' => $attendances,
-//      'qry' => $qry
-// );
-// return Response::json($response);
+     for ($i=0; $i < count($attendances); $i++) { 
+          $empatt = DB::SELECT("SELECT
+                    GROUP_CONCAT( DISTINCT ( auth_datetime ) ORDER BY auth_datetime ASC) AS attend_time,
+               IF
+                    (
+                         MIN( auth_datetime ) >= '".$attendances[$i]->tanggal." 04:00:00' && MIN( auth_datetime ) <= '".$attendances[$i]->tanggal." 07:00:00', 'Shift_1', IF ( MIN( auth_datetime ) >= '".$attendances[$i]->tanggal." 00:30:00' && MIN( auth_datetime ) <= '".$attendances[$i]->tanggal." 03:00:00', 'Shift_2', IF ( MIN( auth_datetime ) >= '".$attendances[$i]->tanggal." 07:01:01' && MIN( auth_datetime ) <= '".$attendances[$i]->tanggal." 08:00:00',
+                                   'Shift_3',
+                                   '".$attendances[$i]->shiftdaily_code."' 
+                              ))) AS shift_suggest 
+               FROM
+                    ivms_attendance
+               WHERE
+                    employee_id = '".$attendances[$i]->emp_no."' 
+                    AND DATE( auth_datetime ) = '".$attendances[$i]->tanggal."' 
+                    LIMIT 1");
+
+
+          array_push($attendanceall, [
+               'tanggal' => $attendances[$i]->tanggal,
+               'emp_no' => $attendances[$i]->emp_no,
+               'Full_name' => $attendances[$i]->Full_name,
+               'Department' => $attendances[$i]->Department,
+               'section' => $attendances[$i]->section,
+               'groups' => $attendances[$i]->groups,
+               'cost_center_code' => $attendances[$i]->cost_center_code,
+               'shiftdaily_code' => $attendances[$i]->shiftdaily_code,
+               'starttime' => $attendances[$i]->starttime,
+               'endtime' => $attendances[$i]->endtime,
+               'Attend_Code' => $attendances[$i]->Attend_Code,
+               'act_in' => $empatt[0]->attend_time,
+               'shift_suggest' => $empatt[0]->shift_suggest,
+          ]);
+     }
+
+     // return DataTables::of($attendances)->make(true);
+
+     $response = array(
+          'status' => true,
+          'attendances' => $attendanceall,
+          'attendancesss' => $attendances,
+          // 'qry' => $qry
+     );
+     return Response::json($response);
 }
 
 public function fetchChecklogData(Request $request)
