@@ -1813,8 +1813,8 @@ public function uploadLiveCookingMenu(Request $request)
 						[
 							'periode' => $request->get('menuDate'),
 							'due_date' => date('Y-m-d', strtotime($rows[$i][0])),
-							'menu_name' => $rows[$i][2],
-							'serving_quota' => $rows[$i][3],
+							'menu_name' => $rows[$i][1],
+							'serving_quota' => $rows[$i][2],
 							'serving_ordered' => 0,
 							'created_by' => Auth::id()
 						]
@@ -2146,7 +2146,6 @@ public function randomLiveCooking(Request $request)
 					employees.live_cooking = 0 
 					AND employee_syncs.end_date IS NULL 
 					AND employees.remark != 'Jps'
-					AND employee_syncs.employee_id NOT LIKE '%OS%' 
 					AND sunfish_shift_syncs.shift_date = '".$val->due_date."' 
 					AND shiftdaily_code LIKE '%Shift_1%' 
 					AND ( attend_code NOT LIKE '%OFF%' AND attend_code NOT LIKE '%CUTI%' AND attend_code NOT LIKE '%CK%' AND attend_code NOT LIKE '%IPU%' AND attend_code NOT LIKE '%SAKIT%' ) 

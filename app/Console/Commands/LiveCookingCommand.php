@@ -83,15 +83,16 @@ class LiveCookingCommand extends Command
         }
 
         $live_cooking = DB::SELECT("SELECT
-            *,
-            canteen_live_cookings.id AS id_live 
+          *,
+          canteen_live_cookings.id AS id_live 
         FROM
-            `canteen_live_cookings`
-            LEFT JOIN employee_syncs ON employee_syncs.employee_id = canteen_live_cookings.order_for
-            LEFT JOIN canteen_live_cooking_menus ON canteen_live_cooking_menus.due_date = canteen_live_cookings.due_date 
+          `canteen_live_cookings`
+          LEFT JOIN employee_syncs ON employee_syncs.employee_id = canteen_live_cookings.order_for
+          LEFT JOIN canteen_live_cooking_menus ON canteen_live_cooking_menus.due_date = canteen_live_cookings.due_date 
         WHERE
-            whatsapp_status = 0 
-            LIMIT 150");
+          whatsapp_status = 0 
+          AND canteen_live_cookings.due_date = DATE(
+          NOW()) + INTERVAL 1 DAY");
 
         if (count($live_cooking) > 0) {
 
@@ -101,17 +102,17 @@ class LiveCookingCommand extends Command
                 $due_date_replace = str_replace(" ","%20",$due_date);
                 $menu_name = str_replace(" ","%20",$key->menu_name);
 
-                // if(substr($key->phone, 0, 1) == '+' ){
-                //  $phone = substr($key->phone, 1, 15);
-                // }
-                // else if(substr($key->phone, 0, 1) == '0'){
-                //  $phone = "62".substr($key->phone, 1, 15);
-                // }
-                // else{
-                //  $phone = $key->phone;
-                // }
+                if(substr($key->phone, 0, 1) == '+' ){
+                 $phone = substr($key->phone, 1, 15);
+                }
+                else if(substr($key->phone, 0, 1) == '0'){
+                 $phone = "62".substr($key->phone, 1, 15);
+                }
+                else{
+                 $phone = $key->phone;
+                }
 
-                $phone = '6285645896741';
+                // $phone = '6285645896741';
 
                 $curl = curl_init();
 
@@ -124,18 +125,18 @@ class LiveCookingCommand extends Command
                   CURLOPT_FOLLOWLOCATION => true,
                   CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                   CURLOPT_CUSTOMREQUEST => 'POST',
-                  // CURLOPT_POSTFIELDS => 'receiver='.$phone.'&device=628113669871&message=Anda%20telah%20terjadwal%20Live%20Cooking%20pada%20tanggal%20'.$due_date_replace.'.%0ASilahkan%20cek%20di%20MIRAI.%0A%0A-YMPI%20GA%20Dept.-&type=chat',
-                  // CURLOPT_HTTPHEADER => array(
-                  //   'Accept: application/json',
-                  //   'Content-Type: application/x-www-form-urlencoded',
-                  //   'Authorization: Bearer UAqINT9e23uRiQmYttEUiFQ9qRMUXk8sADK2EiVSgLODdyOhgU'
-                  // ),
-                  CURLOPT_POSTFIELDS => 'receiver='.$phone.'&device=6282334197238&message=Anda%20telah%20terjadwal%20Live%20Cooking%20pada%20tanggal%20'.$due_date_replace.'.%0ASilahkan%20cek%20di%20MIRAI.%0A%0A-YMPI%20GA%20Dept.-&type=chat',
+                  CURLOPT_POSTFIELDS => 'receiver='.$phone.'&device=628113669871&message=Anda%20telah%20terjadwal%20Live%20Cooking%20pada%20tanggal%20'.$due_date_replace.'.%0ASilahkan%20cek%20di%20MIRAI.%0A%0A-YMPI%20GA%20Dept.-&type=chat',
                   CURLOPT_HTTPHEADER => array(
                     'Accept: application/json',
                     'Content-Type: application/x-www-form-urlencoded',
-                    'Authorization: Bearer OPd8jOytcihnTxoh3WIPLcgdjNAqZgEOjxRbIBb8JnsN7heixZ'
+                    'Authorization: Bearer UAqINT9e23uRiQmYttEUiFQ9qRMUXk8sADK2EiVSgLODdyOhgU'
                   ),
+                  // CURLOPT_POSTFIELDS => 'receiver='.$phone.'&device=6282334197238&message=Anda%20telah%20terjadwal%20Live%20Cooking%20pada%20tanggal%20'.$due_date_replace.'.%0ASilahkan%20cek%20di%20MIRAI.%0A%0A-YMPI%20GA%20Dept.-&type=chat',
+                  // CURLOPT_HTTPHEADER => array(
+                  //   'Accept: application/json',
+                  //   'Content-Type: application/x-www-form-urlencoded',
+                  //   'Authorization: Bearer OPd8jOytcihnTxoh3WIPLcgdjNAqZgEOjxRbIBb8JnsN7heixZ'
+                  // ),
                 ));
                 curl_exec($curl);
 
