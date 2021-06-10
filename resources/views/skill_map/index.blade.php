@@ -114,12 +114,12 @@
 						<div class="row" style="padding-left: 10px" id="table_detail"></div>
 					</div>
 					<div class="col-xs-12" style="padding-top: 20px">
-						<span style="font-weight: bold; font-size: 1.2vw;padding-top: 0px;padding-left: 0px" id="title_required"></span>
+						<center><span style="font-weight: bold; font-size: 30px;padding-top: 0px;padding-left: 0px" id="title_required"></span></center>
 						<input type="hidden" id="required_skill_length">
 						<div class="row" id="table_required"></div>
 					</div>
 					<div class="col-xs-12" style="padding-top: 10px">
-						<span style="font-weight: bold; font-size: 1.2vw;padding-top: 0px;padding-left: 0px" id="title_other"></span>
+						<center><span style="font-weight: bold; font-size: 30px;padding-top: 0px;padding-left: 0px" id="title_other"></span></center>
 						<input type="hidden" id="other_skill_length">
 						<div class="row" id="table_other"></div>
 					</div>
@@ -804,10 +804,10 @@ function skillAdjusment(employee_id,name,proces) {
 				tableRequired += '<table style="padding:0px" class="table table-bordered">';
 				tableRequired += '<thead>';
 				tableRequired += '<tr>';
-				tableRequired += '<th style="padding:0px"><center>Skill yang <b>Harus</b> Dimiliki</center></th>';
-				tableRequired += '<th style="padding:0px"><center>Nilai Max.</center></th>';
-				tableRequired += '<th style="padding:0px"><center>Skill yang Dimiliki</center></th>';
-				tableRequired += '<th colspan="4" style="padding:0px"><center>Nilai Sekarang</center></th>';
+				tableRequired += '<th style="background-color: rgb(126,86,134);color:white;padding:0px"><center>Skill yang <b>Harus</b> Dimiliki</center></th>';
+				tableRequired += '<th style="background-color: rgb(126,86,134);color:white;padding:0px"><center>Nilai Max.</center></th>';
+				tableRequired += '<th style="background-color: rgb(126,86,134);color:white;padding:0px"><center>Skill yang Dimiliki</center></th>';
+				tableRequired += '<th colspan="4" style="background-color: rgb(126,86,134);color:white;padding:0px"><center>Nilai Sekarang</center></th>';
 				tableRequired += '</tr>';
 				tableRequired += '</thead>';
 				for(var i = 0; i < result.skill_required.length;i++){
@@ -862,10 +862,10 @@ function skillAdjusment(employee_id,name,proces) {
 				tableOther += '<table style="padding:0px" class="table table-bordered">';
 				tableOther += '<thead>';
 				tableOther += '<tr>';
-				tableOther += '<th style="padding:0px"><center>Skill yang <b>Harus</b> Dimiliki</center></th>';
-				tableOther += '<th style="padding:0px"><center>Nilai Max.</center></th>';
-				tableOther += '<th style="padding:0px"><center>Skill yang Dimiliki</center></th>';
-				tableOther += '<th colspan="4" style="padding:0px"><center>Nilai Sekarang</center></th>';
+				tableOther += '<th style="background-color: rgb(126,86,134);color:white;padding:0px"><center>Skill yang <b>Harus</b> Dimiliki</center></th>';
+				tableOther += '<th style="background-color: rgb(126,86,134);color:white;padding:0px"><center>Nilai Max.</center></th>';
+				tableOther += '<th style="background-color: rgb(126,86,134);color:white;padding:0px"><center>Skill yang Dimiliki</center></th>';
+				tableOther += '<th colspan="4" style="background-color: rgb(126,86,134);color:white;padding:0px"><center>Nilai Sekarang</center></th>';
 				tableOther += '</tr>';
 				tableOther += '</thead>';
 				for(var l = 0; l < result.other_skill.length;l++){
@@ -901,7 +901,7 @@ function skillAdjusment(employee_id,name,proces) {
 				}
 				tableOther += '</table>';
 				$('#table_other').append(tableOther);
-				$('#title_other').html("Skill yang Lain");
+				$('#title_other').html("Skill untuk Proses Lain");
 			}
 
 			Highcharts.chart('container_detail', {

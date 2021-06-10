@@ -50,17 +50,23 @@ class SkillMapController extends Controller
     	$process = DB::SELECT("SELECT DISTINCT(process) FROM `skills` where location = '".$location."' and skills.deleted_at is null order by process ");
 
     	if ($location == 'pn-assy-initial') {
-    		$dept = 'Educational Instrument (EI)';
+    		$dept = 'Educational Instrument (EI) Department';
     		$section = 'Pianica';
     		$title = 'Skill Map - Pianica Assembly Initial';
             $subtitle = 'Pianica Assembly Initial';
     		$title_jp = 'のスキルマップ ~ ピアニカ集成';
     	}else if ($location == 'pn-assy-final') {
-            $dept = 'Educational Instrument (EI)';
+            $dept = 'Educational Instrument (EI) Department';
             $section = 'Pianica';
             $title = 'Skill Map - Pianica Assembly Final';
             $subtitle = 'Pianica Assembly Final';
             $title_jp = 'のスキルマップ ~ ピアニカ集成';
+        }else if ($location == 'maintenance') {
+            $dept = 'Maintenance Department';
+            $section = 'Maintenance';
+            $title = 'Skill Map - Maintenance';
+            $subtitle = 'Maintenance';
+            $title_jp = 'のスキルマップ ~ メンテナン';
         }
 
         $activity =  new UserActivityLog([
@@ -174,9 +180,103 @@ class SkillMapController extends Controller
 				and skill_maps.deleted_at is null
 				and skills.deleted_at is null");
 
-    		$skill_required = DB::SELECT("select skill_code,skill,process,location,value as nilai,(select skill from skill_maps where skill_code = skills.skill_code and employee_id = '".$employee_id."' and skill_maps.deleted_at is null) as skill_now,(select value from skill_maps where skill_code = skills.skill_code and employee_id = '".$employee_id."' and skill_maps.deleted_at is null) as nilai_now,(select id from skill_maps where skill_code = skills.skill_code and employee_id = '".$employee_id."' and skill_maps.deleted_at is null) as id_skill_now from skills where skills.location = '".$location."' and skills.process = '".$process."' and skills.deleted_at is null");
+    		$skill_required = DB::SELECT("SELECT
+                skill_code,
+                skill,
+                process,
+                location,
+                
+            VALUE
+                AS nilai,(
+                SELECT
+                    skill_code 
+                FROM
+                    skill_maps 
+                WHERE
+                    skill_code = skills.skill_code 
+                    AND employee_id = '".$employee_id."' 
+                    AND skill_maps.deleted_at IS NULL 
+                    AND skill_maps.location = '".$location."' 
+                    AND skill_maps.process = '".$process."' 
+                    ) AS skill_now,(
+                SELECT 
+                VALUE
+                    
+                FROM
+                    skill_maps 
+                WHERE
+                    skill_code = skills.skill_code 
+                    AND employee_id = '".$employee_id."' 
+                    AND skill_maps.deleted_at IS NULL 
+                    AND skill_maps.location = '".$location."' 
+                    AND skill_maps.process = '".$process."' 
+                    ) AS nilai_now,(
+                SELECT
+                    id 
+                FROM
+                    skill_maps 
+                WHERE
+                    skill_code = skills.skill_code 
+                    AND employee_id = '".$employee_id."' 
+                    AND skill_maps.deleted_at IS NULL 
+                    AND skill_maps.location = '".$location."' 
+                    AND skill_maps.process = '".$process."' 
+                ) AS id_skill_now 
+            FROM
+                skills 
+            WHERE
+                skills.location = '".$location."' 
+                AND skills.process = '".$process."' 
+                AND skills.deleted_at IS NULL");
 
-    		$other_skill = DB::SELECT("select skill_code,skill,process,location,value as nilai,(select skill from skill_maps where skill_code = skills.skill_code and employee_id = '".$employee_id."' and skill_maps.deleted_at is null) as skill_now,(select value from skill_maps where skill_code = skills.skill_code and employee_id = '".$employee_id."' and skill_maps.deleted_at is null) as nilai_now,(select id from skill_maps where skill_code = skills.skill_code and employee_id = '".$employee_id."' and skill_maps.deleted_at is null) as id_skill_now from skills where skills.location = '".$location."' and skills.process != '".$process."' and skills.deleted_at is null");
+    		$other_skill = DB::SELECT("SELECT
+                skill_code,
+                skill,
+                process,
+                location,
+                
+            VALUE
+                AS nilai,(
+                SELECT
+                    skill_code 
+                FROM
+                    skill_maps 
+                WHERE
+                    skill_code = skills.skill_code 
+                    AND employee_id = '".$employee_id."' 
+                    AND skill_maps.deleted_at IS NULL 
+                    AND skill_maps.location = '".$location."' 
+                    AND skill_maps.process != '".$process."' 
+                    ) AS skill_now,(
+                SELECT 
+                VALUE
+                    
+                FROM
+                    skill_maps 
+                WHERE
+                    skill_code = skills.skill_code 
+                    AND employee_id = '".$employee_id."' 
+                    AND skill_maps.deleted_at IS NULL 
+                    AND skill_maps.location = '".$location."' 
+                    AND skill_maps.process != '".$process."' 
+                    ) AS nilai_now,(
+                SELECT
+                    id 
+                FROM
+                    skill_maps 
+                WHERE
+                    skill_code = skills.skill_code 
+                    AND employee_id = '".$employee_id."' 
+                    AND skill_maps.deleted_at IS NULL 
+                    AND skill_maps.location = '".$location."' 
+                    AND skill_maps.process != '".$process."' 
+                ) AS id_skill_now 
+            FROM
+                skills 
+            WHERE
+                skills.location = '".$location."' 
+                AND skills.process != '".$process."' 
+                AND skills.deleted_at IS NULL");
 
     		$response = array(
 				'status' => true,
@@ -210,9 +310,10 @@ class SkillMapController extends Controller
     		$skillmapss = [];
     		$skill_codes = [];
 
+
     		if (count($count) >0) {
     			for ($t = 0;$t<count($skill);$t++) {
-    				$skills = Skill::where('location',$location)->where('process',$process)->where('skill',$skill[$t])->first();
+    				$skills = Skill::where('location',$location)->where('process',$process)->where('skill_code',$skill[$t])->first();
 	    			$skill_codes[] = $skills->skill_code;
     			}
 
