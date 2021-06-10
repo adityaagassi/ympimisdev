@@ -34,6 +34,8 @@ class InventoryController extends Controller
             '102',
             '9P1',
             '9P2',
+            '9I3',
+            '9I4',
         ];
     }
 
