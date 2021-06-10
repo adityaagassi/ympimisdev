@@ -13,7 +13,8 @@ thead>tr>th{
   padding: 3px;
 }
 tbody>tr>td{
-  text-align:center;
+  text-align:left;
+  vertical-align:middle !important;
 }
 tfoot>tr>th{
   text-align:center;
@@ -50,7 +51,7 @@ td{
     <small>Corrective and Preventive Action Request</small>
   </h1>
   <ol class="breadcrumb">
-    <li><a href="{{ url("index/qc_report/create")}}" class="btn btn-primary btn-sm" style="color:white">Create {{ $page }}</a></li>
+    <li><a href="{{ url("index/qc_report/create")}}" class="btn btn-success btn-sm" style="color:white"><i class="fa fa-plus"></i>Create / Issue {{ $page }}</a></li>
   </ol>
 </section>
 @endsection
@@ -77,34 +78,41 @@ td{
   <div class="row">
     <div class="col-xs-12">
       <div class="box">
-        <div class="box-header">
-          <h3 class="box-title">Filter <span class="text-purple">CPAR</span></h3>
-        </div>
         <div class="box-body">
           <input type="hidden" value="{{csrf_token()}}" name="_token" />
-          <div class="col-md-12 col-md-offset-3">
-            <div class="col-md-3">
+          <div class="col-xs-12">
+            <div class="col-md-2" style="padding: 0">
               <div class="form-group">
+                <label>Month From</label>
                 <div class="input-group date">
                   <div class="input-group-addon">
                     <i class="fa fa-calendar"></i>
                   </div>
-                  <input type="text" class="form-control pull-right" id="bulandari" name="bulandari" placeholder="Bulan Dari">
+                    <input type="text" class="form-control pull-right" id="bulandari" name="bulandari" >
                 </div>
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
               <div class="form-group">
+                <label>Month To</label>
                 <div class="input-group date">
                   <div class="input-group-addon">
                     <i class="fa fa-calendar"></i>
                   </div>
-                  <input type="text" class="form-control pull-right" id="bulanke" name="bulanke" placeholder="Bulan Ke">
+                    <input type="text" class="form-control pull-right" id="bulanke" name="bulanke">
                 </div>
+              </div>
+            </div>
+
+            <div class="col-md-2">
+              <div class="form-group">
+                  <label style="color: white;">Action</label>
+                  <input type="button" id="search" onClick="fillCPARDetail()" class="form-control btn btn-primary" value="Search"></button>
               </div>
             </div>
           </div>
-          <div class="col-md-12">
+
+          <!-- <div class="col-md-12">
             <div class="col-md-4">
               <div class="form-group">
                 <select class="form-control select2" data-placeholder="Select Kategori" name="kategori" id="kategori" style="width: 100%;">
@@ -135,25 +143,18 @@ td{
                 </select>
               </div>
             </div>
-          </div>
-          <div class="col-md-12 col-md-offset-5">
-            <div class="form-group">
-              <a href="javascript:void(0)" onClick="clearConfirmation()" class="btn btn-danger">Clear</a>
-              <button id="search" onClick="fillCPARDetail()" class="btn btn-primary">Search</button>
-            </div>
-          </div>
+          </div> -->
           <div class="box-body" style="overflow-x: scroll;">
           <table id="example1" class="table table-bordered table-striped table-hover" >
             <thead style="background-color: rgba(126,86,134,.7);">
               <tr>
                 <th>No CPAR</th>
+                <th>Tanggal</th>
                 <th>Judul Komplain</th>
-                <th>Penemu</th>    
-                <th>Manager</th>    
-                <th>Departemen</th>
-                <th>Tgl Permintaan</th>
+                <th>Penerbit CPAR</th>    
+                <!-- <th>Manager</th>     -->
+                <th>Dept PIC CAR</th>
                 <th>Kategori</th> 
-                <th>Sumber Komplain</th>
                 <th>Status</th>
                 <th>Action</th>
               </tr>
@@ -183,8 +184,6 @@ td{
             </tbody>
             <tfoot>
               <tr>
-                <th></th>
-                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -344,16 +343,14 @@ td{
           "data" : data,
         },
         "columns": [
-          { "data": "cpar_no" },
-          { "data": "judul_komplain" },
-          { "data": "penemu" },
-          { "data": "name" },
-          { "data": "department_name" , "width": "15%"},
-          { "data": "tgl_permintaan" },
-          { "data": "kategori" },
-          { "data": "sumber_komplain" },
-          { "data": "status_name" },
-          { "data": "action", "width": "10%"}
+          { "data": "cpar_no" , "width": "10%"},
+          { "data": "tgl_permintaan" , "width": "5%"},
+          { "data": "judul_komplain" , "width": "20%"},
+          { "data": "penemu" , "width": "10%"},
+          { "data": "department_shortname" , "width": "7%"},
+          { "data": "kategori" , "width": "20%"},
+          { "data": "status_name" , "width": "6%"},
+          { "data": "action", "width": "4%"}
         ]
       });
 

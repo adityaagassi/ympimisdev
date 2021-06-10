@@ -1342,8 +1342,8 @@
                                                                 <i class="fa fa-caret-right"></i> PO Monitoring & Control (PO管理)
                                                             </a>
                                                             <br>
-                                                            <a href="{{ url("budget/info") }}">
-                                                                <i class="fa fa-caret-right"></i> Budget Information (予算情報)
+                                                            <a href="{{ url("budget/monthly") }}">
+                                                                <i class="fa fa-caret-right"></i> Budget Monthly (予算情報)
                                                             </a>
                                                         </td>
                                                     </tr>

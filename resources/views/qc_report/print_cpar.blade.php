@@ -156,8 +156,8 @@
 				<td>Prepared By</td>
 				<td>Checked By</td>
 				<td>Checked By</td>
-				<td>Approved By</td>
-				<td>Approved By</td>
+				<td>Known By</td>
+				<td>Known By</td>
 				<td>Received By</td>
 				<td colspan="3" rowspan="4">&nbsp;</td>
 			</tr>
@@ -197,7 +197,7 @@
 				<td rowspan="2" style="vertical-align: middle;text-align: center">
 					@if($cpar->approved_gm == "Checked")
 						@if(count($cparss[0]->ttd) > 0)
-						<img width="50" src="{{url($cparss[0]->ttd)}}" alt="" style="vertical-align: middle !important">
+						<!-- <img width="50" src="{{url($cparss[0]->ttd)}}" alt="" style="vertical-align: middle !important"> -->
 						@endif
 						{{$cpar->gmname}}
 					@else

@@ -45,7 +45,7 @@
               <option value="{{ $manager->employee_id }}_{{ $manager->department }}">{{ $manager->name }} - {{ $manager->position }} {{ $manager->department }}</option>
               @endforeach
               <option value="PI0703002_Production Engineering Department">Susilo Basri Prasetyo - Manager Production Engineering Department</option>
-              <option value="PI9805006_Woodwind Instrument - Body Parts Process (WI-BPP) Department">Fatchur Rozi - Manager Woodwind Instrument - Body Parts Process (WI-BPP) Department</option>
+              <option value="PI0108010_Woodwind Instrument - Welding Process (WI-WP) Department">Yudi Abtadipa - Manager Woodwind Instrument - Welding Process (WI-WP) Department</option>
               <option value="PI9906002_Woodwind Instrument - Key Parts Process (WI-KPP) Department">Khoirul Umam - Woodwind Instrument - Key Parts Process (WI-KPP) Department</option>
             </select>
           </div>
@@ -256,7 +256,11 @@
 </script>
   <script>
     $(function () {
-      $('.select2').select2()
+      $('.select2').select2({
+        allowClear:true,
+        dropdownAutoWidth : true,
+        tags: true
+      });
     });
     
     $('#tgl_permintaan').datepicker({

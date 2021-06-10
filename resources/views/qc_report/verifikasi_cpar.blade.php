@@ -226,7 +226,7 @@
                         @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
                           <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirim Ke DGM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Bagian Terkait</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->dgm) <!-- {{$cpars->dgm}} --><!-- Jika yang masuk adalah pak budhi -->
@@ -308,7 +308,7 @@
                         @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
                           <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirim Ke DGM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Bagian Terkait</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->dgm) <!-- {{$cpars->dgm}} --><!-- Jika yang masuk adalah pak budhi -->
@@ -420,7 +420,7 @@
                         @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
                           <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirim Ke DGM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Bagian Terkait</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->dgm) <!-- {{$cpars->dgm}} --><!-- Jika yang masuk adalah pak budhi -->
@@ -501,7 +501,7 @@
                         @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
                           <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirim Ke DGM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Bagian Terkait</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->dgm) <!-- {{$cpars->dgm}} --><!-- Jika yang masuk adalah pak budhi -->
@@ -582,7 +582,7 @@
                         @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
                           <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirim Ke DGM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Bagian Terkait</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->dgm) <!-- {{$cpars->dgm}} --><!-- Jika yang masuk adalah pak budhi -->
@@ -663,7 +663,7 @@
                         @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
                           <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirim Ke DGM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Bagian Terkait</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->dgm) <!-- {{$cpars->dgm}} --><!-- Jika yang masuk adalah pak budhi -->
@@ -744,7 +744,7 @@
                         @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
                           <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirim Ke DGM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Bagian Terkait</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->dgm) <!-- {{$cpars->dgm}} --><!-- Jika yang masuk adalah pak budhi -->
@@ -825,7 +825,7 @@
                         @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
                           <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirim Ke DGM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Bagian Terkait</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->dgm) <!-- {{$cpars->dgm}} --><!-- Jika yang masuk adalah pak budhi -->
@@ -910,7 +910,7 @@
                         @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
                           <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirim Ke DGM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Bagian Terkait</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->dgm) <!-- {{$cpars->dgm}} --><!-- Jika yang masuk adalah pak budhi -->
@@ -991,7 +991,7 @@
                         @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
                           <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirim Ke DGM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Bagian Terkait</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->dgm) <!-- {{$cpars->dgm}} --><!-- Jika yang masuk adalah pak budhi -->
@@ -1072,7 +1072,7 @@
                         @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
                           <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirim Ke DGM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Bagian Terkait</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->dgm) <!-- {{$cpars->dgm}} --><!-- Jika yang masuk adalah pak budhi -->
@@ -1153,7 +1153,7 @@
                         @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
                           <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirim Ke DGM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Bagian Terkait</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->dgm) <!-- {{$cpars->dgm}} --><!-- Jika yang masuk adalah pak budhi -->
@@ -1234,7 +1234,7 @@
                         @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
                           <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirim Ke DGM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Bagian Terkait</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->dgm) <!-- {{$cpars->dgm}} --><!-- Jika yang masuk adalah pak budhi -->
@@ -1315,7 +1315,7 @@
                         @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
                           <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirim Ke DGM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Bagian Terkait</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->dgm) <!-- {{$cpars->dgm}} --><!-- Jika yang masuk adalah pak budhi -->

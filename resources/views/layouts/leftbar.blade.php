@@ -393,9 +393,9 @@
       @if(isset($page) && $page == "Purchase Item")<li class="active">@else<li>@endif
         <a href="{{ url("/index/purchase_item") }}"><i class="fa fa-sort-alpha-asc"></i><span>Purchase Item</span></a>
       </li>
-      @if(isset($page) && $page == "Budget")<li class="active">@else<li>@endif
+      <!-- @if(isset($page) && $page == "Budget")<li class="active">@else<li>@endif
         <a href="{{ url("budget/info") }}"><i class="fa fa-money"></i><span>Budget Information</span></a>
-      </li>
+      </li> -->
       @if(isset($page) && $page == "Budget Monthly")<li class="active">@else<li>@endif
         <a href="{{ url("budget/monthly") }}"><i class="fa fa-money"></i><span>Budget Monthly</span></a>
       </li>
@@ -425,9 +425,9 @@
       @if(isset($page) && $page == "Purchase Item")<li class="active">@else<li>@endif
         <a href="{{ url("/index/purchase_item") }}"><i class="fa fa-sort-alpha-asc"></i><span>Purchase Item</span></a>
       </li>
-      @if(isset($page) && $page == "Budget")<li class="active">@else<li>@endif
+      <!-- @if(isset($page) && $page == "Budget")<li class="active">@else<li>@endif
         <a href="{{ url("budget/info") }}"><i class="fa fa-money"></i><span>Budget Information</span></a>
-      </li>
+      </li> -->
       @if(isset($page) && $page == "Budget Monthly")<li class="active">@else<li>@endif
         <a href="{{ url("budget/monthly") }}"><i class="fa fa-money"></i><span>Budget Monthly</span></a>
       </li>
@@ -528,9 +528,9 @@
         <a href="{{ url("receive_goods") }}"><i class="fa fa-upload"></i>Upload Receive</a>
       </li>
 
-      @if(isset($page) && $page == "Budget")<li class="active">@else<li>@endif
+      <!-- @if(isset($page) && $page == "Budget")<li class="active">@else<li>@endif
         <a href="{{ url("budget/info") }}"><i class="fa fa-money"></i><span>Budget Info</span></a>
-      </li>
+      </li> -->
 
       @if(isset($page) && $page == "Cek Kedatangan")<li class="active">@else<li>@endif
         <a href="{{ url("warehouse/cek_kedatangan") }}"><i class="fa fa-sticky-note-o"></i>Cek Kedatangan Barang</a>

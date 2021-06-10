@@ -17,16 +17,18 @@
 	<div class="row">
 		<div class="col-xs-6" style="text-align: center; color: red;">
 			<span style="font-size: 3vw; color: green;"><i class="fa fa-angle-double-down"></i> Process & Report <i class="fa fa-angle-double-down"></i></span>
-			
-			<a href="{{ url('index/qc_report') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;"> Corrective And Preventive Action report</a>
-			<a href="{{ url('index/qc_car') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;"> Corrective Action report</a>
+
+			<a href="{{ url('index/qc_report/create') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;"> Create/Issue CPAR</a>
+			<a href="{{ url('index/qc_report') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;"> CPAR Data</a>
+			<a href="{{ url('index/qc_car') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;"> CAR Data</a>
+
 		</div>
 		<div class="col-xs-6" style="text-align: center; color: red;">
 			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> Display <i class="fa fa-angle-double-down"></i></span>
 
 			<a href="{{ url('index/qc_report/grafik_cpar') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;"> CPAR & CAR Monitoring</a>
 			<a href='{{ url("index/cpar/resume") }}' class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Resume CPAR & CAR</a>
-			<a href='{{ url("index/qc_report/grafik_kategori") }}' class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Report CPAR By Category</a>
+			<a href='{{ url("index/qc_report/grafik_kategori") }}' class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">CPAR By Category</a>
 		</div>
 	</div>
 </section>
