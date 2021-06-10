@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use DataTables;
 use Response;
 use App\AssyPickingSchedule;
+use App\AssyBodySchedule;
 use App\OriginGroup;
 use App\Material;
 use App\Http\Controllers\Controller;
@@ -745,29 +746,37 @@ class AssyProcessController extends Controller
 		return DataTables::of($detailData)->make(true);
 	}
 
-	public function fetchSchedule()
+	public function fetchSchedule(Request $request)
 	{
-		$assy_schedules = AssyPickingSchedule::leftJoin("materials","materials.material_number","=","assy_picking_schedules.material_number")
-		->leftJoin("origin_groups","origin_groups.origin_group_code","=","materials.origin_group_code")
-		->select('assy_picking_schedules.id','assy_picking_schedules.material_number','assy_picking_schedules.due_date','assy_picking_schedules.quantity','materials.material_description','origin_groups.origin_group_name')
-		->orderByRaw('due_date DESC', 'assy_picking_schedules.material_number ASC')
-		->get();
+		$item = $request->get('item_category');
+		if (explode(' ', $item)[1] == 'Key') {
+			$assy_schedules = AssyPickingSchedule::where(db::raw('DATE_FORMAT(assy_picking_schedules.due_date,"%Y-%m")'), '=', $request->get('mon'))
+			->where('remark', '=', explode(' ', $item)[0])
+			->leftJoin("materials","materials.material_number","=","assy_picking_schedules.material_number")
+			->select('assy_picking_schedules.id','assy_picking_schedules.material_number','assy_picking_schedules.due_date','assy_picking_schedules.quantity','materials.material_description', 'assy_picking_schedules.remark')
+			->orderByRaw('due_date DESC', 'assy_picking_schedules.material_number ASC')
+			->get();
+		} else {
+			$assy_schedules = AssyBodySchedule::where(db::raw('DATE_FORMAT(assy_body_schedules.due_date,"%Y-%m")'), '=', $request->get('mon'))
+			->where('remark', '=', explode(' ', $item)[0])
+			->leftJoin("materials","materials.material_number","=","assy_body_schedules.material_number")
+			->select('assy_body_schedules.id','assy_body_schedules.material_number','assy_body_schedules.due_date','assy_body_schedules.quantity','materials.material_description','assy_body_schedules.remark')
+			->orderByRaw('due_date DESC', 'assy_body_schedules.material_number ASC')
+			->get();
+		}
 
-		return DataTables::of($assy_schedules)
-		->addColumn('action', function($assy_schedules){
-			return '
-			<button class="btn btn-xs btn-info" data-toggle="tooltip" title="Delete" onclick="modalView('.$assy_schedules->id.')">View</button>
-			<button class="btn btn-xs btn-warning" data-toggle="tooltip" title="Delete" onclick="modalEdit('.$assy_schedules->id.')">Edit</button>
-			<button class="btn btn-xs btn-danger" data-toggle="tooltip" title="Delete" onclick="modalDelete('.$assy_schedules->id.')">Delete</button>';
-		})
-		->rawColumns(['action' => 'action'])
-		->make(true);
+		$response = array(
+			'status' => true,
+			'picking' => $assy_schedules
+		);
+		return Response::json($response);
 	}
 
 	public function import(Request $request)
 	{
 		try{
 			if($request->hasFile('assy_schedule')){
+
 				$id = Auth::id();
 
 				$file = $request->file('assy_schedule');
@@ -777,22 +786,54 @@ class AssyProcessController extends Controller
 
 				$date = date('Y-m', strtotime(str_replace('/','-', explode("\t",$rows[0])[1])));
 
-				$delete_assy = AssyPickingSchedule::where(db::raw('date_format(assy_picking_schedules.due_date,"%Y-%m")'), '=', $date)->forceDelete();
 
-				foreach ($rows as $row)
-				{
-					if (strlen($row) > 0) {
-						$row = explode("\t", $row);
-						$assy_schedule = new AssyPickingSchedule([
-							'material_number' => $row[0],
-							'due_date' => date('Y-m-d', strtotime(str_replace('/','-',$row[1]))),
-							'quantity' => $row[2],
-							'created_by' => $id,
-						]);
+				$category = $request->get('item_imp');
+				// JIKA KUNCI
+				if (explode(' ', $category)[1] == 'Key') {
+					$delete_assy = AssyPickingSchedule::where(db::raw('date_format(assy_picking_schedules.due_date,"%Y-%m")'), '=', $request->get('mon_imp'))
+					->where('remark', '=', explode(' ', $category)[0])
+					->forceDelete();
 
-						$assy_schedule->save();
+					foreach ($rows as $row)
+					{
+						if (strlen($row) > 0) {
+							$row = explode("\t", $row);
+							$assy_schedule = new AssyPickingSchedule([
+								'remark' => explode(' ', $category)[0],
+								'material_number' => $row[0],
+								'due_date' => date('Y-m-d', strtotime(str_replace('/','-',$row[1]))),
+								'quantity' => $row[2],
+								'created_by' => $id,
+							]);
+
+							$assy_schedule->save();
+						}
+					}
+				} else {
+					//JIKA BODY
+
+					$delete_assy = AssyBodySchedule::where(db::raw('date_format(assy_body_schedules.due_date,"%Y-%m")'), '=', $request->get('mon_imp'))
+					->where('remark', '=', explode(' ', $category)[0])
+					->forceDelete();
+
+					foreach ($rows as $row)
+					{
+						if (strlen($row) > 0) {
+							$row = explode("\t", $row);
+							$assy_schedule = new AssyBodySchedule([
+								'remark' => explode(' ', $category)[0],
+								'material_number' => $row[0],
+								'due_date' => date('Y-m-d', strtotime(str_replace('/','-',$row[1]))),
+								'quantity' => $row[2],
+								'created_by' => $id,
+							]);
+
+							$assy_schedule->save();
+						}
 					}
 				}
+
+				
 				return redirect('/index/assy_schedule')->with('status', 'New assy schedule has been imported.')->with('page', 'Assy Schedule');
 			}
 			else

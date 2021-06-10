@@ -44,62 +44,106 @@
   </h1>
   <ol class="breadcrumb">
     <li>
-      <a data-toggle="modal" data-target="#deleteModal" class="btn btn-danger btn-sm" style="color:white">Delete {{ $page }}s</a>
+      <!-- <a data-toggle="modal" data-target="#deleteModal" class="btn btn-danger btn-sm" style="color:white">Delete {{ $page }}s</a> -->
       &nbsp;
       <a data-toggle="modal" data-target="#importModal" class="btn btn-success btn-sm" style="color:white">Import {{ $page }}s</a>
-      &nbsp;
-      <a data-toggle="modal" data-target="#createModal" class="btn btn-primary btn-sm" style="color:white">Create {{ $page }}</a>
-    </li>
-  </ol>
-</section>
-@endsection
+      <!-- &nbsp;
+        <a data-toggle="modal" data-target="#createModal" class="btn btn-primary btn-sm" style="color:white">Create {{ $page }}</a> -->
+      </li>
+    </ol>
+  </section>
+  @endsection
 
 
-@section('content')
+  @section('content')
 
-<section class="content">
-  @if (session('status'))
-  <div class="alert alert-success alert-dismissible">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    <h4><i class="icon fa fa-thumbs-o-up"></i> Success!</h4>
-    {{ session('status') }}
-  </div>   
-  @endif
-  @if (session('error'))
-  <div class="alert alert-danger alert-dismissible">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    <h4><i class="icon fa fa-ban"></i> Error!</h4>
-    {{ session('error') }}
-  </div>   
-  @endif
-  <div class="row">
+  <section class="content">
+    @if (session('status'))
+    <div class="alert alert-success alert-dismissible">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <h4><i class="icon fa fa-thumbs-o-up"></i> Success!</h4>
+      {{ session('status') }}
+    </div>   
+    @endif
+    @if (session('error'))
+    <div class="alert alert-danger alert-dismissible">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <h4><i class="icon fa fa-ban"></i> Error!</h4>
+      {{ session('error') }}
+    </div>   
+    @endif
+
+    <div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 3001; opacity: 0.8;">
+      <p style="position: absolute; color: White; top: 45%; left: 35%;">
+       <span style="font-size: 40px">Loading, please wait <i class="fa fa-spin fa-spinner"></i></span>
+     </p>
+   </div>
+
+   <div class="row">
     <div class="col-xs-12">
       <div class="box">
         <div class="box-body">
-          <table id="example1" class="table table-bordered table-striped table-hover">
-            <thead style="background-color: rgba(126,86,134,.7);">
-              <tr>
-                <th>Material Number</th>
-                <th>Material Description</th>
-                <th>Origin group</th>
-                <th>Due Date</th>
-                <th>Qty</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-            </tbody>
-            <tfoot>
-              <tr>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-              </tr>
-            </tfoot>
-          </table>
+
+          <div class="col-xs-3">
+            <div class="form-group">
+              <label>Pilih Bulan</label>
+              <div class="input-group date" style="width: 100%;">
+                <input type="text" placeholder="Pilih Bulan" class="form-control datepicker" name="mon" id="mon">
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xs-3">
+            <div class="form-group">
+              <label>Pilih Item</label>
+              <div class="input-group date" style="width: 100%;">
+                <select class="form-control select2" name="item_category" id="item_category" data-placeholder="Pilih Item" style="width: 100%">
+                  <option value=""></option>
+                  <option value="SX51 Key">SX Key</option>
+                  <option value="SX51 Body">SX Body</option>
+                  <option value="CL51 Key">CL Key</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xs-3">
+            <div class="form-group">
+              <label>&nbsp;</label>
+              <div class="input-group">
+                <button type="button" class="btn btn-sm btn-primary" onclick="draw_table()">Filter</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xs-12">
+            <table id="example1" class="table table-bordered table-striped table-hover">
+              <thead style="background-color: rgba(126,86,134,.7);">
+                <tr>
+                  <th>Material Number</th>
+                  <th>Material Description</th>
+                  <th>Origin group</th>
+                  <th>Category</th>
+                  <th>Due Date</th>
+                  <th>Qty</th>
+                </tr>
+              </thead>
+              <tbody id="tableBodyList">
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+
         </div>
       </div>
     </div>
@@ -346,16 +390,41 @@
           Format: [Material Number][Due Date][Quantity]<br>
           Sample: <a href="{{ url('download/manual/import_assy_schedule.txt') }}">import_assy_schedule.txt</a>
         </div>
-        <div class="">
-          <div class="modal-body">
-            <center><input type="file" name="assy_schedule" id="InputFile" accept="text/plain"></center>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="item_imp" class="col-sm-2 control-label">Pilih Bulan</label>
+
+            <div class="col-sm-10">
+              <input type="text" placeholder="Pilih Bulan" class="form-control datepicker" name="mon_imp" id="mon_imp">
+            </div>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
-            <button id="modalImportButton" type="submit" class="btn btn-success">Import</button>
+
+          <div class="form-group">
+            <label for="item_imp" class="col-sm-2 control-label">Pilih Item</label>
+
+            <div class="col-sm-10">
+              <select class="form-control select2" name="item_imp" id="item_imp" data-placeholder="Pilih Item" style="width: 100%">
+                <option value=""></option>
+                <option value="SX51 Key">SX Key</option>
+                <option value="SX51 Body">SX Body</option>
+                <option value="CL51 Key">CL Key</option>
+              </select>
+            </div>
           </div>
-        </form>
-      </div>
+
+          <div class="form-group">
+            <label for="InputFile" class="col-sm-2 control-label">Pilih File</label>
+
+            <div class="col-sm-10">
+              <input class="form-control" type="file" name="assy_schedule" id="InputFile" accept="text/plain" style="width: 100%">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+          <button id="modalImportButton" type="submit" class="btn btn-success" onclick="showLoading()"><i class="fa fa-plus"></i>&nbsp; Import</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
@@ -378,148 +447,172 @@
   });
 
   jQuery(document).ready(function() {
-    draw_table();
-
-    $('#due_date').datepicker({
-      autoclose: true,
-      format: "dd/mm/yyyy",
-      todayHighlight: true
+    $('.datepicker').datepicker({
+      format: "yyyy-mm",
+      startView: "months",
+      minViewMode: "months",
+      autoclose: true
     });
 
     $('.select2').select2();
   });
 
   function draw_table() {
-   $('#example1 tfoot th').each( function () {
-    var title = $(this).text();
-    $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
-  } );
-   var table = $('#example1').DataTable({
-    'dom': 'Bfrtip',
-    'responsive': true,
-    'paging': true,
-    'lengthChange': true,
-    'searching': true,
-    'ordering': true,
-    'order': [],
-    'info': true,
-    'autoWidth': true,
-    "sPaginationType": "full_numbers",
-    "bJQueryUI": true,
-    "bAutoWidth": false,
-    "processing": true,
-    "serverSide": true,
-    "ajax": {
-      "type" : "get",
-      "url" : "{{ url("fetch/assy_schedule") }}"
-    },
-    "columns": [
-    { "data": "material_number" },
-    { "data": "material_description"},
-    { "data": "origin_group_name" },
-    { "data": "due_date" },
-    { "data": "quantity" },
-    { "data": "action" }
-    ],
-    'lengthMenu': [
-    [ 10, 25, 50, -1 ],
-    [ '10 rows', '25 rows', '50 rows', 'Show all' ]
-    ],
-    'buttons': {
-      buttons:[
-      {
-        extend: 'pageLength',
-        className: 'btn btn-default',
-      },
-      {
-        extend: 'copy',
-        className: 'btn btn-success',
-        text: '<i class="fa fa-copy"></i> Copy',
-        exportOptions: {
-          columns: ':not(.notexport)'
-        }
-      },
-      {
-        extend: 'excel',
-        className: 'btn btn-info',
-        text: '<i class="fa fa-file-excel-o"></i> Excel',
-        exportOptions: {
-          columns: ':not(.notexport)'
-        }
-      },
-      {
-        extend: 'print',
-        className: 'btn btn-warning',
-        text: '<i class="fa fa-print"></i> Print',
-        exportOptions: {
-          columns: ':not(.notexport)'
-        }
-      },
-      ]
+    $("#loading").show();
+
+    var cat = $("#item_category").val();
+    var data = {
+      item_category : cat,
+      mon : $("#mon").val(),
     }
-  });
 
-   table.columns().every( function () {
-    var that = this;
+    $.get('{{ url("fetch/assy_schedule") }}', data, function(result, status, xhr){
+      if(result.status){
+        $('#example1').DataTable().clear();
+        $('#example1').DataTable().destroy();
+        $('#tableBodyList').html("");
 
-    $( 'input', this.footer() ).on( 'keyup change', function () {
-      if ( that.search() !== this.value ) {
-        that
-        .search( this.value )
-        .draw();
+        var tableData = "";
+        $.each(result.picking ,function(index, value){
+          tableData += "<tr>";
+          tableData += "<td>"+value.material_number+"</td>";
+          tableData += "<td>"+value.material_description+"</td>";
+          tableData += "<td>"+value.remark+"</td>";
+          tableData += "<td>"+cat.split(" ")[1]+"</td>";
+          tableData += "<td>"+value.due_date+"</td>";
+          tableData += "<td>"+value.quantity+"</td>";
+          tableData += "</tr>";
+        })
+
+        $('#tableBodyList').append(tableData);
+
+        $("#loading").hide();
+
+        $('#example1 tfoot th').each( function () {
+          var title = $(this).text();
+          $(this).html( '<input class="cari" style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
+        } );
+
+        var table = $('#example1').DataTable({
+          'dom': 'Bfrtip',
+          'responsive':true,
+          'lengthMenu': [
+          [ 10, 25, 50, -1 ],
+          [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+          ],
+          'buttons': {
+            buttons:[
+            {
+              extend: 'pageLength',
+              className: 'btn btn-default',
+            },
+            {
+              extend: 'copy',
+              className: 'btn btn-success',
+              text: '<i class="fa fa-copy"></i> Copy',
+              exportOptions: {
+                columns: ':not(.notexport)'
+              }
+            },
+            {
+              extend: 'excel',
+              className: 'btn btn-info',
+              text: '<i class="fa fa-file-excel-o"></i> Excel',
+              exportOptions: {
+                columns: ':not(.notexport)'
+              }
+            },
+            {
+              extend: 'print',
+              className: 'btn btn-warning',
+              text: '<i class="fa fa-print"></i> Print',
+              exportOptions: {
+                columns: ':not(.notexport)'
+              }
+            }
+            ]
+          },
+          'paging': true,
+          'lengthChange': true,
+          'searching': true,
+          'ordering': true,
+          'info': true,
+          'autoWidth': true,
+          "sPaginationType": "full_numbers",
+          "bJQueryUI": true,
+          "bAutoWidth": false,
+          "processing": true,
+          "order": [[ 4, 'asc' ]]
+        });
+
+        table.columns().every( function () {
+          var that = this;
+
+          $( '.cari', this.footer() ).on( 'keyup change', function () {
+            if ( that.search() !== this.value ) {
+              that
+              .search( this.value )
+              .draw();
+            }
+          } );
+        } );
+
+        $('#example1 tfoot tr').appendTo('#example1 thead');
       }
-    } );
-  } );
+    })
 
-   $('#example1 tfoot tr').appendTo('#example1 thead');
- }
+  }
 
- function create() {
-  var data = {
-    material_number: $("#material_number").val(),
-    due_date: $("#due_date").val(),
-    quantity: $("#quantity").val()
+  function showLoading() {   
+    $("#loading").show();
+  }  
+
+  function create() {
+    var data = {
+      material_number: $("#material_number").val(),
+      due_date: $("#due_date").val(),
+      quantity: $("#quantity").val()
+    };
+
+    $.post('{{ url("create/assy_schedule") }}', data, function(result, status, xhr){
+      if (result.status == true) {
+        $('#example1').DataTable().ajax.reload(null, false);
+        openSuccessGritter("Success","New Assy schedule has been created.");
+      } else {
+        openErrorGritter("Error","Assy schedule not created.");
+      }
+    })
+  }
+
+  function modalEdit(id) {
+    $('#EditModal').modal("show");
+
+    var data  = {
+      id:id
+    };
+
+    $.get('{{ url("edit/assy_schedule") }}', data, function(result, status, xhr){
+      $("#id_edit").val(id);
+      $('#material_number_edit').val(result.datas.material_number).trigger('change.select2');
+      $("#due_date_edit").val(result.datas.due_date);
+      $("#quantity_edit").val(result.datas.quantity);
+    })
+  }
+
+  function edit() {
+   var data = {
+    id: $("#id_edit").val(),
+    quantity: $("#quantity_edit").val()
   };
 
-  $.post('{{ url("create/assy_schedule") }}', data, function(result, status, xhr){
+  $.post('{{ url("edit/assy_schedule") }}', data, function(result, status, xhr){
     if (result.status == true) {
       $('#example1').DataTable().ajax.reload(null, false);
-      openSuccessGritter("Success","New Assy schedule has been created.");
+      openSuccessGritter("Success","New Assy schedule has been edited.");
     } else {
-      openErrorGritter("Error","Assy schedule not created.");
+      openErrorGritter("Error","Failed to edit.");
     }
   })
-}
-
-function modalEdit(id) {
-  $('#EditModal').modal("show");
-
-  var data  = {
-    id:id
-  };
-
-  $.get('{{ url("edit/assy_schedule") }}', data, function(result, status, xhr){
-    $("#id_edit").val(id);
-    $('#material_number_edit').val(result.datas.material_number).trigger('change.select2');
-    $("#due_date_edit").val(result.datas.due_date);
-    $("#quantity_edit").val(result.datas.quantity);
-  })
-}
-
-function edit() {
- var data = {
-  id: $("#id_edit").val(),
-  quantity: $("#quantity_edit").val()
-};
-
-$.post('{{ url("edit/assy_schedule") }}', data, function(result, status, xhr){
-  if (result.status == true) {
-    $('#example1').DataTable().ajax.reload(null, false);
-    openSuccessGritter("Success","New Assy schedule has been edited.");
-  } else {
-    openErrorGritter("Error","Failed to edit.");
-  }
-})
 }
 
 function modalView(id) {

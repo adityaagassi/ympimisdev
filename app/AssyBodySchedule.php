@@ -5,11 +5,11 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class AssyPickingSchedule extends Model
+class AssyBodySchedule extends Model
 {
-    Use SoftDeletes;
+	Use SoftDeletes;
 
-    protected $fillable = [
+	protected $fillable = [
 		'remark', 'material_number', 'due_date', 'quantity', 'created_by'
 	];
 }
