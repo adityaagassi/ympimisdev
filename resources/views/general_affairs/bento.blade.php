@@ -520,6 +520,7 @@ table.table-bordered > tfoot > tr > th{
 	});
 
 	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
 		// var h = $('#boxQuota').height();
 		// $('#boxMenu').css('height', h);
 
