@@ -703,12 +703,12 @@
 					]
 				});
 
-				//FOOT STOPPER
+				//FOOT
 				var ngname = [];
 				var ngcount = [];
 				var ngall = [];
 				for (var i = 0; i < result.resumes.length; i++) {
-					if (result.resumes[i].part_code.match(/FJ/gi) || result.resumes[i].part_code == 'A YRF S') {
+					if (result.resumes[i].part_code.match(/FJ/gi)) {
 						var ngs = result.resumes[i].ng_name.split(',');
 						var counts = result.resumes[i].ng_count.split(',');
 						for (var j = 0; j < ngs.length; j++) {
@@ -748,7 +748,7 @@
 						backgroundColor: "rgba(0,0,0,0)"
 					},
 					title: {
-						text: "FJ / YRF STOPPER TODAY'S NG",
+						text: "FJ",
 						style: {
 							fontSize: '30px',
 							fontWeight: 'bold'
@@ -872,7 +872,7 @@
 				var ngcount = [];
 				var ngall = [];
 				for (var i = 0; i < result.resumes.length; i++) {
-					if (result.resumes[i].part_code.match(/BJ/gi)) {
+					if (result.resumes[i].part_code.match(/BJ/gi) || result.resumes[i].part_code == 'A YRF S') {
 						var ngs = result.resumes[i].ng_name.split(',');
 						var counts = result.resumes[i].ng_count.split(',');
 						for (var j = 0; j < ngs.length; j++) {
@@ -912,7 +912,7 @@
 						backgroundColor: "rgba(0,0,0,0)"
 					},
 					title: {
-						text: "BJ TODAY'S NG",
+						text: "BJ / YRF STOPPER TODAY'S NG TODAY'S NG",
 						style: {
 							fontSize: '30px',
 							fontWeight: 'bold'
