@@ -1364,17 +1364,22 @@ class AssemblyProcessController extends Controller
 				'title_jp' => $title_jp,
 			))->with('page', 'Assembly FL')->with('head', 'Assembly Process')->with('location',$location);
 		}else{
-			$ng_lists = DB::select("SELECT DISTINCT(ng_name) FROM assembly_ng_lists where origin_group_code = '041' and location = '".$loc_spec."' and process = '".$process."' and deleted_at is null");
+			$pi = "/PI/i";
+			if (preg_match($pi, Auth::user()->username) == 1) {
+				return view('404');
+			}else{
+				$ng_lists = DB::select("SELECT DISTINCT(ng_name) FROM assembly_ng_lists where origin_group_code = '041' and location = '".$loc_spec."' and process = '".$process."' and deleted_at is null");
 
-			return view('processes.assembly.flute.kensa', array(
-				'ng_lists' => $ng_lists,
-				'loc' => $location,
-				'loc2' => $location,
-				'process' => $process,
-				'loc_spec' => $loc_spec,
-				'title' => $title,
-				'title_jp' => $title_jp,
-			))->with('page', 'Assembly FL')->with('head', 'Assembly Process')->with('location',$location);
+				return view('processes.assembly.flute.kensa', array(
+					'ng_lists' => $ng_lists,
+					'loc' => $location,
+					'loc2' => $location,
+					'process' => $process,
+					'loc_spec' => $loc_spec,
+					'title' => $title,
+					'title_jp' => $title_jp,
+				))->with('page', 'Assembly FL')->with('head', 'Assembly Process')->with('location',$location);
+			}
 		}
 	}
 
