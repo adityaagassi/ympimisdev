@@ -9508,6 +9508,7 @@ public function fetchMonitoringPRPch(Request $request){
   $dateto = date("Y-m-d");
 
   $last = AccPurchaseRequisition::whereNull('receive_date')
+  ->whereNull('deleted_at')
   ->orderBy('tanggal', 'asc')
   ->select(db::raw('date(submission_date) as tanggal'))
   ->first();
