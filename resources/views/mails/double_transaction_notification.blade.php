@@ -20,7 +20,7 @@
 	<div>
 		<center>
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
-			<p style="font-size: 20px;">Double Transaction Notification<br>{{ $data['date_text'] }}</p>
+			<p style="font-size: 20px;">Double Transaction Notification<br>{{ $data['date_text'] }} : {{ count($data['resume']) }} Double Transaction</p>
 
 			This is an automatic notification. Please do not reply to this address.
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
@@ -48,7 +48,7 @@
 						<td style="border:1px solid black; text-align: center;">{{ $col->receive }}</td>
 						<td style="border:1px solid black; text-align: right;">{{ $col->lot }}</td>
 						<td style="border:1px solid black; text-align: center;">{{ $col->created_at }}</td>
-						<td style="border:1px solid black; text-align: right;">{{ $col->created_at }}%</td>
+						<td style="border:1px solid black; text-align: right;">{{ $col->duplicates }}</td>
 					</tr>
 					@endforeach
 				</tbody>

@@ -54,6 +54,7 @@ class DoubleTransactionNotification extends Command
             1 AS qty
             FROM `histories`
             WHERE date(created_at) = '".$date."'
+            AND deleted_at IS NULL
             AND category IN ('completion', 'completion_adjustment', 'completion_adjustment_excel', 'completion_adjustment_manual', 'completion_cancel', 'transfer', 'transfer_adjustment', 'transfer_adjustment_excel', 'transfer_adjustment_manual', 'transfer_cancel')
             ) AS resume
             LEFT JOIN materials ON materials.id = resume.material_id
