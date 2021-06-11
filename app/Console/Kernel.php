@@ -61,6 +61,8 @@ class Kernel extends ConsoleKernel
         Commands\ResumeNgLacquering::class,
         Commands\ResumeNgPlating::class,
         Commands\RawMaterialReminder::class,
+        Commands\EmailBento::class,
+        Commands\DoubleTransactionNotification::class,
 
 
         //KITTO
@@ -102,6 +104,8 @@ class Kernel extends ConsoleKernel
                 $schedule->command('plan:stamps')->dailyAt(date('H:i', strtotime($batch_plan_stamp->batch_time)));
             }
         }
+
+        // $chedule->command('email:bento')->weeklyOn(1, '07:00');;
 
         // $schedule->command('plan:leaves')->monthlyOn(1, '01:00');
 
@@ -167,6 +171,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('kd:shipment')->everyTenMinutes();
         $schedule->command('spk:notify')->everyTenMinutes();
         $schedule->command('email:raw_material_reminder')->dailyAt('11:00');
+        $schedule->command('email:double_transaction')->dailyAt('06:00');
 
 
         $schedule->command('resume:buffing')->hourlyAt(10);
