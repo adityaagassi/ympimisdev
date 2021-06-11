@@ -43,7 +43,7 @@
 						<td style="border:1px solid black;">{{ $col->category }}</td>
 						<td style="border:1px solid black; text-align: center;">{{ $col->barcode }}</td>
 						<td style="border:1px solid black; text-align: center;">{{ $col->material_number }}</td>
-						<td style="border:1px solid black;">{{ $col->material_description }}</td>
+						<td style="border:1px solid black;">{{ $col->description }}</td>
 						<td style="border:1px solid black; text-align: center;">{{ $col->issue }}</td>
 						<td style="border:1px solid black; text-align: center;">{{ $col->receive }}</td>
 						<td style="border:1px solid black; text-align: right;">{{ $col->lot }}</td>
