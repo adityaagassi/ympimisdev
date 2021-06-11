@@ -508,7 +508,7 @@ class PantryController extends Controller
             $index = 1;
             $antar = "";
             foreach ($order as $key) {
-                array_push($item, '%0A'.$index.'.%20'.$key->minuman.'%20-%20'.$key->informasi.'%20-%20'.$key->keterangan.'%20-%20'.$key->gula.'%20-%20Jumlah%20:%20'.$key->jumlah);
+                array_push($item, $index.'.%20'.$key->minuman.'%20-%20'.$key->informasi.'%20-%20'.$key->keterangan.'%20-%20'.$key->gula.'%20-%20Jumlah%20:%20'.$key->jumlah);
                 array_push($item_email, ''.$index.'. '.$key->minuman.' - '.$key->informasi.' - '.$key->keterangan.' - '.$key->gula.' - Jumlah : '.$key->jumlah);
                 $antar = $key->tempat;
                 $index++;
@@ -525,9 +525,9 @@ class PantryController extends Controller
             // array_push($phone, '6281554119011');
             // array_push($phone, '6282336050550');
 
-            $pesan = "Ada%20Pesanan%20Pantry%20:%0A".join('%0A',$item)."%0A%0ADari%20".$name.".%0ADiantar%20ke%20".$antar.".%0A%0AMohon%20untuk%20segera%20dibuatkan.%0ATerimakasih.";
+            $pesan = "Ada%20Pesanan%20Pantry%20:%0A".join('%0A',$item)."%0A%0ADipesan%20pada%20".date('d M Y H:i').".%0ADari%20".$name.".%0ADiantar%20ke%20".$antar.".%0A%0AMohon%20untuk%20segera%20dibuatkan.%0ATerimakasih.";
 
-            $bodyHtml2 = "<html><h2>Pantry Order</h2><p>Ada Pesanan Pantry<br> ".join('<br>',$item_email)."</p><p>Dari : ".$name."</p><p>Diantar ke : ".$antar."</p><p>Mohon segera dibuatkan. Terimakasih.</p></html>";
+            $bodyHtml2 = "<html><h2>Pantry Order</h2><p>Ada Pesanan Pantry<br> ".join('<br>',$item_email)."</p><p>Dipesan pada : ".date('d M Y H:i')."</p><p>Dari : ".$name."</p><p>Diantar ke : ".$antar."</p><p>Mohon segera dibuatkan. Terimakasih.</p></html>";
 
             $bcc = [];
             $bcc[0] = "mokhamad.khamdan.khabibi@music.yamaha.com";
@@ -546,71 +546,71 @@ class PantryController extends Controller
                 $message->setBody($bodyHtml2, 'text/html' );
             });
 
-            $curl = curl_init();
+            // $curl = curl_init();
 
-            curl_setopt_array($curl, array(
-              CURLOPT_URL => 'https://app.whatspie.com/api/messages',
-              CURLOPT_RETURNTRANSFER => true,
-              CURLOPT_ENCODING => '',
-              CURLOPT_MAXREDIRS => 10,
-              CURLOPT_TIMEOUT => 0,
-              CURLOPT_FOLLOWLOCATION => true,
-              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-              CURLOPT_CUSTOMREQUEST => 'POST',
-              CURLOPT_POSTFIELDS => 'receiver=62811372398&device=628113669871&message='.$pesan.'&type=chat',
-              CURLOPT_HTTPHEADER => array(
-                'Accept: application/json',
-                'Content-Type: application/x-www-form-urlencoded',
-                'Authorization: Bearer UAqINT9e23uRiQmYttEUiFQ9qRMUXk8sADK2EiVSgLODdyOhgU'
-              ),
-            ));
-            curl_exec($curl);
+            // curl_setopt_array($curl, array(
+            //   CURLOPT_URL => 'https://app.whatspie.com/api/messages',
+            //   CURLOPT_RETURNTRANSFER => true,
+            //   CURLOPT_ENCODING => '',
+            //   CURLOPT_MAXREDIRS => 10,
+            //   CURLOPT_TIMEOUT => 0,
+            //   CURLOPT_FOLLOWLOCATION => true,
+            //   CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            //   CURLOPT_CUSTOMREQUEST => 'POST',
+            //   CURLOPT_POSTFIELDS => 'receiver=62811372398&device=628113669871&message='.$pesan.'&type=chat',
+            //   CURLOPT_HTTPHEADER => array(
+            //     'Accept: application/json',
+            //     'Content-Type: application/x-www-form-urlencoded',
+            //     'Authorization: Bearer UAqINT9e23uRiQmYttEUiFQ9qRMUXk8sADK2EiVSgLODdyOhgU'
+            //   ),
+            // ));
+            // curl_exec($curl);
 
-            curl_close($curl);
+            // curl_close($curl);
 
-            $curl = curl_init();
+            // $curl = curl_init();
 
-            curl_setopt_array($curl, array(
-              CURLOPT_URL => 'https://app.whatspie.com/api/messages',
-              CURLOPT_RETURNTRANSFER => true,
-              CURLOPT_ENCODING => '',
-              CURLOPT_MAXREDIRS => 10,
-              CURLOPT_TIMEOUT => 0,
-              CURLOPT_FOLLOWLOCATION => true,
-              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-              CURLOPT_CUSTOMREQUEST => 'POST',
-              CURLOPT_POSTFIELDS => 'receiver=6281554119011&device=628113669871&message='.$pesan.'&type=chat',
-              CURLOPT_HTTPHEADER => array(
-                'Accept: application/json',
-                'Content-Type: application/x-www-form-urlencoded',
-                'Authorization: Bearer UAqINT9e23uRiQmYttEUiFQ9qRMUXk8sADK2EiVSgLODdyOhgU'
-              ),
-            ));
-            curl_exec($curl);
+            // curl_setopt_array($curl, array(
+            //   CURLOPT_URL => 'https://app.whatspie.com/api/messages',
+            //   CURLOPT_RETURNTRANSFER => true,
+            //   CURLOPT_ENCODING => '',
+            //   CURLOPT_MAXREDIRS => 10,
+            //   CURLOPT_TIMEOUT => 0,
+            //   CURLOPT_FOLLOWLOCATION => true,
+            //   CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            //   CURLOPT_CUSTOMREQUEST => 'POST',
+            //   CURLOPT_POSTFIELDS => 'receiver=6281554119011&device=628113669871&message='.$pesan.'&type=chat',
+            //   CURLOPT_HTTPHEADER => array(
+            //     'Accept: application/json',
+            //     'Content-Type: application/x-www-form-urlencoded',
+            //     'Authorization: Bearer UAqINT9e23uRiQmYttEUiFQ9qRMUXk8sADK2EiVSgLODdyOhgU'
+            //   ),
+            // ));
+            // curl_exec($curl);
 
-            curl_close($curl);
+            // curl_close($curl);
 
-            $curl = curl_init();
+            // $curl = curl_init();
 
-            curl_setopt_array($curl, array(
-              CURLOPT_URL => 'https://app.whatspie.com/api/messages',
-              CURLOPT_RETURNTRANSFER => true,
-              CURLOPT_ENCODING => '',
-              CURLOPT_MAXREDIRS => 10,
-              CURLOPT_TIMEOUT => 0,
-              CURLOPT_FOLLOWLOCATION => true,
-              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-              CURLOPT_CUSTOMREQUEST => 'POST',
-              CURLOPT_POSTFIELDS => 'receiver=6282336050550&device=628113669871&message='.$pesan.'&type=chat',
-              CURLOPT_HTTPHEADER => array(
-                'Accept: application/json',
-                'Content-Type: application/x-www-form-urlencoded',
-                'Authorization: Bearer UAqINT9e23uRiQmYttEUiFQ9qRMUXk8sADK2EiVSgLODdyOhgU'
-              ),
-            ));
-            curl_exec($curl);
+            // curl_setopt_array($curl, array(
+            //   CURLOPT_URL => 'https://app.whatspie.com/api/messages',
+            //   CURLOPT_RETURNTRANSFER => true,
+            //   CURLOPT_ENCODING => '',
+            //   CURLOPT_MAXREDIRS => 10,
+            //   CURLOPT_TIMEOUT => 0,
+            //   CURLOPT_FOLLOWLOCATION => true,
+            //   CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            //   CURLOPT_CUSTOMREQUEST => 'POST',
+            //   CURLOPT_POSTFIELDS => 'receiver=6282336050550&device=628113669871&message='.$pesan.'&type=chat',
+            //   CURLOPT_HTTPHEADER => array(
+            //     'Accept: application/json',
+            //     'Content-Type: application/x-www-form-urlencoded',
+            //     'Authorization: Bearer UAqINT9e23uRiQmYttEUiFQ9qRMUXk8sADK2EiVSgLODdyOhgU'
+            //   ),
+            // ));
+            // curl_exec($curl);
 
-            curl_close($curl);
+            // curl_close($curl);
 
             $curl = curl_init();
 
