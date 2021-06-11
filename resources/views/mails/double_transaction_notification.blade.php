@@ -38,7 +38,7 @@
 					</tr>
 				</thead>
 				<tbody>					
-					@foreach($data['material'] as $col)
+					@foreach($data['resume'] as $col)
 					<tr>
 						<td style="border:1px solid black;">{{ $col['category'] }}</td>
 						<td style="border:1px solid black; text-align: center;">{{ $col['barcode'] }}</td>
