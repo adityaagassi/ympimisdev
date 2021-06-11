@@ -521,12 +521,9 @@ class PantryController extends Controller
             // $fd = @implode('', file($url));
 
             $phone = [];
-            array_push($phone, '6282334197238');
             array_push($phone, '62811372398');
-            array_push($phone, '6285645896741');
             array_push($phone, '6281554119011');
             array_push($phone, '6282336050550');
-            array_push($phone, '6285646597775');
 
             $pesan = "Ada%20Pesanan%20Pantry%20:%0A".join('%0A',$item)."%0A%0ADari%20".$name.".%0ADiantar%20ke%20".$antar.".%0A%0AMohon%20untuk%20segera%20dibuatkan.%0ATerimakasih.";
 
