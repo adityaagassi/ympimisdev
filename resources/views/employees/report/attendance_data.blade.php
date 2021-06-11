@@ -321,7 +321,7 @@
 					tableData += '<td>'+ (value.shiftdaily_code || "") +'</td>';
 					tableData += '<td>'+ (value.starttime || "") +'</td>';
 					tableData += '<td>'+ (value.endtime || "") +'</td>';
-					tableData += '<td>'+ value.Attend_Code +'</td>';
+					tableData += '<td>'+ (value.Attend_Code || "") +'</td>';
 					var shifts = new RegExp(value.shift_suggest, 'g');
 					if (value.shiftdaily_code.match(shifts)) {
 						var color = '#c5ffb8';
