@@ -10038,7 +10038,7 @@ public function detailMonitoringPRPO(Request $request){
   }
 
 
-  $qry = "SELECT acc_purchase_requisitions.no_pr,acc_purchase_requisitions.submission_date, acc_purchase_requisition_items.* from acc_purchase_requisitions left join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr WHERE acc_purchase_requisition_items.deleted_at is NULL and acc_purchase_requisitions.no_pr = '".$pr."' and DATE_FORMAT(submission_date,'%Y-%m') between '".$tglfrom."' and '".$tglto."' ".$dep." ".$status_sign." ";
+  $qry = "SELECT acc_purchase_requisitions.submission_date, acc_purchase_requisition_items.*, (select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order, (select supplier_name from acc_purchase_order_details join acc_purchase_orders on acc_purchase_orders.no_po = acc_purchase_order_details.no_po where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY acc_purchase_order_details.created_at desc limit 1) as last_vendor from acc_purchase_requisitions left join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr WHERE acc_purchase_requisition_items.deleted_at is NULL and acc_purchase_requisitions.no_pr = '".$pr."' and DATE_FORMAT(submission_date,'%Y-%m') between '".$tglfrom."' and '".$tglto."' ".$dep." ".$status_sign." ";
 
   $pr = DB::select($qry);
 
@@ -10876,8 +10876,8 @@ public function detailMonitoringInvActual(Request $request){
         else if ($inv->status != null) {
             return '<span class="label label-success">Sudah Close</span>';
         }
-
     })
+
     ->rawColumns(['status' => 'status'])
     ->make(true);
 }
@@ -13625,10 +13625,32 @@ public function monitoringPRCanteen(){
       $pr = DB::select($qry);
 
       return DataTables::of($pr)
-      ->editColumn('submission_date', function ($pr)
+    ->editColumn('item_request_date', function ($pr)
       {
-        return $pr->submission_date;
+        return date('d-M-Y', strtotime($pr->item_request_date)) ;
     })
+    ->editColumn('item_qty', function ($pr)
+    {
+        return $pr->item_qty.' '.$pr->item_uom;
+    })
+    ->editColumn('item_price', function ($pr)
+    {
+        return number_format($pr->item_price,0,",",".");
+    })
+    ->editColumn('item_amount', function ($pr)
+    {
+        return number_format($pr->item_amount,0,",",".");
+    })
+    ->editColumn('last_order', function ($pr)
+    {
+        if ($pr->last_order != null) {
+            return date('d-M-Y', strtotime($pr->last_order)) ;
+        }
+        else{
+            return '-';
+        }
+    })
+
       ->editColumn('status', function ($pr)
       {
         if ($pr->sudah_po == null) {

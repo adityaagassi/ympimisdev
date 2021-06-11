@@ -275,7 +275,7 @@ hr { background-color: red; height: 1px; border: 0; }
         <div class="modal-header">
           <h4 style="float: right;" id="modal-title"></h4>
           <h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
-          <br><h4 class="modal-title" id="judul_table"></h4>
+          <br><h4 class="modal-title" id="judul_table_po"></h4>
         </div>
         <div class="modal-body">
           <div class="row">
@@ -287,14 +287,13 @@ hr { background-color: red; height: 1px; border: 0; }
                     <th>Kode Item</th>
                     <th>Deskripsi</th>
                     <th>Spesifikasi</th>
-                    <th>Stock</th>
                     <th>Request Date</th>
                     <th>Mata Uang</th>
                     <th>Harga</th>
-                    <th>Jumlah</th>
-                    <th>UOM</th>
+                    <th>Qty</th>
                     <th>Total</th>
-                    <th>Status</th>
+                    <th style="background-color:#2196f3 !important">Last Order</th>
+                    <th style="background-color:#2196f3 !important">Last Vendor</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -649,7 +648,7 @@ hr { background-color: red; height: 1px; border: 0; }
                 point: {
                   events: {
                     click: function () {
-                      ShowModalTableInv(this.category,this.series.name,result.datefrom,result.dateto,result.department);
+                      // ShowModalTableInv(this.category,this.series.name,result.datefrom,result.dateto,result.department);
                     }
                   }
                 },
@@ -777,9 +776,6 @@ hr { background-color: red; height: 1px; border: 0; }
         } else{
           alert('Attempt to retrieve data failed');
         }
-
-
-
       }
     })
   }
@@ -1216,22 +1212,21 @@ hr { background-color: red; height: 1px; border: 0; }
           }
         },
       "columns": [
-          { "data": "no_pr" },
-          { "data": "item_code" },
-          { "data": "item_desc" },
-          { "data": "item_spec" },
-          { "data": "item_stock" },
-          { "data": "item_request_date" },
-          { "data": "item_currency" },
-          { "data": "item_price" },
-          { "data": "item_qty" },
-          { "data": "item_uom" },
-          { "data": "item_amount" },
-          { "data": "status", "width": "15%"}
+          { "data": "no_pr", "width": "5%" },
+          { "data": "item_code", "width": "5%" },
+          { "data": "item_desc", "width": "20%" },
+          { "data": "item_spec", "width": "10%" },
+          { "data": "item_request_date", "width": "5%" },
+          { "data": "item_currency", "width": "5%" },
+          { "data": "item_price", "width": "5%" },
+          { "data": "item_qty", "width": "5%" },
+          { "data": "item_amount", "width": "5%" },
+          { "data": "last_order", "width": "5%"},
+          { "data": "last_vendor", "width": "10%"}
         ]    });
 
-    $('#judul_table').append().empty();
-    $('#judul_table').append('<center><b>'+status+' No PR '+pr+'</center></b>');
+    $('#judul_table_po').append().empty();
+    $('#judul_table_po').append('<center><b>PR '+pr+' '+status+' </center></b>');
     
   }
 
