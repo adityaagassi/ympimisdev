@@ -81,7 +81,7 @@ class SyncShiftSunfish extends Command
         FROM
             ivms.ivms_attendance_triggers 
         WHERE
-            auth_date BETWEEN DATE( NOW() - INTERVAL 10 DAY ) 
+            auth_date BETWEEN DATE( NOW() - INTERVAL 5 DAY ) 
             AND DATE(
             NOW() 
             )");

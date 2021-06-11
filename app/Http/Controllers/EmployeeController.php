@@ -3413,18 +3413,18 @@ public function fetchAttendanceData(Request $request)
 
      for ($i=0; $i < count($attendances); $i++) { 
           $empatt = DB::SELECT("SELECT
-                    GROUP_CONCAT( DISTINCT ( auth_datetime ) ORDER BY auth_datetime ASC) AS attend_time,
+                    GROUP_CONCAT( DISTINCT ( ivms.ivms_attendance_triggers.auth_datetime ) ORDER BY ivms.ivms_attendance_triggers.auth_datetime ASC) AS attend_time,
                IF
                     (
-                         MIN( auth_datetime ) >= '".$attendances[$i]->tanggal." 04:00:00' && MIN( auth_datetime ) <= '".$attendances[$i]->tanggal." 07:00:00', 'Shift_1', IF ( MIN( auth_datetime ) >= '".$attendances[$i]->tanggal." 00:30:00' && MIN( auth_datetime ) <= '".$attendances[$i]->tanggal." 03:00:00', 'Shift_2', IF ( MIN( auth_datetime ) >= '".$attendances[$i]->tanggal." 07:01:01' && MIN( auth_datetime ) <= '".$attendances[$i]->tanggal." 08:00:00',
+                         MIN( ivms.ivms_attendance_triggers.auth_datetime ) >= '".$attendances[$i]->tanggal." 04:00:00' && MIN( ivms.ivms_attendance_triggers.auth_datetime ) <= '".$attendances[$i]->tanggal." 07:00:00', 'Shift_1', IF ( MIN( ivms.ivms_attendance_triggers.auth_datetime ) >= '".$attendances[$i]->tanggal." 00:30:00' && MIN( ivms.ivms_attendance_triggers.auth_datetime ) <= '".$attendances[$i]->tanggal." 03:00:00', 'Shift_2', IF ( MIN( ivms.ivms_attendance_triggers.auth_datetime ) >= '".$attendances[$i]->tanggal." 07:01:01' && MIN( ivms.ivms_attendance_triggers.auth_datetime ) <= '".$attendances[$i]->tanggal." 08:00:00',
                                    'Shift_3',
-                                   IF(MIN( auth_datetime ) >= '".$attendances[$i]->tanggal." 22:00:00' && MIN( auth_datetime ) <= '".$attendances[$i]->tanggal." 23:59:59','Shift_3','".$attendances[$i]->shiftdaily_code."' )
+                                   IF(MIN( ivms.ivms_attendance_triggers.auth_datetime ) >= '".$attendances[$i]->tanggal." 22:00:00' && MIN( ivms.ivms_attendance_triggers.auth_datetime ) <= '".$attendances[$i]->tanggal." 23:59:59','Shift_3','".$attendances[$i]->shiftdaily_code."' )
                               ))) AS shift_suggest 
                FROM
-                    ivms_attendance
+                    ivms.ivms_attendance_triggers 
                WHERE
                     employee_id = '".$attendances[$i]->emp_no."' 
-                    AND DATE( auth_datetime ) = '".$attendances[$i]->tanggal."' 
+                    AND DATE( ivms.ivms_attendance_triggers.auth_datetime ) = '".$attendances[$i]->tanggal."' 
                     LIMIT 1");
 
 
