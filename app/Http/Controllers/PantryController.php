@@ -825,7 +825,7 @@ class PantryController extends Controller
     function filterkonfirmasi(Request $request)
     {
         $detailpesanan = DB::table('pantry_orders')
-        ->select('pantry_orders.id','name','minuman','informasi','keterangan','gula','jumlah','tempat','status')
+        ->select('pantry_orders.id','name','minuman','informasi','keterangan','gula','jumlah','tempat','status',DB::raw('DATE_FORMAT(pantry_orders.created_at,"%H:%i") as tgl_pesan'))
         ->join('users','users.username','=','pantry_orders.pemesan')
         ->where('status', '=', 'confirmed')
         ->orwhere('status', '=', 'proses')

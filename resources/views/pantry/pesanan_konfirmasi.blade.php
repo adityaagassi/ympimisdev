@@ -91,6 +91,7 @@ label {
             <th>Gula</th>
             <th>Jumlah</th>
             <th>Tempat</th>
+            <th>Waktu</th>
             <th>Keterangan</th>
             <th>Status</th>
           </tr>
@@ -210,7 +211,10 @@ label {
           //   audio_error.play();
           // }
           // else{
+
+
           $.each(result.pesanan, function(key, value) {
+
             if (result.pesanan.length > 0) {
               if (value.status == "confirmed") {
                 audio_error.play();                
@@ -227,6 +231,7 @@ label {
             tableData += '<td>'+ value.gula +'</td>';
             tableData += '<td>'+ value.jumlah +'</td>';
             tableData += '<td width=15%>'+ value.tempat +'</td>';
+            tableData += '<td>'+ value.tgl_pesan +'</td>';
             if (value.status == "confirmed") {
               tableData += '<td><label class="label label-danger" style="font-size:14px">Menunggu Konfirmasi</label></td><td width=15%><a onclick="konfirmasi('+value.id+')"" class="btn btn-primary btn-md">Buatkan Pesanan</a></td>';
             } else if (value.status == "proses") {
