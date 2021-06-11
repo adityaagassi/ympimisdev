@@ -3418,7 +3418,7 @@ public function fetchAttendanceData(Request $request)
                     (
                          MIN( ivms.ivms_attendance_triggers.auth_datetime ) >= '".$attendances[$i]->tanggal." 04:00:00' && MIN( ivms.ivms_attendance_triggers.auth_datetime ) <= '".$attendances[$i]->tanggal." 07:00:00', 'Shift_1', IF ( MIN( ivms.ivms_attendance_triggers.auth_datetime ) >= '".$attendances[$i]->tanggal." 00:30:00' && MIN( ivms.ivms_attendance_triggers.auth_datetime ) <= '".$attendances[$i]->tanggal." 03:00:00', 'Shift_2', IF ( MIN( ivms.ivms_attendance_triggers.auth_datetime ) >= '".$attendances[$i]->tanggal." 07:01:01' && MIN( ivms.ivms_attendance_triggers.auth_datetime ) <= '".$attendances[$i]->tanggal." 08:00:00',
                                    'Shift_3',
-                                   IF(MIN( ivms.ivms_attendance_triggers.auth_datetime ) >= '".$attendances[$i]->tanggal." 22:00:00' && MIN( ivms.ivms_attendance_triggers.auth_datetime ) <= '".$attendances[$i]->tanggal." 23:59:59','Shift_3','".$attendances[$i]->shiftdaily_code."' )
+                                   IF(MIN( ivms.ivms_attendance_triggers.auth_datetime ) >= '".$attendances[$i]->tanggal." 22:00:00' && MIN( ivms.ivms_attendance_triggers.auth_datetime ) <= '".$attendances[$i]->tanggal." 23:59:59','Shift_3','No Data' )
                               ))) AS shift_suggest 
                FROM
                     ivms.ivms_attendance_triggers 

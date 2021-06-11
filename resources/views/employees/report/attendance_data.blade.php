@@ -325,10 +325,31 @@
 					var shifts = new RegExp(value.shift_suggest, 'g');
 					if (value.shiftdaily_code.match(shifts)) {
 						var color = '#c5ffb8';
+					}else if(value.shift_suggest == 'No Data'){
+						var color = '#ffe4b8';
 					}else{
 						var color = '#ffbcb8';
 					}
-					tableData += '<td style="background-color:'+color+'">'+ value.shift_suggest +'</td>';
+					if (value.shift_suggest == 'No Data') {
+						var shift_suggest = value.shift_suggest;
+					}else{
+						var suggest_split = value.shift_suggest.split('_');
+						var shift_split = value.shiftdaily_code.split('_');
+						if (shift_split.length == 2) {
+							var shift_suggest = value.shiftdaily_code;
+						}else{
+							var shift_array = [];
+							for (var i = 0; i < shift_split.length; i++) {
+								if (isNaN(shift_split[i])) {
+									shift_array.push(shift_split[i]);
+								}else{
+									shift_array.push(suggest_split[1]);
+								}
+							}
+							var shift_suggest = shift_array.join('_');
+						}
+					}
+					tableData += '<td style="background-color:'+color+'">'+ shift_suggest +'</td>';
 					if (value.act_in != null) {
 						var act_in = value.act_in.split(',');
 						tableData += '<td>';
