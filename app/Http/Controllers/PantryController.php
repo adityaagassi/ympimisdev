@@ -612,6 +612,28 @@ class PantryController extends Controller
 
             curl_close($curl);
 
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => 'https://app.whatspie.com/api/messages',
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => '',
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 0,
+              CURLOPT_FOLLOWLOCATION => true,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => 'POST',
+              CURLOPT_POSTFIELDS => 'receiver=6282334197238&device=628113669871&message='.$pesan.'&type=chat',
+              CURLOPT_HTTPHEADER => array(
+                'Accept: application/json',
+                'Content-Type: application/x-www-form-urlencoded',
+                'Authorization: Bearer UAqINT9e23uRiQmYttEUiFQ9qRMUXk8sADK2EiVSgLODdyOhgU'
+              ),
+            ));
+            curl_exec($curl);
+
+            curl_close($curl);
+
 // $sms = gw_send_sms('API3Y9RTZ5R6Y','API3Y9RTZ5R6Y3Y9RT','YMPI','6285645896741','Terdapat Order Pantry');
 
             $response = array(
