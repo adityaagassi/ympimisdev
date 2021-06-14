@@ -45,6 +45,9 @@
     </h1>
     <ol class="breadcrumb">
         <li>
+            @if(strtoupper(Auth::user()->username) == 'PI2009022')
+            <a onclick="adjusment()" class="btn btn-primary btn-sm" style="color:white">Adjusment {{ $page }}s</a>
+            @endif
             @if(Auth::user()->role->role_code == 'MIS' || Auth::user()->role->role_code == 'PROD')
             <a data-toggle="modal" data-target="#deleteModal" class="btn btn-danger btn-sm" style="color:white">Delete {{ $page }}s</a>
             <a data-toggle="modal" data-target="#importModal" class="btn btn-success btn-sm" style="color:white">Import {{ $page }}s</a>
@@ -418,6 +421,20 @@
         $("#shipment_hpl").val("");
         $("#shipment_hpl").trigger("change");
     });
+
+    function adjusment() {
+        $("#loading").show();
+
+        $.get('{{ url("fetch/adjusment_production_schedule_kd") }}', function(result, status, xhr){
+            if(result.status){
+                $("#loading").hide();
+                openSuccessGritter('Success', 'Adjusment Success');
+            }else{
+                $("#loading").hide();
+                openErrorGritter('Error', 'Adjusment Failed');
+            }
+        });
+    }
 
     function fillAllTable() {
         var month = $('#month').val();
@@ -889,7 +906,7 @@ function deleteProd() {
     $('#loading').show();
 
     $.post('{{ url("delete/production_schedule_kd") }}', data, function(result, status, xhr){
-       if(result.status){
+     if(result.status){
 
         $('#delete_month').val('');
         $("#delete_hpl").val("");
@@ -944,10 +961,10 @@ function generate() {
 }
 
 function shipment() {
-   var month = $('#shipment_month').val();
-   var hpl = $('#shipment_hpl').val();
+ var month = $('#shipment_month').val();
+ var hpl = $('#shipment_hpl').val();
 
-   var data = {
+ var data = {
     month : month,
     hpl : hpl,
 }

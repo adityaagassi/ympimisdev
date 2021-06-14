@@ -976,9 +976,7 @@ Route::post('fetch/generate_production_schedule_kd', 'ProductionScheduleControll
 Route::get('fetch/view_generate_shipment_schedule_kd', 'ProductionScheduleController@fetchViewGenerateShipmentScheduleKd');
 Route::post('fetch/generate_shipment_schedule_kd', 'ProductionScheduleController@fetchGenerateShipmentScheduleKd');
 
-
-
-
+Route::get('fetch/adjusment_production_schedule_kd', 'ProductionScheduleController@updateAdjustmentSchedule');
 
 
 

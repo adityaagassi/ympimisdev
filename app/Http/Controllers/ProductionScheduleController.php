@@ -1412,4 +1412,114 @@ class ProductionScheduleController extends Controller{
             'title_jp' => ''
         ))->with('page', 'Production Schedule');
     }
+
+    public function updateAdjustmentSchedule(){
+
+        $query = "SELECT two.material_number, two.hpl, two.qty as two_qty, COALESCE(ps.qty,0) AS ps_qty, COALESCE(ps.qty,0) - two.qty AS diff FROM
+        (SELECT two.material_number, m.hpl, SUM(two.quantity) AS qty FROM production_schedules_two_steps two
+        LEFT JOIN materials m ON m.material_number = two.material_number
+        WHERE two.due_date >= '2021-06-01'
+        AND m.hpl IN ('ASSY-SX', 'SUBASSY-SX', 'SUBASSY-FL', 'SUBASSY-CL') 
+        GROUP BY two.material_number, m.hpl) AS two
+        LEFT JOIN
+        (SELECT ps.material_number, m.hpl, SUM(ps.quantity) AS qty FROM production_schedules ps
+        LEFT JOIN materials m ON m.material_number = ps.material_number
+        WHERE ps.due_date >= '2021-06-01'
+        AND m.hpl IN ('ASSY-SX', 'SUBASSY-SX', 'SUBASSY-FL', 'SUBASSY-CL')
+        GROUP BY ps.material_number, m.hpl) AS ps
+        ON ps.material_number = two.material_number 
+        HAVING diff <> 0
+        ORDER BY diff ASC";
+
+        $data = db::select("SELECT adj.*, v.lot_completion FROM production_schedule_adjustments adj
+            LEFT JOIN material_volumes v ON v.material_number = adj.material_number");
+
+
+        DB::beginTransaction();
+        for ($i=0; $i < count($data); $i++) {
+
+            $material_number = $data[$i]->material_number;
+            $diff = $data[$i]->diff;
+
+            if($data[$i]->diff < 0){
+                //SCHEDULE KURANG (TAMBAH DARI DEPAN)
+                $production_schedule = ProductionSchedule::where(db::raw("DATE_FORMAT(due_date, '%Y-%m')"), $data[$i]->month)
+                ->where('material_number', $data[$i]->material_number)
+                ->orderBy('due_date', 'ASC')
+                ->get();
+
+                for ($j=0; $j < count($production_schedule); $j++) {
+                    if($diff < 0){
+                        $update = ProductionSchedule::where('due_date', $production_schedule[$j]->due_date)
+                        ->where('material_number', $data[$i]->material_number)
+                        ->first();
+
+                        try {
+                            $update->quantity = $update->quantity + $data[$i]->lot_completion;
+                            $update->save();
+
+                            $diff = $diff + $data[$i]->lot_completion;
+                            $adjument = db::table('production_schedule_adjustments')
+                            ->where('material_number', $data[$i]->material_number)
+                            ->update([
+                                'diff' => $diff
+                            ]);
+                        } catch (Exception $e) {
+                            DB::rollback();
+                            $response = array(
+                                'status' => false,
+                                'message' => $e->getMessage()
+                            );
+                            return Response::json($response);
+                        }
+                    }
+                }
+            }else{
+                //SCHEDULE KEBANYAKAN (KURANGI DARI BELAKANG)
+                $production_schedule = ProductionSchedule::where(db::raw("DATE_FORMAT(due_date, '%Y-%m')"), $data[$i]->month)
+                ->where('material_number', $data[$i]->material_number)
+                ->orderBy('due_date', 'DESC')
+                ->get();
+
+                for ($j=0; $j < count($production_schedule); $j++) {
+                    if($diff > 0){
+                        $update = ProductionSchedule::where('due_date', $production_schedule[$j]->due_date)
+                        ->where('material_number', $data[$i]->material_number)
+                        ->first();
+
+                        if(($update->quantity - $update->actual_quantity) >= $data[$i]->lot_completion){
+                            try {
+                                $update->quantity = $update->quantity - $data[$i]->lot_completion;
+                                $update->save();
+
+                                $diff = $diff - $data[$i]->lot_completion;
+                                $adjument = db::table('production_schedule_adjustments')
+                                ->where('material_number', $data[$i]->material_number)
+                                ->update([
+                                    'diff' => $diff
+                                ]);
+                            } catch (Exception $e) {
+                                DB::rollback();
+                                $response = array(
+                                    'status' => false,
+                                    'message' => $e->getMessage()
+                                );
+                                return Response::json($response);
+                            }
+                        }
+                    }
+                }                
+            }   
+        }
+
+        DB::commit();
+        $response = array(
+            'status' => true
+        );
+        return Response::json($response);
+
+    }
+
+
+
 }
