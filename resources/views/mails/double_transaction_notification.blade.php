@@ -23,7 +23,7 @@
 			<p style="font-size: 20px;">Double Transaction Notification<br>{{ $data['date_text'] }} : {{ count($data['resume']) }} Double Transaction</p>
 
 			This is an automatic notification. Please do not reply to this address.
-			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
+			<table style="border:1px solid black; border-collapse: collapse;" width="90%">
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
 						<th style="width: 10%; border:1px solid black;">Category</th>

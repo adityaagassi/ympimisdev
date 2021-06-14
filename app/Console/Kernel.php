@@ -171,7 +171,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('kd:shipment')->everyTenMinutes();
         $schedule->command('spk:notify')->everyTenMinutes();
         $schedule->command('email:raw_material_reminder')->dailyAt('11:00');
-        $schedule->command('email:double_transaction')->dailyAt('06:00');
+        $schedule->command('email:double_transaction')->dailyAt('08:00');
 
 
         $schedule->command('resume:buffing')->hourlyAt(10);

@@ -42,7 +42,10 @@ class DoubleTransactionNotification extends Command
 
         $date = date('Y-m-d', strtotime('-1 days'));
 
-        $resume = db::connection('mysql2')->select("SELECT resume.category, materials.material_number, resume.barcode, resume.description, resume.issue, resume.receive, resume.lot, resume.created_at, SUM(resume.qty) AS duplicates FROM
+        $resume = db::connection('mysql2')->select("SELECT duplicates.*, completions.lot_completion, transfers.lot_transfer,
+            IF(duplicates.category LIKE '%transfer%', IF(completions.lot_completion = transfers.lot_transfer, 1, 0), 1) AS `status` 
+            FROM
+            (SELECT resume.category, materials.material_number, resume.barcode, resume.description, resume.issue, resume.receive, resume.lot, resume.created_at, SUM(resume.qty) AS duplicates FROM
             (SELECT category,
             IF(category LIKE '%transfer%', transfer_material_id, completion_material_id) AS material_id,
             IF(category LIKE '%transfer%', transfer_barcode_number, completion_barcode_number) AS barcode,
@@ -59,33 +62,33 @@ class DoubleTransactionNotification extends Command
             ) AS resume
             LEFT JOIN materials ON materials.id = resume.material_id
             GROUP BY resume.category, materials.material_number, resume.barcode, resume.description, resume.issue, resume.receive, resume.lot, resume.created_at
-            HAVING duplicates > 1");
+            HAVING duplicates > 1)
+            AS duplicates
+            LEFT JOIN transfers ON transfers.barcode_number_transfer = duplicates.barcode
+            LEFT JOIN completions ON completions.id = transfers.completion_id
+            HAVING `status` > 0");
 
         if(count($resume) > 0){
-            // $to = [
-            //     'yusli.erwandi@music.yamaha.com',
-            //     'silvy.firliani@music.yamaha.com',
-            //     'istiqomah@music.yamaha.com',
-            //     'fathor.rahman@music.yamaha.com',
-            //     'ade.laksmana.putra@music.yamaha.com'
-            // ];
-
-            // $bcc = [
-            //     'aditya.agassi@music.yamaha.com', 
-            //     'muhammad.ikhlas@music.yamaha.com'
-            // ];
-
             $to = [
+                // 'yusli.erwandi@music.yamaha.com',
+                // 'silvy.firliani@music.yamaha.com',
+                'istiqomah@music.yamaha.com',
+                // 'fathor.rahman@music.yamaha.com',
+                'ade.laksmana.putra@music.yamaha.com'
+            ];
+
+            $bcc = [
+                'aditya.agassi@music.yamaha.com', 
                 'muhammad.ikhlas@music.yamaha.com'
             ];
 
             $data = [
                 'resume' => $resume,
-                'date_text' => date('l, d M Y')
+                'date_text' => date('l, d M Y', strtotime('-1 days'))
             ];
 
             Mail::to($to)
-            // ->bcc($bcc)
+            ->bcc($bcc)
             ->send(new SendEmail($data, 'double_transaction_notification'));
 
 
