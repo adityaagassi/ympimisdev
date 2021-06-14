@@ -505,6 +505,9 @@ Route::get('fetch/injection/inventories', 'InjectionsController@fetchInjectionIn
 Route::get('index/injection/transactions', 'InjectionsController@indexInjectionTransaction');
 Route::get('fetch/injection/transactions', 'InjectionsController@fetchInjectionTransaction');
 
+Route::get('index/injection/ng_rate', 'InjectionsController@indexInjectionNgRate');
+Route::get('fetch/injection/ng_rate', 'InjectionsController@fetchInjectionNgRate');
+
 // end mesin injeksi
 
 Route::group(['nav' => 'R5', 'middleware' => 'permission'], function(){
