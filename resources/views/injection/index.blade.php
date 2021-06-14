@@ -67,6 +67,8 @@
 
 			<a href="{{ url('/index/injection/stock_monitoring') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Stock Monitoring</a>
 
+			<a href="{{ url('/index/injection/ng_rate?tanggal=') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">NG Rate</a>
+
 			<a href="{{ url('index/molding_monitoring') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Maintenance Molding Monitoring</a>
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
