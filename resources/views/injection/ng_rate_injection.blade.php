@@ -47,7 +47,7 @@
 	<div class="row">
 		<div class="col-xs-12" style="padding-bottom: 5px;">
 			<div class="row">
-				<form method="GET" action="{{ action('RecorderProcessController@indexNgRateKensa') }}">
+				<form method="GET" action="{{ action('InjectionsController@fetchInjectionNgRate') }}">
 					<div class="col-xs-2" style="padding-right: 0;">
 						<div class="input-group date">
 							<div class="input-group-addon bg-green" style="border: none; background-color: #605ca8; color: white;">
@@ -519,7 +519,7 @@
 							}
 						},
 						type: 'linear',
-						
+						max: 300
 					}
 					],
 					tooltip: {
@@ -705,7 +705,7 @@
 							}
 						},
 						type: 'linear',
-						
+						max: 300
 					}
 					],
 					tooltip: {
