@@ -212,7 +212,7 @@
 		});
 		$('.select2').select2();
 		fetchChart();
-		// setInterval(fetchChart, 20000);
+		setInterval(fetchChart, 20000);
 	});
 
 	Highcharts.createElement('link', {
