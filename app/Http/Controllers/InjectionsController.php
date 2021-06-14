@@ -7274,4 +7274,174 @@ class InjectionsController extends Controller
             return Response::json($response);
         }
     }
+
+    public function indexInjectionNgRate()
+    {
+        $title = 'Injection NG Rate';
+        $title_jp = '';
+        return view('injection.ng_rate_injection',array(
+            'title' => $title,
+            'title_jp' => $title_jp,
+        ))->with('page', 'Injection NG Rate')->with('jpn', '');
+    }
+
+    public function fetchInjectionNgRate(Request $request)
+    {
+        try {
+            if ($request->get('tanggal') == "") {
+              $now = date('Y-m-d');
+            }else{
+              $now = $request->get('tanggal');
+            }
+            $emp = DB::SELECT("SELECT DISTINCT
+                    ( rc_kensa_initials.operator_injection ) AS employee_id,
+                    employee_syncs.`name` 
+                FROM
+                    rc_kensa_initials
+                    LEFT JOIN employee_syncs ON employee_syncs.employee_id = rc_kensa_initials.operator_injection");
+
+            $resumes = DB::SELECT("SELECT DISTINCT
+                ( rc_kensa_initials.operator_injection ),
+                employee_syncs.`name`,
+                rc_kensa_initials.ng_name,
+                rc_kensa_initials.ng_count,
+                serial_number,
+                (
+                SELECT
+                    GROUP_CONCAT( rc_kensas.ng_name ) 
+                FROM
+                    rc_kensas
+                    LEFT JOIN injection_parts ON injection_parts.gmc = rc_kensas.material_number 
+                WHERE
+                    rc_kensas.serial_number = rc_kensa_initials.serial_number 
+                    AND ng_name IS NOT NULL 
+                    AND DATE( rc_kensas.created_at ) = '".$now."' 
+                    AND injection_parts.deleted_at IS NULL 
+                    AND injection_parts.remark = 'injection' 
+                    AND injection_parts.part_code NOT LIKE '%MJ%' 
+                ) AS ng_name_kensa,
+                (
+                SELECT
+                    GROUP_CONCAT( rc_kensas.ng_count ) 
+                FROM
+                    rc_kensas
+                    LEFT JOIN injection_parts ON injection_parts.gmc = rc_kensas.material_number 
+                WHERE
+                    rc_kensas.serial_number = rc_kensa_initials.serial_number 
+                    AND ng_name IS NOT NULL 
+                    AND DATE( rc_kensas.created_at ) = '".$now."' 
+                    AND injection_parts.deleted_at IS NULL 
+                    AND injection_parts.remark = 'injection' 
+                    AND injection_parts.part_code NOT LIKE '%MJ%' 
+                ) AS ng_count_kensa 
+            FROM
+                rc_kensa_initials
+                LEFT JOIN employee_syncs ON employee_syncs.employee_id = rc_kensa_initials.operator_injection 
+            WHERE
+                rc_kensa_initials.ng_name IS NOT NULL");
+
+            $dateTitle = date('d M Y',strtotime($now));
+
+            $firstweek = DB::SELECT("SELECT
+                week_date 
+                FROM
+                    weekly_calendars 
+                WHERE
+                    week_name = ( SELECT week_name FROM weekly_calendars WHERE week_date = '".$now."' - INTERVAL 7 DAY ) 
+                    AND fiscal_year = (
+                    SELECT
+                        fiscal_year 
+                    FROM
+                        weekly_calendars 
+                    WHERE
+                    week_date = '".$now."') 
+                ORDER BY
+                    week_date ASC 
+                    LIMIT 1 ");
+
+            foreach ($firstweek as $key) {
+                $firstdayweek = $key->week_date;
+            }
+
+            $lastweek = DB::SELECT("SELECT
+                week_date 
+                FROM
+                    weekly_calendars 
+                WHERE
+                    week_name = ( SELECT week_name FROM weekly_calendars WHERE week_date = '".$now."' - INTERVAL 7 DAY ) 
+                    AND fiscal_year = (
+                    SELECT
+                        fiscal_year 
+                    FROM
+                        weekly_calendars 
+                    WHERE
+                    week_date = DATE( NOW() )) 
+                ORDER BY
+                    week_date DESC 
+                    LIMIT 1 ");
+
+            foreach ($lastweek as $key) {
+                $lastdayweek = $key->week_date;
+            }
+
+            $resumeweek = DB::SELECT("SELECT DISTINCT
+                ( rc_kensa_initials.operator_injection ),
+                employee_syncs.`name`,
+                users.avatar,
+                rc_kensa_initials.ng_name,
+                rc_kensa_initials.ng_count,
+                serial_number,
+                (
+                SELECT
+                    GROUP_CONCAT( rc_kensas.ng_name ) 
+                FROM
+                    rc_kensas
+                    LEFT JOIN injection_parts ON injection_parts.gmc = rc_kensas.material_number 
+                WHERE
+                    rc_kensas.serial_number = rc_kensa_initials.serial_number 
+                    AND ng_name IS NOT NULL 
+                    AND DATE( rc_kensas.created_at ) >= '".$firstdayweek."' 
+                    AND DATE( rc_kensas.created_at ) <= '".$lastdayweek."' 
+                    AND injection_parts.deleted_at IS NULL 
+                    AND injection_parts.remark = 'injection' 
+                    AND injection_parts.part_code NOT LIKE '%MJ%' 
+                ) AS ng_name_kensa,
+                (
+                SELECT
+                    GROUP_CONCAT( rc_kensas.ng_count ) 
+                FROM
+                    rc_kensas
+                    LEFT JOIN injection_parts ON injection_parts.gmc = rc_kensas.material_number 
+                WHERE
+                    rc_kensas.serial_number = rc_kensa_initials.serial_number 
+                    AND ng_name IS NOT NULL 
+                    AND DATE( rc_kensas.created_at ) >= '".$firstdayweek."' 
+                    AND DATE( rc_kensas.created_at ) <= '".$lastdayweek."' 
+                    AND injection_parts.deleted_at IS NULL 
+                    AND injection_parts.remark = 'injection' 
+                    AND injection_parts.part_code NOT LIKE '%MJ%' 
+                ) AS ng_count_kensa 
+            FROM
+                rc_kensa_initials
+                LEFT JOIN employee_syncs ON employee_syncs.employee_id = rc_kensa_initials.operator_injection 
+                LEFT JOIN users ON users.username = employee_syncs.employee_id 
+            WHERE
+                rc_kensa_initials.ng_name IS NOT NULL");
+
+            $response = array(
+              'status' => true,
+              'emp' => $emp,
+              'resumes' => $resumes,
+              'resumeweek' => $resumeweek,
+              'dateTitle' => $dateTitle
+            );
+            return Response::json($response);
+          } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+            );
+            return Response::json($response);
+          }
+    }
 }
