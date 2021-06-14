@@ -82,7 +82,7 @@
     </p>
   </div>
   <div class="row" style="padding-left: 20px;padding-right: 20px;padding-top: 0px;margin-top: 0px">
-    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="background-color: rgb(126,86,134);text-align: center;height: 35px;padding-right: 5px">
+    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8" style="background-color: rgb(126,86,134);text-align: center;height: 35px;padding-right: 5px">
       <span style="color: white;font-size: 25px;font-weight: bold;" id="title_periode">
       </span>
     </div>
@@ -96,6 +96,14 @@
       </select>
     </div>
     <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="padding-left: 5px;padding-right: 5px">
+      <select class="form-control select2" data-placeholder="Pilih Fiscal Year" style="height: 40px;width: 100%;padding-right: 0px" size="2" onchange="drawChart()" id="fiscal_year">
+        <option value=""></option>
+        @foreach($fiscal as $fiscal)
+          <option value="{{$fiscal->fiscal_year}}">{{$fiscal->fiscal_year}}</option>
+        @endforeach
+      </select>
+    </div>
+    <!-- <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="padding-left: 5px;padding-right: 5px">
       <div class="input-group date">
         <div class="input-group-addon" style="border-color: rgb(126,86,134);background-color: rgb(126,86,134);color: white">
           <i class="fa fa-calendar"></i>
@@ -110,9 +118,12 @@
         </div>
         <input type="text" class="form-control datepicker2" id="month_to" onchange="drawChart()" placeholder="Select Month To" style="border-color: #00a65a;height: 35px">
       </div>
-    </div>
+    </div> -->
     <div class="col-xs-12" style="padding-top: 10px;padding-left: 0px;">
         <div id="container" style="height: 500px"></div>
+    </div>
+    <div class="col-xs-12" style="padding-top: 10px;padding-left: 0px;">
+        <div id="container2" style="height: 500px"></div>
     </div>
     <div class="col-xs-12" style="padding-top: 10px;padding-left: 0px" id="div_resume">
 
@@ -218,18 +229,20 @@
 
   var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
   function drawChart(){
-    var month_from = $('#month_from').val();
-    var month_to = $('#month_to').val();
+    // var month_from = $('#month_from').val();
+    // var month_to = $('#month_to').val();
     var department = $('#department_all').val();
+    var fiscal_year = $('#fiscal_year').val();
     var data = {
-      month_from: month_from,
-      month_to: month_to,
+      // month_from: month_from,
+      // month_to: month_to,
       department: department,
+      fiscal_year: fiscal_year,
     }
     $.get('{{ url("fetch/audit_ik_monitoring") }}', data, function(result, status, xhr) {
       if(xhr.status == 200){
         if(result.status){
-          $('#title_periode').html('Periode On '+result.firstTitle+' - '+result.lastTitle);
+          $('#title_periode').html('Periode '+result.fiscalTitle);
           var categories = [];
           var plan = [];
           var done = [];
@@ -249,7 +262,11 @@
             },
             title: {
               floating: false,
-              text: ""
+              text: "RESUME HASIL AUDIT IK",
+              style: {
+                fontSize: '20px',
+                fontWeight: 'bold'
+              }
             },
             xAxis: {
               type: 'category',
@@ -349,30 +366,150 @@
             }]
           });
 
+          var categories = [];
+          var training_ulang = [];
+          var revisi_ik = [];
+          var jig = [];
+          var obsolete = [];
+
+          for(var i = 0; i< result.resume_penanganan.length;i++){
+            categories.push(result.resume_penanganan[i].months);
+            training_ulang.push({y:parseInt(result.resume_penanganan[i].training_ulang),key:result.resume_penanganan[i].month});
+            revisi_ik.push({y:parseInt(result.resume_penanganan[i].revisi_ik),key:result.resume_penanganan[i].month});
+            jig.push({y:parseInt(result.resume_penanganan[i].jig),key:result.resume_penanganan[i].month});
+            obsolete.push({y:parseInt(result.resume_penanganan[i].obsolete),key:result.resume_penanganan[i].month});
+          }
+
+          Highcharts.chart('container2', {
+            chart: {
+              type: 'column',
+              backgroundColor: null
+            },
+            title: {
+              floating: false,
+              text: "RESUME PENANGANAN AUDIT IK",
+              style: {
+                fontSize: '20px',
+                fontWeight: 'bold'
+              }
+            },
+            xAxis: {
+              type: 'category',
+              categories: categories,
+              lineWidth:2,
+              lineColor:'#9e9e9e',
+              gridLineWidth: 1,
+              labels: {
+                formatter: function (e) {
+                  return this.value;
+                },
+                style: {
+                  fontSize:"15px",
+                }
+              }
+            },
+            yAxis: {
+              lineWidth:2,
+              lineColor:'#fff',
+              type: 'linear',
+              title: {
+                text: 'Total Audit'
+              },
+              stackLabels: {
+                enabled: true,
+                style: {
+                  fontWeight: 'bold',
+                  fontSize:"15px",
+                  color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+                }
+              },
+              labels:{
+                style:{
+                  fontSize:"13px"
+                }
+              }
+            },
+            legend: {
+              itemStyle:{
+                color: "white",
+                fontSize: "12px",
+                fontWeight: "bold",
+              }
+            },
+            tooltip: {
+            },
+            plotOptions: {
+              series: {
+                cursor: 'pointer',
+                dataLabels: {
+                  enabled: true,
+                  format: '{point.y}',
+                  style: {
+                    fontSize: '13px'
+                  }
+                },
+                labels:{
+                  style: {
+                    fontSize: '13px'
+                  }
+                }
+              },
+              column: {
+                color:  Highcharts.ColorString,
+                stacking: 'normal',
+                pointPadding: 0.93,
+                groupPadding: 0.93,
+                borderWidth: 1,
+                dataLabels: {
+                  enabled: true,
+                  style: {
+                    fontSize: '13px'
+                  }
+                },
+                animation: false,
+                point: {
+                  events: {
+                    click: function () {
+                      showModal(this.options.key,this.series.name);
+                    }
+                  }
+                },
+              }
+            },credits: {
+              enabled: false
+            },
+            series: [
+            {
+              name: 'Training Ulang IK',
+              data: training_ulang,
+              color:'#00a65a',
+              stacking:true
+            },
+            {
+              name: 'Revisi IK',
+              data: revisi_ik,
+              color:'#0061a6',
+              stacking:true
+            },
+            {
+              name: 'Pembuatan Jig / Repair Jig',
+              data: jig,
+              color:'#a6007d',
+              stacking:true
+            },
+            {
+              name: 'IK Tidak Digunakan',
+              data: obsolete,
+              color:'#a60000',
+              stacking:true
+            }]
+          });
+
           $("#div_resume").html('');
           var tableresume = "";
 
           for(var i = 0; i< result.department.length;i++){
-            // for(var j = 0; j< result.resume_all.length;j++){
-            //   if (result.resume_all[j].department_id == result.department[i].id_department) {
-
-            //   }
-            // }
             var lengthspan = 0;
-
-            var total1 = 0;
-            var total2 = 0;
-            var total3 = 0;
-            var total4 = 0;
-            var total5 = 0;
-            var total6 = 0;
-            var total7 = 0;
-            var total8 = 0;
-            var total9 = 0;
-            var total10 = 0;
-            var total11 = 0;
-            var total12 = 0;
-            var total13 = 0;
 
             var total = [];
 
@@ -513,7 +650,7 @@
 
           $('#div_resume').html(tableresume);
         } else{
-          alert('Attempt to retrieve data failed');
+          openErrorGritter('Error!','Get Data Failed');          
         }
       }
     });
@@ -608,16 +745,16 @@
                       datatable += '<td style="border:1px solid black">'+result.datass[j][0].date+'</td>';
                       datatable += '</tr>';
                       datatable += '<tr>';
-                      datatable += '<td style="border:1px solid black">Kesesuaian Aktual</td>';
-                      datatable += '<td style="border:1px solid black">'+result.datass[j][0].kesesuaian_aktual_proses+'</td>';
+                      datatable += '<td style="border:1px solid black;background-color:#a6ffc9">Kesesuaian Aktual</td>';
+                      datatable += '<td style="border:1px solid black;background-color:#a6ffc9">'+result.datass[j][0].kesesuaian_aktual_proses+'</td>';
                       datatable += '</tr>';
                       datatable += '<tr>';
-                      datatable += '<td style="border:1px solid black">Kesesuaian QC Kouteihyo</td>';
-                      datatable += '<td style="border:1px solid black">'+result.datass[j][0].kesesuaian_qc_kouteihyo+'</td>';
+                      datatable += '<td style="border:1px solid black;background-color:#a6d4ff">Kesesuaian QC Kouteihyo</td>';
+                      datatable += '<td style="border:1px solid black;background-color:#a6d4ff">'+result.datass[j][0].kesesuaian_qc_kouteihyo+'</td>';
                       datatable += '</tr>';
                       datatable += '<tr>';
-                      datatable += '<td style="border:1px solid black">Kelengkapan Point Safety</td>';
-                      datatable += '<td style="border:1px solid black">'+result.datass[j][0].kelengkapan_point_safety+'</td>';
+                      datatable += '<td style="border:1px solid black;background-color:#ffa6a6">Kelengkapan Point Safety</td>';
+                      datatable += '<td style="border:1px solid black;background-color:#ffa6a6">'+result.datass[j][0].kelengkapan_point_safety+'</td>';
                       datatable += '</tr>';
                       datatable += '<tr>';
                       datatable += '<td style="border:1px solid black">Tindakan Perbaikan</td>';
@@ -634,6 +771,15 @@
                         datatable += '<td style="border:1px solid black">'+result.datass[j][0].target+'</td>';
                         datatable += '</tr>';
                       }
+                      datatable += '</tr>';
+                      datatable += '<tr>';
+                      datatable += '<td style="border:1px solid black">Kondisi</td>';
+                      datatable += '<td style="border:1px solid black">'+result.datass[j][0].condition+'</td>';
+                      datatable += '</tr>';
+                      datatable += '<tr>';
+                      datatable += '<td style="border:1px solid black">Penanganan</td>';
+                      datatable += '<td style="border:1px solid black">'+result.datass[j][0].handling+'</td>';
+                      datatable += '</tr>';
                       datatable += '<tr>';
                       datatable += '<td style="border:1px solid black">PIC</td>';
                       datatable += '<td style="border:1px solid black">'+result.datass[j][0].operator+'</td>';

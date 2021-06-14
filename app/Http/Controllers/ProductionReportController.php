@@ -3107,9 +3107,15 @@ class ProductionReportController extends Controller
         WHERE
             department_shortname != 'JPN'");
 
+        $fiscal = DB::SELECT("SELECT DISTINCT
+                fiscal_year 
+            FROM
+                weekly_calendars");
+
         return view('production_report.audit_ik_monitoring', array(
             'title' => $title,
             'title_jp' => $title_jp,
+            'fiscal' => $fiscal,
             'department_all' => $department_all,
         ))->with('page', 'Audit IK Monitoring');
     }
@@ -3117,33 +3123,106 @@ class ProductionReportController extends Controller
     public function fetchAuditIKMonitoring(Request $request)
     {
         try {
-            $month_from = $request->get('month_from');
-            $month_to = $request->get('month_to');
-            if ($month_from == "") {
-                 if ($month_to == "") {
-                      $first = "DATE_FORMAT( NOW() - INTERVAL 1 YEAR, '%Y-%m' )";
-                      $last = "DATE_FORMAT( NOW(), '%Y-%m' ) ";
-                      $firstTitle = date("F Y", strtotime(date('Y-m-d').' - 1 year'));
-                      $lastTitle = date("F Y", strtotime(date('Y-m-d')));
-                 }else{
-                      $first = "DATE_FORMAT( NOW() - INTERVAL 1 YEAR, '%Y-%m' ) ";
-                      $last = "'".$month_to."'";
-                      $firstTitle = date("F Y", strtotime(date('Y-m-d').' - 1 year'));
-                      $lastTitle = date("F Y", strtotime(date($month_to.'-01')));
-                 }
+            // $month_from = $request->get('month_from');
+            // $month_to = $request->get('month_to');
+            if ($request->get('fiscal_year') != "") {
+                $month = DB::SELECT('( SELECT DISTINCT
+                (
+                DATE_FORMAT( week_date, "%Y-%m" )) AS count_month,
+                fiscal_year
+                FROM
+                    weekly_calendars 
+                WHERE
+                    fiscal_year = "'.$request->get('fiscal_year').'" 
+                    AND DATE_FORMAT( week_date, "%Y-%m" ) <= DATE_FORMAT( DATE( NOW()), "%Y-%m" ) 
+                ORDER BY
+                    DATE_FORMAT( week_date, "%Y-%m" ) ASC 
+                    LIMIT 1 
+                ) UNION ALL
+                (
+                SELECT DISTINCT
+                    (
+                    DATE_FORMAT( week_date, "%Y-%m" )) AS count_month,
+                    fiscal_year
+                FROM
+                    weekly_calendars 
+                WHERE
+                    fiscal_year = "'.$request->get('fiscal_year').'" 
+                    AND DATE_FORMAT( week_date, "%Y-%m" ) <= DATE_FORMAT( DATE( NOW()), "%Y-%m" ) 
+                ORDER BY
+                DATE_FORMAT( week_date, "%Y-%m" ) DESC 
+                LIMIT 1)');
             }else{
-                 if ($month_to == "") {
-                      $first = "'".$month_from."'";
-                      $last = "DATE_FORMAT( NOW(), '%Y-%m' ) ";
-                      $firstTitle = date("F Y", strtotime(date($month_from.'-01')));
-                      $lastTitle = date("F Y", strtotime(date('Y-m-d')));
-                 }else{
-                      $first = "'".$month_from."'";
-                      $last = "'".$month_to."'";
-                      $firstTitle = date("F Y", strtotime(date($month_from.'-01')));
-                      $lastTitle = date("F Y", strtotime(date($month_to.'-01')));
-                 }
+                $month = DB::SELECT('( SELECT DISTINCT
+                (
+                DATE_FORMAT( week_date, "%Y-%m" )) AS count_month,
+                fiscal_year 
+                FROM
+                    weekly_calendars 
+                WHERE
+                    fiscal_year = (
+                    SELECT
+                        fiscal_year 
+                    FROM
+                        weekly_calendars 
+                    WHERE
+                        week_date = DATE(
+                        NOW())) 
+                    AND DATE_FORMAT( week_date, "%Y-%m" ) <= DATE_FORMAT( DATE( NOW()), "%Y-%m" ) 
+                ORDER BY
+                    DATE_FORMAT( week_date, "%Y-%m" ) ASC 
+                    LIMIT 1 
+                ) UNION ALL
+                (
+                SELECT DISTINCT
+                    (
+                    DATE_FORMAT( week_date, "%Y-%m" )) AS count_month,
+                    fiscal_year
+                FROM
+                    weekly_calendars 
+                WHERE
+                    fiscal_year = (
+                    SELECT
+                        fiscal_year 
+                    FROM
+                        weekly_calendars 
+                    WHERE
+                        week_date = DATE(
+                        NOW())) 
+                    AND DATE_FORMAT( week_date, "%Y-%m" ) <= DATE_FORMAT( DATE( NOW()), "%Y-%m" ) 
+                ORDER BY
+                DATE_FORMAT( week_date, "%Y-%m" ) DESC 
+                LIMIT 1)');
             }
+
+            $first = $month[0]->count_month; 
+            $last = $month[1]->count_month;
+            $fiscalTitle = $month[0]->fiscal_year;
+            // if ($month_from == "") {
+            //      if ($month_to == "") {
+            //           $first = "DATE_FORMAT( NOW() - INTERVAL 1 YEAR, '%Y-%m' )";
+            //           $last = "DATE_FORMAT( NOW(), '%Y-%m' ) ";
+            //           $firstTitle = date("F Y", strtotime(date('Y-m-d').' - 1 month'));
+            //           $lastTitle = date("F Y", strtotime(date('Y-m-d')));
+            //      }else{
+            //           $first = "DATE_FORMAT( NOW() - INTERVAL 1 month, '%Y-%m' ) ";
+            //           $last = "'".$month_to."'";
+            //           $firstTitle = date("F Y", strtotime(date('Y-m-d').' - 1 month'));
+            //           $lastTitle = date("F Y", strtotime(date($month_to.'-01')));
+            //      }
+            // }else{
+            //      if ($month_to == "") {
+            //           $first = "'".$month_from."'";
+            //           $last = "DATE_FORMAT( NOW(), '%Y-%m' ) ";
+            //           $firstTitle = date("F Y", strtotime(date($month_from.'-01')));
+            //           $lastTitle = date("F Y", strtotime(date('Y-m-d')));
+            //      }else{
+            //           $first = "'".$month_from."'";
+            //           $last = "'".$month_to."'";
+            //           $firstTitle = date("F Y", strtotime(date($month_from.'-01')));
+            //           $lastTitle = date("F Y", strtotime(date($month_to.'-01')));
+            //      }
+            // }
 
             $department_id = "";
             if ($request->get('department') != "") {
@@ -3151,6 +3230,7 @@ class ProductionReportController extends Controller
             }else if($request->get('department') == "All" || $request->get('department') == ""){
                 $department_id = "";
             }
+
 
             $audit_ik = DB::SELECT("SELECT DISTINCT
                 (
@@ -3194,8 +3274,8 @@ class ProductionReportController extends Controller
             FROM
                 weekly_calendars 
             WHERE
-                DATE_FORMAT( weekly_calendars.week_date, '%Y-%m' ) BETWEEN ".$first." 
-                AND ".$last."
+                DATE_FORMAT( weekly_calendars.week_date, '%Y-%m' ) BETWEEN '".$first."' 
+                AND '".$last."'
             ORDER BY
                 `month`");
 
@@ -3326,21 +3406,130 @@ class ProductionReportController extends Controller
                 FROM
                     weekly_calendars 
                 WHERE
-                    DATE_FORMAT( weekly_calendars.week_date, '%Y-%m' ) BETWEEN ".$first." 
-                    AND ".$last."
+                    DATE_FORMAT( weekly_calendars.week_date, '%Y-%m' ) BETWEEN '".$first."' 
+                    AND '".$last."'
                 ORDER BY
                     `month`");
 
                 array_push($resume_all, $resume);
             }
 
+            $resume_penanganan = DB::SELECT("SELECT DISTINCT
+                    (
+                    DATE_FORMAT( week_date, '%Y-%m' )) AS `month`,
+                    DATE_FORMAT( week_date, '%M %Y' ) AS `months`,
+                    (
+                    SELECT
+                        count( audit_guidances.id ) 
+                    FROM
+                        audit_guidances
+                        LEFT JOIN activity_lists ON activity_lists.id = audit_guidances.activity_list_id 
+                    WHERE
+                        audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' )
+                        and audit_guidances.deleted_at is null 
+                    ) AS plan,
+                    (
+                    SELECT
+                        count( audit_guidances.id ) 
+                    FROM
+                        audit_guidances
+                        LEFT JOIN activity_lists ON activity_lists.id = audit_guidances.activity_list_id 
+                    WHERE
+                        audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' ) 
+                        AND `status` = 'Sudah Dikerjakan' 
+                        AND audit_guidances.deleted_at IS NULL 
+                    ) AS done,
+                    (
+                    SELECT
+                        count( audit_guidances.id ) 
+                    FROM
+                        audit_guidances
+                        LEFT JOIN activity_lists ON activity_lists.id = audit_guidances.activity_list_id 
+                    WHERE
+                        audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' ) 
+                        AND `status` = 'Belum Dikerjakan' 
+                        AND audit_guidances.deleted_at IS NULL 
+                    ) AS not_yet,
+                    (
+                    SELECT
+                        count( audit_guidances.id ) 
+                    FROM
+                        audit_guidances
+                        LEFT JOIN audit_report_activities ON audit_report_activities.audit_guidance_id = audit_guidances.id
+                        LEFT JOIN activity_lists ON activity_lists.id = audit_guidances.activity_list_id 
+                    WHERE
+                        audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' ) 
+                        AND `status` = 'Sudah Dikerjakan' 
+                        AND audit_guidances.deleted_at IS NULL 
+                        AND audit_report_activities.`condition` = 'Tidak Sesuai' 
+                    ) AS tidak_sesuai,
+                    (
+                    SELECT
+                        count( audit_guidances.id ) 
+                    FROM
+                        audit_guidances
+                        LEFT JOIN audit_report_activities ON audit_report_activities.audit_guidance_id = audit_guidances.id
+                        LEFT JOIN activity_lists ON activity_lists.id = audit_guidances.activity_list_id 
+                    WHERE
+                        audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' ) 
+                        AND `status` = 'Sudah Dikerjakan' 
+                        AND audit_guidances.deleted_at IS NULL 
+                        AND audit_report_activities.`handling` = 'Training Ulang IK' 
+                    ) AS training_ulang,
+                    (
+                    SELECT
+                        count( audit_guidances.id ) 
+                    FROM
+                        audit_guidances
+                        LEFT JOIN audit_report_activities ON audit_report_activities.audit_guidance_id = audit_guidances.id
+                        LEFT JOIN activity_lists ON activity_lists.id = audit_guidances.activity_list_id 
+                    WHERE
+                        audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' ) 
+                        AND `status` = 'Sudah Dikerjakan' 
+                        AND audit_guidances.deleted_at IS NULL 
+                        AND audit_report_activities.`handling` = 'Revisi IK' 
+                    ) AS revisi_ik,
+                    (
+                    SELECT
+                        count( audit_guidances.id ) 
+                    FROM
+                        audit_guidances
+                        LEFT JOIN audit_report_activities ON audit_report_activities.audit_guidance_id = audit_guidances.id
+                        LEFT JOIN activity_lists ON activity_lists.id = audit_guidances.activity_list_id 
+                    WHERE
+                        audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' ) 
+                        AND `status` = 'Sudah Dikerjakan' 
+                        AND audit_guidances.deleted_at IS NULL 
+                        AND audit_report_activities.`handling` = 'Pembuatan Jig / Repair Jig' 
+                    ) AS jig,
+                    (
+                    SELECT
+                        count( audit_guidances.id ) 
+                    FROM
+                        audit_guidances
+                        LEFT JOIN audit_report_activities ON audit_report_activities.audit_guidance_id = audit_guidances.id
+                        LEFT JOIN activity_lists ON activity_lists.id = audit_guidances.activity_list_id 
+                    WHERE
+                        audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' ) 
+                        AND `status` = 'Sudah Dikerjakan' 
+                        AND audit_guidances.deleted_at IS NULL 
+                        AND audit_report_activities.`handling` = 'IK Tidak Digunakan' 
+                    ) AS obsolete 
+                FROM
+                    weekly_calendars 
+                WHERE
+                    DATE_FORMAT( weekly_calendars.week_date, '%Y-%m' ) BETWEEN '".$first."' 
+                    AND '".$last."'
+                ORDER BY
+                    `month`");
+
             $response = array(
                 'status' => true,
                 'audit_ik' => $audit_ik,
-                'firstTitle' => $firstTitle,
-                'lastTitle' => $lastTitle,
+                'fiscalTitle' => $fiscalTitle,                
                 'department' => $department,
                 'resume_all' => $resume_all,
+                'resume_penanganan' => $resume_penanganan,
             );
             return Response::json($response);
         } catch (\Exception $e) {
@@ -3374,7 +3563,7 @@ class ProductionReportController extends Controller
                     `month` = '".$month."' 
                     AND `status` = '".$kondisi."'
                     and audit_guidances.deleted_at is null");
-            }else{
+            }elseif ($kondisi == 'Sudah Dikerjakan') {
                 $datas = DB::SELECT("SELECT
                     *,audit_guidances.id as id_guide
                 FROM
@@ -3401,7 +3590,161 @@ class ProductionReportController extends Controller
                         audit_report_activities.tindakan_perbaikan,
                         audit_report_activities.target,
                         audit_report_activities.operator,
-                        audit_report_activities.leader 
+                        audit_report_activities.leader,
+                        audit_report_activities.handling, 
+                        audit_report_activities.condition
+                    FROM
+                        audit_report_activities
+                        JOIN audit_guidances ON audit_guidances.id = audit_report_activities.audit_guidance_id 
+                    WHERE
+                        audit_guidance_id = '".$key->id_guide."'");
+                    array_push($datass, $dd);
+                }
+            }elseif ($kondisi == 'Training Ulang IK') {
+                $datas = DB::SELECT("SELECT
+                    *,audit_guidances.id as id_guide
+                FROM
+                    audit_guidances
+                    LEFT JOIN activity_lists ON activity_lists.id = audit_guidances.activity_list_id 
+                    LEFT JOIN departments ON departments.id = activity_lists.department_id 
+                    LEFT JOIN audit_report_activities ON audit_report_activities.audit_guidance_id = audit_guidances.id 
+                WHERE 
+                    `month` = '".$month."' 
+                    AND `handling` = '".$kondisi."' 
+                    and audit_guidances.deleted_at is null");
+
+                foreach ($datas as $key) {
+                    $dd = DB::SELECT("SELECT
+                        department,
+                        section,
+                        subsection,
+                        audit_report_activities.date,
+                        audit_guidances.no_dokumen,
+                        audit_guidances.nama_dokumen,
+                        audit_guidances.month,
+                        audit_report_activities.kesesuaian_aktual_proses,
+                        audit_report_activities.kesesuaian_qc_kouteihyo,
+                        audit_report_activities.kelengkapan_point_safety,
+                        audit_report_activities.tindakan_perbaikan,
+                        audit_report_activities.target,
+                        audit_report_activities.operator,
+                        audit_report_activities.leader,
+                        audit_report_activities.handling, 
+                        audit_report_activities.condition
+                    FROM
+                        audit_report_activities
+                        JOIN audit_guidances ON audit_guidances.id = audit_report_activities.audit_guidance_id 
+                    WHERE
+                        audit_guidance_id = '".$key->id_guide."'");
+                    array_push($datass, $dd);
+                }
+            }elseif ($kondisi == 'Revisi IK') {
+                $datas = DB::SELECT("SELECT
+                    *,audit_guidances.id as id_guide
+                FROM
+                    audit_guidances
+                    LEFT JOIN activity_lists ON activity_lists.id = audit_guidances.activity_list_id 
+                    LEFT JOIN departments ON departments.id = activity_lists.department_id 
+                    LEFT JOIN audit_report_activities ON audit_report_activities.audit_guidance_id = audit_guidances.id 
+                WHERE 
+                    `month` = '".$month."' 
+                    AND `handling` = '".$kondisi."'
+                    and audit_guidances.deleted_at is null");
+
+                foreach ($datas as $key) {
+                    $dd = DB::SELECT("SELECT
+                        department,
+                        section,
+                        subsection,
+                        audit_report_activities.date,
+                        audit_guidances.no_dokumen,
+                        audit_guidances.nama_dokumen,
+                        audit_guidances.month,
+                        audit_report_activities.kesesuaian_aktual_proses,
+                        audit_report_activities.kesesuaian_qc_kouteihyo,
+                        audit_report_activities.kelengkapan_point_safety,
+                        audit_report_activities.tindakan_perbaikan,
+                        audit_report_activities.target,
+                        audit_report_activities.operator,
+                        audit_report_activities.leader,
+                        audit_report_activities.handling, 
+                        audit_report_activities.condition
+                    FROM
+                        audit_report_activities
+                        JOIN audit_guidances ON audit_guidances.id = audit_report_activities.audit_guidance_id 
+                    WHERE
+                        audit_guidance_id = '".$key->id_guide."'");
+                    array_push($datass, $dd);
+                }
+            }elseif ($kondisi == 'Pembuatan Jig / Repair Jig') {
+                $datas = DB::SELECT("SELECT
+                    *,audit_guidances.id as id_guide
+                FROM
+                    audit_guidances
+                    LEFT JOIN activity_lists ON activity_lists.id = audit_guidances.activity_list_id 
+                    LEFT JOIN departments ON departments.id = activity_lists.department_id 
+                    LEFT JOIN audit_report_activities ON audit_report_activities.audit_guidance_id = audit_guidances.id 
+                WHERE 
+                    `month` = '".$month."' 
+                    AND `handling` = '".$kondisi."'
+                    and audit_guidances.deleted_at is null");
+
+                foreach ($datas as $key) {
+                    $dd = DB::SELECT("SELECT
+                        department,
+                        section,
+                        subsection,
+                        audit_report_activities.date,
+                        audit_guidances.no_dokumen,
+                        audit_guidances.nama_dokumen,
+                        audit_guidances.month,
+                        audit_report_activities.kesesuaian_aktual_proses,
+                        audit_report_activities.kesesuaian_qc_kouteihyo,
+                        audit_report_activities.kelengkapan_point_safety,
+                        audit_report_activities.tindakan_perbaikan,
+                        audit_report_activities.target,
+                        audit_report_activities.operator,
+                        audit_report_activities.leader,
+                        audit_report_activities.handling, 
+                        audit_report_activities.condition
+                    FROM
+                        audit_report_activities
+                        JOIN audit_guidances ON audit_guidances.id = audit_report_activities.audit_guidance_id 
+                    WHERE
+                        audit_guidance_id = '".$key->id_guide."'");
+                    array_push($datass, $dd);
+                }
+            }elseif ($kondisi == 'IK Tidak Digunakan') {
+                $datas = DB::SELECT("SELECT
+                    *,audit_guidances.id as id_guide
+                FROM
+                    audit_guidances
+                    LEFT JOIN activity_lists ON activity_lists.id = audit_guidances.activity_list_id 
+                    LEFT JOIN departments ON departments.id = activity_lists.department_id 
+                    LEFT JOIN audit_report_activities ON audit_report_activities.audit_guidance_id = audit_guidances.id 
+                WHERE 
+                    `month` = '".$month."' 
+                    AND `handling` = '".$kondisi."'
+                    and audit_guidances.deleted_at is null");
+
+                foreach ($datas as $key) {
+                    $dd = DB::SELECT("SELECT
+                        department,
+                        section,
+                        subsection,
+                        audit_report_activities.date,
+                        audit_guidances.no_dokumen,
+                        audit_guidances.nama_dokumen,
+                        audit_guidances.month,
+                        audit_report_activities.kesesuaian_aktual_proses,
+                        audit_report_activities.kesesuaian_qc_kouteihyo,
+                        audit_report_activities.kelengkapan_point_safety,
+                        audit_report_activities.tindakan_perbaikan,
+                        audit_report_activities.target,
+                        audit_report_activities.operator,
+                        audit_report_activities.leader,
+                        audit_report_activities.handling,
+                        audit_report_activities.condition
                     FROM
                         audit_report_activities
                         JOIN audit_guidances ON audit_guidances.id = audit_report_activities.audit_guidance_id 

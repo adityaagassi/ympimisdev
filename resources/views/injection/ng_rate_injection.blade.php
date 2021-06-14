@@ -519,7 +519,7 @@
 							}
 						},
 						type: 'linear',
-						max: 300
+						max: 400
 					}
 					],
 					tooltip: {
@@ -705,7 +705,7 @@
 							}
 						},
 						type: 'linear',
-						max: 300
+						max: 400
 					}
 					],
 					tooltip: {
