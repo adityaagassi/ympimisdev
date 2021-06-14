@@ -4828,6 +4828,15 @@ Route::group(['nav' => 'M34', 'middleware' => 'permission'], function(){
 	Route::get('adagio/report/{id}', 'AdagioAutoController@AdagiReport');
 });
 
+//Audit stock ideal vs aktual
+Route::group(['nav' => 'M34', 'middleware' => 'permission'], function(){
+	Route::get('stock/aktual/monitoring', 'StockAktualController@IndexMonitoring');
+	Route::get('stock/resume/aktual', 'StockAktualController@ResumeStockAktual');
+	Route::get('stock/grafik/aktual', 'StockAktualController@FatchMonitoring');
+	Route::get('stock/aktual/home', 'StockAktualController@AuditStockAktualHome');
+	Route::get('stock/aktual/list', 'StockAktualController@FatchListStock');
+});
+
 
 //Warehouse
 Route::get('index/warehouse', 'WarehouseController@index');
@@ -5022,6 +5031,11 @@ Route::post('fetch/reed/start_injection', 'ReedSyntheticController@fetchStartInj
 Route::post('fetch/reed/finish_injection', 'ReedSyntheticController@fetchFinishInjection');
 Route::post('scan/reed/injection_picking', 'ReedSyntheticController@scanInjectionPicking');
 
+Route::get('index/reed/injection_resin_receive', 'ReedSyntheticController@indexInjectionResinReceive');
+Route::get('fetch/reed/injection_resin_receive', 'ReedSyntheticController@fetchInjectionResinReceive');
+Route::post('update/reed/injection_delivery', 'ReedSyntheticController@updateInjectionResinDelivery');
+
+
 Route::get('index/reed/injection_delivery', 'ReedSyntheticController@indexInjectionDelivery');
 Route::get('fetch/reed/injection_delivery', 'ReedSyntheticController@fetchInjectionDelivery');
 Route::post('scan/reed/injection_delivery', 'ReedSyntheticController@scanInjectionDelivery');
@@ -5082,6 +5096,9 @@ Route::get('index/reed/store_verification', 'ReedSyntheticController@indexStoreV
 Route::post('scan/reed/store_verification', 'ReedSyntheticController@scanStoreVerification');
 
 Route::get('index/reed/warehouse_delivery', 'ReedSyntheticController@indexResinDelivery');
+Route::get('scan/reed/warehouse_delivery', 'ReedSyntheticController@scanWarehouseDelivery');
+Route::post('update/reed/warehouse_delivery', 'ReedSyntheticController@updateWarehouseDelivery');
+
 
 
 //End Reed Project
@@ -5112,9 +5129,15 @@ Route::get('fetch/packing_documentation/data', 'AuditController@documentation_da
 //  -------------------------  FIXED ASSET -------------------------
 
 Route::get('index/fixed_asset', 'AccountingController@indexFixedAsset');
+
+Route::post('send/fixed_asset/invoice_asset_form', 'AccountingController@assetSendInvoice');
+
 Route::get('index/fixed_asset/registration_asset_form', 'AccountingController@indexAssetRegistration');
 Route::get('fetch/fixed_asset/registration_asset_form', 'AccountingController@fetchAssetRegistration');
 Route::post('send/fixed_asset/registration_asset_form', 'AccountingController@assetRegistration');
+
+Route::get('index/fixed_asset/invoice_form', 'AccountingController@indexAssetInvoice');
+Route::get('fetch/fixed_asset/invoice_form', 'AccountingController@fetchAssetInvoice');
 
 //  -----------------------  END FIXED ASSET ------------------------
 

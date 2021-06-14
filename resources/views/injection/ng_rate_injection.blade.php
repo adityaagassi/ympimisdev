@@ -113,16 +113,16 @@
 							<div class="gambar">
 								<table style="text-align:center;width:100%">
 									<tr>
-										<td style="border: 1px solid #fff !important;background-color: #80ff91;color: black;font-size: 20px;font-weight: bold;">BEST EMPLOYEE OF THE WEEK</td>
+										<td style="border: 1px solid #fff !important;background-color: #80ff91;color: black;font-size: 25px;font-weight: bold;">BEST QUALITY EMPLOYEE<br>OF THE WEEK</td>
 									</tr>
 									<tr>
-										<td id="lowest_avatar" style="border: 1px solid #fff !important;background-color: #e2dbff;color: black;font-size: 15px;font-weight: bold;"></td>
+										<td id="lowest_avatar" style="border: 1px solid #fff !important;background-color:white;color: black;font-size: 24px;font-weight: bold;"></td>
 									</tr>
 									<tr>
-										<td id="lowest_name" style="border: 1px solid #fff !important;background-color: #80ff91;color: black;font-size: 15px;font-weight: bold;"></td>
+										<td id="lowest_name" style="border: 1px solid #fff !important;background-color: #80ff91;color: black;font-size: 24px;font-weight: bold;"></td>
 									</tr>
 									<tr>
-										<td id="lowest_ng" style="border: 1px solid #fff !important;background-color: #80ff91;color: black;font-size: 15px;font-weight: bold;"></td>
+										<td id="lowest_ng" style="border: 1px solid #fff !important;background-color: #80ff91;color: black;font-size: 24px;font-weight: bold;"></td>
 									</tr>
 								</table>
 							</div>
@@ -139,16 +139,16 @@
 							<div class="gambar">
 								<table style="text-align:center;width:100%">
 									<tr>
-										<td style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 20px;font-weight: bold;">CARELESS EMPLOYEE OF THE WEEK</td>
+										<td style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 25px;font-weight: bold;">WORST QUALITY EMPLOYEE<br>OF THE WEEK</td>
 									</tr>
 									<tr>
-										<td id="highest_avatar" style="border: 1px solid #fff !important;background-color: #e2dbff;color: black;font-size: 15px;font-weight: bold;"></td>
+										<td id="highest_avatar" style="border: 1px solid #fff !important;background-color:white;color: black;font-size: 24px;font-weight: bold;"></td>
 									</tr>
 									<tr>
-										<td id="highest_name" style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 15px;font-weight: bold;"></td>
+										<td id="highest_name" style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 24px;font-weight: bold;"></td>
 									</tr>
 									<tr>
-										<td id="highest_ng" style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 15px;font-weight: bold;"></td>
+										<td id="highest_ng" style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 24px;font-weight: bold;"></td>
 									</tr>
 								</table>
 							</div>
@@ -828,8 +828,8 @@
 				var url_lowest = '{{ url("images/avatar/") }}/'+lowest_emp+'.jpg';
 				var url_highest = '{{ url("images/avatar/") }}/'+highest_emp+'.JPG';
 
-				$('#lowest_avatar').html('<img style="width:100px" src="'+url_lowest+'" class="user-image" alt="User image">');
-				$('#highest_avatar').html('<img style="width:100px" src="'+url_highest+'" class="user-image" alt="User image">');
+				$('#lowest_avatar').html('<img style="width:120px" src="'+url_lowest+'" class="user-image" alt="User image">');
+				$('#highest_avatar').html('<img style="width:120px" src="'+url_highest+'" class="user-image" alt="User image">');
 
 			}
 			else{
