@@ -674,17 +674,26 @@ $("#total_person_prd_3").text(prd_total_3);
 			$("#AbnormalPulse").empty();
 			var body = "";
 
-			$.each(below_rate_pulse, function(index, value){
+			below_rate_pulse.sort(function(a, b) {
+				return parseInt(a.pulse) - parseInt(b.pulse);
+			});
+
+			console.log(below_rate_pulse);
+
+			var num = 1;
+			for (var i = below_rate_pulse.length - 1; i >= 0; i--) {
 				body += "<tr>";
-				body += "<td>"+(index + 1)+"</td>";
-				body += "<td>"+value.emp_id+"</td>";
-				body += "<td>"+value.name+"</td>";
-				body += "<td>"+value.dept+"</td>";
-				body += "<td>"+value.shift+"</td>";
+				body += "<td>"+num+"</td>";
+				body += "<td>"+below_rate_pulse[i].emp_id+"</td>";
+				body += "<td>"+below_rate_pulse[i].name+"</td>";
+				body += "<td>"+below_rate_pulse[i].dept+"</td>";
+				body += "<td>"+below_rate_pulse[i].shift+"</td>";
 				body += "<td>-</td>";
-				body += "<td>"+value.pulse+"</td>";
+				body += "<td>"+below_rate_pulse[i].pulse+"</td>";
 				body += "</tr>";
-			})
+
+				num++;
+			}
 
 			$("#AbnormalPulse").append(body);
 
