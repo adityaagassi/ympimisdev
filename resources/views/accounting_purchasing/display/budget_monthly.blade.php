@@ -298,11 +298,26 @@ table.table-bordered{
             awal.push(value.apr_simulasi,value.may_simulasi,value.jun_simulasi,value.jul_simulasi,value.aug_simulasi,value.sep_simulasi,value.oct_simulasi,value.nov_simulasi,value.dec_simulasi,value.jan_simulasi,value.feb_simulasi,value.mar_simulasi);
           })
 
+
+          var tmp_plan = 0;
+          var akum_plan = [];
+
+          $.each(awal, function(key, value) {
+            tmp_plan += value;
+            akum_plan.push(tmp_plan);
+          })
+
+          var tmp = 0;
+          var akum_actual = [];
+
           $.each(result.act, function(key, value) {
             pr.push(value.PR);
             investment.push(value.Investment);
             po.push(value.PO);
             sisa.push(value.Actual);
+
+            tmp += value.Actual;
+            akum_actual.push(tmp);
           })
 
           $('#container_resume').highcharts({
@@ -366,7 +381,8 @@ table.table-bordered{
               {
                 name: 'Plan',
                 data: awal,
-                stack: 'alone'
+                stack: 'alone',
+                color: '#ffd600'
               },
               {
                 name: 'Actual',
@@ -376,7 +392,7 @@ table.table-bordered{
               {
                 name: 'Unrealized PR',
                 data: pr,
-                color: '#ffeb3b',
+                color: '#ff6f00',
                 stack: 'all'
               },
               {
@@ -389,6 +405,20 @@ table.table-bordered{
                 name: 'Unrealized PO',
                 data: po,
                 color: '#607d8b',
+                stack: 'all'
+              },
+              {
+                name: 'Akumulasi Forecast',
+                type: 'spline',
+                data: akum_plan,
+                color: '#ffd600',
+                stack: 'all'
+              },
+              {
+                name: 'Akumulasi Actual',
+                type: 'spline',
+                data: akum_actual,
+                color: '#90ee7e',
                 stack: 'all'
               }
 
@@ -439,9 +469,15 @@ table.table-bordered{
             table += '<td rowspan="5" style="text-align:left;border-left:1px solid yellow">'+value.account_name+'</span></td>';
             table += '<td rowspan="5" style="text-align:left;border-left:1px solid yellow">'+value.category+'</td>';
             table += '<td style="text-align:left;border-left:1px solid yellow">Budget</td>';
-            table += '<td style="border-left:1px solid yellow">'+value.apr_budget_awal+'</td>';
-            table += '<td style="border-left:1px solid yellow">'+value.may_budget_awal+'</td>';
-            table += '<td style="border-left:1px solid yellow">'+value.jun_budget_awal+'</td>';
+            if (value.apr_budget_awal != null) {
+              table += '<td style="border-left:1px solid yellow">'+value.apr_budget_awal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })+'</td>';
+            }
+            if (value.may_budget_awal != null) {
+              table += '<td style="border-left:1px solid yellow">'+value.may_budget_awal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })+'</td>';
+            }
+            if (value.jun_budget_awal != null) {
+              table += '<td style="border-left:1px solid yellow">'+value.jun_budget_awal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })+'</td>';
+            }
             table += '<td style="border-left:1px solid yellow">'+value.jul_budget_awal+'</td>';
             table += '<td style="border-left:1px solid yellow">'+value.aug_budget_awal+'</td>';
             table += '<td style="border-left:1px solid yellow">'+value.sep_budget_awal+'</td>';
