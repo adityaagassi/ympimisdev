@@ -139,7 +139,7 @@
 							<div class="gambar">
 								<table style="text-align:center;width:100%">
 									<tr>
-										<td style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 25px;font-weight: bold;">WORST QUALITY EMPLOYEE<br>OF THE WEEK</td>
+										<td style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 25px;font-weight: bold;">BAD QUALITY EMPLOYEE<br>OF THE WEEK</td>
 									</tr>
 									<tr>
 										<td id="highest_avatar" style="border: 1px solid #fff !important;background-color:white;color: black;font-size: 24px;font-weight: bold;"></td>
