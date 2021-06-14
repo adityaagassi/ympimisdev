@@ -102,39 +102,51 @@
 			<tr>
 				<td rowspan="2" style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 3%">#</td>
 				<td rowspan="2" style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 3%">PRODUCT</td>
-				<td colspan="2" style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">HEAD</td>
-				<td colspan="2" style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">MIDDLE / BODY</td>
-				<td colspan="2" style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">FOOT / STOPPER</td>
-				<td colspan="2" style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%" id="tdblock">BLOCK</td>
+				<td colspan="3" style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">HEAD</td>
+				<td colspan="3" style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">MIDDLE / BODY</td>
+				<td colspan="3" style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">FOOT / STOPPER</td>
+				<td colspan="3" style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%" id="tdblock">BLOCK</td>
 			</tr>
 			<tr>
 				<td style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">CAVITY</td>
 				<td style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">KANBAN</td>
+				<td style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">COLOR</td>
 				<td style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">CAVITY</td>
 				<td style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">KANBAN</td>
+				<td style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">COLOR</td>
 				<td style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">CAVITY</td>
 				<td style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">KANBAN</td>
+				<td style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">COLOR</td>
 				<td style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">CAVITY</td>
 				<td style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">KANBAN</td>
+				<td style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">COLOR</td>
 			</tr>
 			<tr>
-				<td style="border: 1px solid #fff !important;background-color: #50a534;color: white;font-size: 80px">NOW</td>
-				<td style="border: 1px solid #fff !important;background-color: #50a534;color: white;font-size: 80px"><span id="product_active_yrs"></span></td>
-				<td style="border: 1px solid #fff !important;background-color: #9ec3ff;color: black;font-size: 80px"><span id="cavity_head">1-8</span>
+				<td style="border: 1px solid #fff;background-color: #50a534;color: white;font-size: 60px">NOW</td>
+				<td style="border: 1px solid #fff;background-color: #50a534;color: white;font-size: 40px"><span id="product_active_yrs"></span></td>
+				<td style="border: 1px solid #fff;background-color: #9ec3ff;color: black;font-size: 70px;border-left:5px solid red;"><span id="cavity_head">1-8</span>
 				</td>
-				<td style="border: 1px solid #fff !important;background-color: #9ec3ff;color: black;font-size: 80px"><span id="kanban_head">10</span>
+				<td style="border: 1px solid #fff;background-color: #9ec3ff;color: black;font-size: 70px"><span id="kanban_head">10</span>
 				</td>
-				<td style="border: 1px solid #fff !important;background-color: #fdff9e;color: black;font-size: 80px"><span id="cavity_middle">1-8</span>
+				<td style="border: 1px solid #fff;background-color: #9ec3ff;color: black;font-size: 70px"><span id="color_head">10</span>
 				</td>
-				<td style="border: 1px solid #fff !important;background-color: #fdff9e;color: black;font-size: 80px"><span id="kanban_middle">2</span>
+				<td style="border: 1px solid #fff;background-color: #fdff9e;color: black;font-size: 70px;border-left:5px solid red;"><span id="cavity_middle">1-8</span>
 				</td>
-				<td style="border: 1px solid #fff !important;background-color: #ffa59e;color: black;font-size: 80px"><span id="cavity_foot">1-8</span>
+				<td style="border: 1px solid #fff;background-color: #fdff9e;color: black;font-size: 70px"><span id="kanban_middle">2</span>
 				</td>
-				<td style="border: 1px solid #fff !important;background-color: #ffa59e;color: black;font-size: 80px"><span id="kanban_foot">2</span>
+				<td style="border: 1px solid #fff;background-color: #fdff9e;color: black;font-size: 70px"><span id="color_middle">10</span>
 				</td>
-				<td id="tdblock2" style="border: 1px solid #fff !important;background-color: #9efcff;color: black;font-size: 80px"><span id="cavity_block">1-8</span>
+				<td style="border: 1px solid #fff;background-color: #ffa59e;color: black;font-size: 70px;border-left:5px solid red;"><span id="cavity_foot">1-8</span>
 				</td>
-				<td id="tdblock3" style="border: 1px solid #fff !important;background-color: #9efcff;color: black;font-size: 80px"><span id="kanban_block">2</span>
+				<td style="border: 1px solid #fff;background-color: #ffa59e;color: black;font-size: 70px"><span id="kanban_foot">2</span>
+				</td>
+				<td style="border: 1px solid #fff;background-color: #ffa59e;color: black;font-size: 70px"><span id="color_foot">10</span>
+				</td>
+				<td id="tdblock2" style="border: 1px solid #fff;background-color: #9efcff;color: black;font-size: 70px;border-left:5px solid red;"><span id="cavity_block">1-8</span>
+				</td>
+				<td id="tdblock3" style="border: 1px solid #fff;background-color: #9efcff;color: black;font-size: 70px"><span id="kanban_block">2</span>
+				</td>
+				<td style="border: 1px solid #fff;background-color: #9efcff;color: black;font-size: 70px"><span id="color_block">10</span>
 				</td>
 			</tr>
 		</table>
@@ -143,20 +155,24 @@
 				<tr>
 					<td rowspan="2" style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 3%">EMP</td>
 					<td rowspan="2" style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 3%">PRODUCT</td>
-					<td colspan="2" style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">HEAD</td>
-					<td colspan="2" style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">MIDDLE / BODY</td>
-					<td colspan="2" style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">FOOT / STOPPER</td>
-					<td colspan="2" style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%" id="tdblock">BLOCK</td>
+					<td colspan="3" style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">HEAD</td>
+					<td colspan="3" style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">MIDDLE / BODY</td>
+					<td colspan="3" style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">FOOT / STOPPER</td>
+					<td colspan="3" style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%" id="tdblock">BLOCK</td>
 				</tr>
 				<tr>
 					<td style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">CAVITY</td>
 					<td style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">KANBAN</td>
+					<td style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">COLOR</td>
 					<td style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">CAVITY</td>
 					<td style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">KANBAN</td>
+					<td style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">COLOR</td>
 					<td style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">CAVITY</td>
 					<td style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">KANBAN</td>
+					<td style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">COLOR</td>
 					<td style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">CAVITY</td>
 					<td style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">KANBAN</td>
+					<td style="border: 1px solid #fff !important;background-color: black;color: white;font-size: 25px;width: 1%">COLOR</td>
 				</tr>
 			</thead>
 			<tbody id="body_all">
@@ -164,52 +180,6 @@
 			</tbody>
 		</table>
 		
-
-		<!-- <div class="box box-solid" style="margin-bottom: 0px;margin-left: 0px;margin-right: 0px;margin-top: 10px">
-			<div class="box-body">
-				<div class="col-xs-12" style="margin-top: 0px;padding-top: 10px;padding: 0px">
-					<table id="table_all" class="table table-bordered table-striped" style="margin-bottom: 0;margin-top: 0px;padding-top: 0px;font-size: 17px">
-						<thead style="background-color: rgb(126,86,134);">
-							<tr>
-								<th rowspan="2" style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">ID</th>
-								<th rowspan="2" style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">Name</th>
-								<th rowspan="2" style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">Product</th>
-								<th colspan="5" style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">Head</th>
-								<th colspan="5" style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">Middle / Body</th>
-								<th colspan="5" style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">Foot / Stopper</th>
-								<th colspan="5" style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">Block</th>
-							</tr>
-							<tr>
-								<th style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">Material</th>
-								<th style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">Tag</th>
-								<th style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">Color</th>
-								<th style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">Cavity</th>
-								<th style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">No. Kanban</th>
-								<th style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">Material</th>
-								<th style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">Tag</th>
-								<th style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">Color</th>
-								<th style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">Cavity</th>
-								<th style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">No. Kanban</th>
-								<th style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">Material</th>
-								<th style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">Tag</th>
-								<th style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">Color</th>
-								<th style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">Cavity</th>
-								<th style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">No. Kanban</th>
-								<th style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">Material</th>
-								<th style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">Tag</th>
-								<th style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">Color</th>
-								<th style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">Cavity</th>
-								<th style="border: 1px solid black; font-size: 1.2vw; padding-top: 2px; padding-bottom: 2px; width: 1%">No. Kanban</th>
-							</tr>
-						</thead>
-						<tbody id="body_table_all" style="text-align:center;">
-							
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
-	</div> -->
 </section>
 @endsection
 @section('scripts')
@@ -242,8 +212,6 @@
 	});
 
 	function fetchKensa() {
-		// $('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
-
 		$.get('{{ url("fetch/recorder/display/kensa") }}',function(result, status, xhr) {
 			if(xhr.status == 200){
 				if(result.status){
@@ -258,18 +226,22 @@
 							if (value.part_type == 'HJ') {
 								$('#cavity_head').html(value.cavity);
 								$('#kanban_head').html(value.no_kanban_injection);
+								$('#color_head').html(value.color);
 							}
 							if (value.part_type.match(/MJ/gi)) {
 								$('#cavity_middle').html(value.cavity);
 								$('#kanban_middle').html(value.no_kanban_injection);
+								$('#color_middle').html(value.color);
 							}
 							if (value.part_type == 'FJ') {
 								$('#cavity_foot').html(value.cavity);
 								$('#kanban_foot').html(value.no_kanban_injection);
+								$('#color_foot').html(value.color);
 							}
 							if (value.part_type == 'BJ') {
 								$('#cavity_block').html(value.cavity);
 								$('#kanban_block').html(value.no_kanban_injection);
+								$('#color_block').html(value.color);
 							}
 						}else{
 							$('#gambaryrs').hide();
@@ -280,44 +252,20 @@
 							if (value.part_type == 'A YRF H') {
 								$('#cavity_head').html(value.cavity);
 								$('#kanban_head').html(value.no_kanban_injection);
+								$('#color_head').html(value.color);
 							}
 							if (value.part_type == 'A YRF B') {
 								$('#cavity_middle').html(value.cavity);
 								$('#kanban_middle').html(value.no_kanban_injection);
+								$('#color_middle').html(value.color);
 							}
 							if (value.part_type == 'A YRF S') {
 								$('#cavity_foot').html(value.cavity);
 								$('#kanban_foot').html(value.no_kanban_injection);
+								$('#color_foot').html(value.color);
 							}
 						}
 					});
-
-					// $('#body_table_all').html("");
-					// var body_all = "";
-
-					// $.each(result.kensa, function(key2,value2){
-					// 	body_all += '<tr>';
-					// 	body_all += '<td style="font-size: 1vw; padding-top: 2px; padding-bottom: 2px;">'+value2.employee_id+'</td>';
-					// 	body_all += '<td style="font-size: 1vw; padding-top: 2px; padding-bottom: 2px;">'+value2.name+'</td>';
-					// 	body_all += '<td style="font-size: 1vw; padding-top: 2px; padding-bottom: 2px;">'+value2.product+'</td>';
-					// 	var material_number = value2.material_number.split(',');
-					// 	var tag = value2.tag.split(',');
-					// 	var color = value2.color.split(',');
-					// 	var no_kanban = value2.no_kanban.split(',');
-					// 	var cavity = value2.cavity.split(',');
-					// 	var mat_desc = value2.mat_desc.split(',');
-					// 	console.log(material_number.length);
-					// 	for (var i = 0;i < material_number.length;i++) {
-					// 		body_all += '<td style="font-size: 1vw; padding-top: 2px; padding-bottom: 2px;">'+material_number[i]+'</td>';
-					// 		body_all += '<td style="font-size: 1vw; padding-top: 2px; padding-bottom: 2px;">'+tag[i]+'</td>';
-					// 		body_all += '<td style="font-size: 1vw; padding-top: 2px; padding-bottom: 2px;">'+color[i]+'</td>';
-					// 		body_all += '<td style="font-size: 1vw; padding-top: 2px; padding-bottom: 2px;">'+cavity[i]+'</td>';
-					// 		body_all += '<td style="font-size: 1vw; padding-top: 2px; padding-bottom: 2px;">'+no_kanban[i]+'</td>';
-					// 	}
-					// 	body_all += '</tr>';
-					// });
-
-					// $('#body_table_all').append(body_all);
 
 					$('#body_all').html('');
 					var body_all = "";
@@ -325,24 +273,37 @@
 						if (value2.product.match(/YRS/gi)) {
 							var no_kanban = value2.no_kanban.split(',');
 							var cavity = value2.cavity.split(',');
+							var color = value2.color.split(',');
 							body_all += '<tr>';
-								body_all += '<td style="border: 1px solid #fff !important;background-color: #c800c6;color: white;font-size: 80px">'+value2.name+'</td>';
-								body_all += '<td style="border: 1px solid #fff !important;background-color: #c800c6;color: white;font-size: 80px"><span>'+value2.product+'</span></td>';
-								body_all += '<td style="border: 1px solid #fff !important;background-color: #9ec3ff;color: black;font-size: 80px"><span>'+cavity[0]+'</span>';
+								body_all += '<td style="border: 1px solid #fff;background-color: #c800c6;color: white;font-size: 40px">'+value2.name.split(' ').slice(0,1).join(' ')+'</td>';
+								body_all += '<td style="border: 1px solid #fff;background-color: #c800c6;color: white;font-size: 40px"><span>'+value2.product+'</span></td>';
+								body_all += '<td style="border: 1px solid #fff;background-color: #9ec3ff;color: black;font-size: 70px;border-left:5px solid red;"><span>'+cavity[0]+'</span>';
 								body_all += '</td>';
-								body_all += '<td style="border: 1px solid #fff !important;background-color: #9ec3ff;color: black;font-size: 80px"><span>'+no_kanban[0]+'</span>';
+								body_all += '<td style="border: 1px solid #fff;background-color: #9ec3ff;color: black;font-size: 70px"><span>'+no_kanban[0]+'</span>';
 								body_all += '</td>';
-								body_all += '<td style="border: 1px solid #fff !important;background-color: #fdff9e;color: black;font-size: 80px"><span>'+cavity[1]+'</span>';
 								body_all += '</td>';
-								body_all += '<td style="border: 1px solid #fff !important;background-color: #fdff9e;color: black;font-size: 80px"><span>'+no_kanban[1]+'</span>';
+								body_all += '<td style="border: 1px solid #fff;background-color: #9ec3ff;color: black;font-size: 70px"><span>'+color[0]+'</span>';
 								body_all += '</td>';
-								body_all += '<td style="border: 1px solid #fff !important;background-color: #ffa59e;color: black;font-size: 80px"><span>'+cavity[2]+'</span>';
+								body_all += '<td style="border: 1px solid #fff;background-color: #fdff9e;color: black;font-size: 70px;border-left:5px solid red;"><span>'+cavity[1]+'</span>';
 								body_all += '</td>';
-								body_all += '<td style="border: 1px solid #fff !important;background-color: #ffa59e;color: black;font-size: 80px"><span>'+no_kanban[2]+'</span>';
+								body_all += '<td style="border: 1px solid #fff;background-color: #fdff9e;color: black;font-size: 70px"><span>'+no_kanban[1]+'</span>';
 								body_all += '</td>';
-								body_all += '<td style="border: 1px solid #fff !important;background-color: #9efcff;color: black;font-size: 80px"><span>'+cavity[3]+'</span>';
 								body_all += '</td>';
-								body_all += '<td style="border: 1px solid #fff !important;background-color: #9efcff;color: black;font-size: 80px"><span>'+no_kanban[3]+'</span>';
+								body_all += '<td style="border: 1px solid #fff;background-color: #fdff9e;color: black;font-size: 70px"><span>'+color[1]+'</span>';
+								body_all += '</td>';
+								body_all += '<td style="border: 1px solid #fff;background-color: #ffa59e;color: black;font-size: 70px;border-left:5px solid red;"><span>'+cavity[2]+'</span>';
+								body_all += '</td>';
+								body_all += '<td style="border: 1px solid #fff;background-color: #ffa59e;color: black;font-size: 70px"><span>'+no_kanban[2]+'</span>';
+								body_all += '</td>';
+								body_all += '</td>';
+								body_all += '<td style="border: 1px solid #fff;background-color: #ffa59e;color: black;font-size: 70px"><span>'+color[2]+'</span>';
+								body_all += '</td>';
+								body_all += '<td style="border: 1px solid #fff;background-color: #9efcff;color: black;font-size: 70px;border-left:5px solid red;"><span>'+cavity[3]+'</span>';
+								body_all += '</td>';
+								body_all += '<td style="border: 1px solid #fff;background-color: #9efcff;color: black;font-size: 70px"><span>'+no_kanban[3]+'</span>';
+								body_all += '</td>';
+								body_all += '</td>';
+								body_all += '<td style="border: 1px solid #fff;background-color: #9efcff;color: black;font-size: 70px"><span>'+color[3]+'</span>';
 								body_all += '</td>';
 							body_all += '</tr>';
 						}else{
