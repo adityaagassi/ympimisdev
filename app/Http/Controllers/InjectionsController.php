@@ -7405,6 +7405,7 @@ class InjectionsController extends Controller
                     AND injection_parts.deleted_at IS NULL 
                     AND injection_parts.remark = 'injection' 
                     AND injection_parts.part_code NOT LIKE '%MJ%' 
+                    AND injection_parts.part_code NOT LIKE '%BJ%' 
                 ) AS ng_name_kensa,
                 (
                 SELECT
@@ -7420,6 +7421,7 @@ class InjectionsController extends Controller
                     AND injection_parts.deleted_at IS NULL 
                     AND injection_parts.remark = 'injection' 
                     AND injection_parts.part_code NOT LIKE '%MJ%' 
+                    AND injection_parts.part_code NOT LIKE '%BJ%' 
                 ) AS ng_count_kensa 
             FROM
                 rc_kensa_initials
