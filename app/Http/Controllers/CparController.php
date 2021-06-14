@@ -2749,11 +2749,11 @@ class CparController extends Controller
         klausul,
         sum( CASE WHEN `status` = 'Good' THEN 1 ELSE 0 END ) AS good,
         sum( CASE WHEN `status` = 'None' THEN 1 ELSE 0 END ) AS `none`,
-        sum( CASE WHEN `status` = 'Not Good' THEN 1 ELSE 0 END ) AS `not_good`
+        sum( CASE WHEN `status` = 'Not Good' THEN 1 ELSE 0 END ) AS `not_good` 
         FROM
         standarisasi_audit_isos
         WHERE 
-        kategori = 'ISO 14001' and deleted_at is null 
+        kategori = 'ISO 14001' and deleted_at is null and tanggal between '".$datefrom."' and '".$dateto."'
         GROUP BY
         klausul
       ");
