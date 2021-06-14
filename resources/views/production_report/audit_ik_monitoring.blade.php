@@ -70,6 +70,9 @@
     text-align:left;
     padding-left: 7px;
   }
+  .tableResumes tr td {
+    cursor: pointer;
+  }
   #loading, #error { display: none; }
 </style>
 @endsection
@@ -345,7 +348,7 @@
                 point: {
                   events: {
                     click: function () {
-                      showModal(this.options.key,this.series.name);
+                      showModal(this.options.key,this.series.name,"");
                     }
                   }
                 },
@@ -470,7 +473,7 @@
                 point: {
                   events: {
                     click: function () {
-                      showModal(this.options.key,this.series.name);
+                      showModal(this.options.key,this.series.name,"");
                     }
                   }
                 },
@@ -525,7 +528,7 @@
             tableresume += '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="background-color: #e7ffb8;text-align: center;height: 35px;padding-right: 5px;margin-top:20px">';
             tableresume += '<span style="font-size: 25px;font-weight: bold;">'+result.department[i].department_name+'</span>';
             tableresume += '</div>';
-            tableresume += '<table id="tableResume" style="background-color: black;color: white;font-size: 15px;" class="table table-bordered">'
+            tableresume += '<table id="tableResume" style="background-color: black;color: white;font-size: 15px;" class="table table-bordered tableResumes">'
               tableresume += '<tr>';
                 tableresume += '<td style="border: 1px solid white">課</td>';
                 tableresume += '<td style="border: 1px solid white">Item</td>';
@@ -545,6 +548,7 @@
                 for(var j = 0; j< result.resume_all.length;j++){
                   if (result.resume_all[j][0].department_id == result.department[i].id_department) {
                     for(var k = 0; k< result.resume_all[j].length;k++){
+                      var kondision = 'All';
                       tableresume += '<td style="border: 1px solid white;text-align:center">'+result.resume_all[j][k].plan+'</td>';
                     }
                   }
@@ -556,6 +560,7 @@
                 for(var j = 0; j< result.resume_all.length;j++){
                   if (result.resume_all[j][0].department_id == result.department[i].id_department) {
                     for(var k = 0; k< result.resume_all[j].length;k++){
+                      var kondision = 'Sudak Dikerjakan';
                       tableresume += '<td style="border: 1px solid white;text-align:center">'+result.resume_all[j][k].done+'</td>';
                     }
                   }
@@ -656,7 +661,7 @@
     });
   }
 
-  function showModal(month,kondisi) {
+  function showModal(month,kondisi,department) {
     $('#loading').show();
     var data = {
       month: month,
