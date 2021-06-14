@@ -133,12 +133,12 @@
 						</a>
 					</li>
 					<li>
-						<a href="#" style="font-size: 18px; font-weight: bold; padding-top: 5px; padding-bottom: 5px;">Sudah Ambil
+						<a href="#" style="font-size: 18px; font-weight: bold; padding-top: 5px; padding-bottom: 5px;">Hadir
 							<span class="pull-right text-green" id="meet5">0</span>
 						</a>
 					</li>
 					<li>
-						<a href="#" style="font-size: 18px; font-weight: bold; padding-top: 5px; padding-bottom: 5px;">Belum Ambil
+						<a href="#" style="font-size: 18px; font-weight: bold; padding-top: 5px; padding-bottom: 5px;">Belum Hadir
 							<span class="pull-right text-green" id="meet6">0</span>
 						</a>
 					</li>
@@ -323,13 +323,13 @@
 					tableData += "<td style='font-size: 18px;'>"+value.name+"</td>";
 					tableData += "<td style='font-size: 18px;'>"+(value.department || '')+"</td>";
 					if(value.status == 0){
-						tableData += "<td style='background-color: RGB(255,204,255);'>"+value.status+" - Belum Ambil</td>";
+						tableData += "<td style='background-color: RGB(255,204,255);'>"+value.status+" - Belum Hadir</td>";
 					}
 					if(value.status == 1){
-						tableData += "<td style='background-color: RGB(204,255,255);'>"+value.status+" - Sudah Ambil</td>";
+						tableData += "<td style='background-color: RGB(204,255,255);'>"+value.status+" - Hadir</td>";
 					}
 					if(value.status == 2){
-						tableData += "<td style='background-color: RGB(204,255,255);'>"+value.status+" - Sudah Ambil</td>";
+						tableData += "<td style='background-color: RGB(204,255,255);'>"+value.status+" - Hadir Tanpa Undangan</td>";
 					}
 					if(value.attend_time == null){
 						tableData += "<td style='font-size: 18px;'>-</td>";
