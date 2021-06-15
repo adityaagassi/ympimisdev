@@ -1955,7 +1955,7 @@
 	        $('div.timerkensa span.minutekensa').html(minute);
 	        $('div.timerkensa span.hourkensa').html(hour);
 	        if ($('#loc').val() == 'qa-fungsi') {
-	        	if (minute == 6) {
+	        	if (minute == 4) {
 		        	timerkensa.stop();
 		        	$('div.timerkensa').hide();
 		        	$('div.timeout').show();
@@ -1977,7 +1977,7 @@
 		        }
 	        }else if($('#loc').val() == 'qa-visual2'){
 	        	if ($('#loc').val() == 'qa-fungsi') {
-		        	if (minute == 3) {
+		        	if (minute == 4) {
 			        	timerkensa.stop();
 			        	$('div.timerkensa').hide();
 			        	$('div.timeout').show();

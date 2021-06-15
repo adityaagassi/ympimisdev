@@ -1415,7 +1415,7 @@ class AssemblyProcessController extends Controller
 			return Response::json($response);			
 		}
 		else{
-			if (count($employee->location) > 0) {
+			if (count($employee) > 0) {
 				$location = $employee->location;
 				$loc = explode("-", $location);
 				$number = $loc[2];
@@ -1467,27 +1467,148 @@ class AssemblyProcessController extends Controller
 			);
 			return Response::json($response);			
 		}else{
-			if (count($employee->location) > 0) {
-				$location = $employee->location;
-				$loc = explode("-", $location);
-				$number = $loc[2];
-				$locfix = $loc[0]."-".$loc[1];
-				$assemblies = Assembly::where('location','=',$locfix)->where('location_number','=',$number)->where('remark','=','OTHER')->first();
-				$assemblies->sedang_tag = strtoupper(dechex($request->get('tag')));
-				$assemblies->sedang_serial_number = $details->serial_number;
-				$assemblies->sedang_model = $details->model;
-				$assemblies->sedang_time = date('Y-m-d H:i:s');
-				$assemblies->save();
+			if ($request->get('location') == 'qa-fungsi') {
+				$detailsfungsi = AssemblyDetail::where('tag', '=', dechex($request->get('tag')))->where('origin_group_code', '=', '041')->where('assembly_details.deleted_at', '=', null)->where('location','renraku-fungsi')->first();
+				if (count($detailsfungsi) > 0) {
+					if (count($employee->location) > 0) {
+						$location = $employee->location;
+						$loc = explode("-", $location);
+						$number = $loc[2];
+						$locfix = $loc[0]."-".$loc[1];
+						$assemblies = Assembly::where('location','=',$locfix)->where('location_number','=',$number)->where('remark','=','OTHER')->first();
+						$assemblies->sedang_tag = strtoupper(dechex($request->get('tag')));
+						$assemblies->sedang_serial_number = $details->serial_number;
+						$assemblies->sedang_model = $details->model;
+						$assemblies->sedang_time = date('Y-m-d H:i:s');
+						$assemblies->save();
+					}
+					$response = array(
+						'status' => true,
+						'message' => 'Serial Number ditemukan',
+						'details' => $details,
+						'details2' => $details2,
+						'started_at' => date('Y-m-d H:i:s'),
+					);
+					return Response::json($response);
+				}else{
+					$response = array(
+						'status' => false,
+						'message' => 'Produk belum melewati Kensa Fungsi Renraku.',
+					);
+					return Response::json($response);
+				}
+			}elseif ($request->get('location') == 'fukiage1-visual') {
+				$detailsvisual1 = AssemblyDetail::where('tag', '=', dechex($request->get('tag')))->where('origin_group_code', '=', '041')->where('assembly_details.deleted_at', '=', null)->where('location','qa-fungsi')->first();
+				if (count($detailsvisual1) > 0) {
+					if (count($employee->location) > 0) {
+						$location = $employee->location;
+						$loc = explode("-", $location);
+						$number = $loc[2];
+						$locfix = $loc[0]."-".$loc[1];
+						$assemblies = Assembly::where('location','=',$locfix)->where('location_number','=',$number)->where('remark','=','OTHER')->first();
+						$assemblies->sedang_tag = strtoupper(dechex($request->get('tag')));
+						$assemblies->sedang_serial_number = $details->serial_number;
+						$assemblies->sedang_model = $details->model;
+						$assemblies->sedang_time = date('Y-m-d H:i:s');
+						$assemblies->save();
+					}
+					$response = array(
+						'status' => true,
+						'message' => 'Serial Number ditemukan',
+						'details' => $details,
+						'details2' => $details2,
+						'started_at' => date('Y-m-d H:i:s'),
+					);
+					return Response::json($response);
+				}else{
+					$response = array(
+						'status' => false,
+						'message' => 'Produk belum melewati QA Fungsi.',
+					);
+					return Response::json($response);
+				}
+			}elseif ($request->get('location') == 'qa-visual1') {
+				$detailsvisual1 = AssemblyDetail::where('tag', '=', dechex($request->get('tag')))->where('origin_group_code', '=', '041')->where('assembly_details.deleted_at', '=', null)->where('location','fukiage1-visual')->first();
+				if (count($detailsvisual1) > 0) {
+					if (count($employee->location) > 0) {
+						$location = $employee->location;
+						$loc = explode("-", $location);
+						$number = $loc[2];
+						$locfix = $loc[0]."-".$loc[1];
+						$assemblies = Assembly::where('location','=',$locfix)->where('location_number','=',$number)->where('remark','=','OTHER')->first();
+						$assemblies->sedang_tag = strtoupper(dechex($request->get('tag')));
+						$assemblies->sedang_serial_number = $details->serial_number;
+						$assemblies->sedang_model = $details->model;
+						$assemblies->sedang_time = date('Y-m-d H:i:s');
+						$assemblies->save();
+					}
+					$response = array(
+						'status' => true,
+						'message' => 'Serial Number ditemukan',
+						'details' => $details,
+						'details2' => $details2,
+						'started_at' => date('Y-m-d H:i:s'),
+					);
+					return Response::json($response);
+				}else{
+					$response = array(
+						'status' => false,
+						'message' => 'Produk belum melewati Kensa Visual Akhir Proses.',
+					);
+					return Response::json($response);
+				}
+			}elseif ($request->get('location') == 'qa-visual2') {
+				$detailsvisual1 = AssemblyDetail::where('tag', '=', dechex($request->get('tag')))->where('origin_group_code', '=', '041')->where('assembly_details.deleted_at', '=', null)->where('location','qa-visual1')->first();
+				if (count($detailsvisual1) > 0) {
+					if (count($employee->location) > 0) {
+						$location = $employee->location;
+						$loc = explode("-", $location);
+						$number = $loc[2];
+						$locfix = $loc[0]."-".$loc[1];
+						$assemblies = Assembly::where('location','=',$locfix)->where('location_number','=',$number)->where('remark','=','OTHER')->first();
+						$assemblies->sedang_tag = strtoupper(dechex($request->get('tag')));
+						$assemblies->sedang_serial_number = $details->serial_number;
+						$assemblies->sedang_model = $details->model;
+						$assemblies->sedang_time = date('Y-m-d H:i:s');
+						$assemblies->save();
+					}
+					$response = array(
+						'status' => true,
+						'message' => 'Serial Number ditemukan',
+						'details' => $details,
+						'details2' => $details2,
+						'started_at' => date('Y-m-d H:i:s'),
+					);
+					return Response::json($response);
+				}else{
+					$response = array(
+						'status' => false,
+						'message' => 'Produk belum melewati QA Visual 1.',
+					);
+					return Response::json($response);
+				}
+			}else{
+				if (count($employee->location) > 0) {
+					$location = $employee->location;
+					$loc = explode("-", $location);
+					$number = $loc[2];
+					$locfix = $loc[0]."-".$loc[1];
+					$assemblies = Assembly::where('location','=',$locfix)->where('location_number','=',$number)->where('remark','=','OTHER')->first();
+					$assemblies->sedang_tag = strtoupper(dechex($request->get('tag')));
+					$assemblies->sedang_serial_number = $details->serial_number;
+					$assemblies->sedang_model = $details->model;
+					$assemblies->sedang_time = date('Y-m-d H:i:s');
+					$assemblies->save();
+				}
+				$response = array(
+					'status' => true,
+					'message' => 'Serial Number ditemukan',
+					'details' => $details,
+					'details2' => $details2,
+					'started_at' => date('Y-m-d H:i:s'),
+				);
+				return Response::json($response);
 			}
-			
-			$response = array(
-				'status' => true,
-				'message' => 'Serial Number ditemukan',
-				'details' => $details,
-				'details2' => $details2,
-				'started_at' => date('Y-m-d H:i:s'),
-			);
-			return Response::json($response);
 		}
 	}
 
