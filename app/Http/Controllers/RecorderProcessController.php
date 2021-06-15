@@ -8096,14 +8096,14 @@ class RecorderProcessController extends Controller
           LEFT JOIN injection_tags ON injection_tags.tag = rc_kensa_initials.tag 
         WHERE
           `status` = 'Open' 
+          AND DATE(rc_kensa_initials.created_at) = DATE(NOW())
         GROUP BY
           serial_number,
           employee_id,
           `name`,
           rc_kensa_initials.product
         ORDER BY
-          rc_kensa_initials.id DESC 
-          LIMIT 5");
+          rc_kensa_initials.id DESC ");
 
         $response = array(
           'status' => true,

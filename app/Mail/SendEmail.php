@@ -94,6 +94,9 @@ class SendEmail extends Mailable
         if($this->remark == 'raw_material_reminder'){
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Stock Alert <75%')->view('mails.raw_material_reminder');
         }
+        if($this->remark == 'raw_material_over'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Warning Raw Material Over Plan Usage')->view('mails.raw_material_over');
+        }
         if($this->remark == 'double_transaction_notification'){
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Double Transaction Notification')->view('mails.double_transaction_notification');
         }

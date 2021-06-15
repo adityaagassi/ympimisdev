@@ -275,8 +275,8 @@
 							var cavity = value2.cavity.split(',');
 							var color = value2.color.split(',');
 							body_all += '<tr>';
-								body_all += '<td style="border: 1px solid #fff;background-color: #c800c6;color: white;font-size: 40px">'+value2.name.split(' ').slice(0,1).join(' ')+'</td>';
-								body_all += '<td style="border: 1px solid #fff;background-color: #c800c6;color: white;font-size: 40px"><span>'+value2.product+'</span></td>';
+								body_all += '<td style="border: 1px solid #fff;background-color: #c800c6;color: white;font-size: 30px">'+value2.name.split(' ').slice(0,1).join(' ')+'<br>'+value2.serial_number+'</td>';
+								body_all += '<td style="border: 1px solid #fff;background-color: #c800c6;color: white;font-size: 30px"><span>'+value2.product+'</span></td>';
 								body_all += '<td style="border: 1px solid #fff;background-color: #9ec3ff;color: black;font-size: 70px;border-left:5px solid red;"><span>'+cavity[0]+'</span>';
 								body_all += '</td>';
 								body_all += '<td style="border: 1px solid #fff;background-color: #9ec3ff;color: black;font-size: 70px"><span>'+no_kanban[0]+'</span>';
