@@ -262,6 +262,7 @@
 			format: "yyyy-mm",
 			startView: "months", 
 			minViewMode: "months",
+			endDate: new Date(),
 			autoclose: true,
 
 		});
@@ -269,6 +270,7 @@
 			format: "yyyy-mm",
 			startView: "months", 
 			minViewMode: "months",
+			endDate: new Date(),
 			autoclose: true,
 		});
 		$('.select2').select2();
@@ -341,9 +343,9 @@
 					tableData += '<td>'+value.pulang_cepat+'</td>';
 
 					if (value.tunjangan == 1) {
-						tableData += '<td>Tidak Dapat</td>';
+						tableData += '<td><span class="label label-danger">Tidak Dapat</span></td>';
 					} else {
-						tableData += '<td>Dapat</td>';
+						tableData += '<td><span class="label label-success">Dapat</span></td>';
 					}
 					tableData += '<td>'+ot.toFixed(2)+'</td>';
 					tableData += '</tr>';
