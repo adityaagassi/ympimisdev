@@ -46,7 +46,10 @@
     <li>
       <!-- <a data-toggle="modal" data-target="#deleteModal" class="btn btn-danger btn-sm" style="color:white">Delete {{ $page }}s</a> -->
       &nbsp;
+      <?php if (strtoupper(Auth::user()->username) == 'PI1005001' || Auth::user()->role_code == 'MIS') { ?>
       <a data-toggle="modal" data-target="#importModal" class="btn btn-success btn-sm" style="color:white">Import {{ $page }}s</a>
+      <?php } ?>
+
       <!-- &nbsp;
         <a data-toggle="modal" data-target="#createModal" class="btn btn-primary btn-sm" style="color:white">Create {{ $page }}</a> -->
       </li>
@@ -56,102 +59,104 @@
 
 
   @section('content')
-  <?php if (strtoupper(Auth::user()->username) != 'PI1005001' && Auth::user()->role_code != 'MIS') { ?>
-    <script>
-      window.location.href = '{{route("home")}}';
-   </script>
- <?php } ?>
- <section class="content">
-  @if (session('status'))
-  <div class="alert alert-success alert-dismissible">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    <h4><i class="icon fa fa-thumbs-o-up"></i> Success!</h4>
-    {{ session('status') }}
-  </div>   
-  @endif
-  @if (session('error'))
-  <div class="alert alert-danger alert-dismissible">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    <h4><i class="icon fa fa-ban"></i> Error!</h4>
-    {{ session('error') }}
-  </div>   
-  @endif
+  <?php if (strtoupper(Auth::user()->username) != 'PI1005001' && Auth::user()->role_code != 'MIS' && Auth::user()->role_code != 'PC') { ?>
+  <script>
+    window.location.href = '{{route("home")}}';
+  </script>
+  <?php } ?>
+  <section class="content">
+    @if (session('status'))
+    <div class="alert alert-success alert-dismissible">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <h4><i class="icon fa fa-thumbs-o-up"></i> Success!</h4>
+      {{ session('status') }}
+    </div>   
+    @endif
+    @if (session('error'))
+    <div class="alert alert-danger alert-dismissible">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <h4><i class="icon fa fa-ban"></i> Error!</h4>
+      {{ session('error') }}
+    </div>   
+    @endif
 
-  <div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 3001; opacity: 0.8;">
-    <p style="position: absolute; color: White; top: 45%; left: 35%;">
-     <span style="font-size: 40px">Loading, please wait <i class="fa fa-spin fa-spinner"></i></span>
-   </p>
- </div>
+    <div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 3001; opacity: 0.8;">
+      <p style="position: absolute; color: White; top: 45%; left: 35%;">
+       <span style="font-size: 40px">Loading, please wait <i class="fa fa-spin fa-spinner"></i></span>
+     </p>
+   </div>
 
- <div class="row">
-  <div class="col-xs-12">
-    <div class="box">
-      <div class="box-body">
+   <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+        <div class="box-body">
 
-        <div class="col-xs-3">
-          <div class="form-group">
-            <label>Pilih Bulan</label>
-            <div class="input-group date" style="width: 100%;">
-              <input type="text" placeholder="Pilih Bulan" class="form-control datepicker" name="mon" id="mon">
+          <div class="col-xs-3">
+            <div class="form-group">
+              <label>Pilih Bulan</label>
+              <div class="input-group date" style="width: 100%;">
+                <input type="text" placeholder="Pilih Bulan" class="form-control datepicker" name="mon" id="mon">
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="col-xs-3">
-          <div class="form-group">
-            <label>Pilih Item</label>
-            <div class="input-group date" style="width: 100%;">
-              <select class="form-control select2" name="item_category" id="item_category" data-placeholder="Pilih Item" style="width: 100%">
-                <option value=""></option>
-                <option value="SX51 Key">SX Key</option>
-                <option value="SX51 Body">SX Body</option>
-                <option value="CL51 Key">CL Key</option>
-              </select>
+          <div class="col-xs-3">
+            <div class="form-group">
+              <label>Pilih Item</label>
+              <div class="input-group date" style="width: 100%;">
+                <select class="form-control select2" name="item_category" id="item_category" data-placeholder="Pilih Item" style="width: 100%">
+                  <option value=""></option>
+                  <option value="SX51 Key">SX Key</option>
+                  <option value="SX51 Body">SX Body</option>
+                  <option value="CL51 Key">CL Key</option>
+                </select>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="col-xs-3">
-          <div class="form-group">
-            <label>&nbsp;</label>
-            <div class="input-group">
-              <button type="button" class="btn btn-sm btn-primary" onclick="draw_table()">Filter</button>
+          <div class="col-xs-3">
+            <div class="form-group">
+              <label>&nbsp;</label>
+              <div class="input-group">
+                <button type="button" class="btn btn-sm btn-primary" onclick="draw_table()">Filter</button>
+              </div>
             </div>
           </div>
+
+          <div class="col-xs-12">
+            <table id="example1" class="table table-bordered table-striped table-hover">
+              <thead style="background-color: rgba(126,86,134,.7);">
+                <tr>
+                  <th>Material</th>
+                  <th>Material Description</th>
+                  <th>Storage Location</th>
+                  <th>Category</th>
+                  <th>Due Date</th>
+                  <th>Qty</th>
+                  <th>Updated At</th>
+                </tr>
+              </thead>
+              <tbody id="tableBodyList">
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+
         </div>
-
-        <div class="col-xs-12">
-          <table id="example1" class="table table-bordered table-striped table-hover">
-            <thead style="background-color: rgba(126,86,134,.7);">
-              <tr>
-                <th>Material Number</th>
-                <th>Material Description</th>
-                <th>Storage Location</th>
-                <th>Category</th>
-                <th>Due Date</th>
-                <th>Qty</th>
-              </tr>
-            </thead>
-            <tbody id="tableBodyList">
-            </tbody>
-            <tfoot>
-              <tr>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-
-
       </div>
     </div>
   </div>
-</div>
 </section>
 
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -485,6 +490,7 @@
           tableData += "<td>"+cat.split(" ")[1]+"</td>";
           tableData += "<td>"+value.due_date+"</td>";
           tableData += "<td>"+value.quantity+"</td>";
+          tableData += "<td>"+value.created_at+"</td>";
           tableData += "</tr>";
         })
 

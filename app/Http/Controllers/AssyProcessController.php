@@ -753,14 +753,14 @@ class AssyProcessController extends Controller
 			$assy_schedules = AssyPickingSchedule::where(db::raw('DATE_FORMAT(assy_picking_schedules.due_date,"%Y-%m")'), '=', $request->get('mon'))
 			->where('remark', '=', explode(' ', $item)[0])
 			->leftJoin("materials","materials.material_number","=","assy_picking_schedules.material_number")
-			->select('assy_picking_schedules.id','assy_picking_schedules.material_number','assy_picking_schedules.due_date','assy_picking_schedules.quantity','materials.material_description', 'assy_picking_schedules.remark')
+			->select('assy_picking_schedules.id','assy_picking_schedules.material_number','assy_picking_schedules.due_date','assy_picking_schedules.quantity','materials.material_description', 'assy_picking_schedules.remark', 'assy_picking_schedules.created_at')
 			->orderByRaw('due_date DESC', 'assy_picking_schedules.material_number ASC')
 			->get();
 		} else {
 			$assy_schedules = AssyBodySchedule::where(db::raw('DATE_FORMAT(assy_body_schedules.due_date,"%Y-%m")'), '=', $request->get('mon'))
 			->where('remark', '=', explode(' ', $item)[0])
 			->leftJoin("materials","materials.material_number","=","assy_body_schedules.material_number")
-			->select('assy_body_schedules.id','assy_body_schedules.material_number','assy_body_schedules.due_date','assy_body_schedules.quantity','materials.material_description','assy_body_schedules.remark')
+			->select('assy_body_schedules.id','assy_body_schedules.material_number','assy_body_schedules.due_date','assy_body_schedules.quantity','materials.material_description','assy_body_schedules.remark', 'assy_body_schedules.created_at')
 			->orderByRaw('due_date DESC', 'assy_body_schedules.material_number ASC')
 			->get();
 		}
