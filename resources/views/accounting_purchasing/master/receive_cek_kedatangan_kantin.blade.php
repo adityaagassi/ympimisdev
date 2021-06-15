@@ -114,7 +114,6 @@
 									<tr>
 										<th style="width:4%;">Nomor PR / Inv</th>
 										<th style="width:4%;">Nomor PO</th>
-										<th style="width:4%;">Nomor PO SAP</th>
 										<th style="width:4%;">Vendor</th>
 										<th style="width:8%;">Nama Item</th>
 										<th style="width:2%;">Date Receive</th>
@@ -128,7 +127,6 @@
 								</tbody>
 								<tfoot>
 									<tr>
-										<th></th>
 										<th></th>
 										<th></th>
 										<th></th>
@@ -270,7 +268,6 @@
 			"columns": [
 			{ "data": "no_pr"},
 			{ "data": "no_po"},
-			{ "data": "no_po_sap"},
 			{ "data": "supplier_code"},
 			{ "data": "nama_item"},
 			{ "data": "date_receive"},

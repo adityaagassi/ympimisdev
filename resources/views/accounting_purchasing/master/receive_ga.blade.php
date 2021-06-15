@@ -121,7 +121,7 @@
 				<thead>
 					<tr>
 
-						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 25px;" colspan="9" id='po_title'>Nomor PO</th>
+						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 25px;" colspan="9" id='po_title'>Nomor PO House Hold</th>
 					</tr>
 					<tr>
 						<th width="1%" style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">Nomor</th>

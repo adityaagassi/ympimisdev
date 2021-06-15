@@ -44,6 +44,10 @@
 					<td style="width: 25%; ">Budget No</td>
 					<td>: <?= $data[0]->no_budget ?></td>
 				</tr>
+				<tr>
+					<td style="width: 25%; ">Note</td>
+					<td>: <?= $data[0]->note ?></td>
+				</tr>
 			</tbody>
 		</table>
 		<br><br>
@@ -64,8 +68,8 @@
 					<td style="border:1px solid black; text-align: left !important;"><?= $datas->item_desc ?></td></td>
 					<td style="border:1px solid black; text-align: center;"><?= $datas->item_qty ?></td>
 					<td style="border:1px solid black; text-align: center;"><?= $datas->item_uom ?></td>
-					<td style="border:1px solid black; text-align: center;"><?= number_format($datas->item_price,2,",",".") ?></td>
-					<td style="border:1px solid black; text-align: center;"><?= number_format($datas->item_amount,2,",",".") ?></td>
+					<td style="border:1px solid black; text-align: center;"><?= number_format($datas->item_price,2,',','.') ?></td>
+					<td style="border:1px solid black; text-align: center;"><?= number_format($datas->item_amount,2,',','.') ?></td>
 				</tr>
 				@endforeach
 			</tbody>
@@ -119,6 +123,10 @@
 				<tr>
 					<td style="width: 30%; ">Budget No (予算番号)</td>
 					<td>: <?= $data[0]->no_budget ?></td>
+				</tr>
+				<tr>
+					<td style="width: 25%; ">Note</td>
+					<td>: <?= $data[0]->note ?></td>
 				</tr>
 			</tbody>
 		</table>
@@ -183,6 +191,10 @@
 				<tr>
 					<td style="width: 25%; ">Budget No</td>
 					<td>: <?= $data[0]->no_budget ?></td>
+				</tr>
+				<tr>
+					<td style="width: 25%; ">Note</td>
+					<td>: <?= $data[0]->note ?></td>
 				</tr>
 			</tbody>
 		</table>

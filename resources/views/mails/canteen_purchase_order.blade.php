@@ -58,7 +58,7 @@
 			<span style="font-weight: bold;"><i>Do you want to Approve this PO Canteen Request?</i></span><br>
 			<a style="background-color: green; width: 50px; text-decoration: none;color: white;font-size: 20px;" href="{{ url("purchase_order_canteen/approvemanager/".$data[0]->id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<a style="background-color: red; width: 50px; text-decoration: none;color: white;font-size: 20px;" href="{{ url("canteen/purchase_order/reject/".$data[0]->id) }}">&nbsp; Reject &nbsp;</a>
+			<a style="background-color: red; width: 50px; text-decoration: none;color: white;font-size: 20px;" href="{{ url("purchase_order_canteen/reject/".$data[0]->id) }}">&nbsp; Reject &nbsp;</a>
 
 			<br>
 			<br>
@@ -107,7 +107,7 @@
 			<br><br><br>
 
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
-			<a href="{{ url('purchase_order_canteen/monitoring') }}">Purchase Order (PO) Monitoring</a>
+			<a href="{{ url('canteen/purchase_order/monitoring') }}">Purchase Order (PO) Monitoring</a>
 
 			<br><br>
 

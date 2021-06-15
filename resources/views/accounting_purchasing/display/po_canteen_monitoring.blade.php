@@ -157,7 +157,6 @@ hr { background-color: red; height: 1px; border: 0; }
                     <th style="width: 8%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;" rowspan="2">Budget</th>
                     <th style="width: 10%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;" rowspan="2" colspan="2">Net Payment</th>
                     <th style="width: 50%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;" colspan="2">Progress Purchase Order</th>
-                    <th style="width: 10%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;" rowspan="2">SAP</th>
                   </tr>
                   <tr>
                     <th style="width: 10%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;">Buyer</th>
@@ -195,7 +194,6 @@ hr { background-color: red; height: 1px; border: 0; }
                     <th>Remark</th>
                     <th>Tanggal PO</th>
                     <th>Supplier</th>
-                    <th>No PO SAP</th>
                     <th>Status</th>
                   </tr>
                 </thead>
@@ -415,7 +413,6 @@ hr { background-color: red; height: 1px; border: 0; }
           var manager = "";
           var dgm = "";
           var gm = "";
-          var sap = "";
 
           $.each(result.datas, function(key, value) {
 
@@ -431,7 +428,6 @@ hr { background-color: red; height: 1px; border: 0; }
             // var dgmname = dgm_name.split(' ').slice(0,2).join(' ');
             // var colordgm = "";
 
-            var colorsap = "";
 
             var d = 0;
 
@@ -480,32 +476,6 @@ hr { background-color: red; height: 1px; border: 0; }
                 }
               }
 
-              //SAP
-              if (value.posisi == "pch") {
-                  if (value.status == "not_sap") {
-                      if (d == 0) {  
-                        sap = '<a href="'+urldetail+'"><span class="label label-danger">Nomor PO SAP</span></a>';
-                        colorsap = 'style="background-color:#dd4b39"'; 
-                        d = 1;
-                      } else {
-                        sap = '';
-                      }
-                  } else {
-                    sap = '<a href="'+urlreport+'/'+value.id+'"><span class="label label-success">Finish</span></a>'; 
-                    colorsap = 'style="background-color:#00a65a"'; 
-                  }
-              } 
-
-              else {
-                if (d == 0) {  
-                  sap = '<a href="'+urldetail+'"><span class="label label-danger">Nomor PO SAP</span></a>';
-                  colorsap = 'style="background-color:#dd4b39"'; 
-                  d = 1;
-                } else {
-                  sap = '';
-                }
-              }
-
               var reject = "";
 
               if (value.reject != null) {
@@ -536,16 +506,9 @@ hr { background-color: red; height: 1px; border: 0; }
               table += '<td style="text-align:right !important;border-left:none '+reject+'">'+formatUang(value.amount,"")+'</td>';
               table += '<td '+colorbuyer+'>'+buyer+'</td>';  
               table += '<td '+colormanager+'>'+manager+'</td>';
-              // table += '<td '+colordgm+'>'+dgm+'</td>';
-              // table += '<td '+colorgm+'>'+gm+'</td>';
-              table += '<td '+colorsap+'>'+sap+'</td>';
-
-              
           })
 
           $('#tabelisi').append(table);
-
-
 
         }
       }
@@ -648,7 +611,6 @@ hr { background-color: red; height: 1px; border: 0; }
           { "data": "remark" },
           { "data": "tgl_po" },
           { "data": "supplier_name" },
-          { "data": "no_po_sap" },
           { "data": "status" }
         ]    });
 

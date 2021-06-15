@@ -584,9 +584,7 @@ class SurveyController extends Controller
 					 and miraimobile.survey_covid_logs.tanggal = '".$date."'
                           and employee_syncs.end_date is null");
 	               }
-	           }
-
-
+	          }
 
 			$response = array(
 				'status' => true,

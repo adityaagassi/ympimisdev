@@ -111,17 +111,17 @@
 				<thead>
 					<tr>
 
-						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 25px;" colspan="9" id='po_title'>Nomor PO</th>
+						<th style="width:15%; background-color: #ef6c00; text-align: center; color: white; padding:0;font-size: 25px;" colspan="9" id='po_title'>Nomor PO Kantin</th>
 					</tr>
 					<tr>
-						<th width="1%" style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">Nomor</th>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">NO PO</th>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">NO ITEM</th>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">DETAIL ITEM</th>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">QTY</th>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">QTY RECEIVE</th>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">RECEIVE DATE</th>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">SURAT JALAN</th>
+						<th width="1%" style="text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">Nomor</th>
+						<th style="text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">NO PO</th>
+						<th style="text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">NO ITEM</th>
+						<th style="text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">DETAIL ITEM</th>
+						<th style="text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">QTY</th>
+						<th style="text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">QTY RECEIVE</th>
+						<th style="text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">RECEIVE DATE</th>
+						<th style="text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">SURAT JALAN</th>
 					</tr>
 				</thead>
 				<tbody id="po_body">

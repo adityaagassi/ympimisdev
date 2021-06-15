@@ -660,7 +660,11 @@
 					bodyDetail += '<td>'+value.due_date+'</td>';
 					bodyDetail += '<td>'+value.menu_name+'</td>';
 					if ($('#role').val() == 'GA' || $('#role').val() == 'MIS') {
-						bodyDetail += '<td><button class="btn btn-warning" onclick="openModalEdit(\''+value.id_live+'\',\''+value.employee_id+'\',\''+value.due_date+'\')"><i class="fa fa-edit"></i> Edit</button></td>';
+						if (value.due_date >= value.date_now) {
+							bodyDetail += '<td><button class="btn btn-warning" onclick="openModalEdit(\''+value.id_live+'\',\''+value.employee_id+'\',\''+value.due_date+'\')"><i class="fa fa-edit"></i> Edit</button></td>';
+						}else{
+							bodyDetail += '<td></td>';
+						}
 					}
 					bodyDetail += '</tr>';
 				});

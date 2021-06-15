@@ -59,6 +59,9 @@
 	</h1>
 	<ol class="breadcrumb">
 		<li>
+			<a href="javascript:void(0)" onclick="openHistory()" class="btn btn-md bg-green" style="color:white"><i class="fa fa-list"></i> Cek History Pembelian Kantin</a>
+		</li>
+		<li>
 			<a href="javascript:void(0)" onclick="openModalCreate()" class="btn btn-md bg-purple" style="color:white"><i class="fa fa-plus"></i> Create {{ $page }}</a>
 		</li>
 	</ol>
@@ -145,7 +148,7 @@
 				</div>
 				<div class="row">
 					<input type="hidden" value="{{csrf_token()}}" name="_token" />
-					<form method="GET" action="{{ url("export/purchase_order/list") }}">
+					<form method="GET" action="{{ url("export/purchase_order_canteen/list") }}">
 						<div class="col-xs-12">
 							<div class="col-md-2">
 								<div class="form-group">
@@ -205,7 +208,6 @@
 										<th style="width: 5%">Buyer</th>
 										<th style="width: 1%">Tanggal PO</th>
 										<th style="width: 4%">Supplier</th>
-										<th style="width: 1%">No PO SAP</th>
 										<th style="width: 1%">Status</th>
 										<th style="width: 6%">Action</th>
 									</tr>
@@ -214,7 +216,6 @@
 								</tbody>
 								<tfoot>
 									<tr>
-										<th></th>
 										<th></th>
 										<th></th>
 										<th></th>
@@ -467,7 +468,7 @@
 									<div class="col-xs-1" style="padding:5px;">
 										<!-- <input type="text" class="form-control" id="gl_number1" name="gl_number1" placeholder="GL Number" required=""> -->
 										<select class="form-control select2" data-placeholder="GL Number" name="gl_number1" id="gl_number1" style="width: 100% height: 35px;" required=''>
-											<option value=""></option>
+											<option value="51400410">51400410 - Meal Allowance</option>
 											<option value="63300000">63300000 - Factory Constool</option>
 											<option value="64500000">64500000 - Repair Maintenance (Material)</option>
 											<option value="64500100">64500100 - Repair Maintenance (Jasa)</option>
@@ -895,32 +896,48 @@
       </div>
   </div>
 
-<div class="modal fade" id="modalSAP" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  	<div class="modal-dialog modal-sm">
-    	<div class="modal-content">
-      		<div class="modal-header">
-	        	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-	        	<h4 class="modal-title" id="myModalLabel">Edit Nomor SAP</h4>
-      		</div>
-	      	<div class="modal-body">
-		        <div class="box-body">
-		          <input type="hidden" value="{{csrf_token()}}" name="_token" />
-		          <div class="row">
-			          <div class="col-xs-12">
-			            <label for="po_sap">No PO SAP<span class="text-red">*</span></label>
-			            <input type="text" class="form-control" name="no_po_sap" id="no_po_sap">
-			           </div>
-		          	</div>
-		        </div>
-	     	</div>
-		    <div class="modal-footer">
-		      <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
-		      <input type="hidden" id="id_edit_sap">
-		      <button type="button" onclick="edit_sap()" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-pencil"></i> Edit</button>
-		    </div>
-	  	</div>
+<div class="modal fade" id="modalHistory">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<center><h3 style="background-color: #1da12e; font-weight: bold; padding: 3px; margin-top: 0; color: black;">Cek History Pembelian</h3>
+					</center>
+					<div class="modal-body table-responsive no-padding" style="min-height: 100px; padding-bottom: 5px;">
+						<div class="col-md-9">
+							<div class="form-group">
+								<label>Enter Keyword</label>
+								<input type="text" class="form-control" id="keyword" name="keyword" placeholder="Masukkan Kode Item / Deskripsi">
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="form-group">
+								<div class="col-md-12">
+									<label style="color: white;"> xxxxxxxxxxxxxxxxxx</label>
+									<button id="search" onclick="fetchLog()" class="btn btn-info"><i class="fa fa-search"></i> Search</button>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-12">
+							<table class="table table-hover table-bordered table-striped" id="tableLog">
+								<thead style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th>No</th>
+										<th>Vendor</th>
+										<th>Nomor PO</th>
+										<th>Nama Item</th>
+										<th>Harga</th>
+										<th>Tanggal PO</th>
+									</tr>
+								</thead>
+								<tbody id="tableLogBody">
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
-</div>
 
 
 <div class="modal modal-danger fade in" id="modaldanger">
@@ -1272,7 +1289,6 @@
 			{ "data": "buyer_name" },
 			{ "data": "tgl_po" },
 			{ "data": "supplier_name" },
-			{ "data": "no_po_sap" },
 			{ "data": "status" },
 			{ "data": "action" },
 
@@ -1513,7 +1529,7 @@
 			lop = "lop2";
 		}
 
-		var divdata = $("<div id='"+no+"' class='col-md-12' style='margin-bottom : 5px'><div class='col-xs-1' style='padding:5px;'><select class='form-control select3' data-placeholder='PR' name='no_pr"+no+"' id='no_pr"+no+"' style='width: 100% height: 35px;' onchange='pilihPR(this)' required=''></select></div><div class='col-xs-1' style='padding:5px;'><select class='form-control select3' data-placeholder='Item' name='no_item"+no+"' id='no_item"+no+"' style='width: 100% height: 35px;' onchange='pilihItem(this)' required=''></select><input type='hidden' class='form-control' id='nama_item"+no+"' name='nama_item"+no+"' placeholder='Nama Item' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_budget"+no+"' name='item_budget"+no+"' placeholder='Budget' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control datepicker' id='delivery_date"+no+"' name='delivery_date"+no+"' placeholder='Delivery Date' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='qty"+no+"' name='qty"+no+"' placeholder='Qty' required='' readonly='' onkeyup='getkonversi(this)'></div> <div class='col-xs-1' style='padding:5px;'><select class='form-control select3' id='uom"+no+"' name='uom"+no+"' data-placeholder='UOM' style='width: 100%;'><option></option>@foreach($uom as $um)<option value='{{ $um }}'>{{ $um }}</option>@endforeach</select></div><div class='col-xs-1' style='padding:5px;'><div class='input-group'><span class='input-group-addon' id='ket_harga"+no+"'>?</span><input type='text' class='form-control currency' id='goods_price"+no+"' name='goods_price"+no+"' placeholder='Goods Price' required='' readonly='' onkeyup='getkonversi(this)'></div></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='last_price"+no+"' name='last_price"+no+"' placeholder='Last Price' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='service_price"+no+"' name='service_price"+no+"' placeholder='Service' onkeyup='getkonversi(this)' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='konversi_dollar"+no+"' name='konversi_dollar"+no+"' placeholder='Konversi Dollar' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'><select class='form-control select3' data-placeholder='GL Number' name='gl_number"+no+"' id='gl_number"+no+"' style='width: 100% height: 35px;' required=''><option value=''></option><option value='63300000'>63300000 - Factory Constool</option><option value='64500000'>64500000 - Repair Maintenance (Material)</option><option value='64500100'>64500100 - Repair Maintenance (Jasa)</option><option value='62300200'>62300200 - Transport Expense</option><option value='63401000'>63401000 - Information System</option><option value='63300400'>63300400 - Office Supply</option><option value='63100000'>63100000 - Traveling Expense</option><option value='64450000'>64450000 - Rent</option><option value='63704000'>63704000 - Profesional Fee STD, QA, CH, dan PE</option><option value='63700000'>63700000 - Miscellaneous Expense</option><option value='53704020'>53704020 - Profesional Fee</option><option value='54450000'>54450000 - Rent</option><option value='53500000'>53500000 - Postage & Telecomm</option><option value='54500000'>54500000 - Repair Maintenance (Material)</option><option value='54500100'>54500100 - Repair Maintenance (Jasa)</option><option value='53200000'>53200000 - Insurance expenses</option><option value='53400000'>53400000 - Office supplies</option><option value='53401000'>53401000 - Information System</option><option value='53100000'>53100000 - Traveling Expenses</option><option value='53601000'>53601000 - Training & Education</option><option value='52300110'>52300110 - Transport Expenses</option><option value='55100000'>55100000 - Books & Period Exp</option><option value='56200000'>56200000 - Tax & Public Dues</option><option value='53703000'>53703000 - Recruiting Expenses</option><option value='58500301'>58500301 - Expatriate Permittance</option><option value='53700000'>53700000 - Miscellaneous Expense</option><option value='54100100'>54100100 - General Activity (Pembelian Seragam)</option><option value='51400300'>51400300 - Medical Allowance</option><option value='15700000'>15700000 - CIP</option><option value='15100000'>15100000 - Building</option><option value='15300000'>15300000 - Machinary & Equipment</option><option value='15400000'>15400000 - Vehicle</option><option value='15500000'>15500000 - Tools, Furniture & Fixture</option></select></div><div class='col-xs-1' style='padding:5px;'><button onclick='kurang(this,\""+lop+"\");' class='btn btn-danger'><i class='fa fa-close'></i> </button> <button type='button' onclick='tambah(\""+id+"\",\""+lop+"\"); ' class='btn btn-success'><i class='fa fa-plus' ></i></button></div></div>");
+		var divdata = $("<div id='"+no+"' class='col-md-12' style='margin-bottom : 5px'><div class='col-xs-1' style='padding:5px;'><select class='form-control select3' data-placeholder='PR' name='no_pr"+no+"' id='no_pr"+no+"' style='width: 100% height: 35px;' onchange='pilihPR(this)' required=''></select></div><div class='col-xs-1' style='padding:5px;'><select class='form-control select3' data-placeholder='Item' name='no_item"+no+"' id='no_item"+no+"' style='width: 100% height: 35px;' onchange='pilihItem(this)' required=''></select><input type='hidden' class='form-control' id='nama_item"+no+"' name='nama_item"+no+"' placeholder='Nama Item' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_budget"+no+"' name='item_budget"+no+"' placeholder='Budget' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control datepicker' id='delivery_date"+no+"' name='delivery_date"+no+"' placeholder='Delivery Date' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='qty"+no+"' name='qty"+no+"' placeholder='Qty' required='' readonly='' onkeyup='getkonversi(this)'></div> <div class='col-xs-1' style='padding:5px;'><select class='form-control select3' id='uom"+no+"' name='uom"+no+"' data-placeholder='UOM' style='width: 100%;'><option></option>@foreach($uom as $um)<option value='{{ $um }}'>{{ $um }}</option>@endforeach</select></div><div class='col-xs-1' style='padding:5px;'><div class='input-group'><span class='input-group-addon' id='ket_harga"+no+"'>?</span><input type='text' class='form-control currency' id='goods_price"+no+"' name='goods_price"+no+"' placeholder='Goods Price' required='' readonly='' onkeyup='getkonversi(this)'></div></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='last_price"+no+"' name='last_price"+no+"' placeholder='Last Price' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='service_price"+no+"' name='service_price"+no+"' placeholder='Service' onkeyup='getkonversi(this)' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='konversi_dollar"+no+"' name='konversi_dollar"+no+"' placeholder='Konversi Dollar' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'><select class='form-control select3' data-placeholder='GL Number' name='gl_number"+no+"' id='gl_number"+no+"' style='width: 100% height: 35px;' required=''><option value='51400410'>51400410 - Meal Allowance</option><option value='63300000'>63300000 - Factory Constool</option><option value='64500000'>64500000 - Repair Maintenance (Material)</option><option value='64500100'>64500100 - Repair Maintenance (Jasa)</option><option value='62300200'>62300200 - Transport Expense</option><option value='63401000'>63401000 - Information System</option><option value='63300400'>63300400 - Office Supply</option><option value='63100000'>63100000 - Traveling Expense</option><option value='64450000'>64450000 - Rent</option><option value='63704000'>63704000 - Profesional Fee STD, QA, CH, dan PE</option><option value='63700000'>63700000 - Miscellaneous Expense</option><option value='53704020'>53704020 - Profesional Fee</option><option value='54450000'>54450000 - Rent</option><option value='53500000'>53500000 - Postage & Telecomm</option><option value='54500000'>54500000 - Repair Maintenance (Material)</option><option value='54500100'>54500100 - Repair Maintenance (Jasa)</option><option value='53200000'>53200000 - Insurance expenses</option><option value='53400000'>53400000 - Office supplies</option><option value='53401000'>53401000 - Information System</option><option value='53100000'>53100000 - Traveling Expenses</option><option value='53601000'>53601000 - Training & Education</option><option value='52300110'>52300110 - Transport Expenses</option><option value='55100000'>55100000 - Books & Period Exp</option><option value='56200000'>56200000 - Tax & Public Dues</option><option value='53703000'>53703000 - Recruiting Expenses</option><option value='58500301'>58500301 - Expatriate Permittance</option><option value='53700000'>53700000 - Miscellaneous Expense</option><option value='54100100'>54100100 - General Activity (Pembelian Seragam)</option><option value='51400300'>51400300 - Medical Allowance</option><option value='15700000'>15700000 - CIP</option><option value='15100000'>15100000 - Building</option><option value='15300000'>15300000 - Machinary & Equipment</option><option value='15400000'>15400000 - Vehicle</option><option value='15500000'>15500000 - Tools, Furniture & Fixture</option></select></div><div class='col-xs-1' style='padding:5px;'><button onclick='kurang(this,\""+lop+"\");' class='btn btn-danger'><i class='fa fa-close'></i> </button> <button type='button' onclick='tambah(\""+id+"\",\""+lop+"\"); ' class='btn btn-success'><i class='fa fa-plus' ></i></button></div></div>");
 
 		$("#"+id).append(divdata);
 		$("#no_pr"+no).append(pr_list);
@@ -1672,7 +1688,7 @@
 		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='service_price"+value.id+"' name='service_price"+value.id+"' placeholder='Service' required='' onkeyup='getkonversiEdit(this)' value="+value.service_price+"></div>";
 		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='konversi_dollar"+value.id+"' name='konversi_dollar"+value.id+"' placeholder='Konversi Dollar' required='' value="+value.konversi_dollar+"></div>";
 
-		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='hidden' name='glhide"+value.id+"' id='glhide"+value.id+"' value='"+ value.gl_number +"'><select class='form-control select6' id='gl_edit"+value.id+"' name='gl_edit"+value.id+"' data-placeholder='GL Number' style='width: 100%;' required=''><option></option><option value='63300000'>63300000 - Factory Constool</option><option value='64500000'>64500000 - Repair Maintenance (Material)</option><option value='64500100'>64500100 - Repair Maintenance (Jasa)</option><option value='62300200'>62300200 - Transport Expense</option><option value='63401000'>63401000 - Information System</option><option value='63300400'>63300400 - Office Supply</option><option value='63100000'>63100000 - Traveling Expense</option><option value='64450000'>64450000 - Rent</option><option value='63704000'>63704000 - Profesional Fee STD, QA, CH, dan PE</option><option value='63700000'>63700000 - Miscellaneous Expense</option><option value='53704020'>53704020 - Profesional Fee</option><option value='54450000'>54450000 - Rent</option><option value='53500000'>53500000 - Postage & Telecomm</option><option value='54500000'>54500000 - Repair Maintenance (Material)</option><option value='54500100'>54500100 - Repair Maintenance (Jasa)</option><option value='53200000'>53200000 - Insurance expenses</option><option value='53400000'>53400000 - Office supplies</option><option value='53401000'>53401000 - Information System</option><option value='53100000'>53100000 - Traveling Expenses</option><option value='53601000'>53601000 - Training & Education</option><option value='52300110'>52300110 - Transport Expenses</option><option value='55100000'>55100000 - Books & Period Exp</option><option value='56200000'>56200000 - Tax & Public Dues</option><option value='53703000'>53703000 - Recruiting Expenses</option><option value='58500301'>58500301 - Expatriate Permittance</option><option value='53700000'>53700000 - Miscellaneous Expense</option><option value='54100100'>54100100 - General Activity (Pembelian Seragam)</option><option value='51400300'>51400300 - Medical Allowance</option><option value='15700000'>15700000 - CIP</option><option value='15100000'>15100000 - Building</option><option value='15300000'>15300000 - Machinary & Equipment</option><option value='15400000'>15400000 - Vehicle</option><option value='15500000'>15500000 - Tools, Furniture & Fixture</option></select></div>";
+		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='hidden' name='glhide"+value.id+"' id='glhide"+value.id+"' value='"+ value.gl_number +"'><select class='form-control select6' id='gl_edit"+value.id+"' name='gl_edit"+value.id+"' data-placeholder='GL Number' style='width: 100%;' required=''><option value='51400410'>51400410 - Meal Allowance</option><option value='63300000'>63300000 - Factory Constool</option><option value='64500000'>64500000 - Repair Maintenance (Material)</option><option value='64500100'>64500100 - Repair Maintenance (Jasa)</option><option value='62300200'>62300200 - Transport Expense</option><option value='63401000'>63401000 - Information System</option><option value='63300400'>63300400 - Office Supply</option><option value='63100000'>63100000 - Traveling Expense</option><option value='64450000'>64450000 - Rent</option><option value='63704000'>63704000 - Profesional Fee STD, QA, CH, dan PE</option><option value='63700000'>63700000 - Miscellaneous Expense</option><option value='53704020'>53704020 - Profesional Fee</option><option value='54450000'>54450000 - Rent</option><option value='53500000'>53500000 - Postage & Telecomm</option><option value='54500000'>54500000 - Repair Maintenance (Material)</option><option value='54500100'>54500100 - Repair Maintenance (Jasa)</option><option value='53200000'>53200000 - Insurance expenses</option><option value='53400000'>53400000 - Office supplies</option><option value='53401000'>53401000 - Information System</option><option value='53100000'>53100000 - Traveling Expenses</option><option value='53601000'>53601000 - Training & Education</option><option value='52300110'>52300110 - Transport Expenses</option><option value='55100000'>55100000 - Books & Period Exp</option><option value='56200000'>56200000 - Tax & Public Dues</option><option value='53703000'>53703000 - Recruiting Expenses</option><option value='58500301'>58500301 - Expatriate Permittance</option><option value='53700000'>53700000 - Miscellaneous Expense</option><option value='54100100'>54100100 - General Activity (Pembelian Seragam)</option><option value='51400300'>51400300 - Medical Allowance</option><option value='15700000'>15700000 - CIP</option><option value='15100000'>15100000 - Building</option><option value='15300000'>15300000 - Machinary & Equipment</option><option value='15400000'>15400000 - Vehicle</option><option value='15500000'>15500000 - Tools, Furniture & Fixture</option></select></div>";
 
 		    	// isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='gl_number"+value.id+"' name='gl_number"+value.id+"' placeholder='GL Number' required='' value="+value.gl_number+"></div>";
 		    	isi += "<div class='col-xs-1' style='padding:5px;'><a href='javascript:void(0);' id='b"+ value.id +"' onclick='deleteConfirmation(\""+ value.nama_item +"\","+value.id +");' class='btn btn-danger' data-toggle='modal' data-target='#modaldanger'><i class='fa fa-close'></i> </a> <button type='button' class='btn btn-success' onclick='tambah(\""+ tambah2 +"\",\""+ lop2 +"\");'><i class='fa fa-plus' ></i></button> </div> "
@@ -1717,29 +1733,6 @@
 		});
 
 	}
-
-	function editSAP(id,nomor){
-    	$('#modalSAP').modal("show");
-    	$("#id_edit_sap").val(id);
-    	$("#no_po_sap").val(nomor);
-    }
-
-    function edit_sap() {
-
-      var data = {
-        id: $("#id_edit_sap").val(),
-        no_po_sap : $("#no_po_sap").val()
-      };
-
-      $.post('{{ url("purchase_order_canteen/edit_sap") }}', data, function(result, status, xhr){
-        if (result.status == true) {
-          $('#poTable').DataTable().ajax.reload(null, false);
-          openSuccessGritter("Success","Nomor PO has been edited.");
-        } else {
-          openErrorGritter("Error","Failed to edit.");
-        }
-      })
-    }
 
 	function deleteConfirmation(name, id) {
 		$('#modalDeleteBody').text("Are you sure want to delete ' " + name + " '");
@@ -2260,7 +2253,6 @@
     }
 
 
-
     function detailPR(id){
 	    var isi = "";
 	    $('#modalDetailPR').modal("show");
@@ -2300,6 +2292,112 @@
             
       });
     }
+
+
+    function openHistory(){
+		$('#modalHistory').modal('show');
+	}
+
+	$('#keyword').keydown(function(event) {
+		if (event.keyCode == 13 || event.keyCode == 9) {
+			fetchLog();
+		}
+	});
+
+
+    function fetchLog(){
+		$('#loading').show();
+		var keyword = $('#keyword').val();
+
+		var data = {
+			keyword:keyword
+		}
+
+		$.get('{{ url("fetch/purchase_order_canteen/log_pembelian") }}', data, function(result, status, xhr){
+			if(result.status){
+				$('#tableLog').DataTable().clear();
+				$('#tableLog').DataTable().destroy();
+				$('#tableLogBody').html('');
+				var tableLogBody = "";
+				var no = 1;
+				$.each(result.history, function(key, value){
+					tableLogBody += '<tr>';
+					tableLogBody += '<td>'+no+'</td>';
+					tableLogBody += '<td>'+value.supplier_name+'</td>';
+					tableLogBody += '<td>'+value.no_po+'</td>';
+					tableLogBody += '<td>'+value.nama_item+'</td>';
+					if (value.goods_price != 0 || value.goods_price != null) {
+						tableLogBody += '<td>('+value.currency+') '+value.goods_price.toLocaleString()+'</td>';
+					}else{
+						tableLogBody += '<td>('+value.currency+') '+value.service_price.toLocaleString()+'</td>';
+					}
+					tableLogBody += '<td>'+value.tgl_po+'</td>';
+					tableLogBody += '</tr>';
+					no++;
+				});
+				$('#tableLogBody').append(tableLogBody);
+
+				$('#tableLog').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'lengthMenu': [
+					[ 10, 25, 50, -1 ],
+					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
+						{
+							extend: 'pageLength',
+							className: 'btn btn-default',
+						},
+						{
+							extend: 'copy',
+							className: 'btn btn-success',
+							text: '<i class="fa fa-copy"></i> Copy',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'excel',
+							className: 'btn btn-info',
+							text: '<i class="fa fa-file-excel-o"></i> Excel',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'print',
+							className: 'btn btn-warning',
+							text: '<i class="fa fa-print"></i> Print',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						]
+					},
+					'paging': true,
+					'lengthChange': true,
+					'searching': true,
+					'ordering': true,
+					'order': [],
+					'info': true,
+					'autoWidth': true,
+					"sPaginationType": "full_numbers",
+					"bJQueryUI": true,
+					"bAutoWidth": false,
+					"processing": true
+				});
+				$('#loading').hide();
+			}
+			else{
+				$('#loading').hide();
+				alert('Unidentified Error');
+				audio_error.play();
+				return false;
+			}
+		});
+	}
 
 
 </script>

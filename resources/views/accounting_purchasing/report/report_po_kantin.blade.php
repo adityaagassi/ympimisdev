@@ -127,17 +127,15 @@
 				<tr>
 					<td colspan="4" style="font-size: 12px">{{$po[0]->supplier_city}}</td>
 					<td colspan="2"></td>
-					<td colspan="1" style="font-size: 12px;">No PO SAP</td>
-					<td colspan="3" style="font-size: 12px;">: {{$po[0]->no_po_sap}}</td>
+					<td colspan="1" rowspan="2" style="font-size: 12px;">Dept/Sect</td>
+					<?php if($po[0]->remark == "Kantin"){ ?>
+						<td colspan="3" rowspan="2" style="font-size: 12px;">: {{$po[0]->department}}</td>
+					<?php } ?>
 				</tr>
 
 				<tr>
 					<td colspan="4" style="font-size: 11px">NPWP &nbsp;: {{$po[0]->supplier_npwp}}</td>
 					<td colspan="2"></td>
-					<td colspan="1" style="font-size: 12px;">Dept/Sect</td>
-					<?php if($po[0]->remark == "Kantin"){ ?>
-						<td colspan="3" style="font-size: 12px;">: {{$po[0]->department}}</td>
-					<?php } ?>
 				</tr>
 
 				<tr>

@@ -248,7 +248,6 @@ table > thead > tr > th{
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
 <script src="{{ url("js/accessibility.js")}}"></script>
-<script src="{{ url("js/drilldown.js")}}"></script>
 
 <script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
 <script src="{{ url("js/buttons.flash.min.js")}}"></script>

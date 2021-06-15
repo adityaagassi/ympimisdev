@@ -144,18 +144,18 @@ hr { background-color: red; height: 1px; border: 0; }
               <div id="chart" style="width: 100%"></div>
           </div>
 
-          <div class="col-md-12" style="margin-top: 5px;background-color: #000;text-align: center;background-color: #e38002">
+          <div class="col-md-12" style="margin-top: 5px;background-color: #000;text-align: center;background-color: #1a237e">
               <span style="font-size: 24px;font-weight: bold;color: white;">Progress Approval PR</span>
           </div>
           <table class="table table-bordered" style="margin-top: 5px; width: 100%">
             <thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 12px;font-weight: bold">
               <tr>
-                <th style="width: 15%; padding: 8px;vertical-align: middle;font-size: 20px;background-color: #eb9b34">No PR</th>
-                <th style="width: 15%; padding: 8px;vertical-align: middle;font-size: 20px;background-color: #eb9b34">Submission Date</th>
-                <th style="width: 15%; padding: 8px;vertical-align: middle;font-size: 20px;background-color: #eb9b34">Staff</th>
-                <th style="width: 15%; padding: 8px;vertical-align: middle;font-size: 20px;background-color: #eb9b34">Manager</th>
-                <th style="width: 15%; padding: 8px;vertical-align: middle;font-size: 20px;background-color: #eb9b34">GM</th>
-                <th style="width: 15%; padding: 8px;vertical-align: middle;font-size: 20px;background-color: #eb9b34">Received By Purchasing</th>
+                <th style="width: 15%; padding: 8px;vertical-align: middle;font-size: 20px;background-color: #3f51b5">No PR</th>
+                <th style="width: 15%; padding: 8px;vertical-align: middle;font-size: 20px;background-color: #3f51b5">Submission Date</th>
+                <th style="width: 15%; padding: 8px;vertical-align: middle;font-size: 20px;background-color: #3f51b5">Staff</th>
+                <th style="width: 15%; padding: 8px;vertical-align: middle;font-size: 20px;background-color: #3f51b5">Manager</th>
+                <th style="width: 15%; padding: 8px;vertical-align: middle;font-size: 20px;background-color: #3f51b5">GM</th>
+                <th style="width: 15%; padding: 8px;vertical-align: middle;font-size: 20px;background-color: #3f51b5">Received By Purchasing</th>
               </tr>
             </thead>
             <tbody id="tabelisi">
@@ -214,7 +214,7 @@ hr { background-color: red; height: 1px; border: 0; }
         <div class="modal-header">
           <h4 style="float: right;" id="modal-title"></h4>
           <h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
-          <br><h4 class="modal-title" id="judul_table"></h4>
+          <br><h4 class="modal-title" id="judul_table_po"></h4>
         </div>
         <div class="modal-body">
           <div class="row">
@@ -228,10 +228,10 @@ hr { background-color: red; height: 1px; border: 0; }
                     <th>Request Date</th>
                     <th>Mata Uang</th>
                     <th>Harga</th>
-                    <th>Jumlah</th>
-                    <th>UOM</th>
+                    <th>Qty</th>
                     <th>Total</th>
-                    <th>Status</th>
+                    <th style="background-color:#2196f3 !important">Last Order</th>
+                    <th style="background-color:#2196f3 !important">Last Vendor</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -314,30 +314,11 @@ hr { background-color: red; height: 1px; border: 0; }
             sign.push(parseInt(value.jumlah_sudah));
           })
 
-          var datapie = [];
-
-          $.each(result.data_dept, function(key, value) {
-            dept.push(value.department);
-            jml_dept.push(value.jumlah_dept);
-            datapie.push({
-              "name" : value.department,
-              "y" : value.jumlah_dept
-            });
-          })
-
           $.each(result.data_pr_belum_po, function(key, value) {
             if (value.belum_po != 0) {
               no_pr.push(value.no_pr);
               belum_po.push(parseInt(value.belum_po));
               sudah_po.push(parseInt(value.sudah_po));              
-            }
-          })
-
-          $.each(result.data_investment_belum_po, function(key, value) {
-            if (value.belum_po != 0) {
-              reff_number.push(value.reff_number);
-              belum_po_inv.push(parseInt(value.belum_po));
-              sudah_po_inv.push(parseInt(value.sudah_po));
             }
           })
 
@@ -887,20 +868,20 @@ hr { background-color: red; height: 1px; border: 0; }
           }
         },
       "columns": [
-          { "data": "no_pr" },
-          { "data": "item_code" },
-          { "data": "item_desc" },
-          { "data": "item_request_date" },
-          { "data": "item_currency" },
-          { "data": "item_price" },
-          { "data": "item_qty" },
-          { "data": "item_uom" },
-          { "data": "item_amount" },
-          { "data": "status", "width": "15%"}
+          { "data": "no_pr", "width": "5%" },
+          { "data": "item_code", "width": "5%" },
+          { "data": "item_desc", "width": "20%" },
+          { "data": "item_request_date", "width": "5%" },
+          { "data": "item_currency", "width": "5%" },
+          { "data": "item_price", "width": "5%" },
+          { "data": "item_qty", "width": "5%" },
+          { "data": "item_amount", "width": "5%" },
+          { "data": "last_order", "width": "5%"},
+          { "data": "last_vendor", "width": "10%"}
         ]    });
 
-    $('#judul_table').append().empty();
-    $('#judul_table').append('<center><b>'+status+' No PR '+pr+'</center></b>');
+    $('#judul_table_po').append().empty();
+    $('#judul_table_po').append('<center><b>PR '+pr+' '+status+' </center></b>');
     
   }
 

@@ -505,6 +505,19 @@
           @if(isset($page) && $page == "Purchase Order Canteen Monitoring")<li class="active">@else<li>@endif
             <a href="{{ url("canteen/purchase_order/monitoring") }}"><i class="fa fa-tv"></i>PO Canteen Monitoring</a>
           </li>
+
+          @if(isset($page) && $page == "Purchase Requisition Control")<li class="active">@else<li>@endif
+            <a href="{{ url("canteen/purchase_requisition/monitoring") }}"><i class="fa fa-tv"></i>PR Monitoring Canteen</a>
+          </li>
+          @if(isset($page) && $page == "Item Canteen")<li class="active">@else<li>@endif
+            <a href="{{ url("canteen/purchase_item") }}"><i class="fa fa-sort-alpha-asc"></i><span>Item Canteen</span></a>
+          </li>
+          @if(isset($page) && $page == "Receive GA Kantin")<li class="active">@else<li>@endif
+            <a href="{{ url("ga/receive_kantin") }}"><i class="fa fa-share-square-o"></i>Terima Barang Kantin</a>
+          </li>
+          @if(isset($page) && $page == "Cek Kedatangan Kantin")<li class="active">@else<li>@endif
+            <a href="{{ url("ga/cek_kedatangan/kantin") }}"><i class="fa fa-truck"></i>Cek Kedatangan Kantin</a>
+          </li>
         </ul>
       </li>
 

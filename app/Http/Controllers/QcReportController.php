@@ -2042,7 +2042,7 @@ class QcReportController extends Controller
 
             $cars->save();
 
-            $query2 = "select qc_cpars.*,departments.department_name,employees.name,statuses.status_name, qc_cars.id as id_car FROM qc_cpars join departments on departments.id = qc_cpars.department_id join employees on qc_cpars.employee_id = employees.employee_id join statuses on qc_cpars.status_code = statuses.status_code join qc_cars on qc_cpars.cpar_no = qc_cars.cpar_no where qc_cpars.id='".$request->get('id')."'";
+            $query2 = "select qc_cpars.*, destination_name, vendors.name as vendorname ,qc_cpar_items.part_item, qc_cpar_items.sample_qty, qc_cpar_items.defect_qty, qc_cpar_items.detail_problem,departments.department_name,employee_syncs.name,statuses.status_name, material_description FROM qc_cpars join departments on departments.id = qc_cpars.department_id join employee_syncs on qc_cpars.employee_id = employee_syncs.employee_id join statuses on qc_cpars.status_code = statuses.status_code join qc_cpar_items on qc_cpars.cpar_no = qc_cpar_items.cpar_no join material_qa_complaints on material_qa_complaints.material_number = qc_cpar_items.part_item left join destinations on qc_cpars.destination_code = destinations.destination_code left join vendors on qc_cpars.vendor = vendors.vendor where qc_cpars.id ='".$request->get('id')."'";
 
             $cpars2 = db::select($query2);
 
@@ -2063,7 +2063,7 @@ class QcReportController extends Controller
       {
           $id_user = Auth::id();
 
-          $query = "select qc_cpars.*,departments.department_name,employees.name,statuses.status_name FROM qc_cpars join departments on departments.id = qc_cpars.department_id join employees on qc_cpars.employee_id = employees.employee_id join statuses on qc_cpars.status_code = statuses.status_code where qc_cpars.id='".$id."'";
+          $query = "select qc_cpars.*, destination_name, vendors.name as vendorname ,qc_cpar_items.part_item, qc_cpar_items.sample_qty, qc_cpar_items.defect_qty, qc_cpar_items.detail_problem,departments.department_name,employee_syncs.name,statuses.status_name, material_description FROM qc_cpars join departments on departments.id = qc_cpars.department_id join employee_syncs on qc_cpars.employee_id = employee_syncs.employee_id join statuses on qc_cpars.status_code = statuses.status_code join qc_cpar_items on qc_cpars.cpar_no = qc_cpar_items.cpar_no join material_qa_complaints on material_qa_complaints.material_number = qc_cpar_items.part_item left join destinations on qc_cpars.destination_code = destinations.destination_code left join vendors on qc_cpars.vendor = vendors.vendor where qc_cpars.id ='".$id."'";
           $cpars = db::select($query);
 
           $qc_cpars = QcCpar::find($id);
@@ -2222,7 +2222,7 @@ class QcReportController extends Controller
 
                 $cars->save();
 
-                $query2 = "select qc_cpars.*,departments.department_name,employees.name,statuses.status_name, qc_cars.id as id_car FROM qc_cpars join departments on departments.id = qc_cpars.department_id join employees on qc_cpars.employee_id = employees.employee_id join statuses on qc_cpars.status_code = statuses.status_code join qc_cars on qc_cpars.cpar_no = qc_cars.cpar_no where qc_cpars.id='".$id."'";
+                $query2 = "select qc_cpars.*, destination_name, vendors.name as vendorname ,qc_cpar_items.part_item, qc_cpar_items.sample_qty, qc_cpar_items.defect_qty, qc_cpar_items.detail_problem,departments.department_name,employee_syncs.name,statuses.status_name, material_description, qc_cars.id as id_car FROM qc_cpars join departments on departments.id = qc_cpars.department_id join employee_syncs on qc_cpars.employee_id = employee_syncs.employee_id join statuses on qc_cpars.status_code = statuses.status_code join qc_cpar_items on qc_cpars.cpar_no = qc_cpar_items.cpar_no join material_qa_complaints on material_qa_complaints.material_number = qc_cpar_items.part_item join qc_cars on qc_cpars.cpar_no = qc_cars.cpar_no left join destinations on qc_cpars.destination_code = destinations.destination_code left join vendors on qc_cpars.vendor = vendors.vendor where qc_cpars.id='".$id."'";
                 $cpars2 = db::select($query2);
 
                 Mail::to($mailtoo)->send(new SendEmail($cpars2, 'cpar'));
@@ -2321,7 +2321,7 @@ class QcReportController extends Controller
 
           $id_user = Auth::id();
 
-          $query = "select qc_cpars.*,departments.department_name,employees.name,statuses.status_name FROM qc_cpars join departments on departments.id = qc_cpars.department_id join employees on qc_cpars.employee_id = employees.employee_id join statuses on qc_cpars.status_code = statuses.status_code where qc_cpars.id='".$id."'";
+          $query = "select qc_cpars.*, destination_name, vendors.name as vendorname ,qc_cpar_items.part_item, qc_cpar_items.sample_qty, qc_cpar_items.defect_qty, qc_cpar_items.detail_problem,departments.department_name,employee_syncs.name,statuses.status_name, material_description FROM qc_cpars join departments on departments.id = qc_cpars.department_id join employee_syncs on qc_cpars.employee_id = employee_syncs.employee_id join statuses on qc_cpars.status_code = statuses.status_code join qc_cpar_items on qc_cpars.cpar_no = qc_cpar_items.cpar_no join material_qa_complaints on material_qa_complaints.material_number = qc_cpar_items.part_item left join destinations on qc_cpars.destination_code = destinations.destination_code left join vendors on qc_cpars.vendor = vendors.vendor where qc_cpars.id ='".$id."'";
           $emailcpar = db::select($query);
 
           $checked = $request->get('checked');
@@ -2342,10 +2342,10 @@ class QcReportController extends Controller
                 $mailtoo = $mail->email;
               }
 
-              $query = "select qc_cpars.*,departments.department_name,employees.name,statuses.status_name FROM qc_cpars join departments on departments.id = qc_cpars.department_id join employees on qc_cpars.employee_id = employees.employee_id join statuses on qc_cpars.status_code = statuses.status_code where qc_cpars.id='".$id."'";
+              $query = "select qc_cpars.*, destination_name, vendors.name as vendorname ,qc_cpar_items.part_item, qc_cpar_items.sample_qty, qc_cpar_items.defect_qty, qc_cpar_items.detail_problem,departments.department_name,employee_syncs.name,statuses.status_name, material_description FROM qc_cpars join departments on departments.id = qc_cpars.department_id join employee_syncs on qc_cpars.employee_id = employee_syncs.employee_id join statuses on qc_cpars.status_code = statuses.status_code join qc_cpar_items on qc_cpars.cpar_no = qc_cpar_items.cpar_no join material_qa_complaints on material_qa_complaints.material_number = qc_cpar_items.part_item left join destinations on qc_cpars.destination_code = destinations.destination_code left join vendors on qc_cpars.vendor = vendors.vendor where qc_cpars.id ='".$id."'";
               $qc_cpars = db::select($query);
 
-              Mail::to($mailtoo)->send(new SendEmail($qc_cpars, 'cpar'));
+              Mail::to($mailtoo)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($qc_cpars, 'cpar'));
               return redirect('/index/qc_report/verifikasicpar/'.$id)->with('status', 'CPAR Approved')->with('page', 'CPAR');
 
           $cpars = db::select($query);
@@ -2365,10 +2365,10 @@ class QcReportController extends Controller
                 $mailtoo = $mail->email;
               }
 
-              $query = "select qc_cpars.*,departments.department_name,employees.name,statuses.status_name FROM qc_cpars join departments on departments.id = qc_cpars.department_id join employees on qc_cpars.employee_id = employees.employee_id join statuses on qc_cpars.status_code = statuses.status_code where qc_cpars.id='".$id."'";
+              $query = "select qc_cpars.*, destination_name, vendors.name as vendorname ,qc_cpar_items.part_item, qc_cpar_items.sample_qty, qc_cpar_items.defect_qty, qc_cpar_items.detail_problem,departments.department_name,employee_syncs.name,statuses.status_name, material_description FROM qc_cpars join departments on departments.id = qc_cpars.department_id join employee_syncs on qc_cpars.employee_id = employee_syncs.employee_id join statuses on qc_cpars.status_code = statuses.status_code join qc_cpar_items on qc_cpars.cpar_no = qc_cpar_items.cpar_no join material_qa_complaints on material_qa_complaints.material_number = qc_cpar_items.part_item left join destinations on qc_cpars.destination_code = destinations.destination_code left join vendors on qc_cpars.vendor = vendors.vendor where qc_cpars.id ='".$id."'";
               $qc_cpars = db::select($query);
 
-              Mail::to($mailtoo)->send(new SendEmail($qc_cpars, 'cpar'));
+              Mail::to($mailtoo)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($qc_cpars, 'cpar'));
               return redirect('/index/qc_report/verifikasicpar/'.$id)->with('status', 'CPAR Approved')->with('page', 'CPAR');
             }
             else if ($cpars->posisi == "manager") {
@@ -2418,11 +2418,11 @@ class QcReportController extends Controller
                 $mailtoo = $mail->email;
               }
 
-              $query2 = "select qc_cpars.*,departments.department_name,employees.name,statuses.status_name, qc_cars.id as id_car FROM qc_cpars join departments on departments.id = qc_cpars.department_id join employees on qc_cpars.employee_id = employees.employee_id join statuses on qc_cpars.status_code = statuses.status_code join qc_cars on qc_cpars.cpar_no = qc_cars.cpar_no where qc_cpars.id='".$id."'";
+              $query2 = "select qc_cpars.*, destination_name, vendors.name as vendorname ,qc_cpar_items.part_item, qc_cpar_items.sample_qty, qc_cpar_items.defect_qty, qc_cpar_items.detail_problem,departments.department_name,employee_syncs.name,statuses.status_name, material_description, qc_cars.id as id_car FROM qc_cpars join departments on departments.id = qc_cpars.department_id join employee_syncs on qc_cpars.employee_id = employee_syncs.employee_id join statuses on qc_cpars.status_code = statuses.status_code join qc_cpar_items on qc_cpars.cpar_no = qc_cpar_items.cpar_no join material_qa_complaints on material_qa_complaints.material_number = qc_cpar_items.part_item join qc_cars on qc_cpars.cpar_no = qc_cars.cpar_no left join destinations on qc_cpars.destination_code = destinations.destination_code left join vendors on qc_cpars.vendor = vendors.vendor where qc_cpars.id='".$id."'";
 
               $cpars2 = db::select($query2);
 
-              Mail::to($mailtoo)->cc($mailtoocc)->send(new SendEmail($cpars2, 'cpar'));
+              Mail::to($mailtoo)->cc($mailtoocc)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($cpars2, 'cpar'));
             }
             else if ($cpars->posisi == "dgm") {
               $cpars->approved_dgm = "Checked";

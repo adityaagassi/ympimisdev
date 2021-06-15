@@ -1749,6 +1749,7 @@ Route::group(['nav' => 'S43', 'middleware' => 'permission'], function(){
 
 
 	Route::get('fetch/purchase_order/log_pembelian', 'AccountingController@fetch_history_pembelian');
+	Route::get('fetch/purchase_order_canteen/log_pembelian', 'AccountingController@fetch_history_pembelian_canteen');
 
 
 	//Purchase Order Khusus investment
@@ -1779,6 +1780,7 @@ Route::group(['nav' => 'S43', 'middleware' => 'permission'], function(){
 	Route::get('canteen/purchase_order/report/{id}', 'AccountingController@report_purchase_order_canteen');
 	Route::get('purchase_order_canteen/sendemail', 'AccountingController@po_send_email_canteen');
 	Route::get('purchase_order_canteen/approvemanager/{id}', 'AccountingController@poapprovalmanagercanteen');
+	Route::get('purchase_order_canteen/reject/{id}', 'AccountingController@porejectKatin');
 	
 	//edit PO SAP
 	Route::post('purchase_order_canteen/edit_sap', 'AccountingController@edit_sap_canteen');
@@ -1788,6 +1790,9 @@ Route::group(['nav' => 'S43', 'middleware' => 'permission'], function(){
 	Route::post('update/purchase_order_canteen', 'AccountingController@update_purchase_order_canteen');
 	Route::post('delete/purchase_order_canteen_item', 'AccountingController@delete_item_po_canteen');
 	Route::post('cancel/purchase_order_canteen', 'AccountingController@cancel_purchase_order_canteen');
+
+	Route::get('export/purchase_order_canteen/list', 'AccountingController@exportPOKantin');
+
 });
 
 //investment
@@ -4833,6 +4838,11 @@ Route::group(['nav' => 'M34', 'middleware' => 'permission'], function(){
 	Route::get('stock/grafik/aktual', 'StockAktualController@FatchMonitoring');
 	Route::get('stock/aktual/home', 'StockAktualController@AuditStockAktualHome');
 	Route::get('stock/aktual/list', 'StockAktualController@FatchListStock');
+	Route::post('stock/aktual/update', 'StockAktualController@UpdateStock');
+	Route::get('stock/aktual/resume', 'StockAktualController@UpdateStockResume');
+	Route::get('stock/ideal/stock', 'StockAktualController@UploadMasterIdeal');
+	Route::post('stock/ideal/import', 'StockAktualController@ImportMasterIdeal');
+	Route::get('stock/ideal/download', 'StockAktualController@DownloadMasterIdeal');
 });
 
 
@@ -5132,6 +5142,7 @@ Route::post('send/fixed_asset/invoice_asset_form', 'AccountingController@assetSe
 
 Route::get('index/fixed_asset/registration_asset_form', 'AccountingController@indexAssetRegistration');
 Route::get('fetch/fixed_asset/registration_asset_form', 'AccountingController@fetchAssetRegistration');
+Route::get('fetch/fixed_asset/registration_asset_form/by', 'AccountingController@fetchAssetRegistrationById');
 Route::post('send/fixed_asset/registration_asset_form', 'AccountingController@assetRegistration');
 
 Route::get('index/fixed_asset/invoice_form', 'AccountingController@indexAssetInvoice');
