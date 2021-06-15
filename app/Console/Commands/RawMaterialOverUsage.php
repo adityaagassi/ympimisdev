@@ -54,7 +54,7 @@ class RawMaterialOverUsage extends Command
             $over = db::select("SELECT io.material_number, mpdl.material_description, mpdl.bun, COALESCE(mrp.`usage`, 0) AS `usage`, io.quantity FROM
                 (SELECT material_number, SUM(quantity) AS quantity FROM material_in_outs
                 WHERE entry_date BETWEEN '".$start."' AND '".$end."'
-                AND movement_type IN ('9I3', '9I4')
+                AND movement_type IN ('9I3', '9I4', '9OE')
                 GROUP BY material_number) AS io
                 LEFT JOIN
                 (SELECT material_number, SUM(`usage`) AS `usage` FROM material_requirement_plans
@@ -62,7 +62,7 @@ class RawMaterialOverUsage extends Command
                 GROUP BY material_number) AS mrp
                 ON mrp.material_number = io.material_number
                 LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = io.material_number
-                HAVING io.quantity > `usage`
+                WHERE io.quantity > `usage`
                 AND `usage` > 0");
 
 
@@ -78,7 +78,7 @@ class RawMaterialOverUsage extends Command
                 $detail = db::select("SELECT sl.department_group, io.material_number, SUM(io.quantity) AS quantity FROM material_in_outs io
                     LEFT JOIN storage_locations sl ON io.receive_location = sl.storage_location
                     WHERE io.entry_date BETWEEN '".$start."' AND '".$end."'
-                    AND io.movement_type IN ('9I3', '9I4')
+                    AND io.movement_type IN ('9I3', '9I4', '9OE')
                     AND io.material_number IN (".$materials.")
                     GROUP BY sl.department_group, io.material_number");
 
