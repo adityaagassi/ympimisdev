@@ -342,7 +342,7 @@
 					tableData += '<td>'+value.terlambat+'</td>';
 					tableData += '<td>'+value.pulang_cepat+'</td>';
 
-					if (value.tunjangan == 1) {
+					if (value.tunjangan != 0) {
 						tableData += '<td><span class="label label-danger">Tidak Dapat</span></td>';
 					} else {
 						tableData += '<td><span class="label label-success">Dapat</span></td>';
