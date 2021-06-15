@@ -2,38 +2,38 @@
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
-thead input {
-	width: 100%;
-	padding: 3px;
-	box-sizing: border-box;
-}
-thead>tr>th{
-	text-align:center;
-}
-tbody>tr>td{
-	text-align:center;
-}
-tfoot>tr>th{
-	text-align:center;
-}
-td:hover {
-	overflow: visible;
-}
-table.table-bordered{
-	border:1px solid black;
-}
-table.table-bordered > thead > tr > th{
-	border:1px solid black;
-}
-table.table-bordered > tbody > tr > td{
-	border:1px solid rgb(211,211,211);
-	padding-top: 0;
-	padding-bottom: 0;
-}
-table.table-bordered > tfoot > tr > th{
-	border:1px solid rgb(211,211,211);
-}
-#loading, #error { display: none; }
+	thead input {
+		width: 100%;
+		padding: 3px;
+		box-sizing: border-box;
+	}
+	thead>tr>th{
+		text-align:center;
+	}
+	tbody>tr>td{
+		text-align:center;
+	}
+	tfoot>tr>th{
+		text-align:center;
+	}
+	td:hover {
+		overflow: visible;
+	}
+	table.table-bordered{
+		border:1px solid black;
+	}
+	table.table-bordered > thead > tr > th{
+		border:1px solid black;
+	}
+	table.table-bordered > tbody > tr > td{
+		border:1px solid rgb(211,211,211);
+		padding-top: 0;
+		padding-bottom: 0;
+	}
+	table.table-bordered > tfoot > tr > th{
+		border:1px solid rgb(211,211,211);
+	}
+	#loading, #error { display: none; }
 </style>
 @endsection
 
@@ -203,11 +203,11 @@ table.table-bordered > tfoot > tr > th{
 										<th style="width: 5%">Name</th>
 										<th style="width: 4%">Department</th>
 										<th style="width: 1%">Mangkir</th>
+										<th style="width: 1%">Cuti</th>
 										<th style="width: 1%">Izin</th>
 										<th style="width: 1%">Sakit</th>
 										<th style="width: 1%">Terlambat</th>
 										<th style="width: 1%">Pulang Cepat</th>
-										<th style="width: 1%">Cuti</th>
 										<th style="width: 1%">Tunjangan Disiplin</th>
 										<th style="width: 1%">Lembur (Jam)</th>
 									</tr>
@@ -339,7 +339,12 @@ table.table-bordered > tfoot > tr > th{
 					tableData += '<td>'+value.sakit+'</td>';
 					tableData += '<td>'+value.terlambat+'</td>';
 					tableData += '<td>'+value.pulang_cepat+'</td>';
-					tableData += '<td>'+value.tunjangan+'</td>';
+
+					if (value.tunjangan == 1) {
+						tableData += '<td>Tidak Dapat</td>';
+					} else {
+						tableData += '<td>Dapat</td>';
+					}
 					tableData += '<td>'+ot.toFixed(2)+'</td>';
 					tableData += '</tr>';
 				});
