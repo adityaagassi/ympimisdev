@@ -839,6 +839,9 @@ class EmployeeController extends Controller
           $tanggal = "and format(A.shiftstarttime, 'yyyy-MM-dd') >= '".$datefrom."' ";
           if(strlen($request->get('dateto')) > 0){
                $dateto = date('Y-m-t', strtotime($request->get('dateto')));
+               if ($dateto > date('Y-m-d')) {
+                    $dateto = date('Y-m-d', strtotime('-1 day'));
+               }
                $tanggal = $tanggal."and format(A.shiftstarttime, 'yyyy-MM-dd') <= '".$dateto."' ";
           }
      }
