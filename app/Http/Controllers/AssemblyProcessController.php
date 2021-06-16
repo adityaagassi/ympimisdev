@@ -208,33 +208,83 @@ class AssemblyProcessController extends Controller
 			);
 			$inventory->location = $request->get('location');
 
-			$logProcess = new LogProcess([
-				'process_code' => 1,
-				'serial_number' => $request->get('serial'),
-				'model' => $request->get('model'),
-				'manpower' => 1,
-				'origin_group_code' => $request->get('origin_group_code'),
-				'created_by' => 1,
-				'remark' => 'FG'
-			]);
+			// $logProcess = new LogProcess([
+			// 	'process_code' => 1,
+			// 	'serial_number' => $request->get('serial'),
+			// 	'model' => $request->get('model'),
+			// 	'manpower' => 1,
+			// 	'origin_group_code' => $request->get('origin_group_code'),
+			// 	'created_by' => 1,
+			// 	'remark' => 'FG'
+			// ]);
+			$logProcess = LogProcess::updateOrCreate(
+				[
+					'process_code' => 1,
+					'serial_number' => $request->get('serial'),
+					'model' => $request->get('model'),
+					'origin_group_code' => $request->get('origin_group_code')
+				],
+				[
+					'process_code' => 1,
+					'serial_number' => $request->get('serial'),
+					'model' => $request->get('model'),
+					'manpower' => 1,
+					'origin_group_code' => $request->get('origin_group_code'),
+					'created_by' => 1,
+					'remark' => 'FG'
+				]
+			);
 		}else{
-			$logProcess = new LogProcess([
-				'process_code' => 1,
-				'serial_number' => $request->get('serial'),
-				'model' => $request->get('model'),
-				'manpower' => 1,
-				'origin_group_code' => $request->get('origin_group_code'),
-				'created_by' => 1,
-			]);
+			// $logProcess = new LogProcess([
+			// 	'process_code' => 1,
+			// 	'serial_number' => $request->get('serial'),
+			// 	'model' => $request->get('model'),
+			// 	'manpower' => 1,
+			// 	'origin_group_code' => $request->get('origin_group_code'),
+			// 	'created_by' => 1,
+			// ]);
+
+			$logProcess = LogProcess::updateOrCreate(
+				[
+					'process_code' => 1,
+					'serial_number' => $request->get('serial'),
+					'model' => $request->get('model'),
+					'origin_group_code' => $request->get('origin_group_code')
+				],
+				[
+					'process_code' => 1,
+					'serial_number' => $request->get('serial'),
+					'model' => $request->get('model'),
+					'manpower' => 1,
+					'origin_group_code' => $request->get('origin_group_code'),
+					'created_by' => 1,
+				]
+			);
 		}
 
-		$stampInventory = new StampInventory([
-			'process_code' => 1,
-			'serial_number' => $request->get('serial'),
-			'model' => $request->get('model'),
-			'quantity' => 1,
-			'origin_group_code' => $request->get('origin_group_code'),
-		]);
+		// $stampInventory = new StampInventory([
+		// 	'process_code' => 1,
+		// 	'serial_number' => $request->get('serial'),
+		// 	'model' => $request->get('model'),
+		// 	'quantity' => 1,
+		// 	'origin_group_code' => $request->get('origin_group_code'),
+		// ]);
+
+		$stampInventory = StampInventory::updateOrCreate(
+			[
+				'process_code' => 1,
+				'serial_number' => $request->get('serial'),
+				'model' => $request->get('model'),
+				'origin_group_code' => $request->get('origin_group_code')
+			],
+			[
+				'process_code' => 1,
+				'serial_number' => $request->get('serial'),
+				'model' => $request->get('model'),
+				'quantity' => 1,
+				'origin_group_code' => $request->get('origin_group_code'),
+			]
+		);
 
 		$tag->serial_number = $request->get('serial');
 		$tag->model = $request->get('model');
