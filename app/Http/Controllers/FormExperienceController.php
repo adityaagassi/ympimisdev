@@ -510,7 +510,7 @@ class FormExperienceController extends Controller
 
     $form_details = FormFailureAttendance::where('form_failure_attendances.form_id', '=', $request->get('id'))
     ->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'form_failure_attendances.employee_id')
-    ->select('form_failure_attendances.id', 'form_failure_attendances.form_id', 'form_failure_attendances.employee_id', 'employee_syncs.name', 'employee_syncs.department', 'form_failure_attendances.status')
+    ->select('form_failure_attendances.id', 'form_failure_attendances.form_id', 'form_failure_attendances.employee_id', 'form_failure_attendances.attend_time', 'employee_syncs.name', 'employee_syncs.department', 'form_failure_attendances.status')
     ->orderBy('form_failure_attendances.id', 'asc')
     ->get();
 

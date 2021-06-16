@@ -235,6 +235,7 @@ td{
                   <th style="width: 2%;">ID</th>
                   <th style="width: 5%;">Name</th>
                   <th style="width: 5%;">Dept</th>
+                  <th style="width: 5%;">Attend Time</th>
                   <!-- <th style="width: 1%;">Action</th> -->
                 </tr>
               </thead>
@@ -647,6 +648,7 @@ td{
             tableData += "<td>"+value.employee_id+"</td>";
             tableData += "<td>"+value.name+"</td>";
             tableData += "<td>"+value.department+"</td>";
+            tableData += "<td>"+value.attend_time+"</td>";
             tableData += "</tr>";
             count += 1;
             count_all += 1;
@@ -684,6 +686,7 @@ td{
             tableData += "<td>"+value.employee_id+"</td>";
             tableData += "<td>"+value.name+"</td>";
             tableData += "<td>"+value.department+"</td>";
+            tableData += "<td>"+value.attend_time+"</td>";
             tableData += "</tr>";
             count += 1;
             count_all += 1;
