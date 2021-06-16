@@ -219,7 +219,6 @@ class AssemblyProcessController extends Controller
 			// ]);
 			$logProcess = LogProcess::updateOrCreate(
 				[
-					'process_code' => 1,
 					'serial_number' => $request->get('serial'),
 					'origin_group_code' => $request->get('origin_group_code')
 				],
@@ -245,7 +244,6 @@ class AssemblyProcessController extends Controller
 
 			$logProcess = LogProcess::updateOrCreate(
 				[
-					'process_code' => 1,
 					'serial_number' => $request->get('serial'),
 					'origin_group_code' => $request->get('origin_group_code')
 				],
@@ -270,7 +268,6 @@ class AssemblyProcessController extends Controller
 
 		$stampInventory = StampInventory::updateOrCreate(
 			[
-				'process_code' => 1,
 				'serial_number' => $request->get('serial'),
 				'origin_group_code' => $request->get('origin_group_code')
 			],
