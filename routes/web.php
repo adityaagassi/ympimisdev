@@ -4832,7 +4832,7 @@ Route::group(['nav' => 'M34', 'middleware' => 'permission'], function(){
 });
 
 //Audit stock ideal vs aktual
-Route::group(['nav' => 'M34', 'middleware' => 'permission'], function(){
+Route::group(['nav' => 'S63', 'middleware' => 'permission'], function(){
 	Route::get('stock/aktual/monitoring', 'StockAktualController@IndexMonitoring');
 	Route::get('stock/resume/aktual', 'StockAktualController@ResumeStockAktual');
 	Route::get('stock/grafik/aktual', 'StockAktualController@FatchMonitoring');
