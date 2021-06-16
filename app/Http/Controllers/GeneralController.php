@@ -3239,40 +3239,43 @@ public function postAirVisual()
 		'https://www.airvisual.com/api/v2/node/60c85f8ef7f824ae96f04a98'
 	];
 
-	foreach ($arr_api as $api) {
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);	
-		curl_setopt($ch, CURLOPT_URL, $api);
-		$result=curl_exec($ch);
-		curl_close($ch);
+	$true_date = "";
 
-		$arr = json_decode($result, true);
-		$s = "";
-		$true_date = "";
+	if (Auth::user()->username == "display") {
+		foreach ($arr_api as $api) {
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);	
+			curl_setopt($ch, CURLOPT_URL, $api);
+			$result=curl_exec($ch);
+			curl_close($ch);
 
-		for ($i=count($arr['historical']['instant'])-1; $i > 0; $i--) { 
-			$s = str_replace('T', ' ', $arr['historical']['instant'][$i]['ts']);
-			$times = substr(explode(' ', $s)[1], 0, -5);
-			$dates = explode(' ', $s)[0];
+			$arr = json_decode($result, true);
+			$s = "";
 
-			$ts = date_create($dates." ".$times);
+			for ($i=count($arr['historical']['instant'])-1; $i > 0; $i--) { 
+				$s = str_replace('T', ' ', $arr['historical']['instant'][$i]['ts']);
+				$times = substr(explode(' ', $s)[1], 0, -5);
+				$dates = explode(' ', $s)[0];
+
+				$ts = date_create($dates." ".$times);
 
 			// $ts2 = date('Y-m-d H:i:s', strtotime($times) + 60*420);
 
-			date_add($ts, date_interval_create_from_date_string('7 hours'));
-			$true_date = date_format($ts, 'Y-m-d H:i:s');
+				date_add($ts, date_interval_create_from_date_string('7 hours'));
+				$true_date = date_format($ts, 'Y-m-d H:i:s');
 
-			$air_log = GeneralAirVisualLog::firstOrNew(array('data_time' => $true_date));
-			$air_log->get_at = date('Y-m-d H:i:00');
-			$air_log->remark = $arr['historical']['instant'][$i]['ts'];
-			$air_log->co = $arr['historical']['instant'][$i]['co'];
-			$air_log->temperature = $arr['historical']['instant'][$i]['tp'];
-			$air_log->humidity = $arr['historical']['instant'][$i]['hm'];
-			$air_log->location = $arr['settings']['node_name'];
-			$air_log->created_at = date('Y-m-d H:i:s');
-			$air_log->updated_at = date('Y-m-d H:i:s');
+				$air_log = GeneralAirVisualLog::firstOrNew(array('data_time' => $true_date));
+				$air_log->get_at = date('Y-m-d H:i:00');
+				$air_log->remark = $arr['historical']['instant'][$i]['ts'];
+				$air_log->co = $arr['historical']['instant'][$i]['co'];
+				$air_log->temperature = $arr['historical']['instant'][$i]['tp'];
+				$air_log->humidity = $arr['historical']['instant'][$i]['hm'];
+				$air_log->location = $arr['settings']['node_name'];
+				$air_log->created_at = date('Y-m-d H:i:s');
+				$air_log->updated_at = date('Y-m-d H:i:s');
 
-			$air_log->save();
+				$air_log->save();
+			}
 		}
 	}
 
