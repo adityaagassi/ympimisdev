@@ -1413,7 +1413,9 @@ class ProductionScheduleController extends Controller{
         ))->with('page', 'Production Schedule');
     }
 
-    public function updateAdjustmentSchedule(){
+    public function updateAdjustmentSchedule(Request $request){
+
+        $date = $request->get("date(format)");
 
         $query = "SELECT two.material_number, two.hpl, two.qty as two_qty, COALESCE(ps.qty,0) AS ps_qty, COALESCE(ps.qty,0) - two.qty AS diff FROM
         (SELECT two.material_number, m.hpl, SUM(two.quantity) AS qty FROM production_schedules_two_steps two
@@ -1444,6 +1446,7 @@ class ProductionScheduleController extends Controller{
             if($data[$i]->diff < 0){
                 //SCHEDULE KURANG (TAMBAH DARI DEPAN)
                 $production_schedule = ProductionSchedule::where(db::raw("DATE_FORMAT(due_date, '%Y-%m')"), $data[$i]->month)
+                ->where('due_date', '>=', $date)
                 ->where('material_number', $data[$i]->material_number)
                 ->orderBy('due_date', 'ASC')
                 ->get();

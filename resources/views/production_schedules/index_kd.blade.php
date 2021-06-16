@@ -46,7 +46,7 @@
     <ol class="breadcrumb">
         <li>
             @if(strtoupper(Auth::user()->username) == 'PI2009022')
-            <a onclick="adjusment()" class="btn btn-primary btn-sm" style="color:white">Adjusment {{ $page }}s</a>
+            <a data-toggle="modal" data-target="#adjustmentModal" class="btn btn-primary btn-sm" style="color:white">Adjusment {{ $page }}s</a>
             @endif
             @if(Auth::user()->role->role_code == 'MIS' || Auth::user()->role->role_code == 'PROD')
             <a data-toggle="modal" data-target="#deleteModal" class="btn btn-danger btn-sm" style="color:white">Delete {{ $page }}s</a>
@@ -368,6 +368,40 @@
     </div>
 </div>
 
+<div class="modal fade" id="adjustmentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <input type="hidden" value="{{csrf_token()}}" name="_token" />
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Adjusment Production Schedule</h4>
+                Adjusment Production Schedule dilakukan setelah revisi schedule
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-6 col-xs-offset-3">
+                        <div class="col-xs-12">
+                            <label>Select Adjusment Date From</label>
+                            <div class="input-group date pull-right" style="text-align: center;">
+                                <div class="input-group-addon bg-green">
+                                    <i class="fa fa-calendar"></i>
+                                </div>
+                                <input type="text" class="form-control monthpicker" name="adjustment_date" id="adjustment_date" placeholder="Select Date">  
+                            </div>
+                        </div>
+                    </div>    
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row" style="margin-top: 7%; margin-right: 2%;">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button onclick="adjusment()" class="btn btn-primary">Adjustment </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @stop
 
 @section('scripts')
@@ -387,9 +421,9 @@
     });
 
     jQuery(document).ready(function() {
-        $('#due_date').datepicker({
+        $('#adjustment_date').datepicker({
             autoclose: true,
-            format: "dd/mm/yyyy",
+            format: "yyyy-mm-dd",
             todayHighlight: true
         });
 
@@ -409,6 +443,10 @@
         
     });
 
+    $('#adjustmentModal').on('hidden.bs.modal', function () {
+        $('#adjustment_date').val('');
+    });
+
     $('#generateModal').on('hidden.bs.modal', function () {
         $('#generate_month').val('');
         $("#generate_hpl").val("");
@@ -423,11 +461,26 @@
     });
 
     function adjusment() {
-        $("#loading").show();
 
-        $.get('{{ url("fetch/adjusment_production_schedule_kd") }}', function(result, status, xhr){
+        var date = $('#adjustment_date').val();
+
+        var data = {
+            date : date
+        }
+
+        if(date == ''){
+            openErrorGritter('Error', '');
+            return false;
+        }
+
+        $("#loading").show();
+        $.get('{{ url("fetch/adjusment_production_schedule_kd") }}', data, function(result, status, xhr){
             if(result.status){
                 $("#loading").hide();
+
+                $('#adjustment_date').val('');
+                $('#adjustmentModal').modal('hide');
+
                 openSuccessGritter('Success', 'Adjusment Success');
             }else{
                 $("#loading").hide();
@@ -906,7 +959,7 @@ function deleteProd() {
     $('#loading').show();
 
     $.post('{{ url("delete/production_schedule_kd") }}', data, function(result, status, xhr){
-     if(result.status){
+       if(result.status){
 
         $('#delete_month').val('');
         $("#delete_hpl").val("");
@@ -961,10 +1014,10 @@ function generate() {
 }
 
 function shipment() {
- var month = $('#shipment_month').val();
- var hpl = $('#shipment_hpl').val();
+   var month = $('#shipment_month').val();
+   var hpl = $('#shipment_hpl').val();
 
- var data = {
+   var data = {
     month : month,
     hpl : hpl,
 }
