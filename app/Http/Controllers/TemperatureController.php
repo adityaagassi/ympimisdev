@@ -1678,7 +1678,7 @@ public function fetchMinMoeMonitoring(Request $request)
           IF
                (
                sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_2%',
-               ( SELECT max( auth_datetime ) FROM ivms_attendance WHERE employee_id = employee_syncs.employee_id AND auth_date = '".$now."' ),
+               ( SELECT min( auth_datetime ) FROM ivms_attendance WHERE employee_id = employee_syncs.employee_id AND auth_date = '".$now."' AND auth_datetime BETWEEN '".$now." 15:00:00' AND '".$now." 18:00:00' ),
                ( SELECT min( auth_datetime ) FROM ivms_attendance WHERE employee_id = employee_syncs.employee_id AND auth_date = '".$now."' ) 
                ) 
                ) AS time_in,
@@ -1711,7 +1711,7 @@ public function fetchMinMoeMonitoring(Request $request)
           IF
                (
                sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_2%',
-               ( SELECT max( auth_datetime ) FROM ivms_attendance WHERE employee_id = employee_syncs.employee_id AND auth_date = '".$now."' ),
+               ( SELECT min( auth_datetime ) FROM ivms_attendance WHERE employee_id = employee_syncs.employee_id AND auth_date = '".$now."' AND auth_datetime BETWEEN '".$now." 15:00:00' AND '".$now." 18:00:00' ),
                ( SELECT min( auth_datetime ) FROM ivms_attendance WHERE employee_id = employee_syncs.employee_id AND auth_date = '".$now."' ) 
                ) 
                ) 
