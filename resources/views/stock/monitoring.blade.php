@@ -321,7 +321,7 @@
       filter:$('#filter').val()
 
     }
-    monthResume($('#location').val());
+    // monthResume($('#location').val());
 
     $.get('<?php echo e(url("stock/resume/aktual")); ?>', data, function(result, status, xhr){
       if(result.status){
