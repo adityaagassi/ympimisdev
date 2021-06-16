@@ -225,9 +225,9 @@
 				var count = 1;
 				$.each(result.datas, function(key, value) {
 					var arr_ng_inj = "";
-					if (value.ng_name != null) {
-						ng_arr = value.ng_name.split(',');
-						qty_arr = value.ng_count.split(',');
+					if (value.ng_name_injection != null) {
+						ng_arr = value.ng_name_injection.split(',');
+						qty_arr = value.ng_count_injection.split(',');
 
 						for(var i = 0; i < ng_arr.length; i++){
 							arr_ng_inj += ng_arr[i] +' = '+ qty_arr[i]+'<br>';
@@ -235,9 +235,9 @@
 					}else{
 						arr_ng_inj = '';
 					}
-					if (value.ng_name_kensa != null) {
-						ng_arr = value.ng_name_kensa.split(',');
-						qty_arr = value.ng_count_kensa.split(',');
+					if (value.ng_name != null) {
+						ng_arr = value.ng_name.split(',');
+						qty_arr = value.ng_count.split(',');
 
 						for(var i = 0; i < ng_arr.length; i++){
 							tableData += '<tr>';
@@ -255,17 +255,18 @@
 							tableData += '<td>';
 							tableData += qty_arr[i] +'<br>';
 							tableData += '</td>';
-							tableData += '<td>'+ value.employee_id +' - '+ value.name +'</td>';
-							tableData += '<td>'+ value.created +'</td>';
+							tableData += '<td>'+ value.operator_kensa +' - '+ value.operator_kensa_name +'</td>';
+							tableData += '<td>'+ value.created_at +'</td>';
 							tableData += '<td>'+ arr_ng_inj +'</td>';
 							tableData += '<td>'+ value.mesin_injection +'</td>';
-							tableData += '<td>'+ value.empinj +' - '+ value.nameinj +'</td>';
+							tableData += '<td>'+ value.operator_injection +' - '+ value.operator_injection_name +'</td>';
 							tableData += '<td>'+ value.molding +'</td>';
 							tableData += '<td>'+ value.operator_molding +'</td>';
 							tableData += '<td>'+ value.lot_number_resin +'</td>';
 							tableData += '<td>'+ value.qty_resin +'</td>';
 							tableData += '<td>'+ value.dryer_resin +'</td>';
 							tableData += '</tr>';
+							count++;
 						}
 					}else{
 						tableData += '<tr>';
@@ -280,7 +281,7 @@
 						tableData += '<td></td>';
 						tableData += '<td></td>';
 						tableData += '<td>'+ value.employee_id +' - '+ value.name +'</td>';
-						tableData += '<td>'+ value.created +'</td>';
+						tableData += '<td>'+ value.created_at +'</td>';
 						tableData += '<td>'+ arr_ng_inj +'</td>';
 						tableData += '<td>'+ value.mesin_injection +'</td>';
 						tableData += '<td>'+ value.empinj +' - '+ value.nameinj +'</td>';
@@ -290,10 +291,8 @@
 						tableData += '<td>'+ value.qty_resin +'</td>';
 						tableData += '<td>'+ value.dryer_resin +'</td>';
 						tableData += '</tr>';
+						count++;
 					}
-					
-
-					count++;
 				});
 				$('#bodyReportKensa').append(tableData);
 
