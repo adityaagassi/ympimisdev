@@ -184,7 +184,7 @@
 								</select>
 							</div>
 						</div>
-						<div class="col-md-10">
+						<div class="col-md-10" style="padding-bottom: 20px">
 							<div class="form-group">
 								<div class="col-md-2" style="padding-right: 0;">
 									<label style="color: white;"> x</label>
