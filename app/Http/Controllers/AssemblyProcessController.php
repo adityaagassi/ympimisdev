@@ -277,6 +277,7 @@ class AssemblyProcessController extends Controller
 				'model' => $request->get('model'),
 				'quantity' => 1,
 				'origin_group_code' => $request->get('origin_group_code'),
+				'status' => null,
 			]
 		);
 
