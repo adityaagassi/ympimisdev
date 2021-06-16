@@ -1793,6 +1793,28 @@
 </li>
 @endif
 
+@if(in_array('M34', $navs))
+@if(isset($head) && $head == "Stock")<li class="treeview active">@else<li class="treeview">@endif
+  <a href="#">
+  <i class="fa fa-archive"></i> <span>Stock</span>
+   <span class="pull-right-container">
+    <i class="fa fa-angle-left pull-right"></i>
+  </span>
+</a>
+<ul class="treeview-menu">
+ @if(isset($page) && $page == "Audit Stock")<li class="active">@else<li>@endif
+      <a href="{{ url("stock/ideal/stock") }}"><i class="fa fa-upload"></i> <span>Upload Master</span></a>
+</li>
+@if(isset($page) && $page == "Monitoring")<li class="active">@else<li>@endif
+      <a href="{{ url("stock/aktual/home") }}"><i class="fa fa-check-square-o"></i> <span>Audit Stock</span></a>
+</li>
+@if(isset($page) && $page == "Monitoring")<li class="active">@else<li>@endif
+      <a href="{{ url("stock/aktual/monitoring") }}"><i class="fa fa-tv"></i> <span>Monitoring</span></a>
+</li>
+</ul>
+</li>
+@endif
+
 
 @if(in_array('R8', $navs))
 @if(isset($head) && $head == "Employees")<li class="treeview active">@else<li class="treeview">@endif
