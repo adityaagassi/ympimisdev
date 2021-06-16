@@ -19,4 +19,6 @@ class AbsenceController extends Controller
 	{
 		return view('employees.report.leave_control')->with('page', 'Leave Control')->with('head', 'Employees');
 	}
+
+	
 }
