@@ -280,7 +280,7 @@ class StockAktualController extends Controller
         // LEFT JOIN users u on u.id = dm.created_by WHERE dm.location = '".$loc."' AND dm.store = '".$store."' AND dm.remark = '1' ORDER BY dm.material_number");
         // }
 
-        $resumes = db::select("SELECT dm.store, dm.category, dm.material_number, dm.material_description, dm.category, dm.actual, u.`name`, dm.updated_at FROM data_materials dm
+        $resumes = db::select("SELECT dm.store, dm.category, dm.material_number, dm.material_description, dm.category, dm.ideal, dm.actual, u.`name`, dm.updated_at FROM data_materials dm
         LEFT JOIN users u on u.id = dm.created_by WHERE dm.location = '".$loc."' AND dm.remark = '1' ORDER BY dm.material_number");
 
         $response = array(
