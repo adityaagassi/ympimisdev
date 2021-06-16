@@ -221,7 +221,6 @@ class AssemblyProcessController extends Controller
 				[
 					'process_code' => 1,
 					'serial_number' => $request->get('serial'),
-					'model' => $request->get('model'),
 					'origin_group_code' => $request->get('origin_group_code')
 				],
 				[
@@ -248,7 +247,6 @@ class AssemblyProcessController extends Controller
 				[
 					'process_code' => 1,
 					'serial_number' => $request->get('serial'),
-					'model' => $request->get('model'),
 					'origin_group_code' => $request->get('origin_group_code')
 				],
 				[
@@ -274,7 +272,6 @@ class AssemblyProcessController extends Controller
 			[
 				'process_code' => 1,
 				'serial_number' => $request->get('serial'),
-				'model' => $request->get('model'),
 				'origin_group_code' => $request->get('origin_group_code')
 			],
 			[
