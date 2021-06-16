@@ -3592,7 +3592,8 @@ class ProductionReportController extends Controller
                         audit_report_activities.operator,
                         audit_report_activities.leader,
                         audit_report_activities.handling, 
-                        audit_report_activities.condition
+                        audit_report_activities.condition,
+                        audit_report_activities.activity_list_id
                     FROM
                         audit_report_activities
                         JOIN audit_guidances ON audit_guidances.id = audit_report_activities.audit_guidance_id 
@@ -3630,7 +3631,8 @@ class ProductionReportController extends Controller
                         audit_report_activities.operator,
                         audit_report_activities.leader,
                         audit_report_activities.handling, 
-                        audit_report_activities.condition
+                        audit_report_activities.condition,
+                        audit_report_activities.activity_list_id
                     FROM
                         audit_report_activities
                         JOIN audit_guidances ON audit_guidances.id = audit_report_activities.audit_guidance_id 
@@ -3668,7 +3670,8 @@ class ProductionReportController extends Controller
                         audit_report_activities.operator,
                         audit_report_activities.leader,
                         audit_report_activities.handling, 
-                        audit_report_activities.condition
+                        audit_report_activities.condition,
+                        audit_report_activities.activity_list_id
                     FROM
                         audit_report_activities
                         JOIN audit_guidances ON audit_guidances.id = audit_report_activities.audit_guidance_id 
@@ -3706,7 +3709,8 @@ class ProductionReportController extends Controller
                         audit_report_activities.operator,
                         audit_report_activities.leader,
                         audit_report_activities.handling, 
-                        audit_report_activities.condition
+                        audit_report_activities.condition,
+                        audit_report_activities.activity_list_id
                     FROM
                         audit_report_activities
                         JOIN audit_guidances ON audit_guidances.id = audit_report_activities.audit_guidance_id 
@@ -3744,7 +3748,8 @@ class ProductionReportController extends Controller
                         audit_report_activities.operator,
                         audit_report_activities.leader,
                         audit_report_activities.handling,
-                        audit_report_activities.condition
+                        audit_report_activities.condition,
+                        audit_report_activities.activity_list_id
                     FROM
                         audit_report_activities
                         JOIN audit_guidances ON audit_guidances.id = audit_report_activities.audit_guidance_id 
