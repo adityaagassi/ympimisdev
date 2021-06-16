@@ -3174,23 +3174,52 @@ public function fetchAbsence(Request $request)
 {
      if(strlen($request->get('tgl')) > 0){
           $tgl = date('d-m-Y',strtotime($request->get("tgl")));
+          $now = date('Y-m-d',strtotime($request->get("tgl")));
      }else{
           $tgl = date("d-m-Y");
+          $now = date("Y-m-d");
      }
 
-     $absence = db::connection('sunfish')->select("
-          select VIEW_YMPI_Emp_Attendance.emp_no, FORMAT (shiftstarttime, 'dd MMMM yyyy') as tanggal, official_name, Attend_Code, concat( Division,' / ', Department, ' / ', [Section]) as bagian from VIEW_YMPI_Emp_Attendance
-          join VIEW_YMPI_Emp_OrgUnit on VIEW_YMPI_Emp_OrgUnit.Emp_no = VIEW_YMPI_Emp_Attendance.emp_no
-          where FORMAT (shiftstarttime, 'dd-MM-yyyy') = '".$tgl."' and
-          Attend_Code NOT LIKE '%PRS%' AND
-          Attend_Code NOT LIKE '%PRSOFF%' AND
-          Attend_Code NOT LIKE '%STSHIFT2%' AND
-          Attend_Code NOT LIKE '%STSHIFT3%' AND
-          Attend_Code NOT LIKE '%STSHIFTG%' AND
-          Attend_Code NOT LIKE '%OFF%' AND
-          Attend_Code NOT LIKE '%NSI%' AND
-          Attend_Code NOT LIKE '%NSO%'
-          ");
+     // $absence = db::connection('sunfish')->select("
+     //      select VIEW_YMPI_Emp_Attendance.emp_no, FORMAT (shiftstarttime, 'dd MMMM yyyy') as tanggal, official_name, Attend_Code, concat( Division,' / ', Department, ' / ', [Section]) as bagian from VIEW_YMPI_Emp_Attendance
+     //      join VIEW_YMPI_Emp_OrgUnit on VIEW_YMPI_Emp_OrgUnit.Emp_no = VIEW_YMPI_Emp_Attendance.emp_no
+     //      where FORMAT (shiftstarttime, 'dd-MM-yyyy') = '".$tgl."' and
+     //      Attend_Code NOT LIKE '%PRS%' AND
+     //      Attend_Code NOT LIKE '%PRSOFF%' AND
+     //      Attend_Code NOT LIKE '%STSHIFT2%' AND
+     //      Attend_Code NOT LIKE '%STSHIFT3%' AND
+     //      Attend_Code NOT LIKE '%STSHIFTG%' AND
+     //      Attend_Code NOT LIKE '%OFF%' AND
+     //      Attend_Code NOT LIKE '%NSI%' AND
+     //      Attend_Code NOT LIKE '%NSO%'
+     //      ");
+
+     $absenceResume = DB::SELECT("SELECT
+          sunfish_shift_syncs.shiftdaily_code,
+          sunfish_shift_syncs.attend_code,
+          sunfish_shift_syncs.employee_id,
+          employee_syncs.name,
+          employee_syncs.department,
+          employee_syncs.section,
+          employee_syncs.`group`,
+          departments.`department_shortname`,
+     IF
+          (
+               sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_3%',
+               ( SELECT MAX( auth_datetime ) FROM ivms_attendance WHERE employee_id = employee_syncs.employee_id AND auth_date = '".$now."' AND auth_datetime BETWEEN '".$now." 22:00:00' AND '".$now." 23:59:59' ),
+          IF
+               (
+                    sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_2%',
+                    ( SELECT min( auth_datetime ) FROM ivms_attendance WHERE employee_id = employee_syncs.employee_id AND auth_date = '".$now."' AND auth_datetime BETWEEN '".$now." 22:00:00' AND '".$now." 23:59:59' ),
+                    ( SELECT min( auth_datetime ) FROM ivms_attendance WHERE employee_id = employee_syncs.employee_id AND auth_date = '".$now."' ) 
+               ) 
+          ) AS time_in 
+     FROM
+          sunfish_shift_syncs
+          LEFT JOIN employee_syncs ON employee_syncs.employee_id = sunfish_shift_syncs.employee_id 
+          LEFT JOIN departments ON departments.department_name = employee_syncs.department 
+     WHERE
+          sunfish_shift_syncs.shift_date = '".$now."'");
 
 // $query = "SELECT shift, COUNT(nik) as jml from presensi WHERE DATE_FORMAT(tanggal,'%d-%m-%Y')='".$tgl."' and tanggal not in (select tanggal from kalender) and shift NOT REGEXP '^[1-9]+$' and shift <> 'OFF' and shift <> 'X' GROUP BY shift ORDER BY jml";
 
@@ -3199,7 +3228,8 @@ public function fetchAbsence(Request $request)
 
      $response = array(
           'status' => true,
-          'absence' => $absence,
+          'absenceResume' => $absenceResume,
+          // 'absence' => $absence,
           'titleChart' => $titleChart,
           'tgl' => $tgl
      );
