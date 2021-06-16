@@ -307,7 +307,7 @@
 							table_content += '<b style="font-size: 18px">Temp. : '+result.last_data[0].temperature+' &#8451;</b><br>';
 							table_content += '<b style="font-size: 18px">Humd. : '+result.last_data[0].humidity+' %</b>';
 							table_content += '</div>';
-							table_content += '<img src="{{ url("images/office_map.png") }}">';
+							table_content += '<img src="{{ url("images/office_map.png") }}" >';
 							table_content += '</div>';
 							table_content += '</td>';
 
@@ -316,9 +316,9 @@
 							table_content += '<table width="100%"><tr><td colspan="2"><div style="background-color: #605ca8; font-size: 25px; font-weight: bold;">'+node_name+'</div></td></tr>';
 							table_content += '<tr><td width="80%"><div id="chart_co'+index+'" style="height: 180px; border: 1px solid #605ca8; width:100%"></div></td>';
 							table_content += '<td style="border: 1px solid #605ca8;" width="20%">';
-							table_content += '<b style="font-size: 18px">CO2 : '+result.last_data[index].co+' ppm</b><br>';
-							table_content += '<b style="font-size: 18px">Temp. : '+result.last_data[index].temperature+' &#8451;</b><br>';
-							table_content += '<b style="font-size: 18px">Humd. : '+result.last_data[index].humidity+' %</b>';
+							table_content += '<b style="font-size: 25px">CO2 : '+result.last_data[index].co+' ppm</b><br>';
+							table_content += '<b style="font-size: 25px">Temp. : '+result.last_data[index].temperature+' &#8451;</b><br>';
+							table_content += '<b style="font-size: 25px">Humd. : '+result.last_data[index].humidity+' %</b>';
 							table_content += '</td></tr></table>';
 							table_content += '</td>';
 						} else {
@@ -326,9 +326,9 @@
 							table_content += '<table width="100%"><tr><td colspan="2"><div style="background-color: #605ca8; font-size: 25px; font-weight: bold;">'+node_name+'</div></td></tr>';
 							table_content += '<tr><td width="80%"><div id="chart_co'+index+'" style="height: 180px; border: 1px solid #605ca8; width:100%"></div></td>';
 							table_content += '<td style="border: 1px solid #605ca8;" width="20%">';
-							table_content += '<b style="font-size: 18px">CO2 : '+result.last_data[index].co+' ppm</b><br>';
-							table_content += '<b style="font-size: 18px">Temp. : '+result.last_data[index].temperature+' &#8451;</b><br>';
-							table_content += '<b style="font-size: 18px">Humd. : '+result.last_data[index].humidity+' %</b>';
+							table_content += '<b style="font-size: 25px">CO2 : '+result.last_data[index].co+' ppm</b><br>';
+							table_content += '<b style="font-size: 25px">Temp. : '+result.last_data[index].temperature+' &#8451;</b><br>';
+							table_content += '<b style="font-size: 25px">Humd. : '+result.last_data[index].humidity+' %</b>';
 							table_content += '</td></tr></table>';
 							table_content += '</td>';
 						}
